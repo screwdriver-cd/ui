@@ -1,0 +1,119 @@
+@mixin transition($prop, $duration, $delay: 0ms) {
+    -webkit-transition: $prop $duration $delay;
+    -moz-transition: $prop $duration $delay;
+    -ms-transition: $prop $duration $delay;
+    -o-transition: $prop $duration $delay;
+    transition: $prop $duration $delay;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+ul, li {
+    list-style-type: none;
+}
+
+.page-header {
+    position: relative;
+    z-index: 5000;
+    height: 70px;
+    background-color: #333;
+    font-weight: 350;
+    min-width: 1190px;
+}
+
+.container {
+    box-sizing: border-box;
+    height: 100%;
+    margin: 0;
+    font-size: 0;
+    overflow: visible;
+}
+
+.logo {
+    display: inline-block;
+    color: #fff;
+    height: 100%;
+    width: 40px;
+    font-size: 12px;
+    text-align: center;
+    position: relative;
+    top: 18px;
+
+    img {
+        display: block;
+        width: 40px;
+        position: relative;
+        left: 0px;
+        top: -5px;
+    }
+}
+
+.search {
+    display: inline-block;
+    vertical-align: top;
+    top: 15px;
+    width: 400px;
+    height: 40px;
+    background: #fff;
+    margin-left: 30px;
+    position: relative;
+    border: 1px solid #d8dade;
+    box-sizing: border-box;
+    border-radius: 2px;
+    font-size: 16px;
+    overflow: hidden;
+    font-weight: 300;
+    @include transition(background, 200ms);
+
+    .category {
+        // display: inline-block;
+        display: none;
+        height: 100%;
+        line-height: 40px;
+        width: 65px;
+        text-align: center;
+        font-family: Helvetica;
+        color: #787d82;
+        cursor: pointer;
+
+        &:hover {
+            color: #555;
+        }
+    }
+
+    form {
+        display: inline-block;
+        height: 100%;
+        width: 265px;
+    }
+
+    input {
+        border: none;
+        outline: none;
+        height: 100%;
+        width: 335px; // 265 if category
+        line-height: 40px;
+        margin-left: 20px; // 5 if category
+        font-family: Helvetica;
+        background: transparent;
+    }
+
+    .search-icon {
+        height: 100%;
+        float: right;
+        width: 40px;
+        line-height: 40px;
+        text-align: center;
+        color: #555;
+        font-size: 20px;
+        cursor: pointer;
+    }
+}
+
+.search-focused {
+    border: 1px solid #888;
+}

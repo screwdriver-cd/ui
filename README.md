@@ -1,5 +1,7 @@
 # Screwdriver-ui
 
+[![Version][npm-image]][npm-url] ![Downloads][downloads-image] [![Build Status][wercker-image]][wercker-url] [![Open Issues][issues-image]][issues-url] [![Dependency Status][daviddm-image]][daviddm-url] ![License][license-image]
+
 This README outlines the details of collaborating on this Ember application.
 A short introduction of this app could easily go here.
 
@@ -51,3 +53,16 @@ Specify what it takes to deploy your app.
   * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
   * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
 
+## License
+Code licensed under the BSD 3-Clause license. See LICENSE file for terms.
+
+[npm-image]: https://img.shields.io/npm/v/screwdriver-ui.svg
+[npm-url]: https://npmjs.org/package/screwdriver-ui
+[downloads-image]: https://img.shields.io/npm/dt/screwdriver-ui.svg
+[license-image]: https://img.shields.io/npm/l/screwdriver-ui.svg
+[issues-image]: https://img.shields.io/github/issues/screwdriver-cd/ui.svg
+[issues-url]: https://github.com/screwdriver-cd/ui/issues
+[wercker-image]: https://app.wercker.com/status/a09ebe6f8fc9b3d011b8b6f048484f4f
+[wercker-url]: https://app.wercker.com/project/bykey/a09ebe6f8fc9b3d011b8b6f048484f4f
+[daviddm-image]: https://david-dm.org/screwdriver-cd/ui.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/screwdriver-cd/ui
