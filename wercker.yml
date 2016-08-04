@@ -3,7 +3,7 @@ box: node:4
 build:
   steps:
     - npm-install
-    - bower-install
+    - plasticine/bower-install@0.0.4
     - npm-test
 
 deploy:
