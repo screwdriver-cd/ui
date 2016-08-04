@@ -3,6 +3,7 @@ box: node:4
 build:
   steps:
     - npm-install
+    - bower-install
     - npm-test
 
 deploy:
