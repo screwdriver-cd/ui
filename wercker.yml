@@ -4,7 +4,6 @@ build:
   steps:
     - npm-install
     - thangngoc89/bower-install@0.5.8
-    - aussiegeek/install-phantomjs@0.0.4
     - npm-test
     # Production asset build
     - thriqon/ember-build@0.1.1
@@ -26,7 +25,7 @@ deploy:
 
     - script:
       name: bundle static files
-      code: tar -cvzf sdui.tgz ${WERCKER_ROOT}/dist
+      code: tar -C ${WERCKER_ROOT}/dist -cvzf sdui.tgz .
 
     - script:
       name: get highest version from tags
