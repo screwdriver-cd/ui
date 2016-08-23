@@ -4,7 +4,6 @@ build:
   steps:
     - npm-install
     - thangngoc89/bower-install@0.5.8
-    - aussiegeek/install-phantomjs@0.0.4
     - npm-test
     # Production asset build
     - thriqon/ember-build@0.1.1
