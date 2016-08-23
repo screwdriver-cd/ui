@@ -2,6 +2,7 @@
 
 # Constants
 TAGS=$(git tag -l --sort="version:refname")
+echo "CURRENT TAGS:" $TAGS
 INDEX=${#TAGS}
 let "INDEX--"
 VERSION=0
