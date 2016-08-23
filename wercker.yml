@@ -30,6 +30,14 @@ deploy:
 
     - script:
       name: get highest version from tags
+      code: git tag
+      
+    - script:
+      name: get highest version from tags
+      code: ./bin/incrementVersion.sh
+
+    - script:
+      name: get highest version from tags
       code: export VERSION=$(bash bin/incrementVersion.sh)
 
     - script:
