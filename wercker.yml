@@ -6,12 +6,17 @@ build:
     - thangngoc89/bower-install@0.5.8
     - aussiegeek/install-phantomjs@0.0.4
     - npm-test
+    # Production asset build
+    - thriqon/ember-build@0.1.1
 
 deploy:
   steps:
     # Add our deploy key to SSH
     - add-ssh-key:
       keyname: GIT_KEY
+
+    - install-packages:
+      packages: openssh-client
 
     # Add GitHub's SSH fingerprint to SSH known_hosts
     - add-to-known_hosts:
@@ -20,16 +25,26 @@ deploy:
       type: rsa
 
     - script:
-      name: Install a version generator
-      code: npm install -g npm-auto-version
+      name: bundle static files
+      code: tar -cvzf sdui.tgz ${WERCKER_OUTPUT_DIR}/dist
 
     - script:
-      name: Generate a new tag/version
-      code: npm-auto-version
-
-    # Publish to npm
-    - turistforeningen/npm-publish
+      name: get highest version from tags
+      code: export VERSION=$(bash bin/incrementVersion.sh)
 
     - script:
-      name: Push Tags to GitHub.com
-      code: git push origin --tags
+      name: add new tag
+      code: git tag $VERSION
+
+    - script:
+      name: push newly added tag
+      code: git push origin $VERSION
+
+    - github-create-release:
+      token: $GITHUB_TOKEN
+      tag: $VERSION
+
+    - github-upload-asset:
+      token: $GITHUB_TOKEN
+      file: sdui.tgz
+      content_type: application/octet-stream
