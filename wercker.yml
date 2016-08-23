@@ -25,7 +25,7 @@ deploy:
 
     - script:
       name: bundle static files
-      code: tar -cvzf sdui.tgz ${WERCKER_ROOT}/dist
+      code: tar -C ${WERCKER_ROOT}/dist -cvzf sdui.tgz .
 
     - script:
       name: get highest version from tags
