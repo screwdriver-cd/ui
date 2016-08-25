@@ -1,0 +1,22 @@
+
+<div class='pure-g'>
+  <div class="pure-u-1-24">
+    <span class="status-icon">{{#if icon}}{{fa-icon icon}}{{/if}}</span>
+  </div>
+  <div class='pure-u-18-24'>
+    <span class="name">{{step.name}}</span>
+  </div>
+  <div class='pure-u-1-6'>
+    <span class="duration">
+      {{if duration (moment-duration duration 'milliseconds')}}
+      {{if isRunning (moment-from-now step.startTime interval=1000)}}
+    </span>
+  </div>
+  <div class="pure-u-1-24">
+    <span class="chevron">
+      {{#if isOpen}}{{fa-icon "fa-chevron-up"}}{{/if}}
+      {{#unless isOpen}}{{fa-icon "fa-chevron-down"}}{{/unless}}
+    </span>
+  </div>
+</div>
+{{sd-build-log step=step buildId=build.id open=isOpen}}
