@@ -1,0 +1,9 @@
+shared:
+    image: node:4
+
+jobs:
+    main:
+        steps:
+            - install: npm install
+            - bower: npm install bower && ./node_modules/.bin/bower install
+            - test: npm test
