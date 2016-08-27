@@ -6,7 +6,7 @@ moduleForComponent('sd-build-step', 'Integration | Component | sd build step', {
   integration: true
 });
 
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const buildMock = { id: 1 };
@@ -16,6 +16,7 @@ test('it renders', function(assert) {
     startTime: '2016-08-26T20:49:42.531Z',
     endTime: '2016-08-26T20:50:52.531Z'
   };
+
   this.set('buildMock', buildMock);
   this.set('stepMock', stepMock);
 
@@ -29,6 +30,7 @@ test('it renders', function(assert) {
   assert.ok(this.$(this.$('.chevron i').get(0)).hasClass('fa-chevron-up'));
   this.$('.name').click();
   assert.ok(this.$(this.$('.chevron i').get(0)).hasClass('fa-chevron-down'));
+
   return wait().then(() => {
     assert.ok(this.$(this.$('.chevron i').get(0)).hasClass('fa-chevron-down'));
   });

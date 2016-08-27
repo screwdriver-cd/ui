@@ -17,6 +17,7 @@ export default DS.Model.extend({
       if (!this.get('startTime')) {
         return 0;
       }
+
       return ((this.get('startTime').getTime() - this.get('createTime').getTime()) / 1000);
     }
   }),
@@ -25,6 +26,7 @@ export default DS.Model.extend({
       if (!this.get('endTime')) {
         return 0;
       }
+
       return ((this.get('endTime').getTime() - this.get('startTime').getTime()) / 1000);
     }
   }),

@@ -6,7 +6,7 @@ moduleForComponent('sd-build-details', 'Integration | Component | sd build detai
   integration: true
 });
 
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   //
@@ -20,6 +20,7 @@ test('it renders', function(assert) {
     buildDuration: 175,
     queuedDuration: 5
   };
+
   this.set('buildMock', buildMock);
   this.render(hbs`{{sd-build-details build=buildMock}}`);
 

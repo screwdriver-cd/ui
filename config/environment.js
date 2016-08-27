@@ -1,9 +1,9 @@
 /* jshint node: true */
 
-module.exports = function(environment) {
-  var ENV = {
+module.exports = (environment) => {
+  let ENV = {
     modulePrefix: 'screwdriver-ui',
-    environment: environment,
+    environment,
     rootURL: '/',
     locationType: 'auto',
     EmberENV: {
@@ -42,7 +42,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    // special config for production
   }
 
   return ENV;

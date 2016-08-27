@@ -24,14 +24,14 @@ export default Ember.Component.extend({
   icon: Ember.computed('status', {
     get() {
       switch (this.get('status')) {
-        case 'running':
-          return 'fa-clock-o';
-        case 'success':
-          return 'fa-check';
-        case 'failure':
-          return 'fa-times';
-        default:
-          return '';
+      case 'running':
+        return 'fa-clock-o';
+      case 'success':
+        return 'fa-check';
+      case 'failure':
+        return 'fa-times';
+      default:
+        return '';
       }
     }
   }),

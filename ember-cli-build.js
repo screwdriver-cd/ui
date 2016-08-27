@@ -1,12 +1,10 @@
-/*jshint node:true*/
-/* global require, module */
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
-module.exports = function(defaults) {
+module.exports = function (defaults) {
   var app = new EmberApp(defaults, {
     // Add options here
     'ember-font-awesome': {
-      useScss: true, // for ember-cli-sass
+      useScss: true // for ember-cli-sass
     }
   });
 

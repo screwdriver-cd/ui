@@ -55,12 +55,14 @@ export default Ember.Component.extend({
       this.set('isLoading', true);
 
       // Fetch logs
-      Ember.$.get(`http://localhost:8080/v3/builds/${buildId}/steps/${name}/logs/?from=${logNumber}`)
+      Ember.$.get(
+        `http://localhost:8080/v3/builds/${buildId}/steps/${name}/logs/?from=${logNumber}`
+      )
         .done((data, textStatus, jqXHR) => {
           if (Array.isArray(data) && data.length) {
             // Add lines to log container
             data.forEach(line => {
-              logContainer.append(ansi_up.ansi_to_html(line.m) + '\n');
+              logContainer.append(`${ansi_up.ansi_to_html(line.m)}\n`);
             });
             // Update the last line we processed for next load
             this.set('lastLine', data[data.length - 1].n);

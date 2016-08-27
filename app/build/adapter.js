@@ -2,15 +2,17 @@ import Adapter from '../application/adapter';
 export default Adapter.extend({
   host: 'http://localhost:8080',
 
-  handleResponse: function (status, headers, payload, requestData) {
+  handleResponse: (status, headers, payload, requestData) => {
+    let data = payload;
+
     // Fix our API not returning the model name in payload
-    if (payload && Array.isArray(payload)) {
-      payload = { builds: payload };
-    } else if (payload) {
-      payload = { build: payload };
+    if (data && Array.isArray(data)) {
+      data = { builds: data };
+    } else if (data) {
+      data = { build: data };
     }
 
     // Pass-through to super-class
-    return Adapter.prototype.handleResponse(status, headers, payload, requestData);
+    return Adapter.prototype.handleResponse(status, headers, data, requestData);
   }
 });

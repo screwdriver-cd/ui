@@ -1,11 +1,13 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('sd-build-step-collection', 'Integration | Component | sd build step collection', {
-  integration: true
-});
+moduleForComponent('sd-build-step-collection',
+  'Integration | Component | sd build step collection', {
+    integration: true
+  }
+);
 
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   this.set('stepsMock', []);
