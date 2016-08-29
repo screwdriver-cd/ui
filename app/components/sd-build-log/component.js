@@ -67,7 +67,7 @@ export default Ember.Component.extend({
               logContainer.append(`${ansi_up.ansi_to_html(line.m)}\n`);
             });
             // Update the last line we processed for next load
-            this.set('lastLine', data[data.length - 1].n);
+            this.set('lastLine', data[data.length - 1].n + 1);
             // Set flag for done based on headers
             this.set('finishedLoading', !jqXHR.getResponseHeader('x-more-data'));
           }
