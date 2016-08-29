@@ -3,7 +3,10 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNameBindings: ['isOpen', 'status'],
   isOpen: false,
-
+  /**
+   * Maps step exit code with status.
+   * @property {String} status
+   */
   status: Ember.computed('step.code', 'step.startTime', {
     get() {
       const code = this.get('step.code');
@@ -21,6 +24,10 @@ export default Ember.Component.extend({
     }
   }),
 
+  /**
+   * Maps step status with different icon.
+   * @property {String} icon
+   */
   icon: Ember.computed('status', {
     get() {
       switch (this.get('status')) {
@@ -36,12 +43,20 @@ export default Ember.Component.extend({
     }
   }),
 
+  /**
+   * Returns true if the step is running otherwise false.
+   * @property {Boolean} isRunning
+   */
   isRunning: Ember.computed('status', {
     get() {
       return this.get('status') === 'running';
     }
   }),
 
+  /**
+   * Returns duration in seconds for a completed step.
+   * @property {number} duration
+   */
   duration: Ember.computed('step.startTime', 'step.endTime', {
     get() {
       const start = this.get('step.startTime');

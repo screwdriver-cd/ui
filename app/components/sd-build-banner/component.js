@@ -1,6 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  /**
+   * Maps build status with different icon.
+   * @property {String} icon
+   */
   icon: Ember.computed('build.status', {
     get() {
       const icons = {
