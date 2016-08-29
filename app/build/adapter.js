@@ -1,7 +1,5 @@
 import Adapter from '../application/adapter';
 export default Adapter.extend({
-  host: 'http://localhost:8080',
-
   handleResponse: (status, headers, payload, requestData) => {
     let data = payload;
 

@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from 'screwdriver-ui/config/environment';
 
 export default Ember.Component.extend({
   classNameBindings: ['open'],
@@ -56,7 +57,8 @@ export default Ember.Component.extend({
 
       // Fetch logs
       Ember.$.get(
-        `http://localhost:8080/v3/builds/${buildId}/steps/${name}/logs/?from=${logNumber}`
+        `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/` +
+        `${buildId}/steps/${name}/logs/?from=${logNumber}`
       )
         .done((data, textStatus, jqXHR) => {
           if (Array.isArray(data) && data.length) {
