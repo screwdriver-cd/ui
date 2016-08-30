@@ -1,9 +1,9 @@
 /* jshint node: true */
 
-module.exports = function(environment) {
-  var ENV = {
+module.exports = (environment) => {
+  let ENV = {
     modulePrefix: 'screwdriver-ui',
-    environment: environment,
+    environment,
     rootURL: '/',
     locationType: 'auto',
     EmberENV: {
@@ -16,6 +16,11 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+      SDAPI_HOSTNAME: 'http://localhost:8080',
+      SDAPI_NAMESPACE: 'v3'
+    },
+    moment: {
+      allowEmpty: true // allow empty dates
     }
   };
 
@@ -39,7 +44,8 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    // special config for production
+    ENV.APP.SDAPI_HOSTNAME = 'http://api.screwdriver.cd';
   }
 
   return ENV;

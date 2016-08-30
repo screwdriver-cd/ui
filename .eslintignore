@@ -1,0 +1,9 @@
+# These are provided by ember-cli. Modification will make upgrades harder.
+app.js
+resolver.js
+tests/helpers/destroy-app.js
+tests/helpers/module-for-acceptance.js
+tests/helpers/start-app.js
+public
+vendor
+ember-cli-build.js

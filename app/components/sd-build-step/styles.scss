@@ -1,0 +1,20 @@
+& {
+  padding: 10px 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.pure-g div:last-child {
+  text-align: right;
+}
+
+&.success .status-icon {
+  color: green;
+}
+
+&.failure .status-icon {
+  color: red;
+}
+
+&.running .status-icon {
+  color: blue;
+}

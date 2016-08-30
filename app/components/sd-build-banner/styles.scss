@@ -1,0 +1,47 @@
+& {
+  margin-top: 10px;
+}
+
+.status {
+  padding: 10px;
+  background-color: #daa;
+  border-radius: 3px;
+
+  .status-icon {
+    color: red;
+  }
+}
+
+.pure-g > div {
+  line-height: 23px;
+}
+
+.pure-g div:last-child {
+  text-align: right;
+}
+
+.SUCCESS {
+  background-color: #ada;
+  .status-icon {
+    color: green;
+  }
+}
+
+.QUEUED {
+  background-color: #aad;
+  .status-icon {
+    color: blue;
+  }
+}
+
+.RUNNING {
+  background-color: #aad;
+  .status-icon {
+    color: blue;
+  }
+}
+
+.build {
+  padding: 3px;
+  border: 1px solid #ccc;
+}
