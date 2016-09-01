@@ -69,7 +69,7 @@ export default Ember.Component.extend({
             // Update the last line we processed for next load
             this.set('lastLine', data[data.length - 1].n + 1);
             // Set flag for done based on headers
-            this.set('finishedLoading', !jqXHR.getResponseHeader('x-more-data'));
+            this.set('finishedLoading', jqXHR.getResponseHeader('x-more-data') === 'false');
           }
         })
         .always(() => {
