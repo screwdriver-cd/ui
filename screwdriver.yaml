@@ -1,9 +1,9 @@
 shared:
-    image: node:4
+    image: node:6
 
 jobs:
     main:
         steps:
             - install: npm install
-            - bower: npm install bower && ./node_modules/.bin/bower install
+            - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
             - test: npm test
