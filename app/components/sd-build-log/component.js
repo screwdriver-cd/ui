@@ -2,25 +2,35 @@ import Ember from 'ember';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Ember.Component.extend({
-  classNameBindings: ['open'],
+  classNameBindings: ['isOpen'],
   // flag: if logs are currently being processed
   isLoading: false,
   // flag: if there are logs left to load
   finishedLoading: false,
   // log panel is visible
-  open: false,
+  isOpen: false,
   // last line processed in log loader
   lastLine: 0,
+
+  // Start loading logs immediately upon inserting the element if the panel is open
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (this.get('isOpen')) {
+      this.logs();
+    }
+  },
+
   /**
    * Listener to determine if log loading should begin.
-   * Should only kick off log loading if "open" changes to true
+   * Should only kick off log loading if "isOpen" changes to true
    * @method didUpdateAttrs
    */
   didUpdateAttrs(config) {
     this._super(...arguments);
     // Call only if recently opened
-    if (config.oldAttrs.open.value !== config.newAttrs.open.value &&
-        config.newAttrs.open.value) {
+    if (config.oldAttrs.isOpen.value !== config.newAttrs.isOpen.value &&
+        config.newAttrs.isOpen.value) {
       this.logs();
     }
   },
@@ -32,10 +42,10 @@ export default Ember.Component.extend({
    * - the step must have logs left to load
    * @property {Boolean} shouldLoad
    */
-  shouldLoad: Ember.computed('step.startTime', 'open', 'isLoading', 'finishedLoading', {
+  shouldLoad: Ember.computed('step.startTime', 'isOpen', 'isLoading', 'finishedLoading', {
     get() {
       return this.get('step.startTime') !== undefined &&
-        this.get('open') &&
+        this.get('isOpen') &&
         !this.get('isLoading') &&
         !this.get('finishedLoading');
     }
@@ -56,10 +66,10 @@ export default Ember.Component.extend({
       this.set('isLoading', true);
 
       // Fetch logs
-      Ember.$.get(
-        `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/` +
-        `${buildId}/steps/${name}/logs/?from=${logNumber}`
-      )
+      const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/` +
+        `${buildId}/steps/${name}/logs`;
+
+      Ember.$.ajax({ url, data: { from: logNumber } })
         .done((data, textStatus, jqXHR) => {
           if (Array.isArray(data) && data.length) {
             // Add lines to log container
