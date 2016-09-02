@@ -1,0 +1,29 @@
+<h2>Secrets</h2>
+<table class="secrets">
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SOMETHING_GIT_RELATED</td>
+      <td>{{input type="password" placeholder="Protected" size="40"}}</td>
+      <td>{{input type="button" value="Delete"}}</td>
+    </tr>
+    <tr>
+      <td>NPM_TOKEN</td>
+      <td>{{input type="password" placeholder="Protected" size="40"}}</td>
+      <td>{{input type="button" value="Delete"}}</td>
+    </tr>
+    <tr class="new">
+      <td>{{input placeholder="key" size="40"}}</td>
+      <td>{{input type="password" placeholder="value" size="40"}}</td>
+      <td>{{input type="button" value="Add"}}</td>
+    </tr>
+  </tbody>
+</table>
+
+{{yield}}
