@@ -1,8 +1,9 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNameBindings: ['isOpen', 'status'],
+  classNameBindings: ['status'],
   isOpen: false,
+
   /**
    * Maps step exit code with status.
    * @property {String} status
@@ -32,7 +33,7 @@ export default Ember.Component.extend({
     get() {
       switch (this.get('status')) {
       case 'running':
-        return 'fa-clock-o';
+        return 'fa-spinner fa-spin';
       case 'success':
         return 'fa-check';
       case 'failure':
@@ -70,11 +71,9 @@ export default Ember.Component.extend({
     }
   }),
 
-  click(event) {
-    if (event.target.className !== 'logs') {
-      if (this.get('status') !== 'queued') {
-        this.set('isOpen', !this.get('isOpen'));
-      }
+  click() {
+    if (this.get('status') !== 'queued') {
+      this.get('onToggle')();
     }
   }
 });
