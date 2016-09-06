@@ -1,0 +1,24 @@
+& {
+  background: -webkit-linear-gradient(left, #0078ff, #666);
+  background: -o-linear-gradient(right, #0078ff, #666);
+  background: -moz-linear-gradient(right, #0078ff, #666);
+  background: linear-gradient(to right, #0078ff, #666);
+  color: #fff;
+  font-weight: 350;
+  height: 70px;
+  line-height: 70px;
+  margin: 0;
+  padding: 0 25px;
+}
+
+h1 {
+  display: inline-block;
+  margin: 0 10px;
+  padding: 0;
+}
+
+a {
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
