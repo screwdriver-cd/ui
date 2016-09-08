@@ -3,7 +3,7 @@ import Ember from 'ember';
 
 moduleForModel('pipeline', 'Unit | Model | pipeline', {
   // Specify the other units that are required for this test.
-  needs: []
+  needs: ['model:secret']
 });
 
 test('it exists', function (assert) {

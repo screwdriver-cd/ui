@@ -1,0 +1,25 @@
+& {
+  border: 1px solid #ddd;
+}
+
+td {
+  padding: 5px;
+}
+
+input {
+  border-color: transparent;
+}
+
+&:hover input {
+  border-color: initial;
+}
+
+input:focus {
+  border-color: initial;
+}
+
+button {
+  border-width: 0;
+  width: 100px;
+  border-radius: 3px;
+}

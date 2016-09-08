@@ -6,6 +6,7 @@ export default DS.Model.extend({
   configUrl: DS.attr('string'),
   createTime: DS.attr('date'),
   admins: DS.attr(),
+  secrets: DS.hasMany('secret', { async: true }),
   repoData: Ember.computed('scmUrl', {
     get() {
       const http = /^http[s]?:\/\/([^/]+)\/([^/]+)\/([^/]+)\.git#?(.*)?/;

@@ -17,6 +17,7 @@ module.exports = (environment) => {
       // Here you can pass flags/options to your application instance
       // when it is created
       SDAPI_HOSTNAME: 'http://localhost:8080',
+      SDUI_HOSTNAME: 'http://localhost:4200',
       SDAPI_NAMESPACE: 'v3'
     },
     moment: {
@@ -45,7 +46,8 @@ module.exports = (environment) => {
 
   if (environment === 'production') {
     // special config for production
-    ENV.APP.SDAPI_HOSTNAME = 'http://api.screwdriver.cd';
+    ENV.APP.SDAPI_HOSTNAME = 'https://api.screwdriver.cd';
+    ENV.APP.SDUI_HOSTNAME = 'https://cd.screwdriver.cd';
   }
 
   return ENV;

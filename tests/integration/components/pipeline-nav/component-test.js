@@ -12,6 +12,6 @@ test('it renders', function (assert) {
   this.render(hbs`{{pipeline-nav}}`);
 
   assert.equal(this.$().text().trim(), `Builds
-    Environment
+    Secrets
     Options`);
 });
