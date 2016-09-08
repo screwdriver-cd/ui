@@ -1,22 +1,23 @@
 import { moduleFor, test } from 'ember-qunit';
 import SuperAdapter from '../../../application/adapter';
 
-moduleFor('adapter:pipeline', 'Unit | Adapter | pipeline', {
+moduleFor('adapter:secret', 'Unit | Adapter | secret', {
   // Specify the other units that are required for this test.
-  // needs: ['adapter:application']
+  // needs: ['serializer:foo']
 });
 
+// Replace this with your real tests.
 test('it exists', function (assert) {
   let adapter = this.subject();
 
   assert.ok(adapter);
 });
 
-test('it wraps non-array payload with model name and inserts link to secrets', function (assert) {
+test('it wraps non-array payload with model name', function (assert) {
   let adapter = this.subject();
 
   SuperAdapter.prototype.handleResponse = function (status, headers, data, requestData) {
-    assert.deepEqual(data, { pipeline: { id: 1234, links: { secrets: 'secrets' } } });
+    assert.deepEqual(data, { secret: { id: 1234 } });
     assert.equal(status, 'status');
     assert.equal(headers, 'headers');
     assert.equal(requestData, 'requestData');
@@ -29,7 +30,7 @@ test('it wraps array payload with model name', function (assert) {
   let adapter = this.subject();
 
   SuperAdapter.prototype.handleResponse = function (status, headers, data, requestData) {
-    assert.deepEqual(data, { pipelines: [{ id: 1234 }] });
+    assert.deepEqual(data, { secrets: [{ id: 1234 }] });
     assert.equal(status, 'status');
     assert.equal(headers, 'headers');
     assert.equal(requestData, 'requestData');

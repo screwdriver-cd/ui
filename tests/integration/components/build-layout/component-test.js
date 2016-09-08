@@ -19,9 +19,6 @@ test('it renders', function (assert) {
     queuedDuration: 5,
     steps: [{ name: 'banana' }]
   };
-  let hasBanner = false;
-  let hasSteps = false;
-  let hasDetails = false;
 
   this.set('buildMock', buildMock);
   this.render(hbs`{{build-layout build=buildMock}}`);
@@ -29,24 +26,7 @@ test('it renders', function (assert) {
   // layout has wrapper
   assert.equal(this.$('.buildPage').length, 1);
 
-  // Ember adds a random identifier to the end of the component classname, making it difficult to find them
-  const views = this.$('.ember-view');
-
-  for (let i = 0; i < views.length; i += 1) {
-    let v = views[i];
-
-    if (/build-banner-/.test(v.className)) {
-      hasBanner = true;
-    }
-    if (/build-step-collection/.test(v.className)) {
-      hasSteps = true;
-    }
-    if (/build-details/.test(v.className)) {
-      hasDetails = true;
-    }
-  }
-
-  assert.ok(hasBanner, 'missing banner');
-  assert.ok(hasSteps, 'missing steps');
-  assert.ok(hasDetails, 'missing details');
+  assert.equal(this.$('.build-banner').length, 1);
+  assert.equal(this.$('.build-step-collection').length, 1);
+  assert.equal(this.$('.build-details').length, 1);
 });

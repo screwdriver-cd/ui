@@ -1,0 +1,24 @@
+<h2>Secrets</h2>
+<table class="secrets">
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each secrets as |secret|}}
+    {{secret-view secret=secret}}
+    {{/each}}
+  </tbody>
+  <tfoot>
+    <tr class="new">
+      <td class="key">{{input placeholder="key" size="40" value=newName key-up="enableButton"}}</td>
+      <td class="pass">{{input type="password" placeholder="value" size="40" value=newValue key-up="enableButton"}}</td>
+      <td><button disabled={{isButtonDisabled}} {{action "addNewSecret"}}>Add</button></td>
+    </tr>
+  </tfoot>
+</table>
+
+{{yield}}

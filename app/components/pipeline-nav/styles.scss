@@ -1,0 +1,21 @@
+.pure-menu-horizontal {
+  background: -webkit-linear-gradient(left, #0078ff, #666);
+  background: -o-linear-gradient(right, #0078ff, #666);
+  background: -moz-linear-gradient(right, #0078ff, #666);
+  background: linear-gradient(to right, #0078ff, #666);
+}
+
+a {
+  color: #fff;
+  background-color: transparent;
+  border-radius: 3px 3px 0 0;
+}
+
+a:hover {
+  background-color: #33abff;
+}
+
+a.active {
+  background-color: #fff;
+  color: #777;
+}

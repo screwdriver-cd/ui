@@ -18,36 +18,20 @@ th {
   padding-left: 5px;
 }
 
-td {
-  padding: 5px;
-}
-
 .new td {
+  padding: 5px;
   background-color: #ddd;
 }
 
-input {
-  border-color: transparent;
-}
-
-tr:hover input {
-  border-color: initial;
-}
-
-input:focus {
-  border-color: initial;
-}
-
-.new input {
-  border-color: initial;
-}
-
-input[type="button"] {
+tfoot button {
   border-width: 0;
   width: 100px;
-}
-
-.new input[type="button"] {
   background-color: #0078ff;
   color: #fff;
+  border-radius: 3px;
+}
+
+tfoot button:disabled {
+  background-color: inherit;
+  color: inherit;
 }

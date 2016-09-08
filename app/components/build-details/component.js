@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  classNames: ['build-details'],
   /**
    * Truncates build sha.
    * @property {String} truncatedSha

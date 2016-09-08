@@ -11,7 +11,9 @@ const Router = Ember.Router.extend({
 Router.map(function route() {
   this.route('home', { path: '/' });
   this.route('build', { path: '/builds/:build_id' });
-  this.route('pipeline', { path: '/pipelines/:pipeline_id' });
+  this.route('pipeline', { path: '/pipelines/:pipeline_id' }, function secretsRoute() {
+    this.route('secrets');
+  });
 });
 /* eslint-enable array-callback-return */
 
