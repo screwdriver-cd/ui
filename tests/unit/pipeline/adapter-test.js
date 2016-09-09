@@ -16,7 +16,10 @@ test('it wraps non-array payload with model name and inserts link to secrets', f
   let adapter = this.subject();
 
   SuperAdapter.prototype.handleResponse = function (status, headers, data, requestData) {
-    assert.deepEqual(data, { pipeline: { id: 1234, links: { secrets: 'secrets' } } });
+    assert.deepEqual(data, { pipeline: { id: 1234, links: {
+      secrets: 'secrets',
+      jobs: 'jobs'
+    } } });
     assert.equal(status, 'status');
     assert.equal(headers, 'headers');
     assert.equal(requestData, 'requestData');
