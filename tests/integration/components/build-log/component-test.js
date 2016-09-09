@@ -1,4 +1,5 @@
 import { moduleForComponent, test } from 'ember-qunit';
+import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import Pretender from 'pretender';
@@ -61,11 +62,18 @@ test('it renders open when told to', function (assert) {
     startTime: '2016-08-26T20:49:42.531Z',
     endTime: '2016-08-26T20:50:52.531Z'
   };
+  const buildMock = Ember.Object.extend({
+    reload() {}
+  }).create({
+    id: '1',
+    status: 'RUNNING'
+  });
 
   server.map(singleRequest);
   this.set('stepMock', stepMock);
+  this.set('buildMock', buildMock);
 
-  this.render(hbs`{{build-log buildId=1 step=stepMock isOpen=true}}`);
+  this.render(hbs`{{build-log build=buildMock step=stepMock isOpen=true}}`);
 
   return wait().then(() => {
     assert.equal(this.$().text().trim(), 'hello, world');
@@ -81,12 +89,19 @@ test('it starts loading when open changes', function (assert) {
     startTime: '2016-08-26T20:49:42.531Z',
     endTime: '2016-08-26T20:50:52.531Z'
   };
+  const buildMock = Ember.Object.extend({
+    reload() {}
+  }).create({
+    id: '1',
+    status: 'RUNNING'
+  });
 
   server.map(singleRequest);
   this.set('stepMock', stepMock);
+  this.set('buildMock', buildMock);
   this.set('open', false);
 
-  this.render(hbs`{{build-log buildId=1 step=stepMock isOpen=open}}`);
+  this.render(hbs`{{build-log build=buildMock step=stepMock isOpen=open}}`);
   this.set('open', true);
 
   return wait().then(() => {

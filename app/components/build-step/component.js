@@ -9,8 +9,8 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
-    // if code is defined and not 0
-    if (this.get('step.code')) {
+    // if code is defined and not 0, or step is running
+    if (this.get('step.code') || (this.get('step.startTime') && !this.get('step.endTime'))) {
       this.isOpen = true;
     }
   },
