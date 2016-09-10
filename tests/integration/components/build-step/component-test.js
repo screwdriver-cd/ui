@@ -1,4 +1,5 @@
 import { moduleForComponent, test } from 'ember-qunit';
+import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import Pretender from 'pretender';
@@ -47,7 +48,12 @@ test('it renders', function (assert) {
 test('it starts open when step failed', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = { id: 1 };
+  const buildMock = Ember.Object.extend({
+    reload() {}
+  }).create({
+    id: '1',
+    status: 'RUNNING'
+  });
   const stepMock = {
     name: 'banana',
     code: 127,

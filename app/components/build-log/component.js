@@ -57,7 +57,8 @@ export default Ember.Component.extend({
    */
   logs() {
     if (this.get('shouldLoad')) {
-      const buildId = this.get('buildId');
+      const build = this.get('build');
+      const buildId = build.get('id');
       const name = this.get('step.name');
       const logContainer = this.$('.logs');
       const logNumber = this.get('lastLine');
@@ -78,8 +79,15 @@ export default Ember.Component.extend({
             });
             // Update the last line we processed for next load
             this.set('lastLine', data[data.length - 1].n + 1);
+            // scroll to bottom of logs
+            window.scrollTo(0, this.$('.bottom').offset().top);
             // Set flag for done based on headers
             this.set('finishedLoading', jqXHR.getResponseHeader('x-more-data') === 'false');
+
+            if (this.get('finishedLoading') && build.get('status') === 'RUNNING') {
+              // if build is running and step is done, reload build
+              build.reload();
+            }
           }
         })
         .always(() => {
