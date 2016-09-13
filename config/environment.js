@@ -1,5 +1,4 @@
 /* jshint node: true */
-
 module.exports = (environment) => {
   let ENV = {
     modulePrefix: 'screwdriver-ui',
@@ -49,6 +48,11 @@ module.exports = (environment) => {
     ENV.APP.SDAPI_HOSTNAME = 'https://api.screwdriver.cd';
     ENV.APP.SDUI_HOSTNAME = 'https://cd.screwdriver.cd';
   }
+
+  ENV['ember-simple-auth'] = {
+    routeAfterAuthentication: 'home',
+    routeIfAlreadyAuthenticated: 'home'
+  };
 
   return ENV;
 };

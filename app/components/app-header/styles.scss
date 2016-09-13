@@ -118,3 +118,19 @@ ul, li {
 .search-focused {
     border: 1px solid #888;
 }
+
+.right {
+  width: 100px;
+  height: 40px;
+  float: right;
+
+  a {
+    position: relative;
+    top: 19px;
+    color: #fff;
+    font-size: 17px;
+    padding: 5px 10px;
+    background-color: #0078ff;
+    border-radius: 3px;
+  }
+}

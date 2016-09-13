@@ -14,6 +14,7 @@ Router.map(function route() {
   this.route('pipeline', { path: '/pipelines/:pipeline_id' }, function secretsRoute() {
     this.route('secrets');
   });
+  this.route('login');
 });
 /* eslint-enable array-callback-return */
 
