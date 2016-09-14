@@ -15,6 +15,7 @@ Router.map(function route() {
     this.route('secrets');
   });
   this.route('login');
+  this.route('create');
 });
 /* eslint-enable array-callback-return */
 

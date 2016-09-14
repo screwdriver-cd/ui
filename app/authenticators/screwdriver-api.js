@@ -1,7 +1,5 @@
 import Ember from 'ember';
 import Base from 'ember-simple-auth/authenticators/base';
-// eslint-disable-next-line camelcase
-import { jwt_decode } from 'ember-cli-jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
 const loginUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/login/web`;
@@ -19,7 +17,7 @@ export default Base.extend({
     const properties = Ember.Object.create(data);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      if (!Ember.isEmpty(properties.get('username'))) {
+      if (!Ember.isEmpty(properties.get('token'))) {
         return resolve(data);
       }
 
@@ -51,7 +49,7 @@ export default Base.extend({
               withCredentials: true
             }
           })
-          .done(jwt => resolve(jwt_decode(jwt.token)))
+          .done(jwt => resolve(jwt))
           .fail(() => reject('Could not get a token'));
         }
       }, 100);

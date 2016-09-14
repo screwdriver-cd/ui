@@ -1,0 +1,8 @@
+{{input
+  class="text-input scm-url"
+  name="scm-url"
+  key-up="scmChange"
+  placeholder="Enter your repository link (eg: git@github.com:screwdriver-cd/ui.git#master)"
+  value=scmUrl
+}}
+<input type="button" class="blue-button" disabled="true" {{action "updateData"}} name="use-repository" value="Use this repository">

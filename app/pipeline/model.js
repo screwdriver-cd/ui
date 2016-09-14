@@ -3,7 +3,7 @@ import Ember from 'ember';
 
 export default DS.Model.extend({
   scmUrl: DS.attr('string'),
-  configUrl: DS.attr('string'),
+  configUrl: DS.attr('string', { defaultValue: '' }),
   createTime: DS.attr('date'),
   admins: DS.attr(),
   secrets: DS.hasMany('secret', { async: true }),

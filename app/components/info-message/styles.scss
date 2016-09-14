@@ -1,0 +1,44 @@
+& {
+  width: 93%;
+  min-height: 20px;
+  border-radius: 3px;
+  margin-bottom: 30px;
+  padding: 10px;
+
+  i.fa {
+    font-size: 26px;
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  &.disabled {
+    display: none;
+  }
+
+  &.error {
+    border: 2px solid $ycolor-red-2a;
+
+    i.fa {
+      color: $ycolor-red-2a;
+    }
+  }
+
+  &.warning {
+    border: 2px solid $ycolor-yellow-5a;
+
+    i.fa {
+      color: $ycolor-yellow-5a;
+    }
+  }
+
+  &.info {
+    border: 2px solid $ycolor-blue-10a;
+
+    i.fa {
+      color: $ycolor-blue-10a;
+    }
+  }
+}

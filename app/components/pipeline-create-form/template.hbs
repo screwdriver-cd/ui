@@ -1,0 +1,13 @@
+{{info-message message=errorMessage type="error" icon="exclamation-triangle"}}
+{{#create-step step=1 currentStep=currentStep title="Select a Repository" }}
+  {{create-pipeline-data updateData=(action "rememberProjectData") returnToStep=(action "updateStep") scmUrl=scmUrl}}
+{{/create-step}}
+{{#create-step step=2 currentStep=currentStep title="Create Pipeline" }}
+  <button {{action "saveData"}} disabled={{isSaving}} class="blue-button {{if isSaving 'saving'}}">
+    <div class="saving-loading">
+      Creating Pipeline
+    </div>
+    <div class="button-label">Create Pipeline</div>
+  </button>
+  {{#if isSaving}}{{fa-icon "fa-spin fa-spinner"}}{{/if}}
+{{/create-step}}
