@@ -2,19 +2,11 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   classNames: ['build-banner'],
-  /**
-   * Maps build status with different icon.
-   * @property {String} icon
-   */
-  icon: Ember.computed('build.status', {
-    get() {
-      const icons = {
-        QUEUED: 'fa-clock-o',
-        RUNNING: 'fa-spinner fa-spin',
-        SUCCESS: 'fa-check'
-      };
+  classNameBindings: ['build.status'],
 
-      return icons[this.get('build.status')] || 'fa-times';
+  truncatedSha: Ember.computed('build.sha', {
+    get() {
+      return this.get('build.sha').substr(0, 6);
     }
   })
 });

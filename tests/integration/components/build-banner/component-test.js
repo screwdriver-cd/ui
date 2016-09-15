@@ -6,28 +6,32 @@ moduleForComponent('build-banner', 'Integration | Component | build banner', {
 });
 
 test('it renders', function (assert) {
+  const $ = this.$;
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const buildMock = {
     status: 'SUCCESS',
-    cause: 'monkeys with typewriters'
+    cause: 'monkeys with typewriters',
+    sha: 'abcd1234567890',
+    buildDuration: 5000
+  };
+  const jobMock = {
+    name: 'PR-671'
+  };
+  const pipelineMock = {
+    appId: 'foo:bar',
+    branch: 'master',
+    hubUrl: 'http://github.com/foo/bar'
   };
 
   this.set('buildMock', buildMock);
-  this.render(hbs`{{build-banner build=buildMock}}`);
+  this.set('jobMock', jobMock);
+  this.set('pipelineMock', pipelineMock);
+  this.render(hbs`{{build-banner build=buildMock job=jobMock pipeline=pipelineMock}}`);
 
-  assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-check'));
-  assert.equal(this.$('.cause').text().trim(), buildMock.cause);
-  assert.equal(this.$('.branch').text().trim(), 'banana');
-  assert.equal(this.$('.job').text().trim(), 'main');
-
-  this.set('buildMock.status', 'QUEUED');
-  assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-clock-o'));
-
-  this.set('buildMock.status', 'RUNNING');
-  assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-spinner'));
-  assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-spin'));
-
-  this.set('buildMock.status', 'FAILURE');
-  assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-times'));
+  assert.ok($('h1').text().trim(), 'PR-671');
+  assert.ok($('.sha').text().trim(), '#abcd12');
+  assert.ok($('.pipeline').text().trim(), 'foo:bar');
+  assert.ok($('.cause').text().trim(), 'monkeys with typewriters');
+  assert.ok($('.duration').text().trim(), 'a few seconds');
 });
