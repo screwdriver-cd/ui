@@ -1,0 +1,262 @@
+$animate: 300ms;
+$animate-delay: 250ms;
+$animate-done: 600ms;
+@mixin transition($prop, $duration, $delay: 0ms, $easing: ease) {
+  -webkit-transition: $prop $duration $delay $easing;
+  -moz-transition: $prop $duration $delay $easing;
+  -ms-transition: $prop $duration $delay $easing;
+  -o-transition: $prop $duration $delay $easing;
+  transition: $prop $duration $delay $easing;
+}
+@mixin scale($amt) {
+  -webkit-transform: scale($amt);
+  -moz-transform: scale($amt);
+  -ms-transform: scale($amt);
+  -o-transform: scale($amt);
+  transform: scale($amt);
+}
+
+& {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 30px;
+  margin-bottom: 0;
+  left: 0;
+
+  &:not(.step-hidden) {
+    .step-content:hover {
+      opacity: 1;
+    }
+  }
+
+  .step-title {
+    position: absolute;
+    height: 40px;
+    line-height: 45px;
+    top: 0;
+    left: 65px;
+    font-size: 1.5em;
+    font-weight: 450;
+    color: $ycolor-gray-a;
+  }
+
+  .step-line {
+    height: 0;
+    @include transition(all, $animate-done);
+  }
+
+  .step-content {
+    padding-top: 50px;
+    margin-bottom: 10px;
+    padding-left: 65px;
+    color: $ycolor-gray-e;
+    @include transition(opacity, 200ms);
+    opacity: 1;
+    max-height: 1000px;
+  }
+
+  .step-number {
+    text-align: center;
+    border: 3px solid $ycolor-green-6a;
+    color: $ycolor-green-6a;
+    font-weight: 500;
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 1.2em;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    span {
+      color: $ycolor-green-6a;
+      opacity: 1;
+    }
+
+    i.fa {
+      position: absolute;
+      font-size: 27px;
+      right: 6px;
+      top: 6px;
+      opacity: 0;
+      color: $ycolor-green-6a;
+    }
+  }
+
+  &.step-hidden {
+    margin-bottom: -5px;
+    padding-bottom: 0;
+
+    .step-number {
+      border-color: $ycolor-gray-h;
+      color: $ycolor-gray-h;
+
+      span {
+        color: $ycolor-gray-h;
+      }
+    }
+
+    .step-title {
+      color: $ycolor-gray-h;
+    }
+
+    .step-content {
+      opacity: 0;
+      max-height: 0;
+
+      * {
+        margin: 0;
+      }
+    }
+
+    .blue-button {
+      display: none;
+    }
+  }
+
+  &.step-done {
+    .step-title {
+      color: $ycolor-gray-g;
+    }
+
+    .step-line {
+      background: $ycolor-green-6a;
+      width: 3px;
+      height: 100%;
+      position: absolute;
+      top: 40px;
+      left: 22px;
+    }
+
+    .step-number {
+      span {
+        opacity: 0;
+      }
+
+      i.fa {
+        opacity: 1;
+      }
+    }
+
+    .step-content {
+      opacity: 0.6;
+    }
+
+    .blue-button {
+      display: none;
+    }
+
+    .hide-when-done {
+      display: none;
+    }
+  }
+
+  .text-input {
+    &.good-text-input:not(:focus) {
+      background: $ycolor-gray-h;
+      border-color: transparent;
+      border-radius: 1px;
+    }
+  }
+}
+
+.text-input {
+  box-sizing: border-box;
+  margin-top: 10px;
+  outline: 0;
+  height: 45px;
+  width: 95%;
+  border-radius: 2px;
+  border: 2px solid $ycolor-gray-h;
+  font-size: 16px;
+  padding-left: 10px;
+  color: $ycolor-gray-b;
+
+  &:focus {
+    border-color: $ycolor-blue-10a;
+  }
+
+  &::-webkit-input-placeholder {
+    color: $ycolor-gray-g;
+  }
+
+  &:-moz-placeholder {
+    color: $ycolor-gray-g;
+  }
+
+  &::-moz-placeholder {
+    color: $ycolor-gray-g;
+  }
+
+  &:-ms-input-placeholder {
+    color: $ycolor-gray-g;
+  }
+
+  &.bad-text-input {
+    border-color: $ycolor-red-2a;
+  }
+
+  &.good-text-input {
+    border-color: $ycolor-green-6a;
+  }
+}
+
+.blue-button {
+  border: none;
+  border-radius: 3px;
+  height: 45px;
+  padding: 0 30px;
+  color: #fff;
+  font-size: 16px;
+  margin-top: 20px;
+  background: $ycolor-blue-10a;
+  @include transition(all, 50ms);
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    background: $ycolor-neutral-blue;
+  }
+
+  &:disabled {
+    background: $ycolor-gray-g;
+  }
+
+  .saving-loading {
+    display: none;
+  }
+
+  &.saving {
+    .saving-loading {
+      display: block;
+    }
+
+    .button-label {
+      display: none;
+    }
+  }
+
+  &:active {
+    &:not(:disabled) {
+      @include scale(0.97);
+    }
+  }
+}
+
+.fuji-spinner {
+  display: inline-block;
+  vertical-align: middle;
+  height: 45px;
+}
+
+input[type="button"] {
+  outline: 0;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}

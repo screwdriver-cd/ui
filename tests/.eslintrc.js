@@ -3,6 +3,7 @@ module.exports = {
     'embertest': true
   },
   rules: {
-    "func-names": 'off'
+    'func-names': 'off',
+    'prefer-arrow-callback': 'off'
   }
 };

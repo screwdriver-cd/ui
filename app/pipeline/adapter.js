@@ -1,6 +1,11 @@
 import Adapter from '../application/adapter';
+
 export default Adapter.extend({
   handleResponse: (status, headers, payload, requestData) => {
+    if (payload.error) {
+      return Adapter.prototype.handleResponse(status, headers, { errors: payload }, requestData);
+    }
+
     let data = {};
     let key = 'pipeline';
 
