@@ -16,6 +16,7 @@ Router.map(function route() {
   });
   this.route('login');
   this.route('create');
+  this.route('error', { path: '/*path' });
 });
 /* eslint-enable array-callback-return */
 
