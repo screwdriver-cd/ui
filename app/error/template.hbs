@@ -1,0 +1,18 @@
+<div id='outer'>
+    <div id='fixed-inner'>
+        <div class='pic'>
+            <img style='' src='/assets/{{backgroundImage}}'>
+        </div>
+        <div class="wrapper-transparent">
+            {{#if statusCode}}
+            <h1 class="jumbo">{{statusCode}}</h1>
+            {{/if}}
+            {{#if errorMessage}}
+            <h4><strong>ERROR</strong>: {{errorMessage}}</h4>
+            <br/>
+            {{/if}}
+            <br>
+        </div>
+    </div>
+</div>
+{{outlet}}
