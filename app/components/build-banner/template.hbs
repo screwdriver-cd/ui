@@ -2,7 +2,7 @@
   <ul>
     <li><h1>{{job.name}}</h1></li>
     <li><a class="sha" href="{{pipeline.hubUrl}}"><span class="sha">#{{truncatedSha}}</span></a></li>
-    <li><span class="pipeline">{{pipeline.appId}}</span></li>
+    <li>{{#link-to "pipeline" pipeline.id}}<span class="pipeline">{{pipeline.appId}}</span>{{/link-to}}</li>
         <!-- <span class="actions"><input type="button" value="Actions"></span> -->
   </ul>
 </div>
