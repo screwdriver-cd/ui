@@ -1,47 +1,62 @@
-& {
-  margin-top: 10px;
+@mixin backgroundGradient($start, $end) {
+  background: -webkit-linear-gradient(left, $start, $end);
+  background: -o-linear-gradient(right, $start, $end);
+  background: -moz-linear-gradient(right, $start, $end);
+  background: linear-gradient(to right, $start, $end);
 }
 
-.status {
-  padding: 10px;
-  background-color: #daa;
-  border-radius: 3px;
+& {
+  @include backgroundGradient($ycolor-blue-10b, #666);
+  color: #fff;
+  font-weight: 350;
+  margin: 0;
+  padding: 10px 25px;
 
-  .status-icon {
-    color: red;
+  &.SUCCESS {
+    @include backgroundGradient($ycolor-green-6b, #666);
+  }
+  &.FAILURE {
+    @include backgroundGradient($ycolor-red-2b, #666);
   }
 }
 
-.pure-g > div {
-  line-height: 23px;
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0;
 }
-
-.pure-g div:last-child {
+li {
+  display: inline-block;
+  width: 50%;
+  font-size: 16px;
+}
+li:last-child {
   text-align: right;
 }
 
-.SUCCESS {
-  background-color: #ada;
-  .status-icon {
-    color: green;
+h1 {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.line1 {
+  margin-bottom: 5px;
+  
+  span {
+    font-size: 2em;
+  }
+  li {
+    width: 33%;
+  }
+  li:last-child {
+    width: 34%;
   }
 }
 
-.QUEUED {
-  background-color: #aad;
-  .status-icon {
-    color: blue;
-  }
-}
-
-.RUNNING {
-  background-color: #aad;
-  .status-icon {
-    color: blue;
-  }
-}
-
-.build {
-  padding: 3px;
-  border: 1px solid #ccc;
+a {
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
 }

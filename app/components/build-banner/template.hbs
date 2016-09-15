@@ -1,20 +1,14 @@
-<div class="status {{build.status}}">
-  <div class="pure-g">
-    <div class="pure-u-1-24">
-      <span class="status-icon">{{fa-icon icon}}</span>
-    </div>
-    <div class="pure-u-15-24">
-      <span class="cause">{{build.cause}}</span>
-    </div>
-    <div class="pure-u-3-24">
-      <span class="branch">{{fa-icon "fa-code-fork"}} banana</span>
-    </div>
-    <div class="pure-u-3-24">
-      <span class="job">main</span>
-    </div>
-    <div class="pure-u-2-24">
-      <span class="actions"><input type="button" value="Actions"></span>
-    </div>
-  </div>
+<div class="line1">
+  <ul>
+    <li><h1>{{job.name}}</h1></li>
+    <li><a class="sha" href="{{pipeline.hubUrl}}"><span class="sha">#{{truncatedSha}}</span></a></li>
+    <li><span class="pipeline">{{pipeline.appId}}</span></li>
+        <!-- <span class="actions"><input type="button" value="Actions"></span> -->
+  </ul>
 </div>
+<ul>
+  <li><span class="cause">{{build.cause}}</span></li>
+  <li><span class="duration">{{moment-duration build.buildDuration}}</span></li>
+</ul>
+
 {{yield}}
