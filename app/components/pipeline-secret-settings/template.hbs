@@ -1,10 +1,12 @@
+{{info-message message=errorMessage type="error" icon="exclamation-triangle"}}
+
 <h2>Secrets</h2>
 <table class="secrets">
   <thead>
     <tr>
       <th>Key</th>
       <th>Value</th>
-      <th></th>
+      <th colspan="2">Allow in PR</th>
     </tr>
   </thead>
   <tbody>
@@ -16,6 +18,7 @@
     <tr class="new">
       <td class="key">{{input placeholder="key" size="40" value=newName key-up="enableButton"}}</td>
       <td class="pass">{{input type="password" placeholder="value" size="40" value=newValue key-up="enableButton"}}</td>
+      <td class="allow">{{input type="checkbox" checked=newAllow title="Check to allow this secret to be used in pull-requests"}}</td>
       <td><button disabled={{isButtonDisabled}} {{action "addNewSecret"}}>Add</button></td>
     </tr>
   </tfoot>
