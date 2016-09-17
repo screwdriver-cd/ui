@@ -1,0 +1,80 @@
+& {
+  padding: 15px;
+}
+
+ul {
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0;
+}
+
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-left: 18px solid white;
+  margin-right: -17px;
+  z-index: 1;
+}
+
+li {
+  background-color: $ycolor-gray-g;
+  display: inline-flex;
+  border-right-width: 0;
+  .arrow-right {
+    border-left-color: $ycolor-gray-g;
+  }
+}
+
+li:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-right-width:1px;
+  .arrow-right {
+    border-width: 0;
+  }
+}
+
+li:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+a {
+  padding: 5px 0;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  color: white;
+}
+
+.SUCCESS {
+  background-color: $ycolor-green-6b;
+  a {
+    color: white;
+  }
+  .arrow-right {
+    border-left-color: $ycolor-green-6b;
+  }
+}
+
+.FAILURE {
+  background-color: $ycolor-red-2b;
+  a {
+    color: white;
+  }
+  .arrow-right {
+    border-left-color: $ycolor-red-2b;
+  }
+}
+
+.arrow-right.shadow {
+  z-index: 0;
+  margin-right: -20px;
+  border-left: 19px solid white;
+}

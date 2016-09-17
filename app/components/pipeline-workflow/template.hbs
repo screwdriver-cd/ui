@@ -1,0 +1,5 @@
+<ul>
+  {{#each jobs as |job|}}
+  <li class={{ get (get-last-build job.builds) "status" }} style={{jobWidth}}>{{#link-to "build" (get (get-last-build job.builds) "id")}}{{job.name}}{{/link-to}}<div class="arrow-right"></div><div class="arrow-right shadow"></div></li>
+  {{/each}}
+</ul>
