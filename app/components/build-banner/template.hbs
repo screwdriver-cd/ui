@@ -1,14 +1,10 @@
 <div class="line1">
   <ul>
-    <li><h1>{{job.name}}</h1></li>
     <li><a class="sha" href="{{pipeline.hubUrl}}"><span class="sha">#{{truncatedSha}}</span></a></li>
-    <li>{{#link-to "pipeline" pipeline.id}}<span class="pipeline">{{pipeline.appId}}</span>{{/link-to}}</li>
-        <!-- <span class="actions"><input type="button" value="Actions"></span> -->
+    <li><h1>{{job.name}}</h1></li>
   </ul>
 </div>
 <ul>
   <li><span class="cause">{{build.cause}}</span></li>
   <li><span class="duration">{{moment-duration build.buildDuration}}</span></li>
 </ul>
-
-{{yield}}
