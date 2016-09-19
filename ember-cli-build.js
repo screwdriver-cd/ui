@@ -5,6 +5,9 @@ module.exports = function (defaults) {
     // Add options here
     'ember-font-awesome': {
       useScss: true // for ember-cli-sass
+    },
+    svg: {
+      paths: ['public/assets/svg']
     }
   });
 

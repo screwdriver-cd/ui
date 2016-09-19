@@ -1,3 +1,18 @@
+@mixin transition($prop, $duration, $delay: 0ms) {
+  -webkit-transition: $prop $duration $delay;
+  -moz-transition: $prop $duration $delay;
+  -ms-transition: $prop $duration $delay;
+  -o-transition: $prop $duration $delay;
+  transition: $prop $duration $delay;
+}
+
+@mixin backgroundGradient($dir, $start, $end) {
+  background: -webkit-linear-gradient($dir, $start, $end);
+  background: -o-linear-gradient($dir, $start, $end);
+  background: -moz-linear-gradient($dir, $start, $end);
+  background: linear-gradient($dir, $start, $end);
+}
+
 @import "font-awesome";
 @import "fuji-colors";
 @import "pod-styles";

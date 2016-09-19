@@ -1,9 +1,105 @@
 & {
-  width: 800px;
   margin: 0 auto;
+}
+
+.top {
+  text-align: center;
+  background: url('/assets/main_bkgrd_home.png') transparent;
+  background-size: cover;
+  background-position: 0 -50px;
+  color: #fff;
+  padding: 27px 0;
+
+  h1 {
+    margin: 0;
+    padding: 0;
+  }
+
+  p {
+    font-size: 16px;
+    width: 360px;
+    margin: 0 auto;
+  }
+
+  img {
+    width: 50px;
+  }
+
+  a {
+    font-size: 14px;
+    margin: 10px auto 0;
+    width: 150px;
+    display: block;
+    padding: 10px 0;
+    background-color: $ycolor-gray-h;
+    border-radius: 3px;
+    text-decoration: none;
+    color: $color-default-primary;
+  }
+}
+.row:nth-child(odd) {
+  background-color: $ycolor-gray-i;
   text-align: center;
 }
 
-.hero {
+.cell div {
+  padding: 10px 0;
+  width: 80%;
+  margin: 0 auto;
   text-align: left;
+
+  h2 {
+    color: $color-default-primary;
+    margin: 0;
+    padding: 0;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+    color: $ycolor-gray-b;
+  }
+}
+
+.cell {
+  padding: 25px 0;
+
+  img {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .cd {
+    height: 102px;
+  }
+
+  .dh {
+    height: 120px;
+  }
+  .code {
+    height: 150px;
+  }
+  .services {
+    height: 150px;
+  }
+}
+
+footer {
+  background: url('/assets/main_bkgrd_home.png') transparent;
+  background-size: cover;
+  color: #fff;
+  padding: 10px 0;
+
+  .license {
+    padding-left: 25px;
+  }
+
+  .copyright {
+    text-align: right;
+    padding-right: 25px;
+  }
+
+  a {
+    color: #fff;
+  }
 }

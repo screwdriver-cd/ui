@@ -1,8 +1,12 @@
+& {
+  padding-top: 5px;
+  background: url('/assets/main_bkgrd_home.png') transparent;
+  background-size: cover;
+  background-position: 0 -100px;
+}
+
 .pure-menu-horizontal {
-  background: -webkit-linear-gradient(left, #0078ff, #666);
-  background: -o-linear-gradient(right, #0078ff, #666);
-  background: -moz-linear-gradient(right, #0078ff, #666);
-  background: linear-gradient(to right, #0078ff, #666);
+  padding: 0 25px;
 }
 
 a {

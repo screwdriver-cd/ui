@@ -1,23 +1,49 @@
-<header class="page-header">
-  <a href="{{uiHostname}}"><div class="logo">
-    <img src="/assets/screwdriver.png" alt="screwdriver-logo"/>
-  </div></a>
+<div class="topBar">
+  <a href="/" class="logo">Screwdriver Home</a>
   <div class="search">
-    <div class="category" title="coming soon!">
-      All <span class="icon icon-arrow_down"></span>
-    </div>
     <form class="search-form" action="#search" method="GET">
       {{input class="search-input" name="query" placeholder="Enter your search terms" focus-in="onFocus" focus-out="onBlur"}}
     </form>
     <div class="search-icon">
-      <span class="icon icon-search"></span>
+      {{fa-icon "fa-search"}}
     </div>
   </div>
   <div class="right">
-    {{#if session.isAuthenticated}}
-      <a {{action 'invalidateSession'}}>Logout</a>
-    {{else}}
-      {{#link-to "login"}}Login{{/link-to}}
-    {{/if}}
+    <ul>
+      <li class="docs">
+        <a href="http://screwdriver.cd">
+          {{inline-svg "documentation" class="img"}}
+          <span>Docs</span>
+        </a>
+      </li>
+      <li class="community">
+        <a href="http://slack.screwdriver.cd">
+          {{inline-svg "community" class="img"}}
+          <span>Slack</span>
+        </a>
+      </li>
+      <li class="blog">
+        <a href="http://blog.screwdriver.cd">
+          {{inline-svg "blog" class="img"}}
+          <span>Blog</span>
+        </a>
+      </li>
+      <li class="github">
+        <a href="https://github.com/screwdriver-cd">
+          {{inline-svg "github" class="img"}}
+          <span>GitHub</span>
+        </a>
+      </li>
+      <li class="authButton">
+        {{#if session.isAuthenticated}}
+          <a {{action 'invalidateSession'}}>
+            {{inline-svg "login" class="img"}}
+            <span>Logout</span>
+          </a>
+        {{else}}
+          {{#link-to "login"}}{{inline-svg "login" class="img"}}<span>Login</span>{{/link-to}}
+        {{/if}}
+      </li>
+    </ul>
   </div>
-</header>
+</div>

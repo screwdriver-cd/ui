@@ -29,9 +29,8 @@ test('it renders', function (assert) {
   this.set('pipelineMock', pipelineMock);
   this.render(hbs`{{build-banner build=buildMock job=jobMock pipeline=pipelineMock}}`);
 
-  assert.ok($('h1').text().trim(), 'PR-671');
-  assert.ok($('.sha').text().trim(), '#abcd12');
-  assert.ok($('.pipeline').text().trim(), 'foo:bar');
-  assert.ok($('.cause').text().trim(), 'monkeys with typewriters');
-  assert.ok($('.duration').text().trim(), 'a few seconds');
+  assert.equal($('h1').text().trim(), 'PR-671');
+  assert.equal($('span.sha').text().trim(), '#abcd12');
+  assert.equal($('.cause').text().trim(), 'monkeys with typewriters');
+  assert.equal($('.duration').text().trim(), 'a few seconds');
 });

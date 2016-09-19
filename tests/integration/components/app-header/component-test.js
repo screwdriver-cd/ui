@@ -14,8 +14,12 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{app-header session=sessionMock}}`);
 
-  assert.ok(this.$('img').attr('src').match(/\/assets\/screwdriver\.png$/));
-  assert.ok(this.$('.right a').text().trim(), 'Login');
+  assert.equal(this.$('.logo').text().trim(), 'Screwdriver Home');
+  assert.equal(this.$('.docs a span').text().trim(), 'Docs');
+  assert.equal(this.$('.community a span').text().trim(), 'Slack');
+  assert.equal(this.$('.blog a span').text().trim(), 'Blog');
+  assert.equal(this.$('.github a span').text().trim(), 'GitHub');
+  assert.equal(this.$('.authButton a span').text().trim(), 'Login');
 });
 
 test('it calls the logout method on logout', function (assert) {
@@ -31,6 +35,6 @@ test('it calls the logout method on logout', function (assert) {
 
   this.render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
 
-  assert.ok(this.$('.right a').text().trim(), 'Logout');
-  this.$('.right a').click();
+  assert.ok(this.$('.authButton a span').text().trim(), 'Logout');
+  this.$('.authButton a').click();
 });
