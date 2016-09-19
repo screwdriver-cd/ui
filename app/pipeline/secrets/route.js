@@ -1,10 +1,13 @@
 import Ember from 'ember';
-
-export default Ember.Route.extend({
-  beforeModel() {
-    this.set('pipeline', this.modelFor('pipeline'));
-  },
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model() {
-    return this.get('pipeline.secrets').then(s => ({ secrets: s, pipeline: this.get('pipeline') }));
+    const pipeline = this.modelFor('pipeline');
+
+    return pipeline.get('secrets')
+      .then(secrets => ({
+        secrets,
+        pipeline
+      }));
   }
 });
