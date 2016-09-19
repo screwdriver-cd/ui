@@ -11,7 +11,6 @@
 }
 
 .topBar {
-  // @include backgroundGradient(rgba(24, 113, 74, 1), transparent, rgba(21, 0, 79, 1));
   @include backgroundGradient(rgba(0, 0, 0, 0.45), transparent);
   clear: both;
   height: 40px;

@@ -12,10 +12,8 @@
 
 .pure-menu-horizontal {
   padding: 0 25px;
-  // @include backgroundGradient($ycolor-blue-10b, #666);
 
   &.SUCCESS {
-    // @include backgroundGradient($ycolor-green-6b, #666);
     @include backgroundGradient(rgba(255, 0, 0, .7), transparent);
     a:hover {
       background-color: $ycolor-green-6a;
