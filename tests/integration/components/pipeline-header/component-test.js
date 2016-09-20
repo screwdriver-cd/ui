@@ -6,6 +6,7 @@ moduleForComponent('pipeline-header', 'Integration | Component | pipeline header
 });
 
 test('it renders', function (assert) {
+  const $ = this.$;
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelineMock = {
@@ -19,7 +20,7 @@ test('it renders', function (assert) {
   this.set('pipelineMock', pipelineMock);
   this.render(hbs`{{pipeline-header pipeline=pipelineMock}}`);
 
-  assert.equal(this.$('h1').text().trim(), 'batman/batmobile');
-  assert.equal(this.$('.branch').text().trim(), 'master');
-  assert.equal(this.$('a')[0].href, 'http://example.com/batman/batmobile');
+  assert.equal($('h1').text().trim(), 'batman/batmobile');
+  assert.equal($($('a').get(1)).text().trim(), 'master');
+  assert.equal($($('a').get(1)).attr('href'), 'http://example.com/batman/batmobile');
 });

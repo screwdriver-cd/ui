@@ -2,3 +2,6 @@
 {{#each pullRequests as |job|}}
   {{pipeline-pr-view job=job}}
 {{/each}}
+{{#unless pullRequests.length}}
+<span>No open pull requests</span>
+{{/unless}}
