@@ -15,19 +15,30 @@ export default DS.Model.extend({
   queuedDuration: Ember.computed('createTime', 'startTime', {
     get() {
       if (!this.get('startTime')) {
-        return 0;
+        return humanizeDuration(0);
       }
 
-      return ((this.get('startTime').getTime() - this.get('createTime').getTime()) / 1000);
+      const duration = this.get('startTime').getTime() - this.get('createTime').getTime();
+
+      return humanizeDuration(duration, { round: true, largest: 1 });
     }
   }),
   buildDuration: Ember.computed('startTime', 'endTime', {
     get() {
       if (!this.get('endTime')) {
-        return 0;
+        return humanizeDuration(0);
       }
 
-      return ((this.get('endTime').getTime() - this.get('startTime').getTime()) / 1000);
+      const duration = this.get('endTime').getTime() - this.get('startTime').getTime();
+
+      return humanizeDuration(duration, { round: true, largest: 1 });
+    }
+  }),
+  createTimeWords: Ember.computed('createTime', {
+    get() {
+      const duration = Date.now() - this.get('createTime').getTime();
+
+      return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
     }
   }),
   parameters: DS.attr(),

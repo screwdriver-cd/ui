@@ -17,8 +17,8 @@ test('it renders', function (assert) {
     createTime: now - 180000,
     startTime: now - 175000,
     endTime: now,
-    buildDuration: 175,
-    queuedDuration: 5
+    buildDuration: '2 minutes',
+    queuedDuration: '1 second'
   };
 
   this.set('buildMock', buildMock);
@@ -30,6 +30,6 @@ test('it renders', function (assert) {
   assert.equal(this.$('.created').text().trim(), moment(buildMock.createTime).format('lll'));
   assert.equal(this.$('.started').text().trim(), moment(buildMock.startTime).format('lll'));
   assert.equal(this.$('.completed').text().trim(), moment(buildMock.endTime).format('lll'));
-  assert.equal(this.$('.buildDuration').text().trim(), '3 minutes');
-  assert.equal(this.$('.queuedDuration').text().trim(), 'a few seconds');
+  assert.equal(this.$('.buildDuration').text().trim(), '2 minutes');
+  assert.equal(this.$('.queuedDuration').text().trim(), '1 second');
 });

@@ -20,11 +20,11 @@
   <dd class="completed">{{moment-format build.endTime 'lll'}}</dd>
   {{#if build.buildDuration}}
   <dt>Duration</dt>
-  <dd class="buildDuration">{{moment-duration build.buildDuration 'seconds'}}</dd>
+  <dd class="buildDuration">{{build.buildDuration}}</dd>
   {{/if}}
   {{#if build.queuedDuration}}
   <dt>Queued</dt>
-  <dd class="queuedDuration">{{moment-duration build.queuedDuration 'seconds'}}</dd>
+  <dd class="queuedDuration">{{build.queuedDuration}}</dd>
   {{/if}}
 </dl>
 {{yield}}
