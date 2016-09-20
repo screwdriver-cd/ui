@@ -5,9 +5,9 @@ RUN set -x \
    # Missing https for some magic reason
    && apk add --no-cache --update ca-certificates \
    && apk add --virtual .build-dependencies wget \
-   && wget $(wget -q -O - https://api.github.com/repos/screwdriver-cd/ui/releases/latest \
-       | awk '/browser_download_url/ { print $2 }' \
-       | sed 's/"//g') \
+   && wget -q -O - https://github.com/screwdriver-cd/ui/releases/latest \
+       | egrep -o '/screwdriver-cd/ui/releases/download/v[0-9.]*/sdui.tgz' \
+       | wget --base=http://github.com/ -i - -O sdui.tgz \
    && tar -xvzf sdui.tgz \
    && rm -rf sdui.tgz \
    # Cleanup packages
