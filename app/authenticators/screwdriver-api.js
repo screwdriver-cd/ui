@@ -1,10 +1,31 @@
 import Ember from 'ember';
 import Base from 'ember-simple-auth/authenticators/base';
-
+// eslint-disable-next-line camelcase
+import { jwt_decode } from 'ember-cli-jwt-decode';
 import ENV from 'screwdriver-ui/config/environment';
 const loginUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/login/web`;
 const tokenUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/token`;
 const logoutUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/logout`;
+
+/**
+ * Fetches a jwt from api and returns result in RSVP Promise
+ * @method fetchToken
+ * @return {Promise}
+ */
+function fetchToken() {
+  return new Ember.RSVP.Promise((resolve, reject) => {
+    // Call the token api to get the session info
+    Ember.$.ajax({
+      url: tokenUrl,
+      crossDomain: true,
+      xhrFields: {
+        withCredentials: true
+      }
+    })
+    .done(jwt => resolve(jwt))
+    .fail(() => reject('Could not get a token'));
+  });
+}
 
 export default Base.extend({
   /**
@@ -18,6 +39,13 @@ export default Base.extend({
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (!Ember.isEmpty(properties.get('token'))) {
+        const jwt = jwt_decode(properties.get('token'));
+
+        // Token expired, reject
+        if (jwt.exp * 1000 < Date.now()) {
+          return reject();
+        }
+
         return resolve(data);
       }
 
@@ -31,26 +59,19 @@ export default Base.extend({
    * @return {Promise}
    */
   authenticate() {
-    // TODO: just try to get token first
-    // Open a window for github auth flow
-    const win = window.open(loginUrl, 'SDAuth', 'modal=yes');
-
     return new Ember.RSVP.Promise((resolve, reject) => {
+      // Open a window for github auth flow
+      const win = window.open(loginUrl, 'SDAuth',
+        'width=1024,height=768,resizable,alwaysRaised');
+
       // check to see if the window has closed
       const interval = setInterval(() => {
-        if (win.closed) {
+        if (win == null || win.closed) {
           clearInterval(interval);
 
-          // Call the token api to get the session info
-          Ember.$.ajax({
-            url: tokenUrl,
-            crossDomain: true,
-            xhrFields: {
-              withCredentials: true
-            }
-          })
-          .done(jwt => resolve(jwt))
-          .fail(() => reject('Could not get a token'));
+          fetchToken().then(resolve, reject);
+        } else {
+          win.focus();
         }
       }, 100);
     });
