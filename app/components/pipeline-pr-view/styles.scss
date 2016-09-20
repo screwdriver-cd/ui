@@ -1,0 +1,25 @@
+.fa {
+  width: 10px;
+  color: $ycolor-blue-10b;
+}
+
+&.SUCCESS {
+  .fa {
+    color: $ycolor-green-6b;
+  }
+}
+
+&.FAILURE {
+  .fa {
+    color: $ycolor-red-2b;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: $ycolor-gray-b;
+}
+
+a span {
+  margin-left: 10px;
+}
