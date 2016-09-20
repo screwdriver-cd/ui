@@ -1,9 +1,33 @@
+workflow:
+  - publish
+
 shared:
-    image: node:6
+  image: node:6
 
 jobs:
-    main:
-        steps:
-            - install: npm install
-            - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
-            - test: npm test
+  main:
+    steps:
+      - install: npm install
+      - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
+      - test: npm test
+
+  publish:
+    environment:
+      RELEASE_FILE: sdui.tgz
+      DOCKER_REPO: screwdrivercd/ui
+    steps:
+      - setup-ci: git clone https://gist.github.com/3d2388b2a7ba658cdcdaffa8cd874e50.git ci
+      - install: npm install
+      - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
+      - build: ./node_modules/.bin/ember build --environment production
+      - package: tar -C dist -cvzf $RELEASE_FILE .
+      - tag: ./ci/git-tag.sh
+      - publish: ./ci/git-release.sh
+      - docker: ./ci/docker.sh
+    secrets:
+      # Pushing tags to Git
+      - GIT_KEY
+      # Pushing releases to GitHub
+      - GIT_TOKEN
+      # Trigger a Docker Hub build
+      - DOCKER_TRIGGER
