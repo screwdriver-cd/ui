@@ -28,6 +28,6 @@ jobs:
       # Pushing tags to Git
       - GIT_KEY
       # Pushing releases to GitHub
-      - GIT_TOKEN
+      - GITHUB_TOKEN
       # Trigger a Docker Hub build
       - DOCKER_TRIGGER
