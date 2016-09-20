@@ -8,13 +8,13 @@
 }
 
 &.success .status-icon {
-  color: green;
+  color: $ycolor-green-6b;
 }
 
 &.failure .status-icon {
-  color: red;
+  color: $ycolor-red-2b;
 }
 
 &.running .status-icon {
-  color: blue;
+  color: $ycolor-blue-10b;
 }
