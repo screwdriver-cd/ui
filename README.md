@@ -1,6 +1,6 @@
 # Screwdriver-ui
 
-[![Version][npm-image]][npm-url] ![Downloads][downloads-image] [![Build Status][wercker-image]][wercker-url] [![Open Issues][issues-image]][issues-url] [![Dependency Status][daviddm-image]][daviddm-url] ![License][license-image]
+[![Version][version-image]][version-url] ![Downloads][downloads-image] [![Build Status][build-image]][build-url] [![Open Issues][issues-image]][issues-url] [![Dependency Status][daviddm-image]][daviddm-url] ![License][license-image]
 
 This README outlines the details of collaborating on this Ember application.
 A short introduction of this app could easily go here.
@@ -56,13 +56,13 @@ Specify what it takes to deploy your app.
 ## License
 Code licensed under the BSD 3-Clause license. See LICENSE file for terms.
 
-[npm-image]: https://img.shields.io/npm/v/screwdriver-ui.svg
-[npm-url]: https://npmjs.org/package/screwdriver-ui
-[downloads-image]: https://img.shields.io/npm/dt/screwdriver-ui.svg
-[license-image]: https://img.shields.io/npm/l/screwdriver-ui.svg
+[version-image]: https://img.shields.io/github/tag/screwdriver-cd/ui.svg
+[version-url]: https://github.com/screwdriver-cd/ui/releases/
+[downloads-image]: https://img.shields.io/docker/pulls/screwdrivercd/ui.svg
+[license-image]: https://img.shields.io/github/license/screwdriver-cd/ui.svg
 [issues-image]: https://img.shields.io/github/issues/screwdriver-cd/ui.svg
 [issues-url]: https://github.com/screwdriver-cd/ui/issues
-[wercker-image]: https://app.wercker.com/status/a09ebe6f8fc9b3d011b8b6f048484f4f
-[wercker-url]: https://app.wercker.com/project/bykey/a09ebe6f8fc9b3d011b8b6f048484f4f
+[build-image]: https://cd.screwdriver.cd/pipelines/34b6834028c4c904dce3d9391c8b2dd4994ec6a9/badge
+[build-url]: https://cd.screwdriver.cd/pipelines/34b6834028c4c904dce3d9391c8b2dd4994ec6a9/
 [daviddm-image]: https://david-dm.org/screwdriver-cd/ui.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/screwdriver-cd/ui
