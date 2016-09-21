@@ -39,7 +39,7 @@ export default Ember.Component.extend(Ember.PromiseProxyMixin, {
 
         // add the build info to correct job in the workflow
         shas[sha].some(j => {
-          if (j.id === build.get('jobId')) {
+          if (j.id === build.get('jobId') && !j.build) {
             j.build = build;
 
             return true;
