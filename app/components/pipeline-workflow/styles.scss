@@ -55,21 +55,22 @@ a {
 
 .SUCCESS {
   background-color: $ycolor-green-6b;
-  a {
-    color: white;
-  }
   .arrow-right {
     border-left-color: $ycolor-green-6b;
   }
 }
 
-.FAILURE {
+.FAILURE, .ABORTED {
   background-color: $ycolor-red-2b;
-  a {
-    color: white;
-  }
   .arrow-right {
     border-left-color: $ycolor-red-2b;
+  }
+}
+
+.RUNNING, .QUEUED{
+  background-color: $ycolor-blue-10b;
+  .arrow-right {
+    border-left-color: $ycolor-blue-10b;
   }
 }
 
