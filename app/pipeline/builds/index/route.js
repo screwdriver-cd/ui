@@ -32,12 +32,10 @@ export default Ember.Route.extend({
   },
   model() {
     return this.get('pipeline.jobs')
-      // Get rid of disabled jobs
-      .then(jobs => jobs.filter(j => j.get('state') !== 'DISABLED'))
       // Split jobs from workflow
       .then(jobs => {
-        // filter out the PRs, reverse to get correct order
-        const workflowJobs = jobs.filter(j => !/^PR\-/.test(j.get('name'))).reverse();
+        // filter out the PRs
+        const workflowJobs = jobs.filter(j => !/^PR\-/.test(j.get('name')));
 
         // get all the builds and return results
         return getBuilds(workflowJobs).then(builds => ({
