@@ -79,3 +79,19 @@ a {
   margin-right: -20px;
   border-left: 19px solid white;
 }
+
+.right {
+  text-align: right;
+}
+
+button {
+  background-color: $ycolor-gray-f;
+  border: none;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+button:hover {
+  background-color: $color-default-primary;
+  color: #fff;
+}

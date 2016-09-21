@@ -1,5 +1,20 @@
+{{#if session.isAuthenticated}}
+<div class="pure-g">
+  <div class="pure-u-23-24">
+    <ul>
+      {{#each jobs as |job|}}
+      <li class={{ get (get-last-build job.builds) "status" }} style={{jobWidth}}>{{#link-to "build" (get (get-last-build job.builds) "id")}}{{job.name}}{{/link-to}}<div class="arrow-right"></div><div class="arrow-right shadow"></div></li>
+      {{/each}}
+    </ul>
+  </div>
+  <div class="pure-u-1-24 right">
+    <button {{action "startBuild"}}>Start</button>
+  </div>
+</div>
+{{else}}
 <ul>
   {{#each jobs as |job|}}
   <li class={{ get (get-last-build job.builds) "status" }} style={{jobWidth}}>{{#link-to "build" (get (get-last-build job.builds) "id")}}{{job.name}}{{/link-to}}<div class="arrow-right"></div><div class="arrow-right shadow"></div></li>
   {{/each}}
 </ul>
+{{/if}}
