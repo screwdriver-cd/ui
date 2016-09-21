@@ -9,7 +9,8 @@ module.exports = {
     'browser': true
   },
   globals: {
-    "ansi_up": true
+    "ansi_up": true,
+    "humanizeDuration": true
   },
   rules: {
     indent: ['error', 2],

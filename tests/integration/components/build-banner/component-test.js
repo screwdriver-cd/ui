@@ -13,7 +13,7 @@ test('it renders', function (assert) {
     status: 'SUCCESS',
     cause: 'monkeys with typewriters',
     sha: 'abcd1234567890',
-    buildDuration: 5000
+    buildDuration: '5 seconds'
   };
   const jobMock = {
     name: 'PR-671'
@@ -32,5 +32,5 @@ test('it renders', function (assert) {
   assert.equal($('h1').text().trim(), 'PR-671');
   assert.equal($('span.sha').text().trim(), '#abcd12');
   assert.equal($('.cause').text().trim(), 'monkeys with typewriters');
-  assert.equal($('.duration').text().trim(), 'a few seconds');
+  assert.equal($('.duration').text().trim(), '5 seconds');
 });

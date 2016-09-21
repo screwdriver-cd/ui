@@ -33,7 +33,7 @@ test('it renders and handles clicks', function (assert) {
   assert.notOk(this.get('isOpen'));
   assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-check'), 'success icon');
   assert.equal(this.$('.name').text().trim(), 'banana');
-  assert.equal(this.$('.duration').text().trim(), 'a minute');
+  assert.equal(this.$('.duration').text().trim(), '1 minute, 10 seconds');
   assert.ok(this.$(this.$('.chevron i').get(0)).hasClass('fa-chevron-down'),
     'chevron down before click');
   this.$('.name').click();

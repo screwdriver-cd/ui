@@ -23,8 +23,8 @@ test('it renders', function (assert) {
         createTime: now - 180000,
         startTime: now - 175000,
         endTime: now - 165000,
-        buildDuration: 5,
-        queuedDuration: 5,
+        buildDuration: '5 seconds',
+        queuedDuration: '5 seconds',
         status: 'SUCCESS'
       })
     },
@@ -39,8 +39,8 @@ test('it renders', function (assert) {
         createTime: now - 165000,
         startTime: now - 155000,
         endTime: now,
-        buildDuration: 155,
-        queuedDuration: 5,
+        buildDuration: '2 minutes',
+        queuedDuration: '5 seconds',
         status: 'SUCCESS'
       })
     }

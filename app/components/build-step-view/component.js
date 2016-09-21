@@ -65,12 +65,41 @@ export default Ember.Component.extend({
       const end = this.get('step.endTime');
 
       if (end && start) {
-        return Date.parse(end) - Date.parse(start);
+        const duration = Date.parse(end) - Date.parse(start);
+
+        return humanizeDuration(duration, { round: true, largest: 2 });
       }
 
       return null;
     }
   }),
+  startTimeFromNow: Ember.computed('step.startTime', 'now', {
+    get() {
+      const start = Date.parse(this.get('step.startTime'));
+
+      if (start) {
+        const duration = Date.now() - start;
+
+        return `${humanizeDuration(duration, { round: true, largest: 2 })} ago`;
+      }
+
+      return null;
+    }
+  }),
+
+  /**
+   * Update the property now every second
+   * @method timer
+   */
+  timer: function timer() {
+    const interval = 1000;
+
+    setInterval(() => {
+      Ember.run(() => {
+        this.notifyPropertyChange('now');
+      });
+    }, interval);
+  }.on('init'),
 
   click() {
     if (this.get('status') !== 'queued') {

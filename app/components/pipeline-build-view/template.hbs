@@ -6,7 +6,7 @@
     <span class="cause">{{commit.cause}}</span>
   </div>
   <div class="pure-u-1-5 right">
-    <span class="created" title="{{commit.createTime}}">{{moment-from-now commit.createTime}}</span>
+    <span class="created" title="{{commit.createTime}}">{{commit.createTimeWords}}</span>
   </div>
   <div class="pure-u-1-5">
   </div>
@@ -22,7 +22,7 @@
     {{/each}}
   </div>
   <div class="pure-u-1-5 right">
-    <span class="duration">{{moment-duration commit.buildDuration}}</span>
+    <span class="duration">{{commit.buildDuration}}</span>
   </div>
 </div>
 

@@ -19,9 +19,9 @@ test('it calculates queuedDuration', function (assert) {
   });
 
   Ember.run(() => {
-    assert.equal(model.get('queuedDuration'), 10);
+    assert.equal(model.get('queuedDuration'), '10 seconds');
     model.set('startTime', null);
-    assert.equal(model.get('queuedDuration'), 0);
+    assert.equal(model.get('queuedDuration'), '0 seconds');
   });
 });
 
@@ -32,8 +32,20 @@ test('it calculates buildDuration', function (assert) {
   });
 
   Ember.run(() => {
-    assert.equal(model.get('buildDuration'), 10);
+    assert.equal(model.get('buildDuration'), '10 seconds');
     model.set('endTime', null);
-    assert.equal(model.get('buildDuration'), 0);
+    assert.equal(model.get('buildDuration'), '0 seconds');
+  });
+});
+
+test('it humanizes createTime', function (assert) {
+  const createTime = new Date(1472244582531);
+  let model = this.subject({
+    createTime
+  });
+
+  Ember.run(() => {
+    assert.equal(model.get('createTimeWords'),
+    `${humanizeDuration(Date.now() - createTime, { round: true, largest: 1 })} ago`);
   });
 });
