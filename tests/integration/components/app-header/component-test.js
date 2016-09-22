@@ -14,12 +14,12 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{app-header session=sessionMock}}`);
 
-  assert.equal(this.$('.logo').text().trim(), 'Screwdriver Home');
-  assert.equal(this.$('.docs a span').text().trim(), 'Docs');
-  assert.equal(this.$('.community a span').text().trim(), 'Slack');
-  assert.equal(this.$('.blog a span').text().trim(), 'Blog');
-  assert.equal(this.$('.github a span').text().trim(), 'GitHub');
-  assert.equal(this.$('.authButton a span').text().trim(), 'Login');
+  assert.equal(this.$('.logo').prop('title'), 'Screwdriver Home');
+  assert.equal(this.$('.docs span').text().trim(), 'Docs');
+  assert.equal(this.$('.community span').text().trim(), 'Slack');
+  assert.equal(this.$('.blog span').text().trim(), 'Blog');
+  assert.equal(this.$('.github span').text().trim(), 'GitHub');
+  assert.equal(this.$('.auth span').text().trim(), 'Login');
 });
 
 test('it calls the logout method on logout', function (assert) {
@@ -35,6 +35,6 @@ test('it calls the logout method on logout', function (assert) {
 
   this.render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
 
-  assert.ok(this.$('.authButton a span').text().trim(), 'Logout');
-  this.$('.authButton a').click();
+  assert.ok(this.$('.auth span').text().trim(), 'Logout');
+  this.$('.auth').click();
 });

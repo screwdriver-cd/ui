@@ -1,5 +1,8 @@
 <div class="topBar">
-  <a href="/" class="logo">Screwdriver Home</a>
+  {{#link-to "home" class="logo" title="Screwdriver Home"}}
+    <img src="/assets/screwdriver.png" alt="Screwdriver Home">
+  {{/link-to}}
+
   <div class="search">
     <form class="search-form" action="#search" method="GET">
       {{input class="search-input" name="query" placeholder="Enter your search terms" focus-in="onFocus" focus-out="onBlur"}}
@@ -8,42 +11,36 @@
       {{fa-icon "fa-search"}}
     </div>
   </div>
+
+
   <div class="right">
-    <ul>
-      <li class="docs">
-        <a href="http://screwdriver.cd">
-          {{inline-svg "documentation" class="img"}}
-          <span>Docs</span>
-        </a>
-      </li>
-      <li class="community">
-        <a href="http://slack.screwdriver.cd">
-          {{inline-svg "community" class="img"}}
-          <span>Slack</span>
-        </a>
-      </li>
-      <li class="blog">
-        <a href="http://blog.screwdriver.cd">
-          {{inline-svg "blog" class="img"}}
-          <span>Blog</span>
-        </a>
-      </li>
-      <li class="github">
-        <a href="https://github.com/screwdriver-cd">
-          {{inline-svg "github" class="img"}}
-          <span>GitHub</span>
-        </a>
-      </li>
-      <li class="authButton">
-        {{#if session.isAuthenticated}}
-          <a {{action 'invalidateSession'}}>
-            {{inline-svg "login" class="img"}}
-            <span>Logout</span>
-          </a>
-        {{else}}
-          {{#link-to "login"}}{{inline-svg "login" class="img"}}<span>Login</span>{{/link-to}}
-        {{/if}}
-      </li>
-    </ul>
+    {{#link-to "create" title="Create a new Pipeline" class="icon create"}}
+      {{inline-svg "write" class="img"}}
+      <span>Create</span>
+    {{/link-to}}
+    <a href="http://screwdriver.cd" class="icon docs">
+      {{inline-svg "documentation" class="img"}}
+      <span>Docs</span>
+    </a>
+    <a href="http://slack.screwdriver.cd" class="icon community">
+      {{inline-svg "community" class="img"}}
+      <span>Slack</span>
+    </a>
+    <a href="http://blog.screwdriver.cd" class="icon blog">
+      {{inline-svg "blog" class="img"}}
+      <span>Blog</span>
+    </a>
+    <a href="https://github.com/screwdriver-cd" class="icon github">
+      {{inline-svg "github" class="img"}}
+      <span>GitHub</span>
+    </a>
+    {{#if session.isAuthenticated}}
+      <a {{action 'invalidateSession'}} class="icon auth">
+        {{inline-svg "login" class="img"}}
+        <span>Logout</span>
+      </a>
+    {{else}}
+      {{#link-to "login" class="icon auth"}}{{inline-svg "login" class="img"}}<span>Login</span>{{/link-to}}
+    {{/if}}
   </div>
 </div>
