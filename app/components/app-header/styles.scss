@@ -12,43 +12,36 @@
 
 .topBar {
   @include backgroundGradient(rgba(0, 0, 0, 0.45), transparent);
-  clear: both;
-  height: 40px;
-  padding: 5px 25px;
+  height: 45px;
+  padding: 5px 25px 0;
 }
 
 .logo {
-  background: url('/assets/screwdriver.png') no-repeat;
-  background-size: contain;
-  text-indent: -9000px;
+  display: inline-block;
   width: 40px;
   height: 40px;
+
+  img {
+    width: inherit;
+    height: inherit;
+  }
+}
+
+.icon {
   display: inline-block;
-}
-
-.right {
-  float: right;
-  text-align: right;
-}
-
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 5px 0 0 0;
-  font-size: 0;
-}
-
-li {
-  display: inline-block;
-  text-align: right;
-}
-
-a {
   height: 40px;
-  width: 50px;
+  width: 40px;
   color: #fff;
-  display: inline-block;
   text-decoration: none;
+  vertical-align: top;
+
+  .img {
+    margin-left: 7.5px;
+    fill: #fff;
+    height: 25px;
+    width: 25px;
+    display: block;
+  }
 
   span {
     text-align: center;
@@ -57,12 +50,9 @@ a {
   }
 }
 
-.img {
-  margin-left: 15px;
-  fill: #fff;
-  height: 20px;
-  width: 20px;
-  display: block;
+.right {
+  float: right;
+  text-align: right;
 }
 
 .search {
@@ -113,9 +103,4 @@ a {
 .search-focused {
   border: 1px solid #888;
   opacity: 1;
-}
-
-.yeilded {
-  color: white;
-  white-space: pre;
 }
