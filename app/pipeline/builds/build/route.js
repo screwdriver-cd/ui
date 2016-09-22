@@ -2,6 +2,9 @@ import Ember from 'ember';
 const RELOAD_TIMER = 5000;
 
 export default Ember.Route.extend({
+  titleToken(model) {
+    return `${model.job.get('name')} > #${model.build.get('sha').substr(0, 6)}`;
+  },
   model(params) {
     return this.store.findRecord('build', params.build_id).then(build => {
       // reload again in a little bit if queued
