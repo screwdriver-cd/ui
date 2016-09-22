@@ -9,4 +9,5 @@ test('it exists', function (assert) {
   let route = this.subject();
 
   assert.ok(route);
+  assert.equal(route.titleToken, 'Create Pipeline');
 });
