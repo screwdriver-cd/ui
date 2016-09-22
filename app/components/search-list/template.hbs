@@ -1,0 +1,10 @@
+<ul>
+  {{#each pipelines as |pipeline|}}
+  <li>
+    {{#link-to "pipeline" pipeline.id}}
+      <span class="appId">{{pipeline.appId}}</span>
+      <span class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.repoData.branch}}</span>
+    {{/link-to}}
+  </li>
+  {{/each}}
+</ul>
