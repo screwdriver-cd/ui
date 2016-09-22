@@ -6,7 +6,7 @@ import Pretender from 'pretender';
 let server;
 
 const singleRequest = () => {
-  server.get('http://localhost:8080/v3/builds/1/steps/banana/logs/', () => [
+  server.get('http://localhost:8080/v4/builds/1/steps/banana/logs/', () => [
     200,
     {
       'Content-Type': 'application/json',
