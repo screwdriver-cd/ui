@@ -11,7 +11,7 @@ moduleForComponent('build-step', 'Integration | Component | build step', {
   beforeEach() {
     server = new Pretender(function () {
       // Verifies passthrough of correct build id to log component
-      this.get('http://localhost:8080/v3/builds/1/steps/banana/logs', () => [
+      this.get('http://localhost:8080/v4/builds/1/steps/banana/logs', () => [
         200,
         { 'Content-Type': 'application/json', 'x-more-data': 'false' },
         JSON.stringify([{

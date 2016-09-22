@@ -43,7 +43,7 @@ test('it wraps non-array payload with model name', function (assert) {
   let adapter = this.subject();
 
   const requestData = {
-    url: 'http://localhost:8080/v3/builds/12345'
+    url: 'http://localhost:8080/v4/builds/12345'
   };
 
   const payload = adapter.handleResponse(200, {}, { id: 1234 }, requestData);
@@ -57,7 +57,7 @@ test('it wraps array payload with model name', function (assert) {
   let adapter = this.subject();
 
   const requestData = {
-    url: 'http://localhost:8080/v3/builds'
+    url: 'http://localhost:8080/v4/builds'
   };
 
   const payload = adapter.handleResponse(200, {}, [{ id: 1234 }], requestData);
@@ -71,7 +71,7 @@ test('it adds links to pipelines', function (assert) {
   let adapter = this.subject();
 
   const requestData = {
-    url: 'http://localhost:8080/v3/pipelines/1234324'
+    url: 'http://localhost:8080/v4/pipelines/1234324'
   };
 
   const payload = adapter.handleResponse(200, {}, { id: 1234 }, requestData);
@@ -85,7 +85,7 @@ test('it adds links to jobs', function (assert) {
   let adapter = this.subject();
 
   const requestData = {
-    url: 'http://localhost:8080/v3/pipelines/1234/jobs'
+    url: 'http://localhost:8080/v4/pipelines/1234/jobs'
   };
 
   const payload = adapter.handleResponse(200, {}, [{ id: 1234 }], requestData);
@@ -99,7 +99,7 @@ test('it adds links to jobs', function (assert) {
   let adapter = this.subject();
 
   const requestData = {
-    url: 'http://localhost:8080/v3/pipelines/1234/jobs'
+    url: 'http://localhost:8080/v4/pipelines/1234/jobs'
   };
 
   const payload = adapter.handleResponse(200, {}, [], requestData);
@@ -113,7 +113,7 @@ test('it wraps errors', function (assert) {
   let adapter = this.subject();
 
   const requestData = {
-    url: 'http://localhost:8080/v3/pipelines/1234/jobs'
+    url: 'http://localhost:8080/v4/pipelines/1234/jobs'
   };
 
   const payload = adapter.handleResponse(404, {}, { error: 'bananas' }, requestData);

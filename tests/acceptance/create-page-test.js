@@ -22,7 +22,7 @@ test('/create a pipeline: not logged in will redirect', function (assert) {
 });
 
 test('/create a pipeline: SUCCESS', function (assert) {
-  server.post('http://localhost:8080/v3/pipelines', () => [
+  server.post('http://localhost:8080/v4/pipelines', () => [
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
@@ -30,19 +30,19 @@ test('/create a pipeline: SUCCESS', function (assert) {
     })
   ]);
 
-  server.get('http://localhost:8080/v3/pipelines/abcd', () => [
+  server.get('http://localhost:8080/v4/pipelines/abcd', () => [
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
       id: 'abcd'
     })
   ]);
-  server.get('http://localhost:8080/v3/builds', () => [
+  server.get('http://localhost:8080/v4/builds', () => [
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify([])
   ]);
-  server.get('http://localhost:8080/v3/pipelines/abcd/jobs', () => [
+  server.get('http://localhost:8080/v4/pipelines/abcd/jobs', () => [
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify([])
@@ -66,7 +66,7 @@ test('/create a pipeline: SUCCESS', function (assert) {
 });
 
 test('/create a pipeline: FAILURE', function (assert) {
-  server.post('http://localhost:8080/v3/pipelines', () => [
+  server.post('http://localhost:8080/v4/pipelines', () => [
     409,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
