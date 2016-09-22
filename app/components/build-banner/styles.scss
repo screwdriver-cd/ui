@@ -8,6 +8,7 @@
   &.SUCCESS {
     background-color: $ycolor-green-6b;
   }
+  &.ABORTED,
   &.FAILURE {
     background-color: $ycolor-red-2b;
   }
@@ -23,6 +24,10 @@ li {
   display: inline-block;
   width: 50%;
   font-size: 16px;
+  text-align: center;
+}
+li:first-child {
+  text-align: left;
 }
 li:last-child {
   text-align: right;
@@ -37,6 +42,13 @@ h1 {
 .line1 {
   margin-bottom: 5px;
 
+  li {
+    vertical-align: middle;
+    width: 33%;
+  }
+  li:last-child {
+    width: 34%;
+  }
   span {
     font-size: 2em;
   }
@@ -46,4 +58,18 @@ a {
   color: #fff;
   cursor: pointer;
   text-decoration: none;
+}
+
+button {
+  font-size: 16px;
+  background-color: $ycolor-gray-i;
+  color: #000;
+  border: none;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+button:hover {
+  background-color: $ycolor-gray-g;
+  color: #000;
 }

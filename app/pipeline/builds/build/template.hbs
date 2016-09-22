@@ -1,4 +1,11 @@
-{{build-banner build=model.build pipeline=model.pipeline job=model.job}}
+{{build-banner
+  build=model.build
+  pipeline=model.pipeline
+  job=model.job
+  session=session
+  onStart=(action "startBuild")
+  onStop=(action "stopBuild")
+}}
 
 {{#if model.build.steps}}
 {{build-step-collection steps=model.build.steps build=model.build}}

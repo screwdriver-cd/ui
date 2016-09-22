@@ -8,5 +8,11 @@ export default Ember.Component.extend({
 
       return Ember.String.htmlSafe(`width:${width}%`);
     }
-  })
+  }),
+
+  actions: {
+    startBuild() {
+      this.get('onStartBuild')();
+    }
+  }
 });

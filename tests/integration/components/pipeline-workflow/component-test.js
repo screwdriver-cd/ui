@@ -36,4 +36,40 @@ test('it renders', function (assert) {
   assert.equal(this.$('li').attr('style'), 'width:100%');
   assert.equal(this.$('li').attr('class'), 'SUCCESS');
   assert.equal(this.$('a').attr('href'), '/builds/123');
+  assert.equal(this.$('button').length, 0);
+});
+
+test('it renders a button when logged in', function (assert) {
+  assert.expect(6);
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
+  // eslint-disable-next-line new-cap
+  const builds = Ember.A([
+    Ember.Object.create({ id: '123', status: 'SUCCESS' })
+  ]);
+
+  const jobs = [
+    Ember.Object.create({ id: 'abcd', name: 'hello', builds })
+  ];
+
+  this.set('sessionMock', {
+    isAuthenticated: true
+  });
+  this.set('jobsMock', jobs);
+  this.set('externalStart', () => {
+    assert.ok(true);
+  });
+
+  this.render(hbs`{{pipeline-workflow
+    jobs=jobsMock
+    session=sessionMock
+    onStartBuild=(action externalStart)
+  }}`);
+
+  assert.equal(this.$('a').text().trim(), 'hello');
+  assert.equal(this.$('li').attr('style'), 'width:100%');
+  assert.equal(this.$('li').attr('class'), 'SUCCESS');
+  assert.equal(this.$('a').attr('href'), '/builds/123');
+  assert.equal(this.$('button').text().trim(), 'Start');
+  this.$('button').click();
 });
