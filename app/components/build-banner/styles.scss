@@ -37,6 +37,8 @@ h1 {
   display: inline-block;
   margin: 0;
   padding: 0;
+  font-size: 24px;
+  font-weight: 600;
 }
 
 .line1 {
@@ -49,9 +51,6 @@ h1 {
   li:last-child {
     width: 34%;
   }
-  span {
-    font-size: 2em;
-  }
 }
 
 a {
@@ -60,16 +59,30 @@ a {
   text-decoration: none;
 }
 
+.sha {
+  font-weight: 300;
+  font-size: 20px;
+}
+
 button {
-  font-size: 16px;
-  background-color: $ycolor-gray-i;
-  color: #000;
-  border: none;
-  border-radius: 3px;
+  font-size: 14px;
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 2px;
   padding: 5px;
+  width: 100px;
 }
 
 button:hover {
-  background-color: $ycolor-gray-g;
-  color: #000;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.duration {
+  font-size: 14px;
+  font-style: italic;
+}
+
+.cause {
+  font-size: 14px;
 }

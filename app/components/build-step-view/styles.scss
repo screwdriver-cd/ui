@@ -1,6 +1,12 @@
 & {
   padding: 10px 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid $ycolor-gray-4;
+  color: $ycolor-gray-11;
+  font-size: 14px;
+}
+
+.duration {
+  font-style: italic;
 }
 
 .pure-g div:last-child {

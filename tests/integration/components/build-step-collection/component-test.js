@@ -8,11 +8,15 @@ moduleForComponent('build-step-collection',
 );
 
 test('it renders', function (assert) {
+  const $ = this.$;
+
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   this.set('stepsMock', []);
   this.set('buildMock', {});
   this.render(hbs`{{build-step-collection steps=stepsMock build=buildMock}}`);
 
-  assert.equal(this.$().text().trim(), 'Steps');
+  assert.equal($('h6').text().trim(), 'Steps');
+  assert.equal($($('.heading').get(0)).text().trim(), 'Step');
+  assert.equal($($('.heading').get(1)).text().trim(), 'Duration');
 });

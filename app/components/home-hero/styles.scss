@@ -37,6 +37,12 @@
     color: $color-default-primary;
   }
 }
+
+.rowContent {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
 .row:nth-child(odd) {
   background-color: $ycolor-gray-i;
   text-align: center;

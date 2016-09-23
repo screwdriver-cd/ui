@@ -52,6 +52,12 @@ a {
   font-size: 16px;
   color: white;
 }
+a:hover {
+  text-decoration: underline;
+}
+li:hover {
+  opacity: 0.9;
+}
 
 .SUCCESS {
   background-color: $ycolor-green-6b;
@@ -85,13 +91,17 @@ a {
 }
 
 button {
-  background-color: $ycolor-gray-f;
-  border: none;
-  border-radius: 3px;
+  border: 1px solid $ycolor-blue-1a;
+  background-color: #fff;
+  color: $ycolor-blue-1a;
+  width: 100px;
+  font-size: 14px;
+  border-radius: 2px;
   padding: 5px;
+  font-weight: 300;
 }
 
 button:hover {
-  background-color: $color-default-primary;
-  color: #fff;
+  border-color: $ycolor-blue-3;
+  color: $ycolor-blue-3;
 }
