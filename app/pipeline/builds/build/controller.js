@@ -15,7 +15,8 @@ export default Ember.Controller.extend({
       const jobId = this.get('model.build.jobId');
       const build = this.store.createRecord('build', { jobId });
 
-      build.save().then(() => this.transitionToRoute('pipeline.builds.build', build.get('id')));
+      return build.save()
+        .then(() => this.transitionToRoute('pipeline.builds.build', build.get('id')));
     }
   }
 });

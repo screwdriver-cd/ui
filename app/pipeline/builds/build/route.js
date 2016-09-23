@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const RELOAD_TIMER = 5000;
+import ENV from 'screwdriver-ui/config/environment';
 
 export default Ember.Route.extend({
   titleToken(model) {
@@ -10,7 +10,11 @@ export default Ember.Route.extend({
       // reload again in a little bit if queued
       const reloadQueuedBuild = () => {
         if (build.get('status') === 'QUEUED') {
-          setTimeout(() => build.reload().then(reloadQueuedBuild), RELOAD_TIMER);
+          Ember.run.later(this, () => {
+            if (!build.get('isDeleted')) {
+              build.reload().then(reloadQueuedBuild);
+            }
+          }, ENV.APP.RELOAD_TIMER);
         }
       };
 

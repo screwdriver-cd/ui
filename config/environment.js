@@ -17,7 +17,8 @@ module.exports = (environment) => {
       // when it is created
       SDAPI_HOSTNAME: 'http://localhost:8080',
       SDUI_HOSTNAME: 'http://localhost:4200',
-      SDAPI_NAMESPACE: 'v4'
+      SDAPI_NAMESPACE: 'v4',
+      RELOAD_TIMER: 5000
     },
     moment: {
       allowEmpty: true // allow empty dates
