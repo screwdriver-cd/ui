@@ -1,6 +1,6 @@
 <div class="line1">
   <ul>
-    <li><a class="sha" href="{{pipeline.hubUrl}}"><span class="sha">#{{truncatedSha}}</span></a></li>
+    <li><a href="{{pipeline.hubUrl}}"><span class="sha">#{{truncatedSha}}</span></a></li>
     <li><h1>{{job.name}}</h1></li>
     {{#if session.isAuthenticated}}
     <li>{{#if hasButton}}<button {{action "toggleBuild"}}>{{buildAction}}</button>{{/if}}</li>

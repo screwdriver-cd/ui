@@ -1,7 +1,7 @@
 & {
   padding: 10px;
-  border-bottom: 1px solid $ycolor-gray-h;
-  color: $ycolor-gray-c;
+  border-bottom: 1px solid $ycolor-gray-4;
+  color: $ycolor-gray-11;
 }
 
 h6 {
@@ -10,13 +10,10 @@ h6 {
   font-size: 16px;
 
   a {
-    color: $ycolor-blue-10b;
+    color: $ycolor-blue-1a;
     text-decoration: none;
+    font-weight: 600;
   }
-}
-
-.duration {
-  font-style: italic;
 }
 
 .right {
@@ -40,4 +37,12 @@ h6 {
 }
 .RUNNING .job, .QUEUED .job {
   background-color: $ycolor-blue-10b;
+}
+
+.duration, .created {
+  font-size: 14px;
+  color: $ycolor-gray-6;
+}
+.duration {
+  font-style: italic;
 }

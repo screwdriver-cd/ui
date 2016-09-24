@@ -11,7 +11,6 @@
 }
 
 .topBar {
-  @include backgroundGradient(rgba(0, 0, 0, 0.45), transparent);
   height: 45px;
   padding: 5px 25px 0;
 }
@@ -30,23 +29,33 @@
 .icon {
   display: inline-block;
   height: 40px;
-  width: 40px;
+  width: 60px;
   color: #fff;
   text-decoration: none;
   vertical-align: top;
+  opacity: 0.7;
 
   .img {
-    margin-left: 7.5px;
+    margin-left: 17.5px;
     fill: #fff;
-    height: 25px;
-    width: 25px;
+    height: 20px;
+    width: 20px;
     display: block;
+    opacity: 0.7;
+    margin-bottom: 2px;
   }
 
   span {
     text-align: center;
     display: block;
-    font-size: 10px;
+    font-size: 14px;
+  }
+}
+
+.icon:hover, .icon.active {
+  opacity: 1;
+  .img {
+    opacity: 1;
   }
 }
 
