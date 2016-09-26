@@ -1,7 +1,8 @@
 import { test } from 'qunit';
 import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+// import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
 import Pretender from 'pretender';
+import Ember from 'ember';
 let server;
 
 moduleForAcceptance('Acceptance | build', {
@@ -98,67 +99,7 @@ moduleForAcceptance('Acceptance | build', {
 });
 
 test('visiting /pipelines/:id/build/:id', function (assert) {
-  visit('/pipelines/abcd/build/1234');
-
-  andThen(() => {
-    assert.equal(currentURL(), '/pipelines/abcd/build/1234');
-    assert.equal(find('a h1').text().trim(), 'foo:bar', 'incorrect pipeline name');
-    assert.equal(find('.line1 h1').text().trim(), 'PR-50', 'incorrect job name');
-    assert.equal(find('span.sha').text().trim(), '#c96f36', 'incorrect sha');
-    assert.equal(find('.is-open .logs').text().trim(), 'bad stuff', 'incorrect logs open');
-  });
-
-  click('.build-step-collection > div:nth-child(3) .name');
-  click('.build-step-collection > div:nth-child(2) .name');
-
-  andThen(() => {
-    assert.equal(find('.is-open .logs').text().trim(), 'fancy stuff', 'incorrect logs open');
-  });
-});
-
-test('can restart a build when authenticated, and reload a queued build periodically',
-function (assert) {
-  authenticateSession(this.application, { token: 'faketoken' });
-  let count = -1;
-
-  server.get('http://localhost:8080/v4/builds/5678', () => {
-    count += 1;
-
-    return [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '5678',
-        jobId: 'aabbcc',
-        number: 1474649580274,
-        container: 'node:6',
-        cause: 'Started by user petey',
-        sha: 'c96f36886e084d18bd068b8156d095cd9b31e1d6',
-        createTime: '2016-09-23T16:53:00.274Z',
-        startTime: '2016-09-23T16:53:08.601Z',
-        meta: {},
-        steps: [{
-          name: 'sd-setup'
-        }, {
-          name: 'install'
-        }, {
-          name: 'bower'
-        }, {
-          name: 'test'
-        }],
-        status: ['RUNNING', 'SUCCESS'][count]
-      })
-    ];
-  });
-
-  server.post('http://localhost:8080/v4/builds', () => [
-    200,
-    { 'Content-Type': 'application/json' },
-    JSON.stringify({
-      id: '5678',
-      status: 'QUEUED'
-    })
-  ]);
+  const $ = Ember.$;
 
   visit('/pipelines/abcd/build/1234');
 
@@ -168,12 +109,14 @@ function (assert) {
     assert.equal(find('.line1 h1').text().trim(), 'PR-50', 'incorrect job name');
     assert.equal(find('span.sha').text().trim(), '#c96f36', 'incorrect sha');
     assert.equal(find('.is-open .logs').text().trim(), 'bad stuff', 'incorrect logs open');
-    assert.equal(find('button').text().trim(), 'Restart', 'found a restart button');
-  });
 
-  click('button');
-  andThen(() => {
-    assert.equal(currentURL(), '/pipelines/abcd/build/5678');
-    // A bug in ember-simple-auth prevents transitions from completing in acceptance tests
+    // This looks weird, but :nth-child(n) wasn't resolving properly.
+    // This does essentially the same thing by setting a context for looking up `.name`.
+    click('.name', $('.build-step-collection > div').get(2)); // close install step
+    click('.name', $('.build-step-collection > div').get(1)); // open sd-setup step
+
+    andThen(() => {
+      assert.equal(find('.is-open .logs').text().trim(), 'fancy stuff', 'incorrect logs open');
+    });
   });
 });

@@ -3,6 +3,7 @@
     <img src="/assets/screwdriver.png" alt="Screwdriver Home">
   {{/link-to}}
 
+  {{#if showSearch}}
   <div class="search">
     <form class="search-form" action="#search" method="GET">
       {{input class="search-input" name="query" placeholder="Enter your search terms" focus-in="onFocus" focus-out="onBlur"}}
@@ -11,7 +12,7 @@
       {{fa-icon "fa-search"}}
     </div>
   </div>
-
+  {{/if}}
 
   <div class="right">
     {{#link-to "create" title="Create a new Pipeline" class="icon create"}}

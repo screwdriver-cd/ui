@@ -20,6 +20,7 @@ test('it renders', function (assert) {
   assert.equal(this.$('.blog span').text().trim(), 'Blog');
   assert.equal(this.$('.github span').text().trim(), 'GitHub');
   assert.equal(this.$('.auth span').text().trim(), 'Login');
+  assert.equal(this.$('.search').length, 0, 'Search bar displayed');
 });
 
 test('it calls the logout method on logout', function (assert) {
@@ -37,4 +38,20 @@ test('it calls the logout method on logout', function (assert) {
 
   assert.ok(this.$('.auth span').text().trim(), 'Logout');
   this.$('.auth').click();
+});
+
+test('it shows the search bar', function (assert) {
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
+  this.set('sessionMock', {
+    isAuthenticated: false
+  });
+
+  this.render(hbs`{{app-header session=sessionMock showSearch=true}}`);
+
+  assert.equal(this.$('.search').length, 1, 'Search bar displayed');
+  this.$('.search input').focusin();
+  assert.ok(this.$('.search').hasClass('search-focused'), 'focused');
+  this.$('.search input').focusout();
+  assert.notOk(this.$('.search').hasClass('search-focused'), 'blurred');
 });

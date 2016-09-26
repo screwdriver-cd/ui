@@ -12,7 +12,9 @@ module.exports = {
     '*/application/template.js',
     '*/login/template.js',
     '*/pipeline/template.js',
-    '*/pipeline/**/template.js'
+    '*/pipeline/**/template.js',
+    // This route should get removed. It is simply a redirect right now.
+    '**/build/route.js'
   ],
   coverageFolder: process.env.COVERAGE_DIR || 'coverage',
   useBabelInstrumenter: false
