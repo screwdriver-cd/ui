@@ -11,6 +11,7 @@ export default Ember.Component.extend({
   isOpen: false,
   // last line processed in log loader
   lastLine: 0,
+  logContent: '',
 
   // Start loading logs immediately upon inserting the element if the panel is open
   didInsertElement() {
@@ -60,41 +61,50 @@ export default Ember.Component.extend({
       const build = this.get('build');
       const buildId = build.get('id');
       const name = this.get('step.name');
-      const logContainer = this.$('.logs');
       const logNumber = this.get('lastLine');
 
-      // Flag so we don't fire new requests while waiting for this to return
-      this.set('isLoading', true);
+      // Schedule log refresh run loop
+      Ember.run.schedule('actions', () => {
+        // Flag so we don't fire new requests while waiting for this to return
+        this.set('isLoading', true);
 
-      // Fetch logs
-      const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/` +
-        `${buildId}/steps/${name}/logs`;
+        // Fetch logs
+        const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/` +
+          `${buildId}/steps/${name}/logs`;
 
-      Ember.$.ajax({ url, data: { from: logNumber } })
-        .done((data, textStatus, jqXHR) => {
-          if (Array.isArray(data) && data.length) {
-            // Add lines to log container
-            data.forEach(line => {
-              logContainer.append(`${ansi_up.ansi_to_html(line.m)}\n`);
+        Ember.$.ajax({ url, data: { from: logNumber } })
+          .done((data, textStatus, jqXHR) => {
+            // render refresh, now
+            Ember.run(() => {
+              if (Array.isArray(data) && data.length) {
+                // Add lines to log container
+                data.forEach(line => {
+                  this.set('logContent',
+                    `${this.get('logContent')}${ansi_up.ansi_to_html(line.m)}\n`
+                  );
+                });
+                // Update the last line we processed for next load
+                this.set('lastLine', data[data.length - 1].n + 1);
+                // scroll to bottom of logs
+                if (this.$('.bottom').length === 1) {
+                  window.scrollTo(0, this.$('.bottom').offset().top);
+                }
+              }
+              // Set flag for done based on headers
+              this.set('finishedLoading', jqXHR.getResponseHeader('x-more-data') === 'false');
+
+              if (this.get('finishedLoading') && build.get('status') === 'RUNNING') {
+                // if build is running and step is done, reload build
+                build.reload();
+              }
             });
-            // Update the last line we processed for next load
-            this.set('lastLine', data[data.length - 1].n + 1);
-            // scroll to bottom of logs
-            window.scrollTo(0, this.$('.bottom').offset().top);
-            // Set flag for done based on headers
-            this.set('finishedLoading', jqXHR.getResponseHeader('x-more-data') === 'false');
-
-            if (this.get('finishedLoading') && build.get('status') === 'RUNNING') {
-              // if build is running and step is done, reload build
-              build.reload();
-            }
-          }
-        })
-        .always(() => {
-          // Unset loading flag and try again soon.
-          this.set('isLoading', false);
-          setTimeout(() => { this.logs(); }, 1000);
-        });
+          })
+          .always(() => {
+            // Unset loading flag and try again soon.
+            this.set('isLoading', false);
+            Ember.run.later(() => this.logs(), 1000);
+          });
+      });
     }
   }
 });
