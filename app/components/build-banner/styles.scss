@@ -1,17 +1,21 @@
 & {
   margin: 10px 25px 0;
-  border-radius: 3px;
-  background-color: $ycolor-blue-10a;
-  color: #fff;
-  padding: 10px 25px;
 
-  &.SUCCESS {
-    background-color: $ycolor-green-6b;
+  &.SUCCESS .line1 {
+    @include backgroundGradient(to right, $ycolor-teal-1b, $ycolor-green-2a);
   }
-  &.ABORTED,
-  &.FAILURE {
-    background-color: $ycolor-red-2b;
+  &.ABORTED .line1,
+  &.FAILURE .line1 {
+    @include backgroundGradient(to right, $ycolor-red-2a, $color-punch-a);
   }
+
+}
+
+.line1 {
+  border-radius: 3px;
+  @include backgroundGradient(to right, $ycolor-blue-1a, $ycolor-blue-10b);
+  color: #fff;
+  padding: 6px 6px 6px 20px;
 }
 
 ul {
@@ -85,4 +89,8 @@ button:hover {
 
 .cause {
   font-size: 14px;
+}
+
+.line2 {
+  color: $ycolor-gray-6;
 }

@@ -1,12 +1,16 @@
 & {
-  padding: 10px 10px;
-  border-bottom: 1px solid $ycolor-gray-4;
+  padding: 10px 0;
+  border-bottom: 1px solid $ycolor-gray-2;
   color: $ycolor-gray-11;
   font-size: 14px;
 }
 
 .duration {
   font-style: italic;
+  color: $ycolor-gray-11;
+}
+.chevron {
+  color: $ycolor-gray-6;
 }
 
 .pure-g div:last-child {
