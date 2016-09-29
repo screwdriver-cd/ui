@@ -54,6 +54,7 @@ test('it renders closed', function (assert) {
 });
 
 test('it renders open when told to', function (assert) {
+  assert.expect(1);
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const stepMock = {
@@ -70,10 +71,12 @@ test('it renders open when told to', function (assert) {
   });
 
   server.map(singleRequest);
+
   this.set('stepMock', stepMock);
   this.set('buildMock', buildMock);
+  this.set('open', true);
 
-  this.render(hbs`{{build-log build=buildMock step=stepMock isOpen=true}}`);
+  this.render(hbs`{{build-log build=buildMock step=stepMock isOpen=open}}`);
 
   return wait().then(() => {
     assert.equal(this.$().text().trim(), 'hello, world');
