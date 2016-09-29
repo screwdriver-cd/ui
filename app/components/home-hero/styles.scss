@@ -4,9 +4,8 @@
 
 .top {
   text-align: center;
-  background: url('/assets/main_bkgrd_home.png') transparent;
-  background-size: cover;
-  background-position: 0 -50px;
+  background: url('/assets/main_bkgrd_home_bottom.png') transparent no-repeat;
+  background-size: 100% 100%;
   color: #fff;
   padding: 27px 0;
 
@@ -49,7 +48,7 @@
 }
 
 .cell div {
-  padding: 10px 0;
+  padding: 10px 25px;
   margin: 0 auto;
   text-align: left;
 
