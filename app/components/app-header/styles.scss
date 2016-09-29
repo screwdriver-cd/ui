@@ -6,9 +6,20 @@
 }
 
 & {
-  background: url('/assets/main_bkgrd_home.png') transparent;
-  background-size: cover;
+  background: url('/assets/main_bkgrd_home_top.png') transparent no-repeat;
+  background-size: 100% 100%;
+  height: 50px;
+  overflow: hidden;
+  -webkit-transition: height 0.5s;
+  -moz-transition: height 0.5s;
+  -ms-transition: height 0.5s;
+  transition: height 0.5s;
+
+  &.open {
+    height: 90px;
+  }
 }
+
 
 .topBar {
   height: 45px;
@@ -24,6 +35,10 @@
     width: inherit;
     height: inherit;
   }
+}
+
+.custom-menu {
+  text-align: right;
 }
 
 .icon {
@@ -112,4 +127,59 @@
 .search-focused {
   border: 1px solid #888;
   opacity: 1;
+}
+
+.custom-toggle {
+  width: 34px;
+  height: 34px;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+}
+
+.custom-toggle .bar {
+  background-color: #fff;
+  display: block;
+  width: 20px;
+  height: 2px;
+  border-radius: 100px;
+  position: absolute;
+  top: 18px;
+  right: 7px;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.custom-toggle .bar:first-child {
+  -webkit-transform: translateY(-6px);
+  -moz-transform: translateY(-6px);
+  -ms-transform: translateY(-6px);
+  transform: translateY(-6px);
+}
+
+.custom-toggle.x .bar {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.custom-toggle.x .bar:first-child {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+@media (max-width: 47.999em) {
+  .custom-menu {
+    text-align: left;
+  }
+  .custom-toggle {
+    display: block;
+  }
 }
