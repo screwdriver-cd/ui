@@ -75,7 +75,7 @@ export default DS.RESTAdapter.extend({
    */
   handleResponse(status, headers, payload, requestData) {
     // handle generically when there is an error key in the payload
-    if (payload.error) {
+    if (payload && payload.error) {
       return this._super(status, headers, { errors: payload }, requestData);
     }
 

@@ -120,3 +120,15 @@ test('it wraps errors', function (assert) {
 
   assert.ok(payload instanceof DS.AdapterError);
 });
+
+test('it takes care of empty payload', function (assert) {
+  let adapter = this.subject();
+
+  const requestData = {
+    url: 'http://localhost:8080/v4/pipelines/1234'
+  };
+
+  const payload = adapter.handleResponse(204, {}, null, requestData);
+
+  assert.deepEqual(payload, {});
+});
