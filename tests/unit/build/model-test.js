@@ -32,8 +32,14 @@ test('it calculates buildDuration', function (assert) {
   });
 
   Ember.run(() => {
+    // valid duration
     assert.equal(model.get('buildDuration'), '10 seconds');
+    // no end time, so duration is 0
     model.set('endTime', null);
+    assert.equal(model.get('buildDuration'), '0 seconds');
+    // no start time, so duration is 0
+    model.set('endTime', new Date(1472244592531));
+    model.set('startTime', null);
     assert.equal(model.get('buildDuration'), '0 seconds');
   });
 });

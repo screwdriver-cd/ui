@@ -25,7 +25,7 @@ export default DS.Model.extend({
   }),
   buildDuration: Ember.computed('startTime', 'endTime', {
     get() {
-      if (!this.get('endTime')) {
+      if (!this.get('endTime') || !this.get('startTime')) {
         return humanizeDuration(0);
       }
 
