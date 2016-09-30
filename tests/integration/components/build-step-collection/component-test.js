@@ -16,7 +16,7 @@ test('it renders', function (assert) {
   this.set('buildMock', {});
   this.render(hbs`{{build-step-collection steps=stepsMock build=buildMock}}`);
 
-  assert.equal($('h6').text().trim(), 'Steps');
-  assert.equal($($('.heading').get(0)).text().trim(), 'Step');
-  assert.equal($($('.heading').get(1)).text().trim(), 'Duration');
+  assert.equal($($('.heading').get(0)).text().trim(), 'Status');
+  assert.equal($($('.heading').get(1)).text().trim(), 'Step');
+  assert.equal($($('.heading').get(2)).text().trim(), 'Duration');
 });

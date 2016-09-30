@@ -1,13 +1,14 @@
 & {
-  padding: 0 25px;
+  padding: 10px 25px;
 }
 
 .info-message {
   margin-top: 10px;
 }
 
-h2 {
-  color: $ycolor-gray-c;
+table {
+  width: 100%;
+  font-weight: 300;
 }
 
 tbody tr {
@@ -15,16 +16,16 @@ tbody tr {
 }
 
 th {
-  font-weight: normal;
-  color: #999;
-  font-style: italic;
+  font-weight: 300;
+  color: $ycolor-gray-6;
+  text-transform: uppercase;
   text-align: left;
   padding-left: 5px;
 }
 
 .new td {
   padding: 5px;
-  background-color: #ddd;
+  background-color: $ycolor-gray-4;
 }
 
 tfoot button {
