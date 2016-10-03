@@ -78,3 +78,23 @@ test('it calls action to create secret', function (assert) {
   assert.equal(this.$('.pass input').val(), '');
   assert.ok(this.$('tfoot button').prop('disabled'), 'not disabled');
 });
+
+test('it displays an error', function (assert) {
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
+  this.set('mockPipeline', { id: 'abcd' });
+  this.set('externalAction', () => {
+    assert.fail('should not get here');
+  });
+
+  // eslint-disable-next-line max-len
+  this.render(hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`);
+
+  this.$('.key input').val('0banana').keyup();
+  this.$('.pass input').val('0value').keyup();
+  this.$('tfoot button').click();
+
+  // and clears the new secret form elements
+  assert.equal(this.$('.info-message span').text().trim(),
+    'Secret name does not meet requirements /^[A-Z_][A-Z0-9_]*$/');
+});

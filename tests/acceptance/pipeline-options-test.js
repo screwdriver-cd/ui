@@ -1,0 +1,47 @@
+import { test } from 'qunit';
+import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
+import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import Pretender from 'pretender';
+let server;
+
+moduleForAcceptance('Acceptance | pipeline/options', {
+  beforeEach() {
+    server = new Pretender();
+
+    server.get('http://localhost:8080/v4/pipelines/abcd', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: 'abcd',
+        scmUrl: 'git@github.com:foo/bar.git#master',
+        createTime: '2016-09-15T23:12:23.760Z',
+        admins: { batman: true },
+        workflow: ['main', 'publish']
+      })
+    ]);
+
+    server.get('http://localhost:8080/v4/pipelines/abcd/jobs', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([
+        { id: 1234, name: 'main', state: 'ENABLED' },
+        { id: 1235, name: 'publish', state: 'ENABLED' }
+      ])
+    ]);
+  },
+  afterEach() {
+    server.shutdown();
+  }
+});
+
+test('visiting /pipelines/:id/options', function (assert) {
+  authenticateSession(this.application, { token: 'faketoken' });
+
+  visit('/pipelines/abcd/options');
+
+  andThen(() => {
+    assert.equal(currentURL(), '/pipelines/abcd/options');
+    assert.equal(find('section.jobs li').length, 2);
+    assert.equal(find('section.danger li').length, 1);
+  });
+});

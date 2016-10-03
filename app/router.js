@@ -18,6 +18,7 @@ Router.map(function route() {
     this.route('builds', { path: '/' }, function buildRoute() {
       this.route('build', { path: 'build/:build_id' });
     });
+    this.route('options');
   });
   this.route('login');
   this.route('create');
