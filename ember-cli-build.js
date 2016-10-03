@@ -8,6 +8,9 @@ module.exports = function (defaults) {
     'ember-font-awesome': {
       useScss: true // for ember-cli-sass
     },
+    fingerprint: {
+      exclude: ['supplimentary_config']
+    },
     svg: {
       paths: ['public/assets/svg']
     }
