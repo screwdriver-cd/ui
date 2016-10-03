@@ -1,5 +1,6 @@
 workflow:
   - publish
+  - beta
   - prod
 
 shared:
@@ -34,6 +35,24 @@ jobs:
       # Trigger a Docker Hub build
       - DOCKER_TRIGGER
 
+  # Deploy to our beta environment and run tests
+  beta:
+    steps:
+      - setup-ci: git clone https://gist.github.com/3d2388b2a7ba658cdcdaffa8cd874e50.git ci
+      - wait-docker: DOCKER_TAG=`git describe --abbrev=0 --tags` ./ci/docker-wait.sh
+      - deploy-k8s: K8S_TAG=`git describe --abbrev=0 --tags` ./ci/k8s-deploy.sh
+      - test: echo Put acceptance tests here
+    environment:
+      DOCKER_REPO: screwdrivercd/ui
+      K8S_CONTAINER: screwdriver-ui
+      K8S_IMAGE: screwdrivercd/ui
+      K8S_HOST: api.k8s.screwdriver.cd
+      K8S_DEPLOYMENT: sdui-beta
+      SD_UI: beta.cd.screwdriver.cd
+    secrets:
+      # Talking to Kubernetes
+      - K8S_TOKEN
+
   # Deploy to our prod environment and run tests
   prod:
     steps:
@@ -47,6 +66,7 @@ jobs:
       K8S_IMAGE: screwdrivercd/ui
       K8S_HOST: api.k8s.screwdriver.cd
       K8S_DEPLOYMENT: sdui
+      SD_UI: cd.screwdriver.cd
     secrets:
       # Talking to Kubernetes
       - K8S_TOKEN
