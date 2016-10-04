@@ -14,6 +14,6 @@ export function initialize() {
 }
 
 export default {
-  name: 'supplimentary-config',
+  name: 'supplementary-config',
   initialize
 };

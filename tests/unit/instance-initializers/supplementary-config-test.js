@@ -1,12 +1,12 @@
 import Ember from 'ember';
-import { initialize } from 'screwdriver-ui/instance-initializers/supplimentary-config';
+import { initialize } from 'screwdriver-ui/instance-initializers/supplementary-config';
 import { module, test } from 'qunit';
 import ENV from 'screwdriver-ui/config/environment';
 import destroyApp from '../../helpers/destroy-app';
 const NAMESPACE = ENV.APP.SDAPI_NAMESPACE;
 const HOSTNAME = ENV.APP.SDAPI_HOSTNAME;
 
-module('Unit | Instance Initializer | supplimentary config', {
+module('Unit | Instance Initializer | supplementary config', {
   beforeEach() {
     Ember.run(() => {
       this.application = Ember.Application.create();
@@ -30,7 +30,7 @@ test('it uses the pre-configured settings', function (assert) {
   assert.equal(ENV.APP.SDAPI_HOSTNAME, HOSTNAME);
 });
 
-test('it uses the supplimentary-config settings', function (assert) {
+test('it uses the supplementary-config settings', function (assert) {
   window.SUPPLIMENTARY_CONFIG = {
     SDAPI_NAMESPACE: 'v5',
     SDAPI_HOSTNAME: 'http://example.com'
