@@ -11,13 +11,13 @@ module('Unit | Instance Initializer | supplementary config', {
     Ember.run(() => {
       this.application = Ember.Application.create();
       this.appInstance = this.application.buildInstance();
-      delete window.SUPPLIMENTARY_CONFIG;
+      delete window.SUPPLEMENTARY_CONFIG;
     });
   },
   afterEach() {
     Ember.run(this.appInstance, 'destroy');
     destroyApp(this.application);
-    delete window.SUPPLIMENTARY_CONFIG;
+    delete window.SUPPLEMENTARY_CONFIG;
     ENV.APP.SDAPI_NAMESPACE = NAMESPACE;
     ENV.APP.SDAPI_HOSTNAME = HOSTNAME;
   }
@@ -31,7 +31,7 @@ test('it uses the pre-configured settings', function (assert) {
 });
 
 test('it uses the supplementary-config settings', function (assert) {
-  window.SUPPLIMENTARY_CONFIG = {
+  window.SUPPLEMENTARY_CONFIG = {
     SDAPI_NAMESPACE: 'v5',
     SDAPI_HOSTNAME: 'http://example.com'
   };
