@@ -1,1 +1,1 @@
-window.SUPPLIMENTARY_CONFIG = {};
+window.SUPPLEMENTARY_CONFIG = {};
