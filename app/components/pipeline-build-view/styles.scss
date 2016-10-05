@@ -34,6 +34,7 @@ h6 {
   background-color: $ycolor-green-6b;
   border-color: $ycolor-green-6b;
 }
+.ABORTED .job,
 .FAILURE .job {
   background-color: $ycolor-red-2b;
   border-color: $ycolor-red-2b;

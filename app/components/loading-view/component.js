@@ -66,7 +66,8 @@ export default Ember.Component.extend({
     'Looking for exact change',
     'All your web browser are belong to us',
     'Eating brownie points...',
-    'Finding cat pictures...'
+    'Finding cat pictures...',
+    'Calculating route through hyperspace...'
   ],
   /**
    * Get a random quote

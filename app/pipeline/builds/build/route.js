@@ -9,7 +9,7 @@ export default Ember.Route.extend({
     return this.store.findRecord('build', params.build_id).then(build => {
       // reload again in a little bit if queued
       const reloadQueuedBuild = () => {
-        if (build.get('status') === 'QUEUED') {
+        if (build.get('status') === 'QUEUED' || build.get('status') === 'RUNNING') {
           Ember.run.later(this, () => {
             if (!build.get('isDeleted')) {
               build.reload().then(reloadQueuedBuild);
