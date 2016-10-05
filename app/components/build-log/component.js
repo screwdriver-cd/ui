@@ -64,7 +64,7 @@ export default Ember.Component.extend({
       const logNumber = this.get('lastLine');
 
       // Schedule log refresh run loop
-      Ember.run.schedule('actions', () => {
+      Ember.run.scheduleOnce('actions', () => {
         // Flag so we don't fire new requests while waiting for this to return
         this.set('isLoading', true);
 
@@ -85,9 +85,12 @@ export default Ember.Component.extend({
                 });
                 // Update the last line we processed for next load
                 this.set('lastLine', data[data.length - 1].n + 1);
+
                 // scroll to bottom of logs
-                if (this.$('.bottom').length === 1) {
-                  window.scrollTo(0, this.$('.bottom').offset().top);
+                if (this.$('.bottom').length === 1 && this.get('autoscroll')) {
+                  Ember.run.scheduleOnce('afterRender', () => {
+                    window.scrollTo(0, this.$('.bottom').offset().top);
+                  });
                 }
               }
               // Set flag for done based on headers
@@ -95,7 +98,7 @@ export default Ember.Component.extend({
 
               if (this.get('finishedLoading') && build.get('status') === 'RUNNING') {
                 // if build is running and step is done, reload build
-                build.reload();
+                Ember.run.scheduleOnce('afterRender', () => build.reload());
               }
             });
           })
