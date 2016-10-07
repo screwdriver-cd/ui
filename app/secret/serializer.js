@@ -8,6 +8,16 @@ export default DS.RESTSerializer.extend({
    * @method serializeIntoHash
    */
   serializeIntoHash(hash, typeClass, snapshot, options) {
-    Ember.merge(hash, this.serialize(snapshot, options));
+    if (!snapshot.id) {
+      return Ember.merge(hash, this.serialize(snapshot, options));
+    }
+
+    const dirty = snapshot.changedAttributes();
+
+    Object.keys(dirty).forEach(key => {
+      dirty[key] = dirty[key][1];
+    });
+
+    return Ember.merge(hash, dirty);
   }
 });
