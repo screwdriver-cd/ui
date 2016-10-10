@@ -1,5 +1,6 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import Ember from 'ember';
 
 moduleForComponent('pipeline-secret-settings',
   'Integration | Component | pipeline secret settings', {
@@ -10,11 +11,14 @@ moduleForComponent('pipeline-secret-settings',
 test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  this.set('mockSecrets', [{
+  const testSecret = Ember.Object.create({
     name: 'TEST_SECRET',
-    pipelineId: 'abcd',
-    value: 'banana'
-  }]);
+    pipelineId: 123245,
+    value: 'banana',
+    allowInPR: false
+  });
+
+  this.set('mockSecrets', [testSecret]);
 
   this.set('mockPipeline', { id: 'abcd' });
   this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
