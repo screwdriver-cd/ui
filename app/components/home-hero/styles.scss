@@ -102,9 +102,8 @@
 }
 
 footer {
-  background: url('/assets/main_bkgrd_home.png') transparent;
-  background-size: cover;
-  color: $ycolor-gray-3;
+  background-color: $ycolor-gray-4;
+  color: $ycolor-gray-7;
   padding: 10px 0;
   font-size: 11px;
   font-weight: 300;
@@ -119,7 +118,7 @@ footer {
   }
 
   a {
-    color: $ycolor-gray-3;
+    color: $ycolor-gray-7;
     text-decoration: none;
   }
   a:hover {
