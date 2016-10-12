@@ -9,16 +9,16 @@ import Ember from 'ember';
 function getBuilds(jobs) {
   const buildList = [];
 
-  jobs.forEach(j => {
+  jobs.forEach((j) => {
     buildList.push(j.get('builds'));
   });
 
   // fetch all the builds
-  return Ember.RSVP.all(buildList).then(builds => {
+  return Ember.RSVP.all(buildList).then((builds) => {
     let combined = [];
 
     // put all the builds in a single array
-    builds.forEach(b => {
+    builds.forEach((b) => {
       combined = combined.concat(b.slice());
     });
 
@@ -33,7 +33,7 @@ export default Ember.Route.extend({
   model() {
     return this.get('pipeline.jobs')
       // Split jobs from workflow
-      .then(jobs => {
+      .then((jobs) => {
         // filter out the PRs
         const workflowJobs = jobs.filter(j => !/^PR\-/.test(j.get('name')));
 

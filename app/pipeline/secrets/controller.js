@@ -7,7 +7,7 @@ export default Ember.Controller.extend({
       const newSecret = this.store.createRecord('secret', { name, value, pipelineId, allowInPR });
 
       return newSecret.save()
-        .then(s => {
+        .then((s) => {
           this.set('errorMessage', '');
           this.get('model.secrets').reload();
 

@@ -34,7 +34,7 @@ test('it uses cors for ajax', function (assert) {
 
   let adapter = this.subject();
 
-  return adapter.ajax('fakeurl', 'GET').then(response => {
+  return adapter.ajax('fakeurl', 'GET').then((response) => {
     assert.deepEqual(response, { foo: 'bar' });
   });
 });

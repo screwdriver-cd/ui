@@ -6,7 +6,7 @@ export default Ember.Component.extend(Ember.PromiseProxyMixin, {
       const workflow = [];
 
       // get a sub-workflow object to clone
-      this.get('jobs').forEach(j => {
+      this.get('jobs').forEach((j) => {
         workflow.push({
           id: j.get('id'),
           name: j.get('name')
@@ -29,7 +29,7 @@ export default Ember.Component.extend(Ember.PromiseProxyMixin, {
       const shas = {};
       let result = [];
 
-      combined.forEach(build => {
+      combined.forEach((build) => {
         const sha = build.get('sha');
 
         // create a workflow based on shas
@@ -38,7 +38,7 @@ export default Ember.Component.extend(Ember.PromiseProxyMixin, {
         }
 
         // add the build info to correct job in the workflow
-        shas[sha].some(j => {
+        shas[sha].some((j) => {
           if (j.id === build.get('jobId') && !j.build) {
             j.build = build;
 
@@ -50,7 +50,7 @@ export default Ember.Component.extend(Ember.PromiseProxyMixin, {
       });
 
       // put the results into an array
-      Object.keys(shas).forEach(key => {
+      Object.keys(shas).forEach((key) => {
         result.push(shas[key]);
       });
 

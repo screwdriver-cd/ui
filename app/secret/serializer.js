@@ -14,7 +14,7 @@ export default DS.RESTSerializer.extend({
 
     const dirty = snapshot.changedAttributes();
 
-    Object.keys(dirty).forEach(key => {
+    Object.keys(dirty).forEach((key) => {
       dirty[key] = dirty[key][1];
     });
 
