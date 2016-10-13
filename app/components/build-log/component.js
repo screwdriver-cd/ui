@@ -78,7 +78,7 @@ export default Ember.Component.extend({
             Ember.run(() => {
               if (Array.isArray(data) && data.length) {
                 // Add lines to log container
-                data.forEach(line => {
+                data.forEach((line) => {
                   this.set('logContent',
                     `${this.get('logContent')}${ansi_up.ansi_to_html(line.m)}\n`
                   );

@@ -6,7 +6,7 @@ export default Ember.Route.extend({
     this.transitionTo('pipeline.builds.build', model.pipeline.id, model.build.id);
   },
   model(params) {
-    return this.store.findRecord('build', params.build_id).then(build => {
+    return this.store.findRecord('build', params.build_id).then((build) => {
       // reload again in a little bit if queued
       const reloadQueuedBuild = () => {
         if (build.get('status') === 'QUEUED') {

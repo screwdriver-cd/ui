@@ -83,7 +83,7 @@ export default Base.extend({
    * @return {Promise}
    */
   invalidate() {
-    return new Ember.RSVP.Promise(resolve => {
+    return new Ember.RSVP.Promise((resolve) => {
       Ember.$.ajax({
         url: logoutUrl,
         method: 'POST',

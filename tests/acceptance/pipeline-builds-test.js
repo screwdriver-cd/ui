@@ -68,7 +68,7 @@ const shas = [
 const makeBuilds = (jobId) => {
   const builds = [];
 
-  shas.forEach(sha => {
+  shas.forEach((sha) => {
     const b = Ember.copy(BUILD, true);
     const config = {
       id: Math.floor(Math.random() * 99999999999),

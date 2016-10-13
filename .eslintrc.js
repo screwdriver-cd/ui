@@ -16,6 +16,7 @@ module.exports = {
     indent: ['error', 2],
     'no-underscore-dangle': 'off',
     'prefer-const': 'off',
+    'import/extensions': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/no-unresolved': 'off',
     'import/no-mutable-exports': 'off',
