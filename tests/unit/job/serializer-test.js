@@ -4,15 +4,9 @@ import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 let server;
 
-moduleForModel('pipeline', 'Unit | Serializer | pipeline', {
+moduleForModel('job', 'Unit | Serializer | job', {
   // Specify the other units that are required for this test.
-  needs: [
-    'serializer:pipeline',
-    'adapter:application',
-    'service:session',
-    'model:secret',
-    'model:job'
-  ],
+  needs: ['serializer:job', 'adapter:application', 'service:session', 'model:build'],
   beforeEach() {
     server = new Pretender();
   },
@@ -30,20 +24,29 @@ test('it serializes records', function (assert) {
   assert.ok(serializedRecord);
 });
 
-test('it does not post with model name as key', function (assert) {
-  assert.expect(2);
-  server.post('http://localhost:8080/v4/pipelines', function () {
+test('it serializes only dirty fields', function (assert) {
+  assert.expect(1);
+  server.put('http://localhost:8080/v4/jobs/abcd', function () {
     return [200, {}, JSON.stringify({ id: 'abcd' })];
   });
 
   Ember.run(() => {
-    const pipeline = this.store().createRecord('pipeline', {
-      scmUrl: 'git@example.com:foo/bar.git'
+    this.store().push({
+      data: {
+        id: 'abcd',
+        type: 'job',
+        attributes: {
+          pipelineId: 'aabb',
+          name: 'main',
+          state: 'ENABLED'
+        }
+      }
     });
 
-    pipeline.save().then(() => {
-      assert.equal(pipeline.get('id'), 'abcd');
-    });
+    const job = this.store().peekRecord('job', 'abcd');
+
+    job.set('state', 'DISABLED');
+    job.save();
   });
 
   return wait().then(() => {
@@ -51,7 +54,7 @@ test('it does not post with model name as key', function (assert) {
     const payload = JSON.parse(request.requestBody);
 
     assert.deepEqual(payload, {
-      scmUrl: 'git@example.com:foo/bar.git'
+      state: 'DISABLED'
     });
   });
 });
