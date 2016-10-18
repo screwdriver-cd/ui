@@ -4,43 +4,30 @@ import Ember from 'ember';
 export default DS.Model.extend({
   scmUrl: DS.attr('string'),
   configUrl: DS.attr('string', { defaultValue: '' }),
+  scmUri: DS.attr('string'),
   createTime: DS.attr('date'),
   admins: DS.attr(),
   secrets: DS.hasMany('secret', { async: true }),
   jobs: DS.hasMany('job', { async: true }),
-  repoData: Ember.computed('scmUrl', {
+  scmRepo: DS.attr(),
+  scmRepoObject: Ember.computed('scmRepo', {
     get() {
-      const http = /^http[s]?:\/\/([^/]+)\/([^/]+)\/([^/]+)\.git#?(.*)?/;
-      const git = /^git@([^:]+):([^/]+)\/([^/]+)\.git#?(.*)?/;
-      const scmUrl = this.get('scmUrl');
-      const matches = /^git@/.test(scmUrl) ? scmUrl.match(git) : scmUrl.match(http);
-      let host;
-      let owner;
-      let repo;
-      let branch;
-
-      if (matches) {
-        host = matches[1];
-        owner = matches[2];
-        repo = matches[3];
-        branch = matches[4] || 'master';
-      }
-
-      return { host, owner, repo, branch };
+      return Ember.Object.create(this.get('scmRepo'));
     }
   }),
-  appId: Ember.computed('repoData', {
+  appId: Ember.computed('scmRepoObject', {
     get() {
-      const data = this.get('repoData');
-
-      return `${data.owner}:${data.repo}`;
+      return this.get('scmRepoObject').name;
     }
   }),
-  hubUrl: Ember.computed('repoData', {
+  hubUrl: Ember.computed('scmRepoObject', {
     get() {
-      const data = this.get('repoData');
-
-      return `https://${data.host}/${data.owner}/${data.repo}`;
+      return this.get('scmRepoObject').url;
+    }
+  }),
+  branch: Ember.computed('scmRepoObject', {
+    get() {
+      return this.get('scmRepoObject').branch;
     }
   })
 });

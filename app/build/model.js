@@ -44,5 +44,6 @@ export default DS.Model.extend({
   parameters: DS.attr(),
   meta: DS.attr(),
   steps: DS.attr(),
-  status: DS.attr('string')
+  status: DS.attr('string'),
+  commit: DS.attr()
 });

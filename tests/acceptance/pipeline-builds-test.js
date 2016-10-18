@@ -96,6 +96,11 @@ moduleForAcceptance('Acceptance | pipeline builds', {
       JSON.stringify({
         id: 'abcd',
         scmUrl: 'git@github.com:foo/bar.git#master',
+        scmRepo: {
+          name: 'foo/bar',
+          branch: 'master',
+          url: 'https://github.com/foo/bar'
+        },
         createTime: '2016-09-15T23:12:23.760Z',
         admins: { batman: true },
         workflow: ['main', 'publish']
@@ -136,7 +141,7 @@ test('visiting /pipelines/abcd', function (assert) {
 
   andThen(() => {
     assert.equal(currentURL(), '/pipelines/abcd');
-    assert.equal(find('a h1').text().trim(), 'foo:bar', 'incorrect pipeline name');
+    assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.arrow-right').length, 4, 'not enough workflow');
     assert.equal(find('.arrow-right').length, 4, 'not enough workflow');
     assert.equal(find('button').length, 0, 'should not have a start button');

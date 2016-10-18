@@ -15,6 +15,11 @@ moduleForAcceptance('Acceptance | build', {
       JSON.stringify({
         id: 'abcd',
         scmUrl: 'git@github.com:foo/bar.git#master',
+        scmRepo: {
+          name: 'foo/bar',
+          branch: 'master',
+          url: 'https://github.com/foo/bar'
+        },
         createTime: '2016-09-15T23:12:23.760Z',
         admins: { batman: true },
         workflow: ['main', 'publish', 'prod']
@@ -50,7 +55,11 @@ moduleForAcceptance('Acceptance | build', {
         }, {
           name: 'test'
         }],
-        status: 'FAILURE'
+        status: 'FAILURE',
+        commit: {
+          url: 'https://github.com/commit',
+          message: 'merge this'
+        }
       })
     ]);
 
@@ -105,7 +114,7 @@ test('visiting /pipelines/:id/build/:id', function (assert) {
 
   andThen(() => {
     assert.equal(currentURL(), '/pipelines/abcd/build/1234');
-    assert.equal(find('a h1').text().trim(), 'foo:bar', 'incorrect pipeline name');
+    assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.line1 h1').text().trim(), 'PR-50', 'incorrect job name');
     assert.equal(find('span.sha').text().trim(), '#c96f36', 'incorrect sha');
     assert.equal(find('.is-open .logs').text().trim(), 'bad stuff', 'incorrect logs open');
