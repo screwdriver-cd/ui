@@ -12,70 +12,19 @@ test('it exists', function (assert) {
   assert.ok(!!model);
 });
 
-test('it gets correct repo data', function (assert) {
-  let model = this.subject();
-
-  Ember.run(() => {
-    // http - no branch
-    model.set('scmUrl', 'http://example.com:8080/batman/batmobile.git');
-
-    assert.deepEqual(model.get('repoData'), {
-      host: 'example.com:8080',
-      owner: 'batman',
-      repo: 'batmobile',
-      branch: 'master'
-    });
-
-    // https - with branch
-    model.set('scmUrl', 'https://example.com/batman/batmobile.git#ejectorSeat');
-
-    assert.deepEqual(model.get('repoData'), {
-      host: 'example.com',
-      owner: 'batman',
-      repo: 'batmobile',
-      branch: 'ejectorSeat'
-    });
-
-    // git - with branch
-    model.set('scmUrl', 'git@example.com:batman/batmobile.git#ejectorSeat');
-
-    assert.deepEqual(model.get('repoData'), {
-      host: 'example.com',
-      owner: 'batman',
-      repo: 'batmobile',
-      branch: 'ejectorSeat'
-    });
-
-    // git - no branch
-    model.set('scmUrl', 'git@example.com:batman/batmobile.git');
-
-    assert.deepEqual(model.get('repoData'), {
-      host: 'example.com',
-      owner: 'batman',
-      repo: 'batmobile',
-      branch: 'master'
-    });
-
-    // invalid url
-    model.set('scmUrl', 'git@example.com:batman');
-
-    assert.deepEqual(model.get('repoData'), {
-      host: undefined,
-      owner: undefined,
-      repo: undefined,
-      branch: undefined
-    });
-  });
-});
-
 test('it gets correct appId', function (assert) {
   let model = this.subject();
 
   Ember.run(() => {
-    // http - no branch
-    model.set('scmUrl', 'http://example.com:8080/batman/batmobile.git');
+    const scmRepoMock = {
+      name: 'foo/bar',
+      branch: 'master',
+      url: 'https://github.com/foo/bar'
+    };
 
-    assert.equal(model.get('appId'), 'batman:batmobile');
+    model.set('scmRepo', scmRepoMock);
+
+    assert.equal(model.get('appId'), 'foo/bar');
   });
 });
 
@@ -83,9 +32,31 @@ test('it gets correct hub url', function (assert) {
   let model = this.subject();
 
   Ember.run(() => {
-    // http - no branch
-    model.set('scmUrl', 'git@example.com:batman/batmobile.git#oilSlick');
+    const scmRepoMock = {
+      name: 'foo/bar',
+      branch: 'master',
+      url: 'https://github.com/foo/bar'
+    };
 
-    assert.equal(model.get('hubUrl'), 'https://example.com/batman/batmobile');
+    model.set('scmRepo', scmRepoMock);
+
+    assert.equal(model.get('hubUrl'), 'https://github.com/foo/bar');
   });
 });
+
+test('it gets correct branch', function (assert) {
+  let model = this.subject();
+
+  Ember.run(() => {
+    const scmRepoMock = {
+      name: 'foo/bar',
+      branch: 'master',
+      url: 'https://github.com/foo/bar'
+    };
+
+    model.set('scmRepo', scmRepoMock);
+
+    assert.equal(model.get('branch'), 'master');
+  });
+});
+

@@ -51,7 +51,7 @@ test('it does not post with model name as key', function (assert) {
     const payload = JSON.parse(request.requestBody);
 
     assert.deepEqual(payload, {
-      scmUrl: 'git@example.com:foo/bar.git'
+      checkoutUrl: 'git@example.com:foo/bar.git'
     });
   });
 });

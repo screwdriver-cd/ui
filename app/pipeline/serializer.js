@@ -8,6 +8,6 @@ export default DS.RESTSerializer.extend({
    * @method serializeIntoHash
    */
   serializeIntoHash(hash, typeClass, snapshot) {
-    return Ember.merge(hash, { scmUrl: snapshot.attr('scmUrl') });
+    return Ember.merge(hash, { checkoutUrl: snapshot.attr('scmUrl') });
   }
 });

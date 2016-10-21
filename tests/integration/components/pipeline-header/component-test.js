@@ -12,9 +12,7 @@ test('it renders', function (assert) {
   const pipelineMock = {
     appId: 'batman/batmobile',
     hubUrl: 'http://example.com/batman/batmobile',
-    repoData: {
-      branch: 'master'
-    }
+    branch: 'master'
   };
 
   this.set('pipelineMock', pipelineMock);
