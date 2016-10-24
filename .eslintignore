@@ -2,6 +2,7 @@
 app.js
 resolver.js
 testem.js
+tests/test-helper.js
 tests/helpers/destroy-app.js
 tests/helpers/module-for-acceptance.js
 tests/helpers/start-app.js
