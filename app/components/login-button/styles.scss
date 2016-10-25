@@ -1,12 +1,25 @@
 & {
   margin: 10px auto;
-  width: 25%;
+  width: 593px;
   text-align: center;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 24px;
+}
+
+@media (max-width: 47.999em) {
+  & {
+    width: 100%;
+  }
 }
 
 a {
   color: #fff;
-  font-size: 17px;
+  font-size: 16px;
   padding: 5px 10px;
   background-color: #0078ff;
   border-radius: 3px;
