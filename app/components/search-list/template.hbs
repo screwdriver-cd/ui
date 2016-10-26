@@ -1,5 +1,5 @@
 <ul>
-  {{#each pipelines as |pipeline|}}
+  {{#each filteredPipelines as |pipeline|}}
   <li>
     {{#link-to "pipeline" pipeline.id}}
       <span class="appId">{{pipeline.appId}}</span>
@@ -8,3 +8,4 @@
   </li>
   {{/each}}
 </ul>
+{{if isEmpty "No Results"}}

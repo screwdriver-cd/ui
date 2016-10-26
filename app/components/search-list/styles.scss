@@ -1,17 +1,26 @@
 & {
-  padding: 0 25px;
+  width: 640px;
+  margin: 2em auto;
 }
+
+@media (max-width: 47.999em) {
+  & {
+    width: 100%;
+  }
+}
+
 ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
+
 a {
   display: block;
   text-decoration: none;
-  color: $ycolor-blue-10b;
-  padding: 5px 10px;
-  border-bottom: 1px solid $ycolor-gray-c;
+  color: $sd-link;
+  padding: 10px;
+  border-bottom: 1px solid $sd-separator;
 
   .appId {
     display: inline-block;
@@ -19,13 +28,20 @@ a {
   }
 
   .branch {
-    color: #000;
+    display: inline-block;
+    width: 215px;
+    text-align: right;
+    color: $sd-text;
   }
 }
 
 a:hover {
-  background-color: $ycolor-gray-h;
+  background-color: $sd-separator;
   .appId {
     text-decoration: underline;
   }
+}
+
+ul > li:last-child a {
+  border-bottom-width: 0px;
 }
