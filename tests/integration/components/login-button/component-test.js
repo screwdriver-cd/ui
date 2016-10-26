@@ -14,6 +14,6 @@ test('it renders', function (assert) {
   });
   this.render(hbs`{{login-button authenticate=(action externalAction)}}`);
 
-  assert.equal(this.$('h2').text().trim(), 'Login with GitHub');
+  assert.equal(this.$('h2').text().trim(), 'Login to Screwdriver');
   this.$('a').click();
 });
