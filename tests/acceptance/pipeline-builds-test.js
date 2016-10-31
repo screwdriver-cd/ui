@@ -142,8 +142,7 @@ test('visiting /pipelines/abcd', function (assert) {
   andThen(() => {
     assert.equal(currentURL(), '/pipelines/abcd');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
-    assert.equal(find('.arrow-right').length, 4, 'not enough workflow');
-    assert.equal(find('.arrow-right').length, 4, 'not enough workflow');
+    assert.equal(find('.pipelineWorkflow .build-bubble').length, 2, 'not enough workflow');
     assert.equal(find('button').length, 0, 'should not have a start button');
     assert.equal(find('.pure-u-md-3-4 h2').text().trim(), 'Builds');
     assert.equal(find('.pure-u-md-1-4 h2').text().trim(), 'Pull Requests');

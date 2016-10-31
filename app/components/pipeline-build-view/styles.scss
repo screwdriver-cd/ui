@@ -1,7 +1,7 @@
 & {
   padding: 10px;
-  border-bottom: 1px solid $ycolor-gray-2;
-  color: $ycolor-gray-11;
+  border-bottom: 1px solid $sd-separator;
+  color: $sd-text;
   font-weight: 300;
 }
 
@@ -11,7 +11,7 @@ h6 {
   font-size: 16px;
 
   a {
-    color: $ycolor-blue-1a;
+    color: $sd-link;
     text-decoration: none;
     font-weight: 300;
   }
@@ -27,29 +27,15 @@ h6 {
   width: 16px;
   height: 16px;
   border-radius: 16px;
-  border: 1px solid $ycolor-gray-4;
-}
-
-.SUCCESS .job {
-  background-color: $ycolor-green-6b;
-  border-color: $ycolor-green-6b;
-}
-.ABORTED .job,
-.FAILURE .job {
-  background-color: $ycolor-red-2b;
-  border-color: $ycolor-red-2b;
-}
-.RUNNING .job, .QUEUED .job {
-  background-color: $ycolor-blue-10b;
-  border-color: $ycolor-blue-10b;
+  border: 2px solid $ycolor-gray-4;
 }
 
 .cause {
-  color: $ycolor-gray-11;
+  color: $sd-text;
 }
 .duration, .created {
   font-size: 14px;
-  color: $ycolor-gray-6;
+  color: $sd-time;
 }
 .duration {
   font-style: italic;

@@ -12,13 +12,7 @@
   </div>
   <div class="pure-u-3-5 workflow">
     {{#each workflow as |job|}}
-    {{#if job.build}}
-      <span class="{{job.build.status}}">
-        {{#link-to "pipeline.builds.build" job.build.id class="job" title=job.name}}{{job.name}}{{/link-to}}
-      </span>
-    {{else}}
-      <span class="job">{{job.name}}</span>
-    {{/if}}
+      {{build-bubble jobName=job.name jobIsDisabled=job.isDisabled build=job.build small=true}}
     {{/each}}
   </div>
   <div class="pure-u-1-5 right">

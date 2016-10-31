@@ -52,6 +52,6 @@ test('it renders', function (assert) {
 
   assert.equal(this.$('h6 a').text().trim(), '#123456');
   assert.equal(this.$('.cause').text().trim(), 'bananas');
-  assert.equal(this.$('.job').length, 2, 'not enough work being done');
+  assert.equal(this.$('.build-bubble').length, 2, 'not enough work being done');
   assert.equal(this.$('.SUCCESS').length, 2, 'not successful enough');
 });

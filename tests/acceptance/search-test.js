@@ -13,6 +13,11 @@ moduleForAcceptance('Acceptance | search', {
         {
           id: 'abcd',
           scmUrl: 'git@github.com:foo/bar.git#master',
+          scmRepo: {
+            name: 'foo/bar',
+            url: 'git@github.com:foo/bar.git#master',
+            branch: 'master'
+          },
           createTime: '2016-09-15T23:12:23.760Z',
           admins: { batman: true },
           workflow: ['main', 'publish']
@@ -20,6 +25,11 @@ moduleForAcceptance('Acceptance | search', {
         {
           id: 'bcda',
           scmUrl: 'git@github.com:foo/bar2.git#banana',
+          scmRepo: {
+            name: 'foo/bar2',
+            url: 'git@github.com:foo/bar2.git#master',
+            branch: 'master'
+          },
           createTime: '2016-09-15T23:12:23.760Z',
           admins: { batman: true },
           workflow: ['main', 'publish']
@@ -27,6 +37,11 @@ moduleForAcceptance('Acceptance | search', {
         {
           id: 'cdab',
           scmUrl: 'git@github.com:foo/bar3.git#cucumber',
+          scmRepo: {
+            name: 'foo/bar3',
+            url: 'git@github.com:foo/bar3.git#master',
+            branch: 'master'
+          },
           createTime: '2016-09-15T23:12:23.760Z',
           admins: { batman: true },
           workflow: ['main', 'publish']
