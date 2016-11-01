@@ -35,13 +35,13 @@ export default Ember.Route.extend({
       // Split jobs from workflow
       .then((jobs) => {
         // filter out the PRs
-        const workflowJobs = jobs.filter(j => !/^PR\-/.test(j.get('name')));
+        const workflowJobs = jobs.filter(j => !/^PR-/.test(j.get('name')));
 
         // get all the builds and return results
         return getBuilds(workflowJobs).then(builds => ({
           jobs: workflowJobs,
           builds,
-          pullRequests: jobs.filter(j => /^PR\-/.test(j.get('name')))
+          pullRequests: jobs.filter(j => /^PR-/.test(j.get('name')))
         }));
       });
   }

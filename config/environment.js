@@ -57,5 +57,11 @@ module.exports = (environment) => {
     routeIfAlreadyAuthenticated: 'home'
   };
 
+  ENV['ember-cli-toggle'] = {
+    includedThemes: ['light'],
+    defaultTheme: 'light',
+    defaultSize: 'small'
+  };
+
   return ENV;
 };

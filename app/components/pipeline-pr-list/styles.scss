@@ -1,9 +1,12 @@
 & {
   font-weight: 300;
+  padding-left: 20px;
+  height: 100%;
+  border-left: 1px solid $sd-separator;
 }
 
 h2 {
-  color: $ycolor-gray-11;
+  color: $sd-text;
   margin: 0;
   padding: 0 0 10px 0;
   font-weight: 600;

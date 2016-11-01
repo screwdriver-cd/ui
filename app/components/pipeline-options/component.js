@@ -5,11 +5,8 @@ export default Ember.Component.extend({
   showRemoveButtons: false,
   isRemoving: false,
   actions: {
-    enableJob(jobId) {
-      this.get('setJobStatus')(jobId, 'ENABLED');
-    },
-    disableJob(jobId) {
-      this.get('setJobStatus')(jobId, 'DISABLED');
+    toggleJob(jobId, event) {
+      this.get('setJobStatus')(jobId, event.newValue ? 'DISABLED' : 'ENABLED');
     },
     showRemoveButtons() {
       this.set('showDangerButton', false);

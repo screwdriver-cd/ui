@@ -1,125 +1,112 @@
 & {
   margin: 10px 25px;
-  color: $ycolor-gray-11;
-}
+  color: $sd-text;
+  font-weight: 300;
 
-section {
-  border-radius: 5px 5px 0 0;
-  border: 1px solid $ycolor-gray-4;
-  margin-bottom: 20px;
-}
+  .x-toggle-component {
+    display: inline-flex;
+  }
 
-h3 {
-  border-radius: 5px 5px 0 0;
-  background-color: $ycolor-gray-4;
-  margin: 0;
-  color: $ycolor-gray-11;
-  padding: 3px 10px;
-  font-weight: 600;
-  font-size: 16px;
-}
+  section {
+    border-radius: 5px 5px 0 0;
+    border: 1px solid $sd-separator;
+    margin-bottom: 20px;
+  }
 
-h4 {
-  font-weight: 600;
-  margin: 0;
-  padding: 0;
-}
-
-p {
-  margin: 0;
-  padding: 0;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  font-size: 14px;
-  padding: 5px 10px;
-  border-bottom: 1px solid $ycolor-gray-4;
-}
-
-li:last-child {
-  border-width: 0;
-}
-
-a {
-  color: $ycolor-blue-3;
-  border: 1px solid $ycolor-blue-3;
-  border-radius: 3px;
-  display: inline-block;
-  text-align: center;
-  width: 100px;
-  padding: 3px;
-  text-decoration: none;
-}
-
-a:hover {
-  background-color: $ycolor-blue-3;
-  color: #fff;
-}
-
-.danger {
   h3 {
-    background-color: $ycolor-red-2b;
-    color: #fff;
+    border-radius: 5px 5px 0 0;
+    background-color: $sd-separator;
+    margin: 0;
+    color: $sd-text;
+    padding: 3px 10px;
+    font-weight: 600;
+    font-size: 16px;
   }
+
+  h4 {
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-bottom: 1px solid $sd-separator;
+
+    &:last-child {
+      border-width: 0;
+    }
+  }
+
   a {
-    color: $ycolor-red-2b;
-    border: 1px solid $ycolor-red-2b;
+    display: inline-block;
+    text-decoration: none;
+    width: 100px;
+    padding: 3px;
+    text-align: center;
+    border-radius: 3px;
+    border: 1px solid transparent;
   }
 
-  a:hover {
-    background-color: $ycolor-red-2b;
-    color: #fff;
+  & .jobs {
+    a {
+      color: $sd-primary;
+      border: 1px solid $sd-primary;
+    }
+
+    a:hover {
+      background-color: $sd-primary;
+      color: #fff;
+    }
   }
 
-  a.cancel {
-    margin: 10px 20px 0 0;
-    background-color: $ycolor-blue-3;
-    color: #fff;
-    border-color: $ycolor-blue-3;
-  }
-  a.cancel:hover {
-    background-color: $ycolor-blue-3;
-    color: #fff;
-    text-decoration: underline;
-  }
-  a.remove {
-    background-color: $ycolor-red-2b;
-    color: #fff;
-  }
-  a.remove:hover {
-    background-color: $ycolor-red-2b;
-    color: #fff;
-    text-decoration: underline;
-  }
-}
+  .danger {
+    h3 {
+      background-color: $sd-failure;
+      color: #fff;
+    }
 
-.danger a {
-  color: $ycolor-red-2b;
-  border: 1px solid $ycolor-red-2b;
-  border-radius: 3px;
-  display: inline-block;
-  text-align: center;
-  width: 100px;
-  padding: 3px;
-}
+    a.trash {
+      color: $sd-failure;
 
-.danger a:hover {
-  background-color: $ycolor-red-2b;
-  color: #fff;
-}
+      &:hover {
+        border: 1px solid $sd-failure;
+      }
+    }
 
-.right {
-  text-align: right;
-}
+    a.cancel {
+      margin: 10px 20px 0 0;
+      background-color: $sd-primary;
+      color: #fff;
 
-@media (max-width: 47.999em) {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    a.remove {
+      background-color: $sd-failure;
+      color: #fff;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
   .right {
-    text-align: left;
+    text-align: right;
   }
 }
