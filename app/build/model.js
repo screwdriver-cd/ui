@@ -2,6 +2,7 @@ import DS from 'ember-data';
 import Ember from 'ember';
 
 export default DS.Model.extend({
+  eventId: DS.attr('string'),
   jobId: DS.attr('string'),
   parentBuildId: DS.attr('string'),
   number: DS.attr('number'),

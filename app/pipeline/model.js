@@ -7,6 +7,7 @@ export default DS.Model.extend({
   scmUri: DS.attr('string'),
   createTime: DS.attr('date'),
   admins: DS.attr(),
+  events: DS.hasMany('event', { async: true }),
   secrets: DS.hasMany('secret', { async: true }),
   jobs: DS.hasMany('job', { async: true }),
   scmRepo: DS.attr(),

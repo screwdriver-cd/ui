@@ -3,7 +3,7 @@ import Ember from 'ember';
 
 moduleForModel('pipeline', 'Unit | Model | pipeline', {
   // Specify the other units that are required for this test.
-  needs: ['model:secret', 'model:job']
+  needs: ['model:secret', 'model:event', 'model:job']
 });
 
 test('it exists', function (assert) {
@@ -59,4 +59,3 @@ test('it gets correct branch', function (assert) {
     assert.equal(model.get('branch'), 'master');
   });
 });
-
