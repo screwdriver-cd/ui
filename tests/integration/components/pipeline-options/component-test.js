@@ -26,9 +26,9 @@ test('it renders', function (assert) {
   // Jobs
   assert.equal(this.$('section.jobs h3').text().trim(), 'Jobs');
   assert.equal(this.$('section.jobs li').length, 1);
-  assert.equal(this.$('section.jobs h4').text().trim(), 'Disable main');
-  assert.equal(this.$('section.jobs p').text().trim(), 'Stop the line by disabling the main job.');
-  assert.ok(this.$('section.jobs a i').hasClass('fa-lock'));
+  assert.equal(this.$('section.jobs h4').text().trim(), 'main');
+  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable the main job.');
+  assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
 
   // Danger Zone
   assert.equal(this.$('section.danger h3').text().trim(), 'Danger Zone');
@@ -61,13 +61,12 @@ test('it handles job disabling', function (assert) {
 
   this.render(hbs`{{pipeline-options pipeline=mockPipeline setJobStatus=setJobStatsMock}}`);
 
-  assert.ok(this.$('section.jobs a i').hasClass('fa-lock'));
-  this.$('section.jobs a').click();
+  assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
+  this.$('.x-toggle-btn').click();
 
-  assert.equal(this.$('section.jobs h4').text().trim(), 'Enable main');
-  assert.equal(this.$('section.jobs p').text().trim(),
-    'Get your main job running again.');
-  assert.ok(this.$('section.jobs a i').hasClass('fa-unlock'));
+  assert.equal(this.$('section.jobs h4').text().trim(), 'main');
+  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to enable the main job.');
+  assert.notOk(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
 });
 
 test('it handles job enabling', function (assert) {
@@ -92,15 +91,14 @@ test('it handles job enabling', function (assert) {
 
   this.render(hbs`{{pipeline-options pipeline=mockPipeline setJobStatus=setJobStatsMock}}`);
 
-  assert.equal(this.$('section.jobs h4').text().trim(), 'Enable main');
-  assert.equal(this.$('section.jobs p').text().trim(),
-    'Get your main job running again.');
-  assert.ok(this.$('section.jobs a i').hasClass('fa-unlock'));
-  this.$('section.jobs a').click();
+  assert.equal(this.$('section.jobs h4').text().trim(), 'main');
+  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to enable the main job.');
+  assert.notOk(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
+  this.$('.x-toggle-btn').click();
 
-  assert.equal(this.$('section.jobs h4').text().trim(), 'Disable main');
-  assert.equal(this.$('section.jobs p').text().trim(), 'Stop the line by disabling the main job.');
-  assert.ok(this.$('section.jobs a i').hasClass('fa-lock'));
+  assert.equal(this.$('section.jobs h4').text().trim(), 'main');
+  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable the main job.');
+  assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
 });
 
 test('it handles pipeline remove flow', function (assert) {

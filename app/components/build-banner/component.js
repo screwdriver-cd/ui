@@ -28,7 +28,7 @@ export default Ember.Component.extend({
         return true;
       }
 
-      if (/^PR\-/.test(this.get('job.name'))) {
+      if (/^PR-/.test(this.get('job.name'))) {
         return true;
       }
 
