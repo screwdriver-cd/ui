@@ -17,6 +17,22 @@ moduleForModel('build', 'Unit | Serializer | build', {
   }
 });
 
+test('it converts container to buildContainer', function (assert) {
+  assert.expect(1);
+  server.get('/builds/abcd', function () {
+    return [200, {}, JSON.stringify({ build: { id: 'abcd', container: 'node:6' } })];
+  });
+  let build;
+
+  Ember.run(() => {
+    build = this.store().findRecord('build', 'abcd');
+  });
+
+  return wait().then(() => {
+    assert.equal(build.get('buildContainer'), 'node:6');
+  });
+});
+
 test('it POSTs only a jobId for create', function (assert) {
   assert.expect(2);
   server.post('/builds', function () {

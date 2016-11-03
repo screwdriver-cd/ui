@@ -2,12 +2,11 @@
   <ul>
     <li><a href="{{pipeline.hubUrl}}"><span class="sha">#{{truncatedSha}}</span></a></li>
     <li><h1>{{job.name}}</h1></li>
-    {{#if session.isAuthenticated}}
-    <li>{{#if hasButton}}<button {{action "toggleBuild"}}>{{buildAction}}</button>{{/if}}</li>
-    {{/if}}
+    <li>{{#if session.isAuthenticated}}{{#if hasButton}}<button {{action "toggleBuild"}}>{{buildAction}}</button>{{/if}}{{/if}}</li>
   </ul>
 </div>
 <ul class="line2">
   <li><span class="cause">{{build.cause}}</span></li>
+  <li><span class="container">{{build.buildContainer}}</span></li>
   <li><span class="duration">{{build.buildDuration}}</span></li>
 </ul>
