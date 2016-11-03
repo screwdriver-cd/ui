@@ -1,96 +1,88 @@
 & {
   margin: 10px 25px 0;
 
+  .line1 {
+    border-radius: 3px;
+    @include backgroundGradient(to right, $sd-running-gradient-start, $sd-running-gradient-end);
+    color: #fff;
+    padding: 6px 6px 6px 20px;
+    margin-bottom: 5px;
+
+    .sha {
+      font-weight: 300;
+      font-size: 20px;
+    }
+
+    h1 {
+      display: inline-block;
+      margin: 0;
+      padding: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+
   &.SUCCESS .line1 {
-    @include backgroundGradient(to right, $ycolor-teal-1b, $ycolor-green-2a);
+    @include backgroundGradient(to right, $sd-success-gradient-start, $sd-success-gradient-end);
   }
   &.ABORTED .line1,
   &.FAILURE .line1 {
-    @include backgroundGradient(to right, $ycolor-red-2a, $color-punch-a);
+    @include backgroundGradient(to right, $sd-failure-gradient-start, $sd-failure-gradient-end);
   }
 
-}
-
-.line1 {
-  border-radius: 3px;
-  @include backgroundGradient(to right, $ycolor-blue-1a, $ycolor-blue-10b);
-  color: #fff;
-  padding: 6px 6px 6px 20px;
-}
-
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-size: 0;
-}
-li {
-  display: inline-block;
-  width: 50%;
-  font-size: 16px;
-  text-align: center;
-}
-li:first-child {
-  text-align: left;
-}
-li:last-child {
-  text-align: right;
-}
-
-h1 {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.line1 {
-  margin-bottom: 5px;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+  }
 
   li {
     vertical-align: middle;
+    display: inline-block;
     width: 33%;
+    font-size: 16px;
+    text-align: center;
+
+    &:first-child {
+      text-align: left;
+    }
+
+    &:last-child {
+      text-align: right;
+      width: 34%;
+    }
   }
-  li:last-child {
-    width: 34%;
+
+  a {
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
   }
-}
 
-a {
-  color: #fff;
-  cursor: pointer;
-  text-decoration: none;
-}
+  button {
+    font-size: 14px;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 2px;
+    padding: 5px;
+    width: 100px;
 
-.sha {
-  font-weight: 300;
-  font-size: 20px;
-}
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  }
 
-button {
-  font-size: 14px;
-  background-color: transparent;
-  color: #fff;
-  border: 1px solid #fff;
-  border-radius: 2px;
-  padding: 5px;
-  width: 100px;
-}
+  .line2 {
+    color: $sd-text-med;
 
-button:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-}
+    li {
+      font-size: 14px;
+    }
 
-.duration {
-  font-size: 14px;
-  font-style: italic;
-}
-
-.cause {
-  font-size: 14px;
-}
-
-.line2 {
-  color: $ycolor-gray-6;
+    .duration {
+      font-style: italic;
+    }
+  }
 }
