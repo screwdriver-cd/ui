@@ -15,7 +15,6 @@ test('it works', (assert) => {
     server: 'github.com',
     owner: 'bananas',
     repo: 'peel',
-    link: 'https://github.com/bananas/peel',
     branch: 'master',
     valid: true
   });
@@ -26,7 +25,6 @@ test('it works', (assert) => {
     server: 'github.com',
     owner: 'bananas',
     repo: 'peel',
-    link: 'https://github.com/bananas/peel/tree/tree',
     branch: 'tree',
     valid: true
   });
