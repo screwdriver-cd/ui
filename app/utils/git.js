@@ -1,12 +1,13 @@
 /**
- * Parse a git url and get info about the repo
+ * Parse a git or https checkout url and get info about the repo
  * @method git
  * @param  {String}  scmUrl Url to parse
  * @return {Object}         Data about the url
  */
 export default {
   parse(scmUrl) {
-    const match = scmUrl.match(/^git@([^:]+):([^/]+)\/([^/]+)\.git(#(.+))?/);
+    // eslint-disable-next-line max-len
+    const match = scmUrl.match(/^(?:(?:https?|git):\/\/)?(?:[^@]+@)?([^/:]+)(?:\/|:)([^/]+)\/([^.#]+)(?:\.git)?(#.+)?$/);
 
     if (!match) {
       return {
@@ -18,14 +19,9 @@ export default {
       server: match[1],
       owner: match[2],
       repo: match[3],
-      branch: match[5] || 'master',
-      link: `https://${match[1]}/${match[2]}/${match[3]}`,
+      branch: match[4] ? match[4].slice(1) : 'master',
       valid: true
     };
-
-    if (result.branch !== 'master') {
-      result.link += `/tree/${result.branch}`;
-    }
 
     return result;
   }

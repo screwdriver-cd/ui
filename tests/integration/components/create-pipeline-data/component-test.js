@@ -38,7 +38,7 @@ test('it handles successful submission of scmUrl', function (assert) {
 
 test('it handles bad scmUrl', function (assert) {
   assert.expect(3);
-  const scm = 'git@github.com/foo/bar.git';
+  const scm = 'git@github.com%foo/bar.git';
 
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
