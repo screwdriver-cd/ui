@@ -9,7 +9,7 @@ module.exports = function (defaults) {
       useScss: true // for ember-cli-sass
     },
     fingerprint: {
-      exclude: ['supplementary_config']
+      exclude: ['supplementary_config', 'unknown_user']
     },
     svg: {
       paths: ['public/assets/svg']
