@@ -75,7 +75,19 @@
   }
 
   .line2 {
+    margin-bottom: 5px;
+    font-size: 14px;
     color: $sd-text-med;
+
+    a {
+      color: $sd-link;
+    }
+  }
+
+  .line3 {
+    color: $sd-text-med;
+    line-height: 20px;
+    vertical-align: middle;
 
     li {
       font-size: 14px;

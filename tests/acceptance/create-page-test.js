@@ -37,16 +37,25 @@ test('/create a pipeline: SUCCESS', function (assert) {
       id: 'abcd'
     })
   ]);
+
+  server.get('http://localhost:8080/v4/pipelines/abcd/events', () => [
+    200,
+    { 'Content-Type': 'application/json' },
+    JSON.stringify([])
+  ]);
+
   server.get('http://localhost:8080/v4/builds', () => [
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify([])
   ]);
+
   server.get('http://localhost:8080/v4/pipelines/abcd/jobs', () => [
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify([])
   ]);
+
   authenticateSession(this.application, { token: 'faketoken' });
 
   visit('/create');

@@ -33,6 +33,58 @@ const BUILD = {
   status: 'FAILURE'
 };
 
+const events = [
+  {
+    id: 'abcdf',
+    causeMessage: 'Merged by batman',
+    commit: {
+      message: 'Merge pull request #2 from batcave/batmobile',
+      author: {
+        username: 'batman',
+        name: 'Bruce W',
+        avatar: 'http://example.com/u/batman/avatar',
+        url: 'http://example.com/u/batman'
+      },
+      url: 'http://example.com/batcave/batmobile/commit/abcdef1029384'
+    },
+    createTime: '2016-11-04T20:09:41.238Z',
+    creator: {
+      username: 'batman',
+      name: 'Bruce W',
+      avatar: 'http://example.com/u/batman/avatar',
+      url: 'http://example.com/u/batman'
+    },
+    pipelineId: '12345',
+    sha: 'abcdef1029384',
+    type: 'pipeline',
+    workflow: ['main', 'publish']
+  }, {
+    id: 'abcde',
+    causeMessage: 'Merged by robin',
+    commit: {
+      message: 'Merge pull request #1 from batcave/batmobile',
+      author: {
+        username: 'robin',
+        name: 'Tim D',
+        avatar: 'http://example.com/u/robin/avatar',
+        url: 'http://example.com/u/robin'
+      },
+      url: 'http://example.com/batcave/batmobile/commit/1029384aaa'
+    },
+    createTime: '2016-11-04T20:09:41.238Z',
+    creator: {
+      username: 'robin',
+      name: 'Tim D',
+      avatar: 'http://example.com/u/robin/avatar',
+      url: 'http://example.com/u/robin'
+    },
+    pipelineId: '12345',
+    sha: '1029384aaa',
+    type: 'pipeline',
+    workflow: ['main', 'publish']
+  }
+];
+
 const jobs = [
   {
     id: '12345',
@@ -65,14 +117,14 @@ const shas = [
   '1234567890abcd'
 ];
 
-const makeBuilds = (jobId) => {
+const makeBuilds = (eventId) => {
   const builds = [];
 
   shas.forEach((sha) => {
     const b = Ember.copy(BUILD, true);
     const config = {
       id: Math.floor(Math.random() * 99999999999),
-      jobId,
+      eventId,
       sha,
       number: Date.now(),
       status: ['SUCCESS', 'FAILURE', 'RUNNING'][Math.floor(Math.random() * 2)]
@@ -113,6 +165,24 @@ moduleForAcceptance('Acceptance | pipeline builds', {
       JSON.stringify(jobs)
     ]);
 
+    server.get('http://localhost:8080/v4/pipelines/abcd/events', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify(events)
+    ]);
+
+    server.get('http://localhost:8080/v4/events/abcdf/builds', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify(makeBuilds('abcdf'))
+    ]);
+
+    server.get('http://localhost:8080/v4/events/abcde/builds', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify(makeBuilds('abcde'))
+    ]);
+
     server.get('http://localhost:8080/v4/jobs/12345/builds', () => [
       200,
       { 'Content-Type': 'application/json' },
@@ -146,6 +216,6 @@ test('visiting /pipelines/abcd', function (assert) {
     assert.equal(find('button').length, 0, 'should not have a start button');
     assert.equal(find('.pure-u-md-3-4 h2').text().trim(), 'Builds');
     assert.equal(find('.pure-u-md-1-4 h2').text().trim(), 'Pull Requests');
-    assert.equal(find('.pure-u-md-3-4 > div > div.ember-view').length, 5);
+    assert.equal(find('.pure-u-md-3-4 > div > div.ember-view').length, 2);
   });
 });

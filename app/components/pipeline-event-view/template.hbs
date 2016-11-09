@@ -1,0 +1,25 @@
+<div class="pure-g">
+  <div class="pure-u-1-5">
+    <h6><a href="{{event.commit.url}}">#{{event.truncatedSha}}</a></h6>
+  </div>
+  <div class="pure-u-3-5">
+    <span class="cause" title="{{event.commit.message}}">{{event.truncatedMessage}}</span>
+  </div>
+  <div class="pure-u-1-5 right">
+    <span class="created" title="{{event.createTime}}">{{event.createTimeWords}}</span>
+  </div>
+  <div class="pure-u-1 sep"></div>
+  <div class="pure-u-1-5">
+    {{user-link user=event.creator causeMessage=event.causeMessage}}
+  </div>
+  <div class="pure-u-3-5 workflow">
+    {{#each event.workflow as |name index|}}
+    {{build-bubble jobName=name build=(index-of event.buildsReversed index) small=true}}
+    {{/each}}
+  </div>
+  <div class="pure-u-1-5 right">
+    <span class="duration">{{event.durationText}}</span>
+  </div>
+</div>
+
+{{yield}}

@@ -1,12 +1,16 @@
 <div class="line1">
   <ul>
-    <li><a href="{{pipeline.hubUrl}}"><span class="sha">#{{truncatedSha}}</span></a></li>
+    <li></li>
     <li><h1>{{job.name}}</h1></li>
     <li>{{#if session.isAuthenticated}}{{#if hasButton}}<button {{action "toggleBuild"}}>{{buildAction}}</button>{{/if}}{{/if}}</li>
   </ul>
 </div>
-<ul class="line2">
-  <li><span class="cause">{{build.cause}}</span></li>
+<div class="line2">
+  <a href="{{event.commit.url}}"><span class="sha">#{{event.truncatedSha}}</span></a>
+  <span class="message" title="{{event.commit.message}}">{{event.truncatedMessage}}</span>
+</div>
+<ul class="line3">
+  <li>{{user-link user=event.creator causeMessage=event.causeMessage}}</li>
   <li><span class="container">{{build.buildContainer}}</span></li>
   <li><span class="duration">{{build.buildDuration}}</span></li>
 </ul>

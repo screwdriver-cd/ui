@@ -28,20 +28,55 @@ test('it renders', function (assert) {
   const sessionMock = {
     isAuthenticated: false
   };
+  const eventMock = {
+    id: 'abcd',
+    causeMessage: 'Merged by batman',
+    commit: {
+      message: 'Merge pull request #2 from batcave/batmobile',
+      author: {
+        username: 'batman',
+        name: 'Bruce W',
+        avatar: 'http://example.com/u/batman/avatar',
+        url: 'http://example.com/u/batman'
+      },
+      url: 'http://example.com/batcave/batmobile/commit/abcdef1029384'
+    },
+    truncatedMessage: 'Merge it',
+    createTime: '2016-11-04T20:09:41.238Z',
+    creator: {
+      username: 'batman',
+      name: 'Bruce W',
+      avatar: 'http://example.com/u/batman/avatar',
+      url: 'http://example.com/u/batman'
+    },
+    pipelineId: '12345',
+    sha: 'abcdef1029384',
+    truncatedSha: 'abcdef',
+    type: 'pipeline',
+    workflow: ['main', 'publish']
+  };
 
   this.set('buildMock', buildMock);
   this.set('jobMock', jobMock);
   this.set('pipelineMock', pipelineMock);
   this.set('sessionMock', sessionMock);
+  this.set('eventMock', eventMock);
   this.render(hbs`{{build-banner
     build=buildMock
     job=jobMock
     pipeline=pipelineMock
-    session=sessionMock}}`);
+    session=sessionMock
+    event=eventMock
+  }}`);
 
   assert.equal($('h1').text().trim(), 'PR-671');
-  assert.equal($('span.sha').text().trim(), '#abcd12');
-  assert.equal($('.cause').text().trim(), 'monkeys with typewriters');
+  assert.equal($('.line2 a').prop('href'),
+    'http://example.com/batcave/batmobile/commit/abcdef1029384');
+  assert.equal($('.line2 a').text().trim(), '#abcdef');
+  assert.equal($('.message').text().trim(),
+    'Merge it');
+  assert.equal($('.message').prop('title'),
+    'Merge pull request #2 from batcave/batmobile');
   assert.equal($('.container').text().trim(), 'node:6');
   assert.equal($('.duration').text().trim(), '5 seconds');
   assert.equal($('button').length, 0);

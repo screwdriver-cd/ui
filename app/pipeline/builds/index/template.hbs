@@ -14,7 +14,7 @@
 
 <div class="pure-g">
   <div class="pure-u-1 pure-u-md-3-4">
-    {{pipeline-builds-list buildList=model.builds jobs=model.jobs}}
+    {{pipeline-events-list events=model.pipeline.events}}
   </div>
   <div class="pure-u-1 pure-u-md-1-4">
     {{pipeline-pr-list pullRequests=model.pullRequests}}

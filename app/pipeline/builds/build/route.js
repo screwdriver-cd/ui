@@ -20,8 +20,11 @@ export default Ember.Route.extend({
 
       reloadQueuedBuild();
 
-      return this.store.findRecord('job', build.get('jobId')).then(job => ({
-        build, job, pipeline: this.modelFor('pipeline')
+      return Ember.RSVP.all([
+        this.store.findRecord('job', build.get('jobId')),
+        this.store.findRecord('event', build.get('eventId'))
+      ]).then(([job, event]) => ({
+        build, job, event, pipeline: this.modelFor('pipeline')
       }));
     });
   }

@@ -57,7 +57,7 @@ export default DS.RESTAdapter.extend({
         jobs: 'jobs',
         secrets: 'secrets'
       };
-    } else if (key === 'job' || key === 'jobs') {
+    } else if (key === 'job' || key === 'jobs' || key === 'event' || key === 'events') {
       o.links = {
         builds: 'builds'
       };

@@ -7,11 +7,12 @@ let server;
 moduleForModel('pipeline', 'Unit | Serializer | pipeline', {
   // Specify the other units that are required for this test.
   needs: [
-    'serializer:pipeline',
     'adapter:application',
-    'service:session',
+    'model:event',
+    'model:job',
     'model:secret',
-    'model:job'
+    'serializer:pipeline',
+    'service:session'
   ],
   beforeEach() {
     server = new Pretender();
@@ -38,7 +39,7 @@ test('it does not post with model name as key', function (assert) {
 
   Ember.run(() => {
     const pipeline = this.store().createRecord('pipeline', {
-      scmUrl: 'git@example.com:foo/bar.git'
+      checkoutUrl: 'git@example.com:foo/bar.git'
     });
 
     pipeline.save().then(() => {

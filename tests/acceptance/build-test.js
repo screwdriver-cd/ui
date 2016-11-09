@@ -13,15 +13,15 @@ moduleForAcceptance('Acceptance | build', {
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
+        admins: { batman: true },
+        createTime: '2016-09-15T23:12:23.760Z',
         id: 'abcd',
-        scmUrl: 'git@github.com:foo/bar.git#master',
         scmRepo: {
           name: 'foo/bar',
           branch: 'master',
           url: 'https://github.com/foo/bar'
         },
-        createTime: '2016-09-15T23:12:23.760Z',
-        admins: { batman: true },
+        scmUri: 'github.com:123456:master',
         workflow: ['main', 'publish', 'prod']
       })
     ]);
@@ -32,6 +32,7 @@ moduleForAcceptance('Acceptance | build', {
       JSON.stringify({
         id: '1234',
         jobId: 'aabbcc',
+        eventId: 'eeeeee',
         number: 1474649580274,
         container: 'node:6',
         cause: 'Started by user petey',
@@ -60,6 +61,36 @@ moduleForAcceptance('Acceptance | build', {
           url: 'https://github.com/commit',
           message: 'merge this'
         }
+      })
+    ]);
+
+    server.get('http://localhost:8080/v4/events/eeeeee', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: 'abcd',
+        causeMessage: 'Merged by batman',
+        commit: {
+          message: 'Merge pull request #2 from batcave/batmobile',
+          author: {
+            username: 'batman',
+            name: 'Bruce W',
+            avatar: 'http://example.com/u/batman/avatar',
+            url: 'http://example.com/u/batman'
+          },
+          url: 'http://example.com/batcave/batmobile/commit/abcdef1029384'
+        },
+        createTime: '2016-11-04T20:09:41.238Z',
+        creator: {
+          username: 'batman',
+          name: 'Bruce W',
+          avatar: 'http://example.com/u/batman/avatar',
+          url: 'http://example.com/u/batman'
+        },
+        pipelineId: '12345',
+        sha: 'abcdef1029384',
+        type: 'pipeline',
+        workflow: ['main', 'publish']
       })
     ]);
 
@@ -116,7 +147,7 @@ test('visiting /pipelines/:id/build/:id', function (assert) {
     assert.equal(currentURL(), '/pipelines/abcd/build/1234');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.line1 h1').text().trim(), 'PR-50', 'incorrect job name');
-    assert.equal(find('span.sha').text().trim(), '#c96f36', 'incorrect sha');
+    assert.equal(find('span.sha').text().trim(), '#abcdef', 'incorrect sha');
     assert.equal(find('.is-open .logs').text().trim(), 'bad stuff', 'incorrect logs open');
 
     // This looks weird, but :nth-child(n) wasn't resolving properly.
