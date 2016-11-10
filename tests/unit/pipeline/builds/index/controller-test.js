@@ -22,7 +22,7 @@ test('it exists', function (assert) {
 });
 
 test('it starts a build', function (assert) {
-  assert.expect(3);
+  assert.expect(6);
   server.post('http://localhost:8080/v4/builds', () => [
     200,
     { 'Content-Type': 'application/json' },
@@ -58,13 +58,16 @@ test('it starts a build', function (assert) {
       assert.equal(id, 5678);
     };
 
+    assert.notOk(controller.get('isShowingModal'));
     controller.send('startMainBuild');
+    assert.ok(controller.get('isShowingModal'));
   });
 
   return wait().then(() => {
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
+    assert.notOk(controller.get('isShowingModal'));
     assert.deepEqual(payload, {
       jobId: 'abcd'
     });

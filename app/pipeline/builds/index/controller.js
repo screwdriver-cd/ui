@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+  isShowingModal: false,
+  errorMessage: '',
   session: Ember.inject.service('session'),
   actions: {
     startMainBuild() {
@@ -17,11 +19,18 @@ export default Ember.Controller.extend({
         }
       }
 
+      this.set('isShowingModal', true);
+
       const newBuild = this.store.createRecord('build', { jobId: main.get('id') });
 
-      return newBuild.save().then(b =>
-        this.transitionToRoute('pipeline.builds.build', b.get('id'))
-      );
+      return newBuild.save().then((b) => {
+        this.set('isShowingModal', false);
+
+        return this.transitionToRoute('pipeline.builds.build', b.get('id'));
+      }).catch((e) => {
+        this.set('isShowingModal', false);
+        this.set('errorMessage', e.message);
+      });
     }
   }
 });

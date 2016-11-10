@@ -1,3 +1,5 @@
+{{info-message message=errorMessage type="error"}}
+
 {{#if session.isAuthenticated}}
 <div class="pure-g">
   <div class="pure-u-21-24">
@@ -21,5 +23,13 @@
   </div>
 </div>
 
+{{#if isShowingModal}}
+  {{#modal-dialog clickOutsideToClose=false
+    targetAttachment="center"
+    translucentOverlay=true
+  }}
+    {{loading-view}}
+  {{/modal-dialog}}
+{{/if}}
 
 {{outlet}}
