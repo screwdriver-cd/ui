@@ -77,7 +77,7 @@ test('it adds links to pipelines', function (assert) {
   const payload = adapter.handleResponse(200, {}, { id: 1234 }, requestData);
 
   assert.deepEqual(payload, {
-    pipeline: { id: 1234, links: { jobs: 'jobs', secrets: 'secrets' } }
+    pipeline: { id: 1234, links: { jobs: 'jobs', secrets: 'secrets', events: 'events' } }
   });
 });
 

@@ -1,0 +1,18 @@
+& {
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+
+  a {
+    vertical-align: top;
+    color: $sd-link;
+    text-decoration: none;
+  }
+
+  img {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+  }
+}

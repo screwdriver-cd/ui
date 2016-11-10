@@ -7,7 +7,7 @@ export default Ember.Controller.extend({
 
   actions: {
     createPipeline(scmUrl) {
-      let pipeline = this.store.createRecord('pipeline', { scmUrl, configUrl: scmUrl });
+      let pipeline = this.store.createRecord('pipeline', { checkoutUrl: scmUrl });
 
       this.set('isSaving', true);
 

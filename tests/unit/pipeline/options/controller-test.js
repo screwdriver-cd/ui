@@ -7,15 +7,16 @@ let server;
 moduleFor('controller:pipeline/options', 'Unit | Controller | pipeline/options', {
   // Specify the other units that are required for this test.
   needs: [
-    'model:pipeline',
-    'serializer:pipeline',
-    'model:job',
-    'model:build',
-    'model:secret',
-    'service:store',
-    'serializer:job',
     'adapter:application',
-    'service:session'
+    'model:build',
+    'model:event',
+    'model:job',
+    'model:pipeline',
+    'model:secret',
+    'serializer:job',
+    'serializer:pipeline',
+    'service:session',
+    'service:store'
   ],
   beforeEach() {
     server = new Pretender();
