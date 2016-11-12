@@ -1,16 +1,16 @@
 & {
   padding: 10px 0;
-  border-bottom: 1px solid $sd-separator;
   color: $sd-text;
   font-size: 14px;
 
   .duration {
     font-style: italic;
-    color: $sd-time;
+    color: $sd-text-med;
   }
 
   .chevron {
     color: $sd-text-light;
+    padding-right: 15px;
   }
 
   .pure-g div:last-child {

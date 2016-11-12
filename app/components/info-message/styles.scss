@@ -19,26 +19,26 @@
   }
 
   &.error {
-    border: 2px solid $ycolor-red-2a;
+    border: 2px solid $sd-failure;
 
     i.fa {
-      color: $ycolor-red-2a;
+      color: $sd-failure;
     }
   }
 
   &.warning {
-    border: 2px solid $ycolor-yellow-5a;
+    border: 2px solid $sd-warning;
 
     i.fa {
-      color: $ycolor-yellow-5a;
+      color: $sd-warning;
     }
   }
 
   &.info {
-    border: 2px solid $ycolor-blue-10a;
+    border: 2px solid $sd-running;
 
     i.fa {
-      color: $ycolor-blue-10a;
+      color: $sd-running;
     }
   }
 }

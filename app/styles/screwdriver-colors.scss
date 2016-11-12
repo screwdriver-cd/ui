@@ -1,20 +1,25 @@
-$sd-success: $ycolor-green-6b;
-$sd-success-gradient-start: $ycolor-teal-1b;
-$sd-success-gradient-end: $ycolor-green-2a;
-$sd-failure: $ycolor-red-2b;
-$sd-aborted: $ycolor-red-2b;
-$sd-failure-gradient-start: $ycolor-red-2a;
-$sd-failure-gradient-end: $color-punch-a;
-$sd-running: $ycolor-blue-10b;
-$sd-queued: $ycolor-blue-10b;
-$sd-running-gradient-start: $ycolor-blue-1a;
-$sd-running-gradient-end: $ycolor-blue-10b;
+$sd-primary: #003abc;
+$sd-link: #188fff;
 
-$sd-primary: $ycolor-blue-3;
-$sd-link: $ycolor-blue-1a;
+$sd-text: #26282a;
+$sd-text-med: #979ba7;
+$sd-text-light: #d8dade;
 
-$sd-separator: $ycolor-gray-2;
-$sd-text-light: $ycolor-gray-4;
-$sd-text-med: $ycolor-gray-6;
-$sd-time: $sd-text-med;
-$sd-text: $ycolor-gray-11;
+$sd-separator: #f1f1f5;
+$sd-highlight: #e7f4ff;
+
+$sd-warning: #ffd333;
+
+$sd-success: #1ac567;
+$sd-success-gradient-start: #00c1a5;
+$sd-success-gradient-end: #00cd7a;
+
+$sd-failure: #dc142d;
+$sd-aborted: $sd-failure;
+$sd-failure-gradient-start: #f0162f;
+$sd-failure-gradient-end: #f80e5d;
+
+$sd-running: #0f69ff;
+$sd-queued: $sd-running;
+$sd-running-gradient-start: $sd-link;
+$sd-running-gradient-end: $sd-running;

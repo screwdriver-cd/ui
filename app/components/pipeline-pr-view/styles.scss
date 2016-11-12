@@ -1,23 +1,23 @@
 .fa {
-  color: $ycolor-blue-10b;
+  color: $sd-running;
   font-size: 14px;
 }
 
 &.SUCCESS {
   .fa {
-    color: $ycolor-green-6b;
+    color: $sd-success;
   }
 }
 
 &.FAILURE {
   .fa {
-    color: $ycolor-red-2b;
+    color: $sd-failure;
   }
 }
 
 a {
   text-decoration: none;
-  color: $ycolor-gray-b;
+  color: $sd-text;
   font-size: 14px;
 }
 

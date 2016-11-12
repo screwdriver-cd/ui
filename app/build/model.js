@@ -37,27 +37,16 @@ function durationText(start, end) {
 }
 
 export default DS.Model.extend({
-  eventId: DS.attr('string'),
-  jobId: DS.attr('string'),
-  parentBuildId: DS.attr('string'),
-  number: DS.attr('number'),
   // ember-data has some reservations with the "container" attribute name
   buildContainer: DS.attr('string'),
-  cause: DS.attr('string'),
-  sha: DS.attr('string'),
-  createTime: DS.attr('date'),
-  startTime: DS.attr('date'),
-  endTime: DS.attr('date'),
-  queuedDuration: Ember.computed('createTime', 'startTime', {
-    get() {
-      return durationText.call(this, 'createTime', 'startTime');
-    }
-  }),
   buildDuration: Ember.computed('startTime', 'endTime', {
     get() {
       return durationText.call(this, 'startTime', 'endTime');
     }
   }),
+  cause: DS.attr('string'),
+  commit: DS.attr(),
+  createTime: DS.attr('date'),
   createTimeWords: Ember.computed('createTime', {
     get() {
       const dt = durationText.call(this, 'createTime', 'now');
@@ -65,14 +54,30 @@ export default DS.Model.extend({
       return `${dt} ago`;
     }
   }),
+  endTime: DS.attr('date'),
+  eventId: DS.attr('string'),
+  jobId: DS.attr('string'),
+  meta: DS.attr(),
+  number: DS.attr('number'),
+  parameters: DS.attr(),
+  parentBuildId: DS.attr('string'),
+  queuedDuration: Ember.computed('createTime', 'startTime', {
+    get() {
+      return durationText.call(this, 'createTime', 'startTime');
+    }
+  }),
+  sha: DS.attr('string'),
+  startTime: DS.attr('date'),
+  status: DS.attr('string'),
+  steps: DS.attr(),
   totalDurationMS: Ember.computed('createTime', 'endTime', {
     get() {
       return calcDuration.call(this, 'createTime', 'endTime');
     }
   }),
-  parameters: DS.attr(),
-  meta: DS.attr(),
-  steps: DS.attr(),
-  status: DS.attr('string'),
-  commit: DS.attr()
+  truncatedSha: Ember.computed('sha', {
+    get() {
+      return this.get('sha').substr(0, 6);
+    }
+  })
 });

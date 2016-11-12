@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  className: ['buildStepView'],
+  classNames: ['step-view'],
   classNameBindings: ['status'],
   isOpen: false,
 
@@ -9,16 +9,16 @@ export default Ember.Component.extend({
    * Maps step exit code with status.
    * @property {String} status
    */
-  status: Ember.computed('step.code', 'step.startTime', {
+  status: Ember.computed('code', 'startTime', {
     get() {
-      const code = this.get('step.code');
-      const startTime = this.get('step.startTime');
+      const code = this.get('code');
+      const startTime = this.get('startTime');
 
       if (!startTime) {
         return 'queued';
       }
 
-      if (code === undefined && startTime) {
+      if ((code === undefined || code === null) && startTime) {
         return 'running';
       }
 
@@ -56,13 +56,13 @@ export default Ember.Component.extend({
   }),
 
   /**
-   * Returns duration in seconds for a completed step.
-   * @property {number} duration
+   * Returns duration in seconds for a completed step
+   * @property {Number} duration
    */
-  duration: Ember.computed('step.startTime', 'step.endTime', {
+  duration: Ember.computed('startTime', 'endTime', {
     get() {
-      const start = this.get('step.startTime');
-      const end = this.get('step.endTime');
+      const start = this.get('startTime');
+      const end = this.get('endTime');
 
       if (end && start) {
         const duration = Date.parse(end) - Date.parse(start);
@@ -73,9 +73,13 @@ export default Ember.Component.extend({
       return null;
     }
   }),
-  startTimeFromNow: Ember.computed('step.startTime', 'now', {
+  /**
+   * Returns the duration in seconds for when this build last started
+   * @property {Number} startTimeFromNow
+   */
+  startTimeFromNow: Ember.computed('startTime', 'now', {
     get() {
-      const start = Date.parse(this.get('step.startTime'));
+      const start = Date.parse(this.get('startTime'));
 
       if (start) {
         const duration = Date.now() - start;
@@ -101,6 +105,10 @@ export default Ember.Component.extend({
     }, interval);
   }.on('init'),
 
+  /**
+   * Allow user to click on a step to open the logs
+   * @method click
+   */
   click() {
     if (this.get('status') !== 'queued') {
       this.get('onToggle')();

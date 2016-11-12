@@ -12,11 +12,15 @@ test('it renders', function (assert) {
 
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  this.set('stepsMock', []);
-  this.set('buildMock', {});
-  this.render(hbs`{{build-step-collection steps=stepsMock build=buildMock}}`);
+  this.render(hbs`{{build-step-collection}}`);
 
   assert.equal($($('.heading').get(0)).text().trim(), 'Status');
   assert.equal($($('.heading').get(1)).text().trim(), 'Step');
   assert.equal($($('.heading').get(2)).text().trim(), 'Duration');
+
+  this.render(hbs`{{#build-step-collection}}
+    <div class="hello">hello</div>
+    {{/build-step-collection}}`);
+
+  assert.equal($('.hello').text().trim(), 'hello');
 });

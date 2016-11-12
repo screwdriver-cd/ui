@@ -1,9 +1,13 @@
-@mixin transition($prop, $duration, $delay: 0ms) {
-  -webkit-transition: $prop $duration $delay;
-  -moz-transition: $prop $duration $delay;
-  -ms-transition: $prop $duration $delay;
-  -o-transition: $prop $duration $delay;
-  transition: $prop $duration $delay;
+$animate: 300ms;
+$animate-delay: 250ms;
+$animate-done: 600ms;
+
+@mixin transition($prop, $duration, $delay: 0ms, $easing: ease) {
+  -webkit-transition: $prop $duration $delay $easing;
+  -moz-transition: $prop $duration $delay $easing;
+  -ms-transition: $prop $duration $delay $easing;
+  -o-transition: $prop $duration $delay $easing;
+  transition: $prop $duration $delay $easing;
 }
 
 @mixin backgroundGradient($dir, $start, $end) {
@@ -13,8 +17,15 @@
   background: linear-gradient($dir, $start, $end);
 }
 
+@mixin scale($amt) {
+  -webkit-transform: scale($amt);
+  -moz-transform: scale($amt);
+  -ms-transform: scale($amt);
+  -o-transform: scale($amt);
+  transform: scale($amt);
+}
+
 @import "font-awesome";
-@import "fuji-colors";
 @import "screwdriver-colors";
 @import "pod-styles";
 @import "ember-modal-dialog/ember-modal-structure";

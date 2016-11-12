@@ -1,15 +1,28 @@
 {{build-banner
-  build=model.build
-  pipeline=model.pipeline
-  job=model.job
-  session=session
+  buildContainer=model.build.buildContainer
+  duration=model.build.buildDuration
+  buildStatus=model.build.status
+  jobName=model.job.name
+  isAuthenticated=session.isAuthenticated
+  event=model.event
   onStart=(action "startBuild")
   onStop=(action "stopBuild")
-  event=model.event
+  reloadBuild=(action "reload")
 }}
 
-{{#if model.build.steps}}
-{{build-step-collection steps=model.build.steps build=model.build}}
+{{#if stepList}}
+{{#build-step-collection}}
+  {{#each stepList as |name index|}}
+    {{build-step
+      stepName=name
+      startTime=(get (index-of model.build.steps index) "startTime")
+      endTime=(get (index-of model.build.steps index) "endTime")
+      code=(get (index-of model.build.steps index) "code")
+      buildId=model.build.id
+      autoscroll=autoscroll
+    }}
+  {{/each}}
+{{/build-step-collection}}
 {{/if}}
 
 {{outlet}}

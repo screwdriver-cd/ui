@@ -1,8 +1,8 @@
 <div class="line1">
   <ul>
     <li></li>
-    <li><h1>{{job.name}}</h1></li>
-    <li>{{#if session.isAuthenticated}}{{#if hasButton}}<button {{action "toggleBuild"}}>{{buildAction}}</button>{{/if}}{{/if}}</li>
+    <li><h1>{{jobName}}</h1></li>
+    <li>{{#if isAuthenticated}}{{#if hasButton}}<button {{action "toggleBuild"}}>{{buildAction}}</button>{{/if}}{{/if}}</li>
   </ul>
 </div>
 <div class="line2">
@@ -11,6 +11,6 @@
 </div>
 <ul class="line3">
   <li>{{user-link user=event.creator causeMessage=event.causeMessage}}</li>
-  <li><span class="container">{{build.buildContainer}}</span></li>
-  <li><span class="duration">{{build.buildDuration}}</span></li>
+  <li><span class="container">{{buildContainer}}</span></li>
+  <li><span class="duration">{{duration}}</span></li>
 </ul>

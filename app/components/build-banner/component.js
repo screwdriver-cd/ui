@@ -2,17 +2,11 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   classNames: ['build-banner'],
-  classNameBindings: ['build.status'],
+  classNameBindings: ['buildStatus'],
 
-  truncatedSha: Ember.computed('build.sha', {
+  buildAction: Ember.computed('buildStatus', {
     get() {
-      return this.get('build.sha').substr(0, 6);
-    }
-  }),
-
-  buildAction: Ember.computed('build.status', {
-    get() {
-      const status = this.get('build.status');
+      const status = this.get('buildStatus');
 
       if (status === 'RUNNING' || status === 'QUEUED') {
         return 'Stop';
@@ -22,19 +16,25 @@ export default Ember.Component.extend({
     }
   }),
 
-  hasButton: Ember.computed('buildAction', 'job.name', {
+  hasButton: Ember.computed('buildAction', 'jobName', {
     get() {
       if (this.get('buildAction') === 'Stop') {
         return true;
       }
 
-      if (/^PR-/.test(this.get('job.name'))) {
+      if (/^PR-/.test(this.get('jobName'))) {
         return true;
       }
 
       return false;
     }
   }),
+
+  willRender() {
+    this._super(...arguments);
+
+    this.get('reloadBuild')();
+  },
 
   actions: {
     toggleBuild() {

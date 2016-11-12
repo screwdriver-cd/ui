@@ -1,72 +1,57 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
+
+const eventMock = {
+  id: 'abcd',
+  causeMessage: 'Merged by batman',
+  commit: {
+    message: 'Merge pull request #2 from batcave/batmobile',
+    author: {
+      username: 'batman',
+      name: 'Bruce W',
+      avatar: 'http://example.com/u/batman/avatar',
+      url: 'http://example.com/u/batman'
+    },
+    url: 'http://example.com/batcave/batmobile/commit/abcdef1029384'
+  },
+  truncatedMessage: 'Merge it',
+  createTime: '2016-11-04T20:09:41.238Z',
+  creator: {
+    username: 'batman',
+    name: 'Bruce W',
+    avatar: 'http://example.com/u/batman/avatar',
+    url: 'http://example.com/u/batman'
+  },
+  pipelineId: '12345',
+  sha: 'abcdef1029384',
+  truncatedSha: 'abcdef',
+  type: 'pipeline',
+  workflow: ['main', 'publish']
+};
 
 moduleForComponent('build-banner', 'Integration | Component | build banner', {
   integration: true
 });
 
 test('it renders', function (assert) {
+  assert.expect(9);
   const $ = this.$;
+
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = {
-    status: 'SUCCESS',
-    cause: 'monkeys with typewriters',
-    buildContainer: 'node:6',
-    sha: 'abcd1234567890',
-    buildDuration: '5 seconds'
-  };
-  const jobMock = {
-    name: 'PR-671'
-  };
-  const pipelineMock = {
-    appId: 'foo:bar',
-    branch: 'master',
-    hubUrl: 'http://github.com/foo/bar'
-  };
-  const sessionMock = {
-    isAuthenticated: false
-  };
-  const eventMock = {
-    id: 'abcd',
-    causeMessage: 'Merged by batman',
-    commit: {
-      message: 'Merge pull request #2 from batcave/batmobile',
-      author: {
-        username: 'batman',
-        name: 'Bruce W',
-        avatar: 'http://example.com/u/batman/avatar',
-        url: 'http://example.com/u/batman'
-      },
-      url: 'http://example.com/batcave/batmobile/commit/abcdef1029384'
-    },
-    truncatedMessage: 'Merge it',
-    createTime: '2016-11-04T20:09:41.238Z',
-    creator: {
-      username: 'batman',
-      name: 'Bruce W',
-      avatar: 'http://example.com/u/batman/avatar',
-      url: 'http://example.com/u/batman'
-    },
-    pipelineId: '12345',
-    sha: 'abcdef1029384',
-    truncatedSha: 'abcdef',
-    type: 'pipeline',
-    workflow: ['main', 'publish']
-  };
+  this.set('willRender', () => {
+    assert.ok(true);
+  });
 
-  this.set('buildMock', buildMock);
-  this.set('jobMock', jobMock);
-  this.set('pipelineMock', pipelineMock);
-  this.set('sessionMock', sessionMock);
   this.set('eventMock', eventMock);
   this.render(hbs`{{build-banner
-    build=buildMock
-    job=jobMock
-    pipeline=pipelineMock
-    session=sessionMock
+    buildContainer="node:6"
+    buildStatus="SUCCESS"
+    duration="5 seconds"
     event=eventMock
+    isAuthenticated=false
+    jobName="PR-671"
+    reloadBuild=(action willRender)
   }}`);
 
   assert.equal($('h1').text().trim(), 'PR-671');
@@ -83,123 +68,73 @@ test('it renders', function (assert) {
 });
 
 test('it does not render a restart button for non-PR jobs when authenticated', function (assert) {
-  const $ = this.$;
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = Ember.Object.create({
-    status: 'ABORTED',
-    cause: 'monkeys with typewriters',
-    sha: 'abcd1234567890',
-    buildDuration: '5 seconds'
-  });
-  const jobMock = Ember.Object.create({
-    name: 'main'
-  });
-  const pipelineMock = Ember.Object.create({
-    appId: 'foo:bar',
-    branch: 'master',
-    hubUrl: 'http://github.com/foo/bar'
-  });
-  const sessionMock = Ember.Object.create({
-    isAuthenticated: true
+  assert.expect(2);
+  this.set('willRender', () => {
+    assert.ok(true);
   });
 
-  this.set('buildMock', buildMock);
-  this.set('jobMock', jobMock);
-  this.set('pipelineMock', pipelineMock);
-  this.set('sessionMock', sessionMock);
+  this.set('eventMock', eventMock);
   this.render(hbs`{{build-banner
-    build=buildMock
-    job=jobMock
-    pipeline=pipelineMock
-    session=sessionMock
+    buildContainer="node:6"
+    buildStatus="ABORTED"
+    duration="5 seconds"
+    event=eventMock
+    isAuthenticated=true
+    jobName="main"
+    reloadBuild=(action willRender)
   }}`);
 
-  assert.equal($('button').length, 0);
+  assert.equal(this.$('button').length, 0);
 });
 
 test('it renders a restart button for PR jobs when authenticated', function (assert) {
-  assert.expect(2);
-  const $ = this.$;
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = Ember.Object.create({
-    status: 'ABORTED',
-    cause: 'monkeys with typewriters',
-    sha: 'abcd1234567890',
-    buildDuration: '5 seconds'
-  });
-  const jobMock = Ember.Object.create({
-    name: 'PR-1234'
-  });
-  const pipelineMock = Ember.Object.create({
-    appId: 'foo:bar',
-    branch: 'master',
-    hubUrl: 'http://github.com/foo/bar'
-  });
-  const sessionMock = Ember.Object.create({
-    isAuthenticated: true
-  });
-  const startAction = () => {
+  assert.expect(3);
+  this.set('willRender', () => {
     assert.ok(true);
-  };
+  });
 
-  this.set('buildMock', buildMock);
-  this.set('jobMock', jobMock);
-  this.set('pipelineMock', pipelineMock);
-  this.set('sessionMock', sessionMock);
-  this.set('externalStart', startAction);
+  this.set('externalStart', () => {
+    assert.ok(true);
+  });
+
+  this.set('eventMock', eventMock);
   this.render(hbs`{{build-banner
-    build=buildMock
-    job=jobMock
-    pipeline=pipelineMock
-    session=sessionMock
+    buildContainer="node:6"
+    buildStatus="ABORTED"
+    duration="5 seconds"
+    event=eventMock
+    isAuthenticated=true
+    jobName="PR-671"
+    reloadBuild=(action willRender)
     onStart=(action externalStart)
   }}`);
 
-  assert.equal($('button').text().trim(), 'Restart');
-  $('button').click();
+  assert.equal(this.$('button').text().trim(), 'Restart');
+  this.$('button').click();
 });
 
 test('it renders a stop button for job when authenticated', function (assert) {
-  assert.expect(2);
-  const $ = this.$;
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = Ember.Object.create({
-    status: 'RUNNING',
-    cause: 'monkeys with typewriters',
-    sha: 'abcd1234567890',
-    buildDuration: '5 seconds'
-  });
-  const jobMock = Ember.Object.create({
-    name: 'main'
-  });
-  const pipelineMock = Ember.Object.create({
-    appId: 'foo:bar',
-    branch: 'master',
-    hubUrl: 'http://github.com/foo/bar'
-  });
-  const sessionMock = Ember.Object.create({
-    isAuthenticated: true
-  });
-  const stopAction = () => {
+  assert.expect(3);
+  this.set('willRender', () => {
     assert.ok(true);
-  };
+  });
 
-  this.set('buildMock', buildMock);
-  this.set('jobMock', jobMock);
-  this.set('pipelineMock', pipelineMock);
-  this.set('sessionMock', sessionMock);
-  this.set('externalStop', stopAction);
+  this.set('externalStop', () => {
+    assert.ok(true);
+  });
+
+  this.set('eventMock', eventMock);
   this.render(hbs`{{build-banner
-    build=buildMock
-    job=jobMock
-    pipeline=pipelineMock
-    session=sessionMock
+    buildContainer="node:6"
+    buildStatus="RUNNING"
+    duration="5 seconds"
+    event=eventMock
+    isAuthenticated=true
+    jobName="main"
+    reloadBuild=(action willRender)
     onStop=(action externalStop)
   }}`);
 
-  assert.equal($('button').text().trim(), 'Stop');
-  $('button').click();
+  assert.equal(this.$('button').text().trim(), 'Stop');
+  this.$('button').click();
 });
