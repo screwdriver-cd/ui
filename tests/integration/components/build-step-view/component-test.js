@@ -8,91 +8,73 @@ moduleForComponent('build-step-view', 'Integration | Component | build step view
 test('it renders and handles clicks', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = { id: 1 };
-  const stepMock = {
-    name: 'banana',
-    code: 0,
-    startTime: '2016-08-26T20:49:42.531Z',
-    endTime: '2016-08-26T20:50:52.531Z'
-  };
   let count = 0;
   let open = false;
+  const $ = this.$;
 
-  this.set('buildMock', buildMock);
-  this.set('stepMock', stepMock);
   this.set('open', open);
-  this.set('externalAction', () => {
+  this.set('toggle', () => {
     count += 1;
     open = !open;
     this.set('open', open);
   });
 
-  // eslint-disable-next-line max-len
-  this.render(hbs`{{build-step-view build=buildMock step=stepMock isOpen=open onToggle=(action externalAction)}}`);
+  this.render(hbs`{{build-step-view
+    code=0
+    endTime='2016-08-26T20:50:52.531Z'
+    isOpen=open
+    onToggle=(action toggle)
+    startTime='2016-08-26T20:49:42.531Z'
+    stepName='banana'
+  }}`);
 
   assert.notOk(this.get('isOpen'));
-  assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-check'), 'success icon');
-  assert.equal(this.$('.name').text().trim(), 'banana');
-  assert.equal(this.$('.duration').text().trim(), '1 minute, 10 seconds');
-  assert.ok(this.$(this.$('.chevron i').get(0)).hasClass('fa-chevron-down'),
+  assert.ok($($('.status-icon i').get(0)).hasClass('fa-check'), 'success icon');
+  assert.equal($('.name').text().trim(), 'banana');
+  assert.equal($('.duration').text().trim(), '1 minute, 10 seconds');
+  assert.ok($($('.chevron i').get(0)).hasClass('fa-chevron-down'),
     'chevron down before click');
-  this.$('.name').click();
-  assert.ok(this.$(this.$('.chevron i').get(0)).hasClass('fa-chevron-up'),
+  $('.name').click();
+  assert.ok($($('.chevron i').get(0)).hasClass('fa-chevron-up'),
     'chevron up after click');
-  this.$('.name').click();
-  assert.ok(this.$(this.$('.chevron i').get(0)).hasClass('fa-chevron-down'),
+  $('.name').click();
+  assert.ok($($('.chevron i').get(0)).hasClass('fa-chevron-down'),
     'chevron down after click');
   assert.equal(count, 2);
 });
 
-test('it is queued', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = { id: 1 };
-  const stepMock = {
-    name: 'banana'
-  };
-
-  this.set('buildMock', buildMock);
-  this.set('stepMock', stepMock);
-
-  this.render(hbs`{{build-step-view build=buildMock step=stepMock}}`);
+test('it has no icon when queued', function (assert) {
+  this.render(hbs`{{build-step-view
+    code=undefined
+    endTime=undefined
+    isOpen=false
+    startTime=undefined
+    stepName='banana'
+  }}`);
 
   assert.equal(this.$('.status-icon i').length, 0);
 });
 
-test('it is running', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = { id: 1 };
-  const stepMock = {
-    name: 'banana',
-    startTime: '2016-08-26T20:49:42.531Z'
-  };
-
-  this.set('buildMock', buildMock);
-  this.set('stepMock', stepMock);
-
-  this.render(hbs`{{build-step-view build=buildMock step=stepMock}}`);
+test('it has a spinner when running', function (assert) {
+  this.render(hbs`{{build-step-view
+    code=undefined
+    endTime=undefined
+    isOpen=false
+    startTime='2016-08-26T20:49:42.531Z'
+    stepName='banana'
+  }}`);
 
   assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-spinner'));
 });
 
-test('it is failed', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = { id: 1 };
-  const stepMock = {
-    name: 'banana',
-    code: 127,
-    startTime: '2016-08-26T20:49:42.531Z',
-    endTime: '2016-08-26T20:50:52.531Z'
-  };
-
-  this.set('buildMock', buildMock);
-  this.set('stepMock', stepMock);
-
-  this.render(hbs`{{build-step-view build=buildMock step=stepMock}}`);
+test('it has an "x" when failed', function (assert) {
+  this.render(hbs`{{build-step-view
+    code=127
+    endTime='2016-08-26T20:50:52.531Z'
+    isOpen=false
+    startTime='2016-08-26T20:49:42.531Z'
+    stepName='banana'
+  }}`);
 
   assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-times'));
 });

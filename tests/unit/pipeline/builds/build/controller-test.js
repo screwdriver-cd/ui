@@ -84,3 +84,35 @@ test('it stops a build', function (assert) {
     controller.send('stopBuild');
   });
 });
+
+test('it reloads a build', function (assert) {
+  assert.expect(2);
+  let controller = this.subject();
+  const build = Ember.Object.create({
+    id: '5678',
+    jobId: 'abcd',
+    status: 'QUEUED',
+    reload() {
+      assert.ok(true);
+      this.set('status', 'SUCCESS');
+
+      return Ember.RSVP.resolve({
+        id: '5678',
+        jobId: 'abcd',
+        status: 'SUCCESS'
+      });
+    }
+  });
+
+  Ember.run(() => {
+    controller.set('model', {
+      build
+    });
+
+    controller.reloadBuild();
+  });
+
+  return wait().then(() => {
+    assert.ok(true);
+  });
+});

@@ -8,6 +8,7 @@ module.exports = {
   excludes: [
     '*/components/**/template.js',
     '*/create/template.js',
+    '*/error/template.js',
     '*/home/template.js',
     '*/application/template.js',
     '*/login/template.js',

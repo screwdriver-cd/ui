@@ -1,2 +1,15 @@
-{{build-step-view step=step build=build isOpen=isOpen onToggle=(action "toggleOpen")}}
-{{build-log step=step build=build isOpen=isOpen autoscroll=autoscroll}}
+{{build-step-view
+  stepName=stepName
+  startTime=startTime
+  endTime=endTime
+  code=code
+  isOpen=isOpen
+  onToggle=(action "toggleOpen")
+}}
+{{build-log
+  stepName=stepName
+  buildId=buildId
+  isOpen=isOpen
+  autoscroll=autoscroll
+  onClick=(action "cancelAutoClose")
+}}
