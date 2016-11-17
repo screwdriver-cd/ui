@@ -7,7 +7,7 @@
   h6 {
     margin: 0;
     padding: 0;
-    font-size: 16px;
+    font-size: 20px;
 
     a {
       color: $sd-link;
@@ -16,31 +16,34 @@
     }
   }
 
-  .right {
-    text-align: right;
+  .commit {
+    line-height: 41px;
+    vertical-align: top;
   }
-
-  .workflow .job {
-    text-indent: -9000px;
+  .commit, .message, .user, .time {
+    font-size: 14px;
     display: inline-block;
-    width: 16px;
-    height: 16px;
-    border-radius: 16px;
-    border: 2px solid $sd-separator;
   }
 
   .cause {
     color: $sd-text;
   }
-  .duration, .created {
-    font-size: 14px;
-    color: $sd-text-med;
-  }
-  .duration {
-    font-style: italic;
+
+  .user {
+    overflow: hidden;
+    word-wrap: nowrap;
   }
 
-  .sep {
-    height: 5px;
+  .cause, .created {
+    margin-bottom: 5px;
+  }
+
+  .time {
+    text-align: right;
+    color: $sd-text-med;
+  }
+
+  .duration {
+    font-style: italic;
   }
 }
