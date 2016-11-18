@@ -1,9 +1,12 @@
 & {
   font-weight: 300;
-  font-size: 14px;
   line-height: 20px;
+  height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
 
   a {
+    font-size: 14px;
     vertical-align: top;
     color: $sd-link;
     text-decoration: none;
@@ -14,5 +17,16 @@
     width: 20px;
     height: 20px;
     border-radius: 20px;
+  }
+}
+
+&.large {
+  line-height: 32px;
+  height: 32px;
+
+  img {
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
   }
 }
