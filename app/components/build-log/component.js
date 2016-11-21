@@ -32,6 +32,38 @@ export default Ember.Component.extend({
     }
   },
 
+  autoscroll: true,
+
+  /**
+   * Set up scroll listener when component has been rendered
+   * @method didRender
+   */
+  didRender() {
+    this._super(...arguments);
+
+    const w = this.$(window);
+    const d = this.$(window.document);
+
+    d.scroll(() => {
+      const scrollPercentage = ((d.scrollTop() + w.height()) / d.height()) * 100;
+
+      if (scrollPercentage > 99) {
+        Ember.run(() => this.set('autoscroll', true));
+      } else {
+        Ember.run(() => this.set('autoscroll', false));
+      }
+    });
+  },
+
+  /**
+   * Remove scroll listener when component is destroyed
+   * @method willDestroyElement
+   */
+  willDestroyElement() {
+    this._super(...arguments);
+    this.$(window.document).off('scroll');
+  },
+
   /**
    * Listener to determine if log loading should begin.
    * Should only kick off log loading if "isOpen" changes to true
@@ -96,7 +128,7 @@ export default Ember.Component.extend({
         // prevent updating logs when component is being destroyed
         if (!this.get('isDestroyed') && !this.get('isDestroying')) {
           if (Array.isArray(lines) && lines.length) {
-            this.set('lastLine', lines[lines.length - 1].n);
+            this.set('lastLine', lines[lines.length - 1].n + 1);
             this.updateLogContent(lines);
           }
           this.set('finishedLoading', done);
