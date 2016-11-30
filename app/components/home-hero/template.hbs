@@ -1,91 +1,33 @@
 <div class="top">
   <img src="/assets/sd_icon.png">
   <h1>Introducing Screwdriver</h1>
-  <p>A collection of services that facilitate the workflow for continuous delivery pipelines.</p>
-  <p><a href="https://screwdriver.cd">Get Started</a></p>
+  <span>Build. Test. Deliver.</span>
 </div>
-<div class="row">
-  <div class="rowContent pure-g">
-    <div class="cell pure-u-md-3-5 pure-u-1">
-      <div>
-        <h2>Secure Continuous Delivery</h2>
-        <p>
-          Screwdriver treats Continuous Delivery as a first-class citizen in your build pipeline.
-          Easily define the path that your code takes from Pull Request to Production.
-        </p>
-      </div>
-    </div>
-    <div class="cell pure-u-md-2-5 pure-u-1">
-      <img class="cd" src="/assets/continuous_delivery.png">
-    </div>
+<div class="start">
+  <div>
+    <h2>Getting started, by the numbers...</h2>
+    <ul>
+      <li>
+        <div class="num"><span>1</span></div>
+        <span>
+          For
+          <select {{action "changeLanguage" on="change"}}>
+            {{#each languages as |lang|}}
+            <option value="{{lang.url}}">{{lang.name}}</option>
+            {{/each}}
+          </select>,
+          <a href="{{forkUrl}}" target="_blank"><span>fork this repo</span></a>
+        </span>
+        <div id="langList"></div>
+      </li>
+      <li>
+        <div class="num"><span>2</span></div>
+        <span>{{#link-to "create"}}Create a new pipeline{{/link-to}} with your repo</span>
+      </li>
+      <li>
+        <div class="num"><span>3</span></div>
+        <span>Click the start button on your new pipeline</span>
+      </li>
+    </ul>
   </div>
 </div>
-<div class="row">
-  <div class="rowContent pure-g">
-    <div class="cell pure-u-md-2-5 pure-u-1">
-      <img class="dh" src="/assets/daily_habits.png">
-    </div>
-    <div class="cell pure-u-md-3-5 pure-u-1">
-      <div>
-        <h2>Integrates with Daily Habits</h2>
-        <p>
-          Screwdriver ties directly into your DevOps daily habits.
-          It tests your pull requests, builds your merged commits, and deploys to your environments.
-          Define load tests, canary deployments, and multi-environment deployment pipelines with ease.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="rowContent pure-g">
-    <div class="cell pure-u-md-3-5 pure-u-1">
-      <div>
-        <h2>Pipeline as Code</h2>
-        <p>
-          Define your pipeline in a simple YAML file that lives beside your code.
-          There is no external configuration of your pipeline to deal with,
-          so your pipeline changes can be reviewed and rolled out with the rest of your codebase.
-        </p>
-      </div>
-    </div>
-    <div class="cell pure-u-md-2-5 pure-u-1">
-      <img class="code" src="/assets/pipeline_code.png">
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="rowContent pure-g">
-    <div class="cell pure-u-md-2-5 pure-u-1">
-      <img class="services" src="/assets/3rd_party_services.png">
-    </div>
-    <div class="cell pure-u-md-3-5 pure-u-1">
-      <div>
-        <h2>Runs Anywhere</h2>
-        <p>
-          Screwdriver's architecture uses pluggable components under the hood
-          to allow you to swap out the pieces that make sense for your infrastructure.
-          Swap in Postgres for the Datastore or Jenkins for the Executor.
-          You can even dynamically select an execution engine based on the needs of each pipeline.
-          For example, send golang builds to the kubernetes executor while your iOS builds got to a
-          Jenkins execution farm.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="pure-g">
-    <div class="pure-u-1-2">
-      <div class="license">
-        All code on this site is licensed under the <a href="https://github.com/screwdriver-cd/screwdriver/blob/master/LICENSE">Yahoo BSD License</a> unless otherwise stated.
-      </div>
-    </div>
-    <div class="pure-u-1-2">
-      <div class="copyright">
-        &copy; 2016 Yahoo! Inc. All rights reserved.
-      </div>
-    </div>
-  </div>
-</footer>

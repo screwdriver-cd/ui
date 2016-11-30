@@ -1,5 +1,6 @@
 & {
   margin: 0 auto;
+  font-weight: 300;
 }
 
 .top {
@@ -8,120 +9,67 @@
   background-size: 100% 100%;
   color: #fff;
   padding: 20px 0;
-  height: 180px;
+  height: 120px;
 
   h1 {
     font-size: 24px;
     font-weight: 600;
-    margin: 0;
+    margin: 0 0 5px 0;
     padding: 0;
-  }
-
-  p {
-    font-size: 16px;
-    font-weight: 300;
-    width: 360px;
-    margin: 0 auto;
   }
 
   img {
     width: 50px;
   }
-
-  a {
-    font-size: 14px;
-    margin: 10px auto 0;
-    width: 150px;
-    display: block;
-    padding: 10px 0;
-    background-color: #fff;
-    border-radius: 3px;
-    text-decoration: none;
-    color: $sd-link;
-    opacity: 0.8;
-  }
-  a:hover {
-    opacity: 1;
-  }
 }
 
-.rowContent {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.row:nth-child(odd) {
-  background-color: $sd-highlight;
-  text-align: center;
-}
-
-.cell div {
-  padding: 10px 25px;
-  margin: 0 auto;
-  text-align: left;
+.start {
+  padding: 0 25px;
 
   h2 {
-    color: $sd-primary;
-    margin: 0;
-    padding: 0;
-    font-size: 24px;
-    font-weight: 300;
+    font-size: 20px;
+    font-weight: 600;
   }
 
-  p {
-    font-weight: 300;
-    font-size: 16px;
-    width: 90%;
+  ul {
     margin: 0;
     padding: 0;
-    color: $sd-text;
+    text-align: left;
+    list-style: none;
+  }
+
+  li {
+    margin-bottom: 10px;
+    span {
+      line-height: 1.75;
+      vertical-align: top;
+    }
+  }
+
+  .num {
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    border-radius: 20px;
+    border: 1px solid $sd-success;
+    text-align: center;
+    vertical-align: top;
+    line-height: 1.75;
+
+    span {
+      line-height: 1.4;
+    }
+  }
+
+  .ember-basic-dropdown-trigger {
+    display: inline-block;
+    width: 100px;
   }
 }
 
-.cell {
-  padding: 25px 0;
-
-  img {
-    display: block;
-    margin: 0 auto;
-  }
-
-  .cd {
-    height: 124px;
-  }
-
-  .dh {
-    height: 100px;
-  }
-  .code {
-    height: 200px;
-  }
-  .services {
-    height: 160px;
-  }
-}
-
-footer {
-  background-color: $sd-text-light;
-  color: $sd-text-med;
-  padding: 10px 0;
-  font-size: 11px;
-  font-weight: 300;
-
-  .license {
-    padding-left: 25px;
-  }
-
-  .copyright {
-    text-align: right;
-    padding-right: 25px;
-  }
-
-  a {
-    color: $sd-text-med;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
+@media screen and (min-width: 35.5em) {
+  .start div {
+    width: 50%;
+    margin: auto;
   }
 }
