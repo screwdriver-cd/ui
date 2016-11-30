@@ -13,9 +13,5 @@ test('it renders', function (assert) {
   this.render(hbs`{{home-hero}}`);
 
   assert.equal($('h1').text().trim(), 'Introducing Screwdriver');
-  assert.equal($($('h2')[0]).text().trim(), 'Secure Continuous Delivery');
-  assert.equal($($('h2')[1]).text().trim(), 'Integrates with Daily Habits');
-  assert.equal($($('h2')[2]).text().trim(), 'Pipeline as Code');
-  assert.equal($($('h2')[3]).text().trim(), 'Runs Anywhere');
-  assert.equal($('footer').length, 1);
+  assert.equal($('h2').text().trim(), 'Getting started, by the numbers...');
 });
