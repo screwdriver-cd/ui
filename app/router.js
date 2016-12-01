@@ -22,7 +22,7 @@ Router.map(function route() {
   });
   this.route('login');
   this.route('create');
-  this.route('error', { path: '/*path' });
+  this.route('page-not-found', { path: '/*path' });
   this.route('search');
 });
 /* eslint-enable array-callback-return */
