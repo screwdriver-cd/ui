@@ -3,7 +3,6 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   isSaving: false,
   errorMessage: '',
-  saveSuccess: false,
 
   actions: {
     createPipeline(scmUrl) {
@@ -13,7 +12,6 @@ export default Ember.Controller.extend({
 
       pipeline.save()
         .then(() => {
-          this.set('saveSuccess', true);
           this.transitionToRoute('pipeline', pipeline.get('id'));
         }, (err) => {
           this.set('errorMessage', err.errors.message);

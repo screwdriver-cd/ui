@@ -1,2 +1,6 @@
-{{pipeline-create-form isSaving=isSaving onCreatePipeline=(action "createPipeline") errorMessage=errorMessage saveSuccess=saveSuccess}}
+{{pipeline-create-form
+  isSaving=isSaving
+  errorMessage=errorMessage
+  onCreatePipeline=(action "createPipeline")
+}}
 {{outlet}}

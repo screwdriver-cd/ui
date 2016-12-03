@@ -62,14 +62,11 @@ test('/create a pipeline: SUCCESS', function (assert) {
 
   andThen(() => {
     assert.equal(currentURL(), '/create');
-    fillIn('.scm-url', 'git@github.com:foo/bar.git');
-    triggerEvent('.scm-url', 'keyup');
-    click('input.blue-button');
+    fillIn('.text-input', 'git@github.com:foo/bar.git');
+    triggerEvent('.text-input', 'keyup');
+    click('button');
     andThen(() => {
-      click('button');
-      andThen(() => {
-        assert.equal(currentURL(), '/pipelines/abcd');
-      });
+      assert.equal(currentURL(), '/pipelines/abcd');
     });
   });
 });
@@ -91,15 +88,12 @@ test('/create a pipeline: FAILURE', function (assert) {
 
   andThen(() => {
     assert.equal(currentURL(), '/create');
-    fillIn('.scm-url', 'git@github.com:foo/bar.git');
-    triggerEvent('.scm-url', 'keyup');
-    click('input.blue-button');
+    fillIn('.text-input', 'git@github.com:foo/bar.git');
+    triggerEvent('.text-input', 'keyup');
+    click('button');
     andThen(() => {
-      click('button');
-      andThen(() => {
-        assert.equal(currentURL(), '/create');
-        assert.equal(find('.info-message span').text(), 'something conflicting');
-      });
+      assert.equal(currentURL(), '/create');
+      assert.equal(find('.info-message span').text(), 'something conflicting');
     });
   });
 });
