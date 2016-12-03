@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
-export default Ember.Controller.extend({
+export default Ember.Component.extend({
   statusCode: 404,
-  errorMessage: 'Unknown error',
+  errorMessage: '',
   backgroundImage: Ember.computed('statusCode', {
     get() {
       let statusCode = this.get('statusCode');
