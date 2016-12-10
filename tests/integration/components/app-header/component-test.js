@@ -55,3 +55,16 @@ test('it shows the search bar', function (assert) {
   this.$('.search input').focusout();
   assert.notOk(this.$('.search').hasClass('search-focused'), 'blurred');
 });
+
+test('it redirects to search page', function (assert) {
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
+  this.set('search', () => {
+    assert.ok(true);
+  });
+
+  this.render(hbs`{{app-header showSearch=true searchPipelines=(action search)}}`);
+
+  this.$('.search input').text('myquery');
+  this.$('.search-icon').click();
+});
