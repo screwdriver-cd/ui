@@ -18,5 +18,5 @@ module.exports = {
     '**/build/route.js'
   ],
   coverageFolder: process.env.COVERAGE_DIR || 'coverage',
-  useBabelInstrumenter: false
+  useBabelInstrumenter: true
 };

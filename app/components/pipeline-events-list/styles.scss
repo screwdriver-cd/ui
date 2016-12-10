@@ -9,4 +9,18 @@
     font-weight: 600;
     font-size: 20px;
   }
+
+  .showAll {
+    margin-top: 10px;
+    a {
+      color: $sd-link;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 300;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
