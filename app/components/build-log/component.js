@@ -1,5 +1,6 @@
 /* eslint-disable new-cap */
 import Ember from 'ember';
+import moment from 'moment';
 
 export default Ember.Component.extend({
   logger: Ember.inject.service('build-logs'),
@@ -109,7 +110,10 @@ export default Ember.Component.extend({
    */
   updateLogContent(lines) {
     // convert all loaded log lines into a single string
-    const newLogLines = lines.map(l => `${l.m}\n`).reduce((log = '', line) => log + line);
+    const newLogLines = lines.map(l => '<span class="line">' +
+      `<span class="time">${moment(l.t).format('HH:mm:ss')}</span>` +
+      `<span class="content">${l.m}</span></span>`
+    ).reduce((log = '', line) => log + line);
 
     this.set('logContent', `${this.get('logContent')}${newLogLines}`);
   },

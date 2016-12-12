@@ -1,6 +1,3 @@
-&.is-open {
-  padding: 0 15px 10px;
-}
 .logs {
   font-size: 1em;
   font-family: monospace;
@@ -10,10 +7,42 @@
   height: 0;
   padding: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
+
+  .line {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .time {
+    color: $sd-text-med;
+    display: none;
+  }
+
+  .content {
+    display: inline-flex;
+    flex-grow: 1;
+  }
 }
 
-&.is-open .logs {
-  padding: 20px 30px;
-  overflow: auto;
-  height: auto;
+&.is-open {
+  padding: 0 15px 10px;
+
+  .logs {
+    padding: 20px 30px;
+    overflow: auto;
+    height: auto;
+  }
+}
+
+@media screen and (min-width: 35.5em) {
+  .logs .line {
+    flex-direction: row;
+  }
+  .logs .time {
+    display: inline-flex;
+    margin-right: 10px;
+  }
 }

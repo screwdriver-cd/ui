@@ -2,11 +2,14 @@ import { moduleForComponent, test } from 'ember-qunit';
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
+import moment from 'moment';
+const time = 1478912844724;
+const timeFormat = moment(time).format('HH:mm:ss');
 
 const logService = Ember.Service.extend({
   fetchLogs() {
     return Ember.RSVP.resolve({
-      lines: [{ m: 'hello, world', n: 1, t: 1478912844724 }],
+      lines: [{ m: 'hello, world', n: 1, t: time }],
       done: true
     });
   }
@@ -53,7 +56,7 @@ test('it starts open when step failed', function (assert) {
   assert.equal($('.step-view.failure').length, 1, 'has step view');
   assert.equal($('.build-log').length, 1, 'has log view');
   assert.ok($('.build-step').hasClass('is-open'), 'rendered open');
-  assert.equal($('.build-log').text().trim(), 'hello, world');
+  assert.equal($('.build-log').text().trim(), `${timeFormat}hello, world`);
 
   $('.name').click();
 
@@ -79,7 +82,7 @@ test('it starts open when step is running', function (assert) {
   assert.ok(this.$('.build-step').hasClass('is-open'));
 
   return wait().then(() => {
-    assert.equal(this.$('.build-log').text().trim(), 'hello, world');
+    assert.equal(this.$('.build-log').text().trim(), `${timeFormat}hello, world`);
   });
 });
 
@@ -103,7 +106,7 @@ test('it can toggle open and closed', function (assert) {
 
   return wait().then(() => {
     assert.ok(this.$('.build-step').hasClass('is-open'), 'is open');
-    assert.equal(this.$('.build-log').text().trim(), 'hello, world');
+    assert.equal(this.$('.build-log').text().trim(), `${timeFormat}hello, world`);
 
     this.$('.name').click();
 

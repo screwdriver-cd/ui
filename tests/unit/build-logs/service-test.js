@@ -2,6 +2,7 @@ import { moduleFor, test } from 'ember-qunit';
 // import wait from 'ember-test-helpers/wait';
 import Pretender from 'pretender';
 let server;
+const now = Date.now();
 
 const noMoreLogs = () => {
   server.get('http://localhost:8080/v4/builds/1/steps/banana/logs/', () => [
@@ -11,7 +12,7 @@ const noMoreLogs = () => {
       'x-more-data': false
     },
     JSON.stringify([{
-      t: Date.now(),
+      t: now,
       n: 0,
       m: 'hello, world'
     }])
@@ -26,7 +27,7 @@ const moreLogs = () => {
       'x-more-data': true
     },
     JSON.stringify([{
-      t: Date.now(),
+      t: now,
       n: 0,
       m: 'hello, world'
     }])

@@ -3,7 +3,10 @@ import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-accepta
 // import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
 import Pretender from 'pretender';
 import Ember from 'ember';
+import moment from 'moment';
 let server;
+const time = 1474649593036;
+const timeFormat = moment(time).format('HH:mm:ss');
 
 moduleForAcceptance('Acceptance | build', {
   beforeEach() {
@@ -124,13 +127,13 @@ moduleForAcceptance('Acceptance | build', {
     server.get('http://localhost:8080/v4/builds/1234/steps/install/logs', () => [
       200,
       { 'Content-Type': 'application/json', 'x-more-data': 'false' },
-      JSON.stringify([{ t: 1474649593036, m: 'bad stuff', n: 0 }])
+      JSON.stringify([{ t: time, m: 'bad stuff', n: 0 }])
     ]);
 
     server.get('http://localhost:8080/v4/builds/1234/steps/sd-setup/logs', () => [
       200,
       { 'Content-Type': 'application/json', 'x-more-data': 'false' },
-      JSON.stringify([{ t: 1474649593036, m: 'fancy stuff', n: 0 }])
+      JSON.stringify([{ t: time, m: 'fancy stuff', n: 0 }])
     ]);
   },
   afterEach() {
@@ -148,7 +151,8 @@ test('visiting /pipelines/:id/build/:id', function (assert) {
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.line1 h1').text().trim(), 'PR-50', 'incorrect job name');
     assert.equal(find('span.sha').text().trim(), '#abcdef', 'incorrect sha');
-    assert.equal(find('.is-open .logs').text().trim(), 'bad stuff', 'incorrect logs open');
+    assert.equal(find('.is-open .logs').text().trim(),
+      `${timeFormat}bad stuff`, 'incorrect logs open');
 
     // This looks weird, but :nth-child(n) wasn't resolving properly.
     // This does essentially the same thing by setting a context for looking up `.name`.
@@ -156,7 +160,8 @@ test('visiting /pipelines/:id/build/:id', function (assert) {
     click('.name', $('.build-step-collection > div').get(1)); // open sd-setup step
 
     andThen(() => {
-      assert.equal(find('.is-open .logs').text().trim(), 'fancy stuff', 'incorrect logs open');
+      assert.equal(find('.is-open .logs').text().trim(),
+        `${timeFormat}fancy stuff`, 'incorrect logs open');
     });
   });
 });
