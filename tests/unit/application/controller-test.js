@@ -29,3 +29,14 @@ test('it calls session.authenticate', function (assert) {
   controller.send('invalidateSession');
   assert.equal(called, 1);
 });
+
+test('it calls search in controller', function (assert) {
+  let controller = this.subject();
+
+  controller.transitionToRoute = (path, params) => {
+    assert.equal(path, 'search');
+    assert.deepEqual(params, { queryParams: { query: 'myquery' } });
+  };
+
+  controller.send('search', 'myquery');
+});

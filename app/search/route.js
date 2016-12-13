@@ -4,7 +4,7 @@ export default Ember.Route.extend({
   titleToken: 'Search',
   queryParams: {
     query: {
-      refreshModel: false,
+      refreshModel: true,
       replace: true
     }
   },

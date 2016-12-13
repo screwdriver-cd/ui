@@ -25,6 +25,9 @@ export default Ember.Component.extend({
     },
     onToggleClick() {
       this.toggleMenu();
+    },
+    triggerSearch() {
+      this.get('searchPipelines')(this.$('.search-input').val());
     }
   }
 });

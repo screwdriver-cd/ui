@@ -7,10 +7,10 @@
 
       {{#if showSearch}}
       <div class="search">
-        <form class="search-form" action="/search" method="GET">
-          {{input class="search-input" name="query" placeholder="Enter your search terms" focus-in="onFocus" focus-out="onBlur"}}
+        <form class="search-form" {{action "triggerSearch" on="submit"}}>
+          {{input class="search-input" name="query" placeholder="Search Screwdriver pipelines " focus-in="onFocus" focus-out="onBlur"}}
         </form>
-        <div class="search-icon">
+        <div class="search-icon" {{action "triggerSearch"}}>
           {{fa-icon "fa-search"}}
         </div>
       </div>
