@@ -1,11 +1,24 @@
 import Ember from 'ember';
+import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
+import ENV from 'screwdriver-ui/config/environment';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(ModelReloaderMixin, {
   tagName: 'span',
   classNames: ['build-bubble'],
   classNameBindings: ['build.id', 'small'],
+  modelToReload: 'build',
+  reloadTimeout: ENV.APP.BUILD_RELOAD_TIMER,
+  shouldReload(build) {
+    if (build) {
+      const s = build.get('status');
 
-  icon: Ember.computed('jobIsDisabled', 'build', {
+      return s === 'RUNNING' || s === 'QUEUED';
+    }
+
+    return false;
+  },
+
+  icon: Ember.computed('jobIsDisabled', 'build', 'build.status', {
     get() {
       if (this.get('jobIsDisabled')) {
         return 'pause';
@@ -49,5 +62,11 @@ export default Ember.Component.extend({
   },
   mouseLeave() {
     Ember.$('.build-bubble').removeClass('highlight');
+  },
+  willRender() {
+    this.startReloading();
+  },
+  willDestroy() {
+    this.stopReloading();
   }
 });

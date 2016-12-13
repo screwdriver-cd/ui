@@ -1,5 +1,12 @@
 <h2>Builds</h2>
-{{#each events as |event|}}
+{{#each eventsToView as |event|}}
 {{pipeline-event-view event=event}}
 {{/each}}
+{{#unless showAll}}
+{{#if events.length}}
+<div class="showAll">
+<a {{action "showAllEvents"}}>Show all events</a>
+</div>
+{{/if}}
+{{/unless}}
 {{yield}}

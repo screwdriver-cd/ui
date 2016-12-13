@@ -21,7 +21,9 @@ module.exports = (environment) => {
       // when it is created
       SDAPI_HOSTNAME: 'http://localhost:8080',
       SDAPI_NAMESPACE: 'v4',
-      RELOAD_TIMER: 5000
+      BUILD_RELOAD_TIMER: 5000,  // 5 seconds
+      EVENT_RELOAD_TIMER: 90000,  // 1.5 minutes
+      NUM_EVENTS_LISTED: 5
     },
     moment: {
       allowEmpty: true // allow empty dates
@@ -29,6 +31,7 @@ module.exports = (environment) => {
   };
 
   if (environment === 'development') {
+    ENV.APP.EVENT_RELOAD_TIMER = 5000;
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
