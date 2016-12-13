@@ -27,10 +27,10 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{search-list pipelines=pipelineList}}`);
 
-  assert.equal($($('li .appId').get(0)).text().trim(), 'batman/tumbler');
-  assert.equal($($('li .branch').get(0)).text().trim(), 'waynecorp');
-  assert.equal($($('li .appId').get(1)).text().trim(), 'foo/bar');
-  assert.equal($($('li .branch').get(1)).text().trim(), 'master');
+  assert.equal($($('td.appId').get(0)).text().trim(), 'batman/tumbler');
+  assert.equal($($('td.branch').get(0)).text().trim(), 'waynecorp');
+  assert.equal($($('td.appId').get(1)).text().trim(), 'foo/bar');
+  assert.equal($($('td.branch').get(1)).text().trim(), 'master');
 });
 
 test('it filters the list', function (assert) {
@@ -55,7 +55,7 @@ test('it filters the list', function (assert) {
 
   this.render(hbs`{{search-list pipelines=pipelineList query=q}}`);
 
-  assert.ok($('li').length, 1);
-  assert.equal($('li .appId').text().trim(), 'foo/bar');
-  assert.equal($('li .branch').text().trim(), 'master');
+  assert.ok($('tr').length, 2);
+  assert.equal($('td.appId').text().trim(), 'foo/bar');
+  assert.equal($('td.branch').text().trim(), 'master');
 });

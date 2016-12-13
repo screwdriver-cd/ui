@@ -1,11 +1,19 @@
-<ul>
-  {{#each filteredPipelines as |pipeline|}}
-  <li>
-    {{#link-to "pipeline" pipeline.id}}
-      <span class="appId">{{pipeline.appId}}</span>
-      <span class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.branch}}</span>
-    {{/link-to}}
-  </li>
-  {{/each}}
-</ul>
-{{if isEmpty "No Results"}}
+<div class="num-results">
+  {{if isEmpty "No Results" (concat "Found " filteredPipelines.length " result(s)")}}
+</div>
+<table>
+  <thead>
+    <tr>
+      <th class="appId">Name</th>
+      <th class="branch">Branch</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each filteredPipelines as |pipeline|}}
+    <tr>
+      <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
+      <td class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.branch}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
