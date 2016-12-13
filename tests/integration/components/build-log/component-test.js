@@ -2,13 +2,18 @@ import { moduleForComponent, test } from 'ember-qunit';
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
+import moment from 'moment';
+const time1 = 1478912844724;
+const time2 = 1478912845725;
+const timeFormat1 = moment(time1).format('HH:mm:ss');
+const timeFormat2 = moment(time2).format('HH:mm:ss');
 
 const logService = Ember.Service.extend({
   fetchLogs() {
     return Ember.RSVP.resolve({
       lines: [
-        { m: 'hello', n: 1, t: 1478912844724 },
-        { m: 'world', n: 2, t: 1478912844725 }
+        { m: 'hello', n: 1, t: time1 },
+        { m: 'world', n: 2, t: time2 }
       ],
       done: true
     });
@@ -62,7 +67,7 @@ test('it renders open when told to', function (assert) {
   assert.ok(this.$('.build-log').hasClass('is-open'));
 
   return wait().then(() => {
-    assert.equal(this.$().text().trim(), 'hello\nworld');
+    assert.equal(this.$().text().trim(), `${timeFormat1}hello${timeFormat2}world`);
   });
 });
 
@@ -81,7 +86,7 @@ test('it starts loading when open changes', function (assert) {
 
   return wait().then(() => {
     assert.ok(this.$('.build-log').hasClass('is-open'), 'is open');
-    assert.equal(this.$().text().trim(), 'hello\nworld');
+    assert.equal(this.$().text().trim(), `${timeFormat1}hello${timeFormat2}world`);
   });
 });
 
