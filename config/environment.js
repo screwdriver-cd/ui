@@ -23,7 +23,9 @@ module.exports = (environment) => {
       SDAPI_NAMESPACE: 'v4',
       BUILD_RELOAD_TIMER: 5000,  // 5 seconds
       EVENT_RELOAD_TIMER: 90000,  // 1.5 minutes
-      NUM_EVENTS_LISTED: 5
+      LOG_RELOAD_TIMER: 1000,
+      NUM_EVENTS_LISTED: 5,
+      MAX_LOG_LINES: 1000
     },
     moment: {
       allowEmpty: true // allow empty dates

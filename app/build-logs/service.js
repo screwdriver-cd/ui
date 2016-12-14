@@ -21,9 +21,7 @@ export default Ember.Service.extend({
       // convert jquery's ajax promises to a real promise
       Ember.$.ajax({ url, data: { from: logNumber } })
         .done((data, textStatus, jqXHR) => {
-          // convert log lines ansi to html colors
-          if (Array.isArray(data) && data.length) {
-            data.forEach((line) => { line.m = ansi_up.ansi_to_html(line.m); });
+          if (Array.isArray(data)) {
             lines = data;
           }
           done = jqXHR.getResponseHeader('x-more-data') === 'false';

@@ -143,6 +143,8 @@ moduleForAcceptance('Acceptance | build', {
 
 test('visiting /pipelines/:id/build/:id', function (assert) {
   const $ = Ember.$;
+  const first = new RegExp(`${timeFormat}\\s+bad stuff`);
+  const second = new RegExp(`${timeFormat}\\s+fancy stuff`);
 
   visit('/pipelines/abcd/build/1234');
 
@@ -151,8 +153,7 @@ test('visiting /pipelines/:id/build/:id', function (assert) {
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.line1 h1').text().trim(), 'PR-50', 'incorrect job name');
     assert.equal(find('span.sha').text().trim(), '#abcdef', 'incorrect sha');
-    assert.equal(find('.is-open .logs').text().trim(),
-      `${timeFormat}bad stuff`, 'incorrect logs open');
+    assert.ok(find('.is-open .logs').text().trim().match(first), 'incorrect logs open');
 
     // This looks weird, but :nth-child(n) wasn't resolving properly.
     // This does essentially the same thing by setting a context for looking up `.name`.
@@ -160,8 +161,7 @@ test('visiting /pipelines/:id/build/:id', function (assert) {
     click('.name', $('.build-step-collection > div').get(1)); // open sd-setup step
 
     andThen(() => {
-      assert.equal(find('.is-open .logs').text().trim(),
-        `${timeFormat}fancy stuff`, 'incorrect logs open');
+      assert.ok(find('.is-open .logs').text().trim().match(second), 'incorrect logs open');
     });
   });
 });

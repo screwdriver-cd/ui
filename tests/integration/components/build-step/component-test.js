@@ -56,7 +56,7 @@ test('it starts open when step failed', function (assert) {
   assert.equal($('.step-view.failure').length, 1, 'has step view');
   assert.equal($('.build-log').length, 1, 'has log view');
   assert.ok($('.build-step').hasClass('is-open'), 'rendered open');
-  assert.equal($('.build-log').text().trim(), `${timeFormat}hello, world`);
+  assert.ok($('.build-log').text().trim().match(`${timeFormat}\\s+hello, world`));
 
   $('.name').click();
 
@@ -82,7 +82,7 @@ test('it starts open when step is running', function (assert) {
   assert.ok(this.$('.build-step').hasClass('is-open'));
 
   return wait().then(() => {
-    assert.equal(this.$('.build-log').text().trim(), `${timeFormat}hello, world`);
+    assert.ok(this.$('.build-log').text().trim().match(`${timeFormat}\\s+hello, world`));
   });
 });
 
@@ -106,7 +106,7 @@ test('it can toggle open and closed', function (assert) {
 
   return wait().then(() => {
     assert.ok(this.$('.build-step').hasClass('is-open'), 'is open');
-    assert.equal(this.$('.build-log').text().trim(), `${timeFormat}hello, world`);
+    assert.ok(this.$('.build-log').text().trim().match(`${timeFormat}\\s+hello, world`));
 
     this.$('.name').click();
 
