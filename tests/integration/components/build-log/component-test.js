@@ -67,7 +67,7 @@ test('it renders open when told to', function (assert) {
   assert.ok(this.$('.build-log').hasClass('is-open'));
 
   return wait().then(() => {
-    assert.equal(this.$().text().trim(), `${timeFormat1}hello${timeFormat2}world`);
+    assert.ok(this.$().text().trim().match(`${timeFormat1}\\s+hello\\s+${timeFormat2}\\s+world`));
   });
 });
 
@@ -86,7 +86,7 @@ test('it starts loading when open changes', function (assert) {
 
   return wait().then(() => {
     assert.ok(this.$('.build-log').hasClass('is-open'), 'is open');
-    assert.equal(this.$().text().trim(), `${timeFormat1}hello${timeFormat2}world`);
+    assert.ok(this.$().text().trim().match(`${timeFormat1}\\s+hello\\s+${timeFormat2}\\s+world`));
   });
 });
 

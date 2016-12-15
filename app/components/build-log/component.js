@@ -1,6 +1,6 @@
 /* eslint-disable new-cap */
 import Ember from 'ember';
-import moment from 'moment';
+import ENV from 'screwdriver-ui/config/environment';
 
 export default Ember.Component.extend({
   logger: Ember.inject.service('build-logs'),
@@ -14,6 +14,11 @@ export default Ember.Component.extend({
   lastLine: 0,
   // store of logs to display, so we only have to recalculate new logs
   logContent: '',
+
+  init() {
+    this._super(...arguments);
+    this.set('logs', Ember.A());
+  },
 
   /**
    * Listen to the user clicking on logs to turn off autoClose
@@ -104,21 +109,6 @@ export default Ember.Component.extend({
   },
 
   /**
-   * Calculates the content for display
-   * @method updateLogContent
-   * @param {Array} lines   List of objects from log service
-   */
-  updateLogContent(lines) {
-    // convert all loaded log lines into a single string
-    const newLogLines = lines.map(l => '<span class="line">' +
-      `<span class="time">${moment(l.t).format('HH:mm:ss')}</span>` +
-      `<span class="content">${l.m}</span></span>`
-    ).reduce((log = '', line) => log + line);
-
-    this.set('logContent', `${this.get('logContent')}${newLogLines}`);
-  },
-
-  /**
    * Fetch logs from log service
    * @method getLogs
    */
@@ -133,12 +123,16 @@ export default Ember.Component.extend({
         if (!this.get('isDestroyed') && !this.get('isDestroying')) {
           if (Array.isArray(lines) && lines.length) {
             this.set('lastLine', lines[lines.length - 1].n + 1);
-            this.updateLogContent(lines);
+            this.get('logs').addObjects(lines);
           }
           this.set('finishedLoading', done);
 
           Ember.run.scheduleOnce('afterRender', this, 'scrollDown');
-          Ember.run.later(this, 'getLogs', 1000);
+          if (!done) {
+            // Immediately ask for more logs if we got MAX_LOG_LINES
+            Ember.run.later(this, 'getLogs',
+              lines.length === ENV.APP.MAX_LOG_LINES ? 0 : ENV.APP.LOG_RELOAD_TIMER);
+          }
         }
       });
     }
