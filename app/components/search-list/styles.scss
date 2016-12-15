@@ -1,47 +1,55 @@
 & {
   width: 640px;
   margin: 2em auto;
+
+  a {
+    display: block;
+    text-decoration: none;
+    color: $sd-link;
+  }
+
+  .appId {
+    text-align: left;
+    width: 60%;
+  }
+
+  .branch {
+    width: 35%;
+    text-align: right;
+  }
+
+  tbody tr:hover {
+      background-color: $sd-separator;
+      .appId {
+        text-decoration: underline;
+      }
+  }
+
+  .num-results {
+    padding: 10px;
+    font-size: 14px;
+    color: $sd-text-med;
+  }
+
+  table {
+    width:100%;
+  }
+
+  th {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: $sd-text-med;
+  }
+
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid $sd-text-light;
+  }
 }
 
 @media (max-width: 47.999em) {
   & {
     width: 100%;
   }
-}
-
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-a {
-  display: block;
-  text-decoration: none;
-  color: $sd-link;
-  padding: 10px;
-  border-bottom: 1px solid $sd-separator;
-
-  .appId {
-    display: inline-block;
-    width: 400px;
-  }
-
-  .branch {
-    display: inline-block;
-    width: 215px;
-    text-align: right;
-    color: $sd-text;
-  }
-}
-
-a:hover {
-  background-color: $sd-separator;
-  .appId {
-    text-decoration: underline;
-  }
-}
-
-ul > li:last-child a {
-  border-bottom-width: 0px;
 }

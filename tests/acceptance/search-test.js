@@ -59,6 +59,7 @@ test('visiting /search', function (assert) {
 
   andThen(() => {
     assert.equal(currentURL(), '/search');
-    assert.equal(find('#appContainer li').length, 3);
+    assert.equal(find('tr').length, 4);
+    assert.equal(find('.num-results').text().trim(), 'Found 3 result(s)');
   });
 });
