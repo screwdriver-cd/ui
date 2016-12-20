@@ -29,49 +29,78 @@ moduleForAcceptance('Acceptance | build', {
       })
     ]);
 
+    server.get('http://localhost:8080/v4/pipelines/abcd/jobs', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{
+        id: 'aabbcc',
+        name: 'main',
+        permutations: [{
+          environment: {},
+          secrets: [],
+          commands: [{
+            name: 'install',
+            command: 'npm install'
+          }],
+          image: 'node:6'
+        }],
+        pipelineId: 'abcd',
+        state: 'ENABLED',
+        archived: false
+      }])
+    ]);
+
+    const buildData = {
+      id: '1234',
+      jobId: 'aabbcc',
+      eventId: 'eeeeee',
+      number: 1474649580274,
+      container: 'node:6',
+      cause: 'Started by user petey',
+      sha: 'c96f36886e084d18bd068b8156d095cd9b31e1d6',
+      createTime: '2016-09-23T16:53:00.274Z',
+      startTime: '2016-09-23T16:53:08.601Z',
+      endTime: '2016-09-23T16:58:47.355Z',
+      meta: {},
+      steps: [{
+        startTime: '2016-09-23T16:53:07.497654442Z',
+        name: 'sd-setup',
+        code: 0,
+        endTime: '2016-09-23T16:53:12.46806858Z'
+      }, {
+        startTime: '2016-09-23T16:53:12.902784483Z',
+        name: 'install',
+        code: 137,
+        endTime: '2016-09-23T16:58:46.924844475Z'
+      }, {
+        name: 'bower'
+      }, {
+        name: 'test'
+      }],
+      status: 'FAILURE',
+      commit: {
+        url: 'https://github.com/commit',
+        message: 'merge this'
+      }
+    };
+
+    server.get('http://localhost:8080/v4/events/eeeeee/builds', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([buildData])
+    ]);
+
     server.get('http://localhost:8080/v4/builds/1234', () => [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1234',
-        jobId: 'aabbcc',
-        eventId: 'eeeeee',
-        number: 1474649580274,
-        container: 'node:6',
-        cause: 'Started by user petey',
-        sha: 'c96f36886e084d18bd068b8156d095cd9b31e1d6',
-        createTime: '2016-09-23T16:53:00.274Z',
-        startTime: '2016-09-23T16:53:08.601Z',
-        endTime: '2016-09-23T16:58:47.355Z',
-        meta: {},
-        steps: [{
-          startTime: '2016-09-23T16:53:07.497654442Z',
-          name: 'sd-setup',
-          code: 0,
-          endTime: '2016-09-23T16:53:12.46806858Z'
-        }, {
-          startTime: '2016-09-23T16:53:12.902784483Z',
-          name: 'install',
-          code: 137,
-          endTime: '2016-09-23T16:58:46.924844475Z'
-        }, {
-          name: 'bower'
-        }, {
-          name: 'test'
-        }],
-        status: 'FAILURE',
-        commit: {
-          url: 'https://github.com/commit',
-          message: 'merge this'
-        }
-      })
+      JSON.stringify(buildData)
     ]);
 
     server.get('http://localhost:8080/v4/events/eeeeee', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
-        id: 'abcd',
+        id: 'eeeeee',
         causeMessage: 'Merged by batman',
         commit: {
           message: 'Merge pull request #2 from batcave/batmobile',
@@ -151,7 +180,7 @@ test('visiting /pipelines/:id/build/:id', function (assert) {
   andThen(() => {
     assert.equal(currentURL(), '/pipelines/abcd/build/1234');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
-    assert.equal(find('.line1 h1').text().trim(), 'PR-50', 'incorrect job name');
+    assert.equal(find('.headerbar h1').text().trim(), 'PR-50', 'incorrect job name');
     assert.equal(find('span.sha').text().trim(), '#abcdef', 'incorrect sha');
     assert.ok(find('.is-open .logs').text().trim().match(first), 'incorrect logs open');
 

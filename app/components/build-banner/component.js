@@ -3,6 +3,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['build-banner'],
   classNameBindings: ['buildStatus'],
+  isPR: Ember.computed.match('jobName', /^PR-/),
+  jobNames: Ember.computed.mapBy('jobs', 'name'),
 
   buildAction: Ember.computed('buildStatus', {
     get() {
@@ -27,6 +29,29 @@ export default Ember.Component.extend({
       }
 
       return false;
+    }
+  }),
+
+  previous: Ember.computed('eventBuilds', 'jobs', 'jobName', {
+    get() {
+      if (this.get('isPR')) {
+        return null;
+      }
+      const prevIndex = this.get('jobNames').indexOf(this.get('jobName')) - 1;
+
+      return prevIndex < 0 ? null : this.get('eventBuilds').objectAt(prevIndex);
+    }
+  }),
+
+  next: Ember.computed('eventBuilds', 'jobs', 'jobName', {
+    get() {
+      if (this.get('isPR')) {
+        return null;
+      }
+      const nextIndex = this.get('jobNames').indexOf(this.get('jobName')) + 1;
+
+      return nextIndex >= this.get('jobs').length
+      ? null : this.get('eventBuilds').objectAt(nextIndex);
     }
   }),
 

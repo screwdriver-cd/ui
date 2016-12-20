@@ -8,6 +8,8 @@
   onStart=(action "startBuild")
   onStop=(action "stopBuild")
   reloadBuild=(action "reload")
+  jobs=model.jobs
+  eventBuilds=model.event.buildsReversed
 }}
 
 {{#if stepList}}
