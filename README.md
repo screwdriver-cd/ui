@@ -60,9 +60,9 @@ Code licensed under the BSD 3-Clause license. See LICENSE file for terms.
 [version-url]: https://github.com/screwdriver-cd/ui/releases/
 [downloads-image]: https://img.shields.io/docker/pulls/screwdrivercd/ui.svg
 [license-image]: https://img.shields.io/github/license/screwdriver-cd/ui.svg
-[issues-image]: https://img.shields.io/github/issues/screwdriver-cd/ui.svg
-[issues-url]: https://github.com/screwdriver-cd/ui/issues
-[build-image]: https://cd.screwdriver.cd/pipelines/6975e4f82b0532e90fea2ac15cc1679e22764842/badge
-[build-url]: https://cd.screwdriver.cd/pipelines/6975e4f82b0532e90fea2ac15cc1679e22764842/
+[issues-image]: https://img.shields.io/github/issues/screwdriver-cd/screwdriver.svg
+[issues-url]: https://github.com/screwdriver-cd/screwdriver/issues
+[build-image]: https://cd.screwdriver.cd/pipelines/7/badge
+[build-url]: https://cd.screwdriver.cd/pipelines/7/
 [daviddm-image]: https://david-dm.org/screwdriver-cd/ui.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/screwdriver-cd/ui
