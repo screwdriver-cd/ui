@@ -1,15 +1,16 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
+import wait from 'ember-test-helpers/wait';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }]*/
+
+let syncService;
 
 moduleForComponent('pipeline-options', 'Integration | Component | pipeline options', {
   integration: true
 });
 
 test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
   this.set('mockPipeline', Ember.Object.create({
     id: 'abc1234',
     jobs: Ember.A([
@@ -30,6 +31,11 @@ test('it renders', function (assert) {
   assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable the main job.');
   assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
 
+  // Sync
+  assert.equal(this.$(this.$('section.sync h4').get(0)).text().trim(), 'SCM webhooks');
+  assert.equal(this.$(this.$('section.sync h4').get(1)).text().trim(), 'Pull requests');
+  assert.equal(this.$(this.$('section.sync h4').get(2)).text().trim(), 'Pipeline');
+
   // Danger Zone
   assert.equal(this.$('section.danger h3').text().trim(), 'Danger Zone');
   assert.equal(this.$('section.danger li').length, 1);
@@ -40,8 +46,6 @@ test('it renders', function (assert) {
 });
 
 test('it handles job disabling', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
   const main = Ember.Object.create({
     id: '1234',
     name: 'main',
@@ -70,8 +74,6 @@ test('it handles job disabling', function (assert) {
 });
 
 test('it handles job enabling', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
   const main = Ember.Object.create({
     id: '1234',
     name: 'main',
@@ -104,8 +106,6 @@ test('it handles job enabling', function (assert) {
 test('it handles pipeline remove flow', function (assert) {
   const $ = this.$;
 
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
   this.set('mockPipeline', Ember.Object.create({
     id: 'abc1234'
   }));
@@ -125,4 +125,95 @@ test('it handles pipeline remove flow', function (assert) {
   $('section.danger a').click();
   $($('section.danger a').get(1)).click();
   assert.equal($('section.danger p').text().trim(), 'Please wait...');
+});
+
+test('it syncs the webhooks', function (assert) {
+  syncService = Ember.Service.extend({
+    syncRequests(pipelineId, syncPath) {
+      assert.equal(pipelineId, 1);
+      assert.equal(syncPath, 'webhooks');
+
+      return Ember.RSVP.resolve({});
+    }
+  });
+
+  this.register('service:sync', syncService);
+
+  const $ = this.$;
+
+  this.set('mockPipeline', Ember.Object.create({
+    id: '1'
+  }));
+
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+  $($('section.sync a').get(0)).click();
+});
+
+test('it syncs the pullrequests', function (assert) {
+  syncService = Ember.Service.extend({
+    syncRequests(pipelineId, syncPath) {
+      assert.equal(pipelineId, 1);
+      assert.equal(syncPath, 'pullrequests');
+
+      return Ember.RSVP.resolve({});
+    }
+  });
+
+  this.register('service:sync', syncService);
+
+  const $ = this.$;
+
+  this.set('mockPipeline', Ember.Object.create({
+    id: '1'
+  }));
+
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+  $($('section.sync a').get(1)).click();
+});
+
+test('it syncs the pipeline', function (assert) {
+  syncService = Ember.Service.extend({
+    syncRequests(pipelineId, syncPath) {
+      assert.equal(pipelineId, 1);
+      assert.equal(syncPath, undefined);
+
+      return Ember.RSVP.resolve({});
+    }
+  });
+
+  this.register('service:sync', syncService);
+
+  const $ = this.$;
+
+  this.set('mockPipeline', Ember.Object.create({
+    id: '1'
+  }));
+
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+  $($('section.sync a').get(2)).click();
+});
+
+test('it fails to sync the pipeline', function (assert) {
+  syncService = Ember.Service.extend({
+    syncRequests() {
+      return Ember.RSVP.reject('something conflicting');
+    }
+  });
+
+  this.register('service:sync', syncService);
+
+  const $ = this.$;
+
+  this.set('mockPipeline', Ember.Object.create({
+    id: '1'
+  }));
+
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+
+  $($('section.sync a').get(2)).click();
+
+  return wait()
+    .then(() => {
+      assert.equal(this.$('.info-message span').text().trim(), 'something conflicting');
+    });
 });

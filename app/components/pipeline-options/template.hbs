@@ -1,3 +1,5 @@
+{{info-message message=errorMessage type="error"}}
+
 <div class="pure-g">
   <div class="pure-u-1 pure-u-md-2-3">
     <section class="jobs">
@@ -19,6 +21,48 @@
       </ul>
     </section>
   </div>
+
+
+    <div class="pure-u-1 pure-u-md-2-3">
+      <section class="sync">
+        <h3>Sync</h3>
+        <ul>
+          <li>
+            <div class="pure-g">
+              <div class="pure-u-4-5">
+                <h4>SCM webhooks</h4>
+                <p>Update the webhooks if they are not working correctly.</p>
+              </div>
+              <div class="pure-u-1-5 right">
+                <a href="#" {{action "sync" "webhooks"}} >{{fa-icon "fa-refresh"}}</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="pure-g">
+              <div class="pure-u-4-5">
+                <h4>Pull requests</h4>
+                <p>Create or update pull-request jobs if they are not displaying properly.</p>
+              </div>
+              <div class="pure-u-1-5 right">
+                <a href="#" {{action "sync" "pullrequests"}}>{{fa-icon "fa-refresh"}}</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="pure-g">
+              <div class="pure-u-4-5">
+                <h4>Pipeline</h4>
+                <p>Update jobs if they are not displaying properly.</p>
+              </div>
+              <div class="pure-u-1-5 right">
+                <a href="#" {{action "sync"}}>{{fa-icon "fa-refresh"}}</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
 
   <div class="pure-u-1 pure-u-md-2-3">
     <section class="danger">
@@ -50,5 +94,14 @@
     </section>
   </div>
 </div>
+
+{{#if isShowingModal}}
+  {{#modal-dialog clickOutsideToClose=false
+    targetAttachment="center"
+    translucentOverlay=true
+  }}
+    {{loading-view}}
+  {{/modal-dialog}}
+{{/if}}
 
 {{yield}}
