@@ -1,4 +1,4 @@
-# Screwdriver-ui
+# Screwdriver UI
 
 [![Version][version-image]][version-url] ![Downloads][downloads-image] [![Build Status][build-image]][build-url] [![Open Issues][issues-image]][issues-url] [![Dependency Status][daviddm-image]][daviddm-url] ![License][license-image]
 
