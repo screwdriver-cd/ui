@@ -72,6 +72,16 @@
     }
   }
 
+  .sync {
+    a {
+      color: $sd-success;
+    }
+
+    a:hover {
+      border: 1px solid $sd-success;
+    }
+  }
+
   .danger {
     h3 {
       background-color: $sd-failure;
