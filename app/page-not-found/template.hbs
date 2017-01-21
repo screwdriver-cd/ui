@@ -1,1 +1,5 @@
-{{error-view statusCode=404 errorMessage=model.reason.errors.message}}
+{{error-view
+  statusCode=model.reason.errors.statusCode
+  statusMessage=model.reason.errors.error
+  errorMessage=model.reason.errors.message
+}}
