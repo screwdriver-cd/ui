@@ -1,7 +1,6 @@
 {
   "name": "screwdriver-ui",
   "dependencies": {
-    "font-awesome": "~4.5.0",
     "ansi_up": "^1.3.0",
     "humanize-duration": "^3.9.1",
     "jquery-highlight": "~3.2.2"
