@@ -1,12 +1,8 @@
 <div class="logs">{{yield}}
   {{#each logs as |log|}}
   <span class="line">
-    <span class="time">
-      {{moment-format log.t 'HH:mm:ss'}}
-    </span>
-    <span class="content">
-      {{ansi-colorize log.m}}
-    </span>
+    <span class="time">{{moment-format log.t 'HH:mm:ss'}}</span>
+    <span class="content">{{ansi-colorize log.m}}</span>
   </span>
   {{/each}}
 </div>
