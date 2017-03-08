@@ -1,14 +1,76 @@
 import Ember from 'ember';
 import ENV from 'screwdriver-ui/config/environment';
 
+/**
+* Recursively remove children and change part type of files (as opposed to directories)
+* @method                      changeFiles
+* @param  {object|array}       tree - Current level of the output tree
+*/
+function changeFiles(tree) {
+  let parts;
+
+  if (!tree.children) {
+    parts = tree;
+  } else {
+    parts = tree.children;
+  }
+
+  parts.forEach((part) => {
+    if (part.children.length === 0) {
+      part.type = 'file';
+      delete part.children;
+    } else {
+      delete part.a_attr;
+      changeFiles(part);
+    }
+  });
+}
+
+/**
+* Recursively remove children and change part type of files (as opposed to directories)
+* @method                  filePathsToTree
+* @param  {string[]}       paths - array of filepaths
+* @param  {string}         baseUrl - base URL to link to for artifacts directory in Store
+* @param  {function}       cb - callback for tree
+*/
+function arrangeIntoTree(paths, baseUrl, cb) {
+  const tree = [];
+  let currentLevel;
+
+  paths.forEach((path) => {
+    const pathParts = path.split('/');
+
+    pathParts.shift(); // Remove first blank element from the parts array.
+    currentLevel = tree; // initialize currentLevel to root
+
+    pathParts.forEach((part) => {
+        // check to see if the path already exists.
+      const existingPath = currentLevel.filter(obj => obj.name === part)[0];
+
+      if (existingPath) {
+          // The path to this item was already in the tree, so don't add it again.
+          // Set the current level to this path's children
+        currentLevel = existingPath.children;
+      } else {
+        const newPart = {
+          name: part,
+          type: 'directory',
+          a_attr: { href: baseUrl + pathParts.join('/') },
+          children: []
+        };
+
+        currentLevel.push(newPart);
+        currentLevel = newPart.children;
+      }
+    });
+  });
+
+  changeFiles(tree);
+
+  cb(tree);
+}
+
 export default Ember.Service.extend({
-  /**
-   * @method arrangeIntoTree
-   * @param {Array}   paths   An array of full paths
-   */
-  arrangeIntoTree(paths, cb) {
-    return cb([]);
-  },
   /**
    * Calls the store api service to fetch build artifact manifest
    * @method fetchLogs
@@ -19,7 +81,8 @@ export default Ember.Service.extend({
     // const url = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
     //   `/builds/${buildId}/ARTIFACTS/manifest.txt`;
     console.log('buildId:', buildId);
-
+    const baseUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
+      `/builds/${buildId}/ARTIFACTS/`;
     const url = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
       '/builds/1881/ARTIFACTS/manifest.txt';
 
@@ -35,7 +98,7 @@ export default Ember.Service.extend({
 
         console.log('paths:', paths);
 
-        return this.arrangeIntoTree(paths, tree => resolve(tree));
+        return arrangeIntoTree(paths, baseUrl, tree => resolve(tree));
       })
       .fail(resolve([]));
     });
