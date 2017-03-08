@@ -1,0 +1,10 @@
+<h4>ARTIFACTS</h4>
+<div class="tree">
+  {{ember-jstree
+      data=treedata
+      plugins=plugins
+      typesOptions=typesOptions
+      eventDidChange="handleJstreeEventDidChange"
+  }}
+</div>
+{{yield}}
