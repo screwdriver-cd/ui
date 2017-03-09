@@ -34,8 +34,6 @@ function changeFiles(tree) {
 * @param  {function}       cb - callback for tree
 */
 function arrangeIntoTree(paths, baseUrl) {
-  console.log('inside the arrangeIntoTree');
-
   const tree = [];
   let currentLevel;
 
@@ -46,12 +44,12 @@ function arrangeIntoTree(paths, baseUrl) {
     currentLevel = tree; // initialize currentLevel to root
 
     pathParts.forEach((part) => {
-        // check to see if the path already exists.
+      // check to see if the path already exists.
       const existingPath = currentLevel.filter(obj => obj.text === part)[0];
 
       if (existingPath) {
-          // The path to this item was already in the tree, so don't add it again.
-          // Set the current level to this path's children
+        // The path to this item was already in the tree, so don't add it again.
+        // Set the current level to this path's children
         currentLevel = existingPath.children;
       } else {
         const newPart = {
@@ -69,8 +67,6 @@ function arrangeIntoTree(paths, baseUrl) {
 
   changeFiles(tree);
 
-  console.log('tree: ', tree);
-
   return new Ember.RSVP.Promise(resolve => resolve(tree));
 }
 
@@ -82,38 +78,12 @@ export default Ember.Service.extend({
    * @return {Promise}               Resolves to a JSON representaion of the file structure
    */
   fetchManifest(buildId) {
-    const url = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
-      `/builds/${buildId}/ARTIFACTS/manifest.txt`;
-
-    console.log('buildId:', buildId);
     const baseUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
       `/builds/${buildId}/ARTIFACTS/`;
 
-    console.log('url:', url);
+    const url = `${baseUrl}manifest.txt`;
 
     return new Ember.RSVP.Promise((resolve) => {
-      // const data = `.
-      //   ./coverage
-      //   ./coverage/coverage.json
-      //   ./coverage/lcov-report
-      //   ./coverage/lcov-report/artifact-bookend
-      //   ./coverage/lcov-report/artifact-bookend/index.html
-      //   ./coverage/lcov-report/artifact-bookend/index.js.html
-      //   ./coverage/lcov-report/base.css
-      //   ./coverage/lcov-report/index.html
-      //   ./coverage/lcov-report/prettify.css
-      //   ./coverage/lcov-report/prettify.js
-      //   ./coverage/lcov-report/sort-arrow-sprite.png
-      //   ./coverage/lcov-report/sorter.js
-      //   ./coverage/lcov.info
-      //   ./test
-      //   ./test/xunit.xml`;
-      // const paths = data.split('\n');
-      //
-      // console.log('paths:', paths);
-      //
-      // arrangeIntoTree(paths, baseUrl, tree => resolve(tree));
-
       Ember.$.ajax({
         url,
         type: 'GET'
@@ -121,11 +91,8 @@ export default Ember.Service.extend({
       .done((data) => {
         const paths = data.split('\n');
 
-        console.log('paths:', paths);
-
         resolve(arrangeIntoTree(paths, baseUrl));
       });
-      // .fail(resolve([]));
     });
   }
 });
