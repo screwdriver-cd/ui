@@ -17,7 +17,7 @@ import Ember from 'ember';
 // ];
 
 const typesOptions = {
-  folder: {
+  directory: {
     icon: 'fa fa-folder-o fa-lg'
   },
   file: {
@@ -26,6 +26,8 @@ const typesOptions = {
 };
 
 export default Ember.Component.extend({
+  classNames: ['artifact-tree'],
+  classNameBindings: ['buildStatus'],
   artifact: Ember.inject.service('build-artifact'),
   typesOptions,
   plugins: 'types',
@@ -33,11 +35,20 @@ export default Ember.Component.extend({
     get() {
       const buildStatus = this.get('buildStatus');
 
-      if (buildStatus === 'QUEUE' || 'RUNNING') {
+      if (buildStatus === 'RUNNING' || buildStatus === 'QUEUED') {
+        console.log('buildStatus running or queue: ', buildStatus);
+
         return [];
       }
 
-      return this.get('artifact').fetchManifest(this.get('buildId'));
+      console.log('buildStatus after running or queue: ', buildStatus);
+
+      return this.get('artifact').fetchManifest(this.get('buildId'))
+      .then((res) => {
+        console.log('res: ', res);
+
+        this.set('treedata', res);
+      });
     }
   }),
   actions: {
