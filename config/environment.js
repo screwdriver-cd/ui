@@ -21,7 +21,7 @@ module.exports = (environment) => {
       // when it is created
       SDAPI_HOSTNAME: 'http://localhost:8080',
       SDAPI_NAMESPACE: 'v4',
-      SDSTORE_HOSTNAME: 'https://store.screwdriver.cd',
+      SDSTORE_HOSTNAME: 'http://localhost:80',
       SDSTORE_NAMESPACE: 'v1',
       BUILD_RELOAD_TIMER: 5000,  // 5 seconds
       EVENT_RELOAD_TIMER: 90000,  // 1.5 minutes

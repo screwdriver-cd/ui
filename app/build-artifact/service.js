@@ -33,7 +33,9 @@ function changeFiles(tree) {
 * @param  {string}         baseUrl - base URL to link to for artifacts directory in Store
 * @param  {function}       cb - callback for tree
 */
-function arrangeIntoTree(paths, baseUrl, cb) {
+function arrangeIntoTree(paths, baseUrl) {
+  console.log('inside the arrangeIntoTree');
+
   const tree = [];
   let currentLevel;
 
@@ -45,7 +47,7 @@ function arrangeIntoTree(paths, baseUrl, cb) {
 
     pathParts.forEach((part) => {
         // check to see if the path already exists.
-      const existingPath = currentLevel.filter(obj => obj.name === part)[0];
+      const existingPath = currentLevel.filter(obj => obj.text === part)[0];
 
       if (existingPath) {
           // The path to this item was already in the tree, so don't add it again.
@@ -53,7 +55,7 @@ function arrangeIntoTree(paths, baseUrl, cb) {
         currentLevel = existingPath.children;
       } else {
         const newPart = {
-          name: part,
+          text: part,
           type: 'directory',
           a_attr: { href: baseUrl + pathParts.join('/') },
           children: []
@@ -67,7 +69,9 @@ function arrangeIntoTree(paths, baseUrl, cb) {
 
   changeFiles(tree);
 
-  cb(tree);
+  console.log('tree: ', tree);
+
+  return new Ember.RSVP.Promise(resolve => resolve(tree));
 }
 
 export default Ember.Service.extend({
@@ -78,17 +82,38 @@ export default Ember.Service.extend({
    * @return {Promise}               Resolves to a JSON representaion of the file structure
    */
   fetchManifest(buildId) {
-    // const url = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
-    //   `/builds/${buildId}/ARTIFACTS/manifest.txt`;
+    const url = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
+      `/builds/${buildId}/ARTIFACTS/manifest.txt`;
+
     console.log('buildId:', buildId);
     const baseUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
       `/builds/${buildId}/ARTIFACTS/`;
-    const url = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
-      '/builds/1881/ARTIFACTS/manifest.txt';
 
     console.log('url:', url);
 
     return new Ember.RSVP.Promise((resolve) => {
+      // const data = `.
+      //   ./coverage
+      //   ./coverage/coverage.json
+      //   ./coverage/lcov-report
+      //   ./coverage/lcov-report/artifact-bookend
+      //   ./coverage/lcov-report/artifact-bookend/index.html
+      //   ./coverage/lcov-report/artifact-bookend/index.js.html
+      //   ./coverage/lcov-report/base.css
+      //   ./coverage/lcov-report/index.html
+      //   ./coverage/lcov-report/prettify.css
+      //   ./coverage/lcov-report/prettify.js
+      //   ./coverage/lcov-report/sort-arrow-sprite.png
+      //   ./coverage/lcov-report/sorter.js
+      //   ./coverage/lcov.info
+      //   ./test
+      //   ./test/xunit.xml`;
+      // const paths = data.split('\n');
+      //
+      // console.log('paths:', paths);
+      //
+      // arrangeIntoTree(paths, baseUrl, tree => resolve(tree));
+
       Ember.$.ajax({
         url,
         type: 'GET'
@@ -98,9 +123,9 @@ export default Ember.Service.extend({
 
         console.log('paths:', paths);
 
-        return arrangeIntoTree(paths, baseUrl, tree => resolve(tree));
-      })
-      .fail(resolve([]));
+        resolve(arrangeIntoTree(paths, baseUrl));
+      });
+      // .fail(resolve([]));
     });
   }
 });
