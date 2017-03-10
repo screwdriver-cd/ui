@@ -1,4 +1,6 @@
 import Ember from 'ember';
+
+const ObjectPromiseProxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin);
 const typesOptions = {
   directory: {
     icon: 'fa fa-folder-o fa-lg'
@@ -19,12 +21,11 @@ export default Ember.Component.extend({
       const buildStatus = this.get('buildStatus');
 
       if (buildStatus === 'RUNNING' || buildStatus === 'QUEUED') {
-        return [];
+        return Ember.RSVP.resolve([]);
       }
 
-      return this.get('artifact').fetchManifest(this.get('buildId'))
-      .then((res) => {
-        this.set('treedata', res);
+      return ObjectPromiseProxy.create({
+        promise: this.get('artifact').fetchManifest(this.get('buildId'))
       });
     }
   }),
