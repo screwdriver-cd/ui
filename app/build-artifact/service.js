@@ -3,8 +3,8 @@ import ENV from 'screwdriver-ui/config/environment';
 
 /**
 * Recursively remove children and change part type of files (as opposed to directories)
-* @method                      changeFiles
-* @param  {object|array}       tree - Current level of the output tree
+* @method  changeFiles
+* @param  {Object|Array}    tree      Current level of the output tree
 */
 function changeFiles(tree) {
   let parts;
@@ -28,10 +28,10 @@ function changeFiles(tree) {
 
 /**
 * Recursively remove children and change part type of files (as opposed to directories)
-* @method                  filePathsToTree
-* @param  {string[]}       paths - array of filepaths
-* @param  {string}         baseUrl - base URL to link to for artifacts directory in Store
-* @param  {function}       cb - callback for tree
+* @method arrangeIntoTree
+* @param  {String[]}      paths     An array of filepaths
+* @param  {String}        baseUrl   Base URL to link to for artifacts directory in Store
+* @return {Object[]}                A tree representaion of dir/file structure
 */
 function arrangeIntoTree(paths, baseUrl) {
   const tree = [];
@@ -67,32 +67,32 @@ function arrangeIntoTree(paths, baseUrl) {
 
   changeFiles(tree);
 
-  return new Ember.RSVP.Promise(resolve => resolve(tree));
+  return tree;
 }
 
 export default Ember.Service.extend({
   /**
    * Calls the store api service to fetch build artifact manifest
-   * @method fetchLogs
-   * @param  {Integer}  buildId      Build id
-   * @return {Promise}               Resolves to a JSON representaion of the file structure
+   * @method fetchManifest
+   * @param  {Integer}  buildId     Build id
+   * @return {Promise}              Resolves to a tree representaion of the dir/file structure
    */
   fetchManifest(buildId) {
+    let manifest = [];
+
     const baseUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
       `/builds/${buildId}/ARTIFACTS/`;
 
-    const url = `${baseUrl}manifest.txt`;
-
     return new Ember.RSVP.Promise((resolve) => {
       Ember.$.ajax({
-        url,
-        type: 'GET'
+        url: `${baseUrl}manifest.txt`
       })
       .done((data) => {
         const paths = data.split('\n');
 
-        resolve(arrangeIntoTree(paths, baseUrl));
-      });
+        manifest = arrangeIntoTree(paths, baseUrl);
+      })
+      .always(() => resolve(manifest));
     });
   }
 });

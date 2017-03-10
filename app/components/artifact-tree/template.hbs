@@ -1,10 +1,7 @@
 <h4>Artifacts</h4>
-<div class="tree">
-  {{ember-jstree
-      data=treedata
-      plugins=plugins
-      typesOptions=typesOptions
-      eventDidChange="handleJstreeEventDidChange"
-  }}
-</div>
-{{yield}}
+{{ember-jstree
+    data=treedata.content
+    plugins=plugins
+    typesOptions=typesOptions
+    eventDidChange="handleJstreeEventDidChange"
+}}

@@ -1,25 +1,63 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import wait from 'ember-test-helpers/wait';
+import Ember from 'ember';
 
-moduleForComponent('artifact-tree', 'Integration | Component | artifact tree', {
-  integration: true
+const parsedManifest = [{
+  text: 'coverage',
+  type: 'directory',
+  children: [{
+    text: 'coverage.json',
+    type: 'file',
+    a_attr: { href: 'http://foo.com/coverage.json' }
+  }]
+},
+{
+  text: 'test.txt',
+  type: 'file',
+  a_attr: { href: 'http://foo.com/test.txt' }
+}
+];
+
+const artifactService = Ember.Service.extend({
+  fetchManifest() {
+    return Ember.RSVP.resolve(parsedManifest);
+  }
 });
 
-test('it renders', function(assert) {
+moduleForComponent('artifact-tree', 'Integration | Component | artifact tree', {
+  integration: true,
 
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  beforeEach() {
+    this.register('service:build-artifact', artifactService);
+  }
+});
 
-  this.render(hbs`{{artifact-tree}}`);
-
-  assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:
+test('it renders only title when build is running', function (assert) {
   this.render(hbs`
-    {{#artifact-tree}}
-      template block text
-    {{/artifact-tree}}
+    {{artifact-tree
+      buildStatus="RUNNING"
+    }}
   `);
 
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.equal(this.$('.artifact-tree h4').text().trim(), 'Artifacts');
+  assert.equal(this.$('.jstree-node').length, 0);
+});
+
+test('it renders with artifacts if build finished', function (assert) {
+  this.render(hbs`
+    {{artifact-tree
+      buildStatus="SUCCESS"
+    }}
+  `);
+
+  return wait().then(() => {
+    // Check if it has two nodes and one of them is a leaf/file
+    assert.equal(this.$('.jstree-leaf').length, 1);
+    assert.equal(this.$('.jstree-node').length, 2);
+
+    // Check if the href is correctly set and then click the link
+    assert.equal(this.$('.jstree-leaf a').prop('href'), parsedManifest[1].a_attr.href);
+    this.$('.jstree-leaf a').click();
+  });
 });
