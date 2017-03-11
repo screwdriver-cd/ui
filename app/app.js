@@ -13,6 +13,18 @@ App = Ember.Application.extend({
   Resolver
 });
 
+// Detect and store previous path for redirection after login
+Ember.Route.reopen({
+  afterModel: function(resolvedModel, transition) {
+    transition.then(() => {
+      App.currentPath = this.get('router.url');
+    });
+  },
+  deactivate() {
+    App.previousPath = App.currentPath;
+  }
+});
+
 loadInitializers(App, config.modulePrefix);
 
 export default App;
