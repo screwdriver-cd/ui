@@ -147,7 +147,7 @@ moduleForAcceptance('Acceptance | build', {
           }],
           image: 'node:6'
         }],
-        pipelineId: '34b6834028c4c904dce3d9391c8b2dd4994ec6a9',
+        pipelineId: 'abcd',
         state: 'ENABLED',
         archived: false
       })

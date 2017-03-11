@@ -19,5 +19,13 @@ export default Ember.Route.extend({
       pipeline: this.get('pipeline'),
       jobs: jobs.filter(j => !/^PR-/.test(j.get('name')))
     })));
+  },
+  afterModel(model) {
+    const pipelineId = model.pipeline.get('id');
+
+    // Build not found for this pipeline, redirecting to the pipeline page
+    if (pipelineId !== model.job.get('pipelineId')) {
+      this.transitionTo('pipeline', pipelineId);
+    }
   }
 });
