@@ -34,5 +34,5 @@ sinonTest('it redirects if build not found', function (assert) {
   route.afterModel(model);
 
   assert.ok(stub.calledOnce, 'transitionTo was called once');
-  assert.ok(stub.calledWithExactly('pipeline', pipelineId), 'transtion to pipeline');
+  assert.ok(stub.calledWithExactly('pipeline', pipelineId), 'transition to pipeline');
 });
