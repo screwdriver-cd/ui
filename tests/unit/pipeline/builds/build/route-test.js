@@ -1,4 +1,5 @@
 import { moduleFor, test } from 'ember-qunit';
+import sinonTest from 'ember-sinon-qunit/test-support/test';
 import Ember from 'ember';
 
 moduleFor('route:pipeline/builds/build', 'Unit | Route | pipeline/builds/build', {
@@ -14,4 +15,24 @@ test('it exists', function (assert) {
     job: Ember.Object.create({ name: 'main' }),
     build: Ember.Object.create({ sha: 'abcd1234567890' })
   }), 'main > #abcd12');
+});
+
+sinonTest('it redirects if build not found', function (assert) {
+  const route = this.subject();
+  const stub = this.stub(route, 'transitionTo');
+  const jobId = 345;
+  const pipelineId = 123;
+  const model = {
+    pipeline: {
+      get: type => (type === 'id' ? pipelineId : null)
+    },
+    job: {
+      get: type => (type === 'id' ? jobId : null)
+    }
+  };
+
+  route.afterModel(model);
+
+  assert.ok(stub.calledOnce, 'transitionTo was called once');
+  assert.ok(stub.calledWithExactly('pipeline', pipelineId), 'transition to pipeline');
 });
