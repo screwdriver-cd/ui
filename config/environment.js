@@ -60,11 +60,6 @@ module.exports = (environment) => {
     ENV.APP.SDSTORE_HOSTNAME = 'https://store.screwdriver.cd';
   }
 
-  ENV['ember-simple-auth'] = {
-    routeAfterAuthentication: 'home',
-    routeIfAlreadyAuthenticated: 'home'
-  };
-
   ENV['ember-cli-toggle'] = {
     includedThemes: ['light'],
     defaultTheme: 'light',
