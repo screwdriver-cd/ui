@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
+  routeAfterAuthentication: 'pipeline',
   titleToken(model) {
     return model.get('appId');
   },

@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
+  routeAfterAuthentication: 'search',
   titleToken: 'Search',
   queryParams: {
     query: {
