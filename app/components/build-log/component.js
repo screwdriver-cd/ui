@@ -71,18 +71,15 @@ export default Ember.Component.extend({
   },
 
   /**
-   * Listener to determine if log loading should begin.
-   * Should only kick off log loading if "isOpen" changes to true
-   * @method didUpdateAttrs
+   * Listens to 'isOpen' to determine if the value has changed
+   * @method isOpenChanged
+   * @private
    */
-  didUpdateAttrs(config) {
-    this._super(...arguments);
-    // Call only if recently opened
-    if (config.oldAttrs.isOpen.value !== config.newAttrs.isOpen.value &&
-        config.newAttrs.isOpen.value) {
+  isOpenChanged: Ember.observer('isOpen', function isOpenChanged() {
+    if (this.get('isOpen')) {
       this.getLogs();
     }
-  },
+  }),
 
   /**
    * Determines if log loading should occur
