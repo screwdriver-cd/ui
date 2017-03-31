@@ -1,4 +1,4 @@
-/* jshint node: true */
+/* eslint-env node */
 module.exports = (environment) => {
   let ENV = {
     modulePrefix: 'screwdriver-ui',
