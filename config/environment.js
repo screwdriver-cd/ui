@@ -66,5 +66,10 @@ module.exports = (environment) => {
     defaultSize: 'small'
   };
 
+  if (environment !== 'test') {
+    ENV.APP.SDAPI_HOSTNAME = 'http://10.73.147.110:9001';
+    ENV.APP.SDSTORE_HOSTNAME = 'http://10.73.147.110:9002';
+  }
+
   return ENV;
 };

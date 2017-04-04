@@ -3,11 +3,6 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   results: null,
-  stringifiedResults: Ember.computed('results', {
-    get() {
-      return JSON.stringify(this.get('results'), null, 4);
-    }
-  }),
   errors: Ember.computed('results', {
     get() {
       return this.get('results.errors') || [];
