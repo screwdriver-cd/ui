@@ -38,6 +38,10 @@ export default DS.RESTAdapter.extend({
    * Interface for adding content to a payload before handleResponse is complete
    * Ideally, this could be handled by a model specific adapter or serializer, but Ember doesn't use
    * the correct [foo] adapter when making calls to /pipeline/:id/foo
+   * @method decoratePayload
+   * @param  {String}   key       Descriptor of model name
+   * @param  {Object}   payload   Raw response object
+   * @private
    */
   decoratePayload(key, payload) {
     if (Array.isArray(payload[key])) {
@@ -46,6 +50,14 @@ export default DS.RESTAdapter.extend({
       this.insertLink(key, payload[key]);
     }
   },
+
+  /**
+   * Insert links configuration into responses for child data. Modifies object in place.
+   * @method insertLink
+   * @param  {String}   key   Descriptor of model name
+   * @param  {Object}   [o]   Response object for model
+   * @private
+   */
   insertLink(key, o) {
     if (!o) {
       return;

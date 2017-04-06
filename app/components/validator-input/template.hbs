@@ -1,0 +1,13 @@
+<h3>{{fa-icon "check-square-o"}} Validate Screwdriver Configuration</h3>
+{{ember-ace
+  value=yaml
+  update=(action (mut yaml))
+  tabSize=4
+  useSoftTabs=true
+  minLines=10
+  maxLines=75
+  showPrintMargin=false
+  useWrapMode=false
+  highlightActiveLine=true
+}}
+{{yield}}

@@ -9,3 +9,5 @@ tests/helpers/start-app.js
 public
 vendor
 ember-cli-build.js
+tmp
+dist

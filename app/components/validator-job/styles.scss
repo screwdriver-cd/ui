@@ -1,0 +1,46 @@
+& {
+  margin: 10px 10px 0 0;
+  border-radius: 3px;
+  border: 1px solid $sd-separator;
+  padding: 10px;
+  font-weight: 300;
+  color: $sd-text;
+
+  > div {
+    padding: 3px;
+    border-radius: 3px;
+  }
+
+  > div:hover {
+    background-color: $sd-highlight;
+  }
+
+  ul {
+    margin: 0;
+  }
+
+  h4 {
+    padding: 0;
+    margin: 0 0 10px 0;
+  }
+
+  .label {
+    font-weight: 600;
+  }
+
+  ul .value {
+    color: $sd-text-med;
+  }
+
+  .steps ul .value {
+    font-family: monospace;
+    display: inline-block;
+  }
+
+  &.has-parse-error .steps ul {
+    .name, .value {
+      font-weight: 600;
+      color: $sd-failure;
+    }
+  }
+}

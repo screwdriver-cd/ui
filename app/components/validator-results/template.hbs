@@ -1,0 +1,17 @@
+{{#each errors as |msg|}}
+<div class="error">
+  {{msg}}
+</div>
+{{/each}}
+{{#if isTemplate}}
+{{validator-job name=templateName job=results.template.config}}
+{{else}}
+{{#each workflow as |jobName|}}
+  {{#if (get jobs jobName)}}
+    {{#each (get jobs jobName) as |jobConfig index|}}
+      {{validator-job name=jobName job=jobConfig index=index}}
+    {{/each}}
+  {{/if}}
+{{/each}}
+{{/if}}
+{{yield}}
