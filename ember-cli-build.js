@@ -12,12 +12,15 @@ module.exports = function (defaults) {
     },
     svg: {
       paths: ['public/assets/svg']
+    },
+    ace: {
+      // TODO: create screwdriver mode
+      modes: ['yaml']
     }
   });
 
   app.import('bower_components/ansi_up/ansi_up.js');
   app.import('bower_components/humanize-duration/humanize-duration.js');
-
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //

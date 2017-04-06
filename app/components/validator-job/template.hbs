@@ -1,0 +1,53 @@
+<h4 {{action 'nameClick'}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>
+<div class="image" title="This is the docker image that acts as the base container for the job.">
+  <span class="label">Image:</span>
+  <span class="value">{{job.image}}</span>
+</div>
+<div class="steps" title="These are the commands that will be executed in the job.">
+  <span class="label">Steps:</span>
+  <span class="value">
+    <ul>
+      {{#each steps as |command|}}
+      <li><span class="name">{{command.name}}: </span><span class="value">{{command.command}}</span></li>
+      {{/each}}
+    </ul>
+  </span>
+</div>
+<div class="secrets" title="These are the keys for secrets that will be available in this job.">
+  <span class="label">Secrets:</span>
+  <span class="value">
+    <ul>
+      {{#each job.secrets as |secretName|}}
+      <li>{{secretName}}</li>
+      {{else}}
+      <li>None defined</li>
+      {{/each}}
+    </ul>
+  </span>
+</div>
+<div class="env" title="These are the environment variables you have added to the job.">
+  <span class="label">Environment Variables:</span>
+  <span class="value">
+    <ul>
+      {{#each-in job.environment as |name value|}}
+      <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
+      {{else}}
+      <li>None defined</li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
+<div class="settings" title="These settings are used to configure the way a build executes and how build results are processed.">
+  <span class="label">Job Settings:</span>
+  <span class="value">
+    <ul>
+      {{!TODO handle settings properly}}
+      {{#each-in job.settings as |name value|}}
+      <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
+      {{else}}
+      <li>None defined</li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
+{{yield}}
