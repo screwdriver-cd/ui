@@ -16,7 +16,7 @@ Router.map(function route() {
   this.route('pipeline', { path: '/pipelines/:pipeline_id' }, function secretsRoute() {
     this.route('secrets');
     this.route('builds', { path: '/' }, function buildRoute() {
-      this.route('build', { path: 'build/:build_id' });
+      this.route('build', { path: 'builds/:build_id' });
     });
     this.route('options');
   });

@@ -170,15 +170,15 @@ moduleForAcceptance('Acceptance | build', {
   }
 });
 
-test('visiting /pipelines/:id/build/:id', function (assert) {
+test('visiting /pipelines/:id/builds/:id', function (assert) {
   const $ = Ember.$;
   const first = new RegExp(`${timeFormat}\\s+bad stuff`);
   const second = new RegExp(`${timeFormat}\\s+fancy stuff`);
 
-  visit('/pipelines/abcd/build/1234');
+  visit('/pipelines/abcd/builds/1234');
 
   andThen(() => {
-    assert.equal(currentURL(), '/pipelines/abcd/build/1234');
+    assert.equal(currentURL(), '/pipelines/abcd/builds/1234');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.headerbar h1').text().trim(), 'PR-50', 'incorrect job name');
     assert.equal(find('span.sha').text().trim(), '#abcdef', 'incorrect sha');
