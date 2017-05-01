@@ -121,6 +121,24 @@ test('it wraps errors', function (assert) {
   assert.ok(payload instanceof DS.AdapterError);
 });
 
+test('it wraps error objects', function (assert) {
+  let adapter = this.subject();
+
+  const requestData = {
+    url: 'http://localhost:8080/v4/pipelines/1234/jobs'
+  };
+
+  const payload = adapter.handleResponse(404, {}, {
+    error: {
+      statusCode: 400,
+      error: 'unfortunate',
+      message: 'a series of unfortunate events'
+    }
+  }, requestData);
+
+  assert.ok(payload instanceof DS.AdapterError);
+});
+
 test('it takes care of empty payload', function (assert) {
   let adapter = this.subject();
 
