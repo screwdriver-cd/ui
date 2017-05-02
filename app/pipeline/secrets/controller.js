@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
 
           return s;
         }, (err) => {
-          this.set('errorMessage', err.errors.message);
+          this.set('errorMessage', err.errors[0].detail);
         });
     }
   }

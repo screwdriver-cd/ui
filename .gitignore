@@ -20,3 +20,4 @@ testem.log
 .DS_STORE
 .*.swp
 .travis.yml
+yarn.lock

@@ -1,16 +1,16 @@
 module.exports = {
   root: true,
   parserOptions: {
-    ecmaVersion: 6,
+    ecmaVersion: 2017,
     sourceType: 'module'
   },
   extends: 'screwdriver',
   env: {
-    'browser': true
+    browser: true
   },
   globals: {
-    "ansi_up": true,
-    "humanizeDuration": true
+    ansi_up: true,
+    humanizeDuration: true
   },
   rules: {
     indent: ['error', 2],
