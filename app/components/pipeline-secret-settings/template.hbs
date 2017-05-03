@@ -1,10 +1,19 @@
 {{info-message message=errorMessage type="error" icon="exclamation-triangle"}}
+<h1>
+  Secrets
+  <a href="http://docs.screwdriver.cd/user-guide/configuration/secrets/">
+    <i class="fa fa-question-circle" ></i>
+  </a>
+</h1>
+<p>
+  User secrets are stored in an encrypted database, and their values are only released to those builds that are authorized by the user.
+</p>
 <table class="secrets">
   <thead>
     <tr>
-      <th>Key</th>
+      <th title="Secret keys can only consist of numbers, uppercase letters and underscores, and must begin with a letter.">Key</th>
       <th>Value</th>
-      <th colspan="2">Allow in PR</th>
+      <th colspan="2" title="Flags a secret as being allowed to be exposed in a pull-request.">Allow in PR</th>
     </tr>
   </thead>
   <tbody>
@@ -14,8 +23,8 @@
   </tbody>
   <tfoot>
     <tr class="new">
-      <td class="key">{{input placeholder="key" size="40" value=newName key-up="enableButton"}}</td>
-      <td class="pass">{{input type="password" placeholder="value" size="40" value=newValue key-up="enableButton"}}</td>
+      <td class="key">{{input placeholder="SECRET_KEY" size="40" value=newName key-up="enableButton"}}</td>
+      <td class="pass">{{input type="password" placeholder="SECRET_VALUE" size="40" value=newValue key-up="enableButton"}}</td>
       <td class="allow">{{input type="checkbox" checked=newAllow title="Check to allow this secret to be used in pull-requests"}}</td>
       <td><button disabled={{isButtonDisabled}} {{action "addNewSecret"}}>Add</button></td>
     </tr>
