@@ -98,3 +98,36 @@ test('it displays an error', function (assert) {
   assert.equal(this.$('.info-message span').text().trim(),
     'Secret name does not meet requirements /^[A-Z_][A-Z0-9_]*$/');
 });
+
+test('it sorts secrets by name alphabetically', function (assert) {
+  const testSecret1 = Ember.Object.create({
+    name: 'FOO',
+    pipelineId: 123245,
+    value: 'banana',
+    allowInPR: false
+  });
+
+  const testSecret2 = Ember.Object.create({
+    name: 'BAR',
+    pipelineId: 123245,
+    value: 'banana',
+    allowInPR: false
+  });
+
+  const testSecret3 = Ember.Object.create({
+    name: 'ZOO',
+    pipelineId: 123245,
+    value: 'banana',
+    allowInPR: false
+  });
+
+  this.set('mockSecrets', [testSecret1, testSecret2, testSecret3]);
+
+  this.set('mockPipeline', { id: 123245 });
+  this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+  // secrets are sorted by name
+  assert.equal(this.$('tbody tr:first-child td:first-child').text().trim(), 'BAR');
+  assert.equal(this.$('tbody tr:nth-child(2) td:first-child').text().trim(), 'FOO');
+  assert.equal(this.$('tbody tr:nth-child(3) td:first-child').text().trim(), 'ZOO');
+});

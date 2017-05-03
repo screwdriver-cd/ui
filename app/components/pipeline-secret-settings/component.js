@@ -6,6 +6,8 @@ export default Ember.Component.extend({
   newAllow: false,
   isButtonDisabled: true,
   errorMessage: '',
+  secretsSorting: ['name'],
+  sortedSecrets: Ember.computed.sort('secrets', 'secretsSorting'),
   actions: {
     /**
      * Sets disabled state of "add" button
