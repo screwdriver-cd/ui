@@ -24,7 +24,8 @@ export default Ember.Component.extend({
      */
     addNewSecret() {
       if (!/^[A-Z_][A-Z0-9_]*$/.test(this.get('newName'))) {
-        this.set('errorMessage', 'Secret name does not meet requirements /^[A-Z_][A-Z0-9_]*$/');
+        this.set('errorMessage', 'Secret keys can only consist of numbers, ' +
+        'uppercase letters and underscores, and cannot begin with a number.');
 
         return false;
       }

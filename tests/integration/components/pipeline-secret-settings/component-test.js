@@ -96,7 +96,8 @@ test('it displays an error', function (assert) {
 
   // and clears the new secret form elements
   assert.equal(this.$('.info-message span').text().trim(),
-    'Secret name does not meet requirements /^[A-Z_][A-Z0-9_]*$/');
+    'Secret keys can only consist of numbers, uppercase letters and underscores, ' +
+    'and cannot begin with a number.');
 });
 
 test('it sorts secrets by name alphabetically', function (assert) {
