@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-  routeAfterAuthentication: 'pipeline.build.build',
+  routeAfterAuthentication: 'pipeline.builds.build',
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline'));
   },
