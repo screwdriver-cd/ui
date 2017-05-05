@@ -5,7 +5,7 @@ RUN set -x \
    # Missing https for some magic reason
    && apk add --no-cache --update ca-certificates \
    && apk add --virtual .build-dependencies wget \
-   && apk add nginx-mod-http-lua nginx-lua \
+   && apk add nginx-mod-http-lua \
    && wget -q -O - https://github.com/screwdriver-cd/ui/releases/latest \
        | egrep -o '/screwdriver-cd/ui/releases/download/v[0-9.]*/sdui.tgz' \
        | wget --base=http://github.com/ -i - -O sdui.tgz \
