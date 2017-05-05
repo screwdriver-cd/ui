@@ -14,7 +14,7 @@ export default Ember.Controller.extend({
         .then(() => {
           this.transitionToRoute('pipeline', pipeline.get('id'));
         }, (err) => {
-          this.set('errorMessage', err.errors.message);
+          this.set('errorMessage', err.errors[0].detail);
         }).finally(() => {
           this.set('isSaving', false);
         });

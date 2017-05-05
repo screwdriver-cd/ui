@@ -88,8 +88,27 @@ export default DS.RESTAdapter.extend({
    */
   handleResponse(status, headers, payload, requestData) {
     // handle generically when there is an error key in the payload
+    // Convert our errors to JSONAPI format [required in ember-data 2.13]
     if (payload && payload.error) {
-      return this._super(status, headers, { errors: payload }, requestData);
+      let errors = payload.error;
+
+      if (typeof errors === 'string') {
+        errors = [{
+          status: payload.statusCode,
+          title: payload.error,
+          detail: payload.message
+        }];
+      }
+
+      if (typeof errors === 'object' && !Array.isArray(errors)) {
+        errors = [{
+          status: errors.statusCode,
+          title: errors.error,
+          detail: errors.message
+        }];
+      }
+
+      return this._super(status, headers, { errors }, requestData);
     }
 
     let data = {};
