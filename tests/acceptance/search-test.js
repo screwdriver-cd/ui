@@ -11,7 +11,7 @@ moduleForAcceptance('Acceptance | search', {
       { 'Content-Type': 'application/json' },
       JSON.stringify([
         {
-          id: 'abcd',
+          id: '1',
           scmUrl: 'git@github.com:foo/bar.git#master',
           scmRepo: {
             name: 'foo/bar',
@@ -23,7 +23,7 @@ moduleForAcceptance('Acceptance | search', {
           workflow: ['main', 'publish']
         },
         {
-          id: 'bcda',
+          id: '2',
           scmUrl: 'git@github.com:foo/bar2.git#banana',
           scmRepo: {
             name: 'foo/bar2',
@@ -35,7 +35,7 @@ moduleForAcceptance('Acceptance | search', {
           workflow: ['main', 'publish']
         },
         {
-          id: 'cdab',
+          id: '3',
           scmUrl: 'git@github.com:foo/bar3.git#cucumber',
           scmRepo: {
             name: 'foo/bar3',

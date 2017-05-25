@@ -6,7 +6,7 @@
     <div class="cause" title="{{event.commit.message}}">{{event.truncatedMessage}}</div>
     <div>
       {{#each event.workflow as |name index|}}
-      {{build-bubble jobName=name build=(index-of event.buildsReversed index) small=true}}
+      {{build-bubble jobName=name build=(index-of event.buildsSorted index) small=true}}
       {{/each}}
     </div>
   </div>

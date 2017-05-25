@@ -6,7 +6,7 @@ let server;
 
 const BUILD = {
   id: '1234',
-  jobId: 'aabbcc',
+  jobId: '1',
   number: 1474649580274,
   container: 'node:6',
   cause: 'Started by user batman',
@@ -35,7 +35,7 @@ const BUILD = {
 
 const events = [
   {
-    id: 'abcdf',
+    id: '2',
     causeMessage: 'Merged by batman',
     commit: {
       message: 'Merge pull request #2 from batcave/batmobile',
@@ -59,7 +59,7 @@ const events = [
     type: 'pipeline',
     workflow: ['main', 'publish']
   }, {
-    id: 'abcde',
+    id: '3',
     causeMessage: 'Merged by robin',
     commit: {
       message: 'Merge pull request #1 from batcave/batmobile',
@@ -89,21 +89,21 @@ const jobs = [
   {
     id: '12345',
     name: 'main',
-    pipelineId: 'abcd',
+    pipelineId: '4',
     state: 'ENABLED',
     archived: false
   },
   {
     id: '12346',
     name: 'publish',
-    pipelineId: 'abcd',
+    pipelineId: '4',
     state: 'ENABLED',
     archived: false
   },
   {
     id: '12347',
     name: 'PR-42',
-    pipelineId: 'abcd',
+    pipelineId: '4',
     state: 'ENABLED',
     archived: false
   }
@@ -142,11 +142,11 @@ moduleForAcceptance('Acceptance | pipeline builds', {
   beforeEach() {
     server = new Pretender();
 
-    server.get('http://localhost:8080/v4/pipelines/abcd', () => [
+    server.get('http://localhost:8080/v4/pipelines/4', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
-        id: 'abcd',
+        id: '4',
         scmUrl: 'git@github.com:foo/bar.git#master',
         scmRepo: {
           name: 'foo/bar',
@@ -159,28 +159,28 @@ moduleForAcceptance('Acceptance | pipeline builds', {
       })
     ]);
 
-    server.get('http://localhost:8080/v4/pipelines/abcd/jobs', () => [
+    server.get('http://localhost:8080/v4/pipelines/4/jobs', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify(jobs)
     ]);
 
-    server.get('http://localhost:8080/v4/pipelines/abcd/events', () => [
+    server.get('http://localhost:8080/v4/pipelines/4/events', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify(events)
     ]);
 
-    server.get('http://localhost:8080/v4/events/abcdf/builds', () => [
+    server.get('http://localhost:8080/v4/events/2/builds', () => [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify(makeBuilds('abcdf'))
+      JSON.stringify(makeBuilds('2'))
     ]);
 
-    server.get('http://localhost:8080/v4/events/abcde/builds', () => [
+    server.get('http://localhost:8080/v4/events/3/builds', () => [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify(makeBuilds('abcde'))
+      JSON.stringify(makeBuilds('3'))
     ]);
 
     server.get('http://localhost:8080/v4/jobs/12345/builds', () => [
@@ -206,11 +206,11 @@ moduleForAcceptance('Acceptance | pipeline builds', {
   }
 });
 
-test('visiting /pipelines/abcd', function (assert) {
-  visit('/pipelines/abcd');
+test('visiting /pipelines/4', function (assert) {
+  visit('/pipelines/4');
 
   andThen(() => {
-    assert.equal(currentURL(), '/pipelines/abcd');
+    assert.equal(currentURL(), '/pipelines/4');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.pipelineWorkflow .build-bubble').length, 2, 'not enough workflow');
     assert.equal(find('button').length, 0, 'should not have a start button');
