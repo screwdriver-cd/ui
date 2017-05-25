@@ -12,13 +12,13 @@ moduleForAcceptance('Acceptance | build', {
   beforeEach() {
     server = new Pretender();
 
-    server.get('http://localhost:8080/v4/pipelines/abcd', () => [
+    server.get('http://localhost:8080/v4/pipelines/1', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
         admins: { batman: true },
         createTime: '2016-09-15T23:12:23.760Z',
-        id: 'abcd',
+        id: '1',
         scmRepo: {
           name: 'foo/bar',
           branch: 'master',
@@ -29,11 +29,11 @@ moduleForAcceptance('Acceptance | build', {
       })
     ]);
 
-    server.get('http://localhost:8080/v4/pipelines/abcd/jobs', () => [
+    server.get('http://localhost:8080/v4/pipelines/1/jobs', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify([{
-        id: 'aabbcc',
+        id: '2',
         name: 'main',
         permutations: [{
           environment: {},
@@ -44,7 +44,7 @@ moduleForAcceptance('Acceptance | build', {
           }],
           image: 'node:6'
         }],
-        pipelineId: 'abcd',
+        pipelineId: '1',
         state: 'ENABLED',
         archived: false
       }])
@@ -52,8 +52,8 @@ moduleForAcceptance('Acceptance | build', {
 
     const buildData = {
       id: '1234',
-      jobId: 'aabbcc',
-      eventId: 'eeeeee',
+      jobId: '2',
+      eventId: '3',
       number: 1474649580274,
       container: 'node:6',
       cause: 'Started by user petey',
@@ -84,7 +84,7 @@ moduleForAcceptance('Acceptance | build', {
       }
     };
 
-    server.get('http://localhost:8080/v4/events/eeeeee/builds', () => [
+    server.get('http://localhost:8080/v4/events/3/builds', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify([buildData])
@@ -96,11 +96,11 @@ moduleForAcceptance('Acceptance | build', {
       JSON.stringify(buildData)
     ]);
 
-    server.get('http://localhost:8080/v4/events/eeeeee', () => [
+    server.get('http://localhost:8080/v4/events/3', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
-        id: 'eeeeee',
+        id: '3',
         causeMessage: 'Merged by batman',
         commit: {
           message: 'Merge pull request #2 from batcave/batmobile',
@@ -126,11 +126,11 @@ moduleForAcceptance('Acceptance | build', {
       })
     ]);
 
-    server.get('http://localhost:8080/v4/jobs/aabbcc', () => [
+    server.get('http://localhost:8080/v4/jobs/2', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
-        id: 'aabbcc',
+        id: '2',
         name: 'PR-50',
         permutations: [{
           environment: {},
@@ -147,7 +147,7 @@ moduleForAcceptance('Acceptance | build', {
           }],
           image: 'node:6'
         }],
-        pipelineId: 'abcd',
+        pipelineId: '1',
         state: 'ENABLED',
         archived: false
       })
@@ -175,10 +175,10 @@ test('visiting /pipelines/:id/builds/:id', function (assert) {
   const first = new RegExp(`${timeFormat}\\s+bad stuff`);
   const second = new RegExp(`${timeFormat}\\s+fancy stuff`);
 
-  visit('/pipelines/abcd/builds/1234');
+  visit('/pipelines/1/builds/1234');
 
   andThen(() => {
-    assert.equal(currentURL(), '/pipelines/abcd/builds/1234');
+    assert.equal(currentURL(), '/pipelines/1/builds/1234');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.headerbar h1').text().trim(), 'PR-50', 'incorrect job name');
     assert.equal(find('span.sha').text().trim(), '#abcdef', 'incorrect sha');

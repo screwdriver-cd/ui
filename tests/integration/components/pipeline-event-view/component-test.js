@@ -12,7 +12,7 @@ test('it renders', function (assert) {
   // Handle any actions with this.on('myAction', function(val) { ... });
   const event = Ember.Object.create({
     id: 'abcd',
-    buildsReversed: Ember.A([]),
+    buildsSorted: Ember.A([]),
     causeMessage: 'Merged by batman',
     commit: {
       message: 'Merge pull request #2 from batcave/batmobile',

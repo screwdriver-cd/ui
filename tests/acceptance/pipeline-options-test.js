@@ -8,11 +8,11 @@ moduleForAcceptance('Acceptance | pipeline/options', {
   beforeEach() {
     server = new Pretender();
 
-    server.get('http://localhost:8080/v4/pipelines/abcd', () => [
+    server.get('http://localhost:8080/v4/pipelines/1', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
-        id: 'abcd',
+        id: '1',
         scmUrl: 'git@github.com:foo/bar.git#master',
         createTime: '2016-09-15T23:12:23.760Z',
         admins: { batman: true },
@@ -20,7 +20,7 @@ moduleForAcceptance('Acceptance | pipeline/options', {
       })
     ]);
 
-    server.get('http://localhost:8080/v4/pipelines/abcd/jobs', () => [
+    server.get('http://localhost:8080/v4/pipelines/1/jobs', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify([
@@ -37,10 +37,10 @@ moduleForAcceptance('Acceptance | pipeline/options', {
 test('visiting /pipelines/:id/options', function (assert) {
   authenticateSession(this.application, { token: 'faketoken' });
 
-  visit('/pipelines/abcd/options');
+  visit('/pipelines/1/options');
 
   andThen(() => {
-    assert.equal(currentURL(), '/pipelines/abcd/options');
+    assert.equal(currentURL(), '/pipelines/1/options');
     assert.equal(find('section.jobs li').length, 2);
     assert.equal(find('section.danger li').length, 1);
   });

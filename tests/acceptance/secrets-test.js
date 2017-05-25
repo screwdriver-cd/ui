@@ -8,11 +8,11 @@ moduleForAcceptance('Acceptance | secrets', {
   beforeEach() {
     server = new Pretender();
 
-    server.get('http://localhost:8080/v4/pipelines/abcd', () => [
+    server.get('http://localhost:8080/v4/pipelines/1', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
-        id: 'abcd',
+        id: '1',
         scmUrl: 'git@github.com:foo/bar.git#master',
         createTime: '2016-09-15T23:12:23.760Z',
         admins: { batman: true },
@@ -20,7 +20,7 @@ moduleForAcceptance('Acceptance | secrets', {
       })
     ]);
 
-    server.get('http://localhost:8080/v4/pipelines/abcd/secrets', () => [
+    server.get('http://localhost:8080/v4/pipelines/1/secrets', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify([
@@ -37,10 +37,10 @@ moduleForAcceptance('Acceptance | secrets', {
 test('visiting /pipelines/:id/secrets', function (assert) {
   authenticateSession(this.application, { token: 'faketoken' });
 
-  visit('/pipelines/abcd/secrets');
+  visit('/pipelines/1/secrets');
 
   andThen(() => {
-    assert.equal(currentURL(), '/pipelines/abcd/secrets');
+    assert.equal(currentURL(), '/pipelines/1/secrets');
     assert.equal(find('.secrets tbody tr').length, 2);
   });
 });

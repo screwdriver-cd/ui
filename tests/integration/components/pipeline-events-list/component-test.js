@@ -12,8 +12,8 @@ test('it renders', function (assert) {
   // Handle any actions with this.on('myAction', function(val) { ... });
   const events = [
     Ember.Object.create({
-      id: 'abcd',
-      buildsReversed: Ember.A([]),
+      id: '1',
+      buildsSorted: Ember.A([]),
       causeMessage: 'Merged by batman',
       commit: {
         message: 'Merge pull request #2 from batcave/batmobile',
@@ -23,7 +23,7 @@ test('it renders', function (assert) {
           avatar: 'http://example.com/u/batman/avatar',
           url: 'http://example.com/u/batman'
         },
-        url: 'http://example.com/batcave/batmobile/commit/abcdef1029384'
+        url: 'http://example.com/batcave/batmobile/commit/1ef1029384'
       },
       createTime: '2016-11-04T20:09:41.238Z',
       creator: {
@@ -38,8 +38,8 @@ test('it renders', function (assert) {
       workflow: ['main', 'publish']
     }),
     Ember.Object.create({
-      id: 'abcd',
-      buildsReversed: Ember.A([]),
+      id: '1',
+      buildsSorted: Ember.A([]),
       causeMessage: 'Merged by robin',
       commit: {
         message: 'Merge pull request #1 from batcave/batmobile',

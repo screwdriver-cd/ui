@@ -3,11 +3,7 @@ import Ember from 'ember';
 
 export default DS.Model.extend({
   builds: DS.hasMany('build'),
-  buildsReversed: Ember.computed('builds.[]', {
-    get() {
-      return this.get('builds').reverseObjects();
-    }
-  }),
+  buildsSorted: Ember.computed.sort('builds', (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)),
   causeMessage: DS.attr('string'),
   commit: DS.attr(),
   createTime: DS.attr('date'),

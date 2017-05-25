@@ -26,19 +26,19 @@ test('/create a pipeline: SUCCESS', function (assert) {
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
-      id: 'abcd'
+      id: '1'
     })
   ]);
 
-  server.get('http://localhost:8080/v4/pipelines/abcd', () => [
+  server.get('http://localhost:8080/v4/pipelines/1', () => [
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
-      id: 'abcd'
+      id: '1'
     })
   ]);
 
-  server.get('http://localhost:8080/v4/pipelines/abcd/events', () => [
+  server.get('http://localhost:8080/v4/pipelines/1/events', () => [
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify([])
@@ -50,7 +50,7 @@ test('/create a pipeline: SUCCESS', function (assert) {
     JSON.stringify([])
   ]);
 
-  server.get('http://localhost:8080/v4/pipelines/abcd/jobs', () => [
+  server.get('http://localhost:8080/v4/pipelines/1/jobs', () => [
     200,
     { 'Content-Type': 'application/json' },
     JSON.stringify([])
@@ -66,7 +66,7 @@ test('/create a pipeline: SUCCESS', function (assert) {
     triggerEvent('.text-input', 'keyup');
     click('button');
     andThen(() => {
-      assert.equal(currentURL(), '/pipelines/abcd');
+      assert.equal(currentURL(), '/pipelines/1');
     });
   });
 });
