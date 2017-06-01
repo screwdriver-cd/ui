@@ -17,12 +17,6 @@ export default Ember.Component.extend({
     invalidateSession() {
       this.get('onInvalidate')();
     },
-    onFocus() {
-      this.$('.search').addClass('search-focused');
-    },
-    onBlur() {
-      this.$('.search').removeClass('search-focused');
-    },
     onToggleClick() {
       this.toggleMenu();
     },
