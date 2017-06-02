@@ -5,7 +5,8 @@ moduleForComponent('app-header', 'Integration | Component | app header', {
   integration: true
 });
 
-test('it renders', function (assert) {
+// this test should pass when search bar feature flag is turned off
+test('it renders when search flag is off', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   this.set('sessionMock', {
@@ -15,18 +16,20 @@ test('it renders', function (assert) {
   this.render(hbs`{{app-header session=sessionMock}}`);
 
   assert.equal(this.$('.logo').prop('title'), 'Screwdriver Home');
-  assert.equal(this.$('.docs span').text().trim(), 'Docs');
-  assert.equal(this.$('.community span').text().trim(), 'Slack');
-  assert.equal(this.$('.blog span').text().trim(), 'Blog');
-  assert.equal(this.$('.github span').text().trim(), 'GitHub');
-  assert.equal(this.$('.auth span').text().trim(), 'Login');
-  assert.equal(this.$('.search').length, 0, 'Search bar displayed');
+  assert.equal(this.$('.icon.create').length, 1);
+  assert.equal(this.$('.icon.docs').length, 1);
+  assert.equal(this.$('.icon.blog').length, 1);
+  assert.equal(this.$('.icon.community').length, 1);
+  assert.equal(this.$('.icon.github').length, 1);
+  assert.equal(this.$('.icon.auth').length, 1);
+  assert.equal(this.$('.search-input').length, 0);
+
+  // check that user has not logged in yet
+  assert.equal(this.$('.icon.auth').prop('title'), 'Login to Screwdriver');
 });
 
 test('it calls the logout method on logout', function (assert) {
   assert.expect(2);
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
   this.set('sessionMock', {
     isAuthenticated: true
   });
@@ -35,36 +38,27 @@ test('it calls the logout method on logout', function (assert) {
   });
 
   this.render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
-
-  assert.ok(this.$('.auth span').text().trim(), 'Logout');
+  assert.equal(this.$('.icon.auth').prop('title'), 'Log out of Screwdriver');
   this.$('.auth').click();
 });
 
 test('it shows the search bar', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
   this.set('sessionMock', {
     isAuthenticated: false
   });
 
   this.render(hbs`{{app-header session=sessionMock showSearch=true}}`);
 
-  assert.equal(this.$('.search').length, 1, 'Search bar displayed');
-  this.$('.search input').focusin();
-  assert.ok(this.$('.search').hasClass('search-focused'), 'focused');
-  this.$('.search input').focusout();
-  assert.notOk(this.$('.search').hasClass('search-focused'), 'blurred');
+  assert.equal(this.$('.search-input').length, 1);
 });
 
-test('it redirects to search page', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+test('it navigates to search page upon clicking the search button', function (assert) {
   this.set('search', () => {
     assert.ok(true);
   });
 
   this.render(hbs`{{app-header showSearch=true searchPipelines=(action search)}}`);
 
-  this.$('.search input').text('myquery');
-  this.$('.search-icon').click();
+  this.$('.search-input').text('myquery');
+  this.$('.search-button').click();
 });

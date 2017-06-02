@@ -8,8 +8,8 @@
         {{/link-to}}
       </div>
       {{#if showSearch}}
-        {{input class="search-input" name="query" placeholder="Search Screwdriver pipelines "}}
-        <button>
+        {{input class="search-input" name="query" placeholder="Search Screwdriver pipelines" enter='triggerSearch'}}
+        <button class="search-button" {{action 'triggerSearch'}}>
           {{fa-icon "fa-search"}}
         </button>
       {{/if}}
@@ -42,11 +42,12 @@
         {{/nav.item}}
         {{#nav.item}}
         {{#if session.isAuthenticated}}
-          <a {{action 'invalidateSession'}} title="Login to Screwdriver" class="icon auth">
+          <a {{action 'invalidateSession'}} title="Log out of Screwdriver" class="icon auth">
             {{inline-svg "login" class="img"}}
           </a>
         {{else}}
-          {{#link-to "login" class="icon auth"}}{{inline-svg "login" class="img"}}{{/link-to}}
+          {{#link-to "login" title="Login to Screwdriver" class="icon auth"}}
+          {{inline-svg "login" class="img"}}{{/link-to}}
         {{/if}}
         {{/nav.item}}
       {{/navbar.nav}}
