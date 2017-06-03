@@ -1,57 +1,63 @@
-<div class="newBar">
-  {{#bs-navbar type=(if inverse 'inverse') fluid=fluid as |navbar|}}
+{{#bs-navbar as |navbar|}}
+  <div class="navbar-header">
     {{navbar.toggle}}
-    <div class="col-md-8 logoSearch">
-      <div class="navbar-header">
-        {{#link-to "home" class="logo" title="Screwdriver Home"}}
-          {{inline-svg "Screwdriver_Logo_FullWhite" class="img"}}
-        {{/link-to}}
-      </div>
+    {{#link-to "home" class="logo navbar-brand" title="Screwdriver Home"}}{{inline-svg "Screwdriver_Logo_FullWhite" class="img"}}{{/link-to}}
+  </div>
+  {{#navbar.content}}
+    {{#navbar.nav as |nav|}}
       {{#if showSearch}}
+      {{#nav.item}}
+      <form class="navbar-form navbar-left" role="search">
         {{input class="search-input" name="query" placeholder="Search Screwdriver pipelines" enter='triggerSearch'}}
-        <button class="search-button" {{action 'triggerSearch'}}>
-          {{fa-icon "fa-search"}}
-        </button>
+        <button class="search-button" {{action 'triggerSearch'}}>{{fa-icon "fa-search"}}</button>
+      </form>
+      {{/nav.item}}
       {{/if}}
-    </div>
-    <div class="col-md-4 iconsbar">
-    {{#navbar.content}}
-      {{#navbar.nav as |nav|}}
-        {{#nav.item}}{{#nav.link-to "create" title="Create a new Pipeline" class="icon create"}}
-          {{inline-svg "write" class="img"}}
-        {{/nav.link-to}}{{/nav.item}}
-        {{#nav.item}}
+    {{/navbar.nav}}
+    {{#navbar.nav classNames="navbar-nav navbar-right" as |nav|}}
+      {{#nav.item}}
+        {{#link-to "create" title="Create a new Pipeline" class="icon create"}}
+        {{inline-svg "write" class="img"}}
+        <span class='icontitle'>Create Project</span>
+        {{/link-to}}
+      {{/nav.item}}
+      {{#nav.item}}
         <a href="http://docs.screwdriver.cd" title="Screwdriver Documentation" class="icon docs">
           {{inline-svg "documentation" class="img"}}
+          <span class='icontitle'>Documentation</span>
         </a>
-        {{/nav.item}}
-        {{#nav.item}}
+      {{/nav.item}}
+      {{#nav.item}}
         <a href="http://blog.screwdriver.cd" title="Screwdriver Blog" class="icon blog">
           {{inline-svg "blog" class="img"}}
+          <span class='icontitle'>Blog</span>
         </a>
-        {{/nav.item}}
-        {{#nav.item}}
+      {{/nav.item}}
+      {{#nav.item}}
         <a href="http://slack.screwdriver.cd" title="Screwdriver Slack channel" class="icon community">
           {{inline-svg "community" class="img"}}
+          <span class='icontitle'>Slack</span>
         </a>
-        {{/nav.item}}
-        {{#nav.item}}
+      {{/nav.item}}
+      {{#nav.item}}
         <a href="https://github.com/screwdriver-cd" title="Screwdriver Github repo" class="icon github">
           {{inline-svg "github" class="img"}}
+          <span class='icontitle'>Github</span>
         </a>
-        {{/nav.item}}
-        {{#nav.item}}
+      {{/nav.item}}
+      {{#nav.item}}
         {{#if session.isAuthenticated}}
           <a {{action 'invalidateSession'}} title="Log out of Screwdriver" class="icon auth">
             {{inline-svg "login" class="img"}}
+            <span class='icontitle'>Log out</span>
           </a>
         {{else}}
           {{#link-to "login" title="Login to Screwdriver" class="icon auth"}}
-          {{inline-svg "login" class="img"}}{{/link-to}}
+          {{inline-svg "login" class="img"}}
+          <span class='icontitle'>Log in</span>
+          {{/link-to}}
         {{/if}}
-        {{/nav.item}}
-      {{/navbar.nav}}
-    {{/navbar.content}}
-    </div>
-  {{/bs-navbar}}
-</div>
+      {{/nav.item}}
+    {{/navbar.nav}}
+  {{/navbar.content}}
+{{/bs-navbar}}

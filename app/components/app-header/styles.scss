@@ -1,138 +1,112 @@
 & {
-  background: url('/assets/main_bkgrd_home_top.png') transparent no-repeat;
-  background-size: 100% 100%;
-  -webkit-transition: height 0.5s;
-  -moz-transition: height 0.5s;
-  -ms-transition: height 0.5s;
-  transition: height 0.5s;
-}
-
-.logo {
-  display: inline-block;
-  height: 34px;
-
-  .img {
-    width: inherit;
-    height: inherit;
-  }
-}
-
-.newBar {
-  height: 60px;
-
-  .navbar {
-    margin-bottom: 0px;
-  }
-
-  .navbar-default {
-    background-color: #05121C;
-    border-color: #05121C;
-    height: 60px;
-  }
-
-  .navbar-header {
-    width: 240px;
-  }
-
-  .container {
-    padding-top: 11px;
-    padding-bottom: 11px;
-    height: 60px;
-    width: 100%;
-  }
-
-  form {
+  .logo {
     display: inline-block;
-    height: 100%;
-  }
+    height: 34px;
+    padding: 9px 0 0 30px;
 
-  input {
-    background: rgba(242, 242, 242, 0.1);
-    background: transparent;
-    border: none;
-    box-sizing: border-box;
-    color: rgba(255, 255, 255, 1);
-    display: inline-block;
-    font-size: 14px;
-    font-weight: 350;
-    height: 36px;
-    line-height: 32px;
-    margin-left: 10px; // 5 if category
-    outline: none;
-    overflow: hidden;
-    padding-right: 0;
-    vertical-align: top;
-    width: 522px;
-    @include transition(background, 200ms);
-  }
-
-  input:focus {
-    border-bottom: solid #3570f4;
-  }
-
-  input:focus::placeholder {
-    color: rgba(255, 255, 255, 1);
-  }
-
-  button {
-    border-radius: 2px;
-    border-left: 0;
-    padding-left: 0;
-    height: 36px;
-    width: 38px;
-    color: rgba(255, 255, 255, 1);
-    background: #3697F2; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(right top, #3570F4, #3697F2); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(bottom left, #3570F4, #3697F2); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(bottom left, #3570F4, #3697F2); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to bottom left, #3570F4, #3697F2); /* Standard syntax */
-    border-style: none;
-
-    .fa {
-      font-size: 15px;
-      font-weight: 100;
+    .img {
+      width: inherit;
+      height: inherit;
     }
   }
 
-  .nav > li > a {
-    padding: 0px 0px;
+  .navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+    background-color: #05121C;
+    border-color: #05121C;
   }
 
-  .iconsbar {
-    margin-top: 8px;
-    float: right;
-    text-align: right;
+  .navbar-form {
+    white-space: nowrap;
+    border-width: 0px;
+    box-shadow: none;
+    font-size: 0;
+
+    input {
+      background: transparent;
+      background: rgba(242, 242, 242, 0.1);
+      color: #fff;
+      border: none;
+      box-sizing: border-box;
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 300;
+      height: 36px;
+      line-height: 32px;
+      margin-left: 10px;
+      outline: none;
+      width: 326px;
+      padding-left: 5px;
+      @include transition(background, 200ms);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    input:focus {
+      border-bottom: solid #3570f4;
+    }
+
+    input:focus::placeholder {
+      color: rgba(255, 255, 255, 1);
+    }
+
+    button {
+      margin-top: 1px;
+      border-radius: 0 2px 2px 0;
+      border-left: 0;
+      padding-left: 0;
+      height: 36px;
+      width: 38px;
+      color: rgba(255, 255, 255, 1);
+      background: #3697F2; /* For browsers that do not support gradients */
+      background: -webkit-linear-gradient(right top, #3570F4, #3697F2); /* For Safari 5.1 to 6.0 */
+      background: -o-linear-gradient(bottom left, #3570F4, #3697F2); /* For Opera 11.1 to 12.0 */
+      background: -moz-linear-gradient(bottom left, #3570F4, #3697F2); /* For Firefox 3.6 to 15 */
+      background: linear-gradient(to bottom left, #3570F4, #3697F2); /* Standard syntax */
+      border-style: none;
+
+      .fa {
+        font-size: 15px;
+        font-weight: 300;
+      }
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
   }
 
-  .icon {
-    display: inline-block;
-    height: 40px;
-    width: 60px;
+  .navbar-default .navbar-nav > li > a.icon {
     color: #fff;
     text-decoration: none;
-    vertical-align: top;
 
     .img {
-      margin-left: 15px;
       fill: rgba(255, 255, 255, 1);
       height: 20px;
       width: 20px;
-      display: block;
-      margin-bottom: 2px;
     }
 
-    span {
-      text-align: center;
-      display: block;
-      font-size: 14px;
-      font-weight: 300;
+    .icontitle {
+      display: inline;
+    }
+
+    &:hover, &.active {
+      .img, .icontitle {
+        opacity: 0.6;
+      }
     }
   }
+}
 
-  .icon:hover, .icon.active {
-    opacity: 0.6;
-    .img {
-      opacity: 0.6;
-    }
+@media screen and (min-width: 1231px) {
+  .navbar-default .navbar-nav > li > a.icon .icontitle {
+    display: none;
+  }
+
+  .navbar-form input {
+    width: 522px;
   }
 }
