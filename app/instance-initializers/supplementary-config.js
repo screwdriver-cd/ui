@@ -5,17 +5,24 @@ import ENV from 'screwdriver-ui/config/environment';
  * @method initialize
  */
 export function initialize() {
-  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.SDAPI_HOSTNAME) {
-    ENV.APP.SDAPI_HOSTNAME = window.SUPPLEMENTARY_CONFIG.SDAPI_HOSTNAME;
-  }
-  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.SDAPI_NAMESPACE) {
-    ENV.APP.SDAPI_NAMESPACE = window.SUPPLEMENTARY_CONFIG.SDAPI_NAMESPACE;
-  }
-  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.SDSTORE_HOSTNAME) {
-    ENV.APP.SDSTORE_HOSTNAME = window.SUPPLEMENTARY_CONFIG.SDSTORE_HOSTNAME;
-  }
-  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.SDSTORE_NAMESPACE) {
-    ENV.APP.SDSTORE_HOSTNAME = window.SUPPLEMENTARY_CONFIG.SDSTORE_NAMESPACE;
+  const externalConfig = window.SUPPLEMENTARY_CONFIG;
+
+  if (externalConfig) {
+    if (externalConfig.SDAPI_HOSTNAME) {
+      ENV.APP.SDAPI_HOSTNAME = externalConfig.SDAPI_HOSTNAME;
+    }
+    if (externalConfig.SDAPI_NAMESPACE) {
+      ENV.APP.SDAPI_NAMESPACE = externalConfig.SDAPI_NAMESPACE;
+    }
+    if (externalConfig.SDSTORE_HOSTNAME) {
+      ENV.APP.SDSTORE_HOSTNAME = externalConfig.SDSTORE_HOSTNAME;
+    }
+    if (externalConfig.SDSTORE_NAMESPACE) {
+      ENV.APP.SDSTORE_HOSTNAME = externalConfig.SDSTORE_NAMESPACE;
+    }
+    if (externalConfig.FEAT_DISPLAY_ALPHA) {
+      ENV.APP.FEAT_DISPLAY_ALPHA = externalConfig.FEAT_DISPLAY_ALPHA;
+    }
   }
 }
 
