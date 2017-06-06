@@ -34,13 +34,16 @@
     "Min Zhang <minzhang@andrew.cmu.edu>",
     "Noah Katzman <nbkatzman@gmail.com>",
     "Peter Peterson <jedipetey@gmail.com>",
-    "St. John Johnson <st.john.johnson@gmail.com",
+    "Reetika Rastogi <r3rastogi@gmail.com>",
+    "St. John Johnson <st.john.johnson@gmail.com>",
     "Tiffany Kyi <tiffanykyi@gmail.com>"
   ],
   "devDependencies": {
+    "bootstrap-sass": "^3.3.7",
     "broccoli-asset-rev": "^2.4.5",
     "ember-ace": "^0.1.2",
     "ember-ajax": "^3.0.0",
+    "ember-bootstrap": "^1.0.0-alpha.12",
     "ember-cli": "2.13.1",
     "ember-cli-app-version": "^3.0.0",
     "ember-cli-babel": "^6.0.0",

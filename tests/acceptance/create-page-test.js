@@ -64,7 +64,7 @@ test('/create a pipeline: SUCCESS', function (assert) {
     assert.equal(currentURL(), '/create');
     fillIn('.text-input', 'git@github.com:foo/bar.git');
     triggerEvent('.text-input', 'keyup');
-    click('button');
+    click('button.blue-button');
     andThen(() => {
       assert.equal(currentURL(), '/pipelines/1');
     });
@@ -90,7 +90,7 @@ test('/create a pipeline: FAILURE', function (assert) {
     assert.equal(currentURL(), '/create');
     fillIn('.text-input', 'git@github.com:foo/bar.git');
     triggerEvent('.text-input', 'keyup');
-    click('button');
+    click('button.blue-button');
     andThen(() => {
       assert.equal(currentURL(), '/create');
       assert.equal(find('.info-message span').text(), 'something conflicting');

@@ -35,3 +35,6 @@ $animate-done: 600ms;
     box-sizing: border-box;
     overflow: hidden;
 }
+
+$grid-float-breakpoint: 1230px;
+@import "ember-bootstrap/bootstrap";

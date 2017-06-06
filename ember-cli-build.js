@@ -7,15 +7,24 @@ module.exports = function (defaults) {
     'ember-font-awesome': {
       useScss: true // for ember-cli-sass
     },
+
     fingerprint: {
       exclude: ['supplementary_config', 'unknown_user']
     },
+
     svg: {
       paths: ['public/assets/svg']
     },
+
     ace: {
       // TODO: create screwdriver mode
       modes: ['yaml']
+    },
+
+    'ember-bootstrap': {
+      'bootstrapVersion': 3,
+      'importBootstrapFont': true,
+      'importBootstrapCSS': false
     }
   });
 
