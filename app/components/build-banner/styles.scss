@@ -6,11 +6,11 @@
     margin-bottom: 3px;
     color: $sd-link;
 
-    .pure-u-1-2:first-child {
+    .col-xs-6:first-child {
       text-align: left;
     }
 
-    .pure-u-1-2:last-child {
+    .col-xs-6:last-child {
       text-align: right;
     }
 
@@ -31,11 +31,11 @@
       font-size: 20px;
     }
 
-    .pure-u-1-3:nth-child(2) {
+    .col-xs-4:nth-child(2) {
       text-align: center;
     }
 
-    .pure-u-1-3:last-child {
+    .col-xs-4:last-child {
       text-align: right;
     }
 
@@ -115,7 +115,7 @@
     line-height: 20px;
     vertical-align: middle;
 
-    .pure-u-1-3 {
+    .col-xs-4 {
       font-size: 14px;
 
       &:nth-child(2) {

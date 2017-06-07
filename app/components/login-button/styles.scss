@@ -18,11 +18,15 @@ h2 {
 }
 
 a {
-  color: #fff;
+  color: $sd-white;
   font-size: 16px;
   padding: 5px 10px;
   background-color: $sd-primary;
   border-radius: 3px;
   border-width: 0;
   text-decoration: none;
+
+  &:hover {
+    color: $sd-white;
+  }
 }

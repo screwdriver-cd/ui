@@ -60,9 +60,7 @@ module.exports = (environment) => {
     ENV.APP.SDSTORE_HOSTNAME = 'https://store.screwdriver.cd';
   }
 
-  ENV['ember-cli-toggle'] = {
-    includedThemes: ['light'],
-    defaultTheme: 'light',
+  ENV['ember-toggle'] = {
     defaultSize: 'small'
   };
 

@@ -1,8 +1,8 @@
-<div class="pure-g">
-  <div class="pure-u-1-3 pure-u-lg-1-8 commit">
+<div class="row">
+  <div class="col-xs-4 col-lg-2 commit">
     <h6><a href="{{event.commit.url}}">#{{event.truncatedSha}}</a></h6>
   </div>
-  <div class="pure-u-2-3 pure-u-lg-5-8 message">
+  <div class="col-xs-8 col-lg-6 message">
     <div class="cause" title="{{event.commit.message}}">{{event.truncatedMessage}}</div>
     <div>
       {{#each event.workflow as |name index|}}
@@ -10,10 +10,10 @@
       {{/each}}
     </div>
   </div>
-  <div class="pure-u-1-2 pure-u-lg-1-8 user">
+  <div class="col-xs-6 col-lg-2 user">
     {{user-link user=event.creator causeMessage=event.causeMessage large=true}}
   </div>
-  <div class="pure-u-1-2 pure-u-lg-1-8 time">
+  <div class="col-xs-6 col-lg-2 time">
     <div class="created">{{event.createTimeWords}}</div>
     <div class="duration">{{event.durationText}}</div>
   </div>
