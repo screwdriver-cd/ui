@@ -1,7 +1,6 @@
 & {
-  background: url('/assets/main_bkgrd_pipeline_top.png') transparent no-repeat;
-  background-size: 100% 100%;
-  color: #fff;
+  background-color: $sd-dark-blue;
+  color: $sd-white;
   height: 50px;
   line-height: 50px;
   margin: 0;
@@ -18,9 +17,14 @@ h1 {
 }
 
 a {
-  color: #fff;
+  color: $sd-white;
   cursor: pointer;
   text-decoration: none;
   overflow: hidden;
   vertical-align: middle;
+}
+
+a:hover, a:active, a.active {
+  color: $sd-white;
+  text-decoration: underline;
 }
