@@ -1,7 +1,5 @@
-<div class="pure-menu pure-menu-horizontal">
-  <ul class="pure-menu-list">
-    <li class="pure-menu-item">{{#link-to "pipeline.builds" class="pure-menu-link"}}Builds{{/link-to}}</li>
-    <li class="pure-menu-item">{{#link-to "pipeline.secrets" class="pure-menu-link"}}Secrets{{/link-to}}</li>
-    <li class="pure-menu-item">{{#link-to "pipeline.options" class="pure-menu-link"}}Options{{/link-to}}</li>
-  </ul>
-</div>
+{{#bs-nav type="pills" as |nav|}}
+  {{#nav.item}}{{#nav.link-to "pipeline.builds"}}Builds{{/nav.link-to}}{{/nav.item}}
+  {{#nav.item}}{{#nav.link-to "pipeline.secrets"}}Secrets{{/nav.link-to}}{{/nav.item}}
+  {{#nav.item}}{{#nav.link-to "pipeline.options"}}Options{{/nav.link-to}}{{/nav.item}}
+{{/bs-nav}}

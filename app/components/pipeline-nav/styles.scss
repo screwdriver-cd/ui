@@ -1,27 +1,30 @@
 & {
-  padding-top: 5px;
-  background: url('/assets/main_bkgrd_pipeline_bottom.png') transparent no-repeat;
-  background-size: 100%;
-  height: 39px;
-}
+  padding-left: 25px;
+  background-color: $sd-dark-blue;
 
-.pure-menu-horizontal {
-  padding: 0 25px;
-}
+  .nav-pills {
+    a {
+      border-radius: 2px 2px 0 0;
+      background-color: transparent;
+      color: $sd-text-med;
 
-a {
-  color: #fff;
-  background-color: transparent;
-  border-radius: 3px 3px 0 0;
-  font-weight: 300;
-  border-bottom: 4px solid transparent;
-}
+      &.active {
+        color: $sd-text-med;
+        background-color: transparent;
+        border-bottom: 4px solid $sd-light-blue;
+      }
+    }
+  }
 
-a:hover {
-  background-color: transparent;
-}
+  .nav > li > a:hover,
+  .nav > li > a:focus {
+    background-color: transparent;
+  }
 
-a.active {
-  background-color: transparent;
-  border-bottom: 4px solid $sd-primary;
+  .nav-pills > li.active > a,
+  .nav-pills > li.active > a:hover,
+  .nav-pills > li.active > a:focus {
+    background-color: $sd-light-blue;
+    color: $sd-text-med;
+  }
 }

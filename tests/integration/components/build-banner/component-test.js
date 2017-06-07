@@ -77,8 +77,8 @@ test('it renders', function (assert) {
     'Merge it');
   assert.equal($('.message').prop('title'),
     'Merge pull request #2 from batcave/batmobile');
-  assert.equal($('.event .pure-u-1-3:nth-child(2)').text().trim(), 'node:6');
-  assert.equal($('.event .pure-u-1-3:nth-child(3)').text().trim(), '5 seconds');
+  assert.equal($('.event .col-xs-4:nth-child(2)').text().trim(), 'node:6');
+  assert.equal($('.event .col-xs-4:nth-child(3)').text().trim(), '5 seconds');
   assert.equal($('button').length, 0);
 });
 
