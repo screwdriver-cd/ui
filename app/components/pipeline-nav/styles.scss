@@ -6,10 +6,10 @@
     a {
       border-radius: 2px 2px 0 0;
       background-color: transparent;
-      color: $sd-text-med;
+      color: $sd-text-light;
 
       &.active {
-        color: $sd-text-med;
+        color: $sd-text-light;
         background-color: transparent;
         border-bottom: 4px solid $sd-light-blue;
       }
@@ -18,13 +18,14 @@
 
   .nav > li > a:hover,
   .nav > li > a:focus {
-    background-color: transparent;
+    background-color: $sd-light-blue;
+    border-bottom: 4px solid $sd-light-blue;
   }
 
   .nav-pills > li.active > a,
   .nav-pills > li.active > a:hover,
   .nav-pills > li.active > a:focus {
     background-color: $sd-light-blue;
-    color: $sd-text-med;
+    color: $sd-text-light;
   }
 }
