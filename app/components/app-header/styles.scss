@@ -71,6 +71,7 @@
       .fa {
         font-size: 15px;
         font-weight: 300;
+        padding-left: 5px;
       }
 
       &:hover {
@@ -101,12 +102,12 @@
   }
 }
 
-@media screen and (min-width: 1231px) {
+@media screen and (min-width: 962px) {
   .navbar-default .navbar-nav > li > a.icon .icontitle {
     display: none;
   }
 
   .navbar-form input {
-    width: 522px;
+    width: 326px;
   }
 }

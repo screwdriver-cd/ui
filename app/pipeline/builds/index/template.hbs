@@ -2,11 +2,15 @@
 
 {{#if session.isAuthenticated}}
 <div class="row">
-  <div class="col-xs-12 col-md-11">
-    {{pipeline-workflow jobs=model.jobs}}
-  </div>
-  <div class="col-xs-1 right">
-    {{pipeline-start startBuild=(action "startMainBuild")}}
+  <div class="col-md-9">
+    <div class="row">
+      <div class="col-xs-12 col-lg-2">
+        {{pipeline-start startBuild=(action "startMainBuild")}}
+      </div>
+      <div class="col-xs-12 col-lg-6">
+        {{pipeline-workflow jobs=model.jobs}}
+      </div>
+    </div>
   </div>
 </div>
 {{else}}
