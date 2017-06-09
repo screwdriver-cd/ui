@@ -4,8 +4,7 @@ export default Ember.Controller.extend({
   isShowingModal: false,
   errorMessage: '',
   session: Ember.inject.service('session'),
-  eventsSorted: Ember.computed.sort('model.pipeline.events',
-    (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
+
   actions: {
     startMainBuild() {
       const main = this.get('model.jobs').objectAt(0);
