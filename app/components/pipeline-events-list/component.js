@@ -6,6 +6,8 @@ export default Ember.Component.extend(ModelReloaderMixin, {
   modelToReload: 'events',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   showAll: false,
+  eventsSorted: Ember.computed.sort('events.[]',
+    (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
 
   /**
    * Runs when a render event is triggered, usually due to a change in attribute data (events)
@@ -29,7 +31,7 @@ export default Ember.Component.extend(ModelReloaderMixin, {
       const end = numEvents >= ENV.APP.NUM_EVENTS_LISTED && !this.get('showAll') ?
         ENV.APP.NUM_EVENTS_LISTED : numEvents;
 
-      return this.get('events').slice(0, end);
+      return this.get('eventsSorted').slice(0, end);
     }
   }),
 
@@ -38,5 +40,4 @@ export default Ember.Component.extend(ModelReloaderMixin, {
       this.set('showAll', true);
     }
   }
-
 });
