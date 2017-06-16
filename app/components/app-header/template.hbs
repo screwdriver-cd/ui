@@ -27,25 +27,33 @@
           <span class='icontitle'>Documentation</span>
         </a>
       {{/nav.item}}
-      {{#nav.item}}
-        <a href="http://blog.screwdriver.cd" class="icon blog">
-          {{inline-svg "blog" class="img"}}
-          <span class='icontitle'>Screwdriver Blog</span>
-        </a>
-      {{/nav.item}}
-      {{#nav.item}}
-        <a href="http://slack.screwdriver.cd" class="icon community">
-          {{inline-svg "community" class="img"}}
-          <span class='icontitle'>Slack Channel</span>
-        </a>
-      {{/nav.item}}
-      {{#nav.item}}
-        <a href="https://github.com/screwdriver-cd" class="icon github">
-          {{inline-svg "github" class="img"}}
-          <span class='icontitle'>Github</span>
 
-        </a>
+      {{#nav.item}}
+        {{#nav.dropdown as |dd|}}
+          {{#dd.toggle}}{{inline-svg "more-circle" class="img"}}
+            <span class='icontitle'>Communication</span>
+            <span class="caret"></span>
+          {{/dd.toggle}}
+          {{#dd.menu as |ddm|}}
+            {{#ddm.item}}
+              <a href="http://blog.screwdriver.cd" class="icon blog">
+                {{inline-svg "blog" class="img"}} Screwdriver Blog
+              </a>
+            {{/ddm.item}}
+            {{#ddm.item}}
+              <a href="http://slack.screwdriver.cd" class="icon community">
+                {{inline-svg "community" class="img"}} Slack Channel
+              </a>
+            {{/ddm.item}}
+            {{#ddm.item}}
+              <a href="https://github.com/screwdriver-cd" class="icon github">
+                {{inline-svg "github" class="img"}} Github
+              </a>
+            {{/ddm.item}}
+          {{/dd.menu}}
+        {{/nav.dropdown}}
       {{/nav.item}}
+
       {{#nav.item}}
         {{#if session.isAuthenticated}}
           <a {{action 'invalidateSession'}} title="Log out of Screwdriver" class="icon auth">
@@ -65,9 +73,6 @@
 <div class="tooltips">
   {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
   {{#bs-tooltip placement="bottom" triggerElement=".icon.docs" renderInPlace=true}}Screwdriver Documentation{{/bs-tooltip}}
-  {{#bs-tooltip placement="bottom" triggerElement=".icon.blog" renderInPlace=true}}Screwdriver Blog{{/bs-tooltip}}
-  {{#bs-tooltip placement="bottom" triggerElement=".icon.community" renderInPlace=true}}Screwdriver Slack Channel{{/bs-tooltip}}
-  {{#bs-tooltip placement="bottom" triggerElement=".icon.github" renderInPlace=true}}Screwdriver Github Repo{{/bs-tooltip}}
   {{#bs-tooltip placement="bottom" triggerElement=".icon.auth" renderInPlace=true}}
     {{#if session.isAuthenticated}}Log out of Screwdriver{{else}}Login to Screwdriver{{/if}}
   {{/bs-tooltip}}
