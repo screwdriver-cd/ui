@@ -48,7 +48,8 @@ test('it renders jobs', function (assert) {
   this.render(hbs`{{validator-results results=validationMock}}`);
 
   assert.equal(this.$('.error').text().trim(), 'got an error');
-  assert.equal(this.$('h4').text().trim(), 'main main.1 foo');
+  assert.equal(this.$('h4.pipeline').text().trim(), 'Pipeline Settings');
+  assert.equal(this.$('h4.job').text().trim(), 'main main.1 foo');
 });
 
 test('it renders templates', function (assert) {

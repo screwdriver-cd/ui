@@ -12,6 +12,11 @@ export default Ember.Component.extend({
       return this.get('results.workflow') || [];
     }
   }),
+  annotations: Ember.computed('results', {
+    get() {
+      return this.get('results.annotations') || [];
+    }
+  }),
   jobs: Ember.computed('results', {
     get() {
       return this.get('results.jobs');
