@@ -1,4 +1,16 @@
-<h4 {{action 'nameClick'}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>
+<h4 class="job" {{action 'nameClick'}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>
+<div class="annotations" title="These are the job-level annotations that the user has defined.">
+  <span class="label">Annotations:</span>
+  <span class="value">
+    <ul>
+      {{#each-in job.annotations as |name value|}}
+      <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
+      {{else}}
+      <li>None defined</li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
 <div class="image" title="This is the docker image that acts as the base container for the job.">
   <span class="label">Image:</span>
   <span class="value">{{job.image}}</span>
@@ -38,7 +50,7 @@
   </span>
 </div>
 <div class="settings" title="These settings are used to configure the way a build executes and how build results are processed.">
-  <span class="label">Job Settings:</span>
+  <span class="label">Settings:</span>
   <span class="value">
     <ul>
       {{!TODO handle settings properly}}

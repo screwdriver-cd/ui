@@ -6,6 +6,7 @@
 {{#if isTemplate}}
 {{validator-job name=templateName job=results.template.config}}
 {{else}}
+{{validator-pipeline name=pipelineName workflow=workflow annotations=annotations}}
 {{#each workflow as |jobName|}}
   {{#if (get jobs jobName)}}
     {{#each (get jobs jobName) as |jobConfig index|}}

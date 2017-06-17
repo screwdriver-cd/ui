@@ -36,11 +36,14 @@ test('it renders', function (assert) {
   assert.equal(this.$('.env .label').text().trim(), 'Environment Variables:');
   assert.equal(this.$('.env ul li').text().trim(), 'None defined');
 
-  assert.equal(this.$('.settings .label').text().trim(), 'Job Settings:');
+  assert.equal(this.$('.settings .label').text().trim(), 'Settings:');
   assert.equal(this.$('.settings ul li').text().trim(), 'None defined');
+
+  assert.equal(this.$('.annotations .label').text().trim(), 'Annotations:');
+  assert.equal(this.$('.annotations .value').text().trim(), 'None defined');
 });
 
-test('it renders settings, env, secrets', function (assert) {
+test('it renders settings, env, secrets, annotations', function (assert) {
   this.set('jobMock', {
     image: 'int-test:1',
     commands: [
@@ -52,6 +55,9 @@ test('it renders settings, env, secrets', function (assert) {
       FOO: 'bar'
     },
     settings: {
+      FOO: 'bar'
+    },
+    annotations: {
       FOO: 'bar'
     }
   });
@@ -65,8 +71,11 @@ test('it renders settings, env, secrets', function (assert) {
   assert.equal(this.$('.env .label').text().trim(), 'Environment Variables:');
   assert.equal(this.$('.env ul li').text().trim(), 'FOO: bar');
 
-  assert.equal(this.$('.settings .label').text().trim(), 'Job Settings:');
+  assert.equal(this.$('.settings .label').text().trim(), 'Settings:');
   assert.equal(this.$('.settings ul li').text().trim(), 'FOO: bar');
+
+  assert.equal(this.$('.annotations .label').text().trim(), 'Annotations:');
+  assert.equal(this.$('.annotations ul li').text().trim(), 'FOO: bar');
 });
 
 test('it renders template steps', function (assert) {
@@ -78,7 +87,8 @@ test('it renders template steps', function (assert) {
     ],
     secrets: [],
     environment: {},
-    settings: {}
+    settings: {},
+    annotations: {}
   });
 
   this.render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
@@ -97,8 +107,11 @@ test('it renders template steps', function (assert) {
   assert.equal(this.$('.env .label').text().trim(), 'Environment Variables:');
   assert.equal(this.$('.env ul li').text().trim(), 'None defined');
 
-  assert.equal(this.$('.settings .label').text().trim(), 'Job Settings:');
+  assert.equal(this.$('.settings .label').text().trim(), 'Settings:');
   assert.equal(this.$('.settings ul li').text().trim(), 'None defined');
+
+  assert.equal(this.$('.annotations .label').text().trim(), 'Annotations:');
+  assert.equal(this.$('.annotations .value').text().trim(), 'None defined');
 });
 
 test('it renders when there are no steps or commands', function (assert) {
@@ -106,7 +119,8 @@ test('it renders when there are no steps or commands', function (assert) {
     image: 'int-test:1',
     secrets: [],
     environment: {},
-    settings: {}
+    settings: {},
+    annotations: {}
   });
 
   this.render(hbs`{{validator-job name="int-test" index=1 job=jobMock}}`);
@@ -129,7 +143,8 @@ test('it handles clicks on header', function (assert) {
     },
     settings: {
       FOO: 'bar'
-    }
+    },
+    annotations: {}
   });
 
   this.set('openMock', true);
