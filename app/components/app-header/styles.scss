@@ -83,8 +83,10 @@
   .navbar-default .navbar-nav > li > a.icon {
     color: #fff;
     text-decoration: none;
+    line-height: 20px;
 
     .img {
+      vertical-align: middle;
       fill: rgba(255, 255, 255, 1);
       height: 20px;
       width: 20px;
@@ -117,6 +119,7 @@
       display: inline-block;
 
       .img {
+        vertical-align: middle;
         fill: $sd-white;
         height: 20px;
         width: 20px;
@@ -126,6 +129,12 @@
 
     &.open a, &.open a:focus, &.open a:hover {
       background-color: transparent;
+    }
+  }
+
+  .dropdown-menu > li > a {
+    span {
+      padding-left: 0.5em;
     }
   }
 
@@ -149,7 +158,8 @@
     display: block;
   }
 
-  .dropdown-menu a {
+  .dropdown-menu > li > a {
+    line-height: 20px;
     color: $sd-text;
     padding-left: 10px;
     display: block;
