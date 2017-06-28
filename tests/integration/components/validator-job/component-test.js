@@ -162,3 +162,20 @@ test('it handles clicks on header', function (assert) {
     });
   });
 });
+
+test('it renders a description', function (assert) {
+  this.set('jobMock', {
+    image: 'int-test:1',
+    description: 'This is a description',
+    secrets: [],
+    environment: {},
+    settings: {},
+    annotations: {}
+  });
+
+  this.render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+
+  assert.equal(this.$('h4').text().trim(), 'int-test');
+  assert.equal(this.$('.description .label').text().trim(), 'Description:');
+  assert.equal(this.$('.description .value ul li').text().trim(), 'This is a description');
+});
