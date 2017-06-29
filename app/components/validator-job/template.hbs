@@ -11,6 +11,18 @@
     </ul>
   </span>
 </div>
+<div class="description" title="This is the description of the job">
+  <span class="label">Description:</span>
+  <span class="value">
+    <ul>
+      {{#if job.description}}
+      <li>{{job.description}}</li>
+      {{else}}
+      <li>None defined</li>
+      {{/if}}
+    </ul>
+  </span>
+</div>
 <div class="image" title="This is the docker image that acts as the base container for the job.">
   <span class="label">Image:</span>
   <span class="value">{{job.image}}</span>
