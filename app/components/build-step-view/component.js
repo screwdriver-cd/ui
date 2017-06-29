@@ -4,6 +4,11 @@ export default Ember.Component.extend({
   classNames: ['step-view'],
   classNameBindings: ['status'],
   isOpen: false,
+  isSdStep: Ember.computed('stepName', {
+    get() {
+      return this.get('stepName').match(/^sd-/);
+    }
+  }),
 
   /**
    * Maps step exit code with status.

@@ -78,3 +78,15 @@ test('it has an "x" when failed', function (assert) {
 
   assert.ok(this.$(this.$('.status-icon i').get(0)).hasClass('fa-times'));
 });
+
+test('it is a different color for sd-steps', function (assert) {
+  this.render(hbs`{{build-step-view
+    code=0
+    endTime='2017-06-30T14:13:52.531Z'
+    isOpen=false
+    startTime='2017-06-30T14:07:42.531Z'
+    stepName='sd-foo'
+  }}`);
+
+  assert.equal(this.$('.sd-step').length, 1);
+});
