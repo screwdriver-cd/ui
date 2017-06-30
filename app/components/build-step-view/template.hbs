@@ -3,7 +3,7 @@
     <span class="status-icon">{{#if icon}}{{fa-icon icon}}{{/if}}</span>
   </div>
   <div class='col-xs-8'>
-    <span class="name">{{stepName}}</span>
+    <span class="name{{if isSdStep ' sd-step'}}">{{stepName}}</span>
   </div>
   <div class='col-xs-2'>
     <span class="duration">
