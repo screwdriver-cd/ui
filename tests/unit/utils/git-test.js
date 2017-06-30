@@ -3,8 +3,7 @@ import { module, test } from 'qunit';
 
 module('Unit | Utility | git');
 
-// Replace this with your real tests.
-test('it works', (assert) => {
+test('it parses the checkout URL correctly', (assert) => {
   let result = git.parse('bananas');
 
   assert.notOk(result.valid);
@@ -28,4 +27,13 @@ test('it works', (assert) => {
     branch: 'tree',
     valid: true
   });
+});
+
+test('it generates the checkout URL correctly', (assert) => {
+  let result = git.getCheckoutUrl({
+    appId: 'bananas/peel',
+    scmUri: 'github.com:12345:master'
+  });
+
+  assert.strictEqual(result, 'git@github.com:bananas/peel.git#master');
 });

@@ -14,6 +14,12 @@ moduleForAcceptance('Acceptance | pipeline/options', {
       JSON.stringify({
         id: '1',
         scmUrl: 'git@github.com:foo/bar.git#master',
+        scmUri: 'github.com:84604643:master',
+        scmRepo: {
+          branch: 'master',
+          name: 'foo/bar',
+          url: 'https://github.com/foo/bar/tree/master'
+        },
         createTime: '2016-09-15T23:12:23.760Z',
         admins: { batman: true },
         workflow: ['main', 'publish']
@@ -41,6 +47,7 @@ test('visiting /pipelines/:id/options', function (assert) {
 
   andThen(() => {
     assert.equal(currentURL(), '/pipelines/1/options');
+    assert.equal(find('section.pipeline li').length, 1);
     assert.equal(find('section.jobs li').length, 2);
     assert.equal(find('section.danger li').length, 1);
   });

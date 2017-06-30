@@ -35,6 +35,9 @@ Make use of the many generators for code, try `ember help generate` for more det
 * `ember test`
 * `ember test --server`
 
+To run a single ember test:
+* `ember t -s -m '<TEST_NAME>'`   // e.g. ember t -s -m 'Integration | Component | pipeline options'
+
 ### Building
 
 * `ember build` (development)
