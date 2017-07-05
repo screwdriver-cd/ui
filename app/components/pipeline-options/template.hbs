@@ -1,6 +1,42 @@
-{{info-message message=errorMessage type="error"}}
+{{info-message message=errorMessage type="error" icon="exclamation-triangle"}}
 
 <div class="row">
+  <div class="col-xs-12 col-md-8">
+    <section class="pipeline">
+      <h3>Pipeline</h3>
+      <ul>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Checkout URL</h4>
+              <p>Update your checkout URL.</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-10">
+              <div>
+                {{input
+                  class="text-input"
+                  key-up="scmChange"
+                  value=scmUrl
+                }}
+              </div>
+            </div>
+            <div class="col-xs-2 right">
+              <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving ' saving'}}">
+                <div class="saving-loading">
+                  Updating pipeline
+                </div>
+                <div class="button-label">Update</div>
+              </button>
+              {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+
   <div class="col-xs-12 col-md-8">
     <section class="jobs">
       <h3>Jobs</h3>
@@ -22,47 +58,46 @@
     </section>
   </div>
 
-
-    <div class="col-xs-12 col-md-8">
-      <section class="sync">
-        <h3>Sync</h3>
-        <ul>
-          <li>
-            <div class="row">
-              <div class="col-xs-10">
-                <h4>SCM webhooks</h4>
-                <p>Update the webhooks if they are not working correctly.</p>
-              </div>
-              <div class="col-xs-2 right">
-                <a href="#" {{action "sync" "webhooks"}} >{{fa-icon "fa-refresh"}}</a>
-              </div>
+  <div class="col-xs-12 col-md-8">
+    <section class="sync">
+      <h3>Sync</h3>
+      <ul>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>SCM webhooks</h4>
+              <p>Update the webhooks if they are not working correctly.</p>
             </div>
-          </li>
-          <li>
-            <div class="row">
-              <div class="col-xs-10">
-                <h4>Pull requests</h4>
-                <p>Create or update pull-request jobs if they are not displaying properly.</p>
-              </div>
-              <div class="col-xs-2 right">
-                <a href="#" {{action "sync" "pullrequests"}}>{{fa-icon "fa-refresh"}}</a>
-              </div>
+            <div class="col-xs-2 right">
+              <a href="#" {{action "sync" "webhooks"}} >{{fa-icon "fa-refresh"}}</a>
             </div>
-          </li>
-          <li>
-            <div class="row">
-              <div class="col-xs-10">
-                <h4>Pipeline</h4>
-                <p>Update jobs if they are not displaying properly.</p>
-              </div>
-              <div class="col-xs-2 right">
-                <a href="#" {{action "sync"}}>{{fa-icon "fa-refresh"}}</a>
-              </div>
+          </div>
+        </li>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Pull requests</h4>
+              <p>Create or update pull-request jobs if they are not displaying properly.</p>
             </div>
-          </li>
-        </ul>
-      </section>
-    </div>
+            <div class="col-xs-2 right">
+              <a href="#" {{action "sync" "pullrequests"}}>{{fa-icon "fa-refresh"}}</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Pipeline</h4>
+              <p>Update jobs if they are not displaying properly.</p>
+            </div>
+            <div class="col-xs-2 right">
+              <a href="#" {{action "sync"}}>{{fa-icon "fa-refresh"}}</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
 
   <div class="col-xs-12 col-md-8">
     <section class="danger">

@@ -1,6 +1,9 @@
 {{pipeline-options
   pipeline=model
+  errorMessage=errorMessage
   setJobStatus=(action "setJobStatus")
   onRemovePipeline=(action "removePipeline")
+  isSaving=isSaving
+  onUpdatePipeline=(action "updatePipeline")
 }}
 {{outlet}}

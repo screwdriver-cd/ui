@@ -12,6 +12,8 @@ moduleForComponent('pipeline-options', 'Integration | Component | pipeline optio
 
 test('it renders', function (assert) {
   this.set('mockPipeline', Ember.Object.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
     id: 'abc1234',
     jobs: Ember.A([
       Ember.Object.create({
@@ -23,6 +25,13 @@ test('it renders', function (assert) {
   }));
 
   this.render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+
+  // Pipeline
+  assert.equal(this.$('section.pipeline h3').text().trim(), 'Pipeline');
+  assert.equal(this.$('section.pipeline li').length, 1);
+  assert.equal(this.$('section.pipeline h4').text().trim(), 'Checkout URL');
+  assert.equal(this.$('section.pipeline p').text().trim(), 'Update your checkout URL.');
+  assert.equal(this.$('section.pipeline .button-label').text().trim(), 'Update');
 
   // Jobs
   assert.equal(this.$('section.jobs h3').text().trim(), 'Jobs');
@@ -45,6 +54,27 @@ test('it renders', function (assert) {
   assert.ok(this.$('section.danger a i').hasClass('fa-trash'));
 });
 
+test('it updates a pipeline', function (assert) {
+  const scm = 'git@github.com:foo/bar.git';
+
+  this.set('updatePipeline', (scmUrl) => {
+    assert.equal(scmUrl, scm);
+  });
+
+  this.set('mockPipeline', Ember.Object.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:notMaster',
+    id: 'abc1234'
+  }));
+
+  // eslint-disable-next-line max-len
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=updatePipeline}}`);
+  assert.equal(this.$('.text-input').val(), 'git@github.com:foo/bar.git#notMaster');
+  this.$('.text-input').val(scm).keyup();
+  assert.equal(this.$('.text-input').val(), scm);
+  this.$('button.blue-button').click();
+});
+
 test('it handles job disabling', function (assert) {
   const main = Ember.Object.create({
     id: '1234',
@@ -53,6 +83,8 @@ test('it handles job disabling', function (assert) {
   });
 
   this.set('mockPipeline', Ember.Object.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
     id: 'abc1234',
     jobs: Ember.A([main])
   }));
@@ -81,6 +113,8 @@ test('it handles job enabling', function (assert) {
   });
 
   this.set('mockPipeline', Ember.Object.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
     id: 'abc1234',
     jobs: Ember.A([main])
   }));
@@ -107,6 +141,8 @@ test('it handles pipeline remove flow', function (assert) {
   const $ = this.$;
 
   this.set('mockPipeline', Ember.Object.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
     id: 'abc1234'
   }));
 
@@ -142,6 +178,8 @@ test('it syncs the webhooks', function (assert) {
   const $ = this.$;
 
   this.set('mockPipeline', Ember.Object.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
     id: '1'
   }));
 
@@ -164,6 +202,8 @@ test('it syncs the pullrequests', function (assert) {
   const $ = this.$;
 
   this.set('mockPipeline', Ember.Object.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
     id: '1'
   }));
 
@@ -186,6 +226,8 @@ test('it syncs the pipeline', function (assert) {
   const $ = this.$;
 
   this.set('mockPipeline', Ember.Object.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
     id: '1'
   }));
 
@@ -205,6 +247,8 @@ test('it fails to sync the pipeline', function (assert) {
   const $ = this.$;
 
   this.set('mockPipeline', Ember.Object.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
     id: '1'
   }));
 

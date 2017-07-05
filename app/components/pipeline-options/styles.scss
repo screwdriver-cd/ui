@@ -120,3 +120,88 @@
     text-align: right;
   }
 }
+
+.text-input {
+  box-sizing: border-box;
+  margin-top: 10px;
+  outline: 0;
+  height: 45px;
+  width: 90%;
+  border-radius: 2px;
+  border: 2px solid $sd-separator;
+  font-size: 16px;
+  padding-left: 10px;
+  color: $sd-text;
+
+  &:focus {
+    border-color: $sd-running;
+  }
+
+  &::-webkit-input-placeholder {
+    color: $sd-text-med;
+  }
+
+  &:-moz-placeholder {
+    color: $sd-text-med;
+  }
+
+  &::-moz-placeholder {
+    color: $sd-text-med;
+  }
+
+  &:-ms-input-placeholder {
+    color: $sd-text-med;
+  }
+
+  &.bad-text-input {
+    border-color: $sd-failure;
+  }
+
+  &.good-text-input {
+    border-color: $sd-success;
+  }
+}
+
+.blue-button {
+  border: none;
+  border-radius: 3px;
+  height: 45px;
+  padding: 0 30px;
+  color: #fff;
+  font-size: 16px;
+  margin-top: 10px;
+  background: $sd-running;
+  @include transition(all, 50ms);
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    background: $sd-link;
+  }
+
+  &:disabled {
+    background: $sd-text-med;
+  }
+
+  .saving-loading {
+    display: none;
+  }
+
+  &.saving {
+    .saving-loading {
+      display: block;
+    }
+
+    .button-label {
+      display: none;
+    }
+  }
+
+  &:active {
+    &:not(:disabled) {
+      @include scale(0.97);
+    }
+  }
+}

@@ -1,15 +1,14 @@
 /* global localStorage*/
 import Ember from 'ember';
-import git from '../../utils/git';
+import { parse } from '../../utils/git';
 
 export default Ember.Component.extend({
   scmUrl: '',
-  isSaving: false,
   isValid: Ember.computed('scmUrl', {
     get() {
       const val = this.get('scmUrl');
 
-      return val.length !== 0 && git.parse(val).valid;
+      return val.length !== 0 && parse(val).valid;
     }
   }),
   isInvalid: Ember.computed.not('isValid'),
