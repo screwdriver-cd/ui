@@ -1,0 +1,63 @@
+& {
+  padding: 10px 25px;
+
+  .info-message {
+    margin-top: 10px;
+  }
+
+  table {
+    width: 100%;
+    font-weight: 300;
+  }
+
+  tbody tr {
+    border: 1px solid $sd-text-light;
+  }
+
+  th {
+    font-weight: 300;
+    color: $sd-text-med;
+    text-transform: uppercase;
+    text-align: left;
+    padding-left: 5px;
+  }
+
+  .new td {
+    padding: 5px;
+    background-color: $sd-text-light;
+  }
+
+  tfoot button {
+    border-width: 0;
+    width: 100px;
+    background-color: $sd-primary;
+    color: $sd-white;
+    border-radius: 3px;
+  }
+
+  tfoot button:disabled {
+    background-color: inherit;
+    color: inherit;
+  }
+
+  .new-token {
+    min-height: 20px;
+    border-radius: 3px;
+    margin-bottom: 30px;
+    padding: 10px;
+    border: 2px solid $sd-success;
+
+    & i.fa {
+      font-size: 26px;
+      color: $sd-success;
+    }
+
+    & .new-name {
+      font-weight: bold;
+    }
+
+    & .new-value {
+      color: $sd-text-med;
+    }
+  }
+}

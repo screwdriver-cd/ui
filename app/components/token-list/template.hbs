@@ -1,0 +1,61 @@
+<h3>Access Tokens</h3>
+{{info-message message=errorMessage type="error" icon="exclamation-triangle"}}
+{{#if newToken}}
+  <div class="new-token">
+    <p>{{fa-icon "check"}} Token {{newToken.action}}. You can only see this value once, so remember to copy it!</p>
+    <span class="new-name">{{newToken.name}}:</span>
+    <span class="new-value">{{newToken.value}}</span>
+  </div>
+{{/if}}
+<p>
+  User access tokens provide access to the <a href="http://docs.screwdriver.cd/user-guide/api/">Screwdriver API</a>. They are scoped to your account.
+</p>
+<table class="token-list">
+  <thead>
+    <tr>
+      <th class="token-name">Name</th>
+      <th class="token-description">Description</th>
+      <th class="last-used">Last Used</th>
+      <th class="actions">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each sortedTokens as |token|}}
+      {{token-view
+        token=token
+        confirmAction=(action "confirmAction")
+        setError=(action "setError")
+        setIsSaving=(action "setIsSaving")
+      }}
+    {{/each}}
+  </tbody>
+  <tfoot>
+    <tr class="new">
+      <td class="name">{{input placeholder="NAME" size="40" value=newName}}</td>
+      <td class="description" colspan="2">{{input placeholder="DESCRIPTION" size="40" value=newDescription}}</td>
+      <td><button disabled={{isButtonDisabled}} {{action "addNewToken"}}>Add</button></td>
+    </tr>
+  </tfoot>
+</table>
+{{#if isShowingModal}}
+  {{#modal-dialog
+      translucentOverlay=true
+      onClickOverlay=(action "closeModal" false)
+  }}
+    <div class="token-confirm-dialog">
+      <h3>Are you sure?</h3>
+      <p>{{modalText}}</p>
+      <button onclick={{action "closeModal" true}} class={{modalAction}}>
+        {{modalButtonText}}
+      </button>
+    </div>
+  {{/modal-dialog}}
+{{/if}}
+{{#if isSaving}}
+  {{#modal-dialog clickOutsideToClose=false
+    targetAttachment="center"
+    translucentOverlay=true
+  }}
+    {{loading-view}}
+  {{/modal-dialog}}
+{{/if}}

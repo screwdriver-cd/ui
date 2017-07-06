@@ -1,0 +1,7 @@
+<td class="name">{{input type="text" size="40" value=newName}}</td>
+<td class="description">{{input type="text" size="40" value=newDescription}}</td>
+<td class="last-used">{{#if token.lastUsed}}{{moment-from-now token.lastUsed}}{{else}}Never used{{/if}}</td>
+<td class="actions">
+  <button {{action "refresh"}}>Refresh</button>
+  <button {{action "modifyToken"}} class={{buttonAction}}>{{buttonAction}}</button>
+</td>
