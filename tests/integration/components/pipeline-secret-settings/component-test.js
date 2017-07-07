@@ -2,11 +2,10 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 
-moduleForComponent('pipeline-secret-settings',
-  'Integration | Component | pipeline secret settings', {
-    integration: true
-  }
-);
+// eslint-disable-next-line max-len
+moduleForComponent('pipeline-secret-settings', 'Integration | Component | pipeline secret settings', {
+  integration: true
+});
 
 test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
