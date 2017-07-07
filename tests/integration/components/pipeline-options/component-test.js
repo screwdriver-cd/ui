@@ -14,17 +14,18 @@ test('it renders', function (assert) {
   this.set('mockPipeline', Ember.Object.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
-    id: 'abc1234',
-    jobs: Ember.A([
-      Ember.Object.create({
-        id: '1234',
-        name: 'main',
-        isDisabled: false
-      })
-    ])
+    id: 'abc1234'
   }));
 
-  this.render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+  this.set('mockJobs', Ember.A([
+    Ember.Object.create({
+      id: '1234',
+      name: 'main',
+      isDisabled: false
+    })
+  ]));
+
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
 
   // Pipeline
   assert.equal(this.$('section.pipeline h3').text().trim(), 'Pipeline');
@@ -85,9 +86,10 @@ test('it handles job disabling', function (assert) {
   this.set('mockPipeline', Ember.Object.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
-    id: 'abc1234',
-    jobs: Ember.A([main])
+    id: 'abc1234'
   }));
+
+  this.set('mockJobs', Ember.A([main]));
 
   this.set('setJobStatsMock', (id, state) => {
     assert.equal(id, '1234');
@@ -95,7 +97,11 @@ test('it handles job disabling', function (assert) {
     main.set('isDisabled', true);
   });
 
-  this.render(hbs`{{pipeline-options pipeline=mockPipeline setJobStatus=setJobStatsMock}}`);
+  this.render(hbs`{{pipeline-options
+    pipeline=mockPipeline
+    setJobStatus=setJobStatsMock
+    jobs=mockJobs
+  }}`);
 
   assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
   this.$('.x-toggle-btn').click();
@@ -115,9 +121,10 @@ test('it handles job enabling', function (assert) {
   this.set('mockPipeline', Ember.Object.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
-    id: 'abc1234',
-    jobs: Ember.A([main])
+    id: 'abc1234'
   }));
+
+  this.set('mockJobs', Ember.A([main]));
 
   this.set('setJobStatsMock', (id, state) => {
     assert.equal(id, '1234');
@@ -125,7 +132,11 @@ test('it handles job enabling', function (assert) {
     main.set('isDisabled', false);
   });
 
-  this.render(hbs`{{pipeline-options pipeline=mockPipeline setJobStatus=setJobStatsMock}}`);
+  this.render(hbs`{{pipeline-options
+    pipeline=mockPipeline
+    setJobStatus=setJobStatsMock
+    jobs=mockJobs
+  }}`);
 
   assert.equal(this.$('section.jobs h4').text().trim(), 'main');
   assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to enable the main job.');
