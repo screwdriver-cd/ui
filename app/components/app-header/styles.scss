@@ -28,6 +28,7 @@
       background: rgba(242, 242, 242, 0.1);
       color: #fff;
       border: none;
+      border-bottom: solid transparent;
       box-sizing: border-box;
       display: inline-block;
       font-size: 14px;
@@ -46,6 +47,7 @@
     }
 
     input:focus {
+      border: none;
       border-bottom: solid #3570f4;
     }
 
@@ -58,7 +60,7 @@
       border-radius: 0 2px 2px 0;
       border-left: 0;
       padding-left: 0;
-      height: 36px;
+      height: 37px;
       width: 38px;
       color: rgba(255, 255, 255, 1);
       background: #3697F2; /* For browsers that do not support gradients */
