@@ -4,20 +4,13 @@ export default Ember.Component.extend({
   newName: null,
   newValue: null,
   newAllow: false,
-  isButtonDisabled: true,
+  isButtonDisabled: Ember.computed('newName', 'newValue', function isButtonDisabled() {
+    return !this.get('newName') || !this.get('newValue');
+  }),
   errorMessage: '',
   secretsSorting: ['name'],
   sortedSecrets: Ember.computed.sort('secrets', 'secretsSorting'),
   actions: {
-    /**
-     * Sets disabled state of "add" button
-     * @method enableButton
-     */
-    enableButton() {
-      const isDisabled = !this.get('newName') || !this.get('newValue');
-
-      this.set('isButtonDisabled', isDisabled);
-    },
     /**
      * Kicks off create secret flow
      * @method addNewSecret

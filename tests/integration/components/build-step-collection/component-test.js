@@ -1,11 +1,9 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('build-step-collection',
-  'Integration | Component | sd build step collection', {
-    integration: true
-  }
-);
+moduleForComponent('build-step-collection', 'Integration | Component | sd build step collection', {
+  integration: true
+});
 
 test('it renders', function (assert) {
   const $ = this.$;

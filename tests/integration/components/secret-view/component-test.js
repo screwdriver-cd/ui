@@ -2,8 +2,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('secret-view',
-'Integration | Component | secret view', {
+moduleForComponent('secret-view', 'Integration | Component | secret view', {
   integration: true
 });
 
