@@ -4,6 +4,9 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   routeAfterAuthentication: 'pipeline.options',
   model() {
-    return this.modelFor('pipeline');
+    const pipeline = this.modelFor('pipeline');
+
+    // Prevent double render when jobs list updates asynchronously
+    return pipeline.get('jobs').then(jobs => ({ pipeline, jobs }));
   }
 });
