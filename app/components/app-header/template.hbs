@@ -53,17 +53,28 @@
           {{/dd.menu}}
         {{/nav.dropdown}}
       {{/nav.item}}
-
       {{#nav.item}}
         {{#if session.isAuthenticated}}
-          <a {{action 'invalidateSession'}} title="Log out of Screwdriver" class="icon auth">
-            {{inline-svg "login" class="img"}}
-            <span class='icontitle'>Log out</span>
-          </a>
+          {{#nav.dropdown as |dd|}}
+            {{#dd.toggle class="icon profile-outline"}}
+              {{inline-svg "profile-outline" class="img"}}
+              <span class='icontitle'>Account</span>
+              <span class="caret"></span>
+            {{/dd.toggle}}
+            {{#dd.menu as |ddm|}}
+              {{#if session.isAuthenticated}}
+                {{#ddm.item}}{{#link-to "user-settings" title="User Settings"}}User Settings{{/link-to}}{{/ddm.item}}
+                {{ddm.divider}}
+              {{/if}}
+              {{#ddm.item}}
+                <a {{action 'invalidateSession'}} class="logout" title="Log out of Screwdriver">Log out</a>
+              {{/ddm.item}}
+            {{/dd.menu}}
+          {{/nav.dropdown}}
         {{else}}
-          {{#link-to "login" title="Login to Screwdriver" class="icon auth"}}
-          {{inline-svg "login" class="img"}}
-          <span class='icontitle'>Log in</span>
+          {{#link-to "login" title="Login to Screwdriver" class="icon profile-outline"}}
+            {{inline-svg "profile-outline" class="img"}}
+            <span class='icontitle'>Log in</span>
           {{/link-to}}
         {{/if}}
       {{/nav.item}}
@@ -73,7 +84,7 @@
 <div class="tooltips">
   {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
   {{#bs-tooltip placement="bottom" triggerElement=".icon.docs" renderInPlace=true}}Screwdriver Documentation{{/bs-tooltip}}
-  {{#bs-tooltip placement="bottom" triggerElement=".icon.auth" renderInPlace=true}}
-    {{#if session.isAuthenticated}}Log out of Screwdriver{{else}}Login to Screwdriver{{/if}}
-  {{/bs-tooltip}}
+  {{#unless session.isAuthenticated}}
+    {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" renderInPlace=true}}Login to Screwdriver{{/bs-tooltip}}
+  {{/unless}}
 </div>

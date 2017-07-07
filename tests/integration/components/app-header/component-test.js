@@ -21,11 +21,11 @@ test('it renders when search flag is off', function (assert) {
   assert.equal(this.$('.icon.blog').length, 1);
   assert.equal(this.$('.icon.community').length, 1);
   assert.equal(this.$('.icon.github').length, 1);
-  assert.equal(this.$('.icon.auth').length, 1);
+  assert.equal(this.$('.icon.profile-outline').length, 1);
   assert.equal(this.$('.search-input').length, 0);
 
   // check that user has not logged in yet
-  assert.equal(this.$('.icon.auth').prop('title'), 'Login to Screwdriver');
+  assert.equal(this.$('.icon.profile-outline').prop('title'), 'Login to Screwdriver');
 });
 
 test('it calls the logout method on logout', function (assert) {
@@ -38,8 +38,8 @@ test('it calls the logout method on logout', function (assert) {
   });
 
   this.render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
-  assert.equal(this.$('.icon.auth').prop('title'), 'Log out of Screwdriver');
-  this.$('.auth').click();
+  assert.equal(this.$('.logout').prop('title'), 'Log out of Screwdriver');
+  this.$('.logout').click();
 });
 
 test('it shows the search bar', function (assert) {
