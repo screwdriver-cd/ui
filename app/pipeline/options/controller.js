@@ -16,7 +16,7 @@ export default Ember.Controller.extend({
       });
     },
     updatePipeline(scmUrl) {
-      let pipeline = this.model;
+      let pipeline = this.model.pipeline;
 
       pipeline.set('checkoutUrl', scmUrl);
 

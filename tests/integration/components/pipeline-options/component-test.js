@@ -69,7 +69,7 @@ test('it updates a pipeline', function (assert) {
   }));
 
   // eslint-disable-next-line max-len
-  this.render(hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=updatePipeline}}`);
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=(action updatePipeline)}}`);
   assert.equal(this.$('.text-input').val(), 'git@github.com:foo/bar.git#notMaster');
   this.$('.text-input').val(scm).keyup();
   assert.equal(this.$('.text-input').val(), scm);
