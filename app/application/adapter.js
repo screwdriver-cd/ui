@@ -96,7 +96,8 @@ export default DS.RESTAdapter.extend({
         errors = [{
           status: payload.statusCode,
           title: payload.error,
-          detail: payload.message
+          detail: payload.message,
+          data: payload.data
         }];
       }
 
