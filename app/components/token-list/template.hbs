@@ -1,12 +1,5 @@
 <h3>Access Tokens</h3>
 {{info-message message=errorMessage type="error" icon="exclamation-triangle"}}
-{{#if newToken}}
-  <div class="new-token">
-    <p>{{fa-icon "check"}} Token {{newToken.action}}. You can only see this value once, so remember to copy it!</p>
-    <span class="new-name">{{newToken.name}}:</span>
-    <span class="new-value">{{newToken.value}}</span>
-  </div>
-{{/if}}
 <p>
   User access tokens provide access to the <a href="http://docs.screwdriver.cd/user-guide/api/">Screwdriver API</a>. They are scoped to your account.
 </p>
@@ -42,9 +35,19 @@
       translucentOverlay=true
       onClickOverlay=(action "closeModal" false)
   }}
-    <div class="token-confirm-dialog">
-      <h3>Are you sure?</h3>
-      <p>{{modalText}}</p>
+    <div class="token-modal">
+      <h3>{{modalTitle}}</h3>
+      {{#if newToken}}
+        <p>
+          You can only see this value once, so remember to copy it!
+        </p>
+        <p>
+          <span class="new-name">{{newToken.name}}:</span>
+          <span class="new-value">{{newToken.value}}</span>
+        </p>
+      {{else}}
+        <p>{{modalText}}</p>
+      {{/if}}
       <button onclick={{action "closeModal" true}} class={{modalAction}}>
         {{modalButtonText}}
       </button>

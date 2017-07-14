@@ -16,6 +16,10 @@ export default DS.RESTSerializer.extend({
 
     const h = Ember.merge(hash, dirty);
 
+    if (h.description === null) {
+      delete h.description;
+    }
+
     delete h.lastUsed;
     delete h.userId;
     delete h.action;

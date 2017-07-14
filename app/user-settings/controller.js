@@ -7,7 +7,7 @@ export default Ember.Controller.extend({
     createToken(name, description) {
       const newToken = this.store.createRecord('token', {
         name,
-        description,
+        description: description || '',
         action: 'created'
       });
 
