@@ -14,7 +14,13 @@ export default Ember.Controller.extend({
         .then(() => {
           this.transitionToRoute('pipeline', pipeline.get('id'));
         }, (err) => {
-          this.set('errorMessage', err.errors[0].detail);
+          let error = err.errors[0] || {};
+
+          if (error.status === 409 && typeof error.data === 'object' && error.data.existingId) {
+            this.transitionToRoute('pipeline', error.data.existingId);
+          } else {
+            this.set('errorMessage', error.detail);
+          }
         }).finally(() => {
           this.set('isSaving', false);
         });
