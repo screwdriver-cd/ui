@@ -1,4 +1,4 @@
-.token-confirm-dialog {
+.token-modal {
   padding: 0px 50px 20px;
 
   & button {
@@ -11,5 +11,13 @@
 
   & button.delete {
     background-color: $sd-failure;
+  }
+
+  & .new-name {
+    font-weight: bold;
+  }
+
+  & .new-value {
+    color: $sd-text-med;
   }
 }

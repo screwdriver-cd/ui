@@ -18,7 +18,7 @@ export default Ember.Service.extend({
           withCredentials: true
         }
       })
-      .done(content => resolve(content))
+      .done(content => resolve(Object.assign(content, { action: 'refreshed' })))
       .fail((response) => {
         let message = `${response.status} Request Failed`;
 

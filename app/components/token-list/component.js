@@ -28,18 +28,17 @@ export default Ember.Component.extend({
   }),
   modalTarget: null,
   modalText: null,
-
-  // Don't show the "new token" and "error" dialogs at the same time
-  errorObserver: Ember.observer('error', function errorObserver() {
-    if (this.get('error')) {
-      this.set('newToken', null);
-      this.set('isSaving', null);
-    }
+  modalTitle: Ember.computed('newToken', function modalTitle() {
+    return this.get('newToken') ? `Token ${this.get('newToken.action')}!` : 'Are you sure?';
   }),
+
+  // Show the modal if there's a new token
   newTokenObserver: Ember.observer('newToken', function newTokenObserver() {
     if (this.get('newToken')) {
       this.set('error', null);
-      this.set('isSaving', null);
+      this.set('isSaving', false);
+      this.set('modalAction', 'dismiss');
+      this.set('isShowingModal', true);
     }
   }),
 
@@ -78,7 +77,7 @@ export default Ember.Component.extend({
     /**
      * Confirm an action
      * @method confirmAction
-     * @param {String} action   One of "refresh" or "revoke"
+     * @param {String} action   One of "refresh" or "delete"
      * @param {Number} id
      */
     confirmAction(action, id) {
@@ -101,11 +100,14 @@ export default Ember.Component.extend({
      */
     closeModal(confirm) {
       this.set('isShowingModal', false);
+      this.set('newToken', null);
 
       if (confirm) {
-        if (this.get('modalAction') === 'delete') {
+        const modalAction = this.get('modalAction');
+
+        if (modalAction === 'delete') {
           this.get('modalTarget').destroyRecord();
-        } else {
+        } else if (modalAction === 'refresh') {
           this.set('isSaving', true);
           this.get('onRefreshToken')(this.get('modalTarget.id'))
             .catch((error) => {

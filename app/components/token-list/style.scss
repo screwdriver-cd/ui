@@ -39,25 +39,4 @@
     background-color: inherit;
     color: inherit;
   }
-
-  .new-token {
-    min-height: 20px;
-    border-radius: 3px;
-    margin-bottom: 30px;
-    padding: 10px;
-    border: 2px solid $sd-success;
-
-    & i.fa {
-      font-size: 26px;
-      color: $sd-success;
-    }
-
-    & .new-name {
-      font-weight: bold;
-    }
-
-    & .new-value {
-      color: $sd-text-med;
-    }
-  }
 }
