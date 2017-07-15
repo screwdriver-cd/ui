@@ -2,12 +2,14 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: 'tr',
-  buttonAction: Ember.computed('newName', 'newDescription', function buttonAction() {
-    const token = this.get('token');
+  buttonAction: Ember.computed('token.name', 'token.description', 'newName', 'newDescription', {
+    get() {
+      const token = this.get('token');
 
-    return (this.get('newName') !== token.get('name')
-         || this.get('newDescription') !== token.get('description')) ?
-      'Update' : 'Delete';
+      return (this.get('newName') !== token.get('name')
+           || this.get('newDescription') !== token.get('description')) ?
+        'Update' : 'Delete';
+    }
   }),
   newName: null,
   newDescription: null,
@@ -29,7 +31,6 @@ export default Ember.Component.extend({
 
         token.save()
           .then(() => {
-            this.set('buttonAction', 'Delete');
             this.get('setIsSaving')(false);
           })
           .catch((error) => {
