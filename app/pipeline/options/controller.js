@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
       job.save();
     },
     removePipeline() {
-      this.model.destroyRecord().then(() => {
+      this.model.pipeline.destroyRecord().then(() => {
         this.transitionToRoute('home');
       });
     },

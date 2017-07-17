@@ -71,7 +71,7 @@ test('it handles deleting pipelines', function (assert) {
         }
       }
     });
-    controller.set('model', controller.store.peekRecord('pipeline', 'abc1234'));
+    controller.set('model', { pipeline: controller.store.peekRecord('pipeline', 'abc1234') });
 
     controller.transitionToRoute = (route) => {
       assert.equal(route, 'home');
