@@ -93,7 +93,7 @@ test('/create a pipeline: FAILURE', function (assert) {
     click('button.blue-button');
     andThen(() => {
       assert.equal(currentURL(), '/create');
-      assert.equal(find('.info-message span').text(), 'something conflicting');
+      assert.equal(find('.alert > span').text(), 'something conflicting');
     });
   });
 });

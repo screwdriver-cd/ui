@@ -10,8 +10,7 @@ test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{info-message icon="fa-check" message="batman"}}`);
+  this.render(hbs`{{info-message message="batman"}}`);
 
-  assert.equal($().text().trim(), 'batman');
-  assert.ok($($('i')[0]).hasClass('fa-check'));
+  assert.equal($('.alert > span').text().trim(), 'batman');
 });

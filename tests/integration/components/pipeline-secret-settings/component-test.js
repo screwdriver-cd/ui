@@ -94,7 +94,7 @@ test('it displays an error', function (assert) {
   this.$('tfoot button').click();
 
   // and clears the new secret form elements
-  assert.equal(this.$('.info-message span').text().trim(),
+  assert.equal(this.$('.alert > span').text().trim(),
     'Secret keys can only consist of numbers, uppercase letters and underscores, ' +
     'and cannot begin with a number.');
 });

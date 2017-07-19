@@ -62,6 +62,13 @@ export default Ember.Component.extend({
         });
     },
     /**
+     * Clear the new token
+     * @method clearNewToken
+     */
+    clearNewToken() {
+      this.set('newToken', null);
+    },
+    /**
      * Set the error to be displayed from child components
      * @param {Object} error
      */

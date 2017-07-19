@@ -269,6 +269,6 @@ test('it fails to sync the pipeline', function (assert) {
 
   return wait()
     .then(() => {
-      assert.equal(this.$('.info-message span').text().trim(), 'something conflicting');
+      assert.equal(this.$('.alert > span').text().trim(), 'something conflicting');
     });
 });
