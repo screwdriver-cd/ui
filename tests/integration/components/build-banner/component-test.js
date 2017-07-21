@@ -59,7 +59,7 @@ test('it renders', function (assert) {
   this.set('jobMock', jobMock);
   this.render(hbs`{{build-banner
     buildContainer="node:6"
-    buildStatus="SUCCESS"
+    buildStatus="RUNNING"
     duration="5 seconds"
     event=eventMock
     isAuthenticated=false
@@ -83,7 +83,7 @@ test('it renders', function (assert) {
 });
 
 test('it does not render a restart button for main job when authenticated', function (assert) {
-  assert.expect(2);
+  assert.expect(1);
   this.set('willRender', () => {
     assert.ok(true);
   });
@@ -105,7 +105,7 @@ test('it does not render a restart button for main job when authenticated', func
 });
 
 test('it does not render a restart button for publish job when authenticated', function (assert) {
-  assert.expect(2);
+  assert.expect(1);
   this.set('willRender', () => {
     assert.ok(true);
   });
@@ -127,7 +127,7 @@ test('it does not render a restart button for publish job when authenticated', f
 });
 
 test('it renders a restart button for PR jobs when authenticated', function (assert) {
-  assert.expect(3);
+  assert.expect(2);
   this.set('willRender', () => {
     assert.ok(true);
   });

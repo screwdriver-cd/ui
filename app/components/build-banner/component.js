@@ -58,7 +58,11 @@ export default Ember.Component.extend({
   willRender() {
     this._super(...arguments);
 
-    this.get('reloadBuild')();
+    const status = this.get('buildStatus');
+
+    if (status === 'QUEUED' || status === 'RUNNING') {
+      this.get('reloadBuild')();
+    }
   },
 
   actions: {
