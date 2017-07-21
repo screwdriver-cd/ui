@@ -1,4 +1,6 @@
 {{pipeline-header pipeline=model}}
-{{pipeline-nav pipeline=model}}
+{{#if session.isAuthenticated}}
+  {{pipeline-nav pipeline=model}}
+{{/if}}
 
 {{outlet}}
