@@ -1,4 +1,4 @@
 <td class="name">{{secret.name}}</td>
-<td class="pass">{{input type="password" placeholder="Protected" size="40" value=newValue key-up="secretDidChange"}}</td>
-<td class="allow">{{input type="checkbox" checked=secret.allowInPR click=(action "secretDidChange" )}}</td>
+<td class="pass">{{input type="password" placeholder="Protected" size="40" value=newValue}}</td>
+<td class="allow">{{input type="checkbox" checked=secret.allowInPR}}</td>
 <td><button {{action "modifySecret"}}>{{buttonAction}}</button></td>
