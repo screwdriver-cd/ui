@@ -2,7 +2,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
-/* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }]*/
+/* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
 let syncService;
 

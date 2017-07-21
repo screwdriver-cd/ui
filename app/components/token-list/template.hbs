@@ -1,7 +1,8 @@
 <h3>Access Tokens</h3>
-{{info-message message=errorMessage type="warning" }}
+{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 {{#if newToken}}
   {{#bs-alert type="success" onDismissed=(action "clearNewToken")}}
+    {{fa-icon "check"}}
     <div class="new-token">
       <p>Token {{newToken.action}}. You can only see this value once, so remember to copy it!</p>
       <span class="new-name">{{newToken.name}}:</span>

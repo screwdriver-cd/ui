@@ -5,6 +5,11 @@
     margin-top: 10px;
   }
 
+  i.fa {
+    vertical-align: top;
+    font-size: 1.1rem;
+  }
+
   table {
     width: 100%;
     font-weight: 300;
@@ -41,6 +46,8 @@
   }
 
   .new-token {
+    display: inline-block;
+
     & .new-name {
       font-weight: bold;
     }

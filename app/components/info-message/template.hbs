@@ -1,5 +1,5 @@
 {{#if message}}
   {{#bs-alert onDismissed=(action "clearMessage") type=type}}
-    <span>{{message}}</span>
+    {{fa-icon icon}}&nbsp;&nbsp;<span>{{message}}</span>
   {{/bs-alert}}
 {{/if}}
