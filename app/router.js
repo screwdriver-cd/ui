@@ -26,6 +26,9 @@ Router.map(function route() {
   this.route('search');
   this.route('user-settings');
   this.route('validator');
+  this.route('collection', { path: '/collections' }, function collectionsRoute() {
+    this.route('show', { path: '/:collection_id' });
+  });
 });
 /* eslint-enable array-callback-return */
 
