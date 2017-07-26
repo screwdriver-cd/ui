@@ -5,6 +5,11 @@
     margin-top: 10px;
   }
 
+  i.fa {
+    vertical-align: top;
+    font-size: 1.1rem;
+  }
+
   table {
     width: 100%;
     font-weight: 300;
@@ -41,16 +46,7 @@
   }
 
   .new-token {
-    min-height: 20px;
-    border-radius: 3px;
-    margin-bottom: 30px;
-    padding: 10px;
-    border: 2px solid $sd-success;
-
-    & i.fa {
-      font-size: 26px;
-      color: $sd-success;
-    }
+    display: inline-block;
 
     & .new-name {
       font-weight: bold;

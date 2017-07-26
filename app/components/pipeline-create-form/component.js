@@ -1,4 +1,4 @@
-/* global localStorage*/
+/* global localStorage */
 import Ember from 'ember';
 import { parse } from '../../utils/git';
 

@@ -1,16 +1,6 @@
 & {
-  min-height: 20px;
-  border-radius: 3px;
-  margin-bottom: 30px;
-  padding: 10px;
-
   i.fa {
-    font-size: 26px;
-  }
-
-  span {
-    display: inline-block;
-    vertical-align: middle;
+    font-size: 1.1rem;
   }
 
   &.disabled {
@@ -18,24 +8,18 @@
   }
 
   &.error {
-    border: 2px solid $sd-failure;
-
     i.fa {
       color: $sd-failure;
     }
   }
 
   &.warning {
-    border: 2px solid $sd-warning;
-
     i.fa {
       color: $sd-warning;
     }
   }
 
   &.info {
-    border: 2px solid $sd-running;
-
     i.fa {
       color: $sd-running;
     }

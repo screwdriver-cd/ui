@@ -2,7 +2,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
-/* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }]*/
+/* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
 let syncService;
 
@@ -269,6 +269,6 @@ test('it fails to sync the pipeline', function (assert) {
 
   return wait()
     .then(() => {
-      assert.equal(this.$('.info-message span').text().trim(), 'something conflicting');
+      assert.equal(this.$('.alert > span').text().trim(), 'something conflicting');
     });
 });
