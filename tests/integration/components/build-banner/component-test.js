@@ -1,6 +1,7 @@
 import Ember from 'ember';
-import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { moduleForComponent } from 'ember-qunit';
+import test from 'ember-sinon-qunit/test-support/test';
 
 const eventMock = Ember.Object.create({
   id: 'abcd',
@@ -51,7 +52,7 @@ test('it renders', function (assert) {
 
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  this.set('willRender', () => {
+  this.set('reloadCb', () => {
     assert.ok(true);
   });
 
@@ -64,7 +65,7 @@ test('it renders', function (assert) {
     event=eventMock
     isAuthenticated=false
     jobName="PR-671"
-    reloadBuild=(action willRender)
+    reloadBuild=(action reloadCb)
     jobs=jobMock
     eventBuilds=eventMock.builds
   }}`);
@@ -83,10 +84,10 @@ test('it renders', function (assert) {
 });
 
 test('it does not render a restart button for main job when authenticated', function (assert) {
-  assert.expect(1);
-  this.set('willRender', () => {
-    assert.ok(true);
-  });
+  assert.expect(2);
+  const reloadBuildSpy = this.spy();
+
+  this.set('reloadCb', reloadBuildSpy);
   this.set('eventMock', eventMock);
   this.set('jobMock', jobMock);
   this.render(hbs`{{build-banner
@@ -96,19 +97,21 @@ test('it does not render a restart button for main job when authenticated', func
     event=eventMock
     isAuthenticated=true
     jobName="main"
-    reloadBuild=(action willRender)
+    reloadBuild=(action reloadCb)
     jobs=jobMock
     eventBuilds=eventMock.builds
   }}`);
 
   assert.equal(this.$('button').length, 0);
+  assert.notOk(reloadBuildSpy.called);
 });
 
 test('it does not render a restart button for publish job when authenticated', function (assert) {
-  assert.expect(1);
-  this.set('willRender', () => {
-    assert.ok(true);
-  });
+  assert.expect(2);
+
+  const reloadBuildSpy = this.spy();
+
+  this.set('reloadCb', reloadBuildSpy);
   this.set('eventMock', eventMock);
   this.set('jobMock', jobMock);
   this.render(hbs`{{build-banner
@@ -118,26 +121,27 @@ test('it does not render a restart button for publish job when authenticated', f
     event=eventMock
     isAuthenticated=true
     jobName="publish"
-    reloadBuild=(action willRender)
+    reloadBuild=(action reloadCb)
     jobs=jobMock
     eventBuilds=eventMock.builds
   }}`);
 
   assert.equal(this.$('button').length, 0);
+  assert.notOk(reloadBuildSpy.called);
 });
 
 test('it renders a restart button for PR jobs when authenticated', function (assert) {
-  assert.expect(2);
-  this.set('willRender', () => {
-    assert.ok(true);
-  });
+  assert.expect(3);
 
+  const reloadBuildSpy = this.spy();
+
+  this.set('reloadCb', reloadBuildSpy);
   this.set('externalStart', () => {
     assert.ok(true);
   });
-
   this.set('eventMock', eventMock);
   this.set('jobMock', jobMock);
+
   this.render(hbs`{{build-banner
     buildContainer="node:6"
     buildStatus="ABORTED"
@@ -145,13 +149,14 @@ test('it renders a restart button for PR jobs when authenticated', function (ass
     event=eventMock
     isAuthenticated=true
     jobName="PR-671"
-    reloadBuild=(action willRender)
+    reloadBuild=(action reloadCb)
     onStart=(action externalStart)
     jobs=jobMock
     eventBuilds=eventMock.builds
   }}`);
 
   assert.equal(this.$('button').text().trim(), 'Restart');
+  assert.notOk(reloadBuildSpy.called);
   this.$('button').click();
 });
 
