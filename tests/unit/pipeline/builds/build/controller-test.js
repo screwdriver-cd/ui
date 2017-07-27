@@ -86,7 +86,7 @@ test('it stops a build', function (assert) {
 });
 
 test('it reloads a build', function (assert) {
-  assert.expect(2);
+  assert.expect(4);
   let controller = this.subject();
   const build = Ember.Object.create({
     id: '5678',
@@ -104,9 +104,20 @@ test('it reloads a build', function (assert) {
     }
   });
 
+  const event = Ember.Object.create({
+    hasMany: (key) => {
+      assert.equal(key, 'builds');
+
+      return {
+        reload: () => assert.ok(true)
+      };
+    }
+  });
+
   Ember.run(() => {
     controller.set('model', {
-      build
+      build,
+      event
     });
 
     controller.reloadBuild();

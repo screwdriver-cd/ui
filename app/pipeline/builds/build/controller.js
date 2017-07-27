@@ -17,17 +17,22 @@ export default Ember.Controller.extend({
     const status = build.get('status');
 
     // reload again in a little bit if queued
-    if ((status === 'QUEUED' || status === 'RUNNING') && !this.get('loading')) {
-      Ember.run.later(this, () => {
-        if (!build.get('isDeleted') && !this.get('loading')) {
-          this.set('loading', true);
+    if (!this.get('loading')) {
+      if ((status === 'QUEUED' || status === 'RUNNING')) {
+        Ember.run.later(this, () => {
+          if (!build.get('isDeleted') && !this.get('loading')) {
+            this.set('loading', true);
 
-          build.reload().then(() => {
-            this.set('loading', false);
-            Ember.run.once(this, 'reloadBuild');
-          });
-        }
-      }, timeout);
+            build.reload().then(() => {
+              this.set('loading', false);
+              Ember.run.once(this, 'reloadBuild');
+            });
+          }
+        }, timeout);
+      } else {
+        // refetch builds which are part of current event
+        this.get('model.event').hasMany('builds').reload();
+      }
     }
   },
 
