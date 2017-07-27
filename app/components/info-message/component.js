@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   type: 'info',
   actions: {
-    clearMessage: () => {
+    clearMessage: function clearMessage() {
       this.set('message', null);
     }
   }
