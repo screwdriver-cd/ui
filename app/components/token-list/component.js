@@ -5,12 +5,7 @@ export default Ember.Component.extend({
   sortedTokens: Ember.computed.sort('tokens', 'tokenSorting'),
 
   // Error for failed to create/update/remove/refresh token
-  error: null,
-  errorMessage: Ember.computed('error', function errorMessage() {
-    const error = this.get('error');
-
-    return error ? error.errors[0].detail : '';
-  }),
+  errorMessage: null,
 
   // Adding a new token
   isButtonDisabled: Ember.computed('newName', 'isSaving', function isButtonDisabled() {
@@ -30,15 +25,15 @@ export default Ember.Component.extend({
   modalText: null,
 
   // Don't show the "new token" and "error" dialogs at the same time
-  errorObserver: Ember.observer('error', function errorObserver() {
-    if (this.get('error')) {
+  errorObserver: Ember.observer('errorMessage', function errorObserver() {
+    if (this.get('errorMessage')) {
       this.set('newToken', null);
       this.set('isSaving', null);
     }
   }),
   newTokenObserver: Ember.observer('newToken', function newTokenObserver() {
     if (this.get('newToken')) {
-      this.set('error', null);
+      this.set('errorMessage', null);
       this.set('isSaving', null);
     }
   }),
@@ -58,7 +53,7 @@ export default Ember.Component.extend({
           this.set('newName', null);
           this.set('newDescription', null);
         }).catch((error) => {
-          this.set('error', error);
+          this.set('errorMessage', error.errors[0].detail);
         });
     },
     /**
@@ -70,10 +65,10 @@ export default Ember.Component.extend({
     },
     /**
      * Set the error to be displayed from child components
-     * @param {Object} error
+     * @param {String} errorMessage
      */
-    setError(error) {
-      this.set('error', error);
+    setErrorMessage(errorMessage) {
+      this.set('errorMessage', errorMessage);
     },
     /**
      * Show or hide the saving modal from child components
@@ -116,7 +111,7 @@ export default Ember.Component.extend({
           this.set('isSaving', true);
           this.get('onRefreshToken')(this.get('modalTarget.id'))
             .catch((error) => {
-              this.set('error', error);
+              this.set('errorMessage', error.errors[0].detail);
             });
         }
       }

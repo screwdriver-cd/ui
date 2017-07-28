@@ -34,7 +34,7 @@ export default Ember.Component.extend({
             this.get('setIsSaving')(false);
           })
           .catch((error) => {
-            this.get('setError')(error);
+            this.get('setErrorMessage')(error.errors[0].detail);
           });
       }
     },
