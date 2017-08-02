@@ -1,3 +1,10 @@
-{{search-list pipelines=model.pipelines query=model.query}}
+<div class="row">
+  {{collections-flyout
+      class="col-md-2"
+      collections=model.collections
+      onCreateCollection=(action "createCollection")
+  }}
+  {{search-list class="col-md-8" pipelines=model.pipelines query=model.query}}
+</div>
 
 {{outlet}}

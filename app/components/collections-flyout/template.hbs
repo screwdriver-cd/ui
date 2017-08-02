@@ -1,0 +1,35 @@
+<div class="flyout row">
+  <h3 class="header-text">
+    <a class="new" {{action "setModal" true}}>{{fa-icon "plus-circle" title="Create a collection" size="md"}}</a> Collections
+  </h3>
+    {{#each collections as |collection|}}
+      <div class="collection-wrapper row">
+        {{#link-to "collection.show" collection.id}}{{collection.name}}{{/link-to}}
+      </div>
+    {{else}}
+      <p class="no-collections-text">No collections to display.</p>
+    {{/each}}
+  {{#if showModal}}
+    {{#bs-modal onHide=(action "setModal" false) as |modal|}}
+      {{#modal.header}}
+        <h4 class="modal-title">Create a new Collection</h4>
+      {{/modal.header}}
+      {{#modal.body}}
+        {{#bs-form onSubmit=(action "addNewCollection") as |form|}}
+          {{#form.group class="name"}}
+            <label class="control-label">Name</label>
+            <input value={{name}} class="form-control" oninput={{action (mut name) value="target.value"}} type="text">
+          {{/form.group}}
+          {{#form.group class="description"}}
+            <label class="control-label">Description</label>
+            <input value={{description}} class="form-control" oninput={{action (mut description) value="target.value"}} type="text">
+          {{/form.group}}
+        {{/bs-form}}
+      {{/modal.body}}
+      {{#modal.footer as |footer|}}
+        {{#bs-button class="cancel" onClick=(action modal.close) type="danger"}}Cancel{{/bs-button}}
+        {{#bs-button class="create" onClick=(action modal.submit) type="success"}}Create{{/bs-button}}
+      {{/modal.footer}}
+    {{/bs-modal}}
+  {{/if}}
+</div>

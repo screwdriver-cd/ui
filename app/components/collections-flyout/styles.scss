@@ -1,0 +1,31 @@
+& {
+  border-right: 1px solid $sd-text-light;
+  border-bottom: 1px solid $sd-text-light;
+
+  a {
+    cursor: pointer;
+  }
+
+  .flyout {
+    padding: 20px;
+    background-color: #f0f4ff;
+    color: #2b2b2b;
+  }
+
+  .collection-wrapper {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ffffff;
+    position: relative;
+
+    &:hover {
+      background-color: #f7faff;
+      .name {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .no-collections-text {
+    padding: 15px;
+  }
+}
