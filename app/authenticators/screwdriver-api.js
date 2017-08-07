@@ -66,7 +66,7 @@ export default Base.extend({
 
       // check to see if the window has closed
       const interval = setInterval(() => {
-        if (win == null || win.closed) {
+        if (win === null || win.closed) {
           clearInterval(interval);
 
           fetchToken().then(resolve, reject);
