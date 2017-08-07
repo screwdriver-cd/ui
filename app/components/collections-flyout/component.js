@@ -1,8 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  showModal: false,
+  collections: Ember.computed('store', {
+    get() {
+      return this.get('store').findAll('collection');
+    }
+  }),
   errorMessage: null,
+  showModal: false,
+  store: Ember.inject.service(),
   actions: {
     /**
      * Action to create a new collection
@@ -11,11 +17,17 @@ export default Ember.Component.extend({
       const name = this.get('name');
       const description = this.get('description');
 
-      return this.get('onCreateCollection')(name, description)
+      const newCollection = this.get('store').createRecord('collection', {
+        name,
+        description
+      });
+
+      return newCollection.save()
         .then(() => {
           this.set('showModal', false);
         })
         .catch((error) => {
+          newCollection.destroyRecord();
           this.set('errorMessage', error.errors[0].detail);
         });
     },
