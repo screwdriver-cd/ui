@@ -4,7 +4,7 @@
   </h3>
     {{#each collections as |collection|}}
       <div class="collection-wrapper row">
-        {{collection.name}}
+        {{#link-to "dashboard.show" collection.id}}{{collection.name}}{{/link-to}}
       </div>
     {{else}}
       <p class="no-collections-text">No collections to display.</p>
