@@ -3,15 +3,15 @@ import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 
+const mockCollection = {
+  id: 1,
+  name: 'Test',
+  description: 'Test description'
+};
+
 const collectionModel = {
   save() {
-    return new Ember.RSVP.Promise((resolve) => {
-      resolve({
-        id: 1,
-        name: 'Test',
-        description: 'Test description'
-      });
-    });
+    return new Ember.RSVP.Promise((resolve) => resolve(mockCollection));
   },
   destroyRecord() {}
 };
@@ -112,13 +112,7 @@ test('it creates a collection', function (assert) {
       return collectionModel;
     },
     findAll() {
-      return new Ember.RSVP.Promise((resolve) => {
-        resolve([{
-          id: 1,
-          name: 'Test',
-          description: 'Test description'
-        }]);
-      });
+      return new Ember.RSVP.Promise((resolve) => resolve([mockCollection]));
     }
   });
 
@@ -139,15 +133,12 @@ test('it creates a collection', function (assert) {
 
   Ember.run(() => $('.new').click());
 
-  return wait().then(() => {
-    this.set('name', 'Test');
-    this.set('description', 'Test description');
+  this.set('name', 'Test');
+  this.set('description', 'Test description');
 
-    assert.ok(this.get('showModal'));
-    Ember.run(() => $('.create').click());
+  assert.ok(this.get('showModal'));
 
-    return wait().then(() => {
-      assert.notOk(this.get('showModal'));
-    });
-  });
+  Ember.run(() => $('.create').click());
+
+  assert.notOk(this.get('showModal'));
 });
