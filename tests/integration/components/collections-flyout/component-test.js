@@ -11,7 +11,7 @@ const mockCollection = {
 
 const collectionModel = {
   save() {
-    return new Ember.RSVP.Promise((resolve) => resolve(mockCollection));
+    return new Ember.RSVP.Promise(resolve => resolve(mockCollection));
   },
   destroyRecord() {}
 };
@@ -112,7 +112,7 @@ test('it creates a collection', function (assert) {
       return collectionModel;
     },
     findAll() {
-      return new Ember.RSVP.Promise((resolve) => resolve([mockCollection]));
+      return new Ember.RSVP.Promise(resolve => resolve([mockCollection]));
     }
   });
 
