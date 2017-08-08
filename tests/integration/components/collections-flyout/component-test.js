@@ -83,8 +83,8 @@ test('it opens collection create modal', function (assert) {
 
   return wait().then(() => {
     const modalTitle = 'Create a new Collection';
-    const cancelButton = $($('.modal-footer button').get(0));
-    const createButton = $($('.modal-footer button').get(1));
+    const cancelButton = $('.cancel');
+    const createButton = $('.create');
 
     assert.equal(this.get('showModal'), true);
     // Make sure there is only 1 modal
