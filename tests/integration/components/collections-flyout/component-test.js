@@ -98,7 +98,8 @@ test('it opens collection create modal', function (assert) {
 });
 
 test('it creates a collection', function (assert) {
-  assert.expect(3);
+  assert.expect(4);
+
   const $ = this.$;
   const storeStub = Ember.Object.extend({
     createRecord(model, data) {
@@ -125,23 +126,25 @@ test('it creates a collection', function (assert) {
   this.set('showModal', false);
   this.set('name', null);
   this.set('description', null);
-  this.set('storeStub', storeStub);
+
+  this.register('service:store', storeStub);
+  this.inject.service('store');
 
   this.render(hbs`{{collections-flyout
     collections=collections
     showModal=showModal
     name=name
     description=description
-    store=storeStub
   }}`);
 
-  $('.new').click();
+  Ember.run(() => $('.new').click());
 
   return wait().then(() => {
     this.set('name', 'Test');
     this.set('description', 'Test description');
 
-    $('form').get(0).submit();
+    assert.ok(this.get('showModal'));
+    Ember.run(() => $('.create').click());
 
     return wait().then(() => {
       assert.notOk(this.get('showModal'));
