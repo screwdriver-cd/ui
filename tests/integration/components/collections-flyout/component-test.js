@@ -16,27 +16,8 @@ const collectionModel = {
   destroyRecord() {}
 };
 
-const storeStub = Ember.Service.extend({
-  createRecord() {
-    return collectionModel;
-  },
-  findAll() {
-    return new Ember.RSVP.Promise((resolve) => {
-      resolve([{
-        id: 1,
-        name: 'Test',
-        description: 'Test description'
-      }]);
-    });
-  }
-});
-
 moduleForComponent('collections-flyout', 'Integration | Component | collections flyout', {
-  integration: true,
-  beforeEach() {
-    this.register('service:store', storeStub);
-    this.inject.service('store');
-  }
+  integration: true
 });
 
 test('it renders', function (assert) {
@@ -117,19 +98,41 @@ test('it opens collection create modal', function (assert) {
 });
 
 test('it creates a collection', function (assert) {
-  assert.expect(1);
+  assert.expect(3);
   const $ = this.$;
+  const storeStub = Ember.Object.extend({
+    createRecord(model, data) {
+      assert.strictEqual(model, 'collection');
+      assert.deepEqual(data, {
+        name: 'Test',
+        description: 'Test description'
+      });
+
+      return collectionModel;
+    },
+    findAll() {
+      return new Ember.RSVP.Promise((resolve) => {
+        resolve([{
+          id: 1,
+          name: 'Test',
+          description: 'Test description'
+        }]);
+      });
+    }
+  });
 
   this.set('collections', []);
   this.set('showModal', false);
   this.set('name', null);
   this.set('description', null);
+  this.set('storeStub', storeStub);
 
   this.render(hbs`{{collections-flyout
     collections=collections
     showModal=showModal
     name=name
     description=description
+    store=storeStub
   }}`);
 
   $('.new').click();
@@ -138,16 +141,10 @@ test('it creates a collection', function (assert) {
     this.set('name', 'Test');
     this.set('description', 'Test description');
 
-    console.log($('.create'));
-    $('.create').click();
+    $('form').get(0).submit();
 
     return wait().then(() => {
-      // assert.deepEqual(this.get('collections'), [{
-      //   id: 1,
-      //   name: 'Test',
-      //   description: 'Test description'
-      // }]);
-      assert.deepEqual(this.get('collections'), []);
+      assert.notOk(this.get('showModal'));
     });
   });
 });
