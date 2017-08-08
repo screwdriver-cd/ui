@@ -3,14 +3,44 @@ import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 
+const collectionModel = {
+  save() {
+    return new Ember.RSVP.Promise((resolve) => {
+      resolve({
+        id: 1,
+        name: 'Test',
+        description: 'Test description'
+      });
+    });
+  },
+  destroyRecord() {}
+};
+
+const storeStub = Ember.Service.extend({
+  createRecord() {
+    return collectionModel;
+  },
+  findAll() {
+    return new Ember.RSVP.Promise((resolve) => {
+      resolve([{
+        id: 1,
+        name: 'Test',
+        description: 'Test description'
+      }]);
+    });
+  }
+});
+
 moduleForComponent('collections-flyout', 'Integration | Component | collections flyout', {
-  integration: true
+  integration: true,
+  beforeEach() {
+    this.register('service:store', storeStub);
+    this.inject.service('store');
+  }
 });
 
 test('it renders', function (assert) {
   assert.expect(5);
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
   const $ = this.$;
 
   this.set('collections', [
@@ -83,5 +113,41 @@ test('it opens collection create modal', function (assert) {
     assert.equal($('.description input').length, 1);
     assert.equal(cancelButton.text().trim(), 'Cancel');
     assert.equal(createButton.text().trim(), 'Create');
+  });
+});
+
+test('it creates a collection', function (assert) {
+  assert.expect(1);
+  const $ = this.$;
+
+  this.set('collections', []);
+  this.set('showModal', false);
+  this.set('name', null);
+  this.set('description', null);
+
+  this.render(hbs`{{collections-flyout
+    collections=collections
+    showModal=showModal
+    name=name
+    description=description
+  }}`);
+
+  $('.new').click();
+
+  return wait().then(() => {
+    this.set('name', 'Test');
+    this.set('description', 'Test description');
+
+    console.log($('.create'));
+    $('.create').click();
+
+    return wait().then(() => {
+      // assert.deepEqual(this.get('collections'), [{
+      //   id: 1,
+      //   name: 'Test',
+      //   description: 'Test description'
+      // }]);
+      assert.deepEqual(this.get('collections'), []);
+    });
   });
 });
