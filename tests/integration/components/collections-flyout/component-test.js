@@ -131,14 +131,14 @@ test('it creates a collection', function (assert) {
     description=description
   }}`);
 
-  Ember.run(() => $('.new').click());
+  $('.new').click();
 
   this.set('name', 'Test');
   this.set('description', 'Test description');
 
   assert.ok(this.get('showModal'));
 
-  Ember.run(() => $('.create').click());
+  $('.create').click();
 
   assert.notOk(this.get('showModal'));
 });
