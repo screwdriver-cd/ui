@@ -3,14 +3,25 @@ import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 
+const mockCollection = {
+  id: 1,
+  name: 'Test',
+  description: 'Test description'
+};
+
+const collectionModel = {
+  save() {
+    return new Ember.RSVP.Promise(resolve => resolve(mockCollection));
+  },
+  destroyRecord() {}
+};
+
 moduleForComponent('collections-flyout', 'Integration | Component | collections flyout', {
   integration: true
 });
 
 test('it renders', function (assert) {
   assert.expect(5);
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
   const $ = this.$;
 
   this.set('collections', [
@@ -72,8 +83,8 @@ test('it opens collection create modal', function (assert) {
 
   return wait().then(() => {
     const modalTitle = 'Create a new Collection';
-    const cancelButton = $($('.modal-footer button').get(0));
-    const createButton = $($('.modal-footer button').get(1));
+    const cancelButton = $('.cancel');
+    const createButton = $('.create');
 
     assert.equal(this.get('showModal'), true);
     // Make sure there is only 1 modal
@@ -84,4 +95,50 @@ test('it opens collection create modal', function (assert) {
     assert.equal(cancelButton.text().trim(), 'Cancel');
     assert.equal(createButton.text().trim(), 'Create');
   });
+});
+
+test('it creates a collection', function (assert) {
+  assert.expect(4);
+
+  const $ = this.$;
+  const storeStub = Ember.Object.extend({
+    createRecord(model, data) {
+      assert.strictEqual(model, 'collection');
+      assert.deepEqual(data, {
+        name: 'Test',
+        description: 'Test description'
+      });
+
+      return collectionModel;
+    },
+    findAll() {
+      return new Ember.RSVP.Promise(resolve => resolve([mockCollection]));
+    }
+  });
+
+  this.set('collections', []);
+  this.set('showModal', false);
+  this.set('name', null);
+  this.set('description', null);
+
+  this.register('service:store', storeStub);
+  this.inject.service('store');
+
+  this.render(hbs`{{collections-flyout
+    collections=collections
+    showModal=showModal
+    name=name
+    description=description
+  }}`);
+
+  $('.new').click();
+
+  this.set('name', 'Test');
+  this.set('description', 'Test description');
+
+  assert.ok(this.get('showModal'));
+
+  $('.create').click();
+
+  assert.notOk(this.get('showModal'));
 });
