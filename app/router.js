@@ -26,6 +26,10 @@ Router.map(function route() {
   this.route('search');
   this.route('user-settings');
   this.route('validator');
+
+  this.route('dashboard', { path: '/dashboards/' }, function dashboardsRoute() {
+    this.route('show', { path: '/:collection_id' });
+  });
 });
 /* eslint-enable array-callback-return */
 

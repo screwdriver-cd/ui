@@ -1,0 +1,28 @@
+<div>
+  <div class="header">
+    <h2>{{collection.name}}</h2>
+    {{#if collection.description}}
+      <p>{{collection.description}}</p>
+    {{/if}}
+  </div>
+  <div class="collection-table row">
+    <table class="col-md-10">
+      <thead>
+        <tr>
+          <th class="app-id">Name</th>
+          <th class="branch">Branch</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each collection.pipelines as |pipeline|}}
+          <tr>
+            <td class="app-id">
+              {{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.scmRepo.name}}{{/link-to}}{{/highlight-terms}}
+            </td>
+            <td class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.scmRepo.branch}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>

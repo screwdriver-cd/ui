@@ -1,0 +1,51 @@
+& {
+  .header {
+    color: $sd-text;
+    padding: 0 25px;
+  }
+
+  a {
+    display: block;
+    text-decoration: none;
+    color: $sd-link;
+  }
+
+  .name {
+    text-align: left;
+    width: 60%;
+  }
+
+  .branch {
+    width: 35%;
+    text-align: right;
+  }
+
+  tbody tr:hover {
+    background-color: $sd-separator;
+    .name {
+      text-decoration: underline;
+    }
+  }
+
+  th {
+    font-size: 0.9em;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: $sd-text-med;
+  }
+
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid $sd-text-light;
+  }
+
+  .collection-table {
+    padding: 25px;
+  }
+}
+
+@media (max-width: 47.999em) {
+  & {
+    width: 100%;
+  }
+}

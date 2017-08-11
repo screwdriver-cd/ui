@@ -1,6 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 
-moduleFor('route:home', 'Unit | Route | home', {
+moduleFor('route:dashboard/show', 'Unit | Route | dashboard/show', {
   // Specify the other units that are required for this test.
   needs: ['service:session']
 });
