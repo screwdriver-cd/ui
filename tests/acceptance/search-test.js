@@ -48,6 +48,19 @@ moduleForAcceptance('Acceptance | search', {
         }
       ])
     ]);
+
+    server.get('http://localhost:8080/v4/collections', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([
+        {
+          id: '1',
+          name: 'collection1',
+          description: 'description1',
+          pipelineIds: [1, 2, 3]
+        }
+      ])
+    ]);
   },
   afterEach() {
     server.shutdown();

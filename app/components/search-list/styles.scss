@@ -46,6 +46,23 @@
     padding: 10px;
     border-bottom: 1px solid $sd-text-light;
   }
+
+  .add-to-collection {
+    border: none;
+  }
+
+  .dropdown-menu > li > span {
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px;
+    width: 100%;
+
+    &:hover {
+      background-color: $sd-highlight;
+      color: $sd-text;
+      opacity: 1;
+    }
+  }
 }
 
 @media (max-width: 47.999em) {
