@@ -1,3 +1,9 @@
+{{#if addCollectionError}}
+  {{info-message message=addCollectionError type="warning" icon="exclamation-triangle"}}
+{{/if}}
+{{#if addCollectionSuccess}}
+  {{info-message message=addCollectionSuccess type="success" icon="check"}}
+{{/if}}
 <div class="num-results">
   {{if isEmpty "No Results" (concat "Found " filteredPipelines.length " result(s)")}}
 </div>
@@ -6,6 +12,7 @@
     <tr>
       <th class="appId">Name</th>
       <th class="branch">Branch</th>
+      <th class="add">Add to Collection</th>
     </tr>
   </thead>
   <tbody>
@@ -13,6 +20,22 @@
     <tr>
       <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
       <td class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.branch}}</td>
+      <td class="add">
+        {{#bs-dropdown as |dd|}}
+          {{#dd.button class="add-to-collection"}}
+            {{fa-icon "plus" title="Add to collection" size="sm"}}
+          {{/dd.button}}
+          {{#dd.menu align="right" as |menu|}}
+            {{#each collections as |collection|}}
+              {{#menu.item}}
+                <span onclick={{action "addToCollection" pipeline.id collection}}>
+                  {{collection.name}}
+                </span>
+              {{/menu.item}}
+            {{/each}}
+          {{/dd.menu}}
+        {{/bs-dropdown}}
+      </td>
     </tr>
     {{/each}}
   </tbody>

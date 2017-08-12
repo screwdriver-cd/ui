@@ -12,6 +12,7 @@ export default Ember.Route.extend({
   model(params) {
     return {
       pipelines: this.store.findAll('pipeline'),
+      collections: this.store.findAll('collection'),
       query: params.query
     };
   }

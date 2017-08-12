@@ -1,3 +1,12 @@
-{{search-list pipelines=model.pipelines query=model.query}}
+<div class="row">
+  {{collections-flyout class="col-md-2"}}
+  {{search-list
+    pipelines=model.pipelines
+    collections=model.collections
+    onAddToCollection=(action "addToCollection")
+    query=model.query
+    class="col-md-10"
+  }}
+</div>
 
 {{outlet}}
