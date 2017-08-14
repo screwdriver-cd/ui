@@ -23,9 +23,32 @@
         text-decoration: underline;
       }
     }
+
+    &.row--active {
+      background-color: $sd-flyout-hover;
+      a {
+        &::before {
+          background-color: $sd-active-hl;
+          content: '';
+          height: 100%;
+          position: absolute;
+          left: -5px;
+          top: 0;
+          width: 5px;
+        }
+      }
+    }
   }
 
   .no-collections-text {
     padding: 15px;
   }
 }
+
+// match with bootstrap min-width: for .col-md-2
+@media (min-width: 992px) {
+  .flyout {
+    min-height: calc(100vh - 56px);
+  }
+}
+

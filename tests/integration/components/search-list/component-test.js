@@ -2,12 +2,55 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 
+import injectSessionStub from '../../../helpers/inject-session';
+
 moduleForComponent('search-list', 'Integration | Component | search list', {
   integration: true
 });
 
-test('it renders', function (assert) {
+test('it renders without collections', function (assert) {
   const $ = this.$;
+
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
+  const pipelines = [
+    Ember.Object.create({
+      id: 1,
+      appId: 'foo/bar',
+      branch: 'master'
+    }),
+    Ember.Object.create({
+      id: 2,
+      appId: 'batman/tumbler',
+      branch: 'waynecorp'
+    })
+  ];
+  const collections = [
+    Ember.Object.create({
+      id: 1,
+      name: 'collection1',
+      description: 'description1',
+      pipelineIds: [1, 2, 3]
+    })
+  ];
+
+  this.set('pipelineList', pipelines);
+  this.set('collections', collections);
+
+  this.render(hbs`{{search-list pipelines=pipelineList collections=collections}}`);
+
+  assert.equal($($('td.appId').get(0)).text().trim(), 'batman/tumbler');
+  assert.equal($($('td.branch').get(0)).text().trim(), 'waynecorp');
+  assert.equal($($('td.appId').get(1)).text().trim(), 'foo/bar');
+  assert.equal($($('td.branch').get(1)).text().trim(), 'master');
+  assert.equal($('.add-to-collection').length, 0);
+});
+
+test('it renders with collections', function (assert) {
+  const $ = this.$;
+
+  injectSessionStub(this);
+
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelines = [
@@ -137,6 +180,8 @@ test('it filters the list by multiple advanced search queries', function (assert
 test('it adds a pipeline to a collection', function (assert) {
   assert.expect(3);
 
+  injectSessionStub(this);
+
   const $ = this.$;
   const pipelines = [
     Ember.Object.create({
@@ -196,6 +241,8 @@ test('it adds a pipeline to a collection', function (assert) {
 
 test('it fails to add a pipeline to a collection', function (assert) {
   assert.expect(1);
+
+  injectSessionStub(this);
 
   const $ = this.$;
   const pipelines = [

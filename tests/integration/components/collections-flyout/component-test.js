@@ -2,11 +2,13 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
+import injectSessionStub from '../../../helpers/inject-session';
 
 const mockCollection = {
   id: 1,
   name: 'Test',
-  description: 'Test description'
+  description: 'Test description',
+  get: name => name
 };
 
 const collectionModel = {
@@ -23,6 +25,8 @@ moduleForComponent('collections-flyout', 'Integration | Component | collections 
 test('it renders', function (assert) {
   assert.expect(5);
   const $ = this.$;
+
+  injectSessionStub(this);
 
   this.set('collections', [
     Ember.Object.create({
@@ -71,6 +75,8 @@ test('it opens collection create modal', function (assert) {
   assert.expect(9);
   const $ = this.$;
 
+  injectSessionStub(this);
+
   this.set('collections', []);
   this.set('showModal', false);
 
@@ -99,6 +105,8 @@ test('it opens collection create modal', function (assert) {
 
 test('it creates a collection', function (assert) {
   assert.expect(4);
+
+  injectSessionStub(this);
 
   const $ = this.$;
   const storeStub = Ember.Object.extend({
@@ -141,4 +149,27 @@ test('it creates a collection', function (assert) {
   $('.create').click();
 
   assert.notOk(this.get('showModal'));
+});
+
+test('it renders an active collection', function (assert) {
+  assert.expect(4);
+  const $ = this.$;
+
+  const storeStub = Ember.Object.extend({
+    findAll() {
+      return new Ember.RSVP.Promise(resolve => resolve([mockCollection]));
+    }
+  });
+
+  this.register('service:store', storeStub);
+  this.inject.service('store');
+
+  this.set('selectedCollectionId', 1);
+
+  this.render(hbs`{{collections-flyout selectedCollectionId=selectedCollectionId}}`);
+
+  assert.equal($('.header-text').text().trim(), 'Collections');
+  assert.notOk($('.header-text a i').length);
+  assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'name');
+  assert.equal($('.collection-wrapper.row--active').length, 1);
 });
