@@ -22,7 +22,7 @@
           {{#if errorMessage}}
             {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
           {{/if}}
-          {{#bs-form onSubmit=(action "addNewCollection") as |form|}}
+          {{#bs-form class="collection-form" onSubmit=(action "addNewCollection") as |form|}}
             {{#form.group class="name"}}
               <label class="control-label">Name</label>
               <input value={{name}} class="form-control" oninput={{action (mut name) value="target.value"}} type="text">
@@ -32,8 +32,8 @@
               <input value={{description}} class="form-control" oninput={{action (mut description) value="target.value"}} type="text">
             {{/form.group}}
             {{#form.group class="footer"}}
-            {{#bs-button class="cancel" onClick=(action modal.close) type="danger"}}Cancel{{/bs-button}}
-            {{#bs-button buttonType="submit" class="create" type="success"}}Create{{/bs-button}}
+            {{#bs-button class="collection-form__cancel" onClick=(action modal.close) type="danger"}}Cancel{{/bs-button}}
+            {{#bs-button buttonType="submit" class="collection-form__create" type="success"}}Create{{/bs-button}}
             {{/form.group}}
           {{/bs-form}}
         {{/modal.body}}

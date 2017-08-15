@@ -89,8 +89,8 @@ test('it opens collection create modal', function (assert) {
 
   return wait().then(() => {
     const modalTitle = 'Create a new Collection';
-    const cancelButton = $('.cancel');
-    const createButton = $('.create');
+    const cancelButton = $('.collection-form__cancel');
+    const createButton = $('.collection-form__create');
 
     assert.equal(this.get('showModal'), true);
     // Make sure there is only 1 modal
@@ -146,7 +146,7 @@ test('it creates a collection', function (assert) {
 
   assert.ok(this.get('showModal'));
 
-  $('.create').click();
+  $('.collection-form__create').click();
 
   assert.notOk(this.get('showModal'));
 });
@@ -172,4 +172,71 @@ test('it renders an active collection', function (assert) {
   assert.notOk($('.header-text a i').length);
   assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'name');
   assert.equal($('.collection-wrapper.row--active').length, 1);
+});
+
+test('it fails to create a collection', function (assert) {
+  assert.expect(3);
+
+  injectSessionStub(this);
+
+  const $ = this.$;
+  const model = {
+    save() {
+      return new Ember.RSVP.Promise((resolve, reject) => reject({
+        errors: [{
+          detail: 'This is an error message'
+        }]
+      }));
+    },
+    destroyRecord() {}
+  };
+  const storeStub = Ember.Object.extend({
+    createRecord() {
+      return model;
+    }
+  });
+
+  this.set('collections', []);
+  this.set('showModal', false);
+  this.set('errorMessage', null);
+  this.set('name', null);
+  this.set('description', null);
+
+  this.register('service:store', storeStub);
+  this.inject.service('store');
+
+  this.render(hbs`{{collections-flyout
+    collections=collections
+    showModal=showModal
+    name=name
+    description=description
+  }}`);
+
+  $('.new').click();
+
+  this.set('name', 'Test');
+  this.set('description', 'Test description');
+
+  assert.ok(this.get('showModal'));
+  $('.collection-form__create').click();
+  // Modal should remain open because of error
+  assert.ok(this.get('showModal'));
+  assert.strictEqual($('.alert-warning > span').text().trim(),
+    'This is an error message');
+});
+
+test('it cancels creation of a collection', function (assert) {
+  const $ = this.$;
+
+  injectSessionStub(this);
+
+  this.set('collections', []);
+  this.set('showModal', false);
+
+  this.render(hbs`{{collections-flyout collections=collections showModal=showModal}}`);
+
+  $('.new').click();
+  assert.ok(this.get('showModal'));
+  $('.collection-form__cancel').click();
+  assert.notOk(this.get('showModal'));
 });
