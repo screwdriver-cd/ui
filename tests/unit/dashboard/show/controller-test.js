@@ -1,12 +1,13 @@
 import { moduleFor, test } from 'ember-qunit';
 import Ember from 'ember';
-import injectSessionStub from '../../helpers/inject-session';
+import injectSessionStub from '../../../helpers/inject-session';
 
-moduleFor('controller:search', 'Unit | Controller | search', {
+moduleFor('controller:dashboard/show', 'Unit | Controller | dashboard/show', {
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
 });
 
+// Replace this with your real tests.
 test('it exists', function (assert) {
   injectSessionStub(this);
   const controller = this.subject();
@@ -14,10 +15,10 @@ test('it exists', function (assert) {
   assert.ok(controller);
 });
 
-test('it calls addToCollection', function (assert) {
+test('it calls removePipeline', function (assert) {
   injectSessionStub(this);
   const controller = this.subject();
-  let pipelineIds = [1, 2];
+  let pipelineIds = [1, 2, 3];
 
   const collectionModelMock = {
     id: 1,
@@ -27,23 +28,23 @@ test('it calls addToCollection', function (assert) {
     get(field) {
       assert.strictEqual(field, 'pipelineIds');
 
-      // The collection currently has pipelineIds 1 and 2
+      // The collections currently has pipelineIds 1, 2 and 3
       return pipelineIds;
     },
     set(field, value) {
       assert.strictEqual(field, 'pipelineIds');
-      assert.deepEqual(value, [1, 2, 3]);
+      assert.deepEqual(value, [1, 2]);
 
       pipelineIds = value;
     },
     save() {
-      assert.deepEqual(pipelineIds, [1, 2, 3]);
+      assert.deepEqual(pipelineIds, [1, 2]);
 
       return Ember.RSVP.resolve({
         id: 1,
         name: 'collection1',
         description: 'description1',
-        pipelineIds: [1, 2, 3]
+        pipelineIds: [1, 2]
       });
     }
   };
@@ -57,6 +58,6 @@ test('it calls addToCollection', function (assert) {
     }
   });
 
-  // Add pipeline with id 3 to collection with id 1
-  controller.send('addToCollection', 3, 1);
+  // Remove pipeline with id 3 from collection with id 1
+  controller.send('removePipeline', 3, 1);
 });
