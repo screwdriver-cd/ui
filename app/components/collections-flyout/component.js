@@ -1,13 +1,27 @@
 import Ember from 'ember';
+import DS from 'ember-data';
+
+const formatCollection = (collection, currentCollectionId) => ({
+  id: collection.get('id'),
+  name: collection.get('name'),
+  current: collection.id === currentCollectionId
+});
 
 export default Ember.Component.extend({
-  collections: Ember.computed('store', {
-    get() {
-      return this.get('store').findAll('collection');
-    }
+  collections: Ember.computed('storeCollections.[]', 'selectedCollectionId', function () {
+    let currentCollectionId = this.get('selectedCollectionId');
+
+    return DS.PromiseArray.create({
+      promise: this.get('storeCollections').then(collections =>
+        collections.map(collection => formatCollection(collection, currentCollectionId)))
+    });
+  }),
+  storeCollections: Ember.computed('store', function () {
+    return this.get('store').findAll('collection');
   }),
   errorMessage: null,
   showModal: false,
+  session: Ember.inject.service(),
   store: Ember.inject.service(),
   actions: {
     /**

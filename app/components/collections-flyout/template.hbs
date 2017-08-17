@@ -1,9 +1,13 @@
 <div class="flyout row">
   <h3 class="header-text">
+    {{#if session.isAuthenticated}}
     <a class="new" {{action "setModal" true}}>{{fa-icon "plus-circle" title="Create a collection" size="md"}}</a> Collections
+    {{else}}
+    Collections
+    {{/if}}
   </h3>
     {{#each collections as |collection|}}
-      <div class="collection-wrapper row">
+      <div class="collection-wrapper row{{if collection.current ' row--active'}}">
         {{#link-to "dashboard.show" collection.id}}{{collection.name}}{{/link-to}}
       </div>
     {{else}}

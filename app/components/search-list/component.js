@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  session: Ember.inject.service(),
   pipelineSorting: ['appId', 'branch'],
   sortedPipelines: Ember.computed.sort('pipelines', 'pipelineSorting'),
   filterSet: Ember.computed('query', {

@@ -1,12 +1,21 @@
 <div class="row">
-  {{collections-flyout class="col-md-2"}}
-  {{search-list
-    pipelines=model.pipelines
-    collections=model.collections
-    onAddToCollection=(action "addToCollection")
-    query=model.query
-    class="col-md-10"
-  }}
+  {{#if session.isAuthenticated}}
+    {{collections-flyout class="col-md-2"}}
+    {{search-list
+      pipelines=model.pipelines
+      collections=model.collections
+      onAddToCollection=(action "addToCollection")
+      query=model.query
+      class="col-md-10"
+    }}
+  {{else}}
+    {{search-list
+      pipelines=model.pipelines
+      collections=model.collections
+      onAddToCollection=(action "addToCollection")
+      query=model.query
+    }}
+  {{/if}}
 </div>
 
 {{outlet}}

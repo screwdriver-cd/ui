@@ -1,5 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 import Ember from 'ember';
+import injectSessionStub from '../../helpers/inject-session';
 
 moduleFor('controller:search', 'Unit | Controller | search', {
   // Specify the other units that are required for this test.
@@ -7,12 +8,14 @@ moduleFor('controller:search', 'Unit | Controller | search', {
 });
 
 test('it exists', function (assert) {
+  injectSessionStub(this);
   const controller = this.subject();
 
   assert.ok(controller);
 });
 
 test('it calls addToCollection', function (assert) {
+  injectSessionStub(this);
   const controller = this.subject();
   let pipelineIds = [1, 2];
 
