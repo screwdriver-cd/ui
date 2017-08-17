@@ -7,6 +7,11 @@
 <p>
   Clicking this button will open a new window with your SCM provider.
 </p>
+
+{{#each contexts as |context|}}
+<a href="#authenticate"{{action "authenticate" context.context}}>{{fa-icon "fa-sign-in"}} Login with {{context.displayName}}</a>
+{{else}}
 <a href="#authenticate"{{action "authenticate"}}>{{fa-icon "fa-sign-in"}} Login with SCM Provider</a>
+{{/each}}
 
 {{yield}}

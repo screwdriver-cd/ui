@@ -3,7 +3,7 @@ import Base from 'ember-simple-auth/authenticators/base';
 // eslint-disable-next-line camelcase
 import { jwt_decode } from 'ember-cli-jwt-decode';
 import ENV from 'screwdriver-ui/config/environment';
-const loginUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/login/web`;
+const loginUrlBase = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/login`;
 const tokenUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/token`;
 const logoutUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/logout`;
 
@@ -56,12 +56,20 @@ export default Base.extend({
   /**
    * Authenticates with resource
    * @method authenticate
+   * @param  {String}  [scmContext]    scmContext of the user
    * @return {Promise}
    */
-  authenticate() {
+  authenticate(scmContext) {
     return new Ember.RSVP.Promise((resolve, reject) => {
+      let url = [loginUrlBase];
+
+      if (scmContext) {
+        url.push(scmContext);
+      }
+      url.push('web');
+
       // Open a window for github auth flow
-      const win = window.open(loginUrl, 'SDAuth',
+      const win = window.open(url.join('/'), 'SDAuth',
         'width=1024,height=768,resizable,alwaysRaised');
 
       // check to see if the window has closed
