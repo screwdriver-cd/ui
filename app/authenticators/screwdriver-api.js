@@ -56,6 +56,7 @@ export default Base.extend({
   /**
    * Authenticates with resource
    * @method authenticate
+   * @param  {String}  [scmContext]    scmContext of the user
    * @return {Promise}
    */
   authenticate(scmContext) {
