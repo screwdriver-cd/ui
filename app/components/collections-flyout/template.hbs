@@ -1,19 +1,49 @@
 <div class="flyout row">
-  <h3 class="header-text">
+  <div class="header row">
     {{#if session.isAuthenticated}}
-    <a class="new" {{action "setModal" true}}>{{fa-icon "plus-circle" title="Create a collection" size="md"}}</a> Collections
+      <h2 class="header__text col-xs-9">
+        <a class="new" {{action "setModal" true}}>{{fa-icon "plus-circle" title="Create a collection" size="md"}}</a> Collections
+      </h2>
+      <a onclick={{action "toggleEdit"}} class="header__edit col-xs-3">Edit</a>
     {{else}}
-    Collections
+      <h2 class="header__text col-xs-12">
+        Collections
+      </h2>
     {{/if}}
-  </h3>
+  </div>
     {{#each collections as |collection|}}
       <div class="collection-wrapper row{{if collection.current ' row--active'}}">
-        {{#link-to "dashboard.show" collection.id}}{{collection.name}}{{/link-to}}
+        {{#link-to "dashboard.show" collection.id}}
+          {{collection.name}}
+        {{/link-to}}
+        {{#if showDeleteButtons}}
+          <button
+            class="collection-wrapper__delete"
+            onclick={{action "setCollectionToDelete" collection}}
+          >
+            {{fa-icon "trash" title="Delete collection" size="md"}}
+          </button>
+        {{/if}}
       </div>
     {{else}}
       <p class="no-collections-text">No collections to display.</p>
     {{/each}}
+    {{#if collectionToDelete}}
+      {{!-- Confirmation modal for deleting a collection --}}
+      {{#bs-modal-simple
+        title="Please confirm"
+        closeTitle="Cancel"
+        submitTitle="Confirm"
+        size=null
+        fade=false
+        onSubmit=(action "deleteCollection" collectionToDelete)
+        onHide=(action "cancelDeletingCollection")
+      }}
+        You're about to delete {{collectionToDelete.name}}. Are you sure?
+      {{/bs-modal-simple}}
+    {{/if}}
     {{#if showModal}}
+      {{!-- Modal to create a collection --}}
       {{#bs-modal onHide=(action "setModal" false) as |modal|}}
         {{#modal.header}}
           <h4 class="modal-title">Create a new Collection</h4>

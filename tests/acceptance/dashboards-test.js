@@ -106,8 +106,8 @@ test('visiting / when logged in and have collections', function (assert) {
 
   andThen(() => {
     assert.equal(currentURL(), '/dashboards/1');
-    assert.equal(find('.header h2').text().trim(), 'collection1');
-    assert.equal(find('.header p').text().trim(), 'description1');
+    assert.equal(find('.header__name').text().trim(), 'collection1');
+    assert.equal(find('.header__description').text().trim(), 'description1');
     assert.equal(find('table').length, 1);
     assert.equal(find('th.app-id').text().trim(), 'Name');
     assert.equal(find('th.branch').text().trim(), 'Branch');
@@ -140,8 +140,8 @@ test('visiting /dashboards/1', function (assert) {
 
   andThen(function () {
     assert.equal(currentURL(), '/dashboards/1');
-    assert.equal(find('.header h2').text().trim(), 'collection1');
-    assert.equal(find('.header p').text().trim(), 'description1');
+    assert.equal(find('.header__name').text().trim(), 'collection1');
+    assert.equal(find('.header__description').text().trim(), 'description1');
     assert.equal(find('table').length, 1);
     assert.equal(find('th.app-id').text().trim(), 'Name');
     assert.equal(find('th.branch').text().trim(), 'Branch');
