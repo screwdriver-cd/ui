@@ -112,7 +112,7 @@ test('visiting / when logged in and have collections', function (assert) {
     assert.equal(find('th.app-id').text().trim(), 'Name');
     assert.equal(find('th.branch').text().trim(), 'Branch');
     assert.equal(find('tr').length, 3);
-    assert.equal(find('td').length, 4);
+    assert.equal(find('td').length, 6);
   });
 });
 
@@ -146,7 +146,7 @@ test('visiting /dashboards/1', function (assert) {
     assert.equal(find('th.app-id').text().trim(), 'Name');
     assert.equal(find('th.branch').text().trim(), 'Branch');
     assert.equal(find('tr').length, 3);
-    assert.equal(find('td').length, 4);
+    assert.equal(find('td').length, 6);
   });
 });
 

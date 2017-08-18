@@ -1,4 +1,7 @@
 <div>
+  {{#if removePipelineError}}
+    {{info-message message=removePipelineError type="warning" icon="exclamation-triangle"}}
+  {{/if}}
   <div class="header">
     <h2>{{collection.name}}</h2>
     {{#if collection.description}}
@@ -11,15 +14,25 @@
         <tr>
           <th class="app-id">Name</th>
           <th class="branch">Branch</th>
+          {{#if session.isAuthenticated}}
+            <th></th>
+          {{/if}}
         </tr>
       </thead>
       <tbody>
         {{#each collection.pipelines as |pipeline|}}
-          <tr>
+          <tr class="collection-pipeline">
             <td class="app-id">
               {{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.scmRepo.name}}{{/link-to}}{{/highlight-terms}}
             </td>
             <td class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.scmRepo.branch}}</td>
+            {{#if session.isAuthenticated}}
+              <td onclick={{action "pipelineRemove" pipeline.id collection.id}} class="collection-pipeline__remove">
+                <span>
+                  &times;
+                </span>
+              </td>
+            {{/if}}
           </tr>
         {{/each}}
       </tbody>

@@ -42,6 +42,17 @@
   .collection-table {
     padding: 25px;
   }
+
+  .collection-pipeline__remove {
+    opacity: 0;
+    cursor: pointer;
+    font-size: 1.5em;
+  }
+
+  // When collection-pipeline is hovered on, show remove button
+  .collection-pipeline:hover .collection-pipeline__remove {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 47.999em) {
