@@ -51,8 +51,8 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{collections-flyout collections=collections}}`);
 
-  assert.equal($('.header-text').text().trim(), 'Collections');
-  assert.equal($('.header-text a i').attr('class'), 'fa fa-plus-circle fa-mdx ember-view');
+  assert.equal($('.header__text').text().trim(), 'Collections');
+  assert.equal($('.header__text a i').attr('class'), 'fa fa-plus-circle fa-mdx ember-view');
   assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'collection1');
   assert.equal($($('.collection-wrapper a').get(1)).text().trim(), 'collection2');
   assert.equal($($('.collection-wrapper a').get(2)).text().trim(), 'collection3');
@@ -168,8 +168,8 @@ test('it renders an active collection', function (assert) {
 
   this.render(hbs`{{collections-flyout selectedCollectionId=selectedCollectionId}}`);
 
-  assert.equal($('.header-text').text().trim(), 'Collections');
-  assert.notOk($('.header-text a i').length);
+  assert.equal($('.header__text').text().trim(), 'Collections');
+  assert.notOk($('.header__text a i').length);
   assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'name');
   assert.equal($('.collection-wrapper.row--active').length, 1);
 });
@@ -239,4 +239,74 @@ test('it cancels creation of a collection', function (assert) {
   assert.ok(this.get('showModal'));
   $('.collection-form__cancel').click();
   assert.notOk(this.get('showModal'));
+});
+
+test('it deletes a collection', function (assert) {
+  assert.expect(7);
+
+  injectSessionStub(this);
+
+  const $ = this.$;
+  const collectionModelMock = {
+    destroyRecord() {
+      // Dummy assert to make sure this function gets called
+      assert.ok(true);
+
+      return new Ember.RSVP.Promise(resolve => resolve());
+    }
+  };
+  const storeStub = Ember.Object.extend({
+    findRecord() {
+      return new Ember.RSVP.Promise(resolve => resolve(collectionModelMock));
+    },
+    findAll() {
+      return new Ember.RSVP.Promise(resolve => resolve([mockCollection]));
+    }
+  });
+
+  this.set('collections', [
+    Ember.Object.create({
+      id: 1,
+      name: 'collection1',
+      description: 'description1',
+      pipelineIds: [1, 2, 3]
+    }),
+    Ember.Object.create({
+      id: 2,
+      name: 'collection2',
+      description: 'description2',
+      pipelineIds: [4, 5, 6]
+    }),
+    Ember.Object.create({
+      id: 3,
+      name: 'collection3',
+      description: 'description3',
+      pipelineIds: [7, 8, 9]
+    })
+  ]);
+  this.set('showModal', false);
+  this.set('name', null);
+  this.set('description', null);
+
+  this.register('service:store', storeStub);
+  this.inject.service('store');
+
+  this.render(hbs`{{collections-flyout
+    collections=collections
+    showModal=showModal
+    name=name
+    description=description
+  }}`);
+
+  assert.ok($('.header__edit').length);
+  // Make sure delete buttons aren't shown
+  assert.notOk($('.collection-wrapper__delete').length);
+  $('.header__edit').click();
+  // Delete buttons should be visible
+  assert.strictEqual($('.collection-wrapper__delete').length, 3);
+  assert.notOk($('.modal').length);
+  $($('.collection-wrapper__delete').get(0)).click();
+  assert.strictEqual($('.modal').length, 1);
+  assert.equal($('.modal-title').text().trim(), 'Please confirm');
+  $('.modal-footer> .btn-primary').click();
 });

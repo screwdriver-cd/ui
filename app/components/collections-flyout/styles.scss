@@ -37,10 +37,31 @@
         }
       }
     }
+
+    &__delete {
+      position: absolute;
+      right: 10px;
+      border: none;
+      background: none;
+    }
   }
 
   .no-collections-text {
     padding: 15px;
+  }
+
+  .header {
+    &__text {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+
+    &__edit {
+      font-size: 0.9em;
+      text-decoration: none;
+      font-weight: 400;
+      margin-top: 25px;
+    }
   }
 }
 

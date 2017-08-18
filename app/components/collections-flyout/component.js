@@ -8,18 +8,25 @@ const formatCollection = (collection, currentCollectionId) => ({
 });
 
 export default Ember.Component.extend({
-  collections: Ember.computed('storeCollections.[]', 'selectedCollectionId', function () {
-    let currentCollectionId = this.get('selectedCollectionId');
+  collections: Ember.computed('storeCollections.[]', 'selectedCollectionId', {
+    get() {
+      let currentCollectionId = this.get('selectedCollectionId');
 
-    return DS.PromiseArray.create({
-      promise: this.get('storeCollections').then(collections =>
-        collections.map(collection => formatCollection(collection, currentCollectionId)))
-    });
+      return DS.PromiseArray.create({
+        promise: this.get('storeCollections').then(collections =>
+          collections.map(collection => formatCollection(collection, currentCollectionId)))
+      });
+    }
   }),
-  storeCollections: Ember.computed('store', function () {
-    return this.get('store').findAll('collection');
+  storeCollections: Ember.computed('store', {
+    get() {
+      return this.get('store').findAll('collection');
+    }
   }),
+  collectionToDelete: null,
   errorMessage: null,
+  showConfirmation: false,
+  showDeleteButtons: false,
   showModal: false,
   session: Ember.inject.service(),
   store: Ember.inject.service(),
@@ -48,6 +55,32 @@ export default Ember.Component.extend({
       });
     },
     /**
+     * Action to cancel the deletion of a collection
+     */
+    cancelDeletingCollection() {
+      this.set('collectionToDelete', null);
+    },
+    /**
+     * Action to delete a collection
+     * @param {collection} collection - the collection to delete
+     */
+    deleteCollection(collection) {
+      return this.get('store').findRecord('collection', collection.id)
+        .then(c =>
+          c.destroyRecord()
+            .then(() => {
+              this.set('collectionToDelete', null);
+            })
+        );
+    },
+    /**
+     * Action to set a collection to be deleted
+     * @param {collection} collection - the collection to set for deletion
+     */
+    setCollectionToDelete(collection) {
+      this.set('collectionToDelete', collection);
+    },
+    /**
      * Action to open / close the create collection modal
      * @param {boolean} open - whether modal should be open
      */
@@ -58,6 +91,9 @@ export default Ember.Component.extend({
         this.set('errorMessage', null);
       }
       this.set('showModal', open);
+    },
+    toggleEdit() {
+      this.set('showDeleteButtons', !this.get('showDeleteButtons'));
     }
   }
 });

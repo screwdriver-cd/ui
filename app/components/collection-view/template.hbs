@@ -3,9 +3,9 @@
     {{info-message message=removePipelineError type="warning" icon="exclamation-triangle"}}
   {{/if}}
   <div class="header">
-    <h2>{{collection.name}}</h2>
+    <h2 class="header__name">{{collection.name}}</h2>
     {{#if collection.description}}
-      <p>{{collection.description}}</p>
+      <p class="header__description">{{collection.description}}</p>
     {{/if}}
   </div>
   <div class="collection-table row">
