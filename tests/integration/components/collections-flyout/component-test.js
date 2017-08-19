@@ -2,6 +2,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
+import sinon from 'sinon';
 import injectSessionStub from '../../../helpers/inject-session';
 
 const mockCollection = {
@@ -242,7 +243,7 @@ test('it cancels creation of a collection', function (assert) {
 });
 
 test('it deletes a collection', function (assert) {
-  assert.expect(7);
+  assert.expect(9);
 
   injectSessionStub(this);
 
@@ -256,8 +257,10 @@ test('it deletes a collection', function (assert) {
     }
   };
   const storeStub = Ember.Object.extend({
-    findRecord() {
-      return new Ember.RSVP.Promise(resolve => resolve(collectionModelMock));
+    peekRecord() {
+      assert.ok(true, 'peekRecord called');
+
+      return collectionModelMock;
     },
     findAll() {
       return new Ember.RSVP.Promise(resolve => resolve([mockCollection]));
@@ -284,9 +287,13 @@ test('it deletes a collection', function (assert) {
       pipelineIds: [7, 8, 9]
     })
   ]);
+
+  let onDeleteSpy = sinon.spy();
+
   this.set('showModal', false);
   this.set('name', null);
   this.set('description', null);
+  this.set('onDeleteCollection', onDeleteSpy);
 
   this.register('service:store', storeStub);
   this.inject.service('store');
@@ -296,6 +303,7 @@ test('it deletes a collection', function (assert) {
     showModal=showModal
     name=name
     description=description
+    onDeleteCollection=onDeleteCollection
   }}`);
 
   assert.ok($('.header__edit').length);
@@ -308,5 +316,7 @@ test('it deletes a collection', function (assert) {
   $($('.collection-wrapper__delete').get(0)).click();
   assert.strictEqual($('.modal').length, 1);
   assert.equal($('.modal-title').text().trim(), 'Please confirm');
-  $('.modal-footer> .btn-primary').click();
+  $('.modal-footer > .btn-primary').click();
+
+  assert.ok(onDeleteSpy.called);
 });

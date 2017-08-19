@@ -65,13 +65,17 @@ export default Ember.Component.extend({
      * @param {collection} collection - the collection to delete
      */
     deleteCollection(collection) {
-      return this.get('store').findRecord('collection', collection.id)
-        .then(c =>
-          c.destroyRecord()
-            .then(() => {
-              this.set('collectionToDelete', null);
-            })
-        );
+      const c = this.get('store')
+        .peekRecord('collection', collection.id);
+
+      return c.destroyRecord()
+        .then(() => {
+          this.set('collectionToDelete', null);
+
+          if (typeof this.get('onDeleteCollection') === 'function') {
+            this.get('onDeleteCollection')();
+          }
+        });
     },
     /**
      * Action to set a collection to be deleted

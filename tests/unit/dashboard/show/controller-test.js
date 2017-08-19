@@ -1,4 +1,5 @@
 import { moduleFor, test } from 'ember-qunit';
+import sinonTest from 'ember-sinon-qunit/test-support/test';
 import Ember from 'ember';
 import injectSessionStub from '../../../helpers/inject-session';
 
@@ -60,4 +61,14 @@ test('it calls removePipeline', function (assert) {
 
   // Remove pipeline with id 3 from collection with id 1
   controller.send('removePipeline', 3, 1);
+});
+
+sinonTest('it calls onDeleteCollection', function (assert) {
+  const controller = this.subject();
+  const stub = this.stub(controller, 'transitionToRoute');
+
+  controller.send('onDeleteCollection');
+
+  assert.ok(stub.calledOnce, 'transitionToRoute was called once');
+  assert.ok(stub.calledWithExactly('/'), 'transition to home');
 });
