@@ -11,6 +11,9 @@ export default Ember.Controller.extend({
 
           return collection.save();
         });
+    },
+    onDeleteCollection() {
+      this.transitionToRoute('/');
     }
   }
 });

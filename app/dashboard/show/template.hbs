@@ -1,5 +1,9 @@
 <div class="row">
-  {{collections-flyout class="col-md-3" selectedCollectionId=model.id}}
+  {{collections-flyout
+      class="col-md-3"
+      onDeleteCollection=(action "onDeleteCollection")
+      selectedCollectionId=model.id
+  }}
   {{collection-view
       onPipelineRemove=(action "removePipeline")
       collection=model
