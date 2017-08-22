@@ -27,7 +27,18 @@ moduleForComponent('collection-view', 'Integration | Component | collection view
             branch: 'master',
             url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
           },
-          annotations: {}
+          annotations: {},
+          lastEventId: 12,
+          lastBuilds: [
+            {
+              id: 123,
+              status: 'SUCCESS'
+            },
+            {
+              id: 124,
+              status: 'FAILURE'
+            }
+          ]
         },
         {
           id: 2,
@@ -65,9 +76,18 @@ test('it renders', function (assert) {
   assert.equal($('table').length, 1);
   assert.equal($('th.app-id').text().trim(), 'Name');
   assert.equal($('th.branch').text().trim(), 'Branch');
+  assert.equal($('th.health').text().trim(), 'Last Build');
   assert.equal($('tr').length, 3);
   assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/screwdriver');
   assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/ui');
+  // Since both pipelines have two jobs, there will be 4 build icons in total
+  assert.equal($('td.health i').length, 4);
+  assert.equal($($('td.health i').get(0)).attr('class'), 'fa fa-check ember-view');
+  assert.equal($($('td.health i').get(1)).attr('class'), 'fa fa-times ember-view');
+  // The build icons for the second pipeline should be empty circles since
+  // there are no builds
+  assert.equal($($('td.health i').get(2)).attr('class'), 'fa ember-view');
+  assert.equal($($('td.health i').get(3)).attr('class'), 'fa ember-view');
 });
 
 test('it removes a pipeline from a collection', function (assert) {
