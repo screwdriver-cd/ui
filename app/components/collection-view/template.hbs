@@ -14,6 +14,7 @@
         <tr>
           <th class="app-id">Name</th>
           <th class="branch">Branch</th>
+          <th class="health">Last Build</th>
           {{#if session.isAuthenticated}}
             <th></th>
           {{/if}}
@@ -26,6 +27,15 @@
               {{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.scmRepo.name}}{{/link-to}}{{/highlight-terms}}
             </td>
             <td class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.scmRepo.branch}}</td>
+            <td class="health">
+              {{#each pipeline.workflow as |job index|}}
+                {{#if pipeline.lastBuilds}}
+                  {{build-health pipelineId=pipeline.id build=(index-of pipeline.lastBuilds index) jobName=job}}
+                {{else}}
+                  {{build-health}}
+                {{/if}}
+              {{/each}}
+            </td>
             {{#if session.isAuthenticated}}
               <td onclick={{action "pipelineRemove" pipeline.id collection.id}} class="collection-pipeline__remove">
                 <span>
