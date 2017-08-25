@@ -156,22 +156,16 @@ test('it renders an active collection', function (assert) {
   assert.expect(4);
   const $ = this.$;
 
-  const storeStub = Ember.Object.extend({
-    findAll() {
-      return new Ember.RSVP.Promise(resolve => resolve([mockCollection]));
-    }
-  });
-
-  this.register('service:store', storeStub);
-  this.inject.service('store');
+  this.set('collections', [Ember.Object.create(mockCollection)]);
 
   this.set('selectedCollectionId', 1);
 
-  this.render(hbs`{{collections-flyout selectedCollectionId=selectedCollectionId}}`);
+  this.render(hbs`{{collections-flyout collections=collections
+    selectedCollectionId=selectedCollectionId}}`);
 
   assert.equal($('.header__text').text().trim(), 'Collections');
   assert.notOk($('.header__text a i').length);
-  assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'name');
+  assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'Test');
   assert.equal($('.collection-wrapper.row--active').length, 1);
 });
 
