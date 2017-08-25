@@ -12,7 +12,7 @@
     {{/if}}
   </div>
     {{#each collections as |collection|}}
-      <div class="collection-wrapper row{{if collection.current ' row--active'}}">
+      <div class="collection-wrapper row {{if (eq collection.id selectedCollectionId) ' row--active'}}">
         {{#link-to "dashboard.show" collection.id}}
           {{collection.name}}
         {{/link-to}}
