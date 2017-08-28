@@ -12,12 +12,17 @@
     <table class="col-md-10">
       <thead>
         <tr>
-          <th class="app-id">Name</th>
-          <th class="branch">Branch</th>
-          <th class="health">Last Build</th>
+          <th class="app-id" rowspan=2>Name</th>
+          <th class="branch" rowspan=2>Branch</th>
+          <th class="health" rowspan=2>Last Build</th>
+          <th class="prs" colspan=2>Pull Requests</th>
           {{#if session.isAuthenticated}}
-            <th></th>
+            <th rowspan=2></th>
           {{/if}}
+        </tr>
+        <tr>
+          <th>Open</th>
+          <th>Failing</th>
         </tr>
       </thead>
       <tbody>
@@ -35,6 +40,16 @@
                   {{build-health}}
                 {{/if}}
               {{/each}}
+            </td>
+            <td class="prs--open">
+              {{#if pipeline.prs}}
+                {{pipeline.prs.open}}
+              {{/if}}
+            </td>
+            <td class="prs--failing">
+              {{#if pipeline.prs}}
+                {{pipeline.prs.failing}}
+              {{/if}}
             </td>
             {{#if session.isAuthenticated}}
               <td onclick={{action "pipelineRemove" pipeline.id collection.id}} class="collection-pipeline__remove">

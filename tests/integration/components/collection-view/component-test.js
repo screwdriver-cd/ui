@@ -53,7 +53,11 @@ moduleForComponent('collection-view', 'Integration | Component | collection view
             branch: 'master',
             url: 'https://github.com/screwdriver-cd/ui/tree/master'
           },
-          annotations: {}
+          annotations: {},
+          prs: {
+            open: 2,
+            failing: 1
+          }
         }
       ]
     });
@@ -77,7 +81,8 @@ test('it renders', function (assert) {
   assert.equal($('th.app-id').text().trim(), 'Name');
   assert.equal($('th.branch').text().trim(), 'Branch');
   assert.equal($('th.health').text().trim(), 'Last Build');
-  assert.equal($('tr').length, 3);
+  assert.equal($('th.prs').text().trim(), 'Pull Requests');
+  assert.equal($('tr').length, 4);
   assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/screwdriver');
   assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/ui');
   // Since both pipelines have two jobs, there will be 4 build icons in total
@@ -88,6 +93,12 @@ test('it renders', function (assert) {
   // there are no builds
   assert.equal($($('td.health i').get(2)).attr('class'), 'fa ember-view');
   assert.equal($($('td.health i').get(3)).attr('class'), 'fa ember-view');
+  // The first pipeline should not have any info for prs open and failing
+  assert.equal($($('td.prs--open').get(0)).text().trim(), '');
+  assert.equal($($('td.prs--failing').get(0)).text().trim(), '');
+  // The second pipeline should have 2 prs open and 1 failing
+  assert.equal($($('td.prs--open').get(1)).text().trim(), '2');
+  assert.equal($($('td.prs--failing').get(1)).text().trim(), '1');
 });
 
 test('it removes a pipeline from a collection', function (assert) {

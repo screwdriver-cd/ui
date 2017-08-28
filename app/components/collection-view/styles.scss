@@ -20,6 +20,14 @@
     text-align: right;
   }
 
+  .prs {
+    border-bottom: none;
+
+    &--failing {
+      color: $sd-failure;
+    }
+  }
+
   tbody tr:hover {
     background-color: $sd-separator;
     .name {

@@ -37,7 +37,18 @@ moduleForAcceptance('Acceptance | dashboards', {
                 branch: 'master',
                 url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
               },
-              annotations: {}
+              annotations: {},
+              lastEventId: 12,
+              lastBuilds: [
+                {
+                  id: 123,
+                  status: 'SUCCESS'
+                },
+                {
+                  id: 124,
+                  status: 'FAILURE'
+                }
+              ]
             },
             {
               id: 12743,
@@ -52,7 +63,11 @@ moduleForAcceptance('Acceptance | dashboards', {
                 branch: 'master',
                 url: 'https://github.com/screwdriver-cd/ui/tree/master'
               },
-              annotations: {}
+              annotations: {},
+              prs: {
+                open: 2,
+                failing: 1
+              }
             }
           ]
         }
@@ -111,8 +126,8 @@ test('visiting / when logged in and have collections', function (assert) {
     assert.equal(find('table').length, 1);
     assert.equal(find('th.app-id').text().trim(), 'Name');
     assert.equal(find('th.branch').text().trim(), 'Branch');
-    assert.equal(find('tr').length, 3);
-    assert.equal(find('td').length, 8);
+    assert.equal(find('tr').length, 4);
+    assert.equal(find('td').length, 12);
   });
 });
 
@@ -145,8 +160,8 @@ test('visiting /dashboards/1', function (assert) {
     assert.equal(find('table').length, 1);
     assert.equal(find('th.app-id').text().trim(), 'Name');
     assert.equal(find('th.branch').text().trim(), 'Branch');
-    assert.equal(find('tr').length, 3);
-    assert.equal(find('td').length, 8);
+    assert.equal(find('tr').length, 4);
+    assert.equal(find('td').length, 12);
   });
 });
 
