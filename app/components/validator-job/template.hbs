@@ -1,4 +1,6 @@
+{{#if collapsible}}
 <h4 class="job" {{action 'nameClick'}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>
+{{/if}}
 <div class="annotations" title="These are the job-level annotations that the user has defined.">
   <span class="label">Annotations:</span>
   <span class="value">

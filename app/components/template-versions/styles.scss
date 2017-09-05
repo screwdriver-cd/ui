@@ -1,0 +1,10 @@
+& {
+  li span {
+    color: $sd-link;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

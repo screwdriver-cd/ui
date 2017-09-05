@@ -179,3 +179,21 @@ test('it renders a description', function (assert) {
   assert.equal(this.$('.description .label').text().trim(), 'Description:');
   assert.equal(this.$('.description .value ul li').text().trim(), 'This is a description');
 });
+
+test('it renders without a collapsible heading', function (assert) {
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
+  this.set('jobMock', {
+    image: 'int-test:1',
+    commands: [
+      { name: 'step1', command: 'echo hello' },
+      { name: 'step2', command: 'echo goodbye' }
+    ],
+    secrets: [],
+    environment: {},
+    settings: {}
+  });
+
+  this.render(hbs`{{validator-job name="int-test" index=0 job=jobMock collapsible=false}}`);
+  assert.equal(this.$('h4').length, 0);
+});
