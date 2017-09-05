@@ -2,11 +2,28 @@
   {{#if removePipelineError}}
     {{info-message message=removePipelineError type="warning" icon="exclamation-triangle"}}
   {{/if}}
-  <div class="header">
-    <h2 class="header__name">{{collection.name}}</h2>
-    {{#if collection.description}}
-      <p class="header__description">{{collection.description}}</p>
-    {{/if}}
+  <div class="header row">
+    <div class="col-md-7">
+      <h2 class="header__name">{{collection.name}}</h2>
+        {{#if collection.description}}
+          <p class="header__description">{{collection.description}}</p>
+        {{/if}}
+    </div>
+    <div class="header__sort-pipelines col-md-5">
+      Sort By
+      {{#bs-dropdown as |dd|}}
+        {{#bs-button}}{{sortByText}}{{/bs-button}}
+        {{#dd.button}}{{fa-icon "fa-caret-down"}}{{/dd.button}}
+        {{#dd.menu as |menu|}}
+          {{#menu.item}}
+            <a onclick={{action "setSortBy" "name"}}>Name</a>
+          {{/menu.item}}
+          {{#menu.item}}
+            <a onclick={{action "setSortBy" "lastBuildTime"}}>Last Build</a>
+          {{/menu.item}}
+        {{/dd.menu}}
+      {{/bs-dropdown}}
+    </div>
   </div>
   <div class="collection-table row">
     <table class="col-md-10">
@@ -26,7 +43,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each collection.pipelines as |pipeline|}}
+        {{#each sortedPipelines as |pipeline|}}
           <tr class="collection-pipeline">
             <td class="app-id">
               {{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.scmRepo.name}}{{/link-to}}{{/highlight-terms}}
