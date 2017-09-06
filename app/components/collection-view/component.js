@@ -2,6 +2,48 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   session: Ember.inject.service(),
+  sortBy: ['scmRepo.name'],
+  sortByText: Ember.computed('sortBy', {
+    get() {
+      switch (this.get('sortBy').get(0)) {
+      case 'scmRepo.name':
+        return 'Name';
+      case 'lastBuildTime:desc':
+        return 'Last Build';
+      default:
+        return '';
+      }
+    }
+  }),
+  collectionPipelines: Ember.computed('collection.pipelines', {
+    get() {
+      if (this.get('collection.pipelines')) {
+        return this.get('collection.pipelines').map((pipeline) => {
+          const ret = {
+            id: pipeline.id,
+            scmRepo: pipeline.scmRepo,
+            workflow: pipeline.workflow,
+            lastBuilds: pipeline.lastBuilds,
+            prs: pipeline.prs
+          };
+
+          if (pipeline.lastBuilds && pipeline.lastBuilds.length) {
+            const lastBuildsLength = pipeline.lastBuilds.length;
+            const lastBuildObj = pipeline.lastBuilds[lastBuildsLength - 1];
+
+            ret.lastBuildTime = new Date(lastBuildObj.createTime).valueOf();
+          } else {
+            ret.lastBuildTime = 0;
+          }
+
+          return ret;
+        });
+      }
+
+      return [];
+    }
+  }),
+  sortedPipelines: Ember.computed.sort('collectionPipelines', 'sortBy'),
   removePipelineError: null,
   actions: {
     /**
@@ -19,6 +61,18 @@ export default Ember.Component.extend({
         .catch((error) => {
           this.set('removePipelineError', error.errors[0].detail);
         });
+    },
+    setSortBy(option) {
+      switch (option) {
+      case 'name':
+        this.set('sortBy', ['scmRepo.name']);
+        break;
+      case 'lastBuildTime':
+        this.set('sortBy', [`${option}:desc`]);
+        break;
+      default:
+        this.set('sortBy', [option]);
+      }
     }
   }
 });
