@@ -31,7 +31,7 @@ export default Ember.Service.extend({
         .fail((response) => {
           let message = `${response.status} Request Failed`;
 
-          if (response && response.responseJSON) {
+          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
             message = `${response.status} ${response.responseJSON.error}`;
           }
 
