@@ -22,10 +22,29 @@
         {{/link-to}}
       {{/nav.item}}
       {{#nav.item}}
-        <a href="http://docs.screwdriver.cd" class="icon docs">
-          {{inline-svg "docs" class="img"}}
+        {{#nav.dropdown as |dd|}}
+          {{#dd.toggle}}{{inline-svg "docs" class="img"}}
           <span class='icontitle'>Documentation</span>
-        </a>
+          <span class="caret"></span>
+          {{/dd.toggle}}
+          {{#dd.menu as |ddm|}}
+            {{#ddm.item}}
+              <a href="http://docs.screwdriver.cd" class="icon docs">
+                {{inline-svg "docs" class="img"}}<span>Documentation</span>
+              </a>
+            {{/ddm.item}}
+            {{#ddm.item}}
+              {{#link-to "validator" classNames="icon validator"}}
+                {{inline-svg "docs" class="img"}}<span>Validator</span>
+              {{/link-to}}
+            {{/ddm.item}}
+            {{#ddm.item}}
+              {{#link-to "templates" classNames="icon templates"}}
+                {{inline-svg "docs" class="img"}}<span>Templates</span>
+              {{/link-to}}
+            {{/ddm.item}}
+          {{/dd.menu}}
+        {{/nav.dropdown}}
       {{/nav.item}}
 
       {{#nav.item}}
@@ -83,7 +102,6 @@
 {{/bs-navbar}}
 <div class="tooltips">
   {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
-  {{#bs-tooltip placement="bottom" triggerElement=".icon.docs" renderInPlace=true}}Screwdriver Documentation{{/bs-tooltip}}
   {{#unless session.isAuthenticated}}
     {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" renderInPlace=true}}Login to Screwdriver{{/bs-tooltip}}
   {{/unless}}
