@@ -1,9 +1,10 @@
+{{#link-to "templates" class="back"}}Back to Templates{{/link-to}}
 <h1>{{template.name}} ({{template.version}})</h1>
 <p>{{template.description}}</p>
 <ul>
   {{! TODO: Link to pipeline and/or source code}}
   <li>Released by: <a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a></li>
-  {{#if template.labels.length}}<li>Tags: {{#each template.labels as |l|}}<span>{{l}}</span>{{/each}}</li>{{/if}}
+  {{#if template.labels.length}}<li>Tags: {{#each template.labels as |l|}}<span class="template-label">{{l}}</span>{{/each}}</li>{{/if}}
 </ul>
 <h4>Usage:</h4>
 <pre>jobs:

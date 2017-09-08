@@ -1,36 +1,27 @@
 & {
   font-weight: 300;
 
-  article {
-    padding: 10px;
-    border: 1px solid $sd-text-light;
-    border-radius: 3px;
-    overflow: hidden;
-    margin-bottom: 10px;
-    background-color: #fefefe;
-
-    header {
-      border-bottom: 1px solid $sd-separator;
-    }
-
-    address {
-      margin: 0;
-      padding: 0;
-    }
-
-    p {
-      padding: 0;
-      margin: 10px 0;
-
-      span {
-        font-weight: 600;
-      }
-    }
-  }
   h4 {
     font-weight: 600;
     margin: 0;
     padding: 0;
     margin-bottom: 5px;
+  }
+
+  .template {
+    padding: 10px;
+    border: 1px solid $sd-text-light;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+
+    header {
+      border-bottom: 1px solid $sd-separator;
+    }
+
+    .description {
+      padding: 0;
+      margin: 10px 0;
+    }
   }
 }

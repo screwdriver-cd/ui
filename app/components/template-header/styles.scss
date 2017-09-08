@@ -1,15 +1,20 @@
 & {
-  ul, li {
+  ul,
+  li {
     padding: 0;
     margin: 0;
     list-style: none;
   }
 
-  span {
+  .template-label {
     margin: 0 5px;
     padding: 3px 5px;
     border-radius: 3px;
     background-color: $sd-light-blue;
-    color: #fff;
+    color: $sd-white;
+  }
+
+  .back {
+    float: right;
   }
 }
