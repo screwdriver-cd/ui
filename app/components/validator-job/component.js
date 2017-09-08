@@ -1,8 +1,9 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNameBindings: ['hasParseError'],
+  classNameBindings: ['hasParseError', 'collapsible'],
   isOpen: true,
+  collapsible: true,
   hasParseError: Ember.computed('job', {
     get() {
       return this.get('job.commands.0.name') === 'config-parse-error';

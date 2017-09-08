@@ -1,10 +1,13 @@
 & {
   margin: 10px 10px 0 0;
-  border-radius: 3px;
-  border: 1px solid $sd-separator;
-  padding: 10px;
   font-weight: 300;
   color: $sd-text;
+
+  &.collapsible {
+    border-radius: 3px;
+    border: 1px solid $sd-separator;
+    padding: 10px;
+  }
 
   > div {
     padding: 3px;
