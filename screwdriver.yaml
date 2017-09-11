@@ -11,6 +11,7 @@ jobs:
     steps:
       - install: npm install
       - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
+      - install-browsers: ./bin/setup_chrome.sh
       - test: npm test
 
   # Publish the package to GitHub and build docker image
