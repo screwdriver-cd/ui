@@ -14,6 +14,11 @@
     border-radius: 3px;
     overflow: hidden;
     margin-bottom: 10px;
+    height: 150px;
+
+    a {
+      text-decoration: none;
+    }
 
     header {
       border-bottom: 1px solid $sd-separator;
