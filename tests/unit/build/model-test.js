@@ -52,6 +52,6 @@ test('it humanizes createTime', function (assert) {
 
   Ember.run(() => {
     assert.equal(model.get('createTimeWords'),
-    `${humanizeDuration(Date.now() - createTime, { round: true, largest: 1 })} ago`);
+      `${humanizeDuration(Date.now() - createTime, { round: true, largest: 1 })} ago`);
   });
 });

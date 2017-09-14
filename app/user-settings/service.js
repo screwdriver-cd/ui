@@ -18,16 +18,16 @@ export default Ember.Service.extend({
           withCredentials: true
         }
       })
-      .done(content => resolve(Object.assign(content, { action: 'refreshed' })))
-      .fail((response) => {
-        let message = `${response.status} Request Failed`;
+        .done(content => resolve(Object.assign(content, { action: 'refreshed' })))
+        .fail((response) => {
+          let message = `${response.status} Request Failed`;
 
-        if (response && response.responseJSON) {
-          message = `${response.status} ${response.responseJSON.error}`;
-        }
+          if (response && response.responseJSON) {
+            message = `${response.status} ${response.responseJSON.error}`;
+          }
 
-        return reject(message);
-      });
+          return reject(message);
+        });
     });
   }
 });

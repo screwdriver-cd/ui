@@ -23,8 +23,8 @@ export default Ember.Service.extend({
           Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
         }
       })
-      .done(() => resolve())
-      .fail(jqXHR => reject(JSON.parse(jqXHR.responseText).message));
+        .done(() => resolve())
+        .fail(jqXHR => reject(JSON.parse(jqXHR.responseText).message));
     });
   }
 });

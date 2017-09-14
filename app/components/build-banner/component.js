@@ -51,7 +51,7 @@ export default Ember.Component.extend({
       const nextIndex = this.get('jobNames').indexOf(this.get('jobName')) + 1;
 
       return nextIndex >= this.get('jobs').length
-      ? null : this.get('eventBuilds').objectAt(nextIndex);
+        ? null : this.get('eventBuilds').objectAt(nextIndex);
     }
   }),
 

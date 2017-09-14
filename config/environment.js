@@ -23,8 +23,8 @@ module.exports = (environment) => {
       SDAPI_NAMESPACE: 'v4',
       SDSTORE_HOSTNAME: 'http://localhost:80',
       SDSTORE_NAMESPACE: 'v1',
-      BUILD_RELOAD_TIMER: 5000,  // 5 seconds
-      EVENT_RELOAD_TIMER: 90000,  // 1.5 minutes
+      BUILD_RELOAD_TIMER: 5000, // 5 seconds
+      EVENT_RELOAD_TIMER: 90000, // 1.5 minutes
       LOG_RELOAD_TIMER: 1000,
       NUM_EVENTS_LISTED: 5,
       MAX_LOG_LINES: 1000
