@@ -49,7 +49,7 @@ test('it handles template yaml', function (assert) {
     Ember.RSVP.resolve(expectedResult)
   );
 
-   // wrap the test in the run loop because we are dealing with async functions
+  // wrap the test in the run loop because we are dealing with async functions
   return Ember.run(() => {
     controller.set('yaml', EXAMPLE_TEMPLATE);
 
@@ -69,7 +69,7 @@ test('it handles screwdriver yaml', function (assert) {
     Ember.RSVP.resolve(expectedResult)
   );
 
-   // wrap the test in the run loop because we are dealing with async functions
+  // wrap the test in the run loop because we are dealing with async functions
   return Ember.run(() => {
     controller.set('yaml', EXAMPLE_CONFIG);
 
@@ -89,7 +89,7 @@ test('it handles clearing yaml', function (assert) {
     Ember.RSVP.resolve(expectedResult)
   );
 
-   // wrap the test in the run loop because we are dealing with async functions
+  // wrap the test in the run loop because we are dealing with async functions
   return Ember.run(() => {
     controller.set('yaml', EXAMPLE_CONFIG);
 

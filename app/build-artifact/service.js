@@ -87,12 +87,12 @@ export default Ember.Service.extend({
       Ember.$.ajax({
         url: `${baseUrl}manifest.txt`
       })
-      .done((data) => {
-        const paths = data.split('\n');
+        .done((data) => {
+          const paths = data.split('\n');
 
-        manifest = arrangeIntoTree(paths, baseUrl);
-      })
-      .always(() => resolve(manifest));
+          manifest = arrangeIntoTree(paths, baseUrl);
+        })
+        .always(() => resolve(manifest));
     });
   }
 });

@@ -9,15 +9,16 @@ module.exports = {
     'Chrome',
     'Firefox'
   ],
-  "browser_args": {
-    "Chrome": [
-      "--headless",
-      "--disable-gpu",
-      "--remote-debugging-port=9222",
-      "--no-sandbox"
+  browser_args: {
+    Chrome: [
+      '--headless',
+      '--disable-gpu',
+      '--remote-debugging-port=9222',
+      '--window-size=1440,900',
+      '--no-sandbox'
     ],
-    "Firefox": [
-      "-headless"
+    Firefox: [
+      '-headless'
     ]
   }
 };

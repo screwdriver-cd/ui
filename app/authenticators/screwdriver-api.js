@@ -22,8 +22,8 @@ function fetchToken() {
         withCredentials: true
       }
     })
-    .done(jwt => resolve(jwt))
-    .fail(() => reject('Could not get a token'));
+      .done(jwt => resolve(jwt))
+      .fail(() => reject('Could not get a token'));
   });
 }
 
@@ -100,7 +100,7 @@ export default Base.extend({
           withCredentials: true
         }
       })
-      .always(() => resolve());
+        .always(() => resolve());
     });
   }
 });
