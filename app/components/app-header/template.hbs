@@ -91,7 +91,7 @@
             {{/dd.menu}}
           {{/nav.dropdown}}
         {{else}}
-          {{#link-to "login" title="Login to Screwdriver" class="icon profile-outline"}}
+        {{#link-to "login" (query-params fromUrl=currentUrl) title="Login to Screwdriver" class="icon profile-outline"}}
             {{inline-svg "profile-outline" class="img"}}
             <span class='icontitle'>Log in</span>
           {{/link-to}}
