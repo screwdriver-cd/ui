@@ -215,7 +215,7 @@ test('visiting /pipelines/4', function (assert) {
     assert.equal(find('.pipelineWorkflow .build-bubble').length, 2, 'not enough workflow');
     assert.equal(find('button.start-button').length, 0, 'should not have a start button');
     assert.equal(find('ul.nav-pills').length, 0, 'should not show options or secrets tabs');
-    assert.equal(find('.col-md-9 h2').text().trim(), 'Builds');
+    assert.equal(find('.col-md-9 h2').text().trim(), 'Events');
     assert.equal(find('.col-md-3 h2').text().trim(), 'Pull Requests');
     assert.equal(find('.col-md-9 > div > div.ember-view').length, 2);
   });

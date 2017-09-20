@@ -68,6 +68,6 @@ test('it renders', function (assert) {
   this.set('eventsMock', events);
   this.render(hbs`{{pipeline-events-list events=eventsMock}}`);
 
-  assert.equal(this.$('h2').text().trim(), 'Builds');
+  assert.equal(this.$('h2').text().trim(), 'Events');
   assert.equal(this.$('> div').length, 1);
 });
