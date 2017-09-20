@@ -20,15 +20,6 @@ test('it calculates title', function (assert) {
   assert.equal(route.title(['a', 'b', 'c']), 'a > b > c > screwdriver.cd');
 });
 
-test('it handles sessionInvalidated', function (assert) {
-  const route = this.subject();
-  const locationStub = this.stub(window.location, 'replace');
-
-  route.sessionInvalidated();
-
-  assert.ok(locationStub.calledOnce, 'window.location.replace should be called once');
-});
-
 test('it should do transitionTo on sessionAuthenticated when valid fromUrl', function (assert) {
   const route = this.subject();
   const transitionStub = this.stub(route, 'transitionTo');

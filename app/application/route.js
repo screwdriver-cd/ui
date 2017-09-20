@@ -3,9 +3,7 @@ import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mi
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   routeAfterAuthentication: 'home',
-  sessionInvalidated: function sessionInvalidated() {
-    window.location.replace(window.location.href);
-  },
+  sessionInvalidated: () => window.location.replace(window.location.href),
   sessionAuthenticated: function sessionAuthenticated() {
     const previousUrl = this.controllerFor('application').get('fromUrl');
 
