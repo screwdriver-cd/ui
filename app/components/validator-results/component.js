@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   results: null,
   errors: Ember.computed('results', {
     get() {
-      return this.get('results.errors') || [];
+      return (this.get('results.errors') || []).map(e => (typeof e === 'string' ? e : e.message));
     }
   }),
   workflow: Ember.computed('results', {
