@@ -4,8 +4,10 @@ export default Ember.Component.extend({
   newName: null,
   newValue: null,
   newAllow: false,
-  isButtonDisabled: Ember.computed('newName', 'newValue', function isButtonDisabled() {
-    return !this.get('newName') || !this.get('newValue');
+  isButtonDisabled: Ember.computed('newName', 'newValue', {
+    get() {
+      return !this.get('newName') || !this.get('newValue');
+    }
   }),
   errorMessage: '',
   secretsSorting: ['name'],
@@ -29,7 +31,6 @@ export default Ember.Component.extend({
       this.set('newName', null);
       this.set('newValue', null);
       this.set('newAllow', false);
-      this.set('isButtonDisabled', true);
 
       return true;
     }
