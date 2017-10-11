@@ -12,6 +12,7 @@
     <tr>
       <th class="appId">Name</th>
       <th class="branch">Branch</th>
+      <th class="account">Account</th>
       {{#if session.isAuthenticated}}
       <th class="add">Add to Collection</th>
       {{/if}}
@@ -22,6 +23,7 @@
     <tr>
       <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
       <td class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.branch}}</td>
+      <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
       {{#if session.isAuthenticated}}
       <td class="add">
         {{#bs-dropdown as |dd|}}

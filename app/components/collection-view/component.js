@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   session: Ember.inject.service(),
+  scmService: Ember.inject.service('scm'),
   sortBy: ['scmRepo.name'],
   sortByText: Ember.computed('sortBy', {
     get() {
@@ -17,11 +18,16 @@ export default Ember.Component.extend({
   }),
   collectionPipelines: Ember.computed('collection.pipelines', {
     get() {
+      const scmService = this.get('scmService');
+
       if (this.get('collection.pipelines')) {
         return this.get('collection.pipelines').map((pipeline) => {
+          const scm = scmService.getScm(pipeline.scmContext);
           const ret = {
             id: pipeline.id,
             scmRepo: pipeline.scmRepo,
+            scm: scm.displayName,
+            scmIcon: scm.iconType,
             workflow: pipeline.workflow,
             lastBuilds: pipeline.lastBuilds,
             prs: pipeline.prs

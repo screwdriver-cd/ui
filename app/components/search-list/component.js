@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   session: Ember.inject.service(),
+  scmService: Ember.inject.service('scm'),
   pipelineSorting: ['appId', 'branch'],
   sortedPipelines: Ember.computed.sort('pipelines', 'pipelineSorting'),
   filterSet: Ember.computed('query', {
@@ -24,6 +25,7 @@ export default Ember.Component.extend({
   }),
   filteredPipelines: Ember.computed('sortedPipelines', 'filterSet', {
     get() {
+      const scmService = this.get('scmService');
       const pipelines = this.get('sortedPipelines');
       const filterSet = this.get('filterSet');
       let filtered = pipelines;
@@ -37,7 +39,15 @@ export default Ember.Component.extend({
         });
       });
 
-      return filtered;
+      // add scm contexts into pipelines.
+      return filtered.map((pipeline) => {
+        const scm = scmService.getScm(pipeline.get('scmContext'));
+
+        pipeline.set('scm', scm.displayName);
+        pipeline.set('scmIcon', scm.iconType);
+
+        return pipeline;
+      });
     }
   }),
   isEmpty: Ember.computed.empty('filteredPipelines'),

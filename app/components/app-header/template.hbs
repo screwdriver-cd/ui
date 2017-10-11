@@ -81,19 +81,31 @@
               <span class="caret"></span>
             {{/dd.toggle}}
             {{#dd.menu as |ddm|}}
+              {{#ddm.item}}<span class="title">ACCOUNTS</span>{{/ddm.item}}
+              {{#each scmContexts as |scmContext|}}
+                {{#ddm.item}}
+                  {{#if scmContext.isSignedIn}}
+                    <a class="active">{{fa-icon scmContext.iconType}} {{scmContext.displayName}} <span>active</span></a>
+                  {{else}}
+                    <a href="#authenticate"{{action "authenticate" scmContext.context}}>
+                      {{fa-icon scmContext.iconType}} {{scmContext.displayName}}
+                    </a>
+                  {{/if}}
+                {{/ddm.item}}
+              {{/each}}
+              {{ddm.divider}}
               {{#if session.isAuthenticated}}
                 {{#ddm.item}}{{#link-to "user-settings" title="User Settings"}}User Settings{{/link-to}}{{/ddm.item}}
-                {{ddm.divider}}
               {{/if}}
               {{#ddm.item}}
-                <a {{action 'invalidateSession'}} class="logout" title="Log out of Screwdriver">Log out</a>
+                <a href="#signout" {{action 'invalidateSession'}} class="logout" title="Sign out of Screwdriver">Sign out</a>
               {{/ddm.item}}
             {{/dd.menu}}
           {{/nav.dropdown}}
         {{else}}
-          {{#link-to "login" (query-params fromUrl=currentUrl) title="Login to Screwdriver" class="icon profile-outline"}}
+          {{#link-to "login" (query-params fromUrl=currentUrl) title="Sign in to Screwdriver" class="icon profile-outline"}}
             {{inline-svg "profile-outline" class="img"}}
-            <span class='icontitle'>Log in</span>
+            <span class='icontitle'>Sign in</span>
           {{/link-to}}
         {{/if}}
       {{/nav.item}}
@@ -103,6 +115,12 @@
 <div class="tooltips">
   {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
   {{#unless session.isAuthenticated}}
-    {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" renderInPlace=true}}Login to Screwdriver{{/bs-tooltip}}
+    {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" renderInPlace=true}}Sign in to Screwdriver{{/bs-tooltip}}
+  {{else}}
+    {{#each scmContexts as |scmContext|}}
+      {{#if scmContext.isSignedIn}}
+        {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" triggerEvents="hover" renderInPlace=true}}Currently signed in to a {{scmContext.displayName}} account.{{/bs-tooltip}}
+      {{/if}}
+    {{/each}}
   {{/unless}}
 </div>

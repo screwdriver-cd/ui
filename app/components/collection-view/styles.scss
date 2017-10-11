@@ -14,14 +14,19 @@
     color: $sd-link;
   }
 
-  .name {
+  .app-id {
     text-align: left;
-    width: 60%;
+    width: 30%;
   }
 
   .branch {
-    width: 35%;
+    width: 15%;
     text-align: right;
+  }
+
+  .account {
+    text-align: left;
+    white-space: nowrap;
   }
 
   .prs {
