@@ -18,6 +18,7 @@ moduleForAcceptance('Acceptance | search', {
             url: 'git@github.com:foo/bar.git#master',
             branch: 'master'
           },
+          scmContext: 'github:github.com',
           createTime: '2016-09-15T23:12:23.760Z',
           admins: { batman: true },
           workflow: ['main', 'publish']
@@ -30,6 +31,7 @@ moduleForAcceptance('Acceptance | search', {
             url: 'git@github.com:foo/bar2.git#master',
             branch: 'master'
           },
+          scmContext: 'github:github.com',
           createTime: '2016-09-15T23:12:23.760Z',
           admins: { batman: true },
           workflow: ['main', 'publish']
@@ -42,6 +44,7 @@ moduleForAcceptance('Acceptance | search', {
             url: 'git@github.com:foo/bar3.git#master',
             branch: 'master'
           },
+          scmContext: 'github:github.com',
           createTime: '2016-09-15T23:12:23.760Z',
           admins: { batman: true },
           workflow: ['main', 'publish']

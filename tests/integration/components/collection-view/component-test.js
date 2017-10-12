@@ -3,6 +3,7 @@ import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 
 import injectSessionStub from '../../../helpers/inject-session';
+import injectScmServiceStub from '../../../helpers/inject-scm';
 
 let testCollection;
 
@@ -27,6 +28,7 @@ moduleForComponent('collection-view', 'Integration | Component | collection view
             branch: 'master',
             url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
           },
+          scmContext: 'github:github.com',
           annotations: {},
           lastEventId: 12,
           lastBuilds: [
@@ -51,6 +53,7 @@ moduleForComponent('collection-view', 'Integration | Component | collection view
             branch: 'master',
             url: 'https://github.com/screwdriver-cd/ui/tree/master'
           },
+          scmContext: 'github:github.com',
           annotations: {},
           prs: {
             open: 2,
@@ -70,6 +73,7 @@ moduleForComponent('collection-view', 'Integration | Component | collection view
             branch: 'master',
             url: 'https://github.com/screwdriver-cd/models/tree/master'
           },
+          scmContext: 'bitbucket:bitbucket.org',
           annotations: {},
           lastEventId: 23,
           lastBuilds: [
@@ -91,6 +95,8 @@ test('it renders', function (assert) {
   // Handle any actions with this.on('myAction', function(val) { ... });
   const $ = this.$;
 
+  injectScmServiceStub(this);
+
   this.set('mockCollection', testCollection);
 
   this.render(hbs`{{collection-view collection=mockCollection}}`);
@@ -102,6 +108,7 @@ test('it renders', function (assert) {
   assert.equal($('table').length, 1);
   assert.equal($('th.app-id').text().trim(), 'Name');
   assert.equal($('th.branch').text().trim(), 'Branch');
+  assert.equal($('th.account').text().trim(), 'Account');
   assert.equal($('th.health').text().trim(), 'Last Build');
   assert.equal($('th.prs').text().trim(), 'Pull Requests');
   assert.equal($('tr').length, 5);
@@ -109,6 +116,10 @@ test('it renders', function (assert) {
   assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/models');
   assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/screwdriver');
   assert.equal($($('td.app-id').get(2)).text().trim(), 'screwdriver-cd/ui');
+  // The models pipeline has scm display names
+  assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
+  assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
+  assert.equal($($('td.account').get(2)).text().trim(), 'github.com');
   // Since the 3 pipelines have 4 jobs in total, there will be 4 build icons in total
   assert.equal($('td.health i').length, 4);
   // The models pipeline has 1 failed build
@@ -159,6 +170,7 @@ test('it removes a pipeline from a collection', function (assert) {
             branch: 'master',
             url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
           },
+          scmContext: 'github:github.com',
           annotations: {}
         }
       ]
