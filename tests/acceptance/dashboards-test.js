@@ -37,6 +37,7 @@ moduleForAcceptance('Acceptance | dashboards', {
                 branch: 'master',
                 url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
               },
+              scmContext: 'github:github.com',
               annotations: {},
               lastEventId: 12,
               lastBuilds: [
@@ -63,6 +64,7 @@ moduleForAcceptance('Acceptance | dashboards', {
                 branch: 'master',
                 url: 'https://github.com/screwdriver-cd/ui/tree/master'
               },
+              scmContext: 'github:github.com',
               annotations: {},
               prs: {
                 open: 2,
@@ -126,8 +128,9 @@ test('visiting / when logged in and have collections', function (assert) {
     assert.equal(find('table').length, 1);
     assert.equal(find('th.app-id').text().trim(), 'Name');
     assert.equal(find('th.branch').text().trim(), 'Branch');
+    assert.equal(find('th.account').text().trim(), 'Account');
     assert.equal(find('tr').length, 4);
-    assert.equal(find('td').length, 12);
+    assert.equal(find('td').length, 14);
   });
 });
 
@@ -160,8 +163,9 @@ test('visiting /dashboards/1', function (assert) {
     assert.equal(find('table').length, 1);
     assert.equal(find('th.app-id').text().trim(), 'Name');
     assert.equal(find('th.branch').text().trim(), 'Branch');
+    assert.equal(find('th.account').text().trim(), 'Account');
     assert.equal(find('tr').length, 4);
-    assert.equal(find('td').length, 12);
+    assert.equal(find('td').length, 14);
   });
 });
 
@@ -205,6 +209,7 @@ test('creating a collection', function (assert) {
           branch: 'master',
           url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
         },
+        scmContext: 'github:github.com',
         annotations: {}
       },
       {
@@ -220,6 +225,7 @@ test('creating a collection', function (assert) {
           branch: 'master',
           url: 'https://github.com/screwdriver-cd/ui/tree/master'
         },
+        scmContext: 'github:github.com',
         annotations: {}
       }
     ])

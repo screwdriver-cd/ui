@@ -31,6 +31,7 @@
         <tr>
           <th class="app-id" rowspan=2>Name</th>
           <th class="branch" rowspan=2>Branch</th>
+          <th class="account" rowspan=2>Account</th>
           <th class="health" rowspan=2>Last Build</th>
           <th class="prs" colspan=2>Pull Requests</th>
           {{#if session.isAuthenticated}}
@@ -49,6 +50,7 @@
               {{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.scmRepo.name}}{{/link-to}}{{/highlight-terms}}
             </td>
             <td class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.scmRepo.branch}}</td>
+            <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
             <td class="health">
               {{#each pipeline.workflow as |job index|}}
                 {{#if pipeline.lastBuilds}}

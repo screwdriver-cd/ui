@@ -3,6 +3,7 @@ import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 
 import injectSessionStub from '../../../helpers/inject-session';
+import injectScmServiceStub from '../../../helpers/inject-scm';
 
 moduleForComponent('search-list', 'Integration | Component | search list', {
   integration: true
@@ -11,18 +12,23 @@ moduleForComponent('search-list', 'Integration | Component | search list', {
 test('it renders without collections', function (assert) {
   const $ = this.$;
 
+  injectScmServiceStub(this);
+
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
+
   const pipelines = [
     Ember.Object.create({
       id: 1,
       appId: 'foo/bar',
-      branch: 'master'
+      branch: 'master',
+      scmContext: 'github:github.com'
     }),
     Ember.Object.create({
       id: 2,
       appId: 'batman/tumbler',
-      branch: 'waynecorp'
+      branch: 'waynecorp',
+      scmContext: 'bitbucket:bitbucket.org'
     })
   ];
   const collections = [
@@ -41,8 +47,10 @@ test('it renders without collections', function (assert) {
 
   assert.equal($($('td.appId').get(0)).text().trim(), 'batman/tumbler');
   assert.equal($($('td.branch').get(0)).text().trim(), 'waynecorp');
+  assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
   assert.equal($($('td.appId').get(1)).text().trim(), 'foo/bar');
   assert.equal($($('td.branch').get(1)).text().trim(), 'master');
+  assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
   assert.equal($('.add-to-collection').length, 0);
 });
 
@@ -50,6 +58,7 @@ test('it renders with collections', function (assert) {
   const $ = this.$;
 
   injectSessionStub(this);
+  injectScmServiceStub(this);
 
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
@@ -57,12 +66,14 @@ test('it renders with collections', function (assert) {
     Ember.Object.create({
       id: 1,
       appId: 'foo/bar',
-      branch: 'master'
+      branch: 'master',
+      scmContext: 'github:github.com'
     }),
     Ember.Object.create({
       id: 2,
       appId: 'batman/tumbler',
-      branch: 'waynecorp'
+      branch: 'waynecorp',
+      scmContext: 'bitbucket:bitbucket.org'
     })
   ];
   const collections = [
@@ -87,8 +98,10 @@ test('it renders with collections', function (assert) {
 
   assert.equal($($('td.appId').get(0)).text().trim(), 'batman/tumbler');
   assert.equal($($('td.branch').get(0)).text().trim(), 'waynecorp');
+  assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
   assert.equal($($('td.appId').get(1)).text().trim(), 'foo/bar');
   assert.equal($($('td.branch').get(1)).text().trim(), 'master');
+  assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
   assert.equal($('.add-to-collection').length, 2);
   assert.equal($($('td.add .dropdown-menu span').get(0)).text().trim(), 'collection1');
   assert.equal($($('td.add .dropdown-menu span').get(1)).text().trim(), 'collection2');
@@ -98,18 +111,23 @@ test('it renders with collections', function (assert) {
 
 test('it filters the list', function (assert) {
   const $ = this.$;
+
+  injectScmServiceStub(this);
+
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelines = [
     Ember.Object.create({
       id: 1,
       appId: 'foo/bar',
-      branch: 'master'
+      branch: 'master',
+      scmContext: 'github:github.com'
     }),
     Ember.Object.create({
       id: 2,
       appId: 'batman/tumbler',
-      branch: 'waynecorp'
+      branch: 'waynecorp',
+      scmContext: 'bitbucket:bitbucket.org'
     })
   ];
 
@@ -121,22 +139,28 @@ test('it filters the list', function (assert) {
   assert.ok($('tr').length, 2);
   assert.equal($('td.appId').text().trim(), 'foo/bar');
   assert.equal($('td.branch').text().trim(), 'master');
+  assert.equal($('td.account').text().trim(), 'github.com');
 });
 
 test('it filters the list by single advanced search query', function (assert) {
   const $ = this.$;
+
+  injectScmServiceStub(this);
+
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelines = [
     Ember.Object.create({
       id: 1,
       appId: 'foo/bar',
-      branch: 'master'
+      branch: 'master',
+      scmContext: 'github:github.com'
     }),
     Ember.Object.create({
       id: 2,
       appId: 'batman/tumbler',
-      branch: 'waynecorp'
+      branch: 'waynecorp',
+      scmContext: 'bitbucket:bitbucket.org'
     })
   ];
 
@@ -148,22 +172,28 @@ test('it filters the list by single advanced search query', function (assert) {
   assert.ok($('tr').length, 2);
   assert.equal($('td.appId').text().trim(), 'foo/bar');
   assert.equal($('td.branch').text().trim(), 'master');
+  assert.equal($('td.account').text().trim(), 'github.com');
 });
 
 test('it filters the list by multiple advanced search queries', function (assert) {
   const $ = this.$;
+
+  injectScmServiceStub(this);
+
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelines = [
     Ember.Object.create({
       id: 1,
       appId: 'foo/bar',
-      branch: 'master'
+      branch: 'master',
+      scmContext: 'github:github.com'
     }),
     Ember.Object.create({
       id: 2,
       appId: 'batman/tumbler',
-      branch: 'waynecorp'
+      branch: 'waynecorp',
+      scmContext: 'bitbucket:bitbucket.org'
     })
   ];
 
@@ -175,24 +205,28 @@ test('it filters the list by multiple advanced search queries', function (assert
   assert.ok($('tr').length, 2);
   assert.equal($('td.appId').text().trim(), 'batman/tumbler');
   assert.equal($('td.branch').text().trim(), 'waynecorp');
+  assert.equal($('td.account').text().trim(), 'bitbucket.org');
 });
 
 test('it adds a pipeline to a collection', function (assert) {
   assert.expect(3);
 
   injectSessionStub(this);
+  injectScmServiceStub(this);
 
   const $ = this.$;
   const pipelines = [
     Ember.Object.create({
       id: 1,
       appId: 'foo/bar',
-      branch: 'master'
+      branch: 'master',
+      scmContext: 'github:github.com'
     }),
     Ember.Object.create({
       id: 2,
       appId: 'batman/tumbler',
-      branch: 'waynecorp'
+      branch: 'waynecorp',
+      scmContext: 'bitbucket:bitbucket.org'
     })
   ];
   const collections = [
@@ -243,13 +277,15 @@ test('it fails to add a pipeline to a collection', function (assert) {
   assert.expect(1);
 
   injectSessionStub(this);
+  injectScmServiceStub(this);
 
   const $ = this.$;
   const pipelines = [
     Ember.Object.create({
       id: 1,
       appId: 'foo/bar',
-      branch: 'master'
+      branch: 'master',
+      scmContext: 'github:github.com'
     })
   ];
   const collections = [

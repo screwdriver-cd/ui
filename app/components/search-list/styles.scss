@@ -10,12 +10,18 @@
 
   .appId {
     text-align: left;
-    width: 60%;
+    width: 45%;
   }
 
   .branch {
-    width: 35%;
+    width: 25%;
     text-align: right;
+  }
+
+  .account {
+    width: 20%;
+    text-align: left;
+    white-space: nowrap;
   }
 
   tbody tr:hover {

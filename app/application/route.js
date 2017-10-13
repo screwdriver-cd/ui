@@ -2,6 +2,7 @@ import Ember from 'ember';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
+  scmService: Ember.inject.service('scm'),
   routeAfterAuthentication: 'home',
   sessionInvalidated: () => window.location.replace(window.location.href),
   sessionAuthenticated: function sessionAuthenticated() {
@@ -19,5 +20,8 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     arr.push('screwdriver.cd');
 
     return arr.join(' > ');
+  },
+  model() {
+    return this.get('scmService').createScms();
   }
 });

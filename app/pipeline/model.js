@@ -6,6 +6,7 @@ export default DS.Model.extend({
   appId: Ember.computed.alias('scmRepo.name'),
   branch: Ember.computed.alias('scmRepo.branch'),
   checkoutUrl: DS.attr('string'),
+  scmContext: DS.attr('string'),
   createTime: DS.attr('date'),
   events: DS.hasMany('event', { async: true }),
   hubUrl: Ember.computed.alias('scmRepo.url'),

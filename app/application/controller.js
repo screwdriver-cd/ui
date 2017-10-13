@@ -11,6 +11,9 @@ export default Ember.Controller.extend({
     },
     search(params) {
       this.transitionToRoute('search', { queryParams: { query: params } });
+    },
+    authenticate(scmContext) {
+      this.get('session').authenticate('authenticator:screwdriver-api', scmContext);
     }
   }
 });

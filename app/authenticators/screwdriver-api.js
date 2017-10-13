@@ -28,6 +28,8 @@ function fetchToken() {
 }
 
 export default Base.extend({
+  scmService: Ember.inject.service('scm'),
+
   /**
    * Restore the state of a session with data already in the session store
    * @method restore
@@ -60,6 +62,8 @@ export default Base.extend({
    * @return {Promise}
    */
   authenticate(scmContext) {
+    const scm = this.get('scmService');
+
     return new Ember.RSVP.Promise((resolve, reject) => {
       let url = [loginUrlBase];
 
@@ -78,6 +82,9 @@ export default Base.extend({
           clearInterval(interval);
 
           fetchToken().then(resolve, reject);
+
+          // change status as logged in.
+          scm.setSignedIn(scmContext);
         } else {
           win.focus();
         }

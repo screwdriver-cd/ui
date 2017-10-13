@@ -1,9 +1,10 @@
 import { moduleFor } from 'ember-qunit';
 import test from 'ember-sinon-qunit/test-support/test';
+import injectScmServiceStub from '../../helpers/inject-scm';
 
 moduleFor('route:application', 'Unit | Route | application', {
   // Specify the other units that are required for this test.
-  needs: ['service:session']
+  needs: ['service:session', 'service:scm']
 });
 
 test('it exists', function (assert) {
@@ -37,4 +38,17 @@ test('it should do transitionTo on sessionAuthenticated when valid fromUrl', fun
 
   assert.ok(transitionStub.calledOnce, 'transitionTo was not called');
   assert.ok(transitionStub.calledWithExactly('fromUrl'), 'invalid data');
+});
+
+test('it shoud return model of scms', function (assert) {
+  injectScmServiceStub(this);
+
+  let route = this.subject();
+
+  return route.model().then((scms) => {
+    assert.equal(scms[0].context, 'github:github.com');
+    assert.equal(scms[0].displayName, 'github.com');
+    assert.equal(scms[0].iconType, 'fa-github');
+    assert.equal(scms[0].isSignedIn, true);
+  });
 });

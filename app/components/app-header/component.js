@@ -10,6 +10,9 @@ export default Ember.Component.extend({
     },
     triggerSearch() {
       this.get('searchPipelines')(this.$('.search-input').val());
+    },
+    authenticate(scmContext) {
+      this.get('authenticate')(scmContext);
     }
   }
 });
