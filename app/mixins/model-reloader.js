@@ -1,7 +1,8 @@
-import Ember from 'ember';
+import { later, cancel } from '@ember/runloop';
+import Mixin from '@ember/object/mixin';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
    * Overridable function to determine if a model should be reloaded
    * @method shouldReload
@@ -20,7 +21,7 @@ export default Ember.Mixin.create({
     // If the reloader is active during tests, the tests will always timeout.
     // I'm not sure of a better way to handle this
     if (ENV.environment !== 'test') {
-      const runLater = Ember.run.later(this, 'reloadModel', this.get('reloadTimeout'));
+      const runLater = later(this, 'reloadModel', this.get('reloadTimeout'));
 
       this.set('runLater', runLater);
     }
@@ -54,7 +55,7 @@ export default Ember.Mixin.create({
    */
   stopReloading() {
     if (this.get('runLater')) {
-      Ember.run.cancel(this.get('runLater'));
+      cancel(this.get('runLater'));
       this.set('runLater', null);
     }
   }

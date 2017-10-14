@@ -1,5 +1,8 @@
+import { resolve, reject } from 'rsvp';
+import Service from '@ember/service';
+import { A } from '@ember/array';
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
-import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
@@ -11,14 +14,14 @@ moduleForComponent('pipeline-options', 'Integration | Component | pipeline optio
 });
 
 test('it renders', function (assert) {
-  this.set('mockPipeline', Ember.Object.create({
+  this.set('mockPipeline', EmberObject.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
     id: 'abc1234'
   }));
 
-  this.set('mockJobs', Ember.A([
-    Ember.Object.create({
+  this.set('mockJobs', A([
+    EmberObject.create({
       id: '1234',
       name: 'main',
       isDisabled: false
@@ -62,7 +65,7 @@ test('it updates a pipeline', function (assert) {
     assert.equal(scmUrl, scm);
   });
 
-  this.set('mockPipeline', Ember.Object.create({
+  this.set('mockPipeline', EmberObject.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:notMaster',
     id: 'abc1234'
@@ -77,19 +80,19 @@ test('it updates a pipeline', function (assert) {
 });
 
 test('it handles job disabling', function (assert) {
-  const main = Ember.Object.create({
+  const main = EmberObject.create({
     id: '1234',
     name: 'main',
     isDisabled: false
   });
 
-  this.set('mockPipeline', Ember.Object.create({
+  this.set('mockPipeline', EmberObject.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
     id: 'abc1234'
   }));
 
-  this.set('mockJobs', Ember.A([main]));
+  this.set('mockJobs', A([main]));
 
   this.set('setJobStatsMock', (id, state) => {
     assert.equal(id, '1234');
@@ -112,19 +115,19 @@ test('it handles job disabling', function (assert) {
 });
 
 test('it handles job enabling', function (assert) {
-  const main = Ember.Object.create({
+  const main = EmberObject.create({
     id: '1234',
     name: 'main',
     isDisabled: true
   });
 
-  this.set('mockPipeline', Ember.Object.create({
+  this.set('mockPipeline', EmberObject.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
     id: 'abc1234'
   }));
 
-  this.set('mockJobs', Ember.A([main]));
+  this.set('mockJobs', A([main]));
 
   this.set('setJobStatsMock', (id, state) => {
     assert.equal(id, '1234');
@@ -151,7 +154,7 @@ test('it handles job enabling', function (assert) {
 test('it handles pipeline remove flow', function (assert) {
   const $ = this.$;
 
-  this.set('mockPipeline', Ember.Object.create({
+  this.set('mockPipeline', EmberObject.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
     id: 'abc1234'
@@ -175,12 +178,12 @@ test('it handles pipeline remove flow', function (assert) {
 });
 
 test('it syncs the webhooks', function (assert) {
-  syncService = Ember.Service.extend({
+  syncService = Service.extend({
     syncRequests(pipelineId, syncPath) {
       assert.equal(pipelineId, 1);
       assert.equal(syncPath, 'webhooks');
 
-      return Ember.RSVP.resolve({});
+      return resolve({});
     }
   });
 
@@ -188,7 +191,7 @@ test('it syncs the webhooks', function (assert) {
 
   const $ = this.$;
 
-  this.set('mockPipeline', Ember.Object.create({
+  this.set('mockPipeline', EmberObject.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
     id: '1'
@@ -199,12 +202,12 @@ test('it syncs the webhooks', function (assert) {
 });
 
 test('it syncs the pullrequests', function (assert) {
-  syncService = Ember.Service.extend({
+  syncService = Service.extend({
     syncRequests(pipelineId, syncPath) {
       assert.equal(pipelineId, 1);
       assert.equal(syncPath, 'pullrequests');
 
-      return Ember.RSVP.resolve({});
+      return resolve({});
     }
   });
 
@@ -212,7 +215,7 @@ test('it syncs the pullrequests', function (assert) {
 
   const $ = this.$;
 
-  this.set('mockPipeline', Ember.Object.create({
+  this.set('mockPipeline', EmberObject.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
     id: '1'
@@ -223,12 +226,12 @@ test('it syncs the pullrequests', function (assert) {
 });
 
 test('it syncs the pipeline', function (assert) {
-  syncService = Ember.Service.extend({
+  syncService = Service.extend({
     syncRequests(pipelineId, syncPath) {
       assert.equal(pipelineId, 1);
       assert.equal(syncPath, undefined);
 
-      return Ember.RSVP.resolve({});
+      return resolve({});
     }
   });
 
@@ -236,7 +239,7 @@ test('it syncs the pipeline', function (assert) {
 
   const $ = this.$;
 
-  this.set('mockPipeline', Ember.Object.create({
+  this.set('mockPipeline', EmberObject.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
     id: '1'
@@ -247,9 +250,9 @@ test('it syncs the pipeline', function (assert) {
 });
 
 test('it fails to sync the pipeline', function (assert) {
-  syncService = Ember.Service.extend({
+  syncService = Service.extend({
     syncRequests() {
-      return Ember.RSVP.reject('something conflicting');
+      return reject('something conflicting');
     }
   });
 
@@ -257,7 +260,7 @@ test('it fails to sync the pipeline', function (assert) {
 
   const $ = this.$;
 
-  this.set('mockPipeline', Ember.Object.create({
+  this.set('mockPipeline', EmberObject.create({
     appId: 'foo/bar',
     scmUri: 'github.com:84604643:master',
     id: '1'

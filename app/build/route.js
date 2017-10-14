@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 const RELOAD_TIMER = 5000;
 
-export default Ember.Route.extend({
+export default Route.extend({
   redirect(model) {
     this.transitionTo('pipeline.builds.build', model.pipeline.id, model.build.id);
   },

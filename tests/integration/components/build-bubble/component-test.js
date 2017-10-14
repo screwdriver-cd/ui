@@ -1,5 +1,5 @@
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
-import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 
 moduleForComponent('build-bubble', 'Integration | Component | build bubble', {
@@ -9,7 +9,7 @@ moduleForComponent('build-bubble', 'Integration | Component | build bubble', {
 test('it renders a success bubble', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     status: 'SUCCESS',
     sha: 'abcdef12345'
   });
@@ -25,7 +25,7 @@ test('it renders a success bubble', function (assert) {
 });
 
 test('it renders a failure bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     status: 'FAILURE',
     sha: 'abcdef12345'
   });
@@ -41,7 +41,7 @@ test('it renders a failure bubble', function (assert) {
 });
 
 test('it renders a running bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     status: 'RUNNING',
     sha: 'abcdef12345'
   });
@@ -58,7 +58,7 @@ test('it renders a running bubble', function (assert) {
 });
 
 test('it renders a queued bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     status: 'QUEUED',
     sha: 'abcdef12345'
   });
@@ -74,7 +74,7 @@ test('it renders a queued bubble', function (assert) {
 });
 
 test('it renders an aborted bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     status: 'ABORTED',
     sha: 'abcdef12345'
   });
@@ -87,7 +87,7 @@ test('it renders an aborted bubble', function (assert) {
 });
 
 test('it renders a unknown bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     status: 'banana',
     sha: 'abcdef12345'
   });
@@ -110,7 +110,7 @@ test('it renders an empty bubble', function (assert) {
 });
 
 test('it renders a disabled bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     status: 'banana',
     sha: 'abcdef12345'
   });

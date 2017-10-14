@@ -1,6 +1,7 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
    * Quotes from: https://www.npmjs.com/package/funnies which has an MIT License
    * @property {Array} funnies
@@ -75,7 +76,7 @@ export default Ember.Component.extend({
    * Get a random quote
    * @property {String} loadingMessage
    */
-  loadingMessage: Ember.computed({
+  loadingMessage: computed({
     get() {
       const index = Math.floor(Math.random() * this.funnies.length);
 

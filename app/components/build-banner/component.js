@@ -1,12 +1,14 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import { match, mapBy } from '@ember/object/computed';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ['build-banner'],
   classNameBindings: ['buildStatus'],
-  isPR: Ember.computed.match('jobName', /^PR-/),
-  jobNames: Ember.computed.mapBy('jobs', 'name'),
+  isPR: match('jobName', /^PR-/),
+  jobNames: mapBy('jobs', 'name'),
 
-  buildAction: Ember.computed('buildStatus', {
+  buildAction: computed('buildStatus', {
     get() {
       const status = this.get('buildStatus');
 
@@ -18,7 +20,7 @@ export default Ember.Component.extend({
     }
   }),
 
-  hasButton: Ember.computed('buildAction', 'jobName', {
+  hasButton: computed('buildAction', 'jobName', {
     get() {
       if (this.get('buildAction') === 'Stop') {
         return true;
@@ -32,7 +34,7 @@ export default Ember.Component.extend({
     }
   }),
 
-  previous: Ember.computed('eventBuilds', 'jobs', 'jobName', {
+  previous: computed('eventBuilds', 'jobs', 'jobName', {
     get() {
       if (this.get('isPR')) {
         return null;
@@ -43,7 +45,7 @@ export default Ember.Component.extend({
     }
   }),
 
-  next: Ember.computed('eventBuilds', 'jobs', 'jobName', {
+  next: computed('eventBuilds', 'jobs', 'jobName', {
     get() {
       if (this.get('isPR')) {
         return null;

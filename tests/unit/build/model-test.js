@@ -1,5 +1,5 @@
+import { run } from '@ember/runloop';
 import { moduleForModel, test } from 'ember-qunit';
-import Ember from 'ember';
 
 moduleForModel('build', 'Unit | Model | build', {
   // Specify the other units that are required for this test.
@@ -18,7 +18,7 @@ test('it calculates queuedDuration', function (assert) {
     startTime: new Date(1472244592531)
   });
 
-  Ember.run(() => {
+  run(() => {
     assert.equal(model.get('queuedDuration'), '10 seconds');
     model.set('startTime', null);
     assert.equal(model.get('queuedDuration'), '0 seconds');
@@ -31,7 +31,7 @@ test('it calculates buildDuration', function (assert) {
     endTime: new Date(1472244592531)
   });
 
-  Ember.run(() => {
+  run(() => {
     // valid duration
     assert.equal(model.get('buildDuration'), '10 seconds');
     // no end time, so duration is 0
@@ -50,7 +50,7 @@ test('it humanizes createTime', function (assert) {
     createTime
   });
 
-  Ember.run(() => {
+  run(() => {
     assert.equal(model.get('createTimeWords'),
       `${humanizeDuration(Date.now() - createTime, { round: true, largest: 1 })} ago`);
   });

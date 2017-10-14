@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 
 /* eslint-disable max-len */
 const langs = [
@@ -9,7 +9,7 @@ const langs = [
 ];
 /* eslint-enable max-len */
 
-export default Ember.Component.extend({
+export default Component.extend({
   languages: langs,
   actions: {
     changeLanguage() {

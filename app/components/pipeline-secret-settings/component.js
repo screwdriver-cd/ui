@@ -1,17 +1,19 @@
-import Ember from 'ember';
+import { sort } from '@ember/object/computed';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   newName: null,
   newValue: null,
   newAllow: false,
-  isButtonDisabled: Ember.computed('newName', 'newValue', {
+  isButtonDisabled: computed('newName', 'newValue', {
     get() {
       return !this.get('newName') || !this.get('newValue');
     }
   }),
   errorMessage: '',
   secretsSorting: ['name'],
-  sortedSecrets: Ember.computed.sort('secrets', 'secretsSorting'),
+  sortedSecrets: sort('secrets', 'secretsSorting'),
   actions: {
     /**
      * Kicks off create secret flow

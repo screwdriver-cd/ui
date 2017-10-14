@@ -1,6 +1,6 @@
+import { resolve } from 'rsvp';
 import { moduleFor, test } from 'ember-qunit';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
-import Ember from 'ember';
 import injectSessionStub from '../../../helpers/inject-session';
 
 moduleFor('controller:dashboard/show', 'Unit | Controller | dashboard/show', {
@@ -41,7 +41,7 @@ test('it calls removePipeline', function (assert) {
     save() {
       assert.deepEqual(pipelineIds, [1, 2]);
 
-      return Ember.RSVP.resolve({
+      return resolve({
         id: 1,
         name: 'collection1',
         description: 'description1',
@@ -55,7 +55,7 @@ test('it calls removePipeline', function (assert) {
       assert.strictEqual(modelName, 'collection');
       assert.strictEqual(collectionId, 1);
 
-      return Ember.RSVP.resolve(collectionModelMock);
+      return resolve(collectionModelMock);
     }
   });
 

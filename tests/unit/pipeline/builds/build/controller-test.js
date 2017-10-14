@@ -1,6 +1,8 @@
+import { resolve } from 'rsvp';
+import EmberObject from '@ember/object';
+import { run } from '@ember/runloop';
 import { moduleFor, test } from 'ember-qunit';
 import Pretender from 'pretender';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 let server;
 
@@ -34,9 +36,9 @@ test('it starts a build', function (assert) {
 
   let controller = this.subject();
 
-  Ember.run(() => {
+  run(() => {
     controller.set('model', {
-      build: Ember.Object.create({
+      build: EmberObject.create({
         jobId: 'abcd'
       })
     });
@@ -71,9 +73,9 @@ test('it stops a build', function (assert) {
 
   let controller = this.subject();
 
-  Ember.run(() => {
+  run(() => {
     controller.set('model', {
-      build: Ember.Object.create({
+      build: EmberObject.create({
         jobId: 'abcd',
         save() {
           assert.ok(true);
@@ -88,7 +90,7 @@ test('it stops a build', function (assert) {
 test('it reloads a build', function (assert) {
   assert.expect(4);
   let controller = this.subject();
-  const build = Ember.Object.create({
+  const build = EmberObject.create({
     id: '5678',
     jobId: 'abcd',
     status: 'QUEUED',
@@ -96,7 +98,7 @@ test('it reloads a build', function (assert) {
       assert.ok(true);
       this.set('status', 'SUCCESS');
 
-      return Ember.RSVP.resolve({
+      return resolve({
         id: '5678',
         jobId: 'abcd',
         status: 'SUCCESS'
@@ -104,7 +106,7 @@ test('it reloads a build', function (assert) {
     }
   });
 
-  const event = Ember.Object.create({
+  const event = EmberObject.create({
     hasMany: (key) => {
       assert.equal(key, 'builds');
 
@@ -114,7 +116,7 @@ test('it reloads a build', function (assert) {
     }
   });
 
-  Ember.run(() => {
+  run(() => {
     controller.set('model', {
       build,
       event

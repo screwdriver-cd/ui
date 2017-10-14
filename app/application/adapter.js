@@ -1,9 +1,10 @@
+import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
-import Ember from 'ember';
 
 export default DS.RESTAdapter.extend({
-  session: Ember.inject.service('session'),
+  session: service('session'),
   namespace: ENV.APP.SDAPI_NAMESPACE,
   host: ENV.APP.SDAPI_HOSTNAME,
 
@@ -30,7 +31,7 @@ export default DS.RESTAdapter.extend({
    * Compute the headers to add the auth token in
    * @property {Object}
    */
-  headers: Ember.computed(function cHeaders() {
+  headers: computed(function cHeaders() {
     return { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` };
   }).volatile(),
 

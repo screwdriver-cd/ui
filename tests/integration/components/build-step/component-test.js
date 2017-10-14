@@ -1,14 +1,15 @@
+import { resolve } from 'rsvp';
+import Service from '@ember/service';
 import { moduleForComponent, test } from 'ember-qunit';
-import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import moment from 'moment';
 const time = 1478912844724;
 const timeFormat = moment(time).format('HH:mm:ss');
 
-const logService = Ember.Service.extend({
+const logService = Service.extend({
   fetchLogs() {
-    return Ember.RSVP.resolve({
+    return resolve({
       lines: [{ m: 'hello, world', n: 1, t: time }],
       done: true
     });

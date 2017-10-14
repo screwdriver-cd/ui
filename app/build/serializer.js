@@ -1,5 +1,5 @@
+import { merge } from '@ember/polyfills';
 import DS from 'ember-data';
-import Ember from 'ember';
 
 export default DS.RESTSerializer.extend({
   attrs: {
@@ -13,9 +13,9 @@ export default DS.RESTSerializer.extend({
    */
   serializeIntoHash(hash, typeClass, snapshot) {
     if (!snapshot.id) {
-      return Ember.merge(hash, { jobId: snapshot.attr('jobId') });
+      return merge(hash, { jobId: snapshot.attr('jobId') });
     }
 
-    return Ember.merge(hash, { status: snapshot.attr('status') });
+    return merge(hash, { status: snapshot.attr('status') });
   }
 });

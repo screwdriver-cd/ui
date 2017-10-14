@@ -1,6 +1,6 @@
+import { run } from '@ember/runloop';
 import { moduleFor, test } from 'ember-qunit';
 import Pretender from 'pretender';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 let server;
 
@@ -31,7 +31,7 @@ test('it handles updating job state', function (assert) {
 
   let controller = this.subject();
 
-  Ember.run(() => {
+  run(() => {
     controller.store.push({
       data: {
         id: '1234',
@@ -61,7 +61,7 @@ test('it handles deleting pipelines', function (assert) {
 
   let controller = this.subject();
 
-  Ember.run(() => {
+  run(() => {
     controller.store.push({
       data: {
         id: 'abc1234',

@@ -1,7 +1,10 @@
-import Ember from 'ember';
+import { schedule } from '@ember/runloop';
+import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
-  collections: Ember.computed('store', {
+export default Component.extend({
+  collections: computed('store', {
     get() {
       return this.get('store').findAll('collection');
     }
@@ -11,8 +14,8 @@ export default Ember.Component.extend({
   showConfirmation: false,
   showDeleteButtons: false,
   showModal: false,
-  session: Ember.inject.service(),
-  store: Ember.inject.service(),
+  session: service(),
+  store: service(),
   actions: {
     /**
      * Action to create a new collection
@@ -21,7 +24,7 @@ export default Ember.Component.extend({
       const name = this.get('name');
       const description = this.get('description');
 
-      Ember.run.schedule('actions', () => {
+      schedule('actions', () => {
         const newCollection = this.get('store').createRecord('collection', {
           name,
           description

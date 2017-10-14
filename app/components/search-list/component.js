@@ -1,11 +1,15 @@
-import Ember from 'ember';
+import { inspect } from '@ember/debug';
+import { computed } from '@ember/object';
+import { sort, empty } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
-  session: Ember.inject.service(),
-  scmService: Ember.inject.service('scm'),
+export default Component.extend({
+  session: service(),
+  scmService: service('scm'),
   pipelineSorting: ['appId', 'branch'],
-  sortedPipelines: Ember.computed.sort('pipelines', 'pipelineSorting'),
-  filterSet: Ember.computed('query', {
+  sortedPipelines: sort('pipelines', 'pipelineSorting'),
+  filterSet: computed('query', {
     get() {
       const q = this.get('query') || '';
       const keywords = q.split(/\s+/);
@@ -23,7 +27,7 @@ export default Ember.Component.extend({
       return filters;
     }
   }),
-  filteredPipelines: Ember.computed('sortedPipelines', 'filterSet', {
+  filteredPipelines: computed('sortedPipelines', 'filterSet', {
     get() {
       const scmService = this.get('scmService');
       const pipelines = this.get('sortedPipelines');
@@ -32,7 +36,7 @@ export default Ember.Component.extend({
 
       filterSet.forEach((filter) => {
         filtered = filtered.filter((p) => {
-          const field = Ember.inspect(p.get(filter.key));
+          const field = inspect(p.get(filter.key));
 
           // skip filtering if value is empty
           return !filter.value || (field && field.indexOf(filter.value) > -1);
@@ -50,7 +54,7 @@ export default Ember.Component.extend({
       });
     }
   }),
-  isEmpty: Ember.computed.empty('filteredPipelines'),
+  isEmpty: empty('filteredPipelines'),
   addCollectionError: null,
   addCollectionSuccess: null,
   actions: {

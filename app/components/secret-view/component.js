@@ -1,8 +1,9 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: 'tr',
-  buttonAction: Ember.computed('newValue', 'secret.allowInPR', 'originalAllowInPR', {
+  buttonAction: computed('newValue', 'secret.allowInPR', 'originalAllowInPR', {
     get() {
       return (this.get('newValue')
         || this.get('originalAllowInPR') !== this.get('secret.allowInPR')) ?

@@ -1,14 +1,17 @@
-import Ember from 'ember';
+import { capitalize } from '@ember/string';
+import { computed, observer } from '@ember/object';
+import { sort } from '@ember/object/computed';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   tokenSorting: ['name', 'description', 'lastUsed'],
-  sortedTokens: Ember.computed.sort('tokens', 'tokenSorting'),
+  sortedTokens: sort('tokens', 'tokenSorting'),
 
   // Error for failed to create/update/remove/refresh token
   errorMessage: null,
 
   // Adding a new token
-  isButtonDisabled: Ember.computed('newName', 'isSaving', function isButtonDisabled() {
+  isButtonDisabled: computed('newName', 'isSaving', function isButtonDisabled() {
     return !this.get('newName') || this.get('isSaving');
   }),
   isSaving: false,
@@ -18,20 +21,20 @@ export default Ember.Component.extend({
   // Confirmation dialog
   isShowingModal: false,
   modalAction: null,
-  modalButtonText: Ember.computed('modalAction', function modalButtonText() {
-    return Ember.String.capitalize(this.get('modalAction'));
+  modalButtonText: computed('modalAction', function modalButtonText() {
+    return capitalize(this.get('modalAction'));
   }),
   modalTarget: null,
   modalText: null,
 
   // Don't show the "new token" and "error" dialogs at the same time
-  errorObserver: Ember.observer('errorMessage', function errorObserver() {
+  errorObserver: observer('errorMessage', function errorObserver() {
     if (this.get('errorMessage')) {
       this.set('newToken', null);
       this.set('isSaving', null);
     }
   }),
-  newTokenObserver: Ember.observer('newToken', function newTokenObserver() {
+  newTokenObserver: observer('newToken', function newTokenObserver() {
     if (this.get('newToken')) {
       this.set('errorMessage', null);
       this.set('isSaving', null);

@@ -1,6 +1,7 @@
+import { merge } from '@ember/polyfills';
+import { copy } from '@ember/object/internals';
 import { test } from 'qunit';
 import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
-import Ember from 'ember';
 import Pretender from 'pretender';
 let server;
 
@@ -121,7 +122,7 @@ const makeBuilds = (eventId) => {
   const builds = [];
 
   shas.forEach((sha) => {
-    const b = Ember.copy(BUILD, true);
+    const b = copy(BUILD, true);
     const config = {
       id: Math.floor(Math.random() * 99999999999),
       eventId,
@@ -130,7 +131,7 @@ const makeBuilds = (eventId) => {
       status: ['SUCCESS', 'FAILURE', 'RUNNING'][Math.floor(Math.random() * 2)]
     };
 
-    Ember.merge(b, config);
+    merge(b, config);
 
     builds.push(b);
   });

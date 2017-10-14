@@ -1,6 +1,7 @@
+import EmberObject from '@ember/object';
+import { Promise as EmberPromise } from 'rsvp';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import injectSessionStub from '../../../helpers/inject-session';
@@ -14,7 +15,7 @@ const mockCollection = {
 
 const collectionModel = {
   save() {
-    return new Ember.RSVP.Promise(resolve => resolve(mockCollection));
+    return new EmberPromise(resolve => resolve(mockCollection));
   },
   destroyRecord() {}
 };
@@ -30,19 +31,19 @@ test('it renders', function (assert) {
   injectSessionStub(this);
 
   this.set('collections', [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       name: 'collection1',
       description: 'description1',
       pipelineIds: [1, 2, 3]
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       name: 'collection2',
       description: 'description2',
       pipelineIds: [4, 5, 6]
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 3,
       name: 'collection3',
       description: 'description3',
@@ -110,7 +111,7 @@ test('it creates a collection', function (assert) {
   injectSessionStub(this);
 
   const $ = this.$;
-  const storeStub = Ember.Object.extend({
+  const storeStub = EmberObject.extend({
     createRecord(model, data) {
       assert.strictEqual(model, 'collection');
       assert.deepEqual(data, {
@@ -121,7 +122,7 @@ test('it creates a collection', function (assert) {
       return collectionModel;
     },
     findAll() {
-      return new Ember.RSVP.Promise(resolve => resolve([mockCollection]));
+      return new EmberPromise(resolve => resolve([mockCollection]));
     }
   });
 
@@ -156,7 +157,7 @@ test('it renders an active collection', function (assert) {
   assert.expect(4);
   const $ = this.$;
 
-  this.set('collections', [Ember.Object.create(mockCollection)]);
+  this.set('collections', [EmberObject.create(mockCollection)]);
 
   this.set('selectedCollectionId', 1);
 
@@ -177,7 +178,7 @@ test('it fails to create a collection', function (assert) {
   const $ = this.$;
   const model = {
     save() {
-      return new Ember.RSVP.Promise((resolve, reject) => reject({
+      return new EmberPromise((resolve, reject) => reject({
         errors: [{
           detail: 'This is an error message'
         }]
@@ -185,7 +186,7 @@ test('it fails to create a collection', function (assert) {
     },
     destroyRecord() {}
   };
-  const storeStub = Ember.Object.extend({
+  const storeStub = EmberObject.extend({
     createRecord() {
       return model;
     }
@@ -247,34 +248,34 @@ test('it deletes a collection', function (assert) {
       // Dummy assert to make sure this function gets called
       assert.ok(true);
 
-      return new Ember.RSVP.Promise(resolve => resolve());
+      return new EmberPromise(resolve => resolve());
     }
   };
-  const storeStub = Ember.Object.extend({
+  const storeStub = EmberObject.extend({
     peekRecord() {
       assert.ok(true, 'peekRecord called');
 
       return collectionModelMock;
     },
     findAll() {
-      return new Ember.RSVP.Promise(resolve => resolve([mockCollection]));
+      return new EmberPromise(resolve => resolve([mockCollection]));
     }
   });
 
   this.set('collections', [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       name: 'collection1',
       description: 'description1',
       pipelineIds: [1, 2, 3]
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       name: 'collection2',
       description: 'description2',
       pipelineIds: [4, 5, 6]
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 3,
       name: 'collection3',
       description: 'description3',

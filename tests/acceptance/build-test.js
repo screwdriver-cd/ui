@@ -1,8 +1,8 @@
+import $ from 'jquery';
 import { test } from 'qunit';
 import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
 // import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
 import Pretender from 'pretender';
-import Ember from 'ember';
 import moment from 'moment';
 let server;
 const time = 1474649593036;
@@ -171,7 +171,6 @@ moduleForAcceptance('Acceptance | build', {
 });
 
 test('visiting /pipelines/:id/builds/:id', function (assert) {
-  const $ = Ember.$;
   const first = new RegExp(`${timeFormat}\\s+bad stuff`);
   const second = new RegExp(`${timeFormat}\\s+fancy stuff`);
 

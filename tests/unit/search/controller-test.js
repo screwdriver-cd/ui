@@ -1,5 +1,5 @@
+import { resolve } from 'rsvp';
 import { moduleFor, test } from 'ember-qunit';
-import Ember from 'ember';
 import injectSessionStub from '../../helpers/inject-session';
 
 moduleFor('controller:search', 'Unit | Controller | search', {
@@ -39,7 +39,7 @@ test('it calls addToCollection', function (assert) {
     save() {
       assert.deepEqual(pipelineIds, [1, 2, 3]);
 
-      return Ember.RSVP.resolve({
+      return resolve({
         id: 1,
         name: 'collection1',
         description: 'description1',
@@ -53,7 +53,7 @@ test('it calls addToCollection', function (assert) {
       assert.strictEqual(modelName, 'collection');
       assert.strictEqual(collectionId, 1);
 
-      return Ember.RSVP.resolve(collectionModelMock);
+      return resolve(collectionModelMock);
     }
   });
 

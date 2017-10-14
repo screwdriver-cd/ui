@@ -1,9 +1,9 @@
-import Ember from 'ember';
+import EmberObject from '@ember/object';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent } from 'ember-qunit';
 import test from 'ember-sinon-qunit/test-support/test';
 
-const eventMock = Ember.Object.create({
+const eventMock = EmberObject.create({
   id: 'abcd',
   causeMessage: 'Merged by batman',
   commit: {
@@ -33,10 +33,10 @@ const eventMock = Ember.Object.create({
 });
 
 const jobMock = [
-  Ember.Object.create({
+  EmberObject.create({
     id: '1',
     name: 'main'
-  }), Ember.Object.create({
+  }), EmberObject.create({
     id: '2',
     name: 'publish'
   })

@@ -1,6 +1,11 @@
-import Ember from 'ember';
+import { resolve } from 'rsvp';
+import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
 
-const ObjectPromiseProxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin);
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 const typesOptions = {
   directory: {
     icon: 'fa fa-folder-o fa-lg'
@@ -10,18 +15,18 @@ const typesOptions = {
   }
 };
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ['artifact-tree'],
   classNameBindings: ['buildStatus'],
-  artifact: Ember.inject.service('build-artifact'),
+  artifact: service('build-artifact'),
   typesOptions,
   plugins: 'types',
-  treedata: Ember.computed('buildStatus', 'buildId', {
+  treedata: computed('buildStatus', 'buildId', {
     get() {
       const buildStatus = this.get('buildStatus');
 
       if (buildStatus === 'RUNNING' || buildStatus === 'QUEUED') {
-        return Ember.RSVP.resolve([]);
+        return resolve([]);
       }
 
       return ObjectPromiseProxy.create({

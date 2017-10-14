@@ -1,7 +1,9 @@
 /* eslint-disable new-cap */
+import { A } from '@ember/array';
+
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 moduleForComponent('pipeline-event-view', 'Integration | Component | pipeline event view', {
   integration: true
@@ -10,9 +12,9 @@ moduleForComponent('pipeline-event-view', 'Integration | Component | pipeline ev
 test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const event = Ember.Object.create({
+  const event = EmberObject.create({
     id: 'abcd',
-    buildsSorted: Ember.A([]),
+    buildsSorted: A([]),
     causeMessage: 'Merged by batman',
     commit: {
       message: 'Merge pull request #2 from batcave/batmobile',

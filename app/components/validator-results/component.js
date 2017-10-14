@@ -1,28 +1,29 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   results: null,
-  errors: Ember.computed('results', {
+  errors: computed('results', {
     get() {
       return (this.get('results.errors') || []).map(e => (typeof e === 'string' ? e : e.message));
     }
   }),
-  workflow: Ember.computed('results', {
+  workflow: computed('results', {
     get() {
       return this.get('results.workflow') || [];
     }
   }),
-  annotations: Ember.computed('results', {
+  annotations: computed('results', {
     get() {
       return this.get('results.annotations') || [];
     }
   }),
-  jobs: Ember.computed('results', {
+  jobs: computed('results', {
     get() {
       return this.get('results.jobs');
     }
   }),
-  templateName: Ember.computed('results.template.name', 'results.template.version', {
+  templateName: computed('results.template.{name,version}', {
     get() {
       return `${this.get('results.template.name')}@${this.get('results.template.version')}`;
     }

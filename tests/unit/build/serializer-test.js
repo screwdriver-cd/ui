@@ -1,6 +1,6 @@
+import { run } from '@ember/runloop';
 import { moduleForModel, test } from 'ember-qunit';
 import Pretender from 'pretender';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 let server;
 
@@ -24,7 +24,7 @@ test('it converts container to buildContainer', function (assert) {
   });
   let build;
 
-  Ember.run(() => {
+  run(() => {
     build = this.store().findRecord('build', 'abcd');
   });
 
@@ -39,7 +39,7 @@ test('it POSTs only a jobId for create', function (assert) {
     return [200, {}, JSON.stringify({ build: { id: 'abcd' } })];
   });
 
-  Ember.run(() => {
+  run(() => {
     const build = this.store().createRecord('build', { jobId: '1234' });
 
     build.save().then(() => {
@@ -61,7 +61,7 @@ test('it PUTs only a status for update', function (assert) {
     return [200, {}, JSON.stringify({ build: { id: 1234 } })];
   });
 
-  Ember.run(() => {
+  run(() => {
     this.store().push({
       data: {
         id: 1234,

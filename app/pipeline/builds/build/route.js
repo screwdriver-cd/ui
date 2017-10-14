@@ -1,6 +1,7 @@
-import Ember from 'ember';
+import { all } from 'rsvp';
+import Route from '@ember/routing/route';
 
-export default Ember.Route.extend({
+export default Route.extend({
   routeAfterAuthentication: 'pipeline.builds.build',
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline'));
@@ -9,7 +10,7 @@ export default Ember.Route.extend({
     return `${model.job.get('name')} > #${model.build.get('sha').substr(0, 6)}`;
   },
   model(params) {
-    return this.store.findRecord('build', params.build_id).then(build => Ember.RSVP.all([
+    return this.store.findRecord('build', params.build_id).then(build => all([
       this.store.findRecord('job', build.get('jobId')),
       this.store.findRecord('event', build.get('eventId')),
       this.get('pipeline.jobs')

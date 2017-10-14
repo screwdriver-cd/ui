@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 // eslint-disable-next-line camelcase
 import { jwt_decode } from 'ember-cli-jwt-decode';
@@ -22,9 +23,9 @@ function getIconType(scmContext) {
   return iconTypes[scm];
 }
 
-export default Ember.Service.extend({
-  session: Ember.inject.service('session'),
-  store: Ember.inject.service(),
+export default Service.extend({
+  session: service('session'),
+  store: service(),
 
   /**
    * Get all scms from sd api server,
@@ -41,7 +42,7 @@ export default Ember.Service.extend({
       return scms;
     }
 
-    return Ember.$.getJSON(scmUrl).then((scmContexts) => {
+    return $.getJSON(scmUrl).then((scmContexts) => {
       scmContexts.forEach((scmContext) => {
         let isSignedIn = false;
 

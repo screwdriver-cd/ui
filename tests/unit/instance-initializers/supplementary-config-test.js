@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import Application from '@ember/application';
+import { run } from '@ember/runloop';
 import { initialize } from 'screwdriver-ui/instance-initializers/supplementary-config';
 import { module, test } from 'qunit';
 import ENV from 'screwdriver-ui/config/environment';
@@ -8,14 +9,14 @@ const HOSTNAME = ENV.APP.SDAPI_HOSTNAME;
 
 module('Unit | Instance Initializer | supplementary config', {
   beforeEach() {
-    Ember.run(() => {
-      this.application = Ember.Application.create();
+    run(() => {
+      this.application = Application.create();
       this.appInstance = this.application.buildInstance();
       delete window.SUPPLEMENTARY_CONFIG;
     });
   },
   afterEach() {
-    Ember.run(this.appInstance, 'destroy');
+    run(this.appInstance, 'destroy');
     destroyApp(this.application);
     delete window.SUPPLEMENTARY_CONFIG;
     ENV.APP.SDAPI_NAMESPACE = NAMESPACE;

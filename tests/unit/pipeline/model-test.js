@@ -1,5 +1,5 @@
+import { run } from '@ember/runloop';
 import { moduleForModel, test } from 'ember-qunit';
-import Ember from 'ember';
 
 moduleForModel('pipeline', 'Unit | Model | pipeline', {
   // Specify the other units that are required for this test.
@@ -15,7 +15,7 @@ test('it exists', function (assert) {
 test('it gets correct appId', function (assert) {
   let model = this.subject();
 
-  Ember.run(() => {
+  run(() => {
     const scmRepoMock = {
       name: 'foo/bar',
       branch: 'master',
@@ -31,7 +31,7 @@ test('it gets correct appId', function (assert) {
 test('it gets correct hub url', function (assert) {
   let model = this.subject();
 
-  Ember.run(() => {
+  run(() => {
     const scmRepoMock = {
       name: 'foo/bar',
       branch: 'master',
@@ -47,7 +47,7 @@ test('it gets correct hub url', function (assert) {
 test('it gets correct branch', function (assert) {
   let model = this.subject();
 
-  Ember.run(() => {
+  run(() => {
     const scmRepoMock = {
       name: 'foo/bar',
       branch: 'master',

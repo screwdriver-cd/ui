@@ -1,5 +1,5 @@
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
-import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 
 moduleForComponent('secret-view', 'Integration | Component | secret view', {
@@ -9,7 +9,7 @@ moduleForComponent('secret-view', 'Integration | Component | secret view', {
 test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const testSecret = Ember.Object.create({
+  const testSecret = EmberObject.create({
     name: 'TEST_SECRET',
     pipelineId: 123245,
     value: 'banana',
@@ -47,7 +47,7 @@ test('it renders', function (assert) {
 
 test('it trys to delete a secret', function (assert) {
   assert.expect(1);
-  this.set('mockSecret', Ember.Object.extend({
+  this.set('mockSecret', EmberObject.extend({
     destroyRecord() {
       // destroy called
       assert.ok(true);
@@ -70,7 +70,7 @@ test('it trys to delete a secret', function (assert) {
 test('it saves changes to a secret', function (assert) {
   assert.expect(2);
   // Setting up model so `set` works as expected
-  this.set('mockSecret', Ember.Object.extend({
+  this.set('mockSecret', EmberObject.extend({
     destroyRecord() {
       // destroy called: Fail!
       assert.ok(false);

@@ -1,8 +1,10 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Ember.Component.extend(ModelReloaderMixin, {
+export default Component.extend(ModelReloaderMixin, {
   tagName: 'span',
   classNames: ['build-bubble'],
   classNameBindings: ['build.id', 'small'],
@@ -18,7 +20,7 @@ export default Ember.Component.extend(ModelReloaderMixin, {
     return false;
   },
 
-  icon: Ember.computed('jobIsDisabled', 'build', 'build.status', {
+  icon: computed('jobIsDisabled', 'build', 'build.status', {
     get() {
       if (this.get('jobIsDisabled')) {
         return 'pause';
@@ -47,7 +49,7 @@ export default Ember.Component.extend(ModelReloaderMixin, {
     }
   }),
 
-  linkTitle: Ember.computed('small', {
+  linkTitle: computed('small', {
     get() {
       if (this.get('small')) {
         return this.get('jobName');
@@ -58,10 +60,10 @@ export default Ember.Component.extend(ModelReloaderMixin, {
   }),
 
   mouseEnter() {
-    Ember.$(`.${this.get('build.id')}`).addClass('highlight');
+    $(`.${this.get('build.id')}`).addClass('highlight');
   },
   mouseLeave() {
-    Ember.$('.build-bubble').removeClass('highlight');
+    $('.build-bubble').removeClass('highlight');
   },
   willRender() {
     this.startReloading();

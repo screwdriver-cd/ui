@@ -1,6 +1,6 @@
+import { run } from '@ember/runloop';
 import { moduleForModel, test } from 'ember-qunit';
 import Pretender from 'pretender';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 let server;
 
@@ -37,7 +37,7 @@ test('it does not post with model name as key', function (assert) {
     return [200, {}, JSON.stringify({ id: 'abcd' })];
   });
 
-  Ember.run(() => {
+  run(() => {
     const pipeline = this.store().createRecord('pipeline', {
       checkoutUrl: 'git@example.com:foo/bar.git'
     });

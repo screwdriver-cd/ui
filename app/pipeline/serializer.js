@@ -1,5 +1,5 @@
+import { merge } from '@ember/polyfills';
 import DS from 'ember-data';
-import Ember from 'ember';
 
 export default DS.RESTSerializer.extend({
   /**
@@ -8,6 +8,6 @@ export default DS.RESTSerializer.extend({
    * @method serializeIntoHash
    */
   serializeIntoHash(hash, typeClass, snapshot) {
-    return Ember.merge(hash, { checkoutUrl: snapshot.attr('checkoutUrl') });
+    return merge(hash, { checkoutUrl: snapshot.attr('checkoutUrl') });
   }
 });

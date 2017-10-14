@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 /**
  * Get first build from an array of builds.
@@ -16,4 +16,4 @@ export function getLastBuild(params) {
   return builds.objectAt(0);
 }
 
-export default Ember.Helper.helper(getLastBuild);
+export default helper(getLastBuild);

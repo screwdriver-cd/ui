@@ -1,8 +1,9 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import Route from '@ember/routing/route';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
-export default Ember.Route.extend(ApplicationRouteMixin, {
-  scmService: Ember.inject.service('scm'),
+export default Route.extend(ApplicationRouteMixin, {
+  scmService: service('scm'),
   routeAfterAuthentication: 'home',
   sessionInvalidated: () => window.location.replace(window.location.href),
   sessionAuthenticated: function sessionAuthenticated() {

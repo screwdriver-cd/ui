@@ -1,10 +1,11 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import Route from '@ember/routing/route';
 import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-route-mixin';
 
-export default Ember.Route.extend(UnauthenticatedRouteMixin, {
+export default Route.extend(UnauthenticatedRouteMixin, {
   titleToken: 'Login',
   routeIfAlreadyAuthenticated: 'home',
-  scmService: Ember.inject.service('scm'),
+  scmService: service('scm'),
   model() {
     return this.get('scmService').getScms();
   }

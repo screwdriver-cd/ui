@@ -1,3 +1,5 @@
+import { helper } from '@ember/component/helper';
+import { htmlSafe } from '@ember/string';
 import Ember from 'ember';
 
 /**
@@ -9,7 +11,7 @@ import Ember from 'ember';
 export function ansiColorize([message]) {
   const m = Ember.Handlebars.Utils.escapeExpression(message);
 
-  return Ember.String.htmlSafe(ansi_up.ansi_to_html(m));
+  return htmlSafe(ansi_up.ansi_to_html(m));
 }
 
-export default Ember.Helper.helper(ansiColorize);
+export default helper(ansiColorize);

@@ -1,9 +1,10 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: 'span',
   className: ['build-health'],
-  icon: Ember.computed('build', 'build.status', {
+  icon: computed('build', 'build.status', {
     get() {
       const build = this.get('build');
 

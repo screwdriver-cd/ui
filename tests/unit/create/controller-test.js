@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { reject } from 'rsvp';
 import { moduleFor } from 'ember-qunit';
 import test from 'ember-sinon-qunit/test-support/test';
 
@@ -31,7 +31,7 @@ test('it should handle duplicate error on pipeline save', function (assert) {
       assert.equal(data.checkoutUrl, 'dummy');
 
       return {
-        save: () => Ember.RSVP.reject({ errors: [conflictError] })
+        save: () => reject({ errors: [conflictError] })
       };
     }
   });

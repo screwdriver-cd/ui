@@ -1,6 +1,8 @@
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
+import { run } from '@ember/runloop';
 import { moduleFor, test } from 'ember-qunit';
 import Pretender from 'pretender';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 let server;
 
@@ -34,16 +36,16 @@ test('it starts a build', function (assert) {
 
   let controller = this.subject();
 
-  Ember.run(() => {
+  run(() => {
     controller.set('model', {
       // eslint-disable-next-line new-cap
-      jobs: Ember.A([
-        Ember.Object.create({
+      jobs: A([
+        EmberObject.create({
           id: 'abcd',
           name: 'main',
           // eslint-disable-next-line new-cap
-          builds: Ember.A([
-            Ember.Object.create({
+          builds: A([
+            EmberObject.create({
               id: '1234',
               jobId: 'abcd',
               status: 'FAILURE'
@@ -78,16 +80,16 @@ test('it transistions to running build', function (assert) {
   assert.expect(2);
   let controller = this.subject();
 
-  Ember.run(() => {
+  run(() => {
     controller.set('model', {
       // eslint-disable-next-line new-cap
-      jobs: Ember.A([
-        Ember.Object.create({
+      jobs: A([
+        EmberObject.create({
           id: 'abcd',
           name: 'main',
           // eslint-disable-next-line new-cap
-          builds: Ember.A([
-            Ember.Object.create({
+          builds: A([
+            EmberObject.create({
               id: '1234',
               jobId: 'abcd',
               status: 'RUNNING'

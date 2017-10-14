@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 /**
  * get an element of the array at the specified index
@@ -14,4 +14,4 @@ export function indexOf(params) {
   return params[0].objectAt(params[1]);
 }
 
-export default Ember.Helper.helper(indexOf);
+export default helper(indexOf);

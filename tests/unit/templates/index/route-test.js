@@ -1,9 +1,10 @@
+import { resolve } from 'rsvp';
+import Service from '@ember/service';
 import { moduleFor, test } from 'ember-qunit';
-import Ember from 'ember';
 
-const templateServiceStub = Ember.Service.extend({
+const templateServiceStub = Service.extend({
   getAllTemplates() {
-    return Ember.RSVP.resolve([
+    return resolve([
       { id: 3, name: 'foo/bar', version: '3.0.0' },
       { id: 2, name: 'foo/bar', version: '2.0.0' },
       { id: 1, name: 'bar/baz', version: '1.0.0' }

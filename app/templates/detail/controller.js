@@ -1,17 +1,18 @@
-import Ember from 'ember';
+import { computed, observer } from '@ember/object';
+import Controller from '@ember/controller';
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   selectedVersion: null,
-  latest: Ember.computed('model.[]', {
+  latest: computed('model.[]', {
     get() {
       return this.get('model')[0];
     }
   }),
   // Set selected version to null whenever the list of templates changes
-  modelObserver: Ember.observer('model.[]', function modelObserver() {
+  modelObserver: observer('model.[]', function modelObserver() {
     this.set('selectedVersion', null);
   }),
-  template: Ember.computed('selectedVersion', 'model.[]', {
+  template: computed('selectedVersion', 'model.[]', {
     get() {
       const version = this.get('selectedVersion') || this.get('latest.version');
 

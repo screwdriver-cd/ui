@@ -1,5 +1,5 @@
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
-import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 
 moduleForComponent('build-health', 'Integration | Component | build health', {
@@ -7,7 +7,7 @@ moduleForComponent('build-health', 'Integration | Component | build health', {
 });
 
 test('it renders a success bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     id: 1,
     status: 'SUCCESS'
   });
@@ -20,7 +20,7 @@ test('it renders a success bubble', function (assert) {
 });
 
 test('it renders a failure bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     id: 1,
     status: 'FAILURE'
   });
@@ -33,7 +33,7 @@ test('it renders a failure bubble', function (assert) {
 });
 
 test('it renders a running bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     id: 1,
     status: 'RUNNING'
   });
@@ -47,7 +47,7 @@ test('it renders a running bubble', function (assert) {
 });
 
 test('it renders a queued bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     id: 1,
     status: 'QUEUED'
   });
@@ -60,7 +60,7 @@ test('it renders a queued bubble', function (assert) {
 });
 
 test('it renders an aborted bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     id: 1,
     status: 'ABORTED'
   });
@@ -73,7 +73,7 @@ test('it renders an aborted bubble', function (assert) {
 });
 
 test('it renders an unknown bubble', function (assert) {
-  const buildMock = Ember.Object.create({
+  const buildMock = EmberObject.create({
     id: 1,
     status: 'banana'
   });
