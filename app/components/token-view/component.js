@@ -1,8 +1,9 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: 'tr',
-  buttonAction: Ember.computed('token.name', 'token.description', 'newName', 'newDescription', {
+  buttonAction: computed('token.{name,description}', 'newName', 'newDescription', {
     get() {
       const token = this.get('token');
 

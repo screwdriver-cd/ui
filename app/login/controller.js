@@ -1,7 +1,8 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import Controller from '@ember/controller';
 
-export default Ember.Controller.extend({
-  session: Ember.inject.service('session'),
+export default Controller.extend({
+  session: service('session'),
   actions: {
     authenticate(scmContext) {
       this.get('session').authenticate('authenticator:screwdriver-api', scmContext);

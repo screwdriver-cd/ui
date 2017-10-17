@@ -1,5 +1,6 @@
+import { resolve } from 'rsvp';
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
-import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 
 moduleForComponent('token-view', 'Integration | Component | token view', {
@@ -10,7 +11,7 @@ test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const $ = this.$;
-  const testToken = Ember.Object.create({
+  const testToken = EmberObject.create({
     name: 'TEST_TOKEN',
     description: 'hunter2'
   });
@@ -47,7 +48,7 @@ test('it trys to delete a token', function (assert) {
   const $ = this.$;
 
   assert.expect(2);
-  this.set('mockToken', Ember.Object.create({
+  this.set('mockToken', EmberObject.create({
     name: 'TEST_TOKEN',
     description: 'hunter2'
   }));
@@ -67,7 +68,7 @@ test('it saves changes to a token', function (assert) {
 
   assert.expect(3);
   // Setting up model so `set` works as expected
-  this.set('mockToken', Ember.Object.extend({
+  this.set('mockToken', EmberObject.extend({
     destroyRecord() {
       // destroy called: Fail!
       assert.ok(false);
@@ -77,7 +78,7 @@ test('it saves changes to a token', function (assert) {
       assert.equal(this.get('name'), 'TEST_TOKEN_2');
       expectIsSaving = false;
 
-      return Ember.RSVP.resolve();
+      return resolve();
     }
   }).create({
     name: 'TEST_TOKEN',

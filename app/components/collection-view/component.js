@@ -1,10 +1,13 @@
-import Ember from 'ember';
+import { sort } from '@ember/object/computed';
+import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
-  session: Ember.inject.service(),
-  scmService: Ember.inject.service('scm'),
+export default Component.extend({
+  session: service(),
+  scmService: service('scm'),
   sortBy: ['scmRepo.name'],
-  sortByText: Ember.computed('sortBy', {
+  sortByText: computed('sortBy', {
     get() {
       switch (this.get('sortBy').get(0)) {
       case 'scmRepo.name':
@@ -16,7 +19,7 @@ export default Ember.Component.extend({
       }
     }
   }),
-  collectionPipelines: Ember.computed('collection.pipelines', {
+  collectionPipelines: computed('collection.pipelines', {
     get() {
       const scmService = this.get('scmService');
 
@@ -49,7 +52,7 @@ export default Ember.Component.extend({
       return [];
     }
   }),
-  sortedPipelines: Ember.computed.sort('collectionPipelines', 'sortBy'),
+  sortedPipelines: sort('collectionPipelines', 'sortBy'),
   removePipelineError: null,
   actions: {
     /**

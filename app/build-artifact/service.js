@@ -1,4 +1,6 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { Promise as EmberPromise } from 'rsvp';
+import Service from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
 /**
@@ -70,7 +72,7 @@ function arrangeIntoTree(paths, baseUrl) {
   return tree;
 }
 
-export default Ember.Service.extend({
+export default Service.extend({
   /**
    * Calls the store api service to fetch build artifact manifest
    * @method fetchManifest
@@ -83,8 +85,8 @@ export default Ember.Service.extend({
     const baseUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
       `/builds/${buildId}/ARTIFACTS/`;
 
-    return new Ember.RSVP.Promise((resolve) => {
-      Ember.$.ajax({
+    return new EmberPromise((resolve) => {
+      $.ajax({
         url: `${baseUrl}manifest.txt`
       })
         .done((data) => {

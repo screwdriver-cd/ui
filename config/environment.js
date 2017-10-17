@@ -55,7 +55,7 @@ module.exports = (environment) => {
   }
 
   if (environment === 'production') {
-    // special config for production
+    // here you can enable a production-specific feature
     ENV.APP.SDAPI_HOSTNAME = 'https://api.screwdriver.cd';
     ENV.APP.SDSTORE_HOSTNAME = 'https://store.screwdriver.cd';
   }

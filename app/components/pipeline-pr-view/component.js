@@ -1,13 +1,14 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ['build.status'],
-  build: Ember.computed('job.builds', {
+  build: computed('job.builds', {
     get() {
       return this.get('job.builds').objectAt(0);
     }
   }),
-  icon: Ember.computed('build.status', {
+  icon: computed('build.status', {
     get() {
       const status = this.get('build.status');
       let icon;

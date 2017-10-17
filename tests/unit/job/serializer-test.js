@@ -1,6 +1,6 @@
+import { run } from '@ember/runloop';
 import { moduleForModel, test } from 'ember-qunit';
 import Pretender from 'pretender';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 let server;
 
@@ -30,7 +30,7 @@ test('it serializes only dirty fields', function (assert) {
     return [200, {}, JSON.stringify({ id: 'abcd' })];
   });
 
-  Ember.run(() => {
+  run(() => {
     this.store().push({
       data: {
         id: 'abcd',

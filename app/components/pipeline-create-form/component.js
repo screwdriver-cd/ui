@@ -1,18 +1,22 @@
 /* global localStorage */
-import Ember from 'ember';
+import $ from 'jquery';
+
+import { not, or } from '@ember/object/computed';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 import { parse } from '../../utils/git';
 
-export default Ember.Component.extend({
+export default Component.extend({
   scmUrl: '',
-  isValid: Ember.computed('scmUrl', {
+  isValid: computed('scmUrl', {
     get() {
       const val = this.get('scmUrl');
 
       return val.length !== 0 && parse(val).valid;
     }
   }),
-  isInvalid: Ember.computed.not('isValid'),
-  isDisabled: Ember.computed.or('isSaving', 'isInvalid'),
+  isInvalid: not('isValid'),
+  isDisabled: or('isSaving', 'isInvalid'),
 
   actions: {
     /**
@@ -22,7 +26,7 @@ export default Ember.Component.extend({
      */
     scmChange(val) {
       this.set('scmUrl', val.trim());
-      const input = Ember.$('.text-input');
+      const input = $('.text-input');
 
       input.removeClass('bad-text-input good-text-input');
 

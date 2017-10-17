@@ -1,6 +1,6 @@
+import { run } from '@ember/runloop';
 import { moduleFor, test } from 'ember-qunit';
 import Pretender from 'pretender';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 let server;
 
@@ -22,7 +22,7 @@ test('it can create secrets', function (assert) {
 
   assert.ok(controller);
 
-  Ember.run(() => {
+  run(() => {
     controller.set('model', {
       secrets: {
         reload() {
@@ -62,7 +62,7 @@ test('it shows errors from server', function (assert) {
 
   assert.ok(controller);
 
-  Ember.run(() => {
+  run(() => {
     assert.equal(controller.get('errorMessage'), '');
     controller.send('createSecret', 'batman', 'robin', 'abcd', false);
   });

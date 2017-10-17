@@ -1,6 +1,6 @@
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 moduleForComponent('pipeline-pr-view', 'Integration | Component | pipeline pr view', {
   integration: true
@@ -9,7 +9,7 @@ moduleForComponent('pipeline-pr-view', 'Integration | Component | pipeline pr vi
 test('it renders a successful PR', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const job = Ember.Object.create({
+  const job = EmberObject.create({
     id: 'abcd',
     name: 'PR-1234',
     builds: [{
@@ -29,7 +29,7 @@ test('it renders a successful PR', function (assert) {
 test('it renders a failed PR', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const job = Ember.Object.create({
+  const job = EmberObject.create({
     id: 'abcd',
     name: 'PR-1234',
     builds: [{
@@ -49,7 +49,7 @@ test('it renders a failed PR', function (assert) {
 test('it renders a queued PR', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const job = Ember.Object.create({
+  const job = EmberObject.create({
     id: 'abcd',
     name: 'PR-1234',
     builds: [{
@@ -69,7 +69,7 @@ test('it renders a queued PR', function (assert) {
 test('it renders a running PR', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const job = Ember.Object.create({
+  const job = EmberObject.create({
     id: 'abcd',
     name: 'PR-1234',
     builds: [{

@@ -1,11 +1,14 @@
-import Ember from 'ember';
+import { later, once } from '@ember/runloop';
+import { mapBy } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
+import Controller from '@ember/controller';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Ember.Controller.extend({
-  session: Ember.inject.service('session'),
+export default Controller.extend({
+  session: service('session'),
   loading: false,
   counter: 0,
-  stepList: Ember.computed.mapBy('model.build.steps', 'name'),
+  stepList: mapBy('model.build.steps', 'name'),
 
   /**
    * Schedules a build to reload after a certain amount of time
@@ -19,13 +22,13 @@ export default Ember.Controller.extend({
     // reload again in a little bit if queued
     if (!this.get('loading')) {
       if ((status === 'QUEUED' || status === 'RUNNING')) {
-        Ember.run.later(this, () => {
+        later(this, () => {
           if (!build.get('isDeleted') && !this.get('loading')) {
             this.set('loading', true);
 
             build.reload().then(() => {
               this.set('loading', false);
-              Ember.run.once(this, 'reloadBuild');
+              once(this, 'reloadBuild');
             });
           }
         }, timeout);
@@ -55,7 +58,7 @@ export default Ember.Controller.extend({
     reload() {
       // If there is already a reload scheduled in the runloop,
       // this replaces it with one with no timeout
-      Ember.run.once(this, 'reloadBuild', 0);
+      once(this, 'reloadBuild', 0);
     }
   }
 });

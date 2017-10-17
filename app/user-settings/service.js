@@ -1,13 +1,15 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { Promise as EmberPromise } from 'rsvp';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Ember.Service.extend({
-  session: Ember.inject.service('session'),
+export default Service.extend({
+  session: service('session'),
   refreshToken(id) {
     const token = this.get('session').get('data.authenticated.token');
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.$.ajax({
+    return new EmberPromise((resolve, reject) => {
+      $.ajax({
         url: `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/tokens/${id}/refresh`,
         method: 'PUT',
         headers: {

@@ -1,11 +1,12 @@
-import Ember from 'ember';
+import { resolve } from 'rsvp';
+import EmberObject from '@ember/object';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { module, test } from 'qunit';
 let subject;
 
 module('Unit | Mixin | model reloader mixin', {
   beforeEach() {
-    const ModelReloaderObject = Ember.Object.extend(ModelReloaderMixin);
+    const ModelReloaderObject = EmberObject.extend(ModelReloaderMixin);
 
     subject = ModelReloaderObject.create();
   }
@@ -45,7 +46,7 @@ test('it calls reload on a model', function (assert) {
     reload() {
       assert.ok(true);
 
-      return Ember.RSVP.resolve({});
+      return resolve({});
     }
   });
   subject.set('modelToReload', 'testModel');

@@ -1,5 +1,5 @@
+import { A } from '@ember/array';
 import { moduleFor, test } from 'ember-qunit';
-import Ember from 'ember';
 
 moduleFor('controller:templates/detail', 'Unit | Controller | templates/detail', {
   // Specify the other units that are required for this test.
@@ -44,7 +44,7 @@ test('it handles version changes', function (assert) {
 test('it handles model changes', function (assert) {
   let controller = this.subject();
   // eslint-disable-next-line new-cap
-  const arr = Ember.A([
+  const arr = A([
     { id: 3, version: '3.0.0' },
     { id: 2, version: '2.0.0' },
     { id: 1, version: '1.0.0' }

@@ -1,10 +1,12 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ['step-view'],
   classNameBindings: ['status'],
   isOpen: false,
-  isSdStep: Ember.computed('stepName', {
+  isSdStep: computed('stepName', {
     get() {
       return this.get('stepName').match(/^sd-/);
     }
@@ -14,7 +16,7 @@ export default Ember.Component.extend({
    * Maps step exit code with status.
    * @property {String} status
    */
-  status: Ember.computed('code', 'startTime', {
+  status: computed('code', 'startTime', {
     get() {
       const code = this.get('code');
       const startTime = this.get('startTime');
@@ -35,7 +37,7 @@ export default Ember.Component.extend({
    * Maps step status with different icon.
    * @property {String} icon
    */
-  icon: Ember.computed('status', {
+  icon: computed('status', {
     get() {
       switch (this.get('status')) {
       case 'running':
@@ -54,7 +56,7 @@ export default Ember.Component.extend({
    * Returns true if the step is running otherwise false.
    * @property {Boolean} isRunning
    */
-  isRunning: Ember.computed('status', {
+  isRunning: computed('status', {
     get() {
       return this.get('status') === 'running';
     }
@@ -64,7 +66,7 @@ export default Ember.Component.extend({
    * Returns duration in seconds for a completed step
    * @property {Number} duration
    */
-  duration: Ember.computed('startTime', 'endTime', {
+  duration: computed('startTime', 'endTime', {
     get() {
       const start = this.get('startTime');
       const end = this.get('endTime');
@@ -82,7 +84,7 @@ export default Ember.Component.extend({
    * Returns the duration in seconds for when this build last started
    * @property {Number} startTimeFromNow
    */
-  startTimeFromNow: Ember.computed('startTime', 'now', {
+  startTimeFromNow: computed('startTime', 'now', {
     get() {
       const start = Date.parse(this.get('startTime'));
 
@@ -104,7 +106,7 @@ export default Ember.Component.extend({
     const interval = 1000;
 
     setInterval(() => {
-      Ember.run(() => {
+      run(() => {
         this.notifyPropertyChange('now');
       });
     }, interval);

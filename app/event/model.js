@@ -1,13 +1,14 @@
+import { computed } from '@ember/object';
+import { sort, not } from '@ember/object/computed';
 import DS from 'ember-data';
-import Ember from 'ember';
 
 export default DS.Model.extend({
   builds: DS.hasMany('build'),
-  buildsSorted: Ember.computed.sort('builds', (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)),
+  buildsSorted: sort('builds', (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)),
   causeMessage: DS.attr('string'),
   commit: DS.attr(),
   createTime: DS.attr('date'),
-  createTimeWords: Ember.computed('createTime', {
+  createTimeWords: computed('createTime', {
     get() {
       const duration = Date.now() - this.get('createTime').getTime();
 
@@ -15,17 +16,17 @@ export default DS.Model.extend({
     }
   }),
   creator: DS.attr(),
-  duration: Ember.computed('builds.[]', 'isComplete', {
+  duration: computed('builds.[]', 'isComplete', {
     get() {
       return this.get('builds').reduce((val = 0, item) => val + item.get('totalDurationMS'));
     }
   }),
-  durationText: Ember.computed('duration', {
+  durationText: computed('duration', {
     get() {
       return humanizeDuration(this.get('duration'), { round: true, largest: 1 });
     }
   }),
-  isComplete: Ember.computed('builds.[]', 'builds.lastObject.status', {
+  isComplete: computed('builds.{[],lastObject.status}', {
     get() {
       const builds = this.get('builds');
       const numBuilds = builds.get('length');
@@ -53,15 +54,15 @@ export default DS.Model.extend({
       return true;
     }
   }),
-  isRunning: Ember.computed.not('isComplete'),
+  isRunning: not('isComplete'),
   pipelineId: DS.attr('string'),
   sha: DS.attr('string'),
-  truncatedMessage: Ember.computed('commit.message', {
+  truncatedMessage: computed('commit.message', {
     get() {
       return this.get('commit.message').split('\n')[0];
     }
   }),
-  truncatedSha: Ember.computed('sha', {
+  truncatedSha: computed('sha', {
     get() {
       return this.get('sha').substr(0, 6);
     }

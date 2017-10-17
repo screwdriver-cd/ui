@@ -1,7 +1,8 @@
+import { resolve } from 'rsvp';
+import Service from '@ember/service';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
-import Ember from 'ember';
 
 const parsedManifest = [{
   text: 'coverage',
@@ -19,9 +20,9 @@ const parsedManifest = [{
 }
 ];
 
-const artifactService = Ember.Service.extend({
+const artifactService = Service.extend({
   fetchManifest() {
-    return Ember.RSVP.resolve(parsedManifest);
+    return resolve(parsedManifest);
   }
 });
 

@@ -1,10 +1,12 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Controller from '@ember/controller';
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: ['fromUrl'],
   fromUrl: null,
-  session: Ember.inject.service('session'),
-  currentUrl: Ember.computed('currentPath', () => window.location.pathname),
+  session: service('session'),
+  currentUrl: computed('currentPath', () => window.location.pathname),
   actions: {
     invalidateSession() {
       this.get('session').invalidate();

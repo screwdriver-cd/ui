@@ -1,5 +1,5 @@
+import { computed } from '@ember/object';
 import DS from 'ember-data';
-import Ember from 'ember';
 
 /**
  * Calulate ms difference between two times
@@ -39,7 +39,7 @@ function durationText(start, end) {
 export default DS.Model.extend({
   // ember-data has some reservations with the "container" attribute name
   buildContainer: DS.attr('string'),
-  buildDuration: Ember.computed('startTime', 'endTime', {
+  buildDuration: computed('startTime', 'endTime', {
     get() {
       return durationText.call(this, 'startTime', 'endTime');
     }
@@ -47,7 +47,7 @@ export default DS.Model.extend({
   cause: DS.attr('string'),
   commit: DS.attr(),
   createTime: DS.attr('date'),
-  createTimeWords: Ember.computed('createTime', {
+  createTimeWords: computed('createTime', {
     get() {
       const dt = durationText.call(this, 'createTime', 'now');
 
@@ -61,7 +61,7 @@ export default DS.Model.extend({
   number: DS.attr('number'),
   parameters: DS.attr(),
   parentBuildId: DS.attr('string'),
-  queuedDuration: Ember.computed('createTime', 'startTime', {
+  queuedDuration: computed('createTime', 'startTime', {
     get() {
       return durationText.call(this, 'createTime', 'startTime');
     }
@@ -70,12 +70,12 @@ export default DS.Model.extend({
   startTime: DS.attr('date'),
   status: DS.attr('string'),
   steps: DS.attr(),
-  totalDurationMS: Ember.computed('createTime', 'endTime', {
+  totalDurationMS: computed('createTime', 'endTime', {
     get() {
       return calcDuration.call(this, 'createTime', 'endTime');
     }
   }),
-  truncatedSha: Ember.computed('sha', {
+  truncatedSha: computed('sha', {
     get() {
       return this.get('sha').substr(0, 6);
     }

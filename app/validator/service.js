@@ -1,7 +1,9 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { Promise as EmberPromise } from 'rsvp';
+import Service from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Ember.Service.extend({
+export default Service.extend({
   /**
    * Simple test to determine if yaml looks like a template file
    * @method isTemplate
@@ -40,9 +42,9 @@ export default Ember.Service.extend({
       data: JSON.stringify({ yaml })
     };
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new EmberPromise((resolve, reject) => {
       // Call the token api to get the session info
-      Ember.$.ajax(ajaxConfig)
+      $.ajax(ajaxConfig)
         .done(content => resolve(content))
         .fail((response) => {
           let message = `${response.status} Request Failed`;

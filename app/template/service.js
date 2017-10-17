@@ -1,7 +1,9 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { Promise as EmberPromise } from 'rsvp';
+import Service from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Ember.Service.extend({
+export default Service.extend({
   getOneTemplate(name) {
     const url =
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}`;
@@ -24,9 +26,9 @@ export default Ember.Service.extend({
       }
     };
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new EmberPromise((resolve, reject) => {
       // Call the token api to get the session info
-      Ember.$.ajax(ajaxConfig)
+      $.ajax(ajaxConfig)
         .done(content => resolve(content))
         .fail((response) => {
           let message = `${response.status} Request Failed`;

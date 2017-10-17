@@ -1,6 +1,6 @@
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 // eslint-disable-next-line max-len
 moduleForComponent('pipeline-secret-settings', 'Integration | Component | pipeline secret settings', {
@@ -10,7 +10,7 @@ moduleForComponent('pipeline-secret-settings', 'Integration | Component | pipeli
 test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const testSecret = Ember.Object.create({
+  const testSecret = EmberObject.create({
     name: 'TEST_SECRET',
     pipelineId: 123245,
     value: 'banana',
@@ -100,21 +100,21 @@ test('it displays an error', function (assert) {
 });
 
 test('it sorts secrets by name alphabetically', function (assert) {
-  const testSecret1 = Ember.Object.create({
+  const testSecret1 = EmberObject.create({
     name: 'FOO',
     pipelineId: 123245,
     value: 'banana',
     allowInPR: false
   });
 
-  const testSecret2 = Ember.Object.create({
+  const testSecret2 = EmberObject.create({
     name: 'BAR',
     pipelineId: 123245,
     value: 'banana',
     allowInPR: false
   });
 
-  const testSecret3 = Ember.Object.create({
+  const testSecret3 = EmberObject.create({
     name: 'ZOO',
     pipelineId: 123245,
     value: 'banana',

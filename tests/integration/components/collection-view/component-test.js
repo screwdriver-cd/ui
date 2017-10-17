@@ -1,6 +1,7 @@
+import { resolve, reject } from 'rsvp';
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 import injectSessionStub from '../../../helpers/inject-session';
 import injectScmServiceStub from '../../../helpers/inject-scm';
@@ -10,7 +11,7 @@ let testCollection;
 moduleForComponent('collection-view', 'Integration | Component | collection view', {
   integration: true,
   beforeEach() {
-    testCollection = Ember.Object.create({
+    testCollection = EmberObject.create({
       id: 1,
       name: 'Test',
       description: 'Test Collection',
@@ -151,7 +152,7 @@ test('it removes a pipeline from a collection', function (assert) {
     assert.strictEqual(pipelineId, 3);
     assert.strictEqual(collectionId, 1);
 
-    return Ember.RSVP.resolve({
+    return resolve({
       id: 1,
       name: 'collection1',
       description: 'description1',
@@ -196,7 +197,7 @@ test('it fails to remove a pipeline', function (assert) {
 
   injectSessionStub(this);
   const $ = this.$;
-  const pipelineRemoveMock = () => Ember.RSVP.reject({
+  const pipelineRemoveMock = () => reject({
     errors: [{
       detail: 'User does not have permission'
     }]

@@ -1,12 +1,14 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import { sort } from '@ember/object/computed';
+import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 
-export default Ember.Component.extend(ModelReloaderMixin, {
+export default Component.extend(ModelReloaderMixin, {
   modelToReload: 'events',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   showAll: false,
-  eventsSorted: Ember.computed.sort('events.[]',
+  eventsSorted: sort('events.[]',
     (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
 
   /**
@@ -25,7 +27,7 @@ export default Ember.Component.extend(ModelReloaderMixin, {
     this.stopReloading();
   },
 
-  eventsToView: Ember.computed('events.[]', 'showAll', {
+  eventsToView: computed('events.[]', 'showAll', {
     get() {
       const numEvents = this.get('events.length');
       const end = numEvents >= ENV.APP.NUM_EVENTS_LISTED && !this.get('showAll') ?

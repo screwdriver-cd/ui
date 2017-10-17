@@ -1,6 +1,6 @@
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 moduleForComponent('token-list', 'Integration | Component | token list', {
   integration: true
@@ -12,12 +12,12 @@ test('it renders', function (assert) {
   const $ = this.$;
 
   this.set('tokens', [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       name: 'foo',
       description: 'bar'
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       name: 'baz',
       description: 'qux'

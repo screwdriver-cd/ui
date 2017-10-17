@@ -1,7 +1,8 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import Controller from '@ember/controller';
 
-export default Ember.Controller.extend({
-  refreshService: Ember.inject.service('user-settings'),
+export default Controller.extend({
+  refreshService: service('user-settings'),
   newToken: null,
   actions: {
     createToken(name, description) {

@@ -1,8 +1,8 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Ember.Component.extend(ModelReloaderMixin, {
+export default Component.extend(ModelReloaderMixin, {
   modelToReload: 'event.builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   shouldReload() {

@@ -1,6 +1,6 @@
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 moduleForComponent('pipeline-header', 'Integration | Component | pipeline header', {
   integration: true
@@ -11,13 +11,13 @@ test('it renders', function (assert) {
 
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const pipelineMock = Ember.Object.create({
+  const pipelineMock = EmberObject.create({
     appId: 'batman/batmobile',
     hubUrl: 'http://example.com/batman/batmobile',
     branch: 'master',
     scmContext: 'github.com'
   });
-  const scmMock = Ember.Object.create({
+  const scmMock = EmberObject.create({
     scm: 'github.com',
     scmIcon: 'fa-github'
   });

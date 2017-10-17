@@ -1,15 +1,16 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ['hasParseError', 'collapsible'],
   isOpen: true,
   collapsible: true,
-  hasParseError: Ember.computed('job', {
+  hasParseError: computed('job', {
     get() {
       return this.get('job.commands.0.name') === 'config-parse-error';
     }
   }),
-  steps: Ember.computed('job', {
+  steps: computed('job', {
     get() {
       let c = this.get('job.commands');
 

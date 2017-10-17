@@ -1,4 +1,6 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
+import { resolve } from 'rsvp';
+import Service from '@ember/service';
 import { moduleFor, test } from 'ember-qunit';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
@@ -8,7 +10,7 @@ const serviceMock = {
   getValidationResults: sinon.stub()
 };
 
-const validatorStub = Ember.Service.extend(serviceMock);
+const validatorStub = Service.extend(serviceMock);
 
 const EXAMPLE_TEMPLATE = `
 name: batman/batmobile
@@ -46,11 +48,11 @@ test('it handles template yaml', function (assert) {
 
   serviceMock.isTemplate.withArgs(EXAMPLE_TEMPLATE).returns(true);
   serviceMock.getValidationResults.withArgs(EXAMPLE_TEMPLATE).returns(
-    Ember.RSVP.resolve(expectedResult)
+    resolve(expectedResult)
   );
 
   // wrap the test in the run loop because we are dealing with async functions
-  return Ember.run(() => {
+  return run(() => {
     controller.set('yaml', EXAMPLE_TEMPLATE);
 
     return wait().then(() => {
@@ -66,11 +68,11 @@ test('it handles screwdriver yaml', function (assert) {
 
   serviceMock.isTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
   serviceMock.getValidationResults.withArgs(EXAMPLE_CONFIG).returns(
-    Ember.RSVP.resolve(expectedResult)
+    resolve(expectedResult)
   );
 
   // wrap the test in the run loop because we are dealing with async functions
-  return Ember.run(() => {
+  return run(() => {
     controller.set('yaml', EXAMPLE_CONFIG);
 
     return wait().then(() => {
@@ -86,11 +88,11 @@ test('it handles clearing yaml', function (assert) {
 
   serviceMock.isTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
   serviceMock.getValidationResults.withArgs(EXAMPLE_CONFIG).returns(
-    Ember.RSVP.resolve(expectedResult)
+    resolve(expectedResult)
   );
 
   // wrap the test in the run loop because we are dealing with async functions
-  return Ember.run(() => {
+  return run(() => {
     controller.set('yaml', EXAMPLE_CONFIG);
 
     return wait().then(() => {

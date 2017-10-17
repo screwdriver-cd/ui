@@ -1,5 +1,5 @@
+import { merge } from '@ember/polyfills';
 import DS from 'ember-data';
-import Ember from 'ember';
 
 export default DS.RESTSerializer.extend({
   /**
@@ -14,7 +14,7 @@ export default DS.RESTSerializer.extend({
       dirty[key] = dirty[key][1];
     });
 
-    const h = Ember.merge(hash, dirty);
+    const h = merge(hash, dirty);
 
     return h;
   }

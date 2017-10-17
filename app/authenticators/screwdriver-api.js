@@ -1,4 +1,8 @@
-import Ember from 'ember';
+import { isEmpty } from '@ember/utils';
+import EmberObject from '@ember/object';
+import { inject as service } from '@ember/service';
+import $ from 'jquery';
+import { Promise as EmberPromise } from 'rsvp';
 import Base from 'ember-simple-auth/authenticators/base';
 // eslint-disable-next-line camelcase
 import { jwt_decode } from 'ember-cli-jwt-decode';
@@ -13,9 +17,9 @@ const logoutUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/log
  * @return {Promise}
  */
 function fetchToken() {
-  return new Ember.RSVP.Promise((resolve, reject) => {
+  return new EmberPromise((resolve, reject) => {
     // Call the token api to get the session info
-    Ember.$.ajax({
+    $.ajax({
       url: tokenUrl,
       crossDomain: true,
       xhrFields: {
@@ -28,7 +32,7 @@ function fetchToken() {
 }
 
 export default Base.extend({
-  scmService: Ember.inject.service('scm'),
+  scmService: service('scm'),
 
   /**
    * Restore the state of a session with data already in the session store
@@ -37,10 +41,10 @@ export default Base.extend({
    * @return {Promise}
    */
   restore(data) {
-    const properties = Ember.Object.create(data);
+    const properties = EmberObject.create(data);
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      if (!Ember.isEmpty(properties.get('token'))) {
+    return new EmberPromise((resolve, reject) => {
+      if (!isEmpty(properties.get('token'))) {
         const jwt = jwt_decode(properties.get('token'));
 
         // Token expired, reject
@@ -64,7 +68,7 @@ export default Base.extend({
   authenticate(scmContext) {
     const scm = this.get('scmService');
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new EmberPromise((resolve, reject) => {
       let url = [loginUrlBase];
 
       if (scmContext) {
@@ -98,8 +102,8 @@ export default Base.extend({
    * @return {Promise}
    */
   invalidate() {
-    return new Ember.RSVP.Promise((resolve) => {
-      Ember.$.ajax({
+    return new EmberPromise((resolve) => {
+      $.ajax({
         url: logoutUrl,
         method: 'POST',
         crossDomain: true,

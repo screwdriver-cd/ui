@@ -1,9 +1,14 @@
 /* eslint-disable new-cap */
-import Ember from 'ember';
+import { observer, computed } from '@ember/object';
+
+import { run, scheduleOnce, later } from '@ember/runloop';
+import { A } from '@ember/array';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Ember.Component.extend({
-  logger: Ember.inject.service('build-logs'),
+export default Component.extend({
+  logger: service('build-logs'),
   classNames: ['build-log'],
   classNameBindings: ['isOpen'],
   // flag: if there are logs left to load
@@ -17,7 +22,7 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    this.set('logs', Ember.A());
+    this.set('logs', A());
   },
 
   /**
@@ -54,9 +59,9 @@ export default Ember.Component.extend({
       const scrollPercentage = ((d.scrollTop() + w.height()) / d.height()) * 100;
 
       if (scrollPercentage > 99) {
-        Ember.run(() => this.set('autoscroll', true));
+        run(() => this.set('autoscroll', true));
       } else {
-        Ember.run(() => this.set('autoscroll', false));
+        run(() => this.set('autoscroll', false));
       }
     });
   },
@@ -75,7 +80,7 @@ export default Ember.Component.extend({
    * @method isOpenChanged
    * @private
    */
-  isOpenChanged: Ember.observer('isOpen', function isOpenChanged() {
+  isOpenChanged: observer('isOpen', function isOpenChanged() {
     if (this.get('isOpen')) {
       this.getLogs();
     }
@@ -88,7 +93,7 @@ export default Ember.Component.extend({
    * - the step must have logs left to load
    * @property {Boolean} shouldLoad
    */
-  shouldLoad: Ember.computed('isOpen', 'finishedLoading', {
+  shouldLoad: computed('isOpen', 'finishedLoading', {
     get() {
       return this.get('isOpen') &&
         !this.get('finishedLoading');
@@ -124,10 +129,10 @@ export default Ember.Component.extend({
           }
           this.set('finishedLoading', done);
 
-          Ember.run.scheduleOnce('afterRender', this, 'scrollDown');
+          scheduleOnce('afterRender', this, 'scrollDown');
           if (!done) {
             // Immediately ask for more logs if we got MAX_LOG_LINES
-            Ember.run.later(this, 'getLogs',
+            later(this, 'getLogs',
               lines.length === ENV.APP.MAX_LOG_LINES ? 0 : ENV.APP.LOG_RELOAD_TIMER);
           }
         }

@@ -1,6 +1,6 @@
+import EmberObject from '@ember/object';
 import { moduleFor, test } from 'ember-qunit';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
-import Ember from 'ember';
 
 moduleFor('route:pipeline/builds/build', 'Unit | Route | pipeline/builds/build', {
   // Specify the other units that are required for this test.
@@ -12,8 +12,8 @@ test('it exists', function (assert) {
 
   assert.ok(route);
   assert.equal(route.titleToken({
-    job: Ember.Object.create({ name: 'main' }),
-    build: Ember.Object.create({ sha: 'abcd1234567890' })
+    job: EmberObject.create({ name: 'main' }),
+    build: EmberObject.create({ sha: 'abcd1234567890' })
   }), 'main > #abcd12');
 });
 

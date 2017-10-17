@@ -1,6 +1,6 @@
+import { run } from '@ember/runloop';
 import { moduleForModel, test } from 'ember-qunit';
 import Pretender from 'pretender';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 let server;
 
@@ -31,7 +31,7 @@ test('it does not post with model name as key', function (assert) {
     return [200, {}, JSON.stringify({ token: { id: 1234 } })];
   });
 
-  Ember.run(() => {
+  run(() => {
     const token = this.store().createRecord('token', {
       name: 'foo',
       description: 'bar'
@@ -59,7 +59,7 @@ test('it serializes only dirty fields', function (assert) {
     return [200, {}, JSON.stringify({ token: { id: 1234 } })];
   });
 
-  Ember.run(() => {
+  run(() => {
     this.store().push({
       data: {
         id: 1234,

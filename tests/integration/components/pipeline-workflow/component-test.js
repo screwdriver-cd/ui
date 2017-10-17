@@ -1,6 +1,6 @@
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 moduleForComponent('pipeline-workflow', 'Integration | Component | pipeline workflow', {
   integration: true
@@ -13,14 +13,14 @@ test('it renders', function (assert) {
     const j = {
       name,
       isDisabled: false,
-      lastBuild: Ember.Object.create({
+      lastBuild: EmberObject.create({
         id: 12345,
         status: 'SUCCESS',
         sha: 'abcd1234'
       })
     };
 
-    return Ember.Object.create(j);
+    return EmberObject.create(j);
   });
 
   this.set('jobsMock', jobs);

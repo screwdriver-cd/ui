@@ -1,6 +1,7 @@
+import { resolve, reject } from 'rsvp';
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 import injectSessionStub from '../../../helpers/inject-session';
 import injectScmServiceStub from '../../../helpers/inject-scm';
@@ -18,13 +19,13 @@ test('it renders without collections', function (assert) {
   // Handle any actions with this.on('myAction', function(val) { ... });
 
   const pipelines = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       appId: 'foo/bar',
       branch: 'master',
       scmContext: 'github:github.com'
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       appId: 'batman/tumbler',
       branch: 'waynecorp',
@@ -32,7 +33,7 @@ test('it renders without collections', function (assert) {
     })
   ];
   const collections = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       name: 'collection1',
       description: 'description1',
@@ -63,13 +64,13 @@ test('it renders with collections', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelines = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       appId: 'foo/bar',
       branch: 'master',
       scmContext: 'github:github.com'
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       appId: 'batman/tumbler',
       branch: 'waynecorp',
@@ -77,13 +78,13 @@ test('it renders with collections', function (assert) {
     })
   ];
   const collections = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       name: 'collection1',
       description: 'description1',
       pipelineIds: [1, 2, 3]
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       name: 'collection2',
       description: 'description2',
@@ -117,13 +118,13 @@ test('it filters the list', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelines = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       appId: 'foo/bar',
       branch: 'master',
       scmContext: 'github:github.com'
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       appId: 'batman/tumbler',
       branch: 'waynecorp',
@@ -150,13 +151,13 @@ test('it filters the list by single advanced search query', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelines = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       appId: 'foo/bar',
       branch: 'master',
       scmContext: 'github:github.com'
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       appId: 'batman/tumbler',
       branch: 'waynecorp',
@@ -183,13 +184,13 @@ test('it filters the list by multiple advanced search queries', function (assert
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelines = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       appId: 'foo/bar',
       branch: 'master',
       scmContext: 'github:github.com'
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       appId: 'batman/tumbler',
       branch: 'waynecorp',
@@ -216,13 +217,13 @@ test('it adds a pipeline to a collection', function (assert) {
 
   const $ = this.$;
   const pipelines = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       appId: 'foo/bar',
       branch: 'master',
       scmContext: 'github:github.com'
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       appId: 'batman/tumbler',
       branch: 'waynecorp',
@@ -230,13 +231,13 @@ test('it adds a pipeline to a collection', function (assert) {
     })
   ];
   const collections = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       name: 'collection1',
       description: 'description1',
       pipelineIds: [2, 3]
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 2,
       name: 'collection2',
       description: 'description2',
@@ -247,7 +248,7 @@ test('it adds a pipeline to a collection', function (assert) {
     assert.strictEqual(pipelineId, 2);
     assert.strictEqual(collectionId, 1);
 
-    return Ember.RSVP.resolve({
+    return resolve({
       id: 1,
       name: 'collection1',
       description: 'description1',
@@ -281,7 +282,7 @@ test('it fails to add a pipeline to a collection', function (assert) {
 
   const $ = this.$;
   const pipelines = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       appId: 'foo/bar',
       branch: 'master',
@@ -289,14 +290,14 @@ test('it fails to add a pipeline to a collection', function (assert) {
     })
   ];
   const collections = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 1,
       name: 'collection1',
       description: 'description1',
       pipelineIds: [2, 3]
     })
   ];
-  const addToCollectionMock = () => Ember.RSVP.reject();
+  const addToCollectionMock = () => reject();
 
   this.set('pipelineList', pipelines);
   this.set('collections', collections);

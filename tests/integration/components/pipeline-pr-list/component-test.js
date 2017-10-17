@@ -1,6 +1,6 @@
+import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 moduleForComponent('pipeline-pr-list', 'Integration | Component | pipeline pr list', {
   integration: true
@@ -10,7 +10,7 @@ test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
   const jobs = [
-    Ember.Object.create({
+    EmberObject.create({
       id: 'abcd',
       name: 'main',
       builds: [{
@@ -18,7 +18,7 @@ test('it renders', function (assert) {
         status: 'SUCCESS'
       }]
     }),
-    Ember.Object.create({
+    EmberObject.create({
       id: 'abcde',
       name: 'publish',
       builds: [{

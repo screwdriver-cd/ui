@@ -1,8 +1,8 @@
+import Service from '@ember/service';
 import { moduleFor, test } from 'ember-qunit';
-import Ember from 'ember';
 let called = 0;
 
-const sessionServiceMock = Ember.Service.extend({
+const sessionServiceMock = Service.extend({
   invalidate() {
     called += 1;
   }
