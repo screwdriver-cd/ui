@@ -32,6 +32,8 @@ module.exports = function (defaults) {
 
   app.import('bower_components/ansi_up/ansi_up.js');
   app.import('bower_components/humanize-duration/humanize-duration.js');
+  app.import('node_modules/vis/dist/vis-network.min.js');
+  app.import('node_modules/vis/dist/vis-network.min.css');
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //

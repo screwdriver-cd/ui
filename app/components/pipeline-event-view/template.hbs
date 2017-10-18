@@ -5,9 +5,13 @@
   <div class="col-xs-8 col-lg-6 message">
     <div class="cause" title="{{event.commit.message}}">{{event.truncatedMessage}}</div>
     <div>
-      {{#each event.workflow as |name index|}}
-      {{build-bubble jobName=name build=(index-of event.buildsSorted index) small=true}}
-      {{/each}}
+      {{#if (and (is-fulfilled event.builds) event.workflowGraph)}}
+        {{workflow-graph-vis builds=event.builds workflowGraph=event.workflowGraph}}
+      {{else}}
+        {{#each event.workflow as |name index|}}
+        {{build-bubble jobName=name build=(index-of event.buildsSorted index) small=true}}
+        {{/each}}
+      {{/if}}
     </div>
   </div>
   <div class="col-xs-6 col-lg-2 user">

@@ -8,6 +8,7 @@ export default DS.Model.extend({
   createTime: DS.attr('date'),
   scmRepo: DS.attr(),
   scmUri: DS.attr('string'),
+  workflowGraph: DS.attr(),
 
   events: DS.hasMany('event', { async: true }),
   jobs: DS.hasMany('job', { async: true }),

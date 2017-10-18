@@ -12,6 +12,7 @@ export default DS.Model.extend({
   startFrom: DS.attr('string'),
   type: DS.attr('string'),
   workflow: DS.attr(),
+  workflowGraph: DS.attr(),
 
   builds: DS.hasMany('build'),
 
