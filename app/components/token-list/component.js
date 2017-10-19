@@ -1,3 +1,4 @@
+/* eslint ember/avoid-leaking-state-in-components: [2, ["tokenSorting"]] */
 import { capitalize } from '@ember/string';
 import { computed, observer } from '@ember/object';
 import { sort } from '@ember/object/computed';
