@@ -34,7 +34,7 @@ module.exports = {
     "ember/no-capital-letters-in-routes": "error",
     "ember/no-duplicate-dependent-keys": "off",
     "ember/no-empty-attrs": "off",
-    "ember/no-function-prototype-extensions": "off",
+    "ember/no-function-prototype-extensions": "error",
     "ember/no-global-jquery": "off",
     "ember/no-jquery": "off",
     "ember/no-observers": "off",

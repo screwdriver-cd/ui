@@ -98,19 +98,19 @@ export default Component.extend({
     }
   }),
 
-  /**
-   * Update the property now every second
-   * @method timer
-   */
-  timer: function timer() {
-    const interval = 1000;
+  init(...args) {
+    this._super(...args);
 
-    setInterval(() => {
-      run(() => {
-        this.notifyPropertyChange('now');
-      });
-    }, interval);
-  }.on('init'),
+    this.set('timer', () => {
+      const interval = 1000;
+
+      setInterval(() => {
+        run(() => {
+          this.notifyPropertyChange('now');
+        });
+      }, interval);
+    });
+  },
 
   /**
    * Allow user to click on a step to open the logs
