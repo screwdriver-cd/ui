@@ -5,6 +5,9 @@ import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mi
 export default Route.extend(ApplicationRouteMixin, {
   scmService: service('scm'),
   routeAfterAuthentication: 'home',
+  model() {
+    return this.get('scmService').createScms();
+  },
   sessionInvalidated: () => window.location.replace(window.location.href),
   sessionAuthenticated: function sessionAuthenticated() {
     const previousUrl = this.controllerFor('application').get('fromUrl');
@@ -21,8 +24,5 @@ export default Route.extend(ApplicationRouteMixin, {
     arr.push('screwdriver.cd');
 
     return arr.join(' > ');
-  },
-  model() {
-    return this.get('scmService').createScms();
   }
 });

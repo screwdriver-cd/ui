@@ -44,7 +44,7 @@ module.exports = {
     "ember/order-in-components": "error",
     "ember/order-in-controllers": "error",
     "ember/order-in-models": "error",
-    "ember/order-in-routes": "off",
+    "ember/order-in-routes": "error",
     "ember/require-super-in-init": "off",
     "ember/routes-segments-snake-case": "error",
     "ember/use-brace-expansion": "error",
