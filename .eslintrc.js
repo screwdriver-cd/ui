@@ -42,7 +42,7 @@ module.exports = {
     "ember/no-on-calls-in-components": "error",
     "ember/no-side-effects": "error",
     "ember/order-in-components": "error",
-    "ember/order-in-controllers": "off",
+    "ember/order-in-controllers": "error",
     "ember/order-in-models": "off",
     "ember/order-in-routes": "off",
     "ember/require-super-in-init": "off",

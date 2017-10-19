@@ -10,6 +10,29 @@ export default Controller.extend({
   counter: 0,
   stepList: mapBy('model.build.steps', 'name'),
 
+  actions: {
+    stopBuild() {
+      const build = this.get('model.build');
+
+      build.set('status', 'ABORTED');
+      build.save();
+    },
+
+    startBuild() {
+      const jobId = this.get('model.build.jobId');
+      const build = this.store.createRecord('build', { jobId });
+
+      return build.save()
+        .then(() => this.transitionToRoute('pipeline.builds.build', build.get('id')));
+    },
+
+    reload() {
+      // If there is already a reload scheduled in the runloop,
+      // this replaces it with one with no timeout
+      once(this, 'reloadBuild', 0);
+    }
+  },
+
   /**
    * Schedules a build to reload after a certain amount of time
    * @method reloadBuild
@@ -36,29 +59,6 @@ export default Controller.extend({
         // refetch builds which are part of current event
         this.get('model.event').hasMany('builds').reload();
       }
-    }
-  },
-
-  actions: {
-    stopBuild() {
-      const build = this.get('model.build');
-
-      build.set('status', 'ABORTED');
-      build.save();
-    },
-
-    startBuild() {
-      const jobId = this.get('model.build.jobId');
-      const build = this.store.createRecord('build', { jobId });
-
-      return build.save()
-        .then(() => this.transitionToRoute('pipeline.builds.build', build.get('id')));
-    },
-
-    reload() {
-      // If there is already a reload scheduled in the runloop,
-      // this replaces it with one with no timeout
-      once(this, 'reloadBuild', 0);
     }
   }
 });
