@@ -57,6 +57,7 @@ export default DS.Model.extend({
   isRunning: not('isComplete'),
   pipelineId: DS.attr('string'),
   sha: DS.attr('string'),
+  startFrom: DS.attr('string'),
   truncatedMessage: computed('commit.message', {
     get() {
       return this.get('commit.message').split('\n')[0];
