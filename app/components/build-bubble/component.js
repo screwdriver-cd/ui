@@ -9,16 +9,6 @@ export default Component.extend(ModelReloaderMixin, {
   classNames: ['build-bubble'],
   classNameBindings: ['build.id', 'small'],
   modelToReload: 'build',
-  reloadTimeout: ENV.APP.BUILD_RELOAD_TIMER,
-  shouldReload(build) {
-    if (build) {
-      const s = build.get('status');
-
-      return s === 'RUNNING' || s === 'QUEUED';
-    }
-
-    return false;
-  },
 
   icon: computed('jobIsDisabled', 'build', 'build.status', {
     get() {
@@ -59,16 +49,30 @@ export default Component.extend(ModelReloaderMixin, {
     }
   }),
 
-  mouseEnter() {
-    $(`.${this.get('build.id')}`).addClass('highlight');
-  },
-  mouseLeave() {
-    $('.build-bubble').removeClass('highlight');
-  },
   willRender() {
     this.startReloading();
   },
+
+  mouseEnter() {
+    $(`.${this.get('build.id')}`).addClass('highlight');
+  },
+
+  mouseLeave() {
+    $('.build-bubble').removeClass('highlight');
+  },
+
   willDestroy() {
     this.stopReloading();
-  }
+  },
+
+  shouldReload(build) {
+    if (build) {
+      const s = build.get('status');
+
+      return s === 'RUNNING' || s === 'QUEUED';
+    }
+
+    return false;
+  },
+  reloadTimeout: ENV.APP.BUILD_RELOAD_TIMER
 });

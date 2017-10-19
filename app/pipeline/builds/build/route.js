@@ -6,9 +6,7 @@ export default Route.extend({
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline'));
   },
-  titleToken(model) {
-    return `${model.job.get('name')} > #${model.build.get('sha').substr(0, 6)}`;
-  },
+
   model(params) {
     return this.store.findRecord('build', params.build_id).then(build => all([
       this.store.findRecord('job', build.get('jobId')),
@@ -22,6 +20,7 @@ export default Route.extend({
       jobs: jobs.filter(j => !/^PR-/.test(j.get('name')))
     })));
   },
+
   afterModel(model) {
     const pipelineId = model.pipeline.get('id');
 
@@ -29,5 +28,9 @@ export default Route.extend({
     if (pipelineId !== model.job.get('pipelineId')) {
       this.transitionTo('pipeline', pipelineId);
     }
+  },
+
+  titleToken(model) {
+    return `${model.job.get('name')} > #${model.build.get('sha').substr(0, 6)}`;
   }
 });

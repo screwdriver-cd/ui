@@ -3,9 +3,9 @@ import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
 
 export default Controller.extend({
+  session: service('session'),
   queryParams: ['fromUrl'],
   fromUrl: null,
-  session: service('session'),
   currentUrl: computed('currentPath', () => window.location.pathname),
   actions: {
     invalidateSession() {

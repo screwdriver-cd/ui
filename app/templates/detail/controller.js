@@ -8,16 +8,16 @@ export default Controller.extend({
       return this.get('model')[0];
     }
   }),
-  // Set selected version to null whenever the list of templates changes
-  modelObserver: observer('model.[]', function modelObserver() {
-    this.set('selectedVersion', null);
-  }),
   template: computed('selectedVersion', 'model.[]', {
     get() {
       const version = this.get('selectedVersion') || this.get('latest.version');
 
       return this.get('model').findBy('version', version);
     }
+  }),
+  // Set selected version to null whenever the list of templates changes
+  modelObserver: observer('model.[]', function modelObserver() {
+    this.set('selectedVersion', null);
   }),
   actions: {
     changeVersion(version) {

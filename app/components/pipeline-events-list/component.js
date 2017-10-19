@@ -6,26 +6,9 @@ import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 
 export default Component.extend(ModelReloaderMixin, {
   modelToReload: 'events',
-  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   showAll: false,
   eventsSorted: sort('events.[]',
     (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
-
-  /**
-   * Runs when a render event is triggered, usually due to a change in attribute data (events)
-   * @method willRender
-   */
-  willRender() {
-    this.startReloading();
-  },
-
-  /**
-   * Executes when the component is about to be destroyed
-   * @method willDestroy
-   */
-  willDestroy() {
-    this.stopReloading();
-  },
 
   eventsToView: computed('events.[]', 'showAll', {
     get() {
@@ -37,9 +20,28 @@ export default Component.extend(ModelReloaderMixin, {
     }
   }),
 
+  /**
+   * Runs when a render event is triggered, usually due to a change in attribute data (events)
+   * @method willRender
+   */
+  willRender() {
+    this.startReloading();
+  },
+
   actions: {
     showAllEvents() {
       this.set('showAll', true);
     }
-  }
+  },
+
+  /**
+   * Executes when the component is about to be destroyed
+   * @method willDestroy
+   */
+  willDestroy() {
+    this.stopReloading();
+  },
+
+  // eslint doesn't know what this property is, so it wants it at the bottom
+  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER
 });

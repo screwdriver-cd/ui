@@ -2,9 +2,6 @@ import Route from '@ember/routing/route';
 const RELOAD_TIMER = 5000;
 
 export default Route.extend({
-  redirect(model) {
-    this.transitionTo('pipeline.builds.build', model.pipeline.id, model.build.id);
-  },
   model(params) {
     return this.store.findRecord('build', params.build_id).then((build) => {
       // reload again in a little bit if queued
@@ -21,5 +18,8 @@ export default Route.extend({
           build, job, pipeline
         })));
     });
+  },
+  redirect(model) {
+    this.transitionTo('pipeline.builds.build', model.pipeline.id, model.build.id);
   }
 });

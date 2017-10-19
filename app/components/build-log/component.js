@@ -19,19 +19,36 @@ export default Component.extend({
   lastLine: 0,
   // store of logs to display, so we only have to recalculate new logs
   logContent: '',
+  autoscroll: true,
+
+  /**
+   * Determines if log loading should occur
+   * - step must have a defined start time (it is, or has executed)
+   * - the log panel must be open
+   * - the step must have logs left to load
+   * @property {Boolean} shouldLoad
+   */
+  shouldLoad: computed('isOpen', 'finishedLoading', {
+    get() {
+      return this.get('isOpen') &&
+        !this.get('finishedLoading');
+    }
+  }),
+
+  /**
+   * Listens to 'isOpen' to determine if the value has changed
+   * @method isOpenChanged
+   * @private
+   */
+  isOpenChanged: observer('isOpen', function isOpenChanged() {
+    if (this.get('isOpen')) {
+      this.getLogs();
+    }
+  }),
 
   init() {
     this._super(...arguments);
     this.set('logs', A());
-  },
-
-  /**
-   * Listen to the user clicking on logs to turn off autoClose
-   * This listener is really only necessary when the step is still running
-   * @method click
-   */
-  click() {
-    this.get('onClick')();
   },
 
   // Start loading logs immediately upon inserting the element if the panel is open
@@ -42,8 +59,6 @@ export default Component.extend({
       this.getLogs();
     }
   },
-
-  autoscroll: true,
 
   /**
    * Set up scroll listener when component has been rendered
@@ -76,29 +91,13 @@ export default Component.extend({
   },
 
   /**
-   * Listens to 'isOpen' to determine if the value has changed
-   * @method isOpenChanged
-   * @private
+   * Listen to the user clicking on logs to turn off autoClose
+   * This listener is really only necessary when the step is still running
+   * @method click
    */
-  isOpenChanged: observer('isOpen', function isOpenChanged() {
-    if (this.get('isOpen')) {
-      this.getLogs();
-    }
-  }),
-
-  /**
-   * Determines if log loading should occur
-   * - step must have a defined start time (it is, or has executed)
-   * - the log panel must be open
-   * - the step must have logs left to load
-   * @property {Boolean} shouldLoad
-   */
-  shouldLoad: computed('isOpen', 'finishedLoading', {
-    get() {
-      return this.get('isOpen') &&
-        !this.get('finishedLoading');
-    }
-  }),
+  click() {
+    this.get('onClick')();
+  },
 
   /**
    * Scroll to the bottom of the page
