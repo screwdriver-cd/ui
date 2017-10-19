@@ -1,10 +1,9 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["className"]] */
 import { computed } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
   tagName: 'span',
-  className: ['build-health'],
+  classNames: ['build-health'],
   icon: computed('build', 'build.status', {
     get() {
       const build = this.get('build');
