@@ -7,6 +7,8 @@ export default Component.extend({
   session: service(),
   scmService: service('scm'),
   sortBy: ['scmRepo.name'],
+  removePipelineError: null,
+  sortedPipelines: sort('collectionPipelines', 'sortBy'),
   sortByText: computed('sortBy', {
     get() {
       switch (this.get('sortBy').get(0)) {
@@ -52,8 +54,7 @@ export default Component.extend({
       return [];
     }
   }),
-  sortedPipelines: sort('collectionPipelines', 'sortBy'),
-  removePipelineError: null,
+
   actions: {
     /**
      * Action to remove a pipeline from a collection

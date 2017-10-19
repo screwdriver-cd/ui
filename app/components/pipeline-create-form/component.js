@@ -8,6 +8,9 @@ import { parse } from '../../utils/git';
 
 export default Component.extend({
   scmUrl: '',
+  isInvalid: not('isValid'),
+  isDisabled: or('isSaving', 'isInvalid'),
+
   isValid: computed('scmUrl', {
     get() {
       const val = this.get('scmUrl');
@@ -15,8 +18,6 @@ export default Component.extend({
       return val.length !== 0 && parse(val).valid;
     }
   }),
-  isInvalid: not('isValid'),
-  isDisabled: or('isSaving', 'isInvalid'),
 
   actions: {
     /**

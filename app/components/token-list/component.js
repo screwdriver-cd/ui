@@ -5,15 +5,11 @@ import Component from '@ember/component';
 
 export default Component.extend({
   tokenSorting: ['name', 'description', 'lastUsed'],
-  sortedTokens: sort('tokens', 'tokenSorting'),
 
   // Error for failed to create/update/remove/refresh token
   errorMessage: null,
 
   // Adding a new token
-  isButtonDisabled: computed('newName', 'isSaving', function isButtonDisabled() {
-    return !this.get('newName') || this.get('isSaving');
-  }),
   isSaving: false,
   newDescription: null,
   newName: null,
@@ -21,11 +17,18 @@ export default Component.extend({
   // Confirmation dialog
   isShowingModal: false,
   modalAction: null,
+  modalTarget: null,
+  modalText: null,
+
+  sortedTokens: sort('tokens', 'tokenSorting'),
+
+  isButtonDisabled: computed('newName', 'isSaving', function isButtonDisabled() {
+    return !this.get('newName') || this.get('isSaving');
+  }),
+
   modalButtonText: computed('modalAction', function modalButtonText() {
     return capitalize(this.get('modalAction'));
   }),
-  modalTarget: null,
-  modalText: null,
 
   // Don't show the "new token" and "error" dialogs at the same time
   errorObserver: observer('errorMessage', function errorObserver() {

@@ -41,7 +41,7 @@ module.exports = {
     "ember/no-old-shims": "off",
     "ember/no-on-calls-in-components": "error",
     "ember/no-side-effects": "error",
-    "ember/order-in-components": "off",
+    "ember/order-in-components": "error",
     "ember/order-in-controllers": "off",
     "ember/order-in-models": "off",
     "ember/order-in-routes": "off",

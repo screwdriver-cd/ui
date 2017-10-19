@@ -6,14 +6,14 @@ export default Component.extend({
   newName: null,
   newValue: null,
   newAllow: false,
+  errorMessage: '',
+  secretsSorting: ['name'],
+  sortedSecrets: sort('secrets', 'secretsSorting'),
   isButtonDisabled: computed('newName', 'newValue', {
     get() {
       return !this.get('newName') || !this.get('newValue');
     }
   }),
-  errorMessage: '',
-  secretsSorting: ['name'],
-  sortedSecrets: sort('secrets', 'secretsSorting'),
   actions: {
     /**
      * Kicks off create secret flow

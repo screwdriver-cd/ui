@@ -2,6 +2,8 @@ import { computed } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
+  newDescription: null,
+  newName: null,
   tagName: 'tr',
   buttonAction: computed('token.{name,description}', 'newName', 'newDescription', {
     get() {
@@ -12,8 +14,6 @@ export default Component.extend({
         'Update' : 'Delete';
     }
   }),
-  newName: null,
-  newDescription: null,
   init() {
     this._super(...arguments);
     this.set('newName', this.get('token.name'));

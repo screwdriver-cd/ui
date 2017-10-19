@@ -6,6 +6,24 @@ import Component from '@ember/component';
 import { parse, getCheckoutUrl } from '../../utils/git';
 
 export default Component.extend({
+  // Syncing a pipeline
+  sync: service('sync'),
+  errorMessage: '',
+  scmUrl: '',
+  // Removing a pipeline
+  isRemoving: false,
+  isShowingModal: false,
+  showDangerButton: true,
+  showRemoveButtons: false,
+  isInvalid: not('isValid'),
+  isDisabled: or('isSaving', 'isInvalid'),
+  isValid: computed('scmUrl', {
+    get() {
+      const val = this.get('scmUrl');
+
+      return val.length !== 0 && parse(val).valid;
+    }
+  }),
   // Updating a pipeline
   init() {
     this._super(...arguments);
@@ -14,24 +32,6 @@ export default Component.extend({
       scmUri: this.get('pipeline.scmUri')
     }));
   },
-  errorMessage: '',
-  scmUrl: '',
-  isValid: computed('scmUrl', {
-    get() {
-      const val = this.get('scmUrl');
-
-      return val.length !== 0 && parse(val).valid;
-    }
-  }),
-  isInvalid: not('isValid'),
-  isDisabled: or('isSaving', 'isInvalid'),
-  // Removing a pipeline
-  isRemoving: false,
-  isShowingModal: false,
-  showDangerButton: true,
-  showRemoveButtons: false,
-  // Syncing a pipeline
-  sync: service('sync'),
   actions: {
     // Checks if scm URL is valid or not
     scmChange(val) {

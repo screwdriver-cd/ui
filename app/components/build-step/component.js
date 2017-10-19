@@ -7,6 +7,26 @@ export default Component.extend({
   autoClose: true,
   autoOpen: true,
 
+  // Called when component will render again
+  willRender() {
+    this._super(...arguments);
+    this.setOpen();
+  },
+
+  actions: {
+    // Opens display of logs, turn off auto close of logs when step is done
+    toggleOpen() {
+      this.set('isOpen', !this.get('isOpen'));
+      this.set('autoClose', false);
+      this.set('autoOpen', false);
+    },
+    // turn off auto close of logs when step is done when user clicks on logs
+    cancelAutoClose() {
+      this.set('autoClose', false);
+      this.set('autoOpen', false);
+    }
+  },
+
   /**
    * Determine if logs should displayed or not, when component is re-rendered
    * @method shouldOpen
@@ -28,26 +48,6 @@ export default Component.extend({
     // and the user hasn't stopped logs from closing
     } else if (!shouldOpen && isOpen && autoClose) {
       this.set('isOpen', false);
-    }
-  },
-
-  // Called when component will render again
-  willRender() {
-    this._super(...arguments);
-    this.setOpen();
-  },
-
-  actions: {
-    // Opens display of logs, turn off auto close of logs when step is done
-    toggleOpen() {
-      this.set('isOpen', !this.get('isOpen'));
-      this.set('autoClose', false);
-      this.set('autoOpen', false);
-    },
-    // turn off auto close of logs when step is done when user clicks on logs
-    cancelAutoClose() {
-      this.set('autoClose', false);
-      this.set('autoOpen', false);
     }
   }
 });

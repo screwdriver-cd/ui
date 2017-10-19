@@ -16,9 +16,9 @@ const typesOptions = {
 };
 
 export default Component.extend({
+  artifact: service('build-artifact'),
   classNames: ['artifact-tree'],
   classNameBindings: ['buildStatus'],
-  artifact: service('build-artifact'),
   typesOptions,
   plugins: 'types',
   treedata: computed('buildStatus', 'buildId', {
