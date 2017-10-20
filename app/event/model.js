@@ -9,6 +9,7 @@ export default DS.Model.extend({
   creator: DS.attr(),
   pipelineId: DS.attr('string'),
   sha: DS.attr('string'),
+  startFrom: DS.attr('string'),
   type: DS.attr('string'),
   workflow: DS.attr(),
 
