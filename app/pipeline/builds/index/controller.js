@@ -16,10 +16,10 @@ export default Controller.extend({
         startFrom: '~commit'
       });
 
-      return newEvent.save().then((e) => {
+      return newEvent.save().then(() => {
         this.set('isShowingModal', false);
 
-        return this.transitionToRoute('pipeline', e.get('pipelineId'));
+        return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
       }).catch((e) => {
         this.set('isShowingModal', false);
         this.set('errorMessage', e.message);

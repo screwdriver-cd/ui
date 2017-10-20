@@ -21,14 +21,14 @@ export default Controller.extend({
     startBuild() {
       const pipelineId = this.get('model.pipeline.id');
       const jobName = this.get('model.job.name');
-      const event = this.store.createRecord('event', {
+      const newEvent = this.store.createRecord('event', {
         pipelineId,
         startFrom: jobName
       });
 
-      return event.save()
+      return newEvent.save()
         .then(() =>
-          event.get('builds')
+          newEvent.get('builds')
             .then(builds =>
               this.transitionToRoute('pipeline.builds.build',
                 builds.get('lastObject.id'))
