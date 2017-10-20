@@ -1,3 +1,4 @@
+/* eslint ember/avoid-leaking-state-in-components: [2, ["pipelineSorting"]] */
 import { inspect } from '@ember/debug';
 import { computed } from '@ember/object';
 import { sort, empty } from '@ember/object/computed';
@@ -8,7 +9,10 @@ export default Component.extend({
   session: service(),
   scmService: service('scm'),
   pipelineSorting: ['appId', 'branch'],
+  addCollectionError: null,
+  addCollectionSuccess: null,
   sortedPipelines: sort('pipelines', 'pipelineSorting'),
+  isEmpty: empty('filteredPipelines'),
   filterSet: computed('query', {
     get() {
       const q = this.get('query') || '';
@@ -54,9 +58,6 @@ export default Component.extend({
       });
     }
   }),
-  isEmpty: empty('filteredPipelines'),
-  addCollectionError: null,
-  addCollectionSuccess: null,
   actions: {
     addToCollection(pipelineId, collection) {
       return this.get('onAddToCollection')(+pipelineId, collection.id)

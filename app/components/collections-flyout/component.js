@@ -4,18 +4,20 @@ import { computed } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
-  collections: computed('store', {
-    get() {
-      return this.get('store').findAll('collection');
-    }
-  }),
+  session: service(),
+  store: service(),
   collectionToDelete: null,
   errorMessage: null,
   showConfirmation: false,
   showDeleteButtons: false,
   showModal: false,
-  session: service(),
-  store: service(),
+
+  collections: computed('store', {
+    get() {
+      return this.get('store').findAll('collection');
+    }
+  }),
+
   actions: {
     /**
      * Action to create a new collection

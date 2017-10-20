@@ -1,3 +1,4 @@
+/* eslint ember/avoid-leaking-state-in-components: [2, ["funnies"]] */
 import { computed } from '@ember/object';
 import Component from '@ember/component';
 

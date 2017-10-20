@@ -4,7 +4,11 @@ import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend(ModelReloaderMixin, {
   modelToReload: 'event.builds',
-  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
+
+  willRender() {
+    this.startReloading();
+  },
+
   shouldReload() {
     const event = this.get('event');
 
@@ -14,10 +18,11 @@ export default Component.extend(ModelReloaderMixin, {
 
     return false;
   },
-  willRender() {
-    this.startReloading();
-  },
+
   willDestroy() {
     this.stopReloading();
-  }
+  },
+
+  // eslint doesn't know what this property is, so it wants it on the bottom
+  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER
 });

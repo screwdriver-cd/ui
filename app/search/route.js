@@ -1,14 +1,14 @@
 import Route from '@ember/routing/route';
 
 export default Route.extend({
-  routeAfterAuthentication: 'search',
-  titleToken: 'Search',
   queryParams: {
     query: {
       refreshModel: true,
       replace: true
     }
   },
+  routeAfterAuthentication: 'search',
+  titleToken: 'Search',
   model(params) {
     return {
       pipelines: this.store.findAll('pipeline'),

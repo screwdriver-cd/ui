@@ -3,8 +3,8 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
 export default Component.extend({
-  classNames: ['row'],
   scmService: service('scm'),
+  classNames: ['row'],
   scmContext: computed({
     get() {
       const pipeline = this.get('pipeline');

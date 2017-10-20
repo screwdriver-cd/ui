@@ -3,6 +3,8 @@ import Component from '@ember/component';
 
 export default Component.extend({
   tagName: 'tr',
+  newValue: null,
+  originalAllowInPR: null,
   buttonAction: computed('newValue', 'secret.allowInPR', 'originalAllowInPR', {
     get() {
       return (this.get('newValue')
@@ -10,8 +12,6 @@ export default Component.extend({
         'Update' : 'Delete';
     }
   }),
-  newValue: null,
-  originalAllowInPR: null,
   init() {
     this._super(...arguments);
     this.set('originalAllowInPR', this.get('secret.allowInPR'));

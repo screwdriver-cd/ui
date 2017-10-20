@@ -10,35 +10,6 @@ export default Controller.extend({
   counter: 0,
   stepList: mapBy('model.build.steps', 'name'),
 
-  /**
-   * Schedules a build to reload after a certain amount of time
-   * @method reloadBuild
-   * @param  {Number}    [timeout=ENV.APP.BUILD_RELOAD_TIMER] ms to wait before reloading
-   */
-  reloadBuild(timeout = ENV.APP.BUILD_RELOAD_TIMER) {
-    const build = this.get('model.build');
-    const status = build.get('status');
-
-    // reload again in a little bit if queued
-    if (!this.get('loading')) {
-      if ((status === 'QUEUED' || status === 'RUNNING')) {
-        later(this, () => {
-          if (!build.get('isDeleted') && !this.get('loading')) {
-            this.set('loading', true);
-
-            build.reload().then(() => {
-              this.set('loading', false);
-              once(this, 'reloadBuild');
-            });
-          }
-        }, timeout);
-      } else {
-        // refetch builds which are part of current event
-        this.get('model.event').hasMany('builds').reload();
-      }
-    }
-  },
-
   actions: {
     stopBuild() {
       const build = this.get('model.build');
@@ -68,6 +39,35 @@ export default Controller.extend({
       // If there is already a reload scheduled in the runloop,
       // this replaces it with one with no timeout
       once(this, 'reloadBuild', 0);
+    }
+  },
+
+  /**
+   * Schedules a build to reload after a certain amount of time
+   * @method reloadBuild
+   * @param  {Number}    [timeout=ENV.APP.BUILD_RELOAD_TIMER] ms to wait before reloading
+   */
+  reloadBuild(timeout = ENV.APP.BUILD_RELOAD_TIMER) {
+    const build = this.get('model.build');
+    const status = build.get('status');
+
+    // reload again in a little bit if queued
+    if (!this.get('loading')) {
+      if ((status === 'QUEUED' || status === 'RUNNING')) {
+        later(this, () => {
+          if (!build.get('isDeleted') && !this.get('loading')) {
+            this.set('loading', true);
+
+            build.reload().then(() => {
+              this.set('loading', false);
+              once(this, 'reloadBuild');
+            });
+          }
+        }, timeout);
+      } else {
+        // refetch builds which are part of current event
+        this.get('model.event').hasMany('builds').reload();
+      }
     }
   }
 });

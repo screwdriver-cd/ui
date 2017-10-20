@@ -2,6 +2,9 @@ import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 export default Route.extend(AuthenticatedRouteMixin, {
+  titleToken: 'Dashboard',
+  authenticationRoute: 'login',
+
   activate() {
     return this.get('store').findAll('collection')
       .then((collections) => {
@@ -21,7 +24,5 @@ export default Route.extend(AuthenticatedRouteMixin, {
       .catch(() => {
         this.replaceWith('home');
       });
-  },
-  titleToken: 'Dashboard',
-  authenticationRoute: 'login'
+  }
 });
