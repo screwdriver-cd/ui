@@ -8,27 +8,18 @@ export default Controller.extend({
 
   actions: {
     startMainBuild() {
-      const main = this.get('model.jobs').objectAt(0);
-      const builds = main.get('builds');
-
-      if (builds.length > 0) {
-        const lastBuild = builds.objectAt(0);
-        const status = lastBuild.get('status');
-
-        // build is already running, just go to the build
-        if (status === 'QUEUED' || status === 'RUNNING') {
-          return this.transitionToRoute('pipeline.builds.build', lastBuild.get('id'));
-        }
-      }
-
       this.set('isShowingModal', true);
 
-      const newBuild = this.store.createRecord('build', { jobId: main.get('id') });
+      const pipelineId = this.get('model.pipeline.id');
+      const newEvent = this.store.createRecord('event', {
+        pipelineId,
+        startFrom: '~commit'
+      });
 
-      return newBuild.save().then((b) => {
+      return newEvent.save().then(() => {
         this.set('isShowingModal', false);
 
-        return this.transitionToRoute('pipeline.builds.build', b.get('id'));
+        return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
       }).catch((e) => {
         this.set('isShowingModal', false);
         this.set('errorMessage', e.message);

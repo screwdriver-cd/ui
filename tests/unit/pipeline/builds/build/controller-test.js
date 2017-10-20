@@ -8,7 +8,8 @@ let server;
 
 moduleFor('controller:pipeline/builds/build', 'Unit | Controller | pipeline/builds/build', {
   // Specify the other units that are required for this test.
-  needs: ['model:build', 'adapter:application', 'service:session', 'serializer:build'],
+  // eslint-disable-next-line max-len
+  needs: ['model:build', 'model:event', 'adapter:application', 'service:session', 'serializer:build', 'serializer:event'],
   beforeEach() {
     server = new Pretender();
   },
@@ -25,26 +26,31 @@ test('it exists', function (assert) {
 
 test('it starts a build', function (assert) {
   assert.expect(3);
-  server.post('http://localhost:8080/v4/builds', () => [
+  server.post('http://localhost:8080/v4/events', () => [
+    201,
+    { 'Content-Type': 'application/json' },
+    JSON.stringify({ id: '5678' })
+  ]);
+  server.get('http://localhost:8080/v4/events/5678/builds', () => [
     200,
     { 'Content-Type': 'application/json' },
-    JSON.stringify({
-      id: '5678',
-      status: 'QUEUED'
-    })
+    JSON.stringify([{ id: '9999' }])
   ]);
 
   let controller = this.subject();
 
   run(() => {
     controller.set('model', {
-      build: EmberObject.create({
-        jobId: 'abcd'
+      pipeline: EmberObject.create({
+        id: '1234'
+      }),
+      job: EmberObject.create({
+        name: 'PR-1:main'
       })
     });
     controller.transitionToRoute = (path, id) => {
       assert.equal(path, 'pipeline.builds.build');
-      assert.equal(id, 5678);
+      assert.equal(id, 9999);
     };
 
     controller.send('startBuild');
@@ -55,7 +61,8 @@ test('it starts a build', function (assert) {
     const payload = JSON.parse(request.requestBody);
 
     assert.deepEqual(payload, {
-      jobId: 'abcd'
+      pipelineId: '1234',
+      startFrom: 'PR-1:main'
     });
   });
 });

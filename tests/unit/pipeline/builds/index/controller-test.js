@@ -1,5 +1,4 @@
 import EmberObject from '@ember/object';
-import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 import { moduleFor, test } from 'ember-qunit';
 import Pretender from 'pretender';
@@ -8,7 +7,8 @@ let server;
 
 moduleFor('controller:pipeline/builds/index', 'Unit | Controller | pipeline/builds/index', {
   // Specify the other units that are required for this test.
-  needs: ['model:build', 'adapter:application', 'service:session', 'serializer:build'],
+  // eslint-disable-next-line max-len
+  needs: ['model:build', 'model:event', 'adapter:application', 'service:session', 'serializer:build', 'serializer:event'],
   beforeEach() {
     server = new Pretender();
   },
@@ -25,12 +25,12 @@ test('it exists', function (assert) {
 
 test('it starts a build', function (assert) {
   assert.expect(6);
-  server.post('http://localhost:8080/v4/builds', () => [
-    200,
+  server.post('http://localhost:8080/v4/events', () => [
+    201,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
       id: '5678',
-      status: 'QUEUED'
+      pipelineId: '1234'
     })
   ]);
 
@@ -38,26 +38,14 @@ test('it starts a build', function (assert) {
 
   run(() => {
     controller.set('model', {
-      // eslint-disable-next-line new-cap
-      jobs: A([
-        EmberObject.create({
-          id: 'abcd',
-          name: 'main',
-          // eslint-disable-next-line new-cap
-          builds: A([
-            EmberObject.create({
-              id: '1234',
-              jobId: 'abcd',
-              status: 'FAILURE'
-            })
-          ])
-        })
-      ])
+      pipeline: EmberObject.create({
+        id: '1234'
+      })
     });
 
     controller.transitionToRoute = (path, id) => {
-      assert.equal(path, 'pipeline.builds.build');
-      assert.equal(id, 5678);
+      assert.equal(path, 'pipeline');
+      assert.equal(id, 1234);
     };
 
     assert.notOk(controller.get('isShowingModal'));
@@ -71,39 +59,8 @@ test('it starts a build', function (assert) {
 
     assert.notOk(controller.get('isShowingModal'));
     assert.deepEqual(payload, {
-      jobId: 'abcd'
+      pipelineId: '1234',
+      startFrom: '~commit'
     });
-  });
-});
-
-test('it transistions to running build', function (assert) {
-  assert.expect(2);
-  let controller = this.subject();
-
-  run(() => {
-    controller.set('model', {
-      // eslint-disable-next-line new-cap
-      jobs: A([
-        EmberObject.create({
-          id: 'abcd',
-          name: 'main',
-          // eslint-disable-next-line new-cap
-          builds: A([
-            EmberObject.create({
-              id: '1234',
-              jobId: 'abcd',
-              status: 'RUNNING'
-            })
-          ])
-        })
-      ])
-    });
-
-    controller.transitionToRoute = (path, id) => {
-      assert.equal(path, 'pipeline.builds.build');
-      assert.equal(id, 1234);
-    };
-
-    controller.send('startMainBuild');
   });
 });

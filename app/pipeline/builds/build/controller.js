@@ -19,11 +19,20 @@ export default Controller.extend({
     },
 
     startBuild() {
-      const jobId = this.get('model.build.jobId');
-      const build = this.store.createRecord('build', { jobId });
+      const pipelineId = this.get('model.pipeline.id');
+      const jobName = this.get('model.job.name');
+      const newEvent = this.store.createRecord('event', {
+        pipelineId,
+        startFrom: jobName
+      });
 
-      return build.save()
-        .then(() => this.transitionToRoute('pipeline.builds.build', build.get('id')));
+      return newEvent.save()
+        .then(() =>
+          newEvent.get('builds')
+            .then(builds =>
+              this.transitionToRoute('pipeline.builds.build',
+                builds.get('lastObject.id'))
+            ));
     },
 
     reload() {
