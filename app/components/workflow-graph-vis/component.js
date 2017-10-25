@@ -11,7 +11,7 @@ export default Component.extend({
       let list = nodes.map(n => ({ id: `${n.name}`, label: n.name }));
       const builds = get(this, 'builds');
 
-      if (builds) {
+      if (Array.isArray(builds) && builds.length) {
         list = nodes.map((n) => {
           const obj = { id: `${n.name}`, label: n.name };
           const build = builds.find(j => `${j.get('jobId')}` === `${n.id}`);
