@@ -8,12 +8,12 @@ export default Component.extend({
   nodes: computed({
     get() {
       const nodes = getWithDefault(this, 'workflowGraph.nodes', []);
-      let list = nodes.map(n => ({ id: `${n.name}`, label: n.name }));
+      let list = nodes.map(n => ({ id: n.name, label: n.name }));
       const builds = get(this, 'builds');
 
       if (Array.isArray(builds) && builds.length) {
         list = nodes.map((n) => {
-          const obj = { id: `${n.name}`, label: n.name };
+          const obj = { id: n.name, label: n.name };
           const build = builds.find(j => `${j.get('jobId')}` === `${n.id}`);
 
           if (build) {
