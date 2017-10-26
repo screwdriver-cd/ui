@@ -20,7 +20,7 @@ jobs:
       RELEASE_FILE: sdui.tgz
       DOCKER_REPO: screwdrivercd/ui
     steps:
-      - setup-ci: git clone https://gist.github.com/3d2388b2a7ba658cdcdaffa8cd874e50.git ci
+      - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
       - install: npm install
       - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
       - build: ./node_modules/.bin/ember build --environment production
@@ -39,9 +39,10 @@ jobs:
   # Deploy to our beta environment and run tests
   beta:
     steps:
-      - setup-ci: git clone https://gist.github.com/3d2388b2a7ba658cdcdaffa8cd874e50.git ci
-      - wait-docker: DOCKER_TAG=`git describe --abbrev=0 --tags` ./ci/docker-wait.sh
-      - deploy-k8s: K8S_TAG=`git describe --abbrev=0 --tags` ./ci/k8s-deploy.sh
+      - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
+      - get-tag: ./ci/git-latest.sh
+      - wait-docker: DOCKER_TAG=`cat VERSION` ./ci/docker-wait.sh
+      - deploy-k8s: K8S_TAG=`cat VERSION` ./ci/k8s-deploy.sh
       - test: echo Put acceptance tests here
     environment:
       DOCKER_REPO: screwdrivercd/ui
@@ -57,9 +58,10 @@ jobs:
   # Deploy to our prod environment and run tests
   prod:
     steps:
-      - setup-ci: git clone https://gist.github.com/3d2388b2a7ba658cdcdaffa8cd874e50.git ci
-      - wait-docker: DOCKER_TAG=`git describe --abbrev=0 --tags` ./ci/docker-wait.sh
-      - deploy-k8s: K8S_TAG=`git describe --abbrev=0 --tags` ./ci/k8s-deploy.sh
+      - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
+      - get-tag: ./ci/git-latest.sh
+      - wait-docker: DOCKER_TAG=`cat VERSION` ./ci/docker-wait.sh
+      - deploy-k8s: K8S_TAG=`cat VERSION` ./ci/k8s-deploy.sh
       - test: echo Put acceptance tests here
     environment:
       DOCKER_REPO: screwdrivercd/ui
