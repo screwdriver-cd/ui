@@ -8,22 +8,21 @@
         {{pipeline-start startBuild=(action "startMainBuild")}}
       </div>
       <div class="col-xs-12 col-lg-6">
-        {{pipeline-workflow jobs=model.jobs}}
+        {{pipeline-workflow workflowGraph=pipeline.workflowGraph jobs=jobs}}
       </div>
     </div>
   </div>
 </div>
 {{else}}
-{{pipeline-workflow jobs=model.jobs}}
+{{pipeline-workflow workflowGraph=pipeline.workflowGraph jobs=jobs}}
 {{/if}}
-
 
 <div class="row">
   <div class="col-xs-12 col-md-9">
-    {{pipeline-events-list events=model.events}}
+    {{pipeline-events-list events=events}}
   </div>
   <div class="col-xs-12 col-md-3">
-    {{pipeline-pr-list pullRequests=model.pullRequests}}
+    {{pipeline-pr-list pullRequests=pullRequests}}
   </div>
 </div>
 
