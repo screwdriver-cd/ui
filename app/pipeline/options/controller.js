@@ -1,8 +1,11 @@
 import Controller from '@ember/controller';
+import { reads } from '@ember/object/computed';
 
 export default Controller.extend({
   errorMessage: '',
   isSaving: false,
+  pipeline: reads('model.pipeline'),
+  jobs: reads('model.jobs'),
   actions: {
     setJobStatus(id, state) {
       const job = this.store.peekRecord('job', id);
@@ -11,12 +14,12 @@ export default Controller.extend({
       job.save();
     },
     removePipeline() {
-      this.model.pipeline.destroyRecord().then(() => {
+      this.get('pipeline').destroyRecord().then(() => {
         this.transitionToRoute('home');
       });
     },
     updatePipeline(scmUrl) {
-      let pipeline = this.model.pipeline;
+      let pipeline = this.get('pipeline');
 
       pipeline.set('checkoutUrl', scmUrl);
 

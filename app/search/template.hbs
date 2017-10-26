@@ -2,18 +2,18 @@
   {{#if session.isAuthenticated}}
     {{collections-flyout class="col-md-2"}}
     {{search-list
-      pipelines=model.pipelines
-      collections=model.collections
+      pipelines=pipelines
+      collections=collections
       onAddToCollection=(action "addToCollection")
-      query=model.query
+      query=query
       class="col-md-10"
     }}
   {{else}}
     {{search-list
-      pipelines=model.pipelines
-      collections=model.collections
+      pipelines=pipelines
+      collections=collections
       onAddToCollection=(action "addToCollection")
-      query=model.query
+      query=query
     }}
   {{/if}}
 </div>

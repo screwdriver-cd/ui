@@ -22,7 +22,7 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/no-mutable-exports': 'off',
     'import/newline-after-import': 'off',
-    "ember/alias-model-in-controller": "off", // error
+    "ember/alias-model-in-controller": "error",
     "ember/avoid-leaking-state-in-components": "error",
     "ember/closure-actions": "error",
     "ember/jquery-ember-run": "off", // error

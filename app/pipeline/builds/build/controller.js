@@ -1,5 +1,5 @@
 import { later, once } from '@ember/runloop';
-import { mapBy } from '@ember/object/computed';
+import { reads, mapBy } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
 import ENV from 'screwdriver-ui/config/environment';
@@ -8,19 +8,24 @@ export default Controller.extend({
   session: service('session'),
   loading: false,
   counter: 0,
-  stepList: mapBy('model.build.steps', 'name'),
+  build: reads('model.build'),
+  jobs: reads('model.jobs'),
+  job: reads('model.job'),
+  event: reads('model.event'),
+  pipeline: reads('model.pipeline'),
+  stepList: mapBy('build.steps', 'name'),
 
   actions: {
     stopBuild() {
-      const build = this.get('model.build');
+      const build = this.get('build');
 
       build.set('status', 'ABORTED');
       build.save();
     },
 
     startBuild() {
-      const pipelineId = this.get('model.pipeline.id');
-      const jobName = this.get('model.job.name');
+      const pipelineId = this.get('pipeline.id');
+      const jobName = this.get('job.name');
       const newEvent = this.store.createRecord('event', {
         pipelineId,
         startFrom: jobName
@@ -48,7 +53,7 @@ export default Controller.extend({
    * @param  {Number}    [timeout=ENV.APP.BUILD_RELOAD_TIMER] ms to wait before reloading
    */
   reloadBuild(timeout = ENV.APP.BUILD_RELOAD_TIMER) {
-    const build = this.get('model.build');
+    const build = this.get('build');
     const status = build.get('status');
 
     // reload again in a little bit if queued
@@ -66,7 +71,7 @@ export default Controller.extend({
         }, timeout);
       } else {
         // refetch builds which are part of current event
-        this.get('model.event').hasMany('builds').reload();
+        this.get('event').hasMany('builds').reload();
       }
     }
   }
