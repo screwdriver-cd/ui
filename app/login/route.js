@@ -7,6 +7,6 @@ export default Route.extend(UnauthenticatedRouteMixin, {
   titleToken: 'Login',
   routeIfAlreadyAuthenticated: 'home',
   model() {
-    return this.get('scmService').getScms();
+    return this.modelFor('application');
   }
 });

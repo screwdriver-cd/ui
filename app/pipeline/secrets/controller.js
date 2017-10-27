@@ -1,7 +1,10 @@
 import Controller from '@ember/controller';
+import { reads } from '@ember/object/computed';
 
 export default Controller.extend({
   errorMessage: '',
+  pipeline: reads('model.pipeline'),
+  secrets: reads('model.secrets'),
   actions: {
     createSecret(name, value, pipelineId, allowInPR) {
       const newSecret = this.store.createRecord('secret', { name, value, pipelineId, allowInPR });
@@ -9,7 +12,7 @@ export default Controller.extend({
       return newSecret.save()
         .then((s) => {
           this.set('errorMessage', '');
-          this.get('model.secrets').reload();
+          this.get('secrets').reload();
 
           return s;
         }, (err) => {

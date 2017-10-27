@@ -2,11 +2,11 @@
   {{collections-flyout
       class="col-md-3"
       onDeleteCollection=(action "onDeleteCollection")
-      selectedCollectionId=model.id
+      selectedCollectionId=collection.id
   }}
   {{collection-view
       onPipelineRemove=(action "removePipeline")
-      collection=model
+      collection=collection
       class="col-md-9"
   }}
 </div>

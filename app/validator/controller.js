@@ -1,3 +1,5 @@
+/* eslint-disable ember/alias-model-in-controller */
+// The route for this controller does not expose a model to alias.
 import { debounce } from '@ember/runloop';
 import { computed, observer } from '@ember/object';
 import { inject as service } from '@ember/service';

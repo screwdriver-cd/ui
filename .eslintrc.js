@@ -22,22 +22,22 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/no-mutable-exports': 'off',
     'import/newline-after-import': 'off',
-    "ember/alias-model-in-controller": "off",
+    "ember/alias-model-in-controller": "error",
     "ember/avoid-leaking-state-in-components": "error",
     "ember/closure-actions": "error",
-    "ember/jquery-ember-run": "off",
+    "ember/jquery-ember-run": "off", // error
     "ember/local-modules": "off",
-    "ember/named-functions-in-promises": "off",
+    "ember/named-functions-in-promises": "off", // error
     "ember/new-module-imports": "off",
     "ember/no-attrs-in-components": "off",
     "ember/no-attrs-snapshot": "error",
     "ember/no-capital-letters-in-routes": "error",
     "ember/no-duplicate-dependent-keys": "off",
-    "ember/no-empty-attrs": "off",
+    "ember/no-empty-attrs": "off", // error
     "ember/no-function-prototype-extensions": "error",
     "ember/no-global-jquery": "off",
     "ember/no-jquery": "off",
-    "ember/no-observers": "off",
+    "ember/no-observers": "off", // error
     "ember/no-old-shims": "off",
     "ember/no-on-calls-in-components": "error",
     "ember/no-side-effects": "error",
@@ -48,6 +48,6 @@ module.exports = {
     "ember/require-super-in-init": "off",
     "ember/routes-segments-snake-case": "error",
     "ember/use-brace-expansion": "error",
-    "ember/use-ember-get-and-set": "off"
+    "ember/use-ember-get-and-set": "off" // error
   }
 };

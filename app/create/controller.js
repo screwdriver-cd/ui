@@ -1,3 +1,5 @@
+/* eslint-disable ember/alias-model-in-controller */
+// The route for this controller does not expose a model to alias.
 import Controller from '@ember/controller';
 
 export default Controller.extend({

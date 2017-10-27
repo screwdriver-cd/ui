@@ -1,8 +1,12 @@
 import { inject as service } from '@ember/service';
+import { reads } from '@ember/object/computed';
 import Controller from '@ember/controller';
 
 export default Controller.extend({
   session: service(),
+  pipelines: reads('model.pipelines'),
+  collections: reads('model.collections'),
+  query: reads('model.query'),
   actions: {
     /**
      * Adding a pipeline to a collection
