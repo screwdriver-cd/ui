@@ -8,7 +8,7 @@ const scmUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/contex
 /**
 * Get scm icon type.
 * @method getIconType
-* @param  {String}  scmContext  scmContext (e.g. github:github.com) 
+* @param  {String}  scmContext  scmContext (e.g. github:github.com)
 * @return {String}  iconType (using Font Awesome Icons)
 */
 function getIconType(scmContext) {
@@ -79,7 +79,7 @@ export default Service.extend({
   /**
    * Get specific scm object from inner ember data table.
    * @method getScm
-   * @param  {String}  scmContext  scmContext (e.g. github:github.com) 
+   * @param  {String}  scmContext  scmContext (e.g. github:github.com)
    * @return {Object}              scm object
    */
   getScm(scmContext) {
@@ -101,7 +101,7 @@ export default Service.extend({
   /**
    * Change status of 'isSignedIn' property true.
    * @method setSignedIn
-   * @param  {String}  scmContext  scmContext (e.g. github:github.com) 
+   * @param  {String}  scmContext  scmContext (e.g. github:github.com)
    */
   setSignedIn(scmContext) {
     this.getScms().forEach((scm) => {
