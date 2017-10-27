@@ -2,6 +2,7 @@
 import { get, getWithDefault, computed, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
+import DS from 'ember-data';
 
 export default Component.extend({
   router: service(),
@@ -11,7 +12,8 @@ export default Component.extend({
       let list = nodes.map(n => ({ id: n.name, label: n.name }));
       const builds = get(this, 'builds');
 
-      if (Array.isArray(builds) && builds.length) {
+      if ((Array.isArray(builds) && builds.length) ||
+        (builds instanceof DS.PromiseArray && builds.get('length'))) {
         list = nodes.map((n) => {
           const obj = { id: n.name, label: n.name };
           const build = builds.find(j => `${j.get('jobId')}` === `${n.id}`);
