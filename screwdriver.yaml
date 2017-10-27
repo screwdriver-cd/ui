@@ -28,7 +28,6 @@ jobs:
       - tag: ./ci/git-tag.sh
       - publish: ./ci/git-release.sh
       - docker: |
-              ./ci/git-latest.sh
               export DOCKER_TAG=`cat VERSION`
               ./ci/docker-trigger.sh
     secrets:
