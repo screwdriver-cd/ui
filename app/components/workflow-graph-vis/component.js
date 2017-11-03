@@ -9,6 +9,8 @@ export default Component.extend({
   nodes: computed({
     get() {
       const nodes = getWithDefault(this, 'workflowGraph.nodes', []);
+      const startFrom = get(this, 'startFrom');
+      const causeMessage = get(this, 'causeMessage');
       let list = nodes.map(n => ({ id: n.name, label: n.name }));
       const builds = get(this, 'builds');
 
@@ -17,6 +19,15 @@ export default Component.extend({
         list = nodes.map((n) => {
           const obj = { id: n.name, label: n.name };
           const build = builds.find(j => `${j.get('jobId')}` === `${n.id}`);
+
+          // If startFrom is a trigger, e.g. ~commit, ~sd@123:main, then highlight it
+          if (startFrom && startFrom.startsWith('~') && n.name === startFrom) {
+            obj.color = '#1ac567';
+            obj.icon = { code: '\uf05d', color: '#1ac567' };
+            if (startFrom.startsWith('~sd@')) {
+              obj.buildId = causeMessage.match(/\d+/)[0];
+            }
+          }
 
           if (build) {
             obj.status = get(build, 'status');
@@ -129,7 +140,13 @@ export default Component.extend({
       if (node.buildId) {
         const router = get(this, 'router');
         // Hack to make click route to build page
-        const url = router.urlFor('pipeline.builds.build', node.buildId);
+        let url = router.urlFor('pipeline.builds.build', node.buildId);
+
+        if (node.id.startsWith('~sd@')) {
+          const pipelineId = node.id.match(/^~sd@(\d+):([\w-]+)$/)[1];
+
+          url = router.urlFor('pipeline.builds.build', pipelineId, node.buildId);
+        }
 
         router.transitionTo(url);
       }
