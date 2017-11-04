@@ -11,6 +11,15 @@ test('it renders jobs', function (assert) {
   this.set('validationMock', {
     errors: ['got an error'],
     workflow: ['main', 'foo'],
+    workflowGraph: {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'main' },
+        { name: 'foo' }
+      ],
+      edges: []
+    },
     jobs: {
       foo: [{
         image: 'int-test:1',

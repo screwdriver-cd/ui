@@ -6,7 +6,7 @@ import DS from 'ember-data';
 
 export default Component.extend({
   router: service(),
-  nodes: computed({
+  nodes: computed('workflowGraph.nodes.[]', {
     get() {
       const nodes = getWithDefault(this, 'workflowGraph.nodes', []);
       const startFrom = get(this, 'startFrom');
@@ -69,7 +69,7 @@ export default Component.extend({
     }
   }),
 
-  edges: computed({
+  edges: computed('workflowGraph.edges.[]', {
     get() {
       const edges = getWithDefault(this, 'workflowGraph.edges', []);
 
@@ -87,7 +87,13 @@ export default Component.extend({
     this.createNetwork();
   },
 
-  // TODO: Listen for changes to nodes/edges and update graph accordingly.
+  // Listen for changes to nodes/edges and update graph accordingly.
+  didUpdateAttrs() {
+    this._super(...arguments);
+
+    set(this, 'network', null);
+    this.createNetwork();
+  },
 
   createNetwork() {
     const options = {

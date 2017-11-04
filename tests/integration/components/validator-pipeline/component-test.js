@@ -14,7 +14,7 @@ test('it renders default empty settings', function (assert) {
   assert.equal(this.$('.annotations ul li').text().trim(), 'None defined');
 
   assert.equal(this.$('.workflow .label').text().trim(), 'Workflow:');
-  assert.equal(this.$('.workflow  ul li').text().trim(), 'Main');
+  assert.ok(this.$('.workflow canvas'), 'workflow canvas');
 });
 
 test('it renders pipeline annotations and workflow', function (assert) {
@@ -34,6 +34,5 @@ test('it renders pipeline annotations and workflow', function (assert) {
   assert.equal(this.$('.annotations ul li').text().trim(), 'hello: hi');
 
   assert.equal(this.$('.workflow .label').text().trim(), 'Workflow:');
-  assert.equal(this.$('.workflow ul li:nth-child(1)').text().trim(), 'firstjob');
-  assert.equal(this.$('.workflow ul li:nth-child(2)').text().trim(), 'secondjob');
+  assert.ok(this.$('.workflow canvas'), 'workflow canvas');
 });
