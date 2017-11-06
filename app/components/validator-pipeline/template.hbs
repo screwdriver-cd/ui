@@ -13,14 +13,6 @@
 </div>
 <div class="workflow" title="This is the order that the jobs will run in.">
   <span class="label">Workflow:</span>
-  <span class="value">
-    <ul>
-      {{#each workflow as |name|}}
-      <li>{{name}}</li>
-      {{else}}
-      <li>Main</li>
-      {{/each}}
-    </ul>
-  </span>
+  {{workflow-graph-vis workflowGraph=workflowGraph}}
 </div>
 {{yield}}

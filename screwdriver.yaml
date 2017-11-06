@@ -1,8 +1,3 @@
-workflow:
-  - publish
-  - beta
-  - prod
-
 shared:
   image: node:6
 
@@ -13,6 +8,9 @@ jobs:
       - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
       - install-browsers: ./bin/setup_chrome.sh
       - test: npm test
+    requires:
+      - ~pr
+      - ~commit
 
   # Publish the package to GitHub and build docker image
   publish:
@@ -37,6 +35,8 @@ jobs:
       - GITHUB_TOKEN
       # Trigger a Docker Hub build
       - DOCKER_TRIGGER
+    requires:
+      - main
 
   # Deploy to our beta environment and run tests
   beta:
@@ -56,6 +56,8 @@ jobs:
     secrets:
       # Talking to Kubernetes
       - K8S_TOKEN
+    requires:
+      - publish
 
   # Deploy to our prod environment and run tests
   prod:
@@ -75,3 +77,5 @@ jobs:
     secrets:
       # Talking to Kubernetes
       - K8S_TOKEN
+    requires:
+      - beta

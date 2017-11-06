@@ -1,31 +1,24 @@
-import { computed } from '@ember/object';
+import { computed, get, getWithDefault } from '@ember/object';
 import Component from '@ember/component';
+const { reads, map } = computed;
 
 export default Component.extend({
   results: null,
-  errors: computed('results', {
+  jobs: reads('results.jobs'),
+  errors: map('results.errors', e => (typeof e === 'string' ? e : e.message)),
+  workflowGraph: computed('results.workflowGraph', {
     get() {
-      return (this.get('results.errors') || []).map(e => (typeof e === 'string' ? e : e.message));
+      return getWithDefault(this, 'results.workflowGraph', { nodes: [], edges: [] });
     }
   }),
-  workflow: computed('results', {
+  annotations: computed('results.annotations', {
     get() {
-      return this.get('results.workflow') || [];
-    }
-  }),
-  annotations: computed('results', {
-    get() {
-      return this.get('results.annotations') || [];
-    }
-  }),
-  jobs: computed('results', {
-    get() {
-      return this.get('results.jobs');
+      return getWithDefault(this, 'results.annotations', []);
     }
   }),
   templateName: computed('results.template.{name,version}', {
     get() {
-      return `${this.get('results.template.name')}@${this.get('results.template.version')}`;
+      return `${get(this, 'results.template.name')}@${get(this, 'results.template.version')}`;
     }
   })
 });

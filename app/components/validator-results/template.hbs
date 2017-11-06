@@ -4,15 +4,16 @@
 </div>
 {{/each}}
 {{#if isTemplate}}
-{{validator-job name=templateName job=results.template.config}}
+  {{validator-job name=templateName job=results.template.config}}
 {{else}}
-{{validator-pipeline name=pipelineName workflow=workflow annotations=annotations}}
-{{#each workflow as |jobName|}}
-  {{#if (get jobs jobName)}}
-    {{#each (get jobs jobName) as |jobConfig index|}}
-      {{validator-job name=jobName job=jobConfig index=index}}
-    {{/each}}
-  {{/if}}
-{{/each}}
+  {{validator-pipeline name=pipelineName workflowGraph=workflowGraph annotations=annotations}}
+
+  {{#each workflowGraph.nodes as |node|}}
+    {{#if (get jobs node.name)}}
+      {{#each (get jobs node.name) as |jobConfig index|}}
+        {{validator-job name=node.name job=jobConfig index=index}}
+      {{/each}}
+    {{/if}}
+  {{/each}}
 {{/if}}
 {{yield}}
