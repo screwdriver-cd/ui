@@ -27,7 +27,7 @@ export default Controller.extend({
         return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
       }).catch((e) => {
         this.set('isShowingModal', false);
-        this.set('errorMessage', e.errors[0].detail);
+        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
     }
   }

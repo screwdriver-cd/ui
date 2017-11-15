@@ -18,7 +18,7 @@ export default Component.extend({
         (builds instanceof DS.PromiseArray && builds.get('length'))) {
         list = nodes.map((n) => {
           const obj = { id: n.name, label: n.name };
-          const build = builds.find(j => `${j.get('jobId')}` === `${n.id}`);
+          const build = builds.find(j => j && `${get(j, 'jobId')}` === `${n.id}`);
 
           // If startFrom is a trigger, e.g. ~commit, ~sd@123:main, then highlight it
           if (startFrom && startFrom.startsWith('~') && n.name === startFrom) {

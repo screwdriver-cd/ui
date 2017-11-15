@@ -34,6 +34,7 @@ module.exports = function (defaults) {
   app.import('bower_components/humanize-duration/humanize-duration.js');
   app.import('node_modules/vis/dist/vis-network.min.js');
   app.import('node_modules/vis/dist/vis-network.min.css');
+  app.import('node_modules/d3/build/d3.min.js');
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //

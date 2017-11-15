@@ -1,5 +1,5 @@
 {{#if (is-fulfilled graph)}}
-  {{workflow-graph-vis workflowGraph=visGraph builds=builds}}
+  {{workflow-graph-d3 workflowGraph=visGraph builds=builds}}
 {{else}}
   {{#each jobs as |job|}}
     {{build-bubble jobName=job.name jobIsDisabled=job.isDisabled build=job.lastBuild}}

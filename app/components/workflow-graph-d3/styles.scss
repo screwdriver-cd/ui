@@ -1,0 +1,34 @@
+.graph-node {
+  fill: $sd-text-light;
+  stroke: $sd-text-light;
+  font-weight: 300;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: 600;
+  }
+}
+
+
+.build-success,
+.build-started_from { // sass-lint:disable-line class-name-format
+  fill: $sd-success;
+  stroke: $sd-success;
+}
+
+.build-failure,
+.build-aborted {
+  fill: $sd-failure;
+  stroke: $sd-failure;
+}
+
+.build-running,
+.build-queued {
+  fill: $sd-queued;
+  stroke: $sd-queued;
+}
+
+.graph-edge {
+  stroke: $sd-text-light;
+  fill: transparent;
+}
