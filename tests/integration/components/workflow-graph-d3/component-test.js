@@ -29,7 +29,7 @@ test('it renders nodes and edges when a graph is supplied', function (assert) {
   const svg = this.$('svg');
 
   assert.equal(svg.length, 1);
-  assert.equal(svg.children('text.graph-node').length, 3);
+  assert.equal(svg.children('g.graph-node').length, 3);
   assert.equal(svg.children('path.graph-edge').length, 2);
 });
 
@@ -62,10 +62,10 @@ test('it renders statuses when build data is available', function (assert) {
   const svg = this.$('svg');
 
   assert.equal(svg.length, 1);
-  assert.equal(svg.children('text.graph-node').length, 5);
-  assert.equal(svg.children('text.graph-node.build-success').length, 2);
-  assert.equal(svg.children('text.graph-node.build-failure').length, 1);
-  assert.equal(svg.children('text.graph-node.build-started_from').length, 1);
+  assert.equal(svg.children('g.graph-node').length, 5);
+  assert.equal(svg.children('g.graph-node.build-success').length, 2);
+  assert.equal(svg.children('g.graph-node.build-failure').length, 1);
+  assert.equal(svg.children('g.graph-node.build-started_from').length, 1);
   assert.equal(svg.children('path.graph-edge').length, 4);
   assert.equal(svg.children('path.graph-edge.build-started_from').length, 1);
   assert.equal(svg.children('path.graph-edge.build-success').length, 2);

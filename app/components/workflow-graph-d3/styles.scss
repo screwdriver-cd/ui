@@ -1,34 +1,77 @@
-.graph-node {
-  fill: $sd-text-light;
-  stroke: $sd-text-light;
-  font-weight: 300;
-  cursor: pointer;
+@font-face {
+  font-family: 'screwdriver';
+  src: url('/assets/screwdriver.eot?anwrf#iefix') format('embedded-opentype'),
+  url('/assets/screwdriver.ttf?anwrf') format('truetype'),
+  url('/assets/screwdriver.woff?anwrf') format('woff'),
+  url('/assets/screwdriver.svg?anwrf#screwdriver') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
-  &:hover {
-    font-weight: 600;
+@keyframes spin {
+  from {transform: rotate(0deg);}
+
+  to {transform: rotate(360deg);}
+}
+
+g {
+  transform-origin: 50% 50%;
+
+  &.build-running {
+    animation: spin 2s infinite linear;
   }
 }
 
+.graph-node {
+  font-family: 'screwdriver';
+  fill: $sd-text-light;
+  stroke-width: 0;
+  cursor: pointer;
 
-.build-success,
-.build-started_from { // sass-lint:disable-line class-name-format
-  fill: $sd-success;
-  stroke: $sd-success;
-}
+  &.build-success,
+  &.build-started_from { // sass-lint:disable-line class-name-format
+    fill: $sd-success;
 
-.build-failure,
-.build-aborted {
-  fill: $sd-failure;
-  stroke: $sd-failure;
-}
+    &:hover {
+      fill: darken($sd-success, 10%);
+    }
+  }
 
-.build-running,
-.build-queued {
-  fill: $sd-queued;
-  stroke: $sd-queued;
+  &.build-failure,
+  &.build-aborted {
+    fill: $sd-failure;
+
+    &:hover {
+      fill: darken($sd-failure, 10%);
+    }
+  }
+
+  &.build-running,
+  &.build-queued {
+    fill: $sd-queued;
+
+    &:hover {
+      fill: darken($sd-queued, 10%);
+    }
+  }
 }
 
 .graph-edge {
   stroke: $sd-text-light;
   fill: transparent;
+
+  &.build-success,
+  &.build-started_from { // sass-lint:disable-line class-name-format
+    stroke: $sd-success;
+  }
+
+  &.build-failure,
+  &.build-aborted {
+    stroke: $sd-failure;
+  }
+
+  &.build-running,
+  &.build-queued {
+    stroke: $sd-queued;
+  }
 }

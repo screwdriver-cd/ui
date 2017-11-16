@@ -5,8 +5,8 @@ const { icon, node, decorateGraph } = graphTools;
 module('Unit | Utility | graph tools');
 
 test('it gets the right icons', function (assert) {
-  assert.equal(icon('SUCCESS'), '\ue924'); // values subject to change
-  assert.equal(icon('banana'), '\ue972');
+  assert.equal(icon('SUCCESS'), '\ue903');
+  assert.equal(icon('banana'), '\ue901');
 });
 
 test('it gets an element from a list', function (assert) {

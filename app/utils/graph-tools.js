@@ -3,14 +3,14 @@ import DS from 'ember-data';
 
 // TODO: These icons are placeholders
 const STATUS_MAP = {
-  SUCCESS: { icon: '\ue924' },
-  STARTED_FROM: { icon: '\ue962' },
-  RUNNING: { icon: '\ue969' },
-  QUEUED: { icon: '\ue927' },
-  ABORTED: { icon: '\ue980' },
-  FAILURE: { icon: '\ue98c' },
-  DISABLED: { icon: '\ue965' },
-  UNKNOWN: { icon: '\ue972' }
+  SUCCESS: { icon: '\ue903' },
+  STARTED_FROM: { icon: '\ue907' },
+  RUNNING: { icon: '\ue905' },
+  QUEUED: { icon: '\ue904' },
+  ABORTED: { icon: '\ue900' },
+  FAILURE: { icon: '\ue906' },
+  DISABLED: { icon: '\ue902' },
+  UNKNOWN: { icon: '\ue901' }
 };
 
 /**
