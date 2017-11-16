@@ -1,7 +1,6 @@
 import { get } from '@ember/object';
 import DS from 'ember-data';
 
-// TODO: These icons are placeholders
 const STATUS_MAP = {
   SUCCESS: { icon: '\ue903' },
   STARTED_FROM: { icon: '\ue907' },
