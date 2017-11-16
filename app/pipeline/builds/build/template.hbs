@@ -12,6 +12,10 @@
   eventBuilds=event.buildsSorted
 }}
 
+{{#if build.statusMessage}}
+  {{info-message message=build.statusMessage type="warning" icon="exclamation-triangle"}}
+{{/if}}
+
 {{#if stepList}}
 {{#build-step-collection}}
   {{#each stepList as |name index|}}
