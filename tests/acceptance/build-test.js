@@ -78,6 +78,7 @@ moduleForAcceptance('Acceptance | build', {
         name: 'test'
       }],
       status: 'FAILURE',
+      statusMessage: 'Build failed to start due to infrastructure err',
       commit: {
         url: 'https://github.com/commit',
         message: 'merge this'
@@ -180,6 +181,8 @@ test('visiting /pipelines/:id/builds/:id', function (assert) {
     assert.equal(currentURL(), '/pipelines/1/builds/1234');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.headerbar h1').text().trim(), 'PR-50', 'incorrect job name');
+    assert.equal($('.alert-warning > span').text().trim(),
+      'Build failed to start due to infrastructure err', 'incorrect statusMessage');
     assert.equal(find('span.sha').text().trim(), '#abcdef', 'incorrect sha');
     assert.ok(find('.is-open .logs').text().trim().match(first), 'incorrect logs open');
 
