@@ -82,18 +82,10 @@ const decorateGraph = (inputGraph, builds, start) => {
 
   nodes.forEach((n) => {
     // Set root nodes on left
-    if (n.name.startsWith('~')) {
+    if (n.name.startsWith('~') || !n.pos) {
       n.pos = { x: 0, y: y[0] };
       y[0] += 1;
-      // recursively walk the graph from root
-      walkGraph(graph, n.name, 1, y);
-    }
-
-    // Set detached nodes on left
-    if (!n.pos) {
-      n.pos = { x: 0, y: y[0] };
-      y[0] += 1;
-      // recursively walk the graph from detached node
+      // recursively walk the graph from root/ detached node
       walkGraph(graph, n.name, 1, y);
     }
 
