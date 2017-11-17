@@ -1,9 +1,10 @@
 & {
-  padding: 20px 0 0 10px;
+  text-align: right;
 }
+
 button {
   border: 1px solid $sd-link;
-  background-color: #fff;
+  background-color: $sd-white;
   color: $sd-link;
   width: 100px;
   font-size: 14px;

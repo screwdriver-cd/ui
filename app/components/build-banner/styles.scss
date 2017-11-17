@@ -21,7 +21,7 @@
 
   .headerbar {
     border-radius: 3px;
-    @include backgroundGradient(to right, $sd-running-gradient-start, $sd-running-gradient-end);
+    @include background-gradient(to right, $sd-running-gradient-start, $sd-running-gradient-end);
     color: #fff;
     padding: 6px 6px 6px 20px;
     margin-bottom: 5px;
@@ -49,11 +49,11 @@
   }
 
   &.SUCCESS .line1 {
-    @include backgroundGradient(to right, $sd-success-gradient-start, $sd-success-gradient-end);
+    @include background-gradient(to right, $sd-success-gradient-start, $sd-success-gradient-end);
   }
   &.ABORTED .line1,
   &.FAILURE .line1 {
-    @include backgroundGradient(to right, $sd-failure-gradient-start, $sd-failure-gradient-end);
+    @include background-gradient(to right, $sd-failure-gradient-start, $sd-failure-gradient-end);
   }
 
   ul {

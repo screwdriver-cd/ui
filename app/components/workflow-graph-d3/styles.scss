@@ -22,6 +22,16 @@ g {
   }
 }
 
+& {
+  background-color: $grey-200;
+  padding: 10px 5px;
+
+  &.minified {
+    padding: 0;
+    background-color: transparent;
+  }
+}
+
 .graph-node {
   font-family: 'screwdriver';
   fill: $sd-text-light;

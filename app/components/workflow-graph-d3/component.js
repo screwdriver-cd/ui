@@ -8,6 +8,7 @@ const { icon, decorateGraph } = graphTools;
 
 export default Component.extend({
   router: service(),
+  classNameBindings: ['minified'],
   displayJobNames: true,
   decoratedGraph: computed('workflowGraph', 'builds.[]', 'startFrom', {
     get() {

@@ -1,24 +1,28 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
-{{#if session.isAuthenticated}}
-<div class="row">
-  <div class="col-md-9">
-    <div class="row">
-      <div class="col-xs-12 col-lg-2">
-        {{pipeline-start startBuild=(action "startMainBuild")}}
-      </div>
-      <div class="col-xs-12 col-lg-6">
-        {{pipeline-workflow workflowGraph=pipeline.workflowGraph jobs=jobs}}
-      </div>
-    </div>
-  </div>
-</div>
-{{else}}
-{{pipeline-workflow workflowGraph=pipeline.workflowGraph jobs=jobs}}
-{{/if}}
-
 <div class="row">
   <div class="col-xs-12 col-md-9">
+    <div class="row">
+      <div class="col-xs-3">
+        <strong>Pipeline</strong>
+        <select>
+          <option>Most Recent</option>
+          <option>Last Successful</option>
+          <option>Aggregate</option>
+        </select>
+      </div>
+      <div class="col-xs-3">
+        <strong>Commit</strong>
+        <a href="#">#abc123</a>
+      </div>
+      <div class="col-xs-6 right">
+        {{#if session.isAuthenticated}}
+        {{pipeline-start startBuild=(action "startMainBuild")}}
+        {{/if}}
+      </div>
+    </div>
+
+    {{pipeline-workflow workflowGraph=pipeline.workflowGraph jobs=jobs}}
     {{pipeline-events-list events=events}}
   </div>
   <div class="col-xs-12 col-md-3">

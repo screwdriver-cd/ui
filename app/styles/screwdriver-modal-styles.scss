@@ -1,5 +1,5 @@
 .token-confirm-dialog {
-  padding: 0px 50px 20px;
+  padding: 0 50px 20px;
 
   & button {
     width: 100%;
@@ -9,7 +9,7 @@
     border-radius: 3px;
   }
 
-  & button.delete {
+  & .delete {
     background-color: $sd-failure;
   }
 }
