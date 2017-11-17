@@ -196,3 +196,68 @@ test('it handles detached jobs', function (assert) {
 
   assert.deepEqual(result, expectedOutput);
 });
+
+test('it handles complex misordered pipeline with multiple commit/pr/remote triggers',
+  function (assert) {
+    const inputGraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'no_main' },
+        { name: '~sd@241:main' },
+        { name: 'publish' },
+        { name: 'other_publish' },
+        { name: 'wow_new_main' },
+        { name: 'detached_main' },
+        { name: 'after_detached_main' },
+        { name: 'detached_solo' }
+      ],
+      edges: [
+        { src: '~commit', dest: 'no_main' },
+        { src: '~pr', dest: 'no_main' },
+        { src: '~sd@241:main', dest: 'no_main' },
+        { src: 'no_main', dest: 'publish' },
+        { src: 'wow_new_main', dest: 'other_publish' },
+        { src: '~commit', dest: 'wow_new_main' },
+        { src: '~pr', dest: 'wow_new_main' },
+        { src: '~sd@241:main', dest: 'wow_new_main' },
+        { src: 'detached_main', dest: 'after_detached_main' }
+      ]
+    };
+    const expectedOutput = {
+      nodes: [
+        { name: '~pr', pos: { x: 0, y: 0 } },
+        { name: '~commit', pos: { x: 0, y: 1 } },
+        { name: 'no_main', pos: { x: 1, y: 0 } },
+        { name: '~sd@241:main', pos: { x: 0, y: 2 } },
+        { name: 'publish', pos: { x: 2, y: 0 } },
+        { name: 'other_publish', pos: { x: 2, y: 1 } },
+        { name: 'wow_new_main', pos: { x: 1, y: 1 } },
+        { name: 'detached_main', pos: { x: 0, y: 3 } },
+        { name: 'after_detached_main', pos: { x: 1, y: 2 } },
+        { name: 'detached_solo', pos: { x: 0, y: 4 } }
+      ],
+      edges: [
+        { src: '~commit', dest: 'no_main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+        { src: '~pr', dest: 'no_main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+        { src: '~sd@241:main', dest: 'no_main', from: { x: 0, y: 2 }, to: { x: 1, y: 0 } },
+        { src: 'no_main', dest: 'publish', from: { x: 1, y: 0 }, to: { x: 2, y: 0 } },
+        { src: 'wow_new_main', dest: 'other_publish', from: { x: 1, y: 1 }, to: { x: 2, y: 1 } },
+        { src: '~commit', dest: 'wow_new_main', from: { x: 0, y: 1 }, to: { x: 1, y: 1 } },
+        { src: '~pr', dest: 'wow_new_main', from: { x: 0, y: 0 }, to: { x: 1, y: 1 } },
+        { src: '~sd@241:main', dest: 'wow_new_main', from: { x: 0, y: 2 }, to: { x: 1, y: 1 } },
+        { src: 'detached_main',
+          dest: 'after_detached_main',
+          from: { x: 0, y: 3 },
+          to: { x: 1, y: 2 }
+        }
+      ],
+      meta: {
+        width: 3,
+        height: 5
+      }
+    };
+    const result = decorateGraph(inputGraph);
+
+    assert.deepEqual(result, expectedOutput);
+  });
