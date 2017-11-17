@@ -11,8 +11,8 @@
     </ul>
   </span>
 </div>
-<div class="workflow" title="This is the order that the jobs will run in.">
-  <span class="label">Workflow:</span>
-  {{workflow-graph-vis workflowGraph=workflowGraph}}
+<div class="workflow">
+  <span class="label" title="This is the order that the jobs will run in.">Workflow:</span>
+  {{workflow-graph-d3 workflowGraph=workflowGraph}}
 </div>
 {{yield}}

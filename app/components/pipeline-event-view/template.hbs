@@ -6,7 +6,13 @@
     <div class="cause" title="{{event.commit.message}}">{{event.truncatedMessage}}</div>
     <div>
       {{#if (and (is-fulfilled event.builds) event.workflowGraph)}}
-        {{workflow-graph-vis builds=event.builds workflowGraph=event.workflowGraph startFrom=event.startFrom causeMessage=event.causeMessage}}
+        {{workflow-graph-d3
+          builds=event.builds
+          workflowGraph=event.workflowGraph
+          startFrom=event.startFrom
+          causeMessage=event.causeMessage
+          minified=true
+        }}
       {{else}}
         {{#each event.workflow as |name index|}}
         {{build-bubble jobName=name build=(index-of event.buildsSorted index) small=true}}
