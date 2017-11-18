@@ -80,6 +80,7 @@ const decorateGraph = (inputGraph, builds, start) => {
   const edges = graph.edges;
   const y = [0]; // accumulator for column heights
 
+  nodes.sort((a, b) => a.name.localeCompare(b.name));
   nodes.forEach((n) => {
     // Set root nodes on left
     if (n.name.startsWith('~') || !n.pos) {
