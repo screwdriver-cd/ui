@@ -63,6 +63,15 @@ const walkGraph = (graph, start, x, y) => {
 };
 
 /**
+ * Determine if a node is a root node by seeing if it is listed as a destination
+ * @method isRoot
+ * @param  {Array}  edges List of graph edges
+ * @param  {String}  name The job name to check
+ * @return {Boolean}      True if the node is not a dest in edges
+ */
+const isRoot = (edges, name) => !edges.find(e => e.dest === name);
+
+/**
  * Clones and decorates an input graph datastructure into something that can be used to display
  * a custom directed graph
  * @method decorateGraph
@@ -83,7 +92,7 @@ const decorateGraph = (inputGraph, builds, start) => {
   nodes.sort((a, b) => a.name.localeCompare(b.name));
   nodes.forEach((n) => {
     // Set root nodes on left
-    if (n.name.startsWith('~') || !n.pos) {
+    if (isRoot(edges, n.name)) {
       n.pos = { x: 0, y: y[0] };
       y[0] += 1;
       // recursively walk the graph from root/ detached node

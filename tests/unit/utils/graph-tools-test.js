@@ -30,13 +30,13 @@ test('it processes a simple graph without builds', function (assert) {
   };
   const expectedOutput = {
     nodes: [
-      { name: '~pr', pos: { x: 0, y: 0 } },
-      { name: '~commit', pos: { x: 0, y: 1 } },
+      { name: '~commit', pos: { x: 0, y: 0 } },
+      { name: '~pr', pos: { x: 0, y: 1 } },
       { name: 'main', pos: { x: 1, y: 0 } }
     ],
     edges: [
-      { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
-      { src: '~commit', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } }
+      { src: '~pr', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+      { src: '~commit', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } }
     ],
     meta: {
       height: 2,
@@ -71,17 +71,17 @@ test('it processes a more complex graph without builds', function (assert) {
   };
   const expectedOutput = {
     nodes: [
-      { name: '~pr', pos: { x: 0, y: 0 } },
-      { name: '~commit', pos: { x: 0, y: 1 } },
-      { name: 'main', pos: { x: 1, y: 0 } },
+      { name: '~commit', pos: { x: 0, y: 0 } },
+      { name: '~pr', pos: { x: 0, y: 1 } },
       { name: 'A', pos: { x: 2, y: 0 } },
       { name: 'B', pos: { x: 2, y: 1 } },
       { name: 'C', pos: { x: 3, y: 0 } },
-      { name: 'D', pos: { x: 4, y: 0 } }
+      { name: 'D', pos: { x: 4, y: 0 } },
+      { name: 'main', pos: { x: 1, y: 0 } }
     ],
     edges: [
-      { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
-      { src: '~commit', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+      { src: '~pr', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+      { src: '~commit', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
       { src: 'main', dest: 'A', from: { x: 1, y: 0 }, to: { x: 2, y: 0 } },
       { src: 'main', dest: 'B', from: { x: 1, y: 0 }, to: { x: 2, y: 1 } },
       { src: 'A', dest: 'C', from: { x: 2, y: 0 }, to: { x: 3, y: 0 } },
@@ -128,20 +128,20 @@ test('it processes a complex graph with builds', function (assert) {
   ];
   const expectedOutput = {
     nodes: [
-      { name: '~pr', pos: { x: 0, y: 0 } },
-      { name: '~commit', status: 'STARTED_FROM', pos: { x: 0, y: 1 } },
-      { name: 'main', id: 1, buildId: 6, status: 'SUCCESS', pos: { x: 1, y: 0 } },
+      { name: '~commit', status: 'STARTED_FROM', pos: { x: 0, y: 0 } },
+      { name: '~pr', pos: { x: 0, y: 1 } },
       { name: 'A', id: 2, buildId: 7, status: 'SUCCESS', pos: { x: 2, y: 0 } },
       { name: 'B', id: 3, buildId: 8, status: 'SUCCESS', pos: { x: 2, y: 1 } },
       { name: 'C', id: 4, buildId: 9, status: 'SUCCESS', pos: { x: 3, y: 0 } },
-      { name: 'D', id: 5, buildId: 10, status: 'FAILURE', pos: { x: 4, y: 0 } }
+      { name: 'D', id: 5, buildId: 10, status: 'FAILURE', pos: { x: 4, y: 0 } },
+      { name: 'main', id: 1, buildId: 6, status: 'SUCCESS', pos: { x: 1, y: 0 } }
     ],
     edges: [
-      { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+      { src: '~pr', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
       {
         src: '~commit',
         dest: 'main',
-        from: { x: 0, y: 1 },
+        from: { x: 0, y: 0 },
         to: { x: 1, y: 0 },
         status: 'STARTED_FROM'
       },
@@ -177,15 +177,15 @@ test('it handles detached jobs', function (assert) {
   };
   const expectedOutput = {
     nodes: [
-      { name: '~pr', pos: { x: 0, y: 0 } },
-      { name: '~commit', pos: { x: 0, y: 1 } },
-      { name: 'main', pos: { x: 1, y: 0 } },
-      { name: 'foo', pos: { x: 0, y: 2 } },
-      { name: 'bar', pos: { x: 0, y: 3 } }
+      { name: '~commit', pos: { x: 0, y: 0 } },
+      { name: '~pr', pos: { x: 0, y: 1 } },
+      { name: 'bar', pos: { x: 0, y: 2 } },
+      { name: 'foo', pos: { x: 0, y: 3 } },
+      { name: 'main', pos: { x: 1, y: 0 } }
     ],
     edges: [
-      { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
-      { src: '~commit', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } }
+      { src: '~pr', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+      { src: '~commit', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } }
     ],
     meta: {
       height: 4,
@@ -226,25 +226,25 @@ test('it handles complex misordered pipeline with multiple commit/pr/remote trig
     };
     const expectedOutput = {
       nodes: [
-        { name: '~pr', pos: { x: 0, y: 0 } },
-        { name: '~commit', pos: { x: 0, y: 1 } },
-        { name: 'no_main', pos: { x: 1, y: 0 } },
+        { name: '~commit', pos: { x: 0, y: 0 } },
+        { name: '~pr', pos: { x: 0, y: 1 } },
         { name: '~sd@241:main', pos: { x: 0, y: 2 } },
-        { name: 'publish', pos: { x: 2, y: 0 } },
-        { name: 'other_publish', pos: { x: 2, y: 1 } },
-        { name: 'wow_new_main', pos: { x: 1, y: 1 } },
-        { name: 'detached_main', pos: { x: 0, y: 3 } },
         { name: 'after_detached_main', pos: { x: 1, y: 2 } },
-        { name: 'detached_solo', pos: { x: 0, y: 4 } }
+        { name: 'detached_main', pos: { x: 0, y: 3 } },
+        { name: 'detached_solo', pos: { x: 0, y: 4 } },
+        { name: 'no_main', pos: { x: 1, y: 0 } },
+        { name: 'other_publish', pos: { x: 2, y: 1 } },
+        { name: 'publish', pos: { x: 2, y: 0 } },
+        { name: 'wow_new_main', pos: { x: 1, y: 1 } }
       ],
       edges: [
-        { src: '~commit', dest: 'no_main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
-        { src: '~pr', dest: 'no_main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+        { src: '~commit', dest: 'no_main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+        { src: '~pr', dest: 'no_main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
         { src: '~sd@241:main', dest: 'no_main', from: { x: 0, y: 2 }, to: { x: 1, y: 0 } },
         { src: 'no_main', dest: 'publish', from: { x: 1, y: 0 }, to: { x: 2, y: 0 } },
         { src: 'wow_new_main', dest: 'other_publish', from: { x: 1, y: 1 }, to: { x: 2, y: 1 } },
-        { src: '~commit', dest: 'wow_new_main', from: { x: 0, y: 1 }, to: { x: 1, y: 1 } },
-        { src: '~pr', dest: 'wow_new_main', from: { x: 0, y: 0 }, to: { x: 1, y: 1 } },
+        { src: '~commit', dest: 'wow_new_main', from: { x: 0, y: 0 }, to: { x: 1, y: 1 } },
+        { src: '~pr', dest: 'wow_new_main', from: { x: 0, y: 1 }, to: { x: 1, y: 1 } },
         { src: '~sd@241:main', dest: 'wow_new_main', from: { x: 0, y: 2 }, to: { x: 1, y: 1 } },
         { src: 'detached_main',
           dest: 'after_detached_main',
