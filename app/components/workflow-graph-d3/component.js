@@ -77,7 +77,6 @@ export default Component.extend({
   },
   draw() {
     const data = get(this, 'decoratedGraph');
-
     // TODO: actually scale drawing based on available space.
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = get(this, 'elementSizes');
     // Adjustable spacing between nodes
@@ -131,6 +130,10 @@ export default Component.extend({
         .attr('y', d => ((d.pos.y + 1) * ICON_SIZE) + (d.pos.y * Y_SPACING) + TITLE_SIZE);
     }
 
+    // Calculate the start/end point of a line
+    const calcPos = (pos, spacer) =>
+      ((pos + 1) * ICON_SIZE) + ((pos * spacer) - (ICON_SIZE / 2));
+
     // edges
     svg.selectAll('link')
       .data(data.edges)
@@ -141,8 +144,6 @@ export default Component.extend({
       .attr('stroke-width', 2)
       .attr('fill', 'transparent')
       .attr('d', (d) => {
-        const calcPos = (pos, spacer) =>
-          ((pos + 1) * ICON_SIZE) + ((pos * spacer) - (ICON_SIZE / 2));
         const path = d3.path();
         const startX = calcPos(d.from.x, X_SPACING) + ICON_SIZE;
         const startY = calcPos(d.from.y, Y_SPACING);
