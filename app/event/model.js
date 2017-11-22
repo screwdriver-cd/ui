@@ -1,6 +1,12 @@
-import { computed } from '@ember/object';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
+import { computed, get } from '@ember/object';
 import { sort, not } from '@ember/object/computed';
 import DS from 'ember-data';
+import graphTools from 'screwdriver-ui/utils/graph-tools';
+
+const { graphDepth } = graphTools;
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default DS.Model.extend({
   causeMessage: DS.attr('string'),
@@ -20,47 +26,85 @@ export default DS.Model.extend({
   buildsSorted: sort('builds', (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)),
   createTimeWords: computed('createTime', {
     get() {
-      const duration = Date.now() - this.get('createTime').getTime();
+      const duration = Date.now() - get(this, 'createTime').getTime();
 
       return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
     }
   }),
   duration: computed('builds.[]', 'isComplete', {
     get() {
-      return this.get('builds').reduce((val = 0, item) => val + item.get('totalDurationMS'));
+      return get(this, 'builds').reduce((val = 0, item) => val + get(item, 'totalDurationMS'));
     }
   }),
   durationText: computed('duration', {
     get() {
-      return humanizeDuration(this.get('duration'), { round: true, largest: 1 });
+      return humanizeDuration(get(this, 'duration'), { round: true, largest: 1 });
     }
   }),
-  isComplete: computed('builds.{[],lastObject.status}', {
+  status: computed('builds.[]', {
     get() {
-      const builds = this.get('builds');
-      const numBuilds = builds.get('length');
+      const builds = get(this, 'builds');
 
-      // No builds in this event yet
-      if (!numBuilds) {
-        return false;
-      }
+      return ObjectPromiseProxy.create({
+        promise: builds
+          .then(list => list.filter(b => get(b, 'status') !== 'SUCCESS'))
+          .then((list) => {
+            if (list.length) {
+              return get(list[0], 'status');
+            }
 
-      const lastBuild = builds.get('lastObject');
-      const expectedBuilds = this.get('workflow').length;
-      const status = lastBuild.get('status');
+            return get(this, 'isComplete').then(isComplete => (isComplete ? 'SUCCESS' : 'RUNNING'));
+          })
+      });
+    }
+  }),
+  isComplete: computed('builds.[]', 'workflowGraph', {
+    get() {
+      const builds = get(this, 'builds');
 
-      // last build is still running
-      if (status === 'RUNNING' || status === 'QUEUED') {
-        return false;
-      }
+      return ObjectPromiseProxy.create({
+        promise: builds
+          .then((list) => {
+            // no builds yet
+            if (!get(list, 'length')) {
+              return false;
+            }
 
-      // last build was successful, but there should be more builds in the event
-      if (status === 'SUCCESS' && expectedBuilds !== numBuilds) {
-        return false;
-      }
+            // Figure out how many builds we expect to run
+            const expectedBuilds = graphDepth(
+              get(this, 'workflowGraph.edges'),
+              get(this, 'startFrom'),
+              new Set()
+            );
 
-      // last build failed, or all expected builds are successful
-      return true;
+            // Figure out if there are any failures
+            const failedBuild = list.find((b) => {
+              const status = get(b, 'status');
+
+              return status === 'FAILED' || status === 'ABORTED';
+            });
+
+            // We probably won't continue on failure
+            if (failedBuild) {
+              return true;
+            }
+
+            // See if any builds are running
+            const runningBuild = list.find((b) => {
+              const status = get(b, 'status');
+
+              return status === 'RUNNING' || status === 'QUEUED';
+            });
+
+            // If we have the expected number of builds, and none are running, it is done
+            if (list.length === expectedBuilds && !runningBuild) {
+              return true;
+            }
+
+            // something is running, or we haven't run everything yet
+            return false;
+          })
+      });
     }
   }),
   truncatedMessage: computed('commit.message', {
