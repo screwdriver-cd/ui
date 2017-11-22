@@ -1,12 +1,29 @@
-<h2>Events</h2>
-{{#each eventsToView as |event|}}
-{{pipeline-event-view event=event}}
-{{/each}}
-{{#unless showAll}}
-{{#if events.length}}
-<div class="showAll">
-<a {{action "showAllEvents"}}>Show all events</a>
-</div>
+<table>
+  <thead>
+    <tr>
+      <th class="commit">Commit {{fa-icon "external-link"}}</th>
+      <th class="message">Message</th>
+      <th class="workflow">Status</th>
+      <th class="user">User {{fa-icon "external-link"}}</th>
+      <th class="created">Start Time</th>
+      <th class="duration">Duration</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each eventsList as |event|}}
+    {{pipeline-event-row
+      event=event
+      selectedEvent=selectedEvent
+      lastSuccessful=lastSuccessful
+      eventClick=(action "eventClick")
+    }}
+    {{else}}
+    <tr><td colspan="6">No events have been run for this pipeline</td></tr>
+    {{/each}}
+  </tbody>
+</table>
+{{#if showMore}}
+<a {{action "moreClick"}}>More...</a>
 {{/if}}
-{{/unless}}
+
 {{yield}}

@@ -1,26 +1,45 @@
 & {
-  padding: 0 30px 0 10px;
   margin-bottom: 2em;
 
-  h2 {
-    color: $sd-text;
-    margin: 0;
-    padding: 0;
-    font-weight: 600;
-    font-size: 20px;
+  a {
+    color: $brand-600;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 300;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
-  .showAll {
-    margin-top: 10px;
-    a {
-      color: $sd-link;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 300;
+  table {
+    width: 100%;
+  }
 
-      &:hover {
-        text-decoration: underline;
-      }
+  thead tr {
+    border-bottom: 1px solid $sd-text-light;
+  }
+
+  th {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: $sd-text-med;
+
+    &.commit {
+      width: 85px;
+    }
+
+    &.user {
+      width: 150px;
+    }
+
+    &.created {
+      width: 100px;
+    }
+
+    &.duration {
+      width: 70px;
     }
   }
 }

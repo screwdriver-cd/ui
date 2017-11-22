@@ -1,0 +1,18 @@
+<td class="commit" title="{{event.causeMessage}}">
+  <a href="{{event.commit.url}}">#{{event.truncatedSha}}</a>
+</td>
+<td class="message">{{event.commit.message}}</td>
+<td class="workflow">
+  {{#if (and (is-fulfilled event.builds) event.workflowGraph)}}
+    {{workflow-graph-d3
+      builds=event.builds
+      workflowGraph=event.workflowGraph
+      startFrom=event.startFrom
+      causeMessage=event.causeMessage
+      minified=true
+    }}
+  {{/if}}
+</td>
+<td class="user"><a href="{{event.creator.url}}">{{event.creator.name}}</a></td>
+<td class="created">{{event.createTimeWords}}</td>
+<td class="duration">{{event.durationText}}</td>
