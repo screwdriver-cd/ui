@@ -65,17 +65,12 @@ export default DS.Model.extend({
       return ObjectPromiseProxy.create({
         promise: builds
           .then((list) => {
+            const numBuilds = get(list, 'length');
+
             // no builds yet
-            if (!get(list, 'length')) {
+            if (!numBuilds) {
               return false;
             }
-
-            // Figure out how many builds we expect to run
-            const expectedBuilds = graphDepth(
-              get(this, 'workflowGraph.edges'),
-              get(this, 'startFrom'),
-              new Set()
-            );
 
             // Figure out if there are any failures
             const failedBuild = list.find((b) => {
@@ -96,12 +91,24 @@ export default DS.Model.extend({
               return status === 'RUNNING' || status === 'QUEUED';
             });
 
-            // If we have the expected number of builds, and none are running, it is done
-            if (list.length === expectedBuilds && !runningBuild) {
+            // Something is running, so we aren't done
+            if (runningBuild) {
+              return false;
+            }
+
+            // Figure out how many builds we expect to run
+            const expectedBuilds = graphDepth(
+              get(this, 'workflowGraph.edges'),
+              get(this, 'startFrom'),
+              new Set()
+            );
+
+            // If we have the expected number of builds, it is done
+            if (numBuilds === expectedBuilds) {
               return true;
             }
 
-            // something is running, or we haven't run everything yet
+            // we haven't run all the expected builds yet
             return false;
           })
       });
