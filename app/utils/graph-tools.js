@@ -39,6 +39,33 @@ const build = (builds, jobId) => builds.find(b => b && `${get(b, 'jobId')}` === 
 const icon = status => (STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MAP.UNKNOWN.icon);
 
 /**
+ * Calculate how many nodes are visited in the graph from the given starting point
+ * @method graphDepth
+ * @param  {Array}   edges    List of graph edges
+ * @param  {String}  start    Node name for starting point
+ * @param  {Set}     visited  List of visited nodes
+ * @return {Number}           Number of visited nodes
+ */
+const graphDepth = (edges, start, visited = new Set()) => {
+  const dests = edges.filter(e => e.src === start);
+
+  // For partials/detached jobs
+  if (!start.startsWith('~')) {
+    visited.add(start);
+  }
+
+  // walk the graph
+  if (dests.length) {
+    dests.forEach((e) => {
+      visited.add(e.dest);
+      graphDepth(edges, e.dest, visited);
+    });
+  }
+
+  return visited.size;
+};
+
+/**
  * Walks the graph to find siblings and set their positions
  * @method walkGraph
  * @param  {Object}  graph Raw graph definition
@@ -89,7 +116,6 @@ const decorateGraph = (inputGraph, builds, start) => {
   const edges = graph.edges;
   const y = [0]; // accumulator for column heights
 
-  nodes.sort((a, b) => a.name.localeCompare(b.name));
   nodes.forEach((n) => {
     // Set root nodes on left
     if (isRoot(edges, n.name)) {
@@ -141,4 +167,4 @@ const decorateGraph = (inputGraph, builds, start) => {
   return graph;
 };
 
-export default { node, icon, decorateGraph };
+export default { node, icon, decorateGraph, graphDepth };

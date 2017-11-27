@@ -1,6 +1,65 @@
 import graphTools from 'screwdriver-ui/utils/graph-tools';
 import { module, test } from 'qunit';
-const { icon, node, decorateGraph } = graphTools;
+const { icon, node, decorateGraph, graphDepth } = graphTools;
+
+const SIMPLE_GRAPH = {
+  nodes: [
+    { name: '~pr' },
+    { name: '~commit' },
+    { name: 'main' }
+  ],
+  edges: [
+    { src: '~pr', dest: 'main' },
+    { src: '~commit', dest: 'main' }
+  ]
+};
+
+const COMPLEX_GRAPH = {
+  nodes: [
+    { name: '~pr' },
+    { name: '~commit' },
+    { name: 'main', id: 1 },
+    { name: 'A', id: 2 },
+    { name: 'B', id: 3 },
+    { name: 'C', id: 4 },
+    { name: 'D', id: 5 }
+  ],
+  edges: [
+    { src: '~pr', dest: 'main' },
+    { src: '~commit', dest: 'main' },
+    { src: 'main', dest: 'A' },
+    { src: 'main', dest: 'B' },
+    { src: 'A', dest: 'C' },
+    { src: 'B', dest: 'D' },
+    { src: 'C', dest: 'D' }
+  ]
+};
+
+const MORE_COMPLEX_GRAPH = {
+  nodes: [
+    { name: '~pr' },
+    { name: '~commit' },
+    { name: 'no_main' },
+    { name: '~sd@241:main' },
+    { name: 'publish' },
+    { name: 'other_publish' },
+    { name: 'wow_new_main' },
+    { name: 'detached_main' },
+    { name: 'after_detached_main' },
+    { name: 'detached_solo' }
+  ],
+  edges: [
+    { src: '~commit', dest: 'no_main' },
+    { src: '~pr', dest: 'no_main' },
+    { src: '~sd@241:main', dest: 'no_main' },
+    { src: 'no_main', dest: 'publish' },
+    { src: 'wow_new_main', dest: 'other_publish' },
+    { src: '~commit', dest: 'wow_new_main' },
+    { src: '~pr', dest: 'wow_new_main' },
+    { src: '~sd@241:main', dest: 'wow_new_main' },
+    { src: 'detached_main', dest: 'after_detached_main' }
+  ]
+};
 
 module('Unit | Utility | graph tools');
 
@@ -17,71 +76,40 @@ test('it gets an element from a list', function (assert) {
 });
 
 test('it processes a simple graph without builds', function (assert) {
-  const inputGraph = {
-    nodes: [
-      { name: '~pr' },
-      { name: '~commit' },
-      { name: 'main' }
-    ],
-    edges: [
-      { src: '~pr', dest: 'main' },
-      { src: '~commit', dest: 'main' }
-    ]
-  };
   const expectedOutput = {
     nodes: [
-      { name: '~commit', pos: { x: 0, y: 0 } },
-      { name: '~pr', pos: { x: 0, y: 1 } },
+      { name: '~pr', pos: { x: 0, y: 0 } },
+      { name: '~commit', pos: { x: 0, y: 1 } },
       { name: 'main', pos: { x: 1, y: 0 } }
     ],
     edges: [
-      { src: '~pr', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
-      { src: '~commit', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } }
+      { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+      { src: '~commit', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } }
     ],
     meta: {
       height: 2,
       width: 2
     }
   };
-  const result = decorateGraph(inputGraph);
+  const result = decorateGraph(SIMPLE_GRAPH);
 
   assert.deepEqual(result, expectedOutput);
 });
 
 test('it processes a more complex graph without builds', function (assert) {
-  const inputGraph = {
-    nodes: [
-      { name: '~pr' },
-      { name: '~commit' },
-      { name: 'main' },
-      { name: 'A' },
-      { name: 'B' },
-      { name: 'C' },
-      { name: 'D' }
-    ],
-    edges: [
-      { src: '~pr', dest: 'main' },
-      { src: '~commit', dest: 'main' },
-      { src: 'main', dest: 'A' },
-      { src: 'main', dest: 'B' },
-      { src: 'A', dest: 'C' },
-      { src: 'B', dest: 'D' },
-      { src: 'C', dest: 'D' }
-    ]
-  };
   const expectedOutput = {
     nodes: [
-      { name: '~commit', pos: { x: 0, y: 0 } },
-      { name: '~pr', pos: { x: 0, y: 1 } },
-      { name: 'A', pos: { x: 2, y: 0 } },
-      { name: 'B', pos: { x: 2, y: 1 } },
-      { name: 'C', pos: { x: 3, y: 0 } },
-      { name: 'D', pos: { x: 4, y: 0 } },
-      { name: 'main', pos: { x: 1, y: 0 } }
+      { name: '~pr', pos: { x: 0, y: 0 } },
+      { name: '~commit', pos: { x: 0, y: 1 } },
+      { name: 'main', id: 1, pos: { x: 1, y: 0 } },
+      { name: 'A', id: 2, pos: { x: 2, y: 0 } },
+      { name: 'B', id: 3, pos: { x: 2, y: 1 } },
+      { name: 'C', id: 4, pos: { x: 3, y: 0 } },
+      { name: 'D', id: 5, pos: { x: 4, y: 0 } }
     ],
     edges: [
-      { src: '~pr', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
-      { src: '~commit', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+      { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+      { src: '~commit', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
       { src: 'main', dest: 'A', from: { x: 1, y: 0 }, to: { x: 2, y: 0 } },
       { src: 'main', dest: 'B', from: { x: 1, y: 0 }, to: { x: 2, y: 1 } },
       { src: 'A', dest: 'C', from: { x: 2, y: 0 }, to: { x: 3, y: 0 } },
@@ -93,32 +121,12 @@ test('it processes a more complex graph without builds', function (assert) {
       width: 5
     }
   };
-  const result = decorateGraph(inputGraph);
+  const result = decorateGraph(COMPLEX_GRAPH);
 
   assert.deepEqual(result, expectedOutput);
 });
 
 test('it processes a complex graph with builds', function (assert) {
-  const inputGraph = {
-    nodes: [
-      { name: '~pr' },
-      { name: '~commit' },
-      { name: 'main', id: 1 },
-      { name: 'A', id: 2 },
-      { name: 'B', id: 3 },
-      { name: 'C', id: 4 },
-      { name: 'D', id: 5 }
-    ],
-    edges: [
-      { src: '~pr', dest: 'main' },
-      { src: '~commit', dest: 'main' },
-      { src: 'main', dest: 'A' },
-      { src: 'main', dest: 'B' },
-      { src: 'A', dest: 'C' },
-      { src: 'B', dest: 'D' },
-      { src: 'C', dest: 'D' }
-    ]
-  };
   const builds = [
     { jobId: 1, status: 'SUCCESS', id: 6 },
     { jobId: 2, status: 'SUCCESS', id: 7 },
@@ -128,20 +136,20 @@ test('it processes a complex graph with builds', function (assert) {
   ];
   const expectedOutput = {
     nodes: [
-      { name: '~commit', status: 'STARTED_FROM', pos: { x: 0, y: 0 } },
-      { name: '~pr', pos: { x: 0, y: 1 } },
+      { name: '~pr', pos: { x: 0, y: 0 } },
+      { name: '~commit', status: 'STARTED_FROM', pos: { x: 0, y: 1 } },
+      { name: 'main', id: 1, buildId: 6, status: 'SUCCESS', pos: { x: 1, y: 0 } },
       { name: 'A', id: 2, buildId: 7, status: 'SUCCESS', pos: { x: 2, y: 0 } },
       { name: 'B', id: 3, buildId: 8, status: 'SUCCESS', pos: { x: 2, y: 1 } },
       { name: 'C', id: 4, buildId: 9, status: 'SUCCESS', pos: { x: 3, y: 0 } },
-      { name: 'D', id: 5, buildId: 10, status: 'FAILURE', pos: { x: 4, y: 0 } },
-      { name: 'main', id: 1, buildId: 6, status: 'SUCCESS', pos: { x: 1, y: 0 } }
+      { name: 'D', id: 5, buildId: 10, status: 'FAILURE', pos: { x: 4, y: 0 } }
     ],
     edges: [
-      { src: '~pr', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+      { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
       {
         src: '~commit',
         dest: 'main',
-        from: { x: 0, y: 0 },
+        from: { x: 0, y: 1 },
         to: { x: 1, y: 0 },
         status: 'STARTED_FROM'
       },
@@ -156,7 +164,7 @@ test('it processes a complex graph with builds', function (assert) {
       width: 5
     }
   };
-  const result = decorateGraph(inputGraph, builds, '~commit');
+  const result = decorateGraph(COMPLEX_GRAPH, builds, '~commit');
 
   assert.deepEqual(result, expectedOutput);
 });
@@ -177,15 +185,15 @@ test('it handles detached jobs', function (assert) {
   };
   const expectedOutput = {
     nodes: [
-      { name: '~commit', pos: { x: 0, y: 0 } },
-      { name: '~pr', pos: { x: 0, y: 1 } },
-      { name: 'bar', pos: { x: 0, y: 2 } },
-      { name: 'foo', pos: { x: 0, y: 3 } },
-      { name: 'main', pos: { x: 1, y: 0 } }
+      { name: '~pr', pos: { x: 0, y: 0 } },
+      { name: '~commit', pos: { x: 0, y: 1 } },
+      { name: 'main', pos: { x: 1, y: 0 } },
+      { name: 'foo', pos: { x: 0, y: 2 } },
+      { name: 'bar', pos: { x: 0, y: 3 } }
     ],
     edges: [
-      { src: '~pr', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
-      { src: '~commit', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } }
+      { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+      { src: '~commit', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } }
     ],
     meta: {
       height: 4,
@@ -199,52 +207,27 @@ test('it handles detached jobs', function (assert) {
 
 test('it handles complex misordered pipeline with multiple commit/pr/remote triggers',
   function (assert) {
-    const inputGraph = {
-      nodes: [
-        { name: '~pr' },
-        { name: '~commit' },
-        { name: 'no_main' },
-        { name: '~sd@241:main' },
-        { name: 'publish' },
-        { name: 'other_publish' },
-        { name: 'wow_new_main' },
-        { name: 'detached_main' },
-        { name: 'after_detached_main' },
-        { name: 'detached_solo' }
-      ],
-      edges: [
-        { src: '~commit', dest: 'no_main' },
-        { src: '~pr', dest: 'no_main' },
-        { src: '~sd@241:main', dest: 'no_main' },
-        { src: 'no_main', dest: 'publish' },
-        { src: 'wow_new_main', dest: 'other_publish' },
-        { src: '~commit', dest: 'wow_new_main' },
-        { src: '~pr', dest: 'wow_new_main' },
-        { src: '~sd@241:main', dest: 'wow_new_main' },
-        { src: 'detached_main', dest: 'after_detached_main' }
-      ]
-    };
     const expectedOutput = {
       nodes: [
-        { name: '~commit', pos: { x: 0, y: 0 } },
-        { name: '~pr', pos: { x: 0, y: 1 } },
-        { name: '~sd@241:main', pos: { x: 0, y: 2 } },
-        { name: 'after_detached_main', pos: { x: 1, y: 2 } },
-        { name: 'detached_main', pos: { x: 0, y: 3 } },
-        { name: 'detached_solo', pos: { x: 0, y: 4 } },
+        { name: '~pr', pos: { x: 0, y: 0 } },
+        { name: '~commit', pos: { x: 0, y: 1 } },
         { name: 'no_main', pos: { x: 1, y: 0 } },
-        { name: 'other_publish', pos: { x: 2, y: 1 } },
+        { name: '~sd@241:main', pos: { x: 0, y: 2 } },
         { name: 'publish', pos: { x: 2, y: 0 } },
-        { name: 'wow_new_main', pos: { x: 1, y: 1 } }
+        { name: 'other_publish', pos: { x: 2, y: 1 } },
+        { name: 'wow_new_main', pos: { x: 1, y: 1 } },
+        { name: 'detached_main', pos: { x: 0, y: 3 } },
+        { name: 'after_detached_main', pos: { x: 1, y: 2 } },
+        { name: 'detached_solo', pos: { x: 0, y: 4 } }
       ],
       edges: [
-        { src: '~commit', dest: 'no_main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
-        { src: '~pr', dest: 'no_main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+        { src: '~commit', dest: 'no_main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+        { src: '~pr', dest: 'no_main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
         { src: '~sd@241:main', dest: 'no_main', from: { x: 0, y: 2 }, to: { x: 1, y: 0 } },
         { src: 'no_main', dest: 'publish', from: { x: 1, y: 0 }, to: { x: 2, y: 0 } },
         { src: 'wow_new_main', dest: 'other_publish', from: { x: 1, y: 1 }, to: { x: 2, y: 1 } },
-        { src: '~commit', dest: 'wow_new_main', from: { x: 0, y: 0 }, to: { x: 1, y: 1 } },
-        { src: '~pr', dest: 'wow_new_main', from: { x: 0, y: 1 }, to: { x: 1, y: 1 } },
+        { src: '~commit', dest: 'wow_new_main', from: { x: 0, y: 1 }, to: { x: 1, y: 1 } },
+        { src: '~pr', dest: 'wow_new_main', from: { x: 0, y: 0 }, to: { x: 1, y: 1 } },
         { src: '~sd@241:main', dest: 'wow_new_main', from: { x: 0, y: 2 }, to: { x: 1, y: 1 } },
         { src: 'detached_main',
           dest: 'after_detached_main',
@@ -257,7 +240,26 @@ test('it handles complex misordered pipeline with multiple commit/pr/remote trig
         height: 5
       }
     };
-    const result = decorateGraph(inputGraph);
+    const result = decorateGraph(MORE_COMPLEX_GRAPH);
 
     assert.deepEqual(result, expectedOutput);
   });
+
+test('it determines the depth of a graph from various starting points', function (assert) {
+  // simple graph, commit
+  assert.equal(graphDepth(SIMPLE_GRAPH.edges, '~commit'), 1, 'simple commit');
+  // simple graph, pr
+  assert.equal(graphDepth(SIMPLE_GRAPH.edges, '~pr'), 1, 'simple pr');
+  // complex graph, commit
+  assert.equal(graphDepth(COMPLEX_GRAPH.edges, '~commit'), 5, 'complex commit');
+  // more complex graph, commit
+  assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, '~commit'), 4, 'very complex commit');
+  // more complex graph, reverse trigger
+  assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, '~sd@241:main'), 4, 'very complex trigger');
+  // more complex graph, detached workflow
+  assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'detached_main'), 2, 'very complex detached');
+  // more complex graph, detached job
+  assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'detached_solo'), 1, 'very complex detached 2');
+  // more complex graph, partial pipeline
+  assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'publish'), 1, 'very complex partial');
+});
