@@ -25,32 +25,6 @@ export default Component.extend(ModelReloaderMixin, {
     }
   }),
 
-  selectedEvent: computed('events.[]', {
-    get() {
-      const list = get(this, 'eventsSorted');
-
-      if (Array.isArray(list) && list.length) {
-        return get(list[0], 'id');
-      }
-
-      return 0;
-    }
-  }),
-
-  lastSuccessful: computed('events.[]', {
-    get() {
-      const event = get(this, 'events').find(e => get(e, 'status') === 'SUCCESS');
-
-      if (!event) {
-        return 0;
-      }
-
-      console.log('hey we got one', get(event, 'id'));
-
-      return get(event, 'id');
-    }
-  }),
-
   init() {
     this._super(...arguments);
 
@@ -70,8 +44,7 @@ export default Component.extend(ModelReloaderMixin, {
       set(this, 'numToShow', get(this, 'numToShow') + ENV.APP.NUM_EVENTS_LISTED);
     },
     eventClick(id) {
-      console.log('clicked', id);
-      set(this, 'selectedEvent', id);
+      set(this, 'selected', id);
     }
   },
 

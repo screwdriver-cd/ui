@@ -21,3 +21,14 @@ td {
     padding: 5px 0;
   }
 }
+
+.commit a {
+  padding: 5px;
+  margin: 0 5px;
+
+  &.last-successful {
+    background-color: $sd-success;
+    color: $sd-white;
+    border-radius: 3px;
+  }
+}

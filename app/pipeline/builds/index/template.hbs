@@ -5,15 +5,16 @@
     <div class="row">
       <div class="col-xs-3">
         <strong>Pipeline</strong>
-        <select>
-          <option>Most Recent</option>
-          <option>Last Successful</option>
-          <option>Aggregate</option>
-        </select>
+        {{#x-select value=selectedEvent action=(action (mut selected)) as |xs|}}
+        <option></option>
+        {{#each eventOptions as |opt|}}
+          {{#xs.option value=opt.value}}{{opt.label}}{{/xs.option}}
+        {{/each}}
+        {{/x-select}}
       </div>
       <div class="col-xs-3">
         <strong>Commit</strong>
-        <a href="#">#abc123</a>
+        <a href="#">#{{selectedEventObj.truncatedSha}}</a>
       </div>
       <div class="col-xs-6 right">
         {{#if session.isAuthenticated}}
@@ -22,8 +23,29 @@
       </div>
     </div>
 
-    {{pipeline-workflow workflowGraph=pipeline.workflowGraph jobs=jobs}}
-    {{pipeline-events-list events=events}}
+    {{#if (eq selected 'aggregate')}}
+      {{pipeline-workflow
+        workflowGraph=pipeline.workflowGraph
+        jobs=jobs
+        selected=(mut selected)
+      }}
+    {{else}}
+      {{#if (is-fulfilled selectedEventObj.builds)}}
+        {{workflow-graph-d3
+          builds=selectedEventObj.builds
+          workflowGraph=selectedEventObj.workflowGraph
+          startFrom=selectedEventObj.startFrom
+          causeMessage=selectedEventObj.causeMessage
+        }}
+      {{/if}}
+    {{/if}}
+    {{pipeline-events-list
+      events=events
+      selected=(mut selected)
+      selectedEvent=selectedEvent
+      lastSuccessful=lastSuccessful
+      mostRecent=mostRecent
+    }}
   </div>
   <div class="col-xs-12 col-md-3">
     {{pipeline-pr-list pullRequests=pullRequests}}

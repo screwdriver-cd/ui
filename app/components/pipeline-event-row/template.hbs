@@ -1,5 +1,5 @@
 <td class="commit" title="{{event.causeMessage}}">
-  <a href="{{event.commit.url}}">#{{event.truncatedSha}}</a>
+  <a class="{{if (eq event.id lastSuccessful) "last-successful"}}" href="{{event.commit.url}}">#{{event.truncatedSha}}</a>
 </td>
 <td class="message">{{event.commit.message}}</td>
 <td class="workflow">

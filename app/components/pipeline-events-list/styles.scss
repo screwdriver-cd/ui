@@ -26,6 +26,10 @@
     font-weight: 300;
     color: $sd-text-med;
 
+    &:first-child {
+      padding-left: 10px;
+    }
+
     &.commit {
       width: 85px;
     }
