@@ -1,44 +1,27 @@
+{{#if session.isAuthenticated}}
+  {{pipeline-nav pipeline=pipeline}}
+{{/if}}
+
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
 <div class="row">
   <div class="col-xs-12 col-md-9">
-    <div class="row">
-      <div class="col-xs-3">
-        <strong>Pipeline</strong>
-        {{#x-select value=selectedEvent action=(action (mut selected)) as |xs|}}
-        <option></option>
-        {{#each eventOptions as |opt|}}
-          {{#xs.option value=opt.value}}{{opt.label}}{{/xs.option}}
-        {{/each}}
-        {{/x-select}}
-      </div>
-      <div class="col-xs-3">
-        <strong>Commit</strong>
-        <a href="#">#{{selectedEventObj.truncatedSha}}</a>
-      </div>
-      <div class="col-xs-6 right">
-        {{#if session.isAuthenticated}}
-        {{pipeline-start startBuild=(action "startMainBuild")}}
-        {{/if}}
-      </div>
-    </div>
+    {{pipeline-graph-nav
+      mostRecent=mostRecent
+      lastSuccessful=lastSuccessful
+      selectedEvent=selectedEvent
+      selectedEventObj=selectedEventObj
+      selected=selected
+      startBuild=(action "startMainBuild")
+    }}
 
-    {{#if (eq selected 'aggregate')}}
-      {{pipeline-workflow
-        workflowGraph=pipeline.workflowGraph
-        jobs=jobs
-        selected=(mut selected)
-      }}
-    {{else}}
-      {{#if (is-fulfilled selectedEventObj.builds)}}
-        {{workflow-graph-d3
-          builds=selectedEventObj.builds
-          workflowGraph=selectedEventObj.workflowGraph
-          startFrom=selectedEventObj.startFrom
-          causeMessage=selectedEventObj.causeMessage
-        }}
-      {{/if}}
-    {{/if}}
+    {{pipeline-workflow
+      workflowGraph=pipeline.workflowGraph
+      jobs=jobs
+      selectedEventObj=selectedEventObj
+      selected=selected
+    }}
+
     {{pipeline-events-list
       events=events
       selected=(mut selected)
@@ -46,6 +29,7 @@
       lastSuccessful=lastSuccessful
       mostRecent=mostRecent
     }}
+
   </div>
   <div class="col-xs-12 col-md-3">
     {{pipeline-pr-list pullRequests=pullRequests}}

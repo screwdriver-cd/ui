@@ -30,7 +30,7 @@ export default Component.extend({
       }
 
       return {
-        ICON_SIZE: 24,
+        ICON_SIZE: 28,
         TITLE_SIZE: 10,
         ARROWHEAD: 4
       };

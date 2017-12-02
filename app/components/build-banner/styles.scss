@@ -22,12 +22,11 @@
   .headerbar {
     border-radius: 3px;
     @include background-gradient(to right, $sd-running-gradient-start, $sd-running-gradient-end);
-    color: #fff;
+    color: $sd-white;
     padding: 6px 6px 6px 20px;
     margin-bottom: 5px;
 
     .sha {
-      font-weight: 300;
       font-size: 20px;
     }
 
@@ -44,17 +43,20 @@
       margin: 0;
       padding: 0;
       font-size: 24px;
-      font-weight: 600;
+      font-weight: $weight-bold;
     }
   }
 
+  // sass-lint:disable class-name-format
   &.SUCCESS .line1 {
     @include background-gradient(to right, $sd-success-gradient-start, $sd-success-gradient-end);
   }
+
   &.ABORTED .line1,
   &.FAILURE .line1 {
     @include background-gradient(to right, $sd-failure-gradient-start, $sd-failure-gradient-end);
   }
+  // sass-lint:enable class-name-format
 
   ul {
     list-style: none;
@@ -81,7 +83,7 @@
   }
 
   a {
-    color: #fff;
+    color: $sd-white;
     cursor: pointer;
     text-decoration: none;
   }
@@ -89,8 +91,8 @@
   button {
     font-size: 14px;
     background-color: transparent;
-    color: #fff;
-    border: 1px solid #fff;
+    color: $sd-white;
+    border: 1px solid $sd-white;
     border-radius: 2px;
     padding: 5px;
     width: 100px;

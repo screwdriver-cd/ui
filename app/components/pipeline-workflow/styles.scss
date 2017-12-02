@@ -1,7 +1,8 @@
 & {
-  padding: 15px 0 15px 5px;
-}
-
-.build-bubble:last-child .dir-arrow {
-  display: none;
+  margin-left: 10px;
+  margin-bottom: 15px;
+  height: 300px;
+  overflow: auto;
+  background-color: $grey-200;
+  padding: 10px 5px;
 }

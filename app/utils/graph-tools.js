@@ -47,6 +47,10 @@ const icon = status => (STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MA
  * @return {Number}           Number of visited nodes
  */
 const graphDepth = (edges, start, visited = new Set()) => {
+  if (!Array.isArray(edges)) {
+    return Number.MAX_VALUE;
+  }
+
   const dests = edges.filter(e => e.src === start);
 
   // For partials/detached jobs

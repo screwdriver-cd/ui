@@ -1,3 +1,6 @@
+{{#if session.isAuthenticated}}
+  {{pipeline-nav pipeline=pipeline}}
+{{/if}}
 {{pipeline-options
   pipeline=pipeline
   jobs=jobs

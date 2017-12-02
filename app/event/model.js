@@ -1,12 +1,9 @@
-import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
-import ObjectProxy from '@ember/object/proxy';
 import { computed, observer, get, set } from '@ember/object';
 import { sort, not } from '@ember/object/computed';
 import DS from 'ember-data';
 import graphTools from 'screwdriver-ui/utils/graph-tools';
 
 const { graphDepth } = graphTools;
-const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default DS.Model.extend({
   causeMessage: DS.attr('string'),
@@ -53,92 +50,82 @@ export default DS.Model.extend({
       return this.get('sha').substr(0, 6);
     }
   }),
-  statusObserver: observer('builds.[]', 'isComplete', function statusObserver() {
+  statusObserver: observer('builds.@each', 'isComplete', function statusObserver() {
     const builds = get(this, 'builds');
     let status = 'UNKNOWN';
 
-    return ObjectPromiseProxy.create({
-      promise: builds
-        .then(list => list.filter(b => get(b, 'status') !== 'SUCCESS'))
-        .then((list) => {
-          if (list.length) {
-            status = get(list[0], 'status');
-            set(this, 'status', status);
-
-            return status;
-          }
-
+    return builds
+      .then(list => list.filter(b => get(b, 'status') !== 'SUCCESS'))
+      .then((list) => {
+        if (list.length) {
+          status = get(list[0], 'status');
+        } else {
           status = get(this, 'isComplete') ? 'SUCCESS' : 'RUNNING';
+        }
 
-          set(this, 'status', status);
-
-          return status;
-        })
-    });
+        set(this, 'status', status);
+      });
   }),
-
-  isCompleteObserver: observer('builds.[]', 'workflowGraph', function isCompleteObserver() {
+  isCompleteObserver: observer('builds.@each', 'workflowGraph', function isCompleteObserver() {
     const builds = get(this, 'builds');
 
-    return ObjectPromiseProxy.create({
-      promise: builds
-        .then((list) => {
-          const numBuilds = get(list, 'length');
+    builds
+      .then((list) => {
+        const numBuilds = get(list, 'length');
 
-          // no builds yet
-          if (!numBuilds) {
-            set(this, 'isComplete', false);
-
-            return false;
-          }
-
-          // Figure out if there are any failures
-          const failedBuild = list.find((b) => {
-            const status = get(b, 'status');
-
-            return status === 'FAILED' || status === 'ABORTED';
-          });
-
-          // We probably won't continue on failure
-          if (failedBuild) {
-            set(this, 'isComplete', true);
-
-            return true;
-          }
-
-          // See if any builds are running
-          const runningBuild = list.find((b) => {
-            const status = get(b, 'status');
-
-            return status === 'RUNNING' || status === 'QUEUED';
-          });
-
-          // Something is running, so we aren't done
-          if (runningBuild) {
-            set(this, 'isComplete', false);
-
-            return false;
-          }
-
-          // Figure out how many builds we expect to run
-          const expectedBuilds = graphDepth(
-            get(this, 'workflowGraph.edges'),
-            get(this, 'startFrom'),
-            new Set()
-          );
-
-          // If we have the expected number of builds, it is done
-          if (numBuilds === expectedBuilds) {
-            set(this, 'isComplete', true);
-
-            return true;
-          }
-
-          // we haven't run all the expected builds yet
+        // no builds yet
+        if (!numBuilds) {
           set(this, 'isComplete', false);
 
           return false;
-        })
-    });
+        }
+
+        // Figure out if there are any failures
+        const failedBuild = list.find((b) => {
+          const status = get(b, 'status');
+
+          return status === 'FAILED' || status === 'ABORTED';
+        });
+
+        // We probably won't continue on failure
+        if (failedBuild) {
+          set(this, 'isComplete', true);
+
+          return true;
+        }
+
+        // See if any builds are running
+        const runningBuild = list.find((b) => {
+          const status = get(b, 'status');
+
+          return status === 'RUNNING' || status === 'QUEUED';
+        });
+
+        // Something is running, so we aren't done
+        if (runningBuild) {
+          set(this, 'isComplete', false);
+
+          return false;
+        }
+
+        // Figure out how many builds we expect to run
+        const expectedBuilds = graphDepth(
+          get(this, 'workflowGraph.edges'),
+          get(this, 'startFrom'),
+          new Set()
+        );
+
+        // If we have the expected number of builds, it is done
+        if (numBuilds === expectedBuilds) {
+          set(this, 'isComplete', true);
+
+          return true;
+        }
+
+        // we haven't run all the expected builds yet
+        set(this, 'isComplete', false);
+
+        return false;
+      });
   })
 });

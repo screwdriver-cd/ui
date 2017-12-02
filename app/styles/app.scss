@@ -1,6 +1,8 @@
 $animate: 300ms;
 $animate-delay: 250ms;
 $animate-done: 600ms;
+$weight-normal: 400;
+$weight-bold: 600;
 
 @mixin transition($prop, $duration, $delay: 0ms, $easing: ease) {
   -webkit-transition: $prop $duration $delay $easing;
@@ -40,3 +42,8 @@ $animate-done: 600ms;
 
 $grid-float-breakpoint: 880px;
 @import 'ember-bootstrap/bootstrap';
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: $weight-normal;
+}

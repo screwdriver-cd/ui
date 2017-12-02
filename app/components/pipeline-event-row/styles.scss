@@ -1,10 +1,10 @@
 & {
-  font-weight: 300;
   border-bottom: 1px solid $grey-300;
 
   &.highlighted {
     background-color: $brand-100;
   }
+
   &:hover {
     background-color: $brand-200;
   }

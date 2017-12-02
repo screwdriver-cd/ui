@@ -4,15 +4,13 @@
 
 table {
   width: 100%;
-  font-weight: 300;
 }
 
 tbody tr {
-  border: 1px solid #ddd;
+  border: 1px solid $grey-500;
 }
 
 th {
-  font-weight: 300;
   color: $sd-text-med;
   text-transform: uppercase;
   text-align: left;
@@ -28,7 +26,7 @@ tfoot button {
   border-width: 0;
   width: 100px;
   background-color: $sd-primary;
-  color: #fff;
+  color: $sd-white;
   border-radius: 3px;
 }
 

@@ -18,6 +18,7 @@
 
     &:hover {
       background-color: $sd-flyout-hover;
+
       .name {
         text-decoration: underline;
       }
@@ -25,6 +26,7 @@
 
     &.row--active {
       background-color: $sd-flyout-hover;
+
       a {
         &::before {
           background-color: $sd-active-hl;
@@ -38,18 +40,21 @@
       }
     }
 
+    // sass-lint:disable class-name-format
     &__delete {
       position: absolute;
       right: 10px;
       border: none;
       background: none;
     }
+    // sass-lint:enable class-name-format
   }
 
   .no-collections-text {
     padding: 15px;
   }
 
+  // sass-lint:disable class-name-format
   .header {
     &__text {
       font-size: 1.5em;
@@ -57,12 +62,12 @@
     }
 
     &__edit {
-      font-size: 0.9em;
+      font-size: .9em;
       text-decoration: none;
-      font-weight: 400;
       margin-top: 25px;
     }
   }
+  // sass-lint:enable class-name-format
 }
 
 // match with bootstrap min-width: for .col-md-2
@@ -71,4 +76,3 @@
     min-height: calc(100vh - 56px);
   }
 }
-

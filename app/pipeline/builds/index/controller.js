@@ -1,12 +1,12 @@
-import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
+import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
-import { get, set, computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 
 const { sort } = computed;
 
 export default Controller.extend({
-  session: service('session'),
+  session: service(),
   isShowingModal: false,
   errorMessage: '',
   pipeline: reads('model.pipeline'),
@@ -61,19 +61,6 @@ export default Controller.extend({
       }
 
       return get(event, 'id');
-    }
-  }),
-
-  eventOptions: computed('lastSuccessful', 'mostRecent', {
-    get() {
-      const recent = get(this, 'mostRecent');
-      const last = get(this, 'lastSuccessful');
-
-      return [
-        { label: 'Most Recent', value: recent },
-        { label: 'Last Successful', value: last },
-        { label: 'Aggregate', value: 'aggregate' }
-      ];
     }
   }),
 

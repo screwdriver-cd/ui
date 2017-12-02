@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-xs-5">
+    <strong>Pipeline</strong>
+    {{#bs-button-group
+      value=selectedEvent
+      type='radio'
+      onChange=(action (mut selected)) as |bg|
+    }}
+    {{#each eventOptions as |opt|}}
+      {{#bg.button value=opt.value}}{{opt.label}}{{/bg.button}}
+    {{/each}}
+    {{/bs-button-group}}
+  </div>
+  <div class="col-xs-4">
+    {{#unless (eq selected 'aggregate')}}
+    <strong>Commit</strong>
+    <a href="{{selectedEventObj.commit.url}}">#{{selectedEventObj.truncatedSha}}</a>
+    {{/unless}}
+  </div>
+  <div class="col-xs-3 right">
+    {{#if session.isAuthenticated}}
+    {{pipeline-start startBuild=(action startBuild)}}
+    {{/if}}
+  </div>
+</div>

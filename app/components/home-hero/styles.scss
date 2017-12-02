@@ -1,18 +1,17 @@
 & {
   margin: 0 auto;
-  font-weight: 300;
 }
 
 .top {
   text-align: center;
-  color: #000000;
+  color: $sd-black;
   padding: 20px 0;
   height: 120px;
 
   h1 {
     font-size: 24px;
-    font-weight: 600;
-    margin: 0 0 5px 0;
+    font-weight: $weight-bold;
+    margin: 0 0 5px;
     padding: 0;
   }
 
@@ -26,7 +25,7 @@
 
   h2 {
     font-size: 20px;
-    font-weight: 600;
+    font-weight: $weight-bold;
   }
 
   ul {
@@ -38,6 +37,7 @@
 
   li {
     margin-bottom: 10px;
+
     span {
       line-height: 1.75;
       vertical-align: top;

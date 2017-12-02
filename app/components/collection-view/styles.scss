@@ -3,9 +3,11 @@
     color: $sd-text;
     padding: 0 25px;
 
+    // sass-lint:disable class-name-format
     &__sort-pipelines {
       margin-top: 2.5rem;
     }
+    // sass-lint:enable class-name-format
   }
 
   a {
@@ -39,19 +41,20 @@
 
   tbody tr:hover {
     background-color: $sd-separator;
+
     .name {
       text-decoration: underline;
     }
   }
 
   th {
-    font-size: 0.9em;
+    font-size: .9em;
     text-transform: uppercase;
-    font-weight: 300;
     color: $sd-text-med;
   }
 
-  th, td {
+  th,
+  td {
     padding: 10px;
     border-bottom: 1px solid $sd-text-light;
   }
@@ -60,6 +63,7 @@
     padding: 25px;
   }
 
+  // sass-lint:disable class-name-format
   .collection-pipeline__remove {
     opacity: 0;
     cursor: pointer;
@@ -70,6 +74,7 @@
   .collection-pipeline:hover .collection-pipeline__remove {
     opacity: 1;
   }
+  // sass-lint:enable class-name-format
 }
 
 @media (max-width: 47.999em) {

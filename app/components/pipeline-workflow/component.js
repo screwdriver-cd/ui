@@ -36,7 +36,7 @@ export default Component.extend({
 
         // set values to consume from templates
         set(this, 'builds', builds);
-        set(this, 'visGraph', graph);
+        set(this, 'directedGraph', graph);
 
         return graph;
       });

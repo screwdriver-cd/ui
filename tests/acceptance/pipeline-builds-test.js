@@ -34,6 +34,20 @@ const BUILD = {
   status: 'FAILURE'
 };
 
+const GRAPH = {
+  nodes: [
+    { name: '~pr' },
+    { name: '~commit' },
+    { id: 12345, name: 'main' },
+    { is: 123456, name: 'publish' }
+  ],
+  edges: [
+    { src: '~pr', dest: 'main' },
+    { src: '~commit', dest: 'main' },
+    { src: 'main', dest: 'publish' }
+  ]
+};
+
 const events = [
   {
     id: '2',
@@ -55,10 +69,11 @@ const events = [
       avatar: 'http://example.com/u/batman/avatar',
       url: 'http://example.com/u/batman'
     },
+    startFrom: '~commit',
     pipelineId: '12345',
     sha: 'abcdef1029384',
     type: 'pipeline',
-    workflow: ['main', 'publish']
+    workflowGraph: GRAPH
   }, {
     id: '3',
     causeMessage: 'Merged by robin',
@@ -79,10 +94,11 @@ const events = [
       avatar: 'http://example.com/u/robin/avatar',
       url: 'http://example.com/u/robin'
     },
+    startFrom: '~commit',
     pipelineId: '12345',
     sha: '1029384aaa',
     type: 'pipeline',
-    workflow: ['main', 'publish']
+    workflowGraph: GRAPH
   }
 ];
 
@@ -103,7 +119,7 @@ const jobs = [
   },
   {
     id: '12347',
-    name: 'PR-42',
+    name: 'PR-42:main',
     pipelineId: '4',
     state: 'ENABLED',
     archived: false
@@ -156,7 +172,7 @@ moduleForAcceptance('Acceptance | pipeline builds', {
         },
         createTime: '2016-09-15T23:12:23.760Z',
         admins: { batman: true },
-        workflow: ['main', 'publish']
+        workflowGraph: GRAPH
       })
     ]);
 
@@ -213,11 +229,10 @@ test('visiting /pipelines/4', function (assert) {
   andThen(() => {
     assert.equal(currentURL(), '/pipelines/4');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
-    assert.equal(find('.pipelineWorkflow .build-bubble').length, 2, 'not enough workflow');
+    assert.equal(find('.pipelineWorkflow svg').length, 1, 'not enough workflow');
     assert.equal(find('button.start-button').length, 0, 'should not have a start button');
     assert.equal(find('ul.nav-pills').length, 0, 'should not show options or secrets tabs');
-    assert.equal(find('.col-md-9 h2').text().trim(), 'Events');
     assert.equal(find('.col-md-3 h2').text().trim(), 'Pull Requests');
-    assert.equal(find('.col-md-9 > div > div.ember-view').length, 2);
+    assert.equal(find('tbody tr').length, 2);
   });
 });

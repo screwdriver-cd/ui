@@ -4,7 +4,6 @@
   url('/assets/screwdriver.ttf?anwrf') format('truetype'),
   url('/assets/screwdriver.woff?anwrf') format('woff'),
   url('/assets/screwdriver.svg?anwrf#screwdriver') format('svg');
-  font-weight: normal;
   font-style: normal;
 }
 
@@ -17,19 +16,10 @@
 g {
   transform-origin: 50% 50%;
 
-  &.build-running {
-    animation: spin 2s infinite linear;
-  }
-}
-
-& {
-  background-color: $grey-200;
-  padding: 10px 5px;
-
-  &.minified {
-    padding: 0;
-    background-color: transparent;
-  }
+  // Disabled as it is broken in Firefox
+  // &.build-running {
+  //   animation: spin 2s infinite linear;
+  // }
 }
 
 .graph-node {
