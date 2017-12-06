@@ -13,8 +13,8 @@
   .navbar {
     margin-bottom: 0;
     border-radius: 0;
-    background-color: $grey-800; // #05121C;
-    border-color: $grey-800; // #05121C;
+    background-color: $grey-800;
+    border-color: $grey-800;
   }
 
   .navbar-form {
@@ -185,6 +185,7 @@
   .dropdown-menu > li > span.title {
     display: block;
     padding: 5px 0 5px 20px;
+    font-weight: $weight-bold;
   }
 
   .dropdown-menu > li > a.active {
