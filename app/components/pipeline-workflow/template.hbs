@@ -1,7 +1,12 @@
-{{#if (is-fulfilled graph)}}
-  {{workflow-graph-d3 workflowGraph=visGraph builds=builds}}
+{{#if (and (eq selected 'aggregate') (is-fulfilled graph))}}
+  {{workflow-graph-d3 workflowGraph=directedGraph builds=builds}}
 {{else}}
-  {{#each jobs as |job|}}
-    {{build-bubble jobName=job.name jobIsDisabled=job.isDisabled build=job.lastBuild}}
-  {{/each}}
+  {{#if (is-fulfilled selectedEventObj.builds)}}
+    {{workflow-graph-d3
+      builds=selectedEventObj.builds
+      workflowGraph=selectedEventObj.workflowGraph
+      startFrom=selectedEventObj.startFrom
+      causeMessage=selectedEventObj.causeMessage
+    }}
+  {{/if}}
 {{/if}}

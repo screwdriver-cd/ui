@@ -26,6 +26,7 @@ test('it exists', function (assert) {
 
 test('it starts a build', function (assert) {
   assert.expect(3);
+
   server.post('http://localhost:8080/v4/events', () => [
     201,
     { 'Content-Type': 'application/json' },

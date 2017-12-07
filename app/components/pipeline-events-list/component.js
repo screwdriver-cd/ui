@@ -1,4 +1,4 @@
-import { computed } from '@ember/object';
+import { computed, get, set } from '@ember/object';
 import { sort } from '@ember/object/computed';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
@@ -6,19 +6,30 @@ import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 
 export default Component.extend(ModelReloaderMixin, {
   modelToReload: 'events',
-  showAll: false,
+  showMore: computed('events.length', 'numToShow', {
+    get() {
+      return get(this, 'numToShow') < get(this, 'events.length');
+    }
+  }),
+
   eventsSorted: sort('events.[]',
     (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
 
-  eventsToView: computed('events.[]', 'showAll', {
+  eventsList: computed('events.[]', 'numToShow', {
     get() {
-      const numEvents = this.get('events.length');
-      const end = numEvents >= ENV.APP.NUM_EVENTS_LISTED && !this.get('showAll') ?
-        ENV.APP.NUM_EVENTS_LISTED : numEvents;
+      const numEvents = get(this, 'events.length');
+      const desiredNumEvents = get(this, 'numToShow');
+      const end = desiredNumEvents <= numEvents ? desiredNumEvents : numEvents;
 
-      return this.get('eventsSorted').slice(0, end);
+      return get(this, 'eventsSorted').slice(0, end);
     }
   }),
+
+  init() {
+    this._super(...arguments);
+
+    set(this, 'numToShow', ENV.APP.NUM_EVENTS_LISTED);
+  },
 
   /**
    * Runs when a render event is triggered, usually due to a change in attribute data (events)
@@ -29,8 +40,11 @@ export default Component.extend(ModelReloaderMixin, {
   },
 
   actions: {
-    showAllEvents() {
-      this.set('showAll', true);
+    moreClick() {
+      set(this, 'numToShow', get(this, 'numToShow') + ENV.APP.NUM_EVENTS_LISTED);
+    },
+    eventClick(id) {
+      set(this, 'selected', id);
     }
   },
 

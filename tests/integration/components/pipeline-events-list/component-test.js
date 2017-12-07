@@ -1,6 +1,3 @@
-/* eslint-disable new-cap */
-import { A } from '@ember/array';
-
 import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
@@ -14,62 +11,84 @@ test('it renders', function (assert) {
   // Handle any actions with this.on('myAction', function(val) { ... });
   const events = [
     EmberObject.create({
-      id: '1',
-      buildsSorted: A([]),
-      causeMessage: 'Merged by batman',
+      id: 4,
+      startFrom: '~commit',
+      causeMessage: 'test',
       commit: {
-        message: 'Merge pull request #2 from batcave/batmobile',
-        author: {
-          username: 'batman',
-          name: 'Bruce W',
-          avatar: 'http://example.com/u/batman/avatar',
-          url: 'http://example.com/u/batman'
-        },
-        url: 'http://example.com/batcave/batmobile/commit/1ef1029384'
+        url: '#',
+        message: 'this was a test'
       },
-      createTime: '2016-11-04T20:09:41.238Z',
       creator: {
-        username: 'batman',
-        name: 'Bruce W',
-        avatar: 'http://example.com/u/batman/avatar',
-        url: 'http://example.com/u/batman'
+        url: '#',
+        name: 'batman'
       },
-      pipelineId: '12345',
-      sha: 'abcdef1029384',
-      type: 'pipeline',
-      workflow: ['main', 'publish']
+      createTimeWords: 'now',
+      durationText: '1 sec',
+      truncatedSha: 'abc124',
+      workflowGraph: {
+        nodes: [
+          { name: '~pr' },
+          { name: '~commit' },
+          { id: 1, name: 'main' },
+          { id: 2, name: 'A' },
+          { id: 3, name: 'B' }
+        ],
+        edges: [
+          { src: '~pr', dest: 'main' },
+          { src: '~commit', dest: 'main' },
+          { src: 'main', dest: 'A' },
+          { src: 'A', dest: 'B' }
+        ]
+      },
+      builds: [
+        { jobId: 1, id: 4, status: 'SUCCESS' },
+        { jobId: 2, id: 5, status: 'SUCCESS' },
+        { jobId: 3, id: 6, status: 'FAILURE' }
+      ]
     }),
     EmberObject.create({
-      id: '1',
-      buildsSorted: A([]),
-      causeMessage: 'Merged by robin',
+      id: 3,
+      startFrom: '~commit',
+      causeMessage: 'test',
       commit: {
-        message: 'Merge pull request #1 from batcave/batmobile',
-        author: {
-          username: 'robin',
-          name: 'Tim D',
-          avatar: 'http://example.com/u/robin/avatar',
-          url: 'http://example.com/u/robin'
-        },
-        url: 'http://example.com/batcave/batmobile/commit/1029384aaa'
+        url: '#',
+        message: 'this was a test'
       },
-      createTime: '2016-11-04T20:09:41.238Z',
       creator: {
-        username: 'robin',
-        name: 'Tim D',
-        avatar: 'http://example.com/u/robin/avatar',
-        url: 'http://example.com/u/robin'
+        url: '#',
+        name: 'batman'
       },
-      pipelineId: '12345',
-      sha: '1029384aaa',
-      type: 'pipeline',
-      workflow: ['main', 'publish']
+      createTimeWords: 'now',
+      durationText: '1 sec',
+      truncatedSha: 'abc123',
+      workflowGraph: {
+        nodes: [
+          { name: '~pr' },
+          { name: '~commit' },
+          { id: 1, name: 'main' },
+          { id: 2, name: 'A' },
+          { id: 3, name: 'B' }
+        ],
+        edges: [
+          { src: '~pr', dest: 'main' },
+          { src: '~commit', dest: 'main' },
+          { src: 'main', dest: 'A' },
+          { src: 'A', dest: 'B' }
+        ]
+      },
+      builds: [
+        { jobId: 1, id: 4, status: 'SUCCESS' },
+        { jobId: 2, id: 5, status: 'SUCCESS' },
+        { jobId: 3, id: 6, status: 'FAILURE' }
+      ]
     })
   ];
 
   this.set('eventsMock', events);
   this.render(hbs`{{pipeline-events-list events=eventsMock}}`);
 
-  assert.equal(this.$('h2').text().trim(), 'Events');
-  assert.equal(this.$('> div').length, 1);
+  assert.equal(this.$('th').length, 6);
+  assert.equal(this.$('thead').text().trim(),
+    'Commit \n      Message\n      Status\n      User \n      Start Time\n      Duration');
+  assert.equal(this.$('tbody tr').length, 2);
 });

@@ -13,83 +13,82 @@
   .navbar {
     margin-bottom: 0;
     border-radius: 0;
-    background-color: #05121C;
-    border-color: #05121C;
+    background-color: $grey-800;
+    border-color: $grey-800;
   }
 
   .navbar-form {
     white-space: nowrap;
-    border-width: 0px;
+    border-width: 0;
     box-shadow: none;
     font-size: 0;
 
     input {
+      @include transition(background, 200ms);
       background: transparent;
-      background: rgba(242, 242, 242, 0.1);
-      color: #fff;
+      background: $sd-search-highlight;
+      color: $sd-white;
       border: none;
       border-bottom: solid transparent;
       box-sizing: border-box;
       display: inline-block;
       font-size: 14px;
-      font-weight: 300;
       height: 36px;
       line-height: 32px;
       margin-left: 10px;
       outline: none;
       width: 326px;
       padding-left: 5px;
-      @include transition(background, 200ms);
+      vertical-align: middle;
     }
 
     input::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: $sd-search-placeholder;
     }
 
     input:focus {
       border: none;
-      border-bottom: solid #3570f4;
+      border-bottom: solid $sd-active-hl;
     }
 
     input:focus::placeholder {
-      color: rgba(255, 255, 255, 1);
+      color: $sd-white;
     }
 
     button {
-      margin-top: 1px;
+      vertical-align: middle;
       border-radius: 0 2px 2px 0;
-      border-left: 0;
+      border-left: none;
       padding-left: 0;
       height: 37px;
       width: 38px;
-      color: rgba(255, 255, 255, 1);
-      background: #3697F2; /* For browsers that do not support gradients */
-      background: -webkit-linear-gradient(right top, #3570F4, #3697F2); /* For Safari 5.1 to 6.0 */
-      background: -o-linear-gradient(bottom left, #3570F4, #3697F2); /* For Opera 11.1 to 12.0 */
-      background: -moz-linear-gradient(bottom left, #3570F4, #3697F2); /* For Firefox 3.6 to 15 */
-      background: linear-gradient(to bottom left, #3570F4, #3697F2); /* Standard syntax */
+      color: $sd-white;
+      background: $sd-button-gradient-end; // For browsers that do not support gradients
+      background: -webkit-linear-gradient(right top, $sd-button-gradient-start, $sd-button-gradient-end); // For Safari 5.1 to 6.0
+      background: -o-linear-gradient(bottom left, $sd-button-gradient-start, $sd-button-gradient-end); // For Opera 11.1 to 12.0
+      background: -moz-linear-gradient(bottom left, $sd-button-gradient-start, $sd-button-gradient-end); // For Firefox 3.6 to 15
+      background: linear-gradient(to bottom left, $sd-button-gradient-start, $sd-button-gradient-end); // Standard syntax
       border-style: none;
 
       .fa {
         font-size: 15px;
-        font-weight: 300;
         padding-left: 5px;
       }
 
       &:hover {
-        opacity: 0.9;
+        opacity: .9;
       }
     }
   }
 
   .navbar-default .navbar-nav > li > a.icon {
-    color: #fff;
+    color: $sd-white;
     text-decoration: none;
     line-height: 20px;
 
     .img {
       vertical-align: middle;
-      fill: rgba(255, 255, 255, 1);
+      fill: $sd-white;
       height: 20px;
       width: 20px;
     }
@@ -98,12 +97,15 @@
       display: inline;
     }
 
-    &:hover, &.active {
-      .img, .icontitle {
-        opacity: 0.6;
+    &:hover,
+    &.active {
+      .img,
+      .icontitle {
+        opacity: .6;
       }
     }
   }
+
   .tooltips {
     display: none;
   }
@@ -112,7 +114,7 @@
     padding: 15px;
 
     .dropdown-toggle:hover {
-      opacity: 0.6;
+      opacity: .6;
     }
 
     a {
@@ -129,14 +131,16 @@
       }
     }
 
-    &.open a, &.open a:focus, &.open a:hover {
+    &.open a,
+    &.open a:focus,
+    &.open a:hover {
       background-color: transparent;
     }
   }
 
   .dropdown-menu > li > a {
     span {
-      padding-left: 0.5em;
+      padding-left: .5em;
     }
   }
 
@@ -158,7 +162,7 @@
 
     &:hover {
       color: $sd-white;
-      opacity: 0.6;
+      opacity: .6;
     }
   }
 }
@@ -181,7 +185,7 @@
   .dropdown-menu > li > span.title {
     display: block;
     padding: 5px 0 5px 20px;
-    font-weight: 700;
+    font-weight: $weight-bold;
   }
 
   .dropdown-menu > li > a.active {
@@ -201,7 +205,9 @@
       fill: $sd-text;
     }
   }
-  .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+
+  .dropdown-menu > li > a:hover,
+  .dropdown-menu > li > a:focus {
     background-color: $sd-highlight;
   }
 

@@ -52,13 +52,6 @@
             <td class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.scmRepo.branch}}</td>
             <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
             <td class="health">
-              {{#each pipeline.workflow as |job index|}}
-                {{#if pipeline.lastBuilds}}
-                  {{build-health pipelineId=pipeline.id build=(index-of pipeline.lastBuilds index) jobName=job}}
-                {{else}}
-                  {{build-health}}
-                {{/if}}
-              {{/each}}
             </td>
             <td class="prs--open">
               {{#if pipeline.prs}}

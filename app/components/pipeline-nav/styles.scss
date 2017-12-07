@@ -1,31 +1,27 @@
 & {
   padding-left: 25px;
-  background-color: $sd-dark-blue;
+  background-color: $brand-100;
 
-  .nav-pills {
-    a {
-      border-radius: 2px 2px 0 0;
+  .nav-pills a {
+    border-radius: 5px 5px 0 0;
+    background-color: transparent;
+    color: $brand-600;
+
+    &.active {
+      color: $grey-800;
       background-color: transparent;
-      color: $sd-text-light;
-
-      &.active {
-        color: $sd-text-light;
-        background-color: transparent;
-        border-bottom: 4px solid $sd-light-blue;
-      }
     }
   }
 
   .nav > li > a:hover,
   .nav > li > a:focus {
-    background-color: $sd-light-blue;
-    border-bottom: 4px solid $sd-light-blue;
+    background-color: $sd-white;
   }
 
-  .nav-pills > li.active > a,
-  .nav-pills > li.active > a:hover,
-  .nav-pills > li.active > a:focus {
-    background-color: $sd-light-blue;
-    color: $sd-text-light;
+  .nav-pills > .active > a,
+  .nav-pills > .active > a:hover,
+  .nav-pills > .active > a:focus {
+    background-color: $sd-white;
+    color: $grey-800;
   }
 }

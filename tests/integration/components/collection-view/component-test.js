@@ -121,16 +121,6 @@ test('it renders', function (assert) {
   assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
   assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
   assert.equal($($('td.account').get(2)).text().trim(), 'github.com');
-  // Since the 3 pipelines have 4 jobs in total, there will be 4 build icons in total
-  assert.equal($('td.health i').length, 4);
-  // The models pipeline has 1 failed build
-  assert.equal($($('td.health i').get(0)).attr('class'), 'fa fa-times ember-view');
-  // The screwdriver pipeline has 1 successful build
-  assert.equal($($('td.health i').get(1)).attr('class'), 'fa fa-check ember-view');
-  // The build icons for the ui pipeline should be empty circles since
-  // there are no builds
-  assert.equal($($('td.health i').get(2)).attr('class'), 'fa ember-view');
-  assert.equal($($('td.health i').get(3)).attr('class'), 'fa ember-view');
   // The models pipeline should not have any info for prs open and failing
   assert.equal($($('td.prs--open').get(0)).text().trim(), '');
   assert.equal($($('td.prs--failing').get(0)).text().trim(), '');

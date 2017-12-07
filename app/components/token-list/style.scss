@@ -3,7 +3,6 @@
 
   table {
     width: 100%;
-    font-weight: 300;
   }
 
   tbody tr {
@@ -11,7 +10,6 @@
   }
 
   th {
-    font-weight: 300;
     color: $sd-text-med;
     text-transform: uppercase;
     text-align: left;
@@ -40,7 +38,7 @@
     display: inline-block;
 
     & .new-name {
-      font-weight: bold;
+      font-weight: $weight-bold;
     }
 
     & .new-value {

@@ -35,35 +35,58 @@ test('it exists', function (assert) {
 });
 
 test('it is not completed when there are no builds', function (assert) {
-  const model = this.subject({ builds: [], workflowGraph, startFrom: '~commit' });
+  const model = this.subject({ workflowGraph, startFrom: '~commit' });
 
-  return get(model, 'isComplete').then(isComplete => assert.notOk(isComplete));
+  run.next(this, () => {
+    const isComplete = get(model, 'isComplete');
+
+    assert.notOk(isComplete);
+  });
 });
 
+// Testing observers is messy, need to change the model value, then schedule to read the newly set value later
 test('it is not completed when the a build is not complete', function (assert) {
   run(() => {
     const build = this.store().createRecord('build', { jobId: 1, status: 'RUNNING' });
-    const model = this.subject({ builds: [build], workflowGraph, startFrom: '~commit' });
+    const model = this.subject({ workflowGraph, startFrom: '~commit' });
 
-    return get(model, 'isComplete').then(isComplete => assert.notOk(isComplete));
+    model.set('builds', [build]);
+
+    run.next(this, () => {
+      const isComplete = get(model, 'isComplete');
+
+      assert.notOk(isComplete);
+    });
   });
 });
 
 test('it is completed when any build is unsuccessful', function (assert) {
   run(() => {
     const build = this.store().createRecord('build', { status: 'ABORTED' });
-    const model = this.subject({ builds: [build], workflowGraph, startFrom: '~commit' });
+    const model = this.subject({ workflowGraph, startFrom: '~commit' });
 
-    return get(model, 'isComplete').then(isComplete => assert.ok(isComplete));
+    model.set('builds', [build]);
+
+    run.next(this, () => {
+      const isComplete = get(model, 'isComplete');
+
+      assert.ok(isComplete);
+    });
   });
 });
 
 test('it is not completed when all not all expected builds have run', function (assert) {
   run(() => {
     const build = this.store().createRecord('build', { status: 'SUCCESS' });
-    const model = this.subject({ builds: [build], workflowGraph, startFrom: '~commit' });
+    const model = this.subject({ workflowGraph, startFrom: '~commit' });
 
-    return get(model, 'isComplete').then(isComplete => assert.notOk(isComplete));
+    model.set('builds', [build]);
+
+    run.next(this, () => {
+      const isComplete = get(model, 'isComplete');
+
+      assert.notOk(isComplete);
+    });
   });
 });
 
@@ -74,21 +97,29 @@ test('it is complete when all expected builds have run', function (assert) {
     const build3 = this.store().createRecord('build', { jobId: 3, status: 'SUCCESS' });
     const build4 = this.store().createRecord('build', { jobId: 4, status: 'SUCCESS' });
     const build5 = this.store().createRecord('build', { jobId: 5, status: 'SUCCESS' });
-    const model = this.subject({
-      builds: [build5, build4, build3, build2, build1],
-      workflowGraph,
-      startFrom: '~commit'
-    });
+    const model = this.subject({ workflowGraph, startFrom: '~commit' });
 
-    return get(model, 'isComplete').then(isComplete => assert.ok(isComplete));
+    model.set('builds', [build5, build4, build3, build2, build1]);
+
+    run.next(this, () => {
+      const isComplete = get(model, 'isComplete');
+
+      assert.ok(isComplete);
+    });
   });
 });
 
 test('it is RUNNING when there are no builds', function (assert) {
   run(() => {
-    const model = this.subject({ builds: [], workflowGraph, startFrom: '~commit' });
+    const model = this.subject({ workflowGraph, startFrom: '~commit' });
 
-    get(model, 'status').then(status => assert.equal('RUNNING', status));
+    model.set('builds', []);
+
+    run.next(this, () => {
+      const status = get(model, 'status');
+
+      assert.equal(status, 'RUNNING');
+    });
   });
 });
 
@@ -96,9 +127,15 @@ test('it returns build status when a build is not SUCCESS', function (assert) {
   run(() => {
     const build1 = this.store().createRecord('build', { jobId: 1, status: 'ABORTED' });
     const build2 = this.store().createRecord('build', { jobId: 2, status: 'SUCCESS' });
-    const model = this.subject({ builds: [build2, build1], workflowGraph, startFrom: '~commit' });
+    const model = this.subject({ workflowGraph, startFrom: '~commit' });
 
-    get(model, 'status').then(status => assert.equal('ABORTED', status));
+    model.set('builds', [build2, build1]);
+
+    run.next(this, () => {
+      const status = get(model, 'status');
+
+      assert.equal(status, 'ABORTED');
+    });
   });
 });
 
@@ -109,12 +146,14 @@ test('it is SUCCESS when all expected builds have run successfully', function (a
     const build3 = this.store().createRecord('build', { jobId: 3, status: 'SUCCESS' });
     const build4 = this.store().createRecord('build', { jobId: 4, status: 'SUCCESS' });
     const build5 = this.store().createRecord('build', { jobId: 5, status: 'SUCCESS' });
-    const model = this.subject({
-      builds: [build5, build4, build3, build2, build1],
-      workflowGraph,
-      startFrom: '~commit'
-    });
+    const model = this.subject({ workflowGraph, startFrom: '~commit' });
 
-    return get(model, 'status').then(status => assert.equal('SUCCESS', status));
+    model.set('builds', [build5, build4, build3, build2, build1]);
+
+    run.next(this, () => {
+      const status = get(model, 'status');
+
+      assert.equal(status, 'SUCCESS');
+    });
   });
 });

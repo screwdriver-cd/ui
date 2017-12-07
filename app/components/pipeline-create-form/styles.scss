@@ -3,10 +3,9 @@
   font-size: 16px;
   padding-bottom: 40px;
   margin: 0 auto;
-  font-weight: 300;
 
   h1 {
-    font-weight: 600;
+    font-weight: $weight-bold;
   }
 }
 
@@ -52,15 +51,15 @@
 }
 
 .blue-button {
+  @include transition(all, 50ms);
   border: none;
   border-radius: 3px;
   height: 45px;
   padding: 0 30px;
-  color: #fff;
+  color: $sd-white;
   font-size: 16px;
   margin-top: 20px;
   background: $sd-running;
-  @include transition(all, 50ms);
 
   &:focus {
     outline: none;
@@ -90,7 +89,7 @@
 
   &:active {
     &:not(:disabled) {
-      @include scale(0.97);
+      @include scale(.97);
     }
   }
 }

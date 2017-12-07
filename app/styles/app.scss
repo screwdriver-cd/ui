@@ -1,6 +1,8 @@
 $animate: 300ms;
 $animate-delay: 250ms;
 $animate-done: 600ms;
+$weight-normal: 400;
+$weight-bold: 600;
 
 @mixin transition($prop, $duration, $delay: 0ms, $easing: ease) {
   -webkit-transition: $prop $duration $delay $easing;
@@ -10,7 +12,7 @@ $animate-done: 600ms;
   transition: $prop $duration $delay $easing;
 }
 
-@mixin backgroundGradient($dir, $start, $end) {
+@mixin background-gradient($dir, $start, $end) {
   background: -webkit-linear-gradient($dir, $start, $end);
   background: -o-linear-gradient($dir, $start, $end);
   background: -moz-linear-gradient($dir, $start, $end);
@@ -25,17 +27,23 @@ $animate-done: 600ms;
   transform: scale($amt);
 }
 
-@import "font-awesome";
-@import "screwdriver-colors";
-@import "screwdriver-modal-styles";
-@import "pod-styles";
-@import "ember-modal-dialog/ember-modal-structure";
-@import "ember-modal-dialog/ember-modal-appearance";
+@import 'font-awesome';
+@import 'denali-colors';
+@import 'screwdriver-colors';
+@import 'screwdriver-modal-styles';
+@import 'pod-styles';
+@import 'ember-modal-dialog/ember-modal-structure';
+@import 'ember-modal-dialog/ember-modal-appearance';
 
 .container {
-    box-sizing: border-box;
-    overflow: hidden;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 $grid-float-breakpoint: 880px;
-@import "ember-bootstrap/bootstrap";
+@import 'ember-bootstrap/bootstrap';
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: $weight-normal;
+}

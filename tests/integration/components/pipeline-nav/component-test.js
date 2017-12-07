@@ -11,5 +11,5 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{pipeline-nav}}`);
 
-  assert.equal(this.$('a').text().trim(), 'BuildsSecretsOptions');
+  assert.equal(this.$('a').text().trim(), 'EventsSecretsOptions');
 });
