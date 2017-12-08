@@ -39,6 +39,7 @@
     "Tiffany Kyi <tiffanykyi@gmail.com>"
   ],
   "devDependencies": {
+    "ansi_up": "^2.0.2",
     "bootstrap-sass": "^3.3.7",
     "broccoli-asset-rev": "^2.4.5",
     "d3": "^4.11.0",
@@ -83,6 +84,7 @@
     "eslint": "^4.7.0",
     "eslint-config-screwdriver": "^3.0.0",
     "eslint-plugin-ember": "^4.5.0",
+    "humanize-duration": "^3.12.0",
     "loader.js": "^4.2.3"
   },
   "dependencies": {}

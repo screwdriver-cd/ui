@@ -83,6 +83,7 @@ export default Component.extend({
     // Adjustable spacing between nodes
     const X_SPACING = ICON_SIZE;
     const Y_SPACING = ICON_SIZE;
+    const EDGE_GAP = Math.floor(ICON_SIZE / 6);
 
     // Calculate the canvas size based on amount of content, or override with user-defined size
     const w = get(this, 'width') || ((data.meta.width * ICON_SIZE) + (data.meta.width * X_SPACING));
@@ -146,9 +147,9 @@ export default Component.extend({
       .attr('fill', 'transparent')
       .attr('d', (d) => {
         const path = d3.path();
-        const startX = calcPos(d.from.x, X_SPACING) + ICON_SIZE;
+        const startX = calcPos(d.from.x, X_SPACING) + ICON_SIZE + EDGE_GAP;
         const startY = calcPos(d.from.y, Y_SPACING);
-        const endX = calcPos(d.to.x, X_SPACING);
+        const endX = calcPos(d.to.x, X_SPACING) - EDGE_GAP;
         const endY = calcPos(d.to.y, Y_SPACING);
 
         path.moveTo(startX, startY);
