@@ -48,7 +48,7 @@ test('it shoud return model of scms', function (assert) {
   return route.model().then((scms) => {
     assert.equal(scms[0].context, 'github:github.com');
     assert.equal(scms[0].displayName, 'github.com');
-    assert.equal(scms[0].iconType, 'fa-github');
+    assert.equal(scms[0].iconType, 'github');
     assert.equal(scms[0].isSignedIn, true);
   });
 });

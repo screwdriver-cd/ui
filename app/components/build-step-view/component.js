@@ -41,11 +41,11 @@ export default Component.extend({
     get() {
       switch (this.get('status')) {
       case 'running':
-        return 'fa-spinner fa-spin';
+        return 'spinner fa-spin';
       case 'success':
-        return 'fa-check';
+        return 'check';
       case 'failure':
-        return 'fa-times';
+        return 'times';
       default:
         return '';
       }

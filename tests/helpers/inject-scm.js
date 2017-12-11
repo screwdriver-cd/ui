@@ -5,13 +5,13 @@ const scms = [
   {
     context: 'github:github.com',
     displayName: 'github.com',
-    iconType: 'fa-github',
+    iconType: 'github',
     isSignedIn: true
   },
   {
     context: 'bitbucket:bitbucket.org',
     displayName: 'bitbucket.org',
-    iconType: 'fa-bitbucket',
+    iconType: 'bitbucket',
     isSignedIn: false
   }
 ];

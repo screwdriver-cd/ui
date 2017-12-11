@@ -19,7 +19,7 @@ test('it renders', function (assert) {
   });
   const scmMock = EmberObject.create({
     scm: 'github.com',
-    scmIcon: 'fa-github'
+    scmIcon: 'github'
   });
 
   this.set('pipelineMock', pipelineMock);

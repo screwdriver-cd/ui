@@ -69,7 +69,7 @@
               <p>Update the webhooks if they are not working correctly.</p>
             </div>
             <div class="col-xs-2 right">
-              <a href="#" {{action "sync" "webhooks"}} >{{fa-icon "fa-refresh"}}</a>
+              <a href="#" {{action "sync" "webhooks"}} >{{fa-icon "refresh"}}</a>
             </div>
           </div>
         </li>
@@ -80,7 +80,7 @@
               <p>Create or update pull-request jobs if they are not displaying properly.</p>
             </div>
             <div class="col-xs-2 right">
-              <a href="#" {{action "sync" "pullrequests"}}>{{fa-icon "fa-refresh"}}</a>
+              <a href="#" {{action "sync" "pullrequests"}}>{{fa-icon "refresh"}}</a>
             </div>
           </div>
         </li>
@@ -91,7 +91,7 @@
               <p>Update jobs if they are not displaying properly.</p>
             </div>
             <div class="col-xs-2 right">
-              <a href="#" {{action "sync"}}>{{fa-icon "fa-refresh"}}</a>
+              <a href="#" {{action "sync"}}>{{fa-icon "refresh"}}</a>
             </div>
           </div>
         </li>
@@ -111,14 +111,14 @@
               <p>Once you remove a pipeline, there is no going back.</p>
             </div>
             <div class="col-xs-1 col-md-4 right">
-              <a href="#" {{action "showRemoveButtons"}} class="trash">{{fa-icon "fa-trash"}}</a>
+              <a href="#" {{action "showRemoveButtons"}} class="trash">{{fa-icon "trash"}}</a>
             </div>
           </div>
           {{/if}}
           {{#if showRemoveButtons}}
             <h4>Are you absolutely sure?</h4>
-            <a href="#" {{action "cancelRemove"}} class="cancel">{{fa-icon "fa-ban"}} Cancel</a>
-            <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "fa-trash"}} Remove</a>
+            <a href="#" {{action "cancelRemove"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
+            <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "trash"}} Remove</a>
           {{/if}}
           {{#if isRemoving}}
             <p>Please wait...</p>
