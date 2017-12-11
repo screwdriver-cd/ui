@@ -2,10 +2,12 @@ import { computed, observer, get, set } from '@ember/object';
 import { sort, not } from '@ember/object/computed';
 import DS from 'ember-data';
 import graphTools from 'screwdriver-ui/utils/graph-tools';
+import ENV from 'screwdriver-ui/config/environment';
+import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 
 const { graphDepth } = graphTools;
 
-export default DS.Model.extend({
+export default DS.Model.extend(ModelReloaderMixin, {
   causeMessage: DS.attr('string'),
   commit: DS.attr(),
   createTime: DS.attr('date'),
@@ -71,6 +73,9 @@ export default DS.Model.extend({
 
     builds
       .then((list) => {
+        // Tell model to reload builds.
+        this.startReloading();
+
         const numBuilds = get(list, 'length');
 
         // no builds yet
@@ -84,7 +89,7 @@ export default DS.Model.extend({
         const failedBuild = list.find((b) => {
           const status = get(b, 'status');
 
-          return status === 'FAILED' || status === 'ABORTED';
+          return status === 'FAILURE' || status === 'ABORTED';
         });
 
         // We probably won't continue on failure
@@ -127,5 +132,13 @@ export default DS.Model.extend({
 
         return false;
       });
-  })
+  }),
+
+  modelToReload: 'builds',
+  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
+
+  // Reload builds only if the event is still running
+  shouldReload() {
+    return get(this, 'isRunning');
+  }
 });
