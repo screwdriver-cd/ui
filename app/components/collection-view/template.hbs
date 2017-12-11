@@ -13,7 +13,7 @@
       Sort By
       {{#bs-dropdown as |dd|}}
         {{#bs-button}}{{sortByText}}{{/bs-button}}
-        {{#dd.button}}{{fa-icon "fa-caret-down"}}{{/dd.button}}
+        {{#dd.button}}{{fa-icon "caret-down"}}{{/dd.button}}
         {{#dd.menu as |menu|}}
           {{#menu.item}}
             <a onclick={{action "setSortBy" "name"}}>Name</a>
@@ -49,7 +49,7 @@
             <td class="app-id">
               {{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.scmRepo.name}}{{/link-to}}{{/highlight-terms}}
             </td>
-            <td class="branch">{{fa-icon "fa-code-fork"}}{{pipeline.scmRepo.branch}}</td>
+            <td class="branch">{{fa-icon "code-fork"}}{{pipeline.scmRepo.branch}}</td>
             <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
             <td class="health">
             </td>

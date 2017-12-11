@@ -13,9 +13,9 @@ const scmUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/contex
 */
 function getIconType(scmContext) {
   const iconTypes = {
-    github: 'fa-github',
-    bitbucket: 'fa-bitbucket',
-    gitlab: 'fa-gitlab'
+    github: 'github',
+    bitbucket: 'bitbucket',
+    gitlab: 'gitlab'
   };
 
   const [scm] = scmContext.split(':');

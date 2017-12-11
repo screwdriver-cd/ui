@@ -16,13 +16,13 @@ export default Component.extend({
       switch (status) {
       case 'QUEUED':
       case 'RUNNING':
-        icon = 'fa-spinner fa-spin';
+        icon = 'spinner fa-spin';
         break;
       case 'SUCCESS':
-        icon = 'fa-check';
+        icon = 'check';
         break;
       default:
-        icon = 'fa-times';
+        icon = 'times';
         break;
       }
 
