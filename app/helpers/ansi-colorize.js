@@ -2,6 +2,11 @@ import { helper } from '@ember/component/helper';
 import { htmlSafe } from '@ember/string';
 import Ember from 'ember';
 
+const ansiUp = new AnsiUp();
+
+// Prevent double-encoding
+ansiUp.escape_for_html = false;
+
 /**
  * Transform ansi color codes to html tags
  * @method ansiColorize
@@ -9,9 +14,10 @@ import Ember from 'ember';
  * @return {String}             Html string
  */
 export function ansiColorize([message]) {
+  // encode html content
   const m = Ember.Handlebars.Utils.escapeExpression(message);
 
-  return htmlSafe(ansi_up.ansi_to_html(m));
+  return htmlSafe(ansiUp.ansi_to_html(m));
 }
 
 export default helper(ansiColorize);

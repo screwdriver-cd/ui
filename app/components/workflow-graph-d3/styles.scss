@@ -64,14 +64,4 @@ g {
   &.build-started_from { // sass-lint:disable-line class-name-format
     stroke: $sd-success;
   }
-
-  &.build-failure,
-  &.build-aborted {
-    stroke: $sd-failure;
-  }
-
-  &.build-running,
-  &.build-queued {
-    stroke: $sd-queued;
-  }
 }

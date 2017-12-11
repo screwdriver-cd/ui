@@ -10,7 +10,7 @@ module.exports = {
     browser: true
   },
   globals: {
-    ansi_up: true,
+    AnsiUp: true,
     humanizeDuration: true
   },
   rules: {
