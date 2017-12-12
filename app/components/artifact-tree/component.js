@@ -8,10 +8,10 @@ import ObjectProxy from '@ember/object/proxy';
 const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 const typesOptions = {
   directory: {
-    icon: 'fa folder-o fa-lg'
+    icon: 'fa fa-folder-o fa-lg'
   },
   file: {
-    icon: 'fa file-text-o'
+    icon: 'fa fa-file-text-o'
   }
 };
 
