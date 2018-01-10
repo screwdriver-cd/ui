@@ -15,18 +15,18 @@ const parsedManifest = [{
   children: [{
     text: 'coverage.json',
     type: 'file',
-    a_attr: { href: `http://localhost:80/v1/builds/${buildId}/ARTIFACTS/coverage/coverage.json` }
+    a_attr: { href: `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/coverage/coverage.json` }
   }]
 },
 {
   text: 'test.txt',
   type: 'file',
-  a_attr: { href: `http://localhost:80/v1/builds/${buildId}/ARTIFACTS/test.txt` }
+  a_attr: { href: `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/test.txt` }
 }
 ];
 
 const getManifest = () => {
-  server.get(`http://localhost:80/v1/builds/${buildId}/ARTIFACTS/manifest.txt`, () => [
+  server.get(`http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`, () => [
     200,
     {
       'Content-Type': 'text/plain'
@@ -63,7 +63,7 @@ test('it makes a call to get artifact manifest successfully', function (assert) 
   p.then((data) => {
     const [request] = server.handledRequests;
 
-    assert.equal(request.url, `http://localhost:80/v1/builds/${buildId}/ARTIFACTS/manifest.txt`);
+    assert.equal(request.url, `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`);
     assert.deepEqual(data, parsedManifest);
   });
 });
