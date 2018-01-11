@@ -21,6 +21,10 @@ module.exports = (environment) => {
       'connect-src': [
         "'self'"
       ],
+      // JSTree web worker
+      'worker-src': [
+        'blob:'
+      ],
       'img-src': [
         "'self'",
         'https:',
