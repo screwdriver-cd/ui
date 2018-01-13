@@ -31,7 +31,9 @@ module.exports = (environment) => {
         // ace editor
         'data:',
         // github avatars
-        '*.githubusercontent.com'
+        'avatars*.githubusercontent.com',
+        // bitbucket avatars
+        'bitbucket.org/account/*/avatar/*'
       ]
     },
     EmberENV: {
