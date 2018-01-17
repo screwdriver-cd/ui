@@ -5,6 +5,37 @@ module.exports = (environment) => {
     environment,
     rootURL: '/',
     locationType: 'auto',
+    contentSecurityPolicyHeader: 'Content-Security-Policy',
+    contentSecurityPolicy: {
+      'style-src': [
+        "'self'",
+        // ace editor inline-styles
+        "'sha256-F7mkvbJTwqc33GcL7mev+qfhVmJ9akZNlMnRdJTmvjI='",
+        "'sha256-Dn0vMZLidJplZ4cSlBMg/F5aa7Vol9dBMHzBF4fGEtk='",
+        "'sha256-sA0hymKbXmMTpnYi15KmDw4u6uRdLXqHyoYIaORFtjU='",
+        "'sha256-GK3QEnA3E0HIm/yl0gj7r7kmfONG84shoAcbrpNh9eg='",
+        "'sha256-eU1D4PmGDxaJYeMSmyMsshvwPgzIiQpmijT8nLuPB8I='",
+        // Glimmer runtime
+        "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='"
+      ],
+      'connect-src': [
+        "'self'"
+      ],
+      // JSTree web worker
+      'worker-src': [
+        'blob:'
+      ],
+      'img-src': [
+        "'self'",
+        'https:',
+        // ace editor
+        'data:',
+        // github avatars
+        'avatars*.githubusercontent.com',
+        // bitbucket avatars
+        'bitbucket.org/account/*/avatar/*'
+      ]
+    },
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -21,7 +52,7 @@ module.exports = (environment) => {
       // when it is created
       SDAPI_HOSTNAME: 'http://localhost:8080',
       SDAPI_NAMESPACE: 'v4',
-      SDSTORE_HOSTNAME: 'http://localhost:80',
+      SDSTORE_HOSTNAME: 'http://localhost:8081',
       SDSTORE_NAMESPACE: 'v1',
       BUILD_RELOAD_TIMER: 5000, // 5 seconds
       EVENT_RELOAD_TIMER: 90000, // 1.5 minutes
@@ -63,6 +94,9 @@ module.exports = (environment) => {
   ENV['ember-toggle'] = {
     defaultSize: 'small'
   };
+
+  ENV.contentSecurityPolicy['connect-src'].push(ENV.APP.SDAPI_HOSTNAME);
+  ENV.contentSecurityPolicy['connect-src'].push(ENV.APP.SDSTORE_HOSTNAME);
 
   return ENV;
 };
