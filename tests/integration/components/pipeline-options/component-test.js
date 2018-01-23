@@ -22,8 +22,18 @@ test('it renders', function (assert) {
 
   this.set('mockJobs', A([
     EmberObject.create({
+      id: '3456',
+      name: 'B',
+      isDisabled: false
+    }),
+    EmberObject.create({
       id: '1234',
       name: 'main',
+      isDisabled: false
+    }),
+    EmberObject.create({
+      id: '2345',
+      name: 'A',
       isDisabled: false
     })
   ]));
@@ -39,9 +49,10 @@ test('it renders', function (assert) {
 
   // Jobs
   assert.equal(this.$('section.jobs h3').text().trim(), 'Jobs');
-  assert.equal(this.$('section.jobs li').length, 1);
-  assert.equal(this.$('section.jobs h4').text().trim(), 'main');
-  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable the main job.');
+  assert.equal(this.$('section.jobs li').length, 3);
+  assert.equal(this.$('section.jobs h4').text().trim(), 'ABmain');
+  // eslint-disable-next-line max-len
+  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable the A job.Toggle to disable the B job.Toggle to disable the main job.');
   assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
 
   // Sync
