@@ -10,6 +10,12 @@ export default Service.extend({
 
     return this.fetchData(url);
   },
+  getTemplateTags(name) {
+    const url = 
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}/tags`;
+
+    return this.fetchData(url);
+  },
   getAllTemplates() {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates`;
 
