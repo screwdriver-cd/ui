@@ -1,6 +1,7 @@
+/* eslint ember/avoid-leaking-state-in-components: [2, ["jobSorting"]] */
 import $ from 'jquery';
 import { inject as service } from '@ember/service';
-import { not, or } from '@ember/object/computed';
+import { not, or, sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import Component from '@ember/component';
 import { parse, getCheckoutUrl } from '../../utils/git';
@@ -15,6 +16,8 @@ export default Component.extend({
   isShowingModal: false,
   showDangerButton: true,
   showRemoveButtons: false,
+  jobSorting: ['name'],
+  sortedJobs: sort('jobs', 'jobSorting'),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
   isValid: computed('scmUrl', {
