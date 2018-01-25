@@ -2,8 +2,8 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
 const TEMPLATES = [
-  { version: '3.0.0' },
-  { version: '2.0.0' },
+  { version: '3.0.0', tag: 'latest stable' },
+  { version: '2.0.0', tag: 'meeseeks' },
   { version: '1.0.0' }
 ];
 
@@ -18,7 +18,7 @@ test('it renders', function (assert) {
   this.render(hbs`{{template-versions templates=mock changeVersion=(action "mockAction")}}`);
 
   assert.equal(this.$('h4').text().trim(), 'Versions:');
-  assert.equal(this.$('ul li').text().trim(), '3.0.02.0.01.0.0');
+  assert.equal(this.$('ul li').text().trim(), '3.0.0 - latest stable2.0.0 - meeseeks1.0.0');
 });
 
 test('it handles clicks on versions', function (assert) {
@@ -32,6 +32,6 @@ test('it handles clicks on versions', function (assert) {
   this.render(hbs`{{template-versions templates=mock changeVersion=(action "mockAction")}}`);
 
   assert.equal(this.$('h4').text().trim(), 'Versions:');
-  assert.equal(this.$('ul li').text().trim(), '3.0.02.0.01.0.0');
+  assert.equal(this.$('ul li').text().trim(), '3.0.0 - latest stable2.0.0 - meeseeks1.0.0');
   this.$('ul li:last-child').click();
 });

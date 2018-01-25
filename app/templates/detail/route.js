@@ -12,15 +12,16 @@ export default Route.extend({
       const [verPayload, tagPayload] = arr;
 
       tagPayload.forEach((tagObj) => {
-        const verObj = verPayload.find(version => verPayload.version === tagPayload.version);
-        if (verObj.tag !== undefined) {
-          verObj.tag += ` ${tagObj.tag}`;
+        const taggedVerObj = verPayload.find(verObj => verObj.version === tagObj.version);
+
+        if (taggedVerObj.tag !== undefined) {
+          taggedVerObj.tag += ` ${tagObj.tag}`;
         } else {
-          verObj.tag = tagObj.tag;
+          taggedVerObj.tag = tagObj.tag;
         }
       });
 
-      return versions;
-    })
+      return verPayload;
+    });
   }
 });
