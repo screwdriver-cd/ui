@@ -24,7 +24,7 @@ test('it exists', function (assert) {
 });
 
 test('it starts a build', function (assert) {
-  assert.expect(6);
+  assert.expect(7);
   server.post('http://localhost:8080/v4/events', () => [
     201,
     { 'Content-Type': 'application/json' },
@@ -40,6 +40,13 @@ test('it starts a build', function (assert) {
     controller.set('model', {
       pipeline: EmberObject.create({
         id: '1234'
+      }),
+      events: EmberObject.create({
+        reload: () => {
+          assert.ok(true);
+
+          return Promise.resolve({});
+        }
       })
     });
 
