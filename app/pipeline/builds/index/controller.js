@@ -3,10 +3,18 @@ import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
 
+import ENV from 'screwdriver-ui/config/environment';
+import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
+
 const { sort } = computed;
 
-export default Controller.extend({
+export default Controller.extend(ModelReloaderMixin, {
   session: service(),
+  init() {
+    this._super(...arguments);
+    this.startReloading();
+  },
+  modelToReload: 'events',
   isShowingModal: false,
   errorMessage: '',
   pipeline: reads('model.pipeline'),
@@ -76,6 +84,7 @@ export default Controller.extend({
 
       return newEvent.save().then(() => {
         this.set('isShowingModal', false);
+        this.forceReload();
 
         return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
       }).catch((e) => {
@@ -83,5 +92,9 @@ export default Controller.extend({
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
     }
-  }
+  },
+  willDestroy() {
+    this.stopReloading();
+  },
+  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER
 });

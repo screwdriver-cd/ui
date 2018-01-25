@@ -2,6 +2,8 @@ import { later, cancel } from '@ember/runloop';
 import Mixin from '@ember/object/mixin';
 import ENV from 'screwdriver-ui/config/environment';
 
+const FORCE_WAIT_TIMEOUT = 100;
+
 export default Mixin.create({
   /**
    * Overridable function to determine if a model should be reloaded
@@ -58,5 +60,15 @@ export default Mixin.create({
       cancel(this.get('runLater'));
       this.set('runLater', null);
     }
+  },
+
+  /**
+   * Forces model reload
+   * @method forceReload
+   */
+  forceReload() {
+    cancel(this.get('runLater'));
+    // Push this reload out of current run loop.
+    later(this, 'reloadModel', FORCE_WAIT_TIMEOUT);
   }
 });
