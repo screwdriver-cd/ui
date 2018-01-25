@@ -4,7 +4,6 @@ import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
-  modelToReload: 'events',
   showMore: computed('events.length', 'numToShow', {
     get() {
       return get(this, 'numToShow') < get(this, 'events.length');
