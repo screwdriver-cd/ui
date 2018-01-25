@@ -5,10 +5,10 @@ import Route from '@ember/routing/route';
 export default Route.extend({
   template: service(),
   model(params) {
-    return RSVP.all(
+    return RSVP.all([
       this.get('template').getOneTemplate(params.name),
       this.get('template').getTemplateTags(params.name)
-    ).then((arr) => {
+    ]).then((arr) => {
       const [verPayload, tagPayload] = arr;
 
       tagPayload.forEach((tagObj) => {
