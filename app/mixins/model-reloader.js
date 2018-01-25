@@ -2,8 +2,6 @@ import { later, cancel } from '@ember/runloop';
 import Mixin from '@ember/object/mixin';
 import ENV from 'screwdriver-ui/config/environment';
 
-const FORCE_WAIT_TIMEOUT = 100;
-
 export default Mixin.create({
   /**
    * Overridable function to determine if a model should be reloaded
