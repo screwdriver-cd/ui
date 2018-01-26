@@ -14,11 +14,7 @@ export default Route.extend({
       tagPayload.forEach((tagObj) => {
         const taggedVerObj = verPayload.find(verObj => verObj.version === tagObj.version);
 
-        if (taggedVerObj.tag !== undefined) {
-          taggedVerObj.tag += ` ${tagObj.tag}`;
-        } else {
-          taggedVerObj.tag = tagObj.tag;
-        }
+        taggedVerObj.tag = taggedVerObj.tag ? `${taggedVerObj.tag} ${tagObj.tag}` : tagObj.tag;
       });
 
       return verPayload;
