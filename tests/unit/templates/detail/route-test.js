@@ -9,6 +9,13 @@ const templateServiceStub = Service.extend({
       { id: 2, name, version: '2.0.0' },
       { id: 1, name, version: '1.0.0' }
     ]);
+  },
+  getTemplateTags(name) {
+    return resolve([
+      { id: 5, name, version: '3.0.0', tag: 'latest' },
+      { id: 6, name, version: '3.0.0', tag: 'stable' },
+      { id: 7, name, version: '2.0.0', tag: 'meeseeks' }
+    ]);
   }
 });
 

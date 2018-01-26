@@ -10,6 +10,13 @@ export default Service.extend({
 
     return this.fetchData(url);
   },
+  getTemplateTags(name) {
+    const url =
+      // eslint-disable-next-line max-len
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}/tags`;
+
+    return this.fetchData(url);
+  },
   getAllTemplates() {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates`;
 
