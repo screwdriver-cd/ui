@@ -20,6 +20,12 @@ export default Component.extend({
     }
   }),
 
+  isWaiting: computed('buildStatus', {
+    get() {
+      return this.get('buildStatus') === 'QUEUED';
+    }
+  }),
+
   hasButton: computed('buildAction', 'jobName', {
     get() {
       if (this.get('buildAction') === 'Stop') {

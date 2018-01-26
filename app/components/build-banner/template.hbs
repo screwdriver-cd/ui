@@ -6,7 +6,11 @@
 </div>
 <div class="headerbar">
   <div class="row">
-    <div class="col-xs-4"></div>
+    <div class="col-xs-4">
+      {{#if isWaiting}}
+      <div class="build-waiting">{{fa-icon "spinner fa-spin fa-fw"}} Setting up build...</div>
+      {{/if}}
+    </div>
     <div class="col-xs-4"><h1>{{jobName}}</h1></div>
     <div class="col-xs-4">{{#if isAuthenticated}}{{#if hasButton}}<button {{action "toggleBuild"}}>{{buildAction}}</button>{{/if}}{{/if}}</div>
   </div>
