@@ -58,5 +58,17 @@ export default Mixin.create({
       cancel(this.get('runLater'));
       this.set('runLater', null);
     }
+  },
+
+  /**
+   * Forces model reload
+   * @method forceReload
+   */
+  forceReload() {
+    cancel(this.get('runLater'));
+    // Push this reload out of current run loop.
+    const forceLater = later(this, 'reloadModel', ENV.APP.FORCE_RELOAD_WAIT);
+
+    this.set('runLater', forceLater);
   }
 });

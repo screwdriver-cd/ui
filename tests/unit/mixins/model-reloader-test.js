@@ -2,6 +2,8 @@ import { resolve } from 'rsvp';
 import EmberObject from '@ember/object';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { module, test } from 'qunit';
+import wait from 'ember-test-helpers/wait';
+
 let subject;
 
 module('Unit | Mixin | model reloader mixin', {
@@ -73,4 +75,22 @@ test('it should not reload a model if shouldReload returns false', function (ass
   subject.set('modelToReload', 'testModel');
 
   subject.reloadModel();
+});
+
+test('it force reloads a model', function (assert) {
+  assert.expect(2);
+  subject.set('testModel', {
+    reload() {
+      assert.ok(true);
+
+      return resolve({});
+    }
+  });
+  subject.set('modelToReload', 'testModel');
+
+  subject.forceReload();
+
+  return wait().then(() => {
+    assert.ok(true);
+  });
 });

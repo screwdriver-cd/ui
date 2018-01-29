@@ -52,7 +52,8 @@ module.exports = (environment) => {
       EVENT_RELOAD_TIMER: 90000, // 1.5 minutes
       LOG_RELOAD_TIMER: 1000,
       NUM_EVENTS_LISTED: 5,
-      MAX_LOG_LINES: 1000
+      MAX_LOG_LINES: 1000,
+      FORCE_RELOAD_WAIT: 100 // Wait 100ms before force reload
     },
     moment: {
       allowEmpty: true // allow empty dates
