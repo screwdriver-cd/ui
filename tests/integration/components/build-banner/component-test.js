@@ -187,3 +187,41 @@ test('it renders a stop button for job when authenticated', function (assert) {
   assert.equal(this.$('button').text().trim(), 'Stop');
   this.$('button').click();
 });
+
+test('it shows waiting message when queued', function (assert) {
+  assert.expect(10);
+  const $ = this.$;
+
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
+  this.set('reloadCb', () => {
+    assert.ok(true);
+  });
+
+  this.set('eventMock', eventMock);
+  this.set('jobMock', jobMock);
+  this.render(hbs`{{build-banner
+    buildContainer="node:6"
+    buildStatus="QUEUED"
+    duration="5 seconds"
+    event=eventMock
+    isAuthenticated=false
+    jobName="main"
+    reloadBuild=(action reloadCb)
+    jobs=jobMock
+    eventBuilds=eventMock.builds
+  }}`);
+
+  assert.equal($('h1').text().trim(), 'main');
+  assert.equal($('.build-waiting').text().trim(), 'Setting up build...');
+  assert.equal($('.commit a').prop('href'),
+    'http://example.com/batcave/batmobile/commit/abcdef1029384');
+  assert.equal($('.commit a').text().trim(), '#abcdef');
+  assert.equal($('.message').text().trim(),
+    'Merge it');
+  assert.equal($('.message').prop('title'),
+    'Merge pull request #2 from batcave/batmobile');
+  assert.equal($('.event .col-xs-4:nth-child(2)').text().trim(), 'node:6');
+  assert.equal($('.event .col-xs-4:nth-child(3)').text().trim(), '5 seconds');
+  assert.equal($('button').length, 0);
+});
