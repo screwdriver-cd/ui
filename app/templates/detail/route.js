@@ -20,6 +20,6 @@ export default Route.extend({
       }
 
       return verPayload;
-    })
+    });
   }
 });
