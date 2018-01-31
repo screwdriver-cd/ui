@@ -1,5 +1,5 @@
 import { moduleFor, test } from 'ember-qunit';
-// import wait from 'ember-test-helpers/wait';
+import Service from '@ember/service';
 import Pretender from 'pretender';
 let server;
 const now = Date.now();
@@ -55,12 +55,24 @@ const badLogs = () => {
   ]);
 };
 
+const sessionServiceMock = Service.extend({
+  isAuthenticated: true,
+  data: {
+    authenticated: {
+      token: 'banana'
+    }
+  }
+});
+
 moduleFor('service:build-logs', 'Unit | Service | build logs', {
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
 
   beforeEach() {
     server = new Pretender();
+    this.register('service:session', sessionServiceMock);
+    this.inject.service('session', { as: 'session' });
+    this.session.set('isAuthenticated', true);
   },
 
   afterEach() {
@@ -72,6 +84,20 @@ test('it exists', function (assert) {
   const service = this.subject();
 
   assert.ok(service);
+});
+
+test('it rejects if the user is not authenticated', function (assert) {
+  assert.expect(2);
+  noMoreLogs();
+  this.session.set('isAuthenticated', false);
+
+  const service = this.subject();
+  const p = service.fetchLogs('1', 'banana');
+
+  p.catch((e) => {
+    assert.ok(e instanceof Error, e);
+    assert.equal('User is not authenticated', e.message);
+  });
 });
 
 test('it makes a call to logs api and logs return with no remaining', function (assert) {

@@ -1,9 +1,10 @@
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Service.extend({
+  session: service(),
   /**
    * Calls the logs api service to fetch logs
    * @method fetchLogs
@@ -19,9 +20,19 @@ export default Service.extend({
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
       `/builds/${buildId}/steps/${stepName}/logs`;
 
-    return new EmberPromise((resolve) => {
+    return new EmberPromise((resolve, reject) => {
+      if (!this.get('session.isAuthenticated')) {
+        return reject(new Error('User is not authenticated'));
+      }
+
       // convert jquery's ajax promises to a real promise
-      $.ajax({ url, data: { from: logNumber } })
+      return $.ajax({
+        url,
+        data: { from: logNumber },
+        headers: {
+          Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
+        }
+      })
         .done((data, textStatus, jqXHR) => {
           if (Array.isArray(data)) {
             lines = data;

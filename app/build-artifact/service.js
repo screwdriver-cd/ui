@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
 /**
@@ -73,6 +73,8 @@ function arrangeIntoTree(paths, baseUrl) {
 }
 
 export default Service.extend({
+  session: service(),
+
   /**
    * Calls the store api service to fetch build artifact manifest
    * @method fetchManifest
@@ -85,9 +87,14 @@ export default Service.extend({
     const baseUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
       `/builds/${buildId}/ARTIFACTS/`;
 
-    return new EmberPromise((resolve) => {
-      $.ajax({
-        url: `${baseUrl}manifest.txt`
+    return new EmberPromise((resolve, reject) => {
+      if (!this.get('session.isAuthenticated')) {
+        return reject(new Error('User is not authenticated'));
+      }
+
+      return $.ajax({
+        url: `${baseUrl}manifest.txt`,
+        headers: { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` }
       })
         .done((data) => {
           const paths = data.split('\n');

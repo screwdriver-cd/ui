@@ -4,7 +4,7 @@ import sinonTest from 'ember-sinon-qunit/test-support/test';
 
 moduleFor('route:pipeline/builds/build', 'Unit | Route | pipeline/builds/build', {
   // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
+  needs: ['service:session']
 });
 
 test('it exists', function (assert) {
