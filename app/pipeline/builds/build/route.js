@@ -4,11 +4,10 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 
 export default Route.extend(AuthenticatedRouteMixin, {
   routeAfterAuthentication: 'pipeline.builds.build',
-  beforeModel() {
-    this.set('pipeline', this.modelFor('pipeline'));
-  },
 
   model(params) {
+    this.set('pipeline', this.modelFor('pipeline'));
+
     return this.store.findRecord('build', params.build_id).then(build => all([
       this.store.findRecord('job', build.get('jobId')),
       this.store.findRecord('event', build.get('eventId')),
