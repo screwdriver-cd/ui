@@ -16,13 +16,13 @@ const parsedManifest = [{
   children: [{
     text: 'coverage.json',
     type: 'file',
-    a_attr: { href: `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/coverage/coverage.json` }
+    a_attr: { href: `http://localhost:8080/v4/builds/${buildId}/artifacts/coverage/coverage.json` }
   }]
 },
 {
   text: 'test.txt',
   type: 'file',
-  a_attr: { href: `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/test.txt` }
+  a_attr: { href: `http://localhost:8080/v4/builds/${buildId}/artifacts/test.txt` }
 }
 ];
 
