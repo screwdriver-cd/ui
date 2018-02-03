@@ -1,3 +1,5 @@
+'use strict';
+
 // Configuration for ember-cli-code-coverage
 module.exports = {
   coverageEnvVar: 'COVERAGE',

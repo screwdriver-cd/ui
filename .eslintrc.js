@@ -4,8 +4,13 @@ module.exports = {
     ecmaVersion: 2017,
     sourceType: 'module'
   },
-  extends: 'screwdriver',
-  plugins: ['ember'],
+  plugins: [
+    'ember'
+  ],
+  extends: [
+    'screwdriver',
+    'plugin:ember/recommended'
+  ],
   env: {
     browser: true
   },
@@ -22,32 +27,40 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/no-mutable-exports': 'off',
     'import/newline-after-import': 'off',
-    "ember/alias-model-in-controller": "error",
-    "ember/avoid-leaking-state-in-components": "error",
-    "ember/closure-actions": "error",
-    "ember/jquery-ember-run": "off", // error
-    "ember/local-modules": "off",
-    "ember/named-functions-in-promises": "off", // error
-    "ember/new-module-imports": "off",
-    "ember/no-attrs-in-components": "off",
-    "ember/no-attrs-snapshot": "error",
-    "ember/no-capital-letters-in-routes": "error",
-    "ember/no-duplicate-dependent-keys": "off",
-    "ember/no-empty-attrs": "off", // error
-    "ember/no-function-prototype-extensions": "error",
-    "ember/no-global-jquery": "off",
-    "ember/no-jquery": "off",
-    "ember/no-observers": "off", // error
-    "ember/no-old-shims": "off",
-    "ember/no-on-calls-in-components": "error",
-    "ember/no-side-effects": "error",
-    "ember/order-in-components": "error",
-    "ember/order-in-controllers": "error",
-    "ember/order-in-models": "error",
-    "ember/order-in-routes": "error",
-    "ember/require-super-in-init": "off",
-    "ember/routes-segments-snake-case": "error",
-    "ember/use-brace-expansion": "error",
-    "ember/use-ember-get-and-set": "off" // error
-  }
+    'ember/avoid-leaking-state-in-ember-objects': 'off',
+    'ember/jquery-ember-run': 'off',
+    'ember/no-global-jquery': 'off'
+  },
+  overrides: [
+    // node files
+    {
+      files: [
+        'testem.js',
+        'ember-cli-build.js',
+        'config/**/*.js',
+        'lib/*/index.js'
+      ],
+      parserOptions: {
+        sourceType: 'script',
+        ecmaVersion: 2015
+      },
+      env: {
+        browser: false,
+        node: true
+      }
+    },
+
+    // test files
+    {
+      files: ['tests/**/*.js'],
+      excludedFiles: ['tests/dummy/**/*.js'],
+      env: {
+        embertest: true
+      },
+      rules: {
+        'func-names': 'off',
+        'prefer-arrow-callback': 'off'
+      }
+    }
+  ]
 };
