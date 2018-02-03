@@ -84,8 +84,13 @@ export default Service.extend({
   fetchManifest(buildId) {
     let manifest = [];
 
-    const baseUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
-      `/builds/${buildId}/ARTIFACTS/`;
+    // Fetch the manifest directly from the store to prevent CORS issues
+    const manifestUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
+      `/builds/${buildId}/ARTIFACTS/manifest.txt`;
+
+    // Set artifact file links to api to get redirects to store with short-lived jwt tokens
+    const baseUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+      `/builds/${buildId}/artifacts/`;
 
     return new EmberPromise((resolve, reject) => {
       if (!this.get('session.isAuthenticated')) {
@@ -93,7 +98,7 @@ export default Service.extend({
       }
 
       return $.ajax({
-        url: `${baseUrl}manifest.txt`,
+        url: manifestUrl,
         headers: { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` }
       })
         .done((data) => {
