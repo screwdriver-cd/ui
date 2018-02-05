@@ -3,7 +3,7 @@ import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 export default Route.extend(AuthenticatedRouteMixin, {
-  routeAfterAuthentication: 'pipeline.builds.build',
+  routeAfterAuthentication: 'pipeline.build',
 
   model(params) {
     this.set('pipeline', this.modelFor('pipeline'));
