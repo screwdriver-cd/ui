@@ -65,12 +65,12 @@ export default Component.extend({
       const router = get(this, 'router');
 
       // Backwards compatibilty - hack to make click route to build page
-      let url = router.urlFor('pipeline.builds.build', job.buildId);
+      let url = router.urlFor('pipeline.build', job.buildId);
 
       if (job.name.startsWith('~sd@')) {
         const pipelineId = job.name.match(/^~sd@(\d+):([\w-]+)$/)[1];
 
-        url = router.urlFor('pipeline.builds.build', pipelineId, job.buildId);
+        url = router.urlFor('pipeline.build', pipelineId, job.buildId);
       }
 
       return router.transitionTo(url);

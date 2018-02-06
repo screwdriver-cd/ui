@@ -6,7 +6,7 @@ import Pretender from 'pretender';
 import wait from 'ember-test-helpers/wait';
 let server;
 
-moduleFor('controller:pipeline/builds/build', 'Unit | Controller | pipeline/builds/build', {
+moduleFor('controller:pipeline/build', 'Unit | Controller | pipeline/build', {
   // Specify the other units that are required for this test.
   // eslint-disable-next-line max-len
   needs: ['model:build', 'model:event', 'adapter:application', 'service:session', 'serializer:build', 'serializer:event'],
@@ -50,7 +50,7 @@ test('it starts a build', function (assert) {
       })
     });
     controller.transitionToRoute = (path, id) => {
-      assert.equal(path, 'pipeline.builds.build');
+      assert.equal(path, 'pipeline.build');
       assert.equal(id, 9999);
     };
 

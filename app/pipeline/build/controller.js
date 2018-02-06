@@ -35,7 +35,7 @@ export default Controller.extend({
         .then(() =>
           newEvent.get('builds')
             .then(builds =>
-              this.transitionToRoute('pipeline.builds.build',
+              this.transitionToRoute('pipeline.build',
                 builds.get('lastObject.id'))
             ));
     },

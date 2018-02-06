@@ -155,7 +155,7 @@ const makeBuilds = (eventId) => {
   return builds;
 };
 
-moduleForAcceptance('Acceptance | pipeline builds', {
+moduleForAcceptance('Acceptance | pipeline build', {
   beforeEach() {
     server = new Pretender();
 

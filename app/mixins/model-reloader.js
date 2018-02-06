@@ -34,7 +34,7 @@ export default Mixin.create({
   reloadModel() {
     const model = this.get(this.get('modelToReload'));
 
-    if (this.shouldReload(model)) {
+    if (model && this.shouldReload(model)) {
       model.reload().then(() => this.scheduleReload());
     }
   },

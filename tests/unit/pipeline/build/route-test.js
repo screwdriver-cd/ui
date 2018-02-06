@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 import { moduleFor, test } from 'ember-qunit';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
 
-moduleFor('route:pipeline/builds/build', 'Unit | Route | pipeline/builds/build', {
+moduleFor('route:pipeline/build', 'Unit | Route | pipeline/build', {
   // Specify the other units that are required for this test.
   needs: ['service:session']
 });
