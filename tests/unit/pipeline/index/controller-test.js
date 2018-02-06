@@ -5,7 +5,7 @@ import Pretender from 'pretender';
 import wait from 'ember-test-helpers/wait';
 let server;
 
-moduleFor('controller:pipeline/builds/index', 'Unit | Controller | pipeline/builds/index', {
+moduleFor('controller:pipeline/index', 'Unit | Controller | pipeline/index', {
   // Specify the other units that are required for this test.
   // eslint-disable-next-line max-len
   needs: ['model:build', 'model:event', 'adapter:application', 'service:session', 'serializer:build', 'serializer:event'],
