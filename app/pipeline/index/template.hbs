@@ -16,10 +16,13 @@
     }}
 
     {{pipeline-workflow
+      mostRecent=mostRecent
       workflowGraph=pipeline.workflowGraph
       jobs=jobs
       selectedEventObj=selectedEventObj
       selected=selected
+      startDetachedBuild=(action "startDetachedBuild")
+      authenticated=session.isAuthenticated
     }}
 
     {{pipeline-events-list

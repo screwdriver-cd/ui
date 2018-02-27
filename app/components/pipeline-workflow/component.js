@@ -1,9 +1,13 @@
 import Component from '@ember/component';
-import { get, computed, set } from '@ember/object';
+import { get, computed, set, setProperties } from '@ember/object';
 import { all, reject } from 'rsvp';
+import graphTools from 'screwdriver-ui/utils/graph-tools';
+
+const { isRoot } = graphTools;
 
 export default Component.extend({
   classNames: ['pipelineWorkflow'],
+  showTooltip: false,
   graph: computed('workflowGraph', {
     get() {
       const jobs = get(this, 'jobs');
@@ -42,9 +46,63 @@ export default Component.extend({
       });
     }
   }),
+  displayRestartButton: computed('mostRecent', 'selectedEventObj', 'authenticated', {
+    get() {
+      // user is authenticated, and displaying builds in the most recent event
+      // TODO: remove restriciton for most recent event
+      return get(this, 'authenticated') &&
+        get(this, 'mostRecent') === get(this, 'selectedEventObj.id');
+    }
+  }),
 
   init() {
     this._super(...arguments);
     set(this, 'builds', []);
+  },
+  didUpdateAttrs() {
+    this._super(...arguments);
+    // hide graph tooltip when event changes
+    set(this, 'showTooltip', false);
+  },
+  actions: {
+    graphClicked(job, mouseevent, sizes) {
+      const edges = get(this, 'directedGraph.edges');
+      let isRootNode = false;
+
+      // Allow popup when clicking on the root node of a detached pipeline
+      if (job && edges && !/^~/.test(job.name)) {
+        isRootNode = isRoot(edges, job.name);
+      }
+
+      // hide tooltip when not clicking on an active job node or root node
+      if (!job || (!get(job, 'buildId') && !isRootNode)) {
+        this.set('showTooltip', false);
+
+        return false;
+      }
+
+      setProperties(this, {
+        showTooltip: true,
+        showTooltipPosition: isRootNode ? 'left' : 'center',
+        tooltipData: {
+          job,
+          mouseevent,
+          sizes
+        }
+      });
+
+      return false;
+    },
+    confirmStartBuild() {
+      set(this, 'isShowingModal', true);
+      set(this, 'showTooltip', false);
+    },
+    cancelStartBuild() {
+      set(this, 'isShowingModal', false);
+    },
+    startDetachedBuild() {
+      set(this, 'isShowingModal', false);
+      get(this, 'startDetachedBuild')(get(this, 'tooltipData.job'));
+    }
   }
 });

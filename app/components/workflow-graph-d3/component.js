@@ -37,44 +37,39 @@ export default Component.extend({
     }
   }),
   didInsertElement() {
+    this._super(...arguments);
     this.draw();
   },
   // Listen for changes to workflow and update graph accordingly.
   didUpdateAttrs() {
     this._super(...arguments);
-
-    // TODO: is there a way to do this more gracefully?
-    // remove the existing graph element
-    this.$('svg').remove();
-    // draw a new one
-    this.draw();
+    this.redraw();
   },
   actions: {
     buildClicked(job) {
-      if (!job.buildId) {
-        return false;
+      const fn = get(this, 'graphClicked');
+
+      if (!get(this, 'minified') && typeof fn === 'function') {
+        fn(job, d3.event, get(this, 'elementSizes'));
       }
-
-      const fn = get(this, 'buildClicked');
-
-      // Properly handle job if one is passed
-      if (typeof fn === 'function') {
-        return fn(job);
-      }
-
-      const router = get(this, 'router');
-
-      // Backwards compatibilty - hack to make click route to build page
-      let url = router.urlFor('pipeline.build', job.buildId);
-
-      if (job.name.startsWith('~sd@')) {
-        const pipelineId = job.name.match(/^~sd@(\d+):([\w-]+)$/)[1];
-
-        url = router.urlFor('pipeline.build', pipelineId, job.buildId);
-      }
-
-      return router.transitionTo(url);
     }
+  },
+  redraw() {
+    const data = get(this, 'decoratedGraph');
+    const el = d3.select(get(this, 'element'));
+
+    data.nodes.forEach((node) => {
+      const n = el.select(`g.job-${node.name}`);
+
+      if (n) {
+        const txt = n.select('text');
+
+        txt.text(icon(node.status));
+        n.attr('class',
+          `job-${node.name} graph-node${node.status ? ` build-${node.status.toLowerCase()}` : ''}`
+        );
+      }
+    });
   },
   draw() {
     const data = get(this, 'decoratedGraph');
@@ -94,7 +89,12 @@ export default Component.extend({
     const svg = d3.select(get(this, 'element'))
       .append('svg')
       .attr('width', w)
-      .attr('height', h);
+      .attr('height', h)
+      .on('click.graph-node:not', (e) => {
+        this.send('buildClicked', e);
+      }, true);
+
+    this.set('graphNode', svg);
 
     // Jobs Icons
     svg.selectAll('jobs')
@@ -103,7 +103,9 @@ export default Component.extend({
       // for each element in data array - do the following
       // create a group element to animate
       .append('g')
-      .attr('class', d => `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`)
+      .attr('class',
+        d => `job-${d.name} graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`
+      )
       // create the icon graphic
       .insert('text')
       .text(d => icon(d.status))

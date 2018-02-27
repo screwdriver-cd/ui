@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
+import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
@@ -81,6 +82,49 @@ export default Controller.extend(ModelReloaderMixin, {
         pipelineId,
         startFrom: '~commit'
       });
+
+      return newEvent.save().then(() => {
+        this.set('isShowingModal', false);
+        this.forceReload();
+
+        return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
+      }).catch((e) => {
+        this.set('isShowingModal', false);
+        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+      });
+    },
+    startDetachedBuild(job) {
+      const buildId = get(job, 'buildId');
+      let parentBuildId = null;
+
+      if (buildId) {
+        const build = this.store.peekRecord('build', buildId);
+
+        parentBuildId = get(build, 'parentBuildId');
+      }
+      const event = get(this, 'selectedEventObj');
+      const parentEventId = get(event, 'id');
+      const startFrom = get(job, 'name');
+      const pipelineId = get(this, 'pipeline.id');
+      const token = get(this, 'session.data.authenticated.token');
+      const user = get(decoder(token), 'username');
+      const causeMessage =
+        `${user} clicked restart for job "${job.name}" for sha ${get(event, 'sha')}`;
+      const newEvent = this.store.createRecord('event', {
+        pipelineId,
+        startFrom,
+        parentBuildId,
+        parentEventId,
+        causeMessage
+      });
+
+      console.log('parentBuildId', parentBuildId);
+      console.log('parentEventId', parentEventId);
+      console.log('pipelineId', pipelineId);
+      console.log('startFrom', startFrom);
+      console.log('causeMessage', causeMessage);
+
+      this.set('isShowingModal', true);
 
       return newEvent.save().then(() => {
         this.set('isShowingModal', false);

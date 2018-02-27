@@ -51,6 +51,7 @@ test('it renders an aggregate', function (assert) {
   this.render(hbs`{{pipeline-workflow workflowGraph=graph jobs=jobsMock selected=selected}}`);
 
   assert.equal(this.$('.graph-node').length, 5);
+  assert.equal(this.$('.workflow-tooltip').length, 1);
 });
 
 test('it renders an event', function (assert) {
@@ -65,4 +66,5 @@ test('it renders an event', function (assert) {
   this.render(hbs`{{pipeline-workflow selectedEventObj=obj selected=selected}}`);
 
   assert.equal(this.$('.graph-node').length, 5);
+  assert.equal(this.$('.workflow-tooltip').length, 1);
 });

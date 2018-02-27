@@ -1,6 +1,6 @@
 import graphTools from 'screwdriver-ui/utils/graph-tools';
 import { module, test } from 'qunit';
-const { icon, node, decorateGraph, graphDepth } = graphTools;
+const { icon, node, decorateGraph, graphDepth, isRoot } = graphTools;
 
 const SIMPLE_GRAPH = {
   nodes: [
@@ -262,4 +262,10 @@ test('it determines the depth of a graph from various starting points', function
   assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'detached_solo'), 1, 'very complex detached 2');
   // more complex graph, partial pipeline
   assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'publish'), 1, 'very complex partial');
+});
+
+test('it determines if a job name is a root node', function (assert) {
+  assert.ok(isRoot(MORE_COMPLEX_GRAPH.edges, 'detached_main'));
+  assert.ok(isRoot(MORE_COMPLEX_GRAPH.edges, '~commit'));
+  assert.notOk(isRoot(MORE_COMPLEX_GRAPH.edges, 'no_main'));
 });

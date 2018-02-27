@@ -13,6 +13,10 @@
   to {transform: rotate(360deg);}
 }
 
+& {
+  position: relative;
+}
+
 g {
   transform-origin: 50% 50%;
 
