@@ -118,12 +118,6 @@ export default Controller.extend(ModelReloaderMixin, {
         causeMessage
       });
 
-      console.log('parentBuildId', parentBuildId);
-      console.log('parentEventId', parentEventId);
-      console.log('pipelineId', pipelineId);
-      console.log('startFrom', startFrom);
-      console.log('causeMessage', causeMessage);
-
       this.set('isShowingModal', true);
 
       return newEvent.save().then(() => {
