@@ -1,7 +1,9 @@
 import Component from '@ember/component';
 import { get, computed, set, setProperties } from '@ember/object';
 import { all, reject } from 'rsvp';
-import { isRoot } from 'screwdriver-ui/utils/graph-tools';
+import graphTools from 'screwdriver-ui/utils/graph-tools';
+
+const { isRoot } = graphTools;
 
 export default Component.extend({
   classNames: ['pipelineWorkflow'],
