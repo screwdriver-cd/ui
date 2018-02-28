@@ -59,14 +59,14 @@ export default Component.extend({
     const el = d3.select(get(this, 'element'));
 
     data.nodes.forEach((node) => {
-      const n = el.select(`g.job-${node.name}`);
+      const n = el.select(`g.graph-node[data-job="${node.name}"]`);
 
       if (n) {
         const txt = n.select('text');
 
         txt.text(icon(node.status));
         n.attr('class',
-          `job-${node.name} graph-node${node.status ? ` build-${node.status.toLowerCase()}` : ''}`
+          `graph-node${node.status ? ` build-${node.status.toLowerCase()}` : ''}`
         );
       }
     });
@@ -104,8 +104,9 @@ export default Component.extend({
       // create a group element to animate
       .append('g')
       .attr('class',
-        d => `job-${d.name} graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`
+        d => `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`
       )
+      .attr('data-job', d => d.name)
       // create the icon graphic
       .insert('text')
       .text(d => icon(d.status))
