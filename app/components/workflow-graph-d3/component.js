@@ -1,6 +1,6 @@
 /* global d3 */
 import Component from '@ember/component';
-import { get, getWithDefault, computed } from '@ember/object';
+import { get, set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import graphTools from 'screwdriver-ui/utils/graph-tools';
 
@@ -39,11 +39,25 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     this.draw();
+
+    set(this, 'lastGraph', get(this, 'workflowGraph'));
   },
   // Listen for changes to workflow and update graph accordingly.
   didUpdateAttrs() {
     this._super(...arguments);
-    this.redraw();
+
+    const lg = get(this, 'lastGraph');
+    const wg = get(this, 'workflowGraph');
+
+    // redraw anyways when graph changes
+    if (lg !== wg) {
+      get(this, 'graphNode').remove();
+
+      this.draw();
+      set(this, 'lastGraph', wg);
+    } else {
+      this.redraw();
+    }
   },
   actions: {
     buildClicked(job) {
