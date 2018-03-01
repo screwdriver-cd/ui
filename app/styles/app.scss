@@ -28,6 +28,7 @@ $weight-bold: 600;
 }
 
 @import 'font-awesome';
+@import 'denali-button';
 @import 'denali-colors';
 @import 'screwdriver-colors';
 @import 'screwdriver-modal-styles';
@@ -46,4 +47,21 @@ $grid-float-breakpoint: 880px;
 body {
   font-family: Helvetica, Arial, sans-serif;
   font-weight: $weight-normal;
+}
+
+.detached-confirm-dialog {
+  max-width: 320px;
+
+  h3 {
+    margin: 10px 0;
+    padding: 0 7px;
+  }
+
+  p {
+    padding: 0 7px;
+  }
+
+  .right {
+    text-align: right;
+  }
 }

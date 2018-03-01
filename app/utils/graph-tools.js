@@ -142,8 +142,8 @@ const decorateGraph = (inputGraph, builds, start) => {
       }
     }
 
-    // Set a status on the trigger node
-    if (n.name === start) {
+    // Set a status on the trigger node (if it starts with ~)
+    if (n.name === start && /^~/.test(n.name)) {
       n.status = 'STARTED_FROM';
     }
   });
@@ -171,4 +171,4 @@ const decorateGraph = (inputGraph, builds, start) => {
   return graph;
 };
 
-export default { node, icon, decorateGraph, graphDepth };
+export default { node, icon, decorateGraph, graphDepth, isRoot };
