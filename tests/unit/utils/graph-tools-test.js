@@ -217,7 +217,7 @@ test('it handles complex misordered pipeline with multiple commit/pr/remote trig
         { name: 'other_publish', pos: { x: 2, y: 1 } },
         { name: 'wow_new_main', pos: { x: 1, y: 1 } },
         { name: 'detached_main', pos: { x: 0, y: 3 } },
-        { name: 'after_detached_main', pos: { x: 1, y: 2 } },
+        { name: 'after_detached_main', pos: { x: 1, y: 3 } },
         { name: 'detached_solo', pos: { x: 0, y: 4 } }
       ],
       edges: [
@@ -232,7 +232,7 @@ test('it handles complex misordered pipeline with multiple commit/pr/remote trig
         { src: 'detached_main',
           dest: 'after_detached_main',
           from: { x: 0, y: 3 },
-          to: { x: 1, y: 2 }
+          to: { x: 1, y: 3 }
         }
       ],
       meta: {

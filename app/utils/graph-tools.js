@@ -78,7 +78,7 @@ const graphDepth = (edges, start, visited = new Set()) => {
  * @param  {Array}   y     Accumulator of column depth
  */
 const walkGraph = (graph, start, x, y) => {
-  if (!y[x]) { y[x] = 0; }
+  if (!y[x]) { y[x] = y[0] - 1; }
   const nodeNames = graph.edges.filter(e => e.src === start).map(e => e.dest);
 
   nodeNames.forEach((name) => {
@@ -103,6 +103,24 @@ const walkGraph = (graph, start, x, y) => {
 const isRoot = (edges, name) => !edges.find(e => e.dest === name);
 
 /**
+ * Determine if an node has destinations that have already been processed.
+ * This allows a graph's common root nodes to collapse instead of taking up multiple lines.
+ * @method hasProcessedDest
+ * @param  {Object}         graph The processed graph
+ * @param  {String}         name  node name
+ * @return {Boolean}              True if a destination of the node has already been processed
+ */
+const hasProcessedDest = (graph, name) => {
+  const nodes = graph.edges.filter(edge => edge.src === name).map(edge => edge.dest);
+
+  return nodes.some((n) => {
+    const found = node(graph.nodes, n);
+
+    return found && typeof found.pos === 'object';
+  });
+};
+
+/**
  * Clones and decorates an input graph datastructure into something that can be used to display
  * a custom directed graph
  * @method decorateGraph
@@ -118,12 +136,22 @@ const decorateGraph = (inputGraph, builds, start) => {
   const buildsAvailable = (Array.isArray(builds) || builds instanceof DS.PromiseArray) &&
     get(builds, 'length');
   const edges = graph.edges;
-  const y = [0]; // accumulator for column heights
+  let y = [0]; // accumulator for column heights
 
   nodes.forEach((n) => {
     // Set root nodes on left
     if (isRoot(edges, n.name)) {
+      if (!hasProcessedDest(graph, n.name)) {
+        // find the next unused row
+        let tmp = Math.max(...y);
+
+        // Set all the starting pos for columns to that row
+        y = y.map(() => tmp);
+      }
+
+      // Set the node position
       n.pos = { x: 0, y: y[0] };
+      // increment by one for next root node
       y[0] += 1;
       // recursively walk the graph from root/ detached node
       walkGraph(graph, n.name, 1, y);
