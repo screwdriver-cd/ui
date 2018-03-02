@@ -13,6 +13,8 @@ export default DS.Model.extend(ModelReloaderMixin, {
   createTime: DS.attr('date'),
   creator: DS.attr(),
   isComplete: DS.attr('boolean', { defaultValue: false }),
+  parentBuildId: DS.attr('number'),
+  parentEventId: DS.attr('number'),
   pipelineId: DS.attr('string'),
   sha: DS.attr('string'),
   startFrom: DS.attr('string'),

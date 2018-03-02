@@ -8,9 +8,23 @@ export default DS.RESTSerializer.extend({
    * @method serializeIntoHash
    */
   serializeIntoHash(hash, typeClass, snapshot) {
-    return merge(hash, {
+    const data = {
       pipelineId: snapshot.attr('pipelineId'),
       startFrom: snapshot.attr('startFrom')
-    });
+    };
+
+    if (snapshot.attr('causeMessage')) {
+      data.causeMessage = snapshot.attr('causeMessage');
+    }
+
+    if (snapshot.attr('parentBuildId')) {
+      data.parentBuildId = parseInt(snapshot.attr('parentBuildId'), 10);
+    }
+
+    if (snapshot.attr('parentEventId')) {
+      data.parentEventId = parseInt(snapshot.attr('parentEventId'), 10);
+    }
+
+    return merge(hash, data);
   }
 });
