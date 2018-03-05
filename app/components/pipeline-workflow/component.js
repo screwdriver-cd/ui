@@ -46,12 +46,10 @@ export default Component.extend({
       });
     }
   }),
-  displayRestartButton: computed('mostRecent', 'selectedEventObj', 'authenticated', {
+  displayRestartButton: computed('selectedEventObj', 'authenticated', {
     get() {
       // user is authenticated, and displaying builds in the most recent event
-      // TODO: remove restriciton for most recent event
-      return get(this, 'authenticated') &&
-        get(this, 'mostRecent') === get(this, 'selectedEventObj.id');
+      return get(this, 'authenticated');
     }
   }),
 
