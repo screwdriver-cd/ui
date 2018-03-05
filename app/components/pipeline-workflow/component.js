@@ -46,12 +46,7 @@ export default Component.extend({
       });
     }
   }),
-  displayRestartButton: computed('authenticated', {
-    get() {
-      // user is authenticated, show the restart button
-      return get(this, 'authenticated');
-    }
-  }),
+  displayRestartButton: computed.alias('authenticated'),
 
   init() {
     this._super(...arguments);
