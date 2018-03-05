@@ -35,7 +35,7 @@ export default Component.extend({
             scm: scm.displayName,
             scmIcon: scm.iconType,
             workflow: pipeline.workflow,
-            lastBuilds: pipeline.lastBuilds,
+            lastBuild: pipeline.lastBuilds,
             prs: pipeline.prs
           };
 
@@ -44,9 +44,29 @@ export default Component.extend({
             const lastBuildObj = pipeline.lastBuilds[lastBuildsLength - 1];
 
             ret.lastBuildTime = new Date(lastBuildObj.createTime).valueOf();
+            ret.lastBuildStatus = lastBuildObj.status.toLowerCase();
           } else {
             ret.lastBuildTime = 0;
+            ret.lastBuildStatus = '';
           }
+
+          ret.lastBuildIcon = (() => {
+            switch (ret.lastBuildStatus) {
+            case 'started_from':
+            case 'queued':
+            case 'running':
+              return 'spinner fa-spin text-primary';
+            case 'success':
+              return 'check text-success';
+            case 'failure':
+            case 'aborted':
+              return 'times text-danger';
+            case 'disabled':
+              return 'stop-circle text-warning';
+            default:
+              return '';
+            }
+          })();
 
           return ret;
         });
