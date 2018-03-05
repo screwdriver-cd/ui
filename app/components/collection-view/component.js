@@ -35,7 +35,7 @@ export default Component.extend({
             scm: scm.displayName,
             scmIcon: scm.iconType,
             workflow: pipeline.workflow,
-            lastBuild: pipeline.lastBuilds,
+            lastBuilds: pipeline.lastBuilds,
             prs: pipeline.prs
           };
 
