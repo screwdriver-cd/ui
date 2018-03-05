@@ -46,9 +46,9 @@ export default Component.extend({
       });
     }
   }),
-  displayRestartButton: computed('selectedEventObj', 'authenticated', {
+  displayRestartButton: computed('authenticated', {
     get() {
-      // user is authenticated, and displaying builds in the most recent event
+      // user is authenticated, show the restart button
       return get(this, 'authenticated');
     }
   }),
