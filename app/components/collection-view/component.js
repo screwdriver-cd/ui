@@ -50,19 +50,19 @@ export default Component.extend({
             ret.lastBuildStatus = '';
           }
 
-          ret.lastBuildIcon = (() => {
+          [ret.lastBuildIcon, ret.lastBuildStatusColor] = (() => {
             switch (ret.lastBuildStatus) {
             case 'started_from':
             case 'queued':
             case 'running':
-              return 'spinner fa-spin text-primary';
+              return ['refresh fa-spin', 'text-primary'];
             case 'success':
-              return 'check text-success';
+              return ['check-circle', 'text-success'];
             case 'failure':
             case 'aborted':
-              return 'times text-danger';
+              return ['times-circle', 'text-danger'];
             case 'disabled':
-              return 'stop-circle text-warning';
+              return ['stop-circle', 'text-warning'];
             default:
               return '';
             }
