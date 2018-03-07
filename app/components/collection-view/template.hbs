@@ -53,9 +53,6 @@
             <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
             <td class="health">
               {{fa-icon pipeline.lastBuildIcon class=pipeline.lastBuildStatusColor}}
-              <span class="{{pipeline.lastBuildStatusColor}}">
-                {{pipeline.lastBuildStatus}}
-              </span>
             </td>
             <td class="prs--open">
               {{#if pipeline.prs}}

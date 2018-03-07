@@ -31,6 +31,10 @@
     white-space: nowrap;
   }
 
+  .health {
+    text-align: center;
+  }
+
   .prs {
     border-bottom: none;
 
@@ -75,6 +79,18 @@
     opacity: 1;
   }
   // sass-lint:enable class-name-format
+
+  .build-running {
+    color: $sd-running;
+  }
+
+  .build-success {
+    color: $sd-success;
+  }
+
+  .build-failure {
+    color: $sd-failure;
+  }
 }
 
 @media (max-width: 47.999em) {
