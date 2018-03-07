@@ -44,9 +44,29 @@ export default Component.extend({
             const lastBuildObj = pipeline.lastBuilds[lastBuildsLength - 1];
 
             ret.lastBuildTime = new Date(lastBuildObj.createTime).valueOf();
+            ret.lastBuildStatus = lastBuildObj.status.toLowerCase();
           } else {
             ret.lastBuildTime = 0;
+            ret.lastBuildStatus = '';
           }
+
+          [ret.lastBuildIcon, ret.lastBuildStatusColor] = (() => {
+            switch (ret.lastBuildStatus) {
+            case 'started_from':
+            case 'queued':
+            case 'running':
+              return ['refresh fa-spin', 'text-primary'];
+            case 'success':
+              return ['check-circle', 'text-success'];
+            case 'failure':
+            case 'aborted':
+              return ['times-circle', 'text-danger'];
+            case 'disabled':
+              return ['stop-circle', 'text-warning'];
+            default:
+              return '';
+            }
+          })();
 
           return ret;
         });
