@@ -121,6 +121,8 @@ test('it renders', function (assert) {
   assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
   assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
   assert.equal($($('td.account').get(2)).text().trim(), 'github.com');
+  // The pipeline health
+  assert.ok($('td.health i').hasClass('build-success'));
   // The models pipeline should not have any info for prs open and failing
   assert.equal($($('td.prs--open').get(0)).text().trim(), '');
   assert.equal($($('td.prs--failing').get(0)).text().trim(), '');
