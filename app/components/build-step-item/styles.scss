@@ -1,0 +1,42 @@
+& {
+  padding: 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+
+  .name {
+    color: $sd-link;
+  }
+}
+
+&:hover {
+  background-color: $grey-500;
+}
+
+&.active {
+  background-color: $grey-400;
+
+  .name {
+    color: $sd-black;
+    font-weight: $weight-bold;
+  }
+}
+
+div {
+  vertical-align: top;
+  display: inline-block;
+}
+
+span {
+  display: block;
+}
+
+.duration {
+  color: $sd-text-med;
+  font-size: 10px;
+}
+
+&.success i { color: $sd-success; }
+&.failure i { color: $sd-failure; }
+&.running i { color: $sd-running; }

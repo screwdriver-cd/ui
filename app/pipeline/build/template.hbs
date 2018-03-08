@@ -2,14 +2,13 @@
   buildContainer=build.buildContainer
   duration=build.buildDuration
   buildStatus=build.status
+  buildStart=build.startTime
   jobName=job.name
   isAuthenticated=session.isAuthenticated
   event=event
   onStart=(action "startBuild")
   onStop=(action "stopBuild")
   reloadBuild=(action "reload")
-  jobs=jobs
-  eventBuilds=event.buildsSorted
 }}
 
 {{#if build.statusMessage}}
@@ -17,19 +16,13 @@
 {{/if}}
 
 {{#if stepList}}
-{{#build-step-collection}}
-  {{#each stepList as |name index|}}
-    {{build-step
-      stepName=name
-      startTime=(get (index-of build.steps index) "startTime")
-      endTime=(get (index-of build.steps index) "endTime")
-      code=(get (index-of build.steps index) "code")
-      buildId=build.id
-    }}
-  {{/each}}
-{{/build-step-collection}}
+{{build-step-collection
+  stepList=stepList
+  buildStatus=build.status
+  buildId=build.id
+  buildSteps=build.steps
+  buildStart=build.startTime
+}}
 {{/if}}
-
-{{artifact-tree buildStatus=build.status buildId=build.id}}
 
 {{outlet}}
