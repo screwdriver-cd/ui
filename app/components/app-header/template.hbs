@@ -94,7 +94,7 @@
                 {{/ddm.item}}
               {{/each}}
               {{ddm.divider}}
-              {{#if session.isAuthenticated}}
+              {{#if (not session.data.authenticated.isGuest)}}
                 {{#ddm.item}}{{#link-to "user-settings" title="User Settings"}}User Settings{{/link-to}}{{/ddm.item}}
               {{/if}}
               {{#ddm.item}}

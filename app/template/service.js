@@ -1,9 +1,11 @@
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
-import Service from '@ember/service';
+import { get } from '@ember/object';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Service.extend({
+  session: service(),
   getOneTemplate(name) {
     const url =
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}`;
@@ -30,6 +32,9 @@ export default Service.extend({
       crossDomain: true,
       xhrFields: {
         withCredentials: true
+      },
+      headers: {
+        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
       }
     };
 

@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
+import { get } from '@ember/object';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Service.extend({
@@ -22,7 +23,7 @@ export default Service.extend({
         url,
         type: 'POST',
         headers: {
-          Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
+          Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
         }
       })
         .done(() => resolve())

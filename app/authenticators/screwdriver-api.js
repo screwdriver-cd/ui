@@ -1,11 +1,10 @@
 import { isEmpty } from '@ember/utils';
-import EmberObject from '@ember/object';
+import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Base from 'ember-simple-auth/authenticators/base';
-// eslint-disable-next-line camelcase
-import { jwt_decode } from 'ember-cli-jwt-decode';
+import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import ENV from 'screwdriver-ui/config/environment';
 const loginUrlBase = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/login`;
 const tokenUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/token`;
@@ -26,7 +25,18 @@ function fetchToken() {
         withCredentials: true
       }
     })
-      .done(jwt => resolve(jwt))
+      .done((jwt) => {
+        // Add some data from the JWT to the session data
+        const { username, scope, scmContext } = decoder(jwt.token);
+
+        resolve(Object.assign({}, {
+          username,
+          scope,
+          scmContext,
+          isGuest: scope.includes('guest'),
+          token: jwt.token
+        }));
+      })
       .fail(() => reject('Could not get a token'));
   });
 }
@@ -41,16 +51,26 @@ export default Base.extend({
    * @return {Promise}
    */
   restore(data) {
-    const properties = EmberObject.create(data);
-
     return new EmberPromise((resolve, reject) => {
-      if (!isEmpty(properties.get('token'))) {
-        const jwt = jwt_decode(properties.get('token'));
+      const token = get(data, 'token');
+
+      if (!isEmpty(token)) {
+        const jwt = decoder(token);
 
         // Token expired, reject
         if (jwt.exp * 1000 < Date.now()) {
           return reject();
         }
+
+        const { username, scope, scmContext } = jwt;
+
+        resolve(Object.assign({}, {
+          username,
+          scope,
+          scmContext,
+          isGuest: scope.includes('guest'),
+          token: data.token
+        }));
 
         return resolve(data);
       }
