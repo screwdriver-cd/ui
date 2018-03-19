@@ -29,7 +29,7 @@ function fetchToken() {
         // Add some data from the JWT to the session data
         const { username, scope, scmContext } = decoder(jwt.token);
 
-        resolve(Object.assign({}, {
+        return resolve(Object.assign({}, {
           username,
           scope,
           scmContext,
