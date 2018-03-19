@@ -1,0 +1,10 @@
+<h1>Commands <a href="https://docs.screwdriver.cd/user-guide/commands" title="More Information" target="_blank">{{fa-icon "question-circle"}}</a></h1>
+<div class="explain">Commands share a binaries (or scripts) across multiple jobs.</div>
+
+<div class="row">
+  {{#each commands as |command|}}
+  {{command-section command=command}}
+  {{/each}}
+</div>
+
+{{yield}}

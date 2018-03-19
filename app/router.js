@@ -28,6 +28,9 @@ Router.map(function route() {
   this.route('templates', function templatesRoute() {
     this.route('detail', { path: '/:name' });
   });
+  this.route('commands', function commandsRoute() {
+    this.route('detail', { path: '/:namespace/:name' });
+  });
 });
 /* eslint-enable array-callback-return */
 
