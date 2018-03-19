@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
-// eslint-disable-next-line camelcase
-import { jwt_decode } from 'ember-cli-jwt-decode';
+import { get } from '@ember/object';
+import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 const scmUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/contexts`;
 
 /**
@@ -24,7 +24,7 @@ function getIconType(scmContext) {
 }
 
 export default Service.extend({
-  session: service('session'),
+  session: service(),
   store: service(),
 
   /**
@@ -34,11 +34,11 @@ export default Service.extend({
    * @return {DS.RecordArray} Array of scm object.
    */
   createScms() {
-    const session = this.get('session');
-    const store = this.get('store');
+    const session = get(this, 'session');
+    const store = get(this, 'store');
     const scms = this.getScms();
 
-    if (scms.get('length') !== 0) {
+    if (get(scms, 'length') !== 0) {
       return scms;
     }
 
@@ -46,8 +46,8 @@ export default Service.extend({
       scmContexts.forEach((scmContext) => {
         let isSignedIn = false;
 
-        if (session.get('isAuthenticated')) {
-          const jwt = jwt_decode(session.get('data.authenticated.token'));
+        if (get(session, 'isAuthenticated')) {
+          const jwt = decoder(get(session, 'data.authenticated.token'));
 
           if (jwt.scmContext === scmContext.context) {
             isSignedIn = true;

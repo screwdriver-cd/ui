@@ -1,6 +1,6 @@
 import { schedule } from '@ember/runloop';
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
@@ -14,6 +14,11 @@ export default Component.extend({
 
   collections: computed('store', {
     get() {
+      if (!get(this, 'session.isAuthenticated') ||
+        get(this, 'session.data.authenticated.isGuest')) {
+        return [];
+      }
+
       return this.get('store').findAll('collection');
     }
   }),

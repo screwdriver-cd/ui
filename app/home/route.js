@@ -1,18 +1,21 @@
 import Route from '@ember/routing/route';
-import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-route-mixin';
+import { get } from '@ember/object';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend(UnauthenticatedRouteMixin, {
-  beforeModel() {
-    if (this.get('session').get('isAuthenticated')) {
-      this.get('store').findAll('collection')
+export default Route.extend(AuthenticatedRouteMixin, {
+  model() {
+    if (get(this, 'session.isAuthenticated')) {
+      // No reason to go fetch collections for a guest user
+      if (get(this, 'session.data.authenticated.isGuest')) {
+        return;
+      }
+
+      get(this, 'store').findAll('collection')
         .then((collections) => {
-          const userCollections = collections.toArray();
-          const length = userCollections.length;
-
-          if (length) {
+          if (get(collections, 'length')) {
             // Get the id of the last object in this array. The last
             // object will be the first collection created by the user.
-            const routeId = userCollections[length - 1].id;
+            const routeId = get(collections, 'lastObject.id');
 
             this.replaceWith(`/dashboards/${routeId}`);
           }

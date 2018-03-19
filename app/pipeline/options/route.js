@@ -1,9 +1,16 @@
 import Route from '@ember/routing/route';
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { inject as service } from '@ember/service';
+import { get } from '@ember/object';
 
-export default Route.extend(AuthenticatedRouteMixin, {
+export default Route.extend({
+  session: service(),
   routeAfterAuthentication: 'pipeline.options',
   model() {
+    // Guests should not access this page
+    if (get(this, 'session.data.authenticated.isGuest')) {
+      this.transitionTo('pipeline');
+    }
+
     const pipeline = this.modelFor('pipeline');
 
     // Prevent double render when jobs list updates asynchronously

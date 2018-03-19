@@ -1,4 +1,5 @@
 import { test } from 'qunit';
+import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
 import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
 import Pretender from 'pretender';
 let server;
@@ -70,7 +71,16 @@ moduleForAcceptance('Acceptance | search', {
   }
 });
 
-test('visiting /search', function (assert) {
+test('visiting /search when not logged in', function (assert) {
+  visit('/search');
+
+  andThen(() => {
+    assert.equal(currentURL(), '/login');
+  });
+});
+
+test('visiting /search when logged in', function (assert) {
+  authenticateSession(this.application, { token: 'fakeToken' });
   visit('/search');
 
   andThen(() => {

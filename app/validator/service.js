@@ -1,9 +1,10 @@
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Service.extend({
+  session: service(),
   /**
    * Simple test to determine if yaml looks like a template file
    * @method isTemplate
@@ -30,9 +31,8 @@ export default Service.extend({
     const ajaxConfig = {
       method: 'post',
       url,
-      // something in the api requires an auth header for these requests, but the token doesn't need to be valid.
       headers: {
-        Authorization: 'Bearer 1234'
+        Authorization: 'Bearer token1234'
       },
       contentType: 'application/json',
       crossDomain: true,

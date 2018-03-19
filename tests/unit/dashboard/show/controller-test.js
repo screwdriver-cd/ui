@@ -1,5 +1,6 @@
 import { resolve } from 'rsvp';
 import { moduleFor, test } from 'ember-qunit';
+import EmberObject, { get } from '@ember/object';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
 import injectSessionStub from '../../../helpers/inject-session';
 
@@ -21,41 +22,24 @@ test('it calls removePipeline', function (assert) {
   const controller = this.subject();
   let pipelineIds = [1, 2, 3];
 
-  const collectionModelMock = {
+  const mock = EmberObject.create({
     id: 1,
     name: 'collection1',
     description: 'description1',
     pipelineIds,
-    get(field) {
-      assert.strictEqual(field, 'pipelineIds');
-
-      // The collections currently has pipelineIds 1, 2 and 3
-      return pipelineIds;
-    },
-    set(field, value) {
-      assert.strictEqual(field, 'pipelineIds');
-      assert.deepEqual(value, [1, 2]);
-
-      pipelineIds = value;
-    },
     save() {
-      assert.deepEqual(pipelineIds, [1, 2]);
+      assert.deepEqual(get(this, 'pipelineIds'), [1, 2]);
 
-      return resolve({
-        id: 1,
-        name: 'collection1',
-        description: 'description1',
-        pipelineIds: [1, 2]
-      });
+      return resolve(this);
     }
-  };
+  });
 
   controller.set('store', {
     findRecord(modelName, collectionId) {
       assert.strictEqual(modelName, 'collection');
       assert.strictEqual(collectionId, 1);
 
-      return resolve(collectionModelMock);
+      return resolve(mock);
     }
   });
 
@@ -70,5 +54,5 @@ sinonTest('it calls onDeleteCollection', function (assert) {
   controller.send('onDeleteCollection');
 
   assert.ok(stub.calledOnce, 'transitionToRoute was called once');
-  assert.ok(stub.calledWithExactly('/'), 'transition to home');
+  assert.ok(stub.calledWithExactly('home'), 'transition to home');
 });
