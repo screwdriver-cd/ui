@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
-import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
@@ -33,7 +32,7 @@ export default Service.extend({
       method: 'post',
       url,
       headers: {
-        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+        Authorization: 'Bearer token1234'
       },
       contentType: 'application/json',
       crossDomain: true,

@@ -64,15 +64,13 @@ export default Base.extend({
 
         const { username, scope, scmContext } = jwt;
 
-        resolve(Object.assign({}, {
+        return resolve(Object.assign({}, {
           username,
           scope,
           scmContext,
           isGuest: scope.includes('guest'),
           token: data.token
         }));
-
-        return resolve(data);
       }
 
       return reject();
