@@ -8,6 +8,7 @@ import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 const { graphDepth } = graphTools;
 
 export default DS.Model.extend(ModelReloaderMixin, {
+  buildId: DS.attr('number'),
   causeMessage: DS.attr('string'),
   commit: DS.attr(),
   createTime: DS.attr('date'),
