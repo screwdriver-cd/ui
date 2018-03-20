@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import moment from 'moment';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent } from 'ember-qunit';
 import test from 'ember-sinon-qunit/test-support/test';
@@ -57,13 +58,14 @@ test('it renders', function (assert) {
     event=eventMock
     reloadBuild=(action reloadCb)
   }}`);
+  const expectedTime = moment('2016-11-04T20:09:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
   assert.equal($('li.job-name .banner-value').text().trim(), 'PR-671');
   assert.equal($('.commit a').prop('href'),
     'http://example.com/batcave/batmobile/commit/abcdef1029384');
   assert.equal($('.commit a').text().trim(), '#abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds');
-  assert.equal($('.started .banner-value').text().trim(), '2016-11-04 13:09:41');
+  assert.equal($('.started .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
   assert.equal($('button').length, 0);
