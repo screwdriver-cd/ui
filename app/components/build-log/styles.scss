@@ -7,11 +7,7 @@
 
 .row1 {
   display: grid;
-  grid-template-columns: 1fr 1fr
-}
-
-.row1 a {
-  grid-column: 2;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .row1 a:first-child {
@@ -52,9 +48,6 @@
   .time {
     color: $sd-text-med;
     grid-column: 1;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
     user-select: none;
   }
 
