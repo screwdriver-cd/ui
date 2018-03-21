@@ -3,6 +3,8 @@ shared:
 
 jobs:
   main:
+    environment:
+      COVERAGE: "true"
     steps:
       - install: npm install
       - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
