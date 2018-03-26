@@ -11,13 +11,6 @@ export default Service.extend({
 
     return this.fetchData(url);
   },
-  getCommandTags(namespace, name) {
-    const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/
-      ${encodeURIComponent(namespace)}/${encodeURIComponent(name)}/tags`;
-
-    return this.fetchData(url);
-  },
   getAllCommands() {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands`;
 
