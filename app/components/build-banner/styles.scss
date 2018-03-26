@@ -1,137 +1,78 @@
 & {
-  margin: 10px 15px 0;
+  padding: 0 25px;
+}
 
-  .prevnext {
-    font-size: 14px;
-    margin-bottom: 3px;
-    color: $sd-link;
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr) 2fr;
+}
 
-    .col-xs-6:first-child {
-      text-align: left;
-    }
+li {
+  border-left: 1px solid $sd-text-med;
+  padding: 5px 10px;
+  min-width: 120px;
+  vertical-align: top;
 
-    .col-xs-6:last-child {
-      text-align: right;
-    }
-
-    a {
-      color: $sd-link;
-    }
+  span {
+    display: block;
   }
+}
 
-  .headerbar {
-    border-radius: 3px;
-    @include background-gradient(to right, $sd-running-gradient-start, $sd-running-gradient-end);
-    color: $sd-white;
-    padding: 6px 6px 6px 20px;
-    margin-bottom: 5px;
+.call-to-action {
+  border-left-width: 0;
+  text-align: right;
+}
 
-    .sha {
-      font-size: 20px;
-    }
+.banner-label {
+  text-transform: uppercase;
+  color: $sd-text-med;
+  font-weight: $weight-normal;
+  font-size: 10px;
+}
 
-    .build-waiting {
-      padding: 5px 0;
-    }
+.job-name {
+  border-left-width: 3px;
 
-    .col-xs-4:nth-child(2) {
-      text-align: center;
-    }
-
-    .col-xs-4:last-child {
-      text-align: right;
-    }
-
-    h1 {
-      display: inline-block;
-      margin: 0;
-      padding: 0;
-      font-size: 24px;
-      font-weight: $weight-bold;
-    }
+  .banner-value {
+    font-weight: $weight-bold;
   }
+}
 
-  // sass-lint:disable class-name-format
-  &.SUCCESS .line1 {
-    @include background-gradient(to right, $sd-success-gradient-start, $sd-success-gradient-end);
-  }
+//sass-lint:disable class-name-format
+&.RUNNING,
+&.QUEUED {
+  .job-name
+  .job-name {
+    border-left-color: $sd-running;
 
-  &.ABORTED .line1,
-  &.FAILURE .line1 {
-    @include background-gradient(to right, $sd-failure-gradient-start, $sd-failure-gradient-end);
-  }
-  // sass-lint:enable class-name-format
-
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 0;
-  }
-
-  li {
-    vertical-align: middle;
-    display: inline-block;
-    width: 33%;
-    font-size: 16px;
-    text-align: center;
-
-    &:first-child {
-      text-align: left;
-    }
-
-    &:last-child {
-      text-align: right;
-      width: 34%;
-    }
-  }
-
-  a {
-    color: $sd-white;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  button {
-    font-size: 14px;
-    background-color: transparent;
-    color: $sd-white;
-    border: 1px solid $sd-white;
-    border-radius: 2px;
-    padding: 5px;
-    width: 100px;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-  }
-
-  .commit {
-    margin-bottom: 5px;
-    font-size: 14px;
-    color: $sd-text-med;
-
-    a {
-      color: $sd-link;
-    }
-  }
-
-  .event {
-    color: $sd-text-med;
-    line-height: 20px;
-    vertical-align: middle;
-
-    .col-xs-4 {
-      font-size: 14px;
-
-      &:nth-child(2) {
-        text-align: center;
-      }
-
-      &:last-child {
-        font-style: italic;
-        text-align: right;
-      }
+    .banner-value {
+      color: $sd-running;
     }
   }
 }
+
+&.SUCCESS {
+  .job-name {
+    border-left-color: $sd-success;
+
+    .banner-value {
+      color: $sd-success;
+    }
+  }
+}
+
+&.ABORTED,
+&.FAILURE {
+  .job-name,
+  .job-name {
+    border-left-color: $sd-failure;
+
+    .banner-value {
+      color: $sd-failure;
+    }
+  }
+}
+//sass-lint:enable class-name-format

@@ -124,7 +124,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
         );
 
         // If we have the expected number of builds, it is done
-        if (numBuilds === expectedBuilds) {
+        if (numBuilds >= expectedBuilds) {
           set(this, 'isComplete', true);
 
           return true;
