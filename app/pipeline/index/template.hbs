@@ -1,5 +1,7 @@
 {{#if session.isAuthenticated}}
-  {{pipeline-nav pipeline=pipeline}}
+  {{#if (not session.data.authenticated.isGuest)}}
+    {{pipeline-nav pipeline=pipeline}}
+  {{/if}}
 {{/if}}
 
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}

@@ -1,5 +1,14 @@
 import { moduleFor, test } from 'ember-qunit';
 import Pretender from 'pretender';
+import Service from '@ember/service';
+
+const sessionStub = Service.extend({
+  data: {
+    authenticated: {
+      token: 'faketoken'
+    }
+  }
+});
 let server;
 
 const EXAMPLE_CONFIG_PAYLOAD = {
@@ -17,6 +26,7 @@ moduleFor('service:validator', 'Unit | Service | validator', {
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
   beforeEach() {
+    this.register('service:session', sessionStub);
     server = new Pretender();
 
     server.post('http://localhost:8080/v4/validator', () => [

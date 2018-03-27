@@ -1,20 +1,22 @@
 import Route from '@ember/routing/route';
+import { get, set } from '@ember/object';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend({
+export default Route.extend(AuthenticatedRouteMixin, {
   routeAfterAuthentication: 'pipeline',
   model(params) {
-    this.set('pipelineId', params.pipeline_id);
+    set(this, 'pipelineId', params.pipeline_id);
 
-    return this.get('store').findRecord('pipeline', params.pipeline_id);
+    return get(this, 'store').findRecord('pipeline', params.pipeline_id);
   },
 
   actions: {
     error(reason) {
-      this.transitionTo('page-not-found', { path: `pipelines/${this.get('pipelineId')}`, reason });
+      this.transitionTo('page-not-found', { path: `pipelines/${get(this, 'pipelineId')}`, reason });
     }
   },
 
   titleToken(model) {
-    return model.get('appId');
+    return get(model, 'appId');
   }
 });

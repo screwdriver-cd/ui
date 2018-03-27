@@ -13,3 +13,20 @@
     background-color: $sd-failure;
   }
 }
+
+.detached-confirm-dialog {
+  max-width: 320px;
+
+  h3 {
+    margin: 10px 0;
+    padding: 0 7px;
+  }
+
+  p {
+    padding: 0 7px;
+  }
+
+  .right {
+    text-align: right;
+  }
+}

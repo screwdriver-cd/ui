@@ -102,6 +102,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
         parentBuildId = get(build, 'parentBuildId');
       }
+
       const event = get(this, 'selectedEventObj');
       const parentEventId = get(event, 'id');
       const startFrom = get(job, 'name');
@@ -111,6 +112,7 @@ export default Controller.extend(ModelReloaderMixin, {
       const causeMessage =
         `${user} clicked restart for job "${job.name}" for sha ${get(event, 'sha')}`;
       const newEvent = this.store.createRecord('event', {
+        buildId,
         pipelineId,
         startFrom,
         parentBuildId,

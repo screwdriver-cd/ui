@@ -1,14 +1,85 @@
-<div class='row th'>
-  <div class="col-xs-1">
-    <span class="heading">Status</span>
+<div class="row">
+  <div class="col-xs-3 step-list">
+    <h3>
+      Steps
+      {{#if (eq buildStatus "QUEUED")}}
+      <span class="setup-spinner">{{fa-icon "spin fa-spinner"}} Setting up build...</span>
+      {{/if}}
+    </h3>
+    <a class="step-toggle" onClick={{action "toggleSetup"}}>
+      {{#if setupCollapsed}}
+      {{fa-icon "chevron-down"}}
+      {{else}}
+      {{fa-icon "chevron-up"}}
+      {{/if}}
+      Setup
+    </a>
+    {{#bs-collapse collapsed=setupCollapsed}}
+      <ul class="setup indent">
+        {{#each setupSteps as |step|}}
+        {{#with (get-step-data buildSteps step) as |s|}}
+        {{build-step-item
+          selectedStep=selectedStep
+          stepName=s.name
+          stepStart=s.startTime
+          stepEnd=s.endTime
+          stepCode=s.code
+          onClick=(action "stepClick")
+        }}
+        {{/with}}
+        {{/each}}
+      </ul>
+    {{/bs-collapse}}
+    <div class="user-steps">
+      <ul>
+        {{#each userSteps as |step|}}
+        {{#with (get-step-data buildSteps step) as |s|}}
+        {{build-step-item
+          selectedStep=selectedStep
+          stepName=s.name
+          stepStart=s.startTime
+          stepEnd=s.endTime
+          stepCode=s.code
+          onClick=(action "stepClick")
+        }}
+        {{/with}}
+        {{/each}}
+      </ul>
+    </div>
+    <a class="step-toggle" onClick={{action "toggleTeardown"}}>
+      {{#if teardownCollapsed}}
+      {{fa-icon "chevron-down"}}
+      {{else}}
+      {{fa-icon "chevron-up"}}
+      {{/if}}
+      Teardown
+    </a>
+    {{#bs-collapse collapsed=teardownCollapsed}}
+    <ul class="teardown indent">
+      {{#each teardownSteps as |step|}}
+      {{#with (get-step-data buildSteps step) as |s|}}
+      {{build-step-item
+        selectedStep=selectedStep
+        stepName=s.name
+        stepStart=s.startTime
+        stepEnd=s.endTime
+        stepCode=s.code
+        onClick=(action "stepClick")
+      }}
+      {{/with}}
+      {{/each}}
+    </ul>
+    {{/bs-collapse}}
+    <hr>
+    {{artifact-tree buildStatus=buildStatus buildId=buildId}}
   </div>
-  <div class='col-xs-8'>
-    <span class="heading">Step</span>
-  </div>
-  <div class='col-xs-2'>
-    <span class="heading">Duration</span>
-  </div>
-  <div class="col-xs-1">
+  <div class="col-xs-9">
+    {{build-log
+      stepName=selectedStep
+      buildId=buildId
+      stepStartTime=(get-step-data buildSteps selectedStep "startTime")
+      buildStartTime=buildStart
+    }}
   </div>
 </div>
 

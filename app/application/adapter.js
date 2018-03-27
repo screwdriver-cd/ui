@@ -110,6 +110,15 @@ export default DS.RESTAdapter.extend({
         }];
       }
 
+      // Rewrite the error message for guest users
+      errors = errors.map((err) => {
+        if (err.detail === 'Insufficient scope') {
+          err.detail = 'You do not have adequate permissions to perform this action.';
+        }
+
+        return err;
+      });
+
       return this._super(status, headers, { errors }, requestData);
     }
 

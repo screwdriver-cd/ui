@@ -85,7 +85,7 @@ test('visiting / when not logged in', function (assert) {
   visit('/');
 
   andThen(() => {
-    assert.equal(currentURL(), '/');
+    assert.equal(currentURL(), '/login');
   });
 });
 

@@ -1,6 +1,7 @@
 import { merge } from '@ember/polyfills';
 import { copy } from '@ember/object/internals';
 import { test } from 'qunit';
+import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
 import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
 import Pretender from 'pretender';
 let server;
@@ -223,15 +224,25 @@ moduleForAcceptance('Acceptance | pipeline build', {
   }
 });
 
-test('visiting /pipelines/4', function (assert) {
+test('visiting /pipelines/4 when not logged in', function (assert) {
+  visit('/pipelines/4');
+
+  andThen(() => {
+    assert.equal(currentURL(), '/login');
+  });
+});
+
+test('visiting /pipelines/4 when logged in', function (assert) {
+  authenticateSession(this.application, { token: 'fakeToken' });
+
   visit('/pipelines/4');
 
   andThen(() => {
     assert.equal(currentURL(), '/pipelines/4');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.pipelineWorkflow svg').length, 1, 'not enough workflow');
-    assert.equal(find('button.start-button').length, 0, 'should not have a start button');
-    assert.equal(find('ul.nav-pills').length, 0, 'should not show options or secrets tabs');
+    assert.equal(find('button.start-button').length, 1, 'should have a start button');
+    assert.equal(find('ul.nav-pills').length, 1, 'should show tabs');
     assert.equal(find('.col-md-3 h2').text().trim(), 'Pull Requests');
     assert.equal(find('tbody tr').length, 2);
   });

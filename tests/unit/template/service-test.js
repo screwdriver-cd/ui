@@ -1,5 +1,14 @@
 import { moduleFor, test } from 'ember-qunit';
 import Pretender from 'pretender';
+import Service from '@ember/service';
+
+const sessionStub = Service.extend({
+  data: {
+    authenticated: {
+      token: 'faketoken'
+    }
+  }
+});
 
 let server;
 
@@ -8,6 +17,7 @@ moduleFor('service:template', 'Unit | Service | template', {
   // needs: ['service:foo']
   beforeEach() {
     server = new Pretender();
+    this.register('service:session', sessionStub);
   },
 
   afterEach() {

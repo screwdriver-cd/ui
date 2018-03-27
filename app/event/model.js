@@ -8,6 +8,7 @@ import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 const { graphDepth } = graphTools;
 
 export default DS.Model.extend(ModelReloaderMixin, {
+  buildId: DS.attr('number'),
   causeMessage: DS.attr('string'),
   commit: DS.attr(),
   createTime: DS.attr('date'),
@@ -123,7 +124,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
         );
 
         // If we have the expected number of builds, it is done
-        if (numBuilds === expectedBuilds) {
+        if (numBuilds >= expectedBuilds) {
           set(this, 'isComplete', true);
 
           return true;

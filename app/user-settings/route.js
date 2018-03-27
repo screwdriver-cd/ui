@@ -1,10 +1,18 @@
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
+import { get } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 export default Route.extend(AuthenticatedRouteMixin, {
+  session: service(),
   titleToken: 'User Settings',
   routeAfterAuthentication: 'user-settings',
   model() {
+    // Guests should not access this page
+    if (get(this, 'session.data.authenticated.isGuest')) {
+      this.transitionTo('home');
+    }
+
     return this.get('store').findAll('token');
   }
 });

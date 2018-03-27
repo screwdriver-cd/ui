@@ -29,82 +29,45 @@ moduleForComponent('build-log', 'Integration | Component | build log', {
   }
 });
 
-test('it renders closed', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+test('it displays some help when no step is selected', function (assert) {
   this.render(hbs`{{build-log
-    stepName="banana"
+    stepName=null
     buildId=1
-    isOpen=false
-    autoscroll=true
+    stepStartTime=null
+    buildStartTime="1478912844724"
   }}`);
 
-  assert.equal(this.$().text().trim(), '');
-  assert.notOk(this.$('.build-log').hasClass('is-open'));
+  assert.equal(this.$().text().trim(), 'Click a step to see logs');
 
   // Template block usage:
   this.render(hbs`{{#build-log
-    stepName="banana"
+    stepName=null
     buildId=1
-    isOpen=false
-    autoscroll=true
+    stepStartTime=null
+    buildStartTime="1478912844724"
   }}
   template block text
   {{/build-log}}`);
 
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.ok(/^template block text/.test(this.$().text().trim()));
+  assert.ok(/Click a step to see logs$/.test(this.$().text().trim()));
 });
 
-test('it renders open when told to', function (assert) {
-  assert.expect(2);
-
+test('it starts loading when step chosen', function (assert) {
+  this.set('step', null);
   this.render(hbs`{{build-log
-    stepName="banana"
+    stepName=step
     buildId=1
-    isOpen=true
-    autoscroll=true
+    stepStartTime=null
+    buildStartTime="1478912844724"
   }}`);
 
-  assert.ok(this.$('.build-log').hasClass('is-open'));
+  assert.equal(this.$().text().trim(), 'Click a step to see logs');
+  this.set('step', 'banana');
 
   return wait().then(() => {
     assert.ok(this.$().text().trim().match(`${timeFormat1}\\s+hello\\s+${timeFormat2}\\s+world`));
   });
 });
 
-test('it starts loading when open changes', function (assert) {
-  this.set('open', false);
-  this.render(hbs`{{build-log
-    stepName="banana"
-    buildId=1
-    isOpen=open
-    autoscroll=true
-  }}`);
-
-  assert.notOk(this.$('.build-log').hasClass('is-open'), 'is closed');
-  assert.equal(this.$().text().trim(), '');
-  this.set('open', true);
-
-  return wait().then(() => {
-    assert.ok(this.$('.build-log').hasClass('is-open'), 'is open');
-    assert.ok(this.$().text().trim().match(`${timeFormat1}\\s+hello\\s+${timeFormat2}\\s+world`));
-  });
-});
-
-test('it handles clicks', function (assert) {
-  assert.expect(1);
-
-  this.set('clickHandler', () => {
-    assert.ok(true);
-  });
-
-  this.render(hbs`{{build-log
-    stepName="banana"
-    buildId=1
-    isOpen=false
-    autoscroll=true
-    onClick=(action clickHandler)
-  }}`);
-
-  this.$('.build-log').click();
-});
+// TODO: tests for scrolling behaviors?

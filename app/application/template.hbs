@@ -1,4 +1,12 @@
-{{app-header currentUrl=currentUrl session=session onInvalidate=(action "invalidateSession") showSearch=true searchPipelines=(action "search") authenticate=(action "authenticate") scmContexts=scmContexts}}
+{{app-header
+  currentUrl=currentUrl
+  scmContexts=scmContexts
+  session=session
+  showSearch=true
+  authenticate=(action "authenticate")
+  onInvalidate=(action "invalidateSession")
+  searchPipelines=(action "search")
+}}
 <div id="appContainer" class="container-fluid">
 {{outlet}}
 </div>

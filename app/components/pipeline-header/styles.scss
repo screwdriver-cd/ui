@@ -8,6 +8,10 @@
   white-space: nowrap;
 }
 
+&.is-build-page {
+  background-color: $sd-white;
+}
+
 h1 {
   display: inline-block;
   margin: 0;
@@ -24,7 +28,9 @@ a {
   vertical-align: middle;
 }
 
-a:hover, a:active, a.active {
+a:hover,
+a:active,
+a.active {
   color: $grey-800;
   text-decoration: underline;
 }

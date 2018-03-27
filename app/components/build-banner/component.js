@@ -1,12 +1,11 @@
 import { computed } from '@ember/object';
-import { match, mapBy } from '@ember/object/computed';
+import { match } from '@ember/object/computed';
 import Component from '@ember/component';
 
 export default Component.extend({
-  classNames: ['build-banner'],
+  classNames: ['build-banner', 'row'],
   classNameBindings: ['buildStatus'],
   isPR: match('jobName', /^PR-/),
-  jobNames: mapBy('jobs', 'name'),
 
   buildAction: computed('buildStatus', {
     get() {
@@ -40,29 +39,6 @@ export default Component.extend({
     }
   }),
 
-  previous: computed('eventBuilds', 'jobs', 'jobName', {
-    get() {
-      if (this.get('isPR')) {
-        return null;
-      }
-      const prevIndex = this.get('jobNames').indexOf(this.get('jobName')) - 1;
-
-      return prevIndex < 0 ? null : this.get('eventBuilds').objectAt(prevIndex);
-    }
-  }),
-
-  next: computed('eventBuilds', 'jobs', 'jobName', {
-    get() {
-      if (this.get('isPR')) {
-        return null;
-      }
-      const nextIndex = this.get('jobNames').indexOf(this.get('jobName')) + 1;
-
-      return nextIndex >= this.get('jobs').length
-        ? null : this.get('eventBuilds').objectAt(nextIndex);
-    }
-  }),
-
   willRender() {
     this._super(...arguments);
 
@@ -74,7 +50,7 @@ export default Component.extend({
   },
 
   actions: {
-    toggleBuild() {
+    buildButtonClick() {
       if (this.get('buildAction') === 'Stop') {
         this.get('onStop')();
       } else {
