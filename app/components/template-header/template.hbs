@@ -1,5 +1,5 @@
 {{#link-to "templates" class="back"}}Back to Templates{{/link-to}}
-<h1>{{template.name}} <a href="#" {{action "removeTemplate" template.name}} class="remove">{{fa-icon "trash"}}</a></h1>
+<h1>{{template.name}} <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash"}}</a></h1>
 <h2>{{template.version}}</h2>
 <p>{{template.description}}</p>
 <ul>
@@ -12,3 +12,25 @@
   main:
     template: {{template.name}}@{{template.version}}
 </pre>
+{{#if templateToRemove}}
+  {{#if isRemoving}}
+    {{#modal-dialog clickOutsideToClose="false"
+      targetAttachment="center"
+      translucentOverlay=true
+    }}
+      {{loading-view}}
+    {{/modal-dialog}}
+  {{else}}
+    {{#bs-modal-simple
+      title="Please confirm"
+      closeTitle="Cancel"
+      submitTitle="Confirm"
+      size=null
+      fade=false
+      onSubmit=(action "removeTemplate" template.name)
+      onHide=(action "cancelRemovingTemplate")
+    }}
+    You're about to delete all versions of {{template.name}}. Are you sure?
+    {{/bs-modal-simple}}
+  {{/if}}
+{{/if}}

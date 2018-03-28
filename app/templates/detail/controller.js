@@ -5,6 +5,7 @@ const { alias } = computed;
 
 export default Controller.extend({
   selectedVersion: null,
+  errorMessage: '',
   template: service(),
   templates: alias('model'),
   latest: computed('templates.[]', {
@@ -28,9 +29,10 @@ export default Controller.extend({
       this.set('selectedVersion', version);
     },
     removeTemplate(name) {
-      this.get('template').deleteTemplates(name).then(() => {
-        this.transitionToRoute('home');
-      });
+      return this.get('template').deleteTemplates(name)
+        .then(
+          () => this.transitionToRoute('home'),
+          (err) => this.set('errorMessage', err));
     }
   }
 });

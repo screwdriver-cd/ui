@@ -80,6 +80,10 @@ export default Service.extend({
             message = `${response.status} ${response.responseJSON.error}`;
           }
 
+          if (response.status === 401) {
+            message = `You do not have the permissions to remove this template`;
+          }
+
           return reject(message);
         });
     });

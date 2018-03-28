@@ -30,7 +30,7 @@ export default Controller.extend({
       pipeline.save()
         .then(() => this.set('errorMessage', ''))
         .catch((err) => {
-          this.set('errorMessage', err.errors[0].detail);
+          this.set('errorMessage', err);
         })
         .finally(() => {
           this.set('isSaving', false);
