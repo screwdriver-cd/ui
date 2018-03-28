@@ -24,6 +24,11 @@ export default Controller.extend({
   actions: {
     changeVersion(version) {
       this.set('selectedVersion', version);
+    },
+    removeTemplate() {
+        this.get('templates').destroyRecord().then(() => {
+            this.transitionToRoute('home');
+        });
     }
   }
 });
