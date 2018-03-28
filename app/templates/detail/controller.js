@@ -1,9 +1,11 @@
+import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import Controller from '@ember/controller';
 const { alias } = computed;
 
 export default Controller.extend({
   selectedVersion: null,
+  service: service(),
   templates: alias('model'),
   latest: computed('templates.[]', {
     get() {
@@ -26,9 +28,9 @@ export default Controller.extend({
       this.set('selectedVersion', version);
     },
     removeTemplate() {
-        this.get('templates').destroyRecord().then(() => {
-            this.transitionToRoute('home');
-        });
+      this.get('templates').destroyRecord().then(() => {
+          this.transitionToRoute('home');
+      });
     }
   }
 });
