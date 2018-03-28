@@ -5,8 +5,8 @@ export default Component.extend({
     this._super(...arguments);
   },
   actions: {
-    removeTemplate() {
-      this.get('onRemoveTemplate')();
+    removeTemplate(name) {
+      this.get('onRemoveTemplate')(name);
     }
   }
 });

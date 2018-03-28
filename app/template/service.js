@@ -54,9 +54,11 @@ export default Service.extend({
     });
   },
   deleteTemplates(name) {
+    // eslint-disable-next-line max-len
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}`;
     const ajaxConfig = {
       method: 'DELETE',
-      url: `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}`,
+      url,
       contentType: 'application/json',
       crossDomain: true,
       xhrFields: {
@@ -66,6 +68,7 @@ export default Service.extend({
         Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
       }
     };
+
     return new EmberPromise((resolve, reject) => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)

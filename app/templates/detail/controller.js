@@ -5,14 +5,14 @@ const { alias } = computed;
 
 export default Controller.extend({
   selectedVersion: null,
-  service: service(),
+  template: service(),
   templates: alias('model'),
   latest: computed('templates.[]', {
     get() {
       return this.get('templates')[0];
     }
   }),
-  template: computed('selectedVersion', 'templates.[]', {
+  versionTemplate: computed('selectedVersion', 'templates.[]', {
     get() {
       const version = this.get('selectedVersion') || this.get('latest.version');
 
@@ -27,9 +27,9 @@ export default Controller.extend({
     changeVersion(version) {
       this.set('selectedVersion', version);
     },
-    removeTemplate() {
-      this.get('templates').destroyRecord().then(() => {
-          this.transitionToRoute('home');
+    removeTemplate(name) {
+      this.get('template').deleteTemplates(name).then(() => {
+        this.transitionToRoute('home');
       });
     }
   }
