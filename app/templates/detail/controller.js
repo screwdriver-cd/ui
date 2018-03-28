@@ -31,7 +31,7 @@ export default Controller.extend({
     removeTemplate(name) {
       return this.get('template').deleteTemplates(name)
         .then(
-          () => this.transitionToRoute('home'),
+          () => this.transitionToRoute('templates'),
           (err) => this.set('errorMessage', err));
     }
   }
