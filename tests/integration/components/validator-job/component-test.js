@@ -191,14 +191,14 @@ test('it renders sourcePaths', function (assert) {
     environment: {},
     settings: {},
     annotations: {},
-    sourcePaths: ['README.md', 'src/folder']
+    sourcePaths: ['README.md', 'src/folder/']
   });
 
   this.render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
 
   assert.equal(this.$('h4').text().trim(), 'int-test');
   assert.equal(this.$('.sourcePaths .label').text().trim(), 'Source Paths:');
-  assert.equal(this.$('.sourcePaths .value ul li').text().trim(), 'README.mdsrc/folder');
+  assert.equal(this.$('.sourcePaths .value ul li').text().trim(), 'README.mdsrc/folder/');
 });
 
 test('it renders without a collapsible heading', function (assert) {
