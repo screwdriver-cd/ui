@@ -29,7 +29,7 @@ export default Controller.extend({
     },
     removeTemplate(name) {
       this.get('template').deleteTemplates(name).then(() => {
-        this.transitionToRoute('home');
+        this.transitionToRoute('templates');
       });
     }
   }
