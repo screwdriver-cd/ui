@@ -39,6 +39,18 @@
     </ul>
   </span>
 </div>
+<div class="sourcePaths" title="These are the source paths that will trigger a job upon modification.">
+  <span class="label">Source Paths:</span>
+  <span class="value">
+    <ul>
+      {{#each job.sourcePaths as |path|}}
+      <li>{{path}}</li>
+      {{else}}
+      <li>None defined</li>
+      {{/each}}
+    </ul>
+  </span>
+</div>
 <div class="secrets" title="These are the keys for secrets that will be available in this job.">
   <span class="label">Secrets:</span>
   <span class="value">
