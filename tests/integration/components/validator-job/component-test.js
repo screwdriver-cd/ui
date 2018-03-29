@@ -112,6 +112,9 @@ test('it renders template steps', function (assert) {
 
   assert.equal(this.$('.annotations .label').text().trim(), 'Annotations:');
   assert.equal(this.$('.annotations .value').text().trim(), 'None defined');
+
+  assert.equal(this.$('.sourcePaths .label').text().trim(), 'Source Paths:');
+  assert.equal(this.$('.sourcePaths ul li').text().trim(), 'None defined');
 });
 
 test('it renders when there are no steps or commands', function (assert) {
@@ -178,6 +181,24 @@ test('it renders a description', function (assert) {
   assert.equal(this.$('h4').text().trim(), 'int-test');
   assert.equal(this.$('.description .label').text().trim(), 'Description:');
   assert.equal(this.$('.description .value ul li').text().trim(), 'This is a description');
+});
+
+test('it renders sourcePaths', function (assert) {
+  this.set('jobMock', {
+    image: 'int-test:1',
+    description: 'This is a description',
+    secrets: [],
+    environment: {},
+    settings: {},
+    annotations: {},
+    sourcePaths: ['README.md', 'src/folder/']
+  });
+
+  this.render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+
+  assert.equal(this.$('h4').text().trim(), 'int-test');
+  assert.equal(this.$('.sourcePaths .label').text().trim(), 'Source Paths:');
+  assert.equal(this.$('.sourcePaths .value ul li').text().trim(), 'README.mdsrc/folder/');
 });
 
 test('it renders without a collapsible heading', function (assert) {
