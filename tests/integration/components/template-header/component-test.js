@@ -23,7 +23,8 @@ test('it renders', function (assert) {
   this.set('mock', TEMPLATE);
   this.render(hbs`{{template-header template=mock}}`);
 
-  assert.equal($('h1').text().trim(), 'foo/bar (2.0.0)');
+  assert.equal($('h1').text().trim(), 'foo/bar');
+  assert.equal($('h2').text().trim(), '2.0.0');
   assert.equal($('p').text().trim(), 'A test example');
   assert.equal($('ul li:first-child').text().trim(), 'Released by: bruce@wayne.com');
   assert.equal($('ul li:first-child a').attr('href'), 'mailto:bruce@wayne.com');

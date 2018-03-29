@@ -30,7 +30,7 @@ test('it parses model properly', function (assert) {
 
   assert.equal(controller.get('selectedVersion'), null);
   assert.equal(controller.get('latest.id'), 3);
-  assert.equal(controller.get('template.id'), 3);
+  assert.equal(controller.get('versionTemplate.id'), 3);
 });
 
 test('it handles version changes', function (assert) {
@@ -45,10 +45,10 @@ test('it handles version changes', function (assert) {
   assert.ok(controller);
   assert.equal(controller.get('selectedVersion'), null);
   assert.equal(controller.get('latest.id'), 3);
-  assert.equal(controller.get('template.id'), 3);
+  assert.equal(controller.get('versionTemplate.id'), 3);
   controller.send('changeVersion', '1.0.0');
   assert.equal(controller.get('selectedVersion'), '1.0.0');
-  assert.equal(controller.get('template.id'), 1);
+  assert.equal(controller.get('versionTemplate.id'), 1);
   assert.equal(controller.get('latest.id'), 3);
 });
 
@@ -65,16 +65,16 @@ test('it handles model changes', function (assert) {
 
   assert.ok(controller);
   assert.equal(controller.get('selectedVersion'), null);
-  assert.equal(controller.get('template.id'), 3);
+  assert.equal(controller.get('versionTemplate.id'), 3);
   assert.equal(controller.get('latest.id'), 3);
 
   controller.send('changeVersion', '1.0.0');
   assert.equal(controller.get('selectedVersion'), '1.0.0');
-  assert.equal(controller.get('template.id'), 1);
+  assert.equal(controller.get('versionTemplate.id'), 1);
 
   arr.unshiftObject({ id: 4, version: '4.0.0' });
   assert.equal(controller.get('selectedVersion'), null);
-  assert.equal(controller.get('template.id'), 4);
+  assert.equal(controller.get('versionTemplate.id'), 4);
   assert.equal(controller.get('latest.id'), 4);
 });
 
