@@ -8,6 +8,9 @@ export default Controller.extend({
   errorMessage: '',
   template: service(),
   templates: alias('model'),
+  reset: function() {
+    this.set('errorMessage', '');
+  },
   latest: computed('templates.[]', {
     get() {
       return this.get('templates')[0];
