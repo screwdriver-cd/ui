@@ -1,9 +1,20 @@
+import { resolve } from 'rsvp';
 import { A } from '@ember/array';
 import { moduleFor, test } from 'ember-qunit';
+import Service from '@ember/service';
+
+const templateServiceStub = Service.extend({
+  deleteTemplates() {
+    return resolve([204]);
+  }
+});
 
 moduleFor('controller:templates/detail', 'Unit | Controller | templates/detail', {
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
+  beforeEach: function beforeEach() {
+    this.register('service:template', templateServiceStub);
+  }
 });
 
 test('it parses model properly', function (assert) {
@@ -79,16 +90,10 @@ test('it handles template deletion', function (assert) {
   controller.set('model', arr);
 
   assert.ok(controller);
-  assert.equal(controller.get('selectedVersion'), null);
-  assert.equal(controller.get('template.id'), 3);
-  assert.equal(controller.get('latest.id'), 3);
+
+  controller.transitionToRoute = (route) => {
+    assert.equal(route, 'templates');
+  };
 
   controller.send('removeTemplate', 'sample');
-  assert.equal(controller.get('selectedVersion'), '1.0.0');
-  /* assert.equal(controller.get('template.id'), 1);
-
-  arr.unshiftObject({ id: 4, version: '4.0.0' });
-  assert.equal(controller.get('selectedVersion'), null);
-  assert.equal(controller.get('template.id'), 4);
-  assert.equal(controller.get('latest.id'), 4); */
 });
