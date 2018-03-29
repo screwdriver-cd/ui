@@ -40,20 +40,37 @@
 .logs {
   font-size: 1em;
   font-family: monospace;
-  height: auto;
+  white-space: pre-line;
+  background-color: #333;
+  color: #eee;
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
   overflow: auto;
-  display: grid;
-  grid-template-columns: 1fr 10fr;
+  height: auto;
+
+  .line {
+    display: flex;
+    flex-direction: column;
+  }
 
   .time {
     color: $sd-text-med;
-    grid-column: 1;
-    user-select: none;
   }
 
   .content {
-    grid-column: 2;
-    white-space: pre-wrap;
+    display: inline-flex;
+    flex-grow: 1;
+  }
+}
+
+@media screen and (min-width: 35.5em) {
+  .logs .line {
+    flex-direction: row;
+  }
+  .logs .time {
+    display: inline-flex;
+    margin-right: 10px;
   }
 }
 
