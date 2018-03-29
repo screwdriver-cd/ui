@@ -66,3 +66,29 @@ test('it handles model changes', function (assert) {
   assert.equal(controller.get('template.id'), 4);
   assert.equal(controller.get('latest.id'), 4);
 });
+
+test('it handles template deletion', function (assert) {
+  let controller = this.subject();
+  // eslint-disable-next-line new-cap
+  const arr = A([
+    { id: 3, name: 'sample', version: '3.0.0' },
+    { id: 2, name: 'sample', version: '2.0.0' },
+    { id: 1, name: 'sample', version: '1.0.0' }
+  ]);
+
+  controller.set('model', arr);
+
+  assert.ok(controller);
+  assert.equal(controller.get('selectedVersion'), null);
+  assert.equal(controller.get('template.id'), 3);
+  assert.equal(controller.get('latest.id'), 3);
+
+  controller.send('removeTemplate', 'sample');
+  assert.equal(controller.get('selectedVersion'), '1.0.0');
+  /* assert.equal(controller.get('template.id'), 1);
+
+  arr.unshiftObject({ id: 4, version: '4.0.0' });
+  assert.equal(controller.get('selectedVersion'), null);
+  assert.equal(controller.get('template.id'), 4);
+  assert.equal(controller.get('latest.id'), 4); */
+});

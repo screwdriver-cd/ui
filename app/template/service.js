@@ -81,7 +81,7 @@ export default Service.extend({
           }
 
           if (response.status === 401) {
-            message = `You do not have the permissions to remove this template`;
+            message = 'You do not have the permissions to remove this template';
           }
 
           return reject(message);
