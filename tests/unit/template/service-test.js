@@ -115,7 +115,7 @@ test('it returns 401 on unauthorized deletion', function (assert) {
   t.then(
     () => {},
     (err) => {
-      assert.equal(err, 'You do not have the permissions to remove this template');
+      assert.equal(err, 'You do not have the permissions to remove this template.');
     }
   );
 });
