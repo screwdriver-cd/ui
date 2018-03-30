@@ -1,5 +1,5 @@
 {{#link-to "templates" class="back"}}Back to Templates{{/link-to}}
-<h1>{{template.name}} <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash"}}</a></h1>
+<h1>{{template.name}} {{#if scmUrl}}<a href="{{scmUrl}}">{{fa-icon "code-fork"}}</a>{{/if}} <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash"}}</a></h1>
 <h2>{{template.version}}</h2>
 <p>{{template.description}}</p>
 <ul>
