@@ -1,5 +1,6 @@
 {{#link-to "templates" class="back"}}Back to Templates{{/link-to}}
-<h1>{{template.name}} ({{template.version}})</h1>
+<h1>{{template.name}} <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash"}}</a></h1>
+<h2>{{template.version}}</h2>
 <p>{{template.description}}</p>
 <ul>
   {{! TODO: Link to pipeline and/or source code}}
@@ -11,3 +12,27 @@
   main:
     template: {{template.name}}@{{template.version}}
 </pre>
+{{#if templateToRemove}}
+  {{#if isRemoving}}
+    {{#modal-dialog clickOutsideToClose="false"
+      targetAttachment="center"
+      translucentOverlay=true
+    }}
+      {{loading-view}}
+    {{/modal-dialog}}
+  {{else}}
+    {{#bs-modal onSubmit=(action "removeTemplate" template.name) onHide=(action "cancelRemovingTemplate") as |modal|}}
+      {{#modal.header}}
+        <h4>Are you sure?</h4>
+      {{/modal.header}}
+      {{#modal.body}}
+        {{fa-icon "exclamation-triangle" pull="left" size=3}}
+        You're about to delete all versions and tags of <strong>{{template.name}}</strong>. There might be existing pipelines using this template.
+      {{/modal.body}}
+      {{#modal.footer as |footer|}}
+        {{#bs-button onClick=(action "cancelRemovingTemplate")}}Cancel{{/bs-button}}
+        {{#bs-button onClick=(action "removeTemplate" template.name) type="danger"}}{{fa-icon "trash"}} Confirm{{/bs-button}}
+      {{/modal.footer}}
+    {{/bs-modal}}
+  {{/if}}
+{{/if}}
