@@ -1,0 +1,23 @@
+& {
+  margin: 10px 10px 0 0;
+  color: $sd-text;
+
+  > div {
+    padding: 3px;
+    border-radius: 3px;
+  }
+
+  > div:hover {
+    background-color: $sd-highlight;
+  }
+
+  h4 {
+    padding: 0;
+    margin: 0 0 10px;
+  }
+
+  .label {
+    color: $sd-text;
+    font-weight: $weight-bold;
+  }
+}
