@@ -1,0 +1,10 @@
+& {
+  .version {
+    color: $sd-link;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

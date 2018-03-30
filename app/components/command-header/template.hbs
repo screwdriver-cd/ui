@@ -1,0 +1,8 @@
+{{#link-to "commands" class="back"}}Back to Commands{{/link-to}}
+<h1>{{command.namespace}}/{{command.name}} ({{command.version}})</h1>
+<p>{{command.description}}</p>
+<ul>
+  <li>Released by: <a href="mailto:{{command.maintainer}}">{{command.maintainer}}</a></li>
+</ul>
+<h4>Usage:</h4>
+<pre>sd-cmd exec {{command.namespace}}/{{command.name}}@{{command.version}}</pre>

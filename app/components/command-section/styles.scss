@@ -1,0 +1,30 @@
+& {
+  h4 {
+    font-weight: $weight-bold;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 5px;
+  }
+
+  .command {
+    padding: 10px;
+    border: 1px solid $sd-text-light;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    height: 150px;
+
+    a {
+      text-decoration: none;
+    }
+
+    header {
+      border-bottom: 1px solid $sd-separator;
+    }
+
+    .description {
+      padding: 0;
+      margin: 10px 0;
+    }
+  }
+}
