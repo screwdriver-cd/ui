@@ -21,6 +21,9 @@ export default Component.extend({
       case 'SUCCESS':
         icon = 'check';
         break;
+      case 'CREATED':
+        icon = 'fa-ban';
+        break;
       default:
         icon = 'times';
         break;
