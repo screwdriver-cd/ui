@@ -36,7 +36,7 @@ test('it renders a created (but not running) PR', function (assert) {
     name: 'PR-1234',
     builds: [{
       id: '1234',
-      status: 'CREATED'
+      status: null
     }]
   });
 
