@@ -34,10 +34,7 @@ test('it renders a created (but not running) PR', function (assert) {
   const job = EmberObject.create({
     id: 'abcd',
     name: 'PR-1234',
-    builds: [{
-      id: '1234',
-      status: 'CREATED'
-    }]
+    builds: []
   });
 
   this.set('jobMock', job);

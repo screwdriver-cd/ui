@@ -21,11 +21,12 @@ export default Component.extend({
       case 'SUCCESS':
         icon = 'check';
         break;
-      case 'CREATED':
-        icon = 'fa-ban';
+      case 'ABORTED':
+      case 'FAILURE':
+        icon = 'times';
         break;
       default:
-        icon = 'times';
+        icon = 'fa-ban';
         break;
       }
 
