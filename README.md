@@ -9,22 +9,24 @@ This README outlines the details of collaborating on this Ember application.
 You will need the following things properly installed on your computer.
 
 * [Git](https://git-scm.com/)
-* [Node.js](https://nodejs.org/) (with NPM)
+* [Node.js](https://nodejs.org/) >= v6.0.0 (with NPM)
 * [Bower](https://bower.io/)
 * [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/)
+* [Google Chrome](https://google.com/chrome/) (for testing)
 
 ## Installation
-
-* `git clone <repository-url>` this repository
-* change into the new directory
-* `npm install`
-* `bower install`
+```bash
+$ git clone git@github.com:screwdriver-cd/ui.git
+$ cd ui/          # change into the new directory
+$ npm install
+$ bower install
+```
 
 ## Running / Development
 
 * `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
+
+Visit your app at [http://localhost:4200](http://localhost:4200).
 
 ### Code Generators
 
