@@ -4,9 +4,9 @@ import Service from '@ember/service';
 let server;
 
 const manifest = `.
+./test.txt
 ./coverage
-./coverage/coverage.json
-./test.txt`;
+./coverage/coverage.json`;
 
 const buildId = 1;
 

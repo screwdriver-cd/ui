@@ -102,7 +102,7 @@ export default Service.extend({
         headers: { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` }
       })
         .done((data) => {
-          const paths = data.split('\n');
+          const paths = data.split('\n').sort(); // sort in alphabetical order
 
           manifest = arrangeIntoTree(paths, baseUrl);
         })
