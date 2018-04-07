@@ -50,6 +50,13 @@
   }
 }
 
+.success i {
+  color: $sd-success;
+  padding: 8px 8px 2px 8px;
+  vertical-align: bottom;
+  font-size: 36px;
+}
+
 .blue-button {
   @include transition(all, 50ms);
   border: none;
