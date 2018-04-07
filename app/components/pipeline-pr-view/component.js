@@ -26,7 +26,7 @@ export default Component.extend({
         icon = 'times';
         break;
       default:
-        icon = 'fa-ban';
+        icon = 'ban';
         break;
       }
 
