@@ -34,7 +34,19 @@
   <span class="value">
     <ul>
       {{#each steps as |command|}}
-      <li><span class="name">{{command.name}}: </span><span class="value">{{command.command}}</span></li>
+      <li><div class="name">{{command.name}}: </div><div class="value">{{command.command}}</div></li>
+      {{/each}}
+    </ul>
+  </span>
+</div>
+<div class="sourcePaths" title="These are the source paths that will trigger a job upon modification. If you want to specify a directory, make sure it has a trailing slash (/).">
+  <span class="label">Source Paths:</span>
+  <span class="value">
+    <ul>
+      {{#each job.sourcePaths as |path|}}
+      <li>{{path}}</li>
+      {{else}}
+      <li>None defined</li>
       {{/each}}
     </ul>
   </span>

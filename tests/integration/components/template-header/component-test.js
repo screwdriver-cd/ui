@@ -1,5 +1,7 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import EmberObject from '@ember/object';
+import { Promise as EmberPromise } from 'rsvp';
 
 const TEMPLATE = {
   id: 2,
@@ -9,8 +11,19 @@ const TEMPLATE = {
   description: 'A test example',
   labels: ['car', 'armored'],
   maintainer: 'bruce@wayne.com',
+  pipelineId: 1,
   name: 'foo/bar',
   version: '2.0.0'
+};
+
+const mockPipeline = {
+  id: 1,
+  scmRepo: {
+    url: 'github.com/screwdriver-cd'
+  },
+  get(key) {
+    return this[key];
+  }
 };
 
 moduleForComponent('template-header', 'Integration | Component | template header', {
@@ -20,10 +33,20 @@ moduleForComponent('template-header', 'Integration | Component | template header
 test('it renders', function (assert) {
   const $ = this.$;
 
+  const storeStub = EmberObject.extend({
+    findRecord() {
+      return new EmberPromise(resolve => resolve(mockPipeline));
+    }
+  });
+
+  this.register('service:store', storeStub);
+  this.inject.service('store');
+
   this.set('mock', TEMPLATE);
   this.render(hbs`{{template-header template=mock}}`);
 
-  assert.equal($('h1').text().trim(), 'foo/bar (2.0.0)');
+  assert.equal($('h1').text().trim(), 'foo/bar');
+  assert.equal($('h2').text().trim(), '2.0.0');
   assert.equal($('p').text().trim(), 'A test example');
   assert.equal($('ul li:first-child').text().trim(), 'Released by: bruce@wayne.com');
   assert.equal($('ul li:first-child a').attr('href'), 'mailto:bruce@wayne.com');

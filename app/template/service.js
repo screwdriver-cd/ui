@@ -52,5 +52,40 @@ export default Service.extend({
           return reject(message);
         });
     });
+  },
+  deleteTemplates(name) {
+    // eslint-disable-next-line max-len
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}`;
+    const ajaxConfig = {
+      method: 'DELETE',
+      url,
+      contentType: 'application/json',
+      crossDomain: true,
+      xhrFields: {
+        withCredentials: true
+      },
+      headers: {
+        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+      }
+    };
+
+    return new EmberPromise((resolve, reject) => {
+      // Call the token api to get the session info
+      $.ajax(ajaxConfig)
+        .done(content => resolve(content))
+        .fail((response) => {
+          let message = `${response.status} Request Failed`;
+
+          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
+            message = `${response.status} ${response.responseJSON.error}`;
+          }
+
+          if (response.status === 401) {
+            message = 'You do not have the permissions to remove this template.';
+          }
+
+          return reject(message);
+        });
+    });
   }
 });
