@@ -82,7 +82,7 @@
           {{#nav.dropdown as |dd|}}
             {{#dd.toggle class="icon profile-outline"}}
               {{inline-svg "profile-outline" class="img"}}
-              <span class='icontitle'>Account</span>
+              <span class='icontitle'>{{session.data.authenticated.username}}</span>
               <span class="caret"></span>
             {{/dd.toggle}}
             {{#dd.menu as |ddm|}}
