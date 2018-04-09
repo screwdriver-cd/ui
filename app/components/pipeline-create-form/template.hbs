@@ -10,6 +10,9 @@
   placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#master)"
   value=scmUrl
 }}
+{{#if isValid}}
+  <i class="success">{{fa-icon "check"}}</i>
+{{/if}}
 </div>
 <div>
 <button {{action "saveData"}} disabled={{isDisabled}} class="blue-button{{if isSaving ' saving'}}">
