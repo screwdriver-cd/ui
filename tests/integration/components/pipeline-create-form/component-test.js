@@ -17,7 +17,7 @@ test('it renders', function (assert) {
 });
 
 test('it handles the entire ui flow', function (assert) {
-  assert.expect(1);
+  assert.expect(2);
   const scm = 'git@github.com:foo/bar.git';
 
   this.set('createPipeline', (scmUrl) => {
@@ -27,5 +27,6 @@ test('it handles the entire ui flow', function (assert) {
   // eslint-disable-next-line max-len
   this.render(hbs`{{pipeline-create-form errorMessage="" isSaving=false onCreatePipeline=(action createPipeline)}}`);
   this.$('.text-input').val(scm).keyup();
+  assert.ok(this.$('i.fa').hasClass('fa-check'), 'success icon');
   this.$('button.blue-button').click();
 });
