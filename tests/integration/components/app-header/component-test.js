@@ -30,6 +30,25 @@ test('it renders when search flag is off', function (assert) {
   assert.equal(this.$('.icon.profile-outline').prop('title'), 'Sign in to Screwdriver');
 });
 
+test('it shows user github username', function (assert) {
+  assert.expect(2);
+  this.set('sessionMock', {
+    isAuthenticated: true,
+    data: {
+      authenticated: {
+        username: 'foofoo'
+      }
+    }
+  });
+  this.set('invalidateSession', () => {
+    assert.ok(true);
+  });
+
+  this.render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
+  assert.equal(this.$('.profile-outline > .icontitle').text(), 'foofoo');
+  this.$('.logout').click();
+});
+
 test('it calls the logout method on logout', function (assert) {
   assert.expect(2);
   this.set('sessionMock', {
