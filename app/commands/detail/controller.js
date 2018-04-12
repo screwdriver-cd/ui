@@ -8,8 +8,8 @@ export default Controller.extend({
   errorMessage: '',
   command: service(),
   commands: alias('model'),
-  reset: function () {
-    this.set('errorMessage', '')
+  reset() {
+    this.set('errorMessage', '');
   },
   latest: computed('commands.[]', {
     get() {
@@ -35,7 +35,7 @@ export default Controller.extend({
       return this.get('command').deleteCommands(namespace, name)
         .then(
           () => this.transitionToRoute('commands'),
-          (err) => this.set('errorMessage', err));
+          err => this.set('errorMessage', err));
     }
   }
 });

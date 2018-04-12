@@ -8,7 +8,7 @@ export default Controller.extend({
   errorMessage: '',
   template: service(),
   templates: alias('model'),
-  reset: function() {
+  reset() {
     this.set('errorMessage', '');
   },
   latest: computed('templates.[]', {
@@ -35,7 +35,7 @@ export default Controller.extend({
       return this.get('template').deleteTemplates(name)
         .then(
           () => this.transitionToRoute('templates'),
-          (err) => this.set('errorMessage', err));
+          err => this.set('errorMessage', err));
     }
   }
 });

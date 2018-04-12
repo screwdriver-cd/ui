@@ -82,7 +82,7 @@ test('it deletes all versions of a command', function (assert) {
 
   assert.ok(service);
 
-  const t = service.deleteCommands('foo/bar');
+  const t = service.deleteCommands('foo', 'bar');
 
   t.then(() => {
     const [request] = server.handledRequests;
@@ -108,7 +108,7 @@ test('it returns 401 on unauthorized deletion', function (assert) {
 
   assert.ok(service);
 
-  const t = service.deleteCommands('foo/bar');
+  const t = service.deleteCommands('foo', 'bar');
 
   t.then(
     () => {},
