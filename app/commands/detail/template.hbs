@@ -1,6 +1,8 @@
-{{command-header command=command}}
+{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
-{{command-format command=command}}
+{{command-header command=versionCommand onRemoveCommand=(action "removeCommand")}}
+
+{{command-format command=versionCommand}}
 
 {{command-versions commands=commands changeVersion=(action "changeVersion")}}
 

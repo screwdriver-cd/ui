@@ -12,5 +12,9 @@ export default Route.extend({
 
       return verPayload;
     });
+  },
+  setupController(controller, model) {
+    this._super(controller, model);
+    controller.reset();
   }
 });
