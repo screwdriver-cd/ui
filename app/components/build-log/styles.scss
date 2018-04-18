@@ -59,7 +59,8 @@
   }
 
   .content {
-    display: inline-flex;
+    display: inline;
+    white-space: pre-wrap;
     flex-grow: 1;
   }
 }
