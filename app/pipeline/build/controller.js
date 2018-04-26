@@ -28,21 +28,13 @@ export default Controller.extend({
 
     startBuild() {
       const buildId = get(this, 'build.id');
-      const parentBuildId = get(this, 'build.parentBuildId');
-      const event = get(this, 'event');
-      const parentEventId = get(event, 'id');
-      const startFrom = get(this, 'job.name');
-      const pipelineId = get(this, 'pipeline.id');
+      const jobName = get(this, 'job.name');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
       const causeMessage =
-        `${user} clicked restart for job "${startFrom}" for sha ${get(event, 'sha')}`;
+        `${user} clicked restart for job "${jobName}" for sha ${get(this, 'event.sha')}`;
       const newEvent = this.store.createRecord('event', {
         buildId,
-        pipelineId,
-        startFrom,
-        parentBuildId,
-        parentEventId,
         causeMessage
       });
 

@@ -95,28 +95,13 @@ export default Controller.extend(ModelReloaderMixin, {
     },
     startDetachedBuild(job) {
       const buildId = get(job, 'buildId');
-      let parentBuildId = null;
-
-      if (buildId) {
-        const build = this.store.peekRecord('build', buildId);
-
-        parentBuildId = get(build, 'parentBuildId');
-      }
-
       const event = get(this, 'selectedEventObj');
-      const parentEventId = get(event, 'id');
-      const startFrom = get(job, 'name');
-      const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
       const causeMessage =
         `${user} clicked restart for job "${job.name}" for sha ${get(event, 'sha')}`;
       const newEvent = this.store.createRecord('event', {
         buildId,
-        pipelineId,
-        startFrom,
-        parentBuildId,
-        parentEventId,
         causeMessage
       });
 

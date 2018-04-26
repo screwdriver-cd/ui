@@ -57,15 +57,10 @@ test('it restarts a build', function (assert) {
   run(() => {
     controller.set('model', {
       build: EmberObject.create({
-        id: '123',
-        parentBuildId: '345'
-      }),
-      pipeline: EmberObject.create({
-        id: '1234'
+        id: '123'
       }),
       job: EmberObject.create({
-        name: 'PR-1:main',
-        buildId: '123'
+        name: 'PR-1:main'
       }),
       event: EmberObject.create({
         id: '1',
@@ -85,11 +80,7 @@ test('it restarts a build', function (assert) {
     const payload = JSON.parse(request.requestBody);
 
     assert.deepEqual(payload, {
-      pipelineId: '1234',
-      startFrom: 'PR-1:main',
       buildId: 123,
-      parentBuildId: 345,
-      parentEventId: 1,
       causeMessage: 'apple clicked restart for job "PR-1:main" for sha sha'
     });
   });
