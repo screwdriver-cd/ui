@@ -11,6 +11,7 @@ export default Component.extend({
   autoscroll: true,
   isFetching: false,
   timeFormat: 'datetime',
+  rawLogs: true,
 
   logs: computed('isFetching', 'stepName', {
     get() {
@@ -103,7 +104,7 @@ export default Component.extend({
         done: false
       });
       const buildId = get(this, 'buildId');
-      const pagesToLoad = this.get('buildStatus') === 'RUNNING' ? 10 : 1000;
+        const pagesToLoad = this.get('buildStatus') === 'RUNNING' ? 10 : 1000;
 
       set(this, 'isFetching', true);
       this.get('logger').fetchLogs(
