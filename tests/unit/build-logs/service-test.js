@@ -113,7 +113,8 @@ test('it makes a call to logs api and logs return with no remaining', function (
 
     const [request] = server.handledRequests;
 
-    assert.equal(request.url, 'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0');
+    assert.equal(request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10');
   });
 });
 
@@ -130,7 +131,8 @@ test('it makes a call to logs api and logs return with more remaining', function
 
     const [request] = server.handledRequests;
 
-    assert.equal(request.url, 'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50');
+    assert.equal(request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50&pages=10');
   });
 });
 
@@ -146,7 +148,8 @@ test('it makes a call to logs api and no logs return with no more remaining', fu
 
     const [request] = server.handledRequests;
 
-    assert.equal(request.url, 'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0');
+    assert.equal(request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10');
   });
 });
 
@@ -162,6 +165,24 @@ test('it handles log api failure by treating it as there are more logs', functio
 
     const [request] = server.handledRequests;
 
-    assert.equal(request.url, 'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0');
+    assert.equal(request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10');
+  });
+});
+
+test('it handles fetching multiple pages', function (assert) {
+  assert.expect(3);
+  noNewLogs();
+  const service = this.subject();
+  const p = service.fetchLogs('1', 'banana', 0, 100);
+
+  p.then(({ lines, done }) => {
+    assert.notOk(done);
+    assert.equal(lines.length, 0);
+
+    const [request] = server.handledRequests;
+
+    assert.equal(request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100');
   });
 });
