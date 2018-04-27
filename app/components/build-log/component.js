@@ -103,14 +103,12 @@ export default Component.extend({
         done: false
       });
       const buildId = get(this, 'buildId');
-      const pagesToLoad = this.get('buildStatus') === 'RUNNING' ? 10 : 1000;
 
       set(this, 'isFetching', true);
       this.get('logger').fetchLogs(
         buildId,
         stepName,
-        logData.lastLine,
-        pagesToLoad
+        logData.lastLine
       ).then(({ lines, done }) => {
         // prevent updating logs when component is being destroyed
         if (!this.get('isDestroyed') && !this.get('isDestroying')) {
