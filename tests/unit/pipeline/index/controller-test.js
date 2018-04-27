@@ -90,14 +90,22 @@ test('it restarts a build', function (assert) {
     201,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
-      id: '2',
-      pipelineId: '1234'
+      id: '2'
     })
   ]);
 
   let controller = this.subject();
 
   run(() => {
+    controller.store.push({
+      data: {
+        id: '123',
+        type: 'build',
+        attributes: {
+          parentBuildId: '345'
+        }
+      }
+    });
     controller.set('selectedEventObj', {
       id: '1',
       sha: 'sha'
@@ -132,7 +140,11 @@ test('it restarts a build', function (assert) {
 
     assert.notOk(controller.get('isShowingModal'));
     assert.deepEqual(payload, {
+      pipelineId: '1234',
+      startFrom: 'deploy',
       buildId: 123,
+      parentBuildId: 345,
+      parentEventId: 1,
       causeMessage: 'apple clicked restart for job "deploy" for sha sha'
     });
   });
