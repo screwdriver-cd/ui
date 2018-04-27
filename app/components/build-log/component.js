@@ -103,7 +103,7 @@ export default Component.extend({
         done: false
       });
       const buildId = get(this, 'buildId');
-      const pagesToLoad = this.get('buildStatus') === 'RUNNING' ? 10 : 1000;
+      const pagesToLoad = this.get('buildStatus') === 'RUNNING' ? 10 : 100;
 
       set(this, 'isFetching', true);
       this.get('logger').fetchLogs(
