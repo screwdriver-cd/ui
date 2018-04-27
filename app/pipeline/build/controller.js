@@ -1,6 +1,9 @@
 import { later, once } from '@ember/runloop';
+import { get } from '@ember/object';
 import { reads, mapBy } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+
 import Controller from '@ember/controller';
 import ENV from 'screwdriver-ui/config/environment';
 
@@ -24,20 +27,23 @@ export default Controller.extend({
     },
 
     startBuild() {
-      const pipelineId = this.get('pipeline.id');
-      const jobName = this.get('job.name');
+      const buildId = get(this, 'build.id');
+      const jobName = get(this, 'job.name');
+      const token = get(this, 'session.data.authenticated.token');
+      const user = get(decoder(token), 'username');
+      const causeMessage =
+        `${user} clicked restart for job "${jobName}" for sha ${get(this, 'event.sha')}`;
       const newEvent = this.store.createRecord('event', {
-        pipelineId,
-        startFrom: jobName
+        buildId,
+        causeMessage
       });
 
-      return newEvent.save()
-        .then(() =>
-          newEvent.get('builds')
-            .then(builds =>
-              this.transitionToRoute('pipeline.build',
-                builds.get('lastObject.id'))
-            ));
+      return newEvent.save().then(() =>
+        newEvent.get('builds')
+          .then(builds =>
+            this.transitionToRoute('pipeline.build',
+              builds.get('lastObject.id'))
+          ));
     },
 
     reload() {

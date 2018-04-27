@@ -106,7 +106,6 @@ test('it restarts a build', function (assert) {
         }
       }
     });
-
     controller.set('selectedEventObj', {
       id: '1',
       sha: 'sha'
