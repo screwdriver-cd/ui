@@ -7,7 +7,7 @@
   <div class="row2">
     <span class="time" onClick={{action "toggleTimeDisplay"}}>
       {{#if (eq timeFormat "datetime")}}
-        Timestamp
+        Local Timestamp
       {{else if (eq timeFormat "elapsedBuild")}}
         Since build started
       {{else if (eq timeFormat "elapsedStep")}}
