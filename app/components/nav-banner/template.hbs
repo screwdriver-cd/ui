@@ -1,7 +1,15 @@
-<h4>Banners</h4>
+
 {{ember-jstree
     data=listdata.content
 }}
-{{#unless listdata.content.length}}
-<span>No banners yet</span>
-{{/unless}}
+
+{{#each banners as |banner|}}
+
+<div class="banner alert-success">
+  {{#bs-alert type=type}}
+    {{fa-icon "check-square"}}
+    <span>{{banner.message}}</span>
+  {{/bs-alert}}
+</div>
+
+{{/each}}

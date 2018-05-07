@@ -165,6 +165,31 @@
       opacity: .6;
     }
   }
+
+  .banner {
+    color: $sd-white;
+    padding: 10px;
+    margin-bottom: 2px;
+    width: 100%;
+  }
+
+  .banner-success  { background-color: $sd-green; }
+  .banner-info     { background-color: $sd-blue; }
+  .banner-warning  { background-color: $sd-yellow; color: $sd-black; }
+  .banner-critical { background-color: $sd-red; }
+
+  .banner .fa {
+    padding-right: 7px;
+    font-size: 20px;
+  }
+
+  .banner .banner-dismiss {
+    float: right;
+  }
+
+  .banner .banner-dismiss .fa {
+    font-size: 15px;
+  }
 }
 
 @media screen and (min-width: 880px) {

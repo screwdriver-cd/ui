@@ -14,7 +14,7 @@ export default Service.extend({
   fetchBanners() {
     // Fetch the banners directly from the API
     const bannersUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      '/banner';
+      '/banners';
 
     return new EmberPromise((resolve, reject) => {
       if (!this.get('session.isAuthenticated')) {

@@ -118,6 +118,30 @@
   {{/navbar.content}}
 {{/bs-navbar}}
 
+<div class="banner banner-success">
+  {{fa-icon "check-square"}}
+  <strong>Success!</strong> You're on your way to building products people love.
+  <div class="banner-dismiss"> {{fa-icon "times-circle"}} </div>
+</div>
+
+<div class="banner banner-info">
+  {{fa-icon "info-circle"}}
+  <strong>Info!</strong> Try scheduling builds to run at specific time intervals.
+  <div class="banner-dismiss"> {{fa-icon "times-circle"}} </div>
+</div>
+
+<div class="banner banner-warning">
+  {{fa-icon "exclamation-triangle"}}
+  <strong>Warning!</strong> You might need to pay attention to this.
+  <div class="banner-dismiss"> {{fa-icon "times-circle"}} </div>
+</div>
+
+<div class="banner banner-critical">
+  {{fa-icon "exclamation-triangle"}}
+  <strong>Danger!</strong> System shutdown imminent!!!
+  <div class="banner-dismiss"> {{fa-icon "times-circle"}} </div>
+</div>
+
 <div class="tooltips">
   {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
   {{#unless session.isAuthenticated}}
