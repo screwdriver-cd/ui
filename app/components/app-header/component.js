@@ -13,10 +13,6 @@ export default Component.extend({
     },
     authenticate(scmContext) {
       this.get('authenticate')(scmContext);
-    },
-    clearMessage() {
-      this.set('message', null);
     }
   }
 });
-
