@@ -1,0 +1,15 @@
+
+{{ember-jstree
+    data=listdata.content
+}}
+
+{{#each banners as |banner|}}
+
+<div class="banner alert-success">
+  {{#bs-alert type=type}}
+    {{fa-icon "check-square"}}
+    <span>{{banner.message}}</span>
+  {{/bs-alert}}
+</div>
+
+{{/each}}
