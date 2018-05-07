@@ -25,7 +25,8 @@ export default Service.extend({
         url: bannersUrl,
         headers: { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` }
       })
-        .done(banners => banners.filter(banner => banner.isActive === true));
+        .done(banners => banners.filter(banner => banner.isActive === true))
+        .always(banners => resolve(banners));
     });
   }
 });
