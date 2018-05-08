@@ -51,29 +51,13 @@
   overflow: auto;
   height: auto;
 
-  .line {
-    display: flex;
-    flex-direction: column;
-  }
-
   .time {
     color: $sd-text-med;
+    margin-right: 10px;
   }
 
   .content {
-    display: inline;
-    white-space: pre-wrap;
-    flex-grow: 1;
-  }
-}
-
-@media screen and (min-width: 35.5em) {
-  .logs .line {
-    flex-direction: row;
-  }
-  .logs .time {
-    display: inline-flex;
-    margin-right: 10px;
+    white-space: pre;
   }
 }
 
