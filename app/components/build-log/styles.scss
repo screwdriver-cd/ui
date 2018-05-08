@@ -12,10 +12,12 @@
 
 .row1 a:first-child {
   grid-column: 1;
+  cursor: pointer;
 }
 
 .row1 a:last-child {
   grid-column: 3;
+  cursor: pointer;
 }
 
 .row2 {
@@ -26,6 +28,7 @@
 
 .row2 .time {
   grid-column: 1;
+  cursor: pointer;
 }
 
 .row2 .content {
