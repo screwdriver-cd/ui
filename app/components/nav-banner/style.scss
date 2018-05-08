@@ -1,9 +1,9 @@
 & {
-  margin: 10px 15px 0;
-
-  .banner .alert {
+  .banner-alert {
     margin-bottom: 0px;
     border-radius: 0px;
+    background: $sd-alert-bg;
+    color: $sd-alert-fg;
   }
 
   .banner .fa {

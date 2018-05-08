@@ -1,22 +1,10 @@
-import { get, set, computed } from '@ember/object';
+import { set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
 export default Component.extend({
   session: service(),
-  // store: service(),
   banner: service('banner'),
-
-  // banners: computed('store', {
-  //   get() {
-  //     if (!get(this, 'session.isAuthenticated') ||
-  //       get(this, 'session.data.authenticated.isGuest')) {
-  //       return [];
-  //     }
-  //
-  //     return this.get('store').findAll('banner');
-  //   }
-  // }),
 
   actions: {
     clearMessage() {
@@ -26,7 +14,6 @@ export default Component.extend({
 
   fetchBanners() {
     this.get('banner').fetchBanners().then((banners) => {
-      console.log(banners);
       set(this, 'banners', banners);
     });
   },

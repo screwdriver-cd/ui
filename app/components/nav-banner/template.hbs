@@ -1,13 +1,13 @@
 
-{{ember-jstree
+<!-- {{ember-jstree
     data=listdata.content
-}}
+}} -->
 
 {{#each banners as |banner|}}
 
-<div class="banner alert-success">
+<div class="banner-alert">
   {{#bs-alert type=type}}
-    {{fa-icon "check-square"}}
+    {{fa-icon "exclamation-triangle"}}
     <span>{{banner.message}}</span>
   {{/bs-alert}}
 </div>
