@@ -1,7 +1,9 @@
 import $ from 'jquery';
-import { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
+
+const bannersUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+  '/banners';
 
 export default Service.extend({
   session: service(),
@@ -13,20 +15,17 @@ export default Service.extend({
    */
   fetchBanners() {
     // Fetch the banners directly from the API
-    const bannersUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      '/banners';
+    return $.ajax({
+      url: bannersUrl,
+      headers: { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` }
+    })
+      .done((banners) => {
+        if (Array.isArray(banners)) {
+          return banners.filter(banner => banner.isActive === true);
+        }
 
-    return new EmberPromise((resolve, reject) => {
-      if (!this.get('session.isAuthenticated')) {
-        return reject(new Error('User is not authenticated'));
-      }
-
-      return $.ajax({
-        url: bannersUrl,
-        headers: { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` }
+        return [];
       })
-        .done(banners => banners.filter(banner => banner.isActive === true))
-        .always(banners => resolve(banners));
-    });
+      .catch(() => []);
   }
 });
