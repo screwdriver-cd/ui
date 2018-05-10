@@ -43,7 +43,6 @@
 .logs {
   font-size: 1em;
   font-family: monospace;
-  white-space: pre-line;
   background-color: #333;
   color: #eee;
   display: flex;
@@ -52,29 +51,17 @@
   overflow: auto;
   height: auto;
 
-  .line {
-    display: flex;
-    flex-direction: column;
-  }
-
   .time {
     color: $sd-text-med;
+    display: inline-block;
+    vertical-align: top;
+    width: 70px;
   }
 
   .content {
-    display: inline;
+    display: inline-block;
     white-space: pre-wrap;
-    flex-grow: 1;
-  }
-}
-
-@media screen and (min-width: 35.5em) {
-  .logs .line {
-    flex-direction: row;
-  }
-  .logs .time {
-    display: inline-flex;
-    margin-right: 10px;
+    width: calc(100% - 80px);
   }
 }
 
