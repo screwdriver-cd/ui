@@ -53,10 +53,15 @@
 
   .time {
     color: $sd-text-med;
+    display: inline-block;
+    vertical-align: top;
+    width: 70px;
   }
 
   .content {
-    white-space: pre;
+    display: inline-block;
+    white-space: pre-wrap;
+    width: calc(100% - 80px);
   }
 }
 

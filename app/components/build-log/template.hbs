@@ -22,7 +22,7 @@
 <div class="wrap" onScroll={{action "logScroll"}}>
   <div class="logs">
     {{#each logs as |log|}}
-      <span class="line">
+      <div class="line">
         <span class="time" onClick={{action "toggleTimeDisplay"}}>
           {{#if (eq timeFormat "datetime")}}
             {{moment-format log.t 'HH:mm:ss'}}
@@ -33,7 +33,7 @@
           {{/if}}
         </span>
         <span class="content">{{ansi-colorize log.m}}</span>
-      </span>
+      </div>
     {{/each}}
   </div>
   <div class="bottom"></div>
