@@ -19,9 +19,11 @@ export default Service.extend({
       url: bannersUrl,
       headers: { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` }
     })
-      .done((banners) => {
+      .then((banners) => {
         if (Array.isArray(banners)) {
-          return banners.filter(banner => banner.isActive === true);
+          const activeBanners = banners.filter(banner => banner.isActive === true);
+
+          return activeBanners;
         }
 
         return [];
