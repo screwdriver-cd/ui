@@ -44,7 +44,7 @@ test('it fetches coverage info', function (assert) {
     endTime: '2018-05-10T19:06:53.123Z'
   };
 
-  const p = service.getConverageInfo(config);
+  const p = service.getCoverageInfo(config);
 
   p.then((data) => {
     const [request] = server.handledRequests;
@@ -77,7 +77,7 @@ test('it sets default coverage info', function (assert) {
     endTime: '2018-05-10T19:06:53.123Z'
   };
 
-  const p = service.getConverageInfo(config);
+  const p = service.getCoverageInfo(config);
 
   p.then((data) => {
     const [request] = server.handledRequests;

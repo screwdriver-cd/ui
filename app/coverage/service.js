@@ -13,7 +13,7 @@ export default Service.extend({
    * @param {String} config.startTime   Start time of the coverage step
    * @param {String} config.endTime     End time of the coverage step
    */
-  getConverageInfo(config) {
+  getCoverageInfo(config) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/coverage/info`;
     const ajaxConfig = {
       method: 'GET',

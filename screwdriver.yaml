@@ -5,7 +5,7 @@ jobs:
   main:
     environment:
       COVERAGE: "true"
-      SD_SONAR_OPTS: "-Dsonar.sources=app, -Dsonar.javascript.lcov.reportPath=coverage/lcov.info"
+      SD_SONAR_OPTS: "-Dsonar.sources=app -Dsonar.javascript.lcov.reportPath=coverage/lcov.info"
     steps:
       - install: npm install
       - bower: npm install bower && ./node_modules/.bin/bower install --allow-root

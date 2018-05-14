@@ -14,7 +14,7 @@ export default Component.extend({
   isPR: match('jobName', /^PR-/),
   coverageStep: filter('buildSteps', item => /^sd-teardown-screwdriver-coverage/.test(item.name)),
 
-  coverageInfo: computed('coverageStep', 'buildAction', 'buildSteps', {
+  coverageInfo: computed('coverageStep', 'buildAction', {
     get() {
       const buildAction = this.get('buildAction');
       const coverageStep = this.get('coverageStep');
@@ -41,7 +41,7 @@ export default Component.extend({
       };
 
       return ObjectPromiseProxy.create({
-        promise: this.get('coverage').getConverageInfo(config)
+        promise: this.get('coverage').getCoverageInfo(config)
       });
     }
   }),
