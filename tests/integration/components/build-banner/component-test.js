@@ -3,6 +3,18 @@ import moment from 'moment';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent } from 'ember-qunit';
 import test from 'ember-sinon-qunit/test-support/test';
+import { resolve } from 'rsvp';
+import Service from '@ember/service';
+import wait from 'ember-test-helpers/wait';
+
+const coverageService = Service.extend({
+  getConverageInfo() {
+    return resolve({
+      coverage: 98,
+      projectUrl: 'http://example.com/coverage/123'
+    });
+  }
+});
 
 const eventMock = EmberObject.create({
   id: 'abcd',
@@ -34,7 +46,11 @@ const eventMock = EmberObject.create({
 });
 
 moduleForComponent('build-banner', 'Integration | Component | build banner', {
-  integration: true
+  integration: true,
+
+  beforeEach() {
+    this.register('service:coverage', coverageService);
+  }
 });
 
 test('it renders', function (assert) {
@@ -123,4 +139,60 @@ test('it renders a stop button for running job when authenticated', function (as
 
   assert.equal(this.$('button').text().trim(), 'Stop');
   this.$('button').click();
+});
+
+test('it renders coverage info if there is a coverage step', function (assert) {
+  const $ = this.$;
+  const buildStepsMock = [
+    { name: 'sd-setup-screwdriver-scm-bookend' },
+    { name: 'sd-teardown-screwdriver-coverage-bookend' }
+  ];
+
+  assert.expect(2);
+  this.set('eventMock', eventMock);
+  this.set('buildStepsMock', buildStepsMock);
+  this.render(hbs`{{build-banner
+    buildContainer="node:6"
+    duration="5 seconds"
+    buildId=123
+    buildStatus="SUCCESS"
+    buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
+    jobId=1
+    jobName="main"
+    isAuthenticated=true
+    event=eventMock
+  }}`);
+
+  return wait().then(() => {
+    assert.equal($('.coverage .banner-value').text().trim(), '98%');
+    assert.equal($('.coverage a').prop('href'), 'http://example.com/coverage/123');
+  });
+});
+
+test('it does not render coverage info if there is no coverage step', function (assert) {
+  const $ = this.$;
+  const buildStepsMock = [
+    { name: 'sd-setup-screwdriver-scm-bookend' }
+  ];
+
+  assert.expect(1);
+  this.set('eventMock', eventMock);
+  this.set('buildStepsMock', buildStepsMock);
+  this.render(hbs`{{build-banner
+    buildContainer="node:6"
+    duration="5 seconds"
+    buildId=123
+    buildStatus="SUCCESS"
+    buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
+    jobId=1
+    jobName="main"
+    isAuthenticated=true
+    event=eventMock
+  }}`);
+
+  return wait().then(() => {
+    assert.notOk($('li').hasClass('coverage'));
+  });
 });

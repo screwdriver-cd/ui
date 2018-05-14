@@ -19,6 +19,12 @@
     <span class="banner-value">{{user-link user=event.creator causeMessage=event.causeMessage}}</span>
     <span class="banner-label">User</span>
   </li>
+  {{#if coverageStep}}
+    <li class="coverage">
+      <span class="banner-value"><a href="{{coverageInfo.projectUrl}}" class="sha">{{coverageInfo.coverage}}%</a></span>
+      <span class="banner-label">Coverage</span>
+    </li>
+  {{/if}}
   <li class="docker-container">
     <span class="banner-value">{{buildContainer}}</span>
     <span class="banner-label">Container</span>
