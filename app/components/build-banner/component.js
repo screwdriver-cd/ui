@@ -14,9 +14,8 @@ export default Component.extend({
   isPR: match('jobName', /^PR-/),
   coverageStep: filter('buildSteps', item => /^sd-teardown-screwdriver-coverage/.test(item.name)),
 
-  coverageInfo: computed('coverageStep', 'buildAction', {
+  coverageInfo: computed('coverageStep', {
     get() {
-      const buildAction = this.get('buildAction');
       const coverageStep = this.get('coverageStep');
 
       // No coverage step, return empty object
@@ -24,15 +23,16 @@ export default Component.extend({
         return {};
       }
 
-      // Build has coverage step but not finished yet, return place holder value
-      if (buildAction === 'Stop') {
+      const coverageStepData = coverageStep.objectAt(0);
+
+      // Coverage step not finished yet, return place holder value
+      if (!coverageStepData.endTime) {
         return {
-          coverage: '',
+          coverage: 'N/A',
           projectUrl: '#'
         };
       }
 
-      const coverageStepData = coverageStep.objectAt(0);
       const config = {
         buildId: this.get('buildId'),
         jobId: this.get('jobId'),

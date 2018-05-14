@@ -21,7 +21,11 @@
   </li>
   {{#if coverageStep}}
     <li class="coverage">
-      <span class="banner-value"><a href="{{coverageInfo.projectUrl}}" class="sha">{{coverageInfo.coverage}}%</a></span>
+      <span class="banner-value">
+        <a href="{{coverageInfo.projectUrl}}" title="{{if (eq coverageInfo.coverage 'N/A') "Coverage report not generated"}}">
+          {{coverageInfo.coverage}}
+        </a>
+      </span>
       <span class="banner-label">Coverage</span>
     </li>
   {{/if}}

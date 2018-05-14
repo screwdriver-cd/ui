@@ -49,7 +49,7 @@ test('it fetches coverage info', function (assert) {
   p.then((data) => {
     const [request] = server.handledRequests;
 
-    assert.deepEqual(data, { coverage: 98, projectUrl: 'https://sonar.foo.bar' });
+    assert.deepEqual(data, { coverage: '98%', projectUrl: 'https://sonar.foo.bar' });
     assert.deepEqual(request.url,
     // eslint-disable-next-line max-len
       'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z');
@@ -82,7 +82,7 @@ test('it sets default coverage info', function (assert) {
   p.then((data) => {
     const [request] = server.handledRequests;
 
-    assert.deepEqual(data, { coverage: '', projectUrl: '#' });
+    assert.deepEqual(data, { coverage: 'N/A', projectUrl: '#' });
     assert.deepEqual(request.url,
     // eslint-disable-next-line max-len
       'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z');

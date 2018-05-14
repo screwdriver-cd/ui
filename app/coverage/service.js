@@ -34,7 +34,7 @@ export default Service.extend({
       $.ajax(ajaxConfig)
         .done(content => resolve({
           projectUrl: content.projectUrl || '#',
-          coverage: content.coverage || ''
+          coverage: content.coverage ? `${content.coverage}%` : 'N/A'
         }))
         .fail((response) => {
           let message = `${response.status} Request Failed`;
