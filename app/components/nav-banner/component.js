@@ -3,7 +3,6 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
 export default Component.extend({
-  session: service(),
   banner: service('banner'),
 
   actions: {
@@ -12,7 +11,7 @@ export default Component.extend({
     }
   },
 
-  fetchBanners() {
+  myFetchBanners() {
     this.get('banner').fetchBanners().then((banners) => {
       set(this, 'banners', banners);
     });
@@ -21,6 +20,6 @@ export default Component.extend({
   // Start loading active banners immediately upon inserting the element
   didInsertElement() {
     this._super(...arguments);
-    this.fetchBanners();
+    this.myFetchBanners();
   }
 });
