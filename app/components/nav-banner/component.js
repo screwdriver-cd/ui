@@ -11,7 +11,7 @@ export default Component.extend({
     }
   },
 
-  myFetchBanners() {
+  setBanners() {
     this.get('banner').fetchBanners().then((banners) => {
       set(this, 'banners', banners);
     });
@@ -20,6 +20,6 @@ export default Component.extend({
   // Start loading active banners immediately upon inserting the element
   didInsertElement() {
     this._super(...arguments);
-    this.myFetchBanners();
+    this.setBanners();
   }
 });
