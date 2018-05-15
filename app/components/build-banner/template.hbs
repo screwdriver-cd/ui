@@ -33,6 +33,19 @@
     <span class="banner-value">{{buildContainer}}</span>
     <span class="banner-label">Container</span>
   </li>
+  {{#if event.pr.url}}
+    <li class="pr">
+      <span class="banner-value">
+        <div class="pr-url-holder">
+          <a href="{{event.pr.url}}" class="sha">{{inline-svg "github" class="pr-img"}}</a>
+        </div>
+      </span>
+      <span class="banner-label">Pull Request</span>
+    </li>
+  {{else}}
+    <li class="empty">
+    </li>
+  {{/if}}
   <li class="call-to-action">
     {{#if isAuthenticated}}
       {{#bs-button onClick=(action "buildButtonClick")}}{{buildAction}}{{/bs-button}}
