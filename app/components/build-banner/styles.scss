@@ -33,12 +33,25 @@ li {
   font-size: 10px;
 }
 
+.empty {
+  border-left-width: 0px;
+}
+
 .job-name {
   border-left-width: 3px;
 
   .banner-value {
     font-weight: $weight-bold;
   }
+}
+
+.pr-img {
+  width: 20px;
+  height: 20px;
+}
+
+.pr-url-holder {
+  height: 20px;
 }
 
 //sass-lint:disable class-name-format
