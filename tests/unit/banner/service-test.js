@@ -20,7 +20,6 @@ moduleFor('service:banner', 'Unit | Service | banner', {
 
   beforeEach() {
     server = new Pretender();
-    // this.register('service:nav-banner', mockBannerService);
   },
 
   afterEach() {
