@@ -2,8 +2,16 @@
   .banner .alert {
     margin-bottom: 2px;
     border-radius: 0px;
-    background: $sd-alert-bg;
-    color: $sd-alert-fg;
+  }
+
+  .banner .alert-warn {
+    background: $sd-warn-bg;
+    color: $sd-warn-fg;
+  }
+
+  .banner .alert-info {
+    background: $sd-info-bg;
+    color: $sd-info-fg;
   }
 
   .banner .fa {

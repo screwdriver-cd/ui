@@ -5,8 +5,10 @@ $sd-white: #FFF;
 $sd-gradient-start: $sd-light-blue;
 $sd-gradient-end: $sd-dark-blue;
 
-$sd-alert-fg: #FAFBFC;
-$sd-alert-bg: #CB2431;
+$sd-warn-fg: #FAFBFC;
+$sd-warn-bg: #CB2431;
+$sd-info-fg: #0B548C;
+$sd-info-bg: #DAEDF8;
 
 $sd-search-highlight: rgba(242, 242, 242, .1);
 $sd-search-placeholder: rgba(255, 255, 255, .6);
