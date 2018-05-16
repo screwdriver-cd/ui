@@ -22,6 +22,29 @@ export default Component.extend({
 
   coverageStepStartTime: alias('coverageStep.startTime'),
 
+  numberOfColumns: computed('coverageStep', {
+    get() {
+      const coverageStep = this.get('coverageStep');
+      const url = this.get('event.pr.url');
+
+      if (!url && (!coverageStep || coverageStep.length <= 0)) {
+        return 'no-conditionals';
+      } else if (url && (coverageStep && coverageStep.length > 0)) {
+        return 'two-conditionals';
+      }
+
+      return 'one-conditional';
+    }
+  }),
+
+  prNumber: computed('event.pr.url', {
+    get() {
+      let url = this.get('event.pr.url');
+
+      return url.split('/').pop();
+    }
+  }),
+
   buildAction: computed('buildStatus', {
     get() {
       const status = this.get('buildStatus');
