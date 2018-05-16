@@ -37,6 +37,9 @@ const eventMock = EmberObject.create({
     avatar: 'http://example.com/u/batman/avatar',
     url: 'http://example.com/u/batman'
   },
+  pr: {
+    url: 'https://github.com/screwdriver-cd/ui/pull/292'
+  },
   pipelineId: '12345',
   sha: 'abcdef1029384',
   truncatedSha: 'abcdef',
@@ -82,6 +85,38 @@ test('it renders', function (assert) {
   assert.equal($('.commit a').text().trim(), '#abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds');
   assert.equal($('.started .banner-value').text().trim(), expectedTime);
+  assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
+  assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
+  assert.equal($('button').length, 0);
+});
+
+test('it renders pr link if there pr url info is available', function (assert) {
+  assert.expect(8);
+  const $ = this.$;
+
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
+  this.set('reloadCb', () => {
+    assert.ok(true);
+  });
+
+  this.set('eventMock', eventMock);
+  this.render(hbs`{{build-banner
+    buildContainer="node:6"
+    duration="5 seconds"
+    buildStatus="RUNNING"
+    buildStart="2016-11-04T20:09:41.238Z"
+    jobName="PR-671"
+    isAuthenticated=false
+    event=eventMock
+    reloadBuild=(action reloadCb)
+  }}`);
+
+  assert.equal($('li.pr .pr-url-holder .pr-url').prop('href'),
+    'https://github.com/screwdriver-cd/ui/pull/292');
+  assert.equal($('li.pr .pr-url-holder .pr-url .pr-link').text().trim(), 'PR#292');
+  assert.equal($('.commit a').text().trim(), '#abcdef');
+  assert.equal($('.duration .banner-value').text().trim(), '5 seconds');
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
   assert.equal($('button').length, 0);
