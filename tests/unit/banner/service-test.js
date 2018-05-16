@@ -1,6 +1,3 @@
-// import EmberObject from '@ember/object';
-import { resolve } from 'rsvp';
-import Service from '@ember/service';
 import Pretender from 'pretender';
 import { moduleFor, test } from 'ember-qunit';
 const actualMessage = 'shutdown imminent';
@@ -12,27 +9,18 @@ const getBanners = () => {
     {
       'Content-Type': 'application/json'
     },
-    '[]'
+    JSON.stringify([
+      { id: 1, isActive: true, message: actualMessage }
+    ])
   ]);
 };
 
-const mockBannerService = Service.extend({
-  fetchBanners() {
-    return resolve({
-      banners: [
-        { id: 1, isActive: true, message: actualMessage }
-      ],
-      done: true
-    });
-  }
-});
-
-moduleFor('service:nav-banner', 'Integration | Component | nav banner', {
+moduleFor('service:banner', 'Unit | Service | banner', {
   integration: true,
 
   beforeEach() {
     server = new Pretender();
-    this.register('service:nav-banner', mockBannerService);
+    // this.register('service:nav-banner', mockBannerService);
   },
 
   afterEach() {
@@ -40,13 +28,19 @@ moduleFor('service:nav-banner', 'Integration | Component | nav banner', {
   }
 });
 
+test('it exists', function (assert) {
+  const service = this.subject();
+
+  assert.ok(service);
+});
+
 test('it fetches active banners', function (assert) {
+  assert.expect(1);
   getBanners();
   const service = this.subject();
   const b = service.fetchBanners();
 
-  b.then(({ banners, done }) => {
-    assert.ok(done);
+  b.then((banners) => {
     assert.equal(banners[0].message, actualMessage);
   });
 });
