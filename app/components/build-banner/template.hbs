@@ -1,4 +1,4 @@
-<ul class={{numberOfColumns}}>
+<ul>
   <li class="job-name build-{{buildStatus}}">
     <span class="banner-value">{{jobName}}</span>
     <span class="banner-label">Job</span>
@@ -12,7 +12,7 @@
       <span class="banner-value pr-url-holder">
         <a href="{{event.pr.url}}" class="sha pr-url">
           {{inline-svg "github" class="pr-img"}} 
-          <div class="pr-link">PR#{{prNumber}}</div>
+          <span class="pr-link">PR#{{prNumber}}</span>
         </a>
       </span>
       <span class="banner-label">Pull Request</span>
@@ -44,7 +44,7 @@
     <span class="banner-value">{{buildContainer}}</span>
     <span class="banner-label">Container</span>
   </li>
-  <li class="call-to-action">
+  <li class="call-to-action button-right">
     {{#if isAuthenticated}}
       {{#bs-button onClick=(action "buildButtonClick")}}{{buildAction}}{{/bs-button}}
     {{/if}}

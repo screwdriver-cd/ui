@@ -7,18 +7,11 @@ ul {
   padding: 0;
   margin: 0;
   display: grid;
+  grid-template-columns: repeat(8, 1fr) 2fr;
 }
 
-.no-conditionals {
-    grid-template-columns: repeat(6, 1fr) 2fr;
-}
-
-.one-conditional {
-    grid-template-columns: repeat(7, 1fr) 2fr;
-}
-
-.two-conditionals {
-    grid-template-columns: repeat(8, 1fr) 2fr;
+.button-right {
+  grid-column: 9;
 }
 
 li {
