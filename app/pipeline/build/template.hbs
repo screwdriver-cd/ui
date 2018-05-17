@@ -14,17 +14,26 @@
   reloadBuild=(action "reload")
 }}
 
+{{#if buildLoading}}
+  {{#modal-dialog clickOutsideToClose=false
+    targetAttachment="center"
+    translucentOverlay=true
+  }}
+    {{loading-view}}
+  {{/modal-dialog}}
+{{/if}}
+
 {{#if build.statusMessage}}
   {{info-message message=build.statusMessage type="warning" icon="exclamation-triangle"}}
 {{/if}}
 
 {{#if stepList}}
-{{build-step-collection
-  buildStatus=build.status
-  buildId=build.id
-  buildSteps=build.steps
-  buildStart=build.startTime
-}}
+  {{build-step-collection
+    buildStatus=build.status
+    buildId=build.id
+    buildSteps=build.steps
+    buildStart=build.startTime
+  }}
 {{/if}}
 
 {{outlet}}
