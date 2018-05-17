@@ -1,0 +1,22 @@
+& {
+  .banner .alert {
+    border: 0px;
+    margin-bottom: 2px;
+    border-radius: 0px;
+  }
+
+  .banner .alert-warn {
+    background: $sd-warn-bg;
+    color: $sd-warn-fg;
+  }
+
+  .banner .alert-info {
+    background: $sd-info-bg;
+    color: $sd-info-fg;
+  }
+
+  .banner .fa {
+    padding-right: 7px;
+    font-size: 20px;
+  }
+}

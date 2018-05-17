@@ -1,0 +1,12 @@
+{{#each banners as |banner|}}
+
+<div class="banner">
+  {{#bs-alert type=banner.type}}
+    {{fa-icon
+      (if (eq banner.type "info") "info-circle" "exclamation-triangle")
+    }}
+    <span>{{banner.message}}</span>
+  {{/bs-alert}}
+</div>
+
+{{/each}}
