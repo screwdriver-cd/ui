@@ -7,6 +7,17 @@
     <span class="banner-value"><a href="{{event.commit.url}}" class="sha">#{{event.truncatedSha}}</a></span>
     <span class="banner-label">Commit</span>
   </li>
+  {{#if event.pr.url}}
+    <li class="pr">
+      <span class="banner-value pr-url-holder">
+        <a href="{{event.pr.url}}" class="sha pr-url">
+          {{inline-svg "github" class="pr-img"}} 
+          <span class="pr-link">PR#{{prNumber}}</span>
+        </a>
+      </span>
+      <span class="banner-label">Pull Request</span>
+    </li>
+  {{/if}}
   <li class="duration">
     <span class="banner-value">{{duration}}</span>
     <span class="banner-label">Duration</span>
@@ -33,7 +44,7 @@
     <span class="banner-value">{{buildContainer}}</span>
     <span class="banner-label">Container</span>
   </li>
-  <li class="call-to-action">
+  <li class="call-to-action button-right">
     {{#if isAuthenticated}}
       {{#bs-button onClick=(action "buildButtonClick")}}{{buildAction}}{{/bs-button}}
     {{/if}}
