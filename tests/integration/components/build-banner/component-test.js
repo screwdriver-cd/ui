@@ -16,6 +16,10 @@ const coverageService = Service.extend({
   }
 });
 
+const buildStepsMock = [
+  { name: 'sd-setup-screwdriver-scm-bookend' }
+];
+
 const eventMock = EmberObject.create({
   id: 'abcd',
   causeMessage: 'Merged by batman',
@@ -63,12 +67,14 @@ test('it renders', function (assert) {
     assert.ok(true);
   });
 
+  this.set('buildStepsMock', buildStepsMock);
   this.set('eventMock', eventMock);
   this.render(hbs`{{build-banner
     buildContainer="node:6"
     duration="5 seconds"
     buildStatus="RUNNING"
     buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
     jobName="PR-671"
     isAuthenticated=false
     event=eventMock
@@ -92,6 +98,7 @@ test('it renders a restart button for completed jobs when authenticated', functi
 
   const reloadBuildSpy = this.spy();
 
+  this.set('buildStepsMock', buildStepsMock);
   this.set('reloadCb', reloadBuildSpy);
   this.set('externalStart', () => {
     assert.ok(true);
@@ -103,6 +110,7 @@ test('it renders a restart button for completed jobs when authenticated', functi
     duration="5 seconds"
     buildStatus="ABORTED"
     buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
     jobName="PR-671"
     isAuthenticated=true
     event=eventMock
@@ -124,12 +132,14 @@ test('it renders a stop button for running job when authenticated', function (as
   this.set('externalStop', () => {
     assert.ok(true);
   });
+  this.set('buildStepsMock', buildStepsMock);
   this.set('eventMock', eventMock);
   this.render(hbs`{{build-banner
     buildContainer="node:6"
     duration="5 seconds"
     buildStatus="RUNNING"
     buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
     jobName="main"
     isAuthenticated=true
     event=eventMock
@@ -143,7 +153,7 @@ test('it renders a stop button for running job when authenticated', function (as
 
 test('it renders coverage info if coverage step finished', function (assert) {
   const $ = this.$;
-  const buildStepsMock = [
+  const coverageStepsMock = [
     { name: 'sd-setup-screwdriver-scm-bookend' },
     {
       name: 'sd-teardown-screwdriver-coverage-bookend',
@@ -154,7 +164,7 @@ test('it renders coverage info if coverage step finished', function (assert) {
 
   assert.expect(2);
   this.set('eventMock', eventMock);
-  this.set('buildStepsMock', buildStepsMock);
+  this.set('buildStepsMock', coverageStepsMock);
   this.render(hbs`{{build-banner
     buildContainer="node:6"
     duration="5 seconds"
@@ -176,7 +186,7 @@ test('it renders coverage info if coverage step finished', function (assert) {
 
 test('it renders default coverage info if coverage step has not finished', function (assert) {
   const $ = this.$;
-  const buildStepsMock = [
+  const coverageStepsMock = [
     { name: 'sd-setup-screwdriver-scm-bookend' },
     { name: 'sd-teardown-screwdriver-coverage-bookend' }
   ];
@@ -187,7 +197,7 @@ test('it renders default coverage info if coverage step has not finished', funct
     assert.ok(true);
   });
   this.set('eventMock', eventMock);
-  this.set('buildStepsMock', buildStepsMock);
+  this.set('buildStepsMock', coverageStepsMock);
   this.render(hbs`{{build-banner
     buildContainer="node:6"
     duration="5 seconds"
@@ -211,9 +221,6 @@ test('it renders default coverage info if coverage step has not finished', funct
 
 test('it does not render coverage info if there is no coverage step', function (assert) {
   const $ = this.$;
-  const buildStepsMock = [
-    { name: 'sd-setup-screwdriver-scm-bookend' }
-  ];
 
   assert.expect(1);
   this.set('eventMock', eventMock);
