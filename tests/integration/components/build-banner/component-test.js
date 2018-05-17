@@ -96,8 +96,8 @@ test('it renders', function (assert) {
   assert.equal($('button').length, 0);
 });
 
-test('it renders pr link if there pr url info is available', function (assert) {
-  assert.expect(8);
+test('it renders pr link if pr url info is available', function (assert) {
+  assert.expect(11);
   const $ = this.$;
 
   // Set any properties with this.set('myProperty', 'value');
@@ -106,23 +106,30 @@ test('it renders pr link if there pr url info is available', function (assert) {
     assert.ok(true);
   });
 
+  this.set('buildStepsMock', buildStepsMock);
   this.set('eventMock', eventMock);
   this.render(hbs`{{build-banner
     buildContainer="node:6"
     duration="5 seconds"
     buildStatus="RUNNING"
     buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
     jobName="PR-671"
     isAuthenticated=false
     event=eventMock
     reloadBuild=(action reloadCb)
   }}`);
+  const expectedTime = moment('2016-11-04T20:09:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
-  assert.equal($('li.pr .pr-url-holder .pr-url').prop('href'),
+  assert.equal($('.pr .pr-url-holder a').prop('href'),
     'https://github.com/screwdriver-cd/ui/pull/292');
-  assert.equal($('li.pr .pr-url-holder .pr-url .pr-link').text().trim(), 'PR#292');
+  assert.equal($('.pr .pr-url-holder a').text().trim(), 'PR#292');
+  assert.equal($('li.job-name .banner-value').text().trim(), 'PR-671');
+  assert.equal($('.commit a').prop('href'),
+    'http://example.com/batcave/batmobile/commit/abcdef1029384');
   assert.equal($('.commit a').text().trim(), '#abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds');
+  assert.equal($('.started .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
   assert.equal($('button').length, 0);
