@@ -45,6 +45,14 @@ export default Component.extend({
     }
   }),
 
+  prNumber: computed('event.pr.url', {
+    get() {
+      let url = this.get('event.pr.url');
+
+      return url.split('/').pop();
+    }
+  }),
+
   buildAction: computed('buildStatus', {
     get() {
       const status = this.get('buildStatus');
