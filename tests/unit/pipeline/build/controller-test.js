@@ -72,13 +72,16 @@ test('it restarts a build', function (assert) {
       assert.equal(id, 9999);
     };
 
+    assert.notOk(controller.get('buildLoading'));
     controller.send('startBuild');
+    assert.ok(controller.get('buildLoading'));
   });
 
   return wait().then(() => {
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
+    assert.notOk(controller.get('buildLoading'));
     assert.deepEqual(payload, {
       buildId: 123,
       causeMessage: 'apple clicked restart for job "PR-1:main" for sha sha'

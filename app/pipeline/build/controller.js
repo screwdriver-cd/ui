@@ -17,6 +17,7 @@ export default Controller.extend({
   event: reads('model.event'),
   pipeline: reads('model.pipeline'),
   stepList: mapBy('build.steps', 'name'),
+  buildLoading: false,
 
   actions: {
     stopBuild() {
@@ -27,6 +28,7 @@ export default Controller.extend({
     },
 
     startBuild() {
+      this.set('buildLoading', true);
       const buildId = get(this, 'build.id');
       const jobName = get(this, 'job.name');
       const token = get(this, 'session.data.authenticated.token');
@@ -40,15 +42,18 @@ export default Controller.extend({
 
       return newEvent.save().then(() =>
         newEvent.get('builds')
-          .then(builds =>
-            this.transitionToRoute('pipeline.build',
-              builds.get('lastObject.id'))
-          ));
+          .then((builds) => {
+            this.set('buildLoading', false);
+
+            return this.transitionToRoute('pipeline.build',
+              builds.get('lastObject.id'));
+          }));
     },
 
     reload() {
       // If there is already a reload scheduled in the runloop,
       // this replaces it with one with no timeout
+      this.set('buildLoading', false);
       once(this, 'reloadBuild', 0);
     }
   },
