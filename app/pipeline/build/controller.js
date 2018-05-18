@@ -44,6 +44,7 @@ export default Controller.extend({
         newEvent.get('builds')
           .then((builds) => {
             this.set('isShowingModal', false);
+
             return this.transitionToRoute('pipeline.build',
               builds.get('lastObject.id'));
           }
