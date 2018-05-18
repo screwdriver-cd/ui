@@ -29,22 +29,18 @@ export default Service.extend({
       }
     };
 
-    return new EmberPromise((resolve, reject) => {
+    return new EmberPromise((resolve) => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
         .done(content => resolve({
           projectUrl: content.projectUrl || '#',
           coverage: content.coverage ? `${content.coverage}%` : 'N/A'
         }))
-        .fail((response) => {
-          let message = `${response.status} Request Failed`;
-
-          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
-            message = `${response.status} ${response.responseJSON.error}`;
-          }
-
-          return reject(message);
-        });
+        .fail(() => resolve({
+          projectUrl: '#',
+          coverage: 'N/A'
+        })
+        );
     });
   }
 });
