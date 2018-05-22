@@ -14,6 +14,15 @@
   reloadBuild=(action "reload")
 }}
 
+{{#if isShowingModal}}
+  {{#modal-dialog clickOutsideToClose=false
+    targetAttachment="center"
+    translucentOverlay=true
+  }}
+    {{loading-view}}
+  {{/modal-dialog}}
+{{/if}}
+
 {{#if build.statusMessage}}
   {{info-message message=build.statusMessage type="warning" icon="exclamation-triangle"}}
 {{/if}}

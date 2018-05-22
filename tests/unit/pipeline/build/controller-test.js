@@ -37,7 +37,7 @@ test('it exists', function (assert) {
 });
 
 test('it restarts a build', function (assert) {
-  assert.expect(3);
+  assert.expect(5);
 
   server.post('http://localhost:8080/v4/events', () => [
     201,
@@ -67,12 +67,14 @@ test('it restarts a build', function (assert) {
         sha: 'sha'
       })
     });
+
+    assert.notOk(controller.get('isShowingModal'));
     controller.transitionToRoute = (path, id) => {
       assert.equal(path, 'pipeline.build');
       assert.equal(id, 9999);
     };
-
     controller.send('startBuild');
+    assert.ok(controller.get('isShowingModal'));
   });
 
   return wait().then(() => {

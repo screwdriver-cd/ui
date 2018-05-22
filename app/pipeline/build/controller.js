@@ -17,6 +17,7 @@ export default Controller.extend({
   event: reads('model.event'),
   pipeline: reads('model.pipeline'),
   stepList: mapBy('build.steps', 'name'),
+  isShowingModal: false,
 
   actions: {
     stopBuild() {
@@ -27,6 +28,7 @@ export default Controller.extend({
     },
 
     startBuild() {
+      this.set('isShowingModal', true);
       const buildId = get(this, 'build.id');
       const jobName = get(this, 'job.name');
       const token = get(this, 'session.data.authenticated.token');
@@ -40,9 +42,12 @@ export default Controller.extend({
 
       return newEvent.save().then(() =>
         newEvent.get('builds')
-          .then(builds =>
-            this.transitionToRoute('pipeline.build',
-              builds.get('lastObject.id'))
+          .then((builds) => {
+            this.set('isShowingModal', false);
+
+            return this.transitionToRoute('pipeline.build',
+              builds.get('lastObject.id'));
+          }
           ));
     },
 
