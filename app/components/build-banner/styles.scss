@@ -64,6 +64,14 @@ li {
   position: relative;
 }
 
+.commit-list {
+  display: inline-block;
+}
+
+.caret-display {
+  display: inline-block;
+}
+
 //sass-lint:disable class-name-format
 &.RUNNING,
 &.QUEUED {

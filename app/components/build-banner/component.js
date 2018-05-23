@@ -1,5 +1,5 @@
-import { computed } from '@ember/object';
-import { alias, match } from '@ember/object/computed';
+import { computed, get } from '@ember/object';
+import { alias, match, sort } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
@@ -111,7 +111,23 @@ export default Component.extend({
     }
   },
 
+  eventsSorted: sort('events.[]',
+    (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
+
   actions: {
+    test() {
+      const list = get(this, 'eventsSorted');
+
+      for(let i = 0; i < list.length; i++) {
+        const type = get(list[i], 'type');
+
+        console.log(type)
+      }
+
+
+      
+    },
+
     buildButtonClick() {
       if (this.get('buildAction') === 'Stop') {
         this.get('onStop')();

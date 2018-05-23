@@ -8,6 +8,8 @@ import Controller from '@ember/controller';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Controller.extend({
+  queryParams: ['type'],
+  type: null,
   session: service('session'),
   loading: false,
   counter: 0,
@@ -15,11 +17,18 @@ export default Controller.extend({
   jobs: reads('model.jobs'),
   job: reads('model.job'),
   event: reads('model.event'),
+  events: reads('model.events'),
   pipeline: reads('model.pipeline'),
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
 
   actions: {
+    test() {
+      const events = this.get('events');
+      
+      console.log(events);
+    },
+
     stopBuild() {
       const build = this.get('build');
 

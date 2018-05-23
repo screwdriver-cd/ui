@@ -45,9 +45,9 @@ module.exports = (environment) => {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
-      SDAPI_HOSTNAME: 'http://localhost:8080',
+      SDAPI_HOSTNAME: 'http://172.142.1.176:9001',
       SDAPI_NAMESPACE: 'v4',
-      SDSTORE_HOSTNAME: 'http://localhost:8081',
+      SDSTORE_HOSTNAME: 'http://172.142.1.176:9002',
       SDSTORE_NAMESPACE: 'v1',
       BUILD_RELOAD_TIMER: 5000, // 5 seconds
       EVENT_RELOAD_TIMER: 90000, // 1.5 minutes

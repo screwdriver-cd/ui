@@ -35,6 +35,11 @@ export default Component.extend({
     },
     eventClick(id) {
       set(this, 'selected', id);
+    },
+    test() {
+      const events = this.get('events.length');
+      
+      console.log(events);
     }
   }
 });
