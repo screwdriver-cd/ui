@@ -72,6 +72,26 @@ li {
   display: inline-block;
 }
 
+.dropdown {
+  display: inline-block
+}
+
+.dropdown .dropdown-menu{
+  display: none;
+}
+
+
+.open .dropdown-menu{
+  display: inline-block;
+}
+.dropdown-menu {
+  position: absolute;
+  left: -70px;
+  min-width: 75px;
+  max-height: 150px;
+  overflow: auto;
+}
+
 //sass-lint:disable class-name-format
 &.RUNNING,
 &.QUEUED {

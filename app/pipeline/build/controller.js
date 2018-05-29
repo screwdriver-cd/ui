@@ -1,5 +1,5 @@
 import { later, once } from '@ember/runloop';
-import { get } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { reads, mapBy } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
@@ -7,7 +7,10 @@ import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import Controller from '@ember/controller';
 import ENV from 'screwdriver-ui/config/environment';
 
+import $ from 'jquery';
+
 export default Controller.extend({
+  prEventsService: service('pr-events'),
   queryParams: ['type'],
   type: null,
   session: service('session'),
@@ -17,16 +20,43 @@ export default Controller.extend({
   jobs: reads('model.jobs'),
   job: reads('model.job'),
   event: reads('model.event'),
-  events: reads('model.events'),
   pipeline: reads('model.pipeline'),
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
+  prEvents: computed('model.event.pr.url', 'model.pipeline.id', {
+    get() {
+      if(this.get('model.event.type') == 'pr') {
+        const event = this.get('model.event.pr.url');
+        const pipeline = this.get('model.pipeline.id');
+        console.log('HELLLLLLLLO')
+        console.log(event, pipeline)
+        return this.get('prEventsService').getPRevents(pipeline, event).then( prCommits => {
+            console.log(prCommits);
+            return prCommits;
+
+        })
+      }
+      return [];
+    }
+  }),
 
   actions: {
+
     test() {
-      const events = this.get('events');
-      
-      console.log(events);
+      //this.transitionToRoute('pipeline.build', 2,);
+      // const pipelineId = get(this, 'pipeline.id');
+      // const eventPrUrl = get(this,'event.pr.url');
+      // console.log(pipelineId);
+      // console.log(eventPrUrl);
+      // this.get('prEventsService').getPRevents(pipelineId, eventPrUrl).then( prCommits => {
+      //   this.set('prCommits', prCommits);
+      // })
+
+      const buildStatus = this.get('build.status');
+      const buildId = this.get('build.id');
+      const buildsteps = this.get('build.steps');
+      const buildstart = this.get('build.startTime');
+      console.log(buildStatus, buildId, buildsteps, buildstart)
     },
 
     stopBuild() {
@@ -64,6 +94,14 @@ export default Controller.extend({
       // If there is already a reload scheduled in the runloop,
       // this replaces it with one with no timeout
       once(this, 'reloadBuild', 0);
+    },
+
+    changeBuild(pipelineId, buildId) {
+      console.log(pipelineId, buildId);
+      //    var buildPath = 'builds/' +buildId;
+      //debugger
+      return this.transitionToRoute('pipeline.build', pipelineId, buildId);
+
     }
   },
 

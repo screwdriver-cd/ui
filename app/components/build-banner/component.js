@@ -1,13 +1,15 @@
 import { computed, get } from '@ember/object';
-import { alias, match, sort } from '@ember/object/computed';
+import { alias, match, sort, reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
+
 
 export default Component.extend({
   classNames: ['build-banner', 'row'],
   classNameBindings: ['buildStatus'],
   coverage: service(),
   isPR: match('jobName', /^PR-/),
+  testArr: ['a','b','c','d','e','6','z'],
   coverageStep: computed('buildSteps', {
     get() {
       const buildSteps = this.get('buildSteps');
@@ -18,6 +20,7 @@ export default Component.extend({
     }
   }),
 
+
   coverageStepEndTime: alias('coverageStep.endTime'),
 
   coverageStepStartTime: alias('coverageStep.startTime'),
@@ -27,6 +30,25 @@ export default Component.extend({
       let url = this.get('event.pr.url');
 
       return url.split('/').pop();
+    }
+  }),
+
+  shortenedPrShas: computed('prEvents', {
+    get() {
+
+      return this.get('prEvents').then((result) => {
+        let shortenedPrs = [];
+
+        console.log('HELLO WORLD')
+        console.log(result)
+
+        result.map((pr) => {
+          shortenedPrs.push(pr.sha.substr(0,6));
+        })
+        console.log(shortenedPrs)
+        return shortenedPrs;
+      });
+      
     }
   }),
 
@@ -115,16 +137,25 @@ export default Component.extend({
     (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
 
   actions: {
-    test() {
-      const list = get(this, 'eventsSorted');
 
-      for(let i = 0; i < list.length; i++) {
-        const type = get(list[i], 'type');
-
-        console.log(type)
+    changeCurPr(pr){
+      console.log(pr)
+      const prs = this.get('prEvents')._result;
+      console.log(prs);
+      this.set('event.truncatedSha',pr)
+      let changeBuild = this.get('changeBuild');
+      for(let i = 0; i < prs.length; i++) {
+        if(pr == prs[i].sha.substr(0,6)) {
+          this.set('event.commit.url', prs[i].commit.url)
+          changeBuild( prs[i].pipelineId, prs[i].id);
+          break;
+        }
       }
+    },
 
-
+    test() {
+      const temp = this.get('shortenedPrShas')
+      console.log(temp)
       
     },
 

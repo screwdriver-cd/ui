@@ -17,7 +17,6 @@ export default Service.extend({
   fetchLogs(buildId, stepName, logNumber = 0, pagesToLoad = 10) {
     let lines = [];
     let done = false;
-
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
       `/builds/${buildId}/steps/${stepName}/logs`;
 

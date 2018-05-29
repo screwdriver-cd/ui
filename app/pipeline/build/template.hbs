@@ -10,9 +10,11 @@
   isAuthenticated=session.isAuthenticated
   event=event
   events=events
+  prEvents=prEvents
   onStart=(action "startBuild")
   onStop=(action "stopBuild")
   reloadBuild=(action "reload")
+  changeBuild=(action "changeBuild")
 }}
 
 {{#if isShowingModal}}
@@ -35,6 +37,7 @@
   buildSteps=build.steps
   buildStart=build.startTime
 }}
+fasdfasdf
 {{/if}}
 
 {{outlet}}

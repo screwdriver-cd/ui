@@ -6,16 +6,19 @@
   <li class="commit">
     <span class="banner-value commit-list">
       <a href="{{event.commit.url}}" class="sha commit-sha">#{{event.truncatedSha}}</a>
-      {{#bs-dropdown as |dd|}}
-        {{#dd.toggle}}
-          <span class="caret caret-display"></span>
-        {{/dd.toggle}}
-        {{#ddm.item}}
-              hi
-            {{/ddm.item}}
-              {{/bs-dropdown}}
+      {{#if event.pr.url}}
+        {{#bs-dropdown as |dd|}}
+          {{#dd.toggle}} <span class="caret caret-display"></span>{{/dd.toggle}}
+          {{#dd.menu as |ddm|}}
+            {{#each (await shortenedPrShas) as |test|}}
+              {{#ddm.item}}
+                <a onClick={{action "changeCurPr" test}}>{{test}}</a>
+              {{/ddm.item}}
+            {{/each}}
+          {{/dd.menu}}
+        {{/bs-dropdown}}
+      {{/if}}
     </span>
-    
     <span class="banner-label">Commit</span>
   </li>
   {{#if event.pr.url}}
