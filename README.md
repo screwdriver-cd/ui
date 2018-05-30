@@ -24,6 +24,27 @@ $ bower install
 
 ## Running / Development
 
+### Local config
+
+Put local app settings at `config/local.js` Settings at this file will be merged 
+with environment settings at  `config/environment.js`
+
+```
+'use strict';
+
+const SDAPI_HOSTNAME = 'http://1.142.1.106:9001';
+const SDSTORE_HOSTNAME = 'http://1.142.1.106:9002';
+
+const APP_CONFIG = {
+  SDAPI_HOSTNAME,
+  SDSTORE_HOSTNAME
+};
+
+module.exports = APP_CONFIG;
+```
+
+### Run app
+
 * `ember serve`
 
 Visit your app at [http://localhost:4200](http://localhost:4200).
