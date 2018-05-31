@@ -4,10 +4,8 @@ import { get, set, computed } from '@ember/object';
 
 export default Component.extend({
   classNames: ['build-step-collection', 'row'],
-  setupCollapsed: true,
   stepNames: mapBy('buildSteps', 'name'),
   setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
-  teardownCollapsed: true,
   teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
   selectedStep: computed('buildSteps.@each.{code,startTime,endTime}', {
     get() {
@@ -17,13 +15,29 @@ export default Component.extend({
       const failedStep = steps.find(s => s.code);
       const name = (runningStep && runningStep.name) || (failedStep && failedStep.name) || null;
 
+      return name;
+    }
+  }),
+  setupCollapsed: computed('selectedStep', {
+    get() {
+      const name = get(this, 'selectedStep');
+
       if (name && get(this, 'setupSteps').includes(name)) {
-        set(this, 'setupCollapsed', false);
-      } else if (name && get(this, 'teardownSteps').includes(name)) {
-        set(this, 'teardownCollapsed', false);
+        return false;
       }
 
-      return name;
+      return true;
+    }
+  }),
+  teardownCollapsed: computed('selectedStep', {
+    get() {
+      const name = get(this, 'selectedStep');
+
+      if (name && get(this, 'teardownSteps').includes(name)) {
+        return false;
+      }
+
+      return true;
     }
   }),
   userSteps: filter('stepNames',

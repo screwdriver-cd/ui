@@ -16,10 +16,6 @@ export default Component.extend({
       if (typeof fn === 'function') {
         fn(get(this, 'event.id'));
       }
-    },
-    test() {
-      const event = this.get('event.type');
-      console.log(event);
     }
   },
   click() {

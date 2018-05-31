@@ -10,9 +10,9 @@
         {{#bs-dropdown as |dd|}}
           {{#dd.toggle}} <span class="caret caret-display"></span>{{/dd.toggle}}
           {{#dd.menu as |ddm|}}
-            {{#each (await shortenedPrShas) as |test|}}
-              {{#ddm.item}}
-                <a onClick={{action "changeCurPr" test}}>{{test}}</a>
+            {{#each (await shortenedPrShas) as |prSha|}}
+              {{#ddm.item class="pr-item"}}
+                <a onClick={{action "changeCurPr" prSha.[1]}}>{{prSha.[0]}}. {{prSha.[1]}}</a>
               {{/ddm.item}}
             {{/each}}
           {{/dd.menu}}
@@ -64,6 +64,3 @@
     {{/if}}
   </li>
 </ul>
-<button onClick={{action "test"}}>
-  AYYYYY ITS DAT BOI
-</button>

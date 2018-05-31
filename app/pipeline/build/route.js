@@ -6,26 +6,18 @@ export default Route.extend({
 
   model(params) {
     this.set('pipeline', this.modelFor('pipeline'));
-    console.log('----------MODEL-------------')
-    console.log(params.build_id);
 
     return this.store.findRecord('build', params.build_id).then(build => all([
       this.store.findRecord('job', build.get('jobId')),
       this.store.findRecord('event', build.get('eventId')),
       this.get('pipeline.jobs')
-    ]).then(([job, event, jobs]) => {
-      console.log('-------------MODEL THEN------------')
-      console.log(job, event, jobs)
-      return ({
+    ]).then(([job, event, jobs]) => ({
       build,
       job,
       event,
       pipeline: this.get('pipeline'),
-      jobs
-    })})).catch(result => {
-      console.log('-------IM HERE--------')
-      console.log(result)
-    });
+      jobs: jobs.filter(j => !/^PR-/.test(j.get('name')))
+    })));
   },
 
   afterModel(model) {

@@ -74,11 +74,6 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
 
   actions: {
-    
-    test() {
-      const events = this.get('events');
-      console.log(events);
-    },
 
     startMainBuild() {
       this.set('isShowingModal', true);

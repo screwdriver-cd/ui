@@ -15,15 +15,11 @@ export default Service.extend({
   getPRevents(pipelineId, eventPrUrl) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
     `/pipelines/${pipelineId}/events`;
-
-    console.log(url)
     const prNum = eventPrUrl.split('/').pop();
-    console.log('bye')
-
-    console.log(prNum);
     let prCommits;
-    return new EmberPromise((resolve, reject) => {
-      return $.ajax({
+
+    return new EmberPromise(resolve =>
+      $.ajax({
         method: 'GET',
         url,
         data: {
@@ -38,13 +34,10 @@ export default Service.extend({
           Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
         }
       }).done((data) => {
-        prCommits = data.filter(curEvent => curEvent.pr.url.split('/').pop() == prNum);
-        
-        console.log(prCommits);
-        this.set('events', prCommits);
+        prCommits = data.filter(curEvent => curEvent.pr.url.split('/').pop() === prNum);
       }).always(() => resolve(
         prCommits
-      ));
-    });
+      ))
+    );
   }
 });

@@ -1,15 +1,13 @@
-import { computed, get } from '@ember/object';
-import { alias, match, sort, reads } from '@ember/object/computed';
+import { computed } from '@ember/object';
+import { alias, match } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-
 
 export default Component.extend({
   classNames: ['build-banner', 'row'],
   classNameBindings: ['buildStatus'],
   coverage: service(),
   isPR: match('jobName', /^PR-/),
-  testArr: ['a','b','c','d','e','6','z'],
   coverageStep: computed('buildSteps', {
     get() {
       const buildSteps = this.get('buildSteps');
@@ -19,7 +17,6 @@ export default Component.extend({
       return coverageStep;
     }
   }),
-
 
   coverageStepEndTime: alias('coverageStep.endTime'),
 
@@ -35,20 +32,15 @@ export default Component.extend({
 
   shortenedPrShas: computed('prEvents', {
     get() {
-
       return this.get('prEvents').then((result) => {
         let shortenedPrs = [];
+        let i = 1;
+        result.forEach((pr) => {
+          shortenedPrs.push([i++, pr.sha.substr(0, 6)]);
+        });
 
-        console.log('HELLO WORLD')
-        console.log(result)
-
-        result.map((pr) => {
-          shortenedPrs.push(pr.sha.substr(0,6));
-        })
-        console.log(shortenedPrs)
         return shortenedPrs;
       });
-      
     }
   }),
 
@@ -133,30 +125,18 @@ export default Component.extend({
     }
   },
 
-  eventsSorted: sort('events.[]',
-    (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
-
   actions: {
 
-    changeCurPr(pr){
-      console.log(pr)
+    changeCurPr(pr) {
       const prs = this.get('prEvents')._result;
-      console.log(prs);
-      this.set('event.truncatedSha',pr)
       let changeBuild = this.get('changeBuild');
-      for(let i = 0; i < prs.length; i++) {
-        if(pr == prs[i].sha.substr(0,6)) {
-          this.set('event.commit.url', prs[i].commit.url)
-          changeBuild( prs[i].pipelineId, prs[i].id);
+
+      for (let i = 0; i < prs.length; i += 1) {
+        if (pr === prs[i].sha.substr(0, 6)) {
+          changeBuild(prs[i].pipelineId, prs[i].id);
           break;
         }
       }
-    },
-
-    test() {
-      const temp = this.get('shortenedPrShas')
-      console.log(temp)
-      
     },
 
     buildButtonClick() {

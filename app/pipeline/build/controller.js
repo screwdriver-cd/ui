@@ -7,8 +7,6 @@ import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import Controller from '@ember/controller';
 import ENV from 'screwdriver-ui/config/environment';
 
-import $ from 'jquery';
-
 export default Controller.extend({
   prEventsService: service('pr-events'),
   queryParams: ['type'],
@@ -23,41 +21,22 @@ export default Controller.extend({
   pipeline: reads('model.pipeline'),
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
-  prEvents: computed('model.event.pr.url', 'model.pipeline.id', {
+  prEvents: computed('model.{event.pr.url,pipeline.id}', {
     get() {
-      if(this.get('model.event.type') == 'pr') {
+      if (this.get('model.event.type') === 'pr') {
         const event = this.get('model.event.pr.url');
         const pipeline = this.get('model.pipeline.id');
-        console.log('HELLLLLLLLO')
-        console.log(event, pipeline)
-        return this.get('prEventsService').getPRevents(pipeline, event).then( prCommits => {
-            console.log(prCommits);
-            return prCommits;
 
-        })
+        return this.get('prEventsService').getPRevents(pipeline, event).then(prCommits =>
+          prCommits
+        );
       }
+
       return [];
     }
   }),
 
   actions: {
-
-    test() {
-      //this.transitionToRoute('pipeline.build', 2,);
-      // const pipelineId = get(this, 'pipeline.id');
-      // const eventPrUrl = get(this,'event.pr.url');
-      // console.log(pipelineId);
-      // console.log(eventPrUrl);
-      // this.get('prEventsService').getPRevents(pipelineId, eventPrUrl).then( prCommits => {
-      //   this.set('prCommits', prCommits);
-      // })
-
-      const buildStatus = this.get('build.status');
-      const buildId = this.get('build.id');
-      const buildsteps = this.get('build.steps');
-      const buildstart = this.get('build.startTime');
-      console.log(buildStatus, buildId, buildsteps, buildstart)
-    },
 
     stopBuild() {
       const build = this.get('build');
@@ -97,11 +76,7 @@ export default Controller.extend({
     },
 
     changeBuild(pipelineId, buildId) {
-      console.log(pipelineId, buildId);
-      //    var buildPath = 'builds/' +buildId;
-      //debugger
       return this.transitionToRoute('pipeline.build', pipelineId, buildId);
-
     }
   },
 
