@@ -26,3 +26,4 @@ package.json.ember-try
 .DS_STORE
 .*.swp
 .travis.yml
+config/local.js
