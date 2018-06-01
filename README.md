@@ -28,10 +28,6 @@ $ bower install
 
 Visit your app at [http://localhost:4200](http://localhost:4200).
 
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
 ### Running Tests
 
 * `ember test`
@@ -40,14 +36,17 @@ Make use of the many generators for code, try `ember help generate` for more det
 To run a single ember test:
 * `ember t -s -m '<TEST_NAME>'`   // e.g. ember t -s -m 'Integration | Component | pipeline options'
 
+To see coverage results, run:
+* `open coverage/lcov-report/index.html`
+
 ### Building
 
 * `ember build` (development)
 * `ember build --environment production` (production)
 
-### Deploying
+### Code Generators
 
-Specify what it takes to deploy your app.
+Make use of the many generators for code, try `ember help generate` for more details
 
 ## Further Reading / Useful Links
 
