@@ -80,6 +80,26 @@ test('it renders templates', function (assert) {
   assert.equal(this.$('h4').text().trim(), 'batman/batmobile@1.0.0');
 });
 
+test('it renders templates with a namespace', function (assert) {
+  this.set('validationMock', {
+    errors: [],
+    template: {
+      namespace: 'batman',
+      name: 'batmobile',
+      version: '1.0.0',
+      config: {
+        image: 'int-test:1',
+        steps: [{ forgreatjustice: 'ba.sh' }]
+      }
+    }
+  });
+
+  this.render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+
+  assert.equal(this.$('.error').text().trim(), '');
+  assert.equal(this.$('h4').text().trim(), 'batman/batmobile@1.0.0');
+});
+
 test('it renders joi error results', function (assert) {
   this.set('validationMock', {
     errors: [{ message: 'there is an error' }],
