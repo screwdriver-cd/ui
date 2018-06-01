@@ -62,6 +62,12 @@ module.exports = (environment) => {
   };
 
   if (environment === 'development') {
+    const localAppConfig = require('./local.js'); // eslint-disable-line global-require
+
+    if (localAppConfig) {
+      Object.assign(ENV.APP, localAppConfig);
+    }
+
     ENV.APP.EVENT_RELOAD_TIMER = 5000;
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
