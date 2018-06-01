@@ -16,9 +16,17 @@ export default Component.extend({
       return getWithDefault(this, 'results.annotations', []);
     }
   }),
-  templateName: computed('results.template.{name,version}', {
+  templateName: computed('results.template.{namespace,name,version}', {
     get() {
-      return `${get(this, 'results.template.name')}@${get(this, 'results.template.version')}`;
+      // construct full template name
+      const namespace = this.get('results.template.namespace');
+      let fullName = this.get('results.template.name');
+
+      if (namespace && namespace !== 'default') {
+        fullName = `${namespace}/${fullName}`;
+      }
+
+      return `${fullName}@${get(this, 'results.template.version')}`;
     }
   })
 });

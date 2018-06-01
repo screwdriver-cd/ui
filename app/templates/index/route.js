@@ -12,6 +12,12 @@ export default Route.extend({
       templates.forEach((t) => {
         if (!names[t.name]) {
           names[t.name] = 1;
+          // construct full template name
+          t.fullName = t.name;
+          if (t.namespace && t.namespace !== 'default') {
+            t.fullName = `${t.namespace}/${t.name}`;
+          }
+
           result.push(t);
         }
       });

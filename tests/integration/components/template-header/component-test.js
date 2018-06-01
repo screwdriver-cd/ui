@@ -12,7 +12,9 @@ const TEMPLATE = {
   labels: ['car', 'armored'],
   maintainer: 'bruce@wayne.com',
   pipelineId: 1,
-  name: 'foo/bar',
+  namespace: 'foo',
+  name: 'bar',
+  fullName: 'foo/bar',
   version: '2.0.0'
 };
 
@@ -48,8 +50,10 @@ test('it renders', function (assert) {
   assert.equal($('h1').text().trim(), 'foo/bar');
   assert.equal($('h2').text().trim(), '2.0.0');
   assert.equal($('p').text().trim(), 'A test example');
-  assert.equal($('ul li:first-child').text().trim(), 'Released by: bruce@wayne.com');
-  assert.equal($('ul li:first-child a').attr('href'), 'mailto:bruce@wayne.com');
+  assert.equal($('ul li:first-child').text().trim(), 'Namespace: foo');
+  assert.equal($('ul li:nth-child(2)').text().trim(), 'Name: bar');
+  assert.equal($('ul li:nth-child(3)').text().trim(), 'Released by: bruce@wayne.com');
+  assert.equal($('ul li:nth-child(3) a').attr('href'), 'mailto:bruce@wayne.com');
   assert.equal($('ul li:last-child').text().trim(), 'Tags: cararmored');
   assert.equal($('h4').text().trim(), 'Usage:');
   // Messy regexp instead of .includes due to phantomjs limitation

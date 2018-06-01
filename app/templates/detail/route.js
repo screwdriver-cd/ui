@@ -17,6 +17,14 @@ export default Route.extend({
         taggedVerObj.tag = taggedVerObj.tag ? `${taggedVerObj.tag} ${tagObj.tag}` : tagObj.tag;
       });
 
+      verPayload.forEach((verObj) => {
+        // construct full template name
+        verObj.fullName = verObj.name;
+        if (verObj.namespace && verObj.namespace !== 'default') {
+          verObj.fullName = `${verObj.namespace}/${verObj.name}`;
+        }
+      });
+
       return verPayload;
     });
   },
