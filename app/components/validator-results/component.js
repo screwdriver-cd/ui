@@ -1,6 +1,8 @@
 import { computed, get, getWithDefault } from '@ember/object';
 import Component from '@ember/component';
+import templateHelper from 'screwdriver-ui/utils/template';
 const { reads, map } = computed;
+const { getFullName } = templateHelper;
 
 export default Component.extend({
   results: null,
@@ -19,12 +21,10 @@ export default Component.extend({
   templateName: computed('results.template.{namespace,name,version}', {
     get() {
       // construct full template name
-      const namespace = this.get('results.template.namespace');
-      let fullName = this.get('results.template.name');
-
-      if (namespace && namespace !== 'default') {
-        fullName = `${namespace}/${fullName}`;
-      }
+      const fullName = getFullName({
+        name: this.get('results.template.name'),
+        namespace: this.get('results.template.namespace')
+      });
 
       return `${fullName}@${get(this, 'results.template.version')}`;
     }

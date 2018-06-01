@@ -1,6 +1,8 @@
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
+import templateHelper from 'screwdriver-ui/utils/template';
+const { getFullName } = templateHelper;
 
 export default Route.extend({
   template: service(),
@@ -17,12 +19,12 @@ export default Route.extend({
         taggedVerObj.tag = taggedVerObj.tag ? `${taggedVerObj.tag} ${tagObj.tag}` : tagObj.tag;
       });
 
+      // construct full template name
       verPayload.forEach((verObj) => {
-        // construct full template name
-        verObj.fullName = verObj.name;
-        if (verObj.namespace && verObj.namespace !== 'default') {
-          verObj.fullName = `${verObj.namespace}/${verObj.name}`;
-        }
+        verObj.fullName = getFullName({
+          name: verObj.name,
+          namespace: verObj.namespace
+        });
       });
 
       return verPayload;
