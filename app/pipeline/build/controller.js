@@ -9,8 +9,6 @@ import ENV from 'screwdriver-ui/config/environment';
 
 export default Controller.extend({
   prEventsService: service('pr-events'),
-  queryParams: ['type'],
-  type: null,
   session: service('session'),
   loading: false,
   counter: 0,
@@ -27,9 +25,7 @@ export default Controller.extend({
         const event = this.get('model.event.pr.url');
         const pipeline = this.get('model.pipeline.id');
 
-        return this.get('prEventsService').getPRevents(pipeline, event).then(prCommits =>
-          prCommits
-        );
+        return this.get('prEventsService').getPRevents(pipeline, event);
       }
 
       return [];

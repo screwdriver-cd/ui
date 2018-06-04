@@ -32,15 +32,11 @@ export default Component.extend({
 
   shortenedPrShas: computed('prEvents', {
     get() {
-      return this.get('prEvents').then((result) => {
-        let shortenedPrs = [];
-        let i = 1;
-        result.forEach((pr) => {
-          shortenedPrs.push([i++, pr.sha.substr(0, 6)]);
-        });
-
-        return shortenedPrs;
-      });
+      return this.get('prEvents').then(result =>
+        result.map((pr, i) =>
+          [i + 1, pr.sha.substr(0, 6)]
+        )
+      );
     }
   }),
 
@@ -127,16 +123,12 @@ export default Component.extend({
 
   actions: {
 
-    changeCurPr(pr) {
+    changeCurPr(targetPr) {
       const prs = this.get('prEvents')._result;
       let changeBuild = this.get('changeBuild');
+      const selected = prs.find(pr => targetPr === pr.sha.substr(0, 6));
 
-      for (let i = 0; i < prs.length; i += 1) {
-        if (pr === prs[i].sha.substr(0, 6)) {
-          changeBuild(prs[i].pipelineId, prs[i].id);
-          break;
-        }
-      }
+      changeBuild(selected.pipelineId, selected.id);
     },
 
     buildButtonClick() {

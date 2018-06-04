@@ -5,6 +5,13 @@ import { moduleFor, test } from 'ember-qunit';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import wait from 'ember-test-helpers/wait';
+
+const prEventsService = Service.extend({
+  getPrEvents() {
+    return resolve();
+  }
+});
+
 const sessionServiceMock = Service.extend({
   isAuthenticated: true,
   data: {
@@ -24,6 +31,7 @@ moduleFor('controller:pipeline/build', 'Unit | Controller | pipeline/build', {
   beforeEach() {
     server = new Pretender();
     this.register('service:session', sessionServiceMock);
+    this.register('service:pr-events', prEventsService);
   },
   afterEach() {
     server.shutdown();
