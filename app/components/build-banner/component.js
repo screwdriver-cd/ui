@@ -34,7 +34,7 @@ export default Component.extend({
     get() {
       return this.get('prEvents').then(result =>
         result.map((pr, i) =>
-          [i + 1, pr.sha.substr(0, 6)]
+          [result.length - i, pr.sha.substr(0, 6)]
         )
       );
     }
