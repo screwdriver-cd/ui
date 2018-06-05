@@ -1,4 +1,4 @@
-import { set } from '@ember/object';
+import { get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
@@ -13,7 +13,9 @@ export default Component.extend({
 
   setBanners() {
     this.get('banner').fetchBanners().then((banners) => {
-      set(this, 'banners', banners);
+      if (!get(this, 'isDestroying') && !get(this, 'isDestroyed')) {
+        set(this, 'banners', banners);
+      }
     });
   },
 
