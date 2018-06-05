@@ -1,4 +1,4 @@
-import { later, once } from '@ember/runloop';
+import { later, throttle } from '@ember/runloop';
 import { get, computed } from '@ember/object';
 import { reads, mapBy } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
@@ -66,9 +66,7 @@ export default Controller.extend({
     },
 
     reload() {
-      // If there is already a reload scheduled in the runloop,
-      // this replaces it with one with no timeout
-      once(this, 'reloadBuild', 0);
+      throttle(this, 'reloadBuild', ENV.APP.BUILD_RELOAD_TIMER);
     },
 
     changeBuild(pipelineId, buildId) {
@@ -94,7 +92,7 @@ export default Controller.extend({
 
             build.reload().then(() => {
               this.set('loading', false);
-              once(this, 'reloadBuild');
+              throttle(this, 'reloadBuild', timeout);
             });
           }
         }, timeout);
