@@ -9,9 +9,11 @@
   jobId=job.id
   isAuthenticated=session.isAuthenticated
   event=event
+  prEvents=prEvents
   onStart=(action "startBuild")
   onStop=(action "stopBuild")
   reloadBuild=(action "reload")
+  changeBuild=(action "changeBuild")
 }}
 
 {{#if isShowingModal}}

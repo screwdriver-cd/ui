@@ -1,5 +1,5 @@
 import { later, once } from '@ember/runloop';
-import { get } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { reads, mapBy } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
@@ -8,6 +8,7 @@ import Controller from '@ember/controller';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Controller.extend({
+  prEventsService: service('pr-events'),
   session: service('session'),
   loading: false,
   counter: 0,
@@ -18,8 +19,21 @@ export default Controller.extend({
   pipeline: reads('model.pipeline'),
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
+  prEvents: computed('model.{event.pr.url,pipeline.id}', {
+    get() {
+      if (this.get('model.event.type') === 'pr') {
+        const event = this.get('model.event.pr.url');
+        const pipeline = this.get('model.pipeline.id');
+
+        return this.get('prEventsService').getPRevents(pipeline, event);
+      }
+
+      return [];
+    }
+  }),
 
   actions: {
+
     stopBuild() {
       const build = this.get('build');
 
@@ -55,6 +69,10 @@ export default Controller.extend({
       // If there is already a reload scheduled in the runloop,
       // this replaces it with one with no timeout
       once(this, 'reloadBuild', 0);
+    },
+
+    changeBuild(pipelineId, buildId) {
+      return this.transitionToRoute('pipeline.build', pipelineId, buildId);
     }
   },
 

@@ -4,7 +4,21 @@
     <span class="banner-label">Job</span>
   </li>
   <li class="commit">
-    <span class="banner-value"><a href="{{event.commit.url}}" class="sha">#{{event.truncatedSha}}</a></span>
+    <span class="banner-value commit-list">
+      <a href="{{event.commit.url}}" class="sha commit-sha">#{{event.truncatedSha}}</a>
+      {{#if event.pr.url}}
+        {{#bs-dropdown as |dd|}}
+          {{#dd.toggle}} <span class="caret caret-display"></span>{{/dd.toggle}}
+          {{#dd.menu as |ddm|}}
+            {{#each (await shortenedPrShas) as |prSha|}}
+              {{#ddm.item class="pr-item"}}
+                <a onClick={{action "changeCurPr" prSha.[1]}}>{{prSha.[0]}}. {{prSha.[1]}}</a>
+              {{/ddm.item}}
+            {{/each}}
+          {{/dd.menu}}
+        {{/bs-dropdown}}
+      {{/if}}
+    </span>
     <span class="banner-label">Commit</span>
   </li>
   {{#if event.pr.url}}

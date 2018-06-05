@@ -64,6 +64,30 @@ li {
   position: relative;
 }
 
+.dropdown .dropdown-menu{
+  display: none;
+}
+
+.open .dropdown-menu, .commit-list, .caret-display, .dropdown{
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  left: -70px;
+  min-width: 60px;
+  max-height: 150px;
+  overflow: auto;
+}
+
+.pr-item {
+  padding: 5px 0px;
+}
+
+.pr-item a:hover {
+  background-color: #d1edff;
+}
+
 //sass-lint:disable class-name-format
 &.RUNNING,
 &.QUEUED {

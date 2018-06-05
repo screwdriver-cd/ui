@@ -74,6 +74,7 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
 
   actions: {
+
     startMainBuild() {
       this.set('isShowingModal', true);
 
