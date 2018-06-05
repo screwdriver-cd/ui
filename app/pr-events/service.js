@@ -34,7 +34,8 @@ export default Service.extend({
           Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
         }
       }).done((data) => {
-        prCommits = data.filter(curEvent => curEvent.pr.url.split('/').pop() === prNum);
+        prCommits = data.filter(curEvent =>
+          curEvent.pr && curEvent.pr.url.split('/').pop() === prNum);
       }).always(() => resolve(
         prCommits
       ))
