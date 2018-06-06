@@ -6,7 +6,7 @@ import ENV from 'screwdriver-ui/config/environment';
 export default Service.extend({
   session: service(),
   /**
-   * Calls the logs api service to fetch logs
+   * Calls the events api and filters based on type prs
    * @method getPRevents
    * @param  {String}  pipelineId           id of pipeline
    * @param  {String}  eventPrUrl           url of PR
@@ -16,7 +16,6 @@ export default Service.extend({
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
     `/pipelines/${pipelineId}/events`;
     const prNum = eventPrUrl.split('/').pop();
-    let prCommits;
 
     return new EmberPromise(resolve =>
       $.ajax({
@@ -34,11 +33,11 @@ export default Service.extend({
           Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
         }
       }).done((data) => {
-        prCommits = data.filter(curEvent =>
+        const prCommits = data.filter(curEvent =>
           curEvent.pr && curEvent.pr.url.split('/').pop() === prNum);
-      }).always(() => resolve(
-        prCommits
-      ))
+
+        resolve(prCommits);
+      }).catch(() => resolve([]))
     );
   }
 });
