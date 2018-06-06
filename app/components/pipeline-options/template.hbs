@@ -49,7 +49,7 @@
               <p>Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.</p>
             </div>
             <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
-              {{x-toggle value=job.isDisabled onLabel='Enabled::false' offLabel='Disabled::true' onToggle=(action "toggleJob" job.id)}}
+              {{x-toggle value=job.isEnabled size="medium" onToggle=(action "toggleJob" job.id)}}
             </div>
           </div>
         </li>

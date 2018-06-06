@@ -1,5 +1,5 @@
 import EmberObject, { computed } from '@ember/object';
-import { equal } from '@ember/object/computed';
+import { equal, not } from '@ember/object/computed';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
@@ -9,6 +9,7 @@ export default DS.Model.extend({
   permutations: DS.attr(),
   builds: DS.hasMany('build', { async: true }),
   isDisabled: equal('state', 'DISABLED'),
+  isEnabled: not('isDisabled'),
   lastBuild: computed('builds', {
     get() {
       const builds = this.get('builds');

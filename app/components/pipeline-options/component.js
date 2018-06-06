@@ -53,7 +53,7 @@ export default Component.extend({
       this.get('onUpdatePipeline')(this.get('scmUrl'));
     },
     toggleJob(jobId, event) {
-      this.get('setJobStatus')(jobId, event.newValue ? 'DISABLED' : 'ENABLED');
+      this.get('setJobStatus')(jobId, event.newValue ? 'ENABLED' : 'DISABLED');
     },
     showRemoveButtons() {
       this.set('showDangerButton', false);

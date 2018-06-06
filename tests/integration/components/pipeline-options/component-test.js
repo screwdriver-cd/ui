@@ -24,17 +24,20 @@ test('it renders', function (assert) {
     EmberObject.create({
       id: '3456',
       name: 'B',
-      isDisabled: false
+      isDisabled: false,
+      isEnabled: true
     }),
     EmberObject.create({
       id: '1234',
       name: 'main',
-      isDisabled: false
+      isDisabled: false,
+      isEnabled: true
     }),
     EmberObject.create({
       id: '2345',
       name: 'A',
-      isDisabled: false
+      isDisabled: false,
+      isEnabled: true
     })
   ]));
 
@@ -94,7 +97,8 @@ test('it handles job disabling', function (assert) {
   const main = EmberObject.create({
     id: '1234',
     name: 'main',
-    isDisabled: false
+    isDisabled: false,
+    isEnabled: true
   });
 
   this.set('mockPipeline', EmberObject.create({
@@ -109,6 +113,7 @@ test('it handles job disabling', function (assert) {
     assert.equal(id, '1234');
     assert.equal(state, 'DISABLED');
     main.set('isDisabled', true);
+    main.set('isEnabled', false);
   });
 
   this.render(hbs`{{pipeline-options
@@ -129,7 +134,8 @@ test('it handles job enabling', function (assert) {
   const main = EmberObject.create({
     id: '1234',
     name: 'main',
-    isDisabled: true
+    isDisabled: true,
+    isEnabled: false
   });
 
   this.set('mockPipeline', EmberObject.create({
@@ -142,8 +148,9 @@ test('it handles job enabling', function (assert) {
 
   this.set('setJobStatsMock', (id, state) => {
     assert.equal(id, '1234');
-    assert.equal(state, 'ENABLED');
+    assert.equal(state, 'DISABLED');
     main.set('isDisabled', false);
+    main.set('isEnabled', true);
   });
 
   this.render(hbs`{{pipeline-options
