@@ -11,3 +11,4 @@ vendor
 ember-cli-build.js
 tmp
 dist
+/blueprints/*/files/**/*.js

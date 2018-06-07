@@ -1,7 +1,0 @@
-{
-  "name": "screwdriver-ui",
-  "dependencies": {
-    "jquery-highlight": "~3.2.2",
-    "jstree": "^3.3.4"
-  }
-}
