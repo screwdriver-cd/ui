@@ -20,6 +20,11 @@ export default Component.extend({
   }),
 
   actions: {
+    canSave() {
+      if (this.get('isValid')) {
+        this.send('saveData');
+      }
+    },
     /**
      * Handles when a git url is entered in step 1
      * @method scmChange
