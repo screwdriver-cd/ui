@@ -24,8 +24,9 @@ export default Controller.extend({
       if (this.get('model.event.type') === 'pr') {
         const event = this.get('model.event.pr.url');
         const pipeline = this.get('model.pipeline.id');
+        const jobId = this.get('job.id');
 
-        return this.get('prEventsService').getPRevents(pipeline, event);
+        return this.get('prEventsService').getPRevents(pipeline, event, jobId);
       }
 
       return [];

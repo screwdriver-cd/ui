@@ -34,7 +34,7 @@ export default Component.extend({
     get() {
       return this.get('prEvents').then(result =>
         result.map((pr, i) =>
-          [result.length - i, pr.sha.substr(0, 6)]
+          [result.length - i, pr[1].sha.substr(0, 6), pr[1]]
         )
       );
     }
@@ -126,9 +126,9 @@ export default Component.extend({
     changeCurPr(targetPr) {
       const prs = this.get('prEvents')._result;
       let changeBuild = this.get('changeBuild');
-      const selected = prs.find(pr => targetPr === pr.sha.substr(0, 6));
+      const selected = prs.find(pr => targetPr[2].id === pr[1].id);
 
-      changeBuild(selected.pipelineId, selected.id);
+      changeBuild(selected[0].pipelineId, selected[1].id);
     },
 
     buildButtonClick() {
