@@ -26,7 +26,9 @@ export default Controller.extend({
         const pipeline = this.get('model.pipeline.id');
         const jobId = this.get('job.id');
 
-        return this.get('prEventsService').getPRevents(pipeline, event, jobId);
+        if (event) {
+          return this.get('prEventsService').getPRevents(pipeline, event, jobId);
+        }
       }
 
       return [];

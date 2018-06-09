@@ -91,8 +91,8 @@ test('it fetches events with type pr', function (assert) {
   const b = service.getPRevents(12345, 'https://github.com/screwdriver-cd/ui/pull/292', 2);
 
   b.then((pair) => {
-    assert.equal(pair[0][0].id, 'abcd');
-    assert.equal(pair[0][1].eventId, 'abcd');
-    assert.equal(pair[0][1].id, 2);
+    assert.equal(pair[0].event.id, 'abcd');
+    assert.equal(pair[0].build.eventId, 'abcd');
+    assert.equal(pair[0].build.id, 2);
   });
 });

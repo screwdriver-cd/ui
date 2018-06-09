@@ -67,14 +67,16 @@ export default Service.extend({
         const events = array[1].value;
         const prCommits = events.filter(curEvent =>
           curEvent.pr && curEvent.pr.url && curEvent.pr.url.split('/').pop() === prNum);
-        let EventBuildPair = [];
+        let eventBuildPairs = [];
 
         prCommits.forEach((commit) => {
           const matchingBuild = builds.find(build => build.eventId === commit.id);
+          const pair = { event: commit, build: matchingBuild };
 
-          EventBuildPair.push([commit, matchingBuild]);
+          eventBuildPairs.push(pair);
         });
-        resolve(EventBuildPair);
+
+        resolve(eventBuildPairs);
       })
     );
   }

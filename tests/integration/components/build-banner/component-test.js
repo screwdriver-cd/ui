@@ -163,7 +163,8 @@ test('it renders prCommit dropdown if event type is pr', function (assert) {
 
   this.set('buildStepsMock', buildStepsMock);
   this.set('eventMock', eventMock);
-  this.set('prEvents', new EmberPromise(resolves => resolves([[buildMock, eventMock]])));
+  this.set('prEvents', new EmberPromise(resolves =>
+    resolves([{ build: buildMock, event: eventMock }])));
 
   this.render(hbs`{{build-banner
     buildContainer="node:6"
