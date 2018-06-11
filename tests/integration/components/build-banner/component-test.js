@@ -52,6 +52,11 @@ const eventMock = EmberObject.create({
   builds: ['build1', 'build2']
 });
 
+const buildMock = EmberObject.create({
+  eventId: 'abcd',
+  id: '2'
+});
+
 moduleForComponent('build-banner', 'Integration | Component | build banner', {
   integration: true,
 
@@ -158,7 +163,8 @@ test('it renders prCommit dropdown if event type is pr', function (assert) {
 
   this.set('buildStepsMock', buildStepsMock);
   this.set('eventMock', eventMock);
-  this.set('prEvents', new EmberPromise(resolves => resolves([eventMock])));
+  this.set('prEvents', new EmberPromise(resolves =>
+    resolves([{ build: buildMock, event: eventMock }])));
 
   this.render(hbs`{{build-banner
     buildContainer="node:6"

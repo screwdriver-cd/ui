@@ -42,6 +42,17 @@ const initServer = () => {
       builds: ['build1', 'build2']
     }])
   ]);
+
+  server.get('http://localhost:8080/v4/jobs/2/builds', () => [
+    200,
+    {
+      'Content-Type': 'application/json'
+    },
+    JSON.stringify([{
+      eventId: 'abcd',
+      id: '2'
+    }])
+  ]);
 };
 
 const sessionServiceMock = Service.extend({
@@ -75,11 +86,13 @@ test('it exists', function (assert) {
 test('it fetches events with type pr', function (assert) {
   initServer();
 
-  assert.expect(1);
+  assert.expect(3);
   const service = this.subject();
-  const b = service.getPRevents(12345, 'https://github.com/screwdriver-cd/ui/pull/292');
+  const b = service.getPRevents(12345, 'https://github.com/screwdriver-cd/ui/pull/292', 2);
 
-  b.then((prEvents) => {
-    assert.equal(prEvents[0].sha, 'abcdef1029384');
+  b.then((pair) => {
+    assert.equal(pair[0].event.id, 'abcd');
+    assert.equal(pair[0].build.eventId, 'abcd');
+    assert.equal(pair[0].build.id, 2);
   });
 });
