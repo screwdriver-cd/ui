@@ -1,9 +1,10 @@
 <h1>Templates <a href="http://docs.screwdriver.cd/user-guide/templates" title="More Information" target="_blank">{{fa-icon "question-circle"}}</a></h1>
 <div class="explain">Templates are snippets of predefined code that people can use to replace a job definition in a screwdriver.yaml. A template contains a series of predefined steps along with a selected Docker image.</div>
-
 <div class="row">
   {{#each templates as |template|}}
-  {{template-section template=template}}
+  {{template-section 
+  	template=template 
+  	changeTemplatesShowed=changeTemplatesShowed}}
   {{/each}}
 </div>
 

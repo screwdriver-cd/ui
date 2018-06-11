@@ -1,0 +1,5 @@
+<div>
+	{{#each crumbs as |crumb|}}
+	    <span onClick={{action transition crumb.route crumb.args}}><h5 class="crumb">/ <a>{{crumb.name}}</a></h5></span>
+  	{{/each}}
+</div>

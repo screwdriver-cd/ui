@@ -1,6 +1,6 @@
 <article class="template">
   <header>
-    {{#link-to "templates.detail" template.fullName}}<h4>{{template.fullName}}</h4>{{/link-to}}
+    <h4>{{#link-to "templates.namespace" template.namespace}} {{template.namespace}} {{/link-to}}/ {{#link-to "templates.detail" template.namespace template.fullName}}{{template.name}}{{/link-to}}</h4>
   </header>
   <p class="description">
     {{template.description}}
