@@ -18,7 +18,11 @@
   </thead>
   <tbody>
     {{#each sortedSecrets as |secret|}}
-    {{secret-view secret=secret}}
+    {{secret-view
+      secret=secret
+      pipeline=pipeline
+      onCreateSecret=onCreateSecret
+    }}
     {{/each}}
   </tbody>
   <tfoot>

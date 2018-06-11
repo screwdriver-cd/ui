@@ -19,7 +19,12 @@ test('it renders', function (assert) {
 
   this.set('mockSecrets', [testSecret]);
 
-  this.set('mockPipeline', { id: 'abcd' });
+  const testPipeline = EmberObject.create({
+    id: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+
   this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
 
   // the table is present
@@ -123,7 +128,11 @@ test('it sorts secrets by name alphabetically', function (assert) {
 
   this.set('mockSecrets', [testSecret1, testSecret2, testSecret3]);
 
-  this.set('mockPipeline', { id: 123245 });
+  const testPipeline = EmberObject.create({
+    id: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
   this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
 
   // secrets are sorted by name
