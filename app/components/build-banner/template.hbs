@@ -12,7 +12,7 @@
           {{#dd.menu as |ddm|}}
             {{#each (await shortenedPrShas) as |prSha|}}
               {{#ddm.item class="pr-item"}}
-                <a onClick={{action "changeCurPr" prSha.[1]}}>{{prSha.[0]}}. {{prSha.[1]}}</a>
+                <a onClick={{action "changeCurPr" prSha}}>{{prSha.index}}. {{prSha.shortenedSha}}</a>
               {{/ddm.item}}
             {{/each}}
           {{/dd.menu}}
