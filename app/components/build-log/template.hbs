@@ -1,20 +1,22 @@
 {{#if (gt logs.length 1)}}
 <div class="heading">
-  <div class="row1">
-    <a onClick={{action "scrollToTop"}}>Go to Top</a>
-    <a onClick={{action "scrollToBottom"}}>Go to Bottom</a>
-  </div>
-  <div class="row2">
-    <span class="time" onClick={{action "toggleTimeDisplay"}}>
-      {{#if (eq timeFormat "datetime")}}
-        Local Timestamp
-      {{else if (eq timeFormat "elapsedBuild")}}
-        Since build started
-      {{else if (eq timeFormat "elapsedStep")}}
-        Since step started
-      {{/if}}
-    </span>
-    <span class="content"></span>
+  <div class="row">
+    <div>
+      <span class="time" onClick={{action "toggleTimeDisplay"}}>
+        {{#if (eq timeFormat "datetime")}}
+          Local Timestamp
+        {{else if (eq timeFormat "elapsedBuild")}}
+          Since build started
+        {{else if (eq timeFormat "elapsedStep")}}
+          Since step started
+        {{/if}}
+      </span>
+      <span class="content"></span>
+    </div>
+    <div>
+      <a onClick={{action "scrollToTop"}}>{{fa-icon "arrow-up"}}Go to Top</a>
+      <a onClick={{action "scrollToBottom"}}>{{fa-icon "arrow-down"}}Go to Bottom</a>
+    </div>
   </div>
 </div>
 {{/if}}
