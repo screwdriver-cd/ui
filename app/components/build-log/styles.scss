@@ -5,34 +5,29 @@
   padding: 0 15px 10px;
 }
 
-.row1 {
+.row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
 }
 
-.row1 a:first-child {
+.row div:first-child {
   grid-column: 1;
   cursor: pointer;
-}
-
-.row1 a:last-child {
-  grid-column: 3;
-  cursor: pointer;
-}
-
-.row2 {
-  display: grid;
-  grid-template-columns: 1fr 10fr;
+  padding: 5px 15px;
   color: $sd-text-med;
 }
 
-.row2 .time {
-  grid-column: 1;
-  cursor: pointer;
-}
-
-.row2 .content {
+.row div:last-child {
   grid-column: 2;
+  cursor: pointer;
+  text-align: right;
+  padding: 5px 15px;
+  i {
+    margin-right: 5px;
+  }
+  a {
+    margin-left: 15px;
+  }
 }
 
 .wrap {
