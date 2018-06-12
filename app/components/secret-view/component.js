@@ -10,8 +10,14 @@ export default Component.extend({
       const secret = this.get('secret');
       const pipeline = this.get('pipeline');
 
-      if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
-        return 'Override';
+      if (pipeline.get('configPipelineId')) {
+        if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
+          return 'Override';
+        }
+
+        return (this.get('newValue')
+          || this.get('originalAllowInPR') !== this.get('secret.allowInPR')) ?
+          'Update' : 'Revert';
       }
 
       return (this.get('newValue')
@@ -25,7 +31,7 @@ export default Component.extend({
       const pipeline = this.get('pipeline');
 
       if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
-        return 'Inherited from config pipeline';
+        return 'Inherited from parent pipeline';
       }
 
       return 'Protected';
@@ -39,8 +45,12 @@ export default Component.extend({
     modifySecret() {
       const secret = this.get('secret');
 
-      if (this.get('buttonAction') === 'Delete') {
-        secret.destroyRecord();
+      if (this.get('buttonAction') === 'Delete'
+        || this.get('buttonAction') === 'Revert') {
+        return secret.destroyRecord().then(() => {
+          this.get('secrets').store.unloadRecord(secret);
+          this.get('secrets').reload();
+        });
       } else if (this.get('buttonAction') === 'Update') {
         if (this.get('newValue')) {
           secret.set('value', this.get('newValue'));
@@ -50,10 +60,12 @@ export default Component.extend({
         this.set('originalAllowInPR', secret.get('allowInPR'));
       } else if (this.get('newValue')) {
         // Create child pipeline secret to override inherited secret of same name
-        this.get('onCreateSecret')(
-          secret.get('name'), this.get('newValue'), this.get('pipeline.id'), this.get('newAllow')
+        return this.get('onCreateSecret')(
+          secret.get('name'), this.get('newValue'), this.get('pipeline.id'), secret.get('allowInPR')
         );
       }
+
+      return Promise.resolve(null);
     }
   }
 });

@@ -140,3 +140,27 @@ test('it sorts secrets by name alphabetically', function (assert) {
   assert.equal(this.$('tbody tr:nth-child(2) td:first-child').text().trim(), 'FOO');
   assert.equal(this.$('tbody tr:nth-child(3) td:first-child').text().trim(), 'ZOO');
 });
+
+test('it does not render table footer for child pipelines', function (assert) {
+  const testSecret = EmberObject.create({
+    name: 'FOO',
+    pipelineId: 123245,
+    value: 'banana',
+    allowInPR: false
+  });
+
+  this.set('mockSecrets', [testSecret]);
+
+  const testPipeline = EmberObject.create({
+    id: '123',
+    configPipelineId: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+  this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+  // Secrets are rendered but footer is not
+  assert.equal(this.$('table').length, 1);
+  assert.equal(this.$('tbody tr').length, 1);
+  assert.equal(this.$('tfoot tr').length, 0);
+});
