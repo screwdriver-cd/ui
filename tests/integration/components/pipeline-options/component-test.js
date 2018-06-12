@@ -286,3 +286,51 @@ test('it fails to sync the pipeline', function (assert) {
       assert.equal(this.$('.alert > span').text().trim(), 'something conflicting');
     });
 });
+
+test('it does not render pipeline and danger for child pipeline', function (assert) {
+  this.set('mockPipeline', EmberObject.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
+    id: 'abc1234',
+    configPipelineId: '123'
+  }));
+
+  this.set('mockJobs', A([
+    EmberObject.create({
+      id: '3456',
+      name: 'B',
+      isDisabled: false
+    }),
+    EmberObject.create({
+      id: '1234',
+      name: 'main',
+      isDisabled: false
+    }),
+    EmberObject.create({
+      id: '2345',
+      name: 'A',
+      isDisabled: false
+    })
+  ]));
+
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
+
+  // Pipeline should not render
+  assert.equal(this.$('section.pipeline h3').text().trim(), '');
+
+  // Jobs should render
+  assert.equal(this.$('section.jobs h3').text().trim(), 'Jobs');
+  assert.equal(this.$('section.jobs li').length, 3);
+  assert.equal(this.$('section.jobs h4').text().trim(), 'ABmain');
+  // eslint-disable-next-line max-len
+  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable the A job.Toggle to disable the B job.Toggle to disable the main job.');
+  assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
+
+  // Sync should render
+  assert.equal(this.$(this.$('section.sync h4').get(0)).text().trim(), 'SCM webhooks');
+  assert.equal(this.$(this.$('section.sync h4').get(1)).text().trim(), 'Pull requests');
+  assert.equal(this.$(this.$('section.sync h4').get(2)).text().trim(), 'Pipeline');
+
+  // Danger Zone should not render
+  assert.equal(this.$('section.danger h3').text().trim(), '');
+});

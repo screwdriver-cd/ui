@@ -9,6 +9,7 @@ export default DS.Model.extend({
   scmRepo: DS.attr(),
   scmUri: DS.attr('string'),
   workflowGraph: DS.attr(),
+  configPipelineId: DS.attr('string'),
 
   events: DS.hasMany('event', { async: true }),
   jobs: DS.hasMany('job', { async: true }),

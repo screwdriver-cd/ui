@@ -1,41 +1,44 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
 <div class="row">
-  <div class="col-xs-12 col-md-8">
-    <section class="pipeline">
-      <h3>Pipeline</h3>
-      <ul>
-        <li>
-          <div class="row">
-            <div class="col-xs-10">
-              <h4>Checkout URL</h4>
-              <p>Update your checkout URL.</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-10">
-              <div>
-                {{input
-                  class="text-input"
-                  key-up="scmChange"
-                  value=scmUrl
-                }}
+  {{#if pipeline.configPipelineId}}
+  {{else}}
+    <div class="col-xs-12 col-md-8">
+      <section class="pipeline">
+        <h3>Pipeline</h3>
+        <ul>
+          <li>
+            <div class="row">
+              <div class="col-xs-10">
+                <h4>Checkout URL</h4>
+                <p>Update your checkout URL.</p>
               </div>
             </div>
-            <div class="col-xs-2 right">
-              <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving ' saving'}}">
-                <div class="saving-loading">
-                  Updating pipeline
+            <div class="row">
+              <div class="col-xs-10">
+                <div>
+                  {{input
+                    class="text-input"
+                    key-up="scmChange"
+                    value=scmUrl
+                  }}
                 </div>
-                <div class="button-label">Update</div>
-              </button>
-              {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
+              </div>
+              <div class="col-xs-2 right">
+                <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving ' saving'}}">
+                  <div class="saving-loading">
+                    Updating pipeline
+                  </div>
+                  <div class="button-label">Update</div>
+                </button>
+                {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
+              </div>
             </div>
-          </div>
-        </li>
-      </ul>
-    </section>
-  </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+  {{/if}}
 
   <div class="col-xs-12 col-md-8">
     <section class="jobs">
@@ -99,35 +102,38 @@
     </section>
   </div>
 
-  <div class="col-xs-12 col-md-8">
-    <section class="danger">
-      <h3>Danger Zone</h3>
-      <ul>
-        <li>
-          {{#if showDangerButton}}
-          <div class="row">
-            <div class="col-xs-1 col-md-8">
-              <h4>Remove this pipeline</h4>
-              <p>Once you remove a pipeline, there is no going back.</p>
+  {{#if pipeline.configPipelineId}}
+  {{else}}
+    <div class="col-xs-12 col-md-8">
+      <section class="danger">
+        <h3>Danger Zone</h3>
+        <ul>
+          <li>
+            {{#if showDangerButton}}
+            <div class="row">
+              <div class="col-xs-1 col-md-8">
+                <h4>Remove this pipeline</h4>
+                <p>Once you remove a pipeline, there is no going back.</p>
+              </div>
+              <div class="col-xs-1 col-md-4 right">
+                <a href="#" {{action "showRemoveButtons"}} class="trash">{{fa-icon "trash"}}</a>
+              </div>
             </div>
-            <div class="col-xs-1 col-md-4 right">
-              <a href="#" {{action "showRemoveButtons"}} class="trash">{{fa-icon "trash"}}</a>
-            </div>
-          </div>
-          {{/if}}
-          {{#if showRemoveButtons}}
-            <h4>Are you absolutely sure?</h4>
-            <a href="#" {{action "cancelRemove"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
-            <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "trash"}} Remove</a>
-          {{/if}}
-          {{#if isRemoving}}
-            <p>Please wait...</p>
-          {{/if}}
-        </li>
-      </ul>
+            {{/if}}
+            {{#if showRemoveButtons}}
+              <h4>Are you absolutely sure?</h4>
+              <a href="#" {{action "cancelRemove"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
+              <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "trash"}} Remove</a>
+            {{/if}}
+            {{#if isRemoving}}
+              <p>Please wait...</p>
+            {{/if}}
+          </li>
+        </ul>
 
-    </section>
-  </div>
+      </section>
+    </div>
+  {{/if}}
 </div>
 
 {{#if isShowingModal}}
