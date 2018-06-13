@@ -44,6 +44,10 @@ export default Component.extend({
       this.set('isSaving', null);
     }
   }),
+  willClearRender() {
+    this._super(...arguments);
+    this.set('newToken', null);
+  },
 
   actions: {
     /**
@@ -113,7 +117,8 @@ export default Component.extend({
 
       if (confirm) {
         if (this.get('modalAction') === 'delete') {
-          this.get('modalTarget').destroyRecord();
+          this.get('modalTarget')
+            .destroyRecord({ adapterOptions: { pipelineId: this.get('pipelineId') } });
         } else {
           this.set('isSaving', true);
           this.get('onRefreshToken')(this.get('modalTarget.id'))

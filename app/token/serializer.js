@@ -19,6 +19,7 @@ export default DS.RESTSerializer.extend({
     delete h.lastUsed;
     delete h.userId;
     delete h.action;
+    delete h.pipelineId;
 
     return h;
   }

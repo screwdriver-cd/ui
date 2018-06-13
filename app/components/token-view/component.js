@@ -5,6 +5,7 @@ export default Component.extend({
   newDescription: null,
   newName: null,
   tagName: 'tr',
+  pipelineId: null,
   buttonAction: computed('token.{name,description}', 'newName', 'newDescription', {
     get() {
       const token = this.get('token');
@@ -30,7 +31,7 @@ export default Component.extend({
         token.set('description', this.get('newDescription'));
         this.get('setIsSaving')(true);
 
-        token.save()
+        token.save({ adapterOptions: { pipelineId: this.get('pipelineId') } })
           .then(() => {
             this.get('setIsSaving')(false);
           })

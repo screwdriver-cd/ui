@@ -68,7 +68,8 @@ export default DS.RESTAdapter.extend({
       o.links = {
         events: 'events',
         jobs: 'jobs',
-        secrets: 'secrets'
+        secrets: 'secrets',
+        tokens: 'tokens'
       };
     } else if (key === 'job' || key === 'jobs' || key === 'event' || key === 'events') {
       o.links = {
@@ -152,5 +153,71 @@ export default DS.RESTAdapter.extend({
 
     // Pass-through to super-class
     return this._super(status, headers, data, requestData);
+  },
+  /**
+   * Overriding default adapter because pipelinetoken's  endpoint is differnt
+   * from user api token.
+   * @method urlForFindAll
+   * @param  {String}      modelName
+   * @param  {Object}      snapshot
+   * @return {String}      url
+   */
+  urlForFindAll(modelName, snapshot) {
+    if (modelName !== 'token' || snapshot.adapterOptions === undefined) {
+      return this._super(modelName, snapshot);
+    }
+
+    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
+      + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
+  },
+  /**
+   * Overriding default adapter because pipelinetoken's  endpoint is differnt
+   * from user api token.
+   * @method urlForCreateRecord
+   * @param  {String}      modelName
+   * @param  {Object}      snapshot
+   * @return {String}      url
+   */
+  urlForCreateRecord(modelName, snapshot) {
+    if (modelName !== 'token' || snapshot.adapterOptions === undefined) {
+      return this._super(modelName, snapshot);
+    }
+
+    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
+      + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
+  },
+  /**
+   * Overriding default adapter because pipelinetoken's  endpoint is differnt
+   * from user api token.
+   * @method urlForUpdateRecord
+   * @param  {String}      id
+   * @param  {String}      modelName
+   * @param  {Object}      snapshot
+   * @return {String}      url
+   */
+  urlForUpdateRecord(id, modelName, snapshot) {
+    if (modelName !== 'token' || snapshot.adapterOptions === undefined) {
+      return this._super(id, modelName, snapshot);
+    }
+
+    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
+      + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`;
+  },
+  /**
+   * Overriding default adapter because pipelinetoken's  endpoint is differnt
+   * from user api token.
+   * @method urlForDeleteRecord
+   * @param  {String}      id
+   * @param  {String}      modelName
+   * @param  {Object}      snapshot
+   * @return {String}      url
+   */
+  urlForDeleteRecord(id, modelName, snapshot) {
+    if (modelName !== 'token' || snapshot.adapterOptions.pipelineId === undefined) {
+      return this._super(id, modelName, snapshot);
+    }
+
+    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
+      + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`;
   }
 });
