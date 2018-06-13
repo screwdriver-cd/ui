@@ -26,8 +26,7 @@
     }}
     {{/each}}
   </tbody>
-  {{#if pipeline.configPipelineId}}
-  {{else}}
+  {{#unless pipeline.configPipelineId}}
     <tfoot>
       <tr class="new">
         <td class="key">{{input placeholder="SECRET_KEY" size="40" value=newName title="Secret keys can only consist of numbers, uppercase letters and underscores, and cannot begin with a number."}}</td>
@@ -36,7 +35,7 @@
         <td><button disabled={{isButtonDisabled}} {{action "addNewSecret"}}>Add</button></td>
       </tr>
     </tfoot>
-  {{/if}}
+  {{/unless}}
 </table>
 
 {{yield}}
