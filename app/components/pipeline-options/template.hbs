@@ -1,8 +1,7 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
 <div class="row">
-  {{#if pipeline.configPipelineId}}
-  {{else}}
+  {{#unless pipeline.configPipelineId}}
     <div class="col-xs-12 col-md-8">
       <section class="pipeline">
         <h3>Pipeline</h3>
@@ -38,7 +37,7 @@
         </ul>
       </section>
     </div>
-  {{/if}}
+  {{/unless}}
 
   <div class="col-xs-12 col-md-8">
     <section class="jobs">
@@ -102,8 +101,7 @@
     </section>
   </div>
 
-  {{#if pipeline.configPipelineId}}
-  {{else}}
+  {{#unless pipeline.configPipelineId}}
     <div class="col-xs-12 col-md-8">
       <section class="danger">
         <h3>Danger Zone</h3>
@@ -133,7 +131,7 @@
 
       </section>
     </div>
-  {{/if}}
+  {{/unless}}
 </div>
 
 {{#if isShowingModal}}
