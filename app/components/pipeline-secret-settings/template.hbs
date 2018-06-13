@@ -6,7 +6,11 @@
   </a>
 </h3>
 <p>
-  User secrets must also be added to the Screwdriver YAML.
+  {{#if pipeline.configPipelineId}}
+    Secrets are inherited from the {{#link-to "pipeline.secrets" pipeline.configPipelineId}}parent pipeline{{/link-to}}. You may override a secret or revert it back to its original value.
+  {{else}}
+    User secrets must also be added to the Screwdriver YAML.
+  {{/if}}
 </p>
 <table class="secrets">
   <thead>

@@ -27,6 +27,9 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
 
+  assert.equal(this.$('p').text().trim(),
+    'User secrets must also be added to the Screwdriver YAML.');
+
   // the table is present
   assert.equal(this.$('table').length, 1);
   assert.equal(this.$('tbody tr').length, 1);
@@ -141,7 +144,7 @@ test('it sorts secrets by name alphabetically', function (assert) {
   assert.equal(this.$('tbody tr:nth-child(3) td:first-child').text().trim(), 'ZOO');
 });
 
-test('it does not render table footer for child pipelines', function (assert) {
+test('it renders differently for a child pipeline', function (assert) {
   const testSecret = EmberObject.create({
     name: 'FOO',
     pipelineId: 123245,
@@ -158,6 +161,10 @@ test('it does not render table footer for child pipelines', function (assert) {
 
   this.set('mockPipeline', testPipeline);
   this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+  assert.equal(this.$('p').text().trim().replace(/\+s/g, ' '),
+    'Secrets are inherited from the parent pipeline. ' +
+    'You may override a secret or revert it back to its original value.');
 
   // Secrets are rendered but footer is not
   assert.equal(this.$('table').length, 1);
