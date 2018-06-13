@@ -4,7 +4,7 @@ import { get } from '@ember/object';
 
 export default Route.extend({
   session: service(),
-  routeAfterAuthentication: 'pipeline.childpipelines',
+  routeAfterAuthentication: 'pipeline.child-pipelines',
   titleToken: 'Child Pipelines',
   model() {
     // Guests should not access this page

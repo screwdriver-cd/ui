@@ -56,13 +56,13 @@ moduleForAcceptance('Acceptance | child pipeline', {
   }
 });
 
-test('visiting /pipelines/:id/childpipelines', function (assert) {
+test('visiting /pipelines/:id/child-pipelines', function (assert) {
   authenticateSession(this.application, { token: 'faketoken' });
 
-  visit('/pipelines/1/childpipelines');
+  visit('/pipelines/1/child-pipelines');
 
   andThen(() => {
-    assert.equal(currentURL(), '/pipelines/1/childpipelines');
+    assert.equal(currentURL(), '/pipelines/1/child-pipelines');
     assert.equal(find('.appId:nth-child(1)').text().trim(), 'child/one');
     assert.equal(find('.appId:nth-child(2)').text().trim(), 'child/two');
   });
