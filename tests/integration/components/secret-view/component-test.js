@@ -18,7 +18,13 @@ test('it renders', function (assert) {
 
   this.set('mockSecret', testSecret);
 
-  this.render(hbs`{{secret-view secret=mockSecret}}`);
+  const testPipeline = EmberObject.create({
+    id: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+
+  this.render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
   const passInput = this.$('.pass input');
   const allowInput = this.$('.allow input');
 
@@ -46,11 +52,13 @@ test('it renders', function (assert) {
 });
 
 test('it trys to delete a secret', function (assert) {
-  assert.expect(1);
+  assert.expect(3);
   this.set('mockSecret', EmberObject.extend({
     destroyRecord() {
       // destroy called
       assert.ok(true);
+
+      return Promise.resolve(null);
     },
     save() {
       // update called: Fail!
@@ -63,7 +71,25 @@ test('it trys to delete a secret', function (assert) {
     allowInPR: false
   }));
 
-  this.render(hbs`{{secret-view secret=mockSecret}}`);
+  const testPipeline = EmberObject.create({
+    id: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+
+  this.set('secrets', {
+    store: {
+      unloadRecord: (secret) => {
+        assert.equal(secret.name, 'TEST_SECRET');
+      }
+    },
+    reload: () => {
+      // reload called
+      assert.ok(true);
+    }
+  });
+
+  this.render(hbs`{{secret-view secret=mockSecret secrets=secrets pipeline=mockPipeline}}`);
   this.$('button').click();
 });
 
@@ -87,8 +113,69 @@ test('it saves changes to a secret', function (assert) {
     allowInPR: false
   }));
 
-  this.render(hbs`{{secret-view secret=mockSecret}}`);
+  const testPipeline = EmberObject.create({
+    id: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+
+  this.render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
   this.$('.pass input').val('banana').keyup();
   this.$('.allow input').click();
+  this.$('button').click();
+});
+
+test('it renders secrets for child pipeline', function (assert) {
+  assert.expect(2);
+  const testSecret = EmberObject.create({
+    name: 'TEST_SECRET',
+    pipelineId: '123245',
+    value: 'banana',
+    allowInPR: false
+  });
+
+  this.set('mockSecret', testSecret);
+
+  const testPipeline = EmberObject.create({
+    id: '123',
+    configPipelineId: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+
+  this.render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+  const passInput = this.$('.pass input');
+
+  assert.equal(passInput.attr('placeholder'), 'Inherited from parent pipeline');
+  assert.equal(this.$('button').text().trim(), 'Override');
+});
+
+test('it overrides a secret for a child pipeline', function (assert) {
+  assert.expect(3);
+  const testSecret = EmberObject.create({
+    name: 'TEST_SECRET',
+    pipelineId: '123245',
+    value: 'banana',
+    allowInPR: false
+  });
+
+  this.set('mockSecret', testSecret);
+
+  const testPipeline = EmberObject.create({
+    id: '123',
+    configPipelineId: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+
+  this.set('externalAction', (name, value, id) => {
+    assert.equal(name, 'TEST_SECRET');
+    assert.equal(value, 'apple');
+    assert.equal(id, '123');
+  });
+
+  this.render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline
+    onCreateSecret=(action externalAction)}}`);
+  this.$('.pass input').val('apple').keyup();
   this.$('button').click();
 });
