@@ -177,7 +177,7 @@ export default Component.extend({
 
         path.moveTo(startX, startY);
         // curvy line
-        path.bezierCurveTo(endX, startY, endX - X_WIDTH/2, endY, endX, endY);
+        path.bezierCurveTo(endX, startY, endX - (X_WIDTH / 2), endY, endX, endY);
         // arrowhead
         path.lineTo(endX - ARROWHEAD, endY - ARROWHEAD);
         path.moveTo(endX, endY);
