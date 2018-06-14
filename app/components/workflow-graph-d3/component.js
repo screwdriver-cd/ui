@@ -87,15 +87,20 @@ export default Component.extend({
   },
   draw() {
     const data = get(this, 'decoratedGraph');
-    // TODO: actually scale drawing based on available space.
+    const MAX_LENGTH = data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0);
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = get(this, 'elementSizes');
+    let X_WIDTH = ICON_SIZE * 2;
+
+    // When displaying job names use estimate of 4.25 per character
+    if (TITLE_SIZE && get(this, 'displayJobNames')) {
+      X_WIDTH = Math.max(X_WIDTH, MAX_LENGTH * 4.25);
+    }
     // Adjustable spacing between nodes
-    const X_SPACING = ICON_SIZE;
     const Y_SPACING = ICON_SIZE;
     const EDGE_GAP = Math.floor(ICON_SIZE / 6);
 
     // Calculate the canvas size based on amount of content, or override with user-defined size
-    const w = get(this, 'width') || ((data.meta.width * ICON_SIZE) + (data.meta.width * X_SPACING));
+    const w = get(this, 'width') || (data.meta.width * X_WIDTH);
     const h = get(this, 'height') ||
       ((data.meta.height * ICON_SIZE) + (data.meta.height * Y_SPACING));
 
@@ -109,6 +114,8 @@ export default Component.extend({
       }, true);
 
     this.set('graphNode', svg);
+
+    const calcXCenter = pos => ((X_WIDTH / 2) + (pos * X_WIDTH));
 
     // Jobs Icons
     svg.selectAll('jobs')
@@ -126,7 +133,7 @@ export default Component.extend({
       .text(d => icon(d.status))
       .attr('font-size', `${ICON_SIZE}px`)
       .style('text-anchor', 'middle')
-      .attr('x', d => ((d.pos.x + 1) * ICON_SIZE) + (d.pos.x * X_SPACING))
+      .attr('x', d => calcXCenter(d.pos.x))
       .attr('y', d => ((d.pos.y + 1) * ICON_SIZE) + (d.pos.y * Y_SPACING))
       .on('click', (e) => {
         this.send('buildClicked', e);
@@ -141,14 +148,13 @@ export default Component.extend({
         .data(data.nodes)
         .enter()
         .append('text')
-        .text(d => (d.name.length > 8 ? `${d.name.substr(0, 6)}...` : d.name))
+        .text(d => d.name)
         .attr('class', 'graph-label')
         .attr('font-size', `${TITLE_SIZE}px`)
         .style('text-anchor', 'middle')
-        .attr('x', d => ((d.pos.x + 1) * ICON_SIZE) + (d.pos.x * X_SPACING))
+        .attr('x', d => calcXCenter(d.pos.x))
         .attr('y', d => ((d.pos.y + 1) * ICON_SIZE) + (d.pos.y * Y_SPACING) + TITLE_SIZE);
     }
-
     // Calculate the start/end point of a line
     const calcPos = (pos, spacer) =>
       ((pos + 1) * ICON_SIZE) + ((pos * spacer) - (ICON_SIZE / 2));
@@ -164,14 +170,14 @@ export default Component.extend({
       .attr('fill', 'transparent')
       .attr('d', (d) => {
         const path = d3.path();
-        const startX = calcPos(d.from.x, X_SPACING) + ICON_SIZE + EDGE_GAP;
+        const startX = calcXCenter(d.from.x) + (ICON_SIZE / 2) + EDGE_GAP;
         const startY = calcPos(d.from.y, Y_SPACING);
-        const endX = calcPos(d.to.x, X_SPACING) - EDGE_GAP;
+        const endX = calcXCenter(d.to.x) - (ICON_SIZE / 2) - EDGE_GAP;
         const endY = calcPos(d.to.y, Y_SPACING);
 
         path.moveTo(startX, startY);
         // curvy line
-        path.bezierCurveTo(endX, startY, endX - X_SPACING, endY, endX, endY);
+        path.bezierCurveTo(endX, startY, endX - X_WIDTH/2, endY, endX, endY);
         // arrowhead
         path.lineTo(endX - ARROWHEAD, endY - ARROWHEAD);
         path.moveTo(endX, endY);
