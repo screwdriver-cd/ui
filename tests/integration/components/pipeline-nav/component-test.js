@@ -36,5 +36,5 @@ test('it renders with child pipelines tab', function (assert) {
 
   this.render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
 
-  assert.equal(this.$('a').text().trim(), 'EventsSecretsOptionsChild Pipelines');
+  assert.equal(this.$('a').text().trim(), 'Child PipelinesEventsSecretsOptions');
 });

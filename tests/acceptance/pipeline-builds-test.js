@@ -238,7 +238,7 @@ test('visiting /pipelines/4 when logged in', function (assert) {
   visit('/pipelines/4');
 
   andThen(() => {
-    assert.equal(currentURL(), '/pipelines/4');
+    assert.equal(currentURL(), '/pipelines/4/events');
     assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
     assert.equal(find('.pipelineWorkflow svg').length, 1, 'not enough workflow');
     assert.equal(find('button.start-button').length, 1, 'should have a start button');
