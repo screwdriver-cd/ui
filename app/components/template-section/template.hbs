@@ -5,4 +5,9 @@
   <p class="description">
     {{template.description}}
   </p>
+  <ul>
+    <li>Released by: <a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a></li>
+    {{#if template.lastUpdated}}<li>Last publish: {{template.lastUpdated}}</li>{{/if}}
+    {{#if template.labels.length}}<li>Tags: {{#each template.labels as |l|}}<span class="template-label">{{l}}</span>{{/each}}</li>{{/if}}
+  </ul>
 </article>

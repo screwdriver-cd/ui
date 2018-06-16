@@ -17,4 +17,17 @@ const getFullName = (config) => {
   return fullName;
 };
 
-export default { getFullName };
+/**
+ * Get the humanized last update time
+ * @param  {Object} config
+ * @param  {String} config.createTime   Template create time
+ * @return {String}                     Returns humanized last update time
+ */
+const getLastUpdatedTime = (config) => {
+  let timeDiff = Date.now() - new Date(config.createTime).getTime();
+  const lastUpdated = `${humanizeDuration(timeDiff, { round: true, largest: 1 })} ago`;
+
+  return lastUpdated;
+};
+
+export default { getFullName, getLastUpdatedTime };

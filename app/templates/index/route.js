@@ -1,7 +1,7 @@
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import templateHelper from 'screwdriver-ui/utils/template';
-const { getFullName } = templateHelper;
+const { getFullName, getLastUpdatedTime } = templateHelper;
 
 export default Route.extend({
   template: service(),
@@ -20,6 +20,11 @@ export default Route.extend({
             name: t.name,
             namespace: t.namespace
           });
+
+          if (t.createTime) {
+            // Add last updated time
+            t.lastUpdated = getLastUpdatedTime({ createTime: t.createTime });
+          }
 
           result.push(t);
         }

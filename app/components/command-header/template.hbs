@@ -4,6 +4,7 @@
 <p>{{command.description}}</p>
 <ul>
   <li>Released by: <a href="mailto:{{command.maintainer}}">{{command.maintainer}}</a></li>
+  {{#if command.lastUpdated}}<li>Last publish: {{command.lastUpdated}}</li>{{/if}}
 </ul>
 <h4>Usage:</h4>
 <pre>sd-cmd exec {{command.namespace}}/{{command.name}}@{{command.version}}</pre>

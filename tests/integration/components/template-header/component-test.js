@@ -8,6 +8,7 @@ const TEMPLATE = {
   config: {
     image: 'node:8'
   },
+  createTime: '2018-06-16T00:36:50.603Z',
   description: 'A test example',
   labels: ['car', 'armored'],
   maintainer: 'bruce@wayne.com',

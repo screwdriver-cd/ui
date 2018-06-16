@@ -57,7 +57,7 @@
     "ember-cli-document-title": "^0.3.3",
     "ember-cli-eslint": "^4.2.3",
     "ember-cli-htmlbars": "^2.0.1",
-    "ember-cli-htmlbars-inline-precompile": "^1.0.0",
+    "ember-cli-htmlbars-inline-precompile": "^1.0.3",
     "ember-cli-inject-live-reload": "^1.4.1",
     "ember-cli-jstree": "^1.0.9",
     "ember-cli-jwt-decode": "0.1.0",
@@ -78,7 +78,7 @@
     "ember-modal-dialog": "^2.4.4",
     "ember-moment": "^7.7.0",
     "ember-promise-helpers": "^1.0.6",
-    "ember-resolver": "^4.5.5",
+    "ember-resolver": "^4.5.6",
     "ember-simple-auth": "^1.6.0",
     "ember-sinon": "^1.0.1",
     "ember-sinon-qunit": "^2.1.0",
@@ -88,7 +88,7 @@
     "eslint": "^4.19.1",
     "eslint-config-screwdriver": "^3.0.0",
     "eslint-plugin-ember": "^5.2.0",
-    "humanize-duration": "^3.14.0",
+    "humanize-duration": "^3.15.0",
     "loader.js": "^4.7.0"
   },
   "dependencies": {}
