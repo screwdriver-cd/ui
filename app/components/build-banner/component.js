@@ -20,8 +20,6 @@ export default Component.extend({
 
   coverageStepEndTime: alias('coverageStep.endTime'),
 
-  coverageStepStartTime: alias('coverageStep.startTime'),
-
   prNumber: computed('event.pr.url', {
     get() {
       let url = this.get('event.pr.url');
@@ -76,8 +74,9 @@ export default Component.extend({
   }),
 
   coverageInfoCompute() {
+    // Set coverage query startTime to build start time since user can do coverage during user step
+    const buildStartTime = this.get('buildStart');
     const coverageStepEndTime = this.get('coverageStepEndTime');
-    const coverageStepStartTime = this.get('coverageStepStartTime');
 
     if (!coverageStepEndTime) {
       this.set('coverageInfo', {
@@ -91,7 +90,7 @@ export default Component.extend({
     const config = {
       buildId: this.get('buildId'),
       jobId: this.get('jobId'),
-      startTime: coverageStepStartTime,
+      startTime: buildStartTime,
       endTime: coverageStepEndTime
     };
 

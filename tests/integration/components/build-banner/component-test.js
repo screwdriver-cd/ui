@@ -264,7 +264,6 @@ test('it renders coverage info if coverage step finished', function (assert) {
     { name: 'sd-setup-screwdriver-scm-bookend' },
     {
       name: 'sd-teardown-screwdriver-coverage-bookend',
-      startTime: '2016-11-04T21:08:41.238Z',
       endTime: '2016-11-04T21:09:41.238Z'
     }
   ];
