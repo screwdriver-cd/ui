@@ -85,6 +85,30 @@ moduleForComponent('collection-view', 'Integration | Component | collection view
               createTime: '2017-09-05T04:01:41.789Z'
             }
           ]
+        },
+        {
+          id: 4,
+          scmUri: 'github.com:54321879:master',
+          createTime: '2017-01-05T00:55:46.775Z',
+          admins: {
+            username: true
+          },
+          workflow: ['main'],
+          scmRepo: {
+            name: 'screwdriver-cd/zzz',
+            branch: 'master',
+            url: 'https://github.com/screwdriver-cd/zzz/tree/master'
+          },
+          scmContext: 'bitbucket:bitbucket.org',
+          annotations: {},
+          lastEventId: 23,
+          lastBuilds: [
+            {
+              id: 125,
+              status: 'UNSTABLE',
+              createTime: '2017-09-05T04:01:41.789Z'
+            }
+          ]
         }
       ]
     });
@@ -112,17 +136,21 @@ test('it renders', function (assert) {
   assert.equal($('th.account').text().trim(), 'Account');
   assert.equal($('th.health').text().trim(), 'Last Build');
   assert.equal($('th.prs').text().trim(), 'Pull Requests');
-  assert.equal($('tr').length, 5);
+  assert.equal($('tr').length, 6);
   // The pipelines are sorted in alphabetical order by default by the component
   assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/models');
   assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/screwdriver');
   assert.equal($($('td.app-id').get(2)).text().trim(), 'screwdriver-cd/ui');
+  assert.equal($($('td.app-id').get(3)).text().trim(), 'screwdriver-cd/zzz');
   // The models pipeline has scm display names
   assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
   assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
   assert.equal($($('td.account').get(2)).text().trim(), 'github.com');
+  assert.equal($($('td.account').get(3)).text().trim(), 'bitbucket.org');
   // The pipeline health
   assert.ok($('td.health i').hasClass('build-success'));
+  assert.ok($('td.health i').hasClass('build-failure'));
+  assert.ok($('td.health i').hasClass('build-unstable'));
   // The models pipeline should not have any info for prs open and failing
   assert.equal($($('td.prs--open').get(0)).text().trim(), '');
   assert.equal($($('td.prs--failing').get(0)).text().trim(), '');
