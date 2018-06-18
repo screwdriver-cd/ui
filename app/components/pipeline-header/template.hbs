@@ -1,3 +1,6 @@
 {{#link-to "pipeline" pipeline.id}}<h1>{{pipeline.appId}}</h1>{{/link-to}}
 <a href="{{pipeline.hubUrl}}" class="branch">{{fa-icon "code-fork"}} {{pipeline.branch}}</a>
 <span class="scm">{{fa-icon scmContext.scmIcon}} {{scmContext.scm}}</span>
+{{#if pipeline.configPipelineId}}
+  {{fa-icon "cog"}} {{#link-to "pipeline" pipeline.configPipelineId}}Parent Pipeline{{/link-to}}
+{{/if}}

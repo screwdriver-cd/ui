@@ -66,7 +66,7 @@ test('/create a pipeline: SUCCESS', function (assert) {
     triggerEvent('.text-input', 'keyup');
     click('button.blue-button');
     andThen(() => {
-      assert.equal(currentURL(), '/pipelines/1');
+      assert.equal(currentURL(), '/pipelines/1/events');
     });
   });
 });
