@@ -6,6 +6,7 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
 export default Component.extend({
+  showModal: false,
   session: service(),
   scmService: service('scm'),
   pipelineSorting: ['appId', 'branch'],
@@ -59,6 +60,14 @@ export default Component.extend({
     }
   }),
   actions: {
+    openModal() {
+      this.set('showModal', true);
+    },
+    addNewCollectionHelper() {
+      let addNewCollectionParent = this.get('addNewCollection');
+
+      addNewCollectionParent();
+    },
     addToCollection(pipelineId, collection) {
       return this.get('onAddToCollection')(+pipelineId, collection.id)
         .then(() => {

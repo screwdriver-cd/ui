@@ -30,7 +30,7 @@
           {{#dd.button class="add-to-collection"}}
             {{fa-icon "plus" title="Add to collection" size="sm"}}
           {{/dd.button}}
-          {{#dd.menu align="right" as |menu|}}
+          {{#dd.menu align="right" class="dropdown" as |menu|}}
             {{#each collections as |collection|}}
               {{#menu.item}}
                 <span onclick={{action "addToCollection" pipeline.id collection}}>
@@ -38,6 +38,11 @@
                 </span>
               {{/menu.item}}
             {{/each}}
+            <li>
+              <span class="create-dropdown" onclick={{action "openModal"}}>
+                {{fa-icon "plus-circle" title="Create" size="md"}} CREATE
+              </span>
+            </li>
           {{/dd.menu}}
         {{/bs-dropdown}}
       </td>
@@ -46,3 +51,4 @@
     {{/each}}
   </tbody>
 </table>
+{{collection-modal showModal=showModal addNewCollection=addNewCollection}}
