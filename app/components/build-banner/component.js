@@ -75,7 +75,7 @@ export default Component.extend({
 
   coverageInfoCompute() {
     // Set coverage query startTime to build start time since user can do coverage during user step
-    const buildStartTime = this.get('buildStart');
+    const buildStartTime = this.get('buildSteps')[0].startTime;
     const coverageStepEndTime = this.get('coverageStepEndTime');
 
     if (!coverageStepEndTime) {

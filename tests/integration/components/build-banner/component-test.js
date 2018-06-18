@@ -261,7 +261,9 @@ test('it renders a stop button for running job when authenticated', function (as
 test('it renders coverage info if coverage step finished', function (assert) {
   const $ = this.$;
   const coverageStepsMock = [
-    { name: 'sd-setup-screwdriver-scm-bookend' },
+    { name: 'sd-setup-screwdriver-scm-bookend',
+      startTime: '2016-11-04T20:09:41.238Z'
+    },
     {
       name: 'sd-teardown-screwdriver-coverage-bookend',
       endTime: '2016-11-04T21:09:41.238Z'
