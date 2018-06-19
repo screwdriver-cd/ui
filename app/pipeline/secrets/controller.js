@@ -7,7 +7,7 @@ export default Controller.extend({
   errorMessage: '',
   pipeline: reads('model.pipeline'),
   secrets: reads('model.secrets'),
-  pipelinetokens: reads('model.tokens'),
+  pipelineTokens: reads('model.tokens'),
   pipelineId: reads('model.pipeline.id'),
   newToken: null,
   refreshService: service('pipeline.secrets'),
