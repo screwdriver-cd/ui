@@ -61,6 +61,10 @@ export default Component.extend({
               return ['times-circle', 'build-failure'];
             case 'aborted':
               return ['stop-circle', 'build-failure'];
+            case 'blocked':
+              return ['ban', 'build-running'];
+            case 'unstable':
+              return ['exclamation-circle', 'build-unstable'];
             default:
               return ['', ''];
             }

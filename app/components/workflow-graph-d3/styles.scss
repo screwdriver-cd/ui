@@ -50,8 +50,17 @@ g {
     }
   }
 
+  &.build-unstable {
+    fill: $sd-unstable;
+
+    &:hover {
+      fill: darken($sd-unstable, 10%);
+    }
+  }
+
   &.build-running,
-  &.build-queued {
+  &.build-queued,
+  &.build-blocked {
     fill: $sd-queued;
 
     &:hover {

@@ -9,6 +9,12 @@
   }
 }
 
+&.UNSTABLE {
+  .fa {
+    color: $sd-unstable;
+  }
+}
+
 &.FAILURE {
   .fa {
     color: $sd-failure;
