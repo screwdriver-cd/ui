@@ -1,8 +1,7 @@
 import { computed, get, getWithDefault } from '@ember/object';
 import Component from '@ember/component';
-import templateHelper from 'screwdriver-ui/utils/template';
+import { getFullName } from 'screwdriver-ui/utils/template';
 const { reads, map } = computed;
-const { getFullName } = templateHelper;
 
 export default Component.extend({
   results: null,
