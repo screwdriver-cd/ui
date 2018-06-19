@@ -1,6 +1,6 @@
 import templateHelper from 'screwdriver-ui/utils/template';
 import { module, test } from 'qunit';
-const { getFullName } = templateHelper;
+const { getFullName, getLastUpdatedTime } = templateHelper;
 
 module('Unit | Utility | template');
 
@@ -29,6 +29,17 @@ test('it gets the name as full name when namespace is default', function (assert
   const result = getFullName({
     name: 'myName',
     namespace: 'default'
+  });
+
+  assert.deepEqual(result, expectedOutput);
+});
+
+test('it gets the last updated time', function (assert) {
+  const createTime = '2016-09-23T16:53:00.274Z';
+  const timeDiff = Date.now() - new Date(createTime).getTime();
+  const expectedOutput = `${humanizeDuration(timeDiff, { round: true, largest: 1 })} ago`;
+  const result = getLastUpdatedTime({
+    createTime
   });
 
   assert.deepEqual(result, expectedOutput);
