@@ -9,8 +9,17 @@
 </h1>
 <h2>{{template.version}}</h2>
 <p>{{template.description}}</p>
-<ul>
+<ul id="template-details">
   {{#if template.namespace}}<li>Namespace: {{template.namespace}}</li><li>Name: {{template.name}}</li>{{/if}}
+  {{#if template.images}}<li id="images-label">Supported Images:
+      <ul id="images-list">
+      {{#each-in template.images as |alias path|}}
+      <li><span class="alias">{{alias}}: </span><span class="path">{{path}}</span></li>
+      {{else}}
+      <li>None defined</li>
+      {{/each-in}}
+      </ul>
+  </li>{{/if}}
   <li>Released by: <a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a></li>
   {{#if template.labels.length}}<li>Tags: {{#each template.labels as |l|}}<span class="template-label">{{l}}</span>{{/each}}</li>{{/if}}
 </ul>

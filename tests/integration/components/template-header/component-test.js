@@ -15,7 +15,11 @@ const TEMPLATE = {
   namespace: 'foo',
   name: 'bar',
   fullName: 'foo/bar',
-  version: '2.0.0'
+  version: '2.0.0',
+  images: {
+    stable: 'node:6',
+    development: 'node:7'
+  }
 };
 
 const mockPipeline = {
@@ -50,12 +54,15 @@ test('it renders', function (assert) {
   assert.equal($('h1').text().trim(), 'foo/bar');
   assert.equal($('h2').text().trim(), '2.0.0');
   assert.equal($('p').text().trim(), 'A test example');
-  assert.equal($('ul li:first-child').text().trim(), 'Namespace: foo');
-  assert.equal($('ul li:nth-child(2)').text().trim(), 'Name: bar');
-  assert.equal($('ul li:nth-child(3)').text().trim(), 'Released by: bruce@wayne.com');
-  assert.equal($('ul li:nth-child(3) a').attr('href'), 'mailto:bruce@wayne.com');
-  assert.equal($('ul li:last-child').text().trim(), 'Tags: cararmored');
+  assert.equal($('#template-details > li:first-child').text().trim(), 'Namespace: foo');
+  assert.equal($('#template-details > li:nth-child(2)').text().trim(), 'Name: bar');
+  assert.equal($('#template-details > li:nth-child(4)').text().trim(),
+    'Released by: bruce@wayne.com');
+  assert.equal($('#template-details > li:nth-child(4) > a').attr('href'), 'mailto:bruce@wayne.com');
+  assert.equal($('#template-details > li:last-child').text().trim(), 'Tags: cararmored');
   assert.equal($('h4').text().trim(), 'Usage:');
+  assert.equal($('#images-list > li:first-child').text().trim(), 'stable: node:6');
+  assert.equal($('#images-list > li:nth-child(2)').text().trim(), 'development: node:7');
   // Messy regexp instead of .includes due to phantomjs limitation
   assert.ok(new RegExp('template: foo/bar@2.0.0').test($('pre').text().trim()));
 });
