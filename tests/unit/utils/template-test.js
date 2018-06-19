@@ -1,5 +1,6 @@
-import { getFullName } from 'screwdriver-ui/utils/template';
+import templateHelper from 'screwdriver-ui/utils/template';
 import { module, test } from 'qunit';
+const { getFullName } = templateHelper;
 
 module('Unit | Utility | template');
 

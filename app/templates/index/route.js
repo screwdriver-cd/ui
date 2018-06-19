@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
-import { getFullName, getLastUpdatedTime } from 'screwdriver-ui/utils/template';
+import templateHelper from 'screwdriver-ui/utils/template';
+const { getFullName, getLastUpdatedTime } = templateHelper;
 
 export default Route.extend({
   template: service(),
