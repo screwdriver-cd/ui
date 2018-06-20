@@ -91,6 +91,10 @@
   .build-failure {
     color: $sd-failure;
   }
+
+  .build-unstable {
+    color: $sd-unstable;
+  }
 }
 
 @media (max-width: 47.999em) {

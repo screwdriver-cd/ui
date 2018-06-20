@@ -55,3 +55,14 @@ test('it humanizes createTime', function (assert) {
       `${humanizeDuration(Date.now() - createTime, { round: true, largest: 1 })} ago`);
   });
 });
+
+test('it truncates the sha', function (assert) {
+  const sha = '026c5b76b210f96dc27011b553679a7663b38698';
+  let model = this.subject({
+    sha
+  });
+
+  run(() => {
+    assert.equal(model.get('truncatedSha'), '026c5b');
+  });
+});

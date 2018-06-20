@@ -9,7 +9,9 @@ const STATUS_MAP = {
   ABORTED: { icon: '\ue900' },
   FAILURE: { icon: '\ue906' },
   DISABLED: { icon: '\ue902' },
-  UNKNOWN: { icon: '\ue901' }
+  UNKNOWN: { icon: '\ue901' },
+  UNSTABLE: { icon: '\ue909' },
+  BLOCKED: { icon: '\ue908' }
 };
 
 /**
