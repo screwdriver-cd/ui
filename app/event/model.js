@@ -38,7 +38,19 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   duration: computed('builds.[]', 'isComplete', {
     get() {
-      return get(this, 'builds').reduce((val = 0, item) => val + get(item, 'totalDurationMS'));
+      const builds = get(this, 'builds');
+      const firstCreateTime = builds.map(item => get(item, 'createTime')).sort()[0];
+      let lastEndTime = new Date();
+
+      if (get(this, 'isComplete')) {
+        lastEndTime = builds.map(item => get(item, 'endTime')).sort().pop();
+      }
+
+      if (!firstCreateTime || !lastEndTime) {
+        return 0;
+      }
+
+      return lastEndTime.getTime() - firstCreateTime.getTime();
     }
   }),
   durationText: computed('duration', {
