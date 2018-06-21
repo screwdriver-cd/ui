@@ -155,7 +155,7 @@ export default DS.RESTAdapter.extend({
     return this._super(status, headers, data, requestData);
   },
   /**
-   * Overriding default adapter because pipeline token's  endpoint is differnt
+   * Overriding default adapter because pipeline token's endpoint is differnt
    * from user api token.
    * @method urlForFindAll
    * @param  {String}      modelName
@@ -171,7 +171,7 @@ export default DS.RESTAdapter.extend({
       + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
   },
   /**
-   * Overriding default adapter because pipeline token's  endpoint is differnt
+   * Overriding default adapter because pipeline token's endpoint is differnt
    * from user api token.
    * @method urlForCreateRecord
    * @param  {String}      modelName
@@ -187,7 +187,7 @@ export default DS.RESTAdapter.extend({
       + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
   },
   /**
-   * Overriding default adapter because pipeline token's  endpoint is differnt
+   * Overriding default adapter because pipeline token's endpoint is differnt
    * from user api token.
    * @method urlForUpdateRecord
    * @param  {String}      id
@@ -204,7 +204,7 @@ export default DS.RESTAdapter.extend({
       + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`;
   },
   /**
-   * Overriding default adapter because pipeline token's  endpoint is differnt
+   * Overriding default adapter because pipeline token's endpoint is differnt
    * from user api token.
    * @method urlForDeleteRecord
    * @param  {String}      id
