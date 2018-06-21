@@ -28,6 +28,15 @@ moduleForAcceptance('Acceptance | secrets', {
         { id: 1235, name: 'ROBIN', value: null, allowInPR: false }
       ])
     ]);
+
+    server.get('http://localhost:8080/v4/pipelines/1/tokens', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([
+        { id: 2345, name: 'foo', description: 'foofoo' },
+        { id: 2346, name: 'bar', description: 'barbar' }
+      ])
+    ]);
   },
   afterEach() {
     server.shutdown();
@@ -42,5 +51,6 @@ test('visiting /pipelines/:id/secrets', function (assert) {
   andThen(() => {
     assert.equal(currentURL(), '/pipelines/1/secrets');
     assert.equal(find('.secrets tbody tr').length, 2);
+    assert.equal(find('.token-list tbody tr').length, 2);
   });
 });
