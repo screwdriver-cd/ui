@@ -10,7 +10,7 @@
   {{/bs-alert}}
 {{/if}}
 <p>
-  User access tokens provide access to the <a href="http://docs.screwdriver.cd/user-guide/api">Screwdriver API</a>. They are scoped to your account.
+  {{tokenName}} tokens provide access to the <a href="http://docs.screwdriver.cd/user-guide/api">Screwdriver API</a>. They are scoped to {{tokenScope}}.
 </p>
 <table class="token-list">
   <thead>
@@ -25,6 +25,7 @@
     {{#each sortedTokens as |token|}}
       {{token-view
         token=token
+        pipelineId=pipelineId
         confirmAction=(action "confirmAction")
         setErrorMessage=(action "setErrorMessage")
         setIsSaving=(action "setIsSaving")
