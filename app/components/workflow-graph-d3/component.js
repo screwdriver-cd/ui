@@ -140,7 +140,7 @@ export default Component.extend({
       })
       // add a tooltip
       .insert('title')
-      .text(d => d.name);
+      .text(d => d.status);
 
     // Job Names
     if (TITLE_SIZE && get(this, 'displayJobNames')) {

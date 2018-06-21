@@ -90,8 +90,10 @@ li {
 
 //sass-lint:disable class-name-format
 &.RUNNING,
-&.QUEUED {
-  .job-name
+&.QUEUED,
+&.BLOCKED {
+  .job-name,
+  .job-name,
   .job-name {
     border-left-color: $sd-running;
 
@@ -107,6 +109,16 @@ li {
 
     .banner-value {
       color: $sd-success;
+    }
+  }
+}
+
+&.UNSTABLE {
+  .job-name {
+    border-left-color: $sd-unstable;
+
+    .banner-value {
+      color: $sd-unstable;
     }
   }
 }
