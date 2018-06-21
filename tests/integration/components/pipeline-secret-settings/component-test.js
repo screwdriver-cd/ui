@@ -19,8 +19,16 @@ test('it renders', function (assert) {
 
   this.set('mockSecrets', [testSecret]);
 
-  this.set('mockPipeline', { id: 'abcd' });
+  const testPipeline = EmberObject.create({
+    id: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+
   this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+  assert.equal(this.$('p').text().trim(),
+    'User secrets must also be added to the Screwdriver YAML.');
 
   // the table is present
   assert.equal(this.$('table').length, 1);
@@ -123,11 +131,43 @@ test('it sorts secrets by name alphabetically', function (assert) {
 
   this.set('mockSecrets', [testSecret1, testSecret2, testSecret3]);
 
-  this.set('mockPipeline', { id: 123245 });
+  const testPipeline = EmberObject.create({
+    id: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
   this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
 
   // secrets are sorted by name
   assert.equal(this.$('tbody tr:first-child td:first-child').text().trim(), 'BAR');
   assert.equal(this.$('tbody tr:nth-child(2) td:first-child').text().trim(), 'FOO');
   assert.equal(this.$('tbody tr:nth-child(3) td:first-child').text().trim(), 'ZOO');
+});
+
+test('it renders differently for a child pipeline', function (assert) {
+  const testSecret = EmberObject.create({
+    name: 'FOO',
+    pipelineId: 123245,
+    value: 'banana',
+    allowInPR: false
+  });
+
+  this.set('mockSecrets', [testSecret]);
+
+  const testPipeline = EmberObject.create({
+    id: '123',
+    configPipelineId: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+  this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+  assert.equal(this.$('p').text().trim().replace(/\+s/g, ' '),
+    'Secrets are inherited from the parent pipeline. ' +
+    'You may override a secret or revert it back to its original value.');
+
+  // Secrets are rendered but footer is not
+  assert.equal(this.$('table').length, 1);
+  assert.equal(this.$('tbody tr').length, 1);
+  assert.equal(this.$('tfoot tr').length, 0);
 });

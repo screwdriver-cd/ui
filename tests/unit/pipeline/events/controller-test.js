@@ -16,7 +16,7 @@ const sessionServiceMock = Service.extend({
 });
 let server;
 
-moduleFor('controller:pipeline/index', 'Unit | Controller | pipeline/index', {
+moduleFor('controller:pipeline/events', 'Unit | Controller | pipeline/events', {
   // Specify the other units that are required for this test.
   // eslint-disable-next-line max-len
   needs: ['model:build', 'model:event', 'adapter:application', 'service:session', 'serializer:build', 'serializer:event'],

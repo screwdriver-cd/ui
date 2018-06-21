@@ -5,4 +5,8 @@
   <p class="description">
     {{command.description}}
   </p>
+  <ul>
+    <li>Released by: <a href="mailto:{{command.maintainer}}">{{command.maintainer}}</a></li>
+    {{#if command.lastUpdated}}<li>Last published: {{command.lastUpdated}}</li>{{/if}}
+  </ul>
 </article>

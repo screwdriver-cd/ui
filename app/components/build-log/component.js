@@ -5,6 +5,8 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 
+const timeTypes = ['datetime', 'elapsedBuild', 'elapsedStep'];
+
 export default Component.extend({
   logger: service('build-logs'),
   classNames: ['build-log'],
@@ -57,6 +59,12 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
+
+    const timeFormat = localStorage.getItem('screwdriver.logs.timeFormat');
+
+    if (timeFormat && timeTypes.includes(timeFormat)) {
+      set(this, 'timeFormat', timeFormat);
+    }
 
     set(this, 'logCache', {});
   },
@@ -145,11 +153,10 @@ export default Component.extend({
       set(this, 'autoscroll', this.$('.bottom')[0].getBoundingClientRect().top < 1000);
     },
     toggleTimeDisplay() {
-      const timeTypes = ['datetime', 'elapsedBuild', 'elapsedStep'];
       let index = timeTypes.indexOf(get(this, 'timeFormat'));
 
       index = index + 1 >= timeTypes.length ? 0 : index + 1;
-
+      localStorage.setItem('screwdriver.logs.timeFormat', timeTypes[index]);
       set(this, 'timeFormat', timeTypes[index]);
     }
   }

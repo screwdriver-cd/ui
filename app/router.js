@@ -12,9 +12,11 @@ Router.map(function route() {
   this.route('home', { path: '/' });
   this.route('builds', { path: '/builds/:build_id' });
   this.route('pipeline', { path: '/pipelines/:pipeline_id' }, function secretsRoute() {
+    this.route('events');
     this.route('secrets');
     this.route('build', { path: 'builds/:build_id' });
     this.route('options');
+    this.route('child-pipelines');
   });
   this.route('login');
   this.route('create');

@@ -1,1 +1,5 @@
-{{#link-to "pipeline.build" build.id}}{{fa-icon icon fixedWidth=true}}<span>{{job.name}}</span>{{/link-to}}
+{{#if build}}
+  {{#link-to "pipeline.build" build.id}}{{fa-icon icon fixedWidth=true}}<span>{{job.name}}</span>{{/link-to}}
+{{else}}
+  {{fa-icon icon fixedWidth=true}}<span>{{job.name}}</span>
+{{/if}}

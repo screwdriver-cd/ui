@@ -6,7 +6,8 @@ let server;
 
 moduleFor('controller:pipeline/secrets', 'Unit | Controller | pipeline/secrets', {
   // Specify the other units that are required for this test.
-  needs: ['model:secret', 'adapter:application', 'serializer:secret', 'service:session'],
+  needs: ['model:secret', 'model:token', 'adapter:application', 'serializer:secret',
+    'serializer:token', 'service:session', 'service:pipeline.secrets'],
   beforeEach() {
     server = new Pretender();
   },
@@ -43,6 +44,40 @@ test('it can create secrets', function (assert) {
       name: 'batman',
       value: 'robin',
       allowInPR: false
+    });
+  });
+});
+
+test('it can create pipelinetokens', function (assert) {
+  server.post('http://localhost:8080/v4/pipelines/1/tokens',
+    () => [200, {}, JSON.stringify({ id: 123 })]);
+
+  let controller = this.subject();
+
+  assert.ok(controller);
+
+  run(() => {
+    controller.set('model', {
+      tokens: {
+        reload() {
+          assert.ok(true);
+        }
+      },
+      pipeline: {
+        id: '1'
+      }
+    });
+
+    controller.send('createPipelineToken', 'foo', 'bar');
+  });
+
+  return wait().then(() => {
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      name: 'foo',
+      description: 'bar'
     });
   });
 });

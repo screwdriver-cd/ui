@@ -13,9 +13,14 @@ export default Route.extend({
     }
 
     const pipeline = this.modelFor('pipeline');
+    const secrets = pipeline.get('secrets');
 
-    return pipeline.get('secrets')
-      .then(secrets => ({
+    this.get('store').unloadAll('token');
+
+    return this.get('store')
+      .findAll('token', { adapterOptions: { pipelineId: this.modelFor('pipeline').get('id') } })
+      .then(tokens => ({
+        tokens,
         secrets,
         pipeline
       }));

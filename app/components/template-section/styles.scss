@@ -1,4 +1,19 @@
 & {
+  ul,
+  li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .template-label {
+    margin: 0 5px;
+    padding: 3px 5px;
+    border-radius: 3px;
+    background-color: $sd-light-blue;
+    color: $sd-white;
+  }
+
   h4 {
     font-weight: $weight-bold;
     margin: 0;

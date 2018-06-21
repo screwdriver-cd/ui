@@ -2,9 +2,9 @@
 <ul>
   {{#each templates as |t|}}
     {{#if t.tag}}
-      <li {{action changeVersion t.version on="click"}}><span class="version">{{t.version}} - {{t.tag}}</span></li>
+      <li {{action changeVersion t.version on="click"}}><span class="version">{{t.version}} - {{t.tag}}</span>{{#if t.lastUpdated}} {{t.lastUpdated}}{{/if}}</li>
     {{else}}
-      <li {{action changeVersion t.version on="click"}}><span class="version">{{t.version}}</span></li>
+      <li {{action changeVersion t.version on="click"}}><span class="version">{{t.version}}</span>{{#if t.lastUpdated}} {{t.lastUpdated}}{{/if}}</li>
     {{/if}}
   {{/each}}
 </ul>

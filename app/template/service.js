@@ -3,6 +3,8 @@ import { Promise as EmberPromise } from 'rsvp';
 import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
+import templateHelper from 'screwdriver-ui/utils/template';
+const { getFullName, getLastUpdatedTime } = templateHelper;
 
 export default Service.extend({
   session: service(),
@@ -41,7 +43,22 @@ export default Service.extend({
     return new EmberPromise((resolve, reject) => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
-        .done(content => resolve(content))
+        .done((templates) => {
+          templates.forEach((template) => {
+            // Construct full template name
+            template.fullName = getFullName({
+              name: template.name,
+              namespace: template.namespace
+            });
+
+            if (template.createTime) {
+              // Add last updated time
+              template.lastUpdated = getLastUpdatedTime({ createTime: template.createTime });
+            }
+          });
+
+          return resolve(templates);
+        })
         .fail((response) => {
           let message = `${response.status} Request Failed`;
 

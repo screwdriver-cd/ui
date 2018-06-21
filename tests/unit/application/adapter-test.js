@@ -77,7 +77,15 @@ test('it adds links to pipelines', function (assert) {
   const payload = adapter.handleResponse(200, {}, { id: 1234 }, requestData);
 
   assert.deepEqual(payload, {
-    pipeline: { id: 1234, links: { jobs: 'jobs', secrets: 'secrets', events: 'events' } }
+    pipeline: {
+      id: 1234,
+      links: {
+        jobs: 'jobs',
+        secrets: 'secrets',
+        events: 'events',
+        tokens: 'tokens'
+      }
+    }
   });
 });
 
@@ -149,4 +157,22 @@ test('it takes care of empty payload', function (assert) {
   const payload = adapter.handleResponse(204, {}, null, requestData);
 
   assert.deepEqual(payload, {});
+});
+
+test('it returns pipelinetoken endpoint when model is token with pipelineId', function (assert) {
+  let adapter = this.subject();
+
+  const modelname = 'token';
+  const snapshot = { adapterOptions: { pipelineId: '1' } };
+  const id = '123';
+  const baseUrl = 'http://localhost:8080/v4/pipelines/1/tokens';
+  const urlForFindAll = adapter.urlForFindAll(modelname, snapshot);
+  const urlForCreateRecord = adapter.urlForCreateRecord(modelname, snapshot);
+  const urlForUpdateRecord = adapter.urlForUpdateRecord(id, modelname, snapshot);
+  const urlForDeleteRecord = adapter.urlForDeleteRecord(id, modelname, snapshot);
+
+  assert.deepEqual(urlForFindAll, baseUrl);
+  assert.deepEqual(urlForCreateRecord, baseUrl);
+  assert.deepEqual(urlForUpdateRecord, `${baseUrl}/${id}`);
+  assert.deepEqual(urlForDeleteRecord, `${baseUrl}/${id}`);
 });
