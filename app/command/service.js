@@ -28,6 +28,9 @@ export default Service.extend({
       crossDomain: true,
       xhrFields: {
         withCredentials: true
+      },
+      headers: {
+        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
       }
     };
 

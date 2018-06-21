@@ -157,3 +157,69 @@ test('it is SUCCESS when all expected builds have run successfully', function (a
     });
   });
 });
+
+test('it returns event duration whenever builds have run in parallel', function (assert) {
+  run(() => {
+    const eventStartTime = 1472244582531;
+    const elapsed10secsTime = eventStartTime + 10000;
+    const elapsed20secsTime = eventStartTime + 20000;
+    const build1 = this.store().createRecord('build', {
+      jobId: 1,
+      createTime: new Date(eventStartTime),
+      endTime: new Date(elapsed10secsTime),
+      status: 'SUCCESS'
+    });
+    const build2 = this.store().createRecord('build', {
+      jobId: 2,
+      createTime: new Date(eventStartTime),
+      endTime: new Date(elapsed20secsTime),
+      status: 'ABORTED'
+    });
+    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+
+    model.set('builds', [build2, build1]);
+
+    run.next(this, () => {
+      const duration = get(model, 'duration');
+
+      assert.equal(duration, 20000);
+    });
+  });
+});
+
+test('it returns event duration until now if not completed yet', function (assert) {
+  run(() => {
+    const eventStartTime = 1472244582531;
+    const elapsed10secsTime = eventStartTime + 10000;
+    const elapsed20secsTime = eventStartTime + 20000;
+    const build1 = this.store().createRecord('build', {
+      jobId: 1,
+      createTime: new Date(eventStartTime),
+      endTime: new Date(elapsed10secsTime)
+    });
+    const build2 = this.store().createRecord('build', {
+      jobId: 2,
+      createTime: new Date(eventStartTime),
+      endTime: new Date(elapsed10secsTime)
+    });
+    const build3 = this.store().createRecord('build', {
+      jobId: 3,
+      createTime: new Date(elapsed20secsTime),
+      status: 'RUNNING'
+    });
+    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+    const testStartTime = new Date().getTime();
+
+    model.set('builds', [build2, build1, build3]);
+
+    run.next(this, () => {
+      const duration = get(model, 'duration');
+      const testFinishedTime = new Date().getTime();
+
+      assert.ok(duration >= (testStartTime - eventStartTime),
+        `duration ${duration} should be equal or longer than test start ${testStartTime}`);
+      assert.ok(duration <= (testFinishedTime - eventStartTime),
+        `duration ${duration} should be equal or shorter than test finished ${testFinishedTime}`);
+    });
+  });
+});
