@@ -30,4 +30,26 @@ const getLastUpdatedTime = (config) => {
   return lastUpdated;
 };
 
-export default { getFullName, getLastUpdatedTime };
+/**
+ * Format templates to add fullName and humanized date
+ * @param  {Array} Templates
+ * @return {Array} Formatted templates
+ */
+const templatesFormatter = (templates) => {
+  templates.forEach((t) => {
+    // Add full template name
+    t.fullName = getFullName({
+      name: t.name,
+      namespace: t.namespace
+    });
+
+    if (t.createTime) {
+      // Add last updated time
+      t.lastUpdated = getLastUpdatedTime({ createTime: t.createTime });
+    }
+  });
+
+  return templates;
+};
+
+export default { getFullName, getLastUpdatedTime, templatesFormatter };

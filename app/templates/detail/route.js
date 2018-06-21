@@ -9,8 +9,6 @@ export default Route.extend({
       this.get('template').getOneTemplate(params.name),
       this.get('template').getTemplateTags(params.name)
     ]).then((arr) => {
-      console.log('------------PARAMS-----------')
-      console.log(params)
       const [verPayload, tagPayload] = arr;
 
       tagPayload.forEach((tagObj) => {
@@ -25,12 +23,5 @@ export default Route.extend({
   setupController(controller, model) {
     this._super(controller, model);
     controller.reset();
-  },
-  actions: {
-    willTransition(transition) {
-      console.log('in will transition at detail');
-      return true;
-      // this.modelFor('templates').reload();
-    }
   }
 });
