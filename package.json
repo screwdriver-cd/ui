@@ -68,7 +68,7 @@
     "ember-cli-shims": "^1.2.0",
     "ember-cli-sri": "^2.1.0",
     "ember-cli-uglify": "^2.1.0",
-    "ember-component-css": "^0.6.3",
+    "ember-component-css": "^0.6.4",
     "ember-data": "~2.18.2",
     "ember-export-application-global": "^2.0.0",
     "ember-font-awesome": "^3.1.1",

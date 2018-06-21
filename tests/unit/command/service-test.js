@@ -9,6 +9,9 @@ const sessionStub = Service.extend({
     }
   }
 });
+const createTime = '2016-09-23T16:53:00.274Z';
+const created = new Date(createTime).getTime();
+const lastUpdated = `${humanizeDuration(Date.now() - created, { round: true, largest: 1 })} ago`;
 
 let server;
 
@@ -24,7 +27,7 @@ moduleFor('service:command', 'Unit | Service | command', {
 });
 
 test('it fetches one set of command version', function (assert) {
-  assert.expect(3);
+  assert.expect(2);
 
   server.get('http://localhost:8080/v4/commands/foo/bar', () => [
     200,
@@ -32,7 +35,8 @@ test('it fetches one set of command version', function (assert) {
       'Content-Type': 'application/json'
     },
     JSON.stringify([
-      { id: 2, version: '2.0.0' }, { id: 1, version: '1.0.0' }
+      { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime },
+      { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime }
     ])
   ]);
 
@@ -43,13 +47,17 @@ test('it fetches one set of command version', function (assert) {
   const t = service.getOneCommand('foo', 'bar');
 
   t.then((commands) => {
-    assert.deepEqual(commands[0], { id: 2, version: '2.0.0' });
-    assert.deepEqual(commands[1], { id: 1, version: '1.0.0' });
+    /* eslint-disable max-len */
+    assert.deepEqual(commands, [
+      { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime, lastUpdated },
+      { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime, lastUpdated }
+    ]);
+    /* eslint-enable max-len */
   });
 });
 
 test('it fetches all commands', function (assert) {
-  assert.expect(3);
+  assert.expect(2);
 
   server.get('http://localhost:8080/v4/commands', () => [
     200,
@@ -57,7 +65,8 @@ test('it fetches all commands', function (assert) {
       'Content-Type': 'application/json'
     },
     JSON.stringify([
-      { id: 2, version: '2.0.0' }, { id: 1, version: '1.0.0' }
+      { id: 2, namespace: 'foo', name: 'baz', version: '2.0.0', createTime },
+      { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime }
     ])
   ]);
 
@@ -68,8 +77,12 @@ test('it fetches all commands', function (assert) {
   const t = service.getAllCommands();
 
   t.then((commands) => {
-    assert.deepEqual(commands[0], { id: 2, version: '2.0.0' });
-    assert.deepEqual(commands[1], { id: 1, version: '1.0.0' });
+    assert.deepEqual(commands, [
+      /* eslint-disable max-len */
+      { id: 2, namespace: 'foo', name: 'baz', version: '2.0.0', createTime, lastUpdated },
+      { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime, lastUpdated }
+    ]);
+    /* eslint-enable max-len */
   });
 });
 
