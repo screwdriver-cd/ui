@@ -35,6 +35,7 @@ Router.map(function route() {
   this.route('commands', function commandsRoute() {
     this.route('detail', { path: '/:namespace/:name' });
   });
+  this.route('404', { path: '/*path' });
 });
 /* eslint-enable array-callback-return */
 
