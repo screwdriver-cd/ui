@@ -14,6 +14,7 @@ export default Route.extend({
 
         if (!names[name]) {
           names[name] = 1;
+
           result.push(c);
         }
       });

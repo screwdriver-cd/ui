@@ -3,6 +3,8 @@ import { Promise as EmberPromise } from 'rsvp';
 import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
+import templateHelper from 'screwdriver-ui/utils/template';
+const { getLastUpdatedTime } = templateHelper;
 
 export default Service.extend({
   session: service(),
@@ -34,7 +36,16 @@ export default Service.extend({
 
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
-        .done(content => resolve(content))
+        .done((commands) => {
+          commands.forEach((command) => {
+            if (command.createTime) {
+              // Add last updated time
+              command.lastUpdated = getLastUpdatedTime({ createTime: command.createTime });
+            }
+          });
+
+          return resolve(commands);
+        })
         .fail((response) => {
           let message = `${response.status} Request Failed`;
 
