@@ -12,6 +12,24 @@ const sessionStub = Service.extend({
 const createTime = '2016-09-23T16:53:00.274Z';
 const created = new Date(createTime).getTime();
 const lastUpdated = `${humanizeDuration(Date.now() - created, { round: true, largest: 1 })} ago`;
+const dummyCommands = [
+  { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime },
+  { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime }
+];
+const dummyCommandsResult = dummyCommands.map((c) => {
+  c.lastUpdated = lastUpdated;
+
+  return c;
+});
+const dummyCommandTags = [
+  { id: 2, namespace: 'foo', name: 'bar', tag: 'latest', version: '2.0.0', createTime },
+  { id: 1, namespace: 'foo', name: 'bar', tag: 'stable', version: '1.0.0', createTime }
+];
+const dummyCommandTagsResult = dummyCommandTags.map((c) => {
+  c.lastUpdated = lastUpdated;
+
+  return c;
+});
 
 let server;
 
@@ -34,10 +52,7 @@ test('it fetches one set of command version', function (assert) {
     {
       'Content-Type': 'application/json'
     },
-    JSON.stringify([
-      { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime },
-      { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime }
-    ])
+    JSON.stringify(dummyCommands)
   ]);
 
   let service = this.subject();
@@ -47,12 +62,29 @@ test('it fetches one set of command version', function (assert) {
   const t = service.getOneCommand('foo', 'bar');
 
   t.then((commands) => {
-    /* eslint-disable max-len */
-    assert.deepEqual(commands, [
-      { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime, lastUpdated },
-      { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime, lastUpdated }
-    ]);
-    /* eslint-enable max-len */
+    assert.deepEqual(commands, dummyCommandsResult);
+  });
+});
+
+test('it fetches one set of command tags', function (assert) {
+  assert.expect(2);
+
+  server.get('http://localhost:8080/v4/commands/foo/bar/tags', () => [
+    200,
+    {
+      'Content-Type': 'application/json'
+    },
+    JSON.stringify(dummyCommandTags)
+  ]);
+
+  let service = this.subject();
+
+  assert.ok(service);
+
+  const t = service.getCommandTags('foo', 'bar');
+
+  t.then((commands) => {
+    assert.deepEqual(commands, dummyCommandTagsResult);
   });
 });
 
@@ -64,10 +96,7 @@ test('it fetches all commands', function (assert) {
     {
       'Content-Type': 'application/json'
     },
-    JSON.stringify([
-      { id: 2, namespace: 'foo', name: 'baz', version: '2.0.0', createTime },
-      { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime }
-    ])
+    JSON.stringify(dummyCommands)
   ]);
 
   let service = this.subject();
@@ -77,12 +106,7 @@ test('it fetches all commands', function (assert) {
   const t = service.getAllCommands();
 
   t.then((commands) => {
-    assert.deepEqual(commands, [
-      /* eslint-disable max-len */
-      { id: 2, namespace: 'foo', name: 'baz', version: '2.0.0', createTime, lastUpdated },
-      { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime, lastUpdated }
-    ]);
-    /* eslint-enable max-len */
+    assert.deepEqual(commands, dummyCommandsResult);
   });
 });
 

@@ -6,9 +6,16 @@ export default Route.extend({
   command: service(),
   model(params) {
     return RSVP.all([
-      this.get('command').getOneCommand(params.namespace, params.name)
+      this.get('command').getOneCommand(params.namespace, params.name),
+      this.get('command').getCommandTags(params.namespace, params.name)
     ]).then((arr) => {
-      const [verPayload] = arr;
+      const [verPayload, tagPayload] = arr;
+
+      tagPayload.forEach((tagObj) => {
+        const taggedVerObj = verPayload.find(verObj => verObj.version === tagObj.version);
+
+        taggedVerObj.tag = taggedVerObj.tag ? `${taggedVerObj.tag} ${tagObj.tag}` : tagObj.tag;
+      });
 
       return verPayload;
     });
