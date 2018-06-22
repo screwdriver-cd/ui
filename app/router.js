@@ -30,7 +30,7 @@ Router.map(function route() {
   });
   this.route('templates', function templatesRoute() {
     this.route('namespace', { path: '/namespaces/:namespace' });
-    this.route('detail', { path: '/namespaces/:namespace/detail/:name' });
+    this.route('detail', { path: '/namespaces/:namespace/name/:name' });
   });
   this.route('commands', function commandsRoute() {
     this.route('detail', { path: '/:namespace/:name' });

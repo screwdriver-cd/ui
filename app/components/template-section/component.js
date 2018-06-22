@@ -1,16 +1,13 @@
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   classNames: ['col-sm-3'],
-  actions: {
+  isDefault: computed('template.namespace', {
+    get() {
+      const namespace = this.get('template.namespace');
 
-    changeTemplates(namespace) {
-      let temp = this.get('changeTemplatesShowed');
-      let templates = this.get('templates');
-
-      console.log(templates);
-      temp(namespace);
+      return namespace === 'default' ? null : namespace;
     }
-
-  }
+  })
 });
