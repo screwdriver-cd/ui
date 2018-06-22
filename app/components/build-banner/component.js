@@ -2,6 +2,7 @@ import { computed } from '@ember/object';
 import { alias, match } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
+import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
   classNames: ['build-banner', 'row'],
@@ -43,9 +44,7 @@ export default Component.extend({
 
   buildAction: computed('buildStatus', {
     get() {
-      const status = this.get('buildStatus');
-
-      if (status === 'RUNNING' || status === 'QUEUED') {
+      if (isActiveBuild(this.get('buildStatus'))) {
         return 'Stop';
       }
 
@@ -65,7 +64,7 @@ export default Component.extend({
         return true;
       }
 
-      if (/^PR-/.test(this.get('jobName'))) {
+      if (isPRJob(this.get('jobName'))) {
         return true;
       }
 
@@ -112,9 +111,7 @@ export default Component.extend({
   willRender() {
     this._super(...arguments);
 
-    const status = this.get('buildStatus');
-
-    if (status === 'QUEUED' || status === 'RUNNING') {
+    if (isActiveBuild(this.get('buildStatus'))) {
       this.get('reloadBuild')();
     }
 
