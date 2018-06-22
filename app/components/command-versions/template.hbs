@@ -1,10 +1,6 @@
 <h4>Versions:</h4>
 <ul>
   {{#each commands as |c|}}
-    {{#if c.tag}}
-      <li {{action changeVersion c.version on="click"}}><span class="version">{{c.version}} - {{c.tag}}</span>{{#if c.lastUpdated}} {{c.lastUpdated}}{{/if}}</li>
-    {{else}}
-      <li {{action changeVersion c.version on="click"}}><span class="version">{{c.version}}</span>{{#if c.lastUpdated}} {{c.lastUpdated}}{{/if}}</li>
-    {{/if}}
+      <li><span {{action changeVersion c.version on="click"}} class="version">{{c.version}}{{#if c.tag}} - {{c.tag}}{{/if}}</span>{{#if c.lastUpdated}} {{c.lastUpdated}}{{/if}}</li>
   {{/each}}
 </ul>

@@ -33,5 +33,5 @@ test('it handles clicks on versions', function (assert) {
 
   assert.equal(this.$('h4').text().trim(), 'Versions:');
   assert.equal(this.$('ul li').text().trim(), '3.0.0 - latest stable2.0.0 - meeseeks1.0.0');
-  this.$('ul li:last-child').click();
+  this.$('ul li:last-child span').click();
 });
