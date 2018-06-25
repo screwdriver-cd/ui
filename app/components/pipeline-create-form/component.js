@@ -20,11 +20,6 @@ export default Component.extend({
   }),
 
   actions: {
-    canSave() {
-      if (this.get('isValid')) {
-        this.send('saveData');
-      }
-    },
     /**
      * Handles when a git url is entered in step 1
      * @method scmChange
@@ -49,7 +44,9 @@ export default Component.extend({
      * @param  {Object} data Project attributes
      */
     saveData() {
-      this.get('onCreatePipeline')(this.get('scmUrl'));
+      if (this.get('isValid')) {
+        this.get('onCreatePipeline')(this.get('scmUrl'));
+      }
     }
   }
 });
