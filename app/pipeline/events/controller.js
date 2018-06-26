@@ -6,6 +6,8 @@ import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
+import $ from 'jquery';
+
 
 const { sort } = computed;
 
