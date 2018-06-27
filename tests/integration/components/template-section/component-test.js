@@ -46,6 +46,6 @@ test('it renders for template with namespace', function (assert) {
 
   this.render(hbs`{{template-section template=mock}}`);
 
-  assert.equal(this.$('header a').text().trim(), 'foo/bar');
+  assert.equal(this.$('header').text().trim(), 'foo/bar');
   assert.equal(this.$('p').text().trim(), 'A test example');
 });

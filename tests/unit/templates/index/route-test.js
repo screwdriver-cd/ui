@@ -26,6 +26,6 @@ test('it dedupes the templates by name', function (assert) {
   assert.ok(route);
 
   return route.model().then((templates) => {
-    assert.equal(templates.length, 2);
+    assert.equal(templates.length, 3);
   });
 });
