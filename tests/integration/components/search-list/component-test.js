@@ -106,8 +106,9 @@ test('it renders with collections', function (assert) {
   assert.equal($('.add-to-collection').length, 2);
   assert.equal($($('td.add .dropdown-menu span').get(0)).text().trim(), 'collection1');
   assert.equal($($('td.add .dropdown-menu span').get(1)).text().trim(), 'collection2');
-  assert.equal($($('td.add .dropdown-menu span').get(2)).text().trim(), 'collection1');
-  assert.equal($($('td.add .dropdown-menu span').get(3)).text().trim(), 'collection2');
+  assert.equal($($('td.add .dropdown-menu span').get(2)).text().trim(), 'CREATE');
+  assert.equal($($('td.add .dropdown-menu span').get(3)).text().trim(), 'collection1');
+  assert.equal($($('td.add .dropdown-menu span').get(4)).text().trim(), 'collection2');
 });
 
 test('it filters the list', function (assert) {
