@@ -29,7 +29,8 @@ Router.map(function route() {
     this.route('show', { path: '/:collection_id' });
   });
   this.route('templates', function templatesRoute() {
-    this.route('detail', { path: '/:name' });
+    this.route('namespace', { path: '/namespaces/:namespace' });
+    this.route('detail', { path: '/namespaces/:namespace/name/:name' });
   });
   this.route('commands', function commandsRoute() {
     this.route('detail', { path: '/:namespace/:name' });
