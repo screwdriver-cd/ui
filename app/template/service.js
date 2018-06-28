@@ -41,8 +41,8 @@ export default Service.extend({
         const names = {};
 
         templates.forEach((t) => {
-          if (!names[t.name]) {
-            names[t.name] = 1;
+          if (!names[t.fullName]) {
+            names[t.fullName] = 1;
             result.push(t);
           }
         });
