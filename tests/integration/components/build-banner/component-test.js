@@ -258,6 +258,37 @@ test('it renders a stop button for running job when authenticated', function (as
   this.$('button').click();
 });
 
+test('it renders a stop button for blocked job when authenticated', function (assert) {
+  assert.expect(4);
+  this.set('willRender', () => {
+    assert.ok(true);
+  });
+
+  this.set('externalStop', () => {
+    assert.ok(true);
+  });
+  this.set('buildStepsMock', buildStepsMock);
+  this.set('eventMock', eventMock);
+  this.set('prEvents', new EmberPromise(resolves => resolves([])));
+
+  this.render(hbs`{{build-banner
+    buildContainer="node:6"
+    duration="5 seconds"
+    buildStatus="BLOCKED"
+    buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
+    jobName="main"
+    isAuthenticated=true
+    event=eventMock
+    prEvents=prEvents
+    onStop=(action externalStop)
+    reloadBuild=(action willRender)
+  }}`);
+
+  assert.equal(this.$('button').text().trim(), 'Stop');
+  this.$('button').click();
+});
+
 test('it renders coverage info if coverage step finished', function (assert) {
   const $ = this.$;
   const coverageStepsMock = [

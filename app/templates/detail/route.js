@@ -9,7 +9,9 @@ export default Route.extend({
       this.get('template').getOneTemplate(params.name),
       this.get('template').getTemplateTags(params.name)
     ]).then((arr) => {
-      const [verPayload, tagPayload] = arr;
+      let [verPayload, tagPayload] = arr;
+
+      verPayload = verPayload.filter(t => t.namespace === params.namespace);
 
       tagPayload.forEach((tagObj) => {
         const taggedVerObj = verPayload.find(verObj => verObj.version === tagObj.version);

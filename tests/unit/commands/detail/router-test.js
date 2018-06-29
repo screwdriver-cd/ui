@@ -9,6 +9,13 @@ const commandServiceStub = Service.extend({
       { id: 2, namespace, name, version: '2.0.0' },
       { id: 1, namespace, name, version: '1.0.0' }
     ]);
+  },
+  getCommandTags(namespace, name) {
+    return resolve([
+      { id: 3, namespace, name, version: '3.0.0', tag: 'latest' },
+      { id: 2, namespace, name, version: '2.0.0', tag: 'stable' },
+      { id: 1, namespace, name, version: '1.0.0' }
+    ]);
   }
 });
 
@@ -28,5 +35,6 @@ test('it asks for the list of commands for a given namespace and name', function
   return route.model({ namespace: 'foo', name: 'bar' }).then((commands) => {
     assert.equal(commands[0].name, 'bar');
     assert.equal(commands[0].namespace, 'foo');
+    assert.equal(commands[0].tag, 'latest');
   });
 });

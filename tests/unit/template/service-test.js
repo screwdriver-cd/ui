@@ -67,6 +67,7 @@ test('it fetches all templates', function (assert) {
       'Content-Type': 'application/json'
     },
     JSON.stringify([
+      { id: 3, namespace: 'boo', name: 'baz', version: '2.0.0', createTime },
       { id: 2, namespace: 'foo', name: 'baz', version: '2.0.0', createTime },
       { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime }
     ])
@@ -81,6 +82,7 @@ test('it fetches all templates', function (assert) {
   t.then((templates) => {
     assert.deepEqual(templates, [
       /* eslint-disable max-len */
+      { id: 3, fullName: 'boo/baz', namespace: 'boo', name: 'baz', version: '2.0.0', createTime, lastUpdated },
       { id: 2, fullName: 'foo/baz', namespace: 'foo', name: 'baz', version: '2.0.0', createTime, lastUpdated },
       { id: 1, fullName: 'foo/bar', namespace: 'foo', name: 'bar', version: '1.0.0', createTime, lastUpdated }
     ]);

@@ -44,7 +44,9 @@ export default Component.extend({
      * @param  {Object} data Project attributes
      */
     saveData() {
-      this.get('onCreatePipeline')(this.get('scmUrl'));
+      if (this.get('isValid')) {
+        this.get('onCreatePipeline')(this.get('scmUrl'));
+      }
     }
   }
 });

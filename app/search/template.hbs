@@ -1,6 +1,7 @@
 <div class="row">
   {{#if session.isAuthenticated}}
-    {{collections-flyout class="col-md-2"}}
+    {{collections-flyout 
+      class="col-md-2"}}
     {{search-list
       pipelines=pipelines
       collections=collections
@@ -14,6 +15,10 @@
       collections=collections
       onAddToCollection=(action "addToCollection")
       query=query
+      name=name
+      description=description
+      errorMessage=errorMessage
+      addNewCollection=(action "addNewCollection") 
     }}
   {{/if}}
 </div>

@@ -2,7 +2,7 @@
   <div class="header row">
     {{#if session.isAuthenticated}}
       <h2 class="header__text col-xs-9">
-        <a class="new" {{action "setModal" true}}>{{fa-icon "plus-circle" title="Create a collection" size="md"}}</a> Collections
+        <a class="new" {{action "openModal"}}>{{fa-icon "plus-circle" title="Create a collection" size="md"}}</a> Collections
       </h2>
       <a onclick={{action "toggleEdit"}} class="header__edit col-xs-3">Edit</a>
     {{else}}
@@ -42,31 +42,5 @@
         You're about to delete {{collectionToDelete.name}}. Are you sure?
       {{/bs-modal-simple}}
     {{/if}}
-    {{#if showModal}}
-      {{!-- Modal to create a collection --}}
-      {{#bs-modal onHide=(action "setModal" false) as |modal|}}
-        {{#modal.header}}
-          <h4 class="modal-title">Create a new Collection</h4>
-        {{/modal.header}}
-        {{#modal.body}}
-          {{#if errorMessage}}
-            {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
-          {{/if}}
-          {{#bs-form class="collection-form" onSubmit=(action "addNewCollection") as |form|}}
-            {{#form.group class="name"}}
-              <label class="control-label">Name</label>
-              <input value={{name}} class="form-control" oninput={{action (mut name) value="target.value"}} type="text">
-            {{/form.group}}
-            {{#form.group class="description"}}
-              <label class="control-label">Description</label>
-              <input value={{description}} class="form-control" oninput={{action (mut description) value="target.value"}} type="text">
-            {{/form.group}}
-            {{#form.group class="footer"}}
-            {{#bs-button class="collection-form__cancel" onClick=(action modal.close) type="danger"}}Cancel{{/bs-button}}
-            {{#bs-button buttonType="submit" class="collection-form__create" type="success"}}Create{{/bs-button}}
-            {{/form.group}}
-          {{/bs-form}}
-        {{/modal.body}}
-      {{/bs-modal}}
-    {{/if}}
+    {{collection-modal showModal=showModal}}
 </div>
