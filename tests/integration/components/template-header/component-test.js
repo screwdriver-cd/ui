@@ -55,15 +55,22 @@ test('it renders', function (assert) {
   assert.equal($('h1').text().trim(), 'foo/bar');
   assert.equal($('h2').text().trim(), '2.0.0');
   assert.equal($('p').text().trim(), 'A test example');
-  assert.equal($('#template-details > li:first-child').text().trim(), 'Namespace: foo');
-  assert.equal($('#template-details > li:nth-child(2)').text().trim(), 'Name: bar');
-  assert.equal($('#template-details > li:nth-child(4)').text().trim(),
+  assert.equal($('#template-namespace').text().replace(/\n +(?= )/g, '').trim(),
+    'Namespace: foo');
+  assert.equal($('#template-name').text().replace(/\n +(?= )/g, '').trim(),
+    'Name: bar');
+  assert.equal($('#template-images > .template-details--value > div:first-child').text().trim(),
+    'stable: node:6');
+  assert.equal($('#template-images > .template-details--value > div:nth-child(2)').text().trim(),
+    'development: node:7');
+  assert.equal($('#template-maintainer').text().replace(/\n +(?= )/g, '').trim(),
     'Released by: bruce@wayne.com');
-  assert.equal($('#template-details > li:nth-child(4) > a').attr('href'), 'mailto:bruce@wayne.com');
-  assert.equal($('#template-details > li:last-child').text().trim(), 'Tags: cararmored');
-  assert.equal($('h4').text().trim(), 'Usage:');
-  assert.equal($('#images-list > li:first-child').text().trim(), 'stable: node:6');
-  assert.equal($('#images-list > li:nth-child(2)').text().trim(), 'development: node:7');
+  assert.equal($('#template-maintainer > .template-details--value > a').attr('href'),
+    'mailto:bruce@wayne.com');
+  assert.equal($('#template-tags').text().replace(/\n +(?= )/g, '').trim(),
+    'Tags:  car armored');
+  assert.equal($('h4').text().trim(),
+    'Usage:');
   // Messy regexp instead of .includes due to phantomjs limitation
   assert.ok(new RegExp('template: foo/bar@2.0.0').test($('pre').text().trim()));
 });
