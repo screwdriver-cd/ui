@@ -391,7 +391,7 @@ test('it does not render coverage info if there is no coverage step', function (
   });
 });
 
-test('it should show stop for running UNSTABLE build', function (assert) {
+test('it should show the stop button for a running UNSTABLE build', function (assert) {
   const coverageStepsMock = [
     { name: 'sd-setup-screwdriver-scm-bookend' },
     { name: 'sd-teardown-screwdriver-coverage-bookend' }
