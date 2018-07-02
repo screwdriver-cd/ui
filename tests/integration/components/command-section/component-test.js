@@ -25,6 +25,6 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{command-section command=mock}}`);
 
-  assert.equal(this.$('header a').text().trim(), 'foo/bar');
+  assert.equal(this.$('header').text().trim(), 'foo/bar');
   assert.equal(this.$('p').text().trim(), 'A test example');
 });

@@ -1,6 +1,6 @@
 <article class="command">
   <header>
-    {{#link-to "commands.detail" command.namespace command.name}}<h4>{{headerTitle}}</h4>{{/link-to}}
+  <h4> {{#link-to "commands.namespace" command.namespace}}<span class="namespace">{{command.namespace}}</span>{{/link-to}}/{{#link-to "commands.detail" command.namespace command.name}}<span class="name">{{command.name}}</span>{{/link-to}}</h4>
   </header>
   <p class="description">
     {{command.description}}
