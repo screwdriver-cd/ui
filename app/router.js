@@ -30,10 +30,11 @@ Router.map(function route() {
   });
   this.route('templates', function templatesRoute() {
     this.route('namespace', { path: '/namespaces/:namespace' });
-    this.route('detail', { path: '/namespaces/:namespace/name/:name' });
+    this.route('detail', { path: '/namespaces/:namespace/names/:name' });
   });
   this.route('commands', function commandsRoute() {
-    this.route('detail', { path: '/:namespace/:name' });
+    this.route('namespace', { path: '/namespaces/:namespace' });
+    this.route('detail', { path: '/namespaces/:namespace/names/:name' });
   });
 });
 /* eslint-enable array-callback-return */

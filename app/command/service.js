@@ -22,15 +22,21 @@ export default Service.extend({
 
     return this.fetchData(url);
   },
-  getAllCommands() {
+  getAllCommands(namespace) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands`;
+    let params = {};
 
-    return this.fetchData(url);
+    if (namespace) {
+      params.namespace = namespace;
+    }
+
+    return this.fetchData(url, params);
   },
-  fetchData(url) {
+  fetchData(url, params = {}) {
     const ajaxConfig = {
       method: 'GET',
       url,
+      data: params,
       contentType: 'application/json',
       crossDomain: true,
       xhrFields: {
