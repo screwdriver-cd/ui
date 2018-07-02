@@ -44,7 +44,7 @@ export default Component.extend({
 
   buildAction: computed('buildStatus', {
     get() {
-      if (isActiveBuild(this.get('buildStatus'))) {
+      if (isActiveBuild(this.get('buildStatus'), this.get('buildEnd'))) {
         return 'Stop';
       }
 
@@ -111,7 +111,7 @@ export default Component.extend({
   willRender() {
     this._super(...arguments);
 
-    if (isActiveBuild(this.get('buildStatus'))) {
+    if (isActiveBuild(this.get('buildStatus'), this.get('buildEnd'))) {
       this.get('reloadBuild')();
     }
 

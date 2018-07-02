@@ -390,3 +390,38 @@ test('it does not render coverage info if there is no coverage step', function (
     assert.notOk($('li').hasClass('coverage'));
   });
 });
+
+test('it should show stop for running UNSTABLE build', function (assert) {
+  const coverageStepsMock = [
+    { name: 'sd-setup-screwdriver-scm-bookend' },
+    { name: 'sd-teardown-screwdriver-coverage-bookend' }
+  ];
+
+  assert.expect(3);
+
+  this.set('reloadCb', () => {
+    assert.ok(true);
+  });
+  this.set('eventMock', eventMock);
+  this.set('buildStepsMock', coverageStepsMock);
+  this.set('prEvents', new EmberPromise(resolves => resolves([])));
+
+  this.render(hbs`{{build-banner
+    buildContainer="node:6"
+    duration="5 seconds"
+    buildId=123
+    buildStatus="UNSTABLE"
+    buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
+    jobId=1
+    jobName="main"
+    isAuthenticated=true
+    event=eventMock
+    reloadBuild=(action reloadCb)
+    prEvents=prEvents
+  }}`);
+
+  return wait().then(() => {
+    assert.equal(this.$('button').text().trim(), 'Stop');
+  });
+});
