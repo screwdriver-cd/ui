@@ -13,12 +13,14 @@ export default Controller.extend({
       const job = this.store.peekRecord('job', id);
 
       job.set('state', state);
-      job.save();
+      job.save()
+        .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
     removePipeline() {
       this.get('pipeline').destroyRecord().then(() => {
         this.transitionToRoute('home');
-      });
+      })
+        .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
     updatePipeline(scmUrl) {
       let pipeline = this.get('pipeline');
@@ -30,7 +32,7 @@ export default Controller.extend({
       pipeline.save()
         .then(() => this.set('errorMessage', ''))
         .catch((err) => {
-          this.set('errorMessage', err);
+          this.set('errorMessage', err.errors[0].detail || '');
         })
         .finally(() => {
           this.set('isSaving', false);
