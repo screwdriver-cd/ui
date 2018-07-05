@@ -7,6 +7,12 @@ let server;
 moduleForAcceptance('Acceptance | create', {
   beforeEach() {
     server = new Pretender();
+
+    server.get('http://localhost:8080/v4/collections', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
   },
   afterEach() {
     server.shutdown();

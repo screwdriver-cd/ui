@@ -5,7 +5,7 @@ export default Route.extend({
   routeAfterAuthentication: 'pipeline.build',
 
   model(params) {
-    this.set('pipeline', this.modelFor('pipeline'));
+    this.set('pipeline', this.modelFor('pipeline').pipeline);
 
     return this.store.findRecord('build', params.build_id).then(build => all([
       this.store.findRecord('job', build.get('jobId')),
