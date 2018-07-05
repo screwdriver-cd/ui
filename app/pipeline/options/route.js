@@ -15,5 +15,11 @@ export default Route.extend({
 
     // Prevent double render when jobs list updates asynchronously
     return pipeline.get('jobs').then(jobs => ({ pipeline, jobs }));
+  },
+  actions: {
+    willTransition() {
+      // Reset error message when switching pages
+      this.controller.set('errorMessage', '');
+    }
   }
 });
