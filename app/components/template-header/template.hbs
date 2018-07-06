@@ -8,12 +8,47 @@
 </h1>
 <h2>{{template.version}}</h2>
 <p>{{template.description}}</p>
-<ul>
-  {{#if template.namespace}}<li>Namespace: {{template.namespace}}</li><li>Name: {{template.name}}</li>{{/if}}
-  <li>Released by: <a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a></li>
-  {{#if template.lastUpdated}}<li>Last published: {{template.lastUpdated}}</li>{{/if}}
-  {{#if template.labels.length}}<li>Tags: {{#each template.labels as |l|}}<span class="template-label">{{l}}</span>{{/each}}</li>{{/if}}
-</ul>
+  {{#if template.namespace}}
+    <div class="template-details--item" id="template-namespace">
+      <div class="template-details--label">Namespace:</div>
+      <div class="template-details--value">{{template.namespace}}</div>
+    </div>
+    <div class="template-details--item" id="template-name">
+      <div class="template-details--label">Name:</div>
+      <div class="template-details--value">{{template.name}}</div>
+    </div>
+  {{/if}}
+  {{#if template.images}}
+    <div class="template-details--item" id="template-images">
+      <div class="template-details--label">Supported Images:</div>
+      <div class="template-details--value">
+      {{#each-in template.images as |alias path|}}
+        <div>
+          <span>{{alias}}: </span><span>{{path}}</span>
+        </div>
+      {{else}}
+        <div>
+          None defined
+        </div>
+      {{/each-in}}
+      </div>
+    </div>
+  {{/if}}
+  <div class="template-details--item" id="template-maintainer">
+    <div class="template-details--label">Released by:</div>
+    <div class="template-details--value"><a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a>
+  </div>
+  </div>
+  {{#if template.labels.length}}
+    <div class="template-details--item" id="template-tags">
+      <div class="template-details--label">Tags:</div>
+      <div class="template-details--value">
+      {{#each template.labels as |l|}}
+        <span class="template-label">{{l}}</span>
+      {{/each}}
+      </div>
+    </div>
+  {{/if}}
 <h4>Usage:</h4>
 <pre>jobs:
   main:
