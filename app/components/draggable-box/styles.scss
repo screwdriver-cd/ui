@@ -1,0 +1,46 @@
+
+#draggable {
+    position: absolute;
+
+	z-index: 1000;
+
+}
+
+#draggableheader {
+	display: inline-block;
+	color: black;
+	width: 30px;
+	cursor: grab;
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;
+  		background-color:gray;
+
+}
+
+
+#graph {
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	transform: translatey(-50%);
+		background-color:gray;
+	padding: 10px;
+
+}
+
+.dot {
+	display: inline-block;
+	background-color: #bbb;
+	height: 5px;
+	width: 5px;
+	border-radius: 50%;
+}
+
+.dots {
+	position: absolute;
+	left: 7px;
+	top: 50%;
+	transform: translateY(-50%);
+}

@@ -1,5 +1,5 @@
 import { later, throttle } from '@ember/runloop';
-import { get, computed } from '@ember/object';
+import { get, computed, setProperties } from '@ember/object';
 import { reads, mapBy } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
@@ -16,9 +16,11 @@ export default Controller.extend({
   jobs: reads('model.jobs'),
   job: reads('model.job'),
   event: reads('model.event'),
+  events: reads('model.events'),
   pipeline: reads('model.pipeline'),
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
+  showTooltip: false,
   prEvents: computed('model.{event.pr.url,pipeline.id}', {
     get() {
       if (this.get('model.event.type') === 'pr') {
@@ -35,7 +37,82 @@ export default Controller.extend({
     }
   }),
 
+  graph: computed('pipeline.workflow', {
+    get() {
+      const jobs = get(this, 'jobs');
+      const fetchBuilds = [];
+      const graph = get(this, 'pipeline.workflow');
+
+      // Hack to make page display stuff when a workflow is not provided
+      if (!graph) {
+        return reject(new Error('No workflow graph provided'));
+      }
+
+      // Preload the builds for the jobs
+      jobs.forEach((j) => {
+        const jobName = get(j, 'name');
+
+        const node = graph.nodes.find(n => n.name === jobName);
+
+        // push the job id into the graph
+        if (node) {
+          node.id = get(j, 'id');
+          fetchBuilds.push(get(j, 'builds'));
+        }
+      });
+
+      return all(fetchBuilds).then(() => {
+        const builds = [];
+
+        // preload the "last build" data for each job for the graph to consume
+        jobs.forEach(j => builds.push(get(j, 'lastBuild')));
+
+        // set values to consume from templates
+        set(this, 'builds', builds);
+        set(this, 'directedGraph', graph);
+
+        return graph;
+      });
+    }
+  }),
+
   actions: {
+    confirmStartBuild() {
+      set(this, 'isShowingModal', true);
+      set(this, 'showTooltip', false);
+    },
+
+    graphClicked(job, mouseevent, sizes) {
+        const edges = get(this, 'directedGraph.edges');
+        let isRootNode = false;
+        console.log('inside graphclicked')
+        // Allow popup when clicking on the root node of a detached pipeline
+        if (job && edges && !/^~/.test(job.name)) {
+          isRootNode = isRoot(edges, job.name);
+        }
+
+        // hide tooltip when not clicking on an active job node or root node
+        if (!job || (!get(job, 'buildId') && !isRootNode)) {
+          this.set('showTooltip', false);
+
+          return false;
+        }
+
+        this.transitionToRoute('pipeline.build', job.buildId)
+        console.log(job)
+        // setProperties(this, {
+        //   showTooltip: true,
+        //   showTooltipPosition: isRootNode ? 'left' : 'center',
+        //   tooltipData: {
+        //     job,
+        //     mouseevent,
+        //     sizes
+        //   }
+        // });
+
+        return false;
+      },
+  
 
     stopBuild() {
       const build = this.get('build');

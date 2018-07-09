@@ -2,6 +2,8 @@
 import Component from '@ember/component';
 import { get, set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { all, reject } from 'rsvp';
+
 import graphTools from 'screwdriver-ui/utils/graph-tools';
 
 const { icon, decorateGraph } = graphTools;
@@ -27,6 +29,14 @@ export default Component.extend({
           TITLE_SIZE: 0,
           ARROWHEAD: 2
         };
+      }
+
+      if (get(this, 'dragsize')) {
+        return {
+          ICON_SIZE: 20,
+          TITLE_SIZE: 0,
+          ARROWHEAD: 2
+        }
       }
 
       return {

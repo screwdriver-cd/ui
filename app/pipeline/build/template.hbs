@@ -17,6 +17,17 @@
   changeBuild=(action "changeBuild")
 }}
 
+{{draggable-box
+  event=event
+  graphClicked=(action "graphClicked")
+  tooltipData=tooltipData
+  displayRestartButton=displayRestartButton
+  showTooltip=showTooltip
+  showTooltipPosition=showTooltipPosition
+  confirmStartBuild=(action "confirmStartBuild")
+  }}
+
+
 {{#if isShowingModal}}
   {{#modal-dialog clickOutsideToClose=false
     targetAttachment="center"
@@ -38,5 +49,4 @@
   buildStart=build.startTime
 }}
 {{/if}}
-
 {{outlet}}

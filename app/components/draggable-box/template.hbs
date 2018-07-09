@@ -1,0 +1,28 @@
+<div id="draggable">
+	<div id="draggableheader">
+		<div class="dots">
+			<div>
+				<span class="dot"></span>
+				<span class="dot"></span>
+			</div>
+			<div>
+				<span class="dot"></span>
+				<span class="dot"></span>
+			</div>
+			<div>
+				<span class="dot"></span>
+				<span class="dot"></span>
+			</div>
+		</div>
+	</div>
+	<div id="graph">
+	{{workflow-graph-d3
+      builds=event.builds
+      workflowGraph=event.workflowGraph
+      startFrom=event.startFrom
+      causeMessage=event.causeMessage
+      dragsize=true
+      graphClicked=graphClicked
+    }}
+    </div>
+</div>

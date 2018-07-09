@@ -16,7 +16,8 @@ export default Route.extend({
       job,
       event,
       pipeline: this.get('pipeline'),
-      jobs: jobs.filter(j => !/^PR-/.test(j.get('name')))
+      jobs: jobs.filter(j => !/^PR-/.test(j.get('name'))),
+      events: this.get('pipeline.events')
     })));
   },
 
