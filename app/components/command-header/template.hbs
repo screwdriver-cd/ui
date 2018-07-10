@@ -7,7 +7,7 @@
   {{#if command.lastUpdated}}<li>Last published: {{command.lastUpdated}}</li>{{/if}}
 </ul>
 <h4>Usage:</h4>
-<pre>sd-cmd exec {{command.namespace}}/{{command.name}}@{{command.version}}</pre>
+<pre>sd-cmd exec {{command.namespace}}/{{command.name}}@{{command.version}} {{command.arguments}}</pre>
 {{#if commandToRemove}}
   {{#if isRemoving}}
     {{#modal-dialog clickOutsideToClose="false"
