@@ -69,15 +69,7 @@ export default Service.extend({
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
         .done(templates => resolve(templates))
-        .fail((response) => {
-          let message = `${response.status} Request Failed`;
-
-          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
-            message = `${response.status} ${response.responseJSON.error}`;
-          }
-
-          return reject(message);
-        });
+        .fail(response => reject(response));
     });
   },
   deleteTemplates(name) {
