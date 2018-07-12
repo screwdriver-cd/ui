@@ -34,6 +34,14 @@ test('it renders', function (assert) {
   assert.equal(this.$('table').length, 1);
   assert.equal(this.$('tbody tr').length, 1);
   assert.equal(this.$('tfoot tr').length, 1);
+
+  // eye-icons are present and have fa-eye class as default
+  assert.ok(this.$('tbody i').hasClass('fa-eye'));
+  assert.ok(this.$('tfoot i').hasClass('fa-eye'));
+
+  // the type of input is a password as default
+  assert.equal(this.$('tbody .pass input').attr('type'), 'password');
+  assert.equal(this.$('tfoot .pass input').attr('type'), 'password');
 });
 
 test('it updates the add button properly', function (assert) {
@@ -170,4 +178,39 @@ test('it renders differently for a child pipeline', function (assert) {
   assert.equal(this.$('table').length, 1);
   assert.equal(this.$('tbody tr').length, 1);
   assert.equal(this.$('tfoot tr').length, 0);
+});
+
+test('it toggles eye-icon and input type', function (assert) {
+  const testSecret = EmberObject.create({
+    name: 'TEST_SECRET',
+    pipelineId: 123245,
+    value: 'banana',
+    allowInPR: false
+  });
+
+  this.set('mockSecrets', [testSecret]);
+
+  const testPipeline = EmberObject.create({
+    id: '123245'
+  });
+
+  this.set('mockPipeline', testPipeline);
+
+  this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+  this.$('tbody i').click();
+  this.$('tfoot i').click();
+
+  assert.ok(this.$('tbody i').hasClass('fa-eye-slash'));
+  assert.equal(this.$('tbody .pass input').attr('type'), 'text');
+  assert.ok(this.$('tfoot i').hasClass('fa-eye-slash'));
+  assert.equal(this.$('tfoot .pass input').attr('type'), 'text');
+
+  this.$('tbody i').click();
+  this.$('tfoot i').click();
+
+  assert.ok(this.$('tbody i').hasClass('fa-eye'));
+  assert.equal(this.$('tbody .pass input').attr('type'), 'password');
+  assert.ok(this.$('tfoot i').hasClass('fa-eye'));
+  assert.equal(this.$('tfoot .pass input').attr('type'), 'password');
 });
