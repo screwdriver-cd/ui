@@ -43,6 +43,48 @@ test('it renders', function (assert) {
   assert.equal(this.$('.annotations .value').text().trim(), 'None defined');
 });
 
+test('it renders a template, description, images', function (assert) {
+  this.set('templateMock', {
+    description: 'Test template',
+    maintainer: 'bruce@wayne.com',
+    images: {
+      stable: 'node:6',
+      development: 'node:7'
+    },
+    name: 'test',
+    namespace: 'batman',
+    version: '2.0.0'
+  });
+
+  this.set('jobMock', {
+    image: 'int-test:1',
+    commands: [
+      { name: 'step1', command: 'echo hello' },
+      { name: 'step2', command: 'echo goodbye' }
+    ],
+    secrets: ['FOO', 'BAR'],
+    environment: {
+      FOO: 'bar'
+    },
+    settings: {
+      FOO: 'bar'
+    },
+    annotations: {
+      FOO: 'bar'
+    }
+  });
+
+  this.render(hbs`{{validator-job name="int-test" index=0 job=jobMock template=templateMock}}`);
+
+  assert.equal(this.$('.template-description .label').text().trim(), 'Template Description:');
+  assert.equal(this.$('.template-description .value').text().trim(), 'Test template');
+  assert.equal(this.$('.images >.label').text().trim(), 'Supported Images:');
+  assert.equal(this.$('.images >.value >ul >li:first-of-type').text().replace(/\s+/g, ' ').trim(),
+    'stable: node:6');
+  assert.equal(this.$('.images >.value >ul >li:nth-of-type(2)').text().replace(/\s+/g, ' ').trim(),
+    'development: node:7');
+});
+
 test('it renders settings, env, secrets, annotations', function (assert) {
   this.set('jobMock', {
     image: 'int-test:1',
@@ -72,7 +114,7 @@ test('it renders settings, env, secrets, annotations', function (assert) {
   assert.equal(this.$('.env ul li').text().trim(), 'FOO: bar');
 
   assert.equal(this.$('.settings .label').text().trim(), 'Settings:');
-  assert.equal(this.$('.settings ul li').text().trim(), 'FOO: bar');
+  assert.equal(this.$('.settings ul li').text().replace(/\s+/g, ' ').trim(), 'FOO: bar');
 
   assert.equal(this.$('.annotations .label').text().trim(), 'Annotations:');
   assert.equal(this.$('.annotations ul li').text().trim(), 'FOO: bar');
@@ -180,7 +222,7 @@ test('it renders a description', function (assert) {
 
   assert.equal(this.$('h4').text().trim(), 'int-test');
   assert.equal(this.$('.description .label').text().trim(), 'Description:');
-  assert.equal(this.$('.description .value ul li').text().trim(), 'This is a description');
+  assert.equal(this.$('.description .value').text().trim(), 'This is a description');
 });
 
 test('it renders sourcePaths', function (assert) {
