@@ -59,15 +59,7 @@ export default Service.extend({
 
           return resolve(commands);
         })
-        .fail((response) => {
-          let message = `${response.status} Request Failed`;
-
-          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
-            message = `${response.status} ${response.responseJSON.error}`;
-          }
-
-          return reject(message);
-        });
+        .fail(response => reject(response));
     });
   },
   deleteCommands(namespace, name) {

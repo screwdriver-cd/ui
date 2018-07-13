@@ -2,6 +2,7 @@
 import { sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import Component from '@ember/component';
+import $ from 'jquery';
 
 export default Component.extend({
   newName: null,
@@ -36,6 +37,23 @@ export default Component.extend({
       this.set('newAllow', false);
 
       return true;
+    },
+    /**
+     * Toggle eye-icon and password input type
+     * @method togglePasswordInput
+     * @param {Object} event Click event
+     */
+    togglePasswordInput(event) {
+      const target = event.target;
+      const passwordInput = target.previousSibling;
+
+      $(target).toggleClass('fa-eye fa-eye-slash');
+
+      if ($(passwordInput).attr('type') === 'password') {
+        $(passwordInput).attr('type', 'text');
+      } else {
+        $(passwordInput).attr('type', 'password');
+      }
     }
   }
 });

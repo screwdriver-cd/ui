@@ -36,6 +36,7 @@ Router.map(function route() {
     this.route('namespace', { path: '/namespaces/:namespace' });
     this.route('detail', { path: '/namespaces/:namespace/names/:name' });
   });
+  this.route('404', { path: '/*path' });
 });
 /* eslint-enable array-callback-return */
 

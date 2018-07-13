@@ -34,3 +34,9 @@ tfoot button:disabled {
   background-color: inherit;
   color: inherit;
 }
+
+.toggle-icon {
+  margin-left: -25px;
+  position: relative;
+  z-index: 2;
+}
