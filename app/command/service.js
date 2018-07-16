@@ -30,7 +30,24 @@ export default Service.extend({
       params.namespace = namespace;
     }
 
-    return this.fetchData(url, params);
+    return this.fetchData(url, params)
+      .then((commands) => {
+        let unique = {};
+
+        let uniqueCommands = commands.filter((c) => {
+          let fullName = `${c.namespace}/${c.name}`;
+
+          if (fullName in unique) {
+            return false;
+          }
+
+          unique[fullName] = true;
+
+          return true;
+        });
+
+        return uniqueCommands;
+      });
   },
   fetchData(url, params = {}) {
     const ajaxConfig = {
