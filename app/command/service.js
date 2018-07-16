@@ -22,15 +22,21 @@ export default Service.extend({
 
     return this.fetchData(url);
   },
-  getAllCommands() {
+  getAllCommands(namespace) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands`;
+    let params = {};
 
-    return this.fetchData(url);
+    if (namespace) {
+      params.namespace = namespace;
+    }
+
+    return this.fetchData(url, params);
   },
-  fetchData(url) {
+  fetchData(url, params = {}) {
     const ajaxConfig = {
       method: 'GET',
       url,
+      data: params,
       contentType: 'application/json',
       crossDomain: true,
       xhrFields: {
@@ -53,15 +59,7 @@ export default Service.extend({
 
           return resolve(commands);
         })
-        .fail((response) => {
-          let message = `${response.status} Request Failed`;
-
-          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
-            message = `${response.status} ${response.responseJSON.error}`;
-          }
-
-          return reject(message);
-        });
+        .fail(response => reject(response));
     });
   },
   deleteCommands(namespace, name) {

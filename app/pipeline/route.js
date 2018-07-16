@@ -11,8 +11,12 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   actions: {
-    error(reason) {
-      this.transitionTo('page-not-found', { path: `pipelines/${get(this, 'pipelineId')}`, reason });
+    error(error) {
+      if (error.errors[0].status === 404) {
+        this.transitionTo('/404');
+      }
+
+      return true;
     }
   },
 

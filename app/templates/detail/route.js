@@ -27,5 +27,14 @@ export default Route.extend({
   setupController(controller, model) {
     this._super(controller, model);
     controller.reset();
+  },
+  actions: {
+    error(error) {
+      if (error.status == 404) {
+        this.transitionTo('/404');
+      }
+      
+      return true;
+    }
   }
 });
