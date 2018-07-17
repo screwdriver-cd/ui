@@ -26,25 +26,12 @@
       <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
       {{#if session.isAuthenticated}}
       <td class="add">
-        {{#bs-dropdown as |dd|}}
-          {{#dd.button class="add-to-collection"}}
-            {{fa-icon "plus" title="Add to collection" size="sm"}}
-          {{/dd.button}}
-          {{#dd.menu align="right" class="dropdown" as |menu|}}
-            {{#each collections as |collection|}}
-              {{#menu.item}}
-                <span onclick={{action "addToCollection" pipeline.id collection}}>
-                  {{collection.name}}
-                </span>
-              {{/menu.item}}
-            {{/each}}
-            <li>
-              <span class="create-dropdown" onclick={{action "openModal"}}>
-                {{fa-icon "plus-circle" title="Create" size="md"}} CREATE
-              </span>
-            </li>
-          {{/dd.menu}}
-        {{/bs-dropdown}}
+        {{collection-dropdown
+          pipeline=pipeline
+          collections=collections
+          onAddToCollection=onAddToCollection
+          addCollectionError=addCollectionError
+          addCollectionSuccess=addCollectionSuccess}}
       </td>
       {{/if}}
     </tr>

@@ -3,7 +3,7 @@ import Route from '@ember/routing/route';
 export default Route.extend({
   routeAfterAuthentication: 'pipeline.events',
   beforeModel() {
-    this.set('pipeline', this.modelFor('pipeline'));
+    this.set('pipeline', this.modelFor('pipeline').pipeline);
   },
   model() {
     return this.get('pipeline.jobs')

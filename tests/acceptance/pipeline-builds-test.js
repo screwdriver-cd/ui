@@ -218,6 +218,12 @@ moduleForAcceptance('Acceptance | pipeline build', {
       { 'Content-Type': 'application/json' },
       JSON.stringify(makeBuilds(12347))
     ]);
+
+    server.get('http://localhost:8080/v4/collections', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
   },
   afterEach() {
     server.shutdown();

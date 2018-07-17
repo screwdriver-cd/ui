@@ -1,0 +1,23 @@
+& {
+  .dropdown-menu {
+    max-height: 300px;
+    overflow: auto;
+
+    > li { 
+      line-height: 22px;
+
+      > span {
+        cursor: pointer;
+        display: inline-block;
+        padding: 5px;
+        width: 100%;
+
+        &:hover {
+          background-color: $sd-highlight;
+          color: $sd-text;
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
