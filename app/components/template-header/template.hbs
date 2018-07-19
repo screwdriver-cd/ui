@@ -18,22 +18,6 @@
       <div class="template-details--value">{{template.name}}</div>
     </div>
   {{/if}}
-  {{#if template.images}}
-    <div class="template-details--item" id="template-images">
-      <div class="template-details--label">Supported Images:</div>
-      <div class="template-details--value">
-      {{#each-in template.images as |alias path|}}
-        <div>
-          <span>{{alias}}: </span><span>{{path}}</span>
-        </div>
-      {{else}}
-        <div>
-          None defined
-        </div>
-      {{/each-in}}
-      </div>
-    </div>
-  {{/if}}
   <div class="template-details--item" id="template-maintainer">
     <div class="template-details--label">Released by:</div>
     <div class="template-details--value"><a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a>
