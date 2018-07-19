@@ -50,6 +50,12 @@ moduleForAcceptance('Acceptance | child pipeline', {
         }
       ])
     ]);
+
+    server.get('http://localhost:8080/v4/collections', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
   },
   afterEach() {
     server.shutdown();
