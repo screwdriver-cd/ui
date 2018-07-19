@@ -59,10 +59,6 @@ test('it renders', function (assert) {
     'Namespace: foo');
   assert.equal($('#template-name').text().replace(/\n +(?= )/g, '').trim(),
     'Name: bar');
-  assert.equal($('#template-images > .template-details--value > div:first-child').text().trim(),
-    'stable: node:6');
-  assert.equal($('#template-images > .template-details--value > div:nth-child(2)').text().trim(),
-    'development: node:7');
   assert.equal($('#template-maintainer').text().replace(/\n +(?= )/g, '').trim(),
     'Released by: bruce@wayne.com');
   assert.equal($('#template-maintainer > .template-details--value > a').attr('href'),
