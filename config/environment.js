@@ -50,7 +50,7 @@ module.exports = (environment) => {
       SDSTORE_HOSTNAME: 'http://localhost:8081',
       SDSTORE_NAMESPACE: 'v1',
       BUILD_RELOAD_TIMER: 5000, // 5 seconds
-      EVENT_RELOAD_TIMER: 90000, // 1.5 minutes
+      EVENT_RELOAD_TIMER: 60000, // 1 minutes
       LOG_RELOAD_TIMER: 1000,
       NUM_EVENTS_LISTED: 5,
       MAX_LOG_LINES: 1000,
