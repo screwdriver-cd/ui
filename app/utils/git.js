@@ -1,6 +1,3 @@
-const schema = require('screwdriver-data-schema');
-const CHECKOUT_URL_REGEX = schema.config.regex.CHECKOUT_URL;
-
 /**
  * Parse a git or https checkout url and get info about the repo
  * @method git
@@ -9,7 +6,7 @@ const CHECKOUT_URL_REGEX = schema.config.regex.CHECKOUT_URL;
  */
 function parse(scmUrl) {
   // eslint-disable-next-line max-len
-  const match = scmUrl.match(CHECKOUT_URL_REGEX);
+  const match = scmUrl.match(/^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)?(#[^\s]+)?$/);
 
   if (!match) {
     return {
