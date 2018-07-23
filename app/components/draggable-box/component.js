@@ -2,8 +2,6 @@ import Component from '@ember/component';
 
 export default Component.extend({
   drag(draggable, header) {
-    console.log(draggable, header)
-
     let startx = 0;
     let starty = 0;
     let endx = 0;

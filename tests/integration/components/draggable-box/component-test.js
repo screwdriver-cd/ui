@@ -61,7 +61,7 @@ test('it renders', function (assert) {
 
   const svg = this.$('svg');
 
-  assert.equal(svg.length, 1);
+  assert.equal(svg.length, 2);
   assert.equal(svg.children('g.graph-node').length, 5);
   assert.equal(svg.children('g.graph-node.build-success').length, 2);
   assert.equal(svg.children('g.graph-node.build-failure').length, 1);
