@@ -1,58 +1,66 @@
-import $ from 'jquery';
-
 import Component from '@ember/component';
 
-
 export default Component.extend({
+  drag(draggable, header) {
+    console.log(draggable, header)
 
+    let startx = 0;
+    let starty = 0;
+    let endx = 0;
+    let endy = 0;
 
-	drag(draggable, header) {
-		console.log('inside drag function')
-		header.onmousedown = dragMouseDown;
+    /**
+    * Repositions draggable box
+    * @param {object} event The drag event.
+    */
+    function dragMove(event) {
+      let e = event;
 
-		let startx = 0;
-		let starty = 0;
-		let endx = 0;
-		let endy = 0;
+      e = e || window.event;
 
-		function dragMove(e){
-			console.log('dragmove')
-			e = e || window.event;
+      endx = startx - e.clientX;
+      endy = starty - e.clientY;
+      startx = e.clientX;
+      starty = e.clientY;
 
-			endx = startx - e.clientX;
-			endy = starty - e.clientY;
-			startx = e.clientX;
-			starty = e.clientY;
-			draggable.style.top = (draggable.offsetTop - endy) + 'px';
-			draggable.style.left = (draggable.offsetLeft - endx) + 'px';
-		}
+      let top = draggable.offsetTop - endy;
+      let left = draggable.offsetLeft - endx;
 
-		function dragRemove(e){
-			document.onmousemove = null;
-			document.onmouseup = null;
-		}
+      draggable.style.top = `${top}px`;
+      draggable.style.left = `${left}px`;
+    }
 
-		function dragMouseDown(e) {
-			console.log('dragdown')
-			e = e || window.event;
+    /**
+    * Removes events
+    */
+    function dragRemove() {
+      document.onmousemove = null;
+      document.onmouseup = null;
+    }
 
-			startx = e.clientX;
-			starty = e.clientY;
+    /**
+    * add events to event listeners
+    * @param {object} event The mouse down event.
+    */
+    function dragMouseDown(event) {
+      let e = event;
 
-			document.onmousemove = dragMove;
-			document.onmouseup = dragRemove;
-		}
-	},
+      e = e || window.event;
 
+      startx = e.clientX;
+      starty = e.clientY;
 
-	didRender(){
-		var box = document.getElementById('draggable');
-		var header = document.getElementById('draggableheader');
-		console.log(box)
-		this.drag(box, header);
+      document.onmousemove = dragMove;
+      document.onmouseup = dragRemove;
+    }
 
-	},
+    header.onmousedown = dragMouseDown;
+  },
 
-	
+  didRender() {
+    let box = document.getElementById('draggable');
+    let drag = document.getElementsByClassName('drag')[0];
 
+    this.drag(box, drag);
+  }
 });

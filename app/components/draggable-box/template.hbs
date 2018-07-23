@@ -1,19 +1,6 @@
 <div id="draggable">
 	<div id="draggableheader">
-		<div class="dots">
-			<div>
-				<span class="dot"></span>
-				<span class="dot"></span>
-			</div>
-			<div>
-				<span class="dot"></span>
-				<span class="dot"></span>
-			</div>
-			<div>
-				<span class="dot"></span>
-				<span class="dot"></span>
-			</div>
-		</div>
+		{{inline-svg "drag-handle" class="drag"}}
 	</div>
 	<div id="graph">
 	{{workflow-graph-d3
@@ -23,6 +10,9 @@
       causeMessage=event.causeMessage
       dragsize=true
       graphClicked=graphClicked
+      event=event
+      routeParams=routeParams
+      build=build
     }}
     </div>
 </div>
