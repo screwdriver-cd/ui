@@ -6,7 +6,7 @@
  */
 function parse(scmUrl) {
   // eslint-disable-next-line max-len
-  const match = scmUrl.match(/^(?:(?:https?|git):\/\/)?(?:[^@]+@)?([^/:]+)(?:\/|:)([^/]+)\/(.+?)(?:\.git)?(#.+)?$/);
+  const match = scmUrl.match(/^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)?(#[^\s]+)?$/);
 
   if (!match) {
     return {
