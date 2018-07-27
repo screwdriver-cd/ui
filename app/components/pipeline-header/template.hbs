@@ -1,3 +1,9 @@
+{{#if addCollectionError}}
+  {{info-message message=addCollectionError type="warning" icon="exclamation-triangle"}}
+{{/if}}
+{{#if addCollectionSuccess}}
+  {{info-message message=addCollectionSuccess type="success" icon="check"}}
+{{/if}}
 {{#link-to "pipeline" pipeline.id}}<h1>{{pipeline.appId}}</h1>{{/link-to}}
 <a href="{{pipeline.hubUrl}}" class="branch">{{fa-icon "code-fork"}} {{pipeline.branch}}</a>
 <span class="scm">{{fa-icon scmContext.scmIcon}} {{scmContext.scm}}</span>
@@ -8,4 +14,6 @@
   pipeline=pipeline
   collections=collections
   onAddToCollection=onAddToCollection
+  addCollectionSuccess=addCollectionSuccess
+  addCollectionError=addCollectionError
   dropdownText=dropdownText}}
