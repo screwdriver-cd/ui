@@ -8,6 +8,10 @@
   white-space: nowrap;
 }
 
+.toggler-text {
+  color: #3697F2;
+}
+
 &.is-build-page {
   background-color: $sd-white;
 }
@@ -33,4 +37,10 @@ a:active,
 a.active {
   color: $grey-800;
   text-decoration: underline;
+}
+
+.collection-dropdown {
+  position: absolute;
+  right: 25px;
+  display: inline;
 }

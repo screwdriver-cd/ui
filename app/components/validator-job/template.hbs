@@ -1,6 +1,26 @@
 {{#if collapsible}}
 <h4 class="job" {{action 'nameClick'}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>
 {{/if}}
+{{#if template.description}}
+<div class="template-description" title="This is the description of the template">
+  <span class="label">Template Description:</span>
+  <span class="value">{{template.description}}</span>
+</div>
+{{/if}}
+{{#if template.images}}
+<div class="images" title="Supported images">
+  <span class="label">Supported Images:</span>
+  <span class="value">
+    <ul>
+      {{#each-in template.images as |name value|}}
+      <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
+      {{else}}
+      <li>None defined</li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
+{{/if}}
 <div class="annotations" title="These are the job-level annotations that the user has defined.">
   <span class="label">Annotations:</span>
   <span class="value">
@@ -13,18 +33,12 @@
     </ul>
   </span>
 </div>
+{{#unless template}}
 <div class="description" title="This is the description of the job">
   <span class="label">Description:</span>
-  <span class="value">
-    <ul>
-      {{#if job.description}}
-      <li>{{job.description}}</li>
-      {{else}}
-      <li>None defined</li>
-      {{/if}}
-    </ul>
-  </span>
+  <span class="value">{{job.description}}</span>
 </div>
+{{/unless}}
 <div class="image" title="This is the docker image that acts as the base container for the job.">
   <span class="label">Image:</span>
   <span class="value">{{job.image}}</span>
@@ -80,8 +94,19 @@
   <span class="value">
     <ul>
       {{!TODO handle settings properly}}
-      {{#each-in job.settings as |name value|}}
-      <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
+      {{#each-in job.settings as |name svalue|}}
+         <li>
+           <div class="value-item">
+           <div class="name">{{name}}: </div>
+           <div class="value">
+           {{#each-in svalue as |xname xvalue|}}
+             <div>{{xname}}: {{xvalue}}</div>
+           {{else}}
+             <div>{{svalue}}</div>
+           {{/each-in}}
+           </div>
+           </div>
+         </li>
       {{else}}
       <li>None defined</li>
       {{/each-in}}

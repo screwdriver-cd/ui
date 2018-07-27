@@ -12,13 +12,13 @@ export default Route.extend({
       this.transitionTo('pipeline');
     }
 
-    const pipeline = this.modelFor('pipeline');
+    const pipeline = this.modelFor('pipeline').pipeline;
     const secrets = pipeline.get('secrets');
 
     this.get('store').unloadAll('token');
 
     return this.get('store')
-      .findAll('token', { adapterOptions: { pipelineId: this.modelFor('pipeline').get('id') } })
+      .findAll('token', { adapterOptions: { pipelineId: pipeline.get('id') } })
       .then(tokens => ({
         tokens,
         secrets,

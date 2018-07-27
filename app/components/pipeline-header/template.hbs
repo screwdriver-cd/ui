@@ -4,3 +4,8 @@
 {{#if pipeline.configPipelineId}}
   {{fa-icon "cog"}} {{#link-to "pipeline" pipeline.configPipelineId}}Parent Pipeline{{/link-to}}
 {{/if}}
+{{collection-dropdown 
+  pipeline=pipeline
+  collections=collections
+  onAddToCollection=onAddToCollection
+  dropdownText=dropdownText}}

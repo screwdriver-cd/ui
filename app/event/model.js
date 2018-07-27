@@ -1,11 +1,9 @@
 import { computed, observer, get, set } from '@ember/object';
 import { sort, not } from '@ember/object/computed';
 import DS from 'ember-data';
-import graphTools from 'screwdriver-ui/utils/graph-tools';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
-
-const { graphDepth } = graphTools;
+import { isActiveBuild } from 'screwdriver-ui/utils/build';
 
 export default DS.Model.extend(ModelReloaderMixin, {
   buildId: DS.attr('number'),
@@ -14,6 +12,8 @@ export default DS.Model.extend(ModelReloaderMixin, {
   createTime: DS.attr('date'),
   creator: DS.attr(),
   isComplete: DS.attr('boolean', { defaultValue: false }),
+  numBuilds: DS.attr('number', { defaultValue: 0 }),
+  reloadWithoutNewBuilds: DS.attr('number', { defaultValue: 0 }),
   parentBuildId: DS.attr('number'),
   parentEventId: DS.attr('number'),
   pipelineId: DS.attr('string'),
@@ -29,7 +29,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   isRunning: not('isComplete'),
   buildsSorted: sort('builds', (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)),
-  createTimeWords: computed('createTime', {
+  createTimeWords: computed('createTime', 'duration', {
     get() {
       const duration = Date.now() - get(this, 'createTime').getTime();
 
@@ -84,13 +84,14 @@ export default DS.Model.extend(ModelReloaderMixin, {
         set(this, 'status', status);
       });
   }),
-  isCompleteObserver: observer('builds.@each', 'workflowGraph', function isCompleteObserver() {
+  isCompleteObserver: observer('builds.@each', function isCompleteObserver() {
     const builds = get(this, 'builds');
 
     builds
       .then((list) => {
         // Tell model to reload builds.
         this.startReloading();
+        set(this, 'reload', get(this, 'reload') + 1);
 
         const numBuilds = get(list, 'length');
 
@@ -101,49 +102,49 @@ export default DS.Model.extend(ModelReloaderMixin, {
           return false;
         }
 
-        // Figure out if there are any failures
-        const failedBuild = list.find((b) => {
-          const status = get(b, 'status');
-
-          return status === 'FAILURE' || status === 'ABORTED';
-        });
-
-        // We probably won't continue on failure
-        if (failedBuild) {
-          set(this, 'isComplete', true);
-
-          return true;
-        }
-
         // See if any builds are running
         const runningBuild = list.find((b) => {
           const status = get(b, 'status');
+          const endTime = get(b, 'endTime');
 
-          return status === 'RUNNING' || status === 'QUEUED';
+          return isActiveBuild(status, endTime);
         });
 
         // Something is running, so we aren't done
         if (runningBuild) {
           set(this, 'isComplete', false);
+          set(this, 'numBuilds', numBuilds);
+          set(this, 'reloadWithoutNewBuilds', 0);
 
           return false;
         }
 
-        // Figure out how many builds we expect to run
-        const expectedBuilds = graphDepth(
-          get(this, 'workflowGraph.edges'),
-          get(this, 'startFrom'),
-          new Set()
-        );
+        // Nothing is running now, check if new builds added during reload
+        // If get(this, 'numBuilds') === 0 that means it is the first load not a reload
+        const newBuilds = get(this, 'numBuilds') === 0 ? 0 : numBuilds - get(this, 'numBuilds');
 
-        // If we have the expected number of builds, it is done
-        if (numBuilds >= expectedBuilds) {
+        // New builds created during reload, event is still going, reset everything
+        if (newBuilds > 0) {
+          set(this, 'isComplete', false);
+          set(this, 'numBuilds', numBuilds);
+          set(this, 'reloadWithoutNewBuilds', 0);
+
+          return false;
+        }
+
+        const reloadWithoutNewBuilds = get(this, 'reloadWithoutNewBuilds') + 1;
+
+        // If reloads 2 times without new builds added, consider event as complete
+        if (reloadWithoutNewBuilds >= 2) {
           set(this, 'isComplete', true);
+          set(this, 'reloadWithoutNewBuilds', reloadWithoutNewBuilds);
 
           return true;
         }
 
-        // we haven't run all the expected builds yet
+        // No new builds added so far, keep counting the reload
+        set(this, 'numBuilds', numBuilds);
+        set(this, 'reloadWithoutNewBuilds', reloadWithoutNewBuilds);
         set(this, 'isComplete', false);
 
         return false;

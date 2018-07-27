@@ -2,27 +2,6 @@ import { run } from '@ember/runloop';
 import { get } from '@ember/object';
 import { moduleForModel, test } from 'ember-qunit';
 
-const workflowGraph = {
-  nodes: [
-    { name: '~pr' },
-    { name: '~commit' },
-    { name: 'main', id: 1 },
-    { name: 'A', id: 2 },
-    { name: 'B', id: 3 },
-    { name: 'C', id: 4 },
-    { name: 'D', id: 5 }
-  ],
-  edges: [
-    { src: '~pr', dest: 'main' },
-    { src: '~commit', dest: 'main' },
-    { src: 'main', dest: 'A' },
-    { src: 'main', dest: 'B' },
-    { src: 'A', dest: 'C' },
-    { src: 'B', dest: 'D' },
-    { src: 'C', dest: 'D' }
-  ]
-};
-
 moduleForModel('event', 'Unit | Model | event', {
   // Specify the other units that are required for this test.
   needs: ['model:build']
@@ -35,7 +14,7 @@ test('it exists', function (assert) {
 });
 
 test('it is not completed when there are no builds', function (assert) {
-  const model = this.subject({ workflowGraph, startFrom: '~commit' });
+  const model = this.subject();
 
   run.next(this, () => {
     const isComplete = get(model, 'isComplete');
@@ -48,7 +27,7 @@ test('it is not completed when there are no builds', function (assert) {
 test('it is not completed when the a build is not complete', function (assert) {
   run(() => {
     const build = this.store().createRecord('build', { jobId: 1, status: 'RUNNING' });
-    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+    const model = this.subject();
 
     model.set('builds', [build]);
 
@@ -60,14 +39,39 @@ test('it is not completed when the a build is not complete', function (assert) {
   });
 });
 
-test('it is completed when any build is unsuccessful', function (assert) {
+test('it is not completed when new builds created during reload', function (assert) {
   run(() => {
-    const build = this.store().createRecord('build', { status: 'ABORTED' });
-    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+    assert.expect(3);
+    const build1 = this.store().createRecord('build', { jobId: 1, status: 'SUCCESS' });
+    const build2 = this.store().createRecord('build', { jobId: 2, status: 'SUCCESS' });
+    const build3 = this.store().createRecord('build', { jobId: 3, status: 'SUCCESS' });
+    const model = this.subject();
+    let reloadCnt = 0;
 
-    model.set('builds', [build]);
+    model.set('builds', [build1]);
+    model.set('buildId', 121);
+    model.set('startReloading', function () {
+      reloadCnt += 1;
+
+      if (reloadCnt > 2) {
+        return;
+      }
+
+      // During each reload, add one new build
+      if (reloadCnt === 1) {
+        this.set('builds', [build2, build1]);
+      } else {
+        this.set('builds', [build3, build2, build1]);
+      }
+
+      // New build added during reload, event not complete
+      const isComplete = get(model, 'isComplete');
+
+      assert.notOk(isComplete);
+    });
 
     run.next(this, () => {
+      // Since no new builds addes after 2 reloads, event eventually finishes
       const isComplete = get(model, 'isComplete');
 
       assert.ok(isComplete);
@@ -75,29 +79,14 @@ test('it is completed when any build is unsuccessful', function (assert) {
   });
 });
 
-test('it is not completed when all not all expected builds have run', function (assert) {
-  run(() => {
-    const build = this.store().createRecord('build', { status: 'SUCCESS' });
-    const model = this.subject({ workflowGraph, startFrom: '~commit' });
-
-    model.set('builds', [build]);
-
-    run.next(this, () => {
-      const isComplete = get(model, 'isComplete');
-
-      assert.notOk(isComplete);
-    });
-  });
-});
-
-test('it is complete when all expected builds have run', function (assert) {
+test('it is complete when all builds have run', function (assert) {
   run(() => {
     const build1 = this.store().createRecord('build', { jobId: 1, status: 'SUCCESS' });
     const build2 = this.store().createRecord('build', { jobId: 2, status: 'SUCCESS' });
     const build3 = this.store().createRecord('build', { jobId: 3, status: 'SUCCESS' });
     const build4 = this.store().createRecord('build', { jobId: 4, status: 'SUCCESS' });
     const build5 = this.store().createRecord('build', { jobId: 5, status: 'SUCCESS' });
-    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+    const model = this.subject();
 
     model.set('builds', [build5, build4, build3, build2, build1]);
 
@@ -111,7 +100,7 @@ test('it is complete when all expected builds have run', function (assert) {
 
 test('it is RUNNING when there are no builds', function (assert) {
   run(() => {
-    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+    const model = this.subject();
 
     model.set('builds', []);
 
@@ -127,7 +116,7 @@ test('it returns build status when a build is not SUCCESS', function (assert) {
   run(() => {
     const build1 = this.store().createRecord('build', { jobId: 1, status: 'ABORTED' });
     const build2 = this.store().createRecord('build', { jobId: 2, status: 'SUCCESS' });
-    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+    const model = this.subject();
 
     model.set('builds', [build2, build1]);
 
@@ -146,7 +135,7 @@ test('it is SUCCESS when all expected builds have run successfully', function (a
     const build3 = this.store().createRecord('build', { jobId: 3, status: 'SUCCESS' });
     const build4 = this.store().createRecord('build', { jobId: 4, status: 'SUCCESS' });
     const build5 = this.store().createRecord('build', { jobId: 5, status: 'SUCCESS' });
-    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+    const model = this.subject();
 
     model.set('builds', [build5, build4, build3, build2, build1]);
 
@@ -175,7 +164,7 @@ test('it returns event duration whenever builds have run in parallel', function 
       endTime: new Date(elapsed20secsTime),
       status: 'ABORTED'
     });
-    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+    const model = this.subject();
 
     model.set('builds', [build2, build1]);
 
@@ -207,7 +196,7 @@ test('it returns event duration until now if not completed yet', function (asser
       createTime: new Date(elapsed20secsTime),
       status: 'RUNNING'
     });
-    const model = this.subject({ workflowGraph, startFrom: '~commit' });
+    const model = this.subject();
     const testStartTime = new Date().getTime();
 
     model.set('builds', [build2, build1, build3]);
