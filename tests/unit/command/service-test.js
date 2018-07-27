@@ -105,8 +105,12 @@ test('it fetches all commands', function (assert) {
 
   const t = service.getAllCommands();
 
+  const filteredCommands = [
+    { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime, lastUpdated }
+  ];
+
   t.then((commands) => {
-    assert.deepEqual(commands, dummyCommandsResult);
+    assert.deepEqual(commands, filteredCommands);
   });
 });
 
