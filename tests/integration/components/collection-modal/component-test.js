@@ -30,11 +30,11 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{collection-modal showModal=showModal}}`);
 
-  assert.equal($('.modal-title').text().trim(), 'Create a new Collection');
-  assert.equal($('.name .control-label').text().trim(), 'Name');
+  assert.equal($('.modal-title').text().trim(), 'Create New Collection');
+  assert.equal($('.name .control-label').text().trim(), 'Collection Name');
   assert.equal($('.description .control-label').text().trim(), 'Description');
   assert.equal($('.collection-form__cancel').text().trim(), 'Cancel');
-  assert.equal($('.collection-form__create').text().trim(), 'Create');
+  assert.equal($('.collection-form__create').text().trim(), 'Save');
 });
 
 test('it cancels creation of a collection', function (assert) {

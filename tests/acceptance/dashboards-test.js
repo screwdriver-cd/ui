@@ -248,8 +248,8 @@ test('creating a collection', function (assert) {
         assert.equal(find('.modal').length, 1);
         fillIn('.name input', 'collection3');
         triggerEvent('.name input', 'keyup');
-        fillIn('.description input', 'description3');
-        triggerEvent('.description input', 'keyup');
+        fillIn('.description textarea', 'description3');
+        triggerEvent('.description textarea', 'keyup');
         click('.collection-form__create');
         andThen(() => {
           // The modal should disappear

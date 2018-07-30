@@ -7,7 +7,6 @@ export default Component.extend({
   description: null,
   errorMessage: null,
   store: service(),
-
   actions: {
     setModal(open) {
       if (!open) {
