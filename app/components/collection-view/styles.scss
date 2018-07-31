@@ -10,6 +10,25 @@
     // sass-lint:enable class-name-format
   }
 
+  .edit-icon {
+    display: none;
+    padding-left: 5px;
+  }
+
+  .edit-area {
+    resize: none;
+    position: relative;
+    width: 100%;
+  }
+
+  .save {
+    float: right;
+  }
+
+  .header__description:hover .edit-icon {
+    display: inline;
+  }
+
   a {
     display: block;
     text-decoration: none;

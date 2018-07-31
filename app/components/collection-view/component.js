@@ -9,6 +9,7 @@ export default Component.extend({
   scmService: service('scm'),
   sortBy: ['scmRepo.name'],
   removePipelineError: null,
+  editingDescription: false,
   sortedPipelines: sort('collectionPipelines', 'sortBy'),
   sortByText: computed('sortBy', {
     get() {
@@ -106,6 +107,16 @@ export default Component.extend({
       default:
         this.set('sortBy', [option]);
       }
+    },
+    editDescription() {
+      this.set('editingDescription', true);
+    },
+    saveDescription() {
+      const collection = this.get('collection');
+
+      collection.set('description', this.$('.edit-area').val());
+      this.set('editingDescription', false);
+      collection.save();
     }
   }
 });
