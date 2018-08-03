@@ -68,17 +68,17 @@ export default Base.extend({
    */
   restore(data) {
     return new EmberPromise((resolve, reject) => {
-      const token = get(data, 'token');
+      const jwt = get(data, 'token');
 
-      if (!isEmpty(token)) {
-        const jwt = decoder(token);
+      if (!isEmpty(jwt)) {
+        const decodedJWT = decoder(jwt);
 
         // Token expired, reject
-        if (jwt.exp * 1000 < Date.now()) {
+        if (decodedJWT.exp * 1000 < Date.now()) {
           return reject();
         }
 
-        const authData = getData(token, jwt);
+        const authData = getData(jwt, decodedJWT);
 
         return resolve(authData);
       }
