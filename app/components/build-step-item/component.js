@@ -54,6 +54,6 @@ export default Component.extend({
     }
   }),
   click() {
-    get(this, 'onClick')(get(this, 'stepName'));
+    get(this, 'onClick')(get(this, 'stepName'), get(this, 's'));
   }
 });

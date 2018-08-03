@@ -7,6 +7,7 @@ export default Component.extend({
   stepNames: mapBy('buildSteps', 'name'),
   setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
   teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
+  selectedStepInfo: null,
   selectedStep: computed('buildSteps.@each.{code,startTime,endTime}', {
     get() {
       const steps = get(this, 'buildSteps');
@@ -49,8 +50,9 @@ export default Component.extend({
     toggleTeardown() {
       set(this, 'teardownCollapsed', !get(this, 'teardownCollapsed'));
     },
-    stepClick(name) {
+    stepClick(name, info) {
       set(this, 'selectedStep', name);
+      set(this, 'selectedStepInfo', info);
     }
   }
 });

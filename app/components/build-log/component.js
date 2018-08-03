@@ -1,9 +1,9 @@
 import { get, getWithDefault, set, computed } from '@ember/object';
-
-import { scheduleOnce, later } from '@ember/runloop';
+import { throttle, scheduleOnce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
+import $ from 'jquery';
 
 const timeTypes = ['datetime', 'elapsedBuild', 'elapsedStep'];
 
@@ -12,6 +12,7 @@ export default Component.extend({
   classNames: ['build-log'],
   autoscroll: true,
   isFetching: false,
+  hasLock: false,
   timeFormat: 'datetime',
 
   logs: computed('isFetching', 'stepName', {
@@ -38,7 +39,6 @@ export default Component.extend({
       return get(cache[name], 'logs');
     }
   }),
-
   /**
    * Determines if log loading should occur
    * - step must have a defined start time (it is, or has executed)
@@ -67,6 +67,7 @@ export default Component.extend({
     }
 
     set(this, 'logCache', {});
+    set(this, 'logLength', {});
   },
 
   // Start loading logs immediately upon inserting the element if a step is selected
@@ -85,6 +86,7 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     set(this, 'logCache', {});
+    set(this, 'logLength', {});
   },
 
   /**
@@ -103,40 +105,87 @@ export default Component.extend({
    */
   getLogs() {
     if (get(this, 'shouldLoad')) {
+      const totalLines = this.get('selectedStepInfo').lines;
+      const componentScope = this;
       const stepName = get(this, 'stepName');
       const cache = get(this, 'logCache');
+
+      if (totalLines && !this.get(`logLength.${stepName}`)) {
+        const length = this.get('selectedStepInfo').lines;
+
+        this.set(`logLength.${stepName}`, length - 1);
+
+        this.$('.wrap').scroll(function () {
+          if (!componentScope.get('hasLock') && $(this).scrollTop() < $('.logs').height() * 0.2
+            && $(this).scrollTop() > $('.logs').height() * 0.15
+            && get(componentScope, `logLength.${stepName}`) !== 0) {
+            componentScope.set('hasLock', true);
+            throttle(componentScope, componentScope.getLogs, 0.5);
+          }
+        });
+      }
+
       const logData = getWithDefault(cache, stepName, {
-        lastLine: 0,
+        lastLine: totalLines ? this.get(`logLength.${stepName}`) : 0,
         logs: [],
         done: false
       });
       const buildId = get(this, 'buildId');
 
       set(this, 'isFetching', true);
-      this.get('logger').fetchLogs(
-        buildId,
-        stepName,
-        logData.lastLine
-      ).then(({ lines, done }) => {
+
+      let fetchLogsArgs = [buildId, stepName, logData.lastLine];
+
+      if (totalLines) {
+        fetchLogsArgs.push('descending', 1);
+      }
+
+      this.get('logger').fetchLogs(...fetchLogsArgs)
+        .then(({ lines, done }) => {
         // prevent updating logs when component is being destroyed
-        if (!this.get('isDestroyed') && !this.get('isDestroying')) {
-          if (Array.isArray(lines) && lines.length) {
-            set(logData, 'lastLine', lines[lines.length - 1].n + 1);
-            set(logData, 'logs', get(logData, 'logs').concat(lines));
-          }
 
-          set(logData, 'done', done);
-          set(this, `logCache.${stepName}`, logData);
-          set(this, 'isFetching', false);
-          scheduleOnce('afterRender', this, 'scrollDown');
+          if (!this.get('isDestroyed') && !this.get('isDestroying')) {
+            if (Array.isArray(lines) && lines.length) {
+              if (totalLines) {
+                let loglength = this.get(`logLength.${stepName}`);
 
-          if (!done) {
-            // Immediately ask for more logs if we got MAX_LOG_LINES
-            later(this, 'getLogs',
-              lines.length === ENV.APP.MAX_LOG_LINES ? 0 : ENV.APP.LOG_RELOAD_TIMER);
+                if (loglength - lines.length < 0) {
+                  this.set(`logLength.${stepName}`, 0);
+                } else {
+                  this.set(`logLength.${stepName}`, loglength - lines.length);
+                }
+
+                set(logData, 'lastLine', this.get(`logLength.${stepName}`));
+                set(logData, 'logs', lines.concat(get(logData, 'logs')));
+              } else {
+                set(logData, 'lastLine', lines[lines.length - 1].n + 1);
+                set(logData, 'logs', get(logData, 'logs').concat(lines));
+              }
+            }
+
+            const pastScrollTop = this.$('.wrap').scrollTop();
+            const newLines = this.$('.line').height() * lines.length;
+            // const pastHeight = this.$('.logs').height();
+            // const pastFromTop = pastHeight - pastScrollTop;
+
+            set(logData, 'done', done);
+            set(this, `logCache.${stepName}`, logData);
+            set(this, 'isFetching', false);
+
+            if (totalLines) {
+              this.$('.wrap').scrollTop(pastScrollTop + newLines);
+              this.set('hasLock', false);
+            } else {
+              scheduleOnce('afterRender', this, 'scrollDown');
+
+              if (!done) {
+                // Immediately ask for more logs if we got MAX_LOG_LINES
+                later(this, 'getLogs',
+                  lines.length === ENV.APP.MAX_LOG_LINES ? 0 : ENV.APP.LOG_RELOAD_TIMER);
+              }
+            }
           }
-        }
-      });
+        });
     }
   },
   actions: {
