@@ -2,7 +2,6 @@ import $ from 'jquery';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 import { get } from '@ember/object';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 const scmUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/contexts`;
 
 /**
@@ -47,9 +46,9 @@ export default Service.extend({
         let isSignedIn = false;
 
         if (get(session, 'isAuthenticated')) {
-          const jwt = decoder(get(session, 'data.authenticated.token'));
+          const jwtContext = get(session, 'data.authenticated.scmContext');
 
-          if (jwt.scmContext === scmContext.context) {
+          if (jwtContext === scmContext.context) {
             isSignedIn = true;
           }
         }

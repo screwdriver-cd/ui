@@ -1,54 +1,63 @@
-import { moduleFor } from 'ember-qunit';
+import { setupTest } from 'ember-qunit';
+import { module } from 'qunit';
 import test from 'ember-sinon-qunit/test-support/test';
 import injectScmServiceStub from '../../helpers/inject-scm';
 
-moduleFor('route:application', 'Unit | Route | application', {
-  // Specify the other units that are required for this test.
-  needs: ['service:session', 'service:scm']
-});
+module('Unit | Route | application', function (hooks) {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let route = this.subject();
+  test('it exists', function (assert) {
+    const route = this.owner.lookup('route:application');
 
-  assert.ok(route);
-});
-
-test('it calculates title', function (assert) {
-  let route = this.subject();
-
-  assert.equal(route.title(), 'screwdriver.cd');
-  assert.equal(route.title([]), 'screwdriver.cd');
-  assert.equal(route.title(['a', 'b', 'c']), 'a > b > c > screwdriver.cd');
-});
-
-test('it should do transitionTo on sessionAuthenticated when valid fromUrl', function (assert) {
-  const route = this.subject();
-  const transitionStub = this.stub(route, 'transitionTo');
-  const contollerForStub = this.stub(route, 'controllerFor');
-
-  contollerForStub.withArgs('application').returns({
-    get: (arg) => {
-      assert.equal(arg, 'fromUrl');
-
-      return 'fromUrl';
-    }
+    assert.ok(route);
   });
 
-  route.sessionAuthenticated();
+  test('it calculates title', function (assert) {
+    const route = this.owner.lookup('route:application');
 
-  assert.ok(transitionStub.calledOnce, 'transitionTo was not called');
-  assert.ok(transitionStub.calledWithExactly('fromUrl'), 'invalid data');
-});
+    assert.equal(route.title(), 'screwdriver.cd');
+    assert.equal(route.title([]), 'screwdriver.cd');
+    assert.equal(route.title(['a', 'b', 'c']), 'a > b > c > screwdriver.cd');
+  });
 
-test('it shoud return model of scms', function (assert) {
-  injectScmServiceStub(this);
+  test('it should reload on sessionInvalidated', function (assert) {
+    const route = this.owner.lookup('route:application');
+    const reloadStub = this.stub(route, 'reloadPage');
 
-  let route = this.subject();
+    route.sessionInvalidated();
+    assert.ok(reloadStub.calledOnce, 'reloadPage was not called');
+  });
 
-  return route.model().then((scms) => {
-    assert.equal(scms[0].context, 'github:github.com');
-    assert.equal(scms[0].displayName, 'github.com');
-    assert.equal(scms[0].iconType, 'github');
-    assert.equal(scms[0].isSignedIn, true);
+  test('it should clear store and reload page on session change', function (assert) {
+    const route = this.owner.lookup('route:application');
+    const session = this.owner.lookup('service:session');
+    const reloadStub = this.stub(route, 'reloadPage');
+
+    session.set('data.sessionChanged', true);
+
+    assert.ok(reloadStub.calledOnce, 'reloadPage was not called');
+  });
+
+  test('it should not clear store and reload page if no session change', function (assert) {
+    const route = this.owner.lookup('route:application');
+    const session = this.owner.lookup('service:session');
+    const reloadStub = this.stub(route, 'reloadPage');
+
+    session.set('data.sessionChanged', false);
+
+    assert.notOk(reloadStub.calledOnce, 'reloadPage was called');
+  });
+
+  test('it shoud return model of scms', function (assert) {
+    injectScmServiceStub(this, false);
+
+    const route = this.owner.lookup('route:application');
+
+    return route.model().then((scms) => {
+      assert.equal(scms[0].context, 'github:github.com');
+      assert.equal(scms[0].displayName, 'github.com');
+      assert.equal(scms[0].iconType, 'github');
+      assert.equal(scms[0].isSignedIn, true);
+    });
   });
 });

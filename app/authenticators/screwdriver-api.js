@@ -11,6 +11,30 @@ const tokenUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/toke
 const logoutUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/logout`;
 
 /**
+ * Constructs session.data.authenticated object
+ * @method getData
+ * @param  {String} token        JWT Token
+ * @param  {Object} decodedToken Decoded JWT Token
+ * @return {Object}
+ */
+function getData(token, decodedToken) {
+  let { username, scope, scmContext } = decodedToken;
+  const isGuest = scope.includes('guest');
+
+  if (isGuest) {
+    scmContext = scmContext || 'guest';
+  }
+
+  return Object.assign({}, {
+    username,
+    scope,
+    scmContext,
+    isGuest,
+    token
+  });
+}
+
+/**
  * Fetches a jwt from api and returns result in RSVP Promise
  * @method fetchToken
  * @return {Promise}
@@ -25,18 +49,10 @@ function fetchToken() {
         withCredentials: true
       }
     })
-      .done((jwt) => {
+      .done(jwt =>
         // Add some data from the JWT to the session data
-        const { username, scope, scmContext } = decoder(jwt.token);
-
-        return resolve(Object.assign({}, {
-          username,
-          scope,
-          scmContext,
-          isGuest: scope.includes('guest'),
-          token: jwt.token
-        }));
-      })
+        resolve(getData(jwt.token, decoder(jwt.token)))
+      )
       .fail(() => reject('Could not get a token'));
   });
 }
@@ -62,15 +78,9 @@ export default Base.extend({
           return reject();
         }
 
-        const { username, scope, scmContext } = jwt;
+        const authData = getData(token, jwt);
 
-        return resolve(Object.assign({}, {
-          username,
-          scope,
-          scmContext,
-          isGuest: scope.includes('guest'),
-          token: data.token
-        }));
+        return resolve(authData);
       }
 
       return reject();
