@@ -59,17 +59,15 @@ export default Component.extend({
     set(this, 'showTooltip', false);
   },
   didRender() {
-            console.log('hi')
     let pipelineWorkflow = $('.pipelineWorkflow');
-    console.log(pipelineWorkflow)
-    $(document).on('scroll', function(){
-      if($(document).scrollTop() > 217){
-        pipelineWorkflow.css('display','fixed')      }
-      else {
-        pipelineWorkflow.css('display','fixed')
 
+    $(document).on('scroll', () => {
+      if ($(document).scrollTop() > 217) {
+        pipelineWorkflow.css('display', 'fixed');
+      } else {
+        pipelineWorkflow.css('display', 'fixed');
       }
-    })
+    });
   },
   actions: {
     graphClicked(job, mouseevent, sizes) {
