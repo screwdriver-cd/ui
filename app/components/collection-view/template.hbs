@@ -6,7 +6,12 @@
     <div class="col-md-7">
       <h2 class="header__name">{{collection.name}}</h2>
         {{#if collection.description}}
-          <p class="header__description">{{collection.description}}</p>
+          {{#if editingDescription}}
+            <textarea class="edit-area">{{collection.description}}</textarea>
+            <button class="save btn btn-primary" {{action 'saveDescription'}}>Save</button>
+          {{else}}
+            <p class="header__description">{{collection.description}}<a class="edit-icon" onClick={{action "editDescription"}}>{{fa-icon "pencil"}}</a></p>
+          {{/if}}
         {{/if}}
     </div>
     <div class="header__sort-pipelines col-md-5">
