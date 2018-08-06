@@ -69,7 +69,7 @@ export default Component.extend({
       addNewCollectionParent();
     },
     addToCollection(pipelineId, collection) {
-      return this.get('onAddToCollection')(+pipelineId, collection.id)
+      return this.get('addToCollection')(+pipelineId, collection.id)
         .then(() => {
           this.set('addCollectionError', null);
           this.set('addCollectionSuccess',

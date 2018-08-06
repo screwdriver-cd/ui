@@ -29,6 +29,12 @@ export default Component.extend({
         return newCollection.save()
           .then(() => {
             this.set('showModal', false);
+
+            let addDirectly = this.get('addToCollection');
+
+            if (addDirectly) {
+              addDirectly(this.get('pipelineId'), newCollection.id);
+            }
           })
           .catch((error) => {
             newCollection.destroyRecord();
