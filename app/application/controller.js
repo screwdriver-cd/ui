@@ -5,19 +5,25 @@ const { alias } = computed;
 
 export default Controller.extend({
   session: service('session'),
-  queryParams: ['fromUrl'],
-  fromUrl: null,
-  currentUrl: computed('currentPath', () => window.location.pathname),
   scmContexts: alias('model'),
   actions: {
     invalidateSession() {
-      this.get('session').invalidate();
+      this.get('session').set('data.sessionChanged', false);
+
+      return this.get('session').invalidate();
     },
     search(params) {
       this.transitionToRoute('search', { queryParams: { query: params } });
     },
     authenticate(scmContext) {
-      this.get('session').authenticate('authenticator:screwdriver-api', scmContext);
+      const session = this.get('session');
+      const currentContext = session.get('data.authenticated.scmContext');
+
+      session.authenticate('authenticator:screwdriver-api', scmContext).then(() => {
+        if (currentContext && currentContext !== scmContext) {
+          session.set('data.sessionChanged', true);
+        }
+      });
     }
   }
 });
