@@ -73,10 +73,11 @@ export default Component.extend({
         .then(() => {
           this.set('addCollectionError', null);
           this.set('addCollectionSuccess',
-            `Successfully added Pipeline to ${collection.get('name')}`);
+            `Successfully added Pipeline to Collection ${collection.get('name')}`);
         })
         .catch(() => {
-          this.set('addCollectionError', `Could not add Pipeline to ${collection.get('name')}`);
+          this.set('addCollectionError',
+            `Could not add Pipeline to Collection ${collection.get('name')}`);
           this.set('addCollectionSuccess', null);
         });
     }
