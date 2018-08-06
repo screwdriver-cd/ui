@@ -8,12 +8,13 @@ export default Route.extend(AuthenticatedRouteMixin, {
   model(params) {
     set(this, 'pipelineId', params.pipeline_id);
 
+    const collections = get(this, 'store').findAll('collection').catch(() => []);
+
     return RSVP.hash({
       pipeline: get(this, 'store').findRecord('pipeline', params.pipeline_id),
-      collections: this.store.findAll('collection')
+      collections
     });
   },
-
   actions: {
     error(error) {
       if (error.errors[0].status === 404) {
