@@ -30,3 +30,58 @@
     text-align: right;
   }
 }
+
+.collection-modal {
+  .modal-title {
+    font-weight: bold;
+  }
+  .collection-form__cancel {
+    border-color: $sd-info-fg;
+    color: $sd-info-fg;
+  }
+  textarea {
+    resize: none;
+  }
+
+  .name {
+    margin-bottom: 30px;
+  }
+
+  .form-control {
+    background-color: $sd-flyout-bg;
+  }
+
+  .control-label {
+    font-weight: normal;
+  }
+
+  .description {
+    margin-bottom: 40px;
+
+    .description-input {
+      height: 85px;
+    }
+  }
+
+  .modal-header {
+    padding: 15px 40px;
+  }
+
+  .modal-body {
+    padding: 50px 40px;
+  }
+
+  .btn, .form-control {
+    border-radius: 3px;
+  }
+
+  .btn {
+    width: 150px;
+  }
+}
+
+.modal-dialog {
+  .modal-content {
+    border-radius: 3px;
+  }
+}

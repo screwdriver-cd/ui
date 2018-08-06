@@ -90,7 +90,7 @@ test('it opens collection create modal', function (assert) {
   $('.new').click();
 
   return wait().then(() => {
-    const modalTitle = 'Create a new Collection';
+    const modalTitle = 'Create New Collection';
     const cancelButton = $('.collection-form__cancel');
     const createButton = $('.collection-form__create');
 
@@ -99,9 +99,9 @@ test('it opens collection create modal', function (assert) {
     assert.equal($('.modal').length, 1);
     assert.equal($('.modal-title').text().trim(), modalTitle);
     assert.equal($('.name input').length, 1);
-    assert.equal($('.description input').length, 1);
+    assert.equal($('.description textarea').length, 1);
     assert.equal(cancelButton.text().trim(), 'Cancel');
-    assert.equal(createButton.text().trim(), 'Create');
+    assert.equal(createButton.text().trim(), 'Save');
   });
 });
 
