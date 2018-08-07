@@ -21,6 +21,11 @@ export default Component.extend({
   }),
 
   actions: {
+    changeCollectionDisplayed(collection) {
+      let changeCollection = this.get('changeCollection');
+
+      changeCollection(collection);
+    },
     openModal() {
       this.set('showModal', true);
     },

@@ -3,11 +3,15 @@
       class="col-md-3"
       onDeleteCollection=(action "onDeleteCollection")
       selectedCollectionId=collection.id
+      editingDescription=editingDescription
+      changeCollection=(action "changeCollection")
   }}
   {{collection-view
       onPipelineRemove=(action "removePipeline")
       collection=collection
       class="col-md-9"
+      editingDescription=editingDescription
+      editingName=editingName
   }}
 </div>
 
