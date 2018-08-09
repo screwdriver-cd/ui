@@ -19,6 +19,7 @@ export default Controller.extend({
   pipeline: reads('model.pipeline'),
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
+  errorMessage: '',
   prEvents: computed('model.{event.pr.url,pipeline.id}', {
     get() {
       if (this.get('model.event.type') === 'pr') {
@@ -41,7 +42,10 @@ export default Controller.extend({
       const build = this.get('build');
 
       build.set('status', 'ABORTED');
-      build.save();
+
+      return build.save().catch((e) => {
+        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+      });
     },
 
     startBuild() {
@@ -64,8 +68,11 @@ export default Controller.extend({
 
             return this.transitionToRoute('pipeline.build',
               builds.get('lastObject.id'));
-          }
-          ));
+          }))
+        .catch((e) => {
+          this.set('isShowingModal', false);
+          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        });
     },
 
     reload() {
