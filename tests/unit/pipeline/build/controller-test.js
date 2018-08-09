@@ -96,8 +96,60 @@ test('it restarts a build', function (assert) {
   });
 });
 
+test('it fails to restart a build', function (assert) {
+  assert.expect(5);
+
+  server.post('http://localhost:8080/v4/events', () => [
+    401,
+    {},
+    JSON.stringify({
+      statusCode: 401,
+      error: 'unauthorized',
+      message: 'User does not have permission'
+    })
+  ]);
+  server.get('http://localhost:8080/v4/events/5678/builds', () => [
+    200,
+    { 'Content-Type': 'application/json' },
+    JSON.stringify([{ id: '9999' }])
+  ]);
+
+  let controller = this.subject();
+
+  run(() => {
+    controller.set('model', {
+      build: EmberObject.create({
+        id: '123'
+      }),
+      job: EmberObject.create({
+        name: 'PR-1:main'
+      }),
+      event: EmberObject.create({
+        id: '1',
+        sha: 'sha'
+      })
+    });
+
+    assert.notOk(controller.get('isShowingModal'));
+    controller.send('startBuild');
+    assert.ok(controller.get('isShowingModal'));
+  });
+
+  return wait().then(() => {
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      buildId: 123,
+      causeMessage: 'apple clicked restart for job "PR-1:main" for sha sha'
+    });
+    assert.notOk(controller.get('isShowingModal'));
+    assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
+  });
+});
+
 test('it stops a build', function (assert) {
-  assert.expect(1);
+  assert.expect(2);
   server.put('http://localhost:8080/v4/builds/5678', () => [
     200,
     { 'Content-Type': 'application/json' },
@@ -110,16 +162,72 @@ test('it stops a build', function (assert) {
   let controller = this.subject();
 
   run(() => {
-    controller.set('model', {
-      build: EmberObject.create({
-        jobId: 'abcd',
-        save() {
-          assert.ok(true);
+    controller.store.push({
+      data: {
+        id: '5678',
+        type: 'build',
+        attributes: {
+          jobId: '123'
         }
-      })
+      }
     });
+    const build = controller.store.peekRecord('build', 5678);
+
+    controller.set('model', { build });
 
     controller.send('stopBuild');
+  });
+
+  return wait().then(() => {
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      status: 'ABORTED'
+    });
+    assert.deepEqual(controller.get('errorMessage'), '');
+  });
+});
+
+test('it fails to stop a build', function (assert) {
+  assert.expect(2);
+  server.put('http://localhost:8080/v4/builds/5678', () => [
+    401,
+    {},
+    JSON.stringify({
+      statusCode: 401,
+      error: 'unauthorized',
+      message: 'User does not have permission'
+    })
+  ]);
+
+  let controller = this.subject();
+
+  run(() => {
+    controller.store.push({
+      data: {
+        id: '5678',
+        type: 'build',
+        attributes: {
+          jobId: '123'
+        }
+      }
+    });
+    const build = controller.store.peekRecord('build', 5678);
+
+    controller.set('model', { build });
+
+    controller.send('stopBuild');
+  });
+
+  return wait().then(() => {
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      status: 'ABORTED'
+    });
+    assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
   });
 });
 
