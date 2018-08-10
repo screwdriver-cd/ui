@@ -7,8 +7,6 @@ import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 
-const { sort } = computed;
-
 export default Controller.extend(ModelReloaderMixin, {
   session: service(),
   init() {
@@ -22,9 +20,6 @@ export default Controller.extend(ModelReloaderMixin, {
   jobs: reads('model.jobs'),
   events: reads('model.events'),
   pullRequests: reads('model.pullRequests'),
-
-  eventsSorted: sort('events.[]',
-    (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
 
   selectedEvent: computed('selected', 'mostRecent', {
     get() {
@@ -44,9 +39,9 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
 
-  mostRecent: computed('eventsSorted', {
+  mostRecent: computed('events.[]', {
     get() {
-      const list = get(this, 'eventsSorted');
+      const list = get(this, 'events');
 
       if (Array.isArray(list) && list.length) {
         const id = get(list[0], 'id');
@@ -60,10 +55,8 @@ export default Controller.extend(ModelReloaderMixin, {
 
   lastSuccessful: computed('events.@each.status', {
     get() {
-      const list = get(this, 'eventsSorted') || [];
-      // Reduce the number of events to look at
-      const event = list.slice(0, Math.min(list.length, 15))
-        .find(e => get(e, 'status') === 'SUCCESS');
+      const list = get(this, 'events') || [];
+      const event = list.find(e => get(e, 'status') === 'SUCCESS');
 
       if (!event) {
         return 0;
