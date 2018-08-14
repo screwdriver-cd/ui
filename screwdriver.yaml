@@ -11,6 +11,7 @@ jobs:
       - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
       - install-browsers: ./bin/setup_chrome.sh
       - test: npm test
+      - teardown-test: sleep 1000
     requires:
       - ~pr
       - ~commit
