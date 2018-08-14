@@ -87,13 +87,13 @@ test('it adds a pipeline to a collection', function (assert) {
 
   this.set('pipelineList', pipelines);
   this.set('collections', collections);
-  this.set('onAddToCollection', addToCollectionMock);
+  this.set('addToCollection', addToCollectionMock);
 
   this.render(hbs`
     {{search-list 
       pipelines=pipelineList
       collections=collections
-      onAddToCollection=onAddToCollection
+      addToCollection=addToCollection
     }}
   `);
 
@@ -131,13 +131,13 @@ test('it fails to add a pipeline to a collection', function (assert) {
 
   this.set('pipelineList', pipelines);
   this.set('collections', collections);
-  this.set('onAddToCollection', addToCollectionMock);
+  this.set('addToCollection', addToCollectionMock);
 
   this.render(hbs`
     {{search-list 
       pipelines=pipelineList
       collections=collections 
-      onAddToCollection=onAddToCollection
+      addToCollection=addToCollection
     }}
   `);
 
