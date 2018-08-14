@@ -1,6 +1,7 @@
 <div class="row">
   {{#if session.isAuthenticated}}
-    {{collections-flyout 
+    {{collections-flyout
+      changeCollection=(action "changeCollection")
       class="col-md-2"}}
     {{search-list
       pipelines=pipelines

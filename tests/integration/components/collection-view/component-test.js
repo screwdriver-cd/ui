@@ -137,7 +137,7 @@ test('it renders', function (assert) {
   assert.equal($('th.health').text().trim(), 'Last Build');
   assert.equal($('th.prs').text().trim(), 'Pull Requests');
   assert.equal($('tr').length, 6);
-  assert.equal($('.fa-pencil').length, 1);
+  assert.equal($('.fa-pencil').length, 2);
   // The pipelines are sorted in alphabetical order by default by the component
   assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/models');
   assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/screwdriver');
@@ -270,15 +270,18 @@ test('it sorts by last build', function (assert) {
   assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/models');
 });
 
-test('it sorts by last build', function (assert) {
+test('description is editable', function (assert) {
   const $ = this.$;
 
   this.set('mockCollection', testCollection);
   this.render(hbs`{{collection-view collection=mockCollection}}`);
 
-  const editDescription = $('.fa-pencil').get(0);
+  const editDescription = $('.fa-pencil').get(1);
+  const editName = $('.fa-pencil').get(0);
 
   editDescription.click();
+  editName.click();
 
   assert.equal($('textarea').length, 1);
+  assert.equal($('input').length, 1);
 });

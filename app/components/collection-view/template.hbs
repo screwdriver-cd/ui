@@ -4,15 +4,26 @@
   {{/if}}
   <div class="header row">
     <div class="col-md-7">
-      <h2 class="header__name">{{collection.name}}</h2>
+      {{#if editingName}}
+        <div class="name-edit">
+          <input class="edit-area-name" value={{collection.name}}>
+          <button class="save-name btn btn-primary" {{action 'saveName'}}>Save</button>
+        </div>
+      {{else}}
+        <h2 class="header__name">{{collection.name}} <a class="edit-icon move-left" onClick={{action "editName"}}>{{fa-icon "pencil"}}</a></h2>
+      {{/if}}
+      {{#if editingDescription}}
+        <textarea class="edit-area">{{collection.description}}</textarea>
+        <button class="save btn btn-primary" {{action 'saveDescription'}}>Save</button>
+      {{else}}
         {{#if collection.description}}
-          {{#if editingDescription}}
-            <textarea class="edit-area">{{collection.description}}</textarea>
-            <button class="save btn btn-primary" {{action 'saveDescription'}}>Save</button>
-          {{else}}
-            <p class="header__description">{{collection.description}}<a class="edit-icon" onClick={{action "editDescription"}}>{{fa-icon "pencil"}}</a></p>
-          {{/if}}
+        <div>
+          <p class="header__description">{{collection.description}}<a class="edit-icon" onClick={{action "editDescription"}}>{{fa-icon "pencil"}}</a></p>
+          </div>
+        {{else}}
+          <p class="description-placeholder" onClick={{action "editDescription"}}>Add a description</p>
         {{/if}}
+      {{/if}}
     </div>
     <div class="header__sort-pipelines col-md-5">
       Sort By
