@@ -36,7 +36,7 @@
     <tr class="new">
       <td class="name">{{input placeholder="NAME" size="40" value=newName}}</td>
       <td class="description" colspan="2">{{input placeholder="DESCRIPTION" size="40" value=newDescription}}</td>
-      <td><button disabled={{isButtonDisabled}} {{action "addNewToken"}}>Add</button></td>
+      <td><button class="add" disabled={{isButtonDisabled}} {{action "addNewToken"}}>Add</button></td>
     </tr>
   </tfoot>
 </table>

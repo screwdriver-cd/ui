@@ -11,6 +11,14 @@
     color: $sd-text;
   }
 
+  .collection {
+    display: inline;
+  }
+
+  .collection-wrapper__delete {
+    display: inline;
+    float: right;
+  }
   .collection-wrapper {
     padding: 10px 15px;
     border-bottom: 1px solid $sd-white;

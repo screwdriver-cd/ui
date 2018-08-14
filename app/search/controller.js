@@ -7,6 +7,8 @@ export default Controller.extend({
   pipelines: reads('model.pipelines'),
   collections: reads('model.collections'),
   query: reads('model.query'),
+  editingDescription: false,
+  editingName: false,
   actions: {
     /**
      * Adding a pipeline to a collection
@@ -24,6 +26,11 @@ export default Controller.extend({
 
           return collection.save();
         });
+    },
+    changeCollection(collection) {
+      this.set('editingDescription', false);
+      this.set('editingName', false);
+      this.transitionToRoute('dashboard.show', collection);
     }
   }
 });
