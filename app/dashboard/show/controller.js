@@ -4,6 +4,8 @@ import Controller from '@ember/controller';
 
 export default Controller.extend({
   collection: alias('model'),
+  editingDescription: false,
+  editingName: false,
   actions: {
     removePipeline(pipelineId, collectionId) {
       return get(this, 'store').findRecord('collection', collectionId)
@@ -17,6 +19,11 @@ export default Controller.extend({
     },
     onDeleteCollection() {
       this.transitionToRoute('home');
+    },
+    changeCollection(collection) {
+      this.set('editingDescription', false);
+      this.set('editingName', false);
+      this.transitionToRoute('dashboard.show', collection);
     }
   }
 });

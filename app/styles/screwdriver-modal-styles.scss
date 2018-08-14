@@ -36,8 +36,8 @@
     font-weight: bold;
   }
   .collection-form__cancel {
-    border-color: $sd-info-fg;
-    color: $sd-info-fg;
+    border-color: $sd-running;
+    color: $sd-running;
   }
   textarea {
     resize: none;
@@ -65,6 +65,10 @@
 
   .modal-header {
     padding: 15px 40px;
+
+    .close {
+      margin-top: 1px;
+    }
   }
 
   .modal-body {
@@ -77,6 +81,15 @@
 
   .btn {
     width: 150px;
+  }
+
+  .collection-form__create {
+    background-color: $sd-running;
+    border-color: $sd-running;
+  }
+
+  .collection-form__create:hover {
+    background-color: $sd-link;
   }
 }
 
