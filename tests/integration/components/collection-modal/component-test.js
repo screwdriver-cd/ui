@@ -52,6 +52,7 @@ test('it cancels creation of a collection', function (assert) {
 
 test('it creates a collection', function (assert) {
   injectSessionStub(this);
+  assert.expect(4);
 
   const $ = this.$;
   const storeStub = EmberObject.extend({
@@ -69,9 +70,14 @@ test('it creates a collection', function (assert) {
     }
   });
 
+  const stubAddFunction = function () {
+    assert.ok(true);
+  };
+
   this.set('showModal', true);
   this.set('name', 'Test');
   this.set('description', 'Test description');
+  this.set('addToCollection', stubAddFunction);
 
   this.register('service:store', storeStub);
   this.inject.service('store');

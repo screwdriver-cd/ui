@@ -25,4 +25,8 @@
     </li>
   {{/dd.menu}}
 {{/bs-dropdown}}
-{{collection-modal showModal=showCollectionModal addNewCollection=addNewCollection}}
+{{collection-modal 
+  showModal=showCollectionModal
+  addNewCollection=addNewCollection
+  addToCollection=addToCollection
+  pipelineId=pipeline.id}}

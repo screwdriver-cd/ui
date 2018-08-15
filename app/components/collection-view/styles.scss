@@ -21,12 +21,39 @@
     width: 100%;
   }
 
+  .edit-area-name {
+    font-size: 30px;
+    margin: 20px 0 2px 0;
+    width: 100%;
+  }
+
+  .name-edit {
+    text-align: right;
+  }
+
+  .save-name {
+    margin-bottom: 5px;
+  }
+  
   .save {
     float: right;
   }
 
+  .move-left {
+    padding-left: 0;
+  }
+
   .header__description:hover .edit-icon {
     display: inline;
+  }
+
+  .header__name {
+    display: inline-block;
+  }
+
+  .header__name:hover .edit-icon {
+    display: inline;
+    font-size: 15px;
   }
 
   a {
@@ -113,6 +140,10 @@
 
   .build-unstable {
     color: $sd-unstable;
+  }
+
+  .description-placeholder {
+    opacity: 0.5;
   }
 }
 
