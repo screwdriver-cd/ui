@@ -5,13 +5,13 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   eventsService: service('events'),
   errorMessage: '',
-  showMore: computed('eventsPage', {
+  showMore: computed('moreToShow', {
     get() {
       return get(this, 'moreToShow');
     }
   }),
 
-  eventsList: computed('events.[]', 'eventsPage', {
+  eventsList: computed('events.[]', {
     get() {
       console.log('events: ', get(this, 'events'));
 

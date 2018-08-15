@@ -135,7 +135,7 @@ export default Controller.extend(ModelReloaderMixin, {
       })
         .then((nextEvents) => {
           if (Array.isArray(nextEvents)) {
-            if (!nextEvents.length) {
+            if (nextEvents.length < ENV.APP.NUM_EVENTS_LISTED) {
               this.set('moreToShow', false);
             }
 
