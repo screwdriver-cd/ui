@@ -8,13 +8,14 @@ import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 
 export default Controller.extend(ModelReloaderMixin, {
+  eventsService: service('events'),
   session: service(),
   init() {
     this._super(...arguments);
     this.startReloading();
   },
-  modelToReload: 'events',
   isShowingModal: false,
+  moreToShow: true,
   errorMessage: '',
   pipeline: reads('model.pipeline'),
   jobs: reads('model.jobs'),
@@ -125,6 +126,22 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('isShowingModal', false);
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
+    },
+    updateEvents(page) {
+      return get(this, 'eventsService').getEvents({
+        page,
+        count: ENV.APP.NUM_EVENTS_LISTED,
+        pipelineId: get(this, 'pipeline.id')
+      })
+        .then((nextEvents) => {
+          if (Array.isArray(nextEvents)) {
+            if (!nextEvents.length) {
+              this.set('moreToShow', false);
+            }
+
+            this.set('model.events', this.get('events').concat(nextEvents));
+          }
+        });
     }
   },
   willDestroy() {

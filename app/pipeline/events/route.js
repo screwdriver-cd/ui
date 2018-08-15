@@ -9,13 +9,13 @@ export default Route.extend({
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
   },
-  model(params) {
+  model() {
     return RSVP.all([
       this.get('events')
         .getEvents({
           page: 1,
           count: ENV.APP.NUM_EVENTS_LISTED,
-          pipelineId: params.pipeline_id
+          pipelineId: this.get('pipeline.id')
         }),
       this.get('pipeline.jobs')
     ]).then(([events, jobs]) => ({

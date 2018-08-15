@@ -11,6 +11,8 @@ export default Component.extend({
   }),
   actions: {
     clickRow() {
+      console.log('event.causeMessage: ', get(this, 'event.commit.url'));
+
       const fn = get(this, 'eventClick');
 
       if (typeof fn === 'function') {

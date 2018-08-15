@@ -1,35 +1,21 @@
 import { computed, get, set } from '@ember/object';
 import Component from '@ember/component';
-import ENV from 'screwdriver-ui/config/environment';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
   eventsService: service('events'),
-  showMore: computed('actualPage', 'eventsPage', {
+  errorMessage: '',
+  showMore: computed('eventsPage', {
     get() {
-      return get(this, 'actualPage') === get(this, 'eventsPage');
+      return get(this, 'moreToShow');
     }
   }),
 
   eventsList: computed('events.[]', 'eventsPage', {
     get() {
-      const eventsPage = get(this, 'eventsPage');
+      console.log('events: ', get(this, 'events'));
 
-      return get(this, 'eventsService').getEvents({
-        page: eventsPage,
-        count: ENV.APP.NUM_EVENTS_LISTED,
-        pipelineId: get(this, 'pipeline.id')
-      })
-        .then((nextEvents) => {
-          if (Array.isArray(nextEvents) && nextEvents.length) {
-            set(this, 'actualPage', eventsPage);
-
-            return get(this, 'events').concat(nextEvents);
-          }
-          set(this, 'actualPage', eventsPage - 1);
-
-          return get(this, 'events');
-        });
+      return get(this, 'events');
     }
   }),
 
@@ -37,12 +23,18 @@ export default Component.extend({
     this._super(...arguments);
 
     set(this, 'eventsPage', 1);
-    set(this, 'actualPage', 1);
   },
 
   actions: {
     moreClick() {
-      set(this, 'eventsPage', get(this, 'eventsPage') + 1);
+      const eventsPage = get(this, 'eventsPage') + 1;
+      const fn = get(this, 'updateEvents');
+
+      set(this, 'eventsPage', eventsPage);
+
+      if (typeof fn === 'function') {
+        fn(eventsPage).catch(error => this.set('errorMessage', error));
+      }
     },
     eventClick(id) {
       set(this, 'selected', id);
