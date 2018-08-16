@@ -12,6 +12,12 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
     return RSVP.hash({
       pipeline: get(this, 'store').findRecord('pipeline', params.pipeline_id),
+      events: get(this, 'store').query('event', { pipelineId: params.pipeline_id, page: 1 })
+        .then((events) => {
+          console.log('events!: ', events);
+
+          return events;
+        }),
       collections
     });
   },

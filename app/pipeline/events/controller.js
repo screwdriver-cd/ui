@@ -128,6 +128,8 @@ export default Controller.extend(ModelReloaderMixin, {
       });
     },
     updateEvents(page) {
+      return;
+
       return get(this, 'eventsService').getEvents({
         page,
         count: ENV.APP.NUM_EVENTS_LISTED,

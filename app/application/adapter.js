@@ -219,5 +219,29 @@ export default DS.RESTAdapter.extend({
 
     return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
       + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`;
+  },
+  urlForQuery(query, modelName) {
+    if (modelName === 'event') {
+      const pipelineId = query.pipelineId;
+
+      delete query.pipelineId;
+
+      return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
+        + `/pipelines/${pipelineId}/events?count=5`;
+    }
+
+    return this._super(...arguments);
+  },
+  urlForQueryRecord(query, modelName) {
+    if (modelName === 'event') {
+      const pipelineId = query.pipelineId;
+
+      delete query.pipelineId;
+
+      return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
+        + `/pipelines/${pipelineId}/events?count=5`;
+    }
+
+    return this._super(...arguments);
   }
 });
