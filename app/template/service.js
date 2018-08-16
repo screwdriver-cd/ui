@@ -15,10 +15,11 @@ export default Service.extend({
 
     return this.fetchData(url).then(templatesFormatter);
   },
-  getTemplateTags(name) {
+  getTemplateTags(namespace, name) {
+    const fullName = `${namespace}/${name}`;
     const url =
       // eslint-disable-next-line max-len
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}/tags`;
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(fullName)}/tags`;
 
     return this.fetchData(url);
   },
