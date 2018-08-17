@@ -30,13 +30,5 @@ export default DS.RESTSerializer.extend({
     }
 
     return merge(hash, data);
-  },
-
-  normalizeQueryResponse(store, primaryModelClass, payload, id, requestType) {
-    if (primaryModelClass === 'events?count=') {
-      debugger;
-    }
-
-    return null;
   }
 });

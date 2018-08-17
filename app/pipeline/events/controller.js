@@ -8,12 +8,12 @@ import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 
 export default Controller.extend(ModelReloaderMixin, {
-  eventsService: service('events'),
   session: service(),
   init() {
     this._super(...arguments);
     this.startReloading();
   },
+  modelToReload: 'events',
   isShowingModal: false,
   moreToShow: true,
   errorMessage: '',
@@ -36,7 +36,13 @@ export default Controller.extend(ModelReloaderMixin, {
         return null;
       }
 
-      return get(this, 'events').find(e => get(e, 'id') === selected);
+      return get(this, 'events').find((e) => {
+        if (e) {
+          return get(e, 'id') === selected;
+        }
+
+        return false;
+      });
     }
   }),
 
@@ -57,7 +63,13 @@ export default Controller.extend(ModelReloaderMixin, {
   lastSuccessful: computed('events.@each.status', {
     get() {
       const list = get(this, 'events') || [];
-      const event = list.find(e => get(e, 'status') === 'SUCCESS');
+      const event = list.find((e) => {
+        if (e) {
+          return get(e, 'status') === 'SUCCESS';
+        }
+
+        return false;
+      });
 
       if (!event) {
         return 0;
@@ -128,14 +140,14 @@ export default Controller.extend(ModelReloaderMixin, {
       });
     },
     updateEvents(page) {
-      return;
-
-      return get(this, 'eventsService').getEvents({
+      return get(this, 'store').query('event', {
+        pipelineId: get(this, 'pipeline.id'),
         page,
-        count: ENV.APP.NUM_EVENTS_LISTED,
-        pipelineId: get(this, 'pipeline.id')
+        count: ENV.APP.NUM_EVENTS_LISTED
       })
-        .then((nextEvents) => {
+        .then((events) => {
+          const nextEvents = events.toArray();
+
           if (Array.isArray(nextEvents)) {
             if (nextEvents.length < ENV.APP.NUM_EVENTS_LISTED) {
               this.set('moreToShow', false);

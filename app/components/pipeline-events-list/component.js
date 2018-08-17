@@ -1,20 +1,15 @@
 import { computed, get, set } from '@ember/object';
 import Component from '@ember/component';
-import { inject as service } from '@ember/service';
 
 export default Component.extend({
-  eventsService: service('events'),
   errorMessage: '',
   showMore: computed('moreToShow', {
     get() {
       return get(this, 'moreToShow');
     }
   }),
-
   eventsList: computed('events.[]', {
     get() {
-      console.log('events: ', get(this, 'events'));
-
       return get(this, 'events');
     }
   }),

@@ -12,6 +12,7 @@ export default DS.Model.extend({
   configPipelineId: DS.attr('string'),
   childPipelines: DS.attr(),
 
+  events: DS.hasMany('event', { async: true }),
   jobs: DS.hasMany('job', { async: true }),
   secrets: DS.hasMany('secret', { async: true }),
   tokens: DS.hasMany('token', { async: true }),

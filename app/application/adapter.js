@@ -220,6 +220,13 @@ export default DS.RESTAdapter.extend({
     return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
       + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`;
   },
+  /**
+   * Overriding default adapter in order to pass pagination query params to
+   * the pipeline events api.
+   * @param  {Object} query
+   * @param  {String} modelName
+   * @return {String} url
+   */
   urlForQuery(query, modelName) {
     if (modelName === 'event') {
       const pipelineId = query.pipelineId;
@@ -227,19 +234,7 @@ export default DS.RESTAdapter.extend({
       delete query.pipelineId;
 
       return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
-        + `/pipelines/${pipelineId}/events?count=5`;
-    }
-
-    return this._super(...arguments);
-  },
-  urlForQueryRecord(query, modelName) {
-    if (modelName === 'event') {
-      const pipelineId = query.pipelineId;
-
-      delete query.pipelineId;
-
-      return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
-        + `/pipelines/${pipelineId}/events?count=5`;
+        + `/pipelines/${pipelineId}/events`;
     }
 
     return this._super(...arguments);
