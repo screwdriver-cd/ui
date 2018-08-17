@@ -48,9 +48,9 @@ test('it renders', function (assert) {
 
   assert.equal($('.header__text').text().trim(), 'Collections');
   assert.equal($('.header__text a i').attr('class'), 'fa fa-plus-circle fa-mdx ember-view');
-  assert.equal($($('.collection-wrapper div').get(0)).text().trim(), 'collection1');
-  assert.equal($($('.collection-wrapper div').get(1)).text().trim(), 'collection2');
-  assert.equal($($('.collection-wrapper div').get(2)).text().trim(), 'collection3');
+  assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'collection1');
+  assert.equal($($('.collection-wrapper a').get(1)).text().trim(), 'collection2');
+  assert.equal($($('.collection-wrapper a').get(2)).text().trim(), 'collection3');
 });
 
 test('it renders with no collections', function (assert) {
@@ -118,7 +118,7 @@ test('it renders an active collection', function (assert) {
 
   assert.equal($('.header__text').text().trim(), 'Collections');
   assert.notOk($('.header__text a i').length);
-  assert.equal($($('.collection-wrapper div').get(0)).text().trim(), 'Test');
+  assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'Test');
   assert.equal($('.collection-wrapper.row--active').length, 1);
 });
 
