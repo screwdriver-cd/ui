@@ -27,10 +27,9 @@ export default Controller.extend({
           return collection.save();
         });
     },
-    changeCollection(collection) {
+    changeCollection() {
       this.set('editingDescription', false);
       this.set('editingName', false);
-      this.transitionToRoute('dashboard.show', collection);
     }
   }
 });
