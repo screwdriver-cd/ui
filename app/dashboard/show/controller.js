@@ -20,10 +20,9 @@ export default Controller.extend({
     onDeleteCollection() {
       this.transitionToRoute('home');
     },
-    changeCollection(collection) {
+    changeCollection() {
       this.set('editingDescription', false);
       this.set('editingName', false);
-      this.transitionToRoute('dashboard.show', collection);
     }
   }
 });

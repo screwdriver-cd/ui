@@ -7,7 +7,7 @@ export default Route.extend({
   model(params) {
     return RSVP.all([
       this.get('template').getOneTemplate(params.name),
-      this.get('template').getTemplateTags(params.name)
+      this.get('template').getTemplateTags(params.namespace, params.name)
     ]).then((arr) => {
       let [verPayload, tagPayload] = arr;
 

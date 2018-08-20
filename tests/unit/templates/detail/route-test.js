@@ -13,7 +13,7 @@ const templateServiceStub = Service.extend({
       { id: 4, name, version: '1.0.0', namespace: 'bar' }
     ]);
   },
-  getTemplateTags(name) {
+  getTemplateTags(namespace, name) {
     return resolve([
       { id: 5, name, version: '3.0.0', tag: 'latest' },
       { id: 6, name, version: '3.0.0', tag: 'stable' },

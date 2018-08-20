@@ -75,6 +75,7 @@
     "ember-highlight": "1.2.5",
     "ember-inline-svg": "^0.1.11",
     "ember-load-initializers": "^1.1.0",
+    "ember-link-action": "^0.1.1",
     "ember-modal-dialog": "^2.4.4",
     "ember-moment": "^7.7.0",
     "ember-promise-helpers": "^1.0.6",
