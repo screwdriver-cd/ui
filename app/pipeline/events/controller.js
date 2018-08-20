@@ -36,13 +36,7 @@ export default Controller.extend(ModelReloaderMixin, {
         return null;
       }
 
-      return get(this, 'events').find((e) => {
-        if (e) {
-          return get(e, 'id') === selected;
-        }
-
-        return false;
-      });
+      return get(this, 'events').find(e => get(e, 'id') === selected);
     }
   }),
 
@@ -63,13 +57,7 @@ export default Controller.extend(ModelReloaderMixin, {
   lastSuccessful: computed('events.@each.status', {
     get() {
       const list = get(this, 'events') || [];
-      const event = list.find((e) => {
-        if (e) {
-          return get(e, 'status') === 'SUCCESS';
-        }
-
-        return false;
-      });
+      const event = list.find(e => get(e, 'status') === 'SUCCESS');
 
       if (!event) {
         return 0;

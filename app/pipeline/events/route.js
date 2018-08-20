@@ -20,7 +20,8 @@ export default Route.extend({
         pipeline: this.get('pipeline'),
         jobs: jobs.filter(j => !/^PR-/.test(j.get('name'))),
         pullRequests: jobs.filter(j => /^PR-/.test(j.get('name'))),
-        // Get the first page of events
+        // Prevent the model list updating multiple times during a render by pre-loading
+        // the first page of events before it is accessed in the template
         events: events.toArray()
       }));
   }
