@@ -1,5 +1,5 @@
 import { later, throttle } from '@ember/runloop';
-import { get, computed } from '@ember/object';
+import { set, get, computed } from '@ember/object';
 import { reads, mapBy } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
@@ -16,9 +16,11 @@ export default Controller.extend({
   jobs: reads('model.jobs'),
   job: reads('model.job'),
   event: reads('model.event'),
+  events: reads('model.events'),
   pipeline: reads('model.pipeline'),
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
+  showTooltip: false,
   errorMessage: '',
   prEvents: computed('model.{event.pr.url,pipeline.id}', {
     get() {
@@ -37,6 +39,16 @@ export default Controller.extend({
   }),
 
   actions: {
+    confirmStartBuild() {
+      set(this, 'isShowingModal', true);
+      set(this, 'showTooltip', false);
+    },
+
+    graphClicked(job) {
+      if (job) {
+        this.transitionToRoute('pipeline.build', job.buildId);
+      }
+    },
 
     stopBuild() {
       const build = this.get('build');

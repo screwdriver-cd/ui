@@ -40,4 +40,15 @@
 }}
 {{/if}}
 
+{{draggable-box
+  event=event
+  graphClicked=(action "graphClicked")
+  tooltipData=tooltipData
+  displayRestartButton=displayRestartButton
+  showTooltip=showTooltip
+  showTooltipPosition=showTooltipPosition
+  build=build
+  confirmStartBuild=(action "confirmStartBuild")
+  routeParams=routeParams
+}}
 {{outlet}}

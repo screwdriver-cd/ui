@@ -1,0 +1,37 @@
+#draggable {
+  position: absolute;
+  z-index: 1000;
+  height: 200px;
+}
+
+#draggableheader {
+  display: inline-block;
+  color: black;
+  width: 30px;
+  position: absolute;
+  height: 100%;
+  background-color: #f0f0f5;
+  top: 0;
+  left: 0;
+}
+
+
+#graph {
+  display: inline-block;
+  background-color:#f0f0f5;
+  padding: 10px;
+  height: 100%;
+}
+
+.drag {
+  top: 50%;
+  transform: translateY(-50%) rotateZ(90deg);
+  position: absolute;
+  fill: #a2a2b1;
+  z-index: 1001;
+  cursor: grab;
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;
+}

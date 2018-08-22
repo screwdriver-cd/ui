@@ -29,6 +29,14 @@ export default Component.extend({
         };
       }
 
+      if (get(this, 'dragsize')) {
+        return {
+          ICON_SIZE: 17,
+          TITLE_SIZE: 0,
+          ARROWHEAD: 4
+        };
+      }
+
       return {
         ICON_SIZE: 28,
         TITLE_SIZE: 10,
@@ -38,21 +46,31 @@ export default Component.extend({
   }),
   didInsertElement() {
     this._super(...arguments);
-    this.draw();
+    
+    if(!(get(this,'dragsize'))){
+      this.draw();
+    }
 
     set(this, 'lastGraph', get(this, 'workflowGraph'));
   },
   // Listen for changes to workflow and update graph accordingly.
   didUpdateAttrs() {
+    console.log('didUpdateAttrs');
     this._super(...arguments);
 
     const lg = get(this, 'lastGraph');
     const wg = get(this, 'workflowGraph');
 
     // redraw anyways when graph changes
-    if (lg !== wg) {
+    if(get(this, 'dragsize')) {
+      if(get(this, 'decoratedGraph').nodes.some( (e) => e.buildId)) {
+        console.log(get(this, 'decoratedGraph'));
+        this.draw();
+        set(this, 'lastGraph', wg);
+      }
+    }
+    else if (lg !== wg) {
       get(this, 'graphNode').remove();
-
       this.draw();
       set(this, 'lastGraph', wg);
     } else {
@@ -87,13 +105,16 @@ export default Component.extend({
   },
   draw() {
     const data = get(this, 'decoratedGraph');
-    const MAX_LENGTH = data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0);
+    let MAX_LENGTH = data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0);
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = get(this, 'elementSizes');
     let X_WIDTH = ICON_SIZE * 2;
 
     // When displaying job names use estimate of 4.25 per character
     if (TITLE_SIZE && get(this, 'displayJobNames')) {
       X_WIDTH = Math.max(X_WIDTH, MAX_LENGTH * 4.25);
+    } else if (get(this, 'dragsize')) {
+      MAX_LENGTH = 30;
+      X_WIDTH = MAX_LENGTH * 3;
     }
     // Adjustable spacing between nodes
     const Y_SPACING = ICON_SIZE;
@@ -131,16 +152,49 @@ export default Component.extend({
       // create the icon graphic
       .insert('text')
       .text(d => icon(d.status))
-      .attr('font-size', `${ICON_SIZE}px`)
+      .attr('font-size', (e) => {
+        console.log('e', e)
+        let routeParams = this.get('routeParams');
+        let buildId = this.get('build.id');
+
+        if (get(this, 'dragsize')
+          && ((routeParams && routeParams.build_id && routeParams.build_id === e.buildId)
+            || (buildId === e.buildId))) {
+          return '24px';
+        }
+
+        return `${ICON_SIZE}px`;
+      })
       .style('text-anchor', 'middle')
       .attr('x', d => calcXCenter(d.pos.x))
-      .attr('y', d => ((d.pos.y + 1) * ICON_SIZE) + (d.pos.y * Y_SPACING))
+      .attr('y',
+        (d) => {
+          let routeParams = this.get('routeParams');
+          let buildId = this.get('build.id');
+
+          if (get(this, 'dragsize')) {
+            if (((routeParams && routeParams.build_id && routeParams.build_id === d.buildId)
+              || (buildId === d.buildId))) {
+              return ((d.pos.y + 1.4) * ICON_SIZE) + (d.pos.y * Y_SPACING);
+            }
+
+            return ((d.pos.y + 1.2) * ICON_SIZE) + (d.pos.y * Y_SPACING);
+          }
+
+          return ((d.pos.y + 1) * ICON_SIZE) + (d.pos.y * Y_SPACING);
+        })
       .on('click', (e) => {
         this.send('buildClicked', e);
       })
       // add a tooltip
       .insert('title')
-      .text(d => d.status);
+      .text((d) => {
+        if (this.get('dragsize')) {
+          return d.name;
+        }
+
+        return d.status;
+      });
 
     // Job Names
     if (TITLE_SIZE && get(this, 'displayJobNames')) {
@@ -170,10 +224,22 @@ export default Component.extend({
       .attr('fill', 'transparent')
       .attr('d', (d) => {
         const path = d3.path();
-        const startX = calcXCenter(d.from.x) + (ICON_SIZE / 2) + EDGE_GAP;
-        const startY = calcPos(d.from.y, Y_SPACING);
-        const endX = calcXCenter(d.to.x) - (ICON_SIZE / 2) - EDGE_GAP;
-        const endY = calcPos(d.to.y, Y_SPACING);
+        let startX;
+        let startY;
+        let endX;
+        let endY;
+
+        if (get(this, 'dragsize')) {
+          startX = calcXCenter(d.from.x) + (ICON_SIZE / 2) + EDGE_GAP;
+          startY = calcPos(d.from.y, Y_SPACING) + 4;
+          endX = calcXCenter(d.to.x) - (ICON_SIZE / 2) - EDGE_GAP;
+          endY = calcPos(d.to.y, Y_SPACING) + 4;
+        } else {
+          startX = calcXCenter(d.from.x) + (ICON_SIZE / 2) + EDGE_GAP;
+          startY = calcPos(d.from.y, Y_SPACING);
+          endX = calcXCenter(d.to.x) - (ICON_SIZE / 2) - EDGE_GAP;
+          endY = calcPos(d.to.y, Y_SPACING);
+        }
 
         path.moveTo(startX, startY);
         // curvy line

@@ -164,7 +164,6 @@ const decorateGraph = (inputGraph, builds, start) => {
 
     if (buildsAvailable && jobId) {
       const b = build(builds, jobId);
-
       // Add build information to node
       if (b) {
         n.status = get(b, 'status');

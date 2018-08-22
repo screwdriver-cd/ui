@@ -1,0 +1,18 @@
+<div id="draggable">
+	<div id="draggableheader">
+		{{inline-svg "drag-handle" class="drag"}}
+	</div>
+	<div id="graph">
+	{{workflow-graph-d3
+      builds=event.builds
+      workflowGraph=event.workflowGraph
+      startFrom=event.startFrom
+      causeMessage=event.causeMessage
+      dragsize=true
+      graphClicked=graphClicked
+      event=event
+      routeParams=routeParams
+      build=build
+    }}
+    </div>
+</div>
