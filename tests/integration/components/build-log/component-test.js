@@ -21,6 +21,10 @@ const logService = Service.extend({
   }
 });
 
+const mockStepInfo = {
+  lines: 10
+};
+
 moduleForComponent('build-log', 'Integration | Component | build log', {
   integration: true,
 
@@ -55,8 +59,10 @@ test('it displays some help when no step is selected', function (assert) {
 
 test('it starts loading when step chosen', function (assert) {
   this.set('step', null);
+  this.set('mockStepInfo', mockStepInfo);
   this.render(hbs`{{build-log
     stepName=step
+    selectedStepInfo=mockStepInfo
     buildId=1
     stepStartTime=null
     buildStartTime="1478912844724"

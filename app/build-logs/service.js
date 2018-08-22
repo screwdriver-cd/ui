@@ -14,7 +14,7 @@ export default Service.extend({
    * @param  {Number}  [pagesToLoad=10]     The number of pages to load
    * @return {Promise}                      Resolves to { lines, done }
    */
-  fetchLogs(buildId, stepName, logNumber = 0, pagesToLoad = 10) {
+  fetchLogs(buildId, stepName, logNumber = 0, sortDirection = 'ascending', pagesToLoad = 10) {
     let lines = [];
     let done = false;
 
@@ -29,7 +29,7 @@ export default Service.extend({
       // convert jquery's ajax promises to a real promise
       return $.ajax({
         url,
-        data: { from: logNumber, pages: pagesToLoad },
+        data: { from: logNumber, pages: pagesToLoad, sort: sortDirection },
         headers: {
           Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
         }

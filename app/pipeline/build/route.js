@@ -16,7 +16,8 @@ export default Route.extend({
       job,
       event,
       pipeline: this.get('pipeline'),
-      jobs: jobs.filter(j => !/^PR-/.test(j.get('name')))
+      jobs: jobs.filter(j => !/^PR-/.test(j.get('name'))),
+      events: this.get('pipeline.events')
     })));
   },
 
@@ -31,5 +32,13 @@ export default Route.extend({
 
   titleToken(model) {
     return `${model.job.get('name')} > #${model.build.get('sha').substr(0, 6)}`;
+  },
+
+  actions: {
+    willTransition(transition) {
+      let newParams = transition.params[transition.targetName];
+
+      this.controller.set('routeParams', newParams);
+    }
   }
 });
