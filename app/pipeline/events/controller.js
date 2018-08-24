@@ -1,6 +1,5 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { reads } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
@@ -13,15 +12,39 @@ export default Controller.extend(ModelReloaderMixin, {
     this._super(...arguments);
     this.startReloading();
   },
-  modelToReload: 'events',
+  reload() {
+    this.send('refreshModel');
+
+    return Promise.resolve();
+  },
   isShowingModal: false,
   moreToShow: true,
   errorMessage: '',
-  pipeline: reads('model.pipeline'),
-  jobs: reads('model.jobs'),
-  events: reads('model.events'),
-  pullRequests: reads('model.pullRequests'),
+  jobs: computed('model.jobs', {
+    get() {
+      const jobs = this.get('model.jobs');
 
+      return jobs.filter(j => !/^PR-/.test(j.get('name')));
+    }
+  }),
+  paginatedEvents: [],
+  initialEvents: computed('model.events', {
+    get() {
+      return this.get('model.events').toArray();
+    }
+  }),
+  events: computed('initialEvents', 'paginatedEvents', {
+    get() {
+      return [].concat(this.get('initialEvents'), this.get('paginatedEvents'));
+    }
+  }),
+  pullRequests: computed('model.jobs', {
+    get() {
+      const jobs = this.get('model.jobs');
+
+      return jobs.filter(j => /^PR-/.test(j.get('name')));
+    }
+  }),
   selectedEvent: computed('selected', 'mostRecent', {
     get() {
       return get(this, 'selected') || get(this, 'mostRecent');
@@ -141,7 +164,8 @@ export default Controller.extend(ModelReloaderMixin, {
               this.set('moreToShow', false);
             }
 
-            this.set('model.events', this.get('events').concat(nextEvents));
+            this.set('paginatedEvents',
+              this.get('paginatedEvents').concat(nextEvents));
           }
         });
     }

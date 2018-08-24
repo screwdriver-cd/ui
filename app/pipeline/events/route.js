@@ -8,21 +8,20 @@ export default Route.extend({
     this.set('pipeline', this.modelFor('pipeline').pipeline);
   },
   model() {
-    return RSVP.all([
-      this.get('pipeline.jobs'),
-      this.store.query('event', {
+    this.controllerFor('pipeline.events').set('pipeline', this.get('pipeline'));
+
+    return RSVP.hash({
+      jobs: this.get('pipeline.jobs'),
+      events: this.store.query('event', {
         pipelineId: this.get('pipeline.id'),
         page: 1,
         count: ENV.APP.NUM_EVENTS_LISTED
       })
-    ])
-      .then(([jobs, events]) => ({
-        pipeline: this.get('pipeline'),
-        jobs: jobs.filter(j => !/^PR-/.test(j.get('name'))),
-        pullRequests: jobs.filter(j => /^PR-/.test(j.get('name'))),
-        // Prevent the model list updating multiple times during a render by pre-loading
-        // the first page of events before it is accessed in the template
-        events: events.toArray()
-      }));
+    });
+  },
+  actions: {
+    refreshModel: function refreshModel() {
+      this.refresh();
+    }
   }
 });
