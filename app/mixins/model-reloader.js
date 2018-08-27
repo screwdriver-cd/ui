@@ -10,7 +10,7 @@ export default Mixin.create({
    * @return {Boolean}          True is model should be reloaded
    */
   shouldReload() {
-    return true;
+    return this.get('runLater');
   },
   /**
    * Schedules reload of events data
@@ -43,7 +43,7 @@ export default Mixin.create({
     }
 
     if (model && this.shouldReload(model)) {
-      model.reload().then(() => this.scheduleReload());
+      model.reload().finally(() => this.scheduleReload());
     }
   },
 

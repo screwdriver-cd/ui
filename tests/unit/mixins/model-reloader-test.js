@@ -51,6 +51,8 @@ test('it calls reload on a model', function (assert) {
       return resolve({});
     }
   });
+
+  subject.set('runLater', 'foo');
   subject.set('modelToReload', 'testModel');
 
   subject.reloadModel();
@@ -93,4 +95,18 @@ test('it force reloads a model', function (assert) {
   return wait().then(() => {
     assert.ok(true);
   });
+});
+
+test('it calls reload function if modelToReload is absent', function (assert) {
+  assert.expect(1);
+
+  subject.set('reload', function () {
+    assert.ok(true);
+
+    return resolve({});
+  });
+
+  subject.set('runLater', 'foo');
+
+  subject.reloadModel();
 });

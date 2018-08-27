@@ -13,7 +13,11 @@ export default Controller.extend(ModelReloaderMixin, {
     this.startReloading();
   },
   reload() {
-    this.send('refreshModel');
+    try {
+      this.send('refreshModel');
+    } catch (e) {
+      return Promise.resolve(e);
+    }
 
     return Promise.resolve();
   },
@@ -27,15 +31,24 @@ export default Controller.extend(ModelReloaderMixin, {
       return jobs.filter(j => !/^PR-/.test(j.get('name')));
     }
   }),
-  paginatedEvents: [],
+  paginateEvents: [],
   initialEvents: computed('model.events', {
     get() {
-      return this.get('model.events').toArray();
+      let headEvents = this.get('headEvents') || [];
+      let modelEvents = this.get('model.events').toArray();
+
+      headEvents = headEvents.filter(e => !modelEvents.find(c => c.id === e.id));
+
+      const initialEvents = modelEvents.concat(headEvents);
+
+      this.set('headEvents', initialEvents);
+
+      return initialEvents;
     }
   }),
-  events: computed('initialEvents', 'paginatedEvents', {
+  events: computed('initialEvents', 'paginateEvents', {
     get() {
-      return [].concat(this.get('initialEvents'), this.get('paginatedEvents'));
+      return [].concat(this.get('initialEvents'), this.get('paginateEvents'));
     }
   }),
   pullRequests: computed('model.jobs', {
@@ -164,13 +177,16 @@ export default Controller.extend(ModelReloaderMixin, {
               this.set('moreToShow', false);
             }
 
-            this.set('paginatedEvents',
-              this.get('paginatedEvents').concat(nextEvents));
+            // FIXME: Skip duplicate ones if new events got added added to the head
+            // of events list
+            this.set('paginateEvents',
+              this.get('paginateEvents').concat(nextEvents));
           }
         });
     }
   },
   willDestroy() {
+    // FIXME: Never called when route is no longer active
     this.stopReloading();
   },
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER
