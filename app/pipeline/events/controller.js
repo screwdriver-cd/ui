@@ -37,6 +37,8 @@ export default Controller.extend(ModelReloaderMixin, {
       let headEvents = this.get('headEvents') || [];
       let modelEvents = this.get('model.events').toArray();
 
+      // headEvents holds current model.events + previous mode.events
+      // model.events gets updated via ModelReloaderMixin logic
       headEvents = headEvents.filter(e => !modelEvents.find(c => c.id === e.id));
 
       const initialEvents = modelEvents.concat(headEvents);
