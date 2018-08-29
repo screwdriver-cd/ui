@@ -3,6 +3,9 @@ import { inject as service } from '@ember/service';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
 
+// urls are of the form: https://server.com/namespace/key1s/:id/key2s, but :id and key2s are optional
+const urlPathParser = new RegExp(`/${ENV.APP.SDAPI_NAMESPACE}/([^/]+)(/([^/]+))?(/([^/]+))?`);
+
 export default DS.RESTAdapter.extend({
   session: service('session'),
   namespace: ENV.APP.SDAPI_NAMESPACE,
@@ -71,9 +74,13 @@ export default DS.RESTAdapter.extend({
         secrets: 'secrets',
         tokens: 'tokens'
       };
-    } else if (key === 'job' || key === 'jobs' || key === 'event' || key === 'events') {
+    } else if (key === 'event' || key === 'events') {
       o.links = {
         builds: 'builds'
+      };
+    } else if (key === 'job' || key === 'jobs') {
+      o.links = {
+        builds: 'builds?count=10&page=1'
       };
     }
   },
@@ -126,11 +133,8 @@ export default DS.RESTAdapter.extend({
     let data = {};
     let key;
 
-    // urls are of the form: https://server.com/namespace/key1s/:id/key2s, but :id and key2s are optional
-    const urlParser = new RegExp(
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/([^/]+)(/([^/]+))?(/([^/]+))?`
-    );
-    const matches = requestData.url.match(urlParser);
+    const requestUrl = new URL(requestData.url);
+    const matches = requestUrl.pathname.match(urlPathParser);
 
     // catch if we got a really weird url
     if (!matches) {
