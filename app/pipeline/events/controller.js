@@ -32,23 +32,25 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
   paginateEvents: [],
-  nonPaginateEvents: computed('model.events', {
+  // Aggregates first page events and events via ModelReloaderMixin
+  modelEvents: computed('model.events', {
     get() {
       let previousModelEvents = this.get('previousModelEvents') || [];
-      let modelEvents = this.get('model.events').toArray();
+      let currentModelEvents = this.get('model.events').toArray();
 
-      previousModelEvents = previousModelEvents.filter(e => !modelEvents.find(c => c.id === e.id));
+      previousModelEvents = previousModelEvents
+        .filter(e => !currentModelEvents.find(c => c.id === e.id));
 
-      const nonPaginateEvents = modelEvents.concat(previousModelEvents);
+      const newModelEvents = currentModelEvents.concat(previousModelEvents);
 
-      this.set('previousModelEvents', nonPaginateEvents);
+      this.set('previousModelEvents', newModelEvents);
 
-      return nonPaginateEvents;
+      return newModelEvents;
     }
   }),
-  events: computed('nonPaginateEvents', 'paginateEvents', {
+  events: computed('modelEvents', 'paginateEvents', {
     get() {
-      return [].concat(this.get('nonPaginateEvents'), this.get('paginateEvents'));
+      return [].concat(this.get('modelEvents'), this.get('paginateEvents'));
     }
   }),
   pullRequests: computed('model.jobs', {
