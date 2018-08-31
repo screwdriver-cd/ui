@@ -17,7 +17,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
   actions: {
     error(error) {
-      if (error.errors[0].status === 404) {
+      if (error && Array.isArray(error.errors) && error.errors[0].status === 404) {
         this.transitionTo('/404');
       }
 

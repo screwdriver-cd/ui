@@ -1,4 +1,6 @@
 import Route from '@ember/routing/route';
+import ENV from 'screwdriver-ui/config/environment';
+import RSVP from 'rsvp';
 
 export default Route.extend({
   routeAfterAuthentication: 'pipeline.events',
@@ -6,15 +8,20 @@ export default Route.extend({
     this.set('pipeline', this.modelFor('pipeline').pipeline);
   },
   model() {
-    return this.get('pipeline.jobs')
-      // Split jobs from workflow
-      .then(jobs => ({
-        pipeline: this.get('pipeline'),
-        jobs: jobs.filter(j => !/^PR-/.test(j.get('name'))),
-        pullRequests: jobs.filter(j => /^PR-/.test(j.get('name'))),
-        // Prevent the model list updating multiple times during a render by pre-loading the data
-        // before it is accessed in the template
-        events: this.get('pipeline.events')
-      }));
+    this.controllerFor('pipeline.events').set('pipeline', this.get('pipeline'));
+
+    return RSVP.hash({
+      jobs: this.get('pipeline.jobs'),
+      events: this.store.query('event', {
+        pipelineId: this.get('pipeline.id'),
+        page: 1,
+        count: ENV.APP.NUM_EVENTS_LISTED
+      })
+    });
+  },
+  actions: {
+    refreshModel: function refreshModel() {
+      this.refresh();
+    }
   }
 });

@@ -30,10 +30,10 @@ export default Route.extend({
   },
   actions: {
     error(error) {
-      if (error.status == 404) {
+      if (error.status === 404) {
         this.transitionTo('/404');
       }
-      
+
       return true;
     }
   }

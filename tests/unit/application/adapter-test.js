@@ -25,7 +25,8 @@ test('it exists', function (assert) {
 test('it uses cors for ajax', function (assert) {
   assert.expect(3);
 
-  server.get('fakeurl', () => [200, { 'content-type': 'application/json' }, '{"foo": "bar"}']);
+  server.get('https://sd.cd/fake',
+    () => [200, { 'content-type': 'application/json' }, '{"foo": "bar"}']);
 
   server.handledRequest = function (verb, path, request) {
     assert.equal(verb, 'GET');
@@ -34,7 +35,7 @@ test('it uses cors for ajax', function (assert) {
 
   let adapter = this.subject();
 
-  return adapter.ajax('fakeurl', 'GET').then((response) => {
+  return adapter.ajax('https://sd.cd/fake', 'GET').then((response) => {
     assert.deepEqual(response, { foo: 'bar' });
   });
 });
@@ -99,7 +100,7 @@ test('it adds links to jobs', function (assert) {
   const payload = adapter.handleResponse(200, {}, [{ id: 1234 }], requestData);
 
   assert.deepEqual(payload, {
-    jobs: [{ id: 1234, links: { builds: 'builds' } }]
+    jobs: [{ id: 1234, links: { builds: 'builds?count=10&page=1' } }]
   });
 });
 

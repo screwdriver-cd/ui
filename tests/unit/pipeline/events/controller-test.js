@@ -49,17 +49,18 @@ test('it starts a build', function (assert) {
   let controller = this.subject();
 
   run(() => {
-    controller.set('model', {
-      pipeline: EmberObject.create({
-        id: '1234'
-      }),
-      events: EmberObject.create({
-        reload: () => {
-          assert.ok(true);
+    controller.set('pipeline', EmberObject.create({
+      id: '1234'
+    }));
 
-          return Promise.resolve({});
-        }
-      })
+    controller.set('reload', () => {
+      assert.ok(true);
+
+      return Promise.resolve({});
+    });
+
+    controller.set('model', {
+      events: EmberObject.create({})
     });
 
     controller.transitionToRoute = (path, id) => {
@@ -111,17 +112,18 @@ test('it restarts a build', function (assert) {
       sha: 'sha'
     });
 
-    controller.set('model', {
-      pipeline: EmberObject.create({
-        id: '1234'
-      }),
-      events: EmberObject.create({
-        reload: () => {
-          assert.ok(true);
+    controller.set('pipeline', EmberObject.create({
+      id: '1234'
+    }));
 
-          return Promise.resolve({});
-        }
-      })
+    controller.set('reload', () => {
+      assert.ok(true);
+
+      return Promise.resolve({});
+    });
+
+    controller.set('model', {
+      events: EmberObject.create({})
     });
 
     controller.transitionToRoute = (path, id) => {

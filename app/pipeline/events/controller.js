@@ -1,13 +1,10 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { reads } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
-
-const { sort } = computed;
 
 export default Controller.extend(ModelReloaderMixin, {
   session: service(),
@@ -15,17 +12,54 @@ export default Controller.extend(ModelReloaderMixin, {
     this._super(...arguments);
     this.startReloading();
   },
-  modelToReload: 'events',
+  reload() {
+    try {
+      this.send('refreshModel');
+    } catch (e) {
+      return Promise.resolve(e);
+    }
+
+    return Promise.resolve();
+  },
   isShowingModal: false,
+  moreToShow: true,
   errorMessage: '',
-  pipeline: reads('model.pipeline'),
-  jobs: reads('model.jobs'),
-  events: reads('model.events'),
-  pullRequests: reads('model.pullRequests'),
+  jobs: computed('model.jobs', {
+    get() {
+      const jobs = this.get('model.jobs');
 
-  eventsSorted: sort('events.[]',
-    (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
+      return jobs.filter(j => !/^PR-/.test(j.get('name')));
+    }
+  }),
+  paginateEvents: [],
+  // Aggregates first page events and events via ModelReloaderMixin
+  modelEvents: computed('model.events', {
+    get() {
+      let previousModelEvents = this.get('previousModelEvents') || [];
+      let currentModelEvents = this.get('model.events').toArray();
 
+      previousModelEvents = previousModelEvents
+        .filter(e => !currentModelEvents.find(c => c.id === e.id));
+
+      const newModelEvents = currentModelEvents.concat(previousModelEvents);
+
+      this.set('previousModelEvents', newModelEvents);
+
+      return newModelEvents;
+    }
+  }),
+  events: computed('modelEvents', 'paginateEvents', {
+    get() {
+      return [].concat(this.get('modelEvents'), this.get('paginateEvents'));
+    }
+  }),
+  pullRequests: computed('model.jobs', {
+    get() {
+      const jobs = this.get('model.jobs');
+
+      return jobs.filter(j => /^PR-/.test(j.get('name')));
+    }
+  }),
   selectedEvent: computed('selected', 'mostRecent', {
     get() {
       return get(this, 'selected') || get(this, 'mostRecent');
@@ -44,9 +78,9 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
 
-  mostRecent: computed('eventsSorted', {
+  mostRecent: computed('events.[]', {
     get() {
-      const list = get(this, 'eventsSorted');
+      const list = get(this, 'events');
 
       if (Array.isArray(list) && list.length) {
         const id = get(list[0], 'id');
@@ -60,10 +94,8 @@ export default Controller.extend(ModelReloaderMixin, {
 
   lastSuccessful: computed('events.@each.status', {
     get() {
-      const list = get(this, 'eventsSorted') || [];
-      // Reduce the number of events to look at
-      const event = list.slice(0, Math.min(list.length, 15))
-        .find(e => get(e, 'status') === 'SUCCESS');
+      const list = get(this, 'events') || [];
+      const event = list.find(e => get(e, 'status') === 'SUCCESS');
 
       if (!event) {
         return 0;
@@ -132,9 +164,31 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('isShowingModal', false);
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
+    },
+    updateEvents(page) {
+      return get(this, 'store').query('event', {
+        pipelineId: get(this, 'pipeline.id'),
+        page,
+        count: ENV.APP.NUM_EVENTS_LISTED
+      })
+        .then((events) => {
+          const nextEvents = events.toArray();
+
+          if (Array.isArray(nextEvents)) {
+            if (nextEvents.length < ENV.APP.NUM_EVENTS_LISTED) {
+              this.set('moreToShow', false);
+            }
+
+            // FIXME: Skip duplicate ones if new events got added added to the head
+            // of events list
+            this.set('paginateEvents',
+              this.get('paginateEvents').concat(nextEvents));
+          }
+        });
     }
   },
   willDestroy() {
+    // FIXME: Never called when route is no longer active
     this.stopReloading();
   },
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER

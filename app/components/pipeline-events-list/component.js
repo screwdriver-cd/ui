@@ -1,37 +1,35 @@
 import { computed, get, set } from '@ember/object';
-import { sort } from '@ember/object/computed';
 import Component from '@ember/component';
-import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
-  showMore: computed('events.length', 'numToShow', {
+  errorMessage: '',
+  showMore: computed('moreToShow', {
     get() {
-      return get(this, 'numToShow') < get(this, 'events.length');
+      return get(this, 'moreToShow');
     }
   }),
-
-  eventsSorted: sort('events.[]',
-    (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)),
-
-  eventsList: computed('events.[]', 'numToShow', {
+  eventsList: computed('events.[]', {
     get() {
-      const numEvents = get(this, 'events.length');
-      const desiredNumEvents = get(this, 'numToShow');
-      const end = desiredNumEvents <= numEvents ? desiredNumEvents : numEvents;
-
-      return get(this, 'eventsSorted').slice(0, end);
+      return get(this, 'events');
     }
   }),
 
   init() {
     this._super(...arguments);
 
-    set(this, 'numToShow', ENV.APP.NUM_EVENTS_LISTED);
+    set(this, 'eventsPage', 1);
   },
 
   actions: {
     moreClick() {
-      set(this, 'numToShow', get(this, 'numToShow') + ENV.APP.NUM_EVENTS_LISTED);
+      const eventsPage = get(this, 'eventsPage') + 1;
+      const fn = get(this, 'updateEvents');
+
+      set(this, 'eventsPage', eventsPage);
+
+      if (typeof fn === 'function') {
+        fn(eventsPage).catch(error => this.set('errorMessage', error));
+      }
     },
     eventClick(id) {
       set(this, 'selected', id);
