@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { get, computed, set, setProperties } from '@ember/object';
 import { all, reject } from 'rsvp';
 import graphTools from 'screwdriver-ui/utils/graph-tools';
+import $ from 'jquery';
 
 const { isRoot } = graphTools;
 
@@ -56,6 +57,17 @@ export default Component.extend({
     this._super(...arguments);
     // hide graph tooltip when event changes
     set(this, 'showTooltip', false);
+  },
+  didRender() {
+    let pipelineWorkflow = $('.pipelineWorkflow');
+
+    $(document).on('scroll', () => {
+      if ($(document).scrollTop() > 217) {
+        pipelineWorkflow.css('display', 'fixed');
+      } else {
+        pipelineWorkflow.css('display', 'fixed');
+      }
+    });
   },
   actions: {
     graphClicked(job, mouseevent, sizes) {

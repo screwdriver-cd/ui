@@ -104,7 +104,7 @@ test('it makes a call to logs api and logs return with no remaining', function (
   assert.expect(4);
   noMoreLogs();
   const service = this.subject();
-  const p = service.fetchLogs('1', 'banana');
+  const p = service.fetchLogs('1', 'banana', 0, 'ascending', 10);
 
   p.then(({ lines, done }) => {
     assert.ok(done);
@@ -114,7 +114,7 @@ test('it makes a call to logs api and logs return with no remaining', function (
     const [request] = server.handledRequests;
 
     assert.equal(request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10');
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending');
   });
 });
 
@@ -122,7 +122,7 @@ test('it makes a call to logs api and logs return with more remaining', function
   assert.expect(4);
   moreLogs();
   const service = this.subject();
-  const p = service.fetchLogs('1', 'banana', 50);
+  const p = service.fetchLogs('1', 'banana', 50, 'ascending', 10);
 
   p.then(({ lines, done }) => {
     assert.notOk(done);
@@ -132,7 +132,7 @@ test('it makes a call to logs api and logs return with more remaining', function
     const [request] = server.handledRequests;
 
     assert.equal(request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50&pages=10');
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50&pages=10&sort=ascending');
   });
 });
 
@@ -140,7 +140,7 @@ test('it makes a call to logs api and no logs return with no more remaining', fu
   assert.expect(3);
   noNewLogs();
   const service = this.subject();
-  const p = service.fetchLogs('1', 'banana');
+  const p = service.fetchLogs('1', 'banana', 0, 'ascending', 10);
 
   p.then(({ lines, done }) => {
     assert.notOk(done);
@@ -149,7 +149,7 @@ test('it makes a call to logs api and no logs return with no more remaining', fu
     const [request] = server.handledRequests;
 
     assert.equal(request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10');
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending');
   });
 });
 
@@ -157,7 +157,7 @@ test('it handles log api failure by treating it as there are more logs', functio
   assert.expect(3);
   badLogs();
   const service = this.subject();
-  const p = service.fetchLogs('1', 'banana');
+  const p = service.fetchLogs('1', 'banana', 0, 'ascending', 10);
 
   p.then(({ lines, done }) => {
     assert.notOk(done);
@@ -166,7 +166,7 @@ test('it handles log api failure by treating it as there are more logs', functio
     const [request] = server.handledRequests;
 
     assert.equal(request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10');
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending');
   });
 });
 
@@ -174,7 +174,7 @@ test('it handles fetching multiple pages', function (assert) {
   assert.expect(3);
   noNewLogs();
   const service = this.subject();
-  const p = service.fetchLogs('1', 'banana', 0, 100);
+  const p = service.fetchLogs('1', 'banana', 0, 'ascending', 100);
 
   p.then(({ lines, done }) => {
     assert.notOk(done);
@@ -183,6 +183,6 @@ test('it handles fetching multiple pages', function (assert) {
     const [request] = server.handledRequests;
 
     assert.equal(request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100');
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100&sort=ascending');
   });
 });
