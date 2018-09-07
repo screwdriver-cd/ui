@@ -54,6 +54,7 @@ module.exports = (environment) => {
       LOG_RELOAD_TIMER: 1000,
       NUM_EVENTS_LISTED: 5,
       MAX_LOG_LINES: 1000,
+      MAX_LOG_PAGES: 10,
       FORCE_RELOAD_WAIT: 100 // Wait 100ms before force reload
     },
     moment: {

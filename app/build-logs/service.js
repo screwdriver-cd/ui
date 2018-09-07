@@ -8,13 +8,15 @@ export default Service.extend({
   /**
    * Calls the logs api service to fetch logs
    * @method fetchLogs
-   * @param  {String}  buildId              sha representing a build id
-   * @param  {String}  stepName             name of a step
-   * @param  {Number}  [logNumber=0]        The line number to start from
-   * @param  {Number}  [pagesToLoad=10]     The number of pages to load
-   * @return {Promise}                      Resolves to { lines, done }
+   * @param  {Object}  config                      config for fetching logs
+   * @param  {String}  config.buildId              sha representing a build id
+   * @param  {String}  config.stepName             name of a step
+   * @param  {Number}  [config.logNumber=0]        The line number to start from
+   * @param  {Number}  [config.pagesSize=10]     The number of pages to load
+   * @param  {String}  [config.sortOrder='ascending']  The sort order. 'ascending' | 'descending'
+   * @return {Promise}                             Resolves to { lines, done }
    */
-  fetchLogs(buildId, stepName, logNumber = 0, pagesToLoad = 10) {
+  fetchLogs({ buildId, stepName, logNumber = 0, pagesSize = 10, sortOrder = 'ascending' }) {
     let lines = [];
     let done = false;
 
@@ -29,7 +31,7 @@ export default Service.extend({
       // convert jquery's ajax promises to a real promise
       return $.ajax({
         url,
-        data: { from: logNumber, pages: pagesToLoad },
+        data: { from: logNumber, pages: pagesSize, sort: sortOrder },
         headers: {
           Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
         }
