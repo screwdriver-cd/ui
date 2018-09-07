@@ -19,11 +19,14 @@ export default Component.extend({
       return get(this, 'totalLine') === undefined ? 'ascending' : 'descending';
     }
   }),
-  getPagesSize() {
-    const itemSize = get(this, `logCache.${get(this, 'stepName')}.nextLine`) ||
-      get(this, 'totalLine');
+  getPageSize() {
+    const totalLine = get(this, 'totalLine');
+    const itemSize = get(this, `logCache.${get(this, 'stepName')}.nextLine`) || totalLine;
 
-    return itemSize === undefined ?
+    // For lazily loading old logs, if the number of log lines is too few on a page,
+    // instead of having another fetch following right after the first render and user scrolls up,
+    // we fetch an extra page of logs to have better UX
+    return totalLine === undefined ?
       ENV.APP.MAX_LOG_PAGES :
       +(itemSize < ENV.APP.MAX_LOG_LINES || itemSize % ENV.APP.MAX_LOG_LINES < 100) + 1;
   },
@@ -138,7 +141,7 @@ export default Component.extend({
         buildId,
         stepName,
         logNumber: logData.nextLine,
-        pagesSize: this.getPagesSize(),
+        pageSize: this.getPageSize(),
         sortOrder: get(this, 'sortOrder')
       }).then(({ lines, done }) => {
         // prevent updating logs when component is being destroyed
