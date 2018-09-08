@@ -1,5 +1,4 @@
 import { get, getWithDefault, set, computed } from '@ember/object';
-
 import { scheduleOnce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -13,7 +12,24 @@ export default Component.extend({
   autoscroll: true,
   isFetching: false,
   timeFormat: 'datetime',
+  currentScrollTop: 0,
+  currentScrollHeight: 0,
+  sortOrder: computed('totalLine', {
+    get() {
+      return get(this, 'totalLine') === undefined ? 'ascending' : 'descending';
+    }
+  }),
+  getPageSize() {
+    const totalLine = get(this, 'totalLine');
+    const itemSize = get(this, `logCache.${get(this, 'stepName')}.nextLine`) || totalLine;
 
+    // For lazily loading old logs, if the number of log lines is too few on a page,
+    // instead of having another fetch following right after the first render and user scrolls up,
+    // we fetch an extra page of logs to have better UX
+    return totalLine === undefined ?
+      ENV.APP.MAX_LOG_PAGES :
+      +(itemSize < ENV.APP.MAX_LOG_LINES || itemSize % ENV.APP.MAX_LOG_LINES < 100) + 1;
+  },
   logs: computed('isFetching', 'stepName', {
     get() {
       const name = get(this, 'stepName');
@@ -97,6 +113,13 @@ export default Component.extend({
     }
   },
 
+  scrollStill() {
+    const container = this.$('.wrap')[0];
+
+    container.scrollTop = get(this, 'currentScrollTop') +
+      (container.scrollHeight - get(this, 'currentScrollHeight'));
+  },
+
   /**
    * Fetch logs from log service
    * @method getLogs
@@ -104,36 +127,50 @@ export default Component.extend({
   getLogs() {
     if (get(this, 'shouldLoad')) {
       const stepName = get(this, 'stepName');
+      const totalLine = get(this, 'totalLine');
       const cache = get(this, 'logCache');
       const logData = getWithDefault(cache, stepName, {
-        lastLine: 0,
+        nextLine: (totalLine || 1) - 1,
         logs: [],
         done: false
       });
       const buildId = get(this, 'buildId');
 
       set(this, 'isFetching', true);
-      this.get('logger').fetchLogs(
+      this.get('logger').fetchLogs({
         buildId,
         stepName,
-        logData.lastLine
-      ).then(({ lines, done }) => {
+        logNumber: logData.nextLine,
+        pageSize: this.getPageSize(),
+        sortOrder: get(this, 'sortOrder')
+      }).then(({ lines, done }) => {
         // prevent updating logs when component is being destroyed
         if (!this.get('isDestroyed') && !this.get('isDestroying')) {
           if (Array.isArray(lines) && lines.length) {
-            set(logData, 'lastLine', lines[lines.length - 1].n + 1);
-            set(logData, 'logs', get(logData, 'logs').concat(lines));
+            set(logData, 'nextLine', totalLine ? lines[0].n - 1 : lines[lines.length - 1].n + 1);
+            set(
+              logData,
+              'logs',
+              totalLine ? lines.concat(get(logData, 'logs')) : get(logData, 'logs').concat(lines)
+            );
           }
+
+          const container = this.$('.wrap')[0];
 
           set(logData, 'done', done);
           set(this, `logCache.${stepName}`, logData);
           set(this, 'isFetching', false);
-          scheduleOnce('afterRender', this, 'scrollDown');
+          set(this, 'currentScrollTop', container.scrollTop);
+          set(this, 'currentScrollHeight', container.scrollHeight);
+          scheduleOnce('afterRender', this, totalLine ? 'scrollStill' : 'scrollDown');
 
-          if (!done) {
-            // Immediately ask for more logs if we got MAX_LOG_LINES
-            later(this, 'getLogs',
-              lines.length === ENV.APP.MAX_LOG_LINES ? 0 : ENV.APP.LOG_RELOAD_TIMER);
+          if (!done && !totalLine) {
+            // Immediately ask for more logs if we have more to load
+            later(
+              this,
+              'getLogs',
+              lines.length === ENV.APP.MAX_LOG_LINES ? 0 : ENV.APP.LOG_RELOAD_TIMER
+            );
           }
         }
       });
@@ -149,6 +186,17 @@ export default Component.extend({
       this.scrollDown();
     },
     logScroll() {
+      const container = this.$('.wrap')[0];
+
+      if (get(this, 'totalLine') &&
+        !get(this, 'isFetching') &&
+        !get(this, `logCache.${get(this, 'stepName')}.done`) &&
+        container.scrollTop < container.scrollHeight / 2) {
+        this.getLogs();
+
+        return;
+      }
+
       // autoscroll when the bottom of the logs is roughly in view
       set(this, 'autoscroll', this.$('.bottom')[0].getBoundingClientRect().top < 1000);
     },

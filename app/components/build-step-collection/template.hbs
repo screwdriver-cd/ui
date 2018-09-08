@@ -76,6 +76,7 @@
   <div class="col-xs-9">
     {{build-log
       stepName=selectedStep
+      totalLine=(get-step-data buildSteps selectedStep "lines")
       buildId=buildId
       stepStartTime=(get-step-data buildSteps selectedStep "startTime")
       buildStartTime=buildStart

@@ -7,14 +7,16 @@ import { get } from '@ember/object';
  * @param  {Array}    buildSteps  The build model
  * @param  {String}    step   The step name
  * @param  {String}    field  The step field name
- * @return {String}
+ * @return {Any|undefined}
  */
 export function getStepData([buildSteps, step, field]) {
+  let data;
+
   if (!step) {
-    return null;
+    return data;
   }
 
-  const data = buildSteps.find(s => s.name === step);
+  data = buildSteps.find(s => s.name === step);
 
   if (field) {
     return get(data, field);
