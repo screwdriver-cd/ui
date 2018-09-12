@@ -87,13 +87,15 @@ export default Component.extend({
   },
   draw() {
     const data = get(this, 'decoratedGraph');
-    const MAX_LENGTH = data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0);
+    const MAX_DISPLAY_NAME = 20;
+    const MAX_LENGTH = Math.min(data.nodes.reduce((max, cur) =>
+      Math.max(cur.name.length, max), 0), MAX_DISPLAY_NAME);
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = get(this, 'elementSizes');
     let X_WIDTH = ICON_SIZE * 2;
 
-    // When displaying job names use estimate of 4.25 per character
+    // When displaying job names use estimate of 5.00 per character
     if (TITLE_SIZE && get(this, 'displayJobNames')) {
-      X_WIDTH = Math.max(X_WIDTH, MAX_LENGTH * 4.25);
+      X_WIDTH = Math.max(X_WIDTH, MAX_LENGTH * 5.00);
     }
     // Adjustable spacing between nodes
     const Y_SPACING = ICON_SIZE;
@@ -116,6 +118,37 @@ export default Component.extend({
     this.set('graphNode', svg);
 
     const calcXCenter = pos => ((X_WIDTH / 2) + (pos * X_WIDTH));
+
+    // Calculate the start/end point of a line
+    const calcPos = (pos, spacer) =>
+      ((pos + 1) * ICON_SIZE) + ((pos * spacer) - (ICON_SIZE / 2));
+
+    // edges
+    svg.selectAll('link')
+      .data(data.edges)
+      .enter()
+      .append('path')
+      .attr('class', d => `graph-edge ${d.status ? `build-${d.status.toLowerCase()}` : ''}`)
+      .attr('stroke-dasharray', d => (!d.status ? 5 : 500))
+      .attr('stroke-width', 2)
+      .attr('fill', 'transparent')
+      .attr('d', (d) => {
+        const path = d3.path();
+        const startX = calcXCenter(d.from.x) + (ICON_SIZE / 2) + EDGE_GAP;
+        const startY = calcPos(d.from.y, Y_SPACING);
+        const endX = calcXCenter(d.to.x) - (ICON_SIZE / 2) - EDGE_GAP;
+        const endY = calcPos(d.to.y, Y_SPACING);
+
+        path.moveTo(startX, startY);
+        // curvy line
+        path.bezierCurveTo(endX, startY, endX - (X_WIDTH / 2), endY, endX, endY);
+        // arrowhead
+        path.lineTo(endX - ARROWHEAD, endY - ARROWHEAD);
+        path.moveTo(endX, endY);
+        path.lineTo(endX - ARROWHEAD, endY + ARROWHEAD);
+
+        return path;
+      });
 
     // Jobs Icons
     svg.selectAll('jobs')
@@ -148,42 +181,15 @@ export default Component.extend({
         .data(data.nodes)
         .enter()
         .append('text')
-        .text(d => d.name)
+        .text(d => (d.name.length >= MAX_DISPLAY_NAME ?
+          `${d.name.substr(0, 8)}...${d.name.substr(-8)}` : d.name))
         .attr('class', 'graph-label')
         .attr('font-size', `${TITLE_SIZE}px`)
         .style('text-anchor', 'middle')
         .attr('x', d => calcXCenter(d.pos.x))
-        .attr('y', d => ((d.pos.y + 1) * ICON_SIZE) + (d.pos.y * Y_SPACING) + TITLE_SIZE);
+        .attr('y', d => ((d.pos.y + 1) * ICON_SIZE) + (d.pos.y * Y_SPACING) + TITLE_SIZE)
+        .insert('title')
+        .text(d => d.name);
     }
-    // Calculate the start/end point of a line
-    const calcPos = (pos, spacer) =>
-      ((pos + 1) * ICON_SIZE) + ((pos * spacer) - (ICON_SIZE / 2));
-
-    // edges
-    svg.selectAll('link')
-      .data(data.edges)
-      .enter()
-      .append('path')
-      .attr('class', d => `graph-edge ${d.status ? `build-${d.status.toLowerCase()}` : ''}`)
-      .attr('stroke-dasharray', d => (!d.status ? 5 : 500))
-      .attr('stroke-width', 2)
-      .attr('fill', 'transparent')
-      .attr('d', (d) => {
-        const path = d3.path();
-        const startX = calcXCenter(d.from.x) + (ICON_SIZE / 2) + EDGE_GAP;
-        const startY = calcPos(d.from.y, Y_SPACING);
-        const endX = calcXCenter(d.to.x) - (ICON_SIZE / 2) - EDGE_GAP;
-        const endY = calcPos(d.to.y, Y_SPACING);
-
-        path.moveTo(startX, startY);
-        // curvy line
-        path.bezierCurveTo(endX, startY, endX - (X_WIDTH / 2), endY, endX, endY);
-        // arrowhead
-        path.lineTo(endX - ARROWHEAD, endY - ARROWHEAD);
-        path.moveTo(endX, endY);
-        path.lineTo(endX - ARROWHEAD, endY + ARROWHEAD);
-
-        return path;
-      });
   }
 });
