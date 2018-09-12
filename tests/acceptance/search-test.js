@@ -86,6 +86,6 @@ test('visiting /search when logged in', function (assert) {
   andThen(() => {
     assert.equal(currentURL(), '/search');
     assert.equal(find('tr').length, 4);
-    assert.equal(find('.num-results').text().trim(), 'Found 3 result(s)');
+    assert.equal(find('.num-results').text().trim(), 'Showing 3 result(s)');
   });
 });

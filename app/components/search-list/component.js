@@ -1,52 +1,35 @@
 /* eslint ember/avoid-leaking-state-in-components: [2, ["pipelineSorting"]] */
-import { inspect } from '@ember/debug';
-import { computed } from '@ember/object';
-import { sort, empty } from '@ember/object/computed';
+import { computed, get, set } from '@ember/object';
+import { empty, sort } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import ENV from 'screwdriver-ui/config/environment';
 import Component from '@ember/component';
 
 export default Component.extend({
+  errorMessage: '',
   showModal: false,
   session: service(),
   scmService: service('scm'),
-  pipelineSorting: ['appId', 'branch'],
   addCollectionError: null,
   addCollectionSuccess: null,
+  pipelineSorting: ['appId', 'branch'],
   sortedPipelines: sort('pipelines', 'pipelineSorting'),
   isEmpty: empty('filteredPipelines'),
-  filterSet: computed('query', {
+  showMore: computed('moreToShow', 'filteredPipelines', {
     get() {
-      const q = this.get('query') || '';
-      const keywords = q.split(/\s+/);
-      const filters = keywords.map((k) => {
-        let pair = k.split(/:/);
+      const pipelines = get(this, 'filteredPipelines');
 
-        if (k.match(/[A-Za-z]+:[^ :]+/)) {
-          return { key: pair[0], value: pair[1] };
-        }
+      if (Array.isArray(pipelines) && pipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
+        return false;
+      }
 
-        // By default, search appId by keywords
-        return { key: 'appId', value: k };
-      });
-
-      return filters;
+      return get(this, 'moreToShow');
     }
   }),
   filteredPipelines: computed('sortedPipelines', 'filterSet', {
     get() {
       const scmService = this.get('scmService');
-      const pipelines = this.get('sortedPipelines');
-      const filterSet = this.get('filterSet');
-      let filtered = pipelines;
-
-      filterSet.forEach((filter) => {
-        filtered = filtered.filter((p) => {
-          const field = inspect(p.get(filter.key));
-
-          // skip filtering if value is empty
-          return !filter.value || (field && field.indexOf(filter.value) > -1);
-        });
-      });
+      let filtered = this.get('sortedPipelines');
 
       // add scm contexts into pipelines.
       return filtered.map((pipeline) => {
@@ -59,7 +42,33 @@ export default Component.extend({
       });
     }
   }),
+  init() {
+    this._super(...arguments);
+
+    set(this, 'pipelinesPage', 1);
+  },
+  /**
+   * Reset show more when component is destroyed
+   * @method willDestroyElement
+   */
+  willDestroyElement() {
+    this._super(...arguments);
+
+    // Reset moreToShow value
+    set(this, 'moreToShow', true);
+  },
   actions: {
+    moreClick() {
+      const pipelinesPage = get(this, 'pipelinesPage') + 1;
+      const fn = get(this, 'updatePipelines');
+
+      set(this, 'pipelinesPage', pipelinesPage);
+
+      if (typeof fn === 'function') {
+        fn({ page: pipelinesPage, search: get(this, 'query') })
+          .catch(error => this.set('errorMessage', error));
+      }
+    },
     openModal() {
       this.set('showModal', true);
     },

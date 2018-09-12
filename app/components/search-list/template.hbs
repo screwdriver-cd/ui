@@ -5,7 +5,7 @@
   {{info-message message=addCollectionSuccess type="success" icon="check"}}
 {{/if}}
 <div class="num-results">
-  {{if isEmpty "No Results" (concat "Found " filteredPipelines.length " result(s)")}}
+  {{if isEmpty "No results" (concat "Showing " filteredPipelines.length " result(s)")}}
 </div>
 <table>
   <thead>
@@ -38,4 +38,8 @@
     {{/each}}
   </tbody>
 </table>
+{{#if showMore}}
+<a {{action "moreClick"}}>Show more results...</a>
+{{/if}}
+
 {{collection-modal showModal=showModal addNewCollection=addNewCollection}}

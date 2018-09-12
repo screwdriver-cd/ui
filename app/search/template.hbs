@@ -4,7 +4,9 @@
       changeCollection=(action "changeCollection")
       class="col-md-2"}}
     {{search-list
+      moreToShow=moreToShow
       pipelines=pipelines
+      updatePipelines=(action "updatePipelines")
       collections=collections
       addToCollection=(action "addToCollection")
       query=query
@@ -12,14 +14,16 @@
     }}
   {{else}}
     {{search-list
+      moreToShow=moreToShow
       pipelines=pipelines
+      updatePipelines=(action "updatePipelines")
       collections=collections
       addToCollection=(action "addToCollection")
       query=query
       name=name
       description=description
       errorMessage=errorMessage
-      addNewCollection=(action "addNewCollection") 
+      addNewCollection=(action "addNewCollection")
     }}
   {{/if}}
 </div>

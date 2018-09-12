@@ -11,7 +11,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
     const collections = get(this, 'store').findAll('collection').catch(() => []);
 
     return RSVP.hash({
-      pipeline: get(this, 'store').findRecord('pipeline', params.pipeline_id),
+      pipeline: get(this, 'store').findRecord('pipeline', params.pipeline_id).catch(() => []),
       collections
     });
   },
