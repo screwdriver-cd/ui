@@ -12,22 +12,33 @@ export default Component.extend({
   autoscroll: true,
   isFetching: false,
   timeFormat: 'datetime',
-  currentScrollTop: 0,
-  currentScrollHeight: 0,
-  sortOrder: computed('totalLine', {
+  lastScrollTop: 0,
+  lastScrollHeight: 0,
+  inProgress: computed('totalLine', {
     get() {
-      return get(this, 'totalLine') === undefined ? 'ascending' : 'descending';
+      return get(this, 'totalLine') === undefined;
     }
   }),
-  getPageSize() {
+  sortOrder: computed('inProgress', {
+    get() {
+      return get(this, 'inProgress') ? 'ascending' : 'descending';
+    }
+  }),
+  getPageSize(fetchMax = false) {
     const totalLine = get(this, 'totalLine');
     const itemSize = get(this, `logCache.${get(this, 'stepName')}.nextLine`) || totalLine;
+
+    // for running step, fetch regular page size
+    if (get(this, 'inProgress')) {
+      return ENV.APP.DEFAULT_LOG_PAGE_SIZE;
+    }
 
     // For lazily loading old logs, if the number of log lines is too few on a page,
     // instead of having another fetch following right after the first render and user scrolls up,
     // we fetch an extra page of logs to have better UX
-    return totalLine === undefined ?
-      ENV.APP.MAX_LOG_PAGES :
+    // Or for the case with max fetch, calculate the remaining pages to fetch
+    return fetchMax ?
+      Math.ceil(itemSize / ENV.APP.MAX_LOG_LINES) :
       +(itemSize < ENV.APP.MAX_LOG_LINES || itemSize % ENV.APP.MAX_LOG_LINES < 100) + 1;
   },
   logs: computed('isFetching', 'stepName', {
@@ -83,6 +94,7 @@ export default Component.extend({
     }
 
     set(this, 'logCache', {});
+    set(this, 'lastStepName', get(this, 'stepName'));
   },
 
   // Start loading logs immediately upon inserting the element if a step is selected
@@ -91,6 +103,16 @@ export default Component.extend({
 
     if (get(this, 'stepName')) {
       this.getLogs();
+    }
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+    const newStepName = get(this, 'stepName');
+
+    if (newStepName !== get(this, 'lastStepName')) {
+      set(this, 'autoscroll', true);
+      set(this, 'lastStepName', newStepName);
     }
   },
 
@@ -104,30 +126,50 @@ export default Component.extend({
   },
 
   /**
+   * Scroll to the top of the page
+   * @method scrollTop
+   */
+  scrollTop() {
+    this.$('.wrap')[0].scrollTop = 0;
+  },
+
+  /**
    * Scroll to the bottom of the page
    * @method scrollDown
    */
   scrollDown() {
     if (get(this, 'autoscroll')) {
-      this.$('.wrap').prop('scrollTop', this.$('.bottom').prop('offsetTop'));
+      const bottom = this.$('.bottom').prop('offsetTop');
+
+      this.$('.wrap').prop('scrollTop', bottom);
+      set(this, 'lastScrollTop', bottom);
     }
   },
 
+  /**
+   * Scroll back to the last anchor point
+   * @method scrollStill
+   */
   scrollStill() {
     const container = this.$('.wrap')[0];
 
-    container.scrollTop = get(this, 'currentScrollTop') +
-      (container.scrollHeight - get(this, 'currentScrollHeight'));
+    set(
+      this,
+      'lastScrollTop',
+      container.scrollTop = get(this, 'lastScrollTop') +
+        (container.scrollHeight - get(this, 'lastScrollHeight'))
+    );
   },
 
   /**
    * Fetch logs from log service
    * @method getLogs
    */
-  getLogs() {
+  getLogs(fetchMax = false) {
     if (get(this, 'shouldLoad')) {
       const stepName = get(this, 'stepName');
       const totalLine = get(this, 'totalLine');
+      const inProgress = get(this, 'inProgress');
       const cache = get(this, 'logCache');
       const logData = getWithDefault(cache, stepName, {
         nextLine: (totalLine || 1) - 1,
@@ -141,17 +183,17 @@ export default Component.extend({
         buildId,
         stepName,
         logNumber: logData.nextLine,
-        pageSize: this.getPageSize(),
+        pageSize: this.getPageSize(fetchMax),
         sortOrder: get(this, 'sortOrder')
       }).then(({ lines, done }) => {
         // prevent updating logs when component is being destroyed
         if (!this.get('isDestroyed') && !this.get('isDestroying')) {
           if (Array.isArray(lines) && lines.length) {
-            set(logData, 'nextLine', totalLine ? lines[0].n - 1 : lines[lines.length - 1].n + 1);
+            set(logData, 'nextLine', inProgress ? lines[lines.length - 1].n + 1 : lines[0].n - 1);
             set(
               logData,
               'logs',
-              totalLine ? lines.concat(get(logData, 'logs')) : get(logData, 'logs').concat(lines)
+              inProgress ? get(logData, 'logs').concat(lines) : lines.concat(get(logData, 'logs'))
             );
           }
 
@@ -160,11 +202,18 @@ export default Component.extend({
           set(logData, 'done', done);
           set(this, `logCache.${stepName}`, logData);
           set(this, 'isFetching', false);
-          set(this, 'currentScrollTop', container.scrollTop);
-          set(this, 'currentScrollHeight', container.scrollHeight);
-          scheduleOnce('afterRender', this, totalLine ? 'scrollStill' : 'scrollDown');
+          set(this, 'lastScrollTop', container.scrollTop);
+          set(this, 'lastScrollHeight', container.scrollHeight);
 
-          if (!done && !totalLine) {
+          let cb = 'scrollTop';
+
+          if (!fetchMax) {
+            cb = inProgress ? 'scrollDown' : 'scrollStill';
+          }
+
+          scheduleOnce('afterRender', this, cb);
+
+          if (!done && inProgress) {
             // Immediately ask for more logs if we have more to load
             later(
               this,
@@ -179,7 +228,12 @@ export default Component.extend({
   actions: {
     scrollToTop() {
       set(this, 'autoscroll', false);
-      this.$('.wrap').prop('scrollTop', 0);
+
+      if (!get(this, 'inProgress')) {
+        this.getLogs(true);
+      }
+
+      this.scrollTop();
     },
     scrollToBottom() {
       set(this, 'autoscroll', true);
@@ -188,10 +242,10 @@ export default Component.extend({
     logScroll() {
       const container = this.$('.wrap')[0];
 
-      if (get(this, 'totalLine') &&
+      if (!get(this, 'inProgress') &&
         !get(this, 'isFetching') &&
         !get(this, `logCache.${get(this, 'stepName')}.done`) &&
-        container.scrollTop < container.scrollHeight / 2) {
+        container.scrollTop < (container.scrollHeight - get(this, 'lastScrollHeight')) / 2) {
         this.getLogs();
 
         return;
