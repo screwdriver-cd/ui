@@ -66,7 +66,8 @@ const sessionServiceMock = Service.extend({
 
 const serviceConfig = {
   buildId: '1',
-  stepName: 'banana'
+  stepName: 'banana',
+  started: true
 };
 
 moduleFor('service:build-logs', 'Unit | Service | build logs', {

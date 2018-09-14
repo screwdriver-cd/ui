@@ -47,19 +47,20 @@ export default Component.extend({
       Math.ceil(itemSize / ENV.APP.MAX_LOG_LINES) :
       +(itemSize < ENV.APP.MAX_LOG_LINES || itemSize % ENV.APP.MAX_LOG_LINES < 100) + 1;
   },
-  logs: computed('isFetching', 'stepName', {
+  logs: computed('stepStartTime', 'isFetching', 'buildId', 'stepName', {
     get() {
       const buildId = get(this, 'buildId');
       const stepName = get(this, 'stepName');
       const logs = this.get('logService').getCache(buildId, stepName, 'logs');
       const isFetching = get(this, 'isFetching');
+      const started = !!get(this, 'stepStartTime');
 
       if (!stepName) {
         return [{ m: 'Click a step to see logs' }];
       }
 
       if (!logs) {
-        if (!isFetching) {
+        if (!isFetching && started) {
           this.getLogs();
         }
 
@@ -78,7 +79,7 @@ export default Component.extend({
    * - the step must have logs left to load
    * @property {Boolean} shouldLoad
    */
-  shouldLoad: computed('isFetching', 'stepName', {
+  shouldLoad: computed('isFetching', 'buildId', 'stepName', {
     get() {
       const name = get(this, 'stepName');
 
@@ -100,7 +101,7 @@ export default Component.extend({
     }
 
     this.get('logService').resetCache();
-    set(this, 'lastStepName', get(this, 'stepName'));
+    set(this, 'lastStepId', `${get(this, 'buildId')}/${get(this, 'stepName')}`);
   },
 
   // Start loading logs immediately upon inserting the element if a step is selected
@@ -114,11 +115,13 @@ export default Component.extend({
 
   didUpdateAttrs() {
     this._super(...arguments);
-    const newStepName = get(this, 'stepName');
+    const newStepId = `${get(this, 'buildId')}/${get(this, 'stepName')}`;
 
-    if (newStepName !== get(this, 'lastStepName')) {
+    if (newStepId !== get(this, 'lastStepId')) {
       set(this, 'autoscroll', true);
-      set(this, 'lastStepName', newStepName);
+      set(this, 'lastStepId', newStepId);
+      set(this, 'lastScrollTop', 0);
+      set(this, 'lastScrollHeight', 0);
     }
   },
 
@@ -179,6 +182,7 @@ export default Component.extend({
       const stepName = get(this, 'stepName');
       const totalLine = get(this, 'totalLine');
       const inProgress = get(this, 'inProgress');
+      const started = !!get(this, 'stepStartTime');
 
       set(this, 'isFetching', true);
 
@@ -188,8 +192,9 @@ export default Component.extend({
         logNumber: this.get('logService').getCache(buildId, stepName, 'nextLine') ||
           (totalLine || 1) - 1,
         pageSize: this.getPageSize(fetchMax),
-        sortOrder: get(this, 'sortOrder')
-      }).then(({ lines, done }) => {
+        sortOrder: get(this, 'sortOrder'),
+        started
+      }).then(({ done }) => {
         // prevent updating logs when component is being destroyed
         if (!this.get('isDestroyed') && !this.get('isDestroying')) {
           const container = this.$('.wrap')[0];
@@ -206,13 +211,8 @@ export default Component.extend({
 
           scheduleOnce('afterRender', this, cb);
 
-          if (!done && inProgress) {
-            // Immediately ask for more logs if we have more to load
-            later(
-              this,
-              'getLogs',
-              lines.length === ENV.APP.MAX_LOG_LINES ? 0 : ENV.APP.LOG_RELOAD_TIMER
-            );
+          if (inProgress && !done) {
+            later(this, 'getLogs', ENV.APP.LOG_RELOAD_TIMER);
           }
         }
       });

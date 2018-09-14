@@ -17,9 +17,17 @@ export default Service.extend({
    * @param  {Number}  [config.logNumber=0]           The line number to start from
    * @param  {Number}  [config.pageSize=10]           The number of pages to load
    * @param  {String}  [config.sortOrder='ascending'] The sort order. 'ascending' | 'descending'
+   * @param  {String}  [config.started=false]         Is step started
    * @return {Promise}                                Resolves to { lines, done }
    */
-  fetchLogs({ buildId, stepName, logNumber = 0, pageSize = 10, sortOrder = 'ascending' }) {
+  fetchLogs({
+    buildId,
+    stepName,
+    logNumber = 0,
+    pageSize = 10,
+    sortOrder = 'ascending',
+    started = false
+  }) {
     let lines = [];
     let done = false;
     const inProgress = sortOrder === 'ascending';
@@ -47,7 +55,7 @@ export default Service.extend({
           if (Array.isArray(data)) {
             lines = data;
           }
-          done = jqXHR.getResponseHeader('x-more-data') === 'false';
+          done = started && jqXHR.getResponseHeader('x-more-data') === 'false';
         })
         // always resolve something
         .always(() => {
@@ -61,6 +69,7 @@ export default Service.extend({
               logs: inProgress ? existings.concat(lines) : lines.concat(existings)
             });
           }
+
           resolve({ lines, done });
         });
     });
