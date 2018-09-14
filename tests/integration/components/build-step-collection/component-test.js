@@ -9,7 +9,9 @@ const logService = Service.extend({
       lines: [],
       done: true
     });
-  }
+  },
+  resetCache() {},
+  getCache() {}
 });
 
 const artifactService = Service.extend({
