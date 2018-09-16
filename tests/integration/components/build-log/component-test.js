@@ -8,17 +8,36 @@ import moment from 'moment';
 import sinon from 'sinon';
 const startTime = 1478912844724;
 const doneStub = sinon.stub();
+const logsStub = sinon.stub();
+const blobUrl = 'blob:https://localhost/34dba0dc-2706-4cae-a74f-99349a578e60';
+const sampleLogs = Array(100).fill().map((_, i) => ({
+  m: `${startTime + i}`,
+  n: i + 1,
+  t: startTime + i
+}));
 const logService = Service.extend({
   fetchLogs() {
     return resolve({
-      lines: Array(100).fill().map((_, i) => ({
-        m: `${startTime + i}`,
-        n: i + 1,
-        t: startTime + i
-      })),
-      done: doneStub()
+      lines: this.getCache('logs'),
+      done: this.getCache('done')
     });
-  }
+  },
+  resetCache() {},
+  getCache() {
+    const lastArg = arguments[arguments.length - 1];
+
+    if (lastArg === 'logs') {
+      return logsStub();
+    }
+
+    if (lastArg === 'done') {
+      return doneStub();
+    }
+
+    return 100;
+  },
+  buildLogBlobUrl() { return blobUrl; },
+  revokeLogBlobUrls() {}
 });
 
 moduleForComponent('build-log', 'Integration | Component | build log', {
@@ -28,10 +47,14 @@ moduleForComponent('build-log', 'Integration | Component | build log', {
     this.register('service:build-logs', logService);
     doneStub.onCall(0).returns(true);
     doneStub.onCall(1).returns(false);
+    logsStub.onCall(0).returns(sampleLogs);
+    logsStub.onCall(1).returns(sampleLogs);
+    logsStub.returns(sampleLogs.concat(sampleLogs));
   },
 
   afterEach() {
     doneStub.reset();
+    logsStub.reset();
   }
 });
 
@@ -87,7 +110,9 @@ test('it starts loading when step chosen', function (assert) {
 
 test('it starts fetching more log for a chosen completed step', function (assert) {
   doneStub.onCall(0).returns(false);
-  doneStub.onCall(1).returns(true);
+  doneStub.onCall(1).returns(false);
+  doneStub.onCall(2).returns(true);
+  doneStub.onCall(3).returns(true);
 
   this.set('step', null);
   this.render(hbs`{{build-log
@@ -107,7 +132,29 @@ test('it starts fetching more log for a chosen completed step', function (assert
   run(() => { container.scrollTop = 0; });
 
   return wait().then(() => {
-    sinon.assert.callCount(doneStub, 2);
+    sinon.assert.callCount(doneStub, 4);
+    sinon.assert.callCount(logsStub, 4);
     assert.ok(container.scrollTop > lastScrollTop);
+  });
+});
+
+test('it generates object url for the log when clicking download button', function (assert) {
+  this.set('step', 'banana');
+  this.render(hbs`{{build-log
+    stepName=step
+    totalLine=1000
+    buildId=1
+    stepStartTime=null
+    buildStartTime="1478912844724"
+  }}`);
+
+  const $hiddenDownloadButton = this.$('#downloadLink');
+
+  assert.equal($hiddenDownloadButton.prev().text().trim(), 'Download');
+
+  $hiddenDownloadButton.prev().click();
+
+  return wait().then(() => {
+    assert.equal($hiddenDownloadButton.attr('href'), blobUrl);
   });
 });
