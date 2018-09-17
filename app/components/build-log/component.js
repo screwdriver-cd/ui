@@ -1,4 +1,5 @@
-import { get, getWithDefault, set, computed } from '@ember/object';
+import { Promise } from 'rsvp';
+import { get, set, computed } from '@ember/object';
 import { scheduleOnce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -7,10 +8,11 @@ import ENV from 'screwdriver-ui/config/environment';
 const timeTypes = ['datetime', 'elapsedBuild', 'elapsedStep'];
 
 export default Component.extend({
-  logger: service('build-logs'),
+  logService: service('build-logs'),
   classNames: ['build-log'],
   autoscroll: true,
   isFetching: false,
+  isDownloading: false,
   timeFormat: 'datetime',
   lastScrollTop: 0,
   lastScrollHeight: 0,
@@ -26,7 +28,11 @@ export default Component.extend({
   }),
   getPageSize(fetchMax = false) {
     const totalLine = get(this, 'totalLine');
-    const itemSize = get(this, `logCache.${get(this, 'stepName')}.nextLine`) || totalLine;
+    const itemSize = this.get('logService').getCache(
+      get(this, 'buildId'),
+      get(this, 'stepName'),
+      'nextLine'
+    ) || totalLine;
 
     // for running step, fetch regular page size
     if (get(this, 'inProgress')) {
@@ -41,28 +47,29 @@ export default Component.extend({
       Math.ceil(itemSize / ENV.APP.MAX_LOG_LINES) :
       +(itemSize < ENV.APP.MAX_LOG_LINES || itemSize % ENV.APP.MAX_LOG_LINES < 100) + 1;
   },
-  logs: computed('isFetching', 'stepName', {
+  logs: computed('stepStartTime', 'isFetching', 'buildId', 'stepName', {
     get() {
-      const name = get(this, 'stepName');
+      const buildId = get(this, 'buildId');
+      const stepName = get(this, 'stepName');
+      const logs = this.get('logService').getCache(buildId, stepName, 'logs');
       const isFetching = get(this, 'isFetching');
+      const started = !!get(this, 'stepStartTime');
 
-      if (!name) {
+      if (!stepName) {
         return [{ m: 'Click a step to see logs' }];
       }
 
-      const cache = get(this, 'logCache');
-
-      if (!cache[name]) {
-        if (!isFetching) {
+      if (!logs) {
+        if (!isFetching && started) {
           this.getLogs();
         }
 
-        return [{ m: `Loading logs for step ${name}...` }];
+        return [{ m: `Loading logs for step ${stepName}...` }];
       }
 
       scheduleOnce('afterRender', this, 'scrollDown');
 
-      return get(cache[name], 'logs');
+      return logs;
     }
   }),
 
@@ -72,7 +79,7 @@ export default Component.extend({
    * - the step must have logs left to load
    * @property {Boolean} shouldLoad
    */
-  shouldLoad: computed('isFetching', 'stepName', {
+  shouldLoad: computed('isFetching', 'buildId', 'stepName', {
     get() {
       const name = get(this, 'stepName');
 
@@ -80,7 +87,7 @@ export default Component.extend({
         return false;
       }
 
-      return !get(this, `logCache.${name}.done`);
+      return !this.get('logService').getCache(get(this, 'buildId'), name, 'done');
     }
   }),
 
@@ -93,8 +100,8 @@ export default Component.extend({
       set(this, 'timeFormat', timeFormat);
     }
 
-    set(this, 'logCache', {});
-    set(this, 'lastStepName', get(this, 'stepName'));
+    this.get('logService').resetCache();
+    set(this, 'lastStepId', `${get(this, 'buildId')}/${get(this, 'stepName')}`);
   },
 
   // Start loading logs immediately upon inserting the element if a step is selected
@@ -108,11 +115,13 @@ export default Component.extend({
 
   didUpdateAttrs() {
     this._super(...arguments);
-    const newStepName = get(this, 'stepName');
+    const newStepId = `${get(this, 'buildId')}/${get(this, 'stepName')}`;
 
-    if (newStepName !== get(this, 'lastStepName')) {
+    if (newStepId !== get(this, 'lastStepId')) {
       set(this, 'autoscroll', true);
-      set(this, 'lastStepName', newStepName);
+      set(this, 'lastStepId', newStepId);
+      set(this, 'lastScrollTop', 0);
+      set(this, 'lastScrollHeight', 0);
     }
   },
 
@@ -122,7 +131,7 @@ export default Component.extend({
    */
   willDestroyElement() {
     this._super(...arguments);
-    set(this, 'logCache', {});
+    this.get('logService').resetCache();
   },
 
   /**
@@ -164,43 +173,32 @@ export default Component.extend({
   /**
    * Fetch logs from log service
    * @method getLogs
+   *
+   * @param {boolean} fetchMax
    */
   getLogs(fetchMax = false) {
     if (get(this, 'shouldLoad')) {
+      const buildId = get(this, 'buildId');
       const stepName = get(this, 'stepName');
       const totalLine = get(this, 'totalLine');
       const inProgress = get(this, 'inProgress');
-      const cache = get(this, 'logCache');
-      const logData = getWithDefault(cache, stepName, {
-        nextLine: (totalLine || 1) - 1,
-        logs: [],
-        done: false
-      });
-      const buildId = get(this, 'buildId');
+      const started = !!get(this, 'stepStartTime');
 
       set(this, 'isFetching', true);
-      this.get('logger').fetchLogs({
+
+      return this.get('logService').fetchLogs({
         buildId,
         stepName,
-        logNumber: logData.nextLine,
+        logNumber: this.get('logService').getCache(buildId, stepName, 'nextLine') ||
+          (totalLine || 1) - 1,
         pageSize: this.getPageSize(fetchMax),
-        sortOrder: get(this, 'sortOrder')
-      }).then(({ lines, done }) => {
+        sortOrder: get(this, 'sortOrder'),
+        started
+      }).then(({ done }) => {
         // prevent updating logs when component is being destroyed
         if (!this.get('isDestroyed') && !this.get('isDestroying')) {
-          if (Array.isArray(lines) && lines.length) {
-            set(logData, 'nextLine', inProgress ? lines[lines.length - 1].n + 1 : lines[0].n - 1);
-            set(
-              logData,
-              'logs',
-              inProgress ? get(logData, 'logs').concat(lines) : lines.concat(get(logData, 'logs'))
-            );
-          }
-
           const container = this.$('.wrap')[0];
 
-          set(logData, 'done', done);
-          set(this, `logCache.${stepName}`, logData);
           set(this, 'isFetching', false);
           set(this, 'lastScrollTop', container.scrollTop);
           set(this, 'lastScrollHeight', container.scrollHeight);
@@ -213,17 +211,14 @@ export default Component.extend({
 
           scheduleOnce('afterRender', this, cb);
 
-          if (!done && inProgress) {
-            // Immediately ask for more logs if we have more to load
-            later(
-              this,
-              'getLogs',
-              lines.length === ENV.APP.MAX_LOG_LINES ? 0 : ENV.APP.LOG_RELOAD_TIMER
-            );
+          if (inProgress && !done) {
+            later(this, 'getLogs', ENV.APP.LOG_RELOAD_TIMER);
           }
         }
       });
     }
+
+    return Promise.resolve();
   },
   actions: {
     scrollToTop() {
@@ -239,12 +234,28 @@ export default Component.extend({
       set(this, 'autoscroll', true);
       this.scrollDown();
     },
+    download() {
+      const buildId = get(this, 'buildId');
+      const stepName = get(this, 'stepName');
+
+      if (this.get('logService').getCache(buildId, stepName, 'logs')) {
+        set(this, 'isDownloading', true);
+
+        this.getLogs(true).then(() => {
+          this.$('#downloadLink').attr({
+            download: `${buildId}-${stepName}.log`,
+            href: this.get('logService').buildLogBlobUrl(buildId, stepName)
+          })[0].click();
+          set(this, 'isDownloading', false);
+        });
+      }
+    },
     logScroll() {
       const container = this.$('.wrap')[0];
 
       if (!get(this, 'inProgress') &&
         !get(this, 'isFetching') &&
-        !get(this, `logCache.${get(this, 'stepName')}.done`) &&
+        !this.get('logService').getCache(get(this, 'buildId'), get(this, 'stepName'), 'done') &&
         container.scrollTop < (container.scrollHeight - get(this, 'lastScrollHeight')) / 2) {
         this.getLogs();
 

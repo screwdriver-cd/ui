@@ -66,7 +66,8 @@ const sessionServiceMock = Service.extend({
 
 const serviceConfig = {
   buildId: '1',
-  stepName: 'banana'
+  stepName: 'banana',
+  started: true
 };
 
 moduleFor('service:build-logs', 'Unit | Service | build logs', {
@@ -78,6 +79,7 @@ moduleFor('service:build-logs', 'Unit | Service | build logs', {
     this.register('service:session', sessionServiceMock);
     this.inject.service('session', { as: 'session' });
     this.session.set('isAuthenticated', true);
+    this.subject().resetCache();
   },
 
   afterEach() {
@@ -190,4 +192,41 @@ test('it handles fetching multiple pages', function (assert) {
     assert.equal(request.url,
       'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100&sort=ascending');
   });
+});
+
+test('it can reset the cache', function (assert) {
+  assert.expect(2);
+  const service = this.subject();
+
+  assert.ok(service.get('cache'));
+  assert.equal(Object.keys(service.get('cache')).length, 0);
+});
+
+test('it creates and revokes object url', function (assert) {
+  // assert.expect(5);
+  const service = this.subject();
+
+  service.setCache(serviceConfig.buildId, serviceConfig.stepName, {
+    logs: [{
+      t: now,
+      n: 0,
+      m: 'hello, world'
+    }]
+  });
+
+  const url = service.buildLogBlobUrl(serviceConfig.buildId, serviceConfig.stepName);
+
+  assert.ok(url);
+  assert.equal(service.getCache(serviceConfig.buildId, serviceConfig.stepName, 'blobUrl'), url);
+  assert.equal(
+    service.get('blobKeys')[0].toString(),
+    [serviceConfig.buildId, serviceConfig.stepName].toString()
+  );
+
+  service.revokeLogBlobUrls();
+  assert.equal(service.get('blobKeys').length, 0);
+  assert.equal(
+    service.getCache(serviceConfig.buildId, serviceConfig.stepName, 'blobUrl'),
+    undefined
+  );
 });
