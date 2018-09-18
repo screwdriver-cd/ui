@@ -15,7 +15,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
   model(params) {
     const pipelineListConfig = {
       page: 1,
-      count: ENV.APP.NUM_PIPELINES_LISTED
+      count: ENV.APP.NUM_PIPELINES_LISTED,
+      sortBy: 'name',
+      sort: 'ascending'
     };
 
     if (params && params.query) {

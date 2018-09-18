@@ -1,6 +1,6 @@
 /* eslint ember/avoid-leaking-state-in-components: [2, ["pipelineSorting"]] */
 import { computed, get, set } from '@ember/object';
-import { empty, sort } from '@ember/object/computed';
+import { empty } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 import Component from '@ember/component';
@@ -12,8 +12,6 @@ export default Component.extend({
   scmService: service('scm'),
   addCollectionError: null,
   addCollectionSuccess: null,
-  pipelineSorting: ['appId', 'branch'],
-  sortedPipelines: sort('pipelines', 'pipelineSorting'),
   isEmpty: empty('filteredPipelines'),
   showMore: computed('moreToShow', 'filteredPipelines', {
     get() {
@@ -26,10 +24,10 @@ export default Component.extend({
       return get(this, 'moreToShow');
     }
   }),
-  filteredPipelines: computed('sortedPipelines', 'filterSet', {
+  filteredPipelines: computed('pipelines', {
     get() {
       const scmService = this.get('scmService');
-      let filtered = this.get('sortedPipelines');
+      let filtered = this.get('pipelines');
 
       // add scm contexts into pipelines.
       return filtered.map((pipeline) => {

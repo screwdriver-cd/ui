@@ -37,7 +37,9 @@ export default Controller.extend({
     updatePipelines({ page, search }) {
       const pipelineListConfig = {
         page,
-        count: ENV.APP.NUM_PIPELINES_LISTED
+        count: ENV.APP.NUM_PIPELINES_LISTED,
+        sortBy: 'name',
+        sort: 'ascending'
       };
 
       if (search) {

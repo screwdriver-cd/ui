@@ -26,6 +26,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   titleToken(model) {
-    return get(model, 'appId');
+    return get(model, 'pipeline.name');
   }
 });
