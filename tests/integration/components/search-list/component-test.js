@@ -19,16 +19,16 @@ test('it renders without collections', function (assert) {
 
   const pipelines = [
     EmberObject.create({
-      id: 1,
-      appId: 'foo/bar',
-      branch: 'master',
-      scmContext: 'github:github.com'
-    }),
-    EmberObject.create({
       id: 2,
       appId: 'batman/tumbler',
       branch: 'waynecorp',
       scmContext: 'bitbucket:bitbucket.org'
+    }),
+    EmberObject.create({
+      id: 1,
+      appId: 'foo/bar',
+      branch: 'master',
+      scmContext: 'github:github.com'
     })
   ];
   const collections = [
@@ -64,16 +64,16 @@ test('it renders with collections', function (assert) {
   // Handle any actions with this.on('myAction', function(val) { ... });
   const pipelines = [
     EmberObject.create({
-      id: 1,
-      appId: 'foo/bar',
-      branch: 'master',
-      scmContext: 'github:github.com'
-    }),
-    EmberObject.create({
       id: 2,
       appId: 'batman/tumbler',
       branch: 'waynecorp',
       scmContext: 'bitbucket:bitbucket.org'
+    }),
+    EmberObject.create({
+      id: 1,
+      appId: 'foo/bar',
+      branch: 'master',
+      scmContext: 'github:github.com'
     })
   ];
   const collections = [
