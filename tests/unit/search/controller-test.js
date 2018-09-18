@@ -1,5 +1,6 @@
 import { resolve } from 'rsvp';
 import { moduleFor, test } from 'ember-qunit';
+import EmberObject from '@ember/object';
 import injectSessionStub from '../../helpers/inject-session';
 
 moduleFor('controller:search', 'Unit | Controller | search', {
@@ -12,6 +13,79 @@ test('it exists', function (assert) {
   const controller = this.subject();
 
   assert.ok(controller);
+});
+
+test('it calls updatePipelines', function (assert) {
+  injectSessionStub(this);
+  const controller = this.subject();
+
+  const pipelineModelMockArray = [
+    EmberObject.create({
+      id: 2,
+      appId: 'batman/tumbler',
+      branch: 'waynecorp',
+      scmContext: 'bitbucket:bitbucket.org'
+    }),
+    EmberObject.create({
+      id: 1,
+      appId: 'foo/bar',
+      branch: 'master',
+      scmContext: 'github:github.com'
+    })
+  ];
+
+  controller.set('store', {
+    query(modelName, params) {
+      assert.strictEqual(modelName, 'pipeline');
+      assert.deepEqual(params, {
+        page: 2,
+        count: 3,
+        sortBy: 'name',
+        sort: 'ascending'
+      });
+
+      return resolve(pipelineModelMockArray);
+    }
+  });
+
+  controller.send('updatePipelines', { page: 2 });
+});
+
+test('it calls updatePipelines with search param', function (assert) {
+  injectSessionStub(this);
+  const controller = this.subject();
+
+  const pipelineModelMockArray = [
+    EmberObject.create({
+      id: 2,
+      appId: 'batman/tumbler',
+      branch: 'waynecorp',
+      scmContext: 'bitbucket:bitbucket.org'
+    }),
+    EmberObject.create({
+      id: 1,
+      appId: 'foo/bar',
+      branch: 'master',
+      scmContext: 'github:github.com'
+    })
+  ];
+
+  controller.set('store', {
+    query(modelName, params) {
+      assert.strictEqual(modelName, 'pipeline');
+      assert.deepEqual(params, {
+        page: 2,
+        count: 3,
+        sortBy: 'name',
+        sort: 'ascending',
+        search: 'ba'
+      });
+
+      return resolve(pipelineModelMockArray);
+    }
+  });
+
+  controller.send('updatePipelines', { page: 2, search: 'ba' });
 });
 
 test('it calls addToCollection', function (assert) {
