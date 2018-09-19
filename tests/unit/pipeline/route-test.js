@@ -21,7 +21,9 @@ module('Unit | Route | pipeline', function (hooks) {
 
     assert.ok(route);
     assert.equal(route.titleToken(EmberObject.create({
-      appId: 'foo:bar'
+      pipeline: EmberObject.create({
+        name: 'foo:bar'
+      })
     })), 'foo:bar');
   });
 

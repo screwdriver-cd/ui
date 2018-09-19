@@ -47,16 +47,16 @@ test('it adds a pipeline to a collection', function (assert) {
   const $ = this.$;
   const pipelines = [
     EmberObject.create({
-      id: 1,
-      appId: 'foo/bar',
-      branch: 'master',
-      scmContext: 'github:github.com'
-    }),
-    EmberObject.create({
       id: 2,
       appId: 'batman/tumbler',
       branch: 'waynecorp',
       scmContext: 'bitbucket:bitbucket.org'
+    }),
+    EmberObject.create({
+      id: 1,
+      appId: 'foo/bar',
+      branch: 'master',
+      scmContext: 'github:github.com'
     })
   ];
   const collections = [
@@ -90,7 +90,7 @@ test('it adds a pipeline to a collection', function (assert) {
   this.set('addToCollection', addToCollectionMock);
 
   this.render(hbs`
-    {{search-list 
+    {{search-list
       pipelines=pipelineList
       collections=collections
       addToCollection=addToCollection
@@ -134,9 +134,9 @@ test('it fails to add a pipeline to a collection', function (assert) {
   this.set('addToCollection', addToCollectionMock);
 
   this.render(hbs`
-    {{search-list 
+    {{search-list
       pipelines=pipelineList
-      collections=collections 
+      collections=collections
       addToCollection=addToCollection
     }}
   `);

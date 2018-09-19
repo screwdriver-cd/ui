@@ -8,6 +8,7 @@ export default DS.Model.extend({
   createTime: DS.attr('date'),
   scmRepo: DS.attr(),
   scmUri: DS.attr('string'),
+  name: DS.attr('string'),
   workflowGraph: DS.attr(),
   configPipelineId: DS.attr('string'),
   childPipelines: DS.attr(),

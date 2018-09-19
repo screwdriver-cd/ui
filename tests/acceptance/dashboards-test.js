@@ -234,7 +234,7 @@ test('creating a collection', function (assert) {
   authenticateSession(this.application, { token: 'fakeToken' });
   visit('/');
   andThen(() => {
-    // Loggedn in but no collections, url should be `/`
+    // Logged in but no collections, url should be `/`
     assert.equal(currentURL(), '/');
 
     visit('/search');
