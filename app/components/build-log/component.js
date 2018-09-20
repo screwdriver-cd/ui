@@ -177,7 +177,7 @@ export default Component.extend({
    * @param {boolean} fetchMax
    */
   getLogs(fetchMax = false) {
-    if (get(this, 'shouldLoad')) {
+    if (!get(this, 'isFetching') && get(this, 'shouldLoad')) {
       const buildId = get(this, 'buildId');
       const stepName = get(this, 'stepName');
       const totalLine = get(this, 'totalLine');
