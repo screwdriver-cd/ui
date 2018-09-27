@@ -105,6 +105,34 @@ const walkGraph = (graph, start, x, y) => {
 const isRoot = (edges, name) => !edges.find(e => e.dest === name);
 
 /**
+ * Determine if a node is a trigger by seeing if it matches the startFrom
+ * @param  {String}  name  The node name to check
+ * @param  {String}  start The start from
+ * @return {Boolean}       True if the node matches the startFrom
+ */
+const isTrigger = (name, start) => {
+  // Set a status on the trigger node (if it starts with ~)
+  if (name === start && /^~/.test(name)) {
+    return true;
+  }
+
+  // Set status on trigger node if is branch specific trigger
+  const edgeSrcBranch = name.match(new RegExp('^~(pr|commit):/(.+)/$'));
+
+  if (edgeSrcBranch) {
+    const triggerBranch = start.match(new RegExp('^~(pr|commit):(.+)$'));
+
+    if (triggerBranch && triggerBranch[1] === edgeSrcBranch[1]) {
+      if (triggerBranch[2].match(edgeSrcBranch[2])) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+/**
  * Determine if an node has destinations that have already been processed.
  * This allows a graph's common root nodes to collapse instead of taking up multiple lines.
  * @method hasProcessedDest
@@ -172,8 +200,8 @@ const decorateGraph = (inputGraph, builds, start) => {
       }
     }
 
-    // Set a status on the trigger node (if it starts with ~)
-    if (n.name === start && /^~/.test(n.name)) {
+    // Set a STARTED_FROM status on the trigger node
+    if (isTrigger(n.name, start)) {
       n.status = 'STARTED_FROM';
     }
   });
@@ -201,4 +229,4 @@ const decorateGraph = (inputGraph, builds, start) => {
   return graph;
 };
 
-export default { node, icon, decorateGraph, graphDepth, isRoot };
+export default { node, icon, decorateGraph, graphDepth, isRoot, isTrigger };
