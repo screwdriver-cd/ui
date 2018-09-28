@@ -13,6 +13,8 @@ const STATUS_MAP = {
   UNSTABLE: { icon: '\ue909' },
   BLOCKED: { icon: '\ue908' }
 };
+const edgeSrcBranchRegExp = new RegExp('^~(pr|commit):/(.+)/$');
+const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');
 
 /**
  * Find a node from the list of nodes
@@ -115,9 +117,6 @@ const isTrigger = (name, start) => {
   if (name === start && /^~/.test(name)) {
     return true;
   }
-
-  const edgeSrcBranchRegExp = new RegExp('^~(pr|commit):/(.+)/$');
-  const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');
 
   // Set status on trigger node if is branch specific trigger
   // Check if node name has regex
