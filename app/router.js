@@ -29,12 +29,12 @@ Router.map(function route() {
     this.route('show', { path: '/:collection_id' });
   });
   this.route('templates', function templatesRoute() {
-    this.route('namespace', { path: '/namespaces/:namespace' });
-    this.route('detail', { path: '/namespaces/:namespace/names/:name' });
+    this.route('namespace', { path: '/:namespace' });
+    this.route('detail', { path: '/:namespace/:name' });
   });
   this.route('commands', function commandsRoute() {
-    this.route('namespace', { path: '/namespaces/:namespace' });
-    this.route('detail', { path: '/namespaces/:namespace/names/:name' });
+    this.route('namespace', { path: '/:namespace' });
+    this.route('detail', { path: '/:namespace/:name' });
   });
   this.route('404', { path: '/*path' });
 });
