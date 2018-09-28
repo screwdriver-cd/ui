@@ -1,6 +1,6 @@
 import graphTools from 'screwdriver-ui/utils/graph-tools';
 import { module, test } from 'qunit';
-const { icon, node, decorateGraph, graphDepth, isRoot } = graphTools;
+const { icon, node, decorateGraph, graphDepth, isRoot, isTrigger } = graphTools;
 
 const SIMPLE_GRAPH = {
   nodes: [
@@ -246,6 +246,8 @@ test('it handles complex misordered pipeline with multiple commit/pr/remote trig
   });
 
 test('it determines the depth of a graph from various starting points', function (assert) {
+  // edges not array
+  assert.equal(graphDepth('meow', '~commit'), Number.MAX_VALUE, 'not array');
   // simple graph, commit
   assert.equal(graphDepth(SIMPLE_GRAPH.edges, '~commit'), 1, 'simple commit');
   // simple graph, pr
@@ -268,4 +270,13 @@ test('it determines if a job name is a root node', function (assert) {
   assert.ok(isRoot(MORE_COMPLEX_GRAPH.edges, 'detached_main'));
   assert.ok(isRoot(MORE_COMPLEX_GRAPH.edges, '~commit'));
   assert.notOk(isRoot(MORE_COMPLEX_GRAPH.edges, 'no_main'));
+});
+
+test('it determines if a node name is a trigger node', function (assert) {
+  assert.ok(isTrigger('~commit', '~commit'));
+  assert.ok(isTrigger('~commit:/^detached_main$/', '~commit:detached_main'));
+  assert.ok(isTrigger('~commit:/^detached_main.*$/', '~commit:detached_main1'));
+  assert.notOk(isTrigger('~pr:/^detached_main$/', '~commit:detached_main'));
+  assert.notOk(isTrigger('~commit:/^detached_main$/', '~commit:detached_main1'));
+  assert.notOk(isTrigger('~commit:detached_main', 'no_main'));
 });
