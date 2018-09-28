@@ -13,6 +13,8 @@ const STATUS_MAP = {
   UNSTABLE: { icon: '\ue909' },
   BLOCKED: { icon: '\ue908' }
 };
+const edgeSrcBranchRegExp = new RegExp('^~(pr|commit):/(.+)/$');
+const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');
 
 /**
  * Find a node from the list of nodes
@@ -105,6 +107,38 @@ const walkGraph = (graph, start, x, y) => {
 const isRoot = (edges, name) => !edges.find(e => e.dest === name);
 
 /**
+ * Determine if a node is a trigger by seeing if it matches the startFrom
+ * @param  {String}  name  The node name to check
+ * @param  {String}  start The start from
+ * @return {Boolean}       True if the node matches the startFrom
+ */
+const isTrigger = (name, start) => {
+  // Set a status on the trigger node (if it starts with ~)
+  if (name === start && /^~/.test(name)) {
+    return true;
+  }
+
+  // Set status on trigger node if is branch specific trigger
+  // Check if node name has regex
+  const edgeSrcBranch = name.match(edgeSrcBranchRegExp);
+
+  if (edgeSrcBranch) {
+    // Check if trigger is specific branch commit or pr
+    const triggerBranch = start.match(triggerBranchRegExp);
+
+    // Check whether job types of trigger and node name match
+    if (triggerBranch && triggerBranch[1] === edgeSrcBranch[1]) {
+      // Check if trigger branch and node branch regex match
+      if (triggerBranch[2].match(edgeSrcBranch[2])) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+/**
  * Determine if an node has destinations that have already been processed.
  * This allows a graph's common root nodes to collapse instead of taking up multiple lines.
  * @method hasProcessedDest
@@ -172,8 +206,8 @@ const decorateGraph = (inputGraph, builds, start) => {
       }
     }
 
-    // Set a status on the trigger node (if it starts with ~)
-    if (n.name === start && /^~/.test(n.name)) {
+    // Set a STARTED_FROM status on the trigger node
+    if (isTrigger(n.name, start)) {
       n.status = 'STARTED_FROM';
     }
   });
@@ -201,4 +235,4 @@ const decorateGraph = (inputGraph, builds, start) => {
   return graph;
 };
 
-export default { node, icon, decorateGraph, graphDepth, isRoot };
+export default { node, icon, decorateGraph, graphDepth, isRoot, isTrigger };
