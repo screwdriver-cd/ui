@@ -116,13 +116,20 @@ const isTrigger = (name, start) => {
     return true;
   }
 
+  const edgeSrcBranchRegExp = new RegExp('^~(pr|commit):/(.+)/$');
+  const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');
+
   // Set status on trigger node if is branch specific trigger
-  const edgeSrcBranch = name.match(new RegExp('^~(pr|commit):/(.+)/$'));
+  // Check if node name has regex
+  const edgeSrcBranch = name.match(edgeSrcBranchRegExp);
 
   if (edgeSrcBranch) {
-    const triggerBranch = start.match(new RegExp('^~(pr|commit):(.+)$'));
+    // Check if trigger is specific branch commit or pr
+    const triggerBranch = start.match(triggerBranchRegExp);
 
+    // Check whether job types of trigger and node name match
     if (triggerBranch && triggerBranch[1] === edgeSrcBranch[1]) {
+      // Check if trigger branch and node branch regex match
       if (triggerBranch[2].match(edgeSrcBranch[2])) {
         return true;
       }
