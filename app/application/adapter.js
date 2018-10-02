@@ -2,15 +2,17 @@ import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
+import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 
 // urls are of the form: https://server.com/namespace/key1s/:id/key2s, but :id and key2s are optional
 const urlPathParser = new RegExp(`/${ENV.APP.SDAPI_NAMESPACE}/([^/]+)(/([^/]+))?(/([^/]+))?`);
 
-export default DS.RESTAdapter.extend({
+export default DS.RESTAdapter.extend(DataAdapterMixin, {
   session: service('session'),
   namespace: ENV.APP.SDAPI_NAMESPACE,
   host: ENV.APP.SDAPI_HOSTNAME,
-
+  /** Just to override the assertion from `DataAdapterMixin` */
+  authorize() {},
   /**
    * Add cors support to all ajax calls
    * @method ajax
