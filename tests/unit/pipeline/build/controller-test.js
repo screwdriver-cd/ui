@@ -5,6 +5,9 @@ import { moduleFor, test } from 'ember-qunit';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import wait from 'ember-test-helpers/wait';
+import sinon from 'sinon';
+
+const invalidateStub = sinon.stub();
 
 const prEventsService = Service.extend({
   getPrEvents() {
@@ -14,6 +17,7 @@ const prEventsService = Service.extend({
 
 const sessionServiceMock = Service.extend({
   isAuthenticated: true,
+  invalidate: invalidateStub,
   data: {
     authenticated: {
       // fake token for test, it has { username: apple } inside
@@ -35,6 +39,7 @@ moduleFor('controller:pipeline/build', 'Unit | Controller | pipeline/build', {
   },
   afterEach() {
     server.shutdown();
+    invalidateStub.reset();
   }
 });
 
@@ -97,7 +102,7 @@ test('it restarts a build', function (assert) {
 });
 
 test('it fails to restart a build', function (assert) {
-  assert.expect(5);
+  assert.expect(6);
 
   server.post('http://localhost:8080/v4/events', () => [
     401,
@@ -144,6 +149,7 @@ test('it fails to restart a build', function (assert) {
       causeMessage: 'apple clicked restart for job "PR-1:main" for sha sha'
     });
     assert.notOk(controller.get('isShowingModal'));
+    assert.ok(invalidateStub.called);
     assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
   });
 });
@@ -190,7 +196,7 @@ test('it stops a build', function (assert) {
 });
 
 test('it fails to stop a build', function (assert) {
-  assert.expect(2);
+  assert.expect(3);
   server.put('http://localhost:8080/v4/builds/5678', () => [
     401,
     {},
@@ -227,6 +233,7 @@ test('it fails to stop a build', function (assert) {
     assert.deepEqual(payload, {
       status: 'ABORTED'
     });
+    assert.ok(invalidateStub.called);
     assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
   });
 });
