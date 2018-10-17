@@ -48,7 +48,7 @@ jobs:
       - get-tag: ./ci/git-latest.sh
       - wait-docker: DOCKER_TAG=`cat VERSION` ./ci/docker-wait.sh
       - deploy-k8s: K8S_TAG=`cat VERSION` ./ci/k8s-deploy.sh
-      - test: sleep 15; curl --silent --fail -o /dev/null https://beta.cd.screwdriver.cd
+      - test: sleep 30; curl --silent --fail -o /dev/null https://beta.cd.screwdriver.cd
     environment:
       DOCKER_REPO: screwdrivercd/ui
       K8S_CONTAINER: screwdriver-ui
