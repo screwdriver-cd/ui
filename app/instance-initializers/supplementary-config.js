@@ -20,6 +20,9 @@ export function initialize() {
   if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.SDDOC_URL) {
     ENV.APP.SDDOC_URL = window.SUPPLEMENTARY_CONFIG.SDDOC_URL;
   }
+  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.rootURL) {
+    ENV.rootURL = window.SUPPLEMENTARY_CONFIG.ROOT_URL;
+  }
 }
 
 export default {
