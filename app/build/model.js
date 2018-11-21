@@ -52,7 +52,7 @@ export default DS.Model.extend({
   sha: DS.attr('string'),
   startTime: DS.attr('date'),
   status: DS.attr('string'),
-  statusMessage: DS.attr('string'),
+  statusMessage: DS.attr('string', { defaultValue: null }),
   steps: DS.attr(),
 
   createTimeWords: computed('createTime', {

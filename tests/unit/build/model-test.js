@@ -6,10 +6,11 @@ moduleForModel('build', 'Unit | Model | build', {
   needs: []
 });
 
-test('it exists', function (assert) {
+test('it exists and has statusMessage defaults to null', function (assert) {
   let model = this.subject();
 
   assert.ok(!!model);
+  assert.equal(model.get('statusMessage'), null);
 });
 
 test('it calculates queuedDuration', function (assert) {
