@@ -17,8 +17,8 @@ moduleForModel('build', 'Unit | Serializer | build', {
   }
 });
 
-test('it converts container to buildContainer', function (assert) {
-  assert.expect(1);
+test('it converts container to buildContainer and haves right defaults', function (assert) {
+  assert.expect(2);
   server.get('/builds/abcd', function () {
     return [200, {}, JSON.stringify({ build: { id: 'abcd', container: 'node:6' } })];
   });
@@ -30,6 +30,7 @@ test('it converts container to buildContainer', function (assert) {
 
   return wait().then(() => {
     assert.equal(build.get('buildContainer'), 'node:6');
+    assert.equal(build.get('statusMessage'), null);
   });
 });
 

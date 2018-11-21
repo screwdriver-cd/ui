@@ -5,6 +5,16 @@ export default DS.RESTSerializer.extend({
   attrs: {
     buildContainer: 'container'
   },
+  /**
+   * Overrride and fill in `statusMessage` so the model can merge properly
+   */
+  normalizeResponse(store, typeClass, payload, id, requestType) {
+    if (payload.build) {
+      payload.build.statusMessage = payload.build.statusMessage || null;
+    }
+
+    return this._super(store, typeClass, payload, id, requestType);
+  },
 
   /**
    * Override the serializeIntoHash method to handle model names without a root key
