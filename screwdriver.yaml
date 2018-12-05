@@ -53,7 +53,7 @@ jobs:
       DOCKER_REPO: screwdrivercd/ui
       K8S_CONTAINER: screwdriver-ui
       K8S_IMAGE: screwdrivercd/ui
-      K8S_HOST: api.k8s.screwdriver.cd
+      K8S_HOST: api.ossd.k8s.screwdriver.cd
       K8S_DEPLOYMENT: sdui-beta
       SD_UI: beta.cd.screwdriver.cd
     secrets:
@@ -74,7 +74,7 @@ jobs:
       DOCKER_REPO: screwdrivercd/ui
       K8S_CONTAINER: screwdriver-ui
       K8S_IMAGE: screwdrivercd/ui
-      K8S_HOST: api.k8s.screwdriver.cd
+      K8S_HOST: api.ossd.k8s.screwdriver.cd
       K8S_DEPLOYMENT: sdui
       SD_UI: cd.screwdriver.cd
     secrets:
