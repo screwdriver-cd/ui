@@ -9,6 +9,8 @@ import { parse, getCheckoutUrl } from '../../utils/git';
 export default Component.extend({
   // Syncing a pipeline
   sync: service('sync'),
+  // Clearing a cache
+  cache: service('cache'),
   errorMessage: '',
   scmUrl: '',
   // Removing a pipeline
@@ -72,6 +74,22 @@ export default Component.extend({
       this.set('isShowingModal', true);
 
       return this.get('sync').syncRequests(this.get('pipeline.id'), syncPath)
+        .catch(error => this.set('errorMessage', error))
+        .finally(() => this.set('isShowingModal', false));
+    },
+    clearCache(scope, id) {
+      let config = {
+        scope,
+        id
+      };
+
+      this.set('isShowingModal', true);
+
+      if (scope === 'pipelines') {
+        config.id = this.get('pipeline.id');
+      }
+
+      return this.get('cache').clearCache(config)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     }

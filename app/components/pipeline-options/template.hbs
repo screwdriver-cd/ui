@@ -101,6 +101,40 @@
     </section>
   </div>
 
+  <div class="col-xs-12 col-md-8">
+    <section class="cache">
+      <h3>Cache</h3>
+      <ul>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Pipeline</h4>
+              <p>Click to clear the cache for the pipeline.</p>
+            </div>
+            <div class="col-xs-2 right">
+              <a href="#" {{action "clearCache" "pipelines"}} >{{fa-icon "trash"}}</a>
+            </div>
+          </div>
+        </li>
+        {{#each sortedJobs as |job|}}
+        {{#unless job.isPR}}
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Job {{job.name}}</h4>
+              <p>Click to clear the cache for the {{job.name}} job.</p>
+            </div>
+            <div class="col-xs-2 right" title="Click to clear cache for {{job.name}} job.">
+              <a href="#" {{action "clearCache" "jobs" job.id}}>{{fa-icon "trash"}}</a>
+            </div>
+          </div>
+        </li>
+        {{/unless}}
+        {{/each}}
+      </ul>
+    </section>
+  </div>
+
   {{#unless pipeline.configPipelineId}}
     <div class="col-xs-12 col-md-8">
       <section class="danger">
