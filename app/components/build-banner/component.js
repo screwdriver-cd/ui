@@ -1,5 +1,5 @@
 import { computed } from '@ember/object';
-import { alias, match } from '@ember/object/computed';
+import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
@@ -8,7 +8,6 @@ export default Component.extend({
   classNames: ['build-banner', 'row'],
   classNameBindings: ['buildStatus'],
   coverage: service(),
-  isPR: match('jobName', /^PR-/),
   coverageStep: computed('buildSteps', {
     get() {
       const buildSteps = this.get('buildSteps');

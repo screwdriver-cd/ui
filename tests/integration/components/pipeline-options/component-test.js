@@ -8,6 +8,7 @@ import wait from 'ember-test-helpers/wait';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
 let syncService;
+let cacheService;
 
 moduleForComponent('pipeline-options', 'Integration | Component | pipeline options', {
   integration: true
@@ -59,6 +60,12 @@ test('it renders', function (assert) {
   assert.equal(this.$(this.$('section.sync h4').get(0)).text().trim(), 'SCM webhooks');
   assert.equal(this.$(this.$('section.sync h4').get(1)).text().trim(), 'Pull requests');
   assert.equal(this.$(this.$('section.sync h4').get(2)).text().trim(), 'Pipeline');
+
+  // Cache
+  assert.equal(this.$(this.$('section.cache h4').get(0)).text().trim(), 'Pipeline');
+  assert.equal(this.$(this.$('section.cache h4').get(1)).text().trim(), 'Job A');
+  assert.equal(this.$(this.$('section.cache h4').get(2)).text().trim(), 'Job B');
+  assert.equal(this.$(this.$('section.cache h4').get(3)).text().trim(), 'Job main');
 
   // Danger Zone
   assert.equal(this.$('section.danger h3').text().trim(), 'Danger Zone');
@@ -331,6 +338,105 @@ test('it does not render pipeline and danger for child pipeline', function (asse
   assert.equal(this.$(this.$('section.sync h4').get(1)).text().trim(), 'Pull requests');
   assert.equal(this.$(this.$('section.sync h4').get(2)).text().trim(), 'Pipeline');
 
+  // Cache should render
+  assert.equal(this.$(this.$('section.cache h4').get(0)).text().trim(), 'Pipeline');
+  assert.equal(this.$(this.$('section.cache h4').get(1)).text().trim(), 'Job A');
+  assert.equal(this.$(this.$('section.cache h4').get(2)).text().trim(), 'Job B');
+  assert.equal(this.$(this.$('section.cache h4').get(3)).text().trim(), 'Job main');
+
   // Danger Zone should not render
   assert.equal(this.$('section.danger h3').text().trim(), '');
+});
+
+test('it clears the pipeline cache', function (assert) {
+  cacheService = Service.extend({
+    clearCache(config) {
+      assert.equal(config.scope, 'pipelines');
+      assert.equal(config.id, '1');
+
+      return resolve({});
+    }
+  });
+
+  this.register('service:cache', cacheService);
+
+  const $ = this.$;
+
+  this.set('mockPipeline', EmberObject.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
+    id: '1'
+  }));
+
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+  $($('section.cache a').get(0)).click();
+});
+
+test('it clears the job cache', function (assert) {
+  cacheService = Service.extend({
+    clearCache(config) {
+      assert.equal(config.scope, 'jobs');
+      assert.equal(config.id, '2345');
+
+      return resolve({});
+    }
+  });
+
+  this.register('service:cache', cacheService);
+
+  const $ = this.$;
+
+  this.set('mockPipeline', EmberObject.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
+    id: '1'
+  }));
+
+  this.set('mockJobs', A([
+    EmberObject.create({
+      id: '3456',
+      name: 'B',
+      isDisabled: false
+    }),
+    EmberObject.create({
+      id: '1234',
+      name: 'main',
+      isDisabled: false
+    }),
+    EmberObject.create({
+      id: '2345',
+      name: 'A',
+      isDisabled: false
+    })
+  ]));
+
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
+  $($('section.cache a').get(1)).click();
+});
+
+test('it fails to clear the cache for the pipeline', function (assert) {
+  cacheService = Service.extend({
+    clearCache() {
+      return reject('something conflicting');
+    }
+  });
+
+  this.register('service:cache', cacheService);
+
+  const $ = this.$;
+
+  this.set('mockPipeline', EmberObject.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
+    id: '1'
+  }));
+
+  this.render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+
+  $($('section.cache a').get(0)).click();
+
+  return wait()
+    .then(() => {
+      assert.equal(this.$('.alert > span').text().trim(), 'something conflicting');
+    });
 });
