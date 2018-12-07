@@ -1,10 +1,11 @@
 import EmberObject, { computed } from '@ember/object';
-import { equal } from '@ember/object/computed';
+import { equal, match } from '@ember/object/computed';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
   pipelineId: DS.attr('string'),
   name: DS.attr('string'),
+  isPR: match('name', /^PR-/),
   state: DS.attr('string'),
   permutations: DS.attr(),
   builds: DS.hasMany('build', { async: true }),
