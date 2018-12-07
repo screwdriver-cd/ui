@@ -37,11 +37,24 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       let previousModelEvents = this.get('previousModelEvents') || [];
       let currentModelEvents = this.get('model.events').toArray();
+      let newModelEvents = [];
+      const newPipelineId = this.get('pipeline.id');
+
+      // purge unmatched pipeline events
+      if (previousModelEvents.some(e => e.get('pipelineId') !== newPipelineId)) {
+        newModelEvents = [...currentModelEvents];
+
+        this.set('paginateEvents', []);
+        this.set('previousModelEvents', newModelEvents);
+        this.set('moreToShow', true);
+
+        return newModelEvents;
+      }
 
       previousModelEvents = previousModelEvents
         .filter(e => !currentModelEvents.find(c => c.id === e.id));
 
-      const newModelEvents = currentModelEvents.concat(previousModelEvents);
+      newModelEvents = currentModelEvents.concat(previousModelEvents);
 
       this.set('previousModelEvents', newModelEvents);
 
