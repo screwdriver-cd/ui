@@ -60,7 +60,7 @@ export default Component.extend({
   actions: {
     graphClicked(job, mouseevent, sizes) {
       const edges = get(this, 'directedGraph.edges');
-      let isRootNode = false;
+      let isRootNode = true;
 
       // Allow popup when clicking on the root node of a detached pipeline
       if (job && edges && !/^~/.test(job.name)) {
@@ -68,7 +68,7 @@ export default Component.extend({
       }
 
       // hide tooltip when not clicking on an active job node or root node
-      if (!job || (!get(job, 'buildId') && !isRootNode)) {
+      if (!job || (!get(job, 'buildId') && isRootNode)) {
         this.set('showTooltip', false);
 
         return false;
