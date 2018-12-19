@@ -1,0 +1,79 @@
+<header>
+  <h4>
+    {{collectionType}}
+    <a href="http://docs.screwdriver.cd/user-guide/{{routes.prefix}}" title="More Information" target="_blank" class="link pull-right">{{collectionType}} Docs {{fa-icon "question-circle"}}</a>
+  </h4>
+  <div class="collection-description">{{yield}}</div>
+</header>
+
+<section class="row">
+  <h5>
+    <b>Screwdriver {{collectionType}}</b>
+    <span class="pull-right">
+      <span class="text-uppercase total">Total </span><span>{{filteredModel.length}}</span>
+    </span>
+  </h5>
+
+  <div class="row">
+    <div class="col-md-3">
+      <select onchange={{action 'onFilterNamespace' value="target.value"}}>
+        {{#if (not-eq namespaces.length 1)}}
+          <option value="" selected="selected">All Namespaces</option>
+        {{/if}}
+        {{#each namespaces as |ns|}}
+          {{#if (eq ns targetNamespace)}}
+            <option value="{{ns}}" selected="selected">{{ns}}</option>
+          {{else}}
+            <option value="{{ns}}">{{ns}}</option>
+          {{/if}}
+        {{/each}}
+      </select>
+      {{#if (gt namespaces.length 1)}}
+        <span class="control-icon">{{fa-icon "caret-down"}}</span>
+      {{/if}}
+    </div>
+
+    <div class="col-md-3">
+      <select onchange={{action 'onFilterMaintainer' value="target.value"}}>
+        {{#if (not-eq maintainers.length 1)}}
+          <option selected="selected" value="">All Maintainers</option>
+        {{/if}}
+        {{#each maintainers as |m|}}
+          <option value="{{m}}">{{m}}</option>
+        {{/each}}
+      </select>
+      {{#if (gt maintainers.length 1)}}
+        <span class="control-icon">{{fa-icon "caret-down"}}</span>
+      {{/if}}
+    </div>
+
+    <div class="col-md-6">
+      <input value="" placeholder="Search {{collectionType}}" type="search" oninput={{action (mut search) value="target.value"}}>
+      <span class="control-icon">{{fa-icon "search"}}</span>
+    </div>
+  </div>
+
+  {{#light-table
+    table
+    height='75vh'
+    responsive=true
+    classNames="collection-list"
+    tableClassNames="collection-list-table"
+    extra=(hash routes=routes) as |t|
+  }}
+    {{t.head
+      onColumnClick=(action 'sortByColumn')
+      iconSortable='fa fa-sort'
+      iconAscending='fa fa-sort-asc'
+      iconDescending='fa fa-sort-desc'
+      resizeOnDrag=true
+    }}
+    {{#t.body canSelect=false as |b|}}
+      {{#if table.isEmpty}}
+        {{#b.no-data}}
+          Sorry. No result is found for <b><i>{{search}}</i></b>
+        {{/b.no-data}}
+      {{/if}}
+    {{/t.body}}
+  {{/light-table}}
+</section>

@@ -27,6 +27,35 @@ $weight-bold: 600;
   transform: scale($amt);
 }
 
+@mixin transform($transform) {
+  -webkit-transform: $transform;
+  -moz-transform: $transform;
+  -ms-transform: $transform;
+  -o-transform: $transform;
+  transform: $transform;
+}
+
+@mixin reset_select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0;
+  border: none;
+  -webkit-border-radius: none;
+  -moz-border-radius: none;
+  border-radius: none;
+}
+
+@mixin reset_input {
+  -webkit-appearance: none;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  padding: 0;
+  height: auto;
+  box-shadow: none;
+}
+
 @import 'font-awesome';
 @import 'denali-button';
 @import 'denali-colors';
