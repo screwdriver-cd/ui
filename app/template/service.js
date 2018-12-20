@@ -26,7 +26,7 @@ export default Service.extend({
   getAllTemplates(namespace) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates`;
 
-    let params = {};
+    let params = { compact: true, sortBy: 'createTime', sort: 'descending' };
 
     if (namespace) {
       params.namespace = namespace;

@@ -4,6 +4,10 @@ import Route from '@ember/routing/route';
 export default Route.extend({
   template: service(),
   templateName: 'templates/index',
+  setupController(controller, model) {
+    this._super(controller, model);
+    controller.set('targetNamespace', this.paramsFor('templates.namespace').namespace);
+  },
   model(params) {
     return this.get('template').getAllTemplates(params.namespace);
   }

@@ -17,13 +17,11 @@ export default Controller.extend({
   }),
   crumbs: computed('routeParams', {
     get() {
-    	
       let breadcrumbs = [];
       let params = this.get('routeParams');
 
-      let temp = this.get('template').getAllTemplates(params.namespace);
-      //add name and namespace together to get full name, compare fullname  to params.name
-      //if equal, use name
+      // add name and namespace together to get full name, compare fullname  to params.name
+      // if equal, use name
       if (params.namespace || params.detail) {
         breadcrumbs.push({
           name: 'Templates',

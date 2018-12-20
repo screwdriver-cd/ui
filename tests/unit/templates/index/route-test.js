@@ -6,7 +6,7 @@ const templateServiceStub = Service.extend({
   getAllTemplates() {
     return resolve([
       { id: 3, name: 'foo/bar', version: '3.0.0' },
-      { id: 2, name: 'foo/bar', version: '2.0.0' },
+      { id: 2, name: 'foo/baz', version: '2.0.0' },
       { id: 1, name: 'bar/baz', version: '1.0.0' }
     ]);
   }

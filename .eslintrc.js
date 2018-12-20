@@ -29,7 +29,8 @@ module.exports = {
     'import/newline-after-import': 'off',
     'ember/avoid-leaking-state-in-ember-objects': 'off',
     'ember/jquery-ember-run': 'off',
-    'ember/no-global-jquery': 'off'
+    'ember/no-global-jquery': 'off',
+    'ember/no-side-effects': 'off'
   },
   overrides: [
     // node files
