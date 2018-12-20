@@ -8,9 +8,9 @@ export default Component.extend({
   table: null,
   model: null,
   search: null,
+  query: null,
   collectionType: null,
   collectionDescription: null,
-  targetNamespace: null,
   routes: computed('collectionType', {
     get() {
       const prefix = this.get('collectionType').toLowerCase();
@@ -134,14 +134,27 @@ export default Component.extend({
       minResizeWidth: 150
     }
   ]),
-  refineResults() {
+  refineModel() {
     this.get('table').setRows(this.get('refinedModel'));
   },
-  onSearch: observer('search', function onSearchChange() {
-    this.set('search', this.get('search').trim());
-    this.set('namespaces', this.get('filteredModel').mapBy('namespace').uniq().sort());
-    this.set('maintainers', this.get('filteredModel').mapBy('maintainer').uniq().sort());
-    debounce(this, 'refineResults', 250);
+  onSearch() {
+    const search = this.get('query').trim();
+
+    this.set('search', search);
+
+    if (!search) {
+      if (this.get('filteringNamespace')) {
+        this.set('maintainers', this.get('filteredModel').mapBy('maintainer').uniq().sort());
+      }
+      if (this.get('filteringMaintainer')) {
+        this.set('namespaces', this.get('filteredModel').mapBy('namespace').uniq().sort());
+      }
+    }
+
+    this.refineModel();
+  },
+  onQuery: observer('query', function onSearchChange() {
+    debounce(this, 'onSearch', 250);
   }),
   actions: {
     sortByColumn(column) {
@@ -152,7 +165,7 @@ export default Component.extend({
           dir: column.ascending ? 'asc' : 'desc',
           sort: vp === 'lastUpdated' ? 'createTime' : vp
         });
-        this.refineResults();
+        this.refineModel();
       }
     },
     onFilterNamespace(ns) {
@@ -166,7 +179,7 @@ export default Component.extend({
       if (!ns) {
         this.set('namespaces', this.get('filteredModel').mapBy('namespace').uniq().sort());
       }
-      this.refineResults();
+      this.refineModel();
     },
     onFilterMaintainer(m) {
       this.set('filteringMaintainer', m || null);
@@ -179,7 +192,7 @@ export default Component.extend({
       if (!m) {
         this.set('maintainers', this.get('filteredModel').mapBy('maintainer').uniq().sort());
       }
-      this.refineResults();
+      this.refineModel();
     }
   }
 });
