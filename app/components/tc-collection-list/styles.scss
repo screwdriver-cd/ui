@@ -45,6 +45,7 @@
 
   .collection-list {
     th {
+      padding: 10px;
       color: $grey-600;
       text-transform: uppercase;
       font-weight: lighter;
@@ -53,14 +54,10 @@
       }
     }
 
-    td, th {
-      padding: 10px;
-      text-overflow: ellipsis;
-      overflow: auto;
-    }
-
     td {
       padding: 15px;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     tbody tr {
