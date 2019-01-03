@@ -24,9 +24,6 @@ export default Service.extend({
       type: 'DELETE',
       contentType: 'application/json',
       crossDomain: true,
-      xhrFields: {
-        withCredentials: true
-      },
       headers: {
         Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
       }
