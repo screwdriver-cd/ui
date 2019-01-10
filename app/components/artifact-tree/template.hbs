@@ -3,7 +3,7 @@
     data=treedata.content
     plugins=plugins
     typesOptions=typesOptions
-    eventDidChange="handleJstreeEventDidChange"
+    eventDidChange=(action "handleJstreeEventDidChange")
 }}
 {{#unless treedata.content.length}}
 <span>No artifacts yet</span>
