@@ -68,9 +68,9 @@ export default DS.Model.extend({
       return durationText.call(this, 'createTime', 'startTime');
     }
   }),
-  buildDuration: computed('startTime', 'endTime', {
+  buildDuration: computed('createTime', 'endTime', {
     get() {
-      return durationText.call(this, 'startTime', 'endTime');
+      return durationText.call(this, 'createTime', 'endTime');
     }
   }),
   totalDurationMS: computed('createTime', 'endTime', {

@@ -92,7 +92,7 @@ export default Component.extend({
               n: 3
             });
 
-            get(this, 'totalLine', 4);
+            set(this, 'totalLine', 4);
           }
 
           return initLogs;
@@ -106,7 +106,7 @@ export default Component.extend({
             n: 1
           });
 
-          get(this, 'totalLine', 2);
+          set(this, 'totalLine', 2);
         }
 
         return initLogs;
