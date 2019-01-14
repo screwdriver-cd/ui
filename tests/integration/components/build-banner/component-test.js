@@ -87,6 +87,7 @@ test('it renders', function (assert) {
     buildContainer="node:6"
     duration="5 seconds"
     buildStatus="RUNNING"
+    buildCreate="2016-11-04T20:08:41.238Z"
     buildStart="2016-11-04T20:09:41.238Z"
     buildSteps=buildStepsMock
     jobName="PR-671"
@@ -96,14 +97,14 @@ test('it renders', function (assert) {
     reloadBuild=(action reloadCb)
     changeBuild=(action changeB)
   }}`);
-  const expectedTime = moment('2016-11-04T20:09:41.238Z').format('YYYY-MM-DD HH:mm:ss');
+  const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
   assert.equal($('li.job-name .banner-value').text().trim(), 'PR-671');
   assert.equal($('.commit a').prop('href'),
     'http://example.com/batcave/batmobile/commit/abcdef1029384');
   assert.equal($('.commit a').text().trim(), '#abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds');
-  assert.equal($('.started .banner-value').text().trim(), expectedTime);
+  assert.equal($('.created .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
   assert.equal($('button').length, 0);
@@ -127,6 +128,7 @@ test('it renders pr link if pr url info is available', function (assert) {
     buildContainer="node:6"
     duration="5 seconds"
     buildStatus="RUNNING"
+    buildCreate="2016-11-04T20:08:41.238Z"
     buildStart="2016-11-04T20:09:41.238Z"
     buildSteps=buildStepsMock
     jobName="PR-671"
@@ -135,7 +137,7 @@ test('it renders pr link if pr url info is available', function (assert) {
     prEvents=prEvents
     reloadBuild=(action reloadCb)
   }}`);
-  const expectedTime = moment('2016-11-04T20:09:41.238Z').format('YYYY-MM-DD HH:mm:ss');
+  const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
   assert.equal($('.pr .pr-url-holder a').prop('href'),
     'https://github.com/screwdriver-cd/ui/pull/292');
@@ -145,7 +147,7 @@ test('it renders pr link if pr url info is available', function (assert) {
     'http://example.com/batcave/batmobile/commit/abcdef1029384');
   assert.equal($('.commit a').text().trim(), '#abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds');
-  assert.equal($('.started .banner-value').text().trim(), expectedTime);
+  assert.equal($('.created .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
   assert.equal($('button').length, 0);
@@ -170,6 +172,7 @@ test('it renders prCommit dropdown if event type is pr', function (assert) {
     buildContainer="node:6"
     duration="5 seconds"
     buildStatus="RUNNING"
+    buildCreate="2016-11-04T20:08:41.238Z"
     buildStart="2016-11-04T20:09:41.238Z"
     buildSteps=buildStepsMock
     jobName="PR-671"
@@ -178,7 +181,7 @@ test('it renders prCommit dropdown if event type is pr', function (assert) {
     prEvents=prEvents
     reloadBuild=(action reloadCb)
   }}`);
-  const expectedTime = moment('2016-11-04T20:09:41.238Z').format('YYYY-MM-DD HH:mm:ss');
+  const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
   assert.equal($('.pr .pr-url-holder a').prop('href'),
     'https://github.com/screwdriver-cd/ui/pull/292');
@@ -189,7 +192,7 @@ test('it renders prCommit dropdown if event type is pr', function (assert) {
   assert.equal($('.commit .commit-sha').text().trim(), '#abcdef');
   assert.equal($('.commit ul li').text().trim(), '1. abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds');
-  assert.equal($('.started .banner-value').text().trim(), expectedTime);
+  assert.equal($('.created .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
   assert.equal($('button').length, 0);

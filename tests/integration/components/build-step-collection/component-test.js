@@ -94,19 +94,3 @@ test('it has a list of steps', function (assert) {
   assert.equal($('.step-list div.user-steps li').length, 4, 'user');
   assert.equal($('.step-list ul.teardown li').length, 2, 'teardown');
 });
-
-test('it show spinner when build is starting up', function (assert) {
-  const $ = this.$;
-
-  this.set('stepList', []);
-  this.set('buildSteps', []);
-  this.render(hbs`{{build-step-collection
-    stepList=stepList
-    buildStatus="QUEUED"
-    buildId=1
-    buildSteps=buildSteps
-    buildStart=null
-  }}`);
-
-  assert.equal($('.setup-spinner').text().trim(), 'Setting up build...');
-});

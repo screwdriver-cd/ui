@@ -52,6 +52,7 @@ export default DS.Model.extend({
   sha: DS.attr('string'),
   startTime: DS.attr('date'),
   status: DS.attr('string'),
+  stats: DS.attr(),
   statusMessage: DS.attr('string', { defaultValue: null }),
   steps: DS.attr(),
 

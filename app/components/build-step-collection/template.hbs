@@ -2,9 +2,6 @@
   <div class="col-xs-3 step-list">
     <h3>
       Steps
-      {{#if (eq buildStatus "QUEUED")}}
-      <span class="setup-spinner">{{fa-icon "spin fa-spinner"}} Setting up build...</span>
-      {{/if}}
     </h3>
     <a class="step-toggle" onClick={{action "toggleSetup"}}>
       {{#if setupCollapsed}}
@@ -79,7 +76,9 @@
       totalLine=(get-step-data buildSteps selectedStep "lines")
       buildId=buildId
       stepStartTime=(get-step-data buildSteps selectedStep "startTime")
+      stepEndTime=(get-step-data buildSteps selectedStep "endTime")
       buildStartTime=buildStart
+      buildStats=buildStats
     }}
   </div>
 </div>
