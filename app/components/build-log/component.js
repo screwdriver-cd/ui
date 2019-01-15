@@ -73,14 +73,14 @@ export default Component.extend({
         if (buildStats.queueEnterTime) {
           initLogs.push({
             t: new Date(buildStats.queueEnterTime).getTime(),
-            m: 'Build entered queue.',
+            m: 'Build enqueued.',
             n: 1
           });
 
           if (buildStats.hostname) {
             initLogs.push({
               t: new Date(buildStats.imagePullStartTime).getTime(),
-              m: `Build is scheduled on ${buildStats.hostname} and started to pull image.`,
+              m: `Build scheduled on ${buildStats.hostname}. Starting image pull.`,
               n: 2
             });
           }
@@ -88,7 +88,7 @@ export default Component.extend({
           if (get(this, 'stepEndTime')) {
             initLogs.push({
               t: new Date(get(this, 'stepEndTime')).getTime(),
-              m: 'Build init done.',
+              m: 'Image pull completed. Build init completed',
               n: 3
             });
 
