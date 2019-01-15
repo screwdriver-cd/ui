@@ -1,13 +1,51 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import Service from '@ember/service';
+import { Promise as EmberPromise } from 'rsvp';
+import { setupTest } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
-moduleFor('route:search', 'Unit | Route | search', {
-  // Specify the other units that are required for this test.
-  needs: ['service:session']
-});
+module('Unit | Route | search', function (hooks) {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let route = this.subject();
+  hooks.beforeEach(function () {
+    run(() => {
+      // Need this to mock store
+      // https://github.com/emberjs/ember-qunit/issues/325
+      this.owner.unregister('service:store');
+    });
+  });
 
-  assert.ok(route);
-  assert.equal(route.titleToken, 'Search');
+  test('it exists', function (assert) {
+    let route = this.owner.lookup('route:search');
+
+    assert.ok(route);
+    assert.equal(route.titleToken, 'Search');
+  });
+
+  test('it returns model even on collections fetch error', function (assert) {
+    assert.expect(5);
+
+    const storeStub = Service.extend({
+      query(record, conf) {
+        assert.ok(conf.page === 1);
+        assert.ok(conf.search === 'search');
+
+        return new EmberPromise(resolve => resolve('results'));
+      },
+      findAll(record) {
+        assert.ok(record === 'collection');
+
+        return new EmberPromise((resolve, reject) => reject());
+      }
+    });
+
+    this.owner.register('service:store', storeStub);
+
+    const route = this.owner.lookup('route:search');
+
+    return route.model({ query: 'search' }).then((results) => {
+      assert.equal(results.pipelines, 'results');
+      assert.deepEqual(results.collections, []);
+    });
+  });
 });
