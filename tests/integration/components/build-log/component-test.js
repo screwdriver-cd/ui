@@ -131,17 +131,17 @@ test('it generate logs for init step', function (assert) {
     );
     assert.ok(
       this.$('.line:eq(1)').text().trim().match(
-        'Build entered queue'
+        'Build enqueued'
       )
     );
     assert.ok(
       this.$('.line:eq(2)').text().trim().match(
-        'Build is scheduled on node12.foo.bar.com'
+        'Build scheduled on node12.foo.bar.com'
       )
     );
     assert.ok(
       this.$('.line:last').text().trim().match(
-        'Build init done'
+        'Image pull completed'
       )
     );
   });
