@@ -25,7 +25,7 @@
     <li class="pr">
       <span class="banner-value pr-url-holder">
         <a href="{{event.pr.url}}" class="sha pr-url">
-          {{inline-svg "github" class="pr-img"}} 
+          {{inline-svg "github" class="pr-img"}}
           <span class="pr-link">PR#{{prNumber}}</span>
         </a>
       </span>
@@ -36,9 +36,9 @@
     <span class="banner-value">{{duration}}</span>
     <span class="banner-label">Duration</span>
   </li>
-  <li class="started">
-    <span class="banner-value" title="{{buildStart}}">{{moment-format buildStart 'YYYY-MM-DD HH:mm:ss'}}</span>
-    <span class="banner-label">Start Time</span>
+  <li class="created">
+    <span class="banner-value" title="{{buildCreate}}">{{moment-format buildCreate 'YYYY-MM-DD HH:mm:ss'}}</span>
+    <span class="banner-label">Create Time</span>
   </li>
   <li class="user">
     <span class="banner-value">{{user-link user=event.creator causeMessage=event.causeMessage}}</span>

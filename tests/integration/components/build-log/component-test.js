@@ -108,6 +108,70 @@ test('it starts loading when step chosen', function (assert) {
   });
 });
 
+test('it generate logs for init step', function (assert) {
+  this.set('stats', {
+    queueEnterTime: '2019-01-14T20:10:41.238Z',
+    imagePullStartTime: '2019-01-14T20:11:41.238Z',
+    hostname: 'node12.foo.bar.com'
+  });
+  this.set('step', 'sd-setup-init');
+  this.render(hbs`{{build-log
+    stepName=step
+    buildId=1
+    stepStartTime="2019-01-14T20:09:41.238Z"
+    stepEndTime="2019-01-14T20:12:41.238Z"
+    buildStats=stats
+  }}`);
+
+  return wait().then(() => {
+    assert.ok(
+      this.$('.line:first').text().trim().match(
+        'Build created'
+      )
+    );
+    assert.ok(
+      this.$('.line:eq(1)').text().trim().match(
+        'Build entered queue'
+      )
+    );
+    assert.ok(
+      this.$('.line:eq(2)').text().trim().match(
+        'Build is scheduled on node12.foo.bar.com'
+      )
+    );
+    assert.ok(
+      this.$('.line:last').text().trim().match(
+        'Build init done'
+      )
+    );
+  });
+});
+
+test('it generate logs for init step with empty build stats', function (assert) {
+  this.set('stats', {});
+  this.set('step', 'sd-setup-init');
+  this.render(hbs`{{build-log
+    stepName=step
+    buildId=1
+    stepStartTime="2019-01-14T20:09:41.238Z"
+    stepEndTime="2019-01-14T20:12:41.238Z"
+    buildStats=stats
+  }}`);
+
+  return wait().then(() => {
+    assert.ok(
+      this.$('.line:first').text().trim().match(
+        'Build created'
+      )
+    );
+    assert.ok(
+      this.$('.line:last').text().trim().match(
+        'Build init done'
+      )
+    );
+  });
+});
+
 test('it starts fetching more log for a chosen completed step', function (assert) {
   doneStub.onCall(0).returns(false);
   doneStub.onCall(1).returns(false);

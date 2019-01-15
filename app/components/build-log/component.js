@@ -54,9 +54,62 @@ export default Component.extend({
       const logs = this.get('logService').getCache(buildId, stepName, 'logs');
       const isFetching = get(this, 'isFetching');
       const started = !!get(this, 'stepStartTime');
+      const buildStats = get(this, 'buildStats');
 
       if (!stepName) {
         return [{ m: 'Click a step to see logs' }];
+      }
+
+      // Generate init step logs using build stats
+      if (stepName === 'sd-setup-init') {
+        const initLogs = [];
+
+        initLogs.push({
+          t: new Date(get(this, 'stepStartTime')).getTime(),
+          m: 'Build created.',
+          n: 0
+        });
+
+        if (buildStats.queueEnterTime) {
+          initLogs.push({
+            t: new Date(buildStats.queueEnterTime).getTime(),
+            m: 'Build entered queue.',
+            n: 1
+          });
+
+          if (buildStats.hostname) {
+            initLogs.push({
+              t: new Date(buildStats.imagePullStartTime).getTime(),
+              m: `Build is scheduled on ${buildStats.hostname} and started to pull image.`,
+              n: 2
+            });
+          }
+
+          if (get(this, 'stepEndTime')) {
+            initLogs.push({
+              t: new Date(get(this, 'stepEndTime')).getTime(),
+              m: 'Build init done.',
+              n: 3
+            });
+
+            set(this, 'totalLine', 4);
+          }
+
+          return initLogs;
+        }
+
+        // If there is no build stat, update totalLine when step ends
+        if (get(this, 'stepEndTime')) {
+          initLogs.push({
+            t: new Date(get(this, 'stepEndTime')).getTime(),
+            m: 'Build init done.',
+            n: 1
+          });
+
+          set(this, 'totalLine', 2);
+        }
+
+        return initLogs;
       }
 
       if (!logs) {

@@ -52,6 +52,7 @@ export default DS.Model.extend({
   sha: DS.attr('string'),
   startTime: DS.attr('date'),
   status: DS.attr('string'),
+  stats: DS.attr(),
   statusMessage: DS.attr('string', { defaultValue: null }),
   steps: DS.attr(),
 
@@ -67,9 +68,9 @@ export default DS.Model.extend({
       return durationText.call(this, 'createTime', 'startTime');
     }
   }),
-  buildDuration: computed('startTime', 'endTime', {
+  buildDuration: computed('createTime', 'endTime', {
     get() {
-      return durationText.call(this, 'startTime', 'endTime');
+      return durationText.call(this, 'createTime', 'endTime');
     }
   }),
   totalDurationMS: computed('createTime', 'endTime', {
