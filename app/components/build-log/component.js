@@ -86,9 +86,16 @@ export default Component.extend({
           }
 
           if (get(this, 'stepEndTime')) {
+            let msg = 'Image pull completed. Build init completed.';
+
+            // If build init succeeded, stepEndTime should be the same as buildStartTime
+            if (get(this, 'stepEndTime') !== get(this, 'buildStartTime')) {
+              msg = 'Build init failed.';
+            }
+
             initLogs.push({
               t: new Date(get(this, 'stepEndTime')).getTime(),
-              m: 'Image pull completed. Build init completed',
+              m: msg,
               n: 3
             });
 
