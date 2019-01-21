@@ -85,10 +85,8 @@ test('it renders', function (assert) {
   ];
 
   this.set('eventsMock', events);
-  this.render(hbs`{{pipeline-events-list events=eventsMock}}`);
+  this.render(hbs`{{pipeline-events-list events=eventsMock moreToShow=true}}`);
 
-  assert.equal(this.$('th').length, 6);
-  assert.equal(this.$('thead').text().trim(),
-    'Commit \n      Message\n      Status\n      User \n      Start Time\n      Duration');
-  assert.equal(this.$('tbody tr').length, 2);
+  assert.equal(this.$('a.btn').text().trim(), 'More...');
+  assert.equal(this.$('.view').length, 2);
 });

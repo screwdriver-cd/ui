@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-xs-5">
+  <div class="col-xs-10">
     <strong>Pipeline</strong>
     {{#bs-button-group
       value=selectedEvent
@@ -11,15 +11,44 @@
     {{/each}}
     {{/bs-button-group}}
   </div>
-  <div class="col-xs-4">
-    {{#unless (eq selected 'aggregate')}}
-    <strong>Commit</strong>
-    <a href="{{selectedEventObj.commit.url}}">#{{selectedEventObj.truncatedSha}}</a>
-    {{/unless}}
-  </div>
-  <div class="col-xs-3 right">
+  <div class="col-xs-2">
     {{#if session.isAuthenticated}}
     {{pipeline-start startBuild=(action startBuild)}}
     {{/if}}
   </div>
 </div>
+
+{{#if selectedEventObj}}
+  <div class="row {{selectedEventObj.status}}">
+    <div class="col-xs-12">
+      {{#unless (eq selected 'aggregate')}}
+        <div class="event-info">
+          <div class="col">
+            <span class="title">Commit</span><br/>
+            <a href="{{selectedEventObj.commit.url}}">#{{selectedEventObj.truncatedSha}}</a>
+          </div>
+          <div class="col">
+            <span class="title">Message</span><br/>
+            {{selectedEventObj.commit.message}}
+          </div>
+          <div class="col">
+            <span class="title">Status</span><br/>
+            {{fa-icon icon fixedWidth=true}} {{selectedEventObj.status}}
+          </div>
+          <div class="col">
+            <span class="title">User</span><br/>
+            <a href="{{selectedEventObj.creator.url}}">{{selectedEventObj.creator.name}}</a>
+          </div>
+          <div class="col">
+            <span class="title">Start Time</span><br/>
+            {{selectedEventObj.createTimeWords}}
+          </div>
+          <div class="col">
+            <span class="title">Duration</span><br/>
+            {{selectedEventObj.durationText}}
+          </div>
+        </div>
+      {{/unless}}
+    </div>
+  </div>
+{{/if}}

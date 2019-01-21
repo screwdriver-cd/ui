@@ -1,5 +1,6 @@
 import { computed } from '@ember/object';
 import Component from '@ember/component';
+import { statusIcon } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
   classNameBindings: ['build.status'],
@@ -8,28 +9,14 @@ export default Component.extend({
       return this.get('job.builds').objectAt(0);
     }
   }),
+  displayName: computed('job.name', {
+    get() {
+      return `#${this.get('job.name').replace('PR-', '').split(':').join(' - ')}`;
+    }
+  }),
   icon: computed('build.status', {
     get() {
-      const status = this.get('build.status');
-      let icon;
-
-      switch (status) {
-      case 'QUEUED':
-      case 'RUNNING':
-        icon = 'spinner fa-spin';
-        break;
-      case 'SUCCESS':
-        icon = 'check';
-        break;
-      case 'UNSTABLE':
-        icon = 'exclamation';
-        break;
-      default:
-        icon = 'times';
-        break;
-      }
-
-      return icon;
+      return statusIcon(this.get('build.status'), true);
     }
   })
 });

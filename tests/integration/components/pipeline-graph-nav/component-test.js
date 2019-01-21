@@ -7,7 +7,7 @@ moduleForComponent('pipeline-graph-nav', 'Integration | Component | pipeline gra
 });
 
 test('it renders', function (assert) {
-  set(this, 'obj', { truncatedSha: 'abc123' });
+  set(this, 'obj', { truncatedSha: 'abc123', status: 'SUCCESS', creator: { name: 'anonymous' } });
   set(this, 'selected', 2);
   set(this, 'startBuild', () => {
     assert.ok(true);
@@ -22,11 +22,23 @@ test('it renders', function (assert) {
     startBuild=startBuild
   }}`);
 
-  assert.equal(this.$('strong').filter(':first').text().trim(), 'Pipeline');
-  assert.equal(this.$('strong').filter(':last').text().trim(), 'Commit');
+  const $columnTitles = this.$('.event-info .title');
+  const $links = this.$('.event-info a');
+
+  assert.equal($columnTitles.eq(0).text().trim(), 'Commit');
+  assert.equal($columnTitles.eq(1).text().trim(), 'Message');
+  assert.equal($columnTitles.eq(2).text().trim(), 'Status');
+  assert.equal($columnTitles.eq(3).text().trim(), 'User');
+  assert.equal($columnTitles.eq(4).text().trim(), 'Start Time');
+  assert.equal($columnTitles.eq(5).text().trim(), 'Duration');
+
+  assert.equal($links.eq(0).text().trim(), '#abc123');
+  assert.equal($links.eq(1).text().trim(), 'anonymous');
+
+  assert.equal(this.$('.SUCCESS').length, 1);
+
   assert.equal(this.$('.btn-group').text()
     .trim(), 'Most Recent\n      Last Successful\n      Aggregate');
-  assert.equal(this.$('a').text().trim(), '#abc123');
 });
 
 test('it updates selected event id', function (assert) {

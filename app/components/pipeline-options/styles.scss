@@ -5,7 +5,8 @@
   .x-toggle-component {
     display: inline-flex;
   }
-  .x-toggle:checked + .x-toggle-default.x-toggle-btn {
+
+  .x-toggle:checked + label > .x-toggle-default.x-toggle-btn {
     background-color: $sd-success;
   }
 

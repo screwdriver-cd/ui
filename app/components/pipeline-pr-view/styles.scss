@@ -1,32 +1,11 @@
-.fa {
-  color: $sd-running;
-  font-size: 14px;
-}
+& {
+  @import 'app/styles/column-view';
 
-&.SUCCESS {
-  .fa {
-    color: $sd-success;
+  & {
+    cursor: default;
   }
-}
 
-&.UNSTABLE {
-  .fa {
-    color: $sd-unstable;
+  &:hover {
+    background: none;
   }
-}
-
-&.FAILURE {
-  .fa {
-    color: $sd-failure;
-  }
-}
-
-a {
-  text-decoration: none;
-  color: $sd-text;
-  font-size: 14px;
-}
-
-span {
-  margin-left: 10px;
 }

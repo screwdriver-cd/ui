@@ -7,6 +7,16 @@ export default DS.Model.extend({
   name: DS.attr('string'),
   isPR: match('name', /^PR-/),
   state: DS.attr('string'),
+  title: DS.attr('string'),
+  username: DS.attr('string'),
+  createTime: DS.attr('date'),
+  createTimeWords: computed('createTime', {
+    get() {
+      const duration = Date.now() - +this.get('createTime');
+
+      return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
+    }
+  }),
   permutations: DS.attr(),
   builds: DS.hasMany('build', { async: true }),
   isDisabled: equal('state', 'DISABLED'),
