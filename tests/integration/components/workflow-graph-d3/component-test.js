@@ -108,3 +108,44 @@ test('it does not render startFrom icon when starting in the middle of the graph
     assert.equal(svg.children('path.graph-edge.build-started_from').length, 0);
     assert.equal(svg.children('path.graph-edge.build-success').length, 1);
   });
+
+test('it can renders subgraph for minified case', function (assert) {
+  this.set('workflowGraph', {
+    nodes: [
+      { name: '~pr' },
+      { name: '~commit' },
+      { id: 1, name: 'main' },
+      { id: 2, name: 'A' },
+      { id: 3, name: 'B' }
+    ],
+    edges: [
+      { src: '~pr', dest: 'main' },
+      { src: '~commit', dest: 'main' },
+      { src: 'main', dest: 'A' },
+      { src: 'A', dest: 'B' }
+    ]
+  });
+  this.set('startFrom', 'A');
+  this.set('builds', [
+    { jobId: 2, id: 5, status: 'SUCCESS' },
+    { jobId: 3, id: 6, status: 'FAILURE' }
+  ]);
+  this.render(
+    hbs`{{workflow-graph-d3
+          workflowGraph=workflowGraph
+          builds=builds
+          startFrom=startFrom
+          minified=true}}`
+  );
+
+  const svg = this.$('svg');
+
+  assert.equal(svg.length, 1);
+  assert.equal(svg.children('g.graph-node').length, 2);
+  assert.equal(svg.children('g.graph-node.build-success').length, 1);
+  assert.equal(svg.children('g.graph-node.build-failure').length, 1);
+  assert.equal(svg.children('g.graph-node.build-started_from').length, 0);
+  assert.equal(svg.children('path.graph-edge').length, 1);
+  assert.equal(svg.children('path.graph-edge.build-started_from').length, 0);
+  assert.equal(svg.children('path.graph-edge.build-success').length, 1);
+});

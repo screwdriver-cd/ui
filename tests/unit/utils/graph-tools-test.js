@@ -1,6 +1,13 @@
-import graphTools from 'screwdriver-ui/utils/graph-tools';
+import {
+  icon,
+  node,
+  decorateGraph,
+  subgraphFilter,
+  graphDepth,
+  isRoot,
+  isTrigger
+} from 'screwdriver-ui/utils/graph-tools';
 import { module, test } from 'qunit';
-const { icon, node, decorateGraph, graphDepth, isRoot, isTrigger } = graphTools;
 
 const SIMPLE_GRAPH = {
   nodes: [
@@ -279,4 +286,32 @@ test('it determines if a node name is a trigger node', function (assert) {
   assert.notOk(isTrigger('~pr:/^detached_main$/', '~commit:detached_main'));
   assert.notOk(isTrigger('~commit:/^detached_main$/', '~commit:detached_main1'));
   assert.notOk(isTrigger('~commit:detached_main', 'no_main'));
+});
+
+test('it reduce to subgraph given a starting point', function (assert) {
+  assert.deepEqual(subgraphFilter(SIMPLE_GRAPH, 'main'), {
+    nodes: [{ name: 'main' }],
+    edges: []
+  });
+  assert.deepEqual(subgraphFilter(SIMPLE_GRAPH), SIMPLE_GRAPH);
+  assert.deepEqual(subgraphFilter(COMPLEX_GRAPH, 'A'), {
+    nodes: [
+      { name: 'A', id: 2 },
+      { name: 'C', id: 4 },
+      { name: 'D', id: 5 }
+    ],
+    edges: [
+      { src: 'A', dest: 'C' },
+      { src: 'C', dest: 'D' }
+    ]
+  });
+  assert.deepEqual(subgraphFilter(MORE_COMPLEX_GRAPH, 'wow_new_main'), {
+    nodes: [
+      { name: 'other_publish' },
+      { name: 'wow_new_main' }
+    ],
+    edges: [
+      { src: 'wow_new_main', dest: 'other_publish' }
+    ]
+  });
 });

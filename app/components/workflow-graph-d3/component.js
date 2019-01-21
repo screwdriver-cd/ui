@@ -2,21 +2,23 @@
 import Component from '@ember/component';
 import { get, set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import graphTools from 'screwdriver-ui/utils/graph-tools';
-
-const { icon, decorateGraph } = graphTools;
+import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-tools';
 
 export default Component.extend({
   router: service(),
   classNameBindings: ['minified'],
   displayJobNames: true,
-  decoratedGraph: computed('workflowGraph', 'builds.[]', 'startFrom', {
+  decoratedGraph: computed('workflowGraph', 'builds.[]', 'startFrom', 'minified', {
     get() {
-      const graph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
       const builds = getWithDefault(this, 'builds', []);
       const startFrom = get(this, 'startFrom');
+      const graph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
 
-      return decorateGraph(graph, builds, startFrom);
+      return decorateGraph(
+        this.get('minified') ? subgraphFilter(graph, startFrom) : graph,
+        builds,
+        startFrom
+      );
     }
   }),
   elementSizes: computed('minified', {
@@ -30,9 +32,9 @@ export default Component.extend({
       }
 
       return {
-        ICON_SIZE: 28,
-        TITLE_SIZE: 10,
-        ARROWHEAD: 4
+        ICON_SIZE: 36,
+        TITLE_SIZE: 12,
+        ARROWHEAD: 6
       };
     }
   }),
@@ -69,7 +71,7 @@ export default Component.extend({
     }
   },
   redraw() {
-    const data = get(this, 'decoratedGraph');
+    const data = this.get('decoratedGraph');
     const el = d3.select(get(this, 'element'));
 
     data.nodes.forEach((node) => {
@@ -86,16 +88,16 @@ export default Component.extend({
     });
   },
   draw() {
-    const data = get(this, 'decoratedGraph');
+    const data = this.get('decoratedGraph');
     const MAX_DISPLAY_NAME = 20;
     const MAX_LENGTH = Math.min(data.nodes.reduce((max, cur) =>
       Math.max(cur.name.length, max), 0), MAX_DISPLAY_NAME);
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = get(this, 'elementSizes');
     let X_WIDTH = ICON_SIZE * 2;
 
-    // When displaying job names use estimate of 5.00 per character
+    // When displaying job names use estimate of 7 per character
     if (TITLE_SIZE && get(this, 'displayJobNames')) {
-      X_WIDTH = Math.max(X_WIDTH, MAX_LENGTH * 5.00);
+      X_WIDTH = Math.max(X_WIDTH, MAX_LENGTH * 7);
     }
     // Adjustable spacing between nodes
     const Y_SPACING = ICON_SIZE;
@@ -173,7 +175,7 @@ export default Component.extend({
       })
       // add a tooltip
       .insert('title')
-      .text(d => d.status);
+      .text(d => `${d.name} - ${d.status}`);
 
     // Job Names
     if (TITLE_SIZE && get(this, 'displayJobNames')) {
