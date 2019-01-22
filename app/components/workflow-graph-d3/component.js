@@ -8,17 +8,19 @@ export default Component.extend({
   router: service(),
   classNameBindings: ['minified'],
   displayJobNames: true,
-  decoratedGraph: computed('workflowGraph', 'builds.[]', 'startFrom', 'minified', {
+  decoratedGraph: computed('workflowGraph', 'builds.[]', 'jobs.[]', 'startFrom', 'minified', {
     get() {
       const builds = getWithDefault(this, 'builds', []);
       const startFrom = get(this, 'startFrom');
+      const jobs = getWithDefault(this, 'jobs', []);
       const graph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
 
-      return decorateGraph(
-        this.get('minified') ? subgraphFilter(graph, startFrom) : graph,
+      return decorateGraph({
+        inputGraph: this.get('minified') ? subgraphFilter(graph, startFrom) : graph,
         builds,
-        startFrom
-      );
+        jobs,
+        start: startFrom
+      });
     }
   }),
   elementSizes: computed('minified', {

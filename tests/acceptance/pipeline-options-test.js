@@ -54,7 +54,7 @@ test('visiting /pipelines/:id/options', function (assert) {
   andThen(() => {
     assert.equal(currentURL(), '/pipelines/1/options');
     assert.equal(find('section.pipeline li').length, 1);
-    assert.equal(find('section.jobs li').length, 2);
+    assert.equal(find('section.jobs li').length, 3);
     assert.equal(find('section.danger li').length, 1);
   });
 });
