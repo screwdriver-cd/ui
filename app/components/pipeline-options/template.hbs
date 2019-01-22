@@ -43,19 +43,29 @@
     <section class="jobs">
       <h3>Jobs</h3>
       <ul>
-        {{#each sortedJobs as |job|}}
         <li>
           <div class="row">
             <div class="col-xs-10">
-              <h4>{{job.name}}</h4>
-              <p>Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.</p>
-            </div>
-            <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
-              {{x-toggle value=job.isDisabled onLabel='Enabled::false' offLabel='Disabled::true' onToggle=(action "toggleJob" job.id)}}
+              <p>Toggle to disable or enable the job.</p>
             </div>
           </div>
-        </li>
+        {{#each sortedJobs as |job|}}
+          <li>
+            <div class="row">
+              <div class="col-xs-10">
+                <h4>{{job.name}}</h4>
+                {{#if job.stateChanger}}
+                  <i class="float-right"><small>{{job.stateChangeTime}}</small></i>
+                  <p>{{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}{{/if}}</p>
+                {{/if}}
+              </div>
+              <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
+                {{x-toggle value=job.isDisabled onLabel='Enabled::false' offLabel='Disabled::true' onToggle=(action "toggleJob" job.id username job.name)}}
+              </div>
+            </div>
+          </li>
         {{/each}}
+      </li>
       </ul>
     </section>
   </div>
@@ -176,5 +186,7 @@
     {{loading-view}}
   {{/modal-dialog}}
 {{/if}}
+
+{{job-toggle-modal showToggleModal=showToggleModal updateMessage=(action "updateMessage") name=name stateChange=stateChange}}
 
 {{yield}}

@@ -2,6 +2,7 @@
   {{#workflow-graph-d3
     workflowGraph=directedGraph
     builds=builds
+    jobs=jobs
     graphClicked=(action "graphClicked")
   }}
   {{workflow-tooltip
@@ -14,6 +15,7 @@
   {{#if (is-fulfilled selectedEventObj.builds)}}
     {{#workflow-graph-d3
       builds=selectedEventObj.builds
+      jobs=jobs
       workflowGraph=selectedEventObj.workflowGraph
       startFrom=selectedEventObj.startFrom
       causeMessage=selectedEventObj.causeMessage

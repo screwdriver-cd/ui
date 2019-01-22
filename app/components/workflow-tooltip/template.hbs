@@ -3,7 +3,11 @@
     {{#link-to "pipeline.build" tooltipData.job.buildId}}Go to build details{{/link-to}}
   {{/if}}
   {{#if displayRestartButton}}
-    <a {{action confirmStartBuild}}>Start pipeline from here</a>
+    {{#if (eq tooltipData.job.status "DISABLED")}}
+      <p>{{tooltipData.job.stateChangeMessage}}</p>
+    {{else}}
+      <a {{action confirmStartBuild}}>Start pipeline from here</a>
+    {{/if}}
   {{/if}}
   {{yield}}
 </div>

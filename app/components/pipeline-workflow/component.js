@@ -22,7 +22,6 @@ export default Component.extend({
       // Preload the builds for the jobs
       jobs.forEach((j) => {
         const jobName = get(j, 'name');
-
         const node = graph.nodes.find(n => n.name === jobName);
 
         // push the job id into the graph

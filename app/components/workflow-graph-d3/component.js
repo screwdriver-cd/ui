@@ -10,13 +10,14 @@ export default Component.extend({
   router: service(),
   classNameBindings: ['minified'],
   displayJobNames: true,
-  decoratedGraph: computed('workflowGraph', 'builds.[]', 'startFrom', {
+  decoratedGraph: computed('workflowGraph', 'builds.[]', 'jobs.[]', 'startFrom', {
     get() {
       const graph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
       const builds = getWithDefault(this, 'builds', []);
-      const startFrom = get(this, 'startFrom');
+      const jobs = getWithDefault(this, 'jobs', []);
+      const startFrom = getWithDefault(this, 'startFrom', null);
 
-      return decorateGraph(graph, builds, startFrom);
+      return decorateGraph({ inputGraph: graph, builds, jobs, start: startFrom });
     }
   }),
   elementSizes: computed('minified', {
