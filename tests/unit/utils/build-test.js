@@ -1,6 +1,6 @@
 import build from 'screwdriver-ui/utils/build';
 import { module, test } from 'qunit';
-const { isActiveBuild, isPRJob } = build;
+const { isActiveBuild, isPRJob, statusIcon } = build;
 
 module('Unit | Utility | build');
 
@@ -32,4 +32,14 @@ test('it checks if the current job is a PR job', (assert) => {
 
   result = isPRJob('PR-1:main');
   assert.ok(result);
+});
+
+test('it gets the right fs class name for given status', (assert) => {
+  assert.equal(statusIcon('SUCCESS', true), 'check-circle-o');
+  assert.equal(statusIcon('SUCCESS'), 'check-circle');
+  assert.equal(statusIcon('RUNNING'), 'spinner fa-spin');
+  assert.equal(statusIcon('QUEUED'), 'spinner fa-spin');
+  assert.equal(statusIcon('UNSTABLE'), 'exclamation-circle');
+  assert.equal(statusIcon('FAILURE', true), 'times-circle-o');
+  assert.equal(statusIcon('FAILURE'), 'times-circle');
 });

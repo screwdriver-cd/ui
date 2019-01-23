@@ -64,14 +64,88 @@ $weight-bold: 600;
 @import 'pod-styles';
 @import 'ember-modal-dialog/ember-modal-structure';
 @import 'ember-modal-dialog/ember-modal-appearance';
+@import 'ember-bootstrap/bootstrap';
 
 .container {
   box-sizing: border-box;
   overflow: hidden;
 }
 
+.SUCCESS {
+  .fa {
+    color: $sd-success;
+  }
+}
+
+.UNSTABLE {
+  .fa {
+    color: $sd-unstable;
+  }
+}
+
+.FAILURE, .ABORTED {
+  .fa {
+    color: $sd-failure;
+  }
+}
+
+.RUNNING, .QUEUED, .BLOCKED {
+  .fa {
+    color: $sd-running;
+  }
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.separator {
+  border-right: 1px solid $grey-500;
+}
+
+a {
+  cursor: pointer;
+}
+
+.partial-view {
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-tabs-view {
+  overflow: auto;
+
+  .nav-tabs {
+    position: sticky;
+    top: 0;
+    background: $sd-white;
+    z-index: 1;
+
+    & > li {
+      width: 50%;
+      float: none;
+      display: inline-block;
+      vertical-align: bottom;
+      text-align: center;
+      border-bottom: 2px solid $grey-400;
+
+      & > a {
+        &, &:hover {
+          border: none !important;
+          margin: 0  !important;
+          background: none  !important;
+        }
+      }
+
+      &.active, &:hover {
+        border-bottom: 2px solid $brand-600;
+      }
+    }
+  }
+}
+
 $grid-float-breakpoint: 880px;
-@import 'ember-bootstrap/bootstrap';
 
 body {
   font-family: Helvetica, Arial, sans-serif;

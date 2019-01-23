@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { get, computed } from '@ember/object';
+import { statusIcon } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
   session: service(),
@@ -11,6 +12,11 @@ export default Component.extend({
         { label: 'Last Successful', value: get(this, 'lastSuccessful') },
         { label: 'Aggregate', value: 'aggregate' }
       ];
+    }
+  }),
+  icon: computed('selectedEventObj.status', {
+    get() {
+      return statusIcon(this.get('selectedEventObj.status'));
     }
   })
 });

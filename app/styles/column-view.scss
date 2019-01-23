@@ -1,0 +1,66 @@
+& {
+  cursor: pointer;
+  padding: 10px 15px 0 15px;
+
+  &.highlighted {
+    background-color: $brand-100;
+  }
+
+  &:hover {
+    background-color: $brand-200;
+  }
+
+  &:last-child {
+    .view {
+      border: none;
+    }
+  }
+}
+
+.last-successful {
+  background-color: $sd-success;
+  color: $sd-white;
+  border-radius: 3px;
+  padding: 3px 5px;
+}
+
+a {
+  color: $brand-600;
+}
+
+.view {
+  display: flex;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $grey-400;
+}
+
+.status {
+  font-size: 2rem;
+  padding-right: 5px;
+  color: $sd-failure;
+}
+
+.detail {
+  font-size: 1.35rem;
+  line-height: 1.5;
+}
+
+.name {
+  font-size: 1.5rem;
+}
+
+.date, .by {
+  font-size: 1.2rem;
+}
+
+.greyOut {
+  color: $grey-600;
+}
+
+.by {
+  color: $grey-700;
+}
+
+.workflow {
+  margin-top: 5px;
+}

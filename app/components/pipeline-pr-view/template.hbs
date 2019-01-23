@@ -1,5 +1,15 @@
-{{#if build}}
-  {{#link-to "pipeline.build" build.id}}{{fa-icon icon fixedWidth=true}}<span>{{job.name}}</span>{{/link-to}}
-{{else}}
-  {{fa-icon icon fixedWidth=true}}<span>{{job.name}}</span>
-{{/if}}
+<div class="view">
+  <div class="status">{{fa-icon icon fixedWidth=true}}</div>
+  <div class="detail">
+    <div class="name">
+      {{#if build}}
+        {{#link-to "pipeline.build" build.id}}{{displayName}}{{/link-to}}
+      {{else}}
+        <span class="greyOut">{{displayName}}</span>
+      {{/if}}
+    </div>
+    <div class="date greyOut">Opened {{job.createTimeWords}}</div>
+    <span class="title">{{job.title}}</span>
+    <div class="by">{{job.username}}</div>
+  </div>
+</div>

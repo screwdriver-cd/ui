@@ -249,7 +249,10 @@ test('visiting /pipelines/4 when logged in', function (assert) {
     assert.equal(find('.pipelineWorkflow svg').length, 1, 'not enough workflow');
     assert.equal(find('button.start-button').length, 1, 'should have a start button');
     assert.equal(find('ul.nav-pills').length, 1, 'should show tabs');
-    assert.equal(find('.col-md-3 h2').text().trim(), 'Pull Requests');
-    assert.equal(find('tbody tr').length, 2);
+    assert.equal(find('.column-tabs-view .nav-link').eq(0).text().trim(), 'Events');
+    assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Events');
+    assert.equal(find('.column-tabs-view .nav-link').eq(1).text().trim(), 'Pull Requests');
+    assert.equal(find('.separator').length, 1);
+    assert.equal(find('.partial-view').length, 2);
   });
 });

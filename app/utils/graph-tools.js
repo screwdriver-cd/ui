@@ -166,7 +166,7 @@ const hasProcessedDest = (graph, name) => {
  * @return {Object}                 A graph representation with row/column coordinates for drawing, and meta information for scaling
  */
 const decorateGraph = (inputGraph, builds, start) => {
-  // simple clone
+  // deep clone
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const nodes = graph.nodes;
   const buildsAvailable = (Array.isArray(builds) || builds instanceof DS.PromiseArray) &&
@@ -217,6 +217,10 @@ const decorateGraph = (inputGraph, builds, start) => {
     const srcNode = node(nodes, e.src);
     const destNode = node(nodes, e.dest);
 
+    if (!srcNode || !destNode) {
+      return;
+    }
+
     e.from = srcNode.pos;
     e.to = destNode.pos;
 
@@ -235,4 +239,38 @@ const decorateGraph = (inputGraph, builds, start) => {
   return graph;
 };
 
-export default { node, icon, decorateGraph, graphDepth, isRoot, isTrigger };
+/**
+ * Filter to the subgraph in which the root is the start from node
+ * @param   {Array}   [{nodes}]   Array of graph vertices
+ * @param   {Array}   [{edges}]   Array of graph edges
+ * @param   {String}  [startNode] Starting/trigger node
+ * @returns {Object}              Nodes and edges for the filtered subgraph
+ */
+const subgraphFilter = ({ nodes, edges }, startNode) => {
+  if (!startNode || !nodes.length) {
+    return { nodes, edges };
+  }
+
+  let visiting = [startNode];
+  let visited = new Set(visiting);
+
+  if (edges.length) {
+    while (visiting.length) {
+      let cur = visiting.shift();
+
+      edges.forEach((e) => {
+        if (e.src === cur) {
+          visiting.push(e.dest);
+          visited.add(e.dest);
+        }
+      });
+    }
+  }
+
+  return {
+    nodes: nodes.filter(n => visited.has(n.name)),
+    edges: edges.filter(e => visited.has(e.src) && visited.has(e.dest))
+  };
+};
+
+export { node, icon, decorateGraph, graphDepth, isRoot, isTrigger, subgraphFilter };

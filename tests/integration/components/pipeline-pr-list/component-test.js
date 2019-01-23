@@ -12,17 +12,23 @@ test('it renders', function (assert) {
   const jobs = [
     EmberObject.create({
       id: 'abcd',
-      name: 'main',
+      name: 'PR-1234:main',
+      createTimeWords: 'now',
+      title: 'update readme',
+      username: 'anonymous',
       builds: [{
         id: '1234',
         status: 'SUCCESS'
       }]
     }),
     EmberObject.create({
-      id: 'abcde',
-      name: 'publish',
+      id: 'efgh',
+      name: 'revert',
+      createTimeWords: 'now',
+      title: 'revert PR-1234',
+      username: 'suomynona',
       builds: [{
-        id: '1234',
+        id: '1235',
         status: 'FAILURE'
       }]
     })
@@ -30,8 +36,11 @@ test('it renders', function (assert) {
 
   this.set('jobsMock', jobs);
 
-  this.render(hbs`{{pipeline-pr-list jobs=jobsMock}}`);
+  this.render(hbs`{{pipeline-pr-list pullRequests=jobsMock}}`);
 
-  assert.equal(this.$('h2').text().trim(), 'Pull Requests');
-  assert.equal(this.$('> div').length, 1);
+  assert.equal(this.$('.view').length, 2);
+
+  this.set('jobsMock', []);
+
+  assert.equal(this.$('.alert').text().trim(), 'No open pull requests');
 });

@@ -16,6 +16,7 @@ test('it renders', function (assert) {
   const event = EmberObject.create({
     id: 3,
     startFrom: '~commit',
+    status: 'SUCCESS',
     causeMessage: 'test',
     commit: {
       url: '#',
@@ -54,11 +55,13 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
 
-  assert.equal(this.$('td').length, 6);
+  assert.equal(this.$('.SUCCESS').length, 1);
+  assert.equal(this.$('.status .fa-check-circle-o').length, 1);
   assert.equal(this.$('.commit').text().trim(), '#abc123');
   assert.equal(this.$('.message').text().trim(), 'this was a test');
   assert.equal(this.$('svg').length, 1);
-  assert.equal(this.$('.user').text().trim(), 'batman');
-  assert.equal(this.$('.created').text().trim(), 'now');
-  assert.equal(this.$('.duration').text().trim(), '1 sec');
+  assert.equal(this.$('.graph-node').length, 4);
+  assert.equal(this.$('.graph-edge').length, 3);
+  assert.equal(this.$('.by').text().trim(), 'batman');
+  assert.equal(this.$('.date').text().trim(), 'Opened now');
 });

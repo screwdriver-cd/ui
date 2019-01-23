@@ -36,4 +36,35 @@
       color: $brand-700;
     }
   }
+
+  .event-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin: 15px 0;
+  }
+
+  .title {
+    text-transform: uppercase;
+    color: $grey-600;
+    font-size: 12px;
+  }
+
+  .col {
+    flex: 1 0 calc(100% / 7);
+    padding-left: 10px;
+    border-right: 1px solid $grey-500;
+
+    &:nth-child(2) {
+      flex-basis: calc(100% / 7 * 2);
+    }
+
+    &:last-child {
+      border: none;
+    }
+
+    a {
+      line-height: inherit;
+    }
+  }
 }

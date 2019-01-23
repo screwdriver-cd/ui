@@ -14,4 +14,26 @@ const isActiveBuild = (status, endTime) => status === 'QUEUED' || status === 'RU
  */
 const isPRJob = jobName => /^PR-/.test(jobName);
 
-export { isActiveBuild, isPRJob };
+const statusIcon = (status, isLight) => {
+  let icon;
+
+  switch (status) {
+  case 'QUEUED':
+  case 'RUNNING':
+    icon = 'spinner fa-spin';
+    break;
+  case 'SUCCESS':
+    icon = `check-circle${isLight ? '-o' : ''}`;
+    break;
+  case 'UNSTABLE':
+    icon = 'exclamation-circle';
+    break;
+  default:
+    icon = `times-circle${isLight ? '-o' : ''}`;
+    break;
+  }
+
+  return icon;
+};
+
+export { isActiveBuild, isPRJob, statusIcon };
