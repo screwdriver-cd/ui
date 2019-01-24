@@ -5,6 +5,7 @@ import EmberObject from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
+import injectSessionStub from '../../../helpers/inject-session';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
 let syncService;
@@ -50,10 +51,10 @@ test('it renders', function (assert) {
 
   // Jobs
   assert.equal(this.$('section.jobs h3').text().trim(), 'Jobs');
-  assert.equal(this.$('section.jobs li').length, 3);
+  assert.equal(this.$('section.jobs li').length, 4);
   assert.equal(this.$('section.jobs h4').text().trim(), 'ABmain');
   // eslint-disable-next-line max-len
-  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable the A job.Toggle to disable the B job.Toggle to disable the main job.');
+  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable or enable the job.');
   assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
 
   // Sync
@@ -97,10 +98,90 @@ test('it updates a pipeline', function (assert) {
   this.$('button.blue-button').click();
 });
 
-test('it handles job disabling', function (assert) {
+test('it opens job toggle modal', async function (assert) {
+  assert.expect(8);
+  const $ = this.$;
+
+  injectSessionStub(this);
+
   const main = EmberObject.create({
     id: '1234',
     name: 'main',
+    isDisabled: false
+  });
+
+  const jobModelMock = {
+    save() {
+      return resolve(main);
+    }
+  };
+  const storeStub = EmberObject.extend({
+    peekRecord() {
+      assert.ok(true, 'peekRecord called');
+
+      return jobModelMock;
+    }
+  });
+
+  this.set('mockPipeline', EmberObject.create({
+    appId: 'foo/bar',
+    scmUri: 'github.com:84604643:master',
+    id: 'abc1234'
+  }));
+  this.set('showToggleModal', false);
+  this.set('mockJobs', A([main]));
+  this.set('username', 'tkyi');
+  this.set('setJobStatsMock', (id, state, name, message) => {
+    assert.equal(id, '1234');
+    assert.equal(message, ' ');
+    assert.equal(name, 'tkyi');
+    assert.equal(state, 'DISABLED');
+
+    main.set('state', state);
+    main.set('stateChanger', 'tkyi');
+    main.set('stateChangeMessage', ' ');
+    main.set('isDisabled', state === 'DISABLED');
+
+    this.set('state', state);
+    this.set('showToggleModal', false);
+  });
+
+  this.register('service:store', storeStub);
+  this.inject.service('store');
+
+  this.render(hbs`{{pipeline-options
+    username=username
+    pipeline=mockPipeline
+    setJobStatus=setJobStatsMock
+    jobs=mockJobs
+    showToggleModal=showToggleModal
+  }}`);
+
+  assert.equal(this.get('showToggleModal'), false);
+  assert.notOk($('.modal').length);
+
+  await this.$('.x-toggle-btn').click();
+
+  const modalTitle = 'Disable the "main" job?';
+  const cancelButton = $('.toggle-form__cancel');
+  const createButton = $('.toggle-form__create');
+
+  assert.equal(this.get('showToggleModal'), true);
+  // Make sure there is only 1 modal
+  assert.equal($('.modal').length, 1);
+  assert.equal($('.modal-title').text().trim(), modalTitle);
+  assert.equal($('.message input').length, 1);
+  assert.equal(cancelButton.text().trim(), 'Cancel');
+  assert.equal(createButton.text().trim(), 'Confirm');
+});
+
+test('it handles job disabling', async function (assert) {
+  const main = EmberObject.create({
+    id: '1234',
+    name: 'main',
+    state: 'ENABLED',
+    stateChanger: 'tkyi',
+    stateChangeMessage: 'testing',
     isDisabled: false
   });
 
@@ -111,28 +192,34 @@ test('it handles job disabling', function (assert) {
   }));
 
   this.set('mockJobs', A([main]));
-
-  this.set('setJobStatsMock', (id, state) => {
+  this.set('username', 'tkyi');
+  this.set('setJobStatsMock', (id, state, name) => {
     assert.equal(id, '1234');
     assert.equal(state, 'DISABLED');
-    main.set('isDisabled', true);
+    assert.equal(name, 'tkyi');
+
+    main.set('isDisabled', state === 'DISABLED');
   });
 
   this.render(hbs`{{pipeline-options
+    username=username
     pipeline=mockPipeline
     setJobStatus=setJobStatsMock
     jobs=mockJobs
   }}`);
 
   assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
-  this.$('.x-toggle-btn').click();
+
+  await this.$('.x-toggle-btn').click();
+  await this.$('.toggle-form__create').click();
 
   assert.equal(this.$('section.jobs h4').text().trim(), 'main');
-  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to enable the main job.');
   assert.notOk(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
+  assert.equal(this.$('section.jobs p').text().trim(),
+    'Toggle to disable or enable the job.Disabled by tkyi: testing');
 });
 
-test('it handles job enabling', function (assert) {
+test('it handles job enabling', async function (assert) {
   const main = EmberObject.create({
     id: '1234',
     name: 'main',
@@ -144,13 +231,12 @@ test('it handles job enabling', function (assert) {
     scmUri: 'github.com:84604643:master',
     id: 'abc1234'
   }));
-
   this.set('mockJobs', A([main]));
-
   this.set('setJobStatsMock', (id, state) => {
     assert.equal(id, '1234');
     assert.equal(state, 'ENABLED');
-    main.set('isDisabled', false);
+
+    main.set('isDisabled', state === 'DISABLED');
   });
 
   this.render(hbs`{{pipeline-options
@@ -160,12 +246,12 @@ test('it handles job enabling', function (assert) {
   }}`);
 
   assert.equal(this.$('section.jobs h4').text().trim(), 'main');
-  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to enable the main job.');
+  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable or enable the job.');
   assert.notOk(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
-  this.$('.x-toggle-btn').click();
 
-  assert.equal(this.$('section.jobs h4').text().trim(), 'main');
-  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable the main job.');
+  await this.$('.x-toggle-btn').click();
+  await this.$('.toggle-form__create').click();
+
   assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
 });
 
@@ -327,10 +413,10 @@ test('it does not render pipeline and danger for child pipeline', function (asse
 
   // Jobs should render
   assert.equal(this.$('section.jobs h3').text().trim(), 'Jobs');
-  assert.equal(this.$('section.jobs li').length, 3);
+  assert.equal(this.$('section.jobs li').length, 4);
   assert.equal(this.$('section.jobs h4').text().trim(), 'ABmain');
   // eslint-disable-next-line max-len
-  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable the A job.Toggle to disable the B job.Toggle to disable the main job.');
+  assert.equal(this.$('section.jobs p').text().trim(), 'Toggle to disable or enable the job.');
   assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
 
   // Sync should render

@@ -18,6 +18,13 @@ export default Component.extend({
   isShowingModal: false,
   showDangerButton: true,
   showRemoveButtons: false,
+  showToggleModal: false,
+  // Job disable/enable
+  name: null,
+  state: null,
+  stateChange: null,
+  user: null,
+  jobId: null,
   jobSorting: ['name'],
   sortedJobs: sort('jobs', 'jobSorting'),
   isInvalid: not('isValid'),
@@ -54,8 +61,23 @@ export default Component.extend({
     updatePipeline() {
       this.get('onUpdatePipeline')(this.get('scmUrl'));
     },
-    toggleJob(jobId, stillActive) {
-      this.get('setJobStatus')(jobId, stillActive ? 'ENABLED' : 'DISABLED');
+    toggleJob(jobId, user, name, stillActive) {
+      const status = stillActive ? 'ENABLED' : 'DISABLED';
+
+      this.set('name', name);
+      this.set('stateChange', status[0].toUpperCase() + status.slice(1, -1).toLowerCase());
+      this.set('state', status);
+      this.set('user', user);
+      this.set('jobId', jobId);
+      this.set('showToggleModal', true);
+    },
+    updateMessage(message) {
+      const state = this.get('state');
+      const user = this.get('user');
+      const jobId = this.get('jobId');
+
+      this.get('setJobStatus')(jobId, state, user, message || ' ');
+      this.set('showToggleModal', false);
     },
     showRemoveButtons() {
       this.set('showDangerButton', false);

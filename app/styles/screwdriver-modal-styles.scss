@@ -90,6 +90,62 @@
 
   .collection-form__create:hover {
     background-color: $sd-link;
+    border-color: $sd-link;
+  }
+}
+
+.toggle-modal {
+  .modal-title {
+    font-weight: bold;
+  }
+  .toggle-form__cancel {
+    border-color: $sd-running;
+    color: $sd-running;
+  }
+  textarea {
+    resize: none;
+  }
+
+  .form-control {
+    background-color: $sd-flyout-bg;
+  }
+
+  .control-label {
+    font-weight: normal;
+  }
+
+  .message {
+    margin-bottom: 30px;
+  }
+
+  .modal-header {
+    padding: 15px 40px;
+
+    .close {
+      margin-top: 1px;
+    }
+  }
+
+  .modal-body {
+    padding: 50px 40px;
+  }
+
+  .btn, .form-control {
+    border-radius: 3px;
+  }
+
+  .btn {
+    width: 150px;
+  }
+
+  .toggle-form__create {
+    background-color: $sd-running;
+    border-color: $sd-running;
+  }
+
+  .toggle-form__create:hover {
+    background-color: $sd-link;
+    border-color: $sd-link;
   }
 }
 

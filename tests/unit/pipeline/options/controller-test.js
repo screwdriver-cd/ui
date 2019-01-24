@@ -42,16 +42,16 @@ test('it handles updating job state', function (assert) {
       }
     });
 
-    controller.send('setJobStatus', '1234', 'ENABLED');
+    controller.send('setJobStatus', '1234', 'ENABLED', 'tkyi', 'testing');
   });
 
   return wait().then(() => {
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
-    assert.deepEqual(payload, {
-      state: 'ENABLED'
-    });
+    assert.equal(payload.state, 'ENABLED');
+    assert.equal(payload.stateChanger, 'tkyi');
+    assert.equal(payload.stateChangeMessage, 'testing');
   });
 });
 

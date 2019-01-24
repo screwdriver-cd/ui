@@ -98,7 +98,7 @@ test('it processes a simple graph without builds', function (assert) {
       width: 2
     }
   };
-  const result = decorateGraph(SIMPLE_GRAPH);
+  const result = decorateGraph({ inputGraph: SIMPLE_GRAPH });
 
   assert.deepEqual(result, expectedOutput);
 });
@@ -128,7 +128,7 @@ test('it processes a more complex graph without builds', function (assert) {
       width: 5
     }
   };
-  const result = decorateGraph(COMPLEX_GRAPH);
+  const result = decorateGraph({ inputGraph: COMPLEX_GRAPH });
 
   assert.deepEqual(result, expectedOutput);
 });
@@ -171,7 +171,7 @@ test('it processes a complex graph with builds', function (assert) {
       width: 5
     }
   };
-  const result = decorateGraph(COMPLEX_GRAPH, builds, '~commit');
+  const result = decorateGraph({ inputGraph: COMPLEX_GRAPH, builds, start: '~commit' });
 
   assert.deepEqual(result, expectedOutput);
 });
@@ -207,7 +207,7 @@ test('it handles detached jobs', function (assert) {
       width: 2
     }
   };
-  const result = decorateGraph(inputGraph);
+  const result = decorateGraph({ inputGraph });
 
   assert.deepEqual(result, expectedOutput);
 });
@@ -247,7 +247,7 @@ test('it handles complex misordered pipeline with multiple commit/pr/remote trig
         height: 5
       }
     };
-    const result = decorateGraph(MORE_COMPLEX_GRAPH);
+    const result = decorateGraph({ inputGraph: MORE_COMPLEX_GRAPH });
 
     assert.deepEqual(result, expectedOutput);
   });

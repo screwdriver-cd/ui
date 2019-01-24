@@ -35,6 +35,15 @@ const node = (nodes, name) => nodes.find(o => o.name === name);
 const build = (builds, jobId) => builds.find(b => b && `${get(b, 'jobId')}` === `${jobId}`);
 
 /**
+ * Find a job for the given job id
+ * @method job
+ * @param  {Array}  jobs    List of job objects
+ * @param  {String} jobId   The job id of the build
+ * @return {Object}         Reference to the job object from the list if found
+ */
+const job = (jobs, jobId) => jobs.find(j => j && `${get(j, 'id')}` === `${jobId}`);
+
+/**
  * Find the icon to set as the text for a node
  * @method icon
  * @param  {String} status Text that denotes a build status
@@ -162,15 +171,18 @@ const hasProcessedDest = (graph, name) => {
  * @method decorateGraph
  * @param  {Object}      inputGraph A directed graph representation { nodes: [], edges: [] }
  * @param  {Array|DS.PromiseArray}  [builds]     A list of build metadata
+ * @param  {Array|DS.PromiseArray}  [jobs]       A list of job metadata
  * @param  {String}      [start]    Node name that indicates what started the graph
  * @return {Object}                 A graph representation with row/column coordinates for drawing, and meta information for scaling
  */
-const decorateGraph = (inputGraph, builds, start) => {
+const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   // deep clone
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const nodes = graph.nodes;
   const buildsAvailable = (Array.isArray(builds) || builds instanceof DS.PromiseArray) &&
     get(builds, 'length');
+  const jobsAvailable = (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) &&
+    get(jobs, 'length');
   const edges = graph.edges;
   let y = [0]; // accumulator for column heights
 
@@ -193,9 +205,25 @@ const decorateGraph = (inputGraph, builds, start) => {
       walkGraph(graph, n.name, 1, y);
     }
 
-    // get build information
+    // Get job information
     const jobId = get(n, 'id');
 
+    if (jobsAvailable) {
+      const j = job(jobs, jobId);
+      const jobIsDisabled = j ? get(j, 'isDisabled') : null;
+
+      // Set build status to disabled if job is disabled
+      if (jobIsDisabled) {
+        const state = get(j, 'state');
+        const stateWithCapitalization = state[0].toUpperCase() + state.substring(1).toLowerCase();
+
+        n.status = state;
+        n.stateChangeMessage = `${stateWithCapitalization} ` +
+        `by ${get(j, 'stateChanger')}`;
+      }
+    }
+
+    // Get build information
     if (buildsAvailable && jobId) {
       const b = build(builds, jobId);
 
@@ -207,7 +235,7 @@ const decorateGraph = (inputGraph, builds, start) => {
     }
 
     // Set a STARTED_FROM status on the trigger node
-    if (isTrigger(n.name, start)) {
+    if (start && isTrigger(n.name, start)) {
       n.status = 'STARTED_FROM';
     }
   });
