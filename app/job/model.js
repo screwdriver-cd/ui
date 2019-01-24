@@ -9,6 +9,13 @@ export default DS.Model.extend({
   state: DS.attr('string'),
   stateChanger: DS.attr('string'),
   stateChangeTime: DS.attr('date'),
+  stateChangeTimeWords: computed('stateChangeTime', {
+    get() {
+      const duration = Date.now() - +this.get('stateChangeTime');
+
+      return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
+    }
+  }),
   stateChangeMessage: DS.attr('string'),
   title: DS.attr('string'),
   username: DS.attr('string'),

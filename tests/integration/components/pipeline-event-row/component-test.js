@@ -63,5 +63,5 @@ test('it renders', function (assert) {
   assert.equal(this.$('.graph-node').length, 4);
   assert.equal(this.$('.graph-edge').length, 3);
   assert.equal(this.$('.by').text().trim(), 'batman');
-  assert.equal(this.$('.date').text().trim(), 'Opened now');
+  assert.equal(this.$('.date').text().trim(), 'Built now');
 });
