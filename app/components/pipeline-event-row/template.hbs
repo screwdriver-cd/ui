@@ -4,7 +4,7 @@
     <div class="commit" title="{{event.causeMessage}}">
       <a class="{{if (eq event.id lastSuccessful) "last-successful"}}" href="{{event.commit.url}}">#{{event.truncatedSha}}</a>
     </div>
-    <div class="date greyOut">Built {{event.createTimeWords}}</div>
+    <div class="date greyOut">Started {{event.createTimeWords}}</div>
     <span class="message">{{event.commit.message}}</span>
     <div class="by"><a href="{{event.creator.url}}">{{event.creator.name}}</a></div>
     <div class="workflow">
