@@ -216,10 +216,11 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
       if (jobIsDisabled) {
         const state = get(j, 'state');
         const stateWithCapitalization = state[0].toUpperCase() + state.substring(1).toLowerCase();
+        const stateChanger = get(j, 'stateChanger');
 
         n.status = state;
-        n.stateChangeMessage = `${stateWithCapitalization} ` +
-        `by ${get(j, 'stateChanger')}`;
+        n.stateChangeMessage = stateChanger ? `${stateWithCapitalization} ` +
+        `by ${stateChanger}` : stateWithCapitalization;
       }
     }
 
