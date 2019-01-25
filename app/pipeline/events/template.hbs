@@ -6,7 +6,7 @@
 
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 <div class="row">
-  <div class="col-xs-12 col-md-10 separator partial-view">
+  <div class="col-xs-12 col-md-9 separator partial-view">
     {{pipeline-graph-nav
       mostRecent=mostRecent
       lastSuccessful=lastSuccessful
@@ -25,7 +25,7 @@
       authenticated=session.isAuthenticated
     }}
   </div>
-  <div class="col-xs-12 col-md-2 no-padding column-tabs-view partial-view">
+  <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view" onScroll={{action "onEventListScroll"}}>
     {{#bs-tab as |tab|}}
       {{#tab.pane title="Events"}}
         {{pipeline-events-list
@@ -34,8 +34,8 @@
           selectedEvent=selectedEvent
           lastSuccessful=lastSuccessful
           mostRecent=mostRecent
+          eventsPage=eventsPage
           updateEvents=(action "updateEvents")
-          moreToShow=moreToShow
         }}
       {{/tab.pane}}
       {{#tab.pane title="Pull Requests"}}

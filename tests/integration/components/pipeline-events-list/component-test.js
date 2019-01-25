@@ -85,8 +85,13 @@ test('it renders', function (assert) {
   ];
 
   this.set('eventsMock', events);
-  this.render(hbs`{{pipeline-events-list events=eventsMock moreToShow=true}}`);
+  this.set('updateEventsMock', (page) => {
+    assert.equal(page, 2);
+  });
+  this.render(hbs`{{pipeline-events-list
+                    events=eventsMock
+                    eventsPage=1
+                    updateEvents=updateEventsMock}}`);
 
-  assert.equal(this.$('a.btn').text().trim(), 'More...');
   assert.equal(this.$('.view').length, 2);
 });

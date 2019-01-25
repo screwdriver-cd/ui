@@ -43,10 +43,19 @@ a {
 .detail {
   font-size: 1.35rem;
   line-height: 1.5;
+  flex-grow: 1;
 }
 
 .name {
   font-size: 1.5rem;
+  padding-right: 10px;
+  position: relative;
+}
+
+.scm {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .date, .by {
