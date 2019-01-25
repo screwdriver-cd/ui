@@ -11,7 +11,9 @@ export default Controller.extend(ModelReloaderMixin, {
   init() {
     this._super(...arguments);
     this.startReloading();
+    this.set('eventsPage', 1);
   },
+
   reload() {
     try {
       this.send('refreshModel');
@@ -22,6 +24,7 @@ export default Controller.extend(ModelReloaderMixin, {
     return Promise.resolve();
   },
   isShowingModal: false,
+  isFetching: false,
   moreToShow: true,
   errorMessage: '',
   jobs: computed('model.jobs', {
@@ -70,7 +73,7 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       const jobs = this.get('model.jobs');
 
-      return jobs.filter(j => /^PR-/.test(j.get('name')));
+      return jobs.filter(j => /^PR-/.test(j.get('name'))).sortBy('createTime').reverse();
     }
   }),
   selectedEvent: computed('selected', 'mostRecent', {
@@ -118,7 +121,49 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
 
+  updateEvents(page) {
+    this.set('isFetching', true);
+
+    return get(this, 'store').query('event', {
+      pipelineId: get(this, 'pipeline.id'),
+      page,
+      count: ENV.APP.NUM_EVENTS_LISTED
+    })
+      .then((events) => {
+        const nextEvents = events.toArray();
+
+        if (Array.isArray(nextEvents)) {
+          if (nextEvents.length < ENV.APP.NUM_EVENTS_LISTED) {
+            this.set('moreToShow', false);
+          }
+
+          this.set('eventsPage', page);
+          this.set('isFetching', false);
+
+          // FIXME: Skip duplicate ones if new events got added added to the head
+          // of events list
+          this.set('paginateEvents',
+            this.get('paginateEvents').concat(nextEvents));
+        }
+      });
+  },
+
+  checkForMorePage({ scrollTop, scrollHeight, clientHeight }) {
+    if (scrollTop + clientHeight > scrollHeight - 150) {
+      this.updateEvents(this.get('eventsPage') + 1);
+    }
+  },
+
   actions: {
+    updateEvents(page) {
+      this.updateEvents(page);
+    },
+
+    onEventListScroll({ currentTarget }) {
+      if (this.get('moreToShow') && !this.get('isFetching')) {
+        this.checkForMorePage(currentTarget);
+      }
+    },
 
     startMainBuild() {
       this.set('isShowingModal', true);
@@ -177,27 +222,6 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('isShowingModal', false);
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
-    },
-    updateEvents(page) {
-      return get(this, 'store').query('event', {
-        pipelineId: get(this, 'pipeline.id'),
-        page,
-        count: ENV.APP.NUM_EVENTS_LISTED
-      })
-        .then((events) => {
-          const nextEvents = events.toArray();
-
-          if (Array.isArray(nextEvents)) {
-            if (nextEvents.length < ENV.APP.NUM_EVENTS_LISTED) {
-              this.set('moreToShow', false);
-            }
-
-            // FIXME: Skip duplicate ones if new events got added added to the head
-            // of events list
-            this.set('paginateEvents',
-              this.get('paginateEvents').concat(nextEvents));
-          }
-        });
     }
   },
   willDestroy() {

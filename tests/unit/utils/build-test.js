@@ -37,6 +37,8 @@ test('it checks if the current job is a PR job', (assert) => {
 test('it gets the right fs class name for given status', (assert) => {
   assert.equal(statusIcon('SUCCESS', true), 'check-circle-o');
   assert.equal(statusIcon('SUCCESS'), 'check-circle');
+  assert.equal(statusIcon('CREATED', true), 'check-circle-o');
+  assert.equal(statusIcon('CREATED'), 'check-circle');
   assert.equal(statusIcon('RUNNING'), 'spinner fa-spin');
   assert.equal(statusIcon('QUEUED'), 'spinner fa-spin');
   assert.equal(statusIcon('UNSTABLE'), 'exclamation-circle');

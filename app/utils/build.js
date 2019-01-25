@@ -22,6 +22,7 @@ const statusIcon = (status, isLight) => {
   case 'RUNNING':
     icon = 'spinner fa-spin';
     break;
+  case 'CREATED':
   case 'SUCCESS':
     icon = `check-circle${isLight ? '-o' : ''}`;
     break;

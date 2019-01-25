@@ -17,8 +17,11 @@ export default DS.Model.extend({
     }
   }),
   stateChangeMessage: DS.attr('string'),
+  // !for pr job only {
   title: DS.attr('string'),
   username: DS.attr('string'),
+  userProfile: DS.attr('string'),
+  url: DS.attr('string'),
   createTime: DS.attr('date'),
   createTimeWords: computed('createTime', {
     get() {
@@ -27,6 +30,7 @@ export default DS.Model.extend({
       return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
     }
   }),
+  // } for pr job only
   permutations: DS.attr(),
   builds: DS.hasMany('build', { async: true }),
   isDisabled: equal('state', 'DISABLED'),

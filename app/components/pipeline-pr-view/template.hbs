@@ -7,9 +7,10 @@
       {{else}}
         <span class="greyOut">{{displayName}}</span>
       {{/if}}
+      <a href="{{job.url}}" target="_blank" class="scm">{{fa-icon "code-fork"}}</a>
     </div>
     <div class="date greyOut">Opened {{job.createTimeWords}}</div>
     <span class="title">{{job.title}}</span>
-    <div class="by">{{job.username}}</div>
+    <div class="by"><a href="{{job.userProfile}}" target="_blank">{{job.username}}</a></div>
   </div>
 </div>

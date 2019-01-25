@@ -72,7 +72,7 @@ $weight-bold: 600;
 }
 
 .SUCCESS {
-  .fa {
+  .status .fa {
     color: $sd-success;
   }
 }
@@ -89,7 +89,7 @@ $weight-bold: 600;
   }
 }
 
-.RUNNING, .QUEUED, .BLOCKED {
+.RUNNING, .QUEUED, .BLOCKED, .CREATED {
   .fa {
     color: $sd-running;
   }
@@ -108,7 +108,7 @@ a {
 }
 
 .partial-view {
-  height: 85vh;
+  height: 78vh;
   display: flex;
   flex-direction: column;
 }
