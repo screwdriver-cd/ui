@@ -1,8 +1,11 @@
 import EmberObject, { computed } from '@ember/object';
 import { equal, match } from '@ember/object/computed';
+import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import DS from 'ember-data';
+import ENV from 'screwdriver-ui/config/environment';
+import { isActiveBuild } from 'screwdriver-ui/utils/build';
 
-export default DS.Model.extend({
+export default DS.Model.extend(ModelReloaderMixin, {
   pipelineId: DS.attr('string'),
   name: DS.attr('string'),
   isPR: match('name', /^PR-/),
@@ -44,5 +47,16 @@ export default DS.Model.extend({
 
       return builds.objectAt(0);
     }
-  })
+  }),
+  modelToReload: 'builds',
+  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
+  // Reload builds only if the pr job build is still running
+  shouldReload() {
+    return this.get('isPR') &&
+      this.get('builds').any(b => isActiveBuild(b.get('status'), b.get('endTime')));
+  },
+  init() {
+    this._super(...arguments);
+    this.startReloading();
+  }
 });

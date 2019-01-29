@@ -25,6 +25,7 @@ export default Controller.extend(ModelReloaderMixin, {
   },
   isShowingModal: false,
   isFetching: false,
+  activeTab: 'events',
   moreToShow: true,
   errorMessage: '',
   jobs: computed('model.jobs', {
@@ -149,7 +150,7 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   checkForMorePage({ scrollTop, scrollHeight, clientHeight }) {
-    if (scrollTop + clientHeight > scrollHeight - 150) {
+    if (scrollTop + clientHeight > scrollHeight - 300) {
       this.updateEvents(this.get('eventsPage') + 1);
     }
   },

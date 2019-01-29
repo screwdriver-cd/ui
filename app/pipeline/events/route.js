@@ -7,6 +7,10 @@ export default Route.extend({
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
   },
+  setupController(controller, model) {
+    this._super(controller, model);
+    controller.set('activeTab', 'events');
+  },
   model() {
     this.controllerFor('pipeline.events').set('pipeline', this.get('pipeline'));
 

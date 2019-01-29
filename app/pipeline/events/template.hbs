@@ -26,9 +26,19 @@
     }}
   </div>
   <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view" onScroll={{action "onEventListScroll"}}>
-    {{#bs-tab as |tab|}}
-      {{#tab.pane title="Events"}}
-        {{pipeline-events-list
+    {{#bs-tab customTabs=true as |tab|}}
+      {{#bs-nav type="tabs" as |nav|}}
+        {{#nav.item active=(bs-eq activeTab 'events')}}
+          {{#nav.link-to "pipeline.events" class="nav-link"}}Events{{/nav.link-to}}
+        {{/nav.item}}
+        {{#nav.item active=(bs-eq activeTab 'pulls')}}
+          {{#nav.link-to "pipeline.pulls" class="nav-link"}}Pull Requests{{/nav.link-to}}
+        {{/nav.item}}
+      {{/bs-nav}}
+
+      <div class="tab-content">
+        {{#tab.pane activeId=activeTab elementId="events" title="Events"}}
+          {{pipeline-events-list
           events=events
           selected=(mut selected)
           selectedEvent=selectedEvent
@@ -37,10 +47,11 @@
           eventsPage=eventsPage
           updateEvents=(action "updateEvents")
         }}
-      {{/tab.pane}}
-      {{#tab.pane title="Pull Requests"}}
-        {{pipeline-pr-list pullRequests=pullRequests}}
-      {{/tab.pane}}
+        {{/tab.pane}}
+        {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
+          {{pipeline-pr-list pullRequests=pullRequests}}
+        {{/tab.pane}}
+      </div>
     {{/bs-tab}}
   </div>
 </div>

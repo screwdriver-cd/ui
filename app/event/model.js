@@ -68,7 +68,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
       return this.get('sha').substr(0, 6);
     }
   }),
-  statusObserver: observer('builds.@each', 'isComplete', function statusObserver() {
+  statusObserver: observer('builds.@each.status', 'isComplete', function statusObserver() {
     const builds = get(this, 'builds');
     let status = 'UNKNOWN';
 
@@ -84,7 +84,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
         set(this, 'status', status);
       });
   }),
-  isCompleteObserver: observer('builds.@each', function isCompleteObserver() {
+  isCompleteObserver: observer('builds.@each.{status,endTime}', function isCompleteObserver() {
     const builds = get(this, 'builds');
 
     builds
