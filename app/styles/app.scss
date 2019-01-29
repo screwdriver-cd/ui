@@ -78,19 +78,19 @@ $weight-bold: 600;
 }
 
 .UNSTABLE {
-  .fa {
+  .status .fa {
     color: $sd-unstable;
   }
 }
 
 .FAILURE, .ABORTED {
-  .fa {
+  .status .fa {
     color: $sd-failure;
   }
 }
 
 .RUNNING, .QUEUED, .BLOCKED, .CREATED {
-  .fa {
+  .status .fa {
     color: $sd-running;
   }
 }

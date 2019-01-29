@@ -254,5 +254,12 @@ test('visiting /pipelines/4 when logged in', function (assert) {
     assert.equal(find('.column-tabs-view .nav-link').eq(1).text().trim(), 'Pull Requests');
     assert.equal(find('.separator').length, 1);
     assert.equal(find('.partial-view').length, 2);
+
+    visit('/pipelines/4/pulls');
+
+    andThen(() => {
+      assert.equal(currentURL(), '/pipelines/4/pulls');
+      assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Pull Requests');
+    });
   });
 });

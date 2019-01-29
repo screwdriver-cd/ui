@@ -213,10 +213,12 @@ test('it handles job disabling', async function (assert) {
   await this.$('.x-toggle-btn').click();
   await this.$('.toggle-form__create').click();
 
-  assert.equal(this.$('section.jobs h4').text().trim(), 'main');
-  assert.notOk(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
-  assert.equal(this.$('section.jobs p').text().trim(),
-    'Toggle to disable or enable the job.Disabled by tkyi: testing');
+  return wait().then(() => {
+    assert.equal(this.$('section.jobs h4').text().trim(), 'main');
+    assert.notOk(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
+    assert.equal(this.$('section.jobs p').text().trim(),
+      'Toggle to disable or enable the job.Disabled by tkyi: testing');
+  });
 });
 
 test('it handles job enabling', async function (assert) {
@@ -252,7 +254,9 @@ test('it handles job enabling', async function (assert) {
   await this.$('.x-toggle-btn').click();
   await this.$('.toggle-form__create').click();
 
-  assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
+  return wait().then(() => {
+    assert.ok(this.$('.x-toggle-container').hasClass('x-toggle-container-checked'));
+  });
 });
 
 test('it handles pipeline remove flow', function (assert) {

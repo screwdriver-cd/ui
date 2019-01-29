@@ -17,6 +17,7 @@ Router.map(function route() {
     this.route('build', { path: 'builds/:build_id' });
     this.route('options');
     this.route('child-pipelines');
+    this.route('pulls');
   });
   this.route('login');
   this.route('create');
