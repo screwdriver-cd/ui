@@ -77,6 +77,14 @@ export default Component.extend({
             n: 1
           });
 
+          if (buildStats.blockedStartTime) {
+            initLogs.push({
+              t: new Date(buildStats.blockedStartTime).getTime(),
+              m: 'Build blocked, putting back into queue.',
+              n: 1
+            });
+          }
+
           if (buildStats.hostname) {
             initLogs.push({
               t: new Date(buildStats.imagePullStartTime).getTime(),
