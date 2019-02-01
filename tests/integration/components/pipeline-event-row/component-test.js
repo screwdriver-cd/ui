@@ -28,6 +28,7 @@ test('it renders', function (assert) {
     },
     createTimeWords: 'now',
     durationText: '1 sec',
+    truncatedMessage: 'this was a test',
     truncatedSha: 'abc123',
     workflowGraph: {
       nodes: [
