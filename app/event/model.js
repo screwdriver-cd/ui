@@ -60,7 +60,10 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   truncatedMessage: computed('commit.message', {
     get() {
-      return this.get('commit.message').split('\n')[0];
+      const msg = this.get('commit.message');
+      const cutOff = 150;
+
+      return msg.length > cutOff ? `${msg.substring(0, cutOff)}...` : msg;
     }
   }),
   truncatedSha: computed('sha', {

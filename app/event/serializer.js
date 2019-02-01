@@ -2,6 +2,25 @@ import { merge } from '@ember/polyfills';
 import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
+  normalizeResponse(store, typeClass, payload, id, requestType) {
+    if (payload.events) {
+      payload.events.forEach((event) => {
+        // sorting on the dest should be enough
+        event.workflowGraph.edges = event.workflowGraph.edges.sort(({ dest: a }, { dest: b }) => {
+          if (a < b) {
+            return -1;
+          }
+          if (a > b) {
+            return 1;
+          }
+
+          return 0;
+        });
+      });
+    }
+
+    return this._super(store, typeClass, payload, id, requestType);
+  },
   /**
    * Override the serializeIntoHash method to handle model names without a root key
    * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash

@@ -5,7 +5,7 @@
       <a class="{{if (eq event.id lastSuccessful) "last-successful"}}" href="{{event.commit.url}}">#{{event.truncatedSha}}</a>
     </div>
     <div class="date greyOut">Started {{event.createTimeWords}}</div>
-    <span class="message">{{event.commit.message}}</span>
+    <span class="message" title="{{event.commit.message}}">{{event.truncatedMessage}}</span>
     <div class="by"><a href="{{event.creator.url}}">{{event.creator.name}}</a></div>
     <div class="workflow">
       {{#if (and (is-fulfilled event.builds) event.workflowGraph)}}
