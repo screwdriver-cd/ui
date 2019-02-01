@@ -28,7 +28,8 @@ test('it calculates queuedDuration', function (assert) {
 
 test('it calculates buildDuration', function (assert) {
   let model = this.subject({
-    createTime: new Date(1472244582531),
+    createTime: new Date(1472244572531),
+    startTime: new Date(1472244582531),
     endTime: new Date(1472244592531)
   });
 
@@ -40,8 +41,28 @@ test('it calculates buildDuration', function (assert) {
     assert.equal(model.get('buildDuration'), '0 seconds');
     // no start time, so duration is 0
     model.set('endTime', new Date(1472244592531));
-    model.set('createTime', null);
+    model.set('startTime', null);
     assert.equal(model.get('buildDuration'), '0 seconds');
+  });
+});
+
+test('it calculates totalDuration', function (assert) {
+  let model = this.subject({
+    createTime: new Date(1472244572531),
+    startTime: new Date(1472244582531),
+    endTime: new Date(1472244592531)
+  });
+
+  run(() => {
+    // valid duration
+    assert.equal(model.get('totalDuration'), '20 seconds');
+    // no end time, so duration is 0
+    model.set('endTime', null);
+    assert.equal(model.get('totalDuration'), '0 seconds');
+    // no start time, so duration is 0
+    model.set('endTime', new Date(1472244592531));
+    model.set('createTime', null);
+    assert.equal(model.get('totalDuration'), '0 seconds');
   });
 });
 

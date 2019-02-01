@@ -14,6 +14,12 @@ ul {
   grid-column: 9;
 }
 
+li .subsection {
+  border-left: none;
+  font-weight: $weight-normal;
+  font-size: 12px;
+}
+
 li {
   border-left: 1px solid $sd-text-med;
   padding: 5px 10px;

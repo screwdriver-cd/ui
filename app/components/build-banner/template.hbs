@@ -33,7 +33,11 @@
     </li>
   {{/if}}
   <li class="duration">
-    <span class="banner-value">{{duration}}</span>
+    <a onClick={{action "toggleDurationDetail"}}><span class="banner-value showClick show" title="Total duration: {{duration}}, Queue time: {{queueDuration}}, Build time: {{buildDuration}}">{{duration}}</span></a>
+    {{#if showDurationDetail}}
+      <li class="subsection"><span class="banner-value">{{queueDuration}} in queue</span></li>
+      <li class="subsection"><span class="banner-value">{{buildDuration}} in build</span></li>
+    {{/if}}
     <span class="banner-label">Duration</span>
   </li>
   <li class="created">
