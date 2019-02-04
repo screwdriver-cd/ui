@@ -63,9 +63,27 @@ export default DS.Model.extend({
       return `${dt} ago`;
     }
   }),
-  queuedDuration: computed('createTime', 'startTime', {
+  queuedDuration: computed('createTime', 'stats.blockedStartTime', {
     get() {
-      return durationText.call(this, 'createTime', 'startTime');
+      return durationText.call(this, 'createTime', 'stats.blockedStartTime');
+    }
+  }),
+  blockedDuration: computed('stats.{blockedStartTime,imagePullStartTime}', {
+    get() {
+      return durationText.call(this, 'stats.blockedStartTime', 'stats.imagePullStartTime');
+    }
+  }),
+  imagePullDuration: computed('stats.imagePullStartTime', 'startTime', {
+    get() {
+      return durationText.call(this, 'stats.imagePullStartTime', 'stats.startTime');
+    }
+  }),
+  truncatedMessage: computed('commit.message', {
+    get() {
+      const msg = this.get('commit.message');
+      const cutOff = 150;
+
+      return msg.length > cutOff ? `${msg.substring(0, cutOff)}...` : msg;
     }
   }),
   buildDuration: computed('startTime', 'endTime', {

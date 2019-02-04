@@ -103,7 +103,6 @@ export default Component.extend({
     this._super(...arguments);
 
     this.set('coverageInfoSet', false);
-    this.set('showDurationDetail', false);
 
     this.coverageInfoCompute();
   },
@@ -134,10 +133,6 @@ export default Component.extend({
       } else {
         this.get('onStart')();
       }
-    },
-
-    toggleDurationDetail() {
-      this.set('showDurationDetail', !this.get('showDurationDetail'));
     }
   }
 });
