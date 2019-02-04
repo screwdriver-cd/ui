@@ -10,10 +10,12 @@
     {{pipeline-graph-nav
       mostRecent=mostRecent
       lastSuccessful=lastSuccessful
+      graphType=currentEventType
       selectedEvent=selectedEvent
       selectedEventObj=selectedEventObj
       selected=selected
-      startBuild=(action "startMainBuild")
+      startMainBuild=(action "startMainBuild")
+      startPRBuild=(action "startPRBuild")
     }}
 
     {{pipeline-workflow
@@ -49,15 +51,26 @@
           }}
         {{/tab.pane}}
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
-          {{#each pullRequestGroups as |prg|}}
-            {{pipeline-pr-list
-              jobs=prg
-              isRestricted=isRestricted
-              startBuild=(action "startPRBuild")
+          {{#if prChainEnabled}}
+            {{pipeline-events-list
+            events=events
+            selected=(mut selected)
+            selectedEvent=selectedEvent
+            lastSuccessful=lastSuccessful
+            eventsPage=eventsPage
+            updateEvents=(action "updateEvents")
             }}
           {{else}}
-            <div class="alert">No open pull requests</div>
-          {{/each}}
+            {{#each pullRequestGroups as |prg|}}
+              {{pipeline-pr-list
+                jobs=prg
+                isRestricted=isRestricted
+                startBuild=(action "startPRBuild")
+              }}
+            {{else}}
+              <div class="alert">No open pull requests</div>
+            {{/each}}
+          {{/if}}
         {{/tab.pane}}
       </div>
     {{/bs-tab}}

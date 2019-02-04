@@ -282,7 +282,14 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
     return { nodes, edges };
   }
 
-  let visiting = [startNode];
+  let start = startNode;
+
+  // startNode can be a PR job in PR events, so trim PR prefix from node name
+  if (startNode.match(/^PR-[0-9]+:/)) {
+    start = startNode.split(':')[1];
+  }
+
+  let visiting = [start];
   let visited = new Set(visiting);
 
   if (edges.length) {
