@@ -16,13 +16,45 @@ test('it exists and has statusMessage defaults to null', function (assert) {
 test('it calculates queuedDuration', function (assert) {
   let model = this.subject({
     createTime: new Date(1472244582531),
-    startTime: new Date(1472244592531)
+    stats: {
+      blockedStartTime: new Date(1472244592531)
+    }
   });
 
   run(() => {
     assert.equal(model.get('queuedDuration'), '10 seconds');
-    model.set('startTime', null);
+    model.set('stats.blockedStartTime', null);
     assert.equal(model.get('queuedDuration'), '0 seconds');
+  });
+});
+
+test('it calculates blockedDuration', function (assert) {
+  let model = this.subject({
+    stats: {
+      blockedStartTime: new Date(1472244582531),
+      imagePullStartTime: new Date(1472244592531)
+    }
+  });
+
+  run(() => {
+    assert.equal(model.get('blockedDuration'), '10 seconds');
+    model.set('stats.imagePullStartTime', null);
+    assert.equal(model.get('blockedDuration'), '0 seconds');
+  });
+});
+
+test('it calculates imagePullDuration', function (assert) {
+  let model = this.subject({
+    stats: {
+      imagePullStartTime: new Date(1472244582531)
+    },
+    startTime: new Date(1472244592531)
+  });
+
+  run(() => {
+    assert.equal(model.get('imagePullDuration'), '10 seconds');
+    model.set('startTime', null);
+    assert.equal(model.get('imagePullDuration'), '0 seconds');
   });
 });
 

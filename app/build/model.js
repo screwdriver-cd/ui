@@ -75,7 +75,7 @@ export default DS.Model.extend({
   }),
   imagePullDuration: computed('stats.imagePullStartTime', 'startTime', {
     get() {
-      return durationText.call(this, 'stats.imagePullStartTime', 'stats.startTime');
+      return durationText.call(this, 'stats.imagePullStartTime', 'startTime');
     }
   }),
   truncatedMessage: computed('commit.message', {
