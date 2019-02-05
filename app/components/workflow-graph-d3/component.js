@@ -177,7 +177,7 @@ export default Component.extend({
       })
       // add a tooltip
       .insert('title')
-      .text(d => `${d.name} - ${d.status}`);
+      .text(d => (d.status ? (`${d.name} - ${d.status}`) : d.name));
 
     // Job Names
     if (TITLE_SIZE && get(this, 'displayJobNames')) {
