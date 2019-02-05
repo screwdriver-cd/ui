@@ -86,8 +86,7 @@ test('it renders', function (assert) {
   this.render(hbs`{{build-banner
     buildContainer="node:6"
     duration="11 seconds"
-    queueDuration="1 second"
-    blockDuration="3 seconds"
+    blockDuration="4 seconds"
     imagePullDuration="5 seconds"
     buildDuration="2 seconds"
     buildStatus="RUNNING"
@@ -107,8 +106,8 @@ test('it renders', function (assert) {
   assert.equal($('.commit a').prop('href'),
     'http://example.com/batcave/batmobile/commit/abcdef1029384');
   assert.equal($('.commit a').text().trim(), '#abcdef');
-  assert.equal($('.duration .banner-value').text().trim(), '11 seconds1 second ' +
-  'in queue3 seconds blocked5 seconds pulling image2 seconds in build');
+  assert.equal($('.duration .banner-value').text().trim(), '11 seconds' +
+  '4 seconds blocked5 seconds pulling image2 seconds in build');
   assert.equal($('.created .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
@@ -132,7 +131,6 @@ test('it renders pr link if pr url info is available', function (assert) {
   this.render(hbs`{{build-banner
     buildContainer="node:6"
     duration="5 seconds"
-    queueDuration="0 seconds"
     blockDuration="0 seconds"
     imagePullDuration="0 seconds"
     buildDuration="0 seconds"
@@ -156,7 +154,7 @@ test('it renders pr link if pr url info is available', function (assert) {
     'http://example.com/batcave/batmobile/commit/abcdef1029384');
   assert.equal($('.commit a').text().trim(), '#abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds0 seconds' +
-  ' in queue0 seconds blocked0 seconds pulling image0 seconds in build');
+  ' pulling image0 seconds in build');
   assert.equal($('.created .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
@@ -181,7 +179,6 @@ test('it renders prCommit dropdown if event type is pr', function (assert) {
   this.render(hbs`{{build-banner
     buildContainer="node:6"
     duration="5 seconds"
-    queueDuration="0 seconds"
     blockDuration="0 seconds"
     imagePullDuration="0 seconds"
     buildDuration="0 seconds"
@@ -206,7 +203,7 @@ test('it renders prCommit dropdown if event type is pr', function (assert) {
   assert.equal($('.commit .commit-sha').text().trim(), '#abcdef');
   assert.equal($('.commit ul li').text().trim(), '1. abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds0 seconds' +
-  ' in queue0 seconds blocked0 seconds pulling image0 seconds in build');
+  ' pulling image0 seconds in build');
   assert.equal($('.created .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');

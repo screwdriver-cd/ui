@@ -63,16 +63,13 @@ export default DS.Model.extend({
       return `${dt} ago`;
     }
   }),
-  queuedDuration: computed('createTime', 'stats.blockedStartTime', {
+  // Queue time and blocked time are merged into blockedDuration
+  blockedDuration: computed('createTime', 'stats.imagePullStartTime', {
     get() {
-      return durationText.call(this, 'createTime', 'stats.blockedStartTime');
+      return durationText.call(this, 'createTime', 'stats.imagePullStartTime');
     }
   }),
-  blockedDuration: computed('stats.{blockedStartTime,imagePullStartTime}', {
-    get() {
-      return durationText.call(this, 'stats.blockedStartTime', 'stats.imagePullStartTime');
-    }
-  }),
+  // Time it takes to pull the image
   imagePullDuration: computed('stats.imagePullStartTime', 'startTime', {
     get() {
       return durationText.call(this, 'stats.imagePullStartTime', 'startTime');
