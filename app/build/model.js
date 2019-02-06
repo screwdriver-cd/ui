@@ -21,7 +21,7 @@ function calcDuration(start, end) {
   }
 
   if (typeof startTime === 'string') {
-    startTime = new Date(start);
+    startTime = new Date(startTime);
   }
 
   if (!startTime || !endTime) {
