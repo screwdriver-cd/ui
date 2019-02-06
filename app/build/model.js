@@ -10,21 +10,19 @@ import DS from 'ember-data';
  */
 function calcDuration(start, end) {
   let endTime = new Date();
-  let startTime;
+  let startTime = this.get(start);
 
   if (end !== 'now') {
     endTime = this.get(end);
-  }
-
-  if (typeof startTime === 'string') {
-    startTime = new Date(start);
   }
 
   if (typeof endTime === 'string') {
     endTime = new Date(end);
   }
 
-  startTime = this.get(start);
+  if (typeof startTime === 'string') {
+    startTime = new Date(start);
+  }
 
   if (!startTime || !endTime) {
     return 0;
