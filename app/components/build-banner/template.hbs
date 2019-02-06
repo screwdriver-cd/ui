@@ -35,7 +35,7 @@
   <li class="duration">
     <details>
       <summary><a class="banner-value" title="Total duration: {{duration}}, Blocked time: {{blockDuration}}, Image pull time: {{imagePullDuration}}, Build time: {{buildDuration}}">{{duration}}</a></summary>
-        {{#unless (eq blockDuration "0 seconds")}}<li class="subsection"><span class="banner-value">{{blockDuration}} blocked</span></li>{{/unless}}
+        <li class="subsection"><span class="banner-value">{{blockDuration}} blocked</span></li>
         <li class="subsection"><span class="banner-value">{{imagePullDuration}} pulling image</span></li>
         <li class="subsection"><span class="banner-value">{{buildDuration}} in build</span></li>
     </details>
