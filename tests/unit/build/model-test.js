@@ -17,12 +17,12 @@ test('it calculates blockedDuration', function (assert) {
   let model = this.subject({
     createTime: new Date(1472244582531),
     stats: {
-      imagePullStartTime: new Date(1472244592531)
+      imagePullStartTime: 'Fri Aug 26 2016 13:49:52 GMT-0700 (PDT)'
     }
   });
 
   run(() => {
-    assert.equal(model.get('blockedDuration'), '10 seconds');
+    assert.equal(model.get('blockedDuration'), '9 seconds');
     model.set('stats.imagePullStartTime', null);
     assert.equal(model.get('blockedDuration'), '0 seconds');
   });
@@ -31,13 +31,13 @@ test('it calculates blockedDuration', function (assert) {
 test('it calculates imagePullDuration', function (assert) {
   let model = this.subject({
     stats: {
-      imagePullStartTime: new Date(1472244582531)
+      imagePullStartTime: 'Fri Aug 26 2016 13:48:52 GMT-0700 (PDT)'
     },
     startTime: new Date(1472244592531)
   });
 
   run(() => {
-    assert.equal(model.get('imagePullDuration'), '10 seconds');
+    assert.equal(model.get('imagePullDuration'), '1 minute');
     model.set('startTime', null);
     assert.equal(model.get('imagePullDuration'), '0 seconds');
   });

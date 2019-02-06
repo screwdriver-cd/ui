@@ -23,8 +23,12 @@ const getFullName = (config) => {
  * @param  {String} config.createTime   Template create time
  * @return {String}                     Returns humanized last update time
  */
-const getLastUpdatedTime = (config) => {
-  let timeDiff = Date.now() - new Date(config.createTime).getTime();
+const getLastUpdatedTime = ({ createTime }) => {
+  if (!createTime) {
+    return null;
+  }
+
+  let timeDiff = Date.now() - new Date(createTime).getTime();
   const lastUpdated = `${humanizeDuration(timeDiff, { round: true, largest: 1 })} ago`;
 
   return lastUpdated;

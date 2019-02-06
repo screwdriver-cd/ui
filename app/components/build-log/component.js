@@ -85,7 +85,7 @@ export default Component.extend({
             });
           }
 
-          if (buildStats.hostname) {
+          if (buildStats.hostname && buildStats.imagePullStartTime) {
             initLogs.push({
               t: new Date(buildStats.imagePullStartTime).getTime(),
               m: `Build scheduled on ${buildStats.hostname}. Starting image pull.`,

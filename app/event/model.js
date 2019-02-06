@@ -31,9 +31,13 @@ export default DS.Model.extend(ModelReloaderMixin, {
   buildsSorted: sort('builds', (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)),
   createTimeWords: computed('createTime', 'duration', {
     get() {
-      const duration = Date.now() - get(this, 'createTime').getTime();
+      if (get(this, 'createTime')) {
+        const duration = Date.now() - get(this, 'createTime').getTime();
 
-      return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
+        return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
+      }
+
+      return '0 seconds ago';
     }
   }),
   duration: computed('builds.[]', 'isComplete', {

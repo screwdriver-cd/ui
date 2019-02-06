@@ -154,7 +154,7 @@ test('it renders pr link if pr url info is available', function (assert) {
     'http://example.com/batcave/batmobile/commit/abcdef1029384');
   assert.equal($('.commit a').text().trim(), '#abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds0 seconds' +
-  ' pulling image0 seconds in build');
+  ' blocked0 seconds pulling image0 seconds in build');
   assert.equal($('.created .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
@@ -203,7 +203,7 @@ test('it renders prCommit dropdown if event type is pr', function (assert) {
   assert.equal($('.commit .commit-sha').text().trim(), '#abcdef');
   assert.equal($('.commit ul li').text().trim(), '1. abcdef');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds0 seconds' +
-  ' pulling image0 seconds in build');
+  ' blocked0 seconds pulling image0 seconds in build');
   assert.equal($('.created .banner-value').text().trim(), expectedTime);
   assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
   assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
