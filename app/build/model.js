@@ -16,6 +16,10 @@ function calcDuration(start, end) {
     endTime = this.get(end);
   }
 
+  if (typeof startTime === 'string') {
+    startTime = new Date(start);
+  }
+
   if (typeof endTime === 'string') {
     endTime = new Date(end);
   }
