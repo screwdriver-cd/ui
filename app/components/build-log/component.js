@@ -64,11 +64,13 @@ export default Component.extend({
       if (stepName === 'sd-setup-init') {
         const initLogs = [];
 
-        initLogs.push({
-          t: new Date(get(this, 'stepStartTime')).getTime(),
-          m: 'Build created.',
-          n: 0
-        });
+        if (get(this, 'stepStartTime')) {
+          initLogs.push({
+            t: new Date(get(this, 'stepStartTime')).getTime(),
+            m: 'Build created.',
+            n: 0
+          });
+        }
 
         if (buildStats.queueEnterTime) {
           initLogs.push({
@@ -85,7 +87,7 @@ export default Component.extend({
             });
           }
 
-          if (buildStats.hostname) {
+          if (buildStats.hostname && buildStats.imagePullStartTime) {
             initLogs.push({
               t: new Date(buildStats.imagePullStartTime).getTime(),
               m: `Build scheduled on ${buildStats.hostname}. Starting image pull.`,
