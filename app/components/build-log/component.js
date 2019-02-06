@@ -64,13 +64,11 @@ export default Component.extend({
       if (stepName === 'sd-setup-init') {
         const initLogs = [];
 
-        if (get(this, 'stepStartTime')) {
-          initLogs.push({
-            t: new Date(get(this, 'stepStartTime')).getTime(),
-            m: 'Build created.',
-            n: 0
-          });
-        }
+        initLogs.push({
+          t: new Date(get(this, 'stepStartTime')).getTime(),
+          m: 'Build created.',
+          n: 0
+        });
 
         if (buildStats.queueEnterTime) {
           initLogs.push({
