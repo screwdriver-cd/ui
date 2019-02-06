@@ -75,14 +75,6 @@ export default DS.Model.extend({
       return durationText.call(this, 'stats.imagePullStartTime', 'startTime');
     }
   }),
-  truncatedMessage: computed('commit.message', {
-    get() {
-      const msg = this.get('commit.message');
-      const cutOff = 150;
-
-      return msg.length > cutOff ? `${msg.substring(0, cutOff)}...` : msg;
-    }
-  }),
   buildDuration: computed('startTime', 'endTime', {
     get() {
       return durationText.call(this, 'startTime', 'endTime');
