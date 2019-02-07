@@ -37,7 +37,7 @@ test('it calculates imagePullDuration', function (assert) {
   });
 
   run(() => {
-    assert.equal(model.get('imagePullDuration'), '1 minute');
+    assert.equal(model.get('imagePullDuration'), '1 minute, 1 second');
     model.set('startTime', null);
     assert.equal(model.get('imagePullDuration'), '0 seconds');
   });
