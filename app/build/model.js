@@ -38,8 +38,8 @@ function calcDuration(start, end) {
  * @param  {String}         end   key for end time
  * @return {String}               human readable text for duration
  */
-function durationText(start, end) {
-  return humanizeDuration(calcDuration.call(this, start, end), { round: true, largest: 1 });
+function durationText(start, end, largest = 1) {
+  return humanizeDuration(calcDuration.call(this, start, end), { round: true, largest });
 }
 
 export default DS.Model.extend({
@@ -72,23 +72,23 @@ export default DS.Model.extend({
   // Queue time and blocked time are merged into blockedDuration
   blockedDuration: computed('createTime', 'stats.imagePullStartTime', {
     get() {
-      return durationText.call(this, 'createTime', 'stats.imagePullStartTime');
+      return durationText.call(this, 'createTime', 'stats.imagePullStartTime', 2);
     }
   }),
   // Time it takes to pull the image
   imagePullDuration: computed('stats.imagePullStartTime', 'startTime', {
     get() {
-      return durationText.call(this, 'stats.imagePullStartTime', 'startTime');
+      return durationText.call(this, 'stats.imagePullStartTime', 'startTime', 2);
     }
   }),
   buildDuration: computed('startTime', 'endTime', {
     get() {
-      return durationText.call(this, 'startTime', 'endTime');
+      return durationText.call(this, 'startTime', 'endTime', 2);
     }
   }),
   totalDuration: computed('createTime', 'endTime', {
     get() {
-      return durationText.call(this, 'createTime', 'endTime');
+      return durationText.call(this, 'createTime', 'endTime', 2);
     }
   }),
   totalDurationMS: computed('createTime', 'endTime', {
