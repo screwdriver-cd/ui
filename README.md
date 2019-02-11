@@ -10,7 +10,6 @@ You will need the following things properly installed on your computer.
 
 * [Git](https://git-scm.com/)
 * [Node.js](https://nodejs.org/) >= v6.0.0 (with NPM)
-* [Bower](https://bower.io/)
 * [Ember CLI](https://ember-cli.com/)
 * [Google Chrome](https://google.com/chrome/) (for testing)
 
@@ -19,7 +18,6 @@ You will need the following things properly installed on your computer.
 $ git clone git@github.com:screwdriver-cd/ui.git
 $ cd ui/          # change into the new directory
 $ npm install
-$ bower install
 ```
 
 ## Running / Development
