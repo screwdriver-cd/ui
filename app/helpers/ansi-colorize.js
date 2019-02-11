@@ -6,6 +6,7 @@ const ansiUp = new AnsiUp();
 
 // Prevent double-encoding
 ansiUp.escape_for_html = false;
+ansiUp.use_classes = true;
 
 /**
  * Transform ansi color codes to html tags
