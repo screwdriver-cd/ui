@@ -14,5 +14,5 @@ test('it escapes html', function (assert) {
 test('colorizes ansi codes', function (assert) {
   let result = ansiColorize(['\u001b[32m<main>\u001b[0m']);
 
-  assert.equal(result.toString(), '<span style="color:rgb(0,187,0)">&lt;main&gt;</span>');
+  assert.equal(result.toString(), '<span class="ansi-green-fg">&lt;main&gt;</span>');
 });
