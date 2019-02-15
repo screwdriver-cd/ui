@@ -47,7 +47,7 @@ export default Component.extend({
       Math.ceil(itemSize / ENV.APP.MAX_LOG_LINES) :
       +(itemSize < ENV.APP.MAX_LOG_LINES || itemSize % ENV.APP.MAX_LOG_LINES < 100) + 1;
   },
-  logs: computed('stepStartTime', 'isFetching', 'buildId', 'stepName', {
+  logs: computed('stepStartTime', 'isFetching', 'buildId', 'stepName', 'buildStatus', {
     get() {
       const buildId = get(this, 'buildId');
       const stepName = get(this, 'stepName');
@@ -55,6 +55,7 @@ export default Component.extend({
       const isFetching = get(this, 'isFetching');
       const started = !!get(this, 'stepStartTime');
       const buildStats = get(this, 'buildStats');
+      const buildStatus = get(this, 'buildStatus');
 
       if (!stepName) {
         return [{ m: 'Click a step to see logs' }];
@@ -70,12 +71,32 @@ export default Component.extend({
           n: 0
         });
 
+        if (buildStatus === 'FROZEN') {
+          initLogs.push({
+            t: new Date(get(this, 'stepEndTime')).getTime(),
+            m: 'Build frozen and removed from the queue.',
+            n: 1
+          });
+
+          return initLogs;
+        }
+
         if (buildStats.queueEnterTime) {
           initLogs.push({
             t: new Date(buildStats.queueEnterTime).getTime(),
             m: 'Build enqueued.',
             n: 1
           });
+
+          if (buildStatus === 'COLLAPSED') {
+            initLogs.push({
+              t: new Date(get(this, 'stepEndTime')).getTime(),
+              m: 'Build collapsed and removed from the queue.',
+              n: 1
+            });
+
+            return initLogs;
+          }
 
           if (buildStats.blockedStartTime) {
             initLogs.push({

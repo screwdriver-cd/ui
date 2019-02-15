@@ -194,6 +194,61 @@ test('it generate logs for init step when build is blocked', function (assert) {
   });
 });
 
+test('it generate logs for COLLAPSED build', function (assert) {
+  this.set('stats', {
+    queueEnterTime: '2019-01-14T20:10:41.238Z'
+  });
+  this.set('step', 'sd-setup-init');
+  this.render(hbs`{{build-log
+    stepName=step
+    buildId=1
+    buildStartTime="2019-01-14T20:12:41.238Z"
+    stepStartTime="2019-01-14T20:09:41.238Z"
+    stepEndTime="2019-01-14T20:12:41.238Z"
+    buildStats=stats
+    buildStatus="COLLAPSED"
+  }}`);
+
+  return wait().then(() => {
+    assert.ok(
+      this.$('.line:first').text().trim().match(
+        'Build created'
+      )
+    );
+    assert.ok(
+      this.$('.line:last').text().trim().match(
+        'Build collapsed and removed from the queue.'
+      )
+    );
+  });
+});
+
+test('it generate logs for FROZEN build', function (assert) {
+  this.set('step', 'sd-setup-init');
+  this.render(hbs`{{build-log
+    stepName=step
+    buildId=1
+    buildStartTime="2019-01-14T20:12:41.238Z"
+    stepStartTime="2019-01-14T20:09:41.238Z"
+    stepEndTime="2019-01-14T20:12:41.238Z"
+    buildStats=stats
+    buildStatus="FROZEN"
+  }}`);
+
+  return wait().then(() => {
+    assert.ok(
+      this.$('.line:first').text().trim().match(
+        'Build created'
+      )
+    );
+    assert.ok(
+      this.$('.line:last').text().trim().match(
+        'Build frozen and removed from the queue.'
+      )
+    );
+  });
+});
+
 test('it generate logs for failed init step', function (assert) {
   this.set('stats', {
     queueEnterTime: '2019-01-14T20:10:41.238Z',
