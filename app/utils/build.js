@@ -29,6 +29,13 @@ const statusIcon = (status, isLight) => {
   case 'UNSTABLE':
     icon = 'exclamation-circle';
     break;
+  case 'FROZEN':
+    icon = 'fa-snowflake-o';
+    break;
+  case 'BLOCKED':
+  case 'COLLAPSED':
+    icon = 'fa-ban fa-flip-horizontal';
+    break;
   default:
     icon = `times-circle${isLight ? '-o' : ''}`;
     break;
