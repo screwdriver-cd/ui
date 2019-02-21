@@ -95,6 +95,12 @@ $weight-bold: 600;
   }
 }
 
+.COLLAPSED, .FROZEN {
+  .status .fa {
+    color: $sd-text-light;
+  }
+}
+
 .no-padding {
   padding: 0 !important;
 }
