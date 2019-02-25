@@ -25,3 +25,5 @@ package.json.ember-try
 .*.swp
 .travis.yml
 config/local.js
+
+Dockerfile.local

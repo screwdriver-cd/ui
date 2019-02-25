@@ -11,7 +11,9 @@ const STATUS_MAP = {
   DISABLED: { icon: '\ue902' },
   UNKNOWN: { icon: '\ue901' },
   UNSTABLE: { icon: '\ue909' },
-  BLOCKED: { icon: '\ue908' }
+  BLOCKED: { icon: '\ue908' },
+  COLLAPSED: { icon: '\ue908' },
+  FROZEN: { icon: '\ue910' }
 };
 const edgeSrcBranchRegExp = new RegExp('^~(pr|commit):/(.+)/$');
 const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');

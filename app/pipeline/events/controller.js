@@ -95,17 +95,16 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
 
-  mostRecent: computed('events.[]', {
+  mostRecent: computed('events.@each.status', {
     get() {
-      const list = get(this, 'events');
+      const list = get(this, 'events') || [];
+      const event = list.find(e => get(e, 'status') === 'RUNNING');
 
-      if (Array.isArray(list) && list.length) {
-        const id = get(list[0], 'id');
-
-        return id;
+      if (!event) {
+        return list.length ? get(list[0], 'id') : 0;
       }
 
-      return 0;
+      return get(event, 'id');
     }
   }),
 
