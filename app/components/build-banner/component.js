@@ -8,6 +8,7 @@ export default Component.extend({
   classNames: ['build-banner', 'row'],
   classNameBindings: ['buildStatus'],
   coverage: service(),
+  coverageInfo: {},
   coverageStep: computed('buildSteps', {
     get() {
       const buildSteps = this.get('buildSteps');
@@ -71,6 +72,27 @@ export default Component.extend({
     }
   }),
 
+  overrideCoverageInfo() {
+    const buildMeta = this.get('buildMeta');
+
+    // override coverage info if set in build meta
+    if (buildMeta && buildMeta.tests) {
+      let coverageInfo = this.get('coverageInfo');
+
+      if (buildMeta.tests.coverage) {
+        coverageInfo.coverage = `${buildMeta.tests.coverage}%`;
+        coverageInfo.coverageUrl = '#';
+      }
+
+      if (this.get('buildMeta').tests.results) {
+        coverageInfo.tests = buildMeta.tests.results;
+        coverageInfo.testsUrl = '#';
+      }
+
+      this.set('coverageInfo', coverageInfo);
+    }
+  },
+
   coverageInfoCompute() {
     // Set coverage query startTime to build start time since user can do coverage during user step
     const buildStartTime = this.get('buildSteps')[0].startTime;
@@ -78,8 +100,10 @@ export default Component.extend({
 
     if (!coverageStepEndTime) {
       this.set('coverageInfo', {
-        projectUrl: '#',
-        coverage: 'N/A'
+        coverage: 'N/A',
+        coverageUrl: '#',
+        tests: 'N/A',
+        testsUrl: '#'
       });
 
       return;
@@ -105,6 +129,7 @@ export default Component.extend({
     this.set('coverageInfoSet', false);
 
     this.coverageInfoCompute();
+    this.overrideCoverageInfo();
   },
 
   willRender() {
@@ -116,6 +141,10 @@ export default Component.extend({
 
     if (this.get('coverageStepEndTime') && !this.get('coverageInfoSet')) {
       this.coverageInfoCompute();
+    }
+
+    if (!isActiveBuild(this.get('buildStatus'), this.get('buildEnd'))) {
+      this.overrideCoverageInfo();
     }
   },
 

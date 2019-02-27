@@ -33,12 +33,16 @@ export default Service.extend({
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
         .done(content => resolve({
-          projectUrl: content.projectUrl || '#',
-          coverage: content.coverage ? `${content.coverage}%` : 'N/A'
+          coverage: content.coverage !== 'N/A' ? `${content.coverage}%` : 'N/A',
+          coverageUrl: content.projectUrl,
+          tests: content.tests,
+          testsUrl: content.projectUrl
         }))
         .fail(() => resolve({
-          projectUrl: '#',
-          coverage: 'N/A'
+          coverage: 'N/A',
+          coverageUrl: '#',
+          tests: 'N/A',
+          testsUrl: '#'
         })
         );
     });

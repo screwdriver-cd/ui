@@ -52,11 +52,19 @@
   {{#if coverageStep}}
     <li class="coverage">
       <span class="banner-value">
-        <a href="{{coverageInfo.projectUrl}}" title="{{if (eq coverageInfo.coverage 'N/A') "Coverage report not generated"}}">
+        <a href="{{coverageInfo.coverageUrl}}" title="{{if (eq coverageInfo.coverage 'N/A') "Coverage report not generated"}}">
           {{coverageInfo.coverage}}
         </a>
       </span>
       <span class="banner-label">Coverage</span>
+    </li>
+    <li class="tests">
+      <span class="banner-value">
+        <a href="{{coverageInfo.testsUrl}}" title="{{if (eq coverageInfo.tests 'N/A') "Tests report not generated"}}">
+          {{coverageInfo.tests}}
+        </a>
+      </span>
+      <span class="banner-label">Tests Passed</span>
     </li>
   {{/if}}
   <li class="docker-container">

@@ -11,7 +11,9 @@ const coverageService = Service.extend({
   getCoverageInfo() {
     return resolve({
       coverage: '98%',
-      projectUrl: 'http://example.com/coverage/123'
+      coverageUrl: 'http://example.com/coverage/123',
+      tests: '7/10',
+      testsUrl: 'http://example.com/coverage/123'
     });
   }
 });
