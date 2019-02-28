@@ -11,7 +11,9 @@ const coverageService = Service.extend({
   getCoverageInfo() {
     return resolve({
       coverage: '98%',
-      projectUrl: 'http://example.com/coverage/123'
+      coverageUrl: 'http://example.com/coverage/123',
+      tests: '7/10',
+      testsUrl: 'http://example.com/coverage/123'
     });
   }
 });
@@ -56,6 +58,13 @@ const buildMock = EmberObject.create({
   eventId: 'abcd',
   id: '2'
 });
+
+const buildMetaMock = {
+  tests: {
+    coverage: '100',
+    results: '10/10'
+  }
+};
 
 moduleForComponent('build-banner', 'Integration | Component | build banner', {
   integration: true,
@@ -316,7 +325,7 @@ test('it renders coverage info if coverage step finished', function (assert) {
     }
   ];
 
-  assert.expect(2);
+  assert.expect(4);
   this.set('eventMock', eventMock);
   this.set('buildStepsMock', coverageStepsMock);
   this.set('prEvents', new EmberPromise(resolves => resolves([])));
@@ -337,7 +346,9 @@ test('it renders coverage info if coverage step finished', function (assert) {
 
   return wait().then(() => {
     assert.equal($('.coverage .banner-value').text().trim(), '98%');
+    assert.equal($('.tests .banner-value').text().trim(), '7/10');
     assert.equal($('.coverage a').prop('href'), 'http://example.com/coverage/123');
+    assert.equal($('.tests a').prop('href'), 'http://example.com/coverage/123');
   });
 });
 
@@ -348,7 +359,7 @@ test('it renders default coverage info if coverage step has not finished', funct
     { name: 'sd-teardown-screwdriver-coverage-bookend' }
   ];
 
-  assert.expect(5);
+  assert.expect(7);
 
   this.set('reloadCb', () => {
     assert.ok(true);
@@ -375,7 +386,48 @@ test('it renders default coverage info if coverage step has not finished', funct
   return wait().then(() => {
     assert.equal(this.$('button').text().trim(), 'Stop');
     assert.equal($('.coverage .banner-value').text().trim(), 'N/A');
+    assert.equal($('.tests .banner-value').text().trim(), 'N/A');
     assert.equal($('.coverage a').prop('title'), 'Coverage report not generated');
+    assert.equal($('.tests a').prop('title'), 'Tests report not generated');
+  });
+});
+
+test('it overrides coverage info if it is set in build meta', function (assert) {
+  const $ = this.$;
+  const coverageStepsMock = [
+    { name: 'sd-setup-screwdriver-scm-bookend',
+      startTime: '2016-11-04T20:09:41.238Z'
+    },
+    {
+      name: 'sd-teardown-screwdriver-coverage-bookend',
+      endTime: '2016-11-04T21:09:41.238Z'
+    }
+  ];
+
+  assert.expect(2);
+  this.set('eventMock', eventMock);
+  this.set('buildStepsMock', coverageStepsMock);
+  this.set('buildMetaMock', buildMetaMock);
+  this.set('prEvents', new EmberPromise(resolves => resolves([])));
+
+  this.render(hbs`{{build-banner
+    buildContainer="node:6"
+    duration="5 seconds"
+    buildId=123
+    buildStatus="SUCCESS"
+    buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
+    buildMeta=buildMetaMock
+    jobId=1
+    jobName="main"
+    isAuthenticated=true
+    event=eventMock
+    prEvents=prEvents
+  }}`);
+
+  return wait().then(() => {
+    assert.equal($('.coverage .banner-value').text().trim(), '100%');
+    assert.equal($('.tests .banner-value').text().trim(), '10/10');
   });
 });
 
