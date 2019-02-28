@@ -431,6 +431,49 @@ test('it overrides coverage info if it is set in build meta', function (assert) 
   });
 });
 
+test('it does not override coverage info if build meta format is not correct', function (assert) {
+  const $ = this.$;
+  const coverageStepsMock = [
+    { name: 'sd-setup-screwdriver-scm-bookend',
+      startTime: '2016-11-04T20:09:41.238Z'
+    },
+    {
+      name: 'sd-teardown-screwdriver-coverage-bookend',
+      endTime: '2016-11-04T21:09:41.238Z'
+    }
+  ];
+
+  buildMetaMock.tests = {
+    coverage: 'nonsense',
+    resulst: 'nonsense'
+  };
+  assert.expect(2);
+  this.set('eventMock', eventMock);
+  this.set('buildStepsMock', coverageStepsMock);
+  this.set('buildMetaMock', buildMetaMock);
+  this.set('prEvents', new EmberPromise(resolves => resolves([])));
+
+  this.render(hbs`{{build-banner
+    buildContainer="node:6"
+    duration="5 seconds"
+    buildId=123
+    buildStatus="SUCCESS"
+    buildStart="2016-11-04T20:09:41.238Z"
+    buildSteps=buildStepsMock
+    buildMeta=buildMetaMock
+    jobId=1
+    jobName="main"
+    isAuthenticated=true
+    event=eventMock
+    prEvents=prEvents
+  }}`);
+
+  return wait().then(() => {
+    assert.equal($('.coverage .banner-value').text().trim(), '98%');
+    assert.equal($('.tests .banner-value').text().trim(), '7/10');
+  });
+});
+
 test('it does not render coverage info if there is no coverage step', function (assert) {
   const $ = this.$;
 
