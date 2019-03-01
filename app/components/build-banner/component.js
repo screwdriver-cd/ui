@@ -77,15 +77,17 @@ export default Component.extend({
 
     // override coverage info if set in build meta
     if (buildMeta && buildMeta.tests) {
+      const coverage = String(buildMeta.tests.coverage);
+      const tests = String(buildMeta.tests.results);
       let coverageInfo = this.get('coverageInfo');
 
-      if (buildMeta.tests.coverage) {
-        coverageInfo.coverage = `${buildMeta.tests.coverage}%`;
+      if (coverage.match(/^\d+$/)) {
+        coverageInfo.coverage = `${coverage}%`;
         coverageInfo.coverageUrl = '#';
       }
 
-      if (this.get('buildMeta').tests.results) {
-        coverageInfo.tests = buildMeta.tests.results;
+      if (tests.match(/^\d+\/\d+$/)) {
+        coverageInfo.tests = tests;
         coverageInfo.testsUrl = '#';
       }
 
