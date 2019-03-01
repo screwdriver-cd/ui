@@ -1,16 +1,17 @@
-<div class="view">
-  <div class="status">{{fa-icon icon fixedWidth=true}}</div>
-  <div class="detail">
-    <div class="name">
-      {{#if build}}
+{{#if build}}
+  <div class="view">
+    <div class="status">{{fa-icon icon fixedWidth=true}}</div>
+    <div class="detail">
+      {{#if build.id}}
         {{#link-to "pipeline.build" build.id}}{{displayName}}{{/link-to}}
       {{else}}
         <span class="greyOut">{{displayName}}</span>
       {{/if}}
-      <a href="{{job.url}}" target="_blank" class="scm">{{fa-icon "code-fork"}}</a>
+      {{#if build.endTimeWords}}
+        <div class="date greyOut">Finished {{build.endTimeWords}}</div>
+      {{else if build.startTimeWords}}
+        <div class="date greyOut">Started {{build.startTimeWords}}</div>
+      {{/if}}
     </div>
-    <div class="date greyOut">Opened {{job.createTimeWords}}</div>
-    <span class="title">{{job.title}}</span>
-    <div class="by"><a href="{{job.userProfile}}" target="_blank">{{job.username}}</a></div>
   </div>
-</div>
+{{/if}}

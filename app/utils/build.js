@@ -36,8 +36,12 @@ const statusIcon = (status, isLight) => {
   case 'COLLAPSED':
     icon = 'fa-ban fa-flip-horizontal';
     break;
-  default:
+  case 'FAILURE':
+  case 'ABORTED':
     icon = `times-circle${isLight ? '-o' : ''}`;
+    break;
+  default:
+    icon = 'circle-o';
     break;
   }
 

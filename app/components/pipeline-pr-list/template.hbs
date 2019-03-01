@@ -1,5 +1,21 @@
-{{#each pullRequests as |job|}}
-  {{pipeline-pr-view job=job}}
+{{#each pullRequestGroups as |groups|}}
+  <div class="view">
+    <div class="detail">
+      <div class="name">
+        <a href="{{groups.0.url}}" target="_blank">
+          PR #{{groups.0.group}}
+          <span class="scm">{{fa-icon "code-fork"}}</span>
+        </a>
+        <br/>
+        <span class="title">{{groups.0.title}}</span>
+      </div>
+      <div class="date greyOut">Opened {{groups.0.createTimeWords}}</div>
+      <div class="by"><a href="{{groups.0.userProfile}}" target="_blank">{{groups.0.username}}</a></div>
+      {{#each groups as |job|}}
+        {{pipeline-pr-view job=job}}
+      {{/each}}
+    </div>
+  </div>
 {{else}}
   <div class="alert">No open pull requests</div>
 {{/each}}

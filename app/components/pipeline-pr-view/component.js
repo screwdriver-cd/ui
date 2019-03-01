@@ -11,7 +11,7 @@ export default Component.extend({
   }),
   displayName: computed('job.name', {
     get() {
-      return `#${this.get('job.name').replace('PR-', '').split(':').join(' - ')}`;
+      return this.get('job.name').replace('PR-', '').split(':').pop();
     }
   }),
   icon: computed('build.status', {

@@ -44,4 +44,5 @@ test('it gets the right fs class name for given status', (assert) => {
   assert.equal(statusIcon('UNSTABLE'), 'exclamation-circle');
   assert.equal(statusIcon('FAILURE', true), 'times-circle-o');
   assert.equal(statusIcon('FAILURE'), 'times-circle');
+  assert.equal(statusIcon(), 'circle-o');
 });
