@@ -17,7 +17,8 @@ test('it renders a successful PR', function (assert) {
     username: 'anonymous',
     builds: [{
       id: '1234',
-      status: 'SUCCESS'
+      status: 'SUCCESS',
+      startTimeWords: 'now'
     }]
   });
 
@@ -26,10 +27,8 @@ test('it renders a successful PR', function (assert) {
   this.render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
   assert.equal(this.$('.SUCCESS').length, 1);
-  assert.equal(this.$('.name').text().trim(), '#1234 - main');
-  assert.equal(this.$('.date').text().trim(), 'Opened now');
-  assert.equal(this.$('.title').text().trim(), 'update readme');
-  assert.equal(this.$('.by').text().trim(), 'anonymous');
+  assert.equal(this.$('.detail').text().trim().replace(/\s{2,}/g, ' '), 'main Started now');
+  assert.equal(this.$('.date').text().trim(), 'Started now');
   assert.equal(this.$('.status .fa-check-circle-o').length, 1);
 });
 
@@ -43,7 +42,8 @@ test('it renders an unstable PR', function (assert) {
     username: 'anonymous',
     builds: [{
       id: '1234',
-      status: 'UNSTABLE'
+      status: 'UNSTABLE',
+      startTimeWords: 'now'
     }]
   });
 
@@ -66,7 +66,8 @@ test('it renders a failed PR', function (assert) {
     username: 'anonymous',
     builds: [{
       id: '1234',
-      status: 'FAILURE'
+      status: 'FAILURE',
+      startTimeWords: 'now'
     }]
   });
 
@@ -89,7 +90,8 @@ test('it renders a queued PR', function (assert) {
     username: 'anonymous',
     builds: [{
       id: '1234',
-      status: 'QUEUED'
+      status: 'QUEUED',
+      startTimeWords: 'now'
     }]
   });
 
@@ -112,7 +114,8 @@ test('it renders a running PR', function (assert) {
     username: 'anonymous',
     builds: [{
       id: '1234',
-      status: 'RUNNING'
+      status: 'RUNNING',
+      startTimeWords: 'now'
     }]
   });
 

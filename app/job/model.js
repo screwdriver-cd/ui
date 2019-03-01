@@ -22,6 +22,11 @@ export default DS.Model.extend(ModelReloaderMixin, {
   stateChangeMessage: DS.attr('string'),
   // !for pr job only {
   title: DS.attr('string'),
+  group: computed('isPR', 'name', {
+    get() {
+      return this.get('isPR') ? parseInt(this.get('name').slice('PR-'.length), 10) : null;
+    }
+  }),
   username: DS.attr('string'),
   userProfile: DS.attr('string'),
   url: DS.attr('string'),

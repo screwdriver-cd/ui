@@ -70,11 +70,26 @@ export default Controller.extend(ModelReloaderMixin, {
       return [].concat(this.get('modelEvents'), this.get('paginateEvents'));
     }
   }),
-  pullRequests: computed('model.jobs', {
+  pullRequestGroups: computed('model.jobs', {
     get() {
       const jobs = this.get('model.jobs');
+      let groups = {};
 
-      return jobs.filter(j => /^PR-/.test(j.get('name'))).sortBy('createTime').reverse();
+      return jobs.filter(j => j.get('isPR'))
+        .sortBy('createTime')
+        .reverse()
+        .reduce((results, j) => {
+          const k = j.get('group');
+
+          if (groups[k] === undefined) {
+            groups[k] = results.length;
+            results[groups[k]] = [j];
+          } else {
+            results[groups[k]].push(j);
+          }
+
+          return results;
+        }, []);
     }
   }),
   selectedEvent: computed('selected', 'mostRecent', {

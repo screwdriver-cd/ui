@@ -61,12 +61,21 @@ export default DS.Model.extend({
   stats: DS.attr(),
   statusMessage: DS.attr('string', { defaultValue: null }),
   steps: DS.attr(),
-
+  startTimeWords: computed('startTime', {
+    get() {
+      return `${durationText.call(this, 'startTime', 'now')} ago`;
+    }
+  }),
   createTimeWords: computed('createTime', {
     get() {
       const dt = durationText.call(this, 'createTime', 'now');
 
       return `${dt} ago`;
+    }
+  }),
+  endTimeWords: computed('endTime', {
+    get() {
+      return `${durationText.call(this, 'endTime', 'now')} ago`;
     }
   }),
   // Queue time and blocked time are merged into blockedDuration

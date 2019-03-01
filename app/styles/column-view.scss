@@ -1,6 +1,6 @@
 & {
   cursor: pointer;
-  padding: 10px 15px 0 15px;
+  padding: 10px 15px 0;
 
   &.highlighted {
     background-color: $brand-100;
@@ -8,12 +8,6 @@
 
   &:hover {
     background-color: $brand-200;
-  }
-
-  &:last-child {
-    .view {
-      border: none;
-    }
   }
 }
 
@@ -32,12 +26,16 @@ a {
   display: flex;
   padding-bottom: 10px;
   border-bottom: 1px solid $grey-400;
+
+  .view {
+    padding-bottom: 3px;
+  }
 }
 
 .status {
   font-size: 2rem;
   padding-right: 5px;
-  color: $sd-failure;
+  color: $sd-no-build;
 }
 
 .detail {
@@ -47,9 +45,10 @@ a {
 }
 
 .name {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   padding-right: 10px;
   position: relative;
+  color: $grey-800;
 }
 
 .scm {

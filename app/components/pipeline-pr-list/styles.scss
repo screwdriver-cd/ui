@@ -1,3 +1,26 @@
 & {
+  @import 'app/styles/column-view';
+
+  & {
+    cursor: default;
+    padding: 0 15px;
+  }
+
+  &:hover {
+    background: none;
+  }
+
+  .view {
+    padding-top: 10px;
+
+    &:last-child {
+      border: none;
+    }
+
+    .view {
+      padding-top: 0;
+    }
+  }
+
   height: 100%;
 }
