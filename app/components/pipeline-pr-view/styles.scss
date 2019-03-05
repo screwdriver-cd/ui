@@ -1,11 +1,7 @@
 & {
-  @import 'app/styles/column-view';
-
-  & {
-    cursor: default;
-  }
-
-  &:hover {
-    background: none;
+  margin-left: 15px;
+  margin-top: 5px;
+  &:empty {
+      margin: 0;
   }
 }

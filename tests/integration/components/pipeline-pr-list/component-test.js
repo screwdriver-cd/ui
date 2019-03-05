@@ -9,7 +9,7 @@ moduleForComponent('pipeline-pr-list', 'Integration | Component | pipeline pr li
 test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  const jobs = [
+  const jobs = [[
     EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',
@@ -32,13 +32,15 @@ test('it renders', function (assert) {
         status: 'FAILURE'
       }]
     })
-  ];
+  ]];
 
   this.set('jobsMock', jobs);
 
-  this.render(hbs`{{pipeline-pr-list pullRequests=jobsMock}}`);
+  this.render(hbs`{{pipeline-pr-list pullRequestGroups=jobsMock}}`);
 
-  assert.equal(this.$('.view').length, 2);
+  assert.equal(this.$('.view .detail .view').length, 2);
+  assert.equal(this.$('.title').text().trim(), 'update readme');
+  assert.equal(this.$('.by').text().trim(), 'anonymous');
 
   this.set('jobsMock', []);
 

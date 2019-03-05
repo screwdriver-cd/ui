@@ -1,3 +1,9 @@
 & {
   @import 'app/styles/column-view';
+
+  &:last-child {
+    .view {
+      border: none;
+    }
+  }
 }
