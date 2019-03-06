@@ -93,6 +93,8 @@
     "eslint-config-screwdriver": "^3.0.1",
     "eslint-plugin-ember": "^5.4.0",
     "humanize-duration": "^3.17.0",
+    "jquery-highlight": "^3.5.0",
+    "jstree": "^3.3.7",
     "loader.js": "^4.7.0"
   },
   "dependencies": {

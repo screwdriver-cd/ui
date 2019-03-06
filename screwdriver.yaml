@@ -1,5 +1,8 @@
+cache:
+  pipeline: [ ~/.npm ]
+
 shared:
-  image: node:8
+  image: node:10
 
 jobs:
   main:
@@ -8,7 +11,6 @@ jobs:
       SD_SONAR_OPTS: "-Dsonar.sources=app -Dsonar.javascript.lcov.reportPath=coverage/lcov.info"
     steps:
       - install: npm install
-      - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
       - install-browsers: ./bin/setup_chrome.sh
       - test: npm test
     requires:
@@ -23,7 +25,6 @@ jobs:
     steps:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
       - install: npm install
-      - bower: npm install bower && ./node_modules/.bin/bower install --allow-root
       - build: ./node_modules/.bin/ember build --environment production
       - package: tar -C dist -cvzf $RELEASE_FILE .
       - tag: ./ci/git-tag.sh
