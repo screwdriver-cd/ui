@@ -1,5 +1,10 @@
-{{#link-to "commands" class="back"}}Back to Commands{{/link-to}}
-<h1>{{command.namespace}}/{{command.name}} {{#if scmUrl}}<a href="{{scmUrl}}">{{fa-icon "code-fork"}}</a> <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash"}}</a>{{else}}{{fa-icon "code-fork" title="The pipeline for this command does not exist."}} {{fa-icon "trash" title="Cannot delete command; pipeline could not be found."}}{{/if}}</h1>
+<h1>{{command.namespace}}/{{command.name}}
+  {{#if scmUrl}}
+    <a href="{{scmUrl}}">{{fa-icon "code-fork" title="Source code"}}</a> <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
+  {{else}}
+    {{fa-icon "code-fork" title="The pipeline for this command does not exist."}} {{fa-icon "trash" title="Cannot delete command; pipeline could not be found."}}
+  {{/if}}
+</h1>
 <h2>{{command.version}}</h2>
 <p>{{command.description}}</p>
 <ul>

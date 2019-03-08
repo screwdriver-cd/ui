@@ -1,7 +1,7 @@
 <h1>
   {{template.fullName}}
   {{#if scmUrl}}
-    <a href="{{scmUrl}}">{{fa-icon "code-fork"}}</a> <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash"}}</a>
+    <a href="{{scmUrl}}">{{fa-icon "code-fork" title="Source code"}}</a> <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
   {{else}}
     {{fa-icon "code-fork" title="The pipeline for this template does not exist."}} {{fa-icon "trash" title="Cannot delete template; pipeline could not be found."}}
   {{/if}}
