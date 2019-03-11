@@ -1,4 +1,4 @@
-{{#each pullRequestGroups as |groups|}}
+{{#each pullRequestGroups as |groups i|}}
   <div class="view">
     <div class="detail">
       <div class="name">
@@ -11,9 +11,15 @@
       </div>
       <div class="date greyOut">Opened {{groups.0.createTimeWords}}</div>
       <div class="by"><a href="{{groups.0.userProfile}}" target="_blank">{{groups.0.username}}</a></div>
-      {{#each groups as |job|}}
-        {{pipeline-pr-view job=job}}
-      {{/each}}
+      {{#if (get showJobs i)}}
+        {{#each groups as |job|}}
+          {{pipeline-pr-view job=job}}
+        {{/each}}
+      {{else}}
+        {{#if isRestricted}}
+          {{#bs-button type="primary" class="startButton" onClick=(action startBuild groups.0.group)}}Start{{/bs-button}}
+        {{/if}}
+      {{/if}}
     </div>
   </div>
 {{else}}

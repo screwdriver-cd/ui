@@ -18,6 +18,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   parentEventId: DS.attr('number'),
   pipelineId: DS.attr('string'),
   pr: DS.attr(),
+  prNum: DS.attr('number'),
   sha: DS.attr('string'),
   startFrom: DS.attr('string'),
   status: DS.attr('string', { defaultValue: 'UNKNOWN' }),

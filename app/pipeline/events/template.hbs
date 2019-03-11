@@ -39,17 +39,21 @@
       <div class="tab-content">
         {{#tab.pane activeId=activeTab elementId="events" title="Events"}}
           {{pipeline-events-list
-          events=events
-          selected=(mut selected)
-          selectedEvent=selectedEvent
-          lastSuccessful=lastSuccessful
-          mostRecent=mostRecent
-          eventsPage=eventsPage
-          updateEvents=(action "updateEvents")
-        }}
+            events=events
+            selected=(mut selected)
+            selectedEvent=selectedEvent
+            lastSuccessful=lastSuccessful
+            mostRecent=mostRecent
+            eventsPage=eventsPage
+            updateEvents=(action "updateEvents")
+          }}
         {{/tab.pane}}
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
-          {{pipeline-pr-list pullRequestGroups=pullRequestGroups}}
+          {{pipeline-pr-list
+            pullRequestGroups=pullRequestGroups
+            isRestricted=isRestricted
+            startBuild=(action "startPRBuild")
+          }}
         {{/tab.pane}}
       </div>
     {{/bs-tab}}
