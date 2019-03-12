@@ -7,11 +7,9 @@ export default Component.extend({
     this.set('inited', false);
   },
   inited: true,
-  showJobs: computed('pullRequestGroups.[]', {
+  showJobs: computed('jobs.@each.builds', 'inited', {
     get() {
-      return this.get('pullRequestGroups').map(
-        group => this.get('inited') || group.some(g => !!g.get('builds.length'))
-      );
+      return this.get('inited') || this.get('jobs').some(j => !!j.get('builds.length'));
     }
   })
 });

@@ -6,6 +6,10 @@
     padding: 0 15px;
   }
 
+  &:last-child > .view {
+    border: none;
+  }
+
   &:hover {
     background: none;
   }
@@ -13,12 +17,9 @@
   .view {
     padding-top: 10px;
 
-    &:last-child {
-      border: none;
-    }
-
     .view {
       padding-top: 0;
+      border: none;
     }
   }
 

@@ -160,30 +160,26 @@ test('it starts PR build(s)', function (assert) {
     201,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
-      id: '5678',
+      id: '5679',
       pipelineId: '1234'
     })
   ]);
 
   let controller = this.subject();
 
+  const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
+
   run(() => {
     controller.set('pipeline', EmberObject.create({
       id: '1234'
     }));
-
-    controller.set('reload', () => {
-      assert.ok(true);
-
-      return Promise.resolve({});
-    });
 
     controller.set('model', {
       events: EmberObject.create({})
     });
 
     assert.notOk(controller.get('isShowingModal'));
-    controller.send('startPRBuild', prNum);
+    controller.send('startPRBuild', prNum, jobs);
     assert.ok(controller.get('isShowingModal'));
   });
 
