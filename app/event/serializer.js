@@ -31,7 +31,8 @@ export default DS.RESTSerializer.extend({
   serializeIntoHash(hash, typeClass, snapshot) {
     const data = {
       pipelineId: snapshot.attr('pipelineId'),
-      startFrom: snapshot.attr('startFrom')
+      startFrom: snapshot.attr('startFrom'),
+      prNum: snapshot.attr('prNum')
     };
 
     if (snapshot.attr('causeMessage')) {

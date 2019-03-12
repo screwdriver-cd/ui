@@ -151,3 +151,52 @@ test('it restarts a build', function (assert) {
     });
   });
 });
+
+test('it starts PR build(s)', function (assert) {
+  const prNum = 999;
+
+  assert.expect(5);
+  server.post('http://localhost:8080/v4/events', () => [
+    201,
+    { 'Content-Type': 'application/json' },
+    JSON.stringify({
+      id: '5678',
+      pipelineId: '1234'
+    })
+  ]);
+
+  let controller = this.subject();
+
+  run(() => {
+    controller.set('pipeline', EmberObject.create({
+      id: '1234'
+    }));
+
+    controller.set('reload', () => {
+      assert.ok(true);
+
+      return Promise.resolve({});
+    });
+
+    controller.set('model', {
+      events: EmberObject.create({})
+    });
+
+    assert.notOk(controller.get('isShowingModal'));
+    controller.send('startPRBuild', prNum);
+    assert.ok(controller.get('isShowingModal'));
+  });
+
+  return wait().then(() => {
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.notOk(controller.get('isShowingModal'));
+    assert.deepEqual(payload, {
+      causeMessage: `apple clicked start build for PR-${prNum}`,
+      pipelineId: '1234',
+      startFrom: '~pr',
+      prNum
+    });
+  });
+});

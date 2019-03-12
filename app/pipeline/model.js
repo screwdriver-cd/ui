@@ -3,6 +3,7 @@ import DS from 'ember-data';
 
 export default DS.Model.extend({
   admins: DS.attr(),
+  annotations: DS.attr(),
   checkoutUrl: DS.attr('string'),
   scmContext: DS.attr('string'),
   createTime: DS.attr('date'),

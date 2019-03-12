@@ -24,3 +24,18 @@
 
   height: 100%;
 }
+
+.startButton {
+  float: right;
+  border: 1px solid $sd-link;
+  background-color: $sd-white;
+  color: $sd-link;
+  border-radius: 2px;
+  padding: 5px 15px;
+  margin-top: 5px;
+
+  &:hover {
+    border-color: $sd-link;
+    color: $sd-white;
+  }
+}

@@ -75,6 +75,10 @@ export default DS.Model.extend({
   }),
   endTimeWords: computed('endTime', {
     get() {
+      if (!this.get('endTime')) {
+        return null;
+      }
+
       return `${durationText.call(this, 'endTime', 'now')} ago`;
     }
   }),

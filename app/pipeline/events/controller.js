@@ -92,6 +92,13 @@ export default Controller.extend(ModelReloaderMixin, {
         }, []);
     }
   }),
+  isRestricted: computed('pipeline.annotations', {
+    get() {
+      const annotations = this.getWithDefault('pipeline.annotations', {});
+
+      return annotations['screwdriver.cd/restrictPR'] !== 'none';
+    }
+  }),
   selectedEvent: computed('selected', 'mostRecent', {
     get() {
       return get(this, 'selected') || get(this, 'mostRecent');
@@ -237,6 +244,25 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('isShowingModal', false);
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
+    },
+    startPRBuild(prNum) {
+      this.set('isShowingModal', true);
+      const user = get(decoder(this.get('session.data.authenticated.token')), 'username');
+      const newEvent = this.store.createRecord('event', {
+        causeMessage: `${user} clicked start build for PR-${prNum}`,
+        pipelineId: this.get('pipeline.id'),
+        startFrom: '~pr',
+        prNum
+      });
+
+      return newEvent.save().then(() =>
+        newEvent.get('builds').then(() => this.set('isShowingModal', false))
+      )
+        .catch((e) => {
+          this.set('isShowingModal', false);
+          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        })
+        .finally(() => this.forceReload());
     }
   },
   willDestroy() {
