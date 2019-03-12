@@ -49,11 +49,15 @@
           }}
         {{/tab.pane}}
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
-          {{pipeline-pr-list
-            pullRequestGroups=pullRequestGroups
-            isRestricted=isRestricted
-            startBuild=(action "startPRBuild")
-          }}
+          {{#each pullRequestGroups as |prg|}}
+            {{pipeline-pr-list
+              jobs=prg
+              isRestricted=isRestricted
+              startBuild=(action "startPRBuild")
+            }}
+          {{else}}
+            <div class="alert">No open pull requests</div>
+          {{/each}}
         {{/tab.pane}}
       </div>
     {{/bs-tab}}

@@ -1,30 +1,28 @@
-{{#each pullRequestGroups as |groups i|}}
+{{#if jobs.length }}
   <div class="view">
     <div class="detail">
       <div class="name">
-        <a href="{{groups.0.url}}" target="_blank">
-          PR #{{groups.0.group}}
+        <a href="{{jobs.0.url}}" target="_blank">
+          PR #{{jobs.0.group}}
           <span class="scm">{{fa-icon "code-fork"}}</span>
         </a>
         <br/>
-        <span class="title">{{groups.0.title}}</span>
+        <span class="title">{{jobs.0.title}}</span>
       </div>
-      <div class="date greyOut">Opened {{groups.0.createTimeWords}}</div>
-      <div class="by"><a href="{{groups.0.userProfile}}" target="_blank">{{groups.0.username}}</a></div>
-      {{#if (get showJobs i)}}
-        {{#each groups as |job|}}
+      <div class="date greyOut">Opened {{jobs.0.createTimeWords}}</div>
+      <div class="by"><a href="{{jobs.0.userProfile}}" target="_blank">{{jobs.0.username}}</a></div>
+      {{#if showJobs }}
+        {{#each jobs as |job|}}
           {{pipeline-pr-view job=job}}
         {{/each}}
       {{else}}
         {{#if isRestricted}}
-          {{#bs-button type="primary" class="startButton" onClick=(action startBuild groups.0.group)}}Start{{/bs-button}}
+          {{#bs-button type="primary" class="startButton" onClick=(action startBuild jobs.0.group jobs)}}Start{{/bs-button}}
         {{/if}}
       {{/if}}
     </div>
   </div>
-{{else}}
-  <div class="alert">No open pull requests</div>
-{{/each}}
+{{/if}}
 
 
 

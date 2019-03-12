@@ -245,7 +245,7 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
     },
-    startPRBuild(prNum) {
+    startPRBuild(prNum, jobs) {
       this.set('isShowingModal', true);
       const user = get(decoder(this.get('session.data.authenticated.token')), 'username');
       const newEvent = this.store.createRecord('event', {
@@ -262,7 +262,7 @@ export default Controller.extend(ModelReloaderMixin, {
           this.set('isShowingModal', false);
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         })
-        .finally(() => this.forceReload());
+        .finally(() => jobs.forEach(j => j.hasMany('builds').reload()));
     }
   },
   willDestroy() {
