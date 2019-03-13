@@ -96,7 +96,7 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       const annotations = this.getWithDefault('pipeline.annotations', {});
 
-      return annotations['screwdriver.cd/restrictPR'] !== 'none';
+      return (annotations['screwdriver.cd/restrictPR'] || 'none') !== 'none';
     }
   }),
   selectedEvent: computed('selected', 'mostRecent', {
