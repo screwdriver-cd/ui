@@ -37,10 +37,10 @@ export default Component.extend({
   actions: {
     handleJstreeEventDidChange(data) {
       if (data.node) {
-        let href = `${data.node.a_attr.href}?download=true`;
+        let href = data.node.a_attr.href;
 
         if (href !== '#') {
-          window.open(href, '_blank');
+          window.open(`${href}?download=true`, '_blank');
         }
       }
     }
