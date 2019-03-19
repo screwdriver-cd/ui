@@ -71,7 +71,7 @@ test('it updates selected event id', function (assert) {
   assert.equal(get(this, 'selected'), 3);
 });
 
-test('it render when selectedEvent is a PR event', function (assert) {
+test('it renders when selectedEvent is a PR event', function (assert) {
   assert.expect(2);
   set(this, 'obj', {
     truncatedSha: 'abc123',
@@ -81,10 +81,15 @@ test('it render when selectedEvent is a PR event', function (assert) {
     type: 'pr'
   });
   set(this, 'selected', 2);
-  set(this, 'startBuild', () => {
-    assert.ok(true);
+  set(this, 'startBuild', (prNum, jobs) => {
+    assert.equal(prNum, 1);
+    assert.equal(jobs[0].group, 1);
   });
   set(this, 'currentEventType', 'pr');
+  set(this, 'pullRequestGroups', {
+    1: [{ name: 'PR-1:foo', isPR: true, group: 1 }, { name: 'PR-1:bar', isPR: true, group: 1 }],
+    2: [{ name: 'PR-2:foo', isPR: true, group: 2 }]
+  });
 
   this.render(hbs`{{pipeline-graph-nav
     mostRecent=3
@@ -95,6 +100,7 @@ test('it render when selectedEvent is a PR event', function (assert) {
     startMainBuild=startBuild
     startPRBuild=startBuild
     graphType=currentEventType
+    prGroups=pullrequestGroups
   }}`);
 
   assert.equal(this.$('.row strong').text().trim(), 'Pull Requests');

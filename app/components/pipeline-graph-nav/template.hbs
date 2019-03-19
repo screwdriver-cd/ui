@@ -18,7 +18,7 @@
   <div class="col-xs-2">
     {{#if session.isAuthenticated}}
       {{#if (eq selectedEventObj.type "pr")}}
-        {{pipeline-start startBuild=(action startPRBuild) prNum=selectedEventObj.prNum}}
+        {{pipeline-start startBuild=(action startPRBuild) prNum=selectedEventObj.prNum jobs=prJobs}}
       {{else}}
         {{pipeline-start startBuild=(action startMainBuild)}}
       {{/if}}

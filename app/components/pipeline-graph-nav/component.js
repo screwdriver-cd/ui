@@ -10,6 +10,14 @@ export default Component.extend({
       return this.get('graphType') === 'pr';
     }
   }),
+  prJobs: computed('selectedEventObj.prNum', 'prGroups', {
+    get() {
+      const prNum = this.get('selectedEventObj.prNum');
+      const prGroups = this.get('prGroups');
+
+      return prGroups[prNum];
+    }
+  }),
   eventOptions: computed('lastSuccessful', 'mostRecent', 'isPR', {
     get() {
       const options = [
