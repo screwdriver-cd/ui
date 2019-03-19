@@ -269,7 +269,9 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('isShowingModal', false);
         this.forceReload();
 
-        return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
+        const path = `pipeline/${newEvent.get('pipelineId')}/${this.get('activeTab')}`;
+
+        return this.transitionToRoute(path);
       }).catch((e) => {
         this.set('isShowingModal', false);
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');

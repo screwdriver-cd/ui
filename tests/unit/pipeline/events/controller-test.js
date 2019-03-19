@@ -86,7 +86,7 @@ test('it starts a build', function (assert) {
 });
 
 test('it restarts a build', function (assert) {
-  assert.expect(7);
+  assert.expect(6);
   server.post('http://localhost:8080/v4/events', () => [
     201,
     { 'Content-Type': 'application/json' },
@@ -126,9 +126,8 @@ test('it restarts a build', function (assert) {
       events: EmberObject.create({})
     });
 
-    controller.transitionToRoute = (path, id) => {
-      assert.equal(path, 'pipeline');
-      assert.equal(id, 1234);
+    controller.transitionToRoute = (path) => {
+      assert.equal(path, 'pipeline/1234/events');
     };
 
     assert.notOk(controller.get('isShowingModal'));
