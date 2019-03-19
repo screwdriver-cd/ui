@@ -1,6 +1,10 @@
 <div class="row">
   <div class="col-xs-10">
-    <strong>Pipeline</strong>
+    {{#if isPR}}
+      <strong>Pull Requests</strong>
+    {{else}}
+      <strong>Pipeline</strong>
+    {{/if}}
     {{#bs-button-group
       value=selectedEvent
       type='radio'
@@ -13,7 +17,11 @@
   </div>
   <div class="col-xs-2">
     {{#if session.isAuthenticated}}
-    {{pipeline-start startBuild=(action startBuild)}}
+      {{#if (eq selectedEventObj.type "pr")}}
+        {{pipeline-start startBuild=(action startPRBuild) prNum=selectedEventObj.prNum jobs=prJobs}}
+      {{else}}
+        {{pipeline-start startBuild=(action startMainBuild)}}
+      {{/if}}
     {{/if}}
   </div>
 </div>

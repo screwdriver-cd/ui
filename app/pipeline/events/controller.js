@@ -2,9 +2,11 @@ import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { get, computed } from '@ember/object';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { alias } from '@ember/object/computed';
 
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
+import { isPRJob } from 'screwdriver-ui/utils/build';
 
 export default Controller.extend(ModelReloaderMixin, {
   session: service(),
@@ -32,10 +34,16 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       const jobs = this.get('model.jobs');
 
-      return jobs.filter(j => !/^PR-/.test(j.get('name')));
+      return jobs.filter(j => !isPRJob(j.get('name')));
     }
   }),
   paginateEvents: [],
+  prChainEnabled: alias('pipeline.prChain'),
+  currentEventType: computed('activeTab', {
+    get() {
+      return this.get('activeTab') === 'pulls' ? 'pr' : 'pipeline';
+    }
+  }),
   // Aggregates first page events and events via ModelReloaderMixin
   modelEvents: computed('model.events', {
     get() {
@@ -65,9 +73,27 @@ export default Controller.extend(ModelReloaderMixin, {
       return newModelEvents;
     }
   }),
-  events: computed('modelEvents', 'paginateEvents', {
+  pipelineEvents: computed('modelEvents', 'paginateEvents', {
     get() {
       return [].concat(this.get('modelEvents'), this.get('paginateEvents'));
+    }
+  }),
+  prEvents: computed('model.events', 'prChainEnabled', {
+    get() {
+      if (this.get('prChainEnabled')) {
+        return this.get('model.events').filter(e => e.prNum).sortBy('createTime').reverse();
+      }
+
+      return [];
+    }
+  }),
+  events: computed('pipelineEvents', 'prEvents', 'currentEventType', {
+    get() {
+      if (this.get('currentEventType') === 'pr') {
+        return this.get('prEvents');
+      }
+
+      return this.get('pipelineEvents');
     }
   }),
   pullRequestGroups: computed('model.jobs', {
@@ -144,6 +170,10 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
 
   updateEvents(page) {
+    if (this.get('currentEventType') === 'pr') {
+      return null;
+    }
+
     this.set('isFetching', true);
 
     return get(this, 'store').query('event', {
@@ -239,7 +269,9 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('isShowingModal', false);
         this.forceReload();
 
-        return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
+        const path = `pipeline/${newEvent.get('pipelineId')}/${this.get('activeTab')}`;
+
+        return this.transitionToRoute(path);
       }).catch((e) => {
         this.set('isShowingModal', false);
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
@@ -256,7 +288,19 @@ export default Controller.extend(ModelReloaderMixin, {
       });
 
       return newEvent.save().then(() =>
-        newEvent.get('builds').then(() => this.set('isShowingModal', false))
+        newEvent.get('builds').then(() => {
+          this.set('isShowingModal', false);
+
+          // PR events are aggregated by each PR jobs when prChain is enabled.
+          if (this.get('prChainEnabled')) {
+            const newEvents = this.get('prEvents')
+              .filter(e => e.get('prNum') !== prNum);
+
+            newEvents.unshiftObject(newEvent);
+
+            this.set('prEvents', newEvents);
+          }
+        })
       )
         .catch((e) => {
           this.set('isShowingModal', false);

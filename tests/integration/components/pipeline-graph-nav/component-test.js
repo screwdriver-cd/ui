@@ -12,6 +12,7 @@ test('it renders', function (assert) {
   set(this, 'startBuild', () => {
     assert.ok(true);
   });
+  set(this, 'currentEventType', 'pipeline');
 
   this.render(hbs`{{pipeline-graph-nav
     mostRecent=3
@@ -19,8 +20,13 @@ test('it renders', function (assert) {
     selectedEvent=2
     selectedEventObj=obj
     selected=selected
-    startBuild=startBuild
+    startMainBuild=startBuild
+    startPRBuild=startBuild
+    graphType=currentEventType
   }}`);
+
+  assert.equal(this.$('.row strong').text().trim(), 'Pipeline');
+  assert.equal(this.$('.row button').length, 3);
 
   const $columnTitles = this.$('.event-info .title');
   const $links = this.$('.event-info a');
@@ -48,6 +54,7 @@ test('it updates selected event id', function (assert) {
   set(this, 'startBuild', () => {
     assert.ok(true);
   });
+  set(this, 'currentEventType', 'pipeline');
 
   this.render(hbs`{{pipeline-graph-nav
     mostRecent=3
@@ -55,9 +62,47 @@ test('it updates selected event id', function (assert) {
     selectedEvent=2
     selectedEventObj=obj
     selected=selected
-    startBuild=startBuild
+    startMainBuild=startBuild
+    startPRBuild=startBuild
+    graphType=currentEventType
   }}`);
 
   this.$('button').filter(':first').click();
   assert.equal(get(this, 'selected'), 3);
+});
+
+test('it renders when selectedEvent is a PR event', function (assert) {
+  assert.expect(2);
+  set(this, 'obj', {
+    truncatedSha: 'abc123',
+    status: 'SUCCESS',
+    creator: { name: 'anonymous' },
+    prNum: 1,
+    type: 'pr'
+  });
+  set(this, 'selected', 2);
+  set(this, 'startBuild', (prNum, jobs) => {
+    assert.equal(prNum, 1);
+    assert.equal(jobs[0].group, 1);
+  });
+  set(this, 'currentEventType', 'pr');
+  set(this, 'pullRequestGroups', {
+    1: [{ name: 'PR-1:foo', isPR: true, group: 1 }, { name: 'PR-1:bar', isPR: true, group: 1 }],
+    2: [{ name: 'PR-2:foo', isPR: true, group: 2 }]
+  });
+
+  this.render(hbs`{{pipeline-graph-nav
+    mostRecent=3
+    lastSuccessful=2
+    selectedEvent=2
+    selectedEventObj=obj
+    selected=selected
+    startMainBuild=startBuild
+    startPRBuild=startBuild
+    graphType=currentEventType
+    prGroups=pullrequestGroups
+  }}`);
+
+  assert.equal(this.$('.row strong').text().trim(), 'Pull Requests');
+  assert.equal(this.$('.row button').length, 2);
 });
