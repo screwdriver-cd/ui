@@ -288,7 +288,19 @@ export default Controller.extend(ModelReloaderMixin, {
       });
 
       return newEvent.save().then(() =>
-        newEvent.get('builds').then(() => this.set('isShowingModal', false))
+        newEvent.get('builds').then(() => {
+          this.set('isShowingModal', false);
+
+          // PR events are aggregated by each PR jobs when prChain is enabled.
+          if (this.get('prChainEnabled')) {
+            const newEvents = this.get('prEvents')
+              .filter(e => e.get('prNum') !== prNum);
+
+            newEvents.unshiftObject(newEvent);
+
+            this.set('prEvents', newEvents);
+          }
+        })
       )
         .catch((e) => {
           this.set('isShowingModal', false);
