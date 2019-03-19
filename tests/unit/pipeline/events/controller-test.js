@@ -199,7 +199,7 @@ test('it starts PR build(s)', function (assert) {
   });
 });
 
-test('New event comes top of PR list when it start a PR build with prChain', function (assert) {
+test('New event comes top of PR list when it starts a PR build with prChain', function (assert) {
   const prNum = 3;
   const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
 
