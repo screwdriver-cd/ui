@@ -20,7 +20,6 @@
     float: right;
   }
   .collection-wrapper {
-    padding: 10px 15px;
     border-bottom: 1px solid $sd-white;
     position: relative;
 
@@ -29,6 +28,13 @@
 
       .name {
         text-decoration: underline;
+      }
+    }
+
+    &.row {
+      a {
+        display: block;
+        padding: 10px 15px;
       }
     }
 
@@ -52,6 +58,7 @@
     &__delete {
       position: absolute;
       right: 10px;
+      top: 10px;
       border: none;
       background: none;
     }
