@@ -114,7 +114,7 @@ test('it renders', function (assert) {
   assert.equal($('li.job-name .banner-value').text().trim(), 'PR-671');
   assert.equal($('.commit a').prop('href'),
     'http://example.com/batcave/batmobile/commit/abcdef1029384');
-  assert.equal($('.commit a').text().trim(), '#abcdef');
+  assert.equal($('.commit a').text().trim(), '#abcdef1');
   assert.equal($('.duration .banner-value').text().trim(), '11 seconds' +
   '4 seconds blocked5 seconds pulling image2 seconds in build');
   assert.equal($('.created .banner-value').text().trim(), expectedTime);
