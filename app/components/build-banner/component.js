@@ -34,7 +34,7 @@ export default Component.extend({
       return this.get('prEvents').then(result =>
         result.map((pr, i) =>
           ({ index: result.length - i,
-            shortenedSha: pr.event.sha.substr(0, 6),
+            shortenedSha: pr.event.sha.substr(0, 7),
             build: pr.build,
             event: pr.event })
         )

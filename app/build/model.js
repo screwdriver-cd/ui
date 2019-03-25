@@ -111,7 +111,7 @@ export default DS.Model.extend({
   }),
   truncatedSha: computed('sha', {
     get() {
-      return this.get('sha').substr(0, 6);
+      return this.get('sha').substr(0, 7);
     }
   })
 });
