@@ -30,6 +30,6 @@ export default Route.extend({
   },
 
   titleToken(model) {
-    return `${model.job.get('name')} > #${model.build.get('sha').substr(0, 6)}`;
+    return `${model.job.get('name')} > #${model.build.get('truncatedSha')}`;
   }
 });
