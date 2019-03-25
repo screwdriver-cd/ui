@@ -13,8 +13,8 @@ test('it exists', function (assert) {
   assert.ok(route);
   assert.equal(route.titleToken({
     job: EmberObject.create({ name: 'main' }),
-    build: EmberObject.create({ sha: 'abcd1234567890' })
-  }), 'main > #abcd12');
+    build: EmberObject.create({ sha: 'abcd1234567890', truncatedSha: 'abcd123' })
+  }), 'main > #abcd123');
 });
 
 sinonTest('it redirects if build not found', function (assert) {

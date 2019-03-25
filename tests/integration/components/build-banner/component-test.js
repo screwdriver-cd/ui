@@ -48,7 +48,7 @@ const eventMock = EmberObject.create({
   },
   pipelineId: '12345',
   sha: 'abcdef1029384',
-  truncatedSha: 'abcdef',
+  truncatedSha: 'abcdef1',
   type: 'pipelineId',
   workflow: ['main', 'publish'],
   builds: ['build1', 'build2']
@@ -161,7 +161,7 @@ test('it renders pr link if pr url info is available', function (assert) {
   assert.equal($('li.job-name .banner-value').text().trim(), 'PR-671');
   assert.equal($('.commit a').prop('href'),
     'http://example.com/batcave/batmobile/commit/abcdef1029384');
-  assert.equal($('.commit a').text().trim(), '#abcdef');
+  assert.equal($('.commit a').text().trim(), '#abcdef1');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds0 seconds' +
   ' blocked0 seconds pulling image0 seconds in build');
   assert.equal($('.created .banner-value').text().trim(), expectedTime);
@@ -209,8 +209,8 @@ test('it renders prCommit dropdown if event type is pr', function (assert) {
   assert.equal($('li.job-name .banner-value').text().trim(), 'PR-671');
   assert.equal($('.commit a').prop('href'),
     'http://example.com/batcave/batmobile/commit/abcdef1029384');
-  assert.equal($('.commit .commit-sha').text().trim(), '#abcdef');
-  assert.equal($('.commit ul li').text().trim(), '1. abcdef');
+  assert.equal($('.commit .commit-sha').text().trim(), '#abcdef1');
+  assert.equal($('.commit ul li').text().trim(), '1. abcdef1');
   assert.equal($('.duration .banner-value').text().trim(), '5 seconds0 seconds' +
   ' blocked0 seconds pulling image0 seconds in build');
   assert.equal($('.created .banner-value').text().trim(), expectedTime);
