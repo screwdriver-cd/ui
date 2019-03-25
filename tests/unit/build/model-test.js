@@ -102,6 +102,6 @@ test('it truncates the sha', function (assert) {
   });
 
   run(() => {
-    assert.equal(model.get('truncatedSha'), '026c5b');
+    assert.equal(model.get('truncatedSha'), '026c5b7');
   });
 });
