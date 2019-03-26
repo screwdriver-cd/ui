@@ -1,0 +1,125 @@
+{{#if session.isAuthenticated}}
+  {{pipeline-nav pipeline=pipeline}}
+{{/if}}
+
+{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+
+<div class="range-selection">
+  Time Range
+  {{#bs-button-group
+    value=selectedRange
+    type="radio"
+    onChange=(action "setTimeRange") as |bg|}}
+    {{#each timeRanges as |range|}}
+      {{#bg.button value=range}}{{range}}{{/bg.button}}
+    {{/each}}
+  {{/bs-button-group}}
+</div>
+
+<div class="datetime-selection">
+  From
+  <input
+    type="datetime-local"
+    name="metric-start"
+    value={{startTime}}
+    onblur={{action "setStartDate" value="target.value"}}
+  />
+</div>
+<div class="datetime-selection">
+  To
+  <input
+    type="datetime-local"
+    name="metric-end"
+    value={{endTime}}
+    onblur={{action "setEndDate" value="target.value" }}
+  />
+</div>
+
+<div class="chart-pipeline-info">
+  <div class="col">
+    <span class="measure">{{measures.total}}</span>
+    <br/>
+    <span class="title">Total Events</span>
+  </div>
+  <div class="col">
+    <span class="measure">
+      <span class="passed">{{measures.passed}}</span> / <span class="failed">{{measures.failed}}</span>
+    </span>
+    <br/>
+    <span class="title">Passed / Failed Jobs</span>
+  </div>
+  <div class="col">
+    <span class="measure">{{measures.avgs.duration}}</span>
+    <br/>
+    <span class="title">Avg. Build Time</span>
+  </div>
+  <div class="col">
+    <span class="measure">{{measures.avgs.imagePullTime}}</span>
+    <br/>
+    <span class="title">Avg. Image Pull Time</span>
+  </div>
+  <div class="col">
+    <span class="measure">{{measures.avgs.queuedTime}}</span>
+    <br/>
+    <span class="title">Avg. Queued Time</span>
+  </div>
+</div>
+
+<div class="chart-c3">
+  <p class="chart-title">Events</p>
+  {{x-toggle
+    size="small"
+    theme="material"
+    showLabels=true
+    value=inTrendlineView
+    offLabel=null
+    onLabel="Trendline View"
+    onToggle=(action "toggleTrendlineView")}}
+  <p class="y-axis-label">TIME (MIN)</p>
+  {{chart-c3
+    name=eventsChartName
+    data=eventMetrics
+    axis=axis
+    grid=grid
+    bar=bar
+    legend=legend
+    tooltip=tooltip
+    subchart=subchart
+    point=point
+    size=size
+    transition=transition
+    color=color
+    zoom=zoom
+    onrendered=onrendered
+    onresized=onresized
+    oninit=(get onInitFns eventsChartName)
+    onChartInit=(action "setChartRef")
+  }}
+  <p class="reset-button" onClick={{action "resetZoom" eventsChartName buildsChartName}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
+</div>
+<div class="chart-c3">
+  <p class="chart-title">Builds Breakdown Per Event</p>
+  <p class="y-axis-label">TIME (MIN)</p>
+  {{chart-c3
+    name=buildsChartName
+    data=buildMetrics
+    axis=axis
+    grid=grid
+    bar=bar
+    legend=legend
+    tooltip=tooltip
+    subchart=subchart
+    point=point
+    size=size
+    transition=transition
+    color=color
+    zoom=zoom
+    onrendered=onrendered
+    onresized=onresized
+    oninit=(get onInitFns buildsChartName)
+    onChartInit=(action "setChartRef")
+  }}
+  <p class="reset-button" onClick={{action "resetZoom" buildsChartName eventsChartName}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
+</div>
+
+{{outlet}}

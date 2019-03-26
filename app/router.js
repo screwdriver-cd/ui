@@ -18,6 +18,7 @@ Router.map(function route() {
     this.route('options');
     this.route('child-pipelines');
     this.route('pulls');
+    this.route('metrics');
   });
   this.route('login');
   this.route('create');

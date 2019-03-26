@@ -18,6 +18,7 @@ export default DS.Model.extend({
   jobs: DS.hasMany('job', { async: true }),
   secrets: DS.hasMany('secret', { async: true }),
   tokens: DS.hasMany('token', { async: true }),
+  metrics: DS.hasMany('metric', { async: true }),
 
   appId: alias('scmRepo.name'),
   branch: alias('scmRepo.branch'),
