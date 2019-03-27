@@ -42,8 +42,12 @@ export default Mixin.create({
       model = this.get(modelToReload);
     }
 
-    if (model && this.shouldReload(model)) {
-      model.reload().finally(() => this.scheduleReload());
+    if (model) {
+      if (this.shouldReload(model)) {
+        model.reload().finally(() => this.scheduleReload());
+      } else if (this.get('isPaused')) {
+        this.scheduleReload();
+      }
     }
   },
 
