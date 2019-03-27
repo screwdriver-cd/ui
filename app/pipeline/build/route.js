@@ -1,5 +1,6 @@
 import { all } from 'rsvp';
 import Route from '@ember/routing/route';
+import { set } from '@ember/object';
 
 export default Route.extend({
   routeAfterAuthentication: 'pipeline.build',
@@ -27,9 +28,17 @@ export default Route.extend({
     if (pipelineId !== model.job.get('pipelineId')) {
       this.transitionTo('pipeline', pipelineId);
     }
+
+    set(model.event, 'isPaused', true);
   },
 
   titleToken(model) {
     return `${model.job.get('name')} > #${model.build.get('truncatedSha')}`;
+  },
+
+  deactivate() {
+    const model = this.modelFor(this.routeName);
+
+    set(model.event, 'isPaused', false);
   }
 });
