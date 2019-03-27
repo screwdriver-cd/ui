@@ -27,9 +27,9 @@ export default Route.extend({
     // Build not found for this pipeline, redirecting to the pipeline page
     if (pipelineId !== model.job.get('pipelineId')) {
       this.transitionTo('pipeline', pipelineId);
+    } else {
+      set(model.event, 'isPaused', true);
     }
-
-    set(model.event, 'isPaused', true);
   },
 
   titleToken(model) {
