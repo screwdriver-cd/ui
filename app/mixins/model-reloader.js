@@ -1,8 +1,13 @@
 import { later, cancel } from '@ember/runloop';
+import DS from 'ember-data';
 import Mixin from '@ember/object/mixin';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Mixin.create({
+  /**
+   * Parameter to indicate reloading is paused
+   */
+  isPaused: DS.attr('boolean', { defaultValue: false }),
   /**
    * Overridable function to determine if a model should be reloaded
    * @method shouldReload

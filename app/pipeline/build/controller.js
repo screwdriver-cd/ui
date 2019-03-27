@@ -13,7 +13,6 @@ export default Controller.extend({
   loading: false,
   counter: 0,
   build: reads('model.build'),
-  jobs: reads('model.jobs'),
   job: reads('model.job'),
   event: reads('model.event'),
   pipeline: reads('model.pipeline'),

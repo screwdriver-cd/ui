@@ -12,7 +12,6 @@ export default DS.Model.extend(ModelReloaderMixin, {
   createTime: DS.attr('date'),
   creator: DS.attr(),
   isComplete: DS.attr('boolean', { defaultValue: false }),
-  isPaused: DS.attr('boolean', { defaultValue: false }),
   numBuilds: DS.attr('number', { defaultValue: 0 }),
   reloadWithoutNewBuilds: DS.attr('number', { defaultValue: 0 }),
   parentBuildId: DS.attr('number'),

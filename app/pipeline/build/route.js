@@ -10,14 +10,12 @@ export default Route.extend({
 
     return this.store.findRecord('build', params.build_id).then(build => all([
       this.store.findRecord('job', build.get('jobId')),
-      this.store.findRecord('event', build.get('eventId')),
-      this.get('pipeline.jobs')
-    ]).then(([job, event, jobs]) => ({
+      this.store.findRecord('event', build.get('eventId'))
+    ]).then(([job, event]) => ({
       build,
       job,
       event,
-      pipeline: this.get('pipeline'),
-      jobs: jobs.filter(j => !/^PR-/.test(j.get('name')))
+      pipeline: this.get('pipeline')
     })));
   },
 
