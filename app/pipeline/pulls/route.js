@@ -54,5 +54,10 @@ export default EventsRoute.extend({
       jobs: jobsPromise,
       events
     });
+  },
+  actions: {
+    refreshModel: function refreshModel() {
+      return this.get('pipeline').hasMany('jobs').reload().then(() => this.refresh());
+    }
   }
 });
