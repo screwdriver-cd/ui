@@ -84,7 +84,8 @@ test('it adds links to pipelines', function (assert) {
         jobs: 'jobs',
         secrets: 'secrets',
         events: 'events',
-        tokens: 'tokens'
+        tokens: 'tokens',
+        metrics: 'metrics'
       }
     }
   });
@@ -176,4 +177,13 @@ test('it returns pipelinetoken endpoint when model is token with pipelineId', fu
   assert.deepEqual(urlForCreateRecord, baseUrl);
   assert.deepEqual(urlForUpdateRecord, `${baseUrl}/${id}`);
   assert.deepEqual(urlForDeleteRecord, `${baseUrl}/${id}`);
+});
+
+test('it returns endpoint for metric and event given pipeline id', function (assert) {
+  const adapter = this.subject();
+  const metricsUrl = 'http://localhost:8080/v4/pipelines/1/metrics';
+  const eventsUrl = 'http://localhost:8080/v4/pipelines/1/events';
+
+  assert.equal(adapter.urlForQuery({ pipelineId: 1 }, 'metric'), metricsUrl);
+  assert.equal(adapter.urlForQuery({ pipelineId: 1 }, 'event'), eventsUrl);
 });

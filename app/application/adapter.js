@@ -1,5 +1,6 @@
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { pluralize } from 'ember-inflector';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
 import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
@@ -74,7 +75,8 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
         events: 'events',
         jobs: 'jobs',
         secrets: 'secrets',
-        tokens: 'tokens'
+        tokens: 'tokens',
+        metrics: 'metrics'
       };
     } else if (key === 'event' || key === 'events') {
       o.links = {
@@ -234,13 +236,13 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    * @return {String} url
    */
   urlForQuery(query, modelName) {
-    if (modelName === 'event') {
+    if (modelName === 'event' || modelName === 'metric') {
       const pipelineId = query.pipelineId;
 
       delete query.pipelineId;
 
       return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
-        + `/pipelines/${pipelineId}/events`;
+        + `/pipelines/${pipelineId}/${pluralize(modelName)}`;
     }
 
     return this._super(...arguments);
