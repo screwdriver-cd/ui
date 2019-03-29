@@ -22,7 +22,7 @@ let server;
 moduleFor('controller:pipeline/events', 'Unit | Controller | pipeline/events', {
   // Specify the other units that are required for this test.
   // eslint-disable-next-line max-len
-  needs: ['model:build', 'model:event', 'adapter:application', 'service:session', 'serializer:build', 'serializer:event', 'mixin:model-reloader'],
+  needs: ['model:build', 'model:event', 'adapter:application', 'service:session', 'serializer:build', 'serializer:event'],
   beforeEach() {
     server = new Pretender();
     this.register('service:session', sessionServiceMock);
@@ -63,8 +63,7 @@ test('it starts a build', function (assert) {
     });
 
     controller.set('model', {
-      events: EmberObject.create({}),
-      jobs: EmberObject.create({})
+      events: EmberObject.create({})
     });
 
     controller.transitionToRoute = (path, id) => {
