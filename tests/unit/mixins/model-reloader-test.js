@@ -1,16 +1,32 @@
 import { resolve } from 'rsvp';
-import EmberObject from '@ember/object';
+import { getOwner } from '@ember/application';
+import { run } from '@ember/runloop';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
-import { module, test } from 'qunit';
+import { moduleFor, test } from 'ember-qunit';
+import DS from 'ember-data';
 import wait from 'ember-test-helpers/wait';
 
 let subject;
 
-module('Unit | Mixin | model reloader mixin', {
-  beforeEach() {
-    const ModelReloaderObject = EmberObject.extend(ModelReloaderMixin);
+moduleFor('mixin:model-reloader', 'Unit | Mixin | model reloader mixin', {
+  unit: true,
 
-    subject = ModelReloaderObject.create();
+  needs: ['service:store'],
+
+  subject() {
+    const ModelReloaderObject = DS.Model.extend(ModelReloaderMixin);
+
+    this.register('model:reload-mixin', ModelReloaderObject);
+
+    return run(() => {
+      let store = getOwner(this).lookup('service:store');
+
+      return store.createRecord('reload-mixin', { isPaused: false });
+    });
+  },
+
+  beforeEach() {
+    subject = this.subject();
   }
 });
 

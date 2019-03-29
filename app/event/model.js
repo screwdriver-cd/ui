@@ -164,6 +164,6 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   // Reload builds only if the event is still running
   shouldReload() {
-    return get(this, 'isRunning') && !get(this, 'isPaused');
+    return get(this, 'isRunning');
   }
 });
