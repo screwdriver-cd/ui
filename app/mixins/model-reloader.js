@@ -4,6 +4,10 @@ import ENV from 'screwdriver-ui/config/environment';
 
 export default Mixin.create({
   /**
+   * Parameter to indicate reloading is paused
+   */
+  isPaused: false,
+  /**
    * Overridable function to determine if a model should be reloaded
    * @method shouldReload
    * @param {Object}    model  The model that is to be reloaded
@@ -42,11 +46,11 @@ export default Mixin.create({
       model = this.get(modelToReload);
     }
 
-    if (model) {
-      if (this.shouldReload(model)) {
-        model.reload().finally(() => this.scheduleReload());
-      } else if (this.get('isPaused')) {
+    if (model && this.shouldReload(model)) {
+      if (this.get('isPaused')) {
         this.scheduleReload();
+      } else {
+        model.reload().finally(() => this.scheduleReload());
       }
     }
   },

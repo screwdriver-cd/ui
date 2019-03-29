@@ -1,4 +1,5 @@
 import { merge } from '@ember/polyfills';
+import { get } from '@ember/object';
 import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
@@ -11,6 +12,18 @@ export default DS.RESTSerializer.extend({
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.build) {
       payload.build.statusMessage = payload.build.statusMessage || null;
+    }
+
+    if (requestType === 'findHasMany' && Array.isArray(payload.builds)) {
+      payload.builds
+        .filter(b => store.hasRecordForId('build', b.id))
+        .forEach((b) => {
+          let storeBuild = store.peekRecord('build', b.id);
+
+          if (storeBuild) {
+            b.steps = get(storeBuild, 'steps').toArray();
+          }
+        });
     }
 
     return this._super(store, typeClass, payload, id, requestType);
