@@ -15,7 +15,7 @@ export default Route.extend({
     this.controllerFor('pipeline.events').set('pipeline', this.get('pipeline'));
 
     return RSVP.hash({
-      jobs: this.get('pipeline.jobs'),
+      jobs: [],
       events: this.store.query('event', {
         pipelineId: this.get('pipeline.id'),
         page: 1,
