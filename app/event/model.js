@@ -12,6 +12,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   createTime: DS.attr('date'),
   creator: DS.attr(),
   isComplete: DS.attr('boolean', { defaultValue: false }),
+  meta: DS.attr(),
   numBuilds: DS.attr('number', { defaultValue: 0 }),
   reloadWithoutNewBuilds: DS.attr('number', { defaultValue: 0 }),
   parentBuildId: DS.attr('number'),
@@ -61,6 +62,11 @@ export default DS.Model.extend(ModelReloaderMixin, {
   durationText: computed('duration', {
     get() {
       return humanizeDuration(get(this, 'duration'), { round: true, largest: 1 });
+    }
+  }),
+  label: computed('meta', {
+    get() {
+      return this.get('meta.label') || null;
     }
   }),
   truncatedMessage: computed('commit.message', {
