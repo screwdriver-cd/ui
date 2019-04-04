@@ -36,6 +36,22 @@ test('it renders build link', function (assert) {
   assert.equal(this.$().text().trim(), 'Go to build details');
 });
 
+test('it renders remote trigger link', function (assert) {
+  const data = {
+    externalTrigger: {
+      pipelineId: 1234,
+      jobName: 'main'
+    }
+  };
+
+  this.set('data', data);
+
+  this.render(hbs`{{workflow-tooltip tooltipData=data}}`);
+
+  assert.equal(this.$('.content a').length, 1);
+  assert.equal(this.$().text().trim(), 'Go to remote pipeline');
+});
+
 test('it renders restart link', function (assert) {
   const data = {
     job: {
