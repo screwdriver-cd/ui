@@ -24,5 +24,10 @@ export default Component.extend({
         left
       });
     }
+  },
+  actions: {
+    stopBuild() {
+      get(this, 'stopBuild')(get(this, 'tooltipData.job'));
+    }
   }
 });
