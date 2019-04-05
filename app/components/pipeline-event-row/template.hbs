@@ -6,7 +6,7 @@
         <a href="{{event.pr.url}}">PR-{{event.prNum}}</a>
       {{else}}
         <a class="{{if (eq event.id lastSuccessful) "last-successful"}}" href="{{event.commit.url}}">#{{event.truncatedSha}}</a>
-        {{#if event.label}}{{event.label}}{{/if}}
+        {{#if event.label}}<div class="label">{{event.label}}</div>{{/if}}
       {{/if}}
     </div>
     <div class="date greyOut">Started {{event.createTimeWords}}</div>
