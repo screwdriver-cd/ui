@@ -3,5 +3,5 @@
 <td class="last-used">{{#if token.lastUsed}}{{moment-from-now token.lastUsed}}{{else}}Never used{{/if}}</td>
 <td class="actions">
   <button {{action "refresh"}}>Refresh</button>
-  <button {{action "modifyToken"}} class={{buttonAction}}>{{buttonAction}}</button>
+  <button {{action "modifyToken" pipelineId}} class={{buttonAction}}>{{buttonAction}}</button>
 </td>
