@@ -21,7 +21,7 @@ export default Component.extend({
     this.set('newDescription', this.get('token.description') || '');
   },
   actions: {
-    modifyToken() {
+    modifyToken(pipelineId) {
       const token = this.get('token');
 
       if (this.get('buttonAction') === 'Delete') {
@@ -31,13 +31,23 @@ export default Component.extend({
         token.set('description', this.get('newDescription'));
         this.get('setIsSaving')(true);
 
-        token.save({ adapterOptions: { pipelineId: this.get('pipelineId') } })
-          .then(() => {
-            this.get('setIsSaving')(false);
-          })
-          .catch((error) => {
-            this.get('setErrorMessage')(error.errors[0].detail);
-          });
+        if (pipelineId) {
+          token.save({ adapterOptions: { pipelineId } })
+            .then(() => {
+              this.get('setIsSaving')(false);
+            })
+            .catch((error) => {
+              this.get('setErrorMessage')(error.errors[0].detail);
+            });
+        } else {
+          token.save()
+            .then(() => {
+              this.get('setIsSaving')(false);
+            })
+            .catch((error) => {
+              this.get('setErrorMessage')(error.errors[0].detail);
+            });
+        }
       }
     },
     refresh() {
