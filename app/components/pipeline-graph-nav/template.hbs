@@ -55,6 +55,12 @@
             <span class="title">Duration</span><br/>
             {{selectedEventObj.durationText}}
           </div>
+          {{#if selectedEventObj.label}}
+          <div class="col">
+            <span class="title">Label</span><br/>
+            {{selectedEventObj.label}}
+          </div>
+          {{/if}}
         </div>
       {{/unless}}
     </div>
