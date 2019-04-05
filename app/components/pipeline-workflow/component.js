@@ -65,8 +65,28 @@ export default Component.extend({
         isRootNode = isRoot(edges, job.name);
       }
 
-      // hide tooltip when not clicking on an active job node or root node
+      const externalTrigger = {};
+
       if (!job || isTrigger) {
+        const externalTriggerMatch = job ? job.name.match(/^~sd@(\d+):([\w-]+)$/) : null;
+
+        // Add external trigger data if relevant
+        if (externalTriggerMatch) {
+          externalTrigger.pipelineId = externalTriggerMatch[1];
+          externalTrigger.jobName = externalTriggerMatch[2];
+          setProperties(this, {
+            showTooltip: true,
+            showTooltipPosition: 'left',
+            tooltipData: {
+              mouseevent,
+              sizes,
+              externalTrigger
+            }
+          });
+
+          return false;
+        }
+        // Hide tooltip when not clicking on an active job node or root node
         this.set('showTooltip', false);
 
         return false;
