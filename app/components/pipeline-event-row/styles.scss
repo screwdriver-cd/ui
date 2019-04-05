@@ -6,4 +6,10 @@
       border: none;
     }
   }
+
+  .label {
+    display: inline-block;
+    float: right;
+    color: $grey-600;
+  }
 }
