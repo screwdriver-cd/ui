@@ -277,6 +277,20 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
     },
+    stopBuild(job) {
+      const buildId = get(job, 'buildId');
+      let build;
+
+      if (buildId) {
+        build = this.store.peekRecord('build', buildId);
+        build.set('status', 'ABORTED');
+
+        return build.save()
+          .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
+      }
+
+      return new Promise.Resolve();
+    },
     startPRBuild(prNum, jobs) {
       this.set('isShowingModal', true);
       const user = get(decoder(this.get('session.data.authenticated.token')), 'username');

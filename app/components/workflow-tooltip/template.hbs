@@ -12,6 +12,9 @@
         <a {{action confirmStartBuild}}>Start pipeline from here</a>
       {{/if}}
     {{/if}}
+    {{#if tooltipData.displayStop}}
+      <a {{action stopBuild tooltipData.job}}>Stop build</a>
+    {{/if}}
   {{/if}}
   {{yield}}
 </div>

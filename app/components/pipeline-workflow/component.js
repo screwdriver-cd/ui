@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { get, computed, set, setProperties } from '@ember/object';
 import { all, reject } from 'rsvp';
 import { isRoot } from 'screwdriver-ui/utils/graph-tools';
+import { isActiveBuild } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
   classNames: ['pipelineWorkflow'],
@@ -97,6 +98,7 @@ export default Component.extend({
         // detached jobs should show tooltip on the left
         showTooltipPosition: isRootNode ? 'left' : 'center',
         tooltipData: {
+          displayStop: isActiveBuild(job.status),
           job,
           mouseevent,
           sizes

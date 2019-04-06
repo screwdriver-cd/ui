@@ -154,6 +154,52 @@ test('it restarts a build', function (assert) {
   });
 });
 
+test('it stops a build', function (assert) {
+  assert.expect(2);
+  server.put('http://localhost:8080/v4/builds/123', () => [
+    200,
+    { 'Content-Type': 'application/json' },
+    JSON.stringify({
+      id: '123'
+    })
+  ]);
+
+  let controller = this.subject();
+
+  run(() => {
+    controller.store.push({
+      data: {
+        id: '123',
+        type: 'build',
+        attributes: {
+          status: 'RUNNING'
+        }
+      }
+    });
+
+    controller.set('model', {
+      events: EmberObject.create({})
+    });
+
+    const build = controller.store.peekRecord('build', '123');
+
+    build.set('status', 'ABORTED');
+    build.save();
+
+    controller.send('stopBuild', { buildId: '123', name: 'deploy' });
+  });
+
+  return wait().then(() => {
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.notOk(controller.get('isShowingModal'));
+    assert.deepEqual(payload, {
+      status: 'ABORTED'
+    });
+  });
+});
+
 test('it starts PR build(s)', function (assert) {
   const prNum = 999;
 
