@@ -7,9 +7,15 @@ export default Component.extend({
   stepNames: mapBy('buildSteps', 'name'),
   setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
   teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
-  selectedStep: computed('buildSteps.@each.{code,startTime,endTime}', {
+  selectedStep: computed('buildSteps.@each.{code,startTime,endTime}', 'preselectedStepName', {
     get() {
       const steps = get(this, 'buildSteps');
+      const preselectedStepName = get(this, 'preselectedStepName');
+      const preselectedStep = steps.findBy('name', preselectedStepName);
+
+      if (preselectedStep) {
+        return preselectedStep.name;
+      }
 
       const runningStep = steps.find(s => s.startTime && !s.endTime);
       const failedStep = steps.find(s => s.code);

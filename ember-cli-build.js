@@ -9,6 +9,10 @@ module.exports = function (defaults) {
       useScss: true // for ember-cli-sass
     },
 
+    flatpickr: {
+      theme: 'airbnb'
+    },
+
     fingerprint: {
       exclude: ['supplementary_config', 'unknown_user']
     },

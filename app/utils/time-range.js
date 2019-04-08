@@ -1,4 +1,34 @@
 /**
+ *
+ *
+ * @export
+ * @param {Date} date date object
+ * @returns {String} ISO 8601 format up to the minute at most, total 16 characters
+ */
+export function iso8601UpToMinute(date) {
+  const d = new Date(date).toISOString();
+
+  return d.substring(0, d.lastIndexOf(':'));
+}
+
+/**
+ * Return custom locale string for date
+ *
+ * @export
+ * @param {Date} date
+ * @returns {String} custom locale string
+ */
+export function toCustomLocaleString(date, options = {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit'
+}) {
+  return date.toLocaleString('en-US', options);
+}
+
+/**
  * Returns start and end dates given time range and end date
  *
  * @export
@@ -13,30 +43,39 @@ export default function timeRange(end, range) {
     return null;
   }
 
-  let now = new Date(end);
+  let current = new Date(end);
   let startTime;
+  let [, quantity, duration] = match;
 
-  const [, quantity, duration] = match;
-  const endTime = now.toISOString().split('.')[0];
+  quantity = +quantity;
+
+  const endTime = iso8601UpToMinute(current);
 
   switch (duration) {
   case 'hr':
-    now.setUTCHours(now.getUTCHours() - +quantity);
+    current.setUTCHours(current.getUTCHours() - quantity);
     break;
   case 'd':
-    now.setUTCDate(now.getUTCDate() - +quantity);
+    current.setUTCDate(current.getUTCDate() - quantity);
     break;
   case 'wk':
-    now.setUTCDate(now.getUTCDate() - (+quantity * 7));
+    current.setUTCDate(current.getUTCDate() - (quantity * 7));
     break;
   case 'mo':
-    now.setUTCMonth(now.getUTCMonth() - +quantity);
+    current.setUTCMonth(current.getUTCMonth() - quantity);
     break;
   default:
     return null;
   }
 
-  startTime = now.toISOString().split('.')[0];
+  startTime = iso8601UpToMinute(current);
 
   return { startTime, endTime };
 }
+
+export const CONSTANT = {
+  WEEK: 60 * 60 * 24 * 7 * 1e3,
+  MONTH: 60 * 60 * 24 * 30 * 1e3,
+  SEMI_YEAR: 60 * 60 * 24 * 30 * 6 * 1e3,
+  YEAR: 60 * 60 * 24 * 365 * 1e3
+};

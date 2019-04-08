@@ -7,16 +7,15 @@ moduleForComponent('chart-c3', 'Integration | Component | chart c3', {
 
 test('it renders', function (assert) {
   this.set('data', { columns: [] });
-  this.set('onChartInit', (name, instance) => {
-    assert.equal(name, 'test-chart');
-    assert.ok(instance);
+  this.set('oninit', () => {
+    assert.ok(this);
   });
 
   this.render(hbs`
     {{chart-c3
       name="test-chart"
       data=data
-      onChartInit=onChartInit
+      oninit=oninit
     }}
   `);
 

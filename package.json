@@ -74,6 +74,7 @@
     "ember-component-css": "^0.6.7",
     "ember-data": "^2.18.5",
     "ember-export-application-global": "^2.0.0",
+    "ember-flatpickr": "^2.12.0",
     "ember-font-awesome": "^3.1.1",
     "ember-highlight": "1.2.8",
     "ember-inline-svg": "^0.1.12",

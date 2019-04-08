@@ -101,7 +101,7 @@ test('it adds links to jobs', function (assert) {
   const payload = adapter.handleResponse(200, {}, [{ id: 1234 }], requestData);
 
   assert.deepEqual(payload, {
-    jobs: [{ id: 1234, links: { builds: 'builds?count=10&page=1' } }]
+    jobs: [{ id: 1234, links: { builds: 'builds?count=10&page=1', metrics: 'metrics' } }]
   });
 });
 
@@ -183,7 +183,9 @@ test('it returns endpoint for metric and event given pipeline id', function (ass
   const adapter = this.subject();
   const metricsUrl = 'http://localhost:8080/v4/pipelines/1/metrics';
   const eventsUrl = 'http://localhost:8080/v4/pipelines/1/events';
+  const jobMetricsUrl = 'http://localhost:8080/v4/jobs/1/metrics';
 
   assert.equal(adapter.urlForQuery({ pipelineId: 1 }, 'metric'), metricsUrl);
   assert.equal(adapter.urlForQuery({ pipelineId: 1 }, 'event'), eventsUrl);
+  assert.equal(adapter.urlForQuery({ jobId: 1 }, 'metric'), jobMetricsUrl);
 });

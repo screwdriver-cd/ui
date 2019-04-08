@@ -2,6 +2,7 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { run } from '@ember/runloop';
 
 const logService = Service.extend({
   fetchLogs() {
@@ -60,7 +61,7 @@ test('it renders', function (assert) {
   assert.equal($('.hello').text().trim(), 'hello');
 });
 
-test('it has a list of steps', function (assert) {
+test('it has a list of steps and can preselect and expand a step', function (assert) {
   const $ = this.$;
   const stepList = [
     'sd-setup-step1',
@@ -82,6 +83,7 @@ test('it has a list of steps', function (assert) {
     code: 0
   })));
   this.render(hbs`{{build-step-collection
+    preselectedStepName=preselectedStepName
     stepList=stepList
     buildStatus="SUCCESS"
     buildId=1
@@ -89,8 +91,13 @@ test('it has a list of steps', function (assert) {
     buildStart=null
   }}`);
 
-  assert.equal($('h3').text().trim(), 'Steps');
-  assert.equal($('.step-list ul.setup li').length, 3, 'setup');
-  assert.equal($('.step-list div.user-steps li').length, 4, 'user');
-  assert.equal($('.step-list ul.teardown li').length, 2, 'teardown');
+  run.next(this, () => {
+    this.set('preselectedStepName', 'user-step2');
+
+    assert.equal($('h3').text().trim(), 'Steps');
+    assert.equal($('.step-list ul.setup li').length, 3, 'setup');
+    assert.equal($('.step-list div.user-steps li').length, 4, 'user');
+    assert.equal($('.step-list ul.teardown li').length, 2, 'teardown');
+    assert.ok($('.step-list div.user-steps li').eq(1).hasClass('active'));
+  });
 });

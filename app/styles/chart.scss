@@ -1,113 +1,188 @@
-.range-selection {
+.chart-cta {
+  padding: 70px 0;
+  font-weight: bold;
+  text-align: center;
+}
+
+.job-selector {
+  position: relative;
+  display: inline-block;
+
+  .control-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    @include transform(translateY(-50%));
+  }
+
+  select {
+    @include reset_select;
+    @include reset_input;
+    font-weight: normal;
+    display: inline;
+    background: #eff4ff;
+    border-radius: 3px;
+    padding: 5px 30px 5px 10px;
+    min-width: 150px;
+    outline: none;
+  }
+
+  &:focus,
+  &:hover {
+    color: #3697f2;
+
+    .control-icon {
+      color: #3697f2;
+    }
+  }
+}
+
+.chart-control {
   display: inline-block;
   font-weight: bold;
+}
+
+.range-selection {
   margin-right: 10px;
 
   button {
     background: #eff4ff;
     padding: 5px 10px;
-    line-height: 1em;
+    line-height: 1;
     border: none;
     border-radius: 3px;
     color: #56a7f5;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background: white;
       z-index: 0 !important;
     }
 
-    &.active:hover, &.active:focus, &.active {
+    &.active:hover,
+    &.active:focus,
+    &.active {
       background: white;
       border-radius: 3px !important;
       border: none;
       outline: none;
       box-shadow: 0 0 0 2px #3570f4;
-      z-index: 2 !important
+      z-index: 2 !important;
     }
   }
 }
 
-.datetime-selection {
-  display: inline-block;
-  font-weight: bold;
-
+.custom-date-selection {
   input {
     @include reset_input;
+    border-radius: 3px;
+    color: #56a7f5;
+    width: 30ch;
+    letter-spacing: 1px;
     background: #eff4ff;
     font-weight: normal;
+    line-height: 1;
+    padding: 5px 10px;
+    text-align: center;
+
+    &:invalid {
+      color: red;
+    }
   }
+}
+
+.filters-selection {
+  float: right;
+}
+
+.chart-c3,
+.chart-cta {
+  margin-bottom: 15px;
+  background: #f8f8f8;
+  border: 1px solid #dadada;
+  border-radius: 5px;
 }
 
 .chart-c3 {
-    margin-bottom: 15px;
-    padding: 15px 15px 10px;
-    background: #f8f8f8;
-    border: 1px solid #dadada;
-    border-radius: 5px;
-    position: relative;
+  padding: 15px 15px 10px;
+  position: relative;
 
-    svg {
-      font-size: 0.8em;
-    }
+  .cursor-line {
+    visibility: hidden;
+  }
 
-    .x-toggle-component {
-      justify-content: flex-end;
-      line-height: 1;
-      margin-top: -1em;
-      float: right;
-      cursor: pointer;
+  svg {
+    font-size: 0.8em;
 
-      .toggle-text {
-        font-weight: normal;
-        font-size: 0.85em;
+    &:hover {
+      .cursor-line {
+        visibility: visible;
       }
     }
+  }
 
-    .c3-event-rect {
-      cursor: ew-resize;
+  .x-toggle-component {
+    justify-content: flex-end;
+    line-height: 1;
+    margin-top: -1em;
+    float: right;
+    cursor: pointer;
+
+    .toggle-text {
+      font-weight: normal;
+      font-size: 0.85em;
     }
+  }
 
-    .c3-event-rects .selection.hide {
-      pointer-events: none !important;
-      visibility: hidden !important;
-    }
+  .c3-event-rect {
+    cursor: crosshair;
 
-    .reset-button {
-      position: absolute;
+    &.data {
       cursor: pointer;
-      padding: 1em;
-      line-height: 1em;
-      font-size: 1em;
-      right: 0;
-      bottom: 0;
-      margin: 0;
-      color: #9A9A9A;
-      display: none;
+    }
+  }
 
-      &:hover {
-        color: #0A0A0A;
+  .c3-event-rects .selection.hide {
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
 
-        .fa {
-          @include scale(1.5);
-        }
+  .reset-button {
+    position: absolute;
+    cursor: pointer;
+    padding: 1em;
+    line-height: 1em;
+    font-size: 1em;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    color: #9a9a9a;
+    display: none;
+
+    &:hover {
+      color: #0a0a0a;
+
+      .fa {
+        @include scale(1.5);
       }
     }
+  }
 
-    &:hover .reset-button {
-      display: block;
-    }
+  &:hover .reset-button {
+    display: block;
+  }
 }
 
 .chart-title {
-    margin: 0;
-    font-weight: bolder;
+  margin: 0;
+  font-weight: bolder;
 }
 
 .chart-pipeline-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    margin: 15px 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin: 15px 0;
 
   .title {
     text-transform: uppercase;
@@ -134,33 +209,82 @@
   }
 }
 
+.chart-legend {
+  font-size: 0.8em;
+  margin: 1em 0 0;
+  line-height: 1;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  a {
+    display: none;
+  }
+
+  li {
+    padding: 5px;
+    background: #efefef;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-right: 5px;
+    margin-bottom: 5px;
+
+    &:before {
+      content: '';
+      border-style: solid;
+      border-width: 4px;
+      border-color: inherit;
+      width: 0;
+      height: 0;
+      line-height: 1;
+      display: inline-block;
+      margin-right: 4px;
+      border-radius: 4px;
+    }
+
+    &:hover {
+      box-shadow: 1px 1px 3px -1px #aaa;
+
+      a {
+        display: inline;
+      }
+    }
+  }
+
+  .unselected {
+    opacity: 0.3;
+  }
+}
+
 .y-axis-label {
   line-height: 0.8em;
-  margin-bottom: -1.6em;
+  margin-bottom: -1em;
   font-size: 0.8em;
   margin-top: 10px;
-  color: #9A9A9A;
+  color: #9a9a9a;
 }
 
 .c3-axis-y {
-    .domain, .tick line {
-        stroke: none;
-    }
+  .domain,
+  .tick line {
+    stroke: none;
+  }
 }
 
 .c3-axis-x {
-    .domain, .tick line {
-        stroke: #ddd;
-    }
+  .domain,
+  .tick line {
+    stroke: #ddd;
+  }
 }
 
 .c3-axis-x-label {
-  fill: #9A9A9A;
+  fill: #9a9a9a;
 }
 
 .c3-grid line {
-    stroke-dasharray: none;
-    stroke: #ddd;
+  stroke-dasharray: none;
+  stroke: #ddd;
 }
 
 .c3-line {
@@ -172,6 +296,37 @@
   border-radius: 3px;
   box-shadow: 0 0 10px #999;
   padding: 10px;
+  bottom: 0;
+
+  &.locked {
+    pointer-events: visible !important;
+
+    .lock {
+      display: block;
+    }
+  }
+
+  &:hover {
+    .clipboard {
+      display: block;
+    }
+  }
+
+  .lock {
+    display: none;
+    color: #444 !important;
+    position: absolute;
+    top: -5px;
+    left: -3px;
+    @include transform(rotate(-45deg) scale(1.3));
+  }
+
+  .clipboard {
+    display: none;
+    float: right;
+    color: #444 !important;
+    cursor: pointer;
+  }
 
   .status {
     font-size: 0.85em;
@@ -191,15 +346,17 @@
     color: #a9a9a9;
     margin-right: 10px;
 
-    span {
-      border-width: 0.5em;
+    .legend:before {
+      content: '';
       border-style: solid;
+      border-width: 4px;
+      border-color: inherit;
       width: 0;
       height: 0;
-      line-height: 0;
+      line-height: 1;
       display: inline-block;
-      vertical-align: middle;
-      margin-right: 0.5em;
+      margin-right: 4px;
+      border-radius: 4px;
     }
   }
 }
