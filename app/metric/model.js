@@ -9,5 +9,9 @@ export default DS.Model.extend({
   imagePullTime: DS.attr('number'),
   duration: DS.attr('number'),
   status: DS.attr('string', { defaultValue: 'UNKNOWN' }),
-  builds: DS.attr()
+  builds: DS.attr(),
+
+  jobId: DS.attr('number'),
+  eventId: DS.attr('number'),
+  steps: DS.attr()
 });

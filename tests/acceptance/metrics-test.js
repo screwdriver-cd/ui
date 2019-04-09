@@ -49,10 +49,13 @@ test('visiting /pipelines/4/metrics', function (assert) {
 
   wait().andThen(() => {
     assert.equal(find('.chart-c3').length, 2);
-    assert.equal(find('.range-selection button').length, 5);
-    assert.equal(find('.datetime-selection input').length, 2);
+    assert.equal(find('.range-selection button').length, 7);
+    assert.equal(find('.custom-date-selection input').length, 1);
+    assert.equal(find('.filters-selection input').length, 1);
     assert.equal(find('.chart-pipeline-info .measure').length, 5);
     assert.equal(find('.chart-c3 svg').length, 2);
     assert.equal(find('.chart-c3 .c3-event-rects').length, 2);
+    assert.equal(find('.chart-cta').length, 1);
+    assert.equal(find('.chart-cta select').length, 1);
   });
 });

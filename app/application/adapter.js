@@ -84,7 +84,8 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       };
     } else if (key === 'job' || key === 'jobs') {
       o.links = {
-        builds: 'builds?count=10&page=1'
+        builds: 'builds?count=10&page=1',
+        metrics: 'metrics'
       };
     }
   },
@@ -238,11 +239,15 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
   urlForQuery(query, modelName) {
     if (modelName === 'event' || modelName === 'metric') {
       const pipelineId = query.pipelineId;
+      const jobId = query.jobId;
 
       delete query.pipelineId;
+      delete query.jobId;
 
-      return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
-        + `/pipelines/${pipelineId}/${pluralize(modelName)}`;
+      // eslint-disable-next-line prefer-template
+      return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+        (pipelineId ? `/pipelines/${pipelineId}` : `/jobs/${jobId}`) +
+        `/${pluralize(modelName)}`;
     }
 
     return this._super(...arguments);

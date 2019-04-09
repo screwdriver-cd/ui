@@ -234,12 +234,14 @@ export function model() {
     {
       startTime: '2019-03-25T01:00',
       endTime: '2019-03-26T17:01:19',
+      successOnly: false,
+      jobId: 156,
       metrics: {
         events: {
-          queuedTime: ['queuedTime', 0.18333333333333332, 0.23333333333333334, 0.25, 0.45],
-          imagePullTime: ['imagePullTime', 0.35, 0.3333333333333333, 0.48333333333333334, 0.5],
-          duration: ['duration', 19.066666666666666, 16.7, 17.883333333333333, 34.5],
-          total: ['total', 19.6, 17.266666666666666, 18.616666666666667, 35.45],
+          queuedTime: [0.18333333333333332, 0.23333333333333334, 0.25, 0.45],
+          imagePullTime: [0.35, 0.3333333333333333, 0.48333333333333334, 0.5],
+          duration: [19.066666666666666, 16.7, 17.883333333333333, 34.5],
+          total: [19.6, 17.266666666666666, 18.616666666666667, 35.45],
           sha: [
             '3deb58c4059220c9e5ae92f3ccd1609aa36e47e7',
             'e6c90056bb11e52d94e74dcc9eae7d17ce8eb290',
@@ -278,8 +280,75 @@ export function model() {
             main: 8.483333333333333
           }
         ],
-        // it would be a Set but mock as iterable array here
-        jobGroup: ['beta', 'publish', 'main', 'prod'],
+        jobMap: {
+          main: 156,
+          publish: 157,
+          beta: 158,
+          prod: 159
+        },
+        steps: {
+          sha: [
+            'e6c90056bb11e52d94e74dcc9eae7d17ce8eb290',
+            '91f45d077bacd52d13a7d5f76f2717f9fbec61b4',
+            '7650a8e64acc96a5de83b42c2e2f6de6223b9f1c'
+          ],
+          status: ['SUCCESS', 'SUCCESS', 'SUCCESS'],
+          createTime: [
+            '2019-03-12T12:29:29.922Z',
+            '2019-03-13T22:23:18.712Z',
+            '2019-03-15T21:07:33.358Z'
+          ],
+          data: [
+            {
+              'sd-setup-init': 0.6333333333333333,
+              'sd-setup-launcher': 0,
+              'sd-setup-scm': 0.03333333333333333,
+              'sd-setup-screwdriver-cache-bookend': 0.18333333333333332,
+              install: 1.2,
+              'install-browsers': 0.75,
+              test: 4.6,
+              'sd-teardown-screwdriver-coverage-bookend': 1.1833333333333333,
+              'sd-teardown-screwdriver-artifact-bookend': 0.016666666666666666,
+              'sd-teardown-screwdriver-cache-bookend': 0.2
+            },
+            {
+              'sd-setup-init': 0.25,
+              'sd-setup-launcher': 0,
+              'sd-setup-scm': 0.03333333333333333,
+              'sd-setup-screwdriver-cache-bookend': 0.2,
+              install: 1.1666666666666667,
+              'install-browsers': 0.7333333333333333,
+              test: 4.583333333333333,
+              'sd-teardown-screwdriver-coverage-bookend': 1.1833333333333333,
+              'sd-teardown-screwdriver-artifact-bookend': 0.03333333333333333,
+              'sd-teardown-screwdriver-cache-bookend': 0.21666666666666667
+            },
+            {
+              'sd-setup-init': 0.2,
+              'sd-setup-launcher': 0,
+              'sd-setup-scm': 0.016666666666666666,
+              'sd-setup-screwdriver-cache-bookend': 0.18333333333333332,
+              install: 1.1666666666666667,
+              'install-browsers': 0.75,
+              test: 4.7,
+              'sd-teardown-screwdriver-coverage-bookend': 1.1833333333333333,
+              'sd-teardown-screwdriver-artifact-bookend': 0.016666666666666666,
+              'sd-teardown-screwdriver-cache-bookend': 0.18333333333333332
+            }
+          ]
+        },
+        stepGroup: [
+          'install',
+          'install-browsers',
+          'sd-setup-init',
+          'sd-setup-launcher',
+          'sd-setup-scm',
+          'sd-setup-screwdriver-cache-bookend',
+          'sd-teardown-screwdriver-artifact-bookend',
+          'sd-teardown-screwdriver-cache-bookend',
+          'sd-teardown-screwdriver-coverage-bookend',
+          'test'
+        ],
         measures: {
           total: 4,
           passed: 4,

@@ -37,11 +37,12 @@ export default Component.extend({
       color: this.get('color'),
       data: this.get('data'),
       grid: this.get('grid'),
+      interaction: this.get('interaction'),
       legend: this.get('legend'),
       oninit: this.get('oninit'),
       onrendered: this.get('onrendered'),
       onresized: this.get('onresized'),
-      padding: { top: 30 },
+      padding: this.get('padding'),
       point: this.get('point'),
       size: this.get('size'),
       subchart: this.get('subchart'),
@@ -50,7 +51,7 @@ export default Component.extend({
       zoom: this.get('zoom')
     });
 
+    chart.internal.name = this.get('name');
     this.set('chart', chart);
-    this.get('onChartInit')(this.get('name'), chart);
   }
 });
