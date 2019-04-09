@@ -155,7 +155,7 @@ test('it restarts a build', function (assert) {
 });
 
 test('it stops a build', function (assert) {
-  assert.expect(2);
+  assert.expect(3);
   server.put('http://localhost:8080/v4/builds/123', () => [
     200,
     { 'Content-Type': 'application/json' },
@@ -165,6 +165,12 @@ test('it stops a build', function (assert) {
   ]);
 
   let controller = this.subject();
+
+  const job = {
+    hasMany: () => ({ reload: () => assert.ok(true) }),
+    buildId: '123',
+    name: 'deploy'
+  };
 
   run(() => {
     controller.store.push({
@@ -186,7 +192,7 @@ test('it stops a build', function (assert) {
     build.set('status', 'ABORTED');
     build.save();
 
-    controller.send('stopBuild', { buildId: '123', name: 'deploy' });
+    controller.send('stopBuild', job);
   });
 
   return wait().then(() => {
