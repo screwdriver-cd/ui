@@ -286,6 +286,7 @@ export default Controller.extend(ModelReloaderMixin, {
         build.set('status', 'ABORTED');
 
         return build.save()
+          .then(() => job.hasMany('builds').reload())
           .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
       }
 
