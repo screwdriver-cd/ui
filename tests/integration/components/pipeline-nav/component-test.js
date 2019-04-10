@@ -18,7 +18,7 @@ test('it renders without child pipelines tab', function (assert) {
 
   this.render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
 
-  assert.equal(this.$('a').text().trim(), 'EventsSecretsOptions');
+  assert.equal(this.$('a').text().trim(), 'EventsSecretsOptionsMetrics');
 });
 
 test('it renders with child pipelines tab', function (assert) {
@@ -36,5 +36,5 @@ test('it renders with child pipelines tab', function (assert) {
 
   this.render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
 
-  assert.equal(this.$('a').text().trim(), 'Child PipelinesEventsSecretsOptions');
+  assert.equal(this.$('a').text().trim(), 'Child PipelinesEventsSecretsOptionsMetrics');
 });

@@ -25,3 +25,20 @@
     color: $grey-800;
   }
 }
+
+.beta-feature {
+  position: relative;
+
+  &:after {
+    content: 'Beta';
+    color: #fff;
+    background: #ff4444;
+    font-size: 0.65em;
+    position: absolute;
+    line-height: 1;
+    top: -1em;
+    right: -1em;
+    padding: 3px 5px;
+    border-radius: 5px;
+  }
+}
