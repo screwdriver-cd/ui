@@ -14,6 +14,7 @@ export default Controller.extend({
   router: service(),
   session: service(),
   inTrendlineView: false,
+  isUTC: false,
   eventsChartName: 'eventsChart',
   buildsChartName: 'buildsChart',
   stepsChartName: 'stepsChart',
@@ -52,9 +53,11 @@ export default Controller.extend({
     get() {
       return ['startTime', 'endTime'].map(t =>
         toCustomLocaleString(new Date(this.get(t)), {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
+          options: {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }
         })
       );
     }
@@ -212,7 +215,9 @@ export default Controller.extend({
         // no need to pass categories data because we are generating cutom ticks
         type: 'category',
         label: {
-          text: 'LOCAL DATE TIME',
+          get text() {
+            return `${self.get('isUTC') ? 'UTC' : 'LOCAL'} DATE TIME`;
+          },
           position: 'outer-center'
         },
         height: 70,
@@ -270,9 +275,10 @@ export default Controller.extend({
            */
           format(times, i) {
             const d = times[Math.floor(i)];
+            const timeZone = self.get('isUTC') ? 'UTC' : undefined;
 
             // local date time string
-            return d ? `${toCustomLocaleString(d, dateOptions)}` : '';
+            return d ? `${toCustomLocaleString(d, { timeZone, options: dateOptions })}` : '';
           }
         }
       }
@@ -290,17 +296,17 @@ export default Controller.extend({
     // override default with configured functions
     return { y: { ...axis.y }, x: { ...axis.x, tick: { ...axis.x.tick, values, format } } };
   },
-  eventsAxis: computed('axis', 'metrics.events.createTime', {
+  eventsAxis: computed('axis', 'metrics.events.createTime', 'isUTC', {
     get() {
       return this.generateAxis('events');
     }
   }),
-  stepsAxis: computed('axis', 'metrics.steps', {
+  stepsAxis: computed('axis', 'metrics.steps', 'isUTC', {
     get() {
       return this.generateAxis('steps');
     }
   }),
-  tooltip: computed('metrics.events', {
+  tooltip: computed('metrics.events', 'isUTC', {
     get() {
       const self = this;
 
@@ -324,6 +330,7 @@ export default Controller.extend({
           const router = self.get('router');
           const pipelineId = self.get('pipeline.id');
           const getBuildId = self.get('metrics.getBuildId');
+          const timeZone = self.get('isUTC') ? 'UTC' : undefined;
 
           // compact destructure assignments
           const [{ sha, status, createTime }, buildId] =
@@ -377,7 +384,7 @@ export default Controller.extend({
                   ${htmls.keys.join('')}
                 </div>
                 <div class="value">
-                  <p>${toCustomLocaleString(createTime[i])}</p>
+                  <p>${toCustomLocaleString(createTime[i], { timeZone })}</p>
                   ${htmls.values.join('')}
                 </div>
               </div>

@@ -15,16 +15,27 @@ export function iso8601UpToMinute(date) {
  * Return custom locale string for date
  *
  * @export
- * @param {Date} date
+ * @param {Date} date input date
+ * @param {String} [config.timeZone] targeted time zone, e.g. UTC, America/Los_Angeles
+ * @param {Object} [config.options] other options for display format
  * @returns {String} custom locale string
  */
-export function toCustomLocaleString(date, options = {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit'
-}) {
+export function toCustomLocaleString(date, {
+  timeZone,
+  options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }
+} = {}) {
+  const tz = timeZone && timeZone.trim();
+
+  if (tz) {
+    options.timeZone = tz;
+  }
+
   return date.toLocaleString('en-US', options);
 }
 

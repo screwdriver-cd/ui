@@ -37,9 +37,23 @@
   }
 }
 
+.chart-controls {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  label {
+    margin: 0;
+  }
+
+  .title {
+    margin-right: 5px;
+  }
+}
+
 .chart-control {
-  display: inline-block;
   font-weight: bold;
+  margin-right: 10px;
 }
 
 .range-selection {
@@ -92,7 +106,7 @@
 }
 
 .filters-selection {
-  float: right;
+  margin-left: auto;
 }
 
 .chart-c3,

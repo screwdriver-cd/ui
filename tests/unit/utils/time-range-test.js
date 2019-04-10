@@ -42,10 +42,12 @@ test('it returns a 16-character ISO 8601 up to minute', function (assert) {
 test('it returns a locale date time string', function (assert) {
   assert.equal(toCustomLocaleString(new Date('2019-03-26T21:03:05.183Z'), {
     timeZone: 'UTC',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
+    options: {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    }
   }), '03/26/2019, 9:03 PM');
 });
