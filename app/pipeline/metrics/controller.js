@@ -18,7 +18,15 @@ export default Controller.extend({
   buildsChartName: 'buildsChart',
   stepsChartName: 'stepsChart',
   selectedRange: '1wk',
-  timeRanges: ['6hr', '12hr', '1d', '1wk', '1mo', '3mo', '180d'],
+  timeRanges: [
+    { alias: '6hr', value: '6hr' },
+    { alias: '12hr', value: '12hr' },
+    { alias: '1d', value: '1d' },
+    { alias: '1wk', value: '1wk' },
+    { alias: '1mo', value: '1mo' },
+    { alias: '3mo', value: '3mo' },
+    { alias: '6mo', value: '180d' }
+  ],
   successOnly: alias('model.successOnly'),
   selectedJobName: computed('model.jobId', 'metrics.jobMap', {
     get() {
