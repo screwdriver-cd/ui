@@ -165,13 +165,13 @@ export default Route.extend({
         jobMetrics.forEach((metric) => {
           const status = metric.get('status');
 
-          steps.sha.push(metric.get('sha'));
-          steps.status.push(status);
-          steps.createTime.push(metric.get('createTime'));
-
           if (successOnly && status !== 'SUCCESS') {
             return;
           }
+
+          steps.sha.push(metric.get('sha'));
+          steps.status.push(status);
+          steps.createTime.push(metric.get('createTime'));
 
           steps.data.push(metric.get('steps').reduce((stepMetric, s) => {
             const stepName = s.name;

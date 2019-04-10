@@ -1,8 +1,10 @@
 import Component from '@ember/component';
 import { filter, mapBy } from '@ember/object/computed';
 import { get, set, computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  router: service(),
   classNames: ['build-step-collection', 'row'],
   stepNames: mapBy('buildSteps', 'name'),
   setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
@@ -56,7 +58,12 @@ export default Component.extend({
       set(this, 'teardownCollapsed', !get(this, 'teardownCollapsed'));
     },
     stepClick(name) {
-      set(this, 'selectedStep', name);
+      this.get('router').transitionTo(
+        'pipeline.build.step',
+        this.get('pipelineId'),
+        this.get('buildId'),
+        name
+      );
     }
   }
 });
