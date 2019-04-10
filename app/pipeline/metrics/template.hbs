@@ -4,43 +4,55 @@
 
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
-<div class="chart-control range-selection">
-  Time Range
-  {{#bs-button-group
-    value=selectedRange
-    type="radio"
-    onChange=(action "setTimeRange") as |bg|}}
-    {{#each timeRanges as |range|}}
-      {{#bg.button value=range.value}}{{range.alias}}{{/bg.button}}
-    {{/each}}
-  {{/bs-button-group}}
-</div>
+<div class="chart-controls">
+  <div class="chart-control range-selection">
+    <span class="title">Time Range</span>
+    {{#bs-button-group
+      value=selectedRange
+      type="radio"
+      onChange=(action "setTimeRange") as |bg|}}
+      {{#each timeRanges as |range|}}
+        {{#bg.button value=range.value}}{{range.alias}}{{/bg.button}}
+      {{/each}}
+    {{/bs-button-group}}
+  </div>
 
-<div class="chart-control custom-date-selection">
-  Custom Date Range
-  {{ember-flatpickr
-    clickOpens=true
-    dateFormat='m/d/Y'
-    date=customRange
-    flatpickrRef=flatpickrRef
-    getFlatpickrRef=(action (mut flatpickrRef))
-    locale="en"
-    mode="range"
-    onChange=(action (mut dateValues))
-    onClose=(action "setCustomRange")
-    placeholder='Choose Start & End Date Time'
-  }}
-</div>
+  <div class="chart-control custom-date-selection">
+    <span class="title">Custom Date Range</span>
+    {{ember-flatpickr
+      clickOpens=true
+      dateFormat='m/d/Y'
+      date=customRange
+      flatpickrRef=flatpickrRef
+      getFlatpickrRef=(action (mut flatpickrRef))
+      locale="en"
+      mode="range"
+      onChange=(action (mut dateValues))
+      onClose=(action "setCustomRange")
+      placeholder='Choose Start & End Date Time'
+    }}
+  </div>
 
-<div class="chart-control filters-selection">
   {{x-toggle
     size="small"
     theme="material"
     showLabels=true
-    value=successOnly
-    offLabel=null
-    onLabel="Success Only"
-    onToggle=(action "toggleSuccessOnly")}}
+    value=isUTC
+    offLabel="Local"
+    onLabel="UTC"
+    onToggle=(action (mut isUTC))
+  }}
+
+  <div class="chart-control filters-selection">
+    {{x-toggle
+      size="small"
+      theme="material"
+      showLabels=true
+      value=successOnly
+      offLabel=null
+      onLabel="Success Only"
+      onToggle=(action "toggleSuccessOnly")}}
+  </div>
 </div>
 
 <div class="chart-pipeline-info">
@@ -124,7 +136,7 @@
   </div>
 
   <div class="chart-c3">
-    <p class="chart-title">Builds Breakdown Per Event</p>
+    <p class="chart-title">Build Breakdown Per Event</p>
     <ul class="list-inline chart-legend">
       {{#each buildLegend as |lg|}}
         <li style={{lg.style}}
@@ -163,7 +175,7 @@
   {{#if metrics.stepGroup}}
     <div class="chart-c3">
       <p class="chart-title">
-        Steps Breakdown Per Build
+        Step Breakdown Per Build
         <div class="job-selector">
           <select onchange={{action "selectJob" value="target.value"}}>
             {{#each jobs as |job|}}
@@ -213,7 +225,7 @@
     </div>
   {{else}}
     <div class="chart-cta">
-      Please select a job below to see steps breakdown per build
+      Please select a job below to see step breakdown per build
       <br/><br/>
       <div class="job-selector">
         <select onchange={{action "selectJob" value="target.value"}}>

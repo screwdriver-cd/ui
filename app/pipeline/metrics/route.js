@@ -186,6 +186,9 @@ export default Route.extend({
         });
       }
 
+      // clear error message
+      controller.set('errorMessage');
+
       return {
         events,
         builds,
