@@ -5,7 +5,9 @@ import timeRange from 'screwdriver-ui/utils/time-range';
 export default Route.extend({
   init() {
     this._super(...arguments);
-
+    this.reinit();
+  },
+  reinit() {
     const { startTime, endTime } = timeRange(new Date(), '1wk');
 
     // these are used for querying, so they are in ISO8601 format
@@ -28,12 +30,8 @@ export default Route.extend({
     this.set('fetchJob', false);
   },
   deactivate() {
-    const controller = this.controllerFor('pipeline.metrics');
-
-    // safety step to release references
-    controller.set('eventsChart', null);
-    controller.set('buildsChart', null);
-    controller.set('stepsChart', null);
+    this.reinit();
+    this.controllerFor('pipeline.metrics').reinit();
   },
   model() {
     const controller = this.controllerFor('pipeline.metrics');
@@ -231,7 +229,7 @@ export default Route.extend({
       this.refresh();
     },
     filterSuccessOnly() {
-      this.set('successOnly', !this.get('successOnly'));
+      this.toggleProperty('successOnly');
       this.refresh();
     }
   }

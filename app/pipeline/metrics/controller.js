@@ -62,6 +62,21 @@ export default Controller.extend({
       );
     }
   }),
+  init() {
+    this._super(...arguments);
+    this.reinit();
+  },
+  reinit() {
+    // clear all those flags b/c this is a controller
+    this.set('selectedRange', '1wk');
+    this.set('inTrendlineView', false);
+    this.set('isUTC', false);
+
+    // safety step to release references
+    this.set(this.get('eventsChartName'), null);
+    this.set(this.get('buildsChartName'), null);
+    this.set(this.get('stepsChartName'), null);
+  },
   /**
    * Memoized range generator
    * Generator code borrowed from MDN:
