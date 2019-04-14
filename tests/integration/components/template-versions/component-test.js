@@ -23,8 +23,8 @@ module('Integration | Component | template versions', function(hooks) {
 
     await render(hbs`{{template-versions templates=mock changeVersion=(action "mockAction")}}`);
 
-    assert.equal(find('h4').textContent.trim(), 'Versions:');
-    assert.equal(find('ul li').textContent.trim(), '3.0.0 - latest stable2.0.0 - meeseeks1.0.0');
+    assert.dom('h4').hasText('Versions:');
+    assert.dom('ul li').hasText('3.0.0 - latest stable2.0.0 - meeseeks1.0.0');
   });
 
   test('it handles clicks on versions', async function(assert) {
@@ -37,8 +37,8 @@ module('Integration | Component | template versions', function(hooks) {
 
     await render(hbs`{{template-versions templates=mock changeVersion=(action "mockAction")}}`);
 
-    assert.equal(find('h4').textContent.trim(), 'Versions:');
-    assert.equal(find('ul li').textContent.trim(), '3.0.0 - latest stable2.0.0 - meeseeks1.0.0');
+    assert.dom('h4').hasText('Versions:');
+    assert.dom('ul li').hasText('3.0.0 - latest stable2.0.0 - meeseeks1.0.0');
     await click('ul li:last-child span');
   });
 });

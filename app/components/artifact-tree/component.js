@@ -23,14 +23,14 @@ export default Component.extend({
   plugins: 'types',
   treedata: computed('buildStatus', 'buildId', {
     get() {
-      const buildStatus = this.get('buildStatus');
+      const buildStatus = this.buildStatus;
 
       if (buildStatus === 'RUNNING' || buildStatus === 'QUEUED') {
         return resolve([]);
       }
 
       return ObjectPromiseProxy.create({
-        promise: this.get('artifact').fetchManifest(this.get('buildId'))
+        promise: this.artifact.fetchManifest(this.buildId)
       });
     }
   }),

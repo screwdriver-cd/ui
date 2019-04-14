@@ -11,7 +11,7 @@ import Controller from '@ember/controller';
  * @private
  */
 function getResults() {
-  this.get('validator').getValidationResults(this.get('yaml'))
+  this.validator.getValidationResults(this.yaml)
     .then(results => this.set('results', results));
 }
 
@@ -21,11 +21,11 @@ export default Controller.extend({
   results: '',
   isTemplate: computed('yaml', {
     get() {
-      return this.get('validator').isTemplate(this.get('yaml'));
+      return this.validator.isTemplate(this.yaml);
     }
   }),
   onYamlChange: observer('yaml', function onYamlChange() {
-    const yaml = this.get('yaml').trim();
+    const yaml = this.yaml.trim();
 
     if (!yaml) {
       this.set('results', '');

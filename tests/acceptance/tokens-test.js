@@ -37,6 +37,6 @@ module('Acceptance | tokens', function(hooks) {
 
     await visit('/user-settings');
 
-    assert.equal(findAll('.token-list tbody tr').length, 2);
+    assert.dom('.token-list tbody tr').exists({ count: 2 });
   });
 });

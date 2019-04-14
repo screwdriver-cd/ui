@@ -10,7 +10,7 @@ export default Component.extend({
       this.set('showCollectionModal', true);
     },
     addToCollection(pipelineId, collection) {
-      return this.get('addToCollection')(+pipelineId, collection.id)
+      return this.addToCollection(+pipelineId, collection.id)
         .then(() => {
           this.set('addCollectionError', null);
           this.set('addCollectionSuccess',

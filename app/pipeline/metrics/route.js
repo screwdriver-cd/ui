@@ -36,14 +36,14 @@ export default Route.extend({
   model() {
     const controller = this.controllerFor('pipeline.metrics');
 
-    controller.set('pipeline', this.get('pipeline'));
+    controller.set('pipeline', this.pipeline);
 
-    const successOnly = this.get('successOnly');
-    const jobId = this.get('jobId');
-    const fetchAll = this.get('fetchAll');
-    const fetchJob = this.get('fetchJob');
-    const startTime = this.get('startTime');
-    const endTime = this.get('endTime');
+    const successOnly = this.successOnly;
+    const jobId = this.jobId;
+    const fetchAll = this.fetchAll;
+    const fetchJob = this.fetchJob;
+    const startTime = this.startTime;
+    const endTime = this.endTime;
     const toMinute = (sec = null) => (sec === null ? null : sec / 60);
     const jobsMap = this.get('pipeline.jobs').then(jobs =>
       jobs.reduce((map, j) => {
@@ -62,13 +62,13 @@ export default Route.extend({
       jobsMap,
       fetchAll ?
         this.store.query('metric', { pipelineId: this.get('pipeline.id'), startTime, endTime }) :
-        RSVP.resolve(this.get('pipelineMetrics')),
+        RSVP.resolve(this.pipelineMetrics),
       // eslint-disable-next-line no-nested-ternary
       fetchJob || fetchAll ?
         (jobId ?
           this.store.query('metric', { jobId, startTime, endTime }) :
           RSVP.resolve()) :
-        RSVP.resolve(this.get('jobMetrics'))
+        RSVP.resolve(this.jobMetrics)
     ]).then(([jobs, pipelineMetrics, jobMetrics]) => {
       // acts as cache
       this.set('pipelineMetrics', pipelineMetrics);

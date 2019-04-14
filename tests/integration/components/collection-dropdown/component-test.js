@@ -29,14 +29,14 @@ module('Integration | Component | collection add button', function(hooks) {
     }}`);
 
     // the button should be there
-    assert.equal(findAll('.dropdown-toggle').length, 1);
+    assert.dom('.dropdown-toggle').exists({ count: 1 });
 
     // there should be two list items ('Test' and 'CREATE')
-    assert.equal(findAll('.dropdown-toggle + ul > li').length, 2);
+    assert.dom('.dropdown-toggle + ul > li').exists({ count: 2 });
 
     // Validate that list items exist
-    assert.equal(find('.dropdown-toggle + ul > li:nth-child(1)').textContent.trim(), 'Test');
-    assert.equal(find('.dropdown-toggle + ul > li:nth-child(2)').textContent.trim(), 'CREATE');
+    assert.dom('.dropdown-toggle + ul > li:nth-child(1)').hasText('Test');
+    assert.dom('.dropdown-toggle + ul > li:nth-child(2)').hasText('CREATE');
   });
 
   test('it adds a pipeline to a collection', async function(assert) {

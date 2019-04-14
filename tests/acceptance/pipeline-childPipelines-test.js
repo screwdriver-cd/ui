@@ -71,7 +71,7 @@ module('Acceptance | child pipeline', function(hooks) {
     await visit('/pipelines/1/child-pipelines');
 
     assert.equal(currentURL(), '/pipelines/1/child-pipelines');
-    assert.equal(find('.appId:nth-child(1)').textContent.trim(), 'child/one');
-    assert.equal(find('.appId:nth-child(2)').textContent.trim(), 'child/two');
+    assert.dom('.appId:nth-child(1)').hasText('child/one');
+    assert.dom('.appId:nth-child(2)').hasText('child/two');
   });
 });

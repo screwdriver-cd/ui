@@ -11,8 +11,8 @@ module('Integration | Component | error view', function(hooks) {
     this.set('sm', 'they are dead, dave');
     await render(hbs`{{error-view errorMessage="bananas" statusCode=sc statusMessage=sm}}`);
 
-    assert.equal(find('h1').textContent.trim(), '400');
-    assert.equal(find('h2').textContent.trim(), 'they are dead, dave');
-    assert.equal(find('h4').textContent.trim(), 'bananas');
+    assert.dom('h1').hasText('400');
+    assert.dom('h2').hasText('they are dead, dave');
+    assert.dom('h4').hasText('bananas');
   });
 });

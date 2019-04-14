@@ -51,15 +51,15 @@ module('Acceptance | metrics', function(hooks) {
     await visit('/pipelines/4/metrics');
 
     wait().andThen(() => {
-      assert.equal(findAll('.chart-c3').length, 2);
-      assert.equal(findAll('.range-selection button').length, 7);
-      assert.equal(findAll('.custom-date-selection input').length, 1);
-      assert.equal(findAll('.filters-selection input').length, 1);
-      assert.equal(findAll('.chart-pipeline-info .measure').length, 5);
-      assert.equal(findAll('.chart-c3 svg').length, 2);
-      assert.equal(findAll('.chart-c3 .c3-event-rects').length, 2);
-      assert.equal(findAll('.chart-cta').length, 1);
-      assert.equal(findAll('.chart-cta select').length, 1);
+      assert.dom('.chart-c3').exists({ count: 2 });
+      assert.dom('.range-selection button').exists({ count: 7 });
+      assert.dom('.custom-date-selection input').exists({ count: 1 });
+      assert.dom('.filters-selection input').exists({ count: 1 });
+      assert.dom('.chart-pipeline-info .measure').exists({ count: 5 });
+      assert.dom('.chart-c3 svg').exists({ count: 2 });
+      assert.dom('.chart-c3 .c3-event-rects').exists({ count: 2 });
+      assert.dom('.chart-cta').exists({ count: 1 });
+      assert.dom('.chart-cta select').exists({ count: 1 });
     });
   });
 });

@@ -7,13 +7,13 @@ export default Component.extend({
   session: service(),
   isPR: computed('graphType', {
     get() {
-      return this.get('graphType') === 'pr';
+      return this.graphType === 'pr';
     }
   }),
   prJobs: computed('selectedEventObj.prNum', 'prGroups', {
     get() {
       const prNum = this.get('selectedEventObj.prNum');
-      const prGroups = this.get('prGroups');
+      const prGroups = this.prGroups;
 
       return prGroups[prNum];
     }
@@ -21,11 +21,11 @@ export default Component.extend({
   eventOptions: computed('lastSuccessful', 'mostRecent', 'isPR', {
     get() {
       const options = [
-        { label: 'Most Recent', value: get(this, 'mostRecent') },
-        { label: 'Last Successful', value: get(this, 'lastSuccessful') }
+        { label: 'Most Recent', value: this.mostRecent },
+        { label: 'Last Successful', value: this.lastSuccessful }
       ];
 
-      if (!this.get('isPR')) {
+      if (!this.isPR) {
         options.push({ label: 'Aggregate', value: 'aggregate' });
       }
 

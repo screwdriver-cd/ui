@@ -1,4 +1,12 @@
-import { click, fillIn, findAll, currentURL, find, triggerEvent, visit } from '@ember/test-helpers';
+import {
+  click,
+  fillIn,
+  findAll,
+  currentURL,
+  find,
+  triggerEvent,
+  visit
+} from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
@@ -120,14 +128,14 @@ module('Acceptance | dashboards', function(hooks) {
     await visit('/');
 
     assert.equal(currentURL(), '/dashboards/1');
-    assert.equal(find('.header__name').textContent.trim(), 'collection1');
-    assert.equal(find('.header__description').textContent.trim(), 'description1');
-    assert.equal(findAll('table').length, 1);
-    assert.equal(find('th.app-id').textContent.trim(), 'Name');
-    assert.equal(find('th.branch').textContent.trim(), 'Branch');
-    assert.equal(find('th.account').textContent.trim(), 'Account');
-    assert.equal(findAll('tr').length, 4);
-    assert.equal(findAll('td').length, 14);
+    assert.dom('.header__name').hasText('collection1');
+    assert.dom('.header__description').hasText('description1');
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('th.app-id').hasText('Name');
+    assert.dom('th.branch').hasText('Branch');
+    assert.dom('th.account').hasText('Account');
+    assert.dom('tr').exists({ count: 4 });
+    assert.dom('td').exists({ count: 14 });
   });
 
   test('visiting /dashboards when not logged in', async function(assert) {
@@ -149,14 +157,14 @@ module('Acceptance | dashboards', function(hooks) {
     await visit('/dashboards/1');
 
     assert.equal(currentURL(), '/dashboards/1');
-    assert.equal(find('.header__name').textContent.trim(), 'collection1');
-    assert.equal(find('.header__description').textContent.trim(), 'description1');
-    assert.equal(findAll('table').length, 1);
-    assert.equal(find('th.app-id').textContent.trim(), 'Name');
-    assert.equal(find('th.branch').textContent.trim(), 'Branch');
-    assert.equal(find('th.account').textContent.trim(), 'Account');
-    assert.equal(findAll('tr').length, 4);
-    assert.equal(findAll('td').length, 14);
+    assert.dom('.header__name').hasText('collection1');
+    assert.dom('.header__description').hasText('description1');
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('th.app-id').hasText('Name');
+    assert.dom('th.branch').hasText('Branch');
+    assert.dom('th.account').hasText('Account');
+    assert.dom('tr').exists({ count: 4 });
+    assert.dom('td').exists({ count: 14 });
   });
 
   test('creating a collection', async function(assert) {
@@ -227,12 +235,12 @@ module('Acceptance | dashboards', function(hooks) {
     assert.equal(currentURL(), '/');
 
     await visit('/search');
-    assert.equal(findAll('.flyout').length, 1);
+    assert.dom('.flyout').exists({ count: 1 });
     assert.notOk(findAll('.modal').length);
     assert.notOk(findAll('.collection-wrapper row').length);
 
     await click('.new');
-    assert.equal(findAll('.modal').length, 1);
+    assert.dom('.modal').exists({ count: 1 });
     await fillIn('.name input', 'collection3');
     await triggerEvent('.name input', 'keyup');
     await fillIn('.description textarea', 'description3');

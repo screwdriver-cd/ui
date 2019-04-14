@@ -4,8 +4,8 @@ import { computed } from '@ember/object';
 export default Component.extend({
   startArgs: computed('prNum', 'jobs', {
     get() {
-      const prNum = this.get('prNum');
-      const jobs = this.get('jobs') || [];
+      const prNum = this.prNum;
+      const jobs = this.jobs || [];
 
       if (!prNum) {
         return [];
@@ -17,8 +17,8 @@ export default Component.extend({
   }),
   actions: {
     startBuild() {
-      const args = this.get('startArgs');
-      const startFunc = this.get('startBuild');
+      const args = this.startArgs;
+      const startFunc = this.startBuild;
 
       startFunc.apply(null, args);
     }

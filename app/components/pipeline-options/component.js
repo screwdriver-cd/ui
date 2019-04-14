@@ -31,7 +31,7 @@ export default Component.extend({
   isDisabled: or('isSaving', 'isInvalid'),
   isValid: computed('scmUrl', {
     get() {
-      const val = this.get('scmUrl');
+      const val = this.scmUrl;
 
       return val.length !== 0 && parse(val).valid;
     }
@@ -52,14 +52,14 @@ export default Component.extend({
 
       input.removeClass('bad-text-input good-text-input');
 
-      if (this.get('isValid')) {
+      if (this.isValid) {
         input.addClass('good-text-input');
       } else if (val.trim().length > 0) {
         input.addClass('bad-text-input');
       }
     },
     updatePipeline() {
-      this.get('onUpdatePipeline')(this.get('scmUrl'));
+      this.onUpdatePipeline(this.scmUrl);
     },
     toggleJob(jobId, user, name, stillActive) {
       const status = stillActive ? 'ENABLED' : 'DISABLED';
@@ -72,11 +72,11 @@ export default Component.extend({
       this.set('showToggleModal', true);
     },
     updateMessage(message) {
-      const state = this.get('state');
-      const user = this.get('user');
-      const jobId = this.get('jobId');
+      const state = this.state;
+      const user = this.user;
+      const jobId = this.jobId;
 
-      this.get('setJobStatus')(jobId, state, user, message || ' ');
+      this.setJobStatus(jobId, state, user, message || ' ');
       this.set('showToggleModal', false);
     },
     showRemoveButtons() {
@@ -90,12 +90,12 @@ export default Component.extend({
     removePipeline() {
       this.set('showRemoveButtons', false);
       this.set('isRemoving', true);
-      this.get('onRemovePipeline')();
+      this.onRemovePipeline();
     },
     sync(syncPath) {
       this.set('isShowingModal', true);
 
-      return this.get('sync').syncRequests(this.get('pipeline.id'), syncPath)
+      return this.sync.syncRequests(this.get('pipeline.id'), syncPath)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     },
@@ -111,7 +111,7 @@ export default Component.extend({
         config.id = this.get('pipeline.id');
       }
 
-      return this.get('cache').clearCache(config)
+      return this.cache.clearCache(config)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     }

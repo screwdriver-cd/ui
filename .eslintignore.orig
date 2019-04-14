@@ -1,0 +1,36 @@
+<<<<<<< HEAD
+# These are provided by ember-cli. Modification will make upgrades harder.
+app.js
+resolver.js
+testem.js
+tests/test-helper.js
+tests/helpers/destroy-app.js
+tests/helpers/module-for-acceptance.js
+tests/helpers/start-app.js
+public
+vendor
+ember-cli-build.js
+tmp
+dist
+=======
+# unconventional js
+/blueprints/*/files/
+/vendor/
+
+# compiled output
+/dist/
+/tmp/
+
+# dependencies
+/bower_components/
+/node_modules/
+
+# misc
+/coverage/
+!.*
+
+# ember-try
+/.node_modules.ember-try/
+/bower.json.ember-try
+/package.json.ember-try
+>>>>>>> 86ba59b... message

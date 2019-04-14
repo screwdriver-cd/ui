@@ -1,6 +1,12 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, click, findAll, find } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  click,
+  findAll,
+  find
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | validator job', function(hooks) {
@@ -22,25 +28,25 @@ module('Integration | Component | validator job', function(hooks) {
 
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
 
-    assert.equal(find('h4').textContent.trim(), 'int-test');
+    assert.dom('h4').hasText('int-test');
 
-    assert.equal(find('.image .label').textContent.trim(), 'Image:');
-    assert.equal(find('.image .value').textContent.trim(), 'int-test:1');
+    assert.dom('.image .label').hasText('Image:');
+    assert.dom('.image .value').hasText('int-test:1');
 
-    assert.equal(find('.steps .label').textContent.trim(), 'Steps:');
-    assert.equal(find('.steps ul .value').textContent.trim(), 'echo helloecho goodbye');
+    assert.dom('.steps .label').hasText('Steps:');
+    assert.dom('.steps ul .value').hasText('echo helloecho goodbye');
 
-    assert.equal(find('.secrets .label').textContent.trim(), 'Secrets:');
-    assert.equal(find('.secrets ul li').textContent.trim(), 'None defined');
+    assert.dom('.secrets .label').hasText('Secrets:');
+    assert.dom('.secrets ul li').hasText('None defined');
 
-    assert.equal(find('.env .label').textContent.trim(), 'Environment Variables:');
-    assert.equal(find('.env ul li').textContent.trim(), 'None defined');
+    assert.dom('.env .label').hasText('Environment Variables:');
+    assert.dom('.env ul li').hasText('None defined');
 
-    assert.equal(find('.settings .label').textContent.trim(), 'Settings:');
-    assert.equal(find('.settings ul li').textContent.trim(), 'None defined');
+    assert.dom('.settings .label').hasText('Settings:');
+    assert.dom('.settings ul li').hasText('None defined');
 
-    assert.equal(find('.annotations .label').textContent.trim(), 'Annotations:');
-    assert.equal(find('.annotations .value').textContent.trim(), 'None defined');
+    assert.dom('.annotations .label').hasText('Annotations:');
+    assert.dom('.annotations .value').hasText('None defined');
   });
 
   test('it renders a template, description, images', async function(assert) {
@@ -76,9 +82,9 @@ module('Integration | Component | validator job', function(hooks) {
 
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock template=templateMock}}`);
 
-    assert.equal(find('.template-description .label').textContent.trim(), 'Template Description:');
-    assert.equal(find('.template-description .value').textContent.trim(), 'Test template');
-    assert.equal(find('.images >.label').textContent.trim(), 'Supported Images:');
+    assert.dom('.template-description .label').hasText('Template Description:');
+    assert.dom('.template-description .value').hasText('Test template');
+    assert.dom('.images >.label').hasText('Supported Images:');
     assert.equal(this.$('.images >.value >ul >li:first-of-type').text().replace(/\s+/g, ' ').trim(),
       'stable: node:6');
     assert.equal(find('.images >.value >ul >li:nth-of-type(2)').textContent.replace(/\s+/g, ' ').trim(),
@@ -106,18 +112,18 @@ module('Integration | Component | validator job', function(hooks) {
 
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
 
-    assert.equal(find('h4').textContent.trim(), 'int-test');
-    assert.equal(find('.secrets .label').textContent.trim(), 'Secrets:');
-    assert.equal(find('.secrets ul li').textContent.trim(), 'FOOBAR');
+    assert.dom('h4').hasText('int-test');
+    assert.dom('.secrets .label').hasText('Secrets:');
+    assert.dom('.secrets ul li').hasText('FOOBAR');
 
-    assert.equal(find('.env .label').textContent.trim(), 'Environment Variables:');
-    assert.equal(find('.env ul li').textContent.trim(), 'FOO: bar');
+    assert.dom('.env .label').hasText('Environment Variables:');
+    assert.dom('.env ul li').hasText('FOO: bar');
 
-    assert.equal(find('.settings .label').textContent.trim(), 'Settings:');
+    assert.dom('.settings .label').hasText('Settings:');
     assert.equal(find('.settings ul li').textContent.replace(/\s+/g, ' ').trim(), 'FOO: bar');
 
-    assert.equal(find('.annotations .label').textContent.trim(), 'Annotations:');
-    assert.equal(find('.annotations ul li').textContent.trim(), 'FOO: bar');
+    assert.dom('.annotations .label').hasText('Annotations:');
+    assert.dom('.annotations ul li').hasText('FOO: bar');
   });
 
   test('it renders template steps', async function(assert) {
@@ -135,28 +141,28 @@ module('Integration | Component | validator job', function(hooks) {
 
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
 
-    assert.equal(find('h4').textContent.trim(), 'int-test');
+    assert.dom('h4').hasText('int-test');
 
-    assert.equal(find('.image .label').textContent.trim(), 'Image:');
-    assert.equal(find('.image .value').textContent.trim(), 'int-test:1');
+    assert.dom('.image .label').hasText('Image:');
+    assert.dom('.image .value').hasText('int-test:1');
 
-    assert.equal(find('.steps .label').textContent.trim(), 'Steps:');
-    assert.equal(find('.steps ul .value').textContent.trim(), 'echo helloecho goodbye');
+    assert.dom('.steps .label').hasText('Steps:');
+    assert.dom('.steps ul .value').hasText('echo helloecho goodbye');
 
-    assert.equal(find('.secrets .label').textContent.trim(), 'Secrets:');
-    assert.equal(find('.secrets ul li').textContent.trim(), 'None defined');
+    assert.dom('.secrets .label').hasText('Secrets:');
+    assert.dom('.secrets ul li').hasText('None defined');
 
-    assert.equal(find('.env .label').textContent.trim(), 'Environment Variables:');
-    assert.equal(find('.env ul li').textContent.trim(), 'None defined');
+    assert.dom('.env .label').hasText('Environment Variables:');
+    assert.dom('.env ul li').hasText('None defined');
 
-    assert.equal(find('.settings .label').textContent.trim(), 'Settings:');
-    assert.equal(find('.settings ul li').textContent.trim(), 'None defined');
+    assert.dom('.settings .label').hasText('Settings:');
+    assert.dom('.settings ul li').hasText('None defined');
 
-    assert.equal(find('.annotations .label').textContent.trim(), 'Annotations:');
-    assert.equal(find('.annotations .value').textContent.trim(), 'None defined');
+    assert.dom('.annotations .label').hasText('Annotations:');
+    assert.dom('.annotations .value').hasText('None defined');
 
-    assert.equal(find('.sourcePaths .label').textContent.trim(), 'Source Paths:');
-    assert.equal(find('.sourcePaths ul li').textContent.trim(), 'None defined');
+    assert.dom('.sourcePaths .label').hasText('Source Paths:');
+    assert.dom('.sourcePaths ul li').hasText('None defined');
   });
 
   test('it renders when there are no steps or commands', async function(assert) {
@@ -170,9 +176,9 @@ module('Integration | Component | validator job', function(hooks) {
 
     await render(hbs`{{validator-job name="int-test" index=1 job=jobMock}}`);
 
-    assert.equal(find('h4').textContent.trim(), 'int-test.1');
-    assert.equal(find('.steps .label').textContent.trim(), 'Steps:');
-    assert.equal(find('.steps ul .value').textContent.trim(), '');
+    assert.dom('h4').hasText('int-test.1');
+    assert.dom('.steps .label').hasText('Steps:');
+    assert.dom('.steps ul .value').hasText('');
   });
 
   test('it handles clicks on header', async function(assert) {
@@ -220,9 +226,9 @@ module('Integration | Component | validator job', function(hooks) {
 
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
 
-    assert.equal(find('h4').textContent.trim(), 'int-test');
-    assert.equal(find('.description .label').textContent.trim(), 'Description:');
-    assert.equal(find('.description .value').textContent.trim(), 'This is a description');
+    assert.dom('h4').hasText('int-test');
+    assert.dom('.description .label').hasText('Description:');
+    assert.dom('.description .value').hasText('This is a description');
   });
 
   test('it renders sourcePaths', async function(assert) {
@@ -238,9 +244,9 @@ module('Integration | Component | validator job', function(hooks) {
 
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
 
-    assert.equal(find('h4').textContent.trim(), 'int-test');
-    assert.equal(find('.sourcePaths .label').textContent.trim(), 'Source Paths:');
-    assert.equal(find('.sourcePaths .value ul li').textContent.trim(), 'README.mdsrc/folder/');
+    assert.dom('h4').hasText('int-test');
+    assert.dom('.sourcePaths .label').hasText('Source Paths:');
+    assert.dom('.sourcePaths .value ul li').hasText('README.mdsrc/folder/');
   });
 
   test('it renders without a collapsible heading', async function(assert) {
@@ -258,6 +264,6 @@ module('Integration | Component | validator job', function(hooks) {
     });
 
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock collapsible=false}}`);
-    assert.equal(findAll('h4').length, 0);
+    assert.dom('h4').doesNotExist();
   });
 });

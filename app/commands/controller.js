@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 export default Controller.extend({
   routeParams: computed('model', {
     get() {
-      let route = this.get('model');
+      let route = this.model;
       let params = Object.assign({},
         route.paramsFor('commands.namespace'),
         route.paramsFor('commands.detail'),
@@ -16,7 +16,7 @@ export default Controller.extend({
   crumbs: computed('routeParams', {
     get() {
       let breadcrumbs = [];
-      let params = this.get('routeParams');
+      let params = this.routeParams;
 
       if (params.namespace || params.detail) {
         breadcrumbs.push({

@@ -15,7 +15,7 @@ module('Integration | Component | pipeline start', function(hooks) {
     });
     await render(hbs`{{pipeline-start startBuild=onStartBuild}}`);
 
-    assert.equal(find('button').textContent.trim(), 'Start');
+    assert.dom('button').hasText('Start');
     await click('button');
   });
 
@@ -31,7 +31,7 @@ module('Integration | Component | pipeline start', function(hooks) {
     });
     await render(hbs`{{pipeline-start startBuild=onPRStartBuild prNum=5 jobs=jobs}}`);
 
-    assert.equal(find('button').textContent.trim(), 'Start PR-5');
+    assert.dom('button').hasText('Start PR-5');
     await click('button');
   });
 });

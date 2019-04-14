@@ -18,7 +18,7 @@ export default Controller.extend({
       return newSecret.save()
         .then((s) => {
           this.set('errorMessage', '');
-          this.get('secrets').reload();
+          this.secrets.reload();
 
           return s;
         }, (err) => {
@@ -32,16 +32,16 @@ export default Controller.extend({
         action: 'created'
       });
 
-      return newToken.save({ adapterOptions: { pipelineId: this.get('pipelineId') } })
+      return newToken.save({ adapterOptions: { pipelineId: this.pipelineId } })
         .then((token) => {
           this.set('newToken', token);
         }, (error) => {
-          newToken.destroyRecord({ adapterOptions: { pipelineId: this.get('pipelineId') } });
+          newToken.destroyRecord({ adapterOptions: { pipelineId: this.pipelineId } });
           throw error;
         });
     },
     refreshPipelineToken(tokenId) {
-      return this.get('refreshService').refreshPipelineToken(this.get('pipelineId'), tokenId)
+      return this.refreshService.refreshPipelineToken(this.pipelineId, tokenId)
         .then((token) => {
           this.set('newToken', token);
         });

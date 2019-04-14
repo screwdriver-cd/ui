@@ -19,13 +19,13 @@ module('Integration | Component | app header', function(hooks) {
     await render(hbs`{{app-header session=sessionMock}}`);
 
     assert.equal(find('.logo').title, 'Screwdriver Home');
-    assert.equal(findAll('.icon.create').length, 1);
-    assert.equal(findAll('.icon.docs').length, 1);
-    assert.equal(findAll('.icon.blog').length, 1);
-    assert.equal(findAll('.icon.community').length, 1);
-    assert.equal(findAll('.icon.github').length, 1);
-    assert.equal(findAll('.icon.profile-outline').length, 1);
-    assert.equal(findAll('.search-input').length, 0);
+    assert.dom('.icon.create').exists({ count: 1 });
+    assert.dom('.icon.docs').exists({ count: 1 });
+    assert.dom('.icon.blog').exists({ count: 1 });
+    assert.dom('.icon.community').exists({ count: 1 });
+    assert.dom('.icon.github').exists({ count: 1 });
+    assert.dom('.icon.profile-outline').exists({ count: 1 });
+    assert.dom('.search-input').doesNotExist();
 
     // check that user has not logged in yet
     assert.equal(find('.icon.profile-outline').title, 'Sign in to Screwdriver');
@@ -46,7 +46,7 @@ module('Integration | Component | app header', function(hooks) {
     });
 
     await render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
-    assert.equal(find('.profile-outline > .icontitle').textContent, 'foofoo');
+    assert.dom('.profile-outline > .icontitle').hasText('foofoo');
     await click('.logout');
   });
 
@@ -75,9 +75,9 @@ module('Integration | Component | app header', function(hooks) {
     this.set('scmMock', this.get('scm').getScms());
 
     await render(hbs`{{app-header session=sessionMock scmContexts=scmMock}}`);
-    assert.equal(find('span.title').textContent, 'ACCOUNTS');
-    assert.equal(find('a.active').textContent.trim(), 'github.com active');
-    assert.equal(findAll('a.active > .fa-github').length, 1);
+    assert.dom('span.title').hasText('ACCOUNTS');
+    assert.dom('a.active').hasText('github.com active');
+    assert.dom('a.active > .fa-github').exists({ count: 1 });
   });
 
   test('it shows the search bar', async function(assert) {
@@ -87,7 +87,7 @@ module('Integration | Component | app header', function(hooks) {
 
     await render(hbs`{{app-header session=sessionMock showSearch=true}}`);
 
-    assert.equal(findAll('.search-input').length, 1);
+    assert.dom('.search-input').exists({ count: 1 });
   });
 
   test('it navigates to search page upon clicking the search button', async function(assert) {

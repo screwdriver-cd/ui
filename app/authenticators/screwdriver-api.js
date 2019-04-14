@@ -94,7 +94,7 @@ export default Base.extend({
    * @return {Promise}
    */
   authenticate(scmContext) {
-    const scm = this.get('scmService');
+    const scm = this.scmService;
 
     return new EmberPromise((resolve, reject) => {
       let url = [loginUrlBase];

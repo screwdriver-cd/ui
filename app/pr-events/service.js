@@ -29,7 +29,7 @@ export default Service.extend({
           withCredentials: true
         },
         headers: {
-          Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
+          Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
         }
       }).done((data) => {
         resolve(data);
@@ -50,7 +50,7 @@ export default Service.extend({
           withCredentials: true
         },
         headers: {
-          Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
+          Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
         }
       }).done((data) => {
         resolve(data);

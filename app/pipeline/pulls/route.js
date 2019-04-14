@@ -13,7 +13,7 @@ export default EventsRoute.extend({
     this.render('pipeline.events');
   },
   model() {
-    this.controllerFor('pipeline.events').set('pipeline', this.get('pipeline'));
+    this.controllerFor('pipeline.events').set('pipeline', this.pipeline);
     const jobsPromise = this.get('pipeline.jobs');
     let events = [];
 
@@ -57,7 +57,7 @@ export default EventsRoute.extend({
   },
   actions: {
     refreshModel: function refreshModel() {
-      return this.get('pipeline').hasMany('jobs').reload().then(() => this.refresh());
+      return this.pipeline.hasMany('jobs').reload().then(() => this.refresh());
     }
   }
 });

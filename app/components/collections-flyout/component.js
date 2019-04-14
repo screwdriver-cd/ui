@@ -16,13 +16,13 @@ export default Component.extend({
         return [];
       }
 
-      return this.get('store').findAll('collection');
+      return this.store.findAll('collection');
     }
   }),
 
   actions: {
     changeCollectionDisplayed() {
-      let changeCollection = this.get('changeCollection');
+      let changeCollection = this.changeCollection;
 
       changeCollection();
     },
@@ -40,15 +40,15 @@ export default Component.extend({
      * @param {collection} collection - the collection to delete
      */
     deleteCollection(collection) {
-      const c = this.get('store')
+      const c = this.store
         .peekRecord('collection', collection.id);
 
       return c.destroyRecord()
         .then(() => {
           this.set('collectionToDelete', null);
 
-          if (typeof this.get('onDeleteCollection') === 'function') {
-            this.get('onDeleteCollection')();
+          if (typeof this.onDeleteCollection === 'function') {
+            this.onDeleteCollection();
           }
         });
     },
@@ -64,7 +64,7 @@ export default Component.extend({
      * @param {boolean} open - whether modal should be open
      */
     toggleEdit() {
-      this.set('showDeleteButtons', !this.get('showDeleteButtons'));
+      this.set('showDeleteButtons', !this.showDeleteButtons);
     }
   }
 });

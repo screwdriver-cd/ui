@@ -38,7 +38,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    * @property {Object}
    */
   headers: computed(function cHeaders() {
-    return { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` };
+    return { Authorization: `Bearer ${this.session.get('data.authenticated.token')}` };
   }).volatile(),
 
   /**

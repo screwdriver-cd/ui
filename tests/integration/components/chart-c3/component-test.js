@@ -20,12 +20,12 @@ module('Integration | Component | chart c3', function(hooks) {
       }}
     `);
 
-    assert.equal(findAll('svg').length, 1);
-    assert.equal(findAll('.c3-circle').length, 0);
-    assert.equal(findAll('.c3-event-rect').length, 1);
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.c3-circle').doesNotExist();
+    assert.dom('.c3-event-rect').exists({ count: 1 });
 
     this.set('data', { columns: [['data', 1]] });
 
-    assert.equal(findAll('.c3-circle').length, 1);
+    assert.dom('.c3-circle').exists({ count: 1 });
   });
 });

@@ -22,6 +22,12 @@ $ npm install
 
 ## Running / Development
 
+* `ember serve`
+* Visit your app at [http://localhost:4200](http://localhost:4200).
+
+### Code Generators
+Make use of the many generators for code, try `ember help generate` for more details
+
 ### Local config
 
 Put local app settings at `config/local.js` Settings at this file will be merged 
@@ -52,18 +58,19 @@ Visit your app at [http://localhost:4200](http://localhost:4200).
 * `ember test`
 * `ember test --server`
 
-<<<<<<< HEAD
 To run a single ember test:
 * `ember t -s -m '<TEST_NAME>'`   // e.g. ember t -s -m 'Integration | Component | pipeline options'
 
 To see coverage results, run:
 * `open coverage/lcov-report/index.html`
-=======
-### Linting
 
+<<<<<<< HEAD
+### Linting
+=======
+* `npm run lint:hbs`
+>>>>>>> 86ba59b... message
 * `npm run lint:js`
 * `npm run lint:js -- --fix`
->>>>>>> 38dc9ac... message
 
 ### Building
 

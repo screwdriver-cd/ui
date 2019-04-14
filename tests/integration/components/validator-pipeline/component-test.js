@@ -9,12 +9,12 @@ module('Integration | Component | validator pipeline', function(hooks) {
   test('it renders default empty settings', async function(assert) {
     await render(hbs`{{validator-pipeline}}`);
 
-    assert.equal(find('h4.pipeline').textContent.trim(), 'Pipeline Settings');
+    assert.dom('h4.pipeline').hasText('Pipeline Settings');
 
-    assert.equal(find('.annotations .label').textContent.trim(), 'Annotations:');
-    assert.equal(find('.annotations ul li').textContent.trim(), 'None defined');
+    assert.dom('.annotations .label').hasText('Annotations:');
+    assert.dom('.annotations ul li').hasText('None defined');
 
-    assert.equal(find('.workflow .label').textContent.trim(), 'Workflow:');
+    assert.dom('.workflow .label').hasText('Workflow:');
     assert.ok(this.$('.workflow canvas'), 'workflow canvas');
   });
 
@@ -31,10 +31,10 @@ module('Integration | Component | validator pipeline', function(hooks) {
 
     await render(hbs`{{validator-pipeline annotations=plMock.annotations workflow=plMock.workflow}}`);
 
-    assert.equal(find('.annotations .label').textContent.trim(), 'Annotations:');
-    assert.equal(find('.annotations ul li').textContent.trim(), 'hello: hi');
+    assert.dom('.annotations .label').hasText('Annotations:');
+    assert.dom('.annotations ul li').hasText('hello: hi');
 
-    assert.equal(find('.workflow .label').textContent.trim(), 'Workflow:');
+    assert.dom('.workflow .label').hasText('Workflow:');
     assert.ok(this.$('.workflow canvas'), 'workflow canvas');
   });
 });

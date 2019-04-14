@@ -12,7 +12,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
       this.replaceWith('home');
     }
 
-    return get(this, 'store').findAll('collection')
+    return this.store.findAll('collection')
       .then((collections) => {
         if (get(collections, 'length')) {
           // Get the id of the last object in this array. The last

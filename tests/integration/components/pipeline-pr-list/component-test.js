@@ -39,9 +39,9 @@ module('Integration | Component | pipeline pr list', function(hooks) {
 
     await render(hbs`{{pipeline-pr-list jobs=jobsMock}}`);
 
-    assert.equal(findAll('.view .view .detail').length, 2);
-    assert.equal(find('.title').textContent.trim(), 'update readme');
-    assert.equal(find('.by').textContent.trim(), 'anonymous');
+    assert.dom('.view .view .detail').exists({ count: 2 });
+    assert.dom('.title').hasText('update readme');
+    assert.dom('.by').hasText('anonymous');
   });
 
   test('it renders start build for restricted PR pipeline', async function(assert) {
@@ -67,9 +67,9 @@ module('Integration | Component | pipeline pr list', function(hooks) {
       isRestricted=isRestricted
       startBuild=startBuild}}`);
 
-    assert.equal(findAll('.view .view .detail').length, 0);
-    assert.equal(find('.title').textContent.trim(), 'update readme');
-    assert.equal(find('.by').textContent.trim(), 'anonymous');
-    assert.equal(findAll('.view .startButton').length, 1);
+    assert.dom('.view .view .detail').doesNotExist();
+    assert.dom('.title').hasText('update readme');
+    assert.dom('.by').hasText('anonymous');
+    assert.dom('.view .startButton').exists({ count: 1 });
   });
 });

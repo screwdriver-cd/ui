@@ -27,10 +27,10 @@ module('Integration | Component | pipeline pr view', function(hooks) {
 
     await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
-    assert.equal(findAll('.SUCCESS').length, 1);
+    assert.dom('.SUCCESS').exists({ count: 1 });
     assert.equal(find('.detail').textContent.trim().replace(/\s{2,}/g, ' '), 'main Started now');
-    assert.equal(find('.date').textContent.trim(), 'Started now');
-    assert.equal(findAll('.status .fa-check-circle-o').length, 1);
+    assert.dom('.date').hasText('Started now');
+    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
   });
 
   // When a user sets a job to unstable, it should show unstable icon
@@ -52,8 +52,8 @@ module('Integration | Component | pipeline pr view', function(hooks) {
 
     await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
-    assert.equal(findAll('.UNSTABLE').length, 1);
-    assert.equal(findAll('.fa-exclamation-circle').length, 1);
+    assert.dom('.UNSTABLE').exists({ count: 1 });
+    assert.dom('.fa-exclamation-circle').exists({ count: 1 });
   });
 
   test('it renders a failed PR', async function(assert) {
@@ -76,8 +76,8 @@ module('Integration | Component | pipeline pr view', function(hooks) {
 
     await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
-    assert.equal(findAll('.FAILURE').length, 1);
-    assert.equal(findAll('.fa-times-circle-o').length, 1);
+    assert.dom('.FAILURE').exists({ count: 1 });
+    assert.dom('.fa-times-circle-o').exists({ count: 1 });
   });
 
   test('it renders a queued PR', async function(assert) {
@@ -100,8 +100,8 @@ module('Integration | Component | pipeline pr view', function(hooks) {
 
     await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
-    assert.equal(findAll('.QUEUED').length, 1);
-    assert.equal(findAll('.fa-spinner').length, 1);
+    assert.dom('.QUEUED').exists({ count: 1 });
+    assert.dom('.fa-spinner').exists({ count: 1 });
   });
 
   test('it renders a running PR', async function(assert) {
@@ -124,7 +124,7 @@ module('Integration | Component | pipeline pr view', function(hooks) {
 
     await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
-    assert.equal(findAll('.RUNNING').length, 1);
-    assert.equal(findAll('.fa-spinner').length, 1);
+    assert.dom('.RUNNING').exists({ count: 1 });
+    assert.dom('.fa-spinner').exists({ count: 1 });
   });
 });

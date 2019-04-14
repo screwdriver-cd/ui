@@ -23,6 +23,6 @@ module('Integration | Component | user link', function(hooks) {
     assert.equal(find('a').href, 'http://example.com/u/batman');
     assert.equal(find('a').title, 'merged it');
     assert.equal(find('img').src, 'http://example.com/u/batman/avatar');
-    assert.equal(find('a').textContent.trim(), 'Bruce W');
+    assert.dom('a').hasText('Bruce W');
   });
 });

@@ -50,7 +50,7 @@ module('Integration | Component | tc collection linker', function(hooks) {
 
     await render(hbs`{{tc-collection-linker column=column extra=extra value=value}}`);
 
-    assert.equal(find('a .namespace').textContent.trim(), 'baz');
+    assert.dom('a .namespace').hasText('baz');
   });
 
   test('it renders the link to collection detail page', async function(assert) {
@@ -60,6 +60,6 @@ module('Integration | Component | tc collection linker', function(hooks) {
 
     await render(hbs`{{tc-collection-linker column=column extra=extra value=value}}`);
 
-    assert.equal(find('a .name').textContent.trim(), 'bar');
+    assert.dom('a .name').hasText('bar');
   });
 });

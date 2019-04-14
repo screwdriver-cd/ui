@@ -21,6 +21,6 @@ module('Integration | Component | nav banner', function(hooks) {
     this.set('bannerMock', banners);
     await render(hbs`{{nav-banner banners=bannerMock}}`);
 
-    assert.equal(find('span').textContent, testedMessage);
+    assert.dom('span').hasText(testedMessage);
   });
 });

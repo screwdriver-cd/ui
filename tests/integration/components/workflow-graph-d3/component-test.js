@@ -9,7 +9,7 @@ module('Integration | Component | workflow graph d3', function(hooks) {
   test('it renders empty when no graph supplied', async function(assert) {
     await render(hbs`{{workflow-graph-d3}}`);
 
-    assert.equal(findAll('svg').length, 1);
+    assert.dom('svg').exists({ count: 1 });
     assert.equal(this.$('svg').children().length, 0);
   });
 

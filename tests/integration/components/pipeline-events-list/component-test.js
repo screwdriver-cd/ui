@@ -95,6 +95,6 @@ module('Integration | Component | pipeline events list', function(hooks) {
                       eventsPage=1
                       updateEvents=updateEventsMock}}`);
 
-    assert.equal(findAll('.view').length, 2);
+    assert.dom('.view').exists({ count: 2 });
   });
 });

@@ -18,12 +18,12 @@ export default Component.extend({
     'jobs.@each.{isDisabled,state,stateChanger}', {
       get() {
         const builds = getWithDefault(this, 'builds', []);
-        const startFrom = get(this, 'startFrom');
+        const startFrom = this.startFrom;
         const jobs = getWithDefault(this, 'jobs', []);
         const graph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
 
         return decorateGraph({
-          inputGraph: this.get('minified') ? subgraphFilter(graph, startFrom) : graph,
+          inputGraph: this.minified ? subgraphFilter(graph, startFrom) : graph,
           builds,
           jobs,
           start: startFrom
@@ -33,7 +33,7 @@ export default Component.extend({
   ),
   elementSizes: computed('minified', {
     get() {
-      if (get(this, 'minified')) {
+      if (this.minified) {
         return {
           ICON_SIZE: 12,
           TITLE_SIZE: 0,
@@ -52,18 +52,18 @@ export default Component.extend({
     this._super(...arguments);
     this.draw();
 
-    set(this, 'lastGraph', get(this, 'workflowGraph'));
+    set(this, 'lastGraph', this.workflowGraph);
   },
   // Listen for changes to workflow and update graph accordingly.
   didUpdateAttrs() {
     this._super(...arguments);
 
-    const lg = get(this, 'lastGraph');
-    const wg = get(this, 'workflowGraph');
+    const lg = this.lastGraph;
+    const wg = this.workflowGraph;
 
     // redraw anyways when graph changes
     if (lg !== wg) {
-      get(this, 'graphNode').remove();
+      this.graphNode.remove();
 
       this.draw();
       set(this, 'lastGraph', wg);
@@ -73,16 +73,16 @@ export default Component.extend({
   },
   actions: {
     buildClicked(job) {
-      const fn = get(this, 'graphClicked');
+      const fn = this.graphClicked;
 
-      if (!get(this, 'minified') && typeof fn === 'function') {
-        fn(job, d3.event, get(this, 'elementSizes'));
+      if (!this.minified && typeof fn === 'function') {
+        fn(job, d3.event, this.elementSizes);
       }
     }
   },
   redraw() {
-    const data = this.get('decoratedGraph');
-    const el = d3.select(get(this, 'element'));
+    const data = this.decoratedGraph;
+    const el = d3.select(this.element);
 
     data.nodes.forEach((node) => {
       const n = el.select(`g.graph-node[data-job="${node.name}"]`);
@@ -98,15 +98,15 @@ export default Component.extend({
     });
   },
   draw() {
-    const data = this.get('decoratedGraph');
+    const data = this.decoratedGraph;
     const MAX_DISPLAY_NAME = 20;
     const MAX_LENGTH = Math.min(data.nodes.reduce((max, cur) =>
       Math.max(cur.name.length, max), 0), MAX_DISPLAY_NAME);
-    const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = get(this, 'elementSizes');
+    const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = this.elementSizes;
     let X_WIDTH = ICON_SIZE * 2;
 
     // When displaying job names use estimate of 7 per character
-    if (TITLE_SIZE && get(this, 'displayJobNames')) {
+    if (TITLE_SIZE && this.displayJobNames) {
       X_WIDTH = Math.max(X_WIDTH, MAX_LENGTH * 7);
     }
     // Adjustable spacing between nodes
@@ -114,12 +114,12 @@ export default Component.extend({
     const EDGE_GAP = Math.floor(ICON_SIZE / 6);
 
     // Calculate the canvas size based on amount of content, or override with user-defined size
-    const w = get(this, 'width') || (data.meta.width * X_WIDTH);
-    const h = get(this, 'height') ||
+    const w = this.width || (data.meta.width * X_WIDTH);
+    const h = this.height ||
       ((data.meta.height * ICON_SIZE) + (data.meta.height * Y_SPACING));
 
     // Add the SVG element
-    const svg = d3.select(get(this, 'element'))
+    const svg = d3.select(this.element)
       .append('svg')
       .attr('width', w)
       .attr('height', h)
@@ -188,7 +188,7 @@ export default Component.extend({
       .text(d => (d.status ? (`${d.name} - ${d.status}`) : d.name));
 
     // Job Names
-    if (TITLE_SIZE && get(this, 'displayJobNames')) {
+    if (TITLE_SIZE && this.displayJobNames) {
       svg.selectAll('jobslabels')
         .data(data.nodes)
         .enter()

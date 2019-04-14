@@ -18,9 +18,9 @@ module('Integration | Component | build step item', function(hooks) {
       onClick=(action mockClick)
     }}`);
 
-    assert.equal(find('.name').textContent.trim(), 'monkey');
-    assert.ok(find('i.fa').classList.contains('fa-check'), 'success icon');
-    assert.equal(find('.duration').textContent.trim(), '1 second');
+    assert.dom('.name').hasText('monkey');
+    assert.dom('i.fa').hasClass('fa-check', 'success icon');
+    assert.dom('.duration').hasText('1 second');
     await click('.name');
   });
 
@@ -33,7 +33,7 @@ module('Integration | Component | build step item', function(hooks) {
       stepCode=128
     }}`);
 
-    assert.ok(find('i.fa').classList.contains('fa-times'), 'fail icon');
+    assert.dom('i.fa').hasClass('fa-times', 'fail icon');
   });
 
   test('it renders an O when not run', async function(assert) {
@@ -42,7 +42,7 @@ module('Integration | Component | build step item', function(hooks) {
       stepName="monkey"
     }}`);
 
-    assert.ok(find('i.fa').classList.contains('fa-circle-o'), 'empty icon');
+    assert.dom('i.fa').hasClass('fa-circle-o', 'empty icon');
   });
 
   test('it renders an spinner when running', async function(assert) {
@@ -52,6 +52,6 @@ module('Integration | Component | build step item', function(hooks) {
       stepStart='2016-08-26T20:50:51.531Z'
     }}`);
 
-    assert.ok(find('i.fa').classList.contains('fa-spinner'), 'spin icon');
+    assert.dom('i.fa').hasClass('fa-spinner', 'spin icon');
   });
 });

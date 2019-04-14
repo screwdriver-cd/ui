@@ -23,7 +23,7 @@ export default Component.extend({
   sortedPipelines: sort('collectionPipelines', 'sortBy'),
   sortByText: computed('sortBy', {
     get() {
-      switch (this.get('sortBy').get(0)) {
+      switch (this.sortBy.get(0)) {
       case 'scmRepo.name':
         return 'Name';
       case 'lastBuildTime:desc':
@@ -35,7 +35,7 @@ export default Component.extend({
   }),
   collectionPipelines: computed('collection.pipelines', {
     get() {
-      const scmService = this.get('scmService');
+      const scmService = this.scmService;
 
       if (this.get('collection.pipelines')) {
         return this.get('collection.pipelines').map((pipeline) => {
@@ -98,7 +98,7 @@ export default Component.extend({
      * @returns {Promise}
      */
     pipelineRemove(pipelineId, collectionId) {
-      return this.get('onPipelineRemove')(+pipelineId, collectionId)
+      return this.onPipelineRemove(+pipelineId, collectionId)
         .then(() => {
           this.set('removePipelineError', null);
         })
@@ -125,7 +125,7 @@ export default Component.extend({
       this.set('editingName', true);
     },
     saveName() {
-      const collection = this.get('collection');
+      const collection = this.collection;
       let newName = this.$('.edit-area-name').val();
 
       if (newName) {
@@ -136,7 +136,7 @@ export default Component.extend({
       this.set('editingName', false);
     },
     saveDescription() {
-      const collection = this.get('collection');
+      const collection = this.collection;
 
       collection.set('description', this.$('.edit-area').val());
       this.set('editingDescription', false);

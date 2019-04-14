@@ -16,7 +16,7 @@ export default Route.extend({
       build,
       job,
       event,
-      pipeline: this.get('pipeline')
+      pipeline: this.pipeline
     })));
   },
 

@@ -51,8 +51,8 @@ module('Integration | Component | pipeline workflow', function(hooks) {
 
     await render(hbs`{{pipeline-workflow workflowGraph=graph jobs=jobsMock selected=selected}}`);
 
-    assert.equal(findAll('.graph-node').length, 5);
-    assert.equal(findAll('.workflow-tooltip').length, 1);
+    assert.dom('.graph-node').exists({ count: 5 });
+    assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 
   test('it renders an event', async function(assert) {
@@ -66,7 +66,7 @@ module('Integration | Component | pipeline workflow', function(hooks) {
 
     await render(hbs`{{pipeline-workflow selectedEventObj=obj selected=selected}}`);
 
-    assert.equal(findAll('.graph-node').length, 5);
-    assert.equal(findAll('.workflow-tooltip').length, 1);
+    assert.dom('.graph-node').exists({ count: 5 });
+    assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 });

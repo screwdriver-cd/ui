@@ -11,8 +11,8 @@ export default Component.extend({
   teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
   selectedStep: computed('buildSteps.@each.{code,startTime,endTime}', 'preselectedStepName', {
     get() {
-      const steps = get(this, 'buildSteps');
-      const preselectedStepName = get(this, 'preselectedStepName');
+      const steps = this.buildSteps;
+      const preselectedStepName = this.preselectedStepName;
       const preselectedStep = steps.findBy('name', preselectedStepName);
 
       if (preselectedStep) {
@@ -24,9 +24,9 @@ export default Component.extend({
   }),
   setupCollapsed: computed('selectedStep', {
     get() {
-      const name = get(this, 'selectedStep');
+      const name = this.selectedStep;
 
-      if (name && get(this, 'setupSteps').includes(name)) {
+      if (name && this.setupSteps.includes(name)) {
         return false;
       }
 
@@ -35,9 +35,9 @@ export default Component.extend({
   }),
   teardownCollapsed: computed('selectedStep', {
     get() {
-      const name = get(this, 'selectedStep');
+      const name = this.selectedStep;
 
-      if (name && get(this, 'teardownSteps').includes(name)) {
+      if (name && this.teardownSteps.includes(name)) {
         return false;
       }
 
@@ -48,16 +48,16 @@ export default Component.extend({
     item => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)),
   actions: {
     toggleSetup() {
-      set(this, 'setupCollapsed', !get(this, 'setupCollapsed'));
+      set(this, 'setupCollapsed', !this.setupCollapsed);
     },
     toggleTeardown() {
-      set(this, 'teardownCollapsed', !get(this, 'teardownCollapsed'));
+      set(this, 'teardownCollapsed', !this.teardownCollapsed);
     },
     stepClick(name) {
-      this.get('router').transitionTo(
+      this.router.transitionTo(
         'pipeline.build.step',
-        this.get('pipelineId'),
-        this.get('buildId'),
+        this.pipelineId,
+        this.buildId,
         name
       );
     }

@@ -1,4 +1,10 @@
-import { click, findAll, currentURL, find, visit } from '@ember/test-helpers';
+import {
+  click,
+  findAll,
+  currentURL,
+  find,
+  visit
+} from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
@@ -128,14 +134,14 @@ module('Acceptance | search', function(hooks) {
     await visit('/search');
 
     assert.equal(currentURL(), '/search');
-    assert.equal(findAll('tr').length, 4);
-    assert.equal(find('.showMore').textContent.trim(), 'Show more results...');
-    assert.equal(find('.num-results').textContent.trim(), 'Showing 3 result(s)');
+    assert.dom('tr').exists({ count: 4 });
+    assert.dom('.showMore').hasText('Show more results...');
+    assert.dom('.num-results').hasText('Showing 3 result(s)');
 
     await click('.showMore');
-    assert.equal(findAll('tr').length, 7);
-    assert.equal(find('.showMore').textContent.trim(), 'Show more results...');
-    assert.equal(find('.num-results').textContent.trim(), 'Showing 6 result(s)');
+    assert.dom('tr').exists({ count: 7 });
+    assert.dom('.showMore').hasText('Show more results...');
+    assert.dom('.num-results').hasText('Showing 6 result(s)');
   });
 
   test('visiting /search?query=banana when logged in', async function(assert) {
@@ -143,9 +149,9 @@ module('Acceptance | search', function(hooks) {
     await visit('/search?query=banana');
 
     assert.equal(currentURL(), '/search?query=banana');
-    assert.equal(findAll('tr').length, 3);
+    assert.dom('tr').exists({ count: 3 });
     assert.notOk(find('.showMore').textContent.trim());
-    assert.equal(find('.num-results').textContent.trim(), 'Showing 2 result(s)');
+    assert.dom('.num-results').hasText('Showing 2 result(s)');
   });
 
   test('visiting /search?query=doesnotexist when logged in', async function(assert) {
@@ -153,8 +159,8 @@ module('Acceptance | search', function(hooks) {
     await visit('/search?query=doesnotexist');
 
     assert.equal(currentURL(), '/search?query=doesnotexist');
-    assert.equal(findAll('tr').length, 1);
+    assert.dom('tr').exists({ count: 1 });
     assert.notOk(find('.showMore').textContent.trim());
-    assert.equal(find('.num-results').textContent.trim(), 'No results');
+    assert.dom('.num-results').hasText('No results');
   });
 });

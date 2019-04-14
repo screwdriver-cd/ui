@@ -246,7 +246,7 @@ module('Integration | Component | build banner', function(hooks) {
       reloadBuild=(action reloadCb)
     }}`);
 
-    assert.equal(find('button').textContent.trim(), 'Restart');
+    assert.dom('button').hasText('Restart');
     assert.notOk(reloadBuildSpy.called);
     await click('button');
   });
@@ -278,7 +278,7 @@ module('Integration | Component | build banner', function(hooks) {
       reloadBuild=(action willRender)
     }}`);
 
-    assert.equal(find('button').textContent.trim(), 'Stop');
+    assert.dom('button').hasText('Stop');
     await click('button');
   });
 
@@ -309,7 +309,7 @@ module('Integration | Component | build banner', function(hooks) {
       reloadBuild=(action willRender)
     }}`);
 
-    assert.equal(find('button').textContent.trim(), 'Stop');
+    assert.dom('button').hasText('Stop');
     await click('button');
   });
 
@@ -384,7 +384,7 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.equal(find('button').textContent.trim(), 'Stop');
+      assert.dom('button').hasText('Stop');
       assert.equal($('.coverage .banner-value').text().trim(), 'N/A');
       assert.equal($('.tests .banner-value').text().trim(), 'N/A');
       assert.equal($('.coverage a').prop('title'), 'Coverage report not generated');
@@ -532,7 +532,7 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.equal(find('button').textContent.trim(), 'Stop');
+      assert.dom('button').hasText('Stop');
     });
   });
 });

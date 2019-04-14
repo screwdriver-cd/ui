@@ -26,6 +26,7 @@ $ npm install
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 
 ### Code Generators
+
 Make use of the many generators for code, try `ember help generate` for more details
 
 ### Local config
@@ -65,6 +66,8 @@ To see coverage results, run:
 * `open coverage/lcov-report/index.html`
 
 ### Linting
+
+* `npm run lint:hbs`
 * `npm run lint:js`
 * `npm run lint:js -- --fix`
 

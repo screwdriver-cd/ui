@@ -7,13 +7,13 @@ export default Component.extend({
   docUrl: ENV.APP.SDDOC_URL,
   actions: {
     invalidateSession() {
-      this.get('onInvalidate')();
+      this.onInvalidate();
     },
     triggerSearch() {
-      this.get('searchPipelines')(this.$('.search-input').val());
+      this.searchPipelines(this.$('.search-input').val());
     },
     authenticate(scmContext) {
-      this.get('authenticate')(scmContext);
+      this.authenticate(scmContext);
     }
   }
 });

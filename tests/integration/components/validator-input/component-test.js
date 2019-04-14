@@ -12,6 +12,6 @@ module('Integration | Component | validator input', function(hooks) {
 
     await render(hbs`{{validator-input}}`);
 
-    assert.equal(find('h3').textContent.trim(), 'Validate Screwdriver Configuration');
+    assert.dom('h3').hasText('Validate Screwdriver Configuration');
   });
 });

@@ -10,7 +10,7 @@ export default Controller.extend({
   modelPipelines: computed('model.pipelines', {
     get() {
       const currentModelPipelines = this.get('model.pipelines').toArray();
-      const currentPipelinesShown = this.get('pipelinesToShow');
+      const currentPipelinesShown = this.pipelinesToShow;
 
       if (Array.isArray(currentPipelinesShown) && currentPipelinesShown.length) {
         this.set('pipelinesToShow', []);
@@ -21,7 +21,7 @@ export default Controller.extend({
   }),
   pipelines: computed('modelPipelines', 'pipelinesToShow', {
     get() {
-      return [].concat(this.get('modelPipelines'), this.get('pipelinesToShow'));
+      return [].concat(this.modelPipelines, this.pipelinesToShow);
     }
   }),
   collections: reads('model.collections'),
@@ -47,7 +47,7 @@ export default Controller.extend({
         this.setProperties({ query: search });
       }
 
-      return get(this, 'store').query('pipeline', pipelineListConfig)
+      return this.store.query('pipeline', pipelineListConfig)
         .then((pipelines) => {
           const nextPipelines = pipelines.toArray();
 
@@ -57,7 +57,7 @@ export default Controller.extend({
             }
 
             this.set('pipelinesToShow',
-              this.get('pipelinesToShow').concat(nextPipelines));
+              this.pipelinesToShow.concat(nextPipelines));
           }
         });
     },

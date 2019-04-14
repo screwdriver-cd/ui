@@ -18,24 +18,24 @@ export default Component.extend({
   lastScrollHeight: 0,
   inProgress: computed('totalLine', {
     get() {
-      return get(this, 'totalLine') === undefined;
+      return this.totalLine === undefined;
     }
   }),
   sortOrder: computed('inProgress', {
     get() {
-      return get(this, 'inProgress') ? 'ascending' : 'descending';
+      return this.inProgress ? 'ascending' : 'descending';
     }
   }),
   getPageSize(fetchMax = false) {
-    const totalLine = get(this, 'totalLine');
-    const itemSize = this.get('logService').getCache(
-      get(this, 'buildId'),
-      get(this, 'stepName'),
+    const totalLine = this.totalLine;
+    const itemSize = this.logService.getCache(
+      this.buildId,
+      this.stepName,
       'nextLine'
     ) || totalLine;
 
     // for running step, fetch regular page size
-    if (get(this, 'inProgress')) {
+    if (this.inProgress) {
       return ENV.APP.DEFAULT_LOG_PAGE_SIZE;
     }
 
@@ -49,13 +49,13 @@ export default Component.extend({
   },
   logs: computed('stepStartTime', 'isFetching', 'buildId', 'stepName', 'buildStatus', {
     get() {
-      const buildId = get(this, 'buildId');
-      const stepName = get(this, 'stepName');
-      const logs = this.get('logService').getCache(buildId, stepName, 'logs');
-      const isFetching = get(this, 'isFetching');
-      const started = !!get(this, 'stepStartTime');
-      const buildStats = get(this, 'buildStats');
-      const buildStatus = get(this, 'buildStatus');
+      const buildId = this.buildId;
+      const stepName = this.stepName;
+      const logs = this.logService.getCache(buildId, stepName, 'logs');
+      const isFetching = this.isFetching;
+      const started = !!this.stepStartTime;
+      const buildStats = this.buildStats;
+      const buildStatus = this.buildStatus;
 
       if (!stepName) {
         return [{ m: 'Click a step to see logs' }];
@@ -66,14 +66,14 @@ export default Component.extend({
         const initLogs = [];
 
         initLogs.push({
-          t: new Date(get(this, 'stepStartTime')).getTime(),
+          t: new Date(this.stepStartTime).getTime(),
           m: 'Build created.',
           n: 0
         });
 
         if (buildStatus === 'FROZEN') {
           initLogs.push({
-            t: new Date(get(this, 'stepEndTime')).getTime(),
+            t: new Date(this.stepEndTime).getTime(),
             m: 'Build frozen and removed from the queue.',
             n: 1
           });
@@ -90,7 +90,7 @@ export default Component.extend({
 
           if (buildStatus === 'COLLAPSED') {
             initLogs.push({
-              t: new Date(get(this, 'stepEndTime')).getTime(),
+              t: new Date(this.stepEndTime).getTime(),
               m: 'Build collapsed and removed from the queue.',
               n: 1
             });
@@ -114,16 +114,16 @@ export default Component.extend({
             });
           }
 
-          if (get(this, 'stepEndTime')) {
+          if (this.stepEndTime) {
             let msg = 'Image pull completed. Build init completed.';
 
             // If build init succeeded and build starts, there should be buildStartTime
-            if (!get(this, 'buildStartTime')) {
+            if (!this.buildStartTime) {
               msg = 'Build init failed.';
             }
 
             initLogs.push({
-              t: new Date(get(this, 'stepEndTime')).getTime(),
+              t: new Date(this.stepEndTime).getTime(),
               m: msg,
               n: 3
             });
@@ -135,9 +135,9 @@ export default Component.extend({
         }
 
         // If there is no build stat, update totalLine when step ends
-        if (get(this, 'stepEndTime')) {
+        if (this.stepEndTime) {
           initLogs.push({
-            t: new Date(get(this, 'stepEndTime')).getTime(),
+            t: new Date(this.stepEndTime).getTime(),
             m: 'Build init done.',
             n: 1
           });
@@ -170,13 +170,13 @@ export default Component.extend({
    */
   shouldLoad: computed('isFetching', 'buildId', 'stepName', {
     get() {
-      const name = get(this, 'stepName');
+      const name = this.stepName;
 
       if (!name) {
         return false;
       }
 
-      return !this.get('logService').getCache(get(this, 'buildId'), name, 'done');
+      return !this.logService.getCache(this.buildId, name, 'done');
     }
   }),
 
@@ -189,24 +189,24 @@ export default Component.extend({
       set(this, 'timeFormat', timeFormat);
     }
 
-    this.get('logService').resetCache();
-    set(this, 'lastStepId', `${get(this, 'buildId')}/${get(this, 'stepName')}`);
+    this.logService.resetCache();
+    set(this, 'lastStepId', `${this.buildId}/${this.stepName}`);
   },
 
   // Start loading logs immediately upon inserting the element if a step is selected
   didInsertElement() {
     this._super(...arguments);
 
-    if (get(this, 'stepName')) {
+    if (this.stepName) {
       this.getLogs();
     }
   },
 
   didUpdateAttrs() {
     this._super(...arguments);
-    const newStepId = `${get(this, 'buildId')}/${get(this, 'stepName')}`;
+    const newStepId = `${this.buildId}/${this.stepName}`;
 
-    if (newStepId !== get(this, 'lastStepId')) {
+    if (newStepId !== this.lastStepId) {
       set(this, 'autoscroll', true);
       set(this, 'lastStepId', newStepId);
       set(this, 'lastScrollTop', 0);
@@ -220,7 +220,7 @@ export default Component.extend({
    */
   willDestroyElement() {
     this._super(...arguments);
-    this.get('logService').resetCache();
+    this.logService.resetCache();
   },
 
   /**
@@ -236,7 +236,7 @@ export default Component.extend({
    * @method scrollDown
    */
   scrollDown() {
-    if (get(this, 'autoscroll')) {
+    if (this.autoscroll) {
       const bottom = this.$('.bottom').prop('offsetTop');
 
       this.$('.wrap').prop('scrollTop', bottom);
@@ -254,8 +254,8 @@ export default Component.extend({
     set(
       this,
       'lastScrollTop',
-      container.scrollTop = get(this, 'lastScrollTop') +
-        (container.scrollHeight - get(this, 'lastScrollHeight'))
+      container.scrollTop = this.lastScrollTop +
+        (container.scrollHeight - this.lastScrollHeight)
     );
   },
 
@@ -266,26 +266,26 @@ export default Component.extend({
    * @param {boolean} fetchMax
    */
   getLogs(fetchMax = false) {
-    if (!get(this, 'isFetching') && get(this, 'shouldLoad')) {
-      const buildId = get(this, 'buildId');
-      const stepName = get(this, 'stepName');
-      const totalLine = get(this, 'totalLine');
-      const inProgress = get(this, 'inProgress');
-      const started = !!get(this, 'stepStartTime');
+    if (!this.isFetching && this.shouldLoad) {
+      const buildId = this.buildId;
+      const stepName = this.stepName;
+      const totalLine = this.totalLine;
+      const inProgress = this.inProgress;
+      const started = !!this.stepStartTime;
 
       set(this, 'isFetching', true);
 
-      return this.get('logService').fetchLogs({
+      return this.logService.fetchLogs({
         buildId,
         stepName,
-        logNumber: this.get('logService').getCache(buildId, stepName, 'nextLine') ||
+        logNumber: this.logService.getCache(buildId, stepName, 'nextLine') ||
           (totalLine || 1) - 1,
         pageSize: this.getPageSize(fetchMax),
-        sortOrder: get(this, 'sortOrder'),
+        sortOrder: this.sortOrder,
         started
       }).then(({ done }) => {
         // prevent updating logs when component is being destroyed
-        if (!this.get('isDestroyed') && !this.get('isDestroying')) {
+        if (!this.isDestroyed && !this.isDestroying) {
           const container = this.$('.wrap')[0];
 
           set(this, 'isFetching', false);
@@ -313,7 +313,7 @@ export default Component.extend({
     scrollToTop() {
       set(this, 'autoscroll', false);
 
-      if (!get(this, 'inProgress')) {
+      if (!this.inProgress) {
         this.getLogs(true);
       }
 
@@ -324,16 +324,16 @@ export default Component.extend({
       this.scrollDown();
     },
     download() {
-      const buildId = get(this, 'buildId');
-      const stepName = get(this, 'stepName');
+      const buildId = this.buildId;
+      const stepName = this.stepName;
 
-      if (this.get('logService').getCache(buildId, stepName, 'logs')) {
+      if (this.logService.getCache(buildId, stepName, 'logs')) {
         set(this, 'isDownloading', true);
 
         this.getLogs(true).then(() => {
           this.$('#downloadLink').attr({
             download: `${buildId}-${stepName}.log`,
-            href: this.get('logService').buildLogBlobUrl(buildId, stepName)
+            href: this.logService.buildLogBlobUrl(buildId, stepName)
           })[0].click();
           set(this, 'isDownloading', false);
         });
@@ -342,10 +342,10 @@ export default Component.extend({
     logScroll() {
       const container = this.$('.wrap')[0];
 
-      if (!get(this, 'inProgress') &&
-        !get(this, 'isFetching') &&
-        !this.get('logService').getCache(get(this, 'buildId'), get(this, 'stepName'), 'done') &&
-        container.scrollTop < (container.scrollHeight - get(this, 'lastScrollHeight')) / 2) {
+      if (!this.inProgress &&
+        !this.isFetching &&
+        !this.logService.getCache(this.buildId, this.stepName, 'done') &&
+        container.scrollTop < (container.scrollHeight - this.lastScrollHeight) / 2) {
         this.getLogs();
 
         return;
@@ -355,7 +355,7 @@ export default Component.extend({
       set(this, 'autoscroll', this.$('.bottom')[0].getBoundingClientRect().top < 1000);
     },
     toggleTimeDisplay() {
-      let index = timeTypes.indexOf(get(this, 'timeFormat'));
+      let index = timeTypes.indexOf(this.timeFormat);
 
       index = index + 1 >= timeTypes.length ? 0 : index + 1;
       localStorage.setItem('screwdriver.logs.timeFormat', timeTypes[index]);

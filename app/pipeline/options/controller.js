@@ -20,13 +20,13 @@ export default Controller.extend({
         .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
     removePipeline() {
-      this.get('pipeline').destroyRecord().then(() => {
+      this.pipeline.destroyRecord().then(() => {
         this.transitionToRoute('home');
       })
         .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
     updatePipeline(scmUrl) {
-      let pipeline = this.get('pipeline');
+      let pipeline = this.pipeline;
 
       pipeline.set('checkoutUrl', scmUrl);
 

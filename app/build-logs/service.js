@@ -48,7 +48,7 @@ export default Service.extend({
           sort: sortOrder
         },
         headers: {
-          Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
+          Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
         }
       })
         .done((data, textStatus, jqXHR) => {
@@ -128,7 +128,7 @@ export default Service.extend({
       blobUrl = URL.createObjectURL(blob);
 
       this.setCache(buildId, stepName, { blobUrl });
-      this.get('blobKeys').push([buildId, stepName]);
+      this.blobKeys.push([buildId, stepName]);
     }
 
     return blobUrl;
@@ -138,7 +138,7 @@ export default Service.extend({
    * @method revokeLogBlobUrls
    */
   revokeLogBlobUrls() {
-    this.get('blobKeys').forEach((k) => {
+    this.blobKeys.forEach((k) => {
       URL.revokeObjectURL(this.getCache(...k, 'blobUrl'));
       this.setCache(...k, { blobUrl: undefined });
     });

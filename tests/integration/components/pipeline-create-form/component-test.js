@@ -30,7 +30,7 @@ module('Integration | Component | pipeline create form', function(hooks) {
       hbs`{{pipeline-create-form errorMessage="" isSaving=false onCreatePipeline=(action createPipeline)}}`
     );
     await fillIn('.text-input', scm).keyup();
-    assert.ok(find('i.fa').classList.contains('fa-check'), 'success icon');
+    assert.dom('i.fa').hasClass('fa-check', 'success icon');
     await click('button.blue-button');
   });
 });

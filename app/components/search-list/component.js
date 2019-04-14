@@ -26,8 +26,8 @@ export default Component.extend({
   }),
   filteredPipelines: computed('pipelines', {
     get() {
-      const scmService = this.get('scmService');
-      let filtered = this.get('pipelines');
+      const scmService = this.scmService;
+      let filtered = this.pipelines;
 
       // add scm contexts into pipelines.
       return filtered.map((pipeline) => {
@@ -71,12 +71,12 @@ export default Component.extend({
       this.set('showModal', true);
     },
     addNewCollectionHelper() {
-      let addNewCollectionParent = this.get('addNewCollection');
+      let addNewCollectionParent = this.addNewCollection;
 
       addNewCollectionParent();
     },
     addToCollection(pipelineId, collection) {
-      return this.get('addToCollection')(+pipelineId, collection.id)
+      return this.addToCollection(+pipelineId, collection.id)
         .then(() => {
           this.set('addCollectionError', null);
           this.set('addCollectionSuccess',

@@ -33,8 +33,8 @@ export default Service.extend({
    * @return {DS.RecordArray} Array of scm object.
    */
   createScms() {
-    const session = get(this, 'session');
-    const store = get(this, 'store');
+    const session = this.session;
+    const store = this.store;
     const scms = this.getScms();
 
     if (get(scms, 'length') !== 0) {
@@ -72,7 +72,7 @@ export default Service.extend({
    * @return {DS.RecordArray} Array of scm object.
    */
   getScms() {
-    return this.get('store').peekAll('scm');
+    return this.store.peekAll('scm');
   },
 
   /**

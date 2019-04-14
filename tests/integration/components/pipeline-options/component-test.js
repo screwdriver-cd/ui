@@ -4,7 +4,14 @@ import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, click, find, findAll, fillIn } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  click,
+  find,
+  findAll,
+  fillIn
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
@@ -43,19 +50,19 @@ module('Integration | Component | pipeline options', function(hooks) {
     await render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
 
     // Pipeline
-    assert.equal(find('section.pipeline h3').textContent.trim(), 'Pipeline');
-    assert.equal(findAll('section.pipeline li').length, 1);
-    assert.equal(find('section.pipeline h4').textContent.trim(), 'Checkout URL');
-    assert.equal(find('section.pipeline p').textContent.trim(), 'Update your checkout URL.');
-    assert.equal(find('section.pipeline .button-label').textContent.trim(), 'Update');
+    assert.dom('section.pipeline h3').hasText('Pipeline');
+    assert.dom('section.pipeline li').exists({ count: 1 });
+    assert.dom('section.pipeline h4').hasText('Checkout URL');
+    assert.dom('section.pipeline p').hasText('Update your checkout URL.');
+    assert.dom('section.pipeline .button-label').hasText('Update');
 
     // Jobs
-    assert.equal(find('section.jobs h3').textContent.trim(), 'Jobs');
-    assert.equal(findAll('section.jobs li').length, 4);
-    assert.equal(find('section.jobs h4').textContent.trim(), 'ABmain');
+    assert.dom('section.jobs h3').hasText('Jobs');
+    assert.dom('section.jobs li').exists({ count: 4 });
+    assert.dom('section.jobs h4').hasText('ABmain');
     // eslint-disable-next-line max-len
-    assert.equal(find('section.jobs p').textContent.trim(), 'Toggle to disable or enable the job.');
-    assert.ok(find('.x-toggle-container').classList.contains('x-toggle-container-checked'));
+    assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
+    assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
 
     // Sync
     assert.equal(this.$(findAll('section.sync h4')[0]).text().trim(), 'SCM webhooks');
@@ -69,12 +76,11 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.equal(this.$(findAll('section.cache h4')[3]).text().trim(), 'Job main');
 
     // Danger Zone
-    assert.equal(find('section.danger h3').textContent.trim(), 'Danger Zone');
-    assert.equal(findAll('section.danger li').length, 1);
-    assert.equal(find('section.danger h4').textContent.trim(), 'Remove this pipeline');
-    assert.equal(find('section.danger p').textContent.trim(),
-      'Once you remove a pipeline, there is no going back.');
-    assert.ok(find('section.danger a i').classList.contains('fa-trash'));
+    assert.dom('section.danger h3').hasText('Danger Zone');
+    assert.dom('section.danger li').exists({ count: 1 });
+    assert.dom('section.danger h4').hasText('Remove this pipeline');
+    assert.dom('section.danger p').hasText('Once you remove a pipeline, there is no going back.');
+    assert.dom('section.danger a i').hasClass('fa-trash');
   });
 
   test('it updates a pipeline', async function(assert) {
@@ -94,9 +100,9 @@ module('Integration | Component | pipeline options', function(hooks) {
     await render(
       hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=(action updatePipeline)}}`
     );
-    assert.equal(find('.text-input').value, 'git@github.com:foo/bar.git#notMaster');
+    assert.dom('.text-input').hasValue('git@github.com:foo/bar.git#notMaster');
     await fillIn('.text-input', scm).keyup();
-    assert.equal(find('.text-input').value, scm);
+    assert.dom('.text-input').hasValue(scm);
     await click('button.blue-button');
   });
 
@@ -210,16 +216,15 @@ module('Integration | Component | pipeline options', function(hooks) {
       jobs=mockJobs
     }}`);
 
-    assert.ok(find('.x-toggle-container').classList.contains('x-toggle-container-checked'));
+    assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
 
     await await click('.x-toggle-btn');
     await await click('.toggle-form__create');
 
     return settled().then(() => {
-      assert.equal(find('section.jobs h4').textContent.trim(), 'main');
-      assert.notOk(find('.x-toggle-container').classList.contains('x-toggle-container-checked'));
-      assert.equal(find('section.jobs p').textContent.trim(),
-        'Toggle to disable or enable the job.Disabled by tkyi: testing');
+      assert.dom('section.jobs h4').hasText('main');
+      assert.dom('.x-toggle-container').hasNoClass('x-toggle-container-checked');
+      assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.Disabled by tkyi: testing');
     });
   });
 
@@ -249,15 +254,15 @@ module('Integration | Component | pipeline options', function(hooks) {
       jobs=mockJobs
     }}`);
 
-    assert.equal(find('section.jobs h4').textContent.trim(), 'main');
-    assert.equal(find('section.jobs p').textContent.trim(), 'Toggle to disable or enable the job.');
-    assert.notOk(find('.x-toggle-container').classList.contains('x-toggle-container-checked'));
+    assert.dom('section.jobs h4').hasText('main');
+    assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
+    assert.dom('.x-toggle-container').hasNoClass('x-toggle-container-checked');
 
     await await click('.x-toggle-btn');
     await await click('.toggle-form__create');
 
     return settled().then(() => {
-      assert.ok(find('.x-toggle-container').classList.contains('x-toggle-container-checked'));
+      assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
     });
   });
 
@@ -382,7 +387,7 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     return settled()
       .then(() => {
-        assert.equal(find('.alert > span').textContent.trim(), 'something conflicting');
+        assert.dom('.alert > span').hasText('something conflicting');
       });
   });
 
@@ -415,15 +420,15 @@ module('Integration | Component | pipeline options', function(hooks) {
     await render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
 
     // Pipeline should not render
-    assert.equal(find('section.pipeline h3').textContent.trim(), '');
+    assert.dom('section.pipeline h3').hasText('');
 
     // Jobs should render
-    assert.equal(find('section.jobs h3').textContent.trim(), 'Jobs');
-    assert.equal(findAll('section.jobs li').length, 4);
-    assert.equal(find('section.jobs h4').textContent.trim(), 'ABmain');
+    assert.dom('section.jobs h3').hasText('Jobs');
+    assert.dom('section.jobs li').exists({ count: 4 });
+    assert.dom('section.jobs h4').hasText('ABmain');
     // eslint-disable-next-line max-len
-    assert.equal(find('section.jobs p').textContent.trim(), 'Toggle to disable or enable the job.');
-    assert.ok(find('.x-toggle-container').classList.contains('x-toggle-container-checked'));
+    assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
+    assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
 
     // Sync should render
     assert.equal(this.$(findAll('section.sync h4')[0]).text().trim(), 'SCM webhooks');
@@ -437,7 +442,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.equal(this.$(findAll('section.cache h4')[3]).text().trim(), 'Job main');
 
     // Danger Zone should not render
-    assert.equal(find('section.danger h3').textContent.trim(), '');
+    assert.dom('section.danger h3').hasText('');
   });
 
   test('it clears the pipeline cache', async function(assert) {
@@ -529,7 +534,7 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     return settled()
       .then(() => {
-        assert.equal(find('.alert > span').textContent.trim(), 'something conflicting');
+        assert.dom('.alert > span').hasText('something conflicting');
       });
   });
 });

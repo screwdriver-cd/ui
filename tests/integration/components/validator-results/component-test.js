@@ -57,9 +57,9 @@ module('Integration | Component | validator results', function(hooks) {
 
     await render(hbs`{{validator-results results=validationMock}}`);
 
-    assert.equal(find('.error').textContent.trim(), 'got an error');
-    assert.equal(find('h4.pipeline').textContent.trim(), 'Pipeline Settings');
-    assert.equal(find('h4.job').textContent.trim(), 'main main.1 foo');
+    assert.dom('.error').hasText('got an error');
+    assert.dom('h4.pipeline').hasText('Pipeline Settings');
+    assert.dom('h4.job').hasText('main main.1 foo');
   });
 
   test('it renders templates', async function(assert) {
@@ -77,8 +77,8 @@ module('Integration | Component | validator results', function(hooks) {
 
     await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
 
-    assert.equal(find('.error').textContent.trim(), '');
-    assert.equal(find('h4').textContent.trim(), 'batman/batmobile@1.0.0');
+    assert.dom('.error').hasText('');
+    assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
   test('it renders templates with a namespace', async function(assert) {
@@ -97,8 +97,8 @@ module('Integration | Component | validator results', function(hooks) {
 
     await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
 
-    assert.equal(find('.error').textContent.trim(), '');
-    assert.equal(find('h4').textContent.trim(), 'batman/batmobile@1.0.0');
+    assert.dom('.error').hasText('');
+    assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
   test('it renders joi error results', async function(assert) {
@@ -116,7 +116,7 @@ module('Integration | Component | validator results', function(hooks) {
 
     await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
 
-    assert.equal(find('.error').textContent.trim(), 'there is an error');
-    assert.equal(find('h4').textContent.trim(), 'batman/batmobile@1.0.0');
+    assert.dom('.error').hasText('there is an error');
+    assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 });

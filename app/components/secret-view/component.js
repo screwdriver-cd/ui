@@ -8,28 +8,28 @@ export default Component.extend({
   originalAllowInPR: null,
   buttonAction: computed('newValue', 'secret.allowInPR', 'originalAllowInPR', {
     get() {
-      const secret = this.get('secret');
-      const pipeline = this.get('pipeline');
+      const secret = this.secret;
+      const pipeline = this.pipeline;
 
       if (pipeline.get('configPipelineId')) {
         if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
           return 'Override';
         }
 
-        return (this.get('newValue')
-          || this.get('originalAllowInPR') !== this.get('secret.allowInPR')) ?
+        return (this.newValue
+          || this.originalAllowInPR !== this.get('secret.allowInPR')) ?
           'Update' : 'Revert';
       }
 
-      return (this.get('newValue')
-        || this.get('originalAllowInPR') !== this.get('secret.allowInPR')) ?
+      return (this.newValue
+        || this.originalAllowInPR !== this.get('secret.allowInPR')) ?
         'Update' : 'Delete';
     }
   }),
   passwordPlaceholder: computed({
     get() {
-      const secret = this.get('secret');
-      const pipeline = this.get('pipeline');
+      const secret = this.secret;
+      const pipeline = this.pipeline;
 
       if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
         return 'Inherited from parent pipeline';
@@ -44,25 +44,25 @@ export default Component.extend({
   },
   actions: {
     modifySecret() {
-      const secret = this.get('secret');
+      const secret = this.secret;
 
-      if (this.get('buttonAction') === 'Delete'
-        || this.get('buttonAction') === 'Revert') {
+      if (this.buttonAction === 'Delete'
+        || this.buttonAction === 'Revert') {
         return secret.destroyRecord().then(() => {
-          this.get('secrets').store.unloadRecord(secret);
-          this.get('secrets').reload();
+          this.secrets.store.unloadRecord(secret);
+          this.secrets.reload();
         });
-      } else if (this.get('buttonAction') === 'Update') {
-        if (this.get('newValue')) {
-          secret.set('value', this.get('newValue'));
+      } else if (this.buttonAction === 'Update') {
+        if (this.newValue) {
+          secret.set('value', this.newValue);
         }
         secret.save();
         this.set('newValue', null);
         this.set('originalAllowInPR', secret.get('allowInPR'));
-      } else if (this.get('newValue')) {
+      } else if (this.newValue) {
         // Create child pipeline secret to override inherited secret of same name
-        return this.get('onCreateSecret')(
-          secret.get('name'), this.get('newValue'), this.get('pipeline.id'), secret.get('allowInPR')
+        return this.onCreateSecret(
+          secret.get('name'), this.newValue, this.get('pipeline.id'), secret.get('allowInPR')
         );
       }
 

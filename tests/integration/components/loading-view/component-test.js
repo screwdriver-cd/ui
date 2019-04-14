@@ -12,7 +12,7 @@ module('Integration | Component | loading view', function(hooks) {
 
     await render(hbs`{{loading-view}}`);
 
-    assert.equal(find('h2').textContent.trim(), 'Loading...');
+    assert.dom('h2').hasText('Loading...');
     assert.ok(find('p').textContent.trim());
   });
 });

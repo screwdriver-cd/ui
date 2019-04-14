@@ -10,9 +10,9 @@ export default Component.extend({
   showTooltip: false,
   graph: computed('workflowGraph', {
     get() {
-      const jobs = get(this, 'jobs');
+      const jobs = this.jobs;
       const fetchBuilds = [];
-      const graph = get(this, 'workflowGraph');
+      const graph = this.workflowGraph;
 
       // Hack to make page display stuff when a workflow is not provided
       if (!graph) {
@@ -117,7 +117,7 @@ export default Component.extend({
     },
     startDetachedBuild() {
       set(this, 'isShowingModal', false);
-      get(this, 'startDetachedBuild')(get(this, 'tooltipData.job'));
+      this.startDetachedBuild(get(this, 'tooltipData.job'));
     }
   }
 });

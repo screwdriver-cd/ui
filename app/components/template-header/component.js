@@ -8,7 +8,7 @@ export default Component.extend({
   store: service(),
   init() {
     this._super(...arguments);
-    this.get('store').findRecord('pipeline', this.template.pipelineId).then((pipeline) => {
+    this.store.findRecord('pipeline', this.template.pipelineId).then((pipeline) => {
       this.set('scmUrl', pipeline.get('scmRepo.url'));
     }).catch(() => {
       this.set('scmUrl', null);
@@ -24,7 +24,7 @@ export default Component.extend({
     },
     removeTemplate(name) {
       this.set('isRemoving', true);
-      this.get('onRemoveTemplate')(name).then(() => {
+      this.onRemoveTemplate(name).then(() => {
         this.set('templateToRemove', null);
         this.set('isRemoving', false);
       });

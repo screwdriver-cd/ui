@@ -13,7 +13,7 @@ export default Component.extend({
 
   isValid: computed('scmUrl', {
     get() {
-      const val = this.get('scmUrl');
+      const val = this.scmUrl;
 
       return val.length !== 0 && parse(val).valid;
     }
@@ -31,7 +31,7 @@ export default Component.extend({
 
       input.removeClass('bad-text-input good-text-input');
 
-      if (this.get('isValid')) {
+      if (this.isValid) {
         input.addClass('good-text-input');
       } else if (val.trim().length > 0) {
         input.addClass('bad-text-input');
@@ -44,8 +44,8 @@ export default Component.extend({
      * @param  {Object} data Project attributes
      */
     saveData() {
-      if (this.get('isValid')) {
-        this.get('onCreatePipeline')(this.get('scmUrl'));
+      if (this.isValid) {
+        this.onCreatePipeline(this.scmUrl);
       }
     }
   }

@@ -24,22 +24,22 @@ export default Component.extend({
   sortedTokens: sort('tokens', 'tokenSorting'),
 
   isButtonDisabled: computed('newName', 'isSaving', function isButtonDisabled() {
-    return !this.get('newName') || this.get('isSaving');
+    return !this.newName || this.isSaving;
   }),
 
   modalButtonText: computed('modalAction', function modalButtonText() {
-    return capitalize(this.get('modalAction'));
+    return capitalize(this.modalAction);
   }),
 
   // Don't show the "new token" and "error" dialogs at the same time
   errorObserver: observer('errorMessage', function errorObserver() {
-    if (this.get('errorMessage')) {
+    if (this.errorMessage) {
       this.set('newToken', null);
       this.set('isSaving', null);
     }
   }),
   newTokenObserver: observer('newToken', function newTokenObserver() {
-    if (this.get('newToken')) {
+    if (this.newToken) {
       this.set('errorMessage', null);
       this.set('isSaving', null);
     }
@@ -55,11 +55,11 @@ export default Component.extend({
      * @method addNewToken
      */
     addNewToken() {
-      const newName = this.get('newName');
+      const newName = this.newName;
 
       this.set('isSaving', true);
 
-      return this.get('onCreateToken')(newName, this.get('newDescription'))
+      return this.onCreateToken(newName, this.newDescription)
         .then(() => {
           this.set('newName', null);
           this.set('newDescription', null);
@@ -95,7 +95,7 @@ export default Component.extend({
      * @param {Number} id
      */
     confirmAction(action, id) {
-      this.set('modalTarget', this.get('tokens').find(token => token.get('id') === id));
+      this.set('modalTarget', this.tokens.find(token => token.get('id') === id));
       this.set('modalAction', action);
 
       if (action === 'delete') {
@@ -116,12 +116,12 @@ export default Component.extend({
       this.set('isShowingModal', false);
 
       if (confirm) {
-        if (this.get('modalAction') === 'delete') {
-          this.get('modalTarget')
-            .destroyRecord({ adapterOptions: { pipelineId: this.get('pipelineId') } });
+        if (this.modalAction === 'delete') {
+          this.modalTarget
+            .destroyRecord({ adapterOptions: { pipelineId: this.pipelineId } });
         } else {
           this.set('isSaving', true);
-          this.get('onRefreshToken')(this.get('modalTarget.id'))
+          this.onRefreshToken(this.get('modalTarget.id'))
             .catch((error) => {
               this.set('errorMessage', error.errors[0].detail);
             });

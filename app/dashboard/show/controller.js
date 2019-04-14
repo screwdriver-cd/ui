@@ -8,7 +8,7 @@ export default Controller.extend({
   editingName: false,
   actions: {
     removePipeline(pipelineId, collectionId) {
-      return get(this, 'store').findRecord('collection', collectionId)
+      return this.store.findRecord('collection', collectionId)
         .then((collection) => {
           const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
 

@@ -84,15 +84,15 @@ module('Acceptance | pipeline build', function(hooks) {
     await visit('/pipelines/4');
 
     assert.equal(currentURL(), '/pipelines/4/events');
-    assert.equal(find('a h1').textContent.trim(), 'foo/bar', 'incorrect pipeline name');
-    assert.equal(findAll('.pipelineWorkflow svg').length, 1, 'not enough workflow');
-    assert.equal(findAll('button.start-button').length, 1, 'should have a start button');
-    assert.equal(findAll('ul.nav-pills').length, 1, 'should show tabs');
+    assert.dom('a h1').hasText('foo/bar', 'incorrect pipeline name');
+    assert.dom('.pipelineWorkflow svg').exists({ count: 1 }, 'not enough workflow');
+    assert.dom('button.start-button').exists({ count: 1 }, 'should have a start button');
+    assert.dom('ul.nav-pills').exists({ count: 1 }, 'should show tabs');
     assert.equal(find('.column-tabs-view .nav-link').eq(0).text().trim(), 'Events');
     assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Events');
     assert.equal(find('.column-tabs-view .nav-link').eq(1).text().trim(), 'Pull Requests');
-    assert.equal(findAll('.separator').length, 1);
-    assert.equal(findAll('.partial-view').length, 2);
+    assert.dom('.separator').exists({ count: 1 });
+    assert.dom('.partial-view').exists({ count: 2 });
 
     await visit('/pipelines/4/pulls');
 

@@ -67,15 +67,15 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
 
-    assert.equal(findAll('.SUCCESS').length, 1);
-    assert.equal(findAll('.status .fa-check-circle-o').length, 1);
-    assert.equal(find('.commit').textContent.trim(), '#abc123');
-    assert.equal(find('.message').textContent.trim(), 'this was a test');
-    assert.equal(findAll('svg').length, 1);
-    assert.equal(findAll('.graph-node').length, 4);
-    assert.equal(findAll('.graph-edge').length, 3);
-    assert.equal(find('.by').textContent.trim(), 'batman');
-    assert.equal(find('.date').textContent.trim(), 'Started now');
+    assert.dom('.SUCCESS').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.message').hasText('this was a test');
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.graph-node').exists({ count: 4 });
+    assert.dom('.graph-edge').exists({ count: 3 });
+    assert.dom('.by').hasText('batman');
+    assert.dom('.date').hasText('Started now');
   });
 
   test('it renders with pr event', async function(assert) {
@@ -98,14 +98,14 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
 
-    assert.equal(findAll('.SUCCESS').length, 1);
-    assert.equal(findAll('.status .fa-check-circle-o').length, 1);
-    assert.equal(find('.commit').textContent.trim(), 'PR-2');
-    assert.equal(find('.message').textContent.trim(), 'this was a test');
-    assert.equal(findAll('svg').length, 1);
-    assert.equal(findAll('.graph-node').length, 4);
-    assert.equal(findAll('.graph-edge').length, 3);
-    assert.equal(find('.by').textContent.trim(), 'batman');
-    assert.equal(find('.date').textContent.trim(), 'Started now');
+    assert.dom('.SUCCESS').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.commit').hasText('PR-2');
+    assert.dom('.message').hasText('this was a test');
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.graph-node').exists({ count: 4 });
+    assert.dom('.graph-edge').exists({ count: 3 });
+    assert.dom('.by').hasText('batman');
+    assert.dom('.date').hasText('Started now');
   });
 });

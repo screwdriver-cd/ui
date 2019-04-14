@@ -19,7 +19,7 @@ module('Integration | Component | sd pipeline nav', function(hooks) {
 
     await render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
 
-    assert.equal(find('a').textContent.trim(), 'EventsSecretsOptionsMetrics');
+    assert.dom('a').hasText('EventsSecretsOptionsMetrics');
   });
 
   test('it renders with child pipelines tab', async function(assert) {
@@ -37,6 +37,6 @@ module('Integration | Component | sd pipeline nav', function(hooks) {
 
     await render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
 
-    assert.equal(find('a').textContent.trim(), 'Child PipelinesEventsSecretsOptionsMetrics');
+    assert.dom('a').hasText('Child PipelinesEventsSecretsOptionsMetrics');
   });
 });

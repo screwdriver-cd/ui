@@ -26,8 +26,8 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
     }}`);
 
-    assert.equal(find('.row strong').textContent.trim(), 'Pipeline');
-    assert.equal(findAll('.row button').length, 3);
+    assert.dom('.row strong').hasText('Pipeline');
+    assert.dom('.row button').exists({ count: 3 });
 
     const $columnTitles = this.$('.event-info .title');
     const $links = this.$('.event-info a');
@@ -42,10 +42,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.equal($links.eq(0).text().trim(), '#abc123');
     assert.equal($links.eq(1).text().trim(), 'anonymous');
 
-    assert.equal(findAll('.SUCCESS').length, 1);
+    assert.dom('.SUCCESS').exists({ count: 1 });
 
-    assert.equal(find('.btn-group').textContent
-      .trim(), 'Most Recent\n      Last Successful\n      Aggregate');
+    assert.dom('.btn-group').hasText('Most Recent Last Successful Aggregate');
   });
 
   test('it updates selected event id', async function(assert) {
@@ -104,7 +103,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       prGroups=pullrequestGroups
     }}`);
 
-    assert.equal(find('.row strong').textContent.trim(), 'Pull Requests');
-    assert.equal(findAll('.row button').length, 2);
+    assert.dom('.row strong').hasText('Pull Requests');
+    assert.dom('.row button').exists({ count: 2 });
   });
 });

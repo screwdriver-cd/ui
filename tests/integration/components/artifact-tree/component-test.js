@@ -2,7 +2,13 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, click, findAll, find } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  click,
+  findAll,
+  find
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const parsedManifest = [{
@@ -41,8 +47,8 @@ module('Integration | Component | artifact tree', function(hooks) {
       }}
     `);
 
-    assert.equal(find('.artifact-tree h4').textContent.trim(), 'Artifacts');
-    assert.equal(findAll('.jstree-node').length, 0);
+    assert.dom('.artifact-tree h4').hasText('Artifacts');
+    assert.dom('.jstree-node').doesNotExist();
   });
 
   test('it renders with artifacts if build finished', async function(assert) {
@@ -54,8 +60,8 @@ module('Integration | Component | artifact tree', function(hooks) {
 
     return settled().then(async () => {
       // Check if it has two nodes and one of them is a leaf/file
-      assert.equal(findAll('.jstree-leaf').length, 1);
-      assert.equal(findAll('.jstree-node').length, 2);
+      assert.dom('.jstree-leaf').exists({ count: 1 });
+      assert.dom('.jstree-node').exists({ count: 2 });
 
       // Check if the href is correctly set and then click the link
       assert.equal(find('.jstree-leaf a').href, parsedManifest[1].a_attr.href);

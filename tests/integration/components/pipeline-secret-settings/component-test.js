@@ -1,7 +1,13 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find, click, findAll, fillIn } from '@ember/test-helpers';
+import {
+  render,
+  find,
+  click,
+  findAll,
+  fillIn
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | pipeline secret settings', function(hooks) {
@@ -27,21 +33,20 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
 
     await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
 
-    assert.equal(find('p').textContent.trim(),
-      'User secrets must also be added to the Screwdriver YAML.');
+    assert.dom('p').hasText('User secrets must also be added to the Screwdriver YAML.');
 
     // the table is present
-    assert.equal(findAll('table').length, 1);
-    assert.equal(findAll('tbody tr').length, 1);
-    assert.equal(findAll('tfoot tr').length, 1);
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tfoot tr').exists({ count: 1 });
 
     // eye-icons are present and have fa-eye class as default
-    assert.ok(find('tbody i').classList.contains('fa-eye'));
-    assert.ok(find('tfoot i').classList.contains('fa-eye'));
+    assert.dom('tbody i').hasClass('fa-eye');
+    assert.dom('tfoot i').hasClass('fa-eye');
 
     // the type of input is a password as default
-    assert.equal(find('tbody .pass input').getAttribute('type'), 'password');
-    assert.equal(find('tfoot .pass input').getAttribute('type'), 'password');
+    assert.dom('tbody .pass input').hasAttribute('type', 'password');
+    assert.dom('tfoot .pass input').hasAttribute('type', 'password');
   });
 
   test('it updates the add button properly', async function(assert) {
@@ -51,16 +56,16 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline}}`);
 
     // starts disabled
-    assert.ok(find('tfoot button').disabled);
+    assert.dom('tfoot button').isDisabled();
 
     // disabled when no value
     await fillIn('.key input', 'SECRET_KEY').keyup();
-    assert.ok(find('tfoot button').disabled);
+    assert.dom('tfoot button').isDisabled();
 
     // disabled when no key
     await fillIn('.key input', '').keyup();
     await fillIn('.pass input', 'SECRET_VAL').keyup();
-    assert.ok(find('tfoot button').disabled);
+    assert.dom('tfoot button').isDisabled();
 
     // enabled when both present
     await fillIn('.key input', 'SECRET_KEY').keyup();
@@ -68,7 +73,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
 
     // disabled again when no key
     await fillIn('.key input', '').keyup();
-    assert.ok(find('tfoot button').disabled);
+    assert.dom('tfoot button').isDisabled();
   });
 
   test('it calls action to create secret', async function(assert) {
@@ -89,9 +94,9 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     await click('tfoot button');
 
     // and clears the new secret form elements
-    assert.equal(find('.key input').value, '');
-    assert.equal(find('.pass input').value, '');
-    assert.ok(find('tfoot button').disabled, 'not disabled');
+    assert.dom('.key input').hasValue('');
+    assert.dom('.pass input').hasValue('');
+    assert.dom('tfoot button').isDisabled('not disabled');
   });
 
   test('it displays an error', async function(assert) {
@@ -110,9 +115,10 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     await click('tfoot button');
 
     // and clears the new secret form elements
-    assert.equal(find('.alert > span').textContent.trim(),
+    assert.dom('.alert > span').hasText(
       'Secret keys can only consist of numbers, uppercase letters and underscores, ' +
-      'and cannot begin with a number.');
+      'and cannot begin with a number.'
+    );
   });
 
   test('it sorts secrets by name alphabetically', async function(assert) {
@@ -147,9 +153,9 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
 
     // secrets are sorted by name
-    assert.equal(find('tbody tr:first-child td:first-child').textContent.trim(), 'BAR');
-    assert.equal(find('tbody tr:nth-child(2) td:first-child').textContent.trim(), 'FOO');
-    assert.equal(find('tbody tr:nth-child(3) td:first-child').textContent.trim(), 'ZOO');
+    assert.dom(find('tbody tr:first-child td:first-child')).hasText('BAR');
+    assert.dom(find('tbody tr:nth-child(2) td:first-child')).hasText('FOO');
+    assert.dom(find('tbody tr:nth-child(3) td:first-child')).hasText('ZOO');
   });
 
   test('it renders differently for a child pipeline', async function(assert) {
@@ -175,9 +181,9 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
       'You may override a secret or revert it back to its original value.');
 
     // Secrets are rendered but footer is not
-    assert.equal(findAll('table').length, 1);
-    assert.equal(findAll('tbody tr').length, 1);
-    assert.equal(findAll('tfoot tr').length, 0);
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tfoot tr').doesNotExist();
   });
 
   test('it toggles eye-icon and input type', async function(assert) {
@@ -201,17 +207,17 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     await click('tbody i');
     await click('tfoot i');
 
-    assert.ok(find('tbody i').classList.contains('fa-eye-slash'));
-    assert.equal(find('tbody .pass input').getAttribute('type'), 'text');
-    assert.ok(find('tfoot i').classList.contains('fa-eye-slash'));
-    assert.equal(find('tfoot .pass input').getAttribute('type'), 'text');
+    assert.dom('tbody i').hasClass('fa-eye-slash');
+    assert.dom('tbody .pass input').hasAttribute('type', 'text');
+    assert.dom('tfoot i').hasClass('fa-eye-slash');
+    assert.dom('tfoot .pass input').hasAttribute('type', 'text');
 
     await click('tbody i');
     await click('tfoot i');
 
-    assert.ok(find('tbody i').classList.contains('fa-eye'));
-    assert.equal(find('tbody .pass input').getAttribute('type'), 'password');
-    assert.ok(find('tfoot i').classList.contains('fa-eye'));
-    assert.equal(find('tfoot .pass input').getAttribute('type'), 'password');
+    assert.dom('tbody i').hasClass('fa-eye');
+    assert.dom('tbody .pass input').hasAttribute('type', 'password');
+    assert.dom('tfoot i').hasClass('fa-eye');
+    assert.dom('tfoot .pass input').hasAttribute('type', 'password');
   });
 });

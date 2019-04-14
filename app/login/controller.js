@@ -7,7 +7,7 @@ export default Controller.extend({
   scmContexts: alias('model'),
   actions: {
     authenticate(scmContext) {
-      this.get('session').authenticate('authenticator:screwdriver-api', scmContext);
+      this.session.authenticate('authenticator:screwdriver-api', scmContext);
     }
   }
 });

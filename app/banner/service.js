@@ -19,7 +19,7 @@ export default Service.extend({
       // Fetch the banners directly from the API
       $.ajax({
         url: bannersUrl,
-        headers: { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` }
+        headers: { Authorization: `Bearer ${this.session.get('data.authenticated.token')}` }
       })
         .done((banners) => {
           if (Array.isArray(banners)) {

@@ -15,9 +15,9 @@ export default Route.extend({
     const pipeline = this.modelFor('pipeline').pipeline;
     const secrets = pipeline.get('secrets');
 
-    this.get('store').unloadAll('token');
+    this.store.unloadAll('token');
 
-    return this.get('store')
+    return this.store
       .findAll('token', { adapterOptions: { pipelineId: pipeline.get('id') } })
       .then(tokens => ({
         tokens,

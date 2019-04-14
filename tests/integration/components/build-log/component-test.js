@@ -66,7 +66,7 @@ module('Integration | Component | build log', function(hooks) {
       buildStartTime="1478912844724"
     }}`);
 
-    assert.equal(find('*').textContent.trim(), 'Click a step to see logs');
+    assert.dom('*').hasText('Click a step to see logs');
 
     // Template block usage:
     await render(hbs`{{#build-log
@@ -91,7 +91,7 @@ module('Integration | Component | build log', function(hooks) {
       buildStartTime="1478912844724"
     }}`);
 
-    assert.equal(find('*').textContent.trim(), 'Click a step to see logs');
+    assert.dom('*').hasText('Click a step to see logs');
     this.set('step', 'banana');
 
     return settled().then(() => {
@@ -330,7 +330,7 @@ module('Integration | Component | build log', function(hooks) {
       buildStartTime="1478912844724"
     }}`);
 
-    assert.equal(find('*').textContent.trim(), 'Click a step to see logs');
+    assert.dom('*').hasText('Click a step to see logs');
     this.set('step', 'banana');
 
     const container = this.$('.wrap')[0];

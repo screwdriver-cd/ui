@@ -16,7 +16,7 @@ module('Integration | Component | login button', function(hooks) {
     });
     await render(hbs`{{login-button authenticate=(action externalAction)}}`);
 
-    assert.equal(find('h2').textContent.trim(), 'Sign in to Screwdriver');
+    assert.dom('h2').hasText('Sign in to Screwdriver');
     await click('a');
   });
 
@@ -33,7 +33,7 @@ module('Integration | Component | login button', function(hooks) {
     this.set('model', contexts);
     await render(hbs`{{login-button authenticate=(action externalAction) scmContexts=model}}`);
 
-    assert.equal(findAll('a').length, 2);
+    assert.dom('a').exists({ count: 2 });
     contexts.forEach((context, index) => {
       assert.equal(this.$(`a:eq(${index})`).text(), ` Sign in with ${context.displayName}`);
       this.$(`a:eq(${index})`).click();

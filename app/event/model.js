@@ -79,7 +79,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   truncatedSha: computed('sha', {
     get() {
-      return this.get('sha').substr(0, 7);
+      return this.sha.substr(0, 7);
     }
   }),
   statusObserver: observer('builds.@each.status', 'isComplete', function statusObserver() {

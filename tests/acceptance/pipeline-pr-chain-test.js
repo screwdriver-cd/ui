@@ -84,15 +84,15 @@ module('Acceptance | pipeline pr-chain', function(hooks) {
     await visit('/pipelines/4/pulls');
 
     wait().andThen(() => {
-      assert.equal(find('a h1').textContent.trim(), 'foo/bar', 'incorrect pipeline name');
-      assert.equal(findAll('.pipelineWorkflow svg').length, 1, 'not enough workflow');
-      assert.equal(findAll('ul.nav-pills').length, 1, 'should show tabs');
+      assert.dom('a h1').hasText('foo/bar', 'incorrect pipeline name');
+      assert.dom('.pipelineWorkflow svg').exists({ count: 1 }, 'not enough workflow');
+      assert.dom('ul.nav-pills').exists({ count: 1 }, 'should show tabs');
       assert.equal(find('.column-tabs-view .nav-link').eq(0).text().trim(), 'Events');
       assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Pull Requests');
       assert.equal(find('.column-tabs-view .nav-link').eq(1).text().trim(), 'Pull Requests');
       assert.equal(find('.column-tabs-view .view .detail .commit').eq(0).text().trim(), 'PR-42');
-      assert.equal(findAll('.separator').length, 1);
-      assert.equal(findAll('.partial-view').length, 2);
+      assert.dom('.separator').exists({ count: 1 });
+      assert.dom('.partial-view').exists({ count: 2 });
     });
   });
 });

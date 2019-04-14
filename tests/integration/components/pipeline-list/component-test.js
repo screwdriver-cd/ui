@@ -35,10 +35,10 @@ module('Integration | Component | pipeline list', function(hooks) {
 
     await render(hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`);
 
-    assert.equal(find('ul li:first-child').textContent.trim(), 'foo/bar');
-    assert.equal(find('ul li:nth-child(2)').textContent.trim(), 'batman/tumbler');
-    assert.equal(find('button').textContent.trim(), 'Start All');
-    assert.equal(find('.num-results span').textContent.trim(), 'Found 2 child pipeline(s)');
+    assert.dom(find('ul li:first-child')).hasText('foo/bar');
+    assert.dom('ul li:nth-child(2)').hasText('batman/tumbler');
+    assert.dom('button').hasText('Start All');
+    assert.dom('.num-results span').hasText('Found 2 child pipeline(s)');
   });
 
   test('it renders with zero child piplines found', async function(assert) {
@@ -56,6 +56,6 @@ module('Integration | Component | pipeline list', function(hooks) {
 
     await render(hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`);
 
-    assert.equal(find('.num-results span').textContent.trim(), 'No child pipeline(s) created');
+    assert.dom('.num-results span').hasText('No child pipeline(s) created');
   });
 });

@@ -8,10 +8,10 @@ export default Component.extend({
   pipelineId: null,
   buttonAction: computed('token.{name,description}', 'newName', 'newDescription', {
     get() {
-      const token = this.get('token');
+      const token = this.token;
 
-      return (this.get('newName') !== token.get('name')
-           || this.get('newDescription') !== token.get('description')) ?
+      return (this.newName !== token.get('name')
+           || this.newDescription !== token.get('description')) ?
         'Update' : 'Delete';
     }
   }),
@@ -22,36 +22,36 @@ export default Component.extend({
   },
   actions: {
     modifyToken(pipelineId) {
-      const token = this.get('token');
+      const token = this.token;
 
-      if (this.get('buttonAction') === 'Delete') {
-        this.get('confirmAction')('delete', this.get('token.id'));
+      if (this.buttonAction === 'Delete') {
+        this.confirmAction('delete', this.get('token.id'));
       } else {
-        token.set('name', this.get('newName'));
-        token.set('description', this.get('newDescription'));
-        this.get('setIsSaving')(true);
+        token.set('name', this.newName);
+        token.set('description', this.newDescription);
+        this.setIsSaving(true);
 
         if (pipelineId) {
           token.save({ adapterOptions: { pipelineId } })
             .then(() => {
-              this.get('setIsSaving')(false);
+              this.setIsSaving(false);
             })
             .catch((error) => {
-              this.get('setErrorMessage')(error.errors[0].detail);
+              this.setErrorMessage(error.errors[0].detail);
             });
         } else {
           token.save()
             .then(() => {
-              this.get('setIsSaving')(false);
+              this.setIsSaving(false);
             })
             .catch((error) => {
-              this.get('setErrorMessage')(error.errors[0].detail);
+              this.setErrorMessage(error.errors[0].detail);
             });
         }
       }
     },
     refresh() {
-      this.get('confirmAction')('refresh', this.get('token.id'));
+      this.confirmAction('refresh', this.get('token.id'));
     }
   }
 });

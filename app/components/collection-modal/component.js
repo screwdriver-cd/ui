@@ -17,11 +17,11 @@ export default Component.extend({
       this.set('showModal', open);
     },
     addNewCollection() {
-      const name = this.get('name');
-      const description = this.get('description');
+      const name = this.name;
+      const description = this.description;
 
       schedule('actions', () => {
-        const newCollection = this.get('store').createRecord('collection', {
+        const newCollection = this.store.createRecord('collection', {
           name,
           description
         });
@@ -30,10 +30,10 @@ export default Component.extend({
           .then(() => {
             this.set('showModal', false);
 
-            let addDirectly = this.get('addToCollection');
+            let addDirectly = this.addToCollection;
 
             if (addDirectly) {
-              addDirectly(this.get('pipelineId'), newCollection.id);
+              addDirectly(this.pipelineId, newCollection.id);
             }
           })
           .catch((error) => {

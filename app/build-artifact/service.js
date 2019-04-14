@@ -99,7 +99,7 @@ export default Service.extend({
 
       return $.ajax({
         url: manifestUrl,
-        headers: { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` }
+        headers: { Authorization: `Bearer ${this.session.get('data.authenticated.token')}` }
       })
         .done((data) => {
           const paths = data.split('\n').sort(); // sort in alphabetical order

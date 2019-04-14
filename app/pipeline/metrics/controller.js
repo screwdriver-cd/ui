@@ -76,9 +76,9 @@ export default Controller.extend({
     this.set('isUTC', false);
 
     // safety step to release references
-    this.set(this.get('eventsChartName'), null);
-    this.set(this.get('buildsChartName'), null);
-    this.set(this.get('stepsChartName'), null);
+    this.set(this.eventsChartName, null);
+    this.set(this.buildsChartName, null);
+    this.set(this.stepsChartName, null);
   },
   /**
    * Memoized range generator
@@ -94,7 +94,7 @@ export default Controller.extend({
   ),
   eventMetrics: computed('metrics.events', {
     get() {
-      const inTrendlineView = this.get('inTrendlineView');
+      const inTrendlineView = this.inTrendlineView;
       let { queuedTime, imagePullTime, duration, total, status } = this.get(
         'metrics.events'
       );
@@ -135,7 +135,7 @@ export default Controller.extend({
   }),
   eventLegend: computed('inTrendlineView', 'metrics.events', {
     get() {
-      const inTrendlineView = this.get('inTrendlineView');
+      const inTrendlineView = this.inTrendlineView;
 
       if (inTrendlineView) {
         return [{
@@ -163,7 +163,7 @@ export default Controller.extend({
   buildMetrics: computed('metrics.builds', 'jobs', {
     get() {
       const builds = this.get('metrics.builds');
-      const jobs = this.get('jobs');
+      const jobs = this.jobs;
 
       return {
         json: builds,
@@ -177,7 +177,7 @@ export default Controller.extend({
   }),
   buildLegend: computed('jobs}', {
     get() {
-      const jobs = this.get('jobs');
+      const jobs = this.jobs;
       const colors = this.get('color.pattern');
 
       return jobs.map((name, i) => ({
@@ -189,7 +189,7 @@ export default Controller.extend({
   }),
   stepMetrics: computed('metrics.{steps,stepGroup}', {
     get() {
-      const { steps: { data }, stepGroup } = this.get('metrics');
+      const { steps: { data }, stepGroup } = this.metrics;
 
       return {
         json: data,
@@ -303,7 +303,7 @@ export default Controller.extend({
     };
   }),
   generateAxis(metricType) {
-    const axis = this.get('axis');
+    const axis = this.axis;
     const times = this.get(`metrics.${metricType}.createTime`);
 
     let { values, format } = axis.x.tick;
@@ -463,9 +463,9 @@ export default Controller.extend({
   },
   onInitFns: computed(function onInitOuter() {
     const self = this;
-    const eventsChartName = this.get('eventsChartName');
-    const buildsChartName = this.get('buildsChartName');
-    const stepsChartName = this.get('stepsChartName');
+    const eventsChartName = this.eventsChartName;
+    const buildsChartName = this.buildsChartName;
+    const stepsChartName = this.stepsChartName;
 
     /**
      * unlock tooltip
@@ -685,7 +685,7 @@ export default Controller.extend({
     };
   }),
   setDates(start, end) {
-    if (this.get('startTime') !== start || this.get('endTime') !== end) {
+    if (this.startTime !== start || this.endTime !== end) {
       this.set('startTime', start);
       this.set('endTime', end);
 
@@ -695,7 +695,7 @@ export default Controller.extend({
   },
   actions: {
     toggleTrendlineView(enabledTrendline) {
-      const chart = this.get('eventsChart');
+      const chart = this.eventsChart;
       const savedZoomDomain = chart.internal.x.orgDomain();
 
       this.set('inTrendlineView', enabledTrendline);
@@ -717,14 +717,14 @@ export default Controller.extend({
     selectJob(name) {
       const { [name]: id } = this.get('metrics.jobMap');
 
-      if (id && this.get('selectedJobName') !== name) {
+      if (id && this.selectedJobName !== name) {
         this.send('setJobId', id);
       } else {
         this.set('errorMessage', `Unknown Job: ${name}`);
       }
     },
     setTimeRange(range) {
-      if (this.get('selectedRange') === range) {
+      if (this.selectedRange === range) {
         return;
       }
 

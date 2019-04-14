@@ -28,7 +28,7 @@ export default Controller.extend({
         const jobId = this.get('job.id');
 
         if (event) {
-          return this.get('prEventsService').getPRevents(pipeline, event, jobId);
+          return this.prEventsService.getPRevents(pipeline, event, jobId);
         }
       }
 
@@ -39,7 +39,7 @@ export default Controller.extend({
   actions: {
 
     stopBuild() {
-      const build = this.get('build');
+      const build = this.build;
 
       build.set('status', 'ABORTED');
 
@@ -88,14 +88,14 @@ export default Controller.extend({
    * @param  {Number}    [timeout=ENV.APP.BUILD_RELOAD_TIMER] ms to wait before reloading
    */
   reloadBuild(timeout = ENV.APP.BUILD_RELOAD_TIMER) {
-    const build = this.get('build');
+    const build = this.build;
     const status = build.get('status');
 
     // reload again in a little bit if queued
-    if (!this.get('loading')) {
+    if (!this.loading) {
       if ((status === 'QUEUED' || status === 'RUNNING')) {
         later(this, () => {
-          if (!build.get('isDeleted') && !this.get('loading')) {
+          if (!build.get('isDeleted') && !this.loading) {
             this.set('loading', true);
 
             build.reload().then(() => {
@@ -107,7 +107,7 @@ export default Controller.extend({
         }, timeout);
       } else {
         // refetch builds which are part of current event
-        this.get('event').hasMany('builds').reload();
+        this.event.hasMany('builds').reload();
       }
     }
   },

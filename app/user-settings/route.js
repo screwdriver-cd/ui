@@ -12,8 +12,8 @@ export default Route.extend(AuthenticatedRouteMixin, {
     if (get(this, 'session.data.authenticated.isGuest')) {
       this.transitionTo('home');
     }
-    this.get('store').unloadAll('token');
+    this.store.unloadAll('token');
 
-    return this.get('store').findAll('token');
+    return this.store.findAll('token');
   }
 });

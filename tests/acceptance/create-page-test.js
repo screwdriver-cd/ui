@@ -1,4 +1,11 @@
-import { click, fillIn, currentURL, find, triggerEvent, visit } from '@ember/test-helpers';
+import {
+  click,
+  fillIn,
+  currentURL,
+  find,
+  triggerEvent,
+  visit
+} from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
@@ -94,6 +101,6 @@ module('Acceptance | create', function(hooks) {
     await triggerEvent('.text-input', 'keyup');
     await click('button.blue-button');
     assert.equal(currentURL(), '/create');
-    assert.equal(find('.alert > span').textContent, 'something conflicting');
+    assert.dom('.alert > span').hasText('something conflicting');
   });
 });

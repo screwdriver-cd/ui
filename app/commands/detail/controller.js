@@ -13,14 +13,14 @@ export default Controller.extend({
   },
   latest: computed('commands.[]', {
     get() {
-      return this.get('commands')[0];
+      return this.commands[0];
     }
   }),
   versionCommand: computed('selectedVersion', 'commands.[]', {
     get() {
-      const version = this.get('selectedVersion') || this.get('latest.version');
+      const version = this.selectedVersion || this.get('latest.version');
 
-      return this.get('commands').findBy('version', version);
+      return this.commands.findBy('version', version);
     }
   }),
   // Set selected version to null whenever the list of commands changes
@@ -32,7 +32,7 @@ export default Controller.extend({
       this.set('selectedVersion', version);
     },
     removeCommand(namespace, name) {
-      return this.get('command').deleteCommands(namespace, name)
+      return this.command.deleteCommands(namespace, name)
         .then(
           () => this.transitionToRoute('commands'),
           err => this.set('errorMessage', err));

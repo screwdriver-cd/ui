@@ -29,27 +29,27 @@ module('Integration | Component | secret view', function(hooks) {
     const passInput = this.$('.pass input');
     const allowInput = this.$('.allow input');
 
-    assert.equal(find('.name').textContent.trim(), 'TEST_SECRET');
+    assert.dom('.name').hasText('TEST_SECRET');
     assert.equal(passInput.attr('placeholder'), 'Protected');
     assert.equal(passInput.val(), '');
     assert.equal(allowInput.prop('checked'), false);
-    assert.equal(find('button').textContent.trim(), 'Delete');
+    assert.dom('button').hasText('Delete');
 
     // button value changes when user types a new value
     passInput.val('banana').keyup();
-    assert.equal(find('button').textContent.trim(), 'Update');
+    assert.dom('button').hasText('Update');
 
     // button value changes when user types a new value
     passInput.val('').keyup();
-    assert.equal(find('button').textContent.trim(), 'Delete');
+    assert.dom('button').hasText('Delete');
 
     // button value changes when user click the checkbox
     allowInput.click();
-    assert.equal(find('button').textContent.trim(), 'Update');
+    assert.dom('button').hasText('Update');
 
     // button value changes when user click the checkbox again to change it back
     allowInput.click();
-    assert.equal(find('button').textContent.trim(), 'Delete');
+    assert.dom('button').hasText('Delete');
   });
 
   test('it trys to delete a secret', async function(assert) {
@@ -148,7 +148,7 @@ module('Integration | Component | secret view', function(hooks) {
     const passInput = this.$('.pass input');
 
     assert.equal(passInput.attr('placeholder'), 'Inherited from parent pipeline');
-    assert.equal(find('button').textContent.trim(), 'Override');
+    assert.dom('button').hasText('Override');
   });
 
   test('it overrides a secret for a child pipeline', async function(assert) {

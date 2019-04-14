@@ -24,7 +24,7 @@ export default Controller.extend({
         });
     },
     refreshToken(id) {
-      return this.get('refreshService').refreshToken(id)
+      return this.refreshService.refreshToken(id)
         .then((token) => {
           this.set('newToken', token);
         });

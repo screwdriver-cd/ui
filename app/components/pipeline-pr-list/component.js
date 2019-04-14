@@ -9,7 +9,7 @@ export default Component.extend({
   inited: true,
   showJobs: computed('jobs.@each.builds', 'inited', {
     get() {
-      return this.get('inited') || this.get('jobs').some(j => !!j.get('builds.length'));
+      return this.inited || this.jobs.some(j => !!j.get('builds.length'));
     }
   })
 });

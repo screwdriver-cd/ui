@@ -58,7 +58,7 @@ module('Acceptance | secrets', function(hooks) {
     await visit('/pipelines/1/secrets');
 
     assert.equal(currentURL(), '/pipelines/1/secrets');
-    assert.equal(findAll('.secrets tbody tr').length, 2);
-    assert.equal(findAll('.token-list tbody tr').length, 2);
+    assert.dom('.secrets tbody tr').exists({ count: 2 });
+    assert.dom('.token-list tbody tr').exists({ count: 2 });
   });
 });

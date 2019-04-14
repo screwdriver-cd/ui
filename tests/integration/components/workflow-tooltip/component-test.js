@@ -9,7 +9,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
   test('it renders', async function(assert) {
     await render(hbs`{{workflow-tooltip}}`);
 
-    assert.equal(find('*').textContent.trim(), '');
+    assert.dom('*').hasText('');
 
     // Template block usage:
     await render(hbs`
@@ -18,7 +18,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       {{/workflow-tooltip}}
     `);
 
-    assert.equal(find('*').textContent.trim(), 'template block text');
+    assert.dom('*').hasText('template block text');
   });
 
   test('it renders build link', async function(assert) {
@@ -33,8 +33,8 @@ module('Integration | Component | workflow tooltip', function(hooks) {
 
     await render(hbs`{{workflow-tooltip tooltipData=data}}`);
 
-    assert.equal(findAll('.content a').length, 1);
-    assert.equal(find('*').textContent.trim(), 'Go to build details');
+    assert.dom('.content a').exists({ count: 1 });
+    assert.dom('*').hasText('Go to build details');
   });
 
   test('it renders remote trigger link', async function(assert) {
@@ -49,8 +49,8 @@ module('Integration | Component | workflow tooltip', function(hooks) {
 
     await render(hbs`{{workflow-tooltip tooltipData=data}}`);
 
-    assert.equal(findAll('.content a').length, 1);
-    assert.equal(find('*').textContent.trim(), 'Go to remote pipeline');
+    assert.dom('.content a').exists({ count: 1 });
+    assert.dom('*').hasText('Go to remote pipeline');
   });
 
   test('it renders restart link', async function(assert) {
@@ -71,8 +71,8 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       confirmStartBuild="confirmStartBuild"
     }}`);
 
-    assert.equal(findAll('.content a').length, 2);
-    assert.equal(find('a').textContent.trim(), 'Go to build detailsStart pipeline from here');
+    assert.dom('.content a').exists({ count: 2 });
+    assert.dom('a').hasText('Go to build detailsStart pipeline from here');
   });
 
   test('it should update position and hidden status', async function(assert) {
@@ -85,13 +85,13 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       showTooltipPosition=pos
     }}`);
 
-    assert.ok(find('.workflow-tooltip').classList.contains('show-tooltip'));
-    assert.ok(find('.workflow-tooltip').classList.contains('left'));
+    assert.dom('.workflow-tooltip').hasClass('show-tooltip');
+    assert.dom('.workflow-tooltip').hasClass('left');
 
     this.set('show', false);
     this.set('pos', 'center');
 
-    assert.notOk(find('.workflow-tooltip').classList.contains('show-tooltip'));
-    assert.notOk(find('.workflow-tooltip').classList.contains('left'));
+    assert.dom('.workflow-tooltip').hasNoClass('show-tooltip');
+    assert.dom('.workflow-tooltip').hasNoClass('left');
   });
 });
