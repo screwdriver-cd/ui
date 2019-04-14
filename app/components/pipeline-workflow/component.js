@@ -1,3 +1,4 @@
+import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
 import { get, computed, set, setProperties } from '@ember/object';
 import { all, reject } from 'rsvp';
@@ -44,7 +45,7 @@ export default Component.extend({
       });
     }
   }),
-  displayRestartButton: computed.alias('authenticated'),
+  displayRestartButton: alias('authenticated'),
 
   init() {
     this._super(...arguments);

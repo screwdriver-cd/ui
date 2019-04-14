@@ -1,3 +1,4 @@
+import { sort } from '@ember/object/computed';
 import Component from '@ember/component';
 import { computed, observer } from '@ember/object';
 import Table from 'ember-light-table';
@@ -69,7 +70,7 @@ export default Component.extend({
       });
     }
   }),
-  refinedModel: computed.sort('filteredModel', 'sortBy'),
+  refinedModel: sort('filteredModel', 'sortBy'),
   sortBy: computed('dir', 'sort', {
     get() {
       return [`${this.get('sort')}:${this.get('dir')}`];

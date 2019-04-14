@@ -2,7 +2,11 @@
 import Component from '@ember/component';
 import { get, set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-tools';
+import {
+  icon,
+  decorateGraph,
+  subgraphFilter
+} from 'screwdriver-ui/utils/graph-tools';
 
 export default Component.extend({
   router: service(),

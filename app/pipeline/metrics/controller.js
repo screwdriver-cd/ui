@@ -6,7 +6,10 @@ import { htmlSafe } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import $ from 'jquery';
-import timeRange, { toCustomLocaleString, CONSTANT } from 'screwdriver-ui/utils/time-range';
+import timeRange, {
+  toCustomLocaleString,
+  CONSTANT
+} from 'screwdriver-ui/utils/time-range';
 
 const locked = Symbol('locked');
 
