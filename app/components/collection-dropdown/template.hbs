@@ -2,7 +2,8 @@
   {{#if dropdownText}}
     {{#dd.toggle}}
       <a class="toggler-text">
-        {{dropdownText}}<span class="caret caret-display"></span>
+        {{dropdownText}}
+        <span class="caret caret-display"></span>
       </a>
     {{/dd.toggle}}
   {{else}}
@@ -20,13 +21,15 @@
     {{/each}}
     <li>
       <span class="create-dropdown" onclick={{action "openModal"}}>
-        {{fa-icon "plus-circle" title="Create" size="md"}} CREATE
+        {{fa-icon "plus-circle" title="Create" size="md"}}
+        CREATE
       </span>
     </li>
   {{/dd.menu}}
 {{/bs-dropdown}}
-{{collection-modal 
+{{collection-modal
   showModal=showCollectionModal
   addNewCollection=addNewCollection
   addToCollection=addToCollection
-  pipelineId=pipeline.id}}
+  pipelineId=pipeline.id
+}}

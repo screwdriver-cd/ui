@@ -30,11 +30,11 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
     subject = this.owner.lookup('mixin:model-reloader');
   });
 
-  test('it mixes in to an ember object', function (assert) {
+  test('it mixes in to an ember object', function(assert) {
     assert.ok(typeof subject.startReloading === 'function');
   });
 
-  test('it try to start a reloading model', function (assert) {
+  test('it try to start a reloading model', function(assert) {
     subject.set('scheduleReload', () => {
       subject.set('runLater', 'foo');
     });
@@ -42,7 +42,7 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
     assert.equal(subject.get('runLater'), 'foo');
   });
 
-  test('it not try to start a reloading model', function (assert) {
+  test('it not try to start a reloading model', function(assert) {
     subject.set('runLater', 1);
     subject.set('scheduleReload', () => {
       subject.set('runLater', 'foo');
@@ -51,14 +51,14 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
     assert.equal(subject.get('runLater'), 1);
   });
 
-  test('it will stop a reloading model', function (assert) {
+  test('it will stop a reloading model', function(assert) {
     subject.set('runLater', 1);
 
     subject.stopReloading();
     assert.notOk(subject.get('runLater'));
   });
 
-  test('it calls reload on a model', function (assert) {
+  test('it calls reload on a model', function(assert) {
     assert.expect(1);
     subject.set('testModel', {
       reload() {
@@ -74,7 +74,7 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
     subject.reloadModel();
   });
 
-  test('it should not reload a model if shouldReload returns false', function (assert) {
+  test('it should not reload a model if shouldReload returns false', function(assert) {
     assert.expect(1);
     const testModel = {
       reload() {
@@ -85,7 +85,7 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
     };
 
     subject.set('testModel', testModel);
-    subject.set('shouldReload', (m) => {
+    subject.set('shouldReload', m => {
       assert.equal(m, testModel);
 
       return false;
@@ -95,7 +95,7 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
     subject.reloadModel();
   });
 
-  test('it force reloads a model', function (assert) {
+  test('it force reloads a model', function(assert) {
     assert.expect(2);
     subject.set('testModel', {
       reload() {
@@ -113,10 +113,10 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
     });
   });
 
-  test('it calls reload function if modelToReload is absent', function (assert) {
+  test('it calls reload function if modelToReload is absent', function(assert) {
     assert.expect(1);
 
-    subject.set('reload', function () {
+    subject.set('reload', function() {
       assert.ok(true);
 
       return resolve({});

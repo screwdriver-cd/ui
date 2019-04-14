@@ -19,6 +19,7 @@ export default Route.extend(ApplicationRouteMixin, {
   sessionInvalidated() {
     this.reloadPage();
   },
+  // eslint-disable-next-line ember/no-observers
   sessionChanged: observer('session.data.sessionChanged', function sessionChanged() {
     if (this.session.get('data.sessionChanged')) {
       this.session.set('data.sessionChanged', false);

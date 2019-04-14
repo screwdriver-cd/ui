@@ -32,12 +32,14 @@ export default Component.extend({
   }),
 
   // Don't show the "new token" and "error" dialogs at the same time
+  // eslint-disable-next-line ember/no-observers
   errorObserver: observer('errorMessage', function errorObserver() {
     if (this.errorMessage) {
       this.set('newToken', null);
       this.set('isSaving', null);
     }
   }),
+  // eslint-disable-next-line ember/no-observers
   newTokenObserver: observer('newToken', function newTokenObserver() {
     if (this.newToken) {
       this.set('errorMessage', null);
@@ -55,7 +57,7 @@ export default Component.extend({
      * @method addNewToken
      */
     addNewToken() {
-      const newName = this.newName;
+      const { newName } = this;
 
       this.set('isSaving', true);
 
@@ -63,7 +65,8 @@ export default Component.extend({
         .then(() => {
           this.set('newName', null);
           this.set('newDescription', null);
-        }).catch((error) => {
+        })
+        .catch(error => {
           this.set('errorMessage', error.errors[0].detail);
         });
     },
@@ -101,8 +104,10 @@ export default Component.extend({
       if (action === 'delete') {
         this.set('modalText', `The "${this.get('modalTarget.name')}" token will be deleted.`);
       } else {
-        this.set('modalText',
-          `The current "${this.get('modalTarget.name')}" token will be invalidated.`);
+        this.set(
+          'modalText',
+          `The current "${this.get('modalTarget.name')}" token will be invalidated.`
+        );
       }
 
       this.set('isShowingModal', true);
@@ -117,14 +122,12 @@ export default Component.extend({
 
       if (confirm) {
         if (this.modalAction === 'delete') {
-          this.modalTarget
-            .destroyRecord({ adapterOptions: { pipelineId: this.pipelineId } });
+          this.modalTarget.destroyRecord({ adapterOptions: { pipelineId: this.pipelineId } });
         } else {
           this.set('isSaving', true);
-          this.onRefreshToken(this.get('modalTarget.id'))
-            .catch((error) => {
-              this.set('errorMessage', error.errors[0].detail);
-            });
+          this.onRefreshToken(this.get('modalTarget.id')).catch(error => {
+            this.set('errorMessage', error.errors[0].detail);
+          });
         }
       }
     }

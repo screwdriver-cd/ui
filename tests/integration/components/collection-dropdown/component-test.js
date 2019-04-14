@@ -1,7 +1,7 @@
 import { resolve, reject } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, findAll, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import EmberObject from '@ember/object';
 import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';
@@ -45,7 +45,7 @@ module('Integration | Component | collection add button', function(hooks) {
     injectSessionStub(this);
     injectScmServiceStub(this);
 
-    const $ = this.$;
+    const { $ } = this;
     const pipelines = [
       EmberObject.create({
         id: 2,
@@ -107,7 +107,7 @@ module('Integration | Component | collection add button', function(hooks) {
     injectSessionStub(this);
     injectScmServiceStub(this);
 
-    const $ = this.$;
+    const { $ } = this;
     const pipelines = [
       EmberObject.create({
         id: 1,

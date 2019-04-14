@@ -8,7 +8,8 @@ const startAll = () => {
 };
 
 const startAllFailed = () => {
-  server.post('http://localhost:8080/v4/pipelines/1/startall', () => [500,
+  server.post('http://localhost:8080/v4/pipelines/1/startall', () => [
+    500,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
       statusCode: 500,
@@ -28,13 +29,13 @@ module('Unit | Service | sync', function(hooks) {
     server.shutdown();
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     const service = this.owner.lookup('service:pipeline-startall');
 
     assert.ok(service);
   });
 
-  test('it makes a call start all child pipelines', function (assert) {
+  test('it makes a call start all child pipelines', function(assert) {
     assert.expect(1);
     startAll();
     const service = this.owner.lookup('service:pipeline-startall');
@@ -47,13 +48,13 @@ module('Unit | Service | sync', function(hooks) {
     });
   });
 
-  test('it fails to stall all child piplines with error message ', function (assert) {
+  test('it fails to stall all child piplines with error message ', function(assert) {
     assert.expect(2);
     startAllFailed();
     const service = this.owner.lookup('service:pipeline-startall');
     const p = service.startAll(1, undefined);
 
-    p.catch((error) => {
+    p.catch(error => {
       assert.equal(error, 'internal server error');
       const [request] = server.handledRequests;
 

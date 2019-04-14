@@ -1,6 +1,4 @@
-/* global localStorage */
 import $ from 'jquery';
-
 import { not, or } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import Component from '@ember/component';

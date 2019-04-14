@@ -3,7 +3,7 @@ import moment from 'moment';
 import hbs from 'htmlbars-inline-precompile';
 import { module } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, click, find } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 import test from 'ember-sinon-qunit/test-support/test';
 import { resolve, Promise as EmberPromise } from 'rsvp';
 import Service from '@ember/service';
@@ -19,9 +19,7 @@ const coverageService = Service.extend({
   }
 });
 
-const buildStepsMock = [
-  { name: 'sd-setup-screwdriver-scm-bookend' }
-];
+const buildStepsMock = [{ name: 'sd-setup-screwdriver-scm-bookend' }];
 
 const eventMock = EmberObject.create({
   id: 'abcd',
@@ -76,7 +74,7 @@ module('Integration | Component | build banner', function(hooks) {
 
   test('it renders', async function(assert) {
     assert.expect(10);
-    const $ = this.$;
+    const { $ } = this;
 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
@@ -111,21 +109,52 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
     const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
-    assert.equal($('li.job-name .banner-value').text().trim(), 'PR-671');
-    assert.equal($('.commit a').prop('href'),
-      'http://example.com/batcave/batmobile/commit/abcdef1029384');
-    assert.equal($('.commit a').text().trim(), '#abcdef1');
-    assert.equal($('.duration .banner-value').text().trim(), '11 seconds' +
-    '4 seconds blocked5 seconds pulling image2 seconds in build');
-    assert.equal($('.created .banner-value').text().trim(), expectedTime);
-    assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
-    assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
+    assert.equal(
+      $('li.job-name .banner-value')
+        .text()
+        .trim(),
+      'PR-671'
+    );
+    assert.equal(
+      $('.commit a').prop('href'),
+      'http://example.com/batcave/batmobile/commit/abcdef1029384'
+    );
+    assert.equal(
+      $('.commit a')
+        .text()
+        .trim(),
+      '#abcdef1'
+    );
+    assert.equal(
+      $('.duration .banner-value')
+        .text()
+        .trim(),
+      '11 seconds4 seconds blocked5 seconds pulling image2 seconds in build'
+    );
+    assert.equal(
+      $('.created .banner-value')
+        .text()
+        .trim(),
+      expectedTime
+    );
+    assert.equal(
+      $('.user .banner-value')
+        .text()
+        .trim(),
+      'Bruce W'
+    );
+    assert.equal(
+      $('.docker-container .banner-value')
+        .text()
+        .trim(),
+      'node:6'
+    );
     assert.equal($('button').length, 0);
   });
 
   test('it renders pr link if pr url info is available', async function(assert) {
     assert.expect(12);
-    const $ = this.$;
+    const { $ } = this;
 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
@@ -155,24 +184,62 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
     const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
-    assert.equal($('.pr .pr-url-holder a').prop('href'),
-      'https://github.com/screwdriver-cd/ui/pull/292');
-    assert.equal($('.pr .pr-url-holder a').text().trim(), 'PR#292');
-    assert.equal($('li.job-name .banner-value').text().trim(), 'PR-671');
-    assert.equal($('.commit a').prop('href'),
-      'http://example.com/batcave/batmobile/commit/abcdef1029384');
-    assert.equal($('.commit a').text().trim(), '#abcdef1');
-    assert.equal($('.duration .banner-value').text().trim(), '5 seconds0 seconds' +
-    ' blocked0 seconds pulling image0 seconds in build');
-    assert.equal($('.created .banner-value').text().trim(), expectedTime);
-    assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
-    assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
+    assert.equal(
+      $('.pr .pr-url-holder a').prop('href'),
+      'https://github.com/screwdriver-cd/ui/pull/292'
+    );
+    assert.equal(
+      $('.pr .pr-url-holder a')
+        .text()
+        .trim(),
+      'PR#292'
+    );
+    assert.equal(
+      $('li.job-name .banner-value')
+        .text()
+        .trim(),
+      'PR-671'
+    );
+    assert.equal(
+      $('.commit a').prop('href'),
+      'http://example.com/batcave/batmobile/commit/abcdef1029384'
+    );
+    assert.equal(
+      $('.commit a')
+        .text()
+        .trim(),
+      '#abcdef1'
+    );
+    assert.equal(
+      $('.duration .banner-value')
+        .text()
+        .trim(),
+      '5 seconds0 seconds blocked0 seconds pulling image0 seconds in build'
+    );
+    assert.equal(
+      $('.created .banner-value')
+        .text()
+        .trim(),
+      expectedTime
+    );
+    assert.equal(
+      $('.user .banner-value')
+        .text()
+        .trim(),
+      'Bruce W'
+    );
+    assert.equal(
+      $('.docker-container .banner-value')
+        .text()
+        .trim(),
+      'node:6'
+    );
     assert.equal($('button').length, 0);
   });
 
   test('it renders prCommit dropdown if event type is pr', async function(assert) {
     assert.expect(13);
-    const $ = this.$;
+    const { $ } = this;
 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
@@ -182,8 +249,10 @@ module('Integration | Component | build banner', function(hooks) {
 
     this.set('buildStepsMock', buildStepsMock);
     this.set('eventMock', eventMock);
-    this.set('prEvents', new EmberPromise(resolves =>
-      resolves([{ build: buildMock, event: eventMock }])));
+    this.set(
+      'prEvents',
+      new EmberPromise(resolves => resolves([{ build: buildMock, event: eventMock }]))
+    );
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -203,19 +272,62 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
     const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
-    assert.equal($('.pr .pr-url-holder a').prop('href'),
-      'https://github.com/screwdriver-cd/ui/pull/292');
-    assert.equal($('.pr .pr-url-holder a').text().trim(), 'PR#292');
-    assert.equal($('li.job-name .banner-value').text().trim(), 'PR-671');
-    assert.equal($('.commit a').prop('href'),
-      'http://example.com/batcave/batmobile/commit/abcdef1029384');
-    assert.equal($('.commit .commit-sha').text().trim(), '#abcdef1');
-    assert.equal($('.commit ul li').text().trim(), '1. abcdef1');
-    assert.equal($('.duration .banner-value').text().trim(), '5 seconds0 seconds' +
-    ' blocked0 seconds pulling image0 seconds in build');
-    assert.equal($('.created .banner-value').text().trim(), expectedTime);
-    assert.equal($('.user .banner-value').text().trim(), 'Bruce W');
-    assert.equal($('.docker-container .banner-value').text().trim(), 'node:6');
+    assert.equal(
+      $('.pr .pr-url-holder a').prop('href'),
+      'https://github.com/screwdriver-cd/ui/pull/292'
+    );
+    assert.equal(
+      $('.pr .pr-url-holder a')
+        .text()
+        .trim(),
+      'PR#292'
+    );
+    assert.equal(
+      $('li.job-name .banner-value')
+        .text()
+        .trim(),
+      'PR-671'
+    );
+    assert.equal(
+      $('.commit a').prop('href'),
+      'http://example.com/batcave/batmobile/commit/abcdef1029384'
+    );
+    assert.equal(
+      $('.commit .commit-sha')
+        .text()
+        .trim(),
+      '#abcdef1'
+    );
+    assert.equal(
+      $('.commit ul li')
+        .text()
+        .trim(),
+      '1. abcdef1'
+    );
+    assert.equal(
+      $('.duration .banner-value')
+        .text()
+        .trim(),
+      '5 seconds0 seconds blocked0 seconds pulling image0 seconds in build'
+    );
+    assert.equal(
+      $('.created .banner-value')
+        .text()
+        .trim(),
+      expectedTime
+    );
+    assert.equal(
+      $('.user .banner-value')
+        .text()
+        .trim(),
+      'Bruce W'
+    );
+    assert.equal(
+      $('.docker-container .banner-value')
+        .text()
+        .trim(),
+      'node:6'
+    );
     assert.equal($('button').length, 0);
   });
 
@@ -314,11 +426,9 @@ module('Integration | Component | build banner', function(hooks) {
   });
 
   test('it renders coverage info if coverage step finished', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
     const coverageStepsMock = [
-      { name: 'sd-setup-screwdriver-scm-bookend',
-        startTime: '2016-11-04T20:09:41.238Z'
-      },
+      { name: 'sd-setup-screwdriver-scm-bookend', startTime: '2016-11-04T20:09:41.238Z' },
       {
         name: 'sd-teardown-screwdriver-coverage-bookend',
         endTime: '2016-11-04T21:09:41.238Z'
@@ -345,15 +455,25 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.equal($('.coverage .banner-value').text().trim(), '98%');
-      assert.equal($('.tests .banner-value').text().trim(), '7/10');
+      assert.equal(
+        $('.coverage .banner-value')
+          .text()
+          .trim(),
+        '98%'
+      );
+      assert.equal(
+        $('.tests .banner-value')
+          .text()
+          .trim(),
+        '7/10'
+      );
       assert.equal($('.coverage a').prop('href'), 'http://example.com/coverage/123');
       assert.equal($('.tests a').prop('href'), 'http://example.com/coverage/123');
     });
   });
 
   test('it renders default coverage info if coverage step has not finished', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
     const coverageStepsMock = [
       { name: 'sd-setup-screwdriver-scm-bookend' },
       { name: 'sd-teardown-screwdriver-coverage-bookend' }
@@ -385,19 +505,27 @@ module('Integration | Component | build banner', function(hooks) {
 
     return settled().then(() => {
       assert.dom('button').hasText('Stop');
-      assert.equal($('.coverage .banner-value').text().trim(), 'N/A');
-      assert.equal($('.tests .banner-value').text().trim(), 'N/A');
+      assert.equal(
+        $('.coverage .banner-value')
+          .text()
+          .trim(),
+        'N/A'
+      );
+      assert.equal(
+        $('.tests .banner-value')
+          .text()
+          .trim(),
+        'N/A'
+      );
       assert.equal($('.coverage a').prop('title'), 'Coverage report not generated');
       assert.equal($('.tests a').prop('title'), 'Tests report not generated');
     });
   });
 
   test('it overrides coverage info if it is set in build meta', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
     const coverageStepsMock = [
-      { name: 'sd-setup-screwdriver-scm-bookend',
-        startTime: '2016-11-04T20:09:41.238Z'
-      },
+      { name: 'sd-setup-screwdriver-scm-bookend', startTime: '2016-11-04T20:09:41.238Z' },
       {
         name: 'sd-teardown-screwdriver-coverage-bookend',
         endTime: '2016-11-04T21:09:41.238Z'
@@ -426,17 +554,25 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.equal($('.coverage .banner-value').text().trim(), '100%');
-      assert.equal($('.tests .banner-value').text().trim(), '10/10');
+      assert.equal(
+        $('.coverage .banner-value')
+          .text()
+          .trim(),
+        '100%'
+      );
+      assert.equal(
+        $('.tests .banner-value')
+          .text()
+          .trim(),
+        '10/10'
+      );
     });
   });
 
   test('it does not override coverage info if build meta format is not correct', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
     const coverageStepsMock = [
-      { name: 'sd-setup-screwdriver-scm-bookend',
-        startTime: '2016-11-04T20:09:41.238Z'
-      },
+      { name: 'sd-setup-screwdriver-scm-bookend', startTime: '2016-11-04T20:09:41.238Z' },
       {
         name: 'sd-teardown-screwdriver-coverage-bookend',
         endTime: '2016-11-04T21:09:41.238Z'
@@ -469,13 +605,23 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.equal($('.coverage .banner-value').text().trim(), '98%');
-      assert.equal($('.tests .banner-value').text().trim(), '7/10');
+      assert.equal(
+        $('.coverage .banner-value')
+          .text()
+          .trim(),
+        '98%'
+      );
+      assert.equal(
+        $('.tests .banner-value')
+          .text()
+          .trim(),
+        '7/10'
+      );
     });
   });
 
   test('it does not render coverage info if there is no coverage step', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     assert.expect(1);
     this.set('eventMock', eventMock);

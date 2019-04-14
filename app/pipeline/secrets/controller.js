@@ -15,15 +15,17 @@ export default Controller.extend({
     createSecret(name, value, pipelineId, allowInPR) {
       const newSecret = this.store.createRecord('secret', { name, value, pipelineId, allowInPR });
 
-      return newSecret.save()
-        .then((s) => {
+      return newSecret.save().then(
+        s => {
           this.set('errorMessage', '');
           this.secrets.reload();
 
           return s;
-        }, (err) => {
+        },
+        err => {
           this.set('errorMessage', err.errors[0].detail);
-        });
+        }
+      );
     },
     createPipelineToken(name, description) {
       const newToken = this.store.createRecord('token', {
@@ -32,19 +34,20 @@ export default Controller.extend({
         action: 'created'
       });
 
-      return newToken.save({ adapterOptions: { pipelineId: this.pipelineId } })
-        .then((token) => {
+      return newToken.save({ adapterOptions: { pipelineId: this.pipelineId } }).then(
+        token => {
           this.set('newToken', token);
-        }, (error) => {
+        },
+        error => {
           newToken.destroyRecord({ adapterOptions: { pipelineId: this.pipelineId } });
           throw error;
-        });
+        }
+      );
     },
     refreshPipelineToken(tokenId) {
-      return this.refreshService.refreshPipelineToken(this.pipelineId, tokenId)
-        .then((token) => {
-          this.set('newToken', token);
-        });
+      return this.refreshService.refreshPipelineToken(this.pipelineId, tokenId).then(token => {
+        this.set('newToken', token);
+      });
     }
   }
 });

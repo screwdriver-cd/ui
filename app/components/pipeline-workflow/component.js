@@ -10,7 +10,7 @@ export default Component.extend({
   showTooltip: false,
   graph: computed('workflowGraph', {
     get() {
-      const jobs = this.jobs;
+      const { jobs } = this;
       const fetchBuilds = [];
       const graph = this.workflowGraph;
 
@@ -20,7 +20,7 @@ export default Component.extend({
       }
 
       // Preload the builds for the jobs
-      jobs.forEach((j) => {
+      jobs.forEach(j => {
         const jobName = get(j, 'name');
         const node = graph.nodes.find(n => n.name === jobName);
 

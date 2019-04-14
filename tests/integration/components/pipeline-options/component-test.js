@@ -4,14 +4,7 @@ import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import {
-  render,
-  settled,
-  click,
-  find,
-  findAll,
-  fillIn
-} from '@ember/test-helpers';
+import { render, settled, click, findAll, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
@@ -23,29 +16,35 @@ module('Integration | Component | pipeline options', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: 'abc1234'
-    }));
-
-    this.set('mockJobs', A([
+    this.set(
+      'mockPipeline',
       EmberObject.create({
-        id: '3456',
-        name: 'B',
-        isDisabled: false
-      }),
-      EmberObject.create({
-        id: '1234',
-        name: 'main',
-        isDisabled: false
-      }),
-      EmberObject.create({
-        id: '2345',
-        name: 'A',
-        isDisabled: false
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234'
       })
-    ]));
+    );
+
+    this.set(
+      'mockJobs',
+      A([
+        EmberObject.create({
+          id: '3456',
+          name: 'B',
+          isDisabled: false
+        }),
+        EmberObject.create({
+          id: '1234',
+          name: 'main',
+          isDisabled: false
+        }),
+        EmberObject.create({
+          id: '2345',
+          name: 'A',
+          isDisabled: false
+        })
+      ])
+    );
 
     await render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
 
@@ -65,15 +64,50 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
 
     // Sync
-    assert.equal(this.$(findAll('section.sync h4')[0]).text().trim(), 'SCM webhooks');
-    assert.equal(this.$(findAll('section.sync h4')[1]).text().trim(), 'Pull requests');
-    assert.equal(this.$(findAll('section.sync h4')[2]).text().trim(), 'Pipeline');
+    assert.equal(
+      this.$(findAll('section.sync h4')[0])
+        .text()
+        .trim(),
+      'SCM webhooks'
+    );
+    assert.equal(
+      this.$(findAll('section.sync h4')[1])
+        .text()
+        .trim(),
+      'Pull requests'
+    );
+    assert.equal(
+      this.$(findAll('section.sync h4')[2])
+        .text()
+        .trim(),
+      'Pipeline'
+    );
 
     // Cache
-    assert.equal(this.$(findAll('section.cache h4')[0]).text().trim(), 'Pipeline');
-    assert.equal(this.$(findAll('section.cache h4')[1]).text().trim(), 'Job A');
-    assert.equal(this.$(findAll('section.cache h4')[2]).text().trim(), 'Job B');
-    assert.equal(this.$(findAll('section.cache h4')[3]).text().trim(), 'Job main');
+    assert.equal(
+      this.$(findAll('section.cache h4')[0])
+        .text()
+        .trim(),
+      'Pipeline'
+    );
+    assert.equal(
+      this.$(findAll('section.cache h4')[1])
+        .text()
+        .trim(),
+      'Job A'
+    );
+    assert.equal(
+      this.$(findAll('section.cache h4')[2])
+        .text()
+        .trim(),
+      'Job B'
+    );
+    assert.equal(
+      this.$(findAll('section.cache h4')[3])
+        .text()
+        .trim(),
+      'Job main'
+    );
 
     // Danger Zone
     assert.dom('section.danger h3').hasText('Danger Zone');
@@ -86,15 +120,18 @@ module('Integration | Component | pipeline options', function(hooks) {
   test('it updates a pipeline', async function(assert) {
     const scm = 'git@github.com:foo/bar.git';
 
-    this.set('updatePipeline', (scmUrl) => {
+    this.set('updatePipeline', scmUrl => {
       assert.equal(scmUrl, scm);
     });
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:notMaster',
-      id: 'abc1234'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:notMaster',
+        id: 'abc1234'
+      })
+    );
 
     // eslint-disable-next-line max-len
     await render(
@@ -106,9 +143,9 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('button.blue-button');
   });
 
-  test('it opens job toggle modal', async function (assert) {
+  test('it opens job toggle modal', async function(assert) {
     assert.expect(8);
-    const $ = this.$;
+    const { $ } = this;
 
     injectSessionStub(this);
 
@@ -131,11 +168,14 @@ module('Integration | Component | pipeline options', function(hooks) {
       }
     });
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: 'abc1234'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234'
+      })
+    );
     this.set('showToggleModal', false);
     this.set('mockJobs', A([main]));
     this.set('username', 'tkyi');
@@ -177,13 +217,18 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.equal(this.get('showToggleModal'), true);
     // Make sure there is only 1 modal
     assert.equal($('.modal').length, 1);
-    assert.equal($('.modal-title').text().trim(), modalTitle);
+    assert.equal(
+      $('.modal-title')
+        .text()
+        .trim(),
+      modalTitle
+    );
     assert.equal($('.message input').length, 1);
     assert.equal(cancelButton.text().trim(), 'Cancel');
     assert.equal(createButton.text().trim(), 'Confirm');
   });
 
-  test('it handles job disabling', async function (assert) {
+  test('it handles job disabling', async function(assert) {
     const main = EmberObject.create({
       id: '1234',
       name: 'main',
@@ -193,11 +238,14 @@ module('Integration | Component | pipeline options', function(hooks) {
       isDisabled: false
     });
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: 'abc1234'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234'
+      })
+    );
 
     this.set('mockJobs', A([main]));
     this.set('username', 'tkyi');
@@ -224,22 +272,27 @@ module('Integration | Component | pipeline options', function(hooks) {
     return settled().then(() => {
       assert.dom('section.jobs h4').hasText('main');
       assert.dom('.x-toggle-container').hasNoClass('x-toggle-container-checked');
-      assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.Disabled by tkyi: testing');
+      assert
+        .dom('section.jobs p')
+        .hasText('Toggle to disable or enable the job.Disabled by tkyi: testing');
     });
   });
 
-  test('it handles job enabling', async function (assert) {
+  test('it handles job enabling', async function(assert) {
     const main = EmberObject.create({
       id: '1234',
       name: 'main',
       isDisabled: true
     });
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: 'abc1234'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234'
+      })
+    );
     this.set('mockJobs', A([main]));
     this.set('setJobStatsMock', (id, state) => {
       assert.equal(id, '1234');
@@ -267,29 +320,54 @@ module('Integration | Component | pipeline options', function(hooks) {
   });
 
   test('it handles pipeline remove flow', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: 'abc1234'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234'
+      })
+    );
 
     this.set('removePipelineMock', () => {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`);
+    await render(
+      hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`
+    );
 
-    assert.equal($('section.danger h4').text().trim(), 'Remove this pipeline');
+    assert.equal(
+      $('section.danger h4')
+        .text()
+        .trim(),
+      'Remove this pipeline'
+    );
     $('section.danger a').click();
-    assert.equal($('section.danger h4').text().trim(), 'Are you absolutely sure?');
+    assert.equal(
+      $('section.danger h4')
+        .text()
+        .trim(),
+      'Are you absolutely sure?'
+    );
     assert.equal($('section.danger a').length, 2);
     $($('section.danger a').get(0)).click();
-    assert.equal($('section.danger h4').text().trim(), 'Remove this pipeline');
+    assert.equal(
+      $('section.danger h4')
+        .text()
+        .trim(),
+      'Remove this pipeline'
+    );
     $('section.danger a').click();
     $($('section.danger a').get(1)).click();
-    assert.equal($('section.danger p').text().trim(), 'Please wait...');
+    assert.equal(
+      $('section.danger p')
+        .text()
+        .trim(),
+      'Please wait...'
+    );
   });
 
   test('it syncs the webhooks', async function(assert) {
@@ -304,13 +382,16 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     this.owner.register('service:sync', syncService);
 
-    const $ = this.$;
+    const { $ } = this;
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: '1'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: '1'
+      })
+    );
 
     await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
     $($('section.sync a').get(0)).click();
@@ -328,13 +409,16 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     this.owner.register('service:sync', syncService);
 
-    const $ = this.$;
+    const { $ } = this;
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: '1'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: '1'
+      })
+    );
 
     await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
     $($('section.sync a').get(1)).click();
@@ -352,13 +436,16 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     this.owner.register('service:sync', syncService);
 
-    const $ = this.$;
+    const { $ } = this;
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: '1'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: '1'
+      })
+    );
 
     await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
     $($('section.sync a').get(2)).click();
@@ -373,49 +460,57 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     this.owner.register('service:sync', syncService);
 
-    const $ = this.$;
+    const { $ } = this;
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: '1'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: '1'
+      })
+    );
 
     await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
 
     $($('section.sync a').get(2)).click();
 
-    return settled()
-      .then(() => {
-        assert.dom('.alert > span').hasText('something conflicting');
-      });
+    return settled().then(() => {
+      assert.dom('.alert > span').hasText('something conflicting');
+    });
   });
 
   test('it does not render pipeline and danger for child pipeline', async function(assert) {
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: 'abc1234',
-      configPipelineId: '123'
-    }));
-
-    this.set('mockJobs', A([
+    this.set(
+      'mockPipeline',
       EmberObject.create({
-        id: '3456',
-        name: 'B',
-        isDisabled: false
-      }),
-      EmberObject.create({
-        id: '1234',
-        name: 'main',
-        isDisabled: false
-      }),
-      EmberObject.create({
-        id: '2345',
-        name: 'A',
-        isDisabled: false
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234',
+        configPipelineId: '123'
       })
-    ]));
+    );
+
+    this.set(
+      'mockJobs',
+      A([
+        EmberObject.create({
+          id: '3456',
+          name: 'B',
+          isDisabled: false
+        }),
+        EmberObject.create({
+          id: '1234',
+          name: 'main',
+          isDisabled: false
+        }),
+        EmberObject.create({
+          id: '2345',
+          name: 'A',
+          isDisabled: false
+        })
+      ])
+    );
 
     await render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
 
@@ -431,15 +526,50 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
 
     // Sync should render
-    assert.equal(this.$(findAll('section.sync h4')[0]).text().trim(), 'SCM webhooks');
-    assert.equal(this.$(findAll('section.sync h4')[1]).text().trim(), 'Pull requests');
-    assert.equal(this.$(findAll('section.sync h4')[2]).text().trim(), 'Pipeline');
+    assert.equal(
+      this.$(findAll('section.sync h4')[0])
+        .text()
+        .trim(),
+      'SCM webhooks'
+    );
+    assert.equal(
+      this.$(findAll('section.sync h4')[1])
+        .text()
+        .trim(),
+      'Pull requests'
+    );
+    assert.equal(
+      this.$(findAll('section.sync h4')[2])
+        .text()
+        .trim(),
+      'Pipeline'
+    );
 
     // Cache should render
-    assert.equal(this.$(findAll('section.cache h4')[0]).text().trim(), 'Pipeline');
-    assert.equal(this.$(findAll('section.cache h4')[1]).text().trim(), 'Job A');
-    assert.equal(this.$(findAll('section.cache h4')[2]).text().trim(), 'Job B');
-    assert.equal(this.$(findAll('section.cache h4')[3]).text().trim(), 'Job main');
+    assert.equal(
+      this.$(findAll('section.cache h4')[0])
+        .text()
+        .trim(),
+      'Pipeline'
+    );
+    assert.equal(
+      this.$(findAll('section.cache h4')[1])
+        .text()
+        .trim(),
+      'Job A'
+    );
+    assert.equal(
+      this.$(findAll('section.cache h4')[2])
+        .text()
+        .trim(),
+      'Job B'
+    );
+    assert.equal(
+      this.$(findAll('section.cache h4')[3])
+        .text()
+        .trim(),
+      'Job main'
+    );
 
     // Danger Zone should not render
     assert.dom('section.danger h3').hasText('');
@@ -457,13 +587,16 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     this.owner.register('service:cache', cacheService);
 
-    const $ = this.$;
+    const { $ } = this;
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: '1'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: '1'
+      })
+    );
 
     await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
     $($('section.cache a').get(0)).click();
@@ -481,31 +614,37 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     this.owner.register('service:cache', cacheService);
 
-    const $ = this.$;
+    const { $ } = this;
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: '1'
-    }));
-
-    this.set('mockJobs', A([
+    this.set(
+      'mockPipeline',
       EmberObject.create({
-        id: '3456',
-        name: 'B',
-        isDisabled: false
-      }),
-      EmberObject.create({
-        id: '1234',
-        name: 'main',
-        isDisabled: false
-      }),
-      EmberObject.create({
-        id: '2345',
-        name: 'A',
-        isDisabled: false
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: '1'
       })
-    ]));
+    );
+
+    this.set(
+      'mockJobs',
+      A([
+        EmberObject.create({
+          id: '3456',
+          name: 'B',
+          isDisabled: false
+        }),
+        EmberObject.create({
+          id: '1234',
+          name: 'main',
+          isDisabled: false
+        }),
+        EmberObject.create({
+          id: '2345',
+          name: 'A',
+          isDisabled: false
+        })
+      ])
+    );
 
     await render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
     $($('section.cache a').get(1)).click();
@@ -520,21 +659,23 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     this.owner.register('service:cache', cacheService);
 
-    const $ = this.$;
+    const { $ } = this;
 
-    this.set('mockPipeline', EmberObject.create({
-      appId: 'foo/bar',
-      scmUri: 'github.com:84604643:master',
-      id: '1'
-    }));
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: '1'
+      })
+    );
 
     await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
 
     $($('section.cache a').get(0)).click();
 
-    return settled()
-      .then(() => {
-        assert.dom('.alert > span').hasText('something conflicting');
-      });
+    return settled().then(() => {
+      assert.dom('.alert > span').hasText('something conflicting');
+    });
   });
 });

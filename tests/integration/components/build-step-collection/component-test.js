@@ -32,7 +32,7 @@ module('Integration | Component | build step collection', function(hooks) {
   });
 
   test('it renders', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     this.set('stepList', []);
     this.set('buildSteps', []);
@@ -44,9 +44,24 @@ module('Integration | Component | build step collection', function(hooks) {
       buildStart=null
     }}`);
 
-    assert.equal($('h3').text().trim(), 'Steps');
-    assert.equal($('.step-list a:nth-of-type(1)').text().trim(), 'Setup');
-    assert.equal($('.step-list a:nth-of-type(2)').text().trim(), 'Teardown');
+    assert.equal(
+      $('h3')
+        .text()
+        .trim(),
+      'Steps'
+    );
+    assert.equal(
+      $('.step-list a:nth-of-type(1)')
+        .text()
+        .trim(),
+      'Setup'
+    );
+    assert.equal(
+      $('.step-list a:nth-of-type(2)')
+        .text()
+        .trim(),
+      'Teardown'
+    );
     assert.equal($('.setup-spinner').length, 0);
 
     await render(hbs`{{#build-step-collection
@@ -59,11 +74,16 @@ module('Integration | Component | build step collection', function(hooks) {
       <div class="hello">hello</div>
     {{/build-step-collection}}`);
 
-    assert.equal($('.hello').text().trim(), 'hello');
+    assert.equal(
+      $('.hello')
+        .text()
+        .trim(),
+      'hello'
+    );
   });
 
   test('it has a list of steps and can preselect and expand a step', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
     const stepList = [
       'sd-setup-step1',
       'sd-setup-step2',
@@ -77,12 +97,15 @@ module('Integration | Component | build step collection', function(hooks) {
     ];
 
     this.set('stepList', stepList);
-    this.set('buildSteps', stepList.map(name => ({
-      name,
-      startTime: new Date(),
-      endTime: new Date(),
-      code: 0
-    })));
+    this.set(
+      'buildSteps',
+      stepList.map(name => ({
+        name,
+        startTime: new Date(),
+        endTime: new Date(),
+        code: 0
+      }))
+    );
     await render(hbs`{{build-step-collection
       preselectedStepName=preselectedStepName
       stepList=stepList
@@ -95,11 +118,20 @@ module('Integration | Component | build step collection', function(hooks) {
     run.next(this, () => {
       this.set('preselectedStepName', 'user-step2');
 
-      assert.equal($('h3').text().trim(), 'Steps');
+      assert.equal(
+        $('h3')
+          .text()
+          .trim(),
+        'Steps'
+      );
       assert.equal($('.step-list ul.setup li').length, 3, 'setup');
       assert.equal($('.step-list div.user-steps li').length, 4, 'user');
       assert.equal($('.step-list ul.teardown li').length, 2, 'teardown');
-      assert.ok($('.step-list div.user-steps li').eq(1).hasClass('active'));
+      assert.ok(
+        $('.step-list div.user-steps li')
+          .eq(1)
+          .hasClass('active')
+      );
     });
   });
 });

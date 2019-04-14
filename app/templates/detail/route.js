@@ -8,12 +8,12 @@ export default Route.extend({
     return RSVP.all([
       this.template.getOneTemplate(`${params.namespace}/${params.name}`),
       this.template.getTemplateTags(params.namespace, params.name)
-    ]).then((arr) => {
+    ]).then(arr => {
       let [verPayload, tagPayload] = arr;
 
       verPayload = verPayload.filter(t => t.namespace === params.namespace);
 
-      tagPayload.forEach((tagObj) => {
+      tagPayload.forEach(tagObj => {
         const taggedVerObj = verPayload.find(verObj => verObj.version === tagObj.version);
 
         if (taggedVerObj) {

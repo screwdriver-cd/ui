@@ -16,16 +16,16 @@ module('Unit | Serializer | collection', function(hooks) {
     server.shutdown();
   });
 
-  test('it serializes records', function (assert) {
+  test('it serializes records', function(assert) {
     let record = run(() => this.owner.lookup('service:store').createRecord('collection'));
     let serializedRecord = record.serialize();
 
     assert.ok(serializedRecord);
   });
 
-  test('it does not post with model name as key', function (assert) {
+  test('it does not post with model name as key', function(assert) {
     assert.expect(2);
-    server.post('/collections', function () {
+    server.post('/collections', function() {
       return [200, {}, JSON.stringify({ collection: { id: 123 } })];
     });
 
@@ -35,10 +35,9 @@ module('Unit | Serializer | collection', function(hooks) {
         description: 'Collection of screwdriver pipelines'
       });
 
-      collection.save()
-        .then(() => {
-          assert.equal(collection.get('id'), 123);
-        });
+      collection.save().then(() => {
+        assert.equal(collection.get('id'), 123);
+      });
     });
 
     return settled().then(() => {
@@ -52,9 +51,9 @@ module('Unit | Serializer | collection', function(hooks) {
     });
   });
 
-  test('it serializes only dirty fields', function (assert) {
+  test('it serializes only dirty fields', function(assert) {
     assert.expect(1);
-    server.patch('/collections/123', function () {
+    server.patch('/collections/123', function() {
       return [200, {}, JSON.stringify({ collection: { id: 123 } })];
     });
 

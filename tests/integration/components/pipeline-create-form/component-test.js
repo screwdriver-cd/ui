@@ -1,27 +1,37 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, find, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | pipeline create form', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
     await render(hbs`{{pipeline-create-form errorMessage="" isSaving=false}}`);
 
-    assert.equal($('h1').text().trim(), 'Create Pipeline');
-    assert.equal($('.button-label').text().trim(), 'Create Pipeline');
+    assert.equal(
+      $('h1')
+        .text()
+        .trim(),
+      'Create Pipeline'
+    );
+    assert.equal(
+      $('.button-label')
+        .text()
+        .trim(),
+      'Create Pipeline'
+    );
   });
 
   test('it handles the entire ui flow', async function(assert) {
     assert.expect(2);
     const scm = 'git@github.com:foo/bar.git';
 
-    this.set('createPipeline', (scmUrl) => {
+    this.set('createPipeline', scmUrl => {
       assert.equal(scmUrl, scm);
     });
 

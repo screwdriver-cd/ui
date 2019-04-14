@@ -12,13 +12,15 @@ export default Route.extend({
       this.transitionTo('pipeline');
     }
 
-    const pipeline = this.modelFor('pipeline').pipeline;
+    const { pipeline } = this.modelFor('pipeline');
 
-    return this.store.query('pipeline', {
-      configPipelineId: pipeline.id
-    }).then(pipelines => ({
-      pipelines,
-      pipeline
-    }));
+    return this.store
+      .query('pipeline', {
+        configPipelineId: pipeline.id
+      })
+      .then(pipelines => ({
+        pipelines,
+        pipeline
+      }));
   }
 });

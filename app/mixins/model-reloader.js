@@ -36,7 +36,7 @@ export default Mixin.create({
    * @method reloadEvents
    */
   reloadModel() {
-    const modelToReload = this.modelToReload;
+    const { modelToReload } = this;
     let model;
 
     // Let Controller provide a reload() to refresh it's dependencies

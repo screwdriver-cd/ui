@@ -9,13 +9,13 @@ import sinonTest from 'ember-sinon-qunit/test-support/test';
 module('Unit | Route | builds', function(hooks) {
   setupTest(hooks);
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     const route = this.owner.lookup('route:builds');
 
     assert.ok(route);
   });
 
-  sinonTest('it redirects', function (assert) {
+  sinonTest('it redirects', function(assert) {
     const route = this.subject();
     const transitionStub = this.stub(route, 'transitionTo');
 
@@ -30,7 +30,7 @@ module('Unit | Route | builds', function(hooks) {
     assert.ok(transitionStub.calledWithExactly('pipeline.build', 1, 2), 'transition to pipeline');
   });
 
-  test('it fetches pipeline & build', function (assert) {
+  test('it fetches pipeline & build', function(assert) {
     const dataMapping = {
       build_2: { type: 'build', jobId: 'jid', id: 2 },
       job_jid: { type: 'job', id: 'jid', pipelineId: 1 },
@@ -39,7 +39,9 @@ module('Unit | Route | builds', function(hooks) {
 
     const storeStub = EmberObject.extend({
       findRecord(type, id) {
-        return new EmberPromise(resolve => resolve(EmberObject.create(dataMapping[`${type}_${id}`])));
+        return new EmberPromise(resolve =>
+          resolve(EmberObject.create(dataMapping[`${type}_${id}`]))
+        );
       }
     });
 
@@ -48,7 +50,7 @@ module('Unit | Route | builds', function(hooks) {
 
     const route = this.owner.lookup('route:builds');
 
-    return route.model({ build_id: 2 }).then((data) => {
+    return route.model({ build_id: 2 }).then(data => {
       const { build, pipeline } = data;
 
       assert.equal(pipeline.id, 1);

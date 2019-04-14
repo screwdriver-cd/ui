@@ -2,29 +2,26 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import {
-  render,
-  settled,
-  click,
-  findAll,
-  find
-} from '@ember/test-helpers';
+import { render, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-const parsedManifest = [{
-  text: 'coverage',
-  type: 'directory',
-  children: [{
-    text: 'coverage.json',
+const parsedManifest = [
+  {
+    text: 'coverage',
+    type: 'directory',
+    children: [
+      {
+        text: 'coverage.json',
+        type: 'file',
+        a_attr: { href: 'http://foo.com/coverage.json' }
+      }
+    ]
+  },
+  {
+    text: 'test.txt',
     type: 'file',
-    a_attr: { href: 'http://foo.com/coverage.json' }
-  }]
-},
-{
-  text: 'test.txt',
-  type: 'file',
-  a_attr: { href: 'http://foo.com/test.txt' }
-}
+    a_attr: { href: 'http://foo.com/test.txt' }
+  }
 ];
 
 const artifactService = Service.extend({

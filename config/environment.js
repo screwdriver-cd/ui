@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = (environment) => {
+module.exports = environment => {
   let ENV = {
     modulePrefix: 'screwdriver-ui',
     environment,
@@ -13,13 +11,9 @@ module.exports = (environment) => {
         // Glimmer [ember] and ACE Editor [validator] add styles to elements at run time, this makes it impossible to precalculate all possible shas for inline styles
         "'unsafe-inline'"
       ],
-      'connect-src': [
-        "'self'"
-      ],
+      'connect-src': ["'self'"],
       // JSTree web worker
-      'worker-src': [
-        'blob:'
-      ],
+      'worker-src': ['blob:'],
       'img-src': [
         "'self'",
         'https:',

@@ -1,79 +1,152 @@
 <ul>
   <li class="job-name build-{{buildStatus}}">
-    <span class="banner-value">{{jobName}}</span>
-    <span class="banner-label">Job</span>
+    <span class="banner-value">
+      {{jobName}}
+    </span>
+    <span class="banner-label">
+      Job
+    </span>
   </li>
   <li class="commit">
     <span class="banner-value commit-list">
-      <a href="{{event.commit.url}}" class="sha commit-sha">#{{event.truncatedSha}}</a>
+      <a href={{event.commit.url}} class="sha commit-sha">
+        #
+        {{event.truncatedSha}}
+      </a>
       {{#if event.pr.url}}
         {{#bs-dropdown as |dd|}}
-          {{#dd.toggle}} <span class="caret caret-display"></span>{{/dd.toggle}}
+          {{#dd.toggle}}<span class="caret caret-display"></span>{{/dd.toggle}}
           {{#dd.menu as |ddm|}}
             {{#each (await shortenedPrShas) as |prSha|}}
               {{#ddm.item class="pr-item"}}
-                <a onClick={{action "changeCurPr" prSha}}>{{prSha.index}}. {{prSha.shortenedSha}}</a>
+                <a onClick={{action "changeCurPr" prSha}}>
+                  {{prSha.index}}
+                  .
+                  {{prSha.shortenedSha}}
+                </a>
               {{/ddm.item}}
             {{/each}}
           {{/dd.menu}}
         {{/bs-dropdown}}
       {{/if}}
     </span>
-    <span class="banner-label">Commit</span>
+    <span class="banner-label">
+      Commit
+    </span>
   </li>
   {{#if event.pr.url}}
     <li class="pr">
       <span class="banner-value pr-url-holder">
-        <a href="{{event.pr.url}}" class="sha pr-url">
+        <a href={{event.pr.url}} class="sha pr-url">
           {{inline-svg "github" class="pr-img"}}
-          <span class="pr-link">PR#{{prNumber}}</span>
+          <span class="pr-link">
+            PR#
+            {{prNumber}}
+          </span>
         </a>
       </span>
-      <span class="banner-label">Pull Request</span>
+      <span class="banner-label">
+        Pull Request
+      </span>
     </li>
   {{/if}}
   <li class="duration">
     <details>
-      <summary><a class="banner-value" title="Total duration: {{duration}}, Blocked time: {{blockDuration}}, Image pull time: {{imagePullDuration}}, Build time: {{buildDuration}}">{{duration}}</a></summary>
-        <li class="subsection"><span class="banner-value">{{blockDuration}} blocked</span></li>
-        <li class="subsection"><span class="banner-value">{{imagePullDuration}} pulling image</span></li>
-        <li class="subsection"><span class="banner-value">{{buildDuration}} in build</span></li>
+      <summary>
+        <a
+          class="banner-value"
+          title="Total duration:
+            {{duration}}
+            , Blocked time:
+            {{blockDuration}}
+            , Image pull time:
+            {{imagePullDuration}}
+            , Build time:
+            {{buildDuration}}"
+        >
+          {{duration}}
+        </a>
+      </summary>
+      <li class="subsection">
+        <span class="banner-value">
+          {{blockDuration}}
+          blocked
+        </span>
+      </li>
+      <li class="subsection">
+        <span class="banner-value">
+          {{imagePullDuration}}
+          pulling image
+        </span>
+      </li>
+      <li class="subsection">
+        <span class="banner-value">
+          {{buildDuration}}
+          in build
+        </span>
+      </li>
     </details>
-    <span class="banner-label">Duration</span>
+    <span class="banner-label">
+      Duration
+    </span>
   </li>
   <li class="created">
-    <span class="banner-value" title="{{buildCreate}}">{{moment-format buildCreate 'YYYY-MM-DD HH:mm:ss'}}</span>
-    <span class="banner-label">Create Time</span>
+    <span class="banner-value" title={{buildCreate}}>
+      {{moment-format buildCreate "YYYY-MM-DD HH:mm:ss"}}
+    </span>
+    <span class="banner-label">
+      Create Time
+    </span>
   </li>
   <li class="user">
-    <span class="banner-value">{{user-link user=event.creator causeMessage=event.causeMessage}}</span>
-    <span class="banner-label">User</span>
+    <span class="banner-value">
+      {{user-link user=event.creator causeMessage=event.causeMessage}}
+    </span>
+    <span class="banner-label">
+      User
+    </span>
   </li>
   {{#if coverageStep}}
     <li class="coverage">
       <span class="banner-value">
-        <a href="{{coverageInfo.coverageUrl}}" title="{{if (eq coverageInfo.coverage 'N/A') "Coverage report not generated"}}">
+        <a
+          href={{coverageInfo.coverageUrl}}
+          title={{if (eq coverageInfo.coverage "N/A") "Coverage report not generated"}}
+        >
           {{coverageInfo.coverage}}
         </a>
       </span>
-      <span class="banner-label">Coverage</span>
+      <span class="banner-label">
+        Coverage
+      </span>
     </li>
     <li class="tests">
       <span class="banner-value">
-        <a href="{{coverageInfo.testsUrl}}" title="{{if (eq coverageInfo.tests 'N/A') "Tests report not generated"}}">
+        <a
+          href={{coverageInfo.testsUrl}}
+          title={{if (eq coverageInfo.tests "N/A") "Tests report not generated"}}
+        >
           {{coverageInfo.tests}}
         </a>
       </span>
-      <span class="banner-label">Tests Passed</span>
+      <span class="banner-label">
+        Tests Passed
+      </span>
     </li>
   {{/if}}
   <li class="docker-container">
-    <span class="banner-value">{{buildContainer}}</span>
-    <span class="banner-label">Container</span>
+    <span class="banner-value">
+      {{buildContainer}}
+    </span>
+    <span class="banner-label">
+      Container
+    </span>
   </li>
   <li class="call-to-action button-right">
     {{#if isAuthenticated}}
-      {{#bs-button onClick=(action "buildButtonClick")}}{{buildAction}}{{/bs-button}}
+      {{#bs-button onClick=(action "buildButtonClick")}}
+        {{buildAction}}
+      {{/bs-button}}
     {{/if}}
   </li>
 </ul>

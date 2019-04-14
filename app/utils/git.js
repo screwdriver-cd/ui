@@ -6,7 +6,9 @@
  */
 function parse(scmUrl) {
   // eslint-disable-next-line max-len
-  const match = scmUrl.match(/^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)?(#[^\s]+)?$/);
+  const match = scmUrl.match(
+    /^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)?(#[^\s]+)?$/
+  );
 
   if (!match) {
     return {
@@ -34,13 +36,10 @@ function parse(scmUrl) {
  * @return {String}                       Returns the checkout URL
  */
 function getCheckoutUrl(config) {
-  const scmUri = (config.scmUri).split(':');
+  const scmUri = config.scmUri.split(':');
   const checkoutUrl = `git@${scmUri[0]}:${config.appId}.git#${scmUri[2]}`;
 
   return checkoutUrl;
 }
 
-export {
-  parse,
-  getCheckoutUrl
-};
+export { parse, getCheckoutUrl };

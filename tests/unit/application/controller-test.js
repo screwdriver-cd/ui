@@ -3,10 +3,10 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
 
-module('Unit | Controller | application', function (hooks) {
+module('Unit | Controller | application', function(hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function () {
+  hooks.beforeEach(function() {
     run(() => {
       // Need this to mock any core services
       // https://github.com/emberjs/ember-qunit/issues/325
@@ -14,13 +14,13 @@ module('Unit | Controller | application', function (hooks) {
     });
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     const controller = this.owner.lookup('controller:application');
 
     assert.ok(controller);
   });
 
-  test('it calls session.invalidateSession', function (assert) {
+  test('it calls session.invalidateSession', function(assert) {
     assert.expect(3);
 
     const sessionServiceMock = Service.extend({
@@ -40,7 +40,7 @@ module('Unit | Controller | application', function (hooks) {
     assert.equal(controller.get('session').get('data.sessionChanged'), false);
   });
 
-  test('it calls session.authenticate', function (assert) {
+  test('it calls session.authenticate', function(assert) {
     assert.expect(4);
 
     const controller = this.owner.lookup('controller:application');
@@ -64,7 +64,7 @@ module('Unit | Controller | application', function (hooks) {
     assert.equal(controller.get('session').get('data.sessionChanged'), true);
   });
 
-  test('it calls search in controller', function (assert) {
+  test('it calls search in controller', function(assert) {
     const controller = this.owner.lookup('controller:application');
 
     controller.transitionToRoute = (path, params) => {
@@ -75,4 +75,3 @@ module('Unit | Controller | application', function (hooks) {
     controller.send('search', 'myquery');
   });
 });
-

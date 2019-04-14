@@ -44,14 +44,12 @@ module('Unit | Controller | validator', function(hooks) {
     serviceMock.getValidationResults.reset();
   });
 
-  test('it handles template yaml', function (assert) {
+  test('it handles template yaml', function(assert) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
     serviceMock.isTemplate.withArgs(EXAMPLE_TEMPLATE).returns(true);
-    serviceMock.getValidationResults.withArgs(EXAMPLE_TEMPLATE).returns(
-      resolve(expectedResult)
-    );
+    serviceMock.getValidationResults.withArgs(EXAMPLE_TEMPLATE).returns(resolve(expectedResult));
 
     // wrap the test in the run loop because we are dealing with async functions
     return run(() => {
@@ -64,14 +62,12 @@ module('Unit | Controller | validator', function(hooks) {
     });
   });
 
-  test('it handles screwdriver yaml', function (assert) {
+  test('it handles screwdriver yaml', function(assert) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
     serviceMock.isTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
-    serviceMock.getValidationResults.withArgs(EXAMPLE_CONFIG).returns(
-      resolve(expectedResult)
-    );
+    serviceMock.getValidationResults.withArgs(EXAMPLE_CONFIG).returns(resolve(expectedResult));
 
     // wrap the test in the run loop because we are dealing with async functions
     return run(() => {
@@ -84,14 +80,12 @@ module('Unit | Controller | validator', function(hooks) {
     });
   });
 
-  test('it handles clearing yaml', function (assert) {
+  test('it handles clearing yaml', function(assert) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
     serviceMock.isTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
-    serviceMock.getValidationResults.withArgs(EXAMPLE_CONFIG).returns(
-      resolve(expectedResult)
-    );
+    serviceMock.getValidationResults.withArgs(EXAMPLE_CONFIG).returns(resolve(expectedResult));
 
     // wrap the test in the run loop because we are dealing with async functions
     return run(() => {

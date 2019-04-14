@@ -29,21 +29,24 @@ export default Service.extend({
       }
     };
 
-    return new EmberPromise((resolve) => {
+    return new EmberPromise(resolve => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
-        .done(content => resolve({
-          coverage: content.coverage !== 'N/A' ? `${content.coverage}%` : 'N/A',
-          coverageUrl: content.coverage !== 'N/A' ? content.projectUrl : '#',
-          tests: content.tests,
-          testsUrl: content.tests !== 'N/A' ? content.projectUrl : '#'
-        }))
-        .fail(() => resolve({
-          coverage: 'N/A',
-          coverageUrl: '#',
-          tests: 'N/A',
-          testsUrl: '#'
-        })
+        .done(content =>
+          resolve({
+            coverage: content.coverage !== 'N/A' ? `${content.coverage}%` : 'N/A',
+            coverageUrl: content.coverage !== 'N/A' ? content.projectUrl : '#',
+            tests: content.tests,
+            testsUrl: content.tests !== 'N/A' ? content.projectUrl : '#'
+          })
+        )
+        .fail(() =>
+          resolve({
+            coverage: 'N/A',
+            coverageUrl: '#',
+            tests: 'N/A',
+            testsUrl: '#'
+          })
         );
     });
   }

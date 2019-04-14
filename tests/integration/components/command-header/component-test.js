@@ -31,7 +31,7 @@ module('Integration | Component | command header', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     const storeStub = EmberObject.extend({
       findRecord() {
@@ -45,12 +45,42 @@ module('Integration | Component | command header', function(hooks) {
     this.set('mock', COMMAND);
     await render(hbs`{{command-header command=mock}}`);
 
-    assert.equal($('h1').text().trim(), 'foo/bar');
-    assert.equal($('h2').text().trim(), '1.0.0');
-    assert.equal($('p').text().trim(), 'A test example');
-    assert.equal($('ul li:first-child').text().trim(), 'Released by: test@example.com');
+    assert.equal(
+      $('h1')
+        .text()
+        .trim(),
+      'foo/bar'
+    );
+    assert.equal(
+      $('h2')
+        .text()
+        .trim(),
+      '1.0.0'
+    );
+    assert.equal(
+      $('p')
+        .text()
+        .trim(),
+      'A test example'
+    );
+    assert.equal(
+      $('ul li:first-child')
+        .text()
+        .trim(),
+      'Released by: test@example.com'
+    );
     assert.equal($('ul li:first-child a').attr('href'), 'mailto:test@example.com');
-    assert.equal($('h4').text().trim(), 'Usage:');
-    assert.equal($('pre').text().trim(), 'sd-cmd exec foo/bar@1.0.0');
+    assert.equal(
+      $('h4')
+        .text()
+        .trim(),
+      'Usage:'
+    );
+    assert.equal(
+      $('pre')
+        .text()
+        .trim(),
+      'sd-cmd exec foo/bar@1.0.0'
+    );
   });
 });

@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, findAll, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 import { merge } from '@ember/polyfills';
@@ -85,14 +85,16 @@ module('Integration | Component | pipeline event row', function(hooks) {
       assert.ok(true);
     };
 
-    const eventMock = EmberObject.create(merge(copy(event, true), {
-      startFrom: '~pr',
-      type: 'pr',
-      pr: {
-        url: 'https://foo/bar/baz/pull/2'
-      },
-      prNum: 2
-    }));
+    const eventMock = EmberObject.create(
+      merge(copy(event, true), {
+        startFrom: '~pr',
+        type: 'pr',
+        pr: {
+          url: 'https://foo/bar/baz/pull/2'
+        },
+        prNum: 2
+      })
+    );
 
     this.set('event', eventMock);
 

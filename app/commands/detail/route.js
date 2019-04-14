@@ -8,10 +8,10 @@ export default Route.extend({
     return RSVP.all([
       this.command.getOneCommand(params.namespace, params.name),
       this.command.getCommandTags(params.namespace, params.name)
-    ]).then((arr) => {
+    ]).then(arr => {
       const [verPayload, tagPayload] = arr;
 
-      tagPayload.forEach((tagObj) => {
+      tagPayload.forEach(tagObj => {
         const taggedVerObj = verPayload.find(verObj => verObj.version === tagObj.version);
 
         if (taggedVerObj) {

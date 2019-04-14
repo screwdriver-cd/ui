@@ -12,11 +12,13 @@ const noMoreLogs = () => {
       'Content-Type': 'application/json',
       'x-more-data': false
     },
-    JSON.stringify([{
-      t: now,
-      n: 0,
-      m: 'hello, world'
-    }])
+    JSON.stringify([
+      {
+        t: now,
+        n: 0,
+        m: 'hello, world'
+      }
+    ])
   ]);
 };
 
@@ -27,11 +29,13 @@ const moreLogs = () => {
       'Content-Type': 'application/json',
       'x-more-data': true
     },
-    JSON.stringify([{
-      t: now,
-      n: 0,
-      m: 'hello, world'
-    }])
+    JSON.stringify([
+      {
+        t: now,
+        n: 0,
+        m: 'hello, world'
+      }
+    ])
   ]);
 };
 
@@ -89,13 +93,13 @@ module('Unit | Service | build logs', function(hooks) {
     server.shutdown();
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     const service = this.owner.lookup('service:build-logs');
 
     assert.ok(service);
   });
 
-  test('it rejects if the user is not authenticated', function (assert) {
+  test('it rejects if the user is not authenticated', function(assert) {
     assert.expect(2);
     noMoreLogs();
     this.session.set('isAuthenticated', false);
@@ -103,13 +107,13 @@ module('Unit | Service | build logs', function(hooks) {
     const service = this.owner.lookup('service:build-logs');
     const p = service.fetchLogs(serviceConfig);
 
-    p.catch((e) => {
+    p.catch(e => {
       assert.ok(e instanceof Error, e);
       assert.equal('User is not authenticated', e.message);
     });
   });
 
-  test('it makes a call to logs api and logs return with no remaining', function (assert) {
+  test('it makes a call to logs api and logs return with no remaining', function(assert) {
     assert.expect(4);
     noMoreLogs();
     const service = this.owner.lookup('service:build-logs');
@@ -122,12 +126,14 @@ module('Unit | Service | build logs', function(hooks) {
 
       const [request] = server.handledRequests;
 
-      assert.equal(request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+      );
     });
   });
 
-  test('it makes a call to logs api and logs return with more remaining', function (assert) {
+  test('it makes a call to logs api and logs return with more remaining', function(assert) {
     assert.expect(4);
     moreLogs();
     const service = this.owner.lookup('service:build-logs');
@@ -140,12 +146,14 @@ module('Unit | Service | build logs', function(hooks) {
 
       const [request] = server.handledRequests;
 
-      assert.equal(request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50&pages=10&sort=ascending');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50&pages=10&sort=ascending'
+      );
     });
   });
 
-  test('it makes a call to logs api and no logs return with no more remaining', function (assert) {
+  test('it makes a call to logs api and no logs return with no more remaining', function(assert) {
     assert.expect(3);
     noNewLogs();
     const service = this.owner.lookup('service:build-logs');
@@ -157,12 +165,14 @@ module('Unit | Service | build logs', function(hooks) {
 
       const [request] = server.handledRequests;
 
-      assert.equal(request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+      );
     });
   });
 
-  test('it handles log api failure by treating it as there are more logs', function (assert) {
+  test('it handles log api failure by treating it as there are more logs', function(assert) {
     assert.expect(3);
     badLogs();
     const service = this.owner.lookup('service:build-logs');
@@ -174,12 +184,14 @@ module('Unit | Service | build logs', function(hooks) {
 
       const [request] = server.handledRequests;
 
-      assert.equal(request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+      );
     });
   });
 
-  test('it handles fetching multiple pages', function (assert) {
+  test('it handles fetching multiple pages', function(assert) {
     assert.expect(3);
     noNewLogs();
     const service = this.owner.lookup('service:build-logs');
@@ -191,12 +203,14 @@ module('Unit | Service | build logs', function(hooks) {
 
       const [request] = server.handledRequests;
 
-      assert.equal(request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100&sort=ascending');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100&sort=ascending'
+      );
     });
   });
 
-  test('it can reset the cache', function (assert) {
+  test('it can reset the cache', function(assert) {
     assert.expect(2);
     const service = this.owner.lookup('service:build-logs');
 
@@ -204,16 +218,18 @@ module('Unit | Service | build logs', function(hooks) {
     assert.equal(Object.keys(service.get('cache')).length, 0);
   });
 
-  test('it creates and revokes object url', function (assert) {
+  test('it creates and revokes object url', function(assert) {
     // assert.expect(5);
     const service = this.owner.lookup('service:build-logs');
 
     service.setCache(serviceConfig.buildId, serviceConfig.stepName, {
-      logs: [{
-        t: now,
-        n: 0,
-        m: 'hello, world'
-      }]
+      logs: [
+        {
+          t: now,
+          n: 0,
+          m: 'hello, world'
+        }
+      ]
     });
 
     const url = service.buildLogBlobUrl(serviceConfig.buildId, serviceConfig.stepName);

@@ -2,7 +2,7 @@ import git from 'screwdriver-ui/utils/git';
 import { module, test } from 'qunit';
 
 module('Unit | Utility | git', function() {
-  test('it parses the checkout URL correctly', (assert) => {
+  test('it parses the checkout URL correctly', assert => {
     let result = git.parse('bananas');
 
     assert.notOk(result.valid);
@@ -28,7 +28,7 @@ module('Unit | Utility | git', function() {
     });
   });
 
-  test('it generates the checkout URL correctly', (assert) => {
+  test('it generates the checkout URL correctly', assert => {
     let result = git.getCheckoutUrl({
       appId: 'bananas/peel',
       scmUri: 'github.com:12345:master'

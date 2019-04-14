@@ -1,8 +1,6 @@
-'use strict';
-
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
-module.exports = function (defaults) {
+module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
     // Add options here
     'ember-font-awesome': {
@@ -27,15 +25,13 @@ module.exports = function (defaults) {
     },
 
     'ember-bootstrap': {
-      'bootstrapVersion': 3,
-      'importBootstrapFont': true,
-      'importBootstrapCSS': false
+      bootstrapVersion: 3,
+      importBootstrapFont: true,
+      importBootstrapCSS: false
     },
 
     babel: {
-      plugins: [
-        'transform-object-rest-spread'
-      ]
+      plugins: []
     }
   });
 

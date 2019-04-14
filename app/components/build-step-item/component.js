@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   tagName: 'li',
@@ -28,14 +28,14 @@ export default Component.extend({
   icon: computed('status', {
     get() {
       switch (this.status) {
-      case 'running':
-        return 'spinner fa-spin';
-      case 'success':
-        return 'check';
-      case 'failure':
-        return 'times';
-      default:
-        return 'circle-o';
+        case 'running':
+          return 'spinner fa-spin';
+        case 'success':
+          return 'check';
+        case 'failure':
+          return 'times';
+        default:
+          return 'circle-o';
       }
     }
   }),

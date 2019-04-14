@@ -30,7 +30,8 @@ const events = [
       nodes: [],
       edges: []
     }
-  }, {
+  },
+  {
     id: '3',
     causeMessage: 'Opened by github:robin',
     commit: {
@@ -62,7 +63,8 @@ const events = [
       nodes: [],
       edges: []
     }
-  }, {
+  },
+  {
     id: '4',
     causeMessage: 'Opened by github:robin',
     commit: {

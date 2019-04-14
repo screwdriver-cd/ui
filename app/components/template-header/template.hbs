@@ -1,63 +1,106 @@
 <h1>
   {{template.fullName}}
   {{#if scmUrl}}
-    <a href="{{scmUrl}}">{{fa-icon "code-fork" title="Source code"}}</a> <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
+    <a href={{scmUrl}}>
+      {{fa-icon "code-fork" title="Source code"}}
+    </a>
+    <a href="#" class="remove" {{action "setTemplateToRemove" template}}>
+      {{fa-icon "trash" title="Delete template"}}
+    </a>
   {{else}}
-    {{fa-icon "code-fork" title="The pipeline for this template does not exist."}} {{fa-icon "trash" title="Cannot delete template; pipeline could not be found."}}
+    {{fa-icon "code-fork" title="The pipeline for this template does not exist."}}
+    {{fa-icon "trash" title="Cannot delete template; pipeline could not be found."}}
   {{/if}}
 </h1>
-<h2>{{template.version}}</h2>
-<p>{{template.description}}</p>
-  {{#if template.namespace}}
-    <div class="template-details--item" id="template-namespace">
-      <div class="template-details--label">Namespace:</div>
-      <div class="template-details--value">{{template.namespace}}</div>
+<h2>
+  {{template.version}}
+</h2>
+<p>
+  {{template.description}}
+</p>
+{{#if template.namespace}}
+  <div class="template-details--item" id="template-namespace">
+    <div class="template-details--label">
+      Namespace:
     </div>
-    <div class="template-details--item" id="template-name">
-      <div class="template-details--label">Name:</div>
-      <div class="template-details--value">{{template.name}}</div>
+    <div class="template-details--value">
+      {{template.namespace}}
     </div>
-  {{/if}}
-  <div class="template-details--item" id="template-maintainer">
-    <div class="template-details--label">Released by:</div>
-    <div class="template-details--value"><a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a>
   </div>
+  <div class="template-details--item" id="template-name">
+    <div class="template-details--label">
+      Name:
+    </div>
+    <div class="template-details--value">
+      {{template.name}}
+    </div>
   </div>
-  {{#if template.labels.length}}
-    <div class="template-details--item" id="template-tags">
-      <div class="template-details--label">Tags:</div>
-      <div class="template-details--value">
+{{/if}}
+<div class="template-details--item" id="template-maintainer">
+  <div class="template-details--label">
+    Released by:
+  </div>
+  <div class="template-details--value">
+    <a href="mailto:{{template.maintainer}}">
+      {{template.maintainer}}
+    </a>
+  </div>
+</div>
+{{#if template.labels.length}}
+  <div class="template-details--item" id="template-tags">
+    <div class="template-details--label">
+      Tags:
+    </div>
+    <div class="template-details--value">
       {{#each template.labels as |l|}}
-        <span class="template-label">{{l}}</span>
+        <span class="template-label">
+          {{l}}
+        </span>
       {{/each}}
-      </div>
     </div>
-  {{/if}}
-<h4>Usage:</h4>
-<pre>jobs:
+  </div>
+{{/if}}
+<h4>
+  Usage:
+</h4>
+<pre>
+  jobs:
   main:
-    template: {{template.fullName}}@{{template.version}}
+    template:
+  {{template.fullName}}
+  @
+  {{template.version}}
 </pre>
 {{#if templateToRemove}}
   {{#if isRemoving}}
-    {{#modal-dialog clickOutsideToClose="false"
-      targetAttachment="center"
-      translucentOverlay=true
-    }}
+    {{#modal-dialog clickOutsideToClose="false" targetAttachment="center" translucentOverlay=true}}
       {{loading-view}}
     {{/modal-dialog}}
   {{else}}
-    {{#bs-modal onSubmit=(action "removeTemplate" template.fullName) onHide=(action "cancelRemovingTemplate") as |modal|}}
+    {{#bs-modal
+      onSubmit=(action "removeTemplate" template.fullName)
+      onHide=(action "cancelRemovingTemplate") as |modal|
+    }}
       {{#modal.header}}
-        <h4>Are you sure?</h4>
+        <h4>
+          Are you sure?
+        </h4>
       {{/modal.header}}
       {{#modal.body}}
         {{fa-icon "exclamation-triangle" pull="left" size=3}}
-        You're about to delete all versions and tags of <strong>{{template.fullName}}</strong>. There might be existing pipelines using this template.
+        You"re about to delete all versions and tags of
+        <strong>
+          {{template.fullName}}
+        </strong>
+        . There might be existing pipelines using this template.
       {{/modal.body}}
-      {{#modal.footer as |footer|}}
-        {{#bs-button onClick=(action "cancelRemovingTemplate")}}Cancel{{/bs-button}}
-        {{#bs-button onClick=(action "removeTemplate" template.fullName) type="danger"}}{{fa-icon "trash"}} Confirm{{/bs-button}}
+      {{#modal.footer}}
+        {{#bs-button onClick=(action "cancelRemovingTemplate")}}
+          Cancel
+        {{/bs-button}}
+        {{#bs-button onClick=(action "removeTemplate" template.fullName) type="danger"}}
+          {{fa-icon "trash"}}Confirm
+        {{/bs-button}}
       {{/modal.footer}}
     {{/bs-modal}}
   {{/if}}

@@ -16,9 +16,9 @@ module('Unit | Serializer | build', function(hooks) {
     server.shutdown();
   });
 
-  test('it converts container to buildContainer and haves right defaults', function (assert) {
+  test('it converts container to buildContainer and haves right defaults', function(assert) {
     assert.expect(2);
-    server.get('/builds/abcd', function () {
+    server.get('/builds/abcd', function() {
       return [200, {}, JSON.stringify({ build: { id: 'abcd', container: 'node:6' } })];
     });
     let build;
@@ -33,9 +33,9 @@ module('Unit | Serializer | build', function(hooks) {
     });
   });
 
-  test('it POSTs only a jobId for create', function (assert) {
+  test('it POSTs only a jobId for create', function(assert) {
     assert.expect(2);
-    server.post('/builds', function () {
+    server.post('/builds', function() {
       return [200, {}, JSON.stringify({ build: { id: 'abcd' } })];
     });
 
@@ -55,9 +55,9 @@ module('Unit | Serializer | build', function(hooks) {
     });
   });
 
-  test('it PUTs only a status for update', function (assert) {
+  test('it PUTs only a status for update', function(assert) {
     assert.expect(1);
-    server.patch('/builds/1234', function () {
+    server.patch('/builds/1234', function() {
       return [200, {}, JSON.stringify({ build: { id: 1234 } })];
     });
 

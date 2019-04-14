@@ -33,13 +33,13 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     server.shutdown();
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     let controller = this.owner.lookup('controller:pipeline/events');
 
     assert.ok(controller);
   });
 
-  test('it starts a build', function (assert) {
+  test('it starts a build', function(assert) {
     assert.expect(7);
     server.post('http://localhost:8080/v4/events', () => [
       201,
@@ -93,7 +93,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     });
   });
 
-  test('it restarts a build', function (assert) {
+  test('it restarts a build', function(assert) {
     assert.expect(6);
     server.post('http://localhost:8080/v4/events', () => [
       201,
@@ -137,7 +137,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
         events: EmberObject.create({})
       });
 
-      controller.transitionToRoute = (path) => {
+      controller.transitionToRoute = path => {
         assert.equal(path, 'pipeline/1234/events');
       };
 
@@ -162,7 +162,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     });
   });
 
-  test('it stops a build', function (assert) {
+  test('it stops a build', function(assert) {
     assert.expect(3);
     server.put('http://localhost:8080/v4/builds/123', () => [
       200,
@@ -214,7 +214,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     });
   });
 
-  test('it starts PR build(s)', function (assert) {
+  test('it starts PR build(s)', function(assert) {
     const prNum = 999;
 
     assert.expect(5);
@@ -262,7 +262,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     });
   });
 
-  test('New event comes top of PR list when it starts a PR build with prChain', function (assert) {
+  test('New event comes top of PR list when it starts a PR build with prChain', function(assert) {
     const prNum = 3;
     const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
 

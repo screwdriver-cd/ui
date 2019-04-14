@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
@@ -13,7 +13,7 @@ export default Component.extend({
   prJobs: computed('selectedEventObj.prNum', 'prGroups', {
     get() {
       const prNum = this.get('selectedEventObj.prNum');
-      const prGroups = this.prGroups;
+      const { prGroups } = this;
 
       return prGroups[prNum];
     }

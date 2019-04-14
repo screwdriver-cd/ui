@@ -30,7 +30,7 @@ module('Unit | Service | template', function(hooks) {
     server.shutdown();
   });
 
-  test('it fetches one set of template versions', function (assert) {
+  test('it fetches one set of template versions', function(assert) {
     assert.expect(2);
 
     server.get('http://localhost:8080/v4/templates/foo%2Fbar', () => [
@@ -50,17 +50,33 @@ module('Unit | Service | template', function(hooks) {
 
     const t = service.getOneTemplate('foo/bar');
 
-    t.then((templates) => {
+    t.then(templates => {
       /* eslint-disable max-len */
       assert.deepEqual(templates, [
-        { id: 2, fullName: 'foo/bar', namespace: 'foo', name: 'bar', version: '2.0.0', createTime, lastUpdated },
-        { id: 1, fullName: 'foo/bar', namespace: 'foo', name: 'bar', version: '1.0.0', createTime, lastUpdated }
+        {
+          id: 2,
+          fullName: 'foo/bar',
+          namespace: 'foo',
+          name: 'bar',
+          version: '2.0.0',
+          createTime,
+          lastUpdated
+        },
+        {
+          id: 1,
+          fullName: 'foo/bar',
+          namespace: 'foo',
+          name: 'bar',
+          version: '1.0.0',
+          createTime,
+          lastUpdated
+        }
       ]);
       /* eslint-enable max-len */
     });
   });
 
-  test('it fetches all templates', function (assert) {
+  test('it fetches all templates', function(assert) {
     assert.expect(2);
 
     server.get('http://localhost:8080/v4/templates', () => [
@@ -81,18 +97,42 @@ module('Unit | Service | template', function(hooks) {
 
     const t = service.getAllTemplates();
 
-    t.then((templates) => {
+    t.then(templates => {
       assert.deepEqual(templates, [
         /* eslint-disable max-len */
-        { id: 3, fullName: 'boo/baz', namespace: 'boo', name: 'baz', version: '2.0.0', createTime, lastUpdated },
-        { id: 2, fullName: 'foo/baz', namespace: 'foo', name: 'baz', version: '2.0.0', createTime, lastUpdated },
-        { id: 1, fullName: 'foo/bar', namespace: 'foo', name: 'bar', version: '1.0.0', createTime, lastUpdated }
+        {
+          id: 3,
+          fullName: 'boo/baz',
+          namespace: 'boo',
+          name: 'baz',
+          version: '2.0.0',
+          createTime,
+          lastUpdated
+        },
+        {
+          id: 2,
+          fullName: 'foo/baz',
+          namespace: 'foo',
+          name: 'baz',
+          version: '2.0.0',
+          createTime,
+          lastUpdated
+        },
+        {
+          id: 1,
+          fullName: 'foo/bar',
+          namespace: 'foo',
+          name: 'bar',
+          version: '1.0.0',
+          createTime,
+          lastUpdated
+        }
       ]);
       /* eslint-enable max-len */
     });
   });
 
-  test('it deletes all versions of a template', function (assert) {
+  test('it deletes all versions of a template', function(assert) {
     assert.expect(4);
 
     server.delete('http://localhost:8080/v4/templates/foo%2Fbar', () => [204]);
@@ -112,7 +152,7 @@ module('Unit | Service | template', function(hooks) {
     });
   });
 
-  test('it returns 401 on unauthorized deletion', function (assert) {
+  test('it returns 401 on unauthorized deletion', function(assert) {
     assert.expect(2);
 
     server.delete('http://localhost:8080/v4/templates/foo%2Fbar', () => [
@@ -131,7 +171,7 @@ module('Unit | Service | template', function(hooks) {
 
     t.then(
       () => {},
-      (err) => {
+      err => {
         assert.equal(err, 'You do not have the permissions to remove this template.');
       }
     );

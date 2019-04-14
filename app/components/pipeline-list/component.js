@@ -10,7 +10,8 @@ export default Component.extend({
     startAll() {
       this.set('isShowingModal', true);
 
-      return this.start.startAll(this.pipeline.id)
+      return this.start
+        .startAll(this.pipeline.id)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     }

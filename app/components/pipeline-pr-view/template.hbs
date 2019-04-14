@@ -1,16 +1,28 @@
 {{#if build}}
   <div class="view">
-    <div class="status">{{fa-icon icon fixedWidth=true}}</div>
+    <div class="status">
+      {{fa-icon icon fixedWidth=true}}
+    </div>
     <div class="detail">
       {{#if build.id}}
-        {{#link-to "pipeline.build" build.id}}{{displayName}}{{/link-to}}
+        {{#link-to "pipeline.build" build.id}}
+          {{displayName}}
+        {{/link-to}}
       {{else}}
-        <span class="greyOut">{{displayName}}</span>
+        <span class="greyOut">
+          {{displayName}}
+        </span>
       {{/if}}
       {{#if build.endTimeWords}}
-        <div class="date greyOut">Finished {{build.endTimeWords}}</div>
+        <div class="date greyOut">
+          Finished
+          {{build.endTimeWords}}
+        </div>
       {{else if build.startTimeWords}}
-        <div class="date greyOut">Started {{build.startTimeWords}}</div>
+        <div class="date greyOut">
+          Started
+          {{build.startTimeWords}}
+        </div>
       {{/if}}
     </div>
   </div>

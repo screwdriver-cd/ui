@@ -6,10 +6,7 @@ import { htmlSafe } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import $ from 'jquery';
-import timeRange, {
-  toCustomLocaleString,
-  CONSTANT
-} from 'screwdriver-ui/utils/time-range';
+import timeRange, { toCustomLocaleString, CONSTANT } from 'screwdriver-ui/utils/time-range';
 
 const locked = Symbol('locked');
 
@@ -48,7 +45,9 @@ export default Controller.extend({
     get() {
       const jobMap = this.get('metrics.jobMap');
 
-      return Object.keys(jobMap).map(j => j.toString()).sort((a, b) => jobMap[a] - jobMap[b]);
+      return Object.keys(jobMap)
+        .map(j => j.toString())
+        .sort((a, b) => jobMap[a] - jobMap[b]);
     }
   }),
   // flatpickr addon seems to prefer dates in string
@@ -90,14 +89,12 @@ export default Controller.extend({
    * @param {Number} step  step to increment
    */
   range: memoizerific(5)((start, stop, step) =>
-    Array.from({ length: ((stop - start) / step) + 1 }, (_, i) => start + (i * step))
+    Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step)
   ),
   eventMetrics: computed('metrics.events', {
     get() {
-      const inTrendlineView = this.inTrendlineView;
-      let { queuedTime, imagePullTime, duration, total, status } = this.get(
-        'metrics.events'
-      );
+      const { inTrendlineView } = this;
+      let { queuedTime, imagePullTime, duration, total, status } = this.get('metrics.events');
 
       return {
         columns: [
@@ -135,35 +132,41 @@ export default Controller.extend({
   }),
   eventLegend: computed('inTrendlineView', 'metrics.events', {
     get() {
-      const inTrendlineView = this.inTrendlineView;
+      const { inTrendlineView } = this;
 
       if (inTrendlineView) {
-        return [{
-          key: 'total',
-          name: 'Event Duration',
-          style: htmlSafe('border-color:#0066df')
-        }];
+        return [
+          {
+            key: 'total',
+            name: 'Event Duration',
+            style: htmlSafe('border-color:#0066df')
+          }
+        ];
       }
 
-      return [{
-        key: 'duration',
-        name: 'Duration',
-        style: htmlSafe('border-color:#16c045 #ea0000 #ea0000 #16c045')
-      }, {
-        key: 'queuedTime',
-        name: 'Queued',
-        style: htmlSafe('border-color:#c5c5c5')
-      }, {
-        key: 'imagePullTime',
-        name: 'Image Pull',
-        style: htmlSafe('border-color:#dfdfdf')
-      }];
+      return [
+        {
+          key: 'duration',
+          name: 'Duration',
+          style: htmlSafe('border-color:#16c045 #ea0000 #ea0000 #16c045')
+        },
+        {
+          key: 'queuedTime',
+          name: 'Queued',
+          style: htmlSafe('border-color:#c5c5c5')
+        },
+        {
+          key: 'imagePullTime',
+          name: 'Image Pull',
+          style: htmlSafe('border-color:#dfdfdf')
+        }
+      ];
     }
   }),
   buildMetrics: computed('metrics.builds', 'jobs', {
     get() {
       const builds = this.get('metrics.builds');
-      const jobs = this.jobs;
+      const { jobs } = this;
 
       return {
         json: builds,
@@ -177,7 +180,7 @@ export default Controller.extend({
   }),
   buildLegend: computed('jobs}', {
     get() {
-      const jobs = this.jobs;
+      const { jobs } = this;
       const colors = this.get('color.pattern');
 
       return jobs.map((name, i) => ({
@@ -189,7 +192,10 @@ export default Controller.extend({
   }),
   stepMetrics: computed('metrics.{steps,stepGroup}', {
     get() {
-      const { steps: { data }, stepGroup } = this.metrics;
+      const {
+        steps: { data },
+        stepGroup
+      } = this.metrics;
 
       return {
         json: data,
@@ -206,12 +212,11 @@ export default Controller.extend({
       const stepGroup = this.get('metrics.stepGroup');
       const colors = this.get('color.pattern');
 
-      return stepGroup
-        .map((name, i) => ({
-          key: name,
-          name,
-          style: htmlSafe(`border-color:${colors[i % colors.length]}`)
-        }));
+      return stepGroup.map((name, i) => ({
+        key: name,
+        name,
+        style: htmlSafe(`border-color:${colors[i % colors.length]}`)
+      }));
     }
   }),
   // serves as a template for axis related configs
@@ -303,7 +308,7 @@ export default Controller.extend({
     };
   }),
   generateAxis(metricType) {
-    const axis = this.axis;
+    const { axis } = this;
     const times = this.get(`metrics.${metricType}.createTime`);
 
     let { values, format } = axis.x.tick;
@@ -352,41 +357,45 @@ export default Controller.extend({
 
           // compact destructure assignments
           const [{ sha, status, createTime }, buildId] =
-            this.name === self.get('stepsChartName') ?
-              [self.get('metrics.steps'), getBuildId('step', i)] :
-              [self.get('metrics.events'), getBuildId('build', i)];
+            this.name === self.get('stepsChartName')
+              ? [self.get('metrics.steps'), getBuildId('step', i)]
+              : [self.get('metrics.events'), getBuildId('build', i)];
           const s = status[i];
 
           // collect grouped data and generate a map for data HTML
-          const htmls = data.sort((a, b) => b.value - a.value).reduce(
-            (html, d) => {
-              const c = d.id === 'duration' && s !== 'SUCCESS' ? '#ea0000' : color(d.id);
-              let name = d.name;
-              let url;
+          const htmls = data
+            .sort((a, b) => b.value - a.value)
+            .reduce(
+              (html, d) => {
+                const c = d.id === 'duration' && s !== 'SUCCESS' ? '#ea0000' : color(d.id);
+                let { name } = d;
+                let url;
 
-              // add deep-link to build/step if possible
-              if (this.name === self.get('stepsChartName')) {
-                url = router.urlFor('pipeline.build.step', pipelineId, buildId, name);
-              } else if (this.name === self.get('buildsChartName')) {
-                url = router.urlFor('pipeline.build', pipelineId, buildId[name] || buildId);
+                // add deep-link to build/step if possible
+                if (this.name === self.get('stepsChartName')) {
+                  url = router.urlFor('pipeline.build.step', pipelineId, buildId, name);
+                } else if (this.name === self.get('buildsChartName')) {
+                  url = router.urlFor('pipeline.build', pipelineId, buildId[name] || buildId);
+                }
+
+                if (url) {
+                  name = `<a href="${url}" target="_blank">${name}</a>`;
+                }
+
+                if (d.value) {
+                  html.keys.push(`<p class="legend" style="border-color:${c}">${name}</p>`);
+                  html.values.push(
+                    `<p>${humanizeDuration(d.value * 60 * 1e3, { round: true })}</p>`
+                  );
+                }
+
+                return html;
+              },
+              {
+                keys: [],
+                values: []
               }
-
-              if (url) {
-                name = `<a href="${url}" target="_blank">${name}</a>`;
-              }
-
-              if (d.value) {
-                html.keys.push(`<p class="legend" style="border-color:${c}">${name}</p>`);
-                html.values.push(`<p>${humanizeDuration(d.value * 60 * 1e3, { round: true })}</p>`);
-              }
-
-              return html;
-            },
-            {
-              keys: [],
-              values: []
-            }
-          );
+            );
 
           return htmlSafe(
             `<div class="${s}">
@@ -415,16 +424,56 @@ export default Controller.extend({
   color: {
     // first dozen were from designs, rest from random generator
     pattern: [
-      '#87d812', '#fed800', '#1ac6f4', '#6e2ebf', '#1f77b4',
-      '#aec7e8', '#ff7f0e', '#2ca02c', '#ffbb78', '#98df8a',
-      '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b',
-      '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7',
-      '#bcbd22', '#dbdb8d', '#17becf', '#9edae5', '#dd6130',
-      '#e0924e', '#e0e03e', '#29799e', '#0ad6d6', '#9549d8',
-      '#6fc11d', '#5dfc5d', '#395fa0', '#ff60d7', '#f907ed',
-      '#e5dc2b', '#46ceba', '#047255', '#5bc42b', '#ce1296',
-      '#efd64a', '#4b0cd3', '#af3be5', '#63ff73', '#3e5cb7',
-      '#f23eaa', '#76259e', '#60f2b3', '#ddbd1c', '#becc2c'
+      '#87d812',
+      '#fed800',
+      '#1ac6f4',
+      '#6e2ebf',
+      '#1f77b4',
+      '#aec7e8',
+      '#ff7f0e',
+      '#2ca02c',
+      '#ffbb78',
+      '#98df8a',
+      '#d62728',
+      '#ff9896',
+      '#9467bd',
+      '#c5b0d5',
+      '#8c564b',
+      '#c49c94',
+      '#e377c2',
+      '#f7b6d2',
+      '#7f7f7f',
+      '#c7c7c7',
+      '#bcbd22',
+      '#dbdb8d',
+      '#17becf',
+      '#9edae5',
+      '#dd6130',
+      '#e0924e',
+      '#e0e03e',
+      '#29799e',
+      '#0ad6d6',
+      '#9549d8',
+      '#6fc11d',
+      '#5dfc5d',
+      '#395fa0',
+      '#ff60d7',
+      '#f907ed',
+      '#e5dc2b',
+      '#46ceba',
+      '#047255',
+      '#5bc42b',
+      '#ce1296',
+      '#efd64a',
+      '#4b0cd3',
+      '#af3be5',
+      '#63ff73',
+      '#3e5cb7',
+      '#f23eaa',
+      '#76259e',
+      '#60f2b3',
+      '#ddbd1c',
+      '#becc2c'
     ]
   },
   size: {
@@ -463,9 +512,9 @@ export default Controller.extend({
   },
   onInitFns: computed(function onInitOuter() {
     const self = this;
-    const eventsChartName = this.eventsChartName;
-    const buildsChartName = this.buildsChartName;
-    const stepsChartName = this.stepsChartName;
+    const { eventsChartName } = this;
+    const { buildsChartName } = this;
+    const { stepsChartName } = this;
 
     /**
      * unlock tooltip
@@ -481,7 +530,8 @@ export default Controller.extend({
      */
     function setupExtras() {
       // add the cursor line
-      const cursorLine = this.svg.append('line')
+      const cursorLine = this.svg
+        .append('line')
         .style('stroke', '#888')
         .style('stroke-dasharray', '3')
         .style('pointer-events', 'none')
@@ -527,11 +577,7 @@ export default Controller.extend({
         // calculate reference distance for edges and midpoint of a bar
         // reuse the same for line chart
         const [leftEdgeDomain, midPointDomain, rightEdgeDomain] = [-1, 0, 1].map(n =>
-          Math.floor(
-            this.x.invert(
-              x - (rangeOffset * (1 - (n * this.config.bar_width_ratio)))
-            )
-          )
+          Math.floor(this.x.invert(x - rangeOffset * (1 - n * this.config.bar_width_ratio)))
         );
         const currentIndexDomain = rightEdgeDomain;
 
@@ -557,13 +603,16 @@ export default Controller.extend({
           let hidden = new Set(this.hiddenTargetIds);
 
           previousIndexDomain = currentIndexDomain;
-          this.showTooltip(this.data.targets.reduce((data, { id, values }) => {
-            if (!hidden.has(id)) {
-              data.push(this.addName(values[currentIndexDomain]));
-            }
+          this.showTooltip(
+            this.data.targets.reduce((data, { id, values }) => {
+              if (!hidden.has(id)) {
+                data.push(this.addName(values[currentIndexDomain]));
+              }
 
-            return data;
-          }, []), this.eventRect.node());
+              return data;
+            }, []),
+            this.eventRect.node()
+          );
         }
       });
 
@@ -605,7 +654,7 @@ export default Controller.extend({
 
           // this won't reset zoom level on every click drag event
           if (x0 !== x1 && Math.abs(x1 - x0) >= 1) {
-            [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach((c) => {
+            [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
               if (c) {
                 c.unzoom();
               }
@@ -615,7 +664,7 @@ export default Controller.extend({
           this.svg.select(`.${this.CLASS.eventRects} .selection`).classed('hide', false);
         })
         .on('brush', () => {
-          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach((c) => {
+          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
             if (c) {
               unlockTooltip.call(c.internal);
               c.tooltip[locked] = false;
@@ -635,7 +684,7 @@ export default Controller.extend({
           // need to have a tiny bit offset from right edge to prevent crossing over the next point
           zoomedDomain = [Math.floor(x0), Math.ceil(x1) - offsetFromRightEdge];
 
-          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach((c) => {
+          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
             if (c) {
               c.zoom(zoomedDomain);
             }
@@ -748,7 +797,7 @@ export default Controller.extend({
       // pop the last item, which is the actual event object
       conjugateChartNames.pop();
 
-      [this.get(chartName), ...conjugateChartNames.map(n => this.get(n))].forEach((c) => {
+      [this.get(chartName), ...conjugateChartNames.map(n => this.get(n))].forEach(c => {
         if (!c) {
           return;
         }
@@ -798,7 +847,10 @@ export default Controller.extend({
       if (currentTarget !== target) {
         chart.show(key);
         chart.hide(Object.keys(chart.internal.config.data_types).filter(k => k !== key));
-        $(currentTarget).removeClass('unselected').siblings().addClass('unselected');
+        $(currentTarget)
+          .removeClass('unselected')
+          .siblings()
+          .addClass('unselected');
       } else {
         chart.toggle(key);
         currentTarget.classList.toggle('unselected');

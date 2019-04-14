@@ -1,12 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import {
-  render,
-  settled,
-  click,
-  findAll,
-  find
-} from '@ember/test-helpers';
+import { render, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | validator job', function(hooks) {
@@ -85,10 +79,19 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.template-description .label').hasText('Template Description:');
     assert.dom('.template-description .value').hasText('Test template');
     assert.dom('.images >.label').hasText('Supported Images:');
-    assert.equal(this.$('.images >.value >ul >li:first-of-type').text().replace(/\s+/g, ' ').trim(),
-      'stable: node:6');
-    assert.equal(find('.images >.value >ul >li:nth-of-type(2)').textContent.replace(/\s+/g, ' ').trim(),
-      'development: node:7');
+    assert.equal(
+      this.$('.images >.value >ul >li:first-of-type')
+        .text()
+        .replace(/\s+/g, ' ')
+        .trim(),
+      'stable: node:6'
+    );
+    assert.equal(
+      find('.images >.value >ul >li:nth-of-type(2)')
+        .textContent.replace(/\s+/g, ' ')
+        .trim(),
+      'development: node:7'
+    );
   });
 
   test('it renders settings, env, secrets, annotations', async function(assert) {
@@ -120,7 +123,12 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.env ul li').hasText('FOO: bar');
 
     assert.dom('.settings .label').hasText('Settings:');
-    assert.equal(find('.settings ul li').textContent.replace(/\s+/g, ' ').trim(), 'FOO: bar');
+    assert.equal(
+      find('.settings ul li')
+        .textContent.replace(/\s+/g, ' ')
+        .trim(),
+      'FOO: bar'
+    );
 
     assert.dom('.annotations .label').hasText('Annotations:');
     assert.dom('.annotations ul li').hasText('FOO: bar');
@@ -129,10 +137,7 @@ module('Integration | Component | validator job', function(hooks) {
   test('it renders template steps', async function(assert) {
     this.set('jobMock', {
       image: 'int-test:1',
-      steps: [
-        { step1: 'echo hello' },
-        { step2: 'echo goodbye' }
-      ],
+      steps: [{ step1: 'echo hello' }, { step2: 'echo goodbye' }],
       secrets: [],
       environment: {},
       settings: {},

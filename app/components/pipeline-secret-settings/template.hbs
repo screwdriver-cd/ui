@@ -7,39 +7,62 @@
 </h3>
 <p>
   {{#if pipeline.configPipelineId}}
-    Secrets are inherited from the {{#link-to "pipeline.secrets" pipeline.configPipelineId}}parent pipeline{{/link-to}}. You may override a secret or revert it back to its original value.
+    Secrets are inherited from the
+    {{#link-to "pipeline.secrets" pipeline.configPipelineId}}
+      parent pipeline
+    {{/link-to}}
+    . You may override a secret or revert it back to its original value.
   {{else}}
     User secrets must also be added to the Screwdriver YAML.
   {{/if}}
 </p>
+{{! template-lint-disable table-groups }}
 <table class="secrets">
   <thead>
     <tr>
-      <th>Key</th>
-      <th>Value</th>
-      <th colspan="2">Allow in PR</th>
+      <th>
+        Key
+      </th>
+      <th>
+        Value
+      </th>
+      <th colspan="2">
+        Allow in PR
+      </th>
     </tr>
   </thead>
   <tbody>
     {{#each sortedSecrets as |secret|}}
-    {{secret-view
-      secret=secret
-      secrets=secrets
-      pipeline=pipeline
-      onCreateSecret=onCreateSecret
-    }}
+      {{secret-view secret=secret secrets=secrets pipeline=pipeline onCreateSecret=onCreateSecret}}
     {{/each}}
   </tbody>
   {{#unless pipeline.configPipelineId}}
     <tfoot>
       <tr class="new">
-        <td class="key">{{input placeholder="SECRET_KEY" size="40" value=newName title="Secret keys can only consist of numbers, uppercase letters and underscores, and cannot begin with a number."}}</td>
-        <td class="pass">{{input type="password" placeholder="SECRET_VALUE" size="40" value=newValue}}{{fa-icon "eye" class="toggle-icon" click=(action "togglePasswordInput")}}</td>
-        <td class="allow"><div title="Check to allow this secret to be used in pull-requests">{{input type="checkbox" checked=newAllow}}</div></td>
-        <td><button class="add" disabled={{isButtonDisabled}} {{action "addNewSecret"}}>Add</button></td>
+        <td class="key">
+          {{input
+            placeholder="SECRET_KEY"
+            size="40"
+            value=newName
+            title="Secret keys can only consist of numbers, uppercase letters and underscores, and cannot begin with a number."
+          }}
+        </td>
+        <td class="pass">
+          {{input type="password" placeholder="SECRET_VALUE" size="40" value=newValue}}
+          {{fa-icon "eye" class="toggle-icon" click=(action "togglePasswordInput")}}
+        </td>
+        <td class="allow">
+          <div title="Check to allow this secret to be used in pull-requests">
+            {{input type="checkbox" checked=newAllow}}
+          </div>
+        </td>
+        <td>
+          <button class="add" disabled={{isButtonDisabled}} {{action "addNewSecret"}}>
+            Add
+          </button>
+        </td>
       </tr>
     </tfoot>
   {{/unless}}
 </table>
-
 {{yield}}

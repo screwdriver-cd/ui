@@ -9,12 +9,12 @@ module('Integration | Component | job toggle modal', function(hooks) {
 
   test('it renders', async function(assert) {
     assert.expect(4);
-    const $ = this.$;
+    const { $ } = this;
 
     this.set('showToggleModal', true);
     this.set('name', 'main');
     this.set('stateChange', 'Disable');
-    this.set('updateMessageMock', (message) => {
+    this.set('updateMessageMock', message => {
       assert.equal(message, 'testing');
     });
 
@@ -25,21 +25,41 @@ module('Integration | Component | job toggle modal', function(hooks) {
       stateChange=stateChange
     }}`);
 
-    assert.equal($('.modal-title').text().trim(), 'Disable the "main" job?');
-    assert.equal($('.message .control-label').text().trim(), 'Reason');
-    assert.equal($('.toggle-form__cancel').text().trim(), 'Cancel');
-    assert.equal($('.toggle-form__create').text().trim(), 'Confirm');
+    assert.equal(
+      $('.modal-title')
+        .text()
+        .trim(),
+      'Disable the "main" job?'
+    );
+    assert.equal(
+      $('.message .control-label')
+        .text()
+        .trim(),
+      'Reason'
+    );
+    assert.equal(
+      $('.toggle-form__cancel')
+        .text()
+        .trim(),
+      'Cancel'
+    );
+    assert.equal(
+      $('.toggle-form__create')
+        .text()
+        .trim(),
+      'Confirm'
+    );
   });
 
   test('it cancels job state update', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     assert.expect(2);
 
     this.set('showToggleModal', true);
     this.set('name', 'main');
     this.set('stateChange', 'Disable');
-    this.set('updateMessageMock', (message) => {
+    this.set('updateMessageMock', message => {
       assert.equal(message, 'testing');
     });
     await render(hbs`{{job-toggle-modal
@@ -58,8 +78,8 @@ module('Integration | Component | job toggle modal', function(hooks) {
     injectSessionStub(this);
     assert.expect(3);
 
-    const $ = this.$;
-    const stubUpdateFunction = function (message) {
+    const { $ } = this;
+    const stubUpdateFunction = function(message) {
       assert.equal(message, 'testing');
     };
 

@@ -10,9 +10,7 @@ const getBanners = () => {
     {
       'Content-Type': 'application/json'
     },
-    JSON.stringify([
-      { id: 1, isActive: true, message: actualMessage }
-    ])
+    JSON.stringify([{ id: 1, isActive: true, message: actualMessage }])
   ]);
 };
 
@@ -27,19 +25,19 @@ module('Unit | Service | banner', function(hooks) {
     server.shutdown();
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     const service = this.owner.lookup('service:banner');
 
     assert.ok(service);
   });
 
-  test('it fetches active banners', function (assert) {
+  test('it fetches active banners', function(assert) {
     assert.expect(1);
     getBanners();
     const service = this.owner.lookup('service:banner');
     const b = service.fetchBanners();
 
-    b.then((banners) => {
+    b.then(banners => {
       assert.equal(banners[0].message, actualMessage);
     });
   });

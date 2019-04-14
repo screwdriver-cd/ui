@@ -37,13 +37,12 @@ export default Controller.extend({
   }),
 
   actions: {
-
     stopBuild() {
-      const build = this.build;
+      const { build } = this;
 
       build.set('status', 'ABORTED');
 
-      return build.save().catch((e) => {
+      return build.save().catch(e => {
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
     },
@@ -59,15 +58,16 @@ export default Controller.extend({
         causeMessage
       });
 
-      return newEvent.save().then(() =>
-        newEvent.get('builds')
-          .then((builds) => {
+      return newEvent
+        .save()
+        .then(() =>
+          newEvent.get('builds').then(builds => {
             this.set('isShowingModal', false);
 
-            return this.transitionToRoute('pipeline.build',
-              builds.get('lastObject.id'));
-          }))
-        .catch((e) => {
+            return this.transitionToRoute('pipeline.build', builds.get('lastObject.id'));
+          })
+        )
+        .catch(e => {
           this.set('isShowingModal', false);
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         });
@@ -88,7 +88,7 @@ export default Controller.extend({
    * @param  {Number}    [timeout=ENV.APP.BUILD_RELOAD_TIMER] ms to wait before reloading
    */
   reloadBuild(timeout = ENV.APP.BUILD_RELOAD_TIMER) {
-    const build = this.build;
+    const { build } = this;
     const status = build.get('status');
 
     // reload again in a little bit if queued

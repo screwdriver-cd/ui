@@ -11,20 +11,25 @@ const manifest = `.
 
 const buildId = 1;
 
-const parsedManifest = [{
-  text: 'coverage',
-  type: 'directory',
-  children: [{
-    text: 'coverage.json',
+const parsedManifest = [
+  {
+    text: 'coverage',
+    type: 'directory',
+    children: [
+      {
+        text: 'coverage.json',
+        type: 'file',
+        a_attr: {
+          href: `http://localhost:8080/v4/builds/${buildId}/artifacts/coverage/coverage.json`
+        }
+      }
+    ]
+  },
+  {
+    text: 'test.txt',
     type: 'file',
-    a_attr: { href: `http://localhost:8080/v4/builds/${buildId}/artifacts/coverage/coverage.json` }
-  }]
-},
-{
-  text: 'test.txt',
-  type: 'file',
-  a_attr: { href: `http://localhost:8080/v4/builds/${buildId}/artifacts/test.txt` }
-}
+    a_attr: { href: `http://localhost:8080/v4/builds/${buildId}/artifacts/test.txt` }
+  }
 ];
 
 const getManifest = () => {
@@ -63,35 +68,38 @@ module('Unit | Service | build artifact', function(hooks) {
     server.shutdown();
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     let service = this.owner.lookup('service:build-artifact');
 
     assert.ok(service);
   });
 
-  test('it rejects if the user is not authenticated', function (assert) {
+  test('it rejects if the user is not authenticated', function(assert) {
     assert.expect(2);
 
     const service = this.owner.lookup('service:build-artifact');
     const p = service.fetchManifest(buildId);
 
-    p.catch((e) => {
+    p.catch(e => {
       assert.ok(e instanceof Error, e);
       assert.equal('User is not authenticated', e.message);
     });
   });
 
-  test('it makes a call to get artifact manifest successfully', function (assert) {
+  test('it makes a call to get artifact manifest successfully', function(assert) {
     assert.expect(2);
     this.session.set('isAuthenticated', true);
     getManifest();
     const service = this.owner.lookup('service:build-artifact');
     const p = service.fetchManifest(buildId);
 
-    p.then((data) => {
+    p.then(data => {
       const [request] = server.handledRequests;
 
-      assert.equal(request.url, `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`);
+      assert.equal(
+        request.url,
+        `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`
+      );
       assert.deepEqual(data, parsedManifest);
     });
   });

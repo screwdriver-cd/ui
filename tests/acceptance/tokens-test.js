@@ -1,4 +1,4 @@
-import { findAll, visit } from '@ember/test-helpers';
+import { visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
@@ -20,11 +20,13 @@ module('Acceptance | tokens', function(hooks) {
           name: 'foo',
           description: 'bar',
           lastUsed: '2016-09-15T23:12:23.760Z'
-        }, {
+        },
+        {
           id: '2',
           name: 'baz',
           lastUsed: ''
-        }])
+        }
+      ])
     ]);
   });
 

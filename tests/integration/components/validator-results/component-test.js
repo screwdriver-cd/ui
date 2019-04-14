@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | validator results', function(hooks) {
@@ -13,45 +13,44 @@ module('Integration | Component | validator results', function(hooks) {
       errors: ['got an error'],
       workflow: ['main', 'foo'],
       workflowGraph: {
-        nodes: [
-          { name: '~pr' },
-          { name: '~commit' },
-          { name: 'main' },
-          { name: 'foo' }
-        ],
+        nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: 'foo' }],
         edges: []
       },
       jobs: {
-        foo: [{
-          image: 'int-test:1',
-          commands: [
-            { name: 'step1', command: 'echo hello' },
-            { name: 'step2', command: 'echo goodbye' }
-          ],
-          secrets: [],
-          environment: {},
-          settings: {}
-        }],
-        main: [{
-          image: 'int-test:1',
-          commands: [
-            { name: 'step1', command: 'echo hello' },
-            { name: 'step2', command: 'echo goodbye' }
-          ],
-          secrets: [],
-          environment: {},
-          settings: {}
-        },
-        {
-          image: 'int-test:1',
-          commands: [
-            { name: 'step1', command: 'echo hello' },
-            { name: 'step2', command: 'echo goodbye' }
-          ],
-          secrets: [],
-          environment: {},
-          settings: {}
-        }]
+        foo: [
+          {
+            image: 'int-test:1',
+            commands: [
+              { name: 'step1', command: 'echo hello' },
+              { name: 'step2', command: 'echo goodbye' }
+            ],
+            secrets: [],
+            environment: {},
+            settings: {}
+          }
+        ],
+        main: [
+          {
+            image: 'int-test:1',
+            commands: [
+              { name: 'step1', command: 'echo hello' },
+              { name: 'step2', command: 'echo goodbye' }
+            ],
+            secrets: [],
+            environment: {},
+            settings: {}
+          },
+          {
+            image: 'int-test:1',
+            commands: [
+              { name: 'step1', command: 'echo hello' },
+              { name: 'step2', command: 'echo goodbye' }
+            ],
+            secrets: [],
+            environment: {},
+            settings: {}
+          }
+        ]
       }
     });
 

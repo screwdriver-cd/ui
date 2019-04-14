@@ -11,8 +11,10 @@ export default Component.extend({
   showModal: false,
   collections: computed('store', {
     get() {
-      if (!get(this, 'session.isAuthenticated') ||
-        get(this, 'session.data.authenticated.isGuest')) {
+      if (
+        !get(this, 'session.isAuthenticated') ||
+        get(this, 'session.data.authenticated.isGuest')
+      ) {
         return [];
       }
 
@@ -22,7 +24,7 @@ export default Component.extend({
 
   actions: {
     changeCollectionDisplayed() {
-      let changeCollection = this.changeCollection;
+      let { changeCollection } = this;
 
       changeCollection();
     },
@@ -40,17 +42,15 @@ export default Component.extend({
      * @param {collection} collection - the collection to delete
      */
     deleteCollection(collection) {
-      const c = this.store
-        .peekRecord('collection', collection.id);
+      const c = this.store.peekRecord('collection', collection.id);
 
-      return c.destroyRecord()
-        .then(() => {
-          this.set('collectionToDelete', null);
+      return c.destroyRecord().then(() => {
+        this.set('collectionToDelete', null);
 
-          if (typeof this.onDeleteCollection === 'function') {
-            this.onDeleteCollection();
-          }
-        });
+        if (typeof this.onDeleteCollection === 'function') {
+          this.onDeleteCollection();
+        }
+      });
     },
     /**
      * Action to set a collection to be deleted

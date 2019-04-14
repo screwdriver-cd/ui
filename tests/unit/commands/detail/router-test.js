@@ -29,12 +29,12 @@ module('Unit | Route | commands/detail', function(hooks) {
     this.owner.register('service:command', commandServiceStub);
   });
 
-  test('it asks for the list of commands for a given namespace and name', function (assert) {
+  test('it asks for the list of commands for a given namespace and name', function(assert) {
     let route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
 
-    return route.model({ namespace: 'foo', name: 'bar' }).then((commands) => {
+    return route.model({ namespace: 'foo', name: 'bar' }).then(commands => {
       assert.equal(commands[0].name, 'bar');
       assert.equal(commands[0].namespace, 'foo');
       assert.equal(commands[0].tag, 'latest');

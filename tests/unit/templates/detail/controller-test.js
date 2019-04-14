@@ -19,7 +19,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     this.owner.register('service:template', templateServiceStub);
   });
 
-  test('it parses model properly', function (assert) {
+  test('it parses model properly', function(assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
     controller.set('model', [
@@ -35,7 +35,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('versionTemplate.id'), 3);
   });
 
-  test('it handles version changes', function (assert) {
+  test('it handles version changes', function(assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
     controller.set('model', [
@@ -54,7 +54,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('latest.id'), 3);
   });
 
-  test('it handles model changes', function (assert) {
+  test('it handles model changes', function(assert) {
     let controller = this.owner.lookup('controller:templates/detail');
     // eslint-disable-next-line new-cap
     const arr = A([
@@ -80,7 +80,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('latest.id'), 4);
   });
 
-  test('it handles template deletion', function (assert) {
+  test('it handles template deletion', function(assert) {
     let controller = this.owner.lookup('controller:templates/detail');
     // eslint-disable-next-line new-cap
     const arr = A([
@@ -93,7 +93,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
 
     assert.ok(controller);
 
-    controller.transitionToRoute = (route) => {
+    controller.transitionToRoute = route => {
       assert.equal(route, 'templates');
     };
 

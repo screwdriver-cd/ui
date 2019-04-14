@@ -24,6 +24,7 @@ export default Controller.extend({
     }
   }),
   // Set selected version to null whenever the list of commands changes
+  // eslint-disable-next-line ember/no-observers
   modelObserver: observer('commands.[]', function modelObserver() {
     this.set('selectedVersion', null);
   }),
@@ -32,10 +33,9 @@ export default Controller.extend({
       this.set('selectedVersion', version);
     },
     removeCommand(namespace, name) {
-      return this.command.deleteCommands(namespace, name)
-        .then(
-          () => this.transitionToRoute('commands'),
-          err => this.set('errorMessage', err));
+      return this.command
+        .deleteCommands(namespace, name)
+        .then(() => this.transitionToRoute('commands'), err => this.set('errorMessage', err));
     }
   }
 });

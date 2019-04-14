@@ -25,7 +25,7 @@ module('Unit | Service | coverage ', function(hooks) {
     server.shutdown();
   });
 
-  test('it fetches coverage info', function (assert) {
+  test('it fetches coverage info', function(assert) {
     assert.expect(3);
     server.get('http://localhost:8080/v4/coverage/info', () => [
       200,
@@ -52,7 +52,7 @@ module('Unit | Service | coverage ', function(hooks) {
 
     const p = service.getCoverageInfo(config);
 
-    p.then((data) => {
+    p.then(data => {
       const [request] = server.handledRequests;
 
       assert.deepEqual(data, {
@@ -61,13 +61,15 @@ module('Unit | Service | coverage ', function(hooks) {
         tests: '7/10',
         testsUrl: 'https://sonar.foo.bar'
       });
-      assert.deepEqual(request.url,
-      // eslint-disable-next-line max-len
-        'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z');
+      assert.deepEqual(
+        request.url,
+        // eslint-disable-next-line max-len
+        'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z'
+      );
     });
   });
 
-  test('it sets default coverage info when request failed', function (assert) {
+  test('it sets default coverage info when request failed', function(assert) {
     assert.expect(3);
     server.get('http://localhost:8080/v4/coverage/info', () => [
       500,
@@ -90,7 +92,7 @@ module('Unit | Service | coverage ', function(hooks) {
 
     const p = service.getCoverageInfo(config);
 
-    p.then((data) => {
+    p.then(data => {
       const [request] = server.handledRequests;
 
       assert.deepEqual(data, {
@@ -99,9 +101,11 @@ module('Unit | Service | coverage ', function(hooks) {
         tests: 'N/A',
         testsUrl: '#'
       });
-      assert.deepEqual(request.url,
-      // eslint-disable-next-line max-len
-        'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z');
+      assert.deepEqual(
+        request.url,
+        // eslint-disable-next-line max-len
+        'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z'
+      );
     });
   });
 });

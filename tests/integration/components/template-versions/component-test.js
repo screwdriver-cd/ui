@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, find } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const TEMPLATES = [
@@ -19,7 +19,7 @@ module('Integration | Component | template versions', function(hooks) {
 
   test('it renders', async function(assert) {
     this.set('mock', TEMPLATES);
-    this.actions.mockAction = function () {};
+    this.actions.mockAction = function() {};
 
     await render(hbs`{{template-versions templates=mock changeVersion=(action "mockAction")}}`);
 
@@ -31,7 +31,7 @@ module('Integration | Component | template versions', function(hooks) {
     assert.expect(3);
 
     this.set('mock', TEMPLATES);
-    this.actions.mockAction = function (ver) {
+    this.actions.mockAction = function(ver) {
       assert.equal(ver, '1.0.0');
     };
 

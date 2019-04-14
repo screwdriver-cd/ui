@@ -1,11 +1,4 @@
-import {
-  click,
-  fillIn,
-  currentURL,
-  find,
-  triggerEvent,
-  visit
-} from '@ember/test-helpers';
+import { click, fillIn, currentURL, triggerEvent, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';

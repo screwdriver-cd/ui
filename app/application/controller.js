@@ -16,7 +16,7 @@ export default Controller.extend({
       this.transitionToRoute('search', { queryParams: { query: params } });
     },
     authenticate(scmContext) {
-      const session = this.session;
+      const { session } = this;
       const currentContext = session.get('data.authenticated.scmContext');
 
       session.authenticate('authenticator:screwdriver-api', scmContext).then(() => {

@@ -19,7 +19,7 @@ module('Integration | Component | collections flyout', function(hooks) {
 
   test('it renders', async function(assert) {
     assert.expect(5);
-    const $ = this.$;
+    const { $ } = this;
 
     injectSessionStub(this);
 
@@ -46,16 +46,36 @@ module('Integration | Component | collections flyout', function(hooks) {
 
     await render(hbs`{{collections-flyout collections=collections}}`);
 
-    assert.equal($('.header__text').text().trim(), 'Collections');
+    assert.equal(
+      $('.header__text')
+        .text()
+        .trim(),
+      'Collections'
+    );
     assert.equal($('.header__text a i').attr('class'), 'fa fa-plus-circle fa-mdx ember-view');
-    assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'collection1');
-    assert.equal($($('.collection-wrapper a').get(1)).text().trim(), 'collection2');
-    assert.equal($($('.collection-wrapper a').get(2)).text().trim(), 'collection3');
+    assert.equal(
+      $($('.collection-wrapper a').get(0))
+        .text()
+        .trim(),
+      'collection1'
+    );
+    assert.equal(
+      $($('.collection-wrapper a').get(1))
+        .text()
+        .trim(),
+      'collection2'
+    );
+    assert.equal(
+      $($('.collection-wrapper a').get(2))
+        .text()
+        .trim(),
+      'collection3'
+    );
   });
 
   test('it renders with no collections', async function(assert) {
     assert.expect(2);
-    const $ = this.$;
+    const { $ } = this;
     const noCollectionsText = 'No collections to display.';
 
     this.set('collections', []);
@@ -63,19 +83,26 @@ module('Integration | Component | collections flyout', function(hooks) {
     await render(hbs`{{collections-flyout collections=collections}}`);
 
     assert.equal($('.no-collections-text').length, 1);
-    assert.equal($('.no-collections-text').text().trim(), noCollectionsText);
+    assert.equal(
+      $('.no-collections-text')
+        .text()
+        .trim(),
+      noCollectionsText
+    );
   });
 
   test('it opens collection create modal', async function(assert) {
     assert.expect(9);
-    const $ = this.$;
+    const { $ } = this;
 
     injectSessionStub(this);
 
     this.set('collections', []);
     this.set('showModal', false);
 
-    const setModal = () => { this.set('showModal', true); };
+    const setModal = () => {
+      this.set('showModal', true);
+    };
 
     this.set('setModal', setModal);
 
@@ -97,7 +124,12 @@ module('Integration | Component | collections flyout', function(hooks) {
       assert.equal(this.get('showModal'), true);
       // Make sure there is only 1 modal
       assert.equal($('.modal').length, 1);
-      assert.equal($('.modal-title').text().trim(), modalTitle);
+      assert.equal(
+        $('.modal-title')
+          .text()
+          .trim(),
+        modalTitle
+      );
       assert.equal($('.name input').length, 1);
       assert.equal($('.description textarea').length, 1);
       assert.equal(cancelButton.text().trim(), 'Cancel');
@@ -107,7 +139,7 @@ module('Integration | Component | collections flyout', function(hooks) {
 
   test('it renders an active collection', async function(assert) {
     assert.expect(4);
-    const $ = this.$;
+    const { $ } = this;
 
     this.set('collections', [EmberObject.create(mockCollection)]);
 
@@ -116,9 +148,19 @@ module('Integration | Component | collections flyout', function(hooks) {
     await render(hbs`{{collections-flyout collections=collections
       selectedCollectionId=selectedCollectionId}}`);
 
-    assert.equal($('.header__text').text().trim(), 'Collections');
+    assert.equal(
+      $('.header__text')
+        .text()
+        .trim(),
+      'Collections'
+    );
     assert.notOk($('.header__text a i').length);
-    assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'Test');
+    assert.equal(
+      $($('.collection-wrapper a').get(0))
+        .text()
+        .trim(),
+      'Test'
+    );
     assert.equal($('.collection-wrapper.row--active').length, 1);
   });
 
@@ -127,14 +169,18 @@ module('Integration | Component | collections flyout', function(hooks) {
 
     injectSessionStub(this);
 
-    const $ = this.$;
+    const { $ } = this;
     const model = {
       save() {
-        return new EmberPromise((resolve, reject) => reject({
-          errors: [{
-            detail: 'This is an error message'
-          }]
-        }));
+        return new EmberPromise((resolve, reject) =>
+          reject({
+            errors: [
+              {
+                detail: 'This is an error message'
+              }
+            ]
+          })
+        );
       },
       destroyRecord() {}
     };
@@ -169,8 +215,12 @@ module('Integration | Component | collections flyout', function(hooks) {
     $('.collection-form__create').click();
     // Modal should remain open because of error
     assert.ok(this.get('showModal'));
-    assert.strictEqual($('.alert-warning > span').text().trim(),
-      'This is an error message');
+    assert.strictEqual(
+      $('.alert-warning > span')
+        .text()
+        .trim(),
+      'This is an error message'
+    );
   });
 
   test('it deletes a collection', async function(assert) {
@@ -178,7 +228,7 @@ module('Integration | Component | collections flyout', function(hooks) {
 
     injectSessionStub(this);
 
-    const $ = this.$;
+    const { $ } = this;
     const collectionModelMock = {
       destroyRecord() {
         // Dummy assert to make sure this function gets called
@@ -246,7 +296,12 @@ module('Integration | Component | collections flyout', function(hooks) {
     assert.notOk($('.modal').length);
     $($('.collection-wrapper__delete').get(0)).click();
     assert.strictEqual($('.modal').length, 1);
-    assert.equal($('.modal-title').text().trim(), 'Please confirm');
+    assert.equal(
+      $('.modal-title')
+        .text()
+        .trim(),
+      'Please confirm'
+    );
     $('.modal-footer > .btn-primary').click();
 
     assert.ok(onDeleteSpy.called);

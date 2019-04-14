@@ -12,7 +12,8 @@ const syncWithPath = () => {
 };
 
 const syncFailed = () => {
-  server.post('http://localhost:8080/v4/pipelines/1/sync/', () => [409,
+  server.post('http://localhost:8080/v4/pipelines/1/sync/', () => [
+    409,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
       statusCode: 409,
@@ -33,13 +34,13 @@ module('Unit | Service | sync', function(hooks) {
     server.shutdown();
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     const service = this.owner.lookup('service:sync');
 
     assert.ok(service);
   });
 
-  test('it makes a call to sync successfully without passing syncPath', function (assert) {
+  test('it makes a call to sync successfully without passing syncPath', function(assert) {
     assert.expect(1);
     sync();
     const service = this.owner.lookup('service:sync');
@@ -52,7 +53,7 @@ module('Unit | Service | sync', function(hooks) {
     });
   });
 
-  test('it makes a call to sync successfully with syncPath', function (assert) {
+  test('it makes a call to sync successfully with syncPath', function(assert) {
     assert.expect(1);
     syncWithPath();
     const service = this.owner.lookup('service:sync');
@@ -65,13 +66,13 @@ module('Unit | Service | sync', function(hooks) {
     });
   });
 
-  test('it fails to sync and rejects with error message ', function (assert) {
+  test('it fails to sync and rejects with error message ', function(assert) {
     assert.expect(2);
     syncFailed();
     const service = this.owner.lookup('service:sync');
     const p = service.syncRequests(1, undefined);
 
-    p.catch((error) => {
+    p.catch(error => {
       assert.equal(error, 'something conflicting');
       const [request] = server.handledRequests;
 

@@ -15,31 +15,34 @@ module('Unit | Adapter | application', function(hooks) {
     server.shutdown();
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     assert.ok(adapter);
   });
 
-  test('it uses cors for ajax', function (assert) {
+  test('it uses cors for ajax', function(assert) {
     assert.expect(3);
 
-    server.get('https://sd.cd/fake',
-      () => [200, { 'content-type': 'application/json' }, '{"foo": "bar"}']);
+    server.get('https://sd.cd/fake', () => [
+      200,
+      { 'content-type': 'application/json' },
+      '{"foo": "bar"}'
+    ]);
 
-    server.handledRequest = function (verb, path, request) {
+    server.handledRequest = function(verb, path, request) {
       assert.equal(verb, 'GET');
       assert.equal(request.withCredentials, true);
     };
 
     let adapter = this.owner.lookup('adapter:application');
 
-    return adapter.ajax('https://sd.cd/fake', 'GET').then((response) => {
+    return adapter.ajax('https://sd.cd/fake', 'GET').then(response => {
       assert.deepEqual(response, { foo: 'bar' });
     });
   });
 
-  test('it wraps non-array payload with model name', function (assert) {
+  test('it wraps non-array payload with model name', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -53,7 +56,7 @@ module('Unit | Adapter | application', function(hooks) {
     });
   });
 
-  test('it wraps array payload with model name', function (assert) {
+  test('it wraps array payload with model name', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -67,7 +70,7 @@ module('Unit | Adapter | application', function(hooks) {
     });
   });
 
-  test('it adds links to pipelines', function (assert) {
+  test('it adds links to pipelines', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -90,7 +93,7 @@ module('Unit | Adapter | application', function(hooks) {
     });
   });
 
-  test('it adds links to jobs', function (assert) {
+  test('it adds links to jobs', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -104,7 +107,7 @@ module('Unit | Adapter | application', function(hooks) {
     });
   });
 
-  test('it adds links to jobs', function (assert) {
+  test('it adds links to jobs', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -118,7 +121,7 @@ module('Unit | Adapter | application', function(hooks) {
     });
   });
 
-  test('it wraps errors', function (assert) {
+  test('it wraps errors', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -130,25 +133,30 @@ module('Unit | Adapter | application', function(hooks) {
     assert.ok(payload instanceof DS.AdapterError);
   });
 
-  test('it wraps error objects', function (assert) {
+  test('it wraps error objects', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/pipelines/1234/jobs'
     };
 
-    const payload = adapter.handleResponse(404, {}, {
-      error: {
-        statusCode: 400,
-        error: 'unfortunate',
-        message: 'a series of unfortunate events'
-      }
-    }, requestData);
+    const payload = adapter.handleResponse(
+      404,
+      {},
+      {
+        error: {
+          statusCode: 400,
+          error: 'unfortunate',
+          message: 'a series of unfortunate events'
+        }
+      },
+      requestData
+    );
 
     assert.ok(payload instanceof DS.AdapterError);
   });
 
-  test('it takes care of empty payload', function (assert) {
+  test('it takes care of empty payload', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -160,7 +168,7 @@ module('Unit | Adapter | application', function(hooks) {
     assert.deepEqual(payload, {});
   });
 
-  test('it returns pipelinetoken endpoint when model is token with pipelineId', function (assert) {
+  test('it returns pipelinetoken endpoint when model is token with pipelineId', function(assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const modelname = 'token';
@@ -178,7 +186,7 @@ module('Unit | Adapter | application', function(hooks) {
     assert.deepEqual(urlForDeleteRecord, `${baseUrl}/${id}`);
   });
 
-  test('it returns endpoint for metric and event given pipeline id', function (assert) {
+  test('it returns endpoint for metric and event given pipeline id', function(assert) {
     const adapter = this.owner.lookup('adapter:application');
     const metricsUrl = 'http://localhost:8080/v4/pipelines/1/metrics';
     const eventsUrl = 'http://localhost:8080/v4/pipelines/1/events';

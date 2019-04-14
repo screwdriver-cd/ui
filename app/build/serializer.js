@@ -17,7 +17,7 @@ export default DS.RESTSerializer.extend({
     if (requestType === 'findHasMany' && Array.isArray(payload.builds)) {
       payload.builds
         .filter(b => store.hasRecordForId('build', b.id))
-        .forEach((b) => {
+        .forEach(b => {
           let storeBuild = store.peekRecord('build', b.id);
 
           if (storeBuild) {

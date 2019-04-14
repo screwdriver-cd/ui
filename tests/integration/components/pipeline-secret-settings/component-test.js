@@ -1,13 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import {
-  render,
-  find,
-  click,
-  findAll,
-  fillIn
-} from '@ember/test-helpers';
+import { render, find, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | pipeline secret settings', function(hooks) {
@@ -87,7 +81,9 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     });
 
     // eslint-disable-next-line max-len
-    await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`);
+    await render(
+      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
+    );
 
     await fillIn('.key input', 'SECRET_KEY').keyup();
     await fillIn('.pass input', 'SECRET_VAL').keyup();
@@ -108,17 +104,21 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     });
 
     // eslint-disable-next-line max-len
-    await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`);
+    await render(
+      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
+    );
 
     await fillIn('.key input', '0banana').keyup();
     await fillIn('.pass input', '0value').keyup();
     await click('tfoot button');
 
     // and clears the new secret form elements
-    assert.dom('.alert > span').hasText(
-      'Secret keys can only consist of numbers, uppercase letters and underscores, ' +
-      'and cannot begin with a number.'
-    );
+    assert
+      .dom('.alert > span')
+      .hasText(
+        'Secret keys can only consist of numbers, uppercase letters and underscores, ' +
+          'and cannot begin with a number.'
+      );
   });
 
   test('it sorts secrets by name alphabetically', async function(assert) {
@@ -176,9 +176,13 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     this.set('mockPipeline', testPipeline);
     await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
 
-    assert.equal(find('p').textContent.trim().replace(/\+s/g, ' '),
+    assert.equal(
+      find('p')
+        .textContent.trim()
+        .replace(/\+s/g, ' '),
       'Secrets are inherited from the parent pipeline. ' +
-      'You may override a secret or revert it back to its original value.');
+        'You may override a secret or revert it back to its original value.'
+    );
 
     // Secrets are rendered but footer is not
     assert.dom('table').exists({ count: 1 });

@@ -20,13 +20,13 @@ module('Unit | Controller | login', function(hooks) {
     this.session = this.owner.lookup('service:session');
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     let controller = this.owner.lookup('controller:login');
 
     assert.ok(controller);
   });
 
-  test('it calls session.authenticate', function (assert) {
+  test('it calls session.authenticate', function(assert) {
     let controller = this.owner.lookup('controller:login');
 
     controller.send('authenticate');

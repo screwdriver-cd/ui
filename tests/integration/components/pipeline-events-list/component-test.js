@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, findAll } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | pipeline events list', function(hooks) {
@@ -87,7 +87,7 @@ module('Integration | Component | pipeline events list', function(hooks) {
     ];
 
     this.set('eventsMock', events);
-    this.set('updateEventsMock', (page) => {
+    this.set('updateEventsMock', page => {
       assert.equal(page, 2);
     });
     await render(hbs`{{pipeline-events-list

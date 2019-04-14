@@ -1,4 +1,4 @@
-import { currentURL, find, visit } from '@ember/test-helpers';
+import { currentURL, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
@@ -21,10 +21,7 @@ module('Acceptance | child pipeline', function(hooks) {
         admins: { batman: true },
         workflow: ['main', 'publish'],
         childPipelines: {
-          scmUrls: [
-            'git@github.com:child/one.git#master',
-            'git@github.com:child/two.git#master'
-          ]
+          scmUrls: ['git@github.com:child/one.git#master', 'git@github.com:child/two.git#master']
         }
       })
     ]);

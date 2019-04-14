@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, findAll, find } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 import injectScmServiceStub from '../../../helpers/inject-scm';
@@ -97,7 +97,7 @@ module('Integration | Component | app header', function(hooks) {
 
     await render(hbs`{{app-header showSearch=true searchPipelines=(action search)}}`);
 
-    find('.search-input').textContent;
+    assert.ok(find('.search-input').textContent);
     await click('.search-button');
   });
 });

@@ -8,11 +8,14 @@ export default Component.extend({
   store: service(),
   init() {
     this._super(...arguments);
-    this.store.findRecord('pipeline', this.command.pipelineId).then((pipeline) => {
-      this.set('scmUrl', pipeline.get('scmRepo.url'));
-    }).catch(() => {
-      this.set('scmUrl', null);
-    });
+    this.store
+      .findRecord('pipeline', this.command.pipelineId)
+      .then(pipeline => {
+        this.set('scmUrl', pipeline.get('scmRepo.url'));
+      })
+      .catch(() => {
+        this.set('scmUrl', null);
+      });
   },
   actions: {
     setCommandToRemove(command) {

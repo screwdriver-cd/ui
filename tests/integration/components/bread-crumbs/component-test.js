@@ -22,12 +22,17 @@ module('Integration | Component | bread crumbs', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     this.set('mocks', TEST_TEMPLATES);
     await render(hbs`{{bread-crumbs crumbs=mocks}}`);
 
     assert.equal($('div a').length, 2);
-    assert.equal($('div a').text().trim(), 'TemplatesTest-Namespace');
+    assert.equal(
+      $('div a')
+        .text()
+        .trim(),
+      'TemplatesTest-Namespace'
+    );
   });
 });

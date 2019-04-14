@@ -11,8 +11,7 @@ import Controller from '@ember/controller';
  * @private
  */
 function getResults() {
-  this.validator.getValidationResults(this.yaml)
-    .then(results => this.set('results', results));
+  this.validator.getValidationResults(this.yaml).then(results => this.set('results', results));
 }
 
 export default Controller.extend({
@@ -24,6 +23,7 @@ export default Controller.extend({
       return this.validator.isTemplate(this.yaml);
     }
   }),
+  // eslint-disable-next-line ember/no-observers
   onYamlChange: observer('yaml', function onYamlChange() {
     const yaml = this.yaml.trim();
 

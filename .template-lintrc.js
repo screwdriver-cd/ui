@@ -1,5 +1,10 @@
-'use strict';
-
 module.exports = {
-  extends: 'recommended'
+  extends: 'recommended',
+  rules: {
+    'no-invalid-interactive': false,
+    'no-inline-styles': false,
+    'simple-unless': {
+      maxHelpers: 1
+    }
+  }
 };

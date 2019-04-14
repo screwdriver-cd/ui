@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, findAll } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import rsvp from 'rsvp';
 
@@ -31,7 +31,7 @@ module('Integration | Component | pipeline workflow', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders an aggregate', async function(assert) {
-    const jobs = ['main', 'batman', 'robin'].map((name) => {
+    const jobs = ['main', 'batman', 'robin'].map(name => {
       const j = {
         name,
         isDisabled: false,
@@ -57,12 +57,15 @@ module('Integration | Component | pipeline workflow', function(hooks) {
 
   test('it renders an event', async function(assert) {
     this.set('selected', 1);
-    this.set('obj', EmberObject.create({
-      builds: rsvp.resolve(BUILDS),
-      workflowGraph: GRAPH,
-      startFrom: '~commit',
-      causeMessage: 'test'
-    }));
+    this.set(
+      'obj',
+      EmberObject.create({
+        builds: rsvp.resolve(BUILDS),
+        workflowGraph: GRAPH,
+        startFrom: '~commit',
+        causeMessage: 'test'
+      })
+    );
 
     await render(hbs`{{pipeline-workflow selectedEventObj=obj selected=selected}}`);
 

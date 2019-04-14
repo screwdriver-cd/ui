@@ -11,11 +11,13 @@ const startTime = 1478912844724;
 const doneStub = sinon.stub();
 const logsStub = sinon.stub();
 const blobUrl = 'blob:https://localhost/34dba0dc-2706-4cae-a74f-99349a578e60';
-const sampleLogs = Array(100).fill().map((_, i) => ({
-  m: `${startTime + i}`,
-  n: i + 1,
-  t: startTime + i
-}));
+const sampleLogs = Array(100)
+  .fill()
+  .map((_, i) => ({
+    m: `${startTime + i}`,
+    n: i + 1,
+    t: startTime + i
+  }));
 const logService = Service.extend({
   fetchLogs() {
     return resolve({
@@ -37,7 +39,9 @@ const logService = Service.extend({
 
     return 100;
   },
-  buildLogBlobUrl() { return blobUrl; },
+  buildLogBlobUrl() {
+    return blobUrl;
+  },
   revokeLogBlobUrls() {}
 });
 
@@ -96,14 +100,16 @@ module('Integration | Component | build log', function(hooks) {
 
     return settled().then(() => {
       assert.ok(
-        this.$('.line:first').text().trim().match(
-          `${moment(startTime).format('HH:mm:ss')}\\s+${startTime}`
-        )
+        this.$('.line:first')
+          .text()
+          .trim()
+          .match(`${moment(startTime).format('HH:mm:ss')}\\s+${startTime}`)
       );
       assert.ok(
-        this.$('.line:last').text().trim().match(
-          `${moment(startTime + 99).format('HH:mm:ss')}\\s+${startTime + 99}`
-        )
+        this.$('.line:last')
+          .text()
+          .trim()
+          .match(`${moment(startTime + 99).format('HH:mm:ss')}\\s+${startTime + 99}`)
       );
     });
   });
@@ -126,24 +132,26 @@ module('Integration | Component | build log', function(hooks) {
 
     return settled().then(() => {
       assert.ok(
-        this.$('.line:first').text().trim().match(
-          'Build created'
-        )
+        this.$('.line:first')
+          .text()
+          .trim()
+          .match('Build created')
       );
       assert.ok(
-        find(findAll('.line')[1]).textContent.trim().match(
-          'Build enqueued'
-        )
+        find(findAll('.line')[1])
+          .textContent.trim()
+          .match('Build enqueued')
       );
       assert.ok(
-        find(findAll('.line')[2]).textContent.trim().match(
-          'Build scheduled on node12.foo.bar.com'
-        )
+        find(findAll('.line')[2])
+          .textContent.trim()
+          .match('Build scheduled on node12.foo.bar.com')
       );
       assert.ok(
-        this.$('.line:last').text().trim().match(
-          'Image pull completed'
-        )
+        this.$('.line:last')
+          .text()
+          .trim()
+          .match('Image pull completed')
       );
     });
   });
@@ -167,29 +175,31 @@ module('Integration | Component | build log', function(hooks) {
 
     return settled().then(() => {
       assert.ok(
-        this.$('.line:first').text().trim().match(
-          'Build created'
-        )
+        this.$('.line:first')
+          .text()
+          .trim()
+          .match('Build created')
       );
       assert.ok(
-        find(findAll('.line')[1]).textContent.trim().match(
-          'Build enqueued'
-        )
+        find(findAll('.line')[1])
+          .textContent.trim()
+          .match('Build enqueued')
       );
       assert.ok(
-        find(findAll('.line')[2]).textContent.trim().match(
-          'Build blocked, putting back into queue'
-        )
+        find(findAll('.line')[2])
+          .textContent.trim()
+          .match('Build blocked, putting back into queue')
       );
       assert.ok(
-        find(findAll('.line')[3]).textContent.trim().match(
-          'Build scheduled on node12.foo.bar.com'
-        )
+        find(findAll('.line')[3])
+          .textContent.trim()
+          .match('Build scheduled on node12.foo.bar.com')
       );
       assert.ok(
-        this.$('.line:last').text().trim().match(
-          'Image pull completed'
-        )
+        this.$('.line:last')
+          .text()
+          .trim()
+          .match('Image pull completed')
       );
     });
   });
@@ -211,14 +221,16 @@ module('Integration | Component | build log', function(hooks) {
 
     return settled().then(() => {
       assert.ok(
-        this.$('.line:first').text().trim().match(
-          'Build created'
-        )
+        this.$('.line:first')
+          .text()
+          .trim()
+          .match('Build created')
       );
       assert.ok(
-        this.$('.line:last').text().trim().match(
-          'Build collapsed and removed from the queue.'
-        )
+        this.$('.line:last')
+          .text()
+          .trim()
+          .match('Build collapsed and removed from the queue.')
       );
     });
   });
@@ -237,14 +249,16 @@ module('Integration | Component | build log', function(hooks) {
 
     return settled().then(() => {
       assert.ok(
-        this.$('.line:first').text().trim().match(
-          'Build created'
-        )
+        this.$('.line:first')
+          .text()
+          .trim()
+          .match('Build created')
       );
       assert.ok(
-        this.$('.line:last').text().trim().match(
-          'Build frozen and removed from the queue.'
-        )
+        this.$('.line:last')
+          .text()
+          .trim()
+          .match('Build frozen and removed from the queue.')
       );
     });
   });
@@ -267,24 +281,26 @@ module('Integration | Component | build log', function(hooks) {
 
     return settled().then(() => {
       assert.ok(
-        this.$('.line:first').text().trim().match(
-          'Build created'
-        )
+        this.$('.line:first')
+          .text()
+          .trim()
+          .match('Build created')
       );
       assert.ok(
-        find(findAll('.line')[1]).textContent.trim().match(
-          'Build enqueued'
-        )
+        find(findAll('.line')[1])
+          .textContent.trim()
+          .match('Build enqueued')
       );
       assert.ok(
-        find(findAll('.line')[2]).textContent.trim().match(
-          'Build scheduled on node12.foo.bar.com'
-        )
+        find(findAll('.line')[2])
+          .textContent.trim()
+          .match('Build scheduled on node12.foo.bar.com')
       );
       assert.ok(
-        this.$('.line:last').text().trim().match(
-          'Build init failed'
-        )
+        this.$('.line:last')
+          .text()
+          .trim()
+          .match('Build init failed')
       );
     });
   });
@@ -303,14 +319,16 @@ module('Integration | Component | build log', function(hooks) {
 
     return settled().then(() => {
       assert.ok(
-        this.$('.line:first').text().trim().match(
-          'Build created'
-        )
+        this.$('.line:first')
+          .text()
+          .trim()
+          .match('Build created')
       );
       assert.ok(
-        this.$('.line:last').text().trim().match(
-          'Build init done'
-        )
+        this.$('.line:last')
+          .text()
+          .trim()
+          .match('Build init done')
       );
     });
   });
@@ -336,7 +354,9 @@ module('Integration | Component | build log', function(hooks) {
     const container = this.$('.wrap')[0];
     const lastScrollTop = container.scrollTop;
 
-    run(() => { container.scrollTop = 0; });
+    run(() => {
+      container.scrollTop = 0;
+    });
 
     return settled().then(() => {
       sinon.assert.callCount(doneStub, 4);
@@ -357,7 +377,13 @@ module('Integration | Component | build log', function(hooks) {
 
     const $hiddenDownloadButton = this.$('#downloadLink');
 
-    assert.equal($hiddenDownloadButton.prev().text().trim(), 'Download');
+    assert.equal(
+      $hiddenDownloadButton
+        .prev()
+        .text()
+        .trim(),
+      'Download'
+    );
 
     $hiddenDownloadButton.prev().click();
 

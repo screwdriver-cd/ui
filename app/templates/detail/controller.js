@@ -24,6 +24,7 @@ export default Controller.extend({
     }
   }),
   // Set selected version to null whenever the list of templates changes
+  // eslint-disable-next-line ember/no-observers
   modelObserver: observer('templates.[]', function modelObserver() {
     this.set('selectedVersion', null);
   }),
@@ -32,10 +33,9 @@ export default Controller.extend({
       this.set('selectedVersion', version);
     },
     removeTemplate(name) {
-      return this.template.deleteTemplates(name)
-        .then(
-          () => this.transitionToRoute('templates'),
-          err => this.set('errorMessage', err));
+      return this.template
+        .deleteTemplates(name)
+        .then(() => this.transitionToRoute('templates'), err => this.set('errorMessage', err));
     }
   }
 });

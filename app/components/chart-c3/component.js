@@ -15,7 +15,7 @@ export default Component.extend({
       return;
     }
 
-    const chart = this.chart;
+    const { chart } = this;
 
     chart.unload({
       done: () => {

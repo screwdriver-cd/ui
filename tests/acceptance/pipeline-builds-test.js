@@ -1,4 +1,4 @@
-import { findAll, currentURL, find, visit } from '@ember/test-helpers';
+import { currentURL, find, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
@@ -41,24 +41,16 @@ module('Acceptance | pipeline build', function(hooks) {
       JSON.stringify(events)
     ]);
 
-    server.get('http://localhost:8080/v4/events/:eventId/builds', (request) => {
+    server.get('http://localhost:8080/v4/events/:eventId/builds', request => {
       const eventId = parseInt(request.params.eventId, 10);
 
-      return [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify(makeBuilds(eventId))
-      ];
+      return [200, { 'Content-Type': 'application/json' }, JSON.stringify(makeBuilds(eventId))];
     });
 
-    server.get('http://localhost:8080/v4/jobs/:jobId/builds', (request) => {
+    server.get('http://localhost:8080/v4/jobs/:jobId/builds', request => {
       const jobId = parseInt(request.params.jobId, 10);
 
-      return [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify(makeBuilds(jobId))
-      ];
+      return [200, { 'Content-Type': 'application/json' }, JSON.stringify(makeBuilds(jobId))];
     });
 
     server.get('http://localhost:8080/v4/collections', () => [
@@ -88,15 +80,39 @@ module('Acceptance | pipeline build', function(hooks) {
     assert.dom('.pipelineWorkflow svg').exists({ count: 1 }, 'not enough workflow');
     assert.dom('button.start-button').exists({ count: 1 }, 'should have a start button');
     assert.dom('ul.nav-pills').exists({ count: 1 }, 'should show tabs');
-    assert.equal(find('.column-tabs-view .nav-link').eq(0).text().trim(), 'Events');
-    assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Events');
-    assert.equal(find('.column-tabs-view .nav-link').eq(1).text().trim(), 'Pull Requests');
+    assert.equal(
+      find('.column-tabs-view .nav-link')
+        .eq(0)
+        .text()
+        .trim(),
+      'Events'
+    );
+    assert.equal(
+      find('.column-tabs-view .nav-link.active')
+        .eq(0)
+        .text()
+        .trim(),
+      'Events'
+    );
+    assert.equal(
+      find('.column-tabs-view .nav-link')
+        .eq(1)
+        .text()
+        .trim(),
+      'Pull Requests'
+    );
     assert.dom('.separator').exists({ count: 1 });
     assert.dom('.partial-view').exists({ count: 2 });
 
     await visit('/pipelines/4/pulls');
 
     assert.equal(currentURL(), '/pipelines/4/pulls');
-    assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Pull Requests');
+    assert.equal(
+      find('.column-tabs-view .nav-link.active')
+        .eq(0)
+        .text()
+        .trim(),
+      'Pull Requests'
+    );
   });
 });

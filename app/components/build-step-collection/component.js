@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { filter, mapBy } from '@ember/object/computed';
-import { get, set, computed } from '@ember/object';
+import { set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
@@ -12,7 +12,7 @@ export default Component.extend({
   selectedStep: computed('buildSteps.@each.{code,startTime,endTime}', 'preselectedStepName', {
     get() {
       const steps = this.buildSteps;
-      const preselectedStepName = this.preselectedStepName;
+      const { preselectedStepName } = this;
       const preselectedStep = steps.findBy('name', preselectedStepName);
 
       if (preselectedStep) {
@@ -44,8 +44,7 @@ export default Component.extend({
       return true;
     }
   }),
-  userSteps: filter('stepNames',
-    item => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)),
+  userSteps: filter('stepNames', item => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)),
   actions: {
     toggleSetup() {
       set(this, 'setupCollapsed', !this.setupCollapsed);
@@ -54,12 +53,7 @@ export default Component.extend({
       set(this, 'teardownCollapsed', !this.teardownCollapsed);
     },
     stepClick(name) {
-      this.router.transitionTo(
-        'pipeline.build.step',
-        this.pipelineId,
-        this.buildId,
-        name
-      );
+      this.router.transitionTo('pipeline.build.step', this.pipelineId, this.buildId, name);
     }
   }
 });

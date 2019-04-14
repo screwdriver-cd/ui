@@ -10,8 +10,9 @@ const { templatesFormatter } = templateHelper;
 export default Service.extend({
   session: service(),
   getOneTemplate(name) {
-    const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/templates/${encodeURIComponent(name)}`;
 
     return this.fetchData(url).then(templatesFormatter);
   },
@@ -19,7 +20,9 @@ export default Service.extend({
     const fullName = `${namespace}/${name}`;
     const url =
       // eslint-disable-next-line max-len
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(fullName)}/tags`;
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(
+        fullName
+      )}/tags`;
 
     return this.fetchData(url);
   },
@@ -34,14 +37,14 @@ export default Service.extend({
 
     return this.fetchData(url, params)
       .then(templatesFormatter)
-      .then((templates) => {
+      .then(templates => {
         // Reduce versions down to one entry
         // FIXME: This should be done in API
 
         const result = [];
         const names = {};
 
-        templates.forEach((t) => {
+        templates.forEach(t => {
           if (!names[t.fullName]) {
             names[t.fullName] = 1;
             result.push(t);
@@ -75,7 +78,9 @@ export default Service.extend({
   },
   deleteTemplates(name) {
     // eslint-disable-next-line max-len
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/templates/${encodeURIComponent(name)}`;
     const ajaxConfig = {
       method: 'DELETE',
       url,
@@ -93,7 +98,7 @@ export default Service.extend({
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
         .done(content => resolve(content))
-        .fail((response) => {
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (response && response.responseJSON && typeof response.responseJSON === 'object') {

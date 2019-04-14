@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, fillIn, find } from '@ember/test-helpers';
+import { render, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | secret view', function(hooks) {
@@ -54,23 +54,26 @@ module('Integration | Component | secret view', function(hooks) {
 
   test('it trys to delete a secret', async function(assert) {
     assert.expect(3);
-    this.set('mockSecret', EmberObject.extend({
-      destroyRecord() {
-        // destroy called
-        assert.ok(true);
+    this.set(
+      'mockSecret',
+      EmberObject.extend({
+        destroyRecord() {
+          // destroy called
+          assert.ok(true);
 
-        return Promise.resolve(null);
-      },
-      save() {
-        // update called: Fail!
-        assert.ok(false);
-      }
-    }).create({
-      name: 'TEST_SECRET',
-      pipelineId: 123245,
-      value: null,
-      allowInPR: false
-    }));
+          return Promise.resolve(null);
+        },
+        save() {
+          // update called: Fail!
+          assert.ok(false);
+        }
+      }).create({
+        name: 'TEST_SECRET',
+        pipelineId: 123245,
+        value: null,
+        allowInPR: false
+      })
+    );
 
     const testPipeline = EmberObject.create({
       id: '123245'
@@ -80,7 +83,7 @@ module('Integration | Component | secret view', function(hooks) {
 
     this.set('secrets', {
       store: {
-        unloadRecord: (secret) => {
+        unloadRecord: secret => {
           assert.equal(secret.name, 'TEST_SECRET');
         }
       },
@@ -97,22 +100,25 @@ module('Integration | Component | secret view', function(hooks) {
   test('it saves changes to a secret', async function(assert) {
     assert.expect(2);
     // Setting up model so `set` works as expected
-    this.set('mockSecret', EmberObject.extend({
-      destroyRecord() {
-        // destroy called: Fail!
-        assert.ok(false);
-      },
-      save() {
-        // update called
-        assert.equal(this.get('value'), 'banana');
-        assert.equal(this.get('allowInPR'), true);
-      }
-    }).create({
-      name: 'TEST_SECRET',
-      pipelineId: 123245,
-      value: null,
-      allowInPR: false
-    }));
+    this.set(
+      'mockSecret',
+      EmberObject.extend({
+        destroyRecord() {
+          // destroy called: Fail!
+          assert.ok(false);
+        },
+        save() {
+          // update called
+          assert.equal(this.get('value'), 'banana');
+          assert.equal(this.get('allowInPR'), true);
+        }
+      }).create({
+        name: 'TEST_SECRET',
+        pipelineId: 123245,
+        value: null,
+        allowInPR: false
+      })
+    );
 
     const testPipeline = EmberObject.create({
       id: '123245'

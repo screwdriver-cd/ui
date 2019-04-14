@@ -17,7 +17,7 @@ module('Unit | Serializer | token', function(hooks) {
   });
 
   // Replace this with your real tests.
-  test('it serializes records', function (assert) {
+  test('it serializes records', function(assert) {
     let record = run(() => this.owner.lookup('service:store').createRecord('token'));
 
     let serializedRecord = record.serialize();
@@ -25,9 +25,9 @@ module('Unit | Serializer | token', function(hooks) {
     assert.ok(serializedRecord);
   });
 
-  test('it does not post with model name as key', function (assert) {
+  test('it does not post with model name as key', function(assert) {
     assert.expect(2);
-    server.post('/tokens', function () {
+    server.post('/tokens', function() {
       return [200, {}, JSON.stringify({ token: { id: 1234 } })];
     });
 
@@ -53,9 +53,9 @@ module('Unit | Serializer | token', function(hooks) {
     });
   });
 
-  test('it serializes only dirty fields', function (assert) {
+  test('it serializes only dirty fields', function(assert) {
     assert.expect(1);
-    server.patch('/tokens/1234', function () {
+    server.patch('/tokens/1234', function() {
       return [200, {}, JSON.stringify({ token: { id: 1234 } })];
     });
 

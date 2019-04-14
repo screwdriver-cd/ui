@@ -11,7 +11,7 @@ module('Integration | Component | token view', function(hooks) {
   test('it renders', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
-    const $ = this.$;
+    const { $ } = this;
     const testToken = EmberObject.create({
       name: 'TEST_TOKEN',
       description: 'hunter2'
@@ -46,13 +46,16 @@ module('Integration | Component | token view', function(hooks) {
   });
 
   test('it trys to delete a token', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     assert.expect(2);
-    this.set('mockToken', EmberObject.create({
-      name: 'TEST_TOKEN',
-      description: 'hunter2'
-    }));
+    this.set(
+      'mockToken',
+      EmberObject.create({
+        name: 'TEST_TOKEN',
+        description: 'hunter2'
+      })
+    );
 
     this.set('confirmAction', (action, id) => {
       assert.equal(action, 'delete');
@@ -64,34 +67,39 @@ module('Integration | Component | token view', function(hooks) {
   });
 
   test('it saves changes to a token', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
     let expectIsSaving = true;
 
     assert.expect(3);
     // Setting up model so `set` works as expected
-    this.set('mockToken', EmberObject.extend({
-      destroyRecord() {
-        // destroy called: Fail!
-        assert.ok(false);
-      },
-      save() {
-        // update called
-        assert.equal(this.get('name'), 'TEST_TOKEN_2');
-        expectIsSaving = false;
+    this.set(
+      'mockToken',
+      EmberObject.extend({
+        destroyRecord() {
+          // destroy called: Fail!
+          assert.ok(false);
+        },
+        save() {
+          // update called
+          assert.equal(this.get('name'), 'TEST_TOKEN_2');
+          expectIsSaving = false;
 
-        return resolve();
-      }
-    }).create({
-      name: 'TEST_TOKEN',
-      description: 'hunter2'
-    }));
+          return resolve();
+        }
+      }).create({
+        name: 'TEST_TOKEN',
+        description: 'hunter2'
+      })
+    );
 
-    this.set('setIsSavingMock', (isSaving) => {
+    this.set('setIsSavingMock', isSaving => {
       assert.equal(expectIsSaving, isSaving);
     });
 
     await render(hbs`{{token-view token=mockToken setIsSaving=setIsSavingMock}}`);
-    $('.name input').val('TEST_TOKEN_2').keyup();
+    $('.name input')
+      .val('TEST_TOKEN_2')
+      .keyup();
     $($('button').get(1)).click();
   });
 });

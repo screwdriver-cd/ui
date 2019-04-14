@@ -5,10 +5,10 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
 
-module('Unit | Route | pipeline', function (hooks) {
+module('Unit | Route | pipeline', function(hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function () {
+  hooks.beforeEach(function() {
     run(() => {
       // Need this to mock store
       // https://github.com/emberjs/ember-qunit/issues/325
@@ -16,18 +16,23 @@ module('Unit | Route | pipeline', function (hooks) {
     });
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     let route = this.owner.lookup('route:pipeline');
 
     assert.ok(route);
-    assert.equal(route.titleToken(EmberObject.create({
-      pipeline: EmberObject.create({
-        name: 'foo:bar'
-      })
-    })), 'foo:bar');
+    assert.equal(
+      route.titleToken(
+        EmberObject.create({
+          pipeline: EmberObject.create({
+            name: 'foo:bar'
+          })
+        })
+      ),
+      'foo:bar'
+    );
   });
 
-  test('it returns model', function (assert) {
+  test('it returns model', function(assert) {
     assert.expect(4);
 
     const storeStub = Service.extend({
@@ -47,13 +52,13 @@ module('Unit | Route | pipeline', function (hooks) {
 
     const route = this.owner.lookup('route:pipeline');
 
-    return route.model({ pipeline_id: 1 }).then((results) => {
+    return route.model({ pipeline_id: 1 }).then(results => {
       assert.equal(results.pipeline, 'pipeline');
       assert.equal(results.collections, 'collections');
     });
   });
 
-  test('it returns model on collections fetch error', function (assert) {
+  test('it returns model on collections fetch error', function(assert) {
     assert.expect(4);
 
     const storeStub = Service.extend({
@@ -73,7 +78,7 @@ module('Unit | Route | pipeline', function (hooks) {
 
     const route = this.owner.lookup('route:pipeline');
 
-    return route.model({ pipeline_id: 1 }).then((results) => {
+    return route.model({ pipeline_id: 1 }).then(results => {
       assert.equal(results.pipeline, 'pipeline');
       assert.deepEqual(results.collections, []);
     });

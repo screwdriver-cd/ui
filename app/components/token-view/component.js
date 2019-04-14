@@ -8,11 +8,11 @@ export default Component.extend({
   pipelineId: null,
   buttonAction: computed('token.{name,description}', 'newName', 'newDescription', {
     get() {
-      const token = this.token;
+      const { token } = this;
 
-      return (this.newName !== token.get('name')
-           || this.newDescription !== token.get('description')) ?
-        'Update' : 'Delete';
+      return this.newName !== token.get('name') || this.newDescription !== token.get('description')
+        ? 'Update'
+        : 'Delete';
     }
   }),
   init() {
@@ -22,7 +22,7 @@ export default Component.extend({
   },
   actions: {
     modifyToken(pipelineId) {
-      const token = this.token;
+      const { token } = this;
 
       if (this.buttonAction === 'Delete') {
         this.confirmAction('delete', this.get('token.id'));
@@ -32,19 +32,21 @@ export default Component.extend({
         this.setIsSaving(true);
 
         if (pipelineId) {
-          token.save({ adapterOptions: { pipelineId } })
+          token
+            .save({ adapterOptions: { pipelineId } })
             .then(() => {
               this.setIsSaving(false);
             })
-            .catch((error) => {
+            .catch(error => {
               this.setErrorMessage(error.errors[0].detail);
             });
         } else {
-          token.save()
+          token
+            .save()
             .then(() => {
               this.setIsSaving(false);
             })
-            .catch((error) => {
+            .catch(error => {
               this.setErrorMessage(error.errors[0].detail);
             });
         }

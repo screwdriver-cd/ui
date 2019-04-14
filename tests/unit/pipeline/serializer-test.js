@@ -16,7 +16,7 @@ module('Unit | Serializer | pipeline', function(hooks) {
     server.shutdown();
   });
 
-  test('it serializes records', function (assert) {
+  test('it serializes records', function(assert) {
     let record = run(() => this.owner.lookup('service:store').createRecord('pipeline'));
 
     let serializedRecord = record.serialize();
@@ -24,9 +24,9 @@ module('Unit | Serializer | pipeline', function(hooks) {
     assert.ok(serializedRecord);
   });
 
-  test('it does not post with model name as key', function (assert) {
+  test('it does not post with model name as key', function(assert) {
     assert.expect(2);
-    server.post('http://localhost:8080/v4/pipelines', function () {
+    server.post('http://localhost:8080/v4/pipelines', function() {
       return [200, {}, JSON.stringify({ id: 'abcd' })];
     });
 

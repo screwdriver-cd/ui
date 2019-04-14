@@ -17,8 +17,8 @@ export default Component.extend({
       this.set('showModal', open);
     },
     addNewCollection() {
-      const name = this.name;
-      const description = this.description;
+      const { name } = this;
+      const { description } = this;
 
       schedule('actions', () => {
         const newCollection = this.store.createRecord('collection', {
@@ -26,7 +26,8 @@ export default Component.extend({
           description
         });
 
-        return newCollection.save()
+        return newCollection
+          .save()
           .then(() => {
             this.set('showModal', false);
 
@@ -36,7 +37,7 @@ export default Component.extend({
               addDirectly(this.pipelineId, newCollection.id);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             newCollection.destroyRecord();
             this.set('errorMessage', error.errors[0].detail);
           });

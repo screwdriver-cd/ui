@@ -1,10 +1,14 @@
-<h4>Artifacts</h4>
+<h4>
+  Artifacts
+</h4>
 {{ember-jstree
-    data=treedata.content
-    plugins=plugins
-    typesOptions=typesOptions
-    eventDidChange=(action "handleJstreeEventDidChange")
+  data=treedata.content
+  plugins=plugins
+  typesOptions=typesOptions
+  eventDidChange=(action "handleJstreeEventDidChange")
 }}
 {{#unless treedata.content.length}}
-<span>No artifacts yet</span>
+  <span>
+    No artifacts yet
+  </span>
 {{/unless}}

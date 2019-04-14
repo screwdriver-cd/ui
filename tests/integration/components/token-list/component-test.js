@@ -10,7 +10,7 @@ module('Integration | Component | token list', function(hooks) {
   test('it renders', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
-    const $ = this.$;
+    const { $ } = this;
 
     this.set('tokens', [
       EmberObject.create({
@@ -27,9 +27,29 @@ module('Integration | Component | token list', function(hooks) {
 
     await render(hbs`{{token-list tokens=tokens}}`);
 
-    assert.equal($($('td.name input').get(0)).val().trim(), 'baz');
-    assert.equal($($('td.description input').get(0)).val().trim(), 'qux');
-    assert.equal($($('td.name input').get(1)).val().trim(), 'foo');
-    assert.equal($($('td.description input').get(1)).val().trim(), 'bar');
+    assert.equal(
+      $($('td.name input').get(0))
+        .val()
+        .trim(),
+      'baz'
+    );
+    assert.equal(
+      $($('td.description input').get(0))
+        .val()
+        .trim(),
+      'qux'
+    );
+    assert.equal(
+      $($('td.name input').get(1))
+        .val()
+        .trim(),
+      'foo'
+    );
+    assert.equal(
+      $($('td.description input').get(1))
+        .val()
+        .trim(),
+      'bar'
+    );
   });
 });

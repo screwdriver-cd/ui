@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, findAll, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | pipeline pr list', function(hooks) {
@@ -17,10 +17,12 @@ module('Integration | Component | pipeline pr list', function(hooks) {
         createTimeWords: 'now',
         title: 'update readme',
         username: 'anonymous',
-        builds: [{
-          id: '1234',
-          status: 'SUCCESS'
-        }]
+        builds: [
+          {
+            id: '1234',
+            status: 'SUCCESS'
+          }
+        ]
       }),
       EmberObject.create({
         id: 'efgh',
@@ -28,10 +30,12 @@ module('Integration | Component | pipeline pr list', function(hooks) {
         createTimeWords: 'now',
         title: 'revert PR-1234',
         username: 'suomynona',
-        builds: [{
-          id: '1235',
-          status: 'FAILURE'
-        }]
+        builds: [
+          {
+            id: '1235',
+            status: 'FAILURE'
+          }
+        ]
       })
     ];
 

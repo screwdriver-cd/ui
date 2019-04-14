@@ -11,7 +11,7 @@ module('Integration | Component | search list', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders without collections', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     injectScmServiceStub(this);
 
@@ -46,17 +46,47 @@ module('Integration | Component | search list', function(hooks) {
 
     await render(hbs`{{search-list pipelines=pipelineList collections=collections}}`);
 
-    assert.equal($($('td.appId').get(0)).text().trim(), 'batman/tumbler');
-    assert.equal($($('td.branch').get(0)).text().trim(), 'waynecorp');
-    assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
-    assert.equal($($('td.appId').get(1)).text().trim(), 'foo/bar');
-    assert.equal($($('td.branch').get(1)).text().trim(), 'master');
-    assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
+    assert.equal(
+      $($('td.appId').get(0))
+        .text()
+        .trim(),
+      'batman/tumbler'
+    );
+    assert.equal(
+      $($('td.branch').get(0))
+        .text()
+        .trim(),
+      'waynecorp'
+    );
+    assert.equal(
+      $($('td.account').get(0))
+        .text()
+        .trim(),
+      'bitbucket.org'
+    );
+    assert.equal(
+      $($('td.appId').get(1))
+        .text()
+        .trim(),
+      'foo/bar'
+    );
+    assert.equal(
+      $($('td.branch').get(1))
+        .text()
+        .trim(),
+      'master'
+    );
+    assert.equal(
+      $($('td.account').get(1))
+        .text()
+        .trim(),
+      'github.com'
+    );
     assert.equal($('.add-to-collection').length, 0);
   });
 
   test('it renders with collections', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     injectSessionStub(this);
     injectScmServiceStub(this);
@@ -97,22 +127,77 @@ module('Integration | Component | search list', function(hooks) {
 
     await render(hbs`{{search-list pipelines=pipelineList collections=collections}}`);
 
-    assert.equal($($('td.appId').get(0)).text().trim(), 'batman/tumbler');
-    assert.equal($($('td.branch').get(0)).text().trim(), 'waynecorp');
-    assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
-    assert.equal($($('td.appId').get(1)).text().trim(), 'foo/bar');
-    assert.equal($($('td.branch').get(1)).text().trim(), 'master');
-    assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
+    assert.equal(
+      $($('td.appId').get(0))
+        .text()
+        .trim(),
+      'batman/tumbler'
+    );
+    assert.equal(
+      $($('td.branch').get(0))
+        .text()
+        .trim(),
+      'waynecorp'
+    );
+    assert.equal(
+      $($('td.account').get(0))
+        .text()
+        .trim(),
+      'bitbucket.org'
+    );
+    assert.equal(
+      $($('td.appId').get(1))
+        .text()
+        .trim(),
+      'foo/bar'
+    );
+    assert.equal(
+      $($('td.branch').get(1))
+        .text()
+        .trim(),
+      'master'
+    );
+    assert.equal(
+      $($('td.account').get(1))
+        .text()
+        .trim(),
+      'github.com'
+    );
     assert.equal($('.add-to-collection').length, 2);
-    assert.equal($($('td.add .dropdown-menu span').get(0)).text().trim(), 'collection1');
-    assert.equal($($('td.add .dropdown-menu span').get(1)).text().trim(), 'collection2');
-    assert.equal($($('td.add .dropdown-menu span').get(2)).text().trim(), 'CREATE');
-    assert.equal($($('td.add .dropdown-menu span').get(3)).text().trim(), 'collection1');
-    assert.equal($($('td.add .dropdown-menu span').get(4)).text().trim(), 'collection2');
+    assert.equal(
+      $($('td.add .dropdown-menu span').get(0))
+        .text()
+        .trim(),
+      'collection1'
+    );
+    assert.equal(
+      $($('td.add .dropdown-menu span').get(1))
+        .text()
+        .trim(),
+      'collection2'
+    );
+    assert.equal(
+      $($('td.add .dropdown-menu span').get(2))
+        .text()
+        .trim(),
+      'CREATE'
+    );
+    assert.equal(
+      $($('td.add .dropdown-menu span').get(3))
+        .text()
+        .trim(),
+      'collection1'
+    );
+    assert.equal(
+      $($('td.add .dropdown-menu span').get(4))
+        .text()
+        .trim(),
+      'collection2'
+    );
   });
 
   test('it filters the list', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     injectScmServiceStub(this);
 
@@ -133,8 +218,23 @@ module('Integration | Component | search list', function(hooks) {
     await render(hbs`{{search-list pipelines=pipelineList query=q}}`);
 
     assert.ok($('tr').length, 2);
-    assert.equal($('td.appId').text().trim(), 'foo/bar');
-    assert.equal($('td.branch').text().trim(), 'master');
-    assert.equal($('td.account').text().trim(), 'github.com');
+    assert.equal(
+      $('td.appId')
+        .text()
+        .trim(),
+      'foo/bar'
+    );
+    assert.equal(
+      $('td.branch')
+        .text()
+        .trim(),
+      'master'
+    );
+    assert.equal(
+      $('td.account')
+        .text()
+        .trim(),
+      'github.com'
+    );
   });
 });

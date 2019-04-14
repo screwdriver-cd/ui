@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, findAll, find } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import injectScmServiceStub from '../../../helpers/inject-scm';
 
@@ -27,7 +27,7 @@ module('Integration | Component | login button', function(hooks) {
 
     const contexts = this.get('scm').getScms();
 
-    this.set('externalAction', (context) => {
+    this.set('externalAction', context => {
       assert.ok(context);
     });
     this.set('model', contexts);

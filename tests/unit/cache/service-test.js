@@ -28,13 +28,13 @@ module('Unit | Service | cache', function(hooks) {
     server.shutdown();
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     const service = this.owner.lookup('service:cache');
 
     assert.ok(service);
   });
 
-  test('it makes a call to delete pipeline cache successfully', function (assert) {
+  test('it makes a call to delete pipeline cache successfully', function(assert) {
     server.delete('http://localhost:8081/v1/caches/pipelines/1', () => [204]);
 
     let service = this.owner.lookup('service:cache');
@@ -52,7 +52,7 @@ module('Unit | Service | cache', function(hooks) {
     });
   });
 
-  test('it makes a call to delete job cache successfully', function (assert) {
+  test('it makes a call to delete job cache successfully', function(assert) {
     server.delete('http://localhost:8081/v1/caches/jobs/1', () => [204]);
 
     let service = this.owner.lookup('service:cache');
@@ -70,7 +70,7 @@ module('Unit | Service | cache', function(hooks) {
     });
   });
 
-  test('it returns 401 on unauthorized deletion', function (assert) {
+  test('it returns 401 on unauthorized deletion', function(assert) {
     assert.expect(2);
 
     server.delete('http://localhost:8081/v1/caches/pipelines/1', () => [
@@ -89,7 +89,7 @@ module('Unit | Service | cache', function(hooks) {
 
     p.then(
       () => {},
-      (err) => {
+      err => {
         assert.equal(err, 'You do not have the permissions to clear the cache.');
       }
     );

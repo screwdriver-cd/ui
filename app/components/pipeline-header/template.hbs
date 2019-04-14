@@ -4,17 +4,31 @@
 {{#if addCollectionSuccess}}
   {{info-message message=addCollectionSuccess type="success" icon="check"}}
 {{/if}}
-{{#link-to "pipeline" pipeline.id}}<h1>{{pipeline.appId}}</h1>{{/link-to}}
-<a href="{{pipeline.hubUrl}}" class="branch">{{fa-icon "code-fork"}} {{pipeline.branch}}</a>
-<span class="scm">{{fa-icon scmContext.scmIcon}} {{scmContext.scm}}</span>
+{{#link-to "pipeline" pipeline.id}}
+  <h1>
+    {{pipeline.appId}}
+  </h1>
+{{/link-to}}
+<a href={{pipeline.hubUrl}} class="branch">
+  {{fa-icon "code-fork"}}
+  {{pipeline.branch}}
+</a>
+<span class="scm">
+  {{fa-icon scmContext.scmIcon}}
+  {{scmContext.scm}}
+</span>
 {{#if pipeline.configPipelineId}}
-  {{fa-icon "cog"}} {{#link-to "pipeline" pipeline.configPipelineId}}Parent Pipeline{{/link-to}}
+  {{fa-icon "cog"}}
+  {{#link-to "pipeline" pipeline.configPipelineId}}
+    Parent Pipeline
+  {{/link-to}}
 {{/if}}
-{{collection-dropdown 
+{{collection-dropdown
   pipeline=pipeline
   pipelineId=pipeline.id
   collections=collections
   addToCollection=addToCollection
   addCollectionSuccess=addCollectionSuccess
   addCollectionError=addCollectionError
-  dropdownText=dropdownText}}
+  dropdownText=dropdownText
+}}

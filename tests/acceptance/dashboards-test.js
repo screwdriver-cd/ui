@@ -1,12 +1,4 @@
-import {
-  click,
-  fillIn,
-  findAll,
-  currentURL,
-  find,
-  triggerEvent,
-  visit
-} from '@ember/test-helpers';
+import { click, fillIn, findAll, currentURL, triggerEvent, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
@@ -175,7 +167,7 @@ module('Acceptance | dashboards', function(hooks) {
       description: 'description3'
     };
 
-    server.post('http://localhost:8080/v4/collections', (request) => {
+    server.post('http://localhost:8080/v4/collections', request => {
       assert.deepEqual(JSON.parse(request.requestBody), expectedRequestBody);
 
       return [

@@ -39,10 +39,13 @@ export default Component.extend({
   // Updating a pipeline
   init() {
     this._super(...arguments);
-    this.set('scmUrl', getCheckoutUrl({
-      appId: this.get('pipeline.appId'),
-      scmUri: this.get('pipeline.scmUri')
-    }));
+    this.set(
+      'scmUrl',
+      getCheckoutUrl({
+        appId: this.get('pipeline.appId'),
+        scmUri: this.get('pipeline.scmUri')
+      })
+    );
   },
   actions: {
     // Checks if scm URL is valid or not
@@ -72,9 +75,9 @@ export default Component.extend({
       this.set('showToggleModal', true);
     },
     updateMessage(message) {
-      const state = this.state;
-      const user = this.user;
-      const jobId = this.jobId;
+      const { state } = this;
+      const { user } = this;
+      const { jobId } = this;
 
       this.setJobStatus(jobId, state, user, message || ' ');
       this.set('showToggleModal', false);
@@ -95,7 +98,8 @@ export default Component.extend({
     sync(syncPath) {
       this.set('isShowingModal', true);
 
-      return this.sync.syncRequests(this.get('pipeline.id'), syncPath)
+      return this.sync
+        .syncRequests(this.get('pipeline.id'), syncPath)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     },
@@ -111,7 +115,8 @@ export default Component.extend({
         config.id = this.get('pipeline.id');
       }
 
-      return this.cache.clearCache(config)
+      return this.cache
+        .clearCache(config)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     }

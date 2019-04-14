@@ -6,11 +6,11 @@ import sinonTest from 'ember-sinon-qunit/test-support/test';
 module('Unit | Route | pipeline/build/step', function(hooks) {
   setupTest(hooks);
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     assert.ok(this.owner.lookup('route:pipeline/build/step'));
   });
 
-  sinonTest('it redirects if step is not found in build', function (assert) {
+  sinonTest('it redirects if step is not found in build', function(assert) {
     const route = this.subject();
     const stub = this.stub(route, 'transitionTo');
     const model = {

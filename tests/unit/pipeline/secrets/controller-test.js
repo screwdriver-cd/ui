@@ -16,7 +16,7 @@ module('Unit | Controller | pipeline/secrets', function(hooks) {
     server.shutdown();
   });
 
-  test('it can create secrets', function (assert) {
+  test('it can create secrets', function(assert) {
     server.post('http://localhost:8080/v4/secrets', () => [200, {}, JSON.stringify({ id: 1234 })]);
 
     let controller = this.owner.lookup('controller:pipeline/secrets');
@@ -48,9 +48,12 @@ module('Unit | Controller | pipeline/secrets', function(hooks) {
     });
   });
 
-  test('it can create pipelinetokens', function (assert) {
-    server.post('http://localhost:8080/v4/pipelines/1/tokens',
-      () => [200, {}, JSON.stringify({ id: 123 })]);
+  test('it can create pipelinetokens', function(assert) {
+    server.post('http://localhost:8080/v4/pipelines/1/tokens', () => [
+      200,
+      {},
+      JSON.stringify({ id: 123 })
+    ]);
 
     let controller = this.owner.lookup('controller:pipeline/secrets');
 
@@ -82,7 +85,7 @@ module('Unit | Controller | pipeline/secrets', function(hooks) {
     });
   });
 
-  test('it shows errors from server', function (assert) {
+  test('it shows errors from server', function(assert) {
     server.post('http://localhost:8080/v4/secrets', () => [
       400,
       {},

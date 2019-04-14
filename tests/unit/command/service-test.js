@@ -17,7 +17,7 @@ const dummyCommands = [
   { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime },
   { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime }
 ];
-const dummyCommandsResult = dummyCommands.map((c) => {
+const dummyCommandsResult = dummyCommands.map(c => {
   c.lastUpdated = lastUpdated;
 
   return c;
@@ -26,7 +26,7 @@ const dummyCommandTags = [
   { id: 2, namespace: 'foo', name: 'bar', tag: 'latest', version: '2.0.0', createTime },
   { id: 1, namespace: 'foo', name: 'bar', tag: 'stable', version: '1.0.0', createTime }
 ];
-const dummyCommandTagsResult = dummyCommandTags.map((c) => {
+const dummyCommandTagsResult = dummyCommandTags.map(c => {
   c.lastUpdated = lastUpdated;
 
   return c;
@@ -46,7 +46,7 @@ module('Unit | Service | command', function(hooks) {
     server.shutdown();
   });
 
-  test('it fetches one set of command version', function (assert) {
+  test('it fetches one set of command version', function(assert) {
     assert.expect(2);
 
     server.get('http://localhost:8080/v4/commands/foo/bar', () => [
@@ -63,12 +63,12 @@ module('Unit | Service | command', function(hooks) {
 
     const t = service.getOneCommand('foo', 'bar');
 
-    t.then((commands) => {
+    t.then(commands => {
       assert.deepEqual(commands, dummyCommandsResult);
     });
   });
 
-  test('it fetches one set of command tags', function (assert) {
+  test('it fetches one set of command tags', function(assert) {
     assert.expect(2);
 
     server.get('http://localhost:8080/v4/commands/foo/bar/tags', () => [
@@ -85,12 +85,12 @@ module('Unit | Service | command', function(hooks) {
 
     const t = service.getCommandTags('foo', 'bar');
 
-    t.then((commands) => {
+    t.then(commands => {
       assert.deepEqual(commands, dummyCommandTagsResult);
     });
   });
 
-  test('it fetches all commands', function (assert) {
+  test('it fetches all commands', function(assert) {
     assert.expect(2);
 
     server.get('http://localhost:8080/v4/commands', () => [
@@ -111,12 +111,12 @@ module('Unit | Service | command', function(hooks) {
       { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime, lastUpdated }
     ];
 
-    t.then((commands) => {
+    t.then(commands => {
       assert.deepEqual(commands, filteredCommands);
     });
   });
 
-  test('it deletes all versions of a command', function (assert) {
+  test('it deletes all versions of a command', function(assert) {
     assert.expect(4);
 
     server.delete('http://localhost:8080/v4/commands/foo/bar', () => [204]);
@@ -136,7 +136,7 @@ module('Unit | Service | command', function(hooks) {
     });
   });
 
-  test('it returns 401 on unauthorized deletion', function (assert) {
+  test('it returns 401 on unauthorized deletion', function(assert) {
     assert.expect(2);
 
     server.delete('http://localhost:8080/v4/commands/foo/bar', () => [
@@ -155,7 +155,7 @@ module('Unit | Service | command', function(hooks) {
 
     t.then(
       () => {},
-      (err) => {
+      err => {
         assert.equal(err, 'You do not have the permissions to remove this command.');
       }
     );

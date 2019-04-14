@@ -26,11 +26,11 @@ export default Component.extend({
   }),
   filteredPipelines: computed('pipelines', {
     get() {
-      const scmService = this.scmService;
+      const { scmService } = this;
       let filtered = this.pipelines;
 
       // add scm contexts into pipelines.
-      return filtered.map((pipeline) => {
+      return filtered.map(pipeline => {
         const scm = scmService.getScm(pipeline.get('scmContext'));
 
         pipeline.set('scm', scm.displayName);
@@ -63,8 +63,9 @@ export default Component.extend({
       set(this, 'pipelinesPage', pipelinesPage);
 
       if (typeof fn === 'function') {
-        fn({ page: pipelinesPage, search: get(this, 'query') })
-          .catch(error => this.set('errorMessage', error));
+        fn({ page: pipelinesPage, search: get(this, 'query') }).catch(error =>
+          this.set('errorMessage', error)
+        );
       }
     },
     openModal() {
@@ -79,12 +80,16 @@ export default Component.extend({
       return this.addToCollection(+pipelineId, collection.id)
         .then(() => {
           this.set('addCollectionError', null);
-          this.set('addCollectionSuccess',
-            `Successfully added Pipeline to Collection ${collection.get('name')}`);
+          this.set(
+            'addCollectionSuccess',
+            `Successfully added Pipeline to Collection ${collection.get('name')}`
+          );
         })
         .catch(() => {
-          this.set('addCollectionError',
-            `Could not add Pipeline to Collection ${collection.get('name')}`);
+          this.set(
+            'addCollectionError',
+            `Could not add Pipeline to Collection ${collection.get('name')}`
+          );
           this.set('addCollectionSuccess', null);
         });
     }

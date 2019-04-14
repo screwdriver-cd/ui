@@ -1,26 +1,40 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
-
-<h1>Create Pipeline</h1>
-<p>Add a Git repository to Screwdriver by pasting your repository link below.<br>
-  We accept both HTTPS and SSH URLs.</p>
+<h1>
+  Create Pipeline
+</h1>
+<p>
+  Add a Git repository to Screwdriver by pasting your repository link below.
+  <br>
+  We accept both HTTPS and SSH URLs.
+</p>
 <div>
-{{input
-  class="text-input"
-  key-up="scmChange"
-  placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#master)"
-  value=scmUrl
-  enter="saveData"
-}}
-{{#if isValid}}
-  <i class="success">{{fa-icon "check"}}</i>
-{{/if}}
+  {{input
+    class="text-input"
+    key-up=(action "scmChange")
+    placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#master)"
+    value=scmUrl
+    enter=(action "saveData")
+  }}
+  {{#if isValid}}
+    <i class="success">
+      {{fa-icon "check"}}
+    </i>
+  {{/if}}
 </div>
 <div>
-<button {{action "saveData"}} disabled={{isDisabled}} class="blue-button{{if isSaving ' saving'}}">
-  <div class="saving-loading">
-    Creating Pipeline
-  </div>
-  <div class="button-label">Create Pipeline</div>
-</button>
-{{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
+  <button
+    disabled={{isDisabled}}
+    class="blue-button{{if isSaving " saving"}}"
+    {{action "saveData"}}
+  >
+    <div class="saving-loading">
+      Creating Pipeline
+    </div>
+    <div class="button-label">
+      Create Pipeline
+    </div>
+  </button>
+  {{#if isSaving}}
+    {{fa-icon "spinner" spin=true}}
+  {{/if}}
 </div>

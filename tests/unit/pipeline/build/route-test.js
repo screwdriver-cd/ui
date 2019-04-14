@@ -6,17 +6,20 @@ import sinonTest from 'ember-sinon-qunit/test-support/test';
 module('Unit | Route | pipeline/build', function(hooks) {
   setupTest(hooks);
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     let route = this.owner.lookup('route:pipeline/build');
 
     assert.ok(route);
-    assert.equal(route.titleToken({
-      job: EmberObject.create({ name: 'main' }),
-      build: EmberObject.create({ sha: 'abcd1234567890', truncatedSha: 'abcd123' })
-    }), 'main > #abcd123');
+    assert.equal(
+      route.titleToken({
+        job: EmberObject.create({ name: 'main' }),
+        build: EmberObject.create({ sha: 'abcd1234567890', truncatedSha: 'abcd123' })
+      }),
+      'main > #abcd123'
+    );
   });
 
-  sinonTest('it redirects if build not found', function (assert) {
+  sinonTest('it redirects if build not found', function(assert) {
     const route = this.subject();
     const stub = this.stub(route, 'transitionTo');
     const jobId = 345;

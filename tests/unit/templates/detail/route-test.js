@@ -32,12 +32,12 @@ module('Unit | Route | templates/detail', function(hooks) {
     this.owner.register('service:template', templateServiceStub);
   });
 
-  test('it asks for the list of templates for a given name', function (assert) {
+  test('it asks for the list of templates for a given name', function(assert) {
     let route = this.owner.lookup('route:templates/detail');
 
     assert.ok(route);
 
-    return route.model({ namespace: 'foo', name: 'baz' }).then((templates) => {
+    return route.model({ namespace: 'foo', name: 'baz' }).then(templates => {
       assert.equal(templates.length, 3);
       assert.equal(templates[0].namespace, 'foo');
       assert.equal(templates[0].name, 'baz');

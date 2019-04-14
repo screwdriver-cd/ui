@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | validator pipeline', function(hooks) {
@@ -23,13 +23,12 @@ module('Integration | Component | validator pipeline', function(hooks) {
       annotations: {
         hello: 'hi'
       },
-      workflow: [
-        'firstjob',
-        'secondjob'
-      ]
+      workflow: ['firstjob', 'secondjob']
     });
 
-    await render(hbs`{{validator-pipeline annotations=plMock.annotations workflow=plMock.workflow}}`);
+    await render(
+      hbs`{{validator-pipeline annotations=plMock.annotations workflow=plMock.workflow}}`
+    );
 
     assert.dom('.annotations .label').hasText('Annotations:');
     assert.dom('.annotations ul li').hasText('hello: hi');

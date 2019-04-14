@@ -75,7 +75,7 @@ const graphDepth = (edges, start, visited = new Set()) => {
 
   // walk the graph
   if (dests.length) {
-    dests.forEach((e) => {
+    dests.forEach(e => {
       visited.add(e.dest);
       graphDepth(edges, e.dest, visited);
     });
@@ -93,10 +93,12 @@ const graphDepth = (edges, start, visited = new Set()) => {
  * @param  {Array}   y     Accumulator of column depth
  */
 const walkGraph = (graph, start, x, y) => {
-  if (!y[x]) { y[x] = y[0] - 1; }
+  if (!y[x]) {
+    y[x] = y[0] - 1;
+  }
   const nodeNames = graph.edges.filter(e => e.src === start).map(e => e.dest);
 
-  nodeNames.forEach((name) => {
+  nodeNames.forEach(name => {
     const obj = node(graph.nodes, name);
 
     if (!obj.pos) {
@@ -160,7 +162,7 @@ const isTrigger = (name, start) => {
 const hasProcessedDest = (graph, name) => {
   const nodes = graph.edges.filter(edge => edge.src === name).map(edge => edge.dest);
 
-  return nodes.some((n) => {
+  return nodes.some(n => {
     const found = node(graph.nodes, n);
 
     return found && typeof found.pos === 'object';
@@ -180,15 +182,15 @@ const hasProcessedDest = (graph, name) => {
 const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   // deep clone
   const graph = JSON.parse(JSON.stringify(inputGraph));
-  const nodes = graph.nodes;
-  const buildsAvailable = (Array.isArray(builds) || builds instanceof DS.PromiseArray) &&
-    get(builds, 'length');
-  const jobsAvailable = (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) &&
-    get(jobs, 'length');
-  const edges = graph.edges;
+  const { nodes } = graph;
+  const buildsAvailable =
+    (Array.isArray(builds) || builds instanceof DS.PromiseArray) && get(builds, 'length');
+  const jobsAvailable =
+    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) && get(jobs, 'length');
+  const { edges } = graph;
   let y = [0]; // accumulator for column heights
 
-  nodes.forEach((n) => {
+  nodes.forEach(n => {
     // Set root nodes on left
     if (isRoot(edges, n.name)) {
       if (!hasProcessedDest(graph, n.name)) {
@@ -221,8 +223,9 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
         const stateChanger = get(j, 'stateChanger');
 
         n.status = state;
-        n.stateChangeMessage = stateChanger ? `${stateWithCapitalization} ` +
-        `by ${stateChanger}` : stateWithCapitalization;
+        n.stateChangeMessage = stateChanger
+          ? `${stateWithCapitalization} by ${stateChanger}`
+          : stateWithCapitalization;
       }
     }
 
@@ -244,7 +247,7 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   });
 
   // Decorate edges with positions and status
-  edges.forEach((e) => {
+  edges.forEach(e => {
     const srcNode = node(nodes, e.src);
     const destNode = node(nodes, e.dest);
 
@@ -296,7 +299,7 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
     while (visiting.length) {
       let cur = visiting.shift();
 
-      edges.forEach((e) => {
+      edges.forEach(e => {
         if (e.src === cur) {
           visiting.push(e.dest);
           visited.add(e.dest);

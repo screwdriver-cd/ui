@@ -1,18 +1,20 @@
 <div class="row">
   <div class="col-xs-10">
     {{#if isPR}}
-      <strong>Pull Requests</strong>
+      <strong>
+        Pull Requests
+      </strong>
     {{else}}
-      <strong>Pipeline</strong>
+      <strong>
+        Pipeline
+      </strong>
     {{/if}}
-    {{#bs-button-group
-      value=selectedEvent
-      type='radio'
-      onChange=(action (mut selected)) as |bg|
-    }}
-    {{#each eventOptions as |opt|}}
-      {{#bg.button value=opt.value}}{{opt.label}}{{/bg.button}}
-    {{/each}}
+    {{#bs-button-group value=selectedEvent type="radio" onChange=(action (mut selected)) as |bg|}}
+      {{#each eventOptions as |opt|}}
+        {{#bg.button value=opt.value}}
+          {{opt.label}}
+        {{/bg.button}}
+      {{/each}}
     {{/bs-button-group}}
   </div>
   <div class="col-xs-2">
@@ -25,41 +27,71 @@
     {{/if}}
   </div>
 </div>
-
 {{#if selectedEventObj}}
   <div class="row {{selectedEventObj.status}}">
     <div class="col-xs-12">
-      {{#unless (eq selected 'aggregate')}}
+      {{#unless (eq selected "aggregate")}}
         <div class="event-info">
           <div class="col">
-            <span class="title">Commit</span><br/>
-            <a href="{{selectedEventObj.commit.url}}">#{{selectedEventObj.truncatedSha}}</a>
+            <span class="title">
+              Commit
+            </span>
+            <br>
+            <a href={{selectedEventObj.commit.url}}>
+              #
+              {{selectedEventObj.truncatedSha}}
+            </a>
           </div>
           <div class="col">
-            <span class="title">Message</span><br/>
-            <span title="{{selectedEventObj.commit.message}}">{{selectedEventObj.truncatedMessage}}</span>
+            <span class="title">
+              Message
+            </span>
+            <br>
+            <span title={{selectedEventObj.commit.message}}>
+              {{selectedEventObj.truncatedMessage}}
+            </span>
           </div>
           <div class="col">
-            <span class="title">Status</span><br/>
-            <span class="status">{{fa-icon icon fixedWidth=true}} {{selectedEventObj.status}}</span>
+            <span class="title">
+              Status
+            </span>
+            <br>
+            <span class="status">
+              {{fa-icon icon fixedWidth=true}}
+              {{selectedEventObj.status}}
+            </span>
           </div>
           <div class="col">
-            <span class="title">User</span><br/>
-            <a href="{{selectedEventObj.creator.url}}">{{selectedEventObj.creator.name}}</a>
+            <span class="title">
+              User
+            </span>
+            <br>
+            <a href={{selectedEventObj.creator.url}}>
+              {{selectedEventObj.creator.name}}
+            </a>
           </div>
           <div class="col">
-            <span class="title">Start Time</span><br/>
+            <span class="title">
+              Start Time
+            </span>
+            <br>
             {{selectedEventObj.createTimeWords}}
           </div>
           <div class="col">
-            <span class="title">Duration</span><br/>
+            <span class="title">
+              Duration
+            </span>
+            <br>
             {{selectedEventObj.durationText}}
           </div>
           {{#if selectedEventObj.label}}
-          <div class="col">
-            <span class="title">Label</span><br/>
-            {{selectedEventObj.label}}
-          </div>
+            <div class="col">
+              <span class="title">
+                Label
+              </span>
+              <br>
+              {{selectedEventObj.label}}
+            </div>
           {{/if}}
           {{#if selectedEventObj.isRunning}}
           <div class="col">

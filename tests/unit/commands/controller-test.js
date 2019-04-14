@@ -6,13 +6,13 @@ import test from 'ember-sinon-qunit/test-support/test';
 module('Unit | Controller | Commands', function(hooks) {
   setupTest(hooks);
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     let controller = this.owner.lookup('controller:commands');
 
     assert.ok(controller);
   });
 
-  test('it creates correct breadcrumbs', function (assert) {
+  test('it creates correct breadcrumbs', function(assert) {
     const controller = this.owner.lookup('controller:commands');
 
     run(() => {
@@ -21,18 +21,20 @@ module('Unit | Controller | Commands', function(hooks) {
         name: 'testName'
       });
 
-      assert.deepEqual(controller.get('crumbs'), [{
-        name: 'Commands',
-        params: ['commands']
-      },
-      {
-        name: 'testNamespace',
-        params: ['commands.namespace', 'testNamespace']
-      },
-      {
-        name: 'testName',
-        params: ['commands.detail', 'testNamespace', 'testName']
-      }]);
+      assert.deepEqual(controller.get('crumbs'), [
+        {
+          name: 'Commands',
+          params: ['commands']
+        },
+        {
+          name: 'testNamespace',
+          params: ['commands.namespace', 'testNamespace']
+        },
+        {
+          name: 'testName',
+          params: ['commands.detail', 'testNamespace', 'testName']
+        }
+      ]);
     });
   });
 });

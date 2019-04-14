@@ -19,7 +19,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     this.owner.register('service:command', commandServiceStub);
   });
 
-  test('it parses model properly', function (assert) {
+  test('it parses model properly', function(assert) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', [
@@ -35,7 +35,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('versionCommand.id'), 3);
   });
 
-  test('it handles version changes', function (assert) {
+  test('it handles version changes', function(assert) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', [
@@ -54,7 +54,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('latest.id'), 3);
   });
 
-  test('it handles model changes', function (assert) {
+  test('it handles model changes', function(assert) {
     let controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A([
@@ -80,7 +80,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('latest.id'), 4);
   });
 
-  test('it handles command deletion', function (assert) {
+  test('it handles command deletion', function(assert) {
     let controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A([
@@ -93,7 +93,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
 
     assert.ok(controller);
 
-    controller.transitionToRoute = (route) => {
+    controller.transitionToRoute = route => {
       assert.equal(route, 'commands');
     };
 

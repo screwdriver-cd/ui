@@ -10,15 +10,8 @@ import {
 import { module, test } from 'qunit';
 
 const SIMPLE_GRAPH = {
-  nodes: [
-    { name: '~pr' },
-    { name: '~commit' },
-    { name: 'main' }
-  ],
-  edges: [
-    { src: '~pr', dest: 'main' },
-    { src: '~commit', dest: 'main' }
-  ]
+  nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }],
+  edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }]
 };
 
 const COMPLEX_GRAPH = {
@@ -69,19 +62,19 @@ const MORE_COMPLEX_GRAPH = {
 };
 
 module('Unit | Utility | graph tools', function() {
-  test('it gets the right icons', function (assert) {
+  test('it gets the right icons', function(assert) {
     assert.equal(icon('SUCCESS'), '\ue903');
     assert.equal(icon('banana'), '\ue901');
   });
 
-  test('it gets an element from a list', function (assert) {
+  test('it gets an element from a list', function(assert) {
     const list = [{ name: 'foo' }, { name: 'bar' }];
     const result = node(list, 'bar');
 
     assert.deepEqual(result, { name: 'bar' });
   });
 
-  test('it processes a simple graph without builds', function (assert) {
+  test('it processes a simple graph without builds', function(assert) {
     const expectedOutput = {
       nodes: [
         { name: '~pr', pos: { x: 0, y: 0 } },
@@ -102,7 +95,7 @@ module('Unit | Utility | graph tools', function() {
     assert.deepEqual(result, expectedOutput);
   });
 
-  test('it processes a more complex graph without builds', function (assert) {
+  test('it processes a more complex graph without builds', function(assert) {
     const expectedOutput = {
       nodes: [
         { name: '~pr', pos: { x: 0, y: 0 } },
@@ -132,7 +125,7 @@ module('Unit | Utility | graph tools', function() {
     assert.deepEqual(result, expectedOutput);
   });
 
-  test('it processes a complex graph with builds', function (assert) {
+  test('it processes a complex graph with builds', function(assert) {
     const builds = [
       { jobId: 1, status: 'SUCCESS', id: 6 },
       { jobId: 2, status: 'SUCCESS', id: 7 },
@@ -175,7 +168,7 @@ module('Unit | Utility | graph tools', function() {
     assert.deepEqual(result, expectedOutput);
   });
 
-  test('it handles detached jobs', function (assert) {
+  test('it handles detached jobs', function(assert) {
     const inputGraph = {
       nodes: [
         { name: '~pr' },
@@ -184,10 +177,7 @@ module('Unit | Utility | graph tools', function() {
         { name: 'foo' },
         { name: 'bar' }
       ],
-      edges: [
-        { src: '~pr', dest: 'main' },
-        { src: '~commit', dest: 'main' }
-      ]
+      edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }]
     };
     const expectedOutput = {
       nodes: [
@@ -211,47 +201,47 @@ module('Unit | Utility | graph tools', function() {
     assert.deepEqual(result, expectedOutput);
   });
 
-  test('it handles complex misordered pipeline with multiple commit/pr/remote triggers',
-    function (assert) {
-      const expectedOutput = {
-        nodes: [
-          { name: '~pr', pos: { x: 0, y: 0 } },
-          { name: '~commit', pos: { x: 0, y: 1 } },
-          { name: 'no_main', pos: { x: 1, y: 0 } },
-          { name: '~sd@241:main', pos: { x: 0, y: 2 } },
-          { name: 'publish', pos: { x: 2, y: 0 } },
-          { name: 'other_publish', pos: { x: 2, y: 1 } },
-          { name: 'wow_new_main', pos: { x: 1, y: 1 } },
-          { name: 'detached_main', pos: { x: 0, y: 3 } },
-          { name: 'after_detached_main', pos: { x: 1, y: 3 } },
-          { name: 'detached_solo', pos: { x: 0, y: 4 } }
-        ],
-        edges: [
-          { src: '~commit', dest: 'no_main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
-          { src: '~pr', dest: 'no_main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
-          { src: '~sd@241:main', dest: 'no_main', from: { x: 0, y: 2 }, to: { x: 1, y: 0 } },
-          { src: 'no_main', dest: 'publish', from: { x: 1, y: 0 }, to: { x: 2, y: 0 } },
-          { src: 'wow_new_main', dest: 'other_publish', from: { x: 1, y: 1 }, to: { x: 2, y: 1 } },
-          { src: '~commit', dest: 'wow_new_main', from: { x: 0, y: 1 }, to: { x: 1, y: 1 } },
-          { src: '~pr', dest: 'wow_new_main', from: { x: 0, y: 0 }, to: { x: 1, y: 1 } },
-          { src: '~sd@241:main', dest: 'wow_new_main', from: { x: 0, y: 2 }, to: { x: 1, y: 1 } },
-          { src: 'detached_main',
-            dest: 'after_detached_main',
-            from: { x: 0, y: 3 },
-            to: { x: 1, y: 3 }
-          }
-        ],
-        meta: {
-          width: 3,
-          height: 5
+  test('it handles complex misordered pipeline with multiple commit/pr/remote triggers', function(assert) {
+    const expectedOutput = {
+      nodes: [
+        { name: '~pr', pos: { x: 0, y: 0 } },
+        { name: '~commit', pos: { x: 0, y: 1 } },
+        { name: 'no_main', pos: { x: 1, y: 0 } },
+        { name: '~sd@241:main', pos: { x: 0, y: 2 } },
+        { name: 'publish', pos: { x: 2, y: 0 } },
+        { name: 'other_publish', pos: { x: 2, y: 1 } },
+        { name: 'wow_new_main', pos: { x: 1, y: 1 } },
+        { name: 'detached_main', pos: { x: 0, y: 3 } },
+        { name: 'after_detached_main', pos: { x: 1, y: 3 } },
+        { name: 'detached_solo', pos: { x: 0, y: 4 } }
+      ],
+      edges: [
+        { src: '~commit', dest: 'no_main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+        { src: '~pr', dest: 'no_main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+        { src: '~sd@241:main', dest: 'no_main', from: { x: 0, y: 2 }, to: { x: 1, y: 0 } },
+        { src: 'no_main', dest: 'publish', from: { x: 1, y: 0 }, to: { x: 2, y: 0 } },
+        { src: 'wow_new_main', dest: 'other_publish', from: { x: 1, y: 1 }, to: { x: 2, y: 1 } },
+        { src: '~commit', dest: 'wow_new_main', from: { x: 0, y: 1 }, to: { x: 1, y: 1 } },
+        { src: '~pr', dest: 'wow_new_main', from: { x: 0, y: 0 }, to: { x: 1, y: 1 } },
+        { src: '~sd@241:main', dest: 'wow_new_main', from: { x: 0, y: 2 }, to: { x: 1, y: 1 } },
+        {
+          src: 'detached_main',
+          dest: 'after_detached_main',
+          from: { x: 0, y: 3 },
+          to: { x: 1, y: 3 }
         }
-      };
-      const result = decorateGraph({ inputGraph: MORE_COMPLEX_GRAPH });
+      ],
+      meta: {
+        width: 3,
+        height: 5
+      }
+    };
+    const result = decorateGraph({ inputGraph: MORE_COMPLEX_GRAPH });
 
-      assert.deepEqual(result, expectedOutput);
-    });
+    assert.deepEqual(result, expectedOutput);
+  });
 
-  test('it determines the depth of a graph from various starting points', function (assert) {
+  test('it determines the depth of a graph from various starting points', function(assert) {
     // edges not array
     assert.equal(graphDepth('meow', '~commit'), Number.MAX_VALUE, 'not array');
     // simple graph, commit
@@ -267,18 +257,22 @@ module('Unit | Utility | graph tools', function() {
     // more complex graph, detached workflow
     assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'detached_main'), 2, 'very complex detached');
     // more complex graph, detached job
-    assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'detached_solo'), 1, 'very complex detached 2');
+    assert.equal(
+      graphDepth(MORE_COMPLEX_GRAPH.edges, 'detached_solo'),
+      1,
+      'very complex detached 2'
+    );
     // more complex graph, partial pipeline
     assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'publish'), 1, 'very complex partial');
   });
 
-  test('it determines if a job name is a root node', function (assert) {
+  test('it determines if a job name is a root node', function(assert) {
     assert.ok(isRoot(MORE_COMPLEX_GRAPH.edges, 'detached_main'));
     assert.ok(isRoot(MORE_COMPLEX_GRAPH.edges, '~commit'));
     assert.notOk(isRoot(MORE_COMPLEX_GRAPH.edges, 'no_main'));
   });
 
-  test('it determines if a node name is a trigger node', function (assert) {
+  test('it determines if a node name is a trigger node', function(assert) {
     assert.ok(isTrigger('~commit', '~commit'));
     assert.ok(isTrigger('~commit:/^detached_main$/', '~commit:detached_main'));
     assert.ok(isTrigger('~commit:/^detached_main.*$/', '~commit:detached_main1'));
@@ -287,31 +281,19 @@ module('Unit | Utility | graph tools', function() {
     assert.notOk(isTrigger('~commit:detached_main', 'no_main'));
   });
 
-  test('it reduce to subgraph given a starting point', function (assert) {
+  test('it reduce to subgraph given a starting point', function(assert) {
     assert.deepEqual(subgraphFilter(SIMPLE_GRAPH, 'main'), {
       nodes: [{ name: 'main' }],
       edges: []
     });
     assert.deepEqual(subgraphFilter(SIMPLE_GRAPH), SIMPLE_GRAPH);
     assert.deepEqual(subgraphFilter(COMPLEX_GRAPH, 'A'), {
-      nodes: [
-        { name: 'A', id: 2 },
-        { name: 'C', id: 4 },
-        { name: 'D', id: 5 }
-      ],
-      edges: [
-        { src: 'A', dest: 'C' },
-        { src: 'C', dest: 'D' }
-      ]
+      nodes: [{ name: 'A', id: 2 }, { name: 'C', id: 4 }, { name: 'D', id: 5 }],
+      edges: [{ src: 'A', dest: 'C' }, { src: 'C', dest: 'D' }]
     });
     assert.deepEqual(subgraphFilter(MORE_COMPLEX_GRAPH, 'wow_new_main'), {
-      nodes: [
-        { name: 'other_publish' },
-        { name: 'wow_new_main' }
-      ],
-      edges: [
-        { src: 'wow_new_main', dest: 'other_publish' }
-      ]
+      nodes: [{ name: 'other_publish' }, { name: 'wow_new_main' }],
+      edges: [{ src: 'wow_new_main', dest: 'other_publish' }]
     });
   });
 });

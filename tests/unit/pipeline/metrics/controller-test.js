@@ -33,13 +33,13 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
     };
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     assert.ok(controller);
   });
 
-  test('it creates chart configurations for events, builds and steps charts', function (assert) {
+  test('it creates chart configurations for events, builds and steps charts', function(assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {
@@ -128,78 +128,82 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
         'sd-teardown-screwdriver-coverage-bookend',
         'test'
       ]);
-      assert.deepEqual(JSON.parse(JSON.stringify(controller.get('stepLegend'))), [
-        {
-          key: 'install',
-          name: 'install',
-          style: {
-            string: 'border-color:#87d812'
+      assert.deepEqual(
+        JSON.parse(JSON.stringify(controller.get('stepLegend'))),
+        [
+          {
+            key: 'install',
+            name: 'install',
+            style: {
+              string: 'border-color:#87d812'
+            }
+          },
+          {
+            key: 'install-browsers',
+            name: 'install-browsers',
+            style: {
+              string: 'border-color:#fed800'
+            }
+          },
+          {
+            key: 'sd-setup-init',
+            name: 'sd-setup-init',
+            style: {
+              string: 'border-color:#1ac6f4'
+            }
+          },
+          {
+            key: 'sd-setup-launcher',
+            name: 'sd-setup-launcher',
+            style: {
+              string: 'border-color:#6e2ebf'
+            }
+          },
+          {
+            key: 'sd-setup-scm',
+            name: 'sd-setup-scm',
+            style: {
+              string: 'border-color:#1f77b4'
+            }
+          },
+          {
+            key: 'sd-setup-screwdriver-cache-bookend',
+            name: 'sd-setup-screwdriver-cache-bookend',
+            style: {
+              string: 'border-color:#aec7e8'
+            }
+          },
+          {
+            key: 'sd-teardown-screwdriver-artifact-bookend',
+            name: 'sd-teardown-screwdriver-artifact-bookend',
+            style: {
+              string: 'border-color:#ff7f0e'
+            }
+          },
+          {
+            key: 'sd-teardown-screwdriver-cache-bookend',
+            name: 'sd-teardown-screwdriver-cache-bookend',
+            style: {
+              string: 'border-color:#2ca02c'
+            }
+          },
+          {
+            key: 'sd-teardown-screwdriver-coverage-bookend',
+            name: 'sd-teardown-screwdriver-coverage-bookend',
+            style: {
+              string: 'border-color:#ffbb78'
+            }
+          },
+          {
+            key: 'test',
+            name: 'test',
+            style: {
+              string: 'border-color:#98df8a'
+            }
           }
-        },
-        {
-          key: 'install-browsers',
-          name: 'install-browsers',
-          style: {
-            string: 'border-color:#fed800'
-          }
-        },
-        {
-          key: 'sd-setup-init',
-          name: 'sd-setup-init',
-          style: {
-            string: 'border-color:#1ac6f4'
-          }
-        },
-        {
-          key: 'sd-setup-launcher',
-          name: 'sd-setup-launcher',
-          style: {
-            string: 'border-color:#6e2ebf'
-          }
-        },
-        {
-          key: 'sd-setup-scm',
-          name: 'sd-setup-scm',
-          style: {
-            string: 'border-color:#1f77b4'
-          }
-        },
-        {
-          key: 'sd-setup-screwdriver-cache-bookend',
-          name: 'sd-setup-screwdriver-cache-bookend',
-          style: {
-            string: 'border-color:#aec7e8'
-          }
-        },
-        {
-          key: 'sd-teardown-screwdriver-artifact-bookend',
-          name: 'sd-teardown-screwdriver-artifact-bookend',
-          style: {
-            string: 'border-color:#ff7f0e'
-          }
-        },
-        {
-          key: 'sd-teardown-screwdriver-cache-bookend',
-          name: 'sd-teardown-screwdriver-cache-bookend',
-          style: {
-            string: 'border-color:#2ca02c'
-          }
-        },
-        {
-          key: 'sd-teardown-screwdriver-coverage-bookend',
-          name: 'sd-teardown-screwdriver-coverage-bookend',
-          style: {
-            string: 'border-color:#ffbb78'
-          }
-        },
-        {
-          key: 'test',
-          name: 'test',
-          style: {
-            string: 'border-color:#98df8a'
-          }
-        }
-      ], 'stepLegend');
+        ],
+        'stepLegend'
+      );
       assert.ok(controller.get('axis.x'));
       assert.ok(controller.get('axis.y'));
       assert.ok(controller.get('tooltip.contents'));
@@ -217,7 +221,7 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
     });
   });
 
-  test('it toggles trendline chart', function (assert) {
+  test('it toggles trendline chart', function(assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {
@@ -228,15 +232,19 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
     return settled().then(() => {
       controller.send('toggleTrendlineView', true);
       assert.equal(controller.get('inTrendlineView'), true);
-      assert.deepEqual(JSON.parse(JSON.stringify(controller.get('eventLegend'))), [
-        {
-          key: 'total',
-          name: 'Event Duration',
-          style: {
-            string: 'border-color:#0066df'
+      assert.deepEqual(
+        JSON.parse(JSON.stringify(controller.get('eventLegend'))),
+        [
+          {
+            key: 'total',
+            name: 'Event Duration',
+            style: {
+              string: 'border-color:#0066df'
+            }
           }
-        }
-      ], 'eventLegend');
+        ],
+        'eventLegend'
+      );
       assert.ok(chartMock.internal.x.orgDomain.called);
       assert.ok(chartMock.show.calledWith('total'));
       assert.ok(chartMock.hide.calledWith(['queuedTime', 'imagePullTime', 'duration']));
@@ -244,7 +252,7 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
     });
   });
 
-  test('it sets dates, range and job id', function (assert) {
+  test('it sets dates, range and job id', function(assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {
@@ -281,7 +289,7 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
     });
   });
 
-  test('it resets chart zoom level', function (assert) {
+  test('it resets chart zoom level', function(assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {

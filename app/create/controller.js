@@ -12,18 +12,23 @@ export default Controller.extend({
 
       this.set('isSaving', true);
 
-      pipeline.save()
-        .then(() => {
-          this.transitionToRoute('pipeline', pipeline.get('id'));
-        }, (err) => {
-          let error = err.errors[0] || {};
+      pipeline
+        .save()
+        .then(
+          () => {
+            this.transitionToRoute('pipeline', pipeline.get('id'));
+          },
+          err => {
+            let error = err.errors[0] || {};
 
-          if (error.status === 409 && typeof error.data === 'object' && error.data.existingId) {
-            this.transitionToRoute('pipeline', error.data.existingId);
-          } else {
-            this.set('errorMessage', error.detail);
+            if (error.status === 409 && typeof error.data === 'object' && error.data.existingId) {
+              this.transitionToRoute('pipeline', error.data.existingId);
+            } else {
+              this.set('errorMessage', error.detail);
+            }
           }
-        }).finally(() => {
+        )
+        .finally(() => {
           this.set('isSaving', false);
         });
     }

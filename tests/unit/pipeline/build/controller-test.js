@@ -24,7 +24,8 @@ const sessionServiceMock = Service.extend({
     authenticated: {
       // fake token for test, it has { username: apple } inside
       // eslint-disable-next-line max-len
-      token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwianRpIjoiNTA1NTQzYTUtNDhjZi00OTAyLWE3YTktZGY0NTI1ODFjYWM0IiwiaWF0IjoxNTIxNTcyMDE5LCJleHAiOjE1MjE1NzU2MTl9.ImS1ajOnksl1X74uL85jOjzdUXmBW3HfMdPfP1vjrmc'
+      token:
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwianRpIjoiNTA1NTQzYTUtNDhjZi00OTAyLWE3YTktZGY0NTI1ODFjYWM0IiwiaWF0IjoxNTIxNTcyMDE5LCJleHAiOjE1MjE1NzU2MTl9.ImS1ajOnksl1X74uL85jOjzdUXmBW3HfMdPfP1vjrmc'
     }
   }
 });
@@ -44,13 +45,13 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     invalidateStub.reset();
   });
 
-  test('it exists', function (assert) {
+  test('it exists', function(assert) {
     let controller = this.owner.lookup('controller:pipeline/build');
 
     assert.ok(controller);
   });
 
-  test('it restarts a build', function (assert) {
+  test('it restarts a build', function(assert) {
     assert.expect(5);
 
     server.post('http://localhost:8080/v4/events', () => [
@@ -101,7 +102,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     });
   });
 
-  test('it fails to restart a build', function (assert) {
+  test('it fails to restart a build', function(assert) {
     assert.expect(6);
 
     server.post('http://localhost:8080/v4/events', () => [
@@ -154,7 +155,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     });
   });
 
-  test('it stops a build', function (assert) {
+  test('it stops a build', function(assert) {
     assert.expect(2);
     server.put('http://localhost:8080/v4/builds/5678', () => [
       200,
@@ -195,7 +196,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     });
   });
 
-  test('it fails to stop a build', function (assert) {
+  test('it fails to stop a build', function(assert) {
     assert.expect(3);
     server.put('http://localhost:8080/v4/builds/5678', () => [
       401,
@@ -238,7 +239,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     });
   });
 
-  test('it reloads a build', function (assert) {
+  test('it reloads a build', function(assert) {
     assert.expect(4);
     let controller = this.owner.lookup('controller:pipeline/build');
     const build = EmberObject.create({
@@ -258,7 +259,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     });
 
     const event = EmberObject.create({
-      hasMany: (key) => {
+      hasMany: key => {
         assert.equal(key, 'builds');
 
         return {

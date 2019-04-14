@@ -3,7 +3,7 @@ import { module, test } from 'qunit';
 const { isActiveBuild, isPRJob, statusIcon } = build;
 
 module('Unit | Utility | build', function() {
-  test('it checks if the current build is active', (assert) => {
+  test('it checks if the current build is active', assert => {
     let result = isActiveBuild('QUEUED', '2017-01-05T00:55:46.775Z');
 
     assert.ok(result);
@@ -24,7 +24,7 @@ module('Unit | Utility | build', function() {
     assert.notOk(result);
   });
 
-  test('it checks if the current job is a PR job', (assert) => {
+  test('it checks if the current job is a PR job', assert => {
     let result = isPRJob('main');
 
     assert.notOk(result);
@@ -33,7 +33,7 @@ module('Unit | Utility | build', function() {
     assert.ok(result);
   });
 
-  test('it gets the right fs class name for given status', (assert) => {
+  test('it gets the right fs class name for given status', assert => {
     assert.equal(statusIcon('SUCCESS', true), 'check-circle-o');
     assert.equal(statusIcon('SUCCESS'), 'check-circle');
     assert.equal(statusIcon('CREATED', true), 'check-circle-o');

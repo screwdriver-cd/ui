@@ -46,7 +46,7 @@ export default Service.extend({
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
         .done(content => resolve(content))
-        .fail((response) => {
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (response && response.responseJSON) {

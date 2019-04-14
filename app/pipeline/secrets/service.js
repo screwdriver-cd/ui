@@ -11,8 +11,9 @@ export default Service.extend({
 
     return new EmberPromise((resolve, reject) => {
       $.ajax({
-        url: `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
-          + `/pipelines/${pipelineId}/tokens/${tokenId}/refresh`,
+        url:
+          `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+          `/pipelines/${pipelineId}/tokens/${tokenId}/refresh`,
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`
@@ -23,7 +24,7 @@ export default Service.extend({
         }
       })
         .done(content => resolve(Object.assign(content, { action: 'refreshed' })))
-        .fail((response) => {
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (response && response.responseJSON) {

@@ -49,7 +49,10 @@ export default DS.Model.extend(ModelReloaderMixin, {
       let lastEndTime = new Date();
 
       if (get(this, 'isComplete')) {
-        lastEndTime = builds.map(item => get(item, 'endTime')).sort().pop();
+        lastEndTime = builds
+          .map(item => get(item, 'endTime'))
+          .sort()
+          .pop();
       }
 
       if (!firstCreateTime || !lastEndTime) {
@@ -82,13 +85,14 @@ export default DS.Model.extend(ModelReloaderMixin, {
       return this.sha.substr(0, 7);
     }
   }),
+  // eslint-disable-next-line ember/no-observers
   statusObserver: observer('builds.@each.status', 'isComplete', function statusObserver() {
     const builds = get(this, 'builds');
     let status = 'UNKNOWN';
 
     return builds
       .then(list => list.filter(b => get(b, 'status') !== 'SUCCESS'))
-      .then((list) => {
+      .then(list => {
         if (list.length) {
           status = get(list[0], 'status');
         } else {
@@ -98,71 +102,71 @@ export default DS.Model.extend(ModelReloaderMixin, {
         set(this, 'status', status);
       });
   }),
+  // eslint-disable-next-line ember/no-observers
   isCompleteObserver: observer('builds.@each.{status,endTime}', function isCompleteObserver() {
     const builds = get(this, 'builds');
 
-    builds
-      .then((list) => {
-        // Tell model to reload builds.
-        this.startReloading();
-        set(this, 'reload', get(this, 'reload') + 1);
+    builds.then(list => {
+      // Tell model to reload builds.
+      this.startReloading();
+      set(this, 'reload', get(this, 'reload') + 1);
 
-        const numBuilds = get(list, 'length');
+      const numBuilds = get(list, 'length');
 
-        // no builds yet
-        if (!numBuilds) {
-          set(this, 'isComplete', false);
-
-          return false;
-        }
-
-        // See if any builds are running
-        const runningBuild = list.find((b) => {
-          const status = get(b, 'status');
-          const endTime = get(b, 'endTime');
-
-          return isActiveBuild(status, endTime);
-        });
-
-        // Something is running, so we aren't done
-        if (runningBuild) {
-          set(this, 'isComplete', false);
-          set(this, 'numBuilds', numBuilds);
-          set(this, 'reloadWithoutNewBuilds', 0);
-
-          return false;
-        }
-
-        // Nothing is running now, check if new builds added during reload
-        // If get(this, 'numBuilds') === 0 that means it is the first load not a reload
-        const newBuilds = get(this, 'numBuilds') === 0 ? 0 : numBuilds - get(this, 'numBuilds');
-
-        // New builds created during reload, event is still going, reset everything
-        if (newBuilds > 0) {
-          set(this, 'isComplete', false);
-          set(this, 'numBuilds', numBuilds);
-          set(this, 'reloadWithoutNewBuilds', 0);
-
-          return false;
-        }
-
-        const reloadWithoutNewBuilds = get(this, 'reloadWithoutNewBuilds') + 1;
-
-        // If reloads 2 times without new builds added, consider event as complete
-        if (reloadWithoutNewBuilds >= 2) {
-          set(this, 'isComplete', true);
-          set(this, 'reloadWithoutNewBuilds', reloadWithoutNewBuilds);
-
-          return true;
-        }
-
-        // No new builds added so far, keep counting the reload
-        set(this, 'numBuilds', numBuilds);
-        set(this, 'reloadWithoutNewBuilds', reloadWithoutNewBuilds);
+      // no builds yet
+      if (!numBuilds) {
         set(this, 'isComplete', false);
 
         return false;
+      }
+
+      // See if any builds are running
+      const runningBuild = list.find(b => {
+        const status = get(b, 'status');
+        const endTime = get(b, 'endTime');
+
+        return isActiveBuild(status, endTime);
       });
+
+      // Something is running, so we aren't done
+      if (runningBuild) {
+        set(this, 'isComplete', false);
+        set(this, 'numBuilds', numBuilds);
+        set(this, 'reloadWithoutNewBuilds', 0);
+
+        return false;
+      }
+
+      // Nothing is running now, check if new builds added during reload
+      // If get(this, 'numBuilds') === 0 that means it is the first load not a reload
+      const newBuilds = get(this, 'numBuilds') === 0 ? 0 : numBuilds - get(this, 'numBuilds');
+
+      // New builds created during reload, event is still going, reset everything
+      if (newBuilds > 0) {
+        set(this, 'isComplete', false);
+        set(this, 'numBuilds', numBuilds);
+        set(this, 'reloadWithoutNewBuilds', 0);
+
+        return false;
+      }
+
+      const reloadWithoutNewBuilds = get(this, 'reloadWithoutNewBuilds') + 1;
+
+      // If reloads 2 times without new builds added, consider event as complete
+      if (reloadWithoutNewBuilds >= 2) {
+        set(this, 'isComplete', true);
+        set(this, 'reloadWithoutNewBuilds', reloadWithoutNewBuilds);
+
+        return true;
+      }
+
+      // No new builds added so far, keep counting the reload
+      set(this, 'numBuilds', numBuilds);
+      set(this, 'reloadWithoutNewBuilds', reloadWithoutNewBuilds);
+      set(this, 'isComplete', false);
+
+      return false;
+    });
   }),
 
   modelToReload: 'builds',

@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 export default Component.extend({
   startArgs: computed('prNum', 'jobs', {
     get() {
-      const prNum = this.prNum;
+      const { prNum } = this;
       const jobs = this.jobs || [];
 
       if (!prNum) {

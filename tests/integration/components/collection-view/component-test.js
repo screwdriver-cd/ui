@@ -120,56 +120,155 @@ module('Integration | Component | collection view', function(hooks) {
   test('it renders', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
-    const $ = this.$;
+    const { $ } = this;
 
     injectScmServiceStub(this);
 
     this.set('mockCollection', testCollection);
 
     await render(hbs`{{collection-view collection=mockCollection}}`);
-    const nameText = $('.header__name').text().trim();
-    const descriptionText = $('.header__description').text().trim();
+    const nameText = $('.header__name')
+      .text()
+      .trim();
+    const descriptionText = $('.header__description')
+      .text()
+      .trim();
 
     assert.equal(nameText, 'Test');
     assert.equal(descriptionText, 'Test Collection');
     assert.equal($('table').length, 1);
-    assert.equal($('th.app-id').text().trim(), 'Name');
-    assert.equal($('th.branch').text().trim(), 'Branch');
-    assert.equal($('th.account').text().trim(), 'Account');
-    assert.equal($('th.health').text().trim(), 'Last Build');
-    assert.equal($('th.prs').text().trim(), 'Pull Requests');
+    assert.equal(
+      $('th.app-id')
+        .text()
+        .trim(),
+      'Name'
+    );
+    assert.equal(
+      $('th.branch')
+        .text()
+        .trim(),
+      'Branch'
+    );
+    assert.equal(
+      $('th.account')
+        .text()
+        .trim(),
+      'Account'
+    );
+    assert.equal(
+      $('th.health')
+        .text()
+        .trim(),
+      'Last Build'
+    );
+    assert.equal(
+      $('th.prs')
+        .text()
+        .trim(),
+      'Pull Requests'
+    );
     assert.equal($('tr').length, 6);
     assert.equal($('.fa-pencil').length, 2);
     // The pipelines are sorted in alphabetical order by default by the component
-    assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/models');
-    assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/screwdriver');
-    assert.equal($($('td.app-id').get(2)).text().trim(), 'screwdriver-cd/ui');
-    assert.equal($($('td.app-id').get(3)).text().trim(), 'screwdriver-cd/zzz');
+    assert.equal(
+      $($('td.app-id').get(0))
+        .text()
+        .trim(),
+      'screwdriver-cd/models'
+    );
+    assert.equal(
+      $($('td.app-id').get(1))
+        .text()
+        .trim(),
+      'screwdriver-cd/screwdriver'
+    );
+    assert.equal(
+      $($('td.app-id').get(2))
+        .text()
+        .trim(),
+      'screwdriver-cd/ui'
+    );
+    assert.equal(
+      $($('td.app-id').get(3))
+        .text()
+        .trim(),
+      'screwdriver-cd/zzz'
+    );
     // The models pipeline has scm display names
-    assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
-    assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
-    assert.equal($($('td.account').get(2)).text().trim(), 'github.com');
-    assert.equal($($('td.account').get(3)).text().trim(), 'bitbucket.org');
+    assert.equal(
+      $($('td.account').get(0))
+        .text()
+        .trim(),
+      'bitbucket.org'
+    );
+    assert.equal(
+      $($('td.account').get(1))
+        .text()
+        .trim(),
+      'github.com'
+    );
+    assert.equal(
+      $($('td.account').get(2))
+        .text()
+        .trim(),
+      'github.com'
+    );
+    assert.equal(
+      $($('td.account').get(3))
+        .text()
+        .trim(),
+      'bitbucket.org'
+    );
     // The pipeline health
     assert.ok($('td.health i').hasClass('build-success'));
     assert.ok($('td.health i').hasClass('build-failure'));
     assert.ok($('td.health i').hasClass('build-unstable'));
     // The models pipeline should not have any info for prs open and failing
-    assert.equal($($('td.prs--open').get(0)).text().trim(), '');
-    assert.equal($($('td.prs--failing').get(0)).text().trim(), '');
+    assert.equal(
+      $($('td.prs--open').get(0))
+        .text()
+        .trim(),
+      ''
+    );
+    assert.equal(
+      $($('td.prs--failing').get(0))
+        .text()
+        .trim(),
+      ''
+    );
     // The screwdriver pipeline should not have any info for prs open and failing
-    assert.equal($($('td.prs--open').get(1)).text().trim(), '');
-    assert.equal($($('td.prs--failing').get(1)).text().trim(), '');
+    assert.equal(
+      $($('td.prs--open').get(1))
+        .text()
+        .trim(),
+      ''
+    );
+    assert.equal(
+      $($('td.prs--failing').get(1))
+        .text()
+        .trim(),
+      ''
+    );
     // The ui pipeline should have 2 prs open and 1 failing
-    assert.equal($($('td.prs--open').get(2)).text().trim(), '2');
-    assert.equal($($('td.prs--failing').get(2)).text().trim(), '1');
+    assert.equal(
+      $($('td.prs--open').get(2))
+        .text()
+        .trim(),
+      '2'
+    );
+    assert.equal(
+      $($('td.prs--failing').get(2))
+        .text()
+        .trim(),
+      '1'
+    );
   });
 
   test('it removes a pipeline from a collection', async function(assert) {
     assert.expect(2);
 
     injectSessionStub(this);
-    const $ = this.$;
+    const { $ } = this;
     const pipelineRemoveMock = (pipelineId, collectionId) => {
       // Make sure the models pipeline is the one being removed
       assert.strictEqual(pipelineId, 3);
@@ -219,12 +318,15 @@ module('Integration | Component | collection view', function(hooks) {
     assert.expect(1);
 
     injectSessionStub(this);
-    const $ = this.$;
-    const pipelineRemoveMock = () => reject({
-      errors: [{
-        detail: 'User does not have permission'
-      }]
-    });
+    const { $ } = this;
+    const pipelineRemoveMock = () =>
+      reject({
+        errors: [
+          {
+            detail: 'User does not have permission'
+          }
+        ]
+      });
 
     this.set('mockCollection', testCollection);
     this.set('onPipelineRemoveMock', pipelineRemoveMock);
@@ -238,14 +340,18 @@ module('Integration | Component | collection view', function(hooks) {
 
     $($('.collection-pipeline__remove').get(0)).click();
 
-    assert.strictEqual($('.alert-warning > span').text().trim(),
-      'User does not have permission');
+    assert.strictEqual(
+      $('.alert-warning > span')
+        .text()
+        .trim(),
+      'User does not have permission'
+    );
   });
 
   test('it does not show remove button if user is not logged in', async function(assert) {
     assert.expect(1);
 
-    const $ = this.$;
+    const { $ } = this;
 
     this.set('mockCollection', testCollection);
     await render(hbs`{{collection-view collection=mockCollection}}`);
@@ -254,26 +360,46 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it sorts by last build', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     this.set('mockCollection', testCollection);
     await render(hbs`{{collection-view collection=mockCollection}}`);
 
     // Initially it is sorted by name
-    assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/models');
-    assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/screwdriver');
+    assert.equal(
+      $($('td.app-id').get(0))
+        .text()
+        .trim(),
+      'screwdriver-cd/models'
+    );
+    assert.equal(
+      $($('td.app-id').get(1))
+        .text()
+        .trim(),
+      'screwdriver-cd/screwdriver'
+    );
 
     const lastBuildsAnchor = $('.header__sort-pipelines ul li a').get(1);
 
     lastBuildsAnchor.click();
 
     // Now it should be sorted by most recent last build
-    assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/screwdriver');
-    assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/models');
+    assert.equal(
+      $($('td.app-id').get(0))
+        .text()
+        .trim(),
+      'screwdriver-cd/screwdriver'
+    );
+    assert.equal(
+      $($('td.app-id').get(1))
+        .text()
+        .trim(),
+      'screwdriver-cd/models'
+    );
   });
 
   test('description is editable', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     this.set('mockCollection', testCollection);
     await render(hbs`{{collection-view collection=mockCollection}}`);

@@ -1,4 +1,15 @@
-<td class="name">{{secret.name}}</td>
-<td class="pass">{{input type="password" placeholder=passwordPlaceholder size="40" value=newValue}}{{fa-icon "eye" class="toggle-icon" click=(action "togglePasswordInput")}}</td>
-<td class="allow">{{input type="checkbox" checked=secret.allowInPR}}</td>
-<td><button {{action "modifySecret"}}>{{buttonAction}}</button></td>
+<td class="name">
+  {{secret.name}}
+</td>
+<td class="pass">
+  {{input type="password" placeholder=passwordPlaceholder size="40" value=newValue}}
+  {{fa-icon "eye" class="toggle-icon" click=(action "togglePasswordInput")}}
+</td>
+<td class="allow">
+  {{input type="checkbox" checked=secret.allowInPR}}
+</td>
+<td>
+  <button {{action "modifySecret"}}>
+    {{buttonAction}}
+  </button>
+</td>

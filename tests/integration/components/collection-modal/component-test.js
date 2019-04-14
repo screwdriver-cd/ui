@@ -25,21 +25,46 @@ module('Integration | Component | collections modal', function(hooks) {
 
   test('it renders', async function(assert) {
     assert.expect(5);
-    const $ = this.$;
+    const { $ } = this;
 
     this.set('showModal', true);
 
     await render(hbs`{{collection-modal showModal=showModal}}`);
 
-    assert.equal($('.modal-title').text().trim(), 'Create New Collection');
-    assert.equal($('.name .control-label').text().trim(), 'Collection Name');
-    assert.equal($('.description .control-label').text().trim(), 'Description');
-    assert.equal($('.collection-form__cancel').text().trim(), 'Cancel');
-    assert.equal($('.collection-form__create').text().trim(), 'Save');
+    assert.equal(
+      $('.modal-title')
+        .text()
+        .trim(),
+      'Create New Collection'
+    );
+    assert.equal(
+      $('.name .control-label')
+        .text()
+        .trim(),
+      'Collection Name'
+    );
+    assert.equal(
+      $('.description .control-label')
+        .text()
+        .trim(),
+      'Description'
+    );
+    assert.equal(
+      $('.collection-form__cancel')
+        .text()
+        .trim(),
+      'Cancel'
+    );
+    assert.equal(
+      $('.collection-form__create')
+        .text()
+        .trim(),
+      'Save'
+    );
   });
 
   test('it cancels creation of a collection', async function(assert) {
-    const $ = this.$;
+    const { $ } = this;
 
     assert.expect(2);
 
@@ -55,7 +80,7 @@ module('Integration | Component | collections modal', function(hooks) {
     injectSessionStub(this);
     assert.expect(4);
 
-    const $ = this.$;
+    const { $ } = this;
     const storeStub = EmberObject.extend({
       createRecord(model, data) {
         assert.strictEqual(model, 'collection');
@@ -71,7 +96,7 @@ module('Integration | Component | collections modal', function(hooks) {
       }
     });
 
-    const stubAddFunction = function () {
+    const stubAddFunction = function() {
       assert.ok(true);
     };
 
@@ -95,14 +120,18 @@ module('Integration | Component | collections modal', function(hooks) {
 
     injectSessionStub(this);
 
-    const $ = this.$;
+    const { $ } = this;
     const model = {
       save() {
-        return new EmberPromise((resolve, reject) => reject({
-          errors: [{
-            detail: 'This is an error message'
-          }]
-        }));
+        return new EmberPromise((resolve, reject) =>
+          reject({
+            errors: [
+              {
+                detail: 'This is an error message'
+              }
+            ]
+          })
+        );
       },
       destroyRecord() {}
     };
@@ -138,7 +167,11 @@ module('Integration | Component | collections modal', function(hooks) {
     $('.collection-form__create').click();
     // Modal should remain open because of error
     assert.ok(this.get('showModal'));
-    assert.strictEqual($('.alert-warning > span').text().trim(),
-      'This is an error message');
+    assert.strictEqual(
+      $('.alert-warning > span')
+        .text()
+        .trim(),
+      'This is an error message'
+    );
   });
 });

@@ -1,10 +1,4 @@
-import {
-  click,
-  findAll,
-  currentURL,
-  find,
-  visit
-} from '@ember/test-helpers';
+import { click, currentURL, find, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
@@ -16,7 +10,7 @@ module('Acceptance | search', function(hooks) {
 
   hooks.beforeEach(function() {
     server = new Pretender();
-    server.get('http://localhost:8080/v4/pipelines', (request) => {
+    server.get('http://localhost:8080/v4/pipelines', request => {
       if (!request.queryParams.search) {
         return [
           200,
@@ -63,7 +57,8 @@ module('Acceptance | search', function(hooks) {
             }
           ])
         ];
-      } else if (request.queryParams.search === 'banana') {
+      }
+      if (request.queryParams.search === 'banana') {
         return [
           200,
           { 'Content-Type': 'application/json' },
@@ -98,11 +93,7 @@ module('Acceptance | search', function(hooks) {
         ];
       }
 
-      return [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify([])
-      ];
+      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
     });
 
     server.get('http://localhost:8080/v4/collections', () => [

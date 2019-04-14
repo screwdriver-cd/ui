@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, findAll, find } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | pipeline pr view', function(hooks) {
@@ -16,11 +16,13 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       createTimeWords: 'now',
       title: 'update readme',
       username: 'anonymous',
-      builds: [{
-        id: '1234',
-        status: 'SUCCESS',
-        startTimeWords: 'now'
-      }]
+      builds: [
+        {
+          id: '1234',
+          status: 'SUCCESS',
+          startTimeWords: 'now'
+        }
+      ]
     });
 
     this.set('jobMock', job);
@@ -28,7 +30,12 @@ module('Integration | Component | pipeline pr view', function(hooks) {
     await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.equal(find('.detail').textContent.trim().replace(/\s{2,}/g, ' '), 'main Started now');
+    assert.equal(
+      find('.detail')
+        .textContent.trim()
+        .replace(/\s{2,}/g, ' '),
+      'main Started now'
+    );
     assert.dom('.date').hasText('Started now');
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
   });
@@ -41,11 +48,13 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       createTimeWords: 'now',
       title: 'update readme',
       username: 'anonymous',
-      builds: [{
-        id: '1234',
-        status: 'UNSTABLE',
-        startTimeWords: 'now'
-      }]
+      builds: [
+        {
+          id: '1234',
+          status: 'UNSTABLE',
+          startTimeWords: 'now'
+        }
+      ]
     });
 
     this.set('jobMock', job);
@@ -65,11 +74,13 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       createTimeWords: 'now',
       title: 'update readme',
       username: 'anonymous',
-      builds: [{
-        id: '1234',
-        status: 'FAILURE',
-        startTimeWords: 'now'
-      }]
+      builds: [
+        {
+          id: '1234',
+          status: 'FAILURE',
+          startTimeWords: 'now'
+        }
+      ]
     });
 
     this.set('jobMock', job);
@@ -89,11 +100,13 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       createTimeWords: 'now',
       title: 'update readme',
       username: 'anonymous',
-      builds: [{
-        id: '1234',
-        status: 'QUEUED',
-        startTimeWords: 'now'
-      }]
+      builds: [
+        {
+          id: '1234',
+          status: 'QUEUED',
+          startTimeWords: 'now'
+        }
+      ]
     });
 
     this.set('jobMock', job);
@@ -113,11 +126,13 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       createTimeWords: 'now',
       title: 'update readme',
       username: 'anonymous',
-      builds: [{
-        id: '1234',
-        status: 'RUNNING',
-        startTimeWords: 'now'
-      }]
+      builds: [
+        {
+          id: '1234',
+          status: 'RUNNING',
+          startTimeWords: 'now'
+        }
+      ]
     });
 
     this.set('jobMock', job);

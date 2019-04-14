@@ -16,25 +16,27 @@ export default Controller.extend({
       job.set('stateChanger', stateChanger);
       job.set('stateChangeMessage', stateChangeMessage);
       job.set('stateChangeTime', new Date());
-      job.save()
-        .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
+      job.save().catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
     removePipeline() {
-      this.pipeline.destroyRecord().then(() => {
-        this.transitionToRoute('home');
-      })
+      this.pipeline
+        .destroyRecord()
+        .then(() => {
+          this.transitionToRoute('home');
+        })
         .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
     updatePipeline(scmUrl) {
-      let pipeline = this.pipeline;
+      let { pipeline } = this;
 
       pipeline.set('checkoutUrl', scmUrl);
 
       this.set('isSaving', true);
 
-      pipeline.save()
+      pipeline
+        .save()
         .then(() => this.set('errorMessage', ''))
-        .catch((err) => {
+        .catch(err => {
           this.set('errorMessage', err.errors[0].detail || '');
         })
         .finally(() => {

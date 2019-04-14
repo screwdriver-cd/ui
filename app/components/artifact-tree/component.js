@@ -23,7 +23,7 @@ export default Component.extend({
   plugins: 'types',
   treedata: computed('buildStatus', 'buildId', {
     get() {
-      const buildStatus = this.buildStatus;
+      const { buildStatus } = this;
 
       if (buildStatus === 'RUNNING' || buildStatus === 'QUEUED') {
         return resolve([]);
@@ -37,7 +37,7 @@ export default Component.extend({
   actions: {
     handleJstreeEventDidChange(data) {
       if (data.node) {
-        let href = data.node.a_attr.href;
+        let { href } = data.node.a_attr;
 
         if (href !== '#') {
           window.open(`${href}?download=true`, '_blank');
