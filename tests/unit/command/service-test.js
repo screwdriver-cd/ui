@@ -1,4 +1,5 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 
@@ -33,128 +34,130 @@ const dummyCommandTagsResult = dummyCommandTags.map((c) => {
 
 let server;
 
-moduleFor('service:command', 'Unit | Service | command', {
-  beforeEach() {
+module('Unit | Service | command', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
     server = new Pretender();
-    this.register('service:session', sessionStub);
-  },
+    this.owner.register('service:session', sessionStub);
+  });
 
-  afterEach() {
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
-
-test('it fetches one set of command version', function (assert) {
-  assert.expect(2);
-
-  server.get('http://localhost:8080/v4/commands/foo/bar', () => [
-    200,
-    {
-      'Content-Type': 'application/json'
-    },
-    JSON.stringify(dummyCommands)
-  ]);
-
-  let service = this.subject();
-
-  assert.ok(service);
-
-  const t = service.getOneCommand('foo', 'bar');
-
-  t.then((commands) => {
-    assert.deepEqual(commands, dummyCommandsResult);
   });
-});
 
-test('it fetches one set of command tags', function (assert) {
-  assert.expect(2);
+  test('it fetches one set of command version', function (assert) {
+    assert.expect(2);
 
-  server.get('http://localhost:8080/v4/commands/foo/bar/tags', () => [
-    200,
-    {
-      'Content-Type': 'application/json'
-    },
-    JSON.stringify(dummyCommandTags)
-  ]);
+    server.get('http://localhost:8080/v4/commands/foo/bar', () => [
+      200,
+      {
+        'Content-Type': 'application/json'
+      },
+      JSON.stringify(dummyCommands)
+    ]);
 
-  let service = this.subject();
+    let service = this.owner.lookup('service:command');
 
-  assert.ok(service);
+    assert.ok(service);
 
-  const t = service.getCommandTags('foo', 'bar');
+    const t = service.getOneCommand('foo', 'bar');
 
-  t.then((commands) => {
-    assert.deepEqual(commands, dummyCommandTagsResult);
+    t.then((commands) => {
+      assert.deepEqual(commands, dummyCommandsResult);
+    });
   });
-});
 
-test('it fetches all commands', function (assert) {
-  assert.expect(2);
+  test('it fetches one set of command tags', function (assert) {
+    assert.expect(2);
 
-  server.get('http://localhost:8080/v4/commands', () => [
-    200,
-    {
-      'Content-Type': 'application/json'
-    },
-    JSON.stringify(dummyCommands)
-  ]);
+    server.get('http://localhost:8080/v4/commands/foo/bar/tags', () => [
+      200,
+      {
+        'Content-Type': 'application/json'
+      },
+      JSON.stringify(dummyCommandTags)
+    ]);
 
-  let service = this.subject();
+    let service = this.owner.lookup('service:command');
 
-  assert.ok(service);
+    assert.ok(service);
 
-  const t = service.getAllCommands();
+    const t = service.getCommandTags('foo', 'bar');
 
-  const filteredCommands = [
-    { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime, lastUpdated }
-  ];
-
-  t.then((commands) => {
-    assert.deepEqual(commands, filteredCommands);
+    t.then((commands) => {
+      assert.deepEqual(commands, dummyCommandTagsResult);
+    });
   });
-});
 
-test('it deletes all versions of a command', function (assert) {
-  assert.expect(4);
+  test('it fetches all commands', function (assert) {
+    assert.expect(2);
 
-  server.delete('http://localhost:8080/v4/commands/foo/bar', () => [204]);
+    server.get('http://localhost:8080/v4/commands', () => [
+      200,
+      {
+        'Content-Type': 'application/json'
+      },
+      JSON.stringify(dummyCommands)
+    ]);
 
-  let service = this.subject();
+    let service = this.owner.lookup('service:command');
 
-  assert.ok(service);
+    assert.ok(service);
 
-  const t = service.deleteCommands('foo', 'bar');
+    const t = service.getAllCommands();
 
-  t.then(() => {
-    const [request] = server.handledRequests;
+    const filteredCommands = [
+      { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime, lastUpdated }
+    ];
 
-    assert.equal(request.status, '204');
-    assert.equal(request.method, 'DELETE');
-    assert.equal(request.url, 'http://localhost:8080/v4/commands/foo/bar');
+    t.then((commands) => {
+      assert.deepEqual(commands, filteredCommands);
+    });
   });
-});
 
-test('it returns 401 on unauthorized deletion', function (assert) {
-  assert.expect(2);
+  test('it deletes all versions of a command', function (assert) {
+    assert.expect(4);
 
-  server.delete('http://localhost:8080/v4/commands/foo/bar', () => [
-    401,
-    {
-      'Content-Type': 'application/json'
-    },
-    'Unauthorized'
-  ]);
+    server.delete('http://localhost:8080/v4/commands/foo/bar', () => [204]);
 
-  let service = this.subject();
+    let service = this.owner.lookup('service:command');
 
-  assert.ok(service);
+    assert.ok(service);
 
-  const t = service.deleteCommands('foo', 'bar');
+    const t = service.deleteCommands('foo', 'bar');
 
-  t.then(
-    () => {},
-    (err) => {
-      assert.equal(err, 'You do not have the permissions to remove this command.');
-    }
-  );
+    t.then(() => {
+      const [request] = server.handledRequests;
+
+      assert.equal(request.status, '204');
+      assert.equal(request.method, 'DELETE');
+      assert.equal(request.url, 'http://localhost:8080/v4/commands/foo/bar');
+    });
+  });
+
+  test('it returns 401 on unauthorized deletion', function (assert) {
+    assert.expect(2);
+
+    server.delete('http://localhost:8080/v4/commands/foo/bar', () => [
+      401,
+      {
+        'Content-Type': 'application/json'
+      },
+      'Unauthorized'
+    ]);
+
+    let service = this.owner.lookup('service:command');
+
+    assert.ok(service);
+
+    const t = service.deleteCommands('foo', 'bar');
+
+    t.then(
+      () => {},
+      (err) => {
+        assert.equal(err, 'You do not have the permissions to remove this command.');
+      }
+    );
+  });
 });

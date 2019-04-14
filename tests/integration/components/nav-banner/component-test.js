@@ -1,24 +1,26 @@
 import EmberObject from '@ember/object';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 const actualMessage = 'shutdown imminent';
 const testedMessage = '×shutdown imminent';
 
-moduleForComponent('nav-banner', 'Integration | Component | nav banner', {
-  integration: true
-});
+module('Integration | Component | nav banner', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders banners', function (assert) {
-  const banners = [
-    EmberObject.create({
-      id: 1,
-      isActive: true,
-      message: actualMessage
-    })
-  ];
+  test('it renders banners', async function(assert) {
+    const banners = [
+      EmberObject.create({
+        id: 1,
+        isActive: true,
+        message: actualMessage
+      })
+    ];
 
-  this.set('bannerMock', banners);
-  this.render(hbs`{{nav-banner banners=bannerMock}}`);
+    this.set('bannerMock', banners);
+    await render(hbs`{{nav-banner banners=bannerMock}}`);
 
-  assert.equal(this.$('span').text(), testedMessage);
+    assert.equal(find('span').textContent, testedMessage);
+  });
 });

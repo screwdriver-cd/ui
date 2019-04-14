@@ -1,4 +1,5 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 let server;
@@ -45,51 +46,53 @@ const sessionServiceMock = Service.extend({
   }
 });
 
-moduleFor('service:build-artifact', 'Unit | Service | build artifact', {
+module('Unit | Service | build artifact', function(hooks) {
+  setupTest(hooks);
+
   // Specify the other units that are required for this test.
   // needs: ['service:session'],
 
-  beforeEach() {
+  hooks.beforeEach(function() {
     server = new Pretender();
-    this.register('service:session', sessionServiceMock);
-    this.inject.service('session', { as: 'session' });
+    this.owner.register('service:session', sessionServiceMock);
+    this.session = this.owner.lookup('service:session');
     this.session.set('isAuthenticated', false);
-  },
-
-  afterEach() {
-    server.shutdown();
-  }
-});
-
-test('it exists', function (assert) {
-  let service = this.subject();
-
-  assert.ok(service);
-});
-
-test('it rejects if the user is not authenticated', function (assert) {
-  assert.expect(2);
-
-  const service = this.subject();
-  const p = service.fetchManifest(buildId);
-
-  p.catch((e) => {
-    assert.ok(e instanceof Error, e);
-    assert.equal('User is not authenticated', e.message);
   });
-});
 
-test('it makes a call to get artifact manifest successfully', function (assert) {
-  assert.expect(2);
-  this.session.set('isAuthenticated', true);
-  getManifest();
-  const service = this.subject();
-  const p = service.fetchManifest(buildId);
+  hooks.afterEach(function() {
+    server.shutdown();
+  });
 
-  p.then((data) => {
-    const [request] = server.handledRequests;
+  test('it exists', function (assert) {
+    let service = this.owner.lookup('service:build-artifact');
 
-    assert.equal(request.url, `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`);
-    assert.deepEqual(data, parsedManifest);
+    assert.ok(service);
+  });
+
+  test('it rejects if the user is not authenticated', function (assert) {
+    assert.expect(2);
+
+    const service = this.owner.lookup('service:build-artifact');
+    const p = service.fetchManifest(buildId);
+
+    p.catch((e) => {
+      assert.ok(e instanceof Error, e);
+      assert.equal('User is not authenticated', e.message);
+    });
+  });
+
+  test('it makes a call to get artifact manifest successfully', function (assert) {
+    assert.expect(2);
+    this.session.set('isAuthenticated', true);
+    getManifest();
+    const service = this.owner.lookup('service:build-artifact');
+    const p = service.fetchManifest(buildId);
+
+    p.then((data) => {
+      const [request] = server.handledRequests;
+
+      assert.equal(request.url, `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`);
+      assert.deepEqual(data, parsedManifest);
+    });
   });
 });

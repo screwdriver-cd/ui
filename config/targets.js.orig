@@ -1,5 +1,7 @@
 'use strict';
 
+<<<<<<< HEAD
+=======
 const browsers = [
   'last 1 Chrome versions',
   'last 1 Firefox versions',
@@ -13,6 +15,7 @@ if (isCI || isProduction) {
   browsers.push('ie 11');
 }
 
+>>>>>>> 38dc9ac... message
 module.exports = {
   browsers
 };

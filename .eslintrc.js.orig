@@ -49,6 +49,7 @@ module.exports = {
         browser: false,
         node: true
       }
+<<<<<<< HEAD
     },
 
     // test files
@@ -62,6 +63,8 @@ module.exports = {
         'func-names': 'off',
         'prefer-arrow-callback': 'off'
       }
+=======
+>>>>>>> 38dc9ac... message
     }
   ]
 };

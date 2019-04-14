@@ -1,4 +1,6 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 import { merge } from '@ember/polyfills';
@@ -44,61 +46,66 @@ const event = {
   ]
 };
 
-moduleForComponent('pipeline-event-row', 'Integration | Component | pipeline event row', {
-  integration: true
-});
+module('Integration | Component | pipeline event row', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders with pipeline event', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  this.on('eventClick', () => {
-    assert.ok(true);
+  hooks.beforeEach(function() {
+    this.actions = {};
+    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
-  const eventMock = EmberObject.create(copy(event, true));
+  test('it renders with pipeline event', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
 
-  this.set('event', eventMock);
+    const eventMock = EmberObject.create(copy(event, true));
 
-  this.render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    this.set('event', eventMock);
 
-  assert.equal(this.$('.SUCCESS').length, 1);
-  assert.equal(this.$('.status .fa-check-circle-o').length, 1);
-  assert.equal(this.$('.commit').text().trim(), '#abc123');
-  assert.equal(this.$('.message').text().trim(), 'this was a test');
-  assert.equal(this.$('svg').length, 1);
-  assert.equal(this.$('.graph-node').length, 4);
-  assert.equal(this.$('.graph-edge').length, 3);
-  assert.equal(this.$('.by').text().trim(), 'batman');
-  assert.equal(this.$('.date').text().trim(), 'Started now');
-});
+    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
 
-test('it renders with pr event', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  this.on('eventClick', () => {
-    assert.ok(true);
+    assert.equal(findAll('.SUCCESS').length, 1);
+    assert.equal(findAll('.status .fa-check-circle-o').length, 1);
+    assert.equal(find('.commit').textContent.trim(), '#abc123');
+    assert.equal(find('.message').textContent.trim(), 'this was a test');
+    assert.equal(findAll('svg').length, 1);
+    assert.equal(findAll('.graph-node').length, 4);
+    assert.equal(findAll('.graph-edge').length, 3);
+    assert.equal(find('.by').textContent.trim(), 'batman');
+    assert.equal(find('.date').textContent.trim(), 'Started now');
   });
 
-  const eventMock = EmberObject.create(merge(copy(event, true), {
-    startFrom: '~pr',
-    type: 'pr',
-    pr: {
-      url: 'https://foo/bar/baz/pull/2'
-    },
-    prNum: 2
-  }));
+  test('it renders with pr event', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
 
-  this.set('event', eventMock);
+    const eventMock = EmberObject.create(merge(copy(event, true), {
+      startFrom: '~pr',
+      type: 'pr',
+      pr: {
+        url: 'https://foo/bar/baz/pull/2'
+      },
+      prNum: 2
+    }));
 
-  this.render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    this.set('event', eventMock);
 
-  assert.equal(this.$('.SUCCESS').length, 1);
-  assert.equal(this.$('.status .fa-check-circle-o').length, 1);
-  assert.equal(this.$('.commit').text().trim(), 'PR-2');
-  assert.equal(this.$('.message').text().trim(), 'this was a test');
-  assert.equal(this.$('svg').length, 1);
-  assert.equal(this.$('.graph-node').length, 4);
-  assert.equal(this.$('.graph-edge').length, 3);
-  assert.equal(this.$('.by').text().trim(), 'batman');
-  assert.equal(this.$('.date').text().trim(), 'Started now');
+    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+
+    assert.equal(findAll('.SUCCESS').length, 1);
+    assert.equal(findAll('.status .fa-check-circle-o').length, 1);
+    assert.equal(find('.commit').textContent.trim(), 'PR-2');
+    assert.equal(find('.message').textContent.trim(), 'this was a test');
+    assert.equal(findAll('svg').length, 1);
+    assert.equal(findAll('.graph-node').length, 4);
+    assert.equal(findAll('.graph-edge').length, 3);
+    assert.equal(find('.by').textContent.trim(), 'batman');
+    assert.equal(find('.date').textContent.trim(), 'Started now');
+  });
 });

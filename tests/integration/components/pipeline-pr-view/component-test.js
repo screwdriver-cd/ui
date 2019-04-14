@@ -1,128 +1,130 @@
 import EmberObject from '@ember/object';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('pipeline-pr-view', 'Integration | Component | pipeline pr view', {
-  integration: true
-});
+module('Integration | Component | pipeline pr view', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders a successful PR', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const job = EmberObject.create({
-    id: 'abcd',
-    name: 'PR-1234:main',
-    createTimeWords: 'now',
-    title: 'update readme',
-    username: 'anonymous',
-    builds: [{
-      id: '1234',
-      status: 'SUCCESS',
-      startTimeWords: 'now'
-    }]
+  test('it renders a successful PR', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    const job = EmberObject.create({
+      id: 'abcd',
+      name: 'PR-1234:main',
+      createTimeWords: 'now',
+      title: 'update readme',
+      username: 'anonymous',
+      builds: [{
+        id: '1234',
+        status: 'SUCCESS',
+        startTimeWords: 'now'
+      }]
+    });
+
+    this.set('jobMock', job);
+
+    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
+
+    assert.equal(findAll('.SUCCESS').length, 1);
+    assert.equal(find('.detail').textContent.trim().replace(/\s{2,}/g, ' '), 'main Started now');
+    assert.equal(find('.date').textContent.trim(), 'Started now');
+    assert.equal(findAll('.status .fa-check-circle-o').length, 1);
   });
 
-  this.set('jobMock', job);
+  // When a user sets a job to unstable, it should show unstable icon
+  test('it renders an unstable PR', async function(assert) {
+    const job = EmberObject.create({
+      id: 'abcd',
+      name: 'PR-1234:main',
+      createTimeWords: 'now',
+      title: 'update readme',
+      username: 'anonymous',
+      builds: [{
+        id: '1234',
+        status: 'UNSTABLE',
+        startTimeWords: 'now'
+      }]
+    });
 
-  this.render(hbs`{{pipeline-pr-view job=jobMock}}`);
+    this.set('jobMock', job);
 
-  assert.equal(this.$('.SUCCESS').length, 1);
-  assert.equal(this.$('.detail').text().trim().replace(/\s{2,}/g, ' '), 'main Started now');
-  assert.equal(this.$('.date').text().trim(), 'Started now');
-  assert.equal(this.$('.status .fa-check-circle-o').length, 1);
-});
+    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
-// When a user sets a job to unstable, it should show unstable icon
-test('it renders an unstable PR', function (assert) {
-  const job = EmberObject.create({
-    id: 'abcd',
-    name: 'PR-1234:main',
-    createTimeWords: 'now',
-    title: 'update readme',
-    username: 'anonymous',
-    builds: [{
-      id: '1234',
-      status: 'UNSTABLE',
-      startTimeWords: 'now'
-    }]
+    assert.equal(findAll('.UNSTABLE').length, 1);
+    assert.equal(findAll('.fa-exclamation-circle').length, 1);
   });
 
-  this.set('jobMock', job);
+  test('it renders a failed PR', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    const job = EmberObject.create({
+      id: 'abcd',
+      name: 'PR-1234:main',
+      createTimeWords: 'now',
+      title: 'update readme',
+      username: 'anonymous',
+      builds: [{
+        id: '1234',
+        status: 'FAILURE',
+        startTimeWords: 'now'
+      }]
+    });
 
-  this.render(hbs`{{pipeline-pr-view job=jobMock}}`);
+    this.set('jobMock', job);
 
-  assert.equal(this.$('.UNSTABLE').length, 1);
-  assert.equal(this.$('.fa-exclamation-circle').length, 1);
-});
+    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
-test('it renders a failed PR', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const job = EmberObject.create({
-    id: 'abcd',
-    name: 'PR-1234:main',
-    createTimeWords: 'now',
-    title: 'update readme',
-    username: 'anonymous',
-    builds: [{
-      id: '1234',
-      status: 'FAILURE',
-      startTimeWords: 'now'
-    }]
+    assert.equal(findAll('.FAILURE').length, 1);
+    assert.equal(findAll('.fa-times-circle-o').length, 1);
   });
 
-  this.set('jobMock', job);
+  test('it renders a queued PR', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    const job = EmberObject.create({
+      id: 'abcd',
+      name: 'PR-1234:main',
+      createTimeWords: 'now',
+      title: 'update readme',
+      username: 'anonymous',
+      builds: [{
+        id: '1234',
+        status: 'QUEUED',
+        startTimeWords: 'now'
+      }]
+    });
 
-  this.render(hbs`{{pipeline-pr-view job=jobMock}}`);
+    this.set('jobMock', job);
 
-  assert.equal(this.$('.FAILURE').length, 1);
-  assert.equal(this.$('.fa-times-circle-o').length, 1);
-});
+    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
-test('it renders a queued PR', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const job = EmberObject.create({
-    id: 'abcd',
-    name: 'PR-1234:main',
-    createTimeWords: 'now',
-    title: 'update readme',
-    username: 'anonymous',
-    builds: [{
-      id: '1234',
-      status: 'QUEUED',
-      startTimeWords: 'now'
-    }]
+    assert.equal(findAll('.QUEUED').length, 1);
+    assert.equal(findAll('.fa-spinner').length, 1);
   });
 
-  this.set('jobMock', job);
+  test('it renders a running PR', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    const job = EmberObject.create({
+      id: 'abcd',
+      name: 'PR-1234:main',
+      createTimeWords: 'now',
+      title: 'update readme',
+      username: 'anonymous',
+      builds: [{
+        id: '1234',
+        status: 'RUNNING',
+        startTimeWords: 'now'
+      }]
+    });
 
-  this.render(hbs`{{pipeline-pr-view job=jobMock}}`);
+    this.set('jobMock', job);
 
-  assert.equal(this.$('.QUEUED').length, 1);
-  assert.equal(this.$('.fa-spinner').length, 1);
-});
+    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
 
-test('it renders a running PR', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const job = EmberObject.create({
-    id: 'abcd',
-    name: 'PR-1234:main',
-    createTimeWords: 'now',
-    title: 'update readme',
-    username: 'anonymous',
-    builds: [{
-      id: '1234',
-      status: 'RUNNING',
-      startTimeWords: 'now'
-    }]
+    assert.equal(findAll('.RUNNING').length, 1);
+    assert.equal(findAll('.fa-spinner').length, 1);
   });
-
-  this.set('jobMock', job);
-
-  this.render(hbs`{{pipeline-pr-view job=jobMock}}`);
-
-  assert.equal(this.$('.RUNNING').length, 1);
-  assert.equal(this.$('.fa-spinner').length, 1);
 });

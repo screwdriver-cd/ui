@@ -1,33 +1,35 @@
 import EmberObject from '@ember/object';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('token-list', 'Integration | Component | token list', {
-  integration: true
-});
+module('Integration | Component | token list', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const $ = this.$;
+  test('it renders', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    const $ = this.$;
 
-  this.set('tokens', [
-    EmberObject.create({
-      id: 1,
-      name: 'foo',
-      description: 'bar'
-    }),
-    EmberObject.create({
-      id: 2,
-      name: 'baz',
-      description: 'qux'
-    })
-  ]);
+    this.set('tokens', [
+      EmberObject.create({
+        id: 1,
+        name: 'foo',
+        description: 'bar'
+      }),
+      EmberObject.create({
+        id: 2,
+        name: 'baz',
+        description: 'qux'
+      })
+    ]);
 
-  this.render(hbs`{{token-list tokens=tokens}}`);
+    await render(hbs`{{token-list tokens=tokens}}`);
 
-  assert.equal($($('td.name input').get(0)).val().trim(), 'baz');
-  assert.equal($($('td.description input').get(0)).val().trim(), 'qux');
-  assert.equal($($('td.name input').get(1)).val().trim(), 'foo');
-  assert.equal($($('td.description input').get(1)).val().trim(), 'bar');
+    assert.equal($($('td.name input').get(0)).val().trim(), 'baz');
+    assert.equal($($('td.description input').get(0)).val().trim(), 'qux');
+    assert.equal($($('td.name input').get(1)).val().trim(), 'foo');
+    assert.equal($($('td.description input').get(1)).val().trim(), 'bar');
+  });
 });

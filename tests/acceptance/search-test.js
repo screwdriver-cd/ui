@@ -1,11 +1,14 @@
-import { test } from 'qunit';
+import { click, findAll, currentURL, find, visit } from '@ember/test-helpers';
+import { module, test } from 'qunit';
+import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
-import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
 import Pretender from 'pretender';
 let server;
 
-moduleForAcceptance('Acceptance | search', {
-  beforeEach() {
+module('Acceptance | search', function(hooks) {
+  setupApplicationTest(hooks);
+
+  hooks.beforeEach(function() {
     server = new Pretender();
     server.get('http://localhost:8080/v4/pipelines', (request) => {
       if (!request.queryParams.search) {
@@ -108,59 +111,50 @@ moduleForAcceptance('Acceptance | search', {
         }
       ])
     ]);
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
+  });
 
-test('visiting /search when not logged in', function (assert) {
-  visit('/search');
+  test('visiting /search when not logged in', async function(assert) {
+    await visit('/search');
 
-  andThen(() => {
     assert.equal(currentURL(), '/login');
   });
-});
 
-test('visiting /search when logged in', function (assert) {
-  authenticateSession(this.application, { token: 'fakeToken' });
-  visit('/search');
+  test('visiting /search when logged in', async function(assert) {
+    authenticateSession(this.application, { token: 'fakeToken' });
+    await visit('/search');
 
-  andThen(() => {
     assert.equal(currentURL(), '/search');
-    assert.equal(find('tr').length, 4);
-    assert.equal(find('.showMore').text().trim(), 'Show more results...');
-    assert.equal(find('.num-results').text().trim(), 'Showing 3 result(s)');
+    assert.equal(findAll('tr').length, 4);
+    assert.equal(find('.showMore').textContent.trim(), 'Show more results...');
+    assert.equal(find('.num-results').textContent.trim(), 'Showing 3 result(s)');
 
-    click('.showMore');
-    andThen(() => {
-      assert.equal(find('tr').length, 7);
-      assert.equal(find('.showMore').text().trim(), 'Show more results...');
-      assert.equal(find('.num-results').text().trim(), 'Showing 6 result(s)');
-    });
+    await click('.showMore');
+    assert.equal(findAll('tr').length, 7);
+    assert.equal(find('.showMore').textContent.trim(), 'Show more results...');
+    assert.equal(find('.num-results').textContent.trim(), 'Showing 6 result(s)');
   });
-});
 
-test('visiting /search?query=banana when logged in', function (assert) {
-  authenticateSession(this.application, { token: 'fakeToken' });
-  visit('/search?query=banana');
+  test('visiting /search?query=banana when logged in', async function(assert) {
+    authenticateSession(this.application, { token: 'fakeToken' });
+    await visit('/search?query=banana');
 
-  andThen(() => {
     assert.equal(currentURL(), '/search?query=banana');
-    assert.equal(find('tr').length, 3);
-    assert.notOk(find('.showMore').text().trim());
-    assert.equal(find('.num-results').text().trim(), 'Showing 2 result(s)');
+    assert.equal(findAll('tr').length, 3);
+    assert.notOk(find('.showMore').textContent.trim());
+    assert.equal(find('.num-results').textContent.trim(), 'Showing 2 result(s)');
   });
-});
 
-test('visiting /search?query=doesnotexist when logged in', function (assert) {
-  authenticateSession(this.application, { token: 'fakeToken' });
-  visit('/search?query=doesnotexist');
+  test('visiting /search?query=doesnotexist when logged in', async function(assert) {
+    authenticateSession(this.application, { token: 'fakeToken' });
+    await visit('/search?query=doesnotexist');
 
-  andThen(() => {
     assert.equal(currentURL(), '/search?query=doesnotexist');
-    assert.equal(find('tr').length, 1);
-    assert.notOk(find('.showMore').text().trim());
-    assert.equal(find('.num-results').text().trim(), 'No results');
+    assert.equal(findAll('tr').length, 1);
+    assert.notOk(find('.showMore').textContent.trim());
+    assert.equal(find('.num-results').textContent.trim(), 'No results');
   });
 });

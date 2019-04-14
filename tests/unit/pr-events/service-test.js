@@ -1,6 +1,7 @@
 import Pretender from 'pretender';
 import Service from '@ember/service';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
 let server;
 
@@ -64,35 +65,37 @@ const sessionServiceMock = Service.extend({
   }
 });
 
-moduleFor('service:pr-events', 'Unit | Service | pr events', {
-  beforeEach() {
+module('Unit | Service | pr events', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
     server = new Pretender();
-    this.register('service:session', sessionServiceMock);
-    this.inject.service('session', { as: 'session' });
+    this.owner.register('service:session', sessionServiceMock);
+    this.session = this.owner.lookup('service:session');
     this.session.set('isAuthenticated', true);
-  },
+  });
 
-  afterEach() {
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
+  });
 
-test('it exists', function (assert) {
-  const service = this.subject();
+  test('it exists', function (assert) {
+    const service = this.owner.lookup('service:pr-events');
 
-  assert.ok(service);
-});
+    assert.ok(service);
+  });
 
-test('it fetches events with type pr', function (assert) {
-  initServer();
+  test('it fetches events with type pr', function (assert) {
+    initServer();
 
-  assert.expect(3);
-  const service = this.subject();
-  const b = service.getPRevents(12345, 'https://github.com/screwdriver-cd/ui/pull/292', 2);
+    assert.expect(3);
+    const service = this.owner.lookup('service:pr-events');
+    const b = service.getPRevents(12345, 'https://github.com/screwdriver-cd/ui/pull/292', 2);
 
-  b.then((pair) => {
-    assert.equal(pair[0].event.id, 'abcd');
-    assert.equal(pair[0].build.eventId, 'abcd');
-    assert.equal(pair[0].build.id, 2);
+    b.then((pair) => {
+      assert.equal(pair[0].event.id, 'abcd');
+      assert.equal(pair[0].build.eventId, 'abcd');
+      assert.equal(pair[0].build.id, 2);
+    });
   });
 });

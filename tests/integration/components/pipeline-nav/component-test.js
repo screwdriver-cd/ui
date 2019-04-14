@@ -1,40 +1,42 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 
-moduleForComponent('pipeline-nav', 'Integration | Component | sd pipeline nav', {
-  integration: true
-});
+module('Integration | Component | sd pipeline nav', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders without child pipelines tab', function (assert) {
-  const pipeline = EmberObject.create({
-    id: 1,
-    appId: 'foo/bar',
-    branch: 'master',
-    scmContext: 'github:github.com'
+  test('it renders without child pipelines tab', async function(assert) {
+    const pipeline = EmberObject.create({
+      id: 1,
+      appId: 'foo/bar',
+      branch: 'master',
+      scmContext: 'github:github.com'
+    });
+
+    this.set('pipelineMock', pipeline);
+
+    await render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
+
+    assert.equal(find('a').textContent.trim(), 'EventsSecretsOptionsMetrics');
   });
 
-  this.set('pipelineMock', pipeline);
+  test('it renders with child pipelines tab', async function(assert) {
+    const pipeline = EmberObject.create({
+      id: 1,
+      appId: 'foo/bar',
+      branch: 'master',
+      scmContext: 'github:github.com',
+      childPipelines: {
+        foo: 'bar'
+      }
+    });
 
-  this.render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
+    this.set('pipelineMock', pipeline);
 
-  assert.equal(this.$('a').text().trim(), 'EventsSecretsOptionsMetrics');
-});
+    await render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
 
-test('it renders with child pipelines tab', function (assert) {
-  const pipeline = EmberObject.create({
-    id: 1,
-    appId: 'foo/bar',
-    branch: 'master',
-    scmContext: 'github:github.com',
-    childPipelines: {
-      foo: 'bar'
-    }
+    assert.equal(find('a').textContent.trim(), 'Child PipelinesEventsSecretsOptionsMetrics');
   });
-
-  this.set('pipelineMock', pipeline);
-
-  this.render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
-
-  assert.equal(this.$('a').text().trim(), 'Child PipelinesEventsSecretsOptionsMetrics');
 });

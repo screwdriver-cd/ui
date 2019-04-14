@@ -1,6 +1,7 @@
 import { resolve } from 'rsvp';
 import Service from '@ember/service';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
 const commandServiceStub = Service.extend({
   getOneCommand(namespace, name) {
@@ -19,22 +20,24 @@ const commandServiceStub = Service.extend({
   }
 });
 
-moduleFor('route:commands/detail', 'Unit | Route | commands/detail', {
+module('Unit | Route | commands/detail', function(hooks) {
+  setupTest(hooks);
+
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
-  beforeEach: function beforeEach() {
-    this.register('service:command', commandServiceStub);
-  }
-});
+  hooks.beforeEach(function beforeEach() {
+    this.owner.register('service:command', commandServiceStub);
+  });
 
-test('it asks for the list of commands for a given namespace and name', function (assert) {
-  let route = this.subject();
+  test('it asks for the list of commands for a given namespace and name', function (assert) {
+    let route = this.owner.lookup('route:commands/detail');
 
-  assert.ok(route);
+    assert.ok(route);
 
-  return route.model({ namespace: 'foo', name: 'bar' }).then((commands) => {
-    assert.equal(commands[0].name, 'bar');
-    assert.equal(commands[0].namespace, 'foo');
-    assert.equal(commands[0].tag, 'latest');
+    return route.model({ namespace: 'foo', name: 'bar' }).then((commands) => {
+      assert.equal(commands[0].name, 'bar');
+      assert.equal(commands[0].namespace, 'foo');
+      assert.equal(commands[0].tag, 'latest');
+    });
   });
 });

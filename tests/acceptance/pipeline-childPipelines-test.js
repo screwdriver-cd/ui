@@ -1,11 +1,14 @@
-import { test } from 'qunit';
-import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
+import { currentURL, find, visit } from '@ember/test-helpers';
+import { module, test } from 'qunit';
+import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
 import Pretender from 'pretender';
 let server;
 
-moduleForAcceptance('Acceptance | child pipeline', {
-  beforeEach() {
+module('Acceptance | child pipeline', function(hooks) {
+  setupApplicationTest(hooks);
+
+  hooks.beforeEach(function() {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/pipelines/1', () => [
@@ -56,20 +59,19 @@ moduleForAcceptance('Acceptance | child pipeline', {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
+  });
 
-test('visiting /pipelines/:id/child-pipelines', function (assert) {
-  authenticateSession(this.application, { token: 'faketoken' });
+  test('visiting /pipelines/:id/child-pipelines', async function(assert) {
+    authenticateSession(this.application, { token: 'faketoken' });
 
-  visit('/pipelines/1/child-pipelines');
+    await visit('/pipelines/1/child-pipelines');
 
-  andThen(() => {
     assert.equal(currentURL(), '/pipelines/1/child-pipelines');
-    assert.equal(find('.appId:nth-child(1)').text().trim(), 'child/one');
-    assert.equal(find('.appId:nth-child(2)').text().trim(), 'child/two');
+    assert.equal(find('.appId:nth-child(1)').textContent.trim(), 'child/one');
+    assert.equal(find('.appId:nth-child(2)').textContent.trim(), 'child/two');
   });
 });

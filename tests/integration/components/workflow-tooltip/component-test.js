@@ -1,95 +1,97 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('workflow-tooltip', 'Integration | Component | workflow tooltip', {
-  integration: true
-});
+module('Integration | Component | workflow tooltip', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  this.render(hbs`{{workflow-tooltip}}`);
+  test('it renders', async function(assert) {
+    await render(hbs`{{workflow-tooltip}}`);
 
-  assert.equal(this.$().text().trim(), '');
+    assert.equal(find('*').textContent.trim(), '');
 
-  // Template block usage:
-  this.render(hbs`
-    {{#workflow-tooltip}}
-      template block text
-    {{/workflow-tooltip}}
-  `);
+    // Template block usage:
+    await render(hbs`
+      {{#workflow-tooltip}}
+        template block text
+      {{/workflow-tooltip}}
+    `);
 
-  assert.equal(this.$().text().trim(), 'template block text');
-});
+    assert.equal(find('*').textContent.trim(), 'template block text');
+  });
 
-test('it renders build link', function (assert) {
-  const data = {
-    job: {
-      buildId: 1234,
-      name: 'batmobile'
-    }
-  };
+  test('it renders build link', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile'
+      }
+    };
 
-  this.set('data', data);
+    this.set('data', data);
 
-  this.render(hbs`{{workflow-tooltip tooltipData=data}}`);
+    await render(hbs`{{workflow-tooltip tooltipData=data}}`);
 
-  assert.equal(this.$('.content a').length, 1);
-  assert.equal(this.$().text().trim(), 'Go to build details');
-});
+    assert.equal(findAll('.content a').length, 1);
+    assert.equal(find('*').textContent.trim(), 'Go to build details');
+  });
 
-test('it renders remote trigger link', function (assert) {
-  const data = {
-    externalTrigger: {
-      pipelineId: 1234,
-      jobName: 'main'
-    }
-  };
+  test('it renders remote trigger link', async function(assert) {
+    const data = {
+      externalTrigger: {
+        pipelineId: 1234,
+        jobName: 'main'
+      }
+    };
 
-  this.set('data', data);
+    this.set('data', data);
 
-  this.render(hbs`{{workflow-tooltip tooltipData=data}}`);
+    await render(hbs`{{workflow-tooltip tooltipData=data}}`);
 
-  assert.equal(this.$('.content a').length, 1);
-  assert.equal(this.$().text().trim(), 'Go to remote pipeline');
-});
+    assert.equal(findAll('.content a').length, 1);
+    assert.equal(find('*').textContent.trim(), 'Go to remote pipeline');
+  });
 
-test('it renders restart link', function (assert) {
-  const data = {
-    job: {
-      buildId: 1234,
-      name: 'batmobile'
-    }
-  };
+  test('it renders restart link', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile'
+      }
+    };
 
-  this.set('data', data);
-  this.set('confirmStartBuild', () => {});
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
 
-  this.render(hbs`{{
-    workflow-tooltip
-    tooltipData=data
-    displayRestartButton=true
-    confirmStartBuild="confirmStartBuild"
-  }}`);
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+    }}`);
 
-  assert.equal(this.$('.content a').length, 2);
-  assert.equal(this.$('a').text().trim(), 'Go to build detailsStart pipeline from here');
-});
+    assert.equal(findAll('.content a').length, 2);
+    assert.equal(find('a').textContent.trim(), 'Go to build detailsStart pipeline from here');
+  });
 
-test('it should update position and hidden status', function (assert) {
-  this.set('show', true);
-  this.set('pos', 'left');
+  test('it should update position and hidden status', async function(assert) {
+    this.set('show', true);
+    this.set('pos', 'left');
 
-  this.render(hbs`{{
-    workflow-tooltip
-    showTooltip=show
-    showTooltipPosition=pos
-  }}`);
+    await render(hbs`{{
+      workflow-tooltip
+      showTooltip=show
+      showTooltipPosition=pos
+    }}`);
 
-  assert.ok(this.$('.workflow-tooltip').hasClass('show-tooltip'));
-  assert.ok(this.$('.workflow-tooltip').hasClass('left'));
+    assert.ok(find('.workflow-tooltip').classList.contains('show-tooltip'));
+    assert.ok(find('.workflow-tooltip').classList.contains('left'));
 
-  this.set('show', false);
-  this.set('pos', 'center');
+    this.set('show', false);
+    this.set('pos', 'center');
 
-  assert.notOk(this.$('.workflow-tooltip').hasClass('show-tooltip'));
-  assert.notOk(this.$('.workflow-tooltip').hasClass('left'));
+    assert.notOk(find('.workflow-tooltip').classList.contains('show-tooltip'));
+    assert.notOk(find('.workflow-tooltip').classList.contains('left'));
+  });
 });

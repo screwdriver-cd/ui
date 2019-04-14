@@ -1,12 +1,12 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleFor('route:commands', 'Unit | Route | commands', {
-  // Specify the other units that are required for this test.
-  needs: ['service:session']
-});
+module('Unit | Route | commands', function(hooks) {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let route = this.subject();
+  test('it exists', function (assert) {
+    let route = this.owner.lookup('route:commands');
 
-  assert.ok(route);
+    assert.ok(route);
+  });
 });

@@ -1,16 +1,18 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('loading-view', 'Integration | Component | loading view', {
-  integration: true
-});
+module('Integration | Component | loading view', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  test('it renders', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{loading-view}}`);
+    await render(hbs`{{loading-view}}`);
 
-  assert.equal(this.$('h2').text().trim(), 'Loading...');
-  assert.ok(this.$('p').text().trim());
+    assert.equal(find('h2').textContent.trim(), 'Loading...');
+    assert.ok(find('p').textContent.trim());
+  });
 });

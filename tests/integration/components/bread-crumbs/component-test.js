@@ -1,4 +1,6 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const TEST_TEMPLATES = [
@@ -16,16 +18,16 @@ const TEST_TEMPLATES = [
   }
 ];
 
-moduleForComponent('bread-crumbs', 'Integration | Component | bread crumbs', {
-  integration: true
-});
+module('Integration | Component | bread crumbs', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  const $ = this.$;
+  test('it renders', async function(assert) {
+    const $ = this.$;
 
-  this.set('mocks', TEST_TEMPLATES);
-  this.render(hbs`{{bread-crumbs crumbs=mocks}}`);
+    this.set('mocks', TEST_TEMPLATES);
+    await render(hbs`{{bread-crumbs crumbs=mocks}}`);
 
-  assert.equal($('div a').length, 2);
-  assert.equal($('div a').text().trim(), 'TemplatesTest-Namespace');
+    assert.equal($('div a').length, 2);
+    assert.equal($('div a').text().trim(), 'TemplatesTest-Namespace');
+  });
 });

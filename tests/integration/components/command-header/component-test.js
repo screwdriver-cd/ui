@@ -1,4 +1,6 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 import { Promise as EmberPromise } from 'rsvp';
@@ -25,30 +27,30 @@ const mockPipeline = {
   }
 };
 
-moduleForComponent('command-header', 'Integration | Component | command header', {
-  integration: true
-});
+module('Integration | Component | command header', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  const $ = this.$;
+  test('it renders', async function(assert) {
+    const $ = this.$;
 
-  const storeStub = EmberObject.extend({
-    findRecord() {
-      return new EmberPromise(resolve => resolve(mockPipeline));
-    }
+    const storeStub = EmberObject.extend({
+      findRecord() {
+        return new EmberPromise(resolve => resolve(mockPipeline));
+      }
+    });
+
+    this.owner.register('service:store', storeStub);
+    this.store = this.owner.lookup('service:store');
+
+    this.set('mock', COMMAND);
+    await render(hbs`{{command-header command=mock}}`);
+
+    assert.equal($('h1').text().trim(), 'foo/bar');
+    assert.equal($('h2').text().trim(), '1.0.0');
+    assert.equal($('p').text().trim(), 'A test example');
+    assert.equal($('ul li:first-child').text().trim(), 'Released by: test@example.com');
+    assert.equal($('ul li:first-child a').attr('href'), 'mailto:test@example.com');
+    assert.equal($('h4').text().trim(), 'Usage:');
+    assert.equal($('pre').text().trim(), 'sd-cmd exec foo/bar@1.0.0');
   });
-
-  this.register('service:store', storeStub);
-  this.inject.service('store');
-
-  this.set('mock', COMMAND);
-  this.render(hbs`{{command-header command=mock}}`);
-
-  assert.equal($('h1').text().trim(), 'foo/bar');
-  assert.equal($('h2').text().trim(), '1.0.0');
-  assert.equal($('p').text().trim(), 'A test example');
-  assert.equal($('ul li:first-child').text().trim(), 'Released by: test@example.com');
-  assert.equal($('ul li:first-child a').attr('href'), 'mailto:test@example.com');
-  assert.equal($('h4').text().trim(), 'Usage:');
-  assert.equal($('pre').text().trim(), 'sd-cmd exec foo/bar@1.0.0');
 });

@@ -1,89 +1,89 @@
 import { run } from '@ember/runloop';
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
-import wait from 'ember-test-helpers/wait';
 let server;
 
-moduleForModel('build', 'Unit | Serializer | build', {
-  // Specify the other units that are required for this test.
-  needs: ['serializer:build'],
+module('Unit | Serializer | build', function(hooks) {
+  setupTest(hooks);
 
-  beforeEach() {
+  hooks.beforeEach(function() {
     server = new Pretender();
-  },
+  });
 
-  afterEach() {
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
-
-test('it converts container to buildContainer and haves right defaults', function (assert) {
-  assert.expect(2);
-  server.get('/builds/abcd', function () {
-    return [200, {}, JSON.stringify({ build: { id: 'abcd', container: 'node:6' } })];
-  });
-  let build;
-
-  run(() => {
-    build = this.store().findRecord('build', 'abcd');
   });
 
-  return wait().then(() => {
-    assert.equal(build.get('buildContainer'), 'node:6');
-    assert.equal(build.get('statusMessage'), null);
-  });
-});
+  test('it converts container to buildContainer and haves right defaults', function (assert) {
+    assert.expect(2);
+    server.get('/builds/abcd', function () {
+      return [200, {}, JSON.stringify({ build: { id: 'abcd', container: 'node:6' } })];
+    });
+    let build;
 
-test('it POSTs only a jobId for create', function (assert) {
-  assert.expect(2);
-  server.post('/builds', function () {
-    return [200, {}, JSON.stringify({ build: { id: 'abcd' } })];
-  });
+    run(() => {
+      build = this.owner.lookup('service:store').findRecord('build', 'abcd');
+    });
 
-  run(() => {
-    const build = this.store().createRecord('build', { jobId: '1234' });
-
-    build.save().then(() => {
-      assert.equal(build.get('id'), 'abcd');
+    return settled().then(() => {
+      assert.equal(build.get('buildContainer'), 'node:6');
+      assert.equal(build.get('statusMessage'), null);
     });
   });
 
-  return wait().then(() => {
-    const [request] = server.handledRequests;
-    const payload = JSON.parse(request.requestBody);
+  test('it POSTs only a jobId for create', function (assert) {
+    assert.expect(2);
+    server.post('/builds', function () {
+      return [200, {}, JSON.stringify({ build: { id: 'abcd' } })];
+    });
 
-    assert.deepEqual(payload, { jobId: '1234' });
+    run(() => {
+      const build = this.owner.lookup('service:store').createRecord('build', { jobId: '1234' });
+
+      build.save().then(() => {
+        assert.equal(build.get('id'), 'abcd');
+      });
+    });
+
+    return settled().then(() => {
+      const [request] = server.handledRequests;
+      const payload = JSON.parse(request.requestBody);
+
+      assert.deepEqual(payload, { jobId: '1234' });
+    });
   });
-});
 
-test('it PUTs only a status for update', function (assert) {
-  assert.expect(1);
-  server.patch('/builds/1234', function () {
-    return [200, {}, JSON.stringify({ build: { id: 1234 } })];
-  });
+  test('it PUTs only a status for update', function (assert) {
+    assert.expect(1);
+    server.patch('/builds/1234', function () {
+      return [200, {}, JSON.stringify({ build: { id: 1234 } })];
+    });
 
-  run(() => {
-    this.store().push({
-      data: {
-        id: 1234,
-        type: 'build',
-        attributes: {
-          jobId: 'abcd',
-          status: 'RUNNING'
+    run(() => {
+      this.owner.lookup('service:store').push({
+        data: {
+          id: 1234,
+          type: 'build',
+          attributes: {
+            jobId: 'abcd',
+            status: 'RUNNING'
+          }
         }
-      }
+      });
+
+      const build = this.owner.lookup('service:store').peekRecord('build', 1234);
+
+      build.set('status', 'ABORTED');
+      build.save();
     });
 
-    const build = this.store().peekRecord('build', 1234);
+    return settled().then(() => {
+      const [request] = server.handledRequests;
+      const payload = JSON.parse(request.requestBody);
 
-    build.set('status', 'ABORTED');
-    build.save();
-  });
-
-  return wait().then(() => {
-    const [request] = server.handledRequests;
-    const payload = JSON.parse(request.requestBody);
-
-    assert.deepEqual(payload, { status: 'ABORTED' });
+      assert.deepEqual(payload, { status: 'ABORTED' });
+    });
   });
 });

@@ -1,59 +1,61 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 
-moduleForComponent('pipeline-list', 'Integration | Component | pipeline list', {
-  integration: true
-});
+module('Integration | Component | pipeline list', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  const pipelines = [
-    EmberObject.create({
-      id: 3,
+  test('it renders', async function(assert) {
+    const pipelines = [
+      EmberObject.create({
+        id: 3,
+        appId: 'foo/bar',
+        branch: 'master',
+        scmContext: 'github:github.com'
+      }),
+      EmberObject.create({
+        id: 4,
+        appId: 'batman/tumbler',
+        branch: 'waynecorp',
+        scmContext: 'bitbucket:bitbucket.org'
+      })
+    ];
+
+    const pipeline = EmberObject.create({
+      id: 1,
       appId: 'foo/bar',
       branch: 'master',
       scmContext: 'github:github.com'
-    }),
-    EmberObject.create({
-      id: 4,
-      appId: 'batman/tumbler',
-      branch: 'waynecorp',
-      scmContext: 'bitbucket:bitbucket.org'
-    })
-  ];
+    });
 
-  const pipeline = EmberObject.create({
-    id: 1,
-    appId: 'foo/bar',
-    branch: 'master',
-    scmContext: 'github:github.com'
+    this.set('pipelineList', pipelines);
+    this.set('pipeline', pipeline);
+
+    await render(hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`);
+
+    assert.equal(find('ul li:first-child').textContent.trim(), 'foo/bar');
+    assert.equal(find('ul li:nth-child(2)').textContent.trim(), 'batman/tumbler');
+    assert.equal(find('button').textContent.trim(), 'Start All');
+    assert.equal(find('.num-results span').textContent.trim(), 'Found 2 child pipeline(s)');
   });
 
-  this.set('pipelineList', pipelines);
-  this.set('pipeline', pipeline);
+  test('it renders with zero child piplines found', async function(assert) {
+    const pipelines = [];
 
-  this.render(hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`);
+    const pipeline = EmberObject.create({
+      id: 1,
+      appId: 'foo/bar',
+      branch: 'master',
+      scmContext: 'github:github.com'
+    });
 
-  assert.equal(this.$('ul li:first-child').text().trim(), 'foo/bar');
-  assert.equal(this.$('ul li:nth-child(2)').text().trim(), 'batman/tumbler');
-  assert.equal(this.$('button').text().trim(), 'Start All');
-  assert.equal(this.$('.num-results span').text().trim(), 'Found 2 child pipeline(s)');
-});
+    this.set('pipelineList', pipelines);
+    this.set('pipeline', pipeline);
 
-test('it renders with zero child piplines found', function (assert) {
-  const pipelines = [];
+    await render(hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`);
 
-  const pipeline = EmberObject.create({
-    id: 1,
-    appId: 'foo/bar',
-    branch: 'master',
-    scmContext: 'github:github.com'
+    assert.equal(find('.num-results span').textContent.trim(), 'No child pipeline(s) created');
   });
-
-  this.set('pipelineList', pipelines);
-  this.set('pipeline', pipeline);
-
-  this.render(hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`);
-
-  assert.equal(this.$('.num-results span').text().trim(), 'No child pipeline(s) created');
 });

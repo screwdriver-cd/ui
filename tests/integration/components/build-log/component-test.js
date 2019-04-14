@@ -1,9 +1,10 @@
 import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { run } from '@ember/runloop';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, settled, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import moment from 'moment';
 import sinon from 'sinon';
 const startTime = 1478912844724;
@@ -40,328 +41,328 @@ const logService = Service.extend({
   revokeLogBlobUrls() {}
 });
 
-moduleForComponent('build-log', 'Integration | Component | build log', {
-  integration: true,
+module('Integration | Component | build log', function(hooks) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.register('service:build-logs', logService);
+  hooks.beforeEach(function() {
+    this.owner.register('service:build-logs', logService);
     doneStub.onCall(0).returns(true);
     doneStub.onCall(1).returns(false);
     logsStub.onCall(0).returns(sampleLogs);
     logsStub.onCall(1).returns(sampleLogs);
     logsStub.returns(sampleLogs.concat(sampleLogs));
-  },
+  });
 
-  afterEach() {
+  hooks.afterEach(function() {
     doneStub.reset();
     logsStub.reset();
-  }
-});
-
-test('it displays some help when no step is selected', function (assert) {
-  this.render(hbs`{{build-log
-    stepName=null
-    buildId=1
-    stepStartTime=null
-    buildStartTime="1478912844724"
-  }}`);
-
-  assert.equal(this.$().text().trim(), 'Click a step to see logs');
-
-  // Template block usage:
-  this.render(hbs`{{#build-log
-    stepName=null
-    buildId=1
-    stepStartTime=null
-    buildStartTime="1478912844724"
-  }}
-  template block text
-  {{/build-log}}`);
-
-  assert.ok(/^template block text/.test(this.$().text().trim()));
-  assert.ok(/Click a step to see logs$/.test(this.$().text().trim()));
-});
-
-test('it starts loading when step chosen', function (assert) {
-  this.set('step', null);
-  this.render(hbs`{{build-log
-    stepName=step
-    buildId=1
-    stepStartTime=null
-    buildStartTime="1478912844724"
-  }}`);
-
-  assert.equal(this.$().text().trim(), 'Click a step to see logs');
-  this.set('step', 'banana');
-
-  return wait().then(() => {
-    assert.ok(
-      this.$('.line:first').text().trim().match(
-        `${moment(startTime).format('HH:mm:ss')}\\s+${startTime}`
-      )
-    );
-    assert.ok(
-      this.$('.line:last').text().trim().match(
-        `${moment(startTime + 99).format('HH:mm:ss')}\\s+${startTime + 99}`
-      )
-    );
   });
-});
 
-test('it generate logs for init step', function (assert) {
-  this.set('stats', {
-    queueEnterTime: '2019-01-14T20:10:41.238Z',
-    imagePullStartTime: '2019-01-14T20:11:41.238Z',
-    hostname: 'node12.foo.bar.com'
+  test('it displays some help when no step is selected', async function(assert) {
+    await render(hbs`{{build-log
+      stepName=null
+      buildId=1
+      stepStartTime=null
+      buildStartTime="1478912844724"
+    }}`);
+
+    assert.equal(find('*').textContent.trim(), 'Click a step to see logs');
+
+    // Template block usage:
+    await render(hbs`{{#build-log
+      stepName=null
+      buildId=1
+      stepStartTime=null
+      buildStartTime="1478912844724"
+    }}
+    template block text
+    {{/build-log}}`);
+
+    assert.ok(/^template block text/.test(find('*').textContent.trim()));
+    assert.ok(/Click a step to see logs$/.test(find('*').textContent.trim()));
   });
-  this.set('step', 'sd-setup-init');
-  this.render(hbs`{{build-log
-    stepName=step
-    buildId=1
-    buildStartTime="2019-01-14T20:12:41.238Z"
-    stepStartTime="2019-01-14T20:09:41.238Z"
-    stepEndTime="2019-01-14T20:12:41.238Z"
-    buildStats=stats
-  }}`);
 
-  return wait().then(() => {
-    assert.ok(
-      this.$('.line:first').text().trim().match(
-        'Build created'
-      )
-    );
-    assert.ok(
-      this.$('.line:eq(1)').text().trim().match(
-        'Build enqueued'
-      )
-    );
-    assert.ok(
-      this.$('.line:eq(2)').text().trim().match(
-        'Build scheduled on node12.foo.bar.com'
-      )
-    );
-    assert.ok(
-      this.$('.line:last').text().trim().match(
-        'Image pull completed'
-      )
-    );
+  test('it starts loading when step chosen', async function(assert) {
+    this.set('step', null);
+    await render(hbs`{{build-log
+      stepName=step
+      buildId=1
+      stepStartTime=null
+      buildStartTime="1478912844724"
+    }}`);
+
+    assert.equal(find('*').textContent.trim(), 'Click a step to see logs');
+    this.set('step', 'banana');
+
+    return settled().then(() => {
+      assert.ok(
+        this.$('.line:first').text().trim().match(
+          `${moment(startTime).format('HH:mm:ss')}\\s+${startTime}`
+        )
+      );
+      assert.ok(
+        this.$('.line:last').text().trim().match(
+          `${moment(startTime + 99).format('HH:mm:ss')}\\s+${startTime + 99}`
+        )
+      );
+    });
   });
-});
 
-test('it generate logs for init step when build is blocked', function (assert) {
-  this.set('stats', {
-    queueEnterTime: '2019-01-14T20:10:41.238Z',
-    blockedStartTime: '2019-01-14T20:10:42.238Z',
-    imagePullStartTime: '2019-01-14T20:11:41.238Z',
-    hostname: 'node12.foo.bar.com'
+  test('it generate logs for init step', async function(assert) {
+    this.set('stats', {
+      queueEnterTime: '2019-01-14T20:10:41.238Z',
+      imagePullStartTime: '2019-01-14T20:11:41.238Z',
+      hostname: 'node12.foo.bar.com'
+    });
+    this.set('step', 'sd-setup-init');
+    await render(hbs`{{build-log
+      stepName=step
+      buildId=1
+      buildStartTime="2019-01-14T20:12:41.238Z"
+      stepStartTime="2019-01-14T20:09:41.238Z"
+      stepEndTime="2019-01-14T20:12:41.238Z"
+      buildStats=stats
+    }}`);
+
+    return settled().then(() => {
+      assert.ok(
+        this.$('.line:first').text().trim().match(
+          'Build created'
+        )
+      );
+      assert.ok(
+        find(findAll('.line')[1]).textContent.trim().match(
+          'Build enqueued'
+        )
+      );
+      assert.ok(
+        find(findAll('.line')[2]).textContent.trim().match(
+          'Build scheduled on node12.foo.bar.com'
+        )
+      );
+      assert.ok(
+        this.$('.line:last').text().trim().match(
+          'Image pull completed'
+        )
+      );
+    });
   });
-  this.set('step', 'sd-setup-init');
-  this.render(hbs`{{build-log
-    stepName=step
-    buildId=1
-    buildStartTime="2019-01-14T20:12:41.238Z"
-    stepStartTime="2019-01-14T20:09:41.238Z"
-    stepEndTime="2019-01-14T20:12:41.238Z"
-    buildStats=stats
-  }}`);
 
-  return wait().then(() => {
-    assert.ok(
-      this.$('.line:first').text().trim().match(
-        'Build created'
-      )
-    );
-    assert.ok(
-      this.$('.line:eq(1)').text().trim().match(
-        'Build enqueued'
-      )
-    );
-    assert.ok(
-      this.$('.line:eq(2)').text().trim().match(
-        'Build blocked, putting back into queue'
-      )
-    );
-    assert.ok(
-      this.$('.line:eq(3)').text().trim().match(
-        'Build scheduled on node12.foo.bar.com'
-      )
-    );
-    assert.ok(
-      this.$('.line:last').text().trim().match(
-        'Image pull completed'
-      )
-    );
+  test('it generate logs for init step when build is blocked', async function(assert) {
+    this.set('stats', {
+      queueEnterTime: '2019-01-14T20:10:41.238Z',
+      blockedStartTime: '2019-01-14T20:10:42.238Z',
+      imagePullStartTime: '2019-01-14T20:11:41.238Z',
+      hostname: 'node12.foo.bar.com'
+    });
+    this.set('step', 'sd-setup-init');
+    await render(hbs`{{build-log
+      stepName=step
+      buildId=1
+      buildStartTime="2019-01-14T20:12:41.238Z"
+      stepStartTime="2019-01-14T20:09:41.238Z"
+      stepEndTime="2019-01-14T20:12:41.238Z"
+      buildStats=stats
+    }}`);
+
+    return settled().then(() => {
+      assert.ok(
+        this.$('.line:first').text().trim().match(
+          'Build created'
+        )
+      );
+      assert.ok(
+        find(findAll('.line')[1]).textContent.trim().match(
+          'Build enqueued'
+        )
+      );
+      assert.ok(
+        find(findAll('.line')[2]).textContent.trim().match(
+          'Build blocked, putting back into queue'
+        )
+      );
+      assert.ok(
+        find(findAll('.line')[3]).textContent.trim().match(
+          'Build scheduled on node12.foo.bar.com'
+        )
+      );
+      assert.ok(
+        this.$('.line:last').text().trim().match(
+          'Image pull completed'
+        )
+      );
+    });
   });
-});
 
-test('it generate logs for COLLAPSED build', function (assert) {
-  this.set('stats', {
-    queueEnterTime: '2019-01-14T20:10:41.238Z'
+  test('it generate logs for COLLAPSED build', async function(assert) {
+    this.set('stats', {
+      queueEnterTime: '2019-01-14T20:10:41.238Z'
+    });
+    this.set('step', 'sd-setup-init');
+    await render(hbs`{{build-log
+      stepName=step
+      buildId=1
+      buildStartTime="2019-01-14T20:12:41.238Z"
+      stepStartTime="2019-01-14T20:09:41.238Z"
+      stepEndTime="2019-01-14T20:12:41.238Z"
+      buildStats=stats
+      buildStatus="COLLAPSED"
+    }}`);
+
+    return settled().then(() => {
+      assert.ok(
+        this.$('.line:first').text().trim().match(
+          'Build created'
+        )
+      );
+      assert.ok(
+        this.$('.line:last').text().trim().match(
+          'Build collapsed and removed from the queue.'
+        )
+      );
+    });
   });
-  this.set('step', 'sd-setup-init');
-  this.render(hbs`{{build-log
-    stepName=step
-    buildId=1
-    buildStartTime="2019-01-14T20:12:41.238Z"
-    stepStartTime="2019-01-14T20:09:41.238Z"
-    stepEndTime="2019-01-14T20:12:41.238Z"
-    buildStats=stats
-    buildStatus="COLLAPSED"
-  }}`);
 
-  return wait().then(() => {
-    assert.ok(
-      this.$('.line:first').text().trim().match(
-        'Build created'
-      )
-    );
-    assert.ok(
-      this.$('.line:last').text().trim().match(
-        'Build collapsed and removed from the queue.'
-      )
-    );
+  test('it generate logs for FROZEN build', async function(assert) {
+    this.set('step', 'sd-setup-init');
+    await render(hbs`{{build-log
+      stepName=step
+      buildId=1
+      buildStartTime="2019-01-14T20:12:41.238Z"
+      stepStartTime="2019-01-14T20:09:41.238Z"
+      stepEndTime="2019-01-14T20:12:41.238Z"
+      buildStats=stats
+      buildStatus="FROZEN"
+    }}`);
+
+    return settled().then(() => {
+      assert.ok(
+        this.$('.line:first').text().trim().match(
+          'Build created'
+        )
+      );
+      assert.ok(
+        this.$('.line:last').text().trim().match(
+          'Build frozen and removed from the queue.'
+        )
+      );
+    });
   });
-});
 
-test('it generate logs for FROZEN build', function (assert) {
-  this.set('step', 'sd-setup-init');
-  this.render(hbs`{{build-log
-    stepName=step
-    buildId=1
-    buildStartTime="2019-01-14T20:12:41.238Z"
-    stepStartTime="2019-01-14T20:09:41.238Z"
-    stepEndTime="2019-01-14T20:12:41.238Z"
-    buildStats=stats
-    buildStatus="FROZEN"
-  }}`);
+  test('it generate logs for failed init step', async function(assert) {
+    this.set('stats', {
+      queueEnterTime: '2019-01-14T20:10:41.238Z',
+      imagePullStartTime: '2019-01-14T20:11:41.238Z',
+      hostname: 'node12.foo.bar.com'
+    });
+    this.set('step', 'sd-setup-init');
+    await render(hbs`{{build-log
+      stepName=step
+      buildId=1
+      stepStartTime="2019-01-14T20:09:41.238Z"
+      stepEndTime="2019-01-14T20:12:41.238Z"
+      buildStartTime=""
+      buildStats=stats
+    }}`);
 
-  return wait().then(() => {
-    assert.ok(
-      this.$('.line:first').text().trim().match(
-        'Build created'
-      )
-    );
-    assert.ok(
-      this.$('.line:last').text().trim().match(
-        'Build frozen and removed from the queue.'
-      )
-    );
+    return settled().then(() => {
+      assert.ok(
+        this.$('.line:first').text().trim().match(
+          'Build created'
+        )
+      );
+      assert.ok(
+        find(findAll('.line')[1]).textContent.trim().match(
+          'Build enqueued'
+        )
+      );
+      assert.ok(
+        find(findAll('.line')[2]).textContent.trim().match(
+          'Build scheduled on node12.foo.bar.com'
+        )
+      );
+      assert.ok(
+        this.$('.line:last').text().trim().match(
+          'Build init failed'
+        )
+      );
+    });
   });
-});
 
-test('it generate logs for failed init step', function (assert) {
-  this.set('stats', {
-    queueEnterTime: '2019-01-14T20:10:41.238Z',
-    imagePullStartTime: '2019-01-14T20:11:41.238Z',
-    hostname: 'node12.foo.bar.com'
+  test('it generate logs for init step with empty build stats', async function(assert) {
+    this.set('stats', {});
+    this.set('step', 'sd-setup-init');
+    await render(hbs`{{build-log
+      stepName=step
+      buildId=1
+      buildStartTime="2019-01-14T20:12:41.238Z"
+      stepStartTime="2019-01-14T20:09:41.238Z"
+      stepEndTime="2019-01-14T20:12:41.238Z"
+      buildStats=stats
+    }}`);
+
+    return settled().then(() => {
+      assert.ok(
+        this.$('.line:first').text().trim().match(
+          'Build created'
+        )
+      );
+      assert.ok(
+        this.$('.line:last').text().trim().match(
+          'Build init done'
+        )
+      );
+    });
   });
-  this.set('step', 'sd-setup-init');
-  this.render(hbs`{{build-log
-    stepName=step
-    buildId=1
-    stepStartTime="2019-01-14T20:09:41.238Z"
-    stepEndTime="2019-01-14T20:12:41.238Z"
-    buildStartTime=""
-    buildStats=stats
-  }}`);
 
-  return wait().then(() => {
-    assert.ok(
-      this.$('.line:first').text().trim().match(
-        'Build created'
-      )
-    );
-    assert.ok(
-      this.$('.line:eq(1)').text().trim().match(
-        'Build enqueued'
-      )
-    );
-    assert.ok(
-      this.$('.line:eq(2)').text().trim().match(
-        'Build scheduled on node12.foo.bar.com'
-      )
-    );
-    assert.ok(
-      this.$('.line:last').text().trim().match(
-        'Build init failed'
-      )
-    );
+  test('it starts fetching more log for a chosen completed step', async function(assert) {
+    doneStub.onCall(0).returns(false);
+    doneStub.onCall(1).returns(false);
+    doneStub.onCall(2).returns(true);
+    doneStub.onCall(3).returns(true);
+
+    this.set('step', null);
+    await render(hbs`{{build-log
+      stepName=step
+      totalLine=1000
+      buildId=1
+      stepStartTime=null
+      buildStartTime="1478912844724"
+    }}`);
+
+    assert.equal(find('*').textContent.trim(), 'Click a step to see logs');
+    this.set('step', 'banana');
+
+    const container = this.$('.wrap')[0];
+    const lastScrollTop = container.scrollTop;
+
+    run(() => { container.scrollTop = 0; });
+
+    return settled().then(() => {
+      sinon.assert.callCount(doneStub, 4);
+      sinon.assert.callCount(logsStub, 4);
+      assert.ok(container.scrollTop > lastScrollTop);
+    });
   });
-});
 
-test('it generate logs for init step with empty build stats', function (assert) {
-  this.set('stats', {});
-  this.set('step', 'sd-setup-init');
-  this.render(hbs`{{build-log
-    stepName=step
-    buildId=1
-    buildStartTime="2019-01-14T20:12:41.238Z"
-    stepStartTime="2019-01-14T20:09:41.238Z"
-    stepEndTime="2019-01-14T20:12:41.238Z"
-    buildStats=stats
-  }}`);
+  test('it generates object url for the log when clicking download button', async function(assert) {
+    this.set('step', 'banana');
+    await render(hbs`{{build-log
+      stepName=step
+      totalLine=1000
+      buildId=1
+      stepStartTime=null
+      buildStartTime="1478912844724"
+    }}`);
 
-  return wait().then(() => {
-    assert.ok(
-      this.$('.line:first').text().trim().match(
-        'Build created'
-      )
-    );
-    assert.ok(
-      this.$('.line:last').text().trim().match(
-        'Build init done'
-      )
-    );
-  });
-});
+    const $hiddenDownloadButton = this.$('#downloadLink');
 
-test('it starts fetching more log for a chosen completed step', function (assert) {
-  doneStub.onCall(0).returns(false);
-  doneStub.onCall(1).returns(false);
-  doneStub.onCall(2).returns(true);
-  doneStub.onCall(3).returns(true);
+    assert.equal($hiddenDownloadButton.prev().text().trim(), 'Download');
 
-  this.set('step', null);
-  this.render(hbs`{{build-log
-    stepName=step
-    totalLine=1000
-    buildId=1
-    stepStartTime=null
-    buildStartTime="1478912844724"
-  }}`);
+    $hiddenDownloadButton.prev().click();
 
-  assert.equal(this.$().text().trim(), 'Click a step to see logs');
-  this.set('step', 'banana');
-
-  const container = this.$('.wrap')[0];
-  const lastScrollTop = container.scrollTop;
-
-  run(() => { container.scrollTop = 0; });
-
-  return wait().then(() => {
-    sinon.assert.callCount(doneStub, 4);
-    sinon.assert.callCount(logsStub, 4);
-    assert.ok(container.scrollTop > lastScrollTop);
-  });
-});
-
-test('it generates object url for the log when clicking download button', function (assert) {
-  this.set('step', 'banana');
-  this.render(hbs`{{build-log
-    stepName=step
-    totalLine=1000
-    buildId=1
-    stepStartTime=null
-    buildStartTime="1478912844724"
-  }}`);
-
-  const $hiddenDownloadButton = this.$('#downloadLink');
-
-  assert.equal($hiddenDownloadButton.prev().text().trim(), 'Download');
-
-  $hiddenDownloadButton.prev().click();
-
-  return wait().then(() => {
-    assert.equal($hiddenDownloadButton.attr('href'), blobUrl);
+    return settled().then(() => {
+      assert.equal($hiddenDownloadButton.attr('href'), blobUrl);
+    });
   });
 });

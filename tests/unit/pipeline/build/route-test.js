@@ -1,40 +1,40 @@
 import EmberObject from '@ember/object';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
 
-moduleFor('route:pipeline/build', 'Unit | Route | pipeline/build', {
-  // Specify the other units that are required for this test.
-  needs: ['service:session']
-});
+module('Unit | Route | pipeline/build', function(hooks) {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let route = this.subject();
+  test('it exists', function (assert) {
+    let route = this.owner.lookup('route:pipeline/build');
 
-  assert.ok(route);
-  assert.equal(route.titleToken({
-    job: EmberObject.create({ name: 'main' }),
-    build: EmberObject.create({ sha: 'abcd1234567890', truncatedSha: 'abcd123' })
-  }), 'main > #abcd123');
-});
+    assert.ok(route);
+    assert.equal(route.titleToken({
+      job: EmberObject.create({ name: 'main' }),
+      build: EmberObject.create({ sha: 'abcd1234567890', truncatedSha: 'abcd123' })
+    }), 'main > #abcd123');
+  });
 
-sinonTest('it redirects if build not found', function (assert) {
-  const route = this.subject();
-  const stub = this.stub(route, 'transitionTo');
-  const jobId = 345;
-  const pipelineId = 123;
-  const model = {
-    pipeline: {
-      get: type => (type === 'id' ? pipelineId : null)
-    },
-    job: {
-      get: type => (type === 'id' ? jobId : null)
-    }
-  };
+  sinonTest('it redirects if build not found', function (assert) {
+    const route = this.subject();
+    const stub = this.stub(route, 'transitionTo');
+    const jobId = 345;
+    const pipelineId = 123;
+    const model = {
+      pipeline: {
+        get: type => (type === 'id' ? pipelineId : null)
+      },
+      job: {
+        get: type => (type === 'id' ? jobId : null)
+      }
+    };
 
-  route.afterModel(model);
+    route.afterModel(model);
 
-  assert.ok(stub.calledOnce, 'transitionTo was called once');
-  assert.ok(stub.calledWithExactly('pipeline', pipelineId), 'transition to pipeline');
+    assert.ok(stub.calledOnce, 'transitionTo was called once');
+    assert.ok(stub.calledWithExactly('pipeline', pipelineId), 'transition to pipeline');
+  });
 });
 
 sinonTest('it redirects if not step route', function (assert) {

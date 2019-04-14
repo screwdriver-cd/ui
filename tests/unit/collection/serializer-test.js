@@ -1,86 +1,88 @@
 import { run } from '@ember/runloop';
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
-import wait from 'ember-test-helpers/wait';
 let server;
 
-moduleForModel('collection', 'Unit | Serializer | collection', {
-  // Specify the other units that are required for this test.
-  needs: ['serializer:collection'],
-  beforeEach() {
+module('Unit | Serializer | collection', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
     server = new Pretender();
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
-
-test('it serializes records', function (assert) {
-  let record = this.subject();
-  let serializedRecord = record.serialize();
-
-  assert.ok(serializedRecord);
-});
-
-test('it does not post with model name as key', function (assert) {
-  assert.expect(2);
-  server.post('/collections', function () {
-    return [200, {}, JSON.stringify({ collection: { id: 123 } })];
   });
 
-  run(() => {
-    const collection = this.store().createRecord('collection', {
-      name: 'Screwdriver',
-      description: 'Collection of screwdriver pipelines'
+  test('it serializes records', function (assert) {
+    let record = run(() => this.owner.lookup('service:store').createRecord('collection'));
+    let serializedRecord = record.serialize();
+
+    assert.ok(serializedRecord);
+  });
+
+  test('it does not post with model name as key', function (assert) {
+    assert.expect(2);
+    server.post('/collections', function () {
+      return [200, {}, JSON.stringify({ collection: { id: 123 } })];
     });
 
-    collection.save()
-      .then(() => {
-        assert.equal(collection.get('id'), 123);
+    run(() => {
+      const collection = this.owner.lookup('service:store').createRecord('collection', {
+        name: 'Screwdriver',
+        description: 'Collection of screwdriver pipelines'
       });
-  });
 
-  return wait().then(() => {
-    const [request] = server.handledRequests;
-    const payload = JSON.parse(request.requestBody);
+      collection.save()
+        .then(() => {
+          assert.equal(collection.get('id'), 123);
+        });
+    });
 
-    assert.deepEqual(payload, {
-      name: 'Screwdriver',
-      description: 'Collection of screwdriver pipelines'
+    return settled().then(() => {
+      const [request] = server.handledRequests;
+      const payload = JSON.parse(request.requestBody);
+
+      assert.deepEqual(payload, {
+        name: 'Screwdriver',
+        description: 'Collection of screwdriver pipelines'
+      });
     });
   });
-});
 
-test('it serializes only dirty fields', function (assert) {
-  assert.expect(1);
-  server.patch('/collections/123', function () {
-    return [200, {}, JSON.stringify({ collection: { id: 123 } })];
-  });
+  test('it serializes only dirty fields', function (assert) {
+    assert.expect(1);
+    server.patch('/collections/123', function () {
+      return [200, {}, JSON.stringify({ collection: { id: 123 } })];
+    });
 
-  run(() => {
-    this.store().push({
-      data: {
-        id: 123,
-        type: 'collection',
-        attributes: {
-          name: 'Screwdriver',
-          description: 'Collection of screwdriver pipelines'
+    run(() => {
+      this.owner.lookup('service:store').push({
+        data: {
+          id: 123,
+          type: 'collection',
+          attributes: {
+            name: 'Screwdriver',
+            description: 'Collection of screwdriver pipelines'
+          }
         }
-      }
+      });
+
+      const collection = this.owner.lookup('service:store').peekRecord('collection', 123);
+
+      collection.set('description', 'newDescription');
+      collection.save();
     });
 
-    const collection = this.store().peekRecord('collection', 123);
+    return settled().then(() => {
+      const [request] = server.handledRequests;
+      const payload = JSON.parse(request.requestBody);
 
-    collection.set('description', 'newDescription');
-    collection.save();
-  });
-
-  return wait().then(() => {
-    const [request] = server.handledRequests;
-    const payload = JSON.parse(request.requestBody);
-
-    assert.deepEqual(payload, {
-      description: 'newDescription'
+      assert.deepEqual(payload, {
+        description: 'newDescription'
+      });
     });
   });
 });

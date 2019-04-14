@@ -1,5 +1,6 @@
 import Pretender from 'pretender';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 const actualMessage = 'shutdown imminent';
 let server;
 
@@ -15,31 +16,31 @@ const getBanners = () => {
   ]);
 };
 
-moduleFor('service:banner', 'Unit | Service | banner', {
-  integration: true,
+module('Unit | Service | banner', function(hooks) {
+  setupTest(hooks);
 
-  beforeEach() {
+  hooks.beforeEach(function() {
     server = new Pretender();
-  },
+  });
 
-  afterEach() {
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
+  });
 
-test('it exists', function (assert) {
-  const service = this.subject();
+  test('it exists', function (assert) {
+    const service = this.owner.lookup('service:banner');
 
-  assert.ok(service);
-});
+    assert.ok(service);
+  });
 
-test('it fetches active banners', function (assert) {
-  assert.expect(1);
-  getBanners();
-  const service = this.subject();
-  const b = service.fetchBanners();
+  test('it fetches active banners', function (assert) {
+    assert.expect(1);
+    getBanners();
+    const service = this.owner.lookup('service:banner');
+    const b = service.fetchBanners();
 
-  b.then((banners) => {
-    assert.equal(banners[0].message, actualMessage);
+    b.then((banners) => {
+      assert.equal(banners[0].message, actualMessage);
+    });
   });
 });

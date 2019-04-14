@@ -1,6 +1,7 @@
-import { test } from 'qunit';
+import { findAll, find, visit } from '@ember/test-helpers';
+import { module, test } from 'qunit';
+import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
-import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
 import Pretender from 'pretender';
 
 import makePipeline from '../mock/pipeline';
@@ -11,8 +12,10 @@ import makeJobs from '../mock/jobs';
 
 let server;
 
-moduleForAcceptance('Acceptance | pipeline pr-chain', {
-  beforeEach() {
+module('Acceptance | pipeline pr-chain', function(hooks) {
+  setupApplicationTest(hooks);
+
+  hooks.beforeEach(function() {
     const graph = makeGraph();
     const jobs = makeJobs();
     const pipeline = makePipeline(graph);
@@ -69,26 +72,27 @@ moduleForAcceptance('Acceptance | pipeline pr-chain', {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
+  });
 
-test('visiting /pipelines/4/pulls when the pipeline is enabled for prChain', function (assert) {
-  authenticateSession(this.application, { token: 'fakeToken' });
+  test('visiting /pipelines/4/pulls when the pipeline is enabled for prChain', async function(assert) {
+    authenticateSession(this.application, { token: 'fakeToken' });
 
-  visit('/pipelines/4/pulls');
+    await visit('/pipelines/4/pulls');
 
-  wait().andThen(() => {
-    assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
-    assert.equal(find('.pipelineWorkflow svg').length, 1, 'not enough workflow');
-    assert.equal(find('ul.nav-pills').length, 1, 'should show tabs');
-    assert.equal(find('.column-tabs-view .nav-link').eq(0).text().trim(), 'Events');
-    assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Pull Requests');
-    assert.equal(find('.column-tabs-view .nav-link').eq(1).text().trim(), 'Pull Requests');
-    assert.equal(find('.column-tabs-view .view .detail .commit').eq(0).text().trim(), 'PR-42');
-    assert.equal(find('.separator').length, 1);
-    assert.equal(find('.partial-view').length, 2);
+    wait().andThen(() => {
+      assert.equal(find('a h1').textContent.trim(), 'foo/bar', 'incorrect pipeline name');
+      assert.equal(findAll('.pipelineWorkflow svg').length, 1, 'not enough workflow');
+      assert.equal(findAll('ul.nav-pills').length, 1, 'should show tabs');
+      assert.equal(find('.column-tabs-view .nav-link').eq(0).text().trim(), 'Events');
+      assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Pull Requests');
+      assert.equal(find('.column-tabs-view .nav-link').eq(1).text().trim(), 'Pull Requests');
+      assert.equal(find('.column-tabs-view .view .detail .commit').eq(0).text().trim(), 'PR-42');
+      assert.equal(findAll('.separator').length, 1);
+      assert.equal(findAll('.partial-view').length, 2);
+    });
   });
 });

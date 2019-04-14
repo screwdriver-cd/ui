@@ -1,6 +1,7 @@
 import { resolve } from 'rsvp';
 import Service from '@ember/service';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
 const templateServiceStub = Service.extend({
   getOneTemplate() {
@@ -22,22 +23,24 @@ const templateServiceStub = Service.extend({
   }
 });
 
-moduleFor('route:templates/detail', 'Unit | Route | templates/detail', {
+module('Unit | Route | templates/detail', function(hooks) {
+  setupTest(hooks);
+
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
-  beforeEach: function beforeEach() {
-    this.register('service:template', templateServiceStub);
-  }
-});
+  hooks.beforeEach(function beforeEach() {
+    this.owner.register('service:template', templateServiceStub);
+  });
 
-test('it asks for the list of templates for a given name', function (assert) {
-  let route = this.subject();
+  test('it asks for the list of templates for a given name', function (assert) {
+    let route = this.owner.lookup('route:templates/detail');
 
-  assert.ok(route);
+    assert.ok(route);
 
-  return route.model({ namespace: 'foo', name: 'baz' }).then((templates) => {
-    assert.equal(templates.length, 3);
-    assert.equal(templates[0].namespace, 'foo');
-    assert.equal(templates[0].name, 'baz');
+    return route.model({ namespace: 'foo', name: 'baz' }).then((templates) => {
+      assert.equal(templates.length, 3);
+      assert.equal(templates[0].namespace, 'foo');
+      assert.equal(templates[0].name, 'baz');
+    });
   });
 });
