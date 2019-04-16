@@ -83,7 +83,8 @@ test('it starts a build', function (assert) {
     assert.notOk(controller.get('isShowingModal'));
     assert.deepEqual(payload, {
       pipelineId: '1234',
-      startFrom: '~commit'
+      startFrom: '~commit',
+      causeMessage: 'Manually started by apple'
     });
   });
 });
@@ -149,7 +150,7 @@ test('it restarts a build', function (assert) {
       buildId: 123,
       parentBuildId: 345,
       parentEventId: 1,
-      causeMessage: 'apple clicked restart for job "deploy" for sha sha'
+      causeMessage: 'Manually started by apple'
     });
   });
 });
@@ -243,7 +244,7 @@ test('it starts PR build(s)', function (assert) {
 
     assert.notOk(controller.get('isShowingModal'));
     assert.deepEqual(payload, {
-      causeMessage: `apple clicked start build for PR-${prNum}`,
+      causeMessage: 'Manually started by apple',
       pipelineId: '1234',
       startFrom: '~pr',
       prNum

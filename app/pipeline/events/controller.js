@@ -220,10 +220,13 @@ export default Controller.extend(ModelReloaderMixin, {
     startMainBuild() {
       this.set('isShowingModal', true);
 
+      const token = get(this, 'session.data.authenticated.token');
+      const user = get(decoder(token), 'username');
       const pipelineId = this.get('pipeline.id');
       const newEvent = this.store.createRecord('event', {
         pipelineId,
-        startFrom: '~commit'
+        startFrom: '~commit',
+        causeMessage: `Manually started by ${user}`
       });
 
       return newEvent.save().then(() => {
@@ -252,8 +255,7 @@ export default Controller.extend(ModelReloaderMixin, {
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
-      const causeMessage =
-        `${user} clicked restart for job "${job.name}" for sha ${get(event, 'sha')}`;
+      const causeMessage = `Manually started by ${user}`;
       const newEvent = this.store.createRecord('event', {
         buildId,
         pipelineId,
@@ -296,7 +298,7 @@ export default Controller.extend(ModelReloaderMixin, {
       this.set('isShowingModal', true);
       const user = get(decoder(this.get('session.data.authenticated.token')), 'username');
       const newEvent = this.store.createRecord('event', {
-        causeMessage: `${user} clicked start build for PR-${prNum}`,
+        causeMessage: `Manually started by ${user}`,
         pipelineId: this.get('pipeline.id'),
         startFrom: '~pr',
         prNum
