@@ -3,7 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 import { copy } from '@ember/object/internals';
 
 const event = {
@@ -86,7 +86,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     };
 
     const eventMock = EmberObject.create(
-      merge(copy(event, true), {
+      assign(copy(event, true), {
         startFrom: '~pr',
         type: 'pr',
         pr: {

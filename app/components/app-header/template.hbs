@@ -27,51 +27,35 @@
       {{#nav.item}}
         {{#link-to "create" class="icon create"}}
           {{inline-svg "create" class="img"}}
-          <span class="icontitle">
-            Create Pipeline
-          </span>
+          <span class="icontitle">Create Pipeline</span>
         {{/link-to}}
       {{/nav.item}}
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
-          {{#dd.toggle}}
+          {{#dd.toggle class="icon docs-outline"}}
             {{inline-svg "docs" class="img"}}
-            <span class="icontitle">
-              Documentation
-            </span>
+            <span class="icontitle">Documentation</span>
             <span class="caret"></span>
           {{/dd.toggle}}
           {{#dd.menu as |ddm|}}
             {{#ddm.item}}
               <a href={{docUrl}} class="icon docs">
-                {{inline-svg "docs" class="img"}}
-                <span>
-                  Documentation
-                </span>
+                {{inline-svg "docs" class="img"}}<span>Documentation</span>
               </a>
             {{/ddm.item}}
             {{#ddm.item}}
               {{#link-to "validator" classNames="icon validator"}}
-                {{inline-svg "docs" class="img"}}
-                <span>
-                  Validator
-                </span>
+                {{inline-svg "docs" class="img"}}<span>Validator</span>
               {{/link-to}}
             {{/ddm.item}}
             {{#ddm.item}}
               {{#link-to "templates" classNames="icon templates"}}
-                {{inline-svg "docs" class="img"}}
-                <span>
-                  Templates
-                </span>
+                {{inline-svg "docs" class="img"}}<span>Templates</span>
               {{/link-to}}
             {{/ddm.item}}
             {{#ddm.item}}
               {{#link-to "commands" classNames="icon commands"}}
-                {{inline-svg "docs" class="img"}}
-                <span>
-                  Commands
-                </span>
+                {{inline-svg "docs" class="img"}}<span>Commands</span>
               {{/link-to}}
             {{/ddm.item}}
           {{/dd.menu}}
@@ -79,36 +63,24 @@
       {{/nav.item}}
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
-          {{#dd.toggle}}
-            {{inline-svg "more-circle" class="img"}}
-            <span class="icontitle">
-              Communication
-            </span>
+          {{#dd.toggle class="icon comm-outline"}}
+            {{inline-svg "more-circle" class="img"}}<span class="icontitle">Communication</span>
             <span class="caret"></span>
           {{/dd.toggle}}
           {{#dd.menu as |ddm|}}
             {{#ddm.item}}
               <a href="http://blog.screwdriver.cd" class="icon blog">
-                {{inline-svg "tumblr" class="img"}}
-                <span>
-                  Screwdriver Blog
-                </span>
+                {{inline-svg "tumblr" class="img"}}<span>Screwdriver Blog</span>
               </a>
             {{/ddm.item}}
             {{#ddm.item}}
               <a href="http://slack.screwdriver.cd" class="icon community">
-                {{inline-svg "slack" class="img"}}
-                <span>
-                  Slack Channel
-                </span>
+                {{inline-svg "slack" class="img"}}<span>Slack Channel</span>
               </a>
             {{/ddm.item}}
             {{#ddm.item}}
               <a href="https://github.com/screwdriver-cd" class="icon github">
-                {{inline-svg "github" class="img"}}
-                <span>
-                  Github
-                </span>
+                {{inline-svg "github" class="img"}}<span>Github</span>
               </a>
             {{/ddm.item}}
           {{/dd.menu}}
@@ -126,9 +98,7 @@
             {{/dd.toggle}}
             {{#dd.menu as |ddm|}}
               {{#ddm.item}}
-                <span class="title">
-                  ACCOUNTS
-                </span>
+                <span class="title">ACCOUNTS</span>
               {{/ddm.item}}
               {{#each scmContexts as |scmContext|}}
                 {{#ddm.item}}
@@ -136,9 +106,7 @@
                     <a class="active">
                       {{fa-icon scmContext.iconType}}
                       {{scmContext.displayName}}
-                      <span>
-                        active
-                      </span>
+                      <span>active</span>
                     </a>
                   {{else}}
                     <a href="#authenticate" {{action "authenticate" scmContext.context}}>

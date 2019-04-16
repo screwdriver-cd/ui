@@ -1,7 +1,7 @@
-import { currentURL, find, visit } from '@ember/test-helpers';
+import { currentURL, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 
 import makePipeline from '../mock/pipeline';
@@ -71,8 +71,7 @@ module('Acceptance | pipeline build', function(hooks) {
   });
 
   test('visiting /pipelines/4 when logged in', async function(assert) {
-    authenticateSession(this.application, { token: 'fakeToken' });
-
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/pipelines/4');
 
     assert.equal(currentURL(), '/pipelines/4/events');
@@ -80,39 +79,15 @@ module('Acceptance | pipeline build', function(hooks) {
     assert.dom('.pipelineWorkflow svg').exists({ count: 1 }, 'not enough workflow');
     assert.dom('button.start-button').exists({ count: 1 }, 'should have a start button');
     assert.dom('ul.nav-pills').exists({ count: 1 }, 'should show tabs');
-    assert.equal(
-      find('.column-tabs-view .nav-link')
-        .eq(0)
-        .text()
-        .trim(),
-      'Events'
-    );
-    assert.equal(
-      find('.column-tabs-view .nav-link.active')
-        .eq(0)
-        .text()
-        .trim(),
-      'Events'
-    );
-    assert.equal(
-      find('.column-tabs-view .nav-link')
-        .eq(1)
-        .text()
-        .trim(),
-      'Pull Requests'
-    );
+    assert.dom('.column-tabs-view .nav-link').hasText('Events');
+    assert.dom('.column-tabs-view .nav-link.active').hasText('Events');
+    assert.dom('.column-tabs-view .nav-link:not(.active)').hasText('Pull Requests');
     assert.dom('.separator').exists({ count: 1 });
     assert.dom('.partial-view').exists({ count: 2 });
 
     await visit('/pipelines/4/pulls');
 
     assert.equal(currentURL(), '/pipelines/4/pulls');
-    assert.equal(
-      find('.column-tabs-view .nav-link.active')
-        .eq(0)
-        .text()
-        .trim(),
-      'Pull Requests'
-    );
+    assert.dom('.column-tabs-view .nav-link.active').hasText('Pull Requests');
   });
 });

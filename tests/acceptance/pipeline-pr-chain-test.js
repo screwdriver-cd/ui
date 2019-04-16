@@ -1,7 +1,7 @@
-import { find, visit } from '@ember/test-helpers';
+import { visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 
 import makePipeline from '../mock/pipeline';
@@ -71,44 +71,16 @@ module('Acceptance | pipeline pr-chain', function(hooks) {
   });
 
   test('visiting /pipelines/4/pulls when the pipeline is enabled for prChain', async function(assert) {
-    authenticateSession(this.application, { token: 'fakeToken' });
-
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/pipelines/4/pulls');
 
-    wait().andThen(() => {
-      assert.dom('a h1').hasText('foo/bar', 'incorrect pipeline name');
-      assert.dom('.pipelineWorkflow svg').exists({ count: 1 }, 'not enough workflow');
-      assert.dom('ul.nav-pills').exists({ count: 1 }, 'should show tabs');
-      assert.equal(
-        find('.column-tabs-view .nav-link')
-          .eq(0)
-          .text()
-          .trim(),
-        'Events'
-      );
-      assert.equal(
-        find('.column-tabs-view .nav-link.active')
-          .eq(0)
-          .text()
-          .trim(),
-        'Pull Requests'
-      );
-      assert.equal(
-        find('.column-tabs-view .nav-link')
-          .eq(1)
-          .text()
-          .trim(),
-        'Pull Requests'
-      );
-      assert.equal(
-        find('.column-tabs-view .view .detail .commit')
-          .eq(0)
-          .text()
-          .trim(),
-        'PR-42'
-      );
-      assert.dom('.separator').exists({ count: 1 });
-      assert.dom('.partial-view').exists({ count: 2 });
-    });
+    assert.dom('a h1').hasText('foo/bar', 'incorrect pipeline name');
+    assert.dom('.pipelineWorkflow svg').exists({ count: 1 }, 'not enough workflow');
+    assert.dom('ul.nav-pills').exists({ count: 1 }, 'should show tabs');
+    assert.dom('.column-tabs-view .nav-link').hasText('Events');
+    assert.dom('.column-tabs-view .nav-link.active').hasText('Pull Requests');
+    assert.dom('.column-tabs-view .view .detail .commit').hasText('PR-42');
+    assert.dom('.separator').exists({ count: 1 });
+    assert.dom('.partial-view').exists({ count: 2 });
   });
 });

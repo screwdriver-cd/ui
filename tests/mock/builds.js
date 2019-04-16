@@ -1,5 +1,5 @@
 import { copy } from '@ember/object/internals';
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 
 const build = {
   id: '1234',
@@ -56,7 +56,7 @@ export default eventId => {
       status: ['SUCCESS', 'FAILURE', 'RUNNING'][Math.floor(Math.random() * 2)]
     };
 
-    merge(b, config);
+    assign(b, config);
 
     builds.push(b);
   });

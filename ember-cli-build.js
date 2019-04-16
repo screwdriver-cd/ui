@@ -37,7 +37,7 @@ module.exports = function(defaults) {
 
   app.import('node_modules/ansi_up/ansi_up.js');
   app.import('node_modules/humanize-duration/humanize-duration.js');
-  app.import('node_modules/d3/build/d3.min.js');
+  app.import('node_modules/d3/dist/d3.min.js');
   app.import('node_modules/c3/c3.min.js');
   app.import('node_modules/c3/c3.min.css');
   app.import('node_modules/memoizerific/memoizerific.min.js');

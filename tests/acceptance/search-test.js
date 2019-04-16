@@ -1,7 +1,7 @@
-import { click, currentURL, find, visit } from '@ember/test-helpers';
+import { click, currentURL, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
@@ -121,7 +121,7 @@ module('Acceptance | search', function(hooks) {
   });
 
   test('visiting /search when logged in', async function(assert) {
-    authenticateSession(this.application, { token: 'fakeToken' });
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/search');
 
     assert.equal(currentURL(), '/search');
@@ -136,22 +136,22 @@ module('Acceptance | search', function(hooks) {
   });
 
   test('visiting /search?query=banana when logged in', async function(assert) {
-    authenticateSession(this.application, { token: 'fakeToken' });
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/search?query=banana');
 
     assert.equal(currentURL(), '/search?query=banana');
     assert.dom('tr').exists({ count: 3 });
-    assert.notOk(find('.showMore').textContent.trim());
+    assert.dom('.showMore').doesNotExist();
     assert.dom('.num-results').hasText('Showing 2 result(s)');
   });
 
   test('visiting /search?query=doesnotexist when logged in', async function(assert) {
-    authenticateSession(this.application, { token: 'fakeToken' });
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/search?query=doesnotexist');
 
     assert.equal(currentURL(), '/search?query=doesnotexist');
     assert.dom('tr').exists({ count: 1 });
-    assert.notOk(find('.showMore').textContent.trim());
+    assert.dom('.showMore').doesNotExist();
     assert.dom('.num-results').hasText('No results');
   });
 });

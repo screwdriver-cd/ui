@@ -1,4 +1,4 @@
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 import { get } from '@ember/object';
 import DS from 'ember-data';
 
@@ -7,7 +7,7 @@ export default DS.RESTSerializer.extend({
     buildContainer: 'container'
   },
   /**
-   * Overrride and fill in `statusMessage` so the model can merge properly
+   * Overrride and fill in `statusMessage` so the model can assign properly
    */
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.build) {
@@ -36,9 +36,9 @@ export default DS.RESTSerializer.extend({
    */
   serializeIntoHash(hash, typeClass, snapshot) {
     if (!snapshot.id) {
-      return merge(hash, { jobId: snapshot.attr('jobId') });
+      return assign(hash, { jobId: snapshot.attr('jobId') });
     }
 
-    return merge(hash, { status: snapshot.attr('status') });
+    return assign(hash, { status: snapshot.attr('status') });
   }
 });

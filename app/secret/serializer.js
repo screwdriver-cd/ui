@@ -1,4 +1,4 @@
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
@@ -9,7 +9,7 @@ export default DS.RESTSerializer.extend({
    */
   serializeIntoHash(hash, typeClass, snapshot, options) {
     if (!snapshot.id) {
-      return merge(hash, this.serialize(snapshot, options));
+      return assign(hash, this.serialize(snapshot, options));
     }
 
     const dirty = snapshot.changedAttributes();
@@ -18,6 +18,6 @@ export default DS.RESTSerializer.extend({
       dirty[key] = dirty[key][1];
     });
 
-    return merge(hash, dirty);
+    return assign(hash, dirty);
   }
 });

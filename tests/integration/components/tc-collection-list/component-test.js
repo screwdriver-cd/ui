@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { setBreakpointForIntegrationTest } from 'screwdriver-ui/tests/helpers/responsive';
+import { setBreakpoint } from 'ember-responsive/test-support';
 
 const TEST_TEMPLATES = {
   model: [
@@ -34,7 +34,7 @@ module('Integration | Component | tc collection list', function(hooks) {
   test('it renders', async function(assert) {
     const { $ } = this;
 
-    setBreakpointForIntegrationTest(this, 'desktop');
+    setBreakpoint('desktop');
 
     Object.keys(TEST_TEMPLATES).forEach(prop => this.set(prop, TEST_TEMPLATES[prop]));
 
@@ -59,7 +59,7 @@ module('Integration | Component | tc collection list', function(hooks) {
   test('it renders with filter namespace', async function(assert) {
     const { $ } = this;
 
-    setBreakpointForIntegrationTest(this, 'desktop');
+    setBreakpoint('desktop');
 
     Object.keys(TEST_TEMPLATES).forEach(prop => this.set(prop, TEST_TEMPLATES[prop]));
 

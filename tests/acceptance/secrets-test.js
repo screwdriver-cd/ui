@@ -1,7 +1,7 @@
 import { currentURL, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
@@ -53,8 +53,7 @@ module('Acceptance | secrets', function(hooks) {
   });
 
   test('visiting /pipelines/:id/secrets', async function(assert) {
-    authenticateSession(this.application, { token: 'faketoken' });
-
+    await authenticateSession({ token: 'faketoken' });
     await visit('/pipelines/1/secrets');
 
     assert.equal(currentURL(), '/pipelines/1/secrets');

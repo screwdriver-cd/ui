@@ -71,6 +71,9 @@ module.exports = environment => {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+
+    ENV.RAISE_ON_DEPRECATION = true;
+    ENV.LOG_STACKTRACE_ON_DEPRECATION = true;
   }
 
   if (environment === 'test') {
@@ -81,6 +84,8 @@ module.exports = environment => {
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
     ENV.APP.NUM_PIPELINES_LISTED = 3;
+    ENV.RAISE_ON_DEPRECATION = false;
+    ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;

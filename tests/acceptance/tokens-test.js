@@ -1,7 +1,7 @@
 import { visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
@@ -35,8 +35,7 @@ module('Acceptance | tokens', function(hooks) {
   });
 
   test('visiting /user-settings', async function(assert) {
-    authenticateSession(this.application, { token: 'faketoken' });
-
+    await authenticateSession({ token: 'faketoken' });
     await visit('/user-settings');
 
     assert.dom('.token-list tbody tr').exists({ count: 2 });

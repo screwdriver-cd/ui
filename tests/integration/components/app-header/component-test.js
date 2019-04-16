@@ -20,15 +20,21 @@ module('Integration | Component | app header', function(hooks) {
 
     assert.equal(find('.logo').title, 'Screwdriver Home');
     assert.dom('.icon.create').exists({ count: 1 });
+
+    await click('.icon.docs-outline');
     assert.dom('.icon.docs').exists({ count: 1 });
+    assert.dom('.icon.validator').exists({ count: 1 });
+    assert.dom('.icon.templates').exists({ count: 1 });
+    assert.dom('.icon.commands').exists({ count: 1 });
+
+    await click('.icon.comm-outline');
     assert.dom('.icon.blog').exists({ count: 1 });
     assert.dom('.icon.community').exists({ count: 1 });
     assert.dom('.icon.github').exists({ count: 1 });
-    assert.dom('.icon.profile-outline').exists({ count: 1 });
-    assert.dom('.search-input').doesNotExist();
 
-    // check that user has not logged in yet
+    assert.dom('.icon.profile-outline').exists({ count: 1 });
     assert.equal(find('.icon.profile-outline').title, 'Sign in to Screwdriver');
+    assert.dom('.search-input').doesNotExist();
   });
 
   test('it shows user github username', async function(assert) {
@@ -47,6 +53,8 @@ module('Integration | Component | app header', function(hooks) {
 
     await render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
     assert.dom('.profile-outline > .icontitle').hasText('foofoo');
+
+    await click('.icon.profile-outline');
     await click('.logout');
   });
 
@@ -60,6 +68,8 @@ module('Integration | Component | app header', function(hooks) {
     });
 
     await render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
+    await click('.icon.profile-outline');
+
     assert.equal(find('.logout').title, 'Sign out of Screwdriver');
     await click('.logout');
   });
@@ -72,9 +82,11 @@ module('Integration | Component | app header', function(hooks) {
     this.set('sessionMock', {
       isAuthenticated: true
     });
-    this.set('scmMock', this.get('scm').getScms());
+    this.set('scmMock', this.owner.lookup('service:scm').getScms());
 
     await render(hbs`{{app-header session=sessionMock scmContexts=scmMock}}`);
+    await click('.icon.profile-outline');
+
     assert.dom('span.title').hasText('ACCOUNTS');
     assert.dom('a.active').hasText('github.com active');
     assert.dom('a.active > .fa-github').exists({ count: 1 });
@@ -97,7 +109,8 @@ module('Integration | Component | app header', function(hooks) {
 
     await render(hbs`{{app-header showSearch=true searchPipelines=(action search)}}`);
 
-    assert.ok(find('.search-input').textContent);
+    assert.dom('.search-input').hasNoValue();
+
     await click('.search-button');
   });
 });

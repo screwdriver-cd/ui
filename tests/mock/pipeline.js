@@ -1,5 +1,5 @@
 import { copy } from '@ember/object/internals';
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 
 const pipeline = {
   id: '4',
@@ -17,4 +17,4 @@ const pipeline = {
   }
 };
 
-export default workflowGraph => merge(copy(pipeline, true), { workflowGraph });
+export default workflowGraph => assign(copy(pipeline, true), { workflowGraph });

@@ -1,4 +1,4 @@
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
@@ -14,7 +14,7 @@ export default DS.RESTSerializer.extend({
       dirty[key] = dirty[key][1];
     });
 
-    const h = merge(hash, dirty);
+    const h = assign(hash, dirty);
 
     return h;
   }

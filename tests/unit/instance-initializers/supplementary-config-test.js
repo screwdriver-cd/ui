@@ -3,7 +3,6 @@ import { run } from '@ember/runloop';
 import { initialize } from 'screwdriver-ui/instance-initializers/supplementary-config';
 import { module, test } from 'qunit';
 import ENV from 'screwdriver-ui/config/environment';
-import destroyApp from '../../helpers/destroy-app';
 const NAMESPACE = ENV.APP.SDAPI_NAMESPACE;
 const HOSTNAME = ENV.APP.SDAPI_HOSTNAME;
 const { SDDOC_URL } = ENV.APP;
@@ -19,7 +18,7 @@ module('Unit | Instance Initializer | supplementary config', function(hooks) {
 
   hooks.afterEach(function() {
     run(this.appInstance, 'destroy');
-    destroyApp(this.application);
+    run(this.application, 'destroy');
     delete window.SUPPLEMENTARY_CONFIG;
     ENV.APP.SDAPI_NAMESPACE = NAMESPACE;
     ENV.APP.SDAPI_HOSTNAME = HOSTNAME;

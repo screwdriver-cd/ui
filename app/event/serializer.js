@@ -1,4 +1,4 @@
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
@@ -51,6 +51,6 @@ export default DS.RESTSerializer.extend({
       data.buildId = parseInt(snapshot.attr('buildId'), 10);
     }
 
-    return merge(hash, data);
+    return assign(hash, data);
   }
 });

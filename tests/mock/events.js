@@ -1,5 +1,5 @@
 import { copy } from '@ember/object/internals';
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 
 const events = [
   {
@@ -99,4 +99,4 @@ const events = [
   }
 ];
 
-export default workflowGraph => events.map(e => merge(copy(e, true), { workflowGraph }));
+export default workflowGraph => events.map(e => assign(copy(e, true), { workflowGraph }));

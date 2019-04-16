@@ -1,7 +1,7 @@
 import { click, fillIn, currentURL, triggerEvent, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
@@ -63,8 +63,7 @@ module('Acceptance | create', function(hooks) {
       JSON.stringify([])
     ]);
 
-    authenticateSession(this.application, { token: 'faketoken' });
-
+    await authenticateSession({ token: 'faketoken' });
     await visit('/create');
 
     assert.equal(currentURL(), '/create');
@@ -85,8 +84,7 @@ module('Acceptance | create', function(hooks) {
       })
     ]);
 
-    authenticateSession(this.application, { token: 'faketoken' });
-
+    await authenticateSession({ token: 'faketoken' });
     await visit('/create');
 
     assert.equal(currentURL(), '/create');

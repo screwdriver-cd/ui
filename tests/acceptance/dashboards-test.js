@@ -1,7 +1,7 @@
 import { click, fillIn, findAll, currentURL, triggerEvent, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
@@ -90,7 +90,7 @@ module('Acceptance | dashboards', function(hooks) {
   });
 
   test('visiting / when logged in and no collections', async function(assert) {
-    authenticateSession(this.application, { token: 'fakeToken' });
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/');
 
     assert.equal(currentURL(), '/');
@@ -116,7 +116,7 @@ module('Acceptance | dashboards', function(hooks) {
       ])
     ]);
 
-    authenticateSession(this.application, { token: 'fakeToken' });
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/');
 
     assert.equal(currentURL(), '/dashboards/1');
@@ -137,15 +137,14 @@ module('Acceptance | dashboards', function(hooks) {
   });
 
   test('visiting /dashboards when logged in and no collections', async function(assert) {
-    authenticateSession(this.application, { token: 'fakeToken' });
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/dashboards');
 
     assert.equal(currentURL(), '/');
   });
 
   test('visiting /dashboards/1', async function(assert) {
-    authenticateSession(this.application, { token: 'fakeToken' });
-
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/dashboards/1');
 
     assert.equal(currentURL(), '/dashboards/1');
@@ -221,7 +220,7 @@ module('Acceptance | dashboards', function(hooks) {
       ])
     ]);
 
-    authenticateSession(this.application, { token: 'fakeToken' });
+    await authenticateSession({ token: 'fakeToken' });
     await visit('/');
     // Logged in but no collections, url should be `/`
     assert.equal(currentURL(), '/');
