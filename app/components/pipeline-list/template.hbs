@@ -1,33 +1,26 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+
 {{#if pipelines.length}}
   <div class="num-results col-xs-12 col-md-8">
-    <span>
-      Found
-      {{pipelines.length}}
-      child pipeline(s)
-    </span>
-    <button class="start-button" {{action "startAll"}}>
-      Start All
-    </button>
+    <span>Found {{pipelines.length}} child pipeline(s)</span>
+    <button {{action "startAll"}} class="start-button">Start All</button>
   </div>
   <ul class="col-xs-12 col-md-8">
     {{#each pipelines as |pipeline|}}
-      <li class="appId">
-        {{#link-to "pipeline" pipeline.id}}
-          {{pipeline.appId}}
-        {{/link-to}}
-      </li>
+      <li class="appId">{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}</li>
     {{/each}}
   </ul>
 {{else}}
   <div class="num-results">
-    <span>
-      No child pipeline(s) created
-    </span>
+    <span>No child pipeline(s) created</span>
   </div>
 {{/if}}
+
 {{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false targetAttachment="center" translucentOverlay=true}}
+  {{#modal-dialog clickOutsideToClose=false
+    targetAttachment="center"
+    translucentOverlay=true
+  }}
     {{loading-view}}
   {{/modal-dialog}}
 {{/if}}

@@ -1,24 +1,15 @@
 {{#bs-navbar as |navbar|}}
   <div class="navbar-header">
     {{navbar.toggle}}
-    {{#link-to "home" class="logo navbar-brand" title="Screwdriver Home"}}
-      {{inline-svg "Screwdriver_Logo_FullWhite" class="img"}}
-    {{/link-to}}
+    {{#link-to "home" class="logo navbar-brand" title="Screwdriver Home"}}{{inline-svg "Screwdriver_Logo_FullWhite" class="img"}}{{/link-to}}
   </div>
   {{#navbar.content}}
     {{#navbar.nav as |nav|}}
       {{#if showSearch}}
         {{#nav.item}}
           <form class="navbar-form navbar-left" role="search">
-            {{input
-              class="search-input"
-              name="query"
-              placeholder="Search Screwdriver pipelines"
-              enter=(action "triggerSearch")
-            }}
-            <button class="search-button" {{action "triggerSearch"}}>
-              {{fa-icon "search"}}
-            </button>
+            {{input class="search-input" name="query" placeholder="Search Screwdriver pipelines" enter="triggerSearch"}}
+            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search"}}</button>
           </form>
         {{/nav.item}}
       {{/if}}
@@ -32,7 +23,7 @@
       {{/nav.item}}
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
-          {{#dd.toggle class="icon docs-outline"}}
+          {{#dd.toggle}}
             {{inline-svg "docs" class="img"}}
             <span class="icontitle">Documentation</span>
             <span class="caret"></span>
@@ -61,10 +52,12 @@
           {{/dd.menu}}
         {{/nav.dropdown}}
       {{/nav.item}}
+
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
-          {{#dd.toggle class="icon comm-outline"}}
-            {{inline-svg "more-circle" class="img"}}<span class="icontitle">Communication</span>
+          {{#dd.toggle}}
+            {{inline-svg "more-circle" class="img"}}
+            <span class="icontitle">Communication</span>
             <span class="caret"></span>
           {{/dd.toggle}}
           {{#dd.menu as |ddm|}}
@@ -91,62 +84,35 @@
           {{#nav.dropdown as |dd|}}
             {{#dd.toggle class="icon profile-outline"}}
               {{inline-svg "profile-outline" class="img"}}
-              <span class="icontitle">
-                {{session.data.authenticated.username}}
-              </span>
+              <span class="icontitle">{{session.data.authenticated.username}}</span>
               <span class="caret"></span>
             {{/dd.toggle}}
             {{#dd.menu as |ddm|}}
-              {{#ddm.item}}
-                <span class="title">ACCOUNTS</span>
-              {{/ddm.item}}
+              {{#ddm.item}}<span class="title">ACCOUNTS</span>{{/ddm.item}}
               {{#each scmContexts as |scmContext|}}
                 {{#ddm.item}}
                   {{#if scmContext.isSignedIn}}
-                    <a class="active">
-                      {{fa-icon scmContext.iconType}}
-                      {{scmContext.displayName}}
-                      <span>active</span>
-                    </a>
+                    <a class="active">{{fa-icon scmContext.iconType}} {{scmContext.displayName}} <span>active</span></a>
                   {{else}}
-                    <a href="#authenticate" {{action "authenticate" scmContext.context}}>
-                      {{fa-icon scmContext.iconType}}
-                      {{scmContext.displayName}}
+                    <a href="#authenticate"{{action "authenticate" scmContext.context}}>
+                      {{fa-icon scmContext.iconType}} {{scmContext.displayName}}
                     </a>
                   {{/if}}
                 {{/ddm.item}}
               {{/each}}
               {{ddm.divider}}
               {{#if (not session.data.authenticated.isGuest)}}
-                {{#ddm.item}}
-                  {{#link-to "user-settings" title="User Settings"}}
-                    User Settings
-                  {{/link-to}}
-                {{/ddm.item}}
+                {{#ddm.item}}{{#link-to "user-settings" title="User Settings"}}User Settings{{/link-to}}{{/ddm.item}}
               {{/if}}
               {{#ddm.item}}
-                <a
-                  href="#signout"
-                  class="logout"
-                  title="Sign out of Screwdriver"
-                  {{action "invalidateSession"}}
-                >
-                  Sign out
-                </a>
+                <a href="#signout" {{action "invalidateSession"}} class="logout" title="Sign out of Screwdriver">Sign out</a>
               {{/ddm.item}}
             {{/dd.menu}}
           {{/nav.dropdown}}
         {{else}}
-          {{#link-to
-            "login"
-            (query-params fromUrl=currentUrl)
-            title="Sign in to Screwdriver"
-            class="icon profile-outline"
-          }}
+          {{#link-to "login" (query-params fromUrl=currentUrl) title="Sign in to Screwdriver" class="icon profile-outline"}}
             {{inline-svg "profile-outline" class="img"}}
-            <span class="icontitle">
-              Sign in
-            </span>
+            <span class="icontitle">Sign in</span>
           {{/link-to}}
         {{/if}}
       {{/nav.item}}
@@ -154,26 +120,14 @@
   {{/navbar.content}}
 {{/bs-navbar}}
 <div class="tooltips">
-  {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}
-    Create a new Pipeline
-  {{/bs-tooltip}}
-  {{! template-lint-disable simple-unless }}
-  {{#unless session.isAuthenticated}}
-    {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" renderInPlace=true}}
-      Sign in to Screwdriver
-    {{/bs-tooltip}}
-  {{else}}
+  {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
+  {{#if session.isAuthenticated}}
     {{#each scmContexts as |scmContext|}}
       {{#if scmContext.isSignedIn}}
-        {{#bs-tooltip
-          placement="bottom"
-          triggerElement=".icon.profile-outline"
-          triggerEvents="hover"
-          renderInPlace=true
-        }}
-          Currently signed in to a{{scmContext.displayName}}account.
-        {{/bs-tooltip}}
+        {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" triggerEvents="hover" renderInPlace=true}}Currently signed in to a {{scmContext.displayName}} account.{{/bs-tooltip}}
       {{/if}}
     {{/each}}
-  {{/unless}}
+  {{else}}
+    {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" renderInPlace=true}}Sign in to Screwdriver{{/bs-tooltip}}
+  {{/if}}
 </div>

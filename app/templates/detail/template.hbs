@@ -1,13 +1,13 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
-{{template-header template=versionTemplate onRemoveTemplate=(action "removeTemplate")}}
-<h4>
-  Contents:
-</h4>
-{{validator-job
-  name=versionTemplate.fullName
-  job=versionTemplate.config
+
+{{template-header
   template=versionTemplate
-  collapsible=false
+  onRemoveTemplate=(action "removeTemplate")
 }}
+
+<h4>Contents:</h4>
+{{validator-job name=versionTemplate.fullName job=versionTemplate.config template=versionTemplate collapsible=false}}
+
 {{template-versions templates=templates changeVersion=(action "changeVersion")}}
+
 {{outlet}}

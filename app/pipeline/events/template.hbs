@@ -3,6 +3,7 @@
     {{pipeline-nav pipeline=pipeline}}
   {{/if}}
 {{/if}}
+
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 <div class="row">
   <div class="col-xs-12 col-md-9 separator partial-view">
@@ -18,6 +19,7 @@
       prGroups=pullRequestGroups
       stopEvent=(action "stopEvent")
     }}
+
     {{pipeline-workflow
       workflowGraph=pipeline.workflowGraph
       jobs=jobs
@@ -28,23 +30,17 @@
       authenticated=session.isAuthenticated
     }}
   </div>
-  <div
-    class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view"
-    onScroll={{action "onEventListScroll"}}
-  >
+  <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view" onScroll={{action "onEventListScroll"}}>
     {{#bs-tab customTabs=true as |tab|}}
       {{#bs-nav type="tabs" as |nav|}}
         {{#nav.item active=(bs-eq activeTab "events")}}
-          {{#nav.link-to "pipeline.events" class="nav-link"}}
-            Events
-          {{/nav.link-to}}
+          {{#nav.link-to "pipeline.events" class="nav-link"}}Events{{/nav.link-to}}
         {{/nav.item}}
         {{#nav.item active=(bs-eq activeTab "pulls")}}
-          {{#nav.link-to "pipeline.pulls" class="nav-link"}}
-            Pull Requests
-          {{/nav.link-to}}
+          {{#nav.link-to "pipeline.pulls" class="nav-link"}}Pull Requests{{/nav.link-to}}
         {{/nav.item}}
       {{/bs-nav}}
+
       <div class="tab-content">
         {{#tab.pane activeId=activeTab elementId="events" title="Events"}}
           {{pipeline-events-list
@@ -60,12 +56,12 @@
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
           {{#if prChainEnabled}}
             {{pipeline-events-list
-              events=events
-              selected=(mut selected)
-              selectedEvent=selectedEvent
-              lastSuccessful=lastSuccessful
-              eventsPage=eventsPage
-              updateEvents=(action "updateEvents")
+            events=events
+            selected=(mut selected)
+            selectedEvent=selectedEvent
+            lastSuccessful=lastSuccessful
+            eventsPage=eventsPage
+            updateEvents=(action "updateEvents")
             }}
           {{else}}
             {{#each pullRequestGroups as |prg|}}
@@ -75,9 +71,7 @@
                 startBuild=(action "startPRBuild")
               }}
             {{else}}
-              <div class="alert">
-                No open pull requests
-              </div>
+              <div class="alert">No open pull requests</div>
             {{/each}}
           {{/if}}
         {{/tab.pane}}
@@ -85,9 +79,14 @@
     {{/bs-tab}}
   </div>
 </div>
+
 {{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false targetAttachment="center" translucentOverlay=true}}
+  {{#modal-dialog clickOutsideToClose=false
+    targetAttachment="center"
+    translucentOverlay=true
+  }}
     {{loading-view}}
   {{/modal-dialog}}
 {{/if}}
+
 {{outlet}}

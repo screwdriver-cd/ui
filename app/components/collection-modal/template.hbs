@@ -1,11 +1,9 @@
 {{#if showModal}}
-  {{! Modal to create a collection }}
+  {{!-- Modal to create a collection --}}
   {{#bs-modal onHide=(action "setModal" false) as |modal|}}
     <div class="collection-modal">
       {{#modal.header}}
-        <h4 class="modal-title">
-          Create New Collection
-        </h4>
+        <h4 class="modal-title">Create New Collection</h4>
       {{/modal.header}}
       {{#modal.body}}
         {{#if errorMessage}}
@@ -13,38 +11,16 @@
         {{/if}}
         {{#bs-form class="collection-form" onSubmit=(action "addNewCollection") as |form|}}
           {{#form.group class="name"}}
-            <label class="control-label">
-              Collection Name
-            </label>
-            <input
-              value={{name}}
-              class="form-control"
-              oninput={{action (mut name) value="target.value"}}
-              type="text"
-              placeholder="Name"
-            >
-
+            <label class="control-label">Collection Name</label>
+            <input value={{name}} class="form-control" oninput={{action (mut name) value="target.value"}} type="text" placeholder="Name">
           {{/form.group}}
           {{#form.group class="description"}}
-            <label class="control-label">
-              Description
-            </label>
-            <textarea
-              value={{description}}
-              class="form-control description-input"
-              oninput={{action (mut description) value="target.value"}}
-              type="text"
-              placeholder="Description for the collection"
-            ></textarea>
+            <label class="control-label">Description</label>
+            <textarea value={{description}} class="form-control description-input" oninput={{action (mut description) value="target.value"}} type="text" placeholder="Description for the collection"></textarea>
           {{/form.group}}
           {{#form.group class="footer"}}
-            {{#bs-button buttonType="submit" class="collection-form__create" type="primary"}}
-              Save
-            {{/bs-button}}
-            {{#bs-button class="collection-form__cancel" onClick=(action modal.close) type="default"
-            }}
-              Cancel
-            {{/bs-button}}
+            {{#bs-button buttonType="submit" class="collection-form__create" type="primary"}}Save{{/bs-button}}
+            {{#bs-button class="collection-form__cancel" onClick=(action modal.close) type="default"}}Cancel{{/bs-button}}
           {{/form.group}}
         {{/bs-form}}
       {{/modal.body}}

@@ -1,40 +1,24 @@
-{{#if jobs.length}}
+{{#if jobs.length }}
   <div class="view">
     <div class="detail">
       <div class="name">
         <a href={{jobs.0.url}} target="_blank" rel="noopener">
-          PR #
-          {{jobs.0.group}}
-          <span class="scm">
-            {{fa-icon "code-fork"}}
-          </span>
+          PR #{{jobs.0.group}}
+          <span class="scm">{{fa-icon "code-fork"}}</span>
         </a>
         <br>
-        <span class="title">
-          {{jobs.0.title}}
-        </span>
+        <span class="title">{{jobs.0.title}}</span>
       </div>
-      <div class="date greyOut">
-        Opened
-        {{jobs.0.createTimeWords}}
-      </div>
-      <div class="by">
-        <a href={{jobs.0.userProfile}} target="_blank" rel="noopener">
-          {{jobs.0.username}}
-        </a>
-      </div>
-      {{#if showJobs}}
+      <div class="date greyOut">Opened {{jobs.0.createTimeWords}}</div>
+      <div class="by"><a href={{jobs.0.userProfile}} target="_blank" rel="noopener">{{jobs.0.username}}</a></div>
+      {{#if showJobs }}
         {{#each jobs as |job|}}
           {{pipeline-pr-view job=job}}
         {{/each}}
-      {{else if isRestricted}}
-        {{#bs-button
-          type="primary"
-          class="startButton"
-          onClick=(action startBuild jobs.0.group jobs)
-        }}
-          Start
-        {{/bs-button}}
+      {{else}}
+        {{#if isRestricted}}
+          {{#bs-button type="primary" class="startButton" onClick=(action startBuild jobs.0.group jobs)}}Start{{/bs-button}}
+        {{/if}}
       {{/if}}
     </div>
   </div>

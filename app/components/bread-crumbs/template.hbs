@@ -1,16 +1,13 @@
 <div>
   {{#each crumbs as |crumb index|}}
-    {{#if (eq index 0)}}
-      {{#link-to params=crumb.params}}
-        {{crumb.name}}
-      {{/link-to}}
-    {{else if (eq crumb crumbs.lastObject)}}
-      /{{crumb.name}}
+    {{#if (eq index 0) }}
+      {{#link-to params=crumb.params}}{{crumb.name}}{{/link-to}}
     {{else}}
-      /
-      {{#link-to params=crumb.params}}
-        {{crumb.name}}
-      {{/link-to}}
+      {{#if (eq crumb crumbs.lastObject)}}
+        / {{crumb.name}}
+      {{else}}
+        / {{#link-to params=crumb.params}}{{crumb.name}}{{/link-to}}
+      {{/if}}
     {{/if}}
   {{/each}}
 </div>

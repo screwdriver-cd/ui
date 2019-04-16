@@ -1,17 +1,18 @@
 <div class="row">
   {{collections-flyout
-    class="col-md-3"
-    onDeleteCollection=(action "onDeleteCollection")
-    selectedCollectionId=collection.id
-    editingDescription=editingDescription
-    changeCollection=(action "changeCollection")
+      class="col-md-3"
+      onDeleteCollection=(action "onDeleteCollection")
+      selectedCollectionId=collection.id
+      editingDescription=editingDescription
+      changeCollection=(action "changeCollection")
   }}
   {{collection-view
-    onPipelineRemove=(action "removePipeline")
-    collection=collection
-    class="col-md-9"
-    editingDescription=editingDescription
-    editingName=editingName
+      onPipelineRemove=(action "removePipeline")
+      collection=collection
+      class="col-md-9"
+      editingDescription=editingDescription
+      editingName=editingName
   }}
 </div>
+
 {{outlet}}
