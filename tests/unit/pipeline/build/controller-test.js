@@ -96,7 +96,7 @@ test('it restarts a build', function (assert) {
 
     assert.deepEqual(payload, {
       buildId: 123,
-      causeMessage: 'apple clicked restart for job "PR-1:main" for sha sha'
+      causeMessage: 'Manually started by apple'
     });
   });
 });
@@ -146,7 +146,7 @@ test('it fails to restart a build', function (assert) {
 
     assert.deepEqual(payload, {
       buildId: 123,
-      causeMessage: 'apple clicked restart for job "PR-1:main" for sha sha'
+      causeMessage: 'Manually started by apple'
     });
     assert.notOk(controller.get('isShowingModal'));
     assert.ok(invalidateStub.called);

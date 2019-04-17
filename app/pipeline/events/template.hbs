@@ -55,13 +55,13 @@
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
           {{#if prChainEnabled}}
             {{pipeline-events-list
-            events=events
-            selected=(mut selected)
-            selectedEvent=selectedEvent
-            lastSuccessful=lastSuccessful
-            eventsPage=eventsPage
-            updateEvents=(action "updateEvents")
-            }}
+              events=events
+              selected=(mut selected)
+              selectedEvent=selectedEvent
+              lastSuccessful=lastSuccessful
+              eventsPage=eventsPage
+              updateEvents=(action "updateEvents")
+              }}
           {{else}}
             {{#each pullRequestGroups as |prg|}}
               {{pipeline-pr-list

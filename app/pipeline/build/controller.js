@@ -50,11 +50,9 @@ export default Controller.extend({
     startBuild() {
       this.set('isShowingModal', true);
       const buildId = get(this, 'build.id');
-      const jobName = get(this, 'job.name');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
-      const causeMessage =
-        `${user} clicked restart for job "${jobName}" for sha ${get(this, 'event.sha')}`;
+      const causeMessage = `Manually started by ${user}`;
       const newEvent = this.store.createRecord('event', {
         buildId,
         causeMessage
