@@ -11,6 +11,24 @@
     line-height: 33px;
   }
 
+  .btn.event__stop {
+    float: right;
+    border: 1px solid $sd-aborted;
+    background-color: #fff;
+    color: $sd-aborted;
+    width: 100px;
+    font-size: 14px;
+    border-radius: 2px;
+    padding: 5px 10px;
+    font-weight: $weight-normal;
+
+    &:hover,
+    &.active:hover {
+      border-color: #ccc;
+      color: $grey-800;
+    }
+  }
+
   .btn {
     border-radius: 3px;
     padding: 5px 10px;
