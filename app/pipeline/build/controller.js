@@ -79,16 +79,6 @@ export default Controller.extend({
 
     changeBuild(pipelineId, buildId) {
       return this.transitionToRoute('pipeline.build', pipelineId, buildId);
-    },
-
-    changeBuildStep() {
-      const build = this.get('build');
-      const pipelineId = this.get('pipeline.id');
-      const activeStep = getActiveStep(get(build, 'steps'));
-
-      if (this.get('preselectedStepName') !== activeStep) {
-        this.transitionToRoute('pipeline.build.step', pipelineId, build.get('id'), activeStep);
-      }
     }
   },
 
@@ -111,7 +101,7 @@ export default Controller.extend({
             build.reload().then(() => {
               this.set('loading', false);
               throttle(this, 'reloadBuild', timeout);
-              this.send('changeBuildStep');
+              this.changeBuildStep();
             });
           }
         }, timeout);
@@ -119,6 +109,16 @@ export default Controller.extend({
         // refetch builds which are part of current event
         this.get('event').hasMany('builds').reload();
       }
+    }
+  },
+
+  changeBuildStep() {
+    const build = this.get('build');
+    const pipelineId = this.get('pipeline.id');
+    const activeStep = getActiveStep(get(build, 'steps'));
+
+    if (this.get('preselectedStepName') !== activeStep) {
+      this.transitionToRoute('pipeline.build.step', pipelineId, build.get('id'), activeStep);
     }
   }
 });
