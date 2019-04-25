@@ -1,6 +1,7 @@
 import { all } from 'rsvp';
 import Route from '@ember/routing/route';
 import { set, get } from '@ember/object';
+import { getActiveStep } from 'screwdriver-ui/utils/build';
 
 export default Route.extend({
   routeAfterAuthentication: 'pipeline.build',
@@ -42,18 +43,7 @@ export default Route.extend({
 
   redirect(model, transition) {
     if (transition.targetName !== "pipeline.build.step") {
-      const steps = get(model, 'build.steps');
-      const runningStep = steps.find(s => s.startTime && !s.endTime);
-      let name;
-
-      if (runningStep && runningStep.name) {
-        name = runningStep.name;
-      } else {
-        const failedStep = steps.find(s => s.code);
-        if (failedStep && failedStep.name) {
-          name = failedStep.name;
-        }
-      }
+      const name = getActiveStep(get(model, 'build.steps'));
 
       if (name) {
         this.transitionTo('pipeline.build.step', model.pipeline.get('id'), model.build.get('id'), name);

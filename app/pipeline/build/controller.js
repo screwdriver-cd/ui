@@ -6,6 +6,7 @@ import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
 import Controller from '@ember/controller';
 import ENV from 'screwdriver-ui/config/environment';
+import { getActiveStep } from 'screwdriver-ui/utils/build';
 
 export default Controller.extend({
   prEventsService: service('pr-events'),
@@ -78,6 +79,14 @@ export default Controller.extend({
 
     changeBuild(pipelineId, buildId) {
       return this.transitionToRoute('pipeline.build', pipelineId, buildId);
+    },
+
+    changeBuildStep() {
+      const build = this.get('build');
+      const pipelineId = this.get('pipeline.id');
+      const name = getActiveStep(get(build, 'steps'));
+
+      this.transitionTo('pipeline.build.step', pipelineId, build.get('id'), name);
     }
   },
 
@@ -100,6 +109,7 @@ export default Controller.extend({
             build.reload().then(() => {
               this.set('loading', false);
               throttle(this, 'reloadBuild', timeout);
+              this.get('changeBuildStep')();
             });
           }
         }, timeout);
