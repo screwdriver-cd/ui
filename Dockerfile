@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine
+FROM nginx:1.14.2-alpine
 COPY nginx.conf /etc/nginx/nginx.conf
 WORKDIR /usr/share/nginx/html
 RUN set -x \

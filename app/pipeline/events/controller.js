@@ -10,6 +10,7 @@ import { isPRJob } from 'screwdriver-ui/utils/build';
 
 export default Controller.extend(ModelReloaderMixin, {
   session: service(),
+  stop: service('event-stop'),
   init() {
     this._super(...arguments);
     this.startReloading();
@@ -293,6 +294,13 @@ export default Controller.extend(ModelReloaderMixin, {
       }
 
       return new Promise.Resolve();
+    },
+    stopEvent() {
+      const event = get(this, 'selectedEventObj');
+      const eventId = get(event, 'id');
+
+      return this.get('stop').stopBuilds(eventId)
+        .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
     },
     startPRBuild(prNum, jobs) {
       this.set('isShowingModal', true);
