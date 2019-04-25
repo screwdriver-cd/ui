@@ -84,9 +84,11 @@ export default Controller.extend({
     changeBuildStep() {
       const build = this.get('build');
       const pipelineId = this.get('pipeline.id');
-      const name = getActiveStep(get(build, 'steps'));
+      const activeStep = getActiveStep(get(build, 'steps'));
 
-      this.transitionTo('pipeline.build.step', pipelineId, build.get('id'), name);
+      if (this.get('preselectedStepName') !== activeStep) {
+        this.transitionToRoute('pipeline.build.step', pipelineId, build.get('id'), activeStep);
+      }
     }
   },
 
@@ -109,7 +111,7 @@ export default Controller.extend({
             build.reload().then(() => {
               this.set('loading', false);
               throttle(this, 'reloadBuild', timeout);
-              this.get('changeBuildStep')();
+              this.send('changeBuildStep');
             });
           }
         }, timeout);

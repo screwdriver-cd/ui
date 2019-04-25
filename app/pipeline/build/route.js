@@ -42,11 +42,12 @@ export default Route.extend({
   },
 
   redirect(model, transition) {
-    if (transition.targetName !== "pipeline.build.step") {
+    if (transition.targetName !== 'pipeline.build.step') {
       const name = getActiveStep(get(model, 'build.steps'));
 
       if (name) {
-        this.transitionTo('pipeline.build.step', model.pipeline.get('id'), model.build.get('id'), name);
+        this.transitionTo('pipeline.build.step',
+          model.pipeline.get('id'), model.build.get('id'), name);
       }
     }
   }
