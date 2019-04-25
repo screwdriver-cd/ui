@@ -41,7 +41,8 @@ export default Service.extend({
         method: 'GET',
         url: eventUrl,
         data: {
-          type: 'pr'
+          type: 'pr',
+          prNum
         },
         contentType: 'application/json',
         crossDomain: true,
@@ -52,10 +53,7 @@ export default Service.extend({
           Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
         }
       }).done((data) => {
-        const prCommits = data.filter(curEvent =>
-          curEvent.pr && curEvent.pr.url && curEvent.pr.url.split('/').pop() === prNum);
-
-        resolve(prCommits);
+        resolve(data);
       }).catch(() => resolve([]))
     );
 
@@ -64,16 +62,16 @@ export default Service.extend({
     return new EmberPromise(resolve =>
       RSVP.allSettled(promises).then((array) => {
         const builds = array[0].value;
-        const events = array[1].value;
-        const prCommits = events.filter(curEvent =>
-          curEvent.pr && curEvent.pr.url && curEvent.pr.url.split('/').pop() === prNum);
+        const prCommits = array[1].value;
+
         let eventBuildPairs = [];
 
         prCommits.forEach((commit) => {
           const matchingBuild = builds.find(build => build.eventId === commit.id);
-          const pair = { event: commit, build: matchingBuild };
 
-          eventBuildPairs.push(pair);
+          if (matchingBuild) {
+            eventBuildPairs.push({ event: commit, build: matchingBuild });
+          }
         });
 
         resolve(eventBuildPairs);

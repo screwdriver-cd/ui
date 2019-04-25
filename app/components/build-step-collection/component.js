@@ -23,6 +23,7 @@ export default Component.extend({
       const failedStep = steps.find(s => s.code);
       const name = (runningStep && runningStep.name) || (failedStep && failedStep.name) || null;
 
+      debugger;
       return name;
     }
   }),
