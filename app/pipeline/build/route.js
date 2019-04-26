@@ -1,6 +1,7 @@
 import { all } from 'rsvp';
 import Route from '@ember/routing/route';
-import { set } from '@ember/object';
+import { set, get } from '@ember/object';
+import { getActiveStep } from 'screwdriver-ui/utils/build';
 
 export default Route.extend({
   routeAfterAuthentication: 'pipeline.build',
@@ -38,5 +39,16 @@ export default Route.extend({
     const model = this.modelFor(this.routeName);
 
     set(model.event, 'isPaused', false);
+  },
+
+  redirect(model, transition) {
+    if (transition.targetName !== 'pipeline.build.step') {
+      const name = getActiveStep(get(model, 'build.steps'));
+
+      if (name) {
+        this.transitionTo('pipeline.build.step',
+          model.pipeline.get('id'), model.build.get('id'), name);
+      }
+    }
   }
 });

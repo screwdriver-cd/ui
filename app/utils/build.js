@@ -48,4 +48,26 @@ const statusIcon = (status, isLight) => {
   return icon;
 };
 
-export { isActiveBuild, isPRJob, statusIcon };
+/**
+ * Return active step name
+ * @param  {Array}  build steps
+ * @return {String} active step name
+ */
+const getActiveStep = (steps = []) => {
+  const runningStep = steps.find(s => s.startTime && !s.endTime);
+  let name;
+
+  if (runningStep && runningStep.name) {
+    name = runningStep.name;
+  } else {
+    const failedStep = steps.find(s => s.code);
+
+    if (failedStep && failedStep.name) {
+      name = failedStep.name;
+    }
+  }
+
+  return name;
+};
+
+export { isActiveBuild, isPRJob, statusIcon, getActiveStep };

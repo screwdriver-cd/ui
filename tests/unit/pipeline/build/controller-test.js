@@ -6,6 +6,7 @@ import Pretender from 'pretender';
 import Service from '@ember/service';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
+import sinonTest from 'ember-sinon-qunit/test-support/test';
 
 const invalidateStub = sinon.stub();
 
@@ -279,4 +280,35 @@ test('it reloads a build', function (assert) {
   return wait().then(() => {
     assert.ok(true);
   });
+});
+
+sinonTest('it changes build step', function (assert) {
+  assert.expect(3);
+
+  const controller = this.subject();
+  const stub = this.stub(controller, 'transitionToRoute');
+
+  const build = EmberObject.create({
+    id: 5678,
+    jobId: 'abcd',
+    status: 'RUNNING',
+    steps: [{ startTime: 's', name: 'active' }]
+  });
+
+  const pipeline = EmberObject.create({
+    id: 1
+  });
+
+  controller.set('model', {
+    build,
+    pipeline
+  });
+
+  controller.changeBuildStep();
+
+  assert.ok(true);
+  assert.ok(stub.calledOnce, 'transition was called once');
+  assert.ok(stub.calledWithExactly('pipeline.build.step', 1, 5678, 'active'),
+    'transition to build step page'
+  );
 });

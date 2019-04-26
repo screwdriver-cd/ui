@@ -19,11 +19,7 @@ export default Component.extend({
         return preselectedStep.name;
       }
 
-      const runningStep = steps.find(s => s.startTime && !s.endTime);
-      const failedStep = steps.find(s => s.code);
-      const name = (runningStep && runningStep.name) || (failedStep && failedStep.name) || null;
-
-      return name;
+      return null;
     }
   }),
   setupCollapsed: computed('selectedStep', {
