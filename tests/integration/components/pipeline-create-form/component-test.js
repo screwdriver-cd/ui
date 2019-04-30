@@ -1,30 +1,16 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | pipeline create form', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const { $ } = this;
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
     await render(hbs`{{pipeline-create-form errorMessage="" isSaving=false}}`);
 
-    assert.equal(
-      $('h1')
-        .text()
-        .trim(),
-      'Create Pipeline'
-    );
-    assert.equal(
-      $('.button-label')
-        .text()
-        .trim(),
-      'Create Pipeline'
-    );
+    assert.dom('h1').hasText('Create Pipeline');
+    assert.dom('.button-label').hasText('Create Pipeline');
   });
 
   test('it handles the entire ui flow', async function(assert) {
@@ -35,12 +21,15 @@ module('Integration | Component | pipeline create form', function(hooks) {
       assert.equal(scmUrl, scm);
     });
 
-    // eslint-disable-next-line max-len
     await render(
       hbs`{{pipeline-create-form errorMessage="" isSaving=false onCreatePipeline=(action createPipeline)}}`
     );
-    await fillIn('.text-input', scm).keyup();
-    assert.dom('i.fa').hasClass('fa-check', 'success icon');
+
+    await fillIn('.text-input', scm);
+    await triggerKeyEvent('.text-input', 'keyup', 'SPACE');
+
+    assert.dom('i.fa').hasClass('fa-check');
+
     await click('button.blue-button');
   });
 });

@@ -1,14 +1,12 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, click, find } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | validator job', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('jobMock', {
       image: 'int-test:1',
       commands: [
@@ -23,22 +21,17 @@ module('Integration | Component | validator job', function(hooks) {
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
 
     assert.dom('h4').hasText('int-test');
-
     assert.dom('.image .label').hasText('Image:');
     assert.dom('.image .value').hasText('int-test:1');
-
     assert.dom('.steps .label').hasText('Steps:');
-    assert.dom('.steps ul .value').hasText('echo helloecho goodbye');
-
+    assert.dom('.steps ul li:first-child .value').hasText('echo hello');
+    assert.dom('.steps ul li:last-child .value').hasText('echo goodbye');
     assert.dom('.secrets .label').hasText('Secrets:');
     assert.dom('.secrets ul li').hasText('None defined');
-
     assert.dom('.env .label').hasText('Environment Variables:');
     assert.dom('.env ul li').hasText('None defined');
-
     assert.dom('.settings .label').hasText('Settings:');
     assert.dom('.settings ul li').hasText('None defined');
-
     assert.dom('.annotations .label').hasText('Annotations:');
     assert.dom('.annotations .value').hasText('None defined');
   });
@@ -78,20 +71,9 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('.template-description .label').hasText('Template Description:');
     assert.dom('.template-description .value').hasText('Test template');
-    assert.dom('.images >.label').hasText('Supported Images:');
-    assert.equal(
-      this.$('.images >.value >ul >li:first-of-type')
-        .text()
-        .replace(/\s+/g, ' ')
-        .trim(),
-      'stable: node:6'
-    );
-    assert.equal(
-      find('.images >.value >ul >li:nth-of-type(2)')
-        .textContent.replace(/\s+/g, ' ')
-        .trim(),
-      'development: node:7'
-    );
+    assert.dom('.images > .label').hasText('Supported Images:');
+    assert.dom('.images > .value > ul > li:first-child').hasText('stable: node:6');
+    assert.dom('.images > .value > ul > li:nth-child(2)').hasText('development: node:7');
   });
 
   test('it renders settings, env, secrets, annotations', async function(assert) {
@@ -117,19 +99,12 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.secrets .label').hasText('Secrets:');
-    assert.dom('.secrets ul li').hasText('FOOBAR');
-
+    assert.dom('.secrets ul li:first-child').hasText('FOO');
+    assert.dom('.secrets ul li:last-child').hasText('BAR');
     assert.dom('.env .label').hasText('Environment Variables:');
     assert.dom('.env ul li').hasText('FOO: bar');
-
     assert.dom('.settings .label').hasText('Settings:');
-    assert.equal(
-      find('.settings ul li')
-        .textContent.replace(/\s+/g, ' ')
-        .trim(),
-      'FOO: bar'
-    );
-
+    assert.dom('.settings ul li').hasText('FOO: bar');
     assert.dom('.annotations .label').hasText('Annotations:');
     assert.dom('.annotations ul li').hasText('FOO: bar');
   });
@@ -147,25 +122,19 @@ module('Integration | Component | validator job', function(hooks) {
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
 
     assert.dom('h4').hasText('int-test');
-
     assert.dom('.image .label').hasText('Image:');
     assert.dom('.image .value').hasText('int-test:1');
-
     assert.dom('.steps .label').hasText('Steps:');
-    assert.dom('.steps ul .value').hasText('echo helloecho goodbye');
-
+    assert.dom('.steps ul li:first-child .value').hasText('echo hello');
+    assert.dom('.steps ul li:last-child .value').hasText('echo goodbye');
     assert.dom('.secrets .label').hasText('Secrets:');
     assert.dom('.secrets ul li').hasText('None defined');
-
     assert.dom('.env .label').hasText('Environment Variables:');
     assert.dom('.env ul li').hasText('None defined');
-
     assert.dom('.settings .label').hasText('Settings:');
     assert.dom('.settings ul li').hasText('None defined');
-
     assert.dom('.annotations .label').hasText('Annotations:');
     assert.dom('.annotations .value').hasText('None defined');
-
     assert.dom('.sourcePaths .label').hasText('Source Paths:');
     assert.dom('.sourcePaths ul li').hasText('None defined');
   });
@@ -183,7 +152,7 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('h4').hasText('int-test.1');
     assert.dom('.steps .label').hasText('Steps:');
-    assert.dom('.steps ul .value').hasText('');
+    assert.dom('.steps ul .value').doesNotExist();
   });
 
   test('it handles clicks on header', async function(assert) {
@@ -204,19 +173,18 @@ module('Integration | Component | validator job', function(hooks) {
     });
 
     this.set('openMock', true);
+
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock isOpen=openMock}}`);
 
     assert.ok(this.get('openMock'));
+
     await click('h4');
 
-    return settled().then(async () => {
-      assert.notOk(this.get('openMock'));
-      await click('h4');
+    assert.notOk(this.get('openMock'));
 
-      return settled().then(() => {
-        assert.ok(this.get('openMock'));
-      });
-    });
+    await click('h4');
+
+    assert.ok(this.get('openMock'));
   });
 
   test('it renders a description', async function(assert) {
@@ -251,12 +219,11 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.sourcePaths .label').hasText('Source Paths:');
-    assert.dom('.sourcePaths .value ul li').hasText('README.mdsrc/folder/');
+    assert.dom('.sourcePaths .value ul li:first-child').hasText('README.md');
+    assert.dom('.sourcePaths .value ul li:last-child').hasText('src/folder/');
   });
 
   test('it renders without a collapsible heading', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('jobMock', {
       image: 'int-test:1',
       commands: [
@@ -269,6 +236,7 @@ module('Integration | Component | validator job', function(hooks) {
     });
 
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock collapsible=false}}`);
+
     assert.dom('h4').doesNotExist();
   });
 });

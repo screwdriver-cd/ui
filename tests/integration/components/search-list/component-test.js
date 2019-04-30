@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 import injectSessionStub from '../../../helpers/inject-session';
@@ -11,12 +11,7 @@ module('Integration | Component | search list', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders without collections', async function(assert) {
-    const { $ } = this;
-
     injectScmServiceStub(this);
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
 
     const pipelines = [
       EmberObject.create({
@@ -46,53 +41,19 @@ module('Integration | Component | search list', function(hooks) {
 
     await render(hbs`{{search-list pipelines=pipelineList collections=collections}}`);
 
-    assert.equal(
-      $($('td.appId').get(0))
-        .text()
-        .trim(),
-      'batman/tumbler'
-    );
-    assert.equal(
-      $($('td.branch').get(0))
-        .text()
-        .trim(),
-      'waynecorp'
-    );
-    assert.equal(
-      $($('td.account').get(0))
-        .text()
-        .trim(),
-      'bitbucket.org'
-    );
-    assert.equal(
-      $($('td.appId').get(1))
-        .text()
-        .trim(),
-      'foo/bar'
-    );
-    assert.equal(
-      $($('td.branch').get(1))
-        .text()
-        .trim(),
-      'master'
-    );
-    assert.equal(
-      $($('td.account').get(1))
-        .text()
-        .trim(),
-      'github.com'
-    );
-    assert.equal($('.add-to-collection').length, 0);
+    assert.dom('tbody tr:first-child td.appId').hasText('batman/tumbler');
+    assert.dom('tbody tr:first-child td.branch').hasText('waynecorp');
+    assert.dom('tbody tr:first-child td.account').hasText('bitbucket.org');
+    assert.dom('tbody tr:nth-child(2) td.appId').hasText('foo/bar');
+    assert.dom('tbody tr:nth-child(2) td.branch').hasText('master');
+    assert.dom('tbody tr:nth-child(2) td.account').hasText('github.com');
+    assert.dom('.add-to-collection').doesNotExist();
   });
 
   test('it renders with collections', async function(assert) {
-    const { $ } = this;
-
     injectSessionStub(this);
     injectScmServiceStub(this);
 
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     const pipelines = [
       EmberObject.create({
         id: 2,
@@ -127,82 +88,24 @@ module('Integration | Component | search list', function(hooks) {
 
     await render(hbs`{{search-list pipelines=pipelineList collections=collections}}`);
 
-    assert.equal(
-      $($('td.appId').get(0))
-        .text()
-        .trim(),
-      'batman/tumbler'
-    );
-    assert.equal(
-      $($('td.branch').get(0))
-        .text()
-        .trim(),
-      'waynecorp'
-    );
-    assert.equal(
-      $($('td.account').get(0))
-        .text()
-        .trim(),
-      'bitbucket.org'
-    );
-    assert.equal(
-      $($('td.appId').get(1))
-        .text()
-        .trim(),
-      'foo/bar'
-    );
-    assert.equal(
-      $($('td.branch').get(1))
-        .text()
-        .trim(),
-      'master'
-    );
-    assert.equal(
-      $($('td.account').get(1))
-        .text()
-        .trim(),
-      'github.com'
-    );
-    assert.equal($('.add-to-collection').length, 2);
-    assert.equal(
-      $($('td.add .dropdown-menu span').get(0))
-        .text()
-        .trim(),
-      'collection1'
-    );
-    assert.equal(
-      $($('td.add .dropdown-menu span').get(1))
-        .text()
-        .trim(),
-      'collection2'
-    );
-    assert.equal(
-      $($('td.add .dropdown-menu span').get(2))
-        .text()
-        .trim(),
-      'CREATE'
-    );
-    assert.equal(
-      $($('td.add .dropdown-menu span').get(3))
-        .text()
-        .trim(),
-      'collection1'
-    );
-    assert.equal(
-      $($('td.add .dropdown-menu span').get(4))
-        .text()
-        .trim(),
-      'collection2'
-    );
+    assert.dom('tbody tr:first-child td.appId').hasText('batman/tumbler');
+    assert.dom('tbody tr:first-child td.branch').hasText('waynecorp');
+    assert.dom('tbody tr:first-child td.account').hasText('bitbucket.org');
+    assert.dom('tbody tr:nth-child(2) td.appId').hasText('foo/bar');
+    assert.dom('tbody tr:nth-child(2) td.branch').hasText('master');
+    assert.dom('tbody tr:nth-child(2) td.account').hasText('github.com');
+    assert.dom('.add-to-collection').exists({ count: 2 });
+
+    await click('td.add .dropdown-toggle');
+
+    assert.dom('td.add .dropdown-menu li:first-child span').hasText('collection1');
+    assert.dom('td.add .dropdown-menu li:nth-child(2) span').hasText('collection2');
+    assert.dom('td.add .dropdown-menu li:nth-child(3) span').hasText('CREATE');
   });
 
   test('it filters the list', async function(assert) {
-    const { $ } = this;
-
     injectScmServiceStub(this);
 
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     const pipelines = [
       EmberObject.create({
         id: 1,
@@ -217,24 +120,9 @@ module('Integration | Component | search list', function(hooks) {
 
     await render(hbs`{{search-list pipelines=pipelineList query=q}}`);
 
-    assert.ok($('tr').length, 2);
-    assert.equal(
-      $('td.appId')
-        .text()
-        .trim(),
-      'foo/bar'
-    );
-    assert.equal(
-      $('td.branch')
-        .text()
-        .trim(),
-      'master'
-    );
-    assert.equal(
-      $('td.account')
-        .text()
-        .trim(),
-      'github.com'
-    );
+    assert.dom('tr').exists({ count: 2 });
+    assert.dom('td.appId').hasText('foo/bar');
+    assert.dom('td.branch').hasText('master');
+    assert.dom('td.account').hasText('github.com');
   });
 });

@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
 
 const COMMAND = {
@@ -33,7 +33,7 @@ module('Integration | Component | command header', function(hooks) {
   test('it renders', async function(assert) {
     const { $ } = this;
 
-    const storeStub = EmberObject.extend({
+    const storeStub = Service.extend({
       findRecord() {
         return new EmberPromise(resolve => resolve(mockPipeline));
       }

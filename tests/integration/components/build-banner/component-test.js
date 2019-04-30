@@ -75,8 +75,6 @@ module('Integration | Component | build banner', function(hooks) {
   test('it renders', async function(assert) {
     assert.expect(10);
 
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('reloadCb', () => {
       assert.ok(true);
     });
@@ -117,7 +115,7 @@ module('Integration | Component | build banner', function(hooks) {
       .dom('.duration .banner-value')
       .hasAttribute(
         'title',
-        'Total duration:\n            11 seconds\n            , Blocked time:\n            4 seconds\n            , Image pull time:\n            5 seconds\n            , Build time:\n            2 seconds'
+        'Total duration: 11 seconds, Blocked time: 4 seconds, Image pull time: 5 seconds, Build time: 2 seconds'
       );
     assert.dom('.created .banner-value').hasText(expectedTime);
     assert.dom('.user .banner-value').hasText('Bruce W');
@@ -128,8 +126,6 @@ module('Integration | Component | build banner', function(hooks) {
   test('it renders pr link if pr url info is available', async function(assert) {
     assert.expect(12);
 
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('reloadCb', () => {
       assert.ok(true);
     });
@@ -169,7 +165,7 @@ module('Integration | Component | build banner', function(hooks) {
       .dom('.duration .banner-value')
       .hasAttribute(
         'title',
-        'Total duration:\n            5 seconds\n            , Blocked time:\n            0 seconds\n            , Image pull time:\n            0 seconds\n            , Build time:\n            0 seconds'
+        'Total duration: 5 seconds, Blocked time: 0 seconds, Image pull time: 0 seconds, Build time: 0 seconds'
       );
     assert.dom('.created .banner-value').hasText(expectedTime);
     assert.dom('.user .banner-value').hasText('Bruce W');
@@ -178,10 +174,8 @@ module('Integration | Component | build banner', function(hooks) {
   });
 
   test('it renders prCommit dropdown if event type is pr', async function(assert) {
-    assert.expect(13);
+    assert.expect(16);
 
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('reloadCb', () => {
       assert.ok(true);
     });
@@ -220,12 +214,15 @@ module('Integration | Component | build banner', function(hooks) {
       .dom('.commit a')
       .hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
     assert.dom('.commit .commit-sha').hasText('#abcdef1');
-    assert.dom('.commit').hasText('1. abcdef1');
+
+    await click('.commit .dropdown-toggle');
+
+    assert.dom('.commit .pr-item a').hasText('1. abcdef1');
     assert
       .dom('.duration .banner-value')
       .hasAttribute(
         'title',
-        'Total duration:\n            5 seconds\n            , Blocked time:\n            0 seconds\n            , Image pull time:\n            0 seconds\n            , Build time:\n            0 seconds'
+        'Total duration: 5 seconds, Blocked time: 0 seconds, Image pull time: 0 seconds, Build time: 0 seconds'
       );
     assert.dom('.created .banner-value').hasText(expectedTime);
     assert.dom('.user .banner-value').hasText('Bruce W');

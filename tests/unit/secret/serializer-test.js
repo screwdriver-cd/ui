@@ -27,7 +27,7 @@ module('Unit | Serializer | secret', function(hooks) {
 
   test('it does not post with model name as key', function(assert) {
     assert.expect(2);
-    server.post('/secrets', function() {
+    server.post('http://localhost:8080/v4/secrets', function() {
       return [200, {}, JSON.stringify({ secret: { id: 'abcd' } })];
     });
 
@@ -58,7 +58,7 @@ module('Unit | Serializer | secret', function(hooks) {
 
   test('it serializes only dirty fields', function(assert) {
     assert.expect(1);
-    server.patch('/secrets/abcd', function() {
+    server.put('http://localhost:8080/v4/secrets/abcd', function() {
       return [200, {}, JSON.stringify({ secret: { id: 'abcd' } })];
     });
 

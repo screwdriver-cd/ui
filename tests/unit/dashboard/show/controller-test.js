@@ -47,7 +47,7 @@ module('Unit | Controller | dashboard/show', function(hooks) {
   });
 
   sinonTest('it calls onDeleteCollection', function(assert) {
-    const controller = this.subject();
+    const controller = this.owner.lookup('controller:dashboard/show');
     const stub = this.stub(controller, 'transitionToRoute');
 
     controller.send('onDeleteCollection');

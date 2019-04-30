@@ -4,7 +4,6 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { run } from '@ember/runloop';
 
 const logService = Service.extend({
   fetchLogs() {
@@ -14,7 +13,9 @@ const logService = Service.extend({
     });
   },
   resetCache() {},
-  getCache() {}
+  getCache() {
+    return [];
+  }
 });
 
 const artifactService = Service.extend({
@@ -32,8 +33,6 @@ module('Integration | Component | build step collection', function(hooks) {
   });
 
   test('it renders', async function(assert) {
-    const { $ } = this;
-
     this.set('stepList', []);
     this.set('buildSteps', []);
     await render(hbs`{{build-step-collection
@@ -44,25 +43,10 @@ module('Integration | Component | build step collection', function(hooks) {
       buildStart=null
     }}`);
 
-    assert.equal(
-      $('h3')
-        .text()
-        .trim(),
-      'Steps'
-    );
-    assert.equal(
-      $('.step-list a:nth-of-type(1)')
-        .text()
-        .trim(),
-      'Setup'
-    );
-    assert.equal(
-      $('.step-list a:nth-of-type(2)')
-        .text()
-        .trim(),
-      'Teardown'
-    );
-    assert.equal($('.setup-spinner').length, 0);
+    assert.dom('h3').hasText('Steps');
+    assert.dom('.step-list a:nth-of-type(1)').hasText('Setup');
+    assert.dom('.step-list a:nth-of-type(2)').hasText('Teardown');
+    assert.dom('.setup-spinner').doesNotExist();
 
     await render(hbs`{{#build-step-collection
       stepList=stepList
@@ -74,16 +58,10 @@ module('Integration | Component | build step collection', function(hooks) {
       <div class="hello">hello</div>
     {{/build-step-collection}}`);
 
-    assert.equal(
-      $('.hello')
-        .text()
-        .trim(),
-      'hello'
-    );
+    assert.dom('.hello').hasText('hello');
   });
 
   test('it has a list of steps and can preselect and expand a step', async function(assert) {
-    const { $ } = this;
     const stepList = [
       'sd-setup-step1',
       'sd-setup-step2',
@@ -106,6 +84,8 @@ module('Integration | Component | build step collection', function(hooks) {
         code: 0
       }))
     );
+    this.set('preselectedStepName', 'user-step2');
+
     await render(hbs`{{build-step-collection
       preselectedStepName=preselectedStepName
       stepList=stepList
@@ -115,23 +95,10 @@ module('Integration | Component | build step collection', function(hooks) {
       buildStart=null
     }}`);
 
-    run.next(this, () => {
-      this.set('preselectedStepName', 'user-step2');
-
-      assert.equal(
-        $('h3')
-          .text()
-          .trim(),
-        'Steps'
-      );
-      assert.equal($('.step-list ul.setup li').length, 3, 'setup');
-      assert.equal($('.step-list div.user-steps li').length, 4, 'user');
-      assert.equal($('.step-list ul.teardown li').length, 2, 'teardown');
-      assert.ok(
-        $('.step-list div.user-steps li')
-          .eq(1)
-          .hasClass('active')
-      );
-    });
+    assert.dom('h3').hasText('Steps');
+    assert.dom('.step-list ul.setup li').exists({ count: 3 });
+    assert.dom('.step-list div.user-steps li').exists({ count: 4 });
+    assert.dom('.step-list ul.teardown li').exists({ count: 2 });
+    assert.dom('.step-list div.user-steps li:nth-child(2)').hasClass('active');
   });
 });

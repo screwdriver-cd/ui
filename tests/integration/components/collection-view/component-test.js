@@ -2,7 +2,7 @@ import { resolve, reject } from 'rsvp';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, click, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 import injectSessionStub from '../../../helpers/inject-session';
@@ -118,157 +118,67 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-    const { $ } = this;
-
     injectScmServiceStub(this);
 
     this.set('mockCollection', testCollection);
 
     await render(hbs`{{collection-view collection=mockCollection}}`);
-    const nameText = $('.header__name')
-      .text()
-      .trim();
-    const descriptionText = $('.header__description')
-      .text()
-      .trim();
 
-    assert.equal(nameText, 'Test');
-    assert.equal(descriptionText, 'Test Collection');
-    assert.equal($('table').length, 1);
-    assert.equal(
-      $('th.app-id')
-        .text()
-        .trim(),
-      'Name'
-    );
-    assert.equal(
-      $('th.branch')
-        .text()
-        .trim(),
-      'Branch'
-    );
-    assert.equal(
-      $('th.account')
-        .text()
-        .trim(),
-      'Account'
-    );
-    assert.equal(
-      $('th.health')
-        .text()
-        .trim(),
-      'Last Build'
-    );
-    assert.equal(
-      $('th.prs')
-        .text()
-        .trim(),
-      'Pull Requests'
-    );
-    assert.equal($('tr').length, 6);
-    assert.equal($('.fa-pencil').length, 2);
+    assert.dom('.header__name').hasText('Test');
+    assert.dom('.header__description').hasText('Test Collection');
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('th.app-id').hasText('Name');
+    assert.dom('th.branch').hasText('Branch');
+    assert.dom('th.account').hasText('Account');
+    assert.dom('th.health').hasText('Last Build');
+    assert.dom('th.prs').hasText('Pull Requests');
+    assert.dom('tr').exists({ count: 6 });
+    assert.dom('.fa-pencil').exists({ count: 2 });
+
     // The pipelines are sorted in alphabetical order by default by the component
-    assert.equal(
-      $($('td.app-id').get(0))
-        .text()
-        .trim(),
-      'screwdriver-cd/models'
-    );
-    assert.equal(
-      $($('td.app-id').get(1))
-        .text()
-        .trim(),
-      'screwdriver-cd/screwdriver'
-    );
-    assert.equal(
-      $($('td.app-id').get(2))
-        .text()
-        .trim(),
-      'screwdriver-cd/ui'
-    );
-    assert.equal(
-      $($('td.app-id').get(3))
-        .text()
-        .trim(),
-      'screwdriver-cd/zzz'
-    );
+    const appIdEls = findAll('td.app-id');
+
+    assert.dom(appIdEls[0]).hasText('screwdriver-cd/models');
+    assert.dom(appIdEls[1]).hasText('screwdriver-cd/screwdriver');
+    assert.dom(appIdEls[2]).hasText('screwdriver-cd/ui');
+    assert.dom(appIdEls[3]).hasText('screwdriver-cd/zzz');
+
     // The models pipeline has scm display names
-    assert.equal(
-      $($('td.account').get(0))
-        .text()
-        .trim(),
-      'bitbucket.org'
-    );
-    assert.equal(
-      $($('td.account').get(1))
-        .text()
-        .trim(),
-      'github.com'
-    );
-    assert.equal(
-      $($('td.account').get(2))
-        .text()
-        .trim(),
-      'github.com'
-    );
-    assert.equal(
-      $($('td.account').get(3))
-        .text()
-        .trim(),
-      'bitbucket.org'
-    );
+    const accountEls = findAll('td.account');
+
+    assert.dom(accountEls[0]).hasText('bitbucket.org');
+    assert.dom(accountEls[1]).hasText('github.com');
+    assert.dom(accountEls[2]).hasText('github.com');
+    assert.dom(accountEls[3]).hasText('bitbucket.org');
+
     // The pipeline health
-    assert.ok($('td.health i').hasClass('build-success'));
-    assert.ok($('td.health i').hasClass('build-failure'));
-    assert.ok($('td.health i').hasClass('build-unstable'));
+    const healthEls = findAll('td.health i');
+
+    assert.dom(healthEls[0]).hasClass('build-failure');
+    assert.dom(healthEls[1]).hasClass('build-success');
+    assert.dom(healthEls[3]).hasClass('build-unstable');
+
+    const openEls = findAll('td.prs--open');
+    const failingEls = findAll('td.prs--failing');
+
     // The models pipeline should not have any info for prs open and failing
-    assert.equal(
-      $($('td.prs--open').get(0))
-        .text()
-        .trim(),
-      ''
-    );
-    assert.equal(
-      $($('td.prs--failing').get(0))
-        .text()
-        .trim(),
-      ''
-    );
+    assert.dom(openEls[0]).hasText('');
+    assert.dom(failingEls[0]).hasText('');
+
     // The screwdriver pipeline should not have any info for prs open and failing
-    assert.equal(
-      $($('td.prs--open').get(1))
-        .text()
-        .trim(),
-      ''
-    );
-    assert.equal(
-      $($('td.prs--failing').get(1))
-        .text()
-        .trim(),
-      ''
-    );
+    assert.dom(openEls[1]).hasText('');
+    assert.dom(failingEls[1]).hasText('');
+
     // The ui pipeline should have 2 prs open and 1 failing
-    assert.equal(
-      $($('td.prs--open').get(2))
-        .text()
-        .trim(),
-      '2'
-    );
-    assert.equal(
-      $($('td.prs--failing').get(2))
-        .text()
-        .trim(),
-      '1'
-    );
+    assert.dom(openEls[2]).hasText('2');
+    assert.dom(failingEls[2]).hasText('1');
   });
 
   test('it removes a pipeline from a collection', async function(assert) {
     assert.expect(2);
 
     injectSessionStub(this);
-    const { $ } = this;
+
     const pipelineRemoveMock = (pipelineId, collectionId) => {
       // Make sure the models pipeline is the one being removed
       assert.strictEqual(pipelineId, 3);
@@ -311,14 +221,14 @@ module('Integration | Component | collection view', function(hooks) {
     `);
 
     // Delete the models pipeline
-    $($('.collection-pipeline__remove').get(0)).click();
+    await click('.collection-pipeline__remove');
   });
 
   test('it fails to remove a pipeline', async function(assert) {
     assert.expect(1);
 
     injectSessionStub(this);
-    const { $ } = this;
+
     const pipelineRemoveMock = () =>
       reject({
         errors: [
@@ -338,79 +248,51 @@ module('Integration | Component | collection view', function(hooks) {
       }}
     `);
 
-    $($('.collection-pipeline__remove').get(0)).click();
+    await click('.collection-pipeline__remove');
 
-    assert.strictEqual(
-      $('.alert-warning > span')
-        .text()
-        .trim(),
-      'User does not have permission'
-    );
+    assert.dom('.alert-warning > span').hasText('User does not have permission');
   });
 
   test('it does not show remove button if user is not logged in', async function(assert) {
     assert.expect(1);
 
-    const { $ } = this;
-
     this.set('mockCollection', testCollection);
+
     await render(hbs`{{collection-view collection=mockCollection}}`);
 
-    assert.strictEqual($('.collection-pipeline__remove').length, 0);
+    assert.dom('.collection-pipeline__remove').doesNotExist();
   });
 
   test('it sorts by last build', async function(assert) {
-    const { $ } = this;
-
     this.set('mockCollection', testCollection);
     await render(hbs`{{collection-view collection=mockCollection}}`);
 
+    let appIdEls = findAll('td.app-id');
+
     // Initially it is sorted by name
-    assert.equal(
-      $($('td.app-id').get(0))
-        .text()
-        .trim(),
-      'screwdriver-cd/models'
-    );
-    assert.equal(
-      $($('td.app-id').get(1))
-        .text()
-        .trim(),
-      'screwdriver-cd/screwdriver'
-    );
+    assert.dom(appIdEls[0]).hasText('screwdriver-cd/models');
+    assert.dom(appIdEls[1]).hasText('screwdriver-cd/screwdriver');
 
-    const lastBuildsAnchor = $('.header__sort-pipelines ul li a').get(1);
+    await click('.header__sort-pipelines .dropdown-toggle');
+    await click(findAll('.header__sort-pipelines ul li a')[1]);
 
-    lastBuildsAnchor.click();
+    appIdEls = findAll('td.app-id');
 
     // Now it should be sorted by most recent last build
-    assert.equal(
-      $($('td.app-id').get(0))
-        .text()
-        .trim(),
-      'screwdriver-cd/screwdriver'
-    );
-    assert.equal(
-      $($('td.app-id').get(1))
-        .text()
-        .trim(),
-      'screwdriver-cd/models'
-    );
+    assert.dom(appIdEls[0]).hasText('screwdriver-cd/screwdriver');
+    assert.dom(appIdEls[1]).hasText('screwdriver-cd/models');
   });
 
   test('description is editable', async function(assert) {
-    const { $ } = this;
-
     this.set('mockCollection', testCollection);
     await render(hbs`{{collection-view collection=mockCollection}}`);
 
-    const editDescription = $('.fa-pencil').get(1);
-    const editName = $('.fa-pencil').get(0);
+    const editEls = findAll('.fa-pencil');
 
-    editDescription.click();
-    editName.click();
+    await click(editEls[1]);
+    await click(editEls[0]);
 
-    assert.equal($('textarea').length, 1);
-    assert.equal($('input').length, 1);
+    assert.dom('textarea').exists({ count: 1 });
+    assert.dom('input').exists({ count: 1 });
   });
 });

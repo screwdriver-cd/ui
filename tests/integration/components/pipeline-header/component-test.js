@@ -10,8 +10,6 @@ module('Integration | Component | pipeline header', function(hooks) {
   test('it renders', async function(assert) {
     const { $ } = this;
 
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     const pipelineMock = EmberObject.create({
       appId: 'batman/batmobile',
       hubUrl: 'http://example.com/batman/batmobile',
@@ -52,8 +50,6 @@ module('Integration | Component | pipeline header', function(hooks) {
   test('it renders link to parent pipeline for child pipeline', async function(assert) {
     const { $ } = this;
 
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     const pipelineMock = EmberObject.create({
       appId: 'batman/batmobile',
       hubUrl: 'http://example.com/batman/batmobile',

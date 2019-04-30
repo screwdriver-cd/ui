@@ -1,7 +1,6 @@
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
 let server;
 
@@ -23,65 +22,58 @@ module('Unit | Serializer | collection', function(hooks) {
     assert.ok(serializedRecord);
   });
 
-  test('it does not post with model name as key', function(assert) {
+  test('it does not post with model name as key', async function(assert) {
     assert.expect(2);
-    server.post('/collections', function() {
-      return [200, {}, JSON.stringify({ collection: { id: 123 } })];
+    server.post('http://localhost:8080/v4/collections', function() {
+      return [200, {}, JSON.stringify({ id: 123 })];
     });
 
-    run(() => {
-      const collection = this.owner.lookup('service:store').createRecord('collection', {
-        name: 'Screwdriver',
-        description: 'Collection of screwdriver pipelines'
-      });
-
-      collection.save().then(() => {
-        assert.equal(collection.get('id'), 123);
-      });
+    const collection = this.owner.lookup('service:store').createRecord('collection', {
+      name: 'Screwdriver',
+      description: 'Collection of screwdriver pipelines'
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    await collection.save();
 
-      assert.deepEqual(payload, {
-        name: 'Screwdriver',
-        description: 'Collection of screwdriver pipelines'
-      });
+    assert.equal(collection.get('id'), 123);
+
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      name: 'Screwdriver',
+      description: 'Collection of screwdriver pipelines'
     });
   });
 
-  test('it serializes only dirty fields', function(assert) {
+  test('it serializes only dirty fields', async function(assert) {
     assert.expect(1);
-    server.patch('/collections/123', function() {
-      return [200, {}, JSON.stringify({ collection: { id: 123 } })];
+    server.put('http://localhost:8080/v4/collections/123', function() {
+      return [200, {}, JSON.stringify({ id: 123 })];
     });
 
-    run(() => {
-      this.owner.lookup('service:store').push({
-        data: {
-          id: 123,
-          type: 'collection',
-          attributes: {
-            name: 'Screwdriver',
-            description: 'Collection of screwdriver pipelines'
-          }
+    this.owner.lookup('service:store').push({
+      data: {
+        id: 123,
+        type: 'collection',
+        attributes: {
+          name: 'Screwdriver',
+          description: 'Collection of screwdriver pipelines'
         }
-      });
-
-      const collection = this.owner.lookup('service:store').peekRecord('collection', 123);
-
-      collection.set('description', 'newDescription');
-      collection.save();
+      }
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    const collection = this.owner.lookup('service:store').peekRecord('collection', 123);
 
-      assert.deepEqual(payload, {
-        description: 'newDescription'
-      });
+    collection.set('description', 'newDescription');
+
+    await collection.save();
+
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      description: 'newDescription'
     });
   });
 });

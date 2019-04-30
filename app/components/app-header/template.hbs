@@ -8,7 +8,7 @@
       {{#if showSearch}}
         {{#nav.item}}
           <form class="navbar-form navbar-left" role="search">
-            {{input class="search-input" name="query" placeholder="Search Screwdriver pipelines" enter="triggerSearch"}}
+            {{input class="search-input" name="query" placeholder="Search Screwdriver pipelines" enter=(action "triggerSearch")}}
             <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search"}}</button>
           </form>
         {{/nav.item}}
@@ -23,7 +23,7 @@
       {{/nav.item}}
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
-          {{#dd.toggle}}
+          {{#dd.toggle class="icon docs-outline"}}
             {{inline-svg "docs" class="img"}}
             <span class="icontitle">Documentation</span>
             <span class="caret"></span>
@@ -55,7 +55,7 @@
 
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
-          {{#dd.toggle}}
+          {{#dd.toggle class="icon comm-outline"}}
             {{inline-svg "more-circle" class="img"}}
             <span class="icontitle">Communication</span>
             <span class="caret"></span>

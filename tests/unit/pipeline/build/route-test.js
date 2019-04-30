@@ -7,7 +7,7 @@ module('Unit | Route | pipeline/build', function(hooks) {
   setupTest(hooks);
 
   test('it exists', function(assert) {
-    let route = this.owner.lookup('route:pipeline/build');
+    const route = this.owner.lookup('route:pipeline/build');
 
     assert.ok(route);
     assert.equal(
@@ -20,7 +20,7 @@ module('Unit | Route | pipeline/build', function(hooks) {
   });
 
   sinonTest('it redirects if build not found', function(assert) {
-    const route = this.subject();
+    const route = this.owner.lookup('route:pipeline/build');
     const stub = this.stub(route, 'transitionTo');
     const jobId = 345;
     const pipelineId = 123;

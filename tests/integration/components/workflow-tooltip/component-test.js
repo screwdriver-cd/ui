@@ -9,7 +9,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
   test('it renders', async function(assert) {
     await render(hbs`{{workflow-tooltip}}`);
 
-    assert.dom('*').hasText('');
+    assert.dom(this.element).hasText('');
 
     // Template block usage:
     await render(hbs`
@@ -18,7 +18,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       {{/workflow-tooltip}}
     `);
 
-    assert.dom('*').hasText('template block text');
+    assert.dom(this.element).includesText('template block text');
   });
 
   test('it renders build link', async function(assert) {
@@ -34,7 +34,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     await render(hbs`{{workflow-tooltip tooltipData=data}}`);
 
     assert.dom('.content a').exists({ count: 1 });
-    assert.dom('*').hasText('Go to build details');
+    assert.dom(this.element).hasText('Go to build details');
   });
 
   test('it renders remote trigger link', async function(assert) {
@@ -50,7 +50,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     await render(hbs`{{workflow-tooltip tooltipData=data}}`);
 
     assert.dom('.content a').exists({ count: 1 });
-    assert.dom('*').hasText('Go to remote pipeline');
+    assert.dom(this.element).hasText('Go to remote pipeline');
   });
 
   test('it renders restart link', async function(assert) {
@@ -72,7 +72,8 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     }}`);
 
     assert.dom('.content a').exists({ count: 2 });
-    assert.dom('a').hasText('Go to build detailsStart pipeline from here');
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Start pipeline from here');
   });
 
   test('it should update position and hidden status', async function(assert) {

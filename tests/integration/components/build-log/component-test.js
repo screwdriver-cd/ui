@@ -1,9 +1,8 @@
 import { resolve } from 'rsvp';
 import Service from '@ember/service';
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, findAll, find } from '@ember/test-helpers';
+import { render, settled, find, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import moment from 'moment';
 import sinon from 'sinon';
@@ -70,7 +69,7 @@ module('Integration | Component | build log', function(hooks) {
       buildStartTime="1478912844724"
     }}`);
 
-    assert.dom('*').hasText('Click a step to see logs');
+    assert.dom('.logs').includesText('Click a step to see logs');
 
     // Template block usage:
     await render(hbs`{{#build-log
@@ -82,8 +81,8 @@ module('Integration | Component | build log', function(hooks) {
     template block text
     {{/build-log}}`);
 
-    assert.ok(/^template block text/.test(find('*').textContent.trim()));
-    assert.ok(/Click a step to see logs$/.test(find('*').textContent.trim()));
+    assert.dom(this.element).includesText('template block text');
+    assert.dom(this.element).includesText('Click a step to see logs');
   });
 
   test('it starts loading when step chosen', async function(assert) {
@@ -95,22 +94,16 @@ module('Integration | Component | build log', function(hooks) {
       buildStartTime="1478912844724"
     }}`);
 
-    assert.dom('*').hasText('Click a step to see logs');
+    assert.dom('.logs').hasText('Click a step to see logs');
     this.set('step', 'banana');
 
     return settled().then(() => {
-      assert.ok(
-        this.$('.line:first')
-          .text()
-          .trim()
-          .match(`${moment(startTime).format('HH:mm:ss')}\\s+${startTime}`)
-      );
-      assert.ok(
-        this.$('.line:last')
-          .text()
-          .trim()
-          .match(`${moment(startTime + 99).format('HH:mm:ss')}\\s+${startTime + 99}`)
-      );
+      assert
+        .dom('.line:first-child')
+        .hasText(`${moment(startTime).format('HH:mm:ss')} ${startTime}`);
+      assert
+        .dom('.line:last-child')
+        .hasText(`${moment(startTime + 99).format('HH:mm:ss')} ${startTime + 99}`);
     });
   });
 
@@ -131,28 +124,10 @@ module('Integration | Component | build log', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.ok(
-        this.$('.line:first')
-          .text()
-          .trim()
-          .match('Build created')
-      );
-      assert.ok(
-        find(findAll('.line')[1])
-          .textContent.trim()
-          .match('Build enqueued')
-      );
-      assert.ok(
-        find(findAll('.line')[2])
-          .textContent.trim()
-          .match('Build scheduled on node12.foo.bar.com')
-      );
-      assert.ok(
-        this.$('.line:last')
-          .text()
-          .trim()
-          .match('Image pull completed')
-      );
+      assert.dom('.line:first-child').includesText('Build created');
+      assert.dom('.line:nth-child(2)').includesText('Build enqueued');
+      assert.dom('.line:nth-child(3)').includesText('Build scheduled on node12.foo.bar.com');
+      assert.dom('.line:last-child').includesText('Image pull completed');
     });
   });
 
@@ -174,33 +149,11 @@ module('Integration | Component | build log', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.ok(
-        this.$('.line:first')
-          .text()
-          .trim()
-          .match('Build created')
-      );
-      assert.ok(
-        find(findAll('.line')[1])
-          .textContent.trim()
-          .match('Build enqueued')
-      );
-      assert.ok(
-        find(findAll('.line')[2])
-          .textContent.trim()
-          .match('Build blocked, putting back into queue')
-      );
-      assert.ok(
-        find(findAll('.line')[3])
-          .textContent.trim()
-          .match('Build scheduled on node12.foo.bar.com')
-      );
-      assert.ok(
-        this.$('.line:last')
-          .text()
-          .trim()
-          .match('Image pull completed')
-      );
+      assert.dom('.line:first-child').includesText('Build created');
+      assert.dom('.line:nth-child(2)').includesText('Build enqueued');
+      assert.dom('.line:nth-child(3)').includesText('Build blocked, putting back into queue');
+      assert.dom('.line:nth-child(4)').includesText('Build scheduled on node12.foo.bar.com');
+      assert.dom('.line:last-child').includesText('Image pull completed');
     });
   });
 
@@ -220,18 +173,8 @@ module('Integration | Component | build log', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.ok(
-        this.$('.line:first')
-          .text()
-          .trim()
-          .match('Build created')
-      );
-      assert.ok(
-        this.$('.line:last')
-          .text()
-          .trim()
-          .match('Build collapsed and removed from the queue.')
-      );
+      assert.dom('.line:first-child').includesText('Build created');
+      assert.dom('.line:last-child').includesText('Build collapsed and removed from the queue.');
     });
   });
 
@@ -248,18 +191,8 @@ module('Integration | Component | build log', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.ok(
-        this.$('.line:first')
-          .text()
-          .trim()
-          .match('Build created')
-      );
-      assert.ok(
-        this.$('.line:last')
-          .text()
-          .trim()
-          .match('Build frozen and removed from the queue.')
-      );
+      assert.dom('.line:first-child').includesText('Build created');
+      assert.dom('.line:last-child').includesText('Build frozen and removed from the queue.');
     });
   });
 
@@ -280,28 +213,10 @@ module('Integration | Component | build log', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.ok(
-        this.$('.line:first')
-          .text()
-          .trim()
-          .match('Build created')
-      );
-      assert.ok(
-        find(findAll('.line')[1])
-          .textContent.trim()
-          .match('Build enqueued')
-      );
-      assert.ok(
-        find(findAll('.line')[2])
-          .textContent.trim()
-          .match('Build scheduled on node12.foo.bar.com')
-      );
-      assert.ok(
-        this.$('.line:last')
-          .text()
-          .trim()
-          .match('Build init failed')
-      );
+      assert.dom('.line:first-child').includesText('Build created');
+      assert.dom('.line:nth-child(2)').includesText('Build enqueued');
+      assert.dom('.line:nth-child(3)').includesText('Build scheduled on node12.foo.bar.com');
+      assert.dom('.line:last-child').includesText('Build init failed');
     });
   });
 
@@ -318,18 +233,8 @@ module('Integration | Component | build log', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.ok(
-        this.$('.line:first')
-          .text()
-          .trim()
-          .match('Build created')
-      );
-      assert.ok(
-        this.$('.line:last')
-          .text()
-          .trim()
-          .match('Build init done')
-      );
+      assert.dom('.line:first-child').includesText('Build created');
+      assert.dom('.line:last-child').includesText('Build init done');
     });
   });
 
@@ -340,6 +245,7 @@ module('Integration | Component | build log', function(hooks) {
     doneStub.onCall(3).returns(true);
 
     this.set('step', null);
+    this.set('scrollStill', sinon.stub());
     await render(hbs`{{build-log
       stepName=step
       totalLine=1000
@@ -348,19 +254,19 @@ module('Integration | Component | build log', function(hooks) {
       buildStartTime="1478912844724"
     }}`);
 
-    assert.dom('*').hasText('Click a step to see logs');
+    assert.dom('.logs').hasText('Click a step to see logs');
     this.set('step', 'banana');
 
-    const container = this.$('.wrap')[0];
+    const container = find('.wrap');
     const lastScrollTop = container.scrollTop;
 
-    run(() => {
-      container.scrollTop = 0;
-    });
+    container.scrollTop = 0;
+
+    await settled();
 
     return settled().then(() => {
-      sinon.assert.callCount(doneStub, 4);
-      sinon.assert.callCount(logsStub, 4);
+      sinon.assert.called(doneStub);
+      sinon.assert.called(logsStub);
       assert.ok(container.scrollTop > lastScrollTop);
     });
   });
@@ -375,20 +281,10 @@ module('Integration | Component | build log', function(hooks) {
       buildStartTime="1478912844724"
     }}`);
 
-    const $hiddenDownloadButton = this.$('#downloadLink');
+    assert.dom(find('#downloadLink').previousElementSibling).hasText('Download');
 
-    assert.equal(
-      $hiddenDownloadButton
-        .prev()
-        .text()
-        .trim(),
-      'Download'
-    );
+    await click(find('#downloadLink').previousElementSibling);
 
-    $hiddenDownloadButton.prev().click();
-
-    return settled().then(() => {
-      assert.equal($hiddenDownloadButton.attr('href'), blobUrl);
-    });
+    assert.dom('#downloadLink').hasAttribute('href', blobUrl);
   });
 });

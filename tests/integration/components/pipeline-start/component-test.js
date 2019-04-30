@@ -8,8 +8,6 @@ module('Integration | Component | pipeline start', function(hooks) {
 
   test('it renders', async function(assert) {
     assert.expect(2);
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('onStartBuild', () => {
       assert.ok(true);
     });
@@ -23,8 +21,6 @@ module('Integration | Component | pipeline start', function(hooks) {
     assert.expect(3);
     // Starting PR job requires the PR number and PR jobs
     this.set('jobs', ['job1', 'job2']);
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('onPRStartBuild', (prNum, prJobs) => {
       assert.equal(prNum, 5);
       assert.equal(prJobs.length, 2);

@@ -8,8 +8,6 @@ module('Integration | Component | pipeline pr view', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders a successful PR', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     const job = EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',
@@ -66,8 +64,6 @@ module('Integration | Component | pipeline pr view', function(hooks) {
   });
 
   test('it renders a failed PR', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     const job = EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',
@@ -92,8 +88,6 @@ module('Integration | Component | pipeline pr view', function(hooks) {
   });
 
   test('it renders a queued PR', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     const job = EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',
@@ -118,8 +112,6 @@ module('Integration | Component | pipeline pr view', function(hooks) {
   });
 
   test('it renders a running PR', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     const job = EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',

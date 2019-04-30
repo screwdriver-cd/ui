@@ -55,8 +55,6 @@ module('Integration | Component | pipeline event row', function(hooks) {
   });
 
   test('it renders with pipeline event', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.actions.eventClick = () => {
       assert.ok(true);
     };
@@ -79,8 +77,6 @@ module('Integration | Component | pipeline event row', function(hooks) {
   });
 
   test('it renders with pr event', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.actions.eventClick = () => {
       assert.ok(true);
     };

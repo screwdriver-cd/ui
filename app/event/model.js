@@ -90,23 +90,29 @@ export default DS.Model.extend(ModelReloaderMixin, {
     const builds = get(this, 'builds');
     let status = 'UNKNOWN';
 
-    return builds
-      .then(list => list.filter(b => get(b, 'status') !== 'SUCCESS'))
-      .then(list => {
-        if (list.length) {
-          status = get(list[0], 'status');
+    builds.then(list => {
+      if (!this.isDestroying && !this.isDestroyed) {
+        const validList = list.filter(b => get(b, 'status') !== 'SUCCESS');
+
+        if (validList.length) {
+          status = get(validList[0], 'status');
         } else {
           status = get(this, 'isComplete') ? 'SUCCESS' : 'RUNNING';
         }
 
         set(this, 'status', status);
-      });
+      }
+    });
   }),
   // eslint-disable-next-line ember/no-observers
   isCompleteObserver: observer('builds.@each.{status,endTime}', function isCompleteObserver() {
     const builds = get(this, 'builds');
 
     builds.then(list => {
+      if (this.isDestroying || this.isDestroyed) {
+        return false;
+      }
+
       // Tell model to reload builds.
       this.startReloading();
       set(this, 'reload', get(this, 'reload') + 1);

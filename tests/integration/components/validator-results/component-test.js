@@ -1,14 +1,12 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | validator results', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders jobs', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('validationMock', {
       errors: ['got an error'],
       workflow: ['main', 'foo'],
@@ -56,9 +54,13 @@ module('Integration | Component | validator results', function(hooks) {
 
     await render(hbs`{{validator-results results=validationMock}}`);
 
+    const jobs = findAll('h4.job');
+
+    assert.dom(jobs[0]).hasText('main');
+    assert.dom(jobs[1]).hasText('main.1');
+    assert.dom(jobs[2]).hasText('foo');
     assert.dom('.error').hasText('got an error');
     assert.dom('h4.pipeline').hasText('Pipeline Settings');
-    assert.dom('h4.job').hasText('main main.1 foo');
   });
 
   test('it renders templates', async function(assert) {
@@ -76,7 +78,7 @@ module('Integration | Component | validator results', function(hooks) {
 
     await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
 
-    assert.dom('.error').hasText('');
+    assert.dom('.error').doesNotExist();
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
@@ -96,7 +98,7 @@ module('Integration | Component | validator results', function(hooks) {
 
     await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
 
-    assert.dom('.error').hasText('');
+    assert.dom('.error').doesNotExist();
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 

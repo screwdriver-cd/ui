@@ -12,13 +12,13 @@ module('helper:x-duration', function(hooks) {
 
     await render(hbs`{{x-duration time1 time2}}`);
 
-    assert.dom('*').hasText('00:00:01');
+    assert.dom(this.element).hasText('00:00:01');
 
     this.set('time1', '2016-11-04T20:09:41.238Z');
     this.set('time2', '2016-11-04T20:09:44.238Z');
 
     await render(hbs`{{x-duration time1 time2}}`);
 
-    assert.dom('*').hasText('00:00:03');
+    assert.dom(this.element).hasText('00:00:03');
   });
 });

@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
 
 import { module, test } from 'qunit';
@@ -16,7 +17,7 @@ module('Unit | Route | builds', function(hooks) {
   });
 
   sinonTest('it redirects', function(assert) {
-    const route = this.subject();
+    const route = this.owner.lookup('route:builds');
     const transitionStub = this.stub(route, 'transitionTo');
 
     const model = {
@@ -37,7 +38,7 @@ module('Unit | Route | builds', function(hooks) {
       pipeline_1: { type: 'job', id: 1 }
     };
 
-    const storeStub = EmberObject.extend({
+    const storeStub = Service.extend({
       findRecord(type, id) {
         return new EmberPromise(resolve =>
           resolve(EmberObject.create(dataMapping[`${type}_${id}`]))
@@ -45,8 +46,8 @@ module('Unit | Route | builds', function(hooks) {
       }
     });
 
+    this.owner.unregister('service:store');
     this.owner.register('service:store', storeStub);
-    this.store = this.owner.lookup('service:store');
 
     const route = this.owner.lookup('route:builds');
 

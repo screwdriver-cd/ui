@@ -27,7 +27,7 @@ module('Unit | Serializer | token', function(hooks) {
 
   test('it does not post with model name as key', function(assert) {
     assert.expect(2);
-    server.post('/tokens', function() {
+    server.post('http://localhost:8080/v4/tokens', function() {
       return [200, {}, JSON.stringify({ token: { id: 1234 } })];
     });
 
@@ -55,7 +55,7 @@ module('Unit | Serializer | token', function(hooks) {
 
   test('it serializes only dirty fields', function(assert) {
     assert.expect(1);
-    server.patch('/tokens/1234', function() {
+    server.put('http://localhost:8080/v4/tokens/1234', function() {
       return [200, {}, JSON.stringify({ token: { id: 1234 } })];
     });
 

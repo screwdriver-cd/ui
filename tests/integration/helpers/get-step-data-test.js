@@ -25,7 +25,7 @@ module('helper:get-step-data', function(hooks) {
     this.set('field', 'code');
 
     await render(hbs`{{get-step-data buildSteps step field}}`);
-    assert.dom('*').hasText('128');
+    assert.dom(this.element).hasText('128');
   });
 
   test('it fetches an object', async function(assert) {
@@ -46,6 +46,6 @@ module('helper:get-step-data', function(hooks) {
     this.set('field', 'startTime');
     this.set('step', 'monkey');
     await render(hbs`{{#with (get-step-data buildSteps step) as |s|}}{{s.startTime}}{{/with}}`);
-    assert.dom('*').hasText('1236');
+    assert.dom(this.element).hasText('1236');
   });
 });

@@ -1,7 +1,7 @@
 import { resolve, reject } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, click, findAll } from '@ember/test-helpers';
 import EmberObject from '@ember/object';
 import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';
@@ -31,12 +31,14 @@ module('Integration | Component | collection add button', function(hooks) {
     // the button should be there
     assert.dom('.dropdown-toggle').exists({ count: 1 });
 
+    await click('.dropdown-toggle');
+
     // there should be two list items ('Test' and 'CREATE')
-    assert.dom('.dropdown-toggle + ul > li').exists({ count: 2 });
+    assert.dom('.dropdown-menu > li').exists({ count: 2 });
 
     // Validate that list items exist
-    assert.dom('.dropdown-toggle + ul > li:nth-child(1)').hasText('Test');
-    assert.dom('.dropdown-toggle + ul > li:nth-child(2)').hasText('CREATE');
+    assert.dom('.dropdown-menu > li:nth-child(1)').hasText('Test');
+    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('CREATE');
   });
 
   test('it adds a pipeline to a collection', async function(assert) {
@@ -45,7 +47,6 @@ module('Integration | Component | collection add button', function(hooks) {
     injectSessionStub(this);
     injectScmServiceStub(this);
 
-    const { $ } = this;
     const pipelines = [
       EmberObject.create({
         id: 2,
@@ -98,7 +99,8 @@ module('Integration | Component | collection add button', function(hooks) {
       }}
     `);
 
-    $($('td.add .dropdown-menu span').get(0)).click();
+    await click(findAll('.dropdown-toggle')[0]);
+    await click('td.add .dropdown-menu span');
   });
 
   test('it fails to add a pipeline to a collection', async function(assert) {
@@ -107,7 +109,6 @@ module('Integration | Component | collection add button', function(hooks) {
     injectSessionStub(this);
     injectScmServiceStub(this);
 
-    const { $ } = this;
     const pipelines = [
       EmberObject.create({
         id: 1,
@@ -142,6 +143,7 @@ module('Integration | Component | collection add button', function(hooks) {
       }}
     `);
 
-    $($('td.add .dropdown-menu span').get(0)).click();
+    await click(findAll('.dropdown-toggle')[0]);
+    await click('td.add .dropdown-menu span');
   });
 });

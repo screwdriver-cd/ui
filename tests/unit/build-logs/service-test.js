@@ -113,101 +113,95 @@ module('Unit | Service | build logs', function(hooks) {
     });
   });
 
-  test('it makes a call to logs api and logs return with no remaining', function(assert) {
+  test('it makes a call to logs api and logs return with no remaining', async function(assert) {
     assert.expect(4);
     noMoreLogs();
     const service = this.owner.lookup('service:build-logs');
-    const p = service.fetchLogs(serviceConfig);
+    const { lines, done } = await service.fetchLogs(serviceConfig);
 
-    p.then(({ lines, done }) => {
-      assert.ok(done);
-      assert.equal(lines.length, 1);
-      assert.equal(lines[0].m, 'hello, world');
+    assert.ok(done);
+    assert.equal(lines.length, 1);
+    assert.equal(lines[0].m, 'hello, world');
 
-      const [request] = server.handledRequests;
+    const [request] = server.handledRequests;
 
-      assert.equal(
-        request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
-      );
-    });
+    assert.equal(
+      request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+    );
   });
 
-  test('it makes a call to logs api and logs return with more remaining', function(assert) {
+  test('it makes a call to logs api and logs return with more remaining', async function(assert) {
     assert.expect(4);
     moreLogs();
     const service = this.owner.lookup('service:build-logs');
-    const p = service.fetchLogs({ logNumber: 50, ...serviceConfig });
+    const { lines, done } = await service.fetchLogs({ logNumber: 50, ...serviceConfig });
 
-    p.then(({ lines, done }) => {
-      assert.notOk(done);
-      assert.equal(lines.length, 1);
-      assert.equal(lines[0].m, 'hello, world');
+    assert.notOk(done);
+    assert.equal(lines.length, 1);
+    assert.equal(lines[0].m, 'hello, world');
 
-      const [request] = server.handledRequests;
+    const [request] = server.handledRequests;
 
-      assert.equal(
-        request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50&pages=10&sort=ascending'
-      );
-    });
+    assert.equal(
+      request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50&pages=10&sort=ascending'
+    );
   });
 
-  test('it makes a call to logs api and no logs return with no more remaining', function(assert) {
+  test('it makes a call to logs api and no logs return with no more remaining', async function(assert) {
     assert.expect(3);
     noNewLogs();
     const service = this.owner.lookup('service:build-logs');
-    const p = service.fetchLogs(serviceConfig);
+    const { lines, done } = await service.fetchLogs(serviceConfig);
 
-    p.then(({ lines, done }) => {
-      assert.notOk(done);
-      assert.equal(lines.length, 0);
+    assert.notOk(done);
+    assert.equal(lines.length, 0);
 
-      const [request] = server.handledRequests;
+    const [request] = server.handledRequests;
 
-      assert.equal(
-        request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
-      );
-    });
+    assert.equal(
+      request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+    );
   });
 
-  test('it handles log api failure by treating it as there are more logs', function(assert) {
+  test('it handles log api failure by treating it as there are more logs', async function(assert) {
     assert.expect(3);
     badLogs();
     const service = this.owner.lookup('service:build-logs');
-    const p = service.fetchLogs(serviceConfig);
+    const { lines, done } = await service.fetchLogs(serviceConfig);
 
-    p.then(({ lines, done }) => {
-      assert.notOk(done);
-      assert.equal(lines.length, 0);
+    assert.notOk(done);
+    assert.equal(lines.length, 0);
 
-      const [request] = server.handledRequests;
+    const [request] = server.handledRequests;
 
-      assert.equal(
-        request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
-      );
-    });
+    assert.equal(
+      request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+    );
   });
 
-  test('it handles fetching multiple pages', function(assert) {
+  test('it handles fetching multiple pages', async function(assert) {
     assert.expect(3);
     noNewLogs();
     const service = this.owner.lookup('service:build-logs');
-    const p = service.fetchLogs({ logNumber: 0, pageSize: 100, ...serviceConfig });
-
-    p.then(({ lines, done }) => {
-      assert.notOk(done);
-      assert.equal(lines.length, 0);
-
-      const [request] = server.handledRequests;
-
-      assert.equal(
-        request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100&sort=ascending'
-      );
+    const { lines, done } = await service.fetchLogs({
+      logNumber: 0,
+      pageSize: 100,
+      ...serviceConfig
     });
+
+    assert.notOk(done);
+    assert.equal(lines.length, 0);
+
+    const [request] = server.handledRequests;
+
+    assert.equal(
+      request.url,
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100&sort=ascending'
+    );
   });
 
   test('it can reset the cache', function(assert) {

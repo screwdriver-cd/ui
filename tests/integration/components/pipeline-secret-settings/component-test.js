@@ -1,15 +1,13 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find, click, fillIn } from '@ember/test-helpers';
+import { render, find, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | pipeline secret settings', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     const testSecret = EmberObject.create({
       name: 'TEST_SECRET',
       pipelineId: 123245,
@@ -44,8 +42,6 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
   });
 
   test('it updates the add button properly', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('mockPipeline', { id: 'abcd' });
     await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline}}`);
 
@@ -53,26 +49,34 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     assert.dom('tfoot button').isDisabled();
 
     // disabled when no value
-    await fillIn('.key input', 'SECRET_KEY').keyup();
+    await fillIn('.key input', 'SECRET_KEY');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
     assert.dom('tfoot button').isDisabled();
 
     // disabled when no key
-    await fillIn('.key input', '').keyup();
-    await fillIn('.pass input', 'SECRET_VAL').keyup();
+    await fillIn('.key input', '');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
+    await fillIn('.pass input', 'SECRET_VAL');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+
     assert.dom('tfoot button').isDisabled();
 
     // enabled when both present
-    await fillIn('.key input', 'SECRET_KEY').keyup();
-    assert.ok(!find('tfoot button').disabled);
+    await fillIn('.key input', 'SECRET_KEY');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
+    assert.dom('tfoot button').isNotDisabled();
 
     // disabled again when no key
-    await fillIn('.key input', '').keyup();
+    await fillIn('.key input', '');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
     assert.dom('tfoot button').isDisabled();
   });
 
   test('it calls action to create secret', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('mockPipeline', { id: 'abcd' });
     this.set('externalAction', (name, value, id) => {
       assert.equal(name, 'SECRET_KEY');
@@ -85,8 +89,12 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
       hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
     );
 
-    await fillIn('.key input', 'SECRET_KEY').keyup();
-    await fillIn('.pass input', 'SECRET_VAL').keyup();
+    await fillIn('.key input', 'SECRET_KEY');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
+    await fillIn('.pass input', 'SECRET_VAL');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+
     await click('tfoot button');
 
     // and clears the new secret form elements
@@ -96,8 +104,6 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
   });
 
   test('it displays an error', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('mockPipeline', { id: 'abcd' });
     this.set('externalAction', () => {
       assert.fail('should not get here');
@@ -108,8 +114,12 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
       hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
     );
 
-    await fillIn('.key input', '0banana').keyup();
-    await fillIn('.pass input', '0value').keyup();
+    await fillIn('.key input', '0banana');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
+    await fillIn('.pass input', '0value');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+
     await click('tfoot button');
 
     // and clears the new secret form elements
@@ -176,13 +186,11 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     this.set('mockPipeline', testPipeline);
     await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
 
-    assert.equal(
-      find('p')
-        .textContent.trim()
-        .replace(/\+s/g, ' '),
-      'Secrets are inherited from the parent pipeline. ' +
-        'You may override a secret or revert it back to its original value.'
-    );
+    assert
+      .dom('p')
+      .hasText(
+        'Secrets are inherited from the parent pipeline. You may override a secret or revert it back to its original value.'
+      );
 
     // Secrets are rendered but footer is not
     assert.dom('table').exists({ count: 1 });

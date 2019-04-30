@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, find } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 import injectScmServiceStub from '../../../helpers/inject-scm';
@@ -10,15 +10,13 @@ module('Integration | Component | app header', function(hooks) {
 
   // this test should pass when search bar feature flag is turned off
   test('it renders when search flag is off', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
     this.set('sessionMock', {
       isAuthenticated: false
     });
 
     await render(hbs`{{app-header session=sessionMock}}`);
 
-    assert.equal(find('.logo').title, 'Screwdriver Home');
+    assert.dom('.logo').hasAttribute('title', 'Screwdriver Home');
     assert.dom('.icon.create').exists({ count: 1 });
 
     await click('.icon.docs-outline');
@@ -33,7 +31,7 @@ module('Integration | Component | app header', function(hooks) {
     assert.dom('.icon.github').exists({ count: 1 });
 
     assert.dom('.icon.profile-outline').exists({ count: 1 });
-    assert.equal(find('.icon.profile-outline').title, 'Sign in to Screwdriver');
+    assert.dom('.icon.profile-outline').hasAttribute('title', 'Sign in to Screwdriver');
     assert.dom('.search-input').doesNotExist();
   });
 
@@ -70,7 +68,8 @@ module('Integration | Component | app header', function(hooks) {
     await render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
     await click('.icon.profile-outline');
 
-    assert.equal(find('.logout').title, 'Sign out of Screwdriver');
+    assert.dom('.logout').hasAttribute('title', 'Sign out of Screwdriver');
+
     await click('.logout');
   });
 

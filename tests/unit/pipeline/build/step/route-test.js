@@ -11,7 +11,7 @@ module('Unit | Route | pipeline/build/step', function(hooks) {
   });
 
   sinonTest('it redirects if step is not found in build', function(assert) {
-    const route = this.subject();
+    const route = this.owner.lookup('route:pipeline/build/step');
     const stub = this.stub(route, 'transitionTo');
     const model = {
       event: EmberObject.create(),

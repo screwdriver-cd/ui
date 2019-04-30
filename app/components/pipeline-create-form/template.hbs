@@ -5,10 +5,10 @@
 <div>
   {{input
     class="text-input"
-    key-up="scmChange"
+    key-up=(action "scmChange")
     placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#master)"
     value=scmUrl
-    enter="saveData"
+    enter=(action "saveData")
   }}
   {{#if isValid}}
     <i class="success">{{fa-icon "check"}}</i>

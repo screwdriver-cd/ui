@@ -14,21 +14,25 @@ module.exports = {
     humanizeDuration: true
   },
   rules: {
-    indent: ['error', 2, { "SwitchCase": 1 }],
+    indent: ['error', 2, { SwitchCase: 1 }],
     'no-underscore-dangle': 'off',
     'prefer-const': 'off',
-    "prefer-destructuring": ["warn", {
-      "VariableDeclarator": {
-        "array": false,
-        "object": true
+    'prefer-destructuring': [
+      'warn',
+      {
+        VariableDeclarator: {
+          array: false,
+          object: true
+        },
+        AssignmentExpression: {
+          array: false,
+          object: true
+        }
       },
-      "AssignmentExpression": {
-        "array": false,
-        "object": true
+      {
+        enforceForRenamedProperties: false
       }
-    }, {
-      "enforceForRenamedProperties": false
-    }],
+    ],
     'import/extensions': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/no-unresolved': 'off',
@@ -67,7 +71,8 @@ module.exports = {
       files: ['tests/**/*.js'],
       excludedFiles: ['tests/dummy/**/*.js'],
       env: {
-        embertest: true
+        browser: true,
+        node: true
       },
       rules: {
         'func-names': 'off',
