@@ -62,9 +62,9 @@
             </div>
           {{/if}}
           {{#if selectedEventObj.isRunning}}
-          <div class="col">
-            {{#bs-button onClick=(action stopEvent) class="event__stop" title="Stop all builds for this event"}}Stop{{/bs-button}}
-          </div>
+            <div class="col">
+              {{#bs-button onClick=(action stopEvent) class="event__stop" title="Stop all builds for this event"}}Stop{{/bs-button}}
+            </div>
           {{/if}}
         </div>
       {{/unless}}

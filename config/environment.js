@@ -89,6 +89,7 @@ module.exports = environment => {
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
+    ENV.APP.FORCE_RELOAD_WAIT = 0;
   }
 
   if (environment === 'production') {

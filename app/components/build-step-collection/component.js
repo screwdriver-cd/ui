@@ -12,8 +12,7 @@ export default Component.extend({
   selectedStep: computed('buildSteps.@each.{code,startTime,endTime}', 'preselectedStepName', {
     get() {
       const steps = this.buildSteps;
-      const { preselectedStepName } = this;
-      const preselectedStep = steps.findBy('name', preselectedStepName);
+      const preselectedStep = steps.findBy('name', this.preselectedStepName);
 
       if (preselectedStep) {
         return preselectedStep.name;

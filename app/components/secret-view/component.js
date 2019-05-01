@@ -8,8 +8,7 @@ export default Component.extend({
   originalAllowInPR: null,
   buttonAction: computed('newValue', 'secret.allowInPR', 'originalAllowInPR', {
     get() {
-      const { secret } = this;
-      const { pipeline } = this;
+      const { secret, pipeline } = this;
 
       if (pipeline.get('configPipelineId')) {
         if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
@@ -28,8 +27,7 @@ export default Component.extend({
   }),
   passwordPlaceholder: computed({
     get() {
-      const { secret } = this;
-      const { pipeline } = this;
+      const { secret, pipeline } = this;
 
       if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
         return 'Inherited from parent pipeline';

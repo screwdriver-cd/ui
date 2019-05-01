@@ -79,10 +79,9 @@ export default Service.extend({
     });
   },
   deleteCommands(namespace, name) {
-    // eslint-disable-next-line max-len
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/${encodeURIComponent(
-      namespace
-    )}/${encodeURIComponent(name)}`;
+    const url =
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
+      `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}`;
     const ajaxConfig = {
       method: 'DELETE',
       url,

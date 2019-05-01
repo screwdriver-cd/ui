@@ -8,8 +8,6 @@ module('Integration | Component | token list', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const { $ } = this;
-
     this.set('tokens', [
       EmberObject.create({
         id: 1,
@@ -25,29 +23,9 @@ module('Integration | Component | token list', function(hooks) {
 
     await render(hbs`{{token-list tokens=tokens}}`);
 
-    assert.equal(
-      $($('td.name input').get(0))
-        .val()
-        .trim(),
-      'baz'
-    );
-    assert.equal(
-      $($('td.description input').get(0))
-        .val()
-        .trim(),
-      'qux'
-    );
-    assert.equal(
-      $($('td.name input').get(1))
-        .val()
-        .trim(),
-      'foo'
-    );
-    assert.equal(
-      $($('td.description input').get(1))
-        .val()
-        .trim(),
-      'bar'
-    );
+    assert.dom('td.name input').hasValue('baz');
+    assert.dom('td.description input').hasValue('qux');
+    assert.dom('tr:nth-child(2) td.name input').hasValue('foo');
+    assert.dom('tr:nth-child(2) td.description input').hasValue('bar');
   });
 });

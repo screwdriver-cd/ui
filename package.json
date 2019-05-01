@@ -1,6 +1,6 @@
 {
   "name": "screwdriver-ui",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Ember UI for screwdriver",
   "repository": {
     "type": "git",
@@ -20,8 +20,23 @@
     "start": "ember serve",
     "test": "ember test"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.scss": [
+      "prettier --check --write",
+      "git add"
+    ]
+  },
   "engines": {
-    "node": "6.* || 8.* || >= 10.*"
+    "node": "8.* || >= 10.*"
   },
   "homepage": "https://github.com/screwdriver-cd/ui",
   "bugs": "https://github.com/screwdriver-cd/ui/issues",
@@ -101,8 +116,10 @@
     "eslint-plugin-ember": "^6.3.0",
     "eslint-plugin-prettier": "^3.0.1",
     "humanize-duration": "^3.18.0",
+    "husky": "^2.2.0",
     "jquery-highlight": "^3.5.0",
     "jstree": "^3.3.7",
+    "lint-staged": "^8.1.5",
     "loader.js": "^4.7.0",
     "memoizerific": "^1.11.3",
     "prettier": "^1.17.0",

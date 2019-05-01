@@ -7,15 +7,8 @@ module('Integration | Component | info message', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const { $ } = this;
-
     await render(hbs`{{info-message message="batman"}}`);
 
-    assert.equal(
-      $('.alert > span')
-        .text()
-        .trim(),
-      'batman'
-    );
+    assert.dom('.alert > span').hasText('batman');
   });
 });

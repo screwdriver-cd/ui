@@ -8,8 +8,6 @@ module('Integration | Component | pipeline header', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const { $ } = this;
-
     const pipelineMock = EmberObject.create({
       appId: 'batman/batmobile',
       hubUrl: 'http://example.com/batman/batmobile',
@@ -25,31 +23,15 @@ module('Integration | Component | pipeline header', function(hooks) {
     this.set('scmMock', scmMock);
     await render(hbs`{{pipeline-header pipeline=pipelineMock scmContext=scmMock}}`);
 
-    assert.equal(
-      $('h1')
-        .text()
-        .trim(),
-      'batman/batmobile'
-    );
-    assert.equal(
-      $($('a').get(1))
-        .text()
-        .trim(),
-      'master'
-    );
-    assert.equal($($('a').get(1)).attr('href'), 'http://example.com/batman/batmobile');
-    assert.equal(
-      $('span.scm')
-        .text()
-        .trim(),
-      'github.com'
-    );
-    assert.equal($('.scm > .fa-github').length, 1);
+    assert.dom('h1').hasText('batman/batmobile');
+    assert.dom('a.branch').hasText('master');
+    assert.dom('a.branch').hasAttribute('href', 'http://example.com/batman/batmobile');
+
+    assert.dom('span.scm', 'github.com');
+    assert.dom('.scm > .fa-github').exists({ count: 1 });
   });
 
   test('it renders link to parent pipeline for child pipeline', async function(assert) {
-    const { $ } = this;
-
     const pipelineMock = EmberObject.create({
       appId: 'batman/batmobile',
       hubUrl: 'http://example.com/batman/batmobile',
@@ -66,11 +48,6 @@ module('Integration | Component | pipeline header', function(hooks) {
     this.set('scmMock', scmMock);
     await render(hbs`{{pipeline-header pipeline=pipelineMock scmContext=scmMock}}`);
 
-    assert.equal(
-      $($('a').get(2))
-        .text()
-        .trim(),
-      'Parent Pipeline'
-    );
+    assert.dom('a:nth-child(5)').hasText('Parent Pipeline');
   });
 });

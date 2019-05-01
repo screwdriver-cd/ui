@@ -87,6 +87,10 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   // eslint-disable-next-line ember/no-observers
   statusObserver: observer('builds.@each.status', 'isComplete', function statusObserver() {
+    if (this.isSaving) {
+      return;
+    }
+
     const builds = get(this, 'builds');
     let status = 'UNKNOWN';
 
@@ -106,6 +110,10 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   // eslint-disable-next-line ember/no-observers
   isCompleteObserver: observer('builds.@each.{status,endTime}', function isCompleteObserver() {
+    if (this.isSaving) {
+      return;
+    }
+
     const builds = get(this, 'builds');
 
     builds.then(list => {

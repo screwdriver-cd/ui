@@ -46,12 +46,10 @@ module('Unit | Controller | pipeline/build', function(hooks) {
   });
 
   test('it exists', function(assert) {
-    let controller = this.owner.lookup('controller:pipeline/build');
-
-    assert.ok(controller);
+    assert.ok(this.owner.lookup('controller:pipeline/build'));
   });
 
-  test('it restarts a build', function(assert) {
+  test('it restarts a build', async function(assert) {
     assert.expect(5);
 
     server.post('http://localhost:8080/v4/events', () => [
@@ -67,7 +65,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       JSON.stringify([{ id: '9999' }])
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/build');
+    const controller = this.owner.lookup('controller:pipeline/build');
 
     run(() => {
       controller.set('model', {
@@ -88,13 +86,15 @@ module('Unit | Controller | pipeline/build', function(hooks) {
         assert.equal(path, 'pipeline.build');
         assert.equal(id, 9999);
       };
+
       controller.send('startBuild');
       assert.ok(controller.get('isShowingModal'));
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    await settled();
+
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
 
     assert.deepEqual(payload, {
       buildId: 123,
@@ -102,7 +102,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     });
   });
 
-  test('it fails to restart a build', function(assert) {
+  test('it fails to restart a build', async function(assert) {
     assert.expect(6);
 
     server.post('http://localhost:8080/v4/events', () => [
@@ -120,7 +120,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       JSON.stringify([{ id: '9999' }])
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/build');
+    const controller = this.owner.lookup('controller:pipeline/build');
 
     run(() => {
       controller.set('model', {
@@ -141,21 +141,21 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       assert.ok(controller.get('isShowingModal'));
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    await settled();
 
-      assert.deepEqual(payload, {
-        buildId: 123,
-        causeMessage: 'Manually started by apple'
-      });
-      assert.notOk(controller.get('isShowingModal'));
-      assert.ok(invalidateStub.called);
-      assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      buildId: 123,
+      causeMessage: 'Manually started by apple'
     });
+    assert.notOk(controller.get('isShowingModal'));
+    assert.ok(invalidateStub.called);
+    assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
   });
 
-  test('it stops a build', function(assert) {
+  test('it stops a build', async function(assert) {
     assert.expect(2);
     server.put('http://localhost:8080/v4/builds/5678', () => [
       200,
@@ -166,7 +166,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/build');
+    const controller = this.owner.lookup('controller:pipeline/build');
 
     run(() => {
       controller.store.push({
@@ -185,18 +185,18 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       controller.send('stopBuild');
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    await settled();
 
-      assert.deepEqual(payload, {
-        status: 'ABORTED'
-      });
-      assert.deepEqual(controller.get('errorMessage'), '');
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      status: 'ABORTED'
     });
+    assert.deepEqual(controller.get('errorMessage'), '');
   });
 
-  test('it fails to stop a build', function(assert) {
+  test('it fails to stop a build', async function(assert) {
     assert.expect(3);
     server.put('http://localhost:8080/v4/builds/5678', () => [
       401,
@@ -208,7 +208,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/build');
+    const controller = this.owner.lookup('controller:pipeline/build');
 
     run(() => {
       controller.store.push({
@@ -227,21 +227,21 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       controller.send('stopBuild');
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    await settled();
 
-      assert.deepEqual(payload, {
-        status: 'ABORTED'
-      });
-      assert.ok(invalidateStub.called);
-      assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      status: 'ABORTED'
     });
+    assert.ok(invalidateStub.called);
+    assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
   });
 
-  test('it reloads a build', function(assert) {
+  test('it reloads a build', async function(assert) {
     assert.expect(4);
-    let controller = this.owner.lookup('controller:pipeline/build');
+    const controller = this.owner.lookup('controller:pipeline/build');
     const build = EmberObject.create({
       id: '5678',
       jobId: 'abcd',
@@ -277,39 +277,40 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       controller.reloadBuild();
     });
 
-    return settled().then(() => {
-      assert.ok(true);
+    await settled();
+
+    assert.ok(true);
+  });
+
+  sinonTest('it changes build step', function(assert) {
+    assert.expect(3);
+
+    const controller = this.owner.lookup('controller:pipeline/build');
+    const stub = this.stub(controller, 'transitionToRoute');
+
+    const build = EmberObject.create({
+      id: 5678,
+      jobId: 'abcd',
+      status: 'RUNNING',
+      steps: [{ startTime: 's', name: 'active' }]
     });
+
+    const pipeline = EmberObject.create({
+      id: 1
+    });
+
+    controller.set('model', {
+      build,
+      pipeline
+    });
+
+    controller.changeBuildStep();
+
+    assert.ok(true);
+    assert.ok(stub.calledOnce, 'transition was called once');
+    assert.ok(
+      stub.calledWithExactly('pipeline.build.step', 1, 5678, 'active'),
+      'transition to build step page'
+    );
   });
-});
-
-sinonTest('it changes build step', function (assert) {
-  assert.expect(3);
-
-  const controller = this.subject();
-  const stub = this.stub(controller, 'transitionToRoute');
-
-  const build = EmberObject.create({
-    id: 5678,
-    jobId: 'abcd',
-    status: 'RUNNING',
-    steps: [{ startTime: 's', name: 'active' }]
-  });
-
-  const pipeline = EmberObject.create({
-    id: 1
-  });
-
-  controller.set('model', {
-    build,
-    pipeline
-  });
-
-  controller.changeBuildStep();
-
-  assert.ok(true);
-  assert.ok(stub.calledOnce, 'transition was called once');
-  assert.ok(stub.calledWithExactly('pipeline.build.step', 1, 5678, 'active'),
-    'transition to build step page'
-  );
 });

@@ -38,12 +38,7 @@ export default Route.extend({
 
     controller.set('pipeline', this.pipeline);
 
-    const { successOnly } = this;
-    const { jobId } = this;
-    const { fetchAll } = this;
-    const { fetchJob } = this;
-    const { startTime } = this;
-    const { endTime } = this;
+    const { successOnly, jobId, fetchAll, fetchJob, startTime, endTime } = this;
     const toMinute = (sec = null) => (sec === null ? null : sec / 60);
     const jobsMap = this.get('pipeline.jobs').then(jobs =>
       jobs.reduce((map, j) => {

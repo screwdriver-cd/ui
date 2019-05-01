@@ -96,7 +96,7 @@
 
   &:active {
     &:not(:disabled) {
-      @include scale(.97);
+      @include scale(0.97);
     }
   }
 }

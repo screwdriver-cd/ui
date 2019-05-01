@@ -45,13 +45,9 @@ export default Component.extend({
   },
   logs: computed('stepStartTime', 'isFetching', 'buildId', 'stepName', 'buildStatus', {
     get() {
-      const { buildId } = this;
-      const { stepName } = this;
+      const { buildId, stepName, isFetching, buildStats, buildStatus } = this;
       const logs = this.logService.getCache(buildId, stepName, 'logs');
-      const { isFetching } = this;
       const started = !!this.stepStartTime;
-      const { buildStats } = this;
-      const { buildStatus } = this;
 
       if (!stepName) {
         return [{ m: 'Click a step to see logs' }];
@@ -262,10 +258,7 @@ export default Component.extend({
    */
   getLogs(fetchMax = false) {
     if (!this.isFetching && this.shouldLoad) {
-      const { buildId } = this;
-      const { stepName } = this;
-      const { totalLine } = this;
-      const { inProgress } = this;
+      const { buildId, stepName, totalLine, inProgress } = this;
       const started = !!this.stepStartTime;
 
       set(this, 'isFetching', true);
@@ -321,8 +314,7 @@ export default Component.extend({
       this.scrollDown();
     },
     download() {
-      const { buildId } = this;
-      const { stepName } = this;
+      const { buildId, stepName } = this;
 
       if (this.logService.getCache(buildId, stepName, 'logs')) {
         set(this, 'isDownloading', true);

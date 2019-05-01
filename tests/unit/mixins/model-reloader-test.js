@@ -1,10 +1,8 @@
 import { resolve } from 'rsvp';
-import { getOwner } from '@ember/application';
 import { run } from '@ember/runloop';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { settled } from '@ember/test-helpers';
 import DS from 'ember-data';
 
 let subject;
@@ -13,21 +11,10 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function() {
-    this.subject = function() {
-      const ModelReloaderObject = DS.Model.extend(ModelReloaderMixin);
+    const ModelReloaderObject = DS.Model.extend(ModelReloaderMixin);
 
-      this.owner.register('model:reload-mixin', ModelReloaderObject);
-
-      return run(() => {
-        let store = getOwner(this).lookup('service:store');
-
-        return store.createRecord('reload-mixin', { isPaused: false });
-      });
-    };
-  });
-
-  hooks.beforeEach(function() {
-    subject = this.owner.lookup('mixin:model-reloader');
+    this.owner.register('model:reload-mixin', ModelReloaderObject);
+    subject = this.owner.lookup('service:store').createRecord('reload-mixin', { isPaused: false });
   });
 
   test('it mixes in to an ember object', function(assert) {
@@ -95,8 +82,9 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
     subject.reloadModel();
   });
 
-  test('it force reloads a model', function(assert) {
+  test('it force reloads a model', async function(assert) {
     assert.expect(2);
+
     subject.set('testModel', {
       reload() {
         assert.ok(true);
@@ -105,10 +93,9 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
       }
     });
     subject.set('modelToReload', 'testModel');
-
     subject.forceReload();
 
-    return settled().then(() => {
+    run(() => {
       assert.ok(true);
     });
   });

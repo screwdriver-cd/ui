@@ -7,21 +7,9 @@ module('Integration | Component | home hero', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const { $ } = this;
-
     await render(hbs`{{home-hero}}`);
 
-    assert.equal(
-      $('h1')
-        .text()
-        .trim(),
-      'Introducing Screwdriver'
-    );
-    assert.equal(
-      $('h2')
-        .text()
-        .trim(),
-      'Getting started, by the numbers...'
-    );
+    assert.dom('h1').hasText('Introducing Screwdriver');
+    assert.dom('h2').hasText('Getting started, by the numbers...');
   });
 });

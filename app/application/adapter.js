@@ -245,8 +245,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    */
   urlForQuery(query, modelName) {
     if (modelName === 'event' || modelName === 'metric') {
-      const { pipelineId } = query;
-      const { jobId } = query;
+      const { pipelineId, jobId } = query;
 
       delete query.pipelineId;
       delete query.jobId;

@@ -93,18 +93,22 @@ export default Controller.extend({
 
     // reload again in a little bit if queued
     if (!this.loading) {
-      if ((status === 'QUEUED' || status === 'RUNNING')) {
-        later(this, () => {
-          if (!build.get('isDeleted') && !this.loading) {
-            this.set('loading', true);
+      if (status === 'QUEUED' || status === 'RUNNING') {
+        later(
+          this,
+          () => {
+            if (!build.get('isDeleted') && !this.loading) {
+              this.set('loading', true);
 
-            build.reload().then(() => {
-              this.set('loading', false);
-              throttle(this, 'reloadBuild', timeout);
-              this.changeBuildStep();
-            });
-          }
-        }, timeout);
+              build.reload().then(() => {
+                this.set('loading', false);
+                throttle(this, 'reloadBuild', timeout);
+                this.changeBuildStep();
+              });
+            }
+          },
+          timeout
+        );
       } else {
         // refetch builds which are part of current event
         this.event.hasMany('builds').reload();

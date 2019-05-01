@@ -14,8 +14,7 @@ export default Service.extend({
    * @return  {Promise}            Resolve nothing if success otherwise reject with error message
    */
   stopBuilds(eventId) {
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/events/${eventId}/stop`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/events/${eventId}/stop`;
 
     return new EmberPromise((resolve, reject) => {
       $.ajax({

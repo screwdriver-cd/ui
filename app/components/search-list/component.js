@@ -26,12 +26,11 @@ export default Component.extend({
   }),
   filteredPipelines: computed('pipelines', {
     get() {
-      const { scmService } = this;
       let filtered = this.pipelines;
 
       // add scm contexts into pipelines.
       return filtered.map(pipeline => {
-        const scm = scmService.getScm(pipeline.get('scmContext'));
+        const scm = this.scmService.getScm(pipeline.get('scmContext'));
 
         pipeline.set('scm', scm.displayName);
         pipeline.set('scmIcon', scm.iconType);

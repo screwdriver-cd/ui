@@ -262,8 +262,6 @@ module('Integration | Component | build log', function(hooks) {
 
     container.scrollTop = 0;
 
-    await settled();
-
     return settled().then(() => {
       sinon.assert.called(doneStub);
       sinon.assert.called(logsStub);

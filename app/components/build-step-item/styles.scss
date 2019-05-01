@@ -37,6 +37,12 @@ span {
   font-size: 10px;
 }
 
-&.success i { color: $sd-success; }
-&.failure i { color: $sd-failure; }
-&.running i { color: $sd-running; }
+&.success i {
+  color: $sd-success;
+}
+&.failure i {
+  color: $sd-failure;
+}
+&.running i {
+  color: $sd-running;
+}

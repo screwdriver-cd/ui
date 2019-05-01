@@ -21,25 +21,23 @@ const sessionServiceMock = Service.extend({
 });
 let server;
 
-module('Unit | Controller | pipeline/events', function (hooks) {
+module('Unit | Controller | pipeline/events', function(hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function () {
+  hooks.beforeEach(function() {
     server = new Pretender();
     this.owner.register('service:session', sessionServiceMock);
   });
 
-  hooks.afterEach(function () {
+  hooks.afterEach(function() {
     server.shutdown();
   });
 
   test('it exists', function(assert) {
-    let controller = this.owner.lookup('controller:pipeline/events');
-
-    assert.ok(controller);
+    assert.ok(this.owner.lookup('controller:pipeline/events'));
   });
 
-  test('it starts a build', function(assert) {
+  test('it starts a build', async function(assert) {
     assert.expect(7);
     server.post('http://localhost:8080/v4/events', () => [
       201,
@@ -50,7 +48,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/events');
+    const controller = this.owner.lookup('controller:pipeline/events');
 
     run(() => {
       controller.set(
@@ -80,20 +78,20 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       assert.ok(controller.get('isShowingModal'));
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    await settled();
 
-      assert.notOk(controller.get('isShowingModal'));
-      assert.deepEqual(payload, {
-        pipelineId: '1234',
-        startFrom: '~commit',
-        causeMessage: 'Manually started by apple'
-      });
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.notOk(controller.get('isShowingModal'));
+    assert.deepEqual(payload, {
+      pipelineId: '1234',
+      startFrom: '~commit',
+      causeMessage: 'Manually started by apple'
     });
   });
 
-  test('it restarts a build', function(assert) {
+  test('it restarts a build', async function(assert) {
     assert.expect(6);
     server.post('http://localhost:8080/v4/events', () => [
       201,
@@ -103,7 +101,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/events');
+    const controller = this.owner.lookup('controller:pipeline/events');
 
     run(() => {
       controller.store.push({
@@ -146,23 +144,23 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       assert.ok(controller.get('isShowingModal'));
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    await settled();
 
-      assert.notOk(controller.get('isShowingModal'));
-      assert.deepEqual(payload, {
-        pipelineId: '1234',
-        startFrom: 'deploy',
-        buildId: 123,
-        parentBuildId: 345,
-        parentEventId: 1,
-        causeMessage: 'Manually started by apple'
-      });
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.notOk(controller.get('isShowingModal'));
+    assert.deepEqual(payload, {
+      pipelineId: '1234',
+      startFrom: 'deploy',
+      buildId: 123,
+      parentBuildId: 345,
+      parentEventId: 1,
+      causeMessage: 'Manually started by apple'
     });
   });
 
-  test('it stops a build', function(assert) {
+  test('it stops a build', async function(assert) {
     assert.expect(3);
     server.put('http://localhost:8080/v4/builds/123', () => [
       200,
@@ -172,7 +170,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/events');
+    const controller = this.owner.lookup('controller:pipeline/events');
 
     const job = {
       hasMany: () => ({ reload: () => assert.ok(true) }),
@@ -203,18 +201,18 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       controller.send('stopBuild', job);
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    await settled();
 
-      assert.notOk(controller.get('isShowingModal'));
-      assert.deepEqual(payload, {
-        status: 'ABORTED'
-      });
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.notOk(controller.get('isShowingModal'));
+    assert.deepEqual(payload, {
+      status: 'ABORTED'
     });
   });
 
-  test('it starts PR build(s)', function(assert) {
+  test('it starts PR build(s)', async function(assert) {
     const prNum = 999;
 
     assert.expect(5);
@@ -227,7 +225,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/events');
+    const controller = this.owner.lookup('controller:pipeline/events');
 
     const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
 
@@ -248,21 +246,21 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       assert.ok(controller.get('isShowingModal'));
     });
 
-    return settled().then(() => {
-      const [request] = server.handledRequests;
-      const payload = JSON.parse(request.requestBody);
+    await settled();
 
-      assert.notOk(controller.get('isShowingModal'));
-      assert.deepEqual(payload, {
-        causeMessage: 'Manually started by apple',
-        pipelineId: '1234',
-        startFrom: '~pr',
-        prNum
-      });
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.notOk(controller.get('isShowingModal'));
+    assert.deepEqual(payload, {
+      causeMessage: 'Manually started by apple',
+      pipelineId: '1234',
+      startFrom: '~pr',
+      prNum
     });
   });
 
-  test('New event comes top of PR list when it starts a PR build with prChain', function(assert) {
+  test('New event comes top of PR list when it starts a PR build with prChain', async function(assert) {
     const prNum = 3;
     const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
 
@@ -277,7 +275,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     ]);
 
     const createRecordStub = sinon.stub();
-    let controller = this.owner.factoryFor('controller:pipeline/events').create({
+    const controller = this.owner.factoryFor('controller:pipeline/events').create({
       store: {
         createRecord: createRecordStub
       }
@@ -324,9 +322,9 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       assert.ok(controller.get('isShowingModal'));
     });
 
-    return settled().then(() => {
-      assert.equal(controller.get('prEvents')[0].id, 3);
-      assert.equal(controller.get('prEvents')[0].prNum, '3');
-    });
+    await settled();
+
+    assert.equal(controller.get('prEvents')[0].id, 3);
+    assert.equal(controller.get('prEvents')[0].prNum, '3');
   });
 });

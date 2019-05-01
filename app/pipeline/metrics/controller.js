@@ -93,7 +93,6 @@ export default Controller.extend({
   ),
   eventMetrics: computed('metrics.events', {
     get() {
-      const { inTrendlineView } = this;
       let { queuedTime, imagePullTime, duration, total, status } = this.get('metrics.events');
 
       return {
@@ -115,7 +114,7 @@ export default Controller.extend({
           duration: 'Duration',
           total: 'Event Duration'
         },
-        hide: inTrendlineView ? ['queuedTime', 'imagePullTime', 'duration'] : 'total',
+        hide: this.inTrendlineView ? ['queuedTime', 'imagePullTime', 'duration'] : 'total',
         colors: {
           queuedTime: '#c5c5c5',
           imagePullTime: '#dfdfdf',
@@ -132,9 +131,7 @@ export default Controller.extend({
   }),
   eventLegend: computed('inTrendlineView', 'metrics.events', {
     get() {
-      const { inTrendlineView } = this;
-
-      if (inTrendlineView) {
+      if (this.inTrendlineView) {
         return [
           {
             key: 'total',
@@ -180,10 +177,9 @@ export default Controller.extend({
   }),
   buildLegend: computed('jobs}', {
     get() {
-      const { jobs } = this;
       const colors = this.get('color.pattern');
 
-      return jobs.map((name, i) => ({
+      return this.jobs.map((name, i) => ({
         key: name,
         name,
         style: htmlSafe(`border-color:${colors[i % colors.length]}`)
@@ -512,9 +508,7 @@ export default Controller.extend({
   },
   onInitFns: computed(function onInitOuter() {
     const self = this;
-    const { eventsChartName } = this;
-    const { buildsChartName } = this;
-    const { stepsChartName } = this;
+    const { eventsChartName, buildsChartName, stepsChartName } = this;
 
     /**
      * unlock tooltip

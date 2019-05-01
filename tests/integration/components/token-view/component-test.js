@@ -2,14 +2,13 @@ import { resolve } from 'rsvp';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn, triggerEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | token view', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const { $ } = this;
     const testToken = EmberObject.create({
       name: 'TEST_TOKEN',
       description: 'hunter2'
@@ -18,34 +17,33 @@ module('Integration | Component | token view', function(hooks) {
     this.set('mockToken', testToken);
 
     await render(hbs`{{token-view token=mockToken}}`);
-    const nameInput = $('.name input');
-    const descInput = $('.description input');
-    const updateButton = $($('button').get(1));
 
-    assert.equal(nameInput.val(), 'TEST_TOKEN');
-    assert.equal(descInput.val(), 'hunter2');
-    assert.equal(updateButton.text().trim(), 'Delete');
+    assert.dom('.name input').hasValue('TEST_TOKEN');
+    assert.dom('.description input').hasValue('hunter2');
+    assert.dom('button:last-child').hasText('Delete');
 
     // button value changes when user types a new name
-    nameInput.val('TEST_TOKEN_2').keyup();
-    assert.equal(updateButton.text().trim(), 'Update');
+    await fillIn('.name input', 'TEST_TOKEN_2');
+    await triggerEvent('.name input', 'keyup');
+    assert.dom('button:last-child').hasText('Update');
 
     // button value reverts if the new name is the same as the original
-    nameInput.val('TEST_TOKEN').keyup();
-    assert.equal(updateButton.text().trim(), 'Delete');
+    await fillIn('.name input', 'TEST_TOKEN');
+    await triggerEvent('.name input', 'keyup');
+    assert.dom('button:last-child').hasText('Delete');
 
     // button value changes when user types a new description
-    descInput.val('hunter3').keyup();
-    assert.equal(updateButton.text().trim(), 'Update');
+    await fillIn('.description input', 'hunter3');
+    await triggerEvent('.description input', 'keyup');
+    assert.dom('button:last-child').hasText('Update');
 
     // button value reverts if the new description is the same as the original
-    descInput.val('hunter2').keyup();
-    assert.equal(updateButton.text().trim(), 'Delete');
+    await fillIn('.description input', 'hunter2');
+    await triggerEvent('.description input', 'keyup');
+    assert.dom('button:last-child').hasText('Delete');
   });
 
   test('it trys to delete a token', async function(assert) {
-    const { $ } = this;
-
     assert.expect(2);
     this.set(
       'mockToken',
@@ -61,11 +59,10 @@ module('Integration | Component | token view', function(hooks) {
     });
 
     await render(hbs`{{token-view token=mockToken confirmAction=(action confirmAction)}}`);
-    $($('button').get(1)).click();
+    await click('button:last-child');
   });
 
   test('it saves changes to a token', async function(assert) {
-    const { $ } = this;
     let expectIsSaving = true;
 
     assert.expect(3);
@@ -95,9 +92,8 @@ module('Integration | Component | token view', function(hooks) {
     });
 
     await render(hbs`{{token-view token=mockToken setIsSaving=setIsSavingMock}}`);
-    $('.name input')
-      .val('TEST_TOKEN_2')
-      .keyup();
-    $($('button').get(1)).click();
+    await fillIn('.name input', 'TEST_TOKEN_2');
+    await triggerEvent('.name input', 'keyup');
+    await click('button:last-child');
   });
 });

@@ -31,8 +31,6 @@ module('Integration | Component | command header', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const { $ } = this;
-
     const storeStub = Service.extend({
       findRecord() {
         return new EmberPromise(resolve => resolve(mockPipeline));
@@ -40,47 +38,16 @@ module('Integration | Component | command header', function(hooks) {
     });
 
     this.owner.register('service:store', storeStub);
-    this.store = this.owner.lookup('service:store');
 
     this.set('mock', COMMAND);
     await render(hbs`{{command-header command=mock}}`);
 
-    assert.equal(
-      $('h1')
-        .text()
-        .trim(),
-      'foo/bar'
-    );
-    assert.equal(
-      $('h2')
-        .text()
-        .trim(),
-      '1.0.0'
-    );
-    assert.equal(
-      $('p')
-        .text()
-        .trim(),
-      'A test example'
-    );
-    assert.equal(
-      $('ul li:first-child')
-        .text()
-        .trim(),
-      'Released by: test@example.com'
-    );
-    assert.equal($('ul li:first-child a').attr('href'), 'mailto:test@example.com');
-    assert.equal(
-      $('h4')
-        .text()
-        .trim(),
-      'Usage:'
-    );
-    assert.equal(
-      $('pre')
-        .text()
-        .trim(),
-      'sd-cmd exec foo/bar@1.0.0'
-    );
+    assert.dom('h1').hasText('foo/bar');
+    assert.dom('h2').hasText('1.0.0');
+    assert.dom('p').hasText('A test example');
+    assert.dom('ul li:first-child').hasText('Released by: test@example.com');
+    assert.dom('ul li:first-child a').hasAttribute('href', 'mailto:test@example.com');
+    assert.dom('h4').hasText('Usage:');
+    assert.dom('pre').hasText('sd-cmd exec foo/bar@1.0.0');
   });
 });

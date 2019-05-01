@@ -75,9 +75,7 @@ export default Component.extend({
       this.set('showToggleModal', true);
     },
     updateMessage(message) {
-      const { state } = this;
-      const { user } = this;
-      const { jobId } = this;
+      const { state, user, jobId } = this;
 
       this.setJobStatus(jobId, state, user, message || ' ');
       this.set('showToggleModal', false);

@@ -66,15 +66,18 @@ li {
   height: 20px;
 }
 
-.pr-url{
+.pr-url {
   position: relative;
 }
 
-.dropdown .dropdown-menu{
+.dropdown .dropdown-menu {
   display: none;
 }
 
-.open .dropdown-menu, .commit-list, .caret-display, .dropdown{
+.open .dropdown-menu,
+.commit-list,
+.caret-display,
+.dropdown {
   display: inline-block;
 }
 

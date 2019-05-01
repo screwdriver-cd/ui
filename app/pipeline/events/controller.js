@@ -311,7 +311,8 @@ export default Controller.extend(ModelReloaderMixin, {
       const event = get(this, 'selectedEventObj');
       const eventId = get(event, 'id');
 
-      return this.get('stop').stopBuilds(eventId)
+      return this.get('stop')
+        .stopBuilds(eventId)
         .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
     },
     startPRBuild(prNum, jobs) {

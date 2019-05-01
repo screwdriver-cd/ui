@@ -11,8 +11,7 @@ export default Component.extend({
   coverageInfo: {},
   coverageStep: computed('buildSteps', {
     get() {
-      const { buildSteps } = this;
-      const coverageStep = buildSteps.find(item =>
+      const coverageStep = this.buildSteps.find(item =>
         /^sd-teardown-screwdriver-coverage/.test(item.name)
       );
 
@@ -152,9 +151,7 @@ export default Component.extend({
 
   actions: {
     changeCurPr(targetPr) {
-      let { changeBuild } = this;
-
-      changeBuild(targetPr.event.pipelineId, targetPr.build.id);
+      this.changeBuild(targetPr.event.pipelineId, targetPr.build.id);
     },
 
     buildButtonClick() {

@@ -13,9 +13,8 @@ export default Component.extend({
   prJobs: computed('selectedEventObj.prNum', 'prGroups', {
     get() {
       const prNum = this.get('selectedEventObj.prNum');
-      const { prGroups } = this;
 
-      return prGroups[prNum];
+      return this.prGroups[prNum];
     }
   }),
   eventOptions: computed('lastSuccessful', 'mostRecent', 'isPR', {

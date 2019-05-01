@@ -84,19 +84,24 @@ $weight-bold: 600;
   }
 }
 
-.FAILURE, .ABORTED {
+.FAILURE,
+.ABORTED {
   .status .fa {
     color: $sd-failure;
   }
 }
 
-.RUNNING, .QUEUED, .BLOCKED, .CREATED {
+.RUNNING,
+.QUEUED,
+.BLOCKED,
+.CREATED {
   .status .fa {
     color: $sd-running;
   }
 }
 
-.COLLAPSED, .FROZEN {
+.COLLAPSED,
+.FROZEN {
   .status .fa {
     color: $sd-text-light;
   }
@@ -138,14 +143,16 @@ a {
       border-bottom: 2px solid $grey-400;
 
       & > a {
-        &, &:hover {
+        &,
+        &:hover {
           border: none !important;
-          margin: 0  !important;
-          background: none  !important;
+          margin: 0 !important;
+          background: none !important;
         }
       }
 
-      &.active, &:hover {
+      &.active,
+      &:hover {
         border-bottom: 2px solid $brand-600;
       }
     }

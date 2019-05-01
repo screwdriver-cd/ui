@@ -18,8 +18,7 @@ export default Component.extend({
   }),
   scmContext: computed({
     get() {
-      const { pipeline } = this;
-      const scm = this.scmService.getScm(pipeline.get('scmContext'));
+      const scm = this.scmService.getScm(this.pipeline.get('scmContext'));
 
       return {
         scm: scm.displayName,

@@ -17,8 +17,7 @@ export default Component.extend({
       this.set('showModal', open);
     },
     addNewCollection() {
-      const { name } = this;
-      const { description } = this;
+      const { name, description } = this;
 
       schedule('actions', () => {
         const newCollection = this.store.createRecord('collection', {

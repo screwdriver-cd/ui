@@ -33,8 +33,7 @@ export default Service.extend({
    * @return {DS.RecordArray} Array of scm object.
    */
   createScms() {
-    const { session } = this;
-    const { store } = this;
+    const { session, store } = this;
     const scms = this.getScms();
 
     if (get(scms, 'length') !== 0) {

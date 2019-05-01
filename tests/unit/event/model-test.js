@@ -1,29 +1,28 @@
 import { run } from '@ember/runloop';
 import { get } from '@ember/object';
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { settled } from '@ember/test-helpers';
 
 module('Unit | Model | event', function(hooks) {
   setupTest(hooks);
 
   test('it exists', function(assert) {
-    let model = this.owner.lookup('service:store').createRecord('event');
-
-    assert.ok(!!model);
+    assert.ok(!!this.owner.lookup('service:store').createRecord('event'));
   });
 
-  test('it is not completed when there are no builds', function(assert) {
+  test('it is not completed when there are no builds', async function(assert) {
     const model = this.owner.lookup('service:store').createRecord('event');
 
-    run.next(this, () => {
-      const isComplete = get(model, 'isComplete');
+    await settled();
 
-      assert.notOk(isComplete);
-    });
+    const isComplete = get(model, 'isComplete');
+
+    assert.notOk(isComplete);
   });
 
   // Testing observers is messy, need to change the model value, then schedule to read the newly set value later
-  test('it is not completed when the a build is not complete', function(assert) {
+  test('it is not completed when the a build is not complete', async function(assert) {
     const build = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 1, status: 'RUNNING' });
@@ -31,12 +30,12 @@ module('Unit | Model | event', function(hooks) {
 
     run(() => model.set('builds', [build]));
 
-    run.next(this, () => {
-      assert.notOk(model.get('isComplete'));
-    });
+    await settled();
+
+    assert.notOk(model.get('isComplete'));
   });
 
-  test('it is not completed when new builds created during reload', function(assert) {
+  test('it is not completed when new builds created during reload', async function(assert) {
     assert.expect(3);
 
     const build1 = this.owner
@@ -75,15 +74,15 @@ module('Unit | Model | event', function(hooks) {
       });
     });
 
-    run.next(this, () => {
-      // Since no new builds added after 2 reloads, event eventually finishes
-      const isComplete = get(model, 'isComplete');
+    await settled();
 
-      assert.ok(isComplete);
-    });
+    // Since no new builds added after 2 reloads, event eventually finishes
+    const isComplete = get(model, 'isComplete');
+
+    assert.ok(isComplete);
   });
 
-  test('it is complete when all builds have run', function(assert) {
+  test('it is complete when all builds have run', async function(assert) {
     const build1 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 1, status: 'SUCCESS' });
@@ -103,26 +102,26 @@ module('Unit | Model | event', function(hooks) {
 
     run(() => model.set('builds', [build5, build4, build3, build2, build1]));
 
-    run.next(this, () => {
-      const isComplete = get(model, 'isComplete');
+    await settled();
 
-      assert.ok(isComplete);
-    });
+    const isComplete = get(model, 'isComplete');
+
+    assert.ok(isComplete);
   });
 
-  test('it is RUNNING when there are no builds', function(assert) {
+  test('it is RUNNING when there are no builds', async function(assert) {
     const model = run(() => this.owner.lookup('service:store').createRecord('event'));
 
     run(() => model.set('builds', []));
 
-    run.next(this, () => {
-      const status = get(model, 'status');
+    await settled();
 
-      assert.equal(status, 'RUNNING');
-    });
+    const status = get(model, 'status');
+
+    assert.equal(status, 'RUNNING');
   });
 
-  test('it returns build status when a build is not SUCCESS', function(assert) {
+  test('it returns build status when a build is not SUCCESS', async function(assert) {
     const build1 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 1, status: 'ABORTED' });
@@ -133,14 +132,14 @@ module('Unit | Model | event', function(hooks) {
 
     run(() => model.set('builds', [build2, build1]));
 
-    run.next(this, () => {
-      const status = get(model, 'status');
+    await settled();
 
-      assert.equal(status, 'ABORTED');
-    });
+    const status = get(model, 'status');
+
+    assert.equal(status, 'ABORTED');
   });
 
-  test('it is SUCCESS when all expected builds have run successfully', function(assert) {
+  test('it is SUCCESS when all expected builds have run successfully', async function(assert) {
     const build1 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 1, status: 'SUCCESS' });
@@ -160,14 +159,14 @@ module('Unit | Model | event', function(hooks) {
 
     run(() => model.set('builds', [build5, build4, build3, build2, build1]));
 
-    run.next(this, () => {
-      const status = get(model, 'status');
+    await settled();
 
-      assert.equal(status, 'SUCCESS');
-    });
+    const status = get(model, 'status');
+
+    assert.equal(status, 'SUCCESS');
   });
 
-  skip('it returns event duration whenever builds have run in parallel', function(assert) {
+  test('it returns event duration whenever builds have run in parallel', async function(assert) {
     const eventStartTime = 1472244582531;
     const elapsed10secsTime = eventStartTime + 10000;
     const elapsed20secsTime = eventStartTime + 20000;
@@ -187,14 +186,14 @@ module('Unit | Model | event', function(hooks) {
 
     run(() => model.set('builds', [build2, build1]));
 
-    return run.next(this, () => {
-      const duration = get(model, 'duration');
+    await settled();
 
-      assert.equal(duration, 20000);
-    });
+    const duration = get(model, 'duration');
+
+    assert.equal(duration, 20000);
   });
 
-  skip('it returns event duration until now if not completed yet', function(assert) {
+  test('it returns event duration until now if not completed yet', async function(assert) {
     const eventStartTime = 1472244582531;
     const elapsed10secsTime = eventStartTime + 10000;
     const elapsed20secsTime = eventStartTime + 20000;
@@ -218,18 +217,18 @@ module('Unit | Model | event', function(hooks) {
 
     run(() => model.set('builds', [build2, build1, build3]));
 
-    return run.next(this, () => {
-      const duration = get(model, 'duration');
-      const testFinishedTime = new Date().getTime();
+    await settled();
 
-      assert.ok(
-        duration >= testStartTime - eventStartTime,
-        `duration ${duration} should be equal or longer than test start ${testStartTime}`
-      );
-      assert.ok(
-        duration <= testFinishedTime - eventStartTime,
-        `duration ${duration} should be equal or shorter than test finished ${testFinishedTime}`
-      );
-    });
+    const duration = get(model, 'duration');
+    const testFinishedTime = new Date().getTime();
+
+    assert.ok(
+      duration >= testStartTime - eventStartTime,
+      `duration ${duration} should be equal or longer than test start ${testStartTime}`
+    );
+    assert.ok(
+      duration <= testFinishedTime - eventStartTime,
+      `duration ${duration} should be equal or shorter than test finished ${testFinishedTime}`
+    );
   });
 });

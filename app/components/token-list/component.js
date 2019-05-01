@@ -57,11 +57,9 @@ export default Component.extend({
      * @method addNewToken
      */
     addNewToken() {
-      const { newName } = this;
-
       this.set('isSaving', true);
 
-      return this.onCreateToken(newName, this.newDescription)
+      return this.onCreateToken(this.newName, this.newDescription)
         .then(() => {
           this.set('newName', null);
           this.set('newDescription', null);

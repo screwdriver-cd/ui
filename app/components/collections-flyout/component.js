@@ -24,9 +24,7 @@ export default Component.extend({
 
   actions: {
     changeCollectionDisplayed() {
-      let { changeCollection } = this;
-
-      changeCollection();
+      this.changeCollection();
     },
     openModal() {
       this.set('showModal', true);

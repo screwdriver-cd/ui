@@ -52,9 +52,11 @@ export default Service.extend({
         headers: {
           Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
         }
-      }).done((data) => {
-        resolve(data);
-      }).catch(() => resolve([]))
+      })
+        .done(data => {
+          resolve(data);
+        })
+        .catch(() => resolve([]))
     );
 
     let promises = [buildPromise, eventPromise];
