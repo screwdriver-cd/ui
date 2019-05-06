@@ -18,8 +18,7 @@ export default Component.extend({
   }),
   scmContext: computed({
     get() {
-      const pipeline = get(this, 'pipeline');
-      const scm = get(this, 'scmService').getScm(pipeline.get('scmContext'));
+      const scm = this.scmService.getScm(this.pipeline.get('scmContext'));
 
       return {
         scm: scm.displayName,
@@ -32,11 +31,13 @@ export default Component.extend({
       this.set('showCollectionModal', true);
     },
     addToCollection(pipelineId, collection) {
-      return this.get('addToCollection')(+pipelineId, collection.id)
+      return this.addToCollection(+pipelineId, collection.id)
         .then(() => {
           this.set('addCollectionError', null);
-          this.set('addCollectionSuccess',
-            `Successfully added Pipeline to ${collection.get('name')}`);
+          this.set(
+            'addCollectionSuccess',
+            `Successfully added Pipeline to ${collection.get('name')}`
+          );
         })
         .catch(() => {
           this.set('addCollectionError', `Could not add Pipeline to ${collection.get('name')}`);

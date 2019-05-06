@@ -75,7 +75,7 @@ export default DS.Model.extend({
   }),
   endTimeWords: computed('endTime', {
     get() {
-      if (!this.get('endTime')) {
+      if (!this.endTime) {
         return null;
       }
 
@@ -111,7 +111,7 @@ export default DS.Model.extend({
   }),
   truncatedSha: computed('sha', {
     get() {
-      return this.get('sha').substr(0, 7);
+      return this.sha.substr(0, 7);
     }
   })
 });

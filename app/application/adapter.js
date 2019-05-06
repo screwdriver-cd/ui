@@ -1,4 +1,3 @@
-import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { pluralize } from 'ember-inflector';
 import DS from 'ember-data';
@@ -33,13 +32,9 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
     return this._super(url, method, finalHash);
   },
 
-  /**
-   * Compute the headers to add the auth token in
-   * @property {Object}
-   */
-  headers: computed(function cHeaders() {
-    return { Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}` };
-  }).volatile(),
+  get headers() {
+    return { Authorization: `Bearer ${this.session.get('data.authenticated.token')}` };
+  },
 
   /**
    * Interface for adding content to a payload before handleResponse is complete
@@ -107,24 +102,28 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       let errors = payload.error;
 
       if (typeof errors === 'string') {
-        errors = [{
-          status: payload.statusCode,
-          title: payload.error,
-          detail: payload.message,
-          data: payload.data
-        }];
+        errors = [
+          {
+            status: payload.statusCode,
+            title: payload.error,
+            detail: payload.message,
+            data: payload.data
+          }
+        ];
       }
 
       if (typeof errors === 'object' && !Array.isArray(errors)) {
-        errors = [{
-          status: errors.statusCode,
-          title: errors.error,
-          detail: errors.message
-        }];
+        errors = [
+          {
+            status: errors.statusCode,
+            title: errors.error,
+            detail: errors.message
+          }
+        ];
       }
 
       // Rewrite the error message for guest users
-      errors = errors.map((err) => {
+      errors = errors.map(err => {
         if (err.detail === 'Insufficient scope') {
           err.detail = 'You do not have adequate permissions to perform this action.';
         }
@@ -176,8 +175,10 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       return this._super(modelName, snapshot);
     }
 
-    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
-      + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
+    return (
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`
+    );
   },
   /**
    * Overriding default adapter because pipeline token's endpoint is differnt
@@ -192,8 +193,10 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       return this._super(modelName, snapshot);
     }
 
-    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
-      + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
+    return (
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`
+    );
   },
   /**
    * Overriding default adapter because pipeline token's endpoint is differnt
@@ -209,8 +212,10 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       return this._super(id, modelName, snapshot);
     }
 
-    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
-      + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`;
+    return (
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`
+    );
   },
   /**
    * Overriding default adapter because pipeline token's endpoint is differnt
@@ -226,8 +231,10 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       return this._super(id, modelName, snapshot);
     }
 
-    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`
-      + `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`;
+    return (
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`
+    );
   },
   /**
    * Overriding default adapter in order to pass pagination query params to
@@ -238,16 +245,15 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    */
   urlForQuery(query, modelName) {
     if (modelName === 'event' || modelName === 'metric') {
-      const pipelineId = query.pipelineId;
-      const jobId = query.jobId;
+      const { pipelineId, jobId } = query;
 
       delete query.pipelineId;
       delete query.jobId;
 
       // eslint-disable-next-line prefer-template
-      return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-        (pipelineId ? `/pipelines/${pipelineId}` : `/jobs/${jobId}`) +
-        `/${pluralize(modelName)}`;
+      return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}${
+        pipelineId ? `/pipelines/${pipelineId}` : `/jobs/${jobId}`
+      }/${pluralize(modelName)}`;
     }
 
     return this._super(...arguments);

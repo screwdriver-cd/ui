@@ -1,6 +1,8 @@
-import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';
 
@@ -18,125 +20,131 @@ const collectionModel = {
   destroyRecord() {}
 };
 
-moduleForComponent('collections-modal', 'Integration | Component | collections modal', {
-  integration: true
-});
+module('Integration | Component | collections modal', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  assert.expect(5);
-  const $ = this.$;
-
-  this.set('showModal', true);
-
-  this.render(hbs`{{collection-modal showModal=showModal}}`);
-
-  assert.equal($('.modal-title').text().trim(), 'Create New Collection');
-  assert.equal($('.name .control-label').text().trim(), 'Collection Name');
-  assert.equal($('.description .control-label').text().trim(), 'Description');
-  assert.equal($('.collection-form__cancel').text().trim(), 'Cancel');
-  assert.equal($('.collection-form__create').text().trim(), 'Save');
-});
-
-test('it cancels creation of a collection', function (assert) {
-  const $ = this.$;
-
-  assert.expect(2);
-
-  this.set('showModal', true);
-  this.render(hbs`{{collection-modal showModal=showModal}}`);
-
-  assert.equal($('.modal-dialog').length, 1);
-  $('.collection-form__cancel').click();
-  assert.equal($('.modal-dialog').length, 0);
-});
-
-test('it creates a collection', function (assert) {
-  injectSessionStub(this);
-  assert.expect(4);
-
-  const $ = this.$;
-  const storeStub = EmberObject.extend({
-    createRecord(model, data) {
-      assert.strictEqual(model, 'collection');
-      assert.deepEqual(data, {
-        name: 'Test',
-        description: 'Test description'
-      });
-
-      return collectionModel;
-    },
-    findAll() {
-      return new EmberPromise(resolve => resolve([mockCollection]));
-    }
+  hooks.beforeEach(function() {
+    this.owner.unregister('service:store');
   });
 
-  const stubAddFunction = function () {
-    assert.ok(true);
-  };
+  test('it renders', async function(assert) {
+    assert.expect(5);
 
-  this.set('showModal', true);
-  this.set('name', 'Test');
-  this.set('description', 'Test description');
-  this.set('addToCollection', stubAddFunction);
+    this.set('showModal', true);
 
-  this.register('service:store', storeStub);
-  this.inject.service('store');
+    await render(hbs`{{collection-modal showModal=showModal}}`);
 
-  this.render(hbs`{{collection-modal showModal=showModal name=name description=description}}`);
-
-  assert.equal($('.modal-dialog').length, 1);
-  $('.collection-form__create').click();
-  assert.notOk(this.get('showModal'));
-});
-
-test('it cancels creation of a collection', function (assert) {
-  assert.expect(3);
-
-  injectSessionStub(this);
-
-  const $ = this.$;
-  const model = {
-    save() {
-      return new EmberPromise((resolve, reject) => reject({
-        errors: [{
-          detail: 'This is an error message'
-        }]
-      }));
-    },
-    destroyRecord() {}
-  };
-  const storeStub = EmberObject.extend({
-    createRecord() {
-      return model;
-    }
+    assert.dom('.modal-title').hasText('Create New Collection');
+    assert.dom('.name .control-label').hasText('Collection Name');
+    assert.dom('.description .control-label').hasText('Description');
+    assert.dom('.collection-form__cancel').hasText('Cancel');
+    assert.dom('.collection-form__create').hasText('Save');
   });
 
-  this.set('collections', []);
-  this.set('showModal', true);
-  this.set('errorMessage', null);
-  this.set('name', null);
-  this.set('description', null);
+  test('it cancels creation of a collection', async function(assert) {
+    assert.expect(2);
 
-  this.register('service:store', storeStub);
-  this.inject.service('store');
+    this.set('showModal', true);
 
-  this.render(hbs`{{collection-modal
-    collections=collections
-    showModal=showModal
-    name=name
-    description=description
-    errorMessage=errorMessage
-  }}`);
+    await render(hbs`{{collection-modal showModal=showModal}}`);
 
-  $('.new').click();
+    assert.dom('.modal-dialog').exists({ count: 1 });
 
-  this.set('name', 'Test');
-  this.set('description', 'Test description');
+    await click('.collection-form__cancel');
 
-  assert.ok(this.get('showModal'));
-  $('.collection-form__create').click();
-  // Modal should remain open because of error
-  assert.ok(this.get('showModal'));
-  assert.strictEqual($('.alert-warning > span').text().trim(),
-    'This is an error message');
+    assert.dom('.modal-dialog').doesNotExist();
+  });
+
+  test('it creates a collection', async function(assert) {
+    assert.expect(4);
+
+    injectSessionStub(this);
+
+    const storeStub = Service.extend({
+      createRecord(model, data) {
+        assert.strictEqual(model, 'collection');
+        assert.deepEqual(data, {
+          name: 'Test',
+          description: 'Test description'
+        });
+
+        return collectionModel;
+      },
+      findAll() {
+        return new EmberPromise(resolve => resolve([mockCollection]));
+      }
+    });
+
+    const stubAddFunction = function() {
+      assert.ok(true);
+    };
+
+    this.set('showModal', true);
+    this.set('name', 'Test');
+    this.set('description', 'Test description');
+    this.set('addToCollection', stubAddFunction);
+
+    this.owner.register('service:store', storeStub);
+
+    await render(hbs`{{collection-modal showModal=showModal name=name description=description}}`);
+
+    assert.dom('.modal-dialog').exists({ count: 1 });
+
+    await click('.collection-form__create');
+
+    assert.notOk(this.get('showModal'));
+  });
+
+  test('it cancels creation of a collection', async function(assert) {
+    assert.expect(3);
+
+    injectSessionStub(this);
+
+    const model = {
+      save() {
+        return new EmberPromise((resolve, reject) =>
+          reject({
+            errors: [
+              {
+                detail: 'This is an error message'
+              }
+            ]
+          })
+        );
+      },
+      destroyRecord() {}
+    };
+    const storeStub = Service.extend({
+      createRecord() {
+        return model;
+      }
+    });
+
+    this.set('collections', []);
+    this.set('showModal', true);
+    this.set('errorMessage', null);
+    this.set('name', null);
+    this.set('description', null);
+
+    this.owner.register('service:store', storeStub);
+
+    await render(hbs`{{collection-modal
+      collections=collections
+      showModal=showModal
+      name=name
+      description=description
+      errorMessage=errorMessage
+    }}`);
+
+    this.set('name', 'Test');
+    this.set('description', 'Test description');
+
+    assert.ok(this.get('showModal'));
+
+    await click('.collection-form__create');
+
+    // Modal should remain open because of error
+    assert.ok(this.get('showModal'));
+    assert.dom('.alert-warning > span').hasText('This is an error message');
+  });
 });

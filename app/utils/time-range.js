@@ -20,16 +20,19 @@ export function iso8601UpToMinute(date) {
  * @param {Object} [config.options] other options for display format
  * @returns {String} custom locale string
  */
-export function toCustomLocaleString(date, {
-  timeZone,
-  options = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  }
-} = {}) {
+export function toCustomLocaleString(
+  date,
+  {
+    timeZone,
+    options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    }
+  } = {}
+) {
   const tz = timeZone && timeZone.trim();
 
   if (tz) {
@@ -63,20 +66,20 @@ export default function timeRange(end, range) {
   const endTime = iso8601UpToMinute(current);
 
   switch (duration) {
-  case 'hr':
-    current.setUTCHours(current.getUTCHours() - quantity);
-    break;
-  case 'd':
-    current.setUTCDate(current.getUTCDate() - quantity);
-    break;
-  case 'wk':
-    current.setUTCDate(current.getUTCDate() - (quantity * 7));
-    break;
-  case 'mo':
-    current.setUTCMonth(current.getUTCMonth() - quantity);
-    break;
-  default:
-    return null;
+    case 'hr':
+      current.setUTCHours(current.getUTCHours() - quantity);
+      break;
+    case 'd':
+      current.setUTCDate(current.getUTCDate() - quantity);
+      break;
+    case 'wk':
+      current.setUTCDate(current.getUTCDate() - quantity * 7);
+      break;
+    case 'mo':
+      current.setUTCMonth(current.getUTCMonth() - quantity);
+      break;
+    default:
+      return null;
   }
 
   startTime = iso8601UpToMinute(current);

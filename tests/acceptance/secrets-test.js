@@ -1,11 +1,14 @@
-import { test } from 'qunit';
-import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { currentURL, visit } from '@ember/test-helpers';
+import { module, test } from 'qunit';
+import { setupApplicationTest } from 'ember-qunit';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
-moduleForAcceptance('Acceptance | secrets', {
-  beforeEach() {
+module('Acceptance | secrets', function(hooks) {
+  setupApplicationTest(hooks);
+
+  hooks.beforeEach(function() {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/pipelines/1', () => [
@@ -43,20 +46,18 @@ moduleForAcceptance('Acceptance | secrets', {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
+  });
 
-test('visiting /pipelines/:id/secrets', function (assert) {
-  authenticateSession(this.application, { token: 'faketoken' });
+  test('visiting /pipelines/:id/secrets', async function(assert) {
+    await authenticateSession({ token: 'faketoken' });
+    await visit('/pipelines/1/secrets');
 
-  visit('/pipelines/1/secrets');
-
-  andThen(() => {
     assert.equal(currentURL(), '/pipelines/1/secrets');
-    assert.equal(find('.secrets tbody tr').length, 2);
-    assert.equal(find('.token-list tbody tr').length, 2);
+    assert.dom('.secrets tbody tr').exists({ count: 2 });
+    assert.dom('.token-list tbody tr').exists({ count: 2 });
   });
 });

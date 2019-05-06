@@ -17,8 +17,7 @@ export default Service.extend({
    */
   clearCache(config) {
     const { scope, id } = config;
-    const url = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
-      `/caches/${scope}/${id}`;
+    const url = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}/caches/${scope}/${id}`;
     const ajaxConfig = {
       url,
       type: 'DELETE',
@@ -32,7 +31,7 @@ export default Service.extend({
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
         .done(content => resolve(content))
-        .fail((response) => {
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (response && response.responseJSON && typeof response.responseJSON === 'object') {

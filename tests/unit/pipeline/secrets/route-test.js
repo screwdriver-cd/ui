@@ -1,13 +1,13 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleFor('route:pipeline/secrets', 'Unit | Route | pipeline/secrets', {
-  // Specify the other units that are required for this test.
-  needs: ['service:session']
-});
+module('Unit | Route | pipeline/secrets', function(hooks) {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let route = this.subject();
+  test('it exists', function(assert) {
+    let route = this.owner.lookup('route:pipeline/secrets');
 
-  assert.ok(route);
-  assert.equal(route.titleToken, 'Secrets');
+    assert.ok(route);
+    assert.equal(route.titleToken, 'Secrets');
+  });
 });

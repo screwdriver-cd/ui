@@ -14,14 +14,15 @@ export default Route.extend(ApplicationRouteMixin, {
     }
   },
   model() {
-    return this.get('scmService').createScms();
+    return this.scmService.createScms();
   },
   sessionInvalidated() {
     this.reloadPage();
   },
+  // eslint-disable-next-line ember/no-observers
   sessionChanged: observer('session.data.sessionChanged', function sessionChanged() {
-    if (this.get('session').get('data.sessionChanged')) {
-      this.get('session').set('data.sessionChanged', false);
+    if (this.session.get('data.sessionChanged')) {
+      this.session.set('data.sessionChanged', false);
       this.store.unloadAll();
       this.reloadPage();
     }

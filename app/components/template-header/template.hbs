@@ -1,7 +1,7 @@
 <h1>
   {{template.fullName}}
   {{#if scmUrl}}
-    <a href="{{scmUrl}}">{{fa-icon "code-fork" title="Source code"}}</a> <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
+    <a href={{scmUrl}}>{{fa-icon "code-fork" title="Source code"}}</a> <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
   {{else}}
     {{fa-icon "code-fork" title="The pipeline for this template does not exist."}} {{fa-icon "trash" title="Cannot delete template; pipeline could not be found."}}
   {{/if}}
@@ -20,20 +20,22 @@
   {{/if}}
   <div class="template-details--item" id="template-maintainer">
     <div class="template-details--label">Released by:</div>
-    <div class="template-details--value"><a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a>
-  </div>
+    <div class="template-details--value">
+      <a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a>
+    </div>
   </div>
   {{#if template.labels.length}}
     <div class="template-details--item" id="template-tags">
       <div class="template-details--label">Tags:</div>
       <div class="template-details--value">
-      {{#each template.labels as |l|}}
-        <span class="template-label">{{l}}</span>
-      {{/each}}
+        {{#each template.labels as |l|}}
+          <span class="template-label">{{l}}</span>
+        {{/each}}
       </div>
     </div>
   {{/if}}
 <h4>Usage:</h4>
+{{! template-lint-disable block-indentation }}
 <pre>jobs:
   main:
     template: {{template.fullName}}@{{template.version}}
@@ -55,7 +57,7 @@
         {{fa-icon "exclamation-triangle" pull="left" size=3}}
         You're about to delete all versions and tags of <strong>{{template.fullName}}</strong>. There might be existing pipelines using this template.
       {{/modal.body}}
-      {{#modal.footer as |footer|}}
+      {{#modal.footer}}
         {{#bs-button onClick=(action "cancelRemovingTemplate")}}Cancel{{/bs-button}}
         {{#bs-button onClick=(action "removeTemplate" template.fullName) type="danger"}}{{fa-icon "trash"}} Confirm{{/bs-button}}
       {{/modal.footer}}

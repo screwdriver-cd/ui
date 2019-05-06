@@ -24,22 +24,24 @@ export default Component.extend({
   sortedTokens: sort('tokens', 'tokenSorting'),
 
   isButtonDisabled: computed('newName', 'isSaving', function isButtonDisabled() {
-    return !this.get('newName') || this.get('isSaving');
+    return !this.newName || this.isSaving;
   }),
 
   modalButtonText: computed('modalAction', function modalButtonText() {
-    return capitalize(this.get('modalAction'));
+    return capitalize(this.modalAction);
   }),
 
   // Don't show the "new token" and "error" dialogs at the same time
+  // eslint-disable-next-line ember/no-observers
   errorObserver: observer('errorMessage', function errorObserver() {
-    if (this.get('errorMessage')) {
+    if (this.errorMessage) {
       this.set('newToken', null);
       this.set('isSaving', null);
     }
   }),
+  // eslint-disable-next-line ember/no-observers
   newTokenObserver: observer('newToken', function newTokenObserver() {
-    if (this.get('newToken')) {
+    if (this.newToken) {
       this.set('errorMessage', null);
       this.set('isSaving', null);
     }
@@ -55,15 +57,14 @@ export default Component.extend({
      * @method addNewToken
      */
     addNewToken() {
-      const newName = this.get('newName');
-
       this.set('isSaving', true);
 
-      return this.get('onCreateToken')(newName, this.get('newDescription'))
+      return this.onCreateToken(this.newName, this.newDescription)
         .then(() => {
           this.set('newName', null);
           this.set('newDescription', null);
-        }).catch((error) => {
+        })
+        .catch(error => {
           this.set('errorMessage', error.errors[0].detail);
         });
     },
@@ -95,14 +96,16 @@ export default Component.extend({
      * @param {Number} id
      */
     confirmAction(action, id) {
-      this.set('modalTarget', this.get('tokens').find(token => token.get('id') === id));
+      this.set('modalTarget', this.tokens.find(token => token.get('id') === id));
       this.set('modalAction', action);
 
       if (action === 'delete') {
         this.set('modalText', `The "${this.get('modalTarget.name')}" token will be deleted.`);
       } else {
-        this.set('modalText',
-          `The current "${this.get('modalTarget.name')}" token will be invalidated.`);
+        this.set(
+          'modalText',
+          `The current "${this.get('modalTarget.name')}" token will be invalidated.`
+        );
       }
 
       this.set('isShowingModal', true);
@@ -116,15 +119,13 @@ export default Component.extend({
       this.set('isShowingModal', false);
 
       if (confirm) {
-        if (this.get('modalAction') === 'delete') {
-          this.get('modalTarget')
-            .destroyRecord({ adapterOptions: { pipelineId: this.get('pipelineId') } });
+        if (this.modalAction === 'delete') {
+          this.modalTarget.destroyRecord({ adapterOptions: { pipelineId: this.pipelineId } });
         } else {
           this.set('isSaving', true);
-          this.get('onRefreshToken')(this.get('modalTarget.id'))
-            .catch((error) => {
-              this.set('errorMessage', error.errors[0].detail);
-            });
+          this.onRefreshToken(this.get('modalTarget.id')).catch(error => {
+            this.set('errorMessage', error.errors[0].detail);
+          });
         }
       }
     }

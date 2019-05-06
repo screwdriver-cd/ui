@@ -17,26 +17,26 @@ export default Component.extend({
       this.set('showModal', open);
     },
     addNewCollection() {
-      const name = this.get('name');
-      const description = this.get('description');
+      const { name, description } = this;
 
       schedule('actions', () => {
-        const newCollection = this.get('store').createRecord('collection', {
+        const newCollection = this.store.createRecord('collection', {
           name,
           description
         });
 
-        return newCollection.save()
+        return newCollection
+          .save()
           .then(() => {
             this.set('showModal', false);
 
-            let addDirectly = this.get('addToCollection');
+            let addDirectly = this.addToCollection;
 
             if (addDirectly) {
-              addDirectly(this.get('pipelineId'), newCollection.id);
+              addDirectly(this.pipelineId, newCollection.id);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             newCollection.destroyRecord();
             this.set('errorMessage', error.errors[0].detail);
           });

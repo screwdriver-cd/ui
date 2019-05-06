@@ -1,4 +1,6 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const TEMPLATE_DATA_WITH_NAME = {
@@ -38,26 +40,26 @@ const TEMPLATE_DATA_WITH_NAMESPACE = {
   value: 'baz'
 };
 
-moduleForComponent('tc-collection-linker', 'Integration | Component | tc collection linker', {
-  integration: true
-});
+module('Integration | Component | tc collection linker', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders the link to collection namespace page', function (assert) {
-  Object.keys(TEMPLATE_DATA_WITH_NAMESPACE).forEach(
-    prop => this.set(prop, TEMPLATE_DATA_WITH_NAMESPACE[prop])
-  );
+  test('it renders the link to collection namespace page', async function(assert) {
+    Object.keys(TEMPLATE_DATA_WITH_NAMESPACE).forEach(prop =>
+      this.set(prop, TEMPLATE_DATA_WITH_NAMESPACE[prop])
+    );
 
-  this.render(hbs`{{tc-collection-linker column=column extra=extra value=value}}`);
+    await render(hbs`{{tc-collection-linker column=column extra=extra value=value}}`);
 
-  assert.equal(this.$('a .namespace').text().trim(), 'baz');
-});
+    assert.dom('a .namespace').hasText('baz');
+  });
 
-test('it renders the link to collection detail page', function (assert) {
-  Object.keys(TEMPLATE_DATA_WITH_NAME).forEach(
-    prop => this.set(prop, TEMPLATE_DATA_WITH_NAME[prop])
-  );
+  test('it renders the link to collection detail page', async function(assert) {
+    Object.keys(TEMPLATE_DATA_WITH_NAME).forEach(prop =>
+      this.set(prop, TEMPLATE_DATA_WITH_NAME[prop])
+    );
 
-  this.render(hbs`{{tc-collection-linker column=column extra=extra value=value}}`);
+    await render(hbs`{{tc-collection-linker column=column extra=extra value=value}}`);
 
-  assert.equal(this.$('a .name').text().trim(), 'bar');
+    assert.dom('a .name').hasText('bar');
+  });
 });

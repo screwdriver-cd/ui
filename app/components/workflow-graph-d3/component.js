@@ -1,6 +1,6 @@
 /* global d3 */
 import Component from '@ember/component';
-import { get, set, getWithDefault, computed } from '@ember/object';
+import { set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-tools';
 
@@ -9,17 +9,20 @@ export default Component.extend({
   classNameBindings: ['minified'],
   displayJobNames: true,
   decoratedGraph: computed(
-    'workflowGraph', 'startFrom', 'minified',
+    'workflowGraph',
+    'startFrom',
+    'minified',
     'builds.@each.{status,id}',
-    'jobs.@each.{isDisabled,state,stateChanger}', {
+    'jobs.@each.{isDisabled,state,stateChanger}',
+    {
       get() {
         const builds = getWithDefault(this, 'builds', []);
-        const startFrom = get(this, 'startFrom');
+        const { startFrom } = this;
         const jobs = getWithDefault(this, 'jobs', []);
         const graph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
 
         return decorateGraph({
-          inputGraph: this.get('minified') ? subgraphFilter(graph, startFrom) : graph,
+          inputGraph: this.minified ? subgraphFilter(graph, startFrom) : graph,
           builds,
           jobs,
           start: startFrom
@@ -29,7 +32,7 @@ export default Component.extend({
   ),
   elementSizes: computed('minified', {
     get() {
-      if (get(this, 'minified')) {
+      if (this.minified) {
         return {
           ICON_SIZE: 12,
           TITLE_SIZE: 0,
@@ -48,18 +51,18 @@ export default Component.extend({
     this._super(...arguments);
     this.draw();
 
-    set(this, 'lastGraph', get(this, 'workflowGraph'));
+    set(this, 'lastGraph', this.workflowGraph);
   },
   // Listen for changes to workflow and update graph accordingly.
   didUpdateAttrs() {
     this._super(...arguments);
 
-    const lg = get(this, 'lastGraph');
-    const wg = get(this, 'workflowGraph');
+    const lg = this.lastGraph;
+    const wg = this.workflowGraph;
 
     // redraw anyways when graph changes
     if (lg !== wg) {
-      get(this, 'graphNode').remove();
+      this.graphNode.remove();
 
       this.draw();
       set(this, 'lastGraph', wg);
@@ -69,40 +72,40 @@ export default Component.extend({
   },
   actions: {
     buildClicked(job) {
-      const fn = get(this, 'graphClicked');
+      const fn = this.graphClicked;
 
-      if (!get(this, 'minified') && typeof fn === 'function') {
-        fn(job, d3.event, get(this, 'elementSizes'));
+      if (!this.minified && typeof fn === 'function') {
+        fn(job, d3.event, this.elementSizes);
       }
     }
   },
   redraw() {
-    const data = this.get('decoratedGraph');
-    const el = d3.select(get(this, 'element'));
+    const data = this.decoratedGraph;
+    const el = d3.select(this.element);
 
-    data.nodes.forEach((node) => {
+    data.nodes.forEach(node => {
       const n = el.select(`g.graph-node[data-job="${node.name}"]`);
 
       if (n) {
         const txt = n.select('text');
 
         txt.text(icon(node.status));
-        n.attr('class',
-          `graph-node${node.status ? ` build-${node.status.toLowerCase()}` : ''}`
-        );
+        n.attr('class', `graph-node${node.status ? ` build-${node.status.toLowerCase()}` : ''}`);
       }
     });
   },
   draw() {
-    const data = this.get('decoratedGraph');
+    const data = this.decoratedGraph;
     const MAX_DISPLAY_NAME = 20;
-    const MAX_LENGTH = Math.min(data.nodes.reduce((max, cur) =>
-      Math.max(cur.name.length, max), 0), MAX_DISPLAY_NAME);
-    const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = get(this, 'elementSizes');
+    const MAX_LENGTH = Math.min(
+      data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
+      MAX_DISPLAY_NAME
+    );
+    const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = this.elementSizes;
     let X_WIDTH = ICON_SIZE * 2;
 
     // When displaying job names use estimate of 7 per character
-    if (TITLE_SIZE && get(this, 'displayJobNames')) {
+    if (TITLE_SIZE && this.displayJobNames) {
       X_WIDTH = Math.max(X_WIDTH, MAX_LENGTH * 7);
     }
     // Adjustable spacing between nodes
@@ -110,29 +113,33 @@ export default Component.extend({
     const EDGE_GAP = Math.floor(ICON_SIZE / 6);
 
     // Calculate the canvas size based on amount of content, or override with user-defined size
-    const w = get(this, 'width') || (data.meta.width * X_WIDTH);
-    const h = get(this, 'height') ||
-      ((data.meta.height * ICON_SIZE) + (data.meta.height * Y_SPACING));
+    const w = this.width || data.meta.width * X_WIDTH;
+    const h = this.height || data.meta.height * ICON_SIZE + data.meta.height * Y_SPACING;
 
     // Add the SVG element
-    const svg = d3.select(get(this, 'element'))
+    const svg = d3
+      .select(this.element)
       .append('svg')
       .attr('width', w)
       .attr('height', h)
-      .on('click.graph-node:not', (e) => {
-        this.send('buildClicked', e);
-      }, true);
+      .on(
+        'click.graph-node:not',
+        e => {
+          this.send('buildClicked', e);
+        },
+        true
+      );
 
     this.set('graphNode', svg);
 
-    const calcXCenter = pos => ((X_WIDTH / 2) + (pos * X_WIDTH));
+    const calcXCenter = pos => X_WIDTH / 2 + pos * X_WIDTH;
 
     // Calculate the start/end point of a line
-    const calcPos = (pos, spacer) =>
-      ((pos + 1) * ICON_SIZE) + ((pos * spacer) - (ICON_SIZE / 2));
+    const calcPos = (pos, spacer) => (pos + 1) * ICON_SIZE + (pos * spacer - ICON_SIZE / 2);
 
     // edges
-    svg.selectAll('link')
+    svg
+      .selectAll('link')
       .data(data.edges)
       .enter()
       .append('path')
@@ -140,16 +147,16 @@ export default Component.extend({
       .attr('stroke-dasharray', d => (!d.status ? 5 : 500))
       .attr('stroke-width', 2)
       .attr('fill', 'transparent')
-      .attr('d', (d) => {
+      .attr('d', d => {
         const path = d3.path();
-        const startX = calcXCenter(d.from.x) + (ICON_SIZE / 2) + EDGE_GAP;
+        const startX = calcXCenter(d.from.x) + ICON_SIZE / 2 + EDGE_GAP;
         const startY = calcPos(d.from.y, Y_SPACING);
-        const endX = calcXCenter(d.to.x) - (ICON_SIZE / 2) - EDGE_GAP;
+        const endX = calcXCenter(d.to.x) - ICON_SIZE / 2 - EDGE_GAP;
         const endY = calcPos(d.to.y, Y_SPACING);
 
         path.moveTo(startX, startY);
         // curvy line
-        path.bezierCurveTo(endX, startY, endX - (X_WIDTH / 2), endY, endX, endY);
+        path.bezierCurveTo(endX, startY, endX - X_WIDTH / 2, endY, endX, endY);
         // arrowhead
         path.lineTo(endX - ARROWHEAD, endY - ARROWHEAD);
         path.moveTo(endX, endY);
@@ -159,15 +166,14 @@ export default Component.extend({
       });
 
     // Jobs Icons
-    svg.selectAll('jobs')
+    svg
+      .selectAll('jobs')
       .data(data.nodes)
       .enter()
       // for each element in data array - do the following
       // create a group element to animate
       .append('g')
-      .attr('class',
-        d => `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`
-      )
+      .attr('class', d => `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`)
       .attr('data-job', d => d.name)
       // create the icon graphic
       .insert('text')
@@ -175,27 +181,31 @@ export default Component.extend({
       .attr('font-size', `${ICON_SIZE}px`)
       .style('text-anchor', 'middle')
       .attr('x', d => calcXCenter(d.pos.x))
-      .attr('y', d => ((d.pos.y + 1) * ICON_SIZE) + (d.pos.y * Y_SPACING))
-      .on('click', (e) => {
+      .attr('y', d => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING)
+      .on('click', e => {
         this.send('buildClicked', e);
       })
       // add a tooltip
       .insert('title')
-      .text(d => (d.status ? (`${d.name} - ${d.status}`) : d.name));
+      .text(d => (d.status ? `${d.name} - ${d.status}` : d.name));
 
     // Job Names
-    if (TITLE_SIZE && get(this, 'displayJobNames')) {
-      svg.selectAll('jobslabels')
+    if (TITLE_SIZE && this.displayJobNames) {
+      svg
+        .selectAll('jobslabels')
         .data(data.nodes)
         .enter()
         .append('text')
-        .text(d => (d.name.length >= MAX_DISPLAY_NAME ?
-          `${d.name.substr(0, 8)}...${d.name.substr(-8)}` : d.name))
+        .text(d =>
+          d.name.length >= MAX_DISPLAY_NAME
+            ? `${d.name.substr(0, 8)}...${d.name.substr(-8)}`
+            : d.name
+        )
         .attr('class', 'graph-label')
         .attr('font-size', `${TITLE_SIZE}px`)
         .style('text-anchor', 'middle')
         .attr('x', d => calcXCenter(d.pos.x))
-        .attr('y', d => ((d.pos.y + 1) * ICON_SIZE) + (d.pos.y * Y_SPACING) + TITLE_SIZE)
+        .attr('y', d => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING + TITLE_SIZE)
         .insert('title')
         .text(d => d.name);
     }

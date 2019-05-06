@@ -8,15 +8,15 @@ export default Controller.extend({
   scmContexts: alias('model'),
   actions: {
     invalidateSession() {
-      this.get('session').set('data.sessionChanged', false);
+      this.session.set('data.sessionChanged', false);
 
-      return this.get('session').invalidate();
+      return this.session.invalidate();
     },
     search(params) {
       this.transitionToRoute('search', { queryParams: { query: params } });
     },
     authenticate(scmContext) {
-      const session = this.get('session');
+      const { session } = this;
       const currentContext = session.get('data.authenticated.scmContext');
 
       session.authenticate('authenticator:screwdriver-api', scmContext).then(() => {

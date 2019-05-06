@@ -3,47 +3,47 @@ import { run } from '@ember/runloop';
 import { initialize } from 'screwdriver-ui/instance-initializers/supplementary-config';
 import { module, test } from 'qunit';
 import ENV from 'screwdriver-ui/config/environment';
-import destroyApp from '../../helpers/destroy-app';
 const NAMESPACE = ENV.APP.SDAPI_NAMESPACE;
 const HOSTNAME = ENV.APP.SDAPI_HOSTNAME;
-const SDDOC_URL = ENV.APP.SDDOC_URL;
+const { SDDOC_URL } = ENV.APP;
 
-module('Unit | Instance Initializer | supplementary config', {
-  beforeEach() {
+module('Unit | Instance Initializer | supplementary config', function(hooks) {
+  hooks.beforeEach(function() {
     run(() => {
       this.application = Application.create();
       this.appInstance = this.application.buildInstance();
       delete window.SUPPLEMENTARY_CONFIG;
     });
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     run(this.appInstance, 'destroy');
-    destroyApp(this.application);
+    run(this.application, 'destroy');
     delete window.SUPPLEMENTARY_CONFIG;
     ENV.APP.SDAPI_NAMESPACE = NAMESPACE;
     ENV.APP.SDAPI_HOSTNAME = HOSTNAME;
     ENV.APP.SDDOC_URL = SDDOC_URL;
-  }
-});
+  });
 
-test('it uses the pre-configured settings', function (assert) {
-  initialize(this.appInstance);
+  test('it uses the pre-configured settings', function(assert) {
+    initialize(this.appInstance);
 
-  assert.equal(ENV.APP.SDAPI_NAMESPACE, NAMESPACE);
-  assert.equal(ENV.APP.SDAPI_HOSTNAME, HOSTNAME);
-  assert.equal(ENV.APP.SDDOC_URL, SDDOC_URL);
-});
+    assert.equal(ENV.APP.SDAPI_NAMESPACE, NAMESPACE);
+    assert.equal(ENV.APP.SDAPI_HOSTNAME, HOSTNAME);
+    assert.equal(ENV.APP.SDDOC_URL, SDDOC_URL);
+  });
 
-test('it uses the supplementary-config settings', function (assert) {
-  window.SUPPLEMENTARY_CONFIG = {
-    SDAPI_NAMESPACE: 'v5',
-    SDAPI_HOSTNAME: 'http://example.com',
-    SDDOC_URL: 'http://custom.doc'
-  };
+  test('it uses the supplementary-config settings', function(assert) {
+    window.SUPPLEMENTARY_CONFIG = {
+      SDAPI_NAMESPACE: 'v5',
+      SDAPI_HOSTNAME: 'http://example.com',
+      SDDOC_URL: 'http://custom.doc'
+    };
 
-  initialize(this.appInstance);
+    initialize(this.appInstance);
 
-  assert.equal(ENV.APP.SDAPI_NAMESPACE, 'v5');
-  assert.equal(ENV.APP.SDAPI_HOSTNAME, 'http://example.com');
-  assert.equal(ENV.APP.SDDOC_URL, 'http://custom.doc');
+    assert.equal(ENV.APP.SDAPI_NAMESPACE, 'v5');
+    assert.equal(ENV.APP.SDAPI_HOSTNAME, 'http://example.com');
+    assert.equal(ENV.APP.SDDOC_URL, 'http://custom.doc');
+  });
 });

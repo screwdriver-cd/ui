@@ -37,15 +37,15 @@
 {{/if}}
 
 {{#if stepList}}
-{{build-step-collection
-  preselectedStepName=preselectedStepName
-  pipelineId=pipeline.id
-  buildStatus=build.status
-  buildId=build.id
-  buildSteps=build.steps
-  buildStart=build.startTime
-  buildStats=build.stats
-}}
+  {{build-step-collection
+    preselectedStepName=preselectedStepName
+    pipelineId=pipeline.id
+    buildStatus=build.status
+    buildId=build.id
+    buildSteps=build.steps
+    buildStart=build.startTime
+    buildStats=build.stats
+  }}
 {{/if}}
 
 {{outlet}}

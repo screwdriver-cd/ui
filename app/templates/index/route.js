@@ -4,6 +4,6 @@ import Route from '@ember/routing/route';
 export default Route.extend({
   template: service(),
   model() {
-    return this.get('template').getAllTemplates();
+    return this.template.getAllTemplates();
   }
 });

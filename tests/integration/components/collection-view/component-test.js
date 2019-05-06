@@ -1,6 +1,8 @@
 import { resolve, reject } from 'rsvp';
 import EmberObject from '@ember/object';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, click, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 import injectSessionStub from '../../../helpers/inject-session';
@@ -8,9 +10,10 @@ import injectScmServiceStub from '../../../helpers/inject-scm';
 
 let testCollection;
 
-moduleForComponent('collection-view', 'Integration | Component | collection view', {
-  integration: true,
-  beforeEach() {
+module('Integration | Component | collection view', function(hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function() {
     testCollection = EmberObject.create({
       id: 1,
       name: 'Test',
@@ -112,176 +115,184 @@ moduleForComponent('collection-view', 'Integration | Component | collection view
         }
       ]
     });
-  }
-});
-
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const $ = this.$;
-
-  injectScmServiceStub(this);
-
-  this.set('mockCollection', testCollection);
-
-  this.render(hbs`{{collection-view collection=mockCollection}}`);
-  const nameText = $('.header__name').text().trim();
-  const descriptionText = $('.header__description').text().trim();
-
-  assert.equal(nameText, 'Test');
-  assert.equal(descriptionText, 'Test Collection');
-  assert.equal($('table').length, 1);
-  assert.equal($('th.app-id').text().trim(), 'Name');
-  assert.equal($('th.branch').text().trim(), 'Branch');
-  assert.equal($('th.account').text().trim(), 'Account');
-  assert.equal($('th.health').text().trim(), 'Last Build');
-  assert.equal($('th.prs').text().trim(), 'Pull Requests');
-  assert.equal($('tr').length, 6);
-  assert.equal($('.fa-pencil').length, 2);
-  // The pipelines are sorted in alphabetical order by default by the component
-  assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/models');
-  assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/screwdriver');
-  assert.equal($($('td.app-id').get(2)).text().trim(), 'screwdriver-cd/ui');
-  assert.equal($($('td.app-id').get(3)).text().trim(), 'screwdriver-cd/zzz');
-  // The models pipeline has scm display names
-  assert.equal($($('td.account').get(0)).text().trim(), 'bitbucket.org');
-  assert.equal($($('td.account').get(1)).text().trim(), 'github.com');
-  assert.equal($($('td.account').get(2)).text().trim(), 'github.com');
-  assert.equal($($('td.account').get(3)).text().trim(), 'bitbucket.org');
-  // The pipeline health
-  assert.ok($('td.health i').hasClass('build-success'));
-  assert.ok($('td.health i').hasClass('build-failure'));
-  assert.ok($('td.health i').hasClass('build-unstable'));
-  // The models pipeline should not have any info for prs open and failing
-  assert.equal($($('td.prs--open').get(0)).text().trim(), '');
-  assert.equal($($('td.prs--failing').get(0)).text().trim(), '');
-  // The screwdriver pipeline should not have any info for prs open and failing
-  assert.equal($($('td.prs--open').get(1)).text().trim(), '');
-  assert.equal($($('td.prs--failing').get(1)).text().trim(), '');
-  // The ui pipeline should have 2 prs open and 1 failing
-  assert.equal($($('td.prs--open').get(2)).text().trim(), '2');
-  assert.equal($($('td.prs--failing').get(2)).text().trim(), '1');
-});
-
-test('it removes a pipeline from a collection', function (assert) {
-  assert.expect(2);
-
-  injectSessionStub(this);
-  const $ = this.$;
-  const pipelineRemoveMock = (pipelineId, collectionId) => {
-    // Make sure the models pipeline is the one being removed
-    assert.strictEqual(pipelineId, 3);
-    assert.strictEqual(collectionId, 1);
-
-    return resolve({
-      id: 1,
-      name: 'collection1',
-      description: 'description1',
-      pipelineIds: [1],
-      pipelines: [
-        {
-          id: 1,
-          scmUri: 'github.com:12345678:master',
-          createTime: '2017-01-05T00:55:46.775Z',
-          admins: {
-            username: true
-          },
-          workflow: ['main', 'publish'],
-          scmRepo: {
-            name: 'screwdriver-cd/screwdriver',
-            branch: 'master',
-            url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
-          },
-          scmContext: 'github:github.com',
-          annotations: {}
-        }
-      ]
-    });
-  };
-
-  this.set('mockCollection', testCollection);
-  this.set('onPipelineRemoveMock', pipelineRemoveMock);
-
-  this.render(hbs`
-    {{collection-view
-        collection=mockCollection
-        onPipelineRemove=onPipelineRemoveMock
-    }}
-  `);
-
-  // Delete the models pipeline
-  $($('.collection-pipeline__remove').get(0)).click();
-});
-
-test('it fails to remove a pipeline', function (assert) {
-  assert.expect(1);
-
-  injectSessionStub(this);
-  const $ = this.$;
-  const pipelineRemoveMock = () => reject({
-    errors: [{
-      detail: 'User does not have permission'
-    }]
   });
 
-  this.set('mockCollection', testCollection);
-  this.set('onPipelineRemoveMock', pipelineRemoveMock);
+  test('it renders', async function(assert) {
+    injectScmServiceStub(this);
 
-  this.render(hbs`
-    {{collection-view
-        collection=mockCollection
-        onPipelineRemove=onPipelineRemoveMock
-    }}
-  `);
+    this.set('mockCollection', testCollection);
 
-  $($('.collection-pipeline__remove').get(0)).click();
+    await render(hbs`{{collection-view collection=mockCollection}}`);
 
-  assert.strictEqual($('.alert-warning > span').text().trim(),
-    'User does not have permission');
-});
+    assert.dom('.header__name').hasText('Test');
+    assert.dom('.header__description').hasText('Test Collection');
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('th.app-id').hasText('Name');
+    assert.dom('th.branch').hasText('Branch');
+    assert.dom('th.account').hasText('Account');
+    assert.dom('th.health').hasText('Last Build');
+    assert.dom('th.prs').hasText('Pull Requests');
+    assert.dom('tr').exists({ count: 6 });
+    assert.dom('.fa-pencil').exists({ count: 2 });
 
-test('it does not show remove button if user is not logged in', function (assert) {
-  assert.expect(1);
+    // The pipelines are sorted in alphabetical order by default by the component
+    const appIdEls = findAll('td.app-id');
 
-  const $ = this.$;
+    assert.dom(appIdEls[0]).hasText('screwdriver-cd/models');
+    assert.dom(appIdEls[1]).hasText('screwdriver-cd/screwdriver');
+    assert.dom(appIdEls[2]).hasText('screwdriver-cd/ui');
+    assert.dom(appIdEls[3]).hasText('screwdriver-cd/zzz');
 
-  this.set('mockCollection', testCollection);
-  this.render(hbs`{{collection-view collection=mockCollection}}`);
+    // The models pipeline has scm display names
+    const accountEls = findAll('td.account');
 
-  assert.strictEqual($('.collection-pipeline__remove').length, 0);
-});
+    assert.dom(accountEls[0]).hasText('bitbucket.org');
+    assert.dom(accountEls[1]).hasText('github.com');
+    assert.dom(accountEls[2]).hasText('github.com');
+    assert.dom(accountEls[3]).hasText('bitbucket.org');
 
-test('it sorts by last build', function (assert) {
-  const $ = this.$;
+    // The pipeline health
+    const healthEls = findAll('td.health i');
 
-  this.set('mockCollection', testCollection);
-  this.render(hbs`{{collection-view collection=mockCollection}}`);
+    assert.dom(healthEls[0]).hasClass('build-failure');
+    assert.dom(healthEls[1]).hasClass('build-success');
+    assert.dom(healthEls[3]).hasClass('build-unstable');
 
-  // Initially it is sorted by name
-  assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/models');
-  assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/screwdriver');
+    const openEls = findAll('td.prs--open');
+    const failingEls = findAll('td.prs--failing');
 
-  const lastBuildsAnchor = $('.header__sort-pipelines ul li a').get(1);
+    // The models pipeline should not have any info for prs open and failing
+    assert.dom(openEls[0]).hasText('');
+    assert.dom(failingEls[0]).hasText('');
 
-  lastBuildsAnchor.click();
+    // The screwdriver pipeline should not have any info for prs open and failing
+    assert.dom(openEls[1]).hasText('');
+    assert.dom(failingEls[1]).hasText('');
 
-  // Now it should be sorted by most recent last build
-  assert.equal($($('td.app-id').get(0)).text().trim(), 'screwdriver-cd/screwdriver');
-  assert.equal($($('td.app-id').get(1)).text().trim(), 'screwdriver-cd/models');
-});
+    // The ui pipeline should have 2 prs open and 1 failing
+    assert.dom(openEls[2]).hasText('2');
+    assert.dom(failingEls[2]).hasText('1');
+  });
 
-test('description is editable', function (assert) {
-  const $ = this.$;
+  test('it removes a pipeline from a collection', async function(assert) {
+    assert.expect(2);
 
-  this.set('mockCollection', testCollection);
-  this.render(hbs`{{collection-view collection=mockCollection}}`);
+    injectSessionStub(this);
 
-  const editDescription = $('.fa-pencil').get(1);
-  const editName = $('.fa-pencil').get(0);
+    const pipelineRemoveMock = (pipelineId, collectionId) => {
+      // Make sure the models pipeline is the one being removed
+      assert.strictEqual(pipelineId, 3);
+      assert.strictEqual(collectionId, 1);
 
-  editDescription.click();
-  editName.click();
+      return resolve({
+        id: 1,
+        name: 'collection1',
+        description: 'description1',
+        pipelineIds: [1],
+        pipelines: [
+          {
+            id: 1,
+            scmUri: 'github.com:12345678:master',
+            createTime: '2017-01-05T00:55:46.775Z',
+            admins: {
+              username: true
+            },
+            workflow: ['main', 'publish'],
+            scmRepo: {
+              name: 'screwdriver-cd/screwdriver',
+              branch: 'master',
+              url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
+            },
+            scmContext: 'github:github.com',
+            annotations: {}
+          }
+        ]
+      });
+    };
 
-  assert.equal($('textarea').length, 1);
-  assert.equal($('input').length, 1);
+    this.set('mockCollection', testCollection);
+    this.set('onPipelineRemoveMock', pipelineRemoveMock);
+
+    await render(hbs`
+      {{collection-view
+          collection=mockCollection
+          onPipelineRemove=onPipelineRemoveMock
+      }}
+    `);
+
+    // Delete the models pipeline
+    await click('.collection-pipeline__remove');
+  });
+
+  test('it fails to remove a pipeline', async function(assert) {
+    assert.expect(1);
+
+    injectSessionStub(this);
+
+    const pipelineRemoveMock = () =>
+      reject({
+        errors: [
+          {
+            detail: 'User does not have permission'
+          }
+        ]
+      });
+
+    this.set('mockCollection', testCollection);
+    this.set('onPipelineRemoveMock', pipelineRemoveMock);
+
+    await render(hbs`
+      {{collection-view
+          collection=mockCollection
+          onPipelineRemove=onPipelineRemoveMock
+      }}
+    `);
+
+    await click('.collection-pipeline__remove');
+
+    assert.dom('.alert-warning > span').hasText('User does not have permission');
+  });
+
+  test('it does not show remove button if user is not logged in', async function(assert) {
+    assert.expect(1);
+
+    this.set('mockCollection', testCollection);
+
+    await render(hbs`{{collection-view collection=mockCollection}}`);
+
+    assert.dom('.collection-pipeline__remove').doesNotExist();
+  });
+
+  test('it sorts by last build', async function(assert) {
+    this.set('mockCollection', testCollection);
+    await render(hbs`{{collection-view collection=mockCollection}}`);
+
+    let appIdEls = findAll('td.app-id');
+
+    // Initially it is sorted by name
+    assert.dom(appIdEls[0]).hasText('screwdriver-cd/models');
+    assert.dom(appIdEls[1]).hasText('screwdriver-cd/screwdriver');
+
+    await click('.header__sort-pipelines .dropdown-toggle');
+    await click(findAll('.header__sort-pipelines ul li a')[1]);
+
+    appIdEls = findAll('td.app-id');
+
+    // Now it should be sorted by most recent last build
+    assert.dom(appIdEls[0]).hasText('screwdriver-cd/screwdriver');
+    assert.dom(appIdEls[1]).hasText('screwdriver-cd/models');
+  });
+
+  test('description is editable', async function(assert) {
+    this.set('mockCollection', testCollection);
+    await render(hbs`{{collection-view collection=mockCollection}}`);
+
+    const editEls = findAll('.fa-pencil');
+
+    await click(editEls[1]);
+    await click(editEls[0]);
+
+    assert.dom('textarea').exists({ count: 1 });
+    assert.dom('input').exists({ count: 1 });
+  });
 });

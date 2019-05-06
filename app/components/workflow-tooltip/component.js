@@ -17,7 +17,7 @@ export default Component.extend({
     // setting tooltip position
     if (el && event) {
       let top = event.layerY + get(this, 'tooltipData.sizes.ICON_SIZE');
-      let left = get(this, 'left') ? event.layerX - 20 : event.layerX - (el.outerWidth() / 2);
+      let left = this.left ? event.layerX - 20 : event.layerX - el.outerWidth() / 2;
 
       el.css({
         top,
@@ -27,7 +27,7 @@ export default Component.extend({
   },
   actions: {
     stopBuild() {
-      get(this, 'stopBuild')(get(this, 'tooltipData.job'));
+      this.stopBuild(get(this, 'tooltipData.job'));
     }
   }
 });

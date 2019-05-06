@@ -1,6 +1,7 @@
 & {
   border-bottom: 1px solid $sd-text-light;
 }
-&.is-open, &:hover {
+&.is-open,
+&:hover {
   background-color: $sd-highlight;
 }

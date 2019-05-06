@@ -14,7 +14,7 @@ export default Mixin.create({
    * @return {Boolean}          True is model should be reloaded
    */
   shouldReload() {
-    return this.get('runLater');
+    return this.runLater;
   },
   /**
    * Schedules reload of events data
@@ -25,7 +25,7 @@ export default Mixin.create({
     // If the reloader is active during tests, the tests will always timeout.
     // I'm not sure of a better way to handle this
     if (ENV.environment !== 'test') {
-      const runLater = later(this, 'reloadModel', this.get('reloadTimeout'));
+      const runLater = later(this, 'reloadModel', this.reloadTimeout);
 
       this.set('runLater', runLater);
     }
@@ -36,7 +36,7 @@ export default Mixin.create({
    * @method reloadEvents
    */
   reloadModel() {
-    const modelToReload = this.get('modelToReload');
+    const { modelToReload } = this;
     let model;
 
     // Let Controller provide a reload() to refresh it's dependencies
@@ -47,7 +47,7 @@ export default Mixin.create({
     }
 
     if (model && this.shouldReload(model)) {
-      if (this.get('isPaused')) {
+      if (this.isPaused) {
         this.scheduleReload();
       } else {
         model.reload().finally(() => this.scheduleReload());
@@ -60,7 +60,7 @@ export default Mixin.create({
    * @method startReloading
    */
   startReloading() {
-    if (!this.get('runLater')) {
+    if (!this.runLater) {
       this.scheduleReload();
     }
   },
@@ -70,8 +70,8 @@ export default Mixin.create({
    * @method stopReloading
    */
   stopReloading() {
-    if (this.get('runLater')) {
-      cancel(this.get('runLater'));
+    if (this.runLater) {
+      cancel(this.runLater);
       this.set('runLater', null);
     }
   },
@@ -81,7 +81,7 @@ export default Mixin.create({
    * @method forceReload
    */
   forceReload() {
-    cancel(this.get('runLater'));
+    cancel(this.runLater);
     // Push this reload out of current run loop.
     const forceLater = later(this, 'reloadModel', ENV.APP.FORCE_RELOAD_WAIT);
 

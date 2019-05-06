@@ -14,7 +14,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   stateChangeTime: DS.attr('date'),
   stateChangeTimeWords: computed('stateChangeTime', {
     get() {
-      const duration = Date.now() - +this.get('stateChangeTime');
+      const duration = Date.now() - +this.stateChangeTime;
 
       return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
     }
@@ -24,7 +24,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   title: DS.attr('string'),
   group: computed('isPR', 'name', {
     get() {
-      return this.get('isPR') ? parseInt(this.get('name').slice('PR-'.length), 10) : null;
+      return this.isPR ? parseInt(this.name.slice('PR-'.length), 10) : null;
     }
   }),
   username: DS.attr('string'),
@@ -33,7 +33,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   createTime: DS.attr('date'),
   createTimeWords: computed('createTime', {
     get() {
-      const duration = Date.now() - +this.get('createTime');
+      const duration = Date.now() - +this.createTime;
 
       return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
     }
@@ -44,7 +44,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   isDisabled: equal('state', 'DISABLED'),
   lastBuild: computed('builds', {
     get() {
-      const builds = this.get('builds');
+      const { builds } = this;
 
       if (builds.length === 0) {
         return EmberObject.create();
@@ -57,8 +57,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   // Reload builds only if the pr job build is still running
   shouldReload() {
-    return this.get('isPR') &&
-      this.get('builds').any(b => isActiveBuild(b.get('status'), b.get('endTime')));
+    return this.isPR && this.builds.any(b => isActiveBuild(b.get('status'), b.get('endTime')));
   },
   init() {
     this._super(...arguments);

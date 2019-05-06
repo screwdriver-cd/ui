@@ -21,13 +21,13 @@
     <span class="title">Custom Date Range</span>
     {{ember-flatpickr
       clickOpens=true
-      dateFormat='m/d/Y'
+      dateFormat="m/d/Y"
       date=customRange
       locale="en"
       mode="range"
       onChange=(action (mut dateValues))
       onClose=(action "setCustomRange")
-      placeholder='Choose Start & End Date Time'
+      placeholder="Choose Start & End Date Time"
     }}
   </div>
 
@@ -56,7 +56,7 @@
 <div class="chart-pipeline-info">
   <div class="col">
     <span class="measure">{{if measures.total measures.total "N/A"}}</span>
-    <br/>
+    <br>
     <span class="title">Total Events</span>
   </div>
   <div class="col">
@@ -67,22 +67,22 @@
         N/A
       {{/if}}
     </span>
-    <br/>
+    <br>
     <span class="title">Passed / Failed Jobs</span>
   </div>
   <div class="col">
     <span class="measure">{{if measures.total measures.avgs.duration "N/A"}}</span>
-    <br/>
+    <br>
     <span class="title">Avg. Build Time</span>
   </div>
   <div class="col">
     <span class="measure">{{if measures.total measures.avgs.imagePullTime "N/A"}}</span>
-    <br/>
+    <br>
     <span class="title">Avg. Image Pull Time</span>
   </div>
   <div class="col">
     <span class="measure">{{if measures.total measures.avgs.queuedTime "N/A"}}</span>
-    <br/>
+    <br>
     <span class="title">Avg. Queued Time</span>
   </div>
 </div>
@@ -178,9 +178,9 @@
           <select onchange={{action "selectJob" value="target.value"}}>
             {{#each jobs as |job|}}
               {{#if (eq job selectedJobName)}}
-                <option value="{{job}}" selected="selected">{{job}}</option>
+                <option value={{job}} selected="selected">{{job}}</option>
               {{else}}
-                <option value="{{job}}">{{job}}</option>
+                <option value={{job}}>{{job}}</option>
               {{/if}}
             {{/each}}
           </select>
@@ -197,39 +197,39 @@
             {{lg.name}} <a>only</a>
           </li>
         {{/each}}
-        </ul>
-        <p class="y-axis-label">TIME (MIN)</p>
-        {{chart-c3
-          name=stepsChartName
-          data=stepMetrics
-          axis=stepsAxis
-          grid=grid
-          interaction=interaction
-          bar=bar
-          legend=legend
-          tooltip=tooltip
-          subchart=subchart
-          point=point
-          size=size
-          transition=transition
-          color=color
-          padding=padding
-          zoom=zoom
-          onrendered=onrendered
-          onresized=onresized
-          oninit=(get onInitFns stepsChartName)
-        }}
-        <p class="reset-button" onClick={{action "resetZoom" stepsChartName}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
+      </ul>
+      <p class="y-axis-label">TIME (MIN)</p>
+      {{chart-c3
+        name=stepsChartName
+        data=stepMetrics
+        axis=stepsAxis
+        grid=grid
+        interaction=interaction
+        bar=bar
+        legend=legend
+        tooltip=tooltip
+        subchart=subchart
+        point=point
+        size=size
+        transition=transition
+        color=color
+        padding=padding
+        zoom=zoom
+        onrendered=onrendered
+        onresized=onresized
+        oninit=(get onInitFns stepsChartName)
+      }}
+      <p class="reset-button" onClick={{action "resetZoom" stepsChartName}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
     </div>
   {{else}}
     <div class="chart-cta">
       Please select a job below to see step breakdown per build
-      <br/><br/>
+      <br><br>
       <div class="job-selector">
         <select onchange={{action "selectJob" value="target.value"}}>
           <option value="">Select a job</option>
           {{#each jobs as |job|}}
-            <option value="{{job}}">{{job}}</option>
+            <option value={{job}}>{{job}}</option>
           {{/each}}
         </select>
         <span class="control-icon">{{fa-icon "caret-down"}}</span>

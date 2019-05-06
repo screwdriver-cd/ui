@@ -1,5 +1,5 @@
 import { copy } from '@ember/object/internals';
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 
 const build = {
   id: '1234',
@@ -12,21 +12,26 @@ const build = {
   startTime: '2016-09-23T16:53:08.601Z',
   endTime: '2016-09-23T16:58:47.355Z',
   meta: {},
-  steps: [{
-    startTime: '2016-09-23T16:53:07.497654442Z',
-    name: 'sd-setup',
-    code: 0,
-    endTime: '2016-09-23T16:53:12.46806858Z'
-  }, {
-    startTime: '2016-09-23T16:53:12.902784483Z',
-    name: 'install',
-    code: 137,
-    endTime: '2016-09-23T16:58:46.924844475Z'
-  }, {
-    name: 'bower'
-  }, {
-    name: 'test'
-  }],
+  steps: [
+    {
+      startTime: '2016-09-23T16:53:07.497654442Z',
+      name: 'sd-setup',
+      code: 0,
+      endTime: '2016-09-23T16:53:12.46806858Z'
+    },
+    {
+      startTime: '2016-09-23T16:53:12.902784483Z',
+      name: 'install',
+      code: 137,
+      endTime: '2016-09-23T16:58:46.924844475Z'
+    },
+    {
+      name: 'bower'
+    },
+    {
+      name: 'test'
+    }
+  ],
   status: 'FAILURE'
 };
 
@@ -38,10 +43,10 @@ const shas = [
   '1234567890abcd'
 ];
 
-export default (eventId) => {
+export default eventId => {
   const builds = [];
 
-  shas.forEach((sha) => {
+  shas.forEach(sha => {
     const b = copy(build, true);
     const config = {
       id: Math.floor(Math.random() * 99999999999),
@@ -51,7 +56,7 @@ export default (eventId) => {
       status: ['SUCCESS', 'FAILURE', 'RUNNING'][Math.floor(Math.random() * 2)]
     };
 
-    merge(b, config);
+    assign(b, config);
 
     builds.push(b);
   });

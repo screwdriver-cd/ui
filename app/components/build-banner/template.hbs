@@ -5,7 +5,7 @@
   </li>
   <li class="commit">
     <span class="banner-value commit-list">
-      <a href="{{event.commit.url}}" class="sha commit-sha">#{{event.truncatedSha}}</a>
+      <a href={{event.commit.url}} class="sha commit-sha">#{{event.truncatedSha}}</a>
       {{#if event.pr.url}}
         {{#bs-dropdown as |dd|}}
           {{#dd.toggle}} <span class="caret caret-display"></span>{{/dd.toggle}}
@@ -24,7 +24,7 @@
   {{#if event.pr.url}}
     <li class="pr">
       <span class="banner-value pr-url-holder">
-        <a href="{{event.pr.url}}" class="sha pr-url">
+        <a href={{event.pr.url}} class="sha pr-url">
           {{inline-svg "github" class="pr-img"}}
           <span class="pr-link">PR#{{prNumber}}</span>
         </a>
@@ -34,15 +34,17 @@
   {{/if}}
   <li class="duration">
     <details>
-      <summary><a class="banner-value" title="Total duration: {{duration}}, Blocked time: {{blockDuration}}, Image pull time: {{imagePullDuration}}, Build time: {{buildDuration}}">{{duration}}</a></summary>
-        <li class="subsection"><span class="banner-value">{{blockDuration}} blocked</span></li>
-        <li class="subsection"><span class="banner-value">{{imagePullDuration}} pulling image</span></li>
-        <li class="subsection"><span class="banner-value">{{buildDuration}} in build</span></li>
+      <summary>
+        <a class="banner-value" title="Total duration: {{duration}}, Blocked time: {{blockDuration}}, Image pull time: {{imagePullDuration}}, Build time: {{buildDuration}}">{{duration}}</a>
+      </summary>
+      <li class="subsection"><span class="banner-value">{{blockDuration}} blocked</span></li>
+      <li class="subsection"><span class="banner-value">{{imagePullDuration}} pulling image</span></li>
+      <li class="subsection"><span class="banner-value">{{buildDuration}} in build</span></li>
     </details>
     <span class="banner-label">Duration</span>
   </li>
   <li class="created">
-    <span class="banner-value" title="{{buildCreate}}">{{moment-format buildCreate 'YYYY-MM-DD HH:mm:ss'}}</span>
+    <span class="banner-value" title={{buildCreate}}>{{moment-format buildCreate "YYYY-MM-DD HH:mm:ss"}}</span>
     <span class="banner-label">Create Time</span>
   </li>
   <li class="user">
@@ -52,7 +54,7 @@
   {{#if coverageStep}}
     <li class="coverage">
       <span class="banner-value">
-        <a href="{{coverageInfo.coverageUrl}}" title="{{if (eq coverageInfo.coverage 'N/A') "Coverage report not generated"}}">
+        <a href={{coverageInfo.coverageUrl}} title={{if (eq coverageInfo.coverage "N/A") "Coverage report not generated"}}>
           {{coverageInfo.coverage}}
         </a>
       </span>
@@ -60,7 +62,7 @@
     </li>
     <li class="tests">
       <span class="banner-value">
-        <a href="{{coverageInfo.testsUrl}}" title="{{if (eq coverageInfo.tests 'N/A') "Tests report not generated"}}">
+        <a href={{coverageInfo.testsUrl}} title={{if (eq coverageInfo.tests "N/A") "Tests report not generated"}}>
           {{coverageInfo.tests}}
         </a>
       </span>

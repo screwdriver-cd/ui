@@ -3,7 +3,7 @@
   position: absolute;
   text-align: left;
   opacity: 0;
-  transition: opacity .3s .1s;
+  transition: opacity 0.3s 0.1s;
 
   &.show-tooltip {
     opacity: 1;

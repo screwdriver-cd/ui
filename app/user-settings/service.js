@@ -22,7 +22,7 @@ export default Service.extend({
         }
       })
         .done(content => resolve(Object.assign(content, { action: 'refreshed' })))
-        .fail((response) => {
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (response && response.responseJSON) {

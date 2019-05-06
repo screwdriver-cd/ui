@@ -12,6 +12,7 @@
     User secrets must also be added to the Screwdriver YAML.
   {{/if}}
 </p>
+{{! template-lint-disable table-groups }}
 <table class="secrets">
   <thead>
     <tr>
@@ -22,12 +23,12 @@
   </thead>
   <tbody>
     {{#each sortedSecrets as |secret|}}
-    {{secret-view
-      secret=secret
-      secrets=secrets
-      pipeline=pipeline
-      onCreateSecret=onCreateSecret
-    }}
+      {{secret-view
+        secret=secret
+        secrets=secrets
+        pipeline=pipeline
+        onCreateSecret=onCreateSecret
+      }}
     {{/each}}
   </tbody>
   {{#unless pipeline.configPipelineId}}

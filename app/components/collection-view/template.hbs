@@ -7,18 +7,18 @@
       {{#if editingName}}
         <div class="name-edit">
           <input class="edit-area-name" value={{collection.name}}>
-          <button class="save-name btn btn-primary" {{action 'saveName'}}>Save</button>
+          <button class="save-name btn btn-primary" {{action "saveName"}}>Save</button>
         </div>
       {{else}}
         <h2 class="header__name">{{collection.name}} <a class="edit-icon move-left" onClick={{action "editName"}}>{{fa-icon "pencil"}}</a></h2>
       {{/if}}
       {{#if editingDescription}}
         <textarea class="edit-area">{{collection.description}}</textarea>
-        <button class="save btn btn-primary" {{action 'saveDescription'}}>Save</button>
+        <button class="save btn btn-primary" {{action "saveDescription"}}>Save</button>
       {{else}}
         {{#if collection.description}}
-        <div>
-          <p class="header__description">{{collection.description}}<a class="edit-icon" onClick={{action "editDescription"}}>{{fa-icon "pencil"}}</a></p>
+          <div>
+            <p class="header__description">{{collection.description}}<a class="edit-icon" onClick={{action "editDescription"}}>{{fa-icon "pencil"}}</a></p>
           </div>
         {{else}}
           <p class="description-placeholder" onClick={{action "editDescription"}}>Add a description</p>
@@ -45,13 +45,13 @@
     <table class="col-md-10">
       <thead>
         <tr>
-          <th class="app-id" rowspan=2>Name</th>
-          <th class="branch" rowspan=2>Branch</th>
-          <th class="account" rowspan=2>Account</th>
-          <th class="health" rowspan=2>Last Build</th>
-          <th class="prs" colspan=2>Pull Requests</th>
+          <th class="app-id" rowspan="2">Name</th>
+          <th class="branch" rowspan="2">Branch</th>
+          <th class="account" rowspan="2">Account</th>
+          <th class="health" rowspan="2">Last Build</th>
+          <th class="prs" colspan="2">Pull Requests</th>
           {{#if session.isAuthenticated}}
-            <th rowspan=2></th>
+            <th rowspan="2"></th>
           {{/if}}
         </tr>
         <tr>

@@ -1,6 +1,7 @@
-import { test } from 'qunit';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
-import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
+import { currentURL, visit } from '@ember/test-helpers';
+import { module, test } from 'qunit';
+import { setupApplicationTest } from 'ember-qunit';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 
 import makePipeline from '../mock/pipeline';
@@ -11,8 +12,10 @@ import makeJobs from '../mock/jobs';
 
 let server;
 
-moduleForAcceptance('Acceptance | pipeline build', {
-  beforeEach() {
+module('Acceptance | pipeline build', function(hooks) {
+  setupApplicationTest(hooks);
+
+  hooks.beforeEach(function() {
     const graph = makeGraph();
     const jobs = makeJobs();
     const pipeline = makePipeline(graph);
@@ -38,24 +41,16 @@ moduleForAcceptance('Acceptance | pipeline build', {
       JSON.stringify(events)
     ]);
 
-    server.get('http://localhost:8080/v4/events/:eventId/builds', (request) => {
+    server.get('http://localhost:8080/v4/events/:eventId/builds', request => {
       const eventId = parseInt(request.params.eventId, 10);
 
-      return [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify(makeBuilds(eventId))
-      ];
+      return [200, { 'Content-Type': 'application/json' }, JSON.stringify(makeBuilds(eventId))];
     });
 
-    server.get('http://localhost:8080/v4/jobs/:jobId/builds', (request) => {
+    server.get('http://localhost:8080/v4/jobs/:jobId/builds', request => {
       const jobId = parseInt(request.params.jobId, 10);
 
-      return [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify(makeBuilds(jobId))
-      ];
+      return [200, { 'Content-Type': 'application/json' }, JSON.stringify(makeBuilds(jobId))];
     });
 
     server.get('http://localhost:8080/v4/collections', () => [
@@ -63,42 +58,36 @@ moduleForAcceptance('Acceptance | pipeline build', {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
+  });
 
-test('visiting /pipelines/4 when not logged in', function (assert) {
-  visit('/pipelines/4');
+  test('visiting /pipelines/4 when not logged in', async function(assert) {
+    await visit('/pipelines/4');
 
-  andThen(() => {
     assert.equal(currentURL(), '/login');
   });
-});
 
-test('visiting /pipelines/4 when logged in', function (assert) {
-  authenticateSession(this.application, { token: 'fakeToken' });
+  test('visiting /pipelines/4 when logged in', async function(assert) {
+    await authenticateSession({ token: 'fakeToken' });
+    await visit('/pipelines/4');
 
-  visit('/pipelines/4');
-
-  andThen(() => {
     assert.equal(currentURL(), '/pipelines/4/events');
-    assert.equal(find('a h1').text().trim(), 'foo/bar', 'incorrect pipeline name');
-    assert.equal(find('.pipelineWorkflow svg').length, 1, 'not enough workflow');
-    assert.equal(find('button.start-button').length, 1, 'should have a start button');
-    assert.equal(find('ul.nav-pills').length, 1, 'should show tabs');
-    assert.equal(find('.column-tabs-view .nav-link').eq(0).text().trim(), 'Events');
-    assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Events');
-    assert.equal(find('.column-tabs-view .nav-link').eq(1).text().trim(), 'Pull Requests');
-    assert.equal(find('.separator').length, 1);
-    assert.equal(find('.partial-view').length, 2);
+    assert.dom('a h1').hasText('foo/bar', 'incorrect pipeline name');
+    assert.dom('.pipelineWorkflow svg').exists({ count: 1 }, 'not enough workflow');
+    assert.dom('button.start-button').exists({ count: 1 }, 'should have a start button');
+    assert.dom('ul.nav-pills').exists({ count: 1 }, 'should show tabs');
+    assert.dom('.column-tabs-view .nav-link').hasText('Events');
+    assert.dom('.column-tabs-view .nav-link.active').hasText('Events');
+    assert.dom('.column-tabs-view .nav-link:not(.active)').hasText('Pull Requests');
+    assert.dom('.separator').exists({ count: 1 });
+    assert.dom('.partial-view').exists({ count: 2 });
 
-    visit('/pipelines/4/pulls');
+    await visit('/pipelines/4/pulls');
 
-    andThen(() => {
-      assert.equal(currentURL(), '/pipelines/4/pulls');
-      assert.equal(find('.column-tabs-view .nav-link.active').eq(0).text().trim(), 'Pull Requests');
-    });
+    assert.equal(currentURL(), '/pipelines/4/pulls');
+    assert.dom('.column-tabs-view .nav-link.active').hasText('Pull Requests');
   });
 });

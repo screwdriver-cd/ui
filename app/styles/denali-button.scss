@@ -3,14 +3,14 @@
 .d-button {
   border: none;
   border-radius: 2px;
-  box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 #D5D5D5 inset;
+  box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 #d5d5d5 inset;
   cursor: pointer;
   display: inline-block;
-  font-family: Helvetica,Arial,sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-weight: normal;
   line-height: 0px;
-  letter-spacing: .2px;
+  letter-spacing: 0.2px;
   margin: 5px;
   height: 36px;
   min-width: 120px;
@@ -41,22 +41,22 @@ a.d-button.has-icon {
 //PRIMARY
 
 .d-button.is-primary {
-  background: linear-gradient(to right, #3697F2, #3570F4);
-  color: #FFF;
+  background: linear-gradient(to right, #3697f2, #3570f4);
+  color: #fff;
 }
 
 .d-button.is-primary:hover,
 .d-button.is-primary.is-active,
 .d-button.is-primary.is-active:hover {
-  background: linear-gradient(to right, #3570F4, #3448F7);
+  background: linear-gradient(to right, #3570f4, #3448f7);
 }
 
 //SECONDARY
 
 .d-button.is-secondary {
   background: transparent;
-  box-shadow: 0 0 0 1px #3697F2 inset;
-  color: #3697F2;
+  box-shadow: 0 0 0 1px #3697f2 inset;
+  color: #3697f2;
 }
 .d-button.is-secondary:hover,
 .d-button.is-secondary.is-active,
@@ -67,13 +67,13 @@ a.d-button.has-icon {
 //DANGER
 
 .d-button.is-danger {
-  background: #EA0000;
-  color: #FFF;
+  background: #ea0000;
+  color: #fff;
 }
 .d-button.is-danger:hover,
 .d-button.is-danger.is-active,
 .d-button.is-danger.is-active:hover {
-  background: #BB0000;
+  background: #bb0000;
 }
 
 // Disabled
@@ -105,6 +105,6 @@ a.d-button.is-medium {
   padding: 4px 14px;
   height: 24px;
 }
-a.d-button.is-small{
+a.d-button.is-small {
   padding: 12px 14px;
 }

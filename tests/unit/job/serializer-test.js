@@ -1,60 +1,61 @@
 import { run } from '@ember/runloop';
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
-import wait from 'ember-test-helpers/wait';
 let server;
 
-moduleForModel('job', 'Unit | Serializer | job', {
-  // Specify the other units that are required for this test.
-  needs: ['serializer:job', 'adapter:application', 'service:session', 'model:build'],
-  beforeEach() {
+module('Unit | Serializer | job', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
     server = new Pretender();
-  },
-
-  afterEach() {
-    server.shutdown();
-  }
-});
-
-test('it serializes records', function (assert) {
-  let record = this.subject();
-
-  let serializedRecord = record.serialize();
-
-  assert.ok(serializedRecord);
-});
-
-test('it serializes only dirty fields', function (assert) {
-  assert.expect(1);
-  server.put('http://localhost:8080/v4/jobs/abcd', function () {
-    return [200, {}, JSON.stringify({ id: 'abcd' })];
   });
 
-  run(() => {
-    this.store().push({
-      data: {
-        id: 'abcd',
-        type: 'job',
-        attributes: {
-          pipelineId: 'aabb',
-          name: 'main',
-          state: 'ENABLED'
-        }
-      }
+  hooks.afterEach(function() {
+    server.shutdown();
+  });
+
+  test('it serializes records', function(assert) {
+    let record = run(() => this.owner.lookup('service:store').createRecord('job'));
+
+    let serializedRecord = record.serialize();
+
+    assert.ok(serializedRecord);
+  });
+
+  test('it serializes only dirty fields', function(assert) {
+    assert.expect(1);
+    server.put('http://localhost:8080/v4/jobs/abcd', function() {
+      return [200, {}, JSON.stringify({ id: 'abcd' })];
     });
 
-    const job = this.store().peekRecord('job', 'abcd');
+    run(() => {
+      this.owner.lookup('service:store').push({
+        data: {
+          id: 'abcd',
+          type: 'job',
+          attributes: {
+            pipelineId: 'aabb',
+            name: 'main',
+            state: 'ENABLED'
+          }
+        }
+      });
 
-    job.set('state', 'DISABLED');
-    job.save();
-  });
+      const job = this.owner.lookup('service:store').peekRecord('job', 'abcd');
 
-  return wait().then(() => {
-    const [request] = server.handledRequests;
-    const payload = JSON.parse(request.requestBody);
+      job.set('state', 'DISABLED');
+      job.save();
+    });
 
-    assert.deepEqual(payload, {
-      state: 'DISABLED'
+    return settled().then(() => {
+      const [request] = server.handledRequests;
+      const payload = JSON.parse(request.requestBody);
+
+      assert.deepEqual(payload, {
+        state: 'DISABLED'
+      });
     });
   });
 });

@@ -42,13 +42,13 @@ export default Controller.extend(ModelReloaderMixin, {
   prChainEnabled: alias('pipeline.prChain'),
   currentEventType: computed('activeTab', {
     get() {
-      return this.get('activeTab') === 'pulls' ? 'pr' : 'pipeline';
+      return this.activeTab === 'pulls' ? 'pr' : 'pipeline';
     }
   }),
   // Aggregates first page events and events via ModelReloaderMixin
   modelEvents: computed('model.events', {
     get() {
-      let previousModelEvents = this.get('previousModelEvents') || [];
+      let previousModelEvents = this.previousModelEvents || [];
       let currentModelEvents = this.get('model.events').toArray();
       let newModelEvents = [];
       const newPipelineId = this.get('pipeline.id');
@@ -64,8 +64,9 @@ export default Controller.extend(ModelReloaderMixin, {
         return newModelEvents;
       }
 
-      previousModelEvents = previousModelEvents
-        .filter(e => !currentModelEvents.find(c => c.id === e.id));
+      previousModelEvents = previousModelEvents.filter(
+        e => !currentModelEvents.find(c => c.id === e.id)
+      );
 
       newModelEvents = currentModelEvents.concat(previousModelEvents);
 
@@ -76,13 +77,16 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   pipelineEvents: computed('modelEvents', 'paginateEvents', {
     get() {
-      return [].concat(this.get('modelEvents'), this.get('paginateEvents'));
+      return [].concat(this.modelEvents, this.paginateEvents);
     }
   }),
   prEvents: computed('model.events', 'prChainEnabled', {
     get() {
-      if (this.get('prChainEnabled')) {
-        return this.get('model.events').filter(e => e.prNum).sortBy('createTime').reverse();
+      if (this.prChainEnabled) {
+        return this.get('model.events')
+          .filter(e => e.prNum)
+          .sortBy('createTime')
+          .reverse();
       }
 
       return [];
@@ -90,11 +94,11 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   events: computed('pipelineEvents', 'prEvents', 'currentEventType', {
     get() {
-      if (this.get('currentEventType') === 'pr') {
-        return this.get('prEvents');
+      if (this.currentEventType === 'pr') {
+        return this.prEvents;
       }
 
-      return this.get('pipelineEvents');
+      return this.pipelineEvents;
     }
   }),
   pullRequestGroups: computed('model.jobs', {
@@ -102,7 +106,8 @@ export default Controller.extend(ModelReloaderMixin, {
       const jobs = this.get('model.jobs');
       let groups = {};
 
-      return jobs.filter(j => j.get('isPR'))
+      return jobs
+        .filter(j => j.get('isPR'))
         .sortBy('createTime')
         .reverse()
         .reduce((results, j) => {
@@ -128,25 +133,25 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   selectedEvent: computed('selected', 'mostRecent', {
     get() {
-      return get(this, 'selected') || get(this, 'mostRecent');
+      return this.selected || this.mostRecent;
     }
   }),
 
   selectedEventObj: computed('selectedEvent', {
     get() {
-      const selected = get(this, 'selectedEvent');
+      const selected = this.selectedEvent;
 
       if (selected === 'aggregate') {
         return null;
       }
 
-      return get(this, 'events').find(e => get(e, 'id') === selected);
+      return this.events.find(e => get(e, 'id') === selected);
     }
   }),
 
   mostRecent: computed('events.@each.status', {
     get() {
-      const list = get(this, 'events') || [];
+      const list = this.events || [];
       const event = list.find(e => get(e, 'status') === 'RUNNING');
 
       if (!event) {
@@ -159,7 +164,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
   lastSuccessful: computed('events.@each.status', {
     get() {
-      const list = get(this, 'events') || [];
+      const list = this.events || [];
       const event = list.find(e => get(e, 'status') === 'SUCCESS');
 
       if (!event) {
@@ -171,18 +176,19 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
 
   updateEvents(page) {
-    if (this.get('currentEventType') === 'pr') {
+    if (this.currentEventType === 'pr') {
       return null;
     }
 
     this.set('isFetching', true);
 
-    return get(this, 'store').query('event', {
-      pipelineId: get(this, 'pipeline.id'),
-      page,
-      count: ENV.APP.NUM_EVENTS_LISTED
-    })
-      .then((events) => {
+    return this.store
+      .query('event', {
+        pipelineId: get(this, 'pipeline.id'),
+        page,
+        count: ENV.APP.NUM_EVENTS_LISTED
+      })
+      .then(events => {
         const nextEvents = events.toArray();
 
         if (Array.isArray(nextEvents)) {
@@ -195,15 +201,14 @@ export default Controller.extend(ModelReloaderMixin, {
 
           // FIXME: Skip duplicate ones if new events got added added to the head
           // of events list
-          this.set('paginateEvents',
-            this.get('paginateEvents').concat(nextEvents));
+          this.set('paginateEvents', this.paginateEvents.concat(nextEvents));
         }
       });
   },
 
   checkForMorePage({ scrollTop, scrollHeight, clientHeight }) {
     if (scrollTop + clientHeight > scrollHeight - 300) {
-      this.updateEvents(this.get('eventsPage') + 1);
+      this.updateEvents(this.eventsPage + 1);
     }
   },
 
@@ -213,7 +218,7 @@ export default Controller.extend(ModelReloaderMixin, {
     },
 
     onEventListScroll({ currentTarget }) {
-      if (this.get('moreToShow') && !this.get('isFetching')) {
+      if (this.moreToShow && !this.isFetching) {
         this.checkForMorePage(currentTarget);
       }
     },
@@ -230,15 +235,18 @@ export default Controller.extend(ModelReloaderMixin, {
         causeMessage: `Manually started by ${user}`
       });
 
-      return newEvent.save().then(() => {
-        this.set('isShowingModal', false);
-        this.forceReload();
+      return newEvent
+        .save()
+        .then(() => {
+          this.set('isShowingModal', false);
+          this.forceReload();
 
-        return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
-      }).catch((e) => {
-        this.set('isShowingModal', false);
-        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
-      });
+          return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
+        })
+        .catch(e => {
+          this.set('isShowingModal', false);
+          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        });
     },
     startDetachedBuild(job) {
       const buildId = get(job, 'buildId');
@@ -250,7 +258,7 @@ export default Controller.extend(ModelReloaderMixin, {
         parentBuildId = get(build, 'parentBuildId');
       }
 
-      const event = get(this, 'selectedEventObj');
+      const event = this.selectedEventObj;
       const parentEventId = get(event, 'id');
       const startFrom = get(job, 'name');
       const pipelineId = get(this, 'pipeline.id');
@@ -268,17 +276,20 @@ export default Controller.extend(ModelReloaderMixin, {
 
       this.set('isShowingModal', true);
 
-      return newEvent.save().then(() => {
-        this.set('isShowingModal', false);
-        this.forceReload();
+      return newEvent
+        .save()
+        .then(() => {
+          this.set('isShowingModal', false);
+          this.forceReload();
 
-        const path = `pipeline/${newEvent.get('pipelineId')}/${this.get('activeTab')}`;
+          const path = `pipeline/${newEvent.get('pipelineId')}/${this.activeTab}`;
 
-        return this.transitionToRoute(path);
-      }).catch((e) => {
-        this.set('isShowingModal', false);
-        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
-      });
+          return this.transitionToRoute(path);
+        })
+        .catch(e => {
+          this.set('isShowingModal', false);
+          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        });
     },
     stopBuild(job) {
       const buildId = get(job, 'buildId');
@@ -288,7 +299,8 @@ export default Controller.extend(ModelReloaderMixin, {
         build = this.store.peekRecord('build', buildId);
         build.set('status', 'ABORTED');
 
-        return build.save()
+        return build
+          .save()
           .then(() => job.hasMany('builds').reload())
           .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
       }
@@ -299,7 +311,8 @@ export default Controller.extend(ModelReloaderMixin, {
       const event = get(this, 'selectedEventObj');
       const eventId = get(event, 'id');
 
-      return this.get('stop').stopBuilds(eventId)
+      return this.get('stop')
+        .stopBuilds(eventId)
         .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
     },
     startPRBuild(prNum, jobs) {
@@ -312,22 +325,23 @@ export default Controller.extend(ModelReloaderMixin, {
         prNum
       });
 
-      return newEvent.save().then(() =>
-        newEvent.get('builds').then(() => {
-          this.set('isShowingModal', false);
+      return newEvent
+        .save()
+        .then(() =>
+          newEvent.get('builds').then(() => {
+            this.set('isShowingModal', false);
 
-          // PR events are aggregated by each PR jobs when prChain is enabled.
-          if (this.get('prChainEnabled')) {
-            const newEvents = this.get('prEvents')
-              .filter(e => e.get('prNum') !== prNum);
+            // PR events are aggregated by each PR jobs when prChain is enabled.
+            if (this.prChainEnabled) {
+              const newEvents = this.prEvents.filter(e => e.get('prNum') !== prNum);
 
-            newEvents.unshiftObject(newEvent);
+              newEvents.unshiftObject(newEvent);
 
-            this.set('prEvents', newEvents);
-          }
-        })
-      )
-        .catch((e) => {
+              this.set('prEvents', newEvents);
+            }
+          })
+        )
+        .catch(e => {
           this.set('isShowingModal', false);
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         })

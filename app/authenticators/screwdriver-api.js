@@ -25,13 +25,16 @@ function getData(token, decodedToken) {
     scmContext = scmContext || 'guest';
   }
 
-  return Object.assign({}, {
-    username,
-    scope,
-    scmContext,
-    isGuest,
-    token
-  });
+  return Object.assign(
+    {},
+    {
+      username,
+      scope,
+      scmContext,
+      isGuest,
+      token
+    }
+  );
 }
 
 /**
@@ -94,7 +97,7 @@ export default Base.extend({
    * @return {Promise}
    */
   authenticate(scmContext) {
-    const scm = this.get('scmService');
+    const scm = this.scmService;
 
     return new EmberPromise((resolve, reject) => {
       let url = [loginUrlBase];
@@ -105,8 +108,11 @@ export default Base.extend({
       url.push('web');
 
       // Open a window for github auth flow
-      const win = window.open(url.join('/'), 'SDAuth',
-        'width=1024,height=768,resizable,alwaysRaised');
+      const win = window.open(
+        url.join('/'),
+        'SDAuth',
+        'width=1024,height=768,resizable,alwaysRaised'
+      );
 
       // check to see if the window has closed
       const interval = setInterval(() => {
@@ -130,7 +136,7 @@ export default Base.extend({
    * @return {Promise}
    */
   invalidate() {
-    return new EmberPromise((resolve) => {
+    return new EmberPromise(resolve => {
       $.ajax({
         url: logoutUrl,
         method: 'POST',
@@ -138,8 +144,7 @@ export default Base.extend({
         xhrFields: {
           withCredentials: true
         }
-      })
-        .always(() => resolve());
+      }).always(() => resolve());
     });
   }
 });

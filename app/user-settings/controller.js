@@ -14,20 +14,20 @@ export default Controller.extend({
         action: 'created'
       });
 
-      return newToken.save()
-        .then((token) => {
+      return newToken
+        .save()
+        .then(token => {
           this.set('newToken', token);
         })
-        .catch((error) => {
+        .catch(error => {
           newToken.destroyRecord();
           throw error;
         });
     },
     refreshToken(id) {
-      return this.get('refreshService').refreshToken(id)
-        .then((token) => {
-          this.set('newToken', token);
-        });
+      return this.refreshService.refreshToken(id).then(token => {
+        this.set('newToken', token);
+      });
     }
   }
 });

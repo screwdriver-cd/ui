@@ -1,5 +1,7 @@
 & {
-  .row, .collection-table, .lt-body-wrap {
+  .row,
+  .collection-table,
+  .lt-body-wrap {
     margin-top: 15px;
   }
 
@@ -23,16 +25,17 @@
     margin-top: 15px;
   }
 
-  select, input[type=search] {
+  select,
+  input[type='search'] {
     @include reset_select;
     @include reset_input;
     width: 100%;
-    background: rgba(53,112,244,0.05);
+    background: rgba(53, 112, 244, 0.05);
     border-radius: 2px;
     padding: 10px 30px 10px 10px;
 
     &:focus ~ .control-icon {
-      color: #3697F2;
+      color: #3697f2;
     }
   }
 

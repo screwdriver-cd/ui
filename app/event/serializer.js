@@ -1,10 +1,10 @@
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.events) {
-      payload.events.forEach((event) => {
+      payload.events.forEach(event => {
         if (event.workflowGraph) {
           // sorting on the dest should be enough
           event.workflowGraph.edges = event.workflowGraph.edges.sort(({ dest: a }, { dest: b }) => {
@@ -51,6 +51,6 @@ export default DS.RESTSerializer.extend({
       data.buildId = parseInt(snapshot.attr('buildId'), 10);
     }
 
-    return merge(hash, data);
+    return assign(hash, data);
   }
 });

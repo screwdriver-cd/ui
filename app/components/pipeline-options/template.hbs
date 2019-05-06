@@ -18,13 +18,13 @@
                 <div>
                   {{input
                     class="text-input"
-                    key-up="scmChange"
+                    key-up=(action "scmChange")
                     value=scmUrl
                   }}
                 </div>
               </div>
               <div class="col-xs-2 right">
-                <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving ' saving'}}">
+                <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
                   <div class="saving-loading">
                     Updating pipeline
                   </div>
@@ -49,28 +49,28 @@
               <p>Toggle to disable or enable the job.</p>
             </div>
           </div>
-        {{#each sortedJobs as |job|}}
-          <li>
-            <div class="row">
-              <div class="col-xs-10">
-                <h4>{{job.name}}</h4>
-                {{#if job.stateChanger}}
-                  <i class="float-right"><small>{{job.stateChangeTimeWords}}</small></i>
-                  <p>{{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}{{/if}}</p>
-                {{/if}}
+          {{#each sortedJobs as |job|}}
+            <li>
+              <div class="row">
+                <div class="col-xs-10">
+                  <h4>{{job.name}}</h4>
+                  {{#if job.stateChanger}}
+                    <i class="float-right"><small>{{job.stateChangeTimeWords}}</small></i>
+                    <p>{{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}{{/if}}</p>
+                  {{/if}}
+                </div>
+                <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
+                  {{x-toggle
+                    size="small"
+                    value=(not job.isDisabled)
+                    onLabel="Enabled::false"
+                    offLabel="Disabled::true"
+                    onToggle=(action "toggleJob" job.id username job.name)}}
+                </div>
               </div>
-              <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
-                {{x-toggle
-                  size='small'
-                  value=(not job.isDisabled)
-                  onLabel='Enabled::false'
-                  offLabel='Disabled::true'
-                  onToggle=(action "toggleJob" job.id username job.name)}}
-              </div>
-            </div>
-          </li>
-        {{/each}}
-      </li>
+            </li>
+          {{/each}}
+        </li>
       </ul>
     </section>
   </div>
@@ -132,19 +132,19 @@
           </div>
         </li>
         {{#each sortedJobs as |job|}}
-        {{#unless job.isPR}}
-        <li>
-          <div class="row">
-            <div class="col-xs-10">
-              <h4>Job {{job.name}}</h4>
-              <p>Click to clear the cache for the {{job.name}} job.</p>
-            </div>
-            <div class="col-xs-2 right" title="Click to clear cache for {{job.name}} job.">
-              <a href="#" {{action "clearCache" "jobs" job.id}}>{{fa-icon "trash"}}</a>
-            </div>
-          </div>
-        </li>
-        {{/unless}}
+          {{#unless job.isPR}}
+            <li>
+              <div class="row">
+                <div class="col-xs-10">
+                  <h4>Job {{job.name}}</h4>
+                  <p>Click to clear the cache for the {{job.name}} job.</p>
+                </div>
+                <div class="col-xs-2 right" title="Click to clear cache for {{job.name}} job.">
+                  <a href="#" {{action "clearCache" "jobs" job.id}}>{{fa-icon "trash"}}</a>
+                </div>
+              </div>
+            </li>
+          {{/unless}}
         {{/each}}
       </ul>
     </section>
@@ -157,15 +157,15 @@
         <ul>
           <li>
             {{#if showDangerButton}}
-            <div class="row">
-              <div class="col-xs-1 col-md-8">
-                <h4>Remove this pipeline</h4>
-                <p>Once you remove a pipeline, there is no going back.</p>
+              <div class="row">
+                <div class="col-xs-1 col-md-8">
+                  <h4>Remove this pipeline</h4>
+                  <p>Once you remove a pipeline, there is no going back.</p>
+                </div>
+                <div class="col-xs-1 col-md-4 right">
+                  <a href="#" {{action "showRemoveButtons"}} class="trash">{{fa-icon "trash"}}</a>
+                </div>
               </div>
-              <div class="col-xs-1 col-md-4 right">
-                <a href="#" {{action "showRemoveButtons"}} class="trash">{{fa-icon "trash"}}</a>
-              </div>
-            </div>
             {{/if}}
             {{#if showRemoveButtons}}
               <h4>Are you absolutely sure?</h4>
@@ -177,7 +177,6 @@
             {{/if}}
           </li>
         </ul>
-
       </section>
     </div>
   {{/unless}}
@@ -193,5 +192,4 @@
 {{/if}}
 
 {{job-toggle-modal showToggleModal=showToggleModal updateMessage=(action "updateMessage") name=name stateChange=stateChange}}
-
 {{yield}}

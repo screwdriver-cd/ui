@@ -33,10 +33,10 @@
   <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view" onScroll={{action "onEventListScroll"}}>
     {{#bs-tab customTabs=true as |tab|}}
       {{#bs-nav type="tabs" as |nav|}}
-        {{#nav.item active=(bs-eq activeTab 'events')}}
+        {{#nav.item active=(bs-eq activeTab "events")}}
           {{#nav.link-to "pipeline.events" class="nav-link"}}Events{{/nav.link-to}}
         {{/nav.item}}
-        {{#nav.item active=(bs-eq activeTab 'pulls')}}
+        {{#nav.item active=(bs-eq activeTab "pulls")}}
           {{#nav.link-to "pipeline.pulls" class="nav-link"}}Pull Requests{{/nav.link-to}}
         {{/nav.item}}
       {{/bs-nav}}
@@ -56,13 +56,13 @@
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
           {{#if prChainEnabled}}
             {{pipeline-events-list
-              events=events
-              selected=(mut selected)
-              selectedEvent=selectedEvent
-              lastSuccessful=lastSuccessful
-              eventsPage=eventsPage
-              updateEvents=(action "updateEvents")
-              }}
+            events=events
+            selected=(mut selected)
+            selectedEvent=selectedEvent
+            lastSuccessful=lastSuccessful
+            eventsPage=eventsPage
+            updateEvents=(action "updateEvents")
+            }}
           {{else}}
             {{#each pullRequestGroups as |prg|}}
               {{pipeline-pr-list

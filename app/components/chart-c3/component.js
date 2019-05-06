@@ -15,7 +15,7 @@ export default Component.extend({
       return;
     }
 
-    const chart = this.get('chart');
+    const { chart } = this;
 
     chart.unload({
       done: () => {
@@ -26,32 +26,32 @@ export default Component.extend({
   },
   willDestroyElement() {
     this._super(...arguments);
-    this.get('chart').destroy();
+    this.chart.destroy();
     this.set('chart', null);
   },
   draw() {
     const chart = c3.generate({
-      axis: this.get('axis'),
-      bar: this.get('bar'),
+      axis: this.axis,
+      bar: this.bar,
       bindto: this.element,
-      color: this.get('color'),
-      data: this.get('data'),
-      grid: this.get('grid'),
-      interaction: this.get('interaction'),
-      legend: this.get('legend'),
-      oninit: this.get('oninit'),
-      onrendered: this.get('onrendered'),
-      onresized: this.get('onresized'),
-      padding: this.get('padding'),
-      point: this.get('point'),
-      size: this.get('size'),
-      subchart: this.get('subchart'),
-      tooltip: this.get('tooltip'),
-      transition: this.get('transition'),
-      zoom: this.get('zoom')
+      color: this.color,
+      data: this.data,
+      grid: this.grid,
+      interaction: this.interaction,
+      legend: this.legend,
+      oninit: this.oninit,
+      onrendered: this.onrendered,
+      onresized: this.onresized,
+      padding: this.padding,
+      point: this.point,
+      size: this.size,
+      subchart: this.subchart,
+      tooltip: this.tooltip,
+      transition: this.transition,
+      zoom: this.zoom
     });
 
-    chart.internal.name = this.get('name');
+    chart.internal.name = this.name;
     this.set('chart', chart);
   }
 });

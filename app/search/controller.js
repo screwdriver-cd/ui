@@ -1,6 +1,6 @@
 import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import ENV from 'screwdriver-ui/config/environment';
 import Controller from '@ember/controller';
 
@@ -10,7 +10,7 @@ export default Controller.extend({
   modelPipelines: computed('model.pipelines', {
     get() {
       const currentModelPipelines = this.get('model.pipelines').toArray();
-      const currentPipelinesShown = this.get('pipelinesToShow');
+      const currentPipelinesShown = this.pipelinesToShow;
 
       if (Array.isArray(currentPipelinesShown) && currentPipelinesShown.length) {
         this.set('pipelinesToShow', []);
@@ -21,7 +21,7 @@ export default Controller.extend({
   }),
   pipelines: computed('modelPipelines', 'pipelinesToShow', {
     get() {
-      return [].concat(this.get('modelPipelines'), this.get('pipelinesToShow'));
+      return [].concat(this.modelPipelines, this.pipelinesToShow);
     }
   }),
   collections: reads('model.collections'),
@@ -47,19 +47,17 @@ export default Controller.extend({
         this.setProperties({ query: search });
       }
 
-      return get(this, 'store').query('pipeline', pipelineListConfig)
-        .then((pipelines) => {
-          const nextPipelines = pipelines.toArray();
+      return this.store.query('pipeline', pipelineListConfig).then(pipelines => {
+        const nextPipelines = pipelines.toArray();
 
-          if (Array.isArray(nextPipelines)) {
-            if (nextPipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
-              this.set('moreToShow', false);
-            }
-
-            this.set('pipelinesToShow',
-              this.get('pipelinesToShow').concat(nextPipelines));
+        if (Array.isArray(nextPipelines)) {
+          if (nextPipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
+            this.set('moreToShow', false);
           }
-        });
+
+          this.set('pipelinesToShow', this.pipelinesToShow.concat(nextPipelines));
+        }
+      });
     },
     /**
      * Adding a pipeline to a collection
@@ -67,16 +65,15 @@ export default Controller.extend({
      * @param {Object} collection - collection object
      */
     addToCollection(pipelineId, collectionId) {
-      return this.store.findRecord('collection', collectionId)
-        .then((collection) => {
-          const pipelineIds = collection.get('pipelineIds');
+      return this.store.findRecord('collection', collectionId).then(collection => {
+        const pipelineIds = collection.get('pipelineIds');
 
-          if (!pipelineIds.includes(pipelineId)) {
-            collection.set('pipelineIds', [...pipelineIds, pipelineId]);
-          }
+        if (!pipelineIds.includes(pipelineId)) {
+          collection.set('pipelineIds', [...pipelineIds, pipelineId]);
+        }
 
-          return collection.save();
-        });
+        return collection.save();
+      });
     },
     changeCollection() {
       this.set('editingDescription', false);

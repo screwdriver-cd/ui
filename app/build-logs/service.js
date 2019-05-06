@@ -31,7 +31,8 @@ export default Service.extend({
     let lines = [];
     let done = false;
     const inProgress = sortOrder === 'ascending';
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+    const url =
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
       `/builds/${buildId}/steps/${stepName}/logs`;
 
     return new EmberPromise((resolve, reject) => {
@@ -40,38 +41,40 @@ export default Service.extend({
       }
 
       // convert jquery's ajax promises to a real promise
-      return $.ajax({
-        url,
-        data: {
-          from: logNumber,
-          pages: pageSize,
-          sort: sortOrder
-        },
-        headers: {
-          Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
-        }
-      })
-        .done((data, textStatus, jqXHR) => {
-          if (Array.isArray(data)) {
-            lines = data;
+      return (
+        $.ajax({
+          url,
+          data: {
+            from: logNumber,
+            pages: pageSize,
+            sort: sortOrder
+          },
+          headers: {
+            Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
           }
-          done = started && jqXHR.getResponseHeader('x-more-data') === 'false';
         })
-        // always resolve something
-        .always(() => {
-          this.setCache(buildId, stepName, { done });
+          .done((data, textStatus, jqXHR) => {
+            if (Array.isArray(data)) {
+              lines = data;
+            }
+            done = started && jqXHR.getResponseHeader('x-more-data') === 'false';
+          })
+          // always resolve something
+          .always(() => {
+            this.setCache(buildId, stepName, { done });
 
-          if (lines.length) {
-            let existings = this.getCache(buildId, stepName, 'logs') || [];
+            if (lines.length) {
+              let existings = this.getCache(buildId, stepName, 'logs') || [];
 
-            this.setCache(buildId, stepName, {
-              nextLine: inProgress ? lines[lines.length - 1].n + 1 : lines[0].n - 1,
-              logs: inProgress ? existings.concat(lines) : lines.concat(existings)
-            });
-          }
+              this.setCache(buildId, stepName, {
+                nextLine: inProgress ? lines[lines.length - 1].n + 1 : lines[0].n - 1,
+                logs: inProgress ? existings.concat(lines) : lines.concat(existings)
+              });
+            }
 
-          resolve({ lines, done });
-        });
+            resolve({ lines, done });
+          })
+      );
     });
   },
   /**
@@ -120,15 +123,14 @@ export default Service.extend({
     let blobUrl = this.getCache(buildId, stepName, 'blobUrl');
 
     if (!blobUrl) {
-      const blob = new Blob(
-        this.getCache(buildId, stepName, 'logs').map(l => `${l.m}\n`),
-        { type: 'text/plain' }
-      );
+      const blob = new Blob(this.getCache(buildId, stepName, 'logs').map(l => `${l.m}\n`), {
+        type: 'text/plain'
+      });
 
       blobUrl = URL.createObjectURL(blob);
 
       this.setCache(buildId, stepName, { blobUrl });
-      this.get('blobKeys').push([buildId, stepName]);
+      this.blobKeys.push([buildId, stepName]);
     }
 
     return blobUrl;
@@ -138,7 +140,7 @@ export default Service.extend({
    * @method revokeLogBlobUrls
    */
   revokeLogBlobUrls() {
-    this.get('blobKeys').forEach((k) => {
+    this.blobKeys.forEach(k => {
       URL.revokeObjectURL(this.getCache(...k, 'blobUrl'));
       this.setCache(...k, { blobUrl: undefined });
     });

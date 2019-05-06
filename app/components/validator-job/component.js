@@ -21,7 +21,7 @@ export default Component.extend({
       // Templates have a different output
       c = this.get('job.steps');
       if (c) {
-        return c.map((s) => {
+        return c.map(s => {
           const name = Object.keys(s)[0];
           const command = s[name];
 

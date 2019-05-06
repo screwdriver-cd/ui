@@ -1,7 +1,7 @@
 <header>
   <h4>
     {{collectionType}}
-    <a href="http://docs.screwdriver.cd/user-guide/{{routes.prefix}}" title="More Information" target="_blank" class="link pull-right">{{collectionType}} Docs {{fa-icon "question-circle"}}</a>
+    <a href="http://docs.screwdriver.cd/user-guide/{{routes.prefix}}" title="More Information" target="_blank" rel="noopener" class="link pull-right">{{collectionType}} Docs {{fa-icon "question-circle"}}</a>
   </h4>
   <div class="collection-description">{{yield}}</div>
 </header>
@@ -16,20 +16,13 @@
 
   <div class="row">
     <div class="col-sm-3">
-      <select onchange={{action 'onFilterNamespace' value="target.value"}}>
+      <select onchange={{action "onFilterNamespace" value="target.value"}}>
         <option value="">All Namespaces</option>
-        {{!-- {{#if (not-eq namespaces.length 1)}}
-          {{#if filteringNamespace}}
-            <option value="">All Namespaces</option>
-          {{else}}
-            <option value="" selected="selected">All Namespaces</option>
-          {{/if}}
-        {{/if}} --}}
         {{#each namespaces as |ns|}}
           {{#if (eq ns filteringNamespace)}}
-            <option value="{{ns}}" selected="selected">{{ns}}</option>
+            <option value={{ns}} selected="selected">{{ns}}</option>
           {{else}}
-            <option value="{{ns}}">{{ns}}</option>
+            <option value={{ns}}>{{ns}}</option>
           {{/if}}
         {{/each}}
       </select>
@@ -37,20 +30,13 @@
     </div>
 
     <div class="col-sm-3">
-      <select onchange={{action 'onFilterMaintainer' value="target.value"}}>
+      <select onchange={{action "onFilterMaintainer" value="target.value"}}>
         <option value="">All Maintainers</option>
-        {{!-- {{#if (not-eq maintainers.length 1)}}
-          {{#if filteringMaintainer}}
-            <option value="">All Maintainers</option>
-          {{else}}
-            <option value="" selected="selected">All Maintainers</option>
-          {{/if}}
-        {{/if}} --}}
         {{#each maintainers as |m|}}
           {{#if (eq ns filteringMaintainer)}}
-            <option value="{{m}}" selected="selected">{{m}}</option>
+            <option value={{m}} selected="selected">{{m}}</option>
           {{else}}
-            <option value="{{m}}">{{m}}</option>
+            <option value={{m}}>{{m}}</option>
           {{/if}}
         {{/each}}
       </select>
@@ -65,26 +51,26 @@
 
   {{#light-table
     table
-    height='75vh'
+    height="75vh"
     responsive=true
     classNames="collection-list"
     tableClassNames="collection-list-table"
     extra=(hash routes=routes) as |t|
   }}
     {{t.head
-      onColumnClick=(action 'sortByColumn')
-      iconSortable='fa fa-sort'
-      iconAscending='fa fa-sort-asc'
-      iconDescending='fa fa-sort-desc'
+      onColumnClick=(action "sortByColumn")
+      iconSortable="fa fa-sort"
+      iconAscending="fa fa-sort-asc"
+      iconDescending="fa fa-sort-desc"
       resizeOnDrag=true
     }}
-    {{#t.body canSelect=false as |b|}}
+    {{#t.body canSelect=false as |body|}}
       {{#if table.isEmpty}}
-        {{#b.no-data}}
+        {{#body.no-data}}
           Sorry. No result is found for <b><i>{{search}}</i></b>
           {{#if filteringNamespace}} under <b><i>{{filteringNamespace}}</i></b>{{/if}}
           {{#if filteringMaintainer}} by <b><i>{{filteringMaintainer}}</i></b>{{/if}}
-        {{/b.no-data}}
+        {{/body.no-data}}
       {{/if}}
     {{/t.body}}
   {{/light-table}}

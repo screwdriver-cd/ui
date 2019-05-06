@@ -11,9 +11,9 @@ export default Component.extend({
   coverageInfo: {},
   coverageStep: computed('buildSteps', {
     get() {
-      const buildSteps = this.get('buildSteps');
-      const coverageStep = buildSteps.find(item =>
-        /^sd-teardown-screwdriver-coverage/.test(item.name));
+      const coverageStep = this.buildSteps.find(item =>
+        /^sd-teardown-screwdriver-coverage/.test(item.name)
+      );
 
       return coverageStep;
     }
@@ -31,20 +31,20 @@ export default Component.extend({
 
   shortenedPrShas: computed('prEvents', {
     get() {
-      return this.get('prEvents').then(result =>
-        result.map((pr, i) =>
-          ({ index: result.length - i,
-            shortenedSha: pr.event.sha.substr(0, 7),
-            build: pr.build,
-            event: pr.event })
-        )
+      return this.prEvents.then(result =>
+        result.map((pr, i) => ({
+          index: result.length - i,
+          shortenedSha: pr.event.sha.substr(0, 7),
+          build: pr.build,
+          event: pr.event
+        }))
       );
     }
   }),
 
   buildAction: computed('buildStatus', {
     get() {
-      if (isActiveBuild(this.get('buildStatus'), this.get('buildEnd'))) {
+      if (isActiveBuild(this.buildStatus, this.buildEnd)) {
         return 'Stop';
       }
 
@@ -54,17 +54,17 @@ export default Component.extend({
 
   isWaiting: computed('buildStatus', {
     get() {
-      return this.get('buildStatus') === 'QUEUED';
+      return this.buildStatus === 'QUEUED';
     }
   }),
 
   hasButton: computed('buildAction', 'jobName', {
     get() {
-      if (this.get('buildAction') === 'Stop') {
+      if (this.buildAction === 'Stop') {
         return true;
       }
 
-      if (isPRJob(this.get('jobName'))) {
+      if (isPRJob(this.jobName)) {
         return true;
       }
 
@@ -73,13 +73,13 @@ export default Component.extend({
   }),
 
   overrideCoverageInfo() {
-    const buildMeta = this.get('buildMeta');
+    const { buildMeta } = this;
 
     // override coverage info if set in build meta
     if (buildMeta && buildMeta.tests) {
       const coverage = String(buildMeta.tests.coverage);
       const tests = String(buildMeta.tests.results);
-      let coverageInfo = this.get('coverageInfo');
+      let { coverageInfo } = this;
 
       if (coverage.match(/^\d+$/)) {
         coverageInfo.coverage = `${coverage}%`;
@@ -97,8 +97,8 @@ export default Component.extend({
 
   coverageInfoCompute() {
     // Set coverage query startTime to build start time since user can do coverage during user step
-    const buildStartTime = this.get('buildSteps')[0].startTime;
-    const coverageStepEndTime = this.get('coverageStepEndTime');
+    const buildStartTime = this.buildSteps[0].startTime;
+    const { coverageStepEndTime } = this;
 
     if (!coverageStepEndTime) {
       this.set('coverageInfo', {
@@ -112,17 +112,16 @@ export default Component.extend({
     }
 
     const config = {
-      buildId: this.get('buildId'),
-      jobId: this.get('jobId'),
+      buildId: this.buildId,
+      jobId: this.jobId,
       startTime: buildStartTime,
       endTime: coverageStepEndTime
     };
 
-    this.get('coverage').getCoverageInfo(config)
-      .then((data) => {
-        this.set('coverageInfo', data);
-        this.set('coverageInfoSet', true);
-      });
+    this.coverage.getCoverageInfo(config).then(data => {
+      this.set('coverageInfo', data);
+      this.set('coverageInfoSet', true);
+    });
   },
 
   init() {
@@ -137,32 +136,29 @@ export default Component.extend({
   willRender() {
     this._super(...arguments);
 
-    if (isActiveBuild(this.get('buildStatus'), this.get('buildEnd'))) {
-      this.get('reloadBuild')();
+    if (isActiveBuild(this.buildStatus, this.buildEnd)) {
+      this.reloadBuild();
     }
 
-    if (this.get('coverageStepEndTime') && !this.get('coverageInfoSet')) {
+    if (this.coverageStepEndTime && !this.coverageInfoSet) {
       this.coverageInfoCompute();
     }
 
-    if (!isActiveBuild(this.get('buildStatus'), this.get('buildEnd'))) {
+    if (!isActiveBuild(this.buildStatus, this.buildEnd)) {
       this.overrideCoverageInfo();
     }
   },
 
   actions: {
-
     changeCurPr(targetPr) {
-      let changeBuild = this.get('changeBuild');
-
-      changeBuild(targetPr.event.pipelineId, targetPr.build.id);
+      this.changeBuild(targetPr.event.pipelineId, targetPr.build.id);
     },
 
     buildButtonClick() {
-      if (this.get('buildAction') === 'Stop') {
-        this.get('onStop')();
+      if (this.buildAction === 'Stop') {
+        this.onStop();
       } else {
-        this.get('onStart')();
+        this.onStart();
       }
     }
   }

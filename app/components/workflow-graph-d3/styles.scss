@@ -1,16 +1,20 @@
 @font-face {
   font-family: 'screwdriver';
   src: url('/assets/screwdriver.eot?anwrf#iefix') format('embedded-opentype'),
-  url('/assets/screwdriver.ttf?anwrf') format('truetype'),
-  url('/assets/screwdriver.woff?anwrf') format('woff'),
-  url('/assets/screwdriver.svg?anwrf#screwdriver') format('svg');
+    url('/assets/screwdriver.ttf?anwrf') format('truetype'),
+    url('/assets/screwdriver.woff?anwrf') format('woff'),
+    url('/assets/screwdriver.svg?anwrf#screwdriver') format('svg');
   font-style: normal;
 }
 
 @keyframes spin {
-  from {transform: rotate(0deg);}
+  from {
+    transform: rotate(0deg);
+  }
 
-  to {transform: rotate(360deg);}
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 & {
@@ -33,7 +37,8 @@ g {
   cursor: pointer;
 
   &.build-success,
-  &.build-started_from { // sass-lint:disable-line class-name-format
+  &.build-started_from {
+    // sass-lint:disable-line class-name-format
     fill: $sd-success;
 
     &:hover {
@@ -74,7 +79,8 @@ g {
   fill: transparent;
 
   &.build-success,
-  &.build-started_from { // sass-lint:disable-line class-name-format
+  &.build-started_from {
+    // sass-lint:disable-line class-name-format
     stroke: $sd-success;
   }
 }

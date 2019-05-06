@@ -10,8 +10,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
         return;
       }
 
-      get(this, 'store').findAll('collection')
-        .then((collections) => {
+      this.store
+        .findAll('collection')
+        .then(collections => {
           if (get(collections, 'length')) {
             // Get the id of the last object in this array. The last
             // object will be the first collection created by the user.

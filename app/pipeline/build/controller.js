@@ -28,7 +28,7 @@ export default Controller.extend({
         const jobId = this.get('job.id');
 
         if (event) {
-          return this.get('prEventsService').getPRevents(pipeline, event, jobId);
+          return this.prEventsService.getPRevents(pipeline, event, jobId);
         }
       }
 
@@ -37,13 +37,12 @@ export default Controller.extend({
   }),
 
   actions: {
-
     stopBuild() {
-      const build = this.get('build');
+      const { build } = this;
 
       build.set('status', 'ABORTED');
 
-      return build.save().catch((e) => {
+      return build.save().catch(e => {
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       });
     },
@@ -59,15 +58,16 @@ export default Controller.extend({
         causeMessage
       });
 
-      return newEvent.save().then(() =>
-        newEvent.get('builds')
-          .then((builds) => {
+      return newEvent
+        .save()
+        .then(() =>
+          newEvent.get('builds').then(builds => {
             this.set('isShowingModal', false);
 
-            return this.transitionToRoute('pipeline.build',
-              builds.get('lastObject.id'));
-          }))
-        .catch((e) => {
+            return this.transitionToRoute('pipeline.build', builds.get('lastObject.id'));
+          })
+        )
+        .catch(e => {
           this.set('isShowingModal', false);
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         });
@@ -88,26 +88,30 @@ export default Controller.extend({
    * @param  {Number}    [timeout=ENV.APP.BUILD_RELOAD_TIMER] ms to wait before reloading
    */
   reloadBuild(timeout = ENV.APP.BUILD_RELOAD_TIMER) {
-    const build = this.get('build');
+    const { build } = this;
     const status = build.get('status');
 
     // reload again in a little bit if queued
-    if (!this.get('loading')) {
-      if ((status === 'QUEUED' || status === 'RUNNING')) {
-        later(this, () => {
-          if (!build.get('isDeleted') && !this.get('loading')) {
-            this.set('loading', true);
+    if (!this.loading) {
+      if (status === 'QUEUED' || status === 'RUNNING') {
+        later(
+          this,
+          () => {
+            if (!build.get('isDeleted') && !this.loading) {
+              this.set('loading', true);
 
-            build.reload().then(() => {
-              this.set('loading', false);
-              throttle(this, 'reloadBuild', timeout);
-              this.changeBuildStep();
-            });
-          }
-        }, timeout);
+              build.reload().then(() => {
+                this.set('loading', false);
+                throttle(this, 'reloadBuild', timeout);
+                this.changeBuildStep();
+              });
+            }
+          },
+          timeout
+        );
       } else {
         // refetch builds which are part of current event
-        this.get('event').hasMany('builds').reload();
+        this.event.hasMany('builds').reload();
       }
     }
   },

@@ -1,6 +1,7 @@
 import { resolve } from 'rsvp';
 import Service from '@ember/service';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
 const commandServiceStub = Service.extend({
   getAllCommands() {
@@ -12,20 +13,22 @@ const commandServiceStub = Service.extend({
   }
 });
 
-moduleFor('route:commands/index', 'Unix | Route | commands/index', {
+module('Unix | Route | commands/index', function(hooks) {
+  setupTest(hooks);
+
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
-  beforeEach: function beforeEach() {
-    this.register('service:command', commandServiceStub);
-  }
-});
+  hooks.beforeEach(function beforeEach() {
+    this.owner.register('service:command', commandServiceStub);
+  });
 
-test('it dedupes the commands by namespace and name', function (assert) {
-  let route = this.subject();
+  test('it dedupes the commands by namespace and name', function(assert) {
+    let route = this.owner.lookup('route:commands/index');
 
-  assert.ok(route);
+    assert.ok(route);
 
-  return route.model().then((commands) => {
-    assert.equal(commands.length, 3);
+    return route.model().then(commands => {
+      assert.equal(commands.length, 3);
+    });
   });
 });

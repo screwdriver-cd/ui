@@ -12,7 +12,7 @@ export default Route.extend({
     controller.set('activeTab', 'events');
   },
   model() {
-    this.controllerFor('pipeline.events').set('pipeline', this.get('pipeline'));
+    this.controllerFor('pipeline.events').set('pipeline', this.pipeline);
 
     return RSVP.hash({
       jobs: this.get('pipeline.jobs'),

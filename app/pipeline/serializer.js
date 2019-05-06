@@ -1,4 +1,4 @@
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
@@ -8,6 +8,6 @@ export default DS.RESTSerializer.extend({
    * @method serializeIntoHash
    */
   serializeIntoHash(hash, typeClass, snapshot) {
-    return merge(hash, { checkoutUrl: snapshot.attr('checkoutUrl') });
+    return assign(hash, { checkoutUrl: snapshot.attr('checkoutUrl') });
   }
 });

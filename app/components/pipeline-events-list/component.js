@@ -11,7 +11,7 @@ export default Component.extend({
   }),
   init() {
     this._super(...arguments);
-    scheduleOnce('afterRender', this, 'updateEvents', this.get('eventsPage') + 1);
+    scheduleOnce('afterRender', this, 'updateEvents', this.eventsPage + 1);
   },
   actions: {
     eventClick(id) {

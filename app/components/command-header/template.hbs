@@ -1,6 +1,8 @@
-<h1>{{command.namespace}}/{{command.name}}
+<h1>
+  {{command.namespace}}/{{command.name}}
   {{#if scmUrl}}
-    <a href="{{scmUrl}}">{{fa-icon "code-fork" title="Source code"}}</a> <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
+    <a href={{scmUrl}}>{{fa-icon "code-fork" title="Source code"}}</a>
+    <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
   {{else}}
     {{fa-icon "code-fork" title="The pipeline for this command does not exist."}} {{fa-icon "trash" title="Cannot delete command; pipeline could not be found."}}
   {{/if}}
@@ -34,7 +36,7 @@
         {{fa-icon "exclamation-triangle" pull="left" size=3}}
         You're about to delete all versions and tags of <strong>{{command.namespace}}/{{command.name}}</strong>. There might be existing pipelines using this command.
       {{/modal.body}}
-      {{#modal.footer as |footer|}}
+      {{#modal.footer}}
         {{#bs-button onClick=(action "cancelRemovingCommand")}}Cancel{{/bs-button}}
         {{#bs-button onClick=(action "removeCommand" command.namespace command.name) type="danger"}}{{fa-icon "trash"}} Confirm{{/bs-button}}
       {{/modal.footer}}

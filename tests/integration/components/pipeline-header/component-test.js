@@ -1,58 +1,53 @@
 import EmberObject from '@ember/object';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('pipeline-header', 'Integration | Component | pipeline header', {
-  integration: true
-});
+module('Integration | Component | pipeline header', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  const $ = this.$;
+  test('it renders', async function(assert) {
+    const pipelineMock = EmberObject.create({
+      appId: 'batman/batmobile',
+      hubUrl: 'http://example.com/batman/batmobile',
+      branch: 'master',
+      scmContext: 'github.com'
+    });
+    const scmMock = EmberObject.create({
+      scm: 'github.com',
+      scmIcon: 'github'
+    });
 
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const pipelineMock = EmberObject.create({
-    appId: 'batman/batmobile',
-    hubUrl: 'http://example.com/batman/batmobile',
-    branch: 'master',
-    scmContext: 'github.com'
-  });
-  const scmMock = EmberObject.create({
-    scm: 'github.com',
-    scmIcon: 'github'
-  });
+    this.set('pipelineMock', pipelineMock);
+    this.set('scmMock', scmMock);
+    await render(hbs`{{pipeline-header pipeline=pipelineMock scmContext=scmMock}}`);
 
-  this.set('pipelineMock', pipelineMock);
-  this.set('scmMock', scmMock);
-  this.render(hbs`{{pipeline-header pipeline=pipelineMock scmContext=scmMock}}`);
+    assert.dom('h1').hasText('batman/batmobile');
+    assert.dom('a.branch').hasText('master');
+    assert.dom('a.branch').hasAttribute('href', 'http://example.com/batman/batmobile');
 
-  assert.equal($('h1').text().trim(), 'batman/batmobile');
-  assert.equal($($('a').get(1)).text().trim(), 'master');
-  assert.equal($($('a').get(1)).attr('href'), 'http://example.com/batman/batmobile');
-  assert.equal($('span.scm').text().trim(), 'github.com');
-  assert.equal($('.scm > .fa-github').length, 1);
-});
-
-test('it renders link to parent pipeline for child pipeline', function (assert) {
-  const $ = this.$;
-
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const pipelineMock = EmberObject.create({
-    appId: 'batman/batmobile',
-    hubUrl: 'http://example.com/batman/batmobile',
-    branch: 'master',
-    scmContext: 'github.com',
-    configPipelineId: '123'
-  });
-  const scmMock = EmberObject.create({
-    scm: 'github.com',
-    scmIcon: 'github'
+    assert.dom('span.scm', 'github.com');
+    assert.dom('.scm > .fa-github').exists({ count: 1 });
   });
 
-  this.set('pipelineMock', pipelineMock);
-  this.set('scmMock', scmMock);
-  this.render(hbs`{{pipeline-header pipeline=pipelineMock scmContext=scmMock}}`);
+  test('it renders link to parent pipeline for child pipeline', async function(assert) {
+    const pipelineMock = EmberObject.create({
+      appId: 'batman/batmobile',
+      hubUrl: 'http://example.com/batman/batmobile',
+      branch: 'master',
+      scmContext: 'github.com',
+      configPipelineId: '123'
+    });
+    const scmMock = EmberObject.create({
+      scm: 'github.com',
+      scmIcon: 'github'
+    });
 
-  assert.equal($($('a').get(2)).text().trim(), 'Parent Pipeline');
+    this.set('pipelineMock', pipelineMock);
+    this.set('scmMock', scmMock);
+    await render(hbs`{{pipeline-header pipeline=pipelineMock scmContext=scmMock}}`);
+
+    assert.dom('a:nth-child(5)').hasText('Parent Pipeline');
+  });
 });

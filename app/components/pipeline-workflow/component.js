@@ -1,3 +1,4 @@
+import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
 import { get, computed, set, setProperties } from '@ember/object';
 import { all, reject } from 'rsvp';
@@ -9,9 +10,9 @@ export default Component.extend({
   showTooltip: false,
   graph: computed('workflowGraph', {
     get() {
-      const jobs = get(this, 'jobs');
+      const { jobs } = this;
       const fetchBuilds = [];
-      const graph = get(this, 'workflowGraph');
+      const graph = this.workflowGraph;
 
       // Hack to make page display stuff when a workflow is not provided
       if (!graph) {
@@ -19,7 +20,7 @@ export default Component.extend({
       }
 
       // Preload the builds for the jobs
-      jobs.forEach((j) => {
+      jobs.forEach(j => {
         const jobName = get(j, 'name');
         const node = graph.nodes.find(n => n.name === jobName);
 
@@ -44,7 +45,7 @@ export default Component.extend({
       });
     }
   }),
-  displayRestartButton: computed.alias('authenticated'),
+  displayRestartButton: alias('authenticated'),
 
   init() {
     this._super(...arguments);
@@ -116,7 +117,7 @@ export default Component.extend({
     },
     startDetachedBuild() {
       set(this, 'isShowingModal', false);
-      get(this, 'startDetachedBuild')(get(this, 'tooltipData.job'));
+      this.startDetachedBuild(get(this, 'tooltipData.job'));
     }
   }
 });

@@ -39,7 +39,8 @@
   }
 
   &.has-parse-error .steps ul {
-    .name, .value {
+    .name,
+    .value {
       font-weight: 600;
       color: $sd-failure;
     }

@@ -2,15 +2,15 @@
   <div class="view">
     <div class="detail">
       <div class="name">
-        <a href="{{jobs.0.url}}" target="_blank">
+        <a href={{jobs.0.url}} target="_blank" rel="noopener">
           PR #{{jobs.0.group}}
           <span class="scm">{{fa-icon "code-fork"}}</span>
         </a>
-        <br/>
+        <br>
         <span class="title">{{jobs.0.title}}</span>
       </div>
       <div class="date greyOut">Opened {{jobs.0.createTimeWords}}</div>
-      <div class="by"><a href="{{jobs.0.userProfile}}" target="_blank">{{jobs.0.username}}</a></div>
+      <div class="by"><a href={{jobs.0.userProfile}} target="_blank" rel="noopener">{{jobs.0.username}}</a></div>
       {{#if showJobs }}
         {{#each jobs as |job|}}
           {{pipeline-pr-view job=job}}
@@ -23,6 +23,3 @@
     </div>
   </div>
 {{/if}}
-
-
-

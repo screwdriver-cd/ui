@@ -16,11 +16,10 @@ export default Component.extend({
     },
     updateState() {
       schedule('actions', () => {
-        const message = this.get('message');
-        let addMessage = this.get('updateMessage');
+        let addMessage = this.updateMessage;
 
         if (addMessage) {
-          addMessage(message);
+          addMessage(this.message);
         }
 
         this.set('showToggleModal', false);

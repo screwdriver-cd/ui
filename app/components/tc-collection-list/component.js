@@ -1,3 +1,4 @@
+import { sort } from '@ember/object/computed';
 import Component from '@ember/component';
 import { computed, observer } from '@ember/object';
 import Table from 'ember-light-table';
@@ -13,7 +14,7 @@ export default Component.extend({
   collectionDescription: null,
   routes: computed('collectionType', {
     get() {
-      const prefix = this.get('collectionType').toLowerCase();
+      const prefix = this.collectionType.toLowerCase();
 
       return {
         prefix,
@@ -29,8 +30,8 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let table = new Table(this.get('columns'), this.get('refinedModel'));
-    let sortColumn = table.get('allColumns').findBy('valuePath', this.get('sort'));
+    let table = new Table(this.columns, this.refinedModel);
+    let sortColumn = table.get('allColumns').findBy('valuePath', this.sort);
 
     // Setup initial sort column
     if (sortColumn) {
@@ -41,11 +42,11 @@ export default Component.extend({
   },
   filteredModel: computed('filteringNamespace', 'filteringMaintainer', 'search', 'model', {
     get() {
-      const ns = this.get('filteringNamespace');
-      const maintainer = this.get('filteringMaintainer');
-      const search = this.get('search');
+      const ns = this.filteringNamespace;
+      const maintainer = this.filteringMaintainer;
+      const { search } = this;
 
-      return this.get('model').filter((m) => {
+      return this.model.filter(m => {
         let result = true;
 
         if (ns) {
@@ -57,32 +58,38 @@ export default Component.extend({
         }
 
         if (result && search) {
-          result = result && (
-            m.namespace.includes(search) ||
-            m.name.includes(search) ||
-            m.description.includes(search) ||
-            m.maintainer.includes(search)
-          );
+          result =
+            result &&
+            (m.namespace.includes(search) ||
+              m.name.includes(search) ||
+              m.description.includes(search) ||
+              m.maintainer.includes(search));
         }
 
         return result;
       });
     }
   }),
-  refinedModel: computed.sort('filteredModel', 'sortBy'),
+  refinedModel: sort('filteredModel', 'sortBy'),
   sortBy: computed('dir', 'sort', {
     get() {
-      return [`${this.get('sort')}:${this.get('dir')}`];
+      return [`${this.sort}:${this.dir}`];
     }
   }),
   namespaces: computed('model', {
     get() {
-      return this.get('model').mapBy('namespace').uniq().sort();
+      return this.model
+        .mapBy('namespace')
+        .uniq()
+        .sort();
     }
   }),
   maintainers: computed('model', {
     get() {
-      return this.get('model').mapBy('maintainer').uniq().sort();
+      return this.model
+        .mapBy('maintainer')
+        .uniq()
+        .sort();
     }
   }),
   columns: computed(() => [
@@ -135,24 +142,37 @@ export default Component.extend({
     }
   ]),
   refineModel() {
-    this.get('table').setRows(this.get('refinedModel'));
+    this.table.setRows(this.refinedModel);
   },
   onSearch() {
-    const search = this.get('query').trim();
+    const search = this.query.trim();
 
     this.set('search', search);
 
     if (!search) {
-      if (this.get('filteringNamespace')) {
-        this.set('maintainers', this.get('filteredModel').mapBy('maintainer').uniq().sort());
+      if (this.filteringNamespace) {
+        this.set(
+          'maintainers',
+          this.filteredModel
+            .mapBy('maintainer')
+            .uniq()
+            .sort()
+        );
       }
-      if (this.get('filteringMaintainer')) {
-        this.set('namespaces', this.get('filteredModel').mapBy('namespace').uniq().sort());
+      if (this.filteringMaintainer) {
+        this.set(
+          'namespaces',
+          this.filteredModel
+            .mapBy('namespace')
+            .uniq()
+            .sort()
+        );
       }
     }
 
     this.refineModel();
   },
+  // eslint-disable-next-line ember/no-observers
   onQuery: observer('query', function onSearchChange() {
     debounce(this, 'onSearch', 250);
   }),
@@ -172,12 +192,19 @@ export default Component.extend({
       this.set('filteringNamespace', ns || null);
       this.set(
         'maintainers',
-        this.get(
-          ns ? 'filteredModel' : 'model'
-        ).mapBy('maintainer').uniq().sort()
+        this.get(ns ? 'filteredModel' : 'model')
+          .mapBy('maintainer')
+          .uniq()
+          .sort()
       );
       if (!ns) {
-        this.set('namespaces', this.get('filteredModel').mapBy('namespace').uniq().sort());
+        this.set(
+          'namespaces',
+          this.filteredModel
+            .mapBy('namespace')
+            .uniq()
+            .sort()
+        );
       }
       this.refineModel();
     },
@@ -185,12 +212,19 @@ export default Component.extend({
       this.set('filteringMaintainer', m || null);
       this.set(
         'namespaces',
-        this.get(
-          m ? 'filteredModel' : 'model'
-        ).mapBy('namespace').uniq().sort()
+        this.get(m ? 'filteredModel' : 'model')
+          .mapBy('namespace')
+          .uniq()
+          .sort()
       );
       if (!m) {
-        this.set('maintainers', this.get('filteredModel').mapBy('maintainer').uniq().sort());
+        this.set(
+          'maintainers',
+          this.filteredModel
+            .mapBy('maintainer')
+            .uniq()
+            .sort()
+        );
       }
       this.refineModel();
     }

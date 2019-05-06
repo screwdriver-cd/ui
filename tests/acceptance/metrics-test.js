@@ -1,6 +1,7 @@
-import { test } from 'qunit';
-import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { visit } from '@ember/test-helpers';
+import { module, test } from 'qunit';
+import { setupApplicationTest } from 'ember-qunit';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 
 import makePipeline from '../mock/pipeline';
@@ -10,8 +11,10 @@ import makeGraph from '../mock/workflow-graph';
 
 let server;
 
-moduleForAcceptance('Acceptance | metrics', {
-  beforeEach() {
+module('Acceptance | metrics', function(hooks) {
+  setupApplicationTest(hooks);
+
+  hooks.beforeEach(function() {
     const graph = makeGraph();
     const metrics = makeMetrics();
     const jobs = makeJobs();
@@ -36,26 +39,24 @@ moduleForAcceptance('Acceptance | metrics', {
       { 'Content-Type': 'application/json' },
       JSON.stringify(metrics)
     ]);
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
+  });
 
-test('visiting /pipelines/4/metrics', function (assert) {
-  authenticateSession(this.application, { token: 'fakeToken' });
+  test('visiting /pipelines/4/metrics', async function(assert) {
+    await authenticateSession({ token: 'fakeToken' });
+    await visit('/pipelines/4/metrics');
 
-  visit('/pipelines/4/metrics');
-
-  wait().andThen(() => {
-    assert.equal(find('.chart-c3').length, 2);
-    assert.equal(find('.range-selection button').length, 7);
-    assert.equal(find('.custom-date-selection input').length, 1);
-    assert.equal(find('.filters-selection input').length, 1);
-    assert.equal(find('.chart-pipeline-info .measure').length, 5);
-    assert.equal(find('.chart-c3 svg').length, 2);
-    assert.equal(find('.chart-c3 .c3-event-rects').length, 2);
-    assert.equal(find('.chart-cta').length, 1);
-    assert.equal(find('.chart-cta select').length, 1);
+    assert.dom('.chart-c3').exists({ count: 2 });
+    assert.dom('.range-selection button').exists({ count: 7 });
+    assert.dom('.custom-date-selection input').exists({ count: 1 });
+    assert.dom('.filters-selection input').exists({ count: 1 });
+    assert.dom('.chart-pipeline-info .measure').exists({ count: 5 });
+    assert.dom('.chart-c3 svg').exists({ count: 2 });
+    assert.dom('.chart-c3 .c3-event-rects').exists({ count: 2 });
+    assert.dom('.chart-cta').exists({ count: 1 });
+    assert.dom('.chart-cta select').exists({ count: 1 });
   });
 });

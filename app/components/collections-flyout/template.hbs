@@ -11,36 +11,36 @@
       </h2>
     {{/if}}
   </div>
-    {{#each collections as |collection|}}
-      <div class="collection-wrapper row {{if (eq collection.id selectedCollectionId) ' row--active'}}">
-        {{#link-to "dashboard.show" collection.id invokeAction="changeCollectionDisplayed"}}
-          {{collection.name}}
-        {{/link-to}}
-        {{#if showDeleteButtons}}
-          <button
-            class="collection-wrapper__delete"
-            onclick={{action "setCollectionToDelete" collection}}
-          >
-            {{fa-icon "trash" title="Delete collection" size="md"}}
-          </button>
-        {{/if}}
-      </div>
-    {{else}}
-      <p class="no-collections-text">No collections to display.</p>
-    {{/each}}
-    {{#if collectionToDelete}}
-      {{!-- Confirmation modal for deleting a collection --}}
-      {{#bs-modal-simple
-        title="Please confirm"
-        closeTitle="Cancel"
-        submitTitle="Confirm"
-        size=null
-        fade=false
-        onSubmit=(action "deleteCollection" collectionToDelete)
-        onHide=(action "cancelDeletingCollection")
-      }}
-        You're about to delete {{collectionToDelete.name}}. Are you sure?
-      {{/bs-modal-simple}}
-    {{/if}}
-    {{collection-modal showModal=showModal}}
+  {{#each collections as |collection|}}
+    <div class="collection-wrapper row {{if (eq collection.id selectedCollectionId) " row--active"}}">
+      {{#link-to "dashboard.show" collection.id invokeAction="changeCollectionDisplayed"}}
+        {{collection.name}}
+      {{/link-to}}
+      {{#if showDeleteButtons}}
+        <button
+          class="collection-wrapper__delete"
+          onclick={{action "setCollectionToDelete" collection}}
+        >
+          {{fa-icon "trash" title="Delete collection" size="md"}}
+        </button>
+      {{/if}}
+    </div>
+  {{else}}
+    <p class="no-collections-text">No collections to display.</p>
+  {{/each}}
+  {{#if collectionToDelete}}
+    {{!-- Confirmation modal for deleting a collection --}}
+    {{#bs-modal-simple
+      title="Please confirm"
+      closeTitle="Cancel"
+      submitTitle="Confirm"
+      size=null
+      fade=false
+      onSubmit=(action "deleteCollection" collectionToDelete)
+      onHide=(action "cancelDeletingCollection")
+    }}
+      You're about to delete {{collectionToDelete.name}}. Are you sure?
+    {{/bs-modal-simple}}
+  {{/if}}
+  {{collection-modal showModal=showModal}}
 </div>

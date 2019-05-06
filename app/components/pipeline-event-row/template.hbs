@@ -1,17 +1,17 @@
 <div class="view">
   <div class="status">{{fa-icon icon fixedWidth=true}}</div>
   <div class="detail">
-    <div class="commit" title="{{event.causeMessage}}">
-      {{#if (eq event.type 'pr') }}
-        <a href="{{event.pr.url}}">PR-{{event.prNum}}</a>
+    <div class="commit" title={{event.causeMessage}}>
+      {{#if (eq event.type "pr") }}
+        <a href={{event.pr.url}}>PR-{{event.prNum}}</a>
       {{else}}
-        <a class="{{if (eq event.id lastSuccessful) "last-successful"}}" href="{{event.commit.url}}">#{{event.truncatedSha}}</a>
+        <a class={{if (eq event.id lastSuccessful) "last-successful"}} href={{event.commit.url}}>#{{event.truncatedSha}}</a>
         {{#if event.label}}<div class="label">{{event.label}}</div>{{/if}}
       {{/if}}
     </div>
     <div class="date greyOut">Started {{event.createTimeWords}}</div>
-    <span class="message" title="{{event.commit.message}}">{{event.truncatedMessage}}</span>
-    <div class="by"><a href="{{event.creator.url}}">{{event.creator.name}}</a></div>
+    <span class="message" title={{event.commit.message}}>{{event.truncatedMessage}}</span>
+    <div class="by"><a href={{event.creator.url}}>{{event.creator.name}}</a></div>
     <div class="workflow">
       {{#if (and (is-fulfilled event.builds) event.workflowGraph)}}
         {{workflow-graph-d3

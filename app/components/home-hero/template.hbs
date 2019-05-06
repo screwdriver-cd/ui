@@ -13,10 +13,10 @@
           For
           <select {{action "changeLanguage" on="change"}}>
             {{#each languages as |lang|}}
-            <option value="{{lang.url}}">{{lang.name}}</option>
+              <option value={{lang.url}}>{{lang.name}}</option>
             {{/each}}
           </select>,
-          <a href="{{forkUrl}}" target="_blank"><span>fork this repo</span></a>
+          <a href={{forkUrl}} target="_blank" rel="noopener"><span>fork this repo</span></a>
         </span>
         <div id="langList"></div>
       </li>

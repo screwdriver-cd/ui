@@ -1,8 +1,10 @@
 import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, click, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import injectSessionStub from '../../../helpers/inject-session';
 
@@ -13,241 +15,244 @@ const mockCollection = {
   get: name => name
 };
 
-moduleForComponent('collections-flyout', 'Integration | Component | collections flyout', {
-  integration: true
-});
+module('Integration | Component | collections flyout', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  assert.expect(5);
-  const $ = this.$;
+  test('it renders', async function(assert) {
+    assert.expect(6);
 
-  injectSessionStub(this);
+    injectSessionStub(this);
 
-  this.set('collections', [
-    EmberObject.create({
-      id: 1,
-      name: 'collection1',
-      description: 'description1',
-      pipelineIds: [1, 2, 3]
-    }),
-    EmberObject.create({
-      id: 2,
-      name: 'collection2',
-      description: 'description2',
-      pipelineIds: [4, 5, 6]
-    }),
-    EmberObject.create({
-      id: 3,
-      name: 'collection3',
-      description: 'description3',
-      pipelineIds: [7, 8, 9]
-    })
-  ]);
+    this.set('collections', [
+      EmberObject.create({
+        id: 1,
+        name: 'collection1',
+        description: 'description1',
+        pipelineIds: [1, 2, 3]
+      }),
+      EmberObject.create({
+        id: 2,
+        name: 'collection2',
+        description: 'description2',
+        pipelineIds: [4, 5, 6]
+      }),
+      EmberObject.create({
+        id: 3,
+        name: 'collection3',
+        description: 'description3',
+        pipelineIds: [7, 8, 9]
+      })
+    ]);
 
-  this.render(hbs`{{collections-flyout collections=collections}}`);
+    await render(hbs`{{collections-flyout collections=collections}}`);
 
-  assert.equal($('.header__text').text().trim(), 'Collections');
-  assert.equal($('.header__text a i').attr('class'), 'fa fa-plus-circle fa-mdx ember-view');
-  assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'collection1');
-  assert.equal($($('.collection-wrapper a').get(1)).text().trim(), 'collection2');
-  assert.equal($($('.collection-wrapper a').get(2)).text().trim(), 'collection3');
-});
+    assert.dom('.header__text').hasText('Collections');
+    assert.dom('.header__text a i').hasClass('fa-plus-circle');
+    assert.dom('.collection-wrapper a').hasText('collection1');
 
-test('it renders with no collections', function (assert) {
-  assert.expect(2);
-  const $ = this.$;
-  const noCollectionsText = 'No collections to display.';
+    const wrapperEls = findAll('.collection-wrapper a');
 
-  this.set('collections', []);
+    assert.dom(wrapperEls[0]).hasText('collection1');
+    assert.dom(wrapperEls[1]).hasText('collection2');
+    assert.dom(wrapperEls[2]).hasText('collection3');
+  });
 
-  this.render(hbs`{{collections-flyout collections=collections}}`);
+  test('it renders with no collections', async function(assert) {
+    assert.expect(2);
 
-  assert.equal($('.no-collections-text').length, 1);
-  assert.equal($('.no-collections-text').text().trim(), noCollectionsText);
-});
+    this.set('collections', []);
 
-test('it opens collection create modal', function (assert) {
-  assert.expect(9);
-  const $ = this.$;
+    await render(hbs`{{collections-flyout collections=collections}}`);
 
-  injectSessionStub(this);
+    assert.dom('.no-collections-text').exists({ count: 1 });
+    assert.dom('.no-collections-text').hasText('No collections to display.');
+  });
 
-  this.set('collections', []);
-  this.set('showModal', false);
+  test('it opens collection create modal', async function(assert) {
+    assert.expect(9);
 
-  const setModal = () => { this.set('showModal', true); };
+    injectSessionStub(this);
 
-  this.set('setModal', setModal);
+    this.set('collections', []);
+    this.set('showModal', false);
+    this.set('setModal', () => {
+      this.set('showModal', true);
+    });
 
-  this.render(hbs`{{collections-flyout
-    collections=collections
-    showModal=showModal
-    setModal=setModal}}`);
-  assert.equal(this.get('showModal'), false);
-  // Make sure there are no modals
-  assert.notOk($('.modal').length);
+    await render(hbs`{{collections-flyout
+      collections=collections
+      showModal=showModal
+      setModal=setModal}}`);
 
-  $('.new').click();
+    assert.equal(this.get('showModal'), false);
 
-  return wait().then(() => {
-    const modalTitle = 'Create New Collection';
-    const cancelButton = $('.collection-form__cancel');
-    const createButton = $('.collection-form__create');
+    // Make sure there are no modals
+    assert.dom('.modal').doesNotExist();
+
+    await click('.new');
 
     assert.equal(this.get('showModal'), true);
+
     // Make sure there is only 1 modal
-    assert.equal($('.modal').length, 1);
-    assert.equal($('.modal-title').text().trim(), modalTitle);
-    assert.equal($('.name input').length, 1);
-    assert.equal($('.description textarea').length, 1);
-    assert.equal(cancelButton.text().trim(), 'Cancel');
-    assert.equal(createButton.text().trim(), 'Save');
-  });
-});
-
-test('it renders an active collection', function (assert) {
-  assert.expect(4);
-  const $ = this.$;
-
-  this.set('collections', [EmberObject.create(mockCollection)]);
-
-  this.set('selectedCollectionId', 1);
-
-  this.render(hbs`{{collections-flyout collections=collections
-    selectedCollectionId=selectedCollectionId}}`);
-
-  assert.equal($('.header__text').text().trim(), 'Collections');
-  assert.notOk($('.header__text a i').length);
-  assert.equal($($('.collection-wrapper a').get(0)).text().trim(), 'Test');
-  assert.equal($('.collection-wrapper.row--active').length, 1);
-});
-
-test('it fails to create a collection', function (assert) {
-  assert.expect(3);
-
-  injectSessionStub(this);
-
-  const $ = this.$;
-  const model = {
-    save() {
-      return new EmberPromise((resolve, reject) => reject({
-        errors: [{
-          detail: 'This is an error message'
-        }]
-      }));
-    },
-    destroyRecord() {}
-  };
-  const storeStub = EmberObject.extend({
-    createRecord() {
-      return model;
-    }
+    assert.dom('.modal').exists({ count: 1 });
+    assert.dom('.modal-title').hasText('Create New Collection');
+    assert.dom('.name input').exists({ count: 1 });
+    assert.dom('.description textarea').exists({ count: 1 });
+    assert.dom('.collection-form__cancel').hasText('Cancel');
+    assert.dom('.collection-form__create').hasText('Save');
   });
 
-  this.set('collections', []);
-  this.set('showModal', false);
-  this.set('errorMessage', null);
-  this.set('name', null);
-  this.set('description', null);
+  test('it renders an active collection', async function(assert) {
+    assert.expect(4);
 
-  this.register('service:store', storeStub);
-  this.inject.service('store');
+    this.set('collections', [EmberObject.create(mockCollection)]);
+    this.set('selectedCollectionId', 1);
 
-  this.render(hbs`{{collections-flyout
-    collections=collections
-    showModal=showModal
-    name=name
-    description=description
-  }}`);
+    await render(hbs`{{collections-flyout collections=collections
+      selectedCollectionId=selectedCollectionId}}`);
 
-  $('.new').click();
-
-  this.set('name', 'Test');
-  this.set('description', 'Test description');
-
-  assert.ok(this.get('showModal'));
-  $('.collection-form__create').click();
-  // Modal should remain open because of error
-  assert.ok(this.get('showModal'));
-  assert.strictEqual($('.alert-warning > span').text().trim(),
-    'This is an error message');
-});
-
-test('it deletes a collection', function (assert) {
-  assert.expect(9);
-
-  injectSessionStub(this);
-
-  const $ = this.$;
-  const collectionModelMock = {
-    destroyRecord() {
-      // Dummy assert to make sure this function gets called
-      assert.ok(true);
-
-      return new EmberPromise(resolve => resolve());
-    }
-  };
-  const storeStub = EmberObject.extend({
-    peekRecord() {
-      assert.ok(true, 'peekRecord called');
-
-      return collectionModelMock;
-    },
-    findAll() {
-      return new EmberPromise(resolve => resolve([mockCollection]));
-    }
+    assert.dom('.header__text').hasText('Collections');
+    assert.dom('.header__text a i').doesNotExist();
+    assert.dom('.collection-wrapper a').hasText('Test');
+    assert.dom('.collection-wrapper.row--active').exists({ count: 1 });
   });
 
-  this.set('collections', [
-    EmberObject.create({
-      id: 1,
-      name: 'collection1',
-      description: 'description1',
-      pipelineIds: [1, 2, 3]
-    }),
-    EmberObject.create({
-      id: 2,
-      name: 'collection2',
-      description: 'description2',
-      pipelineIds: [4, 5, 6]
-    }),
-    EmberObject.create({
-      id: 3,
-      name: 'collection3',
-      description: 'description3',
-      pipelineIds: [7, 8, 9]
-    })
-  ]);
+  test('it fails to create a collection', async function(assert) {
+    assert.expect(3);
 
-  let onDeleteSpy = sinon.spy();
+    injectSessionStub(this);
 
-  this.set('showModal', false);
-  this.set('name', null);
-  this.set('description', null);
-  this.set('onDeleteCollection', onDeleteSpy);
+    const model = {
+      save() {
+        return new EmberPromise((resolve, reject) =>
+          reject({
+            errors: [
+              {
+                detail: 'This is an error message'
+              }
+            ]
+          })
+        );
+      },
+      destroyRecord() {}
+    };
+    const storeStub = Service.extend({
+      createRecord() {
+        return model;
+      }
+    });
 
-  this.register('service:store', storeStub);
-  this.inject.service('store');
+    this.set('collections', []);
+    this.set('showModal', false);
+    this.set('errorMessage', null);
+    this.set('name', null);
+    this.set('description', null);
 
-  this.render(hbs`{{collections-flyout
-    collections=collections
-    showModal=showModal
-    name=name
-    description=description
-    onDeleteCollection=onDeleteCollection
-  }}`);
+    this.owner.unregister('service:store');
+    this.owner.register('service:store', storeStub);
 
-  assert.ok($('.header__edit').length);
-  // Make sure delete buttons aren't shown
-  assert.notOk($('.collection-wrapper__delete').length);
-  $('.header__edit').click();
-  // Delete buttons should be visible
-  assert.strictEqual($('.collection-wrapper__delete').length, 3);
-  assert.notOk($('.modal').length);
-  $($('.collection-wrapper__delete').get(0)).click();
-  assert.strictEqual($('.modal').length, 1);
-  assert.equal($('.modal-title').text().trim(), 'Please confirm');
-  $('.modal-footer > .btn-primary').click();
+    await render(hbs`{{collections-flyout
+      collections=collections
+      showModal=showModal
+      name=name
+      description=description
+    }}`);
 
-  assert.ok(onDeleteSpy.called);
+    await click('.new');
+
+    this.set('name', 'Test');
+    this.set('description', 'Test description');
+
+    assert.ok(this.get('showModal'));
+
+    await click('.collection-form__create');
+
+    // Modal should remain open because of error
+    assert.ok(this.get('showModal'));
+    assert.dom('.alert-warning > span').hasText('This is an error message');
+  });
+
+  test('it deletes a collection', async function(assert) {
+    assert.expect(9);
+
+    injectSessionStub(this);
+
+    const collectionModelMock = {
+      destroyRecord() {
+        // Dummy assert to make sure this function gets called
+        assert.ok(true);
+
+        return new EmberPromise(resolve => resolve());
+      }
+    };
+    const storeStub = Service.extend({
+      peekRecord() {
+        assert.ok(true, 'peekRecord called');
+
+        return collectionModelMock;
+      },
+      findAll() {
+        return new EmberPromise(resolve => resolve([mockCollection]));
+      }
+    });
+
+    this.set('collections', [
+      EmberObject.create({
+        id: 1,
+        name: 'collection1',
+        description: 'description1',
+        pipelineIds: [1, 2, 3]
+      }),
+      EmberObject.create({
+        id: 2,
+        name: 'collection2',
+        description: 'description2',
+        pipelineIds: [4, 5, 6]
+      }),
+      EmberObject.create({
+        id: 3,
+        name: 'collection3',
+        description: 'description3',
+        pipelineIds: [7, 8, 9]
+      })
+    ]);
+
+    let onDeleteSpy = sinon.spy();
+
+    this.set('showModal', false);
+    this.set('name', null);
+    this.set('description', null);
+    this.set('onDeleteCollection', onDeleteSpy);
+
+    this.owner.unregister('service:store');
+    this.owner.register('service:store', storeStub);
+
+    await render(hbs`{{collections-flyout
+      collections=collections
+      showModal=showModal
+      name=name
+      description=description
+      onDeleteCollection=onDeleteCollection
+    }}`);
+
+    assert.dom('.header__edit').exists({ count: 1 });
+
+    // Make sure delete buttons aren't shown
+    assert.dom('.wrapper__delete').doesNotExist();
+
+    await click('.header__edit');
+
+    // Delete buttons should be visible
+    assert.dom('.collection-wrapper__delete').exists({ count: 3 });
+    assert.dom('.modal').doesNotExist();
+
+    await click('.collection-wrapper__delete');
+
+    assert.dom('.modal').exists({ count: 1 });
+    assert.dom('.modal-title').hasText('Please confirm');
+
+    await click('.modal-footer > .btn-primary');
+
+    assert.ok(onDeleteSpy.called);
+  });
 });

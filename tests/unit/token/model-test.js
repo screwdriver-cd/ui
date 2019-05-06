@@ -1,13 +1,15 @@
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleForModel('token', 'Unit | Model | token', {
-  // Specify the other units that are required for this test.
-  needs: []
-});
+import { run } from '@ember/runloop';
 
-test('it exists', function (assert) {
-  let model = this.subject();
-  // let store = this.store();
+module('Unit | Model | token', function(hooks) {
+  setupTest(hooks);
 
-  assert.ok(!!model);
+  test('it exists', function(assert) {
+    let model = run(() => this.owner.lookup('service:store').createRecord('token'));
+    // let store = this.store();
+
+    assert.ok(!!model);
+  });
 });

@@ -1,4 +1,5 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
 let server;
 
@@ -11,7 +12,8 @@ const syncWithPath = () => {
 };
 
 const syncFailed = () => {
-  server.post('http://localhost:8080/v4/pipelines/1/sync/', () => [409,
+  server.post('http://localhost:8080/v4/pipelines/1/sync/', () => [
+    409,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
       statusCode: 409,
@@ -21,61 +23,60 @@ const syncFailed = () => {
   ]);
 };
 
-moduleFor('service:sync', 'Unit | Service | sync', {
-  // Specify the other units that are required for this test.
-  needs: ['service:session'],
+module('Unit | Service | sync', function(hooks) {
+  setupTest(hooks);
 
-  beforeEach() {
+  hooks.beforeEach(function() {
     server = new Pretender();
-  },
+  });
 
-  afterEach() {
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
-
-test('it exists', function (assert) {
-  const service = this.subject();
-
-  assert.ok(service);
-});
-
-test('it makes a call to sync successfully without passing syncPath', function (assert) {
-  assert.expect(1);
-  sync();
-  const service = this.subject();
-  const p = service.syncRequests(1, undefined);
-
-  p.then(() => {
-    const [request] = server.handledRequests;
-
-    assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/sync/');
   });
-});
 
-test('it makes a call to sync successfully with syncPath', function (assert) {
-  assert.expect(1);
-  syncWithPath();
-  const service = this.subject();
-  const p = service.syncRequests(1, 'webhooks');
+  test('it exists', function(assert) {
+    const service = this.owner.lookup('service:sync');
 
-  p.then(() => {
-    const [request] = server.handledRequests;
-
-    assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/sync/webhooks');
+    assert.ok(service);
   });
-});
 
-test('it fails to sync and rejects with error message ', function (assert) {
-  assert.expect(2);
-  syncFailed();
-  const service = this.subject();
-  const p = service.syncRequests(1, undefined);
+  test('it makes a call to sync successfully without passing syncPath', function(assert) {
+    assert.expect(1);
+    sync();
+    const service = this.owner.lookup('service:sync');
+    const p = service.syncRequests(1, undefined);
 
-  p.catch((error) => {
-    assert.equal(error, 'something conflicting');
-    const [request] = server.handledRequests;
+    p.then(() => {
+      const [request] = server.handledRequests;
 
-    assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/sync/');
+      assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/sync/');
+    });
+  });
+
+  test('it makes a call to sync successfully with syncPath', function(assert) {
+    assert.expect(1);
+    syncWithPath();
+    const service = this.owner.lookup('service:sync');
+    const p = service.syncRequests(1, 'webhooks');
+
+    p.then(() => {
+      const [request] = server.handledRequests;
+
+      assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/sync/webhooks');
+    });
+  });
+
+  test('it fails to sync and rejects with error message ', function(assert) {
+    assert.expect(2);
+    syncFailed();
+    const service = this.owner.lookup('service:sync');
+    const p = service.syncRequests(1, undefined);
+
+    p.catch(error => {
+      assert.equal(error, 'something conflicting');
+      const [request] = server.handledRequests;
+
+      assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/sync/');
+    });
   });
 });

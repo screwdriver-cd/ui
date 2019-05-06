@@ -26,12 +26,11 @@ export default Component.extend({
   }),
   filteredPipelines: computed('pipelines', {
     get() {
-      const scmService = this.get('scmService');
-      let filtered = this.get('pipelines');
+      let filtered = this.pipelines;
 
       // add scm contexts into pipelines.
-      return filtered.map((pipeline) => {
-        const scm = scmService.getScm(pipeline.get('scmContext'));
+      return filtered.map(pipeline => {
+        const scm = this.scmService.getScm(pipeline.get('scmContext'));
 
         pipeline.set('scm', scm.displayName);
         pipeline.set('scmIcon', scm.iconType);
@@ -63,28 +62,33 @@ export default Component.extend({
       set(this, 'pipelinesPage', pipelinesPage);
 
       if (typeof fn === 'function') {
-        fn({ page: pipelinesPage, search: get(this, 'query') })
-          .catch(error => this.set('errorMessage', error));
+        fn({ page: pipelinesPage, search: get(this, 'query') }).catch(error =>
+          this.set('errorMessage', error)
+        );
       }
     },
     openModal() {
       this.set('showModal', true);
     },
     addNewCollectionHelper() {
-      let addNewCollectionParent = this.get('addNewCollection');
+      let addNewCollectionParent = this.addNewCollection;
 
       addNewCollectionParent();
     },
     addToCollection(pipelineId, collection) {
-      return this.get('addToCollection')(+pipelineId, collection.id)
+      return this.addToCollection(+pipelineId, collection.id)
         .then(() => {
           this.set('addCollectionError', null);
-          this.set('addCollectionSuccess',
-            `Successfully added Pipeline to Collection ${collection.get('name')}`);
+          this.set(
+            'addCollectionSuccess',
+            `Successfully added Pipeline to Collection ${collection.get('name')}`
+          );
         })
         .catch(() => {
-          this.set('addCollectionError',
-            `Could not add Pipeline to Collection ${collection.get('name')}`);
+          this.set(
+            'addCollectionError',
+            `Could not add Pipeline to Collection ${collection.get('name')}`
+          );
           this.set('addCollectionSuccess', null);
         });
     }

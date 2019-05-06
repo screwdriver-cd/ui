@@ -1,17 +1,15 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('home-hero', 'Integration | Component | home hero', {
-  integration: true
-});
+module('Integration | Component | home hero', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  const $ = this.$;
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  test('it renders', async function(assert) {
+    await render(hbs`{{home-hero}}`);
 
-  this.render(hbs`{{home-hero}}`);
-
-  assert.equal($('h1').text().trim(), 'Introducing Screwdriver');
-  assert.equal($('h2').text().trim(), 'Getting started, by the numbers...');
+    assert.dom('h1').hasText('Introducing Screwdriver');
+    assert.dom('h2').hasText('Getting started, by the numbers...');
+  });
 });

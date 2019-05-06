@@ -1,181 +1,189 @@
 import EmberObject from '@ember/object';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('secret-view', 'Integration | Component | secret view', {
-  integration: true
-});
+module('Integration | Component | secret view', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const testSecret = EmberObject.create({
-    name: 'TEST_SECRET',
-    pipelineId: 123245,
-    value: 'banana',
-    allowInPR: false
+  test('it renders', async function(assert) {
+    const testSecret = EmberObject.create({
+      name: 'TEST_SECRET',
+      pipelineId: 123245,
+      value: 'banana',
+      allowInPR: false
+    });
+
+    this.set('mockSecret', testSecret);
+
+    const testPipeline = EmberObject.create({
+      id: '123245'
+    });
+
+    this.set('mockPipeline', testPipeline);
+
+    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+
+    assert.dom('.name').hasText('TEST_SECRET');
+    assert.dom('.pass input').hasAttribute('placeholder', 'Protected');
+    assert.dom('.pass input').hasNoValue();
+    assert.dom('.allow input').isNotChecked();
+    assert.dom('button').hasText('Delete');
+
+    // button value changes when user types a new value
+    await fillIn('.pass input', 'banana');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+
+    assert.dom('button').hasText('Update');
+
+    // button value changes when user types a new value
+    await fillIn('.pass input', '');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+    assert.dom('button').hasText('Delete');
+
+    // button value changes when user click the checkbox
+    await click('.allow input');
+    assert.dom('button').hasText('Update');
+
+    // button value changes when user click the checkbox again to change it back
+    await click('.allow input');
+    assert.dom('button').hasText('Delete');
   });
 
-  this.set('mockSecret', testSecret);
+  test('it trys to delete a secret', async function(assert) {
+    assert.expect(3);
 
-  const testPipeline = EmberObject.create({
-    id: '123245'
-  });
+    const testPipeline = EmberObject.create({
+      id: '123245'
+    });
 
-  this.set('mockPipeline', testPipeline);
+    this.set(
+      'mockSecret',
+      EmberObject.extend({
+        destroyRecord() {
+          // destroy called
+          assert.ok(true);
 
-  this.render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
-  const passInput = this.$('.pass input');
-  const allowInput = this.$('.allow input');
-
-  assert.equal(this.$('.name').text().trim(), 'TEST_SECRET');
-  assert.equal(passInput.attr('placeholder'), 'Protected');
-  assert.equal(passInput.val(), '');
-  assert.equal(allowInput.prop('checked'), false);
-  assert.equal(this.$('button').text().trim(), 'Delete');
-
-  // button value changes when user types a new value
-  passInput.val('banana').keyup();
-  assert.equal(this.$('button').text().trim(), 'Update');
-
-  // button value changes when user types a new value
-  passInput.val('').keyup();
-  assert.equal(this.$('button').text().trim(), 'Delete');
-
-  // button value changes when user click the checkbox
-  allowInput.click();
-  assert.equal(this.$('button').text().trim(), 'Update');
-
-  // button value changes when user click the checkbox again to change it back
-  allowInput.click();
-  assert.equal(this.$('button').text().trim(), 'Delete');
-});
-
-test('it trys to delete a secret', function (assert) {
-  assert.expect(3);
-  this.set('mockSecret', EmberObject.extend({
-    destroyRecord() {
-      // destroy called
-      assert.ok(true);
-
-      return Promise.resolve(null);
-    },
-    save() {
-      // update called: Fail!
-      assert.ok(false);
-    }
-  }).create({
-    name: 'TEST_SECRET',
-    pipelineId: 123245,
-    value: null,
-    allowInPR: false
-  }));
-
-  const testPipeline = EmberObject.create({
-    id: '123245'
-  });
-
-  this.set('mockPipeline', testPipeline);
-
-  this.set('secrets', {
-    store: {
-      unloadRecord: (secret) => {
-        assert.equal(secret.name, 'TEST_SECRET');
+          return Promise.resolve(null);
+        },
+        save() {
+          // update called: Fail!
+          assert.ok(false);
+        }
+      }).create({
+        name: 'TEST_SECRET',
+        pipelineId: 123245,
+        value: null,
+        allowInPR: false
+      })
+    );
+    this.set('mockPipeline', testPipeline);
+    this.set('secrets', {
+      store: {
+        unloadRecord: secret => {
+          assert.equal(secret.name, 'TEST_SECRET');
+        }
+      },
+      reload: () => {
+        // reload called
+        assert.ok(true);
       }
-    },
-    reload: () => {
-      // reload called
-      assert.ok(true);
-    }
+    });
+
+    await render(hbs`{{secret-view secret=mockSecret secrets=secrets pipeline=mockPipeline}}`);
+    await click('button');
   });
 
-  this.render(hbs`{{secret-view secret=mockSecret secrets=secrets pipeline=mockPipeline}}`);
-  this.$('button').click();
-});
+  test('it saves changes to a secret', async function(assert) {
+    assert.expect(2);
 
-test('it saves changes to a secret', function (assert) {
-  assert.expect(2);
-  // Setting up model so `set` works as expected
-  this.set('mockSecret', EmberObject.extend({
-    destroyRecord() {
-      // destroy called: Fail!
-      assert.ok(false);
-    },
-    save() {
-      // update called
-      assert.equal(this.get('value'), 'banana');
-      assert.equal(this.get('allowInPR'), true);
-    }
-  }).create({
-    name: 'TEST_SECRET',
-    pipelineId: 123245,
-    value: null,
-    allowInPR: false
-  }));
+    const testPipeline = EmberObject.create({
+      id: '123245'
+    });
 
-  const testPipeline = EmberObject.create({
-    id: '123245'
+    // Setting up model so `set` works as expected
+    this.set(
+      'mockSecret',
+      EmberObject.extend({
+        destroyRecord() {
+          // destroy called: Fail!
+          assert.ok(false);
+        },
+        save() {
+          // update called
+          assert.equal(this.get('value'), 'banana');
+          assert.equal(this.get('allowInPR'), true);
+        }
+      }).create({
+        name: 'TEST_SECRET',
+        pipelineId: 123245,
+        value: null,
+        allowInPR: false
+      })
+    );
+    this.set('mockPipeline', testPipeline);
+
+    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+
+    await fillIn('.pass input', 'banana');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+
+    await click('.allow input');
+    await click('button');
   });
 
-  this.set('mockPipeline', testPipeline);
+  test('it renders secrets for child pipeline', async function(assert) {
+    assert.expect(2);
 
-  this.render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
-  this.$('.pass input').val('banana').keyup();
-  this.$('.allow input').click();
-  this.$('button').click();
-});
+    const testSecret = EmberObject.create({
+      name: 'TEST_SECRET',
+      pipelineId: '123245',
+      value: 'banana',
+      allowInPR: false
+    });
+    const testPipeline = EmberObject.create({
+      id: '123',
+      configPipelineId: '123245'
+    });
 
-test('it renders secrets for child pipeline', function (assert) {
-  assert.expect(2);
-  const testSecret = EmberObject.create({
-    name: 'TEST_SECRET',
-    pipelineId: '123245',
-    value: 'banana',
-    allowInPR: false
+    this.set('mockSecret', testSecret);
+    this.set('mockPipeline', testPipeline);
+
+    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+
+    assert.dom('.pass input').hasAttribute('placeholder', 'Inherited from parent pipeline');
+    assert.dom('button').hasText('Override');
   });
 
-  this.set('mockSecret', testSecret);
+  test('it overrides a secret for a child pipeline', async function(assert) {
+    assert.expect(3);
 
-  const testPipeline = EmberObject.create({
-    id: '123',
-    configPipelineId: '123245'
+    const testSecret = EmberObject.create({
+      name: 'TEST_SECRET',
+      pipelineId: '123245',
+      value: 'banana',
+      allowInPR: false
+    });
+    const testPipeline = EmberObject.create({
+      id: '123',
+      configPipelineId: '123245'
+    });
+
+    this.set('mockSecret', testSecret);
+    this.set('mockPipeline', testPipeline);
+    this.set('externalAction', (name, value, id) => {
+      assert.equal(name, 'TEST_SECRET');
+      assert.equal(value, 'apple');
+      assert.equal(id, '123');
+    });
+
+    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline
+      onCreateSecret=(action externalAction)}}`);
+
+    await fillIn('.pass input', 'apple');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+
+    await click('button');
   });
-
-  this.set('mockPipeline', testPipeline);
-
-  this.render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
-  const passInput = this.$('.pass input');
-
-  assert.equal(passInput.attr('placeholder'), 'Inherited from parent pipeline');
-  assert.equal(this.$('button').text().trim(), 'Override');
-});
-
-test('it overrides a secret for a child pipeline', function (assert) {
-  assert.expect(3);
-  const testSecret = EmberObject.create({
-    name: 'TEST_SECRET',
-    pipelineId: '123245',
-    value: 'banana',
-    allowInPR: false
-  });
-
-  this.set('mockSecret', testSecret);
-
-  const testPipeline = EmberObject.create({
-    id: '123',
-    configPipelineId: '123245'
-  });
-
-  this.set('mockPipeline', testPipeline);
-
-  this.set('externalAction', (name, value, id) => {
-    assert.equal(name, 'TEST_SECRET');
-    assert.equal(value, 'apple');
-    assert.equal(id, '123');
-  });
-
-  this.render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline
-    onCreateSecret=(action externalAction)}}`);
-  this.$('.pass input').val('apple').keyup();
-  this.$('button').click();
 });

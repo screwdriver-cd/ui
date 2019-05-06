@@ -1,6 +1,7 @@
 import { resolve } from 'rsvp';
 import Service from '@ember/service';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
 const templateServiceStub = Service.extend({
   getAllTemplates() {
@@ -12,20 +13,22 @@ const templateServiceStub = Service.extend({
   }
 });
 
-moduleFor('route:templates/index', 'Unit | Route | templates/index', {
+module('Unit | Route | templates/index', function(hooks) {
+  setupTest(hooks);
+
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
-  beforeEach: function beforeEach() {
-    this.register('service:template', templateServiceStub);
-  }
-});
+  hooks.beforeEach(function beforeEach() {
+    this.owner.register('service:template', templateServiceStub);
+  });
 
-test('it dedupes the templates by name', function (assert) {
-  let route = this.subject();
+  test('it dedupes the templates by name', function(assert) {
+    let route = this.owner.lookup('route:templates/index');
 
-  assert.ok(route);
+    assert.ok(route);
 
-  return route.model().then((templates) => {
-    assert.equal(templates.length, 3);
+    return route.model().then(templates => {
+      assert.equal(templates.length, 3);
+    });
   });
 });

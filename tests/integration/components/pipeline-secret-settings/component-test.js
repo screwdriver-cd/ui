@@ -1,216 +1,235 @@
 import EmberObject from '@ember/object';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, find, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-// eslint-disable-next-line max-len
-moduleForComponent('pipeline-secret-settings', 'Integration | Component | pipeline secret settings', {
-  integration: true
-});
+module('Integration | Component | pipeline secret settings', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  const testSecret = EmberObject.create({
-    name: 'TEST_SECRET',
-    pipelineId: 123245,
-    value: 'banana',
-    allowInPR: false
+  test('it renders', async function(assert) {
+    const testSecret = EmberObject.create({
+      name: 'TEST_SECRET',
+      pipelineId: 123245,
+      value: 'banana',
+      allowInPR: false
+    });
+
+    this.set('mockSecrets', [testSecret]);
+
+    const testPipeline = EmberObject.create({
+      id: '123245'
+    });
+
+    this.set('mockPipeline', testPipeline);
+
+    await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+    assert.dom('p').hasText('User secrets must also be added to the Screwdriver YAML.');
+
+    // the table is present
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tfoot tr').exists({ count: 1 });
+
+    // eye-icons are present and have fa-eye class as default
+    assert.dom('tbody i').hasClass('fa-eye');
+    assert.dom('tfoot i').hasClass('fa-eye');
+
+    // the type of input is a password as default
+    assert.dom('tbody .pass input').hasAttribute('type', 'password');
+    assert.dom('tfoot .pass input').hasAttribute('type', 'password');
   });
 
-  this.set('mockSecrets', [testSecret]);
+  test('it updates the add button properly', async function(assert) {
+    this.set('mockPipeline', { id: 'abcd' });
+    await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline}}`);
 
-  const testPipeline = EmberObject.create({
-    id: '123245'
+    // starts disabled
+    assert.dom('tfoot button').isDisabled();
+
+    // disabled when no value
+    await fillIn('.key input', 'SECRET_KEY');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
+    assert.dom('tfoot button').isDisabled();
+
+    // disabled when no key
+    await fillIn('.key input', '');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
+    await fillIn('.pass input', 'SECRET_VAL');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+
+    assert.dom('tfoot button').isDisabled();
+
+    // enabled when both present
+    await fillIn('.key input', 'SECRET_KEY');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
+    assert.dom('tfoot button').isNotDisabled();
+
+    // disabled again when no key
+    await fillIn('.key input', '');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+
+    assert.dom('tfoot button').isDisabled();
   });
 
-  this.set('mockPipeline', testPipeline);
+  test('it calls action to create secret', async function(assert) {
+    this.set('mockPipeline', { id: 'abcd' });
+    this.set('externalAction', (name, value, id) => {
+      assert.equal(name, 'SECRET_KEY');
+      assert.equal(value, 'SECRET_VAL');
+      assert.equal(id, 'abcd');
+    });
 
-  this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+    // eslint-disable-next-line max-len
+    await render(
+      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
+    );
 
-  assert.equal(this.$('p').text().trim(),
-    'User secrets must also be added to the Screwdriver YAML.');
+    await fillIn('.key input', 'SECRET_KEY');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
 
-  // the table is present
-  assert.equal(this.$('table').length, 1);
-  assert.equal(this.$('tbody tr').length, 1);
-  assert.equal(this.$('tfoot tr').length, 1);
+    await fillIn('.pass input', 'SECRET_VAL');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
 
-  // eye-icons are present and have fa-eye class as default
-  assert.ok(this.$('tbody i').hasClass('fa-eye'));
-  assert.ok(this.$('tfoot i').hasClass('fa-eye'));
+    await click('tfoot button');
 
-  // the type of input is a password as default
-  assert.equal(this.$('tbody .pass input').attr('type'), 'password');
-  assert.equal(this.$('tfoot .pass input').attr('type'), 'password');
-});
-
-test('it updates the add button properly', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  this.set('mockPipeline', { id: 'abcd' });
-  this.render(hbs`{{pipeline-secret-settings pipeline=mockPipeline}}`);
-
-  // starts disabled
-  assert.ok(this.$('tfoot button').prop('disabled'));
-
-  // disabled when no value
-  this.$('.key input').val('SECRET_KEY').keyup();
-  assert.ok(this.$('tfoot button').prop('disabled'));
-
-  // disabled when no key
-  this.$('.key input').val('').keyup();
-  this.$('.pass input').val('SECRET_VAL').keyup();
-  assert.ok(this.$('tfoot button').prop('disabled'));
-
-  // enabled when both present
-  this.$('.key input').val('SECRET_KEY').keyup();
-  assert.ok(!this.$('tfoot button').prop('disabled'));
-
-  // disabled again when no key
-  this.$('.key input').val('').keyup();
-  assert.ok(this.$('tfoot button').prop('disabled'));
-});
-
-test('it calls action to create secret', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  this.set('mockPipeline', { id: 'abcd' });
-  this.set('externalAction', (name, value, id) => {
-    assert.equal(name, 'SECRET_KEY');
-    assert.equal(value, 'SECRET_VAL');
-    assert.equal(id, 'abcd');
+    // and clears the new secret form elements
+    assert.dom('.key input').hasValue('');
+    assert.dom('.pass input').hasValue('');
+    assert.dom('tfoot button').isDisabled('not disabled');
   });
 
-  // eslint-disable-next-line max-len
-  this.render(hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`);
+  test('it displays an error', async function(assert) {
+    this.set('mockPipeline', { id: 'abcd' });
+    this.set('externalAction', () => {
+      assert.fail('should not get here');
+    });
 
-  this.$('.key input').val('SECRET_KEY').keyup();
-  this.$('.pass input').val('SECRET_VAL').keyup();
-  this.$('tfoot button').click();
+    // eslint-disable-next-line max-len
+    await render(
+      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
+    );
 
-  // and clears the new secret form elements
-  assert.equal(this.$('.key input').val(), '');
-  assert.equal(this.$('.pass input').val(), '');
-  assert.ok(this.$('tfoot button').prop('disabled'), 'not disabled');
-});
+    await fillIn('.key input', '0banana');
+    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
 
-test('it displays an error', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  this.set('mockPipeline', { id: 'abcd' });
-  this.set('externalAction', () => {
-    assert.fail('should not get here');
+    await fillIn('.pass input', '0value');
+    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+
+    await click('tfoot button');
+
+    // and clears the new secret form elements
+    assert
+      .dom('.alert > span')
+      .hasText(
+        'Secret keys can only consist of numbers, uppercase letters and underscores, ' +
+          'and cannot begin with a number.'
+      );
   });
 
-  // eslint-disable-next-line max-len
-  this.render(hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`);
+  test('it sorts secrets by name alphabetically', async function(assert) {
+    const testSecret1 = EmberObject.create({
+      name: 'FOO',
+      pipelineId: 123245,
+      value: 'banana',
+      allowInPR: false
+    });
 
-  this.$('.key input').val('0banana').keyup();
-  this.$('.pass input').val('0value').keyup();
-  this.$('tfoot button').click();
+    const testSecret2 = EmberObject.create({
+      name: 'BAR',
+      pipelineId: 123245,
+      value: 'banana',
+      allowInPR: false
+    });
 
-  // and clears the new secret form elements
-  assert.equal(this.$('.alert > span').text().trim(),
-    'Secret keys can only consist of numbers, uppercase letters and underscores, ' +
-    'and cannot begin with a number.');
-});
+    const testSecret3 = EmberObject.create({
+      name: 'ZOO',
+      pipelineId: 123245,
+      value: 'banana',
+      allowInPR: false
+    });
 
-test('it sorts secrets by name alphabetically', function (assert) {
-  const testSecret1 = EmberObject.create({
-    name: 'FOO',
-    pipelineId: 123245,
-    value: 'banana',
-    allowInPR: false
+    this.set('mockSecrets', [testSecret1, testSecret2, testSecret3]);
+
+    const testPipeline = EmberObject.create({
+      id: '123245'
+    });
+
+    this.set('mockPipeline', testPipeline);
+    await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+    // secrets are sorted by name
+    assert.dom(find('tbody tr:first-child td:first-child')).hasText('BAR');
+    assert.dom(find('tbody tr:nth-child(2) td:first-child')).hasText('FOO');
+    assert.dom(find('tbody tr:nth-child(3) td:first-child')).hasText('ZOO');
   });
 
-  const testSecret2 = EmberObject.create({
-    name: 'BAR',
-    pipelineId: 123245,
-    value: 'banana',
-    allowInPR: false
+  test('it renders differently for a child pipeline', async function(assert) {
+    const testSecret = EmberObject.create({
+      name: 'FOO',
+      pipelineId: 123245,
+      value: 'banana',
+      allowInPR: false
+    });
+
+    this.set('mockSecrets', [testSecret]);
+
+    const testPipeline = EmberObject.create({
+      id: '123',
+      configPipelineId: '123245'
+    });
+
+    this.set('mockPipeline', testPipeline);
+    await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+    assert
+      .dom('p')
+      .hasText(
+        'Secrets are inherited from the parent pipeline. You may override a secret or revert it back to its original value.'
+      );
+
+    // Secrets are rendered but footer is not
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tfoot tr').doesNotExist();
   });
 
-  const testSecret3 = EmberObject.create({
-    name: 'ZOO',
-    pipelineId: 123245,
-    value: 'banana',
-    allowInPR: false
+  test('it toggles eye-icon and input type', async function(assert) {
+    const testSecret = EmberObject.create({
+      name: 'TEST_SECRET',
+      pipelineId: 123245,
+      value: 'banana',
+      allowInPR: false
+    });
+
+    this.set('mockSecrets', [testSecret]);
+
+    const testPipeline = EmberObject.create({
+      id: '123245'
+    });
+
+    this.set('mockPipeline', testPipeline);
+
+    await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+
+    await click('tbody i');
+    await click('tfoot i');
+
+    assert.dom('tbody i').hasClass('fa-eye-slash');
+    assert.dom('tbody .pass input').hasAttribute('type', 'text');
+    assert.dom('tfoot i').hasClass('fa-eye-slash');
+    assert.dom('tfoot .pass input').hasAttribute('type', 'text');
+
+    await click('tbody i');
+    await click('tfoot i');
+
+    assert.dom('tbody i').hasClass('fa-eye');
+    assert.dom('tbody .pass input').hasAttribute('type', 'password');
+    assert.dom('tfoot i').hasClass('fa-eye');
+    assert.dom('tfoot .pass input').hasAttribute('type', 'password');
   });
-
-  this.set('mockSecrets', [testSecret1, testSecret2, testSecret3]);
-
-  const testPipeline = EmberObject.create({
-    id: '123245'
-  });
-
-  this.set('mockPipeline', testPipeline);
-  this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
-
-  // secrets are sorted by name
-  assert.equal(this.$('tbody tr:first-child td:first-child').text().trim(), 'BAR');
-  assert.equal(this.$('tbody tr:nth-child(2) td:first-child').text().trim(), 'FOO');
-  assert.equal(this.$('tbody tr:nth-child(3) td:first-child').text().trim(), 'ZOO');
-});
-
-test('it renders differently for a child pipeline', function (assert) {
-  const testSecret = EmberObject.create({
-    name: 'FOO',
-    pipelineId: 123245,
-    value: 'banana',
-    allowInPR: false
-  });
-
-  this.set('mockSecrets', [testSecret]);
-
-  const testPipeline = EmberObject.create({
-    id: '123',
-    configPipelineId: '123245'
-  });
-
-  this.set('mockPipeline', testPipeline);
-  this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
-
-  assert.equal(this.$('p').text().trim().replace(/\+s/g, ' '),
-    'Secrets are inherited from the parent pipeline. ' +
-    'You may override a secret or revert it back to its original value.');
-
-  // Secrets are rendered but footer is not
-  assert.equal(this.$('table').length, 1);
-  assert.equal(this.$('tbody tr').length, 1);
-  assert.equal(this.$('tfoot tr').length, 0);
-});
-
-test('it toggles eye-icon and input type', function (assert) {
-  const testSecret = EmberObject.create({
-    name: 'TEST_SECRET',
-    pipelineId: 123245,
-    value: 'banana',
-    allowInPR: false
-  });
-
-  this.set('mockSecrets', [testSecret]);
-
-  const testPipeline = EmberObject.create({
-    id: '123245'
-  });
-
-  this.set('mockPipeline', testPipeline);
-
-  this.render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
-
-  this.$('tbody i').click();
-  this.$('tfoot i').click();
-
-  assert.ok(this.$('tbody i').hasClass('fa-eye-slash'));
-  assert.equal(this.$('tbody .pass input').attr('type'), 'text');
-  assert.ok(this.$('tfoot i').hasClass('fa-eye-slash'));
-  assert.equal(this.$('tfoot .pass input').attr('type'), 'text');
-
-  this.$('tbody i').click();
-  this.$('tfoot i').click();
-
-  assert.ok(this.$('tbody i').hasClass('fa-eye'));
-  assert.equal(this.$('tbody .pass input').attr('type'), 'password');
-  assert.ok(this.$('tfoot i').hasClass('fa-eye'));
-  assert.equal(this.$('tfoot .pass input').attr('type'), 'password');
 });

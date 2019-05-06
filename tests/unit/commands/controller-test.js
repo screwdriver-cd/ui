@@ -1,38 +1,40 @@
-import { moduleFor } from 'ember-qunit';
+import { module } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
 import test from 'ember-sinon-qunit/test-support/test';
 
-moduleFor('controller:commands', 'Unit | Controller | Commands', {
-  // Specify the other units that are required for this test.
-  // needs: [],
-});
+module('Unit | Controller | Commands', function(hooks) {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let controller = this.subject();
+  test('it exists', function(assert) {
+    let controller = this.owner.lookup('controller:commands');
 
-  assert.ok(controller);
-});
+    assert.ok(controller);
+  });
 
-test('it creates correct breadcrumbs', function (assert) {
-  const controller = this.subject();
+  test('it creates correct breadcrumbs', function(assert) {
+    const controller = this.owner.lookup('controller:commands');
 
-  run(() => {
-    controller.set('routeParams', {
-      namespace: 'testNamespace',
-      name: 'testName'
+    run(() => {
+      controller.set('routeParams', {
+        namespace: 'testNamespace',
+        name: 'testName'
+      });
+
+      assert.deepEqual(controller.get('crumbs'), [
+        {
+          name: 'Commands',
+          params: ['commands']
+        },
+        {
+          name: 'testNamespace',
+          params: ['commands.namespace', 'testNamespace']
+        },
+        {
+          name: 'testName',
+          params: ['commands.detail', 'testNamespace', 'testName']
+        }
+      ]);
     });
-
-    assert.deepEqual(controller.get('crumbs'), [{
-      name: 'Commands',
-      params: ['commands']
-    },
-    {
-      name: 'testNamespace',
-      params: ['commands.namespace', 'testNamespace']
-    },
-    {
-      name: 'testName',
-      params: ['commands.detail', 'testNamespace', 'testName']
-    }]);
   });
 });

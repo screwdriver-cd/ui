@@ -1,16 +1,18 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('error-view', 'Integration | Component | error view', {
-  integration: true
-});
+module('Integration | Component | error view', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  this.set('sc', 400);
-  this.set('sm', 'they are dead, dave');
-  this.render(hbs`{{error-view errorMessage="bananas" statusCode=sc statusMessage=sm}}`);
+  test('it renders', async function(assert) {
+    this.set('sc', 400);
+    this.set('sm', 'they are dead, dave');
+    await render(hbs`{{error-view errorMessage="bananas" statusCode=sc statusMessage=sm}}`);
 
-  assert.equal(this.$('h1').text().trim(), '400');
-  assert.equal(this.$('h2').text().trim(), 'they are dead, dave');
-  assert.equal(this.$('h4').text().trim(), 'bananas');
+    assert.dom('h1').hasText('400');
+    assert.dom('h2').hasText('they are dead, dave');
+    assert.dom('h4').hasText('bananas');
+  });
 });

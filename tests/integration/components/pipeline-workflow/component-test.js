@@ -1,5 +1,7 @@
 import EmberObject from '@ember/object';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import rsvp from 'rsvp';
 
@@ -25,46 +27,49 @@ const BUILDS = [
   { jobId: 3, id: 6, status: 'FAILURE' }
 ];
 
-moduleForComponent('pipeline-workflow', 'Integration | Component | pipeline workflow', {
-  integration: true
-});
+module('Integration | Component | pipeline workflow', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders an aggregate', function (assert) {
-  const jobs = ['main', 'batman', 'robin'].map((name) => {
-    const j = {
-      name,
-      isDisabled: false,
-      lastBuild: EmberObject.create({
-        id: 12345,
-        status: 'SUCCESS',
-        sha: 'abcd1234'
-      })
-    };
+  test('it renders an aggregate', async function(assert) {
+    const jobs = ['main', 'batman', 'robin'].map(name => {
+      const j = {
+        name,
+        isDisabled: false,
+        lastBuild: EmberObject.create({
+          id: 12345,
+          status: 'SUCCESS',
+          sha: 'abcd1234'
+        })
+      };
 
-    return EmberObject.create(j);
+      return EmberObject.create(j);
+    });
+
+    this.set('jobsMock', jobs);
+    this.set('graph', GRAPH);
+    this.set('selected', 'aggregate');
+
+    await render(hbs`{{pipeline-workflow workflowGraph=graph jobs=jobsMock selected=selected}}`);
+
+    assert.dom('.graph-node').exists({ count: 5 });
+    assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 
-  this.set('jobsMock', jobs);
-  this.set('graph', GRAPH);
-  this.set('selected', 'aggregate');
+  test('it renders an event', async function(assert) {
+    this.set('selected', 1);
+    this.set(
+      'obj',
+      EmberObject.create({
+        builds: rsvp.resolve(BUILDS),
+        workflowGraph: GRAPH,
+        startFrom: '~commit',
+        causeMessage: 'test'
+      })
+    );
 
-  this.render(hbs`{{pipeline-workflow workflowGraph=graph jobs=jobsMock selected=selected}}`);
+    await render(hbs`{{pipeline-workflow selectedEventObj=obj selected=selected}}`);
 
-  assert.equal(this.$('.graph-node').length, 5);
-  assert.equal(this.$('.workflow-tooltip').length, 1);
-});
-
-test('it renders an event', function (assert) {
-  this.set('selected', 1);
-  this.set('obj', EmberObject.create({
-    builds: rsvp.resolve(BUILDS),
-    workflowGraph: GRAPH,
-    startFrom: '~commit',
-    causeMessage: 'test'
-  }));
-
-  this.render(hbs`{{pipeline-workflow selectedEventObj=obj selected=selected}}`);
-
-  assert.equal(this.$('.graph-node').length, 5);
-  assert.equal(this.$('.workflow-tooltip').length, 1);
+    assert.dom('.graph-node').exists({ count: 5 });
+    assert.dom('.workflow-tooltip').exists({ count: 1 });
+  });
 });

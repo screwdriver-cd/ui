@@ -1,15 +1,15 @@
-{{#if (and (eq selected 'aggregate') (is-fulfilled graph))}}
+{{#if (and (eq selected "aggregate") (is-fulfilled graph))}}
   {{#workflow-graph-d3
     workflowGraph=directedGraph
     builds=builds
     jobs=jobs
     graphClicked=(action "graphClicked")
   }}
-  {{workflow-tooltip
-    tooltipData=tooltipData
-    displayRestartButton=false
-    showTooltip=showTooltip
-  }}
+    {{workflow-tooltip
+      tooltipData=tooltipData
+      displayRestartButton=false
+      showTooltip=showTooltip
+    }}
   {{/workflow-graph-d3}}
 {{else}}
   {{#if (is-fulfilled selectedEventObj.builds)}}
@@ -21,14 +21,14 @@
       causeMessage=selectedEventObj.causeMessage
       graphClicked=(action "graphClicked")
     }}
-    {{workflow-tooltip
-      tooltipData=tooltipData
-      displayRestartButton=displayRestartButton
-      stopBuild=stopBuild
-      showTooltip=showTooltip
-      showTooltipPosition=showTooltipPosition
-      confirmStartBuild=(action "confirmStartBuild")
-    }}
+      {{workflow-tooltip
+        tooltipData=tooltipData
+        displayRestartButton=displayRestartButton
+        stopBuild=stopBuild
+        showTooltip=showTooltip
+        showTooltipPosition=showTooltipPosition
+        confirmStartBuild=(action "confirmStartBuild")
+      }}
     {{/workflow-graph-d3}}
     {{#if isShowingModal}}
       {{#modal-dialog

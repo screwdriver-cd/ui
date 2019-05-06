@@ -23,22 +23,22 @@ export default Component.extend({
   sortedPipelines: sort('collectionPipelines', 'sortBy'),
   sortByText: computed('sortBy', {
     get() {
-      switch (this.get('sortBy').get(0)) {
-      case 'scmRepo.name':
-        return 'Name';
-      case 'lastBuildTime:desc':
-        return 'Last Build';
-      default:
-        return '';
+      switch (this.sortBy.get(0)) {
+        case 'scmRepo.name':
+          return 'Name';
+        case 'lastBuildTime:desc':
+          return 'Last Build';
+        default:
+          return '';
       }
     }
   }),
   collectionPipelines: computed('collection.pipelines', {
     get() {
-      const scmService = this.get('scmService');
+      const { scmService } = this;
 
       if (this.get('collection.pipelines')) {
-        return this.get('collection.pipelines').map((pipeline) => {
+        return this.get('collection.pipelines').map(pipeline => {
           const scm = scmService.getScm(pipeline.scmContext);
           const ret = {
             id: pipeline.id,
@@ -63,21 +63,21 @@ export default Component.extend({
 
           [ret.lastBuildIcon, ret.lastBuildStatusColor] = (() => {
             switch (ret.lastBuildStatus) {
-            case 'queued':
-            case 'running':
-              return ['refresh fa-spin', 'build-running'];
-            case 'success':
-              return ['check-circle', 'build-success'];
-            case 'failure':
-              return ['times-circle', 'build-failure'];
-            case 'aborted':
-              return ['stop-circle', 'build-failure'];
-            case 'blocked':
-              return ['ban', 'build-running'];
-            case 'unstable':
-              return ['exclamation-circle', 'build-unstable'];
-            default:
-              return ['', ''];
+              case 'queued':
+              case 'running':
+                return ['refresh fa-spin', 'build-running'];
+              case 'success':
+                return ['check-circle', 'build-success'];
+              case 'failure':
+                return ['times-circle', 'build-failure'];
+              case 'aborted':
+                return ['stop-circle', 'build-failure'];
+              case 'blocked':
+                return ['ban', 'build-running'];
+              case 'unstable':
+                return ['exclamation-circle', 'build-unstable'];
+              default:
+                return ['', ''];
             }
           })();
 
@@ -98,24 +98,24 @@ export default Component.extend({
      * @returns {Promise}
      */
     pipelineRemove(pipelineId, collectionId) {
-      return this.get('onPipelineRemove')(+pipelineId, collectionId)
+      return this.onPipelineRemove(+pipelineId, collectionId)
         .then(() => {
           this.set('removePipelineError', null);
         })
-        .catch((error) => {
+        .catch(error => {
           this.set('removePipelineError', error.errors[0].detail);
         });
     },
     setSortBy(option) {
       switch (option) {
-      case 'name':
-        this.set('sortBy', ['scmRepo.name']);
-        break;
-      case 'lastBuildTime':
-        this.set('sortBy', [`${option}:desc`]);
-        break;
-      default:
-        this.set('sortBy', [option]);
+        case 'name':
+          this.set('sortBy', ['scmRepo.name']);
+          break;
+        case 'lastBuildTime':
+          this.set('sortBy', [`${option}:desc`]);
+          break;
+        default:
+          this.set('sortBy', [option]);
       }
     },
     editDescription() {
@@ -125,7 +125,7 @@ export default Component.extend({
       this.set('editingName', true);
     },
     saveName() {
-      const collection = this.get('collection');
+      const { collection } = this;
       let newName = this.$('.edit-area-name').val();
 
       if (newName) {
@@ -136,7 +136,7 @@ export default Component.extend({
       this.set('editingName', false);
     },
     saveDescription() {
-      const collection = this.get('collection');
+      const { collection } = this;
 
       collection.set('description', this.$('.edit-area').val());
       this.set('editingDescription', false);

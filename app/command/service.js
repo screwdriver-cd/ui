@@ -30,24 +30,23 @@ export default Service.extend({
       params.namespace = namespace;
     }
 
-    return this.fetchData(url, params)
-      .then((commands) => {
-        let unique = {};
+    return this.fetchData(url, params).then(commands => {
+      let unique = {};
 
-        let uniqueCommands = commands.filter((c) => {
-          let fullName = `${c.namespace}/${c.name}`;
+      let uniqueCommands = commands.filter(c => {
+        let fullName = `${c.namespace}/${c.name}`;
 
-          if (fullName in unique) {
-            return false;
-          }
+        if (fullName in unique) {
+          return false;
+        }
 
-          unique[fullName] = true;
+        unique[fullName] = true;
 
-          return true;
-        });
-
-        return uniqueCommands;
+        return true;
       });
+
+      return uniqueCommands;
+    });
   },
   fetchData(url, params = {}) {
     const ajaxConfig = {
@@ -66,8 +65,8 @@ export default Service.extend({
 
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
-        .done((commands) => {
-          commands.forEach((command) => {
+        .done(commands => {
+          commands.forEach(command => {
             if (command.createTime) {
               // Add last updated time
               command.lastUpdated = getLastUpdatedTime({ createTime: command.createTime });
@@ -80,8 +79,9 @@ export default Service.extend({
     });
   },
   deleteCommands(namespace, name) {
-    // eslint-disable-next-line max-len
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/${encodeURIComponent(namespace)}/${encodeURIComponent(name)}`;
+    const url =
+      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
+      `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}`;
     const ajaxConfig = {
       method: 'DELETE',
       url,
@@ -98,7 +98,7 @@ export default Service.extend({
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
         .done(content => resolve(content))
-        .fail((response) => {
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (response && response.responseJSON && typeof response.responseJSON === 'object') {

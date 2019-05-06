@@ -1,24 +1,30 @@
 import EmberObject from '@ember/object';
-import { moduleForComponent, test } from 'ember-qunit';
+import Service from '@ember/service';
+import { resolve } from 'rsvp';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-const actualMessage = 'shutdown imminent';
-const testedMessage = '×shutdown imminent';
 
-moduleForComponent('nav-banner', 'Integration | Component | nav banner', {
-  integration: true
-});
+module('Integration | Component | nav banner', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders banners', function (assert) {
-  const banners = [
-    EmberObject.create({
-      id: 1,
-      isActive: true,
-      message: actualMessage
-    })
-  ];
+  test('it renders banners', async function(assert) {
+    const bannerStub = Service.extend({
+      fetchBanners: () =>
+        resolve([
+          EmberObject.create({
+            id: 1,
+            isActive: true,
+            message: 'shutdown imminent'
+          })
+        ])
+    });
 
-  this.set('bannerMock', banners);
-  this.render(hbs`{{nav-banner banners=bannerMock}}`);
+    this.owner.register('service:banner', bannerStub);
 
-  assert.equal(this.$('span').text(), testedMessage);
+    await render(hbs`{{nav-banner}}`);
+
+    assert.dom('.banner').hasText('× shutdown imminent');
+  });
 });

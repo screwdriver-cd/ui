@@ -13,17 +13,18 @@ export default Controller.extend({
   },
   latest: computed('templates.[]', {
     get() {
-      return this.get('templates')[0];
+      return this.templates[0];
     }
   }),
   versionTemplate: computed('selectedVersion', 'templates.[]', {
     get() {
-      const version = this.get('selectedVersion') || this.get('latest.version');
+      const version = this.selectedVersion || this.get('latest.version');
 
-      return this.get('templates').findBy('version', version);
+      return this.templates.findBy('version', version);
     }
   }),
   // Set selected version to null whenever the list of templates changes
+  // eslint-disable-next-line ember/no-observers
   modelObserver: observer('templates.[]', function modelObserver() {
     this.set('selectedVersion', null);
   }),
@@ -32,10 +33,9 @@ export default Controller.extend({
       this.set('selectedVersion', version);
     },
     removeTemplate(name) {
-      return this.get('template').deleteTemplates(name)
-        .then(
-          () => this.transitionToRoute('templates'),
-          err => this.set('errorMessage', err));
+      return this.template
+        .deleteTemplates(name)
+        .then(() => this.transitionToRoute('templates'), err => this.set('errorMessage', err));
     }
   }
 });

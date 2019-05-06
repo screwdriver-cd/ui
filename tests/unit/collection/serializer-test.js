@@ -1,46 +1,42 @@
 import { run } from '@ember/runloop';
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
-import wait from 'ember-test-helpers/wait';
 let server;
 
-moduleForModel('collection', 'Unit | Serializer | collection', {
-  // Specify the other units that are required for this test.
-  needs: ['serializer:collection'],
-  beforeEach() {
+module('Unit | Serializer | collection', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
     server = new Pretender();
-  },
-  afterEach() {
-    server.shutdown();
-  }
-});
-
-test('it serializes records', function (assert) {
-  let record = this.subject();
-  let serializedRecord = record.serialize();
-
-  assert.ok(serializedRecord);
-});
-
-test('it does not post with model name as key', function (assert) {
-  assert.expect(2);
-  server.post('/collections', function () {
-    return [200, {}, JSON.stringify({ collection: { id: 123 } })];
   });
 
-  run(() => {
-    const collection = this.store().createRecord('collection', {
+  hooks.afterEach(function() {
+    server.shutdown();
+  });
+
+  test('it serializes records', function(assert) {
+    let record = run(() => this.owner.lookup('service:store').createRecord('collection'));
+    let serializedRecord = record.serialize();
+
+    assert.ok(serializedRecord);
+  });
+
+  test('it does not post with model name as key', async function(assert) {
+    assert.expect(2);
+    server.post('http://localhost:8080/v4/collections', function() {
+      return [200, {}, JSON.stringify({ id: 123 })];
+    });
+
+    const collection = this.owner.lookup('service:store').createRecord('collection', {
       name: 'Screwdriver',
       description: 'Collection of screwdriver pipelines'
     });
 
-    collection.save()
-      .then(() => {
-        assert.equal(collection.get('id'), 123);
-      });
-  });
+    await collection.save();
 
-  return wait().then(() => {
+    assert.equal(collection.get('id'), 123);
+
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
@@ -49,16 +45,14 @@ test('it does not post with model name as key', function (assert) {
       description: 'Collection of screwdriver pipelines'
     });
   });
-});
 
-test('it serializes only dirty fields', function (assert) {
-  assert.expect(1);
-  server.patch('/collections/123', function () {
-    return [200, {}, JSON.stringify({ collection: { id: 123 } })];
-  });
+  test('it serializes only dirty fields', async function(assert) {
+    assert.expect(1);
+    server.put('http://localhost:8080/v4/collections/123', function() {
+      return [200, {}, JSON.stringify({ id: 123 })];
+    });
 
-  run(() => {
-    this.store().push({
+    this.owner.lookup('service:store').push({
       data: {
         id: 123,
         type: 'collection',
@@ -69,13 +63,12 @@ test('it serializes only dirty fields', function (assert) {
       }
     });
 
-    const collection = this.store().peekRecord('collection', 123);
+    const collection = this.owner.lookup('service:store').peekRecord('collection', 123);
 
     collection.set('description', 'newDescription');
-    collection.save();
-  });
 
-  return wait().then(() => {
+    await collection.save();
+
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 

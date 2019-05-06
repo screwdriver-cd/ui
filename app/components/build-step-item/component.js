@@ -1,18 +1,18 @@
 import Component from '@ember/component';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   tagName: 'li',
   classNameBindings: ['status', 'active'],
   active: computed('stepName', 'selectedStep', {
     get() {
-      return get(this, 'stepName') === get(this, 'selectedStep');
+      return this.stepName === this.selectedStep;
     }
   }),
   status: computed('stepCode', 'stepStart', {
     get() {
-      const code = get(this, 'stepCode');
-      const startTime = get(this, 'stepStart');
+      const code = this.stepCode;
+      const startTime = this.stepStart;
 
       if (!startTime) {
         return 'queued';
@@ -27,22 +27,22 @@ export default Component.extend({
   }),
   icon: computed('status', {
     get() {
-      switch (get(this, 'status')) {
-      case 'running':
-        return 'spinner fa-spin';
-      case 'success':
-        return 'check';
-      case 'failure':
-        return 'times';
-      default:
-        return 'circle-o';
+      switch (this.status) {
+        case 'running':
+          return 'spinner fa-spin';
+        case 'success':
+          return 'check';
+        case 'failure':
+          return 'times';
+        default:
+          return 'circle-o';
       }
     }
   }),
   duration: computed('stepStart', 'stepEnd', {
     get() {
-      const start = get(this, 'stepStart');
-      const end = get(this, 'stepEnd');
+      const start = this.stepStart;
+      const end = this.stepEnd;
 
       if (end && start) {
         const duration = Date.parse(end) - Date.parse(start);
@@ -54,6 +54,6 @@ export default Component.extend({
     }
   }),
   click() {
-    get(this, 'onClick')(get(this, 'stepName'));
+    this.onClick(this.stepName);
   }
 });

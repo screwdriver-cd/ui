@@ -26,10 +26,10 @@
   }
 
   tbody tr:hover {
-      background-color: $sd-separator;
-      .appId {
-        text-decoration: underline;
-      }
+    background-color: $sd-separator;
+    .appId {
+      text-decoration: underline;
+    }
   }
 
   .num-results {
@@ -39,7 +39,7 @@
   }
 
   table {
-    width:100%;
+    width: 100%;
   }
 
   th {
@@ -49,7 +49,8 @@
     color: $sd-text-med;
   }
 
-  th, td {
+  th,
+  td {
     padding: 10px;
     border-bottom: 1px solid $sd-text-light;
   }

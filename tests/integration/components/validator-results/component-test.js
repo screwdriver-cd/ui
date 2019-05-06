@@ -1,120 +1,123 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('validator-results', 'Integration | Component | validator results', {
-  integration: true
-});
+module('Integration | Component | validator results', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders jobs', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  this.set('validationMock', {
-    errors: ['got an error'],
-    workflow: ['main', 'foo'],
-    workflowGraph: {
-      nodes: [
-        { name: '~pr' },
-        { name: '~commit' },
-        { name: 'main' },
-        { name: 'foo' }
-      ],
-      edges: []
-    },
-    jobs: {
-      foo: [{
-        image: 'int-test:1',
-        commands: [
-          { name: 'step1', command: 'echo hello' },
-          { name: 'step2', command: 'echo goodbye' }
-        ],
-        secrets: [],
-        environment: {},
-        settings: {}
-      }],
-      main: [{
-        image: 'int-test:1',
-        commands: [
-          { name: 'step1', command: 'echo hello' },
-          { name: 'step2', command: 'echo goodbye' }
-        ],
-        secrets: [],
-        environment: {},
-        settings: {}
+  test('it renders jobs', async function(assert) {
+    this.set('validationMock', {
+      errors: ['got an error'],
+      workflow: ['main', 'foo'],
+      workflowGraph: {
+        nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: 'foo' }],
+        edges: []
       },
-      {
-        image: 'int-test:1',
-        commands: [
-          { name: 'step1', command: 'echo hello' },
-          { name: 'step2', command: 'echo goodbye' }
+      jobs: {
+        foo: [
+          {
+            image: 'int-test:1',
+            commands: [
+              { name: 'step1', command: 'echo hello' },
+              { name: 'step2', command: 'echo goodbye' }
+            ],
+            secrets: [],
+            environment: {},
+            settings: {}
+          }
         ],
-        secrets: [],
-        environment: {},
-        settings: {}
-      }]
-    }
-  });
-
-  this.render(hbs`{{validator-results results=validationMock}}`);
-
-  assert.equal(this.$('.error').text().trim(), 'got an error');
-  assert.equal(this.$('h4.pipeline').text().trim(), 'Pipeline Settings');
-  assert.equal(this.$('h4.job').text().trim(), 'main main.1 foo');
-});
-
-test('it renders templates', function (assert) {
-  this.set('validationMock', {
-    errors: [],
-    template: {
-      name: 'batman/batmobile',
-      version: '1.0.0',
-      config: {
-        image: 'int-test:1',
-        steps: [{ forgreatjustice: 'ba.sh' }]
+        main: [
+          {
+            image: 'int-test:1',
+            commands: [
+              { name: 'step1', command: 'echo hello' },
+              { name: 'step2', command: 'echo goodbye' }
+            ],
+            secrets: [],
+            environment: {},
+            settings: {}
+          },
+          {
+            image: 'int-test:1',
+            commands: [
+              { name: 'step1', command: 'echo hello' },
+              { name: 'step2', command: 'echo goodbye' }
+            ],
+            secrets: [],
+            environment: {},
+            settings: {}
+          }
+        ]
       }
-    }
+    });
+
+    await render(hbs`{{validator-results results=validationMock}}`);
+
+    const jobs = findAll('h4.job');
+
+    assert.dom(jobs[0]).hasText('main');
+    assert.dom(jobs[1]).hasText('main.1');
+    assert.dom(jobs[2]).hasText('foo');
+    assert.dom('.error').hasText('got an error');
+    assert.dom('h4.pipeline').hasText('Pipeline Settings');
   });
 
-  this.render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
-
-  assert.equal(this.$('.error').text().trim(), '');
-  assert.equal(this.$('h4').text().trim(), 'batman/batmobile@1.0.0');
-});
-
-test('it renders templates with a namespace', function (assert) {
-  this.set('validationMock', {
-    errors: [],
-    template: {
-      namespace: 'batman',
-      name: 'batmobile',
-      version: '1.0.0',
-      config: {
-        image: 'int-test:1',
-        steps: [{ forgreatjustice: 'ba.sh' }]
+  test('it renders templates', async function(assert) {
+    this.set('validationMock', {
+      errors: [],
+      template: {
+        name: 'batman/batmobile',
+        version: '1.0.0',
+        config: {
+          image: 'int-test:1',
+          steps: [{ forgreatjustice: 'ba.sh' }]
+        }
       }
-    }
+    });
+
+    await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+
+    assert.dom('.error').doesNotExist();
+    assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
-  this.render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
-
-  assert.equal(this.$('.error').text().trim(), '');
-  assert.equal(this.$('h4').text().trim(), 'batman/batmobile@1.0.0');
-});
-
-test('it renders joi error results', function (assert) {
-  this.set('validationMock', {
-    errors: [{ message: 'there is an error' }],
-    template: {
-      name: 'batman/batmobile',
-      version: '1.0.0',
-      config: {
-        image: 'int-test:1',
-        steps: [{ forgreatjustice: 'ba.sh' }]
+  test('it renders templates with a namespace', async function(assert) {
+    this.set('validationMock', {
+      errors: [],
+      template: {
+        namespace: 'batman',
+        name: 'batmobile',
+        version: '1.0.0',
+        config: {
+          image: 'int-test:1',
+          steps: [{ forgreatjustice: 'ba.sh' }]
+        }
       }
-    }
+    });
+
+    await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+
+    assert.dom('.error').doesNotExist();
+    assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
-  this.render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+  test('it renders joi error results', async function(assert) {
+    this.set('validationMock', {
+      errors: [{ message: 'there is an error' }],
+      template: {
+        name: 'batman/batmobile',
+        version: '1.0.0',
+        config: {
+          image: 'int-test:1',
+          steps: [{ forgreatjustice: 'ba.sh' }]
+        }
+      }
+    });
 
-  assert.equal(this.$('.error').text().trim(), 'there is an error');
-  assert.equal(this.$('h4').text().trim(), 'batman/batmobile@1.0.0');
+    await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+
+    assert.dom('.error').hasText('there is an error');
+    assert.dom('h4').hasText('batman/batmobile@1.0.0');
+  });
 });

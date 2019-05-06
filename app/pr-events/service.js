@@ -13,10 +13,10 @@ export default Service.extend({
    * @return {Promise}                      Resolves to prCommit
    */
   getPRevents(pipelineId, eventPrUrl, jobId) {
-    const eventUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-    `/pipelines/${pipelineId}/events`;
-    const buildUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-    `/jobs/${jobId}/builds`;
+    const eventUrl = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipelines/${pipelineId}/events`;
+    const buildUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/jobs/${jobId}/builds`;
     const prNum = eventPrUrl.split('/').pop();
 
     let buildPromise = new EmberPromise(resolve =>
@@ -29,9 +29,9 @@ export default Service.extend({
           withCredentials: true
         },
         headers: {
-          Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
+          Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
         }
-      }).done((data) => {
+      }).done(data => {
         resolve(data);
       })
     );
@@ -50,23 +50,25 @@ export default Service.extend({
           withCredentials: true
         },
         headers: {
-          Authorization: `Bearer ${this.get('session').get('data.authenticated.token')}`
+          Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
         }
-      }).done((data) => {
-        resolve(data);
-      }).catch(() => resolve([]))
+      })
+        .done(data => {
+          resolve(data);
+        })
+        .catch(() => resolve([]))
     );
 
     let promises = [buildPromise, eventPromise];
 
     return new EmberPromise(resolve =>
-      RSVP.allSettled(promises).then((array) => {
+      RSVP.allSettled(promises).then(array => {
         const builds = array[0].value;
         const prCommits = array[1].value;
 
         let eventBuildPairs = [];
 
-        prCommits.forEach((commit) => {
+        prCommits.forEach(commit => {
           const matchingBuild = builds.find(build => build.eventId === commit.id);
 
           if (matchingBuild) {

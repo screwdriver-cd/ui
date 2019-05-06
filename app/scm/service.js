@@ -5,11 +5,11 @@ import { get } from '@ember/object';
 const scmUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/contexts`;
 
 /**
-* Get scm icon type.
-* @method getIconType
-* @param  {String}  scmContext  scmContext (e.g. github:github.com)
-* @return {String}  iconType (using Font Awesome Icons)
-*/
+ * Get scm icon type.
+ * @method getIconType
+ * @param  {String}  scmContext  scmContext (e.g. github:github.com)
+ * @return {String}  iconType (using Font Awesome Icons)
+ */
 function getIconType(scmContext) {
   const iconTypes = {
     github: 'github',
@@ -33,37 +33,38 @@ export default Service.extend({
    * @return {DS.RecordArray} Array of scm object.
    */
   createScms() {
-    const session = get(this, 'session');
-    const store = get(this, 'store');
+    const { session, store } = this;
     const scms = this.getScms();
 
     if (get(scms, 'length') !== 0) {
       return scms;
     }
 
-    return $.getJSON(scmUrl).then((scmContexts) => {
-      scmContexts.forEach((scmContext) => {
-        let isSignedIn = false;
+    return $.getJSON(scmUrl)
+      .then(scmContexts => {
+        scmContexts.forEach(scmContext => {
+          let isSignedIn = false;
 
-        if (get(session, 'isAuthenticated')) {
-          const jwtContext = get(session, 'data.authenticated.scmContext');
+          if (get(session, 'isAuthenticated')) {
+            const jwtContext = get(session, 'data.authenticated.scmContext');
 
-          if (jwtContext === scmContext.context) {
-            isSignedIn = true;
+            if (jwtContext === scmContext.context) {
+              isSignedIn = true;
+            }
           }
-        }
 
-        // Create ember data of scm info
-        store.createRecord('scm', {
-          context: scmContext.context,
-          displayName: scmContext.displayName,
-          iconType: getIconType(scmContext.context),
-          isSignedIn
+          // Create ember data of scm info
+          store.createRecord('scm', {
+            context: scmContext.context,
+            displayName: scmContext.displayName,
+            iconType: getIconType(scmContext.context),
+            isSignedIn
+          });
         });
-      });
 
-      return store.peekAll('scm');
-    }).catch(() => []);
+        return store.peekAll('scm');
+      })
+      .catch(() => []);
   },
 
   /**
@@ -72,7 +73,7 @@ export default Service.extend({
    * @return {DS.RecordArray} Array of scm object.
    */
   getScms() {
-    return this.get('store').peekAll('scm');
+    return this.store.peekAll('scm');
   },
 
   /**
@@ -84,7 +85,7 @@ export default Service.extend({
   getScm(scmContext) {
     let ret = {};
 
-    this.getScms().forEach((scm) => {
+    this.getScms().forEach(scm => {
       if (scm.get('context') === scmContext) {
         ret = {
           context: scm.get('context'),
@@ -103,7 +104,7 @@ export default Service.extend({
    * @param  {String}  scmContext  scmContext (e.g. github:github.com)
    */
   setSignedIn(scmContext) {
-    this.getScms().forEach((scm) => {
+    this.getScms().forEach(scm => {
       if (scm.get('context') === scmContext) {
         scm.set('isSignedIn', true);
       } else {

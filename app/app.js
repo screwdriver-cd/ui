@@ -1,6 +1,7 @@
 import Application from '@ember/application';
-import Resolver from './resolver';
 import loadInitializers from 'ember-load-initializers';
+import { run } from '@ember/runloop';
+import Resolver from './resolver';
 import config from './config/environment';
 
 const App = Application.extend({
@@ -10,5 +11,9 @@ const App = Application.extend({
 });
 
 loadInitializers(App, config.modulePrefix);
+
+if (config.environment === 'development') {
+  run.backburner.DEBUG = true;
+}
 
 export default App;

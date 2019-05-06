@@ -1,80 +1,82 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';
 
-moduleForComponent('job-toggle-modal', 'Integration | Component | job toggle modal', {
-  integration: true
-});
+module('Integration | Component | job toggle modal', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  assert.expect(4);
-  const $ = this.$;
+  test('it renders', async function(assert) {
+    assert.expect(4);
 
-  this.set('showToggleModal', true);
-  this.set('name', 'main');
-  this.set('stateChange', 'Disable');
-  this.set('updateMessageMock', (message) => {
-    assert.equal(message, 'testing');
+    this.set('showToggleModal', true);
+    this.set('name', 'main');
+    this.set('stateChange', 'Disable');
+    this.set('updateMessageMock', message => {
+      assert.equal(message, 'testing');
+    });
+
+    await render(hbs`{{job-toggle-modal
+      showToggleModal=showToggleModal
+      updateMessage=updateMessageMock
+      name=name
+      stateChange=stateChange
+    }}`);
+
+    assert.dom('.modal-title').hasText('Disable the "main" job?');
+    assert.dom('.message .control-label').hasText('Reason');
+    assert.dom('.toggle-form__cancel').hasText('Cancel');
+    assert.dom('.toggle-form__create').hasText('Confirm');
   });
 
-  this.render(hbs`{{job-toggle-modal
-    showToggleModal=showToggleModal
-    updateMessage=updateMessageMock
-    name=name
-    stateChange=stateChange
-  }}`);
+  test('it cancels job state update', async function(assert) {
+    assert.expect(2);
 
-  assert.equal($('.modal-title').text().trim(), 'Disable the "main" job?');
-  assert.equal($('.message .control-label').text().trim(), 'Reason');
-  assert.equal($('.toggle-form__cancel').text().trim(), 'Cancel');
-  assert.equal($('.toggle-form__create').text().trim(), 'Confirm');
-});
+    this.set('showToggleModal', true);
+    this.set('name', 'main');
+    this.set('stateChange', 'Disable');
+    this.set('updateMessageMock', message => {
+      assert.equal(message, 'testing');
+    });
+    await render(hbs`{{job-toggle-modal
+      showToggleModal=showToggleModal
+      updateMessage=updateMessageMock
+      name=name
+      stateChange=stateChange
+    }}`);
 
-test('it cancels job state update', function (assert) {
-  const $ = this.$;
+    assert.dom('.modal-dialog').exists({ count: 1 });
 
-  assert.expect(2);
+    await click('.toggle-form__cancel');
 
-  this.set('showToggleModal', true);
-  this.set('name', 'main');
-  this.set('stateChange', 'Disable');
-  this.set('updateMessageMock', (message) => {
-    assert.equal(message, 'testing');
+    assert.dom('.modal-dialog').doesNotExist();
   });
-  this.render(hbs`{{job-toggle-modal
-    showToggleModal=showToggleModal
-    updateMessage=updateMessageMock
-    name=name
-    stateChange=stateChange
-  }}`);
 
-  assert.equal($('.modal-dialog').length, 1);
-  $('.toggle-form__cancel').click();
-  assert.equal($('.modal-dialog').length, 0);
-});
+  test('it updates a job state', async function(assert) {
+    injectSessionStub(this);
+    assert.expect(3);
 
-test('it updates a job state', function (assert) {
-  injectSessionStub(this);
-  assert.expect(3);
+    const stubUpdateFunction = function(message) {
+      assert.equal(message, 'testing');
+    };
 
-  const $ = this.$;
-  const stubUpdateFunction = function (message) {
-    assert.equal(message, 'testing');
-  };
+    this.set('showToggleModal', true);
+    this.set('message', 'testing');
+    this.set('updateMessageMock', stubUpdateFunction);
 
-  this.set('showToggleModal', true);
-  this.set('message', 'testing');
-  this.set('updateMessageMock', stubUpdateFunction);
+    await render(hbs`{{job-toggle-modal
+      showToggleModal=showToggleModal
+      updateMessage=updateMessageMock
+      name=name
+      message=message
+      stateChange=stateChange
+    }}`);
 
-  this.render(hbs`{{job-toggle-modal
-    showToggleModal=showToggleModal
-    updateMessage=updateMessageMock
-    name=name
-    message=message
-    stateChange=stateChange
-  }}`);
+    assert.dom('.modal-dialog').exists({ count: 1 });
 
-  assert.equal($('.modal-dialog').length, 1);
-  $('.toggle-form__create').click();
-  assert.notOk(this.get('showToggleModal'));
+    await click('.toggle-form__create');
+
+    assert.notOk(this.get('showToggleModal'));
+  });
 });

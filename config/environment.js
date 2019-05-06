@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = (environment) => {
+module.exports = environment => {
   let ENV = {
     modulePrefix: 'screwdriver-ui',
     environment,
@@ -13,13 +11,9 @@ module.exports = (environment) => {
         // Glimmer [ember] and ACE Editor [validator] add styles to elements at run time, this makes it impossible to precalculate all possible shas for inline styles
         "'unsafe-inline'"
       ],
-      'connect-src': [
-        "'self'"
-      ],
+      'connect-src': ["'self'"],
       // JSTree web worker
-      'worker-src': [
-        'blob:'
-      ],
+      'worker-src': ['blob:'],
       'img-src': [
         "'self'",
         'https:',
@@ -34,7 +28,7 @@ module.exports = (environment) => {
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
-        // e.g. 'with-controller': true
+        // e.g. EMBER_NATIVE_DECORATOR_SUPPORT: true
       },
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
@@ -77,6 +71,9 @@ module.exports = (environment) => {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+
+    ENV.RAISE_ON_DEPRECATION = true;
+    ENV.LOG_STACKTRACE_ON_DEPRECATION = true;
   }
 
   if (environment === 'test') {
@@ -87,9 +84,12 @@ module.exports = (environment) => {
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
     ENV.APP.NUM_PIPELINES_LISTED = 3;
+    ENV.RAISE_ON_DEPRECATION = false;
+    ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
+    ENV.APP.FORCE_RELOAD_WAIT = 0;
   }
 
   if (environment === 'production') {

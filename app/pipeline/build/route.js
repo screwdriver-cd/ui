@@ -9,15 +9,17 @@ export default Route.extend({
   model(params) {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
 
-    return this.store.findRecord('build', params.build_id).then(build => all([
-      this.store.findRecord('job', build.get('jobId')),
-      this.store.findRecord('event', build.get('eventId'))
-    ]).then(([job, event]) => ({
-      build,
-      job,
-      event,
-      pipeline: this.get('pipeline')
-    })));
+    return this.store.findRecord('build', params.build_id).then(build =>
+      all([
+        this.store.findRecord('job', build.get('jobId')),
+        this.store.findRecord('event', build.get('eventId'))
+      ]).then(([job, event]) => ({
+        build,
+        job,
+        event,
+        pipeline: this.pipeline
+      }))
+    );
   },
 
   afterModel(model) {
@@ -46,8 +48,12 @@ export default Route.extend({
       const name = getActiveStep(get(model, 'build.steps'));
 
       if (name) {
-        this.transitionTo('pipeline.build.step',
-          model.pipeline.get('id'), model.build.get('id'), name);
+        this.transitionTo(
+          'pipeline.build.step',
+          model.pipeline.get('id'),
+          model.build.get('id'),
+          name
+        );
       }
     }
   }

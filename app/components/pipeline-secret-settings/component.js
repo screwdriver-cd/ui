@@ -13,7 +13,7 @@ export default Component.extend({
   sortedSecrets: sort('secrets', 'secretsSorting'),
   isButtonDisabled: computed('newName', 'newValue', {
     get() {
-      return !this.get('newName') || !this.get('newValue');
+      return !this.newName || !this.newValue;
     }
   }),
   actions: {
@@ -22,16 +22,17 @@ export default Component.extend({
      * @method addNewSecret
      */
     addNewSecret() {
-      if (!/^[A-Z_][A-Z0-9_]*$/.test(this.get('newName'))) {
-        this.set('errorMessage', 'Secret keys can only consist of numbers, ' +
-        'uppercase letters and underscores, and cannot begin with a number.');
+      if (!/^[A-Z_][A-Z0-9_]*$/.test(this.newName)) {
+        this.set(
+          'errorMessage',
+          'Secret keys can only consist of numbers, ' +
+            'uppercase letters and underscores, and cannot begin with a number.'
+        );
 
         return false;
       }
 
-      this.get('onCreateSecret')(
-        this.get('newName'), this.get('newValue'), this.get('pipeline.id'), this.get('newAllow')
-      );
+      this.onCreateSecret(this.newName, this.newValue, this.get('pipeline.id'), this.newAllow);
       this.set('newName', null);
       this.set('newValue', null);
       this.set('newAllow', false);
@@ -44,7 +45,7 @@ export default Component.extend({
      * @param {Object} event Click event
      */
     togglePasswordInput(event) {
-      const target = event.target;
+      const { target } = event;
       const passwordInput = target.previousSibling;
 
       $(target).toggleClass('fa-eye fa-eye-slash');

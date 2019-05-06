@@ -1,11 +1,14 @@
-import { test } from 'qunit';
-import moduleForAcceptance from 'screwdriver-ui/tests/helpers/module-for-acceptance';
-import { authenticateSession } from 'screwdriver-ui/tests/helpers/ember-simple-auth';
+import { currentURL, visit } from '@ember/test-helpers';
+import { module, test } from 'qunit';
+import { setupApplicationTest } from 'ember-qunit';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
-moduleForAcceptance('Acceptance | pipeline/options', {
-  beforeEach() {
+module('Acceptance | pipeline/options', function(hooks) {
+  setupApplicationTest(hooks);
+
+  hooks.beforeEach(function() {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/pipelines/1', () => [
@@ -40,21 +43,19 @@ moduleForAcceptance('Acceptance | pipeline/options', {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     server.shutdown();
-  }
-});
+  });
 
-test('visiting /pipelines/:id/options', function (assert) {
-  authenticateSession(this.application, { token: 'faketoken' });
+  test('visiting /pipelines/:id/options', async function(assert) {
+    await authenticateSession({ token: 'faketoken' });
+    await visit('/pipelines/1/options');
 
-  visit('/pipelines/1/options');
-
-  andThen(() => {
     assert.equal(currentURL(), '/pipelines/1/options');
-    assert.equal(find('section.pipeline li').length, 1);
-    assert.equal(find('section.jobs li').length, 3);
-    assert.equal(find('section.danger li').length, 1);
+    assert.dom('section.pipeline li').exists({ count: 1 });
+    assert.dom('section.jobs li').exists({ count: 3 });
+    assert.dom('section.danger li').exists({ count: 1 });
   });
 });

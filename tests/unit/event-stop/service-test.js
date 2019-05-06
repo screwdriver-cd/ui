@@ -1,4 +1,5 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
 let server;
 
@@ -7,7 +8,8 @@ const stop = () => {
 };
 
 const stopFailed = () => {
-  server.put('http://localhost:8080/v4/events/1/stop', () => [500,
+  server.put('http://localhost:8080/v4/events/1/stop', () => [
+    500,
     { 'Content-Type': 'application/json' },
     JSON.stringify({
       statusCode: 500,
@@ -16,48 +18,47 @@ const stopFailed = () => {
   ]);
 };
 
-moduleFor('service:event-stop', 'Unit | Service | event-stop', {
-  // Specify the other units that are required for this test.
-  needs: ['service:session'],
+module('Unit | Service | event-stop', function(hooks) {
+  setupTest(hooks);
 
-  beforeEach() {
+  hooks.beforeEach(function() {
     server = new Pretender();
-  },
-
-  afterEach() {
-    server.shutdown();
-  }
-});
-
-test('it exists', function (assert) {
-  const service = this.subject();
-
-  assert.ok(service);
-});
-
-test('it makes a call to stop all builds in an event', function (assert) {
-  assert.expect(1);
-  stop();
-  const service = this.subject();
-  const e = service.stopBuilds(1);
-
-  e.then(() => {
-    const [request] = server.handledRequests;
-
-    assert.equal(request.url, 'http://localhost:8080/v4/events/1/stop');
   });
-});
 
-test('it fails to stop all builds in an event with error message ', function (assert) {
-  assert.expect(2);
-  stopFailed();
-  const service = this.subject();
-  const e = service.stopBuilds(1);
+  hooks.afterEach(function() {
+    server.shutdown();
+  });
 
-  e.catch((error) => {
-    assert.equal(error, 'internal server error');
-    const [request] = server.handledRequests;
+  test('it exists', function(assert) {
+    const service = this.owner.lookup('service:event-stop');
 
-    assert.equal(request.url, 'http://localhost:8080/v4/events/1/stop');
+    assert.ok(service);
+  });
+
+  test('it makes a call to stop all builds in an event', function(assert) {
+    assert.expect(1);
+    stop();
+    const service = this.owner.lookup('service:event-stop');
+    const e = service.stopBuilds(1);
+
+    e.then(() => {
+      const [request] = server.handledRequests;
+
+      assert.equal(request.url, 'http://localhost:8080/v4/events/1/stop');
+    });
+  });
+
+  test('it fails to stop all builds in an event with error message ', function(assert) {
+    assert.expect(2);
+    stopFailed();
+    const service = this.owner.lookup('service:event-stop');
+    const e = service.stopBuilds(1);
+
+    e.catch(error => {
+      assert.equal(error, 'internal server error');
+      const [request] = server.handledRequests;
+
+      assert.equal(request.url, 'http://localhost:8080/v4/events/1/stop');
+    });
   });
 });

@@ -1,23 +1,27 @@
 import { resolve } from 'rsvp';
 import Service from '@ember/service';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 
-const parsedManifest = [{
-  text: 'coverage',
-  type: 'directory',
-  children: [{
-    text: 'coverage.json',
+const parsedManifest = [
+  {
+    text: 'coverage',
+    type: 'directory',
+    children: [
+      {
+        text: 'coverage.json',
+        type: 'file',
+        a_attr: { href: 'http://foo.com/coverage.json' }
+      }
+    ]
+  },
+  {
+    text: 'test.txt',
     type: 'file',
-    a_attr: { href: 'http://foo.com/coverage.json' }
-  }]
-},
-{
-  text: 'test.txt',
-  type: 'file',
-  a_attr: { href: 'http://foo.com/test.txt' }
-}
+    a_attr: { href: 'http://foo.com/test.txt' }
+  }
 ];
 
 const artifactService = Service.extend({
@@ -26,39 +30,39 @@ const artifactService = Service.extend({
   }
 });
 
-moduleForComponent('artifact-tree', 'Integration | Component | artifact tree', {
-  integration: true,
+module('Integration | Component | artifact tree', function(hooks) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.register('service:build-artifact', artifactService);
-  }
-});
+  hooks.beforeEach(function() {
+    this.owner.register('service:build-artifact', artifactService);
+  });
 
-test('it renders only title when build is running', function (assert) {
-  this.render(hbs`
-    {{artifact-tree
-      buildStatus="RUNNING"
-    }}
-  `);
+  test('it renders only title when build is running', async function(assert) {
+    await render(hbs`
+      {{artifact-tree
+        buildStatus="RUNNING"
+      }}
+    `);
 
-  assert.equal(this.$('.artifact-tree h4').text().trim(), 'Artifacts');
-  assert.equal(this.$('.jstree-node').length, 0);
-});
+    assert.dom('.artifact-tree h4').hasText('Artifacts');
+    assert.dom('.jstree-node').doesNotExist();
+  });
 
-test('it renders with artifacts if build finished', function (assert) {
-  this.render(hbs`
-    {{artifact-tree
-      buildStatus="SUCCESS"
-    }}
-  `);
+  test('it renders with artifacts if build finished', async function(assert) {
+    await render(hbs`
+      {{artifact-tree
+        buildStatus="SUCCESS"
+      }}
+    `);
 
-  return wait().then(() => {
-    // Check if it has two nodes and one of them is a leaf/file
-    assert.equal(this.$('.jstree-leaf').length, 1);
-    assert.equal(this.$('.jstree-node').length, 2);
+    return settled().then(async () => {
+      // Check if it has two nodes and one of them is a leaf/file
+      assert.dom('.jstree-leaf').exists({ count: 1 });
+      assert.dom('.jstree-node').exists({ count: 2 });
 
-    // Check if the href is correctly set and then click the link
-    assert.equal(this.$('.jstree-leaf a').prop('href'), parsedManifest[1].a_attr.href);
-    this.$('.jstree-leaf a').click();
+      // Check if the href is correctly set and then click the link
+      assert.equal(find('.jstree-leaf a').href, parsedManifest[1].a_attr.href);
+      await click('.jstree-leaf a');
+    });
   });
 });
