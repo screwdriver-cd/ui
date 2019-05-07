@@ -9,7 +9,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
   test('it renders', async function(assert) {
     await render(hbs`{{workflow-tooltip}}`);
 
-    assert.dom(this.element).hasText('');
+    assert.dom(this.element).hasText('Go to build metrics');
 
     // Template block usage:
     await render(hbs`
@@ -21,9 +21,10 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom(this.element).includesText('template block text');
   });
 
-  test('it renders build link', async function(assert) {
+  test('it renders build detail and metrics links', async function(assert) {
     const data = {
       job: {
+        id: 1,
         buildId: 1234,
         name: 'batmobile'
       }
@@ -33,8 +34,9 @@ module('Integration | Component | workflow tooltip', function(hooks) {
 
     await render(hbs`{{workflow-tooltip tooltipData=data}}`);
 
-    assert.dom('.content a').exists({ count: 1 });
-    assert.dom(this.element).hasText('Go to build details');
+    assert.dom('.content a').exists({ count: 2 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Go to build metrics');
   });
 
   test('it renders remote trigger link', async function(assert) {
@@ -71,7 +73,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       confirmStartBuild="confirmStartBuild"
     }}`);
 
-    assert.dom('.content a').exists({ count: 2 });
+    assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:first-child').hasText('Go to build details');
     assert.dom('a:last-child').hasText('Start pipeline from here');
   });

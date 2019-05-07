@@ -235,7 +235,7 @@ export function model() {
       startTime: '2019-03-25T01:00',
       endTime: '2019-03-26T17:01:19',
       successOnly: false,
-      jobId: 156,
+      jobId: '156',
       metrics: {
         events: {
           queuedTime: [0.18333333333333332, 0.23333333333333334, 0.25, 0.45],
@@ -281,10 +281,10 @@ export function model() {
           }
         ],
         jobMap: {
-          main: 156,
-          publish: 157,
-          beta: 158,
-          prod: 159
+          main: '156',
+          publish: '157',
+          beta: '158',
+          prod: '159'
         },
         steps: {
           sha: [

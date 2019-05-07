@@ -13,6 +13,11 @@ const locked = Symbol('locked');
 export default Controller.extend({
   router: service(),
   session: service(),
+  queryParams: [
+    {
+      jobId: { type: 'string' }
+    }
+  ],
   inTrendlineView: false,
   isUTC: false,
   eventsChartName: 'eventsChart',
@@ -762,6 +767,7 @@ export default Controller.extend({
 
       if (id && this.selectedJobName !== name) {
         this.send('setJobId', id);
+        this.transitionToRoute({ queryParams: { jobId: id } });
       } else {
         this.set('errorMessage', `Unknown Job: ${name}`);
       }

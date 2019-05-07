@@ -41,6 +41,7 @@
       <li class="subsection"><span class="banner-value">{{imagePullDuration}} pulling image</span></li>
       <li class="subsection"><span class="banner-value">{{buildDuration}} in build</span></li>
     </details>
+    {{#link-to "pipeline.metrics" (query-params jobId=jobId)}}See build metrics{{/link-to}}
     <span class="banner-label">Duration</span>
   </li>
   <li class="created">
