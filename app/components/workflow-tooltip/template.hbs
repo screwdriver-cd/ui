@@ -5,6 +5,7 @@
     {{#if tooltipData.job.buildId}}
       {{#link-to "pipeline.build" tooltipData.job.buildId}}Go to build details{{/link-to}}
     {{/if}}
+    {{#link-to "pipeline.metrics" (query-params jobId=tooltipData.job.id)}}Go to build metrics{{/link-to}}
     {{#if displayRestartButton}}
       {{#if (eq tooltipData.job.status "DISABLED")}}
         <p>{{tooltipData.job.stateChangeMessage}}</p>

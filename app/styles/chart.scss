@@ -127,6 +127,7 @@
 
   svg {
     font-size: 0.8em;
+    overflow: visible !important;
 
     &:hover {
       .cursor-line {

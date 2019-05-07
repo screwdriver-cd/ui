@@ -73,7 +73,7 @@ module('Integration | Component | build banner', function(hooks) {
   });
 
   test('it renders', async function(assert) {
-    assert.expect(10);
+    assert.expect(11);
 
     this.set('reloadCb', () => {
       assert.ok(true);
@@ -117,6 +117,7 @@ module('Integration | Component | build banner', function(hooks) {
         'title',
         'Total duration: 11 seconds, Blocked time: 4 seconds, Image pull time: 5 seconds, Build time: 2 seconds'
       );
+    assert.dom('.duration > a').hasText('See build metrics');
     assert.dom('.created .banner-value').hasText(expectedTime);
     assert.dom('.user .banner-value').hasText('Bruce W');
     assert.dom('.docker-container .banner-value').hasText('node:6');

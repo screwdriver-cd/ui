@@ -255,6 +255,8 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
   test('it sets dates, range and job id', function(assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
+    controller.transitionToRoute = sinon.stub();
+
     run(() => {
       controller.set('model', metricsMock);
       controller.set('setDates', sinon.stub());
@@ -282,7 +284,8 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
       assert.ok(controller.get('setDates').calledWith(startISO, endISO));
 
       controller.send('selectJob', 'publish');
-      assert.ok(controller.get('actions.setJobId').calledWith(157));
+      assert.ok(controller.get('actions.setJobId').calledWith('157'));
+      assert.ok(controller.transitionToRoute.called);
 
       controller.send('selectJob', 'do not exist');
       assert.equal(controller.get('errorMessage'), 'Unknown Job: do not exist');

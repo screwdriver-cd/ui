@@ -33,12 +33,12 @@ export default Route.extend({
     this.reinit();
     this.controllerFor('pipeline.metrics').reinit();
   },
-  model() {
+  model({ jobId = this.jobId }) {
     const controller = this.controllerFor('pipeline.metrics');
 
     controller.set('pipeline', this.pipeline);
 
-    const { successOnly, jobId, fetchAll, fetchJob, startTime, endTime } = this;
+    const { successOnly, fetchAll, fetchJob, startTime, endTime } = this;
     const toMinute = (sec = null) => (sec === null ? null : sec / 60);
     const jobsMap = this.get('pipeline.jobs').then(jobs =>
       jobs.reduce((map, j) => {
@@ -52,6 +52,10 @@ export default Route.extend({
         return map;
       }, new Map())
     );
+
+    if (jobId) {
+      this.set('jobId', jobId);
+    }
 
     const metrics = RSVP.all([
       jobsMap,
@@ -137,7 +141,7 @@ export default Route.extend({
               const jobName = jobs.get(`${b.jobId}`);
 
               if (jobName) {
-                jobMap[jobName] = b.jobId;
+                jobMap[jobName] = `${b.jobId}`;
                 info.values[jobName] = toMinute(b.duration);
                 info.ids[jobName] = b.id;
               }
