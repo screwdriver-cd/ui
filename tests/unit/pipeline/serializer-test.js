@@ -45,7 +45,8 @@ module('Unit | Serializer | pipeline', function(hooks) {
       const payload = JSON.parse(request.requestBody);
 
       assert.deepEqual(payload, {
-        checkoutUrl: 'git@example.com:foo/bar.git'
+        checkoutUrl: 'git@example.com:foo/bar.git',
+        rootDir: ''
       });
     });
   });

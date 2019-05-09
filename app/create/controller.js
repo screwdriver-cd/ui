@@ -7,8 +7,9 @@ export default Controller.extend({
   errorMessage: '',
 
   actions: {
-    createPipeline(scmUrl) {
-      let pipeline = this.store.createRecord('pipeline', { checkoutUrl: scmUrl });
+    createPipeline({ scmUrl, rootDir }) {
+      let payload = { checkoutUrl: scmUrl, rootDir };
+      let pipeline = this.store.createRecord('pipeline', payload);
 
       this.set('isSaving', true);
 

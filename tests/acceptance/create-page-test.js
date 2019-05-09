@@ -73,6 +73,52 @@ module('Acceptance | create', function(hooks) {
     assert.equal(currentURL(), '/pipelines/1/events');
   });
 
+  test('/create a pipeline with rootDir: SUCCESS', async function(assert) {
+    server.post('http://localhost:8080/v4/pipelines', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '1'
+      })
+    ]);
+
+    server.get('http://localhost:8080/v4/pipelines/1', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '1'
+      })
+    ]);
+
+    server.get('http://localhost:8080/v4/pipelines/1/events', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+
+    server.get('http://localhost:8080/v4/builds', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+
+    server.get('http://localhost:8080/v4/pipelines/1/jobs', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+
+    await authenticateSession({ token: 'faketoken' });
+    await visit('/create');
+
+    assert.equal(currentURL(), '/create');
+    await fillIn('.scm-url', 'git@github.com:foo/bar.git');
+    await triggerEvent('.scm-url', 'keyup');
+    await fillIn('.root-dir', 'lib');
+    await click('button.blue-button');
+    assert.equal(currentURL(), '/pipelines/1/events');
+  });
+
   test('/create a pipeline: FAILURE', async function(assert) {
     server.post('http://localhost:8080/v4/pipelines', () => [
       409,
