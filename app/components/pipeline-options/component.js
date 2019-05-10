@@ -48,8 +48,8 @@ export default Component.extend({
       })
     );
 
-    if (this.get('pipeline.rootDir')) {
-      this.set('rootDir', this.get('pipeline.rootDir'));
+    if (this.get('pipeline.scmRepo.rootDir')) {
+      this.set('rootDir', this.get('pipeline.scmRepo.rootDir'));
     }
   },
   actions: {
@@ -65,6 +65,9 @@ export default Component.extend({
       } else if (val.trim().length > 0) {
         input.addClass('bad-text-input');
       }
+    },
+    updateRootDir(val) {
+      this.set('rootDir', val.trim());
     },
     updatePipeline() {
       this.onUpdatePipeline({

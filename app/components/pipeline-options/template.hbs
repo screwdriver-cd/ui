@@ -21,12 +21,8 @@
                     key-up=(action "scmChange")
                     value=scmUrl
                   }}
-                  {{input
-                    class="text-input root-dir"
-                    value=rootDir
-                    placeholder="Enter your source directory if it's not the root of your repository."
-                  }}
                 </div>
+                {{pipeline-rootdir hasRootDir=(if this.rootDir true false) rootDir=this.rootDir updateRootDir=(action "updateRootDir")}}
               </div>
             </div>
             <div class="row">

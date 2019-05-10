@@ -38,6 +38,15 @@ export default Component.extend({
     },
 
     /**
+     * Update rootdir
+     * @method updateRootDir
+     * @param  {String}      val The value of the rootDir input box
+     */
+    updateRootDir(val) {
+      this.set('rootDir', val.trim());
+    },
+
+    /**
      * Call Api to save project
      * @event saveData
      * @param  {Object} data Project attributes

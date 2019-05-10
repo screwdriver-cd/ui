@@ -48,6 +48,10 @@
   &.good-text-input {
     border-color: $sd-success;
   }
+
+  &.root-dir {
+    width: calc(50% - 15px);
+  }
 }
 
 .success i {

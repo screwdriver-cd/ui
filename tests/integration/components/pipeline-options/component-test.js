@@ -86,9 +86,8 @@ module('Integration | Component | pipeline options', function(hooks) {
   test('it updates a pipeline', async function(assert) {
     const scm = 'git@github.com:foo/bar.git';
 
-    this.set('updatePipeline', ({ scmUrl, rootUrl }) => {
+    this.set('updatePipeline', ({ scmUrl }) => {
       assert.equal(scmUrl, scm);
-      assert.equal(rootUrl, undefined);
     });
 
     this.set(
@@ -105,7 +104,7 @@ module('Integration | Component | pipeline options', function(hooks) {
       hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=(action updatePipeline)}}`
     );
     assert.dom('.scm-url').hasValue('git@github.com:foo/bar.git#notMaster');
-    assert.dom('.root-dir').hasValue('');
+    assert.dom('.root-dir').doesNotExist();
 
     await fillIn('.scm-url', scm);
     await triggerKeyEvent('.text-input', 'keyup', 'SPACE');
@@ -138,14 +137,15 @@ module('Integration | Component | pipeline options', function(hooks) {
       hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=(action updatePipeline)}}`
     );
     assert.dom('.scm-url').hasValue('git@github.com:foo/bar.git#notMaster');
-    assert.dom('.root-dir').hasValue('');
+    assert.dom('.root-dir').doesNotExist('');
 
     await fillIn('.scm-url', scm);
+    await click('.checkbox-input');
     await fillIn('.root-dir', root);
     await triggerKeyEvent('.scm-url', 'keyup', 'SPACE');
 
-    // assert.dom('.scm-url').hasValue(scm);
-    // assert.dom('.root-dir').hasValue(root);
+    assert.dom('.scm-url').hasValue(scm);
+    assert.dom('.root-dir').hasValue(root);
 
     await click('button.blue-button');
   });

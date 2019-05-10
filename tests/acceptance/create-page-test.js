@@ -114,6 +114,7 @@ module('Acceptance | create', function(hooks) {
     assert.equal(currentURL(), '/create');
     await fillIn('.scm-url', 'git@github.com:foo/bar.git');
     await triggerEvent('.scm-url', 'keyup');
+    await click('.checkbox-input');
     await fillIn('.root-dir', 'lib');
     await click('button.blue-button');
     assert.equal(currentURL(), '/pipelines/1/events');

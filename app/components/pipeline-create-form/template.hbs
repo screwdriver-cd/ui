@@ -13,12 +13,9 @@
   {{#if isValid}}
     <i class="success">{{fa-icon "check"}}</i>
   {{/if}}
-  {{input
-    class="text-input root-dir"
-    placeholder="Enter your source directory if it's not the root of your repository (eg: appA/lib)"
-    value=rootDir
-    enter=(action "saveData")
-  }}
+</div>
+<div>
+  {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
 </div>
 <div>
   <button {{action "saveData"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
