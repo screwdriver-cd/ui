@@ -1,5 +1,5 @@
 import { Promise } from 'rsvp';
-import { set, computed } from '@ember/object';
+import { set, computed, observer } from '@ember/object';
 import { scheduleOnce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -13,25 +13,37 @@ export default Component.extend({
   autoscroll: true,
   isFetching: false,
   isDownloading: false,
+  inProgress: false,
+  justFinished: false,
   timeFormat: 'datetime',
   lastScrollTop: 0,
   lastScrollHeight: 0,
-  inProgress: computed('totalLine', {
-    get() {
-      return this.totalLine === undefined;
+  // eslint-disable-next-line ember/no-observers
+  inProgressObserver: observer('totalLine', function inProgressObserver() {
+    const inProgress = this.totalLine === undefined;
+
+    // step just finished
+    if (this.inProgress && !inProgress) {
+      this.set('justFinished', true);
     }
+
+    this.set('inProgress', inProgress);
   }),
   sortOrder: computed('inProgress', {
     get() {
-      return this.inProgress ? 'ascending' : 'descending';
+      return this.inProgress || this.justFinished ? 'ascending' : 'descending';
     }
   }),
   getPageSize(fetchMax = false) {
-    const { totalLine } = this;
-    const itemSize = this.logService.getCache(this.buildId, this.stepName, 'nextLine') || totalLine;
+    const { totalLine, inProgress, justFinished } = this;
+    let itemSize = this.logService.getCache(this.buildId, this.stepName, 'nextLine') || totalLine;
+
+    if (justFinished) {
+      itemSize = totalLine - itemSize + 1;
+    }
 
     // for running step, fetch regular page size
-    if (this.inProgress) {
+    if (inProgress) {
       return ENV.APP.DEFAULT_LOG_PAGE_SIZE;
     }
 
@@ -148,6 +160,11 @@ export default Component.extend({
         return [{ m: `Loading logs for step ${stepName}...` }];
       }
 
+      if (this.justFinished) {
+        // there were logs in the cache, fetch the last batch of logs
+        this.getLogs(true);
+      }
+
       scheduleOnce('afterRender', this, 'scrollDown');
 
       return logs;
@@ -199,10 +216,15 @@ export default Component.extend({
     const newStepId = `${this.buildId}/${this.stepName}`;
 
     if (newStepId !== this.lastStepId) {
-      set(this, 'autoscroll', true);
-      set(this, 'lastStepId', newStepId);
-      set(this, 'lastScrollTop', 0);
-      set(this, 'lastScrollHeight', 0);
+      this.setProperties({
+        autoscroll: true,
+        lastStepId: newStepId,
+        lastScrollTop: 0,
+        lastScrollHeight: 0,
+        isFetching: false,
+        isDownloading: false,
+        justFinished: false
+      });
     }
   },
 
@@ -258,7 +280,7 @@ export default Component.extend({
    */
   getLogs(fetchMax = false) {
     if (!this.isFetching && this.shouldLoad) {
-      const { buildId, stepName, totalLine, inProgress } = this;
+      const { buildId, stepName, totalLine } = this;
       const started = !!this.stepStartTime;
 
       set(this, 'isFetching', true);
@@ -277,6 +299,7 @@ export default Component.extend({
           // prevent updating logs when component is being destroyed
           if (!this.isDestroyed && !this.isDestroying) {
             const container = this.$('.wrap')[0];
+            const { inProgress, justFinished } = this;
 
             set(this, 'isFetching', false);
             set(this, 'lastScrollTop', container.scrollTop);
@@ -288,10 +311,14 @@ export default Component.extend({
               cb = inProgress ? 'scrollDown' : 'scrollStill';
             }
 
+            if (justFinished) {
+              cb = 'scrollDown';
+            }
+
             scheduleOnce('afterRender', this, cb);
 
-            if (inProgress && !done) {
-              later(this, 'getLogs', ENV.APP.LOG_RELOAD_TIMER);
+            if ((justFinished || inProgress) && !done) {
+              later(this, 'getLogs', justFinished, ENV.APP.LOG_RELOAD_TIMER);
             }
           }
         });
@@ -345,7 +372,7 @@ export default Component.extend({
       }
 
       // autoscroll when the bottom of the logs is roughly in view
-      set(this, 'autoscroll', this.$('.bottom')[0].getBoundingClientRect().top < 1000);
+      set(this, 'autoscroll', this.$('.bottom')[0].getBoundingClientRect().top < 1500);
     },
     toggleTimeDisplay() {
       let index = timeTypes.indexOf(this.timeFormat);
