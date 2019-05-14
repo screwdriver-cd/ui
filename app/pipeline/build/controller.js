@@ -121,7 +121,7 @@ export default Controller.extend({
     const pipelineId = this.get('pipeline.id');
     const activeStep = getActiveStep(get(build, 'steps'));
 
-    if (this.get('preselectedStepName') !== activeStep) {
+    if (activeStep && this.get('preselectedStepName') !== activeStep) {
       this.transitionToRoute('pipeline.build.step', pipelineId, build.get('id'), activeStep);
     }
   }

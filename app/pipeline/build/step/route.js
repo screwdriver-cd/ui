@@ -1,13 +1,17 @@
-import BuildRoute from '../route';
+import Route from '@ember/routing/route';
 
-export default BuildRoute.extend({
+export default Route.extend({
+  routeAfterAuthentication: 'pipeline.build',
   model(params) {
     this.controllerFor('pipeline.build').set('preselectedStepName', params.step_id);
 
-    return this._super(this.paramsFor('pipeline.build'));
+    // return parent route model
+    return this.modelFor('pipeline.build');
   },
   afterModel(model) {
-    this._super(model);
+    if (!model) {
+      return;
+    }
 
     const stepName = this.controllerFor('pipeline.build').get('preselectedStepName');
 
