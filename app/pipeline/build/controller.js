@@ -79,6 +79,9 @@ export default Controller.extend({
 
     changeBuild(pipelineId, buildId) {
       return this.transitionToRoute('pipeline.build', pipelineId, buildId);
+    },
+    changeBuildStep(name) {
+      this.changeBuildStep(name);
     }
   },
 
@@ -116,10 +119,17 @@ export default Controller.extend({
     }
   },
 
-  changeBuildStep() {
+  changeBuildStep(name) {
     const build = this.get('build');
     const pipelineId = this.get('pipeline.id');
-    const activeStep = getActiveStep(get(build, 'steps'));
+    let activeStep;
+
+    if (name) {
+      activeStep = name;
+      this.set('userSelectedStepName', name);
+    } else if (!this.userSelectedStepName) {
+      activeStep = getActiveStep(get(build, 'steps'));
+    }
 
     if (activeStep && this.get('preselectedStepName') !== activeStep) {
       this.transitionToRoute('pipeline.build.step', pipelineId, build.get('id'), activeStep);

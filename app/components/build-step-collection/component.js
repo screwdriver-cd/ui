@@ -50,9 +50,6 @@ export default Component.extend({
     },
     toggleTeardown() {
       set(this, 'teardownCollapsed', !this.teardownCollapsed);
-    },
-    stepClick(name) {
-      this.router.transitionTo('pipeline.build.step', this.pipelineId, this.buildId, name);
     }
   }
 });
