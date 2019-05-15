@@ -221,9 +221,9 @@ export default Component.extend({
         lastStepId: newStepId,
         lastScrollTop: 0,
         lastScrollHeight: 0,
-        isFetching: false,
         isDownloading: false,
-        justFinished: false
+        justFinished: false,
+        inProgress: this.totalLine === undefined
       });
     }
   },
