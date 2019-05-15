@@ -118,6 +118,8 @@ module('Integration | Component | pipeline options', function(hooks) {
     const scm = 'git@github.com:foo/bar.git';
     const root = 'lib';
 
+    assert.expect(6);
+
     this.set('updatePipeline', ({ scmUrl, rootDir }) => {
       assert.equal(scmUrl, scm);
       assert.equal(rootDir, root);

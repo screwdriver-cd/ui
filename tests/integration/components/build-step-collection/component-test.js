@@ -85,6 +85,7 @@ module('Integration | Component | build step collection', function(hooks) {
       }))
     );
     this.set('preselectedStepName', 'user-step2');
+    this.set('changeBuildStep', () => {});
 
     await render(hbs`{{build-step-collection
       preselectedStepName=preselectedStepName
@@ -93,6 +94,7 @@ module('Integration | Component | build step collection', function(hooks) {
       buildId=1
       buildSteps=buildSteps
       buildStart=null
+      changeBuildStep=(action changeBuildStep)
     }}`);
 
     assert.dom('h3').hasText('Steps');
