@@ -41,6 +41,7 @@ export default Route.extend({
     const model = this.modelFor(this.routeName);
 
     set(model.event, 'isPaused', false);
+    set(model, 'userSelectedStepName', null);
   },
 
   redirect(model, transition) {
