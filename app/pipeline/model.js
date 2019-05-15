@@ -1,10 +1,12 @@
 import { alias } from '@ember/object/computed';
+import { computed } from '@ember/object';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
   admins: DS.attr(),
   annotations: DS.attr(),
   checkoutUrl: DS.attr('string'),
+  rootDir: DS.attr('string'),
   scmContext: DS.attr('string'),
   createTime: DS.attr('date'),
   scmRepo: DS.attr(),
@@ -21,6 +23,16 @@ export default DS.Model.extend({
   metrics: DS.hasMany('metric', { async: true }),
 
   appId: alias('scmRepo.name'),
-  branch: alias('scmRepo.branch'),
+  branch: computed('scmRepo.{branch,rootDir}', {
+    get() {
+      let { branch, rootDir } = this.scmRepo || {};
+
+      if (rootDir) {
+        branch = `${branch}#${rootDir}`;
+      }
+
+      return branch;
+    }
+  }),
   hubUrl: alias('scmRepo.url')
 });

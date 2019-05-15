@@ -13,6 +13,7 @@ export default Component.extend({
   cache: service('cache'),
   errorMessage: '',
   scmUrl: '',
+  rootDir: '',
   // Removing a pipeline
   isRemoving: false,
   isShowingModal: false,
@@ -46,6 +47,10 @@ export default Component.extend({
         scmUri: this.get('pipeline.scmUri')
       })
     );
+
+    if (this.get('pipeline.scmRepo.rootDir')) {
+      this.set('rootDir', this.get('pipeline.scmRepo.rootDir'));
+    }
   },
   actions: {
     // Checks if scm URL is valid or not
@@ -61,8 +66,14 @@ export default Component.extend({
         input.addClass('bad-text-input');
       }
     },
+    updateRootDir(val) {
+      this.set('rootDir', val.trim());
+    },
     updatePipeline() {
-      this.onUpdatePipeline(this.scmUrl);
+      this.onUpdatePipeline({
+        scmUrl: this.scmUrl,
+        rootDir: this.rootDir
+      });
     },
     toggleJob(jobId, user, name, stillActive) {
       const status = stillActive ? 'ENABLED' : 'DISABLED';

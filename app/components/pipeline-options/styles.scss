@@ -133,7 +133,7 @@
   margin-top: 10px;
   outline: 0;
   height: 45px;
-  width: 90%;
+  width: 100%;
   border-radius: 2px;
   border: 2px solid $sd-separator;
   font-size: 16px;
@@ -166,6 +166,10 @@
 
   &.good-text-input {
     border-color: $sd-success;
+  }
+
+  &.root-dir {
+    width: calc(100% - 15px);
   }
 }
 

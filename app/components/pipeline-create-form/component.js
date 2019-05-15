@@ -6,6 +6,7 @@ import { parse } from '../../utils/git';
 
 export default Component.extend({
   scmUrl: '',
+  rootDir: '',
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
 
@@ -25,7 +26,7 @@ export default Component.extend({
      */
     scmChange(val) {
       this.set('scmUrl', val.trim());
-      const input = $('.text-input');
+      const input = $('.scm-url');
 
       input.removeClass('bad-text-input good-text-input');
 
@@ -37,13 +38,25 @@ export default Component.extend({
     },
 
     /**
+     * Update rootdir
+     * @method updateRootDir
+     * @param  {String}      val The value of the rootDir input box
+     */
+    updateRootDir(val) {
+      this.set('rootDir', val.trim());
+    },
+
+    /**
      * Call Api to save project
      * @event saveData
      * @param  {Object} data Project attributes
      */
     saveData() {
       if (this.isValid) {
-        this.onCreatePipeline(this.scmUrl);
+        this.onCreatePipeline({
+          scmUrl: this.scmUrl,
+          rootDir: this.rootDir
+        });
       }
     }
   }

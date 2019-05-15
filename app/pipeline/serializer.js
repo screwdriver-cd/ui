@@ -8,6 +8,9 @@ export default DS.RESTSerializer.extend({
    * @method serializeIntoHash
    */
   serializeIntoHash(hash, typeClass, snapshot) {
-    return assign(hash, { checkoutUrl: snapshot.attr('checkoutUrl') });
+    return assign(hash, {
+      checkoutUrl: snapshot.attr('checkoutUrl'),
+      rootDir: snapshot.attr('rootDir') || ''
+    });
   }
 });

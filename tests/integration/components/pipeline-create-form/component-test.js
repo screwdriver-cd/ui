@@ -14,19 +14,24 @@ module('Integration | Component | pipeline create form', function(hooks) {
   });
 
   test('it handles the entire ui flow', async function(assert) {
-    assert.expect(2);
+    assert.expect(3);
     const scm = 'git@github.com:foo/bar.git';
+    const root = 'lib';
 
-    this.set('createPipeline', scmUrl => {
+    this.set('createPipeline', ({ scmUrl, rootDir }) => {
       assert.equal(scmUrl, scm);
+      assert.equal(rootDir, root);
     });
 
     await render(
       hbs`{{pipeline-create-form errorMessage="" isSaving=false onCreatePipeline=(action createPipeline)}}`
     );
 
-    await fillIn('.text-input', scm);
-    await triggerKeyEvent('.text-input', 'keyup', 'SPACE');
+    await fillIn('.scm-url', scm);
+    await click('.checkbox-input');
+    await fillIn('.root-dir', root);
+    await triggerKeyEvent('.scm-url', 'keyup', 'SPACE');
+    await triggerKeyEvent('.root-dir', 'keyup', 'SPACE');
 
     assert.dom('i.fa').hasClass('fa-check');
 

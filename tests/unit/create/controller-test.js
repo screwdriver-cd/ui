@@ -28,6 +28,7 @@ module('Unit | Controller | create', function(hooks) {
       createRecord(modelName, data) {
         assert.equal(modelName, 'pipeline');
         assert.equal(data.checkoutUrl, 'dummy');
+        assert.equal(data.rootDir, '');
 
         return {
           save: () => reject({ errors: [conflictError] })
@@ -35,6 +36,6 @@ module('Unit | Controller | create', function(hooks) {
       }
     });
 
-    controller.send('createPipeline', 'dummy');
+    controller.send('createPipeline', { scmUrl: 'dummy', rootDir: '' });
   });
 });

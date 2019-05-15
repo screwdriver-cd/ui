@@ -51,8 +51,8 @@ module('Integration | Component | pipeline options', function(hooks) {
     // Pipeline
     assert.dom('section.pipeline h3').hasText('Pipeline');
     assert.dom('section.pipeline li').exists({ count: 1 });
-    assert.dom('section.pipeline h4').hasText('Checkout URL');
-    assert.dom('section.pipeline p').hasText('Update your checkout URL.');
+    assert.dom('section.pipeline h4').hasText('Checkout URL and Source Directory');
+    assert.dom('section.pipeline p').hasText('Update your checkout URL and / or source directory.');
     assert.dom('section.pipeline .button-label').hasText('Update');
 
     // Jobs
@@ -86,7 +86,7 @@ module('Integration | Component | pipeline options', function(hooks) {
   test('it updates a pipeline', async function(assert) {
     const scm = 'git@github.com:foo/bar.git';
 
-    this.set('updatePipeline', scmUrl => {
+    this.set('updatePipeline', ({ scmUrl }) => {
       assert.equal(scmUrl, scm);
     });
 
@@ -95,6 +95,42 @@ module('Integration | Component | pipeline options', function(hooks) {
       EmberObject.create({
         appId: 'foo/bar',
         scmUri: 'github.com:84604643:notMaster',
+        id: 'abc1234',
+        rootDir: ''
+      })
+    );
+
+    await render(
+      hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=(action updatePipeline)}}`
+    );
+    assert.dom('.scm-url').hasValue('git@github.com:foo/bar.git#notMaster');
+    assert.dom('.root-dir').doesNotExist();
+
+    await fillIn('.scm-url', scm);
+    await triggerKeyEvent('.text-input', 'keyup', 'SPACE');
+
+    assert.dom('.scm-url').hasValue(scm);
+
+    await click('button.blue-button');
+  });
+
+  test('it updates a pipeline with rootDir', async function(assert) {
+    const scm = 'git@github.com:foo/bar.git';
+    const root = 'lib';
+
+    assert.expect(6);
+
+    this.set('updatePipeline', ({ scmUrl, rootDir }) => {
+      assert.equal(scmUrl, scm);
+      assert.equal(rootDir, root);
+    });
+
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:notMaster',
+        rootDir: '',
         id: 'abc1234'
       })
     );
@@ -102,12 +138,16 @@ module('Integration | Component | pipeline options', function(hooks) {
     await render(
       hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=(action updatePipeline)}}`
     );
-    assert.dom('.text-input').hasValue('git@github.com:foo/bar.git#notMaster');
+    assert.dom('.scm-url').hasValue('git@github.com:foo/bar.git#notMaster');
+    assert.dom('.root-dir').doesNotExist('');
 
-    await fillIn('.text-input', scm);
-    await triggerKeyEvent('.text-input', 'keyup', 'SPACE');
+    await fillIn('.scm-url', scm);
+    await click('.checkbox-input');
+    await fillIn('.root-dir', root);
+    await triggerKeyEvent('.scm-url', 'keyup', 'SPACE');
 
-    assert.dom('.text-input').hasValue(scm);
+    assert.dom('.scm-url').hasValue(scm);
+    assert.dom('.root-dir').hasValue(root);
 
     await click('button.blue-button');
   });
