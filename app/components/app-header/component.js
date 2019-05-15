@@ -5,6 +5,7 @@ export default Component.extend({
   tagName: 'header',
   showSearch: false,
   docUrl: ENV.APP.SDDOC_URL,
+  slackUrl: ENV.APP.SLACK_URL,
   actions: {
     invalidateSession() {
       this.onInvalidate();

@@ -44,6 +44,7 @@ module.exports = environment => {
       SDSTORE_HOSTNAME: 'http://localhost:8081',
       SDSTORE_NAMESPACE: 'v1',
       SDDOC_URL: 'http://docs.screwdriver.cd',
+      SLACK_URL: 'http://slack.screwdriver.cd',
       BUILD_RELOAD_TIMER: 5000, // 5 seconds
       EVENT_RELOAD_TIMER: 60000, // 1 minute
       LOG_RELOAD_TIMER: 1000,
