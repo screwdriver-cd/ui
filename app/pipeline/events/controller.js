@@ -260,11 +260,17 @@ export default Controller.extend(ModelReloaderMixin, {
 
       const event = this.selectedEventObj;
       const parentEventId = get(event, 'id');
-      const startFrom = get(job, 'name');
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
       const causeMessage = `Manually started by ${user}`;
+      const prNum = get(event, 'prNum');
+      let startFrom = get(job, 'name');
+
+      if (prNum) {
+        // PR-<num>: prefix is needed, if it is a PR event.
+        startFrom = `PR-${prNum}:${startFrom}`;
+      }
       const newEvent = this.store.createRecord('event', {
         buildId,
         pipelineId,

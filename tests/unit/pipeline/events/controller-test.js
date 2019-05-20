@@ -160,6 +160,75 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
+  test('it restarts a PR build', async function(assert) {
+    assert.expect(6);
+    server.post('http://localhost:8080/v4/events', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '2'
+      })
+    ]);
+
+    const controller = this.owner.lookup('controller:pipeline/events');
+
+    run(() => {
+      controller.store.push({
+        data: {
+          id: '123',
+          type: 'build',
+          attributes: {
+            parentBuildId: '345'
+          }
+        }
+      });
+      controller.set('selectedEventObj', {
+        id: '1',
+        sha: 'sha',
+        prNum: '3'
+      });
+
+      controller.set(
+        'pr',
+        EmberObject.create({
+          id: '1234'
+        })
+      );
+
+      controller.set('reload', () => {
+        assert.ok(true);
+
+        return Promise.resolve({});
+      });
+
+      controller.set('model', {
+        events: EmberObject.create({})
+      });
+
+      controller.transitionToRoute = path => {
+        assert.equal(path, 'pipeline/1234/pulls');
+      };
+
+      controller.send('startDetachedBuild', { buildId: '123', name: 'deploy' });
+      assert.ok(controller.get('isShowingModal'));
+    });
+
+    await settled();
+
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.notOk(controller.get('isShowingModal'));
+    assert.deepEqual(payload, {
+      pipelineId: '1234',
+      startFrom: 'PR-3:deploy',
+      buildId: 123,
+      parentBuildId: 345,
+      parentEventId: 1,
+      causeMessage: 'Manually started by apple'
+    });
+  });
+
   test('it stops a build', async function(assert) {
     assert.expect(3);
     server.put('http://localhost:8080/v4/builds/123', () => [
