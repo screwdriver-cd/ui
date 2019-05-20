@@ -189,11 +189,13 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set(
-        'pr',
+        'pipeline',
         EmberObject.create({
           id: '1234'
         })
       );
+
+      controller.set('activeTab', 'pulls');
 
       controller.set('reload', () => {
         assert.ok(true);
@@ -209,6 +211,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         assert.equal(path, 'pipeline/1234/pulls');
       };
 
+      assert.notOk(controller.get('isShowingModal'));
       controller.send('startDetachedBuild', { buildId: '123', name: 'deploy' });
       assert.ok(controller.get('isShowingModal'));
     });
