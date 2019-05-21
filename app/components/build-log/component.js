@@ -211,6 +211,11 @@ export default Component.extend({
     }
   },
 
+  didReceiveAttrs() {
+    this._super(...arguments);
+    this.set('inProgress', this.totalLine === undefined);
+  },
+
   didUpdateAttrs() {
     this._super(...arguments);
     const newStepId = `${this.buildId}/${this.stepName}`;
