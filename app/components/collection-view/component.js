@@ -40,14 +40,17 @@ export default Component.extend({
       if (this.get('collection.pipelines')) {
         return this.get('collection.pipelines').map(pipeline => {
           const scm = scmService.getScm(pipeline.scmContext);
+          const { id, scmRepo, workflow, lastBuilds, prs } = pipeline;
+          const { branch, rootDir } = scmRepo;
           const ret = {
-            id: pipeline.id,
-            scmRepo: pipeline.scmRepo,
+            id,
+            scmRepo,
+            branch: rootDir ? `${branch}#${rootDir}` : branch,
             scm: scm.displayName,
             scmIcon: scm.iconType,
-            workflow: pipeline.workflow,
-            lastBuilds: pipeline.lastBuilds,
-            prs: pipeline.prs
+            workflow,
+            lastBuilds,
+            prs
           };
 
           if (pipeline.lastBuilds && pipeline.lastBuilds.length) {

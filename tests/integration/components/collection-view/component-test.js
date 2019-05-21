@@ -91,7 +91,7 @@ module('Integration | Component | collection view', function(hooks) {
         },
         {
           id: 4,
-          scmUri: 'github.com:54321879:master',
+          scmUri: 'github.com:54321879:master:lib',
           createTime: '2017-01-05T00:55:46.775Z',
           admins: {
             username: true
@@ -100,7 +100,8 @@ module('Integration | Component | collection view', function(hooks) {
           scmRepo: {
             name: 'screwdriver-cd/zzz',
             branch: 'master',
-            url: 'https://github.com/screwdriver-cd/zzz/tree/master'
+            url: 'https://github.com/screwdriver-cd/zzz/tree/master',
+            rootDir: 'lib'
           },
           scmContext: 'bitbucket:bitbucket.org',
           annotations: {},
@@ -142,6 +143,14 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom(appIdEls[1]).hasText('screwdriver-cd/screwdriver');
     assert.dom(appIdEls[2]).hasText('screwdriver-cd/ui');
     assert.dom(appIdEls[3]).hasText('screwdriver-cd/zzz');
+
+    // The pipelines are sorted in alphabetical order by default by the component
+    const branchEls = findAll('td.branch');
+
+    assert.dom(branchEls[0]).hasText('master');
+    assert.dom(branchEls[1]).hasText('master');
+    assert.dom(branchEls[2]).hasText('master');
+    assert.dom(branchEls[3]).hasText('master#lib');
 
     // The models pipeline has scm display names
     const accountEls = findAll('td.account');
