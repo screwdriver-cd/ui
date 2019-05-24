@@ -8,18 +8,26 @@ export default Component.extend({
   router: service(),
   classNameBindings: ['minified'],
   displayJobNames: true,
+  graph: { nodes: [], edges: [] },
   decoratedGraph: computed(
+    'showDownstreamTriggers',
     'workflowGraph',
     'startFrom',
     'minified',
     'builds.@each.{status,id}',
     'jobs.@each.{isDisabled,state,stateChanger}',
+    'completeWorkflowGraph',
     {
       get() {
+        const showDownstreamTriggers = getWithDefault(this, 'showDownstreamTriggers', false);
         const builds = getWithDefault(this, 'builds', []);
         const { startFrom } = this;
         const jobs = getWithDefault(this, 'jobs', []);
-        const graph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
+        const workflowGraph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
+        const completeGraph = getWithDefault(this, 'completeWorkflowGraph', workflowGraph);
+        let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
+
+        set(this, 'graph', graph);
 
         return decorateGraph({
           inputGraph: this.minified ? subgraphFilter(graph, startFrom) : graph,
@@ -51,14 +59,14 @@ export default Component.extend({
     this._super(...arguments);
     this.draw();
 
-    set(this, 'lastGraph', this.workflowGraph);
+    set(this, 'lastGraph', this.get('graph'));
   },
   // Listen for changes to workflow and update graph accordingly.
   didUpdateAttrs() {
     this._super(...arguments);
 
     const lg = this.lastGraph;
-    const wg = this.workflowGraph;
+    const wg = this.get('graph');
 
     // redraw anyways when graph changes
     if (lg !== wg) {

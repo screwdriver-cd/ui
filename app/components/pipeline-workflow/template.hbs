@@ -1,5 +1,6 @@
 {{#if (and (eq selected "aggregate") (is-fulfilled graph))}}
   {{#workflow-graph-d3
+    completeWorkflowGraph=completeWorkflowGraph
     workflowGraph=directedGraph
     builds=builds
     jobs=jobs
@@ -14,6 +15,8 @@
 {{else}}
   {{#if (is-fulfilled selectedEventObj.builds)}}
     {{#workflow-graph-d3
+      completeWorkflowGraph=completeWorkflowGraph
+      showDownstreamTriggers=showDownstreamTriggers
       builds=selectedEventObj.builds
       jobs=jobs
       workflowGraph=selectedEventObj.workflowGraph
