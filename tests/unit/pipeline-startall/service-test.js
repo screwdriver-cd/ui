@@ -18,7 +18,7 @@ const startAllFailed = () => {
   ]);
 };
 
-module('Unit | Service | sync', function(hooks) {
+module('Unit | Service | pipeline start all', function(hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function() {
