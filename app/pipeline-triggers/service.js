@@ -36,6 +36,7 @@ export default Service.extend({
     //     }
     //   ])
     // );
+    //
 
     return new EmberPromise((resolve, reject) => {
       $.ajax({
@@ -49,7 +50,7 @@ export default Service.extend({
           console.log('data1: ', data);
           console.log('data2: ', typeof data);
 
-          return resolve(data || []);
+          return resolve(data);
         })
         .fail(jqXHR => reject(JSON.parse(jqXHR.responseText).message));
     });

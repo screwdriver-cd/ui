@@ -46,18 +46,18 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       const pipelineId = this.get('pipeline.id');
 
-      return this.get('trigger')
-        .getDownstreamTriggers(pipelineId)
-        .catch(e => {
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
-        });
+      return this.trigger.getDownstreamTriggers(pipelineId).catch(e => {
+        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+      });
     }
   }),
   completeWorkflowGraph: computed('triggers', {
     get() {
       const workflowGraph = this.get('pipeline.workflowGraph');
-      const triggers = this.getWithDefault('triggers', []);
+      const triggers = this.get('triggers');
       const completeGraph = workflowGraph;
+
+      console.log('triggers: ', triggers);
 
       // Add extra node if downstream triggers exist
       if (triggers && triggers.length > 0) {
