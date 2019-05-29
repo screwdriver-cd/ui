@@ -41,6 +41,12 @@ module('Acceptance | pipeline build', function(hooks) {
       JSON.stringify(events)
     ]);
 
+    server.get('http://localhost:8080/v4/pipelines/4/triggers', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+
     server.get('http://localhost:8080/v4/events/:eventId/builds', request => {
       const eventId = parseInt(request.params.eventId, 10);
 

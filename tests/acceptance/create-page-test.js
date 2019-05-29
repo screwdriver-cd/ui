@@ -63,6 +63,12 @@ module('Acceptance | create', function(hooks) {
       JSON.stringify([])
     ]);
 
+    server.get('http://localhost:8080/v4/pipelines/1/triggers', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+
     await authenticateSession({ token: 'faketoken' });
     await visit('/create');
 
@@ -103,6 +109,12 @@ module('Acceptance | create', function(hooks) {
     ]);
 
     server.get('http://localhost:8080/v4/pipelines/1/jobs', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+
+    server.get('http://localhost:8080/v4/pipelines/1/triggers', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify([])

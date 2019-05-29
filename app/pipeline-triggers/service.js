@@ -31,7 +31,7 @@ export default Service.extend({
           let message = `${response.status} Request Failed`;
 
           if (response && response.responseJSON && typeof response.responseJSON === 'object') {
-            message = `${response.status} ${response.responseJSON.error}`;
+            message = `${response.status} ${response.responseJSON.message}`;
           }
 
           return reject(message);

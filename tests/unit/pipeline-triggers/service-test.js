@@ -70,7 +70,7 @@ module('Unit | Service | pipeline triggers', function(hooks) {
     const p = service.getDownstreamTriggers(1);
 
     p.catch(error => {
-      assert.equal(error, 'internal server error');
+      assert.equal(error, '500 internal server error');
       const [request] = server.handledRequests;
 
       assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/triggers');

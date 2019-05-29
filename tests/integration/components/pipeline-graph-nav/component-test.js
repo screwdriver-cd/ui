@@ -188,6 +188,6 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.dom('.x-toggle-component').includesText('Show triggers');
     await click('.x-toggle-btn');
 
-    assert.equal(this.get('showDownstreamTriggers', false));
+    assert.equal(this.get('showDownstreamTriggers', true));
   });
 });

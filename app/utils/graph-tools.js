@@ -177,7 +177,6 @@ const hasProcessedDest = (graph, name) => {
  * @param  {Object}      inputGraph A directed graph representation { nodes: [], edges: [] }
  * @param  {Array|DS.PromiseArray}  [builds]     A list of build metadata
  * @param  {Array|DS.PromiseArray}  [jobs]       A list of job metadata
- * @param  {Array}       [triggers] A list of external downstream triggers
  * @param  {String}      [start]    Node name that indicates what started the graph
  * @return {Object}                 A graph representation with row/column coordinates for drawing, and meta information for scaling
  */
@@ -185,7 +184,6 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   // deep clone
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const { nodes } = graph;
-
   const buildsAvailable =
     (Array.isArray(builds) || builds instanceof DS.PromiseArray) && get(builds, 'length');
   const jobsAvailable =
