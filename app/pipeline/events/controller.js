@@ -11,7 +11,6 @@ import { isPRJob } from 'screwdriver-ui/utils/build';
 export default Controller.extend(ModelReloaderMixin, {
   session: service(),
   stop: service('event-stop'),
-  trigger: service('pipeline-triggers'),
   init() {
     this._super(...arguments);
     this.startReloading();
@@ -42,45 +41,25 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
-  triggers: computed('model.jobs', {
-    get() {
-      const pipelineId = this.get('pipeline.id');
-
-      return this.trigger.getDownstreamTriggers(pipelineId).catch(e => {
-        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
-      });
-    }
-  }),
-  completeWorkflowGraph: computed('triggers', {
+  completeWorkflowGraph: computed('model.triggers', {
     get() {
       const workflowGraph = this.get('pipeline.workflowGraph');
-      const triggers = this.get('triggers');
+      const triggers = this.get('model.triggers');
       const completeGraph = workflowGraph;
-
-      console.log('triggers: ', triggers);
 
       // Add extra node if downstream triggers exist
       if (triggers && triggers.length > 0) {
         triggers.forEach(t => {
-          completeGraph.edges.push({ src: t.jobName, dest: `~sd-${t.jobName}-triggers` });
-          completeGraph.nodes.push({
-            name: `~sd-${t.jobName}-triggers`,
-            triggers: t.triggers,
-            status: 'DOWNSTREAM_TRIGGER'
-          });
+          if (t.triggers && t.triggers.length > 0) {
+            completeGraph.edges.push({ src: t.jobName, dest: `~sd-${t.jobName}-triggers` });
+            completeGraph.nodes.push({
+              name: `~sd-${t.jobName}-triggers`,
+              triggers: t.triggers,
+              status: 'DOWNSTREAM_TRIGGER'
+            });
+          }
         });
       }
-      // // Add extra node if downstream triggers exist
-      // if (triggers && triggers._result.length > 0) {
-      //   triggers._result.forEach(t => {
-      //     completeGraph.edges.push({ src: t.jobName, dest: `~sd-${t.jobName}-triggers` });
-      //     completeGraph.nodes.push({
-      //       name: `~sd-${t.jobName}-triggers`,
-      //       triggers: t.triggers,
-      //       status: 'DOWNSTREAM_TRIGGER'
-      //     });
-      //   });
-      // }
 
       return completeGraph;
     }
