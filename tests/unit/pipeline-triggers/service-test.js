@@ -63,7 +63,7 @@ module('Unit | Service | pipeline triggers', function(hooks) {
     });
   });
 
-  test('it fails to stall all child piplines with error message ', function(assert) {
+  test('it fails to get pipeline triggers with error message ', function(assert) {
     assert.expect(2);
     getTriggersFailed();
     const service = this.owner.lookup('service:pipeline-triggers');

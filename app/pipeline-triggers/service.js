@@ -18,26 +18,6 @@ export default Service.extend({
       ENV.APP.SDAPI_NAMESPACE
     }/pipelines/${pipelineId}/triggers`;
 
-    // console.log('pipelineId: ', pipelineId);
-    //
-    // return new EmberPromise(resolve =>
-    //   resolve([
-    //     {
-    //       jobName: 'main',
-    //       triggers: ['~sd@7:main']
-    //     },
-    //     {
-    //       jobName: 'promote',
-    //       triggers: ['~sd@7:other', '~sd@7:other2']
-    //     },
-    //     {
-    //       jobName: 'test',
-    //       triggers: ['~sd@7:other2']
-    //     }
-    //   ])
-    // );
-    //
-
     return new EmberPromise((resolve, reject) => {
       $.ajax({
         url,
@@ -46,13 +26,16 @@ export default Service.extend({
           Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
         }
       })
-        .done(data => {
-          console.log('data1: ', data);
-          console.log('data2: ', typeof data);
+        .done(data => resolve(data))
+        .fail(response => {
+          let message = `${response.status} Request Failed`;
 
-          return resolve(data);
-        })
-        .fail(jqXHR => reject(JSON.parse(jqXHR.responseText).message));
+          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
+            message = `${response.status} ${response.responseJSON.error}`;
+          }
+
+          return reject(message);
+        });
     });
   }
 });

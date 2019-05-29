@@ -15,6 +15,7 @@ export default Controller.extend(ModelReloaderMixin, {
     this._super(...arguments);
     this.startReloading();
     this.set('eventsPage', 1);
+    this.set('showDownstreamTriggers', false);
   },
 
   reload() {
@@ -27,7 +28,6 @@ export default Controller.extend(ModelReloaderMixin, {
     return Promise.resolve();
   },
   isShowingModal: false,
-  showDownstreamTriggers: false,
   isFetching: false,
   activeTab: 'events',
   moreToShow: true,

@@ -48,7 +48,7 @@ module('Unit | Service | pipeline start all', function(hooks) {
     });
   });
 
-  test('it fails to stall all child piplines with error message ', function(assert) {
+  test('it fails to start all child piplines with error message ', function(assert) {
     assert.expect(2);
     startAllFailed();
     const service = this.owner.lookup('service:pipeline-startall');
