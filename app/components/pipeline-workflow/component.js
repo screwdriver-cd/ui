@@ -6,13 +6,14 @@ import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
+  // get all downstream triggers for a pipeline
   classNames: ['pipelineWorkflow'],
   showTooltip: false,
-  graph: computed('workflowGraph', {
+  graph: computed('workflowGraph', 'completeWorkflowGraph', 'showDownstreamTriggers', {
     get() {
       const { jobs } = this;
       const fetchBuilds = [];
-      const graph = this.workflowGraph;
+      const graph = this.showDownstreamTriggers ? this.completeWorkflowGraph : this.workflowGraph;
 
       // Hack to make page display stuff when a workflow is not provided
       if (!graph) {
@@ -50,6 +51,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     set(this, 'builds', []);
+    set(this, 'showDownstreamTriggers', false);
   },
   didUpdateAttrs() {
     this._super(...arguments);
@@ -58,25 +60,40 @@ export default Component.extend({
   },
   actions: {
     graphClicked(job, mouseevent, sizes) {
+      const EXTERNAL_TRIGGER_REGEX = /^~sd@(\d+):([\w-]+)$/;
       const edges = get(this, 'directedGraph.edges');
       let isRootNode = true;
-      let isTrigger = job ? /^~/.test(job.name) : false;
+      const isTrigger = job ? /^~/.test(job.name) : false;
+      let toolTipProperties = {};
 
       // Find root nodes to determine position of tooltip
       if (job && edges && !/^~/.test(job.name)) {
+        toolTipProperties = {
+          showTooltip: true,
+          // detached jobs should show tooltip on the left
+          showTooltipPosition: isRootNode ? 'left' : 'center',
+          tooltipData: {
+            displayStop: isActiveBuild(job.status),
+            job,
+            mouseevent,
+            sizes
+          }
+        };
         isRootNode = isRoot(edges, job.name);
       }
 
-      const externalTrigger = {};
-
       if (!job || isTrigger) {
-        const externalTriggerMatch = job ? job.name.match(/^~sd@(\d+):([\w-]+)$/) : null;
+        const externalTriggerMatch = job ? job.name.match(EXTERNAL_TRIGGER_REGEX) : null;
+        const downstreamTriggerMatch = job ? job.name.match(/^~sd-([\w-]+)-triggers$/) : null;
 
         // Add external trigger data if relevant
         if (externalTriggerMatch) {
-          externalTrigger.pipelineId = externalTriggerMatch[1];
-          externalTrigger.jobName = externalTriggerMatch[2];
-          setProperties(this, {
+          const externalTrigger = {
+            pipelineId: externalTriggerMatch[1],
+            jobName: externalTriggerMatch[2]
+          };
+
+          toolTipProperties = {
             showTooltip: true,
             showTooltipPosition: 'left',
             tooltipData: {
@@ -84,7 +101,38 @@ export default Component.extend({
               sizes,
               externalTrigger
             }
+          };
+
+          setProperties(this, toolTipProperties);
+
+          return false;
+        }
+
+        // Add downstream trigger data if relevant
+        if (downstreamTriggerMatch) {
+          const triggers = [];
+
+          job.triggers.forEach(t => {
+            const downstreamTrigger = t.match(/^~sd@(\d+):([\w-]+)$/);
+
+            triggers.push({
+              triggerName: t,
+              pipelineId: downstreamTrigger[1],
+              jobName: downstreamTrigger[2]
+            });
           });
+
+          toolTipProperties = {
+            showTooltip: true,
+            showTooltipPosition: 'left',
+            tooltipData: {
+              mouseevent,
+              sizes,
+              triggers
+            }
+          };
+
+          setProperties(this, toolTipProperties);
 
           return false;
         }
@@ -94,17 +142,7 @@ export default Component.extend({
         return false;
       }
 
-      setProperties(this, {
-        showTooltip: true,
-        // detached jobs should show tooltip on the left
-        showTooltipPosition: isRootNode ? 'left' : 'center',
-        tooltipData: {
-          displayStop: isActiveBuild(job.status),
-          job,
-          mouseevent,
-          sizes
-        }
-      });
+      setProperties(this, toolTipProperties);
 
       return false;
     },

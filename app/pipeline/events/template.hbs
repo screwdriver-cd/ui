@@ -14,6 +14,7 @@
       selectedEvent=selectedEvent
       selectedEventObj=selectedEventObj
       selected=selected
+      setDownstreamTrigger=(action "setDownstreamTrigger")
       startMainBuild=(action "startMainBuild")
       startPRBuild=(action "startPRBuild")
       prGroups=pullRequestGroups
@@ -21,6 +22,8 @@
     }}
 
     {{pipeline-workflow
+      showDownstreamTriggers=showDownstreamTriggers
+      completeWorkflowGraph=completeWorkflowGraph
       workflowGraph=pipeline.workflowGraph
       jobs=jobs
       selectedEventObj=selectedEventObj

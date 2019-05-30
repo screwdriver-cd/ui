@@ -15,6 +15,7 @@ export default Controller.extend(ModelReloaderMixin, {
     this._super(...arguments);
     this.startReloading();
     this.set('eventsPage', 1);
+    this.set('showDownstreamTriggers', false);
   },
 
   reload() {
@@ -40,6 +41,29 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
+  completeWorkflowGraph: computed('model.triggers', {
+    get() {
+      const workflowGraph = this.get('pipeline.workflowGraph');
+      const triggers = this.get('model.triggers');
+      const completeGraph = workflowGraph;
+
+      // Add extra node if downstream triggers exist
+      if (triggers && triggers.length > 0) {
+        triggers.forEach(t => {
+          if (t.triggers && t.triggers.length > 0) {
+            completeGraph.edges.push({ src: t.jobName, dest: `~sd-${t.jobName}-triggers` });
+            completeGraph.nodes.push({
+              name: `~sd-${t.jobName}-triggers`,
+              triggers: t.triggers,
+              status: 'DOWNSTREAM_TRIGGER'
+            });
+          }
+        });
+      }
+
+      return completeGraph;
+    }
+  }),
   currentEventType: computed('activeTab', {
     get() {
       return this.activeTab === 'pulls' ? 'pr' : 'pipeline';
@@ -213,6 +237,9 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   actions: {
+    setDownstreamTrigger(status) {
+      this.set('showDownstreamTriggers', status);
+    },
     updateEvents(page) {
       this.updateEvents(page);
     },

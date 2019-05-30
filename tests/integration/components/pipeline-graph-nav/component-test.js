@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { get, set } from '@ember/object';
 
@@ -93,6 +93,8 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.dom('.SUCCESS').exists({ count: 1 });
 
     assert.dom('.btn-group').hasText('Most Recent Last Successful Aggregate');
+
+    assert.dom('.x-toggle-component').includesText('Show triggers');
   });
 
   test('it updates selected event id', async function(assert) {
@@ -155,5 +157,37 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     assert.dom('.row strong').hasText('Pull Requests');
     assert.dom('.row button').exists({ count: 2 });
+  });
+
+  test('it handles toggling triggers', async function(assert) {
+    assert.expect(4);
+    set(this, 'obj', { truncatedSha: 'abc123' });
+    set(this, 'selected', 2);
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'setTrigger', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      lastSuccessful=2
+      graphType=currentEventType
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      setDownstreamTrigger=setTrigger
+    }}`);
+
+    assert.equal(this.get('showDownstreamTriggers', false));
+
+    assert.dom('.x-toggle-component').includesText('Show triggers');
+    await click('.x-toggle-btn');
+
+    assert.equal(this.get('showDownstreamTriggers', true));
   });
 });

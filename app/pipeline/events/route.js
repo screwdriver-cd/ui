@@ -1,8 +1,10 @@
+import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
 import RSVP from 'rsvp';
 
 export default Route.extend({
+  triggerService: service('pipeline-triggers'),
   routeAfterAuthentication: 'pipeline.events',
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
@@ -20,7 +22,8 @@ export default Route.extend({
         pipelineId: this.get('pipeline.id'),
         page: 1,
         count: ENV.APP.NUM_EVENTS_LISTED
-      })
+      }),
+      triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
     });
   },
   actions: {

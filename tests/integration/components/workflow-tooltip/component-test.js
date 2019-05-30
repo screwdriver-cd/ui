@@ -55,6 +55,32 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom(this.element).hasText('Go to remote pipeline');
   });
 
+  test('it renders downstream trigger links', async function(assert) {
+    const data = {
+      triggers: [
+        {
+          pipelineId: 1234,
+          jobName: 'main',
+          triggerName: '~sd@1234:main'
+        },
+        {
+          pipelineId: 2,
+          jobName: 'prod',
+          triggerName: '~sd@2:prod'
+        }
+      ]
+    };
+
+    this.set('data', data);
+
+    await render(hbs`{{workflow-tooltip tooltipData=data}}`);
+
+    assert.dom('.content a').exists({ count: 2 });
+    assert
+      .dom(this.element)
+      .hasText('Go to downstream pipeline ~sd@1234:main Go to downstream pipeline ~sd@2:prod');
+  });
+
   test('it renders restart link', async function(assert) {
     const data = {
       job: {

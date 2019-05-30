@@ -27,6 +27,31 @@ module('Integration | Component | workflow graph d3', function(hooks) {
     assert.equal(svg.children('path.graph-edge').length, 2);
   });
 
+  test('it renders a complete graph with triggers when showDownstreamTriggers is true', async function(assert) {
+    this.set('workflowGraph', {
+      nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }],
+      edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }]
+    });
+    this.set('completeWorkflowGraph', {
+      nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: '~sd-main-trigger' }],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: '~sd-main-trigger' }
+      ]
+    });
+    this.set('showDownstreamTriggers', true);
+    await render(
+      hbs`{{workflow-graph-d3 workflowGraph=workflowGraph completeWorkflowGraph=completeWorkflowGraph showDownstreamTriggers=showDownstreamTriggers}}`
+    );
+
+    const svg = this.$('svg');
+
+    assert.equal(svg.length, 1);
+    assert.equal(svg.children('g.graph-node').length, 4);
+    assert.equal(svg.children('path.graph-edge').length, 3);
+  });
+
   test('it renders statuses when build data is available', async function(assert) {
     this.set('workflowGraph', {
       nodes: [

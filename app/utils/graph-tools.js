@@ -4,6 +4,7 @@ import DS from 'ember-data';
 const STATUS_MAP = {
   SUCCESS: { icon: '\ue903' },
   STARTED_FROM: { icon: '\ue907' },
+  DOWNSTREAM_TRIGGER: { icon: '\ue907' },
   RUNNING: { icon: '\ue905' },
   QUEUED: { icon: '\ue904' },
   ABORTED: { icon: '\ue900' },
