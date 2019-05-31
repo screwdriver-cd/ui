@@ -41,7 +41,7 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
-  completeWorkflowGraph: computed('model.triggers', {
+  completeWorkflowGraph: computed('model.triggers.@each.triggers', {
     get() {
       const workflowGraph = this.get('pipeline.workflowGraph');
       const triggers = this.get('model.triggers');
@@ -237,8 +237,8 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   actions: {
-    setDownstreamTrigger(status) {
-      this.set('showDownstreamTriggers', status);
+    setDownstreamTrigger() {
+      this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
     },
     updateEvents(page) {
       this.updateEvents(page);
