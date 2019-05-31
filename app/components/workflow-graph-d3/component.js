@@ -57,25 +57,32 @@ export default Component.extend({
   }),
   didInsertElement() {
     this._super(...arguments);
-    this.draw();
+    this.draw(this.decoratedGraph);
 
     set(this, 'lastGraph', this.get('graph'));
   },
   // Listen for changes to workflow and update graph accordingly.
-  didUpdateAttrs() {
+  didReceiveAttrs() {
     this._super(...arguments);
 
+    this.doRedraw(this.get('decoratedGraph'));
+  },
+  doRedraw(decoratedGraph) {
     const lg = this.lastGraph;
     const wg = this.get('graph');
+
+    if (!this.graphNode) {
+      return;
+    }
 
     // redraw anyways when graph changes
     if (lg !== wg) {
       this.graphNode.remove();
 
-      this.draw();
+      this.draw(decoratedGraph);
       set(this, 'lastGraph', wg);
     } else {
-      this.redraw();
+      this.redraw(decoratedGraph.graph);
     }
   },
   actions: {
@@ -87,8 +94,7 @@ export default Component.extend({
       }
     }
   },
-  redraw() {
-    const data = this.decoratedGraph;
+  redraw(data) {
     const el = d3.select(this.element);
 
     data.nodes.forEach(node => {
@@ -102,8 +108,7 @@ export default Component.extend({
       }
     });
   },
-  draw() {
-    const data = this.decoratedGraph;
+  draw(data) {
     const MAX_DISPLAY_NAME = 20;
     const MAX_LENGTH = Math.min(
       data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
