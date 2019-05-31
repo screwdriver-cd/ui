@@ -14,6 +14,10 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       assert.ok(true);
     });
     set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
@@ -24,6 +28,8 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       startMainBuild=startBuild
       startPRBuild=startBuild
       graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
     }}`);
 
     assert.dom('.row strong').hasText('Pipeline');
@@ -105,6 +111,10 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       assert.ok(true);
     });
     set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
@@ -115,6 +125,8 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       startMainBuild=startBuild
       startPRBuild=startBuild
       graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
     }}`);
 
     this.$('button')
@@ -142,6 +154,10 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       1: [{ name: 'PR-1:foo', isPR: true, group: 1 }, { name: 'PR-1:bar', isPR: true, group: 1 }],
       2: [{ name: 'PR-2:foo', isPR: true, group: 2 }]
     });
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
@@ -153,6 +169,8 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       startPRBuild=startBuild
       graphType=currentEventType
       prGroups=pullrequestGroups
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
     }}`);
 
     assert.dom('.row strong').hasText('Pull Requests');
@@ -160,7 +178,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
   });
 
   test('it handles toggling triggers', async function(assert) {
-    assert.expect(4);
+    assert.expect(2);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
     set(this, 'startBuild', () => {
@@ -170,6 +188,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       assert.ok(true);
     });
     set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
@@ -181,13 +200,10 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       startMainBuild=startBuild
       startPRBuild=startBuild
       setDownstreamTrigger=setTrigger
+      showDownstreamTriggers=showDownstreamTriggers
     }}`);
-
-    assert.equal(this.get('showDownstreamTriggers', false));
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
     await click('.x-toggle-btn');
-
-    assert.equal(this.get('showDownstreamTriggers', true));
   });
 });
