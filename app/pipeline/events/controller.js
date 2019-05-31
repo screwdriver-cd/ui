@@ -237,8 +237,8 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   actions: {
-    setDownstreamTrigger(status) {
-      this.set('showDownstreamTriggers', status);
+    setDownstreamTrigger() {
+      this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
     },
     updateEvents(page) {
       this.updateEvents(page);

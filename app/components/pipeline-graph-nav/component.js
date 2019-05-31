@@ -35,11 +35,5 @@ export default Component.extend({
     get() {
       return statusIcon(this.get('selectedEventObj.status'));
     }
-  }),
-  actions: {
-    setDownstreamTrigger() {
-      this.toggleProperty('showDownstreamTriggers');
-      this.setDownstreamTrigger(this.get('showDownstreamTriggers'));
-    }
-  }
+  })
 });
