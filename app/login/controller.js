@@ -3,11 +3,14 @@ import { alias } from '@ember/object/computed';
 import Controller from '@ember/controller';
 
 export default Controller.extend({
+  router: service(),
   session: service('session'),
   scmContexts: alias('model'),
   actions: {
     authenticate(scmContext) {
-      this.session.authenticate('authenticator:screwdriver-api', scmContext);
+      this.session.authenticate('authenticator:screwdriver-api', scmContext).then(() => {
+        this.get('router').transitionTo('home');
+      });
     }
   }
 });
