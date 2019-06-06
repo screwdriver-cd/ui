@@ -53,6 +53,7 @@
               placeholder="Search Screwdriver pipelines"
               enter=(action "triggerSearch")
               escape-press=(action "cancelSearch")
+              autofocus="true"
               value=searchTerm}}
             <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search"}}</button>
           </form>
