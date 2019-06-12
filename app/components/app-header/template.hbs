@@ -6,14 +6,14 @@
   {{#navbar.content}}
     {{#navbar.nav classNames="navbar-nav navbar-left" as |nav|}}
       {{#nav.item}}
-        {{#link-to "home" class="icon"}}
-          <span class="home collections">Collections</span>
+        {{#link-to "dashboard" class="icon"}}
+          <span>Collections</span>
         {{/link-to}}
       {{/nav.item}}
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
-          {{#dd.toggle class="icon docs-outline"}}
-            <span class="home tools">Tools</span>
+          {{#dd.toggle class="icon tools"}}
+            <span>Tools</span>
             <span class="caret"></span>
           {{/dd.toggle}}
           {{#dd.menu as |ddm|}}
@@ -38,7 +38,7 @@
       {{#nav.item}}
         {{#link-to "create" class="icon create"}}
           {{inline-svg "add-circle" class="img"}}
-          <span class="home create-pipeline">Create Pipeline</span>
+          <span>Create Pipeline</span>
         {{/link-to}}
       {{/nav.item}}
     {{/navbar.nav}}
