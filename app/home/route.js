@@ -19,7 +19,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
             const routeId = get(collections, 'lastObject.id');
             const applicationController = this.controllerFor('application');
 
-            applicationController.set('showCollection', true);
+            applicationController.set('showCollections', true);
             this.replaceWith(`/dashboards/${routeId}`);
           }
         })
