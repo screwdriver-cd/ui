@@ -7,7 +7,7 @@ export default Component.extend({
   docUrl: ENV.APP.SDDOC_URL,
   slackUrl: ENV.APP.SLACK_URL,
   searchTerm: '',
-
+  showCollections: false,
   actions: {
     invalidateSession() {
       this.onInvalidate();
