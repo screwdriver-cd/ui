@@ -13,9 +13,7 @@ export default Service.extend({
    * @return {Promise}                      Resolves to prCommit
    */
   getPRevents(pipelineId, eventPrUrl, jobId) {
-    const eventUrl = `${ENV.APP.SDAPI_HOSTNAME}/${
-      ENV.APP.SDAPI_NAMESPACE
-    }/pipelines/${pipelineId}/events`;
+    const eventUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/events`;
     const buildUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/jobs/${jobId}/builds`;
     const prNum = eventPrUrl.split('/').pop();
 

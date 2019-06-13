@@ -14,9 +14,7 @@ export default Service.extend({
    * @return  {Promise}            Resolve nothing if success otherwise reject with error message
    */
   startAll(pipelineId) {
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
-      ENV.APP.SDAPI_NAMESPACE
-    }/pipelines/${pipelineId}/startall`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/startall`;
 
     return new EmberPromise((resolve, reject) => {
       $.ajax({
