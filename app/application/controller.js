@@ -6,6 +6,7 @@ const { alias } = computed;
 export default Controller.extend({
   session: service('session'),
   scmContexts: alias('model'),
+  showCollections: false,
   actions: {
     invalidateSession() {
       this.session.set('data.sessionChanged', false);

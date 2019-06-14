@@ -19,13 +19,13 @@ module('Integration | Component | app header', function(hooks) {
     assert.dom('.logo').hasAttribute('title', 'Screwdriver Home');
     assert.dom('.icon.create').exists({ count: 1 });
 
-    await click('.icon.docs-outline');
-    assert.dom('.icon.docs').exists({ count: 1 });
+    await click('.icon.tools');
     assert.dom('.icon.validator').exists({ count: 1 });
     assert.dom('.icon.templates').exists({ count: 1 });
     assert.dom('.icon.commands').exists({ count: 1 });
 
-    await click('.icon.comm-outline');
+    await click('.icon.docs-outline');
+    assert.dom('.icon.docs').exists({ count: 1 });
     assert.dom('.icon.blog').exists({ count: 1 });
     assert.dom('.icon.community').exists({ count: 1 });
     assert.dom('.icon.github').exists({ count: 1 });

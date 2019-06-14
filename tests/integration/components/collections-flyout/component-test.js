@@ -65,7 +65,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     await render(hbs`{{collections-flyout collections=collections}}`);
 
     assert.dom('.no-collections-text').exists({ count: 1 });
-    assert.dom('.no-collections-text').hasText('No collections to display.');
+    assert.dom('.no-collections-text').hasText('Please create a collection.');
   });
 
   test('it opens collection create modal', async function(assert) {

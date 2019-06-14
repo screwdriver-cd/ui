@@ -92,7 +92,6 @@ module('Acceptance | dashboards', function(hooks) {
   test('visiting / when logged in and no collections', async function(assert) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/');
-
     assert.equal(currentURL(), '/');
   });
 
@@ -140,7 +139,7 @@ module('Acceptance | dashboards', function(hooks) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/dashboards');
 
-    assert.equal(currentURL(), '/');
+    assert.equal(currentURL(), '/dashboards');
   });
 
   test('visiting /dashboards/1', async function(assert) {

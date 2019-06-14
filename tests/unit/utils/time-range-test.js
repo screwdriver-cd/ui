@@ -50,7 +50,7 @@ module('Unit | Utility | time range', function() {
           minute: '2-digit'
         }
       }),
-      '03/26/2019, 9:03 PM'
+      '03/26/2019, 09:03 PM'
     );
   });
 });

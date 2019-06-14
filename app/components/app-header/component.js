@@ -6,15 +6,20 @@ export default Component.extend({
   showSearch: false,
   docUrl: ENV.APP.SDDOC_URL,
   slackUrl: ENV.APP.SLACK_URL,
+  searchTerm: '',
+  showCollections: false,
   actions: {
     invalidateSession() {
       this.onInvalidate();
     },
     triggerSearch() {
-      this.searchPipelines(this.$('.search-input').val());
+      this.searchPipelines(this.searchTerm);
     },
     authenticate(scmContext) {
       this.authenticate(scmContext);
+    },
+    cancelSearch() {
+      this.set('showSearch', false);
     }
   }
 });

@@ -4,66 +4,83 @@
     {{#link-to "home" class="logo navbar-brand" title="Screwdriver Home"}}{{inline-svg "Screwdriver_Logo_FullWhite" class="img"}}{{/link-to}}
   </div>
   {{#navbar.content}}
-    {{#navbar.nav as |nav|}}
-      {{#if showSearch}}
+    {{#navbar.nav classNames="navbar-nav navbar-left" as |nav|}}
+      {{#if showCollections}}
         {{#nav.item}}
-          <form class="navbar-form navbar-left" role="search">
-            {{input class="search-input" name="query" placeholder="Search Screwdriver pipelines" enter=(action "triggerSearch")}}
-            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search"}}</button>
-          </form>
+          {{#link-to "dashboard" class="icon"}}
+            <span>Collections</span>
+          {{/link-to}}
         {{/nav.item}}
       {{/if}}
-    {{/navbar.nav}}
-    {{#navbar.nav classNames="navbar-nav navbar-right" as |nav|}}
-      {{#nav.item}}
-        {{#link-to "create" class="icon create"}}
-          {{inline-svg "create" class="img"}}
-          <span class="icontitle">Create Pipeline</span>
-        {{/link-to}}
-      {{/nav.item}}
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
-          {{#dd.toggle class="icon docs-outline"}}
-            {{inline-svg "docs" class="img"}}
-            <span class="icontitle">Documentation</span>
+          {{#dd.toggle class="icon tools"}}
+            <span>Tools</span>
             <span class="caret"></span>
           {{/dd.toggle}}
           {{#dd.menu as |ddm|}}
             {{#ddm.item}}
-              <a href={{docUrl}} class="icon docs">
-                {{inline-svg "docs" class="img"}}<span>Documentation</span>
-              </a>
-            {{/ddm.item}}
-            {{#ddm.item}}
               {{#link-to "validator" classNames="icon validator"}}
-                {{inline-svg "docs" class="img"}}<span>Validator</span>
+                <span>Validator</span>
               {{/link-to}}
             {{/ddm.item}}
             {{#ddm.item}}
               {{#link-to "templates" classNames="icon templates"}}
-                {{inline-svg "docs" class="img"}}<span>Templates</span>
+                <span>Templates</span>
               {{/link-to}}
             {{/ddm.item}}
             {{#ddm.item}}
               {{#link-to "commands" classNames="icon commands"}}
-                {{inline-svg "docs" class="img"}}<span>Commands</span>
+                <span>Commands</span>
               {{/link-to}}
             {{/ddm.item}}
           {{/dd.menu}}
         {{/nav.dropdown}}
       {{/nav.item}}
+      {{#nav.item}}
+        {{#link-to "create" class="icon create"}}
+          {{inline-svg "add-circle" class="img"}}
+          <span>Create Pipeline</span>
+        {{/link-to}}
+      {{/nav.item}}
+    {{/navbar.nav}}
+
+    {{#navbar.nav classNames="navbar-nav navbar-right" as |nav|}}
+      {{#if showSearch}}
+        {{#nav.item}}
+          <form class="navbar-form navbar-right" role="search">
+            {{input
+              class="search-input"
+              name="query"
+              placeholder="Search Screwdriver pipelines"
+              enter=(action "triggerSearch")
+              escape-press=(action "cancelSearch")
+              autofocus="true"
+              value=searchTerm}}
+            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search"}}</button>
+          </form>
+        {{/nav.item}}
+      {{else}}
+        {{#nav.item}}
+          <a href="#" class="icon search" {{action (mut showSearch) (not showSearch) preventDefault=false}}>{{inline-svg "search" class="img"}}</a>
+        {{/nav.item}}
+      {{/if}}
 
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
-          {{#dd.toggle class="icon comm-outline"}}
-            {{inline-svg "more-circle" class="img"}}
-            <span class="icontitle">Communication</span>
-            <span class="caret"></span>
+          {{#dd.toggle class="icon docs-outline"}}
+            {{inline-svg "help-circle" class="img"}}
           {{/dd.toggle}}
           {{#dd.menu as |ddm|}}
             {{#ddm.item}}
+              <a href={{docUrl}} class="icon docs">
+                {{inline-svg "file-text" class="img"}}<span>Documentation</span>
+              </a>
+            {{/ddm.item}}
+            {{ddm.divider}}
+            {{#ddm.item}}
               <a href="http://blog.screwdriver.cd" class="icon blog">
-                {{inline-svg "tumblr" class="img"}}<span>Screwdriver Blog</span>
+                {{inline-svg "tumblr" class="img"}}<span>Blog</span>
               </a>
             {{/ddm.item}}
             {{#ddm.item}}
@@ -119,6 +136,7 @@
     {{/navbar.nav}}
   {{/navbar.content}}
 {{/bs-navbar}}
+
 <div class="tooltips">
   {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
   {{#if session.isAuthenticated}}
