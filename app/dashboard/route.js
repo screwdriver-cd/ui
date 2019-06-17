@@ -19,7 +19,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
           // object will be the first collection created by the user.
           const collection = get(collections, 'lastObject');
           const routeId = collection.get('id');
+          const applicationController = this.controllerFor('application');
 
+          applicationController.set('showCollections', true);
           this.replaceWith(`/dashboards/${routeId}`);
         } else {
           this.replaceWith('search');
