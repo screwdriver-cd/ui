@@ -14,7 +14,9 @@ export default Service.extend({
    * @return  {Promise}            Resolve nothing if success otherwise reject with error message
    */
   getDownstreamTriggers(pipelineId) {
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/triggers`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipelines/${pipelineId}/triggers`;
 
     return new EmberPromise((resolve, reject) => {
       $.ajax({
