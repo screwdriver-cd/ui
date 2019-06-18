@@ -30,8 +30,8 @@ module('Integration | Component | pipeline create form', function(hooks) {
     await fillIn('.scm-url', scm);
     await click('.checkbox-input');
     await fillIn('.root-dir', root);
-    await triggerKeyEvent('.scm-url', 'keyup', 'SPACE');
-    await triggerKeyEvent('.root-dir', 'keyup', 'SPACE');
+    await triggerKeyEvent('.scm-url', 'keyup', 32);
+    await triggerKeyEvent('.root-dir', 'keyup', 32);
 
     assert.dom('i.fa').hasClass('fa-check');
 

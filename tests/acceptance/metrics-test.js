@@ -4,6 +4,7 @@ import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 
+import { hasCollections } from 'screwdriver-ui/tests/mock/collections';
 import makePipeline from '../mock/pipeline';
 import makeMetrics from '../mock/metrics';
 import makeJobs from '../mock/jobs';
@@ -21,6 +22,7 @@ module('Acceptance | metrics', function(hooks) {
     const pipeline = makePipeline(graph);
 
     server = new Pretender();
+    server.get('http://localhost:8080/v4/collections', hasCollections);
 
     server.get('http://localhost:8080/v4/pipelines/4', () => [
       200,

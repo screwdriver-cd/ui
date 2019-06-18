@@ -4,9 +4,12 @@ import Controller from '@ember/controller';
 const { alias } = computed;
 
 export default Controller.extend({
-  session: service('session'),
+  collections: [],
+  session: service(),
   scmContexts: alias('model'),
-  showCollections: false,
+  showCollections: computed('collections.[]', function() {
+    return this.get('collections.length') > 0;
+  }),
   actions: {
     invalidateSession() {
       this.session.set('data.sessionChanged', false);
