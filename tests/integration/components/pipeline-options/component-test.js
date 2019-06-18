@@ -107,7 +107,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('.root-dir').doesNotExist();
 
     await fillIn('.scm-url', scm);
-    await triggerKeyEvent('.text-input', 'keyup', 'SPACE');
+    await triggerKeyEvent('.text-input', 'keyup', 32);
 
     assert.dom('.scm-url').hasValue(scm);
 
@@ -144,7 +144,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     await fillIn('.scm-url', scm);
     await click('.checkbox-input');
     await fillIn('.root-dir', root);
-    await triggerKeyEvent('.scm-url', 'keyup', 'SPACE');
+    await triggerKeyEvent('.scm-url', 'keyup', 32);
 
     assert.dom('.scm-url').hasValue(scm);
     assert.dom('.root-dir').hasValue(root);
