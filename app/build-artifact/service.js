@@ -90,9 +90,7 @@ export default Service.extend({
       `/builds/${buildId}/ARTIFACTS/manifest.txt`;
 
     // Set artifact file links to api to get redirects to store with short-lived jwt tokens
-    const baseUrl = `${ENV.APP.SDAPI_HOSTNAME}/${
-      ENV.APP.SDAPI_NAMESPACE
-    }/builds/${buildId}/artifacts/`;
+    const baseUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/artifacts/`;
 
     return new EmberPromise((resolve, reject) => {
       if (!this.get('session.isAuthenticated')) {

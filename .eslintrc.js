@@ -5,7 +5,11 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: ['ember', 'prettier'],
-  extends: ['screwdriver', 'prettier', 'plugin:ember/recommended'],
+  extends: [
+    'screwdriver',
+    'plugin:ember/recommended',
+    'prettier' // last one wins
+  ],
   env: {
     browser: true
   },
