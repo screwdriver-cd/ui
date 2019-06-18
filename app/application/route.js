@@ -1,5 +1,5 @@
 import { inject as service } from '@ember/service';
-import { observer } from '@ember/object';
+import { get, observer } from '@ember/object';
 import Route from '@ember/routing/route';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
@@ -15,6 +15,12 @@ export default Route.extend(ApplicationRouteMixin, {
   },
   model() {
     return this.scmService.createScms();
+  },
+  setupController(controller) {
+    this._super(...arguments);
+    if (get(this, 'session.isAuthenticated') && !get(this, 'session.data.authenticated.isGuest')) {
+      controller.set('collections', this.store.findAll('collection'));
+    }
   },
   sessionInvalidated() {
     this.reloadPage();

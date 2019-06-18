@@ -3,6 +3,8 @@ import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
+import { hasCollections } from 'screwdriver-ui/tests/mock/collections';
+
 let server;
 
 module('Acceptance | tokens', function(hooks) {
@@ -11,6 +13,7 @@ module('Acceptance | tokens', function(hooks) {
   hooks.beforeEach(function() {
     server = new Pretender();
 
+    server.get('http://localhost:8080/v4/collections', hasCollections);
     server.get('http://localhost:8080/v4/tokens', () => [
       200,
       { 'Content-Type': 'application/json' },

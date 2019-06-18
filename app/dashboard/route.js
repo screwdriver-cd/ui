@@ -6,29 +6,32 @@ export default Route.extend(AuthenticatedRouteMixin, {
   titleToken: 'Dashboard',
   routeAfterAuthentication: 'home',
 
-  activate() {
+  beforeModel(/* transition */) {
     if (!get(this, 'session.isAuthenticated') || get(this, 'session.data.authenticated.isGuest')) {
       this.replaceWith('home');
     }
+  },
 
-    return this.store
-      .findAll('collection')
-      .then(collections => {
-        if (get(collections, 'length')) {
-          // Get the id of the last object in this array. The last
-          // object will be the first collection created by the user.
-          const collection = get(collections, 'lastObject');
-          const routeId = collection.get('id');
-          const applicationController = this.controllerFor('application');
+  model() {
+    return this.store.findAll('collection');
+  },
 
-          applicationController.set('showCollections', true);
-          this.replaceWith(`/dashboards/${routeId}`);
-        } else {
-          this.replaceWith('search');
-        }
-      })
-      .catch(() => {
-        this.replaceWith('home');
-      });
+  afterModel(collections) {
+    if (collections.get('length')) {
+      // Get the id of the last object in this array. The last
+      // object will be the first collection created by the user.
+      const collection = get(collections, 'lastObject');
+      const routeId = collection.get('id');
+
+      this.replaceWith(`/dashboards/${routeId}`);
+    } else {
+      this.replaceWith('search');
+    }
+  },
+
+  actions: {
+    error(/* error, transition */) {
+      this.replaceWith('home');
+    }
   }
 });
