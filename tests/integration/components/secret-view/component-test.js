@@ -33,13 +33,13 @@ module('Integration | Component | secret view', function(hooks) {
 
     // button value changes when user types a new value
     await fillIn('.pass input', 'banana');
-    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.pass input', 'keyup', 13);
 
     assert.dom('button').hasText('Update');
 
     // button value changes when user types a new value
     await fillIn('.pass input', '');
-    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.pass input', 'keyup', 13);
     assert.dom('button').hasText('Delete');
 
     // button value changes when user click the checkbox
@@ -127,7 +127,7 @@ module('Integration | Component | secret view', function(hooks) {
     await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
 
     await fillIn('.pass input', 'banana');
-    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.pass input', 'keyup', 13);
 
     await click('.allow input');
     await click('button');
@@ -182,7 +182,7 @@ module('Integration | Component | secret view', function(hooks) {
       onCreateSecret=(action externalAction)}}`);
 
     await fillIn('.pass input', 'apple');
-    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.pass input', 'keyup', 13);
 
     await click('button');
   });

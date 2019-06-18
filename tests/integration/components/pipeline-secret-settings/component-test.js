@@ -50,28 +50,28 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
 
     // disabled when no value
     await fillIn('.key input', 'SECRET_KEY');
-    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.key input', 'keyup', 13);
 
     assert.dom('tfoot button').isDisabled();
 
     // disabled when no key
     await fillIn('.key input', '');
-    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.key input', 'keyup', 13);
 
     await fillIn('.pass input', 'SECRET_VAL');
-    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.pass input', 'keyup', 13);
 
     assert.dom('tfoot button').isDisabled();
 
     // enabled when both present
     await fillIn('.key input', 'SECRET_KEY');
-    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.key input', 'keyup', 13);
 
     assert.dom('tfoot button').isNotDisabled();
 
     // disabled again when no key
     await fillIn('.key input', '');
-    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.key input', 'keyup', 13);
 
     assert.dom('tfoot button').isDisabled();
   });
@@ -90,10 +90,10 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     );
 
     await fillIn('.key input', 'SECRET_KEY');
-    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.key input', 'keyup', 13);
 
     await fillIn('.pass input', 'SECRET_VAL');
-    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.pass input', 'keyup', 13);
 
     await click('tfoot button');
 
@@ -115,10 +115,10 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     );
 
     await fillIn('.key input', '0banana');
-    await triggerKeyEvent('.key input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.key input', 'keyup', 13);
 
     await fillIn('.pass input', '0value');
-    await triggerKeyEvent('.pass input', 'keyup', 'ENTER');
+    await triggerKeyEvent('.pass input', 'keyup', 13);
 
     await click('tfoot button');
 
