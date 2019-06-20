@@ -40,36 +40,47 @@ export default Component.extend({
 
     this.set('table', table);
   },
-  filteredModel: computed('filteringNamespace', 'filteringMaintainer', 'search', 'model', {
-    get() {
-      const ns = this.filteringNamespace;
-      const maintainer = this.filteringMaintainer;
-      const { search } = this;
+  filteredModel: computed(
+    'filteringNamespace',
+    'filteringMaintainer',
+    'search',
+    'trustedOnly',
+    'model',
+    {
+      get() {
+        const ns = this.filteringNamespace;
+        const maintainer = this.filteringMaintainer;
+        const { search, trustedOnly } = this;
 
-      return this.model.filter(m => {
-        let result = true;
+        return this.model.filter(m => {
+          let result = true;
 
-        if (ns) {
-          result = result && m.namespace === ns;
-        }
+          if (trustedOnly && !m.trusted) {
+            return false;
+          }
 
-        if (result && maintainer) {
-          result = result && m.maintainer === maintainer;
-        }
+          if (ns) {
+            result = result && m.namespace === ns;
+          }
 
-        if (result && search) {
-          result =
-            result &&
-            (m.namespace.includes(search) ||
-              m.name.includes(search) ||
-              m.description.includes(search) ||
-              m.maintainer.includes(search));
-        }
+          if (result && maintainer) {
+            result = result && m.maintainer === maintainer;
+          }
 
-        return result;
-      });
+          if (result && search) {
+            result =
+              result &&
+              (m.namespace.toLowerCase().includes(search) ||
+                m.name.toLowerCase().includes(search) ||
+                m.description.toLowerCase().includes(search) ||
+                m.maintainer.toLowerCase().includes(search));
+          }
+
+          return result;
+        });
+      }
     }
-  }),
+  ),
   refinedModel: sort('filteredModel', 'sortBy'),
   sortBy: computed('dir', 'sort', {
     get() {
@@ -145,7 +156,7 @@ export default Component.extend({
     this.table.setRows(this.refinedModel);
   },
   onSearch() {
-    const search = this.query.trim();
+    const search = this.query.trim().toLowerCase();
 
     this.set('search', search);
 
@@ -226,6 +237,10 @@ export default Component.extend({
             .sort()
         );
       }
+      this.refineModel();
+    },
+    toggleTrustedOnly(trustedOnly) {
+      this.set('trustedOnly', trustedOnly);
       this.refineModel();
     }
   }
