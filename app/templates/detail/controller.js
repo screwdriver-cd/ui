@@ -11,6 +11,9 @@ export default Controller.extend({
   reset() {
     this.set('errorMessage', '');
   },
+  trusted: computed('templates.[]', function computeTrusted() {
+    return this.templates.some(t => t.trusted);
+  }),
   latest: computed('templates.[]', {
     get() {
       return this.templates[0];

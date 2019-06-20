@@ -23,7 +23,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', [
-      { id: 3, version: '3.0.0' },
+      { id: 3, version: '3.0.0', trusted: true },
       { id: 2, version: '2.0.0' },
       { id: 1, version: '1.0.0' }
     ]);
@@ -33,6 +33,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('selectedVersion'), null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionCommand.id'), 3);
+    assert.equal(controller.get('trusted'), true);
   });
 
   test('it handles version changes', function(assert) {

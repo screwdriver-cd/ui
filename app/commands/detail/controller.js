@@ -16,6 +16,9 @@ export default Controller.extend({
       return this.commands[0];
     }
   }),
+  trusted: computed('commands.[]', function computeTrusted() {
+    return this.commands.some(c => c.trusted);
+  }),
   versionCommand: computed('selectedVersion', 'commands.[]', {
     get() {
       const version = this.selectedVersion || this.get('latest.version');

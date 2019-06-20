@@ -15,6 +15,18 @@
   </h5>
 
   <div class="row">
+    <div class="col-sm-1">
+      {{x-toggle
+        size="small"
+        theme="material"
+        showLabels=true
+        value=trustedOnly
+        offLabel=null
+        onLabel="Trusted"
+        onToggle=(action "toggleTrustedOnly")
+      }}
+    </div>
+
     <div class="col-sm-3">
       <select onchange={{action "onFilterNamespace" value="target.value"}}>
         <option value="">All Namespaces</option>
@@ -43,7 +55,7 @@
       <span class="control-icon">{{fa-icon "caret-down"}}</span>
     </div>
 
-    <div class="col-sm-6">
+    <div class="col-sm-5">
       <input value="" placeholder="Search {{collectionType}}" type="search" oninput={{action (mut query) value="target.value"}}>
       <span class="control-icon">{{fa-icon "search"}}</span>
     </div>
@@ -67,7 +79,7 @@
     {{#t.body canSelect=false as |body|}}
       {{#if table.isEmpty}}
         {{#body.no-data}}
-          Sorry. No result is found for <b><i>{{search}}</i></b>
+          Sorry! No result is found.
           {{#if filteringNamespace}} under <b><i>{{filteringNamespace}}</i></b>{{/if}}
           {{#if filteringMaintainer}} by <b><i>{{filteringMaintainer}}</i></b>{{/if}}
         {{/body.no-data}}
