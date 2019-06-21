@@ -1,6 +1,12 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
-{{command-header command=versionCommand trusted=trusted onRemoveCommand=(action "removeCommand")}}
+{{command-header
+  command=versionCommand
+  trusted=trusted
+  isAdmin=isAdmin
+  onUpdateTrust=(action "updateTrust")
+  onRemoveCommand=(action "removeCommand")
+}}
 
 {{command-format command=versionCommand}}
 

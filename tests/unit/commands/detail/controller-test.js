@@ -2,11 +2,27 @@ import { resolve } from 'rsvp';
 import { A } from '@ember/array';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import sinon from 'sinon';
 import Service from '@ember/service';
+
+const updateTrustStub = sinon.stub();
 
 const commandServiceStub = Service.extend({
   deleteCommands() {
     return resolve([204]);
+  },
+  updateTrust: updateTrustStub.resolves('123')
+});
+
+const sessionServiceMock = Service.extend({
+  isAuthenticated: true,
+  data: {
+    authenticated: {
+      // fake token for test, it has { username: apple } inside
+      // eslint-disable-next-line max-len
+      token:
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwic2NvcGUiOlsidXNlciIsImFkbWluIl0sImp0aSI6IjUwNTU0M2E1LTQ4Y2YtNDkwMi1hN2E5LWRmNDUyNTgxY2FjNCIsImlhdCI6MTUyMTU3MjAxOSwiZXhwIjoxNTIxNTc1NjE5fQ.85SkUix6FemFGM5SU6hJ1NzzI0fFS_9JxQw6Qt-Cnsc'
+    }
   }
 });
 
@@ -16,6 +32,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
   hooks.beforeEach(function beforeEach() {
+    this.owner.register('service:session', sessionServiceMock);
     this.owner.register('service:command', commandServiceStub);
   });
 
@@ -99,5 +116,23 @@ module('Unit | Controller | commands/detail', function(hooks) {
     };
 
     controller.send('removeCommand', 'sample');
+  });
+
+  test('it handles command update', function(assert) {
+    let controller = this.owner.lookup('controller:commands/detail');
+    // eslint-disable-next-line new-cap
+    const arr = A([
+      { id: 3, name: 'sample', version: '3.0.0' },
+      { id: 2, name: 'sample', version: '2.0.0' },
+      { id: 1, name: 'sample', version: '1.0.0' }
+    ]);
+
+    controller.set('model', arr);
+
+    assert.ok(controller);
+    assert.ok(controller.get('isAdmin'));
+
+    controller.send('updateTrust', 'sample');
+    assert.ok(updateTrustStub.calledOnce);
   });
 });
