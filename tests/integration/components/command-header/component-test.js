@@ -40,7 +40,10 @@ module('Integration | Component | command header', function(hooks) {
     this.owner.register('service:store', storeStub);
 
     this.set('mock', COMMAND);
-    await render(hbs`{{command-header command=mock}}`);
+    this.set('trusted', false);
+    this.set('isAdmin', false);
+
+    await render(hbs`{{command-header command=mock trusted=trusted isAdmin=isAdmin}}`);
 
     assert.dom('h1').hasText('foo/bar');
     assert.dom('h2').hasText('1.0.0');
@@ -49,5 +52,11 @@ module('Integration | Component | command header', function(hooks) {
     assert.dom('ul li:first-child a').hasAttribute('href', 'mailto:test@example.com');
     assert.dom('h4').hasText('Usage:');
     assert.dom('pre').hasText('sd-cmd exec foo/bar@1.0.0');
+
+    this.set('trusted', true);
+    this.set('isAdmin', true);
+
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.x-toggle-component').exists({ count: 1 });
   });
 });

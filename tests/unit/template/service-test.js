@@ -152,11 +152,11 @@ module('Unit | Service | template', function(hooks) {
     });
   });
 
-  test('it returns 401 on unauthorized deletion', function(assert) {
+  test('it returns 403 on unauthorized deletion', function(assert) {
     assert.expect(2);
 
     server.delete('http://localhost:8080/v4/templates/foo%2Fbar', () => [
-      401,
+      403,
       {
         'Content-Type': 'application/json'
       },
@@ -175,5 +175,50 @@ module('Unit | Service | template', function(hooks) {
         assert.equal(err, 'You do not have the permissions to remove this template.');
       }
     );
+  });
+
+  test('it returns 403 on unauthorized update', function(assert) {
+    assert.expect(2);
+
+    server.put('http://localhost:8080/v4/templates/foo%2Fbar/trusted', () => [
+      403,
+      {
+        'Content-Type': 'application/json'
+      },
+      'Unauthorized'
+    ]);
+
+    let service = this.owner.lookup('service:template');
+
+    assert.ok(service);
+
+    const t = service.updateTrust('foo/bar', true);
+
+    t.then(
+      () => {},
+      err => {
+        assert.equal(err, 'You do not have the permissions to update this template.');
+      }
+    );
+  });
+
+  test('it updates the trusted property of a template', function(assert) {
+    assert.expect(4);
+
+    server.put('http://localhost:8080/v4/templates/foo%2Fbar/trusted', () => [204]);
+
+    let service = this.owner.lookup('service:template');
+
+    assert.ok(service);
+
+    const t = service.updateTrust('foo/bar', true);
+
+    t.then(() => {
+      const [request] = server.handledRequests;
+
+      assert.equal(request.status, '204');
+      assert.equal(request.method, 'PUT');
+      assert.equal(request.url, 'http://localhost:8080/v4/templates/foo%2Fbar/trusted');
+    });
   });
 });

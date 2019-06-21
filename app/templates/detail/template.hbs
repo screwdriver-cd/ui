@@ -2,8 +2,10 @@
 
 {{template-header
   template=versionTemplate
-  onRemoveTemplate=(action "removeTemplate")
   trusted=trusted
+  isAdmin=isAdmin
+  onUpdateTrust=(action "updateTrust")
+  onRemoveTemplate=(action "removeTemplate")
 }}
 
 <h4>Contents:</h4>
