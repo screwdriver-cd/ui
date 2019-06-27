@@ -29,7 +29,8 @@ Router.map(function route() {
   this.route('user-settings');
   this.route('validator');
 
-  this.route('dashboard', { path: '/dashboards/' }, function dashboardsRoute() {
+  this.route('dashboard', { path: '/dashboards' }, function dashboardsRoute() {
+    this.route('index', { path: '/' });
     this.route('show', { path: '/:collection_id' });
   });
   this.route('templates', function templatesRoute() {
