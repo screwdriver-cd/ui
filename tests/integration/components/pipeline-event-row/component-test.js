@@ -83,6 +83,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
+        id: 4,
         startFrom: '~pr',
         type: 'pr',
         pr: {
@@ -94,7 +95,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     this.set('event', eventMock);
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(hbs`{{pipeline-event-row event=event selectedEvent=4 lastSuccessful=3}}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -103,6 +104,34 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
+    assert.dom('.by').hasText('batman');
+    assert.dom('.date').hasText('Started now');
+  });
+
+  test('it does not render graph when skipped event', async function(assert) {
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
+
+    const eventMock = EmberObject.create(
+      assign(copy(event, true), {
+        status: 'SKIPPED',
+        commit: {
+          url: '#',
+          message: '[skip ci] skip ci build.'
+        },
+        truncatedMessage: '[skip ci] skip ci build.'
+      })
+    );
+
+    this.set('event', eventMock);
+
+    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+
+    assert.dom('.SKIPPED').exists({ count: 1 });
+    assert.dom('.status .fa-exclamation-circle').exists({ count: 1 });
+    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.message').hasText('[skip ci] skip ci build.');
     assert.dom('.by').hasText('batman');
     assert.dom('.date').hasText('Started now');
   });

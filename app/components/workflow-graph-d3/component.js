@@ -150,14 +150,20 @@ export default Component.extend({
     // Calculate the start/end point of a line
     const calcPos = (pos, spacer) => (pos + 1) * ICON_SIZE + (pos * spacer - ICON_SIZE / 2);
 
+    const isSkipped = getWithDefault(this, 'isSkipped', false);
+
     // edges
     svg
       .selectAll('link')
       .data(data.edges)
       .enter()
       .append('path')
-      .attr('class', d => `graph-edge ${d.status ? `build-${d.status.toLowerCase()}` : ''}`)
-      .attr('stroke-dasharray', d => (!d.status ? 5 : 500))
+      .attr('class', d =>
+        isSkipped
+          ? 'graph-edge build-skipped'
+          : `graph-edge ${d.status ? `build-${d.status.toLowerCase()}` : ''}`
+      )
+      .attr('stroke-dasharray', d => (!d.status || isSkipped ? 5 : 500))
       .attr('stroke-width', 2)
       .attr('fill', 'transparent')
       .attr('d', d => {
@@ -186,11 +192,23 @@ export default Component.extend({
       // for each element in data array - do the following
       // create a group element to animate
       .append('g')
-      .attr('class', d => `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`)
+      .attr('class', d => {
+        if (isSkipped && d.status === 'STARTED_FROM') {
+          return 'graph-node build-skipped';
+        }
+
+        return `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`;
+      })
       .attr('data-job', d => d.name)
       // create the icon graphic
       .insert('text')
-      .text(d => icon(d.status))
+      .text(d => {
+        if (isSkipped && d.status === 'STARTED_FROM') {
+          return icon('SKIPPED');
+        }
+
+        return icon(d.status);
+      })
       .attr('font-size', `${ICON_SIZE}px`)
       .style('text-anchor', 'middle')
       .attr('x', d => calcXCenter(d.pos.x))

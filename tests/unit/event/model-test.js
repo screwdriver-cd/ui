@@ -109,6 +109,36 @@ module('Unit | Model | event', function(hooks) {
     assert.ok(isComplete);
   });
 
+  test('it is skipped when commit massage contains skip ci', async function(assert) {
+    const model = this.owner.lookup('service:store').createRecord('event');
+
+    run(() => {
+      model.set('commit', { message: '[skip ci] skip ci build.' });
+      model.set('type', 'pipeline');
+    });
+
+    await settled();
+
+    const isSkipped = get(model, 'isSkipped');
+
+    assert.ok(isSkipped);
+  });
+
+  test('it is not skipped when commit type is pr', async function(assert) {
+    const model = this.owner.lookup('service:store').createRecord('event');
+
+    run(() => {
+      model.set('commit', { message: '[skip ci] skip ci build.' });
+      model.set('type', 'pr');
+    });
+
+    await settled();
+
+    const isSkipped = get(model, 'isSkipped');
+
+    assert.notOk(isSkipped);
+  });
+
   test('it is RUNNING when there are no builds', async function(assert) {
     const model = run(() => this.owner.lookup('service:store').createRecord('event'));
 
