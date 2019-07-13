@@ -211,6 +211,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
     return get(this, 'isRunning');
   },
   init() {
+    this._super(...arguments);
     if (get(this, 'isSkipped')) {
       set(this, 'status', 'SKIPPED');
     }
