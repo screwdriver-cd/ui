@@ -13,7 +13,7 @@
     <span class="message" title={{event.commit.message}}>{{event.truncatedMessage}}</span>
     <div class="by"><a href={{event.creator.url}}>{{event.creator.name}}</a></div>
     <div class="workflow">
-      {{#if (and (is-fulfilled event.builds) event.workflowGraph (not event.isSkipped))}}
+      {{#if (and (is-fulfilled event.builds) isShowGraph)}}
         {{workflow-graph-d3
           builds=event.builds
           workflowGraph=event.workflowGraph

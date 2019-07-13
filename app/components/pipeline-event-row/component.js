@@ -14,6 +14,14 @@ export default Component.extend({
       return statusIcon(this.get('event.status'), true);
     }
   }),
+  isShowGraph: computed('event.{workflowGraph,isSkipped}', {
+    get() {
+      const workflowGraph = get(this, 'event.workflowGraph');
+      const isSkipped = get(this, 'event.isSkipped');
+
+      return workflowGraph && !isSkipped;
+    }
+  }),
   actions: {
     clickRow() {
       const fn = get(this, 'eventClick');
