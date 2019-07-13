@@ -33,7 +33,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
     get() {
       let isRunning = true;
 
-      if (get(this, 'isComplete') || get(this, 'isSkipped')) {
+      if (this.isComplete || this.isSkipped) {
         isRunning = false;
       }
 
@@ -97,7 +97,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   // eslint-disable-next-line ember/no-observers
   statusObserver: observer('builds.@each.status', 'isComplete', function statusObserver() {
-    if (this.isSaving || get(this, 'isSkipped')) {
+    if (this.isSaving || this.isSkipped) {
       return;
     }
 
