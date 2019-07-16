@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed, get, getProperties } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
@@ -16,8 +16,7 @@ export default Component.extend({
   }),
   isShowGraph: computed('event.{workflowGraph,isSkipped}', {
     get() {
-      const workflowGraph = get(this, 'event.workflowGraph');
-      const isSkipped = get(this, 'event.isSkipped');
+      const { workflowGraph, isSkipped } = getProperties(this, 'event.workflowGraph', 'event.isSkipped');
 
       return workflowGraph && !isSkipped;
     }
