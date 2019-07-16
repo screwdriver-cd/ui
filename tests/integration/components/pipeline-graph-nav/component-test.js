@@ -177,6 +177,44 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.dom('.row button').exists({ count: 2 });
   });
 
+  test('it renders when selectedEvent is a skipped event', async function(assert) {
+    set(this, 'obj', {
+      truncatedSha: 'abc123',
+      status: 'SKIPPED',
+      commit: { message: '[skip ci] skip ci build.' },
+      creator: { name: 'anonymous' },
+      type: 'pipeline'
+    });
+    set(this, 'selected', 2);
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+    }}`);
+
+    assert.dom('.row strong').hasText('Pipeline');
+    assert.dom('.row button').exists({ count: 3 });
+    assert.dom('.SKIPPED').exists({ count: 1 });
+    assert.dom('.btn-group').hasText('Most Recent Last Successful Aggregate');
+    assert.dom('.x-toggle-component').includesText('Show triggers');
+  });
+
   test('it handles toggling triggers', async function(assert) {
     assert.expect(2);
     set(this, 'obj', { truncatedSha: 'abc123' });
