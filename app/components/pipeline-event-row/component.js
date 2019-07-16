@@ -16,9 +16,9 @@ export default Component.extend({
   }),
   isShowGraph: computed('event.{workflowGraph,isSkipped}', {
     get() {
-      const { workflowGraph, isSkipped } = getProperties(this, 'event.workflowGraph', 'event.isSkipped');
+      const eventProperties = getProperties(this, 'event.workflowGraph', 'event.isSkipped');
 
-      return workflowGraph && !isSkipped;
+      return eventProperties['event.workflowGraph'] && !eventProperties['event.isSkipped'];
     }
   }),
   actions: {
