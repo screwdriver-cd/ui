@@ -1,10 +1,13 @@
 import Component from '@ember/component';
-import { filter, mapBy } from '@ember/object/computed';
+import { filter, mapBy, equal } from '@ember/object/computed';
 import { set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  iframeUrl: '',
   router: service(),
+  activeTab: 'steps',
+  isArtifacts: equal('activeTab', 'artifacts'),
   classNames: ['build-step-collection', 'row'],
   stepNames: mapBy('buildSteps', 'name'),
   setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
@@ -50,6 +53,9 @@ export default Component.extend({
     },
     toggleTeardown() {
       set(this, 'teardownCollapsed', !this.teardownCollapsed);
+    },
+    changeActiveTabPane(activeTab) {
+      this.set('activeTab', activeTab);
     }
   }
 });

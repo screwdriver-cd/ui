@@ -11,6 +11,7 @@ module.exports = environment => {
         // Glimmer [ember] and ACE Editor [validator] add styles to elements at run time, this makes it impossible to precalculate all possible shas for inline styles
         "'unsafe-inline'"
       ],
+      'frame-src': ["'self'"],
       'connect-src': ["'self'"],
       // JSTree web worker
       'worker-src': ['blob:'],
@@ -105,6 +106,8 @@ module.exports = environment => {
 
   ENV.contentSecurityPolicy['connect-src'].push(ENV.APP.SDAPI_HOSTNAME);
   ENV.contentSecurityPolicy['connect-src'].push(ENV.APP.SDSTORE_HOSTNAME);
+  ENV.contentSecurityPolicy['frame-src'].push(ENV.APP.SDAPI_HOSTNAME);
+  ENV.contentSecurityPolicy['frame-src'].push(ENV.APP.SDSTORE_HOSTNAME);
 
   return ENV;
 };

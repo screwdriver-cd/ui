@@ -16,11 +16,13 @@ const typesOptions = {
 };
 
 export default Component.extend({
+  iframeUrl: undefined,
   artifact: service('build-artifact'),
   classNames: ['artifact-tree'],
   classNameBindings: ['buildStatus'],
   typesOptions,
   plugins: 'types',
+  isModalOpen: false,
   treedata: computed('buildStatus', 'buildId', {
     get() {
       const { buildStatus } = this;
@@ -34,13 +36,41 @@ export default Component.extend({
       });
     }
   }),
-  actions: {
-    handleJstreeEventDidChange(data) {
-      if (data.node) {
-        let { href } = data.node.a_attr;
 
-        if (href !== '#') {
-          window.open(`${href}?download=true`, '_blank');
+  download(href) {
+    window.open(`${href}?type=download`, '_blank');
+  },
+
+  actions: {
+    handleClose() {
+      this.set('isModalOpen', false);
+    },
+
+    handleDownload() {
+      this.download(this.href);
+    },
+
+    handleJstreeEventDidChange(data = {}) {
+      const { node, instance } = data;
+
+      if (node) {
+        const {
+          type,
+          a_attr: { href }
+        } = node;
+
+        if (type === 'directory') {
+          instance.toggle_node(node);
+
+          return;
+        }
+
+        if (type === 'file') {
+          this.setProperties({
+            href,
+            iframeUrl: `${href}?type=preview`,
+            isModalOpen: true
+          });
         }
       }
     }

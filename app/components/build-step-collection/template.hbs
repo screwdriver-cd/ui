@@ -1,84 +1,109 @@
 <div class="row">
-  <div class="col-xs-3 step-list">
-    <h3>Steps</h3>
-    <a class="step-toggle" onClick={{action "toggleSetup"}}>
-      {{#if setupCollapsed}}
-        {{fa-icon "chevron-right"}}
-      {{else}}
-        {{fa-icon "chevron-down"}}
-      {{/if}}
-      Setup
-    </a>
-    {{#bs-collapse collapsed=setupCollapsed}}
-      <ul class="setup indent">
-        {{#each setupSteps as |step|}}
-          {{#with (get-step-data buildSteps step) as |s|}}
-            {{build-step-item
-              selectedStep=selectedStep
-              stepName=s.name
-              stepStart=s.startTime
-              stepEnd=s.endTime
-              stepCode=s.code
-              onClick=(action changeBuildStep)
-            }}
-          {{/with}}
-        {{/each}}
-      </ul>
-    {{/bs-collapse}}
-    <div class="user-steps">
-      <ul>
-        {{#each userSteps as |step|}}
-          {{#with (get-step-data buildSteps step) as |s|}}
-            {{build-step-item
-              selectedStep=selectedStep
-              stepName=s.name
-              stepStart=s.startTime
-              stepEnd=s.endTime
-              stepCode=s.code
-              onClick=(action changeBuildStep)
-            }}
-          {{/with}}
-        {{/each}}
-      </ul>
-    </div>
-    <a class="step-toggle" onClick={{action "toggleTeardown"}}>
-      {{#if teardownCollapsed}}
-        {{fa-icon "chevron-right"}}
-      {{else}}
-        {{fa-icon "chevron-down"}}
-      {{/if}}
-      Teardown
-    </a>
-    {{#bs-collapse collapsed=teardownCollapsed}}
-      <ul class="teardown indent">
-        {{#each teardownSteps as |step|}}
-          {{#with (get-step-data buildSteps step) as |s|}}
-            {{build-step-item
-              selectedStep=selectedStep
-              stepName=s.name
-              stepStart=s.startTime
-              stepEnd=s.endTime
-              stepCode=s.code
-              onClick=(action changeBuildStep)
-            }}
-          {{/with}}
-        {{/each}}
-      </ul>
-    {{/bs-collapse}}
-    <hr>
-    {{artifact-tree buildStatus=buildStatus buildId=buildId}}
+  <div class="col-xs-3 step-list no-padding column-tabs-view partial-view">
+    {{#bs-tab customTabs=true as |tab|}}
+      {{#bs-nav type="tabs" as |nav|}}
+        {{#nav.item class="float-left"
+          active=(bs-eq tab.activeId "steps")
+          onClick=(action "changeActiveTabPane" "steps")}}
+          <a href="#steps" role="tab" {{action tab.select "steps"}}>Steps</a>{{/nav.item}}
+        {{#nav.item class="float-left"
+          active=(bs-eq tab.activeId "artifacts")
+          onClick=(action "changeActiveTabPane" "artifacts")}}
+          <a href="#artifacts" role="tab" {{action tab.select "artifacts"}}>Afifacts</a>{{/nav.item}}
+      {{/bs-nav}}
+
+      <div class="tab-content">
+        {{#tab.pane id="steps" title="Steps"}}
+          <h3>Steps</h3>
+          <a class="step-toggle" onClick={{action "toggleSetup"}}>
+            {{#if setupCollapsed}}
+              {{fa-icon "chevron-right"}}
+            {{else}}
+              {{fa-icon "chevron-down"}}
+            {{/if}}
+            Setup
+          </a>
+          {{#bs-collapse collapsed=setupCollapsed}}
+            <ul class="setup indent">
+              {{#each setupSteps as |step|}}
+                {{#with (get-step-data buildSteps step) as |s|}}
+                  {{build-step-item
+                    selectedStep=selectedStep
+                    stepName=s.name
+                    stepStart=s.startTime
+                    stepEnd=s.endTime
+                    stepCode=s.code
+                    onClick=(action changeBuildStep)
+                  }}
+                {{/with}}
+              {{/each}}
+            </ul>
+          {{/bs-collapse}}
+          <div class="user-steps">
+            <ul>
+              {{#each userSteps as |step|}}
+                {{#with (get-step-data buildSteps step) as |s|}}
+                  {{build-step-item
+                    selectedStep=selectedStep
+                    stepName=s.name
+                    stepStart=s.startTime
+                    stepEnd=s.endTime
+                    stepCode=s.code
+                    onClick=(action changeBuildStep)
+                  }}
+                {{/with}}
+              {{/each}}
+            </ul>
+          </div>
+          <a class="step-toggle" onClick={{action "toggleTeardown"}}>
+            {{#if teardownCollapsed}}
+              {{fa-icon "chevron-right"}}
+            {{else}}
+              {{fa-icon "chevron-down"}}
+            {{/if}}
+            Teardown
+          </a>
+          {{#bs-collapse collapsed=teardownCollapsed}}
+            <ul class="teardown indent">
+              {{#each teardownSteps as |step|}}
+                {{#with (get-step-data buildSteps step) as |s|}}
+                  {{build-step-item
+                    selectedStep=selectedStep
+                    stepName=s.name
+                    stepStart=s.startTime
+                    stepEnd=s.endTime
+                    stepCode=s.code
+                    onClick=(action changeBuildStep)
+                  }}
+                {{/with}}
+              {{/each}}
+            </ul>
+          {{/bs-collapse}}
+        {{/tab.pane}}
+        {{#tab.pane id="artifacts" title="Artifacts"}}
+          {{artifact-tree
+            buildStatus=buildStatus
+            buildId=buildId
+            iframeUrl=iframeUrl}}
+        {{/tab.pane}}
+      </div>
+    {{/bs-tab}}
   </div>
   <div class="col-xs-9">
-    {{build-log
-      stepName=selectedStep
-      totalLine=(get-step-data buildSteps selectedStep "lines")
-      buildId=buildId
-      stepStartTime=(get-step-data buildSteps selectedStep "startTime")
-      stepEndTime=(get-step-data buildSteps selectedStep "endTime")
-      buildStartTime=buildStart
-      buildStats=buildStats
-      buildStatus=buildStatus
-    }}
+    {{#if (and isArtifacts iframeUrl)}}
+      {{artifact-preview iframeUrl=iframeUrl}}
+    {{else}}
+      {{build-log
+        stepName=selectedStep
+        totalLine=(get-step-data buildSteps selectedStep "lines")
+        buildId=buildId
+        stepStartTime=(get-step-data buildSteps selectedStep "startTime")
+        stepEndTime=(get-step-data buildSteps selectedStep "endTime")
+        buildStartTime=buildStart
+        buildStats=buildStats
+        buildStatus=buildStatus
+      }}
+    {{/if}}
   </div>
 </div>
 
