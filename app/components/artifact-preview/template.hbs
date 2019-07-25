@@ -1,0 +1,15 @@
+<div>
+  {{#bs-button
+    type="primary"
+    icon="glyphicon glyphicon-download"
+    onClick=(action "download")
+  }}Download
+  {{/bs-button}}
+  <iframe
+    id={{iframeId}}
+    src={{iframeUrl}}
+    width="100%"
+    height="625px">
+    <h4>Alternative content for browsers which do not support iframe.</h4>
+  </iframe>
+</div>

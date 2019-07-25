@@ -144,6 +144,10 @@ a {
       text-align: center;
       border-bottom: 2px solid $grey-400;
 
+      &.float-left {
+        float: left;
+      }
+
       & > a {
         &,
         &:hover {
