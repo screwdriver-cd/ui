@@ -195,12 +195,17 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   modelToReload: 'builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
-  isSkipped: computed('commit.message', 'type', {
+  isSkipped: computed('commit.message', 'type', 'numBuilds', {
     get() {
       if (get(this, 'type') === 'pr') {
         return false;
       }
       const msg = get(this, 'commit.message');
+      const numBuilds = get(this, 'numBuilds');
+
+      if (numBuilds !== 0) {
+        return false;
+      }
 
       return msg ? msg.match(/\[(skip ci|ci skip)\]/) : false;
     }
