@@ -11,6 +11,7 @@ module.exports = environment => {
         // Glimmer [ember] and ACE Editor [validator] add styles to elements at run time, this makes it impossible to precalculate all possible shas for inline styles
         "'unsafe-inline'"
       ],
+      'manifest-src': ["'self'"],
       'frame-src': ["'self'"],
       'connect-src': ["'self'"],
       // JSTree web worker

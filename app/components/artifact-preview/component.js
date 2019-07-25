@@ -1,44 +1,38 @@
 import Component from '@ember/component';
-import $ from 'jquery';
+import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
-  iframeUrl: undefined,
+  iframeUrl: '',
 
-  iframeId: undefined,
+  iframeId: '',
 
   init() {
     this._super(...arguments);
-    const iframeId = `${this.elementId}-iframe`;
-
-    this.set('iframeId', iframeId);
+    this.set('iframeId', `${this.elementId}-iframe`);
   },
 
   handleMessageSendFromIframe(e) {
-    const { href } = e.data;
+    if (!this.get('isDestroyed') && !this.get('isDestroying')) {
+      const { state, href } = e.data;
 
-    if (!this.get('isDestroyed') && !this.get('isDestroying') && href) {
-      this.set('iframeUrl', href);
+      if (e.origin === `${ENV.APP.SDSTORE_HOSTNAME}`) {
+        if (state === 'loaded') {
+          this.handleMessageSendToIframe();
+        } else if (state === 'redirect' && href) {
+          this.set('iframeUrl', href);
+        }
+      }
     }
   },
 
   handleMessageSendToIframe() {
-    const { iframeId } = this;
+    const currentIframe = document.getElementById(this.iframeId).contentWindow;
 
-    $(`#${this.iframeId}`).on('load', (/* e */) => {
-      const currentIframe = document.getElementById(iframeId).contentWindow;
-
-      currentIframe.postMessage(
-        {
-          state: 'ready'
-        },
-        '*'
-      );
-    });
+    currentIframe.postMessage({ state: 'ready' }, '*');
   },
 
   didInsertElement() {
     window.addEventListener('message', this.handleMessageSendFromIframe.bind(this));
-    this.handleMessageSendToIframe();
   },
 
   actions: {

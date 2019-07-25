@@ -16,7 +16,7 @@ const typesOptions = {
 };
 
 export default Component.extend({
-  iframeUrl: undefined,
+  iframeUrl: '',
   artifact: service('build-artifact'),
   classNames: ['artifact-tree'],
   classNameBindings: ['buildStatus'],
