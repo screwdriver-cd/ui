@@ -6,6 +6,12 @@ import { getActiveStep } from 'screwdriver-ui/utils/build';
 export default Route.extend({
   routeAfterAuthentication: 'pipeline.build',
 
+  queryParams: {
+    activeTab: {
+      as: 'tab'
+    }
+  },
+
   model(params) {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
 

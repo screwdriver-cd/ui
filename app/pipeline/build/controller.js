@@ -20,6 +20,12 @@ export default Controller.extend({
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
   errorMessage: '',
+  activeTab: 'steps',
+  queryParams: [
+    {
+      activeTab: { type: 'string' }
+    }
+  ],
   prEvents: computed('model.{event.pr.url,pipeline.id}', {
     get() {
       if (this.get('model.event.type') === 'pr') {
