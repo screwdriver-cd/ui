@@ -3,17 +3,17 @@
     {{#bs-tab customTabs=true as |tab|}}
       {{#bs-nav type="tabs" as |nav|}}
         {{#nav.item class="float-left"
-          active=(bs-eq tab.activeId "steps")
+          active=(bs-eq activeTab "steps")
           onClick=(action "changeActiveTabPane" "steps")}}
           <a href="#steps" role="tab" {{action tab.select "steps"}}>Steps</a>{{/nav.item}}
         {{#nav.item class="float-left"
-          active=(bs-eq tab.activeId "artifacts")
+          active=(bs-eq activeTab "artifacts")
           onClick=(action "changeActiveTabPane" "artifacts")}}
           <a href="#artifacts" role="tab" {{action tab.select "artifacts"}}>Artifacts</a>{{/nav.item}}
       {{/bs-nav}}
 
       <div class="tab-content">
-        {{#tab.pane id="steps" title="Steps"}}
+        {{#tab.pane activeId=activeTab id="steps" title="Steps"}}
           <h3>Steps</h3>
           <a class="step-toggle" onClick={{action "toggleSetup"}}>
             {{#if setupCollapsed}}
@@ -80,7 +80,7 @@
             </ul>
           {{/bs-collapse}}
         {{/tab.pane}}
-        {{#tab.pane id="artifacts" title="Artifacts"}}
+        {{#tab.pane activeId=activeTab id="artifacts" title="Artifacts"}}
           {{artifact-tree
             buildStatus=buildStatus
             buildId=buildId

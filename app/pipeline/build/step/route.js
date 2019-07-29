@@ -18,5 +18,12 @@ export default Route.extend({
     if (!model.build.get('steps').findBy('name', stepName)) {
       this.transitionTo('pipeline.build', model.pipeline.get('id'), model.build.get('id'));
     }
+  },
+
+  actions: {
+    didTransition() {
+      // delegate to its parent route's didTranstion
+      return true;
+    }
   }
 });
