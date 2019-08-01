@@ -256,7 +256,7 @@ module('Integration | Component | validator job', function(hooks) {
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
 
     assert.dom('h4').hasText('int-test');
-    assert.dom('.sd-commands .label').hasText('Sd-commands:');
+    assert.dom('.sd-commands .label').hasText('Commands:');
     assert.dom('.sd-commands ul li').hasText('foo/bar');
     assert.dom('.sd-commands ul li a').hasAttribute('href', '/commands/foo/bar');
   });
