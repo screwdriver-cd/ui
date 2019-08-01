@@ -139,6 +139,23 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.sourcePaths ul li').hasText('None defined');
   });
 
+  test('it renders template name', async function(assert) {
+    this.set('jobMock', {
+      image: 'int-test:1',
+      steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
+      secrets: [],
+      environment: { SD_TEMPLATE_FULLNAME: 'foo/bar' },
+      settings: {},
+      annotations: {}
+    });
+
+    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+
+    assert.dom('h4:nth-of-type(1)').hasText('int-test');
+    assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
+    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar');
+  });
+
   test('it renders when there are no steps or commands', async function(assert) {
     this.set('jobMock', {
       image: 'int-test:1',
@@ -221,6 +238,27 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.sourcePaths .label').hasText('Source Paths:');
     assert.dom('.sourcePaths .value ul li:first-child').hasText('README.md');
     assert.dom('.sourcePaths .value ul li:last-child').hasText('src/folder/');
+  });
+
+  test('it renders sd-commands', async function(assert) {
+    this.set('jobMock', {
+      image: 'int-test:1',
+      commands: [
+        { name: 'step1', command: 'echo hello' },
+        { name: 'step2', command: 'sd-cmd exec foo/bar@0.0.1 foobar' }
+      ],
+      secrets: [],
+      environment: {},
+      settings: {},
+      annotations: {}
+    });
+
+    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+
+    assert.dom('h4').hasText('int-test');
+    assert.dom('.sd-commands .label').hasText('Sd-commands:');
+    assert.dom('.sd-commands ul li').hasText('foo/bar');
+    assert.dom('.sd-commands ul li a').hasAttribute('href', '/commands/foo/bar');
   });
 
   test('it renders without a collapsible heading', async function(assert) {

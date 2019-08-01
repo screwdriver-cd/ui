@@ -1,5 +1,5 @@
 {{#if collapsible}}
-  <h4 class="job" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>
+  <h4 class="job" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>{{#if getTemplateName}}<h4>This job uses <a href="/templates/{{getTemplateName}}">{{getTemplateName}}</a> template.</h4>{{/if}}
 {{/if}}
 {{#if template.description}}
   <div class="template-description" title="This is the description of the template">
@@ -107,6 +107,18 @@
             </div>
           </div>
         </li>
+      {{else}}
+        <li>None defined</li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
+<div class="sd-commands" title="These are the sd-commands that will be executed in the job.">
+  <span class="label">Sd-commands:</span>
+  <span class="value">
+    <ul>
+      {{#each-in sdCommands as |index value|}}
+        <li><span class="name"><a href="/commands/{{value}}">{{value}}</a></span></li>
       {{else}}
         <li>None defined</li>
       {{/each-in}}
