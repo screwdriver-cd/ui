@@ -5,6 +5,11 @@ export default Component.extend({
   classNameBindings: ['hasParseError', 'collapsible'],
   isOpen: true,
   collapsible: true,
+  getTemplateName: computed('job', {
+    get() {
+      return this.get('job.environment.SD_TEMPLATE_FULLNAME');
+    }
+  }),
   hasParseError: computed('job', {
     get() {
       return this.get('job.commands.0.name') === 'config-parse-error';
@@ -30,6 +35,30 @@ export default Component.extend({
       }
 
       return [];
+    }
+  }),
+  sdCommands: computed('job', {
+    get() {
+      const commands = this.steps;
+      const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)/g;
+      let sdCommands = [];
+
+      if (commands === []) {
+        return [];
+      }
+
+      commands.forEach(c => {
+        let matchRes = regex.exec(c.command);
+
+        while (matchRes !== null) {
+          if (!sdCommands.includes(matchRes[1])) {
+            sdCommands.push(matchRes[1]);
+          }
+          matchRes = regex.exec(c.command);
+        }
+      });
+
+      return sdCommands;
     }
   }),
   actions: {
