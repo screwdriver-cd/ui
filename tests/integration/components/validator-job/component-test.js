@@ -244,8 +244,9 @@ module('Integration | Component | validator job', function(hooks) {
     this.set('jobMock', {
       image: 'int-test:1',
       commands: [
-        { name: 'step1', command: 'echo hello' },
-        { name: 'step2', command: 'sd-cmd exec foo/bar@0.0.1 foobar' }
+        { name: 'step1', command: 'sd-cmd exec bar/foo@latest' },
+        { name: 'step2', command: 'sd-cmd exec foo/bar@0.0.1 foobar' },
+        { name: 'step3', command: 'sd-cmd exec bar/foo@stable' }
       ],
       secrets: [],
       environment: {},
@@ -257,8 +258,10 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.sd-commands .label').hasText('Commands:');
-    assert.dom('.sd-commands ul li').hasText('foo/bar');
-    assert.dom('.sd-commands ul li a').hasAttribute('href', '/commands/foo/bar');
+    assert.dom('.sd-commands ul li:nth-of-type(1)').hasText('bar/foo');
+    assert.dom('.sd-commands ul li:nth-of-type(1) a').hasAttribute('href', '/commands/bar/foo');
+    assert.dom('.sd-commands ul li:nth-of-type(2)').hasText('foo/bar');
+    assert.dom('.sd-commands ul li:nth-of-type(2) a').hasAttribute('href', '/commands/foo/bar');
   });
 
   test('it renders without a collapsible heading', async function(assert) {
