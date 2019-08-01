@@ -57,5 +57,11 @@ export default Route.extend({
         );
       }
     }
+  },
+
+  actions: {
+    didTransition() {
+      this.controller.set('activeTab', 'steps');
+    }
   }
 });

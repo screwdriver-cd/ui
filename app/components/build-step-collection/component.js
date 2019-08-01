@@ -55,7 +55,7 @@ export default Component.extend({
       set(this, 'teardownCollapsed', !this.teardownCollapsed);
     },
     changeActiveTabPane(activeTab) {
-      this.set('activeTab', activeTab);
+      this.changeRouteTo(activeTab);
     }
   }
 });
