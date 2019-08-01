@@ -42,14 +42,14 @@ export default Component.extend({
       const commands = this.steps;
       const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)/g;
       let sdCommands = [];
-      let matchRes;
 
       if (commands === []) {
         return [];
       }
 
       commands.forEach(c => {
-        matchRes = regex.exec(c.command);
+        let matchRes = regex.exec(c.command);
+
         while (matchRes !== null) {
           if (!sdCommands.includes(matchRes[1])) {
             sdCommands.push(matchRes[1]);
