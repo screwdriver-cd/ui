@@ -23,4 +23,21 @@ module('Integration | Component | user link', function(hooks) {
     assert.equal(find('img').src, 'http://example.com/u/batman/avatar');
     assert.dom('a').hasText('Bruce W');
   });
+
+  test('it renders scheduler', async function(assert) {
+    const userMock = {
+      username: 'sd:scheduler',
+      name: 'Screwdriver scheduler'
+    };
+
+    this.set('userMock', userMock);
+
+    await render(
+      hbs`{{user-link user=userMock causeMessage="Automatically started by scheduler"}}`
+    );
+
+    assert.equal(find('a').title, 'Automatically started by scheduler');
+    assert.ok(find('img').src.endsWith('/favicon.ico'));
+    assert.dom('a').hasText('Screwdriver scheduler');
+  });
 });

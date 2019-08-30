@@ -82,6 +82,13 @@ export default Controller.extend({
     },
     changeBuildStep(name) {
       this.changeBuildStep(name);
+    },
+    changeRouteTo(activeTab) {
+      if (activeTab === 'artifacts') {
+        this.transitionToRoute('pipeline.build.artifacts');
+      } else {
+        this.transitionToRoute('pipeline.build', this.get('pipeline.id'), this.get('build.id'));
+      }
     }
   },
 

@@ -136,11 +136,11 @@ module('Unit | Service | command', function(hooks) {
     });
   });
 
-  test('it returns 401 on unauthorized deletion', function(assert) {
+  test('it returns 403 on unauthorized deletion', function(assert) {
     assert.expect(2);
 
     server.delete('http://localhost:8080/v4/commands/foo/bar', () => [
-      401,
+      403,
       {
         'Content-Type': 'application/json'
       },
@@ -159,5 +159,50 @@ module('Unit | Service | command', function(hooks) {
         assert.equal(err, 'You do not have the permissions to remove this command.');
       }
     );
+  });
+
+  test('it returns 403 on unauthorized update', function(assert) {
+    assert.expect(2);
+
+    server.put('http://localhost:8080/v4/commands/foo/bar/trusted', () => [
+      403,
+      {
+        'Content-Type': 'application/json'
+      },
+      'Unauthorized'
+    ]);
+
+    let service = this.owner.lookup('service:command');
+
+    assert.ok(service);
+
+    const t = service.updateTrust('foo', 'bar', true);
+
+    t.then(
+      () => {},
+      err => {
+        assert.equal(err, 'You do not have the permissions to update this command.');
+      }
+    );
+  });
+
+  test('it updates the trusted property of a command', function(assert) {
+    assert.expect(4);
+
+    server.put('http://localhost:8080/v4/commands/foo/bar/trusted', () => [204]);
+
+    let service = this.owner.lookup('service:command');
+
+    assert.ok(service);
+
+    const t = service.updateTrust('foo', 'bar', true);
+
+    t.then(() => {
+      const [request] = server.handledRequests;
+
+      assert.equal(request.status, '204');
+      assert.equal(request.method, 'PUT');
+      assert.equal(request.url, 'http://localhost:8080/v4/commands/foo/bar/trusted');
+    });
   });
 });

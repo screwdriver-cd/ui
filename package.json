@@ -17,6 +17,7 @@
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
+    "lint:fix": "./node_modules/eslint/bin/eslint.js --fix .",
     "start": "ember serve",
     "test": "ember test"
   },
@@ -112,7 +113,7 @@
     "ember-toggle": "^5.3.2",
     "ember-truth-helpers": "^2.1.0",
     "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.3.0",
+    "eslint-config-prettier": "^5.0.0",
     "eslint-config-screwdriver": "^4.0.0",
     "eslint-plugin-ember": "^6.5.1",
     "eslint-plugin-prettier": "^3.1.0",
@@ -123,7 +124,7 @@
     "lint-staged": "^8.1.7",
     "loader.js": "^4.7.0",
     "memoizerific": "^1.11.3",
-    "prettier": "^1.17.1",
+    "prettier": "^1.18.2",
     "qunit-dom": "^0.8.4",
     "sass": "^1.20.1"
   }

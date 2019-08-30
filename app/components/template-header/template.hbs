@@ -1,9 +1,21 @@
 <h1>
+  {{#if trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}
   {{template.fullName}}
   {{#if scmUrl}}
     <a href={{scmUrl}}>{{fa-icon "code-fork" title="Source code"}}</a> <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
   {{else}}
     {{fa-icon "code-fork" title="The pipeline for this template does not exist."}} {{fa-icon "trash" title="Cannot delete template; pipeline could not be found."}}
+  {{/if}}
+  {{#if isAdmin}}
+    {{x-toggle
+      size="medium"
+      theme="light"
+      showLabels=true
+      value=trusted
+      offLabel=null
+      onLabel="Trust?"
+      onToggle=(action "updateTrust" template.fullName)
+    }}
   {{/if}}
 </h1>
 <h2>{{template.version}}</h2>

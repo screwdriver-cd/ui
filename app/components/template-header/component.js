@@ -31,6 +31,10 @@ export default Component.extend({
         this.set('templateToRemove', null);
         this.set('isRemoving', false);
       });
+    },
+    updateTrust(fullName, toTrust) {
+      this.set('trusted', toTrust);
+      this.onUpdateTrust(fullName, toTrust);
     }
   }
 });

@@ -16,19 +16,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
     return this.store.findAll('collection');
   },
 
-  afterModel(collections) {
-    if (collections.get('length')) {
-      // Get the id of the last object in this array. The last
-      // object will be the first collection created by the user.
-      const collection = get(collections, 'lastObject');
-      const routeId = collection.get('id');
-
-      this.replaceWith(`/dashboards/${routeId}`);
-    } else {
-      this.replaceWith('search');
-    }
-  },
-
   actions: {
     error(/* error, transition */) {
       this.replaceWith('home');

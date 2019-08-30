@@ -46,11 +46,13 @@ module('Integration | Component | template header', function(hooks) {
     });
 
     this.set('mock', TEMPLATE);
+    this.set('trusted', false);
+    this.set('isAdmin', false);
 
     this.owner.unregister('service:store');
     this.owner.register('service:store', storeStub);
 
-    await render(hbs`{{template-header template=mock}}`);
+    await render(hbs`{{template-header template=mock trusted=trusted isAdmin=isAdmin}}`);
 
     assert.dom('h1').hasText('foo/bar');
     assert.dom('h2').hasText('2.0.0');
@@ -64,5 +66,11 @@ module('Integration | Component | template header', function(hooks) {
     assert.dom('#template-tags').hasText('Tags: car armored');
     assert.dom('h4').hasText('Usage:');
     assert.dom('pre').hasText('jobs: main: template: foo/bar@2.0.0');
+
+    this.set('trusted', true);
+    this.set('isAdmin', true);
+
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.x-toggle-component').exists({ count: 1 });
   });
 });

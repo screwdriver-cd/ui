@@ -14,7 +14,9 @@ const STATUS_MAP = {
   UNSTABLE: { icon: '\ue909' },
   BLOCKED: { icon: '\ue908' },
   COLLAPSED: { icon: '\ue908' },
-  FROZEN: { icon: '\ue910' }
+  FROZEN: { icon: '\ue910' },
+  // TODO: Replace skipped property if necessary.
+  SKIPPED: { icon: '\ue909' }
 };
 const edgeSrcBranchRegExp = new RegExp('^~(pr|commit):/(.+)/$');
 const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');

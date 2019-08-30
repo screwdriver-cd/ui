@@ -65,7 +65,9 @@ g {
 
   &.build-running,
   &.build-queued,
-  &.build-blocked {
+  &.build-blocked,
+  // TODO: Replace skipped property if necessary.
+  &.build-skipped {
     fill: $sd-queued;
 
     &:hover {

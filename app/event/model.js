@@ -1,5 +1,5 @@
 import { computed, observer, get, set } from '@ember/object';
-import { sort, not } from '@ember/object/computed';
+import { sort } from '@ember/object/computed';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
@@ -29,7 +29,17 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   builds: DS.hasMany('build'),
 
-  isRunning: not('isComplete'),
+  isRunning: computed('isComplete', 'isSkipped', {
+    get() {
+      let isRunning = true;
+
+      if (this.isComplete || this.isSkipped) {
+        isRunning = false;
+      }
+
+      return isRunning;
+    }
+  }),
   buildsSorted: sort('builds', (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)),
   createTimeWords: computed('createTime', 'duration', {
     get() {
@@ -87,7 +97,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   // eslint-disable-next-line ember/no-observers
   statusObserver: observer('builds.@each.status', 'isComplete', function statusObserver() {
-    if (this.isSaving) {
+    if (this.isSaving || this.isSkipped) {
       return;
     }
 
@@ -185,9 +195,30 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   modelToReload: 'builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
+  isSkipped: computed('commit.message', 'type', 'numBuilds', {
+    get() {
+      if (get(this, 'type') === 'pr') {
+        return false;
+      }
+      const msg = get(this, 'commit.message');
+      const numBuilds = get(this, 'numBuilds');
+
+      if (numBuilds !== 0) {
+        return false;
+      }
+
+      return msg ? msg.match(/\[(skip ci|ci skip)\]/) : false;
+    }
+  }),
 
   // Reload builds only if the event is still running
   shouldReload() {
     return get(this, 'isRunning');
+  },
+  init() {
+    this._super(...arguments);
+    if (get(this, 'isSkipped')) {
+      set(this, 'status', 'SKIPPED');
+    }
   }
 });

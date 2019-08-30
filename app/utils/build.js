@@ -43,6 +43,10 @@ const statusIcon = (status, isLight) => {
     case 'ABORTED':
       icon = `times-circle${isLight ? '-o' : ''}`;
       break;
+    case 'SKIPPED':
+      // TODO: Replace skipped property if necessary.
+      icon = 'exclamation-circle';
+      break;
     default:
       icon = 'circle-o';
       break;

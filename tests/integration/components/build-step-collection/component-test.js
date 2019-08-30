@@ -43,9 +43,12 @@ module('Integration | Component | build step collection', function(hooks) {
       buildStart=null
     }}`);
 
+    assert.dom('.step-list .nav-tabs li:nth-of-type(1) a').hasText('Steps');
+    assert.dom('.step-list .nav-tabs li:nth-of-type(2) a').hasText('Artifacts');
+
     assert.dom('h3').hasText('Steps');
-    assert.dom('.step-list a:nth-of-type(1)').hasText('Setup');
-    assert.dom('.step-list a:nth-of-type(2)').hasText('Teardown');
+    assert.dom('.step-list .tab-content a:nth-of-type(1)').hasText('Setup');
+    assert.dom('.step-list .tab-content a:nth-of-type(2)').hasText('Teardown');
     assert.dom('.setup-spinner').doesNotExist();
 
     await render(hbs`{{#build-step-collection

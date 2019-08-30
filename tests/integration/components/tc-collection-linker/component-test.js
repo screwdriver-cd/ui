@@ -16,7 +16,8 @@ const TEMPLATE_DATA_WITH_NAME = {
   row: {
     content: {
       namespace: 'foo',
-      name: 'bar'
+      name: 'bar',
+      trusted: true
     }
   },
   value: 'bar'
@@ -48,7 +49,7 @@ module('Integration | Component | tc collection linker', function(hooks) {
       this.set(prop, TEMPLATE_DATA_WITH_NAMESPACE[prop])
     );
 
-    await render(hbs`{{tc-collection-linker column=column extra=extra value=value}}`);
+    await render(hbs`{{tc-collection-linker column=column extra=extra value=value row=row}}`);
 
     assert.dom('a .namespace').hasText('baz');
   });
@@ -58,8 +59,9 @@ module('Integration | Component | tc collection linker', function(hooks) {
       this.set(prop, TEMPLATE_DATA_WITH_NAME[prop])
     );
 
-    await render(hbs`{{tc-collection-linker column=column extra=extra value=value}}`);
+    await render(hbs`{{tc-collection-linker column=column extra=extra value=value row=row}}`);
 
     assert.dom('a .name').hasText('bar');
+    assert.dom('svg').exists({ count: 1 });
   });
 });

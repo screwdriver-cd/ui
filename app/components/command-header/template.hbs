@@ -1,10 +1,22 @@
 <h1>
+  {{#if trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}
   {{command.namespace}}/{{command.name}}
   {{#if scmUrl}}
     <a href={{scmUrl}}>{{fa-icon "code-fork" title="Source code"}}</a>
-    <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
+    <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash" title="Delete command"}}</a>
   {{else}}
     {{fa-icon "code-fork" title="The pipeline for this command does not exist."}} {{fa-icon "trash" title="Cannot delete command; pipeline could not be found."}}
+  {{/if}}
+  {{#if isAdmin}}
+    {{x-toggle
+      size="medium"
+      theme="light"
+      showLabels=true
+      value=trusted
+      offLabel=null
+      onLabel="Trust?"
+      onToggle=(action "updateTrust" command.namespace command.name)
+    }}
   {{/if}}
 </h1>
 <h2>{{command.version}}</h2>

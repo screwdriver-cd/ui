@@ -21,4 +21,21 @@
   .template-details--value {
     margin-left: 10px;
   }
+
+  .trusted {
+    fill: #16c047;
+    height: 1em;
+    width: 1em;
+    vertical-align: middle;
+  }
+
+  .x-toggle-component {
+    display: inline-flex;
+    font-size: 0.5em;
+    float: right;
+  }
+
+  .x-toggle-container {
+    font-size: 0.75rem;
+  }
 }

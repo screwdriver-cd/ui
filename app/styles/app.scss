@@ -94,7 +94,9 @@ $weight-bold: 600;
 .RUNNING,
 .QUEUED,
 .BLOCKED,
-.CREATED {
+.CREATED,
+// TODO: Replace skipped property if necessary.
+.SKIPPED {
   .status .fa {
     color: $sd-running;
   }
@@ -141,6 +143,10 @@ a {
       vertical-align: bottom;
       text-align: center;
       border-bottom: 2px solid $grey-400;
+
+      &.float-left {
+        float: left;
+      }
 
       & > a {
         &,

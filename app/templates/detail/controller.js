@@ -1,16 +1,26 @@
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import Controller from '@ember/controller';
+import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 const { alias } = computed;
 
 export default Controller.extend({
   selectedVersion: null,
   errorMessage: '',
+  session: service(),
   template: service(),
   templates: alias('model'),
   reset() {
     this.set('errorMessage', '');
   },
+  trusted: computed('templates.[]', function computeTrusted() {
+    return this.templates.some(t => t.trusted);
+  }),
+  isAdmin: computed(function isAdmin() {
+    const token = this.get('session.data.authenticated.token');
+
+    return (decoder(token).scope || []).includes('admin');
+  }),
   latest: computed('templates.[]', {
     get() {
       return this.templates[0];
@@ -36,6 +46,12 @@ export default Controller.extend({
       return this.template
         .deleteTemplates(name)
         .then(() => this.transitionToRoute('templates'), err => this.set('errorMessage', err));
+    },
+    updateTrust(fullName, toTrust) {
+      return (
+        this.isAdmin &&
+        this.template.updateTrust(fullName, toTrust).catch(err => this.set('errorMessage', err))
+      );
     }
   }
 });
