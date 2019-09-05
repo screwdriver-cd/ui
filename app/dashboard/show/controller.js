@@ -3,7 +3,8 @@ import { getWithDefault, set } from '@ember/object';
 import Controller from '@ember/controller';
 
 export default Controller.extend({
-  collection: alias('model'),
+  collection: alias('model.collection'),
+  eventsMap: alias('model.eventsMap'),
   editingDescription: false,
   editingName: false,
   actions: {

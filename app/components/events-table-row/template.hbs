@@ -1,0 +1,24 @@
+<td class="app-id">
+  {{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.scmRepo.name}}{{/link-to}}{{/highlight-terms}}
+</td>
+<td class="branch">{{fa-icon "code-fork"}}{{pipeline.branch}}</td>
+<td class="status">
+  {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
+  {{lastEventInfo.sha}}
+</td>
+<td class="start">
+  {{lastEventInfo.startTime}}
+</td>
+<td class="duration">
+  {{lastEventInfo.durationText}}
+</td>
+<td class="history">
+  {{events-thumbnail events=eventsInfo}}
+</td>
+{{#if isAuthenticated}}
+  <td onclick={{action "pipelineRemove" pipeline.id}} class="collection-pipeline__remove">
+    <span>
+      &times;
+    </span>
+  </td>
+{{/if}}

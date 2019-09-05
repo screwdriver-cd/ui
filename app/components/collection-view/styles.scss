@@ -63,30 +63,28 @@
   }
 
   .app-id {
-    text-align: left;
-    width: 30%;
+    width: 25%;
   }
 
   .branch {
     width: 15%;
-    text-align: right;
   }
 
-  .account {
-    text-align: left;
-    white-space: nowrap;
+  .status {
+    width: 10%;
   }
 
-  .health {
-    text-align: center;
+  .start {
+    width: 10%;
   }
 
-  .prs {
-    border-bottom: none;
+  .duration {
+    width: 10%;
+  }
 
-    &--failing {
-      color: $sd-failure;
-    }
+  .history {
+    width: 25%;
+    padding: 5px;
   }
 
   tbody tr:hover {
@@ -107,6 +105,7 @@
   td {
     padding: 10px;
     border-bottom: 1px solid $sd-text-light;
+    text-align: left;
   }
 
   .collection-table {
@@ -118,6 +117,8 @@
     opacity: 0;
     cursor: pointer;
     font-size: 1.5em;
+    width: 5%;
+    text-align: center;
   }
 
   // When collection-pipeline is hovered on, show remove button

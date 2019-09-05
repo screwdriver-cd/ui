@@ -127,5 +127,8 @@
     "prettier": "^1.18.2",
     "qunit-dom": "^0.8.4",
     "sass": "^1.20.1"
+  },
+  "dependencies": {
+    "ember-d3": "^0.5.1"
   }
 }

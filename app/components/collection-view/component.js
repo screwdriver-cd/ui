@@ -26,8 +26,8 @@ export default Component.extend({
       switch (this.sortBy.get(0)) {
         case 'scmRepo.name':
           return 'Name';
-        case 'lastBuildTime:desc':
-          return 'Last Build';
+        case 'lastEventTime:desc':
+          return 'Last Event';
         default:
           return '';
       }
@@ -37,52 +37,118 @@ export default Component.extend({
     get() {
       const { scmService } = this;
 
+      const getIcon = status => {
+        switch (status) {
+          case 'queued':
+          case 'running':
+            return 'refresh fa-spin';
+          case 'success':
+            return 'check-circle';
+          case 'failure':
+            return 'times-circle';
+          case 'aborted':
+            return 'stop-circle';
+          case 'blocked':
+            return 'ban';
+          case 'unstable':
+            return 'exclamation-circle';
+          default:
+            return '';
+        }
+      };
+
+      const getColor = status => {
+        switch (status) {
+          case 'queued':
+          case 'running':
+            return 'build-running';
+          case 'success':
+            return 'build-success';
+          case 'failure':
+            return 'build-failure';
+          case 'aborted':
+            return 'build-failure';
+          case 'blocked':
+            return 'build-running';
+          case 'unstable':
+            return 'build-unstable';
+          default:
+            return '';
+        }
+      };
+
+      const formatTime = duration => {
+        const numOfTotalSeconds = Math.floor(duration / 1000);
+        const minute = 60;
+        const hour = 60 * minute;
+
+        if (numOfTotalSeconds === 0) {
+          return '0s';
+        }
+        if (numOfTotalSeconds < minute) {
+          return `${numOfTotalSeconds}s`;
+        }
+        if (numOfTotalSeconds < hour) {
+          const numOfMinutes = Math.floor(numOfTotalSeconds / minute);
+          const numOfSeconds = numOfTotalSeconds % minute;
+
+          return `${numOfMinutes}m${numOfSeconds}s`;
+        }
+        const numOfHours = Math.floor(numOfTotalSeconds / hour);
+        const numOfMinutes = Math.floor((numOfTotalSeconds % hour) / minute);
+        const numOfSeconds = Math.floor(numOfTotalSeconds % minute);
+
+        return `${numOfHours}h${numOfMinutes}m${numOfSeconds}s`;
+      };
+
       if (this.get('collection.pipelines')) {
         return this.get('collection.pipelines').map(pipeline => {
           const scm = scmService.getScm(pipeline.scmContext);
-          const { id, scmRepo, workflow, lastBuilds, prs } = pipeline;
+          const { id, scmRepo, prs } = pipeline;
           const { branch, rootDir } = scmRepo;
+          const events = this.eventsMap[pipeline.id];
           const ret = {
             id,
             scmRepo,
             branch: rootDir ? `${branch}#${rootDir}` : branch,
             scm: scm.displayName,
             scmIcon: scm.iconType,
-            workflow,
-            lastBuilds,
             prs
           };
 
-          if (pipeline.lastBuilds && pipeline.lastBuilds.length) {
-            const lastBuildsLength = pipeline.lastBuilds.length;
-            const lastBuildObj = pipeline.lastBuilds[lastBuildsLength - 1];
+          if (events && events.length) {
+            const lastEvent = events.get('firstObject');
+            const lastEventStartTime = new Date(lastEvent.createTime);
+            const lastEventStartYear = lastEventStartTime.getFullYear();
+            const lastEventStartMonth = (lastEventStartTime.getMonth() + 1)
+              .toString()
+              .padStart(2, '0');
+            const lastEventStartDay = lastEventStartTime
+              .getDate()
+              .toString()
+              .padStart(2, '0');
 
-            ret.lastBuildTime = new Date(lastBuildObj.createTime).valueOf();
-            ret.lastBuildStatus = lastBuildObj.status.toLowerCase();
+            ret.eventsInfo = events.map(event => ({
+              duration: event.duration,
+              statusColor: getColor(event.status.toLowerCase())
+            }));
+            ret.lastEventInfo = {
+              startTime: `${lastEventStartMonth}/${lastEventStartDay}/${lastEventStartYear}`,
+              statusColor: getColor(lastEvent.status.toLowerCase()),
+              durationText: formatTime(lastEvent.duration),
+              sha: lastEvent.sha.substring(0, 7),
+              icon: getIcon(lastEvent.status.toLowerCase())
+            };
           } else {
-            ret.lastBuildTime = 0;
-            ret.lastBuildStatus = '';
+            ret.eventsInfo = [];
+            ret.lastEventInfo = {
+              startTime: '',
+              statusColor: '',
+              duration: 0,
+              sha: '',
+              icon: ''
+            };
           }
-
-          [ret.lastBuildIcon, ret.lastBuildStatusColor] = (() => {
-            switch (ret.lastBuildStatus) {
-              case 'queued':
-              case 'running':
-                return ['refresh fa-spin', 'build-running'];
-              case 'success':
-                return ['check-circle', 'build-success'];
-              case 'failure':
-                return ['times-circle', 'build-failure'];
-              case 'aborted':
-                return ['stop-circle', 'build-failure'];
-              case 'blocked':
-                return ['ban', 'build-running'];
-              case 'unstable':
-                return ['exclamation-circle', 'build-unstable'];
-              default:
-                return ['', ''];
-            }
-          })();
 
           return ret;
         });
@@ -114,7 +180,7 @@ export default Component.extend({
         case 'name':
           this.set('sortBy', ['scmRepo.name']);
           break;
-        case 'lastBuildTime':
+        case 'lastEventTime':
           this.set('sortBy', [`${option}:desc`]);
           break;
         default:
