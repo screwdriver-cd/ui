@@ -11,6 +11,15 @@ export default Route.extend({
     ]).then(arr => {
       let [verPayload, tagPayload] = arr;
 
+      if (params.version) {
+        const exsistVersion = verPayload.filter(t => t.version === params.version);
+        const exsistTag = tagPayload.filter(t => t.tag === params.version);
+
+        if (exsistTag.length === 0 && exsistVersion.length === 0) {
+          this.transitionTo('/404');
+        }
+      }
+
       verPayload = verPayload.filter(t => t.namespace === params.namespace);
 
       tagPayload.forEach(tagObj => {
@@ -21,7 +30,13 @@ export default Route.extend({
         }
       });
 
-      return verPayload;
+      let result = {};
+
+      result.templateData = verPayload;
+      result.versionOrTagFromUrl = params.version;
+      result.templateTagData = tagPayload;
+
+      return result;
     });
   },
   setupController(controller, model) {

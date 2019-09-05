@@ -11,6 +11,15 @@ export default Route.extend({
     ]).then(arr => {
       const [verPayload, tagPayload] = arr;
 
+      if (params.version) {
+        const exsistVersion = verPayload.filter(t => t.version === params.version);
+        const exsistTag = tagPayload.filter(c => c.tag === params.version);
+
+        if (exsistTag.length === 0 && exsistVersion.length === 0) {
+          this.transitionTo('/404');
+        }
+      }
+
       tagPayload.forEach(tagObj => {
         const taggedVerObj = verPayload.find(verObj => verObj.version === tagObj.version);
 
@@ -19,7 +28,13 @@ export default Route.extend({
         }
       });
 
-      return verPayload;
+      let result = {};
+
+      result.commandData = verPayload;
+      result.versionOrTagFromUrl = params.version;
+      result.commandTagData = tagPayload;
+
+      return result;
     });
   },
   setupController(controller, model) {

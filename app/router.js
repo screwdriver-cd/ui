@@ -37,10 +37,12 @@ Router.map(function route() {
   this.route('templates', function templatesRoute() {
     this.route('namespace', { path: '/:namespace' });
     this.route('detail', { path: '/:namespace/:name' });
+    this.route('detail', { path: '/:namespace/:name/:version' });
   });
   this.route('commands', function commandsRoute() {
     this.route('namespace', { path: '/:namespace' });
     this.route('detail', { path: '/:namespace/:name' });
+    this.route('detail', { path: '/:namespace/:name/:version' });
   });
   this.route('404', { path: '/*path' });
 });

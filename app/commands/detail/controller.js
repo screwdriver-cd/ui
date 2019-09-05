@@ -13,35 +13,46 @@ export default Controller.extend({
   reset() {
     this.set('errorMessage', '');
   },
-  latest: computed('commands.[]', {
+  latest: computed('commands.commandData.[]', {
     get() {
-      return this.commands[0];
+      return this.commands.commandData[0];
     }
   }),
-  trusted: computed('commands.[]', function computeTrusted() {
-    return this.commands.some(c => c.trusted);
+  trusted: computed('commands.commandData.[]', function computeTrusted() {
+    return this.commands.commandData.some(c => c.trusted);
   }),
   isAdmin: computed(function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
     return (decoder(token).scope || []).includes('admin');
   }),
-  versionCommand: computed('selectedVersion', 'commands.[]', {
+  versionCommand: computed('selectedVersion', 'commands.commandData.[]', {
     get() {
       const version = this.selectedVersion || this.get('latest.version');
 
-      return this.commands.findBy('version', version);
+      let { versionOrTagFromUrl } = this.commands;
+
+      let { commandTagData } = this.commands;
+
+      if (versionOrTagFromUrl === undefined) {
+        return this.commands.commandData.findBy('version', version);
+      }
+
+      let exsistTag = commandTagData.filter(t => t.tag === versionOrTagFromUrl);
+
+      if (exsistTag.length > 0) {
+        return this.commands.commandData.findBy('version', exsistTag[0].version);
+      }
+
+      return this.commands.commandData.findBy('version', versionOrTagFromUrl);
     }
   }),
   // Set selected version to null whenever the list of commands changes
   // eslint-disable-next-line ember/no-observers
-  modelObserver: observer('commands.[]', function modelObserver() {
+  modelObserver: observer('commands.commandData.[]', function modelObserver() {
     this.set('selectedVersion', null);
   }),
   actions: {
-    changeVersion(version) {
-      this.set('selectedVersion', version);
-    },
     removeCommand(namespace, name) {
       return this.command
         .deleteCommands(namespace, name)

@@ -2,6 +2,7 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import sinonTest from 'ember-sinon-qunit/test-support/test';
 
 const commandServiceStub = Service.extend({
   getOneCommand(namespace, name) {
@@ -29,15 +30,68 @@ module('Unit | Route | commands/detail', function(hooks) {
     this.owner.register('service:command', commandServiceStub);
   });
 
-  test('it asks for the list of commands for a given namespace and name', function(assert) {
+  test('it asks for the list of commands for a given namespace and name without version', function(assert) {
     let route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
 
     return route.model({ namespace: 'foo', name: 'bar' }).then(commands => {
-      assert.equal(commands[0].name, 'bar');
-      assert.equal(commands[0].namespace, 'foo');
-      assert.equal(commands[0].tag, 'latest');
+      assert.equal(commands.commandData[0].name, 'bar');
+      assert.equal(commands.commandData[0].namespace, 'foo');
+      assert.equal(commands.commandData[0].tag, 'latest');
+      assert.equal(commands.versionOrTagFromUrl, undefined);
+    });
+  });
+
+  test('it asks for the list of commands for a given name and exist version', function(assert) {
+    let route = this.owner.lookup('route:commands/detail');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: '1.0.0' }).then(commands => {
+      assert.equal(commands.commandData.length, 3);
+      assert.equal(commands.commandData[0].namespace, 'foo');
+      assert.equal(commands.commandData[0].name, 'baz');
+      assert.equal(commands.versionOrTagFromUrl, '1.0.0');
+    });
+  });
+
+  test('it asks for the list of commands for a given name and exist tag', function(assert) {
+    let route = this.owner.lookup('route:commands/detail');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: 'stable' }).then(commands => {
+      assert.equal(commands.commandData.length, 3);
+      assert.equal(commands.commandData[0].namespace, 'foo');
+      assert.equal(commands.commandData[0].name, 'baz');
+      assert.equal(commands.versionOrTagFromUrl, 'stable');
+    });
+  });
+
+  sinonTest('it asks for the list of commands for a given name and non-exist version', function(
+    assert
+  ) {
+    let route = this.owner.lookup('route:commands/detail');
+    const stub = this.stub(route, 'transitionTo');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: '9.9.9' }).then(() => {
+      assert.ok(stub.calledOnce, 'transitionTo was called once');
+    });
+  });
+
+  sinonTest('it asks for the list of commands for a given name and non-exist tag', function(
+    assert
+  ) {
+    let route = this.owner.lookup('route:commands/detail');
+    const stub = this.stub(route, 'transitionTo');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: 'foo' }).then(() => {
+      assert.ok(stub.calledOnce, 'transitionTo was called once');
     });
   });
 });

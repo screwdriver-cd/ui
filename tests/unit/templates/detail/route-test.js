@@ -2,6 +2,7 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import sinonTest from 'ember-sinon-qunit/test-support/test';
 
 const templateServiceStub = Service.extend({
   getOneTemplate() {
@@ -32,15 +33,68 @@ module('Unit | Route | templates/detail', function(hooks) {
     this.owner.register('service:template', templateServiceStub);
   });
 
-  test('it asks for the list of templates for a given name', function(assert) {
+  test('it asks for the list of templates for a given name without version', function(assert) {
     let route = this.owner.lookup('route:templates/detail');
 
     assert.ok(route);
 
     return route.model({ namespace: 'foo', name: 'baz' }).then(templates => {
-      assert.equal(templates.length, 3);
-      assert.equal(templates[0].namespace, 'foo');
-      assert.equal(templates[0].name, 'baz');
+      assert.equal(templates.templateData.length, 3);
+      assert.equal(templates.templateData[0].namespace, 'foo');
+      assert.equal(templates.templateData[0].name, 'baz');
+      assert.equal(templates.versionOrTagFromUrl, undefined);
+    });
+  });
+
+  test('it asks for the list of templates for a given name and exist version', function(assert) {
+    let route = this.owner.lookup('route:templates/detail');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: '1.0.0' }).then(templates => {
+      assert.equal(templates.templateData.length, 3);
+      assert.equal(templates.templateData[0].namespace, 'foo');
+      assert.equal(templates.templateData[0].name, 'baz');
+      assert.equal(templates.versionOrTagFromUrl, '1.0.0');
+    });
+  });
+
+  test('it asks for the list of templates for a given name and exist tag', function(assert) {
+    let route = this.owner.lookup('route:templates/detail');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: 'stable' }).then(templates => {
+      assert.equal(templates.templateData.length, 3);
+      assert.equal(templates.templateData[0].namespace, 'foo');
+      assert.equal(templates.templateData[0].name, 'baz');
+      assert.equal(templates.versionOrTagFromUrl, 'stable');
+    });
+  });
+
+  sinonTest('it asks for the list of templates for a given name and non-exist version', function(
+    assert
+  ) {
+    let route = this.owner.lookup('route:templates/detail');
+    const stub = this.stub(route, 'transitionTo');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: '9.9.9' }).then(() => {
+      assert.ok(stub.calledOnce, 'transitionTo was called once');
+    });
+  });
+
+  sinonTest('it asks for the list of templates for a given name and non-exist tag', function(
+    assert
+  ) {
+    let route = this.owner.lookup('route:templates/detail');
+    const stub = this.stub(route, 'transitionTo');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: 'foo' }).then(() => {
+      assert.ok(stub.calledOnce, 'transitionTo was called once');
     });
   });
 });
