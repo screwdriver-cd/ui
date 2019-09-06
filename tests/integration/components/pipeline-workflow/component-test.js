@@ -38,10 +38,10 @@ module('Integration | Component | pipeline workflow', function(hooks) {
         workflowGraph: GRAPH,
         startFrom: '~commit',
         causeMessage: 'test'
-      })
+      }),
+      'graph',
+      EmberObject.create({})
     );
-
-    this.set('graph', EmberObject.create({}));
 
     await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph}}`);
 
