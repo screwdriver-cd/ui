@@ -51,12 +51,14 @@ export default Component.extend({
     graphClicked(job, mouseevent, sizes) {
       const EXTERNAL_TRIGGER_REGEX = /^~sd@(\d+):([\w-]+)$/;
       const edges = get(this, 'directedGraph.edges');
-      let isRootNode = true;
       const isTrigger = job ? /^~/.test(job.name) : false;
+      let isRootNode = true;
       let toolTipProperties = {};
 
       // Find root nodes to determine position of tooltip
       if (job && edges && !/^~/.test(job.name)) {
+        const selectedEvent = get(this, 'selectedEventObj');
+
         toolTipProperties = {
           showTooltip: true,
           // detached jobs should show tooltip on the left
@@ -65,7 +67,8 @@ export default Component.extend({
             displayStop: isActiveBuild(job.status),
             job,
             mouseevent,
-            sizes
+            sizes,
+            selectedEvent
           }
         };
         isRootNode = isRoot(edges, job.name);
