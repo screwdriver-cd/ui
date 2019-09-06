@@ -31,7 +31,6 @@ module('Integration | Component | pipeline workflow', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders an event', async function(assert) {
-    this.set('selected', 1);
     this.set(
       'obj',
       EmberObject.create({
@@ -42,7 +41,9 @@ module('Integration | Component | pipeline workflow', function(hooks) {
       })
     );
 
-    await render(hbs`{{pipeline-workflow selectedEventObj=obj selected=selected}}`);
+    this.set('graph', EmberObject.create({}));
+
+    await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph}}`);
 
     assert.dom('.graph-node').exists({ count: 5 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
