@@ -1,4 +1,4 @@
-{{#if (is-fulfilled selectedEventObj.builds)}}
+{{#if (and (is-fulfilled selectedEventObj.builds) (is-fulfilled graph))}}
   {{#workflow-graph-d3
     completeWorkflowGraph=completeWorkflowGraph
     showDownstreamTriggers=showDownstreamTriggers
