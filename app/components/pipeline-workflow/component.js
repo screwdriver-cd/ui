@@ -1,7 +1,7 @@
 import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
 import { get, computed, set, setProperties } from '@ember/object';
-import { all, reject } from 'rsvp';
+import { reject } from 'rsvp';
 import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
 
@@ -12,7 +12,6 @@ export default Component.extend({
   graph: computed('workflowGraph', 'completeWorkflowGraph', 'showDownstreamTriggers', {
     get() {
       const { jobs } = this;
-      const fetchBuilds = [];
       const graph = this.showDownstreamTriggers ? this.completeWorkflowGraph : this.workflowGraph;
 
       // Hack to make page display stuff when a workflow is not provided
@@ -31,15 +30,9 @@ export default Component.extend({
         }
       });
 
-      return all(fetchBuilds).then(() => {
-        const builds = [];
+      set(this, 'directedGraph', graph);
 
-        // set values to consume from templates
-        set(this, 'builds', builds);
-        set(this, 'directedGraph', graph);
-
-        return graph;
-      });
+      return graph;
     }
   }),
   displayRestartButton: alias('authenticated'),
