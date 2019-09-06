@@ -1,59 +1,43 @@
-{{#if (and (eq selected "aggregate") (is-fulfilled graph))}}
+{{#if (is-fulfilled selectedEventObj.builds)}}
   {{#workflow-graph-d3
     completeWorkflowGraph=completeWorkflowGraph
-    workflowGraph=directedGraph
-    builds=builds
+    showDownstreamTriggers=showDownstreamTriggers
+    builds=selectedEventObj.builds
     jobs=jobs
+    workflowGraph=selectedEventObj.workflowGraph
+    startFrom=selectedEventObj.startFrom
+    causeMessage=selectedEventObj.causeMessage
     graphClicked=(action "graphClicked")
+    isSkipped=selectedEventObj.isSkipped
   }}
     {{workflow-tooltip
       tooltipData=tooltipData
-      displayRestartButton=false
+      displayRestartButton=displayRestartButton
+      stopBuild=stopBuild
       showTooltip=showTooltip
+      showTooltipPosition=showTooltipPosition
+      confirmStartBuild=(action "confirmStartBuild")
     }}
   {{/workflow-graph-d3}}
-{{else}}
-  {{#if (is-fulfilled selectedEventObj.builds)}}
-    {{#workflow-graph-d3
-      completeWorkflowGraph=completeWorkflowGraph
-      showDownstreamTriggers=showDownstreamTriggers
-      builds=selectedEventObj.builds
-      jobs=jobs
-      workflowGraph=selectedEventObj.workflowGraph
-      startFrom=selectedEventObj.startFrom
-      causeMessage=selectedEventObj.causeMessage
-      graphClicked=(action "graphClicked")
-      isSkipped=selectedEventObj.isSkipped
+  {{#if isShowingModal}}
+    {{#modal-dialog
+      targetAttachment="center"
+      translucentOverlay=true
+      containerClass="detached-confirm-dialog"
     }}
-      {{workflow-tooltip
-        tooltipData=tooltipData
-        displayRestartButton=displayRestartButton
-        stopBuild=stopBuild
-        showTooltip=showTooltip
-        showTooltipPosition=showTooltipPosition
-        confirmStartBuild=(action "confirmStartBuild")
-      }}
-    {{/workflow-graph-d3}}
-    {{#if isShowingModal}}
-      {{#modal-dialog
-        targetAttachment="center"
-        translucentOverlay=true
-        containerClass="detached-confirm-dialog"
-      }}
-        <h3>Are you sure?</h3>
-        <p>
-          You are about to start the job <code>{{tooltipData.job.name}}</code> in a new event with the same
-          context of the selected event for sha <code>#{{selectedEventObj.truncatedSha}}</code>
-        </p>
-        <div class="row">
-          <div class="col-xs-6">
-            <button class="d-button is-primary" {{action "startDetachedBuild"}}>Yes</button>
-          </div>
-          <div class="col-xs-6 right">
-            <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
-          </div>
+      <h3>Are you sure?</h3>
+      <p>
+        You are about to start the job <code>{{tooltipData.job.name}}</code> in a new event with the same
+        context of the selected event for sha <code>#{{selectedEventObj.truncatedSha}}</code>
+      </p>
+      <div class="row">
+        <div class="col-xs-6">
+          <button class="d-button is-primary" {{action "startDetachedBuild"}}>Yes</button>
         </div>
-      {{/modal-dialog}}
-    {{/if}}
+        <div class="col-xs-6 right">
+          <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+        </div>
+      </div>
+    {{/modal-dialog}}
   {{/if}}
 {{/if}}

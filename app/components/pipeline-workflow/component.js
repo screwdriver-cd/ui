@@ -28,15 +28,11 @@ export default Component.extend({
         // push the job id into the graph
         if (node) {
           node.id = get(j, 'id');
-          fetchBuilds.push(get(j, 'builds'));
         }
       });
 
       return all(fetchBuilds).then(() => {
         const builds = [];
-
-        // preload the "last build" data for each job for the graph to consume
-        jobs.forEach(j => builds.push(get(j, 'lastBuild')));
 
         // set values to consume from templates
         set(this, 'builds', builds);
