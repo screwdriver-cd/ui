@@ -165,10 +165,6 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       const selected = this.selectedEvent;
 
-      if (selected === 'aggregate') {
-        return null;
-      }
-
       return this.events.find(e => get(e, 'id') === selected);
     }
   }),
@@ -324,7 +320,7 @@ export default Controller.extend(ModelReloaderMixin, {
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         });
     },
-    stopBuild(job) {
+    stopBuild(event, job) {
       const buildId = get(job, 'buildId');
       let build;
 
@@ -334,7 +330,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
         return build
           .save()
-          .then(() => job.hasMany('builds').reload())
+          .then(() => event.hasMany('builds').reload())
           .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
       }
 
