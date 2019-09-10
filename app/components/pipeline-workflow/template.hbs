@@ -25,10 +25,10 @@
       translucentOverlay=true
       containerClass="detached-confirm-dialog"
     }}
-      <h3>Are you sure?</h3>
+      <h3>Are you sure to start?</h3>
       <p>
-        You are about to start the job <code>{{tooltipData.job.name}}</code> in a new event with the same
-        context of the selected event for sha <code>#{{selectedEventObj.truncatedSha}}</code>
+        Job: <code>{{tooltipData.job.name}}</code><br>
+        Commit:<a href={{selectedEventObj.commit.url}}><code>{{selectedEventObj.truncatedMessage}}</code>({{selectedEventObj.truncatedSha}})</a> 
       </p>
       <div class="row">
         <div class="col-xs-6">
