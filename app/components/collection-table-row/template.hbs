@@ -1,0 +1,31 @@
+<td class="collection-pipeline__choose">
+  {{#if showCheckbox}}
+    <input type="checkbox" value={{pipelineSelected}} onchange={{action "togglePipeline"}}>
+  {{/if}}
+</td>
+<td class="app-id">
+  {{#link-to "pipeline" pipeline.id}}{{pipeline.scmRepo.name}}{{/link-to}}
+</td>
+<td class="branch">{{fa-icon "code-fork"}}{{pipeline.branch}}</td>
+<td class="status">
+  {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
+  <a href={{lastEventInfo.commitUrl}}>
+    {{lastEventInfo.sha}}
+  </a>
+</td>
+<td class="start">
+  {{lastEventInfo.startTime}}
+</td>
+<td class="duration">
+  {{lastEventInfo.durationText}}
+</td>
+<td class="history">
+  {{events-thumbnail events=eventsInfo}}
+</td>
+<td class="collection-pipeline__remove">
+  {{#unless showCheckbox}}
+    <span onclick={{action "removePipeline"}}>
+      &times;
+    </span>
+  {{/unless}}
+</td>

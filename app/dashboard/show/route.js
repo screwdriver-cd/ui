@@ -15,8 +15,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
             oldMap[pipelineId] = this.store
               .query('event', {
                 pipelineId,
-                // startTime,
-                // endTime
                 page: 1,
                 count: NUM_EVENTS_SHOWN
               })
@@ -29,7 +27,8 @@ export default Route.extend(AuthenticatedRouteMixin, {
             return oldMap;
           }, {})
         ),
-        collection
+        collection,
+        collections: this.store.findAll('collection').catch(() => [])
       });
     });
   },

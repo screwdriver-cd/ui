@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
 import { get, computed } from '@ember/object';
 import Component from '@ember/component';
+// import RSVP from 'rsvp';
 
 export default Component.extend({
   session: service(),
@@ -9,6 +10,7 @@ export default Component.extend({
   showConfirmation: false,
   showDeleteButtons: false,
   showModal: false,
+  defaultCollection: null,
   collections: computed('store', {
     get() {
       if (
@@ -19,6 +21,14 @@ export default Component.extend({
       }
 
       return this.store.findAll('collection');
+
+      // return this.store.findAll('collection').then(collections => {
+      //   this.set('defaultCollection',
+      //     collections.find(collection => collection.type !== 'default'));
+
+      //   console.log(this.defaultCollection);
+      //   return RSVP.Promise.resolve(collections);
+      // });
     }
   }),
 

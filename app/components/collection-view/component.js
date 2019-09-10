@@ -1,14 +1,40 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["sortBy"]] */
+/* eslint ember/avoid-leaking-state-in-components: [2, ["sortBy", "selectedPipelines"]] */
 import { sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
+const viewOptions = [
+  {
+    svgName: 'apps',
+    value: 'Card'
+  },
+  {
+    svgName: 'list',
+    value: 'List'
+  }
+];
+
 export default Component.extend({
+  store: service(),
   session: service(),
   scmService: service('scm'),
   sortBy: ['scmRepo.name'],
   removePipelineError: null,
+  activeViewOptionValue: viewOptions[0].value,
+  viewOptions,
+  isOrganizing: false,
+  selectedPipelines: [],
+  addCollectionError: null,
+
+  isListView: computed('activeViewOptionValue', function isListView() {
+    return this.activeViewOptionValue === viewOptions[1].value;
+  }),
+
+  showOperations: computed('selectedPipelines.length', function showOperations() {
+    return this.selectedPipelines.length > 0;
+  }),
+
   description: computed('collection', {
     get() {
       let description = this.get('collection.description');
@@ -36,7 +62,6 @@ export default Component.extend({
   collectionPipelines: computed('collection.pipelines', {
     get() {
       const { scmService } = this;
-
       const getIcon = status => {
         switch (status) {
           case 'queued':
@@ -92,13 +117,13 @@ export default Component.extend({
           const numOfMinutes = Math.floor(numOfTotalSeconds / minute);
           const numOfSeconds = numOfTotalSeconds % minute;
 
-          return `${numOfMinutes}m${numOfSeconds}s`;
+          return `${numOfMinutes}m ${numOfSeconds}s`;
         }
         const numOfHours = Math.floor(numOfTotalSeconds / hour);
         const numOfMinutes = Math.floor((numOfTotalSeconds % hour) / minute);
         const numOfSeconds = Math.floor(numOfTotalSeconds % minute);
 
-        return `${numOfHours}h${numOfMinutes}m${numOfSeconds}s`;
+        return `${numOfHours}h ${numOfMinutes}m ${numOfSeconds}s`;
       };
 
       if (this.get('collection.pipelines')) {
@@ -137,16 +162,20 @@ export default Component.extend({
               statusColor: getColor(lastEvent.status.toLowerCase()),
               durationText: formatTime(lastEvent.duration),
               sha: lastEvent.sha.substring(0, 7),
-              icon: getIcon(lastEvent.status.toLowerCase())
+              icon: getIcon(lastEvent.status.toLowerCase()),
+              commitMessage: lastEvent.commit.message,
+              commitUrl: lastEvent.commit.url
             };
           } else {
             ret.eventsInfo = [];
             ret.lastEventInfo = {
-              startTime: '',
-              statusColor: '',
-              duration: 0,
-              sha: '',
-              icon: ''
+              startTime: '--/--/----',
+              statusColor: '$sd-no-build',
+              durationText: '--',
+              sha: 'Not available',
+              icon: 'fas fa-question-circle',
+              commitMessage: 'No events have been run for this pipeline',
+              commitUrl: '#'
             };
           }
 
@@ -166,10 +195,32 @@ export default Component.extend({
      * @param {Number} collectionId - id of collection to remove from
      * @returns {Promise}
      */
-    pipelineRemove(pipelineId, collectionId) {
-      return this.onPipelineRemove(+pipelineId, collectionId)
+    pipelineRemove(pipelineId) {
+      const collectionId = this.get('collection.id');
+
+      return this.onPipelineRemove(+pipelineId)
         .then(() => {
-          this.set('removePipelineError', null);
+          this.store.findRecord('collection', collectionId).then(collection => {
+            this.setProperties({
+              removePipelineError: null,
+              collection
+            });
+          });
+        })
+        .catch(error => {
+          this.set('removePipelineError', error.errors[0].detail);
+        });
+    },
+    removeSelectedPipelines() {
+      return this.removeMultiplePipelines(this.selectedPipelines, this.get('collection.id'))
+        .then(() => {
+          this.store.findRecord('collection', this.get('collection.id')).then(collection => {
+            this.setProperties({
+              removePipelineError: null,
+              isOrganizing: false,
+              collection
+            });
+          });
         })
         .catch(error => {
           this.set('removePipelineError', error.errors[0].detail);
@@ -210,6 +261,42 @@ export default Component.extend({
       collection.set('description', this.$('.edit-area').val());
       this.set('editingDescription', false);
       collection.save();
+    },
+    organize() {
+      this.set('isOrganizing', true);
+    },
+    cancelOrganize() {
+      this.setProperties({
+        isOrganizing: false,
+        selectedPipelines: []
+      });
+    },
+    selectPipeline(pipelineId) {
+      const newSelectedPipelines = this.selectedPipelines.slice(0);
+
+      newSelectedPipelines.push(pipelineId);
+      this.set('selectedPipelines', newSelectedPipelines);
+    },
+    deselectPipeline(pipelineId) {
+      const idx = this.selectedPipelines.indexOf(pipelineId);
+      const newSelectedPipelines = this.selectedPipelines.slice(0);
+
+      if (idx !== -1) {
+        newSelectedPipelines.splice(idx, 1);
+        this.set('selectedPipelines', newSelectedPipelines);
+      }
+    },
+    addMultipleToCollection(collection) {
+      return this.addMultipleToCollection(this.selectedPipelines, collection.id)
+        .then(() => {
+          this.setProperties({
+            addCollectionError: null,
+            isOrganizing: false
+          });
+        })
+        .catch(() => {
+          this.set('addCollectionError', `Could not add Pipeline to Collection ${collection.name}`);
+        });
     }
   }
 });

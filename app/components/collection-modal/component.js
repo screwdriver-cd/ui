@@ -33,7 +33,7 @@ export default Component.extend({
             let addDirectly = this.addToCollection;
 
             if (addDirectly) {
-              addDirectly(this.pipelineId, newCollection.id);
+              addDirectly(newCollection);
             }
           })
           .catch(error => {

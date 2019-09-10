@@ -9,7 +9,10 @@
   {{collection-view
       class="col-md-10"
       onPipelineRemove=(action "removePipeline")
+      addMultipleToCollection=(action "addMultipleToCollection")
+      removeMultiplePipelines=(action "removeMultiplePipelines")
       collection=collection
+      collections=model.collections
       eventsMap=eventsMap
       editingDescription=editingDescription
       editingName=editingName

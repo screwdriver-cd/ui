@@ -1,9 +1,12 @@
-<div>
+<div class="collection-view">
+  {{#if addCollectionError}}
+    {{info-message message=addCollectionError type="warning" icon="exclamation-triangle"}}
+  {{/if}}
   {{#if removePipelineError}}
     {{info-message message=removePipelineError type="warning" icon="exclamation-triangle"}}
   {{/if}}
   <div class="header row">
-    <div class="col-md-7">
+    <div class="col-md-8">
       {{#if editingName}}
         <div class="name-edit">
           <input class="edit-area-name" value={{collection.name}}>
@@ -25,8 +28,8 @@
         {{/if}}
       {{/if}}
     </div>
-    <div class="header__sort-pipelines col-md-5">
-      Sort By
+    {{!-- <div class="header__sort-pipelines col-md-3">
+      Sort By&nbsp;&nbsp;
       {{#bs-dropdown as |dd|}}
         {{#bs-button}}{{sortByText}}{{/bs-button}}
         {{#dd.button}}{{fa-icon "caret-down"}}{{/dd.button}}
@@ -39,32 +42,83 @@
           {{/menu.item}}
         {{/dd.menu}}
       {{/bs-dropdown}}
+    </div> --}}
+    {{#if session.isAuthenticated}}
+      <div class="header__organize col-md-3">
+        {{#if isOrganizing}}
+          {{#if showOperations}}
+            <span>Selected</span>
+            <BsButton class="operation-button" onclick={{action "removeSelectedPipelines"}}>Remove</BsButton>
+            {{!-- <BsButton class="operation-button" onclick={{action "organize"}}>Move To</BsButton> --}}
+            {{collection-dropdown
+                collections=collections
+                addMultipleToCollection=(action "addMultipleToCollection")
+                buttonClass="operation-button"
+                buttonText="Move To"
+            }}
+          {{/if}}
+          <BsButton onclick={{action "cancelOrganize"}}>Cancel</BsButton>
+        {{else}}
+          <BsButton onclick={{action "organize"}}>Organize</BsButton>
+        {{/if}}
+      </div>
+    {{/if}}
+    <BsButtonGroup
+      class="header__change-view col-md-1"
+      @value={{activeViewOptionValue}}
+      @type="radio"
+      @onChange={{action (mut activeViewOptionValue)}} as |bg|>
+      {{#each viewOptions as |viewOption|}}
+        <bg.button @value={{viewOption.value}}>{{inline-svg viewOption.svgName class="img"}}</bg.button>
+      {{/each}}
+    </BsButtonGroup>
+  </div>
+
+  {{#if isListView}}
+    <div class="collection-table row">
+      <table class="col-md-12">
+        <thead>
+          <tr>
+            <th class="collection-pipeline__choose"></th>
+            <th class="app-id" rowspan="1">Name</th>
+            <th class="branch" rowspan="1">Branch</th>
+            <th class="status" rowspan="1">Status</th>
+            <th class="start" rowspan="1">Start Time</th>
+            <th class="duration" rowspan="1">Duration</th>
+            <th class="history" rowspan="1">Build History</th>
+            <th class="collection-pipeline__remove"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each sortedPipelines as |pipeline|}}
+            {{collection-table-row
+                class="collection-pipeline"
+                pipelineRemove=(action "pipelineRemove")
+                pipeline=pipeline
+                isAuthenticated=session.isAuthenticated
+                isOrganizing=isOrganizing
+                selectPipeline=(action "selectPipeline")
+                deselectPipeline=(action "deselectPipeline")
+                reset=reset
+            }}
+          {{/each}}
+        </tbody>
+      </table>
     </div>
-  </div>
-  <div class="collection-table row">
-    <table class="col-md-12">
-      <thead>
-        <tr>
-          <th class="app-id" rowspan="1">Name</th>
-          <th class="branch" rowspan="1">Branch</th>
-          <th class="status" rowspan="1">Status</th>
-          <th class="start" rowspan="1">Start Time</th>
-          <th class="duration" rowspan="1">Duration</th>
-          <th class="history" rowspan="1">Build History</th>
-          <td class="collection-pipeline__remove"></td>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each sortedPipelines as |pipeline|}}
-          {{events-table-row
-              class="collection-pipeline"
-              pipelineRemove=(action "pipelineRemove")
-              pipeline=pipeline
-              collectionId=collection.id
-              isAuthenticated=session.isAuthenticated
-          }}
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
+  {{else}}
+    <div class="collection-card-view">
+      {{#each sortedPipelines as |pipeline|}}
+        {{pipeline-card
+            class="pipeline-card"
+            pipelineRemove=(action "pipelineRemove")
+            pipeline=pipeline
+            isAuthenticated=session.isAuthenticated
+            isOrganizing=isOrganizing
+            selectPipeline=(action "selectPipeline")
+            deselectPipeline=(action "deselectPipeline")
+            reset=reset
+        }}
+      {{/each}}
+    </div>
+  {{/if}}
 </div>

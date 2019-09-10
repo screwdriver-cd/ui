@@ -8,11 +8,24 @@ export default Controller.extend({
   editingDescription: false,
   editingName: false,
   actions: {
-    removePipeline(pipelineId, collectionId) {
+    removePipeline(pipelineId) {
+      const collectionId = this.get('collection.id');
+
       return this.store.findRecord('collection', collectionId).then(collection => {
         const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
 
         set(collection, 'pipelineIds', pipelineIds.filter(id => id !== pipelineId));
+
+        return collection.save();
+      });
+    },
+    removeMultiplePipelines(removedPipelineIds) {
+      const collectionId = this.get('collection.id');
+
+      return this.store.findRecord('collection', collectionId).then(collection => {
+        const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
+
+        set(collection, 'pipelineIds', pipelineIds.filter(id => !removedPipelineIds.includes(id)));
 
         return collection.save();
       });
@@ -23,6 +36,15 @@ export default Controller.extend({
     changeCollection() {
       this.set('editingDescription', false);
       this.set('editingName', false);
+    },
+    addMultipleToCollection(addedPipelineIds, collectionId) {
+      return this.store.findRecord('collection', collectionId).then(collection => {
+        const pipelineIds = collection.get('pipelineIds');
+
+        collection.set('pipelineIds', [...new Set([...pipelineIds, ...addedPipelineIds])]);
+
+        return collection.save();
+      });
     }
   }
 });
