@@ -297,6 +297,12 @@ export default Component.extend({
         .catch(() => {
           this.set('addCollectionError', `Could not add Pipeline to Collection ${collection.name}`);
         });
+    },
+    resetView() {
+      this.setProperties({
+        isOrganizing: false,
+        selectedPipelines: []
+      });
     }
   }
 });

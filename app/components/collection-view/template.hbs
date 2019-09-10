@@ -47,7 +47,7 @@
       <div class="header__organize col-md-3">
         {{#if isOrganizing}}
           {{#if showOperations}}
-            <span>Selected</span>
+            <span>{{selectedPipelines.length}}&nbsp;&nbsp;Selected</span>
             <BsButton class="operation-button" onclick={{action "removeSelectedPipelines"}}>Remove</BsButton>
             {{!-- <BsButton class="operation-button" onclick={{action "organize"}}>Move To</BsButton> --}}
             {{collection-dropdown
@@ -69,7 +69,7 @@
       @type="radio"
       @onChange={{action (mut activeViewOptionValue)}} as |bg|>
       {{#each viewOptions as |viewOption|}}
-        <bg.button @value={{viewOption.value}}>{{inline-svg viewOption.svgName class="img"}}</bg.button>
+        <bg.button @value={{viewOption.value}} onclick={{action "resetView"}}>{{inline-svg viewOption.svgName class="img"}}</bg.button>
       {{/each}}
     </BsButtonGroup>
   </div>
