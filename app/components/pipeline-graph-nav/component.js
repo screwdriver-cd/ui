@@ -24,10 +24,6 @@ export default Component.extend({
         { label: 'Last Successful', value: this.lastSuccessful }
       ];
 
-      if (!this.isPR) {
-        options.push({ label: 'Aggregate', value: 'aggregate' });
-      }
-
       return options;
     }
   }),

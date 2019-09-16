@@ -30,33 +30,7 @@ const BUILDS = [
 module('Integration | Component | pipeline workflow', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders an aggregate', async function(assert) {
-    const jobs = ['main', 'batman', 'robin'].map(name => {
-      const j = {
-        name,
-        isDisabled: false,
-        lastBuild: EmberObject.create({
-          id: 12345,
-          status: 'SUCCESS',
-          sha: 'abcd1234'
-        })
-      };
-
-      return EmberObject.create(j);
-    });
-
-    this.set('jobsMock', jobs);
-    this.set('graph', GRAPH);
-    this.set('selected', 'aggregate');
-
-    await render(hbs`{{pipeline-workflow workflowGraph=graph jobs=jobsMock selected=selected}}`);
-
-    assert.dom('.graph-node').exists({ count: 5 });
-    assert.dom('.workflow-tooltip').exists({ count: 1 });
-  });
-
   test('it renders an event', async function(assert) {
-    this.set('selected', 1);
     this.set(
       'obj',
       EmberObject.create({
@@ -64,10 +38,12 @@ module('Integration | Component | pipeline workflow', function(hooks) {
         workflowGraph: GRAPH,
         startFrom: '~commit',
         causeMessage: 'test'
-      })
+      }),
+      'graph',
+      EmberObject.create({})
     );
 
-    await render(hbs`{{pipeline-workflow selectedEventObj=obj selected=selected}}`);
+    await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph}}`);
 
     assert.dom('.graph-node').exists({ count: 5 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
