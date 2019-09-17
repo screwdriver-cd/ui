@@ -245,9 +245,13 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     const controller = this.owner.lookup('controller:pipeline/events');
 
     const job = {
-      hasMany: () => ({ reload: () => assert.ok(true) }),
       buildId: '123',
       name: 'deploy'
+    };
+
+    const event = {
+      hasMany: () => ({ reload: () => assert.ok(true) }),
+      id: '123'
     };
 
     run(() => {
@@ -270,7 +274,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       build.set('status', 'ABORTED');
       build.save();
 
-      controller.send('stopBuild', job);
+      controller.send('stopBuild', event, job);
     });
 
     await settled();

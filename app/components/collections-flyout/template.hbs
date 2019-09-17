@@ -16,14 +16,16 @@
       {{#link-to "dashboard.show" collection.id invokeAction="changeCollectionDisplayed"}}
         {{collection.name}}
       {{/link-to}}
-      {{#if showDeleteButtons}}
-        <button
-          class="collection-wrapper__delete"
-          onclick={{action "setCollectionToDelete" collection}}
-        >
-          {{fa-icon "trash" title="Delete collection" size="md"}}
-        </button>
-      {{/if}}
+      {{#unless (eq collection.type "default")}}
+        {{#if showDeleteButtons}}
+          <button
+            class="collection-wrapper__delete"
+            onclick={{action "setCollectionToDelete" collection}}
+          >
+            {{fa-icon "trash" title="Delete collection" size="md"}}
+          </button>
+        {{/if}}
+      {{/unless}}
     </div>
   {{else}}
     <p class="no-collections-text">Please create a collection.</p>
