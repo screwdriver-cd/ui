@@ -11,7 +11,6 @@ export default Component.extend({
   showModal: false,
   orderedCollections: computed('collections', {
     get() {
-      console.log(this.collections);
       let defaultCollection;
       const normalCollections = this.collections.filter(collection => {
         if (collection.type === 'default') {
