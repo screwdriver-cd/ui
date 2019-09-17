@@ -48,8 +48,10 @@
       <span class="badge-info">{{lastEventInfo.startTime}}</span>
     </div>
   </div>
-  {{events-thumbnail 
-      class="events-thumbnail"  
-      events=eventsInfo
-  }}
+  <div class="events-thumbnail-wrapper">
+    {{events-thumbnail
+        class="events-thumbnail"
+        events=eventsInfo
+    }}
+  </div>
 </div>

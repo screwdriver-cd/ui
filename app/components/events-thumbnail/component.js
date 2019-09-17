@@ -3,6 +3,7 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { select } from 'd3-selection';
 const MAX_NUM_EVENTS_SHOWN = 20;
+const RANDOM_NUMS = new Array(MAX_NUM_EVENTS_SHOWN).fill(0).map(() => Math.random());
 
 export default Component.extend({
   store: service(),
@@ -22,12 +23,12 @@ export default Component.extend({
 
     // Fixed number of bars
     this.events = this.events.reverse().concat(
-      Array(MAX_NUM_EVENTS_SHOWN - totalNumberOfEvents)
-        .fill(1)
-        .map(() => ({
-          duration: maxDuration * Math.random(),
+      RANDOM_NUMS.slice(totalNumberOfEvents - MAX_NUM_EVENTS_SHOWN, MAX_NUM_EVENTS_SHOWN).map(
+        randomNum => ({
+          duration: maxDuration * randomNum,
           statusColor: 'build-empty'
-        }))
+        })
+      )
     );
 
     const bars = svg
@@ -52,7 +53,7 @@ export default Component.extend({
       .attr('y', event => 40 - y(event.duration));
     */
 
-    bars.each(function(bar) {
+    bars.each(function addColor(bar) {
       this.classList.add(bar.statusColor.toLowerCase());
     });
   }

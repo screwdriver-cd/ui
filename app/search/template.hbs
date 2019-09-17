@@ -2,6 +2,7 @@
   {{#if session.isAuthenticated}}
     {{collections-flyout
       changeCollection=(action "changeCollection")
+      collections=collections
       class="col-md-2"}}
     {{search-list
       moreToShow=moreToShow

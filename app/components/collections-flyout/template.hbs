@@ -11,7 +11,7 @@
       </h2>
     {{/if}}
   </div>
-  {{#each collections as |collection|}}
+  {{#each orderedCollections as |collection|}}
     <div class="collection-wrapper row {{if (eq collection.id selectedCollectionId) " row--active"}}">
       {{#link-to "dashboard.show" collection.id invokeAction="changeCollectionDisplayed"}}
         {{collection.name}}

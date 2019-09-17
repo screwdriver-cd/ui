@@ -5,6 +5,7 @@ import Controller from '@ember/controller';
 export default Controller.extend({
   collection: alias('model.collection'),
   eventsMap: alias('model.eventsMap'),
+  collections: alias('model.collections'),
   editingDescription: false,
   editingName: false,
   actions: {

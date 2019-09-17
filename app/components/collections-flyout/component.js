@@ -1,7 +1,6 @@
 import { inject as service } from '@ember/service';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import Component from '@ember/component';
-// import RSVP from 'rsvp';
 
 export default Component.extend({
   session: service(),
@@ -10,25 +9,19 @@ export default Component.extend({
   showConfirmation: false,
   showDeleteButtons: false,
   showModal: false,
-  defaultCollection: null,
-  collections: computed('store', {
+  orderedCollections: computed('collections', {
     get() {
-      if (
-        !get(this, 'session.isAuthenticated') ||
-        get(this, 'session.data.authenticated.isGuest')
-      ) {
-        return [];
-      }
+      console.log(this.collections);
+      let defaultCollection;
+      const normalCollections = this.collections.filter(collection => {
+        if (collection.type === 'default') {
+          defaultCollection = collection;
+        }
 
-      return this.store.findAll('collection');
+        return collection.type === 'normal';
+      });
 
-      // return this.store.findAll('collection').then(collections => {
-      //   this.set('defaultCollection',
-      //     collections.find(collection => collection.type !== 'default'));
-
-      //   console.log(this.defaultCollection);
-      //   return RSVP.Promise.resolve(collections);
-      // });
+      return [defaultCollection, ...normalCollections];
     }
   }),
 
