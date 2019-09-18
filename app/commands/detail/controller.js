@@ -38,10 +38,10 @@ export default Controller.extend({
         return this.commands.commandData.findBy('version', version);
       }
 
-      let exsistTag = commandTagData.filter(t => t.tag === versionOrTagFromUrl);
+      let tagExists = commandTagData.filter(t => t.tag === versionOrTagFromUrl);
 
-      if (exsistTag.length > 0) {
-        return this.commands.commandData.findBy('version', exsistTag[0].version);
+      if (tagExists.length > 0) {
+        return this.commands.commandData.findBy('version', tagExists[0].version);
       }
 
       return this.commands.commandData.findBy('version', versionOrTagFromUrl);

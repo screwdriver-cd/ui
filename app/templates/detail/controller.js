@@ -37,10 +37,10 @@ export default Controller.extend({
         return this.templates.templateData.findBy('version', version);
       }
 
-      let exsistTag = templateTagData.filter(t => t.tag === versionOrTagFromUrl);
+      let tagExists = templateTagData.filter(t => t.tag === versionOrTagFromUrl);
 
-      if (exsistTag.length > 0) {
-        return this.templates.templateData.findBy('version', exsistTag[0].version);
+      if (tagExists.length > 0) {
+        return this.templates.templateData.findBy('version', tagExists[0].version);
       }
 
       return this.templates.templateData.findBy('version', versionOrTagFromUrl);

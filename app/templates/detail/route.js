@@ -12,10 +12,10 @@ export default Route.extend({
       let [verPayload, tagPayload] = arr;
 
       if (params.version) {
-        const exsistVersion = verPayload.filter(t => t.version === params.version);
-        const exsistTag = tagPayload.filter(t => t.tag === params.version);
+        const versionExists = verPayload.filter(t => t.version === params.version);
+        const tagExists = tagPayload.filter(t => t.tag === params.version);
 
-        if (exsistTag.length === 0 && exsistVersion.length === 0) {
+        if (tagExists.length === 0 && versionExists.length === 0) {
           this.transitionTo('/404');
         }
       }
