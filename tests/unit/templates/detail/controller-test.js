@@ -39,11 +39,17 @@ module('Unit | Controller | templates/detail', function(hooks) {
   test('it parses model properly', function(assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
-    controller.set('model', [
-      { id: 3, version: '3.0.0', trusted: true },
-      { id: 2, version: '2.0.0' },
-      { id: 1, version: '1.0.0' }
-    ]);
+    controller.set('model', {
+      templateData: [
+        { id: 3, version: '3.0.0', trusted: true },
+        { id: 2, version: '2.0.0' },
+        { id: 1, version: '1.0.0' }
+      ],
+      templateTagData: [
+        { id: 2, version: '2.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ]
+    });
 
     assert.ok(controller);
 
@@ -56,30 +62,34 @@ module('Unit | Controller | templates/detail', function(hooks) {
   test('it handles version changes', function(assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
-    controller.set('model', [
-      { id: 3, version: '3.0.0' },
-      { id: 2, version: '2.0.0' },
-      { id: 1, version: '1.0.0' }
-    ]);
+    controller.set('model', {
+      templateData: [
+        { id: 3, version: '3.0.0', trusted: true },
+        { id: 2, version: '2.0.0' },
+        { id: 1, version: '1.0.0' }
+      ],
+      templateTagData: [
+        { id: 2, version: '2.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ]
+    });
 
     assert.ok(controller);
     assert.equal(controller.get('selectedVersion'), null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionTemplate.id'), 3);
-    controller.send('changeVersion', '1.0.0');
-    assert.equal(controller.get('selectedVersion'), '1.0.0');
-    assert.equal(controller.get('versionTemplate.id'), 1);
-    assert.equal(controller.get('latest.id'), 3);
   });
 
   test('it handles model changes', function(assert) {
     let controller = this.owner.lookup('controller:templates/detail');
     // eslint-disable-next-line new-cap
-    const arr = A([
-      { id: 3, version: '3.0.0' },
-      { id: 2, version: '2.0.0' },
-      { id: 1, version: '1.0.0' }
-    ]);
+    const arr = A({
+      templateData: [
+        { id: 3, version: '3.0.0' },
+        { id: 2, version: '2.0.0' },
+        { id: 1, version: '1.0.0' }
+      ]
+    });
 
     controller.set('model', arr);
 
@@ -88,11 +98,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('versionTemplate.id'), 3);
     assert.equal(controller.get('latest.id'), 3);
 
-    controller.send('changeVersion', '1.0.0');
-    assert.equal(controller.get('selectedVersion'), '1.0.0');
-    assert.equal(controller.get('versionTemplate.id'), 1);
-
-    arr.unshiftObject({ id: 4, version: '4.0.0' });
+    arr.templateData.unshiftObject({ id: 4, version: '4.0.0' });
     assert.equal(controller.get('selectedVersion'), null);
     assert.equal(controller.get('versionTemplate.id'), 4);
     assert.equal(controller.get('latest.id'), 4);
@@ -134,5 +140,104 @@ module('Unit | Controller | templates/detail', function(hooks) {
 
     controller.send('updateTrust', 'sample');
     assert.ok(updateTrustStub.calledOnce);
+  });
+  test('it handles undefined tag or version', function(assert) {
+    let controller = this.owner.lookup('controller:templates/detail');
+
+    controller.set('model', {
+      templateData: [
+        { id: 3, version: '3.0.0', trusted: true },
+        { id: 2, version: '2.0.0' },
+        { id: 1, version: '1.0.0' }
+      ],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
+      versionOrTagFromUrl: undefined
+    });
+
+    assert.ok(controller);
+    assert.equal(controller.get('versionTemplate.version'), '3.0.0');
+  });
+
+  test('it handles a version that is exist', function(assert) {
+    let controller = this.owner.lookup('controller:templates/detail');
+
+    controller.set('model', {
+      templateData: [
+        { id: 3, version: '3.0.0', trusted: true },
+        { id: 2, version: '2.0.0' },
+        { id: 1, version: '1.0.0' }
+      ],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
+      versionOrTagFromUrl: '2.0.0'
+    });
+
+    assert.ok(controller);
+    assert.equal(controller.get('versionTemplate.version'), '2.0.0');
+  });
+
+  test('it handles a tag that is exist', function(assert) {
+    let controller = this.owner.lookup('controller:templates/detail');
+
+    controller.set('model', {
+      templateData: [
+        { id: 3, version: '3.0.0', trusted: true },
+        { id: 2, version: '2.0.0' },
+        { id: 1, version: '1.0.0' }
+      ],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
+      versionOrTagFromUrl: 'stable'
+    });
+
+    assert.ok(controller);
+    assert.equal(controller.get('versionTemplate.version'), '1.0.0');
+  });
+
+  test('it handles a version that is not exist', function(assert) {
+    let controller = this.owner.lookup('controller:templates/detail');
+
+    controller.set('model', {
+      templateData: [
+        { id: 3, version: '3.0.0', trusted: true },
+        { id: 2, version: '2.0.0' },
+        { id: 1, version: '1.0.0' }
+      ],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
+      versionOrTagFromUrl: '9.9.9'
+    });
+
+    assert.ok(controller);
+    assert.equal(controller.get('versionTemplate.version'), undefined);
+  });
+
+  test('it handles a tag that is not exist', function(assert) {
+    let controller = this.owner.lookup('controller:templates/detail');
+
+    controller.set('model', {
+      templateData: [
+        { id: 3, version: '3.0.0', trusted: true },
+        { id: 2, version: '2.0.0' },
+        { id: 1, version: '1.0.0' }
+      ],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
+      versionOrTagFromUrl: 'foo'
+    });
+
+    assert.ok(controller);
+    assert.equal(controller.get('versionTemplate.version'), undefined);
   });
 });

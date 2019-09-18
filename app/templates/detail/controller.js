@@ -13,35 +13,45 @@ export default Controller.extend({
   reset() {
     this.set('errorMessage', '');
   },
-  trusted: computed('templates.[]', function computeTrusted() {
-    return this.templates.some(t => t.trusted);
+  trusted: computed('templates.templateData.[]', function computeTrusted() {
+    return this.templates.templateData.some(t => t.trusted);
   }),
   isAdmin: computed(function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
     return (decoder(token).scope || []).includes('admin');
   }),
-  latest: computed('templates.[]', {
+  latest: computed('templates.templateData.[]', {
     get() {
-      return this.templates[0];
+      return this.templates.templateData[0];
     }
   }),
-  versionTemplate: computed('selectedVersion', 'templates.[]', {
+  versionTemplate: computed('selectedVersion', 'templates.templateData.[]', {
     get() {
       const version = this.selectedVersion || this.get('latest.version');
 
-      return this.templates.findBy('version', version);
+      let { versionOrTagFromUrl } = this.templates;
+      let { templateTagData } = this.templates;
+
+      if (versionOrTagFromUrl === undefined) {
+        return this.templates.templateData.findBy('version', version);
+      }
+
+      let tagExists = templateTagData.filter(t => t.tag === versionOrTagFromUrl);
+
+      if (tagExists.length > 0) {
+        return this.templates.templateData.findBy('version', tagExists[0].version);
+      }
+
+      return this.templates.templateData.findBy('version', versionOrTagFromUrl);
     }
   }),
   // Set selected version to null whenever the list of templates changes
   // eslint-disable-next-line ember/no-observers
-  modelObserver: observer('templates.[]', function modelObserver() {
+  modelObserver: observer('templates.templateData.[]', function modelObserver() {
     this.set('selectedVersion', null);
   }),
   actions: {
-    changeVersion(version) {
-      this.set('selectedVersion', version);
-    },
     removeTemplate(name) {
       return this.template
         .deleteTemplates(name)

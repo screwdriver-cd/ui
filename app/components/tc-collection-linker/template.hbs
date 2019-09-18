@@ -1,5 +1,5 @@
 {{#if (eq column.label "Name")}}
-  {{#link-to extra.routes.detail row.content.namespace value}}{{#if row.content.trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}<span class="name">{{value}}</span>{{/link-to}}
+  {{#link-to extra.routes.detail row.content.namespace value row.content.version}}{{#if row.content.trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}<span class="name">{{value}}</span>{{/link-to}}
 {{else if (eq column.label "Namespace")}}
   {{#link-to extra.routes.namespace value}}<span class="namespace">{{value}}</span>{{/link-to}}
 {{/if}}

@@ -1,8 +1,8 @@
 <h4>Versions:</h4>
 <ul>
-  {{#each templates as |t|}}
+  {{#each templates.templateData as |t|}}
     <li>
-      <span {{action changeVersion t.version on="click"}} class="version">{{t.version}}{{#if t.tag}} - {{t.tag}}{{/if}}</span>{{#if t.lastUpdated}} {{t.lastUpdated}}{{/if}}
+      <a href={{t.version}}><span class="version">{{t.version}}{{#if t.tag}} - {{t.tag}}{{/if}}</span></a>{{#if t.lastUpdated}} {{t.lastUpdated}}{{/if}}
     </li>
   {{/each}}
 </ul>
