@@ -1,5 +1,5 @@
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
@@ -9,10 +9,22 @@ export default Component.extend({
   showConfirmation: false,
   showDeleteButtons: false,
   showModal: false,
-  orderedCollections: computed('collections', {
+  collections: computed('store', {
+    get() {
+      if (
+        !get(this, 'session.isAuthenticated') ||
+        get(this, 'session.data.authenticated.isGuest')
+      ) {
+        return [];
+      }
+
+      return this.store.findAll('collection');
+    }
+  }),
+  orderedCollections: computed('collections.[]', 'store', {
     get() {
       let defaultCollection;
-      const normalCollections = this.collections.filter(collection => {
+      const normalCollections = this.collections.toArray().filter(collection => {
         if (collection.type === 'default') {
           defaultCollection = collection;
         }

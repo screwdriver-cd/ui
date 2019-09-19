@@ -1,8 +1,9 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["sortBy", "selectedPipelines"]] */
+/* eslint ember/avoid-leaking-state-in-components: [2, ["sortBy", "selectedPipelines", "searchedPipelines", "selectedSearchedPipelines"]] */
 import { sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
+import ENV from 'screwdriver-ui/config/environment';
 
 const viewOptions = [
   {
@@ -26,6 +27,20 @@ export default Component.extend({
   isOrganizing: false,
   selectedPipelines: [],
   addCollectionError: null,
+  showSettingModal: false,
+  showAddPipelineModal: false,
+  collectionName: null,
+  collectionDescription: null,
+  searchedPipelines: [],
+  selectedSearchedPipelines: [],
+
+  showOrganizeButton: computed(
+    'session.isAuthenticated',
+    'collection.pipelines',
+    function showOrganizeButton() {
+      return this.session.isAuthenticated && this.collection.pipelines.length !== 0;
+    }
+  ),
 
   isListView: computed('activeViewOptionValue', function isListView() {
     return this.activeViewOptionValue === viewOptions[1].value;
@@ -298,11 +313,82 @@ export default Component.extend({
           this.set('addCollectionError', `Could not add Pipeline to Collection ${collection.name}`);
         });
     },
+    selectSearchedPipeline(pipelineId) {
+      this.set('selectedSearchedPipelines', [
+        ...this.selectedSearchedPipelines,
+        parseInt(pipelineId, 10)
+      ]);
+    },
     resetView() {
       this.setProperties({
         isOrganizing: false,
         selectedPipelines: []
       });
+    },
+    onSubmitSettingModal() {
+      const { collection } = this;
+
+      if (
+        this.collectionName !== this.collection.name ||
+        this.collectionDescription !== this.collection.description
+      ) {
+        collection.set('name', this.collectionName);
+        collection.set('description', this.collectionDescription);
+        collection.save();
+      }
+
+      this.send('toggleSettingModal');
+    },
+    toggleSettingModal() {
+      this.setProperties({
+        collectionName: this.collection.name,
+        collectionDescription: this.collection.description,
+        showSettingModal: !this.showSettingModal
+      });
+    },
+    toggleAddPipelineModal() {
+      if (this.get('showAddPipelineModal') && this.selectedSearchedPipelines.length !== 0) {
+        this.addMultipleToCollection(this.selectedSearchedPipelines, this.collection.id).then(
+          () => {
+            this.store.findRecord('collection', this.get('collection.id')).then(collection => {
+              this.setProperties({
+                showAddPipelineModal: false,
+                searchedPipelines: [],
+                selectedSearchedPipelines: [],
+                collection
+              });
+            });
+          }
+        );
+      } else {
+        this.set('showAddPipelineModal', !this.get('showAddPipelineModal'));
+      }
+    },
+    updateCollectionName(name) {
+      this.set('collectionName', name);
+    },
+    updateCollectionDescription(description) {
+      this.set('collectionDescription', description);
+    },
+    goToDocs() {
+      window.location.href = '#';
+    },
+    searchPipelines(query) {
+      const pipelineListConfig = {
+        page: 1,
+        count: ENV.APP.NUM_PIPELINES_LISTED,
+        sortBy: 'name',
+        sort: 'ascending'
+      };
+
+      if (query) {
+        pipelineListConfig.search = query;
+      }
+
+      this.set('searchedPipelines', this.store.query('pipeline', pipelineListConfig));
+    },
+    cancelSearch() {
+      this.set('showSearch', false);
     }
   }
 });

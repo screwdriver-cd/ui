@@ -2,6 +2,14 @@
   overflow-y: scroll;
   height: calc(100vh - 56px);
 
+  button {
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
   .header {
     color: $sd-text;
     padding: 25px 25px 0;
@@ -11,13 +19,6 @@
       font-weight: bold;
       font-size: 28px;
     }
-
-    // &__sort-pipelines {
-    //   margin-top: 2.5rem;
-    //   display: flex;
-    //   justify-content: flex-end;
-    //   align-items: center;
-    // }
 
     &__organize {
       margin-top: 3rem;
@@ -32,15 +33,12 @@
       button {
         margin-right: 10px;
         padding: 3px 8px;
-
-        &:focus {
-          outline: none;
-        }
+        border: solid 1px #ccc;
 
         &.operation-button {
           background-color: #d9e2fb;
           color: #63a4ee;
-          border: #d9e2fb;
+          border: solid 1px #d9e2fb;
 
           &:hover {
             background: rgb(185, 204, 245);
@@ -139,6 +137,17 @@
     font-size: 15px;
   }
 
+  .collection-operation {
+    margin-left: 8px;
+    cursor: pointer;
+
+    .img {
+      width: 20px;
+      height: 20px;
+      fill: #96c4e9;
+    }
+  }
+
   a {
     display: block;
     text-decoration: none;
@@ -204,7 +213,7 @@
     text-align: left;
   }
 
-  .collection-table {
+  .collection-list-view {
     padding: 25px;
   }
 
@@ -218,6 +227,54 @@
     &::after {
       content: '';
       flex: auto;
+    }
+  }
+
+  .collection-empty-view {
+    height: calc(100vh - 300px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .guide {
+      width: 500px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      .guide-image {
+        width: 360px;
+      }
+
+      .guide-text {
+        width: 100%;
+        text-align: center;
+      }
+
+      .guide-buttons {
+        margin-top: 10px;
+
+        .guide-create-pipeline-button {
+          background-image: linear-gradient(to right, #4f97eb, #4073ec);
+          color: #fff;
+        }
+
+        // .guide-docs-link {
+        //   display: inline-block;
+        //   background-color: #E2EEFB;
+        //   color: #589EEC;
+        //   width: 120px;
+        //   height: 32px;
+        //   line-height: 32px;
+        //   text-align: center;
+        // }
+
+        .guide-docs-button {
+          background-color: #e2eefb;
+          color: #589eec;
+          margin-left: 10px;
+        }
+      }
     }
   }
 
