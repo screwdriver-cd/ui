@@ -55,19 +55,19 @@ module('Unit | Service | template', function(hooks) {
       assert.deepEqual(templates, [
         {
           id: 2,
-          fullName: 'foo/bar',
           namespace: 'foo',
           name: 'bar',
           version: '2.0.0',
+          fullName: 'foo/bar',
           createTime,
           lastUpdated
         },
         {
           id: 1,
-          fullName: 'foo/bar',
           namespace: 'foo',
           name: 'bar',
           version: '1.0.0',
+          fullName: 'foo/bar',
           createTime,
           lastUpdated
         }
