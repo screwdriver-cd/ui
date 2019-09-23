@@ -5,16 +5,20 @@
   {{#if removePipelineError}}
     {{info-message message=removePipelineError type="warning" icon="exclamation-triangle"}}
   {{/if}}
+  {{#if linkCopied}}
+    {{info-message message=linkCopied type="success" icon="check"}}
+  {{/if}}
   <div class="header row">
     <div class="col-md-8">
-      {{#if editingName}}
+      {{!-- {{#if editingName}}
         <div class="name-edit">
           <input class="edit-area-name" value={{collection.name}}>
           <button class="save-name btn btn-primary" {{action "saveName"}}>Save</button>
         </div>
       {{else}}
         <h2 class="header__name">{{collection.name}} <a class="edit-icon move-left" onClick={{action "editName"}}>{{fa-icon "pencil"}}</a></h2>
-      {{/if}}
+      {{/if}} --}}
+      <h2 class="header__name">{{collection.name}}</h2>
 
       <span onclick={{action "toggleAddPipelineModal"}} class="collection-operation">
         {{inline-svg "add" class="img"}}
@@ -22,7 +26,7 @@
       <span onclick={{action "toggleSettingModal"}} class="collection-operation">
         {{inline-svg "setting" class="img"}}
       </span>
-      <span class="collection-operation">
+      <span onclick={{action "copyLink"}} class="collection-operation">
         {{inline-svg "link" class="img"}}
       </span>
       <span class="collection-operation">
@@ -30,7 +34,6 @@
       </span>
 
       <BsModal
-        @class="add-pipeline-modal"
         @open={{showAddPipelineModal}} 
         @onHidden={{action "toggleAddPipelineModal"}}
       as |modal|>
@@ -71,7 +74,6 @@
       </BsModal>
 
       <BsModal
-        @class="setting-modal"
         @open={{showSettingModal}}
         @onHide={{action "toggleSettingModal"}}
         @onSubmit={{action "onSubmitSettingModal"}} as |modal|>
@@ -100,29 +102,37 @@
         </modal.body>
         <modal.footer>
           <BsButton @onClick={{action modal.close}}>Cancel</BsButton>
-          <BsButton @type="danger">Delete</BsButton>
-          <BsButton @type="success" @onClick={{action "onSubmitSettingModal"}}>Save</BsButton>
+          <BsButton @type="primary" @onClick={{action "onSubmitSettingModal"}}>Save</BsButton>
         </modal.footer>
       </BsModal>
 
-      {{#if editingDescription}}
+      {{!-- {{#if editingDescription}}
         <textarea class="edit-area">{{collection.description}}</textarea>
         <button class="save btn btn-primary" {{action "saveDescription"}}>Save</button>
       {{else}}
         {{#if collection.description}}
           <div>
             <p class="header__description">
-              {{!-- {{line-clamp
-                lines=2
-                interactive=false
-                text=collection.description
-              }} --}}
               {{collection.description}}
               <a class="edit-icon" onClick={{action "editDescription"}}>{{fa-icon "pencil"}}</a></p>
           </div>
         {{else}}
           <p class="description-placeholder" onClick={{action "editDescription"}}>Add a description</p>
         {{/if}}
+      {{/if}} --}}
+      {{#if collection.description}}
+        <div>
+          <p class="header__description">
+            {{!-- {{line-clamp
+              lines=2
+              interactive=false
+              text=collection.description
+            }} --}}
+            {{collection.description}}
+          </p>
+        </div>
+      {{else}}
+        <p class="description-placeholder">Add a description</p>
       {{/if}}
     </div>
     <div class="header__organize col-md-3">
@@ -161,9 +171,12 @@
         <img class="guide-image" src="/assets/images/jobs-example.png" />
         <p class="guide-text">You haven't created a pipeline yet. Once you create a pipeline it will show up in this collection. To help you get started check out our documentation or if you already know what you are doing, create a new pipeline</p>
         <div class="guide-buttons">
-          <BsButton class="guide-create-pipeline-button" onclick={{action "organize"}}>Create Pipeline</BsButton>
-          {{!-- <a type="button" href="#" class="guide-docs-link">View Docs</a> --}}
-          <BsButton class="guide-docs-button" onclick={{action "goToDocs"}}>View Docs</BsButton>
+          {{#link-to "create"}}
+            <BsButton class="guide-create-pipeline-button" onclick={{action "organize"}}>Create Pipeline</BsButton>
+          {{/link-to}}
+          <a href="https://docs.screwdriver.cd/" target="_blank">
+            <BsButton class="guide-docs-button" onclick={{action "goToDocs"}}>View Docs</BsButton>
+          </a>
         </div>
       </div>
     </div>

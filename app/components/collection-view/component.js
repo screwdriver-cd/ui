@@ -33,12 +33,13 @@ export default Component.extend({
   collectionDescription: null,
   searchedPipelines: [],
   selectedSearchedPipelines: [],
+  linkCopied: '',
 
   showOrganizeButton: computed(
     'session.isAuthenticated',
-    'collection.pipelines',
+    'collection.pipelineIds',
     function showOrganizeButton() {
-      return this.session.isAuthenticated && this.collection.pipelines.length !== 0;
+      return this.session.isAuthenticated && this.collection.pipelineIds.length !== 0;
     }
   ),
 
@@ -314,10 +315,12 @@ export default Component.extend({
         });
     },
     selectSearchedPipeline(pipelineId) {
-      this.set('selectedSearchedPipelines', [
-        ...this.selectedSearchedPipelines,
-        parseInt(pipelineId, 10)
-      ]);
+      this.setProperties({
+        selectedSearchedPipelines: [...this.selectedSearchedPipelines, parseInt(pipelineId, 10)],
+        searchedPipelines: this.searchedPipelines.filter(
+          searchedPipeline => searchedPipeline.id !== pipelineId
+        )
+      });
     },
     resetView() {
       this.setProperties({
@@ -347,21 +350,29 @@ export default Component.extend({
       });
     },
     toggleAddPipelineModal() {
-      if (this.get('showAddPipelineModal') && this.selectedSearchedPipelines.length !== 0) {
-        this.addMultipleToCollection(this.selectedSearchedPipelines, this.collection.id).then(
-          () => {
-            this.store.findRecord('collection', this.get('collection.id')).then(collection => {
-              this.setProperties({
-                showAddPipelineModal: false,
-                searchedPipelines: [],
-                selectedSearchedPipelines: [],
-                collection
+      if (this.get('showAddPipelineModal')) {
+        if (this.selectedSearchedPipelines.length !== 0) {
+          this.addMultipleToCollection(this.selectedSearchedPipelines, this.collection.id).then(
+            () => {
+              this.store.findRecord('collection', this.get('collection.id')).then(collection => {
+                this.setProperties({
+                  showAddPipelineModal: false,
+                  searchedPipelines: [],
+                  selectedSearchedPipelines: [],
+                  collection
+                });
               });
-            });
-          }
-        );
+            }
+          );
+        } else {
+          this.setProperties({
+            showAddPipelineModal: false,
+            searchedPipelines: [],
+            selectedSearchedPipelines: []
+          });
+        }
       } else {
-        this.set('showAddPipelineModal', !this.get('showAddPipelineModal'));
+        this.set('showAddPipelineModal', true);
       }
     },
     updateCollectionName(name) {
@@ -385,10 +396,32 @@ export default Component.extend({
         pipelineListConfig.search = query;
       }
 
-      this.set('searchedPipelines', this.store.query('pipeline', pipelineListConfig));
+      this.store.query('pipeline', pipelineListConfig).then(pipelines => {
+        this.set(
+          'searchedPipelines',
+          pipelines.filter(
+            pipeline =>
+              !this.collection.pipelineIds.includes(parseInt(pipeline.id, 10)) &&
+              !this.selectedSearchedPipelines.includes(parseInt(pipeline.id, 10))
+          )
+        );
+      });
     },
     cancelSearch() {
       this.set('showSearch', false);
+    },
+    copyLink() {
+      const textArea = document.createElement('textarea');
+
+      textArea.value = window.location.href;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('Copy');
+      textArea.remove();
+      this.set(
+        'linkCopied',
+        'The link of this collection is successfully copied to the clipboard.'
+      );
     }
   }
 });

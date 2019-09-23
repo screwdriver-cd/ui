@@ -254,6 +254,10 @@
       .guide-buttons {
         margin-top: 10px;
 
+        a {
+          display: inline-block;
+        }
+
         .guide-create-pipeline-button {
           background-image: linear-gradient(to right, #4f97eb, #4073ec);
           color: #fff;
