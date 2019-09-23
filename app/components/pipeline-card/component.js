@@ -9,6 +9,7 @@ export default Component.extend({
   pipeline: null,
   pipelineSelected: false,
   classNames: ['pipeline-card'],
+  reset: false,
 
   showCheckbox: computed('isOrganizing', 'isAuthenticated', function showCheckbox() {
     return this.isOrganizing && this.isAuthenticated;
@@ -25,6 +26,13 @@ export default Component.extend({
     },
     togglePipeline() {
       const pipelineId = this.pipeline.id;
+
+      if (this.reset) {
+        this.setProperties({
+          pipelineSelected: false,
+          reset: false
+        });
+      }
 
       if (this.pipelineSelected) {
         this.set('pipelineSelected', false);

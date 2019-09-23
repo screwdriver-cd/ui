@@ -34,6 +34,7 @@ export default Component.extend({
   searchedPipelines: [],
   selectedSearchedPipelines: [],
   linkCopied: '',
+  reset: false,
 
   showOrganizeButton: computed(
     'session.isAuthenticated',
@@ -281,12 +282,6 @@ export default Component.extend({
     organize() {
       this.set('isOrganizing', true);
     },
-    cancelOrganize() {
-      this.setProperties({
-        isOrganizing: false,
-        selectedPipelines: []
-      });
-    },
     selectPipeline(pipelineId) {
       const newSelectedPipelines = this.selectedPipelines.slice(0);
 
@@ -325,7 +320,8 @@ export default Component.extend({
     resetView() {
       this.setProperties({
         isOrganizing: false,
-        selectedPipelines: []
+        selectedPipelines: [],
+        reset: true
       });
     },
     onSubmitSettingModal() {

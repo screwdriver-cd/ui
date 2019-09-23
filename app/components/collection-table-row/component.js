@@ -11,6 +11,7 @@ export default Component.extend({
   isOrganizing: false,
   pipeline: null,
   pipelineSelected: false,
+  reset: false,
 
   showCheckbox: computed('isOrganizing', 'isAuthenticated', function showCheckbox() {
     return this.isOrganizing && this.isAuthenticated;
@@ -27,6 +28,13 @@ export default Component.extend({
     },
     togglePipeline() {
       const pipelineId = this.pipeline.id;
+
+      if (this.reset) {
+        this.setProperties({
+          pipelineSelected: false,
+          reset: false
+        });
+      }
 
       if (this.pipelineSelected) {
         this.set('pipelineSelected', false);

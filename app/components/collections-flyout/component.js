@@ -21,10 +21,10 @@ export default Component.extend({
       return this.store.findAll('collection');
     }
   }),
-  orderedCollections: computed('collections.[]', 'store', {
+  orderedCollections: computed('collections.[]', {
     get() {
       let defaultCollection;
-      const normalCollections = this.collections.toArray().filter(collection => {
+      const normalCollections = this.store.peekAll('collection').filter(collection => {
         if (collection.type === 'default') {
           defaultCollection = collection;
         }
