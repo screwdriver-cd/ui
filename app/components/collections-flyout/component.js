@@ -24,7 +24,7 @@ export default Component.extend({
   orderedCollections: computed('collections.[]', {
     get() {
       let defaultCollection;
-      const normalCollections = this.store.peekAll('collection').filter(collection => {
+      const normalCollections = this.collections.filter(collection => {
         if (collection.type === 'default') {
           defaultCollection = collection;
         }
@@ -58,6 +58,8 @@ export default Component.extend({
 
       return c.destroyRecord().then(() => {
         this.set('collectionToDelete', null);
+        c.transitionTo('deleted.saved');
+        c.unloadRecord();
 
         if (typeof this.onDeleteCollection === 'function') {
           this.onDeleteCollection();

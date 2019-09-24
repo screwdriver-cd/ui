@@ -22,7 +22,8 @@ export default Component.extend({
       schedule('actions', () => {
         const newCollection = this.store.createRecord('collection', {
           name,
-          description
+          description,
+          type: 'normal'
         });
 
         return newCollection
