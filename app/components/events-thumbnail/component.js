@@ -41,18 +41,6 @@ export default Component.extend({
       .attr('x', (build, idx) => 15 * idx)
       .attr('y', event => 40 - y(event.duration));
 
-    // Show no matter how many we've got
-    /*
-    const bars = svg.selectAll('rect')
-      .data(this.events.toArray().reverse())
-      .enter()
-      .append('rect')
-      .attr('width', 600 / (3 * totalNumberOfEvents - 1))
-      .attr('height', event => y(event.duration))
-      .attr('x', (event, idx) => 900 / (3 * totalNumberOfEvents - 1) * idx)
-      .attr('y', event => 40 - y(event.duration));
-    */
-
     bars.each(function addColor(bar) {
       this.classList.add(bar.statusColor.toLowerCase());
     });
