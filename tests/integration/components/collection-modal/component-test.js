@@ -10,6 +10,7 @@ const mockCollection = {
   id: 1,
   name: 'Test',
   description: 'Test description',
+  type: 'normal',
   get: name => name
 };
 
@@ -65,7 +66,8 @@ module('Integration | Component | collections modal', function(hooks) {
         assert.strictEqual(model, 'collection');
         assert.deepEqual(data, {
           name: 'Test',
-          description: 'Test description'
+          description: 'Test description',
+          type: 'normal'
         });
 
         return collectionModel;

@@ -23,9 +23,9 @@
   {{events-thumbnail events=eventsInfo class="events-thumbnail"}}
 </td>
 <td class="collection-pipeline__remove">
-  {{#unless showCheckbox}}
+  {{#if showRemoveButton}}
     <span onclick={{action "removePipeline"}}>
       &times;
     </span>
-  {{/unless}}
+  {{/if}}
 </td>

@@ -212,10 +212,10 @@ export default Component.extend({
      * @param {Number} collectionId - id of collection to remove from
      * @returns {Promise}
      */
-    pipelineRemove(pipelineId) {
+    removePipeline(pipelineId) {
       const collectionId = this.get('collection.id');
 
-      return this.onPipelineRemove(+pipelineId)
+      return this.onRemovePipeline(+pipelineId)
         .then(() => {
           this.store.findRecord('collection', collectionId).then(collection => {
             this.setProperties({

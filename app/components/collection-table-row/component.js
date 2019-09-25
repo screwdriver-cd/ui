@@ -7,7 +7,7 @@ export default Component.extend({
   store: service(),
   eventsInfo: null,
   lastEventInfo: null,
-  isAuthenticated: undefined,
+  isAuthenticated: false,
   isOrganizing: false,
   pipeline: null,
   pipelineSelected: false,
@@ -17,6 +17,10 @@ export default Component.extend({
     return this.isOrganizing && this.isAuthenticated;
   }),
 
+  showRemoveButton: computed('isOrganizing', 'isAuthenticated', function showRemoveButton() {
+    return !this.isOrganizing && this.isAuthenticated;
+  }),
+
   didReceiveAttrs() {
     this.set('eventsInfo', this.pipeline.eventsInfo);
     this.set('lastEventInfo', this.pipeline.lastEventInfo);
@@ -24,7 +28,7 @@ export default Component.extend({
 
   actions: {
     removePipeline() {
-      this.pipelineRemove(this.pipeline.id);
+      this.removePipeline(this.pipeline.id);
     },
     togglePipeline() {
       const pipelineId = this.pipeline.id;

@@ -188,7 +188,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     injectSessionStub(this);
 
-    const pipelineRemoveMock = (pipelineId, collectionId) => {
+    const removePipelineMock = (pipelineId, collectionId) => {
       // Make sure the models pipeline is the one being removed
       assert.strictEqual(pipelineId, 3);
       assert.strictEqual(collectionId, 1);
@@ -220,12 +220,12 @@ module('Integration | Component | collection view', function(hooks) {
     };
 
     this.set('mockCollection', testCollection);
-    this.set('onPipelineRemoveMock', pipelineRemoveMock);
+    this.set('onMock', removePipelineMock);
 
     await render(hbs`
       {{collection-view
           collection=mockCollection
-          onPipelineRemove=onPipelineRemoveMock
+          onRemovePipeline=onRemovePipelineMock
       }}
     `);
 
@@ -238,7 +238,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     injectSessionStub(this);
 
-    const pipelineRemoveMock = () =>
+    const removePipelineMock = () =>
       reject({
         errors: [
           {
@@ -248,12 +248,12 @@ module('Integration | Component | collection view', function(hooks) {
       });
 
     this.set('mockCollection', testCollection);
-    this.set('onPipelineRemoveMock', pipelineRemoveMock);
+    this.set('onRemovePipelineMock', removePipelineMock);
 
     await render(hbs`
       {{collection-view
           collection=mockCollection
-          onPipelineRemove=onPipelineRemoveMock
+          onRemovePipeline=onRemovePipelineMock
       }}
     `);
 

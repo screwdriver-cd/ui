@@ -152,7 +152,7 @@
             {{#each sortedPipelines as |pipeline|}}
               {{collection-table-row
                   class="collection-pipeline"
-                  pipelineRemove=(action "pipelineRemove")
+                  removePipeline=(action "removePipeline")
                   pipeline=pipeline
                   isAuthenticated=session.isAuthenticated
                   isOrganizing=isOrganizing
@@ -169,7 +169,7 @@
         {{#each sortedPipelines as |pipeline|}}
           {{pipeline-card
               class="pipeline-card"
-              pipelineRemove=(action "pipelineRemove")
+              removePipeline=(action "removePipeline")
               pipeline=pipeline
               isAuthenticated=session.isAuthenticated
               isOrganizing=isOrganizing
