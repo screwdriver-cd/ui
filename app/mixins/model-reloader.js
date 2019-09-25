@@ -83,8 +83,8 @@ export default Mixin.create({
   forceReload() {
     cancel(this.runLater);
     // Push this reload out of current run loop.
-    const forceLater = later(this, 'reloadModel', ENV.APP.FORCE_RELOAD_WAIT);
+    later(this, 'reloadModel', ENV.APP.FORCE_RELOAD_WAIT);
 
-    this.set('runLater', forceLater);
+    this.set('runLater', true);
   }
 });
