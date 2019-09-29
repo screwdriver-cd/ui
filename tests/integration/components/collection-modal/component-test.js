@@ -21,7 +21,7 @@ const collectionModel = {
   destroyRecord() {}
 };
 
-module('Integration | Component | collections modal', function(hooks) {
+module('Integration | Component | collection modal', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {

@@ -7,9 +7,6 @@ export default Component.extend({
     searchPipelines() {
       this.searchPipelines(this.searchTerm);
     },
-    cancelSearch() {
-      this.cancelSearch();
-    },
     selectSearchedPipeline(pipelineId) {
       this.selectSearchedPipeline(pipelineId);
     }

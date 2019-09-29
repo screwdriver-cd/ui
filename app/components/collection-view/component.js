@@ -403,9 +403,6 @@ export default Component.extend({
         );
       });
     },
-    cancelSearch() {
-      this.set('showSearch', false);
-    },
     copyLink() {
       const textArea = document.createElement('textarea');
 
