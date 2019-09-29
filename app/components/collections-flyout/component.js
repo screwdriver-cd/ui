@@ -32,7 +32,7 @@ export default Component.extend({
         return collection.type === 'normal';
       });
 
-      return [defaultCollection, ...normalCollections];
+      return defaultCollection ? [defaultCollection, ...normalCollections] : normalCollections;
     }
   }),
 
