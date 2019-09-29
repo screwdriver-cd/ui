@@ -15,6 +15,10 @@ export default Component.extend({
     return this.isOrganizing && this.isAuthenticated;
   }),
 
+  showRemoveButton: computed('isOrganizing', 'isAuthenticated', function showRemoveButton() {
+    return !this.isOrganizing && this.isAuthenticated;
+  }),
+
   didReceiveAttrs() {
     this.set('eventsInfo', this.pipeline.eventsInfo);
     this.set('lastEventInfo', this.pipeline.lastEventInfo);

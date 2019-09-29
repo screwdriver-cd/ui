@@ -5,11 +5,11 @@
   </label>
 {{/if}}
 <div class="pipeline-card-content {{if showCheckbox "show-checkbox" ""}}">
-  {{#unless showCheckbox}}
+  {{#if showRemoveButton}}
     <span class="remove-button" onclick={{action "removePipeline"}}>
       &times;
     </span>
-  {{/unless}}
+  {{/if}}
   <div class="branch-info">
     {{#link-to "pipeline" pipeline.id}}
       {{line-clamp
