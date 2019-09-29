@@ -7,9 +7,24 @@ import sinon from 'sinon';
 import $ from 'jquery';
 
 const mockPipeline = EmberObject.create({
+  id: 1,
   eventsInfo: [],
-  lastEventInfo: [],
-  id: 1
+  lastEventInfo: {
+    commitMessage: 'No events have been run for this pipeline',
+    commitUrl: '#',
+    durationText: '--',
+    icon: 'fas fa-question-circle',
+    sha: 'Not available',
+    startTime: '--/--/----',
+    statusColor: '$sd-no-build'
+  },
+  scmRepo: {
+    branch: 'master',
+    name: 'screwdriver-cd/ui',
+    rootDir: '',
+    url: 'https://github.com/screwdriver-cd/ui/tree/master'
+  },
+  branch: 'master'
 });
 const removePipelineSpy = sinon.spy();
 const selectPipelineSpy = sinon.spy();
@@ -31,6 +46,8 @@ module('Integration | Component | collection table row', function(hooks) {
   });
 
   test('it renders', async function(assert) {
+    this.owner.setupRouter();
+
     await render(hbs`
       {{collection-table-row
         pipeline=pipeline
@@ -38,13 +55,17 @@ module('Integration | Component | collection table row', function(hooks) {
     `);
 
     assert.dom('td.collection-pipeline__choose').exists({ count: 1 });
-    assert.dom('td.app-id').exists({ count: 1 });
-    assert.dom('td.branch').exists({ count: 1 });
-    assert.dom('td.status').exists({ count: 1 });
-    assert.dom('td.start').exists({ count: 1 });
-    assert.dom('td.duration').exists({ count: 1 });
+    assert.dom('td.app-id a').hasText(mockPipeline.scmRepo.name);
+    assert.dom('td.app-id a').hasAttribute('href', `/pipelines/${mockPipeline.id}`);
+    assert.dom('td.branch').hasText(mockPipeline.branch);
+    assert.dom('td.status a').hasText(mockPipeline.lastEventInfo.sha);
+    assert.dom('td.status a').hasAttribute('href', mockPipeline.lastEventInfo.commitUrl);
+    assert.dom('td.start').hasText(mockPipeline.lastEventInfo.startTime);
+    assert.dom('td.duration').hasText(mockPipeline.lastEventInfo.durationText);
     assert.dom('td.history').exists({ count: 1 });
     assert.dom('td.collection-pipeline__remove').exists({ count: 1 });
+
+    // TODO: test nested components
   });
 
   test('it renders no remove button and no checkbox when not authenticated', async function(assert) {
@@ -89,7 +110,7 @@ module('Integration | Component | collection table row', function(hooks) {
     assert.dom('td.collection-pipeline__remove span').exists();
   });
 
-  test('it can delete the pipeline displayed', async function(assert) {
+  test('it deletes the pipeline displayed', async function(assert) {
     await render(hbs`
       {{collection-table-row
         pipeline=pipeline
@@ -100,10 +121,10 @@ module('Integration | Component | collection table row', function(hooks) {
     `);
 
     await click('.collection-pipeline__remove span');
-    assert.ok(removePipelineSpy.called);
+    assert.ok(removePipelineSpy.calledWith(mockPipeline.id));
   });
 
-  test('it can select and deselect the pipeline displayed', async function(assert) {
+  test('it selects and deselects the pipeline displayed', async function(assert) {
     this.set('isOrganizing', true);
 
     await render(hbs`
@@ -117,11 +138,11 @@ module('Integration | Component | collection table row', function(hooks) {
     `);
 
     await click('.collection-pipeline__choose input');
-    assert.ok(selectPipelineSpy.called);
+    assert.ok(selectPipelineSpy.calledWith(mockPipeline.id));
     assert.equal($('.collection-pipeline__choose input').val(), 'true');
 
     await click('.collection-pipeline__choose input');
-    assert.ok(deselectPipelineSpy.called);
+    assert.ok(deselectPipelineSpy.calledWith(mockPipeline.id));
     assert.equal($('.collection-pipeline__choose input').val(), 'false');
   });
 });
