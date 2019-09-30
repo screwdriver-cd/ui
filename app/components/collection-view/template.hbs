@@ -26,6 +26,7 @@
       </span>
 
       <BsModal
+        @class="add-pipeline-modal"
         @open={{showAddPipelineModal}} 
         @onHidden={{action "toggleAddPipelineModal"}}
       as |modal|>
@@ -44,6 +45,7 @@
       </BsModal>
 
       <BsModal
+        @class="setting-modal"
         @open={{showSettingModal}}
         @onHide={{action "toggleSettingModal"}}
         @onSubmit={{action "onSubmitSettingModal"}} as |modal|>
@@ -93,15 +95,16 @@
             <span>{{selectedPipelines.length}}&nbsp;&nbsp;Selected</span>
             <BsButton class="operation-button" onclick={{action "removeSelectedPipelines"}}>Remove</BsButton>
             {{collection-dropdown
+                class="move-pipeline"
                 collections=collections
                 addMultipleToCollection=(action "addMultipleToCollection")
                 buttonClass="operation-button"
                 buttonText="Move To"
             }}
           {{/if}}
-          <BsButton onclick={{action "resetView"}}>Cancel</BsButton>
+          <BsButton class="cancel-organize-button" onclick={{action "resetView"}}>Cancel</BsButton>
         {{else}}
-          <BsButton onclick={{action "organize"}}>Organize</BsButton>
+          <BsButton class="organize-button" onclick={{action "organize"}}>Organize</BsButton>
         {{/if}}
       {{/if}}
     </div>

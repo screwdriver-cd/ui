@@ -255,30 +255,6 @@ export default Component.extend({
           this.set('sortBy', [option]);
       }
     },
-    editDescription() {
-      this.set('editingDescription', true);
-    },
-    editName() {
-      this.set('editingName', true);
-    },
-    saveName() {
-      const { collection } = this;
-      let newName = this.$('.edit-area-name').val();
-
-      if (newName) {
-        collection.set('name', this.$('.edit-area-name').val());
-        collection.save();
-      }
-
-      this.set('editingName', false);
-    },
-    saveDescription() {
-      const { collection } = this;
-
-      collection.set('description', this.$('.edit-area').val());
-      this.set('editingDescription', false);
-      collection.save();
-    },
     organize() {
       this.set('isOrganizing', true);
     },

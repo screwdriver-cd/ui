@@ -6,8 +6,6 @@ export default Controller.extend({
   collection: alias('model.collection'),
   eventsMap: alias('model.eventsMap'),
   collections: alias('model.collections'),
-  editingDescription: false,
-  editingName: false,
   actions: {
     removePipeline(pipelineId) {
       const collectionId = this.get('collection.id');
@@ -33,10 +31,6 @@ export default Controller.extend({
     },
     onDeleteCollection() {
       this.transitionToRoute('home');
-    },
-    changeCollection() {
-      this.set('editingDescription', false);
-      this.set('editingName', false);
     },
     addMultipleToCollection(addedPipelineIds, collectionId) {
       return this.store.findRecord('collection', collectionId).then(collection => {

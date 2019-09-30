@@ -37,9 +37,6 @@ export default Component.extend({
   }),
 
   actions: {
-    changeCollectionDisplayed() {
-      this.changeCollection();
-    },
     openModal() {
       this.set('showModal', true);
     },
