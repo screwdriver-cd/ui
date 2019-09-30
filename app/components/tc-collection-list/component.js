@@ -132,15 +132,7 @@ export default Component.extend({
       label: 'Updated',
       valuePath: 'lastUpdated',
       resizable: true,
-      width: '10%',
-      minResizeWidth: 100
-    },
-    {
-      label: 'Version',
-      sortable: false,
-      valuePath: 'version',
-      resizable: true,
-      width: '10%',
+      width: '15%',
       minResizeWidth: 100
     },
     {
@@ -148,7 +140,7 @@ export default Component.extend({
       sortable: true,
       valuePath: 'maintainer',
       resizable: true,
-      width: '15%',
+      width: '20%',
       minResizeWidth: 150
     }
   ]),

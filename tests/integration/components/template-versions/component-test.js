@@ -34,6 +34,8 @@ module('Integration | Component | template versions', function(hooks) {
   test('it handles clicks on versions', async function(assert) {
     assert.expect(10);
 
+    this.owner.setupRouter();
+
     this.set('mock', TEMPLATES);
     this.actions.mockAction = function(ver) {
       assert.equal(ver, '1.0.0');

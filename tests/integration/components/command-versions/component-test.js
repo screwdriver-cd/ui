@@ -34,6 +34,8 @@ module('Integration | Component | command versions', function(hooks) {
   test('Links of version exist', async function(assert) {
     assert.expect(10);
 
+    this.owner.setupRouter();
+
     this.set('mock', COMMANDS);
     this.actions.mockAction = function(ver) {
       assert.equal(ver, '1.0.0');
