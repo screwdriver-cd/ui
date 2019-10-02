@@ -18,6 +18,11 @@ export default Component.extend({
       return getWithDefault(this, 'results.annotations', []);
     }
   }),
+  parameters: computed('results.parameters', {
+    get() {
+      return getWithDefault(this, 'results.parameters', []);
+    }
+  }),
   templateName: computed('results.template.{namespace,name,version}', {
     get() {
       // construct full template name

@@ -89,29 +89,6 @@
     </ul>
   </span>
 </div>
-<div class="parameters" title="These are the parameter variables you have added to the job.">
-  <span class="label">Parameter Variables:</span>
-  <span class="value">
-    <ul>
-      {{#each-in job.parameters as |name value|}}
-        {{!-- if value is a string --}}
-        {{#if value.length}}
-          <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
-        {{else}}
-        {{!-- if value is an object --}}
-          <li><span class="name">{{name}}: </span>
-            <ul>
-              <li><span class="value">{{value.value}}</span></li>
-              <li><span class="description">{{value.description}}</span></li>
-            </ul>
-          </li>
-        {{/if}}
-      {{else}}
-        <li>None defined</li>
-      {{/each-in}}
-    </ul>
-  </span>
-</div>
 <div class="settings" title="These settings are used to configure any additional build plugins added to screwdriver.cd. Configure email and slack notifications for build events here.">
   <span class="label">Settings:</span>
   <span class="value">
