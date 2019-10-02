@@ -1,10 +1,9 @@
 import Component from '@ember/component';
-import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
+import { and } from '@ember/object/computed';
 
 export default Component.extend({
   tagName: 'tr',
-  store: service(),
   eventsInfo: null,
   lastEventInfo: null,
   isAuthenticated: false,
@@ -13,17 +12,17 @@ export default Component.extend({
   pipelineSelected: false,
   reset: false,
 
-  showCheckbox: computed('isOrganizing', 'isAuthenticated', function showCheckbox() {
-    return this.isOrganizing && this.isAuthenticated;
-  }),
+  showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
   showRemoveButton: computed('isOrganizing', 'isAuthenticated', function showRemoveButton() {
     return !this.isOrganizing && this.isAuthenticated;
   }),
 
   didReceiveAttrs() {
-    this.set('eventsInfo', this.pipeline.eventsInfo);
-    this.set('lastEventInfo', this.pipeline.lastEventInfo);
+    this.setProperties({
+      eventsInfo: this.pipeline.eventsInfo,
+      lastEventInfo: this.pipeline.lastEventInfo
+    });
   },
 
   actions: {

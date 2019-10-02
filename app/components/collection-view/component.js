@@ -143,6 +143,8 @@ export default Component.extend({
         return `${numOfHours}h ${numOfMinutes}m ${numOfSeconds}s`;
       };
 
+      const getSha = sha => sha.substring(0, 7);
+
       if (this.get('collection.pipelines')) {
         return this.get('collection.pipelines').map(pipeline => {
           const scm = scmService.getScm(pipeline.scmContext);
@@ -178,7 +180,7 @@ export default Component.extend({
               startTime: `${lastEventStartMonth}/${lastEventStartDay}/${lastEventStartYear}`,
               statusColor: getColor(lastEvent.status.toLowerCase()),
               durationText: formatTime(lastEvent.duration),
-              sha: lastEvent.sha.substring(0, 7),
+              sha: getSha(lastEvent.sha),
               icon: getIcon(lastEvent.status.toLowerCase()),
               commitMessage: lastEvent.commit.message,
               commitUrl: lastEvent.commit.url
@@ -187,10 +189,10 @@ export default Component.extend({
             ret.eventsInfo = [];
             ret.lastEventInfo = {
               startTime: '--/--/----',
-              statusColor: '$sd-no-build',
+              statusColor: 'build-empty',
               durationText: '--',
               sha: 'Not available',
-              icon: 'fas fa-question-circle',
+              icon: 'question-circle',
               commitMessage: 'No events have been run for this pipeline',
               commitUrl: '#'
             };

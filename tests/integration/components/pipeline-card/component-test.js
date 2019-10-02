@@ -13,10 +13,10 @@ const mockPipeline = EmberObject.create({
     commitMessage: 'No events have been run for this pipeline',
     commitUrl: '#',
     durationText: '--',
-    icon: 'fas fa-question-circle',
+    icon: 'question-circle',
     sha: 'Not available',
     startTime: '--/--/----',
-    statusColor: '$sd-no-build'
+    statusColor: 'build-empty'
   },
   scmRepo: {
     branch: 'master',
@@ -59,6 +59,7 @@ module('Integration | Component | pipeline card', function(hooks) {
     assert.dom('.commit-info').exists({ count: 1 });
     assert.dom('.commit-status a').hasText(mockPipeline.lastEventInfo.sha);
     assert.dom('.commit-status a').hasAttribute('href', mockPipeline.lastEventInfo.commitUrl);
+    assert.dom('.commit-status i').hasClass('fa-question-circle');
     assert.dom('.commit-message').hasText(mockPipeline.lastEventInfo.commitMessage);
     assert.dom('.time-metrics').exists({ count: 1 });
     assert

@@ -14,28 +14,33 @@ export default Component.extend({
     },
     addToCollection(collection) {
       if (this.get('pipeline') && this.addToCollection) {
-        return this.addToCollection(+this.get('pipeline').id, collection)
+        return this.addToCollection(+this.pipeline.id, collection)
           .then(() => {
-            this.set('addCollectionError', null);
-            this.set('addCollectionSuccess', `Successfully added Pipeline to ${collection.name}`);
+            this.setProperties({
+              addCollectionError: null,
+              addCollectionSuccess: `Successfully added Pipeline to ${collection.name}`
+            });
           })
           .catch(() => {
-            this.set('addCollectionError', `Could not add Pipeline to ${collection.name}`);
-            this.set('addCollectionSuccess', null);
+            this.setProperties({
+              addCollectionError: `Could not add Pipeline to ${collection.name}`,
+              addCollectionSuccess: null
+            });
           });
       }
 
       return this.addMultipleToCollection(collection)
         .then(() => {
-          this.set('addCollectionError', null);
-          this.set(
-            'addCollectionSuccess',
-            `Successfully added all Pipelines to ${collection.name}`
-          );
+          this.setProperties({
+            addCollectionError: null,
+            addCollectionSuccess: `Successfully added all Pipelines to ${collection.name}`
+          });
         })
         .catch(() => {
-          this.set('addCollectionError', `Could not add all Pipelines to ${collection.name}`);
-          this.set('addCollectionSuccess', null);
+          this.setProperties({
+            addCollectionError: `Could not add all Pipelines to ${collection.name}`,
+            addCollectionSuccess: null
+          });
         });
     }
   }

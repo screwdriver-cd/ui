@@ -55,8 +55,8 @@ export default Component.extend({
 
       return c.destroyRecord().then(() => {
         this.set('collectionToDelete', null);
-        c.transitionTo('deleted.saved');
         c.unloadRecord();
+        c.transitionTo('deleted.saved');
 
         if (typeof this.onDeleteCollection === 'function') {
           this.onDeleteCollection();

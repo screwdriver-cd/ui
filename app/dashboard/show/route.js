@@ -1,13 +1,10 @@
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-// import timeRange from 'screwdriver-ui/utils/time-range';
 const NUM_EVENTS_SHOWN = 20;
 
 export default Route.extend(AuthenticatedRouteMixin, {
   model(params) {
-    // const { startTime, endTime } = timeRange(new Date(), '1wk');
-
     return this.store.findRecord('collection', params.collection_id).then(collection => {
       return RSVP.hash({
         eventsMap: RSVP.hash(

@@ -165,7 +165,37 @@ const mockCollections = [
   }
 ];
 
-const mockEventsMap = EmberObject.create({ 1: [], 2: [], 3: [], 4: [] });
+const mockEventsMap = EmberObject.create({
+  1: [
+    {
+      creatTime: 'Tue Oct 01 2019 15:55:52 GMT-0700 (Pacific Daylight Time)',
+      status: 'FAILURE',
+      duration: 42718,
+      sha: '9af92ba97483213119dd4b57d7cc903405d199ea',
+      commit: {
+        message:
+          'Merge pull request #7 from screwdriver-cd-test/tkyi-patch-1\n\nfix: Use new workflow with requires keyword',
+        url:
+          'https://github.com/screwdriver-cd/screwdriver/commit/9af92ba97483213119dd4b57d7cc903405d199ea'
+      }
+    },
+    {
+      status: 'SUCCESS',
+      duration: 23173
+    },
+    {
+      status: 'SUCCESS',
+      duration: 20011
+    },
+    {
+      status: 'FAILURE',
+      duration: 39234
+    }
+  ],
+  2: [],
+  3: [],
+  4: []
+});
 
 const onRemovePipelineSpy = sinon.spy();
 const addMultipleToCollectionSpy = sinon.spy();
@@ -197,9 +227,42 @@ module('Integration | Component | collection view', function(hooks) {
         eventsMap=eventsMap
       }}`);
 
+    // check that necessage elements exist
     assert.dom('.collection-card-view').exists({ count: 1 });
     assert.dom('.collection-list-view').doesNotExist();
     assert.dom('.pipeline-card').exists({ count: 4 });
+
+    // check that pipeline card order is correct
+    assert.dom('.pipeline-card:nth-of-type(1) .branch-info a').hasText('screwdriver-cd/models');
+    assert
+      .dom('.pipeline-card:nth-of-type(2) .branch-info a')
+      .hasText('screwdriver-cd/screwdriver');
+    assert.dom('.pipeline-card:nth-of-type(3) .branch-info a').hasText('screwdriver-cd/ui');
+    assert.dom('.pipeline-card:nth-of-type(4) .branch-info a').hasText('screwdriver-cd/zzz');
+
+    // check that helper function getColor() works correctly
+    assert.dom('.pipeline-card:nth-of-type(1) .commit-status i').hasClass('build-empty');
+    assert.dom('.pipeline-card:nth-of-type(2) .commit-status i').hasClass('build-failure');
+    assert.dom('.pipeline-card:nth-of-type(3) .commit-status i').hasClass('build-empty');
+    assert.dom('.pipeline-card:nth-of-type(4) .commit-status i').hasClass('build-empty');
+
+    // check that helper function getIcon() works correctly
+    assert.dom('.pipeline-card:nth-of-type(1) .commit-status i').hasClass('fa-question-circle');
+    assert.dom('.pipeline-card:nth-of-type(2) .commit-status i').hasClass('fa-times-circle');
+    assert.dom('.pipeline-card:nth-of-type(3) .commit-status i').hasClass('fa-question-circle');
+    assert.dom('.pipeline-card:nth-of-type(4) .commit-status i').hasClass('fa-question-circle');
+
+    // check that helper function getSha() works correctly
+    assert.dom('.pipeline-card:nth-of-type(1) .commit-status a').hasText('Not available');
+    assert.dom('.pipeline-card:nth-of-type(2) .commit-status a').hasText('9af92ba');
+    assert.dom('.pipeline-card:nth-of-type(3) .commit-status a').hasText('Not available');
+    assert.dom('.pipeline-card:nth-of-type(4) .commit-status a').hasText('Not available');
+
+    // check that helper function formatTime() works correctly
+    assert.dom('.pipeline-card:nth-of-type(1) .duration-badge span:nth-of-type(2)').hasText('--');
+    assert.dom('.pipeline-card:nth-of-type(2) .duration-badge span:nth-of-type(2)').hasText('42s');
+    assert.dom('.pipeline-card:nth-of-type(3) .duration-badge span:nth-of-type(2)').hasText('--');
+    assert.dom('.pipeline-card:nth-of-type(4) .duration-badge span:nth-of-type(2)').hasText('--');
   });
 
   test('it renders in list mode', async function(assert) {
@@ -214,6 +277,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await click('.header__change-view button:nth-of-type(2)');
 
+    // check that necessage elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -228,6 +292,38 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('th.history').exists({ count: 1 });
 
     assert.dom('.collection-pipeline').exists({ count: 4 });
+
+    // check that collection table row order is correct
+    assert.dom('.collection-pipeline:nth-of-type(1) .app-id a').hasText('screwdriver-cd/models');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id a')
+      .hasText('screwdriver-cd/screwdriver');
+    assert.dom('.collection-pipeline:nth-of-type(3) .app-id a').hasText('screwdriver-cd/ui');
+    assert.dom('.collection-pipeline:nth-of-type(4) .app-id a').hasText('screwdriver-cd/zzz');
+
+    // check that helper function getColor() works correctly
+    assert.dom('.collection-pipeline:nth-of-type(1) .status i').hasClass('build-empty');
+    assert.dom('.collection-pipeline:nth-of-type(2) .status i').hasClass('build-failure');
+    assert.dom('.collection-pipeline:nth-of-type(3) .status i').hasClass('build-empty');
+    assert.dom('.collection-pipeline:nth-of-type(4) .status i').hasClass('build-empty');
+
+    // check that helper function getIcon() works correctly
+    assert.dom('.collection-pipeline:nth-of-type(1) .status i').hasClass('fa-question-circle');
+    assert.dom('.collection-pipeline:nth-of-type(2) .status i').hasClass('fa-times-circle');
+    assert.dom('.collection-pipeline:nth-of-type(3) .status i').hasClass('fa-question-circle');
+    assert.dom('.collection-pipeline:nth-of-type(4) .status i').hasClass('fa-question-circle');
+
+    // check that helper function getSha() works correctly
+    assert.dom('.collection-pipeline:nth-of-type(1) .status a').hasText('Not available');
+    assert.dom('.collection-pipeline:nth-of-type(2) .status a').hasText('9af92ba');
+    assert.dom('.collection-pipeline:nth-of-type(3) .status a').hasText('Not available');
+    assert.dom('.collection-pipeline:nth-of-type(4) .status a').hasText('Not available');
+
+    // check that helper function formatTime() works correctly
+    assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('--');
+    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('42s');
+    assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('--');
+    assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('--');
   });
 
   test('it renders empty view if the collection has no pipelins', async function(assert) {
