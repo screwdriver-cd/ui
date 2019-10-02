@@ -1,8 +1,8 @@
-{{#if pipeline.parameters}}
+{{#if hasParameters}}
   {{#bs-dropdown
     onHide=(action "resetForm")
     closeOnMenuClick=false as |dd|}}
-     <div class="btn-group">
+    <div class="btn-group">
       <button {{action "startBuild"}} class="start-button btn"
         title="Start a new event from latest commit"
         >Start{{#if prNum}} PR-{{prNum}}{{/if}}</button>
@@ -10,25 +10,24 @@
         onClick=(action "toggleDropdown" dd.toggleDropdown)}}
         {{fa-icon (concat "caret-" direction)}}
       {{/dd.button}}
-     </div>
-  {{#dd.menu as |ddm|}}
-    {{#bs-form formLayout="horizontal" model=buildParameters
-      class="start-with-parameters-form"
-      onSubmit=(action "startBuildWithParameters") as |form|}}
-      {{#each-in buildParameters as |parameterName|}}
-        {{form.element
-          label=parameterName
-          property=parameterName
-          onChange=(action "updateValue")}}
-      {{/each-in}}
-      <div class="btn-group">
-        {{bs-button defaultText="Submit" type="primary"}}
-        {{bs-button defaultText="Reset" type="secondary" onClick=(action "resetForm")}}
-      </div>
-    {{/bs-form}}
-  {{/dd.menu}}
-{{/bs-dropdown}}
-
+    </div>
+    {{#dd.menu as |ddm|}}
+      {{#bs-form formLayout="horizontal" model=buildParameters
+        class="start-with-parameters-form"
+        onSubmit=(action "startBuild" buildParameters dd.closeDropdown) as |form|}}
+        {{#each-in buildParameters as |parameterName|}}
+          {{form.element
+            label=parameterName
+            property=parameterName
+            onChange=(action "updateValue")}}
+        {{/each-in}}
+        <div class="btn-group">
+          {{bs-button defaultText="Submit" type="primary" buttonType="submit"}}
+          {{bs-button defaultText="Reset" type="secondary" onClick=(action "resetForm")}}
+        </div>
+      {{/bs-form}}
+    {{/dd.menu}}
+  {{/bs-dropdown}}
 {{else}}
   <button {{action "startBuild"}} class="start-button" title="Start a new event from latest commit">Start{{#if prNum}} PR-{{prNum}}{{/if}}</button>
 {{/if}}

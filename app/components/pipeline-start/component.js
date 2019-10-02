@@ -9,6 +9,10 @@ export default Component.extend({
     this.set('buildParameters', this.getDefaultBuildParameters());
   },
 
+  hasParameters: computed('buildParameters', function() {
+    return Object.keys(this.buildParameters).length > 0;
+  }),
+
   getDefaultBuildParameters() {
     const buildParameters = {};
 
@@ -21,7 +25,7 @@ export default Component.extend({
     return buildParameters;
   },
 
-  startArgs: computed('prNum', 'jobs', 'buildParameters', {
+  startArgs: computed('prNum', 'jobs', {
     get() {
       const jobs = this.jobs || [];
       const { prNum } = this;
@@ -36,20 +40,16 @@ export default Component.extend({
   }),
 
   actions: {
-    startBuild(parameters) {
+    startBuild(parameters, closeDropdown) {
       let args = this.startArgs;
 
       if (parameters) {
+        closeDropdown();
         args.push(parameters);
       }
       const startFunc = this.startBuild;
 
       startFunc.apply(null, args);
-    },
-
-    startBuildWithParameters() {
-      console.log('current buildParameters', this.buildParameters);
-      this.send('startBuild', this.buildParameters);
     },
 
     toggleDropdown(toggleDropdown) {
@@ -68,12 +68,7 @@ export default Component.extend({
     },
 
     resetForm() {
-      const buildParameters = this.getDefaultBuildParameters();
-
-      this.setProperties({
-        direction: 'down',
-        buildParameters
-      });
+      this.set('buildParameters', this.getDefaultBuildParameters());
     }
   }
 });
