@@ -21,11 +21,22 @@ export default Component.extend({
       return this.store.findAll('collection');
     }
   }),
+  orderedCollections: computed('collections.[]', {
+    get() {
+      let defaultCollection;
+      const normalCollections = this.collections.filter(collection => {
+        if (collection.type === 'default') {
+          defaultCollection = collection;
+        }
+
+        return collection.type === 'normal';
+      });
+
+      return defaultCollection ? [defaultCollection, ...normalCollections] : normalCollections;
+    }
+  }),
 
   actions: {
-    changeCollectionDisplayed() {
-      this.changeCollection();
-    },
     openModal() {
       this.set('showModal', true);
     },
@@ -44,6 +55,8 @@ export default Component.extend({
 
       return c.destroyRecord().then(() => {
         this.set('collectionToDelete', null);
+        c.unloadRecord();
+        c.transitionTo('deleted.saved');
 
         if (typeof this.onDeleteCollection === 'function') {
           this.onDeleteCollection();

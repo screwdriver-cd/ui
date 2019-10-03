@@ -22,7 +22,7 @@ module('Unit | Controller | dashboard/show', function(hooks) {
     let pipelineIds = [1, 2, 3];
 
     const mock = EmberObject.create({
-      id: 1,
+      id: 2,
       name: 'collection1',
       description: 'description1',
       pipelineIds,
@@ -33,17 +33,23 @@ module('Unit | Controller | dashboard/show', function(hooks) {
       }
     });
 
+    controller.set('model', {
+      collection: {
+        id: 2
+      }
+    });
+
     controller.set('store', {
       findRecord(modelName, collectionId) {
         assert.strictEqual(modelName, 'collection');
-        assert.strictEqual(collectionId, 1);
+        assert.strictEqual(collectionId, 2);
 
         return resolve(mock);
       }
     });
 
     // Remove pipeline with id 3 from collection with id 1
-    controller.send('removePipeline', 3, 1);
+    controller.send('removePipeline', 3);
   });
 
   sinonTest('it calls onDeleteCollection', function(assert) {

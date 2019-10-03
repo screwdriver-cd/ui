@@ -1,0 +1,26 @@
+svg {
+  height: 40px;
+  width: 100%;
+  padding: 0 11px 0 16px;
+  border-bottom: 2px $sd-empty solid;
+}
+
+.build-running {
+  fill: $sd-running;
+}
+
+.build-success {
+  fill: $sd-success;
+}
+
+.build-failure {
+  fill: $sd-failure;
+}
+
+.build-unstable {
+  fill: $sd-unstable;
+}
+
+.build-empty {
+  fill: $sd-empty;
+}

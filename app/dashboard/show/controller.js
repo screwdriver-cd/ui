@@ -3,11 +3,13 @@ import { getWithDefault, set } from '@ember/object';
 import Controller from '@ember/controller';
 
 export default Controller.extend({
-  collection: alias('model'),
-  editingDescription: false,
-  editingName: false,
+  collection: alias('model.collection'),
+  eventsMap: alias('model.eventsMap'),
+  collections: alias('model.collections'),
   actions: {
-    removePipeline(pipelineId, collectionId) {
+    removePipeline(pipelineId) {
+      const collectionId = this.get('collection.id');
+
       return this.store.findRecord('collection', collectionId).then(collection => {
         const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
 
@@ -16,12 +18,28 @@ export default Controller.extend({
         return collection.save();
       });
     },
+    removeMultiplePipelines(removedPipelineIds) {
+      const collectionId = this.get('collection.id');
+
+      return this.store.findRecord('collection', collectionId).then(collection => {
+        const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
+
+        set(collection, 'pipelineIds', pipelineIds.filter(id => !removedPipelineIds.includes(id)));
+
+        return collection.save();
+      });
+    },
     onDeleteCollection() {
       this.transitionToRoute('home');
     },
-    changeCollection() {
-      this.set('editingDescription', false);
-      this.set('editingName', false);
+    addMultipleToCollection(addedPipelineIds, collectionId) {
+      return this.store.findRecord('collection', collectionId).then(collection => {
+        const pipelineIds = collection.get('pipelineIds');
+
+        collection.set('pipelineIds', [...new Set([...pipelineIds, ...addedPipelineIds])]);
+
+        return collection.save();
+      });
     }
   }
 });
