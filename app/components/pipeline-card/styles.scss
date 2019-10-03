@@ -105,6 +105,9 @@
 
     & a {
       width: 80%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     & > div {
@@ -125,6 +128,10 @@
 
     .commit-message {
       height: 40px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
   }
 
