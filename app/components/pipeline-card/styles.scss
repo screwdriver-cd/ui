@@ -8,9 +8,6 @@
   margin-bottom: 12px;
   cursor: pointer;
   font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 
   input {
@@ -41,8 +38,6 @@
       height: 14px;
       border: solid #96c4e9;
       border-width: 0 3px 3px 0;
-      -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
       transform: rotate(45deg);
     }
   }
@@ -129,7 +124,7 @@
     .commit-message {
       height: 40px;
       overflow: hidden;
-      display: -webkit-box;
+      display: --box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
     }
