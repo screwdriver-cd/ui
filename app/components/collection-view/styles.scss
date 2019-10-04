@@ -22,6 +22,7 @@
 
     &__organize {
       margin-top: 3rem;
+      padding-right: 40px;
       display: flex;
       justify-content: flex-end;
       align-items: center;
@@ -282,6 +283,12 @@
     width: 33.33%;
     padding: 20px;
     position: relative;
+  }
+
+  @media screen and (max-width: 1440px) {
+    .pipeline-card {
+      width: 50%;
+    }
   }
 
   // sass-lint:disable class-name-format

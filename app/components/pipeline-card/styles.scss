@@ -8,9 +8,6 @@
   margin-bottom: 12px;
   cursor: pointer;
   font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 
   input {
@@ -41,8 +38,6 @@
       height: 14px;
       border: solid #96c4e9;
       border-width: 0 3px 3px 0;
-      -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
       transform: rotate(45deg);
     }
   }
@@ -104,11 +99,26 @@
     font-size: 16px;
 
     & a {
-      width: 80%;
+      width: 75%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     & > div {
-      width: 20%;
+      width: 25%;
+    }
+  }
+
+  @media screen and (max-width: 1440px) {
+    .branch-info {
+      & a {
+        width: 78%;
+      }
+
+      & > div {
+        width: 22%;
+      }
     }
   }
 
@@ -125,6 +135,10 @@
 
     .commit-message {
       height: 40px;
+      overflow: hidden;
+      display: --box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
   }
 
@@ -176,6 +190,6 @@
   }
 
   .events-thumbnail {
-    width: 327px;
+    width: 100%;
   }
 }

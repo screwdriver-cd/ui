@@ -12,11 +12,12 @@
   {{/if}}
   <div class="branch-info">
     {{#link-to "pipeline" pipeline.id}}
-      {{line-clamp
+      {{!-- {{line-clamp
         lines=1
         interactive=false
         text=pipeline.scmRepo.name
-      }}
+      }} --}}
+      <p title={{pipeline.scmRepo.name}}>{{pipeline.scmRepo.name}}</p>
     {{/link-to}}
     <div>
       {{fa-icon "code-fork"}}
@@ -31,11 +32,12 @@
       </a>
     </div>
     <p class="commit-message">
-      {{line-clamp
+      {{!-- {{line-clamp
         lines=2
         interactive=false
         text=lastEventInfo.commitMessage
-      }}
+      }} --}}
+      {{lastEventInfo.commitMessage}}
     </p>
   </div>
   <div class="time-metrics">
@@ -52,6 +54,7 @@
     {{events-thumbnail
         class="events-thumbnail"
         events=eventsInfo
+        pipelineId=pipeline.id
     }}
   </div>
 </div>
