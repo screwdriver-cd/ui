@@ -93,8 +93,6 @@
   }
 
   .branch-info {
-    // display: flex;
-    // justify-content: space-between;
     margin-bottom: 20px;
     font-size: 16px;
 
@@ -116,18 +114,6 @@
       white-space: nowrap;
     }
   }
-
-  // @media screen and (max-width: 1440px) {
-  //   .branch-info {
-  //     & a {
-  //       width: 78%;
-  //     }
-
-  //     & > div {
-  //       width: 22%;
-  //     }
-  //   }
-  // }
 
   .commit-info {
     margin-bottom: 25px;
