@@ -4,7 +4,7 @@ import Controller from '@ember/controller';
 
 export default Controller.extend({
   collection: alias('model.collection'),
-  eventsMap: alias('model.eventsMap'),
+  metricsMap: alias('model.metricsMap'),
   collections: alias('model.collections'),
   actions: {
     removePipeline(pipelineId) {

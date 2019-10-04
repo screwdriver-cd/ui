@@ -1,25 +1,21 @@
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-const NUM_EVENTS_SHOWN = 20;
+import timeRange from 'screwdriver-ui/utils/time-range';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   model(params) {
+    const { startTime, endTime } = timeRange(new Date(), '1mo');
+
     return this.store.findRecord('collection', params.collection_id).then(collection => {
       return RSVP.hash({
-        eventsMap: RSVP.hash(
+        metricsMap: RSVP.hash(
           (collection.pipelineIds || []).reduce((oldMap, pipelineId) => {
-            oldMap[pipelineId] = this.store
-              .query('event', {
-                pipelineId,
-                page: 1,
-                count: NUM_EVENTS_SHOWN
-              })
-              .then(events => {
-                return RSVP.all(events.getEach('builds')).then(() => {
-                  return events;
-                });
-              });
+            oldMap[pipelineId] = this.store.query('metric', {
+              pipelineId,
+              startTime,
+              endTime
+            });
 
             return oldMap;
           }, {})
