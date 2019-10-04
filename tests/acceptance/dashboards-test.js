@@ -58,7 +58,7 @@ module('Acceptance | dashboards', function(hooks) {
     assert.equal(currentURL(), '/dashboards/1');
     assert.dom('.header__name').hasText('My Pipelines');
     assert.dom('.header__description').hasText('default collection description');
-    assert.dom('.collection-operation').exists({ count: 4 });
+    assert.dom('.collection-operation').exists({ count: 3 });
     assert.dom('.collection-card-view').exists({ count: 1 });
     assert.dom('.pipeline-card').exists({ count: 2 });
   });
@@ -87,7 +87,7 @@ module('Acceptance | dashboards', function(hooks) {
     assert.equal(currentURL(), '/dashboards/2');
     assert.dom('.header__name').hasText('collection1');
     assert.dom('.header__description').hasText('description1');
-    assert.dom('.collection-operation').exists({ count: 4 });
+    assert.dom('.collection-operation').exists({ count: 3 });
     assert.dom('.collection-card-view').exists({ count: 1 });
     assert.dom('.pipeline-card').exists({ count: 2 });
   });
