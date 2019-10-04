@@ -184,8 +184,8 @@ export default Component.extend({
               durationText: formatTime(lastEvent.duration),
               sha: getSha(lastEvent.sha),
               icon: getIcon(lastEvent.status.toLowerCase()),
-              commitMessage: lastEvent.causeMessage,
-              commitUrl: lastEvent.url
+              commitMessage: lastEvent.commit.message,
+              commitUrl: lastEvent.commit.url
             };
           } else {
             ret.eventsInfo = [];
