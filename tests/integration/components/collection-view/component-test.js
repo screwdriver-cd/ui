@@ -165,7 +165,7 @@ const mockCollections = [
   }
 ];
 
-const mockEventsMap = EmberObject.create({
+const mockmetricsMap = EmberObject.create({
   1: [
     {
       creatTime: 'Tue Oct 01 2019 15:55:52 GMT-0700 (Pacific Daylight Time)',
@@ -210,7 +210,7 @@ module('Integration | Component | collection view', function(hooks) {
     this.setProperties({
       collection: mockDefaultCollection,
       collections: mockCollections,
-      eventsMap: mockEventsMap,
+      metricsMap: mockmetricsMap,
       onRemovePipeline: onRemovePipelineSpy,
       addMultipleToCollection: addMultipleToCollectionSpy,
       removeMultiplePipelines: removeMultiplePipelinesSpy
@@ -224,7 +224,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view 
         collection=collection 
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
       }}`);
 
     // check that necessage elements exist
@@ -272,7 +272,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view 
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
       }}`);
 
     await click('.header__change-view button:nth-of-type(2)');
@@ -326,7 +326,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('--');
   });
 
-  test('it renders empty view if the collection has no pipelins', async function(assert) {
+  test('it renders empty view if the collection has no pipelines', async function(assert) {
     this.set('collection', mockEmptyCollection);
     injectScmServiceStub(this);
 
@@ -334,7 +334,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view 
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
       }}`);
 
     assert.dom('.collection-empty-view').exists({ count: 1 });
@@ -350,7 +350,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view 
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
       }}`);
     assert.dom('.collection-card-view').exists({ count: 1 });
     assert.dom('.collection-list-view').doesNotExist();
@@ -392,7 +392,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view 
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
       }}`);
 
@@ -428,7 +428,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view 
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
       }}`);
 
@@ -461,7 +461,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
       }}
     `);
@@ -494,7 +494,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
       }}
     `);
@@ -512,7 +512,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
       }}
     `);
@@ -527,7 +527,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
       }}
     `);
@@ -542,7 +542,7 @@ module('Integration | Component | collection view', function(hooks) {
         {{collection-view
           collection=collection
           collections=collections
-          eventsMap=eventsMap
+          metricsMap=metricsMap
           onRemovePipeline=onRemovePipeline
         }}
       `);
@@ -559,7 +559,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
       }}
     `);
 
@@ -612,7 +612,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
       }}
     `);
 
@@ -684,7 +684,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         removeMultiplePipelines=removeMultiplePipelines
       }}
     `);
@@ -728,7 +728,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         removeMultiplePipelines=removeMultiplePipelines
       }}
     `);
@@ -781,7 +781,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         removeMultiplePipelines=removeMultiplePipelines
       }}
     `);
@@ -834,7 +834,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         removeMultiplePipelines=removeMultiplePipelines
       }}
     `);
@@ -875,7 +875,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         addMultipleToCollection=addMultipleToCollection
       }}
     `);
@@ -910,7 +910,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         addMultipleToCollection=addMultipleToCollection
       }}
     `);
@@ -948,7 +948,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         addMultipleToCollection=addMultipleToCollection
       }}
     `);
@@ -988,7 +988,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         addMultipleToCollection=addMultipleToCollection
       }}
     `);
@@ -1088,7 +1088,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
         addMultipleToCollection=addMultipleToCollection
       }}
     `);
@@ -1148,7 +1148,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
       }}
     `);
 
@@ -1194,7 +1194,7 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        eventsMap=eventsMap
+        metricsMap=metricsMap
       }}
     `);
 

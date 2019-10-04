@@ -14,7 +14,7 @@ import {
 import { hasPipelines } from 'screwdriver-ui/tests/mock/pipeline';
 
 let server;
-const hasEmptyEvents = () => [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
+const hasEmptyMetrics = () => [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
 
 module('Acceptance | dashboards', function(hooks) {
   setupApplicationTest(hooks);
@@ -26,8 +26,8 @@ module('Acceptance | dashboards', function(hooks) {
     server.get('http://localhost:8080/v4/collections/1', hasDefaultCollection);
     server.get('http://localhost:8080/v4/collections/2', hasCollection);
     server.get('http://localhost:8080/v4/pipelines', hasPipelines);
-    server.get('http://localhost:8080/v4/pipelines/12742/events', hasEmptyEvents);
-    server.get('http://localhost:8080/v4/pipelines/12743/events', hasEmptyEvents);
+    server.get('http://localhost:8080/v4/pipelines/12742/metrics', hasEmptyMetrics);
+    server.get('http://localhost:8080/v4/pipelines/12743/metrics', hasEmptyMetrics);
   });
 
   hooks.afterEach(function() {

@@ -1,4 +1,4 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["sortBy", "selectedPipelines", "searchedPipelines", "selectedSearchedPipelines"]] */
+/* eslint ember/avoid-leaking-state-in-components: [2, ["sortBy", "selectedPipelines", "searchedPipelines", "selectedSearchedPipelines", "metricsMap"]] */
 import { sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -21,6 +21,8 @@ export default Component.extend({
   session: service(),
   scmService: service('scm'),
   sortBy: ['scmRepo.name'],
+  collection: null,
+  metricsMap: [],
   removePipelineError: null,
   activeViewOptionValue: viewOptions[0].value,
   viewOptions,
@@ -150,7 +152,7 @@ export default Component.extend({
           const scm = scmService.getScm(pipeline.scmContext);
           const { id, scmRepo, prs } = pipeline;
           const { branch, rootDir } = scmRepo;
-          const events = this.eventsMap[pipeline.id];
+          const metrics = this.metricsMap[pipeline.id];
           const ret = {
             id,
             scmRepo,
@@ -160,8 +162,8 @@ export default Component.extend({
             prs
           };
 
-          if (events && events.length) {
-            const lastEvent = events.get('firstObject');
+          if (metrics && metrics.length) {
+            const lastEvent = metrics.get('firstObject');
             const lastEventStartTime = new Date(lastEvent.createTime);
             const lastEventStartYear = lastEventStartTime.getFullYear();
             const lastEventStartMonth = (lastEventStartTime.getMonth() + 1)
@@ -172,7 +174,7 @@ export default Component.extend({
               .toString()
               .padStart(2, '0');
 
-            ret.eventsInfo = events.map(event => ({
+            ret.eventsInfo = metrics.map(event => ({
               duration: event.duration,
               statusColor: getColor(event.status.toLowerCase())
             }));

@@ -93,32 +93,25 @@
   }
 
   .branch-info {
-    display: flex;
-    justify-content: space-between;
     margin-bottom: 20px;
     font-size: 16px;
 
     & a {
-      width: 75%;
+      width: 65%;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: inline-block;
     }
 
     & > div {
-      width: 25%;
-    }
-  }
-
-  @media screen and (max-width: 1440px) {
-    .branch-info {
-      & a {
-        width: 78%;
-      }
-
-      & > div {
-        width: 22%;
-      }
+      float: right;
+      display: inline-block;
+      max-width: 30%;
+      display: inline;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 
