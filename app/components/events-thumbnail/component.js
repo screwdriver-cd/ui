@@ -75,5 +75,15 @@ export default Component.extend({
       // change bar width and spacing to keep the thumbnail responsive
       bars.attr('width', barWidth).attr('x', (build, idx) => barSpace * idx);
     });
+
+    d3.select(window).on(`resize.${this.pipelineId}`, function resize() {
+      [barSpace, barWidth, paddingLeft, paddingRight] = getParameters(svg);
+
+      // change padding to the svg element so that it stays symmetrical
+      svg.style('padding', `0 ${paddingLeft} 0 ${paddingRight}`);
+
+      // change bar width and spacing to keep the thumbnail responsive
+      bars.attr('width', barWidth).attr('x', (build, idx) => barSpace * idx);
+    });
   }
 });
