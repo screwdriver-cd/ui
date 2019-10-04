@@ -58,7 +58,7 @@ export default Component.extend({
       .attr('y', event => 40 - y(event.duration));
 
     bars.each(function addColor(bar) {
-      this.classList.add(bar.statusColor.toLowerCase());
+      this.classList.add(bar.statusColor);
     });
 
     d3.select(window).on(`resize.${this.pipelineId}`, function resize() {
