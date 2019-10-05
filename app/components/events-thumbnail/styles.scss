@@ -17,6 +17,10 @@ svg {
   fill: $sd-failure;
 }
 
+.build-frozen {
+  fill: $sd-frozen;
+}
+
 .build-unstable {
   fill: $sd-unstable;
 }

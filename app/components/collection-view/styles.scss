@@ -322,7 +322,15 @@
     color: $sd-unstable;
   }
 
+  .build-frozen {
+    color: $sd-frozen;
+  }
+
   .build-empty {
+    color: $sd-no-build;
+  }
+
+  .build-unknown {
     color: $sd-no-build;
   }
 

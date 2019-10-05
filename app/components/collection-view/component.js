@@ -96,8 +96,10 @@ export default Component.extend({
             return 'ban';
           case 'unstable':
             return 'exclamation-circle';
+          case 'frozen':
+            return 'minus-circle';
           default:
-            return '';
+            return 'question-circle';
         }
       };
 
@@ -116,8 +118,10 @@ export default Component.extend({
             return 'build-running';
           case 'unstable':
             return 'build-unstable';
+          case 'frozen':
+            return 'build-frozen';
           default:
-            return '';
+            return 'build-unknown';
         }
       };
 
@@ -175,13 +179,13 @@ export default Component.extend({
               .padStart(2, '0');
 
             ret.eventsInfo = metrics.map(event => ({
-              duration: event.duration,
+              duration: event.duration || 0,
               statusColor: getColor(event.status.toLowerCase())
             }));
             ret.lastEventInfo = {
               startTime: `${lastEventStartMonth}/${lastEventStartDay}/${lastEventStartYear}`,
               statusColor: getColor(lastEvent.status.toLowerCase()),
-              durationText: formatTime(lastEvent.duration),
+              durationText: lastEvent.duration ? formatTime(lastEvent.duration) : '--',
               sha: getSha(lastEvent.sha),
               icon: getIcon(lastEvent.status.toLowerCase()),
               commitMessage: lastEvent.commit.message,
