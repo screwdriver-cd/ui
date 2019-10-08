@@ -24,12 +24,13 @@ export default Component.extend({
   orderedCollections: computed('collections.[]', {
     get() {
       let defaultCollection;
-      const normalCollections = this.collections.filter(collection => {
+      const 
+      Collections = this.collections.filter(collection => {
         if (collection.type === 'default') {
           defaultCollection = collection;
         }
 
-        return collection.type === 'normal';
+        return collection.type !== 'default';
       });
 
       return defaultCollection ? [defaultCollection, ...normalCollections] : normalCollections;
