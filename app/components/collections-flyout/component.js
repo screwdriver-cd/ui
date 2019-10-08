@@ -29,7 +29,7 @@ export default Component.extend({
           defaultCollection = collection;
         }
 
-        return collection.type === 'normal';
+        return collection.type !== 'default';
       });
 
       return defaultCollection ? [defaultCollection, ...normalCollections] : normalCollections;
