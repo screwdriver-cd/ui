@@ -39,14 +39,15 @@ export default Component.extend({
 
     // Fixed number of bars
     if (this.events.length < MAX_NUM_EVENTS_SHOWN) {
-      this.events = this.events.reverse().concat(
-        RANDOM_NUMS.slice(totalNumberOfEvents - MAX_NUM_EVENTS_SHOWN, MAX_NUM_EVENTS_SHOWN).map(
+      this.events = [
+        ...this.events.reverse(),
+        ...RANDOM_NUMS.slice(totalNumberOfEvents - MAX_NUM_EVENTS_SHOWN, MAX_NUM_EVENTS_SHOWN).map(
           randomNum => ({
             duration: maxDuration * randomNum,
             statusColor: 'build-empty'
           })
         )
-      );
+      ];
     } else {
       this.events = this.events.slice(0, MAX_NUM_EVENTS_SHOWN).reverse();
     }

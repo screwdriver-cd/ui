@@ -4,11 +4,16 @@
   {{/if}}
 </td>
 <td class="app-id">
-  {{#link-to "pipeline" pipeline.id}}{{pipeline.scmRepo.name}}{{/link-to}}
+  {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}{{pipeline.scmRepo.name}}{{/link-to}}
 </td>
-<td class="branch">{{fa-icon "code-fork"}}{{pipeline.branch}}</td>
+<td class="branch">
+  {{fa-icon "code-fork"}}
+  <span title={{pipeline.branch}}>{{pipeline.branch}}</span>
+</td>
 <td class="status">
-  {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
+  {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
+    {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
+  {{/link-to}}
   <a href={{lastEventInfo.commitUrl}}>
     {{lastEventInfo.sha}}
   </a>
@@ -22,7 +27,7 @@
 <td class="history">
   {{events-thumbnail
       events=eventsInfo
-      pipeline=pipeline.id
+      pipelineId=pipeline.id
       class="events-thumbnail"
   }}
 </td>

@@ -1,6 +1,4 @@
 & {
-  max-width: 275px;
-
   a {
     cursor: pointer;
   }
@@ -22,6 +20,13 @@
   .collection-wrapper {
     border-bottom: 1px solid $sd-white;
     position: relative;
+
+    a {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+    }
 
     &:hover {
       background-color: $sd-flyout-hover;
@@ -72,17 +77,29 @@
   // sass-lint:disable class-name-format
   .header {
     &__text {
-      font-size: 1.5em;
-      margin-top: 20px;
+      font-size: 1.3em;
+      margin-top: 22px;
+      padding: 0 2px 0;
     }
 
     &__edit {
       font-size: 0.9em;
       text-decoration: none;
       margin-top: 25px;
+      text-align: end;
     }
   }
   // sass-lint:enable class-name-format
+}
+
+@media (min-width: 1330px) {
+  .flyout {
+    .header__text {
+      font-size: 1.5em;
+      margin-top: 20;
+      padding: 0 20px 0;
+    }
+  }
 }
 
 // match with bootstrap min-width: for .col-md-2
