@@ -15,12 +15,11 @@ export default Component.extend({
 
   getDefaultBuildParameters() {
     const buildParameters = {};
+    const pipelineParameters = this.getWithDefault('pipeline.parameters', {});
 
-    Object.entries(this.getWithDefault('pipeline.parameters', {})).forEach(
-      ([propertyName, propertyVal]) => {
-        buildParameters[propertyName] = propertyVal.value ? propertyVal.value : propertyVal;
-      }
-    );
+    Object.entries(pipelineParameters).forEach(([propertyName, propertyVal]) => {
+      buildParameters[propertyName] = propertyVal.value ? propertyVal.value : propertyVal;
+    });
 
     return buildParameters;
   },
@@ -68,7 +67,10 @@ export default Component.extend({
     },
 
     resetForm() {
-      this.set('buildParameters', this.getDefaultBuildParameters());
+      this.setProperties({
+        buildParameters: this.getDefaultBuildParameters(),
+        direction: 'down'
+      });
     }
   }
 });
