@@ -1,27 +1,26 @@
 import Component from '@ember/component';
-import { computed, set } from '@ember/object';
+import { computed } from '@ember/object';
+
+const MAX_NUM_OF_PARAMETERS_ALLOWED = 1; // 5;
 
 export default Component.extend({
   direction: 'down',
+
+  hasParameters: computed('buildParameters', function() {
+    return Object.keys(this.buildParameters).length > 0;
+  }),
+
+  hasLargeNumberOfParameters: computed('buildParameters', function() {
+    return Object.keys(this.buildParameters).length > MAX_NUM_OF_PARAMETERS_ALLOWED;
+  }),
 
   init() {
     this._super(...arguments);
     this.set('buildParameters', this.getDefaultBuildParameters());
   },
 
-  hasParameters: computed('buildParameters', function() {
-    return Object.keys(this.buildParameters).length > 0;
-  }),
-
   getDefaultBuildParameters() {
-    const buildParameters = {};
-    const pipelineParameters = this.getWithDefault('pipeline.parameters', {});
-
-    Object.entries(pipelineParameters).forEach(([propertyName, propertyVal]) => {
-      buildParameters[propertyName] = propertyVal.value ? propertyVal.value : propertyVal;
-    });
-
-    return buildParameters;
+    return this.getWithDefault('pipeline.parameters', {});
   },
 
   startArgs: computed('prNum', 'jobs', {
@@ -38,12 +37,20 @@ export default Component.extend({
     }
   }),
 
+  toggleCaretDirection() {
+    let direction = 'down';
+
+    if (this.direction === 'down') {
+      direction = 'up';
+    }
+    this.set('direction', direction);
+  },
+
   actions: {
-    startBuild(parameters, closeDropdown) {
+    startBuild(parameters) {
       let args = this.startArgs;
 
       if (parameters) {
-        closeDropdown();
         args.push(parameters);
       }
       const startFunc = this.startBuild;
@@ -51,25 +58,23 @@ export default Component.extend({
       startFunc.apply(null, args);
     },
 
-    toggleDropdown(toggleDropdown) {
-      let direction = 'down';
-
-      if (this.direction === 'down') {
-        direction = 'up';
+    toggleDropdown(toggleAction) {
+      this.toggleCaretDirection();
+      if (typeof toggleAction === 'function') {
+        toggleAction();
       }
-      this.set('direction', direction);
-      toggleDropdown();
     },
 
-    updateValue(value, model, propertyName) {
-      console.log('(value, model, propertyName)', value, model, propertyName);
-      set(model, propertyName, value);
+    toggleModal() {
+      this.toggleCaretDirection();
+      this.toggleProperty('isShowingModal');
     },
 
     resetForm() {
       this.setProperties({
         buildParameters: this.getDefaultBuildParameters(),
-        direction: 'down'
+        direction: 'down',
+        isShowingModal: false
       });
     }
   }

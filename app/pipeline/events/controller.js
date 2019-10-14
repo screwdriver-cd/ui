@@ -277,7 +277,7 @@ export default Controller.extend(ModelReloaderMixin, {
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         });
     },
-    startDetachedBuild(job) {
+    startDetachedBuild(job, parameters) {
       const buildId = get(job, 'buildId');
       let parentBuildId = null;
 
@@ -300,14 +300,21 @@ export default Controller.extend(ModelReloaderMixin, {
         // PR-<num>: prefix is needed, if it is a PR event.
         startFrom = `PR-${prNum}:${startFrom}`;
       }
-      const newEvent = this.store.createRecord('event', {
+
+      const eventPayload = {
         buildId,
         pipelineId,
         startFrom,
         parentBuildId,
         parentEventId,
         causeMessage
-      });
+      };
+
+      if (parameters) {
+        eventPayload.meta = { parameters };
+      }
+
+      const newEvent = this.store.createRecord('event', eventPayload);
 
       this.set('isShowingModal', true);
 
