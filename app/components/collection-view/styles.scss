@@ -1,11 +1,94 @@
-& {
+.collection-view {
+  overflow-y: scroll;
+  height: calc(100vh - 56px);
+
+  button {
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
   .header {
     color: $sd-text;
-    padding: 0 25px;
+    padding: 25px 25px 0;
 
     // sass-lint:disable class-name-format
-    &__sort-pipelines {
+    &__name {
+      font-weight: bold;
+      font-size: 28px;
+    }
+
+    &__organize {
+      margin-top: 3rem;
+      padding-right: 40px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      span {
+        margin-right: 20px;
+      }
+
+      button {
+        margin-right: 10px;
+        padding: 3px 8px;
+        border: solid 1px $sd-light-gray;
+
+        &.operation-button {
+          background-color: $sd-info-bg;
+          color: $sd-lighter-blue;
+          border: solid 1px $sd-info-bg;
+
+          &:hover {
+            background: $sd-pale-purple;
+            border: solid 1px $sd-pale-purple;
+          }
+        }
+      }
+    }
+
+    &__change-view {
       margin-top: 2.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      button {
+        background: $sd-info-bg;
+        border: $sd-info-bg 1px solid;
+        padding: 6px 8px;
+        box-shadow: none;
+
+        &:focus,
+        &.active {
+          outline: none;
+          background: $sd-white;
+          border: $sd-light-blue 1px solid;
+          box-shadow: none;
+
+          .img {
+            fill: $sd-black;
+          }
+        }
+
+        &:nth-of-type(1):hover {
+          border-right: $sd-light-blue 1px solid;
+        }
+
+        &:nth-of-type(2):hover {
+          border-left: $sd-light-blue 1px solid;
+        }
+
+        .img {
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          fill: $sd-lighter-blue;
+        }
+      }
     }
     // sass-lint:enable class-name-format
   }
@@ -56,41 +139,63 @@
     font-size: 15px;
   }
 
+  .collection-operation {
+    margin-left: 8px;
+    cursor: pointer;
+
+    .img {
+      width: 20px;
+      height: 20px;
+      fill: $sd-pale-blue;
+    }
+  }
+
   a {
     display: block;
     text-decoration: none;
     color: $sd-link;
   }
 
+  .collection-pipeline__choose {
+    width: 3%;
+    text-align: center;
+  }
+
   .app-id {
-    text-align: left;
-    width: 30%;
+    width: 22%;
   }
 
   .branch {
     width: 15%;
-    text-align: right;
   }
 
-  .account {
-    text-align: left;
-    white-space: nowrap;
-  }
+  .status {
+    width: 10%;
 
-  .health {
-    text-align: center;
-  }
-
-  .prs {
-    border-bottom: none;
-
-    &--failing {
-      color: $sd-failure;
+    a {
+      display: inline;
     }
   }
 
+  .start {
+    width: 10%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+      'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  .duration {
+    width: 10%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+      'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  .history {
+    width: 25%;
+    padding: 5px;
+  }
+
   tbody tr:hover {
-    background-color: $sd-separator;
+    background-color: $sd-table-hover;
 
     .name {
       text-decoration: underline;
@@ -107,10 +212,83 @@
   td {
     padding: 10px;
     border-bottom: 1px solid $sd-text-light;
+    text-align: left;
   }
 
-  .collection-table {
+  .collection-list-view {
     padding: 25px;
+  }
+
+  .collection-card-view {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+
+    &::after {
+      content: '';
+      flex: auto;
+    }
+  }
+
+  .collection-empty-view {
+    height: calc(100vh - 300px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .guide {
+      width: 500px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      .guide-image {
+        width: 360px;
+        height: 183.27px;
+      }
+
+      .guide-text {
+        width: 100%;
+        text-align: center;
+      }
+
+      .guide-buttons {
+        margin-top: 10px;
+
+        a {
+          display: inline-block;
+        }
+
+        .guide-create-pipeline-button {
+          background-image: linear-gradient(
+            to right,
+            $sd-button-gradient-start,
+            $sd-button-gradient-end
+          );
+          color: $sd-white;
+        }
+
+        .guide-docs-button {
+          background-color: $sd-info-bg;
+          color: $sd-link;
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  .pipeline-card {
+    width: 33.33%;
+    padding: 20px;
+    position: relative;
+  }
+
+  @media screen and (max-width: 1440px) {
+    .pipeline-card {
+      width: 50%;
+    }
   }
 
   // sass-lint:disable class-name-format
@@ -118,6 +296,8 @@
     opacity: 0;
     cursor: pointer;
     font-size: 1.5em;
+    width: 5%;
+    text-align: center;
   }
 
   // When collection-pipeline is hovered on, show remove button
@@ -140,6 +320,10 @@
 
   .build-unstable {
     color: $sd-unstable;
+  }
+
+  .build-empty {
+    color: $sd-no-build;
   }
 
   .description-placeholder {

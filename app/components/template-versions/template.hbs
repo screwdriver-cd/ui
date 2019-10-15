@@ -2,7 +2,7 @@
 <ul>
   {{#each templates.templateData as |t|}}
     <li>
-      <a href={{t.version}}><span class="version">{{t.version}}{{#if t.tag}} - {{t.tag}}{{/if}}</span></a>{{#if t.lastUpdated}} {{t.lastUpdated}}{{/if}}
+      {{#link-to "templates.detail" t.namespace t.name t.version}}<span class="version">{{t.version}}{{#if t.tag}} - {{t.tag}}{{/if}}</span>{{/link-to}}{{#if t.lastUpdated}} {{t.lastUpdated}}{{/if}}
     </li>
   {{/each}}
 </ul>
