@@ -4,7 +4,8 @@
       {{fa-icon
         (if (eq banner.type "info") "info-circle" "exclamation-triangle")
       }}
-      <span>{{banner.message}}</span>
+      {{! template-lint-disable no-triple-curlies }}
+      <span>{{{banner.message}}}</span>
     {{/bs-alert}}
   </div>
 {{/each}}
