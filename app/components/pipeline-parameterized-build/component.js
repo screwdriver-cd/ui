@@ -32,11 +32,11 @@ export default Component.extend({
    */
   init() {
     this._super(...arguments);
-    const parameters = this.normalizeParameters(this.buildParameters);
+    const [parameters, parameterizedModel] = this.normalizeParameters(this.buildParameters);
 
     this.setProperties({
       parameters,
-      parameterizedModel: {}
+      parameterizedModel
     });
   },
 
@@ -67,6 +67,7 @@ export default Component.extend({
    */
   normalizeParameters(parameters = {}) {
     const normalizedParameters = [];
+    const parameterizedModel = {};
 
     Object.entries(parameters).forEach(([propertyName, propertyVal]) => {
       const value = propertyVal.value || propertyVal || '';
@@ -77,21 +78,11 @@ export default Component.extend({
         value,
         description
       });
+
+      parameterizedModel[propertyName] = value;
     });
 
-    // for (const [propertyName, propertyVal] of Object.entries(parameters)) {
-    //   const value = propertyVal.value || propertyVal || '';
-    //   const description = propertyVal.description || '';
-
-    //   normalizedParameters.push({
-    //     name: propertyName,
-    //     value,
-    //     description
-    //   });
-    // }
-
-    // return [...normalizedParameters, ...normalizedParameters, ...normalizedParameters];
-    return normalizedParameters;
+    return [normalizedParameters, parameterizedModel];
   },
 
   /**
