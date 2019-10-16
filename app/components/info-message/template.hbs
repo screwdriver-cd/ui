@@ -1,5 +1,6 @@
 {{#if message}}
   {{#bs-alert onDismissed=(action "clearMessage") type=type}}
+    {{! template-lint-disable no-triple-curlies }}
     {{fa-icon icon}} <span>{{{message}}}</span>
   {{/bs-alert}}
 {{/if}}
