@@ -1,6 +1,8 @@
 .collection-view {
   overflow-y: scroll;
+  overflow-x: hidden;
   height: calc(100vh - 56px);
+  width: 100%;
 
   button {
     border: none;
@@ -162,15 +164,18 @@
   }
 
   .app-id {
-    width: 22%;
+    width: 20%;
+    max-width: 400px;
   }
 
   .branch {
-    width: 15%;
+    width: 12%;
+    max-width: 200px;
   }
 
   .status {
-    width: 10%;
+    width: 15%;
+    min-width: 120px;
 
     a {
       display: inline;
@@ -291,6 +296,67 @@
     }
   }
 
+  @media screen and (max-width: 900px) {
+    .pipeline-card {
+      width: 100%;
+    }
+
+    .app-id {
+      max-width: 180px;
+      width: 21%;
+    }
+
+    .branch {
+      max-width: 180px;
+      width: 21%;
+    }
+
+    .status {
+      width: 20%;
+    }
+
+    .start {
+      width: 15%;
+    }
+
+    .duration {
+      width: 15%;
+    }
+
+    .history {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .header__organize {
+      justify-content: flex-start;
+    }
+
+    .duration {
+      display: none;
+    }
+
+    .app-id {
+      max-width: 120px;
+      width: 26%;
+    }
+
+    .branch {
+      max-width: 120px;
+      width: 26%;
+    }
+
+    .status {
+      width: 23%;
+      min-width: 120px;
+    }
+
+    .start {
+      width: 17%;
+    }
+  }
+
   // sass-lint:disable class-name-format
   .collection-pipeline__remove {
     opacity: 0;
@@ -322,7 +388,15 @@
     color: $sd-unstable;
   }
 
+  .build-frozen {
+    color: $sd-frozen;
+  }
+
   .build-empty {
+    color: $sd-no-build;
+  }
+
+  .build-unknown {
     color: $sd-no-build;
   }
 

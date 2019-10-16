@@ -9,7 +9,7 @@
     {{info-message message=linkCopied type="success" icon="check"}}
   {{/if}}
   <div class="header row">
-    <div class="col-md-8">
+    <div class="col-xs-12 col-sm-8">
       <h2 class="header__name">{{collection.name}}</h2>
 
       <span onclick={{action "toggleAddPipelineModal"}} class="collection-operation">
@@ -88,7 +88,7 @@
         <p class="description-placeholder">Add a description</p>
       {{/if}}
     </div>
-    <div class="header__organize col-md-3">
+    <div class="header__organize col-xs-6 col-sm-3">
       {{#if showOrganizeButton}}
         {{#if isOrganizing}}
           {{#if showOperations}}
@@ -109,7 +109,7 @@
       {{/if}}
     </div>
     <BsButtonGroup
-      class="header__change-view col-md-1"
+      class="header__change-view col-xs-6 col-sm-1"
       @value={{activeViewOptionValue}}
       @type="radio"
       @onChange={{action (mut activeViewOptionValue)}} as |bg|>
