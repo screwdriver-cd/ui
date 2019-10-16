@@ -165,7 +165,7 @@ const mockCollections = [
   }
 ];
 
-const mockmetricsMap = EmberObject.create({
+const mockMetricsMap = EmberObject.create({
   1: [
     {
       creatTime: 'Tue Oct 01 2019 15:55:52 GMT-0700 (Pacific Daylight Time)',
@@ -210,7 +210,7 @@ module('Integration | Component | collection view', function(hooks) {
     this.setProperties({
       collection: mockDefaultCollection,
       collections: mockCollections,
-      metricsMap: mockmetricsMap,
+      metricsMap: mockMetricsMap,
       onRemovePipeline: onRemovePipelineSpy,
       addMultipleToCollection: addMultipleToCollectionSpy,
       removeMultiplePipelines: removeMultiplePipelinesSpy
@@ -253,10 +253,16 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.pipeline-card:nth-of-type(4) .commit-status i').hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
-    assert.dom('.pipeline-card:nth-of-type(1) .commit-status a').hasText('Not available');
-    assert.dom('.pipeline-card:nth-of-type(2) .commit-status a').hasText('9af92ba');
-    assert.dom('.pipeline-card:nth-of-type(3) .commit-status a').hasText('Not available');
-    assert.dom('.pipeline-card:nth-of-type(4) .commit-status a').hasText('Not available');
+    assert
+      .dom('.pipeline-card:nth-of-type(1) .commit-status a:nth-of-type(2)')
+      .hasText('Not available');
+    assert.dom('.pipeline-card:nth-of-type(2) .commit-status a:nth-of-type(2)').hasText('9af92ba');
+    assert
+      .dom('.pipeline-card:nth-of-type(3) .commit-status a:nth-of-type(2)')
+      .hasText('Not available');
+    assert
+      .dom('.pipeline-card:nth-of-type(4) .commit-status a:nth-of-type(2)')
+      .hasText('Not available');
 
     // check that helper function formatTime() works correctly
     assert.dom('.pipeline-card:nth-of-type(1) .duration-badge span:nth-of-type(2)').hasText('--');
@@ -314,10 +320,16 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.collection-pipeline:nth-of-type(4) .status i').hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
-    assert.dom('.collection-pipeline:nth-of-type(1) .status a').hasText('Not available');
-    assert.dom('.collection-pipeline:nth-of-type(2) .status a').hasText('9af92ba');
-    assert.dom('.collection-pipeline:nth-of-type(3) .status a').hasText('Not available');
-    assert.dom('.collection-pipeline:nth-of-type(4) .status a').hasText('Not available');
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status a:nth-of-type(2)')
+      .hasText('Not available');
+    assert.dom('.collection-pipeline:nth-of-type(2) .status a:nth-of-type(2)').hasText('9af92ba');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status a:nth-of-type(2)')
+      .hasText('Not available');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status a:nth-of-type(2)')
+      .hasText('Not available');
 
     // check that helper function formatTime() works correctly
     assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('--');

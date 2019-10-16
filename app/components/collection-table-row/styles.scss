@@ -1,3 +1,28 @@
-.events-thumbnail {
-  width: 100%;
+& {
+  .events-thumbnail {
+    width: 100%;
+  }
+
+  .branch {
+    i {
+      vertical-align: middle;
+    }
+
+    span {
+      display: inline-block;
+      max-width: 70%;
+      vertical-align: middle;
+    }
+  }
+
+  .app-id a {
+    max-width: 95%;
+  }
+
+  .branch span,
+  .app-id a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

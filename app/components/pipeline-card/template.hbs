@@ -19,14 +19,16 @@
       }} --}}
       {{pipeline.scmRepo.name}}
     {{/link-to}}
-    <div>
+    <div title={{pipeline.branch}}>
       {{fa-icon "code-fork"}}
       {{pipeline.branch}}
     </div>
   </div>
   <div class="commit-info">
     <div class="commit-status">
-      {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
+      {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
+        {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
+      {{/link-to}}
       <a href={{lastEventInfo.commitUrl}}> 
         {{lastEventInfo.sha}}
       </a>
