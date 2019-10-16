@@ -3,25 +3,25 @@ button.start-with-parameters-button {
   padding-right: 20px;
 }
 
-.start-with-parameters-menu {
-  float: initial;
-  right: -25px;
-  width: auto;
-  left: auto;
-  padding-top: 35px;
+// .start-with-parameters-menu {
+//   float: initial;
+//   right: -25px;
+//   width: auto;
+//   left: auto;
+//   padding-top: 35px;
 
-  &:after {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #959595;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    content: 'Start pipeline with parameters';
-  }
-}
+//   // &:after {
+//   //   position: absolute;
+//   //   top: 15px;
+//   //   left: 15px;
+//   //   font-size: 12px;
+//   //   font-weight: 700;
+//   //   color: #959595;
+//   //   text-transform: uppercase;
+//   //   letter-spacing: 1px;
+//   //   content: 'Start pipeline with parameters';
+//   // }
+// }
 
 .start-with-parameters-form {
   min-width: 300px;
@@ -29,5 +29,21 @@ button.start-with-parameters-button {
 
   .btn-group {
     padding-left: 38%;
+  }
+}
+& {
+  position: relative;
+  padding-top: 20px;
+
+  &:after {
+    position: absolute;
+    top: 0px;
+    left: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    content: 'Start pipeline with parameters';
   }
 }

@@ -27,17 +27,5 @@ button.start-with-parameters-button {
   right: -25px;
   width: auto;
   left: auto;
-  padding-top: 35px;
-
-  &:after {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #959595;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    content: 'Start pipeline with parameters';
-  }
+  padding-top: 10px;
 }

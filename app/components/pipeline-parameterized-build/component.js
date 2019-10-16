@@ -67,7 +67,7 @@ export default Component.extend({
    */
   normalizeParameters(parameters = {}) {
     const normalizedParameters = [];
-    const parameterizedModel = {};
+    const normalizedParameterizedModel = {};
 
     Object.entries(parameters).forEach(([propertyName, propertyVal]) => {
       const value = propertyVal.value || propertyVal || '';
@@ -79,10 +79,10 @@ export default Component.extend({
         description
       });
 
-      parameterizedModel[propertyName] = value;
+      normalizedParameterizedModel[propertyName] = value;
     });
 
-    return [normalizedParameters, parameterizedModel];
+    return [normalizedParameters, normalizedParameterizedModel];
   },
 
   /**
@@ -111,7 +111,6 @@ export default Component.extend({
 
   actions: {
     onUpdateValue(value, model, propertyName) {
-      console.log('(value, model, propertyName)', value, model, propertyName);
       set(model, propertyName, value);
     },
 

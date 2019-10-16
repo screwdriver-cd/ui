@@ -30,7 +30,7 @@
         Job: <code>{{tooltipData.job.name}}</code><br>
         Commit:<a href={{selectedEventObj.commit.url}}><code>{{selectedEventObj.truncatedMessage}}</code>({{selectedEventObj.truncatedSha}})</a>
       </p>
-      {{#if pipeline.parameters}}
+      {{#if tooltipData.selectedEvent.meta.parameters}}
         {{#pipeline-parameterized-build
           buildParameters=tooltipData.selectedEvent.meta.parameters
           as |parameterizedBuild| }}
@@ -44,7 +44,7 @@
           </div>
         {{/pipeline-parameterized-build}}
       {{else}}
-        <div class="row">
+        <div class="row non-parameters-build">
           <div class="col-xs-6">
             <button class="d-button is-primary" {{action "startDetachedBuild"}}>Yes</button>
           </div>
