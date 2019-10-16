@@ -20,7 +20,7 @@ export default Component.extend({
    */
   buildParameters: {
     _started_at: '10/10/2019',
-    user: {
+    _started_by: {
       value: 'adong',
       description: 'User running build'
     }
@@ -90,8 +90,8 @@ export default Component.extend({
     //   });
     // }
 
-    return [...normalizedParameters, ...normalizedParameters, ...normalizedParameters];
-    // return normalizedParameters;
+    // return [...normalizedParameters, ...normalizedParameters, ...normalizedParameters];
+    return normalizedParameters;
   },
 
   /**

@@ -1,7 +1,8 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 
-const MAX_NUM_OF_PARAMETERS_ALLOWED = 1; // 5;
+// const MAX_NUM_OF_PARAMETERS_ALLOWED = 1;
+const MAX_NUM_OF_PARAMETERS_ALLOWED = 5;
 
 export default Component.extend({
   direction: 'down',
@@ -20,6 +21,21 @@ export default Component.extend({
   },
 
   getDefaultBuildParameters() {
+    // const buildParameters = {
+    //   _started_at: '10/10/2019',
+    //   _started_by: {
+    //     value: 'adong',
+    //     description: 'User running build'
+    //   },
+    //   _started_for: {
+    //     value: 'Kick off build for hotfix',
+    //     description: 'why did you start this build'
+    //   }
+    // };
+
+    // return buildParameters;
+
+    // instead of hard code, pulling from the screwdriver.yaml
     return this.getWithDefault('pipeline.parameters', {});
   },
 
