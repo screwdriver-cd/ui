@@ -1,0 +1,188 @@
+.checkbox-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  display: block;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+    border-radius: 6px;
+    border: 3px solid #96c4e9;
+
+    &:after {
+      content: '';
+      position: absolute;
+      display: none;
+      left: 6px;
+      top: 2px;
+      width: 7px;
+      height: 14px;
+      border: solid #96c4e9;
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+  }
+
+  &:hover input ~ .checkmark {
+    background-color: #eee;
+  }
+
+  input:checked ~ .checkmark:after {
+    display: block;
+  }
+}
+
+.pipeline-card-content {
+  border: 3px solid #e8e8e8;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  position: relative;
+
+  .remove-button {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    font-size: 1.5em;
+    color: rgb(255, 109, 109);
+    border: rgb(255, 109, 109) 3px solid;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: -10px;
+    top: -15px;
+    border-radius: 6px;
+    padding-bottom: 2px;
+    background-color: rgb(248, 222, 222);
+  }
+
+  &:hover {
+    border: 3px solid rgb(255, 109, 109);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
+    .remove-button {
+      opacity: 1;
+    }
+  }
+
+  &.show-checkbox {
+    border: 3px solid #96c4e9;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  }
+
+  .branch-info {
+    margin-bottom: 20px;
+    font-size: 16px;
+
+    & a {
+      width: 65%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+    }
+
+    & > div {
+      float: right;
+      display: inline-block;
+      max-width: 30%;
+      display: inline;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .commit-info {
+    margin-bottom: 25px;
+
+    .commit-status {
+      margin-bottom: 5px;
+
+      a {
+        display: inline;
+      }
+    }
+
+    .commit-message {
+      height: 40px;
+      overflow: hidden;
+      display: --box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+  }
+
+  .time-metrics {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 25px;
+
+    span {
+      padding: 3px 5px;
+      margin: 0;
+      border: 1px #e4e4e4 solid;
+    }
+
+    .badge-label {
+      background: #e4e4e4;
+      text-transform: uppercase;
+      border-bottom-left-radius: 5px;
+      border-top-left-radius: 5px;
+      font-size: 12px;
+      color: #6b6b6b;
+    }
+
+    .badge-info {
+      max-width: 100px;
+      text-align: center;
+      border-bottom-right-radius: 5px;
+      border-top-right-radius: 5px;
+      font-size: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+        'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .duration-badge {
+      display: flex;
+      justify-content: center;
+      margin-right: 10px;
+    }
+
+    .start-time-badge {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .events-thumbnail-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .events-thumbnail {
+    width: 100%;
+  }
+}

@@ -65,11 +65,13 @@ const getActiveStep = (steps = []) => {
   let name;
 
   if (runningStep && runningStep.name) {
+    // eslint-disable-next-line prefer-destructuring
     name = runningStep.name;
   } else {
     const failedStep = steps.find(s => s.code);
 
     if (failedStep && failedStep.name) {
+      // eslint-disable-next-line prefer-destructuring
       name = failedStep.name;
     }
   }

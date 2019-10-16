@@ -22,7 +22,8 @@ export default Component.extend({
       schedule('actions', () => {
         const newCollection = this.store.createRecord('collection', {
           name,
-          description
+          description,
+          type: 'normal'
         });
 
         return newCollection
@@ -33,7 +34,7 @@ export default Component.extend({
             let addDirectly = this.addToCollection;
 
             if (addDirectly) {
-              addDirectly(this.pipelineId, newCollection.id);
+              addDirectly(newCollection);
             }
           })
           .catch(error => {

@@ -11,9 +11,34 @@ import injectSessionStub from '../../../helpers/inject-session';
 const mockCollection = {
   id: 1,
   name: 'Test',
+  type: 'normal',
   description: 'Test description',
   get: name => name
 };
+
+const mockCollections = [
+  EmberObject.create({
+    id: 1,
+    name: 'collection1',
+    type: 'default',
+    description: 'description1',
+    pipelineIds: [1, 2, 3]
+  }),
+  EmberObject.create({
+    id: 2,
+    name: 'collection2',
+    type: 'normal',
+    description: 'description2',
+    pipelineIds: [4, 5, 6]
+  }),
+  EmberObject.create({
+    id: 3,
+    name: 'collection3',
+    type: 'normal',
+    description: 'description3',
+    pipelineIds: [7, 8, 9]
+  })
+];
 
 module('Integration | Component | collections flyout', function(hooks) {
   setupRenderingTest(hooks);
@@ -23,26 +48,7 @@ module('Integration | Component | collections flyout', function(hooks) {
 
     injectSessionStub(this);
 
-    this.set('collections', [
-      EmberObject.create({
-        id: 1,
-        name: 'collection1',
-        description: 'description1',
-        pipelineIds: [1, 2, 3]
-      }),
-      EmberObject.create({
-        id: 2,
-        name: 'collection2',
-        description: 'description2',
-        pipelineIds: [4, 5, 6]
-      }),
-      EmberObject.create({
-        id: 3,
-        name: 'collection3',
-        description: 'description3',
-        pipelineIds: [7, 8, 9]
-      })
-    ]);
+    this.set('collections', mockCollections);
 
     await render(hbs`{{collections-flyout collections=collections}}`);
 
@@ -173,7 +179,7 @@ module('Integration | Component | collections flyout', function(hooks) {
   });
 
   test('it deletes a collection', async function(assert) {
-    assert.expect(9);
+    assert.expect(11);
 
     injectSessionStub(this);
 
@@ -183,6 +189,12 @@ module('Integration | Component | collections flyout', function(hooks) {
         assert.ok(true);
 
         return new EmberPromise(resolve => resolve());
+      },
+      transitionTo() {
+        assert.ok(true);
+      },
+      unloadRecord() {
+        assert.ok(true);
       }
     };
     const storeStub = Service.extend({
@@ -196,26 +208,7 @@ module('Integration | Component | collections flyout', function(hooks) {
       }
     });
 
-    this.set('collections', [
-      EmberObject.create({
-        id: 1,
-        name: 'collection1',
-        description: 'description1',
-        pipelineIds: [1, 2, 3]
-      }),
-      EmberObject.create({
-        id: 2,
-        name: 'collection2',
-        description: 'description2',
-        pipelineIds: [4, 5, 6]
-      }),
-      EmberObject.create({
-        id: 3,
-        name: 'collection3',
-        description: 'description3',
-        pipelineIds: [7, 8, 9]
-      })
-    ]);
+    this.set('collections', mockCollections);
 
     let onDeleteSpy = sinon.spy();
 
@@ -242,8 +235,8 @@ module('Integration | Component | collections flyout', function(hooks) {
 
     await click('.header__edit');
 
-    // Delete buttons should be visible
-    assert.dom('.collection-wrapper__delete').exists({ count: 3 });
+    // Delete buttons should be visible except for default collection
+    assert.dom('.collection-wrapper__delete').exists({ count: 2 });
     assert.dom('.modal').doesNotExist();
 
     await click('.collection-wrapper__delete');
