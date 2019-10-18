@@ -902,8 +902,8 @@ module('Integration | Component | collection view', function(hooks) {
     await click(checkboxes[1]);
 
     // remove these selected pipelines
-    await click('.move-pipeline button');
-    await click('.move-pipeline .dropdown-menu li:nth-of-type(2) span');
+    await click('.copy-pipeline button');
+    await click('.copy-pipeline .dropdown-menu li:nth-of-type(2) span');
   });
 
   test('it moves multiple pipelines to another collection in list mode', async function(assert) {
@@ -940,8 +940,8 @@ module('Integration | Component | collection view', function(hooks) {
     await click(checkboxes[1]);
 
     // remove these selected pipelines
-    await click('.move-pipeline button');
-    await click('.move-pipeline .dropdown-menu li:nth-of-type(2) span');
+    await click('.copy-pipeline button');
+    await click('.copy-pipeline .dropdown-menu li:nth-of-type(2) span');
   });
 
   test('it fails to move multiple pipelines to another collection in card mode', async function(assert) {
@@ -975,8 +975,8 @@ module('Integration | Component | collection view', function(hooks) {
     await click(checkboxes[1]);
 
     // remove these selected pipelines
-    await click('.move-pipeline button');
-    await click('.move-pipeline .dropdown-menu li:nth-of-type(2) span');
+    await click('.copy-pipeline button');
+    await click('.copy-pipeline .dropdown-menu li:nth-of-type(2) span');
 
     // assert the error message is correct
     assert
@@ -1018,8 +1018,8 @@ module('Integration | Component | collection view', function(hooks) {
     await click(checkboxes[1]);
 
     // remove these selected pipelines
-    await click('.move-pipeline button');
-    await click('.move-pipeline .dropdown-menu li:nth-of-type(2) span');
+    await click('.copy-pipeline button');
+    await click('.copy-pipeline .dropdown-menu li:nth-of-type(2) span');
   });
 
   test('it searches and adds pipelines into the collection', async function(assert) {
