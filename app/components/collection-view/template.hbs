@@ -95,7 +95,7 @@
             <span>{{selectedPipelines.length}}&nbsp;&nbsp;Selected</span>
             <BsButton class="operation-button" onclick={{action "removeSelectedPipelines"}}>Remove</BsButton>
             {{collection-dropdown
-                class="move-pipeline"
+                class="copy-pipeline"
                 collections=collections
                 addMultipleToCollection=(action "addMultipleToCollection")
                 buttonClass="operation-button"
