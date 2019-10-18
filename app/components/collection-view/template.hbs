@@ -27,7 +27,7 @@
 
       <BsModal
         @class="add-pipeline-modal"
-        @open={{showAddPipelineModal}} 
+        @open={{showAddPipelineModal}}
         @onHidden={{action "toggleAddPipelineModal"}}
       as |modal|>
         <modal.header>
@@ -56,17 +56,17 @@
         </modal.header>
         <modal.body>
           <BsForm @formLayout="vertical" as |form|>
-            <form.element 
-              @controlType="text" 
-              @label="Name" 
-              @placeholder="Screwdriver CI/CD" 
+            <form.element
+              @controlType="text"
+              @label="Name"
+              @placeholder="Screwdriver CI/CD"
               @value={{collection.name}}
               @onChange={{action "updateCollectionName"}}
             />
-            <form.element 
-              @controlType="textarea" 
-              @label="Description" 
-              @placeholder="Collection Description" 
+            <form.element
+              @controlType="textarea"
+              @label="Description"
+              @placeholder="Collection Description"
               @value={{collection.description}}
               @onChange={{action "updateCollectionDescription"}}
             />
@@ -99,7 +99,7 @@
                 collections=collections
                 addMultipleToCollection=(action "addMultipleToCollection")
                 buttonClass="operation-button"
-                buttonText="Move To"
+                buttonText="Copy To"
             }}
           {{/if}}
           <BsButton class="cancel-organize-button" onclick={{action "resetView"}}>Cancel</BsButton>
@@ -182,5 +182,5 @@
         {{/each}}
       </div>
     {{/if}}
-  {{/if}}  
+  {{/if}}
 </div>
