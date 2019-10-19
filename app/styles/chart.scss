@@ -206,11 +206,11 @@
   }
 
   .passed {
-    color: #16c045;
+    color: $sd-success;
   }
 
   .failed {
-    color: #ea0000;
+    color: $sd-failure;
   }
 
   .col {
