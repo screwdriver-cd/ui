@@ -21,12 +21,12 @@
   .checkmark {
     position: absolute;
     top: 0;
-    left: 0;
+    left: -1px;
     height: 25px;
     width: 25px;
     background-color: #fff;
-    border-radius: 6px;
-    border: 3px solid #96c4e9;
+    border-radius: 4px;
+    border: 2px solid #96c4e9;
 
     &:after {
       content: '';
@@ -64,22 +64,22 @@
     cursor: pointer;
     font-size: 1.5em;
     color: rgb(255, 109, 109);
-    border: rgb(255, 109, 109) 3px solid;
+    border: rgb(255, 109, 109) 2px solid;
     width: 25px;
     height: 25px;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    right: -10px;
-    top: -15px;
-    border-radius: 6px;
+    right: -13px;
+    top: -14px;
+    border-radius: 4px;
     padding-bottom: 2px;
     background-color: rgb(248, 222, 222);
   }
 
   &:hover {
-    border: 3px solid rgb(255, 109, 109);
+    border: 2px solid rgb(255, 109, 109);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 
     .remove-button {
@@ -88,7 +88,7 @@
   }
 
   &.show-checkbox {
-    border: 3px solid #96c4e9;
+    border: 2px solid #96c4e9;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
