@@ -293,7 +293,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('th.app-id').hasText('Name');
     assert.dom('th.branch').hasText('Branch');
     assert.dom('th.status').hasText('Status');
-    assert.dom('th.start').hasText('Start Time');
+    assert.dom('th.start').hasText('Start Date');
     assert.dom('th.duration').hasText('Duration');
     assert.dom('th.history').exists({ count: 1 });
 
