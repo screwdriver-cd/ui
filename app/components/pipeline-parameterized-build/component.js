@@ -15,6 +15,12 @@ export default Component.extend({
   showSubmitButton: false,
 
   /**
+   * submitButtonText
+   * @type {String} Submit
+   */
+  submitButtonText: 'Submit',
+
+  /**
    * buildParameters are expected to be an object consists of key value pairs
    * @type {Object}
    */
