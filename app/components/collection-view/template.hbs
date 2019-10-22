@@ -12,18 +12,18 @@
     <div class="col-xs-12 col-sm-8">
       <h2 class="header__name">{{collection.name}}</h2>
 
-      <span onclick={{action "toggleAddPipelineModal"}} class="collection-operation">
-        {{inline-svg "add" class="img"}}
-      </span>
-      <span onclick={{action "toggleSettingModal"}} class="collection-operation">
-        {{inline-svg "setting" class="img"}}
-      </span>
+      {{#if (not-eq collection.type "default")}}
+        <span onclick={{action "toggleAddPipelineModal"}} class="collection-operation">
+          {{inline-svg "add" class="img"}}
+        </span>
+        <span onclick={{action "toggleSettingModal"}} class="collection-operation">
+          {{inline-svg "setting" class="img"}}
+        </span>
+      {{/if}}
+
       <span onclick={{action "copyLink"}} class="collection-operation">
         {{inline-svg "link" class="img"}}
       </span>
-      {{!-- <span class="collection-operation">
-        {{inline-svg "user-add" class="img"}}
-      </span> --}}
 
       <BsModal
         @class="add-pipeline-modal"
@@ -108,15 +108,17 @@
         {{/if}}
       {{/if}}
     </div>
-    <BsButtonGroup
-      class="header__change-view col-xs-6 col-sm-1"
-      @value={{activeViewOptionValue}}
-      @type="radio"
-      @onChange={{action (mut activeViewOptionValue)}} as |bg|>
-      {{#each viewOptions as |viewOption|}}
-        <bg.button @value={{viewOption.value}} onclick={{action "resetView"}}>{{inline-svg viewOption.svgName class="img"}}</bg.button>
-      {{/each}}
-    </BsButtonGroup>
+    {{#if showViewSwitch }}
+      <BsButtonGroup
+        class="header__change-view col-xs-6 col-sm-1"
+        @value={{activeViewOptionValue}}
+        @type="radio"
+        @onChange={{action (mut activeViewOptionValue)}} as |bg|>
+        {{#each viewOptions as |viewOption|}}
+          <bg.button @value={{viewOption.value}} onclick={{action "resetView"}}>{{inline-svg viewOption.svgName class="img"}}</bg.button>
+        {{/each}}
+      </BsButtonGroup>
+    {{/if}}
   </div>
 
   {{#if (eq sortedPipelines.length 0)}}

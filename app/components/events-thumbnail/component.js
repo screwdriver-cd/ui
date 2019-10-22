@@ -3,7 +3,6 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { select } from 'd3-selection';
 const MAX_NUM_EVENTS_SHOWN = 20;
-const RANDOM_NUMS = new Array(MAX_NUM_EVENTS_SHOWN).fill(0).map(() => Math.random());
 
 export default Component.extend({
   store: service(),
@@ -41,12 +40,10 @@ export default Component.extend({
     if (this.events.length < MAX_NUM_EVENTS_SHOWN) {
       this.events = [
         ...this.events.reverse(),
-        ...RANDOM_NUMS.slice(totalNumberOfEvents - MAX_NUM_EVENTS_SHOWN, MAX_NUM_EVENTS_SHOWN).map(
-          randomNum => ({
-            duration: maxDuration * randomNum,
-            statusColor: 'build-empty'
-          })
-        )
+        ...new Array(MAX_NUM_EVENTS_SHOWN - totalNumberOfEvents).fill({
+          duration: 0,
+          statusColor: 'build-empty'
+        })
       ];
     } else {
       this.events = this.events.slice(0, MAX_NUM_EVENTS_SHOWN).reverse();

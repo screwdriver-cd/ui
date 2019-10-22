@@ -38,6 +38,10 @@ export default Component.extend({
   linkCopied: '',
   reset: false,
 
+  showViewSwitch: computed('collection.pipelineIds', function showViewSwitch() {
+    return this.collection.pipelineIds.length !== 0;
+  }),
+
   showOrganizeButton: computed(
     'session.isAuthenticated',
     'collection.pipelineIds',
@@ -126,7 +130,7 @@ export default Component.extend({
       };
 
       const formatTime = duration => {
-        const numOfTotalSeconds = Math.floor(duration / 1000);
+        const numOfTotalSeconds = duration;
         const minute = 60;
         const hour = 60 * minute;
 
@@ -167,7 +171,7 @@ export default Component.extend({
           };
 
           if (metrics && metrics.length) {
-            const lastEvent = metrics.get('firstObject');
+            const lastEvent = metrics.get('lastObject');
             const lastEventStartTime = new Date(lastEvent.createTime);
             const lastEventStartYear = lastEventStartTime.getFullYear();
             const lastEventStartMonth = (lastEventStartTime.getMonth() + 1)
