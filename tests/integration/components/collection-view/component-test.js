@@ -1108,7 +1108,7 @@ module('Integration | Component | collection view', function(hooks) {
     `);
 
     // open pipeline search modal
-    await click('.collection-operation:nth-of-type(1)');
+    await click('.add-pipeline-operation');
     assert.dom('.add-pipeline-modal .modal-body').exists({ count: 1 });
     assert.dom('.add-pipeline-modal .search-pipeline-searchbar').exists({ count: 1 });
 
@@ -1134,7 +1134,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.pipeline-card .branch-info a').hasText('screwdriver-cd/screwdriver');
 
     // search again with the same search item
-    await click('.collection-operation:nth-of-type(1)');
+    await click('.add-pipeline-operation');
     await fillIn('.search-pipeline-searchbar input', 'screwdriver-cd');
     await click('.search-pipeline-button');
 
@@ -1168,7 +1168,7 @@ module('Integration | Component | collection view', function(hooks) {
     `);
 
     // open the setting modal
-    await click('.collection-operation:nth-of-type(2)');
+    await click('.settings-operation');
     assert.dom('.setting-modal .modal-body').exists({ count: 1 });
 
     // check the collection name and description is correct
@@ -1185,7 +1185,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.header__description').hasText('Default Collection');
 
     // open the modal again and check input default values aren't changed
-    await click('.collection-operation:nth-of-type(2)');
+    await click('.settings-operation');
     assert.dom('.form .form-group:nth-of-type(1) .form-control').hasValue('My Pipelines');
     assert.dom('.form .form-group:nth-of-type(2) .form-control').hasValue('Default Collection');
 
@@ -1199,7 +1199,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.header__description').hasText('New Description');
 
     // open the modal again and check input default values are also changed
-    await click('.collection-operation:nth-of-type(2)');
+    await click('.settings-operation');
     assert.dom('.form .form-group:nth-of-type(1) .form-control').hasValue('New Name');
     assert.dom('.form .form-group:nth-of-type(2) .form-control').hasValue('New Description');
   });
@@ -1214,7 +1214,7 @@ module('Integration | Component | collection view', function(hooks) {
     `);
 
     // click the copy button
-    await click('.collection-operation:nth-of-type(1)');
+    await click('.copy-operation');
 
     // check the banner is correct
     assert.dom('.alert-success > span').hasText(`
