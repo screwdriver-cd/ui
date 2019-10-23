@@ -25,10 +25,7 @@
       onHide=(action "resetForm")
       closeOnMenuClick=false as |dd|}}
       <div class="btn-group">
-        <button {{action "startBuild"}}
-          class="start-button btn"
-          title="Start a new event from latest commit"
-          >Start{{#if prNum}} PR-{{prNum}}{{/if}}</button>
+        <button {{action "startBuild"}} class="start-button btn" title="Start a new event from latest commit">Start{{#if prNum}} PR-{{prNum}}{{/if}}</button>
         {{#dd.button class="start-with-parameters-button"
           onClick=(action "toggleDropdown" dd.toggleDropdown)}}
           {{fa-icon (concat "caret-" direction)}}

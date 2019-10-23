@@ -1,26 +1,51 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | pipeline-parameterized-build', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders inline', async function(assert) {
+    this.setProperties({
+      buildParameters: {
+        p1: '1',
+        p2: '2'
+      },
+      showSubmitButton: true
+    });
+
+    await render(hbs`{{pipeline-parameterized-build
+      buildParameters=buildParameters
+      showSubmitButton=showSubmitButton}}`);
+    assert.dom('input').exists({ count: 2 }, 'There are 2 parameters');
+    assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');
+  });
+
+  test('it renders block', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
-
-    await render(hbs`{{pipeline-parameterized-build}}`);
-
-    assert.equal(this.element.textContent.trim(), '');
+    this.setProperties({
+      buildParameters: {
+        p1: '1',
+        p2: '2'
+      },
+      checkParameters: parameterizedModel => {
+        assert.ok(typeof parameterizedModel === 'object', 'parameterizedModel is object');
+        assert.equal(
+          2,
+          Object.keys(parameterizedModel).length,
+          'parameterizedModel has length of 2'
+        );
+      }
+    });
 
     // Template block usage:
     await render(hbs`
-      {{#pipeline-parameterized-build}}
-        template block text
+      {{#pipeline-parameterized-build buildParameters=buildParameters as |parameterizedBuild| }}
+        <button class="test-button is-primary" {{action "checkParameters" parameterizedBuild.parameters}}>Test</button>
       {{/pipeline-parameterized-build}}
     `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    await click('button.test-button');
   });
 });

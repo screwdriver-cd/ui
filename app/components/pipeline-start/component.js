@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 
-// const MAX_NUM_OF_PARAMETERS_ALLOWED = 1;
 const MAX_NUM_OF_PARAMETERS_ALLOWED = 5;
 
 export default Component.extend({
