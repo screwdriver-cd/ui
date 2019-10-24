@@ -1,8 +1,7 @@
 import Component from '@ember/component';
 import { computed, get, getProperties } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
-
-const MAX_NUM_INLINE_PARAMETERS = 5;
+import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
 
 export default Component.extend({
   classNameBindings: ['highlighted', 'event.status'],
@@ -34,7 +33,7 @@ export default Component.extend({
 
   isInlineParameters: computed('numberOfParameters', {
     get() {
-      return this.get('numberOfParameters') < MAX_NUM_INLINE_PARAMETERS;
+      return this.get('numberOfParameters') < MAX_NUM_OF_PARAMETERS_ALLOWED;
     }
   }),
 

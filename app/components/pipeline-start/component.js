@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-
-const MAX_NUM_OF_PARAMETERS_ALLOWED = 5;
+import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
 
 export default Component.extend({
   direction: 'down',
