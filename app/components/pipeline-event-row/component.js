@@ -28,7 +28,7 @@ export default Component.extend({
     get() {
       const parameters = this.getWithDefault('event.meta.parameters', {});
 
-      return Object.entries(parameters).length;
+      return Object.keys(parameters).length;
     }
   }),
 
