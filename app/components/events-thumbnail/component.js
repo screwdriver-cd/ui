@@ -24,10 +24,12 @@ export default Component.extend({
     const svg = select(this.element.getElementsByTagName('svg')[0]);
     let [barSpace, barWidth, paddingLeft, paddingRight] = getParameters(svg);
     const totalNumberOfEvents = this.events.length;
-    const maxEvent = totalNumberOfEvents
-      ? this.events.sort((e1, e2) => e2.duration - e1.duration)[0]
-      : {};
-    const maxDuration = maxEvent.duration || 100;
+    let maxDuration = Math.max(...this.events.map(event => event.duration));
+
+    if (maxDuration === -Infinity) {
+      maxDuration = 100;
+    }
+
     const y = d3
       .scaleLinear()
       .domain([0, maxDuration])
@@ -39,14 +41,14 @@ export default Component.extend({
     // Fixed number of bars
     if (this.events.length < MAX_NUM_EVENTS_SHOWN) {
       this.events = [
-        ...this.events.reverse(),
+        ...this.events,
         ...new Array(MAX_NUM_EVENTS_SHOWN - totalNumberOfEvents).fill({
           duration: 0,
           statusColor: 'build-empty'
         })
       ];
     } else {
-      this.events = this.events.slice(0, MAX_NUM_EVENTS_SHOWN).reverse();
+      this.events = this.events.slice(0, MAX_NUM_EVENTS_SHOWN);
     }
 
     const bars = svg
