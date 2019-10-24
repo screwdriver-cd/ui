@@ -20,7 +20,7 @@ export default Component.extend({
   }),
   parameters: computed('results.parameters', {
     get() {
-      return getWithDefault(this, 'results.parameters', []);
+      return getWithDefault(this, 'results.parameters', {});
     }
   }),
   templateName: computed('results.template.{namespace,name,version}', {

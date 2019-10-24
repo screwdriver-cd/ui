@@ -4,30 +4,7 @@
 {{#if isTemplate}}
   {{validator-job name=templateName job=results.template.config template=results.template}}
 {{else}}
-  {{validator-pipeline name=pipelineName workflowGraph=workflowGraph annotations=annotations}}
-  {{!-- TODO --}}
-  {{!-- <div class="parameters" title="These are the parameter variables you have added to the job.">
-    <span class="label">Parameter Variables:</span>
-    <span class="value">
-      <ul>
-        {{#each-in job.parameters as |name value|}}
-          {{#if value.length}}
-            <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
-          {{else}}
-            <li><span class="name">{{name}}: </span>
-              <ul>
-                <li><span class="value">{{value.value}}</span></li>
-                <li><span class="description">{{value.description}}</span></li>
-              </ul>
-            </li>
-          {{/if}}
-        {{else}}
-          <li>None defined</li>
-        {{/each-in}}
-      </ul>
-    </span>
-  </div> --}}
-  {{!-- {{validator-parameters}} --}}
+  {{validator-pipeline name=pipelineName workflowGraph=workflowGraph annotations=annotations parameters=parameters}}
   {{#each workflowGraph.nodes as |node|}}
     {{#if (get jobs node.name)}}
       {{#each (get jobs node.name) as |jobConfig index|}}
