@@ -24,13 +24,7 @@ export default Component.extend({
    * buildParameters are expected to be an object consists of key value pairs
    * @type {Object}
    */
-  buildParameters: {
-    _started_at: '10/10/2019',
-    _started_by: {
-      value: 'adong',
-      description: 'User running build'
-    }
-  },
+  buildParameters: {},
 
   /**
    * parameters expected to be an object
