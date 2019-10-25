@@ -16,3 +16,16 @@ button:hover {
   border-color: $sd-primary;
   color: $sd-primary;
 }
+
+button.start-with-parameters-button {
+  width: 25px;
+  padding-right: 20px;
+}
+
+.start-with-parameters-menu {
+  float: none;
+  right: -25px;
+  width: auto;
+  left: auto;
+  padding-top: 10px;
+}
