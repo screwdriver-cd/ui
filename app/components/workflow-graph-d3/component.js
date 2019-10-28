@@ -95,6 +95,7 @@ export default Component.extend({
     }
   },
   redraw(data) {
+    if (!data) return;
     const el = d3.select(this.element);
 
     data.nodes.forEach(node => {

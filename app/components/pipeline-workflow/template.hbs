@@ -28,16 +28,31 @@
       <h3>Are you sure to start?</h3>
       <p>
         Job: <code>{{tooltipData.job.name}}</code><br>
-        Commit:<a href={{selectedEventObj.commit.url}}><code>{{selectedEventObj.truncatedMessage}}</code>({{selectedEventObj.truncatedSha}})</a> 
+        Commit:<a href={{selectedEventObj.commit.url}}><code>{{selectedEventObj.truncatedMessage}}</code>({{selectedEventObj.truncatedSha}})</a>
       </p>
-      <div class="row">
-        <div class="col-xs-6">
-          <button class="d-button is-primary" {{action "startDetachedBuild"}}>Yes</button>
+      {{#if tooltipData.selectedEvent.meta.parameters}}
+        {{#pipeline-parameterized-build
+          buildParameters=tooltipData.selectedEvent.meta.parameters
+          as |parameterizedBuild| }}
+          <div class="row">
+            <div class="col-xs-6">
+              <button class="d-button is-primary" {{action "startDetachedBuild" parameterizedBuild.parameters}}>Yes</button>
+            </div>
+            <div class="col-xs-6 right">
+              <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+            </div>
+          </div>
+        {{/pipeline-parameterized-build}}
+      {{else}}
+        <div class="row non-parameters-build">
+          <div class="col-xs-6">
+            <button class="d-button is-primary" {{action "startDetachedBuild"}}>Yes</button>
+          </div>
+          <div class="col-xs-6 right">
+            <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+          </div>
         </div>
-        <div class="col-xs-6 right">
-          <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
-        </div>
-      </div>
+      {{/if}}
     {{/modal-dialog}}
   {{/if}}
 {{/if}}

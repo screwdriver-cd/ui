@@ -145,9 +145,9 @@ export default Component.extend({
     cancelStartBuild() {
       set(this, 'isShowingModal', false);
     },
-    startDetachedBuild() {
+    startDetachedBuild(parameters) {
       set(this, 'isShowingModal', false);
-      this.startDetachedBuild(get(this, 'tooltipData.job'));
+      this.startDetachedBuild(get(this, 'tooltipData.job'), parameters);
     }
   }
 });
