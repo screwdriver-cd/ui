@@ -17,14 +17,17 @@ export default Component.extend({
       this.set('showModal', open);
     },
     addNewCollection() {
-      const { name, description } = this;
+      const newCollectionRecord = {
+        name: this.name,
+        type: 'normal'
+      };
+
+      if (this.description) {
+        newCollectionRecord.description = this.description;
+      }
 
       schedule('actions', () => {
-        const newCollection = this.store.createRecord('collection', {
-          name,
-          description,
-          type: 'normal'
-        });
+        const newCollection = this.store.createRecord('collection', newCollectionRecord);
 
         return newCollection
           .save()

@@ -7,7 +7,6 @@ export default Component.extend({
   store: service(),
   collectionToDelete: null,
   showConfirmation: false,
-  showDeleteButtons: false,
   showModal: false,
   collections: computed('store', {
     get() {
@@ -69,13 +68,6 @@ export default Component.extend({
      */
     setCollectionToDelete(collection) {
       this.set('collectionToDelete', collection);
-    },
-    /**
-     * Action to open / close the create collection modal
-     * @param {boolean} open - whether modal should be open
-     */
-    toggleEdit() {
-      this.set('showDeleteButtons', !this.showDeleteButtons);
     }
   }
 });
