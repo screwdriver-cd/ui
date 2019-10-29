@@ -168,18 +168,6 @@ const mockCollections = [
 const mockMetricsMap = EmberObject.create({
   1: [
     {
-      status: 'SUCCESS',
-      duration: 23173
-    },
-    {
-      status: 'SUCCESS',
-      duration: 20011
-    },
-    {
-      status: 'FAILURE',
-      duration: 39234
-    },
-    {
       creatTime: 'Tue Oct 01 2019 15:55:52 GMT-0700 (Pacific Daylight Time)',
       status: 'FAILURE',
       duration: 42718,
@@ -190,6 +178,18 @@ const mockMetricsMap = EmberObject.create({
         url:
           'https://github.com/screwdriver-cd/screwdriver/commit/9af92ba97483213119dd4b57d7cc903405d199ea'
       }
+    },
+    {
+      status: 'SUCCESS',
+      duration: 23173
+    },
+    {
+      status: 'SUCCESS',
+      duration: 20011
+    },
+    {
+      status: 'FAILURE',
+      duration: 39234
     }
   ],
   2: [],
