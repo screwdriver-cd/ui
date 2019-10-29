@@ -41,7 +41,7 @@ export default Component.extend({
     // Fixed number of bars
     if (this.events.length < MAX_NUM_EVENTS_SHOWN) {
       this.events = [
-        ...this.events,
+        ...this.events.reverse(),
         ...new Array(MAX_NUM_EVENTS_SHOWN - totalNumberOfEvents).fill({
           duration: 0,
           statusColor: 'build-empty'
