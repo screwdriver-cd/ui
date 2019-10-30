@@ -171,7 +171,7 @@ export default Component.extend({
           };
 
           if (metrics && metrics.length) {
-            const lastEvent = metrics.get('lastObject');
+            const lastEvent = metrics.get('firstObject');
             const lastEventStartTime = new Date(lastEvent.createTime);
             const lastEventStartYear = lastEventStartTime.getFullYear();
             const lastEventStartMonth = (lastEventStartTime.getMonth() + 1)
