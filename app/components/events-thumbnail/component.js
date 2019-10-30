@@ -38,17 +38,18 @@ export default Component.extend({
     // Add padding to the svg element so that it stays symmetrical
     svg.style('padding', `0 ${paddingLeft} 0 ${paddingRight}`);
 
+    // Reverse the events array so the lastest event is at the end
+    this.events.reverse();
+
     // Fixed number of bars
     if (this.events.length < MAX_NUM_EVENTS_SHOWN) {
       this.events = [
-        ...this.events.reverse(),
+        ...this.events,
         ...new Array(MAX_NUM_EVENTS_SHOWN - totalNumberOfEvents).fill({
           duration: 0,
           statusColor: 'build-empty'
         })
       ];
-    } else {
-      this.events = this.events.slice(0, MAX_NUM_EVENTS_SHOWN);
     }
 
     const bars = svg
