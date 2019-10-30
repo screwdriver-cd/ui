@@ -8,8 +8,8 @@ export default Controller.extend({
   pipeline: alias('model.pipeline'),
   collections: alias('model.collections'),
   actions: {
-    addToCollection(pipelineId, collectionId) {
-      return this.store.findRecord('collection', collectionId).then(collection => {
+    addToCollection(pipelineId, c) {
+      return this.store.findRecord('collection', c.id).then(collection => {
         const pipelineIds = collection.get('pipelineIds');
 
         if (!pipelineIds.includes(pipelineId)) {
