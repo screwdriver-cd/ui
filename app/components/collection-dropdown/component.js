@@ -14,7 +14,10 @@ export default Component.extend({
     },
     addToCollection(collection) {
       if (this.get('pipeline') && this.addToCollection) {
-        return this.addToCollection(+this.pipeline.id, collection)
+        const pipelineId = +this.pipeline.id;
+        const collectionId = +collection.id;
+
+        return this.addToCollection(pipelineId, collectionId)
           .then(() => {
             this.setProperties({
               addCollectionError: null,
