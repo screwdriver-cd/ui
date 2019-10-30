@@ -30,7 +30,7 @@
         Job: <code>{{tooltipData.job.name}}</code><br>
         Commit:<a href={{selectedEventObj.commit.url}}><code>{{selectedEventObj.truncatedMessage}}</code>({{selectedEventObj.truncatedSha}})</a>
       </p>
-      {{#if tooltipData.selectedEvent.meta.parameters}}
+      {{#if (get-length tooltipData.selectedEvent.meta.parameters)}}
         {{#pipeline-parameterized-build
           buildParameters=tooltipData.selectedEvent.meta.parameters
           as |parameterizedBuild| }}

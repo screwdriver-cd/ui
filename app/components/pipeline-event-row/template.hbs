@@ -24,7 +24,7 @@
       </div>
     {{/if}}
 
-    {{#if event.meta.parameters}}
+    {{#if (get-length event.meta.parameters)}}
       {{#if isShowingModal}}
         {{#modal-dialog
           targetAttachment="center"

@@ -131,6 +131,54 @@ module('Integration | Component | build log', function(hooks) {
     });
   });
 
+  test('it generate logs for init step with parameters', async function(assert) {
+    this.owner.unregister('service:store');
+    const storeStub = Service.extend({
+      peekRecord() {
+        return {
+          meta: {
+            parameters: {
+              p1: {
+                value: 'p1'
+              },
+              p2: {
+                value: 'p2'
+              }
+            }
+          }
+        };
+      }
+    });
+
+    this.owner.register('service:store', storeStub);
+    this.setProperties({
+      step: 'sd-setup-init',
+      buildId: 1,
+      stats: {
+        queueEnterTime: '2019-01-14T20:10:41.238Z',
+        imagePullStartTime: '2019-01-14T20:11:41.238Z',
+        hostname: 'node12.foo.bar.com'
+      }
+    });
+
+    await render(hbs`{{build-log
+      stepName=step
+      buildId=1
+      buildStartTime="2019-01-14T20:12:41.238Z"
+      stepStartTime="2019-01-14T20:09:41.238Z"
+      stepEndTime="2019-01-14T20:12:41.238Z"
+      buildStats=stats
+    }}`);
+
+    return settled().then(() => {
+      assert.dom('.line:first-child').includesText('Build created');
+      assert.dom('.line:nth-child(2)').includesText('Build parameters');
+      assert.dom('.line:nth-child(3)').includesText('Build enqueued');
+      assert.dom('.line:nth-child(4)').includesText('Build scheduled on node12.foo.bar.com');
+      assert.dom('.line:last-child').includesText('Image pull completed');
+    });
+  });
+
   test('it generate logs for init step when build is blocked', async function(assert) {
     this.set('stats', {
       queueEnterTime: '2019-01-14T20:10:41.238Z',
