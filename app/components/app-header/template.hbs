@@ -5,13 +5,11 @@
   </div>
   {{#navbar.content}}
     {{#navbar.nav classNames="navbar-nav navbar-left" as |nav|}}
-      {{#if showCollections}}
-        {{#nav.item}}
-          {{#link-to "home" class="icon"}}
-            <span>Collections</span>
-          {{/link-to}}
-        {{/nav.item}}
-      {{/if}}
+      {{#nav.item}}
+        {{#link-to "home" class="icon"}}
+          <span>Collections</span>
+        {{/link-to}}
+      {{/nav.item}}
       {{#nav.item}}
         {{#nav.dropdown as |dd|}}
           {{#dd.toggle class="icon tools"}}
