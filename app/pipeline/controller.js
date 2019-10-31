@@ -11,7 +11,7 @@ export default Controller.extend({
     addToCollection(pipelineId, collection) {
       const { pipelineIds } = collection;
 
-      if (!pipelineIds.include(pipelineId)) {
+      if (!pipelineIds.includes(pipelineId)) {
         pipelineIds.push(pipelineId);
       }
 
