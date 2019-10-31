@@ -9,7 +9,11 @@ export default Controller.extend({
   collections: alias('model.collections'),
   actions: {
     addToCollection(pipelineId, collection) {
-      collection.pipelineIds.push(pipelineId);
+      const { pipelineIds } = collection;
+
+      if (!pipelineIds.include(pipelineId)) {
+        pipelineIds.push(pipelineId);
+      }
 
       return collection.save();
     }
