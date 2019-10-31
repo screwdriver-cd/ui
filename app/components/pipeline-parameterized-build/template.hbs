@@ -1,0 +1,24 @@
+{{#bs-form formLayout="horizontal" model=parameterizedModel
+  class="start-with-parameters-form"
+  onSubmit=(action "onSave" parameters) as |form|}}
+
+  {{#each parameters as |parameter|}}
+    {{form.element
+      label=parameter.name
+      placeholder=parameter.value
+      property=parameter.name
+      onChange=(action "onUpdateValue")}}
+  {{/each}}
+
+  {{#if showSubmitButton}}
+    <div class="btn-group">
+      {{bs-button defaultText=submitButtonText type="primary" buttonType="submit"}}
+    </div>
+  {{/if}}
+{{/bs-form}}
+
+{{yield
+  (hash
+    parameters=parameterizedModel
+  )
+}}

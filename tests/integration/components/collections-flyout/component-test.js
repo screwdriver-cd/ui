@@ -1,5 +1,6 @@
 import EmberObject from '@ember/object';
 import Service from '@ember/service';
+import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
@@ -53,7 +54,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     await render(hbs`{{collections-flyout collections=collections}}`);
 
     assert.dom('.header__text').hasText('Collections');
-    assert.dom('.header__text a i').hasClass('fa-plus-circle');
+    assert.dom('.header__create').hasText('create');
     assert.dom('.collection-wrapper a').hasText('collection1');
 
     const wrapperEls = findAll('.collection-wrapper a');
@@ -95,7 +96,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     // Make sure there are no modals
     assert.dom('.modal').doesNotExist();
 
-    await click('.new');
+    await click('.header__create');
 
     assert.equal(this.get('showModal'), true);
 
@@ -164,7 +165,7 @@ module('Integration | Component | collections flyout', function(hooks) {
       description=description
     }}`);
 
-    await click('.new');
+    await click('.header__create');
 
     this.set('name', 'Test');
     this.set('description', 'Test description');
@@ -228,12 +229,9 @@ module('Integration | Component | collections flyout', function(hooks) {
       onDeleteCollection=onDeleteCollection
     }}`);
 
-    assert.dom('.header__edit').exists({ count: 1 });
-
-    // Make sure delete buttons aren't shown
-    assert.dom('.wrapper__delete').doesNotExist();
-
-    await click('.header__edit');
+    // Make sure delete buttons exist but aren't shown
+    assert.dom('.collection-wrapper__delete').exists({ count: 2 });
+    assert.equal($('.collection-wrapper__delete').css('display'), 'none');
 
     // Delete buttons should be visible except for default collection
     assert.dom('.collection-wrapper__delete').exists({ count: 2 });

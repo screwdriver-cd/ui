@@ -3,7 +3,6 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { select } from 'd3-selection';
 const MAX_NUM_EVENTS_SHOWN = 20;
-const RANDOM_NUMS = new Array(MAX_NUM_EVENTS_SHOWN).fill(0).map(() => Math.random());
 
 export default Component.extend({
   store: service(),
@@ -25,10 +24,12 @@ export default Component.extend({
     const svg = select(this.element.getElementsByTagName('svg')[0]);
     let [barSpace, barWidth, paddingLeft, paddingRight] = getParameters(svg);
     const totalNumberOfEvents = this.events.length;
-    const maxEvent = totalNumberOfEvents
-      ? this.events.sort((e1, e2) => e2.duration - e1.duration)[0]
-      : {};
-    const maxDuration = maxEvent.duration || 100;
+    let maxDuration = Math.max(...this.events.map(event => event.duration));
+
+    if (maxDuration === -Infinity) {
+      maxDuration = 100;
+    }
+
     const y = d3
       .scaleLinear()
       .domain([0, maxDuration])
@@ -37,19 +38,18 @@ export default Component.extend({
     // Add padding to the svg element so that it stays symmetrical
     svg.style('padding', `0 ${paddingLeft} 0 ${paddingRight}`);
 
+    // Reverse the events array so the lastest event is at the end
+    this.events.reverse();
+
     // Fixed number of bars
     if (this.events.length < MAX_NUM_EVENTS_SHOWN) {
       this.events = [
-        ...this.events.reverse(),
-        ...RANDOM_NUMS.slice(totalNumberOfEvents - MAX_NUM_EVENTS_SHOWN, MAX_NUM_EVENTS_SHOWN).map(
-          randomNum => ({
-            duration: maxDuration * randomNum,
-            statusColor: 'build-empty'
-          })
-        )
+        ...this.events,
+        ...new Array(MAX_NUM_EVENTS_SHOWN - totalNumberOfEvents).fill({
+          duration: 0,
+          statusColor: 'build-empty'
+        })
       ];
-    } else {
-      this.events = this.events.slice(0, MAX_NUM_EVENTS_SHOWN).reverse();
     }
 
     const bars = svg

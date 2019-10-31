@@ -266,7 +266,9 @@ module('Integration | Component | collection view', function(hooks) {
 
     // check that helper function formatTime() works correctly
     assert.dom('.pipeline-card:nth-of-type(1) .duration-badge span:nth-of-type(2)').hasText('--');
-    assert.dom('.pipeline-card:nth-of-type(2) .duration-badge span:nth-of-type(2)').hasText('42s');
+    assert
+      .dom('.pipeline-card:nth-of-type(2) .duration-badge span:nth-of-type(2)')
+      .hasText('11h 51m 58s');
     assert.dom('.pipeline-card:nth-of-type(3) .duration-badge span:nth-of-type(2)').hasText('--');
     assert.dom('.pipeline-card:nth-of-type(4) .duration-badge span:nth-of-type(2)').hasText('--');
   });
@@ -293,7 +295,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('th.app-id').hasText('Name');
     assert.dom('th.branch').hasText('Branch');
     assert.dom('th.status').hasText('Status');
-    assert.dom('th.start').hasText('Start Time');
+    assert.dom('th.start').hasText('Start Date');
     assert.dom('th.duration').hasText('Duration');
     assert.dom('th.history').exists({ count: 1 });
 
@@ -333,7 +335,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     // check that helper function formatTime() works correctly
     assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('--');
-    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('42s');
+    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('11h 51m 58s');
     assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('--');
     assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('--');
   });
@@ -1106,7 +1108,7 @@ module('Integration | Component | collection view', function(hooks) {
     `);
 
     // open pipeline search modal
-    await click('.collection-operation:nth-of-type(1)');
+    await click('.add-pipeline-operation');
     assert.dom('.add-pipeline-modal .modal-body').exists({ count: 1 });
     assert.dom('.add-pipeline-modal .search-pipeline-searchbar').exists({ count: 1 });
 
@@ -1132,7 +1134,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.pipeline-card .branch-info a').hasText('screwdriver-cd/screwdriver');
 
     // search again with the same search item
-    await click('.collection-operation:nth-of-type(1)');
+    await click('.add-pipeline-operation');
     await fillIn('.search-pipeline-searchbar input', 'screwdriver-cd');
     await click('.search-pipeline-button');
 
@@ -1151,10 +1153,11 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.pipeline-card .branch-info a').hasText('screwdriver-cd/screwdriver');
   });
 
-  test('it changes the name and description of the collection', async function(assert) {
+  test('it changes the name and description of the normal collection', async function(assert) {
     const collectionSaveSpy = sinon.spy();
 
     this.collection.set('save', collectionSaveSpy);
+    this.collection.set('type', 'normal');
 
     await render(hbs`
       {{collection-view
@@ -1165,7 +1168,7 @@ module('Integration | Component | collection view', function(hooks) {
     `);
 
     // open the setting modal
-    await click('.collection-operation:nth-of-type(2)');
+    await click('.settings-operation');
     assert.dom('.setting-modal .modal-body').exists({ count: 1 });
 
     // check the collection name and description is correct
@@ -1182,7 +1185,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.header__description').hasText('Default Collection');
 
     // open the modal again and check input default values aren't changed
-    await click('.collection-operation:nth-of-type(2)');
+    await click('.settings-operation');
     assert.dom('.form .form-group:nth-of-type(1) .form-control').hasValue('My Pipelines');
     assert.dom('.form .form-group:nth-of-type(2) .form-control').hasValue('Default Collection');
 
@@ -1196,7 +1199,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.header__description').hasText('New Description');
 
     // open the modal again and check input default values are also changed
-    await click('.collection-operation:nth-of-type(2)');
+    await click('.settings-operation');
     assert.dom('.form .form-group:nth-of-type(1) .form-control').hasValue('New Name');
     assert.dom('.form .form-group:nth-of-type(2) .form-control').hasValue('New Description');
   });
@@ -1211,7 +1214,7 @@ module('Integration | Component | collection view', function(hooks) {
     `);
 
     // click the copy button
-    await click('.collection-operation:nth-of-type(3)');
+    await click('.copy-operation');
 
     // check the banner is correct
     assert.dom('.alert-success > span').hasText(`

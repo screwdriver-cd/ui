@@ -2,9 +2,9 @@
   <div class="header row">
     {{#if session.isAuthenticated}}
       <h2 class="header__text col-xs-9">
-        <a class="new" {{action "openModal"}}>{{fa-icon "plus-circle" title="Create a collection" size="md"}}</a> Collections
+        Collections
       </h2>
-      <a onclick={{action "toggleEdit"}} class="header__edit col-xs-3">Edit</a>
+      <a {{action "openModal"}} class="header__create col-xs-3">create</a>
     {{else}}
       <h2 class="header__text col-xs-12">
         Collections
@@ -17,14 +17,12 @@
         {{collection.name}}
       {{/link-to}}
       {{#unless (eq collection.type "default")}}
-        {{#if showDeleteButtons}}
-          <button
-            class="collection-wrapper__delete"
-            onclick={{action "setCollectionToDelete" collection}}
-          >
-            {{fa-icon "trash" title="Delete collection" size="md"}}
-          </button>
-        {{/if}}
+        <button
+          class="collection-wrapper__delete"
+          onclick={{action "setCollectionToDelete" collection}}
+        >
+          {{fa-icon "trash" title="Delete collection" size="md"}}
+        </button>
       {{/unless}}
     </div>
   {{else}}
