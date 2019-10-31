@@ -12,7 +12,7 @@ export default Controller.extend({
       const { pipelineIds } = collection;
 
       if (!pipelineIds.includes(pipelineId)) {
-        pipelineIds.push(pipelineId);
+        collection.set('pipelineIds', [...pipelineIds, pipelineId]);
       }
 
       return collection.save();
