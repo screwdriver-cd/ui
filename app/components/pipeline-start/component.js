@@ -5,11 +5,11 @@ import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
 export default Component.extend({
   direction: 'down',
 
-  hasParameters: computed('buildParameters', function() {
+  hasParameters: computed('buildParameters', function hasParameters() {
     return Object.keys(this.buildParameters).length > 0;
   }),
 
-  hasLargeNumberOfParameters: computed('buildParameters', function() {
+  hasLargeNumberOfParameters: computed('buildParameters', function hasLargeNumberOfParameters() {
     return Object.keys(this.buildParameters).length > MAX_NUM_OF_PARAMETERS_ALLOWED;
   }),
 
