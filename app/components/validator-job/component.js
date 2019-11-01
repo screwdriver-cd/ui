@@ -10,6 +10,11 @@ export default Component.extend({
       return this.get('job.environment.SD_TEMPLATE_FULLNAME');
     }
   }),
+  getTemplateVersion: computed('job', {
+    get() {
+      return this.get('job.environment.SD_TEMPLATE_VERSION');
+    }
+  }),
   hasParseError: computed('job', {
     get() {
       return this.get('job.commands.0.name') === 'config-parse-error';
@@ -40,7 +45,8 @@ export default Component.extend({
   sdCommands: computed('job', {
     get() {
       const commands = this.steps;
-      const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)/g;
+      const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)(?:@((?:(?:\d+)(?:\.\d+)?(?:\.\d+)?)|(?:[a-zA-Z][\w-]+)))?/g;
+
       let sdCommands = [];
 
       if (commands === []) {
@@ -52,7 +58,7 @@ export default Component.extend({
 
         while (matchRes !== null) {
           if (!sdCommands.includes(matchRes[1])) {
-            sdCommands.push(matchRes[1]);
+            sdCommands.push({ command: matchRes[1], version: matchRes[2] });
           }
           matchRes = regex.exec(c.command);
         }
