@@ -165,10 +165,6 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       const selected = this.selectedEvent;
 
-      if (selected === 'aggregate') {
-        return null;
-      }
-
       return this.events.find(e => get(e, 'id') === selected);
     }
   }),
@@ -250,17 +246,23 @@ export default Controller.extend(ModelReloaderMixin, {
       }
     },
 
-    startMainBuild() {
+    startMainBuild(parameters) {
       this.set('isShowingModal', true);
 
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
       const pipelineId = this.get('pipeline.id');
-      const newEvent = this.store.createRecord('event', {
+      let eventPayload = {
         pipelineId,
         startFrom: '~commit',
         causeMessage: `Manually started by ${user}`
-      });
+      };
+
+      if (parameters) {
+        eventPayload.meta = { parameters };
+      }
+
+      const newEvent = this.store.createRecord('event', eventPayload);
 
       return newEvent
         .save()
@@ -275,7 +277,7 @@ export default Controller.extend(ModelReloaderMixin, {
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         });
     },
-    startDetachedBuild(job) {
+    startDetachedBuild(job, parameters) {
       const buildId = get(job, 'buildId');
       let parentBuildId = null;
 
@@ -298,14 +300,21 @@ export default Controller.extend(ModelReloaderMixin, {
         // PR-<num>: prefix is needed, if it is a PR event.
         startFrom = `PR-${prNum}:${startFrom}`;
       }
-      const newEvent = this.store.createRecord('event', {
+
+      const eventPayload = {
         buildId,
         pipelineId,
         startFrom,
         parentBuildId,
         parentEventId,
         causeMessage
-      });
+      };
+
+      if (parameters) {
+        eventPayload.meta = { parameters };
+      }
+
+      const newEvent = this.store.createRecord('event', eventPayload);
 
       this.set('isShowingModal', true);
 
@@ -324,7 +333,7 @@ export default Controller.extend(ModelReloaderMixin, {
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         });
     },
-    stopBuild(job) {
+    stopBuild(event, job) {
       const buildId = get(job, 'buildId');
       let build;
 
@@ -334,7 +343,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
         return build
           .save()
-          .then(() => job.hasMany('builds').reload())
+          .then(() => event.hasMany('builds').reload())
           .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
       }
 
@@ -348,15 +357,21 @@ export default Controller.extend(ModelReloaderMixin, {
         .stopBuilds(eventId)
         .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
     },
-    startPRBuild(prNum, jobs) {
+    startPRBuild(prNum, jobs, parameters) {
       this.set('isShowingModal', true);
       const user = get(decoder(this.get('session.data.authenticated.token')), 'username');
-      const newEvent = this.store.createRecord('event', {
+      let eventPayload = {
         causeMessage: `Manually started by ${user}`,
         pipelineId: this.get('pipeline.id'),
         startFrom: '~pr',
         prNum
-      });
+      };
+
+      if (parameters) {
+        eventPayload.meta = { parameters };
+      }
+
+      const newEvent = this.store.createRecord('event', eventPayload);
 
       return newEvent
         .save()

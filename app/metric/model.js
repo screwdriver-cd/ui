@@ -10,7 +10,7 @@ export default DS.Model.extend({
   duration: DS.attr('number'),
   status: DS.attr('string', { defaultValue: 'UNKNOWN' }),
   builds: DS.attr(),
-
+  commit: DS.attr(),
   jobId: DS.attr('number'),
   eventId: DS.attr('number'),
   steps: DS.attr()

@@ -17,13 +17,17 @@ export default Component.extend({
       this.set('showModal', open);
     },
     addNewCollection() {
-      const { name, description } = this;
+      const newCollectionRecord = {
+        name: this.name,
+        type: 'normal'
+      };
+
+      if (this.description) {
+        newCollectionRecord.description = this.description;
+      }
 
       schedule('actions', () => {
-        const newCollection = this.store.createRecord('collection', {
-          name,
-          description
-        });
+        const newCollection = this.store.createRecord('collection', newCollectionRecord);
 
         return newCollection
           .save()
@@ -33,7 +37,7 @@ export default Component.extend({
             let addDirectly = this.addToCollection;
 
             if (addDirectly) {
-              addDirectly(this.pipelineId, newCollection.id);
+              addDirectly(newCollection);
             }
           })
           .catch(error => {

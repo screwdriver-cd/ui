@@ -1,0 +1,3 @@
+const MAX_NUM_OF_PARAMETERS_ALLOWED = 5;
+
+export { MAX_NUM_OF_PARAMETERS_ALLOWED as default };

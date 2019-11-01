@@ -12,4 +12,9 @@
     float: right;
     color: $grey-600;
   }
+  .parameters {
+    ul {
+      list-style: none;
+    }
+  }
 }

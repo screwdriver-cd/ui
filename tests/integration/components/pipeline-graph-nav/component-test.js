@@ -33,7 +33,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     }}`);
 
     assert.dom('.row strong').hasText('Pipeline');
-    assert.dom('.row button').exists({ count: 3 });
+    assert.dom('.row button').exists({ count: 2 });
 
     const $columnTitles = this.$('.event-info .title');
     const $links = this.$('.event-info a');
@@ -71,7 +71,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
         .eq(4)
         .text()
         .trim(),
-      'Start Time'
+      'Start Date'
     );
     assert.equal(
       $columnTitles
@@ -98,7 +98,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
 
-    assert.dom('.btn-group').hasText('Most Recent Last Successful Aggregate');
+    assert.dom('.btn-group').hasText('Most Recent Last Successful');
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
@@ -209,9 +209,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     }}`);
 
     assert.dom('.row strong').hasText('Pipeline');
-    assert.dom('.row button').exists({ count: 3 });
+    assert.dom('.row button').exists({ count: 2 });
     assert.dom('.SKIPPED').exists({ count: 1 });
-    assert.dom('.btn-group').hasText('Most Recent Last Successful Aggregate');
+    assert.dom('.btn-group').hasText('Most Recent Last Successful');
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
 

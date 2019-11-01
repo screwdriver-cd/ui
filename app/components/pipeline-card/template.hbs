@@ -1,0 +1,62 @@
+{{#if showCheckbox}}
+  <label class="checkbox-container">
+    <input type="checkbox" value={{pipelineSelected}} onchange={{action "togglePipeline"}}>
+    <span class="checkmark"></span>
+  </label>
+{{/if}}
+<div class="pipeline-card-content {{if showCheckbox "show-checkbox" ""}}">
+  {{#if showRemoveButton}}
+    <span class="remove-button" onclick={{action "removePipeline"}}>
+      &times;
+    </span>
+  {{/if}}
+  <div class="branch-info">
+    {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
+      {{!-- {{line-clamp
+        lines=1
+        interactive=false
+        text=pipeline.scmRepo.name
+      }} --}}
+      {{pipeline.scmRepo.name}}
+    {{/link-to}}
+    <div title={{pipeline.branch}}>
+      {{fa-icon "code-fork"}}
+      {{pipeline.branch}}
+    </div>
+  </div>
+  <div class="commit-info">
+    <div class="commit-status">
+      {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
+        {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
+      {{/link-to}}
+      <a href={{lastEventInfo.commitUrl}}> 
+        {{lastEventInfo.sha}}
+      </a>
+    </div>
+    <p class="commit-message" title={{lastEventInfo.commitMessage}}>
+      {{!-- {{line-clamp
+        lines=2
+        interactive=false
+        text=lastEventInfo.commitMessage
+      }} --}}
+      {{lastEventInfo.commitMessage}}
+    </p>
+  </div>
+  <div class="time-metrics">
+    <div class="duration-badge">
+      <span class="badge-label">duration</span>
+      <span class="badge-info">{{lastEventInfo.durationText}}</span>
+    </div>
+    <div class="start-time-badge">
+      <span class="badge-label">start Date</span>
+      <span class="badge-info">{{lastEventInfo.startTime}}</span>
+    </div>
+  </div>
+  <div class="events-thumbnail-wrapper">
+    {{events-thumbnail
+        class="events-thumbnail"
+        events=eventsInfo
+        pipelineId=pipeline.id
+    }}
+  </div>
+</div>

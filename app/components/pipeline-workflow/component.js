@@ -1,7 +1,7 @@
 import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
 import { get, computed, set, setProperties } from '@ember/object';
-import { all, reject } from 'rsvp';
+import { reject } from 'rsvp';
 import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
 
@@ -12,7 +12,6 @@ export default Component.extend({
   graph: computed('workflowGraph', 'completeWorkflowGraph', 'showDownstreamTriggers', {
     get() {
       const { jobs } = this;
-      const fetchBuilds = [];
       const graph = this.showDownstreamTriggers ? this.completeWorkflowGraph : this.workflowGraph;
 
       // Hack to make page display stuff when a workflow is not provided
@@ -28,22 +27,12 @@ export default Component.extend({
         // push the job id into the graph
         if (node) {
           node.id = get(j, 'id');
-          fetchBuilds.push(get(j, 'builds'));
         }
       });
 
-      return all(fetchBuilds).then(() => {
-        const builds = [];
+      set(this, 'directedGraph', graph);
 
-        // preload the "last build" data for each job for the graph to consume
-        jobs.forEach(j => builds.push(get(j, 'lastBuild')));
-
-        // set values to consume from templates
-        set(this, 'builds', builds);
-        set(this, 'directedGraph', graph);
-
-        return graph;
-      });
+      return graph;
     }
   }),
   displayRestartButton: alias('authenticated'),
@@ -62,12 +51,14 @@ export default Component.extend({
     graphClicked(job, mouseevent, sizes) {
       const EXTERNAL_TRIGGER_REGEX = /^~sd@(\d+):([\w-]+)$/;
       const edges = get(this, 'directedGraph.edges');
-      let isRootNode = true;
       const isTrigger = job ? /^~/.test(job.name) : false;
+      let isRootNode = true;
       let toolTipProperties = {};
 
       // Find root nodes to determine position of tooltip
       if (job && edges && !/^~/.test(job.name)) {
+        const selectedEvent = get(this, 'selectedEventObj');
+
         toolTipProperties = {
           showTooltip: true,
           // detached jobs should show tooltip on the left
@@ -76,7 +67,8 @@ export default Component.extend({
             displayStop: isActiveBuild(job.status),
             job,
             mouseevent,
-            sizes
+            sizes,
+            selectedEvent
           }
         };
         isRootNode = isRoot(edges, job.name);
@@ -153,9 +145,9 @@ export default Component.extend({
     cancelStartBuild() {
       set(this, 'isShowingModal', false);
     },
-    startDetachedBuild() {
+    startDetachedBuild(parameters) {
       set(this, 'isShowingModal', false);
-      this.startDetachedBuild(get(this, 'tooltipData.job'));
+      this.startDetachedBuild(get(this, 'tooltipData.job'), parameters);
     }
   }
 });

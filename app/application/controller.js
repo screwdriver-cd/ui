@@ -7,9 +7,6 @@ export default Controller.extend({
   collections: [],
   session: service(),
   scmContexts: alias('model'),
-  showCollections: computed('collections.[]', function showCollections() {
-    return this.get('collections.length') > 0;
-  }),
   actions: {
     invalidateSession() {
       this.session.set('data.sessionChanged', false);

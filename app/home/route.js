@@ -14,9 +14,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
         .findAll('collection')
         .then(collections => {
           if (get(collections, 'length')) {
-            // Get the id of the last object in this array. The last
-            // object will be the first collection created by the user.
-            const routeId = get(collections, 'lastObject.id');
+            // Get the id of the default collection.
+            const defaultCollection = collections.find(collection => collection.type === 'default');
+            const routeId = defaultCollection.id;
 
             this.replaceWith(`/dashboards/${routeId}`);
           }
