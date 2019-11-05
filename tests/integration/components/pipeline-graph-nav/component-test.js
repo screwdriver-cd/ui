@@ -71,7 +71,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
         .eq(4)
         .text()
         .trim(),
-      'Start Time'
+      'Start Date'
     );
     assert.equal(
       $columnTitles

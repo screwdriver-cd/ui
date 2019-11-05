@@ -46,6 +46,7 @@ export default Component.extend({
     get() {
       const commands = this.steps;
       const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)(?:@((?:(?:\d+)(?:\.\d+)?(?:\.\d+)?)|(?:[a-zA-Z][\w-]+)))?/g;
+
       let sdCommands = [];
 
       if (commands === []) {
@@ -61,6 +62,7 @@ export default Component.extend({
 
         while (matchRes !== null) {
           if (commandExist.length === 0) {
+
             sdCommands.push({ command: matchRes[1], version: matchRes[2] });
           }
           matchRes = regex.exec(c.command);

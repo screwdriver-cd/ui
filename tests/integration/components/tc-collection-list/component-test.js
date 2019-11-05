@@ -47,8 +47,8 @@ module('Integration | Component | tc collection list', function(hooks) {
     assert
       .dom('header h4 a')
       .hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
-    assert.dom('.collection-list-table th').exists({ count: 6 });
-    assert.dom('.collection-list-table .lt-body td').exists({ count: 12 });
+    assert.dom('.collection-list-table th').exists({ count: 5 });
+    assert.dom('.collection-list-table .lt-body td').exists({ count: 10 });
   });
 
   test('it renders with filter namespace', async function(assert) {
@@ -68,7 +68,7 @@ module('Integration | Component | tc collection list', function(hooks) {
     assert
       .dom('header h4 a')
       .hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
-    assert.dom('.collection-list-table th').exists({ count: 6 });
-    assert.dom('.collection-list-table .lt-body td').exists({ count: 6 });
+    assert.dom('.collection-list-table th').exists({ count: 5 });
+    assert.dom('.collection-list-table .lt-body td').exists({ count: 5 });
   });
 });

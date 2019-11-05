@@ -12,8 +12,8 @@
     <div class="date greyOut">Started {{event.createTimeWords}}</div>
     <span class="message" title={{event.commit.message}}>{{event.truncatedMessage}}</span>
     <div class="by"><a href={{event.creator.url}}>{{event.creator.name}}</a></div>
-    <div class="workflow">
-      {{#if (and (is-fulfilled event.builds) isShowGraph)}}
+    {{#if (and (is-fulfilled event.builds) isShowGraph)}}
+      <div class="workflow">
         {{workflow-graph-d3
           builds=event.builds
           workflowGraph=event.workflowGraph
@@ -21,7 +21,47 @@
           causeMessage=event.causeMessage
           minified=true
         }}
+      </div>
+    {{/if}}
+
+    {{#if (get-length event.meta.parameters)}}
+      {{#if isShowingModal}}
+        {{#modal-dialog
+          targetAttachment="center"
+          translucentOverlay=true
+          clickOutsideToClose=true
+          onClickOverlay=(action "toggleParametersPreview")
+          containerClass="detached-confirm-dialog"
+        }}
+          <h3>Parameters:</h3>
+          {{pipeline-parameterized-build
+            showSubmitButton=true
+            buildParameters=event.meta.parameters
+            submitButtonText="Close"
+            onSave=(action "toggleParametersPreview")}}
+        {{/modal-dialog}}
       {{/if}}
-    </div>
+
+      <div class="parameters">
+        {{#if isInlineParameters}}
+          <span>Parameters:</span>
+          <ul>
+            {{#each-in event.meta.parameters as |pName pVal|}}
+              <li>
+                <span class="parameter-name badge">{{pName}}</span>
+                <span class="parameter-value">:{{pVal.value}}</span>
+              </li>
+            {{/each-in}}
+          </ul>
+        {{else}}
+          <span>
+            <button class="btn btn-primary btn-xs" type="button"
+              onClick={{action "toggleParametersPreview"}}>
+              Parameters...<span class="badge">{{numberOfParameters}}</span>
+            </button>
+          </span>
+        {{/if}}
+      </div>
+    {{/if}}
   </div>
 </div>

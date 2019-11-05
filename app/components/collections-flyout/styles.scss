@@ -1,6 +1,4 @@
 & {
-  max-width: 275px;
-
   a {
     cursor: pointer;
   }
@@ -23,12 +21,23 @@
     border-bottom: 1px solid $sd-white;
     position: relative;
 
+    a {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+    }
+
     &:hover {
       background-color: $sd-flyout-hover;
 
       .name {
         text-decoration: underline;
       }
+    }
+
+    &:hover .collection-wrapper__delete {
+      display: inline-block;
     }
 
     &.row {
@@ -61,6 +70,7 @@
       top: 10px;
       border: none;
       background: none;
+      display: none;
     }
     // sass-lint:enable class-name-format
   }
@@ -72,17 +82,29 @@
   // sass-lint:disable class-name-format
   .header {
     &__text {
-      font-size: 1.5em;
-      margin-top: 20px;
+      font-size: 1.3em;
+      margin-top: 22px;
+      padding: 0 2px 0;
     }
 
-    &__edit {
+    &__create {
       font-size: 0.9em;
       text-decoration: none;
       margin-top: 25px;
+      text-align: end;
     }
   }
   // sass-lint:enable class-name-format
+}
+
+@media (min-width: 1330px) {
+  .flyout {
+    .header__text {
+      font-size: 1.5em;
+      margin-top: 20;
+      padding: 0 20px 0;
+    }
+  }
 }
 
 // match with bootstrap min-width: for .col-md-2
