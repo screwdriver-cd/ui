@@ -62,7 +62,6 @@ export default Component.extend({
 
         while (matchRes !== null) {
           if (commandExist.length === 0) {
-
             sdCommands.push({ command: matchRes[1], version: matchRes[2] });
           }
           matchRes = regex.exec(c.command);
