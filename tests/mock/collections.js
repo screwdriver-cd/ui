@@ -1,20 +1,29 @@
-const emptyMockCollections = [];
-
 const mockCollections = [
   {
-    id: 1,
+    id: 2,
     name: 'collection1',
     description: 'description1',
+    type: 'normal',
+    userId: 1,
+    pipelineIds: [12742, 12743]
+  },
+  {
+    id: 1,
+    name: 'My Pipelines',
+    description: 'default collection description',
+    type: 'default',
     userId: 1,
     pipelineIds: [12742, 12743]
   }
 ];
 
-const mockCollection = [
+const mockDefaultCollection = [
   {
     id: 1,
-    name: 'collection1',
-    description: 'description1',
+    name: 'My Pipelines',
+    description: 'default collection description',
+    type: 'default',
+    pipelineIds: [12742, 12743],
     pipelines: [
       {
         id: 12742,
@@ -67,16 +76,39 @@ const mockCollection = [
   }
 ];
 
+const mockCollection = [
+  Object.assign({}, mockDefaultCollection[0], {
+    id: 2,
+    name: 'collection1',
+    description: 'description1',
+    type: 'normal'
+  })
+];
+
+const mockEmptyDefaultCollection = [
+  Object.assign({}, mockDefaultCollection[0], {
+    pipelineIds: [],
+    pipelines: []
+  })
+];
+
+const mockEmptyCollection = [
+  Object.assign({}, mockCollection[0], {
+    pipelineIds: [],
+    pipelines: []
+  })
+];
+
 export const hasCollections = () => [
   200,
   { 'Content-Type': 'application/json' },
   JSON.stringify(mockCollections)
 ];
 
-export const hasEmptyCollections = () => [
+export const hasDefaultCollection = () => [
   200,
   { 'Content-Type': 'application/json' },
-  JSON.stringify(emptyMockCollections)
+  JSON.stringify(mockDefaultCollection)
 ];
 
 export const hasCollection = () => [
@@ -85,8 +117,22 @@ export const hasCollection = () => [
   JSON.stringify(mockCollection)
 ];
 
+export const hasEmptyDefaultCollection = () => [
+  200,
+  { 'Content-Type': 'application/json' },
+  JSON.stringify(mockEmptyDefaultCollection)
+];
+
+export const hasEmptyCollection = () => [
+  200,
+  { 'Content-Type': 'application/json' },
+  JSON.stringify(mockEmptyCollection)
+];
+
 export default {
   hasCollections,
-  hasEmptyCollections,
-  hasCollection
+  hasDefaultCollection,
+  hasCollection,
+  hasEmptyDefaultCollection,
+  hasEmptyCollection
 };

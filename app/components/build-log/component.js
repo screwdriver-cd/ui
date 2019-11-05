@@ -1,5 +1,5 @@
 import { Promise } from 'rsvp';
-import { set, computed, observer } from '@ember/object';
+import { set, getWithDefault, computed, observer } from '@ember/object';
 import { scheduleOnce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -9,6 +9,7 @@ const timeTypes = ['datetime', 'elapsedBuild', 'elapsedStep'];
 
 export default Component.extend({
   logService: service('build-logs'),
+  store: service(),
   classNames: ['build-log'],
   autoscroll: true,
   isFetching: false,
@@ -74,6 +75,17 @@ export default Component.extend({
           m: 'Build created.',
           n: 0
         });
+
+        const currentBuild = this.store.peekRecord('build', buildId);
+        const parameters = getWithDefault(currentBuild || {}, 'meta.parameters', {});
+
+        if (currentBuild && Object.keys(parameters).length > 0) {
+          initLogs.push({
+            t: new Date(this.stepEndTime).getTime(),
+            m: `Build parameters: ${JSON.stringify(parameters, null, 2)}`,
+            n: 1
+          });
+        }
 
         if (buildStatus === 'FROZEN') {
           initLogs.push({

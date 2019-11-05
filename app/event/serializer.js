@@ -51,6 +51,10 @@ export default DS.RESTSerializer.extend({
       data.buildId = parseInt(snapshot.attr('buildId'), 10);
     }
 
+    if (snapshot.attr('meta')) {
+      data.meta = snapshot.attr('meta');
+    }
+
     return assign(hash, data);
   }
 });

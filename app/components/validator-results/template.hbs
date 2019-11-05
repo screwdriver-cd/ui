@@ -4,7 +4,7 @@
 {{#if isTemplate}}
   {{validator-job name=templateName job=results.template.config template=results.template}}
 {{else}}
-  {{validator-pipeline name=pipelineName workflowGraph=workflowGraph annotations=annotations}}
+  {{validator-pipeline name=pipelineName workflowGraph=workflowGraph annotations=annotations parameters=parameters}}
   {{#each workflowGraph.nodes as |node|}}
     {{#if (get jobs node.name)}}
       {{#each (get jobs node.name) as |jobConfig index|}}
