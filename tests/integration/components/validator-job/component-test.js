@@ -281,7 +281,7 @@ module('Integration | Component | validator job', function(hooks) {
         { name: 'step1', command: 'sd-cmd exec bar/foo@latest' },
         { name: 'step2', command: 'sd-cmd exec foo/bar@0.0.1 foobar' },
         { name: 'step3', command: 'sd-cmd exec bar/foo@stable' },
-        { name: 'step4', command: 'sd-cmd exec foo/bar' }
+        { name: 'step4', command: 'sd-cmd exec bar/foo@latest' }
       ],
       secrets: [],
       environment: {},
@@ -301,7 +301,12 @@ module('Integration | Component | validator job', function(hooks) {
     assert
       .dom('.sd-commands ul li:nth-of-type(2) a')
       .hasAttribute('href', '/commands/foo/bar/0.0.1');
-    assert.dom('.sd-commands ul li:nth-of-type(3) a').hasAttribute('href', '/commands/foo/bar/');
+    assert.dom('.sd-commands ul li:nth-of-type(3)').hasText('bar/foo@stable');
+    assert
+      .dom('.sd-commands ul li:nth-of-type(3) a')
+      .hasAttribute('href', '/commands/bar/foo/stable');
+
+    assert.dom('.sd-commands ul li:nth-of-type(4)').doesNotExist();
   });
 
   test('it renders without a collapsible heading', async function(assert) {

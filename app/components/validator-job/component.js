@@ -57,7 +57,7 @@ export default Component.extend({
         let matchRes = regex.exec(c.command);
 
         let commandExist = sdCommands.filter(
-          command => command.command === matchRes[1] && matchRes[2]
+          command => command.command === matchRes[1] && command.version === matchRes[2]
         );
 
         while (matchRes !== null) {
