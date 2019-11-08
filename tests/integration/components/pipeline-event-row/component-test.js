@@ -13,6 +13,10 @@ const event = {
   type: 'pipeline',
   causeMessage: 'test',
   commit: {
+    author: {
+      url: '#',
+      name: 'batman'
+    },
     url: '#',
     message: 'this was a test'
   },
@@ -28,6 +32,7 @@ const event = {
     nodes: [
       { name: '~pr' },
       { name: '~commit' },
+      { name: '~sd@456:test' },
       { id: 1, name: 'main' },
       { id: 2, name: 'A' },
       { id: 3, name: 'B' }
@@ -35,6 +40,7 @@ const event = {
     edges: [
       { src: '~pr', dest: 'main' },
       { src: '~commit', dest: 'main' },
+      { src: '~sd@456:test', dest: 'main' },
       { src: 'main', dest: 'A' },
       { src: 'A', dest: 'B' }
     ]
@@ -72,7 +78,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
-    assert.dom('.by').hasText('batman');
+    assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
   });
 
@@ -104,7 +110,65 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
-    assert.dom('.by').hasText('batman');
+    assert.dom('.by').hasText('Started and committed by: batman');
+    assert.dom('.date').hasText('Started now');
+  });
+
+  test('it render when event creator and commit author is different', async function(assert) {
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
+
+    const eventMock = EmberObject.create(
+      assign(copy(event, true), {
+        commit: {
+          author: {
+            url: '#',
+            name: 'superman'
+          }
+        }
+      })
+    );
+
+    this.set('event', eventMock);
+
+    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+
+    assert.dom('.SUCCESS').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.message').hasText('this was a test');
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.graph-node').exists({ count: 4 });
+    assert.dom('.graph-edge').exists({ count: 3 });
+    assert.dom('.by').hasText('Committed by: superman Started by: batman');
+    assert.dom('.date').hasText('Started now');
+  });
+
+  test('it render when event is trigger by external pipeline', async function(assert) {
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
+
+    const eventMock = EmberObject.create(
+      assign(copy(event, true), {
+        causeMessage: 'Triggered by build 123',
+        startFrom: '~sd@456:test'
+      })
+    );
+
+    this.set('event', eventMock);
+
+    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+
+    assert.dom('.SUCCESS').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.message').hasText('this was a test');
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.graph-node').exists({ count: 4 });
+    assert.dom('.graph-edge').exists({ count: 3 });
+    assert.dom('.by').hasText('Committed by: batman Started by: External Trigger');
     assert.dom('.date').hasText('Started now');
   });
 
@@ -117,6 +181,10 @@ module('Integration | Component | pipeline event row', function(hooks) {
       assign(copy(event, true), {
         status: 'SKIPPED',
         commit: {
+          author: {
+            url: '#',
+            name: 'batman'
+          },
           url: '#',
           message: '[skip ci] skip ci build.'
         },
@@ -132,7 +200,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.status .fa-exclamation-circle').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123');
     assert.dom('.message').hasText('[skip ci] skip ci build.');
-    assert.dom('.by').hasText('batman');
+    assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
   });
 });

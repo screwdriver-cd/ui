@@ -49,8 +49,8 @@
     <span class="banner-label">Create Time</span>
   </li>
   <li class="user">
-    <span class="banner-value">{{user-link user=event.creator causeMessage=event.causeMessage}}</span>
-    <span class="banner-label">User</span>
+    <span class="banner-value">{{user-link user=event.commit.author causeMessage=event.causeMessage}}</span>
+    <span class="banner-label">Committer</span>
   </li>
   {{#if coverageStep}}
     <li class="coverage">
