@@ -54,7 +54,7 @@ export default Component.extend({
 
   externalBuild: computed('event.{causeMessage,startFrom}', {
     get() {
-      // need to use underscores here because they used for link-to
+      // using underscore because router.js doesn't pick up camelcase
       /* eslint-disable camelcase */
       const build_id = this.get('event.causeMessage').match(/\d+$/)[0];
       const pipeline_id = this.get('event.startFrom').match(/^~sd@(\d+):[\w-]+$/)[1];
