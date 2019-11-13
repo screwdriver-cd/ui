@@ -46,7 +46,6 @@ export default Component.extend({
     get() {
       const commands = this.steps;
       const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)(?:@((?:(?:\d+)(?:\.\d+)?(?:\.\d+)?)|(?:[a-zA-Z][\w-]+)))?/g;
-
       let sdCommands = [];
 
       if (commands === []) {
@@ -57,7 +56,12 @@ export default Component.extend({
         let matchRes = regex.exec(c.command);
 
         while (matchRes !== null) {
-          if (!sdCommands.includes(matchRes[1])) {
+          let commandExist = sdCommands.find(
+            // eslint-disable-next-line no-loop-func
+            command => command.command === matchRes[1] && command.version === matchRes[2]
+          );
+
+          if (commandExist === undefined) {
             sdCommands.push({ command: matchRes[1], version: matchRes[2] });
           }
           matchRes = regex.exec(c.command);

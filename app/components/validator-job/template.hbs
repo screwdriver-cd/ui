@@ -118,7 +118,7 @@
   <span class="value">
     <ul>
       {{#each-in sdCommands as |index value|}}
-        <li><span class="name"><a href="/commands/{{value.command}}/{{value.version}}">{{value.command}}</a></span></li>
+        <li><span class="name"><a href="/commands/{{value.command}}/{{value.version}}">{{value.command}}{{#if value.version}}@{{value.version}}{{/if}}</a></span></li>
       {{else}}
         <li>None defined</li>
       {{/each-in}}

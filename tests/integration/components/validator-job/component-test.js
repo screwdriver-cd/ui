@@ -280,7 +280,10 @@ module('Integration | Component | validator job', function(hooks) {
       commands: [
         { name: 'step1', command: 'sd-cmd exec bar/foo@latest' },
         { name: 'step2', command: 'sd-cmd exec foo/bar@0.0.1 foobar' },
-        { name: 'step3', command: 'sd-cmd exec bar/foo@stable' }
+        { name: 'step3', command: 'sd-cmd exec bar/foo@stable' },
+        { name: 'step4', command: 'sd-cmd exec foo/bar@stable; sd-cmd exec foo/bar@stable' },
+        { name: 'step5', command: 'sd-cmd exec foo/bar@stable; sd-cmd exec foo/bar@latest' },
+        { name: 'step6', command: 'sd-cmd exec bar/foo@latest' }
       ],
       secrets: [],
       environment: {},
@@ -292,14 +295,22 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.sd-commands .label').hasText('Commands:');
-    assert.dom('.sd-commands ul li:nth-of-type(1)').hasText('bar/foo');
+    assert.dom('.sd-commands ul li:nth-of-type(1)').hasText('bar/foo@latest');
     assert
       .dom('.sd-commands ul li:nth-of-type(1) a')
       .hasAttribute('href', '/commands/bar/foo/latest');
-    assert.dom('.sd-commands ul li:nth-of-type(2)').hasText('foo/bar');
+    assert.dom('.sd-commands ul li:nth-of-type(2)').hasText('foo/bar@0.0.1');
     assert
       .dom('.sd-commands ul li:nth-of-type(2) a')
       .hasAttribute('href', '/commands/foo/bar/0.0.1');
+    assert.dom('.sd-commands ul li:nth-of-type(3)').hasText('bar/foo@stable');
+    assert
+      .dom('.sd-commands ul li:nth-of-type(3) a')
+      .hasAttribute('href', '/commands/bar/foo/stable');
+
+    assert.dom('.sd-commands ul li:nth-of-type(4)').hasText('foo/bar@stable');
+    assert.dom('.sd-commands ul li:nth-of-type(5)').hasText('foo/bar@latest');
+    assert.dom('.sd-commands ul li:nth-of-type(6)').doesNotExist();
   });
 
   test('it renders without a collapsible heading', async function(assert) {
