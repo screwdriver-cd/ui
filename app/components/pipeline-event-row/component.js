@@ -37,6 +37,33 @@ export default Component.extend({
     }
   }),
 
+  isExternalTrigger: computed('event.startFrom', {
+    get() {
+      return this.get('event.startFrom').match(/^~sd@(\d+):([\w-]+)$/);
+    }
+  }),
+
+  isCommiterDifferent: computed('isExternalTrigger', 'event.{creator.name,commit.author.name}', {
+    get() {
+      const creatorName = this.get('event.creator.name');
+      const authorName = this.get('event.commit.author.name');
+
+      return this.get('isExternalTrigger') || creatorName !== authorName;
+    }
+  }),
+
+  externalBuild: computed('event.{causeMessage,startFrom}', {
+    get() {
+      // using underscore because router.js doesn't pick up camelcase
+      /* eslint-disable camelcase */
+      const build_id = this.get('event.causeMessage').match(/\d+$/)[0];
+      const pipeline_id = this.get('event.startFrom').match(/^~sd@(\d+):[\w-]+$/)[1];
+      /* eslint-enable camelcase */
+
+      return { build_id, pipeline_id };
+    }
+  }),
+
   actions: {
     clickRow() {
       const fn = get(this, 'eventClick');

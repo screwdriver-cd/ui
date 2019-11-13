@@ -8,7 +8,13 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    set(this, 'obj', { truncatedSha: 'abc123', status: 'SUCCESS', creator: { name: 'anonymous' } });
+    set(this, 'obj', {
+      truncatedSha: 'abc123',
+      status: 'SUCCESS',
+      commit: {
+        author: { name: 'anonymous' }
+      }
+    });
     set(this, 'selected', 2);
     set(this, 'startBuild', () => {
       assert.ok(true);
@@ -64,7 +70,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
         .eq(3)
         .text()
         .trim(),
-      'User'
+      'Committer'
     );
     assert.equal(
       $columnTitles
