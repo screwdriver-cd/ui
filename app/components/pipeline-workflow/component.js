@@ -39,8 +39,10 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    set(this, 'builds', []);
-    set(this, 'showDownstreamTriggers', false);
+    setProperties(this, {
+      builds: [],
+      showDownstreamTriggers: false
+    });
   },
   didUpdateAttrs() {
     this._super(...arguments);
@@ -145,9 +147,9 @@ export default Component.extend({
     cancelStartBuild() {
       set(this, 'isShowingModal', false);
     },
-    startDetachedBuild(parameters) {
+    startDetachedBuild(options) {
       set(this, 'isShowingModal', false);
-      this.startDetachedBuild(get(this, 'tooltipData.job'), parameters);
+      this.startDetachedBuild(get(this, 'tooltipData.job'), options);
     }
   }
 });

@@ -30,19 +30,32 @@
         Job: <code>{{tooltipData.job.name}}</code><br>
         Commit:<a href={{selectedEventObj.commit.url}}><code>{{selectedEventObj.truncatedMessage}}</code>({{selectedEventObj.truncatedSha}})</a>
       </p>
-      {{#if (get-length tooltipData.selectedEvent.meta.parameters)}}
+      {{#if (eq tooltipData.job.status "FROZEN")}}
+        <form>
+          <label class="checkbox-inline">Reason:{{input type="text" value=reason}}</label>
+        </form>
+        <div class="row non-parameters-build">
+          <div class="col-xs-6">
+            <button class="d-button is-primary" {{action "startDetachedBuild" (hash reason=reason)}}>Yes</button>
+          </div>
+          <div class="col-xs-6 right">
+            <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+          </div>
+        </div>
+      {{else if (get-length tooltipData.selectedEvent.meta.parameters)}}
         {{#pipeline-parameterized-build
           buildParameters=tooltipData.selectedEvent.meta.parameters
           as |parameterizedBuild| }}
           <div class="row">
             <div class="col-xs-6">
-              <button class="d-button is-primary" {{action "startDetachedBuild" parameterizedBuild.parameters}}>Yes</button>
+              <button class="d-button is-primary" {{action "startDetachedBuild" (hash parameters=parameterizedBuild.parameters)}}>Yes</button>
             </div>
             <div class="col-xs-6 right">
               <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
             </div>
           </div>
         {{/pipeline-parameterized-build}}
+
       {{else}}
         <div class="row non-parameters-build">
           <div class="col-xs-6">

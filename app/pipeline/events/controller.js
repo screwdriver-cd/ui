@@ -277,9 +277,10 @@ export default Controller.extend(ModelReloaderMixin, {
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         });
     },
-    startDetachedBuild(job, parameters) {
+    startDetachedBuild(job, options = {}) {
       const buildId = get(job, 'buildId');
       let parentBuildId = null;
+      const { parameters, reason } = options;
 
       if (buildId) {
         const build = this.store.peekRecord('build', buildId);
@@ -292,7 +293,7 @@ export default Controller.extend(ModelReloaderMixin, {
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
-      const causeMessage = `Manually started by ${user}`;
+      const causeMessage = reason || `Manually started by ${user}`;
       const prNum = get(event, 'prNum');
       let startFrom = get(job, 'name');
 
