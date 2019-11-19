@@ -89,30 +89,26 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
         {
           key: 'main',
           name: 'main',
-          style: {
-            string: 'border-color:#87d812'
-          }
+          class: { string: '' },
+          style: { string: 'border-color:#87d812' }
         },
         {
           key: 'publish',
           name: 'publish',
-          style: {
-            string: 'border-color:#fed800'
-          }
+          class: { string: 'unselected' },
+          style: { string: 'border-color:#fed800' }
         },
         {
           key: 'beta',
           name: 'beta',
-          style: {
-            string: 'border-color:#1ac6f4'
-          }
+          class: { string: 'unselected' },
+          style: { string: 'border-color:#1ac6f4' }
         },
         {
           key: 'prod',
           name: 'prod',
-          style: {
-            string: 'border-color:#6e2ebf'
-          }
+          class: { string: 'unselected' },
+          style: { string: 'border-color:#6e2ebf' }
         }
       ]);
       assert.deepEqual(controller.get('stepMetrics.json'), metricsMock.metrics.steps.data);

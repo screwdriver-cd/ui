@@ -57,172 +57,180 @@ export default Route.extend({
       this.set('jobId', jobId);
     }
 
-    const metrics = RSVP.all([
-      jobsMap,
-      fetchAll
-        ? this.store.query('metric', { pipelineId: this.get('pipeline.id'), startTime, endTime })
-        : RSVP.resolve(this.pipelineMetrics),
-      // eslint-disable-next-line no-nested-ternary
-      fetchJob || fetchAll
-        ? jobId
-          ? this.store.query('metric', { jobId, startTime, endTime })
-          : RSVP.resolve()
-        : RSVP.resolve(this.jobMetrics)
-    ])
-      .then(([jobs, pipelineMetrics, jobMetrics]) => {
-        // acts as cache
-        this.set('pipelineMetrics', pipelineMetrics);
-        this.set('jobMetrics', jobMetrics);
+    const metrics = RSVP.resolve(jobsMap).then(allJobs => {
+      // resolve all the job IDs first and validate against inquired job id
+      if (!allJobs.has(jobId)) {
+        // bail if the inquired job id is not of this pipeline
+        this.set('jobId');
+      }
 
-        const total = pipelineMetrics.get('length');
-        let events = {
-          queuedTime: [],
-          imagePullTime: [],
-          duration: [],
-          total: [],
-          sha: [],
-          status: [],
-          createTime: []
-        };
-        let steps = {};
-        let builds = [];
-        let buildIds = [];
-        let stepGroup = new Set();
-        let jobMap = {};
-        let passCount = 0;
-        let sum = { queuedTime: 0, imagePullTime: 0, duration: 0 };
+      return RSVP.all([
+        allJobs,
+        fetchAll
+          ? this.store.query('metric', { pipelineId: this.get('pipeline.id'), startTime, endTime })
+          : RSVP.resolve(this.pipelineMetrics),
+        // eslint-disable-next-line no-nested-ternary
+        fetchJob || fetchAll
+          ? this.get('jobId')
+            ? this.store.query('metric', { jobId: this.get('jobId'), startTime, endTime })
+            : RSVP.resolve()
+          : RSVP.resolve(this.jobMetrics)
+      ])
+        .then(([jobs, pipelineMetrics, jobMetrics]) => {
+          // acts as cache
+          this.set('pipelineMetrics', pipelineMetrics);
+          this.set('jobMetrics', jobMetrics);
 
-        /**
-         * Map index to build id, gathered from pipeline and job metrics
-         *
-         * @param {String} type type of the requesting metric
-         * @param {Number} index index of inquiry
-         * @returns {Number|null} build id(s) of the located build
-         */
-        function getBuildId(type, index) {
-          if (type === 'step') {
-            return +jobMetrics.objectAt(index).get('id');
-          }
-
-          if (type === 'build') {
-            return buildIds[index];
-          }
-
-          return null;
-        }
-
-        pipelineMetrics.forEach(metric => {
-          const sha = metric.get('sha');
-          const status = metric.get('status');
-          const duration = metric.get('duration');
-          const queuedTime = metric.get('queuedTime');
-          const imagePullTime = metric.get('imagePullTime');
-
-          if (status === 'SUCCESS') {
-            passCount += 1;
-          } else if (successOnly) {
-            return;
-          }
-
-          events.sha.push(sha);
-          events.status.push(status);
-          events.duration.push(toMinute(duration));
-          events.queuedTime.push(toMinute(queuedTime));
-          events.imagePullTime.push(toMinute(imagePullTime));
-          events.createTime.push(metric.get('createTime'));
-          events.total.push(toMinute(duration + queuedTime + imagePullTime));
-
-          sum.duration += duration;
-          sum.queuedTime += queuedTime;
-          sum.imagePullTime += imagePullTime;
-
-          const buildInfo = metric.get('builds').reduce(
-            (info, b) => {
-              const jobName = jobs.get(`${b.jobId}`);
-
-              if (jobName) {
-                jobMap[jobName] = `${b.jobId}`;
-                info.values[jobName] = toMinute(b.duration);
-                info.ids[jobName] = b.id;
-              }
-
-              return info;
-            },
-            { ids: {}, values: {} }
-          );
-
-          builds.push(buildInfo.values);
-          buildIds.push(buildInfo.ids);
-        });
-
-        if (jobMetrics) {
-          steps = {
+          const total = pipelineMetrics.get('length');
+          let events = {
+            queuedTime: [],
+            imagePullTime: [],
+            duration: [],
+            total: [],
             sha: [],
             status: [],
-            createTime: [],
-            data: []
+            createTime: []
           };
+          let steps = {};
+          let builds = [];
+          let buildIds = [];
+          let stepGroup = new Set();
+          let jobMap = {};
+          let passCount = 0;
+          let sum = { queuedTime: 0, imagePullTime: 0, duration: 0 };
 
-          jobMetrics.forEach(metric => {
+          /**
+           * Map index to build id, gathered from pipeline and job metrics
+           *
+           * @param {String} type type of the requesting metric
+           * @param {Number} index index of inquiry
+           * @returns {Number|null} build id(s) of the located build
+           */
+          function getBuildId(type, index) {
+            if (type === 'step') {
+              return +jobMetrics.objectAt(index).get('id');
+            }
+
+            if (type === 'build') {
+              return buildIds[index];
+            }
+
+            return null;
+          }
+
+          pipelineMetrics.forEach(metric => {
+            const sha = metric.get('sha');
             const status = metric.get('status');
+            const duration = metric.get('duration');
+            const queuedTime = metric.get('queuedTime');
+            const imagePullTime = metric.get('imagePullTime');
 
-            if (successOnly && status !== 'SUCCESS') {
+            if (status === 'SUCCESS') {
+              passCount += 1;
+            } else if (successOnly) {
               return;
             }
 
-            steps.sha.push(metric.get('sha'));
-            steps.status.push(status);
-            steps.createTime.push(metric.get('createTime'));
+            events.sha.push(sha);
+            events.status.push(status);
+            events.duration.push(toMinute(duration));
+            events.queuedTime.push(toMinute(queuedTime));
+            events.imagePullTime.push(toMinute(imagePullTime));
+            events.createTime.push(metric.get('createTime'));
+            events.total.push(toMinute(duration + queuedTime + imagePullTime));
 
-            steps.data.push(
-              metric.get('steps').reduce((stepMetric, s) => {
-                const stepName = s.name;
+            sum.duration += duration;
+            sum.queuedTime += queuedTime;
+            sum.imagePullTime += imagePullTime;
 
-                if (stepName) {
-                  stepGroup.add(stepName);
-                  stepMetric[stepName] = toMinute(s.duration);
+            const buildInfo = metric.get('builds').reduce(
+              (info, b) => {
+                const jobName = jobs.get(`${b.jobId}`);
+
+                if (jobName) {
+                  jobMap[jobName] = `${b.jobId}`;
+                  info.values[jobName] = toMinute(b.duration);
+                  info.ids[jobName] = b.id;
                 }
 
-                return stepMetric;
-              }, {})
+                return info;
+              },
+              { ids: {}, values: {} }
             );
+
+            builds.push(buildInfo.values);
+            buildIds.push(buildInfo.ids);
           });
-        }
 
-        // clear error message
-        controller.set('errorMessage');
+          if (jobMetrics) {
+            steps = {
+              sha: [],
+              status: [],
+              createTime: [],
+              data: []
+            };
 
-        return {
-          events,
-          builds,
-          jobMap,
-          steps,
-          stepGroup: Array.from(stepGroup)
-            .map(s => s.toString())
-            .sort(),
-          measures: {
-            total,
-            passed: passCount,
-            failed: total - passCount,
-            avgs: {
-              queuedTime: humanizeDuration((sum.queuedTime * 1e3) / total, { round: true }),
-              imagePullTime: humanizeDuration((sum.imagePullTime * 1e3) / total, { round: true }),
-              duration: humanizeDuration((sum.duration * 1e3) / total, { round: true })
-            }
-          },
-          getBuildId
-        };
-      })
-      .catch(({ errors: [{ detail }] }) => {
-        // catch what's thrown by the upstream RESTAdapter
-        // e.g. bad request error about 180 day max
-        // error message to be shown as banner
-        controller.set('errorMessage', detail);
+            jobMetrics.forEach(metric => {
+              const status = metric.get('status');
 
-        return controller.get('model.metrics');
-      });
+              if (successOnly && status !== 'SUCCESS') {
+                return;
+              }
 
-    return RSVP.hash({ metrics, startTime, endTime, successOnly, jobId });
+              steps.sha.push(metric.get('sha'));
+              steps.status.push(status);
+              steps.createTime.push(metric.get('createTime'));
+
+              steps.data.push(
+                metric.get('steps').reduce((stepMetric, s) => {
+                  const stepName = s.name;
+
+                  if (stepName) {
+                    stepGroup.add(stepName);
+                    stepMetric[stepName] = toMinute(s.duration);
+                  }
+
+                  return stepMetric;
+                }, {})
+              );
+            });
+          }
+
+          // clear error message
+          controller.set('errorMessage');
+
+          return {
+            events,
+            builds,
+            jobMap,
+            steps,
+            stepGroup: Array.from(stepGroup)
+              .map(s => s.toString())
+              .sort(),
+            measures: {
+              total,
+              passed: passCount,
+              failed: total - passCount,
+              avgs: {
+                queuedTime: humanizeDuration((sum.queuedTime * 1e3) / total, { round: true }),
+                imagePullTime: humanizeDuration((sum.imagePullTime * 1e3) / total, { round: true }),
+                duration: humanizeDuration((sum.duration * 1e3) / total, { round: true })
+              }
+            },
+            getBuildId
+          };
+        })
+        .catch(({ errors: [{ detail }] }) => {
+          // catch what's thrown by the upstream RESTAdapter
+          // e.g. bad request error about 180 day max
+          // error message to be shown as banner
+          controller.set('errorMessage', detail);
+
+          return controller.get('model.metrics');
+        });
+    });
+
+    return RSVP.hash({ metrics, startTime, endTime, successOnly, jobId: this.get('jobId') });
   },
   actions: {
     setFetchDates(start, end) {
