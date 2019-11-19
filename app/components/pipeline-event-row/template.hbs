@@ -16,9 +16,13 @@
         <span>Committed by: </span>
         <a href={{event.commit.author.url}}>{{event.commit.author.name}}</a>
         <br>
-        <span> Started by: </span>
+        <span>Started by: </span>
         {{#if isExternalTrigger}}
-          {{#link-to "pipeline.build" externalBuild.pipeline_id externalBuild.build_id}}External Trigger{{/link-to}}
+          {{#if externalBuild.build_id}}
+            {{#link-to "pipeline.build" externalBuild.pipeline_id externalBuild.build_id}}External Trigger{{/link-to}}
+          {{else}}
+            {{#link-to "pipeline" externalBuild.pipeline_id}}External Trigger{{/link-to}}
+          {{/if}}
         {{else}}
           <a href={{event.creator.url}}>{{event.creator.name}}</a>
         {{/if}}
