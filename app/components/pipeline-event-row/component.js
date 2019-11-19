@@ -56,8 +56,12 @@ export default Component.extend({
     get() {
       // using underscore because router.js doesn't pick up camelcase
       /* eslint-disable camelcase */
-      const build_id = this.get('event.causeMessage').match(/\d+$/)[0];
       const pipeline_id = this.get('event.startFrom').match(/^~sd@(\d+):[\w-]+$/)[1];
+      let build_id = this.get('event.causeMessage').match(/\d+$/);
+
+      if (build_id) {
+        build_id = build_id[0];
+      }
       /* eslint-enable camelcase */
 
       return { build_id, pipeline_id };
