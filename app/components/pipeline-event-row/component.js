@@ -39,7 +39,15 @@ export default Component.extend({
 
   isExternalTrigger: computed('event.startFrom', {
     get() {
-      return this.get('event.startFrom').match(/^~sd@(\d+):([\w-]+)$/);
+      const startFrom = this.get('event.startFrom');
+      const pipelineId = this.get('event.pipelineId');
+      let isExternal = false;
+
+      if (startFrom && startFrom.match(/^~sd@(\d+):([\w-]+)$/)) {
+        isExternal = Number(startFrom.match(/^~sd@(\d+):([\w-]+)$/)[1]) !== pipelineId;
+      }
+
+      return isExternal;
     }
   }),
 
@@ -56,11 +64,14 @@ export default Component.extend({
     get() {
       // using underscore because router.js doesn't pick up camelcase
       /* eslint-disable camelcase */
-      const pipeline_id = this.get('event.startFrom').match(/^~sd@(\d+):[\w-]+$/)[1];
-      let build_id = this.get('event.causeMessage').match(/\d+$/);
+      let pipeline_id = this.get('event.startFrom').match(/^~sd@(\d+):[\w-]+$/);
+      let build_id = this.get('event.causeMessage').match(/\s(\d+)$/);
 
       if (build_id) {
-        build_id = build_id[0];
+        build_id = build_id[1];
+      }
+      if (pipeline_id) {
+        pipeline_id = pipeline_id[1];
       }
       /* eslint-enable camelcase */
 

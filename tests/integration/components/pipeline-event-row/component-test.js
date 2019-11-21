@@ -172,6 +172,59 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.date').hasText('Started now');
   });
 
+  test('it render when event is trigger by same pipeline', async function(assert) {
+    assert.expect(9);
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
+
+    const eventMock = EmberObject.create(
+      assign(copy(event, true), {
+        causeMessage: 'Triggered from API Deploy pipeline',
+        startFrom: '~sd@456:test',
+        pipelineId: 456
+      })
+    );
+
+    this.set('event', eventMock);
+
+    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+
+    assert.dom('.SUCCESS').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.message').hasText('this was a test');
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.graph-node').exists({ count: 4 });
+    assert.dom('.graph-edge').exists({ count: 3 });
+    assert.dom('.by').hasText('Started and committed by: batman');
+    assert.dom('.date').hasText('Started now');
+  });
+
+  test('it render when startFrom is missing', async function(assert) {
+    assert.expect(6);
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
+
+    const eventMock = EmberObject.create(
+      assign(copy(event, true), {
+        startFrom: undefined
+      })
+    );
+
+    this.set('event', eventMock);
+
+    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+
+    assert.dom('.SUCCESS').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.message').hasText('this was a test');
+    assert.dom('.by').hasText('Started and committed by: batman');
+    assert.dom('.date').hasText('Started now');
+  });
+
   test('it does not render graph when skipped event', async function(assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
