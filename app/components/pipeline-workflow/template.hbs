@@ -31,17 +31,47 @@
         Commit:<a href={{selectedEventObj.commit.url}}><code>{{selectedEventObj.truncatedMessage}}</code>({{selectedEventObj.truncatedSha}})</a>
       </p>
       {{#if (eq tooltipData.job.status "FROZEN")}}
-        <form>
-          <label class="checkbox-inline">Reason:{{input type="text" value=reason}}</label>
-        </form>
-        <div class="row non-parameters-build">
-          <div class="col-xs-6">
-            <button class="d-button is-primary" {{action "startDetachedBuild" (hash reason=reason)}}>Yes</button>
+        {{#if (get-length tooltipData.selectedEvent.meta.parameters)}}
+          {{#pipeline-parameterized-build
+            buildParameters=tooltipData.selectedEvent.meta.parameters
+            as |parameterizedBuild| }}
+            <div class="form-group form-horizontal">
+              <label class="control-label col-md-4">Reason:</label>
+              <div class="col-md-8">
+                {{input class="form-control" type="text" value=reason
+                  placeholder="Please enter reason"}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <button class="d-button is-primary"
+                {{action "startDetachedBuild" (hash reason=reason
+                parameters=parameterizedBuild.parameters)}}>
+                  Yes
+                </button>
+              </div>
+              <div class="col-xs-6 right">
+                <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+              </div>
+            </div>
+          {{/pipeline-parameterized-build}}
+        {{else}}
+          <div class="form-group form-horizontal">
+            <label class="control-label col-md-4">Reason:</label>
+            <div class="col-md-8">
+              {{input class="form-control" type="text" value=reason
+                placeholder="Please enter reason"}}
+            </div>
           </div>
-          <div class="col-xs-6 right">
-            <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+          <div class="row non-parameters-build">
+            <div class="col-xs-6">
+              <button class="d-button is-primary" {{action "startDetachedBuild" (hash reason=reason)}}>Yes</button>
+            </div>
+            <div class="col-xs-6 right">
+              <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+            </div>
           </div>
-        </div>
+        {{/if}}
       {{else if (get-length tooltipData.selectedEvent.meta.parameters)}}
         {{#pipeline-parameterized-build
           buildParameters=tooltipData.selectedEvent.meta.parameters
@@ -55,7 +85,6 @@
             </div>
           </div>
         {{/pipeline-parameterized-build}}
-
       {{else}}
         <div class="row non-parameters-build">
           <div class="col-xs-6">

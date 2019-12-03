@@ -293,9 +293,13 @@ export default Controller.extend(ModelReloaderMixin, {
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
-      const causeMessage = reason || `Manually started by ${user}`;
+      let causeMessage = `Manually started by ${user}`;
       const prNum = get(event, 'prNum');
       let startFrom = get(job, 'name');
+
+      if (reason) {
+        causeMessage = `[force start]${reason}`;
+      }
 
       if (prNum) {
         // PR-<num>: prefix is needed, if it is a PR event.

@@ -41,9 +41,11 @@ export default Component.extend({
     this._super(...arguments);
     setProperties(this, {
       builds: [],
-      showDownstreamTriggers: false
+      showDownstreamTriggers: false,
+      reason: 'Please enter reason'
     });
   },
+
   didUpdateAttrs() {
     this._super(...arguments);
     // hide graph tooltip when event changes
