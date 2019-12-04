@@ -35,6 +35,7 @@ export default Component.extend({
       return graph;
     }
   }),
+
   displayRestartButton: alias('authenticated'),
 
   init() {
@@ -42,7 +43,7 @@ export default Component.extend({
     setProperties(this, {
       builds: [],
       showDownstreamTriggers: false,
-      reason: 'Please enter reason'
+      reason: ''
     });
   },
 

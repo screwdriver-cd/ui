@@ -45,6 +45,7 @@
             <div class="row">
               <div class="col-xs-6">
                 <button class="d-button is-primary"
+                disabled={{eq (get-length reason) 0}}
                 {{action "startDetachedBuild" (hash reason=reason
                 parameters=parameterizedBuild.parameters)}}>
                   Yes
@@ -65,7 +66,8 @@
           </div>
           <div class="row non-parameters-build">
             <div class="col-xs-6">
-              <button class="d-button is-primary" {{action "startDetachedBuild" (hash reason=reason)}}>Yes</button>
+              <button class="d-button is-primary" disabled={{eq (get-length reason) 0}}
+              {{action "startDetachedBuild" (hash reason=reason)}}>Yes</button>
             </div>
             <div class="col-xs-6 right">
               <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
