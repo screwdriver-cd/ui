@@ -35,13 +35,18 @@ export default Component.extend({
       return graph;
     }
   }),
+
   displayRestartButton: alias('authenticated'),
 
   init() {
     this._super(...arguments);
-    set(this, 'builds', []);
-    set(this, 'showDownstreamTriggers', false);
+    setProperties(this, {
+      builds: [],
+      showDownstreamTriggers: false,
+      reason: ''
+    });
   },
+
   didUpdateAttrs() {
     this._super(...arguments);
     // hide graph tooltip when event changes
@@ -139,15 +144,19 @@ export default Component.extend({
       return false;
     },
     confirmStartBuild() {
-      set(this, 'isShowingModal', true);
-      set(this, 'showTooltip', false);
+      setProperties(this, {
+        isShowingModal: true,
+        showTooltip: false
+      });
     },
     cancelStartBuild() {
       set(this, 'isShowingModal', false);
     },
-    startDetachedBuild(parameters) {
+    startDetachedBuild(options) {
       set(this, 'isShowingModal', false);
-      this.startDetachedBuild(get(this, 'tooltipData.job'), parameters);
+      this.startDetachedBuild(get(this, 'tooltipData.job'), options).then(() => {
+        this.set('reason', '');
+      });
     }
   }
 });

@@ -4,6 +4,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import rsvp from 'rsvp';
+import frozenBuild from 'screwdriver-ui/tests/mock/frozenBuild';
 
 const GRAPH = {
   nodes: [
@@ -46,6 +47,77 @@ module('Integration | Component | pipeline workflow', function(hooks) {
     await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph}}`);
 
     assert.dom('.graph-node').exists({ count: 5 });
+    assert.dom('.workflow-tooltip').exists({ count: 1 });
+  });
+
+  test('it renders with frozen window', async function(assert) {
+    this.setProperties({
+      obj: frozenBuild,
+      builds: [],
+      displayRestartButton: true,
+      jobs: [
+        {
+          id: 6,
+          pipelineId: 1,
+          name: 'main',
+          state: 'ENABLED',
+          builds: [
+            {
+              status: 'SUCCESS'
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        {
+          id: 7,
+          pipelineId: 1,
+          name: 'mainFreeze',
+          state: 'ENABLED',
+          builds: [
+            {
+              status: 'FROZEN'
+            }
+          ],
+          status: 'FROZEN'
+        }
+      ],
+      workflowGraph: {
+        nodes: [
+          {
+            name: '~pr'
+          },
+          {
+            name: '~commit'
+          },
+          {
+            id: 6,
+            name: 'main'
+          },
+          {
+            id: 7,
+            name: 'mainFreeze'
+          }
+        ],
+        edges: [
+          {
+            src: '~pr',
+            dest: 'main'
+          },
+          {
+            src: '~commit',
+            dest: 'main'
+          },
+          {
+            src: 'main',
+            dest: 'mainFreeze'
+          }
+        ]
+      }
+    });
+
+    await render(hbs`{{pipeline-workflow selectedEventObj=obj jobs=jobs graph=workflowGraph}}`);
+    assert.dom('.pipelineWorkflow [data-job="mainFreeze"]').exists({ count: 1 });
+    assert.dom('.graph-node.build-frozen').exists({ count: 1 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 });
