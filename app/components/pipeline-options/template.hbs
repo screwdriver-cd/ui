@@ -22,7 +22,7 @@
                     value=scmUrl
                   }}
                 </div>
-                {{pipeline-rootdir hasRootDir=(if this.rootDir true false) rootDir=this.rootDir updateRootDir=(action "updateRootDir")}}
+                {{pipeline-rootdir hasRootDir=hasRootDir rootDir=this.rootDir updateRootDir=(action "updateRootDir")}}
               </div>
             </div>
             <div class="row">

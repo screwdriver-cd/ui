@@ -14,6 +14,7 @@ export default Component.extend({
   errorMessage: '',
   scmUrl: '',
   rootDir: '',
+  hasRootDir: false,
   // Removing a pipeline
   isRemoving: false,
   isShowingModal: false,
@@ -49,7 +50,10 @@ export default Component.extend({
     );
 
     if (this.get('pipeline.scmRepo.rootDir')) {
-      this.set('rootDir', this.get('pipeline.scmRepo.rootDir'));
+      this.setProperties({
+        rootDir: this.get('pipeline.scmRepo.rootDir'),
+        hasRootDir: true
+      });
     }
   },
   actions: {
@@ -70,10 +74,16 @@ export default Component.extend({
       this.set('rootDir', val.trim());
     },
     updatePipeline() {
-      this.onUpdatePipeline({
-        scmUrl: this.scmUrl,
-        rootDir: this.rootDir
-      });
+      const { scmUrl, rootDir, hasRootDir } = this;
+      const pipelineConfig = {
+        scmUrl,
+        rootDir: ''
+      };
+
+      if (hasRootDir) {
+        pipelineConfig.rootDir = rootDir;
+      }
+      this.onUpdatePipeline(pipelineConfig);
     },
     toggleJob(jobId, user, name, stillActive) {
       const status = stillActive ? 'ENABLED' : 'DISABLED';
