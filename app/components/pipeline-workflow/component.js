@@ -144,15 +144,19 @@ export default Component.extend({
       return false;
     },
     confirmStartBuild() {
-      set(this, 'isShowingModal', true);
-      set(this, 'showTooltip', false);
+      setProperties(this, {
+        isShowingModal: true,
+        showTooltip: false
+      });
     },
     cancelStartBuild() {
       set(this, 'isShowingModal', false);
     },
     startDetachedBuild(options) {
       set(this, 'isShowingModal', false);
-      this.startDetachedBuild(get(this, 'tooltipData.job'), options);
+      this.startDetachedBuild(get(this, 'tooltipData.job'), options).then(() => {
+        this.set('reason', '');
+      });
     }
   }
 });
