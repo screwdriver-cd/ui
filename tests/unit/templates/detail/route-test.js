@@ -7,12 +7,13 @@ import sinonTest from 'ember-sinon-qunit/test-support/test';
 const templateServiceStub = Service.extend({
   getOneTemplate() {
     return resolve([
-      { id: 3, name: 'baz', version: '3.0.0', namespace: 'foo' },
-      { id: 2, name: 'baz', version: '2.0.0', namespace: 'foo' },
+      { id: 4, name: 'baz', version: '3.0.0', namespace: 'foo' },
+      { id: 3, name: 'baz', version: '2.0.0', namespace: 'foo' },
+      { id: 2, name: 'baz', version: '1.1.0', namespace: 'foo' },
       { id: 1, name: 'baz', version: '1.0.0', namespace: 'foo' },
-      { id: 6, name: 'baz', version: '3.0.0', namespace: 'bar' },
-      { id: 5, name: 'baz', version: '2.0.0', namespace: 'bar' },
-      { id: 4, name: 'baz', version: '1.0.0', namespace: 'bar' }
+      { id: 7, name: 'baz', version: '3.0.0', namespace: 'bar' },
+      { id: 6, name: 'baz', version: '2.0.0', namespace: 'bar' },
+      { id: 5, name: 'baz', version: '1.0.0', namespace: 'bar' }
     ]);
   },
   getTemplateTags(namespace, name) {
@@ -39,7 +40,7 @@ module('Unit | Route | templates/detail', function(hooks) {
     assert.ok(route);
 
     return route.model({ namespace: 'foo', name: 'baz' }).then(templates => {
-      assert.equal(templates.templateData.length, 3);
+      assert.equal(templates.templateData.length, 4);
       assert.equal(templates.templateData[0].namespace, 'foo');
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, undefined);
@@ -52,10 +53,23 @@ module('Unit | Route | templates/detail', function(hooks) {
     assert.ok(route);
 
     return route.model({ namespace: 'foo', name: 'baz', version: '1.0.0' }).then(templates => {
-      assert.equal(templates.templateData.length, 3);
+      assert.equal(templates.templateData.length, 4);
       assert.equal(templates.templateData[0].namespace, 'foo');
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, '1.0.0');
+    });
+  });
+
+  test('it asks for the list of templates for a given name and exist version of according to ember', function(assert) {
+    let route = this.owner.lookup('route:templates/detail');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: '1' }).then(templates => {
+      assert.equal(templates.templateData.length, 4);
+      assert.equal(templates.templateData[0].namespace, 'foo');
+      assert.equal(templates.templateData[0].name, 'baz');
+      assert.equal(templates.versionOrTagFromUrl, '1.1.0');
     });
   });
 
@@ -65,7 +79,7 @@ module('Unit | Route | templates/detail', function(hooks) {
     assert.ok(route);
 
     return route.model({ namespace: 'foo', name: 'baz', version: 'stable' }).then(templates => {
-      assert.equal(templates.templateData.length, 3);
+      assert.equal(templates.templateData.length, 4);
       assert.equal(templates.templateData[0].namespace, 'foo');
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, 'stable');

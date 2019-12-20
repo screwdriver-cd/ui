@@ -10,13 +10,38 @@ export default Route.extend({
       this.template.getTemplateTags(params.namespace, params.name)
     ]).then(arr => {
       let [verPayload, tagPayload] = arr;
+      let version;
 
       if (params.version) {
-        const versionExists = verPayload.filter(t => t.version === params.version);
+        const versionExists = verPayload.filter(t => t.version.startsWith(params.version));
         const tagExists = tagPayload.filter(t => t.tag === params.version);
 
         if (tagExists.length === 0 && versionExists.length === 0) {
           this.transitionTo('/404');
+        }
+
+        if (versionExists.length > 0) {
+          // Sort commands by descending order
+          versionExists.sort((a, b) => {
+            const as = a.version.split('.');
+            const bs = b.version.split('.');
+            let ai;
+            let bi;
+            let limit = Math.max(as.length, bs.length);
+
+            while (limit) {
+              limit -= 1;
+              ai = parseInt(as.shift() || 0, 10);
+              bi = parseInt(bs.shift() || 0, 10);
+              if (ai !== bi) {
+                break;
+              }
+            }
+
+            return ai > bi;
+          });
+
+          ({ version } = versionExists[0]);
         }
       }
 
@@ -33,7 +58,7 @@ export default Route.extend({
       let result = {};
 
       result.templateData = verPayload;
-      result.versionOrTagFromUrl = params.version;
+      result.versionOrTagFromUrl = version || params.version;
       result.templateTagData = tagPayload;
 
       return result;
