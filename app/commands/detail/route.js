@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
+import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 
 export default Route.extend({
   command: service(),
@@ -22,25 +23,7 @@ export default Route.extend({
 
         if (versionExists.length > 0) {
           // Sort commands by descending order
-          versionExists.sort((a, b) => {
-            const as = a.version.split('.');
-            const bs = b.version.split('.');
-            let ai;
-            let bi;
-            let limit = Math.max(as.length, bs.length);
-
-            while (limit) {
-              limit -= 1;
-              ai = parseInt(as.shift() || 0, 10);
-              bi = parseInt(bs.shift() || 0, 10);
-              if (ai !== bi) {
-                break;
-              }
-            }
-
-            return ai > bi;
-          });
-
+          versionExists.sort((a, b) => compareVersions(b.version, a.version));
           ({ version } = versionExists[0]);
         }
       }
