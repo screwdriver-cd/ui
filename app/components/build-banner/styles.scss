@@ -49,6 +49,7 @@ li {
 
 .job-name {
   border-left-width: 3px;
+  word-wrap: break-word;
 
   .banner-value {
     font-weight: $weight-bold;
