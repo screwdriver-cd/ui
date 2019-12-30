@@ -7,15 +7,17 @@ import sinonTest from 'ember-sinon-qunit/test-support/test';
 const commandServiceStub = Service.extend({
   getOneCommand(namespace, name) {
     return resolve([
-      { id: 3, namespace, name, version: '3.0.0' },
-      { id: 2, namespace, name, version: '2.0.0' },
+      { id: 4, namespace, name, version: '3.0.0' },
+      { id: 3, namespace, name, version: '2.0.0' },
+      { id: 2, namespace, name, version: '1.1.0' },
       { id: 1, namespace, name, version: '1.0.0' }
     ]);
   },
   getCommandTags(namespace, name) {
     return resolve([
-      { id: 3, namespace, name, version: '3.0.0', tag: 'latest' },
-      { id: 2, namespace, name, version: '2.0.0', tag: 'stable' },
+      { id: 4, namespace, name, version: '3.0.0', tag: 'latest' },
+      { id: 3, namespace, name, version: '2.0.0', tag: 'stable' },
+      { id: 2, namespace, name, version: '1.1.0' },
       { id: 1, namespace, name, version: '1.0.0' }
     ]);
   }
@@ -49,10 +51,23 @@ module('Unit | Route | commands/detail', function(hooks) {
     assert.ok(route);
 
     return route.model({ namespace: 'foo', name: 'baz', version: '1.0.0' }).then(commands => {
-      assert.equal(commands.commandData.length, 3);
+      assert.equal(commands.commandData.length, 4);
       assert.equal(commands.commandData[0].namespace, 'foo');
       assert.equal(commands.commandData[0].name, 'baz');
       assert.equal(commands.versionOrTagFromUrl, '1.0.0');
+    });
+  });
+
+  test('it asks for the list of commands for a given name and exist version of according to ember', function(assert) {
+    let route = this.owner.lookup('route:commands/detail');
+
+    assert.ok(route);
+
+    return route.model({ namespace: 'foo', name: 'baz', version: '1' }).then(commands => {
+      assert.equal(commands.commandData.length, 4);
+      assert.equal(commands.commandData[0].namespace, 'foo');
+      assert.equal(commands.commandData[0].name, 'baz');
+      assert.equal(commands.versionOrTagFromUrl, '1.1.0');
     });
   });
 
@@ -62,7 +77,7 @@ module('Unit | Route | commands/detail', function(hooks) {
     assert.ok(route);
 
     return route.model({ namespace: 'foo', name: 'baz', version: 'stable' }).then(commands => {
-      assert.equal(commands.commandData.length, 3);
+      assert.equal(commands.commandData.length, 4);
       assert.equal(commands.commandData[0].namespace, 'foo');
       assert.equal(commands.commandData[0].name, 'baz');
       assert.equal(commands.versionOrTagFromUrl, 'stable');

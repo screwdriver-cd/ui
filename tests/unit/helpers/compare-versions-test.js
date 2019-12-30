@@ -1,0 +1,40 @@
+import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
+import { module, test } from 'qunit';
+
+module('Unit | Helper | compare versions', function() {
+  test('it works', function(assert) {
+    assert.equal(compareVersions('2.0.0', '1.0.0'), 1);
+    assert.equal(compareVersions('0.2.0', '0.1.0'), 1);
+    assert.equal(compareVersions('0.0.2', '0.0.1'), 1);
+    assert.equal(compareVersions('2.0.0', '2.0.0'), 0);
+    assert.equal(compareVersions('0.2.0', '0.2.0'), 0);
+    assert.equal(compareVersions('0.0.2', '0.0.2'), 0);
+    assert.equal(compareVersions('1.0.0', '2.0.0'), -1);
+    assert.equal(compareVersions('0.1.0', '0.2.0'), -1);
+    assert.equal(compareVersions('0.0.1', '0.0.2'), -1);
+    assert.equal(compareVersions('2.0.0', '1.0'), 1);
+    assert.equal(compareVersions('0.0.8', '0.3'), -1);
+    assert.equal(compareVersions('0.3.0', '0.3'), 0);
+    assert.equal(compareVersions('2.0.0', '1'), 1);
+    assert.equal(compareVersions('0.0.3', '1'), -1);
+    assert.equal(compareVersions('2.0.0', '2'), 0);
+    assert.equal(compareVersions('2.3', '1.6.0'), 1);
+    assert.equal(compareVersions('2.1', '2.1.3'), -1);
+    assert.equal(compareVersions('2.0', '2.0.0'), 0);
+    assert.equal(compareVersions('2.8', '2.4'), 1);
+    assert.equal(compareVersions('2.3', '4.7'), -1);
+    assert.equal(compareVersions('0.3', '0.3'), 0);
+    assert.equal(compareVersions('2.0', '1'), 1);
+    assert.equal(compareVersions('2.59', '3'), -1);
+    assert.equal(compareVersions('2.0', '2'), 0);
+    assert.equal(compareVersions('2', '1.8.3'), 1);
+    assert.equal(compareVersions('2', '5.1.1'), -1);
+    assert.equal(compareVersions('2', '2.0.0'), 0);
+    assert.equal(compareVersions('2', '1.8'), 1);
+    assert.equal(compareVersions('2', '5.1'), -1);
+    assert.equal(compareVersions('2', '2.0'), 0);
+    assert.equal(compareVersions('2', '1'), 1);
+    assert.equal(compareVersions('2', '3'), -1);
+    assert.equal(compareVersions('2', '2'), 0);
+  });
+});

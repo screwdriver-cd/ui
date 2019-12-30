@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
+import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 
 export default Route.extend({
   template: service(),
@@ -10,13 +11,20 @@ export default Route.extend({
       this.template.getTemplateTags(params.namespace, params.name)
     ]).then(arr => {
       let [verPayload, tagPayload] = arr;
+      let version;
 
       if (params.version) {
-        const versionExists = verPayload.filter(t => t.version === params.version);
+        const versionExists = verPayload.filter(t => t.version.startsWith(params.version));
         const tagExists = tagPayload.filter(t => t.tag === params.version);
 
         if (tagExists.length === 0 && versionExists.length === 0) {
           this.transitionTo('/404');
+        }
+
+        if (versionExists.length > 0) {
+          // Sort commands by descending order
+          versionExists.sort((a, b) => compareVersions(b.version, a.version));
+          ({ version } = versionExists[0]);
         }
       }
 
@@ -33,7 +41,7 @@ export default Route.extend({
       let result = {};
 
       result.templateData = verPayload;
-      result.versionOrTagFromUrl = params.version;
+      result.versionOrTagFromUrl = version || params.version;
       result.templateTagData = tagPayload;
 
       return result;
