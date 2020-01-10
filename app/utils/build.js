@@ -41,7 +41,7 @@ const statusIcon = (status, isLight) => {
       break;
     case 'FAILURE':
     case 'ABORTED':
-      icon = `times-circle${isLight ? '-o' : ''}`;
+      icon = `stop-circle${isLight ? '-o' : ''}`;
       break;
     case 'SKIPPED':
       // TODO: Replace skipped property if necessary.
