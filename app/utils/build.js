@@ -40,8 +40,10 @@ const statusIcon = (status, isLight) => {
       icon = 'fa-ban fa-flip-horizontal';
       break;
     case 'FAILURE':
-    case 'ABORTED':
       icon = `times-circle${isLight ? '-o' : ''}`;
+      break;
+    case 'ABORTED':
+      icon = `stop-circle${isLight ? '-o' : ''}`;
       break;
     case 'SKIPPED':
       // TODO: Replace skipped property if necessary.
