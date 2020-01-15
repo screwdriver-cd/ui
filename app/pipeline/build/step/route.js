@@ -4,6 +4,7 @@ export default Route.extend({
   routeAfterAuthentication: 'pipeline.build',
   model(params) {
     this.controllerFor('pipeline.build').set('preselectedStepName', params.step_id);
+    this.controllerFor('pipeline.build').set('selectedArtifact', 'manifest.txt');
 
     // return parent route model
     return this.modelFor('pipeline.build');

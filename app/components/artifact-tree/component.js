@@ -16,6 +16,8 @@ const typesOptions = {
 };
 
 export default Component.extend({
+  jstreeActionReceiver: null,
+  selectedArtifact: '',
   iframeUrl: '',
   artifact: service('build-artifact'),
   classNames: ['artifact-tree'],
@@ -48,6 +50,26 @@ export default Component.extend({
 
     handleDownload() {
       this.download(this.href);
+    },
+
+    handleJstreeEventDidBecomeReady() {
+      const paths = this.selectedArtifact.split('/');
+      const jstree = this.jstreeActionReceiver.target.treeObject.jstree(true);
+      let nodeList = jstree.get_json();
+      let targetNode = null;
+
+      // traversing jstree to find target artifact node
+      paths.forEach(path => {
+        targetNode = nodeList.find(node => node.text === path);
+        if (targetNode && targetNode.type === 'directory') {
+          nodeList = targetNode.children;
+        }
+      });
+
+      // select the target node
+      if (targetNode) {
+        this.jstreeActionReceiver.send('selectNode', targetNode.id);
+      }
     },
 
     handleJstreeEventDidChange(data = {}) {

@@ -2,7 +2,7 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, click, find } from '@ember/test-helpers';
+import { render, settled, click, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const parsedManifest = [
@@ -62,6 +62,25 @@ module('Integration | Component | artifact tree', function(hooks) {
 
       // Check if the href is correctly set and then click the link
       assert.equal(find('.jstree-leaf a').href, parsedManifest[1].a_attr.href);
+      await click('.jstree-leaf a');
+    });
+  });
+
+  test('it renders with artifacts with artifact preselected', async function(assert) {
+    await render(hbs`
+      {{artifact-tree
+        buildStatus="SUCCESS"
+        selectedArtifact="coverage/coverage.json"
+      }}
+    `);
+
+    return settled().then(async () => {
+      // Check if it has two nodes and one of them is a leaf/file
+      assert.dom('.jstree-leaf').exists({ count: 2 });
+      assert.dom('.jstree-node').exists({ count: 3 });
+      assert.equal(find('.jstree-clicked').href, parsedManifest[0].children[0].a_attr.href);
+      // Check if the href is correctly set and then click the link
+      assert.equal(findAll('.jstree-leaf a')[1].href, parsedManifest[1].a_attr.href);
       await click('.jstree-leaf a');
     });
   });
