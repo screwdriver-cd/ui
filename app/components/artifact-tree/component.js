@@ -53,7 +53,8 @@ export default Component.extend({
     },
 
     handleJstreeEventDidBecomeReady() {
-      const paths = this.selectedArtifact.split('/');
+      const artifactPath = this.selectedArtifact || 'manifest.txt';
+      const paths = artifactPath.split('/');
       const jstree = this.jstreeActionReceiver.target.treeObject.jstree(true);
       let nodeList = jstree.get_json();
       let targetNode = null;

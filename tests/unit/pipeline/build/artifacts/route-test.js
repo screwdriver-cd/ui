@@ -33,32 +33,4 @@ module('Unit | Route | pipeline/build/artifacts', function(hooks) {
       assert.equal(parentController.get('activeTab'), 'artifacts');
     });
   });
-
-  sinonTest('it sets selected artifact', function(assert) {
-    assert.expect(2);
-    const route = this.owner.lookup('route:pipeline/build/artifacts');
-    const controller = this.owner.lookup('controller:pipeline/build');
-    const stub = this.stub(controller, 'set');
-    const params = {
-      artifactPath: 'picture/cat.jpg'
-    };
-
-    route.model(params);
-
-    assert.ok(stub.calledOnce, 'set was called once');
-    assert.ok(stub.calledWithExactly('selectedArtifact', 'picture/cat.jpg'), 'set artifact');
-  });
-
-  sinonTest('it sets selected artifact to manifest if no parameter pass in', function(assert) {
-    assert.expect(2);
-    const route = this.owner.lookup('route:pipeline/build/artifacts');
-    const controller = this.owner.lookup('controller:pipeline/build');
-    const stub = this.stub(controller, 'set');
-    const params = {};
-
-    route.model(params);
-
-    assert.ok(stub.calledOnce, 'set was called once');
-    assert.ok(stub.calledWithExactly('selectedArtifact', 'manifest.txt'), 'set artifact');
-  });
 });
