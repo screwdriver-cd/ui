@@ -68,6 +68,8 @@ export default Component.extend({
         }
       });
 
+      this.set('selectedArtifact', '');
+
       // select the target node
       if (targetNode) {
         this.jstreeActionReceiver.send('selectNode', targetNode.id);
