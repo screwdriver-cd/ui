@@ -30,11 +30,19 @@ const artifactService = Service.extend({
   }
 });
 
+const routerService = Service.extend({
+  transitionTo() {
+    return true;
+  }
+});
+
 module('Integration | Component | artifact tree', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.owner.register('service:build-artifact', artifactService);
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerService);
   });
 
   test('it renders only title when build is running', async function(assert) {
