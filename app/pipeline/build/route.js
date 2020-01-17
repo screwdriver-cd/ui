@@ -61,7 +61,10 @@ export default Route.extend({
 
   actions: {
     didTransition() {
-      this.controller.set('activeTab', 'steps');
+      this.controller.setProperties({
+        selectedArtifact: '',
+        activeTab: 'steps'
+      });
     }
   }
 });

@@ -7,6 +7,7 @@ export default Component.extend({
   iframeUrl: '',
   router: service(),
   activeTab: 'steps',
+  selectedArtifact: '',
   isArtifacts: equal('activeTab', 'artifacts'),
   classNames: ['build-step-collection', 'row'],
   stepNames: mapBy('buildSteps', 'name'),
