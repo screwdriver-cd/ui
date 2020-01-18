@@ -10,6 +10,7 @@ export default Route.extend({
     const pipelineId = transition.params.pipeline.pipeline_id;
     const { job_name: jobName, status: buildStatus } = params;
 
+    // todo: move build-latest service to this file
     return this.latestBuildService.getLatestBuild(pipelineId, jobName, buildStatus);
   }
 });
