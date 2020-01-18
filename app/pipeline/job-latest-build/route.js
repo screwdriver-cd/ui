@@ -8,7 +8,7 @@ export default Route.extend({
   },
   model(params, transition) {
     const pipelineId = transition.params.pipeline.pipeline_id;
-    const { jobName, buildStatus } = params;
+    const { job_name: jobName, status: buildStatus } = params;
 
     return this.latestBuildService.getLatestBuild(pipelineId, jobName, buildStatus);
   }

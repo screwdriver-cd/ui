@@ -18,7 +18,6 @@ export default Service.extend({
   getLatestBuild(pipelineId, jobName, buildStatus) {
     let url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/jobs/${jobName}/latestBuild`;
 
-    console.log(`status at service${buildStatus}`);
     if (buildStatus) {
       url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/jobs/${jobName}/latestBuild?status=${buildStatus}`;
     }

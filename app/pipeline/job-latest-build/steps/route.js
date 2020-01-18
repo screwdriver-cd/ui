@@ -8,8 +8,8 @@ export default Route.extend({
   afterModel(model) {
     if (!model) return;
     const { id: buildId, pipelineId } = model;
-    const stepId = this.paramsFor(this.routeName).step_id;
+    const stepName = this.paramsFor(this.routeName).step_name;
 
-    this.transitionTo('pipeline.build.step', pipelineId, buildId, stepId);
+    this.transitionTo('pipeline.build.step', pipelineId, buildId, stepName);
   }
 });
