@@ -69,16 +69,25 @@ module('Unit | Route | pipeline/job-latest-build', function(hooks) {
   sinonTest('it makes call to get latest build successfully', function(assert) {
     assert.expect(2);
     this.session.set('isAuthenticated', true);
-    server.get(
-      'http://localhost:8081/v1/builds/pipelines/123/jobs/main/latestBuild?status=SUCCESS',
-      () => [
+    server.get('http://localhost:8080/v4/pipelines/123/jobs/main/latestBuild', request => {
+      if (request.queryParams.status === 'SUCCESS') {
+        return [
+          200,
+          {
+            'Content-Type': 'application/json'
+          },
+          JSON.stringify([{ id: 456 }])
+        ];
+      }
+
+      return [
         200,
         {
           'Content-Type': 'application/json'
         },
-        JSON.stringify([{ id: 456 }])
-      ]
-    );
+        JSON.stringify([{ id: 100 }])
+      ];
+    });
 
     const route = this.owner.lookup('route:pipeline/job-latest-build');
     const p = route.model(params, transition);
@@ -88,7 +97,7 @@ module('Unit | Route | pipeline/job-latest-build', function(hooks) {
 
       assert.deepEqual(
         request.url,
-        'http://localhost:8081/v1/builds/pipelines/123/jobs/main/latestBuild?status=SUCCESS',
+        'http://localhost:8080/v4/pipelines/123/jobs/main/latestBuild?status=SUCCESS',
         'called with right url'
       );
       assert.deepEqual(data, latestBuild);
