@@ -51,7 +51,6 @@ function getLatestBuild(session, pipelineId, jobName, buildStatus) {
 }
 
 export default Route.extend({
-  latestBuildService: service('build-latest'),
   session: service('session'),
   queryParams: {
     status: ''
@@ -60,7 +59,6 @@ export default Route.extend({
     const pipelineId = transition.params.pipeline.pipeline_id;
     const { job_name: jobName, status: buildStatus } = params;
 
-    // todo: move build-latest service to this file
     return getLatestBuild(this.get('session'), pipelineId, jobName, buildStatus);
   }
 });

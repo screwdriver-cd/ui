@@ -1,8 +1,52 @@
+import sinonTest from 'ember-sinon-qunit/test-support/test';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import Pretender from 'pretender';
+import Service from '@ember/service';
+
+let server;
+
+const jobName = 'main';
+const pipelineId = '123';
+const buildId = '456';
+const buildStatus = 'SUCCESS';
+const params = {
+  job_name: jobName,
+  status: buildStatus
+};
+const transition = {
+  params: {
+    pipeline: {
+      pipeline_id: pipelineId
+    }
+  }
+};
+const latestBuild = {
+  id: buildId,
+  pipelineId
+};
+const sessionServiceMock = Service.extend({
+  isAuthenticated: false,
+  data: {
+    authenticated: {
+      token: 'banana'
+    }
+  }
+});
 
 module('Unit | Route | pipeline/job-latest-build', function(hooks) {
   setupTest(hooks);
+
+  hooks.beforeEach(function() {
+    server = new Pretender();
+    this.owner.register('service:session', sessionServiceMock);
+    this.session = this.owner.lookup('service:session');
+    this.session.set('isAuthenticated', false);
+  });
+
+  hooks.afterEach(function() {
+    server.shutdown();
+  });
 
   test('it exists', function(assert) {
     let route = this.owner.lookup('route:pipeline/job-latest-build');
@@ -10,23 +54,44 @@ module('Unit | Route | pipeline/job-latest-build', function(hooks) {
     assert.ok(route);
   });
 
-  // sinonTest('it fetches latest build for given job', function (assert) {
-  //   const route = this.owner.lookup('route:pipeline/job-latest-build');
-  //   const stub = this.stub(route, 'transitionTo');
-  //   const jobId = 345;
-  //   const pipelineId = 123;
-  //   const model = {
-  //     pipeline: {
-  //       get: type => (type === 'id' ? pipelineId : null)
-  //     },
-  //     job: {
-  //       get: type => (type === 'id' ? jobId : null)
-  //     }
-  //   };
+  sinonTest('it rejects if the user is not authenticated', function(assert) {
+    assert.expect(2);
 
-  //   route.afterModel(model);
+    const route = this.owner.lookup('route:pipeline/job-latest-build');
+    const p = route.model(params, transition);
 
-  //   assert.ok(stub.calledOnce, 'transitionTo was called once');
-  //   assert.ok(stub.calledWithExactly('pipeline', pipelineId), 'transition to pipeline');
-  // });
+    p.catch(e => {
+      assert.ok(e instanceof Error, e);
+      assert.equal('User is not authenticated', e.message);
+    });
+  });
+
+  sinonTest('it makes call to get latest build successfully', function(assert) {
+    assert.expect(2);
+    this.session.set('isAuthenticated', true);
+    server.get(
+      'http://localhost:8081/v1/builds/pipelines/123/jobs/main/latestBuild?status=SUCCESS',
+      () => [
+        200,
+        {
+          'Content-Type': 'application/json'
+        },
+        JSON.stringify([{ id: 456 }])
+      ]
+    );
+
+    const route = this.owner.lookup('route:pipeline/job-latest-build');
+    const p = route.model(params, transition);
+
+    p.then(data => {
+      const [request] = server.handledRequests;
+
+      assert.deepEqual(
+        request.url,
+        'http://localhost:8081/v1/builds/pipelines/123/jobs/main/latestBuild?status=SUCCESS',
+        'called with right url'
+      );
+      assert.deepEqual(data, latestBuild);
+    });
+  });
 });
