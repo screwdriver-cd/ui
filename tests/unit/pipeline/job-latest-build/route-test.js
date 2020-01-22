@@ -7,8 +7,8 @@ import Service from '@ember/service';
 let server;
 
 const jobName = 'main';
-const pipelineId = '123';
-const buildId = '456';
+const pipelineId = 123;
+const buildId = 456;
 const buildStatus = 'SUCCESS';
 const params = {
   job_name: jobName,
@@ -76,7 +76,7 @@ module('Unit | Route | pipeline/job-latest-build', function(hooks) {
           {
             'Content-Type': 'application/json'
           },
-          JSON.stringify([{ id: 456 }])
+          JSON.stringify({ id: 456 })
         ];
       }
 
@@ -85,7 +85,7 @@ module('Unit | Route | pipeline/job-latest-build', function(hooks) {
         {
           'Content-Type': 'application/json'
         },
-        JSON.stringify([{ id: 100 }])
+        JSON.stringify({ id: 100 })
       ];
     });
 
