@@ -17,7 +17,9 @@ function getLatestBuild(session, pipelineId, jobName, buildStatus) {
   let url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/jobs/${jobName}/latestBuild`;
 
   if (buildStatus) {
-    url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/jobs/${jobName}/latestBuild?status=${buildStatus}`;
+    const status = buildStatus.toUpperCase();
+
+    url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/jobs/${jobName}/latestBuild?status=${status}`;
   }
 
   return new EmberPromise((resolve, reject) => {
