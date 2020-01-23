@@ -12,20 +12,24 @@ const GRAPH = {
     { name: '~commit' },
     { id: 1, name: 'main' },
     { id: 2, name: 'batman' },
-    { id: 3, name: 'robin' }
+    { id: 3, name: 'robin' },
+    { id: 4, name: 'sd@123:main' },
+    { id: 5, name: 'deploy' }
   ],
   edges: [
     { src: '~pr', dest: 'main' },
     { src: '~commit', dest: 'main' },
     { src: 'main', dest: 'batman' },
-    { src: 'batman', dest: 'robin' }
+    { src: 'batman', dest: 'robin' },
+    { src: 'robin', dest: 'sd@123:main' }
   ]
 };
 
 const BUILDS = [
   { jobId: 1, id: 4, status: 'SUCCESS' },
   { jobId: 2, id: 5, status: 'SUCCESS' },
-  { jobId: 3, id: 6, status: 'FAILURE' }
+  { jobId: 3, id: 6, status: 'SUCCESS' },
+  { jobId: 5, id: 8, status: 'FAILURE' }
 ];
 
 module('Integration | Component | pipeline workflow', function(hooks) {
@@ -41,12 +45,12 @@ module('Integration | Component | pipeline workflow', function(hooks) {
         causeMessage: 'test'
       }),
       'graph',
-      EmberObject.create({})
+      EmberObject.create(GRAPH)
     );
 
     await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph}}`);
 
-    assert.dom('.graph-node').exists({ count: 5 });
+    assert.dom('.graph-node').exists({ count: 7 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 
