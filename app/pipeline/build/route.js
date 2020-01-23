@@ -44,18 +44,17 @@ export default Route.extend({
     set(model, 'userSelectedStepName', null);
   },
 
-  redirect(model, transition) {
-    if (transition.targetName !== 'pipeline.build.step') {
-      const name = getActiveStep(get(model, 'build.steps'));
+  goToActiveStep() {
+    const model = this.controller.get('model');
+    const name = getActiveStep(get(model, 'build.steps'));
 
-      if (name) {
-        this.transitionTo(
-          'pipeline.build.step',
-          model.pipeline.get('id'),
-          model.build.get('id'),
-          name
-        );
-      }
+    if (name) {
+      this.transitionTo(
+        'pipeline.build.step',
+        model.pipeline.get('id'),
+        model.build.get('id'),
+        name
+      );
     }
   },
 
@@ -65,6 +64,8 @@ export default Route.extend({
         selectedArtifact: '',
         activeTab: 'steps'
       });
+
+      this.goToActiveStep();
     }
   }
 });
