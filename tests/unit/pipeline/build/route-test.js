@@ -39,7 +39,7 @@ module('Unit | Route | pipeline/build', function(hooks) {
     assert.ok(stub.calledWithExactly('pipeline', pipelineId), 'transition to pipeline');
   });
 
-  sinonTest('it should not redirect if not step route', function(assert) {
+  sinonTest('it should not call transitionTo when redirect', function(assert) {
     const route = this.owner.lookup('route:pipeline/build');
     const stub = this.stub(route, 'transitionTo');
 
