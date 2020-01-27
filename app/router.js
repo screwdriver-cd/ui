@@ -15,6 +15,7 @@ Router.map(function route() {
     this.route('events');
     this.route('secrets');
     this.route('build', { path: 'builds/:build_id' }, function stepsRoute() {
+      this.route('index', { path: '/' });
       this.route('step', { path: 'steps/:step_id' });
       this.route('artifacts', function artifactsRoute() {
         this.route('index', { path: '/' });
