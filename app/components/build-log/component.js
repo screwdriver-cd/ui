@@ -5,7 +5,7 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 
-const timeTypes = ['datetime', 'elapsedBuild', 'elapsedStep'];
+const timeTypes = ['datetime', 'datetimeUTC', 'elapsedBuild', 'elapsedStep'];
 
 export default Component.extend({
   logService: service('build-logs'),
