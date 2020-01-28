@@ -6,7 +6,7 @@ import hbs from 'htmlbars-inline-precompile';
 module('helper:branch-url-encode', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders a duration given two parsable times in HH:mm:ss format', async function(assert) {
+  test('it renders a encoded url of branch name including #', async function(assert) {
     this.set('url', 'https://github/org/repo/tree/branch#hash');
 
     await render(hbs`{{branch-url-encode url}}`);
