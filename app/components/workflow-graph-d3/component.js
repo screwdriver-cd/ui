@@ -31,7 +31,7 @@ export default Component.extend({
         let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
         const endNodes = graph.nodes.filter(node => node.name.startsWith('sd@'));
 
-        // remove duplicate danling trigger jobs from graph
+        // remove duplicate dangling trigger jobs from graph
         if (endNodes) {
           graph.nodes.removeObjects(endNodes);
           endNodes.forEach(endNode => {
