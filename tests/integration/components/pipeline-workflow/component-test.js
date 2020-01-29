@@ -50,7 +50,7 @@ module('Integration | Component | pipeline workflow', function(hooks) {
 
     await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph}}`);
 
-    assert.dom('.graph-node').exists({ count: 7 });
+    assert.dom('.graph-node').exists({ count: 6 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 
