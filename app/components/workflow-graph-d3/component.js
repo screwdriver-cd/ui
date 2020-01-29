@@ -35,11 +35,9 @@ export default Component.extend({
         if (endNodes) {
           graph.nodes.removeObjects(endNodes);
           endNodes.forEach(endNode => {
-            let existEdges = graph.edges.filter(edge => edge.dest === endNode.name);
+            let endEdges = graph.edges.filter(edge => edge.dest === endNode.name);
 
-            if (existEdges) {
-              graph.edges.removeObjects(existEdges);
-            }
+            graph.edges.removeObjects(endEdges);
           });
         }
 
