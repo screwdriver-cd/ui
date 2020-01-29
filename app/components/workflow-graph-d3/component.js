@@ -35,7 +35,7 @@ export default Component.extend({
         if (endNodes) {
           graph.nodes.removeObjects(endNodes);
           endNodes.forEach(endNode => {
-            let endEdges = graph.edges.filter(edge => edge.dest === endNode.name);
+            const endEdges = graph.edges.filter(edge => edge.dest === endNode.name);
 
             graph.edges.removeObjects(endEdges);
           });
