@@ -32,7 +32,7 @@ export default Component.extend({
         const endNodes = graph.nodes.filter(node => node.name.startsWith('sd@'));
 
         // remove duplicate dangling trigger jobs from graph
-        if (endNodes) {
+        if (endNodes.length) {
           graph.nodes.removeObjects(endNodes);
           endNodes.forEach(endNode => {
             const endEdges = graph.edges.filter(edge => edge.dest === endNode.name);
