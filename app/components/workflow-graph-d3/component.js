@@ -24,8 +24,22 @@ export default Component.extend({
         const { startFrom } = this;
         const jobs = getWithDefault(this, 'jobs', []);
         const workflowGraph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
-        const completeGraph = getWithDefault(this, 'completeWorkflowGraph', workflowGraph);
+        const completeGraph = getWithDefault(this, 'completeWorkflowGraph', {
+          nodes: [],
+          edges: []
+        });
         let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
+        const endNodes = graph.nodes.filter(node => node.name.startsWith('sd@'));
+
+        // remove duplicate dangling trigger jobs from graph
+        if (endNodes.length) {
+          graph.nodes.removeObjects(endNodes);
+          endNodes.forEach(endNode => {
+            const endEdges = graph.edges.filter(edge => edge.dest === endNode.name);
+
+            graph.edges.removeObjects(endEdges);
+          });
+        }
 
         set(this, 'graph', graph);
 
