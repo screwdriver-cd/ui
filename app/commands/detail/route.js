@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
+import { get } from '@ember/object';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 
 export default Route.extend({
@@ -38,6 +39,8 @@ export default Route.extend({
 
       let result = {};
 
+      result.namespace = params.namespace;
+      result.name = params.name;
       result.commandData = verPayload;
       result.versionOrTagFromUrl = version || params.version;
       result.commandTagData = tagPayload;
@@ -57,5 +60,15 @@ export default Route.extend({
 
       return true;
     }
+  },
+  titleToken(model) {
+    let title = `${get(model, 'namespace') || ''}/${get(model, 'name') || ''}`;
+    const version = get(model, 'versionOrTagFromUrl');
+
+    if (version !== undefined) {
+      title = `${title}@${version}`;
+    }
+
+    return title;
   }
 });

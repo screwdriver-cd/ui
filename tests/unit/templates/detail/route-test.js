@@ -38,6 +38,13 @@ module('Unit | Route | templates/detail', function(hooks) {
     let route = this.owner.lookup('route:templates/detail');
 
     assert.ok(route);
+    assert.equal(
+      route.titleToken({
+        namespace: 'foo',
+        name: 'baz'
+      }),
+      'foo/baz'
+    );
 
     return route.model({ namespace: 'foo', name: 'baz' }).then(templates => {
       assert.equal(templates.templateData.length, 4);
@@ -51,6 +58,14 @@ module('Unit | Route | templates/detail', function(hooks) {
     let route = this.owner.lookup('route:templates/detail');
 
     assert.ok(route);
+    assert.equal(
+      route.titleToken({
+        namespace: 'foo',
+        name: 'baz',
+        versionOrTagFromUrl: '1.0.0'
+      }),
+      'foo/baz@1.0.0'
+    );
 
     return route.model({ namespace: 'foo', name: 'baz', version: '1.0.0' }).then(templates => {
       assert.equal(templates.templateData.length, 4);
@@ -77,6 +92,14 @@ module('Unit | Route | templates/detail', function(hooks) {
     let route = this.owner.lookup('route:templates/detail');
 
     assert.ok(route);
+    assert.equal(
+      route.titleToken({
+        namespace: 'foo',
+        name: 'baz',
+        versionOrTagFromUrl: 'stable'
+      }),
+      'foo/baz@stable'
+    );
 
     return route.model({ namespace: 'foo', name: 'baz', version: 'stable' }).then(templates => {
       assert.equal(templates.templateData.length, 4);
