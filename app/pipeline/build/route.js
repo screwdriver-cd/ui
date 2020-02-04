@@ -59,7 +59,6 @@ export default Route.extend({
   },
 
   redirect(model /* , transition */) {
-    console.log('redirect called');
     const name = getActiveStep(get(model, 'build.steps'));
 
     if (name) {
