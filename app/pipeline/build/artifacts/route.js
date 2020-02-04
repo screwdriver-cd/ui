@@ -9,9 +9,6 @@ export default Route.extend({
   actions: {
     didTransition() {
       this.controllerFor('pipeline.build').set('activeTab', 'artifacts');
-
-      // NOT delegate to its parent route's didTranstion
-      return false;
     }
   }
 });

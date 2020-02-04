@@ -39,7 +39,7 @@ module('Unit | Route | pipeline/build', function(hooks) {
     assert.ok(stub.calledWithExactly('pipeline', pipelineId), 'transition to pipeline');
   });
 
-  sinonTest('it should not call transitionTo when redirect', function(assert) {
+  sinonTest('it redirects if not step route', function(assert) {
     const route = this.owner.lookup('route:pipeline/build');
     const stub = this.stub(route, 'transitionTo');
 
@@ -64,6 +64,10 @@ module('Unit | Route | pipeline/build', function(hooks) {
 
     route.redirect(model, transition);
 
-    assert.ok(stub.notCalled, 'transitionTo was not called at all');
+    assert.ok(stub.calledOnce, 'transitionTo was called once');
+    assert.ok(
+      stub.calledWithExactly('pipeline.build.step', pipelineId, buildId, 'error'),
+      'transition to build step page'
+    );
   });
 });
