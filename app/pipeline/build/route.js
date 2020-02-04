@@ -58,14 +58,17 @@ export default Route.extend({
     }
   },
 
-  actions: {
-    didTransition() {
-      this.controller.setProperties({
-        selectedArtifact: '',
-        activeTab: 'steps'
-      });
+  redirect(model /* , transition */) {
+    console.log('redirect called');
+    const name = getActiveStep(get(model, 'build.steps'));
 
-      this.goToActiveStep();
+    if (name) {
+      this.transitionTo(
+        'pipeline.build.step',
+        model.pipeline.get('id'),
+        model.build.get('id'),
+        name
+      );
     }
   }
 });
