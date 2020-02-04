@@ -78,8 +78,8 @@ export default Component.extend({
     // override coverage info if set in build meta
     if (buildMeta && buildMeta.tests) {
       const { coverage, coverageUrl, results: tests, resultsUrl: testsUrl } = buildMeta.tests;
-      const regex = /^.+\/pipelines\/\d+\/builds\/\d+/;
-      const urlBase = window.location.href.match(regex);
+      const BUILD_URL_REGEX = /^.+\/pipelines\/\d+\/builds\/\d+/;
+      const buildUrl = window.location.href.match(BUILD_URL_REGEX);
       let coverageInfo = Object.assign({}, this.get('coverageInfo'));
 
       if (String(coverage).match(/^\d+$/)) {
@@ -87,8 +87,8 @@ export default Component.extend({
         coverageInfo.coverageUrl = '#';
       }
 
-      if (String(coverageUrl).match(/^(\/[^/]+)+$/) && urlBase) {
-        coverageInfo.coverageUrl = `${urlBase[0]}/artifacts${coverageUrl}`;
+      if (String(coverageUrl).match(/^(\/[^/]+)+$/) && buildUrl) {
+        coverageInfo.coverageUrl = `${buildUrl[0]}/artifacts${coverageUrl}`;
       }
 
       if (String(tests).match(/^\d+\/\d+$/)) {
@@ -96,8 +96,8 @@ export default Component.extend({
         coverageInfo.testsUrl = '#';
       }
 
-      if (String(testsUrl).match(/^(\/[^/]+)+$/) && urlBase) {
-        coverageInfo.testsUrl = `${urlBase[0]}/artifacts${testsUrl}`;
+      if (String(testsUrl).match(/^(\/[^/]+)+$/) && buildUrl) {
+        coverageInfo.testsUrl = `${buildUrl[0]}/artifacts${testsUrl}`;
       }
 
       this.set('coverageInfo', coverageInfo);
