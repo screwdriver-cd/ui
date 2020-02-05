@@ -151,7 +151,7 @@ const mockCollections = [
     id: 1,
     name: 'My Pipelines',
     description: 'Default Collection',
-    type: 'normal',
+    type: 'default',
     pipelineIds: [1, 2, 3, 4],
     userId: 1
   },
@@ -162,6 +162,14 @@ const mockCollections = [
     type: 'normal',
     userId: 1,
     pipelineIds: []
+  },
+  {
+    id: 3,
+    name: 'My Pipelines',
+    description: 'Collection2',
+    type: 'normal',
+    pipelineIds: [1, 2, 3, 4],
+    userId: 1
   }
 ];
 
@@ -874,9 +882,11 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it moves multiple pipelines to another collection in card mode', async function(assert) {
+    assert.expect(2);
+
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [3, 1]);
-      assert.strictEqual(collectionId, 2);
+      assert.strictEqual(collectionId, 3);
 
       return resolve();
     };
@@ -909,9 +919,11 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it moves multiple pipelines to another collection in list mode', async function(assert) {
+    assert.expect(2);
+
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [3, 1]);
-      assert.strictEqual(collectionId, 2);
+      assert.strictEqual(collectionId, 3);
 
       return resolve();
     };
@@ -947,9 +959,11 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it fails to move multiple pipelines to another collection in card mode', async function(assert) {
+    assert.expect(3);
+
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [3, 1]);
-      assert.strictEqual(collectionId, 2);
+      assert.strictEqual(collectionId, 3);
 
       return reject();
     };
@@ -983,13 +997,15 @@ module('Integration | Component | collection view', function(hooks) {
     // assert the error message is correct
     assert
       .dom('.alert-warning > span')
-      .hasText(`Could not add Pipeline to Collection ${mockEmptyCollection.name}`);
+      .hasText('Could not add Pipeline to Collection My Pipelines');
   });
 
   test('it fails to move multiple pipelines to another collection in list mode', async function(assert) {
+    assert.expect(2);
+
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [3, 1]);
-      assert.strictEqual(collectionId, 2);
+      assert.strictEqual(collectionId, 3);
 
       return reject();
     };

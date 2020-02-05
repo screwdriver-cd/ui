@@ -9,7 +9,7 @@ export default Component.extend({
   pipeline: null,
   buttonText: undefined,
   buttonClass: undefined,
-  filteredCollections: filter('collections.[]', function isNormalCollection(collection) {
+  normalCollections: filter('collections.[]', function isNormalCollection(collection) {
     return collection.type !== 'default';
   }),
   actions: {
