@@ -7,8 +7,10 @@ export default Route.extend({
   },
   actions: {
     didTransition() {
-      // delegate to its parent route's didTranstion
-      return true;
+      this.controllerFor('pipeline.build').setProperties({
+        selectedArtifact: '',
+        activeTab: 'steps'
+      });
     }
   }
 });
