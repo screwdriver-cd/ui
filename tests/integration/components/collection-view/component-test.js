@@ -151,7 +151,7 @@ const mockCollections = [
     id: 1,
     name: 'My Pipelines',
     description: 'Default Collection',
-    type: 'default',
+    type: 'normal',
     pipelineIds: [1, 2, 3, 4],
     userId: 1
   },
@@ -221,8 +221,8 @@ module('Integration | Component | collection view', function(hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view 
-        collection=collection 
+      {{collection-view
+        collection=collection
         collections=collections
         metricsMap=metricsMap
       }}`);
@@ -277,7 +277,7 @@ module('Integration | Component | collection view', function(hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view 
+      {{collection-view
         collection=collection
         collections=collections
         metricsMap=metricsMap
@@ -345,7 +345,7 @@ module('Integration | Component | collection view', function(hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view 
+      {{collection-view
         collection=collection
         collections=collections
         metricsMap=metricsMap
@@ -361,7 +361,7 @@ module('Integration | Component | collection view', function(hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view 
+      {{collection-view
         collection=collection
         collections=collections
         metricsMap=metricsMap
@@ -403,7 +403,7 @@ module('Integration | Component | collection view', function(hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view 
+      {{collection-view
         collection=collection
         collections=collections
         metricsMap=metricsMap
@@ -439,7 +439,7 @@ module('Integration | Component | collection view', function(hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view 
+      {{collection-view
         collection=collection
         collections=collections
         metricsMap=metricsMap

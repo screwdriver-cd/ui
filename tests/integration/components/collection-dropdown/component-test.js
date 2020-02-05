@@ -42,6 +42,8 @@ module('Integration | Component | collection add button', function(hooks) {
   });
 
   test('it does not render default collection', async function(assert) {
+    assert.expect(4);
+
     const collections = [
       EmberObject.create({
         id: 1,
