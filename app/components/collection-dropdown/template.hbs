@@ -15,7 +15,7 @@
     {{/dd.button}}
   {{/if}}
   {{#dd.menu align="right" class="dropdown" as |menu|}}
-    {{#each collections as |collection|}}
+    {{#each normalCollections as |collection|}}
       {{#menu.item}}
         <span onclick={{action "addToCollection" collection}}>
           {{collection.name}}
@@ -29,7 +29,7 @@
     </li>
   {{/dd.menu}}
 {{/bs-dropdown}}
-{{collection-modal 
+{{collection-modal
   showModal=showCollectionModal
   addNewCollection=addNewCollection
   addToCollection=(action "addToCollection")}}

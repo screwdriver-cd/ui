@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import { filter } from '@ember/object/computed';
 
 export default Component.extend({
   classNames: ['collection-dropdown'],
@@ -8,6 +9,9 @@ export default Component.extend({
   pipeline: null,
   buttonText: undefined,
   buttonClass: undefined,
+  normalCollections: filter('collections.[]', function isNormalCollection(collection) {
+    return collection.type !== 'default';
+  }),
   actions: {
     openModal() {
       this.set('showCollectionModal', true);
