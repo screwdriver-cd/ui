@@ -41,6 +41,46 @@ module('Integration | Component | collection add button', function(hooks) {
     assert.dom('.dropdown-menu > li:nth-child(2)').hasText('CREATE');
   });
 
+  test('it does not render default collection', async function(assert) {
+    const collections = [
+      EmberObject.create({
+        id: 1,
+        name: 'collection1',
+        description: 'description1',
+        pipelineIds: [2, 3],
+        type: 'default'
+      }),
+      EmberObject.create({
+        id: 2,
+        name: 'collection2',
+        description: 'description2',
+        pipelineIds: []
+      })
+    ];
+
+    this.set('collections', collections);
+    this.set('pipeline', { id: 1 });
+    this.set('onAddToCollection', true);
+
+    await render(hbs`{{collection-dropdown
+      collections=collections
+      pipeline=pipeline
+      onAddToCollection=onAddToCollection
+    }}`);
+
+    // the button should be there
+    assert.dom('.dropdown-toggle').exists({ count: 1 });
+
+    await click('.dropdown-toggle');
+
+    // there should be two list items ('collection2' and 'CREATE')
+    assert.dom('.dropdown-menu > li').exists({ count: 2 });
+
+    // Validate that list items exist
+    assert.dom('.dropdown-menu > li:nth-child(1)').hasText('collection2');
+    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('CREATE');
+  });
+
   test('it adds a pipeline to a collection', async function(assert) {
     assert.expect(2);
 
