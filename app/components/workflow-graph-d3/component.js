@@ -29,7 +29,18 @@ export default Component.extend({
           edges: []
         });
         let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
-        const endNodes = graph.nodes.filter(node => node.name.startsWith('sd@'));
+
+        // only remove node if it is not a source node
+        const endNodes = graph.nodes.filter(node => {
+          if (node.name.startsWith('sd@')) {
+            // check if an edge has this node as source
+            if (graph.edges.filter(edge => edge.src === node.name).length <= 0) {
+              return true;
+            }
+          }
+
+          return false;
+        });
 
         // remove duplicate dangling trigger jobs from graph
         if (endNodes.length) {
