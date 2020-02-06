@@ -13,7 +13,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   model() {
-    return this.controllerFor('application').getWithDefault('collections');
+    return this.controllerFor('application').getWithDefault('collections', []);
   },
 
   actions: {

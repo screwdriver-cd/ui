@@ -5,7 +5,7 @@ const MAX_NUM_EVENTS_SHOWN = 20;
 
 export default Route.extend(AuthenticatedRouteMixin, {
   model(params) {
-    const collections = this.controllerFor('application').getWithDefault('collections');
+    const collections = this.controllerFor('application').getWithDefault('collections', []);
 
     return this.store
       .findRecord('collection', params.collection_id, { reload: true })
