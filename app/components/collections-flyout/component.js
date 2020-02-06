@@ -16,6 +16,11 @@ export default Component.extend({
       ) {
         return [];
       }
+      const collections = this.store.peekAll('collection');
+
+      if (collections.isLoaded) {
+        return collections;
+      }
 
       return this.store.findAll('collection');
     }
