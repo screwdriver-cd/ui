@@ -36,6 +36,13 @@ module('Unit | Route | commands/detail', function(hooks) {
     let route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
+    assert.equal(
+      route.titleToken({
+        namespace: 'foo',
+        name: 'bar'
+      }),
+      'foo/bar'
+    );
 
     return route.model({ namespace: 'foo', name: 'bar' }).then(commands => {
       assert.equal(commands.commandData[0].name, 'bar');
@@ -49,6 +56,14 @@ module('Unit | Route | commands/detail', function(hooks) {
     let route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
+    assert.equal(
+      route.titleToken({
+        namespace: 'foo',
+        name: 'baz',
+        versionOrTagFromUrl: '1.0.0'
+      }),
+      'foo/baz@1.0.0'
+    );
 
     return route.model({ namespace: 'foo', name: 'baz', version: '1.0.0' }).then(commands => {
       assert.equal(commands.commandData.length, 4);
@@ -75,6 +90,14 @@ module('Unit | Route | commands/detail', function(hooks) {
     let route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
+    assert.equal(
+      route.titleToken({
+        namespace: 'foo',
+        name: 'baz',
+        versionOrTagFromUrl: 'stable'
+      }),
+      'foo/baz@stable'
+    );
 
     return route.model({ namespace: 'foo', name: 'baz', version: 'stable' }).then(commands => {
       assert.equal(commands.commandData.length, 4);
