@@ -5,6 +5,8 @@ const MAX_NUM_EVENTS_SHOWN = 20;
 
 export default Route.extend(AuthenticatedRouteMixin, {
   model(params) {
+    const collections = this.controllerFor('application').getWithDefault('collections', []);
+
     return this.store
       .findRecord('collection', params.collection_id, { reload: true })
       .then(collection => {
@@ -21,7 +23,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
             }, {})
           ),
           collection,
-          collections: this.store.findAll('collection').catch(() => [])
+          collections
         });
       });
   },
