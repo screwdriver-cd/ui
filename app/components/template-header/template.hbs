@@ -22,6 +22,7 @@
   {{/if}}
 </h1>
 <h2>{{template.version}}</h2>
+<h2>Jobs: {{template.metrics.jobs.count}} | Builds: {{template.metrics.builds.count}}</h2>
 <p>{{template.description}}</p>
   {{#if template.namespace}}
     <div class="template-details--item" id="template-namespace">
