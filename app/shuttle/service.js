@@ -3,13 +3,14 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
 const ALLOWED_METHODS = {
-  get: 'get',
-  request: 'get',
+  get: 'request',
+  request: 'request',
   post: 'post',
   put: 'put',
   patch: 'patch',
   delete: 'del',
-  del: 'del'
+  del: 'del',
+  raw: 'raw'
 };
 
 export default Service.extend({
@@ -41,8 +42,9 @@ export default Service.extend({
     };
   },
 
-  fetchFrom(host = 'store', method = 'get', url, data) {
+  fetchFrom(host = 'store', method = 'get', url, data = {}, raw = false) {
     let baseHost = this.apiHost;
+    let actualMethod = method.toLowerCase();
 
     if (host === 'store') {
       baseHost = this.storeHost;
@@ -50,22 +52,39 @@ export default Service.extend({
 
     const options = this.ajaxOptions();
 
-    const httpMethod = ALLOWED_METHODS[method.toLowerCase()];
+    if (raw) {
+      actualMethod = 'raw';
+    }
+
+    const httpMethod = ALLOWED_METHODS[actualMethod];
 
     if (httpMethod === 'post') {
       options.data = JSON.stringify(data);
     }
 
-    const uri = `${baseHost}/${url}`;
+    let uri = `${baseHost}/${url}`;
+
+    if (url.startsWith('/')) {
+      uri = `${baseHost}${url}`;
+    }
 
     return this.get('ajax')[httpMethod](uri, options);
   },
 
-  fetchFromApi(method = 'get', url, data) {
-    return this.fetchFrom('api', method, url, data);
+  fetchFromApi(method = 'get', url, data, raw = false) {
+    return this.fetchFrom('api', method, url, data, raw);
   },
 
-  fetchFromStore(method = 'get', url, data) {
-    return this.fetchFrom('store', method, url, data);
+  fetchFromStore(method = 'get', url, data, raw = false) {
+    return this.fetchFrom('store', method, url, data, raw);
+  },
+
+  fetchLogs({ buildId, stepName, logNumber = 0, pageSize = 10, sortOrder = 'ascending' }) {
+    const method = 'get';
+    const url = `/builds/${buildId}/steps/${stepName}/logs`;
+    const data = { from: logNumber, pages: pageSize, sort: sortOrder };
+    const raw = true;
+
+    return this.fetchFromApi(method, url, data, raw);
   }
 });
