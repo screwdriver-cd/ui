@@ -2,6 +2,7 @@ import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
+import { set } from '@ember/object';
 
 export default Route.extend({
   template: service(),
@@ -30,19 +31,15 @@ export default Route.extend({
     this._super(...arguments);
 
     if (this.resultCache.templateData) {
-      this.resultCache.versionOrTagFromUrl = this.determineVersion(
+      const versionOrTagFromUrl = this.determineVersion(
         params.version,
         this.resultCache.templateData,
         this.resultCache.templateTagData
       );
 
-      let newResult = {};
+      set(this.resultCache, 'versionOrTagFromUrl', versionOrTagFromUrl);
 
-      newResult.templateData = this.resultCache.templateData;
-      newResult.templateTagData = this.resultCache.templateTagData;
-      newResult.versionOrTagFromUrl = this.resultCache.versionOrTagFromUrl;
-
-      return newResult;
+      return this.resultCache;
     }
 
     return RSVP.all([

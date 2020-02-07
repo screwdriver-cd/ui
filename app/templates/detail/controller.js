@@ -5,7 +5,7 @@ import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 const { alias } = computed;
 
 export default Controller.extend({
-  selectedVersion: null,
+  selectedVersion: computed.oneWay('model.versionOrTagFromUrl'),
   errorMessage: '',
   session: service(),
   template: service(),
