@@ -2,16 +2,13 @@ import { computed } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
-const ALLOWED_METHODS = {
-  get: 'get',
-  request: 'get',
-  post: 'post',
-  put: 'put',
-  patch: 'patch',
-  delete: 'del',
-  del: 'del'
-};
-
+/**
+ * Screwdriver Shuttle Service
+ * Only certain methods are allowed: get, request, post, put, patch, del, raw
+ * Ember Ajax API: https://github.com/ember-cli/ember-ajax
+ * @namespace
+ * @return
+ */
 export default Service.extend({
   ajax: service(),
 
@@ -41,31 +38,44 @@ export default Service.extend({
     };
   },
 
-  fetchFrom(host = 'store', method = 'get', url, data) {
+  fetchFrom(host = 'store', method = 'get', url, data = {}, raw = false) {
     let baseHost = this.apiHost;
 
     if (host === 'store') {
       baseHost = this.storeHost;
     }
 
-    const options = this.ajaxOptions();
+    let optionsType = method.toUpperCase();
+    let requestType = method.toLowerCase();
 
-    const httpMethod = ALLOWED_METHODS[method.toLowerCase()];
-
-    if (httpMethod === 'post') {
-      options.data = JSON.stringify(data);
+    if (raw) {
+      requestType = 'raw';
     }
 
-    const uri = `${baseHost}/${url}`;
+    const uri = `${baseHost}${url}`;
 
-    return this.get('ajax')[httpMethod](uri, options);
+    const options = Object.assign({}, this.ajaxOptions(), {
+      data,
+      type: optionsType
+    });
+
+    return this.get('ajax')[requestType](uri, options);
   },
 
-  fetchFromApi(method = 'get', url, data) {
-    return this.fetchFrom('api', method, url, data);
+  fetchFromApi(method = 'get', url, data, raw = false) {
+    return this.fetchFrom('api', method, url, data, raw);
   },
 
-  fetchFromStore(method = 'get', url, data) {
-    return this.fetchFrom('store', method, url, data);
+  fetchFromStore(method = 'get', url, data, raw = false) {
+    return this.fetchFrom('store', method, url, data, raw);
+  },
+
+  fetchLogs({ buildId, stepName, logNumber = 0, pageSize = 10, sortOrder = 'ascending' }) {
+    const method = 'get';
+    const url = `/builds/${buildId}/steps/${stepName}/logs`;
+    const data = { from: logNumber, pages: pageSize, sort: sortOrder };
+    const raw = true;
+
+    return this.fetchFromApi(method, url, data, raw);
   }
 });

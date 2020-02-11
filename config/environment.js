@@ -49,7 +49,7 @@ module.exports = environment => {
       SLACK_URL: 'http://slack.screwdriver.cd',
       BUILD_RELOAD_TIMER: 5000, // 5 seconds
       EVENT_RELOAD_TIMER: 60000, // 1 minute
-      LOG_RELOAD_TIMER: 1000,
+      LOG_RELOAD_TIMER: 3000,
       NUM_EVENTS_LISTED: 5,
       NUM_PIPELINES_LISTED: 50,
       MAX_LOG_LINES: 1000,
