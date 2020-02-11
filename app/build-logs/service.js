@@ -54,6 +54,7 @@ export default Service.extend({
             }
             done = started && jqXHR.getResponseHeader('x-more-data') === 'false';
           })
+          .catch(() => [])
           // always resolve something
           .finally(() => {
             this.setCache(buildId, stepName, { done });

@@ -2,17 +2,13 @@ import { computed } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
-const ALLOWED_METHODS = {
-  get: 'request',
-  request: 'request',
-  post: 'post',
-  put: 'put',
-  patch: 'patch',
-  delete: 'del',
-  del: 'del',
-  raw: 'raw'
-};
-
+/**
+ * Screwdriver Shuttle Service
+ * Only certain methods are allowed: get, request, post, put, patch, del, raw
+ * Ember Ajax API: https://github.com/ember-cli/ember-ajax
+ * @namespace
+ * @return
+ */
 export default Service.extend({
   ajax: service(),
 
@@ -44,31 +40,26 @@ export default Service.extend({
 
   fetchFrom(host = 'store', method = 'get', url, data = {}, raw = false) {
     let baseHost = this.apiHost;
-    let actualMethod = method.toLowerCase();
 
     if (host === 'store') {
       baseHost = this.storeHost;
     }
 
-    const options = this.ajaxOptions();
+    let optionsType = method.toUpperCase();
+    let requestType = method.toLowerCase();
 
     if (raw) {
-      actualMethod = 'raw';
+      requestType = 'raw';
     }
 
-    const httpMethod = ALLOWED_METHODS[actualMethod];
+    const uri = `${baseHost}${url}`;
 
-    if (httpMethod === 'post') {
-      options.data = JSON.stringify(data);
-    }
+    const options = Object.assign({}, this.ajaxOptions(), {
+      data,
+      type: optionsType
+    });
 
-    let uri = `${baseHost}/${url}`;
-
-    if (url.startsWith('/')) {
-      uri = `${baseHost}${url}`;
-    }
-
-    return this.get('ajax')[httpMethod](uri, options);
+    return this.get('ajax')[requestType](uri, options);
   },
 
   fetchFromApi(method = 'get', url, data, raw = false) {
