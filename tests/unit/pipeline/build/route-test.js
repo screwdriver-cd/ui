@@ -73,9 +73,9 @@ module('Unit | Route | pipeline/build', function(hooks) {
   });
 
   sinonTest('it redirects will NOT redirect if on artifacts route', function(assert) {
+    assert.expect(2);
     const route = this.owner.lookup('route:pipeline/build');
     const spy = this.spy(getActiveStep);
-
     const buildId = 345;
     const pipelineId = 123;
     const model = {
