@@ -58,16 +58,18 @@ export default Route.extend({
     }
   },
 
-  redirect(model /* , transition */) {
-    const name = getActiveStep(get(model, 'build.steps'));
+  redirect(model, transition) {
+    if (['pipeline.build.step', 'pipeline.build.index'].includes(transition.targetName)) {
+      const name = getActiveStep(get(model, 'build.steps'));
 
-    if (name) {
-      this.transitionTo(
-        'pipeline.build.step',
-        model.pipeline.get('id'),
-        model.build.get('id'),
-        name
-      );
+      if (name) {
+        this.transitionTo(
+          'pipeline.build.step',
+          model.pipeline.get('id'),
+          model.build.get('id'),
+          name
+        );
+      }
     }
   }
 });
