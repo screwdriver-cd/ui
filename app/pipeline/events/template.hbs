@@ -4,7 +4,12 @@
   {{/if}}
 {{/if}}
 
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+{{#if (eq errorMessage "This checkoutUrl is not supported for your current login host.")}}
+  {{info-message-scm message=errorMessage type="warning" icon="exclamation-triangle" scmContext=pipeline.scmContext}}
+{{else}}
+  {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+{{/if}}
+
 <div class="row">
   <div class="col-xs-12 col-md-9 separator partial-view">
     {{pipeline-graph-nav
