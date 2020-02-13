@@ -1,11 +1,10 @@
-import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
-import ENV from 'screwdriver-ui/config/environment';
 import { get, set } from '@ember/object';
 
 export default Service.extend({
   session: service(),
+  shuttle: service(),
   cache: Object.create(null),
   blobKeys: [],
   /**
@@ -31,9 +30,6 @@ export default Service.extend({
     let lines = [];
     let done = false;
     const inProgress = sortOrder === 'ascending';
-    const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/builds/${buildId}/steps/${stepName}/logs`;
 
     return new EmberPromise((resolve, reject) => {
       if (!this.get('session.isAuthenticated')) {
@@ -42,25 +38,25 @@ export default Service.extend({
 
       // convert jquery's ajax promises to a real promise
       return (
-        $.ajax({
-          url,
-          data: {
-            from: logNumber,
-            pages: pageSize,
-            sort: sortOrder
-          },
-          headers: {
-            Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
-          }
-        })
-          .done((data, textStatus, jqXHR) => {
-            if (Array.isArray(data)) {
-              lines = data;
+        this.shuttle
+          .fetchLogs({
+            buildId,
+            stepName,
+            logNumber,
+            pageSize,
+            sortOrder
+          })
+          .then(result => {
+            const { response, jqXHR } = result;
+
+            if (Array.isArray(response)) {
+              lines = response;
             }
             done = started && jqXHR.getResponseHeader('x-more-data') === 'false';
           })
+          .catch(() => [])
           // always resolve something
-          .always(() => {
+          .finally(() => {
             this.setCache(buildId, stepName, { done });
 
             if (lines.length) {

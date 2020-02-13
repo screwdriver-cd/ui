@@ -54,9 +54,9 @@ export default Component.extend({
   },
   actions: {
     graphClicked(job, mouseevent, sizes) {
-      const EXTERNAL_TRIGGER_REGEX = /^~sd@(\d+):([\w-]+)$/;
+      const EXTERNAL_TRIGGER_REGEX = /^~?sd@(\d+):([\w-]+)$/;
       const edges = get(this, 'directedGraph.edges');
-      const isTrigger = job ? /^~/.test(job.name) : false;
+      const isTrigger = job ? /(^~)|(^~?sd@)/.test(job.name) : false;
       let isRootNode = true;
       let toolTipProperties = {};
 
@@ -110,7 +110,7 @@ export default Component.extend({
           const triggers = [];
 
           job.triggers.forEach(t => {
-            const downstreamTrigger = t.match(/^~sd@(\d+):([\w-]+)$/);
+            const downstreamTrigger = t.match(/^~?sd@(\d+):([\w-]+)$/);
 
             triggers.push({
               triggerName: t,

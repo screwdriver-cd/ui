@@ -82,6 +82,7 @@
         {{/tab.pane}}
         {{#tab.pane activeId=activeTab id="artifacts" title="Artifacts"}}
           {{artifact-tree
+            selectedArtifact=selectedArtifact
             buildStatus=buildStatus
             buildId=buildId
             iframeUrl=iframeUrl}}

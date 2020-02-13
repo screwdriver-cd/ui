@@ -16,7 +16,10 @@ const typesOptions = {
 };
 
 export default Component.extend({
+  jstreeActionReceiver: null,
+  selectedArtifact: '',
   iframeUrl: '',
+  router: service(),
   artifact: service('build-artifact'),
   classNames: ['artifact-tree'],
   classNameBindings: ['buildStatus'],
@@ -50,6 +53,27 @@ export default Component.extend({
       this.download(this.href);
     },
 
+    handleJstreeEventDidRedraw() {
+      const artifactPath = this.getWithDefault('selectedArtifact', '');
+      const paths = artifactPath.split('/');
+      const jstree = this.jstreeActionReceiver.target.treeObject.jstree(true);
+      let nodeList = jstree.get_json();
+      let targetNode = null;
+
+      // traversing jstree to find target artifact node
+      paths.forEach(path => {
+        targetNode = nodeList.find(node => node.text === path);
+        if (targetNode && targetNode.type === 'directory') {
+          nodeList = targetNode.children;
+        }
+      });
+
+      // select the target node
+      if (targetNode) {
+        this.jstreeActionReceiver.send('selectNode', targetNode.id);
+      }
+    },
+
     handleJstreeEventDidChange(data = {}) {
       const { node, instance } = data;
 
@@ -58,9 +82,11 @@ export default Component.extend({
           type,
           a_attr: { href }
         } = node;
+        const artifactPath = instance.get_path(node, '/');
 
         if (type === 'directory') {
           instance.toggle_node(node);
+          this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
 
           return;
         }
@@ -72,6 +98,7 @@ export default Component.extend({
             isModalOpen: true
           });
         }
+        this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
       }
     }
   }

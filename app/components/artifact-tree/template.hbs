@@ -3,6 +3,8 @@
   data=treedata.content
   plugins=plugins
   typesOptions=typesOptions
+  actionReceiver=jstreeActionReceiver
+  eventDidRedraw=(action "handleJstreeEventDidRedraw")
   eventDidChange=(action "handleJstreeEventDidChange")
 }}
 {{#unless treedata.content.length}}

@@ -61,7 +61,9 @@ const buildMock = EmberObject.create({
 const buildMetaMock = {
   tests: {
     coverage: '100',
-    results: '10/10'
+    coverageUrl: '/coverage/666',
+    results: '10/10',
+    resultsUrl: '/results/666'
   }
 };
 
@@ -409,6 +411,13 @@ module('Integration | Component | build banner', function(hooks) {
       }
     ];
 
+    buildMetaMock.tests = {
+      coverage: '100',
+      coverageUrl: '/666',
+      results: '10/10',
+      resultsUrl: '/666'
+    };
+
     assert.expect(2);
     this.set('eventMock', eventMock);
     this.set('buildStepsMock', coverageStepsMock);
@@ -447,9 +456,12 @@ module('Integration | Component | build banner', function(hooks) {
 
     buildMetaMock.tests = {
       coverage: 'nonsense',
-      resulst: 'nonsense'
+      coverageUrl: 'nonsense',
+      results: 'nonsense',
+      resultsUrl: 'nonsense'
     };
-    assert.expect(2);
+
+    assert.expect(4);
     this.set('eventMock', eventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('buildMetaMock', buildMetaMock);
@@ -473,6 +485,8 @@ module('Integration | Component | build banner', function(hooks) {
     return settled().then(() => {
       assert.dom('.coverage .banner-value').hasText('98%');
       assert.dom('.tests .banner-value').hasText('7/10');
+      assert.dom('.coverage a').hasAttribute('href', 'http://example.com/coverage/123');
+      assert.dom('.tests a').hasAttribute('href', 'http://example.com/coverage/123');
     });
   });
 

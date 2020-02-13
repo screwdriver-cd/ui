@@ -2,6 +2,8 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Service from '@ember/service';
 import Pretender from 'pretender';
+import Ember from 'ember';
+
 let server;
 const now = Date.now();
 
@@ -170,17 +172,22 @@ module('Unit | Service | build logs', function(hooks) {
     assert.expect(3);
     badLogs();
     const service = this.owner.lookup('service:build-logs');
-    const { lines, done } = await service.fetchLogs(serviceConfig);
 
-    assert.notOk(done);
-    assert.equal(lines.length, 0);
+    try {
+      const { lines, done } = await service.fetchLogs(serviceConfig);
 
-    const [request] = server.handledRequests;
+      assert.notOk(done);
+      assert.equal(lines.length, 0);
 
-    assert.equal(
-      request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
-    );
+      const [request] = server.handledRequests;
+
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+      );
+    } catch (err) {
+      Ember.Logger.error('err', err);
+    }
   });
 
   test('it handles fetching multiple pages', async function(assert) {
