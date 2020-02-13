@@ -98,6 +98,7 @@ module('Unit | Route | templates/detail', function(hooks) {
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, undefined);
       assert.equal(templates.templateData[0].metrics.jobs.count, 1);
+      assert.equal(templates.templateData[0].metrics.builds.count, 3);
     });
   });
 
@@ -112,6 +113,7 @@ module('Unit | Route | templates/detail', function(hooks) {
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, '1.0.0');
       assert.equal(templates.templateData[3].metrics.jobs.count, 0);
+      assert.equal(templates.templateData[3].metrics.builds.count, 0);
     });
   });
 
@@ -126,6 +128,7 @@ module('Unit | Route | templates/detail', function(hooks) {
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, '1.1.0');
       assert.equal(templates.templateData[2].metrics.jobs.count, 7);
+      assert.equal(templates.templateData[2].metrics.builds.count, 9);
     });
   });
 
@@ -139,7 +142,8 @@ module('Unit | Route | templates/detail', function(hooks) {
       assert.equal(templates.templateData[0].namespace, 'foo');
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, 'stable');
-      assert.equal(templates.templateData[0].metrics.jobs.count, 1);
+      assert.equal(templates.templateData[4].metrics.jobs.count, 7);
+      assert.equal(templates.templateData[4].metrics.builds.count, 7);
     });
   });
 
