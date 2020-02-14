@@ -1,6 +1,13 @@
 {{#if message}}
-  {{#bs-alert onDismissed=(action "clearMessage") type=type}}
-    {{! template-lint-disable no-triple-curlies }}
-    {{fa-icon icon}} <span>{{{message}}}</span>
-  {{/bs-alert}}
+  {{#if (eq message "This checkoutUrl is not supported for your current login host.")}}
+    {{#bs-alert onDismissed=(action "clearMessage") type=type}}
+      {{! template-lint-disable no-triple-curlies }}
+      {{fa-icon icon}} <span>{{{message}}}</span> Please login to <a href="#authenticate" {{action "authenticate" scmContext}}>{{scmContext}}</a>
+    {{/bs-alert}}
+  {{else}}
+    {{#bs-alert onDismissed=(action "clearMessage") type=type}}
+      {{! template-lint-disable no-triple-curlies }}
+      {{fa-icon icon}} <span>{{{message}}}</span>
+    {{/bs-alert}}
+  {{/if}}
 {{/if}}
