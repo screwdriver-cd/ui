@@ -1,6 +1,6 @@
 {{#if message}}
   {{#bs-alert onDismissed=(action "clearMessage") type=type}}
     {{! template-lint-disable no-triple-curlies }}
-    {{fa-icon icon}} <span>{{{message}}}</span> Please login <a href="#authenticate" {{action "authenticate" scmContext}}>{{scmContext}}</a>
+    {{fa-icon icon}} <span>{{{message}}}</span> Please login to <a href="#authenticate" {{action "authenticate" scmContext}}>{{scmContext}}</a>
   {{/bs-alert}}
 {{/if}}
