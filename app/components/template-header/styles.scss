@@ -22,6 +22,22 @@
     margin-left: 10px;
   }
 
+  .template-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .template-version {
+    margin: 0;
+  }
+
+  .template-metrics {
+    font-size: 1.5em;
+    margin: 0;
+  }
+
   .trusted {
     fill: #16c047;
     height: 1em;
