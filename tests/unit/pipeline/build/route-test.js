@@ -2,6 +2,7 @@ import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
+import { getActiveStep } from 'screwdriver-ui/utils/build';
 
 module('Unit | Route | pipeline/build', function(hooks) {
   setupTest(hooks);
@@ -69,5 +70,31 @@ module('Unit | Route | pipeline/build', function(hooks) {
       stub.calledWithExactly('pipeline.build.step', pipelineId, buildId, 'error'),
       'transition to build step page'
     );
+  });
+
+  sinonTest('it redirects will NOT redirect if on artifacts route', function(assert) {
+    assert.expect(2);
+    const route = this.owner.lookup('route:pipeline/build');
+    const spy = this.spy(getActiveStep);
+    const buildId = 345;
+    const pipelineId = 123;
+    const model = {
+      pipeline: {
+        get: type => (type === 'id' ? pipelineId : null)
+      },
+      build: {
+        get: type => (type === 'id' ? buildId : null),
+        steps: []
+      }
+    };
+    let transition = { targetName: 'pipeline.build.artifacts.details' };
+
+    route.redirect(model, transition);
+    assert.ok(spy.notCalled, 'redirect was not called');
+
+    transition = { targetName: 'pipeline.build.artifacts.index' };
+
+    route.redirect(model, transition);
+    assert.ok(spy.notCalled, 'redirect was not called');
   });
 });

@@ -1,11 +1,11 @@
 import { inject as service } from '@ember/service';
-import { computed, observer } from '@ember/object';
+import { computed } from '@ember/object';
 import Controller from '@ember/controller';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 const { alias } = computed;
 
 export default Controller.extend({
-  selectedVersion: null,
+  selectedVersion: computed.oneWay('model.versionOrTagFromUrl'),
   errorMessage: '',
   session: service(),
   template: service(),
@@ -45,11 +45,6 @@ export default Controller.extend({
 
       return this.templates.templateData.findBy('version', versionOrTagFromUrl);
     }
-  }),
-  // Set selected version to null whenever the list of templates changes
-  // eslint-disable-next-line ember/no-observers
-  modelObserver: observer('templates.templateData.[]', function modelObserver() {
-    this.set('selectedVersion', null);
   }),
   actions: {
     removeTemplate(name) {
