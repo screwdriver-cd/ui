@@ -23,6 +23,23 @@
     }
   }
 
+  .btn.event__stop {
+    border: 1px solid $sd-aborted;
+    background-color: #fff;
+    color: $sd-aborted;
+    width: 100px;
+    font-size: 14px;
+    border-radius: 2px;
+    padding: 5px 10px;
+    font-weight: $weight-normal;
+
+    &:hover,
+    &.active:hover {
+      border-color: #ccc;
+      color: $grey-800;
+    }
+  }
+
   height: 100%;
 }
 
@@ -39,4 +56,10 @@
     border-color: $sd-link;
     color: $sd-white;
   }
+}
+
+.prsStop {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }

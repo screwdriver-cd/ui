@@ -1,3 +1,4 @@
+
 {{#if jobs.length }}
   <div class="view">
     <div class="detail">
@@ -6,6 +7,9 @@
           PR #{{jobs.0.group}}
           <span class="scm">{{fa-icon "code-fork"}}</span>
         </a>
+        {{#if isRunning}}
+          <div class="prsStop">{{#bs-button onClick=(action stopPRBuilds jobs) class="event__stop" title="Stop all builds for this event"}}Stop{{/bs-button}}</div>
+        {{/if}}
         <br>
         <span class="title">{{jobs.0.title}}</span>
       </div>

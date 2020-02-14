@@ -362,6 +362,13 @@ export default Controller.extend(ModelReloaderMixin, {
         .stopBuilds(eventId)
         .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
     },
+    stopPRBuilds(jobs) {
+      const eventId = jobs.get('firstObject.builds.firstObject.eventId');
+
+      return this.get('stop')
+        .stopBuilds(eventId)
+        .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
+    },
     startPRBuild(prNum, jobs, parameters) {
       this.set('isShowingModal', true);
       const user = get(decoder(this.get('session.data.authenticated.token')), 'username');
