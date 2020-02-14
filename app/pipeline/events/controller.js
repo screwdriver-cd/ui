@@ -239,13 +239,11 @@ export default Controller.extend(ModelReloaderMixin, {
     updateEvents(page) {
       this.updateEvents(page);
     },
-
     onEventListScroll({ currentTarget }) {
       if (this.moreToShow && !this.isFetching) {
         this.checkForMorePage(currentTarget);
       }
     },
-
     startMainBuild(parameters) {
       this.set('isShowingModal', true);
 
