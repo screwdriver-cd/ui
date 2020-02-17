@@ -5,6 +5,10 @@ export default Component.extend({
   actions: {
     clearMessage: function clearMessage() {
       this.set('message', null);
+    },
+    authenticate(scmContext) {
+      this.session.authenticate('authenticator:screwdriver-api', scmContext);
+      this.set('message', null);
     }
   }
 });
