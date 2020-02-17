@@ -61,15 +61,53 @@ module('Integration | Component | pipeline pr list', function(hooks) {
     this.set('jobsMock', jobs);
     this.set('isRestricted', true);
     this.set('startBuild', Function.prototype);
+    this.set('stopPRBuilds', Function.prototype);
 
     await render(hbs`{{pipeline-pr-list
       jobs=jobsMock
       isRestricted=isRestricted
-      startBuild=startBuild}}`);
+      startBuild=startBuild
+      stopPRBuilds=stopPRBuilds}}`);
 
+    assert.dom('.prsStop').doesNotExist();
     assert.dom('.view .view .detail').doesNotExist();
     assert.dom('.title').hasText('update readme');
     assert.dom('.by').hasText('anonymous');
     assert.dom('.view .startButton').exists({ count: 1 });
+  });
+
+  test('it renders PR stop button', async function(assert) {
+    const jobs = [
+      EmberObject.create({
+        id: 'abcd',
+        name: 'PR-1234:main',
+        createTimeWords: 'now',
+        title: 'update readme',
+        username: 'anonymous',
+        builds: [
+          {
+            id: '1235',
+            status: 'RUNNING',
+            endTime: null
+          }
+        ]
+      })
+    ];
+
+    this.set('jobsMock', jobs);
+    this.set('isRestricted', true);
+    this.set('startBuild', Function.prototype);
+    this.set('stopPRBuilds', Function.prototype);
+
+    await render(hbs`{{pipeline-pr-list
+      jobs=jobsMock
+      isRestricted=isRestricted
+      startBuild=startBuild
+      stopPRBuilds=stopPRBuilds}}`);
+
+    assert.dom('.prsStop').exists({ count: 1 });
+    assert.dom('.view .view .detail').exists({ count: 1 });
+    assert.dom('.title').hasText('update readme');
+    assert.dom('.by').hasText('anonymous');
   });
 });
