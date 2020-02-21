@@ -3,10 +3,9 @@ import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
   normalizeResponse(store, typeClass, payload, id, requestType) {
-    console.log('===== pipeline normalizeResponse');
     const { pipeline } = payload;
 
-    if (pipeline.workflowGraph) {
+    if (pipeline && pipeline.workflowGraph) {
       // sorting on the dest should be enough
       pipeline.workflowGraph.edges.sort(({ dest: a }, { dest: b }) => {
         if (a < b) {
