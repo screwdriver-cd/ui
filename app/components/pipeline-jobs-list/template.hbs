@@ -1,0 +1,7 @@
+<div>
+  {{#each jobs as |job|}}
+    {{pipeline-job-row}}
+  {{else}}
+    <div class="alert">This pipeline has no jobs</div>
+  {{/each}}
+</div>

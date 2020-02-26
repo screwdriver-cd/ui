@@ -1,0 +1,22 @@
+& {
+  border-bottom: 1px solid rgb(211, 211, 211);
+
+  .job-info {
+    padding: 5px 25px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &:last-of-type {
+    border: none;
+  }
+
+  .icon {
+    width: 1em;
+    font-size: 1.5em;
+  }
+
+  .status-icon {
+    font-size: 1.7em;
+  }
+}
