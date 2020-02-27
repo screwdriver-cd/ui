@@ -9,6 +9,7 @@ import ENV from 'screwdriver-ui/config/environment';
 import { getActiveStep } from 'screwdriver-ui/utils/build';
 
 export default Controller.extend({
+  router: service(),
   prEventsService: service('pr-events'),
   session: service('session'),
   loading: false,
@@ -127,6 +128,12 @@ export default Controller.extend({
   },
 
   changeBuildStep(name) {
+    const currentRouteName = this.router.currentRoute.name;
+
+    if (!['pipeline.build.step', 'pipeline.build.index'].includes(currentRouteName)) {
+      return;
+    }
+
     const build = this.get('build');
     const pipelineId = this.get('pipeline.id');
     let activeStep;
