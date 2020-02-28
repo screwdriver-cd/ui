@@ -296,7 +296,12 @@ export default Component.extend({
    * @param {boolean} fetchMax
    */
   getLogs(fetchMax = false) {
-    if (!this.isFetching && this.shouldLoad) {
+    if (
+      !this.get('isDestroyed') &&
+      !this.get('isDestroying') &&
+      !this.isFetching &&
+      this.shouldLoad
+    ) {
       const { buildId, stepName, totalLine } = this;
       const started = !!this.stepStartTime;
 
