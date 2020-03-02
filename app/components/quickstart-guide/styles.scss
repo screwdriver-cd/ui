@@ -75,16 +75,26 @@
 
         .section {
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
           width: 100%;
         }
       }
     }
 
-    .header > .item > .section > .title,
-    .close-quickstart-guide {
+    .header > .item > .section > .title {
       width: 100%;
       font-size: 28px;
+      display: flex;
+
+      .text {
+        display: flex;
+      }
+
+      .close-quickstart-guide {
+        display: flex;
+        margin-left: auto;
+        margin-right: 10%;
+      }
     }
 
     .footer {
