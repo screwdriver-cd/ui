@@ -39,7 +39,7 @@
           {{#if (eq timeFormat "datetime")}}
             {{moment-format log.t "HH:mm:ss"}}
           {{else if (eq timeFormat "datetimeUTC")}}
-            {{moment-format log.t "HH:mm:ss" timeZone="UTC"}}
+            {{moment-format (utc log.t) "HH:mm:ss"}}
           {{else if (eq timeFormat "elapsedBuild")}}
             {{x-duration buildStartTime log.t precision="seconds"}}
           {{else if (eq timeFormat "elapsedStep")}}
