@@ -15,7 +15,9 @@ export default Route.extend({
       let version;
 
       if (params.version) {
-        const versionExists = verPayload.filter(t => t.version.startsWith(params.version));
+        const versionExists = verPayload.filter(t =>
+          t.version.concat('.').startsWith(params.version.concat('.'))
+        );
         const tagExists = tagPayload.filter(c => c.tag === params.version);
 
         if (tagExists.length === 0 && versionExists.length === 0) {
