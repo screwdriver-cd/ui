@@ -1,0 +1,79 @@
+{{#unless isOpen}}
+  <div class="quickstart-guide-menu" onclick={{action "openMenu"}}>
+    <div class="mini-menu-oval">
+      <div class="mini-menu">
+        {{fa-icon "power-off"}}
+      </div>
+    </div>
+  </div>
+{{/unless}}
+
+<div class="quickstart-guide {{if isOpen "menu-open" "menu-close"}}">
+  <div class="header">
+    <div class="item">
+      <div class="icon">
+        {{fa-icon "sign-in"}}
+      </div>
+      <div class="section">
+        <span class="title">Quickstart Guide</span>
+        <span class="close-quickstart-guide"
+            onclick={{action "closeMenu"}}>×</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon"></div>
+      <div class="section">
+        <span>This will cover how to build and deploy a sample app with Screwdriver</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="item">
+      <div class="icon">
+         <span class="badge">1</span>
+      </div>
+      <div class="section">
+        <span>Click on Create icon</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon">
+        <span class="badge">2</span>
+      </div>
+      <div class="section">
+        <span>Enter your repository link into the filed
+        </span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon"></div>
+      <div class="section">
+        <p>
+          git clone git@github.com:screwdriver-cd/ui.git
+        </p>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon">
+        <span class="badge">3</span>
+      </div>
+      <div class="section">
+        <span>Now that you've created a pipeline. You should directed to your own pipeline page</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <button type="button" class="quickstart-doc-button">
+      <span>QuickStart Documentation</span>
+      {{fa-icon "share-square-o"}}
+    </button>
+  </div>
+
+</div>
