@@ -7,11 +7,11 @@ import sinonTest from 'ember-sinon-qunit/test-support/test';
 const templateServiceStub = Service.extend({
   getOneTemplate() {
     return resolve([
-      { id: 4, name: 'baz', version: '3.0.0', namespace: 'foo' },
+      { id: 4, name: 'baz', version: '10.0.0', namespace: 'foo' },
       { id: 3, name: 'baz', version: '2.0.0', namespace: 'foo' },
       { id: 2, name: 'baz', version: '1.1.0', namespace: 'foo' },
       { id: 1, name: 'baz', version: '1.0.0', namespace: 'foo' },
-      { id: 7, name: 'baz', version: '3.0.0', namespace: 'bar' },
+      { id: 7, name: 'baz', version: '10.0.0', namespace: 'bar' },
       { id: 6, name: 'baz', version: '2.0.0', namespace: 'bar' },
       { id: 5, name: 'baz', version: '1.0.0', namespace: 'bar' }
     ]);
@@ -21,7 +21,7 @@ const templateServiceStub = Service.extend({
       {
         id: 4,
         name: 'baz',
-        version: '3.0.0',
+        version: '10.0.0',
         namespace: 'foo',
         metrics: { jobs: { count: 1 }, builds: { count: 3 } }
       },
@@ -49,8 +49,8 @@ const templateServiceStub = Service.extend({
       {
         id: 7,
         name: 'baz',
-        version: '3.0.0',
-        namespace: 'foo',
+        version: '10.0.0',
+        namespace: 'bar',
         metrics: { jobs: { count: 7 }, builds: { count: 7 } }
       },
       {
@@ -71,8 +71,8 @@ const templateServiceStub = Service.extend({
   },
   getTemplateTags(namespace, name) {
     return resolve([
-      { id: 5, name, version: '3.0.0', tag: 'latest' },
-      { id: 6, name, version: '3.0.0', tag: 'stable' },
+      { id: 5, name, version: '10.0.0', tag: 'latest' },
+      { id: 6, name, version: '10.0.0', tag: 'stable' },
       { id: 7, name, version: '2.0.0', tag: 'meeseeks' }
     ]);
   }
@@ -100,7 +100,7 @@ module('Unit | Route | templates/detail', function(hooks) {
     );
 
     return route.model({ namespace: 'foo', name: 'baz' }).then(templates => {
-      assert.equal(templates.templateData.length, 5);
+      assert.equal(templates.templateData.length, 4);
       assert.equal(templates.templateData[0].namespace, 'foo');
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, undefined);
@@ -123,7 +123,7 @@ module('Unit | Route | templates/detail', function(hooks) {
     );
 
     return route.model({ namespace: 'foo', name: 'baz', version: '1.0.0' }).then(templates => {
-      assert.equal(templates.templateData.length, 5);
+      assert.equal(templates.templateData.length, 4);
       assert.equal(templates.templateData[0].namespace, 'foo');
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, '1.0.0');
@@ -138,7 +138,7 @@ module('Unit | Route | templates/detail', function(hooks) {
     assert.ok(route);
 
     return route.model({ namespace: 'foo', name: 'baz', version: '1' }).then(templates => {
-      assert.equal(templates.templateData.length, 5);
+      assert.equal(templates.templateData.length, 4);
       assert.equal(templates.templateData[0].namespace, 'foo');
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, '1.1.0');
@@ -161,12 +161,12 @@ module('Unit | Route | templates/detail', function(hooks) {
     );
 
     return route.model({ namespace: 'foo', name: 'baz', version: 'stable' }).then(templates => {
-      assert.equal(templates.templateData.length, 5);
+      assert.equal(templates.templateData.length, 4);
       assert.equal(templates.templateData[0].namespace, 'foo');
       assert.equal(templates.templateData[0].name, 'baz');
       assert.equal(templates.versionOrTagFromUrl, 'stable');
-      assert.equal(templates.templateData[4].metrics.jobs.count, 7);
-      assert.equal(templates.templateData[4].metrics.builds.count, 7);
+      assert.equal(templates.templateData[3].metrics.jobs.count, 0);
+      assert.equal(templates.templateData[3].metrics.builds.count, 0);
     });
   });
 

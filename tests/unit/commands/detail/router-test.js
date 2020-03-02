@@ -7,7 +7,7 @@ import sinonTest from 'ember-sinon-qunit/test-support/test';
 const commandServiceStub = Service.extend({
   getOneCommand(namespace, name) {
     return resolve([
-      { id: 4, namespace, name, version: '3.0.0' },
+      { id: 4, namespace, name, version: '10.0.0' },
       { id: 3, namespace, name, version: '2.0.0' },
       { id: 2, namespace, name, version: '1.1.0' },
       { id: 1, namespace, name, version: '1.0.0' }
@@ -15,7 +15,7 @@ const commandServiceStub = Service.extend({
   },
   getCommandTags(namespace, name) {
     return resolve([
-      { id: 4, namespace, name, version: '3.0.0', tag: 'latest' },
+      { id: 4, namespace, name, version: '10.0.0', tag: 'latest' },
       { id: 3, namespace, name, version: '2.0.0', tag: 'stable' },
       { id: 2, namespace, name, version: '1.1.0' },
       { id: 1, namespace, name, version: '1.0.0' }
