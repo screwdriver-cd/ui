@@ -1,6 +1,6 @@
 <div>
   {{#each jobs as |job|}}
-    {{pipeline-job-row}}
+    {{pipeline-job-row job=job}}
   {{else}}
     <div class="alert">This pipeline has no jobs</div>
   {{/each}}

@@ -1,5 +1,6 @@
 & {
-  border-bottom: 1px solid rgb(211, 211, 211);
+  border-bottom: 1px solid $sd-light-gray;
+  margin-left: 10px;
 
   .job-info {
     padding: 5px 25px;
@@ -14,6 +15,11 @@
   .icon {
     width: 1em;
     font-size: 1.5em;
+  }
+
+  .col:first-child {
+    width: calc(100% / 8 * 2);
+    word-wrap: break-word;
   }
 
   .status-icon {

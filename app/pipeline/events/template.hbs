@@ -38,7 +38,14 @@
       authenticated=session.isAuthenticated
     }}
 
-    {{pipeline-jobs-list}}
+    {{!-- {{pipeline-jobs-list
+      test=jobs
+    }} --}}
+
+    {{pipeline-list-view
+      jobsDetails=jobsDetails
+      updateJobsDetails=(action "updateJobsDetails")
+    }}
   </div>
   <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view" onScroll={{action "onEventListScroll"}}>
     {{#bs-tab customTabs=true as |tab|}}

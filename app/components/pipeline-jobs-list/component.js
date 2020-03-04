@@ -1,6 +1,14 @@
 import Component from '@ember/component';
-// import { computed, get, getProperties } from '@ember/object';
+import { computed } from '@ember/object';
 
 export default Component.extend({
-  jobs: [1, 2, 3, 4, 5]
+  jobs: computed('test', {
+    get() {
+      const j = this.get('test');
+
+      console.log(j);
+
+      return j;
+    }
+  })
 });

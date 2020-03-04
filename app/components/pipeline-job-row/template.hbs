@@ -1,18 +1,14 @@
-<div class="row">
-  <div class="col-xs-12">
-    <div class="job-info">
-      <span>{{fa-icon icon fixedWidth=true class="status-icon"}} {JOB NAME}</span>
-      <div>
-        {{#each buildIcons as |statusI|}}
-          <span class="status">{{fa-icon statusI fixedWidth=true class="icon"}}</span>
-        {{else}}
-          <div>No builds have been run for this job</div>
-        {{/each}}
-      </div>
-      <span>{Duration}</span>
-      <span>{Start Time}</span>
-      <span>{Coverage}</span>
-      <span>{Actions}</span>
-    </div>
+<div class="job-info">
+  <span class="col">{{fa-icon icon fixedWidth=true class="status-icon"}} {{job.name}}</span>
+  <div>
+    {{#each buildIcons as |statusI|}}
+      <span class="status">{{fa-icon statusI fixedWidth=true class="icon"}}</span>
+    {{else}}
+      <div>No builds have been run for this job</div>
+    {{/each}}
   </div>
+  <span class="col">{Duration}</span>
+  <span class="col">{Start Time}</span>
+  <span class="col">{Coverage}</span>
+  <span class="col">{Actions}</span>
 </div>

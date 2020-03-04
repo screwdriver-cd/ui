@@ -39,6 +39,14 @@ export default Controller.extend(ModelReloaderMixin, {
       return jobs.filter(j => !isPRJob(j.get('name')));
     }
   }),
+  jobIds: computed('pipeline.jobs', {
+    get() {
+      return this.get('pipeline.jobs')
+        .filter(j => !isPRJob(j.get('name')))
+        .map(j => j.id);
+    }
+  }),
+  jobsDetails: [],
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
   completeWorkflowGraph: computed('model.triggers.@each.triggers', {
@@ -232,12 +240,27 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   },
 
+  updateJobsDetails() {
+    this.store
+      .query('build-history', {
+        jobIds: this.jobIds,
+        offset: 0,
+        numBuilds: 5
+      })
+      .then(jobsDetails => {
+        this.set('jobsDetails', jobsDetails);
+      });
+  },
+
   actions: {
     setDownstreamTrigger() {
       this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
     },
     updateEvents(page) {
       this.updateEvents(page);
+    },
+    updateJobsDetails() {
+      this.updateJobsDetails();
     },
     onEventListScroll({ currentTarget }) {
       if (this.moreToShow && !this.isFetching) {
