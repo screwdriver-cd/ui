@@ -44,8 +44,9 @@
 
     {{pipeline-list-view
       jobsDetails=jobsDetails
-      updateJobsDetails=(action "updateJobsDetails")
+      updateListViewJobs=(action "updateListViewJobs")
     }}
+    
   </div>
   <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view" onScroll={{action "onEventListScroll"}}>
     {{#bs-tab customTabs=true as |tab|}}

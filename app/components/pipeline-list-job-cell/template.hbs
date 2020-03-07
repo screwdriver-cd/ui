@@ -1,0 +1,6 @@
+<div class="job-cell">
+  {{#link-to "pipeline.build" build.id}}
+    {{fa-icon build.icon fixedWidth=true class=build.status}}
+  {{/link-to}}
+  <div class="job-name">{{build.jobName}}</div>
+</div>

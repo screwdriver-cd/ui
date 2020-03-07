@@ -14,7 +14,7 @@ export default BaseAdapter.extend({
     console.log(query);
     console.log(modelName);
 
-    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/history`;
+    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/statuses`;
   },
   ajax(url, type, options) {
     if (options) {

@@ -1,0 +1,37 @@
+& {
+  .history {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .SUCCESS {
+    color: $sd-success;
+  }
+
+  .UNSTABLE {
+    color: $sd-unstable;
+  }
+
+  .FAILURE,
+  .ABORTED {
+    color: $sd-failure;
+  }
+
+  .RUNNING,
+  .QUEUED,
+  .BLOCKED,
+  .CREATED,
+  .SKIPPED {
+    color: $sd-running;
+  }
+
+  .COLLAPSED,
+  .FROZEN {
+    color: $sd-text-light;
+  }
+
+  .fa-circle {
+    width: 0.8em;
+    font-size: 1.2em;
+  }
+}

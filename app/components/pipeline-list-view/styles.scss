@@ -1,5 +1,35 @@
 & {
+  height: 100%;
+
   .ember-light-table {
     padding: 15px;
+  }
+
+  .ember-light-table thead .lt-column {
+    padding-left: 15px;
+    border-bottom: 2px solid $sd-light-gray;
+    font-weight: 150;
+    font-size: 1.2rem;
+    color: $sd-light-gray;
+  }
+
+  .ember-light-table tbody .lt-cell {
+    padding-left: 15px;
+  }
+
+  .ember-light-table .lt-row {
+    height: 40px;
+  }
+
+  .ember-light-table .lt-row:not(:last-child) {
+    border-bottom: 1px solid $sd-light-gray;
+  }
+
+  .ember-light-table .lt-row:hover {
+    background-color: $brand-200;
+  }
+
+  .ember-light-table .tse-scrollbar {
+    display: none;
   }
 }

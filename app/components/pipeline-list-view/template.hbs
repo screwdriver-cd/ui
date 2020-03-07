@@ -1,4 +1,7 @@
 {{#light-table table as |t|}}
-	  {{t.head}}
-	  {{#t.body as |body|}}{{/t.body}}
+  {{t.head fixed=true}}
+  {{#t.body
+    canSelect=false
+    onScrolledToBottom=(action "onScrolledToBottom")
+  }}{{/t.body}}
 {{/light-table}}

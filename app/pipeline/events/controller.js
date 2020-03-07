@@ -15,6 +15,7 @@ export default Controller.extend(ModelReloaderMixin, {
     this._super(...arguments);
     this.startReloading();
     this.set('eventsPage', 1);
+    this.set('listViewOffset', 0);
     this.set('showDownstreamTriggers', false);
   },
 
@@ -240,16 +241,24 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   },
 
-  updateJobsDetails() {
-    this.store
+  updateListViewJobs() {
+    const listViewOffset = this.get('listViewOffset');
+    const listViewCutOff = listViewOffset + 10;
+    const jobIds = this.get('jobIds');
+
+    if (listViewOffset < jobIds.length) {
+      this.store
       .query('build-history', {
-        jobIds: this.jobIds,
+        jobIds: jobIds.slice(listViewOffset, listViewCutOff),
         offset: 0,
-        numBuilds: 5
+        numBuilds: 8
       })
       .then(jobsDetails => {
-        this.set('jobsDetails', jobsDetails);
+        const nextJobsDetails = jobsDetails.toArray();
+        this.set('listViewOffset', listViewCutOff);
+        this.set('jobsDetails', this.jobsDetails.concat(nextJobsDetails));
       });
+    }
   },
 
   actions: {
@@ -259,8 +268,8 @@ export default Controller.extend(ModelReloaderMixin, {
     updateEvents(page) {
       this.updateEvents(page);
     },
-    updateJobsDetails() {
-      this.updateJobsDetails();
+    updateListViewJobs() {
+      this.updateListViewJobs();
     },
     onEventListScroll({ currentTarget }) {
       if (this.moreToShow && !this.isFetching) {
