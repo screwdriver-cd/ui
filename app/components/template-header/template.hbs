@@ -18,7 +18,11 @@
       onToggle=(action "updateTrust" template.fullName)
     }}
   {{else}}
-    {{fa-icon "trash" title="Cannot delete template; pipeline could not be found."}}
+    {{#if scmUrl}}
+      <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
+    {{else}}
+      {{fa-icon "trash" title="Cannot delete template; pipeline could not be found."}}
+    {{/if}}
   {{/if}}
 </h1>
 <div class="template-stats">
