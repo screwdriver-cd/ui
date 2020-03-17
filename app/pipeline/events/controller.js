@@ -42,6 +42,7 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   jobIds: computed('pipeline.jobs', {
     get() {
+      console.log(this.pipeline.jobs);
       return this.get('pipeline.jobs')
         .filter(j => !isPRJob(j.get('name')))
         .map(j => j.id);
@@ -60,7 +61,10 @@ export default Controller.extend(ModelReloaderMixin, {
       if (triggers && triggers.length > 0) {
         triggers.forEach(t => {
           if (t.triggers && t.triggers.length > 0) {
-            completeGraph.edges.push({ src: t.jobName, dest: `~sd-${t.jobName}-triggers` });
+            completeGraph.edges.push({
+              src: t.jobName,
+              dest: `~sd-${t.jobName}-triggers`
+            });
             completeGraph.nodes.push({
               name: `~sd-${t.jobName}-triggers`,
               triggers: t.triggers,
@@ -248,16 +252,17 @@ export default Controller.extend(ModelReloaderMixin, {
 
     if (listViewOffset < jobIds.length) {
       this.store
-      .query('build-history', {
-        jobIds: jobIds.slice(listViewOffset, listViewCutOff),
-        offset: 0,
-        numBuilds: 8
-      })
-      .then(jobsDetails => {
-        const nextJobsDetails = jobsDetails.toArray();
-        this.set('listViewOffset', listViewCutOff);
-        this.set('jobsDetails', this.jobsDetails.concat(nextJobsDetails));
-      });
+        .query('build-history', {
+          jobIds: jobIds.slice(listViewOffset, listViewCutOff),
+                    offset: 0,
+                    numBuilds: 8
+                })
+        .then(jobsDetails => {
+                    const nextJobsDetails = jobsDetails.toArray();
+
+          this.set('listViewOffset', listViewCutOff);
+                    this.set('jobsDetails', this.jobsDetails.concat(nextJobsDetails));
+                });
     }
   },
 
@@ -368,6 +373,57 @@ export default Controller.extend(ModelReloaderMixin, {
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         });
     },
+    startSingleBuild(jobId, jobName, status = undefined) {
+      const buildQueryConfig = { jobId };
+
+      if (status) {
+        buildQueryConfig.status = status;
+      }
+
+      return this.store.queryRecord('build', buildQueryConfig).then(build => {
+        this.store.findRecord('event', get(build, eventId)).then(event => {
+          const parentBuildId = get(build, 'parentBuildId');
+          const parentEventId = get(event, 'id');
+          const pipelineId = get(this, 'pipeline.id');
+          const token = get(this, 'session.data.authenticated.token');
+                    const user = get(decoder(token), 'username');
+          let causeMessage = `[skip further] Manually started by ${user}`;
+          const prNum = get(event, 'prNum');
+          let startFrom = jobName;
+
+          if (prNum) {
+            // PR-<num>: prefix is needed, if it is a PR event.
+            startFrom = `PR-${prNum}:${startFrom}`;
+                    }
+
+          const eventPayload = {
+            pipelineId,
+            startFrom,
+            parentBuildId,
+            parentEventId,
+            causeMessage
+          };
+
+          const newEvent = this.store.createRecord('event', eventPayload);
+
+          return newEvent
+            .save()
+            .then(() => {
+              // this.forceReload();
+
+              const path = `pipeline/${newEvent.get('pipelineId')}/${this.activeTab}`;
+
+              return this.transitionToRoute(path);
+            })
+            .catch(e => {
+              this.set(
+                'errorMessage',
+                Array.isArray(e.errors) ? e.errors[0].detail : ''
+              );
+                        });
+        });
+      });
+    },
     stopBuild(event, job) {
       const buildId = get(job, 'buildId');
       let build;
@@ -379,7 +435,9 @@ export default Controller.extend(ModelReloaderMixin, {
         return build
           .save()
           .then(() => event.hasMany('builds').reload())
-          .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
+          .catch(e =>
+            this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '')
+          );
       }
 
       return new Promise.Resolve();
@@ -390,14 +448,18 @@ export default Controller.extend(ModelReloaderMixin, {
 
       return this.get('stop')
         .stopBuilds(eventId)
-        .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
+        .catch(e =>
+          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '')
+        );
     },
     stopPRBuilds(jobs) {
       const eventId = jobs.get('firstObject.builds.firstObject.eventId');
 
       return this.get('stop')
         .stopBuilds(eventId)
-        .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
+        .catch(e =>
+          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '')
+        );
     },
     startPRBuild(prNum, jobs, parameters) {
       this.set('isShowingModal', true);
