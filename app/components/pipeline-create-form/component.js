@@ -1,10 +1,22 @@
 import $ from 'jquery';
 import { not, or } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
+import { debounce } from '@ember/runloop';
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
+import { getResults } from 'screwdriver-ui/validator/controller';
 import { parse } from '../../utils/git';
 
+const SEPARATOR = '  '; // 2 spaces
+
 export default Component.extend({
+  selectedTemplate: {},
+  templates: [],
+  overrideScrewdriverYaml: false,
+  template: service(),
+  results: '',
+  validator: service(),
+
   scmUrl: '',
   rootDir: '',
   isInvalid: not('isValid'),
@@ -16,6 +28,19 @@ export default Component.extend({
 
       return val.length !== 0 && parse(val).valid;
     }
+  }),
+
+  // eslint-disable-next-line ember/no-observers
+  onYamlChange: observer('yaml', function onYamlChange() {
+    const yaml = this.yaml.trim();
+
+    if (!yaml) {
+      this.set('results', '');
+
+      return;
+    }
+
+    debounce(this, getResults, 250);
   }),
 
   actions: {
@@ -58,6 +83,12 @@ export default Component.extend({
           rootDir: this.rootDir
         });
       }
+    },
+
+    async selectTemplate(selectedTemplate) {
+      const yaml = `jobs:\n${SEPARATOR}main:\n${SEPARATOR}${SEPARATOR}template: ${selectedTemplate.name}\n${SEPARATOR}${SEPARATOR}steps:\n${SEPARATOR}${SEPARATOR}${SEPARATOR}- step1: echo ok\n${SEPARATOR}${SEPARATOR}${SEPARATOR}- step2: echo ok`;
+
+      this.setProperties({ selectedTemplate, yaml });
     }
   }
 });

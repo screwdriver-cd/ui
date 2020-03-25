@@ -5,8 +5,8 @@ import Controller from '@ember/controller';
 export default Controller.extend({
   isSaving: false,
   errorMessage: '',
-  // showQuickStartGuide: true,
   showQuickStartGuide: false,
+  templates: [],
   actions: {
     createPipeline({ scmUrl, rootDir }) {
       let payload = { checkoutUrl: scmUrl, rootDir };
