@@ -155,6 +155,10 @@ export default Component.extend({
 
       const getSha = sha => sha.substring(0, 7);
 
+      let viewingId = this.get('collection.id');
+
+      this.session.set('lastViewedCollectionId', viewingId);
+
       if (this.get('collection.pipelines')) {
         return this.get('collection.pipelines').map(pipeline => {
           const scm = scmService.getScm(pipeline.scmContext);
