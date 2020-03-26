@@ -62,12 +62,14 @@
         order: 0;
         flex: 0 1 auto;
         align-self: auto;
-        align-items: center;
+        // enable to align in the middle
+        // align-items: center;
         padding-bottom: 10px;
 
         .icon {
           display: flex;
           width: 26px;
+          height: 20px;
           font-size: 26px;
           margin-left: 14px;
           margin-right: 14px;
@@ -77,6 +79,26 @@
           display: flex;
           flex-direction: row;
           width: 100%;
+
+          & > p {
+            .command-section {
+              background-color: #606060;
+              padding: 10px;
+
+              .command {
+                color: #c66a15;
+              }
+
+              .subcommand {
+                color: #72a526;
+              }
+
+              .argument {
+                color: #8ac5ed;
+                line-height: 1.85;
+              }
+            }
+          }
         }
       }
     }
