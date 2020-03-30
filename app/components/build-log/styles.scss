@@ -34,7 +34,7 @@
 }
 
 .wrap {
-  height: auto;
+  max-height: 100vh;
   overflow-y: auto;
   transform: translateZ(0);
 }
