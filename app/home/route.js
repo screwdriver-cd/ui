@@ -18,7 +18,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
             const defaultCollection = collections.find(collection => collection.type === 'default');
             const routeId = defaultCollection.id;
 
-            let lastViewedCollectionId = get(this, 'session.lastViewedCollectionId');
+            let lastViewedCollectionId = localStorage.getItem('lastViewedCollectionId');
 
             if (lastViewedCollectionId) {
               this.replaceWith(`/dashboards/${lastViewedCollectionId}`);
