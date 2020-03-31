@@ -157,7 +157,7 @@ export default Component.extend({
 
       let viewingId = this.get('collection.id');
 
-      this.session.set('lastViewedCollectionId', viewingId);
+      localStorage.setItem('lastViewedCollectionId', viewingId);
 
       if (this.get('collection.pipelines')) {
         return this.get('collection.pipelines').map(pipeline => {
