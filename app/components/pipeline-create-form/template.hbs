@@ -26,48 +26,43 @@
 </div>
 
 <div>
-  {{input type="checkbox" checked=overrideScrewdriverYaml}}
-  <label class="normal-weight">
-    Create <span class="select-screwdriver-yaml">Screwdriver.yaml {{fa-icon "question-circle"}}
-    </span>
-  </label>
+  {{input class="create-screwdriver-yaml" type="checkbox" checked=overrideScrewdriverYaml}}
+  <label class="normal-weight">Create <span class="select-screwdriver-yaml">Screwdriver.yaml {{fa-icon "question-circle"}}</span></label>
 
   <div>
-  {{#if overrideScrewdriverYaml}}
-    <label class="normal-weight">Select from a
-      <span class="select-template">template {{fa-icon "question-circle"}}</span>
-    </label>
+    {{#if overrideScrewdriverYaml}}
+      <label class="normal-weight">Select from a <span class="select-template">template {{fa-icon "question-circle"}}</span></label>
 
-    <div class="templates-dropdown">
-    {{#power-select
-      options=templates
-      selected=selectedTemplate
-      onchange=(action "selectTemplate")
-      searchField='name'
-      as |template| }}
-      {{template.name}}
-    {{/power-select}}
-    </div>
+      <div class="templates-dropdown">
+        {{#power-select
+          options=templates
+          selected=selectedTemplate
+          onchange=(action "selectTemplate")
+          searchField="name"
+          as |template| }}
+          {{template.name}}
+        {{/power-select}}
+      </div>
 
-    {{#if selectedTemplate}}
-      <div class="row">
-        <div class="col-xs-12 col-md-6">
-          {{validator-input yaml=(mut yaml)}}
-        </div>
-        {{#ember-wormhole to="template-validate-results"}}
+      {{#if selectedTemplate}}
+        <div class="row">
           <div class="col-xs-12 col-md-6">
-            {{validator-results results=results}}
+            {{validator-input yaml=(mut yaml)}}
           </div>
-        {{/ember-wormhole}}
+          {{#ember-wormhole to="template-validate-results"}}
+            <div class="col-xs-12 col-md-6">
+              {{validator-results results=results}}
+            </div>
+          {{/ember-wormhole}}
+        </div>
+      {{/if}}
+
+      <div class="tooltips">
+        {{#bs-tooltip placement="right" triggerElement=".select-template" renderInPlace=true delayHide="1000"}}
+          What are <a href="https://docs.screwdriver.cd/user-guide/templates">templates</a>?
+        {{/bs-tooltip}}
       </div>
     {{/if}}
-
-    <div class="tooltips">
-      {{#bs-tooltip placement="right" triggerElement=".select-template" renderInPlace=true delayHide="1000"}}
-        What are <a href="https://docs.screwdriver.cd/user-guide/templates">templates</a>?
-      {{/bs-tooltip}}
-    </div>
-  {{/if}}
   </div>
 </div>
 
