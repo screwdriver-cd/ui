@@ -8,7 +8,13 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    set(this, 'obj', { truncatedSha: 'abc123', status: 'SUCCESS', creator: { name: 'anonymous' } });
+    set(this, 'obj', {
+      truncatedSha: 'abc123',
+      status: 'SUCCESS',
+      commit: {
+        author: { name: 'anonymous' }
+      }
+    });
     set(this, 'selected', 2);
     set(this, 'startBuild', () => {
       assert.ok(true);
@@ -64,7 +70,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
         .eq(3)
         .text()
         .trim(),
-      'User'
+      'Committer'
     );
     assert.equal(
       $columnTitles
@@ -243,5 +249,75 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
     await click('.x-toggle-btn');
+  });
+
+  test('it renders when selectedEvent is a FAILURE event', async function(assert) {
+    set(this, 'obj', {
+      truncatedSha: 'abc123',
+      status: 'FAILURE',
+      commit: { message: 'somthing went wrong and result into FAILURE state.' },
+      creator: { name: 'anonymous' },
+      type: 'pipeline'
+    });
+    set(this, 'selected', 2);
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+    }}`);
+
+    assert.dom('.FAILURE').exists({ count: 1 });
+    assert.dom('.status .fa-times-circle').exists({ count: 1 });
+  });
+
+  test('it renders when selectedEvent is a ABORTED event', async function(assert) {
+    set(this, 'obj', {
+      truncatedSha: 'abc123',
+      status: 'ABORTED',
+      commit: { message: 'someone ABORTED the event.' },
+      creator: { name: 'anonymous' },
+      type: 'pipeline'
+    });
+    set(this, 'selected', 2);
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+    }}`);
+
+    assert.dom('.ABORTED').exists({ count: 1 });
+    assert.dom('.status .fa-stop-circle').exists({ count: 1 });
   });
 });

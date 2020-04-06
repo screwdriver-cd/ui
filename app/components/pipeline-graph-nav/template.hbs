@@ -58,8 +58,8 @@
           <span class="status">{{fa-icon icon fixedWidth=true}} {{selectedEventObj.status}}</span>
         </div>
         <div class="col">
-          <span class="title">User</span><br>
-          <a href={{selectedEventObj.creator.url}}>{{selectedEventObj.creator.name}}</a>
+          <span class="title">Committer</span><br>
+          <a href={{selectedEventObj.commit.author.url}}>{{selectedEventObj.commit.author.name}}</a>
         </div>
         <div class="col">
           <span class="title">Start Date</span><br>

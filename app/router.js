@@ -15,13 +15,25 @@ Router.map(function route() {
     this.route('events');
     this.route('secrets');
     this.route('build', { path: 'builds/:build_id' }, function stepsRoute() {
+      this.route('index', { path: '/' });
       this.route('step', { path: 'steps/:step_id' });
-      this.route('artifacts');
+      this.route('artifacts', function artifactsRoute() {
+        this.route('index', { path: '/' });
+        this.route('detail', { path: '/*file_path' });
+      });
     });
     this.route('options');
     this.route('child-pipelines');
     this.route('pulls');
     this.route('metrics');
+    this.route('job-latest-build', { path: 'jobs/:job_name' }, function latestJobRoute() {
+      this.route('index', { path: '/' });
+      this.route('artifacts', function artifactsRoute() {
+        this.route('index', { path: '/' });
+        this.route('detail', { path: '/*file_path' });
+      });
+      this.route('steps', { path: 'steps/:step_name' });
+    });
   });
   this.route('login');
   this.route('create');

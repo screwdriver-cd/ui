@@ -29,6 +29,12 @@ const sessionServiceMock = Service.extend({
     }
   }
 });
+
+const routerServiceMock = Service.extend({
+  currentRoute: {
+    name: 'someRouteName'
+  }
+});
 let server;
 
 module('Unit | Controller | pipeline/build', function(hooks) {
@@ -282,12 +288,32 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     assert.ok(true);
   });
 
-  sinonTest('it changes build step', function(assert) {
+  sinonTest('it will not change build step in pipeline.events', function(assert) {
+    assert.expect(1);
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+    const routerService = this.owner.lookup('service:router');
+
+    routerService.set('currentRoute', { name: 'pipeline.events' });
+
+    const controller = this.owner.lookup('controller:pipeline/build');
+    const spy = this.spy(controller, 'transitionToRoute');
+
+    controller.changeBuildStep();
+    assert.ok(spy.notCalled, 'transition was not called');
+    this.owner.unregister('service:router');
+  });
+
+  sinonTest('it changes build step in pipeline.build.step', function(assert) {
     assert.expect(3);
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+    const routerService = this.owner.lookup('service:router');
+
+    routerService.set('currentRoute', { name: 'pipeline.build.step' });
 
     const controller = this.owner.lookup('controller:pipeline/build');
     const stub = this.stub(controller, 'transitionToRoute');
-
     const build = EmberObject.create({
       id: 5678,
       jobId: 'abcd',
@@ -312,5 +338,6 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       stub.calledWithExactly('pipeline.build.step', 1, 5678, 'active'),
       'transition to build step page'
     );
+    this.owner.unregister('service:router');
   });
 });

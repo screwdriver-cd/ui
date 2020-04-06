@@ -18,7 +18,11 @@
       onToggle=(action "updateTrust" command.namespace command.name)
     }}
   {{else}}
-    {{fa-icon "trash" title="Cannot delete command; pipeline could not be found."}}
+    {{#if scmUrl}}
+      <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash" title="Delete command"}}</a>
+    {{else}}
+      {{fa-icon "trash" title="Cannot delete command; pipeline could not be found."}}
+    {{/if}}
   {{/if}}
 </h1>
 <h2>{{command.version}}</h2>

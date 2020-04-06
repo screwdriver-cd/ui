@@ -100,7 +100,8 @@
       onToggle=(action "toggleTrendlineView")}}
     <ul class="list-inline chart-legend">
       {{#each eventLegend as |lg|}}
-        <li style={{lg.style}}
+        <li
+          style={{lg.style}}
           onclick={{action "onLegendClick" lg.key eventsChartName}}
           onmouseenter={{action "onLegendHover" lg.key eventsChartName}}
           onmouseleave={{action "onLegendHoverOut" eventsChartName}}
@@ -137,7 +138,9 @@
     <p class="chart-title">Build Breakdown Per Event</p>
     <ul class="list-inline chart-legend">
       {{#each buildLegend as |lg|}}
-        <li style={{lg.style}}
+        <li
+          style={{lg.style}}
+          class={{lg.class}}
           onclick={{action "onLegendClick" lg.key buildsChartName}}
           onmouseenter={{action "onLegendHover" lg.key buildsChartName}}
           onmouseleave={{action "onLegendHoverOut" buildsChartName}}

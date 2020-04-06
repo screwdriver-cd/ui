@@ -239,13 +239,11 @@ export default Controller.extend(ModelReloaderMixin, {
     updateEvents(page) {
       this.updateEvents(page);
     },
-
     onEventListScroll({ currentTarget }) {
       if (this.moreToShow && !this.isFetching) {
         this.checkForMorePage(currentTarget);
       }
     },
-
     startMainBuild(parameters) {
       this.set('isShowingModal', true);
 
@@ -277,9 +275,10 @@ export default Controller.extend(ModelReloaderMixin, {
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
         });
     },
-    startDetachedBuild(job, parameters) {
+    startDetachedBuild(job, options = {}) {
       const buildId = get(job, 'buildId');
       let parentBuildId = null;
+      const { parameters, reason } = options;
 
       if (buildId) {
         const build = this.store.peekRecord('build', buildId);
@@ -292,9 +291,13 @@ export default Controller.extend(ModelReloaderMixin, {
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
-      const causeMessage = `Manually started by ${user}`;
+      let causeMessage = `Manually started by ${user}`;
       const prNum = get(event, 'prNum');
       let startFrom = get(job, 'name');
+
+      if (reason) {
+        causeMessage = `[force start]${reason}`;
+      }
 
       if (prNum) {
         // PR-<num>: prefix is needed, if it is a PR event.
@@ -352,6 +355,13 @@ export default Controller.extend(ModelReloaderMixin, {
     stopEvent() {
       const event = get(this, 'selectedEventObj');
       const eventId = get(event, 'id');
+
+      return this.get('stop')
+        .stopBuilds(eventId)
+        .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
+    },
+    stopPRBuilds(jobs) {
+      const eventId = jobs.get('firstObject.builds.firstObject.eventId');
 
       return this.get('stop')
         .stopBuilds(eventId)

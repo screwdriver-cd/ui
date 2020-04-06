@@ -5,6 +5,8 @@
         <span class="time" onClick={{action "toggleTimeDisplay"}}>
           {{#if (eq timeFormat "datetime")}}
             Local Timestamp
+          {{else if (eq timeFormat "datetimeUTC")}}
+            UTC Timestamp
           {{else if (eq timeFormat "elapsedBuild")}}
             Since build started
           {{else if (eq timeFormat "elapsedStep")}}
@@ -36,6 +38,8 @@
         <span class="time" onClick={{action "toggleTimeDisplay"}}>
           {{#if (eq timeFormat "datetime")}}
             {{moment-format log.t "HH:mm:ss"}}
+          {{else if (eq timeFormat "datetimeUTC")}}
+            {{moment-format (utc log.t) "HH:mm:ss"}}
           {{else if (eq timeFormat "elapsedBuild")}}
             {{x-duration buildStartTime log.t precision="seconds"}}
           {{else if (eq timeFormat "elapsedStep")}}

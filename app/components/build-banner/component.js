@@ -77,18 +77,27 @@ export default Component.extend({
 
     // override coverage info if set in build meta
     if (buildMeta && buildMeta.tests) {
-      const coverage = String(buildMeta.tests.coverage);
-      const tests = String(buildMeta.tests.results);
-      let { coverageInfo } = this;
+      const { coverage, coverageUrl, results: tests, resultsUrl: testsUrl } = buildMeta.tests;
+      const BUILD_URL_REGEX = /^.+\/pipelines\/\d+\/builds\/\d+/;
+      const buildUrl = window.location.href.match(BUILD_URL_REGEX);
+      let coverageInfo = Object.assign({}, this.get('coverageInfo'));
 
-      if (coverage.match(/^\d+$/)) {
+      if (String(coverage).match(/^\d+$/)) {
         coverageInfo.coverage = `${coverage}%`;
         coverageInfo.coverageUrl = '#';
       }
 
-      if (tests.match(/^\d+\/\d+$/)) {
+      if (String(coverageUrl).match(/^(\/[^/]+)+$/) && buildUrl) {
+        coverageInfo.coverageUrl = `${buildUrl[0]}/artifacts${coverageUrl}`;
+      }
+
+      if (String(tests).match(/^\d+\/\d+$/)) {
         coverageInfo.tests = tests;
         coverageInfo.testsUrl = '#';
+      }
+
+      if (String(testsUrl).match(/^(\/[^/]+)+$/) && buildUrl) {
+        coverageInfo.testsUrl = `${buildUrl[0]}/artifacts${testsUrl}`;
       }
 
       this.set('coverageInfo', coverageInfo);

@@ -3,6 +3,9 @@
   border-radius: 5px;
   color: $grey-100;
   padding: 0 15px 10px;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 .row {
@@ -31,7 +34,7 @@
 }
 
 .wrap {
-  height: 70vh;
+  max-height: 100vh;
   overflow-y: auto;
   transform: translateZ(0);
 }

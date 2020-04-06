@@ -9,6 +9,7 @@ import ENV from 'screwdriver-ui/config/environment';
 import { getActiveStep } from 'screwdriver-ui/utils/build';
 
 export default Controller.extend({
+  router: service(),
   prEventsService: service('pr-events'),
   session: service('session'),
   loading: false,
@@ -103,13 +104,12 @@ export default Controller.extend({
 
     // reload again in a little bit if queued
     if (!this.loading) {
-      if (status === 'QUEUED' || status === 'RUNNING') {
+      if (['QUEUED', 'RUNNING'].includes(status)) {
         later(
           this,
           () => {
             if (!build.get('isDeleted') && !this.loading) {
               this.set('loading', true);
-
               build.reload().then(() => {
                 this.set('loading', false);
                 throttle(this, 'reloadBuild', timeout);
@@ -127,6 +127,12 @@ export default Controller.extend({
   },
 
   changeBuildStep(name) {
+    const currentRouteName = this.getWithDefault('router.currentRoute.name', '');
+
+    if (!['pipeline.build.step', 'pipeline.build.index'].includes(currentRouteName)) {
+      return;
+    }
+
     const build = this.get('build');
     const pipelineId = this.get('pipeline.id');
     let activeStep;

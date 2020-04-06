@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import EmberObject from '@ember/object';
 
 module('Unit | Controller | pipeline', function(hooks) {
   setupTest(hooks);
@@ -8,12 +9,12 @@ module('Unit | Controller | pipeline', function(hooks) {
     assert.expect(1);
     let controller = this.owner.lookup('controller:pipeline');
     let pipelineId = 1;
-    let collection = {
+    let collection = EmberObject.create({
       pipelineIds: [],
       save() {
         assert.equal(this.pipelineIds.length, 1, 'Collection now has 1 pipelineId');
       }
-    };
+    });
 
     controller.send('addToCollection', pipelineId, collection);
   });
@@ -22,12 +23,12 @@ module('Unit | Controller | pipeline', function(hooks) {
     assert.expect(1);
     let controller = this.owner.lookup('controller:pipeline');
     let pipelineId = 1;
-    let collection = {
+    let collection = EmberObject.create({
       pipelineIds: [1],
       save() {
         assert.equal(this.pipelineIds.length, 1, 'Collection now has 1 uniq pipelineId');
       }
-    };
+    });
 
     controller.send('addToCollection', pipelineId, collection);
   });
@@ -36,12 +37,12 @@ module('Unit | Controller | pipeline', function(hooks) {
     assert.expect(1);
     let controller = this.owner.lookup('controller:pipeline');
     let pipelineId = 2;
-    let collection = {
+    let collection = EmberObject.create({
       pipelineIds: [1],
       save() {
         assert.equal(this.pipelineIds.length, 2, 'Collection now has 2 pipelineId');
       }
-    };
+    });
 
     controller.send('addToCollection', pipelineId, collection);
   });

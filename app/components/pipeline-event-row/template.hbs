@@ -11,7 +11,26 @@
     </div>
     <div class="date greyOut">Started {{event.createTimeWords}}</div>
     <span class="message" title={{event.commit.message}}>{{event.truncatedMessage}}</span>
-    <div class="by"><a href={{event.creator.url}}>{{event.creator.name}}</a></div>
+    <div class="by">
+      {{#if isCommiterDifferent}}
+        <span>Committed by: </span>
+        <a href={{event.commit.author.url}}>{{event.commit.author.name}}</a>
+        <br>
+        <span>Started by: </span>
+        {{#if isExternalTrigger}}
+          {{#if externalBuild.build_id}}
+            {{#link-to "pipeline.build" externalBuild.pipeline_id externalBuild.build_id}}External Trigger{{/link-to}}
+          {{else}}
+            {{#link-to "pipeline" externalBuild.pipeline_id}}External Trigger{{/link-to}}
+          {{/if}}
+        {{else}}
+          <a href={{event.creator.url}}>{{event.creator.name}}</a>
+        {{/if}}
+      {{else}}
+        <span>Started and committed by: </span>
+        <a href={{event.creator.url}}>{{event.creator.name}}</a>
+      {{/if}}
+    </div>
     {{#if (and (is-fulfilled event.builds) isShowGraph)}}
       <div class="workflow">
         {{workflow-graph-d3

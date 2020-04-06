@@ -76,6 +76,68 @@ module('Unit | Service | template', function(hooks) {
     });
   });
 
+  test('it fetches one set of template versions with metrics', function(assert) {
+    assert.expect(2);
+
+    server.get('http://localhost:8080/v4/templates/foo%2Fbar/metrics', () => [
+      200,
+      {
+        'Content-Type': 'application/json'
+      },
+      JSON.stringify([
+        {
+          id: 2,
+          namespace: 'foo',
+          name: 'bar',
+          version: '2.0.0',
+          createTime,
+          metrics: { jobs: { count: 7 }, builds: { count: 7 } }
+        },
+        {
+          id: 1,
+          namespace: 'foo',
+          name: 'bar',
+          version: '1.0.0',
+          createTime,
+          metrics: { jobs: { count: 3 }, builds: { count: 9 } }
+        }
+      ])
+    ]);
+
+    let service = this.owner.lookup('service:template');
+
+    assert.ok(service);
+
+    const t = service.getOneTemplateWithMetrics('foo/bar');
+
+    t.then(templates => {
+      /* eslint-disable max-len */
+      assert.deepEqual(templates, [
+        {
+          id: 2,
+          namespace: 'foo',
+          name: 'bar',
+          version: '2.0.0',
+          fullName: 'foo/bar',
+          createTime,
+          lastUpdated,
+          metrics: { jobs: { count: 7 }, builds: { count: 7 } }
+        },
+        {
+          id: 1,
+          namespace: 'foo',
+          name: 'bar',
+          version: '1.0.0',
+          fullName: 'foo/bar',
+          createTime,
+          lastUpdated,
+          metrics: { jobs: { count: 3 }, builds: { count: 9 } }
+        }
+      ]);
+      /* eslint-enable max-len */
+    });
+  });
+
   test('it fetches all templates', function(assert) {
     assert.expect(2);
 

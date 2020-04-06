@@ -288,6 +288,68 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
+  test('it stops PR build(s)', async function(assert) {
+    assert.expect(1);
+    server.put('http://localhost:8080/v4/builds/123', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '123'
+      })
+    ]);
+    server.put('http://localhost:8080/v4/events/123/stop', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '123'
+      })
+    ]);
+
+    const controller = this.owner.lookup('controller:pipeline/events');
+
+    const jobs = EmberObject.create([
+      {
+        builds: [
+          {
+            eventId: 123
+          }
+        ]
+      }
+    ]);
+
+    run(() => {
+      controller.store.push({
+        data: {
+          id: '123',
+          type: 'build',
+          attributes: {
+            status: 'RUNNING'
+          }
+        }
+      });
+
+      controller.set('model', {
+        events: EmberObject.create({})
+      });
+
+      const build = controller.store.peekRecord('build', '123');
+
+      build.set('status', 'ABORTED');
+      build.save();
+
+      controller.send('stopPRBuilds', jobs);
+    });
+
+    await settled();
+
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.deepEqual(payload, {
+      status: 'ABORTED'
+    });
+  });
+
   test('it starts PR build(s)', async function(assert) {
     const prNum = 999;
 

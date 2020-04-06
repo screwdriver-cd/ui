@@ -43,6 +43,7 @@ module('Acceptance | dashboards', function(hooks) {
   test('visiting / when logged in and have collections among which the default collection is empty', async function(assert) {
     server.get('http://localhost:8080/v4/collections/1', hasEmptyDefaultCollection);
     await authenticateSession({ token: 'fakeToken' });
+    localStorage.setItem('lastViewedCollectionId', 1);
     await visit('/');
 
     assert.equal(currentURL(), '/dashboards/1');
@@ -53,6 +54,7 @@ module('Acceptance | dashboards', function(hooks) {
 
   test('visiting / when logged in and have collections among which the default collection is not empty', async function(assert) {
     await authenticateSession({ token: 'fakeToken' });
+    localStorage.setItem('lastViewedCollectionId', 1);
     await visit('/');
 
     assert.equal(currentURL(), '/dashboards/1');
@@ -120,6 +122,7 @@ module('Acceptance | dashboards', function(hooks) {
     server.get('http://localhost:8080/v4/pipelines', hasPipelines);
 
     await authenticateSession({ token: 'fakeToken' });
+    localStorage.setItem('lastViewedCollectionId', 1);
     await visit('/');
     // Logged in but no collections, url should be `/`
     assert.equal(currentURL(), '/dashboards/1');

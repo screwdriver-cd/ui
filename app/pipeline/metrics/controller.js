@@ -165,28 +165,33 @@ export default Controller.extend({
       ];
     }
   }),
-  buildMetrics: computed('metrics.builds', 'jobs', {
+  buildMetrics: computed('metrics.builds', 'jobs', 'selectedJobName', {
     get() {
+      const { jobs, selectedJobName } = this;
       const builds = this.get('metrics.builds');
-      const { jobs } = this;
 
       return {
         json: builds,
         keys: {
           value: jobs
         },
+        hide: selectedJobName ? jobs.filter(j => j !== selectedJobName) : undefined,
         type: 'bar',
         groups: [jobs]
       };
     }
   }),
-  buildLegend: computed('jobs}', {
+  buildLegend: computed('jobs', 'selectedJobName', {
     get() {
       const colors = this.get('color.pattern');
+      const { selectedJobName } = this;
 
       return this.jobs.map((name, i) => ({
         key: name,
         name,
+        class: htmlSafe(
+          selectedJobName === undefined || name === selectedJobName ? '' : 'unselected'
+        ),
         style: htmlSafe(`border-color:${colors[i % colors.length]}`)
       }));
     }

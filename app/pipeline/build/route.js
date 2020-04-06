@@ -44,8 +44,22 @@ export default Route.extend({
     set(model, 'userSelectedStepName', null);
   },
 
+  goToActiveStep() {
+    const model = this.controller.get('model');
+    const name = getActiveStep(get(model, 'build.steps'));
+
+    if (name) {
+      this.transitionTo(
+        'pipeline.build.step',
+        model.pipeline.get('id'),
+        model.build.get('id'),
+        name
+      );
+    }
+  },
+
   redirect(model, transition) {
-    if (transition.targetName !== 'pipeline.build.step') {
+    if (['pipeline.build.step', 'pipeline.build.index'].includes(transition.targetName)) {
       const name = getActiveStep(get(model, 'build.steps'));
 
       if (name) {
@@ -56,12 +70,6 @@ export default Route.extend({
           name
         );
       }
-    }
-  },
-
-  actions: {
-    didTransition() {
-      this.controller.set('activeTab', 'steps');
     }
   }
 });

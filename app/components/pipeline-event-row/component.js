@@ -37,6 +37,48 @@ export default Component.extend({
     }
   }),
 
+  isExternalTrigger: computed('event.startFrom', {
+    get() {
+      const startFrom = this.get('event.startFrom');
+      const pipelineId = this.get('event.pipelineId');
+      let isExternal = false;
+
+      if (startFrom && startFrom.match(/^~sd@(\d+):([\w-]+)$/)) {
+        isExternal = Number(startFrom.match(/^~sd@(\d+):([\w-]+)$/)[1]) !== pipelineId;
+      }
+
+      return isExternal;
+    }
+  }),
+
+  isCommiterDifferent: computed('isExternalTrigger', 'event.{creator.name,commit.author.name}', {
+    get() {
+      const creatorName = this.get('event.creator.name');
+      const authorName = this.get('event.commit.author.name');
+
+      return this.get('isExternalTrigger') || creatorName !== authorName;
+    }
+  }),
+
+  externalBuild: computed('event.{causeMessage,startFrom}', {
+    get() {
+      // using underscore because router.js doesn't pick up camelcase
+      /* eslint-disable camelcase */
+      let pipeline_id = this.get('event.startFrom').match(/^~sd@(\d+):[\w-]+$/);
+      let build_id = this.get('event.causeMessage').match(/\s(\d+)$/);
+
+      if (build_id) {
+        build_id = build_id[1];
+      }
+      if (pipeline_id) {
+        pipeline_id = pipeline_id[1];
+      }
+      /* eslint-enable camelcase */
+
+      return { build_id, pipeline_id };
+    }
+  }),
+
   actions: {
     clickRow() {
       const fn = get(this, 'eventClick');

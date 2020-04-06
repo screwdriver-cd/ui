@@ -153,7 +153,41 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('h4:nth-of-type(1)').hasText('int-test');
     assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
-    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar');
+    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar/');
+  });
+
+  test('it renders template name with version tag', async function(assert) {
+    this.set('jobMock', {
+      image: 'int-test:1',
+      steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
+      secrets: [],
+      environment: { SD_TEMPLATE_FULLNAME: 'foo/bar', SD_TEMPLATE_VERSION: 'latest' },
+      settings: {},
+      annotations: {}
+    });
+
+    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+
+    assert.dom('h4:nth-of-type(1)').hasText('int-test');
+    assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
+    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar/latest');
+  });
+
+  test('it renders template name with version number', async function(assert) {
+    this.set('jobMock', {
+      image: 'int-test:1',
+      steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
+      secrets: [],
+      environment: { SD_TEMPLATE_FULLNAME: 'foo/bar', SD_TEMPLATE_VERSION: '0.0.1' },
+      settings: {},
+      annotations: {}
+    });
+
+    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+
+    assert.dom('h4:nth-of-type(1)').hasText('int-test');
+    assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
+    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar/0.0.1');
   });
 
   test('it renders when there are no steps or commands', async function(assert) {
@@ -246,7 +280,10 @@ module('Integration | Component | validator job', function(hooks) {
       commands: [
         { name: 'step1', command: 'sd-cmd exec bar/foo@latest' },
         { name: 'step2', command: 'sd-cmd exec foo/bar@0.0.1 foobar' },
-        { name: 'step3', command: 'sd-cmd exec bar/foo@stable' }
+        { name: 'step3', command: 'sd-cmd exec bar/foo@stable' },
+        { name: 'step4', command: 'sd-cmd exec foo/bar@stable; sd-cmd exec foo/bar@stable' },
+        { name: 'step5', command: 'sd-cmd exec foo/bar@stable; sd-cmd exec foo/bar@latest' },
+        { name: 'step6', command: 'sd-cmd exec bar/foo@latest' }
       ],
       secrets: [],
       environment: {},
@@ -258,10 +295,22 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.sd-commands .label').hasText('Commands:');
-    assert.dom('.sd-commands ul li:nth-of-type(1)').hasText('bar/foo');
-    assert.dom('.sd-commands ul li:nth-of-type(1) a').hasAttribute('href', '/commands/bar/foo');
-    assert.dom('.sd-commands ul li:nth-of-type(2)').hasText('foo/bar');
-    assert.dom('.sd-commands ul li:nth-of-type(2) a').hasAttribute('href', '/commands/foo/bar');
+    assert.dom('.sd-commands ul li:nth-of-type(1)').hasText('bar/foo@latest');
+    assert
+      .dom('.sd-commands ul li:nth-of-type(1) a')
+      .hasAttribute('href', '/commands/bar/foo/latest');
+    assert.dom('.sd-commands ul li:nth-of-type(2)').hasText('foo/bar@0.0.1');
+    assert
+      .dom('.sd-commands ul li:nth-of-type(2) a')
+      .hasAttribute('href', '/commands/foo/bar/0.0.1');
+    assert.dom('.sd-commands ul li:nth-of-type(3)').hasText('bar/foo@stable');
+    assert
+      .dom('.sd-commands ul li:nth-of-type(3) a')
+      .hasAttribute('href', '/commands/bar/foo/stable');
+
+    assert.dom('.sd-commands ul li:nth-of-type(4)').hasText('foo/bar@stable');
+    assert.dom('.sd-commands ul li:nth-of-type(5)').hasText('foo/bar@latest');
+    assert.dom('.sd-commands ul li:nth-of-type(6)').doesNotExist();
   });
 
   test('it renders without a collapsible heading', async function(assert) {

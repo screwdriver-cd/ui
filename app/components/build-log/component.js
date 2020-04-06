@@ -5,7 +5,7 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 
-const timeTypes = ['datetime', 'elapsedBuild', 'elapsedStep'];
+const timeTypes = ['datetime', 'datetimeUTC', 'elapsedBuild', 'elapsedStep'];
 
 export default Component.extend({
   logService: service('build-logs'),
@@ -296,7 +296,12 @@ export default Component.extend({
    * @param {boolean} fetchMax
    */
   getLogs(fetchMax = false) {
-    if (!this.isFetching && this.shouldLoad) {
+    if (
+      !this.get('isDestroyed') &&
+      !this.get('isDestroying') &&
+      !this.isFetching &&
+      this.shouldLoad
+    ) {
       const { buildId, stepName, totalLine } = this;
       const started = !!this.stepStartTime;
 
