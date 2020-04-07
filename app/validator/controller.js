@@ -36,3 +36,5 @@ export default Controller.extend({
     debounce(this, getResults, 250);
   })
 });
+
+export { getResults };

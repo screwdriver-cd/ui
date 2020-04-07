@@ -52,6 +52,10 @@ export default Service.extend({
       requestType = 'raw';
     }
 
+    if (requestType === 'get') {
+      requestType = 'request';
+    }
+
     const uri = `${baseHost}${url}`;
 
     const options = Object.assign({}, this.ajaxOptions(), {
@@ -77,5 +81,13 @@ export default Service.extend({
     const raw = true;
 
     return this.fetchFromApi(method, url, data, raw);
+  },
+
+  fetchAllTemplates() {
+    const method = 'get';
+    const url = `/templates`;
+    const data = { sortBy: 'createTime', sort: 'descending', compact: true };
+
+    return this.fetchFromApi(method, url, data);
   }
 });

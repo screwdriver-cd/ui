@@ -1,7 +1,14 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
+
 <h1>Create Pipeline</h1>
-<p>Add a Git repository to Screwdriver by pasting your repository link below.<br>We accept both HTTPS and SSH URLs.</p>
+<div class="row">
+  <div class="col-xs-12 col-md-6">
+    <p>Add a Git repository to Screwdriver by pasting your repository link below.<br>We accept both HTTPS and SSH URLs.</p>
+  </div>
+  <div id="template-validate-results"></div>
+</div>
+
 <div>
   {{input
     class="text-input scm-url"
@@ -17,6 +24,48 @@
 <div>
   {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
 </div>
+
+<div>
+  {{input class="create-screwdriver-yaml" type="checkbox" checked=overrideScrewdriverYaml}}
+  <label class="normal-weight">Create <span class="select-screwdriver-yaml">Screwdriver.yaml {{fa-icon "question-circle"}}</span></label>
+
+  <div>
+    {{#if overrideScrewdriverYaml}}
+      <label class="normal-weight">Select from a <span class="select-template">template {{fa-icon "question-circle"}}</span></label>
+
+      <div class="templates-dropdown">
+        {{#power-select
+          options=templates
+          selected=selectedTemplate
+          onchange=(action "selectTemplate")
+          searchField="name"
+          as |template| }}
+          {{template.name}}
+        {{/power-select}}
+      </div>
+
+      {{#if selectedTemplate}}
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            {{validator-input yaml=(mut yaml)}}
+          </div>
+          {{#ember-wormhole to="template-validate-results"}}
+            <div class="col-xs-12 col-md-6">
+              {{validator-results results=results}}
+            </div>
+          {{/ember-wormhole}}
+        </div>
+      {{/if}}
+
+      <div class="tooltips">
+        {{#bs-tooltip placement="right" triggerElement=".select-template" renderInPlace=true delayHide="1000"}}
+          What are <a href="https://docs.screwdriver.cd/user-guide/templates">templates</a>?
+        {{/bs-tooltip}}
+      </div>
+    {{/if}}
+  </div>
+</div>
+
 <div>
   <button {{action "saveData"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
     <div class="saving-loading">
@@ -25,4 +74,11 @@
     <div class="button-label">Create Pipeline</div>
   </button>
   {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
+</div>
+
+<div class="tooltips">
+  {{#bs-tooltip placement="right" triggerElement=".select-screwdriver-yaml" renderInPlace=true
+  delayHide="1000"}}
+    What is <a href="https://docs.screwdriver.cd/user-guide/configuration/">screwdriver.yaml</a>
+  {{/bs-tooltip}}
 </div>

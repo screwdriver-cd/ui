@@ -1,0 +1,116 @@
+{{#unless isOpen}}
+  <div class="quickstart-guide-menu" onclick={{action "openMenu"}}>
+    <div class="mini-menu-oval">
+      <div class="mini-menu">
+        {{fa-icon "power-off"}}
+      </div>
+    </div>
+  </div>
+{{/unless}}
+
+<div class="quickstart-guide {{if isOpen "menu-open" "menu-close"}}">
+  <div class="header">
+    <div class="item">
+      <div class="icon">
+        {{fa-icon "power-off"}}
+      </div>
+      <div class="section">
+        <span class="title">
+          <span class="text">Quickstart Guide</span>
+          <span class="close-quickstart-guide" onclick={{action "closeMenu"}}>×</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon"></div>
+      <div class="section">
+        <span>This will cover how to build and deploy a sample app with Screwdriver</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="item">
+      <div class="icon">
+        <span class="badge">1</span>
+      </div>
+      <div class="section">
+        <span>Click on the Create icon. (You will be redirected to login if you have not already.)</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon">
+        <span class="badge">2</span>
+      </div>
+      <div class="section">
+        <span>Enter your repository link into the field. SSH or HTTPS link is fine, with #&lt;YOUR_BRANCH_NAME&gt; immediately after.</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon"></div>
+      <div class="section">
+        <p>
+          <div class="command-section">
+            <div>
+              <span class="argument">
+                git clone git@github.com:screwdriver-cd/ui.git
+              </span>
+            </div>
+          </div>
+        </p>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon"></div>
+      <div class="section">
+        <span>If no BRANCH_NAME is provided, it will default to the master branch. Click Use this repository to confirm and then click Create Pipeline.</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon">
+        <span class="badge">3</span>
+      </div>
+      <div class="section">
+        <span>Now that you’ve created a pipeline, you should be directed to your new pipeline page. Click the Start button to start your build.</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="icon"></div>
+      <div class="section">
+        <p>
+          <div>
+            <div class="command-section">
+              <div>
+                <span>$</span>
+                <span class="command">git</span>
+                <span class="subcommand">clone</span>
+                <span class="argument">git@github.com:&lt;YOUR_USERNAME_HERE&gt;/quickstart-generic.git</span>
+              </div>
+              <div>
+                <span>$</span>
+                <span class="command">cd</span>
+                <span class="subcommand">quickstart-generic/</span>
+              </div>
+            </div>
+          </div>
+        </p>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="footer">
+    <button type="button" class="quickstart-doc-button">
+      <span>QuickStart Documentation</span>
+      {{fa-icon "share-square-o"}}
+    </button>
+  </div>
+
+</div>
