@@ -24,6 +24,8 @@ export default Route.extend({
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
       triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
+    }).catch(() => {
+      this.transitionTo('/404');
     });
   },
   actions: {
