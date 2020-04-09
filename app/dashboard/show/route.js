@@ -30,6 +30,8 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
   actions: {
     error() {
+      localStorage.removeItem('lastViewedCollectionId');
+
       return this.transitionTo('/404');
     }
   }
