@@ -57,6 +57,10 @@ export default Component.extend({
     deleteCollection(collection) {
       const c = this.store.peekRecord('collection', collection.id);
 
+      if (collection.id === localStorage.getItem('lastViewedCollectionId')) {
+        localStorage.removeItem('lastViewedCollectionId');
+      }
+
       return c.destroyRecord().then(() => {
         this.set('collectionToDelete', null);
         c.unloadRecord();
