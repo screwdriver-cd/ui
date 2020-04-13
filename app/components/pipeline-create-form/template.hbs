@@ -44,7 +44,7 @@
         {{/power-select}}
       </div>
 
-      {{#if selectedTemplate}}
+      {{#if selectedTemplate.name}}
         <div class="row">
           <div class="col-xs-12 col-md-6">
             {{validator-input yaml=(mut yaml)}}
@@ -59,7 +59,7 @@
 
       <div class="tooltips">
         {{#bs-tooltip placement="right" triggerElement=".select-template" renderInPlace=true delayHide="1000"}}
-          What are <a href="https://docs.screwdriver.cd/user-guide/templates">templates</a>?
+          What are <a href="https://docs.screwdriver.cd/user-guide/templates" target="_blank">templates</a>?
         {{/bs-tooltip}}
       </div>
     {{/if}}
@@ -79,6 +79,6 @@
 <div class="tooltips">
   {{#bs-tooltip placement="right" triggerElement=".select-screwdriver-yaml" renderInPlace=true
   delayHide="1000"}}
-    What is <a href="https://docs.screwdriver.cd/user-guide/configuration/">screwdriver.yaml</a>
+    What is <a href="https://docs.screwdriver.cd/user-guide/configuration/" target="_blank">screwdriver.yaml</a>
   {{/bs-tooltip}}
 </div>
