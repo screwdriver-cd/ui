@@ -38,13 +38,12 @@
       authenticated=session.isAuthenticated
     }}
 
-    {{!-- {{pipeline-jobs-list
-      test=jobs
-    }} --}}
-
     {{pipeline-list-view
       jobsDetails=jobsDetails
       updateListViewJobs=(action "updateListViewJobs")
+      refreshListViewJobs=(action "refreshListViewJobs")
+      startSingleBuild=(action "startSingleBuild")
+      stopBuild=(action "stopBuild")
     }}
     
   </div>

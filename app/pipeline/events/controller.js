@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import { get, computed } from '@ember/object';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import { alias } from '@ember/object/computed';
+import RSVP from 'rsvp';
 
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
@@ -105,6 +106,22 @@ export default Controller.extend(ModelReloaderMixin, {
         e => !currentModelEvents.find(c => c.id === e.id)
       );
 
+      if (this.jobsDetails.length) {
+        // currentModelEvents[0].addObserver('builds', (...args) => {
+        //   debugger;
+        //   console.log(...args);
+        // })
+        // currentModelEvents[0].get('builds').then(builds => {
+        //   console.log(Array.isArray(builds));
+        //   console.log(builds.get('length'));
+        //   debugger;
+        //   RSVP.all(builds).then(b => {
+        //     console.log(b);
+        //     debugger;
+        //   });
+        // });
+      }
+
       newModelEvents = currentModelEvents.concat(previousModelEvents);
 
       this.set('previousModelEvents', newModelEvents);
@@ -177,6 +194,11 @@ export default Controller.extend(ModelReloaderMixin, {
   selectedEventObj: computed('selectedEvent', {
     get() {
       const selected = this.selectedEvent;
+      // debugger;
+      // this.events.find(e => get(e, 'id') === selected).addObserver('builds', (...args) => {
+      //   debugger;
+      //   console.log(...args);
+      // })
 
       return this.events.find(e => get(e, 'id') === selected);
     }
@@ -245,25 +267,106 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   },
 
-  updateListViewJobs() {
-    const listViewOffset = this.get('listViewOffset');
-    const listViewCutOff = listViewOffset + 10;
+  getNewListViewJobs(listViewOffset, listViewCutOff) {
     const jobIds = this.get('jobIds');
 
     if (listViewOffset < jobIds.length) {
-      this.store
+      return this.store
         .query('build-history', {
           jobIds: jobIds.slice(listViewOffset, listViewCutOff),
-                    offset: 0,
-                    numBuilds: 8
-                })
+          offset: 0, // make variable?
+          numBuilds: 8 // make variable
+        })
         .then(jobsDetails => {
-                    const nextJobsDetails = jobsDetails.toArray();
+          const nextJobsDetails = jobsDetails.toArray();
 
-          this.set('listViewOffset', listViewCutOff);
-                    this.set('jobsDetails', this.jobsDetails.concat(nextJobsDetails));
-                });
+          nextJobsDetails.forEach(nextJobDetail => {
+            nextJobDetail.jobName = this.get('pipeline.jobs').find(
+              job => job.id == nextJobDetail.jobId
+            ).name;
+          });
+
+          return nextJobsDetails;
+        });
     }
+
+    return Promise.resolve([]);
+  },
+
+  refreshListViewJobs() {
+    const listViewCutOff = this.get('listViewOffset');
+
+    this.getNewListViewJobs(0, listViewCutOff).then(updatedJobsDetails => {
+      this.set('jobsDetails', updatedJobsDetails);
+    });
+  },
+
+  updateListViewJobs() {
+    const listViewOffset = this.get('listViewOffset');
+    const listViewCutOff = listViewOffset + 10; // inc by variable
+
+    this.getNewListViewJobs(listViewOffset, listViewCutOff).then(nextJobsDetails => {
+      this.set('listViewOffset', listViewCutOff);
+      if (nextJobsDetails.length > 0) {
+        this.set('jobsDetails', this.jobsDetails.concat(nextJobsDetails));
+      }
+        });
+  },
+
+  createEvent(eventPayload, toActiveTab) {
+    const newEvent = this.store.createRecord('event', eventPayload);
+
+    return newEvent
+      .save()
+      .then(event => {
+        event.get('builds').then(b => {
+          RSVP.all(b.toArray()).then(builds => {
+            debugger;
+            console.log(builds);
+            builds.forEach(build => {
+              const jobDetail = this.jobsDetails.find(
+                j => j.jobId === parseInt(build.jobId)
+              );
+
+                            if (jobDetail) {
+                jobDetail.builds.pushObject({
+                  id: parseInt(build.id),
+                  jobId: parseInt(build.jobId),
+                  status: build.status,
+                  startTime: build.startTime,
+                  endTime: build.endTime
+                });
+
+                jobDetail.builds.sort(function(b1, b2) {
+                  return b1.id > b2.id ? -1 : b1.id < b2.id ? 1 : 0;
+                });
+
+                jobDetail.builds.popObject();
+
+                debugger;
+                this.notifyPropertyChange('jobsDetails');
+                // Fix this - can't get table rows to update otherwise
+                // this.set('jobsDetails', this.jobsDetails);
+              }
+            });
+          });
+        });
+
+        this.set('isShowingModal', false);
+        this.forceReload();
+
+        if (toActiveTab) {
+          const path = `pipeline/${newEvent.get('pipelineId')}/${this.activeTab}`;
+
+          return this.transitionToRoute(path);
+        }
+
+        return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
+      })
+      .catch(e => {
+        this.set('isShowingModal', false);
+        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+      });
   },
 
   actions: {
@@ -272,6 +375,9 @@ export default Controller.extend(ModelReloaderMixin, {
     },
     updateEvents(page) {
       this.updateEvents(page);
+    },
+    refreshListViewJobs() {
+      this.refreshListViewJobs();
     },
     updateListViewJobs() {
       this.updateListViewJobs();
@@ -297,20 +403,7 @@ export default Controller.extend(ModelReloaderMixin, {
         eventPayload.meta = { parameters };
       }
 
-      const newEvent = this.store.createRecord('event', eventPayload);
-
-      return newEvent
-        .save()
-        .then(() => {
-          this.set('isShowingModal', false);
-          this.forceReload();
-
-          return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
-        })
-        .catch(e => {
-          this.set('isShowingModal', false);
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
-        });
+      return this.createEvent(eventPayload, false);
     },
     startDetachedBuild(job, options = {}) {
       const buildId = get(job, 'buildId');
@@ -354,47 +447,44 @@ export default Controller.extend(ModelReloaderMixin, {
         eventPayload.meta = { parameters };
       }
 
-      const newEvent = this.store.createRecord('event', eventPayload);
-
-      this.set('isShowingModal', true);
-
-      return newEvent
-        .save()
-        .then(() => {
-          this.set('isShowingModal', false);
-          this.forceReload();
-
-          const path = `pipeline/${newEvent.get('pipelineId')}/${this.activeTab}`;
-
-          return this.transitionToRoute(path);
-        })
-        .catch(e => {
-          this.set('isShowingModal', false);
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
-        });
+      return this.createEvent(eventPayload, true);
     },
     startSingleBuild(jobId, jobName, status = undefined) {
+      this.set('isShowingModal', true);
+
+      const pipelineId = get(this, 'pipeline.id');
+      const token = get(this, 'session.data.authenticated.token');
+      const user = get(decoder(token), 'username');
+      let causeMessage = `[skip further]Manually started by ${user}`;
+      let startFrom = jobName;
+
       const buildQueryConfig = { jobId };
 
       if (status) {
         buildQueryConfig.status = status;
       }
 
+      // handle null build
       return this.store.queryRecord('build', buildQueryConfig).then(build => {
-        this.store.findRecord('event', get(build, eventId)).then(event => {
+        if (!build) {
+          const eventPayload = {
+            pipelineId,
+            startFrom,
+            causeMessage
+          };
+
+          return this.createEvent(eventPayload, false);
+        }
+
+        this.store.findRecord('event', get(build, 'eventId')).then(event => {
           const parentBuildId = get(build, 'parentBuildId');
           const parentEventId = get(event, 'id');
-          const pipelineId = get(this, 'pipeline.id');
-          const token = get(this, 'session.data.authenticated.token');
-                    const user = get(decoder(token), 'username');
-          let causeMessage = `[skip further] Manually started by ${user}`;
           const prNum = get(event, 'prNum');
-          let startFrom = jobName;
 
           if (prNum) {
             // PR-<num>: prefix is needed, if it is a PR event.
             startFrom = `PR-${prNum}:${startFrom}`;
-                    }
+          }
 
           const eventPayload = {
             pipelineId,
@@ -404,37 +494,31 @@ export default Controller.extend(ModelReloaderMixin, {
             causeMessage
           };
 
-          const newEvent = this.store.createRecord('event', eventPayload);
-
-          return newEvent
-            .save()
-            .then(() => {
-              // this.forceReload();
-
-              const path = `pipeline/${newEvent.get('pipelineId')}/${this.activeTab}`;
-
-              return this.transitionToRoute(path);
-            })
-            .catch(e => {
-              this.set(
-                'errorMessage',
-                Array.isArray(e.errors) ? e.errors[0].detail : ''
-              );
-                        });
+          return this.createEvent(eventPayload, false);
         });
       });
     },
-    stopBuild(event, job) {
+    stopBuild(givenEvent, job) {
+      debugger;
       const buildId = get(job, 'buildId');
       let build;
+      let event = givenEvent;
 
       if (buildId) {
         build = this.store.peekRecord('build', buildId);
         build.set('status', 'ABORTED');
 
+        if (!event) {
+          event = this.modelEvents.filter(e => e.id === get(build, 'eventId'));
+        }
+
         return build
           .save()
-          .then(() => event.hasMany('builds').reload())
+          .then(() => {
+            if (event) {
+              event.hasMany('builds').reload();
+            }
+          })
           .catch(e =>
             this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '')
           );

@@ -1,8 +1,13 @@
 & {
   height: 100%;
 
+  .refresh-btn {
+    float: right;
+  }
+
   .ember-light-table {
-    padding: 15px;
+    padding-left: 15px;
+    width: 100%;
   }
 
   .ember-light-table thead .lt-column {

@@ -8,7 +8,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    const table = new Table(this.get('columns'), this.get('rows'));
+    const table = new Table(this.get('columns'), this.get('rows'), { enableSync: true });
 
     this.set('table', table);
   },
@@ -38,7 +38,8 @@ export default Component.extend({
     },
     {
       label: 'ACTIONS',
-      valuePath: 'actions'
+      valuePath: 'actions',
+      cellComponent: 'pipeline-list-actions-cell'
     }
   ],
   rows: [],
@@ -65,23 +66,45 @@ export default Component.extend({
   //     return rows;
   //   }
   // }),
-  test: observer('jobsDetails', function() {
+  test: observer('jobsDetails', 'jobsDetails.@each.builds', function() {
     const rows = [];
 
     this.jobsDetails.forEach(jobDetails => {
-      const startDateTime = Date.parse(jobDetails.builds[0].startTime);
-      const endDateTime = Date.parse(jobDetails.builds[0].endTime);
-      const startTime = moment(jobDetails.builds[0].startTime).format('lll');
+      const latestBuild = jobDetails.builds.length ? jobDetails.builds[0] : null;
+
+      const jobData = {
+        jobName: jobDetails.jobName,
+        build: latestBuild
+      };
+
+      const actionsData = {
+        jobId: jobDetails.jobId,
+        jobName: jobDetails.jobName,
+        latestBuild,
+        startSingleBuild: this.get('startSingleBuild'),
+        stopBuild: this.get('stopBuild')
+      };
+
+      let startDateTime;
+            let endDateTime;
+            let startTime;
+            let status;
+
+      if (latestBuild) {
+        startDateTime = Date.parse(jobDetails.builds[0].startTime);
+        endDateTime = Date.parse(jobDetails.builds[0].endTime);
+        startTime = moment(jobDetails.builds[0].startTime).format('lll');
+        status = latestBuild.status;
+      }
 
       rows.push({
-        job: jobDetails.builds[0],
+        job: jobData,
         startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
-        duration: this.getDuration(startDateTime, endDateTime),
-        history: jobDetails.builds
+        duration: this.getDuration(startDateTime, endDateTime, status),
+        history: jobDetails.builds,
+        actions: actionsData
       });
     });
-
-    console.log('add rows');
     this.get('table').setRows(rows);
   }),
   // table: computed('rows', {
@@ -90,33 +113,33 @@ export default Component.extend({
   //     return new Table(this.get('columns'), this.get('rows'));
   //   }
   // }),
-  getDuration(startDateTime, endDateTime) {
-    const duration = endDateTime - startDateTime;
+  getDuration(startDateTime, endDateTime, status) {
+        if (!startDateTime) {
+            return null;
+        }
+        if (!endDateTime) {
+            return 'Still running.';
+        }
 
-    // eslint-disable-next-line no-restricted-globals
-    if (isNaN(duration)) {
-      return 'Still running.';
-    }
+        const duration = endDateTime - startDateTime;
 
-    let seconds = Math.floor((duration / 1000) % 60);
-    let minutes = Math.floor((duration / (1000 * 60)) % 60);
-    let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+        let seconds = Math.floor((duration / 1000) % 60);
+        let minutes = Math.floor((duration / (1000 * 60)) % 60);
+        let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
 
-    hours = hours < 10 ? '0'.concat(hours) : hours;
-    minutes = minutes < 10 ? '0'.concat(minutes) : minutes;
-    seconds = seconds < 10 ? '0'.concat(seconds) : seconds;
+        hours = hours < 10 ? '0'.concat(hours) : hours;
+        minutes = minutes < 10 ? '0'.concat(minutes) : minutes;
+        seconds = seconds < 10 ? '0'.concat(seconds) : seconds;
 
-    // eslint-disable-next-line prefer-template
-    return hours + 'h ' + minutes + 'm ' + seconds + 's';
-  },
-  actions: {
-    onScroll(scrollOffset, event) {
-      console.log(scrollOffset);
-      console.log(event);
+        // eslint-disable-next-line prefer-template
+        return hours + 'h ' + minutes + 'm ' + seconds + 's';
     },
+  actions: {
     onScrolledToBottom() {
       this.get('updateListViewJobs')();
-      console.log("scrolled to bottom");
+    },
+    refreshListViewJobs() {
+      this.get('refreshListViewJobs')();
     }
   }
 });

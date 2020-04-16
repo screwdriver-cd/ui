@@ -5,12 +5,22 @@ import { statusIcon } from 'screwdriver-ui/utils/build';
 export default Component.extend({
   build: computed('value', {
     get() {
+      const { build } = this.value;
+
+      if (!build) {
+        return null;
+      }
+
       return {
-        id: this.value.id,
-        icon: statusIcon(this.value.status),
-        status: this.value.status,
-        jobName: this.value.jobName
+        id: build.id,
+        icon: statusIcon(build.status),
+        status: build.status
       };
+    }
+  }),
+  jobName: computed('value', {
+    get() {
+      return this.value.jobName;
     }
   })
 });
