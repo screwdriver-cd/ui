@@ -3,6 +3,29 @@
 
   .refresh-btn {
     float: right;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: $brand-600;
+    background-color: $sd-white;
+    border-color: $brand-600;
+    font-weight: $weight-normal;
+
+    &:hover,
+    &:focus,
+    &.active,
+    &.active:hover,
+    &.active:focus {
+      outline: none;
+      box-shadow: none;
+      color: $brand-600;
+      background-color: $button-background;
+      border-color: $brand-600;
+    }
+
+    &:hover,
+    &.active:hover {
+      color: $brand-700;
+    }
   }
 
   .ember-light-table {

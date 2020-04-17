@@ -22,7 +22,6 @@ export default Component.extend({
     stopBuild() {
       const value = this.get('value');
 
-      debugger;
       value.stopBuild(null, { buildId: value.latestBuild.id });
     }
   }

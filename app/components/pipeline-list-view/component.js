@@ -8,9 +8,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    const table = new Table(this.get('columns'), this.get('rows'), { enableSync: true });
-
-    this.set('table', table);
+    this.get('updateListViewJobs')();
   },
   table: null,
   columns: [
@@ -42,78 +40,94 @@ export default Component.extend({
       cellComponent: 'pipeline-list-actions-cell'
     }
   ],
-  rows: [],
-  // rows: computed('jobsDetails', {
-  //   get() {
-  //     const rows = [];
-
-  //     this.jobsDetails.forEach(jobDetails => {
-  //       const startDateTime = Date.parse(jobDetails.builds[0].startTime);
-  //       const endDateTime = Date.parse(jobDetails.builds[0].endTime);
-  //       const startTime = moment(jobDetails.builds[0].startTime).format('lll');
-
-  //       rows.push({
-  //         job: jobDetails.builds[0],
-  //         startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
-  //         duration: this.getDuration(startDateTime, endDateTime),
-  //         history: jobDetails.builds
-  //       });
-  //     });
-
-  //     console.log('new rows');
-  //     console.log(rows);
-  //     debugger;
-  //     return rows;
-  //   }
-  // }),
-  test: observer('jobsDetails', 'jobsDetails.@each.builds', function() {
-    const rows = [];
-
-    this.jobsDetails.forEach(jobDetails => {
-      const latestBuild = jobDetails.builds.length ? jobDetails.builds[0] : null;
-
-      const jobData = {
-        jobName: jobDetails.jobName,
-        build: latestBuild
-      };
-
-      const actionsData = {
-        jobId: jobDetails.jobId,
-        jobName: jobDetails.jobName,
-        latestBuild,
-        startSingleBuild: this.get('startSingleBuild'),
-        stopBuild: this.get('stopBuild')
-      };
-
-      let startDateTime;
-            let endDateTime;
-            let startTime;
-            let status;
-
-      if (latestBuild) {
-        startDateTime = Date.parse(jobDetails.builds[0].startTime);
-        endDateTime = Date.parse(jobDetails.builds[0].endTime);
-        startTime = moment(jobDetails.builds[0].startTime).format('lll');
-        status = latestBuild.status;
-      }
-
-      rows.push({
-        job: jobData,
-        startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
-        duration: this.getDuration(startDateTime, endDateTime, status),
-        history: jobDetails.builds,
-        actions: actionsData
+  rows: computed('jobsDetails', {
+    get() {
+      return this.jobsDetails.map(jobDetails => {
+        const latestBuild = jobDetails.builds.length ? jobDetails.builds[0] : null;
+  
+        const jobData = {
+          jobName: jobDetails.jobName,
+          build: latestBuild
+        };
+  
+        const actionsData = {
+          jobId: jobDetails.jobId,
+          jobName: jobDetails.jobName,
+          latestBuild,
+          startSingleBuild: this.get('startSingleBuild'),
+          stopBuild: this.get('stopBuild')
+        };
+  
+        let startDateTime;
+        let endDateTime;
+        let startTime;
+        let status;
+  
+        if (latestBuild) {
+          startDateTime = Date.parse(jobDetails.builds[0].startTime);
+          endDateTime = Date.parse(jobDetails.builds[0].endTime);
+          startTime = moment(jobDetails.builds[0].startTime).format('lll');
+          status = latestBuild.status;
+        }
+        
+        return {
+          job: jobData,
+          startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
+          duration: this.getDuration(startDateTime, endDateTime, status),
+          history: jobDetails.builds,
+          actions: actionsData
+        };
       });
-    });
-    this.get('table').setRows(rows);
+    }
   }),
-  // table: computed('rows', {
-  //   get() {
-  //     console.log('new table');
-  //     return new Table(this.get('columns'), this.get('rows'));
-  //   }
+  // test: observer('jobsDetails', 'jobsDetails.@each.builds', function() {
+  //   const rows = [];
+
+  //   this.jobsDetails.forEach(jobDetails => {
+  //     const latestBuild = jobDetails.builds.length ? jobDetails.builds[0] : null;
+
+  //     const jobData = {
+  //       jobName: jobDetails.jobName,
+  //       build: latestBuild
+  //     };
+
+  //     const actionsData = {
+  //       jobId: jobDetails.jobId,
+  //       jobName: jobDetails.jobName,
+  //       latestBuild,
+  //       startSingleBuild: this.get('startSingleBuild'),
+  //       stopBuild: this.get('stopBuild')
+  //     };
+
+  //     let startDateTime;
+  //           let endDateTime;
+  //           let startTime;
+  //           let status;
+
+  //     if (latestBuild) {
+  //       startDateTime = Date.parse(jobDetails.builds[0].startTime);
+  //       endDateTime = Date.parse(jobDetails.builds[0].endTime);
+  //       startTime = moment(jobDetails.builds[0].startTime).format('lll');
+  //       status = latestBuild.status;
+  //     }
+
+  //     rows.push({
+  //       job: jobData,
+  //       startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
+  //       duration: this.getDuration(startDateTime, endDateTime, status),
+  //       history: jobDetails.builds,
+  //       actions: actionsData
+  //     });
+  //   });
+  //   this.get('table').setRows(rows);
   // }),
-  getDuration(startDateTime, endDateTime, status) {
+  table: computed('rows', {
+    get() {
+      console.log('new table');
+      return new Table(this.get('columns'), this.get('rows'));
+    }
+  }),
+  getDuration(startDateTime, endDateTime) {
         if (!startDateTime) {
             return null;
         }
@@ -133,7 +147,7 @@ export default Component.extend({
 
         // eslint-disable-next-line prefer-template
         return hours + 'h ' + minutes + 'm ' + seconds + 's';
-    },
+  },
   actions: {
     onScrolledToBottom() {
       this.get('updateListViewJobs')();

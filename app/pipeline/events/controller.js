@@ -3,7 +3,6 @@ import { inject as service } from '@ember/service';
 import { get, computed } from '@ember/object';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import { alias } from '@ember/object/computed';
-import RSVP from 'rsvp';
 
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
@@ -50,6 +49,7 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
   jobsDetails: [],
+  showListView: false,
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
   completeWorkflowGraph: computed('model.triggers.@each.triggers', {
@@ -105,22 +105,6 @@ export default Controller.extend(ModelReloaderMixin, {
       previousModelEvents = previousModelEvents.filter(
         e => !currentModelEvents.find(c => c.id === e.id)
       );
-
-      if (this.jobsDetails.length) {
-        // currentModelEvents[0].addObserver('builds', (...args) => {
-        //   debugger;
-        //   console.log(...args);
-        // })
-        // currentModelEvents[0].get('builds').then(builds => {
-        //   console.log(Array.isArray(builds));
-        //   console.log(builds.get('length'));
-        //   debugger;
-        //   RSVP.all(builds).then(b => {
-        //     console.log(b);
-        //     debugger;
-        //   });
-        // });
-      }
 
       newModelEvents = currentModelEvents.concat(previousModelEvents);
 
@@ -194,11 +178,6 @@ export default Controller.extend(ModelReloaderMixin, {
   selectedEventObj: computed('selectedEvent', {
     get() {
       const selected = this.selectedEvent;
-      // debugger;
-      // this.events.find(e => get(e, 'id') === selected).addObserver('builds', (...args) => {
-      //   debugger;
-      //   console.log(...args);
-      // })
 
       return this.events.find(e => get(e, 'id') === selected);
     }
@@ -274,8 +253,8 @@ export default Controller.extend(ModelReloaderMixin, {
       return this.store
         .query('build-history', {
           jobIds: jobIds.slice(listViewOffset, listViewCutOff),
-          offset: 0, // make variable?
-          numBuilds: 8 // make variable
+          offset: 0,
+          numBuilds: ENV.APP.NUM_BUILDS_LISTED
         })
         .then(jobsDetails => {
           const nextJobsDetails = jobsDetails.toArray();
@@ -303,7 +282,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
   updateListViewJobs() {
     const listViewOffset = this.get('listViewOffset');
-    const listViewCutOff = listViewOffset + 10; // inc by variable
+    const listViewCutOff = listViewOffset + ENV.APP.LIST_VIEW_PAGE_SIZE;
 
     this.getNewListViewJobs(listViewOffset, listViewCutOff).then(nextJobsDetails => {
       this.set('listViewOffset', listViewCutOff);
@@ -318,39 +297,8 @@ export default Controller.extend(ModelReloaderMixin, {
 
     return newEvent
       .save()
-      .then(event => {
-        event.get('builds').then(b => {
-          RSVP.all(b.toArray()).then(builds => {
-            debugger;
-            console.log(builds);
-            builds.forEach(build => {
-              const jobDetail = this.jobsDetails.find(
-                j => j.jobId === parseInt(build.jobId)
-              );
-
-                            if (jobDetail) {
-                jobDetail.builds.pushObject({
-                  id: parseInt(build.id),
-                  jobId: parseInt(build.jobId),
-                  status: build.status,
-                  startTime: build.startTime,
-                  endTime: build.endTime
-                });
-
-                jobDetail.builds.sort(function(b1, b2) {
-                  return b1.id > b2.id ? -1 : b1.id < b2.id ? 1 : 0;
-                });
-
-                jobDetail.builds.popObject();
-
-                debugger;
-                this.notifyPropertyChange('jobsDetails');
-                // Fix this - can't get table rows to update otherwise
-                // this.set('jobsDetails', this.jobsDetails);
-              }
-            });
-          });
-        });
+      .then(() => {
+        this.refreshListViewJobs();
 
         this.set('isShowingModal', false);
         this.forceReload();
@@ -499,7 +447,6 @@ export default Controller.extend(ModelReloaderMixin, {
       });
     },
     stopBuild(givenEvent, job) {
-      debugger;
       const buildId = get(job, 'buildId');
       let build;
       let event = givenEvent;
@@ -515,6 +462,8 @@ export default Controller.extend(ModelReloaderMixin, {
         return build
           .save()
           .then(() => {
+            this.refreshListViewJobs();
+
             if (event) {
               event.hasMany('builds').reload();
             }
@@ -532,6 +481,9 @@ export default Controller.extend(ModelReloaderMixin, {
 
       return this.get('stop')
         .stopBuilds(eventId)
+        .then(() => {
+          this.refreshListViewJobs();
+        })
         .catch(e =>
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '')
         );
@@ -541,6 +493,9 @@ export default Controller.extend(ModelReloaderMixin, {
 
       return this.get('stop')
         .stopBuilds(eventId)
+        .then(() => {
+          this.refreshListViewJobs();
+        })
         .catch(e =>
           this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '')
         );
@@ -565,6 +520,8 @@ export default Controller.extend(ModelReloaderMixin, {
         .save()
         .then(() =>
           newEvent.get('builds').then(() => {
+            this.refreshListViewJobs();
+
             this.set('isShowingModal', false);
 
             // PR events are aggregated by each PR jobs when prChain is enabled.
