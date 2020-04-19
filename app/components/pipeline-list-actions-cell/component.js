@@ -17,7 +17,7 @@ export default Component.extend({
     startSingleBuild(status = undefined) {
       const value = this.get('value');
 
-            value.startSingleBuild(value.jobId, value.jobName, status);
+      value.startSingleBuild(value.jobId, value.jobName, status);
     },
     stopBuild() {
       const value = this.get('value');

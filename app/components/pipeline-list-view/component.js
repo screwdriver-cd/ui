@@ -80,47 +80,6 @@ export default Component.extend({
       });
     }
   }),
-  // test: observer('jobsDetails', 'jobsDetails.@each.builds', function() {
-  //   const rows = [];
-
-  //   this.jobsDetails.forEach(jobDetails => {
-  //     const latestBuild = jobDetails.builds.length ? jobDetails.builds[0] : null;
-
-  //     const jobData = {
-  //       jobName: jobDetails.jobName,
-  //       build: latestBuild
-  //     };
-
-  //     const actionsData = {
-  //       jobId: jobDetails.jobId,
-  //       jobName: jobDetails.jobName,
-  //       latestBuild,
-  //       startSingleBuild: this.get('startSingleBuild'),
-  //       stopBuild: this.get('stopBuild')
-  //     };
-
-  //     let startDateTime;
-  //           let endDateTime;
-  //           let startTime;
-  //           let status;
-
-  //     if (latestBuild) {
-  //       startDateTime = Date.parse(jobDetails.builds[0].startTime);
-  //       endDateTime = Date.parse(jobDetails.builds[0].endTime);
-  //       startTime = moment(jobDetails.builds[0].startTime).format('lll');
-  //       status = latestBuild.status;
-  //     }
-
-  //     rows.push({
-  //       job: jobData,
-  //       startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
-  //       duration: this.getDuration(startDateTime, endDateTime, status),
-  //       history: jobDetails.builds,
-  //       actions: actionsData
-  //     });
-  //   });
-  //   this.get('table').setRows(rows);
-  // }),
   table: computed('rows', {
     get() {
       console.log('new table');
