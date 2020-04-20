@@ -25,7 +25,7 @@
   {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
 </div>
 
-<div>
+{{!-- <div>
   {{input class="create-screwdriver-yaml" type="checkbox" checked=overrideScrewdriverYaml}}
   <label class="normal-weight">Create <span class="select-screwdriver-yaml">Screwdriver.yaml {{fa-icon "question-circle"}}</span></label>
 
@@ -64,7 +64,7 @@
       </div>
     {{/if}}
   </div>
-</div>
+</div> --}}
 
 <div>
   <button {{action "saveData"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
@@ -76,9 +76,9 @@
   {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
 </div>
 
-<div class="tooltips">
+{{!-- <div class="tooltips">
   {{#bs-tooltip placement="right" triggerElement=".select-screwdriver-yaml" renderInPlace=true
   delayHide="1000"}}
     What is <a href="https://docs.screwdriver.cd/user-guide/configuration/">screwdriver.yaml</a>
   {{/bs-tooltip}}
-</div>
+</div> --}}

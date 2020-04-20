@@ -165,62 +165,62 @@ module('Acceptance | create', function(hooks) {
     assert.dom('.alert > span').hasText('something conflicting');
   });
 
-  test('Create Screwdriver.yaml', async function(assert) {
-    server.post('http://localhost:8080/v4/pipelines', () => [
-      409,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        statusCode: 409,
-        error: 'Conflict',
-        message: 'something conflicting'
-      })
-    ]);
+  // test('Create Screwdriver.yaml', async function(assert) {
+  //   server.post('http://localhost:8080/v4/pipelines', () => [
+  //     409,
+  //     { 'Content-Type': 'application/json' },
+  //     JSON.stringify({
+  //       statusCode: 409,
+  //       error: 'Conflict',
+  //       message: 'something conflicting'
+  //     })
+  //   ]);
 
-    server.get('http://localhost:8080/v4/templates', () => {
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
-    });
+  //   server.get('http://localhost:8080/v4/templates', () => {
+  //     return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
+  //   });
 
-    await authenticateSession({ token: 'faketoken' });
-    await visit('/create');
+  //   await authenticateSession({ token: 'faketoken' });
+  //   await visit('/create');
 
-    await fillIn('.text-input', 'git@github.com:foo/bar.git');
-    await triggerEvent('.text-input', 'keyup');
-    await click('input.create-screwdriver-yaml');
+  //   await fillIn('.text-input', 'git@github.com:foo/bar.git');
+  //   await triggerEvent('.text-input', 'keyup');
+  //   await click('input.create-screwdriver-yaml');
 
-    assert.dom('.select-template').hasText('template');
-    assert.dom('.templates-dropdown').exists();
-    assert.dom('.ace_editor').exists();
-    assert.dom('#template-validate-results').exists();
-  });
+  //   assert.dom('.select-template').hasText('template');
+  //   assert.dom('.templates-dropdown').exists();
+  //   assert.dom('.ace_editor').exists();
+  //   assert.dom('#template-validate-results').exists();
+  // });
 
-  test('Quick start guide', async function(assert) {
-    server.post('http://localhost:8080/v4/pipelines', () => [
-      409,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        statusCode: 409,
-        error: 'Conflict',
-        message: 'something conflicting'
-      })
-    ]);
+  // test('Quick start guide', async function(assert) {
+  //   server.post('http://localhost:8080/v4/pipelines', () => [
+  //     409,
+  //     { 'Content-Type': 'application/json' },
+  //     JSON.stringify({
+  //       statusCode: 409,
+  //       error: 'Conflict',
+  //       message: 'something conflicting'
+  //     })
+  //   ]);
 
-    server.get('http://localhost:8080/v4/templates', () => {
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
-    });
+  //   server.get('http://localhost:8080/v4/templates', () => {
+  //     return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
+  //   });
 
-    await authenticateSession({ token: 'faketoken' });
-    await visit('/create');
-    await fillIn('.text-input', 'git@github.com:foo/bar.git');
-    await triggerEvent('.text-input', 'keyup');
+  //   await authenticateSession({ token: 'faketoken' });
+  //   await visit('/create');
+  //   await fillIn('.text-input', 'git@github.com:foo/bar.git');
+  //   await triggerEvent('.text-input', 'keyup');
 
-    // default toggle button is closed
-    assert.dom('.quickstart-guide-menu').exists();
-    assert.dom('.quickstart-guide.menu-open').doesNotExist();
-    assert.dom('.quickstart-guide.menu-close').exists();
+  //   // default toggle button is closed
+  //   assert.dom('.quickstart-guide-menu').exists();
+  //   assert.dom('.quickstart-guide.menu-open').doesNotExist();
+  //   assert.dom('.quickstart-guide.menu-close').exists();
 
-    await click('.quickstart-guide-menu');
-    // after click toggle-button, menu now is open
-    assert.dom('.quickstart-guide.menu-open').exists();
-    assert.dom('.quickstart-guide.menu-close').doesNotExist();
-  });
+  //   await click('.quickstart-guide-menu');
+  //   // after click toggle-button, menu now is open
+  //   assert.dom('.quickstart-guide.menu-open').exists();
+  //   assert.dom('.quickstart-guide.menu-close').doesNotExist();
+  // });
 });
