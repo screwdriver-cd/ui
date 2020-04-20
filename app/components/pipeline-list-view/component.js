@@ -86,12 +86,16 @@ export default Component.extend({
       return new Table(this.get('columns'), this.get('rows'));
     }
   }),
-  getDuration(startDateTime, endDateTime) {
+  getDuration(startDateTime, endDateTime, status) {
         if (!startDateTime) {
             return null;
         }
         if (!endDateTime) {
+          if (['CREATED', 'RUNNING', 'QUEUED', 'BLOCKED', 'FROZEN'].includes(status)) {
             return 'Still running.';
+          }
+          
+          return null;
         }
 
         const duration = endDateTime - startDateTime;

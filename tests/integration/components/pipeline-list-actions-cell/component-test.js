@@ -8,25 +8,107 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    set(this, 'jobId', 1);
-    set(this, 'jobName', 'a');
-    set(this, 'latestBuild', {
-      id:  2,
-      status: 'RUNNING'
-    });
-    set(this, 'startSingleBuild', () => {
-      assert.ok(true);
-    });
-    set(this, 'stopBuild', () => {
-      assert.ok(true);
+    set(this, 'value', {
+      jobId: 1,
+      jobName: 'a',
+      latestBuild: {
+        id: 2,
+        status: 'RUNNING'
+      },
+      startSingleBuild: () => { assert.ok(true) },
+      stopBuild: () => { assert.ok(true) }
     });
 
     await render(hbs`{{pipeline-list-actions-cell
-      jobId=jobId
-      jobName=jobName
-      latestBuild=latestBuild
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
+      value=value
+    }}`);
+
+    assert.dom('.fa-play-circle-o').exists({ count: 1 });
+    assert.dom('.fa-stop-circle-o').exists({ count: 1 });
+    assert.dom('.fa-repeat').exists({ count: 1 });
+    assert.dom('.clicks-disabled').doesNotExist();
+  });
+
+  test('it renders queued build', async function(assert) {
+    set(this, 'value', {
+      jobId: 1,
+      jobName: 'a',
+      latestBuild: {
+        id: 2,
+        status: 'QUEUED'
+      },
+      startSingleBuild: () => { assert.ok(true) },
+      stopBuild: () => { assert.ok(true) }
+    });
+
+    await render(hbs`{{pipeline-list-actions-cell
+      value=value
+    }}`);
+
+    assert.dom('.fa-play-circle-o').exists({ count: 1 });
+    assert.dom('.fa-stop-circle-o').exists({ count: 1 });
+    assert.dom('.fa-repeat').exists({ count: 1 });
+    assert.dom('.clicks-disabled').doesNotExist();
+  });
+
+  test('it renders blocked build', async function(assert) {
+    set(this, 'value', {
+      jobId: 1,
+      jobName: 'a',
+      latestBuild: {
+        id: 2,
+        status: 'BLOCKED'
+      },
+      startSingleBuild: () => { assert.ok(true) },
+      stopBuild: () => { assert.ok(true) }
+    });
+
+    await render(hbs`{{pipeline-list-actions-cell
+      value=value
+    }}`);
+
+    assert.dom('.fa-play-circle-o').exists({ count: 1 });
+    assert.dom('.fa-stop-circle-o').exists({ count: 1 });
+    assert.dom('.fa-repeat').exists({ count: 1 });
+    assert.dom('.clicks-disabled').doesNotExist();
+  });
+
+  test('it renders frozen build', async function(assert) {
+    set(this, 'value', {
+      jobId: 1,
+      jobName: 'a',
+      latestBuild: {
+        id: 2,
+        status: 'FROZEN'
+      },
+      startSingleBuild: () => { assert.ok(true) },
+      stopBuild: () => { assert.ok(true) }
+    });
+
+    await render(hbs`{{pipeline-list-actions-cell
+      value=value
+    }}`);
+
+    assert.dom('.fa-play-circle-o').exists({ count: 1 });
+    assert.dom('.fa-stop-circle-o').exists({ count: 1 });
+    assert.dom('.fa-repeat').exists({ count: 1 });
+    assert.dom('.clicks-disabled').doesNotExist();
+  });
+
+  test('it renders created build', async function(assert) {
+    set(this, 'value', {
+      jobId: 1,
+      jobName: 'a',
+      latestBuild: {
+        id: 2,
+        status: 'CREATED'
+      },
+      startSingleBuild: () => { assert.ok(true) },
+      stopBuild: () => { assert.ok(true) }
+    });
+
+    await render(hbs`{{pipeline-list-actions-cell
+      value=value
     }}`);
 
     assert.dom('.fa-play-circle-o').exists({ count: 1 });
@@ -36,25 +118,19 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
   });
 
   test('it renders with stopBuild disabled', async function(assert) {
-    set(this, 'jobId', 1);
-    set(this, 'jobName', 'a');
-    set(this, 'latestBuild', {
-      id:  2,
-      status: 'SUCCESS'
-    });
-    set(this, 'startSingleBuild', () => {
-      assert.ok(true);
-    });
-    set(this, 'stopBuild', () => {
-      assert.ok(true);
+    set(this, 'value', {
+      jobId: 1,
+      jobName: 'a',
+      latestBuild: {
+        id: 2,
+        status: 'RUNNING'
+      },
+      startSingleBuild: () => { assert.ok(true) },
+      stopBuild: () => { assert.ok(true) }
     });
 
     await render(hbs`{{pipeline-list-actions-cell
-      jobId=jobId
-      jobName=jobName
-      latestBuild=latestBuild
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
+      value=value
     }}`);
 
     assert.dom('.fa-play-circle-o').exists({ count: 1 });
