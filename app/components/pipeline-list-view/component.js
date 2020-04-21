@@ -1,6 +1,5 @@
 import Component from '@ember/component';
-import { computed, observer } from '@ember/object';
-import { scheduleOnce } from '@ember/runloop';
+import { computed } from '@ember/object';
 import moment from 'moment';
 import Table from 'ember-light-table';
 
@@ -10,7 +9,6 @@ export default Component.extend({
 
     this.get('updateListViewJobs')();
   },
-  table: null,
   columns: [
     {
       label: 'JOB',
@@ -44,12 +42,12 @@ export default Component.extend({
     get() {
       return this.jobsDetails.map(jobDetails => {
         const latestBuild = jobDetails.builds.length ? jobDetails.builds[0] : null;
-  
+
         const jobData = {
           jobName: jobDetails.jobName,
           build: latestBuild
         };
-  
+
         const actionsData = {
           jobId: jobDetails.jobId,
           jobName: jobDetails.jobName,
@@ -57,19 +55,19 @@ export default Component.extend({
           startSingleBuild: this.get('startSingleBuild'),
           stopBuild: this.get('stopBuild')
         };
-  
+
         let startDateTime;
         let endDateTime;
         let startTime;
         let status;
-  
+
         if (latestBuild) {
           startDateTime = Date.parse(jobDetails.builds[0].startTime);
           endDateTime = Date.parse(jobDetails.builds[0].endTime);
           startTime = moment(jobDetails.builds[0].startTime).format('lll');
           status = latestBuild.status;
         }
-        
+
         return {
           job: jobData,
           startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
@@ -82,34 +80,33 @@ export default Component.extend({
   }),
   table: computed('rows', {
     get() {
-      console.log('new table');
       return new Table(this.get('columns'), this.get('rows'));
     }
   }),
   getDuration(startDateTime, endDateTime, status) {
-        if (!startDateTime) {
-            return null;
-        }
-        if (!endDateTime) {
-          if (['CREATED', 'RUNNING', 'QUEUED', 'BLOCKED', 'FROZEN'].includes(status)) {
-            return 'Still running.';
-          }
-          
-          return null;
-        }
+    if (!startDateTime) {
+      return null;
+    }
+    if (!endDateTime) {
+      if (['CREATED', 'RUNNING', 'QUEUED', 'BLOCKED', 'FROZEN'].includes(status)) {
+        return 'Still running.';
+      }
 
-        const duration = endDateTime - startDateTime;
+      return null;
+    }
 
-        let seconds = Math.floor((duration / 1000) % 60);
-        let minutes = Math.floor((duration / (1000 * 60)) % 60);
-        let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+    const duration = endDateTime - startDateTime;
 
-        hours = hours < 10 ? '0'.concat(hours) : hours;
-        minutes = minutes < 10 ? '0'.concat(minutes) : minutes;
-        seconds = seconds < 10 ? '0'.concat(seconds) : seconds;
+    let seconds = Math.floor((duration / 1000) % 60);
+    let minutes = Math.floor((duration / (1000 * 60)) % 60);
+    let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
 
-        // eslint-disable-next-line prefer-template
-        return hours + 'h ' + minutes + 'm ' + seconds + 's';
+    hours = hours < 10 ? '0'.concat(hours) : hours;
+    minutes = minutes < 10 ? '0'.concat(minutes) : minutes;
+    seconds = seconds < 10 ? '0'.concat(seconds) : seconds;
+
+    // eslint-disable-next-line prefer-template
+    return hours + 'h ' + minutes + 'm ' + seconds + 's';
   },
   actions: {
     onScrolledToBottom() {

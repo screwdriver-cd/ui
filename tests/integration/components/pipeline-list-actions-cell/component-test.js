@@ -15,8 +15,12 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
         id: 2,
         status: 'RUNNING'
       },
-      startSingleBuild: () => { assert.ok(true) },
-      stopBuild: () => { assert.ok(true) }
+      startSingleBuild: () => {
+        assert.ok(true);
+      },
+      stopBuild: () => {
+        assert.ok(true);
+      }
     });
 
     await render(hbs`{{pipeline-list-actions-cell
@@ -37,8 +41,12 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
         id: 2,
         status: 'QUEUED'
       },
-      startSingleBuild: () => { assert.ok(true) },
-      stopBuild: () => { assert.ok(true) }
+      startSingleBuild: () => {
+        assert.ok(true);
+      },
+      stopBuild: () => {
+        assert.ok(true);
+      }
     });
 
     await render(hbs`{{pipeline-list-actions-cell
@@ -59,8 +67,12 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
         id: 2,
         status: 'BLOCKED'
       },
-      startSingleBuild: () => { assert.ok(true) },
-      stopBuild: () => { assert.ok(true) }
+      startSingleBuild: () => {
+        assert.ok(true);
+      },
+      stopBuild: () => {
+        assert.ok(true);
+      }
     });
 
     await render(hbs`{{pipeline-list-actions-cell
@@ -81,8 +93,12 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
         id: 2,
         status: 'FROZEN'
       },
-      startSingleBuild: () => { assert.ok(true) },
-      stopBuild: () => { assert.ok(true) }
+      startSingleBuild: () => {
+        assert.ok(true);
+      },
+      stopBuild: () => {
+        assert.ok(true);
+      }
     });
 
     await render(hbs`{{pipeline-list-actions-cell
@@ -103,8 +119,12 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
         id: 2,
         status: 'CREATED'
       },
-      startSingleBuild: () => { assert.ok(true) },
-      stopBuild: () => { assert.ok(true) }
+      startSingleBuild: () => {
+        assert.ok(true);
+      },
+      stopBuild: () => {
+        assert.ok(true);
+      }
     });
 
     await render(hbs`{{pipeline-list-actions-cell
@@ -125,8 +145,12 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
         id: 2,
         status: 'RUNNING'
       },
-      startSingleBuild: () => { assert.ok(true) },
-      stopBuild: () => { assert.ok(true) }
+      startSingleBuild: () => {
+        assert.ok(true);
+      },
+      stopBuild: () => {
+        assert.ok(true);
+      }
     });
 
     await render(hbs`{{pipeline-list-actions-cell

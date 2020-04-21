@@ -2,10 +2,10 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { set } from '@ember/object';
+import EmberObject from '@ember/object';
 
 const mockPipeline = EmberObject.create({
-  id: 1,
+  id: 1
 });
 
 module('Integration | Component | pipeline list history cell', function(hooks) {
@@ -13,12 +13,12 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
 
   hooks.beforeEach(function() {
     this.setProperties({
-      pipeline: mockPipeline,
+      pipeline: mockPipeline
     });
   });
 
   test('it renders', async function(assert) {
-    set(this, 'value', [
+    this.set('value', [
       {
         id: 1,
         status: 'RUNNING'
@@ -33,16 +33,15 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
       value=value
     }}`);
 
-    assert.dom('a').hasAttribute(
-      'href',
-      `/pipelines/${mockPipeline.id}/builds/${this.value[1].id}`
-    );
+    assert
+      .dom('a')
+      .hasAttribute('href', `/pipelines/${mockPipeline.id}/builds/${this.value[1].id}`);
     assert.dom('.fa-circle').hasClass('SUCCESS');
     assert.dom('.fa-circle').exists({ count: 1 });
   });
 
   test('it renders empty', async function(assert) {
-    set(this, 'value', [
+    this.set('value', [
       {
         id: 1,
         status: 'RUNNING'
@@ -58,7 +57,7 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
   });
 
   test('it renders aborted build', async function(assert) {
-    set(this, 'value', [
+    this.set('value', [
       {
         id: 1,
         status: 'RUNNING'
@@ -73,10 +72,9 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
       value=value
     }}`);
 
-    assert.dom('a').hasAttribute(
-      'href',
-      `/pipelines/${mockPipeline.id}/builds/${this.value[1].id}`
-    );
+    assert
+      .dom('a')
+      .hasAttribute('href', `/pipelines/${mockPipeline.id}/builds/${this.value[1].id}`);
     assert.dom('.fa-circle').hasClass('ABORTED');
     assert.dom('.fa-circle').exists({ count: 1 });
   });

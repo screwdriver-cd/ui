@@ -50,10 +50,18 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => { assert.ok(true) });
-    set(this, 'refreshListViewJobs', () => { assert.ok(true) });
-    set(this, 'startSingleBuild', () => { assert.ok(true) });
-    set(this, 'stopBuild', () => { assert.ok(true) });
+    set(this, 'updateListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -82,14 +90,22 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
             status: 'RUNNING',
             startTime: '2020-04-16T01:30:01.447Z',
             endTime: '2020-04-16T07:43:09.447Z'
-          },
+          }
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => { assert.ok(true) });
-    set(this, 'refreshListViewJobs', () => { assert.ok(true) });
-    set(this, 'startSingleBuild', () => { assert.ok(true) });
-    set(this, 'stopBuild', () => { assert.ok(true) });
+    set(this, 'updateListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -120,14 +136,22 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
             status: 'RUNNING',
             startTime: '2020-04-16T01:30:01.447Z',
             endTime: null
-          },
+          }
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => { assert.ok(true) });
-    set(this, 'refreshListViewJobs', () => { assert.ok(true) });
-    set(this, 'startSingleBuild', () => { assert.ok(true) });
-    set(this, 'stopBuild', () => { assert.ok(true) });
+    set(this, 'updateListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -158,14 +182,22 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
             status: 'CREATED',
             startTime: '2020-04-16T01:30:01.447Z',
             endTime: null
-          },
+          }
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => { assert.ok(true) });
-    set(this, 'refreshListViewJobs', () => { assert.ok(true) });
-    set(this, 'startSingleBuild', () => { assert.ok(true) });
-    set(this, 'stopBuild', () => { assert.ok(true) });
+    set(this, 'updateListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -196,14 +228,22 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
             status: 'QUEUED',
             startTime: '2020-04-16T01:30:01.447Z',
             endTime: null
-          },
+          }
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => { assert.ok(true) });
-    set(this, 'refreshListViewJobs', () => { assert.ok(true) });
-    set(this, 'startSingleBuild', () => { assert.ok(true) });
-    set(this, 'stopBuild', () => { assert.ok(true) });
+    set(this, 'updateListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -234,14 +274,22 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
             status: 'BLOCKED',
             startTime: '2020-04-16T01:30:01.447Z',
             endTime: null
-          },
+          }
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => { assert.ok(true) });
-    set(this, 'refreshListViewJobs', () => { assert.ok(true) });
-    set(this, 'startSingleBuild', () => { assert.ok(true) });
-    set(this, 'stopBuild', () => { assert.ok(true) });
+    set(this, 'updateListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -272,14 +320,22 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
             status: 'FROZEN',
             startTime: '2020-04-16T01:30:01.447Z',
             endTime: null
-          },
+          }
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => { assert.ok(true) });
-    set(this, 'refreshListViewJobs', () => { assert.ok(true) });
-    set(this, 'startSingleBuild', () => { assert.ok(true) });
-    set(this, 'stopBuild', () => { assert.ok(true) });
+    set(this, 'updateListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -310,14 +366,22 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
             status: 'RUNNING',
             startTime: null,
             endTime: null
-          },
+          }
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => { assert.ok(true) });
-    set(this, 'refreshListViewJobs', () => { assert.ok(true) });
-    set(this, 'startSingleBuild', () => { assert.ok(true) });
-    set(this, 'stopBuild', () => { assert.ok(true) });
+    set(this, 'updateListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -347,14 +411,22 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
             status: 'ABORTED',
             startTime: '2020-04-16T01:30:01.447Z',
             endTime: null
-          },
+          }
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => { assert.ok(true) });
-    set(this, 'refreshListViewJobs', () => { assert.ok(true) });
-    set(this, 'startSingleBuild', () => { assert.ok(true) });
-    set(this, 'stopBuild', () => { assert.ok(true) });
+    set(this, 'updateListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails

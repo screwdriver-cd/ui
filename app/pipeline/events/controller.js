@@ -42,7 +42,6 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   jobIds: computed('pipeline.jobs', {
     get() {
-      console.log(this.pipeline.jobs);
       return this.get('pipeline.jobs')
         .filter(j => !isPRJob(j.get('name')))
         .map(j => j.id);
@@ -260,9 +259,12 @@ export default Controller.extend(ModelReloaderMixin, {
           const nextJobsDetails = jobsDetails.toArray();
 
           nextJobsDetails.forEach(nextJobDetail => {
-            nextJobDetail.jobName = this.get('pipeline.jobs').find(
-              job => job.id == nextJobDetail.jobId
-            ).name;
+            const job = this.get('pipeline.jobs').find(j => j.id === String(nextJobDetail.jobId));
+
+            if (job) {
+              nextJobDetail.jobName = job.name;
+              nextJobDetail.jobPipelineId = job.pipelineId;
+            }
           });
 
           return nextJobsDetails;
@@ -281,15 +283,23 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   updateListViewJobs() {
+    // purge unmatched pipeline jobs
+    let jobsDetails = this.get('jobsDetails');
+
+    if (jobsDetails.some(j => j.get('jobPipelineId') !== this.get('pipeline.id'))) {
+      jobsDetails = [];
+      this.set('listViewOffset', 0);
+    }
+
     const listViewOffset = this.get('listViewOffset');
     const listViewCutOff = listViewOffset + ENV.APP.LIST_VIEW_PAGE_SIZE;
 
     this.getNewListViewJobs(listViewOffset, listViewCutOff).then(nextJobsDetails => {
-      this.set('listViewOffset', listViewCutOff);
       if (nextJobsDetails.length > 0) {
-        this.set('jobsDetails', this.jobsDetails.concat(nextJobsDetails));
+        this.set('listViewOffset', listViewCutOff);
+        this.set('jobsDetails', jobsDetails.concat(nextJobsDetails));
       }
-        });
+    });
   },
 
   createEvent(eventPayload, toActiveTab) {
@@ -424,7 +434,7 @@ export default Controller.extend(ModelReloaderMixin, {
           return this.createEvent(eventPayload, false);
         }
 
-        this.store.findRecord('event', get(build, 'eventId')).then(event => {
+        return this.store.findRecord('event', get(build, 'eventId')).then(event => {
           const parentBuildId = get(build, 'parentBuildId');
           const parentEventId = get(event, 'id');
           const prNum = get(event, 'prNum');
@@ -468,9 +478,7 @@ export default Controller.extend(ModelReloaderMixin, {
               event.hasMany('builds').reload();
             }
           })
-          .catch(e =>
-            this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '')
-          );
+          .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
       }
 
       return new Promise.Resolve();
@@ -484,9 +492,7 @@ export default Controller.extend(ModelReloaderMixin, {
         .then(() => {
           this.refreshListViewJobs();
         })
-        .catch(e =>
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '')
-        );
+        .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
     },
     stopPRBuilds(jobs) {
       const eventId = jobs.get('firstObject.builds.firstObject.eventId');
@@ -496,9 +502,7 @@ export default Controller.extend(ModelReloaderMixin, {
         .then(() => {
           this.refreshListViewJobs();
         })
-        .catch(e =>
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '')
-        );
+        .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
     },
     startPRBuild(prNum, jobs, parameters) {
       this.set('isShowingModal', true);

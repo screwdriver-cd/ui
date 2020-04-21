@@ -6,5 +6,5 @@ export default Component.extend({
     get() {
       return this.value.slice(1);
     }
-  }),
+  })
 });
