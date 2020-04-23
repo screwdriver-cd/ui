@@ -364,6 +364,8 @@ export default Controller.extend(ModelReloaderMixin, {
       return this.createEvent(eventPayload, false);
     },
     startDetachedBuild(job, options = {}) {
+      this.set('isShowingModal', true);
+
       const buildId = get(job, 'buildId');
       let parentBuildId = null;
       const { parameters, reason } = options;

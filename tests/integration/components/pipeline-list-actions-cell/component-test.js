@@ -137,13 +137,39 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
     assert.dom('.clicks-disabled').doesNotExist();
   });
 
-  test('it renders with stopBuild disabled', async function(assert) {
+  test('it renders with aborted build', async function(assert) {
     set(this, 'value', {
       jobId: 1,
       jobName: 'a',
       latestBuild: {
         id: 2,
-        status: 'RUNNING'
+        status: 'ABORTED'
+      },
+      startSingleBuild: () => {
+        assert.ok(true);
+      },
+      stopBuild: () => {
+        assert.ok(true);
+      }
+    });
+
+    await render(hbs`{{pipeline-list-actions-cell
+      value=value
+    }}`);
+
+    assert.dom('.fa-play-circle-o').exists({ count: 1 });
+    assert.dom('.fa-stop-circle-o').exists({ count: 1 });
+    assert.dom('.fa-repeat').exists({ count: 1 });
+    assert.dom('.clicks-disabled').exists({ count: 1 });
+  });
+
+  test('it renders with successful build', async function(assert) {
+    set(this, 'value', {
+      jobId: 1,
+      jobName: 'a',
+      latestBuild: {
+        id: 2,
+        status: 'SUCCESS'
       },
       startSingleBuild: () => {
         assert.ok(true);

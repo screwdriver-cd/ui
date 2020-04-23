@@ -39,7 +39,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     }}`);
 
     assert.dom('.row strong').hasText('Pipeline');
-    assert.dom('.row button').exists({ count: 2 });
+    assert.dom('.row button').exists({ count: 4 });
 
     const $columnTitles = this.$('.event-info .title');
     const $links = this.$('.event-info a');
@@ -141,6 +141,43 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.equal(get(this, 'selected'), 3);
   });
 
+  test('it updates showListView', async function(assert) {
+    assert.expect(3);
+    set(this, 'obj', { truncatedSha: 'abc123' });
+    set(this, 'selected', 2);
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+    set(this, 'showListView', false);
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+      showListView=showListView
+    }}`);
+
+    assert.notOk(get(this, 'showListView'));
+
+    this.$('button')[3].click();
+    assert.ok(get(this, 'showListView'));
+
+    this.$('button')[2].click();
+    assert.notOk(get(this, 'showListView'));
+  });
+
   test('it renders when selectedEvent is a PR event', async function(assert) {
     assert.expect(2);
     set(this, 'obj', {
@@ -180,7 +217,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     }}`);
 
     assert.dom('.row strong').hasText('Pull Requests');
-    assert.dom('.row button').exists({ count: 2 });
+    assert.dom('.row button').exists({ count: 4 });
   });
 
   test('it renders when selectedEvent is a skipped event', async function(assert) {
@@ -215,7 +252,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     }}`);
 
     assert.dom('.row strong').hasText('Pipeline');
-    assert.dom('.row button').exists({ count: 2 });
+    assert.dom('.row button').exists({ count: 4 });
     assert.dom('.SKIPPED').exists({ count: 1 });
     assert.dom('.btn-group').hasText('Most Recent Last Successful');
     assert.dom('.x-toggle-component').includesText('Show triggers');

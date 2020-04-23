@@ -30,9 +30,6 @@ module('Integration | Component | pipeline list job cell', function(hooks) {
       value=value
     }}`);
 
-    assert
-      .dom('a')
-      .hasAttribute('href', `/pipelines/${mockPipeline.id}/builds/${this.value.build.id}`);
     assert.dom('.fa-spinner').exists({ count: 1 });
     assert.dom('.job-name').hasText('a');
   });
@@ -50,9 +47,6 @@ module('Integration | Component | pipeline list job cell', function(hooks) {
       value=value
     }}`);
 
-    assert
-      .dom('a')
-      .hasAttribute('href', `/pipelines/${mockPipeline.id}/builds/${this.value.build.id}`);
     assert.dom('.fa-stop-circle').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
@@ -70,14 +64,11 @@ module('Integration | Component | pipeline list job cell', function(hooks) {
       value=value
     }}`);
 
-    assert
-      .dom('a')
-      .hasAttribute('href', `/pipelines/${mockPipeline.id}/builds/${this.value.build.id}`);
     assert.dom('.fa-check-circle').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
-  test('it renders a successful build', async function(assert) {
+  test('it renders a failed build', async function(assert) {
     this.set('value', {
       jobName: 'b',
       build: {
@@ -90,10 +81,7 @@ module('Integration | Component | pipeline list job cell', function(hooks) {
       value=value
     }}`);
 
-    assert
-      .dom('a')
-      .hasAttribute('href', `/pipelines/${mockPipeline.id}/builds/${this.value.build.id}`);
-    assert.dom('.fa-check-circle').exists({ count: 1 });
+    assert.dom('.fa-times-circle').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 });

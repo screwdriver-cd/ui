@@ -4,7 +4,7 @@ import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { set } from '@ember/object';
 
-module('Integration | Component | pipeline list actions cell', function(hooks) {
+module('Integration | Component | pipeline list view', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
@@ -120,8 +120,8 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
     assert.dom('.lt-column').exists({ count: 6 });
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').hasText('6h 13m 8s');
-    assert.dom('.lt-body').hasText('Apr 16, 2020 1:30 AM');
+    assert.dom('.lt-body').includesText('06h 13m 08s');
+    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
   });
 
   test('it renders and build running', async function(assert) {
@@ -166,8 +166,8 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
     assert.dom('.lt-column').exists({ count: 6 });
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').hasText('Still running.');
-    assert.dom('.lt-body').hasText('Apr 16, 2020 1:30 AM');
+    assert.dom('.lt-body').includesText('Still running.');
+    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
   });
 
   test('it renders and build created', async function(assert) {
@@ -212,8 +212,8 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
     assert.dom('.lt-column').exists({ count: 6 });
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').hasText('Still running.');
-    assert.dom('.lt-body').hasText('Apr 16, 2020 1:30 AM');
+    assert.dom('.lt-body').includesText('Still running.');
+    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
   });
 
   test('it renders and build queued', async function(assert) {
@@ -258,8 +258,8 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
     assert.dom('.lt-column').exists({ count: 6 });
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').hasText('Still running.');
-    assert.dom('.lt-body').hasText('Apr 16, 2020 1:30 AM');
+    assert.dom('.lt-body').includesText('Still running.');
+    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
   });
 
   test('it renders and build blocked', async function(assert) {
@@ -304,8 +304,8 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
     assert.dom('.lt-column').exists({ count: 6 });
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').hasText('Still running.');
-    assert.dom('.lt-body').hasText('Apr 16, 2020 1:30 AM');
+    assert.dom('.lt-body').includesText('Still running.');
+    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
   });
 
   test('it renders and build frozen', async function(assert) {
@@ -350,8 +350,8 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
     assert.dom('.lt-column').exists({ count: 6 });
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').hasText('Still running.');
-    assert.dom('.lt-body').hasText('Apr 16, 2020 1:30 AM');
+    assert.dom('.lt-body').includesText('Still running.');
+    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
   });
 
   test('it renders and not started', async function(assert) {
@@ -396,7 +396,7 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
     assert.dom('.lt-column').exists({ count: 6 });
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').hasText('Not started.');
+    assert.dom('.lt-body').includesText('Not started.');
   });
 
   test('it renders and aborted', async function(assert) {
