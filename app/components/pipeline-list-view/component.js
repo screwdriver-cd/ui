@@ -40,7 +40,7 @@ export default Component.extend({
   ],
   rows: computed('jobsDetails', {
     get() {
-      return this.jobsDetails.map(jobDetails => {
+      return this.get('jobsDetails').map(jobDetails => {
         const latestBuild = jobDetails.builds.length ? jobDetails.builds[0] : null;
 
         const jobData = {

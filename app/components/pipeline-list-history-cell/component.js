@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 export default Component.extend({
   builds: computed('value', {
     get() {
-      return this.value.slice(1);
+      return this.get('value').slice(1);
     }
   })
 });

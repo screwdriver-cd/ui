@@ -9,7 +9,6 @@ module('Unit | Model | build-history', function(hooks) {
   test('it exists', function(assert) {
     let model = run(() => this.owner.lookup('service:store').createRecord('build-history'));
 
-    // let store = this.store();
     assert.ok(!!model);
   });
 });

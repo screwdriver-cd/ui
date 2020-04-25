@@ -424,7 +424,6 @@ export default Controller.extend(ModelReloaderMixin, {
         buildQueryConfig.status = status;
       }
 
-      // handle null build
       return this.store.queryRecord('build', buildQueryConfig).then(build => {
         if (!build) {
           const eventPayload = {
