@@ -106,6 +106,9 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(Date, 'prototype.getTimezoneOffset', () => {
+      return 0;
+    });
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -120,7 +123,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     assert.dom('.lt-column').exists({ count: 6 });
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').includesText('06h 13m 08s');
+    assert.dom('.lt-body').includesText('6h 13m 8s');
     assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
   });
 

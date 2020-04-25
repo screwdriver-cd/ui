@@ -56,22 +56,20 @@ export default Component.extend({
           stopBuild: this.get('stopBuild')
         };
 
-        let startDateTime;
-        let endDateTime;
+        let duration;
         let startTime;
         let status;
 
         if (latestBuild) {
-          startDateTime = Date.parse(jobDetails.builds[0].startTime);
-          endDateTime = Date.parse(jobDetails.builds[0].endTime);
-          startTime = moment(jobDetails.builds[0].startTime).format('lll');
+          startTime = moment(latestBuild.startTime).format('lll');
           status = latestBuild.status;
+          duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, status);
         }
 
         return {
           job: jobData,
           startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
-          duration: this.getDuration(startDateTime, endDateTime, status),
+          duration,
           history: jobDetails.builds,
           actions: actionsData
         };
@@ -83,7 +81,20 @@ export default Component.extend({
       return new Table(this.get('columns'), this.get('rows'));
     }
   }),
-  getDuration(startDateTime, endDateTime, status) {
+  getDuration(startTime, endTime, status) {
+    const startDateTime = Date.parse(startTime);
+    const endDateTime = Date.parse(endTime);
+    const humanizeConfig = {
+      round: true,
+      delimiter: ' ',
+      spacer: '',
+      units: ['h', 'm', 's'],
+      language: 'shortEn',
+      languages: {
+        shortEn: { h: () => 'h', m: () => 'm', s: () => 's' }
+      }
+    };
+
     if (!startDateTime) {
       return null;
     }
@@ -97,16 +108,15 @@ export default Component.extend({
 
     const duration = endDateTime - startDateTime;
 
-    let seconds = Math.floor((duration / 1000) % 60);
-    let minutes = Math.floor((duration / (1000 * 60)) % 60);
-    let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+    if (duration < 60000) {
+      return `0h 0m ${humanizeDuration(duration, humanizeConfig)}`;
+    }
 
-    hours = hours < 10 ? '0'.concat(hours) : hours;
-    minutes = minutes < 10 ? '0'.concat(minutes) : minutes;
-    seconds = seconds < 10 ? '0'.concat(seconds) : seconds;
+    if (duration < 3600000) {
+      return `0h ${humanizeDuration(duration, humanizeConfig)}`;
+    }
 
-    // eslint-disable-next-line prefer-template
-    return hours + 'h ' + minutes + 'm ' + seconds + 's';
+    return humanizeDuration(duration, humanizeConfig);
   },
   actions: {
     onScrolledToBottom() {
