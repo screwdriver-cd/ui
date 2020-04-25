@@ -50,7 +50,7 @@
     {{/if}}
 
   </div>
-  <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view" onScroll={{action "onEventListScroll"}}>
+  <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view {{if showListView "disabled"}}" onScroll={{action "onEventListScroll"}}>
     {{#bs-tab customTabs=true as |tab|}}
       {{#bs-nav type="tabs" as |nav|}}
         {{#nav.item active=(bs-eq activeTab "events")}}

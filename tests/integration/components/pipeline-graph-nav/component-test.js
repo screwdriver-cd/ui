@@ -141,8 +141,8 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.equal(get(this, 'selected'), 3);
   });
 
-  test('it updates showListView', async function(assert) {
-    assert.expect(3);
+  test('it updates showListView and disables event info', async function(assert) {
+    assert.expect(6);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
     set(this, 'startBuild', () => {
@@ -170,12 +170,15 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     }}`);
 
     assert.notOk(get(this, 'showListView'));
+    assert.dom('.event-info').doesNotHaveClass('disabled');
 
     this.$('button')[3].click();
     assert.ok(get(this, 'showListView'));
+    assert.dom('.event-info').hasClass('disabled');
 
     this.$('button')[2].click();
     assert.notOk(get(this, 'showListView'));
+    assert.dom('.event-info').doesNotHaveClass('disabled');
   });
 
   test('it renders when selectedEvent is a PR event', async function(assert) {

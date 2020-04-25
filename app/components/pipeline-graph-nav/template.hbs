@@ -55,7 +55,7 @@
 {{#if selectedEventObj}}
   <div class="row {{selectedEventObj.status}}">
     <div class="col-xs-12">
-      <div class="event-info">
+      <div class="event-info {{if showListView "disabled"}}">
         <div class="col">
           <span class="title">Commit</span><br>
           <a href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a>
