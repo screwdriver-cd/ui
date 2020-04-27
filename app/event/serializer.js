@@ -47,6 +47,10 @@ export default DS.RESTSerializer.extend({
       data.parentEventId = parseInt(snapshot.attr('parentEventId'), 10);
     }
 
+    if (snapshot.attr('groupEventId')) {
+      data.groupEventId = parseInt(snapshot.attr('groupEventId'), 10);
+    }
+
     if (snapshot.attr('buildId')) {
       data.buildId = parseInt(snapshot.attr('buildId'), 10);
     }
