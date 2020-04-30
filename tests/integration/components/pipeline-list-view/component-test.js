@@ -88,8 +88,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
             id: 1,
             jobId: 1,
             status: 'RUNNING',
-            startTime: '2020-04-16T01:30:01.447Z',
-            endTime: '2020-04-16T07:43:09.447Z'
+            startTime: '2020-04-16T01:30:01.447',
+            endTime: '2020-04-16T07:43:09.447'
           }
         ]
       }
@@ -124,7 +124,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('6h 13m 8s');
-    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
+    assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
   });
 
   test('it renders and build running', async function(assert) {
