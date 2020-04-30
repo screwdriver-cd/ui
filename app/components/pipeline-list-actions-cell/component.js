@@ -1,12 +1,13 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
   stopButtonClass: computed('value.latestBuild', {
     get() {
       const status = this.get('value.latestBuild.status');
 
-      if (['CREATED', 'RUNNING', 'QUEUED', 'BLOCKED', 'FROZEN'].includes(status)) {
+      if (unfinishedStatuses.includes(status)) {
         return 'clicks-enabled';
       }
 

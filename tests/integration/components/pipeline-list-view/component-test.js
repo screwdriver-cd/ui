@@ -137,7 +137,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
             id: 1,
             jobId: 1,
             status: 'RUNNING',
-            startTime: '2020-04-16T01:30:01.447Z',
+            startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
         ]
@@ -170,7 +170,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
+    assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
   });
 
   test('it renders and build created', async function(assert) {
@@ -183,7 +183,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
             id: 1,
             jobId: 1,
             status: 'CREATED',
-            startTime: '2020-04-16T01:30:01.447Z',
+            startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
         ]
@@ -216,7 +216,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
+    assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
   });
 
   test('it renders and build queued', async function(assert) {
@@ -229,7 +229,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
             id: 1,
             jobId: 1,
             status: 'QUEUED',
-            startTime: '2020-04-16T01:30:01.447Z',
+            startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
         ]
@@ -262,7 +262,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
+    assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
   });
 
   test('it renders and build blocked', async function(assert) {
@@ -275,7 +275,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
             id: 1,
             jobId: 1,
             status: 'BLOCKED',
-            startTime: '2020-04-16T01:30:01.447Z',
+            startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
         ]
@@ -308,7 +308,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
+    assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
   });
 
   test('it renders and build frozen', async function(assert) {
@@ -321,7 +321,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
             id: 1,
             jobId: 1,
             status: 'FROZEN',
-            startTime: '2020-04-16T01:30:01.447Z',
+            startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
         ]
@@ -354,7 +354,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('Apr 15, 2020 9:30 PM');
+    assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
   });
 
   test('it renders and not started', async function(assert) {
@@ -412,7 +412,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
             id: 1,
             jobId: 1,
             status: 'ABORTED',
-            startTime: '2020-04-16T01:30:01.447Z',
+            startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
         ]
