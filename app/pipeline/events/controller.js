@@ -424,38 +424,39 @@ export default Controller.extend(ModelReloaderMixin, {
         buildQueryConfig.status = status;
       }
 
-      return this.store.queryRecord('build', buildQueryConfig).then(build => {
-        if (!build) {
+      return this.store
+        .queryRecord('build', buildQueryConfig)
+        .then(build => {
+          return this.store.findRecord('event', get(build, 'eventId')).then(event => {
+            const parentBuildId = get(build, 'parentBuildId');
+            const parentEventId = get(event, 'id');
+            const prNum = get(event, 'prNum');
+
+            if (prNum) {
+              // PR-<num>: prefix is needed, if it is a PR event.
+              startFrom = `PR-${prNum}:${startFrom}`;
+            }
+
+            const eventPayload = {
+              pipelineId,
+              startFrom,
+              parentBuildId,
+              parentEventId,
+              causeMessage
+            };
+
+            return this.createEvent(eventPayload, false);
+          });
+        })
+        .catch(() => {
           const eventPayload = {
             pipelineId,
             startFrom,
-            causeMessage
-          };
-
-          return this.createEvent(eventPayload, false);
-        }
-
-        return this.store.findRecord('event', get(build, 'eventId')).then(event => {
-          const parentBuildId = get(build, 'parentBuildId');
-          const parentEventId = get(event, 'id');
-          const prNum = get(event, 'prNum');
-
-          if (prNum) {
-            // PR-<num>: prefix is needed, if it is a PR event.
-            startFrom = `PR-${prNum}:${startFrom}`;
-          }
-
-          const eventPayload = {
-            pipelineId,
-            startFrom,
-            parentBuildId,
-            parentEventId,
             causeMessage
           };
 
           return this.createEvent(eventPayload, false);
         });
-      });
     },
     stopBuild(givenEvent, job) {
       const buildId = get(job, 'buildId');
