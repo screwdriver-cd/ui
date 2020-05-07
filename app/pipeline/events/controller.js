@@ -277,9 +277,11 @@ export default Controller.extend(ModelReloaderMixin, {
   refreshListViewJobs() {
     const listViewCutOff = this.get('listViewOffset');
 
-    this.getNewListViewJobs(0, listViewCutOff).then(updatedJobsDetails => {
-      this.set('jobsDetails', updatedJobsDetails);
-    });
+    if (listViewCutOff > 0) {
+      this.getNewListViewJobs(0, listViewCutOff).then(updatedJobsDetails => {
+        this.set('jobsDetails', updatedJobsDetails);
+      });
+    }
   },
 
   updateListViewJobs() {
