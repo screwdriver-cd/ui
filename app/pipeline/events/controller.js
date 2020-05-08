@@ -268,6 +268,9 @@ export default Controller.extend(ModelReloaderMixin, {
           });
 
           return nextJobsDetails;
+        })
+        .catch(() => {
+          return Promise.resolve([]);
         });
     }
 
