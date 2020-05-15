@@ -383,6 +383,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
       const event = this.selectedEventObj;
       const parentEventId = get(event, 'id');
+      const groupEventId = get(event, 'groupEventId');
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
@@ -405,6 +406,7 @@ export default Controller.extend(ModelReloaderMixin, {
         startFrom,
         parentBuildId,
         parentEventId,
+        groupEventId,
         causeMessage
       };
 
