@@ -127,6 +127,11 @@ a {
   flex-direction: column;
 }
 
+.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
 .column-tabs-view {
   overflow: auto;
 
