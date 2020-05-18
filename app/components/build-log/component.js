@@ -410,5 +410,6 @@ export default Component.extend({
     },
     toggleZoom() {
       set(this, 'fullScreen', !!this.fullScreen);
+    }
   }
 });
