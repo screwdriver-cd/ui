@@ -10,7 +10,7 @@ const timeTypes = ['datetime', 'datetimeUTC', 'elapsedBuild', 'elapsedStep'];
 export default Component.extend({
   logService: service('build-logs'),
   store: service(),
-  classNames: ['build-log', 'fullscreen:fullscreen'],
+  classNames: ['build-log', 'fullScreen:fullScreen'],
   fullScreen: false,
   autoscroll: true,
   isFetching: false,
