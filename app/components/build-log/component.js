@@ -10,7 +10,8 @@ const timeTypes = ['datetime', 'datetimeUTC', 'elapsedBuild', 'elapsedStep'];
 export default Component.extend({
   logService: service('build-logs'),
   store: service(),
-  classNames: ['build-log'],
+  classNames: ['build-log', 'fullscreen:fullscreen'],
+  fullScreen: false,
   autoscroll: true,
   isFetching: false,
   isDownloading: false,
@@ -406,6 +407,8 @@ export default Component.extend({
       index = index + 1 >= timeTypes.length ? 0 : index + 1;
       localStorage.setItem('screwdriver.logs.timeFormat', timeTypes[index]);
       set(this, 'timeFormat', timeTypes[index]);
-    }
+    },
+    toggleZoom() {
+      set(this, 'fullScreen', !!this.fullScreen);
   }
 });

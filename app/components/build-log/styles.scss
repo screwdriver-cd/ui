@@ -8,6 +8,13 @@
   grid-template-rows: auto 1fr;
 }
 
+&.fullScreen {
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 1; /* clear class="nav nav-tabs ember-view" being on top */
+}
+
 .row {
   display: grid;
   grid-template-columns: 1fr;
@@ -20,8 +27,13 @@
   color: $sd-text-med;
 }
 
-.row div:last-child {
+.row div:nth-child(2) {
   grid-column: 2;
+  text-align: center;
+}
+
+.row div:last-child {
+  grid-column: 3;
   cursor: pointer;
   text-align: right;
   padding: 5px 15px;
