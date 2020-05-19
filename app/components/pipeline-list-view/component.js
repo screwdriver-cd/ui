@@ -70,7 +70,7 @@ export default Component.extend({
           job: jobData,
           startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
           duration,
-          history: jobDetails.builds,
+          history: jobDetails.builds.reverse(), // display history in chronological order
           actions: actionsData
         };
       });
