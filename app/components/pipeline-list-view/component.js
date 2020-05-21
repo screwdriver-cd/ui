@@ -30,7 +30,8 @@ export default Component.extend({
     },
     {
       label: 'COVERAGE',
-      valuePath: 'coverage'
+      valuePath: 'coverage',
+      cellComponent: 'pipeline-list-coverage-cell'
     },
     {
       label: 'ACTIONS',
@@ -41,16 +42,17 @@ export default Component.extend({
   rows: computed('jobsDetails', {
     get() {
       return this.get('jobsDetails').map(jobDetails => {
+        const { jobId, jobName } = jobDetails;
         const latestBuild = jobDetails.builds.length ? jobDetails.builds[0] : null;
 
         const jobData = {
-          jobName: jobDetails.jobName,
+          jobName,
           build: latestBuild
         };
 
         const actionsData = {
-          jobId: jobDetails.jobId,
-          jobName: jobDetails.jobName,
+          jobId,
+          jobName,
           latestBuild,
           startSingleBuild: this.get('startSingleBuild'),
           stopBuild: this.get('stopBuild')
@@ -59,19 +61,29 @@ export default Component.extend({
         let duration;
         let startTime;
         let status;
+        let buildId;
 
         if (latestBuild) {
           startTime = moment(latestBuild.startTime).format('lll');
           status = latestBuild.status;
+          buildId = latestBuild.id;
           duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, status);
         }
+
+        const coverageData = {
+          jobId,
+          buildId,
+          startTime: latestBuild.startTime,
+          endTime: latestBuild.endTime
+        };
 
         return {
           job: jobData,
           startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
           duration,
           history: jobDetails.builds,
-          actions: actionsData
+          actions: actionsData,
+          coverage: coverageData
         };
       });
     }

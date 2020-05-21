@@ -1,0 +1,9 @@
+<div class="coverage">
+  {{#if (is-pending result)}}
+    Loading
+  {{else}}
+    {{#if (await result)}}
+      {{get (await result) 'coverage'}}
+    {{/if}}
+  {{/if}}
+</div>

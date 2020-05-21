@@ -1,7 +1,7 @@
 <div class="history">
   <div>
     {{#each builds as |build|}}
-      {{#link-to "pipeline.build" build.id}}
+      {{#link-to "pipeline.build" build.id title=build.id}}
         {{fa-icon "circle" fixedWidth=true class=build.status}}
       {{/link-to}}
     {{/each}}
