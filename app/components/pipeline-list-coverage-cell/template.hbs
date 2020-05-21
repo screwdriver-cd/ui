@@ -1,9 +1,11 @@
 <div class="coverage">
   {{#if (is-pending result)}}
     Loading
-  {{else}}
-    {{#if (await result)}}
-      <span class="coverage-value">{{get (await result) "coverage"}}</span>
-    {{/if}}
+  {{/if}}
+  {{#if (is-rejected result)}}
+    <span class="coverage-value">N/A</span>
+  {{/if}}
+  {{#if (is-fulfilled result)}}
+    <span class="coverage-value">{{get (await result) "coverage"}}</span>
   {{/if}}
 </div>
