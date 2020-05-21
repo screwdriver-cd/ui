@@ -3,7 +3,7 @@
     Loading
   {{else}}
     {{#if (await result)}}
-      {{get (await result) 'coverage'}}
+      <span class="coverage-value">{{get (await result) "coverage"}}</span>
     {{/if}}
   {{/if}}
 </div>
