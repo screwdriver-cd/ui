@@ -127,6 +127,11 @@ a {
   flex-direction: column;
 }
 
+.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
 .column-tabs-view {
   overflow: auto;
 
@@ -171,3 +176,5 @@ body {
   font-family: Helvetica, Arial, sans-serif;
   font-weight: $weight-normal;
 }
+
+@import 'ember-power-select';

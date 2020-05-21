@@ -26,7 +26,18 @@
       onToggle=(action setDownstreamTrigger)
     }}
   </div>
-  <div class="col-xs-5">
+  <div class="col-xs-2">
+    {{#bs-button-group
+      class="view-toggle"
+      value=showListView
+      type="radio"
+      onChange=(action (mut showListView)) as |bg|
+    }}
+      {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
+      {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
+    {{/bs-button-group}}
+  </div>
+  <div class="col-xs-3">
     {{#if session.isAuthenticated}}
       {{#if (eq selectedEventObj.type "pr")}}
         {{pipeline-start
@@ -44,7 +55,7 @@
 {{#if selectedEventObj}}
   <div class="row {{selectedEventObj.status}}">
     <div class="col-xs-12">
-      <div class="event-info">
+      <div class="event-info {{if showListView "disabled"}}">
         <div class="col">
           <span class="title">Commit</span><br>
           <a href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a>

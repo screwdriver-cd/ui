@@ -1,0 +1,9 @@
+<div class="history">
+  <div>
+    {{#each builds as |build|}}
+      {{#link-to "pipeline.build" build.id}}
+        {{fa-icon "circle" fixedWidth=true class=build.status}}
+      {{/link-to}}
+    {{/each}}
+  </div>
+</div>

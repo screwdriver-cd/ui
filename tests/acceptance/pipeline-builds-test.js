@@ -64,6 +64,12 @@ module('Acceptance | pipeline build', function(hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
+
+    server.get('http://localhost:8080/v4/builds/statuses', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
   });
 
   hooks.afterEach(function() {
@@ -77,6 +83,8 @@ module('Acceptance | pipeline build', function(hooks) {
   });
 
   test('visiting /pipelines/4 when logged in', async function(assert) {
+    const controller = this.owner.lookup('controller:pipeline/events');
+
     await authenticateSession({ token: 'fakeToken' });
     await visit('/pipelines/4');
 
@@ -88,8 +96,15 @@ module('Acceptance | pipeline build', function(hooks) {
     assert.dom('.column-tabs-view .nav-link').hasText('Events');
     assert.dom('.column-tabs-view .nav-link.active').hasText('Events');
     assert.dom('.column-tabs-view .nav-link:not(.active)').hasText('Pull Requests');
+    assert.dom('.column-tabs-view').doesNotHaveClass('disabled');
     assert.dom('.separator').exists({ count: 1 });
     assert.dom('.partial-view').exists({ count: 2 });
+
+    controller.set('showListView', true);
+
+    await visit('/pipelines/4');
+
+    assert.dom('.column-tabs-view').hasClass('disabled');
 
     await visit('/pipelines/4/pulls');
 

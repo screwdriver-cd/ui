@@ -52,6 +52,8 @@ module.exports = environment => {
       LOG_RELOAD_TIMER: 3000,
       NUM_EVENTS_LISTED: 5,
       NUM_PIPELINES_LISTED: 50,
+      LIST_VIEW_PAGE_SIZE: 10,
+      NUM_BUILDS_LISTED: 8,
       MAX_LOG_LINES: 1000,
       DEFAULT_LOG_PAGE_SIZE: 10,
       FORCE_RELOAD_WAIT: 100 // Wait 100ms before force reload

@@ -24,7 +24,7 @@ export default Component.extend({
   collection: null,
   metricsMap: [],
   removePipelineError: null,
-  activeViewOptionValue: viewOptions[0].value,
+  activeViewOptionValue: localStorage.getItem('activeViewOptionValue') || viewOptions[0].value,
   viewOptions,
   isOrganizing: false,
   selectedPipelines: [],
@@ -51,6 +51,8 @@ export default Component.extend({
   ),
 
   isListView: computed('activeViewOptionValue', function isListView() {
+    localStorage.setItem('activeViewOptionValue', this.activeViewOptionValue);
+
     return this.activeViewOptionValue === viewOptions[1].value;
   }),
 
@@ -154,6 +156,10 @@ export default Component.extend({
       };
 
       const getSha = sha => sha.substring(0, 7);
+
+      let viewingId = this.get('collection.id');
+
+      localStorage.setItem('lastViewedCollectionId', viewingId);
 
       if (this.get('collection.pipelines')) {
         return this.get('collection.pipelines').map(pipeline => {

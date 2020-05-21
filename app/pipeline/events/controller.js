@@ -15,6 +15,7 @@ export default Controller.extend(ModelReloaderMixin, {
     this._super(...arguments);
     this.startReloading();
     this.set('eventsPage', 1);
+    this.set('listViewOffset', 0);
     this.set('showDownstreamTriggers', false);
   },
 
@@ -39,6 +40,15 @@ export default Controller.extend(ModelReloaderMixin, {
       return jobs.filter(j => !isPRJob(j.get('name')));
     }
   }),
+  jobIds: computed('pipeline.jobs', {
+    get() {
+      return this.get('pipeline.jobs')
+        .filter(j => !isPRJob(j.get('name')))
+        .map(j => j.id);
+    }
+  }),
+  jobsDetails: [],
+  showListView: false,
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
   completeWorkflowGraph: computed('model.triggers.@each.triggers', {
@@ -51,7 +61,10 @@ export default Controller.extend(ModelReloaderMixin, {
       if (triggers && triggers.length > 0) {
         triggers.forEach(t => {
           if (t.triggers && t.triggers.length > 0) {
-            completeGraph.edges.push({ src: t.jobName, dest: `~sd-${t.jobName}-triggers` });
+            completeGraph.edges.push({
+              src: t.jobName,
+              dest: `~sd-${t.jobName}-triggers`
+            });
             completeGraph.nodes.push({
               name: `~sd-${t.jobName}-triggers`,
               triggers: t.triggers,
@@ -232,12 +245,105 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   },
 
+  getNewListViewJobs(listViewOffset, listViewCutOff) {
+    const jobIds = this.get('jobIds');
+
+    if (listViewOffset < jobIds.length) {
+      return this.store
+        .query('build-history', {
+          jobIds: jobIds.slice(listViewOffset, listViewCutOff),
+          offset: 0,
+          numBuilds: ENV.APP.NUM_BUILDS_LISTED
+        })
+        .then(jobsDetails => {
+          const nextJobsDetails = jobsDetails.toArray();
+
+          nextJobsDetails.forEach(nextJobDetail => {
+            const job = this.get('pipeline.jobs').find(j => j.id === String(nextJobDetail.jobId));
+
+            if (job) {
+              nextJobDetail.jobName = job.name;
+              nextJobDetail.jobPipelineId = job.pipelineId;
+            }
+          });
+
+          return nextJobsDetails;
+        })
+        .catch(() => {
+          return Promise.resolve([]);
+        });
+    }
+
+    return Promise.resolve([]);
+  },
+
+  refreshListViewJobs() {
+    const listViewCutOff = this.get('listViewOffset');
+
+    if (listViewCutOff > 0) {
+      this.getNewListViewJobs(0, listViewCutOff).then(updatedJobsDetails => {
+        this.set('jobsDetails', updatedJobsDetails);
+      });
+    }
+  },
+
+  updateListViewJobs() {
+    // purge unmatched pipeline jobs
+    let jobsDetails = this.get('jobsDetails');
+
+    if (jobsDetails.some(j => j.get('jobPipelineId') !== this.get('pipeline.id'))) {
+      jobsDetails = [];
+      this.set('listViewOffset', 0);
+    }
+
+    const listViewOffset = this.get('listViewOffset');
+    const listViewCutOff = listViewOffset + ENV.APP.LIST_VIEW_PAGE_SIZE;
+
+    this.getNewListViewJobs(listViewOffset, listViewCutOff).then(nextJobsDetails => {
+      if (nextJobsDetails.length > 0) {
+        this.set('listViewOffset', listViewCutOff);
+        this.set('jobsDetails', jobsDetails.concat(nextJobsDetails));
+      }
+    });
+  },
+
+  createEvent(eventPayload, toActiveTab) {
+    const newEvent = this.store.createRecord('event', eventPayload);
+
+    return newEvent
+      .save()
+      .then(() => {
+        this.refreshListViewJobs();
+
+        this.set('isShowingModal', false);
+        this.forceReload();
+
+        if (toActiveTab) {
+          const path = `pipeline/${newEvent.get('pipelineId')}/${this.activeTab}`;
+
+          return this.transitionToRoute(path);
+        }
+
+        return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
+      })
+      .catch(e => {
+        this.set('isShowingModal', false);
+        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+      });
+  },
+
   actions: {
     setDownstreamTrigger() {
       this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
     },
     updateEvents(page) {
       this.updateEvents(page);
+    },
+    refreshListViewJobs() {
+      this.refreshListViewJobs();
+    },
+    updateListViewJobs() {
+      this.updateListViewJobs();
     },
     onEventListScroll({ currentTarget }) {
       if (this.moreToShow && !this.isFetching) {
@@ -260,22 +366,11 @@ export default Controller.extend(ModelReloaderMixin, {
         eventPayload.meta = { parameters };
       }
 
-      const newEvent = this.store.createRecord('event', eventPayload);
-
-      return newEvent
-        .save()
-        .then(() => {
-          this.set('isShowingModal', false);
-          this.forceReload();
-
-          return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
-        })
-        .catch(e => {
-          this.set('isShowingModal', false);
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
-        });
+      return this.createEvent(eventPayload, false);
     },
     startDetachedBuild(job, options = {}) {
+      this.set('isShowingModal', true);
+
       const buildId = get(job, 'buildId');
       let parentBuildId = null;
       const { parameters, reason } = options;
@@ -288,6 +383,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
       const event = this.selectedEventObj;
       const parentEventId = get(event, 'id');
+      const groupEventId = get(event, 'groupEventId');
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
@@ -310,6 +406,7 @@ export default Controller.extend(ModelReloaderMixin, {
         startFrom,
         parentBuildId,
         parentEventId,
+        groupEventId,
         causeMessage
       };
 
@@ -317,36 +414,79 @@ export default Controller.extend(ModelReloaderMixin, {
         eventPayload.meta = { parameters };
       }
 
-      const newEvent = this.store.createRecord('event', eventPayload);
-
+      return this.createEvent(eventPayload, true);
+    },
+    startSingleBuild(jobId, jobName, status = undefined) {
       this.set('isShowingModal', true);
 
-      return newEvent
-        .save()
-        .then(() => {
-          this.set('isShowingModal', false);
-          this.forceReload();
+      const pipelineId = get(this, 'pipeline.id');
+      const token = get(this, 'session.data.authenticated.token');
+      const user = get(decoder(token), 'username');
+      let causeMessage = `[skip further]Manually started by ${user}`;
+      let startFrom = jobName;
 
-          const path = `pipeline/${newEvent.get('pipelineId')}/${this.activeTab}`;
+      const buildQueryConfig = { jobId };
 
-          return this.transitionToRoute(path);
+      if (status) {
+        buildQueryConfig.status = status;
+      }
+
+      return this.store
+        .queryRecord('build', buildQueryConfig)
+        .then(build => {
+          return this.store.findRecord('event', get(build, 'eventId')).then(event => {
+            const parentBuildId = get(build, 'parentBuildId');
+            const parentEventId = get(event, 'id');
+            const prNum = get(event, 'prNum');
+
+            if (prNum) {
+              // PR-<num>: prefix is needed, if it is a PR event.
+              startFrom = `PR-${prNum}:${startFrom}`;
+            }
+
+            const eventPayload = {
+              pipelineId,
+              startFrom,
+              parentBuildId,
+              parentEventId,
+              causeMessage
+            };
+
+            return this.createEvent(eventPayload, false);
+          });
         })
-        .catch(e => {
-          this.set('isShowingModal', false);
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        .catch(() => {
+          const eventPayload = {
+            pipelineId,
+            startFrom,
+            causeMessage
+          };
+
+          return this.createEvent(eventPayload, false);
         });
     },
-    stopBuild(event, job) {
+    stopBuild(givenEvent, job) {
       const buildId = get(job, 'buildId');
       let build;
+      let event = givenEvent;
 
       if (buildId) {
         build = this.store.peekRecord('build', buildId);
         build.set('status', 'ABORTED');
 
+        if (!event) {
+          event = this.modelEvents.filter(e => e.id === get(build, 'eventId'));
+        }
+
         return build
           .save()
-          .then(() => event.hasMany('builds').reload())
+          .then(() => {
+            this.refreshListViewJobs();
+
+            if (event) {
+              event.hasMany('builds').reload();
+            }
+          })
           .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
       }
 
@@ -358,6 +498,9 @@ export default Controller.extend(ModelReloaderMixin, {
 
       return this.get('stop')
         .stopBuilds(eventId)
+        .then(() => {
+          this.refreshListViewJobs();
+        })
         .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
     },
     stopPRBuilds(jobs) {
@@ -365,6 +508,9 @@ export default Controller.extend(ModelReloaderMixin, {
 
       return this.get('stop')
         .stopBuilds(eventId)
+        .then(() => {
+          this.refreshListViewJobs();
+        })
         .catch(e => this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : ''));
     },
     startPRBuild(prNum, jobs, parameters) {
@@ -387,6 +533,8 @@ export default Controller.extend(ModelReloaderMixin, {
         .save()
         .then(() =>
           newEvent.get('builds').then(() => {
+            this.refreshListViewJobs();
+
             this.set('isShowingModal', false);
 
             // PR events are aggregated by each PR jobs when prChain is enabled.

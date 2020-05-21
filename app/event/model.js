@@ -17,6 +17,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
   reloadWithoutNewBuilds: DS.attr('number', { defaultValue: 0 }),
   parentBuildId: DS.attr('number'),
   parentEventId: DS.attr('number'),
+  groupEventId: DS.attr('number'),
   pipelineId: DS.attr('string'),
   pr: DS.attr(),
   prNum: DS.attr('number'),
