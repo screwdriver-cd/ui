@@ -17,7 +17,7 @@ export default Service.extend({
    */
   clearCache(config) {
     const { scope, id } = config;
-    const url = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}/caches/${scope}/${id}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/caches/${scope}/${id}`;
     const ajaxConfig = {
       url,
       type: 'DELETE',
