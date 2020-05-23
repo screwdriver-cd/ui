@@ -77,20 +77,18 @@ module('Unit | Service | shuttle', function(hooks) {
       ]
     );
 
-    service
-      .fetchCoverage({
-        buildId: 243421,
-        jobId: 21,
-        startTime: '2020-05-06T23:36:46.779Z',
-        endTime: '2020-05-06T23:50:18.590Z'
-      })
-      .then(result => {
-        assert.equal(result.payload.coverage, '71.4', 'coverage is 71.4');
-        assert.equal(
-          result.payload.projectUrl,
-          'https://sonar.screwdriver.cd/dashboard?id=job%3A21',
-          'project url is sonar.screwdriver.cd'
-        );
-      });
+    const buildId = 243421;
+    const jobId = 21;
+    const startTime = '2020-05-06T23:36:46.779Z';
+    const endTime = '2020-05-06T23:50:18.590Z';
+
+    service.fetchCoverage(buildId, jobId, startTime, endTime).then(result => {
+      assert.equal(result.payload.coverage, '71.4', 'coverage is 71.4');
+      assert.equal(
+        result.payload.projectUrl,
+        'https://sonar.screwdriver.cd/dashboard?id=job%3A21',
+        'project url is sonar.screwdriver.cd'
+      );
+    });
   });
 });
