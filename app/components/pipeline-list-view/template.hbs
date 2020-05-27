@@ -1,10 +1,10 @@
 <button {{action "refreshListViewJobs"}} class="refresh-btn">Refresh</button>
 {{#light-table table as |t|}}
   {{t.head
-    onColumnClick=(action 'onColumnClick')
-    iconSortable='fa fa-sort'
-    iconAscending='fa fa-sort-asc'
-    iconDescending='fa fa-sort-desc'
+    onColumnClick=(action "onColumnClick")
+    iconSortable="fa fa-sort"
+    iconAscending="fa fa-sort-asc"
+    iconDescending="fa fa-sort-desc"
     fixed=true}}
   {{#t.body
     canSelect=false
