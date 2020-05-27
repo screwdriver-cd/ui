@@ -8,6 +8,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
+    let ticker = 0;
+
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -51,7 +53,14 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      assert.ok(true);
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -79,6 +88,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders with duration', async function(assert) {
+    let ticker = 0;
+
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -95,7 +106,14 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      assert.ok(true);
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -128,6 +146,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build running', async function(assert) {
+    let ticker = 0;
+
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -144,7 +164,14 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      assert.ok(true);
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -174,6 +201,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build created', async function(assert) {
+    let ticker = 0;
+
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -190,7 +219,14 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      assert.ok(true);
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -220,6 +256,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build queued', async function(assert) {
+    let ticker = 0;
+
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -236,7 +274,14 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      assert.ok(true);
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -266,6 +311,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build blocked', async function(assert) {
+    let ticker = 0;
+
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -282,7 +329,14 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      assert.ok(true);
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -312,6 +366,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build frozen', async function(assert) {
+    let ticker = 0;
+
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -328,7 +384,14 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      assert.ok(true);
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -358,6 +421,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and not started', async function(assert) {
+    let ticker = 0;
+
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -374,7 +439,14 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      assert.ok(true);
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -403,6 +475,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and aborted', async function(assert) {
+    let ticker = 0;
+
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -419,7 +493,14 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      assert.ok(true);
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);

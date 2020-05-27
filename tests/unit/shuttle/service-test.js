@@ -57,25 +57,22 @@ module('Unit | Service | shuttle', function(hooks) {
     assert.expect(2);
     let service = this.owner.lookup('service:shuttle');
 
-    server.get(
-      `${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info?buildId=243421&jobId=21&startTime=2020-05-06T23%3A36%3A46.779Z&endTime=2020-05-06T23%3A50%3A18.590Z`,
-      () => [
-        200,
-        {
-          'Content-Type': 'application/json',
-          'x-more-data': false
+    server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info`, () => [
+      200,
+      {
+        'Content-Type': 'application/json',
+        'x-more-data': false
+      },
+      JSON.stringify({
+        envVars: {
+          SD_SONAR_AUTH_URL: 'https://api.screwdriver.cd/v4/coverage/token',
+          SD_SONAR_HOST: 'https://sonar.screwdriver.cd'
         },
-        JSON.stringify({
-          envVars: {
-            SD_SONAR_AUTH_URL: 'https://api.screwdriver.cd/v4/coverage/token',
-            SD_SONAR_HOST: 'https://sonar.screwdriver.cd'
-          },
-          coverage: '71.4',
-          tests: 'N/A',
-          projectUrl: 'https://sonar.screwdriver.cd/dashboard?id=job%3A21'
-        })
-      ]
-    );
+        coverage: '71.4',
+        tests: 'N/A',
+        projectUrl: 'https://sonar.screwdriver.cd/dashboard?id=job%3A21'
+      })
+    ]);
 
     const buildId = 243421;
     const jobId = 21;
@@ -83,9 +80,11 @@ module('Unit | Service | shuttle', function(hooks) {
     const endTime = '2020-05-06T23:50:18.590Z';
 
     service.fetchCoverage(buildId, jobId, startTime, endTime).then(result => {
-      assert.equal(result.payload.coverage, '71.4', 'coverage is 71.4');
+      const { coverage, projectUrl } = result;
+
+      assert.equal(coverage, '71.4', 'coverage is 71.4');
       assert.equal(
-        result.payload.projectUrl,
+        projectUrl,
         'https://sonar.screwdriver.cd/dashboard?id=job%3A21',
         'project url is sonar.screwdriver.cd'
       );
