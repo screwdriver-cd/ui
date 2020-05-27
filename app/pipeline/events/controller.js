@@ -245,7 +245,7 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   },
 
-  getNewListViewJobs(listViewOffset, listViewCutOff) {
+  async getNewListViewJobs(listViewOffset, listViewCutOff) {
     const jobIds = this.get('jobIds');
 
     if (listViewOffset < jobIds.length) {
@@ -277,17 +277,19 @@ export default Controller.extend(ModelReloaderMixin, {
     return Promise.resolve([]);
   },
 
-  refreshListViewJobs() {
+  async refreshListViewJobs() {
     const listViewCutOff = this.get('listViewOffset');
 
     if (listViewCutOff > 0) {
-      this.getNewListViewJobs(0, listViewCutOff).then(updatedJobsDetails => {
-        this.set('jobsDetails', updatedJobsDetails);
-      });
+      const updatedJobsDetails = await this.getNewListViewJobs(0, listViewCutOff);
+
+      this.set('jobsDetails', updatedJobsDetails);
     }
+
+    return this.jobsDetails;
   },
 
-  updateListViewJobs() {
+  async updateListViewJobs() {
     // purge unmatched pipeline jobs
     let jobsDetails = this.get('jobsDetails');
 
@@ -298,12 +300,16 @@ export default Controller.extend(ModelReloaderMixin, {
 
     const listViewOffset = this.get('listViewOffset');
     const listViewCutOff = listViewOffset + ENV.APP.LIST_VIEW_PAGE_SIZE;
+    const nextJobsDetails = await this.getNewListViewJobs(listViewOffset, listViewCutOff);
 
-    this.getNewListViewJobs(listViewOffset, listViewCutOff).then(nextJobsDetails => {
+    return new Promise(resolve => {
       if (nextJobsDetails.length > 0) {
-        this.set('listViewOffset', listViewCutOff);
-        this.set('jobsDetails', jobsDetails.concat(nextJobsDetails));
+        this.setProperties({
+          listViewOffset: listViewCutOff,
+          jobsDetails: jobsDetails.concat(nextJobsDetails)
+        });
       }
+      resolve(nextJobsDetails);
     });
   },
 
@@ -339,11 +345,11 @@ export default Controller.extend(ModelReloaderMixin, {
     updateEvents(page) {
       this.updateEvents(page);
     },
-    refreshListViewJobs() {
-      this.refreshListViewJobs();
+    async refreshListViewJobs() {
+      return this.refreshListViewJobs();
     },
-    updateListViewJobs() {
-      this.updateListViewJobs();
+    async updateListViewJobs() {
+      return this.updateListViewJobs();
     },
     onEventListScroll({ currentTarget }) {
       if (this.moreToShow && !this.isFetching) {
