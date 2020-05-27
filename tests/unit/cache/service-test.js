@@ -34,7 +34,7 @@ module('Unit | Service | cache', function(hooks) {
     assert.ok(service);
   });
 
-  test.only('it makes a call to delete pipeline cache successfully', function(assert) {
+  test('it makes a call to delete pipeline cache successfully', function(assert) {
     server.delete('http://localhost:8080/v4/caches/pipelines/1', () => [204]);
 
     let service = this.owner.lookup('service:cache');
