@@ -14,9 +14,11 @@ export default Controller.extend(ModelReloaderMixin, {
   init() {
     this._super(...arguments);
     this.startReloading();
-    this.set('eventsPage', 1);
-    this.set('listViewOffset', 0);
-    this.set('showDownstreamTriggers', false);
+    this.setProperties({
+      eventsPage: 1,
+      listViewOffset: 0,
+      showDownstreamTriggers: false
+    });
   },
 
   reload() {
@@ -341,6 +343,13 @@ export default Controller.extend(ModelReloaderMixin, {
   actions: {
     setDownstreamTrigger() {
       this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
+    },
+    setShowListView(showListView) {
+      if (!showListView) {
+        this.set('listViewOffset', 0);
+      }
+
+      this.set('showListView', showListView);
     },
     updateEvents(page) {
       this.updateEvents(page);

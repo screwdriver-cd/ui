@@ -6,6 +6,7 @@ import Table from 'ember-light-table';
 export default Component.extend({
   sortingDirection: 'asc',
   sortingValuePath: 'job',
+  sortedRows: [],
   columns: [
     {
       label: 'JOB',
@@ -40,8 +41,6 @@ export default Component.extend({
       cellComponent: 'pipeline-list-actions-cell'
     }
   ],
-
-  sortedRows: [],
 
   init() {
     this._super(...arguments);
