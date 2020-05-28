@@ -24,6 +24,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
@@ -36,6 +39,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.row strong').hasText('Pipeline');
@@ -121,6 +125,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
@@ -133,6 +140,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
     this.$('button')
@@ -142,7 +150,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
   });
 
   test('it updates showListView and disables event info', async function(assert) {
-    assert.expect(6);
+    assert.expect(8);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
     set(this, 'startBuild', () => {
@@ -154,6 +162,10 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       assert.ok(true);
     });
     set(this, 'showListView', false);
+    set(this, 'setShowListView', () => {
+      set(this, 'showListView', !this.showListView);
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
@@ -167,6 +179,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
       showListView=showListView
+      setShowListView=setShowListView
     }}`);
 
     assert.notOk(get(this, 'showListView'));
@@ -204,7 +217,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
-
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
       lastSuccessful=2
@@ -217,6 +232,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       prGroups=pullrequestGroups
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.row strong').hasText('Pull Requests');
@@ -240,7 +256,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
-
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
       lastSuccessful=2
@@ -252,6 +270,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.row strong').hasText('Pipeline');
@@ -273,7 +292,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     set(this, 'currentEventType', 'pipeline');
     set(this, 'showDownstreamTriggers', false);
-
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
       lastSuccessful=2
@@ -285,6 +306,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       startPRBuild=startBuild
       setDownstreamTrigger=setTrigger
       showDownstreamTriggers=showDownstreamTriggers
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
@@ -308,7 +330,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
-
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
       lastSuccessful=2
@@ -320,6 +344,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.FAILURE').exists({ count: 1 });
@@ -343,6 +368,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
@@ -355,6 +383,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.ABORTED').exists({ count: 1 });
