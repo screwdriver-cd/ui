@@ -25,6 +25,6 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
     await render(hbs`{{pipeline-list-coverage-cell result=result}}`);
 
     assert.dom('.coverage-value').exists({ count: 1 });
-    assert.equal(find('.coverage-value').textContent.trim(), '71.4');
+    assert.equal(find('.coverage-value').textContent.trim(), '71.4%');
   });
 });

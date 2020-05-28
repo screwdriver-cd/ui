@@ -140,13 +140,6 @@ export default Component.extend({
       };
     });
 
-    console.log(
-      'new sortedRows',
-      'sortingValuePath',
-      this.sortingValuePath,
-      'sortingDirection',
-      this.sortingDirection
-    );
     const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
 
     switch (this.sortingValuePath) {
@@ -174,7 +167,6 @@ export default Component.extend({
 
   actions: {
     async onScrolledToBottom() {
-      console.log('onScrolledToBottom called');
       this.get('updateListViewJobs')().then(jobs => {
         const rows = this.getRows(jobs);
 
@@ -183,7 +175,6 @@ export default Component.extend({
     },
 
     refreshListViewJobs() {
-      console.log('refreshListViewJobs called');
       this.get('refreshListViewJobs')().then(jobs => {
         const rows = this.getRows(jobs);
 
@@ -198,12 +189,9 @@ export default Component.extend({
 
         this.setProperties({ sortingDirection, sortingValuePath });
 
-        console.log('this column sorted', column);
         const sortedRows = this.getRows(this.jobsDetails);
 
         this.table.setRows(sortedRows);
-      } else {
-        console.log('this column is not sorted', column);
       }
     }
   }
