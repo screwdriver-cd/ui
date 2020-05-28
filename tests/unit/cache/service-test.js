@@ -43,7 +43,7 @@ module('Unit | Service | cache', function(hooks) {
 
     assert.ok(service);
 
-    const p = service.clearCache({ scope: 'pipelines', id: '1', pipelineId: '1' });
+    const p = service.clearCache({ scope: 'pipelines', cacheId: '1', pipelineId: '1' });
 
     p.then(() => {
       const [request] = server.handledRequests;
@@ -64,7 +64,7 @@ module('Unit | Service | cache', function(hooks) {
 
     assert.ok(service);
 
-    const p = service.clearCache({ scope: 'jobs', id: '1', pipelineId: '1' });
+    const p = service.clearCache({ scope: 'jobs', cacheId: '1', pipelineId: '1' });
 
     p.then(() => {
       const [request] = server.handledRequests;
@@ -90,7 +90,7 @@ module('Unit | Service | cache', function(hooks) {
 
     assert.ok(service);
 
-    const p = service.clearCache({ scope: 'pipelines', id: '1', pipelineId: '1' });
+    const p = service.clearCache({ scope: 'pipelines', cacheId: '1', pipelineId: '1' });
 
     p.then(
       () => {},
