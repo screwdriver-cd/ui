@@ -11,13 +11,19 @@ export default Service.extend({
    * Calls the store api service to clear the cache data
    * @method clearCache
    * @param   {Object}  config
-   * @param   {String}  config.id       The ID of pipeline, event, or job to clear the cache from
-   * @param   {String}  config.scope    The scope of the cache, e.g. pipelines, events, jobs
-   * @return  {Promise}                 Resolve nothing if success otherwise reject with error message
+   * @param   {String}  config.cacheId     The ID of event, or job to clear the cache from
+   * @param   {String}  config.pipelineId  The ID of the pipeline
+   * @param   {String}  config.scope       The scope of the cache, e.g. pipelines, events, jobs
+   * @return  {Promise}                    Resolve nothing if success otherwise reject with error message
    */
   clearCache(config) {
-    const { scope, id } = config;
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/caches/${scope}/${id}`;
+    const { scope, pipelineId, cacheId } = config;
+    let url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/caches?scope=${scope}`;
+
+    if (cacheId) {
+      url = url.concat(`&cacheId=${cacheId}`);
+    }
+
     const ajaxConfig = {
       url,
       type: 'DELETE',

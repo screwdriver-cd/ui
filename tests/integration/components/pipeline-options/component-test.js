@@ -522,7 +522,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     cacheService = Service.extend({
       clearCache(config) {
         assert.equal(config.scope, 'pipelines');
-        assert.equal(config.id, '1');
+        assert.equal(config.cacheId, '1');
 
         return resolve({});
       }
@@ -547,7 +547,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     cacheService = Service.extend({
       clearCache(config) {
         assert.equal(config.scope, 'jobs');
-        assert.equal(config.id, '2345');
+        assert.equal(config.cacheId, '2345');
 
         return resolve({});
       }
