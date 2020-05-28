@@ -18,11 +18,9 @@ export default Service.extend({
    */
   clearCache(config) {
     const { scope, pipelineId, cacheId } = config;
-    let url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/caches?scope=${scope}`;
 
-    if (cacheId) {
-      url = url.concat(`&cacheId=${cacheId}`);
-    }
+    let url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/caches`;
+    url = url.concat(`?scope=${scope}&cacheId=${cacheId}`)
 
     const ajaxConfig = {
       url,
