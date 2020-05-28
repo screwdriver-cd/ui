@@ -52,4 +52,42 @@ module('Unit | Service | shuttle', function(hooks) {
         );
       });
   });
+
+  test('fetchCoverage payload', function(assert) {
+    assert.expect(2);
+    let service = this.owner.lookup('service:shuttle');
+
+    server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info`, () => [
+      200,
+      {
+        'Content-Type': 'application/json',
+        'x-more-data': false
+      },
+      JSON.stringify({
+        envVars: {
+          SD_SONAR_AUTH_URL: 'https://api.screwdriver.cd/v4/coverage/token',
+          SD_SONAR_HOST: 'https://sonar.screwdriver.cd'
+        },
+        coverage: '71.4',
+        tests: 'N/A',
+        projectUrl: 'https://sonar.screwdriver.cd/dashboard?id=job%3A21'
+      })
+    ]);
+
+    const buildId = 243421;
+    const jobId = 21;
+    const startTime = '2020-05-06T23:36:46.779Z';
+    const endTime = '2020-05-06T23:50:18.590Z';
+
+    service.fetchCoverage(buildId, jobId, startTime, endTime).then(result => {
+      const { coverage, projectUrl } = result;
+
+      assert.equal(coverage, '71.4', 'coverage is 71.4');
+      assert.equal(
+        projectUrl,
+        'https://sonar.screwdriver.cd/dashboard?id=job%3A21',
+        'project url is sonar.screwdriver.cd'
+      );
+    });
+  });
 });

@@ -31,7 +31,7 @@
       class="view-toggle"
       value=showListView
       type="radio"
-      onChange=(action (mut showListView)) as |bg|
+      onChange=(action setShowListView) as |bg|
     }}
       {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
       {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}

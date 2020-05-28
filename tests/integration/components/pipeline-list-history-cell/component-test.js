@@ -17,7 +17,7 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
     });
   });
 
-  test('it renders', async function(assert) {
+  test('it renders two', async function(assert) {
     this.set('value', [
       {
         id: 1,
@@ -34,10 +34,10 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
     }}`);
 
     assert.dom('.fa-circle').hasClass('RUNNING');
-    assert.dom('.fa-circle').exists({ count: 1 });
+    assert.dom('.fa-circle').exists({ count: 2 });
   });
 
-  test('it renders empty', async function(assert) {
+  test('it renders one', async function(assert) {
     this.set('value', [
       {
         id: 1,
@@ -49,19 +49,19 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
       value=value
     }}`);
 
-    assert.dom('a').doesNotExist();
-    assert.dom('.fa-circle').doesNotExist();
+    assert.dom('.fa-circle').hasClass('RUNNING');
+    assert.dom('.fa-circle').exists({ count: 1 });
   });
 
   test('it renders success build', async function(assert) {
     this.set('value', [
       {
-        id: 1,
-        status: 'RUNNING'
-      },
-      {
         id: 2,
         status: 'SUCCESS'
+      },
+      {
+        id: 1,
+        status: 'RUNNING'
       }
     ]);
 
@@ -70,18 +70,18 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
     }}`);
 
     assert.dom('.fa-circle').hasClass('SUCCESS');
-    assert.dom('.fa-circle').exists({ count: 1 });
+    assert.dom('.fa-circle').exists({ count: 2 });
   });
 
   test('it renders aborted build', async function(assert) {
     this.set('value', [
       {
-        id: 1,
-        status: 'RUNNING'
-      },
-      {
         id: 2,
         status: 'ABORTED'
+      },
+      {
+        id: 1,
+        status: 'RUNNING'
       }
     ]);
 
@@ -90,18 +90,18 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
     }}`);
 
     assert.dom('.fa-circle').hasClass('ABORTED');
-    assert.dom('.fa-circle').exists({ count: 1 });
+    assert.dom('.fa-circle').exists({ count: 2 });
   });
 
   test('it renders random status build', async function(assert) {
     this.set('value', [
       {
-        id: 1,
-        status: 'RUNNING'
-      },
-      {
         id: 2,
         status: 'RANDOM'
+      },
+      {
+        id: 1,
+        status: 'RUNNING'
       }
     ]);
 
@@ -110,6 +110,6 @@ module('Integration | Component | pipeline list history cell', function(hooks) {
     }}`);
 
     assert.dom('.fa-circle').hasClass('RANDOM');
-    assert.dom('.fa-circle').exists({ count: 1 });
+    assert.dom('.fa-circle').exists({ count: 2 });
   });
 });

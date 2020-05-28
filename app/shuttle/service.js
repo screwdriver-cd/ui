@@ -89,5 +89,13 @@ export default Service.extend({
     const data = { sortBy: 'createTime', sort: 'descending', compact: true };
 
     return this.fetchFromApi(method, url, data);
+  },
+
+  async fetchCoverage(buildId, jobId, startTime, endTime) {
+    const method = 'get';
+    const url = `/coverage/info`;
+    const data = { buildId, jobId, startTime, endTime };
+
+    return this.fetchFromApi(method, url, data);
   }
 });
