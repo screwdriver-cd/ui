@@ -20,7 +20,8 @@ export default Service.extend({
     const { scope, pipelineId, cacheId } = config;
 
     let url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/caches`;
-    url = url.concat(`?scope=${scope}&cacheId=${cacheId}`)
+
+    url = url.concat(`?scope=${scope}&cacheId=${cacheId}`);
 
     const ajaxConfig = {
       url,
