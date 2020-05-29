@@ -696,4 +696,31 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       { jobId: 4, jobName: 'd', jobPipelineId: '1234' }
     ]);
   });
+
+  test('it setShowListView reset listViewOffset and jobsDetails', async function(assert) {
+    assert.expect(4);
+
+    const controller = this.owner.lookup('controller:pipeline/events');
+    const listViewOffset = 10;
+    const dummyJob = {};
+    const jobsDetails = [dummyJob, dummyJob, dummyJob];
+
+    run(() => {
+      controller.setProperties({
+        listViewOffset,
+        jobsDetails
+      });
+
+      assert.equal(
+        controller.get('listViewOffset'),
+        listViewOffset,
+        `has listViewOffset of ${listViewOffset}`
+      );
+      assert.equal(controller.get('jobsDetails').length, 3, 'has 3 jobs');
+
+      controller.send('setShowListView', false);
+      assert.equal(controller.get('listViewOffset'), 0, `has listViewOffset of 0`);
+      assert.equal(controller.get('jobsDetails').length, 0, 'has 0 jobs');
+    });
+  });
 });
