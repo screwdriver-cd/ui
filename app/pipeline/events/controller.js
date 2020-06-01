@@ -346,7 +346,10 @@ export default Controller.extend(ModelReloaderMixin, {
     },
     setShowListView(showListView) {
       if (!showListView) {
-        this.set('listViewOffset', 0);
+        this.setProperties({
+          listViewOffset: 0,
+          jobsDetails: []
+        });
       }
 
       this.set('showListView', showListView);
