@@ -440,7 +440,7 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
 
     return settled().then(() => {
-      assert.dom('.coverage .banner-value').hasText('100.00%');
+      assert.dom('.coverage .banner-value').hasText('100%');
       assert.dom('.tests .banner-value').hasText('10/10');
     });
   });

@@ -80,7 +80,7 @@ export default Component.extend({
       const { coverage, coverageUrl, results: tests, resultsUrl: testsUrl } = buildMeta.tests;
       const BUILD_URL_REGEX = /^.+\/pipelines\/\d+\/builds\/\d+/;
       const buildUrl = window.location.href.match(BUILD_URL_REGEX);
-      const coverageFloat = parseInt(coverage, 10) ? Number.parseFloat(coverage).toFixed(2) : null;
+      const coverageFloat = parseFloat(coverage) ? Number(parseFloat(coverage).toFixed(2)) : null;
 
       let coverageInfo = Object.assign({}, this.get('coverageInfo'));
 
