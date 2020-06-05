@@ -2,11 +2,18 @@
   currentUrl=currentUrl
   scmContexts=scmContexts
   session=session
+  showCreatePipeline=showCreatePipeline
   authenticate=(action "authenticate")
   onInvalidate=(action "invalidateSession")
   searchPipelines=(action "search")
 }}
 {{nav-banner}}
+
 <div id="appContainer" class="container-fluid">
   {{outlet}}
 </div>
+
+{{#if showCreatePipeline}}
+  {{create-pipeline
+    showCreatePipeline=showCreatePipeline}}
+{{/if}}

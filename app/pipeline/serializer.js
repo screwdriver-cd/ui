@@ -30,7 +30,11 @@ export default DS.RESTSerializer.extend({
   serializeIntoHash(hash, typeClass, snapshot) {
     return assign(hash, {
       checkoutUrl: snapshot.attr('checkoutUrl'),
-      rootDir: snapshot.attr('rootDir') || ''
+      rootDir: snapshot.attr('rootDir') || '',
+      scmUri: snapshot.attr('scmUri'),
+      files: snapshot.attr('files') || [],
+      title: snapshot.attr('title') || '',
+      message: snapshot.attr('message') || ''
     });
   }
 });

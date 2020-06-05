@@ -14,10 +14,35 @@
       margin-right: -16px;
 
       .mini-menu {
-        font-size: 16px;
+        font-size: 14px;
         top: 8px;
         position: relative;
         left: 5px;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      right: 10px;
+
+      .mini-menu-oval {
+        margin-right: 0px;
+      }
+
+      .mini-menu {
+        left: 10px;
+        font-size: 16px;
+      }
+
+      &:before {
+        content: ' ';
+        width: 30px;
+        background-color: #303030;
+        display: inline-block;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: -10px;
       }
     }
   }
@@ -28,9 +53,10 @@
     background-color: #303030;
 
     // cover header
-    // top: 0;
+    top: 0;
+    padding-top: 12px;
     // does not cover header
-    top: 52px;
+    // top: 52px;
 
     right: 0;
     width: 33%;

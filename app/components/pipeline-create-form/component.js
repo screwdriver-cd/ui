@@ -12,7 +12,7 @@ const SEPARATOR = '  '; // 2 spaces
 export default Component.extend({
   selectedTemplate: {},
   templates: [],
-  overrideScrewdriverYaml: false,
+  manualYamlCreation: false,
   template: service(),
   results: '',
   validator: service(),
@@ -78,15 +78,26 @@ export default Component.extend({
      */
     saveData() {
       if (this.isValid) {
-        this.onCreatePipeline({
+        const payload = {
           scmUrl: this.scmUrl,
           rootDir: this.rootDir
-        });
+        };
+
+        if (!this.manualYamlCreation) {
+          payload.files = [
+            {
+              name: 'screwdriver.yaml',
+              content: this.yaml
+            }
+          ];
+        }
+
+        this.onCreatePipeline(payload);
       }
     },
 
     async selectTemplate(selectedTemplate) {
-      const yaml = `jobs:\n${SEPARATOR}main:\n${SEPARATOR}${SEPARATOR}template: ${selectedTemplate.name}\n${SEPARATOR}${SEPARATOR}steps:\n${SEPARATOR}${SEPARATOR}${SEPARATOR}- step1: echo ok\n${SEPARATOR}${SEPARATOR}${SEPARATOR}- step2: echo ok`;
+      const yaml = `jobs:\n${SEPARATOR}main:\n${SEPARATOR}${SEPARATOR}template: ${selectedTemplate.name}\n${SEPARATOR}${SEPARATOR}requires: [~pr, ~commit]`;
 
       this.setProperties({ selectedTemplate, yaml });
     }

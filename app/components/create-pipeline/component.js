@@ -1,12 +1,34 @@
-/* eslint-disable ember/alias-model-in-controller */
-// The route for this controller does not expose a model to alias.
-import Controller from '@ember/controller';
+import Component from '@ember/component';
+import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+// import ObjectProxy from '@ember/object/proxy';
+import ArrayProxy from '@ember/array/proxy';
 
-export default Controller.extend({
+const ArrayPromiseProxy = ArrayProxy.extend(PromiseProxyMixin);
+
+export default Component.extend({
   isSaving: false,
   errorMessage: '',
   showQuickStartGuide: false,
-  templates: [],
+  // templates: [],
+  shuttle: service(),
+
+  templates: computed({
+    get() {
+      return ArrayPromiseProxy.create({
+        promise: this.shuttle.fetchAllTemplates()
+      });
+    }
+  }),
+
+  async init() {
+    this._super(...arguments);
+
+    // const templates = await this.shuttle.fetchAllTemplates();
+    // this.set('templates', templates);
+  },
+
   actions: {
     createPipeline({ scmUrl, rootDir, files }) {
       let payload = {

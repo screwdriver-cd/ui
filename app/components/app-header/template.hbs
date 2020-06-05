@@ -35,12 +35,19 @@
           {{/dd.menu}}
         {{/nav.dropdown}}
       {{/nav.item}}
+      {{!-- {{#if session.isAuthenticated}} --}}
       {{#nav.item}}
-        {{#link-to "create" class="icon create"}}
+        <a class="icon create" onclick={{action "openCreatePipeline"}}>
           {{inline-svg "add-circle" class="img"}}
           <span>Create Pipeline</span>
-        {{/link-to}}
+        </a>
+
+{{!--         {{#link-to "create" class="icon create"}}
+          {{inline-svg "add-circle" class="img"}}
+          <span>Create Pipeline</span>
+        {{/link-to}} --}}
       {{/nav.item}}
+      {{!-- {{/if}} --}}
     {{/navbar.nav}}
 
     {{#navbar.nav classNames="navbar-nav navbar-right" as |nav|}}
