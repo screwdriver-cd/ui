@@ -123,15 +123,17 @@ export default Component.extend({
         .finally(() => this.set('isShowingModal', false));
     },
     clearCache(scope, id) {
+      const pipelineId = this.get('pipeline.id');
       let config = {
         scope,
-        id
+        cacheId: id,
+        pipelineId
       };
 
       this.set('isShowingModal', true);
 
       if (scope === 'pipelines') {
-        config.id = this.get('pipeline.id');
+        config.cacheId = pipelineId;
       }
 
       return this.cache
