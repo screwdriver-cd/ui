@@ -12,7 +12,7 @@ export default Component.extend({
   showQuickStartGuide: false,
   shuttle: service(),
   store: service(),
-
+  router: service(),
   templates: computed({
     get() {
       return ArrayPromiseProxy.create({
@@ -35,23 +35,28 @@ export default Component.extend({
         if (yaml && yaml.length) {
           pipeline = await this.shuttle.openPr(scmUrl, yaml);
         } else {
-          pipeline = await this.store.createRecord('pipeline', payload).save();
+          console.log('YAML IS EMPTY');
         }
-        this.transitionToRoute('pipeline', pipeline.get('id'));
       } catch (err) {
-        if (yaml && yaml.length) {
-          const { payload: errorPayload } = err;
-          const { /* statusCode, error, */ message } = errorPayload;
+        const { payload: errorPayload } = err;
+        const { /* statusCode, error, */ message } = errorPayload;
 
-          this.set('errorMessage', message);
+        this.set('errorMessage', message);
+      }
+
+      try {
+        pipeline = await this.store.createRecord('pipeline', payload).save();
+        this.router.transitionTo('pipeline', pipeline.get('id'));
+      } catch (err) {
+        let error = err.errors[0] || {};
+
+        if (error.status === 409 && typeof error.data === 'object' && error.data.existingId) {
+          const { existingId } = error.data;
+
+          this.router.transitionTo('pipeline', existingId);
+          this.set('errorMessage', `Pipeline ${existingId} already exists`);
         } else {
-          let error = err.errors[0] || {};
-
-          if (error.status === 409 && typeof error.data === 'object' && error.data.existingId) {
-            this.transitionToRoute('pipeline', error.data.existingId);
-          } else {
-            this.set('errorMessage', error.detail);
-          }
+          this.set('errorMessage', error.detail);
         }
       } finally {
         this.set('isSaving', false);
