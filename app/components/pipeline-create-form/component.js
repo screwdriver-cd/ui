@@ -84,12 +84,7 @@ export default Component.extend({
         };
 
         if (!this.manualYamlCreation) {
-          payload.files = [
-            {
-              name: 'screwdriver.yaml',
-              content: this.yaml
-            }
-          ];
+          payload.yaml = this.yaml;
         }
 
         this.onCreatePipeline(payload);

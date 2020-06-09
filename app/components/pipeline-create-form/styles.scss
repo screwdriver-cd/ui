@@ -37,8 +37,8 @@
   border: 2px solid $sd-separator;
   font-size: 14px;
   padding-left: 10px;
-  // color: $sd-text;
-  color: rgba(48, 48, 48, 0.5);
+  color: $sd-text;
+  // color: rgba(48, 48, 48, 0.5);
 
   &:focus {
     border-color: $sd-running;
@@ -67,11 +67,10 @@
   &.good-text-input {
     border-color: $sd-success;
   }
+}
 
-  &.root-dir {
-    // width: calc(50% - 15px);
-    width: calc(100% - 15px);
-  }
+.repo-url {
+  position: relative;
 }
 
 .success i {
@@ -79,6 +78,8 @@
   padding: 8px 8px 2px 8px;
   vertical-align: bottom;
   font-size: 36px;
+  right: 0;
+  position: absolute;
 }
 
 .blue-button {

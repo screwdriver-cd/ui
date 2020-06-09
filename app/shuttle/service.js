@@ -99,11 +99,11 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data);
   },
 
-  async openPr(scmUri, yaml = '') {
+  async openPr(checkoutUrl, yaml = '', pipelineId = 1) {
     const method = 'post';
-    const url = `/pipelines`;
+    const url = `/pipelines/${pipelineId}/openPr`;
     const data = {
-      scmUri,
+      checkoutUrl,
       files: [
         {
           name: 'screwdriver.yaml',
