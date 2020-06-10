@@ -113,7 +113,8 @@ export default Service.extend({
       title: 'onboard to screwdriver',
       message: 'add screwdriver.yaml file'
     };
+    const raw = true;
 
-    return this.fetchFromApi(method, url, data);
+    return this.fetchFromApi(method, url, data, raw);
   }
 });

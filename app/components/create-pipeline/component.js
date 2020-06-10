@@ -34,14 +34,24 @@ export default Component.extend({
       try {
         if (yaml && yaml.length) {
           pipeline = await this.shuttle.openPr(scmUrl, yaml);
-        } else {
-          console.log('YAML IS EMPTY');
         }
       } catch (err) {
-        const { payload: errorPayload } = err;
-        const { /* statusCode, error, */ message } = errorPayload;
+        const { payload: responsePayload } = err;
+        let { statusCode, message } = responsePayload;
 
-        this.set('errorMessage', message);
+        if (statusCode === '500') {
+          this.setProperties({
+            isSaving: false,
+            errorMessage: message
+          });
+
+          return;
+        }
+
+        // statusCode: 201
+        if (typeof responsePayload === 'string') {
+          this.set('prLink', responsePayload);
+        }
       }
 
       try {
@@ -53,8 +63,8 @@ export default Component.extend({
         if (error.status === 409 && typeof error.data === 'object' && error.data.existingId) {
           const { existingId } = error.data;
 
-          this.router.transitionTo('pipeline', existingId);
           this.set('errorMessage', `Pipeline ${existingId} already exists`);
+          this.router.transitionTo('pipeline', existingId);
         } else {
           this.set('errorMessage', error.detail);
         }

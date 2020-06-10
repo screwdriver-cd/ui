@@ -21,6 +21,9 @@
       <i class="success">{{fa-icon "check"}}</i>
     {{/if}}
   </div>
+  {{#if prLink}}
+    <span>PR Created: <a href="{{prLink}}" target="_blank" rel="noopener">{{prLink}}</a></span>
+  {{/if}}
   <div>
     {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
   </div>

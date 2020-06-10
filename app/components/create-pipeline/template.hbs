@@ -8,6 +8,7 @@
 <div class="center {{if showQuickStartGuide "menu-open"}}">
 {{pipeline-create-form
   isSaving=isSaving
+  prLink=prLink
   errorMessage=errorMessage
   onCreatePipeline=(action "createPipeline")
   templates=templates

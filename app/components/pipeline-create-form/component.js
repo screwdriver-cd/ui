@@ -16,7 +16,7 @@ export default Component.extend({
   template: service(),
   results: '',
   validator: service(),
-
+  prLink: '',
   scmUrl: '',
   rootDir: '',
   isInvalid: not('isValid'),
