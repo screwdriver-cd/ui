@@ -54,7 +54,7 @@
 
     // cover header
     top: 0;
-    padding-top: 12px;
+    padding-top: 25px;
     // does not cover header
     // top: 52px;
 
@@ -88,6 +88,7 @@
         order: 0;
         flex: 0 1 auto;
         align-self: auto;
+        padding-left: 5px;
         // enable to align in the middle
         // align-items: center;
         padding-bottom: 10px;
@@ -99,6 +100,10 @@
           font-size: 26px;
           margin-left: 14px;
           margin-right: 14px;
+
+          & .fa {
+            padding-top: 8px;
+          }
         }
 
         .section {
@@ -110,6 +115,7 @@
             .command-section {
               background-color: #606060;
               padding: 10px;
+              border-radius: 5px;
 
               .command {
                 color: #c66a15;
@@ -141,7 +147,8 @@
       .close-quickstart-guide {
         display: flex;
         margin-left: auto;
-        margin-right: 10%;
+        margin-right: 5%;
+        color: #d5d5d5;
       }
     }
 
@@ -150,7 +157,8 @@
       > .quickstart-doc-button {
         display: flex;
         background-color: #303030;
-        border-color: $sd-light-blue;
+        border: 1px solid #80b6ff;
+        // border-color: $sd-light-blue;
         padding-top: 9px;
         padding-bottom: 9px;
         justify-content: center;
@@ -161,6 +169,10 @@
         > span {
           display: flex;
           padding-right: 5px;
+        }
+
+        > a {
+          color: white;
         }
       }
     }

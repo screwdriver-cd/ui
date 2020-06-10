@@ -8,16 +8,8 @@ export default Controller.extend({
   showQuickStartGuide: false,
   templates: [],
   actions: {
-    createPipeline({ scmUrl, rootDir, files }) {
-      let payload = {
-        checkoutUrl: scmUrl,
-        rootDir,
-        files,
-        scmUri: scmUrl,
-        title: 'onboard to screwdriver',
-        message: 'add screwdriver.yaml file'
-      };
-
+    createPipeline({ scmUrl, rootDir }) {
+      let payload = { checkoutUrl: scmUrl, rootDir };
       let pipeline = this.store.createRecord('pipeline', payload);
 
       this.set('isSaving', true);
