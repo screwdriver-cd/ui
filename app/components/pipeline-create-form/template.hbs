@@ -21,8 +21,8 @@
       <i class="success">{{fa-icon "check"}}</i>
     {{/if}}
   </div>
-  {{#if prLink}}
-    <span>PR Created: <a href="{{prLink}}" target="_blank" rel="noopener">{{prLink}}</a></span>
+  {{#if prUrl}}
+    <span>PR Created: <a href="{{prUrl}}" target="_blank" rel="noopener">{{prUrl}}</a></span>
   {{/if}}
   <div>
     {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
@@ -30,7 +30,7 @@
 </section>
 
 <section>
-  <h5 class="bold">Create Screwdriver.yaml File</h5>
+  <h5 class="bold">Create Screwdriver.yaml file</h5>
   <h5>Choose a template to automatically generate the screwdriver.yaml file for your project or select to create the file manually.</h5>
   <div>
     {{input class="create-screwdriver-yaml" type="checkbox" checked=manualYamlCreation}}
@@ -38,7 +38,7 @@
 
     <div>
       {{#unless manualYamlCreation}}
-        <label class="normal-weight">Select from a <span class="select-template">template {{fa-icon "question-circle"}}</span></label>
+        <label class="normal-weight">Start with a <span class="select-template">template {{fa-icon "question-circle"}}</span></label>
 
         <div class="templates-dropdown">
           {{#power-select
@@ -51,7 +51,7 @@
           {{/power-select}}
         </div>
 
-        {{#if selectedTemplate.name}}
+        {{!-- {{#if selectedTemplate.name}} --}}
           <div class="row">
             <div class="col-xs-12 col-md-12">
               {{validator-input yaml=(mut yaml)}}
@@ -62,7 +62,7 @@
               </div>
             {{!-- {{/ember-wormhole}} --}}
           </div>
-        {{/if}}
+        {{!-- {{/if}} --}}
 
         <div class="tooltips">
           {{#bs-tooltip placement="right" triggerElement=".select-template" renderInPlace=true delayHide="1000"}}

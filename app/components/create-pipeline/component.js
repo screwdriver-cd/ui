@@ -34,24 +34,20 @@ export default Component.extend({
       try {
         if (yaml && yaml.length) {
           pipeline = await this.shuttle.openPr(scmUrl, yaml);
+          const { prUrl } = pipeline.payload;
+
+          this.set('prUrl', prUrl);
         }
       } catch (err) {
         const { payload: responsePayload } = err;
-        let { statusCode, message } = responsePayload;
+        let { message } = responsePayload;
 
-        if (statusCode === '500') {
-          this.setProperties({
-            isSaving: false,
-            errorMessage: message
-          });
+        this.setProperties({
+          isSaving: false,
+          errorMessage: message
+        });
 
-          return;
-        }
-
-        // statusCode: 201
-        if (typeof responsePayload === 'string') {
-          this.set('prLink', responsePayload);
-        }
+        return;
       }
 
       try {

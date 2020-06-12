@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 
 export default Component.extend({
-  isOpen: false,
+  isOpen: true,
   actions: {
     nameClick() {
       this.toggleProperty('isOpen');
