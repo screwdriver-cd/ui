@@ -96,7 +96,9 @@ export default Component.extend({
   getRows(jobsDetails = []) {
     let rows = jobsDetails.map(jobDetails => {
       const { jobId, jobName } = jobDetails;
-      const latestBuild = jobDetails.builds.length ? get(jobDetails, 'builds.lastObject') : null;
+      const latestBuild = jobDetails.builds.length
+        ? get(jobDetails, 'builds.lastObject')
+        : null;
 
       const jobData = {
         jobName,
@@ -115,20 +117,21 @@ export default Component.extend({
       let startTime;
       let status;
       let buildId;
+      let coverageData = {};
 
       if (latestBuild) {
         startTime = moment(latestBuild.startTime).format('lll');
         status = latestBuild.status;
         buildId = latestBuild.id;
         duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, status);
-      }
 
-      const coverageData = {
-        jobId,
-        buildId,
-        startTime: latestBuild.startTime,
-        endTime: latestBuild.endTime
-      };
+        coverageData = {
+          jobId,
+          buildId,
+          startTime: latestBuild.startTime,
+          endTime: latestBuild.endTime
+        };
+      }
 
       return {
         job: jobData,
