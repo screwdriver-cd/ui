@@ -4,8 +4,9 @@ export default Component.extend({
   isOpen: false,
   didInsertElement() {
     this._super(...arguments);
-
-    this.$('div').hide();
+    if (!this.isOpen) {
+      this.$('div').hide();
+    }
   },
   actions: {
     nameClick() {

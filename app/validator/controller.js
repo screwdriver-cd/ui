@@ -18,6 +18,11 @@ export default Controller.extend({
   validator: service(),
   yaml: '',
   results: '',
+  // isOpen: computed({
+  //   get() {
+  //     return true;
+  //   }
+  // }),
   isTemplate: computed('yaml', {
     get() {
       return this.validator.isTemplate(this.yaml);
