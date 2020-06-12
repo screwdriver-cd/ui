@@ -96,9 +96,7 @@ export default Component.extend({
   getRows(jobsDetails = []) {
     let rows = jobsDetails.map(jobDetails => {
       const { jobId, jobName } = jobDetails;
-      const latestBuild = jobDetails.builds.length
-        ? get(jobDetails, 'builds.lastObject')
-        : null;
+      const latestBuild = jobDetails.builds.length ? get(jobDetails, 'builds.lastObject') : null
 
       const jobData = {
         jobName,
