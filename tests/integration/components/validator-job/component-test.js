@@ -296,17 +296,11 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('h4').hasText('int-test');
     assert.dom('.sd-commands .label').hasText('Commands:');
     assert.dom('.sd-commands ul li:nth-of-type(1)').hasText('bar/foo@latest');
-    assert
-      .dom('.sd-commands ul li:nth-of-type(1) a')
-      .hasAttribute('href', '/commands/bar/foo/latest');
+    assert.dom('.sd-commands ul li:nth-of-type(1) a').hasAttribute('href', '/commands/bar/foo/latest');
     assert.dom('.sd-commands ul li:nth-of-type(2)').hasText('foo/bar@0.0.1');
-    assert
-      .dom('.sd-commands ul li:nth-of-type(2) a')
-      .hasAttribute('href', '/commands/foo/bar/0.0.1');
+    assert.dom('.sd-commands ul li:nth-of-type(2) a').hasAttribute('href', '/commands/foo/bar/0.0.1');
     assert.dom('.sd-commands ul li:nth-of-type(3)').hasText('bar/foo@stable');
-    assert
-      .dom('.sd-commands ul li:nth-of-type(3) a')
-      .hasAttribute('href', '/commands/bar/foo/stable');
+    assert.dom('.sd-commands ul li:nth-of-type(3) a').hasAttribute('href', '/commands/bar/foo/stable');
 
     assert.dom('.sd-commands ul li:nth-of-type(4)').hasText('foo/bar@stable');
     assert.dom('.sd-commands ul li:nth-of-type(5)').hasText('foo/bar@latest');

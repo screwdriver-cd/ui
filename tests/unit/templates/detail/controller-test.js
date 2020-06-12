@@ -21,7 +21,7 @@ const sessionServiceMock = Service.extend({
       // fake token for test, it has { username: apple } inside
       // eslint-disable-next-line max-len
       token:
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwic2NvcGUiOlsidXNlciIsImFkbWluIl0sImp0aSI6IjUwNTU0M2E1LTQ4Y2YtNDkwMi1hN2E5LWRmNDUyNTgxY2FjNCIsImlhdCI6MTUyMTU3MjAxOSwiZXhwIjoxNTIxNTc1NjE5fQ.85SkUix6FemFGM5SU6hJ1NzzI0fFS_9JxQw6Qt-Cnsc'
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwic2NvcGUiOlsidXNlciIsImFkbWluIl0sImp0aSI6IjUwNTU0M2E1LTQ4Y2YtNDkwMi1hN2E5LWRmNDUyNTgxY2FjNCIsImlhdCI6MTUyMTU3MjAxOSwiZXhwIjoxNTIxNTc1NjE5fQ.85SkUix6FemFGM5SU6hJ1NzzI0fFS_9JxQw6Qt-Cnsc'
     }
   }
 });

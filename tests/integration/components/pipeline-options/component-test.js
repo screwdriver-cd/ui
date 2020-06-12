@@ -331,9 +331,7 @@ module('Integration | Component | pipeline options', function(hooks) {
       assert.ok(true);
     });
 
-    await render(
-      hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`
-    );
+    await render(hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`);
 
     assert.dom('section.danger h4').hasText('Remove this pipeline');
 

@@ -42,13 +42,9 @@ export default Component.extend({
     return this.collection.pipelineIds.length !== 0;
   }),
 
-  showOrganizeButton: computed(
-    'session.isAuthenticated',
-    'collection.pipelineIds',
-    function showOrganizeButton() {
-      return this.session.isAuthenticated && this.collection.pipelineIds.length !== 0;
-    }
-  ),
+  showOrganizeButton: computed('session.isAuthenticated', 'collection.pipelineIds', function showOrganizeButton() {
+    return this.session.isAuthenticated && this.collection.pipelineIds.length !== 0;
+  }),
 
   isListView: computed('activeViewOptionValue', function isListView() {
     localStorage.setItem('activeViewOptionValue', this.activeViewOptionValue);
@@ -180,9 +176,7 @@ export default Component.extend({
             const lastEvent = metrics.get('firstObject');
             const lastEventStartTime = new Date(lastEvent.createTime);
             const lastEventStartYear = lastEventStartTime.getFullYear();
-            const lastEventStartMonth = (lastEventStartTime.getMonth() + 1)
-              .toString()
-              .padStart(2, '0');
+            const lastEventStartMonth = (lastEventStartTime.getMonth() + 1).toString().padStart(2, '0');
             const lastEventStartDay = lastEventStartTime
               .getDate()
               .toString()
@@ -224,12 +218,12 @@ export default Component.extend({
 
   actions: {
     /**
-     * Action to remove a pipeline from a collection
-     *
-     * @param {Number} pipelineId - id of pipeline to remove
-     * @param {Number} collectionId - id of collection to remove from
-     * @returns {Promise}
-     */
+         * Action to remove a pipeline from a collection
+         *
+         * @param {Number} pipelineId - id of pipeline to remove
+         * @param {Number} collectionId - id of collection to remove from
+         * @returns {Promise}
+         */
     removePipeline(pipelineId) {
       const collectionId = this.get('collection.id');
 
@@ -306,9 +300,7 @@ export default Component.extend({
     selectSearchedPipeline(pipelineId) {
       this.setProperties({
         selectedSearchedPipelines: [...this.selectedSearchedPipelines, parseInt(pipelineId, 10)],
-        searchedPipelines: this.searchedPipelines.filter(
-          searchedPipeline => searchedPipeline.id !== pipelineId
-        )
+        searchedPipelines: this.searchedPipelines.filter(searchedPipeline => searchedPipeline.id !== pipelineId)
       });
     },
     resetView() {
@@ -323,7 +315,7 @@ export default Component.extend({
 
       if (
         this.collectionName !== this.collection.name ||
-        this.collectionDescription !== this.collection.description
+                this.collectionDescription !== this.collection.description
       ) {
         collection.set('name', this.collectionName);
         collection.set('description', this.collectionDescription);
@@ -342,18 +334,16 @@ export default Component.extend({
     toggleAddPipelineModal() {
       if (this.get('showAddPipelineModal')) {
         if (this.selectedSearchedPipelines.length !== 0) {
-          this.addMultipleToCollection(this.selectedSearchedPipelines, this.collection.id).then(
-            () => {
-              this.store.findRecord('collection', this.get('collection.id')).then(collection => {
-                this.setProperties({
-                  showAddPipelineModal: false,
-                  searchedPipelines: [],
-                  selectedSearchedPipelines: [],
-                  collection
-                });
+          this.addMultipleToCollection(this.selectedSearchedPipelines, this.collection.id).then(() => {
+            this.store.findRecord('collection', this.get('collection.id')).then(collection => {
+              this.setProperties({
+                showAddPipelineModal: false,
+                searchedPipelines: [],
+                selectedSearchedPipelines: [],
+                collection
               });
-            }
-          );
+            });
+          });
         } else {
           this.setProperties({
             showAddPipelineModal: false,
@@ -392,7 +382,7 @@ export default Component.extend({
           pipelines.filter(
             pipeline =>
               !this.collection.pipelineIds.includes(parseInt(pipeline.id, 10)) &&
-              !this.selectedSearchedPipelines.includes(parseInt(pipeline.id, 10))
+                            !this.selectedSearchedPipelines.includes(parseInt(pipeline.id, 10))
           )
         );
       });
@@ -405,10 +395,7 @@ export default Component.extend({
       textArea.select();
       document.execCommand('Copy');
       textArea.remove();
-      this.set(
-        'linkCopied',
-        'The link of this collection is successfully copied to the clipboard.'
-      );
+      this.set('linkCopied', 'The link of this collection is successfully copied to the clipboard.');
     }
   }
 });

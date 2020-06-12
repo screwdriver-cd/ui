@@ -94,10 +94,10 @@ export default Controller.extend({
   },
 
   /**
-   * Schedules a build to reload after a certain amount of time
-   * @method reloadBuild
-   * @param  {Number}    [timeout=ENV.APP.BUILD_RELOAD_TIMER] ms to wait before reloading
-   */
+     * Schedules a build to reload after a certain amount of time
+     * @method reloadBuild
+     * @param  {Number}    [timeout=ENV.APP.BUILD_RELOAD_TIMER] ms to wait before reloading
+     */
   reloadBuild(timeout = ENV.APP.BUILD_RELOAD_TIMER) {
     const { build } = this;
     const status = build.get('status');

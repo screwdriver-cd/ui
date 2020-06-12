@@ -24,10 +24,10 @@ export default DS.RESTSerializer.extend({
     return this._super(store, typeClass, payload, id, requestType);
   },
   /**
-   * Override the serializeIntoHash method to handle model names without a root key
-   * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
-   * @method serializeIntoHash
-   */
+     * Override the serializeIntoHash method to handle model names without a root key
+     * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
+     * @method serializeIntoHash
+     */
   serializeIntoHash(hash, typeClass, snapshot) {
     const data = {
       pipelineId: snapshot.attr('pipelineId'),

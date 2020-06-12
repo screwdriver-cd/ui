@@ -40,47 +40,40 @@ export default Component.extend({
 
     this.set('table', table);
   },
-  filteredModel: computed(
-    'filteringNamespace',
-    'filteringMaintainer',
-    'search',
-    'trustedOnly',
-    'model',
-    {
-      get() {
-        const ns = this.filteringNamespace;
-        const maintainer = this.filteringMaintainer;
-        const { search, trustedOnly } = this;
+  filteredModel: computed('filteringNamespace', 'filteringMaintainer', 'search', 'trustedOnly', 'model', {
+    get() {
+      const ns = this.filteringNamespace;
+      const maintainer = this.filteringMaintainer;
+      const { search, trustedOnly } = this;
 
-        return this.model.filter(m => {
-          let result = true;
+      return this.model.filter(m => {
+        let result = true;
 
-          if (trustedOnly && !m.trusted) {
-            return false;
-          }
+        if (trustedOnly && !m.trusted) {
+          return false;
+        }
 
-          if (ns) {
-            result = result && m.namespace === ns;
-          }
+        if (ns) {
+          result = result && m.namespace === ns;
+        }
 
-          if (result && maintainer) {
-            result = result && m.maintainer === maintainer;
-          }
+        if (result && maintainer) {
+          result = result && m.maintainer === maintainer;
+        }
 
-          if (result && search) {
-            result =
-              result &&
-              (m.namespace.toLowerCase().includes(search) ||
-                m.name.toLowerCase().includes(search) ||
-                m.description.toLowerCase().includes(search) ||
-                m.maintainer.toLowerCase().includes(search));
-          }
+        if (result && search) {
+          result =
+                        result &&
+                        (m.namespace.toLowerCase().includes(search) ||
+                            m.name.toLowerCase().includes(search) ||
+                            m.description.toLowerCase().includes(search) ||
+                            m.maintainer.toLowerCase().includes(search));
+        }
 
-          return result;
-        });
-      }
+        return result;
+      });
     }
-  ),
+  }),
   refinedModel: sort('filteredModel', 'sortBy'),
   sortBy: computed('dir', 'sort', {
     get() {

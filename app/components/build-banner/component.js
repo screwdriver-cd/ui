@@ -11,9 +11,7 @@ export default Component.extend({
   coverageInfo: {},
   coverageStep: computed('buildSteps', {
     get() {
-      const coverageStep = this.buildSteps.find(item =>
-        /^sd-teardown-screwdriver-coverage/.test(item.name)
-      );
+      const coverageStep = this.buildSteps.find(item => /^sd-teardown-screwdriver-coverage/.test(item.name));
 
       return coverageStep;
     }
@@ -82,7 +80,7 @@ export default Component.extend({
       const buildUrl = window.location.href.match(BUILD_URL_REGEX);
       const coverageFloat = parseFloat(coverage) ? Number(parseFloat(coverage).toFixed(2)) : null;
 
-      let coverageInfo = Object.assign({}, this.get('coverageInfo'));
+      let coverageInfo = { ...this.get('coverageInfo') };
 
       if (coverageFloat) {
         coverageInfo.coverage = `${coverageFloat}%`;

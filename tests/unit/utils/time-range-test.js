@@ -1,7 +1,4 @@
-import timeRange, {
-  iso8601UpToMinute,
-  toCustomLocaleString
-} from 'screwdriver-ui/utils/time-range';
+import timeRange, { iso8601UpToMinute, toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import { module, test } from 'qunit';
 
 module('Unit | Utility | time range', function() {

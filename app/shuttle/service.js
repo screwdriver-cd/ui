@@ -58,10 +58,7 @@ export default Service.extend({
 
     const uri = `${baseHost}${url}`;
 
-    const options = Object.assign({}, this.ajaxOptions(), {
-      data,
-      type: optionsType
-    });
+    const options = { ...this.ajaxOptions(), data, type: optionsType };
 
     return this.get('ajax')[requestType](uri, options);
   },

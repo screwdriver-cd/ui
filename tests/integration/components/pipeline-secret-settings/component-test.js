@@ -85,9 +85,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     });
 
     // eslint-disable-next-line max-len
-    await render(
-      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
-    );
+    await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`);
 
     await fillIn('.key input', 'SECRET_KEY');
     await triggerKeyEvent('.key input', 'keyup', 13);
@@ -110,9 +108,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     });
 
     // eslint-disable-next-line max-len
-    await render(
-      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
-    );
+    await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`);
 
     await fillIn('.key input', '0banana');
     await triggerKeyEvent('.key input', 'keyup', 13);
@@ -127,7 +123,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
       .dom('.alert > span')
       .hasText(
         'Secret keys can only consist of numbers, uppercase letters and underscores, ' +
-          'and cannot begin with a number.'
+                    'and cannot begin with a number.'
       );
   });
 

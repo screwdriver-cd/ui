@@ -25,7 +25,7 @@ const sessionServiceMock = Service.extend({
       // fake token for test, it has { username: apple } inside
       // eslint-disable-next-line max-len
       token:
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwianRpIjoiNTA1NTQzYTUtNDhjZi00OTAyLWE3YTktZGY0NTI1ODFjYWM0IiwiaWF0IjoxNTIxNTcyMDE5LCJleHAiOjE1MjE1NzU2MTl9.ImS1ajOnksl1X74uL85jOjzdUXmBW3HfMdPfP1vjrmc'
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwianRpIjoiNTA1NTQzYTUtNDhjZi00OTAyLWE3YTktZGY0NTI1ODFjYWM0IiwiaWF0IjoxNTIxNTcyMDE5LCJleHAiOjE1MjE1NzU2MTl9.ImS1ajOnksl1X74uL85jOjzdUXmBW3HfMdPfP1vjrmc'
     }
   }
 });
@@ -334,10 +334,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
 
     assert.ok(true);
     assert.ok(stub.calledOnce, 'transition was called once');
-    assert.ok(
-      stub.calledWithExactly('pipeline.build.step', 1, 5678, 'active'),
-      'transition to build step page'
-    );
+    assert.ok(stub.calledWithExactly('pipeline.build.step', 1, 5678, 'active'), 'transition to build step page');
     this.owner.unregister('service:router');
   });
 });

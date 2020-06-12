@@ -210,7 +210,10 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     set(this, 'currentEventType', 'pr');
     set(this, 'pullRequestGroups', {
-      1: [{ name: 'PR-1:foo', isPR: true, group: 1 }, { name: 'PR-1:bar', isPR: true, group: 1 }],
+      1: [
+        { name: 'PR-1:foo', isPR: true, group: 1 },
+        { name: 'PR-1:bar', isPR: true, group: 1 }
+      ],
       2: [{ name: 'PR-2:foo', isPR: true, group: 2 }]
     });
     set(this, 'showDownstreamTriggers', false);

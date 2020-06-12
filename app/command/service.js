@@ -10,15 +10,15 @@ export default Service.extend({
   session: service(),
   getOneCommand(namespace, name) {
     const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
-      `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}`;
+            `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
+            `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}`;
 
     return this.fetchData(url);
   },
   getCommandTags(namespace, name) {
     const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
-      `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}/tags`;
+            `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
+            `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}/tags`;
 
     return this.fetchData(url);
   },
@@ -80,8 +80,8 @@ export default Service.extend({
   },
   deleteCommands(namespace, name) {
     const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
-      `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}`;
+            `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
+            `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}`;
     const ajaxConfig = {
       method: 'DELETE',
       url,
@@ -115,8 +115,8 @@ export default Service.extend({
   },
   updateTrust(namespace, name, trusted) {
     const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
-      `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}/trusted`;
+            `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
+            `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}/trusted`;
     const ajaxConfig = {
       method: 'PUT',
       dataType: 'json',

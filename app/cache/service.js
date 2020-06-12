@@ -8,14 +8,14 @@ export default Service.extend({
   session: service('session'),
 
   /**
-   * Calls the store api service to clear the cache data
-   * @method clearCache
-   * @param   {Object}  config
-   * @param   {String}  config.cacheId     The ID of event, or job to clear the cache from
-   * @param   {String}  config.pipelineId  The ID of the pipeline
-   * @param   {String}  config.scope       The scope of the cache, e.g. pipelines, events, jobs
-   * @return  {Promise}                    Resolve nothing if success otherwise reject with error message
-   */
+     * Calls the store api service to clear the cache data
+     * @method clearCache
+     * @param   {Object}  config
+     * @param   {String}  config.cacheId     The ID of event, or job to clear the cache from
+     * @param   {String}  config.pipelineId  The ID of the pipeline
+     * @param   {String}  config.scope       The scope of the cache, e.g. pipelines, events, jobs
+     * @return  {Promise}                    Resolve nothing if success otherwise reject with error message
+     */
   clearCache(config) {
     const { scope, pipelineId, cacheId } = config;
 

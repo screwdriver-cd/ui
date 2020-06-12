@@ -79,12 +79,7 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
         }
       ]);
       assert.deepEqual(controller.get('buildMetrics.json'), metricsMock.metrics.builds);
-      assert.deepEqual(controller.get('buildMetrics.keys.value'), [
-        'main',
-        'publish',
-        'beta',
-        'prod'
-      ]);
+      assert.deepEqual(controller.get('buildMetrics.keys.value'), ['main', 'publish', 'beta', 'prod']);
       assert.deepEqual(JSON.parse(JSON.stringify(controller.get('buildLegend'))), [
         {
           key: 'main',

@@ -167,11 +167,7 @@ module('Unit | Serializer | pipeline', function(hooks) {
       .findRecord('pipeline', 3)
       .then(pipeline => {
         assert.equal(pipeline.workflowGraph.edges.length, 5, 'has 5 edges');
-        assert.deepEqual(
-          pipeline.workflowGraph.edges,
-          alphabeticalSortedOrder,
-          'edges order is sorted'
-        );
+        assert.deepEqual(pipeline.workflowGraph.edges, alphabeticalSortedOrder, 'edges order is sorted');
         assert.notDeepEqual(
           pipeline.workflowGraph.edges,
           pipelinePayload.workflowGraph.edges,

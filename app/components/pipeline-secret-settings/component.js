@@ -18,15 +18,15 @@ export default Component.extend({
   }),
   actions: {
     /**
-     * Kicks off create secret flow
-     * @method addNewSecret
-     */
+         * Kicks off create secret flow
+         * @method addNewSecret
+         */
     addNewSecret() {
       if (!/^[A-Z_][A-Z0-9_]*$/.test(this.newName)) {
         this.set(
           'errorMessage',
           'Secret keys can only consist of numbers, ' +
-            'uppercase letters and underscores, and cannot begin with a number.'
+                        'uppercase letters and underscores, and cannot begin with a number.'
         );
 
         return false;
@@ -40,10 +40,10 @@ export default Component.extend({
       return true;
     },
     /**
-     * Toggle eye-icon and password input type
-     * @method togglePasswordInput
-     * @param {Object} event Click event
-     */
+         * Toggle eye-icon and password input type
+         * @method togglePasswordInput
+         * @param {Object} event Click event
+         */
     togglePasswordInput(event) {
       const { target } = event;
       const passwordInput = target.previousSibling;

@@ -18,13 +18,9 @@ module('Integration | Component | info message', function(hooks) {
   });
 
   test('it renders an scm error when scmContext of a pipeline does not exists', async function(assert) {
-    await render(
-      hbs`{{info-message message="This checkoutUrl is not supported for your current login host."}}`
-    );
+    await render(hbs`{{info-message message="This checkoutUrl is not supported for your current login host."}}`);
 
-    assert
-      .dom('.alert > span')
-      .hasText('This checkoutUrl is not supported for your current login host.');
+    assert.dom('.alert > span').hasText('This checkoutUrl is not supported for your current login host.');
     assert.dom('.alert > a').doesNotExist();
   });
 

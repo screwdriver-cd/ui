@@ -40,9 +40,7 @@ module('Unit | Route | builds', function(hooks) {
 
     const storeStub = Service.extend({
       findRecord(type, id) {
-        return new EmberPromise(resolve =>
-          resolve(EmberObject.create(dataMapping[`${type}_${id}`]))
-        );
+        return new EmberPromise(resolve => resolve(EmberObject.create(dataMapping[`${type}_${id}`])));
       }
     });
 

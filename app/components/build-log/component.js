@@ -184,11 +184,11 @@ export default Component.extend({
   }),
 
   /**
-   * Determines if log loading should occur
-   * - step must have a defined start time (it is, or has executed)
-   * - the step must have logs left to load
-   * @property {Boolean} shouldLoad
-   */
+     * Determines if log loading should occur
+     * - step must have a defined start time (it is, or has executed)
+     * - the step must have logs left to load
+     * @property {Boolean} shouldLoad
+     */
   shouldLoad: computed('isFetching', 'buildId', 'stepName', {
     get() {
       const name = this.stepName;
@@ -246,26 +246,26 @@ export default Component.extend({
   },
 
   /**
-   * Remove scroll listener when component is destroyed
-   * @method willDestroyElement
-   */
+     * Remove scroll listener when component is destroyed
+     * @method willDestroyElement
+     */
   willDestroyElement() {
     this._super(...arguments);
     this.logService.resetCache();
   },
 
   /**
-   * Scroll to the top of the page
-   * @method scrollTop
-   */
+     * Scroll to the top of the page
+     * @method scrollTop
+     */
   scrollTop() {
     this.$('.wrap')[0].scrollTop = 0;
   },
 
   /**
-   * Scroll to the bottom of the page
-   * @method scrollDown
-   */
+     * Scroll to the bottom of the page
+     * @method scrollDown
+     */
   scrollDown() {
     if (this.autoscroll) {
       const bottom = this.$('.bottom').prop('offsetTop');
@@ -276,9 +276,9 @@ export default Component.extend({
   },
 
   /**
-   * Scroll back to the last anchor point
-   * @method scrollStill
-   */
+     * Scroll back to the last anchor point
+     * @method scrollStill
+     */
   scrollStill() {
     const container = this.$('.wrap')[0];
 
@@ -290,18 +290,13 @@ export default Component.extend({
   },
 
   /**
-   * Fetch logs from log service
-   * @method getLogs
-   *
-   * @param {boolean} fetchMax
-   */
+     * Fetch logs from log service
+     * @method getLogs
+     *
+     * @param {boolean} fetchMax
+     */
   getLogs(fetchMax = false) {
-    if (
-      !this.get('isDestroyed') &&
-      !this.get('isDestroying') &&
-      !this.isFetching &&
-      this.shouldLoad
-    ) {
+    if (!this.get('isDestroyed') && !this.get('isDestroying') && !this.isFetching && this.shouldLoad) {
       const { buildId, stepName, totalLine } = this;
       const started = !!this.stepStartTime;
 
@@ -311,8 +306,7 @@ export default Component.extend({
         .fetchLogs({
           buildId,
           stepName,
-          logNumber:
-            this.logService.getCache(buildId, stepName, 'nextLine') || (totalLine || 1) - 1,
+          logNumber: this.logService.getCache(buildId, stepName, 'nextLine') || (totalLine || 1) - 1,
           pageSize: this.getPageSize(fetchMax),
           sortOrder: this.sortOrder,
           started
@@ -384,9 +378,9 @@ export default Component.extend({
 
       if (
         !this.inProgress &&
-        !this.isFetching &&
-        !this.logService.getCache(this.buildId, this.stepName, 'done') &&
-        container.scrollTop < (container.scrollHeight - this.lastScrollHeight) / 2
+                !this.isFetching &&
+                !this.logService.getCache(this.buildId, this.stepName, 'done') &&
+                container.scrollTop < (container.scrollHeight - this.lastScrollHeight) / 2
       ) {
         this.getLogs();
 

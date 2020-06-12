@@ -13,7 +13,11 @@ export default Controller.extend({
       return this.store.findRecord('collection', collectionId).then(collection => {
         const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
 
-        set(collection, 'pipelineIds', pipelineIds.filter(id => id !== pipelineId));
+        set(
+          collection,
+          'pipelineIds',
+          pipelineIds.filter(id => id !== pipelineId)
+        );
 
         return collection.save();
       });
@@ -24,7 +28,11 @@ export default Controller.extend({
       return this.store.findRecord('collection', collectionId).then(collection => {
         const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
 
-        set(collection, 'pipelineIds', pipelineIds.filter(id => !removedPipelineIds.includes(id)));
+        set(
+          collection,
+          'pipelineIds',
+          pipelineIds.filter(id => !removedPipelineIds.includes(id))
+        );
 
         return collection.save();
       });

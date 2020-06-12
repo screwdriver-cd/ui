@@ -103,9 +103,7 @@ export default Controller.extend(ModelReloaderMixin, {
         return newModelEvents;
       }
 
-      previousModelEvents = previousModelEvents.filter(
-        e => !currentModelEvents.find(c => c.id === e.id)
-      );
+      previousModelEvents = previousModelEvents.filter(e => !currentModelEvents.find(c => c.id === e.id));
 
       newModelEvents = currentModelEvents.concat(previousModelEvents);
 

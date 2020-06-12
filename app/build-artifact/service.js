@@ -76,18 +76,17 @@ export default Service.extend({
   session: service(),
 
   /**
-   * Calls the store api service to fetch build artifact manifest
-   * @method fetchManifest
-   * @param  {Integer}  buildId     Build id
-   * @return {Promise}              Resolves to a tree representaion of the dir/file structure
-   */
+     * Calls the store api service to fetch build artifact manifest
+     * @method fetchManifest
+     * @param  {Integer}  buildId     Build id
+     * @return {Promise}              Resolves to a tree representaion of the dir/file structure
+     */
   fetchManifest(buildId) {
     let manifest = [];
 
     // Fetch the manifest directly from the store to prevent CORS issues
     const manifestUrl =
-      `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
-      `/builds/${buildId}/ARTIFACTS/manifest.txt`;
+            `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` + `/builds/${buildId}/ARTIFACTS/manifest.txt`;
 
     // Set artifact file links to api to get redirects to store with short-lived jwt tokens
     const baseUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/artifacts/`;

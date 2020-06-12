@@ -54,16 +54,15 @@ export default Controller.extend({
   }),
   actions: {
     removeCommand(namespace, name) {
-      return this.command
-        .deleteCommands(namespace, name)
-        .then(() => this.transitionToRoute('commands'), err => this.set('errorMessage', err));
+      return this.command.deleteCommands(namespace, name).then(
+        () => this.transitionToRoute('commands'),
+        err => this.set('errorMessage', err)
+      );
     },
     updateTrust(namespace, name, toTrust) {
       return (
         this.isAdmin &&
-        this.command
-          .updateTrust(namespace, name, toTrust)
-          .catch(err => this.set('errorMessage', err))
+                this.command.updateTrust(namespace, name, toTrust).catch(err => this.set('errorMessage', err))
       );
     }
   }

@@ -43,11 +43,7 @@ module('Unit | Service | validator', function(hooks) {
         return [400, { 'Content-Type': 'application/json' }, JSON.stringify({ error: 'villains' })];
       }
 
-      return [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify(EXAMPLE_TEMPLATE_PAYLOAD)
-      ];
+      return [200, { 'Content-Type': 'application/json' }, JSON.stringify(EXAMPLE_TEMPLATE_PAYLOAD)];
     });
   });
 

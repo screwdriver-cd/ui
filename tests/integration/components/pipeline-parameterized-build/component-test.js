@@ -32,11 +32,7 @@ module('Integration | Component | pipeline-parameterized-build', function(hooks)
       },
       checkParameters: parameterizedModel => {
         assert.ok(typeof parameterizedModel === 'object', 'parameterizedModel is object');
-        assert.equal(
-          2,
-          Object.keys(parameterizedModel).length,
-          'parameterizedModel has length of 2'
-        );
+        assert.equal(2, Object.keys(parameterizedModel).length, 'parameterizedModel has length of 2');
       }
     });
 

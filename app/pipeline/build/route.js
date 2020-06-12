@@ -49,12 +49,7 @@ export default Route.extend({
     const name = getActiveStep(get(model, 'build.steps'));
 
     if (name) {
-      this.transitionTo(
-        'pipeline.build.step',
-        model.pipeline.get('id'),
-        model.build.get('id'),
-        name
-      );
+      this.transitionTo('pipeline.build.step', model.pipeline.get('id'), model.build.get('id'), name);
     }
   },
 
@@ -63,12 +58,7 @@ export default Route.extend({
       const name = getActiveStep(get(model, 'build.steps'));
 
       if (name) {
-        this.transitionTo(
-          'pipeline.build.step',
-          model.pipeline.get('id'),
-          model.build.get('id'),
-          name
-        );
+        this.transitionTo('pipeline.build.step', model.pipeline.get('id'), model.build.get('id'), name);
       }
     }
   }

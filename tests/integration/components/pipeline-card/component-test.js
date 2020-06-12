@@ -57,22 +57,14 @@ module('Integration | Component | pipeline card', function(hooks) {
     assert.dom('.branch-info a').hasText(mockPipeline.scmRepo.name);
     assert.dom('.branch-info a').hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert.dom('.commit-info').exists({ count: 1 });
-    assert
-      .dom('.commit-status a:nth-of-type(1)')
-      .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
+    assert.dom('.commit-status a:nth-of-type(1)').hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert.dom('.commit-status a:nth-of-type(1) i').hasClass('fa-question-circle');
     assert.dom('.commit-status a:nth-of-type(2)').hasText(mockPipeline.lastEventInfo.sha);
-    assert
-      .dom('.commit-status a:nth-of-type(2)')
-      .hasAttribute('href', mockPipeline.lastEventInfo.commitUrl);
+    assert.dom('.commit-status a:nth-of-type(2)').hasAttribute('href', mockPipeline.lastEventInfo.commitUrl);
     assert.dom('.commit-message').hasText(mockPipeline.lastEventInfo.commitMessage);
     assert.dom('.time-metrics').exists({ count: 1 });
-    assert
-      .dom('.duration-badge span:nth-of-type(2)')
-      .hasText(mockPipeline.lastEventInfo.durationText);
-    assert
-      .dom('.start-time-badge span:nth-of-type(2)')
-      .hasText(mockPipeline.lastEventInfo.startTime);
+    assert.dom('.duration-badge span:nth-of-type(2)').hasText(mockPipeline.lastEventInfo.durationText);
+    assert.dom('.start-time-badge span:nth-of-type(2)').hasText(mockPipeline.lastEventInfo.startTime);
     assert.dom('.events-thumbnail-wrapper').exists({ count: 1 });
   });
 

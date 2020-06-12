@@ -7,8 +7,8 @@ export default DS.RESTSerializer.extend({
     buildContainer: 'container'
   },
   /**
-   * Overrride and fill in `statusMessage` so the model can assign properly
-   */
+     * Overrride and fill in `statusMessage` so the model can assign properly
+     */
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.build) {
       payload.build.statusMessage = payload.build.statusMessage || null;
@@ -30,10 +30,10 @@ export default DS.RESTSerializer.extend({
   },
 
   /**
-   * Override the serializeIntoHash method to handle model names without a root key
-   * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
-   * @method serializeIntoHash
-   */
+     * Override the serializeIntoHash method to handle model names without a root key
+     * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
+     * @method serializeIntoHash
+     */
   serializeIntoHash(hash, typeClass, snapshot) {
     if (!snapshot.id) {
       return assign(hash, { jobId: snapshot.attr('jobId') });

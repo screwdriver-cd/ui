@@ -48,14 +48,14 @@ export default Controller.extend({
   }),
   actions: {
     removeTemplate(name) {
-      return this.template
-        .deleteTemplates(name)
-        .then(() => this.transitionToRoute('templates'), err => this.set('errorMessage', err));
+      return this.template.deleteTemplates(name).then(
+        () => this.transitionToRoute('templates'),
+        err => this.set('errorMessage', err)
+      );
     },
     updateTrust(fullName, toTrust) {
       return (
-        this.isAdmin &&
-        this.template.updateTrust(fullName, toTrust).catch(err => this.set('errorMessage', err))
+        this.isAdmin && this.template.updateTrust(fullName, toTrust).catch(err => this.set('errorMessage', err))
       );
     }
   }

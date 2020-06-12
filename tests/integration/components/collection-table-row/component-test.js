@@ -61,9 +61,7 @@ module('Integration | Component | collection table row', function(hooks) {
     assert.dom('td.status a:nth-of-type(1)').hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert.dom('td.status a:nth-of-type(1) i').hasClass('fa-question-circle');
     assert.dom('td.status a:nth-of-type(2)').hasText(mockPipeline.lastEventInfo.sha);
-    assert
-      .dom('td.status a:nth-of-type(2)')
-      .hasAttribute('href', mockPipeline.lastEventInfo.commitUrl);
+    assert.dom('td.status a:nth-of-type(2)').hasAttribute('href', mockPipeline.lastEventInfo.commitUrl);
     assert.dom('td.start').hasText(mockPipeline.lastEventInfo.startTime);
     assert.dom('td.duration').hasText(mockPipeline.lastEventInfo.durationText);
     assert.dom('td.history').exists({ count: 1 });
