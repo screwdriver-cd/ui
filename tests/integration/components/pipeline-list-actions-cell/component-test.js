@@ -203,7 +203,7 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
     assert.dom('.clicks-disabled').exists({ count: 1 });
   });
 
-  test('start build from latest successful', async function(assert) {
+  test('start build a new build', async function(assert) {
     set(this, 'value', {
       jobId: 1,
       jobName: 'a',
@@ -214,7 +214,7 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
       startSingleBuild: (jobId, jobName, status) => {
         assert.equal(jobId, 1);
         assert.equal(jobName, 'a');
-        assert.equal(status, 'SUCCESS');
+        assert.equal(status, undefined);
       },
       stopBuild: () => {
         assert.ok(false);
@@ -241,7 +241,7 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
       startSingleBuild: (jobId, jobName, status) => {
         assert.equal(jobId, 1);
         assert.equal(jobName, 'a');
-        assert.equal(status, undefined);
+        assert.equal(status, 'RESTART');
       },
       stopBuild: () => {
         assert.ok(false);
