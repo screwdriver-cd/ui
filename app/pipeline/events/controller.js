@@ -438,10 +438,9 @@ export default Controller.extend(ModelReloaderMixin, {
       this.set('isShowingModal', true);
 
       const pipelineId = get(this, 'pipeline.id');
-      // FIXME: This needs a UI element to ask user choice before enabling.
-      // const token = get(this, 'session.data.authenticated.token');
-      // const user = get(decoder(token), 'username');
-      // let causeMessage = `[skip further] Manually started by ${user}`;
+      const token = get(this, 'session.data.authenticated.token');
+      const user = get(decoder(token), 'username');
+      let causeMessage = `Manually started by ${user}`;
       let startFrom = jobName;
       let eventPayload;
 
@@ -464,12 +463,14 @@ export default Controller.extend(ModelReloaderMixin, {
           pipelineId,
           startFrom,
           parentBuildId,
-          parentEventId
+          parentEventId,
+          causeMessage
         };
       } else {
         eventPayload = {
           pipelineId,
-          startFrom
+          startFrom,
+          causeMessage
         };
       }
 

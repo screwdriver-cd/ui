@@ -147,8 +147,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       controller.set('store.queryRecord', (modelName, params) => {
         assert.equal(modelName, 'build');
         assert.deepEqual(params, {
-          jobId: 1,
-          status: 'RUNNING'
+          jobId: 1
         });
 
         return Promise.resolve(EmberObject.create({ eventId: '10', parentBuildId: '57' }));
@@ -162,7 +161,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       assert.notOk(controller.get('isShowingModal'));
-      controller.send('startSingleBuild', 1, 'name', 'RUNNING');
+      controller.send('startSingleBuild', 1, 'name', 'RESTART');
       assert.ok(controller.get('isShowingModal'));
     });
 
@@ -177,7 +176,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       startFrom: 'name',
       parentBuildId: 57,
       parentEventId: 10,
-      causeMessage: '[skip further]Manually started by apple'
+      causeMessage: 'Manually started by apple'
     });
   });
 
