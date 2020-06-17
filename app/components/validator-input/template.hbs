@@ -1,5 +1,5 @@
 <h4 class="pipeline" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} Validate Screwdriver Configuration</h4>
-<div id='validator-ace-editor'>
+<div id="validator-ace-editor">
   {{ember-ace
     value=yaml
     update=(action (mut yaml))

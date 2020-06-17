@@ -1,6 +1,5 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
-
 <section>
   <h1>Create Pipeline</h1>
   <h4>For more information on how to get started with screwdriver, check out our <a href="https://docs.screwdriver.cd/user-guide/quickstart" target="_blank" rel="noopener">quickstart guide</a>.</h4>
@@ -22,7 +21,7 @@
     {{/if}}
   </div>
   {{#if prUrl}}
-    <span>PR Created: <a href="{{prUrl}}" target="_blank" rel="noopener">{{prUrl}}</a></span>
+    <span>PR Created: <a href={{prUrl}} target="_blank" rel="noopener">{{prUrl}}</a></span>
   {{/if}}
   <div>
     {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
@@ -33,8 +32,8 @@
   <h5 class="bold">Create Screwdriver.yaml file</h5>
   <h5>Choose a template to automatically generate the screwdriver.yaml file for your project or select to create the file manually.</h5>
   <div>
-    {{input class="create-screwdriver-yaml" type="checkbox" checked=manualYamlCreation}}
-    <label class="normal-weight">I will create the <span class="select-screwdriver-yaml">screwdriver.yaml {{fa-icon "question-circle"}}</span> manually</label>
+    {{input class="create-screwdriver-yaml-later" type="checkbox" checked=manualYamlCreation}}
+    <label class="normal-weight">I will create the <span class="select-screwdriver-yaml">screwdriver.yaml {{fa-icon "question-circle"}}</span> later</label>
 
     <div>
       {{#unless manualYamlCreation}}
@@ -51,18 +50,14 @@
           {{/power-select}}
         </div>
 
-        {{!-- {{#if selectedTemplate.name}} --}}
-          <div class="row">
-            <div class="col-xs-12 col-md-12">
-              {{validator-input yaml=(mut yaml)}}
-            </div>
-            {{!-- {{#ember-wormhole to="template-validate-results"}} --}}
-              <div class="col-xs-12 col-md-12">
-                {{validator-results results=results}}
-              </div>
-            {{!-- {{/ember-wormhole}} --}}
+        <div class="row">
+          <div class="col-xs-12 col-md-12">
+            {{validator-input yaml=(mut yaml)}}
           </div>
-        {{!-- {{/if}} --}}
+          <div class="col-xs-12 col-md-12">
+            {{validator-results results=results}}
+          </div>
+        </div>
 
         <div class="tooltips">
           {{#bs-tooltip placement="right" triggerElement=".select-template" renderInPlace=true delayHide="1000"}}

@@ -56,18 +56,18 @@ export default Component.extend({
           if (yaml && yaml.length) {
             const pr = await this.shuttle.openPr(scmUrl, yaml);
             const { prUrl } = pr.payload;
+            const that = this;
 
             this.set('prUrl', prUrl);
-
-            const { router } = this;
 
             this.router
               .transitionTo('pipeline.events', pipeline.get('id'))
               .then(() => {
-                const ctrl = getOwner(router).lookup('controller:pipeline.events');
+                const ctrl = getOwner(that).lookup('controller:pipeline.events');
                 const prLink = `<a href="${prUrl}" rel="noopener">${prUrl}</a>`;
 
                 ctrl.set('errorMessage', `PR: ${prLink}`);
+                that.set('showCreatePipeline', false);
               })
               .catch(e => {
                 console.error('error', e);

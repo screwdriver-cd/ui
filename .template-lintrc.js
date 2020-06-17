@@ -5,6 +5,7 @@ module.exports = {
     'no-inline-styles': false,
     'simple-unless': {
       maxHelpers: 1
-    }
+    },
+    'no-unbound': false
   }
 };
