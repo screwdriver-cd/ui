@@ -111,7 +111,7 @@ export default Service.extend({
         }
       ],
       title: 'Onboard to Screwdriver',
-      message: 'add screwdriver.yaml file'
+      message: 'Add screwdriver.yaml file'
     };
     const raw = true;
 
