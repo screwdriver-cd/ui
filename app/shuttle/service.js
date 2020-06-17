@@ -110,7 +110,7 @@ export default Service.extend({
           content: yaml
         }
       ],
-      title: 'onboard to screwdriver',
+      title: 'Onboard to Screwdriver',
       message: 'add screwdriver.yaml file'
     };
     const raw = true;
