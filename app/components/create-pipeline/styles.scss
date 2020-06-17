@@ -21,12 +21,10 @@
     color: #3697f2;
 
     .back {
-      // background-color: yellow;
       width: 80px;
       font-size: 16px;
 
       .img {
-        // vertical-align: middle;
         vertical-align: top;
         fill: #3697f2;
         height: 20px;
@@ -41,7 +39,6 @@
   }
 
   .center {
-    // margin-left: 94px;
     display: inline-block;
     width: 680px;
 
@@ -49,8 +46,4 @@
       margin-left: -220px;
     }
   }
-
-  // .right {
-  //   width: 26.38%;
-  // }
 }

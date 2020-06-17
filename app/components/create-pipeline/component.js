@@ -60,18 +60,16 @@ export default Component.extend({
 
             this.set('prUrl', prUrl);
 
-            this.router
-              .transitionTo('pipeline.events', pipeline.get('id'))
-              .then(() => {
-                const ctrl = getOwner(that).lookup('controller:pipeline.events');
-                const prLink = `<a href="${prUrl}" rel="noopener">${prUrl}</a>`;
+            try {
+              await this.router.transitionTo('pipeline.events', pipeline.get('id'));
+              const ctrl = getOwner(that).lookup('controller:pipeline.events');
+              const prLink = `<a href="${prUrl}" rel="noopener">${prUrl}</a>`;
 
-                ctrl.set('errorMessage', `PR: ${prLink}`);
-                that.set('showCreatePipeline', false);
-              })
-              .catch(e => {
-                console.error('error', e);
-              });
+              ctrl.set('errorMessage', `PR: ${prLink}`);
+              that.set('showCreatePipeline', false);
+            } catch (e) {
+              console.error('error', e);
+            }
           }
         } catch (err) {
           const { payload: responsePayload } = err;
