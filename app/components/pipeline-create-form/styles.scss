@@ -1,5 +1,5 @@
 & {
-  // padding: 10px 25px 0;
+  padding: 10px 25px 0;
   font-size: 16px;
   padding-bottom: 40px;
   margin: 0 auto;
@@ -30,7 +30,6 @@
   box-sizing: border-box;
   margin-top: 10px;
   outline: 0;
-  // height: 45px;
   height: 34px;
   width: 100%;
   border-radius: 2px;
@@ -38,7 +37,6 @@
   font-size: 14px;
   padding-left: 10px;
   color: $sd-text;
-  // color: rgba(48, 48, 48, 0.5);
 
   &:focus {
     border-color: $sd-running;
