@@ -146,9 +146,13 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       return this._super(...arguments);
     }
 
-    // the last key on the path and remove the s at the end
-    key = matches[5] || matches[1];
-    key = key.substr(0, key.length - 1);
+    if (this.modelKey) {
+      key = this.modelKey;
+    } else {
+      // the last key on the path and remove the s at the end
+      key = matches[5] || matches[1];
+      key = key.substr(0, key.length - 1);
+    }
 
     // Fix our API not returning the model name in payload
     if (payload && Array.isArray(payload)) {

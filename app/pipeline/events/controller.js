@@ -434,54 +434,47 @@ export default Controller.extend(ModelReloaderMixin, {
 
       return this.createEvent(eventPayload, true);
     },
-    startSingleBuild(jobId, jobName, status = undefined) {
+    async startSingleBuild(jobId, jobName, buildState = undefined) {
       this.set('isShowingModal', true);
 
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
-      let causeMessage = `[skip further]Manually started by ${user}`;
+      let causeMessage = `Manually started by ${user}`;
       let startFrom = jobName;
+      let eventPayload;
 
-      const buildQueryConfig = { jobId };
+      if (buildState) {
+        const buildQueryConfig = { jobId };
 
-      if (status) {
-        buildQueryConfig.status = status;
+        const build = await this.store.queryRecord('build', buildQueryConfig);
+        const event = await this.store.findRecord('event', get(build, 'eventId'));
+
+        const parentBuildId = get(build, 'parentBuildId');
+        const parentEventId = get(event, 'id');
+        const prNum = get(event, 'prNum');
+
+        if (prNum) {
+          // PR-<num>: prefix is needed, if it is a PR event.
+          startFrom = `PR-${prNum}:${startFrom}`;
+        }
+
+        eventPayload = {
+          pipelineId,
+          startFrom,
+          parentBuildId,
+          parentEventId,
+          causeMessage
+        };
+      } else {
+        eventPayload = {
+          pipelineId,
+          startFrom,
+          causeMessage
+        };
       }
 
-      return this.store
-        .queryRecord('build', buildQueryConfig)
-        .then(build => {
-          return this.store.findRecord('event', get(build, 'eventId')).then(event => {
-            const parentBuildId = get(build, 'parentBuildId');
-            const parentEventId = get(event, 'id');
-            const prNum = get(event, 'prNum');
-
-            if (prNum) {
-              // PR-<num>: prefix is needed, if it is a PR event.
-              startFrom = `PR-${prNum}:${startFrom}`;
-            }
-
-            const eventPayload = {
-              pipelineId,
-              startFrom,
-              parentBuildId,
-              parentEventId,
-              causeMessage
-            };
-
-            return this.createEvent(eventPayload, false);
-          });
-        })
-        .catch(() => {
-          const eventPayload = {
-            pipelineId,
-            startFrom,
-            causeMessage
-          };
-
-          return this.createEvent(eventPayload, false);
-        });
+      return this.createEvent(eventPayload, false);
     },
     stopBuild(givenEvent, job) {
       const buildId = get(job, 'buildId');
