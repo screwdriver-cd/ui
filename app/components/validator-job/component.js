@@ -3,7 +3,7 @@ import Component from '@ember/component';
 
 export default Component.extend({
   classNameBindings: ['hasParseError', 'collapsible'],
-  isOpen: true,
+  isOpen: false,
   collapsible: true,
   getTemplateName: computed('job', {
     get() {
@@ -71,6 +71,13 @@ export default Component.extend({
       return sdCommands;
     }
   }),
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (!this.isOpen) {
+      this.$('div').hide();
+    }
+  },
   actions: {
     nameClick() {
       this.toggleProperty('isOpen');

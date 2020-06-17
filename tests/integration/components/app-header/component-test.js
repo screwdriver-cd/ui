@@ -17,7 +17,7 @@ module('Integration | Component | app header', function(hooks) {
     await render(hbs`{{app-header session=sessionMock}}`);
 
     assert.dom('.logo').hasAttribute('title', 'Screwdriver Home');
-    assert.dom('.icon.create').exists({ count: 1 });
+    assert.dom('.icon.create').doesNotExist();
 
     await click('.icon.tools');
     assert.dom('.icon.validator').exists({ count: 1 });
@@ -36,7 +36,7 @@ module('Integration | Component | app header', function(hooks) {
   });
 
   test('it shows user github username', async function(assert) {
-    assert.expect(2);
+    assert.expect(3);
     this.set('sessionMock', {
       isAuthenticated: true,
       data: {
@@ -51,6 +51,7 @@ module('Integration | Component | app header', function(hooks) {
 
     await render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
     assert.dom('.profile-outline > .icontitle').hasText('foofoo');
+    assert.dom('.icon.create').exists({ count: 1 });
 
     await click('.icon.profile-outline');
     await click('.logout');

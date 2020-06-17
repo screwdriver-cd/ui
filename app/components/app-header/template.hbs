@@ -35,12 +35,14 @@
           {{/dd.menu}}
         {{/nav.dropdown}}
       {{/nav.item}}
-      {{#nav.item}}
-        {{#link-to "create" class="icon create"}}
-          {{inline-svg "add-circle" class="img"}}
-          <span>Create Pipeline</span>
-        {{/link-to}}
-      {{/nav.item}}
+      {{#if session.isAuthenticated}}
+        {{#nav.item}}
+          <a class="icon create" onclick={{action "openCreatePipeline"}}>
+            {{inline-svg "add-circle" class="img"}}
+            <span>Create Pipeline</span>
+          </a>
+        {{/nav.item}}
+      {{/if}}
     {{/navbar.nav}}
 
     {{#navbar.nav classNames="navbar-nav navbar-right" as |nav|}}
@@ -136,7 +138,9 @@
 {{/bs-navbar}}
 
 <div class="tooltips">
-  {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
+  {{#if session.isAuthenticated}}
+    {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
+  {{/if}}
   {{#if session.isAuthenticated}}
     {{#each scmContexts as |scmContext|}}
       {{#if scmContext.isSignedIn}}

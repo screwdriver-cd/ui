@@ -19,6 +19,9 @@ export default Component.extend({
     },
     cancelSearch() {
       this.set('showSearch', false);
+    },
+    openCreatePipeline() {
+      this.set('showCreatePipeline', true);
     }
   }
 });

@@ -4,6 +4,7 @@ import Controller from '@ember/controller';
 const { alias } = computed;
 
 export default Controller.extend({
+  showCreatePipeline: false,
   collections: [],
   session: service(),
   scmContexts: alias('model'),

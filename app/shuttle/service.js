@@ -97,5 +97,24 @@ export default Service.extend({
     const data = { buildId, jobId, startTime, endTime };
 
     return this.fetchFromApi(method, url, data);
+  },
+
+  async openPr(checkoutUrl, yaml = '', pipelineId = 1) {
+    const method = 'post';
+    const url = `/pipelines/${pipelineId}/openPr`;
+    const data = {
+      checkoutUrl,
+      files: [
+        {
+          name: 'screwdriver.yaml',
+          content: yaml
+        }
+      ],
+      title: 'Onboard to Screwdriver',
+      message: 'Add screwdriver.yaml file'
+    };
+    const raw = true;
+
+    return this.fetchFromApi(method, url, data, raw);
   }
 });

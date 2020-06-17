@@ -185,12 +185,37 @@ module('Acceptance | create', function(hooks) {
 
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
     await triggerEvent('.text-input', 'keyup');
-    await click('input.create-screwdriver-yaml');
 
     assert.dom('.select-template').hasText('template');
     assert.dom('.templates-dropdown').exists();
     assert.dom('.ace_editor').exists();
-    assert.dom('#template-validate-results').exists();
+  });
+
+  test('Create Screwdriver.yaml later', async function(assert) {
+    server.post('http://localhost:8080/v4/pipelines', () => [
+      409,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        statusCode: 409,
+        error: 'Conflict',
+        message: 'something conflicting'
+      })
+    ]);
+
+    server.get('http://localhost:8080/v4/templates', () => {
+      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
+    });
+
+    await authenticateSession({ token: 'faketoken' });
+    await visit('/create');
+
+    await fillIn('.text-input', 'git@github.com:foo/bar.git');
+    await triggerEvent('.text-input', 'keyup');
+    await click('input.create-screwdriver-yaml-later');
+
+    assert.dom('.templates-dropdown').doesNotExist();
+    assert.dom('.ace_editor').doesNotExist();
+    assert.dom('#template-validate-results').doesNotExist();
   });
 
   test('Quick start guide', async function(assert) {
