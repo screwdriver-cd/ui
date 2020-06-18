@@ -36,4 +36,11 @@ module('Unit | Utility | git', function() {
 
     assert.strictEqual(result, 'git@github.com:bananas/peel.git#master');
   });
+
+  test('it parses the org checkout URL correctly', assert => {
+    const orgGitUrl = 'org-xxx@github.com:bananas/peel.git#tree';
+    let result = git.parse(orgGitUrl);
+
+    assert.ok(result.valid, 'org-xxx is valid');
+  });
 });
