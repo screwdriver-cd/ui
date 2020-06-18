@@ -34,7 +34,10 @@ export default Component.extend({
 
       try {
         pipeline = await this.store.createRecord('pipeline', payload).save();
-        this.router.transitionTo('pipeline', pipeline.get('id'));
+        await this.router.transitionTo('pipeline', pipeline.get('id'));
+        if (!yaml) {
+          this.set('showCreatePipeline', false);
+        }
       } catch (err) {
         let error = err.errors[0] || {};
 
@@ -54,19 +57,19 @@ export default Component.extend({
       if (pipeline) {
         try {
           if (yaml && yaml.length) {
-            const pr = await this.shuttle.openPr(scmUrl, yaml);
+            const pipelineId = pipeline.get('id');
+            const pr = await this.shuttle.openPr(scmUrl, yaml, pipelineId);
             const { prUrl } = pr.payload;
-            const that = this;
 
             this.set('prUrl', prUrl);
 
             try {
-              await this.router.transitionTo('pipeline.events', pipeline.get('id'));
-              const ctrl = getOwner(that).lookup('controller:pipeline.events');
+              await this.router.transitionTo('pipeline.events', pipelineId);
+              const ctrl = getOwner(this).lookup('controller:pipeline.events');
               const prLink = `<a href="${prUrl}" rel="noopener">${prUrl}</a>`;
 
               ctrl.set('errorMessage', `PR: ${prLink}`);
-              that.set('showCreatePipeline', false);
+              this.set('showCreatePipeline', false);
             } catch (e) {
               console.error('error', e);
             }
