@@ -34,7 +34,7 @@ export default Component.extend({
 
       try {
         pipeline = await this.store.createRecord('pipeline', payload).save();
-        await this.router.transitionTo('pipeline', pipeline.get('id'));
+        this.router.transitionTo('pipeline', pipeline.get('id'));
       } catch (err) {
         let error = err.errors[0] || {};
 
