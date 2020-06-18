@@ -34,7 +34,10 @@ export default Component.extend({
 
       try {
         pipeline = await this.store.createRecord('pipeline', payload).save();
-        this.router.transitionTo('pipeline', pipeline.get('id'));
+        await this.router.transitionTo('pipeline', pipeline.get('id'));
+        if (!yaml) {
+          this.set('showCreatePipeline', false);
+        }
       } catch (err) {
         let error = err.errors[0] || {};
 
@@ -49,9 +52,6 @@ export default Component.extend({
         }
       } finally {
         this.set('isSaving', false);
-        if (!yaml) {
-          this.set('showCreatePipeline', false);
-        }
       }
 
       if (pipeline) {
