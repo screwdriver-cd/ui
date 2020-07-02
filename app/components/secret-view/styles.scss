@@ -24,6 +24,26 @@ button {
   border-radius: 3px;
 }
 
+button.Update {
+  background-color: $sd-running;
+  color: $sd-white;
+}
+
+button.Override {
+  background-color: $sd-running;
+  color: $sd-white;
+}
+
+button.Delete {
+  background-color: $sd-failure;
+  color: $sd-white;
+}
+
+button.Revert {
+  background-color: $sd-failure;
+  color: $sd-white;
+}
+
 .toggle-icon {
   margin-left: -25px;
   position: relative;
