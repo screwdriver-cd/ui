@@ -51,6 +51,66 @@ module('Integration | Component | secret view', function(hooks) {
     assert.dom('button').hasText('Delete');
   });
 
+  test('it trys to open dialog to delete a secret', async function(assert) {
+    assert.expect(5);
+
+    const testPipeline = EmberObject.create({
+      id: '123245'
+    });
+
+    this.set(
+      'mockSecret',
+      EmberObject.extend().create({
+        name: 'TEST_SECRET',
+        pipelineId: 123245,
+        value: null,
+        allowInPR: false
+      })
+    );
+    this.set('mockPipeline', testPipeline);
+
+    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+    // open dialog
+    await click('button');
+
+    assert.dom('div.modal-dialog').exists({ count: 1 });
+    assert.dom('h4').hasText('Are you sure?');
+    assert
+      .dom('div.modal-body')
+      .hasText(
+        "You're about to delete a secret TEST_SECRET. There might be existing jobs using this secret."
+      );
+    assert.dom('button.btn-default').hasText('Cancel');
+    assert.dom('button.btn-danger').hasText('Confirm');
+  });
+
+  test('it trys to cancel deleting a secret', async function(assert) {
+    assert.expect(1);
+
+    const testPipeline = EmberObject.create({
+      id: '123245'
+    });
+
+    this.set(
+      'mockSecret',
+      EmberObject.extend().create({
+        name: 'TEST_SECRET',
+        pipelineId: 123245,
+        value: null,
+        allowInPR: false
+      })
+    );
+    this.set('mockPipeline', testPipeline);
+
+    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+    // open dialog
+    await click('button');
+    // click cancel
+    await click('button.btn-default');
+
+    assert.dom('div.modal-dialog').doesNotExist();
+  });
+
   test('it trys to delete a secret', async function(assert) {
     assert.expect(3);
 
@@ -92,7 +152,10 @@ module('Integration | Component | secret view', function(hooks) {
     });
 
     await render(hbs`{{secret-view secret=mockSecret secrets=secrets pipeline=mockPipeline}}`);
+    // open dialog
     await click('button');
+    // click confirm
+    await click('button.btn-danger');
   });
 
   test('it saves changes to a secret', async function(assert) {

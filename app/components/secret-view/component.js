@@ -45,10 +45,9 @@ export default Component.extend({
       const { secret } = this;
 
       if (this.buttonAction === 'Delete' || this.buttonAction === 'Revert') {
-        return secret.destroyRecord().then(() => {
-          this.secrets.store.unloadRecord(secret);
-          this.secrets.reload();
-        });
+        this.set('secretToRemove', true);
+
+        return Promise.resolve(null);
       }
       if (this.buttonAction === 'Update') {
         if (this.newValue) {
@@ -85,6 +84,18 @@ export default Component.extend({
       } else {
         $(passwordInput).attr('type', 'password');
       }
+    },
+    removeSecret() {
+      const { secret } = this;
+
+      return secret.destroyRecord().then(() => {
+        this.secrets.store.unloadRecord(secret);
+        this.secrets.reload();
+      });
+    },
+    cancelRemovingSecret() {
+      this.set('secretToRemove', null);
+      this.set('isRemoving', false);
     }
   }
 });
