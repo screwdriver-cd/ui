@@ -112,6 +112,9 @@ export default Component.extend({
         stopBuild: this.get('stopBuild')
       };
 
+      const prRegex = /^PR-(\d+)(?::([\w-]+))?$/;
+      const prNumMatch = jobName.match(prRegex);
+
       let duration;
       let startTime;
       let status;
@@ -128,7 +131,9 @@ export default Component.extend({
           jobId,
           buildId,
           startTime: latestBuild.startTime,
-          endTime: latestBuild.endTime
+          endTime: latestBuild.endTime,
+          pipelineId: latestBuild.pipelineId,
+          prNum: prNumMatch ? prNumMatch[1] : null
         };
       }
 
