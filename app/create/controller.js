@@ -8,8 +8,8 @@ export default Controller.extend({
   showQuickStartGuide: false,
   templates: [],
   actions: {
-    createPipeline({ scmUrl, rootDir }) {
-      let payload = { checkoutUrl: scmUrl, rootDir };
+    createPipeline({ scmUrl, rootDir, autoKeysGeneration }) {
+      let payload = { checkoutUrl: scmUrl, rootDir, autoKeysGeneration };
       let pipeline = this.store.createRecord('pipeline', payload);
 
       this.set('isSaving', true);

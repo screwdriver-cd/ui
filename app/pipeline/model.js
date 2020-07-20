@@ -7,6 +7,7 @@ export default DS.Model.extend({
   annotations: DS.attr(),
   checkoutUrl: DS.attr('string'),
   rootDir: DS.attr('string'),
+  autoKeysGeneration: DS.attr('string'),
   scmContext: DS.attr('string'),
   createTime: DS.attr('date'),
   scmRepo: DS.attr(),
