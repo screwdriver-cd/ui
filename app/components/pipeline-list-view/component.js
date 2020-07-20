@@ -133,7 +133,7 @@ export default Component.extend({
           startTime: latestBuild.startTime,
           endTime: latestBuild.endTime,
           pipelineId: latestBuild.pipelineId,
-          prNum: prNumMatch ? prNumMatch[1] : null
+          prNum: prNumMatch && prNumMatch.length > 1 ? prNumMatch[1] : null
         };
       }
 
