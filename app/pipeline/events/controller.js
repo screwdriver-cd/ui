@@ -297,6 +297,9 @@ export default Controller.extend(ModelReloaderMixin, {
 
     if (jobsDetails.some(j => j.get('jobPipelineId') !== this.get('pipeline.id'))) {
       jobsDetails = [];
+    }
+
+    if (jobsDetails.length === 0) {
       this.set('listViewOffset', 0);
     }
 

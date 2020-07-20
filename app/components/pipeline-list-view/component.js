@@ -56,6 +56,10 @@ export default Component.extend({
     this.set('table', table);
   },
 
+  didDestroyElement() {
+    this.set('jobsDetails', []);
+  },
+
   getDuration(startTime, endTime, status) {
     const startDateTime = Date.parse(startTime);
     const endDateTime = Date.parse(endTime);
