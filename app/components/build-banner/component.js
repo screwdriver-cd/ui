@@ -126,7 +126,9 @@ export default Component.extend({
       buildId: this.buildId,
       jobId: this.jobId,
       startTime: buildStartTime,
-      endTime: coverageStepEndTime
+      endTime: coverageStepEndTime,
+      pipelineId: this.pipelineId,
+      prNum: this.prNumber
     };
 
     this.coverage.getCoverageInfo(config).then(data => {

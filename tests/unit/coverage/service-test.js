@@ -47,7 +47,9 @@ module('Unit | Service | coverage ', function(hooks) {
       buildId: 123,
       jobId: 1,
       startTime: '2018-05-10T19:05:53.123Z',
-      endTime: '2018-05-10T19:06:53.123Z'
+      endTime: '2018-05-10T19:06:53.123Z',
+      pipelineId: 456,
+      prNum: 5
     };
 
     const p = service.getCoverageInfo(config);
@@ -64,7 +66,7 @@ module('Unit | Service | coverage ', function(hooks) {
       assert.deepEqual(
         request.url,
         // eslint-disable-next-line max-len
-        'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z'
+        'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z&pipelineId=456&prNum=5'
       );
     });
   });
