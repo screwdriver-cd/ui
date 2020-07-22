@@ -4,6 +4,7 @@ import moment from 'moment';
 import Table from 'ember-light-table';
 
 export default Component.extend({
+  isShowingModal: false,
   sortingDirection: 'asc',
   sortingValuePath: 'job',
   sortedRows: [],
@@ -53,11 +54,32 @@ export default Component.extend({
       sortColumn.set('sorted', true);
     }
 
-    this.set('table', table);
+    this.setProperties({
+      table,
+      buildParameters: this.getDefaultBuildParameters()
+    });
   },
 
   didDestroyElement() {
     this.set('jobsDetails', []);
+  },
+
+  getDefaultBuildParameters() {
+    return this.getWithDefault('pipeline.parameters', {});
+  },
+
+  /**
+   * Note: jobId must be a string
+   * @param  {integer} jobId
+   * @return {undefined}
+   */
+  openParametersModal(jobId) {
+    const job = this.jobs.findBy('id', `${jobId}`);
+
+    this.setProperties({
+      job,
+      isShowingModal: true
+    });
   },
 
   getDuration(startTime, endTime, status) {
@@ -113,7 +135,10 @@ export default Component.extend({
         jobName,
         latestBuild,
         startSingleBuild: this.get('startSingleBuild'),
-        stopBuild: this.get('stopBuild')
+        stopBuild: this.get('stopBuild'),
+        isShowingModal: this.isShowingModal,
+        hasParameters: Object.keys(this.get('buildParameters')).length > 0,
+        openParametersModal: this.openParametersModal.bind(this)
       };
 
       const prRegex = /^PR-(\d+)(?::([\w-]+))?$/;
@@ -204,6 +229,21 @@ export default Component.extend({
 
         this.table.setRows(sortedRows);
       }
+    },
+
+    closeModal() {
+      this.set('isShowingModal', false);
+    },
+
+    resetForm() {
+      this.setProperties({
+        isShowingModal: false,
+        buildParameters: this.getDefaultBuildParameters()
+      });
+    },
+
+    startBuild(parameterizedModel) {
+      this.startDetachedBuild(this.job, parameterizedModel);
     }
   }
 });

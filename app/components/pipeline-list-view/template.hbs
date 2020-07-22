@@ -11,3 +11,20 @@
     onScrolledToBottom=(action "onScrolledToBottom")
   }}{{/t.body}}
 {{/light-table}}
+
+{{#if isShowingModal}}
+  {{#modal-dialog
+    targetAttachment="center"
+    translucentOverlay=true
+    clickOutsideToClose=true
+    onClickOverlay=(action "resetForm")
+    containerClass="detached-confirm-dialog"
+  }}
+    <h3>Are you sure to start?</h3>
+    {{pipeline-parameterized-build
+      showSubmitButton=true
+      buildParameters=buildParameters
+      onSave=(action 'startBuild')
+      onClose=(action "closeModal")}}
+  {{/modal-dialog}}
+{{/if}}
