@@ -71,6 +71,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -78,6 +79,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -127,6 +129,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(Date, 'prototype.getTimezoneOffset', () => {
       return 0;
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -134,6 +137,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -182,6 +186,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -189,6 +194,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -237,6 +243,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -244,6 +251,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -292,6 +300,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -299,6 +308,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -347,6 +357,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -354,6 +365,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -402,6 +414,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -409,6 +422,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -457,6 +471,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -464,6 +479,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -511,6 +527,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -518,6 +535,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
