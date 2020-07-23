@@ -29,11 +29,14 @@
 
     {{#if showListView}}
       {{pipeline-list-view
+        pipeline=pipeline
+        jobs=jobs
         jobsDetails=jobsDetails
         updateListViewJobs=(action "updateListViewJobs")
         refreshListViewJobs=(action "refreshListViewJobs")
         startSingleBuild=(action "startSingleBuild")
         stopBuild=(action "stopBuild")
+        startDetachedBuild=(action "startDetachedBuild")
       }}
     {{else}}
       {{pipeline-workflow
