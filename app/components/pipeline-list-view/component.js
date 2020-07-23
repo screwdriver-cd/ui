@@ -61,6 +61,7 @@ export default Component.extend({
   },
 
   didDestroyElement() {
+    this._super(...arguments);
     this.set('jobsDetails', []);
   },
 

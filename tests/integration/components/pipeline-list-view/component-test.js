@@ -3,6 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { set } from '@ember/object';
+import wait from 'ember-test-helpers/wait';
 
 module('Integration | Component | pipeline list view', function(hooks) {
   setupRenderingTest(hooks);
@@ -87,6 +88,89 @@ module('Integration | Component | pipeline list view', function(hooks) {
     assert.dom('.lt-column').exists({ count: 6 });
     assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
     assert.dom('.lt-row').exists({ count: 2 });
+  });
+
+  test('it renders then resets jobDetails', async function(assert) {
+    let ticker = 0;
+
+    set(this, 'jobsDetails', [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'RUNNING',
+            startTime: '',
+            endTime: ''
+          },
+          {
+            id: 2,
+            jobId: 1,
+            status: 'RUNNING',
+            startTime: '',
+            endTime: ''
+          }
+        ]
+      },
+      {
+        jobId: 2,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 2,
+            status: 'ABORTED',
+            startTime: '',
+            endTime: ''
+          },
+          {
+            id: 2,
+            jobId: 2,
+            status: 'RUNNING',
+            startTime: '',
+            endTime: ''
+          }
+        ]
+      }
+    ]);
+    set(this, 'updateListViewJobs', () => {
+      if (ticker === 0) {
+        assert.ok(true);
+        ticker += 1;
+
+        return Promise.resolve(this.jobsDetails);
+      }
+
+      return Promise.resolve([]);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'buildParameters', [{ p1: 'p1' }]);
+    set(this, 'showPipelineListView', true);
+    await render(hbs`
+      {{#if showPipelineListView}}
+        {{pipeline-list-view
+        jobsDetails=jobsDetails
+        updateListViewJobs=updateListViewJobs
+        refreshListViewJobs=refreshListViewJobs
+        startSingleBuild=startSingleBuild
+        stopBuild=stopBuild
+        buildParameters=buildParameters}}
+      {{/if}}`);
+    set(this, 'showPipelineListView', false);
+
+    return wait().then(() => {
+      assert.equal(this.get('jobsDetails').length, 0);
+    });
   });
 
   test('it renders with duration', async function(assert) {
