@@ -606,10 +606,15 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         EmberObject.create({
           id: '1234',
           jobs: [
-            EmberObject.create({ id: '1', name: 'a', pipelineId: '1234' }),
-            EmberObject.create({ id: '2', name: 'b', pipelineId: '1234' }),
-            EmberObject.create({ id: '3', name: 'c', pipelineId: '1234' }),
-            EmberObject.create({ id: '4', name: 'd', pipelineId: '1234' })
+            EmberObject.create({
+              id: '1',
+              name: 'a',
+              pipelineId: '1234',
+              annotations: {}
+            }),
+            EmberObject.create({ id: '2', name: 'b', pipelineId: '1234', annotations: {} }),
+            EmberObject.create({ id: '3', name: 'c', pipelineId: '1234', annotations: {} }),
+            EmberObject.create({ id: '4', name: 'd', pipelineId: '1234', annotations: {} })
           ]
         })
       );
@@ -633,9 +638,9 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     await settled();
 
     assert.deepEqual(controller.get('jobsDetails'), [
-      { jobId: 1, jobName: 'a', jobPipelineId: '1234' },
-      { jobId: 2, jobName: 'b', jobPipelineId: '1234' },
-      { jobId: 3, jobName: 'c', jobPipelineId: '1234' }
+      { jobId: 1, jobName: 'a', jobPipelineId: '1234', annotations: {} },
+      { jobId: 2, jobName: 'b', jobPipelineId: '1234', annotations: {} },
+      { jobId: 3, jobName: 'c', jobPipelineId: '1234', annotations: {} }
     ]);
   });
 
@@ -658,10 +663,10 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         EmberObject.create({
           id: '1234',
           jobs: [
-            EmberObject.create({ id: '1', name: 'a', pipelineId: '1234' }),
-            EmberObject.create({ id: '2', name: 'b', pipelineId: '1234' }),
-            EmberObject.create({ id: '3', name: 'c', pipelineId: '1234' }),
-            EmberObject.create({ id: '4', name: 'd', pipelineId: '1234' })
+            EmberObject.create({ id: '1', name: 'a', pipelineId: '1234', annotations: {} }),
+            EmberObject.create({ id: '2', name: 'b', pipelineId: '1234', annotations: {} }),
+            EmberObject.create({ id: '3', name: 'c', pipelineId: '1234', annotations: {} }),
+            EmberObject.create({ id: '4', name: 'd', pipelineId: '1234', annotations: {} })
           ]
         })
       );
@@ -689,10 +694,10 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     await settled();
 
     assert.deepEqual(controller.get('jobsDetails'), [
-      { jobId: 1, jobName: 'a', jobPipelineId: '1234' },
-      { jobId: 2, jobName: 'b', jobPipelineId: '1234' },
-      { jobId: 3, jobName: 'c', jobPipelineId: '1234' },
-      { jobId: 4, jobName: 'd', jobPipelineId: '1234' }
+      { jobId: 1, jobName: 'a', jobPipelineId: '1234', annotations: {} },
+      { jobId: 2, jobName: 'b', jobPipelineId: '1234', annotations: {} },
+      { jobId: 3, jobName: 'c', jobPipelineId: '1234', annotations: {} },
+      { jobId: 4, jobName: 'd', jobPipelineId: '1234', annotations: {} }
     ]);
   });
 
