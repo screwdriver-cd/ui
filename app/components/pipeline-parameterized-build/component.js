@@ -26,6 +26,10 @@ export default Component.extend({
    */
   buildParameters: {},
 
+  parameterText: {},
+
+  parameterSelect: {},
+
   /**
    * parameters expected to be an object
    * @type {String}
@@ -33,6 +37,9 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const [parameters, parameterizedModel] = this.normalizeParameters(this.buildParameters);
+
+    this.parameterSelect = {};
+    this.parameterText = {};
 
     this.setProperties({
       parameters,
@@ -65,21 +72,61 @@ export default Component.extend({
    * @param  {Object} parameters [description]
    * @return {[type]}            [description]
    */
-  normalizeParameters(parameters = {}) {
+  normalizeParameters(parameters = {}, selectedValue) {
     const normalizedParameters = [];
     const normalizedParameterizedModel = {};
 
     Object.entries(parameters).forEach(([propertyName, propertyVal]) => {
       const value = propertyVal.value || propertyVal || '';
       const description = propertyVal.description || '';
+      // value to update selected parameter
+      let listSelected = { name: value[0] };
+
+      const selectParameters = [];
+
+      if (Array.isArray(value)) {
+        // initialize selected list
+        normalizedParameterizedModel[propertyName] = value[0];
+        if (this.parameterText[propertyName]) {
+          // when already selected
+          normalizedParameterizedModel[propertyName] = this.parameterText[propertyName];
+        }
+
+        // make data to set values of each parameter
+        value.forEach(v => {
+          const selectParam = { name: v, propertyName };
+
+          selectParameters.push(selectParam);
+        });
+      }
+
+      if (this.parameterSelect[propertyName]) {
+        // use kept value for parameter which is selected at least once
+        listSelected = this.parameterSelect[propertyName];
+      }
+
+      if (selectedValue && selectedValue.propertyName === propertyName) {
+        // when list is selected for the parameter, keep it
+        this.parameterSelect[propertyName] = { name: selectedValue.name };
+        listSelected = this.parameterSelect[propertyName];
+
+        this.parameterText[selectedValue.propertyName] = selectedValue.name;
+        normalizedParameterizedModel[selectedValue.propertyName] = selectedValue.name;
+      } else if (typeof value === 'string') {
+        // not select but textbox
+        normalizedParameterizedModel[propertyName] = value;
+        if (this.parameterText[propertyName]) {
+          normalizedParameterizedModel[propertyName] = this.parameterText[propertyName];
+        }
+      }
 
       normalizedParameters.push({
         name: propertyName,
         value,
-        description
+        description,
+        selectParameters,
+        listSelected
       });
-
-      normalizedParameterizedModel[propertyName] = value;
     });
 
     return [normalizedParameters, normalizedParameterizedModel];
@@ -111,7 +158,17 @@ export default Component.extend({
 
   actions: {
     onUpdateValue(value, model, propertyName) {
+      this.parameterText[propertyName] = value;
       set(model, propertyName, value);
+    },
+
+    selectParameter(value) {
+      const [parameters, parameterizedModel] = this.normalizeParameters(
+        this.buildParameters,
+        value
+      );
+
+      this.setProperties({ parameters, parameterizedModel });
     },
 
     /**

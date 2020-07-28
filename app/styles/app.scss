@@ -177,4 +177,6 @@ body {
   font-weight: $weight-normal;
 }
 
+$ember-basic-dropdown-content-z-index: 1001 !default;
+
 @import 'ember-power-select';

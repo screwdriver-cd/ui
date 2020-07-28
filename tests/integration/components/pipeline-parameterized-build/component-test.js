@@ -22,6 +22,23 @@ module('Integration | Component | pipeline-parameterized-build', function(hooks)
     assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');
   });
 
+  test('it renders inline for multiple parameters', async function(assert) {
+    this.setProperties({
+      buildParameters: {
+        p1: ['1-1', '1-2'],
+        p2: '2'
+      },
+      showSubmitButton: true
+    });
+
+    await render(hbs`{{pipeline-parameterized-build
+      buildParameters=buildParameters
+      showSubmitButton=showSubmitButton}}`);
+    assert.dom('input').exists({ count: 2 }, 'There are 2 inputs');
+    assert.dom('div.parameter-dropdown').exists({ count: 1 }, 'There is 1 dropdown');
+    assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');
+  });
+
   test('it renders block', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
@@ -44,6 +61,34 @@ module('Integration | Component | pipeline-parameterized-build', function(hooks)
     await render(hbs`
       {{#pipeline-parameterized-build buildParameters=buildParameters as |parameterizedBuild| }}
         <button class="test-button is-primary" {{action "checkParameters" parameterizedBuild.parameters}}>Test</button>
+      {{/pipeline-parameterized-build}}
+    `);
+    await click('button.test-button');
+  });
+
+  test('it renders block for multiple parameters', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.set('myAction', function(val) { ... });
+    this.setProperties({
+      buildParameters: {
+        p1: ['1-1', '1-2'],
+        p2: '2'
+      },
+      checkParameters: parameterizedModel => {
+        assert.ok(typeof parameterizedModel === 'object', 'parameterizedModel is object');
+        assert.equal(
+          2,
+          Object.keys(parameterizedModel).length,
+          'parameterizedModel has length of 2'
+        );
+        assert.equal(2, parameterizedModel.p1.length, 'parameterizedModel has length of 2');
+      }
+    });
+
+    // Template block usage:
+    await render(hbs`
+      {{#pipeline-parameterized-build buildParameters=buildParameters}}
+        <button class="test-button is-primary" {{action "checkParameters" buildParameters}}>Test</button>
       {{/pipeline-parameterized-build}}
     `);
     await click('button.test-button');

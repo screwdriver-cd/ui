@@ -8,6 +8,19 @@
       placeholder=parameter.value
       property=parameter.name
       onChange=(action "onUpdateValue")}}
+
+    {{#if parameter.selectParameters}}
+      <div class="parameter-dropdown">
+        {{#power-select
+          options=parameter.selectParameters
+          selected=parameter.listSelected
+          onchange=(action "selectParameter")
+          searchField="name"
+          as |parameter| }}
+          {{parameter.name}}
+        {{/power-select}}
+      </div>
+    {{/if}}
   {{/each}}
 
   {{#if showSubmitButton}}
