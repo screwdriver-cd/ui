@@ -1,11 +1,7 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
-import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
-import ArrayProxy from '@ember/array/proxy';
 import { getOwner } from '@ember/application';
-
-const ArrayPromiseProxy = ArrayProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
   isSaving: false,
@@ -14,13 +10,43 @@ export default Component.extend({
   shuttle: service(),
   store: service(),
   router: service(),
-  templates: computed({
+  templates: computed('allTemplates', {
     get() {
-      return ArrayPromiseProxy.create({
-        promise: this.shuttle.fetchAllTemplates()
-      });
+      const groupedTemplates = [];
+
+      if (this.allTemplates) {
+        const map = new Map();
+
+        this.allTemplates.forEach(template => {
+          const { namespace } = template;
+          const templateCollection = map.get(namespace);
+
+          template.groupName = namespace;
+          if (!templateCollection) {
+            map.set(namespace, [template]);
+          } else {
+            templateCollection.push(template);
+          }
+        });
+
+        map.forEach((options, groupName) => {
+          groupedTemplates.push({
+            groupName,
+            options
+          });
+        });
+      }
+
+      return groupedTemplates;
     }
   }),
+
+  async init() {
+    this._super(...arguments);
+    const allTemplates = await this.shuttle.fetchAllTemplates();
+
+    this.set('allTemplates', allTemplates);
+  },
 
   actions: {
     async createPipeline({ scmUrl, rootDir, yaml }) {
