@@ -12,6 +12,9 @@
             renderInPlace=true
             selected=(get parameterizedModel parameter.name)
             onchange=(action (action "onUpdateDropdownValue" parameterizedModel parameter.name))
+            onkeydown=(action (action "searchOrAddtoList" parameterizedModel parameter.name))
+            searchPlaceholder="Type to filter"
+            noMatchesMessage="Hit enter to override"
             as |selectedValue|
           }}
             {{selectedValue}}

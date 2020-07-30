@@ -118,6 +118,12 @@ export default Component.extend({
   },
 
   actions: {
+    searchOrAddtoList(model, propertyName, value, e) {
+      if (e.keyCode === 13) {
+        this.updateValue({ model, propertyName, value: value.searchText });
+      }
+    },
+
     onUpdateDropdownValue(model, propertyName, value) {
       this.updateValue({ model, propertyName, value });
     },
