@@ -7,6 +7,39 @@ import ENV from 'screwdriver-ui/config/environment';
 
 const timeTypes = ['datetime', 'datetimeUTC', 'elapsedBuild', 'elapsedStep'];
 
+/**
+ * [convertLinkToHyperLink description]
+ * @param  {String} msg [description]
+ * @return {[type]}     [description]
+ */
+function convertLinkToHyperLink(msg = '') {
+  const hyperLink = new RegExp('^((http|https)://)');
+
+  return msg
+    .split(/\s+/)
+    .map(text => {
+      let link = text;
+
+      if (hyperLink.test(text)) {
+        link = `<a href='${text}' target='_blank' rel='noopener'>${text}</a>`;
+      }
+
+      return link;
+    })
+    .join(' ');
+}
+
+/**
+ * [applyHyperLinkToLogs description]
+ * @param  {Array}  logs [description]
+ * @return {[type]}      [description]
+ */
+function applyHyperLinkToLogs(logs = []) {
+  logs.forEach(log => {
+    log.m = convertLinkToHyperLink(log.m);
+  });
+}
+
 export default Component.extend({
   logService: service('build-logs'),
   store: service(),
@@ -178,6 +211,8 @@ export default Component.extend({
       }
 
       scheduleOnce('afterRender', this, 'scrollDown');
+
+      applyHyperLinkToLogs(logs);
 
       return logs;
     }
