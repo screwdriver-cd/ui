@@ -266,6 +266,7 @@ export default Controller.extend(ModelReloaderMixin, {
             if (job) {
               nextJobDetail.jobName = job.name;
               nextJobDetail.jobPipelineId = job.pipelineId;
+              nextJobDetail.annotations = job.annotations;
             }
           });
 
