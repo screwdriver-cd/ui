@@ -88,12 +88,14 @@ export default Component.extend({
       const value = propertyVal.value || propertyVal || '';
       const description = propertyVal.description || '';
       // value to update selected parameter
-      let listSelected = { name: value[0] };
+      let listSelected = {};
 
       const selectParameters = [];
 
       if (Array.isArray(value)) {
         // initialize selected list
+        listSelected = { name: value[0] };
+        // initialize selected text
         normalizedParameterizedModel[propertyName] = value[0];
         if (this.parameterText[propertyName]) {
           // when already selected
