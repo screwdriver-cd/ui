@@ -26,8 +26,16 @@ export default Component.extend({
    */
   buildParameters: {},
 
+  /**
+   * parameterText are expected to be an object consists of key value pairs
+   * @type {Object}
+   */
   parameterText: {},
 
+  /**
+   * parameterSelect are expected to be an object consists of key value pairs
+   * @type {Object}
+   */
   parameterSelect: {},
 
   /**
