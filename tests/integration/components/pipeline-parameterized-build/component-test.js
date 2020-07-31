@@ -48,4 +48,22 @@ module('Integration | Component | pipeline-parameterized-build', function(hooks)
     `);
     await click('button.test-button');
   });
+
+  test('it renders as dropdown list', async function(assert) {
+    this.setProperties({
+      buildParameters: {
+        from: 'latest',
+        to: ['test', 'stable']
+      },
+      showSubmitButton: true
+    });
+
+    await render(hbs`{{pipeline-parameterized-build
+      buildParameters=buildParameters
+      showSubmitButton=showSubmitButton}}`);
+    assert.dom('.form-group').exists({ count: 2 }, 'There are 2 parameters');
+    assert.dom('.ember-basic-dropdown').exists({ count: 1 }, 'There is 1 dropdown list');
+    assert.dom('.form-control').exists({ count: 1 }, 'There is 1 input field');
+    assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');
+  });
 });
