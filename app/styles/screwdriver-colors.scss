@@ -33,11 +33,11 @@ $sd-highlight: #e7f4ff;
 
 $sd-warning: #ffd333;
 
-$sd-success: #1ac567;
+$sd-success: #03af7a;
 $sd-success-gradient-start: #00c1a5;
 $sd-success-gradient-end: #00cd7a;
 
-$sd-failure: #dc142d;
+$sd-failure: #ff4b00;
 $sd-aborted: $sd-failure;
 $sd-failure-gradient-start: #f0162f;
 $sd-failure-gradient-end: #f80e5d;
@@ -51,6 +51,6 @@ $sd-unstable: $sd-warning;
 $sd-running-gradient-start: $sd-link;
 $sd-running-gradient-end: $sd-running;
 
-$sd-flyout-bg: #f0f4ff;
-$sd-flyout-hover: #f7faff;
+$sd-flyout-bg: #f5f8fe;
+$sd-flyout-hover: $sd-white;
 $sd-active-hl: #3570f4;

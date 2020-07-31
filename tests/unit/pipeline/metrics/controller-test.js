@@ -60,7 +60,7 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
           key: 'duration',
           name: 'Duration',
           style: {
-            string: 'border-color:#16c045 #ea0000 #ea0000 #16c045'
+            string: 'border-color:#03af7a #ff4b00 #ff4b00 #03af7a'
           }
         },
         {
