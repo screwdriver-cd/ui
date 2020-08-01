@@ -10,6 +10,7 @@ import injectSessionStub from '../../../helpers/inject-session';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
 let syncService;
+
 let cacheService;
 
 module('Integration | Component | pipeline options', function(hooks) {

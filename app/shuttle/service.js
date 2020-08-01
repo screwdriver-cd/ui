@@ -46,6 +46,7 @@ export default Service.extend({
     }
 
     let optionsType = method.toUpperCase();
+
     let requestType = method.toLowerCase();
 
     if (raw) {

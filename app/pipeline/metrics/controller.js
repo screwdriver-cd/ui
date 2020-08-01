@@ -228,6 +228,7 @@ export default Controller.extend({
   // serves as a template for axis related configs
   axis: computed(function axis() {
     const self = this;
+
     let dateOptions;
 
     return {
@@ -268,6 +269,7 @@ export default Controller.extend({
             const offset = 1;
             const canvasWidth = self.get('eventsChart').internal.width;
             const diff = times[x1 - 2] - times[x0];
+
             let tickLabelWidth = 80;
 
             // show only date string if longer than a week
@@ -284,6 +286,7 @@ export default Controller.extend({
             }
 
             let step = 1;
+
             let values = self.range(x0, x1 - offset, step);
 
             const maxAllowedLabels = Math.floor(canvasWidth / tickLabelWidth);
@@ -374,7 +377,9 @@ export default Controller.extend({
             .reduce(
               (html, d) => {
                 const c = d.id === 'duration' && s !== 'SUCCESS' ? '#ea0000' : color(d.id);
+
                 let { name } = d;
+
                 let url;
 
                 // add deep-link to build/step if possible

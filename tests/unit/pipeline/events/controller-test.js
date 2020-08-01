@@ -20,6 +20,7 @@ const sessionServiceMock = Service.extend({
     }
   }
 });
+
 let server;
 
 module('Unit | Controller | pipeline/events', function(hooks) {
