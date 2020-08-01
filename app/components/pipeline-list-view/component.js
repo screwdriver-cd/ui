@@ -46,7 +46,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
-    const table = new Table(this.get('columns'), sortedRows);
+    const table = Table.create(this.get('columns'), sortedRows);
 
     let sortColumn = table.get('allColumns').findBy('valuePath', this.get('sortingValuePath'));
 
