@@ -1,4 +1,4 @@
-import { copy } from 'ember-copy';
+import { copy } from '@ember/object/internals';
 import { assign } from '@ember/polyfills';
 
 const events = [

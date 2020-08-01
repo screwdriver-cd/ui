@@ -57,7 +57,6 @@ export default DS.Model.extend(ModelReloaderMixin, {
     get() {
       const builds = get(this, 'builds');
       const firstCreateTime = builds.map(item => get(item, 'createTime')).sort()[0];
-
       let lastEndTime = new Date();
 
       if (get(this, 'isComplete')) {
@@ -104,7 +103,6 @@ export default DS.Model.extend(ModelReloaderMixin, {
     }
 
     const builds = get(this, 'builds');
-
     let status = 'UNKNOWN';
 
     builds.then(list => {

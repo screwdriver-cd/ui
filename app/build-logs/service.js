@@ -28,7 +28,6 @@ export default Service.extend({
     started = false
   }) {
     let lines = [];
-
     let done = false;
     const inProgress = sortOrder === 'ascending';
 

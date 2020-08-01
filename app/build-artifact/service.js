@@ -37,7 +37,6 @@ function changeFiles(tree) {
  */
 function arrangeIntoTree(paths, baseUrl) {
   const tree = [];
-
   let currentLevel;
 
   paths.forEach(path => {

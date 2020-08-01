@@ -7,7 +7,6 @@ module('Unit | Model | build history', function(hooks) {
   // Replace this with your real tests.
   test('it exists', function(assert) {
     let store = this.owner.lookup('service:store');
-
     let model = store.createRecord('build-history', {});
 
     assert.ok(model);

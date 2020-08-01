@@ -7,29 +7,9 @@ export default Component.extend({
 
   result: computed('value', {
     async get() {
-      const {
-        buildId,
-        jobId,
-        startTime,
-        endTime,
-        pipelineId,
-        prNum,
-        jobName,
-        pipelineName,
-        scope
-      } = this.value;
+      const { buildId, jobId, startTime, endTime, pipelineId, prNum } = this.value;
 
-      return this.shuttle.fetchCoverage(
-        buildId,
-        jobId,
-        startTime,
-        endTime,
-        pipelineId,
-        prNum,
-        jobName,
-        pipelineName,
-        scope
-      );
+      return this.shuttle.fetchCoverage(buildId, jobId, startTime, endTime, pipelineId, prNum);
     }
   })
 });

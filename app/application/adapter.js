@@ -135,7 +135,6 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
     }
 
     let data = {};
-
     let key;
 
     const requestUrl = new URL(requestData.url);

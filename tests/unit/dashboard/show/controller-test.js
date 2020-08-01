@@ -19,7 +19,6 @@ module('Unit | Controller | dashboard/show', function(hooks) {
   test('it calls removePipeline', function(assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:dashboard/show');
-
     let pipelineIds = [1, 2, 3];
 
     const mock = EmberObject.create({

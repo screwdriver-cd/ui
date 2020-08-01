@@ -191,7 +191,6 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   const jobsAvailable =
     (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) && get(jobs, 'length');
   const { edges } = graph;
-
   let y = [0]; // accumulator for column heights
 
   nodes.forEach(n => {
@@ -297,7 +296,6 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
   }
 
   let visiting = [start];
-
   let visited = new Set(visiting);
 
   if (edges.length) {

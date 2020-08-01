@@ -28,7 +28,6 @@ export default Component.extend({
           nodes: [],
           edges: []
         });
-
         let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
 
         // only remove node if it is not a source node
@@ -142,7 +141,6 @@ export default Component.extend({
       MAX_DISPLAY_NAME
     );
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = this.elementSizes;
-
     let X_WIDTH = ICON_SIZE * 2;
 
     // When displaying job names use estimate of 7 per character

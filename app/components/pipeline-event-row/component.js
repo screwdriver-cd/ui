@@ -41,7 +41,6 @@ export default Component.extend({
     get() {
       const startFrom = this.get('event.startFrom');
       const pipelineId = this.get('event.pipelineId');
-
       let isExternal = false;
 
       if (startFrom && startFrom.match(/^~sd@(\d+):([\w-]+)$/)) {
@@ -66,7 +65,6 @@ export default Component.extend({
       // using underscore because router.js doesn't pick up camelcase
       /* eslint-disable camelcase */
       let pipeline_id = this.get('event.startFrom').match(/^~sd@(\d+):[\w-]+$/);
-
       let build_id = this.get('event.causeMessage').match(/\s(\d+)$/);
 
       if (build_id) {

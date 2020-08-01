@@ -3,31 +3,11 @@
   onSubmit=(action "onSave" parameters) as |form|}}
 
   {{#each parameters as |parameter|}}
-    {{#if (is-array parameter.value)}}
-      {{#form.group}}
-        <label class="control-label col-md-4">{{parameter.name}}</label>
-        <div class="col-md-8">
-          {{#power-select
-            options=parameter.value
-            renderInPlace=true
-            selected=(get parameterizedModel parameter.name)
-            onchange=(action (action "onUpdateDropdownValue" parameterizedModel parameter.name))
-            onkeydown=(action (action "searchOrAddtoList" parameterizedModel parameter.name))
-            searchPlaceholder="Type to filter"
-            noMatchesMessage="Hit enter to override"
-            as |selectedValue|
-          }}
-            {{selectedValue}}
-          {{/power-select}}
-        </div>
-      {{/form.group}}
-    {{else}}
-      {{form.element
-        label=parameter.name
-        placeholder=parameter.value
-        property=parameter.name
-        onChange=(action "onUpdateValue")}}
-    {{/if}}
+    {{form.element
+      label=parameter.name
+      placeholder=parameter.value
+      property=parameter.name
+      onChange=(action "onUpdateValue")}}
   {{/each}}
 
   {{#if showSubmitButton}}

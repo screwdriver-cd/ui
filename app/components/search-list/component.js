@@ -1,3 +1,4 @@
+/* eslint ember/avoid-leaking-state-in-components: [2, ["pipelineSorting"]] */
 import { computed, get, set } from '@ember/object';
 import { empty } from '@ember/object/computed';
 import { inject as service } from '@ember/service';

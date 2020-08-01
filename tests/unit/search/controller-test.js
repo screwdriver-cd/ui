@@ -90,7 +90,6 @@ module('Unit | Controller | search', function(hooks) {
   test('it calls addToCollection', function(assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:search');
-
     let pipelineIds = [1, 2];
 
     const collectionModelMock = {

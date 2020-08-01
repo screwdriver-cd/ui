@@ -4,7 +4,7 @@ import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 import { assign } from '@ember/polyfills';
-import { copy } from 'ember-copy';
+import { copy } from '@ember/object/internals';
 
 const event = {
   id: 3,

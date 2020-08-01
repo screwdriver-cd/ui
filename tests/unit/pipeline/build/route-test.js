@@ -87,7 +87,6 @@ module('Unit | Route | pipeline/build', function(hooks) {
         steps: []
       }
     };
-
     let transition = { targetName: 'pipeline.build.artifacts.details' };
 
     route.redirect(model, transition);

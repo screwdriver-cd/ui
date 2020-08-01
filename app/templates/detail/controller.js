@@ -31,7 +31,6 @@ export default Controller.extend({
       const version = this.selectedVersion || this.get('latest.version');
 
       let { versionOrTagFromUrl } = this.templates;
-
       let { templateTagData } = this.templates;
 
       if (versionOrTagFromUrl === undefined) {

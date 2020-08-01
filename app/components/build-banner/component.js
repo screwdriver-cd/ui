@@ -128,14 +128,8 @@ export default Component.extend({
       startTime: buildStartTime,
       endTime: coverageStepEndTime,
       pipelineId: this.pipelineId,
-      prNum: this.prNumber,
-      jobName: this.jobName,
-      pipelineName: this.pipelineName
+      prNum: this.prNumber
     };
-
-    if (this.annotations && this.annotations['screwdriver.cd/coverageScope']) {
-      config.scope = this.annotations['screwdriver.cd/coverageScope'];
-    }
 
     this.coverage.getCoverageInfo(config).then(data => {
       this.set('coverageInfo', data);

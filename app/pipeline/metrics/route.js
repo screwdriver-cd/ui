@@ -82,7 +82,6 @@ export default Route.extend({
           this.set('jobMetrics', jobMetrics);
 
           const total = pipelineMetrics.get('length');
-
           let events = {
             queuedTime: [],
             imagePullTime: [],
@@ -92,19 +91,12 @@ export default Route.extend({
             status: [],
             createTime: []
           };
-
           let steps = {};
-
           let builds = [];
-
           let buildIds = [];
-
           let stepGroup = new Set();
-
           let jobMap = {};
-
           let passCount = 0;
-
           let sum = { queuedTime: 0, imagePullTime: 0, duration: 0 };
 
           /**

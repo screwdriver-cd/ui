@@ -46,7 +46,6 @@ export default Component.extend({
     get() {
       const commands = this.steps;
       const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)(?:@((?:(?:\d+)(?:\.\d+)?(?:\.\d+)?)|(?:[a-zA-Z][\w-]+)))?/g;
-
       let sdCommands = [];
 
       if (commands === []) {

@@ -24,7 +24,6 @@ export default Service.extend({
   },
   getAllCommands(namespace) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands`;
-
     let params = { compact: true, sortBy: 'createTime' };
 
     if (namespace) {

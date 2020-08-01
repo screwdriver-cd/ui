@@ -8,7 +8,6 @@
  */
 const getFullName = config => {
   let { name, namespace } = config;
-
   let fullName = name;
 
   if (namespace && namespace !== 'default') {

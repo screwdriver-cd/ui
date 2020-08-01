@@ -135,7 +135,6 @@ export default Controller.extend({
 
     const build = this.get('build');
     const pipelineId = this.get('pipeline.id');
-
     let activeStep;
 
     if (name) {

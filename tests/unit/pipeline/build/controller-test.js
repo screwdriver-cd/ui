@@ -35,7 +35,6 @@ const routerServiceMock = Service.extend({
     name: 'someRouteName'
   }
 });
-
 let server;
 
 module('Unit | Controller | pipeline/build', function(hooks) {

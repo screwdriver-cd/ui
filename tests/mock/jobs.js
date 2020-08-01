@@ -1,4 +1,4 @@
-import { copy } from 'ember-copy';
+import { copy } from '@ember/object/internals';
 
 export default () =>
   copy(
