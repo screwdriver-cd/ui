@@ -30,7 +30,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let table = new Table(this.columns, this.refinedModel);
+    let table = Table.create(this.columns, this.refinedModel);
 
     let sortColumn = table.get('allColumns').findBy('valuePath', this.sort);
 
