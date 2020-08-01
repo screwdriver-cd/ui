@@ -10,6 +10,7 @@ const sessionStub = Service.extend({
     }
   }
 });
+
 let server;
 
 const EXAMPLE_CONFIG_PAYLOAD = {

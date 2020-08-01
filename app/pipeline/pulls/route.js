@@ -15,6 +15,7 @@ export default EventsRoute.extend({
   model() {
     this.controllerFor('pipeline.events').set('pipeline', this.pipeline);
     const jobsPromise = this.get('pipeline.jobs');
+
     let events = [];
 
     // fetch latest events which belongs to each PR jobs, if the prChain feature is enabled

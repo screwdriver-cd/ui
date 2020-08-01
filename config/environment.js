@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = environment => {
   let ENV = {
     modulePrefix: 'screwdriver-ui',

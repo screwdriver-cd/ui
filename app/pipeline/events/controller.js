@@ -88,7 +88,9 @@ export default Controller.extend(ModelReloaderMixin, {
   modelEvents: computed('model.events', {
     get() {
       let previousModelEvents = this.previousModelEvents || [];
+
       let currentModelEvents = this.get('model.events').toArray();
+
       let newModelEvents = [];
       const newPipelineId = this.get('pipeline.id');
 
@@ -143,6 +145,7 @@ export default Controller.extend(ModelReloaderMixin, {
   pullRequestGroups: computed('model.jobs', {
     get() {
       const jobs = this.get('model.jobs');
+
       let groups = {};
 
       return jobs
@@ -378,6 +381,7 @@ export default Controller.extend(ModelReloaderMixin, {
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
       const pipelineId = this.get('pipeline.id');
+
       let eventPayload = {
         pipelineId,
         startFrom: '~commit',
@@ -394,6 +398,7 @@ export default Controller.extend(ModelReloaderMixin, {
       this.set('isShowingModal', true);
 
       const buildId = get(job, 'buildId');
+
       let parentBuildId = null;
       const { parameters, reason } = options;
 
@@ -409,8 +414,10 @@ export default Controller.extend(ModelReloaderMixin, {
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
+
       let causeMessage = `Manually started by ${user}`;
       const prNum = get(event, 'prNum');
+
       let startFrom = get(job, 'name');
 
       if (reason) {
@@ -444,8 +451,11 @@ export default Controller.extend(ModelReloaderMixin, {
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
       const user = get(decoder(token), 'username');
+
       let causeMessage = `Manually started by ${user}`;
+
       let startFrom = jobName;
+
       let eventPayload;
 
       if (buildState) {
@@ -482,7 +492,9 @@ export default Controller.extend(ModelReloaderMixin, {
     },
     stopBuild(givenEvent, job) {
       const buildId = get(job, 'buildId');
+
       let build;
+
       let event = givenEvent;
 
       if (buildId) {
@@ -531,6 +543,7 @@ export default Controller.extend(ModelReloaderMixin, {
     startPRBuild(prNum, jobs, parameters) {
       this.set('isShowingModal', true);
       const user = get(decoder(this.get('session.data.authenticated.token')), 'username');
+
       let eventPayload = {
         causeMessage: `Manually started by ${user}`,
         pipelineId: this.get('pipeline.id'),

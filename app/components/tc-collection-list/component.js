@@ -31,6 +31,7 @@ export default Component.extend({
     this._super(...arguments);
 
     let table = new Table(this.columns, this.refinedModel);
+
     let sortColumn = table.get('allColumns').findBy('valuePath', this.sort);
 
     // Setup initial sort column
@@ -103,47 +104,49 @@ export default Component.extend({
         .sort();
     }
   }),
-  columns: computed(() => [
-    {
-      label: 'Name',
-      valuePath: 'name',
-      cellComponent: 'tc-collection-linker',
-      resizable: true,
-      width: '20%',
-      minResizeWidth: 175
-    },
-    {
-      label: 'Description',
-      sortable: false,
-      valuePath: 'description',
-      resizable: true,
-      width: '30%',
-      minResizeWidth: 350
-    },
-    {
-      label: 'Namespace',
-      valuePath: 'namespace',
-      cellComponent: 'tc-collection-linker',
-      resizable: true,
-      width: '15%',
-      minResizeWidth: 150
-    },
-    {
-      label: 'Updated',
-      valuePath: 'lastUpdated',
-      resizable: true,
-      width: '15%',
-      minResizeWidth: 100
-    },
-    {
-      label: 'Released By',
-      sortable: true,
-      valuePath: 'maintainer',
-      resizable: true,
-      width: '20%',
-      minResizeWidth: 150
-    }
-  ]),
+  columns: computed(function() {
+    return [
+      {
+        label: 'Name',
+        valuePath: 'name',
+        cellComponent: 'tc-collection-linker',
+        resizable: true,
+        width: '20%',
+        minResizeWidth: 175
+      },
+      {
+        label: 'Description',
+        sortable: false,
+        valuePath: 'description',
+        resizable: true,
+        width: '30%',
+        minResizeWidth: 350
+      },
+      {
+        label: 'Namespace',
+        valuePath: 'namespace',
+        cellComponent: 'tc-collection-linker',
+        resizable: true,
+        width: '15%',
+        minResizeWidth: 150
+      },
+      {
+        label: 'Updated',
+        valuePath: 'lastUpdated',
+        resizable: true,
+        width: '15%',
+        minResizeWidth: 100
+      },
+      {
+        label: 'Released By',
+        sortable: true,
+        valuePath: 'maintainer',
+        resizable: true,
+        width: '20%',
+        minResizeWidth: 150
+      }
+    ];
+  }),
   refineModel() {
     this.table.setRows(this.refinedModel);
   },
