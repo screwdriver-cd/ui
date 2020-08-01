@@ -92,6 +92,7 @@ module('Unit | Model | build', function(hooks) {
 
   test('it humanizes createTime', function(assert) {
     const createTime = new Date(1472244582531);
+
     let model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         createTime
@@ -108,6 +109,7 @@ module('Unit | Model | build', function(hooks) {
 
   test('it truncates the sha', function(assert) {
     const sha = '026c5b76b210f96dc27011b553679a7663b38698';
+
     let model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         sha

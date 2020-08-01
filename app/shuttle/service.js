@@ -46,6 +46,7 @@ export default Service.extend({
     }
 
     let optionsType = method.toUpperCase();
+
     let requestType = method.toLowerCase();
 
     if (raw) {
@@ -91,10 +92,24 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data);
   },
 
-  async fetchCoverage(buildId, jobId, startTime, endTime, pipelineId, prNum) {
+  async fetchCoverage(
+    buildId,
+    jobId,
+    startTime,
+    endTime,
+    pipelineId,
+    prNum,
+    jobName,
+    pipelineName,
+    scope
+  ) {
     const method = 'get';
     const url = `/coverage/info`;
-    const data = { buildId, jobId, startTime, endTime, pipelineId, prNum };
+    const data = { buildId, jobId, startTime, endTime, pipelineId, prNum, jobName, pipelineName };
+
+    if (scope) {
+      data.scope = scope;
+    }
 
     return this.fetchFromApi(method, url, data);
   },

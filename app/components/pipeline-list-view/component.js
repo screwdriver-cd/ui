@@ -46,7 +46,8 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
-    const table = new Table(this.get('columns'), sortedRows);
+    const table = Table.create(this.get('columns'), sortedRows);
+
     let sortColumn = table.get('allColumns').findBy('valuePath', this.get('sortingValuePath'));
 
     // Setup initial sort column
@@ -123,7 +124,7 @@ export default Component.extend({
 
   getRows(jobsDetails = []) {
     let rows = jobsDetails.map(jobDetails => {
-      const { jobId, jobName } = jobDetails;
+      const { jobId, jobName, annotations } = jobDetails;
       const latestBuild = jobDetails.builds.length ? get(jobDetails, 'builds.lastObject') : null;
 
       const jobData = {
@@ -146,9 +147,13 @@ export default Component.extend({
       const prNumMatch = jobName.match(prRegex);
 
       let duration;
+
       let startTime;
+
       let status;
+
       let buildId;
+
       let coverageData = {};
 
       if (latestBuild) {
@@ -163,8 +168,14 @@ export default Component.extend({
           startTime: latestBuild.startTime,
           endTime: latestBuild.endTime,
           pipelineId: latestBuild.pipelineId,
-          prNum: prNumMatch && prNumMatch.length > 1 ? prNumMatch[1] : null
+          prNum: prNumMatch && prNumMatch.length > 1 ? prNumMatch[1] : null,
+          jobName,
+          pipelineName: this.get('pipeline.name')
         };
+
+        if (annotations && annotations['screwdriver.cd/coverageScope']) {
+          coverageData.scope = annotations['screwdriver.cd/coverageScope'];
+        }
       }
 
       return {

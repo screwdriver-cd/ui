@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { set } from '@ember/object';
+import { getWithDefault, set } from '@ember/object';
 
 /**
  @class PipelineParameterizedBuild
@@ -70,7 +70,7 @@ export default Component.extend({
     const normalizedParameterizedModel = {};
 
     Object.entries(parameters).forEach(([propertyName, propertyVal]) => {
-      const value = propertyVal.value || propertyVal || '';
+      let value = propertyVal.value || propertyVal || '';
       const description = propertyVal.description || '';
 
       normalizedParameters.push({
@@ -78,6 +78,10 @@ export default Component.extend({
         value,
         description
       });
+
+      if (Array.isArray(value)) {
+        value = getWithDefault(value, '0', '');
+      }
 
       normalizedParameterizedModel[propertyName] = value;
     });
@@ -109,9 +113,23 @@ export default Component.extend({
     throw new Error('Not implemented');
   },
 
+  updateValue({ model, propertyName, value }) {
+    set(model, propertyName, value);
+  },
+
   actions: {
+    searchOrAddtoList(model, propertyName, value, e) {
+      if (e.keyCode === 13) {
+        this.updateValue({ model, propertyName, value: value.searchText });
+      }
+    },
+
+    onUpdateDropdownValue(model, propertyName, value) {
+      this.updateValue({ model, propertyName, value });
+    },
+
     onUpdateValue(value, model, propertyName) {
-      set(model, propertyName, value);
+      this.updateValue({ model, propertyName, value });
     },
 
     /**

@@ -37,6 +37,7 @@ export default Component.extend({
   }),
   getPageSize(fetchMax = false) {
     const { totalLine, inProgress, justFinished } = this;
+
     let itemSize = this.logService.getCache(this.buildId, this.stepName, 'nextLine') || totalLine;
 
     if (justFinished) {

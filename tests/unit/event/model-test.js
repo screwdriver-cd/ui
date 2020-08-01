@@ -48,6 +48,7 @@ module('Unit | Model | event', function(hooks) {
       .lookup('service:store')
       .createRecord('build', { jobId: 3, status: 'SUCCESS' });
     const model = run(() => this.owner.lookup('service:store').createRecord('event'));
+
     let reloadCnt = 0;
 
     run(() => {

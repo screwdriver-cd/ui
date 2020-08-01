@@ -1,4 +1,3 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["jobSorting"]] */
 import $ from 'jquery';
 import { inject as service } from '@ember/service';
 import { not, or, sort } from '@ember/object/computed';
@@ -124,6 +123,7 @@ export default Component.extend({
     },
     clearCache(scope, id) {
       const pipelineId = this.get('pipeline.id');
+
       let config = {
         scope,
         cacheId: id,
