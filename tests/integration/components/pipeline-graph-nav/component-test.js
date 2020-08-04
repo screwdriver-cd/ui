@@ -45,64 +45,72 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.dom('.row strong').hasText('Pipeline');
     assert.dom('.row button').exists({ count: 4 });
 
-    const $columnTitles = this.$('.event-info .title');
-    const $links = this.$('.event-info a');
+    const $columnTitles = this.element.querySelectorAll('.event-info .title');
+    const $links = this.element.querySelectorAll('.event-info a');
 
     assert.equal(
-      $columnTitles
-        .eq(0)
-        .text()
-        .trim(),
-      'Commit'
+      // $columnTitles1
+      //   .eq(0)
+      //   .text(),
+      //   .trim(),
+      $columnTitles[0].innerText.trim(),
+      'COMMIT'
     );
     assert.equal(
-      $columnTitles
-        .eq(1)
-        .text()
-        .trim(),
-      'Message'
+      // $columnTitles
+      //   .eq(1)
+      //   .text()
+      //   .trim(),
+      $columnTitles[1].innerText.trim(),
+      'MESSAGE'
     );
     assert.equal(
-      $columnTitles
-        .eq(2)
-        .text()
-        .trim(),
-      'Status'
+      // $columnTitles
+      //   .eq(2)
+      //   .text()
+      //   .trim(),
+      $columnTitles[2].innerText.trim(),
+      'STATUS'
     );
     assert.equal(
-      $columnTitles
-        .eq(3)
-        .text()
-        .trim(),
-      'Committer'
+      // $columnTitles
+      //   .eq(3)
+      //   .text()
+      //   .trim(),
+      $columnTitles[3].innerText.trim(),
+      'COMMITTER'
     );
     assert.equal(
-      $columnTitles
-        .eq(4)
-        .text()
-        .trim(),
-      'Start Date'
+      // $columnTitles
+      //   .eq(4)
+      //   .text()
+      //   .trim(),
+      $columnTitles[4].innerText.trim(),
+      'START DATE'
     );
     assert.equal(
-      $columnTitles
-        .eq(5)
-        .text()
-        .trim(),
-      'Duration'
+      // $columnTitles
+      //   .eq(5)
+      //   .text()
+      //   .trim(),
+      $columnTitles[5].innerText.trim(),
+      'DURATION'
     );
 
     assert.equal(
-      $links
-        .eq(0)
-        .text()
-        .trim(),
+      // $links
+      //   .eq(0)
+      //   .text()
+      //   .trim(),
+      $links[0].innerText.trim(),
       '#abc123'
     );
     assert.equal(
-      $links
-        .eq(1)
-        .text()
-        .trim(),
+      // $links
+      //   .eq(1)
+      //   .text()
+      //   .trim(),
+      $links[1].innerText.trim(),
       'anonymous'
     );
 
@@ -143,9 +151,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       setShowListView=setShowListView
     }}`);
 
-    this.$('button')
-      .filter(':first')
-      .click();
+    this.element.querySelector('button').click();
     assert.equal(get(this, 'selected'), 3);
   });
 
@@ -185,11 +191,11 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.notOk(get(this, 'showListView'));
     assert.dom('.event-info').doesNotHaveClass('disabled');
 
-    this.$('button')[3].click();
+    this.element.querySelectorAll('button')[3].click();
     assert.ok(get(this, 'showListView'));
     assert.dom('.event-info').hasClass('disabled');
 
-    this.$('button')[2].click();
+    this.element.querySelectorAll('button')[2].click();
     assert.notOk(get(this, 'showListView'));
     assert.dom('.event-info').doesNotHaveClass('disabled');
   });

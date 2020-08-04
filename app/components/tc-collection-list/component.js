@@ -104,7 +104,7 @@ export default Component.extend({
         .sort();
     }
   }),
-  columns: computed(function() {
+  columns: computed(function columns() {
     return [
       {
         label: 'Name',

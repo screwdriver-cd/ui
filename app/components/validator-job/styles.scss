@@ -54,4 +54,8 @@
       color: $sd-failure;
     }
   }
+
+  div .hidden {
+    display: node !important;
+  }
 }

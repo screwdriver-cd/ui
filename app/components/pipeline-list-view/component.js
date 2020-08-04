@@ -150,17 +150,14 @@ export default Component.extend({
 
       let startTime;
 
-      let status;
-
       let buildId;
 
       let coverageData = {};
 
       if (latestBuild) {
         startTime = moment(latestBuild.startTime).format('lll');
-        status = latestBuild.status;
         buildId = latestBuild.id;
-        duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, status);
+        duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, latestBuild.status);
 
         coverageData = {
           jobId,

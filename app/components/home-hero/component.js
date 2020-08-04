@@ -13,7 +13,7 @@ export default Component.extend({
   languages: langs,
   actions: {
     changeLanguage() {
-      this.set('forkUrl', this.$('select').val());
+      this.set('forkUrl', this.element.querySelector('select').value);
     }
   },
   forkUrl: langs[0].url
