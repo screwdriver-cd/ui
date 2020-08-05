@@ -17,6 +17,7 @@ export default Component.extend({
   template: service(),
   results: '',
   validator: service(),
+  session: service(),
   prUrl: '',
   scmUrl: '',
   rootDir: '',
@@ -34,7 +35,9 @@ export default Component.extend({
 
   hasAutoDeployEnabled: computed({
     get() {
-      const scm = this.scmService.getScm('github:github.com');
+      const { session } = this;
+      const currentContext = session.get('data.authenticated.scmContext');
+      const scm = this.scmService.getScm(currentContext);
 
       return scm.autoDeployKeyGeneration;
     }
