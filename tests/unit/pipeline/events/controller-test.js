@@ -41,6 +41,11 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
   test('it starts a build', async function(assert) {
     assert.expect(9);
+    server.get('http://localhost:8080/v4/events/5678/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -103,6 +108,11 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
   test('it starts a single build', async function(assert) {
     assert.expect(13);
+    server.get('http://localhost:8080/v4/events/5678/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -183,6 +193,11 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
   test('it restarts a build', async function(assert) {
     assert.expect(8);
+    server.get('http://localhost:8080/v4/events/2/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -260,6 +275,11 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
   test('it restarts a PR build', async function(assert) {
     assert.expect(8);
+    server.get('http://localhost:8080/v4/events/2/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
