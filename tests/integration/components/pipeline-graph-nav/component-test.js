@@ -48,71 +48,15 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     const $columnTitles = this.element.querySelectorAll('.event-info .title');
     const $links = this.element.querySelectorAll('.event-info a');
 
-    assert.equal(
-      // $columnTitles1
-      //   .eq(0)
-      //   .text(),
-      //   .trim(),
-      $columnTitles[0].innerText.trim(),
-      'COMMIT'
-    );
-    assert.equal(
-      // $columnTitles
-      //   .eq(1)
-      //   .text()
-      //   .trim(),
-      $columnTitles[1].innerText.trim(),
-      'MESSAGE'
-    );
-    assert.equal(
-      // $columnTitles
-      //   .eq(2)
-      //   .text()
-      //   .trim(),
-      $columnTitles[2].innerText.trim(),
-      'STATUS'
-    );
-    assert.equal(
-      // $columnTitles
-      //   .eq(3)
-      //   .text()
-      //   .trim(),
-      $columnTitles[3].innerText.trim(),
-      'COMMITTER'
-    );
-    assert.equal(
-      // $columnTitles
-      //   .eq(4)
-      //   .text()
-      //   .trim(),
-      $columnTitles[4].innerText.trim(),
-      'START DATE'
-    );
-    assert.equal(
-      // $columnTitles
-      //   .eq(5)
-      //   .text()
-      //   .trim(),
-      $columnTitles[5].innerText.trim(),
-      'DURATION'
-    );
+    assert.equal($columnTitles[0].innerText.trim(), 'COMMIT');
+    assert.equal($columnTitles[1].innerText.trim(), 'MESSAGE');
+    assert.equal($columnTitles[2].innerText.trim(), 'STATUS');
+    assert.equal($columnTitles[3].innerText.trim(), 'COMMITTER');
+    assert.equal($columnTitles[4].innerText.trim(), 'START DATE');
+    assert.equal($columnTitles[5].innerText.trim(), 'DURATION');
 
-    assert.equal(
-      // $links
-      //   .eq(0)
-      //   .text()
-      //   .trim(),
-      $links[0].innerText.trim(),
-      '#abc123'
-    );
-    assert.equal(
-      // $links
-      //   .eq(1)
-      //   .text()
-      //   .trim(),
-      $links[1].innerText.trim(),
-      'anonymous'
-    );
+    assert.equal($links[0].innerText.trim(), '#abc123');
+    assert.equal($links[1].innerText.trim(), 'anonymous');
 
     assert.dom('.SUCCESS').exists({ count: 1 });
 

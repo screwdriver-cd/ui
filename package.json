@@ -100,7 +100,6 @@
     "ember-d3": "^0.5.1",
     "ember-data": "~3.16.0",
     "ember-export-application-global": "^2.0.1",
-    "ember-fetch": "^7.0.0",
     "ember-flatpickr": "^2.15.0",
     "ember-font-awesome": "^4.0.0-rc.4",
     "ember-highlight": "1.2.8",
