@@ -56,6 +56,7 @@ export default Component.extend({
         checkoutUrl: scmUrl,
         rootDir
       };
+
       let pipeline;
 
       try {
@@ -102,6 +103,7 @@ export default Component.extend({
           }
         } catch (err) {
           const { payload: responsePayload } = err;
+
           let { message } = responsePayload;
 
           this.setProperties({

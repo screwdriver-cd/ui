@@ -46,6 +46,7 @@ export default Component.extend({
     get() {
       const commands = this.steps;
       const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)(?:@((?:(?:\d+)(?:\.\d+)?(?:\.\d+)?)|(?:[a-zA-Z][\w-]+)))?/g;
+
       let sdCommands = [];
 
       if (commands === []) {
@@ -75,13 +76,13 @@ export default Component.extend({
     this._super(...arguments);
 
     if (!this.isOpen) {
-      this.$('div').hide();
+      this.element.querySelectorAll('div').forEach(el => el.classList.add('hidden'));
     }
   },
   actions: {
     nameClick() {
       this.toggleProperty('isOpen');
-      this.$('div').toggle('hidden');
+      this.element.querySelectorAll('div').forEach(el => el.classList.toggle('hidden'));
     }
   }
 });

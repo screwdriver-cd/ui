@@ -1,8 +1,14 @@
+'use strict';
+
 module.exports = {
   root: true,
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: 'module',
+    ecmaFeatures: {
+      legacyDecorators: true
+    }
   },
   plugins: ['ember', 'prettier'],
   extends: [
@@ -45,6 +51,9 @@ module.exports = {
     'ember/avoid-leaking-state-in-ember-objects': 'off',
     'ember/jquery-ember-run': 'off',
     'ember/no-global-jquery': 'off',
+    'ember/no-jquery': 'off',
+    'ember/no-new-mixins': 'off',
+    'ember/no-observers': 'off',
     'ember/no-side-effects': 'off',
     'prettier/prettier': 'error'
   },
@@ -61,6 +70,9 @@ module.exports = {
         'lib/*/index.js',
         'server/**/*.js'
       ],
+      parserOptions: {
+        sourceType: 'script'
+      },
       env: {
         browser: false,
         node: true

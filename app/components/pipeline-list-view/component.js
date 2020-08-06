@@ -46,7 +46,8 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
-    const table = new Table(this.get('columns'), sortedRows);
+    const table = Table.create({ columns: this.get('columns'), rows: sortedRows });
+
     let sortColumn = table.get('allColumns').findBy('valuePath', this.get('sortingValuePath'));
 
     // Setup initial sort column
@@ -146,16 +147,17 @@ export default Component.extend({
       const prNumMatch = jobName.match(prRegex);
 
       let duration;
+
       let startTime;
-      let status;
+
       let buildId;
+
       let coverageData = {};
 
       if (latestBuild) {
         startTime = moment(latestBuild.startTime).format('lll');
-        status = latestBuild.status;
         buildId = latestBuild.id;
-        duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, status);
+        duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, latestBuild.status);
 
         coverageData = {
           jobId,

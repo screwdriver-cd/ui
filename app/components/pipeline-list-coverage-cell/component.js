@@ -6,7 +6,7 @@ export default Component.extend({
   shuttle: service(),
 
   result: computed('value', {
-    async get() {
+    get: async () => {
       const {
         buildId,
         jobId,

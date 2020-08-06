@@ -1,4 +1,3 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["secretsSorting"]] */
 import { sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import Component from '@ember/component';
