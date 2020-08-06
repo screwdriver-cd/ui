@@ -37,6 +37,7 @@ export default Component.extend({
   }),
   getPageSize(fetchMax = false) {
     const { totalLine, inProgress, justFinished } = this;
+
     let itemSize = this.logService.getCache(this.buildId, this.stepName, 'nextLine') || totalLine;
 
     if (justFinished) {
@@ -259,7 +260,7 @@ export default Component.extend({
    * @method scrollTop
    */
   scrollTop() {
-    this.$('.wrap')[0].scrollTop = 0;
+    this.element.querySelectorAll('.wrap')[0].scrollTop = 0;
   },
 
   /**
@@ -268,9 +269,9 @@ export default Component.extend({
    */
   scrollDown() {
     if (this.autoscroll) {
-      const bottom = this.$('.bottom').prop('offsetTop');
+      const bottom = this.element.querySelector('.bottom').offsetTop;
 
-      this.$('.wrap').prop('scrollTop', bottom);
+      this.element.querySelector('.wrap').scrollTop = bottom;
       set(this, 'lastScrollTop', bottom);
     }
   },
@@ -280,7 +281,7 @@ export default Component.extend({
    * @method scrollStill
    */
   scrollStill() {
-    const container = this.$('.wrap')[0];
+    const container = this.element.querySelectorAll('.wrap')[0];
 
     set(
       this,
@@ -320,7 +321,7 @@ export default Component.extend({
         .then(({ done }) => {
           // prevent updating logs when component is being destroyed
           if (!this.isDestroyed && !this.isDestroying) {
-            const container = this.$('.wrap')[0];
+            const container = this.element.querySelectorAll('.wrap')[0];
             const { inProgress, justFinished } = this;
 
             set(this, 'isFetching', false);
@@ -369,18 +370,17 @@ export default Component.extend({
         set(this, 'isDownloading', true);
 
         this.getLogs(true).then(() => {
-          this.$('#downloadLink')
-            .attr({
-              download: `${buildId}-${stepName}.log`,
-              href: this.logService.buildLogBlobUrl(buildId, stepName)
-            })[0]
-            .click();
+          const el = this.element.querySelector('#downloadLink');
+
+          el.setAttribute('download', `${buildId}-${stepName}.log`);
+          el.setAttribute('href', this.logService.buildLogBlobUrl(buildId, stepName));
+          el.click();
           set(this, 'isDownloading', false);
         });
       }
     },
     logScroll() {
-      const container = this.$('.wrap')[0];
+      const container = this.element.querySelectorAll('.wrap')[0];
 
       if (
         !this.inProgress &&
@@ -394,7 +394,11 @@ export default Component.extend({
       }
 
       // autoscroll when the bottom of the logs is roughly in view
-      set(this, 'autoscroll', this.$('.bottom')[0].getBoundingClientRect().top < 1500);
+      set(
+        this,
+        'autoscroll',
+        this.element.querySelectorAll('.bottom')[0].getBoundingClientRect().top < 1500
+      );
     },
     toggleTimeDisplay() {
       let index = timeTypes.indexOf(this.timeFormat);

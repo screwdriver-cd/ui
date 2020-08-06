@@ -10,6 +10,7 @@ export default Controller.extend({
   actions: {
     createPipeline({ scmUrl, rootDir, autoKeysGeneration }) {
       let payload = { checkoutUrl: scmUrl, rootDir, autoKeysGeneration };
+
       let pipeline = this.store.createRecord('pipeline', payload);
 
       this.set('isSaving', true);

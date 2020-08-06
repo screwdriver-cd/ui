@@ -3,13 +3,12 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { set } from '@ember/object';
+import wait from 'ember-test-helpers/wait';
 
 module('Integration | Component | pipeline list view', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    let ticker = 0;
-
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -53,13 +52,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      if (ticker === 0) {
-        assert.ok(true);
-        ticker += 1;
-
-        return Promise.resolve(this.jobsDetails);
-      }
-
       return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
@@ -71,6 +63,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -78,6 +71,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -87,9 +81,81 @@ module('Integration | Component | pipeline list view', function(hooks) {
     assert.dom('.lt-row').exists({ count: 2 });
   });
 
-  test('it renders with duration', async function(assert) {
-    let ticker = 0;
+  test('it renders then resets jobDetails', async function(assert) {
+    set(this, 'jobsDetails', [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'RUNNING',
+            startTime: '',
+            endTime: ''
+          },
+          {
+            id: 2,
+            jobId: 1,
+            status: 'RUNNING',
+            startTime: '',
+            endTime: ''
+          }
+        ]
+      },
+      {
+        jobId: 2,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 2,
+            status: 'ABORTED',
+            startTime: '',
+            endTime: ''
+          },
+          {
+            id: 2,
+            jobId: 2,
+            status: 'RUNNING',
+            startTime: '',
+            endTime: ''
+          }
+        ]
+      }
+    ]);
+    set(this, 'updateListViewJobs', () => {
+      return Promise.resolve([]);
+    });
+    set(this, 'refreshListViewJobs', () => {
+      assert.ok(true);
+    });
+    set(this, 'startSingleBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'stopBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'buildParameters', [{ p1: 'p1' }]);
+    set(this, 'showPipelineListView', true);
+    await render(hbs`
+      {{#if showPipelineListView}}
+        {{pipeline-list-view
+        jobsDetails=jobsDetails
+        updateListViewJobs=updateListViewJobs
+        refreshListViewJobs=refreshListViewJobs
+        startSingleBuild=startSingleBuild
+        stopBuild=stopBuild
+        buildParameters=buildParameters}}
+      {{/if}}`);
+    set(this, 'showPipelineListView', false);
 
+    return wait().then(() => {
+      assert.equal(this.get('jobsDetails').length, 0);
+    });
+  });
+
+  test('it renders with duration', async function(assert) {
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -106,13 +172,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      if (ticker === 0) {
-        assert.ok(true);
-        ticker += 1;
-
-        return Promise.resolve(this.jobsDetails);
-      }
-
       return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
@@ -127,6 +186,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(Date, 'prototype.getTimezoneOffset', () => {
       return 0;
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -134,6 +194,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -146,8 +207,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build running', async function(assert) {
-    let ticker = 0;
-
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -164,13 +223,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      if (ticker === 0) {
-        assert.ok(true);
-        ticker += 1;
-
-        return Promise.resolve(this.jobsDetails);
-      }
-
       return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
@@ -182,6 +234,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -189,6 +242,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -201,8 +255,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build created', async function(assert) {
-    let ticker = 0;
-
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -219,13 +271,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      if (ticker === 0) {
-        assert.ok(true);
-        ticker += 1;
-
-        return Promise.resolve(this.jobsDetails);
-      }
-
       return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
@@ -237,6 +282,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -244,6 +290,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -256,8 +303,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build queued', async function(assert) {
-    let ticker = 0;
-
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -274,13 +319,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      if (ticker === 0) {
-        assert.ok(true);
-        ticker += 1;
-
-        return Promise.resolve(this.jobsDetails);
-      }
-
       return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
@@ -292,6 +330,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -299,6 +338,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -311,8 +351,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build blocked', async function(assert) {
-    let ticker = 0;
-
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -329,13 +367,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      if (ticker === 0) {
-        assert.ok(true);
-        ticker += 1;
-
-        return Promise.resolve(this.jobsDetails);
-      }
-
       return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
@@ -347,6 +378,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -354,6 +386,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -366,8 +399,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and build frozen', async function(assert) {
-    let ticker = 0;
-
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -384,13 +415,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      if (ticker === 0) {
-        assert.ok(true);
-        ticker += 1;
-
-        return Promise.resolve(this.jobsDetails);
-      }
-
       return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
@@ -402,6 +426,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -409,6 +434,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -421,8 +447,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and not started', async function(assert) {
-    let ticker = 0;
-
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -439,13 +463,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      if (ticker === 0) {
-        assert.ok(true);
-        ticker += 1;
-
-        return Promise.resolve(this.jobsDetails);
-      }
-
       return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
@@ -457,6 +474,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -464,6 +482,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
@@ -475,8 +494,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
   });
 
   test('it renders and aborted', async function(assert) {
-    let ticker = 0;
-
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -493,13 +510,6 @@ module('Integration | Component | pipeline list view', function(hooks) {
       }
     ]);
     set(this, 'updateListViewJobs', () => {
-      if (ticker === 0) {
-        assert.ok(true);
-        ticker += 1;
-
-        return Promise.resolve(this.jobsDetails);
-      }
-
       return Promise.resolve([]);
     });
     set(this, 'refreshListViewJobs', () => {
@@ -511,6 +521,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
     set(this, 'stopBuild', () => {
       assert.ok(true);
     });
+    set(this, 'buildParameters', []);
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
@@ -518,6 +529,7 @@ module('Integration | Component | pipeline list view', function(hooks) {
       refreshListViewJobs=refreshListViewJobs
       startSingleBuild=startSingleBuild
       stopBuild=stopBuild
+      buildParameters=buildParameters
     }}`);
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });

@@ -64,6 +64,7 @@ const statusIcon = (status, isLight) => {
  */
 const getActiveStep = (steps = []) => {
   const runningStep = steps.find(s => s.startTime && !s.endTime);
+
   let name;
 
   if (runningStep && runningStep.name) {

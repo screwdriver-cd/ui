@@ -8,7 +8,9 @@ module('Unit | Controller | pipeline', function(hooks) {
   test('Collection expects 1 pipelineIds', function(assert) {
     assert.expect(1);
     let controller = this.owner.lookup('controller:pipeline');
+
     let pipelineId = 1;
+
     let collection = EmberObject.create({
       pipelineIds: [],
       save() {
@@ -22,7 +24,9 @@ module('Unit | Controller | pipeline', function(hooks) {
   test('Collection expects 1 uniq pipelineId', function(assert) {
     assert.expect(1);
     let controller = this.owner.lookup('controller:pipeline');
+
     let pipelineId = 1;
+
     let collection = EmberObject.create({
       pipelineIds: [1],
       save() {
@@ -36,7 +40,9 @@ module('Unit | Controller | pipeline', function(hooks) {
   test('Collection expects 2 pipelineIds', function(assert) {
     assert.expect(1);
     let controller = this.owner.lookup('controller:pipeline');
+
     let pipelineId = 2;
+
     let collection = EmberObject.create({
       pipelineIds: [1],
       save() {

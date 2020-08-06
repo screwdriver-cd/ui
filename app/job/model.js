@@ -1,4 +1,4 @@
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { equal, match } from '@ember/object/computed';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
@@ -39,6 +39,11 @@ export default DS.Model.extend({
   }),
   // } for pr job only
   permutations: DS.attr(),
+  annotations: computed('permutations.[]', {
+    get() {
+      return get(this, 'permutations[0].annotations') || {};
+    }
+  }),
   builds: DS.hasMany('build', { async: true }),
   isDisabled: equal('state', 'DISABLED'),
   modelToReload: 'builds',

@@ -6,6 +6,7 @@ import sinon from 'sinon';
 import { model as makeMetricsMock } from '../../../mock/metrics';
 
 let chartMock;
+
 let metricsMock;
 
 module('Unit | Controller | pipeline/metrics', function(hooks) {

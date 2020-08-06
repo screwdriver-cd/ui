@@ -22,8 +22,10 @@ export default Component.extend({
     };
 
     const svg = select(this.element.getElementsByTagName('svg')[0]);
+
     let [barSpace, barWidth, paddingLeft, paddingRight] = getParameters(svg);
     const totalNumberOfEvents = this.events.length;
+
     let maxDuration = Math.max(...this.events.map(event => event.duration));
 
     if (maxDuration === -Infinity) {

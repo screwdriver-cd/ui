@@ -1,4 +1,3 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["sortBy", "selectedPipelines", "searchedPipelines", "selectedSearchedPipelines", "metricsMap"]] */
 import { sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';

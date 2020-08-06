@@ -78,8 +78,10 @@ module('Unit | Service | shuttle', function(hooks) {
     const jobId = 21;
     const startTime = '2020-05-06T23:36:46.779Z';
     const endTime = '2020-05-06T23:50:18.590Z';
+    const pipelineId = 123456;
+    const prNum = null;
 
-    service.fetchCoverage(buildId, jobId, startTime, endTime).then(result => {
+    service.fetchCoverage(buildId, jobId, startTime, endTime, pipelineId, prNum).then(result => {
       const { coverage, projectUrl } = result;
 
       assert.equal(coverage, '71.4', 'coverage is 71.4');

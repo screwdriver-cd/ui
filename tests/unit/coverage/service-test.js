@@ -47,7 +47,11 @@ module('Unit | Service | coverage ', function(hooks) {
       buildId: 123,
       jobId: 1,
       startTime: '2018-05-10T19:05:53.123Z',
-      endTime: '2018-05-10T19:06:53.123Z'
+      endTime: '2018-05-10T19:06:53.123Z',
+      pipelineId: 456,
+      prNum: 5,
+      jobName: 'main',
+      pipelineName: 'd2lam/mytest'
     };
 
     const p = service.getCoverageInfo(config);
@@ -64,7 +68,56 @@ module('Unit | Service | coverage ', function(hooks) {
       assert.deepEqual(
         request.url,
         // eslint-disable-next-line max-len
-        'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z'
+        'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z&pipelineId=456&prNum=5&jobName=main&pipelineName=d2lam%2Fmytest'
+      );
+    });
+  });
+
+  test('it fetches coverage info with scope', function(assert) {
+    assert.expect(3);
+    server.get('http://localhost:8080/v4/coverage/info', () => [
+      200,
+      {
+        'Content-Type': 'application/json'
+      },
+      JSON.stringify({
+        coverage: 98,
+        projectUrl: 'https://sonar.foo.bar',
+        tests: '7/10'
+      })
+    ]);
+
+    let service = this.owner.lookup('service:coverage');
+
+    assert.ok(service);
+
+    const config = {
+      buildId: 123,
+      jobId: 1,
+      startTime: '2018-05-10T19:05:53.123Z',
+      endTime: '2018-05-10T19:06:53.123Z',
+      pipelineId: 456,
+      prNum: 5,
+      jobName: 'main',
+      pipelineName: 'd2lam/mytest',
+      scope: 'job'
+    };
+
+    const p = service.getCoverageInfo(config);
+
+    p.then(data => {
+      const [request] = server.handledRequests;
+
+      assert.deepEqual(data, {
+        coverage: '98%',
+        coverageUrl: 'https://sonar.foo.bar',
+        tests: '7/10',
+        testsUrl: 'https://sonar.foo.bar'
+      });
+      assert.deepEqual(
+        request.url,
+        // eslint-disable-next-line max-len
+        'http://localhost:8080/v4/coverage/info?buildId=123&jobId=1&startTime=2018-05-10T19%3A05%3A53.123Z&endTime=2018-05-10T19%3A06%3A53.123Z&pipelineId=456&prNum=5&jobName=main&pipelineName=d2lam%2Fmytest&scope=job'
       );
     });
   });

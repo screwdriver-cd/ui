@@ -4,6 +4,7 @@ import moment from 'moment';
 import Table from 'ember-light-table';
 
 export default Component.extend({
+  isShowingModal: false,
   sortingDirection: 'asc',
   sortingValuePath: 'job',
   sortedRows: [],
@@ -45,7 +46,8 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
-    const table = new Table(this.get('columns'), sortedRows);
+    const table = Table.create({ columns: this.get('columns'), rows: sortedRows });
+
     let sortColumn = table.get('allColumns').findBy('valuePath', this.get('sortingValuePath'));
 
     // Setup initial sort column
@@ -53,7 +55,33 @@ export default Component.extend({
       sortColumn.set('sorted', true);
     }
 
-    this.set('table', table);
+    this.setProperties({
+      table,
+      buildParameters: this.getDefaultBuildParameters()
+    });
+  },
+
+  didDestroyElement() {
+    this._super(...arguments);
+    this.set('jobsDetails', []);
+  },
+
+  getDefaultBuildParameters() {
+    return this.getWithDefault('pipeline.parameters', {});
+  },
+
+  /**
+   * Note: jobId must be a string
+   * @param  {integer} jobId
+   * @return {undefined}
+   */
+  openParametersModal(jobId) {
+    const job = this.jobs.findBy('id', `${jobId}`);
+
+    this.setProperties({
+      job,
+      isShowingModal: true
+    });
   },
 
   getDuration(startTime, endTime, status) {
@@ -96,7 +124,7 @@ export default Component.extend({
 
   getRows(jobsDetails = []) {
     let rows = jobsDetails.map(jobDetails => {
-      const { jobId, jobName } = jobDetails;
+      const { jobId, jobName, annotations } = jobDetails;
       const latestBuild = jobDetails.builds.length ? get(jobDetails, 'builds.lastObject') : null;
 
       const jobData = {
@@ -109,27 +137,42 @@ export default Component.extend({
         jobName,
         latestBuild,
         startSingleBuild: this.get('startSingleBuild'),
-        stopBuild: this.get('stopBuild')
+        stopBuild: this.get('stopBuild'),
+        isShowingModal: this.isShowingModal,
+        hasParameters: Object.keys(this.get('buildParameters')).length > 0,
+        openParametersModal: this.openParametersModal.bind(this)
       };
 
+      const prRegex = /^PR-(\d+)(?::([\w-]+))?$/;
+      const prNumMatch = jobName.match(prRegex);
+
       let duration;
+
       let startTime;
-      let status;
+
       let buildId;
+
       let coverageData = {};
 
       if (latestBuild) {
         startTime = moment(latestBuild.startTime).format('lll');
-        status = latestBuild.status;
         buildId = latestBuild.id;
-        duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, status);
+        duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, latestBuild.status);
 
         coverageData = {
           jobId,
           buildId,
           startTime: latestBuild.startTime,
-          endTime: latestBuild.endTime
+          endTime: latestBuild.endTime,
+          pipelineId: latestBuild.pipelineId,
+          prNum: prNumMatch && prNumMatch.length > 1 ? prNumMatch[1] : null,
+          jobName,
+          pipelineName: this.get('pipeline.name')
         };
+
+        if (annotations && annotations['screwdriver.cd/coverageScope']) {
+          coverageData.scope = annotations['screwdriver.cd/coverageScope'];
+        }
       }
 
       return {
@@ -195,6 +238,21 @@ export default Component.extend({
 
         this.table.setRows(sortedRows);
       }
+    },
+
+    closeModal() {
+      this.set('isShowingModal', false);
+    },
+
+    resetForm() {
+      this.setProperties({
+        isShowingModal: false,
+        buildParameters: this.getDefaultBuildParameters()
+      });
+    },
+
+    startBuild(parameterizedModel) {
+      this.startDetachedBuild(this.job, parameterizedModel);
     }
   }
 });

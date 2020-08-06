@@ -10,7 +10,7 @@ module('Integration | Component | workflow graph d3', function(hooks) {
     await render(hbs`{{workflow-graph-d3}}`);
 
     assert.dom('svg').exists({ count: 1 });
-    assert.equal(this.$('svg').children().length, 0);
+    this.element.querySelectorAll('svg').forEach(el => assert.equal(el.children.length, 0));
   });
 
   test('it renders nodes and edges when a graph is supplied', async function(assert) {
@@ -20,11 +20,9 @@ module('Integration | Component | workflow graph d3', function(hooks) {
     });
     await render(hbs`{{workflow-graph-d3 workflowGraph=workflowGraph}}`);
 
-    const svg = this.$('svg');
-
-    assert.equal(svg.length, 1);
-    assert.equal(svg.children('g.graph-node').length, 3);
-    assert.equal(svg.children('path.graph-edge').length, 2);
+    assert.equal(this.element.querySelectorAll('svg').length, 1);
+    assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 3);
+    assert.equal(this.element.querySelectorAll('svg > path.graph-edge').length, 2);
   });
 
   test('it renders a complete graph with triggers when showDownstreamTriggers is true', async function(assert) {
@@ -45,11 +43,9 @@ module('Integration | Component | workflow graph d3', function(hooks) {
       hbs`{{workflow-graph-d3 workflowGraph=workflowGraph completeWorkflowGraph=completeWorkflowGraph showDownstreamTriggers=showDownstreamTriggers}}`
     );
 
-    const svg = this.$('svg');
-
-    assert.equal(svg.length, 1);
-    assert.equal(svg.children('g.graph-node').length, 4);
-    assert.equal(svg.children('path.graph-edge').length, 3);
+    assert.equal(this.element.querySelectorAll('svg').length, 1);
+    assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 4);
+    assert.equal(this.element.querySelectorAll('svg > path.graph-edge').length, 3);
   });
 
   test('it renders statuses when build data is available', async function(assert) {
@@ -78,16 +74,16 @@ module('Integration | Component | workflow graph d3', function(hooks) {
       hbs`{{workflow-graph-d3 workflowGraph=workflowGraph builds=builds startFrom=startFrom}}`
     );
 
-    const svg = this.$('svg');
+    const el = this.element;
 
-    assert.equal(svg.length, 1);
-    assert.equal(svg.children('g.graph-node').length, 5);
-    assert.equal(svg.children('g.graph-node.build-success').length, 2);
-    assert.equal(svg.children('g.graph-node.build-failure').length, 1);
-    assert.equal(svg.children('g.graph-node.build-started_from').length, 1);
-    assert.equal(svg.children('path.graph-edge').length, 4);
-    assert.equal(svg.children('path.graph-edge.build-started_from').length, 1);
-    assert.equal(svg.children('path.graph-edge.build-success').length, 2);
+    assert.equal(el.querySelectorAll('svg').length, 1);
+    assert.equal(el.querySelectorAll('svg > g.graph-node').length, 5);
+    assert.equal(el.querySelectorAll('svg > g.graph-node.build-success').length, 2);
+    assert.equal(el.querySelectorAll('svg > g.graph-node.build-failure').length, 1);
+    assert.equal(el.querySelectorAll('svg > g.graph-node.build-started_from').length, 1);
+    assert.equal(el.querySelectorAll('svg > path.graph-edge').length, 4);
+    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-started_from').length, 1);
+    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-success').length, 2);
   });
 
   test('it does not render startFrom icon when starting in the middle of the graph', async function(assert) {
@@ -115,16 +111,16 @@ module('Integration | Component | workflow graph d3', function(hooks) {
       hbs`{{workflow-graph-d3 workflowGraph=workflowGraph builds=builds startFrom=startFrom}}`
     );
 
-    const svg = this.$('svg');
+    const el = this.element;
 
-    assert.equal(svg.length, 1);
-    assert.equal(svg.children('g.graph-node').length, 5);
-    assert.equal(svg.children('g.graph-node.build-success').length, 1);
-    assert.equal(svg.children('g.graph-node.build-failure').length, 1);
-    assert.equal(svg.children('g.graph-node.build-started_from').length, 0);
-    assert.equal(svg.children('path.graph-edge').length, 4);
-    assert.equal(svg.children('path.graph-edge.build-started_from').length, 0);
-    assert.equal(svg.children('path.graph-edge.build-success').length, 1);
+    assert.equal(el.querySelectorAll('svg').length, 1);
+    assert.equal(el.querySelectorAll('svg > g.graph-node').length, 5);
+    assert.equal(el.querySelectorAll('svg > g.graph-node.build-success').length, 1);
+    assert.equal(el.querySelectorAll('svg > g.graph-node.build-failure').length, 1);
+    assert.equal(el.querySelectorAll('svg > g.graph-node.build-started_from').length, 0);
+    assert.equal(el.querySelectorAll('svg > path.graph-edge').length, 4);
+    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-started_from').length, 0);
+    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-success').length, 1);
   });
 
   test('it can renders subgraph for minified case', async function(assert) {
@@ -154,15 +150,15 @@ module('Integration | Component | workflow graph d3', function(hooks) {
           startFrom=startFrom
           minified=true}}`);
 
-    const svg = this.$('svg');
+    const el = this.element;
 
-    assert.equal(svg.length, 1);
-    assert.equal(svg.children('g.graph-node').length, 2);
-    assert.equal(svg.children('g.graph-node.build-success').length, 1);
-    assert.equal(svg.children('g.graph-node.build-failure').length, 1);
-    assert.equal(svg.children('g.graph-node.build-started_from').length, 0);
-    assert.equal(svg.children('path.graph-edge').length, 1);
-    assert.equal(svg.children('path.graph-edge.build-started_from').length, 0);
-    assert.equal(svg.children('path.graph-edge.build-success').length, 1);
+    assert.equal(el.querySelectorAll('svg').length, 1);
+    assert.equal(el.querySelectorAll('svg > g.graph-node').length, 2);
+    assert.equal(el.querySelectorAll('svg > g.graph-node.build-success').length, 1);
+    assert.equal(el.querySelectorAll('svg > g.graph-node.build-failure').length, 1);
+    assert.equal(el.querySelectorAll('svg > g.graph-node.build-started_from').length, 0);
+    assert.equal(el.querySelectorAll('svg > path.graph-edge').length, 1);
+    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-started_from').length, 0);
+    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-success').length, 1);
   });
 });

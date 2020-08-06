@@ -1,4 +1,4 @@
-import { copy } from '@ember/object/internals';
+import { copy } from 'ember-copy';
 import { assign } from '@ember/polyfills';
 
 export const pipeline = {

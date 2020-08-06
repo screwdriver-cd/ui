@@ -106,7 +106,7 @@ export default Component.extend({
     },
 
     async selectTemplate(selectedTemplate) {
-      const yaml = `jobs:\n${SEPARATOR}main:\n${SEPARATOR}${SEPARATOR}template: ${selectedTemplate.name}\n${SEPARATOR}${SEPARATOR}requires: [~pr, ~commit]`;
+      const yaml = `jobs:\n${SEPARATOR}main:\n${SEPARATOR}${SEPARATOR}template: ${selectedTemplate.namespace}/${selectedTemplate.name}\n${SEPARATOR}${SEPARATOR}requires: [~pr, ~commit]`;
 
       this.setProperties({ selectedTemplate, yaml });
     }

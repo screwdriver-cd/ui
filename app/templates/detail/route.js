@@ -49,6 +49,7 @@ export default Route.extend({
       this.template.getTemplateTags(params.namespace, params.name)
     ]).then(arr => {
       let [verPayload, tagPayload] = arr;
+
       let version = this.determineVersion(params.version, verPayload, tagPayload);
 
       verPayload = verPayload.filter(t => t.namespace === params.namespace);
