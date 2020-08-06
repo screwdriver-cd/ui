@@ -370,13 +370,11 @@ export default Component.extend({
         set(this, 'isDownloading', true);
 
         this.getLogs(true).then(() => {
-          const el = this.element.querySelectorAll('#downloadLink');
+          const el = this.element.querySelector('#downloadLink');
 
-          el.forEach(e => {
-            e.setAttribute('download', `${buildId}-${stepName}.log`);
-            e.setAttribute('href', this.logService.buildLogBlobUrl(buildId, stepName));
-          });
-          el[0].click();
+          el.setAttribute('download', `${buildId}-${stepName}.log`);
+          el.setAttribute('href', this.logService.buildLogBlobUrl(buildId, stepName));
+          el.click();
           set(this, 'isDownloading', false);
         });
       }
