@@ -49,12 +49,13 @@ export default Component.extend({
   },
 
   actions: {
-    async createPipeline({ scmUrl, rootDir, yaml }) {
+    async createPipeline({ scmUrl, rootDir, autoKeysGeneration, yaml }) {
       this.set('isSaving', true);
 
       let payload = {
         checkoutUrl: scmUrl,
-        rootDir
+        rootDir,
+        autoKeysGeneration
       };
 
       let pipeline;

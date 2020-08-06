@@ -13,20 +13,33 @@ export default Component.extend({
   selectedTemplate: {},
   templates: [],
   manualYamlCreation: false,
+  scmService: service('scm'),
   template: service(),
   results: '',
   validator: service(),
+  session: service(),
   prUrl: '',
   scmUrl: '',
   rootDir: '',
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
+  autoKeysGeneration: false,
 
   isValid: computed('scmUrl', {
     get() {
       const val = this.scmUrl;
 
       return val.length !== 0 && parse(val).valid;
+    }
+  }),
+
+  hasAutoDeployEnabled: computed({
+    get() {
+      const { session } = this;
+      const currentContext = session.get('data.authenticated.scmContext');
+      const scm = this.scmService.getScm(currentContext);
+
+      return scm.autoDeployKeyGeneration;
     }
   }),
 
@@ -80,7 +93,8 @@ export default Component.extend({
       if (this.isValid) {
         const payload = {
           scmUrl: this.scmUrl,
-          rootDir: this.rootDir
+          rootDir: this.rootDir,
+          autoKeysGeneration: this.autoKeysGeneration
         };
 
         if (!this.manualYamlCreation) {

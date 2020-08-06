@@ -6,6 +6,7 @@ const scms = [
     context: 'github:github.com',
     displayName: 'github.com',
     iconType: 'github',
+    autoDeployKeyGeneration: true,
     isSignedIn: true
   },
   {
