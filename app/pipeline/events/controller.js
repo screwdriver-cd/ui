@@ -270,6 +270,9 @@ export default Controller.extend(ModelReloaderMixin, {
               nextJobDetail.jobName = job.name;
               nextJobDetail.jobPipelineId = job.pipelineId;
               nextJobDetail.annotations = job.annotations;
+              // PR-specific
+              nextJobDetail.prParentJobId = job.prParentJobId || null;
+              nextJobDetail.prNum = job.group || null;
             }
           });
 

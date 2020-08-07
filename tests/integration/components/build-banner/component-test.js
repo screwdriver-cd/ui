@@ -59,6 +59,7 @@ const buildMock = EmberObject.create({
 });
 
 const buildMetaMock = {
+  build: {},
   tests: {
     coverage: '100',
     coverageUrl: '/coverage/666',
@@ -336,15 +337,19 @@ module('Integration | Component | build banner', function(hooks) {
       }
     ];
 
+    buildMetaMock.tests = {};
+
     assert.expect(4);
     this.set('eventMock', eventMock);
     this.set('buildStepsMock', coverageStepsMock);
+    this.set('buildMetaMock', buildMetaMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
       duration="5 seconds"
       buildId=123
+      buildMeta=buildMetaMock
       buildStatus="SUCCESS"
       buildStart="2016-11-04T20:09:41.238Z"
       buildSteps=buildStepsMock
@@ -352,6 +357,9 @@ module('Integration | Component | build banner', function(hooks) {
       jobName="main"
       isAuthenticated=true
       event=eventMock
+      pipelineId=456
+      pipelineName="d2lam/mytest"
+      prNumber=null
       prEvents=prEvents
     }}`);
 
@@ -376,12 +384,14 @@ module('Integration | Component | build banner', function(hooks) {
     });
     this.set('eventMock', eventMock);
     this.set('buildStepsMock', coverageStepsMock);
+    this.set('buildMetaMock', buildMetaMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
       duration="5 seconds"
       buildId=123
+      buildMeta=buildMetaMock
       buildStatus="RUNNING"
       buildStart="2016-11-04T20:09:41.238Z"
       buildSteps=buildStepsMock

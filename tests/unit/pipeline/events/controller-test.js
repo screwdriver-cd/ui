@@ -659,9 +659,30 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     await settled();
 
     assert.deepEqual(controller.get('jobsDetails'), [
-      { jobId: 1, jobName: 'a', jobPipelineId: '1234', annotations: {} },
-      { jobId: 2, jobName: 'b', jobPipelineId: '1234', annotations: {} },
-      { jobId: 3, jobName: 'c', jobPipelineId: '1234', annotations: {} }
+      {
+        jobId: 1,
+        jobName: 'a',
+        jobPipelineId: '1234',
+        annotations: {},
+        prParentJobId: null,
+        prNum: null
+      },
+      {
+        jobId: 2,
+        jobName: 'b',
+        jobPipelineId: '1234',
+        annotations: {},
+        prParentJobId: null,
+        prNum: null
+      },
+      {
+        jobId: 3,
+        jobName: 'c',
+        jobPipelineId: '1234',
+        annotations: {},
+        prParentJobId: null,
+        prNum: null
+      }
     ]);
   });
 
@@ -715,10 +736,38 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     await settled();
 
     assert.deepEqual(controller.get('jobsDetails'), [
-      { jobId: 1, jobName: 'a', jobPipelineId: '1234', annotations: {} },
-      { jobId: 2, jobName: 'b', jobPipelineId: '1234', annotations: {} },
-      { jobId: 3, jobName: 'c', jobPipelineId: '1234', annotations: {} },
-      { jobId: 4, jobName: 'd', jobPipelineId: '1234', annotations: {} }
+      {
+        jobId: 1,
+        jobName: 'a',
+        jobPipelineId: '1234',
+        annotations: {},
+        prParentJobId: null,
+        prNum: null
+      },
+      {
+        jobId: 2,
+        jobName: 'b',
+        jobPipelineId: '1234',
+        annotations: {},
+        prParentJobId: null,
+        prNum: null
+      },
+      {
+        jobId: 3,
+        jobName: 'c',
+        jobPipelineId: '1234',
+        annotations: {},
+        prParentJobId: null,
+        prNum: null
+      },
+      {
+        jobId: 4,
+        jobName: 'd',
+        jobPipelineId: '1234',
+        annotations: {},
+        prParentJobId: null,
+        prNum: null
+      }
     ]);
   });
 
