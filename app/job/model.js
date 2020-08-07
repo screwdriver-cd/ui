@@ -1,5 +1,5 @@
 import { computed, get } from '@ember/object';
-import { equal, match } from '@ember/object/computed';
+import { alias, equal, match } from '@ember/object/computed';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
@@ -26,6 +26,7 @@ export default DS.Model.extend({
       return this.isPR ? parseInt(this.name.slice('PR-'.length), 10) : null;
     }
   }),
+  prNumber: alias('group'),
   username: DS.attr('string'),
   userProfile: DS.attr('string'),
   url: DS.attr('string'),

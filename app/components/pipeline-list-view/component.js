@@ -166,7 +166,7 @@ export default Component.extend({
           jobName,
           pipelineName: this.get('pipeline.name'),
           prParentJobId,
-          projectKey: latestBuild.meta?.build?.coverageKey || null
+          projectKey: latestBuild.meta?.build?.coverageKey
         };
 
         if (annotations && annotations['screwdriver.cd/coverageScope']) {

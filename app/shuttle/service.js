@@ -92,6 +92,20 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data);
   },
 
+  /**
+   * Fetch coverage info from coverage plugin
+   * @param  {Object}  data
+   * @param  {String}  [data.jobId]        Job ID
+   * @param  {String}  [data.jobName]      Job name
+   * @param  {String}  [data.pipelineId]	 Pipeline ID
+   * @param  {String}  [data.pipelineName] Pipeline name
+   * @param  {String}  data.startTime      Build start time
+   * @param  {String}  data.endTime        Build end time
+   * @param  {String}  [data.prNum]        PR number
+   * @param  {String}  [data.scope]        Coverage scope (pipeline or job)
+   * @param  {String}  data.projectKey     Coverage key
+   * @return {Promise} Coverage object with coverage results and test data
+   */
   async fetchCoverage(data) {
     const method = 'get';
     const url = `/coverage/info`;
