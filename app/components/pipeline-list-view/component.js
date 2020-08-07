@@ -124,7 +124,7 @@ export default Component.extend({
 
   getRows(jobsDetails = []) {
     let rows = jobsDetails.map(jobDetails => {
-      const { jobId, jobName, annotations } = jobDetails;
+      const { jobId, jobName, annotations, prParentJobId, prNum } = jobDetails;
       const latestBuild = jobDetails.builds.length ? get(jobDetails, 'builds.lastObject') : null;
 
       const jobData = {
@@ -142,9 +142,6 @@ export default Component.extend({
         hasParameters: Object.keys(this.get('buildParameters')).length > 0,
         openParametersModal: this.openParametersModal.bind(this)
       };
-
-      const prRegex = /^PR-(\d+)(?::([\w-]+))?$/;
-      const prNumMatch = jobName.match(prRegex);
 
       let duration;
 
@@ -165,9 +162,11 @@ export default Component.extend({
           startTime: latestBuild.startTime,
           endTime: latestBuild.endTime,
           pipelineId: latestBuild.pipelineId,
-          prNum: prNumMatch && prNumMatch.length > 1 ? prNumMatch[1] : null,
+          prNum,
           jobName,
-          pipelineName: this.get('pipeline.name')
+          pipelineName: this.get('pipeline.name'),
+          prParentJobId,
+          projectKey: latestBuild.meta?.build?.coverageKey || null
         };
 
         if (annotations && annotations['screwdriver.cd/coverageScope']) {

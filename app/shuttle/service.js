@@ -92,24 +92,9 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data);
   },
 
-  async fetchCoverage(
-    buildId,
-    jobId,
-    startTime,
-    endTime,
-    pipelineId,
-    prNum,
-    jobName,
-    pipelineName,
-    scope
-  ) {
+  async fetchCoverage(data) {
     const method = 'get';
     const url = `/coverage/info`;
-    const data = { buildId, jobId, startTime, endTime, pipelineId, prNum, jobName, pipelineName };
-
-    if (scope) {
-      data.scope = scope;
-    }
 
     return this.fetchFromApi(method, url, data);
   },

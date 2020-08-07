@@ -37,6 +37,7 @@ export default DS.Model.extend({
       return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
     }
   }),
+  prParentJobId: DS.attr('string'),
   // } for pr job only
   permutations: DS.attr(),
   annotations: computed('permutations.[]', {
