@@ -50,7 +50,7 @@ export default Component.extend({
       let args = this.startArgs;
 
       if (parameters) {
-        args.push(parameters);
+        args = parameters;
       }
       const startFunc = this.startBuild;
 
