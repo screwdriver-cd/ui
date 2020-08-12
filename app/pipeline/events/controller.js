@@ -173,6 +173,12 @@ export default Controller.extend(ModelReloaderMixin, {
       return (annotations['screwdriver.cd/restrictPR'] || 'none') !== 'none';
     }
   }),
+  /**
+   * Selected Event's Id (integer) in a string format, i.e. '379281'
+   * @param  {String} selected
+   * @param  {String} mostRecent
+   * @return {String}
+   */
   selectedEvent: computed('selected', 'mostRecent', {
     get() {
       return this.selected || this.mostRecent;
