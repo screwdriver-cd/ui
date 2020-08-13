@@ -1,5 +1,5 @@
 <button {{action "refreshListViewJobs"}} class="refresh-btn">Refresh</button>
-{{#light-table table height="inherit" as |t|}}
+{{#light-table table height="400px" as |t|}}
   {{t.head
     onColumnClick=(action "onColumnClick")
     iconSortable="fa fa-sort"
