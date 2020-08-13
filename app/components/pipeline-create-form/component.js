@@ -25,6 +25,16 @@ export default Component.extend({
   isDisabled: or('isSaving', 'isInvalid'),
   autoKeysGeneration: false,
 
+  messageForSearching: computed('templates.[]', {
+    get() {
+      if (this.templates.length) {
+        return 'Not found.';
+      }
+
+      return 'Loading...';
+    }
+  }),
+
   isValid: computed('scmUrl', {
     get() {
       const val = this.scmUrl;
