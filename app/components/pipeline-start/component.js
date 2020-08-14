@@ -47,14 +47,10 @@ export default Component.extend({
 
   actions: {
     startBuild(parameters) {
-      let args = this.startArgs;
-
-      if (parameters) {
-        args.push(parameters);
-      }
+      const args = this.startArgs;
       const startFunc = this.startBuild;
 
-      startFunc.apply(null, args);
+      startFunc.apply(null, [...args, parameters]);
     },
 
     toggleDropdown(toggleAction) {
