@@ -57,8 +57,8 @@ export default Route.extend({
   queryParams: {
     status: ''
   },
-  model(params, transition) {
-    const pipelineId = transition.params.pipeline.pipeline_id;
+  model(params /* , transition */) {
+    const pipelineId = this.paramsFor('pipeline').pipeline_id;
     const { job_name: jobName, status: buildStatus } = params;
 
     return getLatestBuild(this.get('session'), pipelineId, jobName, buildStatus);
