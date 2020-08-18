@@ -57,7 +57,7 @@ export default Route.extend({
   queryParams: {
     status: ''
   },
-  model(params /* , transition */) {
+  model(params) {
     const pipelineId = this.paramsFor('pipeline').pipeline_id;
     const { job_name: jobName, status: buildStatus } = params;
 
