@@ -20,7 +20,7 @@ function parse(scmUrl) {
     server: match[1],
     owner: match[2],
     repo: match[3],
-    branch: match[4] ? match[4].slice(1) : 'master',
+    branch: match[4] ? match[4].slice(1) : null,
     valid: true
   };
 

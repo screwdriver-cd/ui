@@ -86,7 +86,14 @@ export default Component.extend({
         try {
           if (yaml && yaml.length) {
             const pipelineId = pipeline.get('id');
-            const pr = await this.shuttle.openPr(scmUrl, yaml, pipelineId);
+
+            let checkoutUrl = scmUrl;
+
+            // Set branch if missing
+            if (scmUrl.split('#').length === 1) {
+              checkoutUrl = checkoutUrl.concat(`#${pipeline.get('branch')}`);
+            }
+            const pr = await this.shuttle.openPr(checkoutUrl, yaml, pipelineId);
             const { prUrl } = pr.payload;
 
             this.set('prUrl', prUrl);
