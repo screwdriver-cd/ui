@@ -13,10 +13,10 @@ export default class PipelineEventsShowRoute extends Route {
    */
   scrollToHighlightedEvent() {
     const scrollConfig = { behavior: 'smooth', block: 'center' };
-    const hightedEvent = document.querySelector('.highlighted');
+    const highlightedEvent = document.querySelector('.highlighted');
 
-    if (hightedEvent) {
-      hightedEvent.scrollIntoView(scrollConfig);
+    if (highlightedEvent) {
+      highlightedEvent.scrollIntoView(scrollConfig);
       this.hasScrolled = true;
     }
   }
