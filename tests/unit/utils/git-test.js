@@ -13,7 +13,7 @@ module('Unit | Utility | git', function() {
       server: 'github.com',
       owner: 'bananas',
       repo: 'peel',
-      branch: 'master',
+      branch: null,
       valid: true
     });
 
