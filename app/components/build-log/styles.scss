@@ -15,6 +15,15 @@
   z-index: 1; /* clear class="nav nav-tabs ember-view" being on top */
 }
 
+/* override ".logs .content { white-space: pre; }" by being one level more specific */
+&.lineWrap {
+  .logs {
+    .content {
+      white-space: pre-wrap;
+    }
+  }
+}
+
 .row {
   display: grid;
   grid-template-columns: 1fr;
@@ -71,7 +80,7 @@
 
   .content {
     display: inline-block;
-    white-space: pre-wrap;
+    white-space: pre;
     width: calc(100% - 80px);
   }
 }

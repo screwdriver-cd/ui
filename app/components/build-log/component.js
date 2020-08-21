@@ -10,8 +10,9 @@ const timeTypes = ['datetime', 'datetimeUTC', 'elapsedBuild', 'elapsedStep'];
 export default Component.extend({
   logService: service('build-logs'),
   store: service(),
-  classNames: ['build-log', 'fullScreen:fullScreen'],
+  classNames: ['build-log', 'fullScreen:fullScreen', 'lineWrap:lineWrap'],
   fullScreen: false,
+  lineWrap: true,
   autoscroll: true,
   isFetching: false,
   isDownloading: false,
@@ -409,7 +410,10 @@ export default Component.extend({
       set(this, 'timeFormat', timeTypes[index]);
     },
     toggleZoom() {
-      togglerProperty(this, 'fullScreen')
+      togglerProperty(this, 'fullScreen');
+    },
+    toggleLineWrap() {
+      togglerProperty(this, 'lineWrap');
     }
   }
 });
