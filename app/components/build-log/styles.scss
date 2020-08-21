@@ -9,10 +9,10 @@
 }
 
 &.fullScreen {
-	position: fixed;
-	left: 0;
-	top: 0;
-	z-index: 1; /* clear class="nav nav-tabs ember-view" being on top */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1; /* clear class="nav nav-tabs ember-view" being on top */
 }
 
 .row {
