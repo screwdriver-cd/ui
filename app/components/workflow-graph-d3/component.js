@@ -3,6 +3,7 @@ import Component from '@ember/component';
 import { set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-tools';
+import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
   router: service(),
@@ -136,7 +137,8 @@ export default Component.extend({
     });
   },
   draw(data) {
-    const MAX_DISPLAY_NAME = 20;
+    let MAX_DISPLAY_NAME = ENV.APP.DISPLAY_NAME_LENGTH;
+
     const MAX_LENGTH = Math.min(
       data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
       MAX_DISPLAY_NAME
