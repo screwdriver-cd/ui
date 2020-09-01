@@ -139,6 +139,12 @@ export default Component.extend({
   draw(data) {
     let MAX_DISPLAY_NAME = ENV.APP.DISPLAY_NAME_LENGTH;
 
+    const preferredLength = parseInt(localStorage.getItem('DISPLAY_NAME_LENGTH'), 10);
+
+    if (MAX_DISPLAY_NAME < preferredLength) {
+      MAX_DISPLAY_NAME = preferredLength;
+    }
+
     const MAX_LENGTH = Math.min(
       data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
       MAX_DISPLAY_NAME
