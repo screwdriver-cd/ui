@@ -43,8 +43,13 @@ export default Component.extend({
     setProperties(this, {
       builds: [],
       showDownstreamTriggers: false,
-      reason: ''
+      reason: '',
+      buildParameters: this.getDefaultBuildParameters()
     });
+  },
+
+  getDefaultBuildParameters() {
+    return this.getWithDefault('pipeline.parameters', {});
   },
 
   didUpdateAttrs() {
