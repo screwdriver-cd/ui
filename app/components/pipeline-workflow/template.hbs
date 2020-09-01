@@ -78,7 +78,7 @@
         {{/if}}
       {{else if (get-length tooltipData.selectedEvent.meta.parameters)}}
         {{#pipeline-parameterized-build
-          buildParameters=tooltipData.selectedEvent.meta.parameters
+          buildParameters=buildParameters
           as |parameterizedBuild| }}
           <div class="row">
             <div class="col-xs-6">
