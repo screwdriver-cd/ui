@@ -58,7 +58,9 @@ module.exports = environment => {
       NUM_BUILDS_LISTED: 5,
       MAX_LOG_LINES: 1000,
       DEFAULT_LOG_PAGE_SIZE: 10,
-      FORCE_RELOAD_WAIT: 100 // Wait 100ms before force reload
+      FORCE_RELOAD_WAIT: 100, // Wait 100ms before force reload
+      WAITING_TO_SCROLL_TIME: 1000,
+      DEBOUNCED_SCROLL_TIME: 3000
     },
     moment: {
       allowEmpty: true // allow empty dates
@@ -93,6 +95,8 @@ module.exports = environment => {
     ENV.APP.NUM_PIPELINES_LISTED = 3;
     ENV.RAISE_ON_DEPRECATION = false;
     ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
+    ENV.APP.WAITING_TO_SCROLL_TIME = 1;
+    ENV.APP.DEBOUNCED_SCROLL_TIME = 1;
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;

@@ -2,6 +2,7 @@ import Route from '@ember/routing/route';
 import { debounce, later } from '@ember/runloop';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import ENV from 'screwdriver-ui/config/environment';
 
 export default class PipelineEventsShowRoute extends Route {
   @service router;
@@ -10,7 +11,7 @@ export default class PipelineEventsShowRoute extends Route {
 
   hasScrolled = false;
 
-  notFromSameRoute = true;
+  selfRedirect = false;
 
   /**
    * scroll to highlighted event
@@ -50,18 +51,18 @@ export default class PipelineEventsShowRoute extends Route {
       transition.from?.name === 'pipeline.events.show' &&
       transition.to?.name === 'pipeline.events.show'
     ) {
-      this.notFromSameRoute = false;
+      this.selfRedirect = true;
     } else {
-      this.notFromSameRoute = true;
+      this.selfRedirect = false;
     }
   }
 
   @action
   didTransition() {
-    if (!this.hasScrolled && this.notFromSameRoute) {
+    if (!this.hasScrolled && !this.selfRedirect) {
       later(() => {
-        debounce(this, this.scrollToHighlightedEvent, 3000);
-      }, 1000);
+        debounce(this, this.scrollToHighlightedEvent, ENV.APP.DEBOUNCED_SCROLL_TIME);
+      }, ENV.APP.WAITING_TO_SCROLL_TIME);
     }
 
     return true;
