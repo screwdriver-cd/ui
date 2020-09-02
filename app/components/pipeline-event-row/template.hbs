@@ -27,8 +27,13 @@
           <a href={{event.creator.url}}>{{event.creator.name}}</a>
         {{/if}}
       {{else}}
-        <span>Started and committed by: </span>
-        <a href={{event.creator.url}}>{{event.creator.name}}</a>
+        {{#if isSubscribedEvent}}
+          <span>Started by subscribed event: </span>
+          <a href={{event.meta.subscribedSourceUrl}}>Subscribed Source</a>
+        {{else}}
+          <span>Started and committed by: </span>
+          <a href={{event.creator.url}}>{{event.creator.name}}</a>
+        {{/if}}
       {{/if}}
     </div>
     {{#if (and (is-fulfilled event.builds) isShowGraph)}}

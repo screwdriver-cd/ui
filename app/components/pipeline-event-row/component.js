@@ -61,6 +61,12 @@ export default Component.extend({
     }
   }),
 
+  isSubscribedEvent: computed('event.meta.subscribedSourceUrl', {
+    get() {
+      return !!this.getWithDefault('event.meta.subscribedSourceUrl', null);
+    }
+  }),
+
   externalBuild: computed('event.{causeMessage,startFrom}', {
     get() {
       // using underscore because router.js doesn't pick up camelcase
