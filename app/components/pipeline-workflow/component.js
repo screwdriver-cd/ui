@@ -56,15 +56,15 @@ export default Component.extend({
       const currentEventParameters = this.tooltipData.selectedEvent.meta.parameters;
       const parameterNames = Object.keys(buildParameters);
 
-      parameterNames.forEach(pName => {
-        const pValue = buildParameters[pName];
-        const currentEventParameterValue = currentEventParameters[pName].value;
+      parameterNames.forEach(parameterName => {
+        const parameterValue = buildParameters[parameterName];
+        const currentEventParameterValue = currentEventParameters[parameterName].value;
 
-        if (Array.isArray(pValue)) {
-          pValue.removeObject(currentEventParameterValue);
-          pValue.unshift(currentEventParameterValue);
+        if (Array.isArray(parameterValue)) {
+          parameterValue.removeObject(currentEventParameterValue);
+          parameterValue.unshift(currentEventParameterValue);
         } else {
-          buildParameters[pName] = currentEventParameterValue;
+          buildParameters[parameterName] = currentEventParameterValue;
         }
       });
     }
