@@ -64,7 +64,7 @@ export default Component.extend({
           pValue.removeObject(currentEventParameterValue);
           pValue.unshift(currentEventParameterValue);
         } else {
-          buildParameters[pName].value = currentEventParameterValue;
+          buildParameters[pName] = currentEventParameterValue;
         }
       });
     }
