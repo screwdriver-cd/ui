@@ -17,12 +17,14 @@ export default Route.extend({
 
     this.store.unloadAll('token');
 
-    return this.store
-      .findAll('token', { adapterOptions: { pipelineId: pipeline.get('id') } })
-      .then(tokens => ({
-        tokens,
-        secrets,
-        pipeline
-      }));
+    const tokens = this.store.findAll('token', {
+      adapterOptions: { pipelineId: pipeline.get('id') }
+    });
+
+    return {
+      tokens,
+      secrets,
+      pipeline
+    };
   }
 });
