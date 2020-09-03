@@ -6,7 +6,7 @@ import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from '../../utils/git';
 
-const { MINIMUM_DISPLAY_NAME_LENGTH } = ENV.APP;
+const { MINIMUM_JOBNAME_LENGTH } = ENV.APP;
 
 export default Component.extend({
   store: service(),
@@ -31,7 +31,7 @@ export default Component.extend({
   user: null,
   jobId: null,
   jobSorting: ['name'],
-  minDisplayLength: MINIMUM_DISPLAY_NAME_LENGTH,
+  minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   sortedJobs: sort('jobs', 'jobSorting'),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
@@ -60,17 +60,17 @@ export default Component.extend({
       });
     }
 
-    let desiredDisplayLength = MINIMUM_DISPLAY_NAME_LENGTH;
+    let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
     const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
       pipelineId: this.get('pipeline.id')
     });
 
     if (pipelinePreference) {
-      desiredDisplayLength = pipelinePreference.displayNameLength;
+      desiredJobNameLength = pipelinePreference.jobNameLength;
     }
 
-    this.set('desiredDisplayLength', desiredDisplayLength);
+    this.set('desiredJobNameLength', desiredJobNameLength);
   },
   actions: {
     // Checks if scm URL is valid or not
@@ -159,20 +159,20 @@ export default Component.extend({
         .finally(() => this.set('isShowingModal', false));
     },
 
-    async updateDisplayNameLength(displayNameLength) {
+    async updateJobNameLength(jobNameLength) {
       const pipelineId = this.get('pipeline.id');
       const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
         pipelineId
       });
 
       if (pipelinePreference) {
-        pipelinePreference.set('displayNameLength', displayNameLength);
+        pipelinePreference.set('jobNameLength', jobNameLength);
         pipelinePreference.save();
       } else {
         this.store
           .createRecord('preference/pipeline', {
             pipelineId,
-            displayNameLength
+            jobNameLength
           })
           .save();
       }

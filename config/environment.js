@@ -52,7 +52,7 @@ module.exports = environment => {
       BUILD_RELOAD_TIMER: 5000, // 5 seconds
       EVENT_RELOAD_TIMER: 60000, // 1 minute
       LOG_RELOAD_TIMER: 3000,
-      MINIMUM_DISPLAY_NAME_LENGTH: 20,
+      MINIMUM_JOBNAME_LENGTH: 20,
       NUM_EVENTS_LISTED: 5,
       NUM_PIPELINES_LISTED: 50,
       LIST_VIEW_PAGE_SIZE: 10,

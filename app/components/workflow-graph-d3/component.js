@@ -138,22 +138,22 @@ export default Component.extend({
     });
   },
   async draw(data) {
-    let MAX_DISPLAY_NAME = ENV.APP.MINIMUM_DISPLAY_NAME_LENGTH;
+    let DISPLAY_JOBNAME_LENGTH = ENV.APP.MINIMUM_JOBNAME_LENGTH;
 
     const pipelineId = this.get('pipeline.id');
     const pipelinePreference = await this.store.queryRecord('preference/pipeline', { pipelineId });
 
     if (pipelinePreference) {
-      const { displayNameLength } = pipelinePreference;
+      const { jobNameLength } = pipelinePreference;
 
-      if (displayNameLength > MAX_DISPLAY_NAME) {
-        MAX_DISPLAY_NAME = displayNameLength;
+      if (jobNameLength > DISPLAY_JOBNAME_LENGTH) {
+        DISPLAY_JOBNAME_LENGTH = jobNameLength;
       }
     }
 
     const MAX_LENGTH = Math.min(
       data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
-      MAX_DISPLAY_NAME
+      DISPLAY_JOBNAME_LENGTH
     );
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = this.elementSizes;
 
@@ -270,7 +270,7 @@ export default Component.extend({
         .enter()
         .append('text')
         .text(d =>
-          d.name.length >= MAX_DISPLAY_NAME
+          d.name.length >= DISPLAY_JOBNAME_LENGTH
             ? `${d.name.substr(0, 8)}...${d.name.substr(-8)}`
             : d.name
         )
