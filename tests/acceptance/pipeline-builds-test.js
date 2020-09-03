@@ -2,6 +2,7 @@ import { currentURL, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
+import { get } from '@ember/object';
 import Pretender from 'pretender';
 
 import makePipeline from '../mock/pipeline';
@@ -12,6 +13,8 @@ import makeJobs from '../mock/jobs';
 
 let server;
 
+let desiredEventId;
+
 module('Acceptance | pipeline build', function(hooks) {
   setupApplicationTest(hooks);
 
@@ -20,7 +23,9 @@ module('Acceptance | pipeline build', function(hooks) {
     const jobs = makeJobs();
     const pipeline = makePipeline(graph);
     const events = makeEvents(graph);
+    const desiredEvent = get(events, 'firstObject');
 
+    desiredEventId = desiredEvent.id;
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/pipelines/4', () => [
@@ -39,6 +44,12 @@ module('Acceptance | pipeline build', function(hooks) {
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify(events)
+    ]);
+
+    server.get('http://localhost:8080/v4/events/:eventId', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify(desiredEvent)
     ]);
 
     server.get('http://localhost:8080/v4/pipelines/4/triggers', () => [
@@ -88,7 +99,7 @@ module('Acceptance | pipeline build', function(hooks) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/pipelines/4');
 
-    assert.equal(currentURL(), '/pipelines/4/events');
+    assert.equal(currentURL(), `/pipelines/4/events/${desiredEventId}`);
     assert.dom('a h1').hasText('foo/bar', 'incorrect pipeline name');
     assert.dom('.pipelineWorkflow svg').exists({ count: 1 }, 'not enough workflow');
     assert.dom('button.start-button').exists({ count: 1 }, 'should have a start button');
