@@ -10,12 +10,6 @@ export default Component.extend({
   errorMessage: '',
   secretsSorting: ['name'],
   sortedSecrets: sort('secrets', 'secretsSorting'),
-  didReceiveAttrs() {
-    this._super(...arguments);
-    this.get('secrets').catch(error => {
-      this.set('errorMessage', error.errors[0].detail);
-    });
-  },
   isButtonDisabled: computed('newName', 'newValue', {
     get() {
       return !this.newName || !this.newValue;

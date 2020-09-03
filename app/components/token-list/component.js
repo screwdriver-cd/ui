@@ -22,13 +22,6 @@ export default Component.extend({
 
   sortedTokens: sort('tokens', 'tokenSorting'),
 
-  didReceiveAttrs() {
-    this._super(...arguments);
-    this.get('tokens').catch(error => {
-      this.set('errorMessage', error.errors[0].detail);
-    });
-  },
-
   isButtonDisabled: computed('newName', 'isSaving', function isButtonDisabled() {
     return !this.newName || this.isSaving;
   }),
