@@ -153,6 +153,39 @@
     </section>
   </div>
 
+  <div class="col-xs-12 col-md-8">
+    <section class="preference">
+      <h3>Local Preference</h3>
+      <ul>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <p>All settings here are stored locally in your browser.</p>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Display Name Length</h4>
+              <p>Setup your own preferred job name length to display on the workflow graph</p>
+            </div>
+            <div class="col-xs-2 right">
+              <input type="number"
+                class="display-name"
+                min={{minDisplayLength}}
+                max="99"
+                placeholder={{minDisplayLength}}
+                value={{desiredJobNameLength}}
+                onchange={{action "updateJobNameLength" value="target.value"}}>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+  </div>
+
   {{#unless pipeline.configPipelineId}}
     <div class="col-xs-12 col-md-8">
       <section class="danger">
