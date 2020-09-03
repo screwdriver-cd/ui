@@ -142,10 +142,13 @@ export default Component.extend({
 
     const pipelineId = this.get('pipeline.id');
     const pipelinePreference = await this.store.queryRecord('preference/pipeline', { pipelineId });
-    const preferredLength = pipelinePreference.displayNameLength;
 
-    if (preferredLength > MAX_DISPLAY_NAME) {
-      MAX_DISPLAY_NAME = preferredLength;
+    if (pipelinePreference) {
+      const { displayNameLength } = pipelinePreference;
+
+      if (displayNameLength > MAX_DISPLAY_NAME) {
+        MAX_DISPLAY_NAME = displayNameLength;
+      }
     }
 
     const MAX_LENGTH = Math.min(
