@@ -6,6 +6,7 @@ import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
+  store: service(),
   router: service(),
   classNameBindings: ['minified'],
   displayJobNames: true,
@@ -136,12 +137,14 @@ export default Component.extend({
       }
     });
   },
-  draw(data) {
-    let MAX_DISPLAY_NAME = ENV.APP.DISPLAY_NAME_LENGTH;
+  async draw(data) {
+    let MAX_DISPLAY_NAME = ENV.APP.MINIMUM_DISPLAY_NAME_LENGTH;
 
-    const preferredLength = parseInt(localStorage.getItem('DISPLAY_NAME_LENGTH'), 10);
+    const pipelineId = this.get('pipeline.id');
+    const pipelinePreference = await this.store.queryRecord('preference/pipeline', { pipelineId });
+    const preferredLength = pipelinePreference.displayNameLength;
 
-    if (MAX_DISPLAY_NAME < preferredLength) {
+    if (preferredLength > MAX_DISPLAY_NAME) {
       MAX_DISPLAY_NAME = preferredLength;
     }
 

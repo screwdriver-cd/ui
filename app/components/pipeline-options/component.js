@@ -3,9 +3,13 @@ import { inject as service } from '@ember/service';
 import { not, or, sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import Component from '@ember/component';
+import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from '../../utils/git';
 
+const { MINIMUM_DISPLAY_NAME_LENGTH } = ENV.APP;
+
 export default Component.extend({
+  store: service(),
   // Syncing a pipeline
   sync: service('sync'),
   // Clearing a cache
@@ -27,6 +31,7 @@ export default Component.extend({
   user: null,
   jobId: null,
   jobSorting: ['name'],
+  minDisplayLength: MINIMUM_DISPLAY_NAME_LENGTH,
   sortedJobs: sort('jobs', 'jobSorting'),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
@@ -38,7 +43,7 @@ export default Component.extend({
     }
   }),
   // Updating a pipeline
-  init() {
+  async init() {
     this._super(...arguments);
     this.set(
       'scmUrl',
@@ -54,6 +59,18 @@ export default Component.extend({
         hasRootDir: true
       });
     }
+
+    let desiredDisplayLength = MINIMUM_DISPLAY_NAME_LENGTH;
+
+    const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
+      pipelineId: this.get('pipeline.id')
+    });
+
+    if (pipelinePreference) {
+      desiredDisplayLength = pipelinePreference.displayNameLength;
+    }
+
+    this.set('desiredDisplayLength', desiredDisplayLength);
   },
   actions: {
     // Checks if scm URL is valid or not
@@ -140,6 +157,25 @@ export default Component.extend({
         .clearCache(config)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
+    },
+
+    async updateDisplayNameLength(displayNameLength) {
+      const pipelineId = this.get('pipeline.id');
+      const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
+        pipelineId
+      });
+
+      if (pipelinePreference) {
+        pipelinePreference.set('displayNameLength', displayNameLength);
+        pipelinePreference.save();
+      } else {
+        this.store
+          .createRecord('preference/pipeline', {
+            pipelineId,
+            displayNameLength
+          })
+          .save();
+      }
     }
   }
 });
