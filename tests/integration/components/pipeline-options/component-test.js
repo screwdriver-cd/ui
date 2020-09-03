@@ -154,7 +154,7 @@ module('Integration | Component | pipeline options', function(hooks) {
   });
 
   test('it opens job toggle modal', async function(assert) {
-    assert.expect(8);
+    assert.expect(9);
 
     injectSessionStub(this);
 
@@ -174,6 +174,11 @@ module('Integration | Component | pipeline options', function(hooks) {
         assert.ok(true, 'peekRecord called');
 
         return jobModelMock;
+      },
+      queryRecord() {
+        assert.ok(true, 'queryRecord called');
+
+        return resolve(null);
       }
     });
 
