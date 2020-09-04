@@ -140,8 +140,11 @@ export default Component.extend({
   async draw(data) {
     let displayJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
 
-    const pipelineId = this.get('pipeline.id');
-    const pipelinePreference = await this.store.queryRecord('preference/pipeline', { pipelineId });
+    const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
+      filter: {
+        pipelineId: this.get('pipeline.id')
+      }
+    });
 
     if (pipelinePreference) {
       const { jobNameLength } = pipelinePreference;

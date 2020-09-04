@@ -63,7 +63,7 @@ export default Component.extend({
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
     const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
-      pipelineId: this.get('pipeline.id')
+      filter: { pipelineId: this.get('pipeline.id') }
     });
 
     if (pipelinePreference) {
@@ -162,7 +162,7 @@ export default Component.extend({
     async updateJobNameLength(jobNameLength) {
       const pipelineId = this.get('pipeline.id');
       const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
-        pipelineId
+        filter: { pipelineId: this.get('pipeline.id') }
       });
 
       if (pipelinePreference) {
