@@ -34,6 +34,7 @@
     {{#if (and (is-fulfilled event.builds) isShowGraph)}}
       <div class="workflow">
         {{workflow-graph-d3
+          pipeline=pipeline
           builds=event.builds
           workflowGraph=event.workflowGraph
           startFrom=event.startFrom
