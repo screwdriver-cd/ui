@@ -150,8 +150,8 @@ module('Integration | Component | pipeline events list', function(hooks) {
                       eventsPage=1
                       updateEvents=updateEventsMock}}`);
 
-    const route = this.owner.lookup('route:application');
-    const transitionToStub = sinon.stub(route, 'transitionTo');
+    const routerService = this.owner.lookup('service:router');
+    const transitionToStub = sinon.stub(routerService, 'transitionTo');
 
     await click('div.view');
     assert.ok(transitionToStub.calledOnce, 'transitionTo was called once');
@@ -210,8 +210,8 @@ module('Integration | Component | pipeline events list', function(hooks) {
                       eventsPage=1
                       updateEvents=updateEventsMock}}`);
 
-    const route = this.owner.lookup('route:application');
-    const transitionToStub = sinon.stub(route, 'transitionTo');
+    const routerService = this.owner.lookup('service:router');
+    const transitionToStub = sinon.stub(routerService, 'transitionTo');
 
     await click('div.view');
     assert.ok(transitionToStub.notCalled, 'transitionTo was not called');
