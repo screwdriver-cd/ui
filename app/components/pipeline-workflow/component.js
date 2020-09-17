@@ -4,6 +4,7 @@ import { get, computed, set, setProperties } from '@ember/object';
 import { reject } from 'rsvp';
 import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import { copy } from 'ember-copy';
 
 export default Component.extend({
   // get all downstream triggers for a pipeline
@@ -46,6 +47,30 @@ export default Component.extend({
       reason: ''
     });
   },
+
+  buildParameters: computed('tooltipData', function preselectBuildParameters() {
+    const defaultParameters = this.getWithDefault('pipeline.parameters', {});
+    const buildParameters = copy(defaultParameters, true);
+
+    if (this.tooltipData) {
+      const currentEventParameters = this.tooltipData.selectedEvent.meta.parameters;
+      const parameterNames = Object.keys(buildParameters);
+
+      parameterNames.forEach(parameterName => {
+        const parameterValue = buildParameters[parameterName];
+        const currentEventParameterValue = currentEventParameters[parameterName].value;
+
+        if (Array.isArray(parameterValue)) {
+          parameterValue.removeObject(currentEventParameterValue);
+          parameterValue.unshift(currentEventParameterValue);
+        } else {
+          buildParameters[parameterName] = currentEventParameterValue;
+        }
+      });
+    }
+
+    return buildParameters;
+  }),
 
   didUpdateAttrs() {
     this._super(...arguments);

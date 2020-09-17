@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import { bool } from '@ember/object/computed';
 import { computed, get, getProperties } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
@@ -60,6 +61,8 @@ export default Component.extend({
       return this.get('isExternalTrigger') || creatorName !== authorName;
     }
   }),
+
+  isSubscribedEvent: bool('event.meta.subscribedSourceUrl'),
 
   externalBuild: computed('event.{causeMessage,startFrom}', {
     get() {

@@ -1,5 +1,6 @@
 {{#if (and (is-fulfilled selectedEventObj.builds) (is-fulfilled graph))}}
   {{#workflow-graph-d3
+    pipeline=pipeline
     completeWorkflowGraph=completeWorkflowGraph
     showDownstreamTriggers=showDownstreamTriggers
     builds=selectedEventObj.builds
@@ -78,7 +79,7 @@
         {{/if}}
       {{else if (get-length tooltipData.selectedEvent.meta.parameters)}}
         {{#pipeline-parameterized-build
-          buildParameters=tooltipData.selectedEvent.meta.parameters
+          buildParameters=buildParameters
           as |parameterizedBuild| }}
           <div class="row">
             <div class="col-xs-6">
