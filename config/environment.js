@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = environment => {
   let ENV = {
     modulePrefix: 'screwdriver-ui',
@@ -50,16 +52,23 @@ module.exports = environment => {
       BUILD_RELOAD_TIMER: 5000, // 5 seconds
       EVENT_RELOAD_TIMER: 60000, // 1 minute
       LOG_RELOAD_TIMER: 3000,
+      MINIMUM_JOBNAME_LENGTH: 20,
       NUM_EVENTS_LISTED: 5,
       NUM_PIPELINES_LISTED: 50,
       LIST_VIEW_PAGE_SIZE: 10,
       NUM_BUILDS_LISTED: 5,
       MAX_LOG_LINES: 1000,
       DEFAULT_LOG_PAGE_SIZE: 10,
-      FORCE_RELOAD_WAIT: 100 // Wait 100ms before force reload
+      FORCE_RELOAD_WAIT: 100, // Wait 100ms before force reload
+      WAITING_TO_SCROLL_TIME: 1000,
+      DEBOUNCED_SCROLL_TIME: 3000
     },
     moment: {
       allowEmpty: true // allow empty dates
+    },
+    'ember-local-storage': {
+      namespace: true,
+      keyDelimiter: ':'
     }
   };
 
@@ -91,6 +100,8 @@ module.exports = environment => {
     ENV.APP.NUM_PIPELINES_LISTED = 3;
     ENV.RAISE_ON_DEPRECATION = false;
     ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
+    ENV.APP.WAITING_TO_SCROLL_TIME = 1;
+    ENV.APP.DEBOUNCED_SCROLL_TIME = 1;
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;

@@ -1,11 +1,7 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
-import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
-import ArrayProxy from '@ember/array/proxy';
 import { getOwner } from '@ember/application';
-
-const ArrayPromiseProxy = ArrayProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
   isSaving: false,
@@ -14,22 +10,54 @@ export default Component.extend({
   shuttle: service(),
   store: service(),
   router: service(),
-  templates: computed({
+  templates: computed('allTemplates', {
     get() {
-      return ArrayPromiseProxy.create({
-        promise: this.shuttle.fetchAllTemplates()
-      });
+      const groupedTemplates = [];
+
+      if (this.allTemplates) {
+        const map = new Map();
+
+        this.allTemplates.forEach(template => {
+          const { namespace } = template;
+          const templateCollection = map.get(namespace);
+
+          template.groupName = namespace;
+          if (!templateCollection) {
+            map.set(namespace, [template]);
+          } else {
+            templateCollection.push(template);
+          }
+        });
+
+        map.forEach((options, groupName) => {
+          groupedTemplates.push({
+            groupName,
+            options
+          });
+        });
+      }
+
+      return groupedTemplates;
     }
   }),
 
+  async init() {
+    this._super(...arguments);
+    const allTemplates = await this.shuttle.fetchAllTemplates();
+
+    this.set('allTemplates', allTemplates);
+  },
+
   actions: {
-    async createPipeline({ scmUrl, rootDir, yaml }) {
+    async createPipeline({ scmUrl, rootDir, autoKeysGeneration, yaml }) {
       this.set('isSaving', true);
 
       let payload = {
         checkoutUrl: scmUrl,
-        rootDir
+        rootDir,
+        autoKeysGeneration
       };
+
       let pipeline;
 
       try {
@@ -58,7 +86,14 @@ export default Component.extend({
         try {
           if (yaml && yaml.length) {
             const pipelineId = pipeline.get('id');
-            const pr = await this.shuttle.openPr(scmUrl, yaml, pipelineId);
+
+            let checkoutUrl = scmUrl;
+
+            // Set branch if missing
+            if (scmUrl.split('#').length === 1) {
+              checkoutUrl = checkoutUrl.concat(`#${pipeline.get('branch')}`);
+            }
+            const pr = await this.shuttle.openPr(checkoutUrl, yaml, pipelineId);
             const { prUrl } = pr.payload;
 
             this.set('prUrl', prUrl);
@@ -76,6 +111,7 @@ export default Component.extend({
           }
         } catch (err) {
           const { payload: responsePayload } = err;
+
           let { message } = responsePayload;
 
           this.setProperties({

@@ -130,7 +130,8 @@ module('Unit | Serializer | pipeline', function(hooks) {
 
       assert.deepEqual(payload, {
         checkoutUrl: 'git@example.com:foo/bar.git',
-        rootDir: ''
+        rootDir: '',
+        autoKeysGeneration: false
       });
     });
   });

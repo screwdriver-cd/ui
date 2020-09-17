@@ -1,8 +1,10 @@
 import { computed, get, set } from '@ember/object';
 import Component from '@ember/component';
 import { scheduleOnce } from '@ember/runloop';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  router: service(),
   errorMessage: '',
   eventsList: computed('events.[]', {
     get() {
@@ -16,6 +18,11 @@ export default Component.extend({
   actions: {
     eventClick(id) {
       set(this, 'selected', id);
+
+      const currentEvent = this.eventsList.findBy('id', id);
+      const { pipelineId } = currentEvent;
+
+      this.router.transitionTo('pipeline.events.show', pipelineId, id);
     }
   }
 });

@@ -12,17 +12,16 @@ export default Component.extend({
     this._super(...arguments);
 
     const event = get(this, 'tooltipData.mouseevent');
-    const el = this.$();
+    const el = this.element;
 
     // setting tooltip position
     if (el && event) {
       let top = event.layerY + get(this, 'tooltipData.sizes.ICON_SIZE');
-      let left = this.left ? event.layerX - 20 : event.layerX - el.outerWidth() / 2;
 
-      el.css({
-        top,
-        left
-      });
+      let left = this.left ? event.layerX - 20 : event.layerX - el.offsetWidth / 2;
+
+      el.style.top = `${top}px`;
+      el.style.left = `${left}px`;
     }
   }
 });

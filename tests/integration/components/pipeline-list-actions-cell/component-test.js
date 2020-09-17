@@ -227,7 +227,7 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
       value=value
     }}`);
 
-    this.$('.actions span')[0].click();
+    this.element.querySelectorAll('.actions span')[0].click();
   });
 
   test('start build from latest build', async function(assert) {
@@ -254,7 +254,7 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
       value=value
     }}`);
 
-    this.$('.actions span')[2].click();
+    this.element.querySelectorAll('.actions span')[2].click();
   });
 
   test('stop build', async function(assert) {
@@ -279,6 +279,6 @@ module('Integration | Component | pipeline list actions cell', function(hooks) {
       value=value
     }}`);
 
-    this.$('.actions span')[1].click();
+    this.element.querySelectorAll('.actions span')[1].click();
   });
 });

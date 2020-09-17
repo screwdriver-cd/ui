@@ -12,6 +12,7 @@ export default Route.extend({
       this.command.getCommandTags(params.namespace, params.name)
     ]).then(arr => {
       const [verPayload, tagPayload] = arr;
+
       let version;
 
       if (params.version) {

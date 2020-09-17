@@ -2,6 +2,7 @@ import Pretender from 'pretender';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 const actualMessage = 'shutdown imminent';
+
 let server;
 
 const getBanners = () => {

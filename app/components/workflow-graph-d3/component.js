@@ -3,8 +3,10 @@ import Component from '@ember/component';
 import { set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-tools';
+import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
+  store: service(),
   router: service(),
   classNameBindings: ['minified'],
   displayJobNames: true,
@@ -28,6 +30,7 @@ export default Component.extend({
           nodes: [],
           edges: []
         });
+
         let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
 
         // only remove node if it is not a source node
@@ -134,13 +137,29 @@ export default Component.extend({
       }
     });
   },
-  draw(data) {
-    const MAX_DISPLAY_NAME = 20;
+  async draw(data) {
+    let displayJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
+
+    const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
+      filter: {
+        pipelineId: this.get('pipeline.id')
+      }
+    });
+
+    if (pipelinePreference) {
+      const { jobNameLength } = pipelinePreference;
+
+      if (jobNameLength > displayJobNameLength) {
+        displayJobNameLength = jobNameLength;
+      }
+    }
+
     const MAX_LENGTH = Math.min(
       data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
-      MAX_DISPLAY_NAME
+      displayJobNameLength
     );
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = this.elementSizes;
+
     let X_WIDTH = ICON_SIZE * 2;
 
     // When displaying job names use estimate of 7 per character
@@ -254,7 +273,7 @@ export default Component.extend({
         .enter()
         .append('text')
         .text(d =>
-          d.name.length >= MAX_DISPLAY_NAME
+          d.name.length >= displayJobNameLength
             ? `${d.name.substr(0, 8)}...${d.name.substr(-8)}`
             : d.name
         )

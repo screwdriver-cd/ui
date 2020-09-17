@@ -1,12 +1,15 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["jobSorting"]] */
 import $ from 'jquery';
 import { inject as service } from '@ember/service';
 import { not, or, sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import Component from '@ember/component';
+import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from '../../utils/git';
 
+const { MINIMUM_JOBNAME_LENGTH } = ENV.APP;
+
 export default Component.extend({
+  store: service(),
   // Syncing a pipeline
   sync: service('sync'),
   // Clearing a cache
@@ -28,6 +31,7 @@ export default Component.extend({
   user: null,
   jobId: null,
   jobSorting: ['name'],
+  minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   sortedJobs: sort('jobs', 'jobSorting'),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
@@ -39,7 +43,7 @@ export default Component.extend({
     }
   }),
   // Updating a pipeline
-  init() {
+  async init() {
     this._super(...arguments);
     this.set(
       'scmUrl',
@@ -55,6 +59,18 @@ export default Component.extend({
         hasRootDir: true
       });
     }
+
+    let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
+
+    const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
+      filter: { pipelineId: this.get('pipeline.id') }
+    });
+
+    if (pipelinePreference) {
+      desiredJobNameLength = pipelinePreference.jobNameLength;
+    }
+
+    this.set('desiredJobNameLength', desiredJobNameLength);
   },
   actions: {
     // Checks if scm URL is valid or not
@@ -124,6 +140,7 @@ export default Component.extend({
     },
     clearCache(scope, id) {
       const pipelineId = this.get('pipeline.id');
+
       let config = {
         scope,
         cacheId: id,
@@ -140,6 +157,25 @@ export default Component.extend({
         .clearCache(config)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
+    },
+
+    async updateJobNameLength(jobNameLength) {
+      const pipelineId = this.get('pipeline.id');
+      const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
+        filter: { pipelineId: this.get('pipeline.id') }
+      });
+
+      if (pipelinePreference) {
+        pipelinePreference.set('jobNameLength', jobNameLength);
+        pipelinePreference.save();
+      } else {
+        this.store
+          .createRecord('preference/pipeline', {
+            pipelineId,
+            jobNameLength
+          })
+          .save();
+      }
     }
   }
 });

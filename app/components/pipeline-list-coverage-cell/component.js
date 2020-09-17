@@ -7,9 +7,7 @@ export default Component.extend({
 
   result: computed('value', {
     async get() {
-      const { buildId, jobId, startTime, endTime, pipelineId, prNum } = this.value;
-
-      return this.shuttle.fetchCoverage(buildId, jobId, startTime, endTime, pipelineId, prNum);
+      return this.shuttle.fetchCoverage(this.value);
     }
   })
 });

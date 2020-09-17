@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import { bool } from '@ember/object/computed';
 import { computed, get, getProperties } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
@@ -41,6 +42,7 @@ export default Component.extend({
     get() {
       const startFrom = this.get('event.startFrom');
       const pipelineId = this.get('event.pipelineId');
+
       let isExternal = false;
 
       if (startFrom && startFrom.match(/^~sd@(\d+):([\w-]+)$/)) {
@@ -60,11 +62,14 @@ export default Component.extend({
     }
   }),
 
+  isSubscribedEvent: bool('event.meta.subscribedSourceUrl'),
+
   externalBuild: computed('event.{causeMessage,startFrom}', {
     get() {
       // using underscore because router.js doesn't pick up camelcase
       /* eslint-disable camelcase */
       let pipeline_id = this.get('event.startFrom').match(/^~sd@(\d+):[\w-]+$/);
+
       let build_id = this.get('event.causeMessage').match(/\s(\d+)$/);
 
       if (build_id) {

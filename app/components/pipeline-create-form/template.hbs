@@ -12,7 +12,7 @@
     {{input
       class="text-input scm-url"
       key-up=(action "scmChange")
-      placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#master)"
+      placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#branchName)"
       value=scmUrl
       enter=(action "saveData")
     }}
@@ -25,6 +25,11 @@
   {{/if}}
   <div>
     {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
+
+    {{#if hasAutoDeployEnabled}}
+      {{input class="toggle-auto-deploy-key-generation" type="checkbox" checked=autoKeysGeneration}}
+      <label class="normal-weight">Generate deploy key pair automatically and add to pipeline.</label>
+    {{/if}}
   </div>
 </section>
 
@@ -45,6 +50,8 @@
             selected=selectedTemplate
             onchange=(action "selectTemplate")
             searchField="name"
+            searchEnabled=true
+            noMatchesMessage=messageForSearching
             as |template| }}
             {{template.name}}
           {{/power-select}}
