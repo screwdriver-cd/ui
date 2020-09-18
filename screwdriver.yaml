@@ -3,6 +3,8 @@ cache:
 
 shared:
   image: node:12
+  annotations:
+    screwdriver.cd/ram: HIGH
 
 jobs:
   main:
