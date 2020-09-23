@@ -20,9 +20,9 @@ module('Integration | Component | sd pipeline nav', function(hooks) {
 
     await render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
 
-    assert.dom('li:first-child a').hasText('Events');
-    assert.dom('li:nth-child(2) a').hasText('Secrets');
-    assert.dom('li:nth-child(3) a').hasText('Options');
+    assert.dom('li:nth-child(2) a').hasText('Events');
+    assert.dom('li:nth-child(3) a').hasText('Secrets');
+    assert.dom('li:nth-child(4) a').hasText('Options');
     assert.dom('li:last-child a').hasText('Metrics');
   });
 
@@ -42,10 +42,10 @@ module('Integration | Component | sd pipeline nav', function(hooks) {
 
     await render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
 
-    assert.dom('li:first-child a').hasText('Child Pipelines');
-    assert.dom('li:nth-child(2) a').hasText('Events');
-    assert.dom('li:nth-child(3) a').hasText('Secrets');
-    assert.dom('li:nth-child(4) a').hasText('Options');
+    assert.dom('li:nth-child(2) a').hasText('Child Pipelines');
+    assert.dom('li:nth-child(3) a').hasText('Events');
+    assert.dom('li:nth-child(4) a').hasText('Secrets');
+    assert.dom('li:nth-child(5) a').hasText('Options');
     assert.dom('li:last-child a').hasText('Metrics');
   });
 

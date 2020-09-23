@@ -1,7 +1,9 @@
 {{#bs-nav type="pills" as |nav|}}
-  {{#if pipelineDescription}}
-    <span>{{{pipelineDescription}}}</span>
+  {{!--
+  {{#if pipelineDescription}} 
+    {{pipelineDescription}}
   {{/if}}
+  --}}
   {{#if pipeline.childPipelines}}
     {{#nav.item}}{{#nav.link-to "pipeline.child-pipelines"}}Child Pipelines{{/nav.link-to}}{{/nav.item}}
   {{/if}}
