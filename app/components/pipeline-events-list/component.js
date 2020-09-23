@@ -16,13 +16,15 @@ export default Component.extend({
     scheduleOnce('afterRender', this, 'updateEvents', this.eventsPage + 1);
   },
   actions: {
-    eventClick(id) {
+    eventClick(id, eventType) {
       set(this, 'selected', id);
 
-      const currentEvent = this.eventsList.findBy('id', id);
-      const { pipelineId } = currentEvent;
+      if (eventType !== 'pr') {
+        const currentEvent = this.eventsList.findBy('id', id);
+        const { pipelineId } = currentEvent;
 
-      this.router.transitionTo('pipeline.events.show', pipelineId, id);
+        this.router.transitionTo('pipeline.events.show', pipelineId, id);
+      }
     }
   }
 });

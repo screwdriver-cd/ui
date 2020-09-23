@@ -89,7 +89,9 @@ export default Component.extend({
       const fn = get(this, 'eventClick');
 
       if (typeof fn === 'function') {
-        fn(get(this, 'event.id'));
+        const { id, type } = this.event;
+
+        fn(id, type);
       }
     },
     toggleParametersPreview() {
