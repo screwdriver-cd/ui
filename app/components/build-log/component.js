@@ -1,5 +1,5 @@
 import { Promise } from 'rsvp';
-import { set, getWithDefault, computed, observer, togglerProperty } from '@ember/object';
+import { set, getWithDefault, computed, observer, toggleProperty } from '@ember/object';
 import { scheduleOnce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -410,10 +410,10 @@ export default Component.extend({
       set(this, 'timeFormat', timeTypes[index]);
     },
     toggleZoom() {
-      togglerProperty(this, 'fullScreen');
+      toggleProperty(this, 'fullScreen');
     },
     toggleLineWrap() {
-      togglerProperty(this, 'lineWrap');
+      toggleProperty(this, 'lineWrap');
     }
   }
 });
