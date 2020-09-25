@@ -1,5 +1,5 @@
 import { Promise } from 'rsvp';
-import { set, getWithDefault, computed, observer, toggleProperty } from '@ember/object';
+import { set, getWithDefault, computed, observer } from '@ember/object';
 import { scheduleOnce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
