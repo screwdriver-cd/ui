@@ -410,10 +410,10 @@ export default Component.extend({
       set(this, 'timeFormat', timeTypes[index]);
     },
     toggleZoom() {
-      toggleProperty(this, 'fullScreen');
+      this.toggleProperty(this, 'fullScreen');
     },
     toggleLineWrap() {
-      toggleProperty(this, 'lineWrap');
+      this.toggleProperty(this, 'lineWrap');
     }
   }
 });
