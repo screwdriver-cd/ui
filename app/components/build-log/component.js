@@ -366,18 +366,9 @@ export default Component.extend({
     download() {
       const { buildId, stepName } = this;
 
-      if (this.logService.getCache(buildId, stepName, 'logs')) {
-        set(this, 'isDownloading', true);
+      let downloadLink = `http://sd.screwdriver.cd:9001/v4/builds/${buildId}/steps/${stepName}/logs?type=download`;
 
-        this.getLogs(true).then(() => {
-          const el = this.element.querySelector('#downloadLink');
-
-          el.setAttribute('download', `${buildId}-${stepName}.log`);
-          el.setAttribute('href', this.logService.buildLogBlobUrl(buildId, stepName));
-          el.click();
-          set(this, 'isDownloading', false);
-        });
-      }
+      window.open(downloadLink, '_blank');
     },
     logScroll() {
       const container = this.element.querySelectorAll('.wrap')[0];

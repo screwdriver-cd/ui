@@ -75,10 +75,17 @@ export default Service.extend({
     return this.fetchFrom('store', method, url, data, raw);
   },
 
-  fetchLogs({ buildId, stepName, logNumber = 0, pageSize = 10, sortOrder = 'ascending' }) {
+  fetchLogs({
+    buildId,
+    stepName,
+    logNumber = 0,
+    pageSize = 10,
+    sortOrder = 'ascending',
+    type = 'preview'
+  }) {
     const method = 'get';
     const url = `/builds/${buildId}/steps/${stepName}/logs`;
-    const data = { from: logNumber, pages: pageSize, sort: sortOrder };
+    const data = { from: logNumber, pages: pageSize, sort: sortOrder, type };
     const raw = true;
 
     return this.fetchFromApi(method, url, data, raw);
