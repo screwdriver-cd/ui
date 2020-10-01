@@ -2,7 +2,7 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, find, click } from '@ember/test-helpers';
+import { render, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import moment from 'moment';
 import sinon from 'sinon';
@@ -315,22 +315,5 @@ module('Integration | Component | build log', function(hooks) {
       sinon.assert.called(logsStub);
       assert.ok(container.scrollTop > lastScrollTop);
     });
-  });
-
-  test('it generates object url for the log when clicking download button', async function(assert) {
-    this.set('step', 'banana');
-    await render(hbs`{{build-log
-      stepName=step
-      totalLine=1000
-      buildId=1
-      stepStartTime=null
-      buildStartTime="1478912844724"
-    }}`);
-
-    assert.dom(find('#downloadLink').previousElementSibling).hasText('Download');
-
-    await click(find('#downloadLink').previousElementSibling);
-
-    assert.dom('#downloadLink').hasAttribute('href', blobUrl);
   });
 });

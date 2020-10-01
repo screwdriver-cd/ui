@@ -129,7 +129,7 @@ module('Unit | Service | build logs', function(hooks) {
 
     assert.equal(
       request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending&type=preview'
     );
   });
 
@@ -147,7 +147,7 @@ module('Unit | Service | build logs', function(hooks) {
 
     assert.equal(
       request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50&pages=10&sort=ascending'
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=50&pages=10&sort=ascending&type=preview'
     );
   });
 
@@ -164,7 +164,7 @@ module('Unit | Service | build logs', function(hooks) {
 
     assert.equal(
       request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending&type=preview'
     );
   });
 
@@ -183,7 +183,7 @@ module('Unit | Service | build logs', function(hooks) {
 
       assert.equal(
         request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
+        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending&type=preview'
       );
     } catch (err) {
       Ember.Logger.error('err', err);
@@ -207,7 +207,7 @@ module('Unit | Service | build logs', function(hooks) {
 
     assert.equal(
       request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100&sort=ascending'
+      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=100&sort=ascending&type=preview'
     );
   });
 
