@@ -367,19 +367,9 @@ export default Component.extend({
     },
     download() {
       const { buildId, stepName } = this;
+      const downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/steps/${stepName}/logs?type=download`;
 
-      if (this.logService.getCache(buildId, stepName, 'logs')) {
-        set(this, 'isDownloading', true);
-
-        this.getLogs(true).then(() => {
-          const el = this.element.querySelector('#downloadLink');
-
-          el.setAttribute('download', `${buildId}-${stepName}.log`);
-          el.setAttribute('href', this.logService.buildLogBlobUrl(buildId, stepName));
-          el.click();
-          set(this, 'isDownloading', false);
-        });
-      }
+      window.open(downloadLink, '_blank');
     },
     logScroll() {
       const container = this.element.querySelectorAll('.wrap')[0];
