@@ -366,7 +366,7 @@ export default Component.extend({
     download() {
       const { buildId, stepName } = this;
 
-      let downloadLink = `http://sd.screwdriver.cd:9001/v4/builds/${buildId}/steps/${stepName}/logs?type=download`;
+      let downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/steps/${stepName}/logs?type=download`;
 
       window.open(downloadLink, '_blank');
     },
