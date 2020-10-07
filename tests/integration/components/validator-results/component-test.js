@@ -120,4 +120,23 @@ module('Integration | Component | validator results', function(hooks) {
     assert.dom('.error').hasText('there is an error');
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
+
+  test('it renders warnAnnotations results', async function(assert) {
+    this.set('validationMock', {
+      warnAnnotations: ['there is an warning'],
+      template: {
+        name: 'batman/batmobile',
+        version: '1.0.0',
+        config: {
+          image: 'int-test:1',
+          steps: [{ forgreatjustice: 'ba.sh' }]
+        }
+      }
+    });
+
+    await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+
+    assert.dom('.warning').hasText('there is an warning');
+    assert.dom('h4').hasText('batman/batmobile@1.0.0');
+  });
 });
