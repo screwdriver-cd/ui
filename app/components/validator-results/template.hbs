@@ -1,6 +1,9 @@
 {{#each errors as |msg|}}
   <div class="error">{{msg}}</div>
 {{/each}}
+{{#each warnAnnotations as |msg|}}
+  <div class="warning">{{msg}}</div>
+{{/each}}
 {{#if isTemplate}}
   {{validator-job name=templateName job=results.template.config template=results.template isOpen=(unbound isOpen)}}
 {{else}}
