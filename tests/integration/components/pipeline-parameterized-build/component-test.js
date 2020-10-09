@@ -62,6 +62,32 @@ module('Integration | Component | pipeline-parameterized-build', function(hooks)
       buildParameters=buildParameters
       showSubmitButton=showSubmitButton}}`);
     assert.dom('.form-group').exists({ count: 2 }, 'There are 2 parameters');
+    assert.dom('.fa-question-circle').exists({ count: 2 }, 'Theare are 2 description info');
+    assert.dom('.ember-basic-dropdown').exists({ count: 1 }, 'There is 1 dropdown list');
+    assert.dom('.form-control').exists({ count: 1 }, 'There is 1 input field');
+    assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');
+  });
+
+  test('it renders description', async function(assert) {
+    this.setProperties({
+      buildParameters: {
+        from: {
+          value: 'latest',
+          description: 'promote from tag'
+        },
+        to: {
+          value: ['test', 'stable'],
+          description: 'promote to tag'
+        }
+      },
+      showSubmitButton: true
+    });
+
+    await render(hbs`{{pipeline-parameterized-build
+      buildParameters=buildParameters
+      showSubmitButton=showSubmitButton}}`);
+    assert.dom('.form-group').exists({ count: 2 }, 'There are 2 parameters');
+    assert.dom('.fa-question-circle').exists({ count: 2 }, 'Theare are 2 description info');
     assert.dom('.ember-basic-dropdown').exists({ count: 1 }, 'There is 1 dropdown list');
     assert.dom('.form-control').exists({ count: 1 }, 'There is 1 input field');
     assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');

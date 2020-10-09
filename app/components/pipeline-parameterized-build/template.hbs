@@ -3,15 +3,22 @@
   onSubmit=(action "onSave" parameters) as |form|}}
 
   {{#each parameters as |parameter|}}
-    {{#if (is-array parameter.value)}}
-      {{#form.group}}
-        <label class="control-label col-md-4">{{parameter.name}}</label>
-        <div class="col-md-8">
+    {{#form.group}}
+      <label class="control-label col-md-4">
+        {{#if parameter.description}}
+          {{fa-icon "question-circle" title=parameter.description}}
+        {{else}}
+          {{fa-icon "question-circle" title="No description."}}
+        {{/if}}
+        {{parameter.name}}
+      </label>
+      <div class="col-md-8">
+        {{#if (is-array parameter.value)}}
           {{#power-select
             options=parameter.value
             renderInPlace=true
             selected=(get parameterizedModel parameter.name)
-            onchange=(action (action "onUpdateDropdownValue" parameterizedModel parameter.name))
+            onchange=(action (action "onUpdateValue" parameterizedModel parameter.name))
             onkeydown=(action (action "searchOrAddtoList" parameterizedModel parameter.name))
             searchPlaceholder="Type to filter"
             noMatchesMessage="Hit enter to override"
@@ -19,15 +26,18 @@
           }}
             {{selectedValue}}
           {{/power-select}}
-        </div>
-      {{/form.group}}
-    {{else}}
-      {{form.element
-        label=parameter.name
-        placeholder=parameter.value
-        property=parameter.name
-        onChange=(action "onUpdateValue")}}
-    {{/if}}
+        {{else}}
+          {{input
+            value=parameter.value
+            class="form-control"
+            label=parameter.value
+            placeholder=parameter.value
+            property=parameter.name
+            change=(action (action "onUpdateValue" parameterizedModel parameter.name parameter.value))
+          }}
+        {{/if}}
+      </div>
+    {{/form.group}}
   {{/each}}
 
   {{#if showSubmitButton}}

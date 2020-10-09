@@ -57,12 +57,16 @@ export default Component.extend({
       const parameterNames = Object.keys(buildParameters);
 
       parameterNames.forEach(parameterName => {
-        const parameterValue = buildParameters[parameterName];
-        const currentEventParameterValue = currentEventParameters[parameterName].value;
+        const parameterValue =
+          buildParameters[parameterName].value || buildParameters[parameterName];
+        const currentEventParameterValue =
+          currentEventParameters[parameterName].value || currentEventParameters[parameterName];
 
         if (Array.isArray(parameterValue)) {
           parameterValue.removeObject(currentEventParameterValue);
           parameterValue.unshift(currentEventParameterValue);
+        } else if (buildParameters[parameterName].value) {
+          buildParameters[parameterName].value = currentEventParameterValue;
         } else {
           buildParameters[parameterName] = currentEventParameterValue;
         }
