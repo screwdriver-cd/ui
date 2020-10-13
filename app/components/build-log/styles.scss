@@ -53,6 +53,24 @@
   }
   a {
     margin-left: 15px;
+    color: $brand-600;
+
+    &:hover,
+    &:focus {
+      color: $brand-700;
+    }
+
+    & > svg.img {
+      display: inline-block;
+      vertical-align: sub;
+      fill: $brand-600;
+      height: 16px;
+
+      &:hover,
+      &:focus {
+        fill: $brand-700;
+      }
+    }
   }
 }
 
