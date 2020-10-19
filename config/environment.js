@@ -61,7 +61,8 @@ module.exports = environment => {
       DEFAULT_LOG_PAGE_SIZE: 10,
       FORCE_RELOAD_WAIT: 100, // Wait 100ms before force reload
       WAITING_TO_SCROLL_TIME: 1000,
-      DEBOUNCED_SCROLL_TIME: 3000
+      DEBOUNCED_SCROLL_TIME: 3000,
+      CANARY_RELEASE: false
     },
     moment: {
       allowEmpty: true // allow empty dates

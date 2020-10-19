@@ -6,6 +6,7 @@ export default Component.extend({
   showSearch: false,
   docUrl: ENV.APP.SDDOC_URL,
   slackUrl: ENV.APP.SLACK_URL,
+  showReleaseBadge: ENV.APP.CANARY_RELEASE,
   searchTerm: '',
   actions: {
     invalidateSession() {

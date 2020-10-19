@@ -46,6 +46,11 @@
     {{/navbar.nav}}
 
     {{#navbar.nav classNames="navbar-nav navbar-right" as |nav|}}
+      {{#if showReleaseBadge}}
+        {{#nav.item}}
+          <span class="canary-feature"></span>
+        {{/nav.item}}
+      {{/if}}
       {{#if showSearch}}
         {{#nav.item}}
           <form class="navbar-form navbar-right" role="search">
