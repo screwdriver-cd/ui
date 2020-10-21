@@ -138,6 +138,8 @@ export default Component.extend({
     });
   },
   async draw(data) {
+    const self = this;
+
     let displayJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
 
     const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
@@ -265,6 +267,8 @@ export default Component.extend({
       .insert('title')
       .text(d => (d.status ? `${d.name} - ${d.status}` : d.name));
 
+    let selectedJobFound = false;
+
     // Job Names
     if (TITLE_SIZE && this.displayJobNames) {
       svg
@@ -277,13 +281,25 @@ export default Component.extend({
             ? `${d.name.substr(0, 8)}...${d.name.substr(-8)}`
             : d.name
         )
-        .attr('class', 'graph-label')
+        .attr('class', d => {
+          if (!self.minified && d.id === parseInt(self.selectedJobId, 10)) {
+            selectedJobFound = true;
+
+            return 'graph-label selected-job';
+          }
+
+          return 'graph-label';
+        })
         .attr('font-size', `${TITLE_SIZE}px`)
         .style('text-anchor', 'middle')
         .attr('x', d => calcXCenter(d.pos.x))
         .attr('y', d => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING + TITLE_SIZE)
         .insert('title')
         .text(d => d.name);
+    }
+    if (selectedJobFound && !this.scrolledToSelectedJob) {
+      this.element.querySelectorAll('svg > .selected-job')[0].scrollIntoView();
+      this.scrolledToSelectedJob = true;
     }
   }
 });

@@ -30,6 +30,10 @@ g {
   // }
 }
 
+.selected-job {
+  stroke: $sd-failure;
+}
+
 .graph-node {
   font-family: 'screwdriver';
   fill: $sd-text-light;
