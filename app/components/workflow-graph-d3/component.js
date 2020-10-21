@@ -277,9 +277,11 @@ export default Component.extend({
         .enter()
         .append('text')
         .text(d =>
-          d.name.length >= displayJobNameLength
-            ? `${d.name.substr(0, 8)}...${d.name.substr(-8)}`
-            : d.name
+          const displayName = d.displayName !== undefined ? d.displayName : d.name;
+
+          return displayName.length >= displayJobNameLength
+            ? `${displayName.substr(0, 8)}...${displayName.substr(-8)}`
+            : displayName;
         )
         .attr('class', d => {
           if (!self.minified && d.id === parseInt(self.selectedJobId, 10)) {

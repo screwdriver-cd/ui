@@ -15,27 +15,54 @@ module('Integration | Component | workflow graph d3', function(hooks) {
 
   test('it renders nodes and edges when a graph is supplied', async function(assert) {
     this.set('workflowGraph', {
-      nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }],
-      edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }]
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'main' },
+        { name: 'foo', displayName: 'bar' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'foo' }
+      ]
     });
     await render(hbs`{{workflow-graph-d3 workflowGraph=workflowGraph}}`);
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
-    assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 3);
-    assert.equal(this.element.querySelectorAll('svg > path.graph-edge').length, 2);
+    assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 4);
+    assert.equal(this.element.querySelectorAll('svg > path.graph-edge').length, 3);
+    assert.dom('svg text.graph-label:nth-of-type(3)').includesText('main');
+    assert.dom('svg text.graph-label:nth-of-type(4)').includesText('bar');
   });
 
   test('it renders a complete graph with triggers when showDownstreamTriggers is true', async function(assert) {
     this.set('workflowGraph', {
-      nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }],
-      edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }]
-    });
-    this.set('completeWorkflowGraph', {
-      nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: '~sd-main-trigger' }],
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'main' },
+        { name: 'foo', displayName: 'bar' }
+      ],
       edges: [
         { src: '~pr', dest: 'main' },
         { src: '~commit', dest: 'main' },
-        { src: 'main', dest: '~sd-main-trigger' }
+        { src: 'main', dest: 'foo' }
+      ]
+    });
+    this.set('completeWorkflowGraph', {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'main' },
+        { name: 'foo', displayName: 'bar' },
+        { name: '~sd-main-trigger' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'foo' },
+        { src: 'foo', dest: '~sd-main-trigger' }
       ]
     });
     this.set('showDownstreamTriggers', true);
@@ -44,8 +71,10 @@ module('Integration | Component | workflow graph d3', function(hooks) {
     );
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
-    assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 4);
-    assert.equal(this.element.querySelectorAll('svg > path.graph-edge').length, 3);
+    assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 5);
+    assert.equal(this.element.querySelectorAll('svg > path.graph-edge').length, 4);
+    assert.dom('svg text.graph-label:nth-of-type(3)').includesText('main');
+    assert.dom('svg text.graph-label:nth-of-type(4)').includesText('bar');
   });
 
   test('it renders statuses when build data is available', async function(assert) {

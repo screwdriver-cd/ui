@@ -154,6 +154,23 @@
     }
   }
 
+  .canary-feature {
+    position: relative;
+  
+    &:after {
+      content: 'Canary';
+      color: #fff;
+      background: #4a3bd0;
+      font-size: 0.75em;
+      position: absolute;
+      line-height: 1;
+      top: 1.5em;
+      right: 1em;
+      padding: 4px 6px;
+      border-radius: 7px;
+    }
+  }
+
   .dropdown-menu > li > a {
     span {
       padding-left: 0.5em;
