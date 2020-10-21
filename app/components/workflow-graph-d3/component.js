@@ -276,13 +276,13 @@ export default Component.extend({
         .data(data.nodes)
         .enter()
         .append('text')
-        .text(d =>
+        .text(d => {
           const displayName = d.displayName !== undefined ? d.displayName : d.name;
 
           return displayName.length >= displayJobNameLength
             ? `${displayName.substr(0, 8)}...${displayName.substr(-8)}`
             : displayName;
-        )
+        })
         .attr('class', d => {
           if (!self.minified && d.id === parseInt(self.selectedJobId, 10)) {
             selectedJobFound = true;
