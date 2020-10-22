@@ -1,6 +1,6 @@
 <ul>
   <li class="job-name build-{{buildStatus}}">
-    {{#link-to "pipeline.events.show" pipelineId buildId (query-params jobId=jobId)}}{{jobName}}{{/link-to}}
+    {{#link-to "pipeline.events.show" pipelineId event.id (query-params jobId=jobId)}}{{jobName}}{{/link-to}}
     <span class="banner-label">Job</span>
   </li>
   <li class="commit">
