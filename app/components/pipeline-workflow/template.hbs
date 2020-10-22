@@ -1,5 +1,6 @@
 {{#if (and (is-fulfilled selectedEventObj.builds) (is-fulfilled graph))}}
   {{#workflow-graph-d3
+    jobId=jobId
     pipeline=pipeline
     completeWorkflowGraph=completeWorkflowGraph
     showDownstreamTriggers=showDownstreamTriggers

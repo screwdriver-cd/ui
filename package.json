@@ -19,6 +19,7 @@
     "lint:js": "eslint .",
     "lint:fix": "./node_modules/eslint/bin/eslint.js --fix .",
     "start": "ember serve",
+    "start:dev": "sudo ember serve --ssl true --port 443 --environment=development",
     "test": "ember test"
   },
   "husky": {
