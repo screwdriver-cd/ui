@@ -26,6 +26,9 @@ export function initialize() {
   if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.ROOT_URL) {
     ENV.rootURL = window.SUPPLEMENTARY_CONFIG.ROOT_URL;
   }
+  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.CANARY_RELEASE) {
+    ENV.APP.canary_release = window.SUPPLEMENTARY_CONFIG.CANARY_RELEASE;
+  }
 }
 
 export default {
