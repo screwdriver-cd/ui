@@ -9,6 +9,11 @@ import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
 
 export default Controller.extend(ModelReloaderMixin, {
+  queryParams: [
+    {
+      view: { type: 'string' }
+    }
+  ],
   session: service(),
   stop: service('event-stop'),
   init() {
@@ -20,6 +25,12 @@ export default Controller.extend(ModelReloaderMixin, {
       showDownstreamTriggers: false
     });
   },
+  showListView: computed('view', {
+    get() {
+      return /^list$/gi.test(this.view);
+    }
+  }),
+  view: '',
 
   reload() {
     try {
@@ -50,7 +61,6 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
   jobsDetails: [],
-  showListView: false,
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
   completeWorkflowGraph: computed('model.triggers.@each.triggers', {
@@ -368,7 +378,11 @@ export default Controller.extend(ModelReloaderMixin, {
         });
       }
 
-      this.set('showListView', showListView);
+      const eventId = get(this.selectedEventObj, 'id');
+
+      this.transitionToRoute('pipeline.build', this.get('pipeline.id'), eventId, {
+        queryParams: { view: showListView ? 'list' : 'grid' }
+      });
     },
     updateEvents(page) {
       this.updateEvents(page);
