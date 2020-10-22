@@ -380,11 +380,7 @@ export default Controller.extend(ModelReloaderMixin, {
         });
       }
 
-      const eventId = get(this.selectedEventObj, 'id');
-
-      this.transitionToRoute('pipeline.build', this.get('pipeline.id'), eventId, {
-        queryParams: { view: showListView ? 'list' : 'grid' }
-      });
+      this.set('view', showListView ? 'list' : 'grid');
     },
     updateEvents(page) {
       this.updateEvents(page);
