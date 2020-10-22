@@ -11,10 +11,10 @@ import { isPRJob } from 'screwdriver-ui/utils/build';
 export default Controller.extend(ModelReloaderMixin, {
   queryParams: [
     {
-      selectedJobId: { type: 'string' }
+      jobId: { type: 'string' }
     }
   ],
-  selectedJobId: '',
+  jobId: '',
   session: service(),
   stop: service('event-stop'),
   init() {

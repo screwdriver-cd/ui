@@ -267,7 +267,7 @@ export default Component.extend({
       .insert('title')
       .text(d => (d.status ? `${d.name} - ${d.status}` : d.name));
 
-    let selectedJobFound = false;
+    let jobFound = false;
 
     // Job Names
     if (TITLE_SIZE && this.displayJobNames) {
@@ -284,8 +284,8 @@ export default Component.extend({
             : displayName;
         })
         .attr('class', d => {
-          if (!self.minified && d.id === parseInt(self.selectedJobId, 10)) {
-            selectedJobFound = true;
+          if (!self.minified && d.id === parseInt(self.jobId, 10)) {
+            jobFound = true;
 
             return 'graph-label selected-job';
           }
@@ -299,7 +299,7 @@ export default Component.extend({
         .insert('title')
         .text(d => d.name);
     }
-    if (selectedJobFound && !this.scrolledToSelectedJob) {
+    if (jobFound && !this.scrolledToSelectedJob) {
       this.element.querySelectorAll('svg > .selected-job')[0].scrollIntoView();
       this.scrolledToSelectedJob = true;
     }
