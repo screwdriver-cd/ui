@@ -11,6 +11,7 @@ import { isPRJob } from 'screwdriver-ui/utils/build';
 export default Controller.extend(ModelReloaderMixin, {
   queryParams: [
     {
+      view: { type: 'string' },
       jobId: { type: 'string' }
     }
   ],
@@ -26,6 +27,12 @@ export default Controller.extend(ModelReloaderMixin, {
       showDownstreamTriggers: false
     });
   },
+  showListView: computed('view', {
+    get() {
+      return /^list$/gi.test(this.view);
+    }
+  }),
+  view: '',
 
   reload() {
     try {
@@ -56,7 +63,6 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
   jobsDetails: [],
-  showListView: false,
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
   completeWorkflowGraph: computed('model.triggers.@each.triggers', {
@@ -374,7 +380,7 @@ export default Controller.extend(ModelReloaderMixin, {
         });
       }
 
-      this.set('showListView', showListView);
+      this.set('view', showListView ? 'list' : 'grid');
     },
     updateEvents(page) {
       this.updateEvents(page);
