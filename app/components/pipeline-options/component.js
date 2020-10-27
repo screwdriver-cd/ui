@@ -110,11 +110,6 @@ export default Component.extend({
         rootDir: ''
       };
       const settings = {};
-      // const settings = { metricsDowntimeStatuses: DEFAULT_DOWNTIME_STATUSES };
-
-      // if (metricsDowntimeStatuses) {
-      //   settings.metricsDowntimeStatuses = metricsDowntimeStatuses;
-      // }
 
       if (metricsDowntimeJobs) {
         settings.metricsDowntimeJobs = metricsDowntimeJobs;
