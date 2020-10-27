@@ -4,9 +4,11 @@ import { not, or, sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
-import { parse, getCheckoutUrl } from '../../utils/git';
+import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
+import { statuses } from 'screwdriver-ui/utils/build';
 
 const { MINIMUM_JOBNAME_LENGTH } = ENV.APP;
+// const DEFAULT_DOWNTIME_STATUSES = ['FAILURE'];
 
 export default Component.extend({
   store: service(),
@@ -31,6 +33,9 @@ export default Component.extend({
   user: null,
   jobId: null,
   jobSorting: ['name'],
+  statuses,
+  metricsDowntimeStatuses: [],
+  metricsDowntimeJobs: [],
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   sortedJobs: sort('jobs', 'jobSorting'),
   isInvalid: not('isValid'),
@@ -90,15 +95,33 @@ export default Component.extend({
       this.set('rootDir', val.trim());
     },
     updatePipeline() {
-      const { scmUrl, rootDir, hasRootDir } = this;
+      const {
+        scmUrl,
+        rootDir,
+        hasRootDir,
+        metricsDowntimeJobs /* , metricsDowntimeStatuses */
+      } = this;
       const pipelineConfig = {
         scmUrl,
         rootDir: ''
       };
+      const settings = {};
+      // const settings = { metricsDowntimeStatuses: DEFAULT_DOWNTIME_STATUSES };
+
+      // if (metricsDowntimeStatuses) {
+      //   settings.metricsDowntimeStatuses = metricsDowntimeStatuses;
+      // }
+
+      if (metricsDowntimeJobs) {
+        settings.metricsDowntimeJobs = metricsDowntimeJobs;
+      }
+
+      pipelineConfig.settings = settings;
 
       if (hasRootDir) {
         pipelineConfig.rootDir = rootDir;
       }
+
       this.onUpdatePipeline(pipelineConfig);
     },
     toggleJob(jobId, user, name, stillActive) {

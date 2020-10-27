@@ -25,6 +25,43 @@
                 {{pipeline-rootdir hasRootDir=hasRootDir rootDir=this.rootDir updateRootDir=(action "updateRootDir")}}
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-xs-10">
+                <h4>Downtime Jobs</h4>
+                <p>Pick your own preferred jobs to be counted in metrics graph</p>
+              </div>
+              <div class="col-xs-2 right">
+                {{#power-select-multiple
+                  options=sortedJobs
+                  selected=metricsDowntimeJobs
+                  placeholder="Select Jobs..."
+                  onchange=(action (mut metricsDowntimeJobs))
+                  as |metricsDowntimeJob|
+                }}
+                  {{metricsDowntimeJob.name}}
+                {{/power-select-multiple}}
+              </div>
+            </div>
+
+{{!--             <div class="row">
+              <div class="col-xs-10">
+                <h4>Downtime Statuses</h4>
+                <p>Pick your own preferred downtime statuses to be counted in metrics graph</p>
+              </div>
+              <div class="col-xs-2 right">
+                {{#power-select-multiple
+                  options=statuses
+                  selected=metricsDowntimeStatuses
+                  placeholder="Select Statuses..."
+                  onchange=(action (mut metricsDowntimeStatuses))
+                  as |metricsDowntimeStatus|
+                }}
+                  {{metricsDowntimeStatus}}
+                {{/power-select-multiple}}
+              </div>
+            </div> --}}
+
             <div class="row">
               <div class="col-xs-12 right">
                 <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
@@ -37,6 +74,7 @@
               </div>
             </div>
           </li>
+
         </ul>
       </section>
     </div>
