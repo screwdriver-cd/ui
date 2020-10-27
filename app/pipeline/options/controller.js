@@ -26,13 +26,12 @@ export default Controller.extend({
         })
         .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
-    updatePipeline({ scmUrl, rootDir, settings }) {
+    updatePipeline({ scmUrl, rootDir }) {
       const { pipeline } = this;
 
       pipeline.setProperties({
         checkoutUrl: scmUrl,
-        rootDir,
-        settings
+        rootDir
       });
 
       this.set('isSaving', true);

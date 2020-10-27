@@ -130,5 +130,26 @@ export default Service.extend({
     const raw = true;
 
     return this.fetchFromApi(method, url, data, raw);
+  },
+
+  /**
+   * updatePipelineSettings
+   * @param  {Number} pipelineId [description]
+   * @param  {Object} settings
+   * @param  {Array}  settings.metricsDowntimeJobs
+   * @return {Promise}
+   */
+  async updatePipelineSettings(pipelineId = 1, settings) {
+    const method = 'put';
+    const url = `/pipelines/${pipelineId}`;
+    const { metricsDowntimeJobs = [] } = settings;
+
+    const data = {
+      settings: {
+        metricsDowntimeJobs: metricsDowntimeJobs.map(job => job.id)
+      }
+    };
+
+    return this.fetchFromApi(method, url, data);
   }
 });

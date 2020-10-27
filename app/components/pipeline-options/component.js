@@ -5,10 +5,8 @@ import { computed } from '@ember/object';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
-import { statuses } from 'screwdriver-ui/utils/build';
 
 const { MINIMUM_JOBNAME_LENGTH } = ENV.APP;
-// const DEFAULT_DOWNTIME_STATUSES = ['FAILURE'];
 
 export default Component.extend({
   store: service(),
@@ -16,6 +14,7 @@ export default Component.extend({
   sync: service('sync'),
   // Clearing a cache
   cache: service('cache'),
+  shuttle: service(),
   errorMessage: '',
   scmUrl: '',
   rootDir: '',
@@ -33,8 +32,7 @@ export default Component.extend({
   user: null,
   jobId: null,
   jobSorting: ['name'],
-  statuses,
-  metricsDowntimeStatuses: [],
+  isUpdatingMetricsDowntimeJobs: false,
   metricsDowntimeJobs: [],
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   sortedJobs: sort('jobs', 'jobSorting'),
@@ -76,6 +74,12 @@ export default Component.extend({
     }
 
     this.set('desiredJobNameLength', desiredJobNameLength);
+
+    const metricsDowntimeJobs = this.get('pipeline.settings.metricsDowntimeJobs').map(jobId => {
+      return this.jobs.findBy('id', `${jobId}`);
+    });
+
+    this.set('metricsDowntimeJobs', metricsDowntimeJobs);
   },
   actions: {
     // Checks if scm URL is valid or not
@@ -198,6 +202,18 @@ export default Component.extend({
             jobNameLength
           })
           .save();
+      }
+    },
+    async updatePipelineSettings(metricsDowntimeJobs) {
+      try {
+        const pipelineId = this.get('pipeline.id');
+
+        this.set('isUpdatingMetricsDowntimeJobs', true);
+        await this.shuttle.updatePipelineSettings(pipelineId, { metricsDowntimeJobs });
+      } catch (err) {
+        throw err;
+      } finally {
+        this.set('isUpdatingMetricsDowntimeJobs', false);
       }
     }
   }
