@@ -25,26 +25,50 @@
                 {{pipeline-rootdir hasRootDir=hasRootDir rootDir=this.rootDir updateRootDir=(action "updateRootDir")}}
               </div>
             </div>
+          </li>
 
+          <li>
+            <div class="row">
+              <div class="col-xs-12 right">
+                <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
+                  <div class="saving-loading">
+                    Updating pipeline
+                  </div>
+                  <div class="button-label">Update</div>
+                </button>
+                {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
+              </div>
+            </div>
+          </li>
+
+          <li>
             <div class="row">
               <div class="col-xs-10">
                 <h4>Downtime Jobs</h4>
                 <p>Pick your own preferred jobs to be counted in metrics graph</p>
+                <div class="row">
+                  <div class="col-xs-5">
+                    {{#power-select-multiple
+                      options=sortedJobs
+                      renderInPlace=true
+                      selected=metricsDowntimeJobs
+                      placeholder="Select Jobs..."
+                      onchange=(action (mut metricsDowntimeJobs))
+                      as |metricsDowntimeJob|
+                    }}
+                      {{metricsDowntimeJob.name}}
+                    {{/power-select-multiple}}
+                  </div>
+                </div>
               </div>
-              <div class="col-xs-2 right">
-                {{#power-select-multiple
-                  options=sortedJobs
-                  selected=metricsDowntimeJobs
-                  placeholder="Select Jobs..."
-                  onchange=(action (mut metricsDowntimeJobs))
-                  as |metricsDowntimeJob|
-                }}
-                  {{metricsDowntimeJob.name}}
-                {{/power-select-multiple}}
+              <div class="col-xs-2 right sync">
+                <a href="#" {{action "updatePipelineSettings" metricsDowntimeJobs}}>{{fa-icon "refresh" spin=isUpdatingMetricsDowntimeJobs}}</a>
               </div>
             </div>
+          </li>
 
-{{!--             <div class="row">
+{{!--           <li>
+            <div class="row">
               <div class="col-xs-10">
                 <h4>Downtime Statuses</h4>
                 <p>Pick your own preferred downtime statuses to be counted in metrics graph</p>
@@ -60,20 +84,8 @@
                   {{metricsDowntimeStatus}}
                 {{/power-select-multiple}}
               </div>
-            </div> --}}
-
-            <div class="row">
-              <div class="col-xs-12 right">
-                <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
-                  <div class="saving-loading">
-                    Updating pipeline
-                  </div>
-                  <div class="button-label">Update</div>
-                </button>
-                {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
-              </div>
             </div>
-          </li>
+          </li> --}}
 
         </ul>
       </section>
@@ -206,7 +218,7 @@
           <div class="row">
             <div class="col-xs-10">
               <h4>Display Name Length</h4>
-              <p>Setup your own preferred job name length to display on the workflow graph</p>
+              <p>Setup your own preferred job name length to display on the workflow graph (range: 20 - 99)</p>
             </div>
             <div class="col-xs-2 right">
               <input type="number"

@@ -28,19 +28,10 @@ export default DS.RESTSerializer.extend({
    * @method serializeIntoHash
    */
   serializeIntoHash(hash, typeClass, snapshot) {
-    const settings = snapshot.attr('settings') || {};
-
-    if (Object.keys(settings).length > 0) {
-      const { metricsDowntimeJobs = [] } = settings;
-
-      settings.metricsDowntimeJobs = metricsDowntimeJobs.map(job => job.name);
-    }
-
     return assign(hash, {
       checkoutUrl: snapshot.attr('checkoutUrl'),
       rootDir: snapshot.attr('rootDir') || '',
-      autoKeysGeneration: snapshot.attr('autoKeysGeneration') || false,
-      settings
+      autoKeysGeneration: snapshot.attr('autoKeysGeneration') || false
     });
   }
 });
