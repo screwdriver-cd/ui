@@ -22,6 +22,7 @@ export default DS.Model.extend({
   secrets: DS.hasMany('secret', { async: true }),
   tokens: DS.hasMany('token', { async: true }),
   metrics: DS.hasMany('metric', { async: true }),
+  settings: DS.attr(),
 
   appId: alias('scmRepo.name'),
   branch: computed('scmRepo.{branch,rootDir}', {
