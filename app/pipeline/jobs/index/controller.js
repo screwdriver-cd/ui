@@ -191,7 +191,6 @@ export default Controller.extend(ModelReloaderMixin, {
         };
       }
 
-      // await this.createEvent(eventPayload, false);
       await this.createEvent(eventPayload);
     },
     stopBuild
