@@ -1,0 +1,40 @@
+{{#if session.isAuthenticated}}
+  {{#if (not session.data.authenticated.isGuest)}}
+    {{pipeline-nav
+      pipeline=pipeline
+      buildsLink="pipeline.jobs.index"
+    }}
+  {{/if}}
+{{/if}}
+
+
+{{info-message message=errorMessage type="warning" icon="exclamation-triangle" scmContext=pipeline.scmContext}}
+
+<div class="row">
+  <div class="col-xs-12 separator partial-view">
+    {{pipeline-list-view
+            pipeline=pipeline
+            jobs=jobs
+            jobsDetails=jobsDetails
+            updateListViewJobs=(action "updateListViewJobs")
+            startSingleBuild=(action "startSingleBuild")
+            stopBuild=(action "stopBuild")
+            startDetachedBuild=(action "startDetachedBuild")
+            showListView=showListView
+            setShowListView=(action "setShowListView")
+            refreshListViewJobs=(action "refreshListViewJobs")
+    }}
+
+  </div>
+</div>
+
+{{#if isShowingModal}}
+  {{#modal-dialog clickOutsideToClose=false
+                  targetAttachment="center"
+                  translucentOverlay=true
+  }}
+    {{loading-view}}
+  {{/modal-dialog}}
+{{/if}}
+
+{{outlet}}

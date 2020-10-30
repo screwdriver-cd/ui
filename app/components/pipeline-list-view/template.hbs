@@ -1,4 +1,20 @@
-<button {{action "refreshListViewJobs"}} class="refresh-btn">Refresh</button>
+<div class="row list-view-nav">
+  <div class="col-xs-2">
+    {{#bs-button-group
+            class="view-toggle"
+            value=showListView
+            type="radio"
+            onChange=(action setShowListView) as |bg|
+    }}
+      {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
+      {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
+    {{/bs-button-group}}
+  </div>
+  <div class="col-xs-offset-8 col-xs-2">
+    <button {{action "refreshListViewJobs"}} class="btn refresh-btn">Refresh</button>
+  </div>
+</div>
+
 {{#light-table table height="400px" as |t|}}
   {{t.head
     onColumnClick=(action "onColumnClick")

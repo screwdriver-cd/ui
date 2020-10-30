@@ -1,8 +1,11 @@
 & {
   height: 100%;
+  padding: 15px 0 15px 10px;
 
-  .refresh-btn {
-    float: right;
+  .list-view-nav {
+    margin-bottom: 15px;
+  }
+  .btn {
     border-radius: 3px;
     padding: 5px 10px;
     color: $brand-600;
@@ -26,6 +29,11 @@
     &.active:hover {
       color: $brand-700;
     }
+  }
+
+  .refresh-btn {
+    width: 100px;
+    float: right;
   }
 
   .ember-light-table {
