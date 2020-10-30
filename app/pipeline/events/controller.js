@@ -8,7 +8,7 @@ import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
 
-/** */
+// eslint-disable-next-line require-jsdoc
 export async function stopBuild(givenEvent, job) {
   const buildId = get(job, 'buildId');
 
@@ -39,7 +39,7 @@ export async function stopBuild(givenEvent, job) {
   }
 }
 
-/** */
+// eslint-disable-next-line require-jsdoc
 export async function startDetachedBuild(job, options = {}) {
   this.set('isShowingModal', true);
 
@@ -92,7 +92,7 @@ export async function startDetachedBuild(job, options = {}) {
   await this.createEvent(eventPayload, true);
 }
 
-/** */
+// eslint-disable-next-line require-jsdoc
 export async function createEvent(eventPayload, toActiveTab) {
   const newEvent = this.store.createRecord('event', eventPayload);
 
@@ -124,7 +124,7 @@ export async function createEvent(eventPayload, toActiveTab) {
   return null;
 }
 
-/** */
+// eslint-disable-next-line require-jsdoc
 export async function updateEvents(page) {
   if (this.currentEventType === 'pr') {
     return null;
