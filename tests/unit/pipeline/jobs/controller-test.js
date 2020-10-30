@@ -37,6 +37,91 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
     assert.ok(this.owner.lookup('controller:pipeline/jobs/index'));
   });
 
+  test('it starts a single build', async function(assert) {
+    assert.expect(9); // 13 -> 9
+    server.get('http://localhost:8080/v4/events/5678/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
+    server.post('http://localhost:8080/v4/events', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '5678',
+        pipelineId: '1234'
+      })
+    ]);
+
+    const controller = this.owner.lookup('controller:pipeline/jobs/index');
+
+    run(() => {
+      controller.set(
+        'pipeline',
+        EmberObject.create({
+          id: '1234'
+        })
+      );
+
+      // controller.set('listViewOffset', 3);
+      // controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
+      //   assert.equal(listViewOffset, 0);
+      //   assert.equal(listViewCutOff, 3);
+      //
+      //   return Promise.resolve([]);
+      // });
+
+      controller.set('reload', () => {
+        assert.ok(true);
+
+        return Promise.resolve({});
+      });
+
+      controller.set('model', {
+        events: EmberObject.create({})
+      });
+
+      // controller.transitionToRoute = (path, id) => {
+      //   assert.equal(path, 'pipeline');
+      //   assert.equal(id, 1234);
+      // };
+
+      controller.set('store.queryRecord', (modelName, params) => {
+        assert.equal(modelName, 'build');
+        assert.deepEqual(params, {
+          jobId: 1
+        });
+
+        return Promise.resolve(EmberObject.create({ eventId: '10', parentBuildId: '57' }));
+      });
+
+      controller.set('store.findRecord', (modelName, params) => {
+        assert.equal(modelName, 'event');
+        assert.deepEqual(params, '10');
+
+        return Promise.resolve(EmberObject.create({ id: '10' }));
+      });
+
+      assert.notOk(controller.get('isShowingModal'));
+      controller.send('startSingleBuild', 1, 'name', 'RESTART');
+      assert.ok(controller.get('isShowingModal'));
+    });
+
+    await settled();
+
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.notOk(controller.get('isShowingModal'));
+    assert.deepEqual(payload, {
+      pipelineId: '1234',
+      startFrom: 'name',
+      parentBuildId: 57,
+      parentEventId: 10,
+      causeMessage: 'Manually started by apple'
+    });
+  });
+
   test('it refreshListViewJobs', async function(assert) {
     assert.expect(3);
     server.post('http://localhost:8080/v4/events', () => [

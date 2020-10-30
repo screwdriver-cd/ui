@@ -1,17 +1,12 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import { get, computed } from '@ember/object';
+import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
-import {
-  createEvent,
-  startDetachedBuild,
-  startSingleBuild,
-  stopBuild,
-  updateEvents
-} from '../../events/controller';
+import { createEvent, startDetachedBuild, stopBuild, updateEvents } from '../../events/controller';
 
 export default Controller.extend(ModelReloaderMixin, {
   jobId: '',
@@ -153,7 +148,52 @@ export default Controller.extend(ModelReloaderMixin, {
       return this.updateListViewJobs();
     },
     startDetachedBuild,
-    startSingleBuild,
+    async startSingleBuild(jobId, jobName, buildState = undefined) {
+      this.set('isShowingModal', true);
+
+      const pipelineId = get(this, 'pipeline.id');
+      const token = get(this, 'session.data.authenticated.token');
+      const user = get(decoder(token), 'username');
+
+      let causeMessage = `Manually started by ${user}`;
+
+      let startFrom = jobName;
+
+      let eventPayload;
+
+      if (buildState) {
+        const buildQueryConfig = { jobId };
+
+        const build = await this.store.queryRecord('build', buildQueryConfig);
+        const event = await this.store.findRecord('event', get(build, 'eventId'));
+
+        const parentBuildId = get(build, 'parentBuildId');
+        const parentEventId = get(event, 'id');
+        const prNum = get(event, 'prNum');
+
+        if (prNum) {
+          // PR-<num>: prefix is needed, if it is a PR event.
+          startFrom = `PR-${prNum}:${startFrom}`;
+        }
+
+        eventPayload = {
+          pipelineId,
+          startFrom,
+          parentBuildId,
+          parentEventId,
+          causeMessage
+        };
+      } else {
+        eventPayload = {
+          pipelineId,
+          startFrom,
+          causeMessage
+        };
+      }
+
+      // await this.createEvent(eventPayload, false);
+      await this.createEvent(eventPayload);
+    },
     stopBuild
   },
   willDestroy() {

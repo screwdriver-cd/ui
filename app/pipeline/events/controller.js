@@ -20,7 +20,7 @@ export async function stopBuild(givenEvent, job) {
     build = this.store.peekRecord('build', buildId);
     build.set('status', 'ABORTED');
 
-    if (!event) {
+    if (!event && this.modelEvents) {
       event = this.modelEvents.filter(e => e.id === get(build, 'eventId'));
     }
 
@@ -37,54 +37,6 @@ export async function stopBuild(givenEvent, job) {
       this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
     }
   }
-}
-
-/** */
-export async function startSingleBuild(jobId, jobName, buildState = undefined) {
-  this.set('isShowingModal', true);
-
-  const pipelineId = get(this, 'pipeline.id');
-  const token = get(this, 'session.data.authenticated.token');
-  const user = get(decoder(token), 'username');
-
-  let causeMessage = `Manually started by ${user}`;
-
-  let startFrom = jobName;
-
-  let eventPayload;
-
-  if (buildState) {
-    const buildQueryConfig = { jobId };
-
-    const build = await this.store.queryRecord('build', buildQueryConfig);
-    const event = await this.store.findRecord('event', get(build, 'eventId'));
-
-    const parentBuildId = get(build, 'parentBuildId');
-    const parentEventId = get(event, 'id');
-    const prNum = get(event, 'prNum');
-
-    if (prNum) {
-      // PR-<num>: prefix is needed, if it is a PR event.
-      startFrom = `PR-${prNum}:${startFrom}`;
-    }
-
-    eventPayload = {
-      pipelineId,
-      startFrom,
-      parentBuildId,
-      parentEventId,
-      causeMessage
-    };
-  } else {
-    eventPayload = {
-      pipelineId,
-      startFrom,
-      causeMessage
-    };
-  }
-
-  // await this.createEvent(eventPayload, false);
-  await this.createEvent(eventPayload);
 }
 
 /** */
@@ -502,7 +454,6 @@ export default Controller.extend(ModelReloaderMixin, {
       return this.createEvent(eventPayload, false);
     },
     startDetachedBuild,
-    startSingleBuild,
     stopBuild,
     async stopEvent() {
       const event = get(this, 'selectedEventObj');
