@@ -323,7 +323,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
     const controller = this.owner.lookup('controller:pipeline/events');
 
-    const jobs = EmberObject.create([
+    const jobs = newArray([
       {
         builds: [
           {
