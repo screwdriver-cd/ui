@@ -169,7 +169,6 @@ export default Controller.extend(ModelReloaderMixin, {
     this.startReloading();
     this.setProperties({
       eventsPage: 1,
-      // listViewOffset: 0,
       showDownstreamTriggers: false
     });
   },
@@ -378,42 +377,6 @@ export default Controller.extend(ModelReloaderMixin, {
       await this.updateEvents(this.eventsPage + 1);
     }
   },
-
-  // async getNewListViewJobs(listViewOffset, listViewCutOff) {
-  //   const jobIds = this.get('jobIds');
-  //
-  //   if (listViewOffset < jobIds.length) {
-  //     return this.store
-  //       .query('build-history', {
-  //         jobIds: jobIds.slice(listViewOffset, listViewCutOff),
-  //         offset: 0,
-  //         numBuilds: ENV.APP.NUM_BUILDS_LISTED
-  //       })
-  //       .then(jobsDetails => {
-  //         const nextJobsDetails = jobsDetails.toArray();
-  //
-  //         nextJobsDetails.forEach(nextJobDetail => {
-  //           const job = this.get('pipeline.jobs').find(j => j.id === String(nextJobDetail.jobId));
-  //
-  //           if (job) {
-  //             nextJobDetail.jobName = job.name;
-  //             nextJobDetail.jobPipelineId = job.pipelineId;
-  //             nextJobDetail.annotations = job.annotations;
-  //             // PR-specific
-  //             nextJobDetail.prParentJobId = job.prParentJobId || null;
-  //             nextJobDetail.prNum = job.group || null;
-  //           }
-  //         });
-  //
-  //         return nextJobsDetails;
-  //       })
-  //       .catch(() => {
-  //         return Promise.resolve([]);
-  //       });
-  //   }
-  //
-  //   return Promise.resolve([]);
-  // },
 
   createEvent,
 

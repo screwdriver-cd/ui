@@ -39,7 +39,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
   });
 
   test('it starts a build', async function(assert) {
-    assert.expect(7); // 9 -> 7
+    assert.expect(7);
     server.get('http://localhost:8080/v4/events/5678/builds', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -63,14 +63,6 @@ module('Unit | Controller | pipeline/events', function(hooks) {
           id: '1234'
         })
       );
-
-      // controller.set('listViewOffset', 3);
-      // controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-      //   assert.equal(listViewOffset, 0);
-      //   assert.equal(listViewCutOff, 3);
-      //
-      //   return Promise.resolve([]);
-      // });
 
       controller.set('reload', () => {
         assert.ok(true);
@@ -106,7 +98,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
   });
 
   test('it restarts a build', async function(assert) {
-    assert.expect(6); // 8 to 6
+    assert.expect(6);
     server.get('http://localhost:8080/v4/events/2/builds', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -144,14 +136,6 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         })
       );
 
-      // controller.set('listViewOffset', 6);
-      // controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-      //   assert.equal(listViewOffset, 0);
-      //   assert.equal(listViewCutOff, 6);
-      //
-      //   return Promise.resolve([]);
-      // });
-
       controller.set('reload', () => {
         assert.ok(true);
 
@@ -188,7 +172,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
   });
 
   test('it restarts a PR build', async function(assert) {
-    assert.expect(6); // 8 -> 6
+    assert.expect(6);
     server.get('http://localhost:8080/v4/events/2/builds', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -229,14 +213,6 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
       controller.set('activeTab', 'pulls');
 
-      // controller.set('listViewOffset', 5);
-      // controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-      //   assert.equal(listViewOffset, 0);
-      //   assert.equal(listViewCutOff, 5);
-      //
-      //   return Promise.resolve([]);
-      // });
-
       controller.set('reload', () => {
         assert.ok(true);
 
@@ -273,7 +249,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
   });
 
   test('it stops a build', async function(assert) {
-    assert.expect(3); // 5 -> 3
+    assert.expect(3);
     server.put('http://localhost:8080/v4/builds/123', () => [
       200,
       { 'Content-Type': 'application/json' },
@@ -308,14 +284,6 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       controller.set('model', {
         events: EmberObject.create({})
       });
-
-      // controller.set('listViewOffset', 3);
-      // controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-      //   assert.equal(listViewOffset, 0);
-      //   assert.equal(listViewCutOff, 3);
-      //
-      //   return Promise.resolve([]);
-      // });
 
       const build = controller.store.peekRecord('build', '123');
 
@@ -451,7 +419,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     const prNum = 3;
     const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
 
-    assert.expect(5); // 7 -> 5
+    assert.expect(5);
 
     server.post('http://localhost:8080/v4/events', () => [
       201,
@@ -489,14 +457,6 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         prNum: '3',
         sha: 'sha2'
       });
-
-      // controller.set('listViewOffset', 3);
-      // controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-      //   assert.equal(listViewOffset, 0);
-      //   assert.equal(listViewCutOff, 3);
-      //
-      //   return Promise.resolve([]);
-      // });
 
       controller.set('prEvents', newArray([event1, event2]));
 

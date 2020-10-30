@@ -38,7 +38,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
   });
 
   test('it starts a single build', async function(assert) {
-    assert.expect(9); // 13 -> 9
+    assert.expect(9);
     server.get('http://localhost:8080/v4/events/5678/builds', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -63,13 +63,9 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         })
       );
 
-      // controller.set('listViewOffset', 3);
-      // controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-      //   assert.equal(listViewOffset, 0);
-      //   assert.equal(listViewCutOff, 3);
-      //
-      //   return Promise.resolve([]);
-      // });
+      controller.set('getNewListViewJobs', () => {
+        assert.fail('we do not refresh the list view upon job start');
+      });
 
       controller.set('reload', () => {
         assert.ok(true);
@@ -81,10 +77,9 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         events: EmberObject.create({})
       });
 
-      // controller.transitionToRoute = (path, id) => {
-      //   assert.equal(path, 'pipeline');
-      //   assert.equal(id, 1234);
-      // };
+      controller.transitionToRoute = () => {
+        assert.fail('we are not supposed to transitionToRoute for jobs.');
+      };
 
       controller.set('store.queryRecord', (modelName, params) => {
         assert.equal(modelName, 'build');
