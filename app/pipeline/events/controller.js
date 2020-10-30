@@ -468,7 +468,7 @@ export default Controller.extend(ModelReloaderMixin, {
       return null;
     },
     async stopPRBuilds(jobs) {
-      const eventId = jobs.get('firstObject.builds.firstObject.eventId');
+      const eventId = jobs.get('0.builds.firstObject.eventId');
 
       try {
         await this.get('stop').stopBuilds(eventId);

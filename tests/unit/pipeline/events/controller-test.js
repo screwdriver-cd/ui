@@ -391,10 +391,11 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     await settled();
 
     const [request] = server.handledRequests;
-    const payload = JSON.parse(request.requestBody);
+    const { responseText } = request;
+    const payload = JSON.parse(responseText);
 
     assert.deepEqual(payload, {
-      status: 'ABORTED'
+      id: '123'
     });
   });
 
