@@ -1,0 +1,43 @@
+  <div class="chart-c3">
+    <p class="chart-title">Events</p>
+    {{x-toggle
+        size="small"
+        theme="material"
+        showLabels=true
+        value=inTrendlineView
+        offLabel=null
+        onLabel="Trendline View"
+        onToggle=(action "toggleTrendlineView")}}
+    <ul class="list-inline chart-legend">
+      {{#each eventLegend as |lg|}}
+      <li style={{lg.style}} onclick={{action "onLegendClick" lg.key eventsChartName}}
+        onmouseenter={{action "onLegendHover" lg.key eventsChartName}}
+        onmouseleave={{action "onLegendHoverOut" eventsChartName}}>
+        {{lg.name}} <a>only</a>
+      </li>
+      {{/each}}
+    </ul>
+    <p class="y-axis-label">TIME (MIN)</p>
+    {{chart-c3
+        name=eventsChartName
+        data=eventMetrics
+        axis=eventsAxis
+        grid=grid
+        interaction=interaction
+        bar=bar
+        legend=legend
+        tooltip=tooltip
+        subchart=subchart
+        point=point
+        size=size
+        transition=transition
+        color=color
+        padding=padding
+        zoom=zoom
+        onrendered=onrendered
+        onresized=onresized
+        oninit=(get onInitFns eventsChartName)
+      }}
+    <p class="reset-button" onClick={{action "resetZoom" eventsChartName buildsChartName}} title="Reset Zoom Level">
+      {{fa-icon "refresh"}}</p>
+  </div>

@@ -1,0 +1,22 @@
+    <p class="y-axis-label">TIME (MIN)</p>
+    {{chart-c3
+      name=@name
+      data=@data
+      axis=@axis
+      tooltip=@tooltip
+      onrendered=@onrendered
+      onresized=@onresized
+      oninit=@oninit
+
+      grid=(or @grid this.grid)
+      interaction=(or @interaction this.interaction)
+      bar=(or @bar this.bar)
+      legend=(or @legend this.legend)
+      subchart=(or @subchart this.subchart)
+      point=(or @point this.point)
+      size=(or @size this.size)
+      transition=(or @transition this.transition)
+      color=(or @color this.color)
+      padding=(or @padding this.padding)
+      zoom=(or @zoom this.zoom)
+    }}

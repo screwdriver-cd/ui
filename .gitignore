@@ -30,3 +30,4 @@ config/local.js
 
 Dockerfile.local
 ssl
+.history
