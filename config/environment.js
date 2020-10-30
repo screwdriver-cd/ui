@@ -62,7 +62,7 @@ module.exports = environment => {
       FORCE_RELOAD_WAIT: 100, // Wait 100ms before force reload
       WAITING_TO_SCROLL_TIME: 1000,
       DEBOUNCED_SCROLL_TIME: 3000,
-      CANARY_RELEASE: false
+      RELEASE_VERSION: 'stable'
     },
     moment: {
       allowEmpty: true // allow empty dates
