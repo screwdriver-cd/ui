@@ -46,11 +46,6 @@
     {{/navbar.nav}}
 
     {{#navbar.nav classNames="navbar-nav navbar-right" as |nav|}}
-      {{#if showReleaseBadge}}
-        {{#nav.item}}
-          <span class="canary-feature"></span>
-        {{/nav.item}}
-      {{/if}}
       {{#if showSearch}}
         {{#nav.item}}
           <form class="navbar-form navbar-right" role="search">
@@ -81,6 +76,9 @@
               <a href={{docUrl}} class="icon docs">
                 {{inline-svg "file-text" class="img"}}<span>Documentation</span>
               </a>
+            {{/ddm.item}}
+            {{#ddm.item}}
+              <a class="release">{{fa-icon "tag"}}<span>{{releaseVersion}}</span></a>
             {{/ddm.item}}
             {{ddm.divider}}
             {{#ddm.item}}
