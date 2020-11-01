@@ -1,17 +1,20 @@
 import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
-import _ from 'underscore';
+import _s from 'underscore.string';
 
 export const sortWorkflowGraph = workflowGraph => {
   if (workflowGraph) {
     if (workflowGraph.nodes) {
-      workflowGraph.nodes = _.sortBy(workflowGraph.nodes, node => {
-        return `${node.name}_____${node.id}`;
+      workflowGraph.nodes.sort((node1, node2) => {
+        return (
+          _s.naturalCmp(node1.name, node2.name) ||
+          _s.naturalCmp(node1.id ? node1.id.toString() : '', node2.id ? node2.id.toString() : '')
+        );
       });
     }
     if (workflowGraph.edges) {
-      workflowGraph.edges = _.sortBy(workflowGraph.edges, edge => {
-        return `${edge.src}_____${edge.dest}`;
+      workflowGraph.edges.sort((edge1, edge2) => {
+        return _s.naturalCmp(edge1.src, edge2.src) || _s.naturalCmp(edge1.dest, edge2.dest);
       });
     }
   }

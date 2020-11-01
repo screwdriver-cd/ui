@@ -147,18 +147,18 @@ module('Unit | Serializer | pipeline', function(hooks) {
       },
       {
         src: 'main',
-        dest: 'fan10'
-      },
-      {
-        src: 'main',
         dest: 'fan2'
       },
       {
-        src: '~pr',
-        dest: 'main'
+        src: 'main',
+        dest: 'fan10'
       },
       {
         src: '~commit',
+        dest: 'main'
+      },
+      {
+        src: '~pr',
         dest: 'main'
       }
     ];
