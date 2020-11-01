@@ -1,22 +1,13 @@
 import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
+import { sortWorkflowGraph } from '../event/serializer';
 
 export default DS.RESTSerializer.extend({
   normalizeResponse(store, typeClass, payload, id, requestType) {
     const { pipeline } = payload;
 
     if (pipeline && pipeline.workflowGraph) {
-      // sorting on the dest should be enough
-      pipeline.workflowGraph.edges.sort(({ dest: a }, { dest: b }) => {
-        if (a < b) {
-          return -1;
-        }
-        if (a > b) {
-          return 1;
-        }
-
-        return 0;
-      });
+      sortWorkflowGraph(pipeline.workflowGraph);
     }
 
     return this._super(store, typeClass, payload, id, requestType);
