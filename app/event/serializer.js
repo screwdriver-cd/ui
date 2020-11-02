@@ -1,21 +1,20 @@
 import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
-import _s from 'underscore.string';
 
 export const sortWorkflowGraph = workflowGraph => {
+  const compare = (s1, s2) =>
+    (s1 || '').localeCompare(s2 || '', undefined, { numeric: true, sensitivity: 'base' });
+
   if (workflowGraph) {
     if (workflowGraph.nodes) {
-      workflowGraph.nodes.sort((node1, node2) => {
-        return (
-          _s.naturalCmp(node1.name, node2.name) ||
-          _s.naturalCmp(node1.id ? node1.id.toString() : '', node2.id ? node2.id.toString() : '')
-        );
-      });
+      workflowGraph.nodes.sort(
+        (node1, node2) => compare(node1.name, node2.name) || compare(node1.id, node2.id)
+      );
     }
     if (workflowGraph.edges) {
-      workflowGraph.edges.sort((edge1, edge2) => {
-        return _s.naturalCmp(edge1.src, edge2.src) || _s.naturalCmp(edge1.dest, edge2.dest);
-      });
+      workflowGraph.edges.sort(
+        (edge1, edge2) => compare(edge1.src, edge2.src) || compare(edge1.dest, edge2.dest)
+      );
     }
   }
 };

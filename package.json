@@ -135,10 +135,10 @@
     "jstree": "^3.3.7",
     "lint-staged": "^8.1.7",
     "loader.js": "^4.7.0",
+    "lodash": "^4.17.20",
     "memoizerific": "^1.11.3",
     "prettier": "^1.18.2",
     "qunit-dom": "^1.0.0",
-    "sass": "^1.23.0",
-    "underscore.string": "^3.3.5"
+    "sass": "^1.23.0"
   }
 }

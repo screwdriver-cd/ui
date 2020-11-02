@@ -142,6 +142,14 @@ module('Unit | Serializer | pipeline', function(hooks) {
 
     const alphabeticalSortedOrder = [
       {
+        src: '~commit',
+        dest: 'main'
+      },
+      {
+        src: '~pr',
+        dest: 'main'
+      },
+      {
         src: 'main',
         dest: 'fan1'
       },
@@ -152,14 +160,6 @@ module('Unit | Serializer | pipeline', function(hooks) {
       {
         src: 'main',
         dest: 'fan10'
-      },
-      {
-        src: '~commit',
-        dest: 'main'
-      },
-      {
-        src: '~pr',
-        dest: 'main'
       }
     ];
 
