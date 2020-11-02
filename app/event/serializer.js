@@ -1,10 +1,10 @@
 import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 
-export const sortWorkflowGraph = workflowGraph => {
-  const compare = (s1, s2) =>
-    (s1 || '').localeCompare(s2 || '', undefined, { numeric: true, sensitivity: 'base' });
+const compare = (s1, s2) =>
+  (s1 || '').localeCompare(s2 || '', undefined, { numeric: true, sensitivity: 'base' });
 
+export const sortWorkflowGraph = workflowGraph => {
   if (workflowGraph) {
     if (workflowGraph.nodes) {
       workflowGraph.nodes.sort(
