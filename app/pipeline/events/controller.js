@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import { get, computed } from '@ember/object';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import { alias } from '@ember/object/computed';
-
+import uniqBy from 'lodash.uniqby';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
@@ -225,6 +225,11 @@ export default Controller.extend(ModelReloaderMixin, {
               status: 'DOWNSTREAM_TRIGGER'
             });
           }
+        });
+      }
+      if (completeGraph && completeGraph.nodes) {
+        completeGraph.nodes = uniqBy(completeGraph.nodes, node => {
+          return node.id ? `id:${node.id}` : `name:${node.name}`;
         });
       }
 
