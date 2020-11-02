@@ -1,24 +1,33 @@
 import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
+import _s from 'underscore.string';
+
+export const sortWorkflowGraph = workflowGraph => {
+  if (workflowGraph) {
+    if (workflowGraph.nodes) {
+      workflowGraph.nodes.sort((node1, node2) => {
+        return (
+          _s.naturalCmp(node1.name, node2.name) ||
+          _s.naturalCmp(node1.id ? node1.id.toString() : '', node2.id ? node2.id.toString() : '')
+        );
+      });
+    }
+    if (workflowGraph.edges) {
+      workflowGraph.edges.sort((edge1, edge2) => {
+        return _s.naturalCmp(edge1.src, edge2.src) || _s.naturalCmp(edge1.dest, edge2.dest);
+      });
+    }
+  }
+};
 
 export default DS.RESTSerializer.extend({
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.events) {
       payload.events.forEach(event => {
-        if (event.workflowGraph) {
-          // sorting on the dest should be enough
-          event.workflowGraph.edges = event.workflowGraph.edges.sort(({ dest: a }, { dest: b }) => {
-            if (a < b) {
-              return -1;
-            }
-            if (a > b) {
-              return 1;
-            }
-
-            return 0;
-          });
-        }
+        sortWorkflowGraph(event.workflowGraph);
       });
+    } else if (payload.event && payload.event.workflowGraph) {
+      sortWorkflowGraph(payload.event.workflowGraph);
     }
 
     return this._super(store, typeClass, payload, id, requestType);
