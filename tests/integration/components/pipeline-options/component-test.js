@@ -6,6 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import $ from 'jquery';
 import injectSessionStub from '../../../helpers/inject-session';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
@@ -55,6 +56,11 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.pipeline h4').hasText('Checkout URL and Source Directory');
     assert.dom('section.pipeline p').hasText('Update your checkout URL and / or source directory.');
     assert.dom('section.pipeline .button-label').hasText('Update');
+    assert
+      .dom('section > ul > li:nth-child(3) p')
+      .hasText('Pick your own preferred jobs to be counted in metrics graph');
+    assert.dom('section > ul > li:nth-child(3) h4').hasText('Downtime Jobs');
+    assert.equal($('section > ul > li:nth-child(3) input').attr('placeholder'), 'Select Jobs...');
 
     // Jobs
     assert.dom('section.jobs h3').hasText('Jobs');
