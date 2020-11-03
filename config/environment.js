@@ -62,7 +62,8 @@ module.exports = environment => {
       FORCE_RELOAD_WAIT: 100, // Wait 100ms before force reload
       WAITING_TO_SCROLL_TIME: 1000,
       DEBOUNCED_SCROLL_TIME: 3000,
-      RELEASE_VERSION: 'stable'
+      RELEASE_VERSION: 'stable',
+      DOWNTIME_JOBS: false
     },
     moment: {
       allowEmpty: true // allow empty dates
@@ -74,7 +75,10 @@ module.exports = environment => {
   };
 
   if (environment === 'development') {
+    delete require.cache[require.resolve('./local.js')];
     const localAppConfig = require('./local.js'); // eslint-disable-line global-require
+
+    console.log('localAppConfig', localAppConfig); // eslint-disable-line no-console
 
     if (localAppConfig) {
       Object.assign(ENV.APP, localAppConfig);
@@ -107,6 +111,8 @@ module.exports = environment => {
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
     ENV.APP.FORCE_RELOAD_WAIT = 0;
+
+    ENV.APP.DOWNTIME_JOBS = true;
   }
 
   if (environment === 'production') {

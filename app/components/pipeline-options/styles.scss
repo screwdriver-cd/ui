@@ -131,6 +131,15 @@
     margin-right: 25px;
     width: 38px;
   }
+
+  .pipeline {
+    .ember-power-select-multiple-option {
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-right: 5px;
+      padding-left: 3px;
+    }
+  }
 }
 
 .text-input {
