@@ -134,9 +134,9 @@ export default Service.extend({
 
   /**
    * updatePipelineSettings
-   * @param  {Number} pipelineId [description]
+   * @param  {Number} pipelineId  Pipeline Id
    * @param  {Object} settings
-   * @param  {Array}  settings.metricsDowntimeJobs
+   * @param  {Array}  settings.metricsDowntimeJobs Job Ids to caluclate downtime
    * @return {Promise}
    */
   async updatePipelineSettings(pipelineId = 1, settings) {
