@@ -6,7 +6,7 @@ import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
 
-const { MINIMUM_JOBNAME_LENGTH } = ENV.APP;
+const { MINIMUM_JOBNAME_LENGTH, DOWNTIME_JOBS } = ENV.APP;
 
 export default Component.extend({
   store: service(),
@@ -34,6 +34,7 @@ export default Component.extend({
   jobSorting: ['name'],
   isUpdatingMetricsDowntimeJobs: false,
   metricsDowntimeJobs: [],
+  displayDowntimeJobs: DOWNTIME_JOBS,
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   sortedJobs: sort('jobs', 'jobSorting'),
   isInvalid: not('isValid'),
@@ -75,14 +76,16 @@ export default Component.extend({
 
     this.set('desiredJobNameLength', desiredJobNameLength);
 
-    const metricsDowntimeJobs = this.getWithDefault(
-      'pipeline.settings.metricsDowntimeJobs',
-      []
-    ).map(jobId => {
-      return this.jobs.findBy('id', `${jobId}`);
-    });
+    if (this.displayDowntimeJobs) {
+      const metricsDowntimeJobs = this.getWithDefault(
+        'pipeline.settings.metricsDowntimeJobs',
+        []
+      ).map(jobId => {
+        return this.jobs.findBy('id', `${jobId}`);
+      });
 
-    this.set('metricsDowntimeJobs', metricsDowntimeJobs);
+      this.set('metricsDowntimeJobs', metricsDowntimeJobs);
+    }
   },
   actions: {
     // Checks if scm URL is valid or not

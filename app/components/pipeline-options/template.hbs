@@ -41,31 +41,33 @@
             </div>
           </li>
 
-          <li>
-            <div class="row">
-              <div class="col-xs-10">
-                <h4>Downtime Jobs</h4>
-                <p>Pick your own preferred jobs to be counted in metrics graph</p>
-                <div class="row">
-                  <div class="col-xs-5">
-                    {{#power-select-multiple
-                      options=sortedJobs
-                      renderInPlace=true
-                      selected=metricsDowntimeJobs
-                      placeholder="Select Jobs..."
-                      onchange=(action (mut metricsDowntimeJobs))
-                      as |metricsDowntimeJob|
-                    }}
-                      {{metricsDowntimeJob.name}}
-                    {{/power-select-multiple}}
+          {{#if displayDowntimeJobs}}
+            <li>
+              <div class="row">
+                <div class="col-xs-10">
+                  <h4>Downtime Jobs</h4>
+                  <p>Pick your own preferred jobs to be counted in metrics graph</p>
+                  <div class="row">
+                    <div class="col-xs-5">
+                      {{#power-select-multiple
+                        options=sortedJobs
+                        renderInPlace=true
+                        selected=metricsDowntimeJobs
+                        placeholder="Select Jobs..."
+                        onchange=(action (mut metricsDowntimeJobs))
+                        as |metricsDowntimeJob|
+                      }}
+                        {{metricsDowntimeJob.name}}
+                      {{/power-select-multiple}}
+                    </div>
                   </div>
                 </div>
+                <div class="col-xs-2 right sync">
+                  <a href="#" {{action "updatePipelineSettings" metricsDowntimeJobs}}>{{fa-icon "refresh" spin=isUpdatingMetricsDowntimeJobs}}</a>
+                </div>
               </div>
-              <div class="col-xs-2 right sync">
-                <a href="#" {{action "updatePipelineSettings" metricsDowntimeJobs}}>{{fa-icon "refresh" spin=isUpdatingMetricsDowntimeJobs}}</a>
-              </div>
-            </div>
-          </li>
+            </li>
+          {{/if}}
         </ul>
       </section>
     </div>
