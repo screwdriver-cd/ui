@@ -51,7 +51,7 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     // Pipeline
     assert.dom('section.pipeline h3').hasText('Pipeline');
-    assert.dom('section.pipeline li').exists({ count: 1 });
+    assert.dom('section.pipeline li').exists({ count: 3 });
     assert.dom('section.pipeline h4').hasText('Checkout URL and Source Directory');
     assert.dom('section.pipeline p').hasText('Update your checkout URL and / or source directory.');
     assert.dom('section.pipeline .button-label').hasText('Update');

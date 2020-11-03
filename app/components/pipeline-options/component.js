@@ -75,7 +75,10 @@ export default Component.extend({
 
     this.set('desiredJobNameLength', desiredJobNameLength);
 
-    const metricsDowntimeJobs = this.get('pipeline.settings.metricsDowntimeJobs').map(jobId => {
+    const metricsDowntimeJobs = this.getWithDefault(
+      'pipeline.settings.metricsDowntimeJobs',
+      []
+    ).map(jobId => {
       return this.jobs.findBy('id', `${jobId}`);
     });
 
