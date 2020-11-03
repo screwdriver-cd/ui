@@ -58,7 +58,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.pipeline .button-label').hasText('Update');
     assert
       .dom('section > ul > li:nth-child(3) p')
-      .hasText('Pick your own preferred jobs to be counted in metrics graph');
+      .hasText('Pick your own preferred jobs to be counted in metrics graph (default all jobs)');
     assert.dom('section > ul > li:nth-child(3) h4').hasText('Downtime Jobs');
     assert.equal($('section > ul > li:nth-child(3) input').attr('placeholder'), 'Select Jobs...');
 
