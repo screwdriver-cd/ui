@@ -88,157 +88,27 @@
 </div>
 
 {{#if measures.total}}
-  <div class="chart-c3">
-    <p class="chart-title">Events</p>
-    {{x-toggle
-      size="small"
-      theme="material"
-      showLabels=true
-      value=inTrendlineView
-      offLabel=null
-      onLabel="Trendline View"
-      onToggle=(action "toggleTrendlineView")}}
-    <ul class="list-inline chart-legend">
-      {{#each eventLegend as |lg|}}
-        <li
-          style={{lg.style}}
-          onclick={{action "onLegendClick" lg.key eventsChartName}}
-          onmouseenter={{action "onLegendHover" lg.key eventsChartName}}
-          onmouseleave={{action "onLegendHoverOut" eventsChartName}}
-        >
-          {{lg.name}} <a>only</a>
-        </li>
-      {{/each}}
-    </ul>
-    <p class="y-axis-label">TIME (MIN)</p>
-    {{chart-c3
-      name=eventsChartName
-      data=eventMetrics
-      axis=eventsAxis
-      grid=grid
-      interaction=interaction
-      bar=bar
-      legend=legend
-      tooltip=tooltip
-      subchart=subchart
-      point=point
-      size=size
-      transition=transition
-      color=color
-      padding=padding
-      zoom=zoom
-      onrendered=onrendered
-      onresized=onresized
-      oninit=(get onInitFns eventsChartName)
-    }}
-    <p class="reset-button" onClick={{action "resetZoom" eventsChartName buildsChartName}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
-  </div>
+  {{log this.downtimeJobsLegends}}
 
-  <div class="chart-c3">
-    <p class="chart-title">Build Breakdown Per Event</p>
-    <ul class="list-inline chart-legend">
-      {{#each buildLegend as |lg|}}
-        <li
-          style={{lg.style}}
-          class={{lg.class}}
-          onclick={{action "onLegendClick" lg.key buildsChartName}}
-          onmouseenter={{action "onLegendHover" lg.key buildsChartName}}
-          onmouseleave={{action "onLegendHoverOut" buildsChartName}}
-        >
-          {{lg.name}} <a>only</a>
-        </li>
-      {{/each}}
-    </ul>
-    <p class="y-axis-label">TIME (MIN)</p>
-    {{chart-c3
-      name=buildsChartName
-      data=buildMetrics
-      axis=eventsAxis
-      grid=grid
-      interaction=interaction
-      bar=bar
-      legend=legend
-      tooltip=tooltip
-      subchart=subchart
-      point=point
-      size=size
-      transition=transition
-      color=color
-      padding=padding
-      zoom=zoom
-      onrendered=onrendered
-      onresized=onresized
-      oninit=(get onInitFns buildsChartName)
-    }}
-    <p class="reset-button" onClick={{action "resetZoom" buildsChartName eventsChartName}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
-  </div>
+  <Metrics::Chart
+    @chartTitle="Downtime Metrics"
+    @eventsChartName="downtimeMetrics"
+    @legends={{this.downtimeJobsLegends}}
+    @onLegendClick={{action "onLegendClick"}}
+    @onLegendHover={{action "onLegendHover"}}
+    @onLegendHoverOut={{action 'onLegendHoverOut'}}
 
-  {{#if metrics.stepGroup}}
-    <div class="chart-c3">
-      <p class="chart-title">
-        Step Breakdown Per Build
-        <div class="job-selector">
-          <select onchange={{action "selectJob" value="target.value"}}>
-            {{#each jobs as |job|}}
-              {{#if (eq job selectedJobName)}}
-                <option value={{job}} selected="selected">{{job}}</option>
-              {{else}}
-                <option value={{job}}>{{job}}</option>
-              {{/if}}
-            {{/each}}
-          </select>
-          <span class="control-icon">{{fa-icon "caret-down"}}</span>
-        </div>
-      </p>
-      <ul class="list-inline chart-legend">
-        {{#each stepLegend as |lg|}}
-          <li style={{lg.style}}
-            onclick={{action "onLegendClick" lg.key stepsChartName}}
-            onmouseenter={{action "onLegendHover" lg.key stepsChartName}}
-            onmouseleave={{action "onLegendHoverOut" stepsChartName}}
-          >
-            {{lg.name}} <a>only</a>
-          </li>
-        {{/each}}
-      </ul>
-      <p class="y-axis-label">TIME (MIN)</p>
-      {{chart-c3
-        name=stepsChartName
-        data=stepMetrics
-        axis=stepsAxis
-        grid=grid
-        interaction=interaction
-        bar=bar
-        legend=legend
-        tooltip=tooltip
-        subchart=subchart
-        point=point
-        size=size
-        transition=transition
-        color=color
-        padding=padding
-        zoom=zoom
-        onrendered=onrendered
-        onresized=onresized
-        oninit=(get onInitFns stepsChartName)
-      }}
-      <p class="reset-button" onClick={{action "resetZoom" stepsChartName}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
-    </div>
-  {{else}}
-    <div class="chart-cta">
-      Please select a job below to see step breakdown per build
-      <br><br>
-      <div class="job-selector">
-        <select onchange={{action "selectJob" value="target.value"}}>
-          <option value="">Select a job</option>
-          {{#each jobs as |job|}}
-            <option value={{job}}>{{job}}</option>
-          {{/each}}
-        </select>
-        <span class="control-icon">{{fa-icon "caret-down"}}</span>
-      </div>
-    </div>
-  {{/if}}
+    @name="downtimeMetrics"
+    @data={{this.eventMetrics}}
+    @axis={{this.eventsAxis}}
+    @tooltip={{this.tooltip}}
+    @onrendered={{this.onrendered}}
+    @onresized={{this.onresized}}
+    @oninit={{get onInitFns "downtimeMetrics"}}
+  />
+
+
+
 {{else}}
   <div class="chart-cta">No metric available for the chosen time range!</div>
 {{/if}}

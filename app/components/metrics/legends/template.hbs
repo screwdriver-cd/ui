@@ -1,0 +1,12 @@
+<ul class="list-inline chart-legend">
+  {{#each @legends as |lg|}}
+    <li
+      style={{lg.style}}
+      onclick={{action "onLegendClick" lg.key @chartName}}
+      onmouseenter={{action "onLegendHover" lg.key @chartName}}
+      onmouseleave={{action "onLegendHoverOut" @chartName}}
+    >
+      {{lg.name}} <a>only</a>
+    </li>
+  {{/each}}
+</ul>

@@ -1,0 +1,33 @@
+<div class="chart-c3">
+  <p class="chart-title">{{this.chartTitle}}</p>
+{{!--   {{x-toggle
+    size="small"
+    theme="material"
+    showLabels=true
+    value=inTrendlineView
+    offLabel=null
+    onLabel="Trendline View"
+    onToggle=(action "toggleTrendlineView")}} --}}
+
+  <Metrics::Legends
+    @chartName={{this.chartName}}
+    @legends={{this.legends}}
+    @onLegendClick={{action "onLegendClick"}}
+    @onLegendHover={{action "onLegendHover"}}
+    @onLegendHoverOut={{action "onLegendHoverOut"}}
+  />
+
+
+{{!--   <Metrics::BarChart
+    @name={{this.chartName}}
+    @data={{this.metrics}}
+    @axis={{this.axis}}
+    @tooltip={{this.tooltip}}
+    @onrendered={{this.onrendered}}
+    @onresized={{this.onresized}}
+    @oninit={{get onInitFns this.chartName}}
+  />
+ --}}
+
+  <p class="reset-button" onClick={{action "resetZoom" chartName dependentChartNames}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
+</div>

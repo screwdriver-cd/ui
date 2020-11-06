@@ -2,9 +2,9 @@
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
-import { htmlSafe } from '@ember/string';
+import { capitalize, htmlSafe } from '@ember/string';
 import { inject as service } from '@ember/service';
-import { statusIcon } from 'screwdriver-ui/utils/build';
+import { statusIcon, statuses } from 'screwdriver-ui/utils/build';
 import $ from 'jquery';
 import timeRange, { toCustomLocaleString, CONSTANT } from 'screwdriver-ui/utils/time-range';
 
@@ -134,6 +134,17 @@ export default Controller.extend({
       };
     }
   }),
+
+  downtimeJobsLegends: computed(function downtimeJobsLegends() {
+    return statuses.map((status, index) => {
+      return {
+        key: status,
+        name: capitalize(status),
+        style: htmlSafe(`border-color: ${this.color.pattern[index]}`)
+      };
+    });
+  }),
+
   eventLegend: computed('inTrendlineView', 'metrics.events', {
     get() {
       if (this.inTrendlineView) {
