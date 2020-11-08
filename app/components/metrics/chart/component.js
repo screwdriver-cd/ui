@@ -30,45 +30,31 @@ export default class MetricsChartComponent extends Component {
     return this.args.legends || 'legends';
   }
 
-  @action
-  onresized() {
-    if (this.args.onresized) {
-      this.args.onresized(...arguments);
-    }
+  get onresized() {
+    return this.args.onresized(...arguments);
+  }
+
+  get onrendered() {
+    return this.args.onrendered(...arguments);
   }
 
   @action
-  onrendered() {
-    if (this.args.onrendered) {
-      this.args.onrendered(...arguments);
-    }
-  }
-
-  @action
-  oninit() {
-    if (this.args.oninit) {
-      this.args.oninit(...arguments);
-    }
-  }
-
-  @action
-  onLegendHoverOut(chartName) {
+  onLegendHoverOut(/* chartName */) {
     this.args.onLegendHoverOut(...arguments);
   }
 
   @action
-  onLegendClick(key, chartName, { currentTarget, target }) {
+  onLegendClick(/* key, chartName, { currentTarget, target } */) {
     this.args.onLegendClick(...arguments);
   }
 
   @action
-  onLegendHover(key, chartName) {
+  onLegendHover(/* key, chartName */) {
     this.args.onLegendHover(...arguments);
   }
 
   @action
-  resetZoom(chartName, dependentChartNames) {}
-  // onInitFns(chartName) {
-
-  // }
+  resetZoom(chartName, dependentChartNames) {
+    this.args.resetZoom(chartName, dependentChartNames);
+  }
 }

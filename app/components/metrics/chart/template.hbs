@@ -1,13 +1,13 @@
 <div class="chart-c3">
   <p class="chart-title">{{this.chartTitle}}</p>
-{{!--   {{x-toggle
+  {{x-toggle
     size="small"
     theme="material"
     showLabels=true
-    value=inTrendlineView
+    value=@inBuildCountView
     offLabel=null
-    onLabel="Trendline View"
-    onToggle=(action "toggleTrendlineView")}} --}}
+    onLabel="Build Count"
+    onToggle=(action @toggleDowntimeJobsView)}}
 
   <Metrics::Legends
     @chartName={{this.chartName}}
@@ -17,17 +17,25 @@
     @onLegendHoverOut={{action "onLegendHoverOut"}}
   />
 
+  {{log "onInitFns" oninit}}
 
-{{!--   <Metrics::BarChart
-    @name={{this.chartName}}
-    @data={{this.metrics}}
-    @axis={{this.axis}}
-    @tooltip={{this.tooltip}}
-    @onrendered={{this.onrendered}}
-    @onresized={{this.onresized}}
-    @oninit={{get onInitFns this.chartName}}
-  />
- --}}
+  {{log "this.onInitFns" this.oninit}}
+
+  {{log "this.metrics outside" this.metrics}}
+
+  {{#if (is-fulfilled this.metrics)}}
+    {{log "this.metrics inside" this.metrics}}
+    <Metrics::BarChart
+      @chartName={{this.chartName}}
+      @data={{this.metrics}}
+      @axis={{this.axis}}
+      @tooltip={{this.tooltip}}
+      @onrendered={{this.onrendered}}
+      @onresized={{this.onresized}}
+      @oninit={{@oninit}}
+      @yaxisLabel={{@yaxisLabel}}
+    />
+  {{/if}}
 
   <p class="reset-button" onClick={{action "resetZoom" chartName dependentChartNames}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
 </div>

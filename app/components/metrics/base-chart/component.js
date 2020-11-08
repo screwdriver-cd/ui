@@ -1,7 +1,9 @@
 import Component from '@glimmer/component';
 
 export default class MetricsBaseChartComponent extends Component {
-  yaxisLabel = 'TIME (MIN)';
+  get yaxisLabel() {
+    return this.args.yaxisLabel || 'TIME (MIN)';
+  }
 
   color = {
     // first dozen were from designs, rest from random generator
