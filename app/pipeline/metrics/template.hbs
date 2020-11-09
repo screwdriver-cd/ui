@@ -92,27 +92,30 @@
 
   {{#if (is-fulfilled this.downtimeJobsMetrics)}}
     {{log "inside this.downtimeJobsMetrics" this.downtimeJobsMetrics}}
-    <Metrics::Chart
-      @chartTitle="Downtime Metrics"
-      @chartName="downtimeJobsChart"
-      @legends={{this.downtimeJobsLegends}}
-      @onLegendClick={{action "onLegendClick"}}
-      @onLegendHover={{action "onLegendHover"}}
-      @onLegendHoverOut={{action "onLegendHoverOut"}}
+    {{#if this.downtimeJobsChartData}}
+      <Metrics::Chart
+        @chartTitle="Downtime Metrics"
+        @chartName="downtimeJobsChart"
+        @legends={{this.downtimeJobsLegends}}
+        @onLegendClick={{action "onLegendClick"}}
+        @onLegendHover={{action "onLegendHover"}}
+        @onLegendHoverOut={{action "onLegendHoverOut"}}
 
-      @toggleDowntimeJobsView={{action "toggleDowntimeJobsView"}}
-      @inBuildCountView={{this.inBuildCountView}}
-      @resetZoom={{action "resetZoom"}}
-      @yaxisLabel="TIME (HR)"
+        @toggleDowntimeJobsView={{action "toggleDowntimeJobsView"}}
+        @inBuildCountView={{this.inBuildCountView}}
+        @resetZoom={{action "resetZoom"}}
 
-      @name="downtimeJobsChart"
-      @metrics={{await this.downtimeJobsMetrics}}
-      @axis={{this.downtimeJobsAxis}}
-      @tooltip={{this.tooltip}}
-      @onrendered={{this.onrendered}}
-      @onresized={{this.onresized}}
-      @oninit={{get onInitFns "downtimeJobsChart"}}
-    />
+        @name="downtimeJobsChart"
+        @metrics={{await this.downtimeJobsMetrics}}
+        @axis={{this.downtimeJobsAxis}}
+        @tooltip={{this.tooltip}}
+        @onrendered={{this.onrendered}}
+        @onresized={{this.onresized}}
+        @oninit={{get onInitFns "downtimeJobsChart"}}
+      />
+    {{else}}
+      <div class="chart-cta">Not enough metric available for Downtime Jobs!</div>
+    {{/if}}
   {{else}}
     {{#if (is-pending this.downtimeJobsMetrics)}}
       <div class="chart-cta">Loading...</div>

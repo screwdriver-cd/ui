@@ -169,15 +169,19 @@ export default Controller.extend({
             endTime
           )
           .then(metrics => {
-            this.set('downtimeJobsChartData', metrics);
-
             console.log('got data', metrics);
-            let duration = metrics.map(m => {
+            const downtimeMetrics = metrics.filter(m => m.isDowntimeEvent);
+
+            console.log('got downtimeMetrics data', downtimeMetrics);
+
+            this.set('downtimeJobsChartData', downtimeMetrics);
+
+            let duration = downtimeMetrics.map(m => {
               // minutes to hours
               return (m.duration / 60).toFixed(2);
             });
 
-            let builds = metrics.map(m => m.builds.length);
+            let builds = downtimeMetrics.map(m => m.builds.length);
 
             let downtimeJobsChartData = {
               columns: [['builds', ...builds], ['duration', ...duration]],
@@ -191,16 +195,31 @@ export default Controller.extend({
               },
               hide: inBuildCountView ? ['duration'] : ['builds'],
               colors: {
-                duration: '#16c045',
+                duration: '#ea0000',
                 builds: '#0066df'
               },
-              groups: [['builds'], ['duration']],
-              color(color, d) {
-                // return color of the status of the corresponding event in the pipeline
-                return d && d.id === 'duration' && status[d.index] !== 'SUCCESS'
-                  ? '#ea0000'
-                  : color;
-              }
+              groups: [['builds'], ['duration']]
+              // color(color, d) {
+              //   let returnColor =
+              //   if (d && d.id === 'duration') {
+              //     return '#ea0000';
+              //   } else {
+              //     d && d.id === 'duration'
+              //   }
+              //    && downtimeStatuses[d.index] !== 'SUCCESS'
+              //     ? '#ea0000'
+              //     : color;
+              //   if (typeof d === 'object') {
+              //     console.log('d', d);
+              //   // }
+              //   // if (d && d.id === 'duration') {
+              //   //   returnColor = '#DF8900';
+              //   }
+
+              //   console.log('%c returnColor', `color: ${returnColor}`);
+
+              //   return returnColor;
+              // }
             };
 
             return downtimeJobsChartData;

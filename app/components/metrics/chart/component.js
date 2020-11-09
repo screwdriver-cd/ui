@@ -22,8 +22,8 @@ export default class MetricsChartComponent extends Component {
     return this.args.metrics || 'metrics';
   }
 
-  get tooltips() {
-    return this.args.tooltips || 'tooltips';
+  get tooltip() {
+    return this.args.tooltip || 'tooltip';
   }
 
   get legends() {
