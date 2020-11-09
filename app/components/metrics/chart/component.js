@@ -31,11 +31,19 @@ export default class MetricsChartComponent extends Component {
   }
 
   get onresized() {
-    return this.args.onresized(...arguments);
+    if (this.args.onresized) {
+      this.args.onresized(...arguments);
+    }
+
+    return () => {};
   }
 
   get onrendered() {
-    return this.args.onrendered(...arguments);
+    if (this.args.onrendered) {
+      return this.args.onrendered(...arguments);
+    }
+
+    return () => {};
   }
 
   @action
