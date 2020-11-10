@@ -1,7 +1,8 @@
 import Component from '@ember/component';
-import { get, observer } from '@ember/object';
+import { get, set, observer } from '@ember/object';
 import moment from 'moment';
 import Table from 'ember-light-table';
+import isEqual from 'lodash.isequal';
 
 export default Component.extend({
   isShowingModal: false,
@@ -210,8 +211,13 @@ export default Component.extend({
   },
   jobsObserver: observer('jobsDetails.[]', function jobsObserverFunc({ jobsDetails }) {
     const rows = this.getRows(jobsDetails);
+    const lastRows = get(this, 'lastRows') || [];
+    const isEqualRes = isEqual(rows.map(r => r.job), lastRows.map(r => r.job));
 
-    this.table.setRows(rows);
+    if (!isEqualRes) {
+      set(this, 'lastRows', rows);
+      this.table.setRows(rows);
+    }
   }),
 
   actions: {
