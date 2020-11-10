@@ -26,10 +26,6 @@ export default class MetricsChartComponent extends Component {
     return this.args.tooltip || 'tooltip';
   }
 
-  get legends() {
-    return this.args.legends || 'legends';
-  }
-
   get onresized() {
     if (this.args.onresized) {
       this.args.onresized(...arguments);
@@ -44,21 +40,6 @@ export default class MetricsChartComponent extends Component {
     }
 
     return () => {};
-  }
-
-  @action
-  onLegendHoverOut(/* chartName */) {
-    this.args.onLegendHoverOut(...arguments);
-  }
-
-  @action
-  onLegendClick(/* key, chartName, { currentTarget, target } */) {
-    this.args.onLegendClick(...arguments);
-  }
-
-  @action
-  onLegendHover(/* key, chartName */) {
-    this.args.onLegendHover(...arguments);
   }
 
   @action

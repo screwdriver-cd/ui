@@ -88,30 +88,22 @@
 </div>
 
 {{#if measures.total}}
-  {{log "outside" this.downtimeJobsLegends}}
-
   {{#if (is-fulfilled this.downtimeJobsMetrics)}}
     {{log "inside this.downtimeJobsMetrics" this.downtimeJobsMetrics}}
     {{#if this.downtimeJobsChartData}}
       <Metrics::Chart
         @chartTitle="Downtime Metrics"
-        @chartName="downtimeJobsChart"
+        @chartName={{this.downtimeJobsChartName}}
         @legends={{this.downtimeJobsLegends}}
-        @onLegendClick={{action "onLegendClick"}}
-        @onLegendHover={{action "onLegendHover"}}
-        @onLegendHoverOut={{action "onLegendHoverOut"}}
-
-        @toggleDowntimeJobsView={{action "toggleDowntimeJobsView"}}
-        @inBuildCountView={{this.inBuildCountView}}
         @resetZoom={{action "resetZoom"}}
 
-        @name="downtimeJobsChart"
+        @name={{this.downtimeJobsChartName}}
         @metrics={{await this.downtimeJobsMetrics}}
         @axis={{this.downtimeJobsAxis}}
         @tooltip={{this.tooltip}}
         @onrendered={{this.onrendered}}
         @onresized={{this.onresized}}
-        @oninit={{get onInitFns "downtimeJobsChart"}}
+        @oninit={{get onInitFns this.downtimeJobsChartName}}
       />
     {{else}}
       <div class="chart-cta">Not enough metric available for Downtime Jobs!</div>

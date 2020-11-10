@@ -3,9 +3,9 @@ import { resolve } from 'rsvp';
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
-import { capitalize, htmlSafe } from '@ember/string';
+import { htmlSafe } from '@ember/string';
 import { inject as service } from '@ember/service';
-import { statusIcon, statuses } from 'screwdriver-ui/utils/build';
+import { statusIcon } from 'screwdriver-ui/utils/build';
 import $ from 'jquery';
 import timeRange, { toCustomLocaleString, CONSTANT } from 'screwdriver-ui/utils/time-range';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
@@ -24,7 +24,6 @@ export default Controller.extend({
     }
   ],
   inTrendlineView: false,
-  inBuildCountView: false,
   isUTC: false,
   eventsChartName: 'eventsChart',
   buildsChartName: 'buildsChart',
@@ -84,7 +83,6 @@ export default Controller.extend({
     // clear all those flags b/c this is a controller
     this.set('selectedRange', '1wk');
     this.set('inTrendlineView', false);
-    this.set('inBuildCountView', false);
     this.set('isUTC', false);
 
     // safety step to release references
@@ -145,16 +143,16 @@ export default Controller.extend({
   }),
 
   downtimeJobsMetrics: computed('startTime', 'endTime', function getDowntimeJobsMetrics() {
-    const { pipeline, startTime, endTime, inBuildCountView } = this;
-    const {
-      id: pipelineId,
-      settings: { metricsDowntimeJobs: downtimeJobs }
-    } = pipeline;
+    const { pipeline, startTime, endTime } = this;
+    const { id: pipelineId } = pipeline;
 
-    // const downtimeStatuses = [...statuses];
+    let downtimeJobs = [];
+
+    if (pipeline.settings) {
+      downtimeJobs = pipeline.settings.metricsDowntimeJobs;
+    }
+
     const downtimeStatuses = ['FAILURE'];
-    // const downtimeStatuses = ['SUCCESS'];
-    // const downtimeJobs = Object.values(this.get('metrics.jobMap'));
 
     console.log('downtimeJobs', downtimeJobs);
 
@@ -170,74 +168,65 @@ export default Controller.extend({
           )
           .then(metrics => {
             console.log('got data', metrics);
-            const downtimeMetrics = metrics.filter(m => m.isDowntimeEvent);
+            this.set('downtimeJobsChartData', metrics);
 
-            console.log('got downtimeMetrics data', downtimeMetrics);
+            let builds = metrics.map(m => m.builds.length);
 
-            this.set('downtimeJobsChartData', downtimeMetrics);
+            let duration = metrics.map(m => {
+              let downtime = 0;
 
-            let duration = downtimeMetrics.map(m => {
-              // minutes to hours
-              return (m.duration / 60).toFixed(2);
+              if (m.isDowntimeEvent) {
+                // minutes to hours
+                downtime = (m.downtimeDuration / 60).toFixed(2);
+              }
+
+              return downtime;
             });
 
-            let builds = downtimeMetrics.map(m => m.builds.length);
-
             let downtimeJobsChartData = {
-              columns: [['builds', ...builds], ['duration', ...duration]],
+              columns: [['duration', ...duration], ['builds', ...builds]],
+              axes: {
+                duration: 'y',
+                builds: 'y2'
+              },
               types: {
-                builds: 'line',
-                duration: 'bar'
+                duration: 'bar',
+                builds: 'line'
               },
               names: {
-                builds: 'Build Count',
-                duration: 'Duration'
+                duration: 'Duration',
+                builds: 'Build Count'
               },
-              hide: inBuildCountView ? ['duration'] : ['builds'],
               colors: {
                 duration: '#ea0000',
                 builds: '#0066df'
-              },
-              groups: [['builds'], ['duration']]
-              // color(color, d) {
-              //   let returnColor =
-              //   if (d && d.id === 'duration') {
-              //     return '#ea0000';
-              //   } else {
-              //     d && d.id === 'duration'
-              //   }
-              //    && downtimeStatuses[d.index] !== 'SUCCESS'
-              //     ? '#ea0000'
-              //     : color;
-              //   if (typeof d === 'object') {
-              //     console.log('d', d);
-              //   // }
-              //   // if (d && d.id === 'duration') {
-              //   //   returnColor = '#DF8900';
-              //   }
-
-              //   console.log('%c returnColor', `color: ${returnColor}`);
-
-              //   return returnColor;
-              // }
+              }
+              // groups: [['duration'], ['builds']]
             };
 
             return downtimeJobsChartData;
           })
       )
     });
-
-    // return downtimeJobsChartData;
   }),
 
   downtimeJobsLegends: computed(function downtimeJobsLegends() {
-    return statuses.map((status, index) => {
-      return {
-        key: status,
-        name: capitalize(status),
-        style: htmlSafe(`border-color: ${this.color.pattern[index]}`)
-      };
-    });
+    return {
+      left: [
+        {
+          key: 'Downtime (MIN)',
+          name: 'Downtime (MIN)',
+          style: `border-color: #ea0000`
+        }
+      ],
+      right: [
+        {
+          key: 'Build Count',
+          name: 'Build Count',
+          style: `border-color: #0066df`
+        }
+      ]
+    };
   }),
 
   eventLegend: computed('inTrendlineView', 'metrics.events', {
@@ -452,7 +441,24 @@ export default Controller.extend({
     format = format.bind(null, times);
 
     // override default with configured functions
-    return { y: { ...axis.y }, x: { ...axis.x, tick: { ...axis.x.tick, values, format } } };
+    return {
+      x: { ...axis.x, tick: { ...axis.x.tick, values, format } },
+      y: { ...axis.y },
+      y2: {
+        min: 0,
+        tick: {
+          outer: false,
+          format(d) {
+            if (Math.floor(d) !== d) {
+              return '';
+            }
+
+            return d;
+          }
+        },
+        show: true
+      }
+    };
   }),
   eventsAxis: computed('axis', 'metrics.events.createTime', 'isUTC', {
     get() {
@@ -521,9 +527,13 @@ export default Controller.extend({
 
                 if (d.value) {
                   html.keys.push(`<p class="legend" style="border-color:${c}">${name}</p>`);
-                  html.values.push(
-                    `<p>${humanizeDuration(d.value * 60 * 1e3, { round: true })}</p>`
-                  );
+                  if (d.id === 'builds') {
+                    html.values.push(`<p>${d.value}</p>`);
+                  } else {
+                    html.values.push(
+                      `<p>${humanizeDuration(d.value * 60 * 1e3, { round: true })}</p>`
+                    );
+                  }
                 }
 
                 return html;
@@ -881,25 +891,6 @@ export default Controller.extend({
     }
   },
   actions: {
-    toggleDowntimeJobsView() {
-      const chart = this.downtimeJobsChart;
-      const savedZoomDomain = chart.internal.x.orgDomain();
-
-      this.toggleProperty('inBuildCountView');
-
-      if (this.inBuildCountView) {
-        console.log('enabled true');
-        chart.show(['builds']);
-        chart.hide(['duration']);
-      } else {
-        console.log('enabled false');
-        chart.show(['duration']);
-        chart.hide(['builds']);
-      }
-
-      // restore previous zoom level
-      chart.zoom(savedZoomDomain);
-    },
     toggleTrendlineView(enabledTrendline) {
       const chart = this.eventsChart;
       const savedZoomDomain = chart.internal.x.orgDomain();

@@ -1,25 +1,27 @@
 <div class="chart-c3">
   <p class="chart-title">{{this.chartTitle}}</p>
-  {{x-toggle
-    size="small"
-    theme="material"
-    showLabels=true
-    value=@inBuildCountView
-    offLabel=null
-    onLabel="Build Count"
-    onToggle=(action @toggleDowntimeJobsView)}}
 
-  <Metrics::Legends
-    @chartName={{this.chartName}}
-    @legends={{this.legends}}
-    @onLegendClick={{action "onLegendClick"}}
-    @onLegendHover={{action "onLegendHover"}}
-    @onLegendHoverOut={{action "onLegendHoverOut"}}
-  />
+  {{#if @legends}}
+    {{#if @legends.left}}
+      <ul class="list-inline chart-legend pull-left">
+        {{#each @legends.left as |leg|}}
+          <li style={{leg.style}}>
+            {{leg.name}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
 
-  {{log "onInitFns" oninit}}
-
-  {{log "this.onInitFns" this.oninit}}
+    {{#if @legends.right}}
+      <ul class="list-inline chart-legend pull-right">
+        {{#each @legends.right as |leg|}}
+          <li style={{leg.style}}>
+            {{leg.name}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+  {{/if}}
 
   {{log "this.metrics outside" this.metrics}}
 
