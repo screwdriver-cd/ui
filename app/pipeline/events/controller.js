@@ -7,6 +7,8 @@ import uniqBy from 'lodash.uniqby';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
+import moment from 'moment';
+import { SHOULD_RELOAD_SKIP, SHOULD_RELOAD_YES } from '../../mixins/model-reloader';
 
 // eslint-disable-next-line require-jsdoc
 export async function stopBuild(givenEvent, job) {
@@ -156,6 +158,28 @@ export async function updateEvents(page) {
 }
 
 export default Controller.extend(ModelReloaderMixin, {
+  lastRefreshed: moment(),
+  shouldReload(model) {
+    const event = model.events.find(m => m.isRunning);
+
+    let res;
+
+    let diff;
+    const lastRefreshed = this.get('lastRefreshed');
+
+    if (event) {
+      res = SHOULD_RELOAD_YES;
+    } else {
+      diff = moment().diff(lastRefreshed, 'milliseconds');
+      if (diff > this.reloadTimeout * 2) {
+        res = SHOULD_RELOAD_YES;
+      } else {
+        res = SHOULD_RELOAD_SKIP;
+      }
+    }
+
+    return res;
+  },
   queryParams: [
     {
       jobId: { type: 'string' }
@@ -179,6 +203,8 @@ export default Controller.extend(ModelReloaderMixin, {
       this.send('refreshModel');
     } catch (e) {
       return Promise.resolve(e);
+    } finally {
+      this.set('lastRefreshed', moment());
     }
 
     return Promise.resolve();

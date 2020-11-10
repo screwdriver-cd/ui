@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { get } from '@ember/object';
+import { get, observer } from '@ember/object';
 import moment from 'moment';
 import Table from 'ember-light-table';
 
@@ -208,6 +208,11 @@ export default Component.extend({
 
     return rows;
   },
+  jobsObserver: observer('jobsDetails.[]', function jobsObserverFunc({ jobsDetails }) {
+    const rows = this.getRows(jobsDetails);
+
+    this.table.setRows(rows);
+  }),
 
   actions: {
     async onScrolledToBottom() {
@@ -215,14 +220,6 @@ export default Component.extend({
         const rows = this.getRows(jobs);
 
         this.table.addRows(rows);
-      });
-    },
-
-    refreshListViewJobs() {
-      this.get('refreshListViewJobs')().then(jobs => {
-        const rows = this.getRows(jobs);
-
-        this.table.setRows(rows);
       });
     },
 
