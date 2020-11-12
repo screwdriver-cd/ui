@@ -23,11 +23,8 @@
     {{/if}}
   {{/if}}
 
-  {{log "this.metrics outside" this.metrics}}
-
   {{#if (is-fulfilled this.metrics)}}
-    {{log "this.metrics inside" this.metrics}}
-    <Metrics::BarChart
+    <Metrics::BaseChart
       @chartName={{this.chartName}}
       @data={{this.metrics}}
       @axis={{this.axis}}
@@ -35,7 +32,6 @@
       @onrendered={{this.onrendered}}
       @onresized={{this.onresized}}
       @oninit={{@oninit}}
-      @yaxisLabel={{@yaxisLabel}}
     />
   {{/if}}
 

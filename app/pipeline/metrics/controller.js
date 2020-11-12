@@ -143,6 +143,7 @@ export default Controller.extend({
   }),
 
   downtimeJobsMetrics: computed('startTime', 'endTime', function getDowntimeJobsMetrics() {
+    const downtimeStatuses = ['FAILURE'];
     const { pipeline, startTime, endTime } = this;
     const { id: pipelineId } = pipeline;
 
@@ -151,10 +152,6 @@ export default Controller.extend({
     if (pipeline.settings) {
       downtimeJobs = pipeline.settings.metricsDowntimeJobs;
     }
-
-    const downtimeStatuses = ['FAILURE'];
-
-    console.log('downtimeJobs', downtimeJobs);
 
     return ObjectPromiseProxy.create({
       promise: resolve(
@@ -167,7 +164,6 @@ export default Controller.extend({
             endTime
           )
           .then(metrics => {
-            console.log('got data', metrics);
             this.set('downtimeJobsChartData', metrics);
 
             let builds = metrics.map(m => m.builds.length);
@@ -367,7 +363,6 @@ export default Controller.extend({
 
             if (!chart) {
               chart = self.get('downtimeJobsChart');
-              console.log('im here with downtimeJobsChart');
             }
 
             const canvasWidth = chart.internal.width;
