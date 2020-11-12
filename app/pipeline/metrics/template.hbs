@@ -92,7 +92,7 @@
     {{log "inside this.downtimeJobsMetrics" this.downtimeJobsMetrics}}
     {{#if this.downtimeJobsChartData}}
       <Metrics::Chart
-        @chartTitle="Downtime Metrics"
+        @chartTitle="Downtime vs Build Count"
         @chartName={{this.downtimeJobsChartName}}
         @legends={{this.downtimeJobsLegends}}
         @resetZoom={{action "resetZoom"}}
