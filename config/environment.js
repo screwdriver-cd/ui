@@ -63,7 +63,7 @@ module.exports = environment => {
       WAITING_TO_SCROLL_TIME: 1000,
       DEBOUNCED_SCROLL_TIME: 3000,
       RELEASE_VERSION: 'stable',
-      DOWNTIME_JOBS: false
+      DOWNTIME_JOBS: true
     },
     moment: {
       allowEmpty: true // allow empty dates
