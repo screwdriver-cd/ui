@@ -5,17 +5,10 @@ const compare = (s1, s2) =>
   (s1 || '').localeCompare(s2 || '', undefined, { numeric: true, sensitivity: 'base' });
 
 export const sortWorkflowGraph = workflowGraph => {
-  if (workflowGraph) {
-    if (workflowGraph.nodes) {
-      workflowGraph.nodes.sort(
-        (node1, node2) => compare(node1.name, node2.name) || compare(node1.id, node2.id)
-      );
-    }
-    if (workflowGraph.edges) {
-      workflowGraph.edges.sort(
-        (edge1, edge2) => compare(edge1.src, edge2.src) || compare(edge1.dest, edge2.dest)
-      );
-    }
+  if (workflowGraph && workflowGraph.edges) {
+    workflowGraph.edges.sort(
+      (edge1, edge2) => compare(edge1.src, edge2.src) || compare(edge1.dest, edge2.dest)
+    );
   }
 };
 
