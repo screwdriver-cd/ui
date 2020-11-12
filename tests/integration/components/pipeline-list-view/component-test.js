@@ -82,8 +82,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
     assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 6 });
-    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
+    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('.lt-row').exists({ count: 2 });
   });
 
@@ -219,8 +219,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
     assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 6 });
-    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
+    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('6h 13m 8s');
     assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
@@ -273,8 +273,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
     assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 6 });
-    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
+    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
     assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
@@ -327,8 +327,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
     assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 6 });
-    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
+    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
     assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
@@ -381,8 +381,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
     assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 6 });
-    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
+    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
     assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
@@ -435,8 +435,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
     assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 6 });
-    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
+    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
     assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
@@ -489,8 +489,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
     assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 6 });
-    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
+    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Still running.');
     assert.dom('.lt-body').includesText('Apr 16, 2020 1:30 AM');
@@ -543,8 +543,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
     assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 6 });
-    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
+    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').includesText('Not started.');
   });
@@ -596,8 +596,8 @@ module('Integration | Component | pipeline list view', function(hooks) {
 
     assert.dom('.lt-head-wrap').exists({ count: 1 });
     assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 6 });
-    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE ACTIONS');
+    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('.lt-head').hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('.lt-row').exists({ count: 1 });
     assert.dom('.lt-body').doesNotIncludeText('Still running.');
   });

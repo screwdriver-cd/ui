@@ -37,6 +37,12 @@ export default Component.extend({
       cellComponent: 'pipeline-list-coverage-cell'
     },
     {
+      label: 'METRICS',
+      sortable: false,
+      valuePath: 'job',
+      cellComponent: 'pipeline-list-metrics-cell'
+    },
+    {
       label: 'ACTIONS',
       valuePath: 'actions',
       sortable: false,
