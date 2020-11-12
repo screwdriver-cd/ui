@@ -1,0 +1,7 @@
+<div>
+  {{#if (not-eq jobId "") }}
+    {{#link-to "pipeline.metrics" (query-params jobId=jobId)}}
+      {{fa-icon "line-chart" fixedWidth=true title="Job metrics"}}
+    {{/link-to}}
+  {{/if}}
+</div>
