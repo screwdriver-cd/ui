@@ -277,9 +277,11 @@
   font-size: 0.8em;
   margin-top: 10px;
   color: #9a9a9a;
+  clear: both;
 }
 
-.c3-axis-y {
+.c3-axis-y,
+.c3-axis-y2 {
   .domain,
   .tick line {
     stroke: none;
