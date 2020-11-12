@@ -1,7 +1,8 @@
 import Component from '@ember/component';
-import { get } from '@ember/object';
+import { get, set, observer } from '@ember/object';
 import moment from 'moment';
 import Table from 'ember-light-table';
+import isEqual from 'lodash.isequal';
 
 export default Component.extend({
   isShowingModal: false,
@@ -208,6 +209,19 @@ export default Component.extend({
 
     return rows;
   },
+  jobsObserver: observer('jobsDetails.[]', function jobsObserverFunc({ jobsDetails }) {
+    const rows = this.getRows(jobsDetails);
+    const lastRows = get(this, 'lastRows') || [];
+    const isEqualRes = isEqual(
+      rows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
+      lastRows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
+    );
+
+    if (!isEqualRes) {
+      set(this, 'lastRows', rows);
+      this.table.setRows(rows);
+    }
+  }),
 
   actions: {
     async onScrolledToBottom() {
@@ -215,14 +229,6 @@ export default Component.extend({
         const rows = this.getRows(jobs);
 
         this.table.addRows(rows);
-      });
-    },
-
-    refreshListViewJobs() {
-      this.get('refreshListViewJobs')().then(jobs => {
-        const rows = this.getRows(jobs);
-
-        this.table.setRows(rows);
       });
     },
 

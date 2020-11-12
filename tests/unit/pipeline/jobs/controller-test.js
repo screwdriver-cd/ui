@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import { A as newArray } from '@ember/array';
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
@@ -38,7 +39,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
   });
 
   test('it starts a single build', async function(assert) {
-    assert.expect(9);
+    assert.expect(10);
     server.get('http://localhost:8080/v4/events/5678/builds', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -74,7 +75,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        jobs: newArray()
       });
 
       controller.transitionToRoute = () => {

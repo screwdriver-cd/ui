@@ -1,14 +1,43 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { get, computed } from '@ember/object';
+import { get, set, computed } from '@ember/object';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
-import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
-import { isPRJob } from 'screwdriver-ui/utils/build';
+import ModelReloaderMixin, {
+  SHOULD_RELOAD_SKIP,
+  SHOULD_RELOAD_YES
+} from 'screwdriver-ui/mixins/model-reloader';
+import { isPRJob, isActiveBuild } from 'screwdriver-ui/utils/build';
+import moment from 'moment';
 import { createEvent, startDetachedBuild, stopBuild, updateEvents } from '../../events/controller';
 
+const PAST_TIME = moment().subtract(1, 'day');
+
 export default Controller.extend(ModelReloaderMixin, {
+  lastRefreshed: moment(),
+  shouldReload(model) {
+    const job = model.jobs.find(j => {
+      return j.builds.find(b => {
+        return isActiveBuild(b.get('status'), b.get('endTime'));
+      });
+    });
+
+    let res;
+
+    const lastRefreshed = this.get('lastRefreshed');
+    const diff = moment().diff(lastRefreshed, 'milliseconds');
+
+    if (job) {
+      res = SHOULD_RELOAD_YES;
+    } else if (diff > this.reloadTimeout * 2) {
+      res = SHOULD_RELOAD_YES;
+    } else {
+      res = SHOULD_RELOAD_SKIP;
+    }
+
+    return res;
+  },
   jobId: '',
   session: service(),
   stop: service('event-stop'),
@@ -22,11 +51,14 @@ export default Controller.extend(ModelReloaderMixin, {
     });
   },
 
-  reload() {
+  async reload() {
     try {
       this.send('refreshModel');
+      await this.refreshListViewJobs();
     } catch (e) {
       return Promise.resolve(e);
+    } finally {
+      this.set('lastRefreshed', moment());
     }
 
     return Promise.resolve();
@@ -192,8 +224,13 @@ export default Controller.extend(ModelReloaderMixin, {
       }
 
       await this.createEvent(eventPayload);
+      set(this, 'lastRefreshed', PAST_TIME);
     },
-    stopBuild
+    stopBuild: async function stopBuildFunc(givenEvent, job) {
+      await stopBuild.bind(this)(givenEvent, job);
+      await this.reload();
+      set(this, 'lastRefreshed', PAST_TIME);
+    }
   },
   willDestroy() {
     // FIXME: Never called when route is no longer active

@@ -1,6 +1,6 @@
 import { resolve } from 'rsvp';
 import { run } from '@ember/runloop';
-import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
+import ModelReloaderMixin, { SHOULD_RELOAD_YES } from 'screwdriver-ui/mixins/model-reloader';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import DS from 'ember-data';
@@ -46,7 +46,7 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
   });
 
   test('it calls reload on a model', function(assert) {
-    assert.expect(1);
+    assert.expect(2);
     subject.set('testModel', {
       reload() {
         assert.ok(true);
@@ -58,6 +58,11 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
     subject.set('runLater', 'foo');
     subject.set('modelToReload', 'testModel');
 
+    subject.shouldReload = model => {
+      assert.ok(model);
+
+      return SHOULD_RELOAD_YES;
+    };
     subject.reloadModel();
   });
 
@@ -83,7 +88,7 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
   });
 
   test('it force reloads a model', async function(assert) {
-    assert.expect(2);
+    assert.expect(3);
 
     subject.set('testModel', {
       reload() {
@@ -93,6 +98,12 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
       }
     });
     subject.set('modelToReload', 'testModel');
+    subject.shouldReload = model => {
+      assert.ok(model);
+
+      return SHOULD_RELOAD_YES;
+    };
+
     subject.forceReload();
 
     run(() => {
@@ -101,13 +112,19 @@ module('Unit | Mixin | model reloader mixin', function(hooks) {
   });
 
   test('it calls reload function if modelToReload is absent', function(assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     subject.set('reload', function() {
       assert.ok(true);
 
       return resolve({});
     });
+
+    subject.shouldReload = model => {
+      assert.ok(model);
+
+      return SHOULD_RELOAD_YES;
+    };
 
     subject.set('runLater', 'foo');
 

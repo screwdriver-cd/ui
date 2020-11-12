@@ -71,7 +71,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       controller.transitionToRoute = (path, id) => {
@@ -143,7 +143,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       controller.transitionToRoute = path => {
@@ -220,7 +220,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       controller.transitionToRoute = path => {
@@ -282,7 +282,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       const build = controller.store.peekRecord('build', '123');
@@ -345,7 +345,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       const build = controller.store.peekRecord('build', '123');
@@ -393,7 +393,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       );
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       assert.notOk(controller.get('isShowingModal'));
@@ -469,7 +469,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       );
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       assert.notOk(controller.get('isShowingModal'));
