@@ -121,6 +121,8 @@ export async function createEvent(eventPayload, toActiveTab) {
     console.log('***** error', e);
     this.set('isShowingModal', false);
     this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+  } finally {
+    await this.reload();
   }
 
   return null;

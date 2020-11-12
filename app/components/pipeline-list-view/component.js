@@ -212,7 +212,10 @@ export default Component.extend({
   jobsObserver: observer('jobsDetails.[]', function jobsObserverFunc({ jobsDetails }) {
     const rows = this.getRows(jobsDetails);
     const lastRows = get(this, 'lastRows') || [];
-    const isEqualRes = isEqual(rows.map(r => r.job), lastRows.map(r => r.job));
+    const isEqualRes = isEqual(
+      rows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
+      lastRows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
+    );
 
     if (!isEqualRes) {
       set(this, 'lastRows', rows);
