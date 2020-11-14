@@ -255,9 +255,14 @@ export default Controller.extend(ModelReloaderMixin, {
           }
         });
       }
-      if (completeGraph && completeGraph.nodes) {
-        completeGraph.nodes = uniqBy(completeGraph.nodes, node => {
-          return node.id ? `id:${node.id}` : `name:${node.name}`;
+      if (completeGraph) {
+        completeGraph.nodes = uniqBy(completeGraph.nodes || [], n => n.name);
+
+        completeGraph.edges = (completeGraph.edges || []).filter(e => {
+          const srcFound = !e.src || !!completeGraph.nodes.find(n => n.name === e.src);
+          const destFound = !e.dest || !!completeGraph.nodes.find(n => n.name === e.dest);
+
+          return srcFound && destFound;
         });
       }
 
