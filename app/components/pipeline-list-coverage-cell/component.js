@@ -7,7 +7,18 @@ export default Component.extend({
 
   result: computed('value', {
     async get() {
-      return this.shuttle.fetchCoverage(this.value);
+      if (this.value.buildId) {
+        if (this.value.coverage) {
+          return this.value.coverage;
+        }
+        const coverage = await this.shuttle.fetchCoverage(this.value);
+
+        this.set('value', { ...this.value, coverage });
+
+        return coverage;
+      }
+
+      return '';
     }
   })
 });
