@@ -1,8 +1,11 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { and } from '@ember/object/computed';
+import { formatMetrics } from 'screwdriver-ui/utils/metric';
 
 export default Component.extend({
+  store: service(),
   eventsInfo: null,
   lastEventInfo: null,
   isAuthenticated: undefined,
@@ -11,20 +14,46 @@ export default Component.extend({
   pipelineSelected: false,
   classNames: ['pipeline-card'],
   reset: false,
-
+  storeQueryError: false,
+  hasBothEventsAndLatestEventInfo: and('eventsInfo', 'lastEventInfo'),
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
+  branch: computed('pipeline', function get() {
+    const { branch, rootDir } = this.pipeline.scmRepo;
+
+    return rootDir ? `${branch}#${rootDir}` : branch;
+  }),
   showRemoveButton: computed('isOrganizing', 'isAuthenticated', function showRemoveButton() {
     return !this.isOrganizing && this.isAuthenticated;
   }),
 
-  didReceiveAttrs() {
-    this.setProperties({
-      eventsInfo: this.pipeline.eventsInfo,
-      lastEventInfo: this.pipeline.lastEventInfo
-    });
+  async didInsertElement() {
+    if (!this.hasBothEventsAndLatestEventInfo) {
+      this.updateEventMetrics();
+    }
   },
 
+  async updateEventMetrics() {
+    const metrics = await this.store
+      .query('metric', {
+        pipelineId: this.pipeline.id,
+        page: 1,
+        count: 20
+      })
+      .catch(() => {
+        this.setProperties({
+          storeQueryError: true
+        });
+      });
+
+    const result = formatMetrics(metrics);
+    const { eventsInfo, lastEventInfo } = result;
+
+    this.setProperties({
+      eventsInfo,
+      lastEventInfo
+    });
+  },
   actions: {
     removePipeline() {
       this.removePipeline(this.pipeline.id);
