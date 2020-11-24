@@ -5,11 +5,13 @@
         {{#nav.item class="float-left"
           active=(bs-eq activeTab "steps")
           onClick=(action "changeActiveTabPane" "steps")}}
-          <a href="#steps" role="tab" {{action tab.select "steps"}}>Steps</a>{{/nav.item}}
+          <a href="#steps" role="tab" {{action tab.select "steps"}}>Steps</a>
+        {{/nav.item}}
         {{#nav.item class="float-left"
           active=(bs-eq activeTab "artifacts")
           onClick=(action "changeActiveTabPane" "artifacts")}}
-          <a href="#artifacts" role="tab" {{action tab.select "artifacts"}}>Artifacts</a>{{/nav.item}}
+          <a href="#artifacts" role="tab" {{action tab.select "artifacts"}}>Artifacts</a>
+        {{/nav.item}}
       {{/bs-nav}}
 
       <div class="tab-content">
