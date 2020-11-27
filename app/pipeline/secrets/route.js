@@ -24,8 +24,10 @@ export default Route.extend({
         secrets,
         pipeline
       }))
-      .catch(error =>
-        this.controllerFor('pipeline.secrets').set('errorMessage', error.errors[0].detail)
-      );
+      .catch(error => {
+        this.controllerFor('pipeline.secrets').set('errorMessage', error.errors[0].detail);
+
+        return { secrets, pipeline };
+      });
   }
 });
