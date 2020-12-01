@@ -27,11 +27,12 @@ export default Component.extend({
     return !this.isOrganizing && this.isAuthenticated;
   }),
 
-  didInsertElement() {
+  async didInsertElement() {
     if (!this.hasBothEventsAndLatestEventInfo) {
       this.updateEventMetrics();
     }
   },
+
   async updateEventMetrics() {
     const metrics = await this.store
       .query('metric', {
