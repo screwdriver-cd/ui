@@ -104,6 +104,7 @@
     "ember-flatpickr": "^2.15.0",
     "ember-font-awesome": "^4.0.0-rc.4",
     "ember-highlight": "1.2.8",
+    "ember-in-viewport": "^3.8.0",
     "ember-inline-svg": "^1.0.0",
     "ember-light-table": "^2.0.0-beta.5",
     "ember-line-clamp": "^1.0.1",
