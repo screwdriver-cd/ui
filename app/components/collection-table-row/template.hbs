@@ -8,15 +8,21 @@
 </td>
 <td class="branch">
   {{fa-icon "code-fork"}}
-  <span title={{pipeline.branch}}>{{pipeline.branch}}</span>
+  <span title={{branch}}>{{branch}}</span>
 </td>
 <td class="status">
   {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
     {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
   {{/link-to}}
-  <a href={{lastEventInfo.commitUrl}}>
-    {{lastEventInfo.sha}}
-  </a>
+  {{#if storeQueryError}}
+    An error occur while loading events
+  {{else if hasBothEventsAndLatestEventInfo}}
+    <a href={{lastEventInfo.commitUrl}}>
+      {{lastEventInfo.sha}}
+    </a>
+  {{else}}
+    Loading events
+  {{/if}}
 </td>
 <td class="start">
   {{lastEventInfo.startTime}}
@@ -25,11 +31,13 @@
   {{lastEventInfo.durationText}}
 </td>
 <td class="history">
-  {{events-thumbnail
-      events=eventsInfo
-      pipelineId=pipeline.id
-      class="events-thumbnail"
-  }}
+  {{#if hasBothEventsAndLatestEventInfo}}
+    {{events-thumbnail
+        events=eventsInfo
+        pipelineId=pipeline.id
+        class="events-thumbnail"
+    }}
+  {{/if}}
 </td>
 <td class="collection-pipeline__remove">
   {{#if showRemoveButton}}
