@@ -6,9 +6,8 @@ import { render, click, findAll, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import Service from '@ember/service';
-import ENV from 'screwdriver-ui/config/environment';
 import $ from 'jquery';
-
+import wait from 'ember-test-helpers/wait';
 import injectSessionStub from '../../../helpers/inject-session';
 import injectScmServiceStub from '../../../helpers/inject-scm';
 
@@ -173,37 +172,31 @@ const mockCollections = [
   }
 ];
 
-const mockMetricsMap = EmberObject.create({
-  1: [
-    {
-      creatTime: 'Tue Oct 01 2019 15:55:52 GMT-0700 (Pacific Daylight Time)',
-      status: 'FAILURE',
-      duration: 42718,
-      sha: '9af92ba97483213119dd4b57d7cc903405d199ea',
-      commit: {
-        message:
-          'Merge pull request #7 from screwdriver-cd-test/tkyi-patch-1\n\nfix: Use new workflow with requires keyword',
-        url:
-          'https://github.com/screwdriver-cd/screwdriver/commit/9af92ba97483213119dd4b57d7cc903405d199ea'
-      }
+const mockMetrics = [
+  {
+    id: 3,
+    createTime: '2020-10-06T17:57:53.388Z',
+    causeMessage: 'Manually started by klu909',
+    sha: '9af92ba134322',
+    commit: {
+      message: '3',
+      url: 'https://github.com/batman/foo/commit/9af92ba134322'
     },
-    {
-      status: 'SUCCESS',
-      duration: 23173
+    duration: 14,
+    status: 'SUCCESS'
+  },
+  {
+    id: 2,
+    createTime: '2020-10-06T17:47:55.089Z',
+    sha: '9af92ba134321',
+    commit: {
+      message: '2',
+      url: 'https://github.com/batman/foo/commit/9af92ba134321'
     },
-    {
-      status: 'SUCCESS',
-      duration: 20011
-    },
-    {
-      status: 'FAILURE',
-      duration: 39234
-    }
-  ],
-  2: [],
-  3: [],
-  4: []
-});
+    duration: 14,
+    status: 'SUCCESS'
+  }
+];
 
 const onRemovePipelineSpy = sinon.spy();
 const addMultipleToCollectionSpy = sinon.spy();
@@ -214,11 +207,20 @@ module('Integration | Component | collection view', function(hooks) {
 
   hooks.beforeEach(function() {
     this.owner.unregister('service:store');
+    const storeStub = Service.extend({
+      query(model, filter) {
+        if (filter.pipelineId === 1) {
+          return resolve(mockMetrics);
+        }
 
+        return resolve([]);
+      }
+    });
+
+    this.owner.register('service:store', storeStub);
     this.setProperties({
       collection: mockDefaultCollection,
       collections: mockCollections,
-      metricsMap: mockMetricsMap,
       onRemovePipeline: onRemovePipelineSpy,
       addMultipleToCollection: addMultipleToCollectionSpy,
       removeMultiplePipelines: removeMultiplePipelinesSpy
@@ -226,14 +228,16 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it renders in card mode', async function(assert) {
+    assert.expect(23);
     injectScmServiceStub(this);
 
     await render(hbs`
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
       }}`);
+
+    await wait();
 
     // check that necessage elements exist
     assert.dom('.collection-card-view').exists({ count: 1 });
@@ -250,13 +254,13 @@ module('Integration | Component | collection view', function(hooks) {
 
     // check that helper function getColor() works correctly
     assert.dom('.pipeline-card:nth-of-type(1) .commit-status i').hasClass('build-empty');
-    assert.dom('.pipeline-card:nth-of-type(2) .commit-status i').hasClass('build-failure');
+    assert.dom('.pipeline-card:nth-of-type(2) .commit-status i').hasClass('build-success');
     assert.dom('.pipeline-card:nth-of-type(3) .commit-status i').hasClass('build-empty');
     assert.dom('.pipeline-card:nth-of-type(4) .commit-status i').hasClass('build-empty');
 
     // check that helper function getIcon() works correctly
     assert.dom('.pipeline-card:nth-of-type(1) .commit-status i').hasClass('fa-question-circle');
-    assert.dom('.pipeline-card:nth-of-type(2) .commit-status i').hasClass('fa-times-circle');
+    assert.dom('.pipeline-card:nth-of-type(2) .commit-status i').hasClass('fa-check-circle');
     assert.dom('.pipeline-card:nth-of-type(3) .commit-status i').hasClass('fa-question-circle');
     assert.dom('.pipeline-card:nth-of-type(4) .commit-status i').hasClass('fa-question-circle');
 
@@ -274,9 +278,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     // check that helper function formatTime() works correctly
     assert.dom('.pipeline-card:nth-of-type(1) .duration-badge span:nth-of-type(2)').hasText('--');
-    assert
-      .dom('.pipeline-card:nth-of-type(2) .duration-badge span:nth-of-type(2)')
-      .hasText('11h 51m 58s');
+    assert.dom('.pipeline-card:nth-of-type(2) .duration-badge span:nth-of-type(2)').hasText('14s');
     assert.dom('.pipeline-card:nth-of-type(3) .duration-badge span:nth-of-type(2)').hasText('--');
     assert.dom('.pipeline-card:nth-of-type(4) .duration-badge span:nth-of-type(2)').hasText('--');
   });
@@ -292,6 +294,8 @@ module('Integration | Component | collection view', function(hooks) {
       }}`);
 
     await click('.header__change-view button:nth-of-type(2)');
+
+    await wait();
 
     // check that necessage elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
@@ -319,13 +323,13 @@ module('Integration | Component | collection view', function(hooks) {
 
     // check that helper function getColor() works correctly
     assert.dom('.collection-pipeline:nth-of-type(1) .status i').hasClass('build-empty');
-    assert.dom('.collection-pipeline:nth-of-type(2) .status i').hasClass('build-failure');
+    assert.dom('.collection-pipeline:nth-of-type(2) .status i').hasClass('build-success');
     assert.dom('.collection-pipeline:nth-of-type(3) .status i').hasClass('build-empty');
     assert.dom('.collection-pipeline:nth-of-type(4) .status i').hasClass('build-empty');
 
     // check that helper function getIcon() works correctly
     assert.dom('.collection-pipeline:nth-of-type(1) .status i').hasClass('fa-question-circle');
-    assert.dom('.collection-pipeline:nth-of-type(2) .status i').hasClass('fa-times-circle');
+    assert.dom('.collection-pipeline:nth-of-type(2) .status i').hasClass('fa-check-circle');
     assert.dom('.collection-pipeline:nth-of-type(3) .status i').hasClass('fa-question-circle');
     assert.dom('.collection-pipeline:nth-of-type(4) .status i').hasClass('fa-question-circle');
 
@@ -343,7 +347,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     // check that helper function formatTime() works correctly
     assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('--');
-    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('11h 51m 58s');
+    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('14s');
     assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('--');
     assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('--');
   });
@@ -372,16 +376,24 @@ module('Integration | Component | collection view', function(hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
       }}`);
+
+    await wait();
+
     assert.dom('.collection-card-view').exists({ count: 1 });
     assert.dom('.collection-list-view').doesNotExist();
 
     await click('.header__change-view button:nth-of-type(2)');
+
+    await wait();
+
     assert.dom('.collection-list-view').exists({ count: 1 });
     assert.dom('.collection-card-view').doesNotExist();
 
     await click('.header__change-view button:nth-of-type(1)');
+
+    await wait();
+
     assert.dom('.collection-card-view').exists({ count: 1 });
     assert.dom('.collection-list-view').doesNotExist();
   });
@@ -390,6 +402,13 @@ module('Integration | Component | collection view', function(hooks) {
     assert.expect(3);
 
     const storeStub = Service.extend({
+      query(model, filter) {
+        if (filter.pipelineId === 1) {
+          return resolve(mockMetrics);
+        }
+
+        return resolve([]);
+      },
       findRecord(model, id) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
@@ -426,6 +445,13 @@ module('Integration | Component | collection view', function(hooks) {
     assert.expect(3);
 
     const storeStub = Service.extend({
+      query(model, filter) {
+        if (filter.pipelineId === 1) {
+          return resolve(mockMetrics);
+        }
+
+        return resolve([]);
+      },
       findRecord(model, id) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
@@ -455,6 +481,8 @@ module('Integration | Component | collection view', function(hooks) {
       }}`);
 
     await click('.header__change-view button:nth-of-type(2)');
+
+    await wait();
 
     // Delete the models pipeline
     await click('.collection-pipeline__remove span');
@@ -522,6 +550,9 @@ module('Integration | Component | collection view', function(hooks) {
     `);
 
     await click('.header__change-view button:nth-of-type(2)');
+
+    await wait();
+
     await click('.collection-pipeline__remove span');
 
     assert.dom('.alert-warning > span').hasText('User does not have permission');
@@ -681,7 +712,16 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it removes multiple pipelines from collection in card mode', async function(assert) {
+    assert.expect(4);
+
     const storeStub = Service.extend({
+      query(model, filter) {
+        if (filter.pipelineId === 1) {
+          return resolve(mockMetrics);
+        }
+
+        return resolve([]);
+      },
       findRecord(model, id) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
@@ -725,7 +765,16 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it removes multiple pipelines from collection in list mode', async function(assert) {
+    assert.expect(4);
+
     const storeStub = Service.extend({
+      query(model, filter) {
+        if (filter.pipelineId === 1) {
+          return resolve(mockMetrics);
+        }
+
+        return resolve([]);
+      },
       findRecord(model, id) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
@@ -772,7 +821,16 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it fails to remove multiple pipelines from collection in card mode', async function(assert) {
+    assert.expect(3);
+
     const storeStub = Service.extend({
+      query(model, filter) {
+        if (filter.pipelineId === 1) {
+          return resolve(mockMetrics);
+        }
+
+        return resolve([]);
+      },
       findRecord(model, id) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
@@ -825,7 +883,16 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it fails to remove multiple pipelines from collection in list mode', async function(assert) {
+    assert.expect(4);
+
     const storeStub = Service.extend({
+      query(model, filter) {
+        if (filter.pipelineId === 1) {
+          return resolve(mockMetrics);
+        }
+
+        return resolve([]);
+      },
       findRecord(model, id) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
@@ -1041,13 +1108,7 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it searches and adds pipelines into the collection', async function(assert) {
-    const pipelineListConfig = {
-      page: 1,
-      count: ENV.APP.NUM_PIPELINES_LISTED,
-      sortBy: 'name',
-      sort: 'ascending',
-      search: 'screwdriver-cd'
-    };
+    assert.expect(19);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [1]);
@@ -1057,11 +1118,16 @@ module('Integration | Component | collection view', function(hooks) {
     };
 
     const storeStub = Service.extend({
-      query(model, config) {
-        assert.strictEqual(model, 'pipeline');
-        assert.deepEqual(config, pipelineListConfig);
+      query(model, filter) {
+        if (model === 'pipeline') {
+          return resolve(mockPipelines);
+        }
 
-        return resolve(mockPipelines);
+        if (filter.pipelineId === 1) {
+          return resolve(mockMetrics);
+        }
+
+        return resolve([]);
       },
       findRecord(model, id) {
         assert.strictEqual(model, 'collection');
@@ -1123,6 +1189,8 @@ module('Integration | Component | collection view', function(hooks) {
       }}
     `);
 
+    await wait();
+
     // open pipeline search modal
     await click('.add-pipeline-operation');
     assert.dom('.add-pipeline-modal .modal-body').exists({ count: 1 });
@@ -1145,6 +1213,7 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.searched-pipeline:nth-of-type(1) .add-pipeline-button');
     await click('.modal-content .close');
 
+    await wait();
     // check the first pipeline is added
     assert.dom('.pipeline-card').exists({ count: 1 });
     assert.dom('.pipeline-card .branch-info a').hasText('screwdriver-cd/screwdriver');
@@ -1170,6 +1239,8 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it changes the name and description of the normal collection', async function(assert) {
+    assert.expect(11);
+
     const collectionSaveSpy = sinon.spy();
 
     this.collection.set('save', collectionSaveSpy);
@@ -1221,6 +1292,8 @@ module('Integration | Component | collection view', function(hooks) {
   });
 
   test('it copies the collection url to the clipboard', async function(assert) {
+    assert.expect(1);
+
     await render(hbs`
       {{collection-view
         collection=collection
