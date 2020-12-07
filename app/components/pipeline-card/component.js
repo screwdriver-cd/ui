@@ -6,6 +6,7 @@ import { formatMetrics } from 'screwdriver-ui/utils/metric';
 
 export default Component.extend({
   store: service(),
+  inViewport: service(),
   eventsInfo: null,
   lastEventInfo: null,
   isAuthenticated: undefined,
@@ -27,12 +28,27 @@ export default Component.extend({
     return !this.isOrganizing && this.isAuthenticated;
   }),
 
-  async didInsertElement() {
+  didInsertElement() {
     if (!this.hasBothEventsAndLatestEventInfo) {
+      this.setupInViewport();
+    }
+  },
+  setupInViewport() {
+    if (this && this.element) {
+      const inViewportHook = this.element.querySelector('.pipeline-card-content');
+      const { onEnter } = this.inViewport.watchElement(inViewportHook);
+
+      onEnter(this.didEnterViewport.bind(this));
+    }
+  },
+  async didEnterViewport() {
+    if (this && this.element) {
+      const inViewportHook = this.element.querySelector('.pipeline-card-content');
+
+      this.inViewport.stopWatching(inViewportHook);
       this.updateEventMetrics();
     }
   },
-
   async updateEventMetrics() {
     const metrics = await this.store
       .query('metric', {
