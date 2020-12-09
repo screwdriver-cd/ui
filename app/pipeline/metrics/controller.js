@@ -149,7 +149,7 @@ export default Controller.extend({
 
     let downtimeJobs = [];
 
-    if (pipeline.settings) {
+    if (pipeline.settings && pipeline.settings.metricsDowntimeJobs) {
       downtimeJobs = pipeline.settings.metricsDowntimeJobs;
     }
 
