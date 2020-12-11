@@ -12,7 +12,7 @@
   </div>
 </div>
 
-{{#light-table table height="80%" as |t|}}
+{{#light-table table height="60vh" as |t|}}
   {{t.head
     onColumnClick=(action "onColumnClick")
     iconSortable="fa fa-sort"
@@ -21,8 +21,15 @@
     fixed=true}}
   {{#t.body
     canSelect=false
-    onScrolledToBottom=(action "onScrolledToBottom")
-  }}{{/t.body}}
+    scrollBuffer=700
+    onScrolledToBottom=(action "onScrolledToBottom") as |body|
+  }}
+    {{#if isLoading}}
+      {{#body.loader}}
+        Loading...
+      {{/body.loader}}
+    {{/if}}
+  {{/t.body}}
 {{/light-table}}
 
 {{#if isShowingModal}}

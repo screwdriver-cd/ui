@@ -5,6 +5,7 @@ import Table from 'ember-light-table';
 import isEqual from 'lodash.isequal';
 
 export default Component.extend({
+  isLoading: false,
   isShowingModal: false,
   sortingDirection: 'asc',
   sortingValuePath: 'job',
@@ -231,10 +232,12 @@ export default Component.extend({
 
   actions: {
     async onScrolledToBottom() {
+      this.set('isLoading', true);
       this.get('updateListViewJobs')().then(jobs => {
         const rows = this.getRows(jobs);
 
         this.table.addRows(rows);
+        this.set('isLoading', false);
       });
     },
 

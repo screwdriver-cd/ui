@@ -68,4 +68,8 @@
   .ember-light-table .tse-scrollbar {
     display: none;
   }
+
+  .ember-light-table div.lt-body-wrap {
+    overflow-y: auto;
+  }
 }
