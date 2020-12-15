@@ -17,9 +17,12 @@ export default Component.extend({
         .split(':')
         .pop();
       const matchedNode = nodes.find(node => node.name === jobName);
-      const displayName = matchedNode.displayName !== undefined ? matchedNode.displayName : jobName;
 
-      return displayName;
+      if (matchedNode && matchedNode.displayName) {
+        return matchedNode.displayName;
+      }
+
+      return jobName;
     }
   }),
   icon: computed('build.status', {
