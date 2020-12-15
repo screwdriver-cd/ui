@@ -368,9 +368,26 @@ export default Component.extend({
     },
     download() {
       const { buildId, stepName } = this;
-      const downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/steps/${stepName}/logs?type=download`;
 
-      window.open(downloadLink, '_blank');
+      if (stepName === 'sd-setup-init') {
+        const fileName = `${stepName}-log.text`;
+        const downloadLink = URL.createObjectURL(
+          new File([this.logs.map(({ m }) => m).join('\n')], fileName, {
+            type: 'text/plain'
+          })
+        );
+
+        const e = document.createElement('a');
+
+        e.setAttribute('href', downloadLink);
+        e.setAttribute('download', fileName);
+        e.setAttribute('target', '_blank');
+        e.click();
+      } else {
+        const downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/steps/${stepName}/logs?type=download`;
+
+        window.open(downloadLink, '_blank');
+      }
     },
     logScroll() {
       const container = this.element.querySelectorAll('.wrap')[0];
