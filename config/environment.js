@@ -55,7 +55,7 @@ module.exports = environment => {
       MINIMUM_JOBNAME_LENGTH: 20,
       NUM_EVENTS_LISTED: 5,
       NUM_PIPELINES_LISTED: 50,
-      LIST_VIEW_PAGE_SIZE: 10,
+      LIST_VIEW_PAGE_SIZE: 20,
       NUM_BUILDS_LISTED: 5,
       MAX_LOG_LINES: 1000,
       DEFAULT_LOG_PAGE_SIZE: 10,
