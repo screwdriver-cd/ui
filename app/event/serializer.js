@@ -1,24 +1,43 @@
 import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 
+const compare = (s1, s2) =>
+  (s1 || '').localeCompare(s2 || '', undefined, { numeric: true, sensitivity: 'base' });
+
+export const sortWorkflowGraph = workflowGraph => {
+  if (workflowGraph) {
+    const notInFirstColumns = {};
+
+    if (workflowGraph.edges) {
+      workflowGraph.edges.forEach(({ dest }) => {
+        notInFirstColumns[dest] = true;
+      });
+      workflowGraph.edges.sort(
+        (edge1, edge2) => compare(edge1.src, edge2.src) || compare(edge1.dest, edge2.dest)
+      );
+    }
+
+    if (workflowGraph.nodes) {
+      const nodesNotInFirstColumn = workflowGraph.nodes.filter(n => !!notInFirstColumns[n.name]);
+      const nodesInFirstColumn = workflowGraph.nodes.filter(n => !notInFirstColumns[n.name]);
+
+      // we only sort the nodes that are not in the first column.
+      nodesNotInFirstColumn.sort(
+        (node1, node2) => compare(node1.name, node2.name) || compare(node1.id, node2.id)
+      );
+      workflowGraph.nodes = [...nodesInFirstColumn, ...nodesNotInFirstColumn];
+    }
+  }
+};
+
 export default DS.RESTSerializer.extend({
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.events) {
       payload.events.forEach(event => {
-        if (event.workflowGraph) {
-          // sorting on the dest should be enough
-          event.workflowGraph.edges = event.workflowGraph.edges.sort(({ dest: a }, { dest: b }) => {
-            if (a < b) {
-              return -1;
-            }
-            if (a > b) {
-              return 1;
-            }
-
-            return 0;
-          });
-        }
+        sortWorkflowGraph(event.workflowGraph);
       });
+    } else if (payload.event && payload.event.workflowGraph) {
+      sortWorkflowGraph(payload.event.workflowGraph);
     }
 
     return this._super(store, typeClass, payload, id, requestType);

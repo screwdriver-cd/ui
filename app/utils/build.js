@@ -83,5 +83,17 @@ const getActiveStep = (steps = []) => {
 };
 
 const unfinishedStatuses = ['CREATED', 'RUNNING', 'QUEUED', 'BLOCKED', 'FROZEN'];
+const statuses = [
+  'ABORTED',
+  'CREATED',
+  'FAILURE',
+  'QUEUED',
+  'RUNNING',
+  'SUCCESS',
+  'BLOCKED',
+  'UNSTABLE',
+  'COLLAPSED',
+  'FROZEN'
+];
 
-export { isActiveBuild, isPRJob, statusIcon, getActiveStep, unfinishedStatuses };
+export { isActiveBuild, isPRJob, statusIcon, getActiveStep, unfinishedStatuses, statuses };

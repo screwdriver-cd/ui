@@ -26,6 +26,9 @@ export function initialize() {
   if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.ROOT_URL) {
     ENV.rootURL = window.SUPPLEMENTARY_CONFIG.ROOT_URL;
   }
+  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.RELEASE_VERSION) {
+    ENV.APP.RELEASE_VERSION = window.SUPPLEMENTARY_CONFIG.RELEASE_VERSION;
+  }
 }
 
 export default {

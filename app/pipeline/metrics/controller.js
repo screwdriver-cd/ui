@@ -1,4 +1,5 @@
 /* global d3, memoizerific */
+import { resolve } from 'rsvp';
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
@@ -7,12 +8,16 @@ import { inject as service } from '@ember/service';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import $ from 'jquery';
 import timeRange, { toCustomLocaleString, CONSTANT } from 'screwdriver-ui/utils/time-range';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
 
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 const locked = Symbol('locked');
 
 export default Controller.extend({
   router: service(),
   session: service(),
+  shuttle: service(),
   queryParams: [
     {
       jobId: { type: 'string' }
@@ -23,6 +28,7 @@ export default Controller.extend({
   eventsChartName: 'eventsChart',
   buildsChartName: 'buildsChart',
   stepsChartName: 'stepsChart',
+  downtimeJobsChartName: 'downtimeJobsChart',
   selectedRange: '1wk',
   timeRanges: [
     { alias: '6hr', value: '6hr' },
@@ -83,6 +89,7 @@ export default Controller.extend({
     this.set(this.eventsChartName, null);
     this.set(this.buildsChartName, null);
     this.set(this.stepsChartName, null);
+    this.set(this.downtimeJobsChartName, null);
   },
   /**
    * Memoized range generator
@@ -134,6 +141,90 @@ export default Controller.extend({
       };
     }
   }),
+
+  downtimeJobsMetrics: computed('startTime', 'endTime', function getDowntimeJobsMetrics() {
+    const downtimeStatuses = ['FAILURE'];
+    const { pipeline, startTime, endTime } = this;
+    const { id: pipelineId } = pipeline;
+
+    let downtimeJobs = [];
+
+    if (pipeline.settings && pipeline.settings.metricsDowntimeJobs) {
+      downtimeJobs = pipeline.settings.metricsDowntimeJobs;
+    }
+
+    return ObjectPromiseProxy.create({
+      promise: resolve(
+        this.shuttle
+          .getPipelineDowntimeJobsMetrics(
+            pipelineId,
+            downtimeJobs,
+            downtimeStatuses,
+            startTime,
+            endTime
+          )
+          .then(metrics => {
+            this.set('downtimeJobsChartData', metrics);
+
+            let builds = metrics.map(m => m.builds.length);
+
+            let duration = metrics.map(m => {
+              let downtime = 0;
+
+              if (m.isDowntimeEvent) {
+                // minutes to hours
+                downtime = (m.downtimeDuration / 60).toFixed(2);
+              }
+
+              return downtime;
+            });
+
+            let downtimeJobsChartData = {
+              columns: [['duration', ...duration], ['builds', ...builds]],
+              axes: {
+                duration: 'y',
+                builds: 'y2'
+              },
+              types: {
+                duration: 'bar',
+                builds: 'line'
+              },
+              names: {
+                duration: 'Duration',
+                builds: 'Build Count'
+              },
+              colors: {
+                duration: '#ea0000',
+                builds: '#0066df'
+              }
+              // groups: [['duration'], ['builds']]
+            };
+
+            return downtimeJobsChartData;
+          })
+      )
+    });
+  }),
+
+  downtimeJobsLegends: computed(function downtimeJobsLegends() {
+    return {
+      left: [
+        {
+          key: 'Downtime (MIN)',
+          name: 'Downtime (MIN)',
+          style: `border-color: #ea0000`
+        }
+      ],
+      right: [
+        {
+          key: 'Build Count',
+          name: 'Build Count',
+          style: `border-color: #0066df`
+        }
+      ]
+    };
+  }),
+
   eventLegend: computed('inTrendlineView', 'metrics.events', {
     get() {
       if (this.inTrendlineView) {
@@ -267,7 +358,14 @@ export default Controller.extend({
           values(times, domain) {
             const [x0, x1] = domain.map(Math.floor);
             const offset = 1;
-            const canvasWidth = self.get('eventsChart').internal.width;
+
+            let chart = self.get('eventsChart');
+
+            if (!chart) {
+              chart = self.get('downtimeJobsChart');
+            }
+
+            const canvasWidth = chart.internal.width;
             const diff = times[x1 - 2] - times[x0];
 
             let tickLabelWidth = 80;
@@ -328,6 +426,35 @@ export default Controller.extend({
     // override default with configured functions
     return { y: { ...axis.y }, x: { ...axis.x, tick: { ...axis.x.tick, values, format } } };
   },
+  downtimeJobsAxis: computed('axis', 'downtimeJobsMetrics', 'isUTC', function() {
+    const { axis, downtimeJobsChartData } = this;
+    const times = downtimeJobsChartData.map(m => new Date(m.createTime));
+
+    let { values, format } = axis.x.tick;
+
+    values = values.bind(null, times);
+    format = format.bind(null, times);
+
+    // override default with configured functions
+    return {
+      x: { ...axis.x, tick: { ...axis.x.tick, values, format } },
+      y: { ...axis.y },
+      y2: {
+        min: 0,
+        tick: {
+          outer: false,
+          format(d) {
+            if (Math.floor(d) !== d) {
+              return '';
+            }
+
+            return d;
+          }
+        },
+        show: true
+      }
+    };
+  }),
   eventsAxis: computed('axis', 'metrics.events.createTime', 'isUTC', {
     get() {
       return this.generateAxis('events');
@@ -395,9 +522,13 @@ export default Controller.extend({
 
                 if (d.value) {
                   html.keys.push(`<p class="legend" style="border-color:${c}">${name}</p>`);
-                  html.values.push(
-                    `<p>${humanizeDuration(d.value * 60 * 1e3, { round: true })}</p>`
-                  );
+                  if (d.id === 'builds') {
+                    html.values.push(`<p>${d.value}</p>`);
+                  } else {
+                    html.values.push(
+                      `<p>${humanizeDuration(d.value * 60 * 1e3, { round: true })}</p>`
+                    );
+                  }
                 }
 
                 return html;
@@ -523,7 +654,7 @@ export default Controller.extend({
   },
   onInitFns: computed(function onInitOuter() {
     const self = this;
-    const { eventsChartName, buildsChartName, stepsChartName } = this;
+    const { eventsChartName, buildsChartName, stepsChartName, downtimeJobsChartName } = this;
 
     /**
      * unlock tooltip
@@ -739,6 +870,9 @@ export default Controller.extend({
       },
       [stepsChartName]() {
         onInitInner.call(this, stepsChartName);
+      },
+      [downtimeJobsChartName]() {
+        onInitInner.call(this, downtimeJobsChartName);
       }
     };
   }),

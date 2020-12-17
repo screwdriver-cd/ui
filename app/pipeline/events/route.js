@@ -6,12 +6,14 @@ import RSVP from 'rsvp';
 export default Route.extend({
   triggerService: service('pipeline-triggers'),
   routeAfterAuthentication: 'pipeline.events',
+  pipelineService: service('pipeline'),
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
   },
   setupController(controller, model) {
     this._super(controller, model);
     controller.set('activeTab', 'events');
+    this.get('pipelineService').setBuildsLink('pipeline.events');
   },
   model() {
     this.controllerFor('pipeline.events').set('pipeline', this.pipeline);

@@ -55,13 +55,15 @@ module.exports = environment => {
       MINIMUM_JOBNAME_LENGTH: 20,
       NUM_EVENTS_LISTED: 5,
       NUM_PIPELINES_LISTED: 50,
-      LIST_VIEW_PAGE_SIZE: 10,
+      LIST_VIEW_PAGE_SIZE: 20,
       NUM_BUILDS_LISTED: 5,
       MAX_LOG_LINES: 1000,
       DEFAULT_LOG_PAGE_SIZE: 10,
       FORCE_RELOAD_WAIT: 100, // Wait 100ms before force reload
       WAITING_TO_SCROLL_TIME: 1000,
-      DEBOUNCED_SCROLL_TIME: 3000
+      DEBOUNCED_SCROLL_TIME: 3000,
+      RELEASE_VERSION: 'stable',
+      DOWNTIME_JOBS: true
     },
     moment: {
       allowEmpty: true // allow empty dates
@@ -73,7 +75,10 @@ module.exports = environment => {
   };
 
   if (environment === 'development') {
+    delete require.cache[require.resolve('./local.js')];
     const localAppConfig = require('./local.js'); // eslint-disable-line global-require
+
+    console.log('localAppConfig', localAppConfig); // eslint-disable-line no-console
 
     if (localAppConfig) {
       Object.assign(ENV.APP, localAppConfig);
@@ -106,6 +111,8 @@ module.exports = environment => {
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
     ENV.APP.FORCE_RELOAD_WAIT = 0;
+
+    ENV.APP.DOWNTIME_JOBS = true;
   }
 
   if (environment === 'production') {

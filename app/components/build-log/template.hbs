@@ -16,17 +16,15 @@
         <span class="content"></span>
       </div>
       <div>
-        <a onClick={{action "toggleZoom"}} alt="Toggle full screen logs">{{fa-icon "compress"}}</a>
-        <a onClick={{action "toggleLineWrap"}} alt="Toggle line wrapping">{{fa-icon "ellipsis-h"}}</a>
-      </div>
-      <div>
-        <a onClick={{action "scrollToTop"}}>{{fa-icon "arrow-up"}}Go to Top</a>
-        <a onClick={{action "scrollToBottom"}}>{{fa-icon "arrow-down"}}Go to Bottom</a>
+        <a onClick={{action "toggleZoom"}} alt="Toggle full screen logs" title="Toggle fullscreen">{{fa-icon "compress"}}</a>
+        <a onClick={{action "toggleLineWrap"}} alt="Toggle line wrapping" title="Toggle wrap lines">{{inline-svg "word-wrap" class="img"}}</a>
+        <a onClick={{action "scrollToTop"}} title="Go to Top">{{fa-icon "arrow-up"}}</a>
+        <a onClick={{action "scrollToBottom"}} title="Go to Bottom">{{fa-icon "arrow-down"}}</a>
         {{#unless inProgress}}
           {{#if isDownloading}}
             <span>{{fa-icon "spinner" spin=true}}Downloading</span>
           {{else}}
-            <a onClick={{action "download"}}>{{fa-icon "download"}}Download</a>
+            <a onClick={{action "download"}} title="Download">{{fa-icon "download"}}</a>
           {{/if}}
           <a id="downloadLink" href download hidden></a>
         {{/unless}}

@@ -1,6 +1,8 @@
 {{#if session.isAuthenticated}}
   {{#if (not session.data.authenticated.isGuest)}}
-    {{pipeline-nav pipeline=pipeline}}
+    {{pipeline-nav
+      pipeline=pipeline
+    }}
   {{/if}}
 {{/if}}
 
@@ -27,31 +29,19 @@
       setShowListView=(action "setShowListView")
     }}
 
-    {{#if showListView}}
-      {{pipeline-list-view
-        pipeline=pipeline
-        jobs=jobs
-        jobsDetails=jobsDetails
-        updateListViewJobs=(action "updateListViewJobs")
-        refreshListViewJobs=(action "refreshListViewJobs")
-        startSingleBuild=(action "startSingleBuild")
-        stopBuild=(action "stopBuild")
-        startDetachedBuild=(action "startDetachedBuild")
-      }}
-    {{else}}
-      {{pipeline-workflow
-        pipeline=pipeline
-        showDownstreamTriggers=showDownstreamTriggers
-        completeWorkflowGraph=completeWorkflowGraph
-        workflowGraph=pipeline.workflowGraph
-        jobs=jobs
-        selectedEventObj=selectedEventObj
-        selected=selected
-        startDetachedBuild=(action "startDetachedBuild")
-        stopBuild=(action "stopBuild")
-        authenticated=session.isAuthenticated
-      }}
-    {{/if}}
+    {{pipeline-workflow
+      jobId=jobId
+      pipeline=pipeline
+      showDownstreamTriggers=showDownstreamTriggers
+      completeWorkflowGraph=completeWorkflowGraph
+      workflowGraph=pipeline.workflowGraph
+      jobs=jobs
+      selectedEventObj=selectedEventObj
+      selected=selected
+      startDetachedBuild=(action "startDetachedBuild")
+      stopBuild=(action "stopBuild")
+      authenticated=session.isAuthenticated
+    }}
 
   </div>
   <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view {{if showListView "disabled"}}" onScroll={{action "onEventListScroll"}}>
@@ -94,6 +84,7 @@
                 isRestricted=isRestricted
                 startBuild=(action "startPRBuild")
                 stopPRBuilds=(action "stopPRBuilds")
+                workflowGraph=pipeline.workflowGraph
               }}
             {{else}}
               <div class="alert">No open pull requests</div>
