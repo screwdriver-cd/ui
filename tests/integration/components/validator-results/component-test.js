@@ -121,9 +121,9 @@ module('Integration | Component | validator results', function(hooks) {
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
-  test('it renders warnAnnotations results', async function(assert) {
+  test('it renders warnMessages results', async function(assert) {
     this.set('validationMock', {
-      warnAnnotations: ['there is an warning'],
+      warnMessages: ['there is an warning'],
       template: {
         name: 'batman/batmobile',
         version: '1.0.0',
