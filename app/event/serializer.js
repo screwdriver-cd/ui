@@ -23,7 +23,8 @@ export const sortWorkflowGraph = workflowGraph => {
 
       // we only sort the nodes that are not in the first column.
       nodesNotInFirstColumn.sort(
-        (node1, node2) => compare(node1.name, node2.name) || compare(node1.id, node2.id)
+        (node1, node2) =>
+          compare(node1.name, node2.name) || compare(node1.id.toString(), node2.id.toString())
       );
       workflowGraph.nodes = [...nodesInFirstColumn, ...nodesNotInFirstColumn];
     }
