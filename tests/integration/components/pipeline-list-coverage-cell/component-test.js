@@ -8,15 +8,17 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Component | pipeline-list-coverage-cell', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders with loading', async function(assert) {
+  test('it renders with N/A', async function(assert) {
     assert.expect(2);
-    await render(hbs`{{pipeline-list-coverage-cell loading=true loaded=true}}`);
+    await render(hbs`{{pipeline-list-coverage-cell}}`);
 
-    assert.dom('.coverage-value').exists({ count: 0 });
-    assert.equal(find('.coverage').textContent.trim(), 'Loading');
+    return settled().then(() => {
+      assert.dom('.coverage-value').exists({ count: 0 });
+      assert.equal(find('.coverage').textContent.trim(), 'N/A');
+    });
   });
 
-  test('it renders', async function(assert) {
+  test('it renders with actual coverage value', async function(assert) {
     assert.expect(2);
 
     const server = new Pretender();
@@ -35,7 +37,7 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
       })
     ]);
 
-    await render(hbs`{{pipeline-list-coverage-cell coverage=coverage loading=false loaded=true}}`);
+    await render(hbs`{{pipeline-list-coverage-cell}}`);
 
     return settled().then(() => {
       assert.dom('.coverage-value').exists({ count: 1 });
