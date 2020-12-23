@@ -106,6 +106,7 @@ export default Component.extend({
               ctrl.set('errorMessage', `PR: ${prLink}`);
               this.set('showCreatePipeline', false);
             } catch (e) {
+              // eslint-disable-next-line no-console
               console.error('error', e);
             }
           }

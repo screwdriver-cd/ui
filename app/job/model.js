@@ -3,6 +3,7 @@ import { alias, equal, match } from '@ember/object/computed';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import { SHOULD_RELOAD_NO, SHOULD_RELOAD_YES } from '../mixins/model-reloader';
 
 export default DS.Model.extend({
   pipelineId: DS.attr('string'),
@@ -52,6 +53,8 @@ export default DS.Model.extend({
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   // Reload builds only if the pr job build is still running
   shouldReload() {
-    return this.isPR && this.builds.any(b => isActiveBuild(b.get('status'), b.get('endTime')));
+    return this.isPR && this.builds.any(b => isActiveBuild(b.get('status'), b.get('endTime')))
+      ? SHOULD_RELOAD_YES
+      : SHOULD_RELOAD_NO;
   }
 });

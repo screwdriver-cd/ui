@@ -107,9 +107,10 @@ const walkGraph = (graph, start, x, y) => {
     if (!obj.pos) {
       obj.pos = { x, y: y[x] };
       y[x] += 1;
-    }
 
-    walkGraph(graph, name, x + 1, y);
+      // walk if not yet visited
+      walkGraph(graph, name, x + 1, y);
+    }
   });
 };
 

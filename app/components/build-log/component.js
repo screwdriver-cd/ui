@@ -11,6 +11,9 @@ export default Component.extend({
   logService: service('build-logs'),
   store: service(),
   classNames: ['build-log'],
+  classNameBindings: ['fullScreen:fullScreen', 'lineWrap:lineWrap'],
+  fullScreen: false,
+  lineWrap: true,
   autoscroll: true,
   isFetching: false,
   isDownloading: false,
@@ -365,19 +368,9 @@ export default Component.extend({
     },
     download() {
       const { buildId, stepName } = this;
+      const downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/steps/${stepName}/logs?type=download`;
 
-      if (this.logService.getCache(buildId, stepName, 'logs')) {
-        set(this, 'isDownloading', true);
-
-        this.getLogs(true).then(() => {
-          const el = this.element.querySelector('#downloadLink');
-
-          el.setAttribute('download', `${buildId}-${stepName}.log`);
-          el.setAttribute('href', this.logService.buildLogBlobUrl(buildId, stepName));
-          el.click();
-          set(this, 'isDownloading', false);
-        });
-      }
+      window.open(downloadLink, '_blank');
     },
     logScroll() {
       const container = this.element.querySelectorAll('.wrap')[0];
@@ -406,6 +399,12 @@ export default Component.extend({
       index = index + 1 >= timeTypes.length ? 0 : index + 1;
       localStorage.setItem('screwdriver.logs.timeFormat', timeTypes[index]);
       set(this, 'timeFormat', timeTypes[index]);
+    },
+    toggleZoom() {
+      this.toggleProperty('fullScreen');
+    },
+    toggleLineWrap() {
+      this.toggleProperty('lineWrap');
     }
   }
 });

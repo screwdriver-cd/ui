@@ -124,11 +124,7 @@ export default Component.extend({
       }
     },
 
-    onUpdateDropdownValue(model, propertyName, value) {
-      this.updateValue({ model, propertyName, value });
-    },
-
-    onUpdateValue(value, model, propertyName) {
+    onUpdateValue(model, propertyName, value) {
       this.updateValue({ model, propertyName, value });
     },
 

@@ -1,6 +1,7 @@
 import { computed } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
+import $ from 'jquery';
 
 /**
  * Screwdriver Shuttle Service
@@ -130,5 +131,47 @@ export default Service.extend({
     const raw = true;
 
     return this.fetchFromApi(method, url, data, raw);
+  },
+
+  /**
+   * updatePipelineSettings
+   * @param  {Number} pipelineId  Pipeline Id
+   * @param  {Object} settings
+   * @param  {Array}  settings.metricsDowntimeJobs Job Ids to caluclate downtime
+   * @return {Promise}
+   */
+  async updatePipelineSettings(pipelineId, settings) {
+    const method = 'put';
+    const url = `/pipelines/${pipelineId}`;
+    const { metricsDowntimeJobs = [] } = settings;
+
+    const data = {
+      settings: {
+        metricsDowntimeJobs: metricsDowntimeJobs.map(job => job.id)
+      }
+    };
+
+    return this.fetchFromApi(method, url, data);
+  },
+
+  /**
+   * getPipelineDowntimeJobsMetrics
+   * @param  {Number} pipelineId        Pipeline Id
+   * @param  {Array}  downtimeJobs      Job Ids
+   * @param  {Array}  downtimeStatuses  Build Statuses
+   * @return {Promise}
+   */
+  async getPipelineDowntimeJobsMetrics(
+    pipelineId,
+    downtimeJobs,
+    downtimeStatuses,
+    startTime,
+    endTime
+  ) {
+    const method = 'get';
+    const query = $.param({ downtimeJobs, downtimeStatuses, startTime, endTime });
+    const url = `/pipelines/${pipelineId}/metrics?${query}`;
+
+    return this.fetchFromApi(method, url);
   }
 });

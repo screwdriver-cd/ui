@@ -10,7 +10,8 @@ const { SDDOC_URL, SLACK_URL } = ENV.APP;
 module('Unit | Instance Initializer | supplementary config', function(hooks) {
   hooks.beforeEach(function() {
     run(() => {
-      this.application = Application.create();
+      this.TestApplication = Application.extend();
+      this.application = this.TestApplication.create({ autoboot: false });
       this.appInstance = this.application.buildInstance();
       delete window.SUPPLEMENTARY_CONFIG;
     });

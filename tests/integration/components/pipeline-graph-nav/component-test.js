@@ -42,25 +42,31 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       setShowListView=setShowListView
     }}`);
 
-    assert.dom('.row strong').hasText('Pipeline');
     assert.dom('.row button').exists({ count: 4 });
 
-    const $columnTitles = this.element.querySelectorAll('.event-info .title');
-    const $links = this.element.querySelectorAll('.event-info a');
+    const $columnTitles = this.element.querySelectorAll('.row .event-info .title');
+    const $links = this.element.querySelectorAll('.row .event-info a');
 
-    assert.equal($columnTitles[0].innerText.trim(), 'COMMIT');
-    assert.equal($columnTitles[1].innerText.trim(), 'MESSAGE');
-    assert.equal($columnTitles[2].innerText.trim(), 'STATUS');
-    assert.equal($columnTitles[3].innerText.trim(), 'COMMITTER');
-    assert.equal($columnTitles[4].innerText.trim(), 'START DATE');
-    assert.equal($columnTitles[5].innerText.trim(), 'DURATION');
+    const compare = (elem, expected) => {
+      assert.equal(
+        (elem.innerText.trim() || elem.innerHTML.trim()).toUpperCase(),
+        expected.toUpperCase()
+      );
+    };
 
-    assert.equal($links[0].innerText.trim(), '#abc123');
-    assert.equal($links[1].innerText.trim(), 'anonymous');
+    compare($columnTitles[0], 'COMMIT');
+    compare($columnTitles[1], 'MESSAGE');
+    compare($columnTitles[2], 'STATUS');
+    compare($columnTitles[3], 'COMMITTER');
+    compare($columnTitles[4], 'START DATE');
+    compare($columnTitles[5], 'DURATION');
+
+    compare($links[0], '#abc123');
+    compare($links[1], 'anonymous');
 
     assert.dom('.SUCCESS').exists({ count: 1 });
 
-    assert.dom('.btn-group').hasText('Most Recent Last Successful');
+    assert.dom('.event-options-toggle').hasText('Most Recent Last Successful');
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
@@ -95,53 +101,8 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       setShowListView=setShowListView
     }}`);
 
-    this.element.querySelector('button').click();
-    assert.equal(get(this, 'selected'), 3);
-  });
-
-  test('it updates showListView and disables event info', async function(assert) {
-    assert.expect(8);
-    set(this, 'obj', { truncatedSha: 'abc123' });
-    set(this, 'selected', 2);
-    set(this, 'startBuild', () => {
-      assert.ok(true);
-    });
-    set(this, 'currentEventType', 'pipeline');
-    set(this, 'showDownstreamTriggers', false);
-    set(this, 'setDownstreamTrigger', () => {
-      assert.ok(true);
-    });
-    set(this, 'showListView', false);
-    set(this, 'setShowListView', () => {
-      set(this, 'showListView', !this.showListView);
-      assert.ok(true);
-    });
-
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
-
-    assert.notOk(get(this, 'showListView'));
-    assert.dom('.event-info').doesNotHaveClass('disabled');
-
-    this.element.querySelectorAll('button')[3].click();
-    assert.ok(get(this, 'showListView'));
-    assert.dom('.event-info').hasClass('disabled');
-
     this.element.querySelectorAll('button')[2].click();
-    assert.notOk(get(this, 'showListView'));
-    assert.dom('.event-info').doesNotHaveClass('disabled');
+    assert.equal(get(this, 'selected'), 3);
   });
 
   test('it renders when selectedEvent is a PR event', async function(assert) {
@@ -223,10 +184,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       setShowListView=setShowListView
     }}`);
 
-    assert.dom('.row strong').hasText('Pipeline');
     assert.dom('.row button').exists({ count: 4 });
     assert.dom('.SKIPPED').exists({ count: 1 });
-    assert.dom('.btn-group').hasText('Most Recent Last Successful');
+    assert.dom('.event-options-toggle').hasText('Most Recent Last Successful');
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
 

@@ -23,16 +23,31 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       ]
     });
 
-    this.set('jobMock', job);
+    const workflowgraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
 
-    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
+    this.set('jobMock', job);
+    this.set('workflowGraphMock', workflowgraph);
+
+    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.equal(
       find('.detail')
         .textContent.trim()
         .replace(/\s{2,}/g, ' '),
-      'main Started now'
+      'myname Started now'
     );
     assert.dom('.date').hasText('Started now');
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -55,9 +70,24 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       ]
     });
 
-    this.set('jobMock', job);
+    const workflowgraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
 
-    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
+    this.set('jobMock', job);
+    this.set('workflowGraphMock', workflowgraph);
+
+    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
 
     assert.dom('.UNSTABLE').exists({ count: 1 });
     assert.dom('.fa-exclamation-circle').exists({ count: 1 });
@@ -79,9 +109,24 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       ]
     });
 
-    this.set('jobMock', job);
+    const workflowgraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
 
-    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
+    this.set('jobMock', job);
+    this.set('workflowGraphMock', workflowgraph);
+
+    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
 
     assert.dom('.FAILURE').exists({ count: 1 });
     assert.dom('.fa-times-circle-o').exists({ count: 1 });
@@ -103,9 +148,24 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       ]
     });
 
-    this.set('jobMock', job);
+    const workflowgraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
 
-    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
+    this.set('jobMock', job);
+    this.set('workflowGraphMock', workflowgraph);
+
+    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
 
     assert.dom('.QUEUED').exists({ count: 1 });
     assert.dom('.fa-spinner').exists({ count: 1 });
@@ -127,9 +187,24 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       ]
     });
 
-    this.set('jobMock', job);
+    const workflowgraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
 
-    await render(hbs`{{pipeline-pr-view job=jobMock}}`);
+    this.set('jobMock', job);
+    this.set('workflowGraphMock', workflowgraph);
+
+    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
 
     assert.dom('.RUNNING').exists({ count: 1 });
     assert.dom('.fa-spinner').exists({ count: 1 });

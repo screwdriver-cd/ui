@@ -12,8 +12,10 @@ Router.map(function route() {
   this.route('home', { path: '/' });
   this.route('builds', { path: '/builds/:build_id' });
   this.route('pipeline', { path: '/pipelines/:pipeline_id' }, function secretsRoute() {
-    this.route('events', function eventsRoute() {
+    this.route('jobs', function eventsRoute() {
       this.route('index', { path: '/' });
+    });
+    this.route('events', function eventsRoute() {
       this.route('show', { path: '/:event_id' });
     });
     this.route('secrets');
