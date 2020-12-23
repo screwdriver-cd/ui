@@ -42,6 +42,7 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
     return settled().then(() => {
       assert.dom('.coverage-value').exists({ count: 1 });
       assert.equal(find('.coverage-value').textContent.trim(), '71.4%');
+      server.shutdown();
     });
   });
 });
