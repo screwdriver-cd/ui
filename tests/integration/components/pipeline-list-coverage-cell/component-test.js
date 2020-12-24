@@ -5,8 +5,18 @@ import Pretender from 'pretender';
 import ENV from 'screwdriver-ui/config/environment';
 import hbs from 'htmlbars-inline-precompile';
 
+let server;
+
 module('Integration | Component | pipeline-list-coverage-cell', function(hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function() {
+    server = new Pretender();
+  });
+
+  hooks.afterEach(function() {
+    server.shutdown();
+  });
 
   test('it renders with N/A', async function(assert) {
     assert.expect(2);
@@ -20,8 +30,6 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
 
   test('it renders with actual coverage value', async function(assert) {
     assert.expect(2);
-
-    const server = new Pretender();
 
     server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info`, () => [
       200,
@@ -42,7 +50,6 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
     return settled().then(() => {
       assert.dom('.coverage-value').exists({ count: 1 });
       assert.equal(find('.coverage-value').textContent.trim(), '71.4%');
-      server.shutdown();
     });
   });
 });
