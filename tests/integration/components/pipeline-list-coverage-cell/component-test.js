@@ -21,11 +21,10 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
   test('it renders with N/A', async function(assert) {
     assert.expect(2);
     await render(hbs`{{pipeline-list-coverage-cell}}`);
+    await settled();
 
-    return settled().then(() => {
-      assert.dom('.coverage-value').exists({ count: 0 });
-      assert.equal(find('.coverage').textContent.trim(), 'N/A');
-    });
+    assert.dom('.coverage-value').exists({ count: 0 });
+    assert.equal(find('.coverage').textContent.trim(), 'N/A');
   });
 
   test('it renders with actual coverage value', async function(assert) {
@@ -46,10 +45,9 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
     ]);
 
     await render(hbs`{{pipeline-list-coverage-cell}}`);
+    await settled();
 
-    return settled().then(() => {
-      assert.dom('.coverage-value').exists({ count: 1 });
-      assert.equal(find('.coverage-value').textContent.trim(), '71.4%');
-    });
+    assert.dom('.coverage-value').exists({ count: 1 });
+    assert.equal(find('.coverage-value').textContent.trim(), '71.4%');
   });
 });
