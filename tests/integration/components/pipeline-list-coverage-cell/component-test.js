@@ -20,15 +20,14 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
   });
 
   test('it renders with N/A', async function(assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     this.owner.unregister('component:pipeline-list-coverage-cell');
     this.owner.register(
       'component:pipeline-list-coverage-cell',
       PipelineCellComponent.extend({
-        didEnterViewport() {
-          assert.ok('didEnterViewport called');
-        }
+        // eslint-disable-next-line no-empty-function
+        async didEnterViewport() {}
       })
     );
 
