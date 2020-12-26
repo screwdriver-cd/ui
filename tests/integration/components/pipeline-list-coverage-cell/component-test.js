@@ -13,6 +13,8 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
 
   hooks.beforeEach(function() {
     server = new Pretender();
+    // make sure component is in viewport to trigger didEnterView event
+    document.getElementById('ember-testing').scrollIntoView();
   });
 
   hooks.afterEach(function() {
