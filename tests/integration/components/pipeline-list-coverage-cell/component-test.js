@@ -4,6 +4,7 @@ import { render, find, settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import ENV from 'screwdriver-ui/config/environment';
 import hbs from 'htmlbars-inline-precompile';
+import PipelineCellComponent from 'screwdriver-ui/components/pipeline-list-coverage-cell/component';
 
 let server;
 
@@ -19,7 +20,18 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
   });
 
   test('it renders with N/A', async function(assert) {
-    assert.expect(2);
+    assert.expect(3);
+
+    this.owner.unregister('component:pipeline-list-coverage-cell');
+    this.owner.register(
+      'component:pipeline-list-coverage-cell',
+      PipelineCellComponent.extend({
+        didEnterViewport() {
+          assert.ok('didEnterViewport called');
+        }
+      })
+    );
+
     await render(hbs`{{pipeline-list-coverage-cell}}`);
     await settled();
 
@@ -29,6 +41,19 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
 
   test('it renders with actual coverage value', async function(assert) {
     assert.expect(2);
+
+    const jobData = {
+      jobId: 23,
+      buildId: 670131,
+      startTime: '2020-12-24T06:30:51.608Z',
+      endTime: '2020-12-24T06:33:44.157Z',
+      prNum: null,
+      jobName: 'beta',
+      pipelineName: 'screwdriver-cd/ui',
+      prParentJobId: null
+    };
+
+    this.set('value', jobData);
 
     server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info`, () => [
       200,
@@ -44,7 +69,7 @@ module('Integration | Component | pipeline-list-coverage-cell', function(hooks) 
       })
     ]);
 
-    await render(hbs`{{pipeline-list-coverage-cell}}`);
+    await render(hbs`{{pipeline-list-coverage-cell value=value}}`);
     await settled();
 
     assert.dom('.coverage-value').exists({ count: 1 });
