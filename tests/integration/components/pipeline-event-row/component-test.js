@@ -79,7 +79,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
@@ -125,8 +125,8 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
-    assert.dom('.last-successful').exists({ count: 1 });
-    assert.dom('.latest-commit').exists({ count: 1 });
+    assert.dom('.last-successful').doesNotExist();
+    assert.dom('.latest-commit').doesNotExist();
   });
 
   test('it render when event creator and commit author is different', async function(assert) {
@@ -156,7 +156,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
@@ -190,7 +190,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
@@ -202,7 +202,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
   });
 
   test('it render when event is trigger by same pipeline', async function(assert) {
-    assert.expect(9);
+    assert.expect(11);
     this.actions.eventClick = () => {
       assert.ok(true);
     };
@@ -226,7 +226,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
@@ -238,7 +238,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
   });
 
   test('it render when startFrom is missing', async function(assert) {
-    assert.expect(6);
+    assert.expect(8);
     this.actions.eventClick = () => {
       assert.ok(true);
     };
@@ -260,7 +260,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
@@ -299,7 +299,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
 
     assert.dom('.SKIPPED').exists({ count: 1 });
     assert.dom('.status .fa-exclamation-circle').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('[skip ci] skip ci build.');
     assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
