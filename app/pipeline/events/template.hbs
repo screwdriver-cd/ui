@@ -58,6 +58,7 @@
       <div class="tab-content">
         {{#tab.pane activeId=activeTab elementId="events" title="Events"}}
           {{pipeline-events-list
+            pipeline=pipeline
             events=events
             selected=(mut selected)
             selectedEvent=selectedEvent
@@ -70,6 +71,7 @@
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
           {{#if prChainEnabled}}
             {{pipeline-events-list
+            pipeline=pipeline
             events=events
             selected=(mut selected)
             selectedEvent=selectedEvent

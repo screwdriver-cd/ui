@@ -12,6 +12,7 @@ const event = {
   status: 'SUCCESS',
   type: 'pipeline',
   causeMessage: 'test',
+  sha: 'sha3',
   commit: {
     author: {
       url: '#',
@@ -68,8 +69,13 @@ module('Integration | Component | pipeline event row', function(hooks) {
     const eventMock = EmberObject.create(copy(event, true));
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(
+      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
+    );
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -80,6 +86,8 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
   test('it renders with pr event', async function(assert) {
@@ -100,8 +108,13 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=4 lastSuccessful=3}}`);
+    await render(
+      hbs`{{pipeline-event-row event=event selectedEvent=4 latestCommit=latestCommit lastSuccessful=3}}`
+    );
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -112,6 +125,8 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
   test('it render when event creator and commit author is different', async function(assert) {
@@ -131,8 +146,13 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(
+      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
+    );
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -143,6 +163,8 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Committed by: superman Started by: batman');
     assert.dom('.date').hasText('Started now');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
   test('it render when event is trigger by external pipeline', async function(assert) {
@@ -158,8 +180,13 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(
+      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
+    );
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -170,6 +197,8 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Committed by: batman Started by: External Trigger');
     assert.dom('.date').hasText('Started now');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
   test('it render when event is trigger by same pipeline', async function(assert) {
@@ -187,8 +216,13 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(
+      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
+    );
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -199,6 +233,8 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
   test('it render when startFrom is missing', async function(assert) {
@@ -214,8 +250,13 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(
+      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
+    );
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -223,6 +264,8 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.message').hasText('this was a test');
     assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
   test('it does not render graph when skipped event', async function(assert) {
@@ -246,8 +289,13 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(
+      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
+    );
 
     assert.dom('.SKIPPED').exists({ count: 1 });
     assert.dom('.status .fa-exclamation-circle').exists({ count: 1 });
@@ -255,5 +303,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.message').hasText('[skip ci] skip ci build.');
     assert.dom('.by').hasText('Started and committed by: batman');
     assert.dom('.date').hasText('Started now');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 });

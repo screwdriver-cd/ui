@@ -173,5 +173,17 @@ export default Service.extend({
     const url = `/pipelines/${pipelineId}/metrics?${query}`;
 
     return this.fetchFromApi(method, url);
+  },
+
+  /**
+   * getLatestCommitEvent
+   * @param  {Number} pipelineId  Pipeline Id
+   * @return {Promise}
+   */
+  async getLatestCommitEvent(pipelineId) {
+    const method = 'get';
+    const url = `/pipelines/${pipelineId}/latestCommitEvent`;
+
+    return this.fetchFromApi(method, url);
   }
 });

@@ -4,10 +4,15 @@ import { scheduleOnce } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  shuttle: service(),
   router: service(),
   errorMessage: '',
   eventsList: computed('events.[]', {
     get() {
+      this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
+        this.set('latestCommit', event);
+      });
+
       return get(this, 'events');
     }
   }),
