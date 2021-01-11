@@ -1,14 +1,14 @@
 import { sort } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import { computed, observer } from '@ember/object';
+import { computed } from '@ember/object';
 import Table from 'ember-light-table';
-import { debounce } from '@ember/runloop';
 
 export default Component.extend({
+  template: service(),
   classNames: [''],
   table: null,
   model: null,
-  search: null,
   query: null,
   collectionType: null,
   collectionDescription: null,
@@ -51,7 +51,7 @@ export default Component.extend({
       get() {
         const ns = this.filteringNamespace;
         const maintainer = this.filteringMaintainer;
-        const { search, trustedOnly } = this;
+        const { trustedOnly } = this;
 
         return this.model.filter(m => {
           let result = true;
@@ -66,15 +66,6 @@ export default Component.extend({
 
           if (result && maintainer) {
             result = result && m.maintainer === maintainer;
-          }
-
-          if (result && search) {
-            result =
-              result &&
-              (m.namespace.toLowerCase().includes(search) ||
-                m.name.toLowerCase().includes(search) ||
-                m.description.toLowerCase().includes(search) ||
-                m.maintainer.toLowerCase().includes(search));
           }
 
           return result;
@@ -150,39 +141,13 @@ export default Component.extend({
   refineModel() {
     this.table.setRows(this.refinedModel);
   },
-  onSearch() {
-    const search = this.query.trim().toLowerCase();
-
-    this.set('search', search);
-
-    if (!search) {
-      if (this.filteringNamespace) {
-        this.set(
-          'maintainers',
-          this.filteredModel
-            .mapBy('maintainer')
-            .uniq()
-            .sort()
-        );
-      }
-      if (this.filteringMaintainer) {
-        this.set(
-          'namespaces',
-          this.filteredModel
-            .mapBy('namespace')
-            .uniq()
-            .sort()
-        );
-      }
-    }
-
-    this.refineModel();
-  },
-  // eslint-disable-next-line ember/no-observers
-  onQuery: observer('query', function onSearchChange() {
-    debounce(this, 'onSearch', 250);
-  }),
   actions: {
+    search() {
+      this.template
+        .getAllTemplates({ search: this.query })
+        .then(model => this.setProperties({ model }));
+      this.table.setRows(this.model);
+    },
     sortByColumn(column) {
       if (column.sorted) {
         let vp = column.get('valuePath');

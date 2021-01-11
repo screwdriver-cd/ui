@@ -9,9 +9,6 @@
 <section class="row">
   <h5>
     <b>Screwdriver {{collectionType}}</b>
-    <span class="pull-right">
-      <span class="text-uppercase total">Total </span><span>{{filteredModel.length}}</span>
-    </span>
   </h5>
 
   <div class="row">
@@ -57,7 +54,7 @@
 
     <div class="col-sm-5">
       <input value="" placeholder="Search {{collectionType}}" type="search" oninput={{action (mut query) value="target.value"}}>
-      <span class="control-icon">{{fa-icon "search"}}</span>
+      <button class="control-icon" {{action "search"}}>{{fa-icon "search"}}</button>
     </div>
   </div>
 

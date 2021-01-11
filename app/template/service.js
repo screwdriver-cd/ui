@@ -33,33 +33,27 @@ export default Service.extend({
 
     return this.fetchData(url);
   },
-  getAllTemplates(namespace) {
+  getAllTemplates(config = {}) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates`;
+    const { namespace, search } = config;
 
-    let params = { compact: true, sortBy: 'createTime', sort: 'descending' };
+    let params = {
+      compact: true,
+      sortBy: 'createTime',
+      sort: 'descending',
+      page: 1,
+      count: 20
+    };
 
     if (namespace) {
-      params.namespace = namespace;
+      params.namespace = config.namespace;
     }
 
-    return this.fetchData(url, params)
-      .then(templatesFormatter)
-      .then(templates => {
-        // Reduce versions down to one entry
-        // FIXME: This should be done in API
+    if (search) {
+      params.search = config.search;
+    }
 
-        const result = [];
-        const names = {};
-
-        templates.forEach(t => {
-          if (!names[t.fullName]) {
-            names[t.fullName] = 1;
-            result.push(t);
-          }
-        });
-
-        return result;
-      });
+    return this.fetchData(url, params).then(templatesFormatter);
   },
   fetchData(url, params = {}) {
     const ajaxConfig = {

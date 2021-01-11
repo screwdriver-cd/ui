@@ -43,6 +43,8 @@
     position: absolute;
     top: 50%;
     right: 30px;
+    background: transparent;
+    border: none !important;
     @include transform(translateY(-50%));
   }
 
