@@ -92,4 +92,30 @@ module('Unit | Service | shuttle', function(hooks) {
       );
     });
   });
+
+  test('getLatestCommitEvent payload', function(assert) {
+    assert.expect(2);
+    let service = this.owner.lookup('service:shuttle');
+
+    server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/pipelines/123456/latestCommitEvent`, () => [
+      200,
+      {
+        'Content-Type': 'application/json',
+        'x-more-data': false
+      },
+      JSON.stringify({
+        id: 3,
+        sha: 'sha3'
+      })
+    ]);
+
+    const pipelineId = 123456;
+
+    service.getLatestCommitEvent(pipelineId).then(result => {
+      const { id, sha } = result;
+
+      assert.equal(id, '3', 'id is 3');
+      assert.equal(sha, 'sha3', 'sha is sha3');
+    });
+  });
 });
