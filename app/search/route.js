@@ -21,7 +21,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
     };
 
     if (params && params.query) {
-      pipelineListConfig.search = params.query.replace(/ /g, '');
+      pipelineListConfig.search = params.query.replace(/\s/g, '');
     }
 
     return RSVP.hash({
