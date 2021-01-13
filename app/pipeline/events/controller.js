@@ -161,6 +161,7 @@ export async function updateEvents(page) {
 
 export default Controller.extend(ModelReloaderMixin, {
   lastRefreshed: moment(),
+  expandedEventsGroup: {},
   shouldReload(model) {
     const event = model.events.find(m => m.isRunning);
 
