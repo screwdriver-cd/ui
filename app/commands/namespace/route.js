@@ -9,6 +9,6 @@ export default Route.extend({
     controller.set('targetNamespace', this.paramsFor('commands.namespace').namespace);
   },
   model(params) {
-    return this.command.getAllCommands(params.namespace);
+    return this.command.getAllCommands({ namespace: params.namespace });
   }
 });

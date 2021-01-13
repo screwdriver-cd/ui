@@ -22,8 +22,9 @@ export default Service.extend({
 
     return this.fetchData(url);
   },
-  getAllCommands(namespace) {
+  getAllCommands(config = {}) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands`;
+    const { namespace, search } = config;
 
     let params = { compact: true, sortBy: 'createTime' };
 
@@ -31,7 +32,15 @@ export default Service.extend({
       params.namespace = namespace;
     }
 
+    if (search) {
+      params.search = search;
+    }
+
     return this.fetchData(url, params).then(commands => {
+      if (!search) {
+        return commands;
+      }
+
       let unique = {};
 
       let uniqueCommands = commands.filter(c => {

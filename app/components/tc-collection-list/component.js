@@ -6,6 +6,7 @@ import Table from 'ember-light-table';
 
 export default Component.extend({
   template: service(),
+  command: service(),
   classNames: [''],
   table: null,
   model: null,
@@ -143,9 +144,15 @@ export default Component.extend({
   },
   actions: {
     search() {
-      this.template
-        .getAllTemplates({ search: this.query })
-        .then(model => this.setProperties({ model }));
+      if (this.collectionType === 'Commands') {
+        this.command
+          .getAllCommands({ search: this.query })
+          .then(model => this.setProperties({ model }));
+      } else if (this.collectionType === 'Templates') {
+        this.template
+          .getAllTemplates({ search: this.query })
+          .then(model => this.setProperties({ model }));
+      }
       this.table.setRows(this.model);
     },
     sortByColumn(column) {

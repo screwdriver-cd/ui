@@ -46,14 +46,34 @@ export default Service.extend({
     };
 
     if (namespace) {
-      params.namespace = config.namespace;
+      params.namespace = namespace;
     }
 
     if (search) {
-      params.search = config.search;
+      params.search = search;
     }
 
-    return this.fetchData(url, params).then(templatesFormatter);
+    return this.fetchData(url, params)
+      .then(templatesFormatter)
+      .then(templates => {
+        if (!search) {
+          return templates;
+        }
+        // Reduce versions down to one entry
+        // FIXME: This should be done in API
+
+        const result = [];
+        const names = {};
+
+        templates.forEach(t => {
+          if (!names[t.fullName]) {
+            names[t.fullName] = 1;
+            result.push(t);
+          }
+        });
+
+        return result;
+      });
   },
   fetchData(url, params = {}) {
     const ajaxConfig = {
