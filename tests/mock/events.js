@@ -24,6 +24,7 @@ const events = [
     },
     startFrom: '~commit',
     pipelineId: '12345',
+    groupEventId: '23452',
     sha: 'abcdef1029384',
     type: 'pipeline',
     workflowGraph: {
@@ -56,6 +57,7 @@ const events = [
       url: 'http://example.com/batcave/batmobile/pulls/42'
     },
     pipelineId: '12345',
+    groupEventId: '23453',
     type: 'pr',
     prNum: 42,
     sha: '1029384bbb',
@@ -89,6 +91,7 @@ const events = [
       url: 'http://example.com/batcave/batmobile/pulls/43'
     },
     pipelineId: '12345',
+    groupEventId: '23454',
     sha: '1030384bbb',
     type: 'pr',
     prNum: 43,

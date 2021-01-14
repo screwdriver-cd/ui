@@ -9,7 +9,10 @@ export default Component.extend({
   }),
   isExpanded: computed('expandedEventsGroup', 'events.[]', {
     get() {
-      return !!get(this, 'expandedEventsGroup')[this.events[0].groupEventId];
+      const expandedGroups = get(this, 'expandedEventsGroup');
+      const { groupEventId } = this.events[0];
+
+      return !!expandedGroups[groupEventId];
     }
   }),
   init() {

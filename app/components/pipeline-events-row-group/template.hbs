@@ -1,16 +1,18 @@
 <div class="pipeline-events-group">
   {{#each events as |event index|}}
     {{#if (eq index 0)}}
-      <a onclick={{action "toggleExpanded"}} class="pull-right expand-collapse">
-        {{#if (eq isExpanded true)}}
-          Collapse
-          {{fa-icon "chevron-circle-up"}}
-        {{else}}
-          Expend
-          {{fa-icon "chevron-circle-down"}}
-        {{/if}}
-      </a>
-      <span class="clearfix" />
+      {{#if (not-eq events.length 1)}}
+        <a onclick={{action "toggleExpanded"}} class="pull-right expand-collapse">
+          {{#if (eq isExpanded true)}}
+            Collapse
+            {{fa-icon "chevron-circle-up"}}
+          {{else}}
+            Expand
+            {{fa-icon "chevron-circle-down"}}
+          {{/if}}
+        </a>
+        <span class="clearfix" />
+      {{/if}}
       {{pipeline-event-row
               event=event
               selectedEvent=selectedEvent
