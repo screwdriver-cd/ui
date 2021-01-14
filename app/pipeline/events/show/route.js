@@ -38,6 +38,13 @@ export default class PipelineEventsShowRoute extends Route {
       const event = await this.store.findRecord('event', eventId);
 
       pipelineEventsController.paginateEvents.pushObject(event);
+    } else {
+      const { groupEventId } = desiredEvent;
+
+      const expandedEventsGroup = pipelineEventsController.get('pipelineEventsController') || {};
+
+      expandedEventsGroup[groupEventId] = true;
+      pipelineEventsController.set('expandedEventsGroup', expandedEventsGroup);
     }
 
     pipelineEventsController.set('selected', eventId);

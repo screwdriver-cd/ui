@@ -39,8 +39,10 @@ export default Component.extend({
 
       if (eventType !== 'pr') {
         const currentEvent = this.groups.find(g => g.find(e => e.id === id))[0];
-
         const { pipelineId } = currentEvent;
+
+        this.expandedEventsGroup[currentEvent.groupEventId] = true;
+        set(this, 'expandedEventsGroup', this.expandedEventsGroup);
 
         this.router.transitionTo('pipeline.events.show', pipelineId, id);
       }
