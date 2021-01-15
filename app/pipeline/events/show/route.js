@@ -41,9 +41,11 @@ export default class PipelineEventsShowRoute extends Route {
     } else {
       const { groupEventId } = desiredEvent;
 
-      const expandedEventsGroup = pipelineEventsController.get('pipelineEventsController') || {};
+      const expandedEventsGroup = pipelineEventsController.expandedEventsGroup || {};
 
-      expandedEventsGroup[groupEventId] = true;
+      if (expandedEventsGroup[groupEventId] === undefined) {
+        expandedEventsGroup[groupEventId] = true;
+      }
       pipelineEventsController.set('expandedEventsGroup', expandedEventsGroup);
     }
 
