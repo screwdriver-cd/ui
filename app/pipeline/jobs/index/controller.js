@@ -18,9 +18,13 @@ export default Controller.extend(ModelReloaderMixin, {
   lastRefreshed: moment(),
   shouldReload(model) {
     const job = model.jobs.find(j => {
-      return j.builds.find(b => {
-        return isActiveBuild(b.get('status'), b.get('endTime'));
-      });
+      if (j.hasMany('builds').value() !== null) {
+        return j.builds.find(b => {
+          return isActiveBuild(b.get('status'), b.get('endTime'));
+        });
+      }
+
+      return null;
     });
 
     let res;

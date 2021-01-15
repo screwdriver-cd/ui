@@ -27,7 +27,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
       triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
-    }).catch(() => {
+    }).catch(err => {
+      // eslint-disable-next-line no-console
+      console.error('err', err);
+
       this.transitionTo('/404');
     });
   },
