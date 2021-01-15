@@ -46,6 +46,7 @@ const eventMock = EmberObject.create({
     url: 'https://github.com/screwdriver-cd/ui/pull/292'
   },
   pipelineId: '12345',
+  groupEventId: '23450',
   sha: 'abcdef1029384',
   truncatedSha: 'abcdef1',
   type: 'pipelineId',

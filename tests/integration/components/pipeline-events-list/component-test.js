@@ -27,6 +27,7 @@ module('Integration | Component | pipeline events list', function(hooks) {
     const events = [
       EmberObject.create({
         id: 4,
+        groupEventId: '2341234',
         startFrom: '~commit',
         causeMessage: 'test',
         commit: {

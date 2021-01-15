@@ -5,6 +5,7 @@ export default () =>
     [
       {
         id: '12345',
+        groupEventId: '23456',
         name: 'main',
         pipelineId: '4',
         state: 'ENABLED',
@@ -12,6 +13,7 @@ export default () =>
       },
       {
         id: '12346',
+        groupEventId: '23456',
         name: 'publish',
         pipelineId: '4',
         state: 'ENABLED',
@@ -19,6 +21,7 @@ export default () =>
       },
       {
         id: '12347',
+        groupEventId: '23457',
         name: 'PR-42:main',
         pipelineId: '4',
         state: 'ENABLED',
@@ -26,6 +29,7 @@ export default () =>
       },
       {
         id: '12348',
+        groupEventId: '23457',
         name: 'PR-42:publish',
         pipelineId: '4',
         state: 'ENABLED',
@@ -33,6 +37,7 @@ export default () =>
       },
       {
         id: '12349',
+        groupEventId: '23458',
         name: 'PR-43:main',
         pipelineId: '4',
         state: 'ENABLED',

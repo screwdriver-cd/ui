@@ -59,6 +59,7 @@
         {{#tab.pane activeId=activeTab elementId="events" title="Events"}}
           {{pipeline-events-list
             pipeline=pipeline
+            expandedEventsGroup=expandedEventsGroup
             events=events
             selected=(mut selected)
             selectedEvent=selectedEvent
@@ -72,6 +73,7 @@
           {{#if prChainEnabled}}
             {{pipeline-events-list
             pipeline=pipeline
+            expandedEventsGroup=expandedEventsGroup
             events=events
             selected=(mut selected)
             selectedEvent=selectedEvent
