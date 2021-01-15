@@ -2,11 +2,7 @@ import { computed, get, set } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
-  events: computed('events.[]', {
-    get() {
-      return get(this, 'events');
-    }
-  }),
+  events: [],
   isExpanded: computed('expandedEventsGroup', 'events.[]', {
     get() {
       const expandedGroups = get(this, 'expandedEventsGroup');
