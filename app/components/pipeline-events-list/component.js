@@ -40,7 +40,7 @@ export default Component.extend({
       if (eventType !== 'pr') {
         const currentEvent = this.groups.find(g => g.find(e => e.id === id))[0];
         const { pipelineId } = currentEvent;
-        const expandedEventsGroup = get(this, 'expandedEventsGroup');
+        const expandedEventsGroup = get(this, 'expandedEventsGroup') || {};
 
         expandedEventsGroup[currentEvent.groupEventId] = true;
         set(this, 'expandedEventsGroup', expandedEventsGroup);
