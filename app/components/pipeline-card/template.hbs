@@ -6,7 +6,7 @@
 {{/if}}
 <div class="pipeline-card-content {{if showCheckbox "show-checkbox" ""}}">
   {{#if showRemoveButton}}
-    <span class="remove-button" onclick={{action "removePipeline"}}>
+    <span class="remove-button" title="Remove {{pipeline.scmRepo.name}} pipeline from the collection" onclick={{action "removePipeline"}}>
       &times;
     </span>
   {{/if}}
@@ -25,7 +25,7 @@
       {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
         {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
       {{/link-to}}
-      <a href={{lastEventInfo.commitUrl}}> 
+      <a href={{lastEventInfo.commitUrl}}>
         {{lastEventInfo.sha}}
       </a>
     </div>
@@ -49,7 +49,7 @@
       <span class="badge-info">{{lastEventInfo.startTime}}</span>
     </div>
   </div>
-  
+
   <div class="events-thumbnail-wrapper">
     {{#if hasBothEventsAndLatestEventInfo}}
       {{events-thumbnail

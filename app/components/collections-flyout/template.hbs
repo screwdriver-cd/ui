@@ -16,14 +16,14 @@
       {{#link-to "dashboard.show" collection.id title=collection.name}}
         {{collection.name}}
       {{/link-to}}
-      {{#unless (eq collection.type "default")}}
+      {{#if (eq collection.type "normal")}}
         <button
           class="collection-wrapper__delete"
           onclick={{action "setCollectionToDelete" collection}}
         >
           {{fa-icon "trash" title="Delete collection" size="md"}}
         </button>
-      {{/unless}}
+      {{/if}}
     </div>
   {{else}}
     <p class="no-collections-text">Please create a collection.</p>
@@ -31,7 +31,7 @@
   {{#if collectionToDelete}}
     {{!-- Confirmation modal for deleting a collection --}}
     {{#bs-modal-simple
-      title="Please confirm"
+      title="Please confirm deletion"
       closeTitle="Cancel"
       submitTitle="Confirm"
       size=null
@@ -39,7 +39,7 @@
       onSubmit=(action "deleteCollection" collectionToDelete)
       onHide=(action "cancelDeletingCollection")
     }}
-      You're about to delete {{collectionToDelete.name}}. Are you sure?
+      You're about to delete the collection {{collectionToDelete.name}}. This action cannot be undone. Are you sure?
     {{/bs-modal-simple}}
   {{/if}}
   {{collection-modal showModal=showModal}}

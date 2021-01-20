@@ -240,7 +240,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     await click('.collection-wrapper__delete');
 
     assert.dom('.modal').exists({ count: 1 });
-    assert.dom('.modal-title').hasText('Please confirm');
+    assert.dom('.modal-title').hasText('Please confirm deletion');
 
     await click('.modal-footer > .btn-primary');
 

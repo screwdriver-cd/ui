@@ -226,18 +226,18 @@
             {{#if showDangerButton}}
               <div class="row">
                 <div class="col-xs-1 col-md-8">
-                  <h4>Remove this pipeline</h4>
-                  <p>Once you remove a pipeline, there is no going back.</p>
+                  <h4>Delete this pipeline</h4>
+                  <p>Once you delete a pipeline, there is no going back.</p>
                 </div>
                 <div class="col-xs-1 col-md-4 right">
-                  <a href="#" {{action "showRemoveButtons"}} class="trash">{{fa-icon "trash"}}</a>
+                  <a href="#" {{action "showRemoveButtons"}} class="trash">{{fa-icon "trash"}} title="Delete pipeline"</a>
                 </div>
               </div>
             {{/if}}
             {{#if showRemoveButtons}}
               <h4>Are you absolutely sure?</h4>
               <a href="#" {{action "cancelRemove"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
-              <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "trash"}} Remove</a>
+              <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "trash"}} Delete</a>
             {{/if}}
             {{#if isRemoving}}
               <p>Please wait...</p>
