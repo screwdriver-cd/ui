@@ -6,7 +6,7 @@
 {{/if}}
 <div class="pipeline-card-content {{if showCheckbox "show-checkbox" ""}}">
   {{#if showRemoveButton}}
-    <span class="remove-button" title="Remove {{pipeline.scmRepo.name}} pipeline from the collection" onclick={{action "removePipeline"}}>
+    <span class="remove-button" title="Remove {{pipeline.scmRepo.name}} pipeline from {{collectionName}} collection" onclick={{action "removePipeline"}}>
       &times;
     </span>
   {{/if}}

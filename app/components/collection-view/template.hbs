@@ -12,16 +12,16 @@
     <div class="col-xs-12 col-sm-8">
       <h2 class="header__name">{{collection.name}}</h2>
 
-      {{#if (not-eq collection.type "default")}}
-        <span onclick={{action "toggleAddPipelineModal"}} class="collection-operation add-pipeline-operation">
+      {{#if (eq collection.type "normal")}}
+        <span onclick={{action "toggleAddPipelineModal"}} title="Add pipeline(s) to collection" class="collection-operation add-pipeline-operation">
           {{inline-svg "add" class="img"}}
         </span>
-        <span onclick={{action "toggleSettingModal"}} class="collection-operation settings-operation">
+        <span onclick={{action "toggleSettingModal"}} title="Collection settings" class="collection-operation settings-operation">
           {{inline-svg "setting" class="img"}}
         </span>
       {{/if}}
 
-      <span onclick={{action "copyLink"}} class="collection-operation copy-operation">
+      <span onclick={{action "copyLink"}} title="Copy collection link" class="collection-operation copy-operation">
         {{inline-svg "link" class="img"}}
       </span>
 
@@ -163,6 +163,7 @@
                   selectPipeline=(action "selectPipeline")
                   deselectPipeline=(action "deselectPipeline")
                   reset=reset
+                  collectionName=collection.name
               }}
             {{/each}}
           </tbody>
@@ -180,6 +181,7 @@
               selectPipeline=(action "selectPipeline")
               deselectPipeline=(action "deselectPipeline")
               reset=reset
+              collectionName=collection.name
           }}
         {{/each}}
       </div>

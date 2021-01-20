@@ -31,7 +31,7 @@
   {{#if collectionToDelete}}
     {{!-- Confirmation modal for deleting a collection --}}
     {{#bs-modal-simple
-      title="Please confirm deletion"
+      title="Confirm deletion"
       closeTitle="Cancel"
       submitTitle="Confirm"
       size=null
@@ -39,7 +39,7 @@
       onSubmit=(action "deleteCollection" collectionToDelete)
       onHide=(action "cancelDeletingCollection")
     }}
-      You're about to delete the collection {{collectionToDelete.name}}. This action cannot be undone. Are you sure?
+      You're about to delete the collection "{{collectionToDelete.name}}". This action cannot be undone. Are you sure?
     {{/bs-modal-simple}}
   {{/if}}
   {{collection-modal showModal=showModal}}
