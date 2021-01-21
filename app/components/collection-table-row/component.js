@@ -72,7 +72,7 @@ export default Component.extend({
   },
   actions: {
     removePipeline() {
-      this.removePipeline(this.pipeline.id);
+      this.removePipeline(this.pipeline.id, this.pipeline.name);
     },
     togglePipeline() {
       const pipelineId = this.pipeline.id;

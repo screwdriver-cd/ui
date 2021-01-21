@@ -8,6 +8,9 @@
   {{#if linkCopied}}
     {{info-message message=linkCopied type="success" icon="check"}}
   {{/if}}
+  {{#if pipelineRemoved}}
+    {{info-message message=pipelineRemoved type="success" icon="check"}}
+  {{/if}}
   <div class="header row">
     <div class="col-xs-12 col-sm-8">
       <h2 class="header__name">{{collection.name}}</h2>

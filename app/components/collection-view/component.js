@@ -33,6 +33,7 @@ export default Component.extend({
   searchedPipelines: [],
   selectedSearchedPipelines: [],
   linkCopied: '',
+  pipelineRemoved: '',
   reset: false,
 
   showViewSwitch: computed('collection.pipelineIds', function showViewSwitch() {
@@ -99,19 +100,23 @@ export default Component.extend({
     /**
      * Action to remove a pipeline from a collection
      *
-     * @param {Number} pipelineId - id of pipeline to remove
-     * @param {Number} collectionId - id of collection to remove from
+     * @param {Number} pipelineId     ID of pipeline to remove
+     * @param {String} [pipelineName] Pipeline name
      * @returns {Promise}
      */
-    removePipeline(pipelineId) {
+    removePipeline(pipelineId, pipelineName) {
       const collectionId = this.get('collection.id');
+      const collectionName = this.get('collection.name');
+      const pipelineLabel = pipelineName ? ` ${pipelineName}` : '';
+      const message = `The pipeline${pipelineLabel} has been removed from the ${collectionName} collection.`;
 
       return this.onRemovePipeline(+pipelineId)
         .then(() => {
           this.store.findRecord('collection', collectionId).then(collection => {
             this.setProperties({
               removePipelineError: null,
-              collection
+              collection,
+              pipelineRemoved: message
             });
           });
         })
