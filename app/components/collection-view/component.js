@@ -33,7 +33,7 @@ export default Component.extend({
   searchedPipelines: [],
   selectedSearchedPipelines: [],
   linkCopied: '',
-  pipelineRemoved: '',
+  pipelineRemovedMessage: '',
   reset: false,
 
   showViewSwitch: computed('collection.pipelineIds', function showViewSwitch() {
@@ -116,7 +116,7 @@ export default Component.extend({
             this.setProperties({
               removePipelineError: null,
               collection,
-              pipelineRemoved: message
+              pipelineRemovedMessage: message
             });
           });
         })
