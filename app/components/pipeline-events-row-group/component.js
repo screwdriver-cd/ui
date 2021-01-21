@@ -11,9 +11,7 @@ export default Component.extend({
       return !!expandedGroups[groupEventId];
     }
   }),
-  init() {
-    this._super(...arguments);
-  },
+
   actions: {
     toggleExpanded() {
       this.expandedEventsGroup[this.events[0].groupEventId] = !this.isExpanded;
