@@ -85,8 +85,8 @@ module('Integration | Component | pipeline options', function(hooks) {
     // Danger Zone
     assert.dom('section.danger h3').hasText('Danger Zone');
     assert.dom('section.danger li').exists({ count: 1 });
-    assert.dom('section.danger h4').hasText('Remove this pipeline');
-    assert.dom('section.danger p').hasText('Once you remove a pipeline, there is no going back.');
+    assert.dom('section.danger h4').hasText('Delete this pipeline');
+    assert.dom('section.danger p').hasText('Once you delete a pipeline, there is no going back.');
     assert.dom('section.danger a i').hasClass('fa-trash');
   });
 
@@ -347,7 +347,7 @@ module('Integration | Component | pipeline options', function(hooks) {
       hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`
     );
 
-    assert.dom('section.danger h4').hasText('Remove this pipeline');
+    assert.dom('section.danger h4').hasText('Delete this pipeline');
 
     await click('section.danger a');
 
@@ -356,7 +356,7 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     await click('section.danger a');
 
-    assert.dom('section.danger h4').hasText('Remove this pipeline');
+    assert.dom('section.danger h4').hasText('Delete this pipeline');
 
     await click('section.danger a');
 

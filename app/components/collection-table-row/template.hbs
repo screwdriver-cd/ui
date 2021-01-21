@@ -41,7 +41,7 @@
 </td>
 <td class="collection-pipeline__remove">
   {{#if showRemoveButton}}
-    <span onclick={{action "removePipeline"}}>
+    <span title="Remove {{pipeline.scmRepo.name}} pipeline from {{collectionName}} collection" onclick={{action "removePipeline"}}>
       &times;
     </span>
   {{/if}}
