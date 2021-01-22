@@ -68,6 +68,7 @@
             eventsPage=eventsPage
             updateEvents=(action "updateEvents")
           }}
+          <div style="padding: 20px;" onMouseEnter={{action "onEventListScroll"}}></div>
         {{/tab.pane}}
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
           {{#if prChainEnabled}}
