@@ -61,7 +61,12 @@ export default Mixin.create({
           .reload()
           .then(() => {
             if (model.model && model.model.reload) {
-              model.model.reload();
+              if (window.navigator.onLine) {
+                model.model.reload();
+              } else {
+                // eslint-disable-next-line no-console
+                console.error('offline');
+              }
             }
           })
           .finally(() => this.scheduleReload());

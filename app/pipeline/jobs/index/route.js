@@ -31,7 +31,11 @@ export default Route.extend(AuthenticatedRouteMixin, {
       // eslint-disable-next-line no-console
       console.error('err', err);
 
-      this.transitionTo('/404');
+      if (window.navigator.onLine) {
+        this.transitionTo('/404');
+      } else {
+        console.log('offline');
+      }
     });
   },
   actions: {
