@@ -28,13 +28,11 @@ export default Route.extend(AuthenticatedRouteMixin, {
       }),
       triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
     }).catch(err => {
-      // eslint-disable-next-line no-console
-      console.error('err', err);
-
-      if (window.navigator.onLine) {
-        this.transitionTo('/404');
+      if (err === '0 Request Failed') {
+        // eslint-disable-next-line no-console
+        console.error('offline err', err);
       } else {
-        console.log('offline');
+        this.transitionTo('/404');
       }
     });
   },

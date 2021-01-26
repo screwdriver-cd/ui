@@ -57,16 +57,15 @@ export default Mixin.create({
 
     switch (shouldReload) {
       case SHOULD_RELOAD_YES:
+        if (!window.navigator.onLine) {
+          break;
+        }
+
         model
           .reload()
           .then(() => {
             if (model.model && model.model.reload) {
-              if (window.navigator.onLine) {
-                model.model.reload();
-              } else {
-                // eslint-disable-next-line no-console
-                console.error('offline');
-              }
+              model.model.reload();
             }
           })
           .finally(() => this.scheduleReload());

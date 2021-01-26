@@ -26,8 +26,13 @@ export default Route.extend({
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
       triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
-    }).catch(() => {
-      this.transitionTo('/404');
+    }).catch(err => {
+      if (err === '0 Request Failed') {
+        // eslint-disable-next-line no-console
+        console.error('offline err', err);
+      } else {
+        this.transitionTo('/404');
+      }
     });
   },
   actions: {
