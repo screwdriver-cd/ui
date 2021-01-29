@@ -1,7 +1,13 @@
 {{#if collapsible}}
   <h4 class="job" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>
 {{/if}}
-{{#if getTemplateName}}<h4>This job uses <a href="/templates/{{getTemplateName}}/{{getTemplateVersion}}">{{getTemplateName}}</a> template.</h4>{{/if}}
+{{#if getTemplateName}}
+  {{#if template}}
+    <h4>This template extends <a href="/templates/{{getTemplateName}}/{{getTemplateVersion}}">{{getTemplateName}}</a> template.</h4>
+  {{else}}
+    <h4>This job uses <a href="/templates/{{getTemplateName}}/{{getTemplateVersion}}">{{getTemplateName}}</a> template.</h4>
+  {{/if}}
+{{/if}}
 {{#if template.description}}
   <div class="template-description" title="This is the description of the template">
     <span class="label">Template Description:</span>
