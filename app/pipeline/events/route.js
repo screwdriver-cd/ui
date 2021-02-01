@@ -3,6 +3,8 @@ import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
 import RSVP from 'rsvp';
 
+const ERROR_MESSAGE = 'Session timed-out, please login back in to complete the action';
+
 export default Route.extend({
   triggerService: service('pipeline-triggers'),
   routeAfterAuthentication: 'pipeline.events',
@@ -16,7 +18,9 @@ export default Route.extend({
     this.get('pipelineService').setBuildsLink('pipeline.events');
   },
   model() {
-    this.controllerFor('pipeline.events').set('pipeline', this.pipeline);
+    const pipelineEventsController = this.controllerFor('pipeline.events');
+
+    pipelineEventsController.set('pipeline', this.pipeline);
 
     return RSVP.hash({
       jobs: this.get('pipeline.jobs'),
@@ -30,6 +34,8 @@ export default Route.extend({
       if (err === '0 Request Failed') {
         // eslint-disable-next-line no-console
         console.error('offline err', err);
+
+        pipelineEventsController.set('errorMessage', ERROR_MESSAGE);
       } else {
         this.transitionTo('/404');
       }
