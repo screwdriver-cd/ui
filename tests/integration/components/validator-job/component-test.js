@@ -139,21 +139,38 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.sourcePaths ul li').hasText('None defined');
   });
 
-  test('it renders template name', async function(assert) {
+  test('it renders template name when template is used', async function(assert) {
+    this.set('templateMock', {
+      description: 'Test template',
+      maintainer: 'bruce@wayne.com',
+      images: {
+        stable: 'node:6',
+        development: 'node:7'
+      },
+      name: 'test',
+      namespace: 'batman',
+      version: '2.0.0'
+    });
     this.set('jobMock', {
       image: 'int-test:1',
+      template: 'baz',
       steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
       secrets: [],
-      environment: { SD_TEMPLATE_FULLNAME: 'foo/bar' },
+      environment: {
+        SD_TEMPLATE_FULLNAME: 'baz',
+        SD_TEMPLATE_NAMESPACE: 'default',
+        SD_TEMPLATE_NAME: 'baz',
+        SD_TEMPLATE_VERSION: '2.0.0'
+      },
       settings: {},
       annotations: {}
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock template=templateMock}}`);
 
     assert.dom('h4:nth-of-type(1)').hasText('int-test');
-    assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
-    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar/');
+    assert.dom('h4:nth-of-type(2)').hasText('This template extends baz template.');
+    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/default/baz/2.0.0');
   });
 
   test('it renders template name with version tag', async function(assert) {
@@ -161,7 +178,12 @@ module('Integration | Component | validator job', function(hooks) {
       image: 'int-test:1',
       steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
       secrets: [],
-      environment: { SD_TEMPLATE_FULLNAME: 'foo/bar', SD_TEMPLATE_VERSION: 'latest' },
+      environment: {
+        SD_TEMPLATE_FULLNAME: 'foo/bar',
+        SD_TEMPLATE_NAMESPACE: 'foo',
+        SD_TEMPLATE_NAME: 'bar',
+        SD_TEMPLATE_VERSION: 'latest'
+      },
       settings: {},
       annotations: {}
     });
@@ -178,7 +200,12 @@ module('Integration | Component | validator job', function(hooks) {
       image: 'int-test:1',
       steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
       secrets: [],
-      environment: { SD_TEMPLATE_FULLNAME: 'foo/bar', SD_TEMPLATE_VERSION: '0.0.1' },
+      environment: {
+        SD_TEMPLATE_FULLNAME: 'foo/bar',
+        SD_TEMPLATE_NAMESPACE: 'foo',
+        SD_TEMPLATE_NAME: 'bar',
+        SD_TEMPLATE_VERSION: '0.0.1'
+      },
       settings: {},
       annotations: {}
     });

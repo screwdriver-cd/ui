@@ -3,9 +3,9 @@
 {{/if}}
 {{#if getTemplateName}}
   {{#if template}}
-    <h4>This template extends <a href="/templates/{{getTemplateName}}/{{getTemplateVersion}}">{{getTemplateName}}</a> template.</h4>
+    <h4>This template extends <a href={{getTemplateLink}}>{{getTemplateName}}</a> template.</h4>
   {{else}}
-    <h4>This job uses <a href="/templates/{{getTemplateName}}/{{getTemplateVersion}}">{{getTemplateName}}</a> template.</h4>
+    <h4>This job uses <a href={{getTemplateLink}}>{{getTemplateName}}</a> template.</h4>
   {{/if}}
 {{/if}}
 {{#if template.description}}
