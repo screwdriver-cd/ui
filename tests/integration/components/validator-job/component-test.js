@@ -153,13 +153,13 @@ module('Integration | Component | validator job', function(hooks) {
     });
     this.set('jobMock', {
       image: 'int-test:1',
-      template: 'foo/bar',
+      template: 'baz',
       steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
       secrets: [],
       environment: {
-        SD_TEMPLATE_FULLNAME: 'foo/bar',
-        SD_TEMPLATE_NAMESPACE: 'foo',
-        SD_TEMPLATE_NAME: 'bar',
+        SD_TEMPLATE_FULLNAME: 'baz',
+        SD_TEMPLATE_NAMESPACE: 'default',
+        SD_TEMPLATE_NAME: 'baz',
         SD_TEMPLATE_VERSION: '2.0.0'
       },
       settings: {},
@@ -169,8 +169,8 @@ module('Integration | Component | validator job', function(hooks) {
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock template=templateMock}}`);
 
     assert.dom('h4:nth-of-type(1)').hasText('int-test');
-    assert.dom('h4:nth-of-type(2)').hasText('This template extends foo/bar template.');
-    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar/2.0.0');
+    assert.dom('h4:nth-of-type(2)').hasText('This template extends baz template.');
+    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/default/baz/2.0.0');
   });
 
   test('it renders template name with version tag', async function(assert) {
