@@ -14,7 +14,7 @@
       {{#if (eq tooltipData.job.status "DISABLED")}}
         <p>{{tooltipData.job.stateChangeMessage}}</p>
       {{else}}
-        <a {{action confirmStartBuild}}>Start pipeline from here</a>
+        <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
       {{/if}}
     {{/if}}
     {{#if tooltipData.displayStop}}
