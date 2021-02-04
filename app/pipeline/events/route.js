@@ -1,9 +1,8 @@
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
+import { getErrorMessage } from 'screwdriver-ui/utils/error-messages';
 import RSVP from 'rsvp';
-
-const ERROR_MESSAGE = 'Session timed-out, please login back in to complete the action';
 
 export default Route.extend({
   triggerService: service('pipeline-triggers'),
@@ -31,11 +30,10 @@ export default Route.extend({
       }),
       triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
     }).catch(err => {
-      if (err === '0 Request Failed') {
-        // eslint-disable-next-line no-console
-        console.error('offline err', err);
+      let errorMessage = getErrorMessage(err);
 
-        pipelineEventsController.set('errorMessage', ERROR_MESSAGE);
+      if (errorMessage !== '') {
+        pipelineEventsController.set('errorMessage', errorMessage);
       } else {
         this.transitionTo('/404');
       }

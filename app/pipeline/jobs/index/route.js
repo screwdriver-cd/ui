@@ -3,8 +3,7 @@ import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
 import RSVP from 'rsvp';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-
-const ERROR_MESSAGE = 'Session timed-out, please login back in to complete the action';
+import { getErrorMessage } from 'screwdriver-ui/utils/error-messages';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   triggerService: service('pipeline-triggers'),
@@ -32,11 +31,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
       }),
       triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
     }).catch(err => {
-      if (err === '0 Request Failed') {
-        // eslint-disable-next-line no-console
-        console.error('offline err', err);
+      let errorMessage = getErrorMessage(err);
 
-        pipelineJobsIndexController.set('errorMessage', ERROR_MESSAGE);
+      if (errorMessage !== '') {
+        pipelineJobsIndexController.set('errorMessage', errorMessage);
       } else {
         this.transitionTo('/404');
       }
