@@ -81,7 +81,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       .hasText('Go to downstream pipeline ~sd@1234:main Go to downstream pipeline ~sd@2:prod');
   });
 
-  test('it renders restart link', async function(assert) {
+  test('it renders start link', async function(assert) {
     const data = {
       job: {
         buildId: 1234,
@@ -102,6 +102,30 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:first-child').hasText('Go to build details');
     assert.dom('a:last-child').hasText('Start pipeline from here');
+  });
+
+  test('it renders restart link', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'SUCCESS'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+    }}`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Restart pipeline from here');
   });
 
   test('it should update position and hidden status', async function(assert) {
