@@ -41,6 +41,7 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
+
     setProperties(this, {
       builds: [],
       showDownstreamTriggers: false,

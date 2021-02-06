@@ -4,4 +4,6 @@ export default class PreferencePipelineModel extends Model {
   @attr('string') pipelineId;
 
   @attr('number') jobNameLength;
+
+  @attr('boolean') showPRJobs;
 }
