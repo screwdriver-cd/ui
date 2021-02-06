@@ -13,10 +13,17 @@ export default Route.extend({
   },
   setupController(controller, model) {
     this._super(controller, model);
-    controller.set('activeTab', 'events');
+    const { pipelinePreference } = model;
+
+    controller.setProperties({
+      activeTab: 'events',
+      showPRJobs: pipelinePreference.showPRJobs
+    });
+
     this.get('pipelineService').setBuildsLink('pipeline.events');
   },
   model() {
+    const pipelineId = this.get('pipeline.id');
     const pipelineEventsController = this.controllerFor('pipeline.events');
 
     pipelineEventsController.set('pipeline', this.pipeline);
@@ -24,11 +31,14 @@ export default Route.extend({
     return RSVP.hash({
       jobs: this.get('pipeline.jobs'),
       events: this.store.query('event', {
-        pipelineId: this.get('pipeline.id'),
+        pipelineId,
         page: 1,
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
-      triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
+      triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id')),
+      pipelinePreference: this.store.queryRecord('preference/pipeline', {
+        filter: { pipelineId }
+      })
     }).catch(err => {
       let errorMessage = getErrorMessage(err);
 

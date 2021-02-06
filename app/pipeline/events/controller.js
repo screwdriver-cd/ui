@@ -200,6 +200,7 @@ export default Controller.extend(ModelReloaderMixin, {
     });
   },
   showListView: false,
+  showPRJobs: true,
 
   reload() {
     try {

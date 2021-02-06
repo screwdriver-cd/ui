@@ -25,6 +25,7 @@ export default Component.extend({
   showDangerButton: true,
   showRemoveButtons: false,
   showToggleModal: false,
+  showPRJobs: true,
   // Job disable/enable
   name: null,
   state: null,
@@ -66,15 +67,18 @@ export default Component.extend({
 
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
+    let showPRJobs = true;
+
     const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
       filter: { pipelineId: this.get('pipeline.id') }
     });
 
     if (pipelinePreference) {
       desiredJobNameLength = pipelinePreference.jobNameLength;
+      showPRJobs = pipelinePreference.showPRJobs;
     }
 
-    this.set('desiredJobNameLength', desiredJobNameLength);
+    this.setProperties({ desiredJobNameLength, showPRJobs });
 
     if (this.displayDowntimeJobs) {
       const metricsDowntimeJobs = this.getWithDefault(
@@ -216,6 +220,27 @@ export default Component.extend({
       } finally {
         this.set('isUpdatingMetricsDowntimeJobs', false);
       }
+    },
+
+    async updateShowPRJobs(showPRJobs) {
+      const pipelineId = this.get('pipeline.id');
+      const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
+        filter: { pipelineId }
+      });
+
+      if (pipelinePreference) {
+        pipelinePreference.set('showPRJobs', showPRJobs);
+        pipelinePreference.save();
+      } else {
+        this.store
+          .createRecord('preference/pipeline', {
+            pipelineId,
+            showPRJobs
+          })
+          .save();
+      }
+
+      this.set('showPRJobs', showPRJobs);
     }
   }
 });
