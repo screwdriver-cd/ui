@@ -533,7 +533,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.cache li:first-child h4').hasText('Pipeline');
     assert.dom('section.cache li:nth-child(2) h4').hasText('Job A');
     assert.dom('section.cache li:nth-child(3) h4').hasText('Job B');
-    assert.dom('section.cache li:last-child h4').hasText('Job main');
+    assert.dom('section.cache li:nth-child(4) h4').hasText('Job main');
 
     // Danger Zone should not render
     assert.dom('section.danger h3').doesNotExist();
