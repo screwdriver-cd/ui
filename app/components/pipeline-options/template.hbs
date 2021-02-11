@@ -84,25 +84,27 @@
             </div>
           </div>
           {{#each sortedJobs as |job|}}
-            <li>
-              <div class="row">
-                <div class="col-xs-10">
-                  <h4>{{job.name}}</h4>
-                  {{#if job.stateChanger}}
-                    <i class="float-right"><small>{{job.stateChangeTimeWords}}</small></i>
-                    <p>{{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}{{/if}}</p>
-                  {{/if}}
+            {{#unless (starts-with job.name "PR-")}}
+              <li>
+                <div class="row">
+                  <div class="col-xs-10">
+                    <h4>{{job.name}}</h4>
+                    {{#if job.stateChanger}}
+                      <i class="float-right"><small>{{job.stateChangeTimeWords}}</small></i>
+                      <p>{{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}{{/if}}</p>
+                    {{/if}}
+                  </div>
+                  <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
+                    {{x-toggle
+                      size="small"
+                      value=(not job.isDisabled)
+                      onLabel="Enabled::false"
+                      offLabel="Disabled::true"
+                      onToggle=(action "toggleJob" job.id username job.name)}}
+                  </div>
                 </div>
-                <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
-                  {{x-toggle
-                    size="small"
-                    value=(not job.isDisabled)
-                    onLabel="Enabled::false"
-                    offLabel="Disabled::true"
-                    onToggle=(action "toggleJob" job.id username job.name)}}
-                </div>
-              </div>
-            </li>
+              </li>
+            {{/unless}}
           {{/each}}
         </li>
       </ul>
