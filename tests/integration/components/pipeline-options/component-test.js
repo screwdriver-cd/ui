@@ -496,6 +496,11 @@ module('Integration | Component | pipeline options', function(hooks) {
           id: '2345',
           name: 'A',
           isDisabled: false
+        }),
+        EmberObject.create({
+          id: '1',
+          name: 'PR-123:component',
+          isDisabled: false
         })
       ])
     );
@@ -511,6 +516,10 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.jobs li:nth-child(2) h4').hasText('A');
     assert.dom('section.jobs li:nth-child(3) h4').hasText('B');
     assert.dom('section.jobs li:nth-child(4) h4').hasText('main');
+
+    // PR Job should not render
+    assert.dom('section.jobs li:nth-child(5) h4').doesNotExist();
+
     // eslint-disable-next-line max-len
     assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
