@@ -15,4 +15,4 @@ const getErrorMessage = err => {
   return errorMessage;
 };
 
-export default { getErrorMessage };
+export { getErrorMessage as default };

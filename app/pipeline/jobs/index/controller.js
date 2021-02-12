@@ -74,7 +74,7 @@ export default Controller.extend(ModelReloaderMixin, {
   errorMessage: '',
   jobs: computed('model.jobs', {
     get() {
-      const jobs = this.get('model.jobs');
+      const jobs = this.getWithDefault('model.jobs', []);
 
       return jobs.filter(j => !isPRJob(j.get('name')));
     }

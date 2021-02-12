@@ -280,7 +280,7 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       let previousModelEvents = this.previousModelEvents || [];
 
-      let currentModelEvents = this.get('model.events').toArray();
+      let currentModelEvents = this.getWithDefault('model.events', []).toArray();
 
       let newModelEvents = [];
       const newPipelineId = this.get('pipeline.id');

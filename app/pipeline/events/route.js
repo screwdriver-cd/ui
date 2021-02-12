@@ -1,7 +1,7 @@
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
-import { getErrorMessage } from 'screwdriver-ui/utils/error-messages';
+import getErrorMessage from 'screwdriver-ui/utils/error-messages';
 import RSVP from 'rsvp';
 
 export default Route.extend({

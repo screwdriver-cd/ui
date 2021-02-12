@@ -3,7 +3,7 @@ import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
 import RSVP from 'rsvp';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import { getErrorMessage } from 'screwdriver-ui/utils/error-messages';
+import getErrorMessage from 'screwdriver-ui/utils/error-messages';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   triggerService: service('pipeline-triggers'),
