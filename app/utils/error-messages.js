@@ -10,7 +10,7 @@ const getErrorMessage = err => {
     const { message = '' } = err;
 
     if (message.startsWith('The adapter operation was aborted')) {
-      errorMessage = 'Session timed-out, please log back in to complete the action';
+      errorMessage = 'Action cannot be completed, please make sure you are online';
     }
   } else if (err === '401 Invalid token') {
     errorMessage = 'Session timed-out, please log back in to complete the action';
