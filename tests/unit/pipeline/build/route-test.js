@@ -34,7 +34,7 @@ module('Unit | Route | pipeline/build', function(hooks) {
       }
     };
 
-    route.afterModel(model);
+    route.redirect(model);
 
     assert.ok(stub.calledOnce, 'transitionTo was called once');
     assert.ok(stub.calledWithExactly('pipeline', pipelineId), 'transition to pipeline');
@@ -56,6 +56,12 @@ module('Unit | Route | pipeline/build', function(hooks) {
       build: {
         get: type => (type === 'id' ? buildId : null),
         steps: []
+      },
+      job: {
+        get: type => (type === 'pipelineId' ? pipelineId : null)
+      },
+      event: {
+        isPaused: true
       }
     };
 
@@ -85,6 +91,12 @@ module('Unit | Route | pipeline/build', function(hooks) {
       build: {
         get: type => (type === 'id' ? buildId : null),
         steps: []
+      },
+      job: {
+        get: type => (type === 'pipelineId' ? pipelineId : null)
+      },
+      event: {
+        isPaused: true
       }
     };
 
