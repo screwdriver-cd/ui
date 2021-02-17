@@ -10,6 +10,15 @@ export default Component.extend({
       return this.get('job.environment.SD_TEMPLATE_FULLNAME');
     }
   }),
+  getTemplateLink: computed('job', {
+    get() {
+      const namespace = this.get('job.environment.SD_TEMPLATE_NAMESPACE');
+      const name = this.get('job.environment.SD_TEMPLATE_NAME');
+      const version = this.get('job.environment.SD_TEMPLATE_VERSION');
+
+      return `/templates/${namespace}/${name}/${version}`;
+    }
+  }),
   getTemplateVersion: computed('job', {
     get() {
       return this.get('job.environment.SD_TEMPLATE_VERSION');

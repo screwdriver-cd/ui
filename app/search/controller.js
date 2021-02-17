@@ -43,7 +43,7 @@ export default Controller.extend({
       };
 
       if (search) {
-        pipelineListConfig.search = search;
+        pipelineListConfig.search = search.replace(/\s/g, '');
         this.setProperties({ query: search });
       }
 

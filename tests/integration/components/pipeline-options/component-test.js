@@ -85,8 +85,8 @@ module('Integration | Component | pipeline options', function(hooks) {
     // Danger Zone
     assert.dom('section.danger h3').hasText('Danger Zone');
     assert.dom('section.danger li').exists({ count: 1 });
-    assert.dom('section.danger h4').hasText('Remove this pipeline');
-    assert.dom('section.danger p').hasText('Once you remove a pipeline, there is no going back.');
+    assert.dom('section.danger h4').hasText('Delete this pipeline');
+    assert.dom('section.danger p').hasText('Once you delete a pipeline, there is no going back.');
     assert.dom('section.danger a i').hasClass('fa-trash');
   });
 
@@ -347,7 +347,7 @@ module('Integration | Component | pipeline options', function(hooks) {
       hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`
     );
 
-    assert.dom('section.danger h4').hasText('Remove this pipeline');
+    assert.dom('section.danger h4').hasText('Delete this pipeline');
 
     await click('section.danger a');
 
@@ -356,7 +356,7 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     await click('section.danger a');
 
-    assert.dom('section.danger h4').hasText('Remove this pipeline');
+    assert.dom('section.danger h4').hasText('Delete this pipeline');
 
     await click('section.danger a');
 
@@ -496,6 +496,11 @@ module('Integration | Component | pipeline options', function(hooks) {
           id: '2345',
           name: 'A',
           isDisabled: false
+        }),
+        EmberObject.create({
+          id: '1',
+          name: 'PR-123:component',
+          isDisabled: false
         })
       ])
     );
@@ -511,6 +516,10 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.jobs li:nth-child(2) h4').hasText('A');
     assert.dom('section.jobs li:nth-child(3) h4').hasText('B');
     assert.dom('section.jobs li:nth-child(4) h4').hasText('main');
+
+    // PR Job should not render
+    assert.dom('section.jobs li:nth-child(5) h4').doesNotExist();
+
     // eslint-disable-next-line max-len
     assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
@@ -524,7 +533,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.cache li:first-child h4').hasText('Pipeline');
     assert.dom('section.cache li:nth-child(2) h4').hasText('Job A');
     assert.dom('section.cache li:nth-child(3) h4').hasText('Job B');
-    assert.dom('section.cache li:last-child h4').hasText('Job main');
+    assert.dom('section.cache li:nth-child(4) h4').hasText('Job main');
 
     // Danger Zone should not render
     assert.dom('section.danger h3').doesNotExist();

@@ -58,6 +58,8 @@
       <div class="tab-content">
         {{#tab.pane activeId=activeTab elementId="events" title="Events"}}
           {{pipeline-events-list
+            pipeline=pipeline
+            expandedEventsGroup=expandedEventsGroup
             events=events
             selected=(mut selected)
             selectedEvent=selectedEvent
@@ -66,10 +68,13 @@
             eventsPage=eventsPage
             updateEvents=(action "updateEvents")
           }}
+          <div style="padding: 20px;" onMouseEnter={{action "onEventListScroll"}}></div>
         {{/tab.pane}}
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
           {{#if prChainEnabled}}
             {{pipeline-events-list
+            pipeline=pipeline
+            expandedEventsGroup=expandedEventsGroup
             events=events
             selected=(mut selected)
             selectedEvent=selectedEvent

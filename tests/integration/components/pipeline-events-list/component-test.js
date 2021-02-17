@@ -3,15 +3,31 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { click, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import Service from '@ember/service';
+import { Promise as EmberPromise } from 'rsvp';
 import sinon from 'sinon';
+
+const latestCommitEvent = {
+  id: 3,
+  sha: 'sha3'
+};
 
 module('Integration | Component | pipeline events list', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
+    const shuttleStub = Service.extend({
+      getLatestCommitEvent() {
+        return new EmberPromise(resolve => resolve(latestCommitEvent));
+      }
+    });
+    const pipeline = EmberObject.create({
+      id: 1
+    });
     const events = [
       EmberObject.create({
         id: 4,
+        groupEventId: '2341234',
         startFrom: '~commit',
         causeMessage: 'test',
         commit: {
@@ -85,11 +101,15 @@ module('Integration | Component | pipeline events list', function(hooks) {
       })
     ];
 
+    this.owner.register('service:shuttle', shuttleStub);
+
+    this.set('pipelineMock', pipeline);
     this.set('eventsMock', events);
     this.set('updateEventsMock', page => {
       assert.equal(page, 2);
     });
     await render(hbs`{{pipeline-events-list
+                      pipeline=pipelineMock
                       events=eventsMock
                       eventsPage=1
                       updateEvents=updateEventsMock}}`);
@@ -98,6 +118,11 @@ module('Integration | Component | pipeline events list', function(hooks) {
   });
 
   test('it will redirect to event page when click on pipeline event', async function(assert) {
+    const shuttleStub = Service.extend({
+      getLatestCommitEvent() {
+        return new EmberPromise(resolve => resolve(latestCommitEvent));
+      }
+    });
     const events = [
       EmberObject.create({
         pipelineId: 10000,
@@ -140,6 +165,8 @@ module('Integration | Component | pipeline events list', function(hooks) {
       })
     ];
 
+    this.owner.register('service:shuttle', shuttleStub);
+
     this.set('eventsMock', events);
     this.set('updateEventsMock', page => {
       assert.equal(page, 2);
@@ -158,6 +185,11 @@ module('Integration | Component | pipeline events list', function(hooks) {
   });
 
   test('it will not redirect to event page when click on PR event', async function(assert) {
+    const shuttleStub = Service.extend({
+      getLatestCommitEvent() {
+        return new EmberPromise(resolve => resolve(latestCommitEvent));
+      }
+    });
     const events = [
       EmberObject.create({
         pipelineId: 10000,
@@ -199,6 +231,8 @@ module('Integration | Component | pipeline events list', function(hooks) {
         ]
       })
     ];
+
+    this.owner.register('service:shuttle', shuttleStub);
 
     this.set('eventsMock', events);
     this.set('updateEventsMock', page => {

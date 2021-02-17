@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
+import getErrorMessage from 'screwdriver-ui/utils/error-messages';
 import RSVP from 'rsvp';
 
 export default Route.extend({
@@ -16,7 +17,9 @@ export default Route.extend({
     this.get('pipelineService').setBuildsLink('pipeline.events');
   },
   model() {
-    this.controllerFor('pipeline.events').set('pipeline', this.pipeline);
+    const pipelineEventsController = this.controllerFor('pipeline.events');
+
+    pipelineEventsController.set('pipeline', this.pipeline);
 
     return RSVP.hash({
       jobs: this.get('pipeline.jobs'),
@@ -26,8 +29,14 @@ export default Route.extend({
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
       triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
-    }).catch(() => {
-      this.transitionTo('/404');
+    }).catch(err => {
+      let errorMessage = getErrorMessage(err);
+
+      if (errorMessage !== '') {
+        pipelineEventsController.set('errorMessage', errorMessage);
+      } else {
+        this.transitionTo('/404');
+      }
     });
   },
   actions: {

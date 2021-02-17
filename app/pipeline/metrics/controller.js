@@ -426,7 +426,7 @@ export default Controller.extend({
     // override default with configured functions
     return { y: { ...axis.y }, x: { ...axis.x, tick: { ...axis.x.tick, values, format } } };
   },
-  downtimeJobsAxis: computed('axis', 'downtimeJobsMetrics', 'isUTC', function() {
+  downtimeJobsAxis: computed('axis', 'downtimeJobsMetrics', 'isUTC', function downtimeJobsAxis() {
     const { axis, downtimeJobsChartData } = this;
     const times = downtimeJobsChartData.map(m => new Date(m.createTime));
 

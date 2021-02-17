@@ -64,6 +64,12 @@ module('Acceptance | pipeline pr-chain', function(hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
+
+    server.get('http://localhost:8080/v4/pipelines/4/latestCommitEvent', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({ id: '2', sha: 'abcdef1029384' })
+    ]);
   });
 
   hooks.afterEach(function() {
@@ -82,5 +88,7 @@ module('Acceptance | pipeline pr-chain', function(hooks) {
     assert.dom('.column-tabs-view .view .detail .commit').hasText('PR-42');
     assert.dom('.separator').exists({ count: 1 });
     assert.dom('.partial-view').exists({ count: 2 });
+    assert.dom('.last-successful').doesNotExist();
+    assert.dom('.latest-commit').doesNotExist();
   });
 });

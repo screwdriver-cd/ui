@@ -5,7 +5,10 @@
       {{#if (eq event.type "pr") }}
         <a href={{event.pr.url}}>PR-{{event.prNum}}</a>
       {{else}}
-        <a class={{if (eq event.id lastSuccessful) "last-successful"}} href={{event.commit.url}}>#{{event.truncatedSha}}</a>
+        <a class={{if (eq event.sha latestCommit.sha) "latest-commit"}} href={{event.commit.url}}>#{{event.truncatedSha}}</a>
+        {{#if (eq event.id lastSuccessful)}}
+          <div class="last-successful">Last successful</div>
+        {{/if}}
         {{#if event.label}}<div class="label">{{event.label}}</div>{{/if}}
       {{/if}}
     </div>

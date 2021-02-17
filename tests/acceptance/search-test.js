@@ -137,9 +137,9 @@ module('Acceptance | search', function(hooks) {
 
   test('visiting /search?query=banana when logged in', async function(assert) {
     await authenticateSession({ token: 'fakeToken' });
-    await visit('/search?query=banana');
+    await visit('/search?query=banana ');
 
-    assert.equal(currentURL(), '/search?query=banana');
+    assert.equal(currentURL(), '/search?query=banana ');
     assert.dom('tr').exists({ count: 3 });
     assert.dom('.showMore').doesNotExist();
     assert.dom('.num-results').hasText('Showing 2 result(s)');

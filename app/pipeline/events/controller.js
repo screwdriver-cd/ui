@@ -161,6 +161,7 @@ export async function updateEvents(page) {
 
 export default Controller.extend(ModelReloaderMixin, {
   lastRefreshed: moment(),
+  expandedEventsGroup: {},
   shouldReload(model) {
     const event = model.events.find(m => m.isRunning);
 
@@ -218,7 +219,7 @@ export default Controller.extend(ModelReloaderMixin, {
   errorMessage: '',
   jobs: computed('model.jobs', {
     get() {
-      const jobs = this.get('model.jobs');
+      const jobs = this.getWithDefault('model.jobs', []);
 
       return jobs.filter(j => !isPRJob(j.get('name')));
     }
@@ -279,7 +280,7 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       let previousModelEvents = this.previousModelEvents || [];
 
-      let currentModelEvents = this.get('model.events').toArray();
+      let currentModelEvents = this.getWithDefault('model.events', []).toArray();
 
       let newModelEvents = [];
       const newPipelineId = this.get('pipeline.id');
@@ -334,7 +335,7 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   pullRequestGroups: computed('model.jobs', {
     get() {
-      const jobs = this.get('model.jobs');
+      const jobs = this.getWithDefault('model.jobs', []);
 
       let groups = {};
 

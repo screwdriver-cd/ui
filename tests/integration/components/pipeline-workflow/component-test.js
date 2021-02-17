@@ -14,14 +14,18 @@ const GRAPH = {
     { id: 2, name: 'batman' },
     { id: 3, name: 'robin' },
     { id: 4, name: 'sd@123:main' },
-    { id: 5, name: 'deploy' }
+    { id: 5, name: 'deploy' },
+    { id: 6, name: 'foo01job' },
+    { id: 7, name: 'foo1job' }
   ],
   edges: [
     { src: '~pr', dest: 'main' },
     { src: '~commit', dest: 'main' },
     { src: 'main', dest: 'batman' },
     { src: 'batman', dest: 'robin' },
-    { src: 'robin', dest: 'sd@123:main' }
+    { src: 'robin', dest: 'sd@123:main' },
+    { src: 'main', dest: 'foo01job' },
+    { src: 'main', dest: 'foo1job' }
   ]
 };
 
@@ -50,7 +54,7 @@ module('Integration | Component | pipeline workflow', function(hooks) {
 
     await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph}}`);
 
-    assert.dom('.graph-node').exists({ count: 6 });
+    assert.dom('.graph-node').exists({ count: 8 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 

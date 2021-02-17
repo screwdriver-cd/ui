@@ -3,6 +3,7 @@ import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
 import RSVP from 'rsvp';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import getErrorMessage from 'screwdriver-ui/utils/error-messages';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   triggerService: service('pipeline-triggers'),
@@ -17,7 +18,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
     this.get('pipelineService').setBuildsLink('pipeline.jobs.index');
   },
   model() {
-    this.controllerFor('pipeline.jobs.index').set('pipeline', this.pipeline);
+    const pipelineJobsIndexController = this.controllerFor('pipeline.jobs.index');
+
+    pipelineJobsIndexController.set('pipeline', this.pipeline);
 
     return RSVP.hash({
       jobs: this.get('pipeline.jobs'),
@@ -27,8 +30,14 @@ export default Route.extend(AuthenticatedRouteMixin, {
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
       triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
-    }).catch(() => {
-      this.transitionTo('/404');
+    }).catch(err => {
+      let errorMessage = getErrorMessage(err);
+
+      if (errorMessage !== '') {
+        pipelineJobsIndexController.set('errorMessage', errorMessage);
+      } else {
+        this.transitionTo('/404');
+      }
     });
   },
   actions: {

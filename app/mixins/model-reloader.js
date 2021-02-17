@@ -57,6 +57,10 @@ export default Mixin.create({
 
     switch (shouldReload) {
       case SHOULD_RELOAD_YES:
+        if (!window.navigator.onLine) {
+          break;
+        }
+
         model
           .reload()
           .then(() => {
