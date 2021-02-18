@@ -232,6 +232,16 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
           ? `${stateWithCapitalization} by ${stateChanger}`
           : stateWithCapitalization;
       }
+
+      // Set manualStartEnabled on the node
+      const annotations = j ? get(j, 'permutations.0.annotations') : null;
+
+      if (annotations) {
+        n.manualStartDisabled =
+          'screwdriver.cd/manualStartEnabled' in annotations
+            ? !annotations['screwdriver.cd/manualStartEnabled']
+            : false;
+      }
     }
 
     // Get build information

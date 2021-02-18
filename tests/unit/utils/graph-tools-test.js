@@ -168,6 +168,62 @@ module('Unit | Utility | graph tools', function() {
     assert.deepEqual(result, expectedOutput);
   });
 
+  test('it processes a complex graph with jobs', function(assert) {
+    const jobs = [
+      { id: 1 },
+      {
+        id: 2,
+        permutations: [{ annotations: { 'screwdriver.cd/manualStartEnabled': true } }]
+      },
+      {
+        id: 3,
+        permutations: [{ annotations: { 'screwdriver.cd/manualStartEnabled': false } }]
+      },
+      {
+        id: 4,
+        state: ['message'],
+        permutations: [{ annotations: {} }]
+      }
+    ];
+    const expectedOutput = {
+      nodes: [
+        { name: '~pr', pos: { x: 0, y: 0 } },
+        { name: '~commit', pos: { x: 0, y: 1 } },
+        { name: 'main', id: 1, pos: { x: 1, y: 0 } },
+        {
+          name: 'A',
+          id: 2,
+          pos: { x: 2, y: 0 },
+          manualStartDisabled: false
+        },
+        { name: 'B', id: 3, pos: { x: 2, y: 1 }, manualStartDisabled: true },
+        {
+          name: 'C',
+          id: 4,
+          pos: { x: 3, y: 0 },
+          manualStartDisabled: false
+        },
+        { name: 'D', id: 5, pos: { x: 4, y: 0 } }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+        { src: '~commit', dest: 'main', from: { x: 0, y: 1 }, to: { x: 1, y: 0 } },
+        { src: 'main', dest: 'A', from: { x: 1, y: 0 }, to: { x: 2, y: 0 } },
+        { src: 'main', dest: 'B', from: { x: 1, y: 0 }, to: { x: 2, y: 1 } },
+        { src: 'A', dest: 'C', from: { x: 2, y: 0 }, to: { x: 3, y: 0 } },
+        { src: 'B', dest: 'D', from: { x: 2, y: 1 }, to: { x: 4, y: 0 } },
+        { src: 'C', dest: 'D', from: { x: 3, y: 0 }, to: { x: 4, y: 0 } }
+      ],
+      meta: {
+        height: 2,
+        width: 5
+      }
+    };
+    const result = decorateGraph({ inputGraph: COMPLEX_GRAPH, jobs });
+
+    assert.deepEqual(result, expectedOutput);
+  });
+
   test('it handles detached jobs', function(assert) {
     const inputGraph = {
       nodes: [
