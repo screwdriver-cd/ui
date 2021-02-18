@@ -81,6 +81,30 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       .hasText('Go to downstream pipeline ~sd@1234:main Go to downstream pipeline ~sd@2:prod');
   });
 
+  test('it renders disabled manually starting', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        manualStartDisabled: true
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+    }}`);
+
+    assert.dom('.content a').exists({ count: 2 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('p:last-child').hasText('Disabled manually starting');
+  });
+
   test('it renders start link', async function(assert) {
     const data = {
       job: {
