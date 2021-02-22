@@ -5,6 +5,7 @@ import getErrorMessage from 'screwdriver-ui/utils/error-messages';
 import RSVP from 'rsvp';
 
 export default Route.extend({
+  shuttle: service(),
   triggerService: service('pipeline-triggers'),
   routeAfterAuthentication: 'pipeline.events',
   pipelineService: service('pipeline'),
@@ -35,10 +36,8 @@ export default Route.extend({
         page: 1,
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
-      triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id')),
-      pipelinePreference: this.store.queryRecord('preference/pipeline', {
-        filter: { pipelineId }
-      })
+      triggers: this.triggerService.getDownstreamTriggers(pipelineId),
+      pipelinePreference: this.shuttle.getUserPreference(pipelineId)
     }).catch(err => {
       let errorMessage = getErrorMessage(err);
 

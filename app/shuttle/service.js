@@ -12,7 +12,7 @@ import $ from 'jquery';
  */
 export default Service.extend({
   ajax: service(),
-
+  store: service(),
   session: service(),
 
   storeHost: `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}`,
@@ -185,5 +185,114 @@ export default Service.extend({
     const url = `/pipelines/${pipelineId}/latestCommitEvent`;
 
     return this.fetchFromApi(method, url);
+  },
+
+  /**
+   * get
+   * @param  {Number} userId  user Id
+   * @return {Promise}
+   */
+  async getUserSetting() {
+    const method = 'get';
+    // const userId = this.session.get('data.authenticated.username');
+    const userId = 46;
+    const url = `/users/${userId}/settings`;
+
+    return this.fetchFromApi(method, url);
+  },
+
+  /**
+   * updateUserSetting
+   * @param  {Number}  [pipelineId]
+   * @param  {Object}  pipelineSettings
+   * @param  {Boolean} [pipelineSettings.showPRJobs]
+   * @return {Promise}
+   */
+  async updateUserSetting(pipelineId, pipelineSettings) {
+    const method = 'put';
+    // const userId = this.session.get('data.authenticated.username');
+    const userId = 46;
+    const url = `/users/${userId}/settings`;
+    const userSettings = await this.getUserSetting();
+    const data = {
+      ...userSettings,
+      [pipelineId]: pipelineSettings
+    };
+
+    return this.fetchFromApi(method, url, data);
+  },
+
+  /**
+   * getUserPreference
+   * @param  {Number} userId  user Id
+   * @return {Promise}
+   */
+  async getUserPreference(pipelineId) {
+    let localPipelinePreference = await this.store.queryRecord('preference/pipeline', {
+      filter: { pipelineId }
+    });
+    const remotePreferences = await this.getUserSetting();
+    const remotePipelinePreference = remotePreferences[pipelineId];
+
+    // local preference takes precedence
+    if (localPipelinePreference) {
+      if (localPipelinePreference.showPRJobs !== remotePipelinePreference.showPRJobs) {
+        const localPipelinePreferenceSettings = localPipelinePreference.toJSON();
+
+        delete localPipelinePreferenceSettings.pipelineId;
+
+        remotePreferences[pipelineId] = localPipelinePreferenceSettings;
+
+        // don't wait on updating remote preference finishes
+        this.updateUserSetting(pipelineId, remotePipelinePreference);
+      }
+
+      return localPipelinePreference;
+    }
+
+    if (remotePipelinePreference) {
+      // don't wait on creating local preference finishes
+      this.store.createRecord('preference/pipeline', {
+        pipelineId,
+        ...remotePipelinePreference
+      });
+
+      return remotePipelinePreference;
+    }
+
+    // if neither remote nor local preference exists
+    localPipelinePreference = this.store.createRecord('preference/pipeline', {
+      pipelineId
+    });
+    const localPipelinePreferenceSettings = localPipelinePreference.toJSON();
+
+    delete localPipelinePreferenceSettings.pipelineId;
+
+    this.updateUserPreference(pipelineId, {
+      localPipelinePreferenceSettings
+    });
+
+    return localPipelinePreference;
+  },
+
+  /**
+   * updateUserPreference
+   * @param  {Number}  [pipelineId]
+   * @param  {Object}  pipelineSettings
+   * @param  {Boolean} [pipelineSettings.showPRJobs]
+   * @return {Promise}
+   */
+  async updateUserPreference(pipelineId, pipelineSettings) {
+    const method = 'put';
+    // const userId = this.session.get('data.authenticated.username');
+    const userId = 46;
+    const url = `/users/${userId}/settings`;
+    const userSettings = await this.getUserSetting();
+    const data = {
+      ...userSettings,
+      [pipelineId]: pipelineSettings
+    };
+
+    return this.fetchFromApi(method, url, data);
   }
 });

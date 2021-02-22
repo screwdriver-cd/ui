@@ -69,9 +69,7 @@ export default Component.extend({
 
     let showPRJobs = true;
 
-    const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
-      filter: { pipelineId: this.get('pipeline.id') }
-    });
+    const pipelinePreference = await this.shuttle.getUserPreference(this.get('pipeline.id'));
 
     if (pipelinePreference) {
       desiredJobNameLength = pipelinePreference.jobNameLength;
@@ -193,9 +191,7 @@ export default Component.extend({
 
     async updateJobNameLength(jobNameLength) {
       const pipelineId = this.get('pipeline.id');
-      const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
-        filter: { pipelineId: this.get('pipeline.id') }
-      });
+      const pipelinePreference = await this.shuttle.getUserPreference(pipelineId);
 
       if (pipelinePreference) {
         pipelinePreference.set('jobNameLength', jobNameLength);
@@ -224,21 +220,30 @@ export default Component.extend({
 
     async updateShowPRJobs(showPRJobs) {
       const pipelineId = this.get('pipeline.id');
-      const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
+
+      let pipelinePreference = await this.store.queryRecord('preference/pipeline', {
         filter: { pipelineId }
       });
 
       if (pipelinePreference) {
         pipelinePreference.set('showPRJobs', showPRJobs);
-        pipelinePreference.save();
       } else {
-        this.store
-          .createRecord('preference/pipeline', {
-            pipelineId,
-            showPRJobs
-          })
-          .save();
+        pipelinePreference = this.store.createRecord('preference/pipeline', {
+          pipelineId,
+          showPRJobs
+        });
       }
+
+      pipelinePreference
+        .save()
+        .then(() => {
+          return this.shuttle.updateUserPreference(pipelineId, {
+            showPRJobs
+          });
+        })
+        .then(userSettings => {
+          console.log('userSettings', userSettings);
+        });
 
       this.set('showPRJobs', showPRJobs);
     }
