@@ -42,9 +42,10 @@ export default Component.extend({
       if (c) {
         return c.map(s => {
           const name = Object.keys(s)[0];
-          const command = s[name];
+          const command = s[name].command || s[name];
+          const locked = s[name].locked || null;
 
-          return { name, command };
+          return { name, command, locked };
         });
       }
 
