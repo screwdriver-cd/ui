@@ -55,7 +55,7 @@
   <span class="value">
     <ul>
       {{#each steps as |command|}}
-        <li><div class="name">{{command.name}}: </div><div class="value">{{command.command}}</div></li>
+        <li><div class="name">{{command.name}}: {{#if command.locked}}{{fa-icon "lock"}}{{/if}}</div><div class="value">{{command.command}}</div></li>
       {{/each}}
     </ul>
   </span>
