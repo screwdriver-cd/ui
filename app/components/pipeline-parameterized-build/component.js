@@ -32,12 +32,19 @@ export default Component.extend({
    */
   init() {
     this._super(...arguments);
-    const [parameters, parameterizedModel] = this.normalizeParameters(this.buildParameters);
+    const [parameters, parameterizedModel] = this.normalizeParameters(
+      this.buildParameters,
+      this.getDefaultBuildParameters()
+    );
 
     this.setProperties({
       parameters,
       parameterizedModel
     });
+  },
+
+  getDefaultBuildParameters() {
+    return this.getWithDefault('pipeline.parameters', {});
   },
 
   /**
@@ -62,20 +69,27 @@ export default Component.extend({
         description: "User running build"
       }
    * ]
-   * @param  {Object} parameters [description]
-   * @return {[type]}            [description]
+   * @param  {Object} parameters        [description]
+   * @param  {Object} defaultParameters [description]
+   * @return {[type]}                   [description]
    */
-  normalizeParameters(parameters = {}) {
+  normalizeParameters(parameters = {}, defaultParameters = {}) {
     const normalizedParameters = [];
     const normalizedParameterizedModel = {};
 
     Object.entries(parameters).forEach(([propertyName, propertyVal]) => {
       let value = propertyVal.value || propertyVal || '';
       const description = propertyVal.description || '';
+      // If no default value is found, fill with build parameter value
+      const defaultPropertyVal = defaultParameters[propertyName]
+        ? defaultParameters[propertyName]
+        : value;
+      const defaultValue = defaultPropertyVal.value || defaultPropertyVal || value;
 
       normalizedParameters.push({
         name: propertyName,
         value,
+        defaultValues: defaultValue,
         description
       });
 

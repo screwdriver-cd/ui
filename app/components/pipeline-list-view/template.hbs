@@ -42,6 +42,7 @@
   }}
     <h3>Are you sure to start?</h3>
     {{pipeline-parameterized-build
+      pipeline=pipeline
       showSubmitButton=true
       buildParameters=buildParameters
       onSave=(action "startBuild")
