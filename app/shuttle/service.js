@@ -189,14 +189,11 @@ export default Service.extend({
 
   /**
    * get
-   * @param  {Number} userId  user Id
    * @return {Promise}
    */
   async getUserSetting() {
     const method = 'get';
-    // const userId = this.session.get('data.authenticated.username');
-    const userId = 46;
-    const url = `/users/${userId}/settings`;
+    const url = `/users/settings`;
 
     return this.fetchFromApi(method, url);
   },
@@ -210,9 +207,7 @@ export default Service.extend({
    */
   async updateUserSetting(pipelineId, pipelineSettings) {
     const method = 'put';
-    // const userId = this.session.get('data.authenticated.username');
-    const userId = 46;
-    const url = `/users/${userId}/settings`;
+    const url = `/users/settings`;
     const userSettings = await this.getUserSetting();
     const data = {
       ...userSettings,
@@ -224,7 +219,7 @@ export default Service.extend({
 
   /**
    * getUserPreference
-   * @param  {Number} userId  user Id
+   * @param  {Number} pipelineId  pipeline Id
    * @return {Promise}
    */
   async getUserPreference(pipelineId) {
@@ -284,9 +279,7 @@ export default Service.extend({
    */
   async updateUserPreference(pipelineId, pipelineSettings) {
     const method = 'put';
-    // const userId = this.session.get('data.authenticated.username');
-    const userId = 46;
-    const url = `/users/${userId}/settings`;
+    const url = `/users/settings`;
     const userSettings = await this.getUserSetting();
     const data = {
       ...userSettings,
