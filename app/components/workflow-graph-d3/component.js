@@ -6,6 +6,7 @@ import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
+  shuttle: service(),
   store: service(),
   router: service(),
   classNameBindings: ['minified'],
@@ -153,7 +154,12 @@ export default Component.extend({
 
     let displayJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
 
-    const pipelinePreference = await this.shuttle.getUserPreference(this.get('pipeline.id'));
+    // const pipelinePreference = await this.shuttle.getUserPreference(this.get('pipeline.id'));
+    const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
+      filter: {
+        pipelineId: this.get('pipeline.id')
+      }
+    });
 
     if (pipelinePreference) {
       const { jobNameLength } = pipelinePreference;

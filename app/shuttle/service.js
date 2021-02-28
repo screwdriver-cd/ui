@@ -1,6 +1,7 @@
-import { computed } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
+
 import $ from 'jquery';
 
 /**
@@ -210,8 +211,10 @@ export default Service.extend({
     const url = `/users/settings`;
     const userSettings = await this.getUserSetting();
     const data = {
-      ...userSettings,
-      [pipelineId]: pipelineSettings
+      settings: {
+        ...userSettings,
+        [pipelineId]: pipelineSettings
+      }
     };
 
     return this.fetchFromApi(method, url, data);
@@ -223,11 +226,15 @@ export default Service.extend({
    * @return {Promise}
    */
   async getUserPreference(pipelineId) {
+    if (pipelineId === undefined) {
+      return {};
+    }
+
     let localPipelinePreference = await this.store.queryRecord('preference/pipeline', {
       filter: { pipelineId }
     });
     const remotePreferences = await this.getUserSetting();
-    const remotePipelinePreference = remotePreferences[pipelineId];
+    const remotePipelinePreference = getWithDefault(remotePreferences, pipelineId, {});
 
     // local preference takes precedence
     if (localPipelinePreference) {
@@ -282,8 +289,10 @@ export default Service.extend({
     const url = `/users/settings`;
     const userSettings = await this.getUserSetting();
     const data = {
-      ...userSettings,
-      [pipelineId]: pipelineSettings
+      settings: {
+        ...userSettings,
+        [pipelineId]: pipelineSettings
+      }
     };
 
     return this.fetchFromApi(method, url, data);
