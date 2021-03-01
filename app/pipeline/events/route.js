@@ -2,6 +2,7 @@ import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
 import getErrorMessage from 'screwdriver-ui/utils/error-messages';
+import { getWithDefault } from '@ember/object';
 import RSVP from 'rsvp';
 
 export default Route.extend({
@@ -14,7 +15,7 @@ export default Route.extend({
   },
   setupController(controller, model) {
     this._super(controller, model);
-    const { pipelinePreference } = model;
+    const pipelinePreference = getWithDefault(model, 'pipelinePreference', {});
 
     controller.setProperties({
       activeTab: 'events',

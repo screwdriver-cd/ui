@@ -7,6 +7,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
+import Pretender from 'pretender';
 import injectSessionStub from '../../../helpers/inject-session';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
@@ -14,8 +15,24 @@ let syncService;
 
 let cacheService;
 
+let server;
+
 module('Integration | Component | pipeline options', function(hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function() {
+    server = new Pretender();
+
+    server.get('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
+  });
+
+  hooks.afterEach(function() {
+    server.shutdown();
+  });
 
   test('it renders', async function(assert) {
     this.set(
@@ -160,7 +177,7 @@ module('Integration | Component | pipeline options', function(hooks) {
   });
 
   test('it opens job toggle modal', async function(assert) {
-    assert.expect(9);
+    assert.expect(10);
 
     injectSessionStub(this);
 
@@ -185,6 +202,15 @@ module('Integration | Component | pipeline options', function(hooks) {
         assert.ok(true, 'queryRecord called');
 
         return resolve(null);
+      },
+      createRecord() {
+        assert.ok(true, 'queryRecord called');
+
+        return resolve({
+          7: {
+            showJobPRs: false
+          }
+        });
       }
     });
 

@@ -87,6 +87,12 @@ module('Acceptance | pipeline build', function(hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify({})
     ]);
+
+    server.get('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
   });
 
   hooks.afterEach(function() {
