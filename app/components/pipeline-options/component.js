@@ -234,16 +234,11 @@ export default Component.extend({
         });
       }
 
-      pipelinePreference
-        .save()
-        .then(() => {
-          return this.shuttle.updateUserPreference(pipelineId, {
-            showPRJobs
-          });
-        })
-        .then(userSettings => {
-          console.log('userSettings', userSettings);
+      pipelinePreference.save().then(() => {
+        return this.shuttle.updateUserPreference(pipelineId, {
+          showPRJobs
         });
+      });
 
       this.set('showPRJobs', showPRJobs);
     }
