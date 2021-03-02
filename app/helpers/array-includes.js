@@ -2,7 +2,7 @@ import { helper } from '@ember/component/helper';
 
 /**
  * return whether toFind exists in array or not
- * @method ansiColorize
+ * @method arrayIncludes
  * @param  {String}    toFind  Value Any string
  * @param  {Array}     array   An array of string or a string
  * @return {Boolean}
