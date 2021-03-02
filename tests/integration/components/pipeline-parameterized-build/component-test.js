@@ -121,7 +121,7 @@ module('Integration | Component | pipeline-parameterized-build', function(hooks)
     assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
     assert
       .dom('.fa-exclamation-triangle')
-      .exists({ count: 2 }, 'Theare are 2 default value warnings');
+      .exists({ count: 2 }, 'There are are 2 default value warnings');
     assert.dom('.ember-basic-dropdown').exists({ count: 1 }, 'There is 1 dropdown list');
     assert.dom('.form-control').exists({ count: 2 }, 'There is 2 input field');
     assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');
