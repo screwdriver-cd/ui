@@ -50,10 +50,17 @@ export default Component.extend({
   /**
    * normalizeParameters transform given parameters from object into array of objects
    * this method also backfills with default properties
-   * For example: {
+   * For example:
+   * parameters = {
         "_started_at": "simple",
         "user": {
           "value": "adong",
+          "description": "User running build"
+        }
+     }
+     defaultParameters = {
+        "user": {
+          "value": "dummy",
           "description": "User running build"
         }
    * }
@@ -62,10 +69,12 @@ export default Component.extend({
    *  {
         name: "_started_at":
         value: "simple",
+        defaultValues: "simple"
         description: ""
       }, {
         name: "user"
         value: "adong",
+        defaultValues: "dummy"
         description: "User running build"
       }
    * ]
