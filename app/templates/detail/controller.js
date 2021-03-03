@@ -14,7 +14,7 @@ export default Controller.extend({
     this.set('errorMessage', '');
   },
   trusted: computed('templates.templateData.[]', function computeTrusted() {
-    return this.templates.templateData.some(t => t.trusted);
+    return this.templates.templateData.some(t => t.trusted && t.latest);
   }),
   isAdmin: computed(function isAdmin() {
     const token = this.get('session.data.authenticated.token');
