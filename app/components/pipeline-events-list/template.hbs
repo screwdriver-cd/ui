@@ -1,6 +1,7 @@
 <div>
   {{#each groups as |group|}}
     {{pipeline-events-row-group
+      pipeline=pipeline
       expandedEventsGroup=expandedEventsGroup
       events=group
       selectedEvent=selectedEvent

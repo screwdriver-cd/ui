@@ -86,10 +86,44 @@ module('Integration | Component | pipeline-parameterized-build', function(hooks)
     await render(hbs`{{pipeline-parameterized-build
       buildParameters=buildParameters
       showSubmitButton=showSubmitButton}}`);
-    assert.dom('.form-group').exists({ count: 3 }, 'There are 2 parameters');
+    assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
     assert.dom('.fa-question-circle').exists({ count: 2 }, 'Theare are 2 description info');
     assert.dom('.ember-basic-dropdown').exists({ count: 1 }, 'There is 1 dropdown list');
-    assert.dom('.form-control').exists({ count: 2 }, 'There is 1 input field');
+    assert.dom('.form-control').exists({ count: 2 }, 'There are 2 input field');
+    assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');
+  });
+
+  test('it renders default parameter', async function(assert) {
+    this.setProperties({
+      pipeline: {
+        parameters: {
+          from: 'latest',
+          to: {
+            value: ['test', 'stable']
+          },
+          image: 'test-image'
+        }
+      },
+      buildParameters: {
+        from: 'foo',
+        to: {
+          value: ['bar', 'test', 'stable']
+        },
+        image: 'test-image'
+      },
+      showSubmitButton: true
+    });
+
+    await render(hbs`{{pipeline-parameterized-build
+      pipeline=pipeline
+      buildParameters=buildParameters
+      showSubmitButton=showSubmitButton}}`);
+    assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
+    assert
+      .dom('.fa-exclamation-triangle')
+      .exists({ count: 2 }, 'There are are 2 default value warnings');
+    assert.dom('.ember-basic-dropdown').exists({ count: 1 }, 'There is 1 dropdown list');
+    assert.dom('.form-control').exists({ count: 2 }, 'There is 2 input field');
     assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');
   });
 });
