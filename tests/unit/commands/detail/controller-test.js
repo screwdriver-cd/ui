@@ -41,7 +41,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
 
     controller.set('model', {
       commandData: [
-        { id: 3, version: '3.0.0', trusted: true },
+        { id: 3, version: '3.0.0', trusted: true, latest: true },
         { id: 2, version: '2.0.0' },
         { id: 1, version: '1.0.0' }
       ],
