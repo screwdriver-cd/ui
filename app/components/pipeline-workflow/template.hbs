@@ -35,6 +35,7 @@
       {{#if (eq tooltipData.job.status "FROZEN")}}
         {{#if (get-length tooltipData.selectedEvent.meta.parameters)}}
           {{#pipeline-parameterized-build
+            pipeline=pipeline
             buildParameters=tooltipData.selectedEvent.meta.parameters
             as |parameterizedBuild| }}
             <div class="form-group form-horizontal">
@@ -80,6 +81,7 @@
         {{/if}}
       {{else if (get-length tooltipData.selectedEvent.meta.parameters)}}
         {{#pipeline-parameterized-build
+          pipeline=pipeline
           buildParameters=buildParameters
           as |parameterizedBuild| }}
           <div class="row">

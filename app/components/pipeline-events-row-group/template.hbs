@@ -14,6 +14,7 @@
         <span class="clearfix" />
       {{/if}}
       {{pipeline-event-row
+              pipeline=pipeline
               event=event
               selectedEvent=selectedEvent
               lastSuccessful=lastSuccessful
@@ -22,6 +23,7 @@
       }}
     {{else if (eq isExpanded true)}}
       {{pipeline-event-row
+              pipeline=pipeline
               event=event
               selectedEvent=selectedEvent
               latestCommit=latestCommit
