@@ -154,7 +154,6 @@ export default Component.extend({
 
     let displayJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
 
-    // const pipelinePreference = await this.shuttle.getUserPreference(this.get('pipeline.id'));
     const pipelinePreference = await this.store.queryRecord('preference/pipeline', {
       filter: {
         pipelineId: this.get('pipeline.id')
