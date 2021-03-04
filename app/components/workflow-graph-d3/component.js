@@ -6,12 +6,15 @@ import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-
 import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
+  shuttle: service(),
   store: service(),
   router: service(),
   classNameBindings: ['minified'],
   displayJobNames: true,
+  showPRJobs: true,
   graph: { nodes: [], edges: [] },
   decoratedGraph: computed(
+    'showPRJobs',
     'showDownstreamTriggers',
     'workflowGraph',
     'startFrom',
@@ -53,6 +56,15 @@ export default Component.extend({
 
             graph.edges.removeObjects(endEdges);
           });
+        }
+
+        // remove jobs that starts from ~pr
+        if (!this.showPRJobs) {
+          const prNodes = graph.nodes.filter(node => node.name === '~pr');
+          const prEdges = graph.edges.filter(edge => edge.src === '~pr');
+
+          graph.nodes.removeObjects(prNodes);
+          graph.edges.removeObjects(prEdges);
         }
 
         set(this, 'graph', graph);

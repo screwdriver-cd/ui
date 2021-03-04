@@ -70,6 +70,11 @@ module('Acceptance | pipeline pr-chain', function(hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify({ id: '2', sha: 'abcdef1029384' })
     ]);
+    server.get('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
   });
 
   hooks.afterEach(function() {
