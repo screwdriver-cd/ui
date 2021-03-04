@@ -226,7 +226,7 @@ export default Component.extend({
       });
 
       if (pipelinePreference) {
-        pipelinePreference.set('showPRJobs', showPRJobs);
+        pipelinePreference.showPRJobs = showPRJobs;
       } else {
         pipelinePreference = this.store.createRecord('preference/pipeline', {
           pipelineId,

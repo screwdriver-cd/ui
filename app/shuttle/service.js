@@ -189,7 +189,7 @@ export default Service.extend({
   },
 
   /**
-   * get
+   * getUserSetting
    * @return {Promise}
    */
   async getUserSetting() {
@@ -197,27 +197,6 @@ export default Service.extend({
     const url = `/users/settings`;
 
     return this.fetchFromApi(method, url);
-  },
-
-  /**
-   * updateUserSetting
-   * @param  {Number}  [pipelineId]
-   * @param  {Object}  pipelineSettings
-   * @param  {Boolean} [pipelineSettings.showPRJobs]
-   * @return {Promise}
-   */
-  async updateUserSetting(pipelineId, pipelineSettings) {
-    const method = 'put';
-    const url = `/users/settings`;
-    const userSettings = await this.getUserSetting();
-    const data = {
-      settings: {
-        ...userSettings,
-        [pipelineId]: pipelineSettings
-      }
-    };
-
-    return this.fetchFromApi(method, url, data);
   },
 
   /**
@@ -246,7 +225,7 @@ export default Service.extend({
         remotePreferences[pipelineId] = localPipelinePreferenceSettings;
 
         // don't wait on updating remote preference finishes
-        this.updateUserSetting(pipelineId, remotePipelinePreference);
+        this.updateUserPreference(pipelineId, remotePipelinePreference);
       }
 
       return localPipelinePreference;
