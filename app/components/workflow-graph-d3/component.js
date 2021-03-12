@@ -5,6 +5,34 @@ import { inject as service } from '@ember/service';
 import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-tools';
 import ENV from 'screwdriver-ui/config/environment';
 
+/**
+ * remove branch of given node and its children
+ * @param  {Node} node     Given node
+ * @param  {Graph} graph   Given graph
+ * @return {undefined}     Removal operation is in-place
+ */
+function removeBranch(node, graph) {
+  if (node && node.name) {
+    // remove node if it only has 1 edge
+    if (graph.edges.filter(edge => edge.dest === node.name).length <= 1) {
+      graph.nodes.removeObject(node);
+    }
+
+    let edgesToBeRemoved = [];
+
+    graph.edges.forEach(edge => {
+      if (edge.src === node.name) {
+        const nodesToBeRemoved = graph.nodes.findBy('name', edge.dest);
+
+        edgesToBeRemoved.push(edge);
+        removeBranch(nodesToBeRemoved, graph);
+      }
+    });
+
+    graph.edges.removeObjects(edgesToBeRemoved);
+  }
+}
+
 export default Component.extend({
   shuttle: service(),
   store: service(),
@@ -60,11 +88,9 @@ export default Component.extend({
 
         // remove jobs that starts from ~pr
         if (!this.showPRJobs) {
-          const prNodes = graph.nodes.filter(node => node.name === '~pr');
-          const prEdges = graph.edges.filter(edge => edge.src === '~pr');
+          const prNode = graph.nodes.findBy('name', '~pr');
 
-          graph.nodes.removeObjects(prNodes);
-          graph.edges.removeObjects(prEdges);
+          removeBranch(prNode, graph);
         }
 
         set(this, 'graph', graph);
