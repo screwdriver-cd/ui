@@ -151,9 +151,12 @@ export async function updateEvents(page) {
     this.set('eventsPage', page);
     this.set('isFetching', false);
 
-    // FIXME: Skip duplicate ones if new events got added added to the head
-    // of events list
-    this.set('paginateEvents', this.paginateEvents.concat(nextEvents));
+    // Skip duplicate ones if new events got added added to the head
+    const noDuplicateEvents = nextEvents.filter(
+      nextEvent => !this.paginateEvents.findBy('id', nextEvent.id)
+    );
+
+    this.paginateEvents.pushObjects(noDuplicateEvents);
   }
 
   return null;
