@@ -151,7 +151,7 @@ export async function updateEvents(page) {
     this.set('eventsPage', page);
     this.set('isFetching', false);
 
-    // Skip duplicate ones if new events got added added to the head
+    // Skip duplicate ones if new events got added to the head of the events list
     const noDuplicateEvents = nextEvents.filter(
       nextEvent => !this.paginateEvents.findBy('id', nextEvent.id)
     );
