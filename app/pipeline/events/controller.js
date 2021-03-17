@@ -166,21 +166,23 @@ export default Controller.extend(ModelReloaderMixin, {
   lastRefreshed: moment(),
   expandedEventsGroup: {},
   shouldReload(model) {
-    const event = model.events.find(m => m.isRunning);
+    let res = SHOULD_RELOAD_SKIP;
 
-    let res;
+    if (this.isDestroyed || this.isDestroying) {
+      const event = model.events.find(m => m.isRunning);
 
-    let diff;
-    const lastRefreshed = this.get('lastRefreshed');
+      let diff;
+      const lastRefreshed = this.get('lastRefreshed');
 
-    if (event) {
-      res = SHOULD_RELOAD_YES;
-    } else {
-      diff = moment().diff(lastRefreshed, 'milliseconds');
-      if (diff > this.reloadTimeout * 2) {
+      if (event) {
         res = SHOULD_RELOAD_YES;
       } else {
-        res = SHOULD_RELOAD_SKIP;
+        diff = moment().diff(lastRefreshed, 'milliseconds');
+        if (diff > this.reloadTimeout * 2) {
+          res = SHOULD_RELOAD_YES;
+        } else {
+          res = SHOULD_RELOAD_SKIP;
+        }
       }
     }
 
