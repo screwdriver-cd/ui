@@ -151,9 +151,12 @@ export async function updateEvents(page) {
     this.set('eventsPage', page);
     this.set('isFetching', false);
 
-    // FIXME: Skip duplicate ones if new events got added added to the head
-    // of events list
-    this.set('paginateEvents', this.paginateEvents.concat(nextEvents));
+    // Skip duplicate ones if new events got added to the head of the events list
+    const noDuplicateEvents = nextEvents.filter(
+      nextEvent => !this.paginateEvents.findBy('id', nextEvent.id)
+    );
+
+    this.paginateEvents.pushObjects(noDuplicateEvents);
   }
 
   return null;
@@ -163,21 +166,23 @@ export default Controller.extend(ModelReloaderMixin, {
   lastRefreshed: moment(),
   expandedEventsGroup: {},
   shouldReload(model) {
-    const event = model.events.find(m => m.isRunning);
+    let res = SHOULD_RELOAD_SKIP;
 
-    let res;
+    if (this.isDestroyed || this.isDestroying) {
+      const event = model.events.find(m => m.isRunning);
 
-    let diff;
-    const lastRefreshed = this.get('lastRefreshed');
+      let diff;
+      const lastRefreshed = this.get('lastRefreshed');
 
-    if (event) {
-      res = SHOULD_RELOAD_YES;
-    } else {
-      diff = moment().diff(lastRefreshed, 'milliseconds');
-      if (diff > this.reloadTimeout * 2) {
+      if (event) {
         res = SHOULD_RELOAD_YES;
       } else {
-        res = SHOULD_RELOAD_SKIP;
+        diff = moment().diff(lastRefreshed, 'milliseconds');
+        if (diff > this.reloadTimeout * 2) {
+          res = SHOULD_RELOAD_YES;
+        } else {
+          res = SHOULD_RELOAD_SKIP;
+        }
       }
     }
 
