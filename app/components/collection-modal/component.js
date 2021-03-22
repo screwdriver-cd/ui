@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 import { schedule } from '@ember/runloop';
 
 export default Component.extend({
@@ -9,7 +10,7 @@ export default Component.extend({
   errorMessage: null,
   store: service(),
   isSaveDisabled: computed('name', function() {
-    return this.get('name') === null;
+    return isEmpty(this.get('name'));
   }),
   actions: {
     setModal(open) {
