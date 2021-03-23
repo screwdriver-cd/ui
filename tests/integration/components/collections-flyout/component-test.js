@@ -4,7 +4,7 @@ import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, findAll } from '@ember/test-helpers';
+import { render, click, findAll, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import injectSessionStub from '../../../helpers/inject-session';
@@ -106,7 +106,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     assert.dom('.name input').exists({ count: 1 });
     assert.dom('.description textarea').exists({ count: 1 });
     assert.dom('.collection-form__cancel').hasText('Cancel');
-    assert.dom('.collection-form__create').hasText('Save');
+    assert.dom('.collection-form__create').hasText('Create');
   });
 
   test('it renders an active collection', async function(assert) {
@@ -167,11 +167,10 @@ module('Integration | Component | collections flyout', function(hooks) {
 
     await click('.header__create');
 
-    this.set('name', 'Test');
-    this.set('description', 'Test description');
-
     assert.ok(this.get('showModal'));
 
+    await fillIn('.name input', 'Test');
+    await fillIn('.description textArea', 'Test description');
     await click('.collection-form__create');
 
     // Modal should remain open because of error
