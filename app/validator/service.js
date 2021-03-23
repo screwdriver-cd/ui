@@ -12,7 +12,7 @@ export default Service.extend({
    * @return {Boolean}
    */
   isTemplate(yaml) {
-    return /^name/.test(yaml);
+    return /^name|\nname: |\nnamespace: /.test(yaml);
   },
 
   /**
