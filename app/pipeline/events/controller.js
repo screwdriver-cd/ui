@@ -156,7 +156,7 @@ export async function updateEvents(page) {
       nextEvent => !this.paginateEvents.findBy('id', nextEvent.id)
     );
 
-    this.paginateEvents.pushObjects(noDuplicateEvents);
+    this.set('paginateEvents', this.paginateEvents.concat(noDuplicateEvents));
   }
 
   return null;
