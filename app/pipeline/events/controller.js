@@ -313,7 +313,7 @@ export default Controller.extend(ModelReloaderMixin, {
       return newModelEvents;
     }
   }),
-  pipelineEvents: computed('modelEvents', 'paginateEvents', {
+  pipelineEvents: computed('modelEvents', 'paginateEvents.[]', {
     get() {
       return [].concat(this.modelEvents, this.paginateEvents);
     }
