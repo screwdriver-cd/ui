@@ -62,6 +62,7 @@
             <form.element
               @controlType="text"
               @label="Name"
+              @required={{true}}
               @placeholder="Screwdriver CI/CD"
               @value={{collection.name}}
               @onChange={{action "updateCollectionName"}}
@@ -77,7 +78,7 @@
         </modal.body>
         <modal.footer>
           <BsButton @onClick={{action modal.close}}>Cancel</BsButton>
-          <BsButton @type="primary" @onClick={{action "onSubmitSettingModal"}}>Save</BsButton>
+          <BsButton @type="primary" @disabled={{isModelSaveDisabled}} @onClick={{action "onSubmitSettingModal"}}>Save</BsButton>
         </modal.footer>
       </BsModal>
 
