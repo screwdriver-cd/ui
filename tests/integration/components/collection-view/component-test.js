@@ -1309,4 +1309,50 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.alert-success > span').hasText(`
       The link of this collection is successfully copied to the clipboard.`);
   });
+
+  test('it should verify collection edit modal', async function(assert) {
+    this.collection.set('type', 'normal');
+
+    await render(hbs`
+      {{collection-view
+        collection=collection
+        collections=collections
+        metricsMap=metricsMap
+      }}
+    `);
+
+    await click('.collection-operation.settings-operation');
+
+    assert.dom('.modal-title').hasText('Settings');
+    assert.dom('.is-required .control-label').hasText('Name');
+    assert.dom('.modal-footer .btn-default').hasText('Cancel');
+    assert
+      .dom('.modal-footer .btn-primary')
+      .hasText('Save')
+      .isDisabled('Should disable Save button when non of the options changes');
+
+    await fillIn('.form-group input', 'Test 1');
+    assert
+      .dom('.modal-footer .btn-primary')
+      .isEnabled('Should enable save when name value is changed');
+
+    await fillIn('.form-group input', '');
+    assert
+      .dom('.modal-footer .btn-primary')
+      .isDisabled('Should disable save when name value is empty');
+
+    await fillIn('.form-group input', 'Test Collection');
+    await click('.modal-footer .btn-primary');
+    assert.dom('.header__name').hasText('Test Collection');
+
+    await click('.collection-operation.settings-operation');
+    await fillIn('.form-group textArea', 'Test Description');
+    assert
+      .dom('.modal-footer .btn-primary')
+      .isEnabled('Should enable save when name value is changed');
+    await fillIn('.form-group input', 'Test Collection Updated');
+
+    await click('.modal-footer .btn-default');
+    assert.dom('.header__name').hasText('Test Collection');
+  });
 });

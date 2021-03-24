@@ -1,5 +1,6 @@
 import { sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
+import { isEmpty, isEqual } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
@@ -95,6 +96,21 @@ export default Component.extend({
       return [];
     }
   }),
+  isModelSaveDisabled: computed(
+    'collectionName',
+    'collectionDescription',
+    'showSettingModal',
+    function isModelSaveDisabled() {
+      const isDescriptionNotChanged = this.collection.description
+        ? isEqual(this.collectionDescription, this.collection.description)
+        : isEmpty(this.collectionDescription);
+
+      return (
+        isEmpty(this.collectionName) ||
+        !(!isEqual(this.collectionName, this.collection.name) || !isDescriptionNotChanged)
+      );
+    }
+  ),
 
   actions: {
     /**
