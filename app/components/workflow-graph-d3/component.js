@@ -13,23 +13,25 @@ import ENV from 'screwdriver-ui/config/environment';
  */
 function removeBranch(node, graph) {
   if (node && node.name) {
+    const inEdges = graph.edges.filter(edge => edge.dest === node.name).length;
+
     // remove node if it only has 1 edge
-    if (graph.edges.filter(edge => edge.dest === node.name).length <= 1) {
+    if (inEdges === 0) {
+      // keep a copy of edges to aid in-place edge removal
+      const edges = graph.edges.slice(0);
+
+      edges.forEach(edge => {
+        if (edge.src === node.name) {
+          const nodeToBeRemoved = graph.nodes.findBy('name', edge.dest);
+
+          graph.edges.removeObject(edge);
+
+          removeBranch(nodeToBeRemoved, graph);
+        }
+      });
+
       graph.nodes.removeObject(node);
     }
-
-    let edgesToBeRemoved = [];
-
-    graph.edges.forEach(edge => {
-      if (edge.src === node.name) {
-        const nodesToBeRemoved = graph.nodes.findBy('name', edge.dest);
-
-        edgesToBeRemoved.push(edge);
-        removeBranch(nodesToBeRemoved, graph);
-      }
-    });
-
-    graph.edges.removeObjects(edgesToBeRemoved);
   }
 }
 
