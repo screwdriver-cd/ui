@@ -13,7 +13,7 @@ export default Route.extend({
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
   },
-  setupController(controller, model) {
+  setupController(controller, model = {}) {
     this._super(controller, model);
     const pipelinePreference = getWithDefault(model, 'pipelinePreference', {});
 
