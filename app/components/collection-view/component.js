@@ -40,7 +40,7 @@ export default Component.extend({
   showViewSwitch: computed('collection.pipelineIds', function showViewSwitch() {
     return this.collection.pipelineIds.length !== 0;
   }),
-  collections: computed('store', {
+  collections: computed({
     get() {
       if (
         !get(this, 'session.isAuthenticated') ||
@@ -164,6 +164,7 @@ export default Component.extend({
             this.setProperties({
               removePipelineError: null,
               selectedPipelines: [],
+              reset: true,
               isOrganizing: false,
               collection
             });
@@ -209,6 +210,7 @@ export default Component.extend({
           this.setProperties({
             addCollectionError: null,
             selectedPipelines: [],
+            reset: true,
             isOrganizing: false
           });
         })
