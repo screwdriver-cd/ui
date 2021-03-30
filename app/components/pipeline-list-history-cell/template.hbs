@@ -5,6 +5,8 @@
         {{#link-to "pipeline.build" build.id title=build.id}}
           {{fa-icon "circle" fixedWidth=true class=build.status}}
         {{/link-to}}
+      {{else}}
+        {{fa-icon "circle" fixedWidth=true class=build.status}}
       {{/if}}
     {{/each}}
   </div>
