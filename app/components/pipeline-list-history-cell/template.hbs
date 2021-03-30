@@ -1,9 +1,13 @@
 <div class="history">
   <div>
     {{#each builds as |build|}}
-      {{#link-to "pipeline.build" build.id title=build.id}}
+      {{#if (eq build.status "CREATED")}}
         {{fa-icon "circle" fixedWidth=true class=build.status}}
-      {{/link-to}}
+      {{else}}
+        {{#link-to "pipeline.build" build.id title=build.id}}
+          {{fa-icon "circle" fixedWidth=true class=build.status}}
+        {{/link-to}}
+      {{/if}}
     {{/each}}
   </div>
 </div>
