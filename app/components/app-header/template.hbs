@@ -57,12 +57,12 @@
               escape-press=(action "cancelSearch")
               autofocus="true"
               value=searchTerm}}
-            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search"}}</button>
+            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search" title="Search"}}</button>
           </form>
         {{/nav.item}}
       {{else}}
         {{#nav.item}}
-          <a href="#" class="icon search" {{action (mut showSearch) (not showSearch) preventDefault=false}}>{{inline-svg "search" class="img"}}</a>
+          <a href="#" class="icon search" title="Search" {{action (mut showSearch) (not showSearch) preventDefault=false}}>{{inline-svg "search" class="img"}}</a>
         {{/nav.item}}
       {{/if}}
 
@@ -73,7 +73,7 @@
           {{/dd.toggle}}
           {{#dd.menu as |ddm|}}
             {{#ddm.item}}
-              <a href={{docUrl}} class="icon docs">
+              <a href={{docUrl}} class="icon docs" title="Documentation and Contact">
                 {{inline-svg "file-text" class="img"}}<span>Documentation</span>
               </a>
             {{/ddm.item}}
