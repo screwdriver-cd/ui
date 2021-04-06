@@ -2,7 +2,7 @@
   {{#if (eq user.username "sd:scheduler")}}
     <img src="/favicon.ico" alt="Screwdriver scheduler's avatar">
   {{else}}
-    {{#if isOpenSourceInstance}}
+    {{#if showAvatar}}
       <img src={{user.avatar}} alt="{{user.name}}'s avatar">
     {{/if}}
   {{/if}}
