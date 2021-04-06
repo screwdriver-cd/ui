@@ -1,8 +1,8 @@
 <a href={{user.url}} title={{causeMessage}}>
-  {{#if isOpenSourceInstance}}
-    {{#if (eq user.username "sd:scheduler")}}
-      <img src="/favicon.ico" alt="Screwdriver scheduler's avatar">
-    {{else}}
+  {{#if (eq user.username "sd:scheduler")}}
+    <img src="/favicon.ico" alt="Screwdriver scheduler's avatar">
+  {{else}}
+    {{#if isOpenSourceInstance}}
       <img src={{user.avatar}} alt="{{user.name}}'s avatar">
     {{/if}}
   {{/if}}
