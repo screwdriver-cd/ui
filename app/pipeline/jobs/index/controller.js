@@ -100,7 +100,8 @@ export default Controller.extend(ModelReloaderMixin, {
           numBuilds: ENV.APP.NUM_BUILDS_LISTED
         })
         .then(jobsDetails => {
-          const nextJobsDetails = jobsDetails.toArray();
+          // filter out CREATED status jobs
+          const nextJobsDetails = jobsDetails.toArray().filter(j => j.status !== 'CREATED');
 
           nextJobsDetails.forEach(nextJobDetail => {
             const job = this.get('pipeline.jobs').find(j => j.id === String(nextJobDetail.jobId));
