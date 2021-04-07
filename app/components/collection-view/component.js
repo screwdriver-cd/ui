@@ -146,6 +146,7 @@ export default Component.extend({
           this.store.findRecord('collection', this.get('collection.id')).then(collection => {
             this.setProperties({
               removePipelineError: null,
+              selectedPipelines: [],
               isOrganizing: false,
               collection
             });
@@ -190,6 +191,7 @@ export default Component.extend({
         .then(() => {
           this.setProperties({
             addCollectionError: null,
+            selectedPipelines: [],
             isOrganizing: false
           });
         })
