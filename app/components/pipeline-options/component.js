@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { inject as service } from '@ember/service';
 import { not, or, sort } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
@@ -73,7 +73,7 @@ export default Component.extend({
 
     if (pipelinePreference) {
       desiredJobNameLength = pipelinePreference.jobNameLength;
-      showPRJobs = pipelinePreference.showPRJobs;
+      showPRJobs = getWithDefault(pipelinePreference, 'showPRJobs', true);
     }
 
     this.setProperties({ desiredJobNameLength, showPRJobs });
