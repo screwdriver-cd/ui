@@ -6,9 +6,22 @@
     <button {{action "startAll"}} class="start-button">Start All</button>
   </div>
   <ul class="col-xs-12 col-md-8">
-    {{#each pipelines as |pipeline|}}
-      <li class="appId">{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}</li>
-    {{/each}}
+    <table>
+      <thead>
+        <tr>
+          <th class="appId">Name</th>
+          <th class="branch">Branch</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each pipelines as |pipeline|}}
+          <tr>
+            <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
+            <td class="branch"><a href={{branch-url-encode pipeline.hubUrl}}>{{fa-icon "code-fork"}}{{pipeline.branch}}</a></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </ul>
 {{else}}
   <div class="num-results">
