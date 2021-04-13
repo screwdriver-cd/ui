@@ -16,6 +16,52 @@
     color: $sd-link;
   }
 
+  .appId {
+    text-align: left;
+    width: 45%;
+  }
+
+  .branch {
+    width: 25%;
+    text-align: right;
+  }
+
+  .account {
+    width: 20%;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  tbody tr:hover {
+    background-color: $sd-separator;
+    .appId {
+      text-decoration: underline;
+    }
+  }
+
+  .num-results {
+    padding: 10px;
+    font-size: 14px;
+    color: $sd-text-med;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: $sd-text-med;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    border-bottom: 1px solid $sd-text-light;
+  }
+
   li {
     list-style: none;
     padding: 10px;

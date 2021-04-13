@@ -30,7 +30,7 @@ export default DS.Model.extend({
       let { branch, rootDir } = this.scmRepo || {};
 
       if (rootDir) {
-        branch = `${branch}#${rootDir}`;
+        branch = `${branch}:${rootDir}`;
       }
 
       return branch;
