@@ -1,5 +1,5 @@
 import { sort } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { isEmpty, isEqual } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -39,6 +39,23 @@ export default Component.extend({
 
   showViewSwitch: computed('collection.pipelineIds', function showViewSwitch() {
     return this.collection.pipelineIds.length !== 0;
+  }),
+  collections: computed({
+    get() {
+      if (
+        !get(this, 'session.isAuthenticated') ||
+        get(this, 'session.data.authenticated.isGuest')
+      ) {
+        return [];
+      }
+      const collections = this.store.peekAll('collection');
+
+      if (collections.isLoaded) {
+        return collections;
+      }
+
+      return this.store.findAll('collection');
+    }
   }),
 
   showOrganizeButton: computed(
@@ -147,6 +164,7 @@ export default Component.extend({
             this.setProperties({
               removePipelineError: null,
               selectedPipelines: [],
+              reset: true,
               isOrganizing: false,
               collection
             });
@@ -192,6 +210,7 @@ export default Component.extend({
           this.setProperties({
             addCollectionError: null,
             selectedPipelines: [],
+            reset: true,
             isOrganizing: false
           });
         })

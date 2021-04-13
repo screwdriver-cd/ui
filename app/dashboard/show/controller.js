@@ -4,7 +4,6 @@ import Controller from '@ember/controller';
 
 export default Controller.extend({
   collection: alias('model.collection'),
-  collections: alias('model.collections'),
   actions: {
     removePipeline(pipelineId) {
       const collectionId = this.get('collection.id');
