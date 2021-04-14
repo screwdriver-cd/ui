@@ -280,7 +280,7 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       if (this.activeTab === 'pulls') {
         this.cachedShowPRJobs = this.showPRJobs;
-        this.showPRJobs = false;
+        this.showPRJobs = true;
 
         return 'pr';
       }
