@@ -278,16 +278,7 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   currentEventType: computed('activeTab', {
     get() {
-      if (this.activeTab === 'pulls') {
-        this.cachedShowPRJobs = this.showPRJobs;
-        this.showPRJobs = true;
-
-        return 'pr';
-      }
-
-      this.showPRJobs = this.cachedShowPRJobs;
-
-      return 'pipeline';
+      return this.activeTab === 'pulls' ? 'pr' : 'pipeline';
     }
   }),
   // Aggregates first page events and events via ModelReloaderMixin
