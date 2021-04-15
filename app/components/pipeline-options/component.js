@@ -39,7 +39,9 @@ export default Component.extend({
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
-    return this.jobs.filter(j => !j.name.match(prRegex)).sortBy('name');
+    return getWithDefault(this, 'jobs', [])
+      .filter(j => !j.name.match(prRegex))
+      .sortBy('name');
   }),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
