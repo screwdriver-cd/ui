@@ -116,6 +116,11 @@ export default DS.Model.extend(ModelReloaderMixin, {
           status = get(this, 'isComplete') ? 'SUCCESS' : 'RUNNING';
         }
 
+        // override CREATED status to RUNNING for event status
+        if (status === 'CREATED') {
+          status = 'RUNNING';
+        }
+
         set(this, 'status', status);
       }
     });
