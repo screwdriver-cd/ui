@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { inject as service } from '@ember/service';
-import { not, or, sort } from '@ember/object/computed';
+import { not, or } from '@ember/object/computed';
 import { computed, getWithDefault } from '@ember/object';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
@@ -32,12 +32,17 @@ export default Component.extend({
   stateChange: null,
   user: null,
   jobId: null,
-  jobSorting: ['name'],
   isUpdatingMetricsDowntimeJobs: false,
   metricsDowntimeJobs: [],
   displayDowntimeJobs: DOWNTIME_JOBS,
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
-  sortedJobs: sort('jobs', 'jobSorting'),
+  sortedJobs: computed('jobs', function filterThenSortJobs() {
+    const prRegex = /PR-\d+:.*/;
+
+    return getWithDefault(this, 'jobs', [])
+      .filter(j => !j.name.match(prRegex))
+      .sortBy('name');
+  }),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
   isValid: computed('scmUrl', {
