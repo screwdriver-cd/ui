@@ -4,7 +4,7 @@ import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
   didInsertElement() {
-    if (ENV.APP.FEEDBACK_HOSTNAME && ENV.APP.FEEDBACK_OWNER_EMAIL && ENV.APP.FEEDBACK_OWNER_NAME) {
+    if (ENV.APP.FEEDBACK_HOSTNAME && ENV.APP.FEEDBACK_OWNER_EMAIL) {
       const scriptSrc = `${ENV.APP.FEEDBACK_HOSTNAME}/api.js`;
 
       $.getScript(scriptSrc, () => {
