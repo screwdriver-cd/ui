@@ -1,4 +1,5 @@
 import ENV from 'screwdriver-ui/config/environment';
+import convertToBool from 'screwdriver-ui/utils/convert-to-boolean';
 
 /**
  * initializer function to replace configuration with custom info
@@ -30,12 +31,7 @@ export function initialize() {
     ENV.APP.RELEASE_VERSION = window.SUPPLEMENTARY_CONFIG.RELEASE_VERSION;
   }
   if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.SHOW_AVATAR) {
-    if (
-      typeof window.SUPPLEMENTARY_CONFIG.SHOW_AVATAR === 'string' &&
-      window.SUPPLEMENTARY_CONFIG.SHOW_AVATAR === 'false'
-    ) {
-      ENV.APP.SHOW_AVATAR = false;
-    }
+    ENV.APP.SHOW_AVATAR = convertToBool(window.SUPPLEMENTARY_CONFIG.SHOW_AVATAR);
   }
   if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.FEEDBACK_HOSTNAME) {
     ENV.APP.FEEDBACK_HOSTNAME = window.SUPPLEMENTARY_CONFIG.FEEDBACK_HOSTNAME;
