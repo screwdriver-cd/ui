@@ -286,10 +286,9 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     this.set('mockJobs', A([main]));
     this.set('username', 'tkyi');
-    this.set('setJobStatsMock', (id, state, name) => {
+    this.set('setJobStatsMock', (id, state) => {
       assert.equal(id, '1234');
       assert.equal(state, 'DISABLED');
-      assert.equal(name, 'tkyi');
 
       main.set('isDisabled', state === 'DISABLED');
     });
@@ -349,10 +348,6 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('.toggle-form__create');
 
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
-
-    // return settled().then(() => {
-
-    // });
   });
 
   test('it handles pipeline remove flow', async function(assert) {
