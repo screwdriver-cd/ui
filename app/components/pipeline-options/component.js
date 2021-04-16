@@ -147,9 +147,9 @@ export default Component.extend({
       this.set('showToggleModal', true);
     },
     updateMessage(message) {
-      const { state, user, jobId } = this;
+      const { state, jobId } = this;
 
-      this.setJobStatus(jobId, state, user, message || ' ');
+      this.setJobStatus(jobId, state, message || ' ');
       this.set('showToggleModal', false);
     },
     showRemoveButtons() {
