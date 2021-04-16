@@ -1,5 +1,5 @@
 import ENV from 'screwdriver-ui/config/environment';
-import convertToBool from 'screwdriver-ui/utils/convert-to-boolean';
+import convertToBool from 'screwdriver-ui/utils/convert-to-bool';
 
 /**
  * initializer function to replace configuration with custom info
