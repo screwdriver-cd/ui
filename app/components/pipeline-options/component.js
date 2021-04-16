@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { inject as service } from '@ember/service';
-import { not, or, sort } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { not, or } from '@ember/object/computed';
+import { computed, getWithDefault } from '@ember/object';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
@@ -32,12 +32,17 @@ export default Component.extend({
   stateChange: null,
   user: null,
   jobId: null,
-  jobSorting: ['name'],
   isUpdatingMetricsDowntimeJobs: false,
   metricsDowntimeJobs: [],
   displayDowntimeJobs: DOWNTIME_JOBS,
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
-  sortedJobs: sort('jobs', 'jobSorting'),
+  sortedJobs: computed('jobs', function filterThenSortJobs() {
+    const prRegex = /PR-\d+:.*/;
+
+    return getWithDefault(this, 'jobs', [])
+      .filter(j => !j.name.match(prRegex))
+      .sortBy('name');
+  }),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
   isValid: computed('scmUrl', {
@@ -73,7 +78,7 @@ export default Component.extend({
 
     if (pipelinePreference) {
       desiredJobNameLength = pipelinePreference.jobNameLength;
-      showPRJobs = pipelinePreference.showPRJobs;
+      showPRJobs = getWithDefault(pipelinePreference, 'showPRJobs', true);
     }
 
     this.setProperties({ desiredJobNameLength, showPRJobs });

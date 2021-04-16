@@ -8,6 +8,7 @@ module.exports = environment => {
     locationType: 'auto',
     contentSecurityPolicyHeader: 'Content-Security-Policy',
     contentSecurityPolicy: {
+      'script-src': ["'self'", "'unsafe-inline'"],
       'style-src': [
         "'self'",
         // Glimmer [ember] and ACE Editor [validator] add styles to elements at run time, this makes it impossible to precalculate all possible shas for inline styles
@@ -64,7 +65,10 @@ module.exports = environment => {
       DEBOUNCED_SCROLL_TIME: 3000,
       RELEASE_VERSION: 'stable',
       DOWNTIME_JOBS: true,
-      SHOW_AVATAR: true
+      SHOW_AVATAR: true,
+      FEEDBACK_HOSTNAME: '',
+      FEEDBACK_SCRIPT: '',
+      FEEDBACK_CONFIG: ''
     },
     moment: {
       allowEmpty: true // allow empty dates
@@ -128,6 +132,8 @@ module.exports = environment => {
 
   ENV.contentSecurityPolicy['connect-src'].push(ENV.APP.SDAPI_HOSTNAME);
   ENV.contentSecurityPolicy['connect-src'].push(ENV.APP.SDSTORE_HOSTNAME);
+  ENV.contentSecurityPolicy['script-src'].push(ENV.APP.FEEDBACK_SCRIPT);
+  ENV.contentSecurityPolicy['frame-src'].push(ENV.APP.FEEDBACK_HOSTNAME);
   ENV.contentSecurityPolicy['frame-src'].push(ENV.APP.SDAPI_HOSTNAME);
   ENV.contentSecurityPolicy['frame-src'].push(ENV.APP.SDSTORE_HOSTNAME);
 
