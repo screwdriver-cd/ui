@@ -15,6 +15,7 @@ jobs:
       - install: npm install
       - install-browsers: ./bin/setup_chrome.sh
       - test: npm test
+      - teardown-build: cp -r . $SD_ARTIFACTS_DIR
     requires:
       - ~pr
       - ~commit

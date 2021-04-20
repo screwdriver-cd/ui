@@ -106,7 +106,7 @@ module.exports = environment => {
     ENV.LOG_STACKTRACE_ON_DEPRECATION = true;
 
     // image placeholders
-    ENV.contentSecurityPolicy['img-src'].push('http://example.com');
+    ENV.contentSecurityPolicy['img-src'].push('example.com');
   }
 
   if (environment === 'test') {
@@ -129,8 +129,8 @@ module.exports = environment => {
     ENV.APP.DOWNTIME_JOBS = true;
 
     // image placeholders
-    ENV.contentSecurityPolicy['img-src'].push('http://example.com');
-    ENV.contentSecurityPolicy['script-src'].push('http://localhost:7357');
+    ENV.contentSecurityPolicy['img-src'].push('example.com');
+    ENV.contentSecurityPolicy['script-src'].push('localhost:7357');
   }
 
   if (environment === 'production') {
