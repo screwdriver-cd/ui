@@ -130,6 +130,7 @@ module.exports = environment => {
 
     // image placeholders
     ENV.contentSecurityPolicy['img-src'].push('http://example.com');
+    ENV.contentSecurityPolicy['script-src'].push('http://localhost:7357');
   }
 
   if (environment === 'production') {
