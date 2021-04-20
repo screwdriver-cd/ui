@@ -164,5 +164,9 @@ module.exports = environment => {
     ENV.contentSecurityPolicy['frame-src'].push(ENV.APP.FEEDBACK_HOSTNAME);
   }
 
+  console.log('ENV.APP.SDAPI_HOSTNAME', ENV.APP.SDAPI_HOSTNAME);
+  console.log('ENV.APP.SDSTORE_HOSTNAME', ENV.APP.SDSTORE_HOSTNAME);
+  console.log(`\nENV.contentSecurityPolicy`, ENV.contentSecurityPolicy);
+
   return ENV;
 };
