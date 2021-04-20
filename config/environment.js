@@ -104,6 +104,9 @@ module.exports = environment => {
 
     ENV.RAISE_ON_DEPRECATION = true;
     ENV.LOG_STACKTRACE_ON_DEPRECATION = true;
+
+    // image placeholders
+    ENV.contentSecurityPolicy['img-src'].push('http://example.com');
   }
 
   if (environment === 'test') {
@@ -124,6 +127,9 @@ module.exports = environment => {
     ENV.APP.FORCE_RELOAD_WAIT = 0;
 
     ENV.APP.DOWNTIME_JOBS = true;
+
+    // image placeholders
+    ENV.contentSecurityPolicy['img-src'].push('http://example.com');
   }
 
   if (environment === 'production') {
