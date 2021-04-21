@@ -22,16 +22,6 @@ button.start-with-parameters-button {
   color: $sd-warning;
 }
 
-// for single default value
-.notice-default-values-icon + input {
-  background: $sd-warning;
-}
-
-// for multi default values
-.notice-default-values-icon + .ember-basic-dropdown > div {
-  background: $sd-warning;
-}
-
 & {
   position: relative;
   padding-top: 20px;
