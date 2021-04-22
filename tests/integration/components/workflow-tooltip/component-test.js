@@ -171,7 +171,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       confirmStartBuild="confirmStartBuild"
     }}`);
 
-    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:first-child').hasText('Go to build details');
     assert.dom('a:last-child').hasText('Stop frozen build');
   });
