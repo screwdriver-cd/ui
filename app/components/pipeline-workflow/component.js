@@ -49,6 +49,14 @@ export default Component.extend({
     });
   },
 
+  isPrChainJob: computed('tooltipData', function isPrChainJob() {
+    const selectedEvent = get(this, 'selectedEventObj');
+    const { prNum } = selectedEvent;
+    const isPrChain = get(this, 'pipeline.prChain');
+
+    return prNum !== undefined && isPrChain;
+  }),
+
   buildParameters: computed('tooltipData', function preselectBuildParameters() {
     const defaultParameters = this.getWithDefault('pipeline.parameters', {});
     const buildParameters = copy(defaultParameters, true);
