@@ -152,6 +152,30 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('a:last-child').hasText('Restart pipeline from here');
   });
 
+  test('it renders stop frozen build link', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'FROZEN'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+    }}`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Stop frozen build');
+  });
+
   test('it should update position and hidden status', async function(assert) {
     this.set('show', true);
     this.set('pos', 'left');
