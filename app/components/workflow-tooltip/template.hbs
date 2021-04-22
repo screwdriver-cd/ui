@@ -18,7 +18,9 @@
       {{else if tooltipData.job.manualStartDisabled}}
         <p>Disabled manually starting</p>
       {{else}}
-        <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+        {{#if (eq isPrChainJob false)}}
+          <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+        {{/if}}
       {{/if}}
     {{/if}}
     {{#if tooltipData.displayStop}}
