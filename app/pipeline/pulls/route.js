@@ -13,7 +13,13 @@ export default EventsRoute.extend({
     this.render('pipeline.events');
   },
   model() {
-    this.controllerFor('pipeline.events').set('pipeline', this.pipeline);
+    const pipelineEventsController = this.controllerFor('pipeline.events');
+
+    pipelineEventsController.setProperties({
+      pipeline: this.pipeline,
+      showPRJobs: true
+    });
+
     const jobsPromise = this.get('pipeline.jobs');
 
     let events = [];

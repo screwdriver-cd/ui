@@ -115,12 +115,14 @@ module('Integration | Component | workflow tooltip', function(hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
 
     await render(hbs`{{
       workflow-tooltip
       tooltipData=data
       displayRestartButton=true
       confirmStartBuild="confirmStartBuild"
+      isPrChainJob=isPrChainJob
     }}`);
 
     assert.dom('.content a').exists({ count: 3 });
@@ -139,17 +141,45 @@ module('Integration | Component | workflow tooltip', function(hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
 
     await render(hbs`{{
       workflow-tooltip
       tooltipData=data
       displayRestartButton=true
       confirmStartBuild="confirmStartBuild"
+      isPrChainJob=isPrChainJob
     }}`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:first-child').hasText('Go to build details');
     assert.dom('a:last-child').hasText('Restart pipeline from here');
+  });
+
+  test('it hides restart link', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'SUCCESS'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChain', true);
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+      isPrChain=isPrChain
+    }}`);
+
+    assert.dom('.content a').exists({ count: 2 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Go to build metrics');
   });
 
   test('it renders stop frozen build link', async function(assert) {
@@ -175,7 +205,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('a:first-child').hasText('Go to build details');
     assert.dom('a:last-child').hasText('Stop frozen build');
   });
-
+  
   test('it should update position and hidden status', async function(assert) {
     this.set('show', true);
     this.set('pos', 'left');

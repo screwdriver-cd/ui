@@ -32,7 +32,7 @@ module('Unit | Controller | pipeline/options', function(hooks) {
         }
       });
 
-      controller.send('setJobStatus', '1234', 'ENABLED', 'tkyi', 'testing');
+      controller.send('setJobStatus', '1234', 'ENABLED', 'testing');
     });
 
     return settled().then(() => {
@@ -40,7 +40,6 @@ module('Unit | Controller | pipeline/options', function(hooks) {
       const payload = JSON.parse(request.requestBody);
 
       assert.equal(payload.state, 'ENABLED');
-      assert.equal(payload.stateChanger, 'tkyi');
       assert.equal(payload.stateChangeMessage, 'testing');
     });
   });
