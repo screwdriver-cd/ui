@@ -316,7 +316,7 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
       let cur = visiting.shift();
 
       edges.forEach(e => {
-        if (e.src === cur) {
+        if (e.src === cur && !visited.has(e.dest)) {
           visiting.push(e.dest);
           visited.add(e.dest);
         }
