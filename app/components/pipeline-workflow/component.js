@@ -57,6 +57,27 @@ export default Component.extend({
     return prNum !== undefined && isPrChain;
   }),
 
+  prBuildExists: computed('tooltipData', function isStartablePrChainJob() {
+    const selectedEvent = get(this, 'selectedEventObj');
+
+    const tooltipData = get(this, 'tooltipData');
+
+    let selectedJobId;
+
+    if (tooltipData) {
+      selectedJobId = tooltipData.job.id ? tooltipData.job.id.toString() : null;
+    } else {
+      // job is not selected
+      return false;
+    }
+
+    const buildExists = selectedEvent.buildsSorted.filter(b => b.jobId === selectedJobId);
+
+    const { prNum } = selectedEvent;
+
+    return prNum && buildExists.length !== 0;
+  }),
+
   buildParameters: computed('tooltipData', function preselectBuildParameters() {
     const defaultParameters = this.getWithDefault('pipeline.parameters', {});
     const buildParameters = copy(defaultParameters, true);
