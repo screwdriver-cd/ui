@@ -20,6 +20,10 @@
       {{else}}
         {{#if (eq isPrChainJob false)}}
           <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+        {{else}}
+          {{#if (eq prBuildExists true)}}
+            <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+          {{/if}}
         {{/if}}
       {{/if}}
     {{/if}}
