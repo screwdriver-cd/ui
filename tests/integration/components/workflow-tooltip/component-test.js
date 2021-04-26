@@ -184,6 +184,32 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('a:last-child').hasText('Go to build metrics');
   });
 
+  test('it renders stop frozen build link', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'FROZEN'
+      },
+      selectedEvent: 'Stop frozen build'
+    };
+
+    this.set('data', data);
+    this.set('stopBuild', () => {});
+    this.set('action', () => {});
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      stopBuild="stopBuild"
+      action="action"
+    }}`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Stop frozen build');
+  });
+
   test('it shows restart link if build exists in PRChain', async function(assert) {
     const data = {
       job: {

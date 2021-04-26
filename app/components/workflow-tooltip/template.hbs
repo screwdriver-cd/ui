@@ -30,6 +30,9 @@
     {{#if tooltipData.displayStop}}
       <a {{action stopBuild tooltipData.selectedEvent tooltipData.job}}>Stop build</a>
     {{/if}}
+    {{#if (eq tooltipData.job.status "FROZEN")}}
+      <a {{action stopBuild tooltipData.selectedEvent tooltipData.job}}>Stop frozen build</a>
+    {{/if}}
   {{/if}}
   {{yield}}
 </div>
