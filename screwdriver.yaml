@@ -21,6 +21,8 @@ jobs:
 
   # Publish the package to GitHub and build docker image
   publish:
+    annotations:
+      screwdriver.cd/ram: TURBO
     environment:
       RELEASE_FILE: sdui.tgz
       DOCKER_REPO: screwdrivercd/ui
