@@ -38,7 +38,7 @@ export default Route.extend({
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
       triggers: this.triggerService.getDownstreamTriggers(pipelineId),
-      pipelinePreference: this.shuttle.getUserPreference(pipelineId)
+      pipelinePreference: this.shuttle.getUserPipelinePreference(pipelineId)
     }).catch(err => {
       let errorMessage = getErrorMessage(err);
 
