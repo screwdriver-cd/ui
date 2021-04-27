@@ -64,10 +64,10 @@ export default Component.extend({
 
     let selectedJobId;
 
-    if (tooltipData) {
+    if (tooltipData && tooltipData.job) {
       selectedJobId = tooltipData.job.id ? tooltipData.job.id.toString() : null;
     } else {
-      // job is not selected
+      // job is not selected or upstream/downstream node are selected
       return false;
     }
 
