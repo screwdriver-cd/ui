@@ -2,6 +2,7 @@ import $ from 'jquery';
 import { inject as service } from '@ember/service';
 import { not, or } from '@ember/object/computed';
 import { computed, getWithDefault, set } from '@ember/object';
+import { debounce } from '@ember/runloop';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
@@ -95,6 +96,15 @@ export default Component.extend({
 
       this.set('metricsDowntimeJobs', metricsDowntimeJobs);
     }
+  },
+  async updateJobNameLength(displayJobNameLength) {
+    const pipelineId = this.get('pipeline.id');
+    const pipelinePreference = await this.shuttle.getUserPipelinePreference(pipelineId);
+
+    set(pipelinePreference, 'displayJobNameLength', displayJobNameLength);
+    pipelinePreference.save().then(() => {
+      return this.shuttle.updateUserPreference(pipelineId, pipelinePreference);
+    });
   },
   actions: {
     // Checks if scm URL is valid or not
@@ -197,13 +207,7 @@ export default Component.extend({
     },
 
     async updateJobNameLength(displayJobNameLength) {
-      const pipelineId = this.get('pipeline.id');
-      const pipelinePreference = await this.shuttle.getUserPipelinePreference(pipelineId);
-
-      set(pipelinePreference, 'displayJobNameLength', displayJobNameLength);
-      pipelinePreference.save().then(() => {
-        return this.shuttle.updateUserPreference(pipelineId, pipelinePreference);
-      });
+      debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
     },
     async updatePipelineSettings(metricsDowntimeJobs) {
       try {
