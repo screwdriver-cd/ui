@@ -97,5 +97,13 @@
     a {
       line-height: inherit;
     }
+
+    .customize-label {
+      display: inline-block;
+      text-overflow: ellipsis;
+      width: 130px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
 }
