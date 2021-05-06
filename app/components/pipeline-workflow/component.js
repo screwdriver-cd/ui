@@ -1,6 +1,6 @@
 import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
-import { get, computed, set, setProperties } from '@ember/object';
+import { get, getWithDefault, computed, set, setProperties } from '@ember/object';
 import { reject } from 'rsvp';
 import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
@@ -50,7 +50,7 @@ export default Component.extend({
   },
 
   isPrChainJob: computed('tooltipData', function isPrChainJob() {
-    const selectedEvent = get(this, 'selectedEventObj');
+    const selectedEvent = getWithDefault(this, 'selectedEventObj', {});
     const { prNum } = selectedEvent;
     const isPrChain = get(this, 'pipeline.prChain');
 
