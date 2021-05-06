@@ -211,6 +211,25 @@ module('Integration | Component | pipeline options', function(hooks) {
             showJobPRs: false
           }
         });
+      },
+      peekAll() {
+        assert.ok(true, 'peekAll called');
+
+        return A([
+          EmberObject.create({
+            id: '1',
+            showPRJobs: true
+          }),
+          EmberObject.create({
+            id: '7',
+            showPRJobs: true
+          }),
+          EmberObject.create({
+            id: '7290',
+            displayJobNameLength: 20,
+            showPRJobs: false
+          })
+        ]);
       }
     });
 
