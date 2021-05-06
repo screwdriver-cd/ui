@@ -200,60 +200,35 @@ export default Service.extend({
   },
 
   /**
-   * getUserPreference
+   * getUserPipelinePreference
    * @param  {Number} pipelineId  pipeline Id
    * @return {Promise}
    */
-  async getUserPreference(pipelineId) {
+  async getUserPipelinePreference(pipelineId) {
     if (pipelineId === undefined) {
       return {};
     }
 
-    let localPipelinePreference = await this.store.queryRecord('preference/pipeline', {
-      filter: { pipelineId }
-    });
     const remotePreferences = await this.getUserSetting();
-    const remotePipelinePreference = getWithDefault(remotePreferences, pipelineId, {});
+    const remotePipelineConfig = getWithDefault(remotePreferences, pipelineId, {});
+    const localPipelinePreference = await this.store
+      .peekAll('preference/pipeline')
+      .findBy('id', pipelineId);
 
     // local preference takes precedence
-    if (localPipelinePreference) {
-      if (localPipelinePreference.showPRJobs !== remotePipelinePreference.showPRJobs) {
-        const localPipelinePreferenceSettings = localPipelinePreference.toJSON();
-
-        delete localPipelinePreferenceSettings.pipelineId;
-
-        remotePreferences[pipelineId] = localPipelinePreferenceSettings;
-
-        // don't wait on updating remote preference finishes
-        this.updateUserPreference(pipelineId, remotePipelinePreference);
-      }
+    if (localPipelinePreference && remotePipelineConfig) {
+      localPipelinePreference.setProperties(remotePipelineConfig);
+      localPipelinePreference.save();
 
       return localPipelinePreference;
     }
 
-    if (remotePipelinePreference) {
-      // don't wait on creating local preference finishes
-      this.store.createRecord('preference/pipeline', {
-        pipelineId,
-        ...remotePipelinePreference
-      });
-
-      return remotePipelinePreference;
-    }
-
-    // if neither remote nor local preference exists
-    localPipelinePreference = this.store.createRecord('preference/pipeline', {
-      pipelineId
-    });
-    const localPipelinePreferenceSettings = localPipelinePreference.toJSON();
-
-    delete localPipelinePreferenceSettings.pipelineId;
-
-    this.updateUserPreference(pipelineId, {
-      localPipelinePreferenceSettings
+    const pipelinePreference = await this.store.createRecord('preference/pipeline', {
+      id: pipelineId,
+      ...remotePipelineConfig
     });
 
-    return localPipelinePreference;
+    return pipelinePreference;
   },
 
   /**

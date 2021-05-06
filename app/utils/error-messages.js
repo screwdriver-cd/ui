@@ -15,7 +15,7 @@ const getErrorMessage = err => {
       errorMessage = 'Action cannot be completed, please make sure you are online';
     } else if (message.startsWith('The ajax operation was aborted')) {
       errorMessage = 'Action cannot be completed, please make sure you are online';
-    } else if (message.startsWith('Request was rejected due to server error')) {
+    } else if (message.startsWith('Request was rejected')) {
       errorMessage = message;
     }
   } else if (err === '401 Invalid token') {
