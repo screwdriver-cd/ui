@@ -21,6 +21,7 @@
     border-radius: 2px;
     padding: 5px 10px;
     font-weight: $weight-normal;
+    margin-left: 5px;
 
     &:hover,
     &.active:hover {
@@ -99,11 +100,7 @@
     }
 
     .customize-label {
-      display: inline-block;
-      text-overflow: ellipsis;
-      width: 130px;
-      white-space: nowrap;
-      overflow: hidden;
+      word-break: break-all;
     }
   }
 }
