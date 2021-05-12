@@ -108,17 +108,14 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
     builds.then(list => {
       if (!this.isDestroying && !this.isDestroyed) {
-        const validList = list.filter(b => get(b, 'status') !== 'SUCCESS');
+        const validList = list.filter(
+          b => get(b, 'status') !== 'SUCCESS' && get(b, 'status') !== 'CREATED'
+        );
 
         if (validList.length) {
           status = get(validList[0], 'status');
         } else {
           status = get(this, 'isComplete') ? 'SUCCESS' : 'RUNNING';
-        }
-
-        // override CREATED status to RUNNING for event status
-        if (status === 'CREATED') {
-          status = 'RUNNING';
         }
 
         set(this, 'status', status);
