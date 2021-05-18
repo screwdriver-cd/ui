@@ -7,7 +7,7 @@
 function parse(scmUrl) {
   // eslint-disable-next-line max-len
   const match = scmUrl.match(
-    /^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@|org-\d+@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)?(#[^\s]+)?$/
+    /^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@|org-\d+@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)(#[^:\s]+)?(:[^\s]+)?$/
   );
 
   if (!match) {
@@ -15,7 +15,6 @@ function parse(scmUrl) {
       valid: false
     };
   }
-
   const result = {
     server: match[1],
     owner: match[2],
