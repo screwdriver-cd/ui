@@ -196,7 +196,13 @@ export default Service.extend({
     const method = 'get';
     const url = `/users/settings`;
 
-    return this.fetchFromApi(method, url);
+    try {
+      const userSettings = await this.fetchFromApi(method, url);
+
+      return userSettings;
+    } catch (e) {
+      return {};
+    }
   },
 
   /**
