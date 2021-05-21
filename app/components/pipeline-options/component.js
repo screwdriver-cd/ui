@@ -7,7 +7,7 @@ import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
 
-const { MINIMUM_JOBNAME_LENGTH, DOWNTIME_JOBS } = ENV.APP;
+const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH, DOWNTIME_JOBS } = ENV.APP;
 
 export default Component.extend({
   store: service(),
@@ -36,7 +36,9 @@ export default Component.extend({
   isUpdatingMetricsDowntimeJobs: false,
   metricsDowntimeJobs: [],
   displayDowntimeJobs: DOWNTIME_JOBS,
+  displayJobNameLength: 20,
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
+  maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
@@ -206,7 +208,19 @@ export default Component.extend({
         .finally(() => this.set('isShowingModal', false));
     },
 
-    async updateJobNameLength(displayJobNameLength) {
+    async updateJobNameLength(inputJobNameLength) {
+      let displayJobNameLength = inputJobNameLength;
+
+      if (parseInt(displayJobNameLength, 10) > MAXIMUM_JOBNAME_LENGTH) {
+        displayJobNameLength = MAXIMUM_JOBNAME_LENGTH;
+      }
+
+      if (parseInt(displayJobNameLength, 10) < MINIMUM_JOBNAME_LENGTH) {
+        displayJobNameLength = MINIMUM_JOBNAME_LENGTH;
+      }
+
+      this.$('input.display-job-name').val(displayJobNameLength);
+
       debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
     },
     async updatePipelineSettings(metricsDowntimeJobs) {
