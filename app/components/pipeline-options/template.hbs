@@ -207,7 +207,7 @@
               <input type="number"
                 class="display-job-name"
                 min={{minDisplayLength}}
-                max="99"
+                max={{maxDisplayLength}}
                 placeholder={{minDisplayLength}}
                 value={{desiredJobNameLength}}
                 onchange={{action "updateJobNameLength" value="target.value"}}>
