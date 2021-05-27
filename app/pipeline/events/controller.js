@@ -45,18 +45,26 @@ export async function stopBuild(givenEvent, job) {
 export async function startDetachedBuild(job, options = {}) {
   this.set('isShowingModal', true);
 
-  const buildId = get(job, 'buildId');
+  let event = this.selectedEventObj;
 
   let parentBuildId = null;
+
+  const buildId = get(job, 'buildId');
   const { parameters, reason } = options;
 
   if (buildId) {
     const build = this.store.peekRecord('build', buildId);
 
     parentBuildId = get(build, 'parentBuildId');
+  } else {
+    const builds = await get(job, 'builds');
+    const latestBuild = get(builds, 'firstObject');
+
+    if (event === undefined) {
+      event = await this.store.findRecord('event', get(latestBuild, 'eventId'));
+    }
   }
 
-  const event = this.selectedEventObj;
   const parentEventId = get(event, 'id');
   const groupEventId = get(event, 'groupEventId');
   const pipelineId = get(this, 'pipeline.id');
