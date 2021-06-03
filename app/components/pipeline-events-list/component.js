@@ -6,7 +6,6 @@ import groupBy from 'lodash.groupby';
 import moment from 'moment';
 
 export default Component.extend({
-  shuttle: service(),
   router: service(),
   errorMessage: '',
   groups: computed('events.[]', {
