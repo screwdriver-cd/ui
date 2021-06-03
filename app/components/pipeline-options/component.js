@@ -27,6 +27,9 @@ export default Component.extend({
   showRemoveButtons: false,
   showToggleModal: false,
   showPRJobs: true,
+  isUpdatingPipelineVisibility: false,
+  privateRepo: false,
+  publicPipeline: false,
   // Job disable/enable
   name: null,
   state: null,
@@ -72,6 +75,20 @@ export default Component.extend({
         hasRootDir: true
       });
     }
+
+    let privateRepo = this.get('pipeline.scmRepo.private');
+
+    let publicPipeline = this.get('pipeline.settings.public');
+
+    if (typeof privateRepo !== 'boolean') {
+      privateRepo = false;
+    }
+
+    if (typeof publicPipeline !== 'boolean') {
+      publicPipeline = !privateRepo;
+    }
+
+    this.setProperties({ privateRepo, publicPipeline });
 
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
@@ -223,7 +240,7 @@ export default Component.extend({
 
       debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
     },
-    async updatePipelineSettings(metricsDowntimeJobs) {
+    async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {
         const pipelineId = this.get('pipeline.id');
 
@@ -233,6 +250,19 @@ export default Component.extend({
         throw err;
       } finally {
         this.set('isUpdatingMetricsDowntimeJobs', false);
+      }
+    },
+
+    async updatePipelineVisibility(publicPipeline) {
+      try {
+        const pipelineId = this.get('pipeline.id');
+
+        this.setProperties({ isUpdatingPipelineVisibility: true });
+        await this.shuttle.updatePipelineSettings(pipelineId, { publicPipeline });
+      } catch (err) {
+        throw err;
+      } finally {
+        this.setProperties({ isUpdatingPipelineVisibility: false, publicPipeline });
       }
     },
 
