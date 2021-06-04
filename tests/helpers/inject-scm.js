@@ -7,13 +7,22 @@ const scms = [
     displayName: 'github.com',
     iconType: 'github',
     autoDeployKeyGeneration: true,
-    isSignedIn: true
+    isSignedIn: true,
+    readOnly: false
   },
   {
     context: 'bitbucket:bitbucket.org',
     displayName: 'bitbucket.org',
     iconType: 'bitbucket',
-    isSignedIn: false
+    isSignedIn: false,
+    readOnly: false
+  },
+  {
+    context: 'gitlab:gitlab.com',
+    displayName: 'gitlab.com',
+    iconType: 'gitlab',
+    isSignedIn: false,
+    readOnly: true
   }
 ];
 
