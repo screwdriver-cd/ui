@@ -54,7 +54,7 @@ const noNewLogs = () => {
 
 const badLogs = () => {
   server.get('http://localhost:8080/v4/builds/1/steps/banana/logs/', () => [
-    404,
+    500,
     {
       'Content-Type': 'application/json'
     },
