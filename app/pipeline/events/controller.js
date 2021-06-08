@@ -171,6 +171,7 @@ export async function updateEvents(page) {
 }
 
 export default Controller.extend(ModelReloaderMixin, {
+  shuttle: service(),
   lastRefreshed: moment(),
   expandedEventsGroup: {},
   shouldReload(model) {
@@ -323,6 +324,10 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   pipelineEvents: computed('modelEvents', 'paginateEvents.[]', {
     get() {
+      this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
+        this.set('latestCommit', event);
+      });
+
       return [].concat(this.modelEvents, this.paginateEvents);
     }
   }),

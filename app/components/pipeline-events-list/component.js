@@ -6,15 +6,10 @@ import groupBy from 'lodash.groupby';
 import moment from 'moment';
 
 export default Component.extend({
-  shuttle: service(),
   router: service(),
   errorMessage: '',
   groups: computed('events.[]', {
     get() {
-      this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
-        this.set('latestCommit', event);
-      });
-
       const events = get(this, 'events');
       const groups = groupBy(events, 'groupEventId');
       const groupsArray = Object.keys(groups).map(key => groups[key]);

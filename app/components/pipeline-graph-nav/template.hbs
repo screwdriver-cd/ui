@@ -64,7 +64,7 @@
       <div class="event-info">
         <div class="col">
           <span class="title">Commit</span><br>
-          <a href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a>
+          <a class={{if (eq selectedEventObj.sha latestCommit.sha) "latest-commit"}} href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a>
         </div>
         <div class="col">
           <span class="title">Message</span><br>
