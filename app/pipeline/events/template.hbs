@@ -14,6 +14,7 @@
     {{pipeline-graph-nav
       pipeline=pipeline
       mostRecent=mostRecent
+      latestCommit=latestCommit
       lastSuccessful=lastSuccessful
       graphType=currentEventType
       selectedEvent=selectedEvent
@@ -64,6 +65,7 @@
             events=events
             selected=(mut selected)
             selectedEvent=selectedEvent
+            latestCommit=latestCommit
             lastSuccessful=lastSuccessful
             mostRecent=mostRecent
             eventsPage=eventsPage
@@ -79,6 +81,7 @@
             events=events
             selected=(mut selected)
             selectedEvent=selectedEvent
+            latestCommit=latestCommit
             lastSuccessful=lastSuccessful
             eventsPage=eventsPage
             updateEvents=(action "updateEvents")
