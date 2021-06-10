@@ -1,9 +1,10 @@
 import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
-import { get, computed, set, setProperties } from '@ember/object';
+import { get, getWithDefault, computed, set, setProperties } from '@ember/object';
 import { reject } from 'rsvp';
 import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import { copy } from 'ember-copy';
 
 export default Component.extend({
   // get all downstream triggers for a pipeline
@@ -40,12 +41,70 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
+
     setProperties(this, {
       builds: [],
       showDownstreamTriggers: false,
       reason: ''
     });
   },
+
+  isPrChainJob: computed('tooltipData', function isPrChainJob() {
+    const selectedEvent = getWithDefault(this, 'selectedEventObj', {});
+    const { prNum } = selectedEvent;
+    const isPrChain = get(this, 'pipeline.prChain');
+
+    return prNum !== undefined && isPrChain;
+  }),
+
+  prBuildExists: computed('tooltipData', function isStartablePrChainJob() {
+    const selectedEvent = get(this, 'selectedEventObj');
+
+    const tooltipData = get(this, 'tooltipData');
+
+    let selectedJobId;
+
+    if (tooltipData && tooltipData.job) {
+      selectedJobId = tooltipData.job.id ? tooltipData.job.id.toString() : null;
+    } else {
+      // job is not selected or upstream/downstream node are selected
+      return false;
+    }
+
+    const buildExists = selectedEvent.buildsSorted.filter(b => b.jobId === selectedJobId);
+
+    const { prNum } = selectedEvent;
+
+    return prNum && buildExists.length !== 0;
+  }),
+
+  buildParameters: computed('tooltipData', function preselectBuildParameters() {
+    const defaultParameters = this.getWithDefault('pipeline.parameters', {});
+    const buildParameters = copy(defaultParameters, true);
+
+    if (this.tooltipData) {
+      const currentEventParameters = this.tooltipData.selectedEvent.meta.parameters;
+      const parameterNames = Object.keys(buildParameters);
+
+      parameterNames.forEach(parameterName => {
+        const parameterValue =
+          buildParameters[parameterName].value || buildParameters[parameterName];
+        const currentEventParameterValue =
+          currentEventParameters[parameterName].value || currentEventParameters[parameterName];
+
+        if (Array.isArray(parameterValue)) {
+          parameterValue.removeObject(currentEventParameterValue);
+          parameterValue.unshift(currentEventParameterValue);
+        } else if (buildParameters[parameterName].value) {
+          buildParameters[parameterName].value = currentEventParameterValue;
+        } else {
+          buildParameters[parameterName] = currentEventParameterValue;
+        }
+      });
+    }
+
+    return buildParameters;
+  }),
 
   didUpdateAttrs() {
     this._super(...arguments);
@@ -57,7 +116,9 @@ export default Component.extend({
       const EXTERNAL_TRIGGER_REGEX = /^~?sd@(\d+):([\w-]+)$/;
       const edges = get(this, 'directedGraph.edges');
       const isTrigger = job ? /(^~)|(^~?sd@)/.test(job.name) : false;
+
       let isRootNode = true;
+
       let toolTipProperties = {};
 
       // Find root nodes to determine position of tooltip

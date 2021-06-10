@@ -14,14 +14,18 @@ const GRAPH = {
     { id: 2, name: 'batman' },
     { id: 3, name: 'robin' },
     { id: 4, name: 'sd@123:main' },
-    { id: 5, name: 'deploy' }
+    { id: 5, name: 'deploy' },
+    { id: 6, name: 'foo01job' },
+    { id: 7, name: 'foo1job' }
   ],
   edges: [
     { src: '~pr', dest: 'main' },
     { src: '~commit', dest: 'main' },
     { src: 'main', dest: 'batman' },
     { src: 'batman', dest: 'robin' },
-    { src: 'robin', dest: 'sd@123:main' }
+    { src: 'robin', dest: 'sd@123:main' },
+    { src: 'main', dest: 'foo01job' },
+    { src: 'main', dest: 'foo1job' }
   ]
 };
 
@@ -48,9 +52,28 @@ module('Integration | Component | pipeline workflow', function(hooks) {
       EmberObject.create(GRAPH)
     );
 
-    await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph}}`);
+    await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=true}}`);
 
-    assert.dom('.graph-node').exists({ count: 6 });
+    assert.dom('.graph-node').exists({ count: 8 });
+    assert.dom('.workflow-tooltip').exists({ count: 1 });
+  });
+
+  test('it renders an event without pr job', async function(assert) {
+    this.set(
+      'obj',
+      EmberObject.create({
+        builds: rsvp.resolve(BUILDS),
+        workflowGraph: GRAPH,
+        startFrom: '~commit',
+        causeMessage: 'test'
+      }),
+      'graph',
+      EmberObject.create(GRAPH)
+    );
+
+    await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=false}}`);
+
+    assert.dom('.graph-node').exists({ count: 7 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 

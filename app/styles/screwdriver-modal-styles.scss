@@ -93,6 +93,10 @@
     background-color: $sd-link;
     border-color: $sd-link;
   }
+
+  .buttons-float-right {
+    float: right;
+  }
 }
 
 .toggle-modal {
@@ -155,4 +159,9 @@
   .modal-content {
     border-radius: 3px;
   }
+}
+
+.is-required .control-label::after {
+  content: '*';
+  color: $sd-failure;
 }

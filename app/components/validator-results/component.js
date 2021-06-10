@@ -23,6 +23,7 @@ export default Component.extend({
       return getWithDefault(this, 'results.parameters', {});
     }
   }),
+  warnMessages: map('results.warnMessages', w => (typeof w === 'string' ? w : w.message)),
   templateName: computed('results.template.{namespace,name,version}', {
     get() {
       // construct full template name

@@ -1,8 +1,11 @@
 <div>
-  {{#each eventsList as |event|}}
-    {{pipeline-event-row
-      event=event
+  {{#each groups as |group|}}
+    {{pipeline-events-row-group
+      pipeline=pipeline
+      expandedEventsGroup=expandedEventsGroup
+      events=group
       selectedEvent=selectedEvent
+      latestCommit=latestCommit
       lastSuccessful=lastSuccessful
       eventClick=(action "eventClick")
     }}

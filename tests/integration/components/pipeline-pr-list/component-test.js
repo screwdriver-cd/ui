@@ -24,7 +24,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
       }),
       EmberObject.create({
         id: 'efgh',
-        name: 'revert',
+        name: 'A',
         createTimeWords: 'now',
         title: 'revert PR-1234',
         username: 'suomynona',
@@ -37,9 +37,24 @@ module('Integration | Component | pipeline pr list', function(hooks) {
       })
     ];
 
-    this.set('jobsMock', jobs);
+    const workflowgraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
 
-    await render(hbs`{{pipeline-pr-list jobs=jobsMock}}`);
+    this.set('jobsMock', jobs);
+    this.set('workflowGraphMock', workflowgraph);
+
+    await render(hbs`{{pipeline-pr-list jobs=jobsMock workflowGraph=workflowGraphMock}}`);
 
     assert.dom('.view .view .detail').exists({ count: 2 });
     assert.dom('.title').hasText('update readme');
@@ -94,15 +109,31 @@ module('Integration | Component | pipeline pr list', function(hooks) {
       })
     ];
 
+    const workflowgraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
+
     this.set('jobsMock', jobs);
     this.set('isRestricted', true);
     this.set('startBuild', Function.prototype);
     this.set('stopPRBuilds', Function.prototype);
+    this.set('workflowGraphMock', workflowgraph);
 
     await render(hbs`{{pipeline-pr-list
       jobs=jobsMock
       isRestricted=isRestricted
       startBuild=startBuild
+      workflowGraph=workflowGraphMock
       stopPRBuilds=stopPRBuilds}}`);
 
     assert.dom('.prsStop').exists({ count: 1 });

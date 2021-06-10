@@ -2,20 +2,16 @@ import { later, cancel } from '@ember/runloop';
 import Mixin from '@ember/object/mixin';
 import ENV from 'screwdriver-ui/config/environment';
 
+export const SHOULD_RELOAD_NO = 'NO';
+export const SHOULD_RELOAD_YES = 'YES';
+export const SHOULD_RELOAD_SKIP = 'SKIP';
+
 export default Mixin.create({
   /**
    * Parameter to indicate reloading is paused
    */
   isPaused: false,
-  /**
-   * Overridable function to determine if a model should be reloaded
-   * @method shouldReload
-   * @param {Object}    model  The model that is to be reloaded
-   * @return {Boolean}          True is model should be reloaded
-   */
-  shouldReload() {
-    return this.runLater;
-  },
+  runLater: 0,
   /**
    * Schedules reload of events data
    * @method scheduleReload
@@ -37,6 +33,7 @@ export default Mixin.create({
    */
   reloadModel() {
     const { modelToReload } = this;
+
     let model;
 
     // Let Controller provide a reload() to refresh it's dependencies
@@ -46,12 +43,38 @@ export default Mixin.create({
       model = this.get(modelToReload);
     }
 
-    if (model && this.shouldReload(model)) {
-      if (this.isPaused) {
+    const shouldReload = this.shouldReload(model);
+
+    if (!model) {
+      return;
+    }
+
+    if (this.isPaused) {
+      this.scheduleReload();
+
+      return;
+    }
+
+    switch (shouldReload) {
+      case SHOULD_RELOAD_YES:
+        if (!window.navigator.onLine) {
+          break;
+        }
+
+        model
+          .reload()
+          .then(() => {
+            if (model.model && model.model.reload) {
+              model.model.reload();
+            }
+          })
+          .finally(() => this.scheduleReload());
+        break;
+      case SHOULD_RELOAD_SKIP:
         this.scheduleReload();
-      } else {
-        model.reload().finally(() => this.scheduleReload());
-      }
+        break;
+      default:
+        break;
     }
   },
 

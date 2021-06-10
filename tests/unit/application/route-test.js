@@ -1,5 +1,7 @@
 import { setupTest } from 'ember-qunit';
 import { module } from 'qunit';
+import { later } from '@ember/runloop';
+import sinon from 'sinon';
 import test from 'ember-sinon-qunit/test-support/test';
 import injectScmServiceStub from '../../helpers/inject-scm';
 
@@ -31,21 +33,25 @@ module('Unit | Route | application', function(hooks) {
   test('it should clear store and reload page on session change', function(assert) {
     const route = this.owner.lookup('route:application');
     const session = this.owner.lookup('service:session');
-    const reloadStub = this.stub(route, 'reloadPage');
+    const reloadStub = sinon.stub(route, 'reloadPage');
 
     session.set('data.sessionChanged', true);
 
-    assert.ok(reloadStub.calledOnce, 'reloadPage was not called');
+    later(() => {
+      assert.ok(reloadStub.calledOnce, 'reloadPage was not called');
+    });
   });
 
   test('it should not clear store and reload page if no session change', function(assert) {
     const route = this.owner.lookup('route:application');
     const session = this.owner.lookup('service:session');
-    const reloadStub = this.stub(route, 'reloadPage');
+    const reloadStub = sinon.stub(route, 'reloadPage');
 
     session.set('data.sessionChanged', false);
 
-    assert.notOk(reloadStub.calledOnce, 'reloadPage was called');
+    later(() => {
+      assert.notOk(reloadStub.calledOnce, 'reloadPage was called');
+    });
   });
 
   test('it shoud return model of scms', function(assert) {

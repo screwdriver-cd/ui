@@ -109,7 +109,7 @@ export default Component.extend({
   coverageInfoCompute() {
     // Set coverage query startTime to build start time since user can do coverage during user step
     const buildStartTime = this.buildSteps[0].startTime;
-    const { coverageStepEndTime } = this;
+    const { coverageStepEndTime, buildMeta } = this;
 
     if (!coverageStepEndTime) {
       this.set('coverageInfo', {
@@ -128,8 +128,15 @@ export default Component.extend({
       startTime: buildStartTime,
       endTime: coverageStepEndTime,
       pipelineId: this.pipelineId,
-      prNum: this.prNumber
+      prNum: this.prNumber,
+      jobName: this.jobName,
+      pipelineName: this.pipelineName,
+      projectKey: buildMeta.build?.coverageKey || null
     };
+
+    if (this.annotations && this.annotations['screwdriver.cd/coverageScope']) {
+      config.scope = this.annotations['screwdriver.cd/coverageScope'];
+    }
 
     this.coverage.getCoverageInfo(config).then(data => {
       this.set('coverageInfo', data);

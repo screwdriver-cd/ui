@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = environment => {
   let ENV = {
     modulePrefix: 'screwdriver-ui',
@@ -6,6 +8,7 @@ module.exports = environment => {
     locationType: 'auto',
     contentSecurityPolicyHeader: 'Content-Security-Policy',
     contentSecurityPolicy: {
+      'script-src': ["'self'", "'unsafe-inline'"],
       'style-src': [
         "'self'",
         // Glimmer [ember] and ACE Editor [validator] add styles to elements at run time, this makes it impossible to precalculate all possible shas for inline styles
@@ -50,21 +53,38 @@ module.exports = environment => {
       BUILD_RELOAD_TIMER: 5000, // 5 seconds
       EVENT_RELOAD_TIMER: 60000, // 1 minute
       LOG_RELOAD_TIMER: 3000,
+      MINIMUM_JOBNAME_LENGTH: 20,
+      MAXIMUM_JOBNAME_LENGTH: 99,
       NUM_EVENTS_LISTED: 5,
       NUM_PIPELINES_LISTED: 50,
-      LIST_VIEW_PAGE_SIZE: 10,
+      LIST_VIEW_PAGE_SIZE: 200,
       NUM_BUILDS_LISTED: 5,
       MAX_LOG_LINES: 1000,
       DEFAULT_LOG_PAGE_SIZE: 10,
-      FORCE_RELOAD_WAIT: 100 // Wait 100ms before force reload
+      FORCE_RELOAD_WAIT: 100, // Wait 100ms before force reload
+      WAITING_TO_SCROLL_TIME: 1000,
+      DEBOUNCED_SCROLL_TIME: 3000,
+      RELEASE_VERSION: 'stable',
+      DOWNTIME_JOBS: true,
+      SHOW_AVATAR: true,
+      FEEDBACK_HOSTNAME: '',
+      FEEDBACK_SCRIPT: '',
+      FEEDBACK_CONFIG: ''
     },
     moment: {
       allowEmpty: true // allow empty dates
+    },
+    'ember-local-storage': {
+      namespace: true,
+      keyDelimiter: ':'
     }
   };
 
   if (environment === 'development') {
+    delete require.cache[require.resolve('./local.js')];
     const localAppConfig = require('./local.js'); // eslint-disable-line global-require
+
+    console.log('localAppConfig', localAppConfig); // eslint-disable-line no-console
 
     if (localAppConfig) {
       Object.assign(ENV.APP, localAppConfig);
@@ -91,10 +111,14 @@ module.exports = environment => {
     ENV.APP.NUM_PIPELINES_LISTED = 3;
     ENV.RAISE_ON_DEPRECATION = false;
     ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
+    ENV.APP.WAITING_TO_SCROLL_TIME = 1;
+    ENV.APP.DEBOUNCED_SCROLL_TIME = 1;
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
     ENV.APP.FORCE_RELOAD_WAIT = 0;
+
+    ENV.APP.DOWNTIME_JOBS = true;
   }
 
   if (environment === 'production') {
@@ -109,6 +133,8 @@ module.exports = environment => {
 
   ENV.contentSecurityPolicy['connect-src'].push(ENV.APP.SDAPI_HOSTNAME);
   ENV.contentSecurityPolicy['connect-src'].push(ENV.APP.SDSTORE_HOSTNAME);
+  ENV.contentSecurityPolicy['script-src'].push(ENV.APP.FEEDBACK_SCRIPT);
+  ENV.contentSecurityPolicy['frame-src'].push(ENV.APP.FEEDBACK_HOSTNAME);
   ENV.contentSecurityPolicy['frame-src'].push(ENV.APP.SDAPI_HOSTNAME);
   ENV.contentSecurityPolicy['frame-src'].push(ENV.APP.SDSTORE_HOSTNAME);
 

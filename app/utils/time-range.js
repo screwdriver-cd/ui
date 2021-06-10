@@ -58,7 +58,9 @@ export default function timeRange(end, range) {
   }
 
   let current = new Date(end);
+
   let startTime;
+
   let [, quantity, duration] = match;
 
   quantity = +quantity;

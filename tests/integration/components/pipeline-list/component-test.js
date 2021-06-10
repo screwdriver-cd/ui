@@ -35,8 +35,8 @@ module('Integration | Component | pipeline list', function(hooks) {
 
     await render(hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`);
 
-    assert.dom(find('ul li:first-child')).hasText('foo/bar');
-    assert.dom('ul li:nth-child(2)').hasText('batman/tumbler');
+    assert.dom(find('tbody tr:first-child')).hasText('foo/bar master');
+    assert.dom('tbody tr:nth-child(2)').hasText('batman/tumbler waynecorp');
     assert.dom('button').hasText('Start All');
     assert.dom('.num-results span').hasText('Found 2 child pipeline(s)');
   });

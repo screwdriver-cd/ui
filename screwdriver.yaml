@@ -3,12 +3,14 @@ cache:
 
 shared:
   image: node:12
+  annotations:
+    screwdriver.cd/ram: HIGH
 
 jobs:
   main:
     environment:
       COVERAGE: "true"
-      SD_SONAR_OPTS: "-Dsonar.sources=app -Dsonar.javascript.lcov.reportPath=coverage/lcov.info"
+      SD_SONAR_OPTS: "-Dsonar.sources=app -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
     steps:
       - install: npm install
       - install-browsers: ./bin/setup_chrome.sh
@@ -19,6 +21,8 @@ jobs:
 
   # Publish the package to GitHub and build docker image
   publish:
+    annotations:
+      screwdriver.cd/ram: TURBO
     environment:
       RELEASE_FILE: sdui.tgz
       DOCKER_REPO: screwdrivercd/ui
@@ -54,7 +58,7 @@ jobs:
       DOCKER_REPO: screwdrivercd/ui
       K8S_CONTAINER: screwdriver-ui
       K8S_IMAGE: screwdrivercd/ui
-      K8S_HOST: kubernetes
+      K8S_HOST: kubernetes.default.svc
       K8S_DEPLOYMENT: sdui-beta
       SD_UI: beta.cd.screwdriver.cd
     secrets:
@@ -75,7 +79,7 @@ jobs:
       DOCKER_REPO: screwdrivercd/ui
       K8S_CONTAINER: screwdriver-ui
       K8S_IMAGE: screwdrivercd/ui
-      K8S_HOST: kubernetes
+      K8S_HOST: kubernetes.default.svc
       K8S_DEPLOYMENT: sdui
       SD_UI: cd.screwdriver.cd
     secrets:

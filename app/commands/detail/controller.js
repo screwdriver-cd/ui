@@ -19,7 +19,7 @@ export default Controller.extend({
     }
   }),
   trusted: computed('commands.commandData.[]', function computeTrusted() {
-    return this.commands.commandData.some(c => c.trusted);
+    return this.commands.commandData.some(c => c.trusted && c.latest);
   }),
   isAdmin: computed(function isAdmin() {
     const token = this.get('session.data.authenticated.token');

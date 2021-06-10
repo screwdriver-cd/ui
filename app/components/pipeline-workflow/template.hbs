@@ -1,7 +1,10 @@
 {{#if (and (is-fulfilled selectedEventObj.builds) (is-fulfilled graph))}}
   {{#workflow-graph-d3
+    jobId=jobId
+    pipeline=pipeline
     completeWorkflowGraph=completeWorkflowGraph
     showDownstreamTriggers=showDownstreamTriggers
+    showPRJobs=showPRJobs
     builds=selectedEventObj.builds
     jobs=jobs
     workflowGraph=selectedEventObj.workflowGraph
@@ -12,6 +15,8 @@
   }}
     {{workflow-tooltip
       tooltipData=tooltipData
+      isPrChainJob=isPrChainJob
+      prBuildExists=prBuildExists
       displayRestartButton=displayRestartButton
       stopBuild=stopBuild
       showTooltip=showTooltip
@@ -33,6 +38,7 @@
       {{#if (eq tooltipData.job.status "FROZEN")}}
         {{#if (get-length tooltipData.selectedEvent.meta.parameters)}}
           {{#pipeline-parameterized-build
+            pipeline=pipeline
             buildParameters=tooltipData.selectedEvent.meta.parameters
             as |parameterizedBuild| }}
             <div class="form-group form-horizontal">
@@ -78,7 +84,8 @@
         {{/if}}
       {{else if (get-length tooltipData.selectedEvent.meta.parameters)}}
         {{#pipeline-parameterized-build
-          buildParameters=tooltipData.selectedEvent.meta.parameters
+          pipeline=pipeline
+          buildParameters=buildParameters
           as |parameterizedBuild| }}
           <div class="row">
             <div class="col-xs-6">

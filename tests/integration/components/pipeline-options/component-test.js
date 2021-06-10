@@ -6,14 +6,33 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import $ from 'jquery';
+import Pretender from 'pretender';
 import injectSessionStub from '../../../helpers/inject-session';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
 let syncService;
+
 let cacheService;
+
+let server;
 
 module('Integration | Component | pipeline options', function(hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function() {
+    server = new Pretender();
+
+    server.get('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
+  });
+
+  hooks.afterEach(function() {
+    server.shutdown();
+  });
 
   test('it renders', async function(assert) {
     this.set(
@@ -50,10 +69,15 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     // Pipeline
     assert.dom('section.pipeline h3').hasText('Pipeline');
-    assert.dom('section.pipeline li').exists({ count: 1 });
+    assert.dom('section.pipeline li').exists({ count: 3 });
     assert.dom('section.pipeline h4').hasText('Checkout URL and Source Directory');
     assert.dom('section.pipeline p').hasText('Update your checkout URL and / or source directory.');
     assert.dom('section.pipeline .button-label').hasText('Update');
+    assert
+      .dom('section > ul > li:nth-child(3) p')
+      .hasText('Pick your own preferred jobs to be counted in metrics graph (default all jobs)');
+    assert.dom('section > ul > li:nth-child(3) h4').hasText('Downtime Jobs');
+    assert.equal($('section > ul > li:nth-child(3) input').attr('placeholder'), 'Select Jobs...');
 
     // Jobs
     assert.dom('section.jobs h3').hasText('Jobs');
@@ -78,8 +102,8 @@ module('Integration | Component | pipeline options', function(hooks) {
     // Danger Zone
     assert.dom('section.danger h3').hasText('Danger Zone');
     assert.dom('section.danger li').exists({ count: 1 });
-    assert.dom('section.danger h4').hasText('Remove this pipeline');
-    assert.dom('section.danger p').hasText('Once you remove a pipeline, there is no going back.');
+    assert.dom('section.danger h4').hasText('Delete this pipeline');
+    assert.dom('section.danger p').hasText('Once you delete a pipeline, there is no going back.');
     assert.dom('section.danger a i').hasClass('fa-trash');
   });
 
@@ -153,7 +177,7 @@ module('Integration | Component | pipeline options', function(hooks) {
   });
 
   test('it opens job toggle modal', async function(assert) {
-    assert.expect(8);
+    assert.expect(10);
 
     injectSessionStub(this);
 
@@ -173,6 +197,39 @@ module('Integration | Component | pipeline options', function(hooks) {
         assert.ok(true, 'peekRecord called');
 
         return jobModelMock;
+      },
+      queryRecord() {
+        assert.ok(true, 'queryRecord called');
+
+        return resolve(null);
+      },
+      createRecord() {
+        assert.ok(true, 'queryRecord called');
+
+        return resolve({
+          7: {
+            showJobPRs: false
+          }
+        });
+      },
+      peekAll() {
+        assert.ok(true, 'peekAll called');
+
+        return A([
+          EmberObject.create({
+            id: '1',
+            showPRJobs: true
+          }),
+          EmberObject.create({
+            id: '7',
+            showPRJobs: true
+          }),
+          EmberObject.create({
+            id: '7290',
+            displayJobNameLength: 20,
+            showPRJobs: false
+          })
+        ]);
       }
     });
 
@@ -248,10 +305,9 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     this.set('mockJobs', A([main]));
     this.set('username', 'tkyi');
-    this.set('setJobStatsMock', (id, state, name) => {
+    this.set('setJobStatsMock', (id, state) => {
       assert.equal(id, '1234');
       assert.equal(state, 'DISABLED');
-      assert.equal(name, 'tkyi');
 
       main.set('isDisabled', state === 'DISABLED');
     });
@@ -311,10 +367,6 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('.toggle-form__create');
 
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
-
-    // return settled().then(() => {
-
-    // });
   });
 
   test('it handles pipeline remove flow', async function(assert) {
@@ -335,7 +387,7 @@ module('Integration | Component | pipeline options', function(hooks) {
       hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`
     );
 
-    assert.dom('section.danger h4').hasText('Remove this pipeline');
+    assert.dom('section.danger h4').hasText('Delete this pipeline');
 
     await click('section.danger a');
 
@@ -344,7 +396,7 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     await click('section.danger a');
 
-    assert.dom('section.danger h4').hasText('Remove this pipeline');
+    assert.dom('section.danger h4').hasText('Delete this pipeline');
 
     await click('section.danger a');
 
@@ -484,6 +536,11 @@ module('Integration | Component | pipeline options', function(hooks) {
           id: '2345',
           name: 'A',
           isDisabled: false
+        }),
+        EmberObject.create({
+          id: '1',
+          name: 'PR-123:component',
+          isDisabled: false
         })
       ])
     );
@@ -499,6 +556,10 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.jobs li:nth-child(2) h4').hasText('A');
     assert.dom('section.jobs li:nth-child(3) h4').hasText('B');
     assert.dom('section.jobs li:nth-child(4) h4').hasText('main');
+
+    // PR Job should not render
+    assert.dom('section.jobs li:nth-child(5) h4').doesNotExist();
+
     // eslint-disable-next-line max-len
     assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
@@ -512,7 +573,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.cache li:first-child h4').hasText('Pipeline');
     assert.dom('section.cache li:nth-child(2) h4').hasText('Job A');
     assert.dom('section.cache li:nth-child(3) h4').hasText('Job B');
-    assert.dom('section.cache li:last-child h4').hasText('Job main');
+    assert.dom('section.cache li:nth-child(4) h4').hasText('Job main');
 
     // Danger Zone should not render
     assert.dom('section.danger h3').doesNotExist();

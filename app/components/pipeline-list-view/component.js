@@ -1,9 +1,11 @@
 import Component from '@ember/component';
-import { get } from '@ember/object';
+import { get, set, observer } from '@ember/object';
 import moment from 'moment';
 import Table from 'ember-light-table';
+import isEqual from 'lodash.isequal';
 
 export default Component.extend({
+  isLoading: false,
   isShowingModal: false,
   sortingDirection: 'asc',
   sortingValuePath: 'job',
@@ -36,6 +38,12 @@ export default Component.extend({
       cellComponent: 'pipeline-list-coverage-cell'
     },
     {
+      label: 'METRICS',
+      sortable: false,
+      valuePath: 'job',
+      cellComponent: 'pipeline-list-metrics-cell'
+    },
+    {
       label: 'ACTIONS',
       valuePath: 'actions',
       sortable: false,
@@ -46,7 +54,8 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
-    const table = new Table(this.get('columns'), sortedRows);
+    const table = Table.create({ columns: this.get('columns'), rows: sortedRows });
+
     let sortColumn = table.get('allColumns').findBy('valuePath', this.get('sortingValuePath'));
 
     // Setup initial sort column
@@ -123,7 +132,7 @@ export default Component.extend({
 
   getRows(jobsDetails = []) {
     let rows = jobsDetails.map(jobDetails => {
-      const { jobId, jobName } = jobDetails;
+      const { jobId, jobName, annotations, prParentJobId, prNum } = jobDetails;
       const latestBuild = jobDetails.builds.length ? get(jobDetails, 'builds.lastObject') : null;
 
       const jobData = {
@@ -142,20 +151,18 @@ export default Component.extend({
         openParametersModal: this.openParametersModal.bind(this)
       };
 
-      const prRegex = /^PR-(\d+)(?::([\w-]+))?$/;
-      const prNumMatch = jobName.match(prRegex);
-
       let duration;
+
       let startTime;
-      let status;
+
       let buildId;
+
       let coverageData = {};
 
       if (latestBuild) {
         startTime = moment(latestBuild.startTime).format('lll');
-        status = latestBuild.status;
         buildId = latestBuild.id;
-        duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, status);
+        duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, latestBuild.status);
 
         coverageData = {
           jobId,
@@ -163,8 +170,16 @@ export default Component.extend({
           startTime: latestBuild.startTime,
           endTime: latestBuild.endTime,
           pipelineId: latestBuild.pipelineId,
-          prNum: prNumMatch && prNumMatch.length > 1 ? prNumMatch[1] : null
+          prNum,
+          jobName,
+          pipelineName: this.get('pipeline.name'),
+          prParentJobId,
+          projectKey: latestBuild.meta?.build?.coverageKey
         };
+
+        if (annotations && annotations['screwdriver.cd/coverageScope']) {
+          coverageData.scope = annotations['screwdriver.cd/coverageScope'];
+        }
       }
 
       return {
@@ -201,21 +216,28 @@ export default Component.extend({
 
     return rows;
   },
+  jobsObserver: observer('jobsDetails.[]', function jobsObserverFunc({ jobsDetails }) {
+    const rows = this.getRows(jobsDetails);
+    const lastRows = get(this, 'lastRows') || [];
+    const isEqualRes = isEqual(
+      rows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
+      lastRows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
+    );
+
+    if (!isEqualRes) {
+      set(this, 'lastRows', rows);
+      this.table.setRows(rows);
+    }
+  }),
 
   actions: {
     async onScrolledToBottom() {
+      this.set('isLoading', true);
       this.get('updateListViewJobs')().then(jobs => {
         const rows = this.getRows(jobs);
 
         this.table.addRows(rows);
-      });
-    },
-
-    refreshListViewJobs() {
-      this.get('refreshListViewJobs')().then(jobs => {
-        const rows = this.getRows(jobs);
-
-        this.table.setRows(rows);
+        this.set('isLoading', false);
       });
     },
 

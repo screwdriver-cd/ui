@@ -27,7 +27,7 @@ module('Integration | Component | pipeline header', function(hooks) {
     assert.dom('a.branch').hasText('master');
     assert.dom('a.branch').hasAttribute('href', 'http://example.com/batman/batmobile');
 
-    assert.dom('span.scm', 'github.com');
+    assert.dom('span.scm').hasText('github.com');
     assert.dom('.scm > .fa-github').exists({ count: 1 });
   });
 

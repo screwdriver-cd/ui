@@ -11,6 +11,9 @@ export default Component.extend({
   logService: service('build-logs'),
   store: service(),
   classNames: ['build-log'],
+  classNameBindings: ['fullScreen:fullScreen', 'lineWrap:lineWrap'],
+  fullScreen: false,
+  lineWrap: true,
   autoscroll: true,
   isFetching: false,
   isDownloading: false,
@@ -37,6 +40,7 @@ export default Component.extend({
   }),
   getPageSize(fetchMax = false) {
     const { totalLine, inProgress, justFinished } = this;
+
     let itemSize = this.logService.getCache(this.buildId, this.stepName, 'nextLine') || totalLine;
 
     if (justFinished) {
@@ -259,7 +263,7 @@ export default Component.extend({
    * @method scrollTop
    */
   scrollTop() {
-    this.$('.wrap')[0].scrollTop = 0;
+    this.element.querySelectorAll('.wrap')[0].scrollTop = 0;
   },
 
   /**
@@ -268,9 +272,9 @@ export default Component.extend({
    */
   scrollDown() {
     if (this.autoscroll) {
-      const bottom = this.$('.bottom').prop('offsetTop');
+      const bottom = this.element.querySelector('.bottom').offsetTop;
 
-      this.$('.wrap').prop('scrollTop', bottom);
+      this.element.querySelector('.wrap').scrollTop = bottom;
       set(this, 'lastScrollTop', bottom);
     }
   },
@@ -280,7 +284,7 @@ export default Component.extend({
    * @method scrollStill
    */
   scrollStill() {
-    const container = this.$('.wrap')[0];
+    const container = this.element.querySelectorAll('.wrap')[0];
 
     set(
       this,
@@ -320,7 +324,7 @@ export default Component.extend({
         .then(({ done }) => {
           // prevent updating logs when component is being destroyed
           if (!this.isDestroyed && !this.isDestroying) {
-            const container = this.$('.wrap')[0];
+            const container = this.element.querySelectorAll('.wrap')[0];
             const { inProgress, justFinished } = this;
 
             set(this, 'isFetching', false);
@@ -364,23 +368,12 @@ export default Component.extend({
     },
     download() {
       const { buildId, stepName } = this;
+      const downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/steps/${stepName}/logs?type=download`;
 
-      if (this.logService.getCache(buildId, stepName, 'logs')) {
-        set(this, 'isDownloading', true);
-
-        this.getLogs(true).then(() => {
-          this.$('#downloadLink')
-            .attr({
-              download: `${buildId}-${stepName}.log`,
-              href: this.logService.buildLogBlobUrl(buildId, stepName)
-            })[0]
-            .click();
-          set(this, 'isDownloading', false);
-        });
-      }
+      window.open(downloadLink, '_blank');
     },
     logScroll() {
-      const container = this.$('.wrap')[0];
+      const container = this.element.querySelectorAll('.wrap')[0];
 
       if (
         !this.inProgress &&
@@ -394,7 +387,11 @@ export default Component.extend({
       }
 
       // autoscroll when the bottom of the logs is roughly in view
-      set(this, 'autoscroll', this.$('.bottom')[0].getBoundingClientRect().top < 1500);
+      set(
+        this,
+        'autoscroll',
+        this.element.querySelectorAll('.bottom')[0].getBoundingClientRect().top < 1500
+      );
     },
     toggleTimeDisplay() {
       let index = timeTypes.indexOf(this.timeFormat);
@@ -402,6 +399,12 @@ export default Component.extend({
       index = index + 1 >= timeTypes.length ? 0 : index + 1;
       localStorage.setItem('screwdriver.logs.timeFormat', timeTypes[index]);
       set(this, 'timeFormat', timeTypes[index]);
+    },
+    toggleZoom() {
+      this.toggleProperty('fullScreen');
+    },
+    toggleLineWrap() {
+      this.toggleProperty('lineWrap');
     }
   }
 });

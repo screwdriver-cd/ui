@@ -57,12 +57,12 @@
               escape-press=(action "cancelSearch")
               autofocus="true"
               value=searchTerm}}
-            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search"}}</button>
+            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search" title="Search"}}</button>
           </form>
         {{/nav.item}}
       {{else}}
         {{#nav.item}}
-          <a href="#" class="icon search" {{action (mut showSearch) (not showSearch) preventDefault=false}}>{{inline-svg "search" class="img"}}</a>
+          <a href="#" class="icon search" title="Search" {{action (mut showSearch) (not showSearch) preventDefault=false}}>{{inline-svg "search" class="img"}}</a>
         {{/nav.item}}
       {{/if}}
 
@@ -73,9 +73,12 @@
           {{/dd.toggle}}
           {{#dd.menu as |ddm|}}
             {{#ddm.item}}
-              <a href={{docUrl}} class="icon docs">
+              <a href={{docUrl}} class="icon docs" title="Documentation and Contact">
                 {{inline-svg "file-text" class="img"}}<span>Documentation</span>
               </a>
+            {{/ddm.item}}
+            {{#ddm.item}}
+              <a class="release">{{fa-icon "tag"}}<span>{{releaseVersion}}</span></a>
             {{/ddm.item}}
             {{ddm.divider}}
             {{#ddm.item}}
@@ -85,12 +88,12 @@
             {{/ddm.item}}
             {{#ddm.item}}
               <a href={{slackUrl}} class="icon community">
-                {{inline-svg "slack" class="img"}}<span>Slack Channel</span>
+                {{inline-svg "slack" class="img"}}<span>Slack Workspace</span>
               </a>
             {{/ddm.item}}
             {{#ddm.item}}
               <a href="https://github.com/screwdriver-cd" class="icon github">
-                {{inline-svg "github" class="img"}}<span>Github</span>
+                {{inline-svg "github" class="img"}}<span>GitHub</span>
               </a>
             {{/ddm.item}}
           {{/dd.menu}}

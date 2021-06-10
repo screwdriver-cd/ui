@@ -10,6 +10,15 @@ export default Component.extend({
       return this.get('job.environment.SD_TEMPLATE_FULLNAME');
     }
   }),
+  getTemplateLink: computed('job', {
+    get() {
+      const namespace = this.get('job.environment.SD_TEMPLATE_NAMESPACE');
+      const name = this.get('job.environment.SD_TEMPLATE_NAME');
+      const version = this.get('job.environment.SD_TEMPLATE_VERSION');
+
+      return `/templates/${namespace}/${name}/${version}`;
+    }
+  }),
   getTemplateVersion: computed('job', {
     get() {
       return this.get('job.environment.SD_TEMPLATE_VERSION');
@@ -33,9 +42,10 @@ export default Component.extend({
       if (c) {
         return c.map(s => {
           const name = Object.keys(s)[0];
-          const command = s[name];
+          const command = s[name].command || s[name];
+          const locked = s[name].locked || null;
 
-          return { name, command };
+          return { name, command, locked };
         });
       }
 
@@ -46,6 +56,7 @@ export default Component.extend({
     get() {
       const commands = this.steps;
       const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)(?:@((?:(?:\d+)(?:\.\d+)?(?:\.\d+)?)|(?:[a-zA-Z][\w-]+)))?/g;
+
       let sdCommands = [];
 
       if (commands === []) {
@@ -75,13 +86,13 @@ export default Component.extend({
     this._super(...arguments);
 
     if (!this.isOpen) {
-      this.$('div').hide();
+      this.element.querySelectorAll('div').forEach(el => el.classList.add('hidden'));
     }
   },
   actions: {
     nameClick() {
       this.toggleProperty('isOpen');
-      this.$('div').toggle('hidden');
+      this.element.querySelectorAll('div').forEach(el => el.classList.toggle('hidden'));
     }
   }
 });

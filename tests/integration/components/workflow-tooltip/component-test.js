@@ -81,11 +81,12 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       .hasText('Go to downstream pipeline ~sd@1234:main Go to downstream pipeline ~sd@2:prod');
   });
 
-  test('it renders restart link', async function(assert) {
+  test('it renders disabled manually starting', async function(assert) {
     const data = {
       job: {
         buildId: 1234,
-        name: 'batmobile'
+        name: 'batmobile',
+        manualStartDisabled: true
       }
     };
 
@@ -99,9 +100,142 @@ module('Integration | Component | workflow tooltip', function(hooks) {
       confirmStartBuild="confirmStartBuild"
     }}`);
 
+    assert.dom('.content a').exists({ count: 2 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('p:last-child').hasText('Disabled manually starting');
+  });
+
+  test('it renders start link', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+      isPrChainJob=isPrChainJob
+    }}`);
+
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:first-child').hasText('Go to build details');
     assert.dom('a:last-child').hasText('Start pipeline from here');
+  });
+
+  test('it renders restart link', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'SUCCESS'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+      isPrChainJob=isPrChainJob
+    }}`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Restart pipeline from here');
+  });
+
+  test('it hides restart link if no build exists in PRChain', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'SUCCESS'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', true);
+    this.set('prBuildExists', false);
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+      isPrChain=isPrChain
+      prBuildExists=prBuildExists
+    }}`);
+
+    assert.dom('.content a').exists({ count: 2 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Go to build metrics');
+  });
+
+  test('it renders stop frozen build link', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'FROZEN'
+      },
+      selectedEvent: 'Stop frozen build'
+    };
+
+    this.set('data', data);
+    this.set('stopBuild', () => {});
+    this.set('action', () => {});
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      stopBuild="stopBuild"
+      action="action"
+    }}`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Stop frozen build');
+  });
+
+  test('it shows restart link if build exists in PRChain', async function(assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'SUCCESS'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', true);
+    this.set('prBuildExists', true);
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+      isPrChain=isPrChain
+      prBuildExists=prBuildExists
+    }}`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:first-child').hasText('Go to build details');
+    assert.dom('a:last-child').hasText('Restart pipeline from here');
   });
 
   test('it should update position and hidden status', async function(assert) {

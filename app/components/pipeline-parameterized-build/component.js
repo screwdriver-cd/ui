@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { set } from '@ember/object';
+import { getWithDefault, set } from '@ember/object';
 
 /**
  @class PipelineParameterizedBuild
@@ -32,7 +32,10 @@ export default Component.extend({
    */
   init() {
     this._super(...arguments);
-    const [parameters, parameterizedModel] = this.normalizeParameters(this.buildParameters);
+    const [parameters, parameterizedModel] = this.normalizeParameters(
+      this.buildParameters,
+      this.getDefaultBuildParameters()
+    );
 
     this.setProperties({
       parameters,
@@ -40,13 +43,24 @@ export default Component.extend({
     });
   },
 
+  getDefaultBuildParameters() {
+    return this.getWithDefault('pipeline.parameters', {});
+  },
+
   /**
    * normalizeParameters transform given parameters from object into array of objects
    * this method also backfills with default properties
-   * For example: {
+   * For example:
+   * parameters = {
         "_started_at": "simple",
         "user": {
           "value": "adong",
+          "description": "User running build"
+        }
+     }
+     defaultParameters = {
+        "user": {
+          "value": "dummy",
           "description": "User running build"
         }
    * }
@@ -55,29 +69,42 @@ export default Component.extend({
    *  {
         name: "_started_at":
         value: "simple",
+        defaultValues: "simple"
         description: ""
       }, {
         name: "user"
         value: "adong",
+        defaultValues: "dummy"
         description: "User running build"
       }
    * ]
-   * @param  {Object} parameters [description]
-   * @return {[type]}            [description]
+   * @param  {Object} parameters        [description]
+   * @param  {Object} defaultParameters [description]
+   * @return {[type]}                   [description]
    */
-  normalizeParameters(parameters = {}) {
+  normalizeParameters(parameters = {}, defaultParameters = {}) {
     const normalizedParameters = [];
     const normalizedParameterizedModel = {};
 
     Object.entries(parameters).forEach(([propertyName, propertyVal]) => {
-      const value = propertyVal.value || propertyVal || '';
+      let value = propertyVal.value || propertyVal || '';
       const description = propertyVal.description || '';
+      // If no default value is found, fill with build parameter value
+      const defaultPropertyVal = defaultParameters[propertyName]
+        ? defaultParameters[propertyName]
+        : value;
+      const defaultValue = defaultPropertyVal.value || defaultPropertyVal || value;
 
       normalizedParameters.push({
         name: propertyName,
         value,
+        defaultValues: defaultValue,
         description
       });
+
+      if (Array.isArray(value)) {
+        value = getWithDefault(value, '0', '');
+      }
 
       normalizedParameterizedModel[propertyName] = value;
     });
@@ -109,9 +136,19 @@ export default Component.extend({
     throw new Error('Not implemented');
   },
 
+  updateValue({ model, propertyName, value }) {
+    set(model, propertyName, value);
+  },
+
   actions: {
-    onUpdateValue(value, model, propertyName) {
-      set(model, propertyName, value);
+    searchOrAddtoList(model, propertyName, value, e) {
+      if (e.keyCode === 13) {
+        this.updateValue({ model, propertyName, value: value.searchText });
+      }
+    },
+
+    onUpdateValue(model, propertyName, value) {
+      this.updateValue({ model, propertyName, value });
     },
 
     /**

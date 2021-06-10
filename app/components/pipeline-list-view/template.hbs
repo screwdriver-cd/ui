@@ -1,5 +1,18 @@
-<button {{action "refreshListViewJobs"}} class="refresh-btn">Refresh</button>
-{{#light-table table as |t|}}
+<div class="row list-view-nav">
+  <div class="col-xs-2">
+    {{#bs-button-group
+            class="view-toggle"
+            value=showListView
+            type="radio"
+            onChange=(action setShowListView) as |bg|
+    }}
+      {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
+      {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
+    {{/bs-button-group}}
+  </div>
+</div>
+
+{{#light-table table height="60vh" as |t|}}
   {{t.head
     onColumnClick=(action "onColumnClick")
     iconSortable="fa fa-sort"
@@ -8,8 +21,15 @@
     fixed=true}}
   {{#t.body
     canSelect=false
-    onScrolledToBottom=(action "onScrolledToBottom")
-  }}{{/t.body}}
+    scrollBuffer=700
+    onScrolledToBottom=(action "onScrolledToBottom") as |body|
+  }}
+    {{#if isLoading}}
+      {{#body.loader}}
+        Loading...
+      {{/body.loader}}
+    {{/if}}
+  {{/t.body}}
 {{/light-table}}
 
 {{#if isShowingModal}}
@@ -22,6 +42,7 @@
   }}
     <h3>Are you sure to start?</h3>
     {{pipeline-parameterized-build
+      pipeline=pipeline
       showSubmitButton=true
       buildParameters=buildParameters
       onSave=(action "startBuild")

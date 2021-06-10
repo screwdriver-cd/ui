@@ -9,8 +9,11 @@ import { helper } from '@ember/component/helper';
 export function compareVersions(v1, v2) {
   const s1 = v1.split('.');
   const s2 = v2.split('.');
+
   let i1;
+
   let i2;
+
   let limit = Math.max(s1.length, s2.length);
 
   while (limit) {

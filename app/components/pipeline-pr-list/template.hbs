@@ -17,7 +17,7 @@
       <div class="by"><a href={{jobs.0.userProfile}} target="_blank" rel="noopener">{{jobs.0.username}}</a></div>
       {{#if showJobs }}
         {{#each jobs as |job|}}
-          {{pipeline-pr-view job=job}}
+          {{pipeline-pr-view job=job workflowGraph=workflowGraph}}
         {{/each}}
       {{else}}
         {{#if isRestricted}}

@@ -21,6 +21,7 @@
     border-radius: 2px;
     padding: 5px 10px;
     font-weight: $weight-normal;
+    margin-left: 5px;
 
     &:hover,
     &.active:hover {
@@ -30,7 +31,6 @@
   }
 
   .view-toggle {
-    float: right;
   }
 
   .btn {
@@ -97,6 +97,10 @@
 
     a {
       line-height: inherit;
+    }
+
+    .customize-label {
+      word-break: break-all;
     }
   }
 }

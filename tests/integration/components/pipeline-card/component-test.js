@@ -5,19 +5,13 @@ import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import $ from 'jquery';
+import wait from 'ember-test-helpers/wait';
+import Pretender from 'pretender';
 
+let server;
+const hasEmptyMetrics = () => [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
 const mockPipeline = EmberObject.create({
   id: 1,
-  eventsInfo: [],
-  lastEventInfo: {
-    commitMessage: 'No events have been run for this pipeline',
-    commitUrl: '#',
-    durationText: '--',
-    icon: 'question-circle',
-    sha: 'Not available',
-    startTime: '--/--/----',
-    statusColor: 'build-empty'
-  },
   scmRepo: {
     branch: 'master',
     name: 'screwdriver-cd/ui',
@@ -25,6 +19,15 @@ const mockPipeline = EmberObject.create({
     url: 'https://github.com/screwdriver-cd/ui/tree/master'
   },
   branch: 'master'
+});
+const lastEventInfo = EmberObject.create({
+  startTime: '--/--/----',
+  statusColor: 'build-empty',
+  durationText: '--',
+  sha: 'Not available',
+  icon: 'question-circle',
+  commitMessage: 'No events have been run for this pipeline',
+  commitUrl: '#'
 });
 const removePipelineSpy = sinon.spy();
 const selectPipelineSpy = sinon.spy();
@@ -34,6 +37,9 @@ module('Integration | Component | pipeline card', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
+    server = new Pretender();
+    server.get('http://localhost:8080/v4/pipelines/1/metrics', hasEmptyMetrics);
+
     this.setProperties({
       pipeline: mockPipeline,
       removePipeline: removePipelineSpy,
@@ -45,7 +51,12 @@ module('Integration | Component | pipeline card', function(hooks) {
     });
   });
 
+  hooks.afterEach(function() {
+    server.shutdown();
+  });
+
   test('it renders', async function(assert) {
+    assert.expect(12);
     this.owner.setupRouter();
 
     await render(hbs`
@@ -54,6 +65,8 @@ module('Integration | Component | pipeline card', function(hooks) {
       }}
     `);
 
+    await wait();
+
     assert.dom('.branch-info a').hasText(mockPipeline.scmRepo.name);
     assert.dom('.branch-info a').hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert.dom('.commit-info').exists({ count: 1 });
@@ -61,18 +74,12 @@ module('Integration | Component | pipeline card', function(hooks) {
       .dom('.commit-status a:nth-of-type(1)')
       .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert.dom('.commit-status a:nth-of-type(1) i').hasClass('fa-question-circle');
-    assert.dom('.commit-status a:nth-of-type(2)').hasText(mockPipeline.lastEventInfo.sha);
-    assert
-      .dom('.commit-status a:nth-of-type(2)')
-      .hasAttribute('href', mockPipeline.lastEventInfo.commitUrl);
-    assert.dom('.commit-message').hasText(mockPipeline.lastEventInfo.commitMessage);
+    assert.dom('.commit-status a:nth-of-type(2)').hasText(lastEventInfo.sha);
+    assert.dom('.commit-status a:nth-of-type(2)').hasAttribute('href', lastEventInfo.commitUrl);
+    assert.dom('.commit-message').hasText(lastEventInfo.commitMessage);
     assert.dom('.time-metrics').exists({ count: 1 });
-    assert
-      .dom('.duration-badge span:nth-of-type(2)')
-      .hasText(mockPipeline.lastEventInfo.durationText);
-    assert
-      .dom('.start-time-badge span:nth-of-type(2)')
-      .hasText(mockPipeline.lastEventInfo.startTime);
+    assert.dom('.duration-badge span:nth-of-type(2)').hasText(lastEventInfo.durationText);
+    assert.dom('.start-time-badge span:nth-of-type(2)').hasText(lastEventInfo.startTime);
     assert.dom('.events-thumbnail-wrapper').exists({ count: 1 });
   });
 

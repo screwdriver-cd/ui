@@ -8,20 +8,23 @@
   {{#if linkCopied}}
     {{info-message message=linkCopied type="success" icon="check"}}
   {{/if}}
+  {{#if pipelineRemovedMessage}}
+    {{info-message message=pipelineRemovedMessage type="success" icon="check"}}
+  {{/if}}
   <div class="header row">
     <div class="col-xs-12 col-sm-8">
       <h2 class="header__name">{{collection.name}}</h2>
 
-      {{#if (not-eq collection.type "default")}}
-        <span onclick={{action "toggleAddPipelineModal"}} class="collection-operation add-pipeline-operation">
+      {{#if (eq collection.type "normal")}}
+        <span onclick={{action "toggleAddPipelineModal"}} title="Add pipeline(s) to collection" class="collection-operation add-pipeline-operation">
           {{inline-svg "add" class="img"}}
         </span>
-        <span onclick={{action "toggleSettingModal"}} class="collection-operation settings-operation">
+        <span onclick={{action "toggleSettingModal"}} title="Collection settings" class="collection-operation settings-operation">
           {{inline-svg "setting" class="img"}}
         </span>
       {{/if}}
 
-      <span onclick={{action "copyLink"}} class="collection-operation copy-operation">
+      <span onclick={{action "copyLink"}} title="Copy collection link" class="collection-operation copy-operation">
         {{inline-svg "link" class="img"}}
       </span>
 
@@ -59,6 +62,7 @@
             <form.element
               @controlType="text"
               @label="Name"
+              @required={{true}}
               @placeholder="Screwdriver CI/CD"
               @value={{collection.name}}
               @onChange={{action "updateCollectionName"}}
@@ -74,7 +78,7 @@
         </modal.body>
         <modal.footer>
           <BsButton @onClick={{action modal.close}}>Cancel</BsButton>
-          <BsButton @type="primary" @onClick={{action "onSubmitSettingModal"}}>Save</BsButton>
+          <BsButton @type="primary" @disabled={{isModelSaveDisabled}} @onClick={{action "onSubmitSettingModal"}}>Save</BsButton>
         </modal.footer>
       </BsModal>
 
@@ -163,6 +167,7 @@
                   selectPipeline=(action "selectPipeline")
                   deselectPipeline=(action "deselectPipeline")
                   reset=reset
+                  collectionName=collection.name
               }}
             {{/each}}
           </tbody>
@@ -180,6 +185,7 @@
               selectPipeline=(action "selectPipeline")
               deselectPipeline=(action "deselectPipeline")
               reset=reset
+              collectionName=collection.name
           }}
         {{/each}}
       </div>

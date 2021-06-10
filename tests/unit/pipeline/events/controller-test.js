@@ -7,7 +7,6 @@ import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import sinon from 'sinon';
-import ENV from 'screwdriver-ui/config/environment';
 
 const sessionServiceMock = Service.extend({
   isAuthenticated: true,
@@ -20,6 +19,7 @@ const sessionServiceMock = Service.extend({
     }
   }
 });
+
 let server;
 
 module('Unit | Controller | pipeline/events', function(hooks) {
@@ -39,7 +39,12 @@ module('Unit | Controller | pipeline/events', function(hooks) {
   });
 
   test('it starts a build', async function(assert) {
-    assert.expect(9);
+    assert.expect(7);
+    server.get('http://localhost:8080/v4/events/5678/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -59,14 +64,6 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         })
       );
 
-      controller.set('listViewOffset', 3);
-      controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-        assert.equal(listViewOffset, 0);
-        assert.equal(listViewCutOff, 3);
-
-        return Promise.resolve([]);
-      });
-
       controller.set('reload', () => {
         assert.ok(true);
 
@@ -74,7 +71,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       controller.transitionToRoute = (path, id) => {
@@ -100,88 +97,13 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it starts a single build', async function(assert) {
-    assert.expect(13);
-    server.post('http://localhost:8080/v4/events', () => [
+  test('it restarts a build', async function(assert) {
+    assert.expect(6);
+    server.get('http://localhost:8080/v4/events/2/builds', () => [
       201,
       { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '5678',
-        pipelineId: '1234'
-      })
+      JSON.stringify([{ id: '1234' }])
     ]);
-
-    const controller = this.owner.lookup('controller:pipeline/events');
-
-    run(() => {
-      controller.set(
-        'pipeline',
-        EmberObject.create({
-          id: '1234'
-        })
-      );
-
-      controller.set('listViewOffset', 3);
-      controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-        assert.equal(listViewOffset, 0);
-        assert.equal(listViewCutOff, 3);
-
-        return Promise.resolve([]);
-      });
-
-      controller.set('reload', () => {
-        assert.ok(true);
-
-        return Promise.resolve({});
-      });
-
-      controller.set('model', {
-        events: EmberObject.create({})
-      });
-
-      controller.transitionToRoute = (path, id) => {
-        assert.equal(path, 'pipeline');
-        assert.equal(id, 1234);
-      };
-
-      controller.set('store.queryRecord', (modelName, params) => {
-        assert.equal(modelName, 'build');
-        assert.deepEqual(params, {
-          jobId: 1
-        });
-
-        return Promise.resolve(EmberObject.create({ eventId: '10', parentBuildId: '57' }));
-      });
-
-      controller.set('store.findRecord', (modelName, params) => {
-        assert.equal(modelName, 'event');
-        assert.deepEqual(params, '10');
-
-        return Promise.resolve(EmberObject.create({ id: '10' }));
-      });
-
-      assert.notOk(controller.get('isShowingModal'));
-      controller.send('startSingleBuild', 1, 'name', 'RESTART');
-      assert.ok(controller.get('isShowingModal'));
-    });
-
-    await settled();
-
-    const [request] = server.handledRequests;
-    const payload = JSON.parse(request.requestBody);
-
-    assert.notOk(controller.get('isShowingModal'));
-    assert.deepEqual(payload, {
-      pipelineId: '1234',
-      startFrom: 'name',
-      parentBuildId: 57,
-      parentEventId: 10,
-      causeMessage: 'Manually started by apple'
-    });
-  });
-
-  test('it restarts a build', async function(assert) {
-    assert.expect(8);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -214,14 +136,6 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         })
       );
 
-      controller.set('listViewOffset', 6);
-      controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-        assert.equal(listViewOffset, 0);
-        assert.equal(listViewCutOff, 6);
-
-        return Promise.resolve([]);
-      });
-
       controller.set('reload', () => {
         assert.ok(true);
 
@@ -229,7 +143,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       controller.transitionToRoute = path => {
@@ -258,7 +172,12 @@ module('Unit | Controller | pipeline/events', function(hooks) {
   });
 
   test('it restarts a PR build', async function(assert) {
-    assert.expect(8);
+    assert.expect(6);
+    server.get('http://localhost:8080/v4/events/2/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -294,14 +213,6 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
       controller.set('activeTab', 'pulls');
 
-      controller.set('listViewOffset', 5);
-      controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-        assert.equal(listViewOffset, 0);
-        assert.equal(listViewCutOff, 5);
-
-        return Promise.resolve([]);
-      });
-
       controller.set('reload', () => {
         assert.ok(true);
 
@@ -309,7 +220,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       controller.transitionToRoute = path => {
@@ -338,7 +249,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
   });
 
   test('it stops a build', async function(assert) {
-    assert.expect(5);
+    assert.expect(3);
     server.put('http://localhost:8080/v4/builds/123', () => [
       200,
       { 'Content-Type': 'application/json' },
@@ -371,15 +282,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
-      });
-
-      controller.set('listViewOffset', 3);
-      controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-        assert.equal(listViewOffset, 0);
-        assert.equal(listViewCutOff, 3);
-
-        return Promise.resolve([]);
+        events: newArray()
       });
 
       const build = controller.store.peekRecord('build', '123');
@@ -420,7 +323,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
     const controller = this.owner.lookup('controller:pipeline/events');
 
-    const jobs = EmberObject.create([
+    const jobs = newArray([
       {
         builds: [
           {
@@ -442,7 +345,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       const build = controller.store.peekRecord('build', '123');
@@ -456,10 +359,11 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     await settled();
 
     const [request] = server.handledRequests;
-    const payload = JSON.parse(request.requestBody);
+    const { responseText } = request;
+    const payload = JSON.parse(responseText);
 
     assert.deepEqual(payload, {
-      status: 'ABORTED'
+      id: '123'
     });
   });
 
@@ -489,7 +393,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       );
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       assert.notOk(controller.get('isShowingModal'));
@@ -515,7 +419,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     const prNum = 3;
     const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
 
-    assert.expect(7);
+    assert.expect(5);
 
     server.post('http://localhost:8080/v4/events', () => [
       201,
@@ -554,14 +458,6 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         sha: 'sha2'
       });
 
-      controller.set('listViewOffset', 3);
-      controller.set('getNewListViewJobs', (listViewOffset, listViewCutOff) => {
-        assert.equal(listViewOffset, 0);
-        assert.equal(listViewCutOff, 3);
-
-        return Promise.resolve([]);
-      });
-
       controller.set('prEvents', newArray([event1, event2]));
 
       controller.set(
@@ -573,7 +469,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       );
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       assert.notOk(controller.get('isShowingModal'));
@@ -585,141 +481,5 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
     assert.equal(controller.get('prEvents')[0].id, 3);
     assert.equal(controller.get('prEvents')[0].prNum, '3');
-  });
-
-  test('it refreshListViewJobs', async function(assert) {
-    assert.expect(3);
-    server.post('http://localhost:8080/v4/events', () => [
-      201,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '5678',
-        pipelineId: '1234'
-      })
-    ]);
-
-    const controller = this.owner.lookup('controller:pipeline/events');
-
-    run(() => {
-      controller.set(
-        'pipeline',
-        EmberObject.create({
-          id: '1234',
-          jobs: [
-            EmberObject.create({ id: '1', name: 'a', pipelineId: '1234' }),
-            EmberObject.create({ id: '2', name: 'b', pipelineId: '1234' }),
-            EmberObject.create({ id: '3', name: 'c', pipelineId: '1234' }),
-            EmberObject.create({ id: '4', name: 'd', pipelineId: '1234' })
-          ]
-        })
-      );
-
-      controller.set('listViewOffset', 3);
-
-      controller.set('store.query', (modelName, params) => {
-        assert.equal(modelName, 'build-history');
-        assert.deepEqual(params, {
-          jobIds: ['1', '2', '3'],
-          offset: 0,
-          numBuilds: ENV.APP.NUM_BUILDS_LISTED
-        });
-
-        return Promise.resolve([{ jobId: 1 }, { jobId: 2 }, { jobId: 3 }]);
-      });
-
-      controller.send('refreshListViewJobs');
-    });
-
-    await settled();
-
-    assert.deepEqual(controller.get('jobsDetails'), [
-      { jobId: 1, jobName: 'a', jobPipelineId: '1234' },
-      { jobId: 2, jobName: 'b', jobPipelineId: '1234' },
-      { jobId: 3, jobName: 'c', jobPipelineId: '1234' }
-    ]);
-  });
-
-  test('it updateListViewJobs purge', async function(assert) {
-    assert.expect(3);
-    server.post('http://localhost:8080/v4/events', () => [
-      201,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '5678',
-        pipelineId: '1234'
-      })
-    ]);
-
-    const controller = this.owner.lookup('controller:pipeline/events');
-
-    run(() => {
-      controller.set(
-        'pipeline',
-        EmberObject.create({
-          id: '1234',
-          jobs: [
-            EmberObject.create({ id: '1', name: 'a', pipelineId: '1234' }),
-            EmberObject.create({ id: '2', name: 'b', pipelineId: '1234' }),
-            EmberObject.create({ id: '3', name: 'c', pipelineId: '1234' }),
-            EmberObject.create({ id: '4', name: 'd', pipelineId: '1234' })
-          ]
-        })
-      );
-
-      controller.set('jobsDetails', [
-        EmberObject.create({ jobId: 7, jobName: 'purge', jobPipelineId: '12' })
-      ]);
-
-      controller.set('listViewOffset', 3);
-
-      controller.set('store.query', (modelName, params) => {
-        assert.equal(modelName, 'build-history');
-        assert.deepEqual(params, {
-          jobIds: ['1', '2', '3', '4'],
-          offset: 0,
-          numBuilds: ENV.APP.NUM_BUILDS_LISTED
-        });
-
-        return Promise.resolve([{ jobId: 1 }, { jobId: 2 }, { jobId: 3 }, { jobId: 4 }]);
-      });
-
-      controller.send('updateListViewJobs');
-    });
-
-    await settled();
-
-    assert.deepEqual(controller.get('jobsDetails'), [
-      { jobId: 1, jobName: 'a', jobPipelineId: '1234' },
-      { jobId: 2, jobName: 'b', jobPipelineId: '1234' },
-      { jobId: 3, jobName: 'c', jobPipelineId: '1234' },
-      { jobId: 4, jobName: 'd', jobPipelineId: '1234' }
-    ]);
-  });
-
-  test('it setShowListView reset listViewOffset and jobsDetails', async function(assert) {
-    assert.expect(4);
-
-    const controller = this.owner.lookup('controller:pipeline/events');
-    const listViewOffset = 10;
-    const dummyJob = {};
-    const jobsDetails = [dummyJob, dummyJob, dummyJob];
-
-    run(() => {
-      controller.setProperties({
-        listViewOffset,
-        jobsDetails
-      });
-
-      assert.equal(
-        controller.get('listViewOffset'),
-        listViewOffset,
-        `has listViewOffset of ${listViewOffset}`
-      );
-      assert.equal(controller.get('jobsDetails').length, 3, 'has 3 jobs');
-
-      controller.send('setShowListView', false);
-      assert.equal(controller.get('listViewOffset'), 0, `has listViewOffset of 0`);
-      assert.equal(controller.get('jobsDetails').length, 0, 'has 0 jobs');
-    });
   });
 });

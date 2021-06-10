@@ -7,6 +7,7 @@ export default DS.Model.extend({
   annotations: DS.attr(),
   checkoutUrl: DS.attr('string'),
   rootDir: DS.attr('string'),
+  autoKeysGeneration: DS.attr('boolean', { defaultValue: false }),
   scmContext: DS.attr('string'),
   createTime: DS.attr('date'),
   scmRepo: DS.attr(),
@@ -21,6 +22,7 @@ export default DS.Model.extend({
   secrets: DS.hasMany('secret', { async: true }),
   tokens: DS.hasMany('token', { async: true }),
   metrics: DS.hasMany('metric', { async: true }),
+  settings: DS.attr(),
 
   appId: alias('scmRepo.name'),
   branch: computed('scmRepo.{branch,rootDir}', {
@@ -28,7 +30,7 @@ export default DS.Model.extend({
       let { branch, rootDir } = this.scmRepo || {};
 
       if (rootDir) {
-        branch = `${branch}#${rootDir}`;
+        branch = `${branch}:${rootDir}`;
       }
 
       return branch;

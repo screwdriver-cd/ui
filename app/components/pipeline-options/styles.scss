@@ -126,6 +126,19 @@
   .right {
     text-align: right;
   }
+
+  input.display-job-name {
+    width: 45px;
+  }
+
+  .pipeline {
+    .ember-power-select-multiple-option {
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-right: 5px;
+      padding-left: 3px;
+    }
+  }
 }
 
 .text-input {

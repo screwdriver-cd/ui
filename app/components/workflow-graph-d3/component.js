@@ -3,13 +3,48 @@ import Component from '@ember/component';
 import { set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-tools';
+import ENV from 'screwdriver-ui/config/environment';
+
+/**
+ * remove branch of given node and its children
+ * @param  {Node} node     Given node
+ * @param  {Graph} graph   Given graph
+ * @return {undefined}     Removal operation is in-place
+ */
+function removeBranch(node, graph) {
+  if (node && node.name) {
+    const inEdges = graph.edges.filter(edge => edge.dest === node.name).length;
+
+    // remove node if it only has 1 edge
+    if (inEdges === 0) {
+      // keep a copy of edges to aid in-place edge removal
+      const edges = graph.edges.slice(0);
+
+      edges.forEach(edge => {
+        if (edge.src === node.name) {
+          const nodeToBeRemoved = graph.nodes.findBy('name', edge.dest);
+
+          graph.edges.removeObject(edge);
+
+          removeBranch(nodeToBeRemoved, graph);
+        }
+      });
+
+      graph.nodes.removeObject(node);
+    }
+  }
+}
 
 export default Component.extend({
+  shuttle: service(),
+  store: service(),
   router: service(),
   classNameBindings: ['minified'],
   displayJobNames: true,
+  showPRJobs: true,
   graph: { nodes: [], edges: [] },
   decoratedGraph: computed(
+    'showPRJobs',
     'showDownstreamTriggers',
     'workflowGraph',
     'startFrom',
@@ -28,6 +63,7 @@ export default Component.extend({
           nodes: [],
           edges: []
         });
+
         let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
 
         // only remove node if it is not a source node
@@ -50,6 +86,13 @@ export default Component.extend({
 
             graph.edges.removeObjects(endEdges);
           });
+        }
+
+        // remove jobs that starts from ~pr
+        if (!this.showPRJobs) {
+          const prNode = graph.nodes.findBy('name', '~pr');
+
+          removeBranch(prNode, graph);
         }
 
         set(this, 'graph', graph);
@@ -134,13 +177,30 @@ export default Component.extend({
       }
     });
   },
-  draw(data) {
-    const MAX_DISPLAY_NAME = 20;
+  async draw(data) {
+    const self = this;
+
+    let desiredJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
+
+    const pipelineId = this.get('pipeline.id');
+    const pipelinePreference = await this.store
+      .peekAll('preference/pipeline')
+      .findBy('id', pipelineId);
+
+    if (pipelinePreference) {
+      const { displayJobNameLength } = pipelinePreference;
+
+      if (displayJobNameLength > desiredJobNameLength) {
+        desiredJobNameLength = displayJobNameLength;
+      }
+    }
+
     const MAX_LENGTH = Math.min(
       data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
-      MAX_DISPLAY_NAME
+      desiredJobNameLength
     );
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = this.elementSizes;
+
     let X_WIDTH = ICON_SIZE * 2;
 
     // When displaying job names use estimate of 7 per character
@@ -246,6 +306,8 @@ export default Component.extend({
       .insert('title')
       .text(d => (d.status ? `${d.name} - ${d.status}` : d.name));
 
+    let jobFound = false;
+
     // Job Names
     if (TITLE_SIZE && this.displayJobNames) {
       svg
@@ -253,18 +315,32 @@ export default Component.extend({
         .data(data.nodes)
         .enter()
         .append('text')
-        .text(d =>
-          d.name.length >= MAX_DISPLAY_NAME
-            ? `${d.name.substr(0, 8)}...${d.name.substr(-8)}`
-            : d.name
-        )
-        .attr('class', 'graph-label')
+        .text(d => {
+          const displayName = d.displayName !== undefined ? d.displayName : d.name;
+
+          return displayName.length >= desiredJobNameLength
+            ? `${displayName.substr(0, 8)}...${displayName.substr(-8)}`
+            : displayName;
+        })
+        .attr('class', d => {
+          if (!self.minified && d.id === parseInt(self.jobId, 10)) {
+            jobFound = true;
+
+            return 'graph-label selected-job';
+          }
+
+          return 'graph-label';
+        })
         .attr('font-size', `${TITLE_SIZE}px`)
         .style('text-anchor', 'middle')
         .attr('x', d => calcXCenter(d.pos.x))
         .attr('y', d => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING + TITLE_SIZE)
         .insert('title')
         .text(d => d.name);
+    }
+    if (jobFound && !this.scrolledToSelectedJob) {
+      this.element.querySelectorAll('svg > .selected-job')[0].scrollIntoView();
+      this.scrolledToSelectedJob = true;
     }
   }
 });

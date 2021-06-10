@@ -10,5 +10,10 @@ module('Integration | Component | validator input', function(hooks) {
     await render(hbs`{{validator-input}}`);
 
     assert.dom('h4').hasText('Validate Screwdriver Configuration');
+    assert
+      .dom('h5')
+      .hasText(
+        'Paste a screwdriver.yaml or a template yaml below to verify.Template yamls must contain the "name" field.'
+      );
   });
 });

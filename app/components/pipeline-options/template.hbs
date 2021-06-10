@@ -25,6 +25,9 @@
                 {{pipeline-rootdir hasRootDir=hasRootDir rootDir=this.rootDir updateRootDir=(action "updateRootDir")}}
               </div>
             </div>
+          </li>
+
+          <li>
             <div class="row">
               <div class="col-xs-12 right">
                 <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
@@ -37,6 +40,34 @@
               </div>
             </div>
           </li>
+
+          {{#if displayDowntimeJobs}}
+            <li>
+              <div class="row">
+                <div class="col-xs-10">
+                  <h4>Downtime Jobs</h4>
+                  <p>Pick your own preferred jobs to be counted in metrics graph (default all jobs)</p>
+                  <div class="row">
+                    <div class="col-xs-5">
+                      {{#power-select-multiple
+                        options=sortedJobs
+                        renderInPlace=true
+                        selected=metricsDowntimeJobs
+                        placeholder="Select Jobs..."
+                        onchange=(action (mut metricsDowntimeJobs))
+                        as |metricsDowntimeJob|
+                      }}
+                        {{metricsDowntimeJob.name}}
+                      {{/power-select-multiple}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-2 right sync">
+                  <a href="#" {{action "updatePipelineSettings" metricsDowntimeJobs}}>{{fa-icon "refresh" spin=isUpdatingMetricsDowntimeJobs}}</a>
+                </div>
+              </div>
+            </li>
+          {{/if}}
         </ul>
       </section>
     </div>
@@ -53,25 +84,27 @@
             </div>
           </div>
           {{#each sortedJobs as |job|}}
-            <li>
-              <div class="row">
-                <div class="col-xs-10">
-                  <h4>{{job.name}}</h4>
-                  {{#if job.stateChanger}}
-                    <i class="float-right"><small>{{job.stateChangeTimeWords}}</small></i>
-                    <p>{{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}{{/if}}</p>
-                  {{/if}}
+            {{#unless (starts-with job.name "PR-")}}
+              <li>
+                <div class="row">
+                  <div class="col-xs-10">
+                    <h4>{{job.name}}</h4>
+                    {{#if job.stateChanger}}
+                      <i class="float-right"><small>{{job.stateChangeTimeWords}}</small></i>
+                      <p>{{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}{{/if}}</p>
+                    {{/if}}
+                  </div>
+                  <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
+                    {{x-toggle
+                      size="small"
+                      value=(not job.isDisabled)
+                      onLabel="Enabled::false"
+                      offLabel="Disabled::true"
+                      onToggle=(action "toggleJob" job.id username job.name)}}
+                  </div>
                 </div>
-                <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
-                  {{x-toggle
-                    size="small"
-                    value=(not job.isDisabled)
-                    onLabel="Enabled::false"
-                    offLabel="Disabled::true"
-                    onToggle=(action "toggleJob" job.id username job.name)}}
-                </div>
-              </div>
-            </li>
+              </li>
+            {{/unless}}
           {{/each}}
         </li>
       </ul>
@@ -153,6 +186,55 @@
     </section>
   </div>
 
+  <div class="col-xs-12 col-md-8">
+    <section class="preference">
+      <h3>User Preference</h3>
+      <ul>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <p>All settings here are stored locally in your browser.</p>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Display Name Length</h4>
+              <p>Setup your own preferred job name length to display on the workflow graph (range: 20 - 99)</p>
+            </div>
+            <div class="col-xs-2 right">
+              <input type="number"
+                class="display-job-name"
+                min={{minDisplayLength}}
+                max={{maxDisplayLength}}
+                placeholder={{minDisplayLength}}
+                value={{desiredJobNameLength}}
+                onchange={{action "updateJobNameLength" value="target.value"}}>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Show PR Jobs</h4>
+              <p>Show or Hide jobs that are triggered from Pull Request</p>
+            </div>
+            <div class="col-xs-2 right" title="Toggle to {{if showPRJobs "show" "hide"}} the jobs that are triggered from PRs">
+              {{x-toggle
+                size="small"
+                value=showPRJobs
+                onLabel="showPRJobs:true"
+                offLabel="showPRJobs::false"
+                onToggle=(action "updateShowPRJobs")
+              }}
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+
   {{#unless pipeline.configPipelineId}}
     <div class="col-xs-12 col-md-8">
       <section class="danger">
@@ -162,18 +244,18 @@
             {{#if showDangerButton}}
               <div class="row">
                 <div class="col-xs-1 col-md-8">
-                  <h4>Remove this pipeline</h4>
-                  <p>Once you remove a pipeline, there is no going back.</p>
+                  <h4>Delete this pipeline</h4>
+                  <p>Once you delete a pipeline, there is no going back.</p>
                 </div>
                 <div class="col-xs-1 col-md-4 right">
-                  <a href="#" {{action "showRemoveButtons"}} class="trash">{{fa-icon "trash"}}</a>
+                  <a href="#" {{action "showRemoveButtons"}} class="trash" title="Delete pipeline">{{fa-icon "trash"}} </a>
                 </div>
               </div>
             {{/if}}
             {{#if showRemoveButtons}}
               <h4>Are you absolutely sure?</h4>
               <a href="#" {{action "cancelRemove"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
-              <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "trash"}} Remove</a>
+              <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "trash"}} Delete</a>
             {{/if}}
             {{#if isRemoving}}
               <p>Please wait...</p>

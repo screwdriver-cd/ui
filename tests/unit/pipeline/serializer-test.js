@@ -130,7 +130,8 @@ module('Unit | Serializer | pipeline', function(hooks) {
 
       assert.deepEqual(payload, {
         checkoutUrl: 'git@example.com:foo/bar.git',
-        rootDir: ''
+        rootDir: '',
+        autoKeysGeneration: false
       });
     });
   });
@@ -141,24 +142,24 @@ module('Unit | Serializer | pipeline', function(hooks) {
 
     const alphabeticalSortedOrder = [
       {
-        src: 'main',
-        dest: 'fan1'
-      },
-      {
-        src: 'main',
-        dest: 'fan10'
-      },
-      {
-        src: 'main',
-        dest: 'fan2'
+        src: '~commit',
+        dest: 'main'
       },
       {
         src: '~pr',
         dest: 'main'
       },
       {
-        src: '~commit',
-        dest: 'main'
+        src: 'main',
+        dest: 'fan1'
+      },
+      {
+        src: 'main',
+        dest: 'fan2'
+      },
+      {
+        src: 'main',
+        dest: 'fan10'
       }
     ];
 

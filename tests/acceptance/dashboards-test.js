@@ -28,6 +28,11 @@ module('Acceptance | dashboards', function(hooks) {
     server.get('http://localhost:8080/v4/pipelines', hasPipelines);
     server.get('http://localhost:8080/v4/pipelines/12742/metrics', hasEmptyMetrics);
     server.get('http://localhost:8080/v4/pipelines/12743/metrics', hasEmptyMetrics);
+    server.get('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
   });
 
   hooks.afterEach(function() {

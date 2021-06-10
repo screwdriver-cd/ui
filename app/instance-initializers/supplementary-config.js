@@ -1,4 +1,5 @@
 import ENV from 'screwdriver-ui/config/environment';
+import convertToBool from 'screwdriver-ui/utils/convert-to-bool';
 
 /**
  * initializer function to replace configuration with custom info
@@ -25,6 +26,21 @@ export function initialize() {
   }
   if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.ROOT_URL) {
     ENV.rootURL = window.SUPPLEMENTARY_CONFIG.ROOT_URL;
+  }
+  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.RELEASE_VERSION) {
+    ENV.APP.RELEASE_VERSION = window.SUPPLEMENTARY_CONFIG.RELEASE_VERSION;
+  }
+  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.SHOW_AVATAR) {
+    ENV.APP.SHOW_AVATAR = convertToBool(window.SUPPLEMENTARY_CONFIG.SHOW_AVATAR);
+  }
+  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.FEEDBACK_HOSTNAME) {
+    ENV.APP.FEEDBACK_HOSTNAME = window.SUPPLEMENTARY_CONFIG.FEEDBACK_HOSTNAME;
+  }
+  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.FEEDBACK_SCRIPT) {
+    ENV.APP.FEEDBACK_SCRIPT = window.SUPPLEMENTARY_CONFIG.FEEDBACK_SCRIPT;
+  }
+  if (window.SUPPLEMENTARY_CONFIG && window.SUPPLEMENTARY_CONFIG.FEEDBACK_CONFIG) {
+    ENV.APP.FEEDBACK_CONFIG = window.SUPPLEMENTARY_CONFIG.FEEDBACK_CONFIG;
   }
 }
 

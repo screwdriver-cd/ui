@@ -4,6 +4,7 @@ import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import { SHOULD_RELOAD_NO, SHOULD_RELOAD_YES } from '../mixins/model-reloader';
 
 export default DS.Model.extend(ModelReloaderMixin, {
   buildId: DS.attr('number'),
@@ -30,16 +31,14 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   builds: DS.hasMany('build'),
 
-  isRunning: computed('isComplete', 'isSkipped', {
-    get() {
-      let isRunning = true;
+  isRunning: computed('isComplete', 'isSkipped', 'isAborted', function isRunningFunc() {
+    let isRunning = true;
 
-      if (this.isComplete || this.isSkipped) {
-        isRunning = false;
-      }
-
-      return isRunning;
+    if (this.isComplete || this.isSkipped || this.isAborted) {
+      isRunning = false;
     }
+
+    return isRunning;
   }),
   buildsSorted: sort('builds', (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)),
   createTimeWords: computed('createTime', 'duration', {
@@ -57,6 +56,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
     get() {
       const builds = get(this, 'builds');
       const firstCreateTime = builds.map(item => get(item, 'createTime')).sort()[0];
+
       let lastEndTime = new Date();
 
       if (get(this, 'isComplete')) {
@@ -103,11 +103,14 @@ export default DS.Model.extend(ModelReloaderMixin, {
     }
 
     const builds = get(this, 'builds');
+
     let status = 'UNKNOWN';
 
     builds.then(list => {
       if (!this.isDestroying && !this.isDestroyed) {
-        const validList = list.filter(b => get(b, 'status') !== 'SUCCESS');
+        const validList = list.filter(
+          b => get(b, 'status') !== 'SUCCESS' && get(b, 'status') !== 'CREATED'
+        );
 
         if (validList.length) {
           status = get(validList[0], 'status');
@@ -196,6 +199,9 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   modelToReload: 'builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
+  isAborted: computed('status', function isAbortedFunc() {
+    return get(this, 'status') === 'ABORTED';
+  }),
   isSkipped: computed('commit.message', 'type', 'numBuilds', {
     get() {
       if (get(this, 'type') === 'pr') {
@@ -214,7 +220,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   // Reload builds only if the event is still running
   shouldReload() {
-    return get(this, 'isRunning');
+    return get(this, 'isRunning') ? SHOULD_RELOAD_YES : SHOULD_RELOAD_NO;
   },
   init() {
     this._super(...arguments);

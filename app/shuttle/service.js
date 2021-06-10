@@ -1,6 +1,8 @@
-import { computed } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
+
+import $ from 'jquery';
 
 /**
  * Screwdriver Shuttle Service
@@ -11,7 +13,7 @@ import ENV from 'screwdriver-ui/config/environment';
  */
 export default Service.extend({
   ajax: service(),
-
+  store: service(),
   session: service(),
 
   storeHost: `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}`,
@@ -46,6 +48,7 @@ export default Service.extend({
     }
 
     let optionsType = method.toUpperCase();
+
     let requestType = method.toLowerCase();
 
     if (raw) {
@@ -91,10 +94,23 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data);
   },
 
-  async fetchCoverage(buildId, jobId, startTime, endTime, pipelineId, prNum) {
+  /**
+   * Fetch coverage info from coverage plugin
+   * @param  {Object}  data
+   * @param  {String}  [data.jobId]        Job ID
+   * @param  {String}  [data.jobName]      Job name
+   * @param  {String}  [data.pipelineId]	 Pipeline ID
+   * @param  {String}  [data.pipelineName] Pipeline name
+   * @param  {String}  data.startTime      Build start time
+   * @param  {String}  data.endTime        Build end time
+   * @param  {String}  [data.prNum]        PR number
+   * @param  {String}  [data.scope]        Coverage scope (pipeline or job)
+   * @param  {String}  data.projectKey     Coverage key
+   * @return {Promise} Coverage object with coverage results and test data
+   */
+  async fetchCoverage(data) {
     const method = 'get';
     const url = `/coverage/info`;
-    const data = { buildId, jobId, startTime, endTime, pipelineId, prNum };
 
     return this.fetchFromApi(method, url, data);
   },
@@ -116,5 +132,129 @@ export default Service.extend({
     const raw = true;
 
     return this.fetchFromApi(method, url, data, raw);
+  },
+
+  /**
+   * updatePipelineSettings
+   * @param  {Number} pipelineId  Pipeline Id
+   * @param  {Object} settings
+   * @param  {Array}  settings.metricsDowntimeJobs Job Ids to caluclate downtime
+   * @return {Promise}
+   */
+  async updatePipelineSettings(pipelineId, settings) {
+    const method = 'put';
+    const url = `/pipelines/${pipelineId}`;
+    const { metricsDowntimeJobs = [] } = settings;
+
+    const data = {
+      settings: {
+        metricsDowntimeJobs: metricsDowntimeJobs.map(job => job.id)
+      }
+    };
+
+    return this.fetchFromApi(method, url, data);
+  },
+
+  /**
+   * getPipelineDowntimeJobsMetrics
+   * @param  {Number} pipelineId        Pipeline Id
+   * @param  {Array}  downtimeJobs      Job Ids
+   * @param  {Array}  downtimeStatuses  Build Statuses
+   * @return {Promise}
+   */
+  async getPipelineDowntimeJobsMetrics(
+    pipelineId,
+    downtimeJobs,
+    downtimeStatuses,
+    startTime,
+    endTime
+  ) {
+    const method = 'get';
+    const query = $.param({ downtimeJobs, downtimeStatuses, startTime, endTime });
+    const url = `/pipelines/${pipelineId}/metrics?${query}`;
+
+    return this.fetchFromApi(method, url);
+  },
+
+  /**
+   * getLatestCommitEvent
+   * @param  {Number} pipelineId  Pipeline Id
+   * @return {Promise}
+   */
+  async getLatestCommitEvent(pipelineId) {
+    const method = 'get';
+    const url = `/pipelines/${pipelineId}/latestCommitEvent`;
+
+    return this.fetchFromApi(method, url);
+  },
+
+  /**
+   * getUserSetting
+   * @return {Promise}
+   */
+  async getUserSetting() {
+    const method = 'get';
+    const url = `/users/settings`;
+
+    try {
+      const userSettings = await this.fetchFromApi(method, url);
+
+      return userSettings;
+    } catch (e) {
+      return {};
+    }
+  },
+
+  /**
+   * getUserPipelinePreference
+   * @param  {Number} pipelineId  pipeline Id
+   * @return {Promise}
+   */
+  async getUserPipelinePreference(pipelineId) {
+    if (pipelineId === undefined) {
+      return {};
+    }
+
+    const remotePreferences = await this.getUserSetting();
+    const remotePipelineConfig = getWithDefault(remotePreferences, pipelineId, {});
+    const localPipelinePreference = await this.store
+      .peekAll('preference/pipeline')
+      .findBy('id', pipelineId);
+
+    // local preference takes precedence
+    if (localPipelinePreference && remotePipelineConfig) {
+      localPipelinePreference.setProperties(remotePipelineConfig);
+      localPipelinePreference.save();
+
+      return localPipelinePreference;
+    }
+
+    const pipelinePreference = await this.store.createRecord('preference/pipeline', {
+      id: pipelineId,
+      ...remotePipelineConfig
+    });
+
+    return pipelinePreference;
+  },
+
+  /**
+   * updateUserPreference
+   * @param  {Number}  [pipelineId]
+   * @param  {Object}  pipelineSettings
+   * @param  {Boolean} [pipelineSettings.showPRJobs]
+   * @return {Promise}
+   */
+  async updateUserPreference(pipelineId, pipelineSettings) {
+    const method = 'put';
+    const url = `/users/settings`;
+    const userSettings = await this.getUserSetting();
+    const data = {
+      settings: {
+        ...userSettings,
+        [pipelineId]: pipelineSettings
+      }
+    };
+
+    return this.fetchFromApi(method, url, data);
   }
 });

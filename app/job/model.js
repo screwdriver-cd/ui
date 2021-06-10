@@ -1,8 +1,9 @@
-import { computed } from '@ember/object';
-import { equal, match } from '@ember/object/computed';
+import { computed, get } from '@ember/object';
+import { alias, equal, match } from '@ember/object/computed';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import { SHOULD_RELOAD_NO, SHOULD_RELOAD_YES } from '../mixins/model-reloader';
 
 export default DS.Model.extend({
   pipelineId: DS.attr('string'),
@@ -26,6 +27,7 @@ export default DS.Model.extend({
       return this.isPR ? parseInt(this.name.slice('PR-'.length), 10) : null;
     }
   }),
+  prNumber: alias('group'),
   username: DS.attr('string'),
   userProfile: DS.attr('string'),
   url: DS.attr('string'),
@@ -37,14 +39,22 @@ export default DS.Model.extend({
       return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
     }
   }),
+  prParentJobId: DS.attr('string'),
   // } for pr job only
   permutations: DS.attr(),
+  annotations: computed('permutations.[]', {
+    get() {
+      return get(this, 'permutations[0].annotations') || {};
+    }
+  }),
   builds: DS.hasMany('build', { async: true }),
   isDisabled: equal('state', 'DISABLED'),
   modelToReload: 'builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   // Reload builds only if the pr job build is still running
   shouldReload() {
-    return this.isPR && this.builds.any(b => isActiveBuild(b.get('status'), b.get('endTime')));
+    return this.isPR && this.builds.any(b => isActiveBuild(b.get('status'), b.get('endTime')))
+      ? SHOULD_RELOAD_YES
+      : SHOULD_RELOAD_NO;
   }
 });

@@ -5,13 +5,13 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     if (!this.isOpen) {
-      this.$('div').hide();
+      this.element.querySelectorAll('div').forEach(el => el.classList.add('hidden'));
     }
   },
   actions: {
     nameClick() {
       this.toggleProperty('isOpen');
-      this.$('div').toggle('hidden');
+      this.element.querySelectorAll('div').forEach(el => el.classList.toggle('hidden'));
     }
   }
 });

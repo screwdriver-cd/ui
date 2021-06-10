@@ -1,11 +1,23 @@
 <div class="row">
+
+  <div class="col-xs-2">
+    {{#bs-button-group
+            class="view-toggle"
+            value=showListView
+            type="radio"
+            onChange=(action setShowListView) as |bg|
+    }}
+      {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
+      {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
+    {{/bs-button-group}}
+  </div>
+
   <div class="col-xs-4">
     {{#if isPR}}
       <strong>Pull Requests</strong>
-    {{else}}
-      <strong>Pipeline</strong>
     {{/if}}
     {{#bs-button-group
+      class="event-options-toggle"
       value=selectedEvent
       type="radio"
       onChange=(action (mut selected)) as |bg|
@@ -26,19 +38,13 @@
       onToggle=(action setDownstreamTrigger)
     }}
   </div>
-  <div class="col-xs-2">
-    {{#bs-button-group
-      class="view-toggle"
-      value=showListView
-      type="radio"
-      onChange=(action setShowListView) as |bg|
-    }}
-      {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
-      {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
-    {{/bs-button-group}}
-  </div>
   <div class="col-xs-3">
     {{#if session.isAuthenticated}}
+      {{#if selectedEventObj.isRunning}}
+        <div class="col">
+          {{#bs-button onClick=(action stopEvent) class="event__stop" title="Stop all builds for this event"}}Stop{{/bs-button}}
+        </div>
+      {{/if}}
       {{#if (eq selectedEventObj.type "pr")}}
         {{pipeline-start
           startBuild=(action startPRBuild)
@@ -55,10 +61,10 @@
 {{#if selectedEventObj}}
   <div class="row {{selectedEventObj.status}}">
     <div class="col-xs-12">
-      <div class="event-info {{if showListView "disabled"}}">
+      <div class="event-info">
         <div class="col">
           <span class="title">Commit</span><br>
-          <a href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a>
+          <a class={{if (eq selectedEventObj.sha latestCommit.sha) "latest-commit"}} href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a>
         </div>
         <div class="col">
           <span class="title">Message</span><br>
@@ -83,12 +89,7 @@
         {{#if selectedEventObj.label}}
           <div class="col">
             <span class="title">Label</span><br>
-            {{selectedEventObj.label}}
-          </div>
-        {{/if}}
-        {{#if selectedEventObj.isRunning}}
-          <div class="col">
-            {{#bs-button onClick=(action stopEvent) class="event__stop" title="Stop all builds for this event"}}Stop{{/bs-button}}
+            <span class="customize-label" title={{selectedEventObj.label}}>{{selectedEventObj.label}}</span>
           </div>
         {{/if}}
       </div>

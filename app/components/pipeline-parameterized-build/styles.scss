@@ -11,6 +11,17 @@ button.start-with-parameters-button {
     padding-left: 38%;
   }
 }
+
+.notice-default-values-icon {
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  transform: translate(-50%, -50%);
+  left: 3%;
+  height: 1em;
+  color: $sd-warning;
+}
+
 & {
   position: relative;
   padding-top: 20px;

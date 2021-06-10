@@ -9,6 +9,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
   test('it renders', async function(assert) {
     set(this, 'obj', {
+      sha: 'abc123',
       truncatedSha: 'abc123',
       status: 'SUCCESS',
       commit: {
@@ -16,6 +17,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       }
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -30,6 +34,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -42,73 +47,33 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       setShowListView=setShowListView
     }}`);
 
-    assert.dom('.row strong').hasText('Pipeline');
     assert.dom('.row button').exists({ count: 4 });
 
-    const $columnTitles = this.$('.event-info .title');
-    const $links = this.$('.event-info a');
+    const $columnTitles = this.element.querySelectorAll('.row .event-info .title');
+    const $links = this.element.querySelectorAll('.row .event-info a');
 
-    assert.equal(
-      $columnTitles
-        .eq(0)
-        .text()
-        .trim(),
-      'Commit'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(1)
-        .text()
-        .trim(),
-      'Message'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(2)
-        .text()
-        .trim(),
-      'Status'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(3)
-        .text()
-        .trim(),
-      'Committer'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(4)
-        .text()
-        .trim(),
-      'Start Date'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(5)
-        .text()
-        .trim(),
-      'Duration'
-    );
+    const compare = (elem, expected) => {
+      assert.equal(
+        (elem.innerText.trim() || elem.innerHTML.trim()).toUpperCase(),
+        expected.toUpperCase()
+      );
+    };
 
-    assert.equal(
-      $links
-        .eq(0)
-        .text()
-        .trim(),
-      '#abc123'
-    );
-    assert.equal(
-      $links
-        .eq(1)
-        .text()
-        .trim(),
-      'anonymous'
-    );
+    compare($columnTitles[0], 'COMMIT');
+    compare($columnTitles[1], 'MESSAGE');
+    compare($columnTitles[2], 'STATUS');
+    compare($columnTitles[3], 'COMMITTER');
+    compare($columnTitles[4], 'START DATE');
+    compare($columnTitles[5], 'DURATION');
+
+    compare($links[0], '#abc123');
+    compare($links[1], 'anonymous');
 
     assert.dom('.SUCCESS').exists({ count: 1 });
 
-    assert.dom('.btn-group').hasText('Most Recent Last Successful');
+    assert.dom('.latest-commit').doesNotExist();
+
+    assert.dom('.event-options-toggle').hasText('Most Recent Last Successful');
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
@@ -117,6 +82,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.expect(1);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -131,6 +99,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -143,55 +112,8 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       setShowListView=setShowListView
     }}`);
 
-    this.$('button')
-      .filter(':first')
-      .click();
+    this.element.querySelectorAll('button')[2].click();
     assert.equal(get(this, 'selected'), 3);
-  });
-
-  test('it updates showListView and disables event info', async function(assert) {
-    assert.expect(8);
-    set(this, 'obj', { truncatedSha: 'abc123' });
-    set(this, 'selected', 2);
-    set(this, 'startBuild', () => {
-      assert.ok(true);
-    });
-    set(this, 'currentEventType', 'pipeline');
-    set(this, 'showDownstreamTriggers', false);
-    set(this, 'setDownstreamTrigger', () => {
-      assert.ok(true);
-    });
-    set(this, 'showListView', false);
-    set(this, 'setShowListView', () => {
-      set(this, 'showListView', !this.showListView);
-      assert.ok(true);
-    });
-
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
-
-    assert.notOk(get(this, 'showListView'));
-    assert.dom('.event-info').doesNotHaveClass('disabled');
-
-    this.$('button')[3].click();
-    assert.ok(get(this, 'showListView'));
-    assert.dom('.event-info').hasClass('disabled');
-
-    this.$('button')[2].click();
-    assert.notOk(get(this, 'showListView'));
-    assert.dom('.event-info').doesNotHaveClass('disabled');
   });
 
   test('it renders when selectedEvent is a PR event', async function(assert) {
@@ -204,6 +126,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pr'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', (prNum, jobs) => {
       assert.equal(prNum, 1);
       assert.equal(jobs[0].group, 1);
@@ -222,6 +147,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -248,6 +174,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pipeline'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -261,6 +190,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -273,10 +203,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       setShowListView=setShowListView
     }}`);
 
-    assert.dom('.row strong').hasText('Pipeline');
     assert.dom('.row button').exists({ count: 4 });
     assert.dom('.SKIPPED').exists({ count: 1 });
-    assert.dom('.btn-group').hasText('Most Recent Last Successful');
+    assert.dom('.event-options-toggle').hasText('Most Recent Last Successful');
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
 
@@ -284,6 +213,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.expect(2);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -297,6 +229,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       graphType=currentEventType
       selectedEvent=2
@@ -322,6 +255,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pipeline'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -335,6 +271,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -360,6 +297,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pipeline'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -374,6 +314,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -388,5 +329,48 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     assert.dom('.ABORTED').exists({ count: 1 });
     assert.dom('.status .fa-stop-circle').exists({ count: 1 });
+  });
+
+  test('it renders when selectedEvent is latestCommit event', async function(assert) {
+    set(this, 'obj', {
+      sha: 'latestSha',
+      truncatedSha: 'latestSha',
+      status: 'SUCCESS',
+      commit: { message: 'this is success event.' },
+      creator: { name: 'anonymous' },
+      type: 'pipeline'
+    });
+    set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      latestCommit=latestCommit
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
+    }}`);
+
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 });

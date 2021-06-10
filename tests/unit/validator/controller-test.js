@@ -96,7 +96,9 @@ module('Unit | Controller | validator', function(hooks) {
         assert.deepEqual(controller.get('results'), expectedResult);
         controller.set('yaml', '');
 
-        assert.equal(controller.get('results'), '');
+        settled().then(() => {
+          assert.equal(controller.get('results'), '');
+        });
       });
     });
   });

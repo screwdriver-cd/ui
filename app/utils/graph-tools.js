@@ -107,9 +107,10 @@ const walkGraph = (graph, start, x, y) => {
     if (!obj.pos) {
       obj.pos = { x, y: y[x] };
       y[x] += 1;
-    }
 
-    walkGraph(graph, name, x + 1, y);
+      // walk if not yet visited
+      walkGraph(graph, name, x + 1, y);
+    }
   });
 };
 
@@ -191,6 +192,7 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   const jobsAvailable =
     (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) && get(jobs, 'length');
   const { edges } = graph;
+
   let y = [0]; // accumulator for column heights
 
   nodes.forEach(n => {
@@ -229,6 +231,16 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
         n.stateChangeMessage = stateChanger
           ? `${stateWithCapitalization} by ${stateChanger}`
           : stateWithCapitalization;
+      }
+
+      // Set manualStartEnabled on the node
+      const annotations = j ? get(j, 'permutations.0.annotations') : null;
+
+      if (annotations) {
+        n.manualStartDisabled =
+          'screwdriver.cd/manualStartEnabled' in annotations
+            ? !annotations['screwdriver.cd/manualStartEnabled']
+            : false;
       }
     }
 
@@ -296,6 +308,7 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
   }
 
   let visiting = [start];
+
   let visited = new Set(visiting);
 
   if (edges.length) {
@@ -303,7 +316,7 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
       let cur = visiting.shift();
 
       edges.forEach(e => {
-        if (e.src === cur) {
+        if (e.src === cur && !visited.has(e.dest)) {
           visiting.push(e.dest);
           visited.add(e.dest);
         }

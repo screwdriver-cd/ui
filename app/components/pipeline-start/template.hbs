@@ -1,7 +1,7 @@
 {{#if hasParameters}}
   {{#if hasLargeNumberOfParameters}}
     <div class="btn-group">
-      <button class="btn start-button" title="Start a new event from latest commit">Start{{#if prNum}} PR-{{prNum}}{{/if}}</button>
+      <button {{action "startBuild"}} class="btn start-button" title="Start a new event from latest commit">Start{{#if prNum}} PR-{{prNum}}{{/if}}</button>
       <button class="btn start-with-parameters-button" onClick={{action "toggleModal"}}>{{fa-icon (concat "caret-" direction)}}</button>
     </div>
     {{#if isShowingModal}}
@@ -14,6 +14,7 @@
       }}
         <h3>Are you sure to start?</h3>
         {{pipeline-parameterized-build
+          pipeline=pipeline
           showSubmitButton=true
           buildParameters=buildParameters
           onSave=(action "startBuild")
@@ -33,6 +34,7 @@
       </div>
       {{#dd.menu class="start-with-parameters-menu"}}
         {{pipeline-parameterized-build
+          pipeline=pipeline
           showSubmitButton=true
           buildParameters=buildParameters
           onSave=(action "startBuild")

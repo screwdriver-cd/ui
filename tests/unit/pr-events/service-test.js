@@ -37,6 +37,7 @@ const initServer = () => {
           url: 'https://github.com/screwdriver-cd/ui/pull/292'
         },
         pipelineId: '12345',
+        groupEventId: '23455',
         sha: 'abcdef1029384',
         truncatedSha: 'abcdef',
         type: 'pr',
