@@ -97,7 +97,9 @@
         {{#if isOrganizing}}
           {{#if showOperations}}
             <span>{{selectedPipelines.length}}&nbsp;&nbsp;Selected</span>
-            <BsButton class="operation-button" onclick={{action "removeSelectedPipelines"}}>Remove</BsButton>
+            {{#unless isDefaultCollection}}
+              <BsButton class="operation-button" onclick={{action "removeSelectedPipelines"}}>Remove</BsButton>
+            {{/unless}}
             {{collection-dropdown
                 class="copy-pipeline"
                 collections=collections
@@ -164,6 +166,7 @@
                   pipeline=pipeline
                   isAuthenticated=session.isAuthenticated
                   isOrganizing=isOrganizing
+                  isDefaultCollection=isDefaultCollection
                   selectPipeline=(action "selectPipeline")
                   deselectPipeline=(action "deselectPipeline")
                   reset=reset
@@ -182,6 +185,7 @@
               pipeline=pipeline
               isAuthenticated=session.isAuthenticated
               isOrganizing=isOrganizing
+              isDefaultCollection=isDefaultCollection
               selectPipeline=(action "selectPipeline")
               deselectPipeline=(action "deselectPipeline")
               reset=reset

@@ -116,6 +116,111 @@ const mockDefaultCollection = EmberObject.create({
   pipelineIds: [1, 2, 3, 4]
 });
 
+const mockNormalCollection = EmberObject.create({
+  id: 1,
+  name: 'My Pipelines',
+  description: 'Normal Collection',
+  type: 'normal',
+  pipelines: [
+    {
+      id: 1,
+      scmUri: 'github.com:12345678:master',
+      createTime: '2017-01-05T00:55:46.775Z',
+      admins: {
+        username: true
+      },
+      workflow: ['main'],
+      scmRepo: {
+        name: 'screwdriver-cd/screwdriver',
+        branch: 'master',
+        url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
+      },
+      scmContext: 'github:github.com',
+      annotations: {},
+      lastEventId: 12,
+      lastBuilds: [
+        {
+          id: 123,
+          status: 'SUCCESS',
+          // Most recent build
+          createTime: '2017-09-05T04:02:20.890Z'
+        }
+      ]
+    },
+    {
+      id: 2,
+      scmUri: 'github.com:87654321:master',
+      createTime: '2017-01-05T00:55:46.775Z',
+      admins: {
+        username: true
+      },
+      workflow: ['main', 'publish'],
+      scmRepo: {
+        name: 'screwdriver-cd/ui',
+        branch: 'master',
+        url: 'https://github.com/screwdriver-cd/ui/tree/master'
+      },
+      scmContext: 'github:github.com',
+      annotations: {},
+      prs: {
+        open: 2,
+        failing: 1
+      }
+    },
+    {
+      id: 3,
+      scmUri: 'github.com:54321876:master',
+      createTime: '2017-01-05T00:55:46.775Z',
+      admins: {
+        username: true
+      },
+      workflow: ['main'],
+      scmRepo: {
+        name: 'screwdriver-cd/models',
+        branch: 'master',
+        url: 'https://github.com/screwdriver-cd/models/tree/master'
+      },
+      scmContext: 'bitbucket:bitbucket.org',
+      annotations: {},
+      lastEventId: 23,
+      lastBuilds: [
+        {
+          id: 125,
+          status: 'FAILURE',
+          // 2nd most recent build
+          createTime: '2017-09-05T04:01:41.789Z'
+        }
+      ]
+    },
+    {
+      id: 4,
+      scmUri: 'github.com:54321879:master:lib',
+      createTime: '2017-01-05T00:55:46.775Z',
+      admins: {
+        username: true
+      },
+      workflow: ['main'],
+      scmRepo: {
+        name: 'screwdriver-cd/zzz',
+        branch: 'master',
+        url: 'https://github.com/screwdriver-cd/zzz/tree/master',
+        rootDir: 'lib'
+      },
+      scmContext: 'bitbucket:bitbucket.org',
+      annotations: {},
+      lastEventId: 23,
+      lastBuilds: [
+        {
+          id: 125,
+          status: 'UNSTABLE',
+          createTime: '2017-09-05T04:01:41.789Z'
+        }
+      ]
+    }
+  ],
+  pipelineIds: [1, 2, 3, 4]
+});
+
 const mockPipelines = [
   {
     id: 1,
@@ -220,6 +325,7 @@ module('Integration | Component | collection view', function(hooks) {
     this.owner.register('service:store', storeStub);
     this.setProperties({
       collection: mockDefaultCollection,
+      normalCollection: mockNormalCollection,
       collections: mockCollections,
       onRemovePipeline: onRemovePipelineSpy,
       addMultipleToCollection: addMultipleToCollectionSpy,
@@ -413,7 +519,7 @@ module('Integration | Component | collection view', function(hooks) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
 
-        return resolve(mockDefaultCollection);
+        return resolve(mockNormalCollection);
       }
     });
 
@@ -431,7 +537,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
@@ -456,7 +562,7 @@ module('Integration | Component | collection view', function(hooks) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
 
-        return resolve(mockDefaultCollection);
+        return resolve(mockNormalCollection);
       }
     });
 
@@ -474,7 +580,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
@@ -509,7 +615,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
@@ -542,7 +648,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
@@ -563,7 +669,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
@@ -578,7 +684,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
@@ -726,7 +832,7 @@ module('Integration | Component | collection view', function(hooks) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
 
-        return resolve(mockDefaultCollection);
+        return resolve(mockNormalCollection);
       }
     });
 
@@ -744,7 +850,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         removeMultiplePipelines=removeMultiplePipelines
@@ -779,7 +885,7 @@ module('Integration | Component | collection view', function(hooks) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
 
-        return resolve(mockDefaultCollection);
+        return resolve(mockNormalCollection);
       }
     });
 
@@ -797,7 +903,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         removeMultiplePipelines=removeMultiplePipelines
@@ -835,7 +941,7 @@ module('Integration | Component | collection view', function(hooks) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
 
-        return resolve(mockDefaultCollection);
+        return resolve(mockNormalCollection);
       }
     });
 
@@ -859,7 +965,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         removeMultiplePipelines=removeMultiplePipelines
@@ -897,7 +1003,7 @@ module('Integration | Component | collection view', function(hooks) {
         assert.strictEqual(model, 'collection');
         assert.strictEqual(id, 1);
 
-        return resolve(mockDefaultCollection);
+        return resolve(mockNormalCollection);
       }
     });
 
@@ -921,7 +1027,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await render(hbs`
       {{collection-view
-        collection=collection
+        collection=normalCollection
         collections=collections
         metricsMap=metricsMap
         removeMultiplePipelines=removeMultiplePipelines
