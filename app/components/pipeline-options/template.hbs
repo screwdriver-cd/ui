@@ -63,7 +63,7 @@
                   </div>
                 </div>
                 <div class="col-xs-2 right sync">
-                  <a href="#" {{action "updatePipelineSettings" metricsDowntimeJobs}}>{{fa-icon "refresh" spin=isUpdatingMetricsDowntimeJobs}}</a>
+                  <a href="#" {{action "updateMetricsDowntimeJobs" metricsDowntimeJobs}}>{{fa-icon "refresh" spin=isUpdatingMetricsDowntimeJobs}}</a>
                 </div>
               </div>
             </li>
@@ -240,6 +240,29 @@
       <section class="danger">
         <h3>Danger Zone</h3>
         <ul>
+          {{#if privateRepo}}
+            <li>
+              <div class="row">
+                <div class="col-xs-10">
+                  <h4>Set pipeline visibility</h4>
+                  <p>Think twice before setting pipeline to public.</p>
+                </div>
+                <div class="col-xs-2 right" title="Set pipeline visibility">
+                  {{#if isUpdatingPipelineVisibility}}
+                    {{fa-icon "refresh" spin=isUpdatingPipelineVisibility}}
+                  {{else}}
+                    {{x-toggle
+                      size="small"
+                      value=publicPipeline
+                      onLabel="publicPipeline::true"
+                      offLabel="publicPipeline::false"
+                      onToggle=(action "updatePipelineVisibility")
+                    }}
+                  {{/if}}
+                </div>
+              </div>
+            </li>
+          {{/if}}
           <li>
             {{#if showDangerButton}}
               <div class="row">
