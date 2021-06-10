@@ -76,6 +76,10 @@ export default Component.extend({
     return this.selectedPipelines.length > 0;
   }),
 
+  isDefaultCollection: computed('collection.type', function isDefaultCollection() {
+    return this.collection.type === 'default';
+  }),
+
   description: computed('collection', {
     get() {
       let description = this.get('collection.description');
