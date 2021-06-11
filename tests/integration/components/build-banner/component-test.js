@@ -42,6 +42,36 @@ const eventMock = EmberObject.create({
     avatar: 'http://example.com/u/batman/avatar',
     url: 'http://example.com/u/batman'
   },
+  pipelineId: '12345',
+  groupEventId: '23450',
+  sha: 'abcdef1029384',
+  truncatedSha: 'abcdef1',
+  type: 'pipelineId',
+  workflow: ['main', 'publish'],
+  builds: ['build1', 'build2']
+});
+
+const prEventMock = EmberObject.create({
+  id: 'abcd',
+  causeMessage: 'Merged by batman',
+  commit: {
+    message: 'Merge pull request #2 from batcave/batmobile',
+    author: {
+      username: 'batman',
+      name: 'Bruce W',
+      avatar: 'http://example.com/u/batman/avatar',
+      url: 'http://example.com/u/batman'
+    },
+    url: 'http://example.com/batcave/batmobile/commit/abcdef1029384'
+  },
+  truncatedMessage: 'Merge it',
+  createTime: '2016-11-04T20:09:41.238Z',
+  creator: {
+    username: 'batman',
+    name: 'Bruce W',
+    avatar: 'http://example.com/u/batman/avatar',
+    url: 'http://example.com/u/batman'
+  },
   pr: {
     url: 'https://github.com/screwdriver-cd/ui/pull/292'
   },
@@ -77,7 +107,8 @@ module('Integration | Component | build banner', function(hooks) {
   });
 
   test('it renders', async function(assert) {
-    assert.expect(11);
+    assert.expect(12);
+    this.owner.setupRouter();
 
     this.set('reloadCb', () => {
       assert.ok(true);
@@ -90,7 +121,7 @@ module('Integration | Component | build banner', function(hooks) {
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     this.set('buildStepsMock', buildStepsMock);
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     await render(hbs`{{build-banner
       buildContainer="node:6"
       duration="11 seconds"
@@ -101,15 +132,19 @@ module('Integration | Component | build banner', function(hooks) {
       buildCreate="2016-11-04T20:08:41.238Z"
       buildStart="2016-11-04T20:09:41.238Z"
       buildSteps=buildStepsMock
+      jobId=1
       jobName="PR-671"
       isAuthenticated=false
       event=eventMock
+      pipelineId=12345
       prEvents=prEvents
       reloadBuild=(action reloadCb)
       changeBuild=(action changeB)
     }}`);
+
     const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
+    assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/pulls');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
     assert
       .dom('.commit a')
@@ -128,6 +163,37 @@ module('Integration | Component | build banner', function(hooks) {
     assert.dom('button').doesNotExist();
   });
 
+  test('it renders events list link if event is not pr', async function(assert) {
+    assert.expect(3);
+    this.owner.setupRouter();
+
+    this.set('reloadCb', () => {
+      assert.ok(true);
+    });
+
+    this.set('buildStepsMock', buildStepsMock);
+    this.set('eventMock', eventMock);
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
+
+    await render(hbs`{{build-banner
+      buildContainer="node:6"
+      duration="5 seconds"
+      buildStatus="RUNNING"
+      buildStart="2016-11-04T20:09:41.238Z"
+      buildSteps=buildStepsMock
+      jobId=1
+      jobName="main"
+      isAuthenticated=true
+      event=eventMock
+      pipelineId=12345
+      prEvents=prEvents
+      reloadBuild=(action reloadCb)
+    }}`);
+
+    assert.dom('li.job-name .banner-value').hasText('main');
+    assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/events/abcd?jobId=1');
+  });
+
   test('it renders pr link if pr url info is available', async function(assert) {
     assert.expect(12);
 
@@ -136,7 +202,7 @@ module('Integration | Component | build banner', function(hooks) {
     });
 
     this.set('buildStepsMock', buildStepsMock);
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
@@ -186,7 +252,7 @@ module('Integration | Component | build banner', function(hooks) {
     });
 
     this.set('buildStepsMock', buildStepsMock);
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set(
       'prEvents',
       new EmberPromise(resolves => resolves([{ build: buildMock, event: eventMock }]))
@@ -245,7 +311,7 @@ module('Integration | Component | build banner', function(hooks) {
     this.set('externalStart', () => {
       assert.ok(true);
     });
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
@@ -277,7 +343,7 @@ module('Integration | Component | build banner', function(hooks) {
       assert.ok(true);
     });
     this.set('buildStepsMock', buildStepsMock);
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
@@ -308,7 +374,7 @@ module('Integration | Component | build banner', function(hooks) {
       assert.ok(true);
     });
     this.set('buildStepsMock', buildStepsMock);
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
@@ -341,7 +407,7 @@ module('Integration | Component | build banner', function(hooks) {
     buildMetaMock.tests = {};
 
     assert.expect(4);
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('buildMetaMock', buildMetaMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
@@ -383,7 +449,7 @@ module('Integration | Component | build banner', function(hooks) {
     this.set('reloadCb', () => {
       assert.ok(true);
     });
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('buildMetaMock', buildMetaMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
@@ -430,7 +496,7 @@ module('Integration | Component | build banner', function(hooks) {
     };
 
     assert.expect(2);
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('buildMetaMock', buildMetaMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
@@ -473,7 +539,7 @@ module('Integration | Component | build banner', function(hooks) {
     };
 
     assert.expect(4);
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('buildMetaMock', buildMetaMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
@@ -504,7 +570,7 @@ module('Integration | Component | build banner', function(hooks) {
   test('it does not render coverage info if there is no coverage step', async function(assert) {
     assert.expect(1);
 
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('buildStepsMock', buildStepsMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
@@ -538,7 +604,7 @@ module('Integration | Component | build banner', function(hooks) {
     this.set('reloadCb', () => {
       assert.ok(true);
     });
-    this.set('eventMock', eventMock);
+    this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 

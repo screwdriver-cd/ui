@@ -136,21 +136,29 @@ export default Service.extend({
 
   /**
    * updatePipelineSettings
-   * @param  {Number} pipelineId  Pipeline Id
-   * @param  {Object} settings
-   * @param  {Array}  settings.metricsDowntimeJobs Job Ids to caluclate downtime
+   * @param  {Number}   pipelineId  Pipeline Id
+   * @param  {Object}   settings
+   * @param  {Array}    settings.metricsDowntimeJobs Job Ids to caluclate downtime
+   * @param  {Boolean}  settings.public pipeline visibility
    * @return {Promise}
    */
   async updatePipelineSettings(pipelineId, settings) {
     const method = 'put';
     const url = `/pipelines/${pipelineId}`;
-    const { metricsDowntimeJobs = [] } = settings;
 
-    const data = {
-      settings: {
-        metricsDowntimeJobs: metricsDowntimeJobs.map(job => job.id)
-      }
-    };
+    let newSetting = {};
+
+    if (settings.metricsDowntimeJobs) {
+      newSetting = {
+        metricsDowntimeJobs: settings.metricsDowntimeJobs.map(job => job.id)
+      };
+    }
+
+    if (typeof settings.publicPipeline === 'boolean') {
+      newSetting = { ...newSetting, public: settings.publicPipeline };
+    }
+
+    const data = { settings: newSetting };
 
     return this.fetchFromApi(method, url, data);
   },
