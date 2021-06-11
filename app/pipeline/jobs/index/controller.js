@@ -93,33 +93,38 @@ export default Controller.extend(ModelReloaderMixin, {
     const jobIds = this.get('jobIds');
 
     if (listViewOffset < jobIds.length) {
-      return this.store
-        .query('build-history', {
-          jobIds: jobIds.slice(listViewOffset, listViewCutOff),
-          offset: 0,
-          numBuilds: ENV.APP.NUM_BUILDS_LISTED
+      const jobsDetails = await Promise.all(
+        jobIds.slice(listViewOffset, listViewCutOff).map(async jobId => {
+          return this.store
+            .query('build-history', {
+              jobIds: jobId,
+              offset: 0,
+              numBuilds: ENV.APP.NUM_BUILDS_LISTED
+            })
+            .catch(() => {
+              return Promise.resolve([]);
+            });
         })
-        .then(jobsDetails => {
-          const nextJobsDetails = jobsDetails.toArray();
+      );
+      const nextJobsDetails = [];
 
-          nextJobsDetails.forEach(nextJobDetail => {
-            const job = this.get('pipeline.jobs').find(j => j.id === String(nextJobDetail.jobId));
+      jobsDetails.toArray().forEach(nextJobDetails => {
+        nextJobDetails.forEach(nextJobDetail => {
+          const job = this.get('pipeline.jobs').find(j => j.id === String(nextJobDetail.jobId));
 
-            if (job) {
-              nextJobDetail.jobName = job.name;
-              nextJobDetail.jobPipelineId = job.pipelineId;
-              nextJobDetail.annotations = job.annotations;
-              // PR-specific
-              nextJobDetail.prParentJobId = job.prParentJobId || null;
-              nextJobDetail.prNum = job.group || null;
-            }
-          });
-
-          return nextJobsDetails;
-        })
-        .catch(() => {
-          return Promise.resolve([]);
+          if (job) {
+            nextJobDetail.jobName = job.name;
+            nextJobDetail.jobPipelineId = job.pipelineId;
+            nextJobDetail.annotations = job.annotations;
+            // PR-specific
+            nextJobDetail.prParentJobId = job.prParentJobId || null;
+            nextJobDetail.prNum = job.group || null;
+          }
+          nextJobsDetails.push(nextJobDetail);
         });
+      });
+
+      return nextJobsDetails;
     }
 
     return Promise.resolve([]);
