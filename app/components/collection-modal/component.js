@@ -9,7 +9,7 @@ export default Component.extend({
   description: null,
   errorMessage: null,
   store: service(),
-  isSaveDisabled: computed('name', function() {
+  isSaveDisabled: computed('name', function isSaveDisabled() {
     return isEmpty(this.get('name'));
   }),
   actions: {
