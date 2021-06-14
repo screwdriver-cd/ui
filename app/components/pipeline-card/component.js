@@ -11,6 +11,7 @@ export default Component.extend({
   lastEventInfo: null,
   isAuthenticated: undefined,
   isOrganizing: false,
+  isDefaultCollection: false,
   pipeline: null,
   pipelineSelected: false,
   classNames: ['pipeline-card'],
@@ -24,9 +25,14 @@ export default Component.extend({
 
     return rootDir ? `${branch}#${rootDir}` : branch;
   }),
-  showRemoveButton: computed('isOrganizing', 'isAuthenticated', function showRemoveButton() {
-    return !this.isOrganizing && this.isAuthenticated;
-  }),
+  showRemoveButton: computed(
+    'isOrganizing',
+    'isAuthenticated',
+    'isDefaultCollection',
+    function showRemoveButton() {
+      return !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated;
+    }
+  ),
 
   didInsertElement() {
     if (!this.hasBothEventsAndLatestEventInfo) {

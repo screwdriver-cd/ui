@@ -9,6 +9,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
   test('it renders', async function(assert) {
     set(this, 'obj', {
+      sha: 'abc123',
       truncatedSha: 'abc123',
       status: 'SUCCESS',
       commit: {
@@ -16,6 +17,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       }
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -30,6 +34,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -66,6 +71,8 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
 
+    assert.dom('.latest-commit').doesNotExist();
+
     assert.dom('.event-options-toggle').hasText('Most Recent Last Successful');
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
@@ -75,6 +82,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.expect(1);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -89,6 +99,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -115,6 +126,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pr'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', (prNum, jobs) => {
       assert.equal(prNum, 1);
       assert.equal(jobs[0].group, 1);
@@ -133,6 +147,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -159,6 +174,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pipeline'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -172,6 +190,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -194,6 +213,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.expect(2);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -207,6 +229,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       graphType=currentEventType
       selectedEvent=2
@@ -232,6 +255,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pipeline'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -245,6 +271,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -270,6 +297,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pipeline'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -284,6 +314,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -298,5 +329,48 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     assert.dom('.ABORTED').exists({ count: 1 });
     assert.dom('.status .fa-stop-circle').exists({ count: 1 });
+  });
+
+  test('it renders when selectedEvent is latestCommit event', async function(assert) {
+    set(this, 'obj', {
+      sha: 'latestSha',
+      truncatedSha: 'latestSha',
+      status: 'SUCCESS',
+      commit: { message: 'this is success event.' },
+      creator: { name: 'anonymous' },
+      type: 'pipeline'
+    });
+    set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      latestCommit=latestCommit
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
+    }}`);
+
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 });

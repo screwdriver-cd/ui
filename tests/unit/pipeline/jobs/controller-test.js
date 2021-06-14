@@ -119,7 +119,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
   });
 
   test('it refreshListViewJobs', async function(assert) {
-    assert.expect(3);
+    assert.expect(7);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -155,12 +155,12 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
       controller.set('store.query', (modelName, params) => {
         assert.equal(modelName, 'build-history');
         assert.deepEqual(params, {
-          jobIds: ['1', '2', '3'],
+          jobIds: params.jobIds,
           offset: 0,
           numBuilds: ENV.APP.NUM_BUILDS_LISTED
         });
 
-        return Promise.resolve([{ jobId: 1 }, { jobId: 2 }, { jobId: 3 }]);
+        return Promise.resolve([{ jobId: params.jobIds }]);
       });
 
       controller.send('refreshListViewJobs');
@@ -170,7 +170,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
 
     assert.deepEqual(controller.get('jobsDetails'), [
       {
-        jobId: 1,
+        jobId: '1',
         jobName: 'a',
         jobPipelineId: '1234',
         annotations: {},
@@ -178,7 +178,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         prNum: null
       },
       {
-        jobId: 2,
+        jobId: '2',
         jobName: 'b',
         jobPipelineId: '1234',
         annotations: {},
@@ -186,7 +186,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         prNum: null
       },
       {
-        jobId: 3,
+        jobId: '3',
         jobName: 'c',
         jobPipelineId: '1234',
         annotations: {},
@@ -197,7 +197,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
   });
 
   test('it updateListViewJobs purge', async function(assert) {
-    assert.expect(3);
+    assert.expect(9);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -232,12 +232,12 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
       controller.set('store.query', (modelName, params) => {
         assert.equal(modelName, 'build-history');
         assert.deepEqual(params, {
-          jobIds: ['1', '2', '3', '4'],
+          jobIds: params.jobIds,
           offset: 0,
           numBuilds: ENV.APP.NUM_BUILDS_LISTED
         });
 
-        return Promise.resolve([{ jobId: 1 }, { jobId: 2 }, { jobId: 3 }, { jobId: 4 }]);
+        return Promise.resolve([{ jobId: params.jobIds }]);
       });
 
       controller.send('updateListViewJobs');
@@ -247,7 +247,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
 
     assert.deepEqual(controller.get('jobsDetails'), [
       {
-        jobId: 1,
+        jobId: '1',
         jobName: 'a',
         jobPipelineId: '1234',
         annotations: {},
@@ -255,7 +255,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         prNum: null
       },
       {
-        jobId: 2,
+        jobId: '2',
         jobName: 'b',
         jobPipelineId: '1234',
         annotations: {},
@@ -263,7 +263,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         prNum: null
       },
       {
-        jobId: 3,
+        jobId: '3',
         jobName: 'c',
         jobPipelineId: '1234',
         annotations: {},
@@ -271,7 +271,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         prNum: null
       },
       {
-        jobId: 4,
+        jobId: '4',
         jobName: 'd',
         jobPipelineId: '1234',
         annotations: {},

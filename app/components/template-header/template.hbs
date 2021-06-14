@@ -1,8 +1,8 @@
 <h1>
   {{#if trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}
-  {{template.fullName}}
+  {{#link-to "pipeline" template.pipelineId title="Go to template pipeline"}}{{template.fullName}}{{/link-to}}
   {{#if scmUrl}}
-    <a href={{scmUrl}}>{{fa-icon "code-fork" title="Source code"}}</a>
+    <a href={{scmUrl}}> {{fa-icon "code-fork" title="Source code"}}</a>
   {{else}}
     {{fa-icon "code-fork" title="The pipeline for this template does not exist."}}
   {{/if}}
