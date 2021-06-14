@@ -36,9 +36,12 @@ module('Integration | Component | login button', function(hooks) {
     const a = findAll('a');
 
     contexts.forEach(async (context, i) => {
-      assert.dom(a[i]).hasText(`Sign in with ${context.displayName}`);
+      // Should skip showing read-only SCM logins
+      if (!context.readOnly) {
+        assert.dom(a[i]).hasText(`Sign in with ${context.displayName}`);
 
-      await click(a[i]);
+        await click(a[i]);
+      }
     });
   });
 });
