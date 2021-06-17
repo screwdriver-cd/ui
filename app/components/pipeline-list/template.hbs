@@ -11,6 +11,7 @@
         <tr>
           <th class="appId">Name</th>
           <th class="branch">Branch</th>
+          <th class="account">Account</th>
         </tr>
       </thead>
       <tbody>
@@ -18,6 +19,7 @@
           <tr>
             <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
             <td class="branch"><a href={{branch-url-encode pipeline.hubUrl}}>{{fa-icon "code-fork"}}{{pipeline.branch}}</a></td>
+            <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
           </tr>
         {{/each}}
       </tbody>
