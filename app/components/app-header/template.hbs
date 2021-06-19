@@ -32,6 +32,11 @@
                 <span>Commands</span>
               {{/link-to}}
             {{/ddm.item}}
+            {{#ddm.item}}
+              {{#link-to "pipeline-visualizer" classNames="icon pipeline-visualizer"}}
+                <span>Visualizer</span>
+              {{/link-to}}
+            {{/ddm.item}}
           {{/dd.menu}}
         {{/nav.dropdown}}
       {{/nav.item}}

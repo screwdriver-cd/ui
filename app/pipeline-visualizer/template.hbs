@@ -1,1 +1,8 @@
-{{outlet}}
+<div class="row">
+  <div class="col-md-2" style="background:white;min-height: calc(100vh - 56px);">
+    {{pipeline-viz-nav onSearch=(action "searchPipeline") onClick=(action "selectPipeline")}}
+  </div>
+  <div class="col-md-10">
+    {{pipeline-viz-chart pipelines=pipelines pipeline=pipeline}}
+  </div>
+</div>

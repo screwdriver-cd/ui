@@ -1,0 +1,12 @@
+& {
+  background-color: #f8f8f8;
+  min-height: 100vh;
+  // calc(100vh - 56px);
+
+  .pipeline-vis.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 56px);
+  }
+}

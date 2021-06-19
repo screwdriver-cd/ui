@@ -1,0 +1,15 @@
+{{!-- {{#if (get-length pipelines)}} --}}
+{{#if pipeline}}
+  <span>Workflow graph pipeline {{pipeline.name}}</span>
+  <div class="workflow">
+    {{workflow-graph-d3
+      pipeline=pipeline
+      workflowGraph=workflowGraph
+      startFrom=startFrom
+    }}
+  </div>
+{{else}}
+  <div class="pipeline-vis empty">
+    {{inline-svg "pipeline-vis-display"}}
+  </div>
+{{/if}}

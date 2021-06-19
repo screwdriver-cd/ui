@@ -1,0 +1,10 @@
+<div class="pipeline-viz-row {{if isSelected "selected"}}"
+  onclick={{action "handleClick" pipeline}}>
+
+  <div class="repo">
+    <i class="fa fa-check-circle success" aria-hidden="true"></i>
+    <span class="repo-name" href={{pipeline.scmRepo.url}}>{{pipeline.name}}</span>
+  </div>
+
+  {{!-- <div> NO INFO ABOUT EVENT, such as COMMIT MESSGAE</div> --}}
+</div>

@@ -264,5 +264,20 @@ export default Service.extend({
     };
 
     return this.fetchFromApi(method, url, data);
+  },
+
+  async searchPipelines(pipelineName) {
+    const method = 'get';
+    const query = $.param({
+      page: 1,
+      count: 50,
+      sort: 'ascending',
+      sortBy: 'name',
+        search: pipelineName
+    });
+
+    const url = `/pipelines?${query}`;
+
+    return this.fetchFromApi(method, url);
   }
 });
