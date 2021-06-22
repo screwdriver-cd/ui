@@ -110,15 +110,17 @@
             {{#dd.menu as |ddm|}}
               {{#ddm.item}}<span class="title">ACCOUNTS</span>{{/ddm.item}}
               {{#each scmContexts as |scmContext|}}
-                {{#ddm.item}}
-                  {{#if scmContext.isSignedIn}}
-                    <a class="active">{{fa-icon scmContext.iconType}} {{scmContext.displayName}} <span>active</span></a>
-                  {{else}}
-                    <a href="#authenticate"{{action "authenticate" scmContext.context}}>
-                      {{fa-icon scmContext.iconType}} {{scmContext.displayName}}
-                    </a>
-                  {{/if}}
-                {{/ddm.item}}
+                {{#unless scmContext.readOnly}}
+                  {{#ddm.item}}
+                    {{#if scmContext.isSignedIn}}
+                      <a class="active">{{fa-icon scmContext.iconType}} {{scmContext.displayName}} <span>active</span></a>
+                    {{else}}
+                      <a href="#authenticate"{{action "authenticate" scmContext.context}}>
+                        {{fa-icon scmContext.iconType}} {{scmContext.displayName}}
+                      </a>
+                    {{/if}}
+                  {{/ddm.item}}
+                {{/unless}}
               {{/each}}
               {{ddm.divider}}
               {{#if (not session.data.authenticated.isGuest)}}
