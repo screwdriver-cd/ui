@@ -4,13 +4,14 @@ import { statusIcon } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
   pipeline: undefined,
-  selectedPipeline: undefined,
+  selectedConnectedPipeline: undefined,
   icon: computed(function() {
     return statusIcon('success', true);
   }),
-  isSelected: computed('selectedPipeline', function isSelected() {
-    if (this.selectedPipeline) {
-      return get(this.selectedPipeline, 'id') === get(this.pipeline, 'id');
+
+  isSelected: computed('selectedConnectedPipeline', function isSelected() {
+    if (this.selectedConnectedPipeline) {
+      return get(this.selectedConnectedPipeline, 'id') === get(this.pipeline, 'id');
     }
 
     return false;
