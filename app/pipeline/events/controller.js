@@ -56,13 +56,11 @@ export async function startDetachedBuild(job, options = {}) {
     const build = this.store.peekRecord('build', buildId);
 
     parentBuildId = get(build, 'parentBuildId');
-  } else {
+  } else if (event === undefined) {
     const builds = await get(job, 'builds');
     const latestBuild = get(builds, 'firstObject');
 
-    if (event === undefined) {
-      event = await this.store.findRecord('event', get(latestBuild, 'eventId'));
-    }
+    event = await this.store.findRecord('event', get(latestBuild, 'eventId'));
   }
 
   const parentEventId = get(event, 'id');
