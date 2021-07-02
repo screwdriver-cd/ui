@@ -1,45 +1,5 @@
 <div class="row header">
   <h4 class="title">Pipeline</h4>
-  {{!-- {{#bs-form class="navbar-form navbar-left" role="search"
-    onSubmit=(action "handleSubmit") as |form|}}
-
-    <div class="toggle-arrow" onclick={{action "toggleCollapse"}}>
-      <div class="arrow-icon">
-        {{#if collaspe}}
-          <span class="glyphicon glyphicon-arrow-left"></span>
-        {{else}}
-          <span class="glyphicon glyphicon-arrow-right"></span>
-        {{/if}}
-      </div>
-    </div>
-
-    <div class="input-group">
-      <input
-        class="form-control"
-        type="text"
-        value={{pipelineName}}
-        oninput={{action (mut pipelineName) value="target.value"}}
-        placeholder="Enter pipeline name.">
-
-      <div class="input-group-btn">
-        <button class="btn btn-default">
-          <span class="glyphicon glyphicon-search"></span>
-        </button>
-      </div>
-    </div>
-  {{/bs-form}} --}}
-
-{{!--     {{#power-select
-      options=templates
-      selected=selectedTemplate
-      onchange=(action "selectTemplate")
-      searchField="name"
-      searchEnabled=true
-      noMatchesMessage=messageForSearching
-      as |template| }}
-      {{template.name}}
-    {{/power-select}} --}}
-
   {{#power-select
     search=(action "handleSearch")
     searchField="name"
@@ -53,31 +13,14 @@
   {{/power-select}}
 </div>
 
-{{!-- {{#x-toggle value=collaspe showLabels=true onToggle=(action (mut collaspe)) as |toggle|}}
-   {{#toggle.label value=(not collaspe)}}
-      {{#if collaspe}}
-        <span class="glyphicon glyphicon-arrow-left"></span>
-      {{else}}
-        <span class="glyphicon glyphicon-arrow-right"></span>
-      {{/if}}
-    {{/toggle.label}}
-{{/x-toggle}} --}}
-
-{{!-- {{#if noResult}}
-  <div class="no-result">
-    {{inline-svg "pipeline-vis-search" class="img"}}
-  </div>
-{{else}} --}}
-
-  <div class="row results">
-    {{#if isLoading}}{{fa-icon "spinner" spin=true}} Loading ...{{/if}}
-    <h4 class="title">Connected Pipelines</h4>
-    {{#each connectedPipelines as |pipeline|}}
-      {{pipeline-viz-row
-        pipeline=pipeline
-        selectedConnectedPipeline=selectedConnectedPipeline
-        onClick=(action "handleSelectedConnectedPipeline")}}
-    {{/each}}
-  </div>
-
-{{!-- {{/if}} --}}
+<div class="row results">
+  <h4 class="title">Connected Pipelines</h4>
+  {{#each connectedPipelines as |pipeline|}}
+    {{pipeline-viz-row
+      pipeline=pipeline
+      selectedPipeline=selectedPipeline
+      selectedConnectedPipeline=selectedConnectedPipeline
+      onClick=(action "handleSelectedConnectedPipeline")
+      onActionClick=(action "handleSelectedPipeline")}}
+  {{/each}}
+</div>

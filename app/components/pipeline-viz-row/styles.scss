@@ -1,10 +1,8 @@
 .pipeline-viz-row {
   border-radius: 4px;
   border: 1px solid rgb(232, 232, 232);
-  // height: 109px;
-  // height: 60px;
-
-  width: 210px;
+  min-width: 210px;
+  display: flex;
 
   &.selected {
     background-color: #ebf4ff;
@@ -16,6 +14,7 @@
     padding-top: 10px;
     padding-left: 10px;
     padding-bottom: 10px;
+    display: inline-block;
 
     .success {
       color: #3bc046;
@@ -28,5 +27,14 @@
       height: 17px;
       width: 151px;
     }
+  }
+
+  .repo-action {
+    display: inline-block;
+    float: right;
+    margin-right: 10px;
+    align-self: center;
+    margin-left: auto;
+    cursor: pointer;
   }
 }

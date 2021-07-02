@@ -25,22 +25,13 @@ export default Component.extend({
     },
 
     async handleSearch(pipelineName) {
-      this.set('isLoading', true);
-
       let pipelines = [];
 
       try {
         pipelines = await this.onSearchPipeline(pipelineName);
-
-        if (pipelines && pipelines.length > 0) {
-          this.set('noResult', false);
-        } else {
-          this.set('noResult', true);
-        }
       } catch (e) {
 
       } finally {
-        this.set('isLoading', false);
 
         return pipelines;
       }
