@@ -147,4 +147,54 @@ module('Integration | Component | pipeline workflow', function(hooks) {
     assert.dom('.graph-node.build-frozen').exists({ count: 1 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
+
+  test('it renders with latest-commit', async function(assert) {
+    this.set(
+      'obj',
+      EmberObject.create({
+        builds: rsvp.resolve(BUILDS),
+        workflowGraph: GRAPH,
+        startFrom: '~commit',
+        causeMessage: 'test',
+        sha: 'abc123'
+      })
+    );
+    this.set(
+      'latestCommit',
+      EmberObject.create({
+        sha: 'abc123'
+      })
+    );
+
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj latestCommit=latestCommit graph=graph showPRJobs=true isShowingModal=true}}`
+    );
+
+    assert.dom('.latest-commit').exists({ count: 1 });
+  });
+
+  test('it renders without latest-commit', async function(assert) {
+    this.set(
+      'obj',
+      EmberObject.create({
+        builds: rsvp.resolve(BUILDS),
+        workflowGraph: GRAPH,
+        startFrom: '~commit',
+        causeMessage: 'test',
+        sha: 'abc123'
+      })
+    );
+    this.set(
+      'latestCommit',
+      EmberObject.create({
+        sha: 'efg456'
+      })
+    );
+
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj latestCommit=latestCommit graph=graph showPRJobs=true isShowingModal=true}}`
+    );
+
+    assert.dom('.latest-commit').doesNotExist();
+  });
 });
