@@ -12,7 +12,7 @@
         {{#if event.label}}<div class="label">{{event.label}}</div>{{/if}}
       {{/if}}
     </div>
-    <div class="date greyOut">Started {{event.createTimeWords}}</div>
+    <div class="date greyOut">Started {{event.createTimeExact}}</div>
     <span class="message" title={{event.commit.message}}>{{event.truncatedMessage}}</span>
     <div class="by">
       {{#if isCommiterDifferent}}

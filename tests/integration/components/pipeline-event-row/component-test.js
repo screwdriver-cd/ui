@@ -26,6 +26,7 @@ const event = {
     name: 'batman'
   },
   createTimeWords: 'now',
+  createTimeExact: '06/30/2021, 04:39 PM',
   durationText: '1 sec',
   truncatedMessage: 'this was a test',
   truncatedSha: 'abc123',
@@ -85,7 +86,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
     assert.dom('.last-successful').exists({ count: 1 });
     assert.dom('.latest-commit').exists({ count: 1 });
   });
@@ -124,7 +125,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
     assert.dom('.last-successful').doesNotExist();
     assert.dom('.latest-commit').doesNotExist();
   });
@@ -162,7 +163,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Committed by: superman Started by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
     assert.dom('.last-successful').exists({ count: 1 });
     assert.dom('.latest-commit').exists({ count: 1 });
   });
@@ -196,7 +197,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Committed by: batman Started by: External Trigger');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
     assert.dom('.last-successful').exists({ count: 1 });
     assert.dom('.latest-commit').exists({ count: 1 });
   });
@@ -232,7 +233,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
     assert.dom('.last-successful').exists({ count: 1 });
     assert.dom('.latest-commit').exists({ count: 1 });
   });
@@ -263,7 +264,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
     assert.dom('.last-successful').exists({ count: 1 });
     assert.dom('.latest-commit').exists({ count: 1 });
   });
@@ -302,7 +303,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('[skip ci] skip ci build.');
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
     assert.dom('.last-successful').exists({ count: 1 });
     assert.dom('.latest-commit').exists({ count: 1 });
   });
