@@ -33,7 +33,10 @@
       <h3>Are you sure to start?</h3>
       <p>
         Job: <code>{{tooltipData.job.name}}</code><br>
-        Commit:<a href={{selectedEventObj.commit.url}}><code>{{selectedEventObj.truncatedMessage}}</code>({{selectedEventObj.truncatedSha}})</a>
+        Commit:<code>{{selectedEventObj.truncatedMessage}}</code>
+        <a class={{if (eq selectedEventObj.sha latestCommit.sha) "latest-commit"}} href={{selectedEventObj.commit.url}}>
+          #{{selectedEventObj.truncatedSha}}
+        </a>
       </p>
       {{#if (eq tooltipData.job.status "FROZEN")}}
         {{#if (get-length tooltipData.selectedEvent.meta.parameters)}}
