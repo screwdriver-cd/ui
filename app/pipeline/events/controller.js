@@ -339,6 +339,9 @@ export default Controller.extend(ModelReloaderMixin, {
       }
 
       return [];
+    },
+    set(key, value) {
+      return value;
     }
   }),
   events: computed('pipelineEvents', 'prEvents', 'currentEventType', {
@@ -390,6 +393,11 @@ export default Controller.extend(ModelReloaderMixin, {
   selectedEvent: computed('selected', 'mostRecent', {
     get() {
       return this.selected || this.mostRecent;
+    },
+    set(key, value) {
+      this.set('selected', value.id);
+
+      return value;
     }
   }),
 
@@ -398,6 +406,12 @@ export default Controller.extend(ModelReloaderMixin, {
       const selected = this.selectedEvent;
 
       return this.events.find(e => get(e, 'id') === selected);
+    },
+    set(key, value) {
+      this.set('selected', value.id);
+      this.set('selectedEvent', value.id);
+
+      return value;
     }
   }),
 
