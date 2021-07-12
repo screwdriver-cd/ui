@@ -8,14 +8,14 @@ export const SHOULD_RELOAD_SKIP = 'SKIP';
 
 export default Mixin.create({
   /**
-   * Parameter to indicate reloading is paused
-   */
+     * Parameter to indicate reloading is paused
+     */
   isPaused: false,
   runLater: 0,
   /**
-   * Schedules reload of events data
-   * @method scheduleReload
-   */
+     * Schedules reload of events data
+     * @method scheduleReload
+     */
   scheduleReload() {
     // The testing environment waits for asyncronous operations to complete.
     // If the reloader is active during tests, the tests will always timeout.
@@ -28,9 +28,9 @@ export default Mixin.create({
   },
 
   /**
-   * Reloads the list of events
-   * @method reloadEvents
-   */
+     * Reloads the list of events
+     * @method reloadEvents
+     */
   reloadModel() {
     const { modelToReload } = this;
 
@@ -79,9 +79,9 @@ export default Mixin.create({
   },
 
   /**
-   * Starts reloading if not already doing so
-   * @method startReloading
-   */
+     * Starts reloading if not already doing so
+     * @method startReloading
+     */
   startReloading() {
     if (!this.runLater) {
       this.scheduleReload();
@@ -89,9 +89,9 @@ export default Mixin.create({
   },
 
   /**
-   * Stops reloading
-   * @method stopReloading
-   */
+     * Stops reloading
+     * @method stopReloading
+     */
   stopReloading() {
     if (this.runLater) {
       cancel(this.runLater);
@@ -100,9 +100,9 @@ export default Mixin.create({
   },
 
   /**
-   * Forces model reload
-   * @method forceReload
-   */
+     * Forces model reload
+     * @method forceReload
+     */
   forceReload() {
     cancel(this.runLater);
     // Push this reload out of current run loop.

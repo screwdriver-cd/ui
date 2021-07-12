@@ -25,14 +25,9 @@ export default Component.extend({
 
     return rootDir ? `${branch}#${rootDir}` : branch;
   }),
-  showRemoveButton: computed(
-    'isOrganizing',
-    'isAuthenticated',
-    'isDefaultCollection',
-    function showRemoveButton() {
-      return !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated;
-    }
-  ),
+  showRemoveButton: computed('isOrganizing', 'isAuthenticated', 'isDefaultCollection', function showRemoveButton() {
+    return !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated;
+  }),
 
   didInsertElement() {
     if (!this.hasBothEventsAndLatestEventInfo) {

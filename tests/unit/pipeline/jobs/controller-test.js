@@ -15,7 +15,7 @@ const sessionServiceMock = Service.extend({
       // fake token for test, it has { username: apple } inside
       // eslint-disable-next-line max-len
       token:
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwianRpIjoiNTA1NTQzYTUtNDhjZi00OTAyLWE3YTktZGY0NTI1ODFjYWM0IiwiaWF0IjoxNTIxNTcyMDE5LCJleHAiOjE1MjE1NzU2MTl9.ImS1ajOnksl1X74uL85jOjzdUXmBW3HfMdPfP1vjrmc'
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwianRpIjoiNTA1NTQzYTUtNDhjZi00OTAyLWE3YTktZGY0NTI1ODFjYWM0IiwiaWF0IjoxNTIxNTcyMDE5LCJleHAiOjE1MjE1NzU2MTl9.ImS1ajOnksl1X74uL85jOjzdUXmBW3HfMdPfP1vjrmc'
     }
   }
 });
@@ -223,9 +223,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         })
       );
 
-      controller.set('jobsDetails', [
-        EmberObject.create({ jobId: 7, jobName: 'purge', jobPipelineId: '12' })
-      ]);
+      controller.set('jobsDetails', [EmberObject.create({ jobId: 7, jobName: 'purge', jobPipelineId: '12' })]);
 
       controller.set('listViewOffset', 3);
 
@@ -295,11 +293,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         jobsDetails
       });
 
-      assert.equal(
-        controller.get('listViewOffset'),
-        listViewOffset,
-        `has listViewOffset of ${listViewOffset}`
-      );
+      assert.equal(controller.get('listViewOffset'), listViewOffset, `has listViewOffset of ${listViewOffset}`);
       assert.equal(controller.get('jobsDetails').length, 3, 'has 3 jobs');
     });
   });

@@ -92,14 +92,14 @@ export default Controller.extend({
     this.set(this.downtimeJobsChartName, null);
   },
   /**
-   * Memoized range generator
-   * Generator code borrowed from MDN:
-   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Sequence_generator_(range)
-   *
-   * @param {Number} start start of the range
-   * @param {Number} stop  end of the range
-   * @param {Number} step  step to increment
-   */
+     * Memoized range generator
+     * Generator code borrowed from MDN:
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Sequence_generator_(range)
+     *
+     * @param {Number} start start of the range
+     * @param {Number} stop  end of the range
+     * @param {Number} step  step to increment
+     */
   range: memoizerific(5)((start, stop, step) =>
     Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step)
   ),
@@ -156,13 +156,7 @@ export default Controller.extend({
     return ObjectPromiseProxy.create({
       promise: resolve(
         this.shuttle
-          .getPipelineDowntimeJobsMetrics(
-            pipelineId,
-            downtimeJobs,
-            downtimeStatuses,
-            startTime,
-            endTime
-          )
+          .getPipelineDowntimeJobsMetrics(pipelineId, downtimeJobs, downtimeStatuses, startTime, endTime)
           .then(metrics => {
             this.set('downtimeJobsChartData', metrics);
 
@@ -280,9 +274,7 @@ export default Controller.extend({
       return this.jobs.map((name, i) => ({
         key: name,
         name,
-        class: htmlSafe(
-          selectedJobName === undefined || name === selectedJobName ? '' : 'unselected'
-        ),
+        class: htmlSafe(selectedJobName === undefined || name === selectedJobName ? '' : 'unselected'),
         style: htmlSafe(`border-color:${colors[i % colors.length]}`)
       }));
     }
@@ -350,11 +342,11 @@ export default Controller.extend({
           multilineMax: 2,
           width: 80,
           /**
-           * Generate the responsive row of tick labels for x-axis
-           *
-           * @param {Array<Number>} domain array containing the start and end of the current domain
-           * @returns {Array<Number>} array containing the indexes of desired tick labels
-           */
+                     * Generate the responsive row of tick labels for x-axis
+                     *
+                     * @param {Array<Number>} domain array containing the start and end of the current domain
+                     * @returns {Array<Number>} array containing the indexes of desired tick labels
+                     */
           values(times, domain) {
             const [x0, x1] = domain.map(Math.floor);
             const offset = 1;
@@ -398,11 +390,11 @@ export default Controller.extend({
             return values;
           },
           /**
-           * Tick label formatter
-           *
-           * @param {Number} i domain value for which the tick label locates
-           * @returns
-           */
+                     * Tick label formatter
+                     *
+                     * @param {Number} i domain value for which the tick label locates
+                     * @returns
+                     */
           format(times, i) {
             const d = times[Math.floor(i)];
             const timeZone = self.get('isUTC') ? 'UTC' : undefined;
@@ -471,18 +463,18 @@ export default Controller.extend({
 
       return {
         /**
-         * Sieve for left position
-         *
-         * @returns {Object} contains left position for tooltip
-         */
+                 * Sieve for left position
+                 *
+                 * @returns {Object} contains left position for tooltip
+                 */
         position() {
           return { left: this.tooltipPosition(...arguments).left };
         },
         /**
-         * Tooltip content generator
-         *
-         * @returns {String} safe HTML string to be displayed for tooltip
-         */
+                 * Tooltip content generator
+                 *
+                 * @returns {String} safe HTML string to be displayed for tooltip
+                 */
         contents() {
           const [data, , , color] = arguments;
           const i = data[0].index;
@@ -493,9 +485,9 @@ export default Controller.extend({
 
           // compact destructure assignments
           const [{ sha, status, createTime }, buildId] =
-            this.name === self.get('stepsChartName')
-              ? [self.get('metrics.steps'), getBuildId('step', i)]
-              : [self.get('metrics.events'), getBuildId('build', i)];
+                        this.name === self.get('stepsChartName')
+                          ? [self.get('metrics.steps'), getBuildId('step', i)]
+                          : [self.get('metrics.events'), getBuildId('build', i)];
           const s = status[i];
 
           // collect grouped data and generate a map for data HTML
@@ -657,17 +649,17 @@ export default Controller.extend({
     const { eventsChartName, buildsChartName, stepsChartName, downtimeJobsChartName } = this;
 
     /**
-     * unlock tooltip
-     *
-     */
+         * unlock tooltip
+         *
+         */
     function unlockTooltip() {
       this.tooltip.classed('locked', false);
     }
 
     /**
-     * Set up custom elements and event handlers
-     *
-     */
+         * Set up custom elements and event handlers
+         *
+         */
     function setupExtras() {
       // add the cursor line
       const cursorLine = this.svg
@@ -780,10 +772,10 @@ export default Controller.extend({
     }
 
     /**
-     * Set up drag and zoom
-     *
-     * @param {Array<String>} conjugateChartNames names of the conjugate chart, e.g. Events <-> Builds
-     */
+         * Set up drag and zoom
+         *
+         * @param {Array<String>} conjugateChartNames names of the conjugate chart, e.g. Events <-> Builds
+         */
     function setupDragZoom(...conjugateChartNames) {
       // get the inverted domain values from d3
       const getZoomedDomain = selection => selection && selection.map(x => this.x.invert(x));
@@ -841,19 +833,19 @@ export default Controller.extend({
     }
 
     /**
-     * Set up different shims for overriding c3 behaviors
-     *
-     */
+         * Set up different shims for overriding c3 behaviors
+         *
+         */
     function shimHandlers() {
       this.windowFocusHandler = Function.prototype;
     }
 
     /**
-     * Custom init callback for setting up custom behaviors
-     *
-     * @param {String} chartName name of the targeted chart
-     * @param {Array<String>} conjugateChartNames names of the conjugate chart
-     */
+         * Custom init callback for setting up custom behaviors
+         *
+         * @param {String} chartName name of the targeted chart
+         * @param {Array<String>} conjugateChartNames names of the conjugate chart
+         */
     function onInitInner(chartName, ...conjugateChartNames) {
       self.set(chartName, this.api);
       setupExtras.call(this);
@@ -972,10 +964,7 @@ export default Controller.extend({
 
       // must have at least one legend/data displayed
       // empty chart could introduce issues around domain in c3
-      if (
-        !wasHidden &&
-        chart.internal.data.targets.length - chart.internal.hiddenTargetIds.length === 1
-      ) {
+      if (!wasHidden && chart.internal.data.targets.length - chart.internal.hiddenTargetIds.length === 1) {
         return;
       }
 

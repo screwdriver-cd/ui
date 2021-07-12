@@ -52,9 +52,9 @@ export default Component.extend({
 
   actions: {
     /**
-     * Kicks off create token flow
-     * @method addNewToken
-     */
+         * Kicks off create token flow
+         * @method addNewToken
+         */
     addNewToken() {
       this.set('isSaving', true);
 
@@ -68,32 +68,32 @@ export default Component.extend({
         });
     },
     /**
-     * Clear the new token
-     * @method clearNewToken
-     */
+         * Clear the new token
+         * @method clearNewToken
+         */
     clearNewToken() {
       this.set('newToken', null);
     },
     /**
-     * Set the error to be displayed from child components
-     * @param {String} errorMessage
-     */
+         * Set the error to be displayed from child components
+         * @param {String} errorMessage
+         */
     setErrorMessage(errorMessage) {
       this.set('errorMessage', errorMessage);
     },
     /**
-     * Show or hide the saving modal from child components
-     * @param {Boolean} isSaving
-     */
+         * Show or hide the saving modal from child components
+         * @param {Boolean} isSaving
+         */
     setIsSaving(isSaving) {
       this.set('isSaving', isSaving);
     },
     /**
-     * Confirm an action
-     * @method confirmAction
-     * @param {String} action   One of "refresh" or "revoke"
-     * @param {Number} id
-     */
+         * Confirm an action
+         * @method confirmAction
+         * @param {String} action   One of "refresh" or "revoke"
+         * @param {Number} id
+         */
     confirmAction(action, id) {
       this.set('modalTarget', this.tokens.find(token => token.get('id') === id));
       this.set('modalAction', action);
@@ -101,19 +101,16 @@ export default Component.extend({
       if (action === 'delete') {
         this.set('modalText', `The "${this.get('modalTarget.name')}" token will be deleted.`);
       } else {
-        this.set(
-          'modalText',
-          `The current "${this.get('modalTarget.name')}" token will be invalidated.`
-        );
+        this.set('modalText', `The current "${this.get('modalTarget.name')}" token will be invalidated.`);
       }
 
       this.set('isShowingModal', true);
     },
     /**
-     * Close the modal, calling a callback if necessary
-     * @method closeModal
-     * @param {Boolean} confirm
-     */
+         * Close the modal, calling a callback if necessary
+         * @method closeModal
+         * @param {Boolean} confirm
+         */
     closeModal(confirm) {
       this.set('isShowingModal', false);
 

@@ -107,9 +107,7 @@ module('Unit | Service | command', function(hooks) {
 
     const t = service.getAllCommands();
 
-    const filteredCommands = [
-      { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime, lastUpdated }
-    ];
+    const filteredCommands = [{ id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime, lastUpdated }];
 
     t.then(commands => {
       assert.deepEqual(commands, filteredCommands);

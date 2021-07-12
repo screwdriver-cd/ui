@@ -53,10 +53,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     const $links = this.element.querySelectorAll('.row .event-info a');
 
     const compare = (elem, expected) => {
-      assert.equal(
-        (elem.innerText.trim() || elem.innerHTML.trim()).toUpperCase(),
-        expected.toUpperCase()
-      );
+      assert.equal((elem.innerText.trim() || elem.innerHTML.trim()).toUpperCase(), expected.toUpperCase());
     };
 
     compare($columnTitles[0], 'COMMIT');

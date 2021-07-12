@@ -146,9 +146,7 @@ module('Integration | Component | build banner', function(hooks) {
 
     assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/pulls');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
-    assert
-      .dom('.commit a')
-      .hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
+    assert.dom('.commit a').hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
     assert.dom('.commit a').hasText('#abcdef1');
     assert
       .dom('.duration .banner-value')
@@ -223,14 +221,10 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
     const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
-    assert
-      .dom('.pr .pr-url-holder a')
-      .hasAttribute('href', 'https://github.com/screwdriver-cd/ui/pull/292');
+    assert.dom('.pr .pr-url-holder a').hasAttribute('href', 'https://github.com/screwdriver-cd/ui/pull/292');
     assert.dom('.pr .pr-url-holder a').hasText('PR#292');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
-    assert
-      .dom('.commit a')
-      .hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
+    assert.dom('.commit a').hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
     assert.dom('.commit a').hasText('#abcdef1');
     assert
       .dom('.duration .banner-value')
@@ -253,10 +247,7 @@ module('Integration | Component | build banner', function(hooks) {
 
     this.set('buildStepsMock', buildStepsMock);
     this.set('eventMock', prEventMock);
-    this.set(
-      'prEvents',
-      new EmberPromise(resolves => resolves([{ build: buildMock, event: eventMock }]))
-    );
+    this.set('prEvents', new EmberPromise(resolves => resolves([{ build: buildMock, event: eventMock }])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -276,14 +267,10 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
     const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
 
-    assert
-      .dom('.pr .pr-url-holder a')
-      .hasAttribute('href', 'https://github.com/screwdriver-cd/ui/pull/292');
+    assert.dom('.pr .pr-url-holder a').hasAttribute('href', 'https://github.com/screwdriver-cd/ui/pull/292');
     assert.dom('.pr .pr-url-holder a').hasText('PR#292');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
-    assert
-      .dom('.commit a')
-      .hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
+    assert.dom('.commit a').hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
     assert.dom('.commit .commit-sha').hasText('#abcdef1');
 
     await click('.commit .dropdown-toggle');

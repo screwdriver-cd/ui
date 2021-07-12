@@ -61,10 +61,7 @@ export default Service.extend({
 
     const uri = `${baseHost}${url}`;
 
-    const options = Object.assign({}, this.ajaxOptions(), {
-      data,
-      type: optionsType
-    });
+    const options = { ...this.ajaxOptions(), data, type: optionsType };
 
     return this.get('ajax')[requestType](uri, options);
   },
@@ -95,19 +92,19 @@ export default Service.extend({
   },
 
   /**
-   * Fetch coverage info from coverage plugin
-   * @param  {Object}  data
-   * @param  {String}  [data.jobId]        Job ID
-   * @param  {String}  [data.jobName]      Job name
-   * @param  {String}  [data.pipelineId]	 Pipeline ID
-   * @param  {String}  [data.pipelineName] Pipeline name
-   * @param  {String}  data.startTime      Build start time
-   * @param  {String}  data.endTime        Build end time
-   * @param  {String}  [data.prNum]        PR number
-   * @param  {String}  [data.scope]        Coverage scope (pipeline or job)
-   * @param  {String}  data.projectKey     Coverage key
-   * @return {Promise} Coverage object with coverage results and test data
-   */
+     * Fetch coverage info from coverage plugin
+     * @param  {Object}  data
+     * @param  {String}  [data.jobId]        Job ID
+     * @param  {String}  [data.jobName]      Job name
+     * @param  {String}  [data.pipelineId]	 Pipeline ID
+     * @param  {String}  [data.pipelineName] Pipeline name
+     * @param  {String}  data.startTime      Build start time
+     * @param  {String}  data.endTime        Build end time
+     * @param  {String}  [data.prNum]        PR number
+     * @param  {String}  [data.scope]        Coverage scope (pipeline or job)
+     * @param  {String}  data.projectKey     Coverage key
+     * @return {Promise} Coverage object with coverage results and test data
+     */
   async fetchCoverage(data) {
     const method = 'get';
     const url = `/coverage/info`;
@@ -135,13 +132,13 @@ export default Service.extend({
   },
 
   /**
-   * updatePipelineSettings
-   * @param  {Number}   pipelineId  Pipeline Id
-   * @param  {Object}   settings
-   * @param  {Array}    settings.metricsDowntimeJobs Job Ids to caluclate downtime
-   * @param  {Boolean}  settings.public pipeline visibility
-   * @return {Promise}
-   */
+     * updatePipelineSettings
+     * @param  {Number}   pipelineId  Pipeline Id
+     * @param  {Object}   settings
+     * @param  {Array}    settings.metricsDowntimeJobs Job Ids to caluclate downtime
+     * @param  {Boolean}  settings.public pipeline visibility
+     * @return {Promise}
+     */
   async updatePipelineSettings(pipelineId, settings) {
     const method = 'put';
     const url = `/pipelines/${pipelineId}`;
@@ -164,19 +161,13 @@ export default Service.extend({
   },
 
   /**
-   * getPipelineDowntimeJobsMetrics
-   * @param  {Number} pipelineId        Pipeline Id
-   * @param  {Array}  downtimeJobs      Job Ids
-   * @param  {Array}  downtimeStatuses  Build Statuses
-   * @return {Promise}
-   */
-  async getPipelineDowntimeJobsMetrics(
-    pipelineId,
-    downtimeJobs,
-    downtimeStatuses,
-    startTime,
-    endTime
-  ) {
+     * getPipelineDowntimeJobsMetrics
+     * @param  {Number} pipelineId        Pipeline Id
+     * @param  {Array}  downtimeJobs      Job Ids
+     * @param  {Array}  downtimeStatuses  Build Statuses
+     * @return {Promise}
+     */
+  async getPipelineDowntimeJobsMetrics(pipelineId, downtimeJobs, downtimeStatuses, startTime, endTime) {
     const method = 'get';
     const query = $.param({ downtimeJobs, downtimeStatuses, startTime, endTime });
     const url = `/pipelines/${pipelineId}/metrics?${query}`;
@@ -185,10 +176,10 @@ export default Service.extend({
   },
 
   /**
-   * getLatestCommitEvent
-   * @param  {Number} pipelineId  Pipeline Id
-   * @return {Promise}
-   */
+     * getLatestCommitEvent
+     * @param  {Number} pipelineId  Pipeline Id
+     * @return {Promise}
+     */
   async getLatestCommitEvent(pipelineId) {
     const method = 'get';
     const url = `/pipelines/${pipelineId}/latestCommitEvent`;
@@ -197,9 +188,9 @@ export default Service.extend({
   },
 
   /**
-   * getUserSetting
-   * @return {Promise}
-   */
+     * getUserSetting
+     * @return {Promise}
+     */
   async getUserSetting() {
     const method = 'get';
     const url = `/users/settings`;
@@ -214,10 +205,10 @@ export default Service.extend({
   },
 
   /**
-   * getUserPipelinePreference
-   * @param  {Number} pipelineId  pipeline Id
-   * @return {Promise}
-   */
+     * getUserPipelinePreference
+     * @param  {Number} pipelineId  pipeline Id
+     * @return {Promise}
+     */
   async getUserPipelinePreference(pipelineId) {
     if (pipelineId === undefined) {
       return {};
@@ -225,9 +216,7 @@ export default Service.extend({
 
     const remotePreferences = await this.getUserSetting();
     const remotePipelineConfig = getWithDefault(remotePreferences, pipelineId, {});
-    const localPipelinePreference = await this.store
-      .peekAll('preference/pipeline')
-      .findBy('id', pipelineId);
+    const localPipelinePreference = await this.store.peekAll('preference/pipeline').findBy('id', pipelineId);
 
     // local preference takes precedence
     if (localPipelinePreference && remotePipelineConfig) {
@@ -246,12 +235,12 @@ export default Service.extend({
   },
 
   /**
-   * updateUserPreference
-   * @param  {Number}  [pipelineId]
-   * @param  {Object}  pipelineSettings
-   * @param  {Boolean} [pipelineSettings.showPRJobs]
-   * @return {Promise}
-   */
+     * updateUserPreference
+     * @param  {Number}  [pipelineId]
+     * @param  {Object}  pipelineSettings
+     * @param  {Boolean} [pipelineSettings.showPRJobs]
+     * @return {Promise}
+     */
   async updateUserPreference(pipelineId, pipelineSettings) {
     const method = 'put';
     const url = `/users/settings`;

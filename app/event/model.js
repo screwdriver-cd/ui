@@ -108,9 +108,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
     builds.then(list => {
       if (!this.isDestroying && !this.isDestroyed) {
-        const validList = list.filter(
-          b => get(b, 'status') !== 'SUCCESS' && get(b, 'status') !== 'CREATED'
-        );
+        const validList = list.filter(b => get(b, 'status') !== 'SUCCESS' && get(b, 'status') !== 'CREATED');
 
         if (validList.length) {
           status = get(validList[0], 'status');

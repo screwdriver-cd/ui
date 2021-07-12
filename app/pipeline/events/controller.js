@@ -158,9 +158,7 @@ export async function updateEvents(page) {
     this.set('isFetching', false);
 
     // Skip duplicate ones if new events got added to the head of the events list
-    const noDuplicateEvents = nextEvents.filter(
-      nextEvent => !this.paginateEvents.findBy('id', nextEvent.id)
-    );
+    const noDuplicateEvents = nextEvents.filter(nextEvent => !this.paginateEvents.findBy('id', nextEvent.id));
 
     this.paginateEvents.pushObjects(noDuplicateEvents);
   }
@@ -309,9 +307,7 @@ export default Controller.extend(ModelReloaderMixin, {
         return newModelEvents;
       }
 
-      previousModelEvents = previousModelEvents.filter(
-        e => !currentModelEvents.find(c => c.id === e.id)
-      );
+      previousModelEvents = previousModelEvents.filter(e => !currentModelEvents.find(c => c.id === e.id));
 
       newModelEvents = currentModelEvents.concat(previousModelEvents);
 
@@ -382,11 +378,11 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
   /**
-   * Selected Event's Id (integer) in a string format, i.e. '379281'
-   * @param  {String} selected
-   * @param  {String} mostRecent
-   * @return {String}
-   */
+     * Selected Event's Id (integer) in a string format, i.e. '379281'
+     * @param  {String} selected
+     * @param  {String} mostRecent
+     * @return {String}
+     */
   selectedEvent: computed('selected', 'mostRecent', {
     get() {
       return this.selected || this.mostRecent;

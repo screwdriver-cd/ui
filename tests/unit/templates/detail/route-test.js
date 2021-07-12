@@ -170,9 +170,7 @@ module('Unit | Route | templates/detail', function(hooks) {
     });
   });
 
-  sinonTest('it asks for the list of templates for a given name and non-exist version', function(
-    assert
-  ) {
+  sinonTest('it asks for the list of templates for a given name and non-exist version', function(assert) {
     let route = this.owner.lookup('route:templates/detail');
     const stub = this.stub(route, 'transitionTo');
 
@@ -183,9 +181,7 @@ module('Unit | Route | templates/detail', function(hooks) {
     });
   });
 
-  sinonTest('it asks for the list of templates for a given name and non-exist tag', function(
-    assert
-  ) {
+  sinonTest('it asks for the list of templates for a given name and non-exist tag', function(assert) {
     let route = this.owner.lookup('route:templates/detail');
     const stub = this.stub(route, 'transitionTo');
 

@@ -49,11 +49,7 @@ module('Unit | Controller | pipeline/secrets', function(hooks) {
   });
 
   test('it can create pipelinetokens', function(assert) {
-    server.post('http://localhost:8080/v4/pipelines/1/tokens', () => [
-      200,
-      {},
-      JSON.stringify({ id: 123 })
-    ]);
+    server.post('http://localhost:8080/v4/pipelines/1/tokens', () => [200, {}, JSON.stringify({ id: 123 })]);
 
     let controller = this.owner.lookup('controller:pipeline/secrets');
 

@@ -226,13 +226,7 @@ module('Unit | Utility | graph tools', function() {
 
   test('it handles detached jobs', function(assert) {
     const inputGraph = {
-      nodes: [
-        { name: '~pr' },
-        { name: '~commit' },
-        { name: 'main' },
-        { name: 'foo' },
-        { name: 'bar' }
-      ],
+      nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: 'foo' }, { name: 'bar' }],
       edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }]
     };
     const expectedOutput = {
@@ -313,11 +307,7 @@ module('Unit | Utility | graph tools', function() {
     // more complex graph, detached workflow
     assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'detached_main'), 2, 'very complex detached');
     // more complex graph, detached job
-    assert.equal(
-      graphDepth(MORE_COMPLEX_GRAPH.edges, 'detached_solo'),
-      1,
-      'very complex detached 2'
-    );
+    assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'detached_solo'), 1, 'very complex detached 2');
     // more complex graph, partial pipeline
     assert.equal(graphDepth(MORE_COMPLEX_GRAPH.edges, 'publish'), 1, 'very complex partial');
   });

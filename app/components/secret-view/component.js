@@ -15,14 +15,10 @@ export default Component.extend({
           return 'Override';
         }
 
-        return this.newValue || this.originalAllowInPR !== this.get('secret.allowInPR')
-          ? 'Update'
-          : 'Revert';
+        return this.newValue || this.originalAllowInPR !== this.get('secret.allowInPR') ? 'Update' : 'Revert';
       }
 
-      return this.newValue || this.originalAllowInPR !== this.get('secret.allowInPR')
-        ? 'Update'
-        : 'Delete';
+      return this.newValue || this.originalAllowInPR !== this.get('secret.allowInPR') ? 'Update' : 'Delete';
     }
   }),
   passwordPlaceholder: computed({
@@ -69,10 +65,10 @@ export default Component.extend({
       return Promise.resolve(null);
     },
     /**
-     * Toggle eye-icon and password input type
-     * @method togglePasswordInput
-     * @param {Object} event Click event
-     */
+         * Toggle eye-icon and password input type
+         * @method togglePasswordInput
+         * @param {Object} event Click event
+         */
     togglePasswordInput(event) {
       const { target } = event;
       const passwordInput = target.previousSibling;

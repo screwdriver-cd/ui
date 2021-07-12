@@ -68,10 +68,10 @@ export default Component.extend({
 
   actions: {
     /**
-     * Handles when a git url is entered in step 1
-     * @method scmChange
-     * @param  {String} val     The value of the input box
-     */
+         * Handles when a git url is entered in step 1
+         * @method scmChange
+         * @param  {String} val     The value of the input box
+         */
     scmChange(val) {
       this.set('scmUrl', val.trim());
       const input = $('.scm-url');
@@ -86,19 +86,19 @@ export default Component.extend({
     },
 
     /**
-     * Update rootdir
-     * @method updateRootDir
-     * @param  {String}      val The value of the rootDir input box
-     */
+         * Update rootdir
+         * @method updateRootDir
+         * @param  {String}      val The value of the rootDir input box
+         */
     updateRootDir(val) {
       this.set('rootDir', val.trim());
     },
 
     /**
-     * Call Api to save project
-     * @event saveData
-     * @param  {Object} data Project attributes
-     */
+         * Call Api to save project
+         * @event saveData
+         * @param  {Object} data Project attributes
+         */
     saveData() {
       if (this.isValid) {
         const payload = {

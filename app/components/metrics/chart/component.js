@@ -42,7 +42,7 @@ export default class MetricsChartComponent extends Component {
     return () => {};
   }
 
-  @action
+    @action
   resetZoom(chartName, dependentChartNames) {
     this.args.resetZoom(chartName, dependentChartNames);
   }

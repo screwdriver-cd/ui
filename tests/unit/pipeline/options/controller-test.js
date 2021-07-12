@@ -46,11 +46,7 @@ module('Unit | Controller | pipeline/options', function(hooks) {
 
   test('it handles deleting pipelines', function(assert) {
     assert.expect(2);
-    server.delete('http://localhost:8080/v4/pipelines/abc1234', () => [
-      200,
-      {},
-      '{"id": "abc1234"}'
-    ]);
+    server.delete('http://localhost:8080/v4/pipelines/abc1234', () => [200, {}, '{"id": "abc1234"}']);
 
     let controller = this.owner.lookup('controller:pipeline/options');
 

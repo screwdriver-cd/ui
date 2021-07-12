@@ -183,9 +183,7 @@ export default Component.extend({
     let desiredJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
 
     const pipelineId = this.get('pipeline.id');
-    const pipelinePreference = await this.store
-      .peekAll('preference/pipeline')
-      .findBy('id', pipelineId);
+    const pipelinePreference = await this.store.peekAll('preference/pipeline').findBy('id', pipelineId);
 
     if (pipelinePreference) {
       const { displayJobNameLength } = pipelinePreference;
@@ -239,8 +237,7 @@ export default Component.extend({
     const isSkipped = getWithDefault(this, 'isSkipped', false);
 
     // edges
-    svg
-      .selectAll('link')
+    svg.selectAll('link')
       .data(data.edges)
       .enter()
       .append('path')
@@ -271,12 +268,11 @@ export default Component.extend({
       });
 
     // Jobs Icons
-    svg
-      .selectAll('jobs')
+    svg.selectAll('jobs')
       .data(data.nodes)
       .enter()
-      // for each element in data array - do the following
-      // create a group element to animate
+    // for each element in data array - do the following
+    // create a group element to animate
       .append('g')
       .attr('class', d => {
         if (isSkipped && d.status === 'STARTED_FROM') {
@@ -286,7 +282,7 @@ export default Component.extend({
         return `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`;
       })
       .attr('data-job', d => d.name)
-      // create the icon graphic
+    // create the icon graphic
       .insert('text')
       .text(d => {
         if (isSkipped && d.status === 'STARTED_FROM') {
@@ -302,7 +298,7 @@ export default Component.extend({
       .on('click', e => {
         this.send('buildClicked', e);
       })
-      // add a tooltip
+    // add a tooltip
       .insert('title')
       .text(d => (d.status ? `${d.name} - ${d.status}` : d.name));
 
@@ -310,8 +306,7 @@ export default Component.extend({
 
     // Job Names
     if (TITLE_SIZE && this.displayJobNames) {
-      svg
-        .selectAll('jobslabels')
+      svg.selectAll('jobslabels')
         .data(data.nodes)
         .enter()
         .append('text')

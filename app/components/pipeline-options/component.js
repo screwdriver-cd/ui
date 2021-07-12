@@ -94,9 +94,7 @@ export default Component.extend({
 
     let showPRJobs = true;
 
-    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
-      this.get('pipeline.id')
-    );
+    const pipelinePreference = await this.shuttle.getUserPipelinePreference(this.get('pipeline.id'));
 
     if (pipelinePreference) {
       desiredJobNameLength = pipelinePreference.displayJobNameLength;
@@ -106,10 +104,7 @@ export default Component.extend({
     this.setProperties({ desiredJobNameLength, showPRJobs });
 
     if (this.displayDowntimeJobs) {
-      const metricsDowntimeJobs = this.getWithDefault(
-        'pipeline.settings.metricsDowntimeJobs',
-        []
-      ).map(jobId => {
+      const metricsDowntimeJobs = this.getWithDefault('pipeline.settings.metricsDowntimeJobs', []).map(jobId => {
         return this.jobs.findBy('id', `${jobId}`);
       });
 
@@ -143,12 +138,7 @@ export default Component.extend({
       this.set('rootDir', val.trim());
     },
     updatePipeline() {
-      const {
-        scmUrl,
-        rootDir,
-        hasRootDir,
-        metricsDowntimeJobs /* , metricsDowntimeStatuses */
-      } = this;
+      const { scmUrl, rootDir, hasRootDir, metricsDowntimeJobs /* , metricsDowntimeStatuses */ } = this;
       const pipelineConfig = {
         scmUrl,
         rootDir: ''
@@ -269,9 +259,7 @@ export default Component.extend({
     async updateShowPRJobs(showPRJobs) {
       const pipelineId = this.get('pipeline.id');
 
-      let pipelinePreference = await this.store
-        .peekAll('preference/pipeline')
-        .findBy('id', pipelineId);
+      let pipelinePreference = await this.store.peekAll('preference/pipeline').findBy('id', pipelineId);
 
       if (pipelinePreference) {
         pipelinePreference.showPRJobs = showPRJobs;

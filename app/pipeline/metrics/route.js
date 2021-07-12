@@ -108,12 +108,12 @@ export default Route.extend({
           let sum = { queuedTime: 0, imagePullTime: 0, duration: 0 };
 
           /**
-           * Map index to build id, gathered from pipeline and job metrics
-           *
-           * @param {String} type type of the requesting metric
-           * @param {Number} index index of inquiry
-           * @returns {Number|null} build id(s) of the located build
-           */
+                     * Map index to build id, gathered from pipeline and job metrics
+                     *
+                     * @param {String} type type of the requesting metric
+                     * @param {Number} index index of inquiry
+                     * @returns {Number|null} build id(s) of the located build
+                     */
           function getBuildId(type, index) {
             if (type === 'step') {
               return +jobMetrics.objectAt(index).get('id');

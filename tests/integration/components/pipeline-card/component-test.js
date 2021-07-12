@@ -70,9 +70,7 @@ module('Integration | Component | pipeline card', function(hooks) {
     assert.dom('.branch-info a').hasText(mockPipeline.scmRepo.name);
     assert.dom('.branch-info a').hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert.dom('.commit-info').exists({ count: 1 });
-    assert
-      .dom('.commit-status a:nth-of-type(1)')
-      .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
+    assert.dom('.commit-status a:nth-of-type(1)').hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert.dom('.commit-status a:nth-of-type(1) i').hasClass('fa-question-circle');
     assert.dom('.commit-status a:nth-of-type(2)').hasText(lastEventInfo.sha);
     assert.dom('.commit-status a:nth-of-type(2)').hasAttribute('href', lastEventInfo.commitUrl);

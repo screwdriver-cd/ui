@@ -8,11 +8,7 @@ export default Controller.extend({
     get() {
       let route = this.model;
 
-      let params = Object.assign(
-        {},
-        route.paramsFor('templates.namespace'),
-        route.paramsFor('templates.detail')
-      );
+      let params = { ...route.paramsFor('templates.namespace'), ...route.paramsFor('templates.detail') };
 
       return params;
     }

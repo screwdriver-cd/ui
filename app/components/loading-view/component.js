@@ -3,9 +3,9 @@ import Component from '@ember/component';
 
 export default Component.extend({
   /**
-   * Quotes from: https://www.npmjs.com/package/funnies which has an MIT License
-   * @property {Array} funnies
-   */
+     * Quotes from: https://www.npmjs.com/package/funnies which has an MIT License
+     * @property {Array} funnies
+     */
   funnies: [
     'Reticulating splines...',
     'Generating witty dialog...',
@@ -73,9 +73,9 @@ export default Component.extend({
     'Recounting votes...'
   ],
   /**
-   * Get a random quote
-   * @property {String} loadingMessage
-   */
+     * Get a random quote
+     * @property {String} loadingMessage
+     */
   loadingMessage: computed({
     get() {
       const index = Math.floor(Math.random() * this.funnies.length);

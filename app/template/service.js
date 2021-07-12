@@ -10,26 +10,22 @@ const { templatesFormatter } = templateHelper;
 export default Service.extend({
   session: service(),
   getOneTemplate(name) {
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
-      ENV.APP.SDAPI_NAMESPACE
-    }/templates/${encodeURIComponent(name)}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}`;
 
     return this.fetchData(url).then(templatesFormatter);
   },
   getOneTemplateWithMetrics(name) {
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
-      ENV.APP.SDAPI_NAMESPACE
-    }/templates/${encodeURIComponent(name)}/metrics`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(
+      name
+    )}/metrics`;
 
     return this.fetchData(url).then(templatesFormatter);
   },
   getTemplateTags(namespace, name) {
     const fullName = `${namespace}/${name}`;
     const url =
-      // eslint-disable-next-line max-len
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(
-        fullName
-      )}/tags`;
+            // eslint-disable-next-line max-len
+            `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(fullName)}/tags`;
 
     return this.fetchData(url);
   },
@@ -85,9 +81,7 @@ export default Service.extend({
   },
   deleteTemplates(name) {
     // eslint-disable-next-line max-len
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
-      ENV.APP.SDAPI_NAMESPACE
-    }/templates/${encodeURIComponent(name)}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(name)}`;
     const ajaxConfig = {
       method: 'DELETE',
       url,
@@ -122,8 +116,8 @@ export default Service.extend({
   },
   updateTrust(fullName, trusted) {
     const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/` +
-      `${encodeURIComponent(fullName)}/trusted`;
+            `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/` +
+            `${encodeURIComponent(fullName)}/trusted`;
     const ajaxConfig = {
       method: 'PUT',
       dataType: 'json',

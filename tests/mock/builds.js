@@ -35,13 +35,7 @@ const build = {
   status: 'FAILURE'
 };
 
-const shas = [
-  'abcd1234567890',
-  'bcd1234567890a',
-  'cd1234567890ab',
-  'd1234567890abc',
-  '1234567890abcd'
-];
+const shas = ['abcd1234567890', 'bcd1234567890a', 'cd1234567890ab', 'd1234567890abc', '1234567890abcd'];
 
 export default eventId => {
   const builds = [];

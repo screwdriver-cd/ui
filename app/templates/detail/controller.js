@@ -55,8 +55,7 @@ export default Controller.extend({
     },
     updateTrust(fullName, toTrust) {
       return (
-        this.isAdmin &&
-        this.template.updateTrust(fullName, toTrust).catch(err => this.set('errorMessage', err))
+        this.isAdmin && this.template.updateTrust(fullName, toTrust).catch(err => this.set('errorMessage', err))
       );
     }
   }

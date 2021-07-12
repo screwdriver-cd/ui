@@ -4,10 +4,7 @@ import { get, set, computed } from '@ember/object';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
-import ModelReloaderMixin, {
-  SHOULD_RELOAD_SKIP,
-  SHOULD_RELOAD_YES
-} from 'screwdriver-ui/mixins/model-reloader';
+import ModelReloaderMixin, { SHOULD_RELOAD_SKIP, SHOULD_RELOAD_YES } from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob, isActiveBuild } from 'screwdriver-ui/utils/build';
 import moment from 'moment';
 import { createEvent, startDetachedBuild, stopBuild, updateEvents } from '../../events/controller';

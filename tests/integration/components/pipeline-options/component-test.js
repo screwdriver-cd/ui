@@ -124,14 +124,10 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.danger h3').hasText('Danger Zone');
     assert.dom('section.danger li').exists({ count: 2 });
     assert.dom('section.danger li:first-child h4').hasText('Set pipeline visibility');
-    assert
-      .dom('section.danger li:first-child p')
-      .hasText('Think twice before setting pipeline to public.');
+    assert.dom('section.danger li:first-child p').hasText('Think twice before setting pipeline to public.');
     assert.dom('section.danger li:first-child .x-toggle-container').hasClass('x-toggle-container');
     assert.dom('section.danger li:nth-child(2) h4').hasText('Delete this pipeline');
-    assert
-      .dom('section.danger li:nth-child(2) p')
-      .hasText('Once you delete a pipeline, there is no going back.');
+    assert.dom('section.danger li:nth-child(2) p').hasText('Once you delete a pipeline, there is no going back.');
     assert.dom('section.danger a i').hasClass('fa-trash');
   });
 
@@ -411,9 +407,7 @@ module('Integration | Component | pipeline options', function(hooks) {
       assert.ok(true);
     });
 
-    await render(
-      hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`
-    );
+    await render(hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`);
 
     assert.dom('section.danger h4').hasText('Delete this pipeline');
 

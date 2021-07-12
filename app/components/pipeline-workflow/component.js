@@ -87,10 +87,9 @@ export default Component.extend({
       const parameterNames = Object.keys(buildParameters);
 
       parameterNames.forEach(parameterName => {
-        const parameterValue =
-          buildParameters[parameterName].value || buildParameters[parameterName];
+        const parameterValue = buildParameters[parameterName].value || buildParameters[parameterName];
         const currentEventParameterValue =
-          currentEventParameters[parameterName].value || currentEventParameters[parameterName];
+                    currentEventParameters[parameterName].value || currentEventParameters[parameterName];
 
         if (Array.isArray(parameterValue)) {
           parameterValue.removeObject(currentEventParameterValue);

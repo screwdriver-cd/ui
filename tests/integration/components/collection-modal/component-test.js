@@ -95,9 +95,7 @@ module('Integration | Component | collection modal', function(hooks) {
 
     await fillIn('.name input', 'Test');
     await fillIn('.description textArea', 'Test description');
-    assert
-      .dom('.collection-form__create')
-      .isEnabled('Should enable Create button when Name is Filled');
+    assert.dom('.collection-form__create').isEnabled('Should enable Create button when Name is Filled');
     await click('.collection-form__create');
 
     assert.notOk(this.get('showModal'));

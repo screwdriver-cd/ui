@@ -79,10 +79,10 @@ export default Component.extend({
   },
 
   /**
-   * Note: jobId must be a string
-   * @param  {integer} jobId
-   * @return {undefined}
-   */
+     * Note: jobId must be a string
+     * @param  {integer} jobId
+     * @return {undefined}
+     */
   openParametersModal(jobId) {
     const job = this.jobs.findBy('id', `${jobId}`);
 

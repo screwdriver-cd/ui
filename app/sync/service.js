@@ -8,16 +8,15 @@ export default Service.extend({
   session: service('session'),
 
   /**
-   * Calls the sync api service to sync data
-   * @method syncRequests
-   * @param   {Number}  pipelineId
-   * @param   {String}  syncPath   The path for the data to sync, e.g. webhooks, pullrequests
-   * @return  {Promise}            Resolve nothing if success otherwise reject with error message
-   */
+     * Calls the sync api service to sync data
+     * @method syncRequests
+     * @param   {Number}  pipelineId
+     * @param   {String}  syncPath   The path for the data to sync, e.g. webhooks, pullrequests
+     * @return  {Promise}            Resolve nothing if success otherwise reject with error message
+     */
   syncRequests(pipelineId, syncPath = '') {
     const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/pipelines/${pipelineId}/sync/${syncPath}`;
+            `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` + `/pipelines/${pipelineId}/sync/${syncPath}`;
 
     return new EmberPromise((resolve, reject) => {
       $.ajax({

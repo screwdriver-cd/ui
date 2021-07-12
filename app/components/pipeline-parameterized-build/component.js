@@ -9,27 +9,27 @@ import { getWithDefault, set } from '@ember/object';
  */
 export default Component.extend({
   /**
-   * showSubmitButton
-   * @type {Boolean} true to show button groups, hide otherwise
-   */
+     * showSubmitButton
+     * @type {Boolean} true to show button groups, hide otherwise
+     */
   showSubmitButton: false,
 
   /**
-   * submitButtonText
-   * @type {String} Submit
-   */
+     * submitButtonText
+     * @type {String} Submit
+     */
   submitButtonText: 'Submit',
 
   /**
-   * buildParameters are expected to be an object consists of key value pairs
-   * @type {Object}
-   */
+     * buildParameters are expected to be an object consists of key value pairs
+     * @type {Object}
+     */
   buildParameters: {},
 
   /**
-   * parameters expected to be an object
-   * @type {String}
-   */
+     * parameters expected to be an object
+     * @type {String}
+     */
   init() {
     this._super(...arguments);
     const [parameters, parameterizedModel] = this.normalizeParameters(
@@ -90,9 +90,7 @@ export default Component.extend({
       let value = propertyVal.value || propertyVal || '';
       const description = propertyVal.description || '';
       // If no default value is found, fill with build parameter value
-      const defaultPropertyVal = defaultParameters[propertyName]
-        ? defaultParameters[propertyName]
-        : value;
+      const defaultPropertyVal = defaultParameters[propertyName] ? defaultParameters[propertyName] : value;
       const defaultValue = defaultPropertyVal.value || defaultPropertyVal || value;
 
       normalizedParameters.push({
@@ -113,25 +111,25 @@ export default Component.extend({
   },
 
   /**
-   * onSave action must be override
-   * @return
-   */
+     * onSave action must be override
+     * @return
+     */
   onSave() {
     throw new Error('Not implemented');
   },
 
   /**
-   * onCancel action must be override
-   * @return
-   */
+     * onCancel action must be override
+     * @return
+     */
   onCancel() {
     throw new Error('Not implemented');
   },
 
   /**
-   * onClose action is optional that will be run at the end of actions
-   * @return
-   */
+     * onClose action is optional that will be run at the end of actions
+     * @return
+     */
   onClose() {
     throw new Error('Not implemented');
   },
@@ -152,10 +150,10 @@ export default Component.extend({
     },
 
     /**
-     * This action is called when clicking on the submit button or form submission
-     * @param parameterizedModel
-     * @return {[type]} [description]
-     */
+         * This action is called when clicking on the submit button or form submission
+         * @param parameterizedModel
+         * @return {[type]} [description]
+         */
     onSave() {
       this.get('onSave')(this.parameterizedModel);
       if (this.onClose) {

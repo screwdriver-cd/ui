@@ -14,13 +14,13 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
   /** Just to override the assertion from `DataAdapterMixin` */
   authorize() {},
   /**
-   * Add cors support to all ajax calls
-   * @method ajax
-   * @param  {String} url    the url for the calls
-   * @param  {String} method the type of call eg. GET POST
-   * @param  {Object} hash   configuration object for the call
-   * @return {Promise}
-   */
+     * Add cors support to all ajax calls
+     * @method ajax
+     * @param  {String} url    the url for the calls
+     * @param  {String} method the type of call eg. GET POST
+     * @param  {Object} hash   configuration object for the call
+     * @return {Promise}
+     */
   ajax(url, method, hash) {
     const finalHash = hash || {};
 
@@ -37,14 +37,14 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
   },
 
   /**
-   * Interface for adding content to a payload before handleResponse is complete
-   * Ideally, this could be handled by a model specific adapter or serializer, but Ember doesn't use
-   * the correct [foo] adapter when making calls to /pipeline/:id/foo
-   * @method decoratePayload
-   * @param  {String}   key       Descriptor of model name
-   * @param  {Object}   payload   Raw response object
-   * @private
-   */
+     * Interface for adding content to a payload before handleResponse is complete
+     * Ideally, this could be handled by a model specific adapter or serializer, but Ember doesn't use
+     * the correct [foo] adapter when making calls to /pipeline/:id/foo
+     * @method decoratePayload
+     * @param  {String}   key       Descriptor of model name
+     * @param  {Object}   payload   Raw response object
+     * @private
+     */
   decoratePayload(key, payload) {
     if (Array.isArray(payload[key])) {
       payload[key].map(o => this.insertLink(key, o));
@@ -54,12 +54,12 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
   },
 
   /**
-   * Insert links configuration into responses for child data. Modifies object in place.
-   * @method insertLink
-   * @param  {String}   key   Descriptor of model name
-   * @param  {Object}   [o]   Response object for model
-   * @private
-   */
+     * Insert links configuration into responses for child data. Modifies object in place.
+     * @method insertLink
+     * @param  {String}   key   Descriptor of model name
+     * @param  {Object}   [o]   Response object for model
+     * @private
+     */
   insertLink(key, o) {
     if (!o) {
       return;
@@ -86,15 +86,15 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
   },
 
   /**
-   * Overriding default adapter because our API doesn't provide model names around request data
-   * https://github.com/emberjs/data/blob/v2.7.0/addon/adapters/rest.js#L883
-   * @method handleResponse
-   * @param  {Number}       status      response status
-   * @param  {Object}       headers     response headers
-   * @param  {Object}       payload     response payload
-   * @param  {Object}       requestData original request info
-   * @return {Object | DS.AdapterError} response
-   */
+     * Overriding default adapter because our API doesn't provide model names around request data
+     * https://github.com/emberjs/data/blob/v2.7.0/addon/adapters/rest.js#L883
+     * @method handleResponse
+     * @param  {Number}       status      response status
+     * @param  {Object}       headers     response headers
+     * @param  {Object}       payload     response payload
+     * @param  {Object}       requestData original request info
+     * @return {Object | DS.AdapterError} response
+     */
   handleResponse(status, headers, payload, requestData) {
     // handle generically when there is an error key in the payload
     // Convert our errors to JSONAPI format [required in ember-data 2.13]
@@ -168,13 +168,13 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
     return this._super(status, headers, data, requestData);
   },
   /**
-   * Overriding default adapter because pipeline token's endpoint is differnt
-   * from user api token.
-   * @method urlForFindAll
-   * @param  {String}      modelName
-   * @param  {Object}      snapshot
-   * @return {String}      url
-   */
+     * Overriding default adapter because pipeline token's endpoint is differnt
+     * from user api token.
+     * @method urlForFindAll
+     * @param  {String}      modelName
+     * @param  {Object}      snapshot
+     * @return {String}      url
+     */
   urlForFindAll(modelName, snapshot) {
     if (modelName !== 'token' || snapshot.adapterOptions === undefined) {
       return this._super(modelName, snapshot);
@@ -182,17 +182,17 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
 
     return (
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`
+            `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`
     );
   },
   /**
-   * Overriding default adapter because pipeline token's endpoint is differnt
-   * from user api token.
-   * @method urlForCreateRecord
-   * @param  {String}      modelName
-   * @param  {Object}      snapshot
-   * @return {String}      url
-   */
+     * Overriding default adapter because pipeline token's endpoint is differnt
+     * from user api token.
+     * @method urlForCreateRecord
+     * @param  {String}      modelName
+     * @param  {Object}      snapshot
+     * @return {String}      url
+     */
   urlForCreateRecord(modelName, snapshot) {
     if (modelName !== 'token' || snapshot.adapterOptions === undefined) {
       return this._super(modelName, snapshot);
@@ -200,18 +200,18 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
 
     return (
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`
+            `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`
     );
   },
   /**
-   * Overriding default adapter because pipeline token's endpoint is differnt
-   * from user api token.
-   * @method urlForUpdateRecord
-   * @param  {String}      id
-   * @param  {String}      modelName
-   * @param  {Object}      snapshot
-   * @return {String}      url
-   */
+     * Overriding default adapter because pipeline token's endpoint is differnt
+     * from user api token.
+     * @method urlForUpdateRecord
+     * @param  {String}      id
+     * @param  {String}      modelName
+     * @param  {Object}      snapshot
+     * @return {String}      url
+     */
   urlForUpdateRecord(id, modelName, snapshot) {
     if (modelName !== 'token' || snapshot.adapterOptions === undefined) {
       return this._super(id, modelName, snapshot);
@@ -219,18 +219,18 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
 
     return (
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`
+            `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`
     );
   },
   /**
-   * Overriding default adapter because pipeline token's endpoint is differnt
-   * from user api token.
-   * @method urlForDeleteRecord
-   * @param  {String}      id
-   * @param  {String}      modelName
-   * @param  {Object}      snapshot
-   * @return {String}      url
-   */
+     * Overriding default adapter because pipeline token's endpoint is differnt
+     * from user api token.
+     * @method urlForDeleteRecord
+     * @param  {String}      id
+     * @param  {String}      modelName
+     * @param  {Object}      snapshot
+     * @return {String}      url
+     */
   urlForDeleteRecord(id, modelName, snapshot) {
     if (modelName !== 'token' || snapshot.adapterOptions.pipelineId === undefined) {
       return this._super(id, modelName, snapshot);
@@ -238,16 +238,16 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
 
     return (
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`
+            `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`
     );
   },
   /**
-   * Overriding default adapter in order to pass pagination query params to
-   * the pipeline events api.
-   * @param  {Object} query
-   * @param  {String} modelName
-   * @return {String} url
-   */
+     * Overriding default adapter in order to pass pagination query params to
+     * the pipeline events api.
+     * @param  {Object} query
+     * @param  {String} modelName
+     * @return {String} url
+     */
   urlForQuery(query, modelName) {
     if (modelName === 'event' || modelName === 'metric') {
       const { pipelineId, jobId } = query;

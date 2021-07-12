@@ -17,9 +17,7 @@ export default Component.extend({
       groupsArray.forEach(arr =>
         arr.sort((a, b) => moment(b.createTime).valueOf() - moment(a.createTime).valueOf())
       );
-      groupsArray.sort(
-        (a, b) => moment(b[0].createTime).valueOf() - moment(a[0].createTime).valueOf()
-      );
+      groupsArray.sort((a, b) => moment(b[0].createTime).valueOf() - moment(a[0].createTime).valueOf());
 
       return groupsArray;
     }

@@ -15,17 +15,8 @@ module('Integration | Component | workflow graph d3', function(hooks) {
 
   test('it renders nodes and edges when a graph is supplied', async function(assert) {
     this.set('workflowGraph', {
-      nodes: [
-        { name: '~pr' },
-        { name: '~commit' },
-        { name: 'main' },
-        { name: 'foo', displayName: 'bar' }
-      ],
-      edges: [
-        { src: '~pr', dest: 'main' },
-        { src: '~commit', dest: 'main' },
-        { src: 'main', dest: 'foo' }
-      ]
+      nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: 'foo', displayName: 'bar' }],
+      edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }, { src: 'main', dest: 'foo' }]
     });
     await render(hbs`{{workflow-graph-d3 workflowGraph=workflowGraph}}`);
 
@@ -38,17 +29,8 @@ module('Integration | Component | workflow graph d3', function(hooks) {
 
   test('it renders a complete graph with triggers when showDownstreamTriggers is true', async function(assert) {
     this.set('workflowGraph', {
-      nodes: [
-        { name: '~pr' },
-        { name: '~commit' },
-        { name: 'main' },
-        { name: 'foo', displayName: 'bar' }
-      ],
-      edges: [
-        { src: '~pr', dest: 'main' },
-        { src: '~commit', dest: 'main' },
-        { src: 'main', dest: 'foo' }
-      ]
+      nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: 'foo', displayName: 'bar' }],
+      edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }, { src: 'main', dest: 'foo' }]
     });
     this.set('completeWorkflowGraph', {
       nodes: [
@@ -99,9 +81,7 @@ module('Integration | Component | workflow graph d3', function(hooks) {
       { jobId: 2, id: 5, status: 'SUCCESS' },
       { jobId: 3, id: 6, status: 'FAILURE' }
     ]);
-    await render(
-      hbs`{{workflow-graph-d3 workflowGraph=workflowGraph builds=builds startFrom=startFrom}}`
-    );
+    await render(hbs`{{workflow-graph-d3 workflowGraph=workflowGraph builds=builds startFrom=startFrom}}`);
 
     const el = this.element;
 
@@ -132,13 +112,8 @@ module('Integration | Component | workflow graph d3', function(hooks) {
       ]
     });
     this.set('startFrom', 'A');
-    this.set('builds', [
-      { jobId: 2, id: 5, status: 'SUCCESS' },
-      { jobId: 3, id: 6, status: 'FAILURE' }
-    ]);
-    await render(
-      hbs`{{workflow-graph-d3 workflowGraph=workflowGraph builds=builds startFrom=startFrom}}`
-    );
+    this.set('builds', [{ jobId: 2, id: 5, status: 'SUCCESS' }, { jobId: 3, id: 6, status: 'FAILURE' }]);
+    await render(hbs`{{workflow-graph-d3 workflowGraph=workflowGraph builds=builds startFrom=startFrom}}`);
 
     const el = this.element;
 
@@ -169,10 +144,7 @@ module('Integration | Component | workflow graph d3', function(hooks) {
       ]
     });
     this.set('startFrom', 'A');
-    this.set('builds', [
-      { jobId: 2, id: 5, status: 'SUCCESS' },
-      { jobId: 3, id: 6, status: 'FAILURE' }
-    ]);
+    this.set('builds', [{ jobId: 2, id: 5, status: 'SUCCESS' }, { jobId: 3, id: 6, status: 'FAILURE' }]);
     await render(hbs`{{workflow-graph-d3
           workflowGraph=workflowGraph
           builds=builds

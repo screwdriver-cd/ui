@@ -11,8 +11,6 @@ module('Integration | Component | artifact-preview', function(hooks) {
     // Handle any actions with this.set('myAction', function(val) { ... });
 
     await render(hbs`{{artifact-preview}}`);
-    assert
-      .dom('iframe')
-      .includesText('Alternative content for browsers which do not support iframe');
+    assert.dom('iframe').includesText('Alternative content for browsers which do not support iframe');
   });
 });

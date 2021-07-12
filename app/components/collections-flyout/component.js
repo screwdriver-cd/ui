@@ -10,10 +10,7 @@ export default Component.extend({
   showModal: false,
   collections: computed('store', {
     get() {
-      if (
-        !get(this, 'session.isAuthenticated') ||
-        get(this, 'session.data.authenticated.isGuest')
-      ) {
+      if (!get(this, 'session.isAuthenticated') || get(this, 'session.data.authenticated.isGuest')) {
         return [];
       }
       const collections = this.store.peekAll('collection');
@@ -45,15 +42,15 @@ export default Component.extend({
       this.set('showModal', true);
     },
     /**
-     * Action to cancel the deletion of a collection
-     */
+         * Action to cancel the deletion of a collection
+         */
     cancelDeletingCollection() {
       this.set('collectionToDelete', null);
     },
     /**
-     * Action to delete a collection
-     * @param {collection} collection - the collection to delete
-     */
+         * Action to delete a collection
+         * @param {collection} collection - the collection to delete
+         */
     deleteCollection(collection) {
       const c = this.store.peekRecord('collection', collection.id);
 
@@ -72,9 +69,9 @@ export default Component.extend({
       });
     },
     /**
-     * Action to set a collection to be deleted
-     * @param {collection} collection - the collection to set for deletion
-     */
+         * Action to set a collection to be deleted
+         * @param {collection} collection - the collection to set for deletion
+         */
     setCollectionToDelete(collection) {
       this.set('collectionToDelete', collection);
     }

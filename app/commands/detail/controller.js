@@ -61,9 +61,7 @@ export default Controller.extend({
     updateTrust(namespace, name, toTrust) {
       return (
         this.isAdmin &&
-        this.command
-          .updateTrust(namespace, name, toTrust)
-          .catch(err => this.set('errorMessage', err))
+                this.command.updateTrust(namespace, name, toTrust).catch(err => this.set('errorMessage', err))
       );
     }
   }

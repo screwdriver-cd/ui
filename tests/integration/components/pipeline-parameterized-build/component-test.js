@@ -32,11 +32,7 @@ module('Integration | Component | pipeline-parameterized-build', function(hooks)
       },
       checkParameters: parameterizedModel => {
         assert.ok(typeof parameterizedModel === 'object', 'parameterizedModel is object');
-        assert.equal(
-          2,
-          Object.keys(parameterizedModel).length,
-          'parameterizedModel has length of 2'
-        );
+        assert.equal(2, Object.keys(parameterizedModel).length, 'parameterizedModel has length of 2');
       }
     });
 
@@ -119,9 +115,7 @@ module('Integration | Component | pipeline-parameterized-build', function(hooks)
       buildParameters=buildParameters
       showSubmitButton=showSubmitButton}}`);
     assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
-    assert
-      .dom('.fa-exclamation-triangle')
-      .exists({ count: 2 }, 'There are are 2 default value warnings');
+    assert.dom('.fa-exclamation-triangle').exists({ count: 2 }, 'There are are 2 default value warnings');
     assert.dom('.ember-basic-dropdown').exists({ count: 1 }, 'There is 1 dropdown list');
     assert.dom('.form-control').exists({ count: 2 }, 'There is 2 input field');
     assert.dom('button[type=submit]').exists({ count: 1 }, 'There is 1 submit button');

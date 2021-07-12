@@ -25,16 +25,13 @@ function getData(token, decodedToken) {
     scmContext = scmContext || 'guest';
   }
 
-  return Object.assign(
-    {},
-    {
-      username,
-      scope,
-      scmContext,
-      isGuest,
-      token
-    }
-  );
+  return {
+        username,
+        scope,
+    scmContext,
+        isGuest,
+    token
+    };
 }
 
 /**
@@ -53,7 +50,7 @@ function fetchToken() {
       }
     })
       .done(jwt =>
-        // Add some data from the JWT to the session data
+      // Add some data from the JWT to the session data
         resolve(getData(jwt.token, decoder(jwt.token)))
       )
       .fail(() => reject('Could not get a token'));
@@ -64,11 +61,11 @@ export default Base.extend({
   scmService: service('scm'),
 
   /**
-   * Restore the state of a session with data already in the session store
-   * @method restore
-   * @param  {Object}  data    Data in the session store
-   * @return {Promise}
-   */
+     * Restore the state of a session with data already in the session store
+     * @method restore
+     * @param  {Object}  data    Data in the session store
+     * @return {Promise}
+     */
   restore(data) {
     return new EmberPromise((resolve, reject) => {
       const jwt = get(data, 'token');
@@ -91,11 +88,11 @@ export default Base.extend({
   },
 
   /**
-   * Authenticates with resource
-   * @method authenticate
-   * @param  {String}  [scmContext]    scmContext of the user
-   * @return {Promise}
-   */
+     * Authenticates with resource
+     * @method authenticate
+     * @param  {String}  [scmContext]    scmContext of the user
+     * @return {Promise}
+     */
   authenticate(scmContext) {
     const scm = this.scmService;
 
@@ -108,11 +105,7 @@ export default Base.extend({
       url.push('web');
 
       // Open a window for github auth flow
-      const win = window.open(
-        url.join('/'),
-        'SDAuth',
-        'width=1024,height=768,resizable,alwaysRaised'
-      );
+      const win = window.open(url.join('/'), 'SDAuth', 'width=1024,height=768,resizable,alwaysRaised');
 
       // check to see if the window has closed
       const interval = setInterval(() => {
@@ -131,10 +124,10 @@ export default Base.extend({
   },
 
   /**
-   * Log the user out from the resource
-   * @method invalidate
-   * @return {Promise}
-   */
+     * Log the user out from the resource
+     * @method invalidate
+     * @return {Promise}
+     */
   invalidate() {
     return new EmberPromise(resolve => {
       $.ajax({

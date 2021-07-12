@@ -44,11 +44,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
         { id: 1, name: 'main', displayName: 'myname' },
         { id: 2, name: 'A' }
       ],
-      edges: [
-        { src: '~pr', dest: 'main' },
-        { src: '~commit', dest: 'main' },
-        { src: 'main', dest: 'A' }
-      ]
+      edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }, { src: 'main', dest: 'A' }]
     };
 
     this.set('jobsMock', jobs);
@@ -116,11 +112,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
         { id: 1, name: 'main', displayName: 'myname' },
         { id: 2, name: 'A' }
       ],
-      edges: [
-        { src: '~pr', dest: 'main' },
-        { src: '~commit', dest: 'main' },
-        { src: 'main', dest: 'A' }
-      ]
+      edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }, { src: 'main', dest: 'A' }]
     };
 
     this.set('jobsMock', jobs);

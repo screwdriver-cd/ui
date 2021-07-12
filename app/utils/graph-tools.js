@@ -187,10 +187,8 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   // deep clone
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const { nodes } = graph;
-  const buildsAvailable =
-    (Array.isArray(builds) || builds instanceof DS.PromiseArray) && get(builds, 'length');
-  const jobsAvailable =
-    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) && get(jobs, 'length');
+  const buildsAvailable = (Array.isArray(builds) || builds instanceof DS.PromiseArray) && get(builds, 'length');
+  const jobsAvailable = (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) && get(jobs, 'length');
   const { edges } = graph;
 
   let y = [0]; // accumulator for column heights
@@ -238,9 +236,9 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
 
       if (annotations) {
         n.manualStartDisabled =
-          'screwdriver.cd/manualStartEnabled' in annotations
-            ? !annotations['screwdriver.cd/manualStartEnabled']
-            : false;
+                    'screwdriver.cd/manualStartEnabled' in annotations
+                      ? !annotations['screwdriver.cd/manualStartEnabled']
+                      : false;
       }
     }
 
