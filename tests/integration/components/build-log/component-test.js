@@ -98,12 +98,8 @@ module('Integration | Component | build log', function(hooks) {
     this.set('step', 'banana');
 
     return settled().then(() => {
-      assert
-        .dom('.line:first-child')
-        .hasText(`${moment(startTime).format('HH:mm:ss')} ${startTime}`);
-      assert
-        .dom('.line:last-child')
-        .hasText(`${moment(startTime + 99).format('HH:mm:ss')} ${startTime + 99}`);
+      assert.dom('.line:first-child').hasText(`${moment(startTime).format('HH:mm:ss')} ${startTime}`);
+      assert.dom('.line:last-child').hasText(`${moment(startTime + 99).format('HH:mm:ss')} ${startTime + 99}`);
     });
   });
 

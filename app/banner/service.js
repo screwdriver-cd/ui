@@ -9,10 +9,10 @@ export default Service.extend({
   session: service(),
 
   /**
-   * Calls the banner api service to fetch active banners
-   * @method fetchBanners
-   * @return {Promise}        Resolves to a list of banner structures
-   */
+     * Calls the banner api service to fetch active banners
+     * @method fetchBanners
+     * @return {Promise}        Resolves to a list of banner structures
+     */
   fetchBanners() {
     return new EmberPromise(resolve => {
       // Fetch the banners directly from the API

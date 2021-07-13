@@ -54,7 +54,7 @@ export default Component.extend({
     },
 
     handleJstreeEventDidRedraw() {
-      const artifactPath = this.getWithDefault('selectedArtifact', '');
+      const artifactPath = this.selectedArtifact === undefined ? '' : this.selectedArtifact;
       const paths = artifactPath.split('/');
       const jstree = this.jstreeActionReceiver.target.treeObject.jstree(true);
 

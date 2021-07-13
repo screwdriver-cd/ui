@@ -15,7 +15,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
   setupController(controller, model) {
     this._super(controller, model);
     controller.set('activeTab', 'events');
-    this.get('pipelineService').setBuildsLink('pipeline.jobs.index');
+    this.pipelineService.setBuildsLink('pipeline.jobs.index');
   },
   model() {
     const pipelineJobsIndexController = this.controllerFor('pipeline.jobs.index');

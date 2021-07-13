@@ -32,9 +32,7 @@ module('Integration | Component | user link', function(hooks) {
 
     this.set('userMock', userMock);
 
-    await render(
-      hbs`{{user-link user=userMock causeMessage="Automatically started by scheduler"}}`
-    );
+    await render(hbs`{{user-link user=userMock causeMessage="Automatically started by scheduler"}}`);
 
     assert.equal(find('a').title, 'Automatically started by scheduler');
     assert.ok(find('img').src.endsWith('/favicon.ico'));

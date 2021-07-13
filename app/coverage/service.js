@@ -7,12 +7,12 @@ import ENV from 'screwdriver-ui/config/environment';
 export default Service.extend({
   session: service(),
   /**
-   * @param {Object} config
-   * @param {Number} config.buildId     Build ID
-   * @param {Number} config.jobId       Job ID
-   * @param {String} config.startTime   Start time of the coverage step
-   * @param {String} config.endTime     End time of the coverage step
-   */
+     * @param {Object} config
+     * @param {Number} config.buildId     Build ID
+     * @param {Number} config.jobId       Job ID
+     * @param {String} config.startTime   Start time of the coverage step
+     * @param {String} config.endTime     End time of the coverage step
+     */
   getCoverageInfo(config) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/coverage/info`;
     const ajaxConfig = {

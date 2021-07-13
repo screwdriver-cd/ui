@@ -26,9 +26,6 @@ module('Unit | Route | pipeline/job-latest-build/steps', function(hooks) {
 
     assert.ok(transitionStub.calledOnce, 'transitionTo was called once');
     assert.ok(paramStub.calledOnce, 'paramsFor was called once');
-    assert.ok(
-      transitionStub.calledWithExactly('pipeline.build.step', 1, 2, 123),
-      'transition to build step'
-    );
+    assert.ok(transitionStub.calledWithExactly('pipeline.build.step', 1, 2, 123), 'transition to build step');
   });
 });

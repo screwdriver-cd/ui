@@ -135,9 +135,7 @@ module('Integration | Component | metrics/chart', function(hooks) {
     assert.dom('.pull-right').hasText('Build Count', 'has right legend');
     assert.dom('.reset-button').exists({ count: 1 });
     assert.dom('.c3-text').exists({ count: 1 });
-    assert
-      .dom('g.c3-chart-bar.c3-target.c3-target-duration')
-      .exists({ count: 1 }, 'has 1 downtime job');
+    assert.dom('g.c3-chart-bar.c3-target.c3-target-duration').exists({ count: 1 }, 'has 1 downtime job');
     assert.dom('.c3-shape.c3-circle').exists({ count: 19 }, 'has 19 builds');
   });
 });

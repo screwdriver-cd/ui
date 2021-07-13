@@ -45,11 +45,7 @@ module('Unit | Service | shuttle', function(hooks) {
       })
       .then(result => {
         assert.equal(result.payload.length, 3, 'should have 3 logs');
-        assert.equal(
-          result.jqXHR.getResponseHeader('x-more-data'),
-          'false',
-          'no more logs, logs completed'
-        );
+        assert.equal(result.jqXHR.getResponseHeader('x-more-data'), 'false', 'no more logs, logs completed');
       });
   });
 

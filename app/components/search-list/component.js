@@ -14,13 +14,13 @@ export default Component.extend({
   isEmpty: empty('filteredPipelines'),
   showMore: computed('moreToShow', 'filteredPipelines', {
     get() {
-      const pipelines = get(this, 'filteredPipelines');
+      const pipelines = this.filteredPipelines;
 
       if (Array.isArray(pipelines) && pipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
         return false;
       }
 
-      return get(this, 'moreToShow');
+      return this.moreToShow;
     }
   }),
   filteredPipelines: computed('pipelines', {
@@ -44,9 +44,9 @@ export default Component.extend({
     set(this, 'pipelinesPage', 1);
   },
   /**
-   * Reset show more when component is destroyed
-   * @method willDestroyElement
-   */
+     * Reset show more when component is destroyed
+     * @method willDestroyElement
+     */
   willDestroyElement() {
     this._super(...arguments);
 
@@ -55,15 +55,13 @@ export default Component.extend({
   },
   actions: {
     moreClick() {
-      const pipelinesPage = get(this, 'pipelinesPage') + 1;
-      const fn = get(this, 'updatePipelines');
+      const pipelinesPage = this.pipelinesPage + 1;
+      const fn = this.updatePipelines;
 
       set(this, 'pipelinesPage', pipelinesPage);
 
       if (typeof fn === 'function') {
-        fn({ page: pipelinesPage, search: get(this, 'query') }).catch(error =>
-          this.set('errorMessage', error)
-        );
+        fn({ page: pipelinesPage, search: this.query }).catch(error => this.set('errorMessage', error));
       }
     },
     openModal() {
@@ -84,10 +82,7 @@ export default Component.extend({
           );
         })
         .catch(() => {
-          this.set(
-            'addCollectionError',
-            `Could not add Pipeline to Collection ${collection.get('name')}`
-          );
+          this.set('addCollectionError', `Could not add Pipeline to Collection ${collection.get('name')}`);
           this.set('addCollectionSuccess', null);
         });
     }

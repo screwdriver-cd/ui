@@ -5,11 +5,9 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   pipelineService: service('pipeline'),
-  buildsLink: computed('pipelineService.buildsLink', function getBuildLink() {
-    return this.get('pipelineService.buildsLink');
-  }),
+  buildsLink: computed.reads('pipelineService.buildsLink'),
   classNames: ['row'],
-  pipelineDescription: computed('pipeline', {
+  pipelineDescription: computed('pipeline.annotations', {
     get() {
       let description;
 

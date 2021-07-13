@@ -42,7 +42,7 @@ export default DS.Model.extend({
   prParentJobId: DS.attr('string'),
   // } for pr job only
   permutations: DS.attr(),
-  annotations: computed('permutations.[]', {
+  annotations: computed('permutations.[]', 'permutations[0].annotations', {
     get() {
       return get(this, 'permutations[0].annotations') || {};
     }

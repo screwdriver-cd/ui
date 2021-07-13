@@ -127,10 +127,7 @@ module('Unit | Service | build logs', function(hooks) {
 
     const [request] = server.handledRequests;
 
-    assert.equal(
-      request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
-    );
+    assert.equal(request.url, 'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending');
   });
 
   test('it makes a call to logs api and logs return with more remaining', async function(assert) {
@@ -162,10 +159,7 @@ module('Unit | Service | build logs', function(hooks) {
 
     const [request] = server.handledRequests;
 
-    assert.equal(
-      request.url,
-      'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
-    );
+    assert.equal(request.url, 'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending');
   });
 
   test('it handles log api failure by treating it as there are more logs', async function(assert) {
@@ -237,16 +231,10 @@ module('Unit | Service | build logs', function(hooks) {
 
     assert.ok(url);
     assert.equal(service.getCache(serviceConfig.buildId, serviceConfig.stepName, 'blobUrl'), url);
-    assert.equal(
-      service.get('blobKeys')[0].toString(),
-      [serviceConfig.buildId, serviceConfig.stepName].toString()
-    );
+    assert.equal(service.get('blobKeys')[0].toString(), [serviceConfig.buildId, serviceConfig.stepName].toString());
 
     service.revokeLogBlobUrls();
     assert.equal(service.get('blobKeys').length, 0);
-    assert.equal(
-      service.getCache(serviceConfig.buildId, serviceConfig.stepName, 'blobUrl'),
-      undefined
-    );
+    assert.equal(service.getCache(serviceConfig.buildId, serviceConfig.stepName, 'blobUrl'), undefined);
   });
 });

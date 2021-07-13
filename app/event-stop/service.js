@@ -8,11 +8,11 @@ export default Service.extend({
   session: service('session'),
 
   /**
-   * Stop all running builds or builds about to run in a single event
-   * @method stopBuilds
-   * @param   {Number}  eventId    ID of event
-   * @return  {Promise}            Resolve nothing if success otherwise reject with error message
-   */
+     * Stop all running builds or builds about to run in a single event
+     * @method stopBuilds
+     * @param   {Number}  eventId    ID of event
+     * @return  {Promise}            Resolve nothing if success otherwise reject with error message
+     */
   stopBuilds(eventId) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/events/${eventId}/stop`;
 

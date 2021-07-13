@@ -33,7 +33,7 @@ export default Component.extend({
 
     this.set('inProgress', inProgress);
   }),
-  sortOrder: computed('inProgress', {
+  sortOrder: computed('inProgress', 'justFinished', {
     get() {
       return this.inProgress || this.justFinished ? 'ascending' : 'descending';
     }
@@ -60,139 +60,149 @@ export default Component.extend({
       ? Math.ceil(itemSize / ENV.APP.MAX_LOG_LINES)
       : +(itemSize < ENV.APP.MAX_LOG_LINES || itemSize % ENV.APP.MAX_LOG_LINES < 100) + 1;
   },
-  logs: computed('stepStartTime', 'isFetching', 'buildId', 'stepName', 'buildStatus', {
-    get() {
-      const { buildId, stepName, isFetching, buildStats, buildStatus } = this;
-      const logs = this.logService.getCache(buildId, stepName, 'logs');
-      const started = !!this.stepStartTime;
+  logs: computed(
+        'buildId',
+        'buildStartTime',
+        'buildStatus',
+        'isFetching',
+        'justFinished',
+        'stepEndTime',
+        'stepName',
+        'stepStartTime',
+        {
+            get() {
+                const { buildId, stepName, isFetching, buildStats, buildStatus } = this;
+                const logs = this.logService.getCache(buildId, stepName, 'logs');
+                const started = !!this.stepStartTime;
 
-      if (!stepName) {
-        return [{ m: 'Click a step to see logs' }];
-      }
+                if (!stepName) {
+                    return [{ m: 'Click a step to see logs' }];
+                }
 
-      // Generate init step logs using build stats
-      if (stepName === 'sd-setup-init') {
-        const initLogs = [];
+                // Generate init step logs using build stats
+        if (stepName === 'sd-setup-init') {
+                    const initLogs = [];
 
-        initLogs.push({
-          t: new Date(this.stepStartTime).getTime(),
-          m: 'Build created.',
-          n: 0
-        });
-
-        const currentBuild = this.store.peekRecord('build', buildId);
-        const parameters = getWithDefault(currentBuild || {}, 'meta.parameters', {});
-
-        if (currentBuild && Object.keys(parameters).length > 0) {
           initLogs.push({
-            t: new Date(this.stepEndTime).getTime(),
-            m: `Build parameters: ${JSON.stringify(parameters, null, 2)}`,
-            n: 1
-          });
-        }
+                        t: new Date(this.stepStartTime).getTime(),
+                        m: 'Build created.',
+                        n: 0
+                    });
 
-        if (buildStatus === 'FROZEN') {
-          initLogs.push({
-            t: new Date(this.stepEndTime).getTime(),
-            m: 'Build frozen and removed from the queue.',
-            n: 1
-          });
+                    const currentBuild = this.store.peekRecord('build', buildId);
+                    const parameters = getWithDefault(currentBuild || {}, 'meta.parameters', {});
 
-          return initLogs;
-        }
+                    if (currentBuild && Object.keys(parameters).length > 0) {
+                        initLogs.push({
+                            t: new Date(this.stepEndTime).getTime(),
+                            m: `Build parameters: ${JSON.stringify(parameters, null, 2)}`,
+                            n: 1
+                        });
+          }
 
-        if (buildStats.queueEnterTime) {
-          initLogs.push({
-            t: new Date(buildStats.queueEnterTime).getTime(),
-            m: 'Build enqueued.',
-            n: 1
-          });
-
-          if (buildStatus === 'COLLAPSED') {
+                    if (buildStatus === 'FROZEN') {
             initLogs.push({
-              t: new Date(this.stepEndTime).getTime(),
-              m: 'Build collapsed and removed from the queue.',
+                            t: new Date(this.stepEndTime).getTime(),
+                            m: 'Build frozen and removed from the queue.',
               n: 1
-            });
+                        });
 
-            return initLogs;
-          }
+                        return initLogs;
+                    }
 
-          if (buildStats.blockedStartTime) {
+                    if (buildStats.queueEnterTime) {
             initLogs.push({
-              t: new Date(buildStats.blockedStartTime).getTime(),
-              m: 'Build blocked, putting back into queue.',
+                            t: new Date(buildStats.queueEnterTime).getTime(),
+                            m: 'Build enqueued.',
               n: 1
-            });
-          }
+                        });
 
-          if (buildStats.hostname && buildStats.imagePullStartTime) {
-            initLogs.push({
-              t: new Date(buildStats.imagePullStartTime).getTime(),
-              m: `Build scheduled on ${buildStats.hostname}. Starting image pull.`,
-              n: 2
-            });
-          }
+            if (buildStatus === 'COLLAPSED') {
+                            initLogs.push({
+                                t: new Date(this.stepEndTime).getTime(),
+                                m: 'Build collapsed and removed from the queue.',
+                                n: 1
+                            });
 
-          if (this.stepEndTime) {
-            let msg = 'Image pull completed. Build init completed.';
+                            return initLogs;
+                        }
 
-            // If build init succeeded and build starts, there should be buildStartTime
-            if (!this.buildStartTime) {
-              msg = 'Build init failed.';
+                        if (buildStats.blockedStartTime) {
+                            initLogs.push({
+                                t: new Date(buildStats.blockedStartTime).getTime(),
+                m: 'Build blocked, putting back into queue.',
+                                n: 1
+              });
+                        }
+
+                        if (buildStats.hostname && buildStats.imagePullStartTime) {
+                            initLogs.push({
+                                t: new Date(buildStats.imagePullStartTime).getTime(),
+                                m: `Build scheduled on ${buildStats.hostname}. Starting image pull.`,
+                n: 2
+                            });
             }
 
-            initLogs.push({
-              t: new Date(this.stepEndTime).getTime(),
-              m: msg,
-              n: 3
-            });
+                        if (this.stepEndTime) {
+                            let msg = 'Image pull completed. Build init completed.';
 
-            set(this, 'totalLine', 4);
+                            // If build init succeeded and build starts, there should be buildStartTime
+                            if (!this.buildStartTime) {
+                                msg = 'Build init failed.';
+                            }
+
+              initLogs.push({
+                                t: new Date(this.stepEndTime).getTime(),
+                m: msg,
+                                n: 3
+                            });
+
+                            set(this, 'totalLine', 4);
+                        }
+
+                        return initLogs;
           }
 
-          return initLogs;
+                    // If there is no build stat, update totalLine when step ends
+                    if (this.stepEndTime) {
+            initLogs.push({
+                            t: new Date(this.stepEndTime).getTime(),
+              m: 'Build init done.',
+                            n: 1
+                        });
+
+                        set(this, 'totalLine', 2);
+                    }
+
+                    return initLogs;
         }
 
-        // If there is no build stat, update totalLine when step ends
-        if (this.stepEndTime) {
-          initLogs.push({
-            t: new Date(this.stepEndTime).getTime(),
-            m: 'Build init done.',
-            n: 1
-          });
+                if (!logs) {
+                    if (!isFetching && started) {
+            this.getLogs();
+                    }
 
-          set(this, 'totalLine', 2);
+                    return [{ m: `Loading logs for step ${stepName}...` }];
         }
 
-        return initLogs;
-      }
-
-      if (!logs) {
-        if (!isFetching && started) {
-          this.getLogs();
+                if (this.justFinished) {
+                    // there were logs in the cache, fetch the last batch of logs
+          this.getLogs(true);
         }
 
-        return [{ m: `Loading logs for step ${stepName}...` }];
-      }
+                scheduleOnce('afterRender', this, 'scrollDown');
 
-      if (this.justFinished) {
-        // there were logs in the cache, fetch the last batch of logs
-        this.getLogs(true);
-      }
-
-      scheduleOnce('afterRender', this, 'scrollDown');
-
-      return logs;
-    }
-  }),
+                return logs;
+            }
+        }
+    ),
 
   /**
-   * Determines if log loading should occur
-   * - step must have a defined start time (it is, or has executed)
-   * - the step must have logs left to load
-   * @property {Boolean} shouldLoad
-   */
+     * Determines if log loading should occur
+     * - step must have a defined start time (it is, or has executed)
+     * - the step must have logs left to load
+     * @property {Boolean} shouldLoad
+     */
   shouldLoad: computed('isFetching', 'buildId', 'stepName', {
     get() {
       const name = this.stepName;
@@ -250,26 +260,26 @@ export default Component.extend({
   },
 
   /**
-   * Remove scroll listener when component is destroyed
-   * @method willDestroyElement
-   */
+     * Remove scroll listener when component is destroyed
+     * @method willDestroyElement
+     */
   willDestroyElement() {
     this._super(...arguments);
     this.logService.resetCache();
   },
 
   /**
-   * Scroll to the top of the page
-   * @method scrollTop
-   */
+     * Scroll to the top of the page
+     * @method scrollTop
+     */
   scrollTop() {
     this.element.querySelectorAll('.wrap')[0].scrollTop = 0;
   },
 
   /**
-   * Scroll to the bottom of the page
-   * @method scrollDown
-   */
+     * Scroll to the bottom of the page
+     * @method scrollDown
+     */
   scrollDown() {
     if (this.autoscroll) {
       const bottom = this.element.querySelector('.bottom').offsetTop;
@@ -280,9 +290,9 @@ export default Component.extend({
   },
 
   /**
-   * Scroll back to the last anchor point
-   * @method scrollStill
-   */
+     * Scroll back to the last anchor point
+     * @method scrollStill
+     */
   scrollStill() {
     const container = this.element.querySelectorAll('.wrap')[0];
 
@@ -294,18 +304,13 @@ export default Component.extend({
   },
 
   /**
-   * Fetch logs from log service
-   * @method getLogs
-   *
-   * @param {boolean} fetchMax
-   */
+     * Fetch logs from log service
+     * @method getLogs
+     *
+     * @param {boolean} fetchMax
+     */
   getLogs(fetchMax = false) {
-    if (
-      !this.get('isDestroyed') &&
-      !this.get('isDestroying') &&
-      !this.isFetching &&
-      this.shouldLoad
-    ) {
+    if (!this.isDestroyed && !this.isDestroying && !this.isFetching && this.shouldLoad) {
       const { buildId, stepName, totalLine } = this;
       const started = !!this.stepStartTime;
 
@@ -315,8 +320,7 @@ export default Component.extend({
         .fetchLogs({
           buildId,
           stepName,
-          logNumber:
-            this.logService.getCache(buildId, stepName, 'nextLine') || (totalLine || 1) - 1,
+          logNumber: this.logService.getCache(buildId, stepName, 'nextLine') || (totalLine || 1) - 1,
           pageSize: this.getPageSize(fetchMax),
           sortOrder: this.sortOrder,
           started
@@ -377,9 +381,9 @@ export default Component.extend({
 
       if (
         !this.inProgress &&
-        !this.isFetching &&
-        !this.logService.getCache(this.buildId, this.stepName, 'done') &&
-        container.scrollTop < (container.scrollHeight - this.lastScrollHeight) / 2
+                !this.isFetching &&
+                !this.logService.getCache(this.buildId, this.stepName, 'done') &&
+                container.scrollTop < (container.scrollHeight - this.lastScrollHeight) / 2
       ) {
         this.getLogs();
 
@@ -387,11 +391,7 @@ export default Component.extend({
       }
 
       // autoscroll when the bottom of the logs is roughly in view
-      set(
-        this,
-        'autoscroll',
-        this.element.querySelectorAll('.bottom')[0].getBoundingClientRect().top < 1500
-      );
+      set(this, 'autoscroll', this.element.querySelectorAll('.bottom')[0].getBoundingClientRect().top < 1500);
     },
     toggleTimeDisplay() {
       let index = timeTypes.indexOf(this.timeFormat);

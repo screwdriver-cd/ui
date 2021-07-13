@@ -107,9 +107,7 @@ module('Unit | Route | commands/detail', function(hooks) {
     });
   });
 
-  sinonTest('it asks for the list of commands for a given name and non-exist version', function(
-    assert
-  ) {
+  sinonTest('it asks for the list of commands for a given name and non-exist version', function(assert) {
     let route = this.owner.lookup('route:commands/detail');
     const stub = this.stub(route, 'transitionTo');
 
@@ -120,9 +118,7 @@ module('Unit | Route | commands/detail', function(hooks) {
     });
   });
 
-  sinonTest('it asks for the list of commands for a given name and non-exist tag', function(
-    assert
-  ) {
+  sinonTest('it asks for the list of commands for a given name and non-exist tag', function(assert) {
     let route = this.owner.lookup('route:commands/detail');
     const stub = this.stub(route, 'transitionTo');
 

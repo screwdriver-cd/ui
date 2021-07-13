@@ -8,11 +8,11 @@ export default Service.extend({
   session: service('session'),
 
   /**
-   * Get all downstream triggers for jobs in a pipeline
-   * @method getDownstreamTriggers
-   * @param   {Number}  pipelineId
-   * @return  {Promise}            Resolve nothing if success otherwise reject with error message
-   */
+     * Get all downstream triggers for jobs in a pipeline
+     * @method getDownstreamTriggers
+     * @param   {Number}  pipelineId
+     * @return  {Promise}            Resolve nothing if success otherwise reject with error message
+     */
   getDownstreamTriggers(pipelineId) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/triggers`;
 

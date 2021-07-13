@@ -297,11 +297,7 @@ export function model() {
             '7650a8e64acc96a5de83b42c2e2f6de6223b9f1c'
           ],
           status: ['SUCCESS', 'SUCCESS', 'SUCCESS'],
-          createTime: [
-            '2019-03-12T12:29:29.922Z',
-            '2019-03-13T22:23:18.712Z',
-            '2019-03-15T21:07:33.358Z'
-          ],
+          createTime: ['2019-03-12T12:29:29.922Z', '2019-03-13T22:23:18.712Z', '2019-03-15T21:07:33.358Z'],
           data: [
             {
               'sd-setup-init': 0.6333333333333333,

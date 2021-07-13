@@ -96,10 +96,7 @@ module('Unit | Service | build artifact', function(hooks) {
     p.then(data => {
       const [request] = server.handledRequests;
 
-      assert.equal(
-        request.url,
-        `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`
-      );
+      assert.equal(request.url, `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`);
       assert.deepEqual(data, parsedManifest);
     });
   });

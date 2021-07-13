@@ -77,9 +77,7 @@ module('Integration | Component | secret view', function(hooks) {
     assert.dom('h4').hasText('Are you sure?');
     assert
       .dom('div.modal-body')
-      .hasText(
-        "You're about to delete a secret TEST_SECRET. There might be existing jobs using this secret."
-      );
+      .hasText("You're about to delete a secret TEST_SECRET. There might be existing jobs using this secret.");
     assert.dom('button.btn-default').hasText('Cancel');
     assert.dom('button.btn-danger').hasText('Confirm');
   });
@@ -175,8 +173,8 @@ module('Integration | Component | secret view', function(hooks) {
         },
         save() {
           // update called
-          assert.equal(this.get('value'), 'banana');
-          assert.equal(this.get('allowInPR'), true);
+          assert.equal(this.value, 'banana');
+          assert.equal(this.allowInPR, true);
         }
       }).create({
         name: 'TEST_SECRET',

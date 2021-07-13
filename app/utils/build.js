@@ -5,10 +5,7 @@
  * @return {Boolean} true if build is active.
  */
 const isActiveBuild = (status, endTime) =>
-  status === 'QUEUED' ||
-  status === 'RUNNING' ||
-  status === 'BLOCKED' ||
-  (status === 'UNSTABLE' && !endTime);
+  status === 'QUEUED' || status === 'RUNNING' || status === 'BLOCKED' || (status === 'UNSTABLE' && !endTime);
 
 /**
  * Check if the current job is a PR job

@@ -77,12 +77,7 @@ const mockDefaultCollection = [
 ];
 
 const mockCollection = [
-  Object.assign({}, mockDefaultCollection[0], {
-    id: 2,
-    name: 'collection1',
-    description: 'description1',
-    type: 'normal'
-  })
+  { ...mockDefaultCollection[0], id: 2, name: 'collection1', description: 'description1', type: 'normal' }
 ];
 
 const mockEmptyDefaultCollection = [
@@ -92,18 +87,9 @@ const mockEmptyDefaultCollection = [
   })
 ];
 
-const mockEmptyCollection = [
-  Object.assign({}, mockCollection[0], {
-    pipelineIds: [],
-    pipelines: []
-  })
-];
+const mockEmptyCollection = [{ ...mockCollection[0], pipelineIds: [], pipelines: [] }];
 
-export const hasCollections = () => [
-  200,
-  { 'Content-Type': 'application/json' },
-  JSON.stringify(mockCollections)
-];
+export const hasCollections = () => [200, { 'Content-Type': 'application/json' }, JSON.stringify(mockCollections)];
 
 export const hasDefaultCollection = () => [
   200,
@@ -111,11 +97,7 @@ export const hasDefaultCollection = () => [
   JSON.stringify(mockDefaultCollection)
 ];
 
-export const hasCollection = () => [
-  200,
-  { 'Content-Type': 'application/json' },
-  JSON.stringify(mockCollection)
-];
+export const hasCollection = () => [200, { 'Content-Type': 'application/json' }, JSON.stringify(mockCollection)];
 
 export const hasEmptyDefaultCollection = () => [
   200,

@@ -12,8 +12,8 @@ export default Service.extend({
     return new EmberPromise((resolve, reject) => {
       $.ajax({
         url:
-          `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-          `/pipelines/${pipelineId}/tokens/${tokenId}/refresh`,
+                    `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
+                    `/pipelines/${pipelineId}/tokens/${tokenId}/refresh`,
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`

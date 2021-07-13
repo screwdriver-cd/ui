@@ -6,12 +6,12 @@ import ENV from 'screwdriver-ui/config/environment';
 export default Service.extend({
   session: service(),
   /**
-   * Calls the events api and filters based on type prs
-   * @method getPRevents
-   * @param  {String}  pipelineId           id of pipeline
-   * @param  {String}  eventPrUrl           url of PR
-   * @return {Promise}                      Resolves to prCommit
-   */
+     * Calls the events api and filters based on type prs
+     * @method getPRevents
+     * @param  {String}  pipelineId           id of pipeline
+     * @param  {String}  eventPrUrl           url of PR
+     * @return {Promise}                      Resolves to prCommit
+     */
   getPRevents(pipelineId, eventPrUrl, jobId) {
     const eventUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/events`;
     const buildUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/jobs/${jobId}/builds`;

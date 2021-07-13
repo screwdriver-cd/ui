@@ -24,11 +24,7 @@ module('Unit | Adapter | application', function(hooks) {
   test('it uses cors for ajax', function(assert) {
     assert.expect(3);
 
-    server.get('https://sd.cd/fake', () => [
-      200,
-      { 'content-type': 'application/json' },
-      '{"foo": "bar"}'
-    ]);
+    server.get('https://sd.cd/fake', () => [200, { 'content-type': 'application/json' }, '{"foo": "bar"}']);
 
     server.handledRequest = function(verb, path, request) {
       assert.equal(verb, 'GET');

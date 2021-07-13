@@ -1,8 +1,7 @@
 import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 
-const compare = (s1, s2) =>
-  (s1 || '').localeCompare(s2 || '', undefined, { numeric: true, sensitivity: 'base' });
+const compare = (s1, s2) => (s1 || '').localeCompare(s2 || '', undefined, { numeric: true, sensitivity: 'base' });
 
 export const sortWorkflowGraph = workflowGraph => {
   if (workflowGraph) {
@@ -25,7 +24,7 @@ export const sortWorkflowGraph = workflowGraph => {
       nodesNotInFirstColumn.sort(
         (node1, node2) =>
           compare(node1.name, node2.name) ||
-          compare(node1.id ? node1.id.toString() : '', node2.id ? node2.id.toString() : '')
+                    compare(node1.id ? node1.id.toString() : '', node2.id ? node2.id.toString() : '')
       );
       workflowGraph.nodes = [...nodesInFirstColumn, ...nodesNotInFirstColumn];
     }
@@ -45,10 +44,10 @@ export default DS.RESTSerializer.extend({
     return this._super(store, typeClass, payload, id, requestType);
   },
   /**
-   * Override the serializeIntoHash method to handle model names without a root key
-   * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
-   * @method serializeIntoHash
-   */
+     * Override the serializeIntoHash method to handle model names without a root key
+     * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
+     * @method serializeIntoHash
+     */
   serializeIntoHash(hash, typeClass, snapshot) {
     const data = {
       pipelineId: snapshot.attr('pipelineId'),

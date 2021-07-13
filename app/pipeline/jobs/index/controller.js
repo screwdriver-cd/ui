@@ -4,10 +4,7 @@ import { get, set, computed } from '@ember/object';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
-import ModelReloaderMixin, {
-  SHOULD_RELOAD_SKIP,
-  SHOULD_RELOAD_YES
-} from 'screwdriver-ui/mixins/model-reloader';
+import ModelReloaderMixin, { SHOULD_RELOAD_SKIP, SHOULD_RELOAD_YES } from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob, isActiveBuild } from 'screwdriver-ui/utils/build';
 import moment from 'moment';
 import { createEvent, startDetachedBuild, stopBuild, updateEvents } from '../../events/controller';
@@ -29,7 +26,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
     let res;
 
-    const lastRefreshed = this.get('lastRefreshed');
+    const { lastRefreshed } = this;
     const diff = moment().diff(lastRefreshed, 'milliseconds');
 
     if (job) {
@@ -74,7 +71,7 @@ export default Controller.extend(ModelReloaderMixin, {
   errorMessage: '',
   jobs: computed('model.jobs', {
     get() {
-      const jobs = this.getWithDefault('model.jobs', []);
+      const jobs = this.get('model.jobs') === undefined ? [] : this.get('model.jobs');
 
       return jobs.filter(j => !isPRJob(j.get('name')));
     }
@@ -90,7 +87,7 @@ export default Controller.extend(ModelReloaderMixin, {
   paginateEvents: [],
   updateEvents,
   async getNewListViewJobs(listViewOffset, listViewCutOff) {
-    const jobIds = this.get('jobIds');
+    const { jobIds } = this;
 
     if (listViewOffset < jobIds.length) {
       const jobsDetails = await Promise.all(
@@ -131,7 +128,7 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   async refreshListViewJobs() {
-    const listViewCutOff = this.get('listViewOffset');
+    const listViewCutOff = this.listViewOffset;
 
     if (listViewCutOff > 0) {
       const updatedJobsDetails = await this.getNewListViewJobs(0, listViewCutOff);
@@ -144,7 +141,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
   async updateListViewJobs() {
     // purge unmatched pipeline jobs
-    let jobsDetails = this.get('jobsDetails');
+    let { jobsDetails } = this;
 
     if (jobsDetails.some(j => j.get('jobPipelineId') !== this.get('pipeline.id'))) {
       jobsDetails = [];
@@ -154,7 +151,7 @@ export default Controller.extend(ModelReloaderMixin, {
       this.set('listViewOffset', 0);
     }
 
-    const listViewOffset = this.get('listViewOffset');
+    const { listViewOffset } = this;
     const listViewCutOff = listViewOffset + ENV.APP.LIST_VIEW_PAGE_SIZE;
     const nextJobsDetails = await this.getNewListViewJobs(listViewOffset, listViewCutOff);
 
@@ -177,7 +174,7 @@ export default Controller.extend(ModelReloaderMixin, {
       }
     },
     setDownstreamTrigger() {
-      this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
+      this.set('showDownstreamTriggers', !this.showDownstreamTriggers);
     },
     async updateEvents(page) {
       await this.updateEvents(page);

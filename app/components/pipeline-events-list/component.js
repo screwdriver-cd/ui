@@ -10,16 +10,14 @@ export default Component.extend({
   errorMessage: '',
   groups: computed('events.[]', {
     get() {
-      const events = get(this, 'events');
+      const { events } = this;
       const groups = groupBy(events, 'groupEventId');
       const groupsArray = Object.keys(groups).map(key => groups[key]);
 
       groupsArray.forEach(arr =>
         arr.sort((a, b) => moment(b.createTime).valueOf() - moment(a.createTime).valueOf())
       );
-      groupsArray.sort(
-        (a, b) => moment(b[0].createTime).valueOf() - moment(a[0].createTime).valueOf()
-      );
+      groupsArray.sort((a, b) => moment(b[0].createTime).valueOf() - moment(a[0].createTime).valueOf());
 
       return groupsArray;
     }
@@ -35,7 +33,7 @@ export default Component.extend({
       if (eventType !== 'pr') {
         const currentEvent = this.groups.find(g => g.find(e => e.id === id))[0];
         const { pipelineId } = currentEvent;
-        const expandedEventsGroup = get(this, 'expandedEventsGroup') || {};
+        const expandedEventsGroup = this.expandedEventsGroup || {};
 
         expandedEventsGroup[currentEvent.groupEventId] = true;
         set(this, 'expandedEventsGroup', expandedEventsGroup);

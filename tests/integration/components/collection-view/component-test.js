@@ -352,9 +352,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     // check that pipeline card order is correct
     assert.dom('.pipeline-card:nth-of-type(1) .branch-info a').hasText('screwdriver-cd/models');
-    assert
-      .dom('.pipeline-card:nth-of-type(2) .branch-info a')
-      .hasText('screwdriver-cd/screwdriver');
+    assert.dom('.pipeline-card:nth-of-type(2) .branch-info a').hasText('screwdriver-cd/screwdriver');
     assert.dom('.pipeline-card:nth-of-type(3) .branch-info a').hasText('screwdriver-cd/ui');
     assert.dom('.pipeline-card:nth-of-type(4) .branch-info a').hasText('screwdriver-cd/zzz');
 
@@ -371,16 +369,10 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.pipeline-card:nth-of-type(4) .commit-status i').hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
-    assert
-      .dom('.pipeline-card:nth-of-type(1) .commit-status a:nth-of-type(2)')
-      .hasText('Not available');
+    assert.dom('.pipeline-card:nth-of-type(1) .commit-status a:nth-of-type(2)').hasText('Not available');
     assert.dom('.pipeline-card:nth-of-type(2) .commit-status a:nth-of-type(2)').hasText('9af92ba');
-    assert
-      .dom('.pipeline-card:nth-of-type(3) .commit-status a:nth-of-type(2)')
-      .hasText('Not available');
-    assert
-      .dom('.pipeline-card:nth-of-type(4) .commit-status a:nth-of-type(2)')
-      .hasText('Not available');
+    assert.dom('.pipeline-card:nth-of-type(3) .commit-status a:nth-of-type(2)').hasText('Not available');
+    assert.dom('.pipeline-card:nth-of-type(4) .commit-status a:nth-of-type(2)').hasText('Not available');
 
     // check that helper function formatTime() works correctly
     assert.dom('.pipeline-card:nth-of-type(1) .duration-badge span:nth-of-type(2)').hasText('--');
@@ -421,9 +413,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     // check that collection table row order is correct
     assert.dom('.collection-pipeline:nth-of-type(1) .app-id a').hasText('screwdriver-cd/models');
-    assert
-      .dom('.collection-pipeline:nth-of-type(2) .app-id a')
-      .hasText('screwdriver-cd/screwdriver');
+    assert.dom('.collection-pipeline:nth-of-type(2) .app-id a').hasText('screwdriver-cd/screwdriver');
     assert.dom('.collection-pipeline:nth-of-type(3) .app-id a').hasText('screwdriver-cd/ui');
     assert.dom('.collection-pipeline:nth-of-type(4) .app-id a').hasText('screwdriver-cd/zzz');
 
@@ -440,16 +430,10 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.collection-pipeline:nth-of-type(4) .status i').hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
-    assert
-      .dom('.collection-pipeline:nth-of-type(1) .status a:nth-of-type(2)')
-      .hasText('Not available');
+    assert.dom('.collection-pipeline:nth-of-type(1) .status a:nth-of-type(2)').hasText('Not available');
     assert.dom('.collection-pipeline:nth-of-type(2) .status a:nth-of-type(2)').hasText('9af92ba');
-    assert
-      .dom('.collection-pipeline:nth-of-type(3) .status a:nth-of-type(2)')
-      .hasText('Not available');
-    assert
-      .dom('.collection-pipeline:nth-of-type(4) .status a:nth-of-type(2)')
-      .hasText('Not available');
+    assert.dom('.collection-pipeline:nth-of-type(3) .status a:nth-of-type(2)').hasText('Not available');
+    assert.dom('.collection-pipeline:nth-of-type(4) .status a:nth-of-type(2)').hasText('Not available');
 
     // check that helper function formatTime() works correctly
     assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('--');
@@ -1168,9 +1152,7 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.copy-pipeline .dropdown-menu li:nth-of-type(2) span');
 
     // assert the error message is correct
-    assert
-      .dom('.alert-warning > span')
-      .hasText('Could not add Pipeline to Collection My Pipelines');
+    assert.dom('.alert-warning > span').hasText('Could not add Pipeline to Collection My Pipelines');
   });
 
   test('it fails to move multiple pipelines to another collection in list mode', async function(assert) {
@@ -1438,14 +1420,10 @@ module('Integration | Component | collection view', function(hooks) {
       .isDisabled('Should disable Save button when non of the options changes');
 
     await fillIn('.form-group input', 'Test 1');
-    assert
-      .dom('.modal-footer .btn-primary')
-      .isEnabled('Should enable save when name value is changed');
+    assert.dom('.modal-footer .btn-primary').isEnabled('Should enable save when name value is changed');
 
     await fillIn('.form-group input', '');
-    assert
-      .dom('.modal-footer .btn-primary')
-      .isDisabled('Should disable save when name value is empty');
+    assert.dom('.modal-footer .btn-primary').isDisabled('Should disable save when name value is empty');
 
     await fillIn('.form-group input', 'Test Collection');
     await click('.modal-footer .btn-primary');
@@ -1453,9 +1431,7 @@ module('Integration | Component | collection view', function(hooks) {
 
     await click('.collection-operation.settings-operation');
     await fillIn('.form-group textArea', 'Test Description');
-    assert
-      .dom('.modal-footer .btn-primary')
-      .isEnabled('Should enable save when name value is changed');
+    assert.dom('.modal-footer .btn-primary').isEnabled('Should enable save when name value is changed');
     await fillIn('.form-group input', 'Test Collection Updated');
 
     await click('.modal-footer .btn-default');

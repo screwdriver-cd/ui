@@ -20,19 +20,14 @@ export default Component.extend({
   hasBothEventsAndLatestEventInfo: and('eventsInfo', 'lastEventInfo'),
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
-  branch: computed('pipeline', function get() {
+  branch: computed('pipeline.scmRepo', function get() {
     const { branch, rootDir } = this.pipeline.scmRepo;
 
     return rootDir ? `${branch}#${rootDir}` : branch;
   }),
-  showRemoveButton: computed(
-    'isOrganizing',
-    'isAuthenticated',
-    'isDefaultCollection',
-    function showRemoveButton() {
-      return !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated;
-    }
-  ),
+  showRemoveButton: computed('isOrganizing', 'isAuthenticated', 'isDefaultCollection', function showRemoveButton() {
+    return !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated;
+  }),
 
   didInsertElement() {
     if (!this.hasBothEventsAndLatestEventInfo) {

@@ -6,21 +6,21 @@ import ENV from 'screwdriver-ui/config/environment';
 export default Service.extend({
   session: service(),
   /**
-   * Simple test to determine if yaml looks like a template file
-   * @method isTemplate
-   * @param  {String}   yaml Raw yaml text
-   * @return {Boolean}
-   */
+     * Simple test to determine if yaml looks like a template file
+     * @method isTemplate
+     * @param  {String}   yaml Raw yaml text
+     * @return {Boolean}
+     */
   isTemplate(yaml) {
     return /^name|\n+name: |\n+namespace: /.test(yaml);
   },
 
   /**
-   * Cross-domain communication to validation endpoints
-   * @method getValidationResults
-   * @param {String} yaml           yaml payload
-   * @return {Promise}
-   */
+     * Cross-domain communication to validation endpoints
+     * @method getValidationResults
+     * @param {String} yaml           yaml payload
+     * @return {Promise}
+     */
   getValidationResults(yaml) {
     let url = `${ENV.APP.SDAPI_HOSTNAME}/v4/validator`;
 

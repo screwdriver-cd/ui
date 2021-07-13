@@ -1,7 +1,8 @@
+import { get, computed, getWithDefault, set } from '@ember/object';
 import $ from 'jquery';
 import { inject as service } from '@ember/service';
 import { not, or } from '@ember/object/computed';
-import { computed, getWithDefault, set } from '@ember/object';
+
 import { debounce } from '@ember/runloop';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
@@ -10,44 +11,42 @@ import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
 const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH, DOWNTIME_JOBS } = ENV.APP;
 
 export default Component.extend({
-  store: service(),
-  // Syncing a pipeline
-  sync: service('sync'),
-  // Clearing a cache
-  cache: service('cache'),
-  shuttle: service(),
-  errorMessage: '',
-  scmUrl: '',
-  rootDir: '',
-  hasRootDir: false,
-  // Removing a pipeline
-  isRemoving: false,
-  isShowingModal: false,
-  showDangerButton: true,
-  showRemoveButtons: false,
-  showToggleModal: false,
-  showPRJobs: true,
-  isUpdatingPipelineVisibility: false,
-  privateRepo: false,
-  publicPipeline: false,
-  // Job disable/enable
-  name: null,
-  state: null,
-  stateChange: null,
-  user: null,
-  jobId: null,
-  isUpdatingMetricsDowntimeJobs: false,
-  metricsDowntimeJobs: [],
-  displayDowntimeJobs: DOWNTIME_JOBS,
-  displayJobNameLength: 20,
-  minDisplayLength: MINIMUM_JOBNAME_LENGTH,
-  maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
-  sortedJobs: computed('jobs', function filterThenSortJobs() {
-    const prRegex = /PR-\d+:.*/;
+    store: service(),
+    // Syncing a pipeline
+    sync: service('sync'),
+    // Clearing a cache
+    cache: service('cache'),
+    shuttle: service(),
+    errorMessage: '',
+    scmUrl: '',
+    rootDir: '',
+    hasRootDir: false,
+    // Removing a pipeline
+    isRemoving: false,
+    isShowingModal: false,
+    showDangerButton: true,
+    showRemoveButtons: false,
+    showToggleModal: false,
+    showPRJobs: true,
+    isUpdatingPipelineVisibility: false,
+    privateRepo: false,
+    publicPipeline: false,
+    // Job disable/enable
+    name: null,
+    state: null,
+    stateChange: null,
+    user: null,
+    jobId: null,
+    isUpdatingMetricsDowntimeJobs: false,
+    metricsDowntimeJobs: [],
+    displayDowntimeJobs: DOWNTIME_JOBS,
+    displayJobNameLength: 20,
+    minDisplayLength: MINIMUM_JOBNAME_LENGTH,
+    maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
+    sortedJobs: computed('jobs', function filterThenSortJobs() {
+        const prRegex = /PR-\d+:.*/;
 
-    return getWithDefault(this, 'jobs', [])
-      .filter(j => !j.name.match(prRegex))
-      .sortBy('name');
+        return (this.jobs === undefined ? [] : this.jobs).filter(j => !j.name.match(prRegex)).sortBy('name');
   }),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
@@ -94,9 +93,7 @@ export default Component.extend({
 
     let showPRJobs = true;
 
-    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
-      this.get('pipeline.id')
-    );
+    const pipelinePreference = await this.shuttle.getUserPipelinePreference(this.get('pipeline.id'));
 
     if (pipelinePreference) {
       desiredJobNameLength = pipelinePreference.displayJobNameLength;
@@ -106,10 +103,10 @@ export default Component.extend({
     this.setProperties({ desiredJobNameLength, showPRJobs });
 
     if (this.displayDowntimeJobs) {
-      const metricsDowntimeJobs = this.getWithDefault(
-        'pipeline.settings.metricsDowntimeJobs',
-        []
-      ).map(jobId => {
+      const metricsDowntimeJobs = (this.get('pipeline.settings.metricsDowntimeJobs') === undefined
+                ? []
+                : this.get('pipeline.settings.metricsDowntimeJobs')
+            ).map(jobId => {
         return this.jobs.findBy('id', `${jobId}`);
       });
 
@@ -143,12 +140,7 @@ export default Component.extend({
       this.set('rootDir', val.trim());
     },
     updatePipeline() {
-      const {
-        scmUrl,
-        rootDir,
-        hasRootDir,
-        metricsDowntimeJobs /* , metricsDowntimeStatuses */
-      } = this;
+      const { scmUrl, rootDir, hasRootDir, metricsDowntimeJobs /* , metricsDowntimeStatuses */ } = this;
       const pipelineConfig = {
         scmUrl,
         rootDir: ''
@@ -269,9 +261,7 @@ export default Component.extend({
     async updateShowPRJobs(showPRJobs) {
       const pipelineId = this.get('pipeline.id');
 
-      let pipelinePreference = await this.store
-        .peekAll('preference/pipeline')
-        .findBy('id', pipelineId);
+      let pipelinePreference = await this.store.peekAll('preference/pipeline').findBy('id', pipelineId);
 
       if (pipelinePreference) {
         pipelinePreference.showPRJobs = showPRJobs;

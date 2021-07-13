@@ -86,10 +86,6 @@ const mockPipelines = [
   }
 ];
 
-export const hasPipelines = () => [
-  200,
-  { 'Content-Type': 'application/json' },
-  JSON.stringify(mockPipelines)
-];
+export const hasPipelines = () => [200, { 'Content-Type': 'application/json' }, JSON.stringify(mockPipelines)];
 
 export default workflowGraph => assign(copy(pipeline, true), { workflowGraph });

@@ -71,8 +71,8 @@ export default Route.extend({
           : RSVP.resolve(this.pipelineMetrics),
         // eslint-disable-next-line no-nested-ternary
         fetchJob || fetchAll
-          ? this.get('jobId')
-            ? this.store.query('metric', { jobId: this.get('jobId'), startTime, endTime })
+          ? this.jobId
+            ? this.store.query('metric', { jobId: this.jobId, startTime, endTime })
             : RSVP.resolve()
           : RSVP.resolve(this.jobMetrics)
       ])
@@ -108,12 +108,12 @@ export default Route.extend({
           let sum = { queuedTime: 0, imagePullTime: 0, duration: 0 };
 
           /**
-           * Map index to build id, gathered from pipeline and job metrics
-           *
-           * @param {String} type type of the requesting metric
-           * @param {Number} index index of inquiry
-           * @returns {Number|null} build id(s) of the located build
-           */
+                     * Map index to build id, gathered from pipeline and job metrics
+                     *
+                     * @param {String} type type of the requesting metric
+                     * @param {Number} index index of inquiry
+                     * @returns {Number|null} build id(s) of the located build
+                     */
           function getBuildId(type, index) {
             if (type === 'step') {
               return +jobMetrics.objectAt(index).get('id');
@@ -238,7 +238,7 @@ export default Route.extend({
         });
     });
 
-    return RSVP.hash({ metrics, startTime, endTime, successOnly, jobId: this.get('jobId') });
+    return RSVP.hash({ metrics, startTime, endTime, successOnly, jobId: this.jobId });
   },
   actions: {
     setFetchDates(start, end) {

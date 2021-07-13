@@ -3,10 +3,10 @@ import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
   /**
-   * Override the serializeIntoHash method
-   * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
-   * @method serializeIntoHash
-   */
+     * Override the serializeIntoHash method
+     * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
+     * @method serializeIntoHash
+     */
   serializeIntoHash(hash, typeClass, snapshot) {
     const dirty = snapshot.changedAttributes();
 

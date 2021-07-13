@@ -6,7 +6,7 @@ export default Component.extend({
   shuttle: service(),
   jobId: computed('value', {
     get() {
-      const value = this.get('value');
+      const { value } = this;
 
       return value && value.build && value.build.jobId ? value.build.jobId : '';
     }

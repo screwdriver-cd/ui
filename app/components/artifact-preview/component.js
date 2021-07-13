@@ -12,7 +12,7 @@ export default Component.extend({
   },
 
   handleMessageSendFromIframe(e) {
-    if (!this.get('isDestroyed') && !this.get('isDestroying')) {
+    if (!this.isDestroyed && !this.isDestroying) {
       const { state, href } = e.data;
 
       if (e.origin === `${ENV.APP.SDSTORE_HOSTNAME}`) {

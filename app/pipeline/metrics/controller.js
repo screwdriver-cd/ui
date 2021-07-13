@@ -92,18 +92,18 @@ export default Controller.extend({
     this.set(this.downtimeJobsChartName, null);
   },
   /**
-   * Memoized range generator
-   * Generator code borrowed from MDN:
-   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Sequence_generator_(range)
-   *
-   * @param {Number} start start of the range
-   * @param {Number} stop  end of the range
-   * @param {Number} step  step to increment
-   */
+     * Memoized range generator
+     * Generator code borrowed from MDN:
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Sequence_generator_(range)
+     *
+     * @param {Number} start start of the range
+     * @param {Number} stop  end of the range
+     * @param {Number} step  step to increment
+     */
   range: memoizerific(5)((start, stop, step) =>
     Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step)
   ),
-  eventMetrics: computed('metrics.events', {
+  eventMetrics: computed('inTrendlineView', 'metrics.events', {
     get() {
       let { queuedTime, imagePullTime, duration, total, status } = this.get('metrics.events');
 
@@ -156,13 +156,7 @@ export default Controller.extend({
     return ObjectPromiseProxy.create({
       promise: resolve(
         this.shuttle
-          .getPipelineDowntimeJobsMetrics(
-            pipelineId,
-            downtimeJobs,
-            downtimeStatuses,
-            startTime,
-            endTime
-          )
+          .getPipelineDowntimeJobsMetrics(pipelineId, downtimeJobs, downtimeStatuses, startTime, endTime)
           .then(metrics => {
             this.set('downtimeJobsChartData', metrics);
 
@@ -180,7 +174,10 @@ export default Controller.extend({
             });
 
             let downtimeJobsChartData = {
-              columns: [['duration', ...duration], ['builds', ...builds]],
+              columns: [
+                ['duration', ...duration],
+                ['builds', ...builds]
+              ],
               axes: {
                 duration: 'y',
                 builds: 'y2'
@@ -272,7 +269,7 @@ export default Controller.extend({
       };
     }
   }),
-  buildLegend: computed('jobs', 'selectedJobName', {
+  buildLegend: computed('color.pattern', 'jobs', 'selectedJobName', {
     get() {
       const colors = this.get('color.pattern');
       const { selectedJobName } = this;
@@ -280,9 +277,7 @@ export default Controller.extend({
       return this.jobs.map((name, i) => ({
         key: name,
         name,
-        class: htmlSafe(
-          selectedJobName === undefined || name === selectedJobName ? '' : 'unselected'
-        ),
+        class: htmlSafe(selectedJobName === undefined || name === selectedJobName ? '' : 'unselected'),
         style: htmlSafe(`border-color:${colors[i % colors.length]}`)
       }));
     }
@@ -304,7 +299,7 @@ export default Controller.extend({
       };
     }
   }),
-  stepLegend: computed('metrics.stepGroup}', {
+  stepLegend: computed('color.pattern', 'metrics.{stepGroup,stepGroup}}', {
     get() {
       const stepGroup = this.get('metrics.stepGroup');
       const colors = this.get('color.pattern');
@@ -350,11 +345,11 @@ export default Controller.extend({
           multilineMax: 2,
           width: 80,
           /**
-           * Generate the responsive row of tick labels for x-axis
-           *
-           * @param {Array<Number>} domain array containing the start and end of the current domain
-           * @returns {Array<Number>} array containing the indexes of desired tick labels
-           */
+                     * Generate the responsive row of tick labels for x-axis
+                     *
+                     * @param {Array<Number>} domain array containing the start and end of the current domain
+                     * @returns {Array<Number>} array containing the indexes of desired tick labels
+                     */
           values(times, domain) {
             const [x0, x1] = domain.map(Math.floor);
             const offset = 1;
@@ -398,11 +393,11 @@ export default Controller.extend({
             return values;
           },
           /**
-           * Tick label formatter
-           *
-           * @param {Number} i domain value for which the tick label locates
-           * @returns
-           */
+                     * Tick label formatter
+                     *
+                     * @param {Number} i domain value for which the tick label locates
+                     * @returns
+                     */
           format(times, i) {
             const d = times[Math.floor(i)];
             const timeZone = self.get('isUTC') ? 'UTC' : undefined;
@@ -465,24 +460,24 @@ export default Controller.extend({
       return this.generateAxis('steps');
     }
   }),
-  tooltip: computed('metrics.events', 'isUTC', {
+  tooltip: computed('isUTC', 'metrics.events', 'name', {
     get() {
       const self = this;
 
       return {
         /**
-         * Sieve for left position
-         *
-         * @returns {Object} contains left position for tooltip
-         */
+                 * Sieve for left position
+                 *
+                 * @returns {Object} contains left position for tooltip
+                 */
         position() {
           return { left: this.tooltipPosition(...arguments).left };
         },
         /**
-         * Tooltip content generator
-         *
-         * @returns {String} safe HTML string to be displayed for tooltip
-         */
+                 * Tooltip content generator
+                 *
+                 * @returns {String} safe HTML string to be displayed for tooltip
+                 */
         contents() {
           const [data, , , color] = arguments;
           const i = data[0].index;
@@ -493,9 +488,9 @@ export default Controller.extend({
 
           // compact destructure assignments
           const [{ sha, status, createTime }, buildId] =
-            this.name === self.get('stepsChartName')
-              ? [self.get('metrics.steps'), getBuildId('step', i)]
-              : [self.get('metrics.events'), getBuildId('build', i)];
+                        this.name === self.get('stepsChartName')
+                          ? [self.get('metrics.steps'), getBuildId('step', i)]
+                          : [self.get('metrics.events'), getBuildId('build', i)];
           const s = status[i];
 
           // collect grouped data and generate a map for data HTML
@@ -652,230 +647,245 @@ export default Controller.extend({
   zoom: {
     rescale: true
   },
-  onInitFns: computed(function onInitOuter() {
-    const self = this;
-    const { eventsChartName, buildsChartName, stepsChartName, downtimeJobsChartName } = this;
+  onInitFns: computed(
+        'CLASS.eventRects',
+        'api.tooltip',
+        'config.bar_width_ratio',
+        'data.targets',
+        'eventRect',
+        'height',
+        'hiddenTargetIds',
+        'main',
+        'selectChart',
+        'svg',
+        'tooltip',
+        'x',
+        'xAxis',
+        function onInitOuter() {
+            const self = this;
+            const { eventsChartName, buildsChartName, stepsChartName, downtimeJobsChartName } = this;
 
-    /**
-     * unlock tooltip
-     *
-     */
-    function unlockTooltip() {
-      this.tooltip.classed('locked', false);
-    }
-
-    /**
-     * Set up custom elements and event handlers
-     *
-     */
-    function setupExtras() {
-      // add the cursor line
-      const cursorLine = this.svg
-        .append('line')
-        .style('stroke', '#888')
-        .style('stroke-dasharray', '3')
-        .style('pointer-events', 'none')
-        .attr('class', 'cursor-line')
-        .attr('x1', -100)
-        .attr('x2', -100)
-        .attr('y1', 0)
-        .attr('y2', this.height)
-        .attr('transform', this.getTranslate('main'));
-
-      let previousIndexDomain = null;
-
-      this.api.tooltip[locked] = false;
-
-      this.eventRect.on('mousedown.cursor', () => {
-        // click again to unlock tooltip
-        if (this.api.tooltip[locked]) {
-          this.api.tooltip[locked] = false;
-          previousIndexDomain = null;
-          unlockTooltip.call(this);
-          this.hideTooltip();
-
-          return;
-        }
-
-        if (previousIndexDomain === null) {
-          this.hideTooltip();
-        } else {
-          // clicked near data domain
-          this.api.tooltip[locked] = true;
-          this.tooltip.classed('locked', true);
-        }
-      });
-
-      this.eventRect.on('mousemove.cursor', () => {
-        const [x] = d3.mouse(this.eventRect.node());
-
-        // always move the cursor line
-        cursorLine.attr('x1', x).attr('x2', x);
-
-        const rangeOffset = this.xAxis.tickOffset();
-
-        // calculate reference distance for edges and midpoint of a bar
-        // reuse the same for line chart
-        const [leftEdgeDomain, midPointDomain, rightEdgeDomain] = [-1, 0, 1].map(n =>
-          Math.floor(this.x.invert(x - rangeOffset * (1 - n * this.config.bar_width_ratio)))
-        );
-        const currentIndexDomain = rightEdgeDomain;
-
-        // if all three are the same, we are outside of bar
-        if (leftEdgeDomain === midPointDomain && midPointDomain === rightEdgeDomain) {
-          previousIndexDomain = null;
-          this.eventRect.classed('data', false);
-
-          // remains locked if it was locked before
-          if (this.api.tooltip[locked]) {
-            return;
-          }
-
-          this.api.tooltip[locked] = false;
-          this.hideTooltip();
-        } else if (previousIndexDomain === null || currentIndexDomain !== previousIndexDomain) {
-          this.eventRect.classed('data', true);
-
-          if (this.api.tooltip[locked]) {
-            return;
-          }
-
-          let hidden = new Set(this.hiddenTargetIds);
-
-          previousIndexDomain = currentIndexDomain;
-          this.showTooltip(
-            this.data.targets.reduce((data, { id, values }) => {
-              if (!hidden.has(id)) {
-                data.push(this.addName(values[currentIndexDomain]));
-              }
-
-              return data;
-            }, []),
-            this.eventRect.node()
-          );
-        }
-      });
-
-      // escape hatch for last chance to cancel out tooltip effect
-      this.selectChart.on('mouseleave', () => {
-        previousIndexDomain = null;
-        if (!this.api.tooltip[locked]) {
-          this.hideTooltip();
-        }
-      });
-
-      // copy all text inside the tooltip
-      this.tooltip.on('click', () => {
-        if (d3.event.target.classList.contains('clipboard')) {
-          const range = document.createRange();
-          const selection = window.getSelection();
-
-          selection.removeAllRanges();
-          range.selectNodeContents(this.tooltip.node());
-          selection.addRange(range);
-          document.execCommand('copy');
-          selection.removeAllRanges();
-        }
-      });
-    }
-
-    /**
-     * Set up drag and zoom
-     *
-     * @param {Array<String>} conjugateChartNames names of the conjugate chart, e.g. Events <-> Builds
-     */
-    function setupDragZoom(...conjugateChartNames) {
-      // get the inverted domain values from d3
-      const getZoomedDomain = selection => selection && selection.map(x => this.x.invert(x));
-      const brush = d3
-        .brushX()
-        .on('start', () => {
-          const [x0, x1] = getZoomedDomain(d3.event.selection);
-
-          // this won't reset zoom level on every click drag event
-          if (x0 !== x1 && Math.abs(x1 - x0) >= 1) {
-            [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
-              if (c) {
-                c.unzoom();
-              }
-            });
-          }
-
-          this.svg.select(`.${this.CLASS.eventRects} .selection`).classed('hide', false);
-        })
-        .on('brush', () => {
-          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
-            if (c) {
-              unlockTooltip.call(c.internal);
-              c.tooltip[locked] = false;
-              c.internal.hideTooltip();
+            /**
+             * unlock tooltip
+             *
+             */
+            function unlockTooltip() {
+                this.tooltip.classed('locked', false);
             }
-          });
-        })
-        .on('end', () => {
-          if (d3.event.selection === null) {
-            return;
-          }
 
-          let zoomedDomain = getZoomedDomain(d3.event.selection);
-          const offsetFromRightEdge = 0.01;
-          const [x0, x1] = zoomedDomain;
+            /**
+             * Set up custom elements and event handlers
+             *
+             */
+            function setupExtras() {
+                // add the cursor line
+                const cursorLine = this.svg
+                    .append('line')
+                    .style('stroke', '#888')
+                    .style('stroke-dasharray', '3')
+                    .style('pointer-events', 'none')
+          .attr('class', 'cursor-line')
+                    .attr('x1', -100)
+                    .attr('x2', -100)
+                    .attr('y1', 0)
+                    .attr('y2', this.height)
+                    .attr('transform', this.getTranslate('main'));
 
-          // need to have a tiny bit offset from right edge to prevent crossing over the next point
-          zoomedDomain = [Math.floor(x0), Math.ceil(x1) - offsetFromRightEdge];
+                let previousIndexDomain = null;
 
-          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
-            if (c) {
-              c.zoom(zoomedDomain);
+                this.api.tooltip[locked] = false;
+
+                this.eventRect.on('mousedown.cursor', () => {
+          // click again to unlock tooltip
+                    if (this.api.tooltip[locked]) {
+                        this.api.tooltip[locked] = false;
+                        previousIndexDomain = null;
+                        unlockTooltip.call(this);
+            this.hideTooltip();
+
+                        return;
+                    }
+
+                    if (previousIndexDomain === null) {
+                        this.hideTooltip();
+          } else {
+                        // clicked near data domain
+                        this.api.tooltip[locked] = true;
+                        this.tooltip.classed('locked', true);
+                    }
+                });
+
+                this.eventRect.on('mousemove.cursor', () => {
+          const [x] = d3.mouse(this.eventRect.node());
+
+                    // always move the cursor line
+                    cursorLine.attr('x1', x).attr('x2', x);
+
+                    const rangeOffset = this.xAxis.tickOffset();
+
+                    // calculate reference distance for edges and midpoint of a bar
+          // reuse the same for line chart
+                    const [leftEdgeDomain, midPointDomain, rightEdgeDomain] = [-1, 0, 1].map(n =>
+                        Math.floor(this.x.invert(x - rangeOffset * (1 - n * this.config.bar_width_ratio)))
+                    );
+                    const currentIndexDomain = rightEdgeDomain;
+
+                    // if all three are the same, we are outside of bar
+                    if (leftEdgeDomain === midPointDomain && midPointDomain === rightEdgeDomain) {
+            previousIndexDomain = null;
+                        this.eventRect.classed('data', false);
+
+                        // remains locked if it was locked before
+                        if (this.api.tooltip[locked]) {
+              return;
             }
-          });
 
-          this.svg.select(`.${this.CLASS.eventRects} .selection`).classed('hide', true);
+                        this.api.tooltip[locked] = false;
+            this.hideTooltip();
+                    } else if (previousIndexDomain === null || currentIndexDomain !== previousIndexDomain) {
+                        this.eventRect.classed('data', true);
+
+            if (this.api.tooltip[locked]) {
+                            return;
+            }
+
+                        let hidden = new Set(this.hiddenTargetIds);
+
+                        previousIndexDomain = currentIndexDomain;
+            this.showTooltip(
+                            this.data.targets.reduce((data, { id, values }) => {
+                                if (!hidden.has(id)) {
+                                    data.push(this.addName(values[currentIndexDomain]));
+                                }
+
+                                return data;
+                            }, []),
+                            this.eventRect.node()
+                        );
+                    }
         });
 
-      // make the default event listening area also the overlay for d3 brush for drag event
-      d3.select(this.eventRect.data([{ type: 'overlay' }]).node().parentElement).call(brush);
+                // escape hatch for last chance to cancel out tooltip effect
+        this.selectChart.on('mouseleave', () => {
+                    previousIndexDomain = null;
+                    if (!this.api.tooltip[locked]) {
+                        this.hideTooltip();
+          }
+                });
 
-      // remove the default overlay area generated by d3 brush
-      this.main.select('.overlay').remove();
-    }
+                // copy all text inside the tooltip
+        this.tooltip.on('click', () => {
+                    if (d3.event.target.classList.contains('clipboard')) {
+            const range = document.createRange();
+                        const selection = window.getSelection();
 
-    /**
-     * Set up different shims for overriding c3 behaviors
-     *
-     */
-    function shimHandlers() {
-      this.windowFocusHandler = Function.prototype;
-    }
+                        selection.removeAllRanges();
+                        range.selectNodeContents(this.tooltip.node());
+                        selection.addRange(range);
+                        document.execCommand('copy');
+                        selection.removeAllRanges();
+          }
+                });
+            }
 
-    /**
-     * Custom init callback for setting up custom behaviors
-     *
-     * @param {String} chartName name of the targeted chart
-     * @param {Array<String>} conjugateChartNames names of the conjugate chart
-     */
-    function onInitInner(chartName, ...conjugateChartNames) {
-      self.set(chartName, this.api);
-      setupExtras.call(this);
-      setupDragZoom.apply(this, conjugateChartNames);
-      shimHandlers.call(this);
-    }
+            /**
+             * Set up drag and zoom
+             *
+             * @param {Array<String>} conjugateChartNames names of the conjugate chart, e.g. Events <-> Builds
+             */
+            function setupDragZoom(...conjugateChartNames) {
+                // get the inverted domain values from d3
+                const getZoomedDomain = selection => selection && selection.map(x => this.x.invert(x));
+                const brush = d3
+                    .brushX()
+                    .on('start', () => {
+                        const [x0, x1] = getZoomedDomain(d3.event.selection);
 
-    return {
-      [eventsChartName]() {
-        onInitInner.call(this, eventsChartName, buildsChartName);
-      },
-      [buildsChartName]() {
-        onInitInner.call(this, buildsChartName, eventsChartName);
-      },
-      [stepsChartName]() {
-        onInitInner.call(this, stepsChartName);
-      },
-      [downtimeJobsChartName]() {
-        onInitInner.call(this, downtimeJobsChartName);
+            // this won't reset zoom level on every click drag event
+                        if (x0 !== x1 && Math.abs(x1 - x0) >= 1) {
+                            [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
+                                if (c) {
+                                    c.unzoom();
+                                }
+                            });
+            }
+
+                        this.svg.select(`.${this.CLASS.eventRects} .selection`).classed('hide', false);
+          })
+                    .on('brush', () => {
+                        [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
+                            if (c) {
+                                unlockTooltip.call(c.internal);
+                c.tooltip[locked] = false;
+                                c.internal.hideTooltip();
+              }
+                        });
+                    })
+          .on('end', () => {
+                        if (d3.event.selection === null) {
+              return;
+                        }
+
+                        let zoomedDomain = getZoomedDomain(d3.event.selection);
+                        const offsetFromRightEdge = 0.01;
+            const [x0, x1] = zoomedDomain;
+
+                        // need to have a tiny bit offset from right edge to prevent crossing over the next point
+                        zoomedDomain = [Math.floor(x0), Math.ceil(x1) - offsetFromRightEdge];
+
+                        [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
+                            if (c) {
+                                c.zoom(zoomedDomain);
+              }
+                        });
+
+                        this.svg.select(`.${this.CLASS.eventRects} .selection`).classed('hide', true);
+                    });
+
+                // make the default event listening area also the overlay for d3 brush for drag event
+        d3.select(this.eventRect.data([{ type: 'overlay' }]).node().parentElement).call(brush);
+
+                // remove the default overlay area generated by d3 brush
+                this.main.select('.overlay').remove();
+            }
+
+            /**
+             * Set up different shims for overriding c3 behaviors
+             *
+             */
+            function shimHandlers() {
+                this.windowFocusHandler = Function.prototype;
       }
-    };
-  }),
+
+            /**
+             * Custom init callback for setting up custom behaviors
+             *
+             * @param {String} chartName name of the targeted chart
+             * @param {Array<String>} conjugateChartNames names of the conjugate chart
+             */
+            function onInitInner(chartName, ...conjugateChartNames) {
+                self.set(chartName, this.api);
+        setupExtras.call(this);
+                setupDragZoom.apply(this, conjugateChartNames);
+        shimHandlers.call(this);
+            }
+
+            return {
+                [eventsChartName]() {
+                    onInitInner.call(this, eventsChartName, buildsChartName);
+        },
+                [buildsChartName]() {
+                    onInitInner.call(this, buildsChartName, eventsChartName);
+                },
+                [stepsChartName]() {
+                    onInitInner.call(this, stepsChartName);
+                },
+                [downtimeJobsChartName]() {
+                    onInitInner.call(this, downtimeJobsChartName);
+                }
+            };
+        }
+    ),
   setDates(start, end) {
     if (this.startTime !== start || this.endTime !== end) {
       this.set('startTime', start);
@@ -972,10 +982,7 @@ export default Controller.extend({
 
       // must have at least one legend/data displayed
       // empty chart could introduce issues around domain in c3
-      if (
-        !wasHidden &&
-        chart.internal.data.targets.length - chart.internal.hiddenTargetIds.length === 1
-      ) {
+      if (!wasHidden && chart.internal.data.targets.length - chart.internal.hiddenTargetIds.length === 1) {
         return;
       }
 

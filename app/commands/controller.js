@@ -6,11 +6,7 @@ export default Controller.extend({
     get() {
       let route = this.model;
 
-      let params = Object.assign(
-        {},
-        route.paramsFor('commands.namespace'),
-        route.paramsFor('commands.detail')
-      );
+      let params = { ...route.paramsFor('commands.namespace'), ...route.paramsFor('commands.detail') };
 
       return params;
     }

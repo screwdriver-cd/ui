@@ -8,11 +8,11 @@ export default Service.extend({
   session: service('session'),
 
   /**
-   * Start all child pipelines
-   * @method startAll
-   * @param   {Number}  pipelineId
-   * @return  {Promise}            Resolve nothing if success otherwise reject with error message
-   */
+     * Start all child pipelines
+     * @method startAll
+     * @param   {Number}  pipelineId
+     * @return  {Promise}            Resolve nothing if success otherwise reject with error message
+     */
   startAll(pipelineId) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/startall`;
 

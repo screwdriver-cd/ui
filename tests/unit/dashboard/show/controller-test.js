@@ -28,7 +28,7 @@ module('Unit | Controller | dashboard/show', function(hooks) {
       description: 'description1',
       pipelineIds,
       save() {
-        assert.deepEqual(get(this, 'pipelineIds'), [1, 2]);
+        assert.deepEqual(this.pipelineIds, [1, 2]);
 
         return resolve(this);
       }

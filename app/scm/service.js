@@ -27,11 +27,11 @@ export default Service.extend({
   store: service(),
 
   /**
-   * Get all scms from sd api server,
-   * and create record into ember data.
-   * @method createScms
-   * @return {DS.RecordArray} Array of scm object.
-   */
+     * Get all scms from sd api server,
+     * and create record into ember data.
+     * @method createScms
+     * @return {DS.RecordArray} Array of scm object.
+     */
   createScms() {
     const { session, store } = this;
     const scms = this.getScms();
@@ -70,20 +70,20 @@ export default Service.extend({
   },
 
   /**
-   * Get all scm object from inner ember data table.
-   * @method getScms
-   * @return {DS.RecordArray} Array of scm object.
-   */
+     * Get all scm object from inner ember data table.
+     * @method getScms
+     * @return {DS.RecordArray} Array of scm object.
+     */
   getScms() {
     return this.store.peekAll('scm');
   },
 
   /**
-   * Get specific scm object from inner ember data table.
-   * @method getScm
-   * @param  {String}  scmContext  scmContext (e.g. github:github.com)
-   * @return {Object}              scm object
-   */
+     * Get specific scm object from inner ember data table.
+     * @method getScm
+     * @param  {String}  scmContext  scmContext (e.g. github:github.com)
+     * @return {Object}              scm object
+     */
   getScm(scmContext) {
     let ret = {};
 
@@ -103,10 +103,10 @@ export default Service.extend({
   },
 
   /**
-   * Change status of 'isSignedIn' property true.
-   * @method setSignedIn
-   * @param  {String}  scmContext  scmContext (e.g. github:github.com)
-   */
+     * Change status of 'isSignedIn' property true.
+     * @method setSignedIn
+     * @param  {String}  scmContext  scmContext (e.g. github:github.com)
+     */
   setSignedIn(scmContext) {
     this.getScms().forEach(scm => {
       if (scm.get('context') === scmContext) {

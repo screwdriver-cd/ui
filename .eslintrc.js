@@ -2,12 +2,16 @@
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
+    requireConfigFile: false,
     ecmaVersion: 2018,
     sourceType: 'module',
     ecmaFeatures: {
       legacyDecorators: true
+    },
+    '@babel/plugin-proposal-private-methods': {
+      loose: true
     }
   },
   plugins: ['ember', 'prettier'],

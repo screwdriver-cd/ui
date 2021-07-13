@@ -44,9 +44,7 @@ module('Integration | Component | tc collection list', function(hooks) {
     {{/tc-collection-list}}`);
 
     assert.dom('header h4 a').hasText('Collection Docs');
-    assert
-      .dom('header h4 a')
-      .hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
+    assert.dom('header h4 a').hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
     assert.dom('.collection-list-table th').exists({ count: 5 });
     assert.dom('.collection-list-table .lt-body td').exists({ count: 10 });
   });
@@ -65,9 +63,7 @@ module('Integration | Component | tc collection list', function(hooks) {
     {{/tc-collection-list}}`);
 
     assert.dom('header h4 a').hasText('Collection Docs');
-    assert
-      .dom('header h4 a')
-      .hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
+    assert.dom('header h4 a').hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
     assert.dom('.collection-list-table th').exists({ count: 5 });
     assert.dom('.collection-list-table .lt-body td').exists({ count: 5 });
   });
