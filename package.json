@@ -123,7 +123,7 @@
     "ember-sinon": "^5.0.0",
     "ember-sinon-qunit": "^5.0.0",
     "ember-source": "~3.16.0",
-    "ember-toggle": "^5.3.3",
+    "ember-toggle": "^7.1.1",
     "ember-truth-helpers": "^2.1.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^5.1.0",
