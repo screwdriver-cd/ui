@@ -3,6 +3,7 @@ import { run } from '@ember/runloop';
 import { initialize } from 'screwdriver-ui/instance-initializers/supplementary-config';
 import { module, test } from 'qunit';
 import ENV from 'screwdriver-ui/config/environment';
+import Resolver from 'ember-resolver';
 const NAMESPACE = ENV.APP.SDAPI_NAMESPACE;
 const HOSTNAME = ENV.APP.SDAPI_HOSTNAME;
 const { SDDOC_URL, SLACK_URL } = ENV.APP;
@@ -10,7 +11,7 @@ const { SDDOC_URL, SLACK_URL } = ENV.APP;
 module('Unit | Instance Initializer | supplementary config', function(hooks) {
   hooks.beforeEach(function() {
     run(() => {
-      this.TestApplication = Application.extend();
+      this.TestApplication = Application.extend({ Resolver });
       this.application = this.TestApplication.create({ autoboot: false });
       this.appInstance = this.application.buildInstance();
       delete window.SUPPLEMENTARY_CONFIG;

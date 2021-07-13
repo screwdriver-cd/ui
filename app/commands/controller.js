@@ -13,6 +13,9 @@ export default Controller.extend({
       );
 
       return params;
+    },
+    set(key, value) {
+      return value;
     }
   }),
   crumbs: computed('routeParams', {
