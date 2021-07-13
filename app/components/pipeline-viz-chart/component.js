@@ -1,19 +1,14 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { htmlSafe } from '@ember/string';
-import { inject as service } from '@ember/service';
 import $ from 'jquery';
-
 
 /**
  * extractPipelineId from jobName
  * @param  {String} jobName ~sd@1:main
  * @return {String} pipelineId
  */
-const extractPipelineId = function(jobName) {
-  const re = /~sd@(.*)\:/;
-
-  const result = jobName.match(/~sd@(?<pipelineId>.*)\:/);
+const extractPipelineId = function extractPipelineId(jobName) {
+  const result = jobName.match(/~sd@(?<pipelineId>.*):/);
 
   if (result !== null) {
     const { pipelineId } = result.groups;
@@ -22,7 +17,7 @@ const extractPipelineId = function(jobName) {
   }
 
   return result;
-}
+};
 
 export default Component.extend({
   pipeline: null,
@@ -43,12 +38,12 @@ export default Component.extend({
   }),
   actions: {
     graphClicked(job, mouseevent, sizes) {
-      const target = mouseevent.target;
-
-      console.log('mouseevent.target.tagName', target.tagName);
+      const { target } = mouseevent;
 
       if (target.tagName === 'text') {
-        const jobName = $(mouseevent.target).find('title').text();
+        const jobName = $(mouseevent.target)
+          .find('title')
+          .text();
         const pipelineId = extractPipelineId(jobName);
 
         this.setProperties({

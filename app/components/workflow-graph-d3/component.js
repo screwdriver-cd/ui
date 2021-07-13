@@ -2,9 +2,13 @@
 import Component from '@ember/component';
 import { set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { icon, decorateGraph, subgraphFilter, removeBranch } from 'screwdriver-ui/utils/graph-tools';
+import {
+  icon,
+  decorateGraph,
+  subgraphFilter,
+  removeBranch
+} from 'screwdriver-ui/utils/graph-tools';
 import ENV from 'screwdriver-ui/config/environment';
-
 
 export default Component.extend({
   shuttle: service(),

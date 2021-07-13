@@ -273,7 +273,7 @@ export default Service.extend({
       count: 50,
       sort: 'ascending',
       sortBy: 'name',
-        search: pipelineName
+      search: pipelineName
     });
 
     const url = `/pipelines?${query}`;

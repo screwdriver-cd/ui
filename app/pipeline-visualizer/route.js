@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import RSVP from 'rsvp';
 import { inject as service } from '@ember/service';
 
 export default Route.extend(AuthenticatedRouteMixin, {
@@ -19,12 +18,13 @@ export default Route.extend(AuthenticatedRouteMixin, {
   async model(params) {
     this._super(...arguments);
     const { selectedPipelineId, selectedConnectedPipelineId } = params;
-    console.log('selectedPipelineId', selectedPipelineId, 'selectedConnectedPipelineId', selectedConnectedPipelineId);
 
     let model = {};
 
+    /* eslint no-unsafe-finally: "error" */
     try {
       let selectedPipeline = null;
+
       let selectedConnectedPipeline = null;
 
       if (selectedPipelineId) {
@@ -37,19 +37,21 @@ export default Route.extend(AuthenticatedRouteMixin, {
           if (selectedPipelineId === selectedConnectedPipelineId) {
             selectedConnectedPipeline = selectedPipeline;
           } else {
-            selectedConnectedPipeline = await this.store.findRecord('pipeline', selectedConnectedPipelineId);
+            selectedConnectedPipeline = await this.store.findRecord(
+              'pipeline',
+              selectedConnectedPipelineId
+            );
           }
 
           model.selectedConnectedPipeline = selectedConnectedPipeline;
         }
       } catch (e) {
-        console.log('err from selectedConnectedPipelineId', e);
+        throw e;
       }
 
-    } catch (e) {
-      console.log('err from route', e);
-    } finally {
       return model;
+    } catch (e) {
+      throw e;
     }
   },
 

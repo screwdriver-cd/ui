@@ -1,6 +1,4 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
-import { inject as service } from '@ember/service';
 
 export default Component.extend({
   noResult: true,
@@ -15,12 +13,10 @@ export default Component.extend({
     },
 
     async handleSelectedConnectedPipeline(pipeline) {
-      console.log('handleSelectedConnectedPipeline', pipeline);
       this.onClickConnectedPipeline(pipeline);
     },
 
     async handleSelectedPipeline(pipeline) {
-      console.log('handleSelectedPipeline', pipeline);
       this.onSelectPipeline(pipeline);
     },
 
@@ -29,11 +25,10 @@ export default Component.extend({
 
       try {
         pipelines = await this.onSearchPipeline(pipelineName);
-      } catch (e) {
-
-      } finally {
 
         return pipelines;
+      } catch (e) {
+        return [];
       }
     }
   }

@@ -6,26 +6,24 @@ export default Component.extend({
   pipeline: undefined,
   selectedConnectedPipeline: undefined,
 
-  icon: computed(function() {
+  icon: computed(function icon() {
     return statusIcon('success', true);
   }),
 
-  isSelectedConnectedPipeline: computed('selectedConnectedPipeline', 'pipeline', function isSelected() {
-    if (this.selectedConnectedPipeline) {
-      console.log('selectedConnectedPipeline ID', get(this.selectedConnectedPipeline, 'id'));
-      console.log('pipeline ID', get(this.pipeline, 'id'));
+  isSelectedConnectedPipeline: computed(
+    'selectedConnectedPipeline',
+    'pipeline',
+    function isSelected() {
+      if (this.selectedConnectedPipeline) {
+        return get(this.selectedConnectedPipeline, 'id') === get(this.pipeline, 'id');
+      }
 
-      return get(this.selectedConnectedPipeline, 'id') === get(this.pipeline, 'id');
+      return false;
     }
-
-    return false;
-  }),
+  ),
 
   isSelectedPipeline: computed('selectedPipeline', 'pipeline', function isSelected() {
     if (this.selectedPipeline) {
-      console.log('selectedPipeline id', get(this.selectedPipeline, 'id'));
-      console.log('pipeline id', get(this.pipeline, 'id'));
-
       return get(this.selectedPipeline, 'id') === get(this.pipeline, 'id');
     }
 
