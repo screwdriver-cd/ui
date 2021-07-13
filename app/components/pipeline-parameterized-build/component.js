@@ -44,7 +44,7 @@ export default Component.extend({
   },
 
   getDefaultBuildParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
+    return this.get('pipeline.parameters') === undefined ? {} : this.get('pipeline.parameters');
   },
 
   /**
@@ -162,7 +162,7 @@ export default Component.extend({
     },
 
     onCancel() {
-      this.get('onCancel')();
+      this.onCancel();
       if (this.onClose) {
         this.onClose();
       }

@@ -43,8 +43,8 @@ export default DS.Model.extend(ModelReloaderMixin, {
   buildsSorted: sort('builds', (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)),
   createTimeWords: computed('createTime', 'duration', {
     get() {
-      if (get(this, 'createTime')) {
-        const duration = Date.now() - get(this, 'createTime').getTime();
+      if (this.createTime) {
+        const duration = Date.now() - this.createTime.getTime();
 
         return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
       }
@@ -54,12 +54,12 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   duration: computed('builds.[]', 'isComplete', {
     get() {
-      const builds = get(this, 'builds');
+      const { builds } = this;
       const firstCreateTime = builds.map(item => get(item, 'createTime')).sort()[0];
 
       let lastEndTime = new Date();
 
-      if (get(this, 'isComplete')) {
+      if (this.isComplete) {
         lastEndTime = builds
           .map(item => get(item, 'endTime'))
           .sort()
@@ -75,10 +75,10 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   durationText: computed('duration', {
     get() {
-      return humanizeDuration(get(this, 'duration'), { round: true, largest: 1 });
+      return humanizeDuration(this.duration, { round: true, largest: 1 });
     }
   }),
-  label: computed('meta', {
+  label: computed('meta.label', {
     get() {
       return this.get('meta.label') || null;
     }
@@ -102,7 +102,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
       return;
     }
 
-    const builds = get(this, 'builds');
+    const { builds } = this;
 
     let status = 'UNKNOWN';
 
@@ -113,7 +113,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
         if (validList.length) {
           status = get(validList[0], 'status');
         } else {
-          status = get(this, 'isComplete') ? 'SUCCESS' : 'RUNNING';
+          status = this.isComplete ? 'SUCCESS' : 'RUNNING';
         }
 
         set(this, 'status', status);
@@ -126,7 +126,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
       return;
     }
 
-    const builds = get(this, 'builds');
+    const { builds } = this;
 
     builds.then(list => {
       if (this.isDestroying || this.isDestroyed) {
@@ -135,7 +135,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
       // Tell model to reload builds.
       this.startReloading();
-      set(this, 'reload', get(this, 'reload') + 1);
+      set(this, 'reload', this.reload + 1);
 
       const numBuilds = get(list, 'length');
 
@@ -165,7 +165,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
       // Nothing is running now, check if new builds added during reload
       // If get(this, 'numBuilds') === 0 that means it is the first load not a reload
-      const newBuilds = get(this, 'numBuilds') === 0 ? 0 : numBuilds - get(this, 'numBuilds');
+      const newBuilds = this.numBuilds === 0 ? 0 : numBuilds - this.numBuilds;
 
       // New builds created during reload, event is still going, reset everything
       if (newBuilds > 0) {
@@ -176,7 +176,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
         return false;
       }
 
-      const reloadWithoutNewBuilds = get(this, 'reloadWithoutNewBuilds') + 1;
+      const reloadWithoutNewBuilds = this.reloadWithoutNewBuilds + 1;
 
       // If reloads 2 times without new builds added, consider event as complete
       if (reloadWithoutNewBuilds >= 2) {
@@ -197,16 +197,14 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   modelToReload: 'builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
-  isAborted: computed('status', function isAbortedFunc() {
-    return get(this, 'status') === 'ABORTED';
-  }),
+  isAborted: computed.equal('status', 'ABORTED'),
   isSkipped: computed('commit.message', 'type', 'numBuilds', {
     get() {
-      if (get(this, 'type') === 'pr') {
+      if (this.type === 'pr') {
         return false;
       }
       const msg = get(this, 'commit.message');
-      const numBuilds = get(this, 'numBuilds');
+      const { numBuilds } = this;
 
       if (numBuilds !== 0) {
         return false;
@@ -218,11 +216,11 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
   // Reload builds only if the event is still running
   shouldReload() {
-    return get(this, 'isRunning') ? SHOULD_RELOAD_YES : SHOULD_RELOAD_NO;
+    return this.isRunning ? SHOULD_RELOAD_YES : SHOULD_RELOAD_NO;
   },
   init() {
     this._super(...arguments);
-    if (get(this, 'isSkipped')) {
+    if (this.isSkipped) {
       set(this, 'status', 'SKIPPED');
     }
   }

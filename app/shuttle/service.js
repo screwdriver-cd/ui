@@ -63,7 +63,7 @@ export default Service.extend({
 
     const options = { ...this.ajaxOptions(), data, type: optionsType };
 
-    return this.get('ajax')[requestType](uri, options);
+    return this.ajax[requestType](uri, options);
   },
 
   fetchFromApi(method = 'get', url, data, raw = false) {

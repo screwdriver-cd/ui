@@ -294,12 +294,12 @@ module('Integration | Component | pipeline options', function(hooks) {
       showToggleModal=showToggleModal
     }}`);
 
-    assert.equal(this.get('showToggleModal'), false);
+    assert.equal(this.showToggleModal, false);
     assert.dom('.modal').doesNotExist();
 
     await click('.x-toggle-btn');
 
-    assert.equal(this.get('showToggleModal'), true);
+    assert.equal(this.showToggleModal, true);
     // Make sure there is only 1 modal
     assert.dom('.modal').exists({ count: 1 });
     assert.dom('.modal-title').hasText('Disable the "main" job?');

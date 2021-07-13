@@ -98,7 +98,7 @@ module('Integration | Component | collection modal', function(hooks) {
     assert.dom('.collection-form__create').isEnabled('Should enable Create button when Name is Filled');
     await click('.collection-form__create');
 
-    assert.notOk(this.get('showModal'));
+    assert.notOk(this.showModal);
   });
 
   test('it cancels creation of a collection', async function(assert) {
@@ -145,12 +145,12 @@ module('Integration | Component | collection modal', function(hooks) {
     this.set('name', 'Test');
     this.set('description', 'Test description');
 
-    assert.ok(this.get('showModal'));
+    assert.ok(this.showModal);
 
     await click('.collection-form__create');
 
     // Modal should remain open because of error
-    assert.ok(this.get('showModal'));
+    assert.ok(this.showModal);
     assert.dom('.alert-warning > span').hasText('This is an error message');
   });
 });

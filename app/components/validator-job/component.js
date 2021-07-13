@@ -5,12 +5,12 @@ export default Component.extend({
   classNameBindings: ['hasParseError', 'collapsible'],
   isOpen: false,
   collapsible: true,
-  getTemplateName: computed('job', {
+  getTemplateName: computed('job.environment.SD_TEMPLATE_FULLNAME', {
     get() {
       return this.get('job.environment.SD_TEMPLATE_FULLNAME');
     }
   }),
-  getTemplateLink: computed('job', {
+  getTemplateLink: computed('job.environment.{SD_TEMPLATE_NAME,SD_TEMPLATE_NAMESPACE,SD_TEMPLATE_VERSION}', {
     get() {
       const namespace = this.get('job.environment.SD_TEMPLATE_NAMESPACE');
       const name = this.get('job.environment.SD_TEMPLATE_NAME');
@@ -19,17 +19,17 @@ export default Component.extend({
       return `/templates/${namespace}/${name}/${version}`;
     }
   }),
-  getTemplateVersion: computed('job', {
+  getTemplateVersion: computed('job.environment.SD_TEMPLATE_VERSION', {
     get() {
       return this.get('job.environment.SD_TEMPLATE_VERSION');
     }
   }),
-  hasParseError: computed('job', {
+  hasParseError: computed('job.commands.0.name', {
     get() {
       return this.get('job.commands.0.name') === 'config-parse-error';
     }
   }),
-  steps: computed('job', {
+  steps: computed('job.{commands,steps}', {
     get() {
       let c = this.get('job.commands');
 
@@ -52,7 +52,7 @@ export default Component.extend({
       return [];
     }
   }),
-  sdCommands: computed('job', {
+  sdCommands: computed('job', 'steps', {
     get() {
       const commands = this.steps;
       const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)(?:@((?:(?:\d+)(?:\.\d+)?(?:\.\d+)?)|(?:[a-zA-Z][\w-]+)))?/g;

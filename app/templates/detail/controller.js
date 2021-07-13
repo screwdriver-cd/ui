@@ -16,7 +16,7 @@ export default Controller.extend({
   trusted: computed('templates.templateData.[]', function computeTrusted() {
     return this.templates.templateData.some(t => t.trusted && t.latest);
   }),
-  isAdmin: computed(function isAdmin() {
+  isAdmin: computed('session.data.authenticated.token', function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
     return (decoder(token).scope || []).includes('admin');
@@ -26,7 +26,7 @@ export default Controller.extend({
       return this.templates.templateData[0];
     }
   }),
-  versionTemplate: computed('selectedVersion', 'templates.templateData.[]', {
+  versionTemplate: computed('latest.version', 'selectedVersion', 'templates.templateData.[]', {
     get() {
       const version = this.selectedVersion || this.get('latest.version');
 
@@ -49,9 +49,10 @@ export default Controller.extend({
   }),
   actions: {
     removeTemplate(name) {
-      return this.template
-        .deleteTemplates(name)
-        .then(() => this.transitionToRoute('templates'), err => this.set('errorMessage', err));
+      return this.template.deleteTemplates(name).then(
+        () => this.transitionToRoute('templates'),
+        err => this.set('errorMessage', err)
+      );
     },
     updateTrust(fullName, toTrust) {
       return (

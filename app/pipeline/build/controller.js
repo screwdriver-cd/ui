@@ -21,7 +21,7 @@ export default Controller.extend({
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
   errorMessage: '',
-  prEvents: computed('model.{event.pr.url,pipeline.id}', {
+  prEvents: computed('job.id', 'model.event.pr.url', 'model.event.type', 'model.pipeline.id', {
     get() {
       if (this.get('model.event.type') === 'pr') {
         const event = this.get('model.event.pr.url');
@@ -127,13 +127,14 @@ export default Controller.extend({
   },
 
   changeBuildStep(name) {
-    const currentRouteName = this.getWithDefault('router.currentRoute.name', '');
+    const currentRouteName =
+            this.get('router.currentRoute.name') === undefined ? '' : this.get('router.currentRoute.name');
 
     if (!['pipeline.build.step', 'pipeline.build.index'].includes(currentRouteName)) {
       return;
     }
 
-    const build = this.get('build');
+    const { build } = this;
     const pipelineId = this.get('pipeline.id');
 
     let activeStep;
@@ -145,7 +146,7 @@ export default Controller.extend({
       activeStep = getActiveStep(get(build, 'steps'));
     }
 
-    if (activeStep && this.get('preselectedStepName') !== activeStep) {
+    if (activeStep && this.preselectedStepName !== activeStep) {
       this.transitionToRoute('pipeline.build.step', pipelineId, build.get('id'), activeStep);
     }
   }

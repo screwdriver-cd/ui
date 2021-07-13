@@ -54,9 +54,9 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
-    const table = Table.create({ columns: this.get('columns'), rows: sortedRows });
+    const table = Table.create({ columns: this.columns, rows: sortedRows });
 
-    let sortColumn = table.get('allColumns').findBy('valuePath', this.get('sortingValuePath'));
+    let sortColumn = table.get('allColumns').findBy('valuePath', this.sortingValuePath);
 
     // Setup initial sort column
     if (sortColumn) {
@@ -75,7 +75,7 @@ export default Component.extend({
   },
 
   getDefaultBuildParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
+    return this.get('pipeline.parameters') === undefined ? {} : this.get('pipeline.parameters');
   },
 
   /**
@@ -144,10 +144,10 @@ export default Component.extend({
         jobId,
         jobName,
         latestBuild,
-        startSingleBuild: this.get('startSingleBuild'),
-        stopBuild: this.get('stopBuild'),
+        startSingleBuild: this.startSingleBuild,
+        stopBuild: this.stopBuild,
         isShowingModal: this.isShowingModal,
-        hasParameters: Object.keys(this.get('buildParameters')).length > 0,
+        hasParameters: Object.keys(this.buildParameters).length > 0,
         openParametersModal: this.openParametersModal.bind(this)
       };
 
@@ -218,7 +218,7 @@ export default Component.extend({
   },
   jobsObserver: observer('jobsDetails.[]', function jobsObserverFunc({ jobsDetails }) {
     const rows = this.getRows(jobsDetails);
-    const lastRows = get(this, 'lastRows') || [];
+    const lastRows = this.lastRows || [];
     const isEqualRes = isEqual(
       rows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
       lastRows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
@@ -233,7 +233,7 @@ export default Component.extend({
   actions: {
     async onScrolledToBottom() {
       this.set('isLoading', true);
-      this.get('updateListViewJobs')().then(jobs => {
+      this.updateListViewJobs().then(jobs => {
         const rows = this.getRows(jobs);
 
         this.table.addRows(rows);

@@ -10,17 +10,19 @@ export default Component.extend({
   errors: map('results.errors', e => (typeof e === 'string' ? e : e.message)),
   workflowGraph: computed('results.workflowGraph', {
     get() {
-      return getWithDefault(this, 'results.workflowGraph', { nodes: [], edges: [] });
+      return get(this, 'results.workflowGraph') === undefined
+                ? { nodes: [], edges: [] }
+                : get(this, 'results.workflowGraph');
     }
   }),
   annotations: computed('results.annotations', {
     get() {
-      return getWithDefault(this, 'results.annotations', []);
+      return get(this, 'results.annotations') === undefined ? [] : get(this, 'results.annotations');
     }
   }),
   parameters: computed('results.parameters', {
     get() {
-      return getWithDefault(this, 'results.parameters', {});
+      return get(this, 'results.parameters') === undefined ? {} : get(this, 'results.parameters');
     }
   }),
   warnMessages: map('results.warnMessages', w => (typeof w === 'string' ? w : w.message)),

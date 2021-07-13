@@ -10,7 +10,7 @@ export default Component.extend({
   errorMessage: null,
   store: service(),
   isSaveDisabled: computed('name', function isSaveDisabled() {
-    return isEmpty(this.get('name'));
+    return isEmpty(this.name);
   }),
   actions: {
     setModal(open) {

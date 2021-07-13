@@ -117,9 +117,12 @@ export default Service.extend({
     let blobUrl = this.getCache(buildId, stepName, 'blobUrl');
 
     if (!blobUrl) {
-      const blob = new Blob(this.getCache(buildId, stepName, 'logs').map(l => `${l.m}\n`), {
-        type: 'text/plain'
-      });
+      const blob = new Blob(
+        this.getCache(buildId, stepName, 'logs').map(l => `${l.m}\n`),
+        {
+          type: 'text/plain'
+        }
+      );
 
       blobUrl = URL.createObjectURL(blob);
 

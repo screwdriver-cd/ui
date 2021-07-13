@@ -95,7 +95,10 @@ export default Component.extend({
          * @param {Number} id
          */
     confirmAction(action, id) {
-      this.set('modalTarget', this.tokens.find(token => token.get('id') === id));
+      this.set(
+        'modalTarget',
+        this.tokens.find(token => token.get('id') === id)
+      );
       this.set('modalAction', action);
 
       if (action === 'delete') {

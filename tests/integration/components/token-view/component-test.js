@@ -76,7 +76,7 @@ module('Integration | Component | token view', function(hooks) {
         },
         save() {
           // update called
-          assert.equal(this.get('name'), 'TEST_TOKEN_2');
+          assert.equal(this.name, 'TEST_TOKEN_2');
           expectIsSaving = false;
 
           return resolve();

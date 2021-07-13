@@ -45,7 +45,10 @@ module('Unit | Controller | templates/detail', function(hooks) {
         { id: 2, version: '2.0.0' },
         { id: 1, version: '1.0.0' }
       ],
-      templateTagData: [{ id: 2, version: '2.0.0', tag: 'latest' }, { id: 1, version: '1.0.0', tag: 'stable' }]
+      templateTagData: [
+        { id: 2, version: '2.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ]
     });
 
     assert.ok(controller);
@@ -65,7 +68,10 @@ module('Unit | Controller | templates/detail', function(hooks) {
         { id: 2, version: '2.0.0' },
         { id: 1, version: '1.0.0' }
       ],
-      templateTagData: [{ id: 2, version: '2.0.0', tag: 'latest' }, { id: 1, version: '1.0.0', tag: 'stable' }]
+      templateTagData: [
+        { id: 2, version: '2.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ]
     });
 
     assert.ok(controller);
@@ -78,7 +84,11 @@ module('Unit | Controller | templates/detail', function(hooks) {
     let controller = this.owner.lookup('controller:templates/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
-      templateData: [{ id: 3, version: '3.0.0' }, { id: 2, version: '2.0.0' }, { id: 1, version: '1.0.0' }]
+      templateData: [
+        { id: 3, version: '3.0.0' },
+        { id: 2, version: '2.0.0' },
+        { id: 1, version: '1.0.0' }
+      ]
     });
 
     controller.set('model', arr);
@@ -140,7 +150,10 @@ module('Unit | Controller | templates/detail', function(hooks) {
         { id: 2, version: '2.0.0' },
         { id: 1, version: '1.0.0' }
       ],
-      templateTagData: [{ id: 2, version: '3.0.0', tag: 'latest' }, { id: 1, version: '1.0.0', tag: 'stable' }],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
       versionOrTagFromUrl: undefined
     });
 
@@ -157,7 +170,10 @@ module('Unit | Controller | templates/detail', function(hooks) {
         { id: 2, version: '2.0.0' },
         { id: 1, version: '1.0.0' }
       ],
-      templateTagData: [{ id: 2, version: '3.0.0', tag: 'latest' }, { id: 1, version: '1.0.0', tag: 'stable' }],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
       versionOrTagFromUrl: '2.0.0'
     });
 
@@ -174,7 +190,10 @@ module('Unit | Controller | templates/detail', function(hooks) {
         { id: 2, version: '2.0.0' },
         { id: 1, version: '1.0.0' }
       ],
-      templateTagData: [{ id: 2, version: '3.0.0', tag: 'latest' }, { id: 1, version: '1.0.0', tag: 'stable' }],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
       versionOrTagFromUrl: 'stable'
     });
 
@@ -191,7 +210,10 @@ module('Unit | Controller | templates/detail', function(hooks) {
         { id: 2, version: '2.0.0' },
         { id: 1, version: '1.0.0' }
       ],
-      templateTagData: [{ id: 2, version: '3.0.0', tag: 'latest' }, { id: 1, version: '1.0.0', tag: 'stable' }],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
       versionOrTagFromUrl: '9.9.9'
     });
 
@@ -208,7 +230,10 @@ module('Unit | Controller | templates/detail', function(hooks) {
         { id: 2, version: '2.0.0' },
         { id: 1, version: '1.0.0' }
       ],
-      templateTagData: [{ id: 2, version: '3.0.0', tag: 'latest' }, { id: 1, version: '1.0.0', tag: 'stable' }],
+      templateTagData: [
+        { id: 2, version: '3.0.0', tag: 'latest' },
+        { id: 1, version: '1.0.0', tag: 'stable' }
+      ],
       versionOrTagFromUrl: 'foo'
     });
 

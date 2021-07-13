@@ -21,12 +21,12 @@ export default Controller.extend({
   trusted: computed('commands.commandData.[]', function computeTrusted() {
     return this.commands.commandData.some(c => c.trusted && c.latest);
   }),
-  isAdmin: computed(function isAdmin() {
+  isAdmin: computed('session.data.authenticated.token', function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
     return (decoder(token).scope || []).includes('admin');
   }),
-  versionCommand: computed('selectedVersion', 'commands.commandData.[]', {
+  versionCommand: computed('commands.commandData.[]', 'latest.version', 'selectedVersion', {
     get() {
       const version = this.selectedVersion || this.get('latest.version');
 
@@ -54,9 +54,10 @@ export default Controller.extend({
   }),
   actions: {
     removeCommand(namespace, name) {
-      return this.command
-        .deleteCommands(namespace, name)
-        .then(() => this.transitionToRoute('commands'), err => this.set('errorMessage', err));
+      return this.command.deleteCommands(namespace, name).then(
+        () => this.transitionToRoute('commands'),
+        err => this.set('errorMessage', err)
+      );
     },
     updateTrust(namespace, name, toTrust) {
       return (

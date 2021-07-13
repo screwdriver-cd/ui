@@ -177,7 +177,7 @@ export default Controller.extend(ModelReloaderMixin, {
       const event = model.events.find(m => m.isRunning);
 
       let diff;
-      const lastRefreshed = this.get('lastRefreshed');
+      const { lastRefreshed } = this;
 
       if (event) {
         res = SHOULD_RELOAD_YES;
@@ -230,7 +230,7 @@ export default Controller.extend(ModelReloaderMixin, {
   errorMessage: '',
   jobs: computed('model.jobs', {
     get() {
-      const jobs = this.getWithDefault('model.jobs', []);
+      const jobs = this.get('model.jobs') === undefined ? [] : this.get('model.jobs');
 
       return jobs.filter(j => !isPRJob(j.get('name')));
     }
@@ -245,7 +245,7 @@ export default Controller.extend(ModelReloaderMixin, {
   jobsDetails: [],
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
-  completeWorkflowGraph: computed('model.triggers.@each.triggers', {
+  completeWorkflowGraph: computed('model.triggers.@each.triggers', 'pipeline.workflowGraph', {
     get() {
       const workflowGraph = this.get('pipeline.workflowGraph');
       const triggers = this.get('model.triggers');
@@ -287,11 +287,11 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
   // Aggregates first page events and events via ModelReloaderMixin
-  modelEvents: computed('model.events', {
+  modelEvents: computed('model.events', 'pipeline.id', 'previousModelEvents', {
     get() {
       let previousModelEvents = this.previousModelEvents || [];
 
-      let currentModelEvents = this.getWithDefault('model.events', []).toArray();
+      let currentModelEvents = (this.get('model.events') === undefined ? [] : this.get('model.events')).toArray();
 
       let newModelEvents = [];
       const newPipelineId = this.get('pipeline.id');
@@ -316,7 +316,7 @@ export default Controller.extend(ModelReloaderMixin, {
       return newModelEvents;
     }
   }),
-  pipelineEvents: computed('modelEvents', 'paginateEvents.[]', {
+  pipelineEvents: computed('modelEvents', 'paginateEvents.[]', 'pipeline.id', {
     get() {
       this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
         this.set('latestCommit', event);
@@ -348,7 +348,7 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   pullRequestGroups: computed('model.jobs', {
     get() {
-      const jobs = this.getWithDefault('model.jobs', []);
+      const jobs = this.get('model.jobs') === undefined ? [] : this.get('model.jobs');
 
       let groups = {};
 
@@ -372,7 +372,7 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   isRestricted: computed('pipeline.annotations', {
     get() {
-      const annotations = this.getWithDefault('pipeline.annotations', {});
+      const annotations = this.get('pipeline.annotations') === undefined ? {} : this.get('pipeline.annotations');
 
       return (annotations['screwdriver.cd/restrictPR'] || 'none') !== 'none';
     }
@@ -389,7 +389,7 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
 
-  selectedEventObj: computed('selectedEvent', {
+  selectedEventObj: computed('events', 'selectedEvent', {
     get() {
       const selected = this.selectedEvent;
 
@@ -434,7 +434,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
   actions: {
     setDownstreamTrigger() {
-      this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
+      this.set('showDownstreamTriggers', !this.showDownstreamTriggers);
     },
     setShowListView(showListView) {
       if (showListView) {
@@ -471,11 +471,11 @@ export default Controller.extend(ModelReloaderMixin, {
     startDetachedBuild,
     stopBuild,
     async stopEvent() {
-      const event = get(this, 'selectedEventObj');
+      const event = this.selectedEventObj;
       const eventId = get(event, 'id');
 
       try {
-        return await this.get('stop').stopBuilds(eventId);
+        return await this.stop.stopBuilds(eventId);
       } catch (e) {
         this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
       }
@@ -486,7 +486,7 @@ export default Controller.extend(ModelReloaderMixin, {
       const eventId = jobs.get('firstObject.builds.firstObject.eventId');
 
       try {
-        await this.get('stop').stopBuilds(eventId);
+        await this.stop.stopBuilds(eventId);
         if (this.refreshListViewJobs) {
           await this.refreshListViewJobs();
         }

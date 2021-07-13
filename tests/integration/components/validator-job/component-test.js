@@ -9,7 +9,10 @@ module('Integration | Component | validator job', function(hooks) {
   test('it renders', async function(assert) {
     this.set('jobMock', {
       image: 'int-test:1',
-      commands: [{ name: 'step1', command: 'echo hello' }, { name: 'step2', command: 'echo goodbye' }],
+      commands: [
+        { name: 'step1', command: 'echo hello' },
+        { name: 'step2', command: 'echo goodbye' }
+      ],
       secrets: [],
       environment: {},
       settings: {}
@@ -48,7 +51,10 @@ module('Integration | Component | validator job', function(hooks) {
 
     this.set('jobMock', {
       image: 'int-test:1',
-      commands: [{ name: 'step1', command: 'echo hello' }, { name: 'step2', command: 'echo goodbye' }],
+      commands: [
+        { name: 'step1', command: 'echo hello' },
+        { name: 'step2', command: 'echo goodbye' }
+      ],
       secrets: ['FOO', 'BAR'],
       environment: {
         FOO: 'bar'
@@ -73,7 +79,10 @@ module('Integration | Component | validator job', function(hooks) {
   test('it renders settings, env, secrets, annotations', async function(assert) {
     this.set('jobMock', {
       image: 'int-test:1',
-      commands: [{ name: 'step1', command: 'echo hello' }, { name: 'step2', command: 'echo goodbye' }],
+      commands: [
+        { name: 'step1', command: 'echo hello' },
+        { name: 'step2', command: 'echo goodbye' }
+      ],
       secrets: ['FOO', 'BAR'],
       environment: {
         FOO: 'bar'
@@ -227,7 +236,10 @@ module('Integration | Component | validator job', function(hooks) {
   test('it handles clicks on header', async function(assert) {
     this.set('jobMock', {
       image: 'int-test:1',
-      commands: [{ name: 'step1', command: 'echo hello' }, { name: 'step2', command: 'echo goodbye' }],
+      commands: [
+        { name: 'step1', command: 'echo hello' },
+        { name: 'step2', command: 'echo goodbye' }
+      ],
       secrets: ['FOO', 'BAR'],
       environment: {
         FOO: 'bar'
@@ -242,15 +254,15 @@ module('Integration | Component | validator job', function(hooks) {
 
     await render(hbs`{{validator-job name="int-test" index=0 job=jobMock isOpen=openMock}}`);
 
-    assert.ok(this.get('openMock'));
+    assert.ok(this.openMock);
 
     await click('h4');
 
-    assert.notOk(this.get('openMock'));
+    assert.notOk(this.openMock);
 
     await click('h4');
 
-    assert.ok(this.get('openMock'));
+    assert.ok(this.openMock);
   });
 
   test('it renders a description', async function(assert) {
@@ -325,7 +337,10 @@ module('Integration | Component | validator job', function(hooks) {
   test('it renders without a collapsible heading', async function(assert) {
     this.set('jobMock', {
       image: 'int-test:1',
-      commands: [{ name: 'step1', command: 'echo hello' }, { name: 'step2', command: 'echo goodbye' }],
+      commands: [
+        { name: 'step1', command: 'echo hello' },
+        { name: 'step2', command: 'echo goodbye' }
+      ],
       secrets: [],
       environment: {},
       settings: {}

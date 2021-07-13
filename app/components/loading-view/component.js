@@ -76,7 +76,7 @@ export default Component.extend({
      * Get a random quote
      * @property {String} loadingMessage
      */
-  loadingMessage: computed({
+  loadingMessage: computed('funnies.length', {
     get() {
       const index = Math.floor(Math.random() * this.funnies.length);
 

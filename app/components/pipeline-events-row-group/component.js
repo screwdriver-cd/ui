@@ -5,7 +5,7 @@ export default Component.extend({
   events: [],
   isExpanded: computed('expandedEventsGroup', 'events.[]', {
     get() {
-      const expandedGroups = get(this, 'expandedEventsGroup');
+      const expandedGroups = this.expandedEventsGroup;
       const { groupEventId } = this.events[0];
 
       return !!expandedGroups[groupEventId];

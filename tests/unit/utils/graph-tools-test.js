@@ -11,7 +11,10 @@ import { module, test } from 'qunit';
 
 const SIMPLE_GRAPH = {
   nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }],
-  edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }]
+  edges: [
+    { src: '~pr', dest: 'main' },
+    { src: '~commit', dest: 'main' }
+  ]
 };
 
 const COMPLEX_GRAPH = {
@@ -227,7 +230,10 @@ module('Unit | Utility | graph tools', function() {
   test('it handles detached jobs', function(assert) {
     const inputGraph = {
       nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: 'foo' }, { name: 'bar' }],
-      edges: [{ src: '~pr', dest: 'main' }, { src: '~commit', dest: 'main' }]
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' }
+      ]
     };
     const expectedOutput = {
       nodes: [
@@ -334,8 +340,15 @@ module('Unit | Utility | graph tools', function() {
     });
     assert.deepEqual(subgraphFilter(SIMPLE_GRAPH), SIMPLE_GRAPH);
     assert.deepEqual(subgraphFilter(COMPLEX_GRAPH, 'A'), {
-      nodes: [{ name: 'A', id: 2 }, { name: 'C', id: 4 }, { name: 'D', id: 5 }],
-      edges: [{ src: 'A', dest: 'C' }, { src: 'C', dest: 'D' }]
+      nodes: [
+        { name: 'A', id: 2 },
+        { name: 'C', id: 4 },
+        { name: 'D', id: 5 }
+      ],
+      edges: [
+        { src: 'A', dest: 'C' },
+        { src: 'C', dest: 'D' }
+      ]
     });
     assert.deepEqual(subgraphFilter(MORE_COMPLEX_GRAPH, 'wow_new_main'), {
       nodes: [{ name: 'other_publish' }, { name: 'wow_new_main' }],

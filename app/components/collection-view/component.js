@@ -37,10 +37,10 @@ export default Component.extend({
   pipelineRemovedMessage: '',
   reset: false,
 
-  showViewSwitch: computed('collection.pipelineIds', function showViewSwitch() {
+  showViewSwitch: computed('collection.pipelineIds.length', function showViewSwitch() {
     return this.collection.pipelineIds.length !== 0;
   }),
-  collections: computed({
+  collections: computed('session.data.authenticated.isGuest', 'session.isAuthenticated', {
     get() {
       if (!get(this, 'session.isAuthenticated') || get(this, 'session.data.authenticated.isGuest')) {
         return [];
@@ -55,9 +55,13 @@ export default Component.extend({
     }
   }),
 
-  showOrganizeButton: computed('session.isAuthenticated', 'collection.pipelineIds', function showOrganizeButton() {
-    return this.session.isAuthenticated && this.collection.pipelineIds.length !== 0;
-  }),
+  showOrganizeButton: computed(
+        'collection.pipelineIds.length',
+        'session.isAuthenticated',
+        function showOrganizeButton() {
+            return this.session.isAuthenticated && this.collection.pipelineIds.length !== 0;
+        }
+    ),
 
   isListView: computed('activeViewOptionValue', function isListView() {
     localStorage.setItem('activeViewOptionValue', this.activeViewOptionValue);
@@ -65,15 +69,11 @@ export default Component.extend({
     return this.activeViewOptionValue === viewOptions[1].value;
   }),
 
-  showOperations: computed('selectedPipelines.length', function showOperations() {
-    return this.selectedPipelines.length > 0;
-  }),
+  showOperations: computed.gt('selectedPipelines.length', 0),
 
-  isDefaultCollection: computed('collection.type', function isDefaultCollection() {
-    return this.collection.type === 'default';
-  }),
+  isDefaultCollection: computed.equal('collection.type', 'default'),
 
-  description: computed('collection', {
+  description: computed('collection.description', {
     get() {
       let description = this.get('collection.description');
 
@@ -97,7 +97,7 @@ export default Component.extend({
       }
     }
   }),
-  collectionPipelines: computed('collection.pipelines', {
+  collectionPipelines: computed('collection.{id,pipelines}', {
     get() {
       let viewingId = this.get('collection.id');
 
@@ -111,9 +111,10 @@ export default Component.extend({
     }
   }),
   isModelSaveDisabled: computed(
-    'collectionName',
-    'collectionDescription',
-    'showSettingModal',
+    'collection.{description,name}',
+        'collectionDescription',
+        'collectionName',
+        'showSettingModal',
     function isModelSaveDisabled() {
       const isDescriptionNotChanged = this.collection.description
         ? isEqual(this.collectionDescription, this.collection.description)
@@ -250,7 +251,7 @@ export default Component.extend({
       });
     },
     toggleAddPipelineModal() {
-      if (this.get('showAddPipelineModal')) {
+      if (this.showAddPipelineModal) {
         if (this.selectedSearchedPipelines.length !== 0) {
           this.addMultipleToCollection(this.selectedSearchedPipelines, this.collection.id).then(() => {
             this.store.findRecord('collection', this.get('collection.id')).then(collection => {

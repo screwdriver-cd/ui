@@ -3,7 +3,7 @@ import { computed } from '@ember/object';
 import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
-  stopButtonClass: computed('value.latestBuild', {
+  stopButtonClass: computed('value.latestBuild.status', {
     get() {
       const status = this.get('value.latestBuild.status');
 
@@ -16,7 +16,7 @@ export default Component.extend({
   }),
   actions: {
     startSingleBuild(status = undefined) {
-      const value = this.get('value');
+      const { value } = this;
 
       if (value.hasParameters) {
         value.openParametersModal(value.jobId);
@@ -25,7 +25,7 @@ export default Component.extend({
       }
     },
     stopBuild() {
-      const value = this.get('value');
+      const { value } = this;
 
       value.stopBuild(null, { buildId: value.latestBuild.id });
     }

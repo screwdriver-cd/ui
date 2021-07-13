@@ -21,7 +21,7 @@ export default Component.extend({
 
   prNumber: computed('event.pr.url', {
     get() {
-      let url = this.getWithDefault('event.pr.url', '');
+      let url = this.get('event.pr.url') === undefined ? '' : this.get('event.pr.url');
 
       return url.split('/').pop();
     }
@@ -40,7 +40,7 @@ export default Component.extend({
     }
   }),
 
-  buildAction: computed('buildStatus', {
+  buildAction: computed('buildEnd', 'buildStatus', {
     get() {
       if (isActiveBuild(this.buildStatus, this.buildEnd)) {
         return 'Stop';
@@ -80,7 +80,7 @@ export default Component.extend({
       const buildUrl = window.location.href.match(BUILD_URL_REGEX);
       const coverageFloat = parseFloat(coverage) ? Number(parseFloat(coverage).toFixed(2)) : null;
 
-      let coverageInfo = { ...this.get('coverageInfo') };
+      let coverageInfo = { ...this.coverageInfo };
 
       if (coverageFloat) {
         coverageInfo.coverage = `${coverageFloat}%`;

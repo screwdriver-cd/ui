@@ -49,18 +49,18 @@ export default Component.extend({
     });
   },
 
-  isPrChainJob: computed('tooltipData', function isPrChainJob() {
-    const selectedEvent = getWithDefault(this, 'selectedEventObj', {});
+  isPrChainJob: computed('pipeline.prChain', 'selectedEventObj', 'tooltipData', function isPrChainJob() {
+    const selectedEvent = this.selectedEventObj === undefined ? {} : this.selectedEventObj;
     const { prNum } = selectedEvent;
     const isPrChain = get(this, 'pipeline.prChain');
 
     return prNum !== undefined && isPrChain;
   }),
 
-  prBuildExists: computed('tooltipData', function isStartablePrChainJob() {
-    const selectedEvent = get(this, 'selectedEventObj');
+  prBuildExists: computed('selectedEventObj', 'tooltipData', function isStartablePrChainJob() {
+    const selectedEvent = this.selectedEventObj;
 
-    const tooltipData = get(this, 'tooltipData');
+    const { tooltipData } = this;
 
     let selectedJobId;
 
@@ -78,32 +78,37 @@ export default Component.extend({
     return prNum && buildExists.length !== 0;
   }),
 
-  buildParameters: computed('tooltipData', function preselectBuildParameters() {
-    const defaultParameters = this.getWithDefault('pipeline.parameters', {});
-    const buildParameters = copy(defaultParameters, true);
+  buildParameters: computed(
+        'pipeline.parameters',
+        'tooltipData.selectedEvent.meta.parameters',
+        function preselectBuildParameters() {
+            const defaultParameters =
+                this.get('pipeline.parameters') === undefined ? {} : this.get('pipeline.parameters');
+            const buildParameters = copy(defaultParameters, true);
 
-    if (this.tooltipData) {
-      const currentEventParameters = this.tooltipData.selectedEvent.meta.parameters;
-      const parameterNames = Object.keys(buildParameters);
+            if (this.tooltipData) {
+                const currentEventParameters = this.tooltipData.selectedEvent.meta.parameters;
+        const parameterNames = Object.keys(buildParameters);
 
-      parameterNames.forEach(parameterName => {
-        const parameterValue = buildParameters[parameterName].value || buildParameters[parameterName];
-        const currentEventParameterValue =
-                    currentEventParameters[parameterName].value || currentEventParameters[parameterName];
+                parameterNames.forEach(parameterName => {
+                    const parameterValue = buildParameters[parameterName].value || buildParameters[parameterName];
+                    const currentEventParameterValue =
+                        currentEventParameters[parameterName].value || currentEventParameters[parameterName];
 
-        if (Array.isArray(parameterValue)) {
-          parameterValue.removeObject(currentEventParameterValue);
-          parameterValue.unshift(currentEventParameterValue);
-        } else if (buildParameters[parameterName].value) {
-          buildParameters[parameterName].value = currentEventParameterValue;
-        } else {
-          buildParameters[parameterName] = currentEventParameterValue;
+                    if (Array.isArray(parameterValue)) {
+                        parameterValue.removeObject(currentEventParameterValue);
+                        parameterValue.unshift(currentEventParameterValue);
+                    } else if (buildParameters[parameterName].value) {
+                        buildParameters[parameterName].value = currentEventParameterValue;
+                    } else {
+                        buildParameters[parameterName] = currentEventParameterValue;
+                    }
+                });
+            }
+
+            return buildParameters;
         }
-      });
-    }
-
-    return buildParameters;
-  }),
+    ),
 
   didUpdateAttrs() {
     this._super(...arguments);
@@ -122,7 +127,7 @@ export default Component.extend({
 
       // Find root nodes to determine position of tooltip
       if (job && edges && !/^~/.test(job.name)) {
-        const selectedEvent = get(this, 'selectedEventObj');
+        const selectedEvent = this.selectedEventObj;
 
         toolTipProperties = {
           showTooltip: true,

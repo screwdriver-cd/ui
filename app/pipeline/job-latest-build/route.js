@@ -61,6 +61,6 @@ export default Route.extend({
     const pipelineId = this.paramsFor('pipeline').pipeline_id;
     const { job_name: jobName, status: buildStatus } = params;
 
-    return getLatestBuild(this.get('session'), pipelineId, jobName, buildStatus);
+    return getLatestBuild(this.session, pipelineId, jobName, buildStatus);
   }
 });

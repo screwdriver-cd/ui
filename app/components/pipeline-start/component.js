@@ -19,7 +19,7 @@ export default Component.extend({
   },
 
   getDefaultBuildParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
+    return this.get('pipeline.parameters') === undefined ? {} : this.get('pipeline.parameters');
   },
 
   startArgs: computed('prNum', 'jobs', {

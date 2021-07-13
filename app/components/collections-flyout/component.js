@@ -8,7 +8,7 @@ export default Component.extend({
   collectionToDelete: null,
   showConfirmation: false,
   showModal: false,
-  collections: computed('store', {
+  collections: computed('session.data.authenticated.isGuest', 'session.isAuthenticated', 'store', {
     get() {
       if (!get(this, 'session.isAuthenticated') || get(this, 'session.data.authenticated.isGuest')) {
         return [];

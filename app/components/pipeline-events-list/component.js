@@ -10,7 +10,7 @@ export default Component.extend({
   errorMessage: '',
   groups: computed('events.[]', {
     get() {
-      const events = get(this, 'events');
+      const { events } = this;
       const groups = groupBy(events, 'groupEventId');
       const groupsArray = Object.keys(groups).map(key => groups[key]);
 
@@ -33,7 +33,7 @@ export default Component.extend({
       if (eventType !== 'pr') {
         const currentEvent = this.groups.find(g => g.find(e => e.id === id))[0];
         const { pipelineId } = currentEvent;
-        const expandedEventsGroup = get(this, 'expandedEventsGroup') || {};
+        const expandedEventsGroup = this.expandedEventsGroup || {};
 
         expandedEventsGroup[currentEvent.groupEventId] = true;
         set(this, 'expandedEventsGroup', expandedEventsGroup);
