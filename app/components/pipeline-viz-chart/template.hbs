@@ -1,6 +1,4 @@
-{{!-- {{#if (get-length pipelines)}} --}}
 {{#if pipeline}}
-  <span>Workflow graph pipeline {{pipeline.name}}</span>
   <div class="workflow">
     {{#workflow-graph-d3
       pipeline=pipeline
