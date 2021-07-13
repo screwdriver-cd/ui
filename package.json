@@ -91,7 +91,6 @@
     "ember-cli-jstree": "^1.0.12",
     "ember-cli-jwt-decode": "0.1.0",
     "ember-cli-moment-shim": "^3.7.1",
-    "ember-cli-pretender": "^3.1.1",
     "ember-cli-sass": "^10.0.1",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-template-lint": "^2.0.2",
@@ -144,5 +143,7 @@
     "qunit-dom": "^1.0.0",
     "sass": "^1.23.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "pretender": "^3.4.3"
+  }
 }
