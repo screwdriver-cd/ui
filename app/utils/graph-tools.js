@@ -332,13 +332,13 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
 
 /**
  * remove branch of given node and its children
- * @param  {Node} node     Given node
+ * @param  {Node} node     Given node n
  * @param  {Graph} graph   Given graph
  * @return {undefined}     Removal operation is in-place
  */
-const removeBranch = (node, graph) => {
-  if (node && node.name) {
-    const inEdges = graph.edges.filter(edge => edge.dest === node.name).length;
+const removeBranch = (n, graph) => {
+  if (n && n.name) {
+    const inEdges = graph.edges.filter(edge => edge.dest === n.name).length;
 
     // remove node if it only has 1 edge
     if (inEdges === 0) {
@@ -346,7 +346,7 @@ const removeBranch = (node, graph) => {
       const edges = graph.edges.slice(0);
 
       edges.forEach(edge => {
-        if (edge.src === node.name) {
+        if (edge.src === n.name) {
           const nodeToBeRemoved = graph.nodes.findBy('name', edge.dest);
 
           graph.edges.removeObject(edge);
@@ -355,7 +355,7 @@ const removeBranch = (node, graph) => {
         }
       });
 
-      graph.nodes.removeObject(node);
+      graph.nodes.removeObject(n);
     }
   }
 };
