@@ -67,7 +67,7 @@ export default Component.extend({
                         ? {
                               nodes: [],
                               edges: []
-        } : this.completeWorkflowGraph);
+        } : this.completeWorkflowGraph;
 
                 let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
 
