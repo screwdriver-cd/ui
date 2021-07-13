@@ -1,21 +1,12 @@
 <div class="pipeline-viz-row {{if isSelectedConnectedPipeline "selected"}}">
-
   <div class="repo" onclick={{action "handleClick" pipeline}}>
     <i class="fa fa-check-circle success" aria-hidden="true"></i>
-    {{!-- <span class="repo-name" href={{pipeline.scmRepo.url}}>{{pipeline.name}}</span> --}}
     <span class="repo-name" href={{pipeline.scmRepo.url}}>{{pipeline.name}}</span>
   </div>
 
   <div class="repo-action" onclick={{action "handleActionClick" pipeline}}>
-    {{#if isSelectedPipeline}}
-      {{!-- {{fa-icon "search" size="1.5"}} --}}
-    {{else}}
-      {{!-- {{fa-icon "search-plus" size="1.5"}} --}}
-      {{!-- {{fa-icon "arrow-right" size="2"}} --}}
+    {{#unless isSelectedPipeline}}
       <i class="glyphicon glyphicon-arrow-right"></i>
-    {{/if}}
+    {{/unless}}
   </div>
-
-
-  {{!-- <div> NO INFO ABOUT EVENT, such as COMMIT MESSGAE</div> --}}
 </div>

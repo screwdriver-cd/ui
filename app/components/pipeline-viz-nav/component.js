@@ -21,10 +21,8 @@ export default Component.extend({
     },
 
     async handleSearch(pipelineName) {
-      let pipelines = [];
-
       try {
-        pipelines = await this.onSearchPipeline(pipelineName);
+        const pipelines = await this.onSearchPipeline(pipelineName);
 
         return pipelines;
       } catch (e) {

@@ -21,7 +21,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
     let model = {};
 
-    /* eslint no-unsafe-finally: "error" */
     try {
       let selectedPipeline = null;
 
