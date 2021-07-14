@@ -33,7 +33,6 @@ export default Component.extend({
     return this.pipeline.workflowGraph;
   }),
   startFrom: computed('pipeline', function startFrom() {
-    // return this.pipeline.startFrom;
     return ['~pr', '~commit'];
   }),
   actions: {
