@@ -9,7 +9,7 @@ import { debounce, later } from '@ember/runloop';
 import { removeBranch } from 'screwdriver-ui/utils/graph-tools';
 
 /**
- * Check weather if given job name is an external trigger
+ * Check whether given job name is an external trigger
  * @param  {String}  jobName
  * @return {Boolean} true if is an external trigger, false otherwise
  */
