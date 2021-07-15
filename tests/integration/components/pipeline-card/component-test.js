@@ -49,6 +49,9 @@ module('Integration | Component | pipeline card', function(hooks) {
       isOrganizing: false,
       reset: false
     });
+
+    // make sure component is in viewport to trigger didEnterView event
+    document.getElementById('ember-testing').scrollIntoView();
   });
 
   hooks.afterEach(function() {

@@ -62,6 +62,7 @@ Router.map(function route() {
     this.route('detail', { path: '/:namespace/:name/:version' });
   });
   this.route('404', { path: '/*path' });
+  this.route('pipeline-visualizer');
 });
 /* eslint-enable array-callback-return */
 

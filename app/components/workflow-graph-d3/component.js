@@ -2,38 +2,13 @@
 import Component from '@ember/component';
 import { set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { icon, decorateGraph, subgraphFilter } from 'screwdriver-ui/utils/graph-tools';
+import {
+  icon,
+  decorateGraph,
+  subgraphFilter,
+  removeBranch
+} from 'screwdriver-ui/utils/graph-tools';
 import ENV from 'screwdriver-ui/config/environment';
-
-/**
- * remove branch of given node and its children
- * @param  {Node} node     Given node
- * @param  {Graph} graph   Given graph
- * @return {undefined}     Removal operation is in-place
- */
-function removeBranch(node, graph) {
-  if (node && node.name) {
-    const inEdges = graph.edges.filter(edge => edge.dest === node.name).length;
-
-    // remove node if it only has 1 edge
-    if (inEdges === 0) {
-      // keep a copy of edges to aid in-place edge removal
-      const edges = graph.edges.slice(0);
-
-      edges.forEach(edge => {
-        if (edge.src === node.name) {
-          const nodeToBeRemoved = graph.nodes.findBy('name', edge.dest);
-
-          graph.edges.removeObject(edge);
-
-          removeBranch(nodeToBeRemoved, graph);
-        }
-      });
-
-      graph.nodes.removeObject(node);
-    }
-  }
-}
 
 export default Component.extend({
   shuttle: service(),
