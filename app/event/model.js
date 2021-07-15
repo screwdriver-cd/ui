@@ -7,25 +7,6 @@ import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
 import { SHOULD_RELOAD_NO, SHOULD_RELOAD_YES } from '../mixins/model-reloader';
 
-/**
- * Gets human readable text for a date
- * @method dateTimeText
- * @param  {String}         date key for time attribute
- * @return {String}              human readable text for date time
- */
-function dateTimeText(date) {
-  let dateTime = this.get(date);
-
-  if (typeof dateTime === 'string') {
-    dateTime = new Date(dateTime);
-  }
-  if (!dateTime) {
-    return '--';
-  }
-
-  return `${toCustomLocaleString(new Date(dateTime.getTime()))}`;
-}
-
 export default DS.Model.extend(ModelReloaderMixin, {
   buildId: DS.attr('number'),
   causeMessage: DS.attr('string'),
@@ -74,7 +55,13 @@ export default DS.Model.extend(ModelReloaderMixin, {
   }),
   createTimeExact: computed('createTime', {
     get() {
-      return dateTimeText.call(this, 'createTime');
+      if (get(this, 'createTime')) {
+        let dateTime = get(this, 'createTime').getTime();
+
+        return `${toCustomLocaleString(new Date(dateTime))}`;
+      }
+
+      return '';
     }
   }),
   duration: computed('builds.[]', 'isComplete', {

@@ -95,3 +95,19 @@ export const CONSTANT = {
   SEMI_YEAR: 60 * 60 * 24 * 30 * 6 * 1e3,
   YEAR: 60 * 60 * 24 * 365 * 1e3
 };
+
+// /**
+//  * Gets human readable text for a date
+//  * @method dateTimeText
+//  * @param  {Date} dateTime date time object
+//  * @param  {String} timeZone targeted time zone, e.g. UTC, America/Los_Angeles
+//  * @return {String} human readable text for date time
+//  */
+//  export function dateTimeText(dateTime, timeZone) {
+
+//   if (!dateTime) {
+//     return '--';
+//   }
+
+//   return `${toCustomLocaleString(new Date(dateTime), { timeZone })}`;
+// }
