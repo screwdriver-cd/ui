@@ -2,6 +2,7 @@ import { computed, observer, get, set } from '@ember/object';
 import { sort } from '@ember/object/computed';
 import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
+import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
 import { SHOULD_RELOAD_NO, SHOULD_RELOAD_YES } from '../mixins/model-reloader';
@@ -50,6 +51,17 @@ export default DS.Model.extend(ModelReloaderMixin, {
       }
 
       return '0 seconds ago';
+    }
+  }),
+  createTimeExact: computed('createTime', {
+    get() {
+      if (get(this, 'createTime')) {
+        let dateTime = get(this, 'createTime').getTime();
+
+        return `${toCustomLocaleString(new Date(dateTime))}`;
+      }
+
+      return '';
     }
   }),
   duration: computed('builds.[]', 'isComplete', {
