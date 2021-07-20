@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { get, set, observer } from '@ember/object';
 import moment from 'moment';
+import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import Table from 'ember-light-table';
 import isEqual from 'lodash.isequal';
 
@@ -160,7 +161,9 @@ export default Component.extend({
       let coverageData = {};
 
       if (latestBuild) {
-        startTime = moment(latestBuild.startTime).format('lll');
+        startTime = latestBuild.startTime
+          ? `${toCustomLocaleString(new Date(latestBuild.startTime))}`
+          : 'Invalid date';
         buildId = latestBuild.id;
         duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, latestBuild.status);
 
