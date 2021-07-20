@@ -330,4 +330,34 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
   };
 };
 
-export { node, icon, decorateGraph, graphDepth, isRoot, isTrigger, subgraphFilter };
+/**
+ * remove branch of given node and its children
+ * @param  {Node} node     Given node n
+ * @param  {Graph} graph   Given graph
+ * @return {undefined}     Removal operation is in-place
+ */
+const removeBranch = (n, graph) => {
+  if (n && n.name) {
+    const inEdges = graph.edges.filter(edge => edge.dest === n.name).length;
+
+    // remove node if it only has 1 edge
+    if (inEdges === 0) {
+      // keep a copy of edges to aid in-place edge removal
+      const edges = graph.edges.slice(0);
+
+      edges.forEach(edge => {
+        if (edge.src === n.name) {
+          const nodeToBeRemoved = graph.nodes.findBy('name', edge.dest);
+
+          graph.edges.removeObject(edge);
+
+          removeBranch(nodeToBeRemoved, graph);
+        }
+      });
+
+      graph.nodes.removeObject(n);
+    }
+  }
+};
+
+export { node, icon, decorateGraph, graphDepth, isRoot, isTrigger, subgraphFilter, removeBranch };
