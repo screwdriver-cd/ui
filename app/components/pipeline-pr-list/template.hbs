@@ -19,11 +19,8 @@
         {{#each jobs as |job|}}
           {{pipeline-pr-view job=job workflowGraph=workflowGraph}}
         {{/each}}
-      {{else}}
-        {{#if isRestricted}}
-          {{#bs-button type="primary" class="startButton" onClick=(action startBuild jobs.0.group jobs)}}Start{{/bs-button}}
-        {{/if}}
       {{/if}}
+      {{#bs-button type="primary" class="startButton" onClick=(action startBuild jobs.0.group jobs)}}Start{{/bs-button}}
     </div>
   </div>
 {{/if}}
