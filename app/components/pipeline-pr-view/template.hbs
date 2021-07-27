@@ -7,10 +7,10 @@
       {{else}}
         <span class="greyOut">{{displayName}}</span>
       {{/if}}
-      {{#if build.endTimeWords}}
-        <div class="date greyOut">Finished {{build.endTimeWords}}</div>
-      {{else if build.startTimeWords}}
-        <div class="date greyOut">Started {{build.startTimeWords}}</div>
+      {{#if build.endTimeExact}}
+        <div class="date greyOut">Finished {{build.endTimeExact}}</div>
+      {{else if build.startTimeExact}}
+        <div class="date greyOut">Started {{build.startTimeExact}}</div>
       {{/if}}
     </div>
   </div>

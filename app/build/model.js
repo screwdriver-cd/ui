@@ -1,5 +1,6 @@
 import { computed } from '@ember/object';
 import DS from 'ember-data';
+import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 
 /**
  * Calulate ms difference between two times
@@ -74,6 +75,17 @@ export default DS.Model.extend({
       return `${dt} ago`;
     }
   }),
+  createTimeExact: computed('createTime', {
+    get() {
+      if (this.createTime) {
+        let dateTime = this.createTime.getTime();
+
+        return `${toCustomLocaleString(new Date(dateTime))}`;
+      }
+
+      return '';
+    }
+  }),
   endTimeWords: computed('endTime', {
     get() {
       if (!this.endTime) {
@@ -81,6 +93,17 @@ export default DS.Model.extend({
       }
 
       return `${durationText.call(this, 'endTime', 'now')} ago`;
+    }
+  }),
+  endTimeExact: computed('endTime', {
+    get() {
+      if (this.endTime) {
+        let dateTime = this.endTime.getTime();
+
+        return `${toCustomLocaleString(new Date(dateTime))}`;
+      }
+
+      return null;
     }
   }),
   // Queue time and blocked time are merged into blockedDuration
