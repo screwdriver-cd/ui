@@ -12,13 +12,15 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       id: 'abcd',
       name: 'PR-1234:main',
       createTimeWords: 'now',
+      createTimeExact: '06/03/2021, 10:04 PM',
       title: 'update readme',
       username: 'anonymous',
       builds: [
         {
           id: '1234',
           status: 'SUCCESS',
-          startTimeWords: 'now'
+          startTimeWords: 'now',
+          startTimeExact: '06/03/2021, 10:04 PM'
         }
       ]
     });
@@ -47,9 +49,9 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       find('.detail')
         .textContent.trim()
         .replace(/\s{2,}/g, ' '),
-      'myname Started now'
+      'myname Started 06/03/2021, 10:04 PM'
     );
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/03/2021, 10:04 PM');
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
   });
 
@@ -59,13 +61,15 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       id: 'abcd',
       name: 'PR-1234:main',
       createTimeWords: 'now',
+      createTimeExact: '06/03/2021, 10:04 PM',
       title: 'update readme',
       username: 'anonymous',
       builds: [
         {
           id: '1234',
           status: 'UNSTABLE',
-          startTimeWords: 'now'
+          startTimeWords: 'now',
+          startTimeExact: '06/03/2021, 10:04 PM'
         }
       ]
     });
@@ -98,13 +102,15 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       id: 'abcd',
       name: 'PR-1234:main',
       createTimeWords: 'now',
+      createTimeExact: '06/03/2021, 10:04 PM',
       title: 'update readme',
       username: 'anonymous',
       builds: [
         {
           id: '1234',
           status: 'FAILURE',
-          startTimeWords: 'now'
+          startTimeWords: 'now',
+          startTimeExact: '06/03/2021, 10:04 PM'
         }
       ]
     });
@@ -137,13 +143,15 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       id: 'abcd',
       name: 'PR-1234:main',
       createTimeWords: 'now',
+      createTimeExact: '06/03/2021, 10:04 PM',
       title: 'update readme',
       username: 'anonymous',
       builds: [
         {
           id: '1234',
           status: 'QUEUED',
-          startTimeWords: 'now'
+          startTimeWords: 'now',
+          startTimeExact: '06/03/2021, 10:04 PM'
         }
       ]
     });
@@ -176,13 +184,15 @@ module('Integration | Component | pipeline pr view', function(hooks) {
       id: 'abcd',
       name: 'PR-1234:main',
       createTimeWords: 'now',
+      createTimeExact: '06/03/2021, 10:04 PM',
       title: 'update readme',
       username: 'anonymous',
       builds: [
         {
           id: '1234',
           status: 'RUNNING',
-          startTimeWords: 'now'
+          startTimeWords: 'now',
+          startTimeExact: '06/03/2021, 10:04 PM'
         }
       ]
     });
