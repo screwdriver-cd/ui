@@ -8,9 +8,9 @@
           PR-{{jobs.0.group}}
         </a>
         {{#if isRunning}}
-          {{#bs-button type="primary" class="stopButton" onClick=(action stopPRBuilds jobs)}}Stop PR-{{jobs.0.group}}{{/bs-button}}
+          {{#bs-button type="primary" class="stopButton" onClick=(action stopPRBuilds jobs)}}Stop{{/bs-button}}
         {{else}}
-          {{#bs-button type="primary" class="startButton" onClick=(action startBuild jobs.0.group jobs)}}Start PR-{{jobs.0.group}}{{/bs-button}}
+          {{#bs-button type="primary" class="startButton" onClick=(action startBuild jobs.0.group jobs)}}Start{{/bs-button}}
         {{/if}}
       </div>
       <div class="date greyOut">Opened {{jobs.0.createTimeExact}}</div>
