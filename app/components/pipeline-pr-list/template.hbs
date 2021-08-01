@@ -7,6 +7,8 @@
           <span>{{fa-icon "code-fork"}}</span>
           PR-{{jobs.0.group}}
         </a>
+        <br>
+        <span class="title">{{jobs.0.title}}</span>
         {{#if isRunning}}
           {{#bs-button type="primary" class="stopButton" onClick=(action stopPRBuilds jobs)}}Stop{{/bs-button}}
         {{else}}
