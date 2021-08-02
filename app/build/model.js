@@ -68,6 +68,17 @@ export default DS.Model.extend({
       return `${durationText.call(this, 'startTime', 'now')} ago`;
     }
   }),
+  startTimeExact: computed('startTime', {
+    get() {
+      if (this.startTime) {
+        let dateTime = this.startTime.getTime();
+
+        return `${toCustomLocaleString(new Date(dateTime))}`;
+      }
+
+      return `${toCustomLocaleString(new Date())}`;
+    }
+  }),
   createTimeWords: computed('createTime', {
     get() {
       const dt = durationText.call(this, 'createTime', 'now');
@@ -83,7 +94,7 @@ export default DS.Model.extend({
         return `${toCustomLocaleString(new Date(dateTime))}`;
       }
 
-      return '';
+      return `${toCustomLocaleString(new Date())}`;
     }
   }),
   endTimeWords: computed('endTime', {
