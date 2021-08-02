@@ -2,12 +2,14 @@ cache:
   pipeline: [ ~/.npm ]
 
 shared:
-  image: node:12
+  environment:
+    DOCKER_REPO: screwdrivercd/ui
   annotations:
     screwdriver.cd/ram: HIGH
 
 jobs:
   main:
+    image: node:12
     environment:
       COVERAGE: "true"
       SD_SONAR_OPTS: "-Dsonar.sources=app -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
@@ -21,6 +23,7 @@ jobs:
 
   # Publish the package to GitHub and build docker image
   publish:
+    image: node:12
     annotations:
       screwdriver.cd/ram: TURBO
     environment:
@@ -33,21 +36,19 @@ jobs:
       - package: tar -C dist -cvzf $RELEASE_FILE .
       - tag: ./ci/git-tag.sh
       - publish: ./ci/git-release.sh
-      - docker: |
-              export DOCKER_TAG=`cat VERSION`
-              ./ci/docker-trigger.sh
     secrets:
       # Pushing tags to Git
       - GIT_KEY
       # Pushing releases to GitHub
       - GITHUB_TOKEN
-      # Trigger a Docker Hub build
-      - DOCKER_TRIGGER
     requires:
       - main
-
+  docker-publish:
+    requires: publish
+    template: sd/dind@latest
   # Deploy to our beta environment and run tests
   beta:
+    image: node:12
     steps:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
       - get-tag: ./ci/git-latest.sh
@@ -55,7 +56,6 @@ jobs:
       - deploy-k8s: K8S_TAG=`cat VERSION` ./ci/k8s-deploy.sh
       - test: sleep 30; curl --silent --fail -o /dev/null https://beta.cd.screwdriver.cd
     environment:
-      DOCKER_REPO: screwdrivercd/ui
       K8S_CONTAINER: screwdriver-ui
       K8S_IMAGE: screwdrivercd/ui
       K8S_HOST: kubernetes.default.svc
@@ -65,10 +65,11 @@ jobs:
       # Talking to Kubernetes
       - K8S_TOKEN
     requires:
-      - publish
+      - docker-publish
 
   # Deploy to our prod environment and run tests
   prod:
+    image: node:12
     steps:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
       - get-tag: ./ci/git-latest.sh
@@ -76,7 +77,6 @@ jobs:
       - deploy-k8s: K8S_TAG=`cat VERSION` ./ci/k8s-deploy.sh
       - test: sleep 30; curl --silent --fail -o /dev/null https://cd.screwdriver.cd
     environment:
-      DOCKER_REPO: screwdrivercd/ui
       K8S_CONTAINER: screwdriver-ui
       K8S_IMAGE: screwdrivercd/ui
       K8S_HOST: kubernetes.default.svc
