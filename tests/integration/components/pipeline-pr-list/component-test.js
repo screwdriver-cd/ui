@@ -56,8 +56,14 @@ module('Integration | Component | pipeline pr list', function(hooks) {
     this.set('jobsMock', jobs);
     this.set('workflowGraphMock', workflowgraph);
     this.set('startBuild', Function.prototype);
+    this.set('stopPRBuilds', Function.prototype);
 
-    await render(hbs`{{pipeline-pr-list jobs=jobsMock workflowGraph=workflowGraphMock}}`);
+    await render(hbs`{{pipeline-pr-list
+      jobs=jobsMock
+      isRestricted=isRestricted
+      startBuild=startBuild
+      workflowGraph=workflowGraphMock
+      stopPRBuilds=stopPRBuilds}}`);
 
     assert.dom('.view .view .detail').exists({ count: 2 });
     assert.dom('.title').hasText('update readme');
