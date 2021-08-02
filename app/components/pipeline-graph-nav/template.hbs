@@ -1,64 +1,64 @@
-<div class="row">
-
-  <div class="col-xs-2">
-    {{#bs-button-group
-            class="view-toggle"
-            value=showListView
-            type="radio"
-            onChange=(action setShowListView) as |bg|
-    }}
-      {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
-      {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
-    {{/bs-button-group}}
-  </div>
-
-  <div class="col-xs-4">
-    {{#if isPR}}
-      <strong>Pull Requests</strong>
-    {{/if}}
-    {{#bs-button-group
-      class="event-options-toggle"
-      value=selectedEvent
-      type="radio"
-      onChange=(action (mut selected)) as |bg|
-    }}
-      {{#each eventOptions as |opt|}}
-        {{#bg.button value=opt.value}}{{opt.label}}{{/bg.button}}
-      {{/each}}
-    {{/bs-button-group}}
-  </div>
-  <div class="col-xs-3" title="Toggle to {{if showDownstreamTriggers "hide" "show"}} the downstream trigger nodes.">
-    {{x-toggle
-      size="medium"
-      theme="material"
-      showLabels=true
-      value=showDownstreamTriggers
-      offLabel="Hide triggers"
-      onLabel="Show triggers"
-      onToggle=(action setDownstreamTrigger)
-    }}
-  </div>
-  <div class="col-xs-3">
-    {{#if session.isAuthenticated}}
-      {{#if selectedEventObj.isRunning}}
-        <div class="col">
-          {{#bs-button onClick=(action stopEvent) class="event__stop" title="Stop all builds for this event"}}Stop{{/bs-button}}
-        </div>
-      {{/if}}
-      {{#if (eq selectedEventObj.type "pr")}}
-        {{pipeline-start
-          startBuild=(action startPRBuild)
-          prNum=selectedEventObj.prNum
-          jobs=prJobs
-          pipeline=pipeline}}
-      {{else}}
-        {{pipeline-start startBuild=(action startMainBuild) pipeline=pipeline}}
-      {{/if}}
-    {{/if}}
-  </div>
-</div>
-
 {{#if selectedEventObj}}
+  <div class="row">
+
+    <div class="col-xs-2">
+      {{#bs-button-group
+              class="view-toggle"
+              value=showListView
+              type="radio"
+              onChange=(action setShowListView) as |bg|
+      }}
+        {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
+        {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
+      {{/bs-button-group}}
+    </div>
+
+    <div class="col-xs-4">
+      {{#if isPR}}
+        <strong>Pull Requests</strong>
+      {{/if}}
+      {{#bs-button-group
+        class="event-options-toggle"
+        value=selectedEvent
+        type="radio"
+        onChange=(action (mut selected)) as |bg|
+      }}
+        {{#each eventOptions as |opt|}}
+          {{#bg.button value=opt.value}}{{opt.label}}{{/bg.button}}
+        {{/each}}
+      {{/bs-button-group}}
+    </div>
+    <div class="col-xs-3" title="Toggle to {{if showDownstreamTriggers "hide" "show"}} the downstream trigger nodes.">
+      {{x-toggle
+        size="medium"
+        theme="material"
+        showLabels=true
+        value=showDownstreamTriggers
+        offLabel="Hide triggers"
+        onLabel="Show triggers"
+        onToggle=(action setDownstreamTrigger)
+      }}
+    </div>
+    <div class="col-xs-3">
+      {{#if session.isAuthenticated}}
+        {{#if selectedEventObj.isRunning}}
+          <div class="col">
+            {{#bs-button onClick=(action stopEvent) class="event__stop" title="Stop all builds for this event"}}Stop{{/bs-button}}
+          </div>
+        {{/if}}
+        {{#if (eq selectedEventObj.type "pr")}}
+          {{pipeline-start
+            startBuild=(action startPRBuild)
+            prNum=selectedEventObj.prNum
+            jobs=prJobs
+            pipeline=pipeline}}
+        {{else}}
+          {{pipeline-start startBuild=(action startMainBuild) pipeline=pipeline}}
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+
   <div class="row {{selectedEventObj.status}}">
     <div class="col-xs-12">
       <div class="event-info">

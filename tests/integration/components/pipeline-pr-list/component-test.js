@@ -13,6 +13,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
         id: 'abcd',
         name: 'PR-1234:main',
         createTimeWords: 'now',
+        createTimeExact: '08/03/2021, 02:21 AM',
         title: 'update readme',
         username: 'anonymous',
         builds: [
@@ -26,6 +27,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
         id: 'efgh',
         name: 'A',
         createTimeWords: 'now',
+        createTimeExact: '08/03/2021, 02:21 AM',
         title: 'revert PR-1234',
         username: 'suomynona',
         builds: [
@@ -53,8 +55,15 @@ module('Integration | Component | pipeline pr list', function(hooks) {
 
     this.set('jobsMock', jobs);
     this.set('workflowGraphMock', workflowgraph);
+    this.set('startBuild', Function.prototype);
+    this.set('stopPRBuilds', Function.prototype);
 
-    await render(hbs`{{pipeline-pr-list jobs=jobsMock workflowGraph=workflowGraphMock}}`);
+    await render(hbs`{{pipeline-pr-list
+      jobs=jobsMock
+      isRestricted=isRestricted
+      startBuild=startBuild
+      workflowGraph=workflowGraphMock
+      stopPRBuilds=stopPRBuilds}}`);
 
     assert.dom('.view .view .detail').exists({ count: 2 });
     assert.dom('.title').hasText('update readme');
@@ -84,7 +93,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
       startBuild=startBuild
       stopPRBuilds=stopPRBuilds}}`);
 
-    assert.dom('.prsStop').doesNotExist();
+    assert.dom('.stopButton').doesNotExist();
     assert.dom('.view .view .detail').doesNotExist();
     assert.dom('.title').hasText('update readme');
     assert.dom('.by').hasText('anonymous');
@@ -136,7 +145,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
       workflowGraph=workflowGraphMock
       stopPRBuilds=stopPRBuilds}}`);
 
-    assert.dom('.prsStop').exists({ count: 1 });
+    assert.dom('.stopButton').exists({ count: 1 });
     assert.dom('.view .view .detail').exists({ count: 1 });
     assert.dom('.title').hasText('update readme');
     assert.dom('.by').hasText('anonymous');
