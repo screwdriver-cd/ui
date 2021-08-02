@@ -55,6 +55,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
 
     this.set('jobsMock', jobs);
     this.set('workflowGraphMock', workflowgraph);
+    this.set('startBuild', Function.prototype);
 
     await render(hbs`{{pipeline-pr-list jobs=jobsMock workflowGraph=workflowGraphMock}}`);
 
