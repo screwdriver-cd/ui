@@ -27,6 +27,16 @@ export default class PipelineEventsShowRoute extends Route {
     }
   }
 
+  async beforeModel() {
+    const { event_id: eventId } = this.paramsFor(this.routeName);
+    const event = await this.store.findRecord('event', eventId);
+    const { pipeline_id: pipelineId } = this.paramsFor('pipeline');
+
+    if (event.get('pipelineId') !== pipelineId) {
+      this.transitionTo('pipeline', pipelineId);
+    }
+  }
+
   async setupController(controller, model) {
     super.setupController(controller, model);
 
