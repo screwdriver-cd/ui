@@ -23,7 +23,7 @@ const events = [
       url: 'http://example.com/u/batman'
     },
     startFrom: '~commit',
-    pipelineId: '12345',
+    pipelineId: '4',
     groupEventId: '23452',
     sha: 'abcdef1029384',
     type: 'pipeline',
@@ -56,7 +56,7 @@ const events = [
     pr: {
       url: 'http://example.com/batcave/batmobile/pulls/42'
     },
-    pipelineId: '12345',
+    pipelineId: '4',
     groupEventId: '23453',
     type: 'pr',
     prNum: 42,
@@ -90,7 +90,7 @@ const events = [
     pr: {
       url: 'http://example.com/batcave/batmobile/pulls/43'
     },
-    pipelineId: '12345',
+    pipelineId: '4',
     groupEventId: '23454',
     sha: '1030384bbb',
     type: 'pr',
