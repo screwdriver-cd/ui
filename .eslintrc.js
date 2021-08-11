@@ -14,6 +14,7 @@ module.exports = {
   extends: [
     'screwdriver',
     'plugin:ember/recommended',
+    'plugin:prettier/recommended',
     'prettier' // last one wins
   ],
   env: {
@@ -24,7 +25,6 @@ module.exports = {
     humanizeDuration: true
   },
   rules: {
-    indent: ['error', 2, { SwitchCase: 1 }],
     'no-underscore-dangle': 'off',
     'prefer-const': 'off',
     'prefer-destructuring': [
@@ -55,7 +55,13 @@ module.exports = {
     'ember/no-new-mixins': 'off',
     'ember/no-observers': 'off',
     'ember/no-side-effects': 'off',
-    'prettier/prettier': 'error'
+    'prettier/prettier': [
+      'error',
+      {},
+      {
+        usePrettierrc: true
+      }
+    ]
   },
   overrides: [
     // node files
