@@ -2,12 +2,15 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { pipeline, selectedConnectedPipeline } from 'screwdriver-ui/tests/mock/pipeline-viz';
+import {
+  pipeline,
+  selectedConnectedPipeline
+} from 'screwdriver-ui/tests/mock/pipeline-viz';
 
-module('Integration | Component | pipeline-viz-chart', function(hooks) {
+module('Integration | Component | pipeline-viz-chart', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
     assert.expect(2);

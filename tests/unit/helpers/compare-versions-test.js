@@ -1,8 +1,8 @@
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 import { module, test } from 'qunit';
 
-module('Unit | Helper | compare versions', function() {
-  test('it works', function(assert) {
+module('Unit | Helper | compare versions', function () {
+  test('it works', function (assert) {
     assert.equal(compareVersions('2.0.0', '1.0.0'), 1);
     assert.equal(compareVersions('0.2.0', '0.1.0'), 1);
     assert.equal(compareVersions('0.0.2', '0.0.1'), 1);

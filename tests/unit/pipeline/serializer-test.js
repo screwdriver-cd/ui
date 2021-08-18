@@ -89,35 +89,39 @@ const getPipeline = () => {
   ]);
 };
 
-module('Unit | Serializer | pipeline', function(hooks) {
+module('Unit | Serializer | pipeline', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it serializes records', function(assert) {
-    let record = run(() => this.owner.lookup('service:store').createRecord('pipeline'));
+  test('it serializes records', function (assert) {
+    let record = run(() =>
+      this.owner.lookup('service:store').createRecord('pipeline')
+    );
 
     let serializedRecord = record.serialize();
 
     assert.ok(serializedRecord);
   });
 
-  test('it does not post with model name as key', function(assert) {
+  test('it does not post with model name as key', function (assert) {
     assert.expect(2);
-    server.post('http://localhost:8080/v4/pipelines', function() {
+    server.post('http://localhost:8080/v4/pipelines', function () {
       return [200, {}, JSON.stringify({ id: 'abcd' })];
     });
 
     run(() => {
-      const pipeline = this.owner.lookup('service:store').createRecord('pipeline', {
-        checkoutUrl: 'git@example.com:foo/bar.git'
-      });
+      const pipeline = this.owner
+        .lookup('service:store')
+        .createRecord('pipeline', {
+          checkoutUrl: 'git@example.com:foo/bar.git'
+        });
 
       pipeline.save().then(() => {
         assert.equal(pipeline.get('id'), 'abcd');
@@ -136,7 +140,7 @@ module('Unit | Serializer | pipeline', function(hooks) {
     });
   });
 
-  test('it has workflow edges sorted alphabetically via normalize', function(assert) {
+  test('it has workflow edges sorted alphabetically via normalize', function (assert) {
     assert.expect(3);
     getPipeline();
 
@@ -166,7 +170,7 @@ module('Unit | Serializer | pipeline', function(hooks) {
     return this.owner
       .lookup('service:store')
       .findRecord('pipeline', 3)
-      .then(pipeline => {
+      .then((pipeline) => {
         assert.equal(pipeline.workflowGraph.edges.length, 5, 'has 5 edges');
         assert.deepEqual(
           pipeline.workflowGraph.edges,

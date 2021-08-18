@@ -77,13 +77,13 @@ const serviceConfig = {
   started: true
 };
 
-module('Unit | Service | build logs', function(hooks) {
+module('Unit | Service | build logs', function (hooks) {
   setupTest(hooks);
 
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     this.owner.register('service:session', sessionServiceMock);
     this.session = this.owner.lookup('service:session');
@@ -91,17 +91,17 @@ module('Unit | Service | build logs', function(hooks) {
     this.owner.lookup('service:build-logs').resetCache();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     const service = this.owner.lookup('service:build-logs');
 
     assert.ok(service);
   });
 
-  test('it rejects if the user is not authenticated', function(assert) {
+  test('it rejects if the user is not authenticated', function (assert) {
     assert.expect(2);
     noMoreLogs();
     this.session.set('isAuthenticated', false);
@@ -109,13 +109,13 @@ module('Unit | Service | build logs', function(hooks) {
     const service = this.owner.lookup('service:build-logs');
     const p = service.fetchLogs(serviceConfig);
 
-    p.catch(e => {
+    p.catch((e) => {
       assert.ok(e instanceof Error, e);
       assert.equal('User is not authenticated', e.message);
     });
   });
 
-  test('it makes a call to logs api and logs return with no remaining', async function(assert) {
+  test('it makes a call to logs api and logs return with no remaining', async function (assert) {
     assert.expect(4);
     noMoreLogs();
     const service = this.owner.lookup('service:build-logs');
@@ -133,11 +133,14 @@ module('Unit | Service | build logs', function(hooks) {
     );
   });
 
-  test('it makes a call to logs api and logs return with more remaining', async function(assert) {
+  test('it makes a call to logs api and logs return with more remaining', async function (assert) {
     assert.expect(4);
     moreLogs();
     const service = this.owner.lookup('service:build-logs');
-    const { lines, done } = await service.fetchLogs({ logNumber: 50, ...serviceConfig });
+    const { lines, done } = await service.fetchLogs({
+      logNumber: 50,
+      ...serviceConfig
+    });
 
     assert.notOk(done);
     assert.equal(lines.length, 1);
@@ -151,7 +154,7 @@ module('Unit | Service | build logs', function(hooks) {
     );
   });
 
-  test('it makes a call to logs api and no logs return with no more remaining', async function(assert) {
+  test('it makes a call to logs api and no logs return with no more remaining', async function (assert) {
     assert.expect(3);
     noNewLogs();
     const service = this.owner.lookup('service:build-logs');
@@ -168,7 +171,7 @@ module('Unit | Service | build logs', function(hooks) {
     );
   });
 
-  test('it handles log api failure by treating it as there are more logs', async function(assert) {
+  test('it handles log api failure by treating it as there are more logs', async function (assert) {
     assert.expect(3);
     badLogs();
     const service = this.owner.lookup('service:build-logs');
@@ -190,7 +193,7 @@ module('Unit | Service | build logs', function(hooks) {
     }
   });
 
-  test('it handles fetching multiple pages', async function(assert) {
+  test('it handles fetching multiple pages', async function (assert) {
     assert.expect(3);
     noNewLogs();
     const service = this.owner.lookup('service:build-logs');
@@ -211,7 +214,7 @@ module('Unit | Service | build logs', function(hooks) {
     );
   });
 
-  test('it can reset the cache', function(assert) {
+  test('it can reset the cache', function (assert) {
     assert.expect(2);
     const service = this.owner.lookup('service:build-logs');
 
@@ -219,7 +222,7 @@ module('Unit | Service | build logs', function(hooks) {
     assert.equal(Object.keys(service.get('cache')).length, 0);
   });
 
-  test('it creates and revokes object url', function(assert) {
+  test('it creates and revokes object url', function (assert) {
     // assert.expect(5);
     const service = this.owner.lookup('service:build-logs');
 
@@ -233,10 +236,20 @@ module('Unit | Service | build logs', function(hooks) {
       ]
     });
 
-    const url = service.buildLogBlobUrl(serviceConfig.buildId, serviceConfig.stepName);
+    const url = service.buildLogBlobUrl(
+      serviceConfig.buildId,
+      serviceConfig.stepName
+    );
 
     assert.ok(url);
-    assert.equal(service.getCache(serviceConfig.buildId, serviceConfig.stepName, 'blobUrl'), url);
+    assert.equal(
+      service.getCache(
+        serviceConfig.buildId,
+        serviceConfig.stepName,
+        'blobUrl'
+      ),
+      url
+    );
     assert.equal(
       service.get('blobKeys')[0].toString(),
       [serviceConfig.buildId, serviceConfig.stepName].toString()
@@ -245,7 +258,11 @@ module('Unit | Service | build logs', function(hooks) {
     service.revokeLogBlobUrls();
     assert.equal(service.get('blobKeys').length, 0);
     assert.equal(
-      service.getCache(serviceConfig.buildId, serviceConfig.stepName, 'blobUrl'),
+      service.getCache(
+        serviceConfig.buildId,
+        serviceConfig.stepName,
+        'blobUrl'
+      ),
       undefined
     );
   });

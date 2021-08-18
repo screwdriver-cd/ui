@@ -16,7 +16,7 @@ export function getStepData([buildSteps, step, field]) {
     return data;
   }
 
-  data = buildSteps.find(s => s.name === step);
+  data = buildSteps.find((s) => s.name === step);
 
   if (field) {
     return get(data, field);

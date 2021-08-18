@@ -35,13 +35,13 @@ const mockPipeline = {
   }
 };
 
-module('Integration | Component | template header', function(hooks) {
+module('Integration | Component | template header', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const storeStub = Service.extend({
       findRecord() {
-        return new EmberPromise(resolve => resolve(mockPipeline));
+        return new EmberPromise((resolve) => resolve(mockPipeline));
       }
     });
 
@@ -52,7 +52,9 @@ module('Integration | Component | template header', function(hooks) {
     this.owner.unregister('service:store');
     this.owner.register('service:store', storeStub);
 
-    await render(hbs`{{template-header template=mock trusted=trusted isAdmin=isAdmin}}`);
+    await render(
+      hbs`{{template-header template=mock trusted=trusted isAdmin=isAdmin}}`
+    );
 
     assert.dom('h1').hasText('foo/bar');
     assert.dom('h2').hasText('2.0.0');

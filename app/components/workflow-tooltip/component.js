@@ -18,7 +18,9 @@ export default Component.extend({
     if (el && event) {
       let top = event.layerY + get(this, 'tooltipData.sizes.ICON_SIZE');
 
-      let left = this.left ? event.layerX - 20 : event.layerX - el.offsetWidth / 2;
+      let left = this.left
+        ? event.layerX - 20
+        : event.layerX - el.offsetWidth / 2;
 
       el.style.top = `${top}px`;
       el.style.left = `${left}px`;

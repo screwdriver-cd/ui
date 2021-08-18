@@ -5,16 +5,18 @@ const logback = `<a href="/login" target="_blank" rel="noopener">log back</a>`;
  * @param  {Array} Templates
  * @return {Array} Formatted templates
  */
-const getErrorMessage = err => {
+const getErrorMessage = (err) => {
   let errorMessage = '';
 
   if (typeof err === 'object' && err !== null) {
     const { message = '' } = err;
 
     if (message.startsWith('The adapter operation was aborted')) {
-      errorMessage = 'Action cannot be completed, please make sure you are online';
+      errorMessage =
+        'Action cannot be completed, please make sure you are online';
     } else if (message.startsWith('The ajax operation was aborted')) {
-      errorMessage = 'Action cannot be completed, please make sure you are online';
+      errorMessage =
+        'Action cannot be completed, please make sure you are online';
     } else if (message.startsWith('Request was rejected')) {
       errorMessage = message;
     }

@@ -1,4 +1,4 @@
-const getIcon = status => {
+const getIcon = (status) => {
   switch (status) {
     case 'queued':
     case 'running':
@@ -20,7 +20,7 @@ const getIcon = status => {
   }
 };
 
-const getColor = status => {
+const getColor = (status) => {
   switch (status) {
     case 'queued':
     case 'running':
@@ -42,7 +42,7 @@ const getColor = status => {
   }
 };
 
-const formatTime = duration => {
+const formatTime = (duration) => {
   const numOfTotalSeconds = duration;
   const minute = 60;
   const hour = 60 * minute;
@@ -66,9 +66,9 @@ const formatTime = duration => {
   return `${numOfHours}h ${numOfMinutes}m ${numOfSeconds}s`;
 };
 
-const getSha = sha => sha.substring(0, 7);
+const getSha = (sha) => sha.substring(0, 7);
 
-const formatMetrics = metrics => {
+const formatMetrics = (metrics) => {
   if (!metrics || !metrics.length) {
     return {
       eventsInfo: [],
@@ -87,13 +87,15 @@ const formatMetrics = metrics => {
   const lastEvent = metrics.get('firstObject');
   const lastEventStartTime = new Date(lastEvent.createTime);
   const lastEventStartYear = lastEventStartTime.getFullYear();
-  const lastEventStartMonth = (lastEventStartTime.getMonth() + 1).toString().padStart(2, '0');
+  const lastEventStartMonth = (lastEventStartTime.getMonth() + 1)
+    .toString()
+    .padStart(2, '0');
   const lastEventStartDay = lastEventStartTime
     .getDate()
     .toString()
     .padStart(2, '0');
 
-  const eventsInfo = metrics.map(event => ({
+  const eventsInfo = metrics.map((event) => ({
     duration: event.duration || 0,
     statusColor: getColor(event.status.toLowerCase())
   }));

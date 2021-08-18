@@ -21,11 +21,14 @@ export default Service.extend({
         url,
         type: 'PUT',
         headers: {
-          Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+          Authorization: `Bearer ${get(
+            this,
+            'session.data.authenticated.token'
+          )}`
         }
       })
         .done(() => resolve())
-        .fail(jqXHR => reject(JSON.parse(jqXHR.responseText).message));
+        .fail((jqXHR) => reject(JSON.parse(jqXHR.responseText).message));
     });
   }
 });

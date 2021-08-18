@@ -30,7 +30,9 @@ export default Component.extend({
     'isAuthenticated',
     'isDefaultCollection',
     function showRemoveButton() {
-      return !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated;
+      return (
+        !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated
+      );
     }
   ),
 

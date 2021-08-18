@@ -25,10 +25,10 @@ const mockSearchedPipelines = [
   }
 ];
 
-module('Integration | Component | pipeline search panel', function(hooks) {
+module('Integration | Component | pipeline search panel', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.setProperties({
       searchedPipelines: mockSearchedPipelines,
       searchPipelines: searchPipelinesSpy,
@@ -36,7 +36,7 @@ module('Integration | Component | pipeline search panel', function(hooks) {
     });
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     await render(hbs`
       {{pipeline-search-panel
         searchedPipelines=searchedPipelines
@@ -54,7 +54,7 @@ module('Integration | Component | pipeline search panel', function(hooks) {
     assert.dom(wrapperEls[3]).hasText(mockSearchedPipelines[3].name);
   });
 
-  test('it searches pipelines with a query', async function(assert) {
+  test('it searches pipelines with a query', async function (assert) {
     await render(hbs`
       {{pipeline-search-panel
         searchedPipelines=searchedPipelines
@@ -71,7 +71,7 @@ module('Integration | Component | pipeline search panel', function(hooks) {
     assert.dom('.searched-pipeline').exists({ count: 4 });
   });
 
-  test('it selects searhced pipeline', async function(assert) {
+  test('it selects searhced pipeline', async function (assert) {
     await render(hbs`
       {{pipeline-search-panel
         searchedPipelines=searchedPipelines
@@ -83,9 +83,11 @@ module('Integration | Component | pipeline search panel', function(hooks) {
 
     assert.equal(addPipelineButtons.length, 4);
 
-    const testAddPipelineButton = async idx => {
+    const testAddPipelineButton = async (idx) => {
       await click(addPipelineButtons[idx]);
-      assert.ok(selectSearchedPipelineSpy.calledWith(mockSearchedPipelines[idx].id));
+      assert.ok(
+        selectSearchedPipelineSpy.calledWith(mockSearchedPipelines[idx].id)
+      );
     };
 
     addPipelineButtons.forEach(async (addPipelineButton, idx) => {

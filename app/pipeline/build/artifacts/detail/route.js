@@ -8,7 +8,10 @@ export default Route.extend({
     if (params && params.file_path) {
       selectedArtifact = params.file_path;
     }
-    this.controllerFor('pipeline.build').set('selectedArtifact', selectedArtifact);
+    this.controllerFor('pipeline.build').set(
+      'selectedArtifact',
+      selectedArtifact
+    );
 
     // return parent route model
     return this.modelFor('pipeline.build');

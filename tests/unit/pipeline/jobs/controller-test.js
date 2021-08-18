@@ -22,23 +22,23 @@ const sessionServiceMock = Service.extend({
 
 let server;
 
-module('Unit | Controller | pipeline/jobs/index', function(hooks) {
+module('Unit | Controller | pipeline/jobs/index', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     this.owner.register('service:session', sessionServiceMock);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     assert.ok(this.owner.lookup('controller:pipeline/jobs/index'));
   });
 
-  test('it starts a single build', async function(assert) {
+  test('it starts a single build', async function (assert) {
     assert.expect(10);
     server.get('http://localhost:8080/v4/events/5678/builds', () => [
       201,
@@ -88,7 +88,9 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
           jobId: 1
         });
 
-        return Promise.resolve(EmberObject.create({ eventId: '10', parentBuildId: '57' }));
+        return Promise.resolve(
+          EmberObject.create({ eventId: '10', parentBuildId: '57' })
+        );
       });
 
       controller.set('store.findRecord', (modelName, params) => {
@@ -118,7 +120,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
     });
   });
 
-  test('it refreshListViewJobs', async function(assert) {
+  test('it refreshListViewJobs', async function (assert) {
     assert.expect(7);
     server.post('http://localhost:8080/v4/events', () => [
       201,
@@ -143,9 +145,24 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
               pipelineId: '1234',
               annotations: {}
             }),
-            EmberObject.create({ id: '2', name: 'b', pipelineId: '1234', annotations: {} }),
-            EmberObject.create({ id: '3', name: 'c', pipelineId: '1234', annotations: {} }),
-            EmberObject.create({ id: '4', name: 'd', pipelineId: '1234', annotations: {} })
+            EmberObject.create({
+              id: '2',
+              name: 'b',
+              pipelineId: '1234',
+              annotations: {}
+            }),
+            EmberObject.create({
+              id: '3',
+              name: 'c',
+              pipelineId: '1234',
+              annotations: {}
+            }),
+            EmberObject.create({
+              id: '4',
+              name: 'd',
+              pipelineId: '1234',
+              annotations: {}
+            })
           ]
         })
       );
@@ -196,7 +213,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
     ]);
   });
 
-  test('it updateListViewJobs purge', async function(assert) {
+  test('it updateListViewJobs purge', async function (assert) {
     assert.expect(9);
     server.post('http://localhost:8080/v4/events', () => [
       201,
@@ -215,10 +232,30 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
         EmberObject.create({
           id: '1234',
           jobs: [
-            EmberObject.create({ id: '1', name: 'a', pipelineId: '1234', annotations: {} }),
-            EmberObject.create({ id: '2', name: 'b', pipelineId: '1234', annotations: {} }),
-            EmberObject.create({ id: '3', name: 'c', pipelineId: '1234', annotations: {} }),
-            EmberObject.create({ id: '4', name: 'd', pipelineId: '1234', annotations: {} })
+            EmberObject.create({
+              id: '1',
+              name: 'a',
+              pipelineId: '1234',
+              annotations: {}
+            }),
+            EmberObject.create({
+              id: '2',
+              name: 'b',
+              pipelineId: '1234',
+              annotations: {}
+            }),
+            EmberObject.create({
+              id: '3',
+              name: 'c',
+              pipelineId: '1234',
+              annotations: {}
+            }),
+            EmberObject.create({
+              id: '4',
+              name: 'd',
+              pipelineId: '1234',
+              annotations: {}
+            })
           ]
         })
       );
@@ -281,7 +318,7 @@ module('Unit | Controller | pipeline/jobs/index', function(hooks) {
     ]);
   });
 
-  test('it setShowListView reset listViewOffset and jobsDetails', async function(assert) {
+  test('it setShowListView reset listViewOffset and jobsDetails', async function (assert) {
     assert.expect(2);
 
     const controller = this.owner.lookup('controller:pipeline/jobs/index');

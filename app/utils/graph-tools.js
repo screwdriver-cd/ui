@@ -28,7 +28,7 @@ const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');
  * @param  {String} name  Name of the node to find
  * @return {Object}       Reference to the node in the list
  */
-const node = (nodes, name) => nodes.find(o => o.name === name);
+const node = (nodes, name) => nodes.find((o) => o.name === name);
 
 /**
  * Find a build for the given job id
@@ -37,7 +37,8 @@ const node = (nodes, name) => nodes.find(o => o.name === name);
  * @param  {String} jobId   The job id of the build
  * @return {Object}         Reference to the build object from the list if found
  */
-const build = (builds, jobId) => builds.find(b => b && `${get(b, 'jobId')}` === `${jobId}`);
+const build = (builds, jobId) =>
+  builds.find((b) => b && `${get(b, 'jobId')}` === `${jobId}`);
 
 /**
  * Find a job for the given job id
@@ -46,7 +47,8 @@ const build = (builds, jobId) => builds.find(b => b && `${get(b, 'jobId')}` === 
  * @param  {String} jobId   The job id of the build
  * @return {Object}         Reference to the job object from the list if found
  */
-const job = (jobs, jobId) => jobs.find(j => j && `${get(j, 'id')}` === `${jobId}`);
+const job = (jobs, jobId) =>
+  jobs.find((j) => j && `${get(j, 'id')}` === `${jobId}`);
 
 /**
  * Find the icon to set as the text for a node
@@ -54,7 +56,8 @@ const job = (jobs, jobId) => jobs.find(j => j && `${get(j, 'id')}` === `${jobId}
  * @param  {String} status Text that denotes a build status
  * @return {String}        Unicode character that maps to an icon in screwdriver icon font
  */
-const icon = status => (STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MAP.UNKNOWN.icon);
+const icon = (status) =>
+  STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MAP.UNKNOWN.icon;
 
 /**
  * Calculate how many nodes are visited in the graph from the given starting point
@@ -69,7 +72,7 @@ const graphDepth = (edges, start, visited = new Set()) => {
     return Number.MAX_VALUE;
   }
 
-  const dests = edges.filter(e => e.src === start);
+  const dests = edges.filter((e) => e.src === start);
 
   // For partials/detached jobs
   if (!start.startsWith('~')) {
@@ -78,7 +81,7 @@ const graphDepth = (edges, start, visited = new Set()) => {
 
   // walk the graph
   if (dests.length) {
-    dests.forEach(e => {
+    dests.forEach((e) => {
       visited.add(e.dest);
       graphDepth(edges, e.dest, visited);
     });
@@ -99,9 +102,11 @@ const walkGraph = (graph, start, x, y) => {
   if (!y[x]) {
     y[x] = y[0] - 1;
   }
-  const nodeNames = graph.edges.filter(e => e.src === start).map(e => e.dest);
+  const nodeNames = graph.edges
+    .filter((e) => e.src === start)
+    .map((e) => e.dest);
 
-  nodeNames.forEach(name => {
+  nodeNames.forEach((name) => {
     const obj = node(graph.nodes, name);
 
     if (!obj.pos) {
@@ -121,7 +126,7 @@ const walkGraph = (graph, start, x, y) => {
  * @param  {String}  name The job name to check
  * @return {Boolean}      True if the node is not a dest in edges
  */
-const isRoot = (edges, name) => !edges.find(e => e.dest === name);
+const isRoot = (edges, name) => !edges.find((e) => e.dest === name);
 
 /**
  * Determine if a node is a trigger by seeing if it matches the startFrom
@@ -164,9 +169,11 @@ const isTrigger = (name, start) => {
  * @return {Boolean}              True if a destination of the node has already been processed
  */
 const hasProcessedDest = (graph, name) => {
-  const nodes = graph.edges.filter(edge => edge.src === name).map(edge => edge.dest);
+  const nodes = graph.edges
+    .filter((edge) => edge.src === name)
+    .map((edge) => edge.dest);
 
-  return nodes.some(n => {
+  return nodes.some((n) => {
     const found = node(graph.nodes, n);
 
     return found && typeof found.pos === 'object';
@@ -188,14 +195,16 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const { nodes } = graph;
   const buildsAvailable =
-    (Array.isArray(builds) || builds instanceof DS.PromiseArray) && get(builds, 'length');
+    (Array.isArray(builds) || builds instanceof DS.PromiseArray) &&
+    get(builds, 'length');
   const jobsAvailable =
-    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) && get(jobs, 'length');
+    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) &&
+    get(jobs, 'length');
   const { edges } = graph;
 
   let y = [0]; // accumulator for column heights
 
-  nodes.forEach(n => {
+  nodes.forEach((n) => {
     // Set root nodes on left
     if (isRoot(edges, n.name)) {
       if (!hasProcessedDest(graph, n.name)) {
@@ -224,7 +233,8 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
       // Set build status to disabled if job is disabled
       if (jobIsDisabled) {
         const state = get(j, 'state');
-        const stateWithCapitalization = state[0].toUpperCase() + state.substring(1).toLowerCase();
+        const stateWithCapitalization =
+          state[0].toUpperCase() + state.substring(1).toLowerCase();
         const stateChanger = get(j, 'stateChanger');
 
         n.status = state;
@@ -262,7 +272,7 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   });
 
   // Decorate edges with positions and status
-  edges.forEach(e => {
+  edges.forEach((e) => {
     const srcNode = node(nodes, e.src);
     const destNode = node(nodes, e.dest);
 
@@ -315,7 +325,7 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
     while (visiting.length) {
       let cur = visiting.shift();
 
-      edges.forEach(e => {
+      edges.forEach((e) => {
         if (e.src === cur && !visited.has(e.dest)) {
           visiting.push(e.dest);
           visited.add(e.dest);
@@ -325,8 +335,8 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
   }
 
   return {
-    nodes: nodes.filter(n => visited.has(n.name)),
-    edges: edges.filter(e => visited.has(e.src) && visited.has(e.dest))
+    nodes: nodes.filter((n) => visited.has(n.name)),
+    edges: edges.filter((e) => visited.has(e.src) && visited.has(e.dest))
   };
 };
 
@@ -338,14 +348,14 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
  */
 const removeBranch = (n, graph) => {
   if (n && n.name) {
-    const inEdges = graph.edges.filter(edge => edge.dest === n.name).length;
+    const inEdges = graph.edges.filter((edge) => edge.dest === n.name).length;
 
     // remove node if it only has 1 edge
     if (inEdges === 0) {
       // keep a copy of edges to aid in-place edge removal
       const edges = graph.edges.slice(0);
 
-      edges.forEach(edge => {
+      edges.forEach((edge) => {
         if (edge.src === n.name) {
           const nodeToBeRemoved = graph.nodes.findBy('name', edge.dest);
 
@@ -360,4 +370,13 @@ const removeBranch = (n, graph) => {
   }
 };
 
-export { node, icon, decorateGraph, graphDepth, isRoot, isTrigger, subgraphFilter, removeBranch };
+export {
+  node,
+  icon,
+  decorateGraph,
+  graphDepth,
+  isRoot,
+  isTrigger,
+  subgraphFilter,
+  removeBranch
+};

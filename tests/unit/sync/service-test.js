@@ -8,7 +8,9 @@ const sync = () => {
 };
 
 const syncWithPath = () => {
-  server.post('http://localhost:8080/v4/pipelines/1/sync/webhooks', () => [204]);
+  server.post('http://localhost:8080/v4/pipelines/1/sync/webhooks', () => [
+    204
+  ]);
 };
 
 const syncFailed = () => {
@@ -23,24 +25,24 @@ const syncFailed = () => {
   ]);
 };
 
-module('Unit | Service | sync', function(hooks) {
+module('Unit | Service | sync', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     const service = this.owner.lookup('service:sync');
 
     assert.ok(service);
   });
 
-  test('it makes a call to sync successfully without passing syncPath', function(assert) {
+  test('it makes a call to sync successfully without passing syncPath', function (assert) {
     assert.expect(1);
     sync();
     const service = this.owner.lookup('service:sync');
@@ -53,7 +55,7 @@ module('Unit | Service | sync', function(hooks) {
     });
   });
 
-  test('it makes a call to sync successfully with syncPath', function(assert) {
+  test('it makes a call to sync successfully with syncPath', function (assert) {
     assert.expect(1);
     syncWithPath();
     const service = this.owner.lookup('service:sync');
@@ -62,17 +64,20 @@ module('Unit | Service | sync', function(hooks) {
     p.then(() => {
       const [request] = server.handledRequests;
 
-      assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/sync/webhooks');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/pipelines/1/sync/webhooks'
+      );
     });
   });
 
-  test('it fails to sync and rejects with error message ', function(assert) {
+  test('it fails to sync and rejects with error message ', function (assert) {
     assert.expect(2);
     syncFailed();
     const service = this.owner.lookup('service:sync');
     const p = service.syncRequests(1, undefined);
 
-    p.catch(error => {
+    p.catch((error) => {
       assert.equal(error, 'something conflicting');
       const [request] = server.handledRequests;
 

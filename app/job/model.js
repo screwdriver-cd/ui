@@ -65,7 +65,8 @@ export default DS.Model.extend({
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   // Reload builds only if the pr job build is still running
   shouldReload() {
-    return this.isPR && this.builds.any(b => isActiveBuild(b.get('status'), b.get('endTime')))
+    return this.isPR &&
+      this.builds.any((b) => isActiveBuild(b.get('status'), b.get('endTime')))
       ? SHOULD_RELOAD_YES
       : SHOULD_RELOAD_NO;
   }

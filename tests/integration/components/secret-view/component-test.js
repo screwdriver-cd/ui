@@ -4,10 +4,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | secret view', function(hooks) {
+module('Integration | Component | secret view', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const testSecret = EmberObject.create({
       name: 'TEST_SECRET',
       pipelineId: 123245,
@@ -51,7 +51,7 @@ module('Integration | Component | secret view', function(hooks) {
     assert.dom('button').hasText('Delete');
   });
 
-  test('it trys to open dialog to delete a secret', async function(assert) {
+  test('it trys to open dialog to delete a secret', async function (assert) {
     assert.expect(5);
 
     const testPipeline = EmberObject.create({
@@ -84,7 +84,7 @@ module('Integration | Component | secret view', function(hooks) {
     assert.dom('button.btn-danger').hasText('Confirm');
   });
 
-  test('it trys to cancel deleting a secret', async function(assert) {
+  test('it trys to cancel deleting a secret', async function (assert) {
     assert.expect(1);
 
     const testPipeline = EmberObject.create({
@@ -111,7 +111,7 @@ module('Integration | Component | secret view', function(hooks) {
     assert.dom('div.modal-dialog').doesNotExist();
   });
 
-  test('it trys to delete a secret', async function(assert) {
+  test('it trys to delete a secret', async function (assert) {
     assert.expect(3);
 
     const testPipeline = EmberObject.create({
@@ -141,7 +141,7 @@ module('Integration | Component | secret view', function(hooks) {
     this.set('mockPipeline', testPipeline);
     this.set('secrets', {
       store: {
-        unloadRecord: secret => {
+        unloadRecord: (secret) => {
           assert.equal(secret.name, 'TEST_SECRET');
         }
       },
@@ -151,14 +151,16 @@ module('Integration | Component | secret view', function(hooks) {
       }
     });
 
-    await render(hbs`{{secret-view secret=mockSecret secrets=secrets pipeline=mockPipeline}}`);
+    await render(
+      hbs`{{secret-view secret=mockSecret secrets=secrets pipeline=mockPipeline}}`
+    );
     // open dialog
     await click('button');
     // click confirm
     await click('button.btn-danger');
   });
 
-  test('it saves changes to a secret', async function(assert) {
+  test('it saves changes to a secret', async function (assert) {
     assert.expect(2);
 
     const testPipeline = EmberObject.create({
@@ -196,7 +198,7 @@ module('Integration | Component | secret view', function(hooks) {
     await click('button');
   });
 
-  test('it renders secrets for child pipeline', async function(assert) {
+  test('it renders secrets for child pipeline', async function (assert) {
     assert.expect(2);
 
     const testSecret = EmberObject.create({
@@ -215,11 +217,13 @@ module('Integration | Component | secret view', function(hooks) {
 
     await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
 
-    assert.dom('.pass input').hasAttribute('placeholder', 'Inherited from parent pipeline');
+    assert
+      .dom('.pass input')
+      .hasAttribute('placeholder', 'Inherited from parent pipeline');
     assert.dom('button').hasText('Override');
   });
 
-  test('it overrides a secret for a child pipeline', async function(assert) {
+  test('it overrides a secret for a child pipeline', async function (assert) {
     assert.expect(3);
 
     const testSecret = EmberObject.create({

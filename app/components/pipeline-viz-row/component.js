@@ -6,29 +6,33 @@ export default Component.extend({
   pipeline: undefined,
   selectedConnectedPipeline: undefined,
 
-  icon: computed(function icon() {
-    return statusIcon('success', true);
-  }),
+  icon: computed(() => statusIcon('success', true)),
 
   isSelectedConnectedPipeline: computed(
     'selectedConnectedPipeline',
     'pipeline',
     function isSelected() {
       if (this.selectedConnectedPipeline) {
-        return get(this.selectedConnectedPipeline, 'id') === get(this.pipeline, 'id');
+        return (
+          get(this.selectedConnectedPipeline, 'id') === get(this.pipeline, 'id')
+        );
       }
 
       return false;
     }
   ),
 
-  isSelectedPipeline: computed('selectedPipeline', 'pipeline', function isSelected() {
-    if (this.selectedPipeline) {
-      return get(this.selectedPipeline, 'id') === get(this.pipeline, 'id');
-    }
+  isSelectedPipeline: computed(
+    'selectedPipeline',
+    'pipeline',
+    function isSelected() {
+      if (this.selectedPipeline) {
+        return get(this.selectedPipeline, 'id') === get(this.pipeline, 'id');
+      }
 
-    return false;
-  }),
+      return false;
+    }
+  ),
 
   actions: {
     handleClick(pipeline) {

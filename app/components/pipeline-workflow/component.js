@@ -1,6 +1,12 @@
 import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
-import { get, getWithDefault, computed, set, setProperties } from '@ember/object';
+import {
+  get,
+  getWithDefault,
+  computed,
+  set,
+  setProperties
+} from '@ember/object';
 import { reject } from 'rsvp';
 import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
@@ -10,32 +16,39 @@ export default Component.extend({
   // get all downstream triggers for a pipeline
   classNames: ['pipelineWorkflow'],
   showTooltip: false,
-  graph: computed('workflowGraph', 'completeWorkflowGraph', 'showDownstreamTriggers', {
-    get() {
-      const { jobs } = this;
-      const graph = this.showDownstreamTriggers ? this.completeWorkflowGraph : this.workflowGraph;
+  graph: computed(
+    'workflowGraph',
+    'completeWorkflowGraph',
+    'showDownstreamTriggers',
+    {
+      get() {
+        const { jobs } = this;
+        const graph = this.showDownstreamTriggers
+          ? this.completeWorkflowGraph
+          : this.workflowGraph;
 
-      // Hack to make page display stuff when a workflow is not provided
-      if (!graph) {
-        return reject(new Error('No workflow graph provided'));
-      }
-
-      // Preload the builds for the jobs
-      jobs.forEach(j => {
-        const jobName = get(j, 'name');
-        const node = graph.nodes.find(n => n.name === jobName);
-
-        // push the job id into the graph
-        if (node) {
-          node.id = get(j, 'id');
+        // Hack to make page display stuff when a workflow is not provided
+        if (!graph) {
+          return reject(new Error('No workflow graph provided'));
         }
-      });
 
-      set(this, 'directedGraph', graph);
+        // Preload the builds for the jobs
+        jobs.forEach((j) => {
+          const jobName = get(j, 'name');
+          const node = graph.nodes.find((n) => n.name === jobName);
 
-      return graph;
+          // push the job id into the graph
+          if (node) {
+            node.id = get(j, 'id');
+          }
+        });
+
+        set(this, 'directedGraph', graph);
+
+        return graph;
+      }
     }
-  }),
+  ),
 
   displayRestartButton: alias('authenticated'),
 
@@ -71,7 +84,9 @@ export default Component.extend({
       return false;
     }
 
-    const buildExists = selectedEvent.buildsSorted.filter(b => b.jobId === selectedJobId);
+    const buildExists = selectedEvent.buildsSorted.filter(
+      (b) => b.jobId === selectedJobId
+    );
 
     const { prNum } = selectedEvent;
 
@@ -83,14 +98,17 @@ export default Component.extend({
     const buildParameters = copy(defaultParameters, true);
 
     if (this.tooltipData) {
-      const currentEventParameters = this.tooltipData.selectedEvent.meta.parameters;
+      const currentEventParameters =
+        this.tooltipData.selectedEvent.meta.parameters;
       const parameterNames = Object.keys(buildParameters);
 
-      parameterNames.forEach(parameterName => {
+      parameterNames.forEach((parameterName) => {
         const parameterValue =
-          buildParameters[parameterName].value || buildParameters[parameterName];
+          buildParameters[parameterName].value ||
+          buildParameters[parameterName];
         const currentEventParameterValue =
-          currentEventParameters[parameterName].value || currentEventParameters[parameterName];
+          currentEventParameters[parameterName].value ||
+          currentEventParameters[parameterName];
 
         if (Array.isArray(parameterValue)) {
           parameterValue.removeObject(currentEventParameterValue);
@@ -141,8 +159,12 @@ export default Component.extend({
       }
 
       if (!job || isTrigger) {
-        const externalTriggerMatch = job ? job.name.match(EXTERNAL_TRIGGER_REGEX) : null;
-        const downstreamTriggerMatch = job ? job.name.match(/^~sd-([\w-]+)-triggers$/) : null;
+        const externalTriggerMatch = job
+          ? job.name.match(EXTERNAL_TRIGGER_REGEX)
+          : null;
+        const downstreamTriggerMatch = job
+          ? job.name.match(/^~sd-([\w-]+)-triggers$/)
+          : null;
 
         // Add external trigger data if relevant
         if (externalTriggerMatch) {
@@ -170,7 +192,7 @@ export default Component.extend({
         if (downstreamTriggerMatch) {
           const triggers = [];
 
-          job.triggers.forEach(t => {
+          job.triggers.forEach((t) => {
             const downstreamTrigger = t.match(/^~?sd@(\d+):([\w-]+)$/);
 
             triggers.push({
@@ -215,9 +237,11 @@ export default Component.extend({
     },
     startDetachedBuild(options) {
       set(this, 'isShowingModal', false);
-      this.startDetachedBuild(get(this, 'tooltipData.job'), options).then(() => {
-        this.set('reason', '');
-      });
+      this.startDetachedBuild(get(this, 'tooltipData.job'), options).then(
+        () => {
+          this.set('reason', '');
+        }
+      );
     }
   }
 });

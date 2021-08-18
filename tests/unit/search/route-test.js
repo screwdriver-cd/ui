@@ -4,10 +4,10 @@ import { Promise as EmberPromise } from 'rsvp';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
 
-module('Unit | Route | search', function(hooks) {
+module('Unit | Route | search', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     run(() => {
       // Need this to mock store
       // https://github.com/emberjs/ember-qunit/issues/325
@@ -15,14 +15,14 @@ module('Unit | Route | search', function(hooks) {
     });
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let route = this.owner.lookup('route:search');
 
     assert.ok(route);
     assert.equal(route.titleToken, 'Search');
   });
 
-  test('it returns model even on collections fetch error', function(assert) {
+  test('it returns model even on collections fetch error', function (assert) {
     assert.expect(5);
 
     const storeStub = Service.extend({
@@ -30,7 +30,7 @@ module('Unit | Route | search', function(hooks) {
         assert.ok(conf.page === 1);
         assert.ok(conf.search === 'search');
 
-        return new EmberPromise(resolve => resolve('results'));
+        return new EmberPromise((resolve) => resolve('results'));
       },
       findAll(record) {
         assert.ok(record === 'collection');
@@ -43,7 +43,7 @@ module('Unit | Route | search', function(hooks) {
 
     const route = this.owner.lookup('route:search');
 
-    return route.model({ query: 'search' }).then(results => {
+    return route.model({ query: 'search' }).then((results) => {
       assert.equal(results.pipelines, 'results');
       assert.deepEqual(results.collections, []);
     });

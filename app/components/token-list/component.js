@@ -22,9 +22,13 @@ export default Component.extend({
 
   sortedTokens: sort('tokens', 'tokenSorting'),
 
-  isButtonDisabled: computed('newName', 'isSaving', function isButtonDisabled() {
-    return !this.newName || this.isSaving;
-  }),
+  isButtonDisabled: computed(
+    'newName',
+    'isSaving',
+    function isButtonDisabled() {
+      return !this.newName || this.isSaving;
+    }
+  ),
 
   modalButtonText: computed('modalAction', function modalButtonText() {
     return capitalize(this.modalAction);
@@ -63,7 +67,7 @@ export default Component.extend({
           this.set('newName', null);
           this.set('newDescription', null);
         })
-        .catch(error => {
+        .catch((error) => {
           this.set('errorMessage', error.errors[0].detail);
         });
     },
@@ -95,15 +99,23 @@ export default Component.extend({
      * @param {Number} id
      */
     confirmAction(action, id) {
-      this.set('modalTarget', this.tokens.find(token => token.get('id') === id));
+      this.set(
+        'modalTarget',
+        this.tokens.find((token) => token.get('id') === id)
+      );
       this.set('modalAction', action);
 
       if (action === 'delete') {
-        this.set('modalText', `The "${this.get('modalTarget.name')}" token will be deleted.`);
+        this.set(
+          'modalText',
+          `The "${this.get('modalTarget.name')}" token will be deleted.`
+        );
       } else {
         this.set(
           'modalText',
-          `The current "${this.get('modalTarget.name')}" token will be invalidated.`
+          `The current "${this.get(
+            'modalTarget.name'
+          )}" token will be invalidated.`
         );
       }
 
@@ -119,10 +131,12 @@ export default Component.extend({
 
       if (confirm) {
         if (this.modalAction === 'delete') {
-          this.modalTarget.destroyRecord({ adapterOptions: { pipelineId: this.pipelineId } });
+          this.modalTarget.destroyRecord({
+            adapterOptions: { pipelineId: this.pipelineId }
+          });
         } else {
           this.set('isSaving', true);
-          this.onRefreshToken(this.get('modalTarget.id')).catch(error => {
+          this.onRefreshToken(this.get('modalTarget.id')).catch((error) => {
             this.set('errorMessage', error.errors[0].detail);
           });
         }

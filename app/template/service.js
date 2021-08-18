@@ -27,9 +27,9 @@ export default Service.extend({
     const fullName = `${namespace}/${name}`;
     const url =
       // eslint-disable-next-line max-len
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(
-        fullName
-      )}/tags`;
+      `${ENV.APP.SDAPI_HOSTNAME}/${
+        ENV.APP.SDAPI_NAMESPACE
+      }/templates/${encodeURIComponent(fullName)}/tags`;
 
     return this.fetchData(url);
   },
@@ -44,14 +44,14 @@ export default Service.extend({
 
     return this.fetchData(url, params)
       .then(templatesFormatter)
-      .then(templates => {
+      .then((templates) => {
         // Reduce versions down to one entry
         // FIXME: This should be done in API
 
         const result = [];
         const names = {};
 
-        templates.forEach(t => {
+        templates.forEach((t) => {
           if (!names[t.fullName]) {
             names[t.fullName] = 1;
             result.push(t);
@@ -79,8 +79,8 @@ export default Service.extend({
     return new EmberPromise((resolve, reject) => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
-        .done(templates => resolve(templates))
-        .fail(response => reject(response));
+        .done((templates) => resolve(templates))
+        .fail((response) => reject(response));
     });
   },
   deleteTemplates(name) {
@@ -104,16 +104,21 @@ export default Service.extend({
     return new EmberPromise((resolve, reject) => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
-        .done(content => resolve(content))
-        .fail(response => {
+        .done((content) => resolve(content))
+        .fail((response) => {
           let message = `${response.status} Request Failed`;
 
-          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
+          if (
+            response &&
+            response.responseJSON &&
+            typeof response.responseJSON === 'object'
+          ) {
             message = `${response.status} ${response.responseJSON.error}`;
           }
 
           if (response.status === 403) {
-            message = 'You do not have the permissions to remove this template.';
+            message =
+              'You do not have the permissions to remove this template.';
           }
 
           return reject(message);
@@ -121,9 +126,9 @@ export default Service.extend({
     });
   },
   updateTrust(fullName, trusted) {
-    const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/` +
-      `${encodeURIComponent(fullName)}/trusted`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/templates/${encodeURIComponent(fullName)}/trusted`;
     const ajaxConfig = {
       method: 'PUT',
       dataType: 'json',
@@ -141,12 +146,13 @@ export default Service.extend({
 
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
-        .done(content => resolve(content))
-        .fail(response => {
+        .done((content) => resolve(content))
+        .fail((response) => {
           let message = `${response.status} Request Failed`;
 
           if (response.status === 401 || response.status === 403) {
-            message = 'You do not have the permissions to update this template.';
+            message =
+              'You do not have the permissions to update this template.';
           }
 
           return reject(message);

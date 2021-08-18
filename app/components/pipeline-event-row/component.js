@@ -18,9 +18,16 @@ export default Component.extend({
   }),
   isShowGraph: computed('event.{workflowGraph,isSkipped}', {
     get() {
-      const eventProperties = getProperties(this, 'event.workflowGraph', 'event.isSkipped');
+      const eventProperties = getProperties(
+        this,
+        'event.workflowGraph',
+        'event.isSkipped'
+      );
 
-      return eventProperties['event.workflowGraph'] && !eventProperties['event.isSkipped'];
+      return (
+        eventProperties['event.workflowGraph'] &&
+        !eventProperties['event.isSkipped']
+      );
     }
   }),
 
@@ -46,21 +53,26 @@ export default Component.extend({
       let isExternal = false;
 
       if (startFrom && startFrom.match(/^~sd@(\d+):([\w-]+)$/)) {
-        isExternal = Number(startFrom.match(/^~sd@(\d+):([\w-]+)$/)[1]) !== pipelineId;
+        isExternal =
+          Number(startFrom.match(/^~sd@(\d+):([\w-]+)$/)[1]) !== pipelineId;
       }
 
       return isExternal;
     }
   }),
 
-  isCommiterDifferent: computed('isExternalTrigger', 'event.{creator.name,commit.author.name}', {
-    get() {
-      const creatorName = this.get('event.creator.name');
-      const authorName = this.get('event.commit.author.name');
+  isCommiterDifferent: computed(
+    'isExternalTrigger',
+    'event.{creator.name,commit.author.name}',
+    {
+      get() {
+        const creatorName = this.get('event.creator.name');
+        const authorName = this.get('event.commit.author.name');
 
-      return this.get('isExternalTrigger') || creatorName !== authorName;
+        return this.get('isExternalTrigger') || creatorName !== authorName;
+      }
     }
-  }),
+  ),
 
   isSubscribedEvent: bool('event.meta.subscribedSourceUrl'),
 

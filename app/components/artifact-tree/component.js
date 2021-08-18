@@ -63,8 +63,8 @@ export default Component.extend({
       let targetNode = null;
 
       // traversing jstree to find target artifact node
-      paths.forEach(path => {
-        targetNode = nodeList.find(node => node.text === path);
+      paths.forEach((path) => {
+        targetNode = nodeList.find((node) => node.text === path);
         if (targetNode && targetNode.type === 'directory') {
           nodeList = targetNode.children;
         }
@@ -88,7 +88,10 @@ export default Component.extend({
 
         if (type === 'directory') {
           instance.toggle_node(node);
-          this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
+          this.router.transitionTo(
+            'pipeline.build.artifacts.detail',
+            artifactPath
+          );
 
           return;
         }
@@ -100,7 +103,10 @@ export default Component.extend({
             isModalOpen: true
           });
         }
-        this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
+        this.router.transitionTo(
+          'pipeline.build.artifacts.detail',
+          artifactPath
+        );
       }
     }
   }

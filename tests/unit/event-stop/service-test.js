@@ -18,24 +18,24 @@ const stopFailed = () => {
   ]);
 };
 
-module('Unit | Service | event-stop', function(hooks) {
+module('Unit | Service | event-stop', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     const service = this.owner.lookup('service:event-stop');
 
     assert.ok(service);
   });
 
-  test('it makes a call to stop all builds in an event', function(assert) {
+  test('it makes a call to stop all builds in an event', function (assert) {
     assert.expect(1);
     stop();
     const service = this.owner.lookup('service:event-stop');
@@ -48,13 +48,13 @@ module('Unit | Service | event-stop', function(hooks) {
     });
   });
 
-  test('it fails to stop all builds in an event with error message ', function(assert) {
+  test('it fails to stop all builds in an event with error message ', function (assert) {
     assert.expect(2);
     stopFailed();
     const service = this.owner.lookup('service:event-stop');
     const e = service.stopBuilds(1);
 
-    e.catch(error => {
+    e.catch((error) => {
       assert.equal(error, 'internal server error');
       const [request] = server.handledRequests;
 

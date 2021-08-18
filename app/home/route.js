@@ -12,13 +12,17 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
       this.store
         .findAll('collection')
-        .then(collections => {
+        .then((collections) => {
           if (get(collections, 'length')) {
             // Get the id of the default collection.
-            const defaultCollection = collections.find(collection => collection.type === 'default');
+            const defaultCollection = collections.find(
+              (collection) => collection.type === 'default'
+            );
             const routeId = defaultCollection.id;
 
-            let lastViewedCollectionId = localStorage.getItem('lastViewedCollectionId');
+            let lastViewedCollectionId = localStorage.getItem(
+              'lastViewedCollectionId'
+            );
 
             if (lastViewedCollectionId) {
               this.replaceWith(`/dashboards/${lastViewedCollectionId}`);

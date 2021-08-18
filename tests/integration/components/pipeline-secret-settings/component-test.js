@@ -1,13 +1,19 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
+import {
+  render,
+  find,
+  click,
+  fillIn,
+  triggerKeyEvent
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | pipeline secret settings', function(hooks) {
+module('Integration | Component | pipeline secret settings', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const testSecret = EmberObject.create({
       name: 'TEST_SECRET',
       pipelineId: 123245,
@@ -23,9 +29,13 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
 
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+    await render(
+      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+    );
 
-    assert.dom('p').hasText('User secrets must also be added to the Screwdriver YAML.');
+    assert
+      .dom('p')
+      .hasText('User secrets must also be added to the Screwdriver YAML.');
 
     // the table is present
     assert.dom('table').exists({ count: 1 });
@@ -41,7 +51,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     assert.dom('tfoot .pass input').hasAttribute('type', 'password');
   });
 
-  test('it updates the add button properly', async function(assert) {
+  test('it updates the add button properly', async function (assert) {
     this.set('mockPipeline', { id: 'abcd' });
     await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline}}`);
 
@@ -76,7 +86,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     assert.dom('tfoot button').isDisabled();
   });
 
-  test('it calls action to create secret', async function(assert) {
+  test('it calls action to create secret', async function (assert) {
     this.set('mockPipeline', { id: 'abcd' });
     this.set('externalAction', (name, value, id) => {
       assert.equal(name, 'SECRET_KEY');
@@ -103,7 +113,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     assert.dom('tfoot button').isDisabled('not disabled');
   });
 
-  test('it displays an error', async function(assert) {
+  test('it displays an error', async function (assert) {
     this.set('mockPipeline', { id: 'abcd' });
     this.set('externalAction', () => {
       assert.fail('should not get here');
@@ -131,7 +141,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
       );
   });
 
-  test('it sorts secrets by name alphabetically', async function(assert) {
+  test('it sorts secrets by name alphabetically', async function (assert) {
     const testSecret1 = EmberObject.create({
       name: 'FOO',
       pipelineId: 123245,
@@ -160,7 +170,9 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     });
 
     this.set('mockPipeline', testPipeline);
-    await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+    await render(
+      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+    );
 
     // secrets are sorted by name
     assert.dom(find('tbody tr:first-child td:first-child')).hasText('BAR');
@@ -168,7 +180,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     assert.dom(find('tbody tr:nth-child(3) td:first-child')).hasText('ZOO');
   });
 
-  test('it renders differently for a child pipeline', async function(assert) {
+  test('it renders differently for a child pipeline', async function (assert) {
     const testSecret = EmberObject.create({
       name: 'FOO',
       pipelineId: 123245,
@@ -184,7 +196,9 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     });
 
     this.set('mockPipeline', testPipeline);
-    await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+    await render(
+      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+    );
 
     assert
       .dom('p')
@@ -198,7 +212,7 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
     assert.dom('tfoot tr').doesNotExist();
   });
 
-  test('it toggles eye-icon and input type', async function(assert) {
+  test('it toggles eye-icon and input type', async function (assert) {
     const testSecret = EmberObject.create({
       name: 'TEST_SECRET',
       pipelineId: 123245,
@@ -214,7 +228,9 @@ module('Integration | Component | pipeline secret settings', function(hooks) {
 
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`);
+    await render(
+      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+    );
 
     await click('tbody i');
     await click('tfoot i');

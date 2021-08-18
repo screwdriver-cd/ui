@@ -8,7 +8,10 @@ import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
 import moment from 'moment';
-import { SHOULD_RELOAD_SKIP, SHOULD_RELOAD_YES } from '../../mixins/model-reloader';
+import {
+  SHOULD_RELOAD_SKIP,
+  SHOULD_RELOAD_YES
+} from '../../mixins/model-reloader';
 
 // eslint-disable-next-line require-jsdoc
 export async function stopBuild(givenEvent, job) {
@@ -23,7 +26,7 @@ export async function stopBuild(givenEvent, job) {
     build.set('status', 'ABORTED');
 
     if (!event && this.modelEvents) {
-      event = this.modelEvents.filter(e => e.id === get(build, 'eventId'));
+      event = this.modelEvents.filter((e) => e.id === get(build, 'eventId'));
     }
 
     try {
@@ -36,7 +39,10 @@ export async function stopBuild(givenEvent, job) {
         event.hasMany('builds').reload();
       }
     } catch (e) {
-      this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+      this.set(
+        'errorMessage',
+        Array.isArray(e.errors) ? e.errors[0].detail : ''
+      );
     }
   }
 }
@@ -159,7 +165,7 @@ export async function updateEvents(page) {
 
     // Skip duplicate ones if new events got added to the head of the events list
     const noDuplicateEvents = nextEvents.filter(
-      nextEvent => !this.paginateEvents.findBy('id', nextEvent.id)
+      (nextEvent) => !this.paginateEvents.findBy('id', nextEvent.id)
     );
 
     this.paginateEvents.pushObjects(noDuplicateEvents);
@@ -176,7 +182,7 @@ export default Controller.extend(ModelReloaderMixin, {
     let res = SHOULD_RELOAD_SKIP;
 
     if (this.isDestroyed || this.isDestroying) {
-      const event = model.events.find(m => m.isRunning);
+      const event = model.events.find((m) => m.isRunning);
 
       let diff;
       const lastRefreshed = this.get('lastRefreshed');
@@ -234,14 +240,14 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       const jobs = this.getWithDefault('model.jobs', []);
 
-      return jobs.filter(j => !isPRJob(j.get('name')));
+      return jobs.filter((j) => !isPRJob(j.get('name')));
     }
   }),
   jobIds: computed('pipeline.jobs', {
     get() {
       return this.get('pipeline.jobs')
-        .filter(j => !isPRJob(j.get('name')))
-        .map(j => j.id);
+        .filter((j) => !isPRJob(j.get('name')))
+        .map((j) => j.id);
     }
   }),
   jobsDetails: [],
@@ -255,7 +261,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
       // Add extra node if downstream triggers exist
       if (triggers && triggers.length > 0) {
-        triggers.forEach(t => {
+        triggers.forEach((t) => {
           if (t.triggers && t.triggers.length > 0) {
             completeGraph.edges.push({
               src: t.jobName,
@@ -270,11 +276,13 @@ export default Controller.extend(ModelReloaderMixin, {
         });
       }
       if (completeGraph) {
-        completeGraph.nodes = uniqBy(completeGraph.nodes || [], n => n.name);
+        completeGraph.nodes = uniqBy(completeGraph.nodes || [], (n) => n.name);
 
-        completeGraph.edges = (completeGraph.edges || []).filter(e => {
-          const srcFound = !e.src || !!completeGraph.nodes.find(n => n.name === e.src);
-          const destFound = !e.dest || !!completeGraph.nodes.find(n => n.name === e.dest);
+        completeGraph.edges = (completeGraph.edges || []).filter((e) => {
+          const srcFound =
+            !e.src || !!completeGraph.nodes.find((n) => n.name === e.src);
+          const destFound =
+            !e.dest || !!completeGraph.nodes.find((n) => n.name === e.dest);
 
           return srcFound && destFound;
         });
@@ -293,13 +301,18 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       let previousModelEvents = this.previousModelEvents || [];
 
-      let currentModelEvents = this.getWithDefault('model.events', []).toArray();
+      let currentModelEvents = this.getWithDefault(
+        'model.events',
+        []
+      ).toArray();
 
       let newModelEvents = [];
       const newPipelineId = this.get('pipeline.id');
 
       // purge unmatched pipeline events
-      if (previousModelEvents.some(e => e.get('pipelineId') !== newPipelineId)) {
+      if (
+        previousModelEvents.some((e) => e.get('pipelineId') !== newPipelineId)
+      ) {
         newModelEvents = [...currentModelEvents];
 
         this.set('paginateEvents', []);
@@ -310,7 +323,7 @@ export default Controller.extend(ModelReloaderMixin, {
       }
 
       previousModelEvents = previousModelEvents.filter(
-        e => !currentModelEvents.find(c => c.id === e.id)
+        (e) => !currentModelEvents.find((c) => c.id === e.id)
       );
 
       newModelEvents = currentModelEvents.concat(previousModelEvents);
@@ -322,9 +335,11 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   pipelineEvents: computed('modelEvents', 'paginateEvents.[]', {
     get() {
-      this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
-        this.set('latestCommit', event);
-      });
+      this.shuttle
+        .getLatestCommitEvent(this.get('pipeline.id'))
+        .then((event) => {
+          this.set('latestCommit', event);
+        });
 
       return [].concat(this.modelEvents, this.paginateEvents);
     }
@@ -333,7 +348,7 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       if (this.prChainEnabled) {
         return this.get('model.events')
-          .filter(e => e.prNum)
+          .filter((e) => e.prNum)
           .sortBy('createTime')
           .reverse();
       }
@@ -357,7 +372,7 @@ export default Controller.extend(ModelReloaderMixin, {
       let groups = {};
 
       return jobs
-        .filter(j => j.get('isPR'))
+        .filter((j) => j.get('isPR'))
         .sortBy('createTime')
         .reverse()
         .reduce((results, j) => {
@@ -397,14 +412,14 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       const selected = this.selectedEvent;
 
-      return this.events.find(e => get(e, 'id') === selected);
+      return this.events.find((e) => get(e, 'id') === selected);
     }
   }),
 
   mostRecent: computed('events.@each.status', {
     get() {
       const list = this.events || [];
-      const event = list.find(e => get(e, 'status') === 'RUNNING');
+      const event = list.find((e) => get(e, 'status') === 'RUNNING');
 
       if (!event) {
         return list.length ? get(list[0], 'id') : 0;
@@ -417,7 +432,7 @@ export default Controller.extend(ModelReloaderMixin, {
   lastSuccessful: computed('events.@each.status', {
     get() {
       const list = this.events || [];
-      const event = list.find(e => get(e, 'status') === 'SUCCESS');
+      const event = list.find((e) => get(e, 'status') === 'SUCCESS');
 
       if (!event) {
         return 0;
@@ -481,7 +496,10 @@ export default Controller.extend(ModelReloaderMixin, {
       try {
         return await this.get('stop').stopBuilds(eventId);
       } catch (e) {
-        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        this.set(
+          'errorMessage',
+          Array.isArray(e.errors) ? e.errors[0].detail : ''
+        );
       }
 
       return null;
@@ -495,12 +513,18 @@ export default Controller.extend(ModelReloaderMixin, {
           await this.refreshListViewJobs();
         }
       } catch (e) {
-        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        this.set(
+          'errorMessage',
+          Array.isArray(e.errors) ? e.errors[0].detail : ''
+        );
       }
     },
     startPRBuild(prNum, jobs, parameters) {
       this.set('isShowingModal', true);
-      const user = get(decoder(this.get('session.data.authenticated.token')), 'username');
+      const user = get(
+        decoder(this.get('session.data.authenticated.token')),
+        'username'
+      );
 
       let eventPayload = {
         causeMessage: `Manually started by ${user}`,
@@ -527,7 +551,9 @@ export default Controller.extend(ModelReloaderMixin, {
 
             // PR events are aggregated by each PR jobs when prChain is enabled.
             if (this.prChainEnabled) {
-              const newEvents = this.prEvents.filter(e => e.get('prNum') !== prNum);
+              const newEvents = this.prEvents.filter(
+                (e) => e.get('prNum') !== prNum
+              );
 
               newEvents.unshiftObject(newEvent);
 
@@ -535,11 +561,14 @@ export default Controller.extend(ModelReloaderMixin, {
             }
           })
         )
-        .catch(e => {
+        .catch((e) => {
           this.set('isShowingModal', false);
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+          this.set(
+            'errorMessage',
+            Array.isArray(e.errors) ? e.errors[0].detail : ''
+          );
         })
-        .finally(() => jobs.forEach(j => j.hasMany('builds').reload()));
+        .finally(() => jobs.forEach((j) => j.hasMany('builds').reload()));
     }
   },
   willDestroy() {

@@ -43,10 +43,10 @@ const shas = [
   '1234567890abcd'
 ];
 
-export default eventId => {
+export default (eventId) => {
   const builds = [];
 
-  shas.forEach(sha => {
+  shas.forEach((sha) => {
     const b = copy(build, true);
     const config = {
       id: Math.floor(Math.random() * 99999999999),

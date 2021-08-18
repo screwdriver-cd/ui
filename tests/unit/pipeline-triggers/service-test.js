@@ -33,24 +33,24 @@ const getTriggersFailed = () => {
   ]);
 };
 
-module('Unit | Service | pipeline triggers', function(hooks) {
+module('Unit | Service | pipeline triggers', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     const service = this.owner.lookup('service:pipeline-triggers');
 
     assert.ok(service);
   });
 
-  test('it makes a call to get all pipeline triggers', function(assert) {
+  test('it makes a call to get all pipeline triggers', function (assert) {
     assert.expect(1);
     getTriggers();
     const service = this.owner.lookup('service:pipeline-triggers');
@@ -59,21 +59,27 @@ module('Unit | Service | pipeline triggers', function(hooks) {
     p.then(() => {
       const [request] = server.handledRequests;
 
-      assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/triggers');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/pipelines/1/triggers'
+      );
     });
   });
 
-  test('it fails to get pipeline triggers with error message ', function(assert) {
+  test('it fails to get pipeline triggers with error message ', function (assert) {
     assert.expect(2);
     getTriggersFailed();
     const service = this.owner.lookup('service:pipeline-triggers');
     const p = service.getDownstreamTriggers(1);
 
-    p.catch(error => {
+    p.catch((error) => {
       assert.equal(error, '500 internal server error');
       const [request] = server.handledRequests;
 
-      assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/triggers');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/pipelines/1/triggers'
+      );
     });
   });
 });

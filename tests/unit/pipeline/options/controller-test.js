@@ -5,19 +5,23 @@ import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
 let server;
 
-module('Unit | Controller | pipeline/options', function(hooks) {
+module('Unit | Controller | pipeline/options', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it handles updating job state', function(assert) {
-    server.put('http://localhost:8080/v4/jobs/1234', () => [200, {}, JSON.stringify({ id: 1234 })]);
+  test('it handles updating job state', function (assert) {
+    server.put('http://localhost:8080/v4/jobs/1234', () => [
+      200,
+      {},
+      JSON.stringify({ id: 1234 })
+    ]);
 
     let controller = this.owner.lookup('controller:pipeline/options');
 
@@ -44,7 +48,7 @@ module('Unit | Controller | pipeline/options', function(hooks) {
     });
   });
 
-  test('it handles deleting pipelines', function(assert) {
+  test('it handles deleting pipelines', function (assert) {
     assert.expect(2);
     server.delete('http://localhost:8080/v4/pipelines/abc1234', () => [
       200,
@@ -64,9 +68,11 @@ module('Unit | Controller | pipeline/options', function(hooks) {
           }
         }
       });
-      controller.set('model', { pipeline: controller.store.peekRecord('pipeline', 'abc1234') });
+      controller.set('model', {
+        pipeline: controller.store.peekRecord('pipeline', 'abc1234')
+      });
 
-      controller.transitionToRoute = route => {
+      controller.transitionToRoute = (route) => {
         assert.equal(route, 'home');
       };
 

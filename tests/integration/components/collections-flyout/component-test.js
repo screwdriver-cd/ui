@@ -14,7 +14,7 @@ const mockCollection = {
   name: 'Test',
   type: 'normal',
   description: 'Test description',
-  get: name => name
+  get: (name) => name
 };
 
 const mockCollections = [
@@ -41,10 +41,10 @@ const mockCollections = [
   })
 ];
 
-module('Integration | Component | collections flyout', function(hooks) {
+module('Integration | Component | collections flyout', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     assert.expect(6);
 
     injectSessionStub(this);
@@ -64,7 +64,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     assert.dom(wrapperEls[2]).hasText('collection3');
   });
 
-  test('it renders with no collections', async function(assert) {
+  test('it renders with no collections', async function (assert) {
     assert.expect(2);
 
     this.set('collections', []);
@@ -75,7 +75,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     assert.dom('.no-collections-text').hasText('Please create a collection.');
   });
 
-  test('it opens collection create modal', async function(assert) {
+  test('it opens collection create modal', async function (assert) {
     assert.expect(9);
 
     injectSessionStub(this);
@@ -109,7 +109,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     assert.dom('.collection-form__create').hasText('Create');
   });
 
-  test('it renders an active collection', async function(assert) {
+  test('it renders an active collection', async function (assert) {
     assert.expect(4);
 
     this.set('collections', [EmberObject.create(mockCollection)]);
@@ -124,7 +124,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     assert.dom('.collection-wrapper.row--active').exists({ count: 1 });
   });
 
-  test('it fails to create a collection', async function(assert) {
+  test('it fails to create a collection', async function (assert) {
     assert.expect(3);
 
     injectSessionStub(this);
@@ -178,7 +178,7 @@ module('Integration | Component | collections flyout', function(hooks) {
     assert.dom('.alert-warning > span').hasText('This is an error message');
   });
 
-  test('it deletes a collection', async function(assert) {
+  test('it deletes a collection', async function (assert) {
     assert.expect(11);
 
     injectSessionStub(this);
@@ -188,7 +188,7 @@ module('Integration | Component | collections flyout', function(hooks) {
         // Dummy assert to make sure this function gets called
         assert.ok(true);
 
-        return new EmberPromise(resolve => resolve());
+        return new EmberPromise((resolve) => resolve());
       },
       transitionTo() {
         assert.ok(true);
@@ -204,7 +204,7 @@ module('Integration | Component | collections flyout', function(hooks) {
         return collectionModelMock;
       },
       findAll() {
-        return new EmberPromise(resolve => resolve([mockCollection]));
+        return new EmberPromise((resolve) => resolve([mockCollection]));
       }
     });
 

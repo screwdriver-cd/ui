@@ -5,10 +5,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click, fillIn, triggerEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | token view', function(hooks) {
+module('Integration | Component | token view', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const testToken = EmberObject.create({
       name: 'TEST_TOKEN',
       description: 'hunter2'
@@ -43,7 +43,7 @@ module('Integration | Component | token view', function(hooks) {
     assert.dom('button:last-child').hasText('Delete');
   });
 
-  test('it trys to delete a token', async function(assert) {
+  test('it trys to delete a token', async function (assert) {
     assert.expect(2);
     this.set(
       'mockToken',
@@ -58,11 +58,13 @@ module('Integration | Component | token view', function(hooks) {
       assert.equal(id, this.get('mockToken.id'));
     });
 
-    await render(hbs`{{token-view token=mockToken confirmAction=(action confirmAction)}}`);
+    await render(
+      hbs`{{token-view token=mockToken confirmAction=(action confirmAction)}}`
+    );
     await click('button:last-child');
   });
 
-  test('it saves changes to a token', async function(assert) {
+  test('it saves changes to a token', async function (assert) {
     let expectIsSaving = true;
 
     assert.expect(3);
@@ -87,11 +89,13 @@ module('Integration | Component | token view', function(hooks) {
       })
     );
 
-    this.set('setIsSavingMock', isSaving => {
+    this.set('setIsSavingMock', (isSaving) => {
       assert.equal(expectIsSaving, isSaving);
     });
 
-    await render(hbs`{{token-view token=mockToken setIsSaving=setIsSavingMock}}`);
+    await render(
+      hbs`{{token-view token=mockToken setIsSaving=setIsSavingMock}}`
+    );
     await fillIn('.name input', 'TEST_TOKEN_2');
     await triggerEvent('.name input', 'keyup');
     await click('button:last-child');

@@ -14,15 +14,21 @@ export default Service.extend({
    * @return {Promise}        Resolves to a list of banner structures
    */
   fetchBanners() {
-    return new EmberPromise(resolve => {
+    return new EmberPromise((resolve) => {
       // Fetch the banners directly from the API
       $.ajax({
         url: bannersUrl,
-        headers: { Authorization: `Bearer ${this.session.get('data.authenticated.token')}` }
+        headers: {
+          Authorization: `Bearer ${this.session.get(
+            'data.authenticated.token'
+          )}`
+        }
       })
-        .done(banners => {
+        .done((banners) => {
           if (Array.isArray(banners)) {
-            const activeBanners = banners.filter(banner => banner.isActive === true);
+            const activeBanners = banners.filter(
+              (banner) => banner.isActive === true
+            );
 
             resolve(activeBanners);
           } else {

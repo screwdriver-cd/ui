@@ -5,29 +5,31 @@ import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
 let server;
 
-module('Unit | Serializer | secret', function(hooks) {
+module('Unit | Serializer | secret', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
   // Replace this with your real tests.
-  test('it serializes records', function(assert) {
-    let record = run(() => this.owner.lookup('service:store').createRecord('secret'));
+  test('it serializes records', function (assert) {
+    let record = run(() =>
+      this.owner.lookup('service:store').createRecord('secret')
+    );
 
     let serializedRecord = record.serialize();
 
     assert.ok(serializedRecord);
   });
 
-  test('it does not post with model name as key', function(assert) {
+  test('it does not post with model name as key', function (assert) {
     assert.expect(2);
-    server.post('http://localhost:8080/v4/secrets', function() {
+    server.post('http://localhost:8080/v4/secrets', function () {
       return [200, {}, JSON.stringify({ id: 'abcd' })];
     });
 
@@ -56,9 +58,9 @@ module('Unit | Serializer | secret', function(hooks) {
     });
   });
 
-  test('it serializes only dirty fields', function(assert) {
+  test('it serializes only dirty fields', function (assert) {
     assert.expect(1);
-    server.put('http://localhost:8080/v4/secrets/abcd', function() {
+    server.put('http://localhost:8080/v4/secrets/abcd', function () {
       return [200, {}, JSON.stringify({ id: 'abcd' })];
     });
 
@@ -76,7 +78,9 @@ module('Unit | Serializer | secret', function(hooks) {
         }
       });
 
-      const secret = this.owner.lookup('service:store').peekRecord('secret', 'abcd');
+      const secret = this.owner
+        .lookup('service:store')
+        .peekRecord('secret', 'abcd');
 
       secret.set('value', 'newValue');
       secret.save();

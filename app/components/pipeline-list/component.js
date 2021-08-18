@@ -12,7 +12,7 @@ export default Component.extend({
 
       return this.start
         .startAll(this.pipeline.id)
-        .catch(error => this.set('errorMessage', error))
+        .catch((error) => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     }
   }

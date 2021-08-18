@@ -13,7 +13,7 @@ const commandServiceStub = Service.extend({
   }
 });
 
-module('Unix | Route | commands/index', function(hooks) {
+module('Unix | Route | commands/index', function (hooks) {
   setupTest(hooks);
 
   // Specify the other units that are required for this test.
@@ -22,12 +22,12 @@ module('Unix | Route | commands/index', function(hooks) {
     this.owner.register('service:command', commandServiceStub);
   });
 
-  test('it dedupes the commands by namespace and name', function(assert) {
+  test('it dedupes the commands by namespace and name', function (assert) {
     let route = this.owner.lookup('route:commands/index');
 
     assert.ok(route);
 
-    return route.model().then(commands => {
+    return route.model().then((commands) => {
       assert.equal(commands.length, 3);
     });
   });

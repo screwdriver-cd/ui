@@ -40,7 +40,7 @@ export default Route.extend({
 
     const { successOnly, fetchAll, fetchJob, startTime, endTime } = this;
     const toMinute = (sec = null) => (sec === null ? null : sec / 60);
-    const jobsMap = this.get('pipeline.jobs').then(jobs =>
+    const jobsMap = this.get('pipeline.jobs').then((jobs) =>
       jobs.reduce((map, j) => {
         const id = j.get('id');
         const name = j.get('name');
@@ -57,7 +57,7 @@ export default Route.extend({
       this.set('jobId', jobId);
     }
 
-    const metrics = RSVP.resolve(jobsMap).then(allJobs => {
+    const metrics = RSVP.resolve(jobsMap).then((allJobs) => {
       // resolve all the job IDs first and validate against inquired job id
       if (!allJobs.has(jobId)) {
         // bail if the inquired job id is not of this pipeline
@@ -67,12 +67,20 @@ export default Route.extend({
       return RSVP.all([
         allJobs,
         fetchAll
-          ? this.store.query('metric', { pipelineId: this.get('pipeline.id'), startTime, endTime })
+          ? this.store.query('metric', {
+              pipelineId: this.get('pipeline.id'),
+              startTime,
+              endTime
+            })
           : RSVP.resolve(this.pipelineMetrics),
         // eslint-disable-next-line no-nested-ternary
         fetchJob || fetchAll
           ? this.get('jobId')
-            ? this.store.query('metric', { jobId: this.get('jobId'), startTime, endTime })
+            ? this.store.query('metric', {
+                jobId: this.get('jobId'),
+                startTime,
+                endTime
+              })
             : RSVP.resolve()
           : RSVP.resolve(this.jobMetrics)
       ])
@@ -126,7 +134,7 @@ export default Route.extend({
             return null;
           }
 
-          pipelineMetrics.forEach(metric => {
+          pipelineMetrics.forEach((metric) => {
             const sha = metric.get('sha');
             const status = metric.get('status');
             const duration = metric.get('duration');
@@ -178,7 +186,7 @@ export default Route.extend({
               data: []
             };
 
-            jobMetrics.forEach(metric => {
+            jobMetrics.forEach((metric) => {
               const status = metric.get('status');
 
               if (successOnly && status !== 'SUCCESS') {
@@ -213,16 +221,23 @@ export default Route.extend({
             jobMap,
             steps,
             stepGroup: Array.from(stepGroup)
-              .map(s => s.toString())
+              .map((s) => s.toString())
               .sort(),
             measures: {
               total,
               passed: passCount,
               failed: total - passCount,
               avgs: {
-                queuedTime: humanizeDuration((sum.queuedTime * 1e3) / total, { round: true }),
-                imagePullTime: humanizeDuration((sum.imagePullTime * 1e3) / total, { round: true }),
-                duration: humanizeDuration((sum.duration * 1e3) / total, { round: true })
+                queuedTime: humanizeDuration((sum.queuedTime * 1e3) / total, {
+                  round: true
+                }),
+                imagePullTime: humanizeDuration(
+                  (sum.imagePullTime * 1e3) / total,
+                  { round: true }
+                ),
+                duration: humanizeDuration((sum.duration * 1e3) / total, {
+                  round: true
+                })
               }
             },
             getBuildId
@@ -238,7 +253,13 @@ export default Route.extend({
         });
     });
 
-    return RSVP.hash({ metrics, startTime, endTime, successOnly, jobId: this.get('jobId') });
+    return RSVP.hash({
+      metrics,
+      startTime,
+      endTime,
+      successOnly,
+      jobId: this.get('jobId')
+    });
   },
   actions: {
     setFetchDates(start, end) {

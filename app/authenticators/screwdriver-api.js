@@ -25,16 +25,13 @@ function getData(token, decodedToken) {
     scmContext = scmContext || 'guest';
   }
 
-  return Object.assign(
-    {},
-    {
-      username,
-      scope,
-      scmContext,
-      isGuest,
-      token
-    }
-  );
+  return {
+    username,
+    scope,
+    scmContext,
+    isGuest,
+    token
+  };
 }
 
 /**
@@ -52,7 +49,7 @@ function fetchToken() {
         withCredentials: true
       }
     })
-      .done(jwt =>
+      .done((jwt) =>
         // Add some data from the JWT to the session data
         resolve(getData(jwt.token, decoder(jwt.token)))
       )
@@ -136,7 +133,7 @@ export default Base.extend({
    * @return {Promise}
    */
   invalidate() {
-    return new EmberPromise(resolve => {
+    return new EmberPromise((resolve) => {
       $.ajax({
         url: logoutUrl,
         method: 'POST',

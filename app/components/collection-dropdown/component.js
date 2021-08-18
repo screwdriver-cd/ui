@@ -9,9 +9,10 @@ export default Component.extend({
   pipeline: null,
   buttonText: undefined,
   buttonClass: undefined,
-  normalCollections: filter('collections.[]', function isNormalCollection(collection) {
-    return collection.type !== 'default';
-  }),
+  normalCollections: filter(
+    'collections.[]',
+    (collection) => collection.type !== 'default'
+  ),
   actions: {
     openModal() {
       this.set('showCollectionModal', true);

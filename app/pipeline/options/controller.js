@@ -14,7 +14,11 @@ export default Controller.extend({
 
       job.set('state', state);
       job.set('stateChangeMessage', stateChangeMessage);
-      job.save().catch(error => this.set('errorMessage', error.errors[0].detail || ''));
+      job
+        .save()
+        .catch((error) =>
+          this.set('errorMessage', error.errors[0].detail || '')
+        );
     },
     removePipeline() {
       this.pipeline
@@ -22,7 +26,9 @@ export default Controller.extend({
         .then(() => {
           this.transitionToRoute('home');
         })
-        .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
+        .catch((error) =>
+          this.set('errorMessage', error.errors[0].detail || '')
+        );
     },
     updatePipeline({ scmUrl, rootDir }) {
       const { pipeline } = this;
@@ -37,7 +43,7 @@ export default Controller.extend({
       pipeline
         .save()
         .then(() => this.set('errorMessage', ''))
-        .catch(err => {
+        .catch((err) => {
           this.set('errorMessage', err.errors[0].detail || '');
         })
         .finally(() => {

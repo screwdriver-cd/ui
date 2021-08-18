@@ -22,23 +22,23 @@ const sessionServiceMock = Service.extend({
 
 let server;
 
-module('Unit | Controller | pipeline/events', function(hooks) {
+module('Unit | Controller | pipeline/events', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     this.owner.register('service:session', sessionServiceMock);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     assert.ok(this.owner.lookup('controller:pipeline/events'));
   });
 
-  test('it starts a build', async function(assert) {
+  test('it starts a build', async function (assert) {
     assert.expect(7);
     server.get('http://localhost:8080/v4/events/5678/builds', () => [
       201,
@@ -97,7 +97,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it restarts a build', async function(assert) {
+  test('it restarts a build', async function (assert) {
     assert.expect(6);
     server.get('http://localhost:8080/v4/events/2/builds', () => [
       201,
@@ -146,7 +146,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         events: newArray()
       });
 
-      controller.transitionToRoute = path => {
+      controller.transitionToRoute = (path) => {
         assert.equal(path, 'pipeline/1234/events');
       };
 
@@ -171,7 +171,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it restarts a PR build', async function(assert) {
+  test('it restarts a PR build', async function (assert) {
     assert.expect(6);
     server.get('http://localhost:8080/v4/events/2/builds', () => [
       201,
@@ -223,7 +223,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
         events: newArray()
       });
 
-      controller.transitionToRoute = path => {
+      controller.transitionToRoute = (path) => {
         assert.equal(path, 'pipeline/1234/pulls');
       };
 
@@ -248,7 +248,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it stops a build', async function(assert) {
+  test('it stops a build', async function (assert) {
     assert.expect(3);
     server.put('http://localhost:8080/v4/builds/123', () => [
       200,
@@ -304,7 +304,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it stops PR build(s)', async function(assert) {
+  test('it stops PR build(s)', async function (assert) {
     assert.expect(1);
     server.put('http://localhost:8080/v4/builds/123', () => [
       200,
@@ -367,7 +367,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it starts PR build(s)', async function(assert) {
+  test('it starts PR build(s)', async function (assert) {
     const prNum = 999;
 
     assert.expect(5);
@@ -415,7 +415,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('New event comes top of PR list when it starts a PR build with prChain', async function(assert) {
+  test('New event comes top of PR list when it starts a PR build with prChain', async function (assert) {
     const prNum = 3;
     const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
 
@@ -430,11 +430,13 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     ]);
 
     const createRecordStub = sinon.stub();
-    const controller = this.owner.factoryFor('controller:pipeline/events').create({
-      store: {
-        createRecord: createRecordStub
-      }
-    });
+    const controller = this.owner
+      .factoryFor('controller:pipeline/events')
+      .create({
+        store: {
+          createRecord: createRecordStub
+        }
+      });
 
     const newEvent = EmberObject.create({
       id: 3,

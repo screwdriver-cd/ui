@@ -6,10 +6,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | nav banner', function(hooks) {
+module('Integration | Component | nav banner', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders banners', async function(assert) {
+  test('it renders banners', async function (assert) {
     const bannerStub = Service.extend({
       fetchBanners: () =>
         resolve([

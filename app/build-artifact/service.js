@@ -17,7 +17,7 @@ function changeFiles(tree) {
     parts = tree.children;
   }
 
-  parts.forEach(part => {
+  parts.forEach((part) => {
     if (part.children.length === 0) {
       part.type = 'file';
       delete part.children;
@@ -40,15 +40,15 @@ function arrangeIntoTree(paths, baseUrl) {
 
   let currentLevel;
 
-  paths.forEach(path => {
+  paths.forEach((path) => {
     const pathParts = path.split('/');
 
     pathParts.shift(); // Remove first blank element from the parts array.
     currentLevel = tree; // initialize currentLevel to root
 
-    pathParts.forEach(part => {
+    pathParts.forEach((part) => {
       // check to see if the path already exists.
-      const existingPath = currentLevel.filter(obj => obj.text === part)[0];
+      const existingPath = currentLevel.filter((obj) => obj.text === part)[0];
 
       if (existingPath) {
         // The path to this item was already in the tree, so don't add it again.
@@ -86,9 +86,7 @@ export default Service.extend({
     let manifest = [];
 
     // Fetch the manifest directly from the store to prevent CORS issues
-    const manifestUrl =
-      `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
-      `/builds/${buildId}/ARTIFACTS/manifest.txt`;
+    const manifestUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}/builds/${buildId}/ARTIFACTS/manifest.txt`;
 
     // Set artifact file links to api to get redirects to store with short-lived jwt tokens
     const baseUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/artifacts/`;
@@ -100,9 +98,13 @@ export default Service.extend({
 
       return $.ajax({
         url: manifestUrl,
-        headers: { Authorization: `Bearer ${this.session.get('data.authenticated.token')}` }
+        headers: {
+          Authorization: `Bearer ${this.session.get(
+            'data.authenticated.token'
+          )}`
+        }
       })
-        .done(data => {
+        .done((data) => {
           const paths = data.split('\n').sort(); // sort in alphabetical order
 
           manifest = arrangeIntoTree(paths, baseUrl);

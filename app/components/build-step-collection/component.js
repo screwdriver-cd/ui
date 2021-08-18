@@ -11,20 +11,24 @@ export default Component.extend({
   isArtifacts: equal('activeTab', 'artifacts'),
   classNames: ['build-step-collection', 'row'],
   stepNames: mapBy('buildSteps', 'name'),
-  setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
-  teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
-  selectedStep: computed('buildSteps.@each.{code,startTime,endTime}', 'preselectedStepName', {
-    get() {
-      const steps = this.buildSteps;
-      const preselectedStep = steps.findBy('name', this.preselectedStepName);
+  setupSteps: filter('stepNames', (item) => /^sd-setup/.test(item)),
+  teardownSteps: filter('stepNames', (item) => /^sd-teardown/.test(item)),
+  selectedStep: computed(
+    'buildSteps.@each.{code,startTime,endTime}',
+    'preselectedStepName',
+    {
+      get() {
+        const steps = this.buildSteps;
+        const preselectedStep = steps.findBy('name', this.preselectedStepName);
 
-      if (preselectedStep) {
-        return preselectedStep.name;
+        if (preselectedStep) {
+          return preselectedStep.name;
+        }
+
+        return null;
       }
-
-      return null;
     }
-  }),
+  ),
   setupCollapsed: computed('selectedStep', {
     get() {
       const name = this.selectedStep;
@@ -47,7 +51,10 @@ export default Component.extend({
       return true;
     }
   }),
-  userSteps: filter('stepNames', item => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)),
+  userSteps: filter(
+    'stepNames',
+    (item) => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)
+  ),
   actions: {
     toggleSetup() {
       set(this, 'setupCollapsed', !this.setupCollapsed);

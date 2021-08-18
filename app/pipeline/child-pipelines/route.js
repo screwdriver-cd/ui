@@ -18,7 +18,7 @@ export default Route.extend({
       .query('pipeline', {
         configPipelineId: pipeline.id
       })
-      .then(pipelines => ({
+      .then((pipelines) => ({
         pipelines,
         pipeline
       }));

@@ -54,15 +54,16 @@ const event = {
   ]
 };
 
-module('Integration | Component | pipeline event row', function(hooks) {
+module('Integration | Component | pipeline event row', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send = (actionName, ...args) =>
+      this.actions[actionName].apply(this, args);
   });
 
-  test('it renders with pipeline event', async function(assert) {
+  test('it renders with pipeline event', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
@@ -91,7 +92,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it renders with pr event', async function(assert) {
+  test('it renders with pr event', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
@@ -130,7 +131,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.latest-commit').doesNotExist();
   });
 
-  test('it render when event creator and commit author is different', async function(assert) {
+  test('it render when event creator and commit author is different', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
@@ -168,7 +169,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it render when event is trigger by external pipeline', async function(assert) {
+  test('it render when event is trigger by external pipeline', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
@@ -196,13 +197,15 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
-    assert.dom('.by').hasText('Committed by: batman Started by: External Trigger');
+    assert
+      .dom('.by')
+      .hasText('Committed by: batman Started by: External Trigger');
     assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
     assert.dom('.last-successful').exists({ count: 1 });
     assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it render when event is trigger by same pipeline', async function(assert) {
+  test('it render when event is trigger by same pipeline', async function (assert) {
     assert.expect(11);
     this.actions.eventClick = () => {
       assert.ok(true);
@@ -238,7 +241,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it render when startFrom is missing', async function(assert) {
+  test('it render when startFrom is missing', async function (assert) {
     assert.expect(8);
     this.actions.eventClick = () => {
       assert.ok(true);
@@ -269,7 +272,7 @@ module('Integration | Component | pipeline event row', function(hooks) {
     assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it does not render graph when skipped event', async function(assert) {
+  test('it does not render graph when skipped event', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };

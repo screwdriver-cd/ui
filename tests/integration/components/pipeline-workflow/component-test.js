@@ -36,10 +36,10 @@ const BUILDS = [
   { jobId: 5, id: 8, status: 'FAILURE' }
 ];
 
-module('Integration | Component | pipeline workflow', function(hooks) {
+module('Integration | Component | pipeline workflow', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders an event', async function(assert) {
+  test('it renders an event', async function (assert) {
     this.set(
       'obj',
       EmberObject.create({
@@ -52,13 +52,15 @@ module('Integration | Component | pipeline workflow', function(hooks) {
       EmberObject.create(GRAPH)
     );
 
-    await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=true}}`);
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=true}}`
+    );
 
     assert.dom('.graph-node').exists({ count: 8 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 
-  test('it renders an event without pr job', async function(assert) {
+  test('it renders an event without pr job', async function (assert) {
     this.set(
       'obj',
       EmberObject.create({
@@ -71,13 +73,15 @@ module('Integration | Component | pipeline workflow', function(hooks) {
       EmberObject.create(GRAPH)
     );
 
-    await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=false}}`);
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=false}}`
+    );
 
     assert.dom('.graph-node').exists({ count: 7 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 
-  test('it renders with frozen window', async function(assert) {
+  test('it renders with frozen window', async function (assert) {
     this.setProperties({
       obj: frozenBuild,
       builds: [],
@@ -142,13 +146,17 @@ module('Integration | Component | pipeline workflow', function(hooks) {
       }
     });
 
-    await render(hbs`{{pipeline-workflow selectedEventObj=obj jobs=jobs graph=workflowGraph}}`);
-    assert.dom('.pipelineWorkflow [data-job="mainFreeze"]').exists({ count: 1 });
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj jobs=jobs graph=workflowGraph}}`
+    );
+    assert
+      .dom('.pipelineWorkflow [data-job="mainFreeze"]')
+      .exists({ count: 1 });
     assert.dom('.graph-node.build-frozen').exists({ count: 1 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 
-  test('it renders with latest-commit', async function(assert) {
+  test('it renders with latest-commit', async function (assert) {
     this.set(
       'obj',
       EmberObject.create({
@@ -173,7 +181,7 @@ module('Integration | Component | pipeline workflow', function(hooks) {
     assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it renders without latest-commit', async function(assert) {
+  test('it renders without latest-commit', async function (assert) {
     this.set(
       'obj',
       EmberObject.create({

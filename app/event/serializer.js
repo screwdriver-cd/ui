@@ -2,9 +2,12 @@ import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 
 const compare = (s1, s2) =>
-  (s1 || '').localeCompare(s2 || '', undefined, { numeric: true, sensitivity: 'base' });
+  (s1 || '').localeCompare(s2 || '', undefined, {
+    numeric: true,
+    sensitivity: 'base'
+  });
 
-export const sortWorkflowGraph = workflowGraph => {
+export const sortWorkflowGraph = (workflowGraph) => {
   if (workflowGraph) {
     const notInFirstColumns = {};
 
@@ -13,19 +16,27 @@ export const sortWorkflowGraph = workflowGraph => {
         notInFirstColumns[dest] = true;
       });
       workflowGraph.edges.sort(
-        (edge1, edge2) => compare(edge1.src, edge2.src) || compare(edge1.dest, edge2.dest)
+        (edge1, edge2) =>
+          compare(edge1.src, edge2.src) || compare(edge1.dest, edge2.dest)
       );
     }
 
     if (workflowGraph.nodes) {
-      const nodesNotInFirstColumn = workflowGraph.nodes.filter(n => !!notInFirstColumns[n.name]);
-      const nodesInFirstColumn = workflowGraph.nodes.filter(n => !notInFirstColumns[n.name]);
+      const nodesNotInFirstColumn = workflowGraph.nodes.filter(
+        (n) => !!notInFirstColumns[n.name]
+      );
+      const nodesInFirstColumn = workflowGraph.nodes.filter(
+        (n) => !notInFirstColumns[n.name]
+      );
 
       // we only sort the nodes that are not in the first column.
       nodesNotInFirstColumn.sort(
         (node1, node2) =>
           compare(node1.name, node2.name) ||
-          compare(node1.id ? node1.id.toString() : '', node2.id ? node2.id.toString() : '')
+          compare(
+            node1.id ? node1.id.toString() : '',
+            node2.id ? node2.id.toString() : ''
+          )
       );
       workflowGraph.nodes = [...nodesInFirstColumn, ...nodesNotInFirstColumn];
     }
@@ -35,7 +46,7 @@ export const sortWorkflowGraph = workflowGraph => {
 export default DS.RESTSerializer.extend({
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.events) {
-      payload.events.forEach(event => {
+      payload.events.forEach((event) => {
         sortWorkflowGraph(event.workflowGraph);
       });
     } else if (payload.event && payload.event.workflowGraph) {

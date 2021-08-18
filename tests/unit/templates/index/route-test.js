@@ -13,7 +13,7 @@ const templateServiceStub = Service.extend({
   }
 });
 
-module('Unit | Route | templates/index', function(hooks) {
+module('Unit | Route | templates/index', function (hooks) {
   setupTest(hooks);
 
   // Specify the other units that are required for this test.
@@ -22,12 +22,12 @@ module('Unit | Route | templates/index', function(hooks) {
     this.owner.register('service:template', templateServiceStub);
   });
 
-  test('it dedupes the templates by name', function(assert) {
+  test('it dedupes the templates by name', function (assert) {
     let route = this.owner.lookup('route:templates/index');
 
     assert.ok(route);
 
-    return route.model().then(templates => {
+    return route.model().then((templates) => {
       assert.equal(templates.length, 3);
     });
   });

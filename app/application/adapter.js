@@ -5,7 +5,9 @@ import ENV from 'screwdriver-ui/config/environment';
 import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 
 // urls are of the form: https://server.com/namespace/key1s/:id/key2s, but :id and key2s are optional
-const urlPathParser = new RegExp(`/${ENV.APP.SDAPI_NAMESPACE}/([^/]+)(/([^/]+))?(/([^/]+))?`);
+const urlPathParser = new RegExp(
+  `/${ENV.APP.SDAPI_NAMESPACE}/([^/]+)(/([^/]+))?(/([^/]+))?`
+);
 
 export default DS.RESTAdapter.extend(DataAdapterMixin, {
   session: service('session'),
@@ -33,7 +35,9 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
   },
 
   get headers() {
-    return { Authorization: `Bearer ${this.session.get('data.authenticated.token')}` };
+    return {
+      Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
+    };
   },
 
   /**
@@ -47,7 +51,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    */
   decoratePayload(key, payload) {
     if (Array.isArray(payload[key])) {
-      payload[key].map(o => this.insertLink(key, o));
+      payload[key].map((o) => this.insertLink(key, o));
     } else {
       this.insertLink(key, payload[key]);
     }
@@ -123,9 +127,10 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       }
 
       // Rewrite the error message for guest users
-      errors = errors.map(err => {
+      errors = errors.map((err) => {
         if (err.detail === 'Insufficient scope') {
-          err.detail = 'You do not have adequate permissions to perform this action.';
+          err.detail =
+            'You do not have adequate permissions to perform this action.';
         }
 
         return err;
@@ -180,10 +185,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       return this._super(modelName, snapshot);
     }
 
-    return (
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`
-    );
+    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
   },
   /**
    * Overriding default adapter because pipeline token's endpoint is differnt
@@ -198,10 +200,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       return this._super(modelName, snapshot);
     }
 
-    return (
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`
-    );
+    return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
   },
   /**
    * Overriding default adapter because pipeline token's endpoint is differnt
@@ -232,7 +231,10 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    * @return {String}      url
    */
   urlForDeleteRecord(id, modelName, snapshot) {
-    if (modelName !== 'token' || snapshot.adapterOptions.pipelineId === undefined) {
+    if (
+      modelName !== 'token' ||
+      snapshot.adapterOptions.pipelineId === undefined
+    ) {
       return this._super(id, modelName, snapshot);
     }
 

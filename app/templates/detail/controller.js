@@ -14,7 +14,7 @@ export default Controller.extend({
     this.set('errorMessage', '');
   },
   trusted: computed('templates.templateData.[]', function computeTrusted() {
-    return this.templates.templateData.some(t => t.trusted && t.latest);
+    return this.templates.templateData.some((t) => t.trusted && t.latest);
   }),
   isAdmin: computed(function isAdmin() {
     const token = this.get('session.data.authenticated.token');
@@ -38,10 +38,15 @@ export default Controller.extend({
         return this.templates.templateData.findBy('version', version);
       }
 
-      let tagExists = templateTagData.filter(t => t.tag === versionOrTagFromUrl);
+      let tagExists = templateTagData.filter(
+        (t) => t.tag === versionOrTagFromUrl
+      );
 
       if (tagExists.length > 0) {
-        return this.templates.templateData.findBy('version', tagExists[0].version);
+        return this.templates.templateData.findBy(
+          'version',
+          tagExists[0].version
+        );
       }
 
       return this.templates.templateData.findBy('version', versionOrTagFromUrl);
@@ -49,14 +54,17 @@ export default Controller.extend({
   }),
   actions: {
     removeTemplate(name) {
-      return this.template
-        .deleteTemplates(name)
-        .then(() => this.transitionToRoute('templates'), err => this.set('errorMessage', err));
+      return this.template.deleteTemplates(name).then(
+        () => this.transitionToRoute('templates'),
+        (err) => this.set('errorMessage', err)
+      );
     },
     updateTrust(fullName, toTrust) {
       return (
         this.isAdmin &&
-        this.template.updateTrust(fullName, toTrust).catch(err => this.set('errorMessage', err))
+        this.template
+          .updateTrust(fullName, toTrust)
+          .catch((err) => this.set('errorMessage', err))
       );
     }
   }

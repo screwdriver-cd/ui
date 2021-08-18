@@ -17,7 +17,7 @@ export default Component.extend({
       if (this.allTemplates) {
         const map = new Map();
 
-        this.allTemplates.forEach(template => {
+        this.allTemplates.forEach((template) => {
           const { namespace } = template;
           const templateCollection = map.get(namespace);
 
@@ -69,7 +69,11 @@ export default Component.extend({
       } catch (err) {
         let error = err.errors[0] || {};
 
-        if (error.status === 409 && typeof error.data === 'object' && error.data.existingId) {
+        if (
+          error.status === 409 &&
+          typeof error.data === 'object' &&
+          error.data.existingId
+        ) {
           const { existingId } = error.data;
           const existingPiplineLink = `<a href="/pipelines/${existingId}" rel="noopener">take me there</a>`;
           const errorMessage = `Pipeline ${existingId} already exists, ${existingPiplineLink}`;

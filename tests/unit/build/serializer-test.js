@@ -3,36 +3,40 @@ import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
 let server;
 
-module('Unit | Serializer | build', function(hooks) {
+module('Unit | Serializer | build', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it converts container to buildContainer and haves right defaults', async function(assert) {
+  test('it converts container to buildContainer and haves right defaults', async function (assert) {
     assert.expect(2);
-    server.get('http://localhost:8080/v4/builds/abcd', function() {
+    server.get('http://localhost:8080/v4/builds/abcd', function () {
       return [200, {}, JSON.stringify({ id: 'abcd', container: 'node:6' })];
     });
 
-    const build = await this.owner.lookup('service:store').findRecord('build', 'abcd');
+    const build = await this.owner
+      .lookup('service:store')
+      .findRecord('build', 'abcd');
 
     assert.equal(build.get('buildContainer'), 'node:6');
     assert.equal(build.get('statusMessage'), null);
   });
 
-  test('it POSTs only a jobId for create', async function(assert) {
+  test('it POSTs only a jobId for create', async function (assert) {
     assert.expect(2);
-    server.post('http://localhost:8080/v4/builds', function() {
+    server.post('http://localhost:8080/v4/builds', function () {
       return [200, {}, JSON.stringify({ id: 'abcd' })];
     });
 
-    const build = await this.owner.lookup('service:store').createRecord('build', { jobId: '1234' });
+    const build = await this.owner
+      .lookup('service:store')
+      .createRecord('build', { jobId: '1234' });
 
     await build.save();
 
@@ -44,9 +48,9 @@ module('Unit | Serializer | build', function(hooks) {
     assert.deepEqual(payload, { jobId: '1234' });
   });
 
-  test('it PUTs only a status for update', async function(assert) {
+  test('it PUTs only a status for update', async function (assert) {
     assert.expect(1);
-    server.put('http://localhost:8080/v4/builds/1234', function() {
+    server.put('http://localhost:8080/v4/builds/1234', function () {
       return [200, {}, JSON.stringify({ id: 1234 })];
     });
 
@@ -61,7 +65,9 @@ module('Unit | Serializer | build', function(hooks) {
       }
     });
 
-    const build = await this.owner.lookup('service:store').peekRecord('build', 1234);
+    const build = await this.owner
+      .lookup('service:store')
+      .peekRecord('build', 1234);
 
     build.set('status', 'ABORTED');
 

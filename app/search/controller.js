@@ -12,7 +12,10 @@ export default Controller.extend({
       const currentModelPipelines = this.get('model.pipelines').toArray();
       const currentPipelinesShown = this.pipelinesToShow;
 
-      if (Array.isArray(currentPipelinesShown) && currentPipelinesShown.length) {
+      if (
+        Array.isArray(currentPipelinesShown) &&
+        currentPipelinesShown.length
+      ) {
         this.set('pipelinesToShow', []);
       }
 
@@ -47,17 +50,22 @@ export default Controller.extend({
         this.setProperties({ query: search });
       }
 
-      return this.store.query('pipeline', pipelineListConfig).then(pipelines => {
-        const nextPipelines = pipelines.toArray();
+      return this.store
+        .query('pipeline', pipelineListConfig)
+        .then((pipelines) => {
+          const nextPipelines = pipelines.toArray();
 
-        if (Array.isArray(nextPipelines)) {
-          if (nextPipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
-            this.set('moreToShow', false);
+          if (Array.isArray(nextPipelines)) {
+            if (nextPipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
+              this.set('moreToShow', false);
+            }
+
+            this.set(
+              'pipelinesToShow',
+              this.pipelinesToShow.concat(nextPipelines)
+            );
           }
-
-          this.set('pipelinesToShow', this.pipelinesToShow.concat(nextPipelines));
-        }
-      });
+        });
     },
     /**
      * Adding a pipeline to a collection
@@ -65,15 +73,17 @@ export default Controller.extend({
      * @param {Object} collection - collection object
      */
     addToCollection(pipelineId, collectionId) {
-      return this.store.findRecord('collection', collectionId).then(collection => {
-        const pipelineIds = collection.get('pipelineIds');
+      return this.store
+        .findRecord('collection', collectionId)
+        .then((collection) => {
+          const pipelineIds = collection.get('pipelineIds');
 
-        if (!pipelineIds.includes(pipelineId)) {
-          collection.set('pipelineIds', [...pipelineIds, pipelineId]);
-        }
+          if (!pipelineIds.includes(pipelineId)) {
+            collection.set('pipelineIds', [...pipelineIds, pipelineId]);
+          }
 
-        return collection.save();
-      });
+          return collection.save();
+        });
     },
     changeCollection() {
       this.set('editingDescription', false);

@@ -3,17 +3,19 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | workflow graph d3', function(hooks) {
+module('Integration | Component | workflow graph d3', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders empty when no graph supplied', async function(assert) {
+  test('it renders empty when no graph supplied', async function (assert) {
     await render(hbs`{{workflow-graph-d3}}`);
 
     assert.dom('svg').exists({ count: 1 });
-    this.element.querySelectorAll('svg').forEach(el => assert.equal(el.children.length, 0));
+    this.element
+      .querySelectorAll('svg')
+      .forEach((el) => assert.equal(el.children.length, 0));
   });
 
-  test('it renders nodes and edges when a graph is supplied', async function(assert) {
+  test('it renders nodes and edges when a graph is supplied', async function (assert) {
     this.set('workflowGraph', {
       nodes: [
         { name: '~pr' },
@@ -31,12 +33,15 @@ module('Integration | Component | workflow graph d3', function(hooks) {
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
     assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 4);
-    assert.equal(this.element.querySelectorAll('svg > path.graph-edge').length, 3);
+    assert.equal(
+      this.element.querySelectorAll('svg > path.graph-edge').length,
+      3
+    );
     assert.dom('svg text.graph-label:nth-of-type(3)').includesText('main');
     assert.dom('svg text.graph-label:nth-of-type(4)').includesText('bar');
   });
 
-  test('it renders a complete graph with triggers when showDownstreamTriggers is true', async function(assert) {
+  test('it renders a complete graph with triggers when showDownstreamTriggers is true', async function (assert) {
     this.set('workflowGraph', {
       nodes: [
         { name: '~pr' },
@@ -72,12 +77,15 @@ module('Integration | Component | workflow graph d3', function(hooks) {
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
     assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 5);
-    assert.equal(this.element.querySelectorAll('svg > path.graph-edge').length, 4);
+    assert.equal(
+      this.element.querySelectorAll('svg > path.graph-edge').length,
+      4
+    );
     assert.dom('svg text.graph-label:nth-of-type(3)').includesText('main');
     assert.dom('svg text.graph-label:nth-of-type(4)').includesText('bar');
   });
 
-  test('it renders statuses when build data is available', async function(assert) {
+  test('it renders statuses when build data is available', async function (assert) {
     this.set('workflowGraph', {
       nodes: [
         { name: '~pr' },
@@ -107,15 +115,30 @@ module('Integration | Component | workflow graph d3', function(hooks) {
 
     assert.equal(el.querySelectorAll('svg').length, 1);
     assert.equal(el.querySelectorAll('svg > g.graph-node').length, 5);
-    assert.equal(el.querySelectorAll('svg > g.graph-node.build-success').length, 2);
-    assert.equal(el.querySelectorAll('svg > g.graph-node.build-failure').length, 1);
-    assert.equal(el.querySelectorAll('svg > g.graph-node.build-started_from').length, 1);
+    assert.equal(
+      el.querySelectorAll('svg > g.graph-node.build-success').length,
+      2
+    );
+    assert.equal(
+      el.querySelectorAll('svg > g.graph-node.build-failure').length,
+      1
+    );
+    assert.equal(
+      el.querySelectorAll('svg > g.graph-node.build-started_from').length,
+      1
+    );
     assert.equal(el.querySelectorAll('svg > path.graph-edge').length, 4);
-    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-started_from').length, 1);
-    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-success').length, 2);
+    assert.equal(
+      el.querySelectorAll('svg > path.graph-edge.build-started_from').length,
+      1
+    );
+    assert.equal(
+      el.querySelectorAll('svg > path.graph-edge.build-success').length,
+      2
+    );
   });
 
-  test('it does not render startFrom icon when starting in the middle of the graph', async function(assert) {
+  test('it does not render startFrom icon when starting in the middle of the graph', async function (assert) {
     this.set('workflowGraph', {
       nodes: [
         { name: '~pr' },
@@ -144,15 +167,30 @@ module('Integration | Component | workflow graph d3', function(hooks) {
 
     assert.equal(el.querySelectorAll('svg').length, 1);
     assert.equal(el.querySelectorAll('svg > g.graph-node').length, 5);
-    assert.equal(el.querySelectorAll('svg > g.graph-node.build-success').length, 1);
-    assert.equal(el.querySelectorAll('svg > g.graph-node.build-failure').length, 1);
-    assert.equal(el.querySelectorAll('svg > g.graph-node.build-started_from').length, 0);
+    assert.equal(
+      el.querySelectorAll('svg > g.graph-node.build-success').length,
+      1
+    );
+    assert.equal(
+      el.querySelectorAll('svg > g.graph-node.build-failure').length,
+      1
+    );
+    assert.equal(
+      el.querySelectorAll('svg > g.graph-node.build-started_from').length,
+      0
+    );
     assert.equal(el.querySelectorAll('svg > path.graph-edge').length, 4);
-    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-started_from').length, 0);
-    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-success').length, 1);
+    assert.equal(
+      el.querySelectorAll('svg > path.graph-edge.build-started_from').length,
+      0
+    );
+    assert.equal(
+      el.querySelectorAll('svg > path.graph-edge.build-success').length,
+      1
+    );
   });
 
-  test('it can renders subgraph for minified case', async function(assert) {
+  test('it can renders subgraph for minified case', async function (assert) {
     this.set('workflowGraph', {
       nodes: [
         { name: '~pr' },
@@ -183,11 +221,26 @@ module('Integration | Component | workflow graph d3', function(hooks) {
 
     assert.equal(el.querySelectorAll('svg').length, 1);
     assert.equal(el.querySelectorAll('svg > g.graph-node').length, 2);
-    assert.equal(el.querySelectorAll('svg > g.graph-node.build-success').length, 1);
-    assert.equal(el.querySelectorAll('svg > g.graph-node.build-failure').length, 1);
-    assert.equal(el.querySelectorAll('svg > g.graph-node.build-started_from').length, 0);
+    assert.equal(
+      el.querySelectorAll('svg > g.graph-node.build-success').length,
+      1
+    );
+    assert.equal(
+      el.querySelectorAll('svg > g.graph-node.build-failure').length,
+      1
+    );
+    assert.equal(
+      el.querySelectorAll('svg > g.graph-node.build-started_from').length,
+      0
+    );
     assert.equal(el.querySelectorAll('svg > path.graph-edge').length, 1);
-    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-started_from').length, 0);
-    assert.equal(el.querySelectorAll('svg > path.graph-edge.build-success').length, 1);
+    assert.equal(
+      el.querySelectorAll('svg > path.graph-edge.build-started_from').length,
+      0
+    );
+    assert.equal(
+      el.querySelectorAll('svg > path.graph-edge.build-success').length,
+      1
+    );
   });
 });

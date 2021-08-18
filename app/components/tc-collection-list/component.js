@@ -30,7 +30,10 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let table = Table.create({ columns: this.columns, rows: this.refinedModel });
+    let table = Table.create({
+      columns: this.columns,
+      rows: this.refinedModel
+    });
 
     let sortColumn = table.get('allColumns').findBy('valuePath', this.sort);
 
@@ -53,7 +56,7 @@ export default Component.extend({
         const maintainer = this.filteringMaintainer;
         const { search, trustedOnly } = this;
 
-        return this.model.filter(m => {
+        return this.model.filter((m) => {
           let result = true;
 
           if (trustedOnly && !m.trusted) {
@@ -90,63 +93,55 @@ export default Component.extend({
   }),
   namespaces: computed('model', {
     get() {
-      return this.model
-        .mapBy('namespace')
-        .uniq()
-        .sort();
+      return this.model.mapBy('namespace').uniq().sort();
     }
   }),
   maintainers: computed('model', {
     get() {
-      return this.model
-        .mapBy('maintainer')
-        .uniq()
-        .sort();
+      return this.model.mapBy('maintainer').uniq().sort();
     }
   }),
-  columns: computed(function columns() {
-    return [
-      {
-        label: 'Name',
-        valuePath: 'name',
-        cellComponent: 'tc-collection-linker',
-        resizable: true,
-        width: '20%',
-        minResizeWidth: 175
-      },
-      {
-        label: 'Description',
-        sortable: false,
-        valuePath: 'description',
-        resizable: true,
-        width: '30%',
-        minResizeWidth: 350
-      },
-      {
-        label: 'Namespace',
-        valuePath: 'namespace',
-        cellComponent: 'tc-collection-linker',
-        resizable: true,
-        width: '15%',
-        minResizeWidth: 150
-      },
-      {
-        label: 'Updated',
-        valuePath: 'lastUpdated',
-        resizable: true,
-        width: '15%',
-        minResizeWidth: 100
-      },
-      {
-        label: 'Released By',
-        sortable: true,
-        valuePath: 'maintainer',
-        resizable: true,
-        width: '20%',
-        minResizeWidth: 150
-      }
-    ];
-  }),
+  columns: computed(() => [
+    {
+      label: 'Name',
+      valuePath: 'name',
+      cellComponent: 'tc-collection-linker',
+      resizable: true,
+      width: '20%',
+      minResizeWidth: 175
+    },
+    {
+      label: 'Description',
+      sortable: false,
+      valuePath: 'description',
+      resizable: true,
+      width: '30%',
+      minResizeWidth: 350
+    },
+    {
+      label: 'Namespace',
+      valuePath: 'namespace',
+      cellComponent: 'tc-collection-linker',
+      resizable: true,
+      width: '15%',
+      minResizeWidth: 150
+    },
+    {
+      label: 'Updated',
+      valuePath: 'lastUpdated',
+      resizable: true,
+      width: '15%',
+      minResizeWidth: 100
+    },
+    {
+      label: 'Released By',
+      sortable: true,
+      valuePath: 'maintainer',
+      resizable: true,
+      width: '20%',
+      minResizeWidth: 150
+    }
+  ]),
   refineModel() {
     this.table.setRows(this.refinedModel);
   },
@@ -159,19 +154,13 @@ export default Component.extend({
       if (this.filteringNamespace) {
         this.set(
           'maintainers',
-          this.filteredModel
-            .mapBy('maintainer')
-            .uniq()
-            .sort()
+          this.filteredModel.mapBy('maintainer').uniq().sort()
         );
       }
       if (this.filteringMaintainer) {
         this.set(
           'namespaces',
-          this.filteredModel
-            .mapBy('namespace')
-            .uniq()
-            .sort()
+          this.filteredModel.mapBy('namespace').uniq().sort()
         );
       }
     }
@@ -206,10 +195,7 @@ export default Component.extend({
       if (!ns) {
         this.set(
           'namespaces',
-          this.filteredModel
-            .mapBy('namespace')
-            .uniq()
-            .sort()
+          this.filteredModel.mapBy('namespace').uniq().sort()
         );
       }
       this.refineModel();
@@ -226,10 +212,7 @@ export default Component.extend({
       if (!m) {
         this.set(
           'maintainers',
-          this.filteredModel
-            .mapBy('maintainer')
-            .uniq()
-            .sort()
+          this.filteredModel.mapBy('maintainer').uniq().sort()
         );
       }
       this.refineModel();

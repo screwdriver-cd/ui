@@ -7,7 +7,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
   routeAfterAuthentication: 'home',
 
   beforeModel(/* transition */) {
-    if (!get(this, 'session.isAuthenticated') || get(this, 'session.data.authenticated.isGuest')) {
+    if (
+      !get(this, 'session.isAuthenticated') ||
+      get(this, 'session.data.authenticated.isGuest')
+    ) {
       this.replaceWith('home');
     }
   },

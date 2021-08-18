@@ -29,11 +29,18 @@ export default Component.extend({
     'completeWorkflowGraph',
     {
       get() {
-        const showDownstreamTriggers = getWithDefault(this, 'showDownstreamTriggers', false);
+        const showDownstreamTriggers = getWithDefault(
+          this,
+          'showDownstreamTriggers',
+          false
+        );
         const builds = getWithDefault(this, 'builds', []);
         const { startFrom } = this;
         const jobs = getWithDefault(this, 'jobs', []);
-        const workflowGraph = getWithDefault(this, 'workflowGraph', { nodes: [], edges: [] });
+        const workflowGraph = getWithDefault(this, 'workflowGraph', {
+          nodes: [],
+          edges: []
+        });
         const completeGraph = getWithDefault(this, 'completeWorkflowGraph', {
           nodes: [],
           edges: []
@@ -42,10 +49,12 @@ export default Component.extend({
         let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
 
         // only remove node if it is not a source node
-        const endNodes = graph.nodes.filter(node => {
+        const endNodes = graph.nodes.filter((node) => {
           if (node.name.startsWith('sd@')) {
             // check if an edge has this node as source
-            if (graph.edges.filter(edge => edge.src === node.name).length <= 0) {
+            if (
+              graph.edges.filter((edge) => edge.src === node.name).length <= 0
+            ) {
               return true;
             }
           }
@@ -56,8 +65,10 @@ export default Component.extend({
         // remove duplicate dangling trigger jobs from graph
         if (endNodes.length) {
           graph.nodes.removeObjects(endNodes);
-          endNodes.forEach(endNode => {
-            const endEdges = graph.edges.filter(edge => edge.dest === endNode.name);
+          endNodes.forEach((endNode) => {
+            const endEdges = graph.edges.filter(
+              (edge) => edge.dest === endNode.name
+            );
 
             graph.edges.removeObjects(endEdges);
           });
@@ -141,14 +152,19 @@ export default Component.extend({
     if (!data) return;
     const el = d3.select(this.element);
 
-    data.nodes.forEach(node => {
+    data.nodes.forEach((node) => {
       const n = el.select(`g.graph-node[data-job="${node.name}"]`);
 
       if (n) {
         const txt = n.select('text');
 
         txt.text(icon(node.status));
-        n.attr('class', `graph-node${node.status ? ` build-${node.status.toLowerCase()}` : ''}`);
+        n.attr(
+          'class',
+          `graph-node${
+            node.status ? ` build-${node.status.toLowerCase()}` : ''
+          }`
+        );
       }
     });
   },
@@ -188,7 +204,9 @@ export default Component.extend({
 
     // Calculate the canvas size based on amount of content, or override with user-defined size
     const w = this.width || data.meta.width * X_WIDTH;
-    const h = this.height || data.meta.height * ICON_SIZE + data.meta.height * Y_SPACING;
+    const h =
+      this.height ||
+      data.meta.height * ICON_SIZE + data.meta.height * Y_SPACING;
 
     // Add the SVG element
     const svg = d3
@@ -198,7 +216,7 @@ export default Component.extend({
       .attr('height', h)
       .on(
         'click.graph-node:not',
-        e => {
+        (e) => {
           this.send('buildClicked', e);
         },
         true
@@ -206,10 +224,11 @@ export default Component.extend({
 
     this.set('graphNode', svg);
 
-    const calcXCenter = pos => X_WIDTH / 2 + pos * X_WIDTH;
+    const calcXCenter = (pos) => X_WIDTH / 2 + pos * X_WIDTH;
 
     // Calculate the start/end point of a line
-    const calcPos = (pos, spacer) => (pos + 1) * ICON_SIZE + (pos * spacer - ICON_SIZE / 2);
+    const calcPos = (pos, spacer) =>
+      (pos + 1) * ICON_SIZE + (pos * spacer - ICON_SIZE / 2);
 
     const isSkipped = getWithDefault(this, 'isSkipped', false);
 
@@ -219,15 +238,15 @@ export default Component.extend({
       .data(data.edges)
       .enter()
       .append('path')
-      .attr('class', d =>
+      .attr('class', (d) =>
         isSkipped
           ? 'graph-edge build-skipped'
           : `graph-edge ${d.status ? `build-${d.status.toLowerCase()}` : ''}`
       )
-      .attr('stroke-dasharray', d => (!d.status || isSkipped ? 5 : 500))
+      .attr('stroke-dasharray', (d) => (!d.status || isSkipped ? 5 : 500))
       .attr('stroke-width', 2)
       .attr('fill', 'transparent')
-      .attr('d', d => {
+      .attr('d', (d) => {
         const path = d3.path();
         const startX = calcXCenter(d.from.x) + ICON_SIZE / 2 + EDGE_GAP;
         const startY = calcPos(d.from.y, Y_SPACING);
@@ -253,17 +272,19 @@ export default Component.extend({
       // for each element in data array - do the following
       // create a group element to animate
       .append('g')
-      .attr('class', d => {
+      .attr('class', (d) => {
         if (isSkipped && d.status === 'STARTED_FROM') {
           return 'graph-node build-skipped';
         }
 
-        return `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`;
+        return `graph-node${
+          d.status ? ` build-${d.status.toLowerCase()}` : ''
+        }`;
       })
-      .attr('data-job', d => d.name)
+      .attr('data-job', (d) => d.name)
       // create the icon graphic
       .insert('text')
-      .text(d => {
+      .text((d) => {
         if (isSkipped && d.status === 'STARTED_FROM') {
           return icon('SKIPPED');
         }
@@ -272,14 +293,14 @@ export default Component.extend({
       })
       .attr('font-size', `${ICON_SIZE}px`)
       .style('text-anchor', 'middle')
-      .attr('x', d => calcXCenter(d.pos.x))
-      .attr('y', d => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING)
-      .on('click', e => {
+      .attr('x', (d) => calcXCenter(d.pos.x))
+      .attr('y', (d) => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING)
+      .on('click', (e) => {
         this.send('buildClicked', e);
       })
       // add a tooltip
       .insert('title')
-      .text(d => (d.status ? `${d.name} - ${d.status}` : d.name));
+      .text((d) => (d.status ? `${d.name} - ${d.status}` : d.name));
 
     let jobFound = false;
 
@@ -290,14 +311,15 @@ export default Component.extend({
         .data(data.nodes)
         .enter()
         .append('text')
-        .text(d => {
-          const displayName = d.displayName !== undefined ? d.displayName : d.name;
+        .text((d) => {
+          const displayName =
+            d.displayName !== undefined ? d.displayName : d.name;
 
           return displayName.length >= desiredJobNameLength
             ? `${displayName.substr(0, 8)}...${displayName.substr(-8)}`
             : displayName;
         })
-        .attr('class', d => {
+        .attr('class', (d) => {
           if (!self.minified && d.id === parseInt(self.jobId, 10)) {
             jobFound = true;
 
@@ -308,10 +330,13 @@ export default Component.extend({
         })
         .attr('font-size', `${TITLE_SIZE}px`)
         .style('text-anchor', 'middle')
-        .attr('x', d => calcXCenter(d.pos.x))
-        .attr('y', d => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING + TITLE_SIZE)
+        .attr('x', (d) => calcXCenter(d.pos.x))
+        .attr(
+          'y',
+          (d) => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING + TITLE_SIZE
+        )
         .insert('title')
-        .text(d => d.name);
+        .text((d) => d.name);
     }
     if (jobFound && !this.scrolledToSelectedJob) {
       this.element.querySelectorAll('svg > .selected-job')[0].scrollIntoView();

@@ -61,10 +61,7 @@ export default Service.extend({
 
     const uri = `${baseHost}${url}`;
 
-    const options = Object.assign({}, this.ajaxOptions(), {
-      data,
-      type: optionsType
-    });
+    const options = { ...this.ajaxOptions(), data, type: optionsType };
 
     return this.get('ajax')[requestType](uri, options);
   },
@@ -77,7 +74,13 @@ export default Service.extend({
     return this.fetchFrom('store', method, url, data, raw);
   },
 
-  fetchLogs({ buildId, stepName, logNumber = 0, pageSize = 10, sortOrder = 'ascending' }) {
+  fetchLogs({
+    buildId,
+    stepName,
+    logNumber = 0,
+    pageSize = 10,
+    sortOrder = 'ascending'
+  }) {
     const method = 'get';
     const url = `/builds/${buildId}/steps/${stepName}/logs`;
     const data = { from: logNumber, pages: pageSize, sort: sortOrder };
@@ -150,7 +153,7 @@ export default Service.extend({
 
     if (settings.metricsDowntimeJobs) {
       newSetting = {
-        metricsDowntimeJobs: settings.metricsDowntimeJobs.map(job => job.id)
+        metricsDowntimeJobs: settings.metricsDowntimeJobs.map((job) => job.id)
       };
     }
 
@@ -178,7 +181,12 @@ export default Service.extend({
     endTime
   ) {
     const method = 'get';
-    const query = $.param({ downtimeJobs, downtimeStatuses, startTime, endTime });
+    const query = $.param({
+      downtimeJobs,
+      downtimeStatuses,
+      startTime,
+      endTime
+    });
     const url = `/pipelines/${pipelineId}/metrics?${query}`;
 
     return this.fetchFromApi(method, url);
@@ -224,7 +232,11 @@ export default Service.extend({
     }
 
     const remotePreferences = await this.getUserSetting();
-    const remotePipelineConfig = getWithDefault(remotePreferences, pipelineId, {});
+    const remotePipelineConfig = getWithDefault(
+      remotePreferences,
+      pipelineId,
+      {}
+    );
     const localPipelinePreference = await this.store
       .peekAll('preference/pipeline')
       .findBy('id', pipelineId);
@@ -237,10 +249,13 @@ export default Service.extend({
       return localPipelinePreference;
     }
 
-    const pipelinePreference = await this.store.createRecord('preference/pipeline', {
-      id: pipelineId,
-      ...remotePipelineConfig
-    });
+    const pipelinePreference = await this.store.createRecord(
+      'preference/pipeline',
+      {
+        id: pipelineId,
+        ...remotePipelineConfig
+      }
+    );
 
     return pipelinePreference;
   },

@@ -12,13 +12,17 @@ export default Component.extend({
     get() {
       const events = get(this, 'events');
       const groups = groupBy(events, 'groupEventId');
-      const groupsArray = Object.keys(groups).map(key => groups[key]);
+      const groupsArray = Object.keys(groups).map((key) => groups[key]);
 
-      groupsArray.forEach(arr =>
-        arr.sort((a, b) => moment(b.createTime).valueOf() - moment(a.createTime).valueOf())
+      groupsArray.forEach((arr) =>
+        arr.sort(
+          (a, b) =>
+            moment(b.createTime).valueOf() - moment(a.createTime).valueOf()
+        )
       );
       groupsArray.sort(
-        (a, b) => moment(b[0].createTime).valueOf() - moment(a[0].createTime).valueOf()
+        (a, b) =>
+          moment(b[0].createTime).valueOf() - moment(a[0].createTime).valueOf()
       );
 
       return groupsArray;
@@ -33,7 +37,9 @@ export default Component.extend({
       set(this, 'selected', id);
 
       if (eventType !== 'pr') {
-        const currentEvent = this.groups.find(g => g.find(e => e.id === id))[0];
+        const currentEvent = this.groups.find((g) =>
+          g.find((e) => e.id === id)
+        )[0];
         const { pipelineId } = currentEvent;
         const expandedEventsGroup = get(this, 'expandedEventsGroup') || {};
 

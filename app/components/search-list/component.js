@@ -16,7 +16,10 @@ export default Component.extend({
     get() {
       const pipelines = get(this, 'filteredPipelines');
 
-      if (Array.isArray(pipelines) && pipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
+      if (
+        Array.isArray(pipelines) &&
+        pipelines.length < ENV.APP.NUM_PIPELINES_LISTED
+      ) {
         return false;
       }
 
@@ -28,7 +31,7 @@ export default Component.extend({
       let filtered = this.pipelines;
 
       // add scm contexts into pipelines.
-      return filtered.map(pipeline => {
+      return filtered.map((pipeline) => {
         const scm = this.scmService.getScm(pipeline.get('scmContext'));
 
         pipeline.set('scm', scm.displayName);
@@ -61,7 +64,7 @@ export default Component.extend({
       set(this, 'pipelinesPage', pipelinesPage);
 
       if (typeof fn === 'function') {
-        fn({ page: pipelinesPage, search: get(this, 'query') }).catch(error =>
+        fn({ page: pipelinesPage, search: get(this, 'query') }).catch((error) =>
           this.set('errorMessage', error)
         );
       }
@@ -80,7 +83,9 @@ export default Component.extend({
           this.set('addCollectionError', null);
           this.set(
             'addCollectionSuccess',
-            `Successfully added Pipeline to Collection ${collection.get('name')}`
+            `Successfully added Pipeline to Collection ${collection.get(
+              'name'
+            )}`
           );
         })
         .catch(() => {

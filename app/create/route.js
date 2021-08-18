@@ -16,7 +16,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
   setupController(controller, model) {
     this._super(...arguments);
-    const trustedTemplates = model.templates.filter(t => t.trusted === true);
+    const trustedTemplates = model.templates.filter((t) => t.trusted === true);
 
     controller.set('templates', trustedTemplates);
   }

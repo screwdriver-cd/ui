@@ -32,7 +32,10 @@ export default Component.extend({
       }
 
       schedule('actions', () => {
-        const newCollection = this.store.createRecord('collection', newCollectionRecord);
+        const newCollection = this.store.createRecord(
+          'collection',
+          newCollectionRecord
+        );
 
         return newCollection
           .save()
@@ -45,7 +48,7 @@ export default Component.extend({
               addDirectly(newCollection);
             }
           })
-          .catch(error => {
+          .catch((error) => {
             newCollection.destroyRecord();
             this.set('errorMessage', error.errors[0].detail);
           });

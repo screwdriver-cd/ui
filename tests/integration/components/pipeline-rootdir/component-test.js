@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | pipeline-rootdir', function(hooks) {
+module('Integration | Component | pipeline-rootdir', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     await render(hbs`{{pipeline-rootdir}}`);
 
     await render(hbs`{{pipeline-rootdir hasRootDir=false}}`);
@@ -15,7 +15,7 @@ module('Integration | Component | pipeline-rootdir', function(hooks) {
     assert.dom('.root-dir').doesNotExist();
   });
 
-  test('it renders with rootDir', async function(assert) {
+  test('it renders with rootDir', async function (assert) {
     await render(hbs`{{pipeline-rootdir}}`);
 
     await render(hbs`{{pipeline-rootdir hasRootDir=true rootDir='lib'}}`);

@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | workflow tooltip', function(hooks) {
+module('Integration | Component | workflow tooltip', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     await render(hbs`{{workflow-tooltip}}`);
 
     assert.dom(this.element).hasText('Go to build metrics');
@@ -21,7 +21,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom(this.element).includesText('template block text');
   });
 
-  test('it renders build detail and metrics links', async function(assert) {
+  test('it renders build detail and metrics links', async function (assert) {
     const data = {
       job: {
         id: 1,
@@ -39,7 +39,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('a:last-child').hasText('Go to build metrics');
   });
 
-  test('it renders remote trigger link', async function(assert) {
+  test('it renders remote trigger link', async function (assert) {
     const data = {
       externalTrigger: {
         pipelineId: 1234,
@@ -55,7 +55,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom(this.element).hasText('Go to remote pipeline');
   });
 
-  test('it renders downstream trigger links', async function(assert) {
+  test('it renders downstream trigger links', async function (assert) {
     const data = {
       triggers: [
         {
@@ -78,10 +78,12 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('.content a').exists({ count: 2 });
     assert
       .dom(this.element)
-      .hasText('Go to downstream pipeline ~sd@1234:main Go to downstream pipeline ~sd@2:prod');
+      .hasText(
+        'Go to downstream pipeline ~sd@1234:main Go to downstream pipeline ~sd@2:prod'
+      );
   });
 
-  test('it renders disabled manually starting', async function(assert) {
+  test('it renders disabled manually starting', async function (assert) {
     const data = {
       job: {
         buildId: 1234,
@@ -105,7 +107,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('p:last-child').hasText('Disabled manually starting');
   });
 
-  test('it renders start link', async function(assert) {
+  test('it renders start link', async function (assert) {
     const data = {
       job: {
         buildId: 1234,
@@ -130,7 +132,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('a:last-child').hasText('Start pipeline from here');
   });
 
-  test('it renders restart link', async function(assert) {
+  test('it renders restart link', async function (assert) {
     const data = {
       job: {
         buildId: 1234,
@@ -156,7 +158,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('a:last-child').hasText('Restart pipeline from here');
   });
 
-  test('it hides restart link if no build exists in PRChain', async function(assert) {
+  test('it hides restart link if no build exists in PRChain', async function (assert) {
     const data = {
       job: {
         buildId: 1234,
@@ -184,7 +186,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('a:last-child').hasText('Go to build metrics');
   });
 
-  test('it renders stop frozen build link', async function(assert) {
+  test('it renders stop frozen build link', async function (assert) {
     const data = {
       job: {
         buildId: 1234,
@@ -210,7 +212,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('a:last-child').hasText('Stop frozen build');
   });
 
-  test('it shows restart link if build exists in PRChain', async function(assert) {
+  test('it shows restart link if build exists in PRChain', async function (assert) {
     const data = {
       job: {
         buildId: 1234,
@@ -238,7 +240,7 @@ module('Integration | Component | workflow tooltip', function(hooks) {
     assert.dom('a:last-child').hasText('Restart pipeline from here');
   });
 
-  test('it should update position and hidden status', async function(assert) {
+  test('it should update position and hidden status', async function (assert) {
     this.set('show', true);
     this.set('pos', 'left');
 

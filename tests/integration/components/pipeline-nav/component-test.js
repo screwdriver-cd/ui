@@ -4,10 +4,10 @@ import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 
-module('Integration | Component | sd pipeline nav', function(hooks) {
+module('Integration | Component | sd pipeline nav', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders without child pipelines tab', async function(assert) {
+  test('it renders without child pipelines tab', async function (assert) {
     const pipeline = EmberObject.create({
       id: 1,
       appId: 'foo/bar',
@@ -26,7 +26,7 @@ module('Integration | Component | sd pipeline nav', function(hooks) {
     assert.dom('li:last-child a').hasText('Metrics');
   });
 
-  test('it renders with child pipelines tab', async function(assert) {
+  test('it renders with child pipelines tab', async function (assert) {
     const pipeline = EmberObject.create({
       id: 1,
       appId: 'foo/bar',
@@ -49,7 +49,7 @@ module('Integration | Component | sd pipeline nav', function(hooks) {
     assert.dom('li:last-child a').hasText('Metrics');
   });
 
-  test('it renders pipeline description', async function(assert) {
+  test('it renders pipeline description', async function (assert) {
     const pipeline = EmberObject.create({
       id: 1,
       appId: 'foo/bar',

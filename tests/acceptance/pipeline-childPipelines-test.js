@@ -5,10 +5,10 @@ import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
-module('Acceptance | child pipeline', function(hooks) {
+module('Acceptance | child pipeline', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/pipelines/1', () => [
@@ -21,7 +21,10 @@ module('Acceptance | child pipeline', function(hooks) {
         admins: { batman: true },
         workflow: ['main', 'publish'],
         childPipelines: {
-          scmUrls: ['git@github.com:child/one.git#master', 'git@github.com:child/two.git#master']
+          scmUrls: [
+            'git@github.com:child/one.git#master',
+            'git@github.com:child/two.git#master'
+          ]
         }
       })
     ]);
@@ -64,11 +67,11 @@ module('Acceptance | child pipeline', function(hooks) {
     ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('visiting /pipelines/:id/child-pipelines', async function(assert) {
+  test('visiting /pipelines/:id/child-pipelines', async function (assert) {
     await authenticateSession({ token: 'faketoken' });
     await visit('/pipelines/1/child-pipelines');
 

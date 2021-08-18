@@ -11,7 +11,7 @@ export default Controller.extend({
       let pipelines = this.get('model.pipelines');
 
       // add scm contexts into pipelines.
-      return pipelines.map(pipeline => {
+      return pipelines.map((pipeline) => {
         const scm = this.scmService.getScm(pipeline.get('scmContext'));
 
         pipeline.set('scm', scm.displayName);

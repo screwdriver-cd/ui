@@ -9,7 +9,7 @@ export default Route.extend({
   model(params) {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
 
-    return this.store.findRecord('build', params.build_id).then(build =>
+    return this.store.findRecord('build', params.build_id).then((build) =>
       all([
         this.store.findRecord('job', build.get('jobId')),
         this.store.findRecord('event', build.get('eventId'))
@@ -55,7 +55,11 @@ export default Route.extend({
       this.transitionTo('pipeline', pipelineId);
     } else {
       set(model.event, 'isPaused', true);
-      if (['pipeline.build.step', 'pipeline.build.index'].includes(transition.targetName)) {
+      if (
+        ['pipeline.build.step', 'pipeline.build.index'].includes(
+          transition.targetName
+        )
+      ) {
         const name = getActiveStep(get(model, 'build.steps'));
 
         if (name) {

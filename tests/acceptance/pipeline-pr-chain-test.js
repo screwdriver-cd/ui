@@ -12,10 +12,10 @@ import makeJobs from '../mock/jobs';
 
 let server;
 
-module('Acceptance | pipeline pr-chain', function(hooks) {
+module('Acceptance | pipeline pr-chain', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     const graph = makeGraph();
     const jobs = makeJobs();
     const pipeline = makePipeline(graph);
@@ -37,26 +37,34 @@ module('Acceptance | pipeline pr-chain', function(hooks) {
       JSON.stringify(jobs)
     ]);
 
-    server.get('http://localhost:8080/v4/pipelines/4/events', request => {
+    server.get('http://localhost:8080/v4/pipelines/4/events', (request) => {
       const prNum = parseInt(request.queryParams.prNum, 10);
 
       return [
         200,
         { 'Content-Type': 'application/json' },
-        JSON.stringify([].concat(events.find(e => e.prNum === prNum)))
+        JSON.stringify([].concat(events.find((e) => e.prNum === prNum)))
       ];
     });
 
-    server.get('http://localhost:8080/v4/events/:eventId/builds', request => {
+    server.get('http://localhost:8080/v4/events/:eventId/builds', (request) => {
       const eventId = parseInt(request.params.eventId, 10);
 
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify(makeBuilds(eventId))];
+      return [
+        200,
+        { 'Content-Type': 'application/json' },
+        JSON.stringify(makeBuilds(eventId))
+      ];
     });
 
-    server.get('http://localhost:8080/v4/jobs/:jobId/builds', request => {
+    server.get('http://localhost:8080/v4/jobs/:jobId/builds', (request) => {
       const jobId = parseInt(request.params.jobId, 10);
 
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify(makeBuilds(jobId))];
+      return [
+        200,
+        { 'Content-Type': 'application/json' },
+        JSON.stringify(makeBuilds(jobId))
+      ];
     });
 
     server.get('http://localhost:8080/v4/collections', () => [
@@ -77,16 +85,18 @@ module('Acceptance | pipeline pr-chain', function(hooks) {
     ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('visiting /pipelines/4/pulls when the pipeline is enabled for prChain', async function(assert) {
+  test('visiting /pipelines/4/pulls when the pipeline is enabled for prChain', async function (assert) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/pipelines/4/pulls');
 
     assert.dom('a h1').hasText('foo/bar', 'incorrect pipeline name');
-    assert.dom('.pipelineWorkflow svg').exists({ count: 1 }, 'not enough workflow');
+    assert
+      .dom('.pipelineWorkflow svg')
+      .exists({ count: 1 }, 'not enough workflow');
     assert.dom('ul.nav-pills').exists({ count: 1 }, 'should show tabs');
     assert.dom('.column-tabs-view .nav-link').hasText('Events');
     assert.dom('.column-tabs-view .nav-link.active').hasText('Pull Requests');

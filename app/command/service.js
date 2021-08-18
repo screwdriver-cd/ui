@@ -31,10 +31,10 @@ export default Service.extend({
       params.namespace = namespace;
     }
 
-    return this.fetchData(url, params).then(commands => {
+    return this.fetchData(url, params).then((commands) => {
       let unique = {};
 
-      let uniqueCommands = commands.filter(c => {
+      let uniqueCommands = commands.filter((c) => {
         let fullName = `${c.namespace}/${c.name}`;
 
         if (fullName in unique) {
@@ -66,17 +66,19 @@ export default Service.extend({
 
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
-        .done(commands => {
-          commands.forEach(command => {
+        .done((commands) => {
+          commands.forEach((command) => {
             if (command.createTime) {
               // Add last updated time
-              command.lastUpdated = getLastUpdatedTime({ createTime: command.createTime });
+              command.lastUpdated = getLastUpdatedTime({
+                createTime: command.createTime
+              });
             }
           });
 
           return resolve(commands);
         })
-        .fail(response => reject(response));
+        .fail((response) => reject(response));
     });
   },
   deleteCommands(namespace, name) {
@@ -98,11 +100,15 @@ export default Service.extend({
 
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
-        .done(content => resolve(content))
-        .fail(response => {
+        .done((content) => resolve(content))
+        .fail((response) => {
           let message = `${response.status} Request Failed`;
 
-          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
+          if (
+            response &&
+            response.responseJSON &&
+            typeof response.responseJSON === 'object'
+          ) {
             message = `${response.status} ${response.responseJSON.error}`;
           }
 
@@ -135,8 +141,8 @@ export default Service.extend({
 
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
-        .done(content => resolve(content))
-        .fail(response => {
+        .done((content) => resolve(content))
+        .fail((response) => {
           let message = `${response.status} Request Failed`;
 
           if (response.status === 401 || response.status === 403) {

@@ -14,7 +14,7 @@ export default Route.extend({
     const { pipeline } = this.modelFor('pipeline');
 
     // Prevent double render when jobs list updates asynchronously
-    return pipeline.get('jobs').then(jobs => ({ pipeline, jobs }));
+    return pipeline.get('jobs').then((jobs) => ({ pipeline, jobs }));
   },
   actions: {
     willTransition() {
