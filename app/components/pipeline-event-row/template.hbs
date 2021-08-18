@@ -11,6 +11,15 @@
         {{/if}}
         {{#if event.label}}<div class="label">{{event.label}}</div>{{/if}}
       {{/if}}
+      {{#if event.isRunning}}
+        {{#bs-button onClick="" class="stopButton" title="Stop all builds for this event"}}Stop{{/bs-button}}
+      {{else}}
+        {{#if (eq event.type "pr")}}
+          {{#bs-button onClick=(action startPRBuild event.prNum events) class="startButton" title="Start all builds for this event"}}Start{{/bs-button}}
+        {{else}}
+          {{#bs-button onClick=(action startMainBuild) class="startButton" title="Start all builds for this event"}}Start{{/bs-button}}
+        {{/if}}
+      {{/if}}
     </div>
     <div class="date greyOut">Started {{event.createTimeExact}}</div>
     <span class="message" title={{event.commit.message}}>{{event.truncatedMessage}}</span>

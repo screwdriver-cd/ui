@@ -29,6 +29,12 @@ export default Component.extend({
     scheduleOnce('afterRender', this, 'updateEvents', this.eventsPage + 1);
   },
   actions: {
+    startPRBuild(parameters) {
+      this.startPRBuild.apply(null, [parameters, this.events]);
+    },
+    startMainBuild() {
+      this.startMainBuild();
+    },
     eventClick(id, eventType) {
       set(this, 'selected', id);
 

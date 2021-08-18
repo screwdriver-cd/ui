@@ -70,6 +70,8 @@
             lastSuccessful=lastSuccessful
             mostRecent=mostRecent
             eventsPage=eventsPage
+            startMainBuild=(action "startMainBuild")
+            startPRBuild=(action "startPRBuild")
             updateEvents=(action "updateEvents")
           }}
           <div style="padding: 20px;" onMouseEnter={{action "onEventListScroll"}}></div>
@@ -85,6 +87,8 @@
             latestCommit=latestCommit
             lastSuccessful=lastSuccessful
             eventsPage=eventsPage
+            startMainBuild=(action "startMainBuild")
+            startPRBuild=(action "startPRBuild")
             updateEvents=(action "updateEvents")
             }}
           {{else}}
