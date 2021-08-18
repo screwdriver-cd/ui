@@ -55,6 +55,7 @@ module.exports = {
     'ember/no-new-mixins': 'off',
     'ember/no-observers': 'off',
     'ember/no-side-effects': 'off',
+    'ember/no-arrow-function-computed-properties': ['error', { onlyThisContexts: true }],
     'prettier/prettier': [
       'error',
       {},
