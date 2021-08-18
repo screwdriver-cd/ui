@@ -27,6 +27,13 @@ export default Component.extend({
       return options;
     }
   }),
+  showGraphNavRow: computed('selectedEventObj.type', 'isPR', {
+    get() {
+      const eventType = this.get('selectedEventObj.type');
+
+      return !this.isPR || eventType === 'pr';
+    }
+  }),
   icon: computed('selectedEventObj.status', {
     get() {
       return statusIcon(this.get('selectedEventObj.status'));
