@@ -43,7 +43,7 @@ export default Component.extend({
             .then(() => {
               this.setIsSaving(false);
             })
-            .catch((error) => {
+            .catch(error => {
               this.setErrorMessage(error.errors[0].detail);
             });
         } else {
@@ -52,7 +52,7 @@ export default Component.extend({
             .then(() => {
               this.setIsSaving(false);
             })
-            .catch((error) => {
+            .catch(error => {
               this.setErrorMessage(error.errors[0].detail);
             });
         }

@@ -14,7 +14,7 @@ const mockCollection = {
   name: 'Test',
   type: 'normal',
   description: 'Test description',
-  get: (name) => name
+  get: name => name
 };
 
 const mockCollections = [
@@ -188,7 +188,7 @@ module('Integration | Component | collections flyout', function (hooks) {
         // Dummy assert to make sure this function gets called
         assert.ok(true);
 
-        return new EmberPromise((resolve) => resolve());
+        return new EmberPromise(resolve => resolve());
       },
       transitionTo() {
         assert.ok(true);
@@ -204,7 +204,7 @@ module('Integration | Component | collections flyout', function (hooks) {
         return collectionModelMock;
       },
       findAll() {
-        return new EmberPromise((resolve) => resolve([mockCollection]));
+        return new EmberPromise(resolve => resolve([mockCollection]));
       }
     });
 

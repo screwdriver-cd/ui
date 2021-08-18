@@ -39,7 +39,7 @@ export default Route.extend({
       }),
       triggers: this.triggerService.getDownstreamTriggers(pipelineId),
       pipelinePreference: this.shuttle.getUserPipelinePreference(pipelineId)
-    }).catch((err) => {
+    }).catch(err => {
       let errorMessage = getErrorMessage(err);
 
       if (errorMessage !== '') {

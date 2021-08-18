@@ -64,7 +64,7 @@ module('Unit | Route | pipeline/job-latest-build', function (hooks) {
       .callsFake(() => ({ pipeline_id: 123 }));
     const p = route.model(params, transition);
 
-    p.catch((e) => {
+    p.catch(e => {
       assert.ok(paramsForStub.called, 'paramsFor got called');
       assert.ok(e instanceof Error, e);
       assert.equal('User is not authenticated', e.message);
@@ -78,7 +78,7 @@ module('Unit | Route | pipeline/job-latest-build', function (hooks) {
       this.session.set('isAuthenticated', true);
       server.get(
         'http://localhost:8080/v4/pipelines/123/jobs/main/latestBuild',
-        (request) => {
+        request => {
           if (request.queryParams.status === 'SUCCESS') {
             return [
               200,
@@ -106,7 +106,7 @@ module('Unit | Route | pipeline/job-latest-build', function (hooks) {
 
       const p = route.model(params, transition);
 
-      p.then((data) => {
+      p.then(data => {
         const [request] = server.handledRequests;
 
         assert.ok(paramsForStub.called, 'paramsFor got called');

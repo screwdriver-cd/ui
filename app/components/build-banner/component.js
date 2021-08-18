@@ -11,7 +11,7 @@ export default Component.extend({
   coverageInfo: {},
   coverageStep: computed('buildSteps', {
     get() {
-      const coverageStep = this.buildSteps.find((item) =>
+      const coverageStep = this.buildSteps.find(item =>
         /^sd-teardown-screwdriver-coverage/.test(item.name)
       );
 
@@ -31,7 +31,7 @@ export default Component.extend({
 
   shortenedPrShas: computed('prEvents', {
     get() {
-      return this.prEvents.then((result) =>
+      return this.prEvents.then(result =>
         result.map((pr, i) => ({
           index: result.length - i,
           shortenedSha: pr.event.sha.substr(0, 7),
@@ -145,7 +145,7 @@ export default Component.extend({
       config.scope = this.annotations['screwdriver.cd/coverageScope'];
     }
 
-    this.coverage.getCoverageInfo(config).then((data) => {
+    this.coverage.getCoverageInfo(config).then(data => {
       this.set('coverageInfo', data);
       this.set('coverageInfoSet', true);
     });

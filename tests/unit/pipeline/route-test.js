@@ -39,12 +39,12 @@ module('Unit | Route | pipeline', function (hooks) {
       findRecord(record, id) {
         assert.ok(id === 1);
 
-        return new EmberPromise((resolve) => resolve('pipeline'));
+        return new EmberPromise(resolve => resolve('pipeline'));
       },
       findAll(record) {
         assert.ok(record === 'collection');
 
-        return new EmberPromise((resolve) => resolve('collections'));
+        return new EmberPromise(resolve => resolve('collections'));
       }
     });
 
@@ -52,7 +52,7 @@ module('Unit | Route | pipeline', function (hooks) {
 
     const route = this.owner.lookup('route:pipeline');
 
-    return route.model({ pipeline_id: 1 }).then((results) => {
+    return route.model({ pipeline_id: 1 }).then(results => {
       assert.equal(results.pipeline, 'pipeline');
       assert.equal(results.collections, 'collections');
     });
@@ -65,7 +65,7 @@ module('Unit | Route | pipeline', function (hooks) {
       findRecord(record, id) {
         assert.ok(id === 1);
 
-        return new EmberPromise((resolve) => resolve('pipeline'));
+        return new EmberPromise(resolve => resolve('pipeline'));
       },
       findAll(record) {
         assert.ok(record === 'collection');
@@ -78,7 +78,7 @@ module('Unit | Route | pipeline', function (hooks) {
 
     const route = this.owner.lookup('route:pipeline');
 
-    return route.model({ pipeline_id: 1 }).then((results) => {
+    return route.model({ pipeline_id: 1 }).then(results => {
       assert.equal(results.pipeline, 'pipeline');
       assert.deepEqual(results.collections, []);
     });

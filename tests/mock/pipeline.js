@@ -92,5 +92,4 @@ export const hasPipelines = () => [
   JSON.stringify(mockPipelines)
 ];
 
-export default (workflowGraph) =>
-  assign(copy(pipeline, true), { workflowGraph });
+export default workflowGraph => assign(copy(pipeline, true), { workflowGraph });

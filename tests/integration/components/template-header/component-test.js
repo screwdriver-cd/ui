@@ -41,7 +41,7 @@ module('Integration | Component | template header', function (hooks) {
   test('it renders', async function (assert) {
     const storeStub = Service.extend({
       findRecord() {
-        return new EmberPromise((resolve) => resolve(mockPipeline));
+        return new EmberPromise(resolve => resolve(mockPipeline));
       }
     });
 

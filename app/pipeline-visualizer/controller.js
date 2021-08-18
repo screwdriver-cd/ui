@@ -50,7 +50,7 @@ export default Controller.extend({
 
     let downstreams = new Set();
 
-    edges.forEach((e) => {
+    edges.forEach(e => {
       if (isExternalTrigger(e.src)) {
         upstreams.add(e.src);
       }
@@ -66,7 +66,7 @@ export default Controller.extend({
     try {
       const connectedPipelineIds = new Set();
 
-      connectedJobs.forEach((connectedJobName) => {
+      connectedJobs.forEach(connectedJobName => {
         const pipelineWithJobName = connectedJobName.split('@')[1];
         const pipelineId = pipelineWithJobName.split(':')[0];
 
@@ -76,7 +76,7 @@ export default Controller.extend({
       connectedPipelineIds.delete(`${pipeline.id}`);
 
       const connectedPipelinesPromises = Array.from(connectedPipelineIds).map(
-        (pipelineId) => this.store.findRecord('pipeline', pipelineId)
+        pipelineId => this.store.findRecord('pipeline', pipelineId)
       );
 
       connectedPipelines = await all(connectedPipelinesPromises);
@@ -98,13 +98,13 @@ export default Controller.extend({
 
     let { workflowGraph } = pipelineGraph;
 
-    workflowGraph.nodes.forEach((n) => {
+    workflowGraph.nodes.forEach(n => {
       if (!isExternalTrigger(n.name)) {
         n.name = prefixJobName(n.name, selectedPipeline.id);
       }
     });
 
-    workflowGraph.edges.forEach((e) => {
+    workflowGraph.edges.forEach(e => {
       if (!isExternalTrigger(e.src)) {
         e.src = prefixJobName(e.src, selectedPipeline.id);
       }
@@ -125,8 +125,8 @@ export default Controller.extend({
       removeBranch(prNode, workflowGraph);
       removeBranch(commitNode, workflowGraph);
 
-      connectedPipelines.forEach((p) => {
-        p.workflowGraph.nodes.forEach((n) => {
+      connectedPipelines.forEach(p => {
+        p.workflowGraph.nodes.forEach(n => {
           if (!['~pr', '~commit'].includes(n.name)) {
             let { name } = n;
 
@@ -143,7 +143,7 @@ export default Controller.extend({
           }
         });
 
-        p.workflowGraph.edges.forEach((e) => {
+        p.workflowGraph.edges.forEach(e => {
           if (!['~pr', '~commit'].includes(e.src)) {
             let { src } = e;
 
@@ -159,7 +159,7 @@ export default Controller.extend({
 
             if (
               !workflowGraph.edges.find(
-                (ed) => ed.src === src && ed.dest === dest
+                ed => ed.src === src && ed.dest === dest
               )
             ) {
               workflowGraph.edges.push({ src, dest });

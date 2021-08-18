@@ -25,7 +25,7 @@ module('Integration | Component | login button', function (hooks) {
 
     const contexts = this.owner.lookup('service:scm').getScms();
 
-    this.set('externalAction', (context) => {
+    this.set('externalAction', context => {
       assert.ok(context);
     });
     this.set('model', contexts);

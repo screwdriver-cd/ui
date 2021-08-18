@@ -579,7 +579,7 @@ module('Integration | Component | collection view', function (hooks) {
       }
     });
 
-    const onRemovePipelineMock = (pipelineId) => {
+    const onRemovePipelineMock = pipelineId => {
       // Make sure the models pipeline is the one being removed
       assert.strictEqual(pipelineId, 3);
 
@@ -622,7 +622,7 @@ module('Integration | Component | collection view', function (hooks) {
       }
     });
 
-    const onRemovePipelineMock = (pipelineId) => {
+    const onRemovePipelineMock = pipelineId => {
       // Make sure the models pipeline is the one being removed
       assert.strictEqual(pipelineId, 3);
 
@@ -653,7 +653,7 @@ module('Integration | Component | collection view', function (hooks) {
   test('it fails to remove a pipeline in card mode', async function (assert) {
     assert.expect(2);
 
-    const onRemovePipelineMock = (pipelineId) => {
+    const onRemovePipelineMock = pipelineId => {
       assert.strictEqual(pipelineId, 3);
 
       return reject({
@@ -688,7 +688,7 @@ module('Integration | Component | collection view', function (hooks) {
   test('it fails to remove a pipeline in list mode', async function (assert) {
     assert.expect(2);
 
-    const onRemovePipelineMock = (pipelineId) => {
+    const onRemovePipelineMock = pipelineId => {
       assert.strictEqual(pipelineId, 3);
 
       return reject({

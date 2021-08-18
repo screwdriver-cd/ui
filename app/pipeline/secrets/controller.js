@@ -21,13 +21,13 @@ export default Controller.extend({
       });
 
       return newSecret.save().then(
-        (s) => {
+        s => {
           this.set('errorMessage', '');
           this.secrets.reload();
 
           return s;
         },
-        (err) => {
+        err => {
           this.set('errorMessage', err.errors[0].detail);
         }
       );
@@ -42,10 +42,10 @@ export default Controller.extend({
       return newToken
         .save({ adapterOptions: { pipelineId: this.pipelineId } })
         .then(
-          (token) => {
+          token => {
             this.set('newToken', token);
           },
-          (error) => {
+          error => {
             newToken.destroyRecord({
               adapterOptions: { pipelineId: this.pipelineId }
             });
@@ -56,7 +56,7 @@ export default Controller.extend({
     refreshPipelineToken(tokenId) {
       return this.refreshService
         .refreshPipelineToken(this.pipelineId, tokenId)
-        .then((token) => {
+        .then(token => {
           this.set('newToken', token);
         });
     }

@@ -117,7 +117,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
 
     assert.ok(controller);
 
-    controller.transitionToRoute = (route) => {
+    controller.transitionToRoute = route => {
       assert.equal(route, 'templates');
     };
 

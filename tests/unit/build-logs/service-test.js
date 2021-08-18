@@ -109,7 +109,7 @@ module('Unit | Service | build logs', function (hooks) {
     const service = this.owner.lookup('service:build-logs');
     const p = service.fetchLogs(serviceConfig);
 
-    p.catch((e) => {
+    p.catch(e => {
       assert.ok(e instanceof Error, e);
       assert.equal('User is not authenticated', e.message);
     });

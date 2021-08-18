@@ -30,10 +30,10 @@ module('Unit | Route | pipeline/build', function (hooks) {
     const pipelineId = 123;
     const model = {
       pipeline: {
-        get: (type) => (type === 'id' ? pipelineId : null)
+        get: type => (type === 'id' ? pipelineId : null)
       },
       job: {
-        get: (type) => (type === 'id' ? jobId : null)
+        get: type => (type === 'id' ? jobId : null)
       }
     };
 
@@ -57,14 +57,14 @@ module('Unit | Route | pipeline/build', function (hooks) {
 
     const model = {
       pipeline: {
-        get: (type) => (type === 'id' ? pipelineId : null)
+        get: type => (type === 'id' ? pipelineId : null)
       },
       build: {
-        get: (type) => (type === 'id' ? buildId : null),
+        get: type => (type === 'id' ? buildId : null),
         steps: []
       },
       job: {
-        get: (type) => (type === 'pipelineId' ? pipelineId : null)
+        get: type => (type === 'pipelineId' ? pipelineId : null)
       },
       event: {
         isPaused: true
@@ -101,14 +101,14 @@ module('Unit | Route | pipeline/build', function (hooks) {
       const pipelineId = 123;
       const model = {
         pipeline: {
-          get: (type) => (type === 'id' ? pipelineId : null)
+          get: type => (type === 'id' ? pipelineId : null)
         },
         build: {
-          get: (type) => (type === 'id' ? buildId : null),
+          get: type => (type === 'id' ? buildId : null),
           steps: []
         },
         job: {
-          get: (type) => (type === 'pipelineId' ? pipelineId : null)
+          get: type => (type === 'pipelineId' ? pipelineId : null)
         },
         event: {
           isPaused: true

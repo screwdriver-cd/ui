@@ -43,7 +43,7 @@ export default Controller.extend({
 
       build.set('status', 'ABORTED');
 
-      return build.save().catch((e) => {
+      return build.save().catch(e => {
         this.set(
           'errorMessage',
           Array.isArray(e.errors) ? e.errors[0].detail : ''
@@ -65,7 +65,7 @@ export default Controller.extend({
       return newEvent
         .save()
         .then(() =>
-          newEvent.get('builds').then((builds) => {
+          newEvent.get('builds').then(builds => {
             this.set('isShowingModal', false);
 
             return this.transitionToRoute(
@@ -74,7 +74,7 @@ export default Controller.extend({
             );
           })
         )
-        .catch((e) => {
+        .catch(e => {
           this.set('isShowingModal', false);
           this.set(
             'errorMessage',

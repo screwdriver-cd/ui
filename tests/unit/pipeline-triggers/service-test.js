@@ -72,7 +72,7 @@ module('Unit | Service | pipeline triggers', function (hooks) {
     const service = this.owner.lookup('service:pipeline-triggers');
     const p = service.getDownstreamTriggers(1);
 
-    p.catch((error) => {
+    p.catch(error => {
       assert.equal(error, '500 internal server error');
       const [request] = server.handledRequests;
 

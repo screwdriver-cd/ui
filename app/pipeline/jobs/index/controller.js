@@ -22,9 +22,9 @@ const PAST_TIME = moment().subtract(1, 'day');
 export default Controller.extend(ModelReloaderMixin, {
   lastRefreshed: moment(),
   shouldReload(model) {
-    const job = model.jobs.find((j) => {
+    const job = model.jobs.find(j => {
       if (j.hasMany('builds').value() !== null) {
-        return j.builds.find((b) =>
+        return j.builds.find(b =>
           isActiveBuild(b.get('status'), b.get('endTime'))
         );
       }
@@ -81,14 +81,14 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       const jobs = this.getWithDefault('model.jobs', []);
 
-      return jobs.filter((j) => !isPRJob(j.get('name')));
+      return jobs.filter(j => !isPRJob(j.get('name')));
     }
   }),
   jobIds: computed('pipeline.jobs', {
     get() {
       return this.get('pipeline.jobs')
-        .filter((j) => !isPRJob(j.get('name')))
-        .map((j) => j.id);
+        .filter(j => !isPRJob(j.get('name')))
+        .map(j => j.id);
     }
   }),
   jobsDetails: [],
@@ -99,7 +99,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
     if (listViewOffset < jobIds.length) {
       const jobsDetails = await Promise.all(
-        jobIds.slice(listViewOffset, listViewCutOff).map(async (jobId) =>
+        jobIds.slice(listViewOffset, listViewCutOff).map(async jobId =>
           this.store
             .query('build-history', {
               jobIds: jobId,
@@ -111,10 +111,10 @@ export default Controller.extend(ModelReloaderMixin, {
       );
       const nextJobsDetails = [];
 
-      jobsDetails.toArray().forEach((nextJobDetails) => {
-        nextJobDetails.forEach((nextJobDetail) => {
+      jobsDetails.toArray().forEach(nextJobDetails => {
+        nextJobDetails.forEach(nextJobDetail => {
           const job = this.get('pipeline.jobs').find(
-            (j) => j.id === String(nextJobDetail.jobId)
+            j => j.id === String(nextJobDetail.jobId)
           );
 
           if (job) {
@@ -155,9 +155,7 @@ export default Controller.extend(ModelReloaderMixin, {
     let jobsDetails = this.get('jobsDetails');
 
     if (
-      jobsDetails.some(
-        (j) => j.get('jobPipelineId') !== this.get('pipeline.id')
-      )
+      jobsDetails.some(j => j.get('jobPipelineId') !== this.get('pipeline.id'))
     ) {
       jobsDetails = [];
     }
@@ -173,7 +171,7 @@ export default Controller.extend(ModelReloaderMixin, {
       listViewCutOff
     );
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       if (nextJobsDetails.length > 0) {
         this.setProperties({
           listViewOffset: listViewCutOff,

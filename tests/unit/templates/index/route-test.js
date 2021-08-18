@@ -27,7 +27,7 @@ module('Unit | Route | templates/index', function (hooks) {
 
     assert.ok(route);
 
-    return route.model().then((templates) => {
+    return route.model().then(templates => {
       assert.equal(templates.length, 3);
     });
   });

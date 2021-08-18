@@ -83,7 +83,7 @@ module('Integration | Component | pipeline search panel', function (hooks) {
 
     assert.equal(addPipelineButtons.length, 4);
 
-    const testAddPipelineButton = async (idx) => {
+    const testAddPipelineButton = async idx => {
       await click(addPipelineButtons[idx]);
       assert.ok(
         selectSearchedPipelineSpy.calledWith(mockSearchedPipelines[idx].id)

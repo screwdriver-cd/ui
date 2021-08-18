@@ -39,7 +39,7 @@ export default function injectScmServiceStub(self) {
       return scms;
     },
     getScm(scmContext) {
-      return this.getScms().find((scm) => scm.context === scmContext);
+      return this.getScms().find(scm => scm.context === scmContext);
     }
   });
 

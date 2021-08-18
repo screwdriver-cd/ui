@@ -99,7 +99,7 @@ module('Unit | Route | templates/detail', function (hooks) {
       'foo/baz'
     );
 
-    return route.model({ namespace: 'foo', name: 'baz' }).then((templates) => {
+    return route.model({ namespace: 'foo', name: 'baz' }).then(templates => {
       assert.equal(templates.templateData.length, 4);
       assert.equal(templates.templateData[0].namespace, 'foo');
       assert.equal(templates.templateData[0].name, 'baz');
@@ -124,7 +124,7 @@ module('Unit | Route | templates/detail', function (hooks) {
 
     return route
       .model({ namespace: 'foo', name: 'baz', version: '1.0.0' })
-      .then((templates) => {
+      .then(templates => {
         assert.equal(templates.templateData.length, 4);
         assert.equal(templates.templateData[0].namespace, 'foo');
         assert.equal(templates.templateData[0].name, 'baz');
@@ -141,7 +141,7 @@ module('Unit | Route | templates/detail', function (hooks) {
 
     return route
       .model({ namespace: 'foo', name: 'baz', version: '1' })
-      .then((templates) => {
+      .then(templates => {
         assert.equal(templates.templateData.length, 4);
         assert.equal(templates.templateData[0].namespace, 'foo');
         assert.equal(templates.templateData[0].name, 'baz');
@@ -166,7 +166,7 @@ module('Unit | Route | templates/detail', function (hooks) {
 
     return route
       .model({ namespace: 'foo', name: 'baz', version: 'stable' })
-      .then((templates) => {
+      .then(templates => {
         assert.equal(templates.templateData.length, 4);
         assert.equal(templates.templateData[0].namespace, 'foo');
         assert.equal(templates.templateData[0].name, 'baz');

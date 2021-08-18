@@ -21,10 +21,10 @@ export default Service.extend({
           withCredentials: true
         }
       })
-        .done((content) =>
+        .done(content =>
           resolve(Object.assign(content, { action: 'refreshed' }))
         )
-        .fail((response) => {
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (response && response.responseJSON) {

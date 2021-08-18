@@ -10,7 +10,7 @@ export default Component.extend({
     this._super(...arguments);
     this.store
       .findRecord('pipeline', this.template.pipelineId)
-      .then((pipeline) => {
+      .then(pipeline => {
         this.set('scmUrl', pipeline.get('scmRepo.url'));
       })
       .catch(() => {

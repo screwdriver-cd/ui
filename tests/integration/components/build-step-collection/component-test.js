@@ -80,7 +80,7 @@ module('Integration | Component | build step collection', function (hooks) {
     this.set('stepList', stepList);
     this.set(
       'buildSteps',
-      stepList.map((name) => ({
+      stepList.map(name => ({
         name,
         startTime: new Date(),
         endTime: new Date(),

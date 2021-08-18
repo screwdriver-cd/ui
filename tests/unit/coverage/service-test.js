@@ -56,7 +56,7 @@ module('Unit | Service | coverage ', function (hooks) {
 
     const p = service.getCoverageInfo(config);
 
-    p.then((data) => {
+    p.then(data => {
       const [request] = server.handledRequests;
 
       assert.deepEqual(data, {
@@ -105,7 +105,7 @@ module('Unit | Service | coverage ', function (hooks) {
 
     const p = service.getCoverageInfo(config);
 
-    p.then((data) => {
+    p.then(data => {
       const [request] = server.handledRequests;
 
       assert.deepEqual(data, {
@@ -145,7 +145,7 @@ module('Unit | Service | coverage ', function (hooks) {
 
     const p = service.getCoverageInfo(config);
 
-    p.then((data) => {
+    p.then(data => {
       const [request] = server.handledRequests;
 
       assert.deepEqual(data, {

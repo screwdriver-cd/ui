@@ -17,7 +17,7 @@ export default Component.extend({
       if (this.allTemplates) {
         const map = new Map();
 
-        this.allTemplates.forEach((template) => {
+        this.allTemplates.forEach(template => {
           const { namespace } = template;
           const templateCollection = map.get(namespace);
 

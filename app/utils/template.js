@@ -6,7 +6,7 @@
  * @param  {String}       config.namespace  Template namespace
  * @return {String}                         Returns the template full name
  */
-const getFullName = (config) => {
+const getFullName = config => {
   let { name, namespace } = config;
 
   let fullName = name;
@@ -43,8 +43,8 @@ const getLastUpdatedTime = ({ createTime }) => {
  * @param  {Array} Templates
  * @return {Array} Formatted templates
  */
-const templatesFormatter = (templates) => {
-  templates.forEach((t) => {
+const templatesFormatter = templates => {
+  templates.forEach(t => {
     // Add full template name
     t.fullName = getFullName({
       name: t.name,

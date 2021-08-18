@@ -106,7 +106,7 @@ module('Unit | Service | cache', function (hooks) {
 
     p.then(
       () => {},
-      (err) => {
+      err => {
         assert.equal(
           err,
           'You do not have the permissions to clear the cache.'

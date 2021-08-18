@@ -41,8 +41,8 @@ export default Service.extend({
     }
 
     return $.getJSON(scmUrl)
-      .then((scmContexts) => {
-        scmContexts.forEach((scmContext) => {
+      .then(scmContexts => {
+        scmContexts.forEach(scmContext => {
           let isSignedIn = false;
 
           if (get(session, 'isAuthenticated')) {
@@ -87,7 +87,7 @@ export default Service.extend({
   getScm(scmContext) {
     let ret = {};
 
-    this.getScms().forEach((scm) => {
+    this.getScms().forEach(scm => {
       if (scm.get('context') === scmContext) {
         ret = {
           context: scm.get('context'),
@@ -108,7 +108,7 @@ export default Service.extend({
    * @param  {String}  scmContext  scmContext (e.g. github:github.com)
    */
   setSignedIn(scmContext) {
-    this.getScms().forEach((scm) => {
+    this.getScms().forEach(scm => {
       if (scm.get('context') === scmContext) {
         scm.set('isSignedIn', true);
       } else {

@@ -11,12 +11,12 @@ const mockCollection = {
   name: 'Test',
   description: 'Test description',
   type: 'normal',
-  get: (name) => name
+  get: name => name
 };
 
 const collectionModel = {
   save() {
-    return new EmberPromise((resolve) => resolve(mockCollection));
+    return new EmberPromise(resolve => resolve(mockCollection));
   },
   destroyRecord() {}
 };
@@ -76,7 +76,7 @@ module('Integration | Component | collection modal', function (hooks) {
         return collectionModel;
       },
       findAll() {
-        return new EmberPromise((resolve) => resolve([mockCollection]));
+        return new EmberPromise(resolve => resolve([mockCollection]));
       }
     });
 

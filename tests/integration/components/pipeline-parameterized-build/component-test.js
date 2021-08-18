@@ -34,7 +34,7 @@ module(
           p1: '1',
           p2: '2'
         },
-        checkParameters: (parameterizedModel) => {
+        checkParameters: parameterizedModel => {
           assert.ok(
             typeof parameterizedModel === 'object',
             'parameterizedModel is object'

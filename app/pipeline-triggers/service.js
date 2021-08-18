@@ -27,8 +27,8 @@ export default Service.extend({
           )}`
         }
       })
-        .done((data) => resolve(data))
-        .fail((response) => {
+        .done(data => resolve(data))
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (

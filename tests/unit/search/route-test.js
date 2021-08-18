@@ -30,7 +30,7 @@ module('Unit | Route | search', function (hooks) {
         assert.ok(conf.page === 1);
         assert.ok(conf.search === 'search');
 
-        return new EmberPromise((resolve) => resolve('results'));
+        return new EmberPromise(resolve => resolve('results'));
       },
       findAll(record) {
         assert.ok(record === 'collection');
@@ -43,7 +43,7 @@ module('Unit | Route | search', function (hooks) {
 
     const route = this.owner.lookup('route:search');
 
-    return route.model({ query: 'search' }).then((results) => {
+    return route.model({ query: 'search' }).then(results => {
       assert.equal(results.pipelines, 'results');
       assert.deepEqual(results.collections, []);
     });

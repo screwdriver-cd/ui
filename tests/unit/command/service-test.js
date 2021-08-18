@@ -20,7 +20,7 @@ const dummyCommands = [
   { id: 2, namespace: 'foo', name: 'bar', version: '2.0.0', createTime },
   { id: 1, namespace: 'foo', name: 'bar', version: '1.0.0', createTime }
 ];
-const dummyCommandsResult = dummyCommands.map((c) => {
+const dummyCommandsResult = dummyCommands.map(c => {
   c.lastUpdated = lastUpdated;
 
   return c;
@@ -43,7 +43,7 @@ const dummyCommandTags = [
     createTime
   }
 ];
-const dummyCommandTagsResult = dummyCommandTags.map((c) => {
+const dummyCommandTagsResult = dummyCommandTags.map(c => {
   c.lastUpdated = lastUpdated;
 
   return c;
@@ -80,7 +80,7 @@ module('Unit | Service | command', function (hooks) {
 
     const t = service.getOneCommand('foo', 'bar');
 
-    t.then((commands) => {
+    t.then(commands => {
       assert.deepEqual(commands, dummyCommandsResult);
     });
   });
@@ -102,7 +102,7 @@ module('Unit | Service | command', function (hooks) {
 
     const t = service.getCommandTags('foo', 'bar');
 
-    t.then((commands) => {
+    t.then(commands => {
       assert.deepEqual(commands, dummyCommandTagsResult);
     });
   });
@@ -135,7 +135,7 @@ module('Unit | Service | command', function (hooks) {
       }
     ];
 
-    t.then((commands) => {
+    t.then(commands => {
       assert.deepEqual(commands, filteredCommands);
     });
   });
@@ -179,7 +179,7 @@ module('Unit | Service | command', function (hooks) {
 
     t.then(
       () => {},
-      (err) => {
+      err => {
         assert.equal(
           err,
           'You do not have the permissions to remove this command.'
@@ -207,7 +207,7 @@ module('Unit | Service | command', function (hooks) {
 
     t.then(
       () => {},
-      (err) => {
+      err => {
         assert.equal(
           err,
           'You do not have the permissions to update this command.'

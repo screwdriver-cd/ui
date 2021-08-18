@@ -141,7 +141,7 @@ module('Integration | Component | secret view', function (hooks) {
     this.set('mockPipeline', testPipeline);
     this.set('secrets', {
       store: {
-        unloadRecord: (secret) => {
+        unloadRecord: secret => {
           assert.equal(secret.name, 'TEST_SECRET');
         }
       },

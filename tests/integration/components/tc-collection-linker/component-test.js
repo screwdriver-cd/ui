@@ -45,7 +45,7 @@ module('Integration | Component | tc collection linker', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders the link to collection namespace page', async function (assert) {
-    Object.keys(TEMPLATE_DATA_WITH_NAMESPACE).forEach((prop) =>
+    Object.keys(TEMPLATE_DATA_WITH_NAMESPACE).forEach(prop =>
       this.set(prop, TEMPLATE_DATA_WITH_NAMESPACE[prop])
     );
 
@@ -57,7 +57,7 @@ module('Integration | Component | tc collection linker', function (hooks) {
   });
 
   test('it renders the link to collection detail page', async function (assert) {
-    Object.keys(TEMPLATE_DATA_WITH_NAME).forEach((prop) =>
+    Object.keys(TEMPLATE_DATA_WITH_NAME).forEach(prop =>
       this.set(prop, TEMPLATE_DATA_WITH_NAME[prop])
     );
 

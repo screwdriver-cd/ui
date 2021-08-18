@@ -59,7 +59,7 @@ module('Unit | Route | application', function (hooks) {
 
     const route = this.owner.lookup('route:application');
 
-    return route.model().then((scms) => {
+    return route.model().then(scms => {
       assert.equal(scms[0].context, 'github:github.com');
       assert.equal(scms[0].displayName, 'github.com');
       assert.equal(scms[0].iconType, 'github');

@@ -43,7 +43,7 @@ module('Unit | Route | builds', function (hooks) {
 
     const storeStub = Service.extend({
       findRecord(type, id) {
-        return new EmberPromise((resolve) =>
+        return new EmberPromise(resolve =>
           resolve(EmberObject.create(dataMapping[`${type}_${id}`]))
         );
       }
@@ -54,7 +54,7 @@ module('Unit | Route | builds', function (hooks) {
 
     const route = this.owner.lookup('route:builds');
 
-    return route.model({ build_id: 2 }).then((data) => {
+    return route.model({ build_id: 2 }).then(data => {
       const { build, pipeline } = data;
 
       assert.equal(pipeline.id, 1);

@@ -27,7 +27,7 @@ module('Unix | Route | commands/index', function (hooks) {
 
     assert.ok(route);
 
-    return route.model().then((commands) => {
+    return route.model().then(commands => {
       assert.equal(commands.length, 3);
     });
   });

@@ -11,7 +11,7 @@ const mockCollection = {
   id: 1,
   name: 'Test',
   description: 'Test description',
-  get: (name) => name
+  get: name => name
 };
 
 module('Integration | Component | collection add button', function (hooks) {

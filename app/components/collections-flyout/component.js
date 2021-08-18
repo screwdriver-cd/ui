@@ -28,7 +28,7 @@ export default Component.extend({
   orderedCollections: computed('collections.[]', {
     get() {
       let defaultCollection;
-      const normalCollections = this.collections.filter((collection) => {
+      const normalCollections = this.collections.filter(collection => {
         if (collection.type === 'default') {
           defaultCollection = collection;
         }

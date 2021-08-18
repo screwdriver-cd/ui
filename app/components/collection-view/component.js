@@ -161,17 +161,15 @@ export default Component.extend({
 
       return this.onRemovePipeline(+pipelineId)
         .then(() => {
-          this.store
-            .findRecord('collection', collectionId)
-            .then((collection) => {
-              this.setProperties({
-                removePipelineError: null,
-                collection,
-                pipelineRemovedMessage: message
-              });
+          this.store.findRecord('collection', collectionId).then(collection => {
+            this.setProperties({
+              removePipelineError: null,
+              collection,
+              pipelineRemovedMessage: message
             });
+          });
         })
-        .catch((error) => {
+        .catch(error => {
           this.set('removePipelineError', error.errors[0].detail);
         });
     },
@@ -183,7 +181,7 @@ export default Component.extend({
         .then(() => {
           this.store
             .findRecord('collection', this.get('collection.id'))
-            .then((collection) => {
+            .then(collection => {
               this.setProperties({
                 removePipelineError: null,
                 selectedPipelines: [],
@@ -193,7 +191,7 @@ export default Component.extend({
               });
             });
         })
-        .catch((error) => {
+        .catch(error => {
           this.set('removePipelineError', error.errors[0].detail);
         });
     },
@@ -251,7 +249,7 @@ export default Component.extend({
           parseInt(pipelineId, 10)
         ],
         searchedPipelines: this.searchedPipelines.filter(
-          (searchedPipeline) => searchedPipeline.id !== pipelineId
+          searchedPipeline => searchedPipeline.id !== pipelineId
         )
       });
     },
@@ -292,7 +290,7 @@ export default Component.extend({
           ).then(() => {
             this.store
               .findRecord('collection', this.get('collection.id'))
-              .then((collection) => {
+              .then(collection => {
                 this.setProperties({
                   showAddPipelineModal: false,
                   searchedPipelines: [],
@@ -333,11 +331,11 @@ export default Component.extend({
         pipelineListConfig.search = query;
       }
 
-      this.store.query('pipeline', pipelineListConfig).then((pipelines) => {
+      this.store.query('pipeline', pipelineListConfig).then(pipelines => {
         this.set(
           'searchedPipelines',
           pipelines.filter(
-            (pipeline) =>
+            pipeline =>
               !this.collection.pipelineIds.includes(
                 parseInt(pipeline.id, 10)
               ) &&

@@ -133,7 +133,7 @@ module('Acceptance | dashboards', function (hooks) {
     };
 
     server.get('http://localhost:8080/v4/collections', hasCollections);
-    server.post('http://localhost:8080/v4/collections', (request) => {
+    server.post('http://localhost:8080/v4/collections', request => {
       assert.deepEqual(JSON.parse(request.requestBody), expectedRequestBody);
 
       return [

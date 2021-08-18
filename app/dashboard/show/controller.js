@@ -10,13 +10,13 @@ export default Controller.extend({
 
       return this.store
         .findRecord('collection', collectionId)
-        .then((collection) => {
+        .then(collection => {
           const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
 
           set(
             collection,
             'pipelineIds',
-            pipelineIds.filter((id) => id !== pipelineId)
+            pipelineIds.filter(id => id !== pipelineId)
           );
 
           return collection.save();
@@ -27,13 +27,13 @@ export default Controller.extend({
 
       return this.store
         .findRecord('collection', collectionId)
-        .then((collection) => {
+        .then(collection => {
           const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
 
           set(
             collection,
             'pipelineIds',
-            pipelineIds.filter((id) => !removedPipelineIds.includes(id))
+            pipelineIds.filter(id => !removedPipelineIds.includes(id))
           );
 
           return collection.save();
@@ -45,7 +45,7 @@ export default Controller.extend({
     addMultipleToCollection(addedPipelineIds, collectionId) {
       return this.store
         .findRecord('collection', collectionId)
-        .then((collection) => {
+        .then(collection => {
           const pipelineIds = collection.get('pipelineIds');
 
           collection.set('pipelineIds', [

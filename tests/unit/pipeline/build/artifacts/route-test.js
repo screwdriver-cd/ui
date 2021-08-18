@@ -18,7 +18,7 @@ module('Unit | Route | pipeline/build/artifacts', function (hooks) {
     const route = this.owner.lookup('route:pipeline/build/artifacts');
     const parentController = EmberObject.create({ activeTab: false });
 
-    route.controllerFor = (controllerName) => {
+    route.controllerFor = controllerName => {
       assert.equal(
         controllerName,
         'pipeline.build',

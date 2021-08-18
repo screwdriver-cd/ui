@@ -34,7 +34,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
       triggers: this.triggerService.getDownstreamTriggers(
         this.get('pipeline.id')
       )
-    }).catch((err) => {
+    }).catch(err => {
       let errorMessage = getErrorMessage(err);
 
       if (errorMessage !== '') {

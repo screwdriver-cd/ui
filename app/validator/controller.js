@@ -13,7 +13,7 @@ import Controller from '@ember/controller';
 function getResults() {
   this.validator
     .getValidationResults(this.yaml)
-    .then((results) => this.set('results', results));
+    .then(results => this.set('results', results));
 }
 
 export default Controller.extend({

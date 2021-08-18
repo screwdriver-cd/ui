@@ -101,7 +101,7 @@ module('Unit | Service | pr events', function (hooks) {
       2
     );
 
-    b.then((pair) => {
+    b.then(pair => {
       assert.equal(pair[0].event.id, 'abcd');
       assert.equal(pair[0].build.eventId, 'abcd');
       assert.equal(pair[0].build.id, 2);

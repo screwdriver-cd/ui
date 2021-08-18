@@ -53,7 +53,7 @@ module('Unit | Controller | application', function (hooks) {
       authenticate() {
         assert.ok(true);
 
-        return { then: (cb) => cb() };
+        return { then: cb => cb() };
       }
     });
 

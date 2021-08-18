@@ -11,7 +11,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
     return this.store
       .findRecord('collection', params.collection_id, { reload: true })
-      .then((collection) =>
+      .then(collection =>
         RSVP.hash({
           collection,
           collections

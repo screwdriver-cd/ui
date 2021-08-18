@@ -11,7 +11,7 @@ export default Component.extend({
   buttonClass: undefined,
   normalCollections: filter(
     'collections.[]',
-    (collection) => collection.type !== 'default'
+    collection => collection.type !== 'default'
   ),
   actions: {
     openModal() {

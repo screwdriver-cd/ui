@@ -7,7 +7,7 @@ const compare = (s1, s2) =>
     sensitivity: 'base'
   });
 
-export const sortWorkflowGraph = (workflowGraph) => {
+export const sortWorkflowGraph = workflowGraph => {
   if (workflowGraph) {
     const notInFirstColumns = {};
 
@@ -23,10 +23,10 @@ export const sortWorkflowGraph = (workflowGraph) => {
 
     if (workflowGraph.nodes) {
       const nodesNotInFirstColumn = workflowGraph.nodes.filter(
-        (n) => !!notInFirstColumns[n.name]
+        n => !!notInFirstColumns[n.name]
       );
       const nodesInFirstColumn = workflowGraph.nodes.filter(
-        (n) => !notInFirstColumns[n.name]
+        n => !notInFirstColumns[n.name]
       );
 
       // we only sort the nodes that are not in the first column.
@@ -46,7 +46,7 @@ export const sortWorkflowGraph = (workflowGraph) => {
 export default DS.RESTSerializer.extend({
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.events) {
-      payload.events.forEach((event) => {
+      payload.events.forEach(event => {
         sortWorkflowGraph(event.workflowGraph);
       });
     } else if (payload.event && payload.event.workflowGraph) {

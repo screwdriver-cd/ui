@@ -89,7 +89,7 @@ module('Integration | Component | token view', function (hooks) {
       })
     );
 
-    this.set('setIsSavingMock', (isSaving) => {
+    this.set('setIsSavingMock', isSaving => {
       assert.equal(expectIsSaving, isSaving);
     });
 

@@ -39,7 +39,7 @@ module('Unit | Service | validator', function (hooks) {
       JSON.stringify(EXAMPLE_CONFIG_PAYLOAD)
     ]);
 
-    server.post('http://localhost:8080/v4/validator/template', (request) => {
+    server.post('http://localhost:8080/v4/validator/template', request => {
       if (request.requestBody === '{"yaml":"name: joker"}') {
         return [
           400,
@@ -76,7 +76,7 @@ module('Unit | Service | validator', function (hooks) {
       assert.ok(request.requestHeaders.Authorization);
     };
 
-    return service.getValidationResults('name: batman').then((response) => {
+    return service.getValidationResults('name: batman').then(response => {
       assert.deepEqual(response, EXAMPLE_TEMPLATE_PAYLOAD);
     });
   });
@@ -90,17 +90,15 @@ module('Unit | Service | validator', function (hooks) {
       assert.ok(request.requestHeaders.Authorization);
     };
 
-    return service
-      .getValidationResults('workflow: [batman]')
-      .then((response) => {
-        assert.deepEqual(response, EXAMPLE_CONFIG_PAYLOAD);
-      });
+    return service.getValidationResults('workflow: [batman]').then(response => {
+      assert.deepEqual(response, EXAMPLE_CONFIG_PAYLOAD);
+    });
   });
 
   test('it handles validator failure', function (assert) {
     const service = this.owner.lookup('service:validator');
 
-    return service.getValidationResults('name: joker').catch((response) => {
+    return service.getValidationResults('name: joker').catch(response => {
       assert.equal(response, '400 villains');
     });
   });

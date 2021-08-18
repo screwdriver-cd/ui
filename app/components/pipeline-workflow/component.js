@@ -33,9 +33,9 @@ export default Component.extend({
         }
 
         // Preload the builds for the jobs
-        jobs.forEach((j) => {
+        jobs.forEach(j => {
           const jobName = get(j, 'name');
-          const node = graph.nodes.find((n) => n.name === jobName);
+          const node = graph.nodes.find(n => n.name === jobName);
 
           // push the job id into the graph
           if (node) {
@@ -85,7 +85,7 @@ export default Component.extend({
     }
 
     const buildExists = selectedEvent.buildsSorted.filter(
-      (b) => b.jobId === selectedJobId
+      b => b.jobId === selectedJobId
     );
 
     const { prNum } = selectedEvent;
@@ -102,7 +102,7 @@ export default Component.extend({
         this.tooltipData.selectedEvent.meta.parameters;
       const parameterNames = Object.keys(buildParameters);
 
-      parameterNames.forEach((parameterName) => {
+      parameterNames.forEach(parameterName => {
         const parameterValue =
           buildParameters[parameterName].value ||
           buildParameters[parameterName];
@@ -192,7 +192,7 @@ export default Component.extend({
         if (downstreamTriggerMatch) {
           const triggers = [];
 
-          job.triggers.forEach((t) => {
+          job.triggers.forEach(t => {
             const downstreamTrigger = t.match(/^~?sd@(\d+):([\w-]+)$/);
 
             triggers.push({

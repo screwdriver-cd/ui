@@ -76,14 +76,14 @@ export default DS.Model.extend(ModelReloaderMixin, {
     get() {
       const builds = get(this, 'builds');
       const firstCreateTime = builds
-        .map((item) => get(item, 'createTime'))
+        .map(item => get(item, 'createTime'))
         .sort()[0];
 
       let lastEndTime = new Date();
 
       if (get(this, 'isComplete')) {
         lastEndTime = builds
-          .map((item) => get(item, 'endTime'))
+          .map(item => get(item, 'endTime'))
           .sort()
           .pop();
       }
@@ -134,10 +134,10 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
       let status = 'UNKNOWN';
 
-      builds.then((list) => {
+      builds.then(list => {
         if (!this.isDestroying && !this.isDestroyed) {
           const validList = list.filter(
-            (b) =>
+            b =>
               get(b, 'status') !== 'SUCCESS' && get(b, 'status') !== 'CREATED'
           );
 
@@ -162,7 +162,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
 
       const builds = get(this, 'builds');
 
-      builds.then((list) => {
+      builds.then(list => {
         if (this.isDestroying || this.isDestroyed) {
           return false;
         }
@@ -181,7 +181,7 @@ export default DS.Model.extend(ModelReloaderMixin, {
         }
 
         // See if any builds are running
-        const runningBuild = list.find((b) => {
+        const runningBuild = list.find(b => {
           const status = get(b, 'status');
           const endTime = get(b, 'endTime');
 

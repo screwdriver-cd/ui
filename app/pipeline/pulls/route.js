@@ -27,11 +27,11 @@ export default EventsRoute.extend({
     // fetch latest events which belongs to each PR jobs, if the prChain feature is enabled
     if (this.get('pipeline.prChain')) {
       // extracts prNumers, the name of PR jobs starts with `PR-$prNum:`
-      const prNumbers = jobsPromise.then((jobs) =>
+      const prNumbers = jobsPromise.then(jobs =>
         jobs
-          .filter((job) => job.get('isPR'))
-          .map((job) => job.get('name'))
-          .map((jobName) => parseInt(jobName.slice('PR-'.length), 10))
+          .filter(job => job.get('isPR'))
+          .map(job => job.get('name'))
+          .map(jobName => parseInt(jobName.slice('PR-'.length), 10))
           .reduce((prNums, prNum) => {
             if (prNums.includes(prNum)) {
               return prNums;
@@ -42,9 +42,9 @@ export default EventsRoute.extend({
       );
 
       // iterate to fetch latest PR event which belongs to each PRs
-      events = prNumbers.then((prNums) =>
+      events = prNumbers.then(prNums =>
         Promise.all(
-          prNums.map((prNum) =>
+          prNums.map(prNum =>
             this.store.query('event', {
               pipelineId: this.get('pipeline.id'),
               page: 1,
@@ -52,11 +52,11 @@ export default EventsRoute.extend({
               prNum
             })
           )
-        ).then((queryReults) => {
+        ).then(queryReults => {
           // merge PR events from separate query results
           const prEvents = newArray();
 
-          queryReults.forEach((prEvent) => {
+          queryReults.forEach(prEvent => {
             prEvents.pushObjects(prEvent.toArray());
           });
 

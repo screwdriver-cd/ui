@@ -63,8 +63,8 @@ export default Component.extend({
       let targetNode = null;
 
       // traversing jstree to find target artifact node
-      paths.forEach((path) => {
-        targetNode = nodeList.find((node) => node.text === path);
+      paths.forEach(path => {
+        targetNode = nodeList.find(node => node.text === path);
         if (targetNode && targetNode.type === 'directory') {
           nodeList = targetNode.children;
         }

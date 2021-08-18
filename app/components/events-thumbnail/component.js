@@ -10,7 +10,7 @@ export default Component.extend({
   pipelineId: undefined,
 
   didInsertElement() {
-    const getParameters = (svg) => {
+    const getParameters = svg => {
       const chartSize = parseInt(svg.style('width'), 10);
       const barSpace = (chartSize * 0.96) / MAX_NUM_EVENTS_SHOWN;
       const barWidth = (barSpace * 2) / 3;
@@ -26,7 +26,7 @@ export default Component.extend({
     let [barSpace, barWidth, paddingLeft, paddingRight] = getParameters(svg);
     const totalNumberOfEvents = this.events.length;
 
-    let maxDuration = Math.max(...this.events.map((event) => event.duration));
+    let maxDuration = Math.max(...this.events.map(event => event.duration));
 
     if (maxDuration === -Infinity) {
       maxDuration = 100;
@@ -57,9 +57,9 @@ export default Component.extend({
       .enter()
       .append('rect')
       .attr('width', barWidth)
-      .attr('height', (event) => y(event.duration))
+      .attr('height', event => y(event.duration))
       .attr('x', (build, idx) => barSpace * idx)
-      .attr('y', (event) => 40 - y(event.duration));
+      .attr('y', event => 40 - y(event.duration));
 
     bars.each(function addColor(bar) {
       this.classList.add(bar.statusColor);

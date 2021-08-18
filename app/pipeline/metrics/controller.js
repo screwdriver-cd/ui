@@ -48,7 +48,7 @@ export default Controller.extend({
       const jobId = this.get('model.jobId');
       const jobMap = this.get('metrics.jobMap');
 
-      return Object.keys(jobMap).find((k) => jobMap[k] === jobId);
+      return Object.keys(jobMap).find(k => jobMap[k] === jobId);
     }
   }),
   startTime: alias('model.startTime'),
@@ -60,14 +60,14 @@ export default Controller.extend({
       const jobMap = this.get('metrics.jobMap');
 
       return Object.keys(jobMap)
-        .map((j) => j.toString())
+        .map(j => j.toString())
         .sort((a, b) => jobMap[a] - jobMap[b]);
     }
   }),
   // flatpickr addon seems to prefer dates in string
   customRange: computed('startTime', 'endTime', {
     get() {
-      return ['startTime', 'endTime'].map((t) =>
+      return ['startTime', 'endTime'].map(t =>
         toCustomLocaleString(new Date(this.get(t)), {
           options: {
             year: 'numeric',
@@ -177,12 +177,12 @@ export default Controller.extend({
               startTime,
               endTime
             )
-            .then((metrics) => {
+            .then(metrics => {
               this.set('downtimeJobsChartData', metrics);
 
-              let builds = metrics.map((m) => m.builds.length);
+              let builds = metrics.map(m => m.builds.length);
 
-              let duration = metrics.map((m) => {
+              let duration = metrics.map(m => {
                 let downtime = 0;
 
                 if (m.isDowntimeEvent) {
@@ -283,7 +283,7 @@ export default Controller.extend({
           value: jobs
         },
         hide: selectedJobName
-          ? jobs.filter((j) => j !== selectedJobName)
+          ? jobs.filter(j => j !== selectedJobName)
           : undefined,
         type: 'bar',
         groups: [jobs]
@@ -457,7 +457,7 @@ export default Controller.extend({
     'isUTC',
     function downtimeJobsAxis() {
       const { axis, downtimeJobsChartData } = this;
-      const times = downtimeJobsChartData.map((m) => new Date(m.createTime));
+      const times = downtimeJobsChartData.map(m => new Date(m.createTime));
 
       let { values, format } = axis.x.tick;
 
@@ -772,7 +772,7 @@ export default Controller.extend({
         // reuse the same for line chart
         const [leftEdgeDomain, midPointDomain, rightEdgeDomain] = [
           -1, 0, 1
-        ].map((n) =>
+        ].map(n =>
           Math.floor(
             this.x.invert(
               x - rangeOffset * (1 - n * this.config.bar_width_ratio)
@@ -852,8 +852,8 @@ export default Controller.extend({
      */
     function setupDragZoom(...conjugateChartNames) {
       // get the inverted domain values from d3
-      const getZoomedDomain = (selection) =>
-        selection && selection.map((x) => this.x.invert(x));
+      const getZoomedDomain = selection =>
+        selection && selection.map(x => this.x.invert(x));
       const brush = d3
         .brushX()
         .on('start', () => {
@@ -861,8 +861,8 @@ export default Controller.extend({
 
           // this won't reset zoom level on every click drag event
           if (x0 !== x1 && Math.abs(x1 - x0) >= 1) {
-            [this.api, ...conjugateChartNames.map((n) => self.get(n))].forEach(
-              (c) => {
+            [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
+              c => {
                 if (c) {
                   c.unzoom();
                 }
@@ -875,8 +875,8 @@ export default Controller.extend({
             .classed('hide', false);
         })
         .on('brush', () => {
-          [this.api, ...conjugateChartNames.map((n) => self.get(n))].forEach(
-            (c) => {
+          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
+            c => {
               if (c) {
                 unlockTooltip.call(c.internal);
                 c.tooltip[locked] = false;
@@ -897,8 +897,8 @@ export default Controller.extend({
           // need to have a tiny bit offset from right edge to prevent crossing over the next point
           zoomedDomain = [Math.floor(x0), Math.ceil(x1) - offsetFromRightEdge];
 
-          [this.api, ...conjugateChartNames.map((n) => self.get(n))].forEach(
-            (c) => {
+          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
+            c => {
               if (c) {
                 c.zoom(zoomedDomain);
               }
@@ -1022,8 +1022,8 @@ export default Controller.extend({
 
       [
         this.get(chartName),
-        ...conjugateChartNames.map((n) => this.get(n))
-      ].forEach((c) => {
+        ...conjugateChartNames.map(n => this.get(n))
+      ].forEach(c => {
         if (!c) {
           return;
         }
@@ -1075,7 +1075,7 @@ export default Controller.extend({
       if (currentTarget !== target) {
         chart.show(key);
         chart.hide(
-          Object.keys(chart.internal.config.data_types).filter((k) => k !== key)
+          Object.keys(chart.internal.config.data_types).filter(k => k !== key)
         );
         $(currentTarget)
           .removeClass('unselected')

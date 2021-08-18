@@ -48,7 +48,7 @@ export default Component.extend({
               addDirectly(newCollection);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             newCollection.destroyRecord();
             this.set('errorMessage', error.errors[0].detail);
           });

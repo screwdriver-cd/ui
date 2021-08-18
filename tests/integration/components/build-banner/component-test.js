@@ -118,7 +118,7 @@ module('Integration | Component | build banner', function (hooks) {
       assert.ok(true);
     });
 
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     this.set('buildStepsMock', buildStepsMock);
     this.set('eventMock', prEventMock);
@@ -178,7 +178,7 @@ module('Integration | Component | build banner', function (hooks) {
 
     this.set('buildStepsMock', buildStepsMock);
     this.set('eventMock', eventMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -210,7 +210,7 @@ module('Integration | Component | build banner', function (hooks) {
 
     this.set('buildStepsMock', buildStepsMock);
     this.set('eventMock', prEventMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -267,7 +267,7 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('eventMock', prEventMock);
     this.set(
       'prEvents',
-      new EmberPromise((resolves) =>
+      new EmberPromise(resolves =>
         resolves([{ build: buildMock, event: eventMock }])
       )
     );
@@ -331,7 +331,7 @@ module('Integration | Component | build banner', function (hooks) {
       assert.ok(true);
     });
     this.set('eventMock', prEventMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -363,7 +363,7 @@ module('Integration | Component | build banner', function (hooks) {
     });
     this.set('buildStepsMock', buildStepsMock);
     this.set('eventMock', prEventMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -394,7 +394,7 @@ module('Integration | Component | build banner', function (hooks) {
     });
     this.set('buildStepsMock', buildStepsMock);
     this.set('eventMock', prEventMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -432,7 +432,7 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('buildMetaMock', buildMetaMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -478,7 +478,7 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('buildMetaMock', buildMetaMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -532,7 +532,7 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('buildMetaMock', buildMetaMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -578,7 +578,7 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
     this.set('buildMetaMock', buildMetaMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -612,7 +612,7 @@ module('Integration | Component | build banner', function (hooks) {
 
     this.set('eventMock', prEventMock);
     this.set('buildStepsMock', buildStepsMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"
@@ -646,7 +646,7 @@ module('Integration | Component | build banner', function (hooks) {
     });
     this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
-    this.set('prEvents', new EmberPromise((resolves) => resolves([])));
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
     await render(hbs`{{build-banner
       buildContainer="node:6"

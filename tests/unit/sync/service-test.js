@@ -77,7 +77,7 @@ module('Unit | Service | sync', function (hooks) {
     const service = this.owner.lookup('service:sync');
     const p = service.syncRequests(1, undefined);
 
-    p.catch((error) => {
+    p.catch(error => {
       assert.equal(error, 'something conflicting');
       const [request] = server.handledRequests;
 

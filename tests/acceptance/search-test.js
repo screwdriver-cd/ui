@@ -10,7 +10,7 @@ module('Acceptance | search', function (hooks) {
 
   hooks.beforeEach(function () {
     server = new Pretender();
-    server.get('http://localhost:8080/v4/pipelines', (request) => {
+    server.get('http://localhost:8080/v4/pipelines', request => {
       if (!request.queryParams.search) {
         return [
           200,

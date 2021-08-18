@@ -47,7 +47,7 @@ export default Service.extend({
             pageSize,
             sortOrder
           })
-          .then((result) => {
+          .then(result => {
             const { response, jqXHR } = result;
 
             if (Array.isArray(response)) {
@@ -56,7 +56,7 @@ export default Service.extend({
             done =
               started && jqXHR.getResponseHeader('x-more-data') === 'false';
           })
-          .catch((error) => {
+          .catch(error => {
             if (error.jqXHR && [403, 404].includes(error.jqXHR.status)) {
               done = true;
             }
@@ -130,7 +130,7 @@ export default Service.extend({
 
     if (!blobUrl) {
       const blob = new Blob(
-        this.getCache(buildId, stepName, 'logs').map((l) => `${l.m}\n`),
+        this.getCache(buildId, stepName, 'logs').map(l => `${l.m}\n`),
         {
           type: 'text/plain'
         }
@@ -149,7 +149,7 @@ export default Service.extend({
    * @method revokeLogBlobUrls
    */
   revokeLogBlobUrls() {
-    this.blobKeys.forEach((k) => {
+    this.blobKeys.forEach(k => {
       URL.revokeObjectURL(this.getCache(...k, 'blobUrl'));
       this.setCache(...k, { blobUrl: undefined });
     });

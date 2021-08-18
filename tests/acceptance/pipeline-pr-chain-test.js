@@ -37,17 +37,17 @@ module('Acceptance | pipeline pr-chain', function (hooks) {
       JSON.stringify(jobs)
     ]);
 
-    server.get('http://localhost:8080/v4/pipelines/4/events', (request) => {
+    server.get('http://localhost:8080/v4/pipelines/4/events', request => {
       const prNum = parseInt(request.queryParams.prNum, 10);
 
       return [
         200,
         { 'Content-Type': 'application/json' },
-        JSON.stringify([].concat(events.find((e) => e.prNum === prNum)))
+        JSON.stringify([].concat(events.find(e => e.prNum === prNum)))
       ];
     });
 
-    server.get('http://localhost:8080/v4/events/:eventId/builds', (request) => {
+    server.get('http://localhost:8080/v4/events/:eventId/builds', request => {
       const eventId = parseInt(request.params.eventId, 10);
 
       return [
@@ -57,7 +57,7 @@ module('Acceptance | pipeline pr-chain', function (hooks) {
       ];
     });
 
-    server.get('http://localhost:8080/v4/jobs/:jobId/builds', (request) => {
+    server.get('http://localhost:8080/v4/jobs/:jobId/builds', request => {
       const jobId = parseInt(request.params.jobId, 10);
 
       return [

@@ -47,7 +47,7 @@ export default Component.extend({
     const prRegex = /PR-\d+:.*/;
 
     return getWithDefault(this, 'jobs', [])
-      .filter((j) => !j.name.match(prRegex))
+      .filter(j => !j.name.match(prRegex))
       .sortBy('name');
   }),
   isInvalid: not('isValid'),
@@ -110,7 +110,7 @@ export default Component.extend({
       const metricsDowntimeJobs = this.getWithDefault(
         'pipeline.settings.metricsDowntimeJobs',
         []
-      ).map((jobId) => this.jobs.findBy('id', `${jobId}`));
+      ).map(jobId => this.jobs.findBy('id', `${jobId}`));
 
       this.set('metricsDowntimeJobs', metricsDowntimeJobs);
     }
@@ -207,7 +207,7 @@ export default Component.extend({
 
       return this.sync
         .syncRequests(this.get('pipeline.id'), syncPath)
-        .catch((error) => this.set('errorMessage', error))
+        .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     },
     clearCache(scope, id) {
@@ -227,7 +227,7 @@ export default Component.extend({
 
       return this.cache
         .clearCache(config)
-        .catch((error) => this.set('errorMessage', error))
+        .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     },
 

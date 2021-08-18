@@ -44,7 +44,7 @@ module('Unit | Route | commands/detail', function (hooks) {
       'foo/bar'
     );
 
-    return route.model({ namespace: 'foo', name: 'bar' }).then((commands) => {
+    return route.model({ namespace: 'foo', name: 'bar' }).then(commands => {
       assert.equal(commands.commandData[0].name, 'bar');
       assert.equal(commands.commandData[0].namespace, 'foo');
       assert.equal(commands.commandData[0].tag, 'latest');
@@ -67,7 +67,7 @@ module('Unit | Route | commands/detail', function (hooks) {
 
     return route
       .model({ namespace: 'foo', name: 'baz', version: '1.0.0' })
-      .then((commands) => {
+      .then(commands => {
         assert.equal(commands.commandData.length, 4);
         assert.equal(commands.commandData[0].namespace, 'foo');
         assert.equal(commands.commandData[0].name, 'baz');
@@ -82,7 +82,7 @@ module('Unit | Route | commands/detail', function (hooks) {
 
     return route
       .model({ namespace: 'foo', name: 'baz', version: '1' })
-      .then((commands) => {
+      .then(commands => {
         assert.equal(commands.commandData.length, 4);
         assert.equal(commands.commandData[0].namespace, 'foo');
         assert.equal(commands.commandData[0].name, 'baz');
@@ -105,7 +105,7 @@ module('Unit | Route | commands/detail', function (hooks) {
 
     return route
       .model({ namespace: 'foo', name: 'baz', version: 'stable' })
-      .then((commands) => {
+      .then(commands => {
         assert.equal(commands.commandData.length, 4);
         assert.equal(commands.commandData[0].namespace, 'foo');
         assert.equal(commands.commandData[0].name, 'baz');

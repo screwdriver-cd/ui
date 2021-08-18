@@ -53,7 +53,7 @@ module('Unit | Service | template', function (hooks) {
 
     const t = service.getOneTemplate('foo/bar');
 
-    t.then((templates) => {
+    t.then(templates => {
       /* eslint-disable max-len */
       assert.deepEqual(templates, [
         {
@@ -113,7 +113,7 @@ module('Unit | Service | template', function (hooks) {
 
     const t = service.getOneTemplateWithMetrics('foo/bar');
 
-    t.then((templates) => {
+    t.then(templates => {
       /* eslint-disable max-len */
       assert.deepEqual(templates, [
         {
@@ -162,7 +162,7 @@ module('Unit | Service | template', function (hooks) {
 
     const t = service.getAllTemplates();
 
-    t.then((templates) => {
+    t.then(templates => {
       assert.deepEqual(templates, [
         /* eslint-disable max-len */
         {
@@ -236,7 +236,7 @@ module('Unit | Service | template', function (hooks) {
 
     t.then(
       () => {},
-      (err) => {
+      err => {
         assert.equal(
           err,
           'You do not have the permissions to remove this template.'
@@ -264,7 +264,7 @@ module('Unit | Service | template', function (hooks) {
 
     t.then(
       () => {},
-      (err) => {
+      err => {
         assert.equal(
           err,
           'You do not have the permissions to update this template.'

@@ -67,7 +67,7 @@ export default Component.extend({
           this.set('newName', null);
           this.set('newDescription', null);
         })
-        .catch((error) => {
+        .catch(error => {
           this.set('errorMessage', error.errors[0].detail);
         });
     },
@@ -101,7 +101,7 @@ export default Component.extend({
     confirmAction(action, id) {
       this.set(
         'modalTarget',
-        this.tokens.find((token) => token.get('id') === id)
+        this.tokens.find(token => token.get('id') === id)
       );
       this.set('modalAction', action);
 
@@ -136,7 +136,7 @@ export default Component.extend({
           });
         } else {
           this.set('isSaving', true);
-          this.onRefreshToken(this.get('modalTarget.id')).catch((error) => {
+          this.onRefreshToken(this.get('modalTarget.id')).catch(error => {
             this.set('errorMessage', error.errors[0].detail);
           });
         }

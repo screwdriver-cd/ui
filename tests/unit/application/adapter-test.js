@@ -37,7 +37,7 @@ module('Unit | Adapter | application', function (hooks) {
 
     let adapter = this.owner.lookup('adapter:application');
 
-    return adapter.ajax('https://sd.cd/fake', 'GET').then((response) => {
+    return adapter.ajax('https://sd.cd/fake', 'GET').then(response => {
       assert.deepEqual(response, { foo: 'bar' });
     });
   });

@@ -18,7 +18,7 @@ module('Integration | Component | pipeline events list', function (hooks) {
   test('it renders', async function (assert) {
     const shuttleStub = Service.extend({
       getLatestCommitEvent() {
-        return new EmberPromise((resolve) => resolve(latestCommitEvent));
+        return new EmberPromise(resolve => resolve(latestCommitEvent));
       }
     });
     const pipeline = EmberObject.create({
@@ -105,7 +105,7 @@ module('Integration | Component | pipeline events list', function (hooks) {
 
     this.set('pipelineMock', pipeline);
     this.set('eventsMock', events);
-    this.set('updateEventsMock', (page) => {
+    this.set('updateEventsMock', page => {
       assert.equal(page, 2);
     });
     await render(hbs`{{pipeline-events-list
@@ -120,7 +120,7 @@ module('Integration | Component | pipeline events list', function (hooks) {
   test('it will redirect to event page when click on pipeline event', async function (assert) {
     const shuttleStub = Service.extend({
       getLatestCommitEvent() {
-        return new EmberPromise((resolve) => resolve(latestCommitEvent));
+        return new EmberPromise(resolve => resolve(latestCommitEvent));
       }
     });
     const events = [
@@ -168,7 +168,7 @@ module('Integration | Component | pipeline events list', function (hooks) {
     this.owner.register('service:shuttle', shuttleStub);
 
     this.set('eventsMock', events);
-    this.set('updateEventsMock', (page) => {
+    this.set('updateEventsMock', page => {
       assert.equal(page, 2);
     });
 
@@ -187,7 +187,7 @@ module('Integration | Component | pipeline events list', function (hooks) {
   test('it will not redirect to event page when click on PR event', async function (assert) {
     const shuttleStub = Service.extend({
       getLatestCommitEvent() {
-        return new EmberPromise((resolve) => resolve(latestCommitEvent));
+        return new EmberPromise(resolve => resolve(latestCommitEvent));
       }
     });
     const events = [
@@ -235,7 +235,7 @@ module('Integration | Component | pipeline events list', function (hooks) {
     this.owner.register('service:shuttle', shuttleStub);
 
     this.set('eventsMock', events);
-    this.set('updateEventsMock', (page) => {
+    this.set('updateEventsMock', page => {
       assert.equal(page, 2);
     });
 

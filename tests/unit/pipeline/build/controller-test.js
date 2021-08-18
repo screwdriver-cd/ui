@@ -272,7 +272,7 @@ module('Unit | Controller | pipeline/build', function (hooks) {
     });
 
     const event = EmberObject.create({
-      hasMany: (key) => {
+      hasMany: key => {
         assert.equal(key, 'builds');
 
         return {

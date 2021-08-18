@@ -29,10 +29,10 @@ export default Service.extend({
       }
     };
 
-    return new EmberPromise((resolve) => {
+    return new EmberPromise(resolve => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
-        .done((content) =>
+        .done(content =>
           resolve({
             coverage:
               content.coverage !== 'N/A' ? `${content.coverage}%` : 'N/A',

@@ -7,7 +7,7 @@ const { getFullName } = templateHelper;
 export default Component.extend({
   results: null,
   jobs: reads('results.jobs'),
-  errors: map('results.errors', (e) => (typeof e === 'string' ? e : e.message)),
+  errors: map('results.errors', e => (typeof e === 'string' ? e : e.message)),
   workflowGraph: computed('results.workflowGraph', {
     get() {
       return getWithDefault(this, 'results.workflowGraph', {
@@ -26,7 +26,7 @@ export default Component.extend({
       return getWithDefault(this, 'results.parameters', {});
     }
   }),
-  warnMessages: map('results.warnMessages', (w) =>
+  warnMessages: map('results.warnMessages', w =>
     typeof w === 'string' ? w : w.message
   ),
   templateName: computed('results.template.{namespace,name,version}', {

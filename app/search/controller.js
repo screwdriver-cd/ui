@@ -52,7 +52,7 @@ export default Controller.extend({
 
       return this.store
         .query('pipeline', pipelineListConfig)
-        .then((pipelines) => {
+        .then(pipelines => {
           const nextPipelines = pipelines.toArray();
 
           if (Array.isArray(nextPipelines)) {
@@ -75,7 +75,7 @@ export default Controller.extend({
     addToCollection(pipelineId, collectionId) {
       return this.store
         .findRecord('collection', collectionId)
-        .then((collection) => {
+        .then(collection => {
           const pipelineIds = collection.get('pipelineIds');
 
           if (!pipelineIds.includes(pipelineId)) {

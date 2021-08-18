@@ -11,10 +11,10 @@ export default Route.extend({
     let version;
 
     if (pVersion) {
-      const versionExists = verPayload.filter((t) =>
+      const versionExists = verPayload.filter(t =>
         t.version.concat('.').startsWith(pVersion.concat('.'))
       );
-      const tagExists = tagPayload.filter((t) => t.tag === pVersion);
+      const tagExists = tagPayload.filter(t => t.tag === pVersion);
 
       if (tagExists.length === 0 && versionExists.length === 0) {
         this.transitionTo('/404');
@@ -49,7 +49,7 @@ export default Route.extend({
         `${params.namespace}/${params.name}`
       ),
       this.template.getTemplateTags(params.namespace, params.name)
-    ]).then((arr) => {
+    ]).then(arr => {
       let [verPayload, tagPayload] = arr;
 
       let version = this.determineVersion(
@@ -58,11 +58,11 @@ export default Route.extend({
         tagPayload
       );
 
-      verPayload = verPayload.filter((t) => t.namespace === params.namespace);
+      verPayload = verPayload.filter(t => t.namespace === params.namespace);
 
-      tagPayload.forEach((tagObj) => {
+      tagPayload.forEach(tagObj => {
         const taggedVerObj = verPayload.find(
-          (verObj) => verObj.version === tagObj.version
+          verObj => verObj.version === tagObj.version
         );
 
         if (taggedVerObj) {

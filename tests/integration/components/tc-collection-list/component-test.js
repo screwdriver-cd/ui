@@ -34,7 +34,7 @@ module('Integration | Component | tc collection list', function (hooks) {
   test('it renders', async function (assert) {
     setBreakpoint('desktop');
 
-    Object.keys(TEST_TEMPLATES).forEach((prop) =>
+    Object.keys(TEST_TEMPLATES).forEach(prop =>
       this.set(prop, TEST_TEMPLATES[prop])
     );
 
@@ -56,7 +56,7 @@ module('Integration | Component | tc collection list', function (hooks) {
   test('it renders with filter namespace', async function (assert) {
     setBreakpoint('desktop');
 
-    Object.keys(TEST_TEMPLATES).forEach((prop) =>
+    Object.keys(TEST_TEMPLATES).forEach(prop =>
       this.set(prop, TEST_TEMPLATES[prop])
     );
 

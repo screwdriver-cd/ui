@@ -56,7 +56,7 @@ export default Component.extend({
         const maintainer = this.filteringMaintainer;
         const { search, trustedOnly } = this;
 
-        return this.model.filter((m) => {
+        return this.model.filter(m => {
           let result = true;
 
           if (trustedOnly && !m.trusted) {

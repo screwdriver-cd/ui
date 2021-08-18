@@ -35,8 +35,8 @@ export default Service.extend({
 
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
-        .done((content) => resolve(content))
-        .fail((response) => {
+        .done(content => resolve(content))
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (

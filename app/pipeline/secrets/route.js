@@ -19,12 +19,12 @@ export default Route.extend({
 
     return this.store
       .findAll('token', { adapterOptions: { pipelineId: pipeline.get('id') } })
-      .then((tokens) => ({
+      .then(tokens => ({
         tokens,
         secrets,
         pipeline
       }))
-      .catch((error) => {
+      .catch(error => {
         this.controllerFor('pipeline.secrets').set(
           'errorMessage',
           error.errors[0].detail

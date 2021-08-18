@@ -146,7 +146,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
         events: newArray()
       });
 
-      controller.transitionToRoute = (path) => {
+      controller.transitionToRoute = path => {
         assert.equal(path, 'pipeline/1234/events');
       };
 
@@ -223,7 +223,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
         events: newArray()
       });
 
-      controller.transitionToRoute = (path) => {
+      controller.transitionToRoute = path => {
         assert.equal(path, 'pipeline/1234/pulls');
       };
 

@@ -54,7 +54,7 @@ module('Unit | Service | event-stop', function (hooks) {
     const service = this.owner.lookup('service:event-stop');
     const e = service.stopBuilds(1);
 
-    e.catch((error) => {
+    e.catch(error => {
       assert.equal(error, 'internal server error');
       const [request] = server.handledRequests;
 

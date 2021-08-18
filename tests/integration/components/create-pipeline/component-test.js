@@ -24,7 +24,7 @@ module('Integration | Component | create-pipeline', function (hooks) {
   test('it renders', async function (assert) {
     const shuttleStub = Service.extend({
       fetchAllTemplates() {
-        return new EmberPromise((resolve) => resolve(allTemplates));
+        return new EmberPromise(resolve => resolve(allTemplates));
       }
     });
 
@@ -44,7 +44,7 @@ module('Integration | Component | create-pipeline', function (hooks) {
   test('it renders with template selections with namespace', async function (assert) {
     const shuttleStub = Service.extend({
       fetchAllTemplates() {
-        return new EmberPromise((resolve) => resolve(allTemplates));
+        return new EmberPromise(resolve => resolve(allTemplates));
       }
     });
 

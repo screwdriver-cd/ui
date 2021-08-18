@@ -44,14 +44,14 @@ export default Service.extend({
 
     return this.fetchData(url, params)
       .then(templatesFormatter)
-      .then((templates) => {
+      .then(templates => {
         // Reduce versions down to one entry
         // FIXME: This should be done in API
 
         const result = [];
         const names = {};
 
-        templates.forEach((t) => {
+        templates.forEach(t => {
           if (!names[t.fullName]) {
             names[t.fullName] = 1;
             result.push(t);
@@ -79,8 +79,8 @@ export default Service.extend({
     return new EmberPromise((resolve, reject) => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
-        .done((templates) => resolve(templates))
-        .fail((response) => reject(response));
+        .done(templates => resolve(templates))
+        .fail(response => reject(response));
     });
   },
   deleteTemplates(name) {
@@ -104,8 +104,8 @@ export default Service.extend({
     return new EmberPromise((resolve, reject) => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
-        .done((content) => resolve(content))
-        .fail((response) => {
+        .done(content => resolve(content))
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (
@@ -146,8 +146,8 @@ export default Service.extend({
 
     return new EmberPromise((resolve, reject) => {
       $.ajax(ajaxConfig)
-        .done((content) => resolve(content))
-        .fail((response) => {
+        .done(content => resolve(content))
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (response.status === 401 || response.status === 403) {

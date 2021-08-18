@@ -45,8 +45,8 @@ export default Service.extend({
     return new EmberPromise((resolve, reject) => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
-        .done((content) => resolve(content))
-        .fail((response) => {
+        .done(content => resolve(content))
+        .fail(response => {
           let message = `${response.status} Request Failed`;
 
           if (response && response.responseJSON) {

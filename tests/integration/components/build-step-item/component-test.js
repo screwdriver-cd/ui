@@ -8,7 +8,7 @@ module('Integration | Component | build step item', function (hooks) {
 
   test('it renders and calls click handler', async function (assert) {
     assert.expect(4);
-    this.set('mockClick', (name) => assert.equal(name, 'monkey'));
+    this.set('mockClick', name => assert.equal(name, 'monkey'));
     await render(hbs`{{build-step-item
       selectedStep="banana"
       stepName="monkey"

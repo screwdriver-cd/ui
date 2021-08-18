@@ -29,7 +29,7 @@ export default Service.extend({
         }
       })
         .done(() => resolve())
-        .fail((jqXHR) => reject(JSON.parse(jqXHR.responseText).message));
+        .fail(jqXHR => reject(JSON.parse(jqXHR.responseText).message));
     });
   }
 });

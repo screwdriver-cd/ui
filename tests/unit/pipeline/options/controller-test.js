@@ -72,7 +72,7 @@ module('Unit | Controller | pipeline/options', function (hooks) {
         pipeline: controller.store.peekRecord('pipeline', 'abc1234')
       });
 
-      controller.transitionToRoute = (route) => {
+      controller.transitionToRoute = route => {
         assert.equal(route, 'home');
       };
 

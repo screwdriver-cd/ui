@@ -7,7 +7,7 @@ export default Component.extend({
     if (!this.isOpen) {
       this.element
         .querySelectorAll('div')
-        .forEach((el) => el.classList.add('hidden'));
+        .forEach(el => el.classList.add('hidden'));
     }
   },
   actions: {
@@ -15,7 +15,7 @@ export default Component.extend({
       this.toggleProperty('isOpen');
       this.element
         .querySelectorAll('div')
-        .forEach((el) => el.classList.toggle('hidden'));
+        .forEach(el => el.classList.toggle('hidden'));
     }
   }
 });

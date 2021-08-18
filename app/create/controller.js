@@ -21,7 +21,7 @@ export default Controller.extend({
           () => {
             this.transitionToRoute('pipeline', pipeline.get('id'));
           },
-          (err) => {
+          err => {
             let error = err.errors[0] || {};
 
             if (

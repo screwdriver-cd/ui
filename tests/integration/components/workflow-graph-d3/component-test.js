@@ -12,7 +12,7 @@ module('Integration | Component | workflow graph d3', function (hooks) {
     assert.dom('svg').exists({ count: 1 });
     this.element
       .querySelectorAll('svg')
-      .forEach((el) => assert.equal(el.children.length, 0));
+      .forEach(el => assert.equal(el.children.length, 0));
   });
 
   test('it renders nodes and edges when a graph is supplied', async function (assert) {

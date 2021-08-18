@@ -38,7 +38,7 @@ module('Unit | Service | banner', function (hooks) {
     const service = this.owner.lookup('service:banner');
     const b = service.fetchBanners();
 
-    b.then((banners) => {
+    b.then(banners => {
       assert.equal(banners[0].message, actualMessage);
     });
   });

@@ -11,8 +11,8 @@ export default Component.extend({
   isArtifacts: equal('activeTab', 'artifacts'),
   classNames: ['build-step-collection', 'row'],
   stepNames: mapBy('buildSteps', 'name'),
-  setupSteps: filter('stepNames', (item) => /^sd-setup/.test(item)),
-  teardownSteps: filter('stepNames', (item) => /^sd-teardown/.test(item)),
+  setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
+  teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
   selectedStep: computed(
     'buildSteps.@each.{code,startTime,endTime}',
     'preselectedStepName',
@@ -53,7 +53,7 @@ export default Component.extend({
   }),
   userSteps: filter(
     'stepNames',
-    (item) => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)
+    item => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)
   ),
   actions: {
     toggleSetup() {

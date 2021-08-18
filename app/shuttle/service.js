@@ -153,7 +153,7 @@ export default Service.extend({
 
     if (settings.metricsDowntimeJobs) {
       newSetting = {
-        metricsDowntimeJobs: settings.metricsDowntimeJobs.map((job) => job.id)
+        metricsDowntimeJobs: settings.metricsDowntimeJobs.map(job => job.id)
       };
     }
 

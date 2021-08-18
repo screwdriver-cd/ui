@@ -13,7 +13,7 @@ module('Integration | Component | job toggle modal', function (hooks) {
     this.set('showToggleModal', true);
     this.set('name', 'main');
     this.set('stateChange', 'Disable');
-    this.set('updateMessageMock', (message) => {
+    this.set('updateMessageMock', message => {
       assert.equal(message, 'testing');
     });
 
@@ -36,7 +36,7 @@ module('Integration | Component | job toggle modal', function (hooks) {
     this.set('showToggleModal', true);
     this.set('name', 'main');
     this.set('stateChange', 'Disable');
-    this.set('updateMessageMock', (message) => {
+    this.set('updateMessageMock', message => {
       assert.equal(message, 'testing');
     });
     await render(hbs`{{job-toggle-modal

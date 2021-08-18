@@ -170,7 +170,7 @@ module('Unit | Serializer | pipeline', function (hooks) {
     return this.owner
       .lookup('service:store')
       .findRecord('pipeline', 3)
-      .then((pipeline) => {
+      .then(pipeline => {
         assert.equal(pipeline.workflowGraph.edges.length, 5, 'has 5 edges');
         assert.deepEqual(
           pipeline.workflowGraph.edges,

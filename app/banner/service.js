@@ -14,7 +14,7 @@ export default Service.extend({
    * @return {Promise}        Resolves to a list of banner structures
    */
   fetchBanners() {
-    return new EmberPromise((resolve) => {
+    return new EmberPromise(resolve => {
       // Fetch the banners directly from the API
       $.ajax({
         url: bannersUrl,
@@ -24,10 +24,10 @@ export default Service.extend({
           )}`
         }
       })
-        .done((banners) => {
+        .done(banners => {
           if (Array.isArray(banners)) {
             const activeBanners = banners.filter(
-              (banner) => banner.isActive === true
+              banner => banner.isActive === true
             );
 
             resolve(activeBanners);

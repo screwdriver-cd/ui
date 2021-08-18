@@ -34,13 +34,13 @@ function getLatestBuild(session, pipelineId, jobName, buildStatus) {
         Authorization: `Bearer ${session.data.authenticated.token}`
       }
     })
-      .done((data) => {
+      .done(data => {
         // setting pipelineId because build meta data is not a gurantee
         data.pipelineId = pipelineId;
 
         return resolve(data);
       })
-      .fail((response) => {
+      .fail(response => {
         let message = `${response.status} Request Failed`;
 
         if (

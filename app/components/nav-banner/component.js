@@ -12,7 +12,7 @@ export default Component.extend({
   },
 
   setBanners() {
-    this.banner.fetchBanners().then((banners) => {
+    this.banner.fetchBanners().then(banners => {
       if (!this.isDestroying && !this.isDestroyed) {
         set(this, 'banners', banners);
       }

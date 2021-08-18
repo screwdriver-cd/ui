@@ -46,7 +46,7 @@ module('Unit | Service | shuttle', function (hooks) {
         pageSize: 10,
         sortOrder: 'ascending'
       })
-      .then((result) => {
+      .then(result => {
         assert.equal(result.payload.length, 3, 'should have 3 logs');
         assert.equal(
           result.jqXHR.getResponseHeader('x-more-data'),
@@ -86,7 +86,7 @@ module('Unit | Service | shuttle', function (hooks) {
 
     service
       .fetchCoverage(buildId, jobId, startTime, endTime, pipelineId, prNum)
-      .then((result) => {
+      .then(result => {
         const { coverage, projectUrl } = result;
 
         assert.equal(coverage, '71.4', 'coverage is 71.4');
@@ -119,7 +119,7 @@ module('Unit | Service | shuttle', function (hooks) {
 
     const pipelineId = 123456;
 
-    service.getLatestCommitEvent(pipelineId).then((result) => {
+    service.getLatestCommitEvent(pipelineId).then(result => {
       const { id, sha } = result;
 
       assert.equal(id, '3', 'id is 3');

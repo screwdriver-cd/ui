@@ -16,16 +16,16 @@ export default Controller.extend({
 
       return newToken
         .save()
-        .then((token) => {
+        .then(token => {
           this.set('newToken', token);
         })
-        .catch((error) => {
+        .catch(error => {
           newToken.destroyRecord();
           throw error;
         });
     },
     refreshToken(id) {
-      return this.refreshService.refreshToken(id).then((token) => {
+      return this.refreshService.refreshToken(id).then(token => {
         this.set('newToken', token);
       });
     }

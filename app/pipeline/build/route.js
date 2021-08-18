@@ -9,7 +9,7 @@ export default Route.extend({
   model(params) {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
 
-    return this.store.findRecord('build', params.build_id).then((build) =>
+    return this.store.findRecord('build', params.build_id).then(build =>
       all([
         this.store.findRecord('job', build.get('jobId')),
         this.store.findRecord('event', build.get('eventId'))

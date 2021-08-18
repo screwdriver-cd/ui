@@ -10,16 +10,16 @@ export default Route.extend({
     return RSVP.all([
       this.command.getOneCommand(params.namespace, params.name),
       this.command.getCommandTags(params.namespace, params.name)
-    ]).then((arr) => {
+    ]).then(arr => {
       const [verPayload, tagPayload] = arr;
 
       let version;
 
       if (params.version) {
-        const versionExists = verPayload.filter((t) =>
+        const versionExists = verPayload.filter(t =>
           t.version.concat('.').startsWith(params.version.concat('.'))
         );
-        const tagExists = tagPayload.filter((c) => c.tag === params.version);
+        const tagExists = tagPayload.filter(c => c.tag === params.version);
 
         if (tagExists.length === 0 && versionExists.length === 0) {
           this.transitionTo('/404');
@@ -32,9 +32,9 @@ export default Route.extend({
         }
       }
 
-      tagPayload.forEach((tagObj) => {
+      tagPayload.forEach(tagObj => {
         const taggedVerObj = verPayload.find(
-          (verObj) => verObj.version === tagObj.version
+          verObj => verObj.version === tagObj.version
         );
 
         if (taggedVerObj) {

@@ -118,7 +118,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
 
     assert.ok(controller);
 
-    controller.transitionToRoute = (route) => {
+    controller.transitionToRoute = route => {
       assert.equal(route, 'commands');
     };
 

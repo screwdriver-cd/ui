@@ -102,5 +102,5 @@ const events = [
   }
 ];
 
-export default (workflowGraph) =>
-  events.map((e) => assign(copy(e, true), { workflowGraph }));
+export default workflowGraph =>
+  events.map(e => assign(copy(e, true), { workflowGraph }));

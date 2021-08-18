@@ -62,7 +62,7 @@ module('Unit | Mixin | model reloader mixin', function (hooks) {
     subject.set('runLater', 'foo');
     subject.set('modelToReload', 'testModel');
 
-    subject.shouldReload = (model) => {
+    subject.shouldReload = model => {
       assert.ok(model);
 
       return SHOULD_RELOAD_YES;
@@ -81,7 +81,7 @@ module('Unit | Mixin | model reloader mixin', function (hooks) {
     };
 
     subject.set('testModel', testModel);
-    subject.set('shouldReload', (m) => {
+    subject.set('shouldReload', m => {
       assert.equal(m, testModel);
 
       return false;
@@ -102,7 +102,7 @@ module('Unit | Mixin | model reloader mixin', function (hooks) {
       }
     });
     subject.set('modelToReload', 'testModel');
-    subject.shouldReload = (model) => {
+    subject.shouldReload = model => {
       assert.ok(model);
 
       return SHOULD_RELOAD_YES;
@@ -124,7 +124,7 @@ module('Unit | Mixin | model reloader mixin', function (hooks) {
       return resolve({});
     });
 
-    subject.shouldReload = (model) => {
+    subject.shouldReload = model => {
       assert.ok(model);
 
       return SHOULD_RELOAD_YES;

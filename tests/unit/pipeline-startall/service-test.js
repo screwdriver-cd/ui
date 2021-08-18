@@ -57,7 +57,7 @@ module('Unit | Service | pipeline start all', function (hooks) {
     const service = this.owner.lookup('service:pipeline-startall');
     const p = service.startAll(1, undefined);
 
-    p.catch((error) => {
+    p.catch(error => {
       assert.equal(error, 'internal server error');
       const [request] = server.handledRequests;
 

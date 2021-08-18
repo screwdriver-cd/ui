@@ -13,7 +13,7 @@ export default Component.extend({
     get() {
       const nodes = this.get('workflowGraph.nodes');
       const jobName = this.get('job.name').replace('PR-', '').split(':').pop();
-      const matchedNode = nodes.find((node) => node.name === jobName);
+      const matchedNode = nodes.find(node => node.name === jobName);
 
       if (matchedNode && matchedNode.displayName) {
         return matchedNode.displayName;

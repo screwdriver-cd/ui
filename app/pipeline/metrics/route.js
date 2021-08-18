@@ -40,7 +40,7 @@ export default Route.extend({
 
     const { successOnly, fetchAll, fetchJob, startTime, endTime } = this;
     const toMinute = (sec = null) => (sec === null ? null : sec / 60);
-    const jobsMap = this.get('pipeline.jobs').then((jobs) =>
+    const jobsMap = this.get('pipeline.jobs').then(jobs =>
       jobs.reduce((map, j) => {
         const id = j.get('id');
         const name = j.get('name');
@@ -57,7 +57,7 @@ export default Route.extend({
       this.set('jobId', jobId);
     }
 
-    const metrics = RSVP.resolve(jobsMap).then((allJobs) => {
+    const metrics = RSVP.resolve(jobsMap).then(allJobs => {
       // resolve all the job IDs first and validate against inquired job id
       if (!allJobs.has(jobId)) {
         // bail if the inquired job id is not of this pipeline
@@ -134,7 +134,7 @@ export default Route.extend({
             return null;
           }
 
-          pipelineMetrics.forEach((metric) => {
+          pipelineMetrics.forEach(metric => {
             const sha = metric.get('sha');
             const status = metric.get('status');
             const duration = metric.get('duration');
@@ -186,7 +186,7 @@ export default Route.extend({
               data: []
             };
 
-            jobMetrics.forEach((metric) => {
+            jobMetrics.forEach(metric => {
               const status = metric.get('status');
 
               if (successOnly && status !== 'SUCCESS') {
@@ -221,7 +221,7 @@ export default Route.extend({
             jobMap,
             steps,
             stepGroup: Array.from(stepGroup)
-              .map((s) => s.toString())
+              .map(s => s.toString())
               .sort(),
             measures: {
               total,

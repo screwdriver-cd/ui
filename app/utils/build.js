@@ -15,7 +15,7 @@ const isActiveBuild = (status, endTime) =>
  * @param  {String}  job name
  * @return {Boolean} true if PR job
  */
-const isPRJob = (jobName) => /^PR-/.test(jobName);
+const isPRJob = jobName => /^PR-/.test(jobName);
 
 const statusIcon = (status, isLight) => {
   let icon;
@@ -63,7 +63,7 @@ const statusIcon = (status, isLight) => {
  * @return {String} active step name
  */
 const getActiveStep = (steps = []) => {
-  const runningStep = steps.find((s) => s.startTime && !s.endTime);
+  const runningStep = steps.find(s => s.startTime && !s.endTime);
 
   let name;
 
@@ -71,7 +71,7 @@ const getActiveStep = (steps = []) => {
     // eslint-disable-next-line prefer-destructuring
     name = runningStep.name;
   } else {
-    const failedStep = steps.find((s) => s.code);
+    const failedStep = steps.find(s => s.code);
 
     if (failedStep && failedStep.name) {
       // eslint-disable-next-line prefer-destructuring

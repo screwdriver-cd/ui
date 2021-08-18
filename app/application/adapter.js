@@ -51,7 +51,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    */
   decoratePayload(key, payload) {
     if (Array.isArray(payload[key])) {
-      payload[key].map((o) => this.insertLink(key, o));
+      payload[key].map(o => this.insertLink(key, o));
     } else {
       this.insertLink(key, payload[key]);
     }
@@ -127,7 +127,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       }
 
       // Rewrite the error message for guest users
-      errors = errors.map((err) => {
+      errors = errors.map(err => {
         if (err.detail === 'Insufficient scope') {
           err.detail =
             'You do not have adequate permissions to perform this action.';

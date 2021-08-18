@@ -139,7 +139,7 @@ export default Component.extend({
   },
 
   getRows(jobsDetails = []) {
-    let rows = jobsDetails.map((jobDetails) => {
+    let rows = jobsDetails.map(jobDetails => {
       const { jobId, jobName, annotations, prParentJobId, prNum } = jobDetails;
       const latestBuild = jobDetails.builds.length
         ? get(jobDetails, 'builds.lastObject')
@@ -242,10 +242,10 @@ export default Component.extend({
       const lastRows = get(this, 'lastRows') || [];
       const isEqualRes = isEqual(
         rows
-          .map((r) => r.job)
+          .map(r => r.job)
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
         lastRows
-          .map((r) => r.job)
+          .map(r => r.job)
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
       );
 
@@ -259,7 +259,7 @@ export default Component.extend({
   actions: {
     async onScrolledToBottom() {
       this.set('isLoading', true);
-      this.get('updateListViewJobs')().then((jobs) => {
+      this.get('updateListViewJobs')().then(jobs => {
         const rows = this.getRows(jobs);
 
         this.table.addRows(rows);
