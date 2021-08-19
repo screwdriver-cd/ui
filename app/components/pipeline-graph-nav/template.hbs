@@ -1,4 +1,4 @@
-{{#if selectedEventObj}}
+{{#if showGraphNavRow}}
   <div class="row">
 
     <div class="col-xs-2">
@@ -58,7 +58,8 @@
       {{/if}}
     </div>
   </div>
-
+{{/if}}
+{{#if selectedEventObj}}
   <div class="row {{selectedEventObj.status}}">
     <div class="col-xs-12">
       <div class="event-info">
