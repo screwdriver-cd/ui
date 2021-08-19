@@ -25,16 +25,13 @@ function getData(token, decodedToken) {
     scmContext = scmContext || 'guest';
   }
 
-  return Object.assign(
-    {},
-    {
-      username,
-      scope,
-      scmContext,
-      isGuest,
-      token
-    }
-  );
+  return {
+    username,
+    scope,
+    scmContext,
+    isGuest,
+    token
+  };
 }
 
 /**

@@ -18,24 +18,24 @@ const startAllFailed = () => {
   ]);
 };
 
-module('Unit | Service | pipeline start all', function(hooks) {
+module('Unit | Service | pipeline start all', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     const service = this.owner.lookup('service:pipeline-startall');
 
     assert.ok(service);
   });
 
-  test('it makes a call start all child pipelines', function(assert) {
+  test('it makes a call start all child pipelines', function (assert) {
     assert.expect(1);
     startAll();
     const service = this.owner.lookup('service:pipeline-startall');
@@ -44,11 +44,14 @@ module('Unit | Service | pipeline start all', function(hooks) {
     p.then(() => {
       const [request] = server.handledRequests;
 
-      assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/startall');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/pipelines/1/startall'
+      );
     });
   });
 
-  test('it fails to start all child piplines with error message ', function(assert) {
+  test('it fails to start all child piplines with error message ', function (assert) {
     assert.expect(2);
     startAllFailed();
     const service = this.owner.lookup('service:pipeline-startall');
@@ -58,7 +61,10 @@ module('Unit | Service | pipeline start all', function(hooks) {
       assert.equal(error, 'internal server error');
       const [request] = server.handledRequests;
 
-      assert.equal(request.url, 'http://localhost:8080/v4/pipelines/1/startall');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/pipelines/1/startall'
+      );
     });
   });
 });

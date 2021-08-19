@@ -4,10 +4,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | pipeline pr view', function(hooks) {
+module('Integration | Component | pipeline pr view', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders a successful PR', async function(assert) {
+  test('it renders a successful PR', async function (assert) {
     const job = EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',
@@ -42,7 +42,9 @@ module('Integration | Component | pipeline pr view', function(hooks) {
     this.set('jobMock', job);
     this.set('workflowGraphMock', workflowgraph);
 
-    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
+    await render(
+      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+    );
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.equal(
@@ -56,7 +58,7 @@ module('Integration | Component | pipeline pr view', function(hooks) {
   });
 
   // When a user sets a job to unstable, it should show unstable icon
-  test('it renders an unstable PR', async function(assert) {
+  test('it renders an unstable PR', async function (assert) {
     const job = EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',
@@ -91,13 +93,15 @@ module('Integration | Component | pipeline pr view', function(hooks) {
     this.set('jobMock', job);
     this.set('workflowGraphMock', workflowgraph);
 
-    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
+    await render(
+      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+    );
 
     assert.dom('.UNSTABLE').exists({ count: 1 });
     assert.dom('.fa-exclamation-circle').exists({ count: 1 });
   });
 
-  test('it renders a failed PR', async function(assert) {
+  test('it renders a failed PR', async function (assert) {
     const job = EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',
@@ -132,13 +136,15 @@ module('Integration | Component | pipeline pr view', function(hooks) {
     this.set('jobMock', job);
     this.set('workflowGraphMock', workflowgraph);
 
-    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
+    await render(
+      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+    );
 
     assert.dom('.FAILURE').exists({ count: 1 });
     assert.dom('.fa-times-circle-o').exists({ count: 1 });
   });
 
-  test('it renders a queued PR', async function(assert) {
+  test('it renders a queued PR', async function (assert) {
     const job = EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',
@@ -173,13 +179,15 @@ module('Integration | Component | pipeline pr view', function(hooks) {
     this.set('jobMock', job);
     this.set('workflowGraphMock', workflowgraph);
 
-    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
+    await render(
+      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+    );
 
     assert.dom('.QUEUED').exists({ count: 1 });
     assert.dom('.fa-spinner').exists({ count: 1 });
   });
 
-  test('it renders a running PR', async function(assert) {
+  test('it renders a running PR', async function (assert) {
     const job = EmberObject.create({
       id: 'abcd',
       name: 'PR-1234:main',
@@ -214,7 +222,9 @@ module('Integration | Component | pipeline pr view', function(hooks) {
     this.set('jobMock', job);
     this.set('workflowGraphMock', workflowgraph);
 
-    await render(hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`);
+    await render(
+      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+    );
 
     assert.dom('.RUNNING').exists({ count: 1 });
     assert.dom('.fa-spinner').exists({ count: 1 });

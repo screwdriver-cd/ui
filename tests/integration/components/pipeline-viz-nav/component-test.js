@@ -8,10 +8,10 @@ import {
   connectedPipelines
 } from 'screwdriver-ui/tests/mock/pipeline-viz';
 
-module('Integration | Component | pipeline-viz-nav', function(hooks) {
+module('Integration | Component | pipeline-viz-nav', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
     assert.expect(2);
@@ -23,11 +23,11 @@ module('Integration | Component | pipeline-viz-nav', function(hooks) {
       pipelines: []
     });
 
-    this.set('searchPipeline', function() {
+    this.set('searchPipeline', function () {
       assert.ok(true);
     });
 
-    this.set('selectConnectedPipeline', function() {
+    this.set('selectConnectedPipeline', function () {
       assert.ok(true);
     });
 
@@ -43,7 +43,9 @@ module('Integration | Component | pipeline-viz-nav', function(hooks) {
       }}`
     );
 
-    assert.dom('.ember-power-select-selected-item').hasText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.ember-power-select-selected-item')
+      .hasText('screwdriver-cd/screwdriver');
     assert.dom('.pipeline-viz-row').exists({ count: 3 });
   });
 });

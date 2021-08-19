@@ -9,9 +9,14 @@ export default Component.extend({
     return Object.keys(this.buildParameters).length > 0;
   }),
 
-  hasLargeNumberOfParameters: computed('buildParameters', function hasLargeNumberOfParameters() {
-    return Object.keys(this.buildParameters).length > MAX_NUM_OF_PARAMETERS_ALLOWED;
-  }),
+  hasLargeNumberOfParameters: computed(
+    'buildParameters',
+    function hasLargeNumberOfParameters() {
+      return (
+        Object.keys(this.buildParameters).length > MAX_NUM_OF_PARAMETERS_ALLOWED
+      );
+    }
+  ),
 
   init() {
     this._super(...arguments);

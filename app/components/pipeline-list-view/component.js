@@ -55,9 +55,14 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
-    const table = Table.create({ columns: this.get('columns'), rows: sortedRows });
+    const table = Table.create({
+      columns: this.get('columns'),
+      rows: sortedRows
+    });
 
-    let sortColumn = table.get('allColumns').findBy('valuePath', this.get('sortingValuePath'));
+    let sortColumn = table
+      .get('allColumns')
+      .findBy('valuePath', this.get('sortingValuePath'));
 
     // Setup initial sort column
     if (sortColumn) {
@@ -111,7 +116,9 @@ export default Component.extend({
       return null;
     }
     if (!endDateTime) {
-      if (['CREATED', 'RUNNING', 'QUEUED', 'BLOCKED', 'FROZEN'].includes(status)) {
+      if (
+        ['CREATED', 'RUNNING', 'QUEUED', 'BLOCKED', 'FROZEN'].includes(status)
+      ) {
         return 'Still running.';
       }
 
@@ -134,7 +141,9 @@ export default Component.extend({
   getRows(jobsDetails = []) {
     let rows = jobsDetails.map(jobDetails => {
       const { jobId, jobName, annotations, prParentJobId, prNum } = jobDetails;
-      const latestBuild = jobDetails.builds.length ? get(jobDetails, 'builds.lastObject') : null;
+      const latestBuild = jobDetails.builds.length
+        ? get(jobDetails, 'builds.lastObject')
+        : null;
 
       const jobData = {
         jobName,
@@ -165,7 +174,11 @@ export default Component.extend({
           ? `${toCustomLocaleString(new Date(latestBuild.startTime))}`
           : 'Invalid date';
         buildId = latestBuild.id;
-        duration = this.getDuration(latestBuild.startTime, latestBuild.endTime, latestBuild.status);
+        duration = this.getDuration(
+          latestBuild.startTime,
+          latestBuild.endTime,
+          latestBuild.status
+        );
 
         coverageData = {
           jobId,
@@ -195,7 +208,10 @@ export default Component.extend({
       };
     });
 
-    const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
+    const collator = new Intl.Collator('en', {
+      numeric: true,
+      sensitivity: 'base'
+    });
 
     switch (this.sortingValuePath) {
       case 'job':
@@ -219,19 +235,26 @@ export default Component.extend({
 
     return rows;
   },
-  jobsObserver: observer('jobsDetails.[]', function jobsObserverFunc({ jobsDetails }) {
-    const rows = this.getRows(jobsDetails);
-    const lastRows = get(this, 'lastRows') || [];
-    const isEqualRes = isEqual(
-      rows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
-      lastRows.map(r => r.job).sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
-    );
+  jobsObserver: observer(
+    'jobsDetails.[]',
+    function jobsObserverFunc({ jobsDetails }) {
+      const rows = this.getRows(jobsDetails);
+      const lastRows = get(this, 'lastRows') || [];
+      const isEqualRes = isEqual(
+        rows
+          .map(r => r.job)
+          .sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
+        lastRows
+          .map(r => r.job)
+          .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
+      );
 
-    if (!isEqualRes) {
-      set(this, 'lastRows', rows);
-      this.table.setRows(rows);
+      if (!isEqualRes) {
+        set(this, 'lastRows', rows);
+        this.table.setRows(rows);
+      }
     }
-  }),
+  ),
 
   actions: {
     async onScrolledToBottom() {

@@ -22,7 +22,8 @@ export default Component.extend({
   sortBy: ['scmRepo.name'],
   collection: null,
   removePipelineError: null,
-  activeViewOptionValue: localStorage.getItem('activeViewOptionValue') || viewOptions[0].value,
+  activeViewOptionValue:
+    localStorage.getItem('activeViewOptionValue') || viewOptions[0].value,
   viewOptions,
   isOrganizing: false,
   selectedPipelines: [],
@@ -62,7 +63,9 @@ export default Component.extend({
     'session.isAuthenticated',
     'collection.pipelineIds',
     function showOrganizeButton() {
-      return this.session.isAuthenticated && this.collection.pipelineIds.length !== 0;
+      return (
+        this.session.isAuthenticated && this.collection.pipelineIds.length !== 0
+      );
     }
   ),
 
@@ -72,13 +75,19 @@ export default Component.extend({
     return this.activeViewOptionValue === viewOptions[1].value;
   }),
 
-  showOperations: computed('selectedPipelines.length', function showOperations() {
-    return this.selectedPipelines.length > 0;
-  }),
+  showOperations: computed(
+    'selectedPipelines.length',
+    function showOperations() {
+      return this.selectedPipelines.length > 0;
+    }
+  ),
 
-  isDefaultCollection: computed('collection.type', function isDefaultCollection() {
-    return this.collection.type === 'default';
-  }),
+  isDefaultCollection: computed(
+    'collection.type',
+    function isDefaultCollection() {
+      return this.collection.type === 'default';
+    }
+  ),
 
   description: computed('collection', {
     get() {
@@ -128,7 +137,10 @@ export default Component.extend({
 
       return (
         isEmpty(this.collectionName) ||
-        !(!isEqual(this.collectionName, this.collection.name) || !isDescriptionNotChanged)
+        !(
+          !isEqual(this.collectionName, this.collection.name) ||
+          !isDescriptionNotChanged
+        )
       );
     }
   ),
@@ -162,17 +174,22 @@ export default Component.extend({
         });
     },
     removeSelectedPipelines() {
-      return this.removeMultiplePipelines(this.selectedPipelines, this.get('collection.id'))
+      return this.removeMultiplePipelines(
+        this.selectedPipelines,
+        this.get('collection.id')
+      )
         .then(() => {
-          this.store.findRecord('collection', this.get('collection.id')).then(collection => {
-            this.setProperties({
-              removePipelineError: null,
-              selectedPipelines: [],
-              reset: true,
-              isOrganizing: false,
-              collection
+          this.store
+            .findRecord('collection', this.get('collection.id'))
+            .then(collection => {
+              this.setProperties({
+                removePipelineError: null,
+                selectedPipelines: [],
+                reset: true,
+                isOrganizing: false,
+                collection
+              });
             });
-          });
         })
         .catch(error => {
           this.set('removePipelineError', error.errors[0].detail);
@@ -219,12 +236,18 @@ export default Component.extend({
           });
         })
         .catch(() => {
-          this.set('addCollectionError', `Could not add Pipeline to Collection ${collection.name}`);
+          this.set(
+            'addCollectionError',
+            `Could not add Pipeline to Collection ${collection.name}`
+          );
         });
     },
     selectSearchedPipeline(pipelineId) {
       this.setProperties({
-        selectedSearchedPipelines: [...this.selectedSearchedPipelines, parseInt(pipelineId, 10)],
+        selectedSearchedPipelines: [
+          ...this.selectedSearchedPipelines,
+          parseInt(pipelineId, 10)
+        ],
         searchedPipelines: this.searchedPipelines.filter(
           searchedPipeline => searchedPipeline.id !== pipelineId
         )
@@ -261,9 +284,13 @@ export default Component.extend({
     toggleAddPipelineModal() {
       if (this.get('showAddPipelineModal')) {
         if (this.selectedSearchedPipelines.length !== 0) {
-          this.addMultipleToCollection(this.selectedSearchedPipelines, this.collection.id).then(
-            () => {
-              this.store.findRecord('collection', this.get('collection.id')).then(collection => {
+          this.addMultipleToCollection(
+            this.selectedSearchedPipelines,
+            this.collection.id
+          ).then(() => {
+            this.store
+              .findRecord('collection', this.get('collection.id'))
+              .then(collection => {
                 this.setProperties({
                   showAddPipelineModal: false,
                   searchedPipelines: [],
@@ -271,8 +298,7 @@ export default Component.extend({
                   collection
                 });
               });
-            }
-          );
+          });
         } else {
           this.setProperties({
             showAddPipelineModal: false,
@@ -310,8 +336,12 @@ export default Component.extend({
           'searchedPipelines',
           pipelines.filter(
             pipeline =>
-              !this.collection.pipelineIds.includes(parseInt(pipeline.id, 10)) &&
-              !this.selectedSearchedPipelines.includes(parseInt(pipeline.id, 10))
+              !this.collection.pipelineIds.includes(
+                parseInt(pipeline.id, 10)
+              ) &&
+              !this.selectedSearchedPipelines.includes(
+                parseInt(pipeline.id, 10)
+              )
           )
         );
       });

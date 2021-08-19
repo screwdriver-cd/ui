@@ -7,10 +7,10 @@ import { hasCollections } from 'screwdriver-ui/tests/mock/collections';
 
 let server;
 
-module('Acceptance | tokens', function(hooks) {
+module('Acceptance | tokens', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/collections', hasCollections);
@@ -33,11 +33,11 @@ module('Acceptance | tokens', function(hooks) {
     ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('visiting /user-settings', async function(assert) {
+  test('visiting /user-settings', async function (assert) {
     await authenticateSession({ token: 'faketoken' });
     await visit('/user-settings');
 

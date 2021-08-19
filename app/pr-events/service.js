@@ -27,7 +27,9 @@ export default Service.extend({
           withCredentials: true
         },
         headers: {
-          Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
+          Authorization: `Bearer ${this.session.get(
+            'data.authenticated.token'
+          )}`
         }
       }).done(data => {
         resolve(data);
@@ -48,7 +50,9 @@ export default Service.extend({
           withCredentials: true
         },
         headers: {
-          Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
+          Authorization: `Bearer ${this.session.get(
+            'data.authenticated.token'
+          )}`
         }
       })
         .done(data => {
@@ -67,7 +71,9 @@ export default Service.extend({
         let eventBuildPairs = [];
 
         prCommits.forEach(commit => {
-          const matchingBuild = builds.find(build => build.eventId === commit.id);
+          const matchingBuild = builds.find(
+            build => build.eventId === commit.id
+          );
 
           if (matchingBuild) {
             eventBuildPairs.push({ event: commit, build: matchingBuild });

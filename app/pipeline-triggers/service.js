@@ -21,14 +21,21 @@ export default Service.extend({
         url,
         type: 'GET',
         headers: {
-          Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+          Authorization: `Bearer ${get(
+            this,
+            'session.data.authenticated.token'
+          )}`
         }
       })
         .done(data => resolve(data))
         .fail(response => {
           let message = `${response.status} Request Failed`;
 
-          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
+          if (
+            response &&
+            response.responseJSON &&
+            typeof response.responseJSON === 'object'
+          ) {
             message = `${response.status} ${response.responseJSON.message}`;
           }
 

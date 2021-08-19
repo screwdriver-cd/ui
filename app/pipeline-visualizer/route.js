@@ -27,7 +27,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
       let selectedConnectedPipeline = null;
 
       if (selectedPipelineId) {
-        selectedPipeline = await this.store.findRecord('pipeline', selectedPipelineId);
+        selectedPipeline = await this.store.findRecord(
+          'pipeline',
+          selectedPipelineId
+        );
         model.selectedPipeline = selectedPipeline;
       }
 
@@ -45,11 +48,15 @@ export default Route.extend(AuthenticatedRouteMixin, {
           model.selectedConnectedPipeline = selectedConnectedPipeline;
         }
       } catch (e) {
+        console.log('error', e);
+
         throw e;
       }
 
       return model;
     } catch (e) {
+      console.log('error', e);
+
       throw e;
     }
   },

@@ -37,7 +37,8 @@ const node = (nodes, name) => nodes.find(o => o.name === name);
  * @param  {String} jobId   The job id of the build
  * @return {Object}         Reference to the build object from the list if found
  */
-const build = (builds, jobId) => builds.find(b => b && `${get(b, 'jobId')}` === `${jobId}`);
+const build = (builds, jobId) =>
+  builds.find(b => b && `${get(b, 'jobId')}` === `${jobId}`);
 
 /**
  * Find a job for the given job id
@@ -46,7 +47,8 @@ const build = (builds, jobId) => builds.find(b => b && `${get(b, 'jobId')}` === 
  * @param  {String} jobId   The job id of the build
  * @return {Object}         Reference to the job object from the list if found
  */
-const job = (jobs, jobId) => jobs.find(j => j && `${get(j, 'id')}` === `${jobId}`);
+const job = (jobs, jobId) =>
+  jobs.find(j => j && `${get(j, 'id')}` === `${jobId}`);
 
 /**
  * Find the icon to set as the text for a node
@@ -54,7 +56,8 @@ const job = (jobs, jobId) => jobs.find(j => j && `${get(j, 'id')}` === `${jobId}
  * @param  {String} status Text that denotes a build status
  * @return {String}        Unicode character that maps to an icon in screwdriver icon font
  */
-const icon = status => (STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MAP.UNKNOWN.icon);
+const icon = status =>
+  STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MAP.UNKNOWN.icon;
 
 /**
  * Calculate how many nodes are visited in the graph from the given starting point
@@ -164,7 +167,9 @@ const isTrigger = (name, start) => {
  * @return {Boolean}              True if a destination of the node has already been processed
  */
 const hasProcessedDest = (graph, name) => {
-  const nodes = graph.edges.filter(edge => edge.src === name).map(edge => edge.dest);
+  const nodes = graph.edges
+    .filter(edge => edge.src === name)
+    .map(edge => edge.dest);
 
   return nodes.some(n => {
     const found = node(graph.nodes, n);
@@ -188,9 +193,11 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const { nodes } = graph;
   const buildsAvailable =
-    (Array.isArray(builds) || builds instanceof DS.PromiseArray) && get(builds, 'length');
+    (Array.isArray(builds) || builds instanceof DS.PromiseArray) &&
+    get(builds, 'length');
   const jobsAvailable =
-    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) && get(jobs, 'length');
+    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) &&
+    get(jobs, 'length');
   const { edges } = graph;
 
   let y = [0]; // accumulator for column heights
@@ -224,7 +231,8 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
       // Set build status to disabled if job is disabled
       if (jobIsDisabled) {
         const state = get(j, 'state');
-        const stateWithCapitalization = state[0].toUpperCase() + state.substring(1).toLowerCase();
+        const stateWithCapitalization =
+          state[0].toUpperCase() + state.substring(1).toLowerCase();
         const stateChanger = get(j, 'stateChanger');
 
         n.status = state;
@@ -360,4 +368,13 @@ const removeBranch = (n, graph) => {
   }
 };
 
-export { node, icon, decorateGraph, graphDepth, isRoot, isTrigger, subgraphFilter, removeBranch };
+export {
+  node,
+  icon,
+  decorateGraph,
+  graphDepth,
+  isRoot,
+  isTrigger,
+  subgraphFilter,
+  removeBranch
+};

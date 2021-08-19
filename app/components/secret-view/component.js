@@ -15,12 +15,14 @@ export default Component.extend({
           return 'Override';
         }
 
-        return this.newValue || this.originalAllowInPR !== this.get('secret.allowInPR')
+        return this.newValue ||
+          this.originalAllowInPR !== this.get('secret.allowInPR')
           ? 'Update'
           : 'Revert';
       }
 
-      return this.newValue || this.originalAllowInPR !== this.get('secret.allowInPR')
+      return this.newValue ||
+        this.originalAllowInPR !== this.get('secret.allowInPR')
         ? 'Update'
         : 'Delete';
     }

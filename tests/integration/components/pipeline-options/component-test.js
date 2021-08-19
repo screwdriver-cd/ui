@@ -17,10 +17,10 @@ let cacheService;
 
 let server;
 
-module('Integration | Component | pipeline options', function(hooks) {
+module('Integration | Component | pipeline options', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/users/settings', () => [
@@ -30,11 +30,11 @@ module('Integration | Component | pipeline options', function(hooks) {
     ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     this.set(
       'mockPipeline',
       EmberObject.create({
@@ -70,14 +70,23 @@ module('Integration | Component | pipeline options', function(hooks) {
     // Pipeline
     assert.dom('section.pipeline h3').hasText('Pipeline');
     assert.dom('section.pipeline li').exists({ count: 3 });
-    assert.dom('section.pipeline h4').hasText('Checkout URL and Source Directory');
-    assert.dom('section.pipeline p').hasText('Update your checkout URL and / or source directory.');
+    assert
+      .dom('section.pipeline h4')
+      .hasText('Checkout URL and Source Directory');
+    assert
+      .dom('section.pipeline p')
+      .hasText('Update your checkout URL and / or source directory.');
     assert.dom('section.pipeline .button-label').hasText('Update');
     assert
       .dom('section > ul > li:nth-child(3) p')
-      .hasText('Pick your own preferred jobs to be counted in metrics graph (default all jobs)');
+      .hasText(
+        'Pick your own preferred jobs to be counted in metrics graph (default all jobs)'
+      );
     assert.dom('section > ul > li:nth-child(3) h4').hasText('Downtime Jobs');
-    assert.equal($('section > ul > li:nth-child(3) input').attr('placeholder'), 'Select Jobs...');
+    assert.equal(
+      $('section > ul > li:nth-child(3) input').attr('placeholder'),
+      'Select Jobs...'
+    );
 
     // Jobs
     assert.dom('section.jobs h3').hasText('Jobs');
@@ -85,7 +94,9 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.jobs li:nth-child(2) h4').hasText('A');
     assert.dom('section.jobs li:nth-child(3) h4').hasText('B');
     assert.dom('section.jobs li:nth-child(4) h4').hasText('main');
-    assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
+    assert
+      .dom('section.jobs p')
+      .hasText('Toggle to disable or enable the job.');
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
 
     // Sync
@@ -103,11 +114,13 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.danger h3').hasText('Danger Zone');
     assert.dom('section.danger li').exists({ count: 1 });
     assert.dom('section.danger h4').hasText('Delete this pipeline');
-    assert.dom('section.danger p').hasText('Once you delete a pipeline, there is no going back.');
+    assert
+      .dom('section.danger p')
+      .hasText('Once you delete a pipeline, there is no going back.');
     assert.dom('section.danger a i').hasClass('fa-trash');
   });
 
-  test('it renders pipeline visibility toggle for private pipeline', async function(assert) {
+  test('it renders pipeline visibility toggle for private pipeline', async function (assert) {
     this.set(
       'mockPipeline',
       EmberObject.create({
@@ -123,19 +136,25 @@ module('Integration | Component | pipeline options', function(hooks) {
     // Danger Zone
     assert.dom('section.danger h3').hasText('Danger Zone');
     assert.dom('section.danger li').exists({ count: 2 });
-    assert.dom('section.danger li:first-child h4').hasText('Set pipeline visibility');
+    assert
+      .dom('section.danger li:first-child h4')
+      .hasText('Set pipeline visibility');
     assert
       .dom('section.danger li:first-child p')
       .hasText('Think twice before setting pipeline to public.');
-    assert.dom('section.danger li:first-child .x-toggle-container').hasClass('x-toggle-container');
-    assert.dom('section.danger li:nth-child(2) h4').hasText('Delete this pipeline');
+    assert
+      .dom('section.danger li:first-child .x-toggle-container')
+      .hasClass('x-toggle-container');
+    assert
+      .dom('section.danger li:nth-child(2) h4')
+      .hasText('Delete this pipeline');
     assert
       .dom('section.danger li:nth-child(2) p')
       .hasText('Once you delete a pipeline, there is no going back.');
     assert.dom('section.danger a i').hasClass('fa-trash');
   });
 
-  test('it updates a pipeline', async function(assert) {
+  test('it updates a pipeline', async function (assert) {
     const scm = 'git@github.com:foo/bar.git';
 
     this.set('updatePipeline', ({ scmUrl }) => {
@@ -166,7 +185,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('button.blue-button');
   });
 
-  test('it updates a pipeline with rootDir', async function(assert) {
+  test('it updates a pipeline with rootDir', async function (assert) {
     const scm = 'git@github.com:foo/bar.git';
     const root = 'lib';
 
@@ -204,7 +223,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('button.blue-button');
   });
 
-  test('it opens job toggle modal', async function(assert) {
+  test('it opens job toggle modal', async function (assert) {
     assert.expect(10);
 
     injectSessionStub(this);
@@ -312,7 +331,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('.toggle-form__create').hasText('Confirm');
   });
 
-  test('it handles job disabling', async function(assert) {
+  test('it handles job disabling', async function (assert) {
     const main = EmberObject.create({
       id: '1234',
       name: 'main',
@@ -354,11 +373,15 @@ module('Integration | Component | pipeline options', function(hooks) {
 
     assert.dom('section.jobs h4').hasText('main');
     assert.dom('.x-toggle-container').hasNoClass('x-toggle-container-checked');
-    assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
-    assert.dom('section.jobs li:nth-child(2) p').hasText('Disabled by tkyi: testing');
+    assert
+      .dom('section.jobs p')
+      .hasText('Toggle to disable or enable the job.');
+    assert
+      .dom('section.jobs li:nth-child(2) p')
+      .hasText('Disabled by tkyi: testing');
   });
 
-  test('it handles job enabling', async function(assert) {
+  test('it handles job enabling', async function (assert) {
     const main = EmberObject.create({
       id: '1234',
       name: 'main',
@@ -388,7 +411,9 @@ module('Integration | Component | pipeline options', function(hooks) {
     }}`);
 
     assert.dom('section.jobs h4').hasText('main');
-    assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
+    assert
+      .dom('section.jobs p')
+      .hasText('Toggle to disable or enable the job.');
     assert.dom('.x-toggle-container').hasNoClass('x-toggle-container-checked');
 
     await click('.x-toggle-btn');
@@ -397,7 +422,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
   });
 
-  test('it handles pipeline remove flow', async function(assert) {
+  test('it handles pipeline remove flow', async function (assert) {
     this.set(
       'mockPipeline',
       EmberObject.create({
@@ -435,7 +460,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.danger p').hasText('Please wait...');
   });
 
-  test('it syncs the webhooks', async function(assert) {
+  test('it syncs the webhooks', async function (assert) {
     syncService = Service.extend({
       syncRequests(pipelineId, syncPath) {
         assert.equal(pipelineId, 1);
@@ -461,7 +486,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('section.sync a');
   });
 
-  test('it syncs the pullrequests', async function(assert) {
+  test('it syncs the pullrequests', async function (assert) {
     syncService = Service.extend({
       syncRequests(pipelineId, syncPath) {
         assert.equal(pipelineId, 1);
@@ -486,7 +511,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('section.sync li:nth-child(2) a');
   });
 
-  test('it syncs the pipeline', async function(assert) {
+  test('it syncs the pipeline', async function (assert) {
     syncService = Service.extend({
       syncRequests(pipelineId, syncPath) {
         assert.equal(pipelineId, 1);
@@ -511,7 +536,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('section.sync li:nth-child(3) a');
   });
 
-  test('it fails to sync the pipeline', async function(assert) {
+  test('it fails to sync the pipeline', async function (assert) {
     syncService = Service.extend({
       syncRequests() {
         return reject('something conflicting');
@@ -536,7 +561,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('.alert > span').hasText('something conflicting');
   });
 
-  test('it does not render pipeline and danger for child pipeline', async function(assert) {
+  test('it does not render pipeline and danger for child pipeline', async function (assert) {
     this.set(
       'mockPipeline',
       EmberObject.create({
@@ -589,7 +614,9 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.jobs li:nth-child(5) h4').doesNotExist();
 
     // eslint-disable-next-line max-len
-    assert.dom('section.jobs p').hasText('Toggle to disable or enable the job.');
+    assert
+      .dom('section.jobs p')
+      .hasText('Toggle to disable or enable the job.');
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
 
     // Sync should render
@@ -607,7 +634,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     assert.dom('section.danger h3').doesNotExist();
   });
 
-  test('it clears the pipeline cache', async function(assert) {
+  test('it clears the pipeline cache', async function (assert) {
     cacheService = Service.extend({
       clearCache(config) {
         assert.equal(config.scope, 'pipelines');
@@ -632,7 +659,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('section.cache a');
   });
 
-  test('it clears the job cache', async function(assert) {
+  test('it clears the job cache', async function (assert) {
     cacheService = Service.extend({
       clearCache(config) {
         assert.equal(config.scope, 'jobs');
@@ -678,7 +705,7 @@ module('Integration | Component | pipeline options', function(hooks) {
     await click('section.cache li:nth-child(2) a');
   });
 
-  test('it fails to clear the cache for the pipeline', async function(assert) {
+  test('it fails to clear the cache for the pipeline', async function (assert) {
     cacheService = Service.extend({
       clearCache() {
         return reject('something conflicting');

@@ -8,20 +8,24 @@ import {
   selectedPipeline
 } from 'screwdriver-ui/tests/mock/pipeline-viz';
 
-module('Integration | Component | pipeline-viz-row', function(hooks) {
+module('Integration | Component | pipeline-viz-row', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    this.setProperties({ selectedConnectedPipeline, selectedPipeline, pipeline });
+    this.setProperties({
+      selectedConnectedPipeline,
+      selectedPipeline,
+      pipeline
+    });
 
-    this.set('handleSelectedConnectedPipeline', function() {
+    this.set('handleSelectedConnectedPipeline', function () {
       assert.ok(true);
     });
 
-    this.set('handleSelectedPipeline', function() {
+    this.set('handleSelectedPipeline', function () {
       assert.ok(true);
     });
 

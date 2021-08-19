@@ -7,7 +7,8 @@ import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
 
-const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH, DOWNTIME_JOBS } = ENV.APP;
+const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH, DOWNTIME_JOBS } =
+  ENV.APP;
 
 export default Component.extend({
   store: service(),
@@ -109,21 +110,23 @@ export default Component.extend({
       const metricsDowntimeJobs = this.getWithDefault(
         'pipeline.settings.metricsDowntimeJobs',
         []
-      ).map(jobId => {
-        return this.jobs.findBy('id', `${jobId}`);
-      });
+      ).map(jobId => this.jobs.findBy('id', `${jobId}`));
 
       this.set('metricsDowntimeJobs', metricsDowntimeJobs);
     }
   },
   async updateJobNameLength(displayJobNameLength) {
     const pipelineId = this.get('pipeline.id');
-    const pipelinePreference = await this.shuttle.getUserPipelinePreference(pipelineId);
+    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
+      pipelineId
+    );
 
     set(pipelinePreference, 'displayJobNameLength', displayJobNameLength);
-    pipelinePreference.save().then(() => {
-      return this.shuttle.updateUserPreference(pipelineId, pipelinePreference);
-    });
+    pipelinePreference
+      .save()
+      .then(() =>
+        this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
+      );
   },
   actions: {
     // Checks if scm URL is valid or not
@@ -171,7 +174,10 @@ export default Component.extend({
       const status = stillActive ? 'ENABLED' : 'DISABLED';
 
       this.set('name', name);
-      this.set('stateChange', status[0].toUpperCase() + status.slice(1, -1).toLowerCase());
+      this.set(
+        'stateChange',
+        status[0].toUpperCase() + status.slice(1, -1).toLowerCase()
+      );
       this.set('state', status);
       this.set('user', user);
       this.set('jobId', jobId);
@@ -245,9 +251,9 @@ export default Component.extend({
         const pipelineId = this.get('pipeline.id');
 
         this.set('isUpdatingMetricsDowntimeJobs', true);
-        await this.shuttle.updatePipelineSettings(pipelineId, { metricsDowntimeJobs });
-      } catch (err) {
-        throw err;
+        await this.shuttle.updatePipelineSettings(pipelineId, {
+          metricsDowntimeJobs
+        });
       } finally {
         this.set('isUpdatingMetricsDowntimeJobs', false);
       }
@@ -258,11 +264,14 @@ export default Component.extend({
         const pipelineId = this.get('pipeline.id');
 
         this.setProperties({ isUpdatingPipelineVisibility: true });
-        await this.shuttle.updatePipelineSettings(pipelineId, { publicPipeline });
-      } catch (err) {
-        throw err;
+        await this.shuttle.updatePipelineSettings(pipelineId, {
+          publicPipeline
+        });
       } finally {
-        this.setProperties({ isUpdatingPipelineVisibility: false, publicPipeline });
+        this.setProperties({
+          isUpdatingPipelineVisibility: false,
+          publicPipeline
+        });
       }
     },
 
@@ -282,9 +291,11 @@ export default Component.extend({
         });
       }
 
-      pipelinePreference.save().then(() => {
-        return this.shuttle.updateUserPreference(pipelineId, pipelinePreference);
-      });
+      pipelinePreference
+        .save()
+        .then(() =>
+          this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
+        );
 
       this.set('showPRJobs', showPRJobs);
     }

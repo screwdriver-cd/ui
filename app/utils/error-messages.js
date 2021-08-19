@@ -12,9 +12,11 @@ const getErrorMessage = err => {
     const { message = '' } = err;
 
     if (message.startsWith('The adapter operation was aborted')) {
-      errorMessage = 'Action cannot be completed, please make sure you are online';
+      errorMessage =
+        'Action cannot be completed, please make sure you are online';
     } else if (message.startsWith('The ajax operation was aborted')) {
-      errorMessage = 'Action cannot be completed, please make sure you are online';
+      errorMessage =
+        'Action cannot be completed, please make sure you are online';
     } else if (message.startsWith('Request was rejected')) {
       errorMessage = message;
     }

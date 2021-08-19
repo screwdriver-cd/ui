@@ -53,7 +53,8 @@ export default Service.extend({
             if (Array.isArray(response)) {
               lines = response;
             }
-            done = started && jqXHR.getResponseHeader('x-more-data') === 'false';
+            done =
+              started && jqXHR.getResponseHeader('x-more-data') === 'false';
           })
           .catch(error => {
             if (error.jqXHR && [403, 404].includes(error.jqXHR.status)) {
@@ -68,8 +69,12 @@ export default Service.extend({
               let existings = this.getCache(buildId, stepName, 'logs') || [];
 
               this.setCache(buildId, stepName, {
-                nextLine: inProgress ? lines[lines.length - 1].n + 1 : lines[0].n - 1,
-                logs: inProgress ? existings.concat(lines) : lines.concat(existings)
+                nextLine: inProgress
+                  ? lines[lines.length - 1].n + 1
+                  : lines[0].n - 1,
+                logs: inProgress
+                  ? existings.concat(lines)
+                  : lines.concat(existings)
               });
             }
 
@@ -124,9 +129,12 @@ export default Service.extend({
     let blobUrl = this.getCache(buildId, stepName, 'blobUrl');
 
     if (!blobUrl) {
-      const blob = new Blob(this.getCache(buildId, stepName, 'logs').map(l => `${l.m}\n`), {
-        type: 'text/plain'
-      });
+      const blob = new Blob(
+        this.getCache(buildId, stepName, 'logs').map(l => `${l.m}\n`),
+        {
+          type: 'text/plain'
+        }
+      );
 
       blobUrl = URL.createObjectURL(blob);
 

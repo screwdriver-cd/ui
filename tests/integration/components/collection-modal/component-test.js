@@ -21,14 +21,14 @@ const collectionModel = {
   destroyRecord() {}
 };
 
-module('Integration | Component | collection modal', function(hooks) {
+module('Integration | Component | collection modal', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.unregister('service:store');
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     assert.expect(6);
 
     this.set('showModal', true);
@@ -45,7 +45,7 @@ module('Integration | Component | collection modal', function(hooks) {
       .isDisabled('Should disable Create button when Name is empty');
   });
 
-  test('it cancels creation of a collection', async function(assert) {
+  test('it cancels creation of a collection', async function (assert) {
     assert.expect(2);
 
     this.set('showModal', true);
@@ -59,7 +59,7 @@ module('Integration | Component | collection modal', function(hooks) {
     assert.dom('.modal-dialog').doesNotExist();
   });
 
-  test('it creates a collection', async function(assert) {
+  test('it creates a collection', async function (assert) {
     assert.expect(5);
 
     injectSessionStub(this);
@@ -80,7 +80,7 @@ module('Integration | Component | collection modal', function(hooks) {
       }
     });
 
-    const stubAddFunction = function() {
+    const stubAddFunction = function () {
       assert.ok(true);
     };
 
@@ -89,7 +89,9 @@ module('Integration | Component | collection modal', function(hooks) {
 
     this.owner.register('service:store', storeStub);
 
-    await render(hbs`{{collection-modal showModal=showModal name=name description=description}}`);
+    await render(
+      hbs`{{collection-modal showModal=showModal name=name description=description}}`
+    );
 
     assert.dom('.modal-dialog').exists({ count: 1 });
 
@@ -103,7 +105,7 @@ module('Integration | Component | collection modal', function(hooks) {
     assert.notOk(this.get('showModal'));
   });
 
-  test('it cancels creation of a collection', async function(assert) {
+  test('it cancels creation of a collection', async function (assert) {
     assert.expect(3);
 
     injectSessionStub(this);

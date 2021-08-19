@@ -55,7 +55,11 @@ export default Route.extend({
       this.transitionTo('pipeline', pipelineId);
     } else {
       set(model.event, 'isPaused', true);
-      if (['pipeline.build.step', 'pipeline.build.index'].includes(transition.targetName)) {
+      if (
+        ['pipeline.build.step', 'pipeline.build.index'].includes(
+          transition.targetName
+        )
+      ) {
         const name = getActiveStep(get(model, 'build.steps'));
 
         if (name) {

@@ -55,7 +55,8 @@ export default Component.extend({
   sdCommands: computed('job', {
     get() {
       const commands = this.steps;
-      const regex = /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)(?:@((?:(?:\d+)(?:\.\d+)?(?:\.\d+)?)|(?:[a-zA-Z][\w-]+)))?/g;
+      const regex =
+        /sd-cmd\s+exec\s+([\w-]+\/[\w-]+)(?:@((?:(?:\d+)(?:\.\d+)?(?:\.\d+)?)|(?:[a-zA-Z][\w-]+)))?/g;
 
       let sdCommands = [];
 
@@ -69,7 +70,8 @@ export default Component.extend({
         while (matchRes !== null) {
           let commandExist = sdCommands.find(
             // eslint-disable-next-line no-loop-func
-            command => command.command === matchRes[1] && command.version === matchRes[2]
+            command =>
+              command.command === matchRes[1] && command.version === matchRes[2]
           );
 
           if (commandExist === undefined) {
@@ -86,13 +88,17 @@ export default Component.extend({
     this._super(...arguments);
 
     if (!this.isOpen) {
-      this.element.querySelectorAll('div').forEach(el => el.classList.add('hidden'));
+      this.element
+        .querySelectorAll('div')
+        .forEach(el => el.classList.add('hidden'));
     }
   },
   actions: {
     nameClick() {
       this.toggleProperty('isOpen');
-      this.element.querySelectorAll('div').forEach(el => el.classList.toggle('hidden'));
+      this.element
+        .querySelectorAll('div')
+        .forEach(el => el.classList.toggle('hidden'));
     }
   }
 });

@@ -1,7 +1,7 @@
 import git from 'screwdriver-ui/utils/git';
 import { module, test } from 'qunit';
 
-module('Unit | Utility | git', function() {
+module('Unit | Utility | git', function () {
   test('it parses the checkout URL correctly', assert => {
     let result = git.parse('bananas');
 

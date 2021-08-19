@@ -70,7 +70,9 @@ export default Service.extend({
           commands.forEach(command => {
             if (command.createTime) {
               // Add last updated time
-              command.lastUpdated = getLastUpdatedTime({ createTime: command.createTime });
+              command.lastUpdated = getLastUpdatedTime({
+                createTime: command.createTime
+              });
             }
           });
 
@@ -102,7 +104,11 @@ export default Service.extend({
         .fail(response => {
           let message = `${response.status} Request Failed`;
 
-          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
+          if (
+            response &&
+            response.responseJSON &&
+            typeof response.responseJSON === 'object'
+          ) {
             message = `${response.status} ${response.responseJSON.error}`;
           }
 

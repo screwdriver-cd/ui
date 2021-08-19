@@ -9,10 +9,10 @@ let chartMock;
 
 let metricsMock;
 
-module('Unit | Controller | pipeline/metrics', function(hooks) {
+module('Unit | Controller | pipeline/metrics', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     metricsMock = makeMetricsMock();
     chartMock = {
       internal: {
@@ -34,13 +34,13 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
     };
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     assert.ok(controller);
   });
 
-  test('it creates chart configurations for events, builds and steps charts', function(assert) {
+  test('it creates chart configurations for events, builds and steps charts', function (assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {
@@ -56,63 +56,75 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
         ['queuedTime', ...metricsMock.metrics.events.queuedTime]
       ]);
       assert.equal(controller.get('eventMetrics.hide'), 'total');
-      assert.deepEqual(JSON.parse(JSON.stringify(controller.get('eventLegend'))), [
-        {
-          key: 'duration',
-          name: 'Duration',
-          style: {
-            string: 'border-color:#16c045 #ea0000 #ea0000 #16c045'
+      assert.deepEqual(
+        JSON.parse(JSON.stringify(controller.get('eventLegend'))),
+        [
+          {
+            key: 'duration',
+            name: 'Duration',
+            style: {
+              string: 'border-color:#16c045 #ea0000 #ea0000 #16c045'
+            }
+          },
+          {
+            key: 'queuedTime',
+            name: 'Queued',
+            style: {
+              string: 'border-color:#c5c5c5'
+            }
+          },
+          {
+            key: 'imagePullTime',
+            name: 'Image Pull',
+            style: {
+              string: 'border-color:#dfdfdf'
+            }
           }
-        },
-        {
-          key: 'queuedTime',
-          name: 'Queued',
-          style: {
-            string: 'border-color:#c5c5c5'
-          }
-        },
-        {
-          key: 'imagePullTime',
-          name: 'Image Pull',
-          style: {
-            string: 'border-color:#dfdfdf'
-          }
-        }
-      ]);
-      assert.deepEqual(controller.get('buildMetrics.json'), metricsMock.metrics.builds);
+        ]
+      );
+      assert.deepEqual(
+        controller.get('buildMetrics.json'),
+        metricsMock.metrics.builds
+      );
       assert.deepEqual(controller.get('buildMetrics.keys.value'), [
         'main',
         'publish',
         'beta',
         'prod'
       ]);
-      assert.deepEqual(JSON.parse(JSON.stringify(controller.get('buildLegend'))), [
-        {
-          key: 'main',
-          name: 'main',
-          class: { string: '' },
-          style: { string: 'border-color:#87d812' }
-        },
-        {
-          key: 'publish',
-          name: 'publish',
-          class: { string: 'unselected' },
-          style: { string: 'border-color:#fed800' }
-        },
-        {
-          key: 'beta',
-          name: 'beta',
-          class: { string: 'unselected' },
-          style: { string: 'border-color:#1ac6f4' }
-        },
-        {
-          key: 'prod',
-          name: 'prod',
-          class: { string: 'unselected' },
-          style: { string: 'border-color:#6e2ebf' }
-        }
-      ]);
-      assert.deepEqual(controller.get('stepMetrics.json'), metricsMock.metrics.steps.data);
+      assert.deepEqual(
+        JSON.parse(JSON.stringify(controller.get('buildLegend'))),
+        [
+          {
+            key: 'main',
+            name: 'main',
+            class: { string: '' },
+            style: { string: 'border-color:#87d812' }
+          },
+          {
+            key: 'publish',
+            name: 'publish',
+            class: { string: 'unselected' },
+            style: { string: 'border-color:#fed800' }
+          },
+          {
+            key: 'beta',
+            name: 'beta',
+            class: { string: 'unselected' },
+            style: { string: 'border-color:#1ac6f4' }
+          },
+          {
+            key: 'prod',
+            name: 'prod',
+            class: { string: 'unselected' },
+            style: { string: 'border-color:#6e2ebf' }
+          }
+        ]
+      );
+      assert.deepEqual(
+        controller.get('stepMetrics.json'),
+        metricsMock.metrics.steps.data
+      );
       assert.deepEqual(controller.get('stepMetrics.keys.value'), [
         'install',
         'install-browsers',
@@ -218,7 +230,7 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
     });
   });
 
-  test('it toggles trendline chart', function(assert) {
+  test('it toggles trendline chart', function (assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {
@@ -244,12 +256,14 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
       );
       assert.ok(chartMock.internal.x.orgDomain.called);
       assert.ok(chartMock.show.calledWith('total'));
-      assert.ok(chartMock.hide.calledWith(['queuedTime', 'imagePullTime', 'duration']));
+      assert.ok(
+        chartMock.hide.calledWith(['queuedTime', 'imagePullTime', 'duration'])
+      );
       assert.ok(chartMock.zoom.calledWith([0, 100]));
     });
   });
 
-  test('it sets dates, range and job id', function(assert) {
+  test('it sets dates, range and job id', function (assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     controller.transitionToRoute = sinon.stub();
@@ -289,7 +303,7 @@ module('Unit | Controller | pipeline/metrics', function(hooks) {
     });
   });
 
-  test('it resets chart zoom level', function(assert) {
+  test('it resets chart zoom level', function (assert) {
     let controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {

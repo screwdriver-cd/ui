@@ -11,17 +11,23 @@ export default Route.extend(AuthenticatedRouteMixin, {
     const collections = this.store.findAll('collection').catch(() => []);
 
     return RSVP.hash({
-      pipeline: this.store.findRecord('pipeline', params.pipeline_id).catch(() => {
-        this.transitionTo('/404');
+      pipeline: this.store
+        .findRecord('pipeline', params.pipeline_id)
+        .catch(() => {
+          this.transitionTo('/404');
 
-        return [];
-      }),
+          return [];
+        }),
       collections
     });
   },
   actions: {
     error(error) {
-      if (error && Array.isArray(error.errors) && error.errors[0].status === 404) {
+      if (
+        error &&
+        Array.isArray(error.errors) &&
+        error.errors[0].status === 404
+      ) {
         this.transitionTo('/404');
       }
 

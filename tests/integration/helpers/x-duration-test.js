@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('helper:x-duration', function(hooks) {
+module('helper:x-duration', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders a duration given two parsable times in HH:mm:ss format', async function(assert) {
+  test('it renders a duration given two parsable times in HH:mm:ss format', async function (assert) {
     this.set('time1', 1478912844724);
     this.set('time2', 1478912845724);
 

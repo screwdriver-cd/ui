@@ -4,10 +4,10 @@ import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';
 
-module('Integration | Component | job toggle modal', function(hooks) {
+module('Integration | Component | job toggle modal', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     assert.expect(4);
 
     this.set('showToggleModal', true);
@@ -30,7 +30,7 @@ module('Integration | Component | job toggle modal', function(hooks) {
     assert.dom('.toggle-form__create').hasText('Confirm');
   });
 
-  test('it cancels job state update', async function(assert) {
+  test('it cancels job state update', async function (assert) {
     assert.expect(2);
 
     this.set('showToggleModal', true);
@@ -53,11 +53,11 @@ module('Integration | Component | job toggle modal', function(hooks) {
     assert.dom('.modal-dialog').doesNotExist();
   });
 
-  test('it updates a job state', async function(assert) {
+  test('it updates a job state', async function (assert) {
     injectSessionStub(this);
     assert.expect(3);
 
-    const stubUpdateFunction = function(message) {
+    const stubUpdateFunction = function (message) {
       assert.equal(message, 'testing');
     };
 

@@ -10,6 +10,11 @@ export default Route.extend({
     const { id: buildId, pipelineId } = model;
     const filePath = this.paramsFor(this.routeName).file_path;
 
-    this.transitionTo('pipeline.build.artifacts.detail', pipelineId, buildId, filePath);
+    this.transitionTo(
+      'pipeline.build.artifacts.detail',
+      pipelineId,
+      buildId,
+      filePath
+    );
   }
 });

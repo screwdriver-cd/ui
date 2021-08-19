@@ -307,10 +307,10 @@ const onRemovePipelineSpy = sinon.spy();
 const addMultipleToCollectionSpy = sinon.spy();
 const removeMultiplePipelinesSpy = sinon.spy();
 
-module('Integration | Component | collection view', function(hooks) {
+module('Integration | Component | collection view', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.unregister('service:store');
     const storeStub = Service.extend({
       query(model, filter) {
@@ -333,7 +333,7 @@ module('Integration | Component | collection view', function(hooks) {
     });
   });
 
-  test('it renders in card mode', async function(assert) {
+  test('it renders in card mode', async function (assert) {
     assert.expect(23);
     injectScmServiceStub(this);
 
@@ -351,30 +351,54 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.pipeline-card').exists({ count: 4 });
 
     // check that pipeline card order is correct
-    assert.dom('.pipeline-card:nth-of-type(1) .branch-info a').hasText('screwdriver-cd/models');
+    assert
+      .dom('.pipeline-card:nth-of-type(1) .branch-info a')
+      .hasText('screwdriver-cd/models');
     assert
       .dom('.pipeline-card:nth-of-type(2) .branch-info a')
       .hasText('screwdriver-cd/screwdriver');
-    assert.dom('.pipeline-card:nth-of-type(3) .branch-info a').hasText('screwdriver-cd/ui');
-    assert.dom('.pipeline-card:nth-of-type(4) .branch-info a').hasText('screwdriver-cd/zzz');
+    assert
+      .dom('.pipeline-card:nth-of-type(3) .branch-info a')
+      .hasText('screwdriver-cd/ui');
+    assert
+      .dom('.pipeline-card:nth-of-type(4) .branch-info a')
+      .hasText('screwdriver-cd/zzz');
 
     // check that helper function getColor() works correctly
-    assert.dom('.pipeline-card:nth-of-type(1) .commit-status i').hasClass('build-empty');
-    assert.dom('.pipeline-card:nth-of-type(2) .commit-status i').hasClass('build-success');
-    assert.dom('.pipeline-card:nth-of-type(3) .commit-status i').hasClass('build-empty');
-    assert.dom('.pipeline-card:nth-of-type(4) .commit-status i').hasClass('build-empty');
+    assert
+      .dom('.pipeline-card:nth-of-type(1) .commit-status i')
+      .hasClass('build-empty');
+    assert
+      .dom('.pipeline-card:nth-of-type(2) .commit-status i')
+      .hasClass('build-success');
+    assert
+      .dom('.pipeline-card:nth-of-type(3) .commit-status i')
+      .hasClass('build-empty');
+    assert
+      .dom('.pipeline-card:nth-of-type(4) .commit-status i')
+      .hasClass('build-empty');
 
     // check that helper function getIcon() works correctly
-    assert.dom('.pipeline-card:nth-of-type(1) .commit-status i').hasClass('fa-question-circle');
-    assert.dom('.pipeline-card:nth-of-type(2) .commit-status i').hasClass('fa-check-circle');
-    assert.dom('.pipeline-card:nth-of-type(3) .commit-status i').hasClass('fa-question-circle');
-    assert.dom('.pipeline-card:nth-of-type(4) .commit-status i').hasClass('fa-question-circle');
+    assert
+      .dom('.pipeline-card:nth-of-type(1) .commit-status i')
+      .hasClass('fa-question-circle');
+    assert
+      .dom('.pipeline-card:nth-of-type(2) .commit-status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.pipeline-card:nth-of-type(3) .commit-status i')
+      .hasClass('fa-question-circle');
+    assert
+      .dom('.pipeline-card:nth-of-type(4) .commit-status i')
+      .hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .commit-status a:nth-of-type(2)')
       .hasText('Not available');
-    assert.dom('.pipeline-card:nth-of-type(2) .commit-status a:nth-of-type(2)').hasText('9af92ba');
+    assert
+      .dom('.pipeline-card:nth-of-type(2) .commit-status a:nth-of-type(2)')
+      .hasText('9af92ba');
     assert
       .dom('.pipeline-card:nth-of-type(3) .commit-status a:nth-of-type(2)')
       .hasText('Not available');
@@ -383,13 +407,21 @@ module('Integration | Component | collection view', function(hooks) {
       .hasText('Not available');
 
     // check that helper function formatTime() works correctly
-    assert.dom('.pipeline-card:nth-of-type(1) .duration-badge span:nth-of-type(2)').hasText('--');
-    assert.dom('.pipeline-card:nth-of-type(2) .duration-badge span:nth-of-type(2)').hasText('14s');
-    assert.dom('.pipeline-card:nth-of-type(3) .duration-badge span:nth-of-type(2)').hasText('--');
-    assert.dom('.pipeline-card:nth-of-type(4) .duration-badge span:nth-of-type(2)').hasText('--');
+    assert
+      .dom('.pipeline-card:nth-of-type(1) .duration-badge span:nth-of-type(2)')
+      .hasText('--');
+    assert
+      .dom('.pipeline-card:nth-of-type(2) .duration-badge span:nth-of-type(2)')
+      .hasText('14s');
+    assert
+      .dom('.pipeline-card:nth-of-type(3) .duration-badge span:nth-of-type(2)')
+      .hasText('--');
+    assert
+      .dom('.pipeline-card:nth-of-type(4) .duration-badge span:nth-of-type(2)')
+      .hasText('--');
   });
 
-  test('it renders in list mode', async function(assert) {
+  test('it renders in list mode', async function (assert) {
     injectScmServiceStub(this);
 
     await render(hbs`
@@ -420,30 +452,54 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.collection-pipeline').exists({ count: 4 });
 
     // check that collection table row order is correct
-    assert.dom('.collection-pipeline:nth-of-type(1) .app-id a').hasText('screwdriver-cd/models');
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .app-id a')
+      .hasText('screwdriver-cd/models');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .app-id a')
       .hasText('screwdriver-cd/screwdriver');
-    assert.dom('.collection-pipeline:nth-of-type(3) .app-id a').hasText('screwdriver-cd/ui');
-    assert.dom('.collection-pipeline:nth-of-type(4) .app-id a').hasText('screwdriver-cd/zzz');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .app-id a')
+      .hasText('screwdriver-cd/ui');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .app-id a')
+      .hasText('screwdriver-cd/zzz');
 
     // check that helper function getColor() works correctly
-    assert.dom('.collection-pipeline:nth-of-type(1) .status i').hasClass('build-empty');
-    assert.dom('.collection-pipeline:nth-of-type(2) .status i').hasClass('build-success');
-    assert.dom('.collection-pipeline:nth-of-type(3) .status i').hasClass('build-empty');
-    assert.dom('.collection-pipeline:nth-of-type(4) .status i').hasClass('build-empty');
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .hasClass('build-empty');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .hasClass('build-success');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .hasClass('build-empty');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .hasClass('build-empty');
 
     // check that helper function getIcon() works correctly
-    assert.dom('.collection-pipeline:nth-of-type(1) .status i').hasClass('fa-question-circle');
-    assert.dom('.collection-pipeline:nth-of-type(2) .status i').hasClass('fa-check-circle');
-    assert.dom('.collection-pipeline:nth-of-type(3) .status i').hasClass('fa-question-circle');
-    assert.dom('.collection-pipeline:nth-of-type(4) .status i').hasClass('fa-question-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .hasClass('fa-question-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .hasClass('fa-question-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status a:nth-of-type(2)')
       .hasText('Not available');
-    assert.dom('.collection-pipeline:nth-of-type(2) .status a:nth-of-type(2)').hasText('9af92ba');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status a:nth-of-type(2)')
+      .hasText('9af92ba');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status a:nth-of-type(2)')
       .hasText('Not available');
@@ -458,7 +514,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('--');
   });
 
-  test('it renders empty view if the collection has no pipelines', async function(assert) {
+  test('it renders empty view if the collection has no pipelines', async function (assert) {
     this.set('collection', mockEmptyCollection);
     injectScmServiceStub(this);
 
@@ -475,7 +531,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.guide-docs-button').exists({ count: 1 });
   });
 
-  test('it switches between card mode and list mode', async function(assert) {
+  test('it switches between card mode and list mode', async function (assert) {
     injectScmServiceStub(this);
 
     await render(hbs`
@@ -504,7 +560,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.collection-list-view').doesNotExist();
   });
 
-  test('it removes a pipeline from a collection in card mode', async function(assert) {
+  test('it removes a pipeline from a collection in card mode', async function (assert) {
     assert.expect(3);
 
     const storeStub = Service.extend({
@@ -547,7 +603,7 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.remove-button');
   });
 
-  test('it removes a pipeline from a collection in list mode', async function(assert) {
+  test('it removes a pipeline from a collection in list mode', async function (assert) {
     assert.expect(3);
 
     const storeStub = Service.extend({
@@ -594,7 +650,7 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.collection-pipeline__remove span');
   });
 
-  test('it fails to remove a pipeline in card mode', async function(assert) {
+  test('it fails to remove a pipeline in card mode', async function (assert) {
     assert.expect(2);
 
     const onRemovePipelineMock = pipelineId => {
@@ -624,10 +680,12 @@ module('Integration | Component | collection view', function(hooks) {
 
     await click('.remove-button');
 
-    assert.dom('.alert-warning > span').hasText('User does not have permission');
+    assert
+      .dom('.alert-warning > span')
+      .hasText('User does not have permission');
   });
 
-  test('it fails to remove a pipeline in list mode', async function(assert) {
+  test('it fails to remove a pipeline in list mode', async function (assert) {
     assert.expect(2);
 
     const onRemovePipelineMock = pipelineId => {
@@ -661,10 +719,12 @@ module('Integration | Component | collection view', function(hooks) {
 
     await click('.collection-pipeline__remove span');
 
-    assert.dom('.alert-warning > span').hasText('User does not have permission');
+    assert
+      .dom('.alert-warning > span')
+      .hasText('User does not have permission');
   });
 
-  test('it does not show remove button in card mode if user is not logged in', async function(assert) {
+  test('it does not show remove button in card mode if user is not logged in', async function (assert) {
     assert.expect(1);
 
     await render(hbs`
@@ -679,7 +739,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.remove-button').doesNotExist();
   });
 
-  test('it does not show remove button in list mode if user is not logged in', async function(assert) {
+  test('it does not show remove button in list mode if user is not logged in', async function (assert) {
     assert.expect(1);
 
     await render(hbs`
@@ -694,7 +754,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.collection-pipeline__remove').doesNotExist();
   });
 
-  test('it does not show organize button if user is not logged in or no pipelines', async function(assert) {
+  test('it does not show organize button if user is not logged in or no pipelines', async function (assert) {
     assert.expect(1);
 
     await render(hbs`
@@ -709,7 +769,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.organize-button').doesNotExist();
   });
 
-  test('it cancels organizing the collection in card mode', async function(assert) {
+  test('it cancels organizing the collection in card mode', async function (assert) {
     assert.expect(13);
 
     injectSessionStub(this);
@@ -761,7 +821,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.equal($(checkboxes[3]).val(), 'false');
   });
 
-  test('it cancels organizing the collection in list mode', async function(assert) {
+  test('it cancels organizing the collection in list mode', async function (assert) {
     assert.expect(13);
 
     injectScmServiceStub(this);
@@ -817,7 +877,7 @@ module('Integration | Component | collection view', function(hooks) {
     assert.equal($(checkboxes[3]).val(), 'false');
   });
 
-  test('it removes multiple pipelines from collection in card mode', async function(assert) {
+  test('it removes multiple pipelines from collection in card mode', async function (assert) {
     assert.expect(4);
 
     const storeStub = Service.extend({
@@ -870,7 +930,7 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.operation-button:nth-of-type(1)');
   });
 
-  test('it removes multiple pipelines from collection in list mode', async function(assert) {
+  test('it removes multiple pipelines from collection in list mode', async function (assert) {
     assert.expect(4);
 
     const storeStub = Service.extend({
@@ -926,7 +986,7 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.operation-button:nth-of-type(1)');
   });
 
-  test('it fails to remove multiple pipelines from collection in card mode', async function(assert) {
+  test('it fails to remove multiple pipelines from collection in card mode', async function (assert) {
     assert.expect(3);
 
     const storeStub = Service.extend({
@@ -985,10 +1045,12 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.operation-button:nth-of-type(1)');
 
     // assert the message is right
-    assert.dom('.alert-warning > span').hasText('error when removing multiple pipelines');
+    assert
+      .dom('.alert-warning > span')
+      .hasText('error when removing multiple pipelines');
   });
 
-  test('it fails to remove multiple pipelines from collection in list mode', async function(assert) {
+  test('it fails to remove multiple pipelines from collection in list mode', async function (assert) {
     assert.expect(4);
 
     const storeStub = Service.extend({
@@ -1051,10 +1113,12 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.operation-button:nth-of-type(1)');
 
     // assert the message is right
-    assert.dom('.alert-warning > span').hasText('error when removing multiple pipelines');
+    assert
+      .dom('.alert-warning > span')
+      .hasText('error when removing multiple pipelines');
   });
 
-  test('it moves multiple pipelines to another collection in card mode', async function(assert) {
+  test('it moves multiple pipelines to another collection in card mode', async function (assert) {
     assert.expect(2);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
@@ -1091,7 +1155,7 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.copy-pipeline .dropdown-menu li:nth-of-type(2) span');
   });
 
-  test('it moves multiple pipelines to another collection in list mode', async function(assert) {
+  test('it moves multiple pipelines to another collection in list mode', async function (assert) {
     assert.expect(2);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
@@ -1131,7 +1195,7 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.copy-pipeline .dropdown-menu li:nth-of-type(2) span');
   });
 
-  test('it fails to move multiple pipelines to another collection in card mode', async function(assert) {
+  test('it fails to move multiple pipelines to another collection in card mode', async function (assert) {
     assert.expect(3);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
@@ -1173,7 +1237,7 @@ module('Integration | Component | collection view', function(hooks) {
       .hasText('Could not add Pipeline to Collection My Pipelines');
   });
 
-  test('it fails to move multiple pipelines to another collection in list mode', async function(assert) {
+  test('it fails to move multiple pipelines to another collection in list mode', async function (assert) {
     assert.expect(2);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
@@ -1213,7 +1277,7 @@ module('Integration | Component | collection view', function(hooks) {
     await click('.copy-pipeline .dropdown-menu li:nth-of-type(2) span');
   });
 
-  test('it searches and adds pipelines into the collection', async function(assert) {
+  test('it searches and adds pipelines into the collection', async function (assert) {
     assert.expect(19);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
@@ -1300,7 +1364,9 @@ module('Integration | Component | collection view', function(hooks) {
     // open pipeline search modal
     await click('.add-pipeline-operation');
     assert.dom('.add-pipeline-modal .modal-body').exists({ count: 1 });
-    assert.dom('.add-pipeline-modal .search-pipeline-searchbar').exists({ count: 1 });
+    assert
+      .dom('.add-pipeline-modal .search-pipeline-searchbar')
+      .exists({ count: 1 });
 
     // search pipelines with the search term "screwdriver-cd"
     await fillIn('.search-pipeline-searchbar input', 'screwdriver-cd');
@@ -1322,7 +1388,9 @@ module('Integration | Component | collection view', function(hooks) {
     await wait();
     // check the first pipeline is added
     assert.dom('.pipeline-card').exists({ count: 1 });
-    assert.dom('.pipeline-card .branch-info a').hasText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.pipeline-card .branch-info a')
+      .hasText('screwdriver-cd/screwdriver');
 
     // search again with the same search item
     await click('.add-pipeline-operation');
@@ -1341,10 +1409,12 @@ module('Integration | Component | collection view', function(hooks) {
 
     // check no new pipeline is added
     assert.dom('.pipeline-card').exists({ count: 1 });
-    assert.dom('.pipeline-card .branch-info a').hasText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.pipeline-card .branch-info a')
+      .hasText('screwdriver-cd/screwdriver');
   });
 
-  test('it changes the name and description of the normal collection', async function(assert) {
+  test('it changes the name and description of the normal collection', async function (assert) {
     assert.expect(11);
 
     const collectionSaveSpy = sinon.spy();
@@ -1365,12 +1435,19 @@ module('Integration | Component | collection view', function(hooks) {
     assert.dom('.setting-modal .modal-body').exists({ count: 1 });
 
     // check the collection name and description is correct
-    assert.dom('.form .form-group:nth-of-type(1) .form-control').hasValue('My Pipelines');
-    assert.dom('.form .form-group:nth-of-type(2) .form-control').hasValue('Default Collection');
+    assert
+      .dom('.form .form-group:nth-of-type(1) .form-control')
+      .hasValue('My Pipelines');
+    assert
+      .dom('.form .form-group:nth-of-type(2) .form-control')
+      .hasValue('Default Collection');
 
     // change two inputs and close the modal
     await fillIn('.form .form-group:nth-of-type(1) .form-control', 'New Name');
-    await fillIn('.form .form-group:nth-of-type(1) .form-control', 'New Description');
+    await fillIn(
+      '.form .form-group:nth-of-type(1) .form-control',
+      'New Description'
+    );
     await click('.setting-modal .close');
 
     // check nothing changes
@@ -1379,12 +1456,19 @@ module('Integration | Component | collection view', function(hooks) {
 
     // open the modal again and check input default values aren't changed
     await click('.settings-operation');
-    assert.dom('.form .form-group:nth-of-type(1) .form-control').hasValue('My Pipelines');
-    assert.dom('.form .form-group:nth-of-type(2) .form-control').hasValue('Default Collection');
+    assert
+      .dom('.form .form-group:nth-of-type(1) .form-control')
+      .hasValue('My Pipelines');
+    assert
+      .dom('.form .form-group:nth-of-type(2) .form-control')
+      .hasValue('Default Collection');
 
     // change two inputs and submit the form
     await fillIn('.form .form-group:nth-of-type(1) .form-control', 'New Name');
-    await fillIn('.form .form-group:nth-of-type(2) .form-control', 'New Description');
+    await fillIn(
+      '.form .form-group:nth-of-type(2) .form-control',
+      'New Description'
+    );
     await click('.setting-modal .modal-footer button:nth-of-type(2)');
 
     // check the displayed name and description are changed
@@ -1393,11 +1477,15 @@ module('Integration | Component | collection view', function(hooks) {
 
     // open the modal again and check input default values are also changed
     await click('.settings-operation');
-    assert.dom('.form .form-group:nth-of-type(1) .form-control').hasValue('New Name');
-    assert.dom('.form .form-group:nth-of-type(2) .form-control').hasValue('New Description');
+    assert
+      .dom('.form .form-group:nth-of-type(1) .form-control')
+      .hasValue('New Name');
+    assert
+      .dom('.form .form-group:nth-of-type(2) .form-control')
+      .hasValue('New Description');
   });
 
-  test('it copies the collection url to the clipboard', async function(assert) {
+  test('it copies the collection url to the clipboard', async function (assert) {
     assert.expect(1);
 
     await render(hbs`
@@ -1416,7 +1504,7 @@ module('Integration | Component | collection view', function(hooks) {
       The link of this collection is successfully copied to the clipboard.`);
   });
 
-  test('it should verify collection edit modal', async function(assert) {
+  test('it should verify collection edit modal', async function (assert) {
     this.collection.set('type', 'normal');
 
     await render(hbs`

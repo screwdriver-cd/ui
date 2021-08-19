@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('helper:get-step-data', function(hooks) {
+module('helper:get-step-data', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders a value', async function(assert) {
+  test('it renders a value', async function (assert) {
     this.set('buildSteps', [
       {
         name: 'banana',
@@ -28,7 +28,7 @@ module('helper:get-step-data', function(hooks) {
     assert.dom(this.element).hasText('128');
   });
 
-  test('it fetches an object', async function(assert) {
+  test('it fetches an object', async function (assert) {
     this.set('buildSteps', [
       {
         name: 'banana',
@@ -45,7 +45,9 @@ module('helper:get-step-data', function(hooks) {
     ]);
     this.set('field', 'startTime');
     this.set('step', 'monkey');
-    await render(hbs`{{#with (get-step-data buildSteps step) as |s|}}{{s.startTime}}{{/with}}`);
+    await render(
+      hbs`{{#with (get-step-data buildSteps step) as |s|}}{{s.startTime}}{{/with}}`
+    );
     assert.dom(this.element).hasText('1236');
   });
 });

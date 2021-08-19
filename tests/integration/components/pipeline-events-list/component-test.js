@@ -12,10 +12,10 @@ const latestCommitEvent = {
   sha: 'sha3'
 };
 
-module('Integration | Component | pipeline events list', function(hooks) {
+module('Integration | Component | pipeline events list', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const shuttleStub = Service.extend({
       getLatestCommitEvent() {
         return new EmberPromise(resolve => resolve(latestCommitEvent));
@@ -117,7 +117,7 @@ module('Integration | Component | pipeline events list', function(hooks) {
     assert.dom('.view').exists({ count: 2 });
   });
 
-  test('it will redirect to event page when click on pipeline event', async function(assert) {
+  test('it will redirect to event page when click on pipeline event', async function (assert) {
     const shuttleStub = Service.extend({
       getLatestCommitEvent() {
         return new EmberPromise(resolve => resolve(latestCommitEvent));
@@ -184,7 +184,7 @@ module('Integration | Component | pipeline events list', function(hooks) {
     assert.ok(transitionToStub.calledOnce, 'transitionTo was called once');
   });
 
-  test('it will not redirect to event page when click on PR event', async function(assert) {
+  test('it will not redirect to event page when click on PR event', async function (assert) {
     const shuttleStub = Service.extend({
       getLatestCommitEvent() {
         return new EmberPromise(resolve => resolve(latestCommitEvent));

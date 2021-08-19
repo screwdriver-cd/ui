@@ -5,10 +5,10 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
 
-module('Unit | Route | pipeline', function(hooks) {
+module('Unit | Route | pipeline', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     run(() => {
       // Need this to mock store
       // https://github.com/emberjs/ember-qunit/issues/325
@@ -16,7 +16,7 @@ module('Unit | Route | pipeline', function(hooks) {
     });
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let route = this.owner.lookup('route:pipeline');
 
     assert.ok(route);
@@ -32,7 +32,7 @@ module('Unit | Route | pipeline', function(hooks) {
     );
   });
 
-  test('it returns model', function(assert) {
+  test('it returns model', function (assert) {
     assert.expect(4);
 
     const storeStub = Service.extend({
@@ -58,7 +58,7 @@ module('Unit | Route | pipeline', function(hooks) {
     });
   });
 
-  test('it returns model on collections fetch error', function(assert) {
+  test('it returns model on collections fetch error', function (assert) {
     assert.expect(4);
 
     const storeStub = Service.extend({

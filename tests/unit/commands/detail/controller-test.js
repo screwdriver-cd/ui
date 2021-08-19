@@ -26,7 +26,7 @@ const sessionServiceMock = Service.extend({
   }
 });
 
-module('Unit | Controller | commands/detail', function(hooks) {
+module('Unit | Controller | commands/detail', function (hooks) {
   setupTest(hooks);
 
   // Specify the other units that are required for this test.
@@ -36,7 +36,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     this.owner.register('service:command', commandServiceStub);
   });
 
-  test('it parses model properly', function(assert) {
+  test('it parses model properly', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
@@ -58,7 +58,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('trusted'), true);
   });
 
-  test('it handles version changes', function(assert) {
+  test('it handles version changes', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
@@ -79,7 +79,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('versionCommand.id'), 3);
   });
 
-  test('it handles model changes', function(assert) {
+  test('it handles model changes', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
@@ -103,7 +103,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('latest.id'), 4);
   });
 
-  test('it handles command deletion', function(assert) {
+  test('it handles command deletion', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
@@ -125,7 +125,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     controller.send('removeCommand', 'sample');
   });
 
-  test('it handles command update', function(assert) {
+  test('it handles command update', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
@@ -145,7 +145,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.ok(updateTrustStub.calledOnce);
   });
 
-  test('it handles undefined tag or version', function(assert) {
+  test('it handles undefined tag or version', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
@@ -165,7 +165,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('versionCommand.version'), '3.0.0');
   });
 
-  test('it handles a version that is exist', function(assert) {
+  test('it handles a version that is exist', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
@@ -185,7 +185,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('versionCommand.version'), '2.0.0');
   });
 
-  test('it handles a tag that is exist', function(assert) {
+  test('it handles a tag that is exist', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
@@ -205,7 +205,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('versionCommand.version'), '1.0.0');
   });
 
-  test('it handles a version that is not exist', function(assert) {
+  test('it handles a version that is not exist', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
@@ -225,7 +225,7 @@ module('Unit | Controller | commands/detail', function(hooks) {
     assert.equal(controller.get('versionCommand.version'), undefined);
   });
 
-  test('it handles a tag that is not exist', function(assert) {
+  test('it handles a tag that is not exist', function (assert) {
     let controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {

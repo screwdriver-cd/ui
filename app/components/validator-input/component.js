@@ -5,7 +5,9 @@ export default Component.extend({
   actions: {
     nameClick() {
       this.toggleProperty('isOpen');
-      this.element.querySelector('#validator-ace-editor').classList.toggle('hidden');
+      this.element
+        .querySelector('#validator-ace-editor')
+        .classList.toggle('hidden');
     }
   }
 });

@@ -5,10 +5,10 @@ import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
-module('Acceptance | search', function(hooks) {
+module('Acceptance | search', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     server.get('http://localhost:8080/v4/pipelines', request => {
       if (!request.queryParams.search) {
@@ -110,17 +110,17 @@ module('Acceptance | search', function(hooks) {
     ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('visiting /search when not logged in', async function(assert) {
+  test('visiting /search when not logged in', async function (assert) {
     await visit('/search');
 
     assert.equal(currentURL(), '/login');
   });
 
-  test('visiting /search when logged in', async function(assert) {
+  test('visiting /search when logged in', async function (assert) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/search');
 
@@ -135,7 +135,7 @@ module('Acceptance | search', function(hooks) {
     assert.dom('.num-results').hasText('Showing 6 result(s)');
   });
 
-  test('visiting /search?query=banana when logged in', async function(assert) {
+  test('visiting /search?query=banana when logged in', async function (assert) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/search?query=banana ');
 
@@ -145,7 +145,7 @@ module('Acceptance | search', function(hooks) {
     assert.dom('.num-results').hasText('Showing 2 result(s)');
   });
 
-  test('visiting /search?query=doesnotexist when logged in', async function(assert) {
+  test('visiting /search?query=doesnotexist when logged in', async function (assert) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/search?query=doesnotexist');
 

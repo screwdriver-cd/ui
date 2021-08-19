@@ -12,10 +12,10 @@ import makeGraph from '../mock/workflow-graph';
 
 let server;
 
-module('Acceptance | metrics', function(hooks) {
+module('Acceptance | metrics', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     const graph = makeGraph();
     const metrics = makeMetrics();
     const jobs = makeJobs();
@@ -43,11 +43,11 @@ module('Acceptance | metrics', function(hooks) {
     ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('visiting /pipelines/4/metrics', async function(assert) {
+  test('visiting /pipelines/4/metrics', async function (assert) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/pipelines/4/metrics');
 

@@ -32,17 +32,13 @@ export default Component.extend({
   workflowGraph: computed('pipeline', function workflowGraph() {
     return this.pipeline.workflowGraph;
   }),
-  startFrom: computed('pipeline', function startFrom() {
-    return ['~pr', '~commit'];
-  }),
+  startFrom: computed('pipeline', () => ['~pr', '~commit']),
   actions: {
     graphClicked(job, mouseevent, sizes) {
       const { target } = mouseevent;
 
       if (target.tagName === 'text') {
-        const jobName = $(mouseevent.target)
-          .find('title')
-          .text();
+        const jobName = $(mouseevent.target).find('title').text();
         const pipelineId = extractPipelineId(jobName);
 
         this.setProperties({

@@ -4,10 +4,10 @@ import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { get, set } from '@ember/object';
 
-module('Integration | Component | pipeline graph nav', function(hooks) {
+module('Integration | Component | pipeline graph nav', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     set(this, 'obj', {
       sha: 'abc123',
       truncatedSha: 'abc123',
@@ -49,7 +49,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
 
     assert.dom('.row button').exists({ count: 4 });
 
-    const $columnTitles = this.element.querySelectorAll('.row .event-info .title');
+    const $columnTitles = this.element.querySelectorAll(
+      '.row .event-info .title'
+    );
     const $links = this.element.querySelectorAll('.row .event-info a');
 
     const compare = (elem, expected) => {
@@ -78,7 +80,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
 
-  test('it updates selected event id', async function(assert) {
+  test('it updates selected event id', async function (assert) {
     assert.expect(1);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
@@ -116,7 +118,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.equal(get(this, 'selected'), 3);
   });
 
-  test('it renders when selectedEvent is a PR event', async function(assert) {
+  test('it renders when selectedEvent is a PR event', async function (assert) {
     assert.expect(2);
     set(this, 'obj', {
       truncatedSha: 'abc123',
@@ -135,7 +137,10 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     set(this, 'currentEventType', 'pr');
     set(this, 'pullRequestGroups', {
-      1: [{ name: 'PR-1:foo', isPR: true, group: 1 }, { name: 'PR-1:bar', isPR: true, group: 1 }],
+      1: [
+        { name: 'PR-1:foo', isPR: true, group: 1 },
+        { name: 'PR-1:bar', isPR: true, group: 1 }
+      ],
       2: [{ name: 'PR-2:foo', isPR: true, group: 2 }]
     });
     set(this, 'showDownstreamTriggers', false);
@@ -165,7 +170,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.dom('.row button').exists({ count: 4 });
   });
 
-  test('it renders when selectedEvent is a skipped event', async function(assert) {
+  test('it renders when selectedEvent is a skipped event', async function (assert) {
     set(this, 'obj', {
       truncatedSha: 'abc123',
       status: 'SKIPPED',
@@ -209,7 +214,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
 
-  test('it handles toggling triggers', async function(assert) {
+  test('it handles toggling triggers', async function (assert) {
     assert.expect(2);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
@@ -246,7 +251,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     await click('.x-toggle-btn');
   });
 
-  test('it renders when selectedEvent is a FAILURE event', async function(assert) {
+  test('it renders when selectedEvent is a FAILURE event', async function (assert) {
     set(this, 'obj', {
       truncatedSha: 'abc123',
       status: 'FAILURE',
@@ -288,7 +293,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.dom('.status .fa-times-circle').exists({ count: 1 });
   });
 
-  test('it renders when selectedEvent is a ABORTED event', async function(assert) {
+  test('it renders when selectedEvent is a ABORTED event', async function (assert) {
     set(this, 'obj', {
       truncatedSha: 'abc123',
       status: 'ABORTED',
@@ -331,7 +336,7 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     assert.dom('.status .fa-stop-circle').exists({ count: 1 });
   });
 
-  test('it renders when selectedEvent is latestCommit event', async function(assert) {
+  test('it renders when selectedEvent is latestCommit event', async function (assert) {
     set(this, 'obj', {
       sha: 'latestSha',
       truncatedSha: 'latestSha',

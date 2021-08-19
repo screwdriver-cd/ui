@@ -99,14 +99,14 @@ const buildMetaMock = {
   }
 };
 
-module('Integration | Component | build banner', function(hooks) {
+module('Integration | Component | build banner', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.register('service:coverage', coverageService);
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     assert.expect(12);
     this.owner.setupRouter();
 
@@ -142,13 +142,18 @@ module('Integration | Component | build banner', function(hooks) {
       changeBuild=(action changeB)
     }}`);
 
-    const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
+    const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
+      'YYYY-MM-DD HH:mm:ss'
+    );
 
     assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/pulls');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
     assert
       .dom('.commit a')
-      .hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
+      .hasAttribute(
+        'href',
+        'http://example.com/batcave/batmobile/commit/abcdef1029384'
+      );
     assert.dom('.commit a').hasText('#abcdef1');
     assert
       .dom('.duration .banner-value')
@@ -163,7 +168,7 @@ module('Integration | Component | build banner', function(hooks) {
     assert.dom('button').doesNotExist();
   });
 
-  test('it renders events list link if event is not pr', async function(assert) {
+  test('it renders events list link if event is not pr', async function (assert) {
     assert.expect(3);
     this.owner.setupRouter();
 
@@ -191,10 +196,12 @@ module('Integration | Component | build banner', function(hooks) {
     }}`);
 
     assert.dom('li.job-name .banner-value').hasText('main');
-    assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/events/abcd?jobId=1');
+    assert
+      .dom('li.job-name a')
+      .hasAttribute('href', '/pipelines/12345/events/abcd?jobId=1');
   });
 
-  test('it renders pr link if pr url info is available', async function(assert) {
+  test('it renders pr link if pr url info is available', async function (assert) {
     assert.expect(12);
 
     this.set('reloadCb', () => {
@@ -221,7 +228,9 @@ module('Integration | Component | build banner', function(hooks) {
       prEvents=prEvents
       reloadBuild=(action reloadCb)
     }}`);
-    const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
+    const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
+      'YYYY-MM-DD HH:mm:ss'
+    );
 
     assert
       .dom('.pr .pr-url-holder a')
@@ -230,7 +239,10 @@ module('Integration | Component | build banner', function(hooks) {
     assert.dom('li.job-name .banner-value').hasText('PR-671');
     assert
       .dom('.commit a')
-      .hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
+      .hasAttribute(
+        'href',
+        'http://example.com/batcave/batmobile/commit/abcdef1029384'
+      );
     assert.dom('.commit a').hasText('#abcdef1');
     assert
       .dom('.duration .banner-value')
@@ -244,7 +256,7 @@ module('Integration | Component | build banner', function(hooks) {
     assert.dom('button').doesNotExist();
   });
 
-  test('it renders prCommit dropdown if event type is pr', async function(assert) {
+  test('it renders prCommit dropdown if event type is pr', async function (assert) {
     assert.expect(16);
 
     this.set('reloadCb', () => {
@@ -255,7 +267,9 @@ module('Integration | Component | build banner', function(hooks) {
     this.set('eventMock', prEventMock);
     this.set(
       'prEvents',
-      new EmberPromise(resolves => resolves([{ build: buildMock, event: eventMock }]))
+      new EmberPromise(resolves =>
+        resolves([{ build: buildMock, event: eventMock }])
+      )
     );
 
     await render(hbs`{{build-banner
@@ -274,7 +288,9 @@ module('Integration | Component | build banner', function(hooks) {
       prEvents=prEvents
       reloadBuild=(action reloadCb)
     }}`);
-    const expectedTime = moment('2016-11-04T20:08:41.238Z').format('YYYY-MM-DD HH:mm:ss');
+    const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
+      'YYYY-MM-DD HH:mm:ss'
+    );
 
     assert
       .dom('.pr .pr-url-holder a')
@@ -283,7 +299,10 @@ module('Integration | Component | build banner', function(hooks) {
     assert.dom('li.job-name .banner-value').hasText('PR-671');
     assert
       .dom('.commit a')
-      .hasAttribute('href', 'http://example.com/batcave/batmobile/commit/abcdef1029384');
+      .hasAttribute(
+        'href',
+        'http://example.com/batcave/batmobile/commit/abcdef1029384'
+      );
     assert.dom('.commit .commit-sha').hasText('#abcdef1');
 
     await click('.commit .dropdown-toggle');
@@ -301,7 +320,7 @@ module('Integration | Component | build banner', function(hooks) {
     assert.dom('button').doesNotExist();
   });
 
-  test('it renders a restart button for completed jobs when authenticated', async function(assert) {
+  test('it renders a restart button for completed jobs when authenticated', async function (assert) {
     assert.expect(3);
 
     const reloadBuildSpy = this.spy();
@@ -333,7 +352,7 @@ module('Integration | Component | build banner', function(hooks) {
     await click('button');
   });
 
-  test('it renders a stop button for running job when authenticated', async function(assert) {
+  test('it renders a stop button for running job when authenticated', async function (assert) {
     assert.expect(4);
     this.set('willRender', () => {
       assert.ok(true);
@@ -364,7 +383,7 @@ module('Integration | Component | build banner', function(hooks) {
     await click('button');
   });
 
-  test('it renders a stop button for blocked job when authenticated', async function(assert) {
+  test('it renders a stop button for blocked job when authenticated', async function (assert) {
     assert.expect(4);
     this.set('willRender', () => {
       assert.ok(true);
@@ -395,9 +414,12 @@ module('Integration | Component | build banner', function(hooks) {
     await click('button');
   });
 
-  test('it renders coverage info if coverage step finished', async function(assert) {
+  test('it renders coverage info if coverage step finished', async function (assert) {
     const coverageStepsMock = [
-      { name: 'sd-setup-screwdriver-scm-bookend', startTime: '2016-11-04T20:09:41.238Z' },
+      {
+        name: 'sd-setup-screwdriver-scm-bookend',
+        startTime: '2016-11-04T20:09:41.238Z'
+      },
       {
         name: 'sd-teardown-screwdriver-coverage-bookend',
         endTime: '2016-11-04T21:09:41.238Z'
@@ -433,12 +455,16 @@ module('Integration | Component | build banner', function(hooks) {
     return settled().then(() => {
       assert.dom('.coverage .banner-value').hasText('98%');
       assert.dom('.tests .banner-value').hasText('7/10');
-      assert.dom('.coverage a').hasAttribute('href', 'http://example.com/coverage/123');
-      assert.dom('.tests a').hasAttribute('href', 'http://example.com/coverage/123');
+      assert
+        .dom('.coverage a')
+        .hasAttribute('href', 'http://example.com/coverage/123');
+      assert
+        .dom('.tests a')
+        .hasAttribute('href', 'http://example.com/coverage/123');
     });
   });
 
-  test('it renders default coverage info if coverage step has not finished', async function(assert) {
+  test('it renders default coverage info if coverage step has not finished', async function (assert) {
     const coverageStepsMock = [
       { name: 'sd-setup-screwdriver-scm-bookend' },
       { name: 'sd-teardown-screwdriver-coverage-bookend' }
@@ -474,14 +500,21 @@ module('Integration | Component | build banner', function(hooks) {
       assert.dom('button').hasText('Stop');
       assert.dom('.coverage .banner-value').hasText('N/A');
       assert.dom('.tests .banner-value').hasText('N/A');
-      assert.dom('.coverage a').hasAttribute('title', 'Coverage report not generated');
-      assert.dom('.tests a').hasAttribute('title', 'Tests report not generated');
+      assert
+        .dom('.coverage a')
+        .hasAttribute('title', 'Coverage report not generated');
+      assert
+        .dom('.tests a')
+        .hasAttribute('title', 'Tests report not generated');
     });
   });
 
-  test('it overrides coverage info if it is set in build meta', async function(assert) {
+  test('it overrides coverage info if it is set in build meta', async function (assert) {
     const coverageStepsMock = [
-      { name: 'sd-setup-screwdriver-scm-bookend', startTime: '2016-11-04T20:09:41.238Z' },
+      {
+        name: 'sd-setup-screwdriver-scm-bookend',
+        startTime: '2016-11-04T20:09:41.238Z'
+      },
       {
         name: 'sd-teardown-screwdriver-coverage-bookend',
         endTime: '2016-11-04T21:09:41.238Z'
@@ -522,9 +555,12 @@ module('Integration | Component | build banner', function(hooks) {
     });
   });
 
-  test('it does not override coverage info if build meta format is not correct', async function(assert) {
+  test('it does not override coverage info if build meta format is not correct', async function (assert) {
     const coverageStepsMock = [
-      { name: 'sd-setup-screwdriver-scm-bookend', startTime: '2016-11-04T20:09:41.238Z' },
+      {
+        name: 'sd-setup-screwdriver-scm-bookend',
+        startTime: '2016-11-04T20:09:41.238Z'
+      },
       {
         name: 'sd-teardown-screwdriver-coverage-bookend',
         endTime: '2016-11-04T21:09:41.238Z'
@@ -562,12 +598,16 @@ module('Integration | Component | build banner', function(hooks) {
     return settled().then(() => {
       assert.dom('.coverage .banner-value').hasText('98%');
       assert.dom('.tests .banner-value').hasText('7/10');
-      assert.dom('.coverage a').hasAttribute('href', 'http://example.com/coverage/123');
-      assert.dom('.tests a').hasAttribute('href', 'http://example.com/coverage/123');
+      assert
+        .dom('.coverage a')
+        .hasAttribute('href', 'http://example.com/coverage/123');
+      assert
+        .dom('.tests a')
+        .hasAttribute('href', 'http://example.com/coverage/123');
     });
   });
 
-  test('it does not render coverage info if there is no coverage step', async function(assert) {
+  test('it does not render coverage info if there is no coverage step', async function (assert) {
     assert.expect(1);
 
     this.set('eventMock', prEventMock);
@@ -593,7 +633,7 @@ module('Integration | Component | build banner', function(hooks) {
     });
   });
 
-  test('it should show the stop button for a running UNSTABLE build', async function(assert) {
+  test('it should show the stop button for a running UNSTABLE build', async function (assert) {
     const coverageStepsMock = [
       { name: 'sd-setup-screwdriver-scm-bookend' },
       { name: 'sd-teardown-screwdriver-coverage-bookend' }

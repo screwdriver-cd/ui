@@ -43,7 +43,11 @@ function getLatestBuild(session, pipelineId, jobName, buildStatus) {
       .fail(response => {
         let message = `${response.status} Request Failed`;
 
-        if (response && response.responseJSON && typeof response.responseJSON === 'object') {
+        if (
+          response &&
+          response.responseJSON &&
+          typeof response.responseJSON === 'object'
+        ) {
           message = `${response.status} ${response.responseJSON.message}`;
         }
 
@@ -61,6 +65,11 @@ export default Route.extend({
     const pipelineId = this.paramsFor('pipeline').pipeline_id;
     const { job_name: jobName, status: buildStatus } = params;
 
-    return getLatestBuild(this.get('session'), pipelineId, jobName, buildStatus);
+    return getLatestBuild(
+      this.get('session'),
+      pipelineId,
+      jobName,
+      buildStatus
+    );
   }
 });

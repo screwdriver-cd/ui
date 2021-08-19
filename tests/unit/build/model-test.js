@@ -2,17 +2,19 @@ import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
-module('Unit | Model | build', function(hooks) {
+module('Unit | Model | build', function (hooks) {
   setupTest(hooks);
 
-  test('it exists and has statusMessage defaults to null', function(assert) {
-    let model = run(() => this.owner.lookup('service:store').createRecord('build'));
+  test('it exists and has statusMessage defaults to null', function (assert) {
+    let model = run(() =>
+      this.owner.lookup('service:store').createRecord('build')
+    );
 
     assert.ok(!!model);
     assert.equal(model.get('statusMessage'), null);
   });
 
-  test('it calculates blockedDuration', function(assert) {
+  test('it calculates blockedDuration', function (assert) {
     let model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         createTime: new Date(1472244582531),
@@ -29,7 +31,7 @@ module('Unit | Model | build', function(hooks) {
     });
   });
 
-  test('it calculates imagePullDuration', function(assert) {
+  test('it calculates imagePullDuration', function (assert) {
     let model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         stats: {
@@ -46,7 +48,7 @@ module('Unit | Model | build', function(hooks) {
     });
   });
 
-  test('it calculates buildDuration', function(assert) {
+  test('it calculates buildDuration', function (assert) {
     let model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         createTime: new Date(1472244572531),
@@ -68,7 +70,7 @@ module('Unit | Model | build', function(hooks) {
     });
   });
 
-  test('it calculates totalDuration', function(assert) {
+  test('it calculates totalDuration', function (assert) {
     let model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         createTime: new Date(1472244572531),
@@ -90,7 +92,7 @@ module('Unit | Model | build', function(hooks) {
     });
   });
 
-  test('it humanizes createTime', function(assert) {
+  test('it humanizes createTime', function (assert) {
     const createTime = new Date(1472244582531);
 
     let model = run(() =>
@@ -102,12 +104,15 @@ module('Unit | Model | build', function(hooks) {
     run(() => {
       assert.equal(
         model.get('createTimeWords'),
-        `${humanizeDuration(Date.now() - createTime, { round: true, largest: 1 })} ago`
+        `${humanizeDuration(Date.now() - createTime, {
+          round: true,
+          largest: 1
+        })} ago`
       );
     });
   });
 
-  test('it truncates the sha', function(assert) {
+  test('it truncates the sha', function (assert) {
     const sha = '026c5b76b210f96dc27011b553679a7663b38698';
 
     let model = run(() =>

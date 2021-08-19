@@ -5,7 +5,5 @@ import ENV from 'screwdriver-ui/config/environment';
 export default Component.extend({
   classNameBindings: ['large'],
 
-  showAvatar: computed(function showAvatar() {
-    return ENV.APP.SHOW_AVATAR === true;
-  })
+  showAvatar: computed(() => ENV.APP.SHOW_AVATAR === true)
 });

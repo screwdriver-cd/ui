@@ -51,7 +51,8 @@ export default class PipelineEventsShowRoute extends Route {
     } else {
       const { groupEventId } = desiredEvent;
 
-      const expandedEventsGroup = pipelineEventsController.expandedEventsGroup || {};
+      const expandedEventsGroup =
+        pipelineEventsController.expandedEventsGroup || {};
 
       if (expandedEventsGroup[groupEventId] === undefined) {
         expandedEventsGroup[groupEventId] = true;
@@ -82,7 +83,11 @@ export default class PipelineEventsShowRoute extends Route {
   didTransition() {
     if (!this.hasScrolled && !this.selfRedirect) {
       later(() => {
-        debounce(this, this.scrollToHighlightedEvent, ENV.APP.DEBOUNCED_SCROLL_TIME);
+        debounce(
+          this,
+          this.scrollToHighlightedEvent,
+          ENV.APP.DEBOUNCED_SCROLL_TIME
+        );
       }, ENV.APP.WAITING_TO_SCROLL_TIME);
     }
 

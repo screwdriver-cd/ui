@@ -87,7 +87,9 @@ const formatMetrics = metrics => {
   const lastEvent = metrics.get('firstObject');
   const lastEventStartTime = new Date(lastEvent.createTime);
   const lastEventStartYear = lastEventStartTime.getFullYear();
-  const lastEventStartMonth = (lastEventStartTime.getMonth() + 1).toString().padStart(2, '0');
+  const lastEventStartMonth = (lastEventStartTime.getMonth() + 1)
+    .toString()
+    .padStart(2, '0');
   const lastEventStartDay = lastEventStartTime
     .getDate()
     .toString()

@@ -10,7 +10,12 @@ import ModelReloaderMixin, {
 } from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob, isActiveBuild } from 'screwdriver-ui/utils/build';
 import moment from 'moment';
-import { createEvent, startDetachedBuild, stopBuild, updateEvents } from '../../events/controller';
+import {
+  createEvent,
+  startDetachedBuild,
+  stopBuild,
+  updateEvents
+} from '../../events/controller';
 
 const PAST_TIME = moment().subtract(1, 'day');
 
@@ -19,9 +24,9 @@ export default Controller.extend(ModelReloaderMixin, {
   shouldReload(model) {
     const job = model.jobs.find(j => {
       if (j.hasMany('builds').value() !== null) {
-        return j.builds.find(b => {
-          return isActiveBuild(b.get('status'), b.get('endTime'));
-        });
+        return j.builds.find(b =>
+          isActiveBuild(b.get('status'), b.get('endTime'))
+        );
       }
 
       return null;
@@ -94,23 +99,23 @@ export default Controller.extend(ModelReloaderMixin, {
 
     if (listViewOffset < jobIds.length) {
       const jobsDetails = await Promise.all(
-        jobIds.slice(listViewOffset, listViewCutOff).map(async jobId => {
-          return this.store
+        jobIds.slice(listViewOffset, listViewCutOff).map(async jobId =>
+          this.store
             .query('build-history', {
               jobIds: jobId,
               offset: 0,
               numBuilds: ENV.APP.NUM_BUILDS_LISTED
             })
-            .catch(() => {
-              return Promise.resolve([]);
-            });
-        })
+            .catch(() => Promise.resolve([]))
+        )
       );
       const nextJobsDetails = [];
 
       jobsDetails.toArray().forEach(nextJobDetails => {
         nextJobDetails.forEach(nextJobDetail => {
-          const job = this.get('pipeline.jobs').find(j => j.id === String(nextJobDetail.jobId));
+          const job = this.get('pipeline.jobs').find(
+            j => j.id === String(nextJobDetail.jobId)
+          );
 
           if (job) {
             nextJobDetail.jobName = job.name;
@@ -134,7 +139,10 @@ export default Controller.extend(ModelReloaderMixin, {
     const listViewCutOff = this.get('listViewOffset');
 
     if (listViewCutOff > 0) {
-      const updatedJobsDetails = await this.getNewListViewJobs(0, listViewCutOff);
+      const updatedJobsDetails = await this.getNewListViewJobs(
+        0,
+        listViewCutOff
+      );
 
       this.set('jobsDetails', updatedJobsDetails);
     }
@@ -146,7 +154,9 @@ export default Controller.extend(ModelReloaderMixin, {
     // purge unmatched pipeline jobs
     let jobsDetails = this.get('jobsDetails');
 
-    if (jobsDetails.some(j => j.get('jobPipelineId') !== this.get('pipeline.id'))) {
+    if (
+      jobsDetails.some(j => j.get('jobPipelineId') !== this.get('pipeline.id'))
+    ) {
       jobsDetails = [];
     }
 
@@ -156,7 +166,10 @@ export default Controller.extend(ModelReloaderMixin, {
 
     const listViewOffset = this.get('listViewOffset');
     const listViewCutOff = listViewOffset + ENV.APP.LIST_VIEW_PAGE_SIZE;
-    const nextJobsDetails = await this.getNewListViewJobs(listViewOffset, listViewCutOff);
+    const nextJobsDetails = await this.getNewListViewJobs(
+      listViewOffset,
+      listViewCutOff
+    );
 
     return new Promise(resolve => {
       if (nextJobsDetails.length > 0) {
@@ -206,7 +219,10 @@ export default Controller.extend(ModelReloaderMixin, {
         const buildQueryConfig = { jobId };
 
         const build = await this.store.queryRecord('build', buildQueryConfig);
-        const event = await this.store.findRecord('event', get(build, 'eventId'));
+        const event = await this.store.findRecord(
+          'event',
+          get(build, 'eventId')
+        );
 
         const parentBuildId = get(build, 'parentBuildId');
         const parentEventId = get(event, 'id');

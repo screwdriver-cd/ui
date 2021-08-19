@@ -6,15 +6,21 @@ export default Component.extend({
   newName: null,
   tagName: 'tr',
   pipelineId: null,
-  buttonAction: computed('token.{name,description}', 'newName', 'newDescription', {
-    get() {
-      const { token } = this;
+  buttonAction: computed(
+    'token.{name,description}',
+    'newName',
+    'newDescription',
+    {
+      get() {
+        const { token } = this;
 
-      return this.newName !== token.get('name') || this.newDescription !== token.get('description')
-        ? 'Update'
-        : 'Delete';
+        return this.newName !== token.get('name') ||
+          this.newDescription !== token.get('description')
+          ? 'Update'
+          : 'Delete';
+      }
     }
-  }),
+  ),
   init() {
     this._super(...arguments);
     this.set('newName', this.get('token.name'));

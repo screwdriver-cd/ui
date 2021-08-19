@@ -32,12 +32,18 @@ export default Component.extend({
   },
 
   didInsertElement() {
-    window.addEventListener('message', this.handleMessageSendFromIframe.bind(this));
+    window.addEventListener(
+      'message',
+      this.handleMessageSendFromIframe.bind(this)
+    );
   },
 
   actions: {
     download() {
-      const downloadLink = this.iframeUrl.replace('type=preview', 'type=download');
+      const downloadLink = this.iframeUrl.replace(
+        'type=preview',
+        'type=download'
+      );
 
       window.open(downloadLink, '_blank');
     }
