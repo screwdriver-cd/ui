@@ -100,7 +100,9 @@ module('Acceptance | pipeline pr-chain', function (hooks) {
     assert.dom('ul.nav-pills').exists({ count: 1 }, 'should show tabs');
     assert.dom('.column-tabs-view .nav-link').hasText('Events');
     assert.dom('.column-tabs-view .nav-link.active').hasText('Pull Requests');
-    assert.dom('.column-tabs-view .view .detail .commit').hasText('PR-42');
+    assert
+      .dom('.column-tabs-view .view .detail .commit')
+      .hasText('PR-42 Start');
     assert.dom('.separator').exists({ count: 1 });
     assert.dom('.partial-view').exists({ count: 2 });
     assert.dom('.last-successful').doesNotExist();
