@@ -107,8 +107,10 @@ module('Integration | Component | pipeline event row', function (hooks) {
       assert.ok(true);
     };
 
-    this.set('stopPRBuilds', Function.prototype);
-    this.set('startMainBuild', Function.prototype);
+    this.set('startBuild', (prNum, jobs) => {
+      assert.equal(prNum, 2);
+      assert.equal(jobs[0].group, 2);
+    });
     this.set('stopEvent', Function.prototype);
 
     const eventMock = EmberObject.create(
@@ -130,8 +132,8 @@ module('Integration | Component | pipeline event row', function (hooks) {
 
     await render(hbs`{{pipeline-event-row 
       event=event 
-      startPRBuild=startPRBuild
-      startMainBuild=startMainBuild
+      startPRBuild=startBuild
+      startMainBuild=startBuild
       stopEvent=stopEvent
       selectedEvent=4
       latestCommit=latestCommit
@@ -140,7 +142,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('PR-2');
+    assert.dom('.commit').hasText('PR-2 Start');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
