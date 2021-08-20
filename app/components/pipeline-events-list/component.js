@@ -35,6 +35,9 @@ export default Component.extend({
     startMainBuild() {
       this.startMainBuild();
     },
+    stopEvent() {
+      this.stopEvent();
+    },
     eventClick(id, eventType) {
       set(this, 'selected', id);
 
