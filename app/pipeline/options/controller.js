@@ -14,7 +14,9 @@ export default Controller.extend({
 
       job.set('state', state);
       job.set('stateChangeMessage', stateChangeMessage);
-      job.save().catch(error => this.set('errorMessage', error.errors[0].detail || ''));
+      job
+        .save()
+        .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
     removePipeline() {
       this.pipeline

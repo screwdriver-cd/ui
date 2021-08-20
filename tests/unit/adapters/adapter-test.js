@@ -1,17 +1,17 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
-module('Unit | Adapter | build history', function(hooks) {
+module('Unit | Adapter | build history', function (hooks) {
   setupTest(hooks);
 
   // Replace this with your real tests.
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let adapter = this.owner.lookup('adapter:build-history');
 
     assert.ok(adapter);
   });
 
-  test('it returns endpoint for builds statuses', function(assert) {
+  test('it returns endpoint for builds statuses', function (assert) {
     const adapter = this.owner.lookup('adapter:build-history');
     const buildsStatusesUrl = 'http://localhost:8080/v4/builds/statuses';
 

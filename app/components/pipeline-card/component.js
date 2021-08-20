@@ -30,7 +30,9 @@ export default Component.extend({
     'isAuthenticated',
     'isDefaultCollection',
     function showRemoveButton() {
-      return !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated;
+      return (
+        !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated
+      );
     }
   ),
 
@@ -41,7 +43,9 @@ export default Component.extend({
   },
   setupInViewport() {
     if (this && this.element) {
-      const inViewportHook = this.element.querySelector('.pipeline-card-content');
+      const inViewportHook = this.element.querySelector(
+        '.pipeline-card-content'
+      );
       const { onEnter } = this.inViewport.watchElement(inViewportHook);
 
       onEnter(this.didEnterViewport.bind(this));
@@ -49,7 +53,9 @@ export default Component.extend({
   },
   async didEnterViewport() {
     if (this && this.element) {
-      const inViewportHook = this.element.querySelector('.pipeline-card-content');
+      const inViewportHook = this.element.querySelector(
+        '.pipeline-card-content'
+      );
 
       this.inViewport.stopWatching(inViewportHook);
       this.updateEventMetrics();

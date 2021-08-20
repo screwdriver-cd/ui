@@ -5,7 +5,10 @@ export default Route.extend({
   model() {
     const selectedArtifact = 'manifest.txt';
 
-    this.controllerFor('pipeline.build').set('selectedArtifact', selectedArtifact);
+    this.controllerFor('pipeline.build').set(
+      'selectedArtifact',
+      selectedArtifact
+    );
 
     // return parent route model
     return this.modelFor('pipeline.build');

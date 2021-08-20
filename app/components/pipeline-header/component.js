@@ -40,7 +40,10 @@ export default Component.extend({
           );
         })
         .catch(() => {
-          this.set('addCollectionError', `Could not add Pipeline to ${collection.get('name')}`);
+          this.set(
+            'addCollectionError',
+            `Could not add Pipeline to ${collection.get('name')}`
+          );
           this.set('addCollectionSuccess', null);
         });
     }

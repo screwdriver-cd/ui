@@ -7,10 +7,10 @@ import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';
 import injectScmServiceStub from '../../../helpers/inject-scm';
 
-module('Integration | Component | search list', function(hooks) {
+module('Integration | Component | search list', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders without collections', async function(assert) {
+  test('it renders without collections', async function (assert) {
     injectScmServiceStub(this);
 
     const pipelines = [
@@ -39,7 +39,9 @@ module('Integration | Component | search list', function(hooks) {
     this.set('pipelineList', pipelines);
     this.set('collections', collections);
 
-    await render(hbs`{{search-list pipelines=pipelineList collections=collections}}`);
+    await render(
+      hbs`{{search-list pipelines=pipelineList collections=collections}}`
+    );
 
     assert.dom('tbody tr:first-child td.appId').hasText('batman/tumbler');
     assert.dom('tbody tr:first-child td.branch').hasText('waynecorp');
@@ -50,7 +52,7 @@ module('Integration | Component | search list', function(hooks) {
     assert.dom('.add-to-collection').doesNotExist();
   });
 
-  test('it renders with collections', async function(assert) {
+  test('it renders with collections', async function (assert) {
     injectSessionStub(this);
     injectScmServiceStub(this);
 
@@ -86,7 +88,9 @@ module('Integration | Component | search list', function(hooks) {
     this.set('pipelineList', pipelines);
     this.set('collections', collections);
 
-    await render(hbs`{{search-list pipelines=pipelineList collections=collections}}`);
+    await render(
+      hbs`{{search-list pipelines=pipelineList collections=collections}}`
+    );
 
     assert.dom('tbody tr:first-child td.appId').hasText('batman/tumbler');
     assert.dom('tbody tr:first-child td.branch').hasText('waynecorp');
@@ -98,12 +102,16 @@ module('Integration | Component | search list', function(hooks) {
 
     await click('td.add .dropdown-toggle');
 
-    assert.dom('td.add .dropdown-menu li:first-child span').hasText('collection1');
-    assert.dom('td.add .dropdown-menu li:nth-child(2) span').hasText('collection2');
+    assert
+      .dom('td.add .dropdown-menu li:first-child span')
+      .hasText('collection1');
+    assert
+      .dom('td.add .dropdown-menu li:nth-child(2) span')
+      .hasText('collection2');
     assert.dom('td.add .dropdown-menu li:nth-child(3) span').hasText('CREATE');
   });
 
-  test('it filters the list', async function(assert) {
+  test('it filters the list', async function (assert) {
     injectScmServiceStub(this);
 
     const pipelines = [

@@ -93,7 +93,8 @@ export default Component.extend({
       const defaultPropertyVal = defaultParameters[propertyName]
         ? defaultParameters[propertyName]
         : value;
-      const defaultValue = defaultPropertyVal.value || defaultPropertyVal || value;
+      const defaultValue =
+        defaultPropertyVal.value || defaultPropertyVal || value;
 
       normalizedParameters.push({
         name: propertyName,

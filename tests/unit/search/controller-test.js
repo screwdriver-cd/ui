@@ -4,17 +4,17 @@ import { setupTest } from 'ember-qunit';
 import EmberObject from '@ember/object';
 import injectSessionStub from '../../helpers/inject-session';
 
-module('Unit | Controller | search', function(hooks) {
+module('Unit | Controller | search', function (hooks) {
   setupTest(hooks);
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:search');
 
     assert.ok(controller);
   });
 
-  test('it calls updatePipelines', function(assert) {
+  test('it calls updatePipelines', function (assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:search');
 
@@ -50,7 +50,7 @@ module('Unit | Controller | search', function(hooks) {
     controller.send('updatePipelines', { page: 2 });
   });
 
-  test('it calls updatePipelines with search param', function(assert) {
+  test('it calls updatePipelines with search param', function (assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:search');
 
@@ -87,7 +87,7 @@ module('Unit | Controller | search', function(hooks) {
     controller.send('updatePipelines', { page: 2, search: 'ba' });
   });
 
-  test('it calls addToCollection', function(assert) {
+  test('it calls addToCollection', function (assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:search');
 

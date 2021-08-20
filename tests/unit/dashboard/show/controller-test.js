@@ -5,18 +5,18 @@ import EmberObject, { get } from '@ember/object';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
 import injectSessionStub from '../../../helpers/inject-session';
 
-module('Unit | Controller | dashboard/show', function(hooks) {
+module('Unit | Controller | dashboard/show', function (hooks) {
   setupTest(hooks);
 
   // Replace this with your real tests.
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:dashboard/show');
 
     assert.ok(controller);
   });
 
-  test('it calls removePipeline', function(assert) {
+  test('it calls removePipeline', function (assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:dashboard/show');
 
@@ -53,7 +53,7 @@ module('Unit | Controller | dashboard/show', function(hooks) {
     controller.send('removePipeline', 3);
   });
 
-  sinonTest('it calls onDeleteCollection', function(assert) {
+  sinonTest('it calls onDeleteCollection', function (assert) {
     const controller = this.owner.lookup('controller:dashboard/show');
     const stub = this.stub(controller, 'transitionToRoute');
 

@@ -18,10 +18,10 @@ const allTemplates = [
   }
 ];
 
-module('Integration | Component | create-pipeline', function(hooks) {
+module('Integration | Component | create-pipeline', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const shuttleStub = Service.extend({
       fetchAllTemplates() {
         return new EmberPromise(resolve => resolve(allTemplates));
@@ -31,7 +31,9 @@ module('Integration | Component | create-pipeline', function(hooks) {
     this.owner.register('service:shuttle', shuttleStub);
 
     this.set('showCreatePipeline', true);
-    await render(hbs`{{create-pipeline showCreatePipeline=showCreatePipeline}}`);
+    await render(
+      hbs`{{create-pipeline showCreatePipeline=showCreatePipeline}}`
+    );
 
     assert.dom('.left').exists('create-pipeline has left secetion');
     assert.dom('.back').hasText('Back');
@@ -39,7 +41,7 @@ module('Integration | Component | create-pipeline', function(hooks) {
     assert.dom('.right').exists('create-pipeline has right secetion');
   });
 
-  test('it renders with template selections with namespace', async function(assert) {
+  test('it renders with template selections with namespace', async function (assert) {
     const shuttleStub = Service.extend({
       fetchAllTemplates() {
         return new EmberPromise(resolve => resolve(allTemplates));
@@ -49,10 +51,16 @@ module('Integration | Component | create-pipeline', function(hooks) {
     this.owner.register('service:shuttle', shuttleStub);
 
     this.set('showCreatePipeline', true);
-    await render(hbs`{{create-pipeline showCreatePipeline=showCreatePipeline}}`);
+    await render(
+      hbs`{{create-pipeline showCreatePipeline=showCreatePipeline}}`
+    );
 
     await click('.ember-basic-dropdown-trigger');
-    assert.dom('.ember-power-select-group-name').exists('create-pipeline has group secetion');
-    assert.dom('ul.ember-power-select-options').exists('create-pipeline has item selection');
+    assert
+      .dom('.ember-power-select-group-name')
+      .exists('create-pipeline has group secetion');
+    assert
+      .dom('ul.ember-power-select-options')
+      .exists('create-pipeline has item selection');
   });
 });

@@ -32,7 +32,10 @@ export default Component.extend({
       }
 
       schedule('actions', () => {
-        const newCollection = this.store.createRecord('collection', newCollectionRecord);
+        const newCollection = this.store.createRecord(
+          'collection',
+          newCollectionRecord
+        );
 
         return newCollection
           .save()

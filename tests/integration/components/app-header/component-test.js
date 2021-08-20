@@ -5,11 +5,11 @@ import hbs from 'htmlbars-inline-precompile';
 
 import injectScmServiceStub from '../../../helpers/inject-scm';
 
-module('Integration | Component | app header', function(hooks) {
+module('Integration | Component | app header', function (hooks) {
   setupRenderingTest(hooks);
 
   // this test should pass when search bar feature flag is turned off
-  test('it renders when search flag is off', async function(assert) {
+  test('it renders when search flag is off', async function (assert) {
     this.set('sessionMock', {
       isAuthenticated: false
     });
@@ -31,11 +31,13 @@ module('Integration | Component | app header', function(hooks) {
     assert.dom('.icon.github').exists({ count: 1 });
 
     assert.dom('.icon.profile-outline').exists({ count: 1 });
-    assert.dom('.icon.profile-outline').hasAttribute('title', 'Sign in to Screwdriver');
+    assert
+      .dom('.icon.profile-outline')
+      .hasAttribute('title', 'Sign in to Screwdriver');
     assert.dom('.search-input').doesNotExist();
   });
 
-  test('it shows user github username', async function(assert) {
+  test('it shows user github username', async function (assert) {
     assert.expect(3);
     this.set('sessionMock', {
       isAuthenticated: true,
@@ -49,7 +51,9 @@ module('Integration | Component | app header', function(hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
+    await render(
+      hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`
+    );
     assert.dom('.profile-outline > .icontitle').hasText('foofoo');
     assert.dom('.icon.create').exists({ count: 1 });
 
@@ -57,7 +61,7 @@ module('Integration | Component | app header', function(hooks) {
     await click('.logout');
   });
 
-  test('it calls the logout method on logout', async function(assert) {
+  test('it calls the logout method on logout', async function (assert) {
     assert.expect(2);
     this.set('sessionMock', {
       isAuthenticated: true
@@ -66,7 +70,9 @@ module('Integration | Component | app header', function(hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`);
+    await render(
+      hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`
+    );
     await click('.icon.profile-outline');
 
     assert.dom('.logout').hasAttribute('title', 'Sign out of Screwdriver');
@@ -74,7 +80,7 @@ module('Integration | Component | app header', function(hooks) {
     await click('.logout');
   });
 
-  test('it shows scm list and which scm is signed in', async function(assert) {
+  test('it shows scm list and which scm is signed in', async function (assert) {
     assert.expect(3);
 
     injectScmServiceStub(this);
@@ -92,7 +98,7 @@ module('Integration | Component | app header', function(hooks) {
     assert.dom('a.active > .fa-github').exists({ count: 1 });
   });
 
-  test('it shows the search bar', async function(assert) {
+  test('it shows the search bar', async function (assert) {
     this.set('sessionMock', {
       isAuthenticated: false
     });
@@ -102,12 +108,14 @@ module('Integration | Component | app header', function(hooks) {
     assert.dom('.search-input').exists({ count: 1 });
   });
 
-  test('it navigates to search page upon clicking the search button', async function(assert) {
+  test('it navigates to search page upon clicking the search button', async function (assert) {
     this.set('search', () => {
       assert.ok(true);
     });
 
-    await render(hbs`{{app-header showSearch=true searchPipelines=(action search)}}`);
+    await render(
+      hbs`{{app-header showSearch=true searchPipelines=(action search)}}`
+    );
 
     assert.dom('.search-input').hasNoValue();
 

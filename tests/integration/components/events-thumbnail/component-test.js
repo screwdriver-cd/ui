@@ -18,10 +18,10 @@ const BUILD_SUCCESS_COLOR = 'rgb(26, 197, 103)';
 const BUILD_FAILURE_COLOR = 'rgb(220, 20, 45)';
 const BUILD_EMPTY_COLOR = 'rgb(232, 232, 232)';
 
-module('Integration | Component | events thumbnail', function(hooks) {
+module('Integration | Component | events thumbnail', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     this.set('eventsInfo', eventsInfo);
 
     await render(hbs`{{events-thumbnail events=eventsInfo}}`);

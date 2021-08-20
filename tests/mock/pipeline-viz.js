@@ -601,4 +601,9 @@ const connectedPipelines = [
   }
 ];
 
-export { pipeline, selectedConnectedPipeline, selectedPipeline, connectedPipelines };
+export {
+  pipeline,
+  selectedConnectedPipeline,
+  selectedPipeline,
+  connectedPipelines
+};

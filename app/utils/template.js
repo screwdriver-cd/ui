@@ -30,7 +30,10 @@ const getLastUpdatedTime = ({ createTime }) => {
   }
 
   let timeDiff = Date.now() - new Date(createTime).getTime();
-  const lastUpdated = `${humanizeDuration(timeDiff, { round: true, largest: 1 })} ago`;
+  const lastUpdated = `${humanizeDuration(timeDiff, {
+    round: true,
+    largest: 1
+  })} ago`;
 
   return lastUpdated;
 };

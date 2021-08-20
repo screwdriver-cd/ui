@@ -15,10 +15,14 @@ export default Component.extend({
       const groupsArray = Object.keys(groups).map(key => groups[key]);
 
       groupsArray.forEach(arr =>
-        arr.sort((a, b) => moment(b.createTime).valueOf() - moment(a.createTime).valueOf())
+        arr.sort(
+          (a, b) =>
+            moment(b.createTime).valueOf() - moment(a.createTime).valueOf()
+        )
       );
       groupsArray.sort(
-        (a, b) => moment(b[0].createTime).valueOf() - moment(a[0].createTime).valueOf()
+        (a, b) =>
+          moment(b[0].createTime).valueOf() - moment(a[0].createTime).valueOf()
       );
 
       return groupsArray;

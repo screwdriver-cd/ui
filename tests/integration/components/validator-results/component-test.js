@@ -3,15 +3,20 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | validator results', function(hooks) {
+module('Integration | Component | validator results', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders jobs', async function(assert) {
+  test('it renders jobs', async function (assert) {
     this.set('validationMock', {
       errors: ['got an error'],
       workflow: ['main', 'foo'],
       workflowGraph: {
-        nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: 'foo' }],
+        nodes: [
+          { name: '~pr' },
+          { name: '~commit' },
+          { name: 'main' },
+          { name: 'foo' }
+        ],
         edges: []
       },
       jobs: {
@@ -63,7 +68,7 @@ module('Integration | Component | validator results', function(hooks) {
     assert.dom('h4.pipeline').hasText('Pipeline Settings');
   });
 
-  test('it renders templates', async function(assert) {
+  test('it renders templates', async function (assert) {
     this.set('validationMock', {
       errors: [],
       template: {
@@ -76,13 +81,15 @@ module('Integration | Component | validator results', function(hooks) {
       }
     });
 
-    await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+    await render(
+      hbs`{{validator-results results=validationMock isTemplate=true}}`
+    );
 
     assert.dom('.error').doesNotExist();
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
-  test('it renders templates with a namespace', async function(assert) {
+  test('it renders templates with a namespace', async function (assert) {
     this.set('validationMock', {
       errors: [],
       template: {
@@ -96,13 +103,15 @@ module('Integration | Component | validator results', function(hooks) {
       }
     });
 
-    await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+    await render(
+      hbs`{{validator-results results=validationMock isTemplate=true}}`
+    );
 
     assert.dom('.error').doesNotExist();
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
-  test('it renders joi error results', async function(assert) {
+  test('it renders joi error results', async function (assert) {
     this.set('validationMock', {
       errors: [{ message: 'there is an error' }],
       template: {
@@ -115,13 +124,15 @@ module('Integration | Component | validator results', function(hooks) {
       }
     });
 
-    await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+    await render(
+      hbs`{{validator-results results=validationMock isTemplate=true}}`
+    );
 
     assert.dom('.error').hasText('there is an error');
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
-  test('it renders warnMessages results', async function(assert) {
+  test('it renders warnMessages results', async function (assert) {
     this.set('validationMock', {
       warnMessages: ['there is an warning'],
       template: {
@@ -134,7 +145,9 @@ module('Integration | Component | validator results', function(hooks) {
       }
     });
 
-    await render(hbs`{{validator-results results=validationMock isTemplate=true}}`);
+    await render(
+      hbs`{{validator-results results=validationMock isTemplate=true}}`
+    );
 
     assert.dom('.warning').hasText('there is an warning');
     assert.dom('h4').hasText('batman/batmobile@1.0.0');

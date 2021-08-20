@@ -4,16 +4,16 @@ import { later } from '@ember/runloop';
 import sinon from 'sinon';
 import ENV from 'screwdriver-ui/config/environment';
 
-module('Unit | Route | pipeline/events/show', function(hooks) {
+module('Unit | Route | pipeline/events/show', function (hooks) {
   setupTest(hooks);
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     const route = this.owner.lookup('route:pipeline/events/show');
 
     assert.ok(route);
   });
 
-  test('it redirect to itself', function(assert) {
+  test('it redirect to itself', function (assert) {
     const route = this.owner.lookup('route:pipeline/events/show');
     const model = { pipeline: {} };
     const transition = {
@@ -29,7 +29,7 @@ module('Unit | Route | pipeline/events/show', function(hooks) {
     assert.ok(route.selfRedirect, 'redirect from itself');
   });
 
-  test('it redirect from other route', function(assert) {
+  test('it redirect from other route', function (assert) {
     const route = this.owner.lookup('route:pipeline/events/show');
     const model = { pipeline: {} };
     const transition = {
@@ -46,7 +46,7 @@ module('Unit | Route | pipeline/events/show', function(hooks) {
     assert.notOk(route.selfRedirect, 'redirect from other route');
   });
 
-  test('it calls didTransition', function(assert) {
+  test('it calls didTransition', function (assert) {
     const route = this.owner.lookup('route:pipeline/events/show');
     const stub = sinon.stub(route, 'scrollToHighlightedEvent');
 
@@ -59,7 +59,7 @@ module('Unit | Route | pipeline/events/show', function(hooks) {
     }, (ENV.APP.WAITING_TO_SCROLL_TIME + ENV.APP.DEBOUNCED_SCROLL_TIME) * 1000);
   });
 
-  test('it calls didTransition', function(assert) {
+  test('it calls didTransition', function (assert) {
     const route = this.owner.lookup('route:pipeline/events/show');
     const stub = sinon.stub(route, 'scrollToHighlightedEvent');
 

@@ -12,25 +12,28 @@ const sessionStub = Service.extend({
 });
 const createTime = '2016-09-23T16:53:00.274Z';
 const created = new Date(createTime).getTime();
-const lastUpdated = `${humanizeDuration(Date.now() - created, { round: true, largest: 1 })} ago`;
+const lastUpdated = `${humanizeDuration(Date.now() - created, {
+  round: true,
+  largest: 1
+})} ago`;
 
 let server;
 
-module('Unit | Service | template', function(hooks) {
+module('Unit | Service | template', function (hooks) {
   setupTest(hooks);
 
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     this.owner.register('service:session', sessionStub);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it fetches one set of template versions', function(assert) {
+  test('it fetches one set of template versions', function (assert) {
     assert.expect(2);
 
     server.get('http://localhost:8080/v4/templates/foo%2Fbar', () => [
@@ -76,7 +79,7 @@ module('Unit | Service | template', function(hooks) {
     });
   });
 
-  test('it fetches one set of template versions with metrics', function(assert) {
+  test('it fetches one set of template versions with metrics', function (assert) {
     assert.expect(2);
 
     server.get('http://localhost:8080/v4/templates/foo%2Fbar/metrics', () => [
@@ -138,7 +141,7 @@ module('Unit | Service | template', function(hooks) {
     });
   });
 
-  test('it fetches all templates', function(assert) {
+  test('it fetches all templates', function (assert) {
     assert.expect(2);
 
     server.get('http://localhost:8080/v4/templates', () => [
@@ -194,7 +197,7 @@ module('Unit | Service | template', function(hooks) {
     });
   });
 
-  test('it deletes all versions of a template', function(assert) {
+  test('it deletes all versions of a template', function (assert) {
     assert.expect(4);
 
     server.delete('http://localhost:8080/v4/templates/foo%2Fbar', () => [204]);
@@ -214,7 +217,7 @@ module('Unit | Service | template', function(hooks) {
     });
   });
 
-  test('it returns 403 on unauthorized deletion', function(assert) {
+  test('it returns 403 on unauthorized deletion', function (assert) {
     assert.expect(2);
 
     server.delete('http://localhost:8080/v4/templates/foo%2Fbar', () => [
@@ -234,12 +237,15 @@ module('Unit | Service | template', function(hooks) {
     t.then(
       () => {},
       err => {
-        assert.equal(err, 'You do not have the permissions to remove this template.');
+        assert.equal(
+          err,
+          'You do not have the permissions to remove this template.'
+        );
       }
     );
   });
 
-  test('it returns 403 on unauthorized update', function(assert) {
+  test('it returns 403 on unauthorized update', function (assert) {
     assert.expect(2);
 
     server.put('http://localhost:8080/v4/templates/foo%2Fbar/trusted', () => [
@@ -259,15 +265,20 @@ module('Unit | Service | template', function(hooks) {
     t.then(
       () => {},
       err => {
-        assert.equal(err, 'You do not have the permissions to update this template.');
+        assert.equal(
+          err,
+          'You do not have the permissions to update this template.'
+        );
       }
     );
   });
 
-  test('it updates the trusted property of a template', function(assert) {
+  test('it updates the trusted property of a template', function (assert) {
     assert.expect(4);
 
-    server.put('http://localhost:8080/v4/templates/foo%2Fbar/trusted', () => [204]);
+    server.put('http://localhost:8080/v4/templates/foo%2Fbar/trusted', () => [
+      204
+    ]);
 
     let service = this.owner.lookup('service:template');
 
@@ -280,7 +291,10 @@ module('Unit | Service | template', function(hooks) {
 
       assert.equal(request.status, '204');
       assert.equal(request.method, 'PUT');
-      assert.equal(request.url, 'http://localhost:8080/v4/templates/foo%2Fbar/trusted');
+      assert.equal(
+        request.url,
+        'http://localhost:8080/v4/templates/foo%2Fbar/trusted'
+      );
     });
   });
 });

@@ -7,7 +7,10 @@ import { htmlSafe } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import $ from 'jquery';
-import timeRange, { toCustomLocaleString, CONSTANT } from 'screwdriver-ui/utils/time-range';
+import timeRange, {
+  toCustomLocaleString,
+  CONSTANT
+} from 'screwdriver-ui/utils/time-range';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import ObjectProxy from '@ember/object/proxy';
 
@@ -101,11 +104,15 @@ export default Controller.extend({
    * @param {Number} step  step to increment
    */
   range: memoizerific(5)((start, stop, step) =>
-    Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step)
+    Array.from(
+      { length: (stop - start) / step + 1 },
+      (_, i) => start + i * step
+    )
   ),
   eventMetrics: computed('metrics.events', {
     get() {
-      let { queuedTime, imagePullTime, duration, total, status } = this.get('metrics.events');
+      let { queuedTime, imagePullTime, duration, total, status } =
+        this.get('metrics.events');
 
       return {
         columns: [
@@ -126,7 +133,9 @@ export default Controller.extend({
           duration: 'Duration',
           total: 'Event Duration'
         },
-        hide: this.inTrendlineView ? ['queuedTime', 'imagePullTime', 'duration'] : 'total',
+        hide: this.inTrendlineView
+          ? ['queuedTime', 'imagePullTime', 'duration']
+          : 'total',
         colors: {
           queuedTime: '#c5c5c5',
           imagePullTime: '#dfdfdf',
@@ -136,94 +145,101 @@ export default Controller.extend({
         groups: [['queuedTime', 'imagePullTime', 'duration']],
         color(color, d) {
           // return color of the status of the corresponding event in the pipeline
-          return d && d.id === 'duration' && status[d.index] !== 'SUCCESS' ? '#ea0000' : color;
+          return d && d.id === 'duration' && status[d.index] !== 'SUCCESS'
+            ? '#ea0000'
+            : color;
         }
       };
     }
   }),
 
-  downtimeJobsMetrics: computed('startTime', 'endTime', function getDowntimeJobsMetrics() {
-    const downtimeStatuses = ['FAILURE'];
-    const { pipeline, startTime, endTime } = this;
-    const { id: pipelineId } = pipeline;
+  downtimeJobsMetrics: computed(
+    'startTime',
+    'endTime',
+    function getDowntimeJobsMetrics() {
+      const downtimeStatuses = ['FAILURE'];
+      const { pipeline, startTime, endTime } = this;
+      const { id: pipelineId } = pipeline;
 
-    let downtimeJobs = [];
+      let downtimeJobs = [];
 
-    if (pipeline.settings && pipeline.settings.metricsDowntimeJobs) {
-      downtimeJobs = pipeline.settings.metricsDowntimeJobs;
+      if (pipeline.settings && pipeline.settings.metricsDowntimeJobs) {
+        downtimeJobs = pipeline.settings.metricsDowntimeJobs;
+      }
+
+      return ObjectPromiseProxy.create({
+        promise: resolve(
+          this.shuttle
+            .getPipelineDowntimeJobsMetrics(
+              pipelineId,
+              downtimeJobs,
+              downtimeStatuses,
+              startTime,
+              endTime
+            )
+            .then(metrics => {
+              this.set('downtimeJobsChartData', metrics);
+
+              let builds = metrics.map(m => m.builds.length);
+
+              let duration = metrics.map(m => {
+                let downtime = 0;
+
+                if (m.isDowntimeEvent) {
+                  // minutes to hours
+                  downtime = (m.downtimeDuration / 60).toFixed(2);
+                }
+
+                return downtime;
+              });
+
+              let downtimeJobsChartData = {
+                columns: [
+                  ['duration', ...duration],
+                  ['builds', ...builds]
+                ],
+                axes: {
+                  duration: 'y',
+                  builds: 'y2'
+                },
+                types: {
+                  duration: 'bar',
+                  builds: 'line'
+                },
+                names: {
+                  duration: 'Duration',
+                  builds: 'Build Count'
+                },
+                colors: {
+                  duration: '#ea0000',
+                  builds: '#0066df'
+                }
+                // groups: [['duration'], ['builds']]
+              };
+
+              return downtimeJobsChartData;
+            })
+        )
+      });
     }
+  ),
 
-    return ObjectPromiseProxy.create({
-      promise: resolve(
-        this.shuttle
-          .getPipelineDowntimeJobsMetrics(
-            pipelineId,
-            downtimeJobs,
-            downtimeStatuses,
-            startTime,
-            endTime
-          )
-          .then(metrics => {
-            this.set('downtimeJobsChartData', metrics);
-
-            let builds = metrics.map(m => m.builds.length);
-
-            let duration = metrics.map(m => {
-              let downtime = 0;
-
-              if (m.isDowntimeEvent) {
-                // minutes to hours
-                downtime = (m.downtimeDuration / 60).toFixed(2);
-              }
-
-              return downtime;
-            });
-
-            let downtimeJobsChartData = {
-              columns: [['duration', ...duration], ['builds', ...builds]],
-              axes: {
-                duration: 'y',
-                builds: 'y2'
-              },
-              types: {
-                duration: 'bar',
-                builds: 'line'
-              },
-              names: {
-                duration: 'Duration',
-                builds: 'Build Count'
-              },
-              colors: {
-                duration: '#ea0000',
-                builds: '#0066df'
-              }
-              // groups: [['duration'], ['builds']]
-            };
-
-            return downtimeJobsChartData;
-          })
-      )
-    });
-  }),
-
-  downtimeJobsLegends: computed(function downtimeJobsLegends() {
-    return {
-      left: [
-        {
-          key: 'Downtime (MIN)',
-          name: 'Downtime (MIN)',
-          style: `border-color: #ea0000`
-        }
-      ],
-      right: [
-        {
-          key: 'Build Count',
-          name: 'Build Count',
-          style: `border-color: #0066df`
-        }
-      ]
-    };
-  }),
+  downtimeJobsLegends: computed(() => ({
+    left: [
+      {
+        key: 'Downtime (MIN)',
+        name: 'Downtime (MIN)',
+        style: `border-color: #ea0000`
+      }
+    ],
+    right: [
+      {
+        key: 'Build Count',
+        name: 'Build Count',
+        style: `border-color: #0066df`
+      }
+    ]
+  })),
 
   eventLegend: computed('inTrendlineView', 'metrics.events', {
     get() {
@@ -266,7 +282,9 @@ export default Controller.extend({
         keys: {
           value: jobs
         },
-        hide: selectedJobName ? jobs.filter(j => j !== selectedJobName) : undefined,
+        hide: selectedJobName
+          ? jobs.filter(j => j !== selectedJobName)
+          : undefined,
         type: 'bar',
         groups: [jobs]
       };
@@ -281,7 +299,9 @@ export default Controller.extend({
         key: name,
         name,
         class: htmlSafe(
-          selectedJobName === undefined || name === selectedJobName ? '' : 'unselected'
+          selectedJobName === undefined || name === selectedJobName
+            ? ''
+            : 'unselected'
         ),
         style: htmlSafe(`border-color:${colors[i % colors.length]}`)
       }));
@@ -408,7 +428,9 @@ export default Controller.extend({
             const timeZone = self.get('isUTC') ? 'UTC' : undefined;
 
             // local date time string
-            return d ? `${toCustomLocaleString(d, { timeZone, options: dateOptions })}` : '';
+            return d
+              ? `${toCustomLocaleString(d, { timeZone, options: dateOptions })}`
+              : '';
           }
         }
       }
@@ -424,37 +446,45 @@ export default Controller.extend({
     format = format.bind(null, times);
 
     // override default with configured functions
-    return { y: { ...axis.y }, x: { ...axis.x, tick: { ...axis.x.tick, values, format } } };
-  },
-  downtimeJobsAxis: computed('axis', 'downtimeJobsMetrics', 'isUTC', function downtimeJobsAxis() {
-    const { axis, downtimeJobsChartData } = this;
-    const times = downtimeJobsChartData.map(m => new Date(m.createTime));
-
-    let { values, format } = axis.x.tick;
-
-    values = values.bind(null, times);
-    format = format.bind(null, times);
-
-    // override default with configured functions
     return {
-      x: { ...axis.x, tick: { ...axis.x.tick, values, format } },
       y: { ...axis.y },
-      y2: {
-        min: 0,
-        tick: {
-          outer: false,
-          format(d) {
-            if (Math.floor(d) !== d) {
-              return '';
-            }
-
-            return d;
-          }
-        },
-        show: true
-      }
+      x: { ...axis.x, tick: { ...axis.x.tick, values, format } }
     };
-  }),
+  },
+  downtimeJobsAxis: computed(
+    'axis',
+    'downtimeJobsMetrics',
+    'isUTC',
+    function downtimeJobsAxis() {
+      const { axis, downtimeJobsChartData } = this;
+      const times = downtimeJobsChartData.map(m => new Date(m.createTime));
+
+      let { values, format } = axis.x.tick;
+
+      values = values.bind(null, times);
+      format = format.bind(null, times);
+
+      // override default with configured functions
+      return {
+        x: { ...axis.x, tick: { ...axis.x.tick, values, format } },
+        y: { ...axis.y },
+        y2: {
+          min: 0,
+          tick: {
+            outer: false,
+            format(d) {
+              if (Math.floor(d) !== d) {
+                return '';
+              }
+
+              return d;
+            }
+          },
+          show: true
+        }
+      };
+    }
+  ),
   eventsAxis: computed('axis', 'metrics.events.createTime', 'isUTC', {
     get() {
       return this.generateAxis('events');
@@ -503,7 +533,10 @@ export default Controller.extend({
             .sort((a, b) => b.value - a.value)
             .reduce(
               (html, d) => {
-                const c = d.id === 'duration' && s !== 'SUCCESS' ? '#ea0000' : color(d.id);
+                const c =
+                  d.id === 'duration' && s !== 'SUCCESS'
+                    ? '#ea0000'
+                    : color(d.id);
 
                 let { name } = d;
 
@@ -511,9 +544,18 @@ export default Controller.extend({
 
                 // add deep-link to build/step if possible
                 if (this.name === self.get('stepsChartName')) {
-                  url = router.urlFor('pipeline.build.step', pipelineId, buildId, name);
+                  url = router.urlFor(
+                    'pipeline.build.step',
+                    pipelineId,
+                    buildId,
+                    name
+                  );
                 } else if (this.name === self.get('buildsChartName')) {
-                  url = router.urlFor('pipeline.build', pipelineId, buildId[name] || buildId);
+                  url = router.urlFor(
+                    'pipeline.build',
+                    pipelineId,
+                    buildId[name] || buildId
+                  );
                 }
 
                 if (url) {
@@ -521,12 +563,16 @@ export default Controller.extend({
                 }
 
                 if (d.value) {
-                  html.keys.push(`<p class="legend" style="border-color:${c}">${name}</p>`);
+                  html.keys.push(
+                    `<p class="legend" style="border-color:${c}">${name}</p>`
+                  );
                   if (d.id === 'builds') {
                     html.values.push(`<p>${d.value}</p>`);
                   } else {
                     html.values.push(
-                      `<p>${humanizeDuration(d.value * 60 * 1e3, { round: true })}</p>`
+                      `<p>${humanizeDuration(d.value * 60 * 1e3, {
+                        round: true
+                      })}</p>`
                     );
                   }
                 }
@@ -542,7 +588,10 @@ export default Controller.extend({
           return htmlSafe(
             `<div class="${s}">
               <div class="status">
-                <i aria-hidden="true" class="fa fa-fw fa-${statusIcon(s, true)}"></i>
+                <i aria-hidden="true" class="fa fa-fw fa-${statusIcon(
+                  s,
+                  true
+                )}"></i>
                 <strong class="sha">#${(sha[i] || '').substr(0, 7)}</strong>
                 <i aria-hidden="true" class="lock fa fa-fw fa-thumb-tack"></i>
                 <i aria-hidden="true" class="clipboard fa fa-fw fa-clipboard"></i>
@@ -654,7 +703,12 @@ export default Controller.extend({
   },
   onInitFns: computed(function onInitOuter() {
     const self = this;
-    const { eventsChartName, buildsChartName, stepsChartName, downtimeJobsChartName } = this;
+    const {
+      eventsChartName,
+      buildsChartName,
+      stepsChartName,
+      downtimeJobsChartName
+    } = this;
 
     /**
      * unlock tooltip
@@ -716,13 +770,22 @@ export default Controller.extend({
 
         // calculate reference distance for edges and midpoint of a bar
         // reuse the same for line chart
-        const [leftEdgeDomain, midPointDomain, rightEdgeDomain] = [-1, 0, 1].map(n =>
-          Math.floor(this.x.invert(x - rangeOffset * (1 - n * this.config.bar_width_ratio)))
+        const [leftEdgeDomain, midPointDomain, rightEdgeDomain] = [
+          -1, 0, 1
+        ].map(n =>
+          Math.floor(
+            this.x.invert(
+              x - rangeOffset * (1 - n * this.config.bar_width_ratio)
+            )
+          )
         );
         const currentIndexDomain = rightEdgeDomain;
 
         // if all three are the same, we are outside of bar
-        if (leftEdgeDomain === midPointDomain && midPointDomain === rightEdgeDomain) {
+        if (
+          leftEdgeDomain === midPointDomain &&
+          midPointDomain === rightEdgeDomain
+        ) {
           previousIndexDomain = null;
           this.eventRect.classed('data', false);
 
@@ -733,7 +796,10 @@ export default Controller.extend({
 
           this.api.tooltip[locked] = false;
           this.hideTooltip();
-        } else if (previousIndexDomain === null || currentIndexDomain !== previousIndexDomain) {
+        } else if (
+          previousIndexDomain === null ||
+          currentIndexDomain !== previousIndexDomain
+        ) {
           this.eventRect.classed('data', true);
 
           if (this.api.tooltip[locked]) {
@@ -786,7 +852,8 @@ export default Controller.extend({
      */
     function setupDragZoom(...conjugateChartNames) {
       // get the inverted domain values from d3
-      const getZoomedDomain = selection => selection && selection.map(x => this.x.invert(x));
+      const getZoomedDomain = selection =>
+        selection && selection.map(x => this.x.invert(x));
       const brush = d3
         .brushX()
         .on('start', () => {
@@ -794,23 +861,29 @@ export default Controller.extend({
 
           // this won't reset zoom level on every click drag event
           if (x0 !== x1 && Math.abs(x1 - x0) >= 1) {
-            [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
-              if (c) {
-                c.unzoom();
+            [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
+              c => {
+                if (c) {
+                  c.unzoom();
+                }
               }
-            });
+            );
           }
 
-          this.svg.select(`.${this.CLASS.eventRects} .selection`).classed('hide', false);
+          this.svg
+            .select(`.${this.CLASS.eventRects} .selection`)
+            .classed('hide', false);
         })
         .on('brush', () => {
-          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
-            if (c) {
-              unlockTooltip.call(c.internal);
-              c.tooltip[locked] = false;
-              c.internal.hideTooltip();
+          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
+            c => {
+              if (c) {
+                unlockTooltip.call(c.internal);
+                c.tooltip[locked] = false;
+                c.internal.hideTooltip();
+              }
             }
-          });
+          );
         })
         .on('end', () => {
           if (d3.event.selection === null) {
@@ -824,17 +897,23 @@ export default Controller.extend({
           // need to have a tiny bit offset from right edge to prevent crossing over the next point
           zoomedDomain = [Math.floor(x0), Math.ceil(x1) - offsetFromRightEdge];
 
-          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(c => {
-            if (c) {
-              c.zoom(zoomedDomain);
+          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
+            c => {
+              if (c) {
+                c.zoom(zoomedDomain);
+              }
             }
-          });
+          );
 
-          this.svg.select(`.${this.CLASS.eventRects} .selection`).classed('hide', true);
+          this.svg
+            .select(`.${this.CLASS.eventRects} .selection`)
+            .classed('hide', true);
         });
 
       // make the default event listening area also the overlay for d3 brush for drag event
-      d3.select(this.eventRect.data([{ type: 'overlay' }]).node().parentElement).call(brush);
+      d3.select(
+        this.eventRect.data([{ type: 'overlay' }]).node().parentElement
+      ).call(brush);
 
       // remove the default overlay area generated by d3 brush
       this.main.select('.overlay').remove();
@@ -941,7 +1020,10 @@ export default Controller.extend({
       // pop the last item, which is the actual event object
       conjugateChartNames.pop();
 
-      [this.get(chartName), ...conjugateChartNames.map(n => this.get(n))].forEach(c => {
+      [
+        this.get(chartName),
+        ...conjugateChartNames.map(n => this.get(n))
+      ].forEach(c => {
         if (!c) {
           return;
         }
@@ -974,7 +1056,9 @@ export default Controller.extend({
       // empty chart could introduce issues around domain in c3
       if (
         !wasHidden &&
-        chart.internal.data.targets.length - chart.internal.hiddenTargetIds.length === 1
+        chart.internal.data.targets.length -
+          chart.internal.hiddenTargetIds.length ===
+          1
       ) {
         return;
       }
@@ -990,7 +1074,9 @@ export default Controller.extend({
       // if clicked on "only"
       if (currentTarget !== target) {
         chart.show(key);
-        chart.hide(Object.keys(chart.internal.config.data_types).filter(k => k !== key));
+        chart.hide(
+          Object.keys(chart.internal.config.data_types).filter(k => k !== key)
+        );
         $(currentTarget)
           .removeClass('unselected')
           .siblings()

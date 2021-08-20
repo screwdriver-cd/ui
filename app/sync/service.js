@@ -15,16 +15,17 @@ export default Service.extend({
    * @return  {Promise}            Resolve nothing if success otherwise reject with error message
    */
   syncRequests(pipelineId, syncPath = '') {
-    const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
-      `/pipelines/${pipelineId}/sync/${syncPath}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${pipelineId}/sync/${syncPath}`;
 
     return new EmberPromise((resolve, reject) => {
       $.ajax({
         url,
         type: 'POST',
         headers: {
-          Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+          Authorization: `Bearer ${get(
+            this,
+            'session.data.authenticated.token'
+          )}`
         }
       })
         .done(() => resolve())

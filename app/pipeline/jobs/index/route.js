@@ -18,7 +18,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
     this.get('pipelineService').setBuildsLink('pipeline.jobs.index');
   },
   model() {
-    const pipelineJobsIndexController = this.controllerFor('pipeline.jobs.index');
+    const pipelineJobsIndexController = this.controllerFor(
+      'pipeline.jobs.index'
+    );
 
     pipelineJobsIndexController.set('pipeline', this.pipeline);
 
@@ -29,7 +31,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
         page: 1,
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
-      triggers: this.triggerService.getDownstreamTriggers(this.get('pipeline.id'))
+      triggers: this.triggerService.getDownstreamTriggers(
+        this.get('pipeline.id')
+      )
     }).catch(err => {
       let errorMessage = getErrorMessage(err);
 

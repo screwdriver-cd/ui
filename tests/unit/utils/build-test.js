@@ -2,7 +2,7 @@ import build from 'screwdriver-ui/utils/build';
 import { module, test } from 'qunit';
 const { isActiveBuild, isPRJob, statusIcon } = build;
 
-module('Unit | Utility | build', function() {
+module('Unit | Utility | build', function () {
   test('it checks if the current build is active', assert => {
     let result = isActiveBuild('QUEUED', '2017-01-05T00:55:46.775Z');
 

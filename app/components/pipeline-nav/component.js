@@ -15,10 +15,9 @@ export default Component.extend({
 
       if (this.pipeline.annotations) {
         if (this.pipeline.annotations['screwdriver.cd/pipelineDescription']) {
-          description = this.pipeline.annotations['screwdriver.cd/pipelineDescription'].replace(
-            /\n/g,
-            '<br>'
-          );
+          description = this.pipeline.annotations[
+            'screwdriver.cd/pipelineDescription'
+          ].replace(/\n/g, '<br>');
         }
       }
 

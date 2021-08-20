@@ -82,7 +82,13 @@ const getActiveStep = (steps = []) => {
   return name;
 };
 
-const unfinishedStatuses = ['CREATED', 'RUNNING', 'QUEUED', 'BLOCKED', 'FROZEN'];
+const unfinishedStatuses = [
+  'CREATED',
+  'RUNNING',
+  'QUEUED',
+  'BLOCKED',
+  'FROZEN'
+];
 const statuses = [
   'ABORTED',
   'CREATED',
@@ -96,4 +102,11 @@ const statuses = [
   'FROZEN'
 ];
 
-export { isActiveBuild, isPRJob, statusIcon, getActiveStep, unfinishedStatuses, statuses };
+export {
+  isActiveBuild,
+  isPRJob,
+  statusIcon,
+  getActiveStep,
+  unfinishedStatuses,
+  statuses
+};

@@ -3,17 +3,17 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | pipeline create form', function(hooks) {
+module('Integration | Component | pipeline create form', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     await render(hbs`{{pipeline-create-form errorMessage="" isSaving=false}}`);
 
     assert.dom('h1').hasText('Create Pipeline');
     assert.dom('.button-label').hasText('Create Pipeline');
   });
 
-  test('it handles the entire ui flow', async function(assert) {
+  test('it handles the entire ui flow', async function (assert) {
     assert.expect(3);
     const scm = 'git@github.com:foo/bar.git';
     const root = 'lib';

@@ -9,24 +9,24 @@ const sessionServiceMock = Service.extend({
   }
 });
 
-module('Unit | Controller | login', function(hooks) {
+module('Unit | Controller | login', function (hooks) {
   setupTest(hooks);
 
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.register('service:session', sessionServiceMock);
     this.session = this.owner.lookup('service:session');
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let controller = this.owner.lookup('controller:login');
 
     assert.ok(controller);
   });
 
-  test('it calls session.authenticate', function(assert) {
+  test('it calls session.authenticate', function (assert) {
     let controller = this.owner.lookup('controller:login');
 
     controller.send('authenticate');

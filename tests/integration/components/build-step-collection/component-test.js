@@ -24,15 +24,15 @@ const artifactService = Service.extend({
   }
 });
 
-module('Integration | Component | build step collection', function(hooks) {
+module('Integration | Component | build step collection', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.register('service:build-logs', logService);
     this.owner.register('service:build-artifact', artifactService);
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     this.set('stepList', []);
     this.set('buildSteps', []);
     await render(hbs`{{build-step-collection
@@ -64,7 +64,7 @@ module('Integration | Component | build step collection', function(hooks) {
     assert.dom('.hello').hasText('hello');
   });
 
-  test('it has a list of steps and can preselect and expand a step', async function(assert) {
+  test('it has a list of steps and can preselect and expand a step', async function (assert) {
     const stepList = [
       'sd-setup-step1',
       'sd-setup-step2',

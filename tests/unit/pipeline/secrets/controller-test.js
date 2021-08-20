@@ -5,19 +5,23 @@ import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
 let server;
 
-module('Unit | Controller | pipeline/secrets', function(hooks) {
+module('Unit | Controller | pipeline/secrets', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it can create secrets', function(assert) {
-    server.post('http://localhost:8080/v4/secrets', () => [200, {}, JSON.stringify({ id: 1234 })]);
+  test('it can create secrets', function (assert) {
+    server.post('http://localhost:8080/v4/secrets', () => [
+      200,
+      {},
+      JSON.stringify({ id: 1234 })
+    ]);
 
     let controller = this.owner.lookup('controller:pipeline/secrets');
 
@@ -48,7 +52,7 @@ module('Unit | Controller | pipeline/secrets', function(hooks) {
     });
   });
 
-  test('it can create pipelinetokens', function(assert) {
+  test('it can create pipelinetokens', function (assert) {
     server.post('http://localhost:8080/v4/pipelines/1/tokens', () => [
       200,
       {},
@@ -85,7 +89,7 @@ module('Unit | Controller | pipeline/secrets', function(hooks) {
     });
   });
 
-  test('it shows errors from server', function(assert) {
+  test('it shows errors from server', function (assert) {
     server.post('http://localhost:8080/v4/secrets', () => [
       400,
       {},
@@ -106,7 +110,10 @@ module('Unit | Controller | pipeline/secrets', function(hooks) {
     });
 
     return settled().then(() => {
-      assert.equal(controller.get('errorMessage'), 'a series of unfortunate events');
+      assert.equal(
+        controller.get('errorMessage'),
+        'a series of unfortunate events'
+      );
     });
   });
 });

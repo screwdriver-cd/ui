@@ -16,6 +16,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
       );
   },
   redirect(model) {
-    return this.transitionTo('pipeline.build', model.pipeline.id, model.build.id);
+    return this.transitionTo(
+      'pipeline.build',
+      model.pipeline.id,
+      model.build.id
+    );
   }
 });

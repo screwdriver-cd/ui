@@ -24,12 +24,12 @@ const EXAMPLE_TEMPLATE_PAYLOAD = {
   template: {}
 };
 
-module('Unit | Service | validator', function(hooks) {
+module('Unit | Service | validator', function (hooks) {
   setupTest(hooks);
 
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.register('service:session', sessionStub);
     server = new Pretender();
 
@@ -41,7 +41,11 @@ module('Unit | Service | validator', function(hooks) {
 
     server.post('http://localhost:8080/v4/validator/template', request => {
       if (request.requestBody === '{"yaml":"name: joker"}') {
-        return [400, { 'Content-Type': 'application/json' }, JSON.stringify({ error: 'villains' })];
+        return [
+          400,
+          { 'Content-Type': 'application/json' },
+          JSON.stringify({ error: 'villains' })
+        ];
       }
 
       return [
@@ -52,21 +56,21 @@ module('Unit | Service | validator', function(hooks) {
     });
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it determines if something looks like a template', function(assert) {
+  test('it determines if something looks like a template', function (assert) {
     const service = this.owner.lookup('service:validator');
 
     assert.ok(service.isTemplate('name: bananas'));
     assert.notOk(service.isTemplate('workflow: bananas'));
   });
 
-  test('it uploads a template to the validator', function(assert) {
+  test('it uploads a template to the validator', function (assert) {
     const service = this.owner.lookup('service:validator');
 
-    server.handledRequest = function(verb, path, request) {
+    server.handledRequest = function (verb, path, request) {
       assert.equal(verb, 'POST');
       assert.equal(request.withCredentials, true);
       assert.ok(request.requestHeaders.Authorization);
@@ -77,10 +81,10 @@ module('Unit | Service | validator', function(hooks) {
     });
   });
 
-  test('it uploads a config to the validator', function(assert) {
+  test('it uploads a config to the validator', function (assert) {
     const service = this.owner.lookup('service:validator');
 
-    server.handledRequest = function(verb, path, request) {
+    server.handledRequest = function (verb, path, request) {
       assert.equal(verb, 'POST');
       assert.equal(request.withCredentials, true);
       assert.ok(request.requestHeaders.Authorization);
@@ -91,7 +95,7 @@ module('Unit | Service | validator', function(hooks) {
     });
   });
 
-  test('it handles validator failure', function(assert) {
+  test('it handles validator failure', function (assert) {
     const service = this.owner.lookup('service:validator');
 
     return service.getValidationResults('name: joker').catch(response => {

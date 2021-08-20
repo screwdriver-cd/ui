@@ -4,14 +4,14 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { settled } from '@ember/test-helpers';
 
-module('Unit | Model | event', function(hooks) {
+module('Unit | Model | event', function (hooks) {
   setupTest(hooks);
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     assert.ok(!!this.owner.lookup('service:store').createRecord('event'));
   });
 
-  test('it is not completed when there are no builds', async function(assert) {
+  test('it is not completed when there are no builds', async function (assert) {
     const model = this.owner.lookup('service:store').createRecord('event');
 
     await settled();
@@ -22,7 +22,7 @@ module('Unit | Model | event', function(hooks) {
   });
 
   // Testing observers is messy, need to change the model value, then schedule to read the newly set value later
-  test('it is not completed when the a build is not complete', async function(assert) {
+  test('it is not completed when the a build is not complete', async function (assert) {
     const build = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 1, status: 'RUNNING' });
@@ -35,7 +35,7 @@ module('Unit | Model | event', function(hooks) {
     assert.notOk(model.get('isComplete'));
   });
 
-  test('it is not completed when new builds created during reload', async function(assert) {
+  test('it is not completed when new builds created during reload', async function (assert) {
     assert.expect(3);
 
     const build1 = this.owner
@@ -47,14 +47,16 @@ module('Unit | Model | event', function(hooks) {
     const build3 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 3, status: 'SUCCESS' });
-    const model = run(() => this.owner.lookup('service:store').createRecord('event'));
+    const model = run(() =>
+      this.owner.lookup('service:store').createRecord('event')
+    );
 
     let reloadCnt = 0;
 
     run(() => {
       model.set('builds', [build1]);
       model.set('buildId', 121);
-      model.set('startReloading', function() {
+      model.set('startReloading', function () {
         reloadCnt += 1;
 
         if (reloadCnt > 2) {
@@ -83,7 +85,7 @@ module('Unit | Model | event', function(hooks) {
     assert.ok(isComplete);
   });
 
-  test('it is complete when all builds have run', async function(assert) {
+  test('it is complete when all builds have run', async function (assert) {
     const build1 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 1, status: 'SUCCESS' });
@@ -99,7 +101,9 @@ module('Unit | Model | event', function(hooks) {
     const build5 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 5, status: 'SUCCESS' });
-    const model = run(() => this.owner.lookup('service:store').createRecord('event'));
+    const model = run(() =>
+      this.owner.lookup('service:store').createRecord('event')
+    );
 
     run(() => model.set('builds', [build5, build4, build3, build2, build1]));
 
@@ -110,7 +114,7 @@ module('Unit | Model | event', function(hooks) {
     assert.ok(isComplete);
   });
 
-  test('it is skipped when commit massage contains skip ci', async function(assert) {
+  test('it is skipped when commit massage contains skip ci', async function (assert) {
     const model = this.owner.lookup('service:store').createRecord('event');
 
     run(() => {
@@ -125,7 +129,7 @@ module('Unit | Model | event', function(hooks) {
     assert.ok(isSkipped);
   });
 
-  test('it is not skipped when commit type is pr', async function(assert) {
+  test('it is not skipped when commit type is pr', async function (assert) {
     const model = this.owner.lookup('service:store').createRecord('event');
 
     run(() => {
@@ -140,7 +144,7 @@ module('Unit | Model | event', function(hooks) {
     assert.notOk(isSkipped);
   });
 
-  test('it is not skipped when it has builds', async function(assert) {
+  test('it is not skipped when it has builds', async function (assert) {
     const build = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 1, status: 'RUNNING' });
@@ -159,8 +163,10 @@ module('Unit | Model | event', function(hooks) {
     assert.notOk(isSkipped);
   });
 
-  test('it is RUNNING when there are no builds', async function(assert) {
-    const model = run(() => this.owner.lookup('service:store').createRecord('event'));
+  test('it is RUNNING when there are no builds', async function (assert) {
+    const model = run(() =>
+      this.owner.lookup('service:store').createRecord('event')
+    );
 
     run(() => model.set('builds', []));
 
@@ -171,14 +177,16 @@ module('Unit | Model | event', function(hooks) {
     assert.equal(status, 'RUNNING');
   });
 
-  test('it returns build status when a build is not SUCCESS', async function(assert) {
+  test('it returns build status when a build is not SUCCESS', async function (assert) {
     const build1 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 1, status: 'ABORTED' });
     const build2 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 2, status: 'SUCCESS' });
-    const model = run(() => this.owner.lookup('service:store').createRecord('event'));
+    const model = run(() =>
+      this.owner.lookup('service:store').createRecord('event')
+    );
 
     run(() => model.set('builds', [build2, build1]));
 
@@ -189,7 +197,7 @@ module('Unit | Model | event', function(hooks) {
     assert.equal(status, 'ABORTED');
   });
 
-  test('it is SUCCESS when all expected builds have run successfully', async function(assert) {
+  test('it is SUCCESS when all expected builds have run successfully', async function (assert) {
     const build1 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 1, status: 'SUCCESS' });
@@ -205,7 +213,9 @@ module('Unit | Model | event', function(hooks) {
     const build5 = this.owner
       .lookup('service:store')
       .createRecord('build', { jobId: 5, status: 'SUCCESS' });
-    const model = run(() => this.owner.lookup('service:store').createRecord('event'));
+    const model = run(() =>
+      this.owner.lookup('service:store').createRecord('event')
+    );
 
     run(() => model.set('builds', [build5, build4, build3, build2, build1]));
 
@@ -216,7 +226,7 @@ module('Unit | Model | event', function(hooks) {
     assert.equal(status, 'SUCCESS');
   });
 
-  test('it returns event duration whenever builds have run in parallel', async function(assert) {
+  test('it returns event duration whenever builds have run in parallel', async function (assert) {
     const eventStartTime = 1472244582531;
     const elapsed10secsTime = eventStartTime + 10000;
     const elapsed20secsTime = eventStartTime + 20000;
@@ -232,7 +242,9 @@ module('Unit | Model | event', function(hooks) {
       endTime: new Date(elapsed20secsTime),
       status: 'ABORTED'
     });
-    const model = run(() => this.owner.lookup('service:store').createRecord('event'));
+    const model = run(() =>
+      this.owner.lookup('service:store').createRecord('event')
+    );
 
     run(() => model.set('builds', [build2, build1]));
 
@@ -243,7 +255,7 @@ module('Unit | Model | event', function(hooks) {
     assert.equal(duration, 20000);
   });
 
-  test('it returns event duration until now if not completed yet', async function(assert) {
+  test('it returns event duration until now if not completed yet', async function (assert) {
     const eventStartTime = 1472244582531;
     const elapsed10secsTime = eventStartTime + 10000;
     const elapsed20secsTime = eventStartTime + 20000;
@@ -263,7 +275,9 @@ module('Unit | Model | event', function(hooks) {
       status: 'RUNNING'
     });
     const testStartTime = new Date().getTime();
-    const model = run(() => this.owner.lookup('service:store').createRecord('event'));
+    const model = run(() =>
+      this.owner.lookup('service:store').createRecord('event')
+    );
 
     run(() => model.set('builds', [build2, build1, build3]));
 

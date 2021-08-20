@@ -8,16 +8,16 @@ const mockPipeline = EmberObject.create({
   id: 1
 });
 
-module('Integration | Component | pipeline list job cell', function(hooks) {
+module('Integration | Component | pipeline list job cell', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.setProperties({
       pipeline: mockPipeline
     });
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     this.set('value', {
       jobName: 'a',
       build: {
@@ -34,7 +34,7 @@ module('Integration | Component | pipeline list job cell', function(hooks) {
     assert.dom('.job-name').hasText('a');
   });
 
-  test('it renders an aborted build', async function(assert) {
+  test('it renders an aborted build', async function (assert) {
     this.set('value', {
       jobName: 'b',
       build: {
@@ -51,7 +51,7 @@ module('Integration | Component | pipeline list job cell', function(hooks) {
     assert.dom('.job-name').hasText('b');
   });
 
-  test('it renders a successful build', async function(assert) {
+  test('it renders a successful build', async function (assert) {
     this.set('value', {
       jobName: 'b',
       build: {
@@ -68,7 +68,7 @@ module('Integration | Component | pipeline list job cell', function(hooks) {
     assert.dom('.job-name').hasText('b');
   });
 
-  test('it renders a failed build', async function(assert) {
+  test('it renders a failed build', async function (assert) {
     this.set('value', {
       jobName: 'b',
       build: {

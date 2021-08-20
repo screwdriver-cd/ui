@@ -75,9 +75,9 @@ export default Controller.extend({
 
       connectedPipelineIds.delete(`${pipeline.id}`);
 
-      const connectedPipelinesPromises = Array.from(connectedPipelineIds).map(pipelineId => {
-        return this.store.findRecord('pipeline', pipelineId);
-      });
+      const connectedPipelinesPromises = Array.from(connectedPipelineIds).map(
+        pipelineId => this.store.findRecord('pipeline', pipelineId)
+      );
 
       connectedPipelines = await all(connectedPipelinesPromises);
 
@@ -114,7 +114,9 @@ export default Controller.extend({
       }
     });
 
-    const connectedPipelines = await this.extractConnectedPipelines(pipelineGraph);
+    const connectedPipelines = await this.extractConnectedPipelines(
+      pipelineGraph
+    );
 
     if (connectedPipelines.length) {
       const prNode = workflowGraph.nodes.findBy('name', '~pr');
@@ -155,7 +157,11 @@ export default Controller.extend({
               dest = `~sd@${p.id}:${e.dest}`;
             }
 
-            if (!workflowGraph.edges.find(ed => ed.src === src && ed.dest === dest)) {
+            if (
+              !workflowGraph.edges.find(
+                ed => ed.src === src && ed.dest === dest
+              )
+            ) {
               workflowGraph.edges.push({ src, dest });
             }
           }
@@ -221,12 +227,22 @@ export default Controller.extend({
 
       this.highlightPipeline(this.selectedConnectedPipeline.id);
 
-      this.set('selectedConnectedPipelineId', this.selectedConnectedPipeline.id);
+      this.set(
+        'selectedConnectedPipelineId',
+        this.selectedConnectedPipeline.id
+      );
     },
 
     async searchPipeline(pipelineName) {
       return new EmberPromise((resolve, reject) => {
-        debounce(this, this.searchPipeline, pipelineName, resolve, reject, 1000);
+        debounce(
+          this,
+          this.searchPipeline,
+          pipelineName,
+          resolve,
+          reject,
+          1000
+        );
       });
     }
   }

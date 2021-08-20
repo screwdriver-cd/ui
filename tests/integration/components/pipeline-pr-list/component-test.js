@@ -4,10 +4,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | pipeline pr list', function(hooks) {
+module('Integration | Component | pipeline pr list', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const jobs = [
       EmberObject.create({
         id: 'abcd',
@@ -70,7 +70,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
     assert.dom('.by').hasText('anonymous');
   });
 
-  test('it renders start build for restricted PR pipeline', async function(assert) {
+  test('it renders start build for restricted PR pipeline', async function (assert) {
     const jobs = [
       EmberObject.create({
         id: 'abcd',
@@ -100,7 +100,7 @@ module('Integration | Component | pipeline pr list', function(hooks) {
     assert.dom('.view .startButton').exists({ count: 1 });
   });
 
-  test('it renders PR stop button', async function(assert) {
+  test('it renders PR stop button', async function (assert) {
     const jobs = [
       EmberObject.create({
         id: 'abcd',

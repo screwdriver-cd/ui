@@ -8,7 +8,10 @@ import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
 import moment from 'moment';
-import { SHOULD_RELOAD_SKIP, SHOULD_RELOAD_YES } from '../../mixins/model-reloader';
+import {
+  SHOULD_RELOAD_SKIP,
+  SHOULD_RELOAD_YES
+} from '../../mixins/model-reloader';
 
 // eslint-disable-next-line require-jsdoc
 export async function stopBuild(givenEvent, job) {
@@ -36,7 +39,10 @@ export async function stopBuild(givenEvent, job) {
         event.hasMany('builds').reload();
       }
     } catch (e) {
-      this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+      this.set(
+        'errorMessage',
+        Array.isArray(e.errors) ? e.errors[0].detail : ''
+      );
     }
   }
 }
@@ -273,8 +279,10 @@ export default Controller.extend(ModelReloaderMixin, {
         completeGraph.nodes = uniqBy(completeGraph.nodes || [], n => n.name);
 
         completeGraph.edges = (completeGraph.edges || []).filter(e => {
-          const srcFound = !e.src || !!completeGraph.nodes.find(n => n.name === e.src);
-          const destFound = !e.dest || !!completeGraph.nodes.find(n => n.name === e.dest);
+          const srcFound =
+            !e.src || !!completeGraph.nodes.find(n => n.name === e.src);
+          const destFound =
+            !e.dest || !!completeGraph.nodes.find(n => n.name === e.dest);
 
           return srcFound && destFound;
         });
@@ -293,13 +301,18 @@ export default Controller.extend(ModelReloaderMixin, {
     get() {
       let previousModelEvents = this.previousModelEvents || [];
 
-      let currentModelEvents = this.getWithDefault('model.events', []).toArray();
+      let currentModelEvents = this.getWithDefault(
+        'model.events',
+        []
+      ).toArray();
 
       let newModelEvents = [];
       const newPipelineId = this.get('pipeline.id');
 
       // purge unmatched pipeline events
-      if (previousModelEvents.some(e => e.get('pipelineId') !== newPipelineId)) {
+      if (
+        previousModelEvents.some(e => e.get('pipelineId') !== newPipelineId)
+      ) {
         newModelEvents = [...currentModelEvents];
 
         this.set('paginateEvents', []);
@@ -481,7 +494,10 @@ export default Controller.extend(ModelReloaderMixin, {
       try {
         return await this.get('stop').stopBuilds(eventId);
       } catch (e) {
-        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        this.set(
+          'errorMessage',
+          Array.isArray(e.errors) ? e.errors[0].detail : ''
+        );
       }
 
       return null;
@@ -495,12 +511,18 @@ export default Controller.extend(ModelReloaderMixin, {
           await this.refreshListViewJobs();
         }
       } catch (e) {
-        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        this.set(
+          'errorMessage',
+          Array.isArray(e.errors) ? e.errors[0].detail : ''
+        );
       }
     },
     startPRBuild(prNum, jobs, parameters) {
       this.set('isShowingModal', true);
-      const user = get(decoder(this.get('session.data.authenticated.token')), 'username');
+      const user = get(
+        decoder(this.get('session.data.authenticated.token')),
+        'username'
+      );
 
       let eventPayload = {
         causeMessage: `Manually started by ${user}`,
@@ -527,7 +549,9 @@ export default Controller.extend(ModelReloaderMixin, {
 
             // PR events are aggregated by each PR jobs when prChain is enabled.
             if (this.prChainEnabled) {
-              const newEvents = this.prEvents.filter(e => e.get('prNum') !== prNum);
+              const newEvents = this.prEvents.filter(
+                e => e.get('prNum') !== prNum
+              );
 
               newEvents.unshiftObject(newEvent);
 
@@ -537,7 +561,10 @@ export default Controller.extend(ModelReloaderMixin, {
         )
         .catch(e => {
           this.set('isShowingModal', false);
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+          this.set(
+            'errorMessage',
+            Array.isArray(e.errors) ? e.errors[0].detail : ''
+          );
         })
         .finally(() => jobs.forEach(j => j.hasMany('builds').reload()));
     }

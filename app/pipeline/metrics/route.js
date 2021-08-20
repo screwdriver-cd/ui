@@ -67,12 +67,20 @@ export default Route.extend({
       return RSVP.all([
         allJobs,
         fetchAll
-          ? this.store.query('metric', { pipelineId: this.get('pipeline.id'), startTime, endTime })
+          ? this.store.query('metric', {
+              pipelineId: this.get('pipeline.id'),
+              startTime,
+              endTime
+            })
           : RSVP.resolve(this.pipelineMetrics),
         // eslint-disable-next-line no-nested-ternary
         fetchJob || fetchAll
           ? this.get('jobId')
-            ? this.store.query('metric', { jobId: this.get('jobId'), startTime, endTime })
+            ? this.store.query('metric', {
+                jobId: this.get('jobId'),
+                startTime,
+                endTime
+              })
             : RSVP.resolve()
           : RSVP.resolve(this.jobMetrics)
       ])
@@ -220,9 +228,16 @@ export default Route.extend({
               passed: passCount,
               failed: total - passCount,
               avgs: {
-                queuedTime: humanizeDuration((sum.queuedTime * 1e3) / total, { round: true }),
-                imagePullTime: humanizeDuration((sum.imagePullTime * 1e3) / total, { round: true }),
-                duration: humanizeDuration((sum.duration * 1e3) / total, { round: true })
+                queuedTime: humanizeDuration((sum.queuedTime * 1e3) / total, {
+                  round: true
+                }),
+                imagePullTime: humanizeDuration(
+                  (sum.imagePullTime * 1e3) / total,
+                  { round: true }
+                ),
+                duration: humanizeDuration((sum.duration * 1e3) / total, {
+                  round: true
+                })
               }
             },
             getBuildId
@@ -238,7 +253,13 @@ export default Route.extend({
         });
     });
 
-    return RSVP.hash({ metrics, startTime, endTime, successOnly, jobId: this.get('jobId') });
+    return RSVP.hash({
+      metrics,
+      startTime,
+      endTime,
+      successOnly,
+      jobId: this.get('jobId')
+    });
   },
   actions: {
     setFetchDates(start, end) {

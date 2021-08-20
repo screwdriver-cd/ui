@@ -28,13 +28,15 @@ const TEST_TEMPLATES = {
   targetNamespace: 'foo'
 };
 
-module('Integration | Component | tc collection list', function(hooks) {
+module('Integration | Component | tc collection list', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     setBreakpoint('desktop');
 
-    Object.keys(TEST_TEMPLATES).forEach(prop => this.set(prop, TEST_TEMPLATES[prop]));
+    Object.keys(TEST_TEMPLATES).forEach(prop =>
+      this.set(prop, TEST_TEMPLATES[prop])
+    );
 
     await render(hbs`{{#tc-collection-list
       model=model
@@ -51,10 +53,12 @@ module('Integration | Component | tc collection list', function(hooks) {
     assert.dom('.collection-list-table .lt-body td').exists({ count: 10 });
   });
 
-  test('it renders with filter namespace', async function(assert) {
+  test('it renders with filter namespace', async function (assert) {
     setBreakpoint('desktop');
 
-    Object.keys(TEST_TEMPLATES).forEach(prop => this.set(prop, TEST_TEMPLATES[prop]));
+    Object.keys(TEST_TEMPLATES).forEach(prop =>
+      this.set(prop, TEST_TEMPLATES[prop])
+    );
 
     await render(hbs`{{#tc-collection-list
       model=model

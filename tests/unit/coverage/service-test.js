@@ -13,19 +13,19 @@ const sessionStub = Service.extend({
 
 let server;
 
-module('Unit | Service | coverage ', function(hooks) {
+module('Unit | Service | coverage ', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     this.owner.register('service:session', sessionStub);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it fetches coverage info', function(assert) {
+  test('it fetches coverage info', function (assert) {
     assert.expect(3);
     server.get('http://localhost:8080/v4/coverage/info', () => [
       200,
@@ -73,7 +73,7 @@ module('Unit | Service | coverage ', function(hooks) {
     });
   });
 
-  test('it fetches coverage info with scope', function(assert) {
+  test('it fetches coverage info with scope', function (assert) {
     assert.expect(3);
     server.get('http://localhost:8080/v4/coverage/info', () => [
       200,
@@ -122,7 +122,7 @@ module('Unit | Service | coverage ', function(hooks) {
     });
   });
 
-  test('it sets default coverage info when request failed', function(assert) {
+  test('it sets default coverage info when request failed', function (assert) {
     assert.expect(3);
     server.get('http://localhost:8080/v4/coverage/info', () => [
       500,

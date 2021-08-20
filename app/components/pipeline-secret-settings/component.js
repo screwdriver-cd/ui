@@ -31,7 +31,12 @@ export default Component.extend({
         return false;
       }
 
-      this.onCreateSecret(this.newName, this.newValue, this.get('pipeline.id'), this.newAllow);
+      this.onCreateSecret(
+        this.newName,
+        this.newValue,
+        this.get('pipeline.id'),
+        this.newAllow
+      );
       this.set('newName', null);
       this.set('newValue', null);
       this.set('newAllow', false);

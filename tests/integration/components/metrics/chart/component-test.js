@@ -4,10 +4,10 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { Promise as EmberPromise } from 'rsvp';
 
-module('Integration | Component | metrics/chart', function(hooks) {
+module('Integration | Component | metrics/chart', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it does not renders chart with pending metrics data', async function(assert) {
+  test('it does not renders chart with pending metrics data', async function (assert) {
     const metrics = new EmberPromise(() => {});
     const chartTitle = 'Downtime vs Build Count';
 
@@ -25,10 +25,31 @@ module('Integration | Component | metrics/chart', function(hooks) {
     assert.dom('.c3-text').doesNotExist();
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const metrics = {
       columns: [
-        ['duration', 0, '42329.18', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [
+          'duration',
+          0,
+          '42329.18',
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
         ['builds', 4, 3, 1, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1]
       ],
       axes: {

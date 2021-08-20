@@ -18,7 +18,10 @@ export default Route.extend(ApplicationRouteMixin, {
   },
   setupController(controller) {
     this._super(...arguments);
-    if (get(this, 'session.isAuthenticated') && !get(this, 'session.data.authenticated.isGuest')) {
+    if (
+      get(this, 'session.isAuthenticated') &&
+      !get(this, 'session.data.authenticated.isGuest')
+    ) {
       controller.set('collections', this.store.findAll('collection'));
     }
   },
@@ -26,13 +29,16 @@ export default Route.extend(ApplicationRouteMixin, {
     this.reloadPage();
   },
   // eslint-disable-next-line ember/no-observers
-  sessionChanged: observer('session.data.sessionChanged', function sessionChanged() {
-    if (this.session.get('data.sessionChanged')) {
-      this.session.set('data.sessionChanged', false);
-      this.store.unloadAll();
-      this.reloadPage();
+  sessionChanged: observer(
+    'session.data.sessionChanged',
+    function sessionChanged() {
+      if (this.session.get('data.sessionChanged')) {
+        this.session.set('data.sessionChanged', false);
+        this.store.unloadAll();
+        this.reloadPage();
+      }
     }
-  }),
+  ),
   title(tokens) {
     let arr = Array.isArray(tokens) ? tokens : [];
 
