@@ -36,9 +36,6 @@ export default Component.extend({
     startPRBuild(parameters) {
       this.startPRBuild.apply(null, [parameters, this.events]);
     },
-    startMainBuild() {
-      this.startMainBuild();
-    },
     stopEvent() {
       this.stopEvent();
     },

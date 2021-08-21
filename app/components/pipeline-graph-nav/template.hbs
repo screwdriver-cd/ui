@@ -41,19 +41,10 @@
     </div>
     <div class="col-xs-3">
       {{#if session.isAuthenticated}}
-        {{#if selectedEventObj.isRunning}}
-          <div class="col">
-            {{#bs-button onClick=(action stopEvent) class="event__stop" title="Stop all builds for this event"}}Stop{{/bs-button}}
-          </div>
-        {{/if}}
-        {{#if (eq selectedEventObj.type "pr")}}
-          {{pipeline-start
-            startBuild=(action startPRBuild)
-            prNum=selectedEventObj.prNum
-            jobs=prJobs
-            pipeline=pipeline}}
-        {{else}}
-          {{pipeline-start startBuild=(action startMainBuild) pipeline=pipeline}}
+        {{#if (not-eq selectedEventObj.type "pr")}}
+          {{#if (not selectedEventObj.isRunning)}}
+            {{pipeline-start startBuild=(action startMainBuild) pipeline=pipeline}}
+          {{/if}}
         {{/if}}
       {{/if}}
     </div>

@@ -16,8 +16,6 @@
       {{else}}
         {{#if (eq event.type "pr")}}
           {{#bs-button onClick=(action startPRBuild event.prNum events) class="startButton" title="Start all builds for this event"}}Start{{/bs-button}}
-        {{else}}
-          {{#bs-button onClick=(action startMainBuild) class="startButton" title="Start all builds for this event"}}Start{{/bs-button}}
         {{/if}}
       {{/if}}
     </div>
