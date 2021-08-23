@@ -68,6 +68,9 @@ module('Integration | Component | pipeline event row', function (hooks) {
       assert.ok(true);
     };
 
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
+
     const eventMock = EmberObject.create(copy(event, true));
 
     this.set('event', eventMock);
@@ -75,9 +78,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(
-      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
-    );
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -97,6 +105,12 @@ module('Integration | Component | pipeline event row', function (hooks) {
       assert.ok(true);
     };
 
+    this.set('startBuild', (prNum, jobs) => {
+      assert.equal(prNum, 2);
+      assert.equal(jobs[0].group, 2);
+    });
+    this.set('stopEvent', Function.prototype);
+
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
         id: 4,
@@ -114,13 +128,18 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(
-      hbs`{{pipeline-event-row event=event selectedEvent=4 latestCommit=latestCommit lastSuccessful=3}}`
-    );
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startBuild
+      stopEvent=stopEvent
+      selectedEvent=4
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('PR-2');
+    assert.dom('.commit').hasText('PR-2 Start');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
@@ -135,6 +154,9 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
 
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
@@ -152,9 +174,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(
-      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
-    );
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -174,6 +201,9 @@ module('Integration | Component | pipeline event row', function (hooks) {
       assert.ok(true);
     };
 
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
+
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
         causeMessage: 'Triggered by build 123',
@@ -186,9 +216,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(
-      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
-    );
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -211,6 +246,9 @@ module('Integration | Component | pipeline event row', function (hooks) {
       assert.ok(true);
     };
 
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
+
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
         causeMessage: 'Triggered from API Deploy pipeline',
@@ -224,9 +262,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(
-      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
-    );
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -247,6 +290,9 @@ module('Integration | Component | pipeline event row', function (hooks) {
       assert.ok(true);
     };
 
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
+
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
         startFrom: undefined
@@ -258,9 +304,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(
-      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
-    );
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
@@ -276,6 +327,9 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
 
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
@@ -297,9 +351,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(
-      hbs`{{pipeline-event-row event=event selectedEvent=3 latestCommit=latestCommit lastSuccessful=3}}`
-    );
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SKIPPED').exists({ count: 1 });
     assert.dom('.status .fa-exclamation-circle').exists({ count: 1 });

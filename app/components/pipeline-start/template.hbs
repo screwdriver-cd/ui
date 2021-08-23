@@ -1,9 +1,11 @@
 {{#if hasParameters}}
   {{#if hasLargeNumberOfParameters}}
-    <div class="btn-group">
-      <button {{action "startBuild"}} class="btn start-button" title="Start a new event from latest commit">Start{{#if prNum}} PR-{{prNum}}{{/if}}</button>
-      <button class="btn start-with-parameters-button" onClick={{action "toggleModal"}}>{{fa-icon (concat "caret-" direction)}}</button>
-    </div>
+    {{#if (not prNum)}}
+      <div class="btn-group">
+        <button {{action "startBuild"}} class="btn start-button" title="Start a new event from latest commit">Start</button>
+        <button class="btn start-with-parameters-button" onClick={{action "toggleModal"}}>{{fa-icon (concat "caret-" direction)}}</button>
+      </div>
+    {{/if}}
     {{#if isShowingModal}}
       {{#modal-dialog
         targetAttachment="center"
@@ -26,7 +28,9 @@
       onHide=(action "resetForm")
       closeOnMenuClick=false as |dd|}}
       <div class="btn-group">
-        <button {{action "startBuild"}} class="start-button btn" title="Start a new event from latest commit">Start{{#if prNum}} PR-{{prNum}}{{/if}}</button>
+        {{#if (not prNum)}}
+          <button {{action "startBuild"}} class="start-button btn" title="Start a new event from latest commit">Start</button>
+        {{/if}}
         {{#dd.button class="start-with-parameters-button"
           onClick=(action "toggleDropdown" dd.toggleDropdown)}}
           {{fa-icon (concat "caret-" direction)}}
@@ -43,5 +47,7 @@
     {{/bs-dropdown}}
   {{/if}}
 {{else}}
-  <button {{action "startBuild"}} class="start-button" title="Start a new event from latest commit">Start{{#if prNum}} PR-{{prNum}}{{/if}}</button>
+  {{#if (not prNum)}}
+    <button {{action "startBuild"}} class="start-button" title="Start a new event from latest commit">Start</button>
+  {{/if}}
 {{/if}}
