@@ -46,9 +46,7 @@
     <div class="col-xs-3">
       {{#if session.isAuthenticated}}
         {{#if (not-eq selectedEventObj.type "pr")}}
-          {{#if (not selectedEventObj.isRunning)}}
-            {{pipeline-start startBuild=(action startMainBuild) pipeline=pipeline}}
-          {{/if}}
+          {{pipeline-start startBuild=(action startMainBuild) pipeline=pipeline}}
         {{/if}}
       {{/if}}
     </div>
