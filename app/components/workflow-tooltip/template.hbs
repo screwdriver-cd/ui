@@ -1,6 +1,7 @@
 <div class="content">
   {{#if tooltipData.externalTrigger}}
     {{#link-to "pipeline" tooltipData.externalTrigger.pipelineId}}Go to remote pipeline{{/link-to}}
+    {{#link-to "pipeline-visualizer" (query-params selectedPipelineId=tooltipData.externalTrigger.pipelineId)}}Open Pipeline Visualizer{{/link-to}}
   {{else if tooltipData.triggers}}
     {{#each tooltipData.triggers as |t|}}
       {{#link-to "pipeline" t.pipelineId}}Go to downstream pipeline {{t.triggerName}}{{/link-to}}
@@ -12,6 +13,7 @@
       {{/if}}
     {{/if}}
     {{#link-to "pipeline.metrics" (query-params jobId=tooltipData.job.id)}}Go to build metrics{{/link-to}}
+    {{#link-to "pipeline-visualizer" (query-params selectedPipelineId=tooltipData.selectedEvent.pipelineId)}}Open Pipeline Visualizer{{/link-to}}
     {{#if displayRestartButton}}
       {{#if (eq tooltipData.job.status "DISABLED")}}
         <p>{{tooltipData.job.stateChangeMessage}}</p>
