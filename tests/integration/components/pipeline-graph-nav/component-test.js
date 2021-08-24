@@ -167,7 +167,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     }}`);
 
     assert.dom('.row strong').hasText('Pull Requests');
-    assert.dom('.row button').exists({ count: 4 });
+    assert.dom('.row button').exists({ count: 2 });
   });
 
   test('it renders when selectedEvent is a skipped event', async function (assert) {

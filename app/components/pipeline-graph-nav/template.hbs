@@ -1,17 +1,19 @@
 {{#if showGraphNavRow}}
   <div class="row">
 
-    <div class="col-xs-2">
-      {{#bs-button-group
-              class="view-toggle"
-              value=showListView
-              type="radio"
-              onChange=(action setShowListView) as |bg|
-      }}
-        {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
-        {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
-      {{/bs-button-group}}
-    </div>
+    {{#if (not isPR)}}
+      <div class="col-xs-2">
+        {{#bs-button-group
+                class="view-toggle"
+                value=showListView
+                type="radio"
+                onChange=(action setShowListView) as |bg|
+        }}
+          {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
+          {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
+        {{/bs-button-group}}
+      </div>
+    {{/if}}
 
     <div class="col-xs-4">
       {{#if isPR}}
@@ -28,23 +30,23 @@
         {{/each}}
       {{/bs-button-group}}
     </div>
-    <div class="col-xs-3" title="Toggle to {{if showDownstreamTriggers "hide" "show"}} the downstream trigger nodes.">
-      {{x-toggle
-        size="medium"
-        theme="material"
-        showLabels=true
-        value=showDownstreamTriggers
-        offLabel="Hide triggers"
-        onLabel="Show triggers"
-        onToggle=(action setDownstreamTrigger)
-      }}
-    </div>
+    {{#if (not isPR)}}
+      <div class="col-xs-3" title="Toggle to {{if showDownstreamTriggers "hide" "show"}} the downstream trigger nodes.">
+        {{x-toggle
+          size="medium"
+          theme="material"
+          showLabels=true
+          value=showDownstreamTriggers
+          offLabel="Hide triggers"
+          onLabel="Show triggers"
+          onToggle=(action setDownstreamTrigger)
+        }}
+      </div>
+    {{/if}}
     <div class="col-xs-3">
       {{#if session.isAuthenticated}}
         {{#if (not-eq selectedEventObj.type "pr")}}
-          {{#if (not selectedEventObj.isRunning)}}
-            {{pipeline-start startBuild=(action startMainBuild) pipeline=pipeline}}
-          {{/if}}
+          {{pipeline-start startBuild=(action startMainBuild) pipeline=pipeline}}
         {{/if}}
       {{/if}}
     </div>
