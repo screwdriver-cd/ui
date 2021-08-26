@@ -24,11 +24,14 @@ export default Component.extend({
   // Removing a pipeline
   isRemoving: false,
   isShowingModal: false,
-  showDangerButton: true,
+  showRemoveDangerButton: true,
   showRemoveButtons: false,
   showToggleModal: false,
   showPRJobs: true,
+  // Set pipeline visibility
   isUpdatingPipelineVisibility: false,
+  showPipelineVisibilityDangerButton: true,
+  showPipelineVisibilityButtons: false,
   privateRepo: false,
   publicPipeline: false,
   // Job disable/enable
@@ -190,11 +193,11 @@ export default Component.extend({
       this.set('showToggleModal', false);
     },
     showRemoveButtons() {
-      this.set('showDangerButton', false);
+      this.set('showRemoveDangerButton', false);
       this.set('showRemoveButtons', true);
     },
     cancelRemove() {
-      this.set('showDangerButton', true);
+      this.set('showRemoveDangerButton', true);
       this.set('showRemoveButtons', false);
     },
     removePipeline() {
@@ -259,16 +262,28 @@ export default Component.extend({
       }
     },
 
+    showPipelineVisibilityButtons() {
+      this.set('showPipelineVisibilityDangerButton', false);
+      this.set('showPipelineVisibilityButtons', true);
+    },
+    cancelPipelineVisibility() {
+      this.set('showPipelineVisibilityDangerButton', true);
+      this.set('showPipelineVisibilityButtons', false);
+    },
     async updatePipelineVisibility(publicPipeline) {
       try {
         const pipelineId = this.get('pipeline.id');
 
-        this.setProperties({ isUpdatingPipelineVisibility: true });
+        this.setProperties({
+          isUpdatingPipelineVisibility: true,
+          showPipelineVisibilityButtons: false
+        });
         await this.shuttle.updatePipelineSettings(pipelineId, {
           publicPipeline
         });
       } finally {
         this.setProperties({
+          showPipelineVisibilityDangerButton: true,
           isUpdatingPipelineVisibility: false,
           publicPipeline
         });
