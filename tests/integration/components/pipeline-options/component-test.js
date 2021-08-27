@@ -145,13 +145,29 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert
       .dom('section.danger li:first-child .x-toggle-container')
       .hasClass('x-toggle-container');
+
+    await click('section.danger li:first-child .x-toggle-btn');
+    assert.dom('section.danger li:first-child a').exists({ count: 2 });
+    assert
+      .dom('section.danger li:first-child h4')
+      .hasText('Are you absolutely sure?');
+    await click('section.danger li:first-child a.cancel');
+    assert
+      .dom('section.danger li:first-child h4')
+      .hasText('Set pipeline visibility');
+
+    await click('section.danger li:first-child .x-toggle-btn');
+    assert
+      .dom('section.danger li:first-child h4')
+      .hasText('Are you absolutely sure?');
+
     assert
       .dom('section.danger li:nth-child(2) h4')
       .hasText('Delete this pipeline');
     assert
       .dom('section.danger li:nth-child(2) p')
       .hasText('Once you delete a pipeline, there is no going back.');
-    assert.dom('section.danger a i').hasClass('fa-trash');
+    assert.dom('section.danger li:nth-child(2) a i').hasClass('fa-trash');
   });
 
   test('it updates a pipeline', async function (assert) {

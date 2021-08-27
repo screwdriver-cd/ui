@@ -242,29 +242,35 @@
         <ul>
           {{#if privateRepo}}
             <li>
-              <div class="row">
-                <div class="col-xs-10">
-                  <h4>Set pipeline visibility</h4>
-                  <p>Think twice before setting pipeline to public.</p>
-                </div>
-                <div class="col-xs-2 right" title="Set pipeline visibility">
-                  {{#if isUpdatingPipelineVisibility}}
-                    {{fa-icon "refresh" spin=isUpdatingPipelineVisibility}}
-                  {{else}}
+              {{#if showPipelineVisibilityDangerButton}}
+                <div class="row">
+                  <div class="col-xs-10">
+                    <h4>Set pipeline visibility</h4>
+                    <p>Think twice before setting pipeline to public.</p>
+                  </div>
+                  <div class="col-xs-2 right" title="Set pipeline visibility">
                     {{x-toggle
                       size="small"
                       value=publicPipeline
                       onLabel="publicPipeline::true"
                       offLabel="publicPipeline::false"
-                      onToggle=(action "updatePipelineVisibility")
+                      onToggle=(action (if publicPipeline "updatePipelineVisibility" "showPipelineVisibilityButtons"))
                     }}
-                  {{/if}}
+                  </div>
                 </div>
-              </div>
+              {{/if}}
+              {{#if showPipelineVisibilityButtons}}
+                <h4>Are you absolutely sure?</h4>
+                <a href="#" {{action "cancelPipelineVisibility"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
+                <a href="#" {{action "updatePipelineVisibility" true}} class="remove">{{fa-icon "unlock"}} Publish</a>
+              {{/if}}
+              {{#if isUpdatingPipelineVisibility}}
+                <p>Please wait...</p>
+              {{/if}}
             </li>
           {{/if}}
           <li>
-            {{#if showDangerButton}}
+            {{#if showRemoveDangerButton}}
               <div class="row">
                 <div class="col-xs-1 col-md-8">
                   <h4>Delete this pipeline</h4>
