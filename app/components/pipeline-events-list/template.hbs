@@ -1,19 +1,41 @@
 <div>
-  {{#each groups as |group|}}
-    {{pipeline-events-row-group
-      pipeline=pipeline
-      expandedEventsGroup=expandedEventsGroup
-      events=group
-      selectedEvent=selectedEvent
-      latestCommit=latestCommit
-      lastSuccessful=lastSuccessful
-      startPRBuild=(action "startPRBuild")
-      stopEvent=(action "stopEvent")
-      eventClick=(action "eventClick")
-    }}
+  {{#if (or prChainEnabled groups)}}
+    {{#each groups as |group|}}
+      {{pipeline-events-row-group
+        prChainEnabled=prChainEnabled
+        pipeline=pipeline
+        expandedEventsGroup=expandedEventsGroup
+        events=group
+        selectedEvent=selectedEvent
+        latestCommit=latestCommit
+        lastSuccessful=lastSuccessful
+        startPRBuild=(action "startPRBuild")
+        stopEvent=(action "stopEvent")
+        eventClick=(action "eventClick")
+      }}
+    {{else}}
+      <div class="alert">No events have been run for this pipeline</div>
+    {{/each}}
   {{else}}
-    <div class="alert">No events have been run for this pipeline</div>
-  {{/each}}
+    {{#each pullRequestGroups as |prg|}}
+      {{pipeline-events-row-group
+          pipeline=pipeline
+          expandedEventsGroup=expandedEventsGroup
+          events=group
+          jobs=prg
+          pipelineWorkflowGraph=pipelineWorkflowGraph
+          selectedEvent=selectedEvent
+          latestCommit=latestCommit
+          lastSuccessful=lastSuccessful
+          startPRBuild=(action "startPRBuild")
+          stopPRBuilds=(action "stopPRBuilds")
+          stopEvent=(action "stopEvent")
+          eventClick=(action "eventClick")
+        }}
+    {{else}}
+      <div class="alert">No open pull requests</div>
+    {{/each}}
+  {{/if}}
 </div>
 
 {{yield}}

@@ -77,8 +77,7 @@
           <div style="padding: 20px;" onMouseEnter={{action "onEventListScroll"}}></div>
         {{/tab.pane}}
         {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
-          {{#if prChainEnabled}}
-            {{pipeline-events-list
+          {{pipeline-events-list
             pipeline=pipeline
             expandedEventsGroup=expandedEventsGroup
             events=events
@@ -87,23 +86,15 @@
             latestCommit=latestCommit
             lastSuccessful=lastSuccessful
             eventsPage=eventsPage
+            prChainEnabled=prChainEnabled
+            pullRequestGroups=pullRequestGroups
+            isRestricted=isRestricted
+            pipelineWorkflowGraph=pipeline.workflowGraph
             startPRBuild=(action "startPRBuild")
             stopEvent=(action "stopEvent")
+            stopPRBuilds=(action "stopPRBuilds")
             updateEvents=(action "updateEvents")
-            }}
-          {{else}}
-            {{#each pullRequestGroups as |prg|}}
-              {{pipeline-pr-list
-                jobs=prg
-                isRestricted=isRestricted
-                startBuild=(action "startPRBuild")
-                stopPRBuilds=(action "stopPRBuilds")
-                workflowGraph=pipeline.workflowGraph
-              }}
-            {{else}}
-              <div class="alert">No open pull requests</div>
-            {{/each}}
-          {{/if}}
+          }}
         {{/tab.pane}}
       </div>
     {{/bs-tab}}

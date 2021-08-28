@@ -36,7 +36,24 @@
       }}
     {{/if}}
   {{else}}
-    <div class="alert">No events have been run for this pipeline</div>
+    {{#if jobs.length}}
+      {{pipeline-event-row
+        prChainEnabled=prChainEnabled
+        pipeline=pipeline
+        event=event
+        jobs=jobs
+        pipelineWorkflowGraph=pipelineWorkflowGraph
+        selectedEvent=selectedEvent
+        latestCommit=latestCommit
+        lastSuccessful=lastSuccessful
+        startPRBuild=startPRBuild
+        stopPRBuilds=stopPRBuilds
+        stopEvent=stopEvent
+        eventClick=eventClick
+      }}
+    {{else}}
+      <div class="alert">No events have been run for this pipeline</div>
+    {{/if}}
   {{/each}}
 </div>
 

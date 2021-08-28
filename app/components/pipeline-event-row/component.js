@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { bool } from '@ember/object/computed';
 import { computed, get, getProperties } from '@ember/object';
-import { statusIcon } from 'screwdriver-ui/utils/build';
+import { statusIcon, isActiveBuild } from 'screwdriver-ui/utils/build';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
 
 export default Component.extend({
@@ -95,7 +95,22 @@ export default Component.extend({
       return { build_id, pipeline_id };
     }
   }),
+  inited: true,
+  isJobsRunning: computed('jobs.@each.builds', 'inited', {
+    get() {
+      return this.jobs.some(j => {
+        const status = j.builds.get('firstObject.status');
+        const endTime = j.builds.get('firstObject.endTime');
 
+        return isActiveBuild(status, endTime);
+      });
+    }
+  }),
+  showJobs: computed('jobs.@each.builds', 'inited', {
+    get() {
+      return this.inited || this.jobs.some(j => !!j.get('builds.length'));
+    }
+  }),
   actions: {
     clickRow() {
       const fn = get(this, 'eventClick');

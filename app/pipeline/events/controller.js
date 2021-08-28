@@ -142,10 +142,6 @@ export async function createEvent(eventPayload, toActiveTab) {
 
 // eslint-disable-next-line require-jsdoc
 export async function updateEvents(page) {
-  if (this.currentEventType === 'pr') {
-    return null;
-  }
-
   this.set('isFetching', true);
 
   const events = await this.store.query('event', {

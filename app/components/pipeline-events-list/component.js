@@ -39,6 +39,9 @@ export default Component.extend({
     stopEvent() {
       this.stopEvent();
     },
+    stopPRBuilds() {
+      this.stopPRBuilds();
+    },
     eventClick(id, eventType) {
       set(this, 'selected', id);
 
