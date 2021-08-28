@@ -51,7 +51,6 @@
       {{#if jobs.length}}
         <div class="commit" title={{jobs.0.title}}>
           <a href={{jobs.0.url}}>PR-{{jobs.0.group}}</a>
-          {{isJobsRunning}}
           {{#if isJobsRunning}}
             {{#bs-button onClick=(action stopPRBuilds jobs) class="stopButton" title="Stop all builds for this event"}}Stop{{/bs-button}}
           {{else}}
