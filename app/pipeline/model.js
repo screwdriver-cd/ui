@@ -16,7 +16,7 @@ export default DS.Model.extend({
   workflowGraph: DS.attr(),
   configPipelineId: DS.attr('string'),
   childPipelines: DS.attr(),
-  prChain: DS.attr('boolean', { defaultValue: false }),
+  prChain: true, // DS.attr('boolean', { defaultValue: false }), //
   parameters: DS.attr(),
   jobs: DS.hasMany('job', { async: true }),
   secrets: DS.hasMany('secret', { async: true }),

@@ -75,10 +75,35 @@ export default Component.extend({
         }
 
         // remove jobs that starts from ~pr
-        if (!this.showPRJobs) {
+        if (!this.isPrTab) {
           const prNode = graph.nodes.findBy('name', '~pr');
 
           removeBranch(prNode, graph);
+        }
+
+        if (this.isPrTab && !this.isChain) {
+          const notPRNodes = graph.nodes.filter(node => {
+            if (!node.name.startsWith('~pr')) {
+              // check if an edge has this node as source
+              if (
+                graph.edges.filter(
+                  edge => edge.src === '~pr' && edge.dest === node.name
+                ).length > 0
+              ) {
+                return false;
+              }
+
+              return true;
+            }
+
+            return false;
+          });
+
+          graph.nodes.removeObjects(notPRNodes);
+
+          let edgesWithoutPr = graph.edges.filter(edge => edge.src !== '~pr');
+
+          graph.edges.removeObjects(edgesWithoutPr);
         }
 
         set(this, 'graph', graph);
@@ -139,6 +164,18 @@ export default Component.extend({
       this.redraw(decoratedGraph.graph);
     }
   },
+  isChain: computed('pipeline.annotations', {
+    get() {
+      const annotations = this.getWithDefault('pipeline.annotations', {});
+
+      return (annotations['screwdriver.cd/chainPR'] || 'none') !== 'none';
+    }
+  }),
+  isPrTab: computed('activeTab', {
+    get() {
+      return this.get('activeTab') === 'pulls';
+    }
+  }),
   actions: {
     buildClicked(job) {
       const fn = this.graphClicked;

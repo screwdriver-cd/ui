@@ -106,6 +106,11 @@ export default Component.extend({
       });
     }
   }),
+  activeTab: computed('event.type', {
+    get() {
+      return this.get('event.type') === 'pr' ? 'pulls' : 'events';
+    }
+  }),
   showJobs: computed('jobs.@each.builds', 'inited', {
     get() {
       return this.inited || this.jobs.some(j => !!j.get('builds.length'));

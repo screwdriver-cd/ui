@@ -72,6 +72,7 @@
     {{#if (and (is-fulfilled event.builds) isShowGraph)}}
       <div class="workflow">
         {{workflow-graph-d3
+          activeTab=activeTab
           pipeline=pipeline
           builds=event.builds
           workflowGraph=event.workflowGraph
