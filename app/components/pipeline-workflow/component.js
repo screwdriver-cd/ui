@@ -1,5 +1,6 @@
 import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 import {
   get,
   getWithDefault,
@@ -15,6 +16,7 @@ import { copy } from 'ember-copy';
 export default Component.extend({
   // get all downstream triggers for a pipeline
   classNames: ['pipelineWorkflow'],
+  shuttle: service(),
   showTooltip: false,
   graph: computed(
     'workflowGraph',
@@ -52,12 +54,26 @@ export default Component.extend({
 
   displayRestartButton: alias('authenticated'),
 
-  init() {
+  async init() {
     this._super(...arguments);
+
+    let showDownstreamTriggers = false;
+
+    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
+      this.get('pipeline.id')
+    );
+
+    if (pipelinePreference) {
+      showDownstreamTriggers = getWithDefault(
+        pipelinePreference,
+        'showDownstreamTriggers',
+        false
+      ); //
+    }
 
     setProperties(this, {
       builds: [],
-      showDownstreamTriggers: false,
+      showDownstreamTriggers,
       reason: ''
     });
   },

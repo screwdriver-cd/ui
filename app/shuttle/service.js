@@ -265,6 +265,7 @@ export default Service.extend({
    * @param  {Number}  [pipelineId]
    * @param  {Object}  pipelineSettings
    * @param  {Boolean} [pipelineSettings.showPRJobs]
+   * @param  {Boolean} [pipelineSettings.showDownstreamTriggers]
    * @return {Promise}
    */
   async updateUserPreference(pipelineId, pipelineSettings) {

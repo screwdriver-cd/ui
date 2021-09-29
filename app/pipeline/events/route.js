@@ -19,7 +19,12 @@ export default Route.extend({
 
     controller.setProperties({
       activeTab: 'events',
-      showPRJobs: getWithDefault(pipelinePreference, 'showPRJobs', true)
+      showPRJobs: getWithDefault(pipelinePreference, 'showPRJobs', true),
+      showDownstreamTriggers: getWithDefault(
+        pipelinePreference,
+        'showDownstreamTriggers',
+        false
+      )
     });
 
     this.get('pipelineService').setBuildsLink('pipeline.events');

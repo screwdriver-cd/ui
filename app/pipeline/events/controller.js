@@ -450,8 +450,33 @@ export default Controller.extend(ModelReloaderMixin, {
   createEvent,
 
   actions: {
-    setDownstreamTrigger() {
-      this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
+    async setDownstreamTrigger() {
+      let showDownstreamTriggers = !this.get('showDownstreamTriggers');
+
+      // this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
+
+      const pipelineId = this.get('pipeline.id');
+
+      let pipelinePreference = await this.store
+        .peekAll('preference/pipeline')
+        .findBy('id', pipelineId);
+
+      if (pipelinePreference) {
+        pipelinePreference.showDownstreamTriggers = showDownstreamTriggers;
+      } else {
+        pipelinePreference = this.store.createRecord('preference/pipeline', {
+          pipelineId,
+          showDownstreamTriggers
+        });
+      }
+
+      pipelinePreference
+        .save()
+        .then(() =>
+          this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
+        );
+
+      this.set('showDownstreamTriggers', showDownstreamTriggers);
     },
     setShowListView(showListView) {
       if (showListView) {
