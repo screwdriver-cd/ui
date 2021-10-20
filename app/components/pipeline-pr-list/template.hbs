@@ -1,6 +1,5 @@
-
 {{#if jobs.length }}
-  <div class="view">
+  <div class="view" onclick={{action "selectPR"}}>
     <div class="detail">
       <div class="commit">
         <a href={{jobs.0.url}} target="_blank" rel="noopener">

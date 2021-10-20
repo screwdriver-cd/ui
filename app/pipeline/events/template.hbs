@@ -95,6 +95,8 @@
             {{#each pullRequestGroups as |prg|}}
               {{pipeline-pr-list
                 jobs=prg
+                pipeline=pipeline
+                selected=(mut selected)
                 isRestricted=isRestricted
                 startBuild=(action "startPRBuild")
                 stopPRBuilds=(action "stopPRBuilds")
