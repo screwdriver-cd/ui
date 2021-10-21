@@ -7,7 +7,10 @@ export default EventsRoute.extend({
   controllerName: 'pipeline.events',
   setupController(controller, model) {
     this._super(controller, model);
-    controller.set('activeTab', 'pulls');
+    controller.setProperties({
+      activeTab: 'pulls',
+      selected: null
+    });
   },
   renderTemplate() {
     this.render('pipeline.events');
