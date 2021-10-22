@@ -8,6 +8,7 @@ import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
 import moment from 'moment';
+import { removeBranch } from 'screwdriver-ui/utils/graph-tools';
 import {
   SHOULD_RELOAD_SKIP,
   SHOULD_RELOAD_YES
@@ -342,16 +343,24 @@ export default Controller.extend(ModelReloaderMixin, {
       return [].concat(this.modelEvents, this.paginateEvents);
     }
   }),
-  prEvents: computed('model.events', 'prChainEnabled', {
+  prEvents: computed('model.events.@each.workflowGraph', 'prChainEnabled', {
     get() {
-      if (this.prChainEnabled) {
-        return this.get('model.events')
-          .filter(e => e.prNum)
-          .sortBy('createTime')
-          .reverse();
-      }
+      const prEvents = this.get('model.events')
+        .filter(e => e.prNum)
+        .sortBy('createTime')
+        .reverse()
+        .map(prEvent => {
+          const prWorkflowGraph = prEvent.workflowGraph;
+          const commitNode = prWorkflowGraph.nodes.findBy('name', '~commit');
 
-      return [];
+          if (commitNode) {
+            removeBranch(commitNode, prWorkflowGraph);
+          }
+
+          return prEvent;
+        });
+
+      return prEvents;
     }
   }),
   events: computed('pipelineEvents', 'prEvents', 'currentEventType', {
