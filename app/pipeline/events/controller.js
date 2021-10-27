@@ -342,16 +342,39 @@ export default Controller.extend(ModelReloaderMixin, {
       return [].concat(this.modelEvents, this.paginateEvents);
     }
   }),
-  prEvents: computed('model.events', 'prChainEnabled', {
+  prEvents: computed('model.events.@each.workflowGraph', 'prChainEnabled', {
     get() {
-      if (this.prChainEnabled) {
-        return this.get('model.events')
-          .filter(e => e.prNum)
-          .sortBy('createTime')
-          .reverse();
+      const prEvents = this.get('model.events')
+        .filter(e => e.prNum)
+        .sortBy('createTime')
+        .reverse();
+
+      if (!this.prChainEnabled) {
+        return prEvents.map(prEvent => {
+          const prWorkflowGraph = prEvent.workflowGraph;
+          const prNode = prWorkflowGraph.nodes.findBy('name', '~pr');
+          const edgesToRemove = [];
+          const nodesToAdd = [prNode];
+
+          prWorkflowGraph.edges.forEach(e => {
+            if (prNode.name === e.src) {
+              const endNode = prWorkflowGraph.nodes.findBy('name', e.dest);
+
+              nodesToAdd.pushObject(endNode);
+            } else {
+              edgesToRemove.pushObject(e);
+            }
+          });
+
+          prWorkflowGraph.edges.removeObjects(edgesToRemove);
+          prWorkflowGraph.nodes.clear();
+          prWorkflowGraph.nodes.pushObjects(nodesToAdd);
+
+          return prEvent;
+        });
       }
 
-      return [];
+      return prEvents;
     }
   }),
   events: computed('pipelineEvents', 'prEvents', 'currentEventType', {
