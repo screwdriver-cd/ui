@@ -1,15 +1,20 @@
+import classic from 'ember-classic-decorator';
+import { classNames, classNameBindings } from '@ember-decorators/component';
+import { equal } from '@ember/object/computed';
 import Component from '@ember/component';
 import { get } from '@ember/object';
-import { equal } from '@ember/object/computed';
 
-export default Component.extend({
-  classNames: 'workflow-tooltip',
-  classNameBindings: ['showTooltip', 'left'],
-  showTooltip: false,
-  left: equal('showTooltipPosition', 'left'),
+@classic
+@classNames('workflow-tooltip')
+@classNameBindings('showTooltip', 'left')
+export default class WorkflowTooltip extends Component {
+  showTooltip = false;
+
+  @equal('showTooltipPosition', 'left')
+  left;
 
   didUpdateAttrs() {
-    this._super(...arguments);
+    super.didUpdateAttrs(...arguments);
 
     const event = get(this, 'tooltipData.mouseevent');
     const el = this.element;
@@ -26,4 +31,4 @@ export default Component.extend({
       el.style.left = `${left}px`;
     }
   }
-});
+}

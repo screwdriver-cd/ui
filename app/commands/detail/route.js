@@ -1,11 +1,15 @@
+import classic from 'ember-classic-decorator';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
-import { get } from '@ember/object';
+import { action } from '@ember/object';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 
-export default Route.extend({
-  command: service(),
+@classic
+export default class DetailRoute extends Route {
+  @service
+  command;
+
   model(params) {
     return RSVP.all([
       this.command.getOneCommand(params.namespace, params.name),
@@ -54,23 +58,25 @@ export default Route.extend({
 
       return result;
     });
-  },
-  setupController(controller, model) {
-    this._super(controller, model);
-    controller.reset();
-  },
-  actions: {
-    error(error) {
-      if (error.status === 404) {
-        this.transitionTo('/404');
-      }
+  }
 
-      return true;
+  setupController(controller, model) {
+    super.setupController(controller, model);
+    controller.reset();
+  }
+
+  @action
+  error(error) {
+    if (error.status === 404) {
+      this.transitionTo('/404');
     }
-  },
+
+    return true;
+  }
+
   titleToken(model) {
-    let title = `${get(model, 'namespace') || ''}/${get(model, 'name') || ''}`;
-    const version = get(model, 'versionOrTagFromUrl');
+    let title = `${model.namespace || ''}/${model.name || ''}`;
+    const version = model.versionOrTagFromUrl;
 
     if (version !== undefined) {
       title = `${title}@${version}`;
@@ -78,4 +84,4 @@ export default Route.extend({
 
     return title;
   }
-});
+}

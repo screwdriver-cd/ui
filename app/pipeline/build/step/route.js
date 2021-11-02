@@ -1,7 +1,11 @@
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 
-export default Route.extend({
-  routeAfterAuthentication: 'pipeline.build',
+@classic
+export default class StepRoute extends Route {
+  routeAfterAuthentication = 'pipeline.build';
+
   model(params) {
     this.controllerFor('pipeline.build').set(
       'preselectedStepName',
@@ -10,7 +14,8 @@ export default Route.extend({
 
     // return parent route model
     return this.modelFor('pipeline.build');
-  },
+  }
+
   afterModel(model) {
     if (!model) {
       return;
@@ -27,14 +32,13 @@ export default Route.extend({
         model.build.get('id')
       );
     }
-  },
-
-  actions: {
-    didTransition() {
-      this.controllerFor('pipeline.build').setProperties({
-        selectedArtifact: '',
-        activeTab: 'steps'
-      });
-    }
   }
-});
+
+  @action
+  didTransition() {
+    this.controllerFor('pipeline.build').setProperties({
+      selectedArtifact: '',
+      activeTab: 'steps'
+    });
+  }
+}

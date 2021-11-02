@@ -1,13 +1,13 @@
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend(AuthenticatedRouteMixin, {
+@classic
+export default class ShowRoute extends Route.extend(AuthenticatedRouteMixin) {
   model(params) {
-    const collections = this.controllerFor('application').getWithDefault(
-      'collections',
-      []
-    );
+    const { collections } = this.modelFor('application');
 
     return this.store
       .findRecord('collection', params.collection_id, { reload: true })
@@ -17,13 +17,12 @@ export default Route.extend(AuthenticatedRouteMixin, {
           collections
         })
       );
-  },
-
-  actions: {
-    error() {
-      localStorage.removeItem('lastViewedCollectionId');
-
-      return this.transitionTo('/404');
-    }
   }
-});
+
+  @action
+  error() {
+    localStorage.removeItem('lastViewedCollectionId');
+
+    return this.transitionTo('/404');
+  }
+}

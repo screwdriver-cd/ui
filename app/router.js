@@ -1,10 +1,13 @@
+import classic from 'ember-classic-decorator';
 import EmberRouter from '@ember/routing/router';
-import config from './config/environment';
+import config from 'screwdriver-ui/config/environment';
 
-const Router = EmberRouter.extend({
-  location: config.locationType,
-  rootURL: config.rootURL
-});
+@classic
+class Router extends EmberRouter {
+  location = config.locationType;
+
+  rootURL = config.rootURL;
+}
 
 // This isn't really an array method, but eslint thinks it is
 /* eslint-disable array-callback-return */

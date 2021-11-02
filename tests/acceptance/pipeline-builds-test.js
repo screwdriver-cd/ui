@@ -2,7 +2,6 @@ import { currentURL, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
-import { get } from '@ember/object';
 import Pretender from 'pretender';
 
 import makePipeline from '../mock/pipeline';
@@ -23,7 +22,7 @@ module('Acceptance | pipeline build', function (hooks) {
     const jobs = makeJobs();
     const pipeline = makePipeline(graph);
     const events = makeEvents(graph);
-    const desiredEvent = get(events, 'firstObject');
+    const desiredEvent = events.firstObject;
 
     desiredEventId = desiredEvent.id;
     server = new Pretender();

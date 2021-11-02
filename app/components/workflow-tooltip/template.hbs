@@ -1,37 +1,37 @@
 <div class="content">
-  {{#if tooltipData.externalTrigger}}
-    {{#link-to "pipeline" tooltipData.externalTrigger.pipelineId}}Go to remote pipeline{{/link-to}}
-  {{else if tooltipData.triggers}}
-    {{#each tooltipData.triggers as |t|}}
+  {{#if this.tooltipData.externalTrigger}}
+    {{#link-to "pipeline" this.tooltipData.externalTrigger.pipelineId}}Go to remote pipeline{{/link-to}}
+  {{else if this.tooltipData.triggers}}
+    {{#each this.tooltipData.triggers as |t|}}
       {{#link-to "pipeline" t.pipelineId}}Go to downstream pipeline {{t.triggerName}}{{/link-to}}
     {{/each}}
   {{else}}
-    {{#if tooltipData.job.buildId}}
-      {{#if (not-eq tooltipData.job.status "CREATED")}}
-        {{#link-to "pipeline.build" tooltipData.job.buildId}}Go to build details{{/link-to}}
+    {{#if this.tooltipData.job.buildId}}
+      {{#if (not-eq this.tooltipData.job.status "CREATED")}}
+        {{#link-to "pipeline.build" this.tooltipData.job.buildId}}Go to build details{{/link-to}}
       {{/if}}
     {{/if}}
-    {{#link-to "pipeline.metrics" (query-params jobId=tooltipData.job.id)}}Go to build metrics{{/link-to}}
-    {{#if displayRestartButton}}
-      {{#if (eq tooltipData.job.status "DISABLED")}}
-        <p>{{tooltipData.job.stateChangeMessage}}</p>
-      {{else if tooltipData.job.manualStartDisabled}}
+    {{#link-to "pipeline.metrics" (query-params jobId=this.tooltipData.job.id)}}Go to build metrics{{/link-to}}
+    {{#if this.displayRestartButton}}
+      {{#if (eq this.tooltipData.job.status "DISABLED")}}
+        <p>{{this.tooltipData.job.stateChangeMessage}}</p>
+      {{else if this.tooltipData.job.manualStartDisabled}}
         <p>Disabled manually starting</p>
       {{else}}
-        {{#if (eq isPrChainJob false)}}
-          <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+        {{#if (eq this.isPrChainJob false)}}
+          <a {{action this.confirmStartBuild}}>{{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
         {{else}}
-          {{#if (eq prBuildExists true)}}
-            <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+          {{#if (eq this.prBuildExists true)}}
+            <a {{action this.confirmStartBuild}}>{{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
           {{/if}}
         {{/if}}
       {{/if}}
     {{/if}}
-    {{#if tooltipData.displayStop}}
-      <a {{action stopBuild tooltipData.selectedEvent tooltipData.job}}>Stop build</a>
+    {{#if this.tooltipData.displayStop}}
+      <a {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>Stop build</a>
     {{/if}}
-    {{#if (eq tooltipData.job.status "FROZEN")}}
-      <a {{action stopBuild tooltipData.selectedEvent tooltipData.job}}>Stop frozen build</a>
+    {{#if (eq this.tooltipData.job.status "FROZEN")}}
+      <a {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>Stop frozen build</a>
     {{/if}}
   {{/if}}
   {{yield}}

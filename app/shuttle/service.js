@@ -1,4 +1,5 @@
-import { computed, getWithDefault } from '@ember/object';
+import classic from 'ember-classic-decorator';
+import { get, getWithDefault, computed } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
@@ -11,22 +12,27 @@ import $ from 'jquery';
  * @namespace
  * @return
  */
-export default Service.extend({
-  ajax: service(),
-  store: service(),
-  session: service(),
+@classic
+export default class ShuttleService extends Service {
+  @service
+  ajax;
 
-  storeHost: `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}`,
+  @service
+  store;
 
-  apiHost: `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`,
+  @service
+  session;
 
-  headers: computed('session.data.authenticated', {
-    get() {
-      return {
-        Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
-      };
-    }
-  }),
+  storeHost = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}`;
+
+  apiHost = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`;
+
+  @computed('session.data.authenticated')
+  get headers() {
+    return {
+      Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
+    };
+  }
 
   ajaxOptions() {
     const { headers } = this;
@@ -38,7 +44,7 @@ export default Service.extend({
       },
       headers
     };
-  },
+  }
 
   fetchFrom(host = 'store', method = 'get', url, data = {}, raw = false) {
     let baseHost = this.apiHost;
@@ -63,16 +69,16 @@ export default Service.extend({
 
     const options = { ...this.ajaxOptions(), data, type: optionsType };
 
-    return this.get('ajax')[requestType](uri, options);
-  },
+    return this.ajax[requestType](uri, options);
+  }
 
   fetchFromApi(method = 'get', url, data, raw = false) {
     return this.fetchFrom('api', method, url, data, raw);
-  },
+  }
 
   fetchFromStore(method = 'get', url, data, raw = false) {
     return this.fetchFrom('store', method, url, data, raw);
-  },
+  }
 
   fetchLogs({
     buildId,
@@ -87,7 +93,7 @@ export default Service.extend({
     const raw = true;
 
     return this.fetchFromApi(method, url, data, raw);
-  },
+  }
 
   fetchAllTemplates() {
     const method = 'get';
@@ -95,7 +101,7 @@ export default Service.extend({
     const data = { sortBy: 'createTime', sort: 'descending', compact: true };
 
     return this.fetchFromApi(method, url, data);
-  },
+  }
 
   /**
    * Fetch coverage info from coverage plugin
@@ -116,7 +122,7 @@ export default Service.extend({
     const url = `/coverage/info`;
 
     return this.fetchFromApi(method, url, data);
-  },
+  }
 
   async openPr(checkoutUrl, yaml = '', pipelineId = 1) {
     const method = 'post';
@@ -135,7 +141,7 @@ export default Service.extend({
     const raw = true;
 
     return this.fetchFromApi(method, url, data, raw);
-  },
+  }
 
   /**
    * updatePipelineSettings
@@ -175,7 +181,7 @@ export default Service.extend({
     const data = { settings: newSetting };
 
     return this.fetchFromApi(method, url, data);
-  },
+  }
 
   /**
    * getPipelineDowntimeJobsMetrics
@@ -201,7 +207,7 @@ export default Service.extend({
     const url = `/pipelines/${pipelineId}/metrics?${query}`;
 
     return this.fetchFromApi(method, url);
-  },
+  }
 
   /**
    * getLatestCommitEvent
@@ -213,7 +219,7 @@ export default Service.extend({
     const url = `/pipelines/${pipelineId}/latestCommitEvent`;
 
     return this.fetchFromApi(method, url);
-  },
+  }
 
   /**
    * getUserSetting
@@ -230,7 +236,7 @@ export default Service.extend({
     } catch (e) {
       return {};
     }
-  },
+  }
 
   /**
    * getUserPipelinePreference
@@ -243,11 +249,10 @@ export default Service.extend({
     }
 
     const remotePreferences = await this.getUserSetting();
-    const remotePipelineConfig = getWithDefault(
-      remotePreferences,
-      pipelineId,
-      {}
-    );
+    const remotePipelineConfig =
+      get(remotePreferences, pipelineId) === undefined
+        ? {}
+        : get(remotePreferences, pipelineId);
     const localPipelinePreference = await this.store
       .peekAll('preference/pipeline')
       .findBy('id', pipelineId);
@@ -269,7 +274,7 @@ export default Service.extend({
     );
 
     return pipelinePreference;
-  },
+  }
 
   /**
    * updateUserPreference
@@ -290,7 +295,7 @@ export default Service.extend({
     };
 
     return this.fetchFromApi(method, url, data);
-  },
+  }
 
   async searchPipelines(pipelineName) {
     const method = 'get';
@@ -306,4 +311,4 @@ export default Service.extend({
 
     return this.fetchFromApi(method, url);
   }
-});
+}

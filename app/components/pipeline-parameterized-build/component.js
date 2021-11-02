@@ -1,5 +1,7 @@
+import { set, action } from '@ember/object';
+import classic from 'ember-classic-decorator';
 import Component from '@ember/component';
-import { getWithDefault, set } from '@ember/object';
+import { tagName } from '@ember-decorators/component';
 
 /**
  @class PipelineParameterizedBuild
@@ -7,43 +9,45 @@ import { getWithDefault, set } from '@ember/object';
  @extends Ember.Component
  @public
  */
-export default Component.extend({
+@classic
+@tagName('')
+export default class PipelineParameterizedBuild extends Component {
   /**
    * showSubmitButton
    * @type {Boolean} true to show button groups, hide otherwise
    */
-  showSubmitButton: false,
+  showSubmitButton = false;
 
   /**
    * submitButtonText
    * @type {String} Submit
    */
-  submitButtonText: 'Submit',
+  submitButtonText = 'Submit';
 
   /**
    * buildPipelineParameters are expected to be an object consists of key value pairs
    * @type {Object}
    */
-  buildPipelineParameters: {},
+  buildPipelineParameters = {};
 
   /**
    * buildJobParameters are expected to be an object consists of key value pairs
    * @type {Object}
    */
-  buildJobParameters: {},
+  buildJobParameters = {};
 
   /**
    * startFrom name of the job which is the entry point for the event
    * @type {String}
    */
-  startFrom: null,
+  startFrom = null;
 
   /**
    * parameters expected to be an object
    * @type {String}
    */
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     const normalizedParameters = this.getNormalizedParameterGroups(
       this.buildPipelineParameters,
@@ -60,15 +64,15 @@ export default Component.extend({
       parameters: normalizedParameters,
       parameterizedModel
     });
-  },
+  }
 
   getDefaultPipelineParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
-  },
+    return this.pipeline?.parameters || {};
+  }
 
   getDefaultJobParameters() {
-    return this.getWithDefault('pipeline.jobParameters', {});
-  },
+    return this.pipeline?.jobParameters || {};
+  }
 
   /**
    * normalizeParameters transform given parameters from object into array of objects
@@ -127,7 +131,7 @@ export default Component.extend({
     });
 
     return normalizedParameters;
-  },
+  }
 
   getNormalizedParameterGroups(
     pipelineParameters = {},
@@ -178,7 +182,7 @@ export default Component.extend({
     }
 
     return normalizedParameterGroups;
-  },
+  }
 
   normalizedParameterizedModel(normalizedParameters = []) {
     const normalizedParameterizedModel = {};
@@ -187,14 +191,14 @@ export default Component.extend({
       let { value } = normalizedParam;
 
       if (Array.isArray(value)) {
-        value = getWithDefault(value, '0', '');
+        value = value[0] === undefined ? '' : value[0];
       }
 
       normalizedParameterizedModel[normalizedParam.name] = value;
     });
 
     return normalizedParameterizedModel;
-  },
+  }
 
   getNormalizedParameterizedModel(normalizedParameters = []) {
     const normalizedParameterizedModel = {};
@@ -212,31 +216,7 @@ export default Component.extend({
     });
 
     return normalizedParameterizedModel;
-  },
-
-  /**
-   * onSave action must be override
-   * @return
-   */
-  onSave() {
-    throw new Error('Not implemented');
-  },
-
-  /**
-   * onCancel action must be override
-   * @return
-   */
-  onCancel() {
-    throw new Error('Not implemented');
-  },
-
-  /**
-   * onClose action is optional that will be run at the end of actions
-   * @return
-   */
-  onClose() {
-    throw new Error('Not implemented');
-  },
+  }
 
   updateValue({ model, jobName, propertyName, value }) {
     if (jobName === null) {
@@ -247,47 +227,42 @@ export default Component.extend({
       set(jobParameters, propertyName, value);
       set(model, jobName, jobParameters);
     }
-  },
+  }
 
-  actions: {
-    searchOrAddtoList(model, jobName, propertyName, value, e) {
-      if (e.keyCode === 13) {
-        this.updateValue({
-          model,
-          jobName,
-          propertyName,
-          value: value.searchText
-        });
-      }
-    },
-
-    onUpdateValue(model, jobName, propertyName, value) {
-      this.updateValue({ model, jobName, propertyName, value });
-    },
-
-    onExpandCollapseParamGroup(jobName) {
-      const jobParamGroup = this.parameters.findBy('jobName', jobName);
-
-      set(jobParamGroup, 'isOpen', !jobParamGroup.isOpen);
-    },
-
-    /**
-     * This action is called when clicking on the submit button or form submission
-     * @param parameterizedModel
-     * @return {[type]} [description]
-     */
-    onSave() {
-      this.get('onSave')(this.parameterizedModel);
-      if (this.onClose) {
-        this.onClose();
-      }
-    },
-
-    onCancel() {
-      this.get('onCancel')();
-      if (this.onClose) {
-        this.onClose();
-      }
+  @action
+  searchOrAddtoList(model, jobName, propertyName, value, e) {
+    if (e.keyCode === 13) {
+      this.updateValue({
+        model,
+        jobName,
+        propertyName,
+        value: value.searchText
+      });
     }
   }
-});
+
+  @action
+  onUpdateValue(model, jobName, propertyName, value) {
+    this.updateValue({ model, jobName, propertyName, value });
+  }
+
+  @action
+  onExpandCollapseParamGroup(jobName) {
+    const jobParamGroup = this.parameters.findBy('jobName', jobName);
+
+    set(jobParamGroup, 'isOpen', !jobParamGroup.isOpen);
+  }
+
+  /**
+   * This action is called when clicking on the submit button or form submission
+   * @param parameterizedModel
+   * @return {[type]} [description]
+   */
+  @action
+  onSubmit() {
+    this.onSave(this.parameterizedModel);
+    if (this.onClose) {
+      this.onClose();
+    }
+  }
+}

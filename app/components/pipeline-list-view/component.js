@@ -1,17 +1,27 @@
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
+import { observes } from '@ember-decorators/object';
 import Component from '@ember/component';
-import { get, set, observer } from '@ember/object';
+import { set, action } from '@ember/object';
 import moment from 'moment';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import Table from 'ember-light-table';
 import isEqual from 'lodash.isequal';
 
-export default Component.extend({
-  isLoading: false,
-  isShowingModal: false,
-  sortingDirection: 'asc',
-  sortingValuePath: 'job',
-  sortedRows: [],
-  columns: [
+@tagName('')
+@classic
+export default class PipelineListView extends Component {
+  isLoading = false;
+
+  isShowingModal = false;
+
+  sortingDirection = 'asc';
+
+  sortingValuePath = 'job';
+
+  sortedRows = [];
+
+  columns = [
     {
       label: 'JOB',
       valuePath: 'job',
@@ -50,19 +60,20 @@ export default Component.extend({
       sortable: false,
       cellComponent: 'pipeline-list-actions-cell'
     }
-  ],
+  ];
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
     const table = Table.create({
-      columns: this.get('columns'),
+      columns: this.columns,
       rows: sortedRows
     });
 
-    let sortColumn = table
-      .get('allColumns')
-      .findBy('valuePath', this.get('sortingValuePath'));
+    let sortColumn = table.allColumns.findBy(
+      'valuePath',
+      this.sortingValuePath
+    );
 
     // Setup initial sort column
     if (sortColumn) {
@@ -74,20 +85,20 @@ export default Component.extend({
       pipelineParameters: this.getDefaultPipelineParameters(),
       jobParameters: this.getDefaultJobParameters()
     });
-  },
+  }
 
   didDestroyElement() {
-    this._super(...arguments);
+    super.didDestroyElement(...arguments);
     this.set('jobsDetails', []);
-  },
+  }
 
   getDefaultPipelineParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
-  },
+    return this.pipeline?.parameters || {};
+  }
 
   getDefaultJobParameters() {
-    return this.getWithDefault('pipeline.jobParameters', {});
-  },
+    return this.pipeline?.jobParameters || {};
+  }
 
   /**
    * Note: jobId must be a string
@@ -102,7 +113,7 @@ export default Component.extend({
       buildState,
       isShowingModal: true
     });
-  },
+  }
 
   getDuration(startTime, endTime, status) {
     const startDateTime = Date.parse(startTime);
@@ -142,13 +153,13 @@ export default Component.extend({
     }
 
     return humanizeDuration(duration, humanizeConfig);
-  },
+  }
 
   getRows(jobsDetails = []) {
     let rows = jobsDetails.map(jobDetails => {
       const { jobId, jobName, annotations, prParentJobId, prNum } = jobDetails;
       const latestBuild = jobDetails.builds.length
-        ? get(jobDetails, 'builds.lastObject')
+        ? jobDetails.builds[jobDetails.builds.length - 1]
         : null;
 
       const jobData = {
@@ -157,15 +168,18 @@ export default Component.extend({
       };
 
       const hasParameters =
-        Object.keys(this.getWithDefault('pipelineParameters', {})).length > 0 ||
-        Object.keys(this.getWithDefault('jobParameters', {})).length > 0;
+        Object.keys(
+          this.pipelineParameters === undefined ? {} : this.pipelineParameters
+        ).length > 0 ||
+        Object.keys(this.jobParameters === undefined ? {} : this.jobParameters)
+          .length > 0;
 
       const actionsData = {
         jobId,
         jobName,
         latestBuild,
-        startSingleBuild: this.get('startSingleBuild'),
-        stopBuild: this.get('stopBuild'),
+        startSingleBuild: this.startSingleBuild,
+        stopBuild: this.stopBuild,
         isShowingModal: this.isShowingModal,
         hasParameters,
         openParametersModal: this.openParametersModal.bind(this)
@@ -198,7 +212,7 @@ export default Component.extend({
           pipelineId: latestBuild.pipelineId,
           prNum,
           jobName,
-          pipelineName: this.get('pipeline.name'),
+          pipelineName: this.pipeline.name,
           prParentJobId,
           projectKey: latestBuild.meta?.build?.coverageKey
         };
@@ -229,8 +243,8 @@ export default Component.extend({
         break;
       case 'startTime':
         rows.sort((a, b) => {
-          const aStartTime = get(a, 'history.lastObject.startTime');
-          const bStartTime = get(b, 'history.lastObject.startTime');
+          const aStartTime = a.history[a.history.length - 1].startTime;
+          const bStartTime = b.history[b.history.length - 1].startTime;
 
           return moment.compare(moment(aStartTime), moment(bStartTime));
         });
@@ -244,69 +258,71 @@ export default Component.extend({
     }
 
     return rows;
-  },
-  jobsObserver: observer(
-    'jobsDetails.[]',
-    function jobsObserverFunc({ jobsDetails }) {
-      const rows = this.getRows(jobsDetails);
-      const lastRows = get(this, 'lastRows') || [];
-      const isEqualRes = isEqual(
-        rows
-          .map(r => r.job)
-          .sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
-        lastRows
-          .map(r => r.job)
-          .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
-      );
+  }
 
-      if (!isEqualRes) {
-        set(this, 'lastRows', rows);
-        this.table.setRows(rows);
-      }
-    }
-  ),
+  @observes('jobsDetails.[]')
+  jobsObserver({ jobsDetails }) {
+    const rows = this.getRows(jobsDetails);
+    const lastRows = this.lastRows || [];
+    const isEqualRes = isEqual(
+      rows
+        .map(r => r.job)
+        .sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
+      lastRows
+        .map(r => r.job)
+        .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
+    );
 
-  actions: {
-    async onScrolledToBottom() {
-      this.set('isLoading', true);
-      this.get('updateListViewJobs')().then(jobs => {
-        const rows = this.getRows(jobs);
-
-        this.table.addRows(rows);
-        this.set('isLoading', false);
-      });
-    },
-
-    onColumnClick(column) {
-      if (column.sorted) {
-        const sortingValuePath = column.get('valuePath');
-        const sortingDirection = column.ascending ? 'asc' : 'desc';
-
-        this.setProperties({ sortingDirection, sortingValuePath });
-
-        const sortedRows = this.getRows(this.jobsDetails);
-
-        this.table.setRows(sortedRows);
-      }
-    },
-
-    closeModal() {
-      this.set('isShowingModal', false);
-    },
-
-    resetForm() {
-      this.setProperties({
-        isShowingModal: false,
-        pipelineParameters: this.getDefaultPipelineParameters(),
-        jobParameters: this.getDefaultJobParameters()
-      });
-    },
-
-    startBuild(parameterizedModel) {
-      const buildState = this.get('buildState');
-      const job = this.get('job');
-
-      this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
+    if (!isEqualRes) {
+      set(this, 'lastRows', rows);
+      this.table.setRows(rows);
     }
   }
-});
+
+  @action
+  async onScrolledToBottom() {
+    this.set('isLoading', true);
+    this.updateListViewJobs().then(jobs => {
+      const rows = this.getRows(jobs);
+
+      this.table.addRows(rows);
+      this.set('isLoading', false);
+    });
+  }
+
+  @action
+  onColumnClick(column) {
+    if (column.sorted) {
+      const sortingValuePath = column.valuePath;
+      const sortingDirection = column.ascending ? 'asc' : 'desc';
+
+      this.setProperties({ sortingDirection, sortingValuePath });
+
+      const sortedRows = this.getRows(this.jobsDetails);
+
+      this.table.setRows(sortedRows);
+    }
+  }
+
+  @action
+  closeModal() {
+    this.set('isShowingModal', false);
+  }
+
+  @action
+  resetForm() {
+    this.setProperties({
+      isShowingModal: false,
+      pipelineParameters: this.getDefaultPipelineParameters(),
+      jobParameters: this.getDefaultJobParameters()
+    });
+  }
+
+  @action
+  startBuild(parameterizedModel) {
+    const { buildState } = this;
+    const { job } = this;
+
+    this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
+  }
+}

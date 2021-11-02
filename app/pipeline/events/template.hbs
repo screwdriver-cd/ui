@@ -1,125 +1,122 @@
-{{#if session.isAuthenticated}}
-  {{#if (not session.data.authenticated.isGuest)}}
+{{#if this.session.isAuthenticated}}
+  {{#unless this.session.data.authenticated.isGuest}}
     {{pipeline-nav
-      pipeline=pipeline
+      pipeline=this.pipeline
     }}
-  {{/if}}
+  {{/unless}}
 {{/if}}
 
 
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle" scmContext=pipeline.scmContext}}
+{{info-message message=this.errorMessage type="warning" icon="exclamation-triangle" scmContext=this.pipeline.scmContext}}
 
 <div class="row">
   <div class="col-xs-12 col-md-9 separator partial-view">
     {{pipeline-graph-nav
-      pipeline=pipeline
-      mostRecent=mostRecent
-      latestCommit=latestCommit
-      lastSuccessful=lastSuccessful
-      graphType=currentEventType
-      selectedEvent=selectedEvent
-      selectedEventObj=selectedEventObj
-      selected=selected
-      showListView=showListView
-      showDownstreamTriggers=showDownstreamTriggers
+      pipeline=this.pipeline
+      mostRecent=this.mostRecent
+      latestCommit=this.latestCommit
+      lastSuccessful=this.lastSuccessful
+      graphType=this.currentEventType
+      selectedEvent=this.selectedEvent
+      selectedEventObj=this.selectedEventObj
+      selected=this.selected
+      showListView=this.showListView
+      showDownstreamTriggers=this.showDownstreamTriggers
       setDownstreamTrigger=(action "setDownstreamTrigger")
       startMainBuild=(action "startMainBuild")
       startPRBuild=(action "startPRBuild")
-      prGroups=pullRequestGroups
+      prGroups=this.pullRequestGroups
       stopEvent=(action "stopEvent")
       setShowListView=(action "setShowListView")
     }}
 
     {{pipeline-workflow
-      jobId=jobId
-      pipeline=pipeline
-      latestCommit=latestCommit
-      showDownstreamTriggers=showDownstreamTriggers
-      showPRJobs=showPRJobs
-      completeWorkflowGraph=completeWorkflowGraph
-      workflowGraph=pipeline.workflowGraph
-      jobs=jobs
-      selectedEventObj=selectedEventObj
-      selected=selected
+      jobId=this.jobId
+      pipeline=this.pipeline
+      latestCommit=this.latestCommit
+      showDownstreamTriggers=this.showDownstreamTriggers
+      showPRJobs=this.showPRJobs
+      completeWorkflowGraph=this.completeWorkflowGraph
+      workflowGraph=this.pipeline.workflowGraph
+      jobs=this.jobs
+      selectedEventObj=this.selectedEventObj
+      selected=this.selected
       startDetachedBuild=(action "startDetachedBuild")
       stopBuild=(action "stopBuild")
-      authenticated=session.isAuthenticated
+      authenticated=this.session.isAuthenticated
     }}
 
   </div>
-  <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view {{if showListView "disabled"}}" onScroll={{action "onEventListScroll"}}>
-    {{#bs-tab customTabs=true as |tab|}}
-      {{#bs-nav type="tabs" as |nav|}}
-        {{#nav.item active=(bs-eq activeTab "events")}}
+  <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view {{if this.showListView "disabled"}}" onScroll={{action "onEventListScroll"}}>
+    <BsTab @customTabs={{true}} as |tab|>
+      <BsNav @type="tabs" as |nav|>
+        <nav.item @active={{bs-eq this.activeTab "events"}}>
           {{#nav.link-to "pipeline.events" class="nav-link"}}Events{{/nav.link-to}}
-        {{/nav.item}}
-        {{#nav.item active=(bs-eq activeTab "pulls")}}
+        </nav.item>
+        <nav.item @active={{bs-eq this.activeTab "pulls"}}>
           {{#nav.link-to "pipeline.pulls" class="nav-link"}}Pull Requests{{/nav.link-to}}
-        {{/nav.item}}
-      {{/bs-nav}}
+        </nav.item>
+      </BsNav>
 
       <div class="tab-content">
-        {{#tab.pane activeId=activeTab elementId="events" title="Events"}}
-          {{pipeline-events-list
-            pipeline=pipeline
-            expandedEventsGroup=expandedEventsGroup
-            events=events
-            selected=(mut selected)
-            selectedEvent=selectedEvent
-            latestCommit=latestCommit
-            lastSuccessful=lastSuccessful
-            mostRecent=mostRecent
-            eventsPage=eventsPage
-            startPRBuild=(action "startPRBuild")
-            stopEvent=(action "stopEvent")
-            updateEvents=(action "updateEvents")
-          }}
+        <tab.pane @activeId={{this.activeTab}} @id="events" @title="Events">
+          <PipelineEventsList
+            @pipeline={{this.pipeline}}
+            @expandedEventsGroup={{this.expandedEventsGroup}}
+            @events={{this.events}}
+            @selected={{fn (mut this.selected)}}
+            @selectedEvent={{this.selectedEvent}}
+            @latestCommit={{this.latestCommit}}
+            @lastSuccessful={{this.lastSuccessful}}
+            @mostRecent={{this.mostRecent}}
+            @eventsPage={{this.eventsPage}}
+            @startPRBuild={{this.startPRBuild}}
+            @stopEvent={{this.stopEvent}}
+            @updateEvents={{this.updateEvents}}
+          />
           <div style="padding: 20px;" onMouseEnter={{action "onEventListScroll"}}></div>
-        {{/tab.pane}}
-        {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
-          {{#if prChainEnabled}}
-            {{pipeline-events-list
-            pipeline=pipeline
-            expandedEventsGroup=expandedEventsGroup
-            events=events
-            selected=(mut selected)
-            selectedEvent=selectedEvent
-            latestCommit=latestCommit
-            lastSuccessful=lastSuccessful
-            eventsPage=eventsPage
-            startPRBuild=(action "startPRBuild")
-            stopEvent=(action "stopEvent")
-            updateEvents=(action "updateEvents")
-            }}
+        </tab.pane>
+        <tab.pane @activeId={{this.activeTab}} @id="pulls" @title="Pull Requests">
+          {{#if this.prChainEnabled}}
+            <PipelineEventsList
+            @pipeline={{this.pipeline}}
+            @events={{this.events}}
+            @expandedEventsGroup={{this.expandedEventsGroup}}
+            @selected={{fn (mut this.selected)}}
+            @selectedEvent={{this.selectedEvent}}
+            @latestCommit={{this.latestCommit}}
+            @lastSuccessful={{this.lastSuccessful}}
+            @eventsPage={{this.eventsPage}}
+            @startPRBuild={{this.startPRBuild}}
+            @stopEvent={{this.stopEvent}}
+            @updateEvents={{this.updateEvents}}
+            />
           {{else}}
-            {{#each pullRequestGroups as |prg|}}
+            {{#each this.pullRequestGroups as |prg|}}
               {{pipeline-pr-list
                 jobs=prg
-                pipeline=pipeline
-                selected=(mut selected)
-                selectedEvent=selectedEvent
-                isRestricted=isRestricted
+                pipeline=this.pipeline
+                selected=(mut this.selected)
+                selectedEvent=this.selectedEvent
+                isRestricted=this.isRestricted
                 startBuild=(action "startPRBuild")
                 stopPRBuilds=(action "stopPRBuilds")
-                workflowGraph=pipeline.workflowGraph
+                workflowGraph=this.pipeline.workflowGraph
               }}
             {{else}}
               <div class="alert">No open pull requests</div>
             {{/each}}
           {{/if}}
-        {{/tab.pane}}
+        </tab.pane>
       </div>
-    {{/bs-tab}}
+    </BsTab>
   </div>
 </div>
 
-{{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false
-    targetAttachment="center"
-    translucentOverlay=true
-  }}
-    {{loading-view}}
-  {{/modal-dialog}}
+{{#if this.isShowingModal}}
+  <ModalDialog @clickOutsideToClose={{false}} @targetAttachment="center" @translucentOverlay={{true}}>
+    <LoadingView/>
+  </ModalDialog>
 {{/if}}
 
 {{outlet}}

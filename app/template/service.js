@@ -1,3 +1,4 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import { get } from '@ember/object';
@@ -7,22 +8,27 @@ import templateHelper from 'screwdriver-ui/utils/template';
 
 const { templatesFormatter } = templateHelper;
 
-export default Service.extend({
-  session: service(),
+@classic
+export default class TemplateService extends Service {
+  @service
+  session;
+
   getOneTemplate(name) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE
     }/templates/${encodeURIComponent(name)}`;
 
     return this.fetchData(url).then(templatesFormatter);
-  },
+  }
+
   getOneTemplateWithMetrics(name) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE
     }/templates/${encodeURIComponent(name)}/metrics`;
 
     return this.fetchData(url).then(templatesFormatter);
-  },
+  }
+
   getTemplateTags(namespace, name) {
     const fullName = `${namespace}/${name}`;
     const url =
@@ -32,7 +38,8 @@ export default Service.extend({
       }/templates/${encodeURIComponent(fullName)}/tags`;
 
     return this.fetchData(url);
-  },
+  }
+
   getAllTemplates(namespace) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates`;
 
@@ -60,7 +67,8 @@ export default Service.extend({
 
         return result;
       });
-  },
+  }
+
   fetchData(url, params = {}) {
     const ajaxConfig = {
       method: 'GET',
@@ -82,7 +90,8 @@ export default Service.extend({
         .done(templates => resolve(templates))
         .fail(response => reject(response));
     });
-  },
+  }
+
   deleteTemplates(name) {
     // eslint-disable-next-line max-len
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
@@ -124,7 +133,8 @@ export default Service.extend({
           return reject(message);
         });
     });
-  },
+  }
+
   updateTrust(fullName, trusted) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE
@@ -159,4 +169,4 @@ export default Service.extend({
         });
     });
   }
-});
+}

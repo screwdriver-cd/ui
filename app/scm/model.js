@@ -1,10 +1,23 @@
-import DS from 'ember-data';
+import classic from 'ember-classic-decorator';
+import Model, { attr } from '@ember-data/model';
 
-export default DS.Model.extend({
-  context: DS.attr('string'),
-  displayName: DS.attr('string'),
-  iconType: DS.attr('string'),
-  isSignedIn: DS.attr('boolean', { defaultValue: false }),
-  autoDeployKeyGeneration: DS.attr('boolean', { defaultValue: false }),
-  readOnly: DS.attr('boolean', { defaultValue: false })
-});
+@classic
+export default class _Model extends Model {
+  @attr('string')
+  context;
+
+  @attr('string')
+  displayName;
+
+  @attr('string')
+  iconType;
+
+  @attr('boolean', { defaultValue: false })
+  isSignedIn;
+
+  @attr('boolean', { defaultValue: false })
+  autoDeployKeyGeneration;
+
+  @attr('boolean', { defaultValue: false })
+  readOnly;
+}

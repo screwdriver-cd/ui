@@ -1,35 +1,36 @@
-{{#bs-dropdown as |dd|}}
-  {{#if dropdownText}}
-    {{#dd.toggle}}
-      <a class="toggler-text">
-        {{dropdownText}}<span class="caret caret-display"></span>
-      </a>
-    {{/dd.toggle}}
-  {{else}}
-    {{#dd.button class=(if buttonClass buttonClass "add-to-collection")}}
-      {{#if buttonText}}
-        {{buttonText}}
-      {{else}}
-        {{fa-icon "plus" title="Add to collection" size="sm"}}
-      {{/if}}
-    {{/dd.button}}
-  {{/if}}
-  {{#dd.menu align="right" class="dropdown" as |menu|}}
-    {{#each normalCollections as |collection|}}
-      {{#menu.item}}
-        <span onclick={{action "addToCollection" collection}}>
-          {{collection.name}}
+<div class="{{this.styleNamespace}} collection-dropdown" ...attributes>
+  <BsDropdown as |dd|>
+    {{#if this.dropdownText}}
+      <dd.toggle>
+        <a class="toggler-text">
+          {{this.dropdownText}}<span class="caret caret-display"></span>
+        </a>
+      </dd.toggle>
+    {{else}}
+      <dd.button @class={{if this.buttonClass this.buttonClass "add-to-collection"}}>
+        {{#if this.buttonText}}
+          {{this.buttonText}}
+        {{else}}
+          {{fa-icon "plus" title="Add to collection" size="sm"}}
+        {{/if}}
+      </dd.button>
+    {{/if}}
+    <dd.menu @align="right" @class="dropdown" as |menu|>
+      {{#each this.normalCollections as |collection|}}
+        <menu.item>
+          <span onclick={{action "addPipelineToCollection" collection}}>
+            {{collection.name}}
+          </span>
+        </menu.item>
+      {{/each}}
+      <li>
+        <span class="create-dropdown" onclick={{action "openModal"}}>
+          {{fa-icon "plus-circle" title="Create" size="md"}} CREATE
         </span>
-      {{/menu.item}}
-    {{/each}}
-    <li>
-      <span class="create-dropdown" onclick={{action "openModal"}}>
-        {{fa-icon "plus-circle" title="Create" size="md"}} CREATE
-      </span>
-    </li>
-  {{/dd.menu}}
-{{/bs-dropdown}}
-{{collection-modal
-  showModal=showCollectionModal
-  addNewCollection=addNewCollection
-  addToCollection=(action "addToCollection")}}
+      </li>
+    </dd.menu>
+  </BsDropdown>
+  {{collection-modal
+    showModal=this.showCollectionModal
+    addToCollection=(action "addPipelineToCollection")}}
+</div>

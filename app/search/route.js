@@ -1,17 +1,22 @@
+import classic from 'ember-classic-decorator';
 import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
 import RSVP from 'rsvp';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend(AuthenticatedRouteMixin, {
-  queryParams: {
+@classic
+export default class SearchRoute extends Route.extend(AuthenticatedRouteMixin) {
+  queryParams = {
     query: {
       refreshModel: true,
       replace: true
     }
-  },
-  routeAfterAuthentication: 'search',
-  titleToken: 'Search',
+  };
+
+  routeAfterAuthentication = 'search';
+
+  titleToken = 'Search';
+
   model(params) {
     const pipelineListConfig = {
       page: 1,
@@ -30,4 +35,4 @@ export default Route.extend(AuthenticatedRouteMixin, {
       query: params.query
     });
   }
-});
+}

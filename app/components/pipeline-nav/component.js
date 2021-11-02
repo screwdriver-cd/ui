@@ -4,12 +4,10 @@ import { htmlSafe } from '@ember/string';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  tagName: '',
   pipelineService: service('pipeline'),
-  buildsLink: computed('pipelineService.buildsLink', function getBuildLink() {
-    return this.get('pipelineService.buildsLink');
-  }),
-  classNames: ['row'],
-  pipelineDescription: computed('pipeline', {
+  buildsLink: computed.reads('pipelineService.buildsLink'),
+  pipelineDescription: computed('pipeline.annotations', {
     get() {
       let description;
 

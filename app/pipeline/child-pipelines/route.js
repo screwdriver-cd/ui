@@ -1,11 +1,17 @@
-import Route from '@ember/routing/route';
+import classic from 'ember-classic-decorator';
 import { inject as service } from '@ember/service';
+import Route from '@ember/routing/route';
 import { get } from '@ember/object';
 
-export default Route.extend({
-  session: service(),
-  routeAfterAuthentication: 'pipeline.child-pipelines',
-  titleToken: 'Child Pipelines',
+@classic
+export default class ChildPipelinesRoute extends Route {
+  @service
+  session;
+
+  routeAfterAuthentication = 'pipeline.child-pipelines';
+
+  titleToken = 'Child Pipelines';
+
   model() {
     // Guests should not access this page
     if (get(this, 'session.data.authenticated.isGuest')) {
@@ -23,4 +29,4 @@ export default Route.extend({
         pipeline
       }));
   }
-});
+}

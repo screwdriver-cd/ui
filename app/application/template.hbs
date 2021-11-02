@@ -1,21 +1,21 @@
 {{app-header
-  currentUrl=currentUrl
-  scmContexts=scmContexts
-  session=session
-  showCreatePipeline=showCreatePipeline
+  currentUrl=this.currentUrl
+  scmContexts=this.scmContexts
+  session=this.session
+  showCreatePipeline=this.showCreatePipeline
   authenticate=(action "authenticate")
   onInvalidate=(action "invalidateSession")
   searchPipelines=(action "search")
 }}
-{{nav-banner}}
+{{this.nav-banner}}
 
 <div id="appContainer" class="container-fluid">
   {{outlet}}
 </div>
 
-{{#if showCreatePipeline}}
+{{#if this.showCreatePipeline}}
   {{create-pipeline
-    showCreatePipeline=showCreatePipeline}}
+    showCreatePipeline=this.showCreatePipeline}}
 {{/if}}
 
-{{feedback}}
+{{this.feedback}}

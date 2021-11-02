@@ -1,10 +1,14 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import RSVP, { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Service.extend({
-  session: service(),
+@classic
+export default class PrEventsService extends Service {
+  @service
+  session;
+
   /**
    * Calls the events api and filters based on type prs
    * @method getPRevents
@@ -84,4 +88,4 @@ export default Service.extend({
       })
     );
   }
-});
+}

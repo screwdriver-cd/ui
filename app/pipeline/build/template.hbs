@@ -1,56 +1,53 @@
 {{build-banner
-  buildContainer=build.buildContainer
-  duration=build.totalDuration
-  blockDuration=build.blockedDuration
-  imagePullDuration=build.imagePullDuration
-  buildDuration=build.buildDuration
-  buildStatus=build.status
-  buildCreate=build.createTime
-  buildStart=build.startTime
-  buildEnd=build.endTime
-  buildSteps=build.steps
-  buildId=build.id
-  buildMeta=build.meta
-  jobName=job.name
-  jobId=job.id
-  annotations=job.annotations
-  pipelineId=pipeline.id
-  pipelineName=pipeline.name
-  isAuthenticated=session.isAuthenticated
-  event=event
-  prEvents=prEvents
-  prNumber=job.prNumber
+  buildContainer=this.build.buildContainer
+  duration=this.build.totalDuration
+  blockDuration=this.build.blockedDuration
+  imagePullDuration=this.build.imagePullDuration
+  buildDuration=this.build.buildDuration
+  buildStatus=this.build.status
+  buildCreate=this.build.createTime
+  buildStart=this.build.startTime
+  buildEnd=this.build.endTime
+  buildSteps=this.build.steps
+  buildId=this.build.id
+  buildMeta=this.build.meta
+  jobName=this.job.name
+  jobId=this.job.id
+  annotations=this.job.annotations
+  pipelineId=this.pipeline.id
+  pipelineName=this.pipeline.name
+  isAuthenticated=this.session.isAuthenticated
+  event=this.event
+  prEvents=this.prEvents
+  prNumber=this.job.prNumber
   onStart=(action "startBuild")
   onStop=(action "stopBuild")
   reloadBuild=(action "reload")
   changeBuild=(action "changeBuild")
 }}
 
-{{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false
-    targetAttachment="center"
-    translucentOverlay=true
-  }}
-    {{loading-view}}
-  {{/modal-dialog}}
+{{#if this.isShowingModal}}
+  <ModalDialog @clickOutsideToClose={{false}} @targetAttachment="center" @translucentOverlay={{true}}>
+    <LoadingView/>
+  </ModalDialog>
 {{/if}}
 
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
-{{#if build.statusMessage}}
-  {{info-message message=build.statusMessage type="warning" icon="exclamation-triangle"}}
+{{info-message message=this.errorMessage type="warning" icon="exclamation-triangle"}}
+{{#if this.build.statusMessage}}
+  {{info-message message=this.build.statusMessage type="warning" icon="exclamation-triangle"}}
 {{/if}}
 
-{{#if stepList}}
+{{#if this.stepList}}
   {{build-step-collection
-    preselectedStepName=preselectedStepName
-    selectedArtifact=selectedArtifact
-    pipelineId=pipeline.id
-    buildStatus=build.status
-    buildId=build.id
-    buildSteps=build.steps
-    buildStart=build.startTime
-    buildStats=build.stats
-    activeTab=activeTab
+    preselectedStepName=this.preselectedStepName
+    selectedArtifact=this.selectedArtifact
+    pipelineId=this.pipeline.id
+    buildStatus=this.build.status
+    buildId=this.build.id
+    buildSteps=this.build.steps
+    buildStart=this.build.startTime
+    buildStats=this.build.stats
+    activeTab=this.activeTab
     changeBuildStep=(action "changeBuildStep")
     changeRouteTo=(action "changeRouteTo")
   }}

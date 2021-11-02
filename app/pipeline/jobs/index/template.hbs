@@ -1,24 +1,24 @@
-{{#if session.isAuthenticated}}
-  {{#if (not session.data.authenticated.isGuest)}}
+{{#if this.session.isAuthenticated}}
+  {{#unless this.session.data.authenticated.isGuest}}
     {{pipeline-nav
-      pipeline=pipeline
+      pipeline=this.pipeline
     }}
-  {{/if}}
+  {{/unless}}
 {{/if}}
 
 
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle" scmContext=pipeline.scmContext}}
+{{info-message message=this.errorMessage type="warning" icon="exclamation-triangle" scmContext=this.pipeline.scmContext}}
 
 <div class="row">
   <div class="col-xs-12 separator partial-view">
     {{pipeline-list-view
-            pipeline=pipeline
-            jobs=jobs
-            jobsDetails=jobsDetails
+            pipeline=this.pipeline
+            jobs=this.jobs
+            jobsDetails=this.jobsDetails
             updateListViewJobs=(action "updateListViewJobs")
             startSingleBuild=(action "startSingleBuild")
             stopBuild=(action "stopBuild")
-            showListView=showListView
+            showListView=this.showListView
             setShowListView=(action "setShowListView")
             refreshListViewJobs=(action "refreshListViewJobs")
     }}
@@ -26,13 +26,10 @@
   </div>
 </div>
 
-{{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false
-                  targetAttachment="center"
-                  translucentOverlay=true
-  }}
-    {{loading-view}}
-  {{/modal-dialog}}
+{{#if this.isShowingModal}}
+  <ModalDialog @clickOutsideToClose={{false}} @targetAttachment="center" @translucentOverlay={{true}}>
+    <LoadingView/>
+  </ModalDialog>
 {{/if}}
 
 {{outlet}}

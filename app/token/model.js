@@ -1,11 +1,26 @@
-import DS from 'ember-data';
+import classic from 'ember-classic-decorator';
+import Model, { attr } from '@ember-data/model';
 
-export default DS.Model.extend({
-  pipelineId: DS.attr('number'),
-  userId: DS.attr('number'),
-  name: DS.attr('string'),
-  description: DS.attr('string', { defaultValue: '' }),
-  lastUsed: DS.attr('string'),
-  value: DS.attr('string'),
-  action: DS.attr('string')
-});
+@classic
+export default class _Model extends Model {
+  @attr('number')
+  pipelineId;
+
+  @attr('number')
+  userId;
+
+  @attr('string')
+  name;
+
+  @attr('string', { defaultValue: '' })
+  description;
+
+  @attr('string')
+  lastUsed;
+
+  @attr('string')
+  value;
+
+  @attr('string')
+  action;
+}

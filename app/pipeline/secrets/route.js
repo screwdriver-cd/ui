@@ -1,11 +1,17 @@
-import Route from '@ember/routing/route';
+import classic from 'ember-classic-decorator';
 import { inject as service } from '@ember/service';
+import Route from '@ember/routing/route';
 import { get } from '@ember/object';
 
-export default Route.extend({
-  session: service(),
-  routeAfterAuthentication: 'pipeline.secrets',
-  titleToken: 'Secrets',
+@classic
+export default class SecretsRoute extends Route {
+  @service
+  session;
+
+  routeAfterAuthentication = 'pipeline.secrets';
+
+  titleToken = 'Secrets';
+
   model() {
     // Guests should not access this page
     if (get(this, 'session.data.authenticated.isGuest')) {
@@ -33,4 +39,4 @@ export default Route.extend({
         return { secrets, pipeline };
       });
   }
-});
+}

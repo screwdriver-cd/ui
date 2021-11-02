@@ -1,13 +1,23 @@
-import Component from '@ember/component';
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 
-export default Component.extend({
-  templateToRemove: null,
-  scmUrl: null,
-  isRemoving: false,
-  store: service(),
+@tagName('')
+@classic
+export default class TemplateHeader extends Component {
+  templateToRemove = null;
+
+  scmUrl = null;
+
+  isRemoving = false;
+
+  @service
+  store;
+
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.store
       .findRecord('pipeline', this.template.pipelineId)
       .then(pipeline => {
@@ -16,25 +26,31 @@ export default Component.extend({
       .catch(() => {
         this.set('scmUrl', null);
       });
-  },
-  actions: {
-    setTemplateToRemove(template) {
-      this.set('templateToRemove', template);
-    },
-    cancelRemovingTemplate() {
+  }
+
+  @action
+  setTemplateToRemove(template) {
+    this.set('templateToRemove', template);
+  }
+
+  @action
+  cancelRemovingTemplate() {
+    this.set('templateToRemove', null);
+    this.set('isRemoving', false);
+  }
+
+  @action
+  removeTemplate(name) {
+    this.set('isRemoving', true);
+    this.onRemoveTemplate(name).then(() => {
       this.set('templateToRemove', null);
       this.set('isRemoving', false);
-    },
-    removeTemplate(name) {
-      this.set('isRemoving', true);
-      this.onRemoveTemplate(name).then(() => {
-        this.set('templateToRemove', null);
-        this.set('isRemoving', false);
-      });
-    },
-    updateTrust(fullName, toTrust) {
-      this.set('trusted', toTrust);
-      this.onUpdateTrust(fullName, toTrust);
-    }
+    });
   }
-});
+
+  @action
+  updateTrust(fullName, toTrust) {
+    this.set('trusted', toTrust);
+    this.onUpdateTrust(fullName, toTrust);
+  }
+}

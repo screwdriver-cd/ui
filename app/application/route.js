@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
-import { get, observer } from '@ember/object';
+import { observer } from '@ember/object';
 import Route from '@ember/routing/route';
+import RSVP from 'rsvp';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
 export default Route.extend(ApplicationRouteMixin, {
@@ -9,22 +10,27 @@ export default Route.extend(ApplicationRouteMixin, {
   store: service('store'),
   reloadPage: window.location.reload.bind(window.location),
   beforeModel(transition) {
-    if (!this.get('session.isAuthenticated')) {
+    if (!this.session.isAuthenticated) {
       this.set('session.attemptedTransition', transition);
     }
   },
   model() {
-    return this.scmService.createScms();
-  },
-  setupController(controller) {
-    this._super(...arguments);
+    const scms = this.scmService.createScms();
+    let collections = [];
+
     if (
-      get(this, 'session.isAuthenticated') &&
-      !get(this, 'session.data.authenticated.isGuest')
+      this.session?.isAuthenticated &&
+      !this.session?.data?.authenticated.isGuest
     ) {
-      controller.set('collections', this.store.findAll('collection'));
+      collections = this.store.findAll('collection');
     }
+
+    return RSVP.hash({
+      scms,
+      collections
+    });
   },
+
   sessionInvalidated() {
     this.reloadPage();
   },

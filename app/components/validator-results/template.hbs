@@ -1,20 +1,21 @@
-{{#each errors as |msg|}}
-  <div class="error">{{msg}}</div>
-{{/each}}
-{{#each warnMessages as |msg|}}
-  <div class="warning">{{msg}}</div>
-{{/each}}
-{{#if isTemplate}}
-  {{validator-job name=templateName job=results.template.config template=results.template isOpen=(unbound isOpen)}}
-{{else}}
-  {{validator-pipeline name=pipelineName workflowGraph=workflowGraph annotations=annotations parameters=parameters isOpen=(unbound isOpen)}}
-  {{#each workflowGraph.nodes as |node|}}
-    {{#if (get jobs node.name)}}
-      {{#each (get jobs node.name) as |jobConfig index|}}
-        {{validator-job name=node.name job=jobConfig index=index
-          isOpen=(unbound isOpen)}}
-      {{/each}}
-    {{/if}}
+<div class={{this.styleNamespace}} ...attributes>
+  {{#each this.errors as |msg|}}
+    <div class="error">{{msg}}</div>
   {{/each}}
-{{/if}}
-{{yield}}
+  {{#each this.warnMessages as |msg|}}
+    <div class="warning">{{msg}}</div>
+  {{/each}}
+  {{#if this.isTemplate}}
+    {{validator-job name=this.templateName job=this.results.template.config template=this.results.template isOpen=(unbound this.isOpen)}}
+  {{else}}
+    {{validator-pipeline name=this.pipelineName workflowGraph=this.workflowGraph annotations=this.annotations parameters=this.parameters isOpen=(unbound this.isOpen)}}
+    {{#each this.workflowGraph.nodes as |node|}}
+      {{#if (get this.jobs node.name)}}
+        {{#each (get this.jobs node.name) as |jobConfig index|}}
+          {{validator-job name=node.name job=jobConfig index=index isOpen=(unbound this.isOpen)}}
+        {{/each}}
+      {{/if}}
+    {{/each}}
+  {{/if}}
+  {{yield}}
+</div>

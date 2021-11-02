@@ -1,24 +1,26 @@
-{{#if showToggleModal}}
-  {{#bs-modal onHide=(action "setModal" false) as |modal|}}
-    <div class="toggle-modal">
-      {{#modal.header}}
-        <h4 class="modal-title">{{stateChange}} the "{{name}}" job?</h4>
-      {{/modal.header}}
-      {{#modal.body}}
-        {{#if errorMessage}}
-          {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
-        {{/if}}
-        {{#bs-form class="toggle-form" onSubmit=(action "updateState") as |form|}}
-          {{#form.group class="message"}}
-            <label class="control-label">Reason</label>
-            <input value={{message}} class="form-control" oninput={{action (mut message) value="target.value"}} type="text" placeholder="Reason for the job state change (optional)">
-          {{/form.group}}
-          {{#form.group class="footer"}}
-            {{#bs-button buttonType="submit" class="toggle-form__create" type="primary"}}Confirm{{/bs-button}}
-            {{#bs-button class="toggle-form__cancel" onClick=(action modal.close) type="default"}}Cancel{{/bs-button}}
-          {{/form.group}}
-        {{/bs-form}}
-      {{/modal.body}}
-    </div>
-  {{/bs-modal}}
-{{/if}}
+<div class={{this.styleNamespace}} ...attributes>
+  {{#if this.showToggleModal}}
+    <BsModal @onHide={{action "setModal" false}} as |modal|>
+      <div class="toggle-modal">
+        <modal.header>
+          <h4 class="modal-title">{{this.stateChange}} the "{{this.name}}" job?</h4>
+        </modal.header>
+        <modal.body>
+          {{#if this.errorMessage}}
+            {{info-message message=this.errorMessage type="warning" icon="exclamation-triangle"}}
+          {{/if}}
+          <BsForm @class="toggle-form" @onSubmit={{action "updateState"}} as |form|>
+            <form.group @class="message">
+              <label class="control-label">Reason</label>
+              <input value={{this.message}} class="form-control" oninput={{action (mut this.message) value="target.value"}} type="text" placeholder="Reason for the job state change (optional)">
+            </form.group>
+            <form.group @class="footer">
+              <BsButton @buttonType="submit" @class="toggle-form__create" @type="primary">Confirm</BsButton>
+              <BsButton @class="toggle-form__cancel" @onClick={{action modal.close}} @type="default">Cancel</BsButton>
+            </form.group>
+          </BsForm>
+        </modal.body>
+      </div>
+    </BsModal>
+  {{/if}}
+</div>

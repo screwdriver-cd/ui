@@ -1,29 +1,31 @@
-{{#if showModal}}
-  {{!-- Modal to create a collection --}}
-  {{#bs-modal onHide=(action "setModal" false) as |modal|}}
-    <div class="collection-modal">
-      {{#modal.header}}
-        <h4 class="modal-title">Create New Collection</h4>
-      {{/modal.header}}
-      {{#modal.body}}
-        {{#if errorMessage}}
-          {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
-        {{/if}}
-        {{#bs-form class="collection-form" onSubmit=(action "addNewCollection") as |form|}}
-          {{#form.group class="name"}}
-            <label class="control-label">Collection Name {{required-field-marker}}</label>
-            <input value={{name}} class="form-control" oninput={{action (mut name) value="target.value"}} type="text" placeholder="Name">
-          {{/form.group}}
-          {{#form.group class="description"}}
-            <label class="control-label">Description</label>
-            <textarea value={{description}} class="form-control description-input" oninput={{action (mut description) value="target.value"}} type="text" placeholder="Description for the collection"></textarea>
-          {{/form.group}}
-          {{#form.group class="footer buttons-float-right"}}
-            {{#bs-button class="collection-form__cancel" onClick=(action modal.close) type="default"}}Cancel{{/bs-button}}
-            {{#bs-button buttonType="submit" class="collection-form__create" disabled=isSaveDisabled type="primary"}}Create{{/bs-button}}
-          {{/form.group}}
-        {{/bs-form}}
-      {{/modal.body}}
-    </div>
-  {{/bs-modal}}
-{{/if}}
+<div class={{this.styleNamespace}} ...attributes>
+  {{#if this.showModal}}
+    {{!-- Modal to create a collection --}}
+    <BsModal @onHide={{action "setModal" false}} as |modal|>
+      <div class="collection-modal">
+        <modal.header>
+          <h4 class="modal-title">Create New Collection</h4>
+        </modal.header>
+        <modal.body>
+          {{#if this.errorMessage}}
+            {{info-message message=this.errorMessage type="warning" icon="exclamation-triangle"}}
+          {{/if}}
+          <BsForm @class="collection-form" @onSubmit={{action "addNewCollection"}} as |form|>
+            <form.group @class="name">
+              <label class="control-label">Collection Name {{this.required-field-marker}}</label>
+              <input value={{this.name}} class="form-control" oninput={{action (mut this.name) value="target.value"}} type="text" placeholder="Name">
+            </form.group>
+            <form.group @class="description">
+              <label class="control-label">Description</label>
+              <textarea value={{this.description}} class="form-control description-input" oninput={{action (mut this.description) value="target.value"}} type="text" placeholder="Description for the collection"></textarea>
+            </form.group>
+            <form.group @class="footer buttons-float-right">
+              <BsButton @class="collection-form__cancel" @onClick={{action modal.close}} @type="default">Cancel</BsButton>
+              <BsButton @buttonType="submit" @class="collection-form__create" @disabled={{this.isSaveDisabled}} @type="primary">Create</BsButton>
+            </form.group>
+          </BsForm>
+        </modal.body>
+      </div>
+    </BsModal>
+  {{/if}}
+</div>

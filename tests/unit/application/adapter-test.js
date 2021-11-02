@@ -1,7 +1,7 @@
+import AdapterError from '@ember-data/adapter/error';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
-import DS from 'ember-data';
 let server;
 
 module('Unit | Adapter | application', function (hooks) {
@@ -150,7 +150,7 @@ module('Unit | Adapter | application', function (hooks) {
       requestData
     );
 
-    assert.ok(payload instanceof DS.AdapterError);
+    assert.ok(payload instanceof AdapterError);
   });
 
   test('it wraps error objects', function (assert) {
@@ -173,7 +173,7 @@ module('Unit | Adapter | application', function (hooks) {
       requestData
     );
 
-    assert.ok(payload instanceof DS.AdapterError);
+    assert.ok(payload instanceof AdapterError);
   });
 
   test('it takes care of empty payload', function (assert) {

@@ -1,16 +1,16 @@
 <div class="row">
   <div class="col-md-2" style="background:white;min-height: calc(100vh - 56px);">
     {{pipeline-viz-nav
-      selectedPipeline=selectedPipeline
-      selectedConnectedPipeline=selectedConnectedPipeline
-      pipelines=pipelines
-      connectedPipelines=connectedPipelines
+      selectedPipeline=this.selectedPipeline
+      selectedConnectedPipeline=this.selectedConnectedPipeline
+      pipelines=this.pipelines
+      connectedPipelines=this.connectedPipelines
       onSearchPipeline=(action "searchPipeline")
       onSelectPipeline=(action "selectPipeline")
       onClickConnectedPipeline=(action "selectConnectedPipeline")
     }}
   </div>
   <div class="col-md-10">
-    {{pipeline-viz-chart pipeline=pipelineGraph selectedConnectedPipeline=selectedConnectedPipeline}}
+    {{pipeline-viz-chart pipeline=this.pipelineGraph selectedConnectedPipeline=this.selectedConnectedPipeline}}
   </div>
 </div>

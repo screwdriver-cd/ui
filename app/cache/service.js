@@ -1,11 +1,13 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
-import { get } from '@ember/object';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Service.extend({
-  session: service('session'),
+@classic
+export default class CacheService extends Service {
+  @service('session')
+  session;
 
   /**
    * Calls the store api service to clear the cache data
@@ -29,7 +31,7 @@ export default Service.extend({
       contentType: 'application/json',
       crossDomain: true,
       headers: {
-        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+        Authorization: `Bearer ${this.session?.data?.authenticated?.token}`
       }
     };
 
@@ -55,4 +57,4 @@ export default Service.extend({
         });
     });
   }
-});
+}

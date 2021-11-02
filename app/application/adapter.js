@@ -1,6 +1,7 @@
+import classic from 'ember-classic-decorator';
 import { inject as service } from '@ember/service';
+import RESTAdapter from '@ember-data/adapter/rest';
 import { pluralize } from 'ember-inflector';
-import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
 import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 
@@ -9,12 +10,15 @@ const urlPathParser = new RegExp(
   `/${ENV.APP.SDAPI_NAMESPACE}/([^/]+)(/([^/]+))?(/([^/]+))?`
 );
 
-export default DS.RESTAdapter.extend(DataAdapterMixin, {
-  session: service('session'),
-  namespace: ENV.APP.SDAPI_NAMESPACE,
-  host: ENV.APP.SDAPI_HOSTNAME,
-  /** Just to override the assertion from `DataAdapterMixin` */
-  authorize() {},
+@classic
+export default class Adapter extends RESTAdapter.extend(DataAdapterMixin) {
+  @service('session')
+  session;
+
+  namespace = ENV.APP.SDAPI_NAMESPACE;
+
+  host = ENV.APP.SDAPI_HOSTNAME;
+
   /**
    * Add cors support to all ajax calls
    * @method ajax
@@ -31,14 +35,14 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       withCredentials: true
     };
 
-    return this._super(url, method, finalHash);
-  },
+    return super.ajax(url, method, finalHash);
+  }
 
   get headers() {
     return {
       Authorization: `Bearer ${this.session.get('data.authenticated.token')}`
     };
-  },
+  }
 
   /**
    * Interface for adding content to a payload before handleResponse is complete
@@ -55,7 +59,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
     } else {
       this.insertLink(key, payload[key]);
     }
-  },
+  }
 
   /**
    * Insert links configuration into responses for child data. Modifies object in place.
@@ -87,7 +91,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
         metrics: 'metrics'
       };
     }
-  },
+  }
 
   /**
    * Overriding default adapter because our API doesn't provide model names around request data
@@ -136,7 +140,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
         return err;
       });
 
-      return this._super(status, headers, { errors }, requestData);
+      return super.handleResponse(status, headers, { errors }, requestData);
     }
 
     let data = {};
@@ -149,7 +153,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
     // catch if we got a really weird url
     if (!matches) {
       // bail
-      return this._super(...arguments);
+      return super.handleResponse(...arguments);
     }
 
     if (this.modelKey) {
@@ -170,8 +174,9 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
     this.decoratePayload(key, data);
 
     // Pass-through to super-class
-    return this._super(status, headers, data, requestData);
-  },
+    return super.handleResponse(status, headers, data, requestData);
+  }
+
   /**
    * Overriding default adapter because pipeline token's endpoint is differnt
    * from user api token.
@@ -182,11 +187,12 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    */
   urlForFindAll(modelName, snapshot) {
     if (modelName !== 'token' || snapshot.adapterOptions === undefined) {
-      return this._super(modelName, snapshot);
+      return super.urlForFindAll(modelName, snapshot);
     }
 
     return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
-  },
+  }
+
   /**
    * Overriding default adapter because pipeline token's endpoint is differnt
    * from user api token.
@@ -197,11 +203,12 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    */
   urlForCreateRecord(modelName, snapshot) {
     if (modelName !== 'token' || snapshot.adapterOptions === undefined) {
-      return this._super(modelName, snapshot);
+      return super.urlForCreateRecord(modelName, snapshot);
     }
 
     return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipelines/${snapshot.adapterOptions.pipelineId}/tokens`;
-  },
+  }
+
   /**
    * Overriding default adapter because pipeline token's endpoint is differnt
    * from user api token.
@@ -213,14 +220,15 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
    */
   urlForUpdateRecord(id, modelName, snapshot) {
     if (modelName !== 'token' || snapshot.adapterOptions === undefined) {
-      return this._super(id, modelName, snapshot);
+      return super.urlForUpdateRecord(id, modelName, snapshot);
     }
 
     return (
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
       `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`
     );
-  },
+  }
+
   /**
    * Overriding default adapter because pipeline token's endpoint is differnt
    * from user api token.
@@ -235,14 +243,15 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       modelName !== 'token' ||
       snapshot.adapterOptions.pipelineId === undefined
     ) {
-      return this._super(id, modelName, snapshot);
+      return super.urlForDeleteRecord(id, modelName, snapshot);
     }
 
     return (
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}` +
       `/pipelines/${snapshot.adapterOptions.pipelineId}/tokens/${id}`
     );
-  },
+  }
+
   /**
    * Overriding default adapter in order to pass pagination query params to
    * the pipeline events api.
@@ -263,6 +272,6 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       }/${pluralize(modelName)}`;
     }
 
-    return this._super(...arguments);
+    return super.urlForQuery(...arguments);
   }
-});
+}

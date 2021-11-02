@@ -1,100 +1,119 @@
-import { computed, get, set } from '@ember/object';
-import { empty } from '@ember/object/computed';
+import classic from 'ember-classic-decorator';
+import { tagName } from '@ember-decorators/component';
 import { inject as service } from '@ember/service';
+import { empty } from '@ember/object/computed';
+import { set, action, computed } from '@ember/object';
 import ENV from 'screwdriver-ui/config/environment';
 import Component from '@ember/component';
 
-export default Component.extend({
-  errorMessage: '',
-  showModal: false,
-  session: service(),
-  scmService: service('scm'),
-  addCollectionError: null,
-  addCollectionSuccess: null,
-  isEmpty: empty('filteredPipelines'),
-  showMore: computed('moreToShow', 'filteredPipelines', {
-    get() {
-      const pipelines = get(this, 'filteredPipelines');
+@classic
+@tagName('')
+export default class SearchList extends Component {
+  errorMessage = '';
 
-      if (
-        Array.isArray(pipelines) &&
-        pipelines.length < ENV.APP.NUM_PIPELINES_LISTED
-      ) {
-        return false;
-      }
+  showModal = false;
 
-      return get(this, 'moreToShow');
+  @service
+  session;
+
+  @service('scm')
+  scmService;
+
+  addCollectionError = null;
+
+  addCollectionSuccess = null;
+
+  @empty('filteredPipelines')
+  isEmpty;
+
+  @computed('moreToShow', 'filteredPipelines')
+  get showMore() {
+    const pipelines = this.filteredPipelines;
+
+    if (
+      Array.isArray(pipelines) &&
+      pipelines.length < ENV.APP.NUM_PIPELINES_LISTED
+    ) {
+      return false;
     }
-  }),
-  filteredPipelines: computed('pipelines', {
-    get() {
-      let filtered = this.pipelines;
 
-      // add scm contexts into pipelines.
-      return filtered.map(pipeline => {
-        const scm = this.scmService.getScm(pipeline.get('scmContext'));
+    return this.moreToShow;
+  }
 
-        pipeline.set('scm', scm.displayName);
-        pipeline.set('scmIcon', scm.iconType);
+  @computed('pipelines')
+  get filteredPipelines() {
+    let filtered = this.pipelines || [];
 
-        return pipeline;
-      });
-    }
-  }),
+    // add scm contexts into pipelines.
+    return filtered.map(pipeline => {
+      const scm = this.scmService.getScm(pipeline.get('scmContext'));
+
+      pipeline.set('scm', scm.displayName);
+      pipeline.set('scmIcon', scm.iconType);
+
+      return pipeline;
+    });
+  }
+
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     set(this, 'pipelinesPage', 1);
-  },
+  }
+
   /**
    * Reset show more when component is destroyed
    * @method willDestroyElement
    */
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     // Reset moreToShow value
     set(this, 'moreToShow', true);
-  },
-  actions: {
-    moreClick() {
-      const pipelinesPage = get(this, 'pipelinesPage') + 1;
-      const fn = get(this, 'updatePipelines');
+  }
 
-      set(this, 'pipelinesPage', pipelinesPage);
+  @action
+  moreClick() {
+    const pipelinesPage = this.pipelinesPage + 1;
+    const fn = this.updatePipelines;
 
-      if (typeof fn === 'function') {
-        fn({ page: pipelinesPage, search: get(this, 'query') }).catch(error =>
-          this.set('errorMessage', error)
-        );
-      }
-    },
-    openModal() {
-      this.set('showModal', true);
-    },
-    addNewCollectionHelper() {
-      let addNewCollectionParent = this.addNewCollection;
+    set(this, 'pipelinesPage', pipelinesPage);
 
-      addNewCollectionParent();
-    },
-    addToCollection(pipelineId, collection) {
-      return this.addToCollection(+pipelineId, collection.id)
-        .then(() => {
-          this.set('addCollectionError', null);
-          this.set(
-            'addCollectionSuccess',
-            `Successfully added Pipeline to Collection ${collection.get(
-              'name'
-            )}`
-          );
-        })
-        .catch(() => {
-          this.set(
-            'addCollectionError',
-            `Could not add Pipeline to Collection ${collection.get('name')}`
-          );
-          this.set('addCollectionSuccess', null);
-        });
+    if (typeof fn === 'function') {
+      fn({ page: pipelinesPage, search: this.query }).catch(error =>
+        this.set('errorMessage', error)
+      );
     }
   }
-});
+
+  @action
+  openModal() {
+    this.set('showModal', true);
+  }
+
+  @action
+  addNewCollectionHelper() {
+    let addNewCollectionParent = this.addNewCollection;
+
+    addNewCollectionParent();
+  }
+
+  @action
+  addPipelineToCollection(pipelineId, collection) {
+    return this.addToCollection(+pipelineId, collection.id)
+      .then(() => {
+        this.set('addCollectionError', null);
+        this.set(
+          'addCollectionSuccess',
+          `Successfully added Pipeline to Collection ${collection.get('name')}`
+        );
+      })
+      .catch(() => {
+        this.set(
+          'addCollectionError',
+          `Could not add Pipeline to Collection ${collection.get('name')}`
+        );
+        this.set('addCollectionSuccess', null);
+      });
+  }
+}

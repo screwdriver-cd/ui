@@ -1,20 +1,26 @@
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 // import Route from '@ember/routing/route';
 import { A as newArray } from '@ember/array';
 import RSVP from 'rsvp';
 import EventsRoute from '../events/route';
 
-export default EventsRoute.extend({
-  controllerName: 'pipeline.events',
+@classic
+export default class PullsRoute extends EventsRoute {
+  controllerName = 'pipeline.events';
+
   setupController(controller, model) {
-    this._super(controller, model);
+    super.setupController(controller, model);
     controller.setProperties({
       activeTab: 'pulls',
       selected: null
     });
-  },
+  }
+
   renderTemplate() {
     this.render('pipeline.events');
-  },
+  }
+
   model() {
     const pipelineEventsController = this.controllerFor('pipeline.events');
 
@@ -70,13 +76,13 @@ export default EventsRoute.extend({
       jobs: jobsPromise,
       events
     });
-  },
-  actions: {
-    refreshModel: function refreshModel() {
-      return this.pipeline
-        .hasMany('jobs')
-        .reload()
-        .then(() => this.refresh());
-    }
   }
-});
+
+  @action
+  refreshModel() {
+    return this.pipeline
+      .hasMany('jobs')
+      .reload()
+      .then(() => this.refresh());
+  }
+}

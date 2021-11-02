@@ -1,11 +1,14 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Service.extend({
-  session: service('session'),
+@classic
+export default class PipelineStartallService extends Service {
+  @service('session')
+  session;
 
   /**
    * Start all child pipelines
@@ -31,4 +34,4 @@ export default Service.extend({
         .fail(jqXHR => reject(JSON.parse(jqXHR.responseText).message));
     });
   }
-});
+}

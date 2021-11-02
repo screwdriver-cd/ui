@@ -1,9 +1,5 @@
-{{#tc-collection-list
-  model=model
-  filteringNamespace=targetNamespace
-  collectionType="Commands"
-}}
+<TcCollectionList @model={{this.model}} @filteringNamespace={{this.targetNamespace}} @collectionType="Commands">
   Commands share binaries (or scripts) across multiple jobs.
-{{/tc-collection-list}}
+</TcCollectionList>
 
 {{outlet}}

@@ -20,19 +20,20 @@ const extractPipelineId = function extractPipelineId(jobName) {
 };
 
 export default Component.extend({
+  tagName: '',
   pipeline: null,
   showTooltip: false,
   showTooltipPosition: 'left',
+
   tooltipData: {
     externalTrigger: {
       pipelineId: 0
     }
   },
 
-  workflowGraph: computed('pipeline', function workflowGraph() {
-    return this.pipeline.workflowGraph;
-  }),
+  workflowGraph: computed.reads('pipeline.workflowGraph'),
   startFrom: computed('pipeline', () => ['~pr', '~commit']),
+
   actions: {
     graphClicked(job, mouseevent, sizes) {
       const { target } = mouseevent;

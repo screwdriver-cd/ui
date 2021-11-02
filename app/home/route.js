@@ -1,8 +1,10 @@
+import classic from 'ember-classic-decorator';
 import Route from '@ember/routing/route';
 import { get } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend(AuthenticatedRouteMixin, {
+@classic
+export default class HomeRoute extends Route.extend(AuthenticatedRouteMixin) {
   model() {
     if (get(this, 'session.isAuthenticated')) {
       // No reason to go fetch collections for a guest user
@@ -13,7 +15,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
       this.store
         .findAll('collection')
         .then(collections => {
-          if (get(collections, 'length')) {
+          if (collections.length) {
             // Get the id of the default collection.
             const defaultCollection = collections.find(
               collection => collection.type === 'default'
@@ -36,4 +38,4 @@ export default Route.extend(AuthenticatedRouteMixin, {
         });
     }
   }
-});
+}

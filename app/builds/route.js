@@ -1,7 +1,9 @@
+import classic from 'ember-classic-decorator';
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend(AuthenticatedRouteMixin, {
+@classic
+export default class BuildsRoute extends Route.extend(AuthenticatedRouteMixin) {
   model(params) {
     return this.store
       .findRecord('build', params.build_id)
@@ -14,7 +16,8 @@ export default Route.extend(AuthenticatedRouteMixin, {
               .then(pipeline => ({ build, job, pipeline }))
           )
       );
-  },
+  }
+
   redirect(model) {
     return this.transitionTo(
       'pipeline.build',
@@ -22,4 +25,4 @@ export default Route.extend(AuthenticatedRouteMixin, {
       model.build.id
     );
   }
-});
+}

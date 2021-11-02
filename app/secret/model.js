@@ -1,8 +1,17 @@
-import DS from 'ember-data';
+import classic from 'ember-classic-decorator';
+import Model, { attr } from '@ember-data/model';
 
-export default DS.Model.extend({
-  pipelineId: DS.attr('string'), // DS.belongsTo('pipeline'),
-  name: DS.attr('string'),
-  value: DS.attr('string'),
-  allowInPR: DS.attr('boolean', { defaultValue: false })
-});
+@classic
+export default class _Model extends Model {
+  @attr('string')
+  pipelineId; // DS.belongsTo('pipeline'),
+
+  @attr('string')
+  name;
+
+  @attr('string')
+  value;
+
+  @attr('boolean', { defaultValue: false })
+  allowInPR;
+}

@@ -30,10 +30,11 @@ export default Service.extend({
     let lines = [];
 
     let done = false;
+    let error = false;
     const inProgress = sortOrder === 'ascending';
 
     return new EmberPromise((resolve, reject) => {
-      if (!this.get('session.isAuthenticated')) {
+      if (!this.session.isAuthenticated) {
         return reject(new Error('User is not authenticated'));
       }
 
@@ -56,10 +57,11 @@ export default Service.extend({
             done =
               started && jqXHR.getResponseHeader('x-more-data') === 'false';
           })
-          .catch(error => {
-            if (error.jqXHR && [403, 404].includes(error.jqXHR.status)) {
+          .catch(err => {
+            if (err.jqXHR && Math.floor(err.jqXHR.status / 100) === 4) {
               done = true;
             }
+            error = true;
           })
           // always resolve something
           .finally(() => {
@@ -78,7 +80,7 @@ export default Service.extend({
               });
             }
 
-            resolve({ lines, done });
+            resolve({ lines, done, error });
           })
       );
     });

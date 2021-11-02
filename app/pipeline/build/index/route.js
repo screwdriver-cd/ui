@@ -1,16 +1,19 @@
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 
-export default Route.extend({
+@classic
+export default class IndexRoute extends Route {
   model() {
     // return parent route model
     return this.modelFor('pipeline.build');
-  },
-  actions: {
-    didTransition() {
-      this.controllerFor('pipeline.build').setProperties({
-        selectedArtifact: '',
-        activeTab: 'steps'
-      });
-    }
   }
-});
+
+  @action
+  didTransition() {
+    this.controllerFor('pipeline.build').setProperties({
+      selectedArtifact: '',
+      activeTab: 'steps'
+    });
+  }
+}

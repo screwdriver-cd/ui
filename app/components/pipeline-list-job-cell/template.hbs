@@ -1,10 +1,12 @@
-<div class="job-cell">
-  {{#if build}}
-    {{#link-to "pipeline.build" build.id}}
-      {{fa-icon build.icon fixedWidth=true class=build.status}}
-    {{/link-to}}
-  {{else}}
-    <span class="fa"></span>
-  {{/if}}
-  <div class="job-name">{{jobName}}</div>
+<div class={{this.styleNamespace}} ...attributes>
+  <div class="job-cell">
+    {{#if this.build}}
+      {{#link-to "pipeline.build" this.build.id}}
+        {{fa-icon this.build.icon fixedWidth=true class=this.build.status}}
+      {{/link-to}}
+    {{else}}
+      <span class="fa"></span>
+    {{/if}}
+    <div class="job-name">{{this.jobName}}</div>
+  </div>
 </div>

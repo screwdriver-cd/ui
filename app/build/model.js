@@ -1,5 +1,6 @@
+import classic from 'ember-classic-decorator';
 import { computed } from '@ember/object';
-import DS from 'ember-data';
+import Model, { attr } from '@ember-data/model';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 
 /**
@@ -47,119 +48,143 @@ function durationText(start, end, largest = 1) {
   });
 }
 
-export default DS.Model.extend({
+@classic
+export default class _Model extends Model {
   // ember-data has some reservations with the "container" attribute name
-  buildContainer: DS.attr('string'),
-  cause: DS.attr('string'),
-  commit: DS.attr(),
-  createTime: DS.attr('date'),
-  endTime: DS.attr('date'),
-  eventId: DS.attr('string'),
-  jobId: DS.attr('string'),
-  meta: DS.attr(),
-  number: DS.attr('number'),
-  parameters: DS.attr(),
-  parentBuildId: DS.attr('string'),
-  sha: DS.attr('string'),
-  startTime: DS.attr('date'),
-  status: DS.attr('string'),
-  stats: DS.attr(),
-  statusMessage: DS.attr('string', { defaultValue: null }),
-  steps: DS.attr(),
-  startTimeWords: computed('startTime', {
-    get() {
-      return `${durationText.call(this, 'startTime', 'now')} ago`;
+  @attr('string')
+  buildContainer;
+
+  @attr('string')
+  cause;
+
+  @attr()
+  commit;
+
+  @attr('date')
+  createTime;
+
+  @attr('date')
+  endTime;
+
+  @attr('string')
+  eventId;
+
+  @attr('string')
+  jobId;
+
+  @attr()
+  meta;
+
+  @attr('number')
+  number;
+
+  @attr()
+  parameters;
+
+  @attr('string')
+  parentBuildId;
+
+  @attr('string')
+  sha;
+
+  @attr('date')
+  startTime;
+
+  @attr('string')
+  status;
+
+  @attr()
+  stats;
+
+  @attr('string', { defaultValue: null })
+  statusMessage;
+
+  @attr()
+  steps;
+
+  @computed('startTime')
+  get startTimeWords() {
+    return `${durationText.call(this, 'startTime', 'now')} ago`;
+  }
+
+  @computed('startTime')
+  get startTimeExact() {
+    if (this.startTime) {
+      let dateTime = this.startTime.getTime();
+
+      return `${toCustomLocaleString(new Date(dateTime))}`;
     }
-  }),
-  startTimeExact: computed('startTime', {
-    get() {
-      if (this.startTime) {
-        let dateTime = this.startTime.getTime();
 
-        return `${toCustomLocaleString(new Date(dateTime))}`;
-      }
+    return `${toCustomLocaleString(new Date())}`;
+  }
 
-      return `${toCustomLocaleString(new Date())}`;
+  @computed('createTime')
+  get createTimeWords() {
+    const dt = durationText.call(this, 'createTime', 'now');
+
+    return `${dt} ago`;
+  }
+
+  @computed('createTime')
+  get createTimeExact() {
+    if (this.createTime) {
+      let dateTime = this.createTime.getTime();
+
+      return `${toCustomLocaleString(new Date(dateTime))}`;
     }
-  }),
-  createTimeWords: computed('createTime', {
-    get() {
-      const dt = durationText.call(this, 'createTime', 'now');
 
-      return `${dt} ago`;
-    }
-  }),
-  createTimeExact: computed('createTime', {
-    get() {
-      if (this.createTime) {
-        let dateTime = this.createTime.getTime();
+    return `${toCustomLocaleString(new Date())}`;
+  }
 
-        return `${toCustomLocaleString(new Date(dateTime))}`;
-      }
-
-      return `${toCustomLocaleString(new Date())}`;
-    }
-  }),
-  endTimeWords: computed('endTime', {
-    get() {
-      if (!this.endTime) {
-        return null;
-      }
-
-      return `${durationText.call(this, 'endTime', 'now')} ago`;
-    }
-  }),
-  endTimeExact: computed('endTime', {
-    get() {
-      if (this.endTime) {
-        let dateTime = this.endTime.getTime();
-
-        return `${toCustomLocaleString(new Date(dateTime))}`;
-      }
-
+  @computed('endTime')
+  get endTimeWords() {
+    if (!this.endTime) {
       return null;
     }
-  }),
+
+    return `${durationText.call(this, 'endTime', 'now')} ago`;
+  }
+
+  @computed('endTime')
+  get endTimeExact() {
+    if (this.endTime) {
+      let dateTime = this.endTime.getTime();
+
+      return `${toCustomLocaleString(new Date(dateTime))}`;
+    }
+
+    return null;
+  }
+
   // Queue time and blocked time are merged into blockedDuration
-  blockedDuration: computed('createTime', 'stats.imagePullStartTime', {
-    get() {
-      return durationText.call(
-        this,
-        'createTime',
-        'stats.imagePullStartTime',
-        2
-      );
-    }
-  }),
+  @computed('createTime', 'stats.imagePullStartTime')
+  get blockedDuration() {
+    return durationText.call(this, 'createTime', 'stats.imagePullStartTime', 2);
+  }
+
   // Time it takes to pull the image
-  imagePullDuration: computed('stats.imagePullStartTime', 'startTime', {
-    get() {
-      return durationText.call(
-        this,
-        'stats.imagePullStartTime',
-        'startTime',
-        2
-      );
-    }
-  }),
-  buildDuration: computed('startTime', 'endTime', {
-    get() {
-      return durationText.call(this, 'startTime', 'endTime', 2);
-    }
-  }),
-  totalDuration: computed('createTime', 'endTime', {
-    get() {
-      return durationText.call(this, 'createTime', 'endTime', 2);
-    }
-  }),
-  totalDurationMS: computed('createTime', 'endTime', {
-    get() {
-      return calcDuration.call(this, 'createTime', 'endTime');
-    }
-  }),
-  truncatedSha: computed('sha', {
-    get() {
-      return this.sha.substr(0, 7);
-    }
-  })
-});
+  @computed('stats.imagePullStartTime', 'startTime')
+  get imagePullDuration() {
+    return durationText.call(this, 'stats.imagePullStartTime', 'startTime', 2);
+  }
+
+  @computed('startTime', 'endTime')
+  get buildDuration() {
+    return durationText.call(this, 'startTime', 'endTime', 2);
+  }
+
+  @computed('createTime', 'endTime')
+  get totalDuration() {
+    return durationText.call(this, 'createTime', 'endTime', 2);
+  }
+
+  @computed('createTime', 'endTime')
+  get totalDurationMS() {
+    return calcDuration.call(this, 'createTime', 'endTime');
+  }
+
+  @computed('sha')
+  get truncatedSha() {
+    return this.sha.substr(0, 7);
+  }
+}

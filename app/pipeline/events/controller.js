@@ -1,8 +1,9 @@
-import Controller from '@ember/controller';
+import classic from 'ember-classic-decorator';
 import { inject as service } from '@ember/service';
-import { get, computed } from '@ember/object';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import { alias } from '@ember/object/computed';
+import Controller from '@ember/controller';
+import { action, computed } from '@ember/object';
+import decoder from 'jwt-decode';
 import uniqBy from 'lodash.uniqby';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
@@ -15,7 +16,7 @@ import {
 
 // eslint-disable-next-line require-jsdoc
 export async function stopBuild(givenEvent, job) {
-  const buildId = get(job, 'buildId');
+  const { buildId } = job;
 
   let build;
 
@@ -26,7 +27,7 @@ export async function stopBuild(givenEvent, job) {
     build.set('status', 'ABORTED');
 
     if (!event && this.modelEvents) {
-      event = this.modelEvents.filter(e => e.id === get(build, 'eventId'));
+      event = this.modelEvents.filter(e => e.id === build.eventId);
     }
 
     try {
@@ -55,30 +56,30 @@ export async function startDetachedBuild(job, options = {}) {
 
   let parentBuildId = null;
 
-  const buildId = get(job, 'buildId');
+  const { buildId } = job;
   const { parameters, reason } = options;
 
   if (buildId) {
     const build = this.store.peekRecord('build', buildId);
 
-    parentBuildId = get(build, 'parentBuildId');
+    ({ parentBuildId } = build);
   } else if (event === undefined) {
-    const builds = await get(job, 'builds');
-    const latestBuild = get(builds, 'firstObject');
+    const builds = await job.builds;
+    const latestBuild = builds.firstObject;
 
-    event = await this.store.findRecord('event', get(latestBuild, 'eventId'));
+    event = await this.store.findRecord('event', latestBuild.eventId);
   }
 
-  const parentEventId = get(event, 'id');
-  const groupEventId = get(event, 'groupEventId');
-  const pipelineId = get(this, 'pipeline.id');
-  const token = get(this, 'session.data.authenticated.token');
-  const user = get(decoder(token), 'username');
+  const parentEventId = event.id;
+  const { groupEventId } = event;
+  const pipelineId = this.pipeline.id;
+  const { token } = this.session.data.authenticated;
+  const user = decoder(token).username;
 
   let causeMessage = `Manually started by ${user}`;
-  const prNum = get(event, 'prNum');
+  const { prNum } = event;
 
-  let startFrom = get(job, 'name');
+  let startFrom = job.name;
 
   if (reason) {
     causeMessage = `[force start]${reason}`;
@@ -121,12 +122,12 @@ export async function createEvent(eventPayload, toActiveTab) {
 
     if (typeof toActiveTab === `boolean`) {
       if (toActiveTab) {
-        const path = `pipeline/${newEvent.get('pipelineId')}/${this.activeTab}`;
+        const path = `pipeline/${newEvent.pipelineId}/${this.activeTab}`;
 
         return this.transitionToRoute(path);
       }
 
-      return this.transitionToRoute('pipeline', newEvent.get('pipelineId'));
+      return this.transitionToRoute('pipeline', newEvent.pipelineId);
     }
   } catch (e) {
     // eslint-disable-next-line no-console
@@ -149,7 +150,7 @@ export async function updateEvents(page) {
   this.set('isFetching', true);
 
   const events = await this.store.query('event', {
-    pipelineId: get(this, 'pipeline.id'),
+    pipelineId: this.pipeline.id,
     page,
     count: ENV.APP.NUM_EVENTS_LISTED
   });
@@ -174,10 +175,17 @@ export async function updateEvents(page) {
   return null;
 }
 
-export default Controller.extend(ModelReloaderMixin, {
-  shuttle: service(),
-  lastRefreshed: moment(),
-  expandedEventsGroup: {},
+@classic
+export default class EventsController extends Controller.extend(
+  ModelReloaderMixin
+) {
+  @service
+  shuttle;
+
+  lastRefreshed = null;
+
+  expandedEventsGroup = null;
+
   shouldReload(model) {
     let res = SHOULD_RELOAD_SKIP;
 
@@ -185,7 +193,7 @@ export default Controller.extend(ModelReloaderMixin, {
       const event = model.events.find(m => m.isRunning);
 
       let diff;
-      const lastRefreshed = this.get('lastRefreshed');
+      const { lastRefreshed } = this;
 
       if (event) {
         res = SHOULD_RELOAD_YES;
@@ -200,22 +208,34 @@ export default Controller.extend(ModelReloaderMixin, {
     }
 
     return res;
-  },
-  queryParams: [
+  }
+
+  queryParams = [
     {
       jobId: { type: 'string' }
     }
-  ],
-  jobId: '',
-  session: service(),
-  stop: service('event-stop'),
+  ];
+
+  jobId = '';
+
+  @service
+  session;
+
+  @service('event-stop')
+  stop;
+
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
+    this.expandedEventsGroup = {};
+    this.lastRefreshed = moment();
+
     this.startReloading();
     this.set('eventsPage', 1);
-  },
-  showListView: false,
-  showPRJobs: true,
+  }
+
+  showListView = false;
+
+  showPRJobs = true;
 
   reload() {
     try {
@@ -227,377 +247,391 @@ export default Controller.extend(ModelReloaderMixin, {
     }
 
     return Promise.resolve();
-  },
-  isShowingModal: false,
-  isFetching: false,
-  activeTab: 'events',
-  moreToShow: true,
-  errorMessage: '',
-  jobs: computed('model.jobs', {
-    get() {
-      const jobs = this.getWithDefault('model.jobs', []);
+  }
 
-      return jobs.filter(j => !isPRJob(j.get('name')));
+  isShowingModal = false;
+
+  isFetching = false;
+
+  activeTab = 'events';
+
+  moreToShow = true;
+
+  errorMessage = '';
+
+  @computed('model.jobs')
+  get jobs() {
+    const jobs = this.model?.jobs || [];
+
+    return jobs.filter(j => !isPRJob(j.name));
+  }
+
+  @computed('pipeline.jobs')
+  get jobIds() {
+    return this.pipeline.jobs.filter(j => !isPRJob(j.name)).map(j => j.id);
+  }
+
+  jobsDetails = [];
+
+  paginateEvents = [];
+
+  @alias('pipeline.prChain')
+  prChainEnabled;
+
+  @computed('model.triggers.@each.triggers', 'pipeline.workflowGraph')
+  get completeWorkflowGraph() {
+    const { workflowGraph } = this.pipeline;
+    const { triggers } = this.model;
+    const completeGraph = { edges: [], nodes: [] };
+
+    if (workflowGraph) {
+      completeGraph.nodes = uniqBy(workflowGraph.nodes || [], n => n.name);
+
+      completeGraph.edges = (workflowGraph.edges || []).filter(e => {
+        const srcFound =
+          !e.src || !!workflowGraph.nodes.find(n => n.name === e.src);
+        const destFound =
+          !e.dest || !!workflowGraph.nodes.find(n => n.name === e.dest);
+
+        return srcFound && destFound;
+      });
     }
-  }),
-  jobIds: computed('pipeline.jobs', {
-    get() {
-      return this.get('pipeline.jobs')
-        .filter(j => !isPRJob(j.get('name')))
-        .map(j => j.id);
+
+    // Add extra node if downstream triggers exist
+    if (triggers && triggers.length > 0) {
+      triggers.forEach(t => {
+        if (t.triggers && t.triggers.length > 0) {
+          completeGraph.edges.push({
+            src: t.jobName,
+            dest: `~sd-${t.jobName}-triggers`
+          });
+          completeGraph.nodes.push({
+            name: `~sd-${t.jobName}-triggers`,
+            triggers: t.triggers,
+            status: 'DOWNSTREAM_TRIGGER'
+          });
+        }
+      });
     }
-  }),
-  jobsDetails: [],
-  paginateEvents: [],
-  prChainEnabled: alias('pipeline.prChain'),
-  completeWorkflowGraph: computed('model.triggers.@each.triggers', {
-    get() {
-      const workflowGraph = this.get('pipeline.workflowGraph');
-      const triggers = this.get('model.triggers');
-      const completeGraph = workflowGraph;
 
-      // Add extra node if downstream triggers exist
-      if (triggers && triggers.length > 0) {
-        triggers.forEach(t => {
-          if (t.triggers && t.triggers.length > 0) {
-            completeGraph.edges.push({
-              src: t.jobName,
-              dest: `~sd-${t.jobName}-triggers`
-            });
-            completeGraph.nodes.push({
-              name: `~sd-${t.jobName}-triggers`,
-              triggers: t.triggers,
-              status: 'DOWNSTREAM_TRIGGER'
-            });
-          }
-        });
-      }
-      if (completeGraph) {
-        completeGraph.nodes = uniqBy(completeGraph.nodes || [], n => n.name);
+    return completeGraph;
+  }
 
-        completeGraph.edges = (completeGraph.edges || []).filter(e => {
-          const srcFound =
-            !e.src || !!completeGraph.nodes.find(n => n.name === e.src);
-          const destFound =
-            !e.dest || !!completeGraph.nodes.find(n => n.name === e.dest);
+  @computed('activeTab')
+  get currentEventType() {
+    return this.activeTab === 'pulls' ? 'pr' : 'pipeline';
+  }
 
-          return srcFound && destFound;
-        });
-      }
-
-      return completeGraph;
-    }
-  }),
-  currentEventType: computed('activeTab', {
-    get() {
-      return this.activeTab === 'pulls' ? 'pr' : 'pipeline';
-    }
-  }),
   // Aggregates first page events and events via ModelReloaderMixin
-  modelEvents: computed('model.events', {
-    get() {
-      let previousModelEvents = this.previousModelEvents || [];
+  @computed('model.events', 'pipeline.id', 'previousModelEvents')
+  get modelEvents() {
+    let previousModelEvents = this.previousModelEvents || [];
 
-      let currentModelEvents = this.getWithDefault(
-        'model.events',
-        []
-      ).toArray();
+    let currentModelEvents = (this.model.events || []).toArray();
 
-      let newModelEvents = [];
-      const newPipelineId = this.get('pipeline.id');
+    let newModelEvents = [];
+    const newPipelineId = this.pipeline.id;
 
-      // purge unmatched pipeline events
-      if (
-        previousModelEvents.some(e => e.get('pipelineId') !== newPipelineId)
-      ) {
-        newModelEvents = [...currentModelEvents];
+    // purge unmatched pipeline events
+    if (previousModelEvents.some(e => e.pipelineId !== newPipelineId)) {
+      newModelEvents = [...currentModelEvents];
 
-        this.set('paginateEvents', []);
-        this.set('previousModelEvents', newModelEvents);
-        this.set('moreToShow', true);
-
-        return newModelEvents;
-      }
-
-      previousModelEvents = previousModelEvents.filter(
-        e => !currentModelEvents.find(c => c.id === e.id)
-      );
-
-      newModelEvents = currentModelEvents.concat(previousModelEvents);
-
+      this.set('paginateEvents', []);
       this.set('previousModelEvents', newModelEvents);
+      this.set('moreToShow', true);
 
       return newModelEvents;
     }
-  }),
-  pipelineEvents: computed('modelEvents', 'paginateEvents.[]', {
-    get() {
-      this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
-        this.set('latestCommit', event);
-      });
 
-      return [].concat(this.modelEvents, this.paginateEvents);
-    }
-  }),
-  prEvents: computed('model.events.@each.workflowGraph', 'prChainEnabled', {
-    get() {
-      const prEvents = this.get('model.events')
-        .filter(e => e.prNum)
-        .sortBy('createTime')
-        .reverse();
+    previousModelEvents = previousModelEvents.filter(
+      e => !currentModelEvents.find(c => c.id === e.id)
+    );
 
-      if (!this.prChainEnabled) {
-        return prEvents.map(prEvent => {
-          const prWorkflowGraph = prEvent.workflowGraph;
+    newModelEvents = currentModelEvents.concat(previousModelEvents);
 
-          const prNodes = prWorkflowGraph.nodes.filter(n =>
-            n.name.startsWith('~pr')
-          );
-          const edgesToAdd = [];
-          const nodesToAdd = [...prNodes];
+    this.set('previousModelEvents', newModelEvents);
 
-          // 1 level deep
-          prWorkflowGraph.edges.forEach(e => {
-            prNodes.forEach(prNode => {
-              if (prNode.name === e.src) {
-                const endNode = prWorkflowGraph.nodes.findBy('name', e.dest);
+    return newModelEvents;
+  }
 
-                nodesToAdd.pushObject(endNode);
-                edgesToAdd.pushObject(e);
-              }
-            });
+  @computed('modelEvents', 'paginateEvents.[]', 'pipeline.id')
+  get pipelineEvents() {
+    this.shuttle.getLatestCommitEvent(this.pipeline.id).then(event => {
+      this.set('latestCommit', event);
+    });
+
+    return [].concat(this.modelEvents, this.paginateEvents);
+  }
+
+  @computed('model.events.@each.workflowGraph', 'prChainEnabled')
+  get prEvents() {
+    const prEvents = this.model.events
+      .filter(e => e.prNum)
+      .sortBy('createTime')
+      .reverse();
+
+    if (!this.prChainEnabled) {
+      return prEvents.map(prEvent => {
+        const prWorkflowGraph = prEvent.workflowGraph;
+
+        const prNodes = prWorkflowGraph.nodes.filter(n =>
+          n.name.startsWith('~pr')
+        );
+        const edgesToAdd = [];
+        const nodesToAdd = [...prNodes];
+
+        // 1 level deep
+        prWorkflowGraph.edges.forEach(e => {
+          prNodes.forEach(prNode => {
+            if (prNode.name === e.src) {
+              const endNode = prWorkflowGraph.nodes.findBy('name', e.dest);
+
+              nodesToAdd.pushObject(endNode);
+              edgesToAdd.pushObject(e);
+            }
           });
-
-          prWorkflowGraph.edges.clear();
-          prWorkflowGraph.edges.pushObjects(edgesToAdd);
-          prWorkflowGraph.nodes.clear();
-          prWorkflowGraph.nodes.pushObjects(nodesToAdd);
-
-          return prEvent;
         });
-      }
 
-      return prEvents;
+        prWorkflowGraph.edges.clear();
+        prWorkflowGraph.edges.pushObjects(edgesToAdd);
+        prWorkflowGraph.nodes.clear();
+        prWorkflowGraph.nodes.pushObjects(nodesToAdd);
+
+        return prEvent;
+      });
     }
-  }),
-  events: computed('pipelineEvents', 'prEvents', 'currentEventType', {
-    get() {
-      if (this.currentEventType === 'pr') {
-        return this.prEvents;
-      }
 
-      return this.pipelineEvents;
+    return prEvents;
+  }
+
+  @computed('pipelineEvents', 'prEvents', 'currentEventType')
+  get events() {
+    if (this.currentEventType === 'pr') {
+      return this.prEvents;
     }
-  }),
-  pullRequestGroups: computed('model.jobs', {
-    get() {
-      const jobs = this.getWithDefault('model.jobs', []);
 
-      let groups = {};
+    return this.pipelineEvents;
+  }
 
-      return jobs
-        .filter(j => j.get('isPR'))
-        .sortBy('createTime')
-        .reverse()
-        .reduce((results, j) => {
-          const k = j.get('group');
+  @computed('model.jobs')
+  get pullRequestGroups() {
+    const jobs = this.model.jobs || [];
 
-          if (groups[k] === undefined) {
-            groups[k] = results.length;
-            results[groups[k]] = [j];
-          } else {
-            results[groups[k]].push(j);
-          }
+    let groups = {};
 
-          return results;
-        }, []);
-    }
-  }),
-  isRestricted: computed('pipeline.annotations', {
-    get() {
-      const annotations = this.getWithDefault('pipeline.annotations', {});
+    return jobs
+      .filter(j => j.isPR)
+      .sortBy('createTime')
+      .reverse()
+      .reduce((results, j) => {
+        const k = j.group;
 
-      return (annotations['screwdriver.cd/restrictPR'] || 'none') !== 'none';
-    }
-  }),
+        if (groups[k] === undefined) {
+          groups[k] = results.length;
+          results[groups[k]] = [j];
+        } else {
+          results[groups[k]].push(j);
+        }
+
+        return results;
+      }, []);
+  }
+
+  @computed('pipeline.annotations')
+  get isRestricted() {
+    const annotations = this.pipeline.annotations || {};
+
+    return (annotations['screwdriver.cd/restrictPR'] || 'none') !== 'none';
+  }
+
   /**
    * Selected Event's Id (integer) in a string format, i.e. '379281'
    * @param  {String} selected
    * @param  {String} mostRecent
    * @return {String}
    */
-  selectedEvent: computed('selected', 'mostRecent', {
-    get() {
-      return this.selected || this.mostRecent;
+  @computed('selected', 'mostRecent')
+  get selectedEvent() {
+    return this.selected || this.mostRecent;
+  }
+
+  @computed('events', 'selectedEvent')
+  get selectedEventObj() {
+    const selected = this.selectedEvent;
+
+    return this.events.find(e => e.id === selected);
+  }
+
+  @computed('events.@each.status')
+  get mostRecent() {
+    const list = this.events || [];
+    const event = list.find(e => e.status === 'RUNNING');
+
+    if (!event) {
+      return list.length ? list[0].id : 0;
     }
-  }),
 
-  selectedEventObj: computed('selectedEvent', {
-    get() {
-      const selected = this.selectedEvent;
+    return event.id;
+  }
 
-      return this.events.find(e => get(e, 'id') === selected);
+  @computed('events.@each.status')
+  get lastSuccessful() {
+    const list = this.events || [];
+    const event = list.find(e => e.status === 'SUCCESS');
+
+    if (!event) {
+      return 0;
     }
-  }),
 
-  mostRecent: computed('events.@each.status', {
-    get() {
-      const list = this.events || [];
-      const event = list.find(e => get(e, 'status') === 'RUNNING');
+    return event.id;
+  }
 
-      if (!event) {
-        return list.length ? get(list[0], 'id') : 0;
-      }
+  updateEvents = updateEvents.bind(this);
 
-      return get(event, 'id');
-    }
-  }),
-
-  lastSuccessful: computed('events.@each.status', {
-    get() {
-      const list = this.events || [];
-      const event = list.find(e => get(e, 'status') === 'SUCCESS');
-
-      if (!event) {
-        return 0;
-      }
-
-      return get(event, 'id');
-    }
-  }),
-
-  updateEvents,
   async checkForMorePage({ scrollTop, scrollHeight, clientHeight }) {
     if (scrollTop + clientHeight > scrollHeight - 300) {
       await this.updateEvents(this.eventsPage + 1);
     }
-  },
+  }
 
-  createEvent,
+  createEvent = createEvent;
 
-  actions: {
-    setDownstreamTrigger() {
-      this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
-    },
-    setShowListView(showListView) {
-      if (showListView) {
-        this.transitionToRoute('pipeline.jobs.index');
-      }
-    },
-    async updateEvents(page) {
-      await this.updateEvents(page);
-    },
-    async onEventListScroll({ currentTarget }) {
-      if (this.moreToShow && !this.isFetching) {
-        await this.checkForMorePage(currentTarget);
-      }
-    },
-    startMainBuild(parameters) {
-      this.set('isShowingModal', true);
+  @action
+  setDownstreamTrigger() {
+    this.set('showDownstreamTriggers', !this.showDownstreamTriggers);
+  }
 
-      const token = get(this, 'session.data.authenticated.token');
-      const user = get(decoder(token), 'username');
-      const pipelineId = this.get('pipeline.id');
-
-      let eventPayload = {
-        pipelineId,
-        startFrom: '~commit',
-        causeMessage: `Manually started by ${user}`
-      };
-
-      if (parameters) {
-        eventPayload.meta = { parameters };
-      }
-
-      return this.createEvent(eventPayload, false);
-    },
-    startDetachedBuild,
-    stopBuild,
-    async stopEvent() {
-      const event = get(this, 'selectedEventObj');
-      const eventId = get(event, 'id');
-
-      try {
-        return await this.get('stop').stopBuilds(eventId);
-      } catch (e) {
-        this.set(
-          'errorMessage',
-          Array.isArray(e.errors) ? e.errors[0].detail : ''
-        );
-      }
-
-      return null;
-    },
-    async stopPRBuilds(jobs) {
-      const eventId = jobs.get('firstObject.builds.firstObject.eventId');
-
-      try {
-        await this.get('stop').stopBuilds(eventId);
-        if (this.refreshListViewJobs) {
-          await this.refreshListViewJobs();
-        }
-      } catch (e) {
-        this.set(
-          'errorMessage',
-          Array.isArray(e.errors) ? e.errors[0].detail : ''
-        );
-      }
-    },
-    startPRBuild(prNum, jobs, parameters) {
-      this.set('isShowingModal', true);
-      const user = get(
-        decoder(this.get('session.data.authenticated.token')),
-        'username'
-      );
-
-      let eventPayload = {
-        causeMessage: `Manually started by ${user}`,
-        pipelineId: this.get('pipeline.id'),
-        startFrom: '~pr',
-        prNum
-      };
-
-      if (parameters) {
-        eventPayload.meta = { parameters };
-      }
-
-      const newEvent = this.store.createRecord('event', eventPayload);
-
-      return newEvent
-        .save()
-        .then(() =>
-          newEvent.get('builds').then(async () => {
-            if (this.refreshListViewJobs) {
-              await this.refreshListViewJobs();
-            }
-
-            this.set('isShowingModal', false);
-
-            // PR events are aggregated by each PR jobs when prChain is enabled.
-            if (this.prChainEnabled) {
-              const newEvents = this.prEvents.filter(
-                e => e.get('prNum') !== prNum
-              );
-
-              newEvents.unshiftObject(newEvent);
-
-              this.set('prEvents', newEvents);
-            }
-          })
-        )
-        .catch(e => {
-          this.set('isShowingModal', false);
-          this.set(
-            'errorMessage',
-            Array.isArray(e.errors) ? e.errors[0].detail : ''
-          );
-        })
-        .finally(() => jobs.forEach(j => j.hasMany('builds').reload()));
+  @action
+  setShowListView(showListView) {
+    if (showListView) {
+      this.transitionToRoute('pipeline.jobs.index');
     }
-  },
+  }
+
+  @action
+  async onEventListScroll({ currentTarget }) {
+    if (this.moreToShow && !this.isFetching) {
+      await this.checkForMorePage(currentTarget);
+    }
+  }
+
+  @action
+  startMainBuild(parameters) {
+    this.set('isShowingModal', true);
+
+    const { token } = this.session.data.authenticated;
+    const user = decoder(token).username;
+    const pipelineId = this.pipeline.id;
+
+    let eventPayload = {
+      pipelineId,
+      startFrom: '~commit',
+      causeMessage: `Manually started by ${user}`
+    };
+
+    if (parameters) {
+      eventPayload.meta = { parameters };
+    }
+
+    return this.createEvent(eventPayload, false);
+  }
+
+  @action
+  startDetachedBuild() {
+    return startDetachedBuild.call(this, ...arguments);
+  }
+
+  @action
+  stopBuild() {
+    return stopBuild.call(this, ...arguments);
+  }
+
+  @action
+  async stopEvent() {
+    const event = this.selectedEventObj;
+    const eventId = event.id;
+
+    try {
+      return await this.stop.stopBuilds(eventId);
+    } catch (e) {
+      this.set(
+        'errorMessage',
+        Array.isArray(e.errors) ? e.errors[0].detail : ''
+      );
+    }
+
+    return null;
+  }
+
+  @action
+  async stopPRBuilds(jobs) {
+    const { eventId } = jobs[0].builds[0];
+
+    try {
+      await this.stop.stopBuilds(eventId);
+      if (this.refreshListViewJobs) {
+        await this.refreshListViewJobs();
+      }
+    } catch (e) {
+      this.set(
+        'errorMessage',
+        Array.isArray(e.errors) ? e.errors[0].detail : ''
+      );
+    }
+  }
+
+  @action
+  startPRBuild(prNum, jobs, parameters) {
+    this.set('isShowingModal', true);
+    const user = decoder(this.session.data.authenticated.token).username;
+
+    let eventPayload = {
+      causeMessage: `Manually started by ${user}`,
+      pipelineId: this.pipeline.id,
+      startFrom: '~pr',
+      prNum
+    };
+
+    if (parameters) {
+      eventPayload.meta = { parameters };
+    }
+
+    const newEvent = this.store.createRecord('event', eventPayload);
+
+    return newEvent
+      .save()
+      .then(() =>
+        newEvent.builds.then(async () => {
+          if (this.refreshListViewJobs) {
+            await this.refreshListViewJobs();
+          }
+
+          this.set('isShowingModal', false);
+
+          // PR events are aggregated by each PR jobs when prChain is enabled.
+          if (this.prChainEnabled) {
+            const newEvents = this.prEvents.filter(e => e.prNum !== prNum);
+
+            newEvents.unshiftObject(newEvent);
+
+            this.set('prEvents', newEvents);
+          }
+        })
+      )
+      .catch(e => {
+        this.set('isShowingModal', false);
+        this.set(
+          'errorMessage',
+          Array.isArray(e.errors) ? e.errors[0].detail : ''
+        );
+      })
+      .finally(() => jobs.forEach(j => j.hasMany('builds').reload()));
+  }
+
   willDestroy() {
     // FIXME: Never called when route is no longer active
     this.stopReloading();
-  },
-  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER
-});
+  }
+
+  reloadTimeout = ENV.APP.EVENT_RELOAD_TIMER;
+}

@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = environment => {
+module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'screwdriver-ui',
     environment,
@@ -29,6 +29,9 @@ module.exports = environment => {
         // bitbucket avatars
         'bitbucket.org/account/*/avatar/*'
       ]
+    },
+    fontawesome: {
+      defaultPrefix: 'fa'
     },
     EmberENV: {
       FEATURES: {
@@ -81,8 +84,8 @@ module.exports = environment => {
   };
 
   if (environment === 'development') {
-    delete require.cache[require.resolve('./local.js')];
-    const localAppConfig = require('./local.js'); // eslint-disable-line global-require
+    delete require.cache[require.resolve('./local')];
+    const localAppConfig = require('./local'); // eslint-disable-line global-require
 
     console.log('localAppConfig', localAppConfig); // eslint-disable-line no-console
 

@@ -10,6 +10,7 @@ import { parse } from '../../utils/git';
 const SEPARATOR = '  '; // 2 spaces
 
 export default Component.extend({
+  tagName: '',
   selectedTemplate: {},
   templates: [],
   manualYamlCreation: false,

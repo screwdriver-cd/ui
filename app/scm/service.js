@@ -1,3 +1,4 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
@@ -22,9 +23,13 @@ function getIconType(scmContext) {
   return iconTypes[scm];
 }
 
-export default Service.extend({
-  session: service(),
-  store: service(),
+@classic
+export default class ScmService extends Service {
+  @service
+  session;
+
+  @service
+  store;
 
   /**
    * Get all scms from sd api server,
@@ -32,42 +37,46 @@ export default Service.extend({
    * @method createScms
    * @return {DS.RecordArray} Array of scm object.
    */
-  createScms() {
+  async createScms() {
     const { session, store } = this;
     const scms = this.getScms();
 
-    if (get(scms, 'length') !== 0) {
+    if (scms.length !== 0) {
       return scms;
     }
 
-    return $.getJSON(scmUrl)
-      .then(scmContexts => {
-        scmContexts.forEach(scmContext => {
-          let isSignedIn = false;
+    try {
+      const scmContexts = await $.getJSON(scmUrl);
 
-          if (get(session, 'isAuthenticated')) {
-            const jwtContext = get(session, 'data.authenticated.scmContext');
+      scmContexts.forEach(scmContext => {
+        let isSignedIn = false;
 
-            if (jwtContext === scmContext.context) {
-              isSignedIn = true;
-            }
+        if (session.isAuthenticated) {
+          const jwtContext = get(session, 'data.authenticated.scmContext');
+
+          if (jwtContext === scmContext.context) {
+            isSignedIn = true;
           }
+        }
 
-          // Create ember data of scm info
-          store.createRecord('scm', {
-            context: scmContext.context,
-            displayName: scmContext.displayName,
-            iconType: getIconType(scmContext.context),
-            isSignedIn,
-            autoDeployKeyGeneration: scmContext.autoDeployKeyGeneration,
-            readOnly: scmContext.readOnly || false
-          });
+        // Create ember data of scm info
+        store.createRecord('scm', {
+          context: scmContext.context,
+          displayName: scmContext.displayName,
+          iconType: getIconType(scmContext.context),
+          isSignedIn,
+          autoDeployKeyGeneration: scmContext.autoDeployKeyGeneration,
+          readOnly: scmContext.readOnly || false
         });
+      });
 
-        return store.peekAll('scm');
-      })
-      .catch(() => []);
-  },
+      return store.peekAll('scm');
+    } catch (e) {
+      console.error('Error fetching scms', e);
+
+      return [];
+    }
+  }
 
   /**
    * Get all scm object from inner ember data table.
@@ -76,7 +85,7 @@ export default Service.extend({
    */
   getScms() {
     return this.store.peekAll('scm');
-  },
+  }
 
   /**
    * Get specific scm object from inner ember data table.
@@ -100,7 +109,7 @@ export default Service.extend({
     });
 
     return ret;
-  },
+  }
 
   /**
    * Change status of 'isSignedIn' property true.
@@ -116,4 +125,4 @@ export default Service.extend({
       }
     });
   }
-});
+}

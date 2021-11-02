@@ -1,67 +1,46 @@
-import Component from '@ember/component';
-import { computed } from '@ember/object';
+import classic from 'ember-classic-decorator';
+import { tagName } from '@ember-decorators/component';
+import { action, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { and } from '@ember/object/computed';
+import Component from '@ember/component';
 import { formatMetrics } from 'screwdriver-ui/utils/metric';
 
-export default Component.extend({
-  store: service(),
-  inViewport: service(),
-  eventsInfo: null,
-  lastEventInfo: null,
-  isAuthenticated: undefined,
-  isOrganizing: false,
-  isDefaultCollection: false,
-  pipeline: null,
-  pipelineSelected: false,
-  classNames: ['pipeline-card'],
-  reset: false,
-  storeQueryError: false,
-  hasBothEventsAndLatestEventInfo: and('eventsInfo', 'lastEventInfo'),
-  showCheckbox: and('isOrganizing', 'isAuthenticated'),
+@classic
+@tagName('')
+export default class PipelineCard extends Component {
+  @service
+  store;
 
-  branch: computed('pipeline', function get() {
+  eventsInfo = null;
+
+  lastEventInfo = null;
+
+  pipelineSelected = false;
+
+  storeQueryError = false;
+
+  @and('eventsInfo', 'lastEventInfo')
+  hasBothEventsAndLatestEventInfo;
+
+  @and('isOrganizing', 'isAuthenticated')
+  showCheckbox;
+
+  @computed('pipeline.scmRepo')
+  get branch() {
     const { branch, rootDir } = this.pipeline.scmRepo;
 
     return rootDir ? `${branch}#${rootDir}` : branch;
-  }),
-  showRemoveButton: computed(
-    'isOrganizing',
-    'isAuthenticated',
-    'isDefaultCollection',
-    function showRemoveButton() {
-      return (
-        !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated
-      );
-    }
-  ),
+  }
 
-  didInsertElement() {
-    if (!this.hasBothEventsAndLatestEventInfo) {
-      this.setupInViewport();
-    }
-  },
-  setupInViewport() {
-    if (this && this.element) {
-      const inViewportHook = this.element.querySelector(
-        '.pipeline-card-content'
-      );
-      const { onEnter } = this.inViewport.watchElement(inViewportHook);
+  @computed('isOrganizing', 'isAuthenticated', 'isDefaultCollection')
+  get showRemoveButton() {
+    return (
+      !this.isDefaultCollection && !this.isOrganizing && this.isAuthenticated
+    );
+  }
 
-      onEnter(this.didEnterViewport.bind(this));
-    }
-  },
-  async didEnterViewport() {
-    if (this && this.element) {
-      const inViewportHook = this.element.querySelector(
-        '.pipeline-card-content'
-      );
-
-      this.inViewport.stopWatching(inViewportHook);
-      this.updateEventMetrics();
-    }
-  },
-  async updateEventMetrics() {
+  updateEventMetrics = async () => {
     const metrics = await this.store
       .query('metric', {
         pipelineId: this.pipeline.id,
@@ -81,28 +60,25 @@ export default Component.extend({
       eventsInfo,
       lastEventInfo
     });
-  },
-  actions: {
-    removePipeline() {
-      this.removePipeline(this.pipeline.id, this.pipeline.name);
-    },
-    togglePipeline() {
-      const pipelineId = this.pipeline.id;
+  };
 
-      if (this.reset) {
-        this.setProperties({
-          pipelineSelected: false,
-          reset: false
-        });
-      }
+  @action
+  togglePipeline() {
+    const pipelineId = this.pipeline.id;
 
-      if (this.pipelineSelected) {
-        this.set('pipelineSelected', false);
-        this.deselectPipeline(pipelineId);
-      } else {
-        this.set('pipelineSelected', true);
-        this.selectPipeline(pipelineId);
-      }
+    if (this.reset) {
+      this.setProperties({
+        pipelineSelected: false,
+        reset: false
+      });
+    }
+
+    if (this.pipelineSelected) {
+      this.set('pipelineSelected', false);
+      this.deselectPipeline(pipelineId);
+    } else {
+      this.set('pipelineSelected', true);
+      this.selectPipeline(pipelineId);
     }
   }
-});
+}

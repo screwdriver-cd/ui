@@ -1,3 +1,7 @@
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
 import Component from '@ember/component';
 
-export default Component.extend({});
+@tagName('')
+@classic
+export default class CommandVersions extends Component {}

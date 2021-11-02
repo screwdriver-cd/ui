@@ -1,20 +1,20 @@
-{{#if addCollectionError}}
-  {{info-message message=addCollectionError type="warning" icon="exclamation-triangle"}}
+{{#if this.addCollectionError}}
+  {{info-message message=this.addCollectionError type="warning" icon="exclamation-triangle"}}
 {{/if}}
-{{#if addCollectionSuccess}}
-  {{info-message message=addCollectionSuccess type="success" icon="check"}}
+{{#if this.addCollectionSuccess}}
+  {{info-message message=this.addCollectionSuccess type="success" icon="check"}}
 {{/if}}
-{{#link-to "pipeline" pipeline.id}}<h1>{{pipeline.appId}}</h1>{{/link-to}}
-<a href={{branch-url-encode pipeline.hubUrl}} class="branch">{{fa-icon "code-fork" title="Source code"}} {{pipeline.branch}}</a>
-<span class="scm">{{fa-icon scmContext.scmIcon}} {{scmContext.scm}}</span>
-{{#if pipeline.configPipelineId}}
-  {{fa-icon "cog"}} {{#link-to "pipeline" pipeline.configPipelineId}}Parent Pipeline{{/link-to}}
+{{#link-to "pipeline" this.pipeline.id}}<h1>{{this.pipeline.appId}}</h1>{{/link-to}}
+<a href={{branch-url-encode this.pipeline.hubUrl}} class="branch"><FaIcon @icon="code-branch" @title="Source code" /> {{this.pipeline.branch}}</a>
+<span class="scm"><FaIcon @prefix="fab" @icon={{this.scmContext.scmIcon}} /> {{this.scmContext.scm}}</span>
+{{#if this.pipeline.configPipelineId}}
+  <FaIcon @icon="cog"/> {{#link-to "pipeline" this.pipeline.configPipelineId}}Parent Pipeline{{/link-to}}
 {{/if}}
 {{collection-dropdown
-  pipeline=pipeline
-  pipelineId=pipeline.id
-  collections=collections
-  addToCollection=addToCollection
-  addCollectionSuccess=addCollectionSuccess
-  addCollectionError=addCollectionError
-  dropdownText=dropdownText}}
+  pipeline=this.pipeline
+  pipelineId=this.pipeline.id
+  collections=this.collections
+  addToCollection=this.addToCollection
+  addCollectionSuccess=this.addCollectionSuccess
+  addCollectionError=this.addCollectionError
+  dropdownText=this.dropdownText}}

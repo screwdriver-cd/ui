@@ -99,8 +99,8 @@ export default Route.extend({
     }
   },
   titleToken(model) {
-    let title = `${get(model, 'namespace') || ''}/${get(model, 'name') || ''}`;
-    const version = get(model, 'versionOrTagFromUrl');
+    let title = `${model.namespace || ''}/${model.name || ''}`;
+    const version = model.versionOrTagFromUrl;
 
     if (version !== undefined) {
       title = `${title}@${version}`;

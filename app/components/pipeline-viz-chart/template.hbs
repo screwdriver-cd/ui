@@ -1,19 +1,16 @@
-{{#if pipeline}}
-  <div class="workflow">
-    {{#workflow-graph-d3
-      pipeline=pipeline
-      workflowGraph=workflowGraph
-      startFrom=startFrom
-      graphClicked=(action "graphClicked")
-    }}
-      {{workflow-tooltip
-        tooltipData=tooltipData
-        showTooltip=showTooltip
-        showTooltipPosition=showTooltipPosition}}
-    {{/workflow-graph-d3}}
-  </div>
-{{else}}
-  <div class="pipeline-vis empty">
-    {{inline-svg "pipeline-vis-display"}}
-  </div>
-{{/if}}
+<div class={{this.styleNamespace}} ...attributes>
+  {{#if this.pipeline}}
+    <div class="workflow">
+      <WorkflowGraphD3 @pipeline={{this.pipeline}} @workflowGraph={{this.workflowGraph}} @startFrom={{this.startFrom}} @graphClicked={{action "graphClicked"}}>
+        {{workflow-tooltip
+          tooltipData=this.tooltipData
+          showTooltip=this.showTooltip
+          showTooltipPosition=this.showTooltipPosition}}
+      </WorkflowGraphD3>
+    </div>
+  {{else}}
+    <div class="pipeline-vis empty">
+      {{inline-svg "pipeline-vis-display"}}
+    </div>
+  {{/if}}
+</div>

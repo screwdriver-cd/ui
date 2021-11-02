@@ -1,26 +1,20 @@
-<div class="row header">
-  <h4 class="title">Pipeline</h4>
-  {{#power-select
-    search=(action "handleSearch")
-    searchField="name"
-    searchEnabled=true
-    searchPlaceholder="Search pipeline..."
-    selected=selectedPipeline
-    onchange=(action "handleSelectedPipeline")
-    as |repo|
-  }}
-    {{repo.name}}
-  {{/power-select}}
-</div>
+<div class={{this.styleNamespace}} ...attributes>
+  <div class="row header">
+    <h4 class="title">Pipeline</h4>
+    <PowerSelect @search={{action "handleSearch"}} @searchField="name" @searchEnabled={{true}} @searchPlaceholder="Search pipeline..." @selected={{this.selectedPipeline}} @onChange={{action "handleSelectedPipeline"}} as |repo|>
+      {{repo.name}}
+    </PowerSelect>
+  </div>
 
-<div class="row results">
-  <h4 class="title">Connected Pipelines</h4>
-  {{#each connectedPipelines as |pipeline|}}
-    {{pipeline-viz-row
-      pipeline=pipeline
-      selectedPipeline=selectedPipeline
-      selectedConnectedPipeline=selectedConnectedPipeline
-      onClick=(action "handleSelectedConnectedPipeline")
-      onActionClick=(action "handleSelectedPipeline")}}
-  {{/each}}
+  <div class="row results">
+    <h4 class="title">Connected Pipelines</h4>
+    {{#each this.connectedPipelines as |pipeline|}}
+      {{pipeline-viz-row
+        pipeline=pipeline
+        selectedPipeline=this.selectedPipeline
+        selectedConnectedPipeline=this.selectedConnectedPipeline
+        onClick=(action "handleSelectedConnectedPipeline")
+        onActionClick=(action "handleSelectedPipeline")}}
+    {{/each}}
+  </div>
 </div>

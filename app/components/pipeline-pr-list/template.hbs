@@ -1,24 +1,24 @@
-{{#if jobs.length }}
+{{#if this.jobs.length }}
   <div class="view" onclick={{action "selectPR"}}>
     <div class="detail">
       <div class="commit">
-        <a href={{jobs.0.url}} target="_blank" rel="noopener">
+        <a href={{this.jobs.0.url}} target="_blank" rel="noopener noreferrer">
           <span>{{fa-icon "code-fork"}}</span>
-          PR-{{jobs.0.group}}
+          PR-{{this.jobs.0.group}}
         </a>
         <br>
-        <span class="title">{{jobs.0.title}}</span>
-        {{#if isRunning}}
-          {{#bs-button type="primary" class="stopButton" onClick=(action stopPRBuilds jobs)}}Stop{{/bs-button}}
+        <span class="title">{{this.jobs.0.title}}</span>
+        {{#if this.isRunning}}
+          <BsButton @type="primary" class="stopButton" @onClick={{action this.stopPRBuilds this.jobs}}>Stop</BsButton>
         {{else}}
-          {{#bs-button type="primary" class="startButton" onClick=(action startBuild jobs.0.group jobs)}}Start{{/bs-button}}
+          <BsButton @type="primary" class="startButton" @onClick={{action this.startBuild this.jobs.0.group this.jobs}}>Start</BsButton>
         {{/if}}
       </div>
-      <div class="date greyOut">Opened {{jobs.0.createTimeExact}}</div>
-      <div class="by"><a href={{jobs.0.userProfile}} target="_blank" rel="noopener">{{jobs.0.username}}</a></div>
-      {{#if showJobs }}
-        {{#each jobs as |job|}}
-          {{pipeline-pr-view job=job workflowGraph=workflowGraph}}
+      <div class="date greyOut">Opened {{this.jobs.0.createTimeExact}}</div>
+      <div class="by"><a href={{this.jobs.0.userProfile}} target="_blank" rel="noopener noreferrer">{{this.jobs.0.username}}</a></div>
+      {{#if this.showJobs }}
+        {{#each this.jobs as |job|}}
+          {{pipeline-pr-view job=job workflowGraph=this.workflowGraph}}
         {{/each}}
       {{/if}}
     </div>

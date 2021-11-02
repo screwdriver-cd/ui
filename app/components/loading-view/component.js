@@ -1,12 +1,16 @@
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
 import { computed } from '@ember/object';
 import Component from '@ember/component';
 
-export default Component.extend({
+@tagName('')
+@classic
+export default class LoadingView extends Component {
   /**
    * Quotes from: https://www.npmjs.com/package/funnies which has an MIT License
    * @property {Array} funnies
    */
-  funnies: [
+  funnies = [
     'Reticulating splines...',
     'Generating witty dialog...',
     'Swapping time and space...',
@@ -71,16 +75,16 @@ export default Component.extend({
     'Calculating route through hyperspace...',
     'Solving for "X"...',
     'Recounting votes...'
-  ],
+  ];
+
   /**
    * Get a random quote
    * @property {String} loadingMessage
    */
-  loadingMessage: computed({
-    get() {
-      const index = Math.floor(Math.random() * this.funnies.length);
+  @computed('funnies.length')
+  get loadingMessage() {
+    const index = Math.floor(Math.random() * this.funnies.length);
 
-      return this.funnies[index];
-    }
-  })
-});
+    return this.funnies[index];
+  }
+}

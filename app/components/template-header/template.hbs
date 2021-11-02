@@ -1,88 +1,86 @@
-<h1>
-  {{#if trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}
-  {{#link-to "pipeline" template.pipelineId title="Go to template pipeline"}}{{template.fullName}}{{/link-to}}
-  {{#if scmUrl}}
-    <a href={{scmUrl}}> {{fa-icon "code-fork" title="Source code"}}</a>
-  {{else}}
-    {{fa-icon "code-fork" title="The pipeline for this template does not exist."}}
-  {{/if}}
-  {{#if isAdmin}}
-    <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
-    {{x-toggle
-      size="medium"
-      theme="light"
-      showLabels=true
-      value=trusted
-      offLabel=null
-      onLabel="Trust?"
-      onToggle=(action "updateTrust" template.fullName)
-    }}
-  {{else}}
-    {{#if scmUrl}}
-      <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
+<div class={{this.styleNamespace}} ...attributes>
+  <h1>
+    {{#if this.trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}
+    {{#link-to "pipeline" this.template.pipelineId title="Go to template pipeline"}}{{this.template.fullName}}{{/link-to}}
+    {{#if this.scmUrl}}
+      <a href={{this.scmUrl}}> {{fa-icon "code-fork" title="Source code"}}</a>
     {{else}}
-      {{fa-icon "trash" title="Cannot delete template; pipeline could not be found."}}
+      {{fa-icon "code-fork" title="The pipeline for this template does not exist."}}
     {{/if}}
-  {{/if}}
-</h1>
-<div class="template-stats">
-  <h2 class="template-version">{{template.version}}</h2>
-  <div class="template-metrics">Usage - Jobs: {{template.metrics.jobs.count}} | Builds: {{template.metrics.builds.count}}</div>
-</div>
-<p>{{template.description}}</p>
-  {{#if template.namespace}}
-    <div class="template-details--item" id="template-namespace">
-      <div class="template-details--label">Namespace:</div>
-      <div class="template-details--value">{{template.namespace}}</div>
-    </div>
-    <div class="template-details--item" id="template-name">
-      <div class="template-details--label">Name:</div>
-      <div class="template-details--value">{{template.name}}</div>
-    </div>
-  {{/if}}
-  <div class="template-details--item" id="template-maintainer">
-    <div class="template-details--label">Released by:</div>
-    <div class="template-details--value">
-      <a href="mailto:{{template.maintainer}}">{{template.maintainer}}</a>
-    </div>
+    {{#if this.isAdmin}}
+      <a href="#" {{action "setTemplateToRemove" this.template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
+      {{x-toggle
+        size="medium"
+        theme="light"
+        showLabels=true
+        value=this.trusted
+        offLabel=null
+        onLabel="Trust?"
+        onToggle=(action "updateTrust" this.template.fullName)
+      }}
+    {{else}}
+      {{#if this.scmUrl}}
+        <a href="#" {{action "setTemplateToRemove" this.template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
+      {{else}}
+        {{fa-icon "trash" title="Cannot delete template; pipeline could not be found."}}
+      {{/if}}
+    {{/if}}
+  </h1>
+  <div class="template-stats">
+    <h2 class="template-version">{{this.template.version}}</h2>
+    <div class="template-metrics">Usage - Jobs: {{this.template.metrics.jobs.count}} | Builds: {{this.template.metrics.builds.count}}</div>
   </div>
-  {{#if template.labels.length}}
-    <div class="template-details--item" id="template-tags">
-      <div class="template-details--label">Tags:</div>
+  <p>{{this.template.description}}</p>
+    {{#if this.template.namespace}}
+      <div class="template-details--item" id="template-namespace">
+        <div class="template-details--label">Namespace:</div>
+        <div class="template-details--value">{{this.template.namespace}}</div>
+      </div>
+      <div class="template-details--item" id="template-name">
+        <div class="template-details--label">Name:</div>
+        <div class="template-details--value">{{this.template.name}}</div>
+      </div>
+    {{/if}}
+    <div class="template-details--item" id="template-maintainer">
+      <div class="template-details--label">Released by:</div>
       <div class="template-details--value">
-        {{#each template.labels as |l|}}
-          <span class="template-label">{{l}}</span>
-        {{/each}}
+        <a href="mailto:{{this.template.maintainer}}">{{this.template.maintainer}}</a>
       </div>
     </div>
+    {{#if this.template.labels.length}}
+      <div class="template-details--item" id="template-tags">
+        <div class="template-details--label">Tags:</div>
+        <div class="template-details--value">
+          {{#each this.template.labels as |l|}}
+            <span class="template-label">{{l}}</span>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+  <h4>Usage:</h4>
+  {{! template-lint-disable block-indentation }}
+  <pre>jobs:
+    main:
+      template: {{this.template.fullName}}@{{this.template.version}}</pre>
+  {{#if this.templateToRemove}}
+    {{#if this.isRemoving}}
+      <ModalDialog @clickOutsideToClose="false" @targetAttachment="center" @translucentOverlay={{true}}>
+        <LoadingView/>
+      </ModalDialog>
+    {{else}}
+      <BsModal @onSubmit={{action "removeTemplate" this.template.fullName}} @onHide={{action "cancelRemovingTemplate"}} as |modal|>
+        <modal.header>
+          <h4>Are you sure?</h4>
+        </modal.header>
+        <modal.body>
+          {{fa-icon "exclamation-triangle" pull="left" size=3}}
+          You're about to delete all versions and tags of <strong>{{this.template.fullName}}</strong>. There might be existing pipelines using this template.
+        </modal.body>
+        <modal.footer>
+          <BsButton @onClick={{action "cancelRemovingTemplate"}}>Cancel</BsButton>
+          <BsButton @onClick={{action "removeTemplate" this.template.fullName}} @type="danger">{{fa-icon "trash"}} Confirm</BsButton>
+        </modal.footer>
+      </BsModal>
+    {{/if}}
   {{/if}}
-<h4>Usage:</h4>
-{{! template-lint-disable block-indentation }}
-<pre>jobs:
-  main:
-    template: {{template.fullName}}@{{template.version}}
-</pre>
-{{#if templateToRemove}}
-  {{#if isRemoving}}
-    {{#modal-dialog clickOutsideToClose="false"
-      targetAttachment="center"
-      translucentOverlay=true
-    }}
-      {{loading-view}}
-    {{/modal-dialog}}
-  {{else}}
-    {{#bs-modal onSubmit=(action "removeTemplate" template.fullName) onHide=(action "cancelRemovingTemplate") as |modal|}}
-      {{#modal.header}}
-        <h4>Are you sure?</h4>
-      {{/modal.header}}
-      {{#modal.body}}
-        {{fa-icon "exclamation-triangle" pull="left" size=3}}
-        You're about to delete all versions and tags of <strong>{{template.fullName}}</strong>. There might be existing pipelines using this template.
-      {{/modal.body}}
-      {{#modal.footer}}
-        {{#bs-button onClick=(action "cancelRemovingTemplate")}}Cancel{{/bs-button}}
-        {{#bs-button onClick=(action "removeTemplate" template.fullName) type="danger"}}{{fa-icon "trash"}} Confirm{{/bs-button}}
-      {{/modal.footer}}
-    {{/bs-modal}}
-  {{/if}}
-{{/if}}
+</div>

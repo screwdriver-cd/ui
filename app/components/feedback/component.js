@@ -1,9 +1,14 @@
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
 import Component from '@ember/component';
 import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Component.extend({
+@tagName('')
+@classic
+export default class Feedback extends Component {
   didInsertElement() {
+    super.didInsertElement(...arguments);
     if (
       ENV.APP.FEEDBACK_HOSTNAME &&
       ENV.APP.FEEDBACK_SCRIPT &&
@@ -20,4 +25,4 @@ export default Component.extend({
       });
     }
   }
-});
+}

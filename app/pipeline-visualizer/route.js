@@ -1,22 +1,30 @@
+import classic from 'ember-classic-decorator';
+import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import { inject as service } from '@ember/service';
 
-export default Route.extend(AuthenticatedRouteMixin, {
-  store: service(),
-  queryParams: {
+@classic
+export default class PipelineVisualizerRoute extends Route.extend(
+  AuthenticatedRouteMixin
+) {
+  @service
+  store;
+
+  queryParams = {
     selectedPipelineId: {
       refreshModel: true
     },
     selectedConnectedPipelineId: {
       refreshModel: false
     }
-  },
-  routeAfterAuthentication: 'pipeline-visualizer',
-  titleToken: 'Pipeline Visualizer',
+  };
+
+  routeAfterAuthentication = 'pipeline-visualizer';
+
+  titleToken = 'Pipeline Visualizer';
 
   async model(params) {
-    this._super(...arguments);
+    super.model(...arguments);
     const { selectedPipelineId, selectedConnectedPipelineId } = params;
 
     let model = {};
@@ -59,10 +67,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
       throw e;
     }
-  },
+  }
 
   setupController(controller, model) {
-    this._super(...arguments);
+    super.setupController(...arguments);
     const { selectedPipeline, selectedConnectedPipeline } = model;
 
     if (selectedPipeline) {
@@ -70,4 +78,4 @@ export default Route.extend(AuthenticatedRouteMixin, {
       controller.selectPipeline(selectedPipeline);
     }
   }
-});
+}

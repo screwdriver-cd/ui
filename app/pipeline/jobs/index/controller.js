@@ -29,7 +29,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
     let res;
 
-    const lastRefreshed = this.get('lastRefreshed');
+    const { lastRefreshed } = this;
     const diff = moment().diff(lastRefreshed, 'milliseconds');
 
     if (job) {
@@ -74,7 +74,8 @@ export default Controller.extend(ModelReloaderMixin, {
   errorMessage: '',
   jobs: computed('model.jobs', {
     get() {
-      const jobs = this.getWithDefault('model.jobs', []);
+      const jobs =
+        this.get('model.jobs') === undefined ? [] : this.get('model.jobs');
 
       return jobs.filter(j => !isPRJob(j.get('name')));
     }
@@ -90,7 +91,7 @@ export default Controller.extend(ModelReloaderMixin, {
   paginateEvents: [],
   updateEvents,
   async getNewListViewJobs(listViewOffset, listViewCutOff) {
-    const jobIds = this.get('jobIds');
+    const { jobIds } = this;
 
     if (listViewOffset < jobIds.length) {
       const jobsDetails = await Promise.all(
@@ -131,7 +132,7 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   async refreshListViewJobs() {
-    const listViewCutOff = this.get('listViewOffset');
+    const listViewCutOff = this.listViewOffset;
 
     if (listViewCutOff > 0) {
       const updatedJobsDetails = await this.getNewListViewJobs(
@@ -147,7 +148,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
   async updateListViewJobs() {
     // purge unmatched pipeline jobs
-    let jobsDetails = this.get('jobsDetails');
+    let { jobsDetails } = this;
 
     if (
       jobsDetails.some(j => j.get('jobPipelineId') !== this.get('pipeline.id'))
@@ -159,7 +160,7 @@ export default Controller.extend(ModelReloaderMixin, {
       this.set('listViewOffset', 0);
     }
 
-    const listViewOffset = this.get('listViewOffset');
+    const { listViewOffset } = this;
     const listViewCutOff = listViewOffset + ENV.APP.LIST_VIEW_PAGE_SIZE;
     const nextJobsDetails = await this.getNewListViewJobs(
       listViewOffset,
@@ -185,7 +186,7 @@ export default Controller.extend(ModelReloaderMixin, {
       }
     },
     setDownstreamTrigger() {
-      this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
+      this.set('showDownstreamTriggers', !this.showDownstreamTriggers);
     },
     async updateEvents(page) {
       await this.updateEvents(page);
@@ -201,7 +202,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
-      const user = get(decoder(token), 'username');
+      const user = decoder(token).username;
 
       let causeMessage = `Manually started by ${user}`;
 
@@ -213,14 +214,11 @@ export default Controller.extend(ModelReloaderMixin, {
         const buildQueryConfig = { jobId };
 
         const build = await this.store.queryRecord('build', buildQueryConfig);
-        const event = await this.store.findRecord(
-          'event',
-          get(build, 'eventId')
-        );
+        const event = await this.store.findRecord('event', build.eventId);
 
-        const parentBuildId = get(build, 'parentBuildId');
-        const parentEventId = get(event, 'id');
-        const prNum = get(event, 'prNum');
+        const { parentBuildId } = build;
+        const parentEventId = event.id;
+        const { prNum } = event;
 
         if (prNum) {
           // PR-<num>: prefix is needed, if it is a PR event.

@@ -1,363 +1,405 @@
 import { sort } from '@ember/object/computed';
-import { get, computed } from '@ember/object';
+import { computed, action } from '@ember/object';
 import { isEmpty, isEqual } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
 import ENV from 'screwdriver-ui/config/environment';
 
-const viewOptions = [
-  {
-    svgName: 'apps',
-    value: 'Card'
-  },
-  {
-    svgName: 'list',
-    value: 'List'
+@classic
+@tagName('')
+export default class CollectionView extends Component {
+  @service
+  store;
+
+  @service
+  session;
+
+  sortBy = ['scmRepo.name'];
+
+  removePipelineError = null;
+
+  activeViewOptionValue =
+    localStorage.getItem('activeViewOptionValue') || this.viewOptions[0].value;
+
+  get viewOptions() {
+    return [
+      {
+        svgName: 'apps',
+        value: 'Card'
+      },
+      {
+        svgName: 'list',
+        value: 'List'
+      }
+    ];
   }
-];
 
-export default Component.extend({
-  store: service(),
-  session: service(),
-  sortBy: ['scmRepo.name'],
-  collection: null,
-  removePipelineError: null,
-  activeViewOptionValue:
-    localStorage.getItem('activeViewOptionValue') || viewOptions[0].value,
-  viewOptions,
-  isOrganizing: false,
-  selectedPipelines: [],
-  addCollectionError: null,
-  showSettingModal: false,
-  showAddPipelineModal: false,
-  collectionName: null,
-  collectionDescription: null,
-  searchedPipelines: [],
-  selectedSearchedPipelines: [],
-  linkCopied: '',
-  pipelineRemovedMessage: '',
-  reset: false,
+  isOrganizing = false;
 
-  showViewSwitch: computed('collection.pipelineIds', function showViewSwitch() {
+  selectedPipelines = [];
+
+  addCollectionError = null;
+
+  showSettingModal = false;
+
+  showAddPipelineModal = false;
+
+  collectionName = null;
+
+  collectionDescription = null;
+
+  searchedPipelines = [];
+
+  selectedSearchedPipelines = [];
+
+  linkCopied = '';
+
+  pipelineRemovedMessage = '';
+
+  reset = false;
+
+  @computed('collection.pipelineIds.length')
+  get showViewSwitch() {
     return this.collection.pipelineIds.length !== 0;
-  }),
-  collections: computed({
-    get() {
-      if (
-        !get(this, 'session.isAuthenticated') ||
-        get(this, 'session.data.authenticated.isGuest')
-      ) {
-        return [];
-      }
-      const collections = this.store.peekAll('collection');
+  }
 
-      if (collections.isLoaded) {
-        return collections;
-      }
-
-      return this.store.findAll('collection');
-    }
-  }),
-
-  showOrganizeButton: computed(
-    'session.isAuthenticated',
-    'collection.pipelineIds',
-    function showOrganizeButton() {
-      return (
-        this.session.isAuthenticated && this.collection.pipelineIds.length !== 0
-      );
-    }
-  ),
-
-  isListView: computed('activeViewOptionValue', function isListView() {
-    localStorage.setItem('activeViewOptionValue', this.activeViewOptionValue);
-
-    return this.activeViewOptionValue === viewOptions[1].value;
-  }),
-
-  showOperations: computed(
-    'selectedPipelines.length',
-    function showOperations() {
-      return this.selectedPipelines.length > 0;
-    }
-  ),
-
-  isDefaultCollection: computed(
-    'collection.type',
-    function isDefaultCollection() {
-      return this.collection.type === 'default';
-    }
-  ),
-
-  description: computed('collection', {
-    get() {
-      let description = this.get('collection.description');
-
-      if (!description) {
-        return 'Add a description';
-      }
-
-      return description;
-    }
-  }),
-  sortedPipelines: sort('collectionPipelines', 'sortBy'),
-  sortByText: computed('sortBy', {
-    get() {
-      switch (this.sortBy.get(0)) {
-        case 'scmRepo.name':
-          return 'Name';
-        case 'lastEventTime:desc':
-          return 'Last Event';
-        default:
-          return '';
-      }
-    }
-  }),
-  collectionPipelines: computed('collection.pipelines', {
-    get() {
-      let viewingId = this.get('collection.id');
-
-      localStorage.setItem('lastViewedCollectionId', viewingId);
-
-      if (this.get('collection.pipelines')) {
-        return this.get('collection.pipelines');
-      }
-
+  @computed('session.{data.authenticated.isGuest,isAuthenticated}')
+  get collections() {
+    if (
+      !this.session?.isAuthenticated ||
+      this.session?.data?.authenticated?.isGuest
+    ) {
       return [];
     }
-  }),
-  isModelSaveDisabled: computed(
-    'collectionName',
-    'collectionDescription',
-    'showSettingModal',
-    function isModelSaveDisabled() {
-      const isDescriptionNotChanged = this.collection.description
-        ? isEqual(this.collectionDescription, this.collection.description)
-        : isEmpty(this.collectionDescription);
+    const collections = this.store.peekAll('collection');
 
-      return (
-        isEmpty(this.collectionName) ||
-        !(
-          !isEqual(this.collectionName, this.collection.name) ||
-          !isDescriptionNotChanged
-        )
-      );
+    if (collections.isLoaded) {
+      return collections;
     }
-  ),
 
-  actions: {
-    /**
-     * Action to remove a pipeline from a collection
-     *
-     * @param {Number} pipelineId     ID of pipeline to remove
-     * @param {String} [pipelineName] Pipeline name
-     * @returns {Promise}
-     */
-    removePipeline(pipelineId, pipelineName) {
-      const collectionId = this.get('collection.id');
-      const collectionName = this.get('collection.name');
-      const pipelineLabel = pipelineName ? ` ${pipelineName}` : '';
-      const message = `The pipeline${pipelineLabel} has been removed from the ${collectionName} collection.`;
+    return this.store.findAll('collection');
+  }
 
-      return this.onRemovePipeline(+pipelineId)
-        .then(() => {
-          this.store.findRecord('collection', collectionId).then(collection => {
-            this.setProperties({
-              removePipelineError: null,
-              collection,
-              pipelineRemovedMessage: message
-            });
-          });
-        })
-        .catch(error => {
-          this.set('removePipelineError', error.errors[0].detail);
-        });
-    },
-    removeSelectedPipelines() {
-      return this.removeMultiplePipelines(
-        this.selectedPipelines,
-        this.get('collection.id')
+  @computed('collection.pipelineIds.length', 'session.isAuthenticated')
+  get showOrganizeButton() {
+    return (
+      this.session.isAuthenticated && this.collection.pipelineIds.length !== 0
+    );
+  }
+
+  @computed('activeViewOptionValue', 'viewOptions')
+  get isListView() {
+    localStorage.setItem('activeViewOptionValue', this.activeViewOptionValue);
+
+    return this.activeViewOptionValue === this.viewOptions[1].value;
+  }
+
+  @computed('selectedPipelines.length')
+  get showOperations() {
+    return this.selectedPipelines.length > 0;
+  }
+
+  @computed('collection.type')
+  get isDefaultCollection() {
+    return this.collection.type === 'default';
+  }
+
+  @computed('collection.description')
+  get description() {
+    let description = this.collection?.description;
+
+    if (!description) {
+      return 'Add a description';
+    }
+
+    return description;
+  }
+
+  @sort('collectionPipelines', 'sortBy') sortedPipelines;
+
+  @computed('sortBy')
+  get sortByText() {
+    switch (this.sortBy.get(0)) {
+      case 'scmRepo.name':
+        return 'Name';
+      case 'lastEventTime:desc':
+        return 'Last Event';
+      default:
+        return '';
+    }
+  }
+
+  @computed('collection.{id,pipelines}')
+  get collectionPipelines() {
+    let viewingId = this.collection.id;
+
+    localStorage.setItem('lastViewedCollectionId', viewingId);
+
+    if (this.collection.pipelines) {
+      return this.collection.pipelines;
+    }
+
+    return [];
+  }
+
+  @computed(
+    'collection.{description,name}',
+    'collectionDescription',
+    'collectionName',
+    'showSettingModal'
+  )
+  get isModelSaveDisabled() {
+    const isDescriptionNotChanged = this.collection.description
+      ? isEqual(this.collectionDescription, this.collection.description)
+      : isEmpty(this.collectionDescription);
+
+    return (
+      isEmpty(this.collectionName) ||
+      !(
+        !isEqual(this.collectionName, this.collection.name) ||
+        !isDescriptionNotChanged
       )
-        .then(() => {
+    );
+  }
+
+  /**
+   * Action to remove a pipeline from a collection
+   *
+   * @param {Number} pipelineId     ID of pipeline to remove
+   * @param {String} [pipelineName] Pipeline name
+   * @returns {Promise}
+   */
+  @action
+  removePipeline(pipelineId, pipelineName) {
+    const collectionName = this.collection.name;
+    const pipelineLabel = pipelineName ? ` ${pipelineName}` : '';
+    const message = `The pipeline${pipelineLabel} has been removed from the ${collectionName} collection.`;
+
+    return this.onRemovePipeline(+pipelineId)
+      .then(() => {
+        this.setProperties({
+          removePipelineError: null,
+          pipelineRemovedMessage: message
+        });
+      })
+      .catch(error => {
+        this.set('removePipelineError', error.errors[0].detail);
+      });
+  }
+
+  @action
+  removeSelectedPipelines() {
+    const collectionName = this.collection.name;
+
+    const message = `The pipelines has been removed from the ${collectionName} collection.`;
+
+    return this.removeMultiplePipelines(
+      this.selectedPipelines,
+      this.collection.id
+    )
+      .then(() => {
+        this.setProperties({
+          removePipelineError: null,
+          selectedPipelines: [],
+          reset: true,
+          isOrganizing: false,
+          pipelineRemovedMessage: message
+        });
+      })
+      .catch(error => {
+        this.set('removePipelineError', error.errors[0].detail);
+      });
+  }
+
+  @action
+  setSortBy(option) {
+    switch (option) {
+      case 'name':
+        this.set('sortBy', ['scmRepo.name']);
+        break;
+      case 'lastEventTime':
+        this.set('sortBy', [`${option}:desc`]);
+        break;
+      default:
+        this.set('sortBy', [option]);
+    }
+  }
+
+  @action
+  organize() {
+    this.set('isOrganizing', true);
+  }
+
+  @action
+  selectPipeline(pipelineId) {
+    const newSelectedPipelines = this.selectedPipelines.slice(0);
+
+    newSelectedPipelines.push(pipelineId);
+    this.set('selectedPipelines', newSelectedPipelines);
+  }
+
+  @action
+  deselectPipeline(pipelineId) {
+    const idx = this.selectedPipelines.indexOf(pipelineId);
+    const newSelectedPipelines = this.selectedPipelines.slice(0);
+
+    if (idx !== -1) {
+      newSelectedPipelines.splice(idx, 1);
+      this.set('selectedPipelines', newSelectedPipelines);
+    }
+  }
+
+  @action
+  addPipelinesToCollection(collection) {
+    return this.addMultipleToCollection(this.selectedPipelines, collection.id)
+      .then(() => {
+        this.setProperties({
+          addCollectionError: null,
+          selectedPipelines: [],
+          reset: true,
+          isOrganizing: false
+        });
+      })
+      .catch(() => {
+        this.set(
+          'addCollectionError',
+          `Could not add Pipeline to Collection ${collection.name}`
+        );
+      });
+  }
+
+  @action
+  selectSearchedPipeline(pipelineId) {
+    this.setProperties({
+      selectedSearchedPipelines: [
+        ...this.selectedSearchedPipelines,
+        parseInt(pipelineId, 10)
+      ],
+      searchedPipelines: this.searchedPipelines.filter(
+        searchedPipeline => searchedPipeline.id !== pipelineId
+      )
+    });
+  }
+
+  @action
+  resetView() {
+    this.setProperties({
+      isOrganizing: false,
+      selectedPipelines: [],
+      reset: true
+    });
+  }
+
+  @action
+  onSubmitSettingModal() {
+    const { collection } = this;
+
+    if (
+      this.collectionName !== this.collection.name ||
+      this.collectionDescription !== this.collection.description
+    ) {
+      collection.set('name', this.collectionName);
+      collection.set('description', this.collectionDescription);
+      collection.save();
+    }
+
+    this.send('toggleSettingModal');
+  }
+
+  @action
+  toggleSettingModal() {
+    this.setProperties({
+      collectionName: this.collection.name,
+      collectionDescription: this.collection.description,
+      showSettingModal: !this.showSettingModal
+    });
+  }
+
+  @action
+  toggleAddPipelineModal() {
+    if (this.showAddPipelineModal) {
+      if (this.selectedSearchedPipelines.length !== 0) {
+        this.addMultipleToCollection(
+          this.selectedSearchedPipelines,
+          this.collection.id
+        ).then(() => {
           this.store
-            .findRecord('collection', this.get('collection.id'))
+            .findRecord('collection', this.collection.id)
             .then(collection => {
               this.setProperties({
-                removePipelineError: null,
-                selectedPipelines: [],
-                reset: true,
-                isOrganizing: false,
+                showAddPipelineModal: false,
+                searchedPipelines: [],
+                selectedSearchedPipelines: [],
                 collection
               });
             });
-        })
-        .catch(error => {
-          this.set('removePipelineError', error.errors[0].detail);
         });
-    },
-    setSortBy(option) {
-      switch (option) {
-        case 'name':
-          this.set('sortBy', ['scmRepo.name']);
-          break;
-        case 'lastEventTime':
-          this.set('sortBy', [`${option}:desc`]);
-          break;
-        default:
-          this.set('sortBy', [option]);
-      }
-    },
-    organize() {
-      this.set('isOrganizing', true);
-    },
-    selectPipeline(pipelineId) {
-      const newSelectedPipelines = this.selectedPipelines.slice(0);
-
-      newSelectedPipelines.push(pipelineId);
-      this.set('selectedPipelines', newSelectedPipelines);
-    },
-    deselectPipeline(pipelineId) {
-      const idx = this.selectedPipelines.indexOf(pipelineId);
-      const newSelectedPipelines = this.selectedPipelines.slice(0);
-
-      if (idx !== -1) {
-        newSelectedPipelines.splice(idx, 1);
-        this.set('selectedPipelines', newSelectedPipelines);
-      }
-    },
-    addMultipleToCollection(collection) {
-      return this.addMultipleToCollection(this.selectedPipelines, collection.id)
-        .then(() => {
-          this.setProperties({
-            addCollectionError: null,
-            selectedPipelines: [],
-            reset: true,
-            isOrganizing: false
-          });
-        })
-        .catch(() => {
-          this.set(
-            'addCollectionError',
-            `Could not add Pipeline to Collection ${collection.name}`
-          );
-        });
-    },
-    selectSearchedPipeline(pipelineId) {
-      this.setProperties({
-        selectedSearchedPipelines: [
-          ...this.selectedSearchedPipelines,
-          parseInt(pipelineId, 10)
-        ],
-        searchedPipelines: this.searchedPipelines.filter(
-          searchedPipeline => searchedPipeline.id !== pipelineId
-        )
-      });
-    },
-    resetView() {
-      this.setProperties({
-        isOrganizing: false,
-        selectedPipelines: [],
-        reset: true
-      });
-    },
-    onSubmitSettingModal() {
-      const { collection } = this;
-
-      if (
-        this.collectionName !== this.collection.name ||
-        this.collectionDescription !== this.collection.description
-      ) {
-        collection.set('name', this.collectionName);
-        collection.set('description', this.collectionDescription);
-        collection.save();
-      }
-
-      this.send('toggleSettingModal');
-    },
-    toggleSettingModal() {
-      this.setProperties({
-        collectionName: this.collection.name,
-        collectionDescription: this.collection.description,
-        showSettingModal: !this.showSettingModal
-      });
-    },
-    toggleAddPipelineModal() {
-      if (this.get('showAddPipelineModal')) {
-        if (this.selectedSearchedPipelines.length !== 0) {
-          this.addMultipleToCollection(
-            this.selectedSearchedPipelines,
-            this.collection.id
-          ).then(() => {
-            this.store
-              .findRecord('collection', this.get('collection.id'))
-              .then(collection => {
-                this.setProperties({
-                  showAddPipelineModal: false,
-                  searchedPipelines: [],
-                  selectedSearchedPipelines: [],
-                  collection
-                });
-              });
-          });
-        } else {
-          this.setProperties({
-            showAddPipelineModal: false,
-            searchedPipelines: [],
-            selectedSearchedPipelines: []
-          });
-        }
       } else {
-        this.set('showAddPipelineModal', true);
+        this.setProperties({
+          showAddPipelineModal: false,
+          searchedPipelines: [],
+          selectedSearchedPipelines: []
+        });
       }
-    },
-    updateCollectionName(name) {
-      this.set('collectionName', name);
-    },
-    updateCollectionDescription(description) {
-      this.set('collectionDescription', description);
-    },
-    goToDocs() {
-      window.location.href = '#';
-    },
-    searchPipelines(query) {
-      const pipelineListConfig = {
-        page: 1,
-        count: ENV.APP.NUM_PIPELINES_LISTED,
-        sortBy: 'name',
-        sort: 'ascending'
-      };
-
-      if (query) {
-        pipelineListConfig.search = query;
-      }
-
-      this.store.query('pipeline', pipelineListConfig).then(pipelines => {
-        this.set(
-          'searchedPipelines',
-          pipelines.filter(
-            pipeline =>
-              !this.collection.pipelineIds.includes(
-                parseInt(pipeline.id, 10)
-              ) &&
-              !this.selectedSearchedPipelines.includes(
-                parseInt(pipeline.id, 10)
-              )
-          )
-        );
-      });
-    },
-    copyLink() {
-      const textArea = document.createElement('textarea');
-
-      textArea.value = window.location.href;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('Copy');
-      textArea.remove();
-      this.set(
-        'linkCopied',
-        'The link of this collection is successfully copied to the clipboard.'
-      );
+    } else {
+      this.set('showAddPipelineModal', true);
     }
   }
-});
+
+  @action
+  updateCollectionName(name) {
+    this.set('collectionName', name);
+  }
+
+  @action
+  updateCollectionDescription(description) {
+    this.set('collectionDescription', description);
+  }
+
+  @action
+  goToDocs() {
+    window.location.href = '#';
+  }
+
+  @action
+  searchPipelines(query) {
+    const pipelineListConfig = {
+      page: 1,
+      count: ENV.APP.NUM_PIPELINES_LISTED,
+      sortBy: 'name',
+      sort: 'ascending'
+    };
+
+    if (query) {
+      pipelineListConfig.search = query;
+    }
+
+    this.store.query('pipeline', pipelineListConfig).then(pipelines => {
+      this.set(
+        'searchedPipelines',
+        pipelines.filter(
+          pipeline =>
+            !this.collection.pipelineIds.includes(parseInt(pipeline.id, 10)) &&
+            !this.selectedSearchedPipelines.includes(parseInt(pipeline.id, 10))
+        )
+      );
+    });
+  }
+
+  @action
+  copyLink() {
+    const textArea = document.createElement('textarea');
+
+    textArea.value = window.location.href;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('Copy');
+    textArea.remove();
+    this.set(
+      'linkCopied',
+      'The link of this collection is successfully copied to the clipboard.'
+    );
+  }
+}

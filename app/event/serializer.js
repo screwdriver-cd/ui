@@ -1,5 +1,6 @@
+import classic from 'ember-classic-decorator';
+import RESTSerializer from '@ember-data/serializer/rest';
 import { assign } from '@ember/polyfills';
-import DS from 'ember-data';
 
 const compare = (s1, s2) =>
   (s1 || '').localeCompare(s2 || '', undefined, {
@@ -43,7 +44,8 @@ export const sortWorkflowGraph = workflowGraph => {
   }
 };
 
-export default DS.RESTSerializer.extend({
+@classic
+export default class Serializer extends RESTSerializer {
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.events) {
       payload.events.forEach(event => {
@@ -53,8 +55,9 @@ export default DS.RESTSerializer.extend({
       sortWorkflowGraph(payload.event.workflowGraph);
     }
 
-    return this._super(store, typeClass, payload, id, requestType);
-  },
+    return super.normalizeResponse(store, typeClass, payload, id, requestType);
+  }
+
   /**
    * Override the serializeIntoHash method to handle model names without a root key
    * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
@@ -93,4 +96,4 @@ export default DS.RESTSerializer.extend({
 
     return assign(hash, data);
   }
-});
+}

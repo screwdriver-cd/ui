@@ -17,40 +17,40 @@ const isActiveBuild = (status, endTime) =>
  */
 const isPRJob = jobName => /^PR-/.test(jobName);
 
-const statusIcon = (status, isLight) => {
+const statusIcon = status => {
   let icon;
 
   switch (status) {
     case 'QUEUED':
     case 'RUNNING':
-      icon = 'spinner fa-spin';
+      icon = 'spinner';
       break;
     case 'CREATED':
     case 'SUCCESS':
-      icon = `check-circle${isLight ? '-o' : ''}`;
+      icon = 'check-circle';
       break;
     case 'UNSTABLE':
       icon = 'exclamation-circle';
       break;
     case 'FROZEN':
-      icon = 'fa-snowflake-o';
+      icon = 'snowflake-o';
       break;
     case 'BLOCKED':
     case 'COLLAPSED':
-      icon = 'fa-ban fa-flip-horizontal';
+      icon = 'ban';
       break;
     case 'FAILURE':
-      icon = `times-circle${isLight ? '-o' : ''}`;
+      icon = 'times-circle';
       break;
     case 'ABORTED':
-      icon = `stop-circle${isLight ? '-o' : ''}`;
+      icon = 'stop-circle';
       break;
     case 'SKIPPED':
       // TODO: Replace skipped property if necessary.
       icon = 'exclamation-circle';
       break;
     default:
-      icon = 'circle-o';
+      icon = 'circle';
       break;
   }
 

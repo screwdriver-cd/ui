@@ -1,10 +1,14 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Service.extend({
-  session: service(),
+@classic
+export default class ValidatorService extends Service {
+  @service
+  session;
+
   /**
    * Simple test to determine if yaml looks like a template file
    * @method isTemplate
@@ -13,7 +17,7 @@ export default Service.extend({
    */
   isTemplate(yaml) {
     return /^name|\n+name: |\n+namespace: /.test(yaml);
-  },
+  }
 
   /**
    * Cross-domain communication to validation endpoints
@@ -57,4 +61,4 @@ export default Service.extend({
         });
     });
   }
-});
+}

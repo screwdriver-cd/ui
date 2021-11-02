@@ -1,9 +1,9 @@
-<h4 class="pipeline" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} Pipeline Settings</h4>
+<h4 class="pipeline" {{action "nameClick"}}>{{fa-icon (if this.isOpen "minus-square" "plus-square")}} Pipeline Settings</h4>
 <div class="annotations" title="These are the pipeline-level annotations that the user has defined.">
   <span class="label">Annotations:</span>
   <span class="value">
     <ul>
-      {{#each-in annotations as |name value|}}
+      {{#each-in this.annotations as |name value|}}
         <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
       {{else}}
         <li>None defined</li>
@@ -16,7 +16,7 @@
   <span class="label">Parameters:</span>
   <span class="value">
     <ul>
-      {{#each-in parameters as |name value|}}
+      {{#each-in this.parameters as |name value|}}
         {{#if value.length}}
           <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
         {{else}}
@@ -37,6 +37,6 @@
 
 <div class="workflow">
   <span class="label" title="This is the order that the jobs will run in.">Workflow:</span>
-  {{workflow-graph-d3 workflowGraph=workflowGraph}}
+  {{workflow-graph-d3 workflowGraph=this.workflowGraph}}
 </div>
 {{yield}}

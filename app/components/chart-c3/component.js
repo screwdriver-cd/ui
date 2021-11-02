@@ -1,15 +1,20 @@
+import classic from 'ember-classic-decorator';
+import { tagName } from '@ember-decorators/component';
 /* global c3 */
 import Component from '@ember/component';
 
-export default Component.extend({
-  tagName: 'div',
-  chart: null,
+@classic
+@tagName('')
+export default class ChartC3 extends Component {
+  chart = null;
+
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.draw();
-  },
+  }
+
   didUpdateAttrs() {
-    this._super(...arguments);
+    super.didUpdateAttrs(...arguments);
 
     if (this.isDestroying || this.isDestroyed) {
       return;
@@ -23,12 +28,14 @@ export default Component.extend({
         this.draw();
       }
     });
-  },
+  }
+
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     this.chart.destroy();
     this.set('chart', null);
-  },
+  }
+
   draw() {
     const chart = c3.generate({
       axis: this.axis,
@@ -54,4 +61,4 @@ export default Component.extend({
     chart.internal.name = this.name;
     this.set('chart', chart);
   }
-});
+}

@@ -1,7 +1,7 @@
-{{#if session.isAuthenticated}}
-  {{pipeline-nav pipeline=pipeline}}
+{{#if this.session.isAuthenticated}}
+  {{pipeline-nav pipeline=this.pipeline}}
 {{/if}}
 
-{{pipeline-list pipelines=pipelines pipeline=pipeline}}
+{{pipeline-list pipelines=this.pipelines pipeline=this.pipeline}}
 
 {{outlet}}

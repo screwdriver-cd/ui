@@ -1,16 +1,16 @@
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+{{info-message message=this.errorMessage type="warning" icon="exclamation-triangle"}}
 
 {{template-header
-  template=versionTemplate
-  trusted=trusted
-  isAdmin=isAdmin
+  template=this.versionTemplate
+  trusted=this.trusted
+  isAdmin=this.isAdmin
   onUpdateTrust=(action "updateTrust")
   onRemoveTemplate=(action "removeTemplate")
 }}
 
 <h4>Contents:</h4>
-{{validator-job name=versionTemplate.fullName job=versionTemplate.config template=versionTemplate collapsible=false isOpen=true}}
+{{validator-job name=this.versionTemplate.fullName job=this.versionTemplate.config template=this.versionTemplate collapsible=false isOpen=true}}
 
-{{template-versions templates=templates}}
+{{template-versions templates=this.templates}}
 
 {{outlet}}

@@ -1,6 +1,6 @@
 /* global d3 */
+import { get, set, getWithDefault, computed } from '@ember/object';
 import Component from '@ember/component';
-import { set, getWithDefault, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import {
   icon,
@@ -29,22 +29,27 @@ export default Component.extend({
     'completeWorkflowGraph',
     {
       get() {
-        const showDownstreamTriggers = getWithDefault(
-          this,
-          'showDownstreamTriggers',
-          false
-        );
-        const builds = getWithDefault(this, 'builds', []);
+        const showDownstreamTriggers =
+          this.showDownstreamTriggers === undefined
+            ? false
+            : this.showDownstreamTriggers;
+        const builds = this.builds === undefined ? [] : this.builds;
         const { startFrom } = this;
-        const jobs = getWithDefault(this, 'jobs', []);
-        const workflowGraph = getWithDefault(this, 'workflowGraph', {
-          nodes: [],
-          edges: []
-        });
-        const completeGraph = getWithDefault(this, 'completeWorkflowGraph', {
-          nodes: [],
-          edges: []
-        });
+        const jobs = this.jobs === undefined ? [] : this.jobs;
+        const workflowGraph =
+          this.workflowGraph === undefined
+            ? {
+                nodes: [],
+                edges: []
+              }
+            : this.workflowGraph;
+        const completeGraph =
+          this.completeWorkflowGraph === undefined
+            ? {
+                nodes: [],
+                edges: []
+              }
+            : this.completeWorkflowGraph;
 
         let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
 
@@ -113,17 +118,17 @@ export default Component.extend({
     this._super(...arguments);
     this.draw(this.decoratedGraph);
 
-    set(this, 'lastGraph', this.get('graph'));
+    set(this, 'lastGraph', this.graph);
   },
   // Listen for changes to workflow and update graph accordingly.
   didReceiveAttrs() {
     this._super(...arguments);
 
-    this.doRedraw(this.get('decoratedGraph'));
+    this.doRedraw(this.decoratedGraph);
   },
   doRedraw(decoratedGraph) {
     const lg = this.lastGraph;
-    const wg = this.get('graph');
+    const wg = this.graph;
 
     if (!this.graphNode) {
       return;
@@ -230,7 +235,7 @@ export default Component.extend({
     const calcPos = (pos, spacer) =>
       (pos + 1) * ICON_SIZE + (pos * spacer - ICON_SIZE / 2);
 
-    const isSkipped = getWithDefault(this, 'isSkipped', false);
+    const isSkipped = this.isSkipped === undefined ? false : this.isSkipped;
 
     // edges
     svg

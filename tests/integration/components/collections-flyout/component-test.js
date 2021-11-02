@@ -91,14 +91,14 @@ module('Integration | Component | collections flyout', function (hooks) {
       showModal=showModal
       setModal=setModal}}`);
 
-    assert.equal(this.get('showModal'), false);
+    assert.equal(this.showModal, false);
 
     // Make sure there are no modals
     assert.dom('.modal').doesNotExist();
 
     await click('.header__create');
 
-    assert.equal(this.get('showModal'), true);
+    assert.equal(this.showModal, true);
 
     // Make sure there is only 1 modal
     assert.dom('.modal').exists({ count: 1 });
@@ -167,14 +167,14 @@ module('Integration | Component | collections flyout', function (hooks) {
 
     await click('.header__create');
 
-    assert.ok(this.get('showModal'));
+    assert.ok(this.showModal);
 
     await fillIn('.name input', 'Test');
     await fillIn('.description textArea', 'Test description');
     await click('.collection-form__create');
 
     // Modal should remain open because of error
-    assert.ok(this.get('showModal'));
+    assert.ok(this.showModal);
     assert.dom('.alert-warning > span').hasText('This is an error message');
   });
 

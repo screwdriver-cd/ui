@@ -1,7 +1,7 @@
 import { resolve } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import EmberObject, { get } from '@ember/object';
+import EmberObject from '@ember/object';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
 import injectSessionStub from '../../../helpers/inject-session';
 
@@ -28,7 +28,7 @@ module('Unit | Controller | dashboard/show', function (hooks) {
       description: 'description1',
       pipelineIds,
       save() {
-        assert.deepEqual(get(this, 'pipelineIds'), [1, 2]);
+        assert.deepEqual(this.pipelineIds, [1, 2]);
 
         return resolve(this);
       }

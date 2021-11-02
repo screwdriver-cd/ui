@@ -1,15 +1,17 @@
-{{#if message}}
-  {{#bs-alert onDismissed=(action "clearMessage") type=type}}
-    {{#if (eq message "This checkoutUrl is not supported for your current login host.")}}
-      {{#if scmContext}}
-        {{! template-lint-disable no-triple-curlies }}
-        {{fa-icon icon}} <span>{{{message}}} Please login to</span> <a href="#authenticate" {{action "authenticate" scmContext}}>{{scmContext}}</a>
+<div class={{this.styleNamespace}} ...attributes>
+  {{#if this.message}}
+    <BsAlert @onDismissed={{action "clearMessage"}} @type={{this.type}}>
+      {{#if (eq this.message "This checkoutUrl is not supported for your current login host.")}}
+        {{#if this.scmContext}}
+          {{! template-lint-disable no-triple-curlies }}
+          {{fa-icon this.icon}} <span>{{{this.message}}} Please login to</span> <a href="#authenticate" {{action "authenticate" this.scmContext}}>{{this.scmContext}}</a>
+        {{else}}
+          {{fa-icon this.icon}} <span>{{{this.message}}}</span>
+        {{/if}}
       {{else}}
-        {{fa-icon icon}} <span>{{{message}}}</span>
+        {{! template-lint-disable no-triple-curlies }}
+        {{fa-icon this.icon}} <span>{{{this.message}}}</span>
       {{/if}}
-    {{else}}
-      {{! template-lint-disable no-triple-curlies }}
-      {{fa-icon icon}} <span>{{{message}}}</span>
-    {{/if}}
-  {{/bs-alert}}
-{{/if}}
+    </BsAlert>
+  {{/if}}
+</div>

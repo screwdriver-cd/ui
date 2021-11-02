@@ -1,25 +1,25 @@
-{{#if collapsible}}
-  <h4 class="job" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>
+{{#if this.collapsible}}
+  <h4 class="job" {{action "nameClick"}}>{{fa-icon (if this.isOpen "minus-square" "plus-square")}} {{this.name}}{{#if this.index }}.{{this.index}}{{/if}}</h4>
 {{/if}}
-{{#if getTemplateName}}
-  {{#if template}}
-    <h4>This template extends <a href={{getTemplateLink}}>{{getTemplateName}}</a> template.</h4>
+{{#if this.getTemplateName}}
+  {{#if this.template}}
+    <h4>This template extends <a href={{this.getTemplateLink}}>{{this.getTemplateName}}</a> template.</h4>
   {{else}}
-    <h4>This job uses <a href={{getTemplateLink}}>{{getTemplateName}}</a> template.</h4>
+    <h4>This job uses <a href={{this.getTemplateLink}}>{{this.getTemplateName}}</a> template.</h4>
   {{/if}}
 {{/if}}
-{{#if template.description}}
+{{#if this.template.description}}
   <div class="template-description" title="This is the description of the template">
     <span class="label">Template Description:</span>
-    <span class="value">{{template.description}}</span>
+    <span class="value">{{this.template.description}}</span>
   </div>
 {{/if}}
-{{#if template.images}}
+{{#if this.template.images}}
   <div class="images" title="Supported images">
     <span class="label">Supported Images:</span>
     <span class="value">
       <ul>
-        {{#each-in template.images as |name value|}}
+        {{#each-in this.template.images as |name value|}}
           <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
         {{else}}
           <li>None defined</li>
@@ -32,7 +32,7 @@
   <span class="label">Annotations:</span>
   <span class="value">
     <ul>
-      {{#each-in job.annotations as |name value|}}
+      {{#each-in this.job.annotations as |name value|}}
         <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
       {{else}}
         <li>None defined</li>
@@ -44,7 +44,7 @@
   <span class="label">Parameters:</span>
   <span class="value">
     <ul>
-      {{#each-in job.parameters as |name value|}}
+      {{#each-in this.job.parameters as |name value|}}
         {{#if value.length}}
           <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
         {{else}}
@@ -62,21 +62,21 @@
     </ul>
   </span>
 </div>
-{{#unless template}}
+{{#unless this.template}}
   <div class="description" title="This is the description of the job">
     <span class="label">Description:</span>
-    <span class="value">{{job.description}}</span>
+    <span class="value">{{this.job.description}}</span>
   </div>
 {{/unless}}
 <div class="image" title="This is the docker image that acts as the base container for the job.">
   <span class="label">Image:</span>
-  <span class="value">{{job.image}}</span>
+  <span class="value">{{this.job.image}}</span>
 </div>
 <div class="steps" title="These are the commands that will be executed in the job.">
   <span class="label">Steps:</span>
   <span class="value">
     <ul>
-      {{#each steps as |command|}}
+      {{#each this.steps as |command|}}
         <li><div class="name">{{command.name}}: {{#if command.locked}}{{fa-icon "lock"}}{{/if}}</div><div class="value">{{command.command}}</div></li>
       {{/each}}
     </ul>
@@ -86,7 +86,7 @@
   <span class="label">Source Paths:</span>
   <span class="value">
     <ul>
-      {{#each job.sourcePaths as |path|}}
+      {{#each this.job.sourcePaths as |path|}}
         <li>{{path}}</li>
       {{else}}
         <li>None defined</li>
@@ -98,7 +98,7 @@
   <span class="label">Secrets:</span>
   <span class="value">
     <ul>
-      {{#each job.secrets as |secretName|}}
+      {{#each this.job.secrets as |secretName|}}
         <li>{{secretName}}</li>
       {{else}}
         <li>None defined</li>
@@ -110,7 +110,7 @@
   <span class="label">Environment Variables:</span>
   <span class="value">
     <ul>
-      {{#each-in job.environment as |name value|}}
+      {{#each-in this.job.environment as |name value|}}
         <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
       {{else}}
         <li>None defined</li>
@@ -123,7 +123,7 @@
   <span class="value">
     <ul>
       {{!TODO handle settings properly}}
-      {{#each-in job.settings as |name svalue|}}
+      {{#each-in this.job.settings as |name svalue|}}
         <li>
           <div class="value-item">
             <div class="name">{{name}}: </div>
@@ -146,7 +146,7 @@
   <span class="label">Commands:</span>
   <span class="value">
     <ul>
-      {{#each-in sdCommands as |index value|}}
+      {{#each-in this.sdCommands as |index value|}}
         <li><span class="name"><a href="/commands/{{value.command}}/{{value.version}}">{{value.command}}{{#if value.version}}@{{value.version}}{{/if}}</a></span></li>
       {{else}}
         <li>None defined</li>

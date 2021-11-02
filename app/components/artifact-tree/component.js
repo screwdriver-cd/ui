@@ -1,11 +1,14 @@
-import { resolve } from 'rsvp';
-import { computed } from '@ember/object';
+import classic from 'ember-classic-decorator';
+import { tagName } from '@ember-decorators/component';
+import { action, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { resolve } from 'rsvp';
 import Component from '@ember/component';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import ObjectProxy from '@ember/object/proxy';
 
 const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
+
 const typesOptions = {
   directory: {
     icon: 'fa fa-folder-o fa-lg'
@@ -15,99 +18,108 @@ const typesOptions = {
   }
 };
 
-export default Component.extend({
-  jstreeActionReceiver: null,
-  selectedArtifact: '',
-  iframeUrl: '',
-  router: service(),
-  artifact: service('build-artifact'),
-  classNames: ['artifact-tree'],
-  classNameBindings: ['buildStatus'],
-  typesOptions,
-  plugins: 'types',
-  isModalOpen: false,
-  treedata: computed('buildStatus', 'buildId', {
-    get() {
-      const { buildStatus } = this;
+@classic
+@tagName('')
+export default class ArtifactTree extends Component {
+  jstreeActionReceiver = null;
 
-      if (buildStatus === 'RUNNING' || buildStatus === 'QUEUED') {
-        return resolve([]);
-      }
+  selectedArtifact = '';
 
-      return ObjectPromiseProxy.create({
-        promise: this.artifact.fetchManifest(this.buildId)
-      });
+  iframeUrl = '';
+
+  @service
+  router;
+
+  @service('build-artifact')
+  artifact;
+
+  typesOptions = typesOptions;
+
+  plugins = 'types';
+
+  isModalOpen = false;
+
+  @computed('buildStatus', 'buildId')
+  get treedata() {
+    const { buildStatus } = this;
+
+    if (buildStatus === 'RUNNING' || buildStatus === 'QUEUED') {
+      return resolve([]);
     }
-  }),
+
+    return ObjectPromiseProxy.create({
+      promise: this.artifact.fetchManifest(this.buildId)
+    });
+  }
 
   download(href) {
     window.open(`${href}?type=download`, '_blank');
-  },
+  }
 
-  actions: {
-    handleClose() {
-      this.set('isModalOpen', false);
-    },
+  @action
+  handleClose() {
+    this.set('isModalOpen', false);
+  }
 
-    handleDownload() {
-      this.download(this.href);
-    },
+  @action
+  handleDownload() {
+    this.download(this.href);
+  }
 
-    handleJstreeEventDidRedraw() {
-      const artifactPath = this.getWithDefault('selectedArtifact', '');
-      const paths = artifactPath.split('/');
-      const jstree = this.jstreeActionReceiver.target.treeObject.jstree(true);
+  @action
+  handleJstreeEventDidRedraw() {
+    const artifactPath =
+      this.selectedArtifact === undefined ? '' : this.selectedArtifact;
+    const paths = artifactPath.split('/');
+    const jstree = this.jstreeActionReceiver.target.treeObject.jstree(true);
 
-      let nodeList = jstree.get_json();
+    let nodeList = jstree.get_json();
 
-      let targetNode = null;
+    let targetNode = null;
 
-      // traversing jstree to find target artifact node
-      paths.forEach(path => {
-        targetNode = nodeList.find(node => node.text === path);
-        if (targetNode && targetNode.type === 'directory') {
-          nodeList = targetNode.children;
-        }
-      });
-
-      // select the target node
-      if (targetNode) {
-        this.jstreeActionReceiver.send('selectNode', targetNode.id);
+    // traversing jstree to find target artifact node
+    paths.forEach(path => {
+      targetNode = nodeList.find(node => node.text === path);
+      if (targetNode && targetNode.type === 'directory') {
+        nodeList = targetNode.children;
       }
-    },
+    });
 
-    handleJstreeEventDidChange(data = {}) {
-      const { node, instance } = data;
+    // select the target node
+    if (targetNode) {
+      this.jstreeActionReceiver.send('selectNode', targetNode.id);
+    }
+  }
 
-      if (node) {
-        const {
-          type,
-          a_attr: { href }
-        } = node;
-        const artifactPath = instance.get_path(node, '/');
+  @action
+  handleJstreeEventDidChange(data = {}) {
+    const { node, instance } = data;
 
-        if (type === 'directory') {
-          instance.toggle_node(node);
-          this.router.transitionTo(
-            'pipeline.build.artifacts.detail',
-            artifactPath
-          );
+    if (node) {
+      const {
+        type,
+        a_attr: { href }
+      } = node;
+      const artifactPath = instance.get_path(node, '/');
 
-          return;
-        }
-
-        if (type === 'file') {
-          this.setProperties({
-            href,
-            iframeUrl: `${href}?type=preview`,
-            isModalOpen: true
-          });
-        }
+      if (type === 'directory') {
+        instance.toggle_node(node);
         this.router.transitionTo(
           'pipeline.build.artifacts.detail',
           artifactPath
         );
+
+        return;
       }
+
+      if (type === 'file') {
+        this.setProperties({
+          href,
+          iframeUrl: `${href}?type=preview`,
+          isModalOpen: true
+        });
+      }
+      this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
     }
   }
-});
+}

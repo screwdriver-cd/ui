@@ -1,9 +1,11 @@
-import DS from 'ember-data';
+import classic from 'ember-classic-decorator';
+import RESTSerializer from '@ember-data/serializer/rest';
 
-export default DS.RESTSerializer.extend({
-  primaryKey: 'jobId',
+@classic
+export default class Serializer extends RESTSerializer {
+  primaryKey = 'jobId';
 
-  modelNameFromPayloadKey(/* key */) {
+  modelNameFromPayloadKey /* key */() {
     return 'build-history';
   }
-});
+}

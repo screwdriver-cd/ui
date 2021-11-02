@@ -1,19 +1,27 @@
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
-export default Component.extend({
+@tagName('')
+@classic
+export default class PipelineList extends Component {
   // start all child pipelines
-  start: service('pipeline-startall'),
-  errorMessage: '',
-  isShowingModal: false,
-  actions: {
-    startAll() {
-      this.set('isShowingModal', true);
+  @service('pipeline-startall')
+  start;
 
-      return this.start
-        .startAll(this.pipeline.id)
-        .catch(error => this.set('errorMessage', error))
-        .finally(() => this.set('isShowingModal', false));
-    }
+  errorMessage = '';
+
+  isShowingModal = false;
+
+  @action
+  startAll() {
+    this.set('isShowingModal', true);
+
+    return this.start
+      .startAll(this.pipeline.id)
+      .catch(error => this.set('errorMessage', error))
+      .finally(() => this.set('isShowingModal', false));
   }
-});
+}

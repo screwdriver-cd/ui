@@ -4,7 +4,7 @@ import Component from '@ember/component';
 export default Component.extend({
   newDescription: null,
   newName: null,
-  tagName: 'tr',
+  tagName: '',
   pipelineId: null,
   buttonAction: computed(
     'token.{name,description}',

@@ -1,15 +1,16 @@
-<div>
-  {{#if isGroupedEvents}}
-    {{#each groups as |group|}}
+<div class={{this.styleNamespace}} ...attributes>
+  <div>
+    {{#if isGroupedEvents}}
+    {{#each this.groups as |group|}}
       {{pipeline-events-row-group
-        pipeline=pipeline
-        expandedEventsGroup=expandedEventsGroup
+        pipeline=this.pipeline
+        expandedEventsGroup=this.expandedEventsGroup
         events=group
-        selectedEvent=selectedEvent
-        latestCommit=latestCommit
-        lastSuccessful=lastSuccessful
-        startPRBuild=(action "startPRBuild")
-        stopEvent=(action "stopEvent")
+        selectedEvent=this.selectedEvent
+        latestCommit=this.latestCommit
+        lastSuccessful=this.lastSuccessful
+        startPRBuild=this.startPRBuild
+        stopEvent=this.stopEvent
         eventClick=(action "eventClick")
       }}
     {{else}}
@@ -19,11 +20,11 @@
     {{#each eventsList as |event|}}
       {{pipeline-event-row
         event=event
-        selectedEvent=selectedEvent
-        latestCommit=latestCommit
-        lastSuccessful=lastSuccessful
-        startPRBuild=(action "startPRBuild")
-        stopEvent=(action "stopEvent")
+        selectedEvent=this.selectedEvent
+        latestCommit=this.latestCommit
+        lastSuccessful=this.lastSuccessful
+        startPRBuild=this.startPRBuild
+        stopEvent=this.stopEvent
         eventClick=(action "eventClick")
       }}
     {{else}}
@@ -32,4 +33,5 @@
   {{/if}}
 </div>
 
-{{yield}}
+  {{yield}}
+</div>

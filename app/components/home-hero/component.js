@@ -1,3 +1,5 @@
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import Component from '@ember/component';
 
 /* eslint-disable max-len */
@@ -21,12 +23,14 @@ const langs = [
 ];
 /* eslint-enable max-len */
 
-export default Component.extend({
-  languages: langs,
-  actions: {
-    changeLanguage() {
-      this.set('forkUrl', this.element.querySelector('select').value);
-    }
-  },
-  forkUrl: langs[0].url
-});
+@classic
+export default class HomeHero extends Component {
+  languages = langs;
+
+  @action
+  changeLanguage() {
+    this.set('forkUrl', this.element.querySelector('select').value);
+  }
+
+  forkUrl = langs[0].url;
+}

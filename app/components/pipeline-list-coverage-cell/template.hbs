@@ -1,10 +1,10 @@
 <div class="coverage">
-  {{#if loading}}
+  {{#if this.loading}}
     Loading
   {{else}}
-    {{#if loaded}}
+    {{#if this.loaded}}
       <span class="coverage-value">
-        {{get coverage "coverage"}}{{if (is-number (get coverage "coverage")) "%"}}
+        {{get this.coverage "coverage"}}{{if (is-number (get this.coverage "coverage")) "%"}}
       </span>
     {{else}}
       N/A

@@ -1,12 +1,14 @@
-<h4>Artifacts</h4>
-{{ember-jstree
-  data=treedata.content
-  plugins=plugins
-  typesOptions=typesOptions
-  actionReceiver=jstreeActionReceiver
-  eventDidRedraw=(action "handleJstreeEventDidRedraw")
-  eventDidChange=(action "handleJstreeEventDidChange")
-}}
-{{#unless treedata.content.length}}
-  <span>No artifacts yet</span>
-{{/unless}}
+<div class="{{this.buildStatus}} artifact-tree">
+  <h4>Artifacts</h4>
+  {{ember-jstree
+    data=this.treedata.content
+    plugins=this.plugins
+    typesOptions=this.typesOptions
+    actionReceiver=this.jstreeActionReceiver
+    eventDidRedraw=(action "handleJstreeEventDidRedraw")
+    eventDidChange=(action "handleJstreeEventDidChange")
+  }}
+  {{#unless this.treedata.content.length}}
+    <span>No artifacts yet</span>
+  {{/unless}}
+</div>

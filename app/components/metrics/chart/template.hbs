@@ -35,5 +35,5 @@
     />
   {{/if}}
 
-  <p class="reset-button" onClick={{action "resetZoom" chartName dependentChartNames}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
+  <p class="reset-button" onClick={{action "resetZoom" this.chartName this.dependentChartNames}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
 </div>

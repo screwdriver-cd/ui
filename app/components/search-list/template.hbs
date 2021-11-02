@@ -1,45 +1,47 @@
-{{#if addCollectionError}}
-  {{info-message message=addCollectionError type="warning" icon="exclamation-triangle"}}
-{{/if}}
-{{#if addCollectionSuccess}}
-  {{info-message message=addCollectionSuccess type="success" icon="check"}}
-{{/if}}
-<div class="num-results">
-  {{if isEmpty "No results" (concat "Showing " filteredPipelines.length " result(s)")}}
-</div>
-<table>
-  <thead>
-    <tr>
-      <th class="appId">Name</th>
-      <th class="branch">Branch</th>
-      <th class="account">Account</th>
-      {{#if session.isAuthenticated}}
-        <th class="add">Add to Collection</th>
-      {{/if}}
-    </tr>
-  </thead>
-  <tbody>
-    {{#each filteredPipelines as |pipeline|}}
+<div class={{this.styleNamespace}} ...attributes>
+  {{#if this.addCollectionError}}
+    {{info-message message=this.addCollectionError type="warning" icon="exclamation-triangle"}}
+  {{/if}}
+  {{#if this.addCollectionSuccess}}
+    {{info-message message=this.addCollectionSuccess type="success" icon="check"}}
+  {{/if}}
+  <div class="num-results">
+    {{if this.isEmpty "No results" (concat "Showing " this.filteredPipelines.length " result(s)")}}
+  </div>
+  <table>
+    <thead>
       <tr>
-        <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
-        <td class="branch"><a href={{branch-url-encode pipeline.hubUrl}}>{{fa-icon "code-fork"}}{{pipeline.branch}}</a></td>
-        <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
-        {{#if session.isAuthenticated}}
-          <td class="add">
-            {{collection-dropdown
-              pipeline=pipeline
-              collections=collections
-              addToCollection=(action "addToCollection")
-              addCollectionError=addCollectionError
-              addCollectionSuccess=addCollectionSuccess}}
-          </td>
+        <th class="appId">Name</th>
+        <th class="branch">Branch</th>
+        <th class="account">Account</th>
+        {{#if this.session.isAuthenticated}}
+          <th class="add">Add to Collection</th>
         {{/if}}
       </tr>
-    {{/each}}
-  </tbody>
-</table>
-{{#if showMore}}
-  <a class="showMore" {{action "moreClick"}}>Show more results...</a>
-{{/if}}
+    </thead>
+    <tbody>
+      {{#each this.filteredPipelines as |pipeline|}}
+        <tr>
+          <td class="appId">{{#highlight-terms this.query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
+          <td class="branch"><a href={{branch-url-encode pipeline.hubUrl}}><FaIcon @icon="code-branch" /> {{pipeline.branch}}</a></td>
+          <td class="account"><FaIcon @prefix="fab" @icon={{pipeline.scmIcon}} /> {{pipeline.scm}}</td>
+          {{#if this.session.isAuthenticated}}
+            <td class="add">
+              {{collection-dropdown
+                pipeline=pipeline
+                collections=this.collections
+                addToCollection=(action "addPipelineToCollection")
+                addCollectionError=this.addCollectionError
+                addCollectionSuccess=this.addCollectionSuccess}}
+            </td>
+          {{/if}}
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{#if this.showMore}}
+    <a class="showMore" {{action "moreClick"}}>Show more results...</a>
+  {{/if}}
 
-{{collection-modal showModal=showModal addNewCollection=addNewCollection}}
+  {{collection-modal showModal=this.showModal}}
+</div>

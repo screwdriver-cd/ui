@@ -1,12 +1,14 @@
-<div class="pipeline-viz-row {{if isSelectedConnectedPipeline "selected"}}">
-  <div class="repo" onclick={{action "handleClick" pipeline}}>
-    <i class="fa fa-check-circle success" aria-hidden="true"></i>
-    <span class="repo-name" href={{pipeline.scmRepo.url}}>{{pipeline.name}} ({{pipeline.id}})</span>
-  </div>
+<div class={{this.styleNamespace}} ...attributes>
+  <div class="pipeline-viz-row {{if this.isSelectedConnectedPipeline "selected"}}">
+    <div class="repo" onclick={{action "handleClick" this.pipeline}}>
+      <i class="fa fa-check-circle success" aria-hidden="true"></i>
+      <span class="repo-name" href={{this.pipeline.scmRepo.url}}>{{this.pipeline.name}} ({{this.pipeline.id}})</span>
+    </div>
 
-  <div class="repo-action" onclick={{action "handleActionClick" pipeline}}>
-    {{#unless isSelectedPipeline}}
-      <i class="glyphicon glyphicon-arrow-right"></i>
-    {{/unless}}
+    <div class="repo-action" onclick={{action "handleActionClick" this.pipeline}}>
+      {{#unless this.isSelectedPipeline}}
+        <i class="glyphicon glyphicon-arrow-right"></i>
+      {{/unless}}
+    </div>
   </div>
 </div>

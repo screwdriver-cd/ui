@@ -1,7 +1,10 @@
+import classic from 'ember-classic-decorator';
 import Route from '@ember/routing/route';
 
-export default Route.extend({
-  routeAfterAuthentication: 'pipeline',
+@classic
+export default class IndexRoute extends Route {
+  routeAfterAuthentication = 'pipeline';
+
   beforeModel() {
     const { pipeline } = this.modelFor('pipeline');
 
@@ -11,4 +14,4 @@ export default Route.extend({
       this.transitionTo('pipeline.events');
     }
   }
-});
+}

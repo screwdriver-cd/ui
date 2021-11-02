@@ -1,3 +1,4 @@
+import Model from '@ember-data/model';
 import { resolve } from 'rsvp';
 import { run } from '@ember/runloop';
 import ModelReloaderMixin, {
@@ -5,7 +6,6 @@ import ModelReloaderMixin, {
 } from 'screwdriver-ui/mixins/model-reloader';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import DS from 'ember-data';
 
 let subject;
 
@@ -13,7 +13,7 @@ module('Unit | Mixin | model reloader mixin', function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    const ModelReloaderObject = DS.Model.extend(ModelReloaderMixin);
+    const ModelReloaderObject = Model.extend(ModelReloaderMixin);
 
     this.owner.register('model:reload-mixin', ModelReloaderObject);
     subject = this.owner

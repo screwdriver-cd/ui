@@ -1,5 +1,7 @@
-{{#if (eq column.label "Name")}}
-  <a href="/{{extra.routes.prefix}}/{{row.content.namespace}}/{{value}}">{{#if row.content.trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}<span class="name">{{value}}</span></a>
-{{else if (eq column.label "Namespace")}}
-  {{#link-to extra.routes.namespace value}}<span class="namespace">{{value}}</span>{{/link-to}}
-{{/if}}
+<div class={{this.styleNamespace}} ...attributes>
+  {{#if (eq this.column.label "Name")}}
+    <a href="/{{this.extra.routes.prefix}}/{{this.row.content.namespace}}/{{this.value}}">{{#if this.row.content.trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}<span class="name">{{this.value}}</span></a>
+  {{else if (eq this.column.label "Namespace")}}
+    {{#link-to this.extra.routes.namespace this.value}}<span class="namespace">{{this.value}}</span>{{/link-to}}
+  {{/if}}
+</div>

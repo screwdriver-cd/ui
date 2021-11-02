@@ -1,26 +1,29 @@
-import Component from '@ember/component';
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
 import { computed } from '@ember/object';
+import Component from '@ember/component';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 
-export default Component.extend({
-  build: computed('value', {
-    get() {
-      const { build } = this.get('value');
+@tagName('')
+@classic
+export default class PipelineListJobCell extends Component {
+  @computed('value')
+  get build() {
+    const { build } = this.value;
 
-      if (!build) {
-        return null;
-      }
+    if (!build) {
+      return null;
+    }
 
-      return {
-        id: build.id,
-        icon: statusIcon(build.status),
-        status: build.status
-      };
-    }
-  }),
-  jobName: computed('value', {
-    get() {
-      return this.get('value').jobName;
-    }
-  })
-});
+    return {
+      id: build.id,
+      icon: statusIcon(build.status),
+      status: build.status
+    };
+  }
+
+  @computed('value.jobName')
+  get jobName() {
+    return this.value.jobName;
+  }
+}

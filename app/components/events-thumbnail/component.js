@@ -1,15 +1,24 @@
+import classic from 'ember-classic-decorator';
+import { inject as service } from '@ember/service';
+import { tagName } from '@ember-decorators/component';
+import { action } from '@ember/object';
 /* global d3 */
 import Component from '@ember/component';
-import { inject as service } from '@ember/service';
 import { select } from 'd3-selection';
 const MAX_NUM_EVENTS_SHOWN = 20;
 
-export default Component.extend({
-  store: service(),
-  events: null,
-  pipelineId: undefined,
+@classic
+@tagName('')
+export default class EventsThumbnail extends Component {
+  @service
+  store;
 
-  didInsertElement() {
+  events = null;
+
+  pipelineId = undefined;
+
+  @action
+  loadSVG(element) {
     const getParameters = svg => {
       const chartSize = parseInt(svg.style('width'), 10);
       const barSpace = (chartSize * 0.96) / MAX_NUM_EVENTS_SHOWN;
@@ -21,7 +30,7 @@ export default Component.extend({
       return [barSpace, barWidth, paddingLeft, paddingRight];
     };
 
-    const svg = select(this.element.getElementsByTagName('svg')[0]);
+    const svg = select(element);
 
     let [barSpace, barWidth, paddingLeft, paddingRight] = getParameters(svg);
     const totalNumberOfEvents = this.events.length;
@@ -75,4 +84,4 @@ export default Component.extend({
       bars.attr('width', barWidth).attr('x', (build, idx) => barSpace * idx);
     });
   }
-});
+}

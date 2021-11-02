@@ -1,19 +1,24 @@
-import Component from '@ember/component';
+import classic from 'ember-classic-decorator';
 import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import InViewportMixin from 'ember-in-viewport';
 
-export default Component.extend(InViewportMixin, {
-  shuttle: service(),
+@classic
+export default class PipelineListCoverageCell extends Component.extend(
+  InViewportMixin
+) {
+  @service
+  shuttle;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.setProperties({
       coverage: undefined,
       loaded: false,
       loading: false
     });
-  },
+  }
 
   async didEnterViewport() {
     if (this.loaded === false) {
@@ -37,4 +42,4 @@ export default Component.extend(InViewportMixin, {
       }
     }
   }
-});
+}

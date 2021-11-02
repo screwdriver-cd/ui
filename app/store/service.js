@@ -1,3 +1,5 @@
-import DS from 'ember-data';
+import classic from 'ember-classic-decorator';
+import Store from '@ember-data/store';
 
-export default DS.Store.extend({});
+@classic
+export default class StoreService extends Store {}

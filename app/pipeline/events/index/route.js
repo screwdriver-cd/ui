@@ -1,9 +1,12 @@
+import { get, getWithDefault } from '@ember/object';
 import Route from '@ember/routing/route';
-import { getWithDefault } from '@ember/object';
 
 export default class PipelineEventsIndexRoute extends Route {
   redirect(model = {} /* , transition */) {
-    const eventId = getWithDefault(model, 'events.firstObject.id', 0);
+    const eventId =
+      get(model, 'events.firstObject.id') === undefined
+        ? 0
+        : get(model, 'events.firstObject.id');
     const { pipeline_id: pipelineId } = this.paramsFor('pipeline');
 
     if (eventId) {

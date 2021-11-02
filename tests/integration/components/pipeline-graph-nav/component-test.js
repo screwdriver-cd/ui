@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { get, set } from '@ember/object';
+import { set } from '@ember/object';
 
 module('Integration | Component | pipeline graph nav', function (hooks) {
   setupRenderingTest(hooks);
@@ -115,7 +115,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     }}`);
 
     this.element.querySelectorAll('button')[2].click();
-    assert.equal(get(this, 'selected'), 3);
+    assert.equal(this.selected, 3);
   });
 
   test('it renders when selectedEvent is a PR event', async function (assert) {

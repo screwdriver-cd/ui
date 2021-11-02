@@ -1,163 +1,165 @@
-{{#bs-navbar as |navbar|}}
-  <div class="navbar-header">
-    {{navbar.toggle}}
-    {{#link-to "home" class="logo navbar-brand" title="Screwdriver Home"}}{{inline-svg "Screwdriver_Logo_FullWhite" class="img"}}{{/link-to}}
-  </div>
-  {{#navbar.content}}
-    {{#navbar.nav classNames="navbar-nav navbar-left" as |nav|}}
-      {{#nav.item}}
-        {{#link-to "home" class="icon"}}
-          <span>Collections</span>
-        {{/link-to}}
-      {{/nav.item}}
-      {{#nav.item}}
-        {{#nav.dropdown as |dd|}}
-          {{#dd.toggle class="icon tools"}}
-            <span>Tools</span>
-            <span class="caret"></span>
-          {{/dd.toggle}}
-          {{#dd.menu as |ddm|}}
-            {{#ddm.item}}
-              {{#link-to "validator" classNames="icon validator"}}
-                <span>Validator</span>
-              {{/link-to}}
-            {{/ddm.item}}
-            {{#ddm.item}}
-              {{#link-to "templates" classNames="icon templates"}}
-                <span>Templates</span>
-              {{/link-to}}
-            {{/ddm.item}}
-            {{#ddm.item}}
-              {{#link-to "commands" classNames="icon commands"}}
-                <span>Commands</span>
-              {{/link-to}}
-            {{/ddm.item}}
-            {{#ddm.item}}
-              {{#link-to "pipeline-visualizer" classNames="icon pipeline-visualizer"}}
-                <span>Visualizer</span>
-              {{/link-to}}
-            {{/ddm.item}}
-          {{/dd.menu}}
-        {{/nav.dropdown}}
-      {{/nav.item}}
-      {{#if session.isAuthenticated}}
-        {{#nav.item}}
-          <a class="icon create" onclick={{action "openCreatePipeline"}}>
-            {{inline-svg "add-circle" class="img"}}
-            <span>Create Pipeline</span>
-          </a>
-        {{/nav.item}}
-      {{/if}}
-    {{/navbar.nav}}
-
-    {{#navbar.nav classNames="navbar-nav navbar-right" as |nav|}}
-      {{#if showSearch}}
-        {{#nav.item}}
-          <form class="navbar-form navbar-right" role="search">
-            {{input
-              class="search-input"
-              name="query"
-              placeholder="Search Screwdriver pipelines"
-              enter=(action "triggerSearch")
-              escape-press=(action "cancelSearch")
-              autofocus="true"
-              value=searchTerm}}
-            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search" title="Search"}}</button>
-          </form>
-        {{/nav.item}}
-      {{else}}
-        {{#nav.item}}
-          <a href="#" class="icon search" title="Search" {{action (mut showSearch) (not showSearch) preventDefault=false}}>{{inline-svg "search" class="img"}}</a>
-        {{/nav.item}}
-      {{/if}}
-
-      {{#nav.item}}
-        {{#nav.dropdown as |dd|}}
-          {{#dd.toggle class="icon docs-outline"}}
-            {{inline-svg "help-circle" class="img"}}
-          {{/dd.toggle}}
-          {{#dd.menu as |ddm|}}
-            {{#ddm.item}}
-              <a href={{docUrl}} class="icon docs" title="Documentation and Contact">
-                {{inline-svg "file-text" class="img"}}<span>Documentation</span>
-              </a>
-            {{/ddm.item}}
-            {{#ddm.item}}
-              <a class="release">{{fa-icon "tag"}}<span>{{releaseVersion}}</span></a>
-            {{/ddm.item}}
-            {{ddm.divider}}
-            {{#ddm.item}}
-              <a href="http://blog.screwdriver.cd" class="icon blog">
-                {{inline-svg "tumblr" class="img"}}<span>Blog</span>
-              </a>
-            {{/ddm.item}}
-            {{#ddm.item}}
-              <a href={{slackUrl}} class="icon community">
-                {{inline-svg "slack" class="img"}}<span>Slack Workspace</span>
-              </a>
-            {{/ddm.item}}
-            {{#ddm.item}}
-              <a href="https://github.com/screwdriver-cd" class="icon github">
-                {{inline-svg "github" class="img"}}<span>GitHub</span>
-              </a>
-            {{/ddm.item}}
-          {{/dd.menu}}
-        {{/nav.dropdown}}
-      {{/nav.item}}
-      {{#nav.item}}
-        {{#if session.isAuthenticated}}
-          {{#nav.dropdown as |dd|}}
-            {{#dd.toggle class="icon profile-outline"}}
-              {{inline-svg "profile-outline" class="img"}}
-              <span class="icontitle">{{session.data.authenticated.username}}</span>
-              <span class="caret"></span>
-            {{/dd.toggle}}
-            {{#dd.menu as |ddm|}}
-              {{#ddm.item}}<span class="title">ACCOUNTS</span>{{/ddm.item}}
-              {{#each scmContexts as |scmContext|}}
-                {{#unless scmContext.readOnly}}
-                  {{#ddm.item}}
-                    {{#if scmContext.isSignedIn}}
-                      <a class="active">{{fa-icon scmContext.iconType}} {{scmContext.displayName}} <span>active</span></a>
-                    {{else}}
-                      <a href="#authenticate"{{action "authenticate" scmContext.context}}>
-                        {{fa-icon scmContext.iconType}} {{scmContext.displayName}}
-                      </a>
-                    {{/if}}
-                  {{/ddm.item}}
-                {{/unless}}
-              {{/each}}
-              {{ddm.divider}}
-              {{#if (not session.data.authenticated.isGuest)}}
-                {{#ddm.item}}{{#link-to "user-settings" title="User Settings"}}User Settings{{/link-to}}{{/ddm.item}}
-              {{/if}}
-              {{#ddm.item}}
-                <a href="#signout" {{action "invalidateSession"}} class="logout" title="Sign out of Screwdriver">Sign out</a>
-              {{/ddm.item}}
-            {{/dd.menu}}
-          {{/nav.dropdown}}
-        {{else}}
-          {{#link-to "login" (query-params fromUrl=currentUrl) title="Sign in to Screwdriver" class="icon profile-outline"}}
-            {{inline-svg "profile-outline" class="img"}}
-            <span class="icontitle">Sign in</span>
+<header class={{this.styleNamespace}} ...attributes>
+  <BsNavbar as |navbar|>
+    <div class="navbar-header">
+      {{navbar.toggle}}
+      {{#link-to "home" class="logo navbar-brand" title="Screwdriver Home"}}{{inline-svg "Screwdriver_Logo_FullWhite" class="img"}}{{/link-to}}
+    </div>
+    <navbar.content>
+      <navbar.nav class="navbar-nav navbar-left" as |nav|>
+        <nav.item>
+          {{#link-to "home" class="icon"}}
+            <span>Collections</span>
           {{/link-to}}
+        </nav.item>
+        <nav.item>
+          <nav.dropdown as |dd|>
+            <dd.toggle class="icon tools">
+              <span>Tools</span>
+              <span class="caret"></span>
+            </dd.toggle>
+            <dd.menu as |ddm|>
+              <ddm.item>
+                {{#link-to "validator" classNames="icon validator"}}
+                  <span>Validator</span>
+                {{/link-to}}
+              </ddm.item>
+              <ddm.item>
+                {{#link-to "templates" classNames="icon templates"}}
+                  <span>Templates</span>
+                {{/link-to}}
+              </ddm.item>
+              <ddm.item>
+                {{#link-to "commands" classNames="icon commands"}}
+                  <span>Commands</span>
+                {{/link-to}}
+              </ddm.item>
+              <ddm.item>
+                {{#link-to "pipeline-visualizer" classNames="icon pipeline-visualizer"}}
+                  <span>Visualizer</span>
+                {{/link-to}}
+              </ddm.item>
+            </dd.menu>
+          </nav.dropdown>
+        </nav.item>
+        {{#if this.session.isAuthenticated}}
+          <nav.item>
+            <a class="icon create" onclick={{action "openCreatePipeline"}}>
+              {{inline-svg "add-circle" class="img"}}
+              <span>Create Pipeline</span>
+            </a>
+          </nav.item>
         {{/if}}
-      {{/nav.item}}
-    {{/navbar.nav}}
-  {{/navbar.content}}
-{{/bs-navbar}}
+      </navbar.nav>
 
-<div class="tooltips">
-  {{#if session.isAuthenticated}}
-    {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
-  {{/if}}
-  {{#if session.isAuthenticated}}
-    {{#each scmContexts as |scmContext|}}
-      {{#if scmContext.isSignedIn}}
-        {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" triggerEvents="hover" renderInPlace=true}}Currently signed in to a {{scmContext.displayName}} account.{{/bs-tooltip}}
-      {{/if}}
-    {{/each}}
-  {{else}}
-    {{#bs-tooltip placement="bottom" triggerElement=".icon.profile-outline" renderInPlace=true}}Sign in to Screwdriver{{/bs-tooltip}}
-  {{/if}}
-</div>
+      <navbar.nav class="navbar-nav navbar-right" as |nav|>
+        {{#if this.showSearch}}
+          <nav.item>
+            <form class="navbar-form navbar-right" role="search">
+              {{input
+                class="search-input"
+                name="query"
+                placeholder="Search Screwdriver pipelines"
+                enter=(action "triggerSearch")
+                escape-press=(action "cancelSearch")
+                autofocus="true"
+                value=this.searchTerm}}
+              <button class="search-button" type="submit" {{action "triggerSearch"}}><FaIcon @icon="search" @title="Search"/></button>
+            </form>
+          </nav.item>
+        {{else}}
+          <nav.item>
+            <a href="#" class="icon search" title="Search" {{action (mut this.showSearch) (not this.showSearch) preventDefault=false}}>{{inline-svg "search" class="img"}}</a>
+          </nav.item>
+        {{/if}}
+
+        <nav.item>
+          <nav.dropdown as |dd|>
+            <dd.toggle class="icon docs-outline">
+              {{inline-svg "help-circle" class="img"}}
+            </dd.toggle>
+            <dd.menu as |ddm|>
+              <ddm.item>
+                <a href={{this.docUrl}} class="icon docs" title="Documentation and Contact">
+                  {{inline-svg "file-text" class="img"}}<span>Documentation</span>
+                </a>
+              </ddm.item>
+              <ddm.item>
+                <a class="release"><FaIcon @icon="tag"/><span>{{this.releaseVersion}}</span></a>
+              </ddm.item>
+              {{ddm.divider}}
+              <ddm.item>
+                <a href="http://blog.screwdriver.cd" class="icon blog">
+                  {{inline-svg "tumblr" class="img"}}<span>Blog</span>
+                </a>
+              </ddm.item>
+              <ddm.item>
+                <a href={{this.slackUrl}} class="icon community">
+                  {{inline-svg "slack" class="img"}}<span>Slack Workspace</span>
+                </a>
+              </ddm.item>
+              <ddm.item>
+                <a href="https://github.com/screwdriver-cd" class="icon github">
+                  {{inline-svg "github" class="img"}}<span>GitHub</span>
+                </a>
+              </ddm.item>
+            </dd.menu>
+          </nav.dropdown>
+        </nav.item>
+        <nav.item>
+          {{#if this.session.isAuthenticated}}
+            <nav.dropdown as |dd|>
+              <dd.toggle class="icon profile-outline">
+                {{inline-svg "profile-outline" class="img"}}
+                <span class="icontitle">{{this.session.data.authenticated.username}}</span>
+                <span class="caret"></span>
+              </dd.toggle>
+              <dd.menu as |ddm|>
+                <ddm.item><span class="title">ACCOUNTS</span></ddm.item>
+                {{#each this.scmContexts as |scmContext|}}
+                  {{#unless scmContext.readOnly}}
+                    <ddm.item>
+                      {{#if scmContext.isSignedIn}}
+                        <a class="active"><FaIcon @prefix="fab" @icon={{scmContext.iconType}} /> {{scmContext.displayName}} <span>active</span></a>
+                      {{else}}
+                        <a href="#authenticate"{{action "doAuthenticate" scmContext.context}}>
+                          <FaIcon @prefix="fab" @icon={{scmContext.iconType}} /> {{scmContext.displayName}}
+                        </a>
+                      {{/if}}
+                    </ddm.item>
+                  {{/unless}}
+                {{/each}}
+                {{ddm.divider}}
+                {{#unless this.session.data.authenticated.isGuest}}
+                  <ddm.item>{{#link-to "user-settings" title="User Settings"}}User Settings{{/link-to}}</ddm.item>
+                {{/unless}}
+                <ddm.item>
+                  <a href="#signout" {{action "invalidateSession"}} class="logout" title="Sign out of Screwdriver">Sign out</a>
+                </ddm.item>
+              </dd.menu>
+            </nav.dropdown>
+          {{else}}
+            {{#link-to "login" (query-params fromUrl=this.currentUrl) title="Sign in to Screwdriver" class="icon profile-outline"}}
+              {{inline-svg "profile-outline" class="img"}}
+              <span class="icontitle">Sign in</span>
+            {{/link-to}}
+          {{/if}}
+        </nav.item>
+      </navbar.nav>
+    </navbar.content>
+  </BsNavbar>
+
+  <div class="tooltips">
+    {{#if this.session.isAuthenticated}}
+      <BsTooltip @placement="bottom" @triggerElement=".icon.create" @renderInPlace={{true}}>Create a new Pipeline</BsTooltip>
+    {{/if}}
+    {{#if this.session.isAuthenticated}}
+      {{#each this.scmContexts as |scmContext|}}
+        {{#if scmContext.isSignedIn}}
+          <BsTooltip @placement="bottom" @triggerElement=".icon.profile-outline" @triggerEvents="hover" @renderInPlace={{true}}>Currently signed in to a {{scmContext.displayName}} account.</BsTooltip>
+        {{/if}}
+      {{/each}}
+    {{else}}
+      <BsTooltip @placement="bottom" @triggerElement=".icon.profile-outline" @renderInPlace={{true}}>Sign in to Screwdriver</BsTooltip>
+    {{/if}}
+  </div>
+</header>

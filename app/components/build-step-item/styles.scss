@@ -37,12 +37,12 @@ span {
   font-size: 10px;
 }
 
-&.success i {
+&.success svg {
   color: $sd-success;
 }
-&.failure i {
+&.failure svg {
   color: $sd-failure;
 }
-&.running i {
+&.running svg {
   color: $sd-running;
 }

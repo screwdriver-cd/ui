@@ -1,69 +1,86 @@
-import Component from '@ember/component';
-import { filter, mapBy, equal } from '@ember/object/computed';
-import { set, computed } from '@ember/object';
+import classic from 'ember-classic-decorator';
+import { tagName } from '@ember-decorators/component';
 import { inject as service } from '@ember/service';
+import { equal, mapBy, filter } from '@ember/object/computed';
+import Component from '@ember/component';
+import { action, computed } from '@ember/object';
 
-export default Component.extend({
-  iframeUrl: '',
-  router: service(),
-  activeTab: 'steps',
-  selectedArtifact: '',
-  isArtifacts: equal('activeTab', 'artifacts'),
-  classNames: ['build-step-collection', 'row'],
-  stepNames: mapBy('buildSteps', 'name'),
-  setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
-  teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
-  selectedStep: computed(
-    'buildSteps.@each.{code,startTime,endTime}',
-    'preselectedStepName',
-    {
-      get() {
-        const steps = this.buildSteps;
-        const preselectedStep = steps.findBy('name', this.preselectedStepName);
+@tagName('')
+@classic
+export default class BuildStepCollection extends Component {
+  iframeUrl = '';
 
-        if (preselectedStep) {
-          return preselectedStep.name;
-        }
+  @service
+  router;
 
-        return null;
-      }
+  activeTab = 'steps';
+
+  selectedArtifact = '';
+
+  @equal('activeTab', 'artifacts')
+  isArtifacts;
+
+  @mapBy('buildSteps', 'name')
+  stepNames;
+
+  @filter('stepNames', item => /^sd-setup/.test(item))
+  setupSteps;
+
+  @filter('stepNames', item => /^sd-teardown/.test(item))
+  teardownSteps;
+
+  @computed('buildSteps.@each.{code,startTime,endTime}', 'preselectedStepName')
+  get selectedStep() {
+    const steps = this.buildSteps;
+    const preselectedStep = steps.findBy('name', this.preselectedStepName);
+
+    if (preselectedStep) {
+      return preselectedStep.name;
     }
-  ),
-  setupCollapsed: computed('selectedStep', {
-    get() {
-      const name = this.selectedStep;
 
-      if (name && this.setupSteps.includes(name)) {
-        return false;
-      }
+    return null;
+  }
 
-      return true;
+  @computed('selectedStep', 'setupSteps')
+  get setupCollapsed() {
+    const name = this.selectedStep;
+
+    if (name && this.setupSteps.includes(name)) {
+      return false;
     }
-  }),
-  teardownCollapsed: computed('selectedStep', {
-    get() {
-      const name = this.selectedStep;
 
-      if (name && this.teardownSteps.includes(name)) {
-        return false;
-      }
+    return false; // FIXME: https://github.com/kaliber5/ember-bootstrap/issues/1681#issuecomment-988231870
+  }
 
-      return true;
+  @computed('selectedStep', 'teardownSteps')
+  get teardownCollapsed() {
+    const name = this.selectedStep;
+
+    if (name && this.teardownSteps.includes(name)) {
+      return false;
     }
-  }),
-  userSteps: filter(
+
+    return false; // FIXME: https://github.com/kaliber5/ember-bootstrap/issues/1681#issuecomment-988231870
+  }
+
+  @filter(
     'stepNames',
     item => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)
-  ),
-  actions: {
-    toggleSetup() {
-      set(this, 'setupCollapsed', !this.setupCollapsed);
-    },
-    toggleTeardown() {
-      set(this, 'teardownCollapsed', !this.teardownCollapsed);
-    },
-    changeActiveTabPane(activeTab) {
-      this.changeRouteTo(activeTab);
-    }
+  )
+  userSteps;
+
+  @action
+  toggleSetup() {
+    // set(this, 'setupCollapsed', !this.setupCollapsed);
   }
-});
+
+  @action
+  toggleTeardown() {
+    // set(this, 'teardownCollapsed', !this.teardownCollapsed);
+  }
+
+  @action
+  changeActiveTabPane(activeTab) {
+    this.changeRouteTo(activeTab);
+  }
+}

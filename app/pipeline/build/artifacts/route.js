@@ -1,14 +1,18 @@
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 
-export default Route.extend({
-  routeAfterAuthentication: 'pipeline.build',
+@classic
+export default class ArtifactsRoute extends Route {
+  routeAfterAuthentication = 'pipeline.build';
+
   model() {
     // return parent route model
     return this.modelFor('pipeline.build');
-  },
-  actions: {
-    didTransition() {
-      this.controllerFor('pipeline.build').set('activeTab', 'artifacts');
-    }
   }
-});
+
+  @action
+  didTransition() {
+    this.controllerFor('pipeline.build').set('activeTab', 'artifacts');
+  }
+}

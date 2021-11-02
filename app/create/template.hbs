@@ -1,11 +1,11 @@
 {{pipeline-create-form
-  isSaving=isSaving
-  errorMessage=errorMessage
+  isSaving=this.isSaving
+  errorMessage=this.errorMessage
   onCreatePipeline=(action "createPipeline")
-  templates=templates
+  templates=this.templates
 }}
 
 {{quickstart-guide
-  isOpen=showQuickStartGuide}}
+  isOpen=this.showQuickStartGuide}}
 
 {{outlet}}

@@ -1,29 +1,39 @@
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { schedule } from '@ember/runloop';
 
-export default Component.extend({
-  message: null,
-  errorMessage: null,
-  store: service(),
-  actions: {
-    setModal(open) {
-      if (!open) {
-        this.set('message', null);
-        this.set('errorMessage', null);
-      }
-      this.set('showToggleModal', open);
-    },
-    updateState() {
-      schedule('actions', () => {
-        let addMessage = this.updateMessage;
+@tagName('')
+@classic
+export default class JobToggleModal extends Component {
+  message = null;
 
-        if (addMessage) {
-          addMessage(this.message);
-        }
+  errorMessage = null;
 
-        this.set('showToggleModal', false);
-      });
+  @service
+  store;
+
+  @action
+  setModal(open) {
+    if (!open) {
+      this.set('message', null);
+      this.set('errorMessage', null);
     }
+    this.set('showToggleModal', open);
   }
-});
+
+  @action
+  updateState() {
+    schedule('actions', () => {
+      let addMessage = this.updateMessage;
+
+      if (addMessage) {
+        addMessage(this.message);
+      }
+
+      this.set('showToggleModal', false);
+    });
+  }
+}

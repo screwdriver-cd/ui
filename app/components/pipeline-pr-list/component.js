@@ -1,23 +1,29 @@
+import classic from 'ember-classic-decorator';
+import { classNameBindings } from '@ember-decorators/component';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import { computed, set, get } from '@ember/object';
+import { set, get, action, computed } from '@ember/object';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
-export default Component.extend({
-  store: service(),
-  classNameBindings: ['highlighted'],
-  highlighted: computed('selectedEvent', 'eventId', {
-    get() {
-      return get(this, 'selectedEvent') === get(this, 'eventId');
-    }
-  }),
+@classic
+@classNameBindings('highlighted')
+export default class PipelinePrList extends Component {
+  @service
+  store;
+
+  @computed('selectedEvent', 'eventId')
+  get highlighted() {
+    return this.selectedEvent === this.eventId;
+  }
+
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.set('inited', false);
-  },
-  inited: true,
+  }
+
+  inited = true;
 
   async init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     const pipelineId = this.get('pipeline.id');
     const jobName = this.get('jobs.firstObject.name');
@@ -32,26 +38,25 @@ export default Component.extend({
     const currentEventId = events.get('firstObject.id');
 
     set(this, 'eventId', currentEventId);
-  },
-
-  showJobs: computed('jobs.@each.builds', 'inited', {
-    get() {
-      return this.inited || this.jobs.some(j => !!j.get('builds.length'));
-    }
-  }),
-  isRunning: computed('jobs.@each.builds', 'inited', {
-    get() {
-      return this.jobs.some(j => {
-        const status = j.builds.get('firstObject.status');
-        const endTime = j.builds.get('firstObject.endTime');
-
-        return isActiveBuild(status, endTime);
-      });
-    }
-  }),
-  actions: {
-    selectPR() {
-      set(this, 'selected', this.get('eventId'));
-    }
   }
-});
+
+  @computed('jobs.@each.builds', 'inited')
+  get showJobs() {
+    return this.inited || this.jobs.some(j => !!j.get('builds.length'));
+  }
+
+  @computed('jobs.@each.builds', 'inited')
+  get isRunning() {
+    return this.jobs.some(j => {
+      const status = j.builds.get('firstObject.status');
+      const endTime = j.builds.get('firstObject.endTime');
+
+      return isActiveBuild(status, endTime);
+    });
+  }
+
+  @action
+  selectPR() {
+    set(this, 'selected', this.eventId);
+  }
+}

@@ -1,20 +1,22 @@
-<h2>Sign in to Screwdriver</h2>
-<p>
-  Screwdriver uses your source code management solution to handle user authentication.
-  Giving Screwdriver access to your repos will allow us to automatically add webhooks,
-  and provide the same permissions model to pipelines as you have already set up on the repository.
-</p>
-<p>
-  Clicking this button will open a new window with your SCM provider.
-</p>
+<div class={{this.styleNamespace}} ...attributes>
+  <h2>Sign in to Screwdriver</h2>
+  <p>
+    Screwdriver uses your source code management solution to handle user authentication.
+    Giving Screwdriver access to your repos will allow us to automatically add webhooks,
+    and provide the same permissions model to pipelines as you have already set up on the repository.
+  </p>
+  <p>
+    Clicking this button will open a new window with your SCM provider.
+  </p>
 
-{{#each scmContexts as |scmContext|}}
-  {{#unless scmContext.readOnly}}
-    <p>
-      <a href="#authenticate"{{action "authenticate" scmContext.context}}>{{fa-icon "sign-in"}} Sign in with {{scmContext.displayName}}</a>
-    </p>
-  {{/unless}}
-{{else}}
-  <a href="#authenticate"{{action "authenticate"}}>{{fa-icon "sign-in"}} Sign in with SCM Provider</a>
-{{/each}}
-{{yield}}
+  {{#each this.scmContexts as |scmContext|}}
+    {{#unless scmContext.readOnly}}
+      <p>
+        <a href="#authenticate"{{action "authenticate" scmContext.context}}>{{fa-icon "sign-in-alt"}} Sign in with {{scmContext.displayName}}</a>
+      </p>
+    {{/unless}}
+  {{else}}
+    <a href="#authenticate"{{action "authenticate"}}>{{fa-icon "sign-in-alt"}} Sign in with SCM Provider</a>
+  {{/each}}
+  {{yield}}
+</div>

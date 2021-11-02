@@ -1,6 +1,7 @@
+import classic from 'ember-classic-decorator';
 import { inject as service } from '@ember/service';
+import EmberObject, { get, getWithDefault, action } from '@ember/object';
 import Controller from '@ember/controller';
-import EmberObject, { getWithDefault } from '@ember/object';
 import { all, Promise as EmberPromise } from 'rsvp';
 import { copy } from 'ember-copy';
 import $ from 'jquery';
@@ -31,20 +32,36 @@ function prefixJobName(jobName, pipelineId) {
   return `~sd@${pipelineId}:${jobName}`;
 }
 
-export default Controller.extend({
-  session: service(),
-  store: service(),
-  shuttle: service(),
-  pipelines: [],
-  selectedPipeline: null,
-  connectedPipelines: [],
-  selectedConnectedPipeline: null,
-  queryParams: ['selectedPipelineId', 'selectedConnectedPipelineId'],
-  selectedPipelineId: null,
-  selectedConnectedPipelineId: null,
+@classic
+export default class PipelineVisualizerController extends Controller {
+  @service
+  session;
+
+  @service
+  store;
+
+  @service
+  shuttle;
+
+  pipelines = [];
+
+  selectedPipeline = null;
+
+  connectedPipelines = [];
+
+  selectedConnectedPipeline = null;
+
+  queryParams = ['selectedPipelineId', 'selectedConnectedPipelineId'];
+
+  selectedPipelineId = null;
+
+  selectedConnectedPipelineId = null;
 
   async extractConnectedPipelines(pipeline) {
-    const edges = getWithDefault(pipeline, 'workflowGraph.edges', []);
+    const edges =
+      get(pipeline, 'workflowGraph.edges') === undefined
+        ? []
+        : get(pipeline, 'workflowGraph.edges');
 
     let upstreams = new Set();
 
@@ -85,7 +102,7 @@ export default Controller.extend({
     } catch (e) {
       return [];
     }
-  },
+  }
 
   async selectPipeline(selectedPipeline) {
     let pipelineGraph;
@@ -185,7 +202,7 @@ export default Controller.extend({
       });
       this.highlightPipeline(selectedPipeline.id);
     }
-  },
+  }
 
   highlightPipeline(pipelineId) {
     later(() => {
@@ -197,7 +214,7 @@ export default Controller.extend({
         }
       });
     });
-  },
+  }
 
   async searchPipeline(pipelineName, resolve, reject) {
     try {
@@ -208,42 +225,33 @@ export default Controller.extend({
     } catch (e) {
       reject(e);
     }
-  },
-
-  actions: {
-    async selectPipeline(selectedPipeline) {
-      const selectedPipelineId = selectedPipeline.id;
-
-      this.transitionToRoute('pipeline-visualizer', {
-        queryParams: {
-          selectedPipelineId,
-          selectedConnectedPipelineId: selectedPipelineId
-        }
-      });
-    },
-
-    selectConnectedPipeline(selectedConnectedPipeline) {
-      this.set('selectedConnectedPipeline', selectedConnectedPipeline);
-
-      this.highlightPipeline(this.selectedConnectedPipeline.id);
-
-      this.set(
-        'selectedConnectedPipelineId',
-        this.selectedConnectedPipeline.id
-      );
-    },
-
-    async searchPipeline(pipelineName) {
-      return new EmberPromise((resolve, reject) => {
-        debounce(
-          this,
-          this.searchPipeline,
-          pipelineName,
-          resolve,
-          reject,
-          1000
-        );
-      });
-    }
   }
-});
+
+  @action
+  async selectPipeline(selectedPipeline) {
+    const selectedPipelineId = selectedPipeline.id;
+
+    this.transitionToRoute('pipeline-visualizer', {
+      queryParams: {
+        selectedPipelineId,
+        selectedConnectedPipelineId: selectedPipelineId
+      }
+    });
+  }
+
+  @action
+  selectConnectedPipeline(selectedConnectedPipeline) {
+    this.set('selectedConnectedPipeline', selectedConnectedPipeline);
+
+    this.highlightPipeline(this.selectedConnectedPipeline.id);
+
+    this.set('selectedConnectedPipelineId', this.selectedConnectedPipeline.id);
+  }
+
+  @action
+  async searchPipeline(pipelineName) {
+    return new EmberPromise((resolve, reject) => {
+      debounce(this, this.searchPipeline, pipelineName, resolve, reject, 1000);
+    });
+  }
+}

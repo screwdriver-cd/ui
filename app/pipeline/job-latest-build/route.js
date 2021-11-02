@@ -1,6 +1,7 @@
+import classic from 'ember-classic-decorator';
+import { inject as service } from '@ember/service';
 import $ from 'jquery';
 import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
 import ENV from 'screwdriver-ui/config/environment';
 
@@ -56,20 +57,19 @@ function getLatestBuild(session, pipelineId, jobName, buildStatus) {
   });
 }
 
-export default Route.extend({
-  session: service('session'),
-  queryParams: {
+@classic
+export default class JobLatestBuildRoute extends Route {
+  @service('session')
+  session;
+
+  queryParams = {
     status: ''
-  },
+  };
+
   model(params) {
     const pipelineId = this.paramsFor('pipeline').pipeline_id;
     const { job_name: jobName, status: buildStatus } = params;
 
-    return getLatestBuild(
-      this.get('session'),
-      pipelineId,
-      jobName,
-      buildStatus
-    );
+    return getLatestBuild(this.session, pipelineId, jobName, buildStatus);
   }
-});
+}

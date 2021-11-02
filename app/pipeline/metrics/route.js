@@ -1,12 +1,16 @@
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
 import timeRange from 'screwdriver-ui/utils/time-range';
 
-export default Route.extend({
+@classic
+export default class MetricsRoute extends Route {
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.reinit();
-  },
+  }
+
   reinit() {
     const { startTime, endTime } = timeRange(new Date(), '1wk');
 
@@ -21,18 +25,22 @@ export default Route.extend({
     // these are passed into controller too
     this.set('successOnly', false);
     this.set('jobId');
-  },
+  }
+
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
-  },
+  }
+
   afterModel() {
     this.set('fetchAll', false);
     this.set('fetchJob', false);
-  },
+  }
+
   deactivate() {
     this.reinit();
     this.controllerFor('pipeline.metrics').reinit();
-  },
+  }
+
   model({ jobId = this.jobId }) {
     const controller = this.controllerFor('pipeline.metrics');
 
@@ -75,9 +83,9 @@ export default Route.extend({
           : RSVP.resolve(this.pipelineMetrics),
         // eslint-disable-next-line no-nested-ternary
         fetchJob || fetchAll
-          ? this.get('jobId')
+          ? this.jobId
             ? this.store.query('metric', {
-                jobId: this.get('jobId'),
+                jobId: this.jobId,
                 startTime,
                 endTime
               })
@@ -258,24 +266,28 @@ export default Route.extend({
       startTime,
       endTime,
       successOnly,
-      jobId: this.get('jobId')
+      jobId: this.jobId
     });
-  },
-  actions: {
-    setFetchDates(start, end) {
-      this.set('startTime', start);
-      this.set('endTime', end);
-      this.set('fetchAll', true);
-      this.refresh();
-    },
-    setJobId(jobId) {
-      this.set('jobId', jobId);
-      this.set('fetchJob', true);
-      this.refresh();
-    },
-    filterSuccessOnly() {
-      this.toggleProperty('successOnly');
-      this.refresh();
-    }
   }
-});
+
+  @action
+  setFetchDates(start, end) {
+    this.set('startTime', start);
+    this.set('endTime', end);
+    this.set('fetchAll', true);
+    this.refresh();
+  }
+
+  @action
+  setJobId(jobId) {
+    this.set('jobId', jobId);
+    this.set('fetchJob', true);
+    this.refresh();
+  }
+
+  @action
+  filterSuccessOnly() {
+    this.toggleProperty('successOnly');
+    this.refresh();
+  }
+}

@@ -1,27 +1,32 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
-import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 import templateHelper from 'screwdriver-ui/utils/template';
 const { getLastUpdatedTime } = templateHelper;
 
-export default Service.extend({
-  session: service(),
+@classic
+export default class CommandService extends Service {
+  @service
+  session;
+
   getOneCommand(namespace, name) {
     const url =
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
       `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}`;
 
     return this.fetchData(url);
-  },
+  }
+
   getCommandTags(namespace, name) {
     const url =
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
       `${encodeURIComponent(namespace)}/${encodeURIComponent(name)}/tags`;
 
     return this.fetchData(url);
-  },
+  }
+
   getAllCommands(namespace) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands`;
 
@@ -48,7 +53,8 @@ export default Service.extend({
 
       return uniqueCommands;
     });
-  },
+  }
+
   fetchData(url, params = {}) {
     const ajaxConfig = {
       method: 'GET',
@@ -60,7 +66,7 @@ export default Service.extend({
         withCredentials: true
       },
       headers: {
-        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+        Authorization: `Bearer ${this.session?.data?.authenticated?.token}`
       }
     };
 
@@ -80,7 +86,8 @@ export default Service.extend({
         })
         .fail(response => reject(response));
     });
-  },
+  }
+
   deleteCommands(namespace, name) {
     const url =
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
@@ -94,7 +101,7 @@ export default Service.extend({
         withCredentials: true
       },
       headers: {
-        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+        Authorization: `Bearer ${this.session?.data?.authenticated?.token}`
       }
     };
 
@@ -119,7 +126,8 @@ export default Service.extend({
           return reject(message);
         });
     });
-  },
+  }
+
   updateTrust(namespace, name, trusted) {
     const url =
       `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands/` +
@@ -134,7 +142,7 @@ export default Service.extend({
         withCredentials: true
       },
       headers: {
-        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+        Authorization: `Bearer ${this.session?.data?.authenticated?.token}`
       },
       data: JSON.stringify({ trusted })
     };
@@ -153,4 +161,4 @@ export default Service.extend({
         });
     });
   }
-});
+}

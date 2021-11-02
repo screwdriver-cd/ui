@@ -1,6 +1,5 @@
-{{#bs-form formLayout="horizontal" model=parameterizedModel
-  class="start-with-parameters-form"
-  onSubmit=(action "onSave" parameters) as |form|}}
+<div class={{this.styleNamespace}} ...attributes>
+  <BsForm @formLayout="horizontal" @model={{this.parameterizedModel}} class="start-with-parameters-form" @onSubmit={{fn this.onSubmit this.parameters}} as |form|>
 
   <div class="parameter-group-list">
     {{#each parameters as |parameterGroup|}}
@@ -10,7 +9,7 @@
         </h4>
         <div class="parameter-list {{if parameterGroup.isOpen "expanded" "collapsed"}}">
           {{#each parameterGroup.parameters as |parameter|}}
-            {{#form.group}}
+            <form.group>
               <label class="control-label col-md-4">
                 {{#if parameter.description}}
                   {{fa-icon "question-circle" title=parameter.description}}
@@ -23,18 +22,18 @@
                     {{#unless (array-includes value parameter.defaultValues)}}
                       {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
                     {{/unless}}
-                    {{#power-select
-                      options=parameter.value
-                      renderInPlace=true
-                      selected=value
-                      onchange=(action (action "onUpdateValue" parameterizedModel parameterGroup.jobName parameter.name))
-                      onkeydown=(action (action "searchOrAddtoList" parameterizedModel parameterGroup.jobName parameter.name))
-                      searchPlaceholder="Type to filter"
-                      noMatchesMessage="Hit enter to override"
+                    <PowerSelect
+                      @options={{this.parameter.value}}
+                      @renderInPlace={{true}}
+                      @selected={{value}}
+                      @onchange={{(action (action "onUpdateValue" this.parameterizedModel parameterGroup.jobName parameter.name))}}
+                      @onkeydown={{(action (action "searchOrAddtoList" this.parameterizedModel parameterGroup.jobName parameter.name))}}
+                      @searchPlaceholder="Type to filter"
+                      @noMatchesMessage="Hit enter to override"
                     as |selectedValue|
-                    }}
+                    >
                       {{selectedValue}}
-                    {{/power-select}}
+                    </PowerSelect>
                   {{/with}}
                 {{else}}
                   {{#unless (array-includes parameter.value parameter.defaultValues)}}
@@ -50,7 +49,7 @@
                   }}
                 {{/if}}
               </div>
-            {{/form.group}}
+            </form.group>
           {{/each}}
         </div>
       </div>
@@ -59,15 +58,16 @@
 
   </div>
 
-  {{#if showSubmitButton}}
-    <div class="btn-group">
-      {{bs-button defaultText=submitButtonText type="primary" buttonType="submit"}}
-    </div>
-  {{/if}}
-{{/bs-form}}
+    {{#if this.showSubmitButton}}
+      <div class="btn-group">
+        {{bs-button defaultText=this.submitButtonText type="primary" buttonType="submit"}}
+      </div>
+    {{/if}}
+  </BsForm>
 
-{{yield
-  (hash
-    parameters=parameterizedModel
-  )
-}}
+  {{yield
+    (hash
+      parameters=this.parameterizedModel
+    )
+  }}
+</div>

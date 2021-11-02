@@ -1,11 +1,15 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Service.extend({
-  session: service(),
+@classic
+export default class CoverageService extends Service {
+  @service
+  session;
+
   /**
    * @param {Object} config
    * @param {Number} config.buildId     Build ID
@@ -51,4 +55,4 @@ export default Service.extend({
         );
     });
   }
-});
+}

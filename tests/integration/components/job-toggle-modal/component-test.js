@@ -77,6 +77,6 @@ module('Integration | Component | job toggle modal', function (hooks) {
 
     await click('.toggle-form__create');
 
-    assert.notOk(this.get('showToggleModal'));
+    assert.notOk(this.showToggleModal);
   });
 });

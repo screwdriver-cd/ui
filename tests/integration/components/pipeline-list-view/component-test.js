@@ -163,7 +163,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'showPipelineListView', false);
 
     return wait().then(() => {
-      assert.equal(this.get('jobsDetails').length, 0);
+      assert.equal(this.jobsDetails.length, 0);
     });
   });
 

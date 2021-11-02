@@ -1,7 +1,11 @@
-import DS from 'ember-data';
-const { Model } = DS;
+import classic from 'ember-classic-decorator';
+import Model, { attr } from '@ember-data/model';
 
-export default Model.extend({
-  jobId: DS.attr('number'),
-  builds: DS.attr()
-});
+@classic
+export default class _Model extends Model {
+  @attr('number')
+  jobId;
+
+  @attr()
+  builds;
+}

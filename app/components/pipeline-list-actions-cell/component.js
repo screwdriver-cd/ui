@@ -1,33 +1,38 @@
+import { tagName } from '@ember-decorators/component';
+import classic from 'ember-classic-decorator';
+import { action, computed } from '@ember/object';
 import Component from '@ember/component';
-import { computed } from '@ember/object';
 import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
 
-export default Component.extend({
-  stopButtonClass: computed('value.latestBuild', {
-    get() {
-      const status = this.get('value.latestBuild.status');
+@tagName('')
+@classic
+export default class PipelineListActionsCell extends Component {
+  @computed('value.latestBuild.status')
+  get stopButtonClass() {
+    const status = this.get('value.latestBuild.status');
 
-      if (unfinishedStatuses.includes(status)) {
-        return 'clicks-enabled';
-      }
-
-      return 'clicks-disabled';
+    if (unfinishedStatuses.includes(status)) {
+      return 'clicks-enabled';
     }
-  }),
-  actions: {
-    startSingleBuild(buildState = undefined) {
-      const value = this.get('value');
 
-      if (buildState === 'START' && value.hasParameters) {
-        value.openParametersModal(value.jobId, buildState);
-      } else {
-        value.startSingleBuild(value.jobId, value.jobName, buildState);
-      }
-    },
-    stopBuild() {
-      const value = this.get('value');
+    return 'clicks-disabled';
+  }
 
-      value.stopBuild(null, { buildId: value.latestBuild.id });
+  @action
+  startSingleBuild(buildState = undefined) {
+    const { value } = this;
+
+    if (buildState === 'START' && value.hasParameters) {
+      value.openParametersModal(value.jobId, buildState);
+    } else {
+      value.startSingleBuild(value.jobId, value.jobName, buildState);
     }
   }
-});
+
+  @action
+  stopBuild() {
+    const { value } = this;
+
+    value.stopBuild(null, { buildId: value.latestBuild.id });
+  }
+}

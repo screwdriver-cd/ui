@@ -1,10 +1,12 @@
+import classic from 'ember-classic-decorator';
 import { all } from 'rsvp';
 import Route from '@ember/routing/route';
 import { set, get } from '@ember/object';
 import { getActiveStep } from 'screwdriver-ui/utils/build';
 
-export default Route.extend({
-  routeAfterAuthentication: 'pipeline.build',
+@classic
+export default class BuildRoute extends Route {
+  routeAfterAuthentication = 'pipeline.build';
 
   model(params) {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
@@ -20,18 +22,18 @@ export default Route.extend({
         pipeline: this.pipeline
       }))
     );
-  },
+  }
 
   titleToken(model) {
     return `${model.job.get('name')} > #${model.build.get('truncatedSha')}`;
-  },
+  }
 
   deactivate() {
     const model = this.modelFor(this.routeName);
 
     set(model.event, 'isPaused', false);
     set(model, 'userSelectedStepName', null);
-  },
+  }
 
   goToActiveStep() {
     const model = this.controller.get('model');
@@ -45,7 +47,7 @@ export default Route.extend({
         name
       );
     }
-  },
+  }
 
   redirect(model, transition) {
     const pipelineId = model.pipeline.get('id');
@@ -73,4 +75,4 @@ export default Route.extend({
       }
     }
   }
-});
+}

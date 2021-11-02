@@ -1,17 +1,44 @@
-import DS from 'ember-data';
+import classic from 'ember-classic-decorator';
+import Model, { attr } from '@ember-data/model';
 
-export default DS.Model.extend({
-  pipelineId: DS.attr('string'),
-  createTime: DS.attr('date'),
-  causeMessage: DS.attr('string'),
-  sha: DS.attr('string'),
-  queuedTime: DS.attr('number'),
-  imagePullTime: DS.attr('number'),
-  duration: DS.attr('number'),
-  status: DS.attr('string', { defaultValue: 'UNKNOWN' }),
-  builds: DS.attr(),
-  commit: DS.attr(),
-  jobId: DS.attr('number'),
-  eventId: DS.attr('number'),
-  steps: DS.attr()
-});
+@classic
+export default class _Model extends Model {
+  @attr('string')
+  pipelineId;
+
+  @attr('date')
+  createTime;
+
+  @attr('string')
+  causeMessage;
+
+  @attr('string')
+  sha;
+
+  @attr('number')
+  queuedTime;
+
+  @attr('number')
+  imagePullTime;
+
+  @attr('number')
+  duration;
+
+  @attr('string', { defaultValue: 'UNKNOWN' })
+  status;
+
+  @attr()
+  builds;
+
+  @attr()
+  commit;
+
+  @attr('number')
+  jobId;
+
+  @attr('number')
+  eventId;
+
+  @attr()
+  steps;
+}

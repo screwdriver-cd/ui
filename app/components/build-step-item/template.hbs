@@ -1,5 +1,7 @@
-<div>{{fa-icon icon}}</div>
-<div>
-  <span class="name">{{stepName}}</span>
-  <span class="duration">{{duration}}</span>
-</div>
+<li class="{{this.status}} {{this.activeItem}} {{this.styleNamespace}}" {{on "click" (fn this.onClick this.stepName)}}>
+  <div><FaIcon @prefix={{icon-prefix this.icon}} @icon={{this.icon}} @fixedWidth={{true}} @spin={{icon-spin this.icon}} /></div>
+  <div>
+    <span class="name">{{this.stepName}}</span>
+    <span class="duration">{{this.duration}}</span>
+  </div>
+</li>

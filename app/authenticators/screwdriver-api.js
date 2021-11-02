@@ -1,10 +1,10 @@
-import { isEmpty } from '@ember/utils';
-import { get } from '@ember/object';
+import classic from 'ember-classic-decorator';
 import { inject as service } from '@ember/service';
+import { isEmpty } from '@ember/utils';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Base from 'ember-simple-auth/authenticators/base';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import decoder from 'jwt-decode';
 import ENV from 'screwdriver-ui/config/environment';
 const loginUrlBase = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/login`;
 const tokenUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/token`;
@@ -57,8 +57,10 @@ function fetchToken() {
   });
 }
 
-export default Base.extend({
-  scmService: service('scm'),
+@classic
+export default class ScrewdriverApi extends Base {
+  @service('scm')
+  scmService;
 
   /**
    * Restore the state of a session with data already in the session store
@@ -66,9 +68,9 @@ export default Base.extend({
    * @param  {Object}  data    Data in the session store
    * @return {Promise}
    */
-  restore(data) {
+  async restore(data) {
     return new EmberPromise((resolve, reject) => {
-      const jwt = get(data, 'token');
+      const jwt = data.token;
 
       if (!isEmpty(jwt)) {
         const decodedJWT = decoder(jwt);
@@ -85,7 +87,7 @@ export default Base.extend({
 
       return reject();
     });
-  },
+  }
 
   /**
    * Authenticates with resource
@@ -125,7 +127,7 @@ export default Base.extend({
         }
       }, 100);
     });
-  },
+  }
 
   /**
    * Log the user out from the resource
@@ -144,4 +146,4 @@ export default Base.extend({
       }).always(() => resolve());
     });
   }
-});
+}

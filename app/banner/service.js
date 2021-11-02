@@ -1,3 +1,4 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
@@ -5,8 +6,10 @@ import ENV from 'screwdriver-ui/config/environment';
 
 const bannersUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/banners`;
 
-export default Service.extend({
-  session: service(),
+@classic
+export default class BannerService extends Service {
+  @service
+  session;
 
   /**
    * Calls the banner api service to fetch active banners
@@ -38,4 +41,4 @@ export default Service.extend({
         .fail(() => resolve([]));
     });
   }
-});
+}

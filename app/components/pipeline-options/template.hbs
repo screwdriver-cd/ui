@@ -1,185 +1,178 @@
+<div class={{this.styleNamespace}} ...attributes>
+  {{info-message message=this.errorMessage type="warning" icon="exclamation-triangle"}}
 
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+  <div class="row">
+    {{#unless this.pipeline.configPipelineId}}
+      <div class="col-xs-12 col-md-8">
+        <section class="pipeline">
+          <h3>Pipeline</h3>
+          <ul>
+            <li>
+              <div class="row">
+                <div class="col-xs-10">
+                  <h4>Checkout URL and Source Directory</h4>
+                  <p>Update your checkout URL and / or source directory.</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-10">
+                  <div>
+                    {{input
+                      class="text-input scm-url"
+                      key-up=(action "scmChange")
+                      value=this.scmUrl
+                    }}
+                  </div>
+                  {{pipeline-rootdir hasRootDir=this.hasRootDir rootDir=this.rootDir updateRootDir=(action "updateRootDir")}}
+                </div>
+              </div>
+            </li>
 
-<div class="row">
-  {{#unless pipeline.configPipelineId}}
+            <li>
+              <div class="row">
+                <div class="col-xs-12 right">
+                  <button disabled={{this.isDisabled}} class="blue-button{{if this.isSaving " saving"}}" type="button" {{action "updatePipeline"}}>
+                    <div class="saving-loading">
+                      Updating pipeline
+                    </div>
+                    <div class="button-label">Update</div>
+                  </button>
+                  {{#if this.isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
+                </div>
+              </div>
+            </li>
+
+            {{#if this.displayDowntimeJobs}}
+              <li>
+                <div class="row">
+                  <div class="col-xs-10">
+                    <h4>Downtime Jobs</h4>
+                    <p>Pick your own preferred jobs to be counted in metrics graph (default all jobs)</p>
+                    <div class="row">
+                      <div class="col-xs-5">
+                        <PowerSelectMultiple @options={{this.sortedJobs}} @renderInPlace={{true}} @selected={{this.metricsDowntimeJobs}} @placeholder="Select Jobs..." @onChange={{action (mut this.metricsDowntimeJobs)}} as |metricsDowntimeJob|>
+                          {{metricsDowntimeJob.name}}
+                        </PowerSelectMultiple>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-2 right sync">
+                    <a href="#" {{action "updateMetricsDowntimeJobs" this.metricsDowntimeJobs}}>{{fa-icon "refresh" spin=this.isUpdatingMetricsDowntimeJobs}}</a>
+                  </div>
+                </div>
+              </li>
+            {{/if}}
+          </ul>
+        </section>
+      </div>
+    {{/unless}}
+
     <div class="col-xs-12 col-md-8">
-      <section class="pipeline">
-        <h3>Pipeline</h3>
+      <section class="jobs">
+        <h3>Jobs</h3>
         <ul>
           <li>
             <div class="row">
               <div class="col-xs-10">
-                <h4>Checkout URL and Source Directory</h4>
-                <p>Update your checkout URL and / or source directory.</p>
+                <p>Toggle to disable or enable the job.</p>
               </div>
             </div>
-            <div class="row">
-              <div class="col-xs-10">
-                <div>
-                  {{input
-                    class="text-input scm-url"
-                    key-up=(action "scmChange")
-                    value=scmUrl
-                  }}
-                </div>
-                {{pipeline-rootdir hasRootDir=hasRootDir rootDir=this.rootDir updateRootDir=(action "updateRootDir")}}
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <div class="row">
-              <div class="col-xs-12 right">
-                <button {{action "updatePipeline"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
-                  <div class="saving-loading">
-                    Updating pipeline
-                  </div>
-                  <div class="button-label">Update</div>
-                </button>
-                {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}
-              </div>
-            </div>
-          </li>
-
-          {{#if displayDowntimeJobs}}
-            <li>
-              <div class="row">
-                <div class="col-xs-10">
-                  <h4>Downtime Jobs</h4>
-                  <p>Pick your own preferred jobs to be counted in metrics graph (default all jobs)</p>
+            {{#each this.sortedJobs as |job|}}
+              {{#unless (starts-with job.name "PR-")}}
+                <li>
                   <div class="row">
-                    <div class="col-xs-5">
-                      {{#power-select-multiple
-                        options=sortedJobs
-                        renderInPlace=true
-                        selected=metricsDowntimeJobs
-                        placeholder="Select Jobs..."
-                        onchange=(action (mut metricsDowntimeJobs))
-                        as |metricsDowntimeJob|
-                      }}
-                        {{metricsDowntimeJob.name}}
-                      {{/power-select-multiple}}
+                    <div class="col-xs-10">
+                      <h4>{{job.name}}</h4>
+                      {{#if job.stateChanger}}
+                        <i class="float-right"><small>{{job.stateChangeTimeWords}}</small></i>
+                        <p>{{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}{{/if}}</p>
+                      {{/if}}
+                    </div>
+                    <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
+                      {{x-toggle
+                        size="small"
+                        value=(not job.isDisabled)
+                        onLabel="Enabled::false"
+                        offLabel="Disabled::true"
+                        onToggle=(action "toggleJob" job.id this.username job.name)}}
                     </div>
                   </div>
-                </div>
-                <div class="col-xs-2 right sync">
-                  <a href="#" {{action "updateMetricsDowntimeJobs" metricsDowntimeJobs}}>{{fa-icon "refresh" spin=isUpdatingMetricsDowntimeJobs}}</a>
-                </div>
-              </div>
-            </li>
-          {{/if}}
+                </li>
+              {{/unless}}
+            {{/each}}
+          </li>
         </ul>
       </section>
     </div>
-  {{/unless}}
 
-  <div class="col-xs-12 col-md-8">
-    <section class="jobs">
-      <h3>Jobs</h3>
-      <ul>
-        <li>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>Toggle to disable or enable the job.</p>
+    <div class="col-xs-12 col-md-8">
+      <section class="sync">
+        <h3>Sync</h3>
+        <ul>
+          <li>
+            <div class="row">
+              <div class="col-xs-10">
+                <h4>SCM webhooks</h4>
+                <p>Update the webhooks if they are not working correctly.</p>
+              </div>
+              <div class="col-xs-2 right">
+                <a href="#" {{action "sync" "webhooks"}} >{{fa-icon "refresh"}}</a>
+              </div>
             </div>
-          </div>
-          {{#each sortedJobs as |job|}}
-            {{#unless (starts-with job.name "PR-")}}
+          </li>
+          <li>
+            <div class="row">
+              <div class="col-xs-10">
+                <h4>Pull requests</h4>
+                <p>Create or update pull-request jobs if they are not displaying properly.</p>
+              </div>
+              <div class="col-xs-2 right">
+                <a href="#" {{action "sync" "pullrequests"}}>{{fa-icon "refresh"}}</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="row">
+              <div class="col-xs-10">
+                <h4>Pipeline</h4>
+                <p>Update jobs if they are not displaying properly.</p>
+              </div>
+              <div class="col-xs-2 right">
+                <a href="#" {{action "sync"}}>{{fa-icon "refresh"}}</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="col-xs-12 col-md-8">
+      <section class="cache">
+        <h3>Cache</h3>
+        <ul>
+          <li>
+            <div class="row">
+              <div class="col-xs-10">
+                <h4>Pipeline</h4>
+                <p>Click to clear the cache for the pipeline.</p>
+              </div>
+              <div class="col-xs-2 right">
+                <a href="#" {{action "clearCache" "pipelines"}} >{{fa-icon "trash"}}</a>
+              </div>
+            </div>
+          </li>
+          {{#each this.sortedJobs as |job|}}
+            {{#unless job.isPR}}
               <li>
                 <div class="row">
                   <div class="col-xs-10">
-                    <h4>{{job.name}}</h4>
-                    {{#if job.stateChanger}}
-                      <i class="float-right"><small>{{job.stateChangeTimeWords}}</small></i>
-                      <p>{{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}{{/if}}</p>
-                    {{/if}}
+                    <h4>Job {{job.name}}</h4>
+                    <p>Click to clear the cache for the {{job.name}} job.</p>
                   </div>
-                  <div class="col-xs-2 right" title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job.">
-                    {{x-toggle
-                      size="small"
-                      value=(not job.isDisabled)
-                      onLabel="Enabled::false"
-                      offLabel="Disabled::true"
-                      onToggle=(action "toggleJob" job.id username job.name)}}
+                  <div class="col-xs-2 right" title="Click to clear cache for {{job.name}} job.">
+                    <a href="#" {{action "clearCache" "jobs" job.id}}>{{fa-icon "trash"}}</a>
                   </div>
                 </div>
-              </li>
-            {{/unless}}
-          {{/each}}
-        </li>
-      </ul>
-    </section>
-  </div>
-
-  <div class="col-xs-12 col-md-8">
-    <section class="sync">
-      <h3>Sync</h3>
-      <ul>
-        <li>
-          <div class="row">
-            <div class="col-xs-10">
-              <h4>SCM webhooks</h4>
-              <p>Update the webhooks if they are not working correctly.</p>
-            </div>
-            <div class="col-xs-2 right">
-              <a href="#" {{action "sync" "webhooks"}} >{{fa-icon "refresh"}}</a>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row">
-            <div class="col-xs-10">
-              <h4>Pull requests</h4>
-              <p>Create or update pull-request jobs if they are not displaying properly.</p>
-            </div>
-            <div class="col-xs-2 right">
-              <a href="#" {{action "sync" "pullrequests"}}>{{fa-icon "refresh"}}</a>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row">
-            <div class="col-xs-10">
-              <h4>Pipeline</h4>
-              <p>Update jobs if they are not displaying properly.</p>
-            </div>
-            <div class="col-xs-2 right">
-              <a href="#" {{action "sync"}}>{{fa-icon "refresh"}}</a>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </section>
-  </div>
-
-  <div class="col-xs-12 col-md-8">
-    <section class="cache">
-      <h3>Cache</h3>
-      <ul>
-        <li>
-          <div class="row">
-            <div class="col-xs-10">
-              <h4>Pipeline</h4>
-              <p>Click to clear the cache for the pipeline.</p>
-            </div>
-            <div class="col-xs-2 right">
-              <a href="#" {{action "clearCache" "pipelines"}} >{{fa-icon "trash"}}</a>
-            </div>
-          </div>
-        </li>
-        {{#each sortedJobs as |job|}}
-          {{#unless job.isPR}}
-            <li>
-              <div class="row">
-                <div class="col-xs-10">
-                  <h4>Job {{job.name}}</h4>
-                  <p>Click to clear the cache for the {{job.name}} job.</p>
-                </div>
-                <div class="col-xs-2 right" title="Click to clear cache for {{job.name}} job.">
-                  <a href="#" {{action "clearCache" "jobs" job.id}}>{{fa-icon "trash"}}</a>
-                </div>
-              </div>
             </li>
           {{/unless}}
         {{/each}}
@@ -249,10 +242,27 @@
             <div class="col-xs-2 right">
               <input type="number"
                 class="display-job-name"
-                min={{minDisplayLength}}
-                max={{maxDisplayLength}}
-                placeholder={{minDisplayLength}}
-                value={{desiredJobNameLength}}
+                min={{this.minDisplayLength}}
+                max={{this.maxDisplayLength}}
+                placeholder={{this.minDisplayLength}}
+                value={{this.desiredJobNameLength}}
+                onchange={{action "updateJobNameLength" value="target.value"}}>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Display Name Length</h4>
+              <p>Setup your own preferred job name length to display on the workflow graph (range: 20 - 99)</p>
+            </div>
+            <div class="col-xs-2 right">
+              <input type="number"
+                class="display-job-name"
+                min={{this.minDisplayLength}}
+                max={{this.maxDisplayLength}}
+                placeholder={{this.minDisplayLength}}
+                value={{this.desiredJobNameLength}}
                 onchange={{action "updateJobNameLength" value="target.value"}}>
             </div>
           </div>
@@ -263,10 +273,10 @@
               <h4>Show PR Jobs</h4>
               <p>Show or Hide jobs that are triggered from Pull Request</p>
             </div>
-            <div class="col-xs-2 right" title="Toggle to {{if showPRJobs "show" "hide"}} the jobs that are triggered from PRs">
+            <div class="col-xs-2 right" title="Toggle to {{if this.showPRJobs "show" "hide"}} the jobs that are triggered from PRs">
               {{x-toggle
                 size="small"
-                value=showPRJobs
+                value=this.showPRJobs
                 onLabel="showPRJobs:true"
                 offLabel="showPRJobs::false"
                 onToggle=(action "updateShowPRJobs")
@@ -278,75 +288,73 @@
     </section>
   </div>
 
-  {{#unless pipeline.configPipelineId}}
-    <div class="col-xs-12 col-md-8">
-      <section class="danger">
-        <h3>Danger Zone</h3>
-        <ul>
-          {{#if privateRepo}}
-            <li>
-              {{#if showPipelineVisibilityDangerButton}}
-                <div class="row">
-                  <div class="col-xs-10">
-                    <h4>Set pipeline visibility</h4>
-                    <p>Think twice before setting pipeline to public.</p>
+    {{#unless this.pipeline.configPipelineId}}
+      <div class="col-xs-12 col-md-8">
+        <section class="danger">
+          <h3>Danger Zone</h3>
+          <ul>
+            {{#if this.privateRepo}}
+              <li>
+                {{#if this.showPipelineVisibilityDangerButton}}
+                  <div class="row">
+                    <div class="col-xs-10">
+                      <h4>Set pipeline visibility</h4>
+                      <p>Think twice before setting pipeline to public.</p>
+                    </div>
+                    <div class="col-xs-2 right" title="Set pipeline visibility">
+                      {{x-toggle
+                        size="small"
+                        value=this.publicPipeline
+                        onLabel="publicPipeline::true"
+                        offLabel="publicPipeline::false"
+                        onToggle=(action (if this.publicPipeline "updatePipelineVisibility" "setPipelineVisibilityButtons"))
+                      }}
+                    </div>
                   </div>
-                  <div class="col-xs-2 right" title="Set pipeline visibility">
-                    {{x-toggle
-                      size="small"
-                      value=publicPipeline
-                      onLabel="publicPipeline::true"
-                      offLabel="publicPipeline::false"
-                      onToggle=(action (if publicPipeline "updatePipelineVisibility" "showPipelineVisibilityButtons"))
-                    }}
+                {{/if}}
+                {{#if this.showPipelineVisibilityButtons}}
+                  <h4>Are you absolutely sure?</h4>
+                  <a href="#" {{action "cancelPipelineVisibility"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
+                  <a href="#" {{action "updatePipelineVisibility" true}} class="remove">{{fa-icon "unlock"}} Publish</a>
+                {{/if}}
+                {{#if this.isUpdatingPipelineVisibility}}
+                  <p>Please wait...</p>
+                {{/if}}
+              </li>
+            {{/if}}
+            <li>
+              {{#if this.showRemoveDangerButton}}
+                <div class="row">
+                  <div class="col-xs-1 col-md-8">
+                    <h4>Delete this pipeline</h4>
+                    <p>Once you delete a pipeline, there is no going back.</p>
+                  </div>
+                  <div class="col-xs-1 col-md-4 right">
+                    <a href="#" {{action "setRemoveButtons"}} class="trash" title="Delete pipeline">{{fa-icon "trash"}} </a>
                   </div>
                 </div>
               {{/if}}
-              {{#if showPipelineVisibilityButtons}}
+              {{#if this.showRemoveButtons}}
                 <h4>Are you absolutely sure?</h4>
-                <a href="#" {{action "cancelPipelineVisibility"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
-                <a href="#" {{action "updatePipelineVisibility" true}} class="remove">{{fa-icon "unlock"}} Publish</a>
+                <a href="#" {{action "cancelRemove"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
+                <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "trash"}} Delete</a>
               {{/if}}
-              {{#if isUpdatingPipelineVisibility}}
+              {{#if this.isRemoving}}
                 <p>Please wait...</p>
               {{/if}}
             </li>
-          {{/if}}
-          <li>
-            {{#if showRemoveDangerButton}}
-              <div class="row">
-                <div class="col-xs-1 col-md-8">
-                  <h4>Delete this pipeline</h4>
-                  <p>Once you delete a pipeline, there is no going back.</p>
-                </div>
-                <div class="col-xs-1 col-md-4 right">
-                  <a href="#" {{action "showRemoveButtons"}} class="trash" title="Delete pipeline">{{fa-icon "trash"}} </a>
-                </div>
-              </div>
-            {{/if}}
-            {{#if showRemoveButtons}}
-              <h4>Are you absolutely sure?</h4>
-              <a href="#" {{action "cancelRemove"}} class="cancel">{{fa-icon "ban"}} Cancel</a>
-              <a href="#" {{action "removePipeline"}} class="remove">{{fa-icon "trash"}} Delete</a>
-            {{/if}}
-            {{#if isRemoving}}
-              <p>Please wait...</p>
-            {{/if}}
-          </li>
-        </ul>
-      </section>
-    </div>
-  {{/unless}}
+          </ul>
+        </section>
+      </div>
+    {{/unless}}
+  </div>
+
+  {{#if this.isShowingModal}}
+    <ModalDialog @clickOutsideToClose={{false}} @targetAttachment="center" @translucentOverlay={{true}}>
+      <LoadingView/>
+    </ModalDialog>
+  {{/if}}
+
+  {{job-toggle-modal showToggleModal=this.showToggleModal updateMessage=(action "updateMessage") name=this.name stateChange=this.stateChange}}
+  {{yield}}
 </div>
-
-{{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false
-    targetAttachment="center"
-    translucentOverlay=true
-  }}
-    {{loading-view}}
-  {{/modal-dialog}}
-{{/if}}
-
-{{job-toggle-modal showToggleModal=showToggleModal updateMessage=(action "updateMessage") name=name stateChange=stateChange}}
-{{yield}}

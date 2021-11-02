@@ -67,9 +67,8 @@ To see coverage results, run:
 
 ### Linting
 
-* `npm run lint:hbs`
-* `npm run lint:js`
-* `npm run lint:js -- --fix`
+* `npm run lint`
+* `npm run lint:fix`
 
 ### Building
 

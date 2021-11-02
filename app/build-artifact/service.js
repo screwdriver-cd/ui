@@ -1,3 +1,4 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
@@ -73,8 +74,10 @@ function arrangeIntoTree(paths, baseUrl) {
   return tree;
 }
 
-export default Service.extend({
-  session: service(),
+@classic
+export default class BuildArtifactService extends Service {
+  @service
+  session;
 
   /**
    * Calls the store api service to fetch build artifact manifest
@@ -92,7 +95,7 @@ export default Service.extend({
     const baseUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/artifacts/`;
 
     return new EmberPromise((resolve, reject) => {
-      if (!this.get('session.isAuthenticated')) {
+      if (!this.session.isAuthenticated) {
         return reject(new Error('User is not authenticated'));
       }
 
@@ -112,4 +115,4 @@ export default Service.extend({
         .always(() => resolve(manifest));
     });
   }
-});
+}

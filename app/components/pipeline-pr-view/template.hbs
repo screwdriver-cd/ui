@@ -1,16 +1,16 @@
-{{#if build}}
+{{#if this.build}}
   <div class="view">
-    <div class="status">{{fa-icon icon fixedWidth=true}}</div>
+    <div class="status"><FaIcon @prefix={{icon-prefix this.icon}} @icon={{this.icon}} @fixedWidth={{true}} @spin={{icon-spin this.icon}} /></div>
     <div class="detail">
-      {{#if build.id}}
-        {{#link-to "pipeline.build" build.id}}{{displayName}}{{/link-to}}
+      {{#if this.build.id}}
+        {{#link-to "pipeline.build" this.build.id}}{{this.displayName}}{{/link-to}}
       {{else}}
-        <span class="greyOut">{{displayName}}</span>
+        <span class="greyOut">{{this.displayName}}</span>
       {{/if}}
-      {{#if build.endTimeExact}}
-        <div class="date greyOut">Finished {{build.endTimeExact}}</div>
-      {{else if build.startTimeExact}}
-        <div class="date greyOut">Started {{build.startTimeExact}}</div>
+      {{#if this.build.endTimeExact}}
+        <div class="date greyOut">Finished {{this.build.endTimeExact}}</div>
+      {{else if this.build.startTimeExact}}
+        <div class="date greyOut">Started {{this.build.startTimeExact}}</div>
       {{/if}}
     </div>
   </div>

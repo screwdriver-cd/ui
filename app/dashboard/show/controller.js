@@ -1,59 +1,50 @@
+import classic from 'ember-classic-decorator';
 import { alias } from '@ember/object/computed';
-import { getWithDefault, set } from '@ember/object';
+import { action } from '@ember/object';
 import Controller from '@ember/controller';
 
-export default Controller.extend({
-  collection: alias('model.collection'),
-  actions: {
-    removePipeline(pipelineId) {
-      const collectionId = this.get('collection.id');
+@classic
+export default class ShowController extends Controller {
+  @alias('model.collection')
+  collection;
 
-      return this.store
-        .findRecord('collection', collectionId)
-        .then(collection => {
-          const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
-
-          set(
-            collection,
-            'pipelineIds',
-            pipelineIds.filter(id => id !== pipelineId)
-          );
-
-          return collection.save();
-        });
-    },
-    removeMultiplePipelines(removedPipelineIds) {
-      const collectionId = this.get('collection.id');
-
-      return this.store
-        .findRecord('collection', collectionId)
-        .then(collection => {
-          const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
-
-          set(
-            collection,
-            'pipelineIds',
-            pipelineIds.filter(id => !removedPipelineIds.includes(id))
-          );
-
-          return collection.save();
-        });
-    },
-    onDeleteCollection() {
-      this.transitionToRoute('home');
-    },
-    addMultipleToCollection(addedPipelineIds, collectionId) {
-      return this.store
-        .findRecord('collection', collectionId)
-        .then(collection => {
-          const pipelineIds = collection.get('pipelineIds');
-
-          collection.set('pipelineIds', [
-            ...new Set([...pipelineIds, ...addedPipelineIds])
-          ]);
-
-          return collection.save();
-        });
-    }
+  @action
+  async removePipeline(pipelineId) {
+    return this.removeMultiplePipelines([pipelineId]);
   }
-});
+
+  @action
+  async removeMultiplePipelines(removedPipelineIds) {
+    const { collection } = this;
+    const pipelineIds =
+      collection.pipelineIds === undefined ? [] : collection.pipelineIds;
+
+    collection.pipelineIds = pipelineIds.filter(
+      id => !removedPipelineIds.includes(id)
+    );
+
+    await collection.save();
+
+    return this.store.findRecord('collection', this.collection.id);
+  }
+
+  @action
+  onDeleteCollection() {
+    this.transitionToRoute('home');
+  }
+
+  @action
+  addMultipleToCollection(addedPipelineIds, collectionId) {
+    return this.store
+      .findRecord('collection', collectionId)
+      .then(collection => {
+        const pipelineIds = collection.get('pipelineIds');
+
+        collection.set('pipelineIds', [
+          ...new Set([...pipelineIds, ...addedPipelineIds])
+        ]);
+
+        return collection.save();
+      });
+  }
+}

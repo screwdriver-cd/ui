@@ -1,11 +1,14 @@
+import classic from 'ember-classic-decorator';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Service, { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import ENV from 'screwdriver-ui/config/environment';
 
-export default Service.extend({
-  session: service('session'),
+@classic
+export default class EventStopService extends Service {
+  @service('session')
+  session;
 
   /**
    * Stop all running builds or builds about to run in a single event
@@ -31,4 +34,4 @@ export default Service.extend({
         .fail(jqXHR => reject(JSON.parse(jqXHR.responseText).message));
     });
   }
-});
+}

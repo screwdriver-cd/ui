@@ -1,92 +1,83 @@
-{{#if showGraphNavRow}}
-  <div class="row">
+<div class={{this.styleNamespace}} ...attributes>
+  {{#if showGraphNavRow}}
+    <div class="row">
 
-    {{#if (not isPR)}}
-      <div class="col-xs-2">
-        {{#bs-button-group
-                class="view-toggle"
-                value=showListView
-                type="radio"
-                onChange=(action setShowListView) as |bg|
-        }}
-          {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
-          {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
-        {{/bs-button-group}}
-      </div>
-    {{/if}}
+      {{#unless isPR}}
+        <div class="col-xs-2">
+          <BsButtonGroup @class="view-toggle" @value={{showListView}} @type="radio" @onChange={{action setShowListView}} as |bg|>
+            <bg.button @value={{false}}>{{fa-icon "th"}}</bg.button>
+            <bg.button @value={{true}}>{{fa-icon "th-list"}}</bg.button>
+          </BsButtonGroup>
+        </div>
+      {{/unless}}
 
-    <div class="col-xs-4">
-      {{#if isPR}}
-        <strong>Pull Requests</strong>
-      {{/if}}
-      {{#bs-button-group
-        class="event-options-toggle"
-        value=selectedEvent
-        type="radio"
-        onChange=(action (mut selected)) as |bg|
-      }}
-        {{#each eventOptions as |opt|}}
-          {{#bg.button value=opt.value}}{{opt.label}}{{/bg.button}}
-        {{/each}}
-      {{/bs-button-group}}
-    </div>
-    {{#if (not isPR)}}
-      <div class="col-xs-3" title="Toggle to {{if showDownstreamTriggers "hide" "show"}} the downstream trigger nodes.">
-        {{x-toggle
-          size="medium"
-          theme="material"
-          showLabels=true
-          value=showDownstreamTriggers
-          offLabel="Hide triggers"
-          onLabel="Show triggers"
-          onToggle=(action setDownstreamTrigger)
-        }}
-      </div>
-    {{/if}}
-    <div class="col-xs-3">
-      {{#if session.isAuthenticated}}
-        {{#if (not-eq selectedEventObj.type "pr")}}
-          {{pipeline-start startBuild=(action startMainBuild) pipeline=pipeline}}
+      <div class="col-xs-4">
+        {{#if isPR}}
+          <strong>Pull Requests</strong>
         {{/if}}
-      {{/if}}
+        <BsButtonGroup @class="event-options-toggle" @value={{selectedEvent}} @type="radio" @onChange={{action (mut selected)}} as |bg|>
+          {{#each eventOptions as |opt|}}
+            <bg.button @value={{opt.value}}>{{opt.label}}</bg.button>
+          {{/each}}
+        </BsButtonGroup>
+      </div>
+      {{#unless isPR}}
+        <div class="col-xs-3" title="Toggle to {{if showDownstreamTriggers "hide" "show"}} the downstream trigger nodes.">
+          <XToggle
+            @theme="material"
+            @showLabels={{true}}
+            @value={{@showDownstreamTriggers}}
+            @offLabel="Hide triggers"
+            @onLabel="Show triggers"
+            @onToggle={{@setDownstreamTrigger}}
+          />
+        </div>
+      {{/unless}}
+      <div class="col-xs-3">
+        {{#if session.isAuthenticated}}
+          {{#if (not-eq selectedEventObj.type "pr")}}
+            <PipelineStart @startNewBuild={{this.startMainBuild}} @pipeline={{this.pipeline}} />
+          {{/if}}
+        {{/if}}
+      </div>
     </div>
-  </div>
-{{/if}}
-{{#if selectedEventObj}}
-  <div class="row {{selectedEventObj.status}}">
-    <div class="col-xs-12">
-      <div class="event-info">
-        <div class="col">
-          <span class="title">Commit</span><br>
-          <a class={{if (eq selectedEventObj.sha latestCommit.sha) "latest-commit"}} href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a>
-        </div>
-        <div class="col">
-          <span class="title">Message</span><br>
-          <span title={{selectedEventObj.commit.message}}>{{selectedEventObj.truncatedMessage}}</span>
-        </div>
-        <div class="col">
-          <span class="title">Status</span><br>
-          <span class="status">{{fa-icon icon fixedWidth=true}} {{selectedEventObj.status}}</span>
-        </div>
-        <div class="col">
-          <span class="title">Committer</span><br>
-          <a href={{selectedEventObj.commit.author.url}}>{{selectedEventObj.commit.author.name}}</a>
-        </div>
-        <div class="col">
-          <span class="title">Start Date</span><br>
-          {{selectedEventObj.createTimeExact}}
-        </div>
-        <div class="col">
-          <span class="title">Duration</span><br>
-          {{selectedEventObj.durationText}}
-        </div>
-        {{#if selectedEventObj.label}}
+  {{/if}}
+  {{#if selectedEventObj}}
+    <div class="row {{selectedEventObj.status}}">
+      <div class="col-xs-12">
+        <div class="event-info">
           <div class="col">
-            <span class="title">Label</span><br>
-            <span class="customize-label" title={{selectedEventObj.label}}>{{selectedEventObj.label}}</span>
+            <span class="title">Commit</span><br>
+            <a class={{if (eq selectedEventObj.sha latestCommit.sha) "latest-commit"}} href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a>
           </div>
-        {{/if}}
+          <div class="col">
+            <span class="title">Message</span><br>
+            <span title={{selectedEventObj.commit.message}}>{{selectedEventObj.truncatedMessage}}</span>
+          </div>
+          <div class="col">
+            <span class="title">Status</span><br>
+            <span class="status"><FaIcon @prefix={{icon-prefix this.icon}} @icon={{this.icon}} @fixedWidth={{true}} @spin={{icon-spin this.icon}} /> {{selectedEventObj.status}}</span>
+          </div>
+          <div class="col">
+            <span class="title">Committer</span><br>
+            <a href={{selectedEventObj.commit.author.url}}>{{selectedEventObj.commit.author.name}}</a>
+          </div>
+          <div class="col">
+            <span class="title">Start Date</span><br>
+            {{selectedEventObj.createTimeExact}}
+          </div>
+          <div class="col">
+            <span class="title">Duration</span><br>
+            {{selectedEventObj.durationText}}
+          </div>
+          {{#if selectedEventObj.label}}
+            <div class="col">
+              <span class="title">Label</span><br>
+              <span class="customize-label" title={{selectedEventObj.label}}>{{selectedEventObj.label}}</span>
+            </div>
+          {{/if}}
+        </div>
       </div>
     </div>
-  </div>
-{{/if}}
+  {{/if}}
+</div>

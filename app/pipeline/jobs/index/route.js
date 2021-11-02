@@ -1,3 +1,5 @@
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
@@ -5,18 +7,26 @@ import RSVP from 'rsvp';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import getErrorMessage from 'screwdriver-ui/utils/error-messages';
 
-export default Route.extend(AuthenticatedRouteMixin, {
-  triggerService: service('pipeline-triggers'),
-  routeAfterAuthentication: 'pipeline.jobs.index',
-  pipelineService: service('pipeline'),
+@classic
+export default class IndexRoute extends Route.extend(AuthenticatedRouteMixin) {
+  @service('pipeline-triggers')
+  triggerService;
+
+  routeAfterAuthentication = 'pipeline.jobs.index';
+
+  @service('pipeline')
+  pipelineService;
+
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
-  },
+  }
+
   setupController(controller, model) {
-    this._super(controller, model);
+    super.setupController(controller, model);
     controller.set('activeTab', 'events');
-    this.get('pipelineService').setBuildsLink('pipeline.jobs.index');
-  },
+    this.pipelineService.setBuildsLink('pipeline.jobs.index');
+  }
+
   model() {
     const pipelineJobsIndexController = this.controllerFor(
       'pipeline.jobs.index'
@@ -43,10 +53,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
         this.transitionTo('/404');
       }
     });
-  },
-  actions: {
-    refreshModel: function refreshModel() {
-      this.refresh();
-    }
   }
-});
+
+  @action
+  refreshModel() {
+    this.refresh();
+  }
+}

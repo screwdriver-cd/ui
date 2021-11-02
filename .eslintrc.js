@@ -55,6 +55,11 @@ module.exports = {
     'ember/no-new-mixins': 'off',
     'ember/no-observers': 'off',
     'ember/no-side-effects': 'off',
+    'ember/no-classic-classes': 'warn',
+    'ember/no-classic-components': 'warn',
+    'ember/no-component-lifecycle-hooks': 'warn',
+    'ember/no-controller-access-in-routes': 'warn',
+    'ember/no-mixins': 'warn',
     'ember/no-arrow-function-computed-properties': [
       'error',
       { onlyThisContexts: true }
@@ -72,14 +77,15 @@ module.exports = {
     // node files
     {
       files: [
-        '.eslintrc.js',
-        '.template-lintrc.js',
-        'ember-cli-build.js',
-        'testem.js',
-        'blueprints/*/index.js',
-        'config/**/*.js',
-        'lib/*/index.js',
-        'server/**/*.js'
+        './.eslintrc.js',
+        './.prettierrc.js',
+        './.template-lintrc.js',
+        './ember-cli-build.js',
+        './testem.js',
+        './blueprints/*/index.js',
+        './config/**/*.js',
+        './lib/*/index.js',
+        './server/**/*.js'
       ],
       parserOptions: {
         sourceType: 'script'
@@ -88,7 +94,12 @@ module.exports = {
         browser: false,
         node: true
       },
+      // plugins: ['node'],
+      // extends: ['plugin:node/recommended'],
       rules: {
+        // this can be removed once the following is fixed
+        // https://github.com/mysticatea/eslint-plugin-node/issues/77
+        // 'node/no-unpublished-require': 'off',
         'func-names': 'off'
       }
     },
@@ -101,6 +112,7 @@ module.exports = {
         browser: true,
         node: true
       },
+      // extends: ['plugin:qunit/recommended'],
       rules: {
         'func-names': 'off',
         'prefer-arrow-callback': 'off'

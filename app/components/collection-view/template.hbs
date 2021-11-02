@@ -1,198 +1,199 @@
-<div class="collection-view">
-  {{#if addCollectionError}}
-    {{info-message message=addCollectionError type="warning" icon="exclamation-triangle"}}
-  {{/if}}
-  {{#if removePipelineError}}
-    {{info-message message=removePipelineError type="warning" icon="exclamation-triangle"}}
-  {{/if}}
-  {{#if linkCopied}}
-    {{info-message message=linkCopied type="success" icon="check"}}
-  {{/if}}
-  {{#if pipelineRemovedMessage}}
-    {{info-message message=pipelineRemovedMessage type="success" icon="check"}}
-  {{/if}}
-  <div class="header row">
-    <div class="col-xs-12 col-sm-8">
-      <h2 class="header__name">{{collection.name}}</h2>
-
-      {{#if (eq collection.type "normal")}}
-        <span onclick={{action "toggleAddPipelineModal"}} title="Add pipeline(s) to collection" class="collection-operation add-pipeline-operation">
-          {{inline-svg "add" class="img"}}
-        </span>
-        <span onclick={{action "toggleSettingModal"}} title="Collection settings" class="collection-operation settings-operation">
-          {{inline-svg "setting" class="img"}}
-        </span>
-      {{/if}}
-
-      <span onclick={{action "copyLink"}} title="Copy collection link" class="collection-operation copy-operation">
-        {{inline-svg "link" class="img"}}
-      </span>
-
-      <BsModal
-        @class="add-pipeline-modal"
-        @open={{showAddPipelineModal}}
-        @onHidden={{action "toggleAddPipelineModal"}}
-      as |modal|>
-        <modal.header>
-          <h4 class="modal-title">
-            Add Pipeline
-          </h4>
-        </modal.header>
-        <modal.body>
-          {{pipeline-search-panel
-              searchedPipelines=searchedPipelines
-              searchPipelines=(action "searchPipelines")
-              selectSearchedPipeline=(action "selectSearchedPipeline")
-          }}
-        </modal.body>
-      </BsModal>
-
-      <BsModal
-        @class="setting-modal"
-        @open={{showSettingModal}}
-        @onHide={{action "toggleSettingModal"}}
-        @onSubmit={{action "onSubmitSettingModal"}} as |modal|>
-        <modal.header>
-          <h4 class="modal-title">
-            Settings
-          </h4>
-        </modal.header>
-        <modal.body>
-          <BsForm @formLayout="vertical" as |form|>
-            <form.element
-              @controlType="text"
-              @label="Name"
-              @required={{true}}
-              @placeholder="Screwdriver CI/CD"
-              @value={{collection.name}}
-              @onChange={{action "updateCollectionName"}}
-            />
-            <form.element
-              @controlType="textarea"
-              @label="Description"
-              @placeholder="Collection Description"
-              @value={{collection.description}}
-              @onChange={{action "updateCollectionDescription"}}
-            />
-          </BsForm>
-        </modal.body>
-        <modal.footer>
-          <BsButton @onClick={{action modal.close}}>Cancel</BsButton>
-          <BsButton @type="primary" @disabled={{isModelSaveDisabled}} @onClick={{action "onSubmitSettingModal"}}>Save</BsButton>
-        </modal.footer>
-      </BsModal>
-
-      {{#if collection.description}}
-        <div>
-          <p class="header__description">
-            {{collection.description}}
-          </p>
-        </div>
-      {{else}}
-        <p class="description-placeholder">Add a description</p>
-      {{/if}}
-    </div>
-    <div class="header__organize col-xs-6 col-sm-3">
-      {{#if showOrganizeButton}}
-        {{#if isOrganizing}}
-          {{#if showOperations}}
-            <span>{{selectedPipelines.length}}&nbsp;&nbsp;Selected</span>
-            {{#unless isDefaultCollection}}
-              <BsButton class="operation-button" onclick={{action "removeSelectedPipelines"}}>Remove</BsButton>
-            {{/unless}}
-            {{collection-dropdown
-                class="copy-pipeline"
-                collections=collections
-                addMultipleToCollection=(action "addMultipleToCollection")
-                buttonClass="operation-button"
-                buttonText="Copy To"
-            }}
-          {{/if}}
-          <BsButton class="cancel-organize-button" onclick={{action "resetView"}}>Cancel</BsButton>
-        {{else}}
-          <BsButton class="organize-button" onclick={{action "organize"}}>Organize</BsButton>
-        {{/if}}
-      {{/if}}
-    </div>
-    {{#if showViewSwitch }}
-      <BsButtonGroup
-        class="header__change-view col-xs-6 col-sm-1"
-        @value={{activeViewOptionValue}}
-        @type="radio"
-        @onChange={{action (mut activeViewOptionValue)}} as |bg|>
-        {{#each viewOptions as |viewOption|}}
-          <bg.button @value={{viewOption.value}} onclick={{action "resetView"}}>{{inline-svg viewOption.svgName class="img"}}</bg.button>
-        {{/each}}
-      </BsButtonGroup>
+<div class={{this.styleNamespace}} ...attributes>
+  <div class="collection-view">
+    {{#if this.addCollectionError}}
+      {{info-message message=this.addCollectionError type="warning" icon="exclamation-triangle"}}
     {{/if}}
-  </div>
+    {{#if this.removePipelineError}}
+      {{info-message message=this.removePipelineError type="warning" icon="exclamation-triangle"}}
+    {{/if}}
+    {{#if this.linkCopied}}
+      {{info-message message=this.linkCopied type="success" icon="check"}}
+    {{/if}}
+    {{#if this.pipelineRemovedMessage}}
+      {{info-message message=this.pipelineRemovedMessage type="success" icon="check"}}
+    {{/if}}
+    <div class="header row">
+      <div class="col-xs-12 col-sm-8">
+        <h2 class="header__name">{{this.collection.name}}</h2>
 
-  {{#if (eq sortedPipelines.length 0)}}
-    <div class="collection-empty-view">
-      <div class="guide">
-        <img class="guide-image" src="/assets/images/jobs-example.png" alt="example diagram of pipeline jobs">
-        <p class="guide-text">You haven't created a pipeline yet. Once you create a pipeline it will show up in this collection. To help you get started check out our documentation or if you already know what you are doing, create a new pipeline</p>
-        <div class="guide-buttons">
-          {{#link-to "create"}}
-            <BsButton class="guide-create-pipeline-button" onclick={{action "organize"}}>Create Pipeline</BsButton>
-          {{/link-to}}
-          <a href="https://docs.screwdriver.cd/" target="_blank" rel="noopener">
-            <BsButton class="guide-docs-button" onclick={{action "goToDocs"}}>View Docs</BsButton>
-          </a>
-        </div>
+        {{#if (eq this.collection.type "normal")}}
+          <span onclick={{action "toggleAddPipelineModal"}} title="Add pipeline(s) to collection" class="collection-operation add-pipeline-operation">
+            {{inline-svg "add" class="img"}}
+          </span>
+          <span onclick={{action "toggleSettingModal"}} title="Collection settings" class="collection-operation settings-operation">
+            {{inline-svg "setting" class="img"}}
+          </span>
+        {{/if}}
+
+        <span onclick={{action "copyLink"}} title="Copy collection link" class="collection-operation copy-operation">
+          {{inline-svg "link" class="img"}}
+        </span>
+
+        <BsModal
+          @class="add-pipeline-modal"
+          @open={{this.showAddPipelineModal}}
+          @onHidden={{action "toggleAddPipelineModal"}}
+        as |modal|>
+          <modal.header>
+            <h4 class="modal-title">
+              Add Pipeline
+            </h4>
+          </modal.header>
+          <modal.body>
+            {{pipeline-search-panel
+                searchedPipelines=this.searchedPipelines
+                searchPipelines=(action "searchPipelines")
+                selectSearchedPipeline=(action "selectSearchedPipeline")
+            }}
+          </modal.body>
+        </BsModal>
+
+        <BsModal
+          @class="setting-modal"
+          @open={{this.showSettingModal}}
+          @onHide={{action "toggleSettingModal"}}
+          @onSubmit={{action "onSubmitSettingModal"}} as |modal|>
+          <modal.header>
+            <h4 class="modal-title">
+              Settings
+            </h4>
+          </modal.header>
+          <modal.body>
+            <BsForm @formLayout="vertical" as |form|>
+              <form.element
+                @controlType="text"
+                @label="Name"
+                @required={{true}}
+                @placeholder="Screwdriver CI/CD"
+                @value={{this.collection.name}}
+                @onChange={{action "updateCollectionName"}}
+              />
+              <form.element
+                @controlType="textarea"
+                @label="Description"
+                @placeholder="Collection Description"
+                @value={{this.collection.description}}
+                @onChange={{action "updateCollectionDescription"}}
+              />
+            </BsForm>
+          </modal.body>
+          <modal.footer>
+            <BsButton @onClick={{action modal.close}}>Cancel</BsButton>
+            <BsButton @type="primary" @disabled={{this.isModelSaveDisabled}} @onClick={{action "onSubmitSettingModal"}}>Save</BsButton>
+          </modal.footer>
+        </BsModal>
+
+        {{#if this.collection.description}}
+          <div>
+            <p class="header__description">
+              {{this.collection.description}}
+            </p>
+          </div>
+        {{else}}
+          <p class="description-placeholder">Add a description</p>
+        {{/if}}
       </div>
-    </div>
-  {{else}}
-    {{#if isListView}}
-      <div class="collection-list-view row">
-        <table class="col-md-12">
-          <thead>
-            <tr>
-              <th class="collection-pipeline__choose"></th>
-              <th class="app-id" rowspan="1">Name</th>
-              <th class="branch" rowspan="1">Branch</th>
-              <th class="status" rowspan="1">Status</th>
-              <th class="start" rowspan="1">Start Date</th>
-              <th class="duration" rowspan="1">Duration</th>
-              <th class="history" rowspan="1">Build History</th>
-              <th class="collection-pipeline__remove"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each sortedPipelines as |pipeline|}}
-              {{collection-table-row
-                  class="collection-pipeline"
-                  removePipeline=(action "removePipeline")
-                  pipeline=pipeline
-                  isAuthenticated=session.isAuthenticated
-                  isOrganizing=isOrganizing
-                  isDefaultCollection=isDefaultCollection
-                  selectPipeline=(action "selectPipeline")
-                  deselectPipeline=(action "deselectPipeline")
-                  reset=reset
-                  collectionName=collection.name
+      <div class="header__organize col-xs-6 col-sm-3">
+        {{#if this.showOrganizeButton}}
+          {{#if this.isOrganizing}}
+            {{#if this.showOperations}}
+              <span>{{this.selectedPipelines.length}}&nbsp;&nbsp;Selected</span>
+              {{#unless this.isDefaultCollection}}
+                <BsButton class="operation-button" onclick={{action "removeSelectedPipelines"}}>Remove</BsButton>
+              {{/unless}}
+              {{collection-dropdown
+                  class="copy-pipeline"
+                  collections=this.collections
+                  addMultipleToCollection=(action "addPipelinesToCollection")
+                  buttonClass="operation-button"
+                  buttonText="Copy To"
               }}
-            {{/each}}
-          </tbody>
-        </table>
+            {{/if}}
+            <BsButton class="cancel-organize-button" onclick={{action "resetView"}}>Cancel</BsButton>
+          {{else}}
+            <BsButton class="organize-button" onclick={{action "organize"}}>Organize</BsButton>
+          {{/if}}
+        {{/if}}
+      </div>
+      {{#if this.showViewSwitch }}
+        <BsButtonGroup
+          class="header__change-view col-xs-6 col-sm-1"
+          @value={{this.activeViewOptionValue}}
+          @type="radio"
+          @onChange={{action (mut this.activeViewOptionValue)}} as |bg|>
+          {{#each this.viewOptions as |viewOption|}}
+            <bg.button @value={{viewOption.value}} onclick={{action "resetView"}}>{{inline-svg viewOption.svgName class="img"}}</bg.button>
+          {{/each}}
+        </BsButtonGroup>
+      {{/if}}
+    </div>
+    {{#if (eq this.sortedPipelines.length 0)}}
+      <div class="collection-empty-view">
+        <div class="guide">
+          <img class="guide-image" src="/assets/images/jobs-example.png" alt="example diagram of pipeline jobs">
+          <p class="guide-text">You haven't created a pipeline yet. Once you create a pipeline it will show up in this collection. To help you get started check out our documentation or if you already know what you are doing, create a new pipeline</p>
+          <div class="guide-buttons">
+            {{#link-to "create"}}
+              <BsButton class="guide-create-pipeline-button" onclick={{action "organize"}}>Create Pipeline</BsButton>
+            {{/link-to}}
+            <a href="https://docs.screwdriver.cd/" target="_blank" rel="noopener noreferrer">
+              <BsButton class="guide-docs-button" onclick={{action "goToDocs"}}>View Docs</BsButton>
+            </a>
+          </div>
+        </div>
       </div>
     {{else}}
-      <div class="collection-card-view">
-        {{#each sortedPipelines as |pipeline|}}
-          {{pipeline-card
-              class="pipeline-card"
-              removePipeline=(action "removePipeline")
-              pipeline=pipeline
-              isAuthenticated=session.isAuthenticated
-              isOrganizing=isOrganizing
-              isDefaultCollection=isDefaultCollection
-              selectPipeline=(action "selectPipeline")
-              deselectPipeline=(action "deselectPipeline")
-              reset=reset
-              collectionName=collection.name
-          }}
-        {{/each}}
-      </div>
+      {{#if this.isListView}}
+        <div class="collection-list-view row">
+          <table class="col-md-12">
+            <thead>
+              <tr>
+                <th class="collection-pipeline__choose"></th>
+                <th class="app-id" rowspan="1">Name</th>
+                <th class="branch" rowspan="1">Branch</th>
+                <th class="status" rowspan="1">Status</th>
+                <th class="start" rowspan="1">Start Date</th>
+                <th class="duration" rowspan="1">Duration</th>
+                <th class="history" rowspan="1">Build History</th>
+                <th class="collection-pipeline__remove"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each this.sortedPipelines as |pipeline|}}
+                <CollectionTableRow
+                    class="collection-pipeline"
+                    @removePipeline={{this.removePipeline}}
+                    @pipeline={{pipeline}}
+                    @isAuthenticated={{this.session.isAuthenticated}}
+                    @isOrganizing={{this.isOrganizing}}
+                    @isDefaultCollection={{this.isDefaultCollection}}
+                    @selectPipeline={{this.selectPipeline}}
+                    @deselectPipeline={{this.deselectPipeline}}
+                    @reset={{this.reset}}
+                    @collectionName={{this.collection.name}}
+                />
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{else}}
+        <div class="collection-card-view">
+          {{#each this.sortedPipelines as |pipeline|}}
+            <PipelineCard
+                class="pipeline-card"
+                @removePipeline={{this.removePipeline}}
+                @pipeline={{pipeline}}
+                @isAuthenticated={{this.session.isAuthenticated}}
+                @isOrganizing={{this.isOrganizing}}
+                @isDefaultCollection={{this.isDefaultCollection}}
+                @selectPipeline={{this.selectPipeline}}
+                @deselectPipeline={{this.deselectPipeline}}
+                @reset={{this.reset}}
+                @collectionName={{this.collection.name}}
+            />
+          {{/each}}
+        </div>
+      {{/if}}
     {{/if}}
-  {{/if}}
+  </div>
 </div>

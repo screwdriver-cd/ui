@@ -1,63 +1,62 @@
-<h1>
-  {{#if trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}
-  {{#link-to "pipeline" command.pipelineId title="Go to command pipeline"}}{{command.namespace}}/{{command.name}}{{/link-to}}
-  {{#if scmUrl}}
-    <a href={{scmUrl}}> {{fa-icon "code-fork" title="Source code"}}</a>
-  {{else}}
-    {{fa-icon "code-fork" title="The pipeline for this command does not exist."}}
-  {{/if}}
-  {{#if isAdmin}}
-    <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash" title="Delete command"}}</a>
-    {{x-toggle
-      size="medium"
-      theme="light"
-      showLabels=true
-      value=trusted
-      offLabel=null
-      onLabel="Trust?"
-      onToggle=(action "updateTrust" command.namespace command.name)
-    }}
-  {{else}}
-    {{#if scmUrl}}
-      <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash" title="Delete command"}}</a>
+<div class={{this.styleNamespace}} ...attributes>
+  <h1>
+    {{#if this.trusted}}<span title="Trusted">{{inline-svg "trusted" class="trusted"}}</span>{{/if}}
+    {{#link-to "pipeline" this.command.pipelineId title="Go to command pipeline"}}{{this.command.namespace}}/{{this.command.name}}{{/link-to}}
+    {{#if this.scmUrl}}
+      <a href={{this.scmUrl}}> {{fa-icon "code-fork" title="Source code"}}</a>
     {{else}}
-      {{fa-icon "trash" title="Cannot delete command; pipeline could not be found."}}
+      {{fa-icon "code-fork" title="The pipeline for this command does not exist."}}
+    {{/if}}
+    {{#if this.isAdmin}}
+      <a href="#" {{action "setCommandToRemove" this.command}} class="remove">{{fa-icon "trash" title="Delete command"}}</a>
+      {{x-toggle
+        size="medium"
+        theme="light"
+        showLabels=true
+        value=this.trusted
+        offLabel=null
+        onLabel="Trust?"
+        onToggle=(action "updateTrust" this.command.namespace this.command.name)
+      }}
+    {{else}}
+      {{#if this.scmUrl}}
+        <a href="#" {{action "setCommandToRemove" this.command}} class="remove">{{fa-icon "trash" title="Delete command"}}</a>
+      {{else}}
+        {{fa-icon "trash" title="Cannot delete command; pipeline could not be found."}}
+      {{/if}}
+    {{/if}}
+  </h1>
+  <h2>{{this.command.version}}</h2>
+  <p>{{this.command.description}}</p>
+  <ul>
+    <li>Released by: <a href="mailto:{{this.command.maintainer}}">{{this.command.maintainer}}</a></li>
+    {{#if this.command.lastUpdated}}<li>Last published: {{this.command.lastUpdated}}</li>{{/if}}
+  </ul>
+  <h4>Usage:</h4>
+  {{#if this.command.usage}}
+    <pre>{{this.command.usage}}</pre>
+  {{else}}
+    <pre>sd-cmd exec {{this.command.namespace}}/{{this.command.name}}@{{this.command.version}}</pre>
+  {{/if}}
+  {{#if this.commandToRemove}}
+    {{#if this.isRemoving}}
+      <ModalDialog @clickOutsideToClose="false" @targetAttachment="center" @translucentOverlay={{true}}>
+        <LoadingView/>
+      </ModalDialog>
+    {{else}}
+      <BsModal @onSubmit={{action "removeCommand" this.command.namespace this.command.name}} @onHide={{action "cancelRemovingCommand"}} as |modal|>
+        <modal.header>
+          <h4>Are you sure?</h4>
+        </modal.header>
+        <modal.body>
+          {{fa-icon "exclamation-triangle" pull="left" size=3}}
+          You're about to delete all versions and tags of <strong>{{this.command.namespace}}/{{this.command.name}}</strong>. There might be existing pipelines using this command.
+        </modal.body>
+        <modal.footer>
+          <BsButton @onClick={{action "cancelRemovingCommand"}}>Cancel</BsButton>
+          <BsButton @onClick={{action "removeCommand" this.command.namespace this.command.name}} @type="danger">{{fa-icon "trash"}} Confirm</BsButton>
+        </modal.footer>
+      </BsModal>
     {{/if}}
   {{/if}}
-</h1>
-<h2>{{command.version}}</h2>
-<p>{{command.description}}</p>
-<ul>
-  <li>Released by: <a href="mailto:{{command.maintainer}}">{{command.maintainer}}</a></li>
-  {{#if command.lastUpdated}}<li>Last published: {{command.lastUpdated}}</li>{{/if}}
-</ul>
-<h4>Usage:</h4>
-{{#if command.usage}}
-  <pre>{{command.usage}}</pre>
-{{else}}
-  <pre>sd-cmd exec {{command.namespace}}/{{command.name}}@{{command.version}}</pre>
-{{/if}}
-{{#if commandToRemove}}
-  {{#if isRemoving}}
-    {{#modal-dialog clickOutsideToClose="false"
-      targetAttachment="center"
-      translucentOverlay=true
-    }}
-      {{loading-view}}
-    {{/modal-dialog}}
-  {{else}}
-    {{#bs-modal onSubmit=(action "removeCommand" command.namespace command.name) onHide=(action "cancelRemovingCommand") as |modal|}}
-      {{#modal.header}}
-        <h4>Are you sure?</h4>
-      {{/modal.header}}
-      {{#modal.body}}
-        {{fa-icon "exclamation-triangle" pull="left" size=3}}
-        You're about to delete all versions and tags of <strong>{{command.namespace}}/{{command.name}}</strong>. There might be existing pipelines using this command.
-      {{/modal.body}}
-      {{#modal.footer}}
-        {{#bs-button onClick=(action "cancelRemovingCommand")}}Cancel{{/bs-button}}
-        {{#bs-button onClick=(action "removeCommand" command.namespace command.name) type="danger"}}{{fa-icon "trash"}} Confirm{{/bs-button}}
-      {{/modal.footer}}
-    {{/bs-modal}}
-  {{/if}}
-{{/if}}
+</div>

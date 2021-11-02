@@ -5,7 +5,7 @@ import Table from 'ember-light-table';
 import { debounce } from '@ember/runloop';
 
 export default Component.extend({
-  classNames: [''],
+  tagName: '',
   table: null,
   model: null,
   search: null,

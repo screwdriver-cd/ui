@@ -1,41 +1,40 @@
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+<div class={{this.styleNamespace}} ...attributes>
+  {{info-message message=this.errorMessage type="warning" icon="exclamation-triangle"}}
 
-{{#if pipelines.length}}
-  <div class="num-results col-xs-12 col-md-8">
-    <span>Found {{pipelines.length}} child pipeline(s)</span>
-    <button {{action "startAll"}} class="start-button">Start All</button>
-  </div>
-  <ul class="col-xs-12 col-md-8">
-    <table>
-      <thead>
-        <tr>
-          <th class="appId">Name</th>
-          <th class="branch">Branch</th>
-          <th class="account">Account</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each pipelines as |pipeline|}}
+  {{#if this.pipelines.length}}
+    <div class="num-results col-xs-12 col-md-8">
+      <span>Found {{this.pipelines.length}} child pipeline(s)</span>
+      <button class="start-button" type="button" {{action "startAll"}}>Start All</button>
+    </div>
+    <ul class="col-xs-12 col-md-8">
+      <table>
+        <thead>
           <tr>
-            <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
-            <td class="branch"><a href={{branch-url-encode pipeline.hubUrl}}>{{fa-icon "code-fork"}}{{pipeline.branch}}</a></td>
-            <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
+            <th class="appId">Name</th>
+            <th class="branch">Branch</th>
+            <th class="account">Account</th>
           </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </ul>
-{{else}}
-  <div class="num-results">
-    <span>No child pipeline(s) created</span>
-  </div>
-{{/if}}
+        </thead>
+        <tbody>
+          {{#each this.pipelines as |pipeline|}}
+            <tr>
+              <td class="appId">{{#highlight-terms this.query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
+              <td class="branch"><a href={{branch-url-encode pipeline.hubUrl}}><FaIcon @icon="code-branch"/> {{pipeline.branch}}</a></td>
+              <td class="account"><FaIcon @prefix="fab" @icon={{pipeline.scmIcon}} /> {{pipeline.scm}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </ul>
+  {{else}}
+    <div class="num-results">
+      <span>No child pipeline(s) created</span>
+    </div>
+  {{/if}}
 
-{{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false
-    targetAttachment="center"
-    translucentOverlay=true
-  }}
-    {{loading-view}}
-  {{/modal-dialog}}
-{{/if}}
+  {{#if this.isShowingModal}}
+    <ModalDialog @clickOutsideToClose={{false}} @targetAttachment="center" @translucentOverlay={{true}}>
+      <LoadingView/>
+    </ModalDialog>
+  {{/if}}
+</div>

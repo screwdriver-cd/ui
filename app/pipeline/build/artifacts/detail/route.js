@@ -1,7 +1,11 @@
+import classic from 'ember-classic-decorator';
+import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 
-export default Route.extend({
-  routeAfterAuthentication: 'pipeline.build',
+@classic
+export default class DetailRoute extends Route {
+  routeAfterAuthentication = 'pipeline.build';
+
   model(params) {
     let selectedArtifact = 'manifest.txt';
 
@@ -15,11 +19,11 @@ export default Route.extend({
 
     // return parent route model
     return this.modelFor('pipeline.build');
-  },
-  actions: {
-    didTransition() {
-      // delegate to its parent route's didTranstion
-      return true;
-    }
   }
-});
+
+  @action
+  didTransition() {
+    // delegate to its parent route's didTranstion
+    return true;
+  }
+}

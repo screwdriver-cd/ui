@@ -1,76 +1,74 @@
-import { computed } from '@ember/object';
-import { alias } from '@ember/object/computed';
+import classic from 'ember-classic-decorator';
+import { tagName } from '@ember-decorators/component';
+import { action, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
 import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
 
-export default Component.extend({
-  classNames: ['build-banner', 'row'],
-  classNameBindings: ['buildStatus'],
-  coverage: service(),
-  coverageInfo: {},
-  coverageStep: computed('buildSteps', {
-    get() {
-      const coverageStep = this.buildSteps.find(item =>
-        /^sd-teardown-screwdriver-coverage/.test(item.name)
-      );
+@classic
+@tagName('')
+export default class BuildBanner extends Component {
+  @service
+  coverage;
 
-      return coverageStep;
+  @computed('buildSteps')
+  get coverageStep() {
+    const coverageStep = this.buildSteps.find(item =>
+      /^sd-teardown-screwdriver-coverage/.test(item.name)
+    );
+
+    return coverageStep;
+  }
+
+  @alias('coverageStep.endTime')
+  coverageStepEndTime;
+
+  @computed('event.pr.url')
+  get prNumber() {
+    let url = this.event?.pr?.url || '';
+
+    return url.split('/').pop();
+  }
+
+  @computed('prEvents')
+  get shortenedPrShas() {
+    return this.prEvents.then(result =>
+      result.map((pr, i) => ({
+        index: result.length - i,
+        shortenedSha: pr.event.sha.substr(0, 7),
+        build: pr.build,
+        event: pr.event
+      }))
+    );
+  }
+
+  @computed('buildEnd', 'buildStatus')
+  get buildAction() {
+    if (isActiveBuild(this.buildStatus, this.buildEnd)) {
+      return 'Stop';
     }
-  }),
 
-  coverageStepEndTime: alias('coverageStep.endTime'),
+    return 'Restart';
+  }
 
-  prNumber: computed('event.pr.url', {
-    get() {
-      let url = this.getWithDefault('event.pr.url', '');
+  @computed('buildStatus')
+  get isWaiting() {
+    return this.buildStatus === 'QUEUED';
+  }
 
-      return url.split('/').pop();
+  @computed('buildAction', 'jobName')
+  get hasButton() {
+    if (this.buildAction === 'Stop') {
+      return true;
     }
-  }),
 
-  shortenedPrShas: computed('prEvents', {
-    get() {
-      return this.prEvents.then(result =>
-        result.map((pr, i) => ({
-          index: result.length - i,
-          shortenedSha: pr.event.sha.substr(0, 7),
-          build: pr.build,
-          event: pr.event
-        }))
-      );
+    if (isPRJob(this.jobName)) {
+      return true;
     }
-  }),
 
-  buildAction: computed('buildStatus', {
-    get() {
-      if (isActiveBuild(this.buildStatus, this.buildEnd)) {
-        return 'Stop';
-      }
-
-      return 'Restart';
-    }
-  }),
-
-  isWaiting: computed('buildStatus', {
-    get() {
-      return this.buildStatus === 'QUEUED';
-    }
-  }),
-
-  hasButton: computed('buildAction', 'jobName', {
-    get() {
-      if (this.buildAction === 'Stop') {
-        return true;
-      }
-
-      if (isPRJob(this.jobName)) {
-        return true;
-      }
-
-      return false;
-    }
-  }),
+    return false;
+  }
 
   overrideCoverageInfo() {
     const { buildMeta } = this;
@@ -89,7 +87,7 @@ export default Component.extend({
         ? Number(parseFloat(coverage).toFixed(2))
         : null;
 
-      let coverageInfo = { ...this.get('coverageInfo') };
+      let coverageInfo = { ...this.coverageInfo };
 
       if (coverageFloat) {
         coverageInfo.coverage = `${coverageFloat}%`;
@@ -111,7 +109,7 @@ export default Component.extend({
 
       this.set('coverageInfo', coverageInfo);
     }
-  },
+  }
 
   coverageInfoCompute() {
     // Set coverage query startTime to build start time since user can do coverage during user step
@@ -149,19 +147,20 @@ export default Component.extend({
       this.set('coverageInfo', data);
       this.set('coverageInfoSet', true);
     });
-  },
+  }
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.set('coverageInfoSet', false);
+    this.coverageInfo = {};
 
     this.coverageInfoCompute();
     this.overrideCoverageInfo();
-  },
+  }
 
   willRender() {
-    this._super(...arguments);
+    super.willRender(...arguments);
 
     if (isActiveBuild(this.buildStatus, this.buildEnd)) {
       this.reloadBuild();
@@ -174,19 +173,19 @@ export default Component.extend({
     if (!isActiveBuild(this.buildStatus, this.buildEnd)) {
       this.overrideCoverageInfo();
     }
-  },
+  }
 
-  actions: {
-    changeCurPr(targetPr) {
-      this.changeBuild(targetPr.event.pipelineId, targetPr.build.id);
-    },
+  @action
+  changeCurPr(targetPr) {
+    this.changeBuild(targetPr.event.pipelineId, targetPr.build.id);
+  }
 
-    buildButtonClick() {
-      if (this.buildAction === 'Stop') {
-        this.onStop();
-      } else {
-        this.onStart();
-      }
+  @action
+  buildButtonClick() {
+    if (this.buildAction === 'Stop') {
+      this.onStop();
+    } else {
+      this.onStart();
     }
   }
-});
+}

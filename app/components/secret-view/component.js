@@ -1,103 +1,114 @@
-import { computed } from '@ember/object';
+import classic from 'ember-classic-decorator';
+import { tagName } from '@ember-decorators/component';
+import { action, computed } from '@ember/object';
 import Component from '@ember/component';
 import $ from 'jquery';
 
-export default Component.extend({
-  tagName: 'tr',
-  newValue: null,
-  originalAllowInPR: null,
-  buttonAction: computed('newValue', 'secret.allowInPR', 'originalAllowInPR', {
-    get() {
-      const { secret, pipeline } = this;
+@classic
+@tagName('')
+export default class SecretView extends Component {
+  newValue = null;
 
-      if (pipeline.get('configPipelineId')) {
-        if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
-          return 'Override';
-        }
+  originalAllowInPR = null;
 
-        return this.newValue ||
-          this.originalAllowInPR !== this.get('secret.allowInPR')
-          ? 'Update'
-          : 'Revert';
+  @computed('newValue', 'secret.allowInPR', 'originalAllowInPR')
+  get buttonAction() {
+    const { secret, pipeline } = this;
+
+    if (pipeline.get('configPipelineId')) {
+      if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
+        return 'Override';
       }
 
       return this.newValue ||
         this.originalAllowInPR !== this.get('secret.allowInPR')
         ? 'Update'
-        : 'Delete';
+        : 'Revert';
     }
-  }),
-  passwordPlaceholder: computed({
-    get() {
-      const { secret, pipeline } = this;
 
-      if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
-        return 'Inherited from parent pipeline';
-      }
+    return this.newValue ||
+      this.originalAllowInPR !== this.get('secret.allowInPR')
+      ? 'Update'
+      : 'Delete';
+  }
 
-      return 'Protected';
+  @computed
+  get passwordPlaceholder() {
+    const { secret, pipeline } = this;
+
+    if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
+      return 'Inherited from parent pipeline';
     }
-  }),
+
+    return 'Protected';
+  }
+
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.set('originalAllowInPR', this.get('secret.allowInPR'));
-  },
-  actions: {
-    modifySecret() {
-      const { secret } = this;
+  }
 
-      if (this.buttonAction === 'Delete' || this.buttonAction === 'Revert') {
-        this.set('secretToRemove', true);
+  @action
+  modifySecret() {
+    const { secret } = this;
 
-        return Promise.resolve(null);
-      }
-      if (this.buttonAction === 'Update') {
-        if (this.newValue) {
-          secret.set('value', this.newValue);
-        }
-        secret.save();
-        this.set('newValue', null);
-        this.set('originalAllowInPR', secret.get('allowInPR'));
-      } else if (this.newValue) {
-        // Create child pipeline secret to override inherited secret of same name
-        return this.onCreateSecret(
-          secret.get('name'),
-          this.newValue,
-          this.get('pipeline.id'),
-          secret.get('allowInPR')
-        );
-      }
+    if (this.buttonAction === 'Delete' || this.buttonAction === 'Revert') {
+      this.set('secretToRemove', true);
 
       return Promise.resolve(null);
-    },
-    /**
-     * Toggle eye-icon and password input type
-     * @method togglePasswordInput
-     * @param {Object} event Click event
-     */
-    togglePasswordInput(event) {
-      const { target } = event;
-      const passwordInput = target.previousSibling;
-
-      $(target).toggleClass('fa-eye fa-eye-slash');
-
-      if ($(passwordInput).attr('type') === 'password') {
-        $(passwordInput).attr('type', 'text');
-      } else {
-        $(passwordInput).attr('type', 'password');
+    }
+    if (this.buttonAction === 'Update') {
+      if (this.newValue) {
+        secret.set('value', this.newValue);
       }
-    },
-    removeSecret() {
-      const { secret } = this;
+      secret.save();
+      this.set('newValue', null);
+      this.set('originalAllowInPR', secret.get('allowInPR'));
+    } else if (this.newValue) {
+      // Create child pipeline secret to override inherited secret of same name
+      return this.onCreateSecret(
+        secret.get('name'),
+        this.newValue,
+        this.get('pipeline.id'),
+        secret.get('allowInPR')
+      );
+    }
 
-      return secret.destroyRecord().then(() => {
-        this.secrets.store.unloadRecord(secret);
-        this.secrets.reload();
-      });
-    },
-    cancelRemovingSecret() {
-      this.set('secretToRemove', null);
-      this.set('isRemoving', false);
+    return Promise.resolve(null);
+  }
+
+  /**
+   * Toggle eye-icon and password input type
+   * @method togglePasswordInput
+   * @param {Object} event Click event
+   */
+  @action
+  togglePasswordInput(event) {
+    const { target } = event;
+    const passwordInput = target.previousSibling;
+
+    $(target).toggleClass('fa-eye fa-eye-slash');
+
+    if ($(passwordInput).attr('type') === 'password') {
+      $(passwordInput).attr('type', 'text');
+    } else {
+      $(passwordInput).attr('type', 'password');
     }
   }
-});
+
+  @action
+  removeSecret() {
+    const { secret } = this;
+
+    return secret.destroyRecord().then(() => {
+      this.secrets.store.unloadRecord(secret);
+      this.secrets.reload();
+    });
+  }
+
+  @action
+  cancelRemovingSecret() {
+    this.set('secretToRemove', null);
+    this.set('isRemoving', false);
+  }
+}

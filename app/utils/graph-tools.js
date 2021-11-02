@@ -1,6 +1,3 @@
-import { get } from '@ember/object';
-import DS from 'ember-data';
-
 const STATUS_MAP = {
   SUCCESS: { icon: '\ue903' },
   STARTED_FROM: { icon: '\ue907' },
@@ -38,7 +35,7 @@ const node = (nodes, name) => nodes.find(o => o.name === name);
  * @return {Object}         Reference to the build object from the list if found
  */
 const build = (builds, jobId) =>
-  builds.find(b => b && `${get(b, 'jobId')}` === `${jobId}`);
+  builds.find(b => b && `${b.jobId}` === `${jobId}`);
 
 /**
  * Find a job for the given job id
@@ -47,8 +44,7 @@ const build = (builds, jobId) =>
  * @param  {String} jobId   The job id of the build
  * @return {Object}         Reference to the job object from the list if found
  */
-const job = (jobs, jobId) =>
-  jobs.find(j => j && `${get(j, 'id')}` === `${jobId}`);
+const job = (jobs, jobId) => jobs.find(j => j && `${j.id}` === `${jobId}`);
 
 /**
  * Find the icon to set as the text for a node
@@ -183,8 +179,8 @@ const hasProcessedDest = (graph, name) => {
  * a custom directed graph
  * @method decorateGraph
  * @param  {Object}      inputGraph A directed graph representation { nodes: [], edges: [] }
- * @param  {Array|DS.PromiseArray}  [builds]     A list of build metadata
- * @param  {Array|DS.PromiseArray}  [jobs]       A list of job metadata
+ * @param  {Array|PromiseManyArray}  [builds]     A list of build metadata
+ * @param  {Array|PromiseManyArray}  [jobs]       A list of job metadata
  * @param  {String}      [start]    Node name that indicates what started the graph
  * @return {Object}                 A graph representation with row/column coordinates for drawing, and meta information for scaling
  */
@@ -192,12 +188,8 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   // deep clone
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const { nodes } = graph;
-  const buildsAvailable =
-    (Array.isArray(builds) || builds instanceof DS.PromiseArray) &&
-    get(builds, 'length');
-  const jobsAvailable =
-    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) &&
-    get(jobs, 'length');
+  const buildsAvailable = builds.length;
+  const jobsAvailable = jobs.length;
   const { edges } = graph;
 
   let y = [0]; // accumulator for column heights
@@ -222,18 +214,18 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
     }
 
     // Get job information
-    const jobId = get(n, 'id');
+    const jobId = n.id;
 
     if (jobsAvailable) {
       const j = job(jobs, jobId);
-      const jobIsDisabled = j ? get(j, 'isDisabled') : null;
+      const jobIsDisabled = j ? j.isDisabled : null;
 
       // Set build status to disabled if job is disabled
       if (jobIsDisabled) {
-        const state = get(j, 'state');
+        const { state } = j;
         const stateWithCapitalization =
           state[0].toUpperCase() + state.substring(1).toLowerCase();
-        const stateChanger = get(j, 'stateChanger');
+        const { stateChanger } = j;
 
         n.status = state;
         n.stateChangeMessage = stateChanger
@@ -242,7 +234,10 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
       }
 
       // Set manualStartEnabled on the node
-      const annotations = j ? get(j, 'permutations.0.annotations') : null;
+      const annotations =
+        j && Array.isArray(j.permutations) && j.permutations.length
+          ? j.permutations[0].annotations
+          : null;
 
       if (annotations) {
         n.manualStartDisabled =
@@ -258,8 +253,8 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
 
       // Add build information to node
       if (b) {
-        n.status = get(b, 'status');
-        n.buildId = get(b, 'id');
+        n.status = b.status;
+        n.buildId = b.id;
       }
     }
 

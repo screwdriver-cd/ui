@@ -1,29 +1,44 @@
+import classic from 'ember-classic-decorator';
 import { inject as service } from '@ember/service';
+import { get, getWithDefault, action } from '@ember/object';
 import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
 import getErrorMessage from 'screwdriver-ui/utils/error-messages';
-import { getWithDefault } from '@ember/object';
 import RSVP from 'rsvp';
 
-export default Route.extend({
-  shuttle: service(),
-  triggerService: service('pipeline-triggers'),
-  routeAfterAuthentication: 'pipeline.events',
-  pipelineService: service('pipeline'),
+@classic
+export default class EventsRoute extends Route {
+  @service
+  shuttle;
+
+  @service('pipeline-triggers')
+  triggerService;
+
+  routeAfterAuthentication = 'pipeline.events';
+
+  @service('pipeline')
+  pipelineService;
+
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
-  },
+  }
+
   setupController(controller, model = {}) {
-    this._super(controller, model);
-    const pipelinePreference = getWithDefault(model, 'pipelinePreference', {});
+    super.setupController(controller, model);
+    const pipelinePreference =
+      model.pipelinePreference === undefined ? {} : model.pipelinePreference;
 
     controller.setProperties({
       activeTab: 'events',
-      showPRJobs: getWithDefault(pipelinePreference, 'showPRJobs', true)
+      showPRJobs:
+        pipelinePreference.showPRJobs === undefined
+          ? true
+          : pipelinePreference.showPRJobs
     });
 
-    this.get('pipelineService').setBuildsLink('pipeline.events');
-  },
+    this.pipelineService.setBuildsLink('pipeline.events');
+  }
+
   model() {
     const pipelineId = this.get('pipeline.id');
     const pipelineEventsController = this.controllerFor('pipeline.events');
@@ -55,10 +70,10 @@ export default Route.extend({
         this.transitionTo('/404');
       }
     });
-  },
-  actions: {
-    refreshModel: function refreshModel() {
-      this.refresh();
-    }
   }
-});
+
+  @action
+  refreshModel() {
+    this.refresh();
+  }
+}
