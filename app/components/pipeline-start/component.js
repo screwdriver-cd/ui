@@ -21,10 +21,34 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.set('buildParameters', this.getDefaultBuildParameters());
+    this.set('pipelineParameters', this.getDefaultPipelineParameters());
+    this.set('jobParameters', this.getDefaultJobParameters());
   },
 
   getDefaultBuildParameters() {
+    return Object.assign(
+      this.getDefaultPipelineParameters(),
+      this.getDefaultJobParameters()
+    );
+  },
+
+  getDefaultPipelineParameters() {
     return this.getWithDefault('pipeline.parameters', {});
+  },
+
+  getDefaultJobParameters() {
+    const jobs = this.getWithDefault('pipeline.jobs', []);
+    const parameters = {};
+
+    jobs.forEach(job => {
+      const jobParameters = job.permutations[0].parameters; // TODO: Revisit while supporting matrix job
+
+      if (jobParameters) {
+        parameters[job.name] = jobParameters;
+      }
+    });
+
+    return parameters;
   },
 
   startArgs: computed('prNum', 'jobs', {

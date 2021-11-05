@@ -21,8 +21,8 @@
             options=parameter.value
             renderInPlace=true
             selected=(get parameterizedModel parameter.name)
-            onchange=(action (action "onUpdateValue" parameterizedModel parameter.name))
-            onkeydown=(action (action "searchOrAddtoList" parameterizedModel parameter.name))
+            onchange=(action (action "onUpdateValue" parameterizedModel null parameter.name))
+            onkeydown=(action (action "searchOrAddtoList" parameterizedModel null parameter.name))
             searchPlaceholder="Type to filter"
             noMatchesMessage="Hit enter to override"
             as |selectedValue|
@@ -39,11 +39,57 @@
             label=parameter.value
             placeholder=parameter.value
             property=parameter.name
-            change=(action (action "onUpdateValue" parameterizedModel parameter.name parameter.value))
+            change=(action (action "onUpdateValue" parameterizedModel null parameter.name parameter.value))
           }}
         {{/if}}
       </div>
     {{/form.group}}
+  {{/each}}
+
+  {{#each jobParameters as |jobParametersHolder|}}
+    {{#each jobParametersHolder.parameters as |parameter|}}
+      {{#form.group}}
+        <label class="control-label col-md-4">
+          {{#if parameter.description}}
+            {{fa-icon "question-circle" title=parameter.description}}
+          {{/if}}
+          {{parameter.name}}
+        </label>
+        <div class="col-md-8">
+          {{#if (is-array parameter.value)}}
+            {{#with (get parameterizedModel parameter.name) as |value|}}
+              {{#unless (array-includes value parameter.defaultValues)}}
+                {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
+              {{/unless}}
+            {{/with}}
+            {{#power-select
+              options=parameter.value
+              renderInPlace=true
+              selected=(get parameterizedModel parameter.name)
+              onchange=(action (action "onUpdateValue" parameterizedModel jobParametersHolder.jobName parameter.name))
+              onkeydown=(action (action "searchOrAddtoList" parameterizedModel jobParametersHolder.jobName parameter.name))
+              searchPlaceholder="Type to filter"
+              noMatchesMessage="Hit enter to override"
+            as |selectedValue|
+            }}
+              {{selectedValue}}
+            {{/power-select}}
+          {{else}}
+            {{#unless (array-includes parameter.value parameter.defaultValues)}}
+              {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
+            {{/unless}}
+            {{input
+              value=parameter.value
+              class="form-control"
+              label=parameter.value
+              placeholder=parameter.value
+              property=parameter.name
+              change=(action (action "onUpdateValue" parameterizedModel jobParametersHolder.jobName parameter.name parameter.value))
+            }}
+          {{/if}}
+        </div>
+      {{/form.group}}
+    {{/each}}
   {{/each}}
 
   {{#if showSubmitButton}}

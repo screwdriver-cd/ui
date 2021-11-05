@@ -27,24 +27,54 @@ export default Component.extend({
   buildParameters: {},
 
   /**
+   * jobParameters are expected to be an object consists of key value pairs
+   * @type {Object}
+   */
+  jobParameters: {},
+
+  /**
    * parameters expected to be an object
    * @type {String}
    */
   init() {
     this._super(...arguments);
-    const [parameters, parameterizedModel] = this.normalizeParameters(
+    const normalizedPipelineParameters = this.normalizeParameters(
       this.buildParameters,
-      this.getDefaultBuildParameters()
+      this.getDefaultPipelineParameters()
+    );
+    const normalizedJobParameters = this.normalizeJobParameters(
+      this.jobParameters,
+      this.getDefaultJobParameters()
+    );
+    const parameterizedModel = Object.assign(
+      this.getNormalizedParameterizedPipelineModel(
+        normalizedPipelineParameters
+      ),
+      this.getNormalizedParameterizedJobModel(normalizedJobParameters)
     );
 
     this.setProperties({
-      parameters,
+      parameters: normalizedPipelineParameters,
+      jobParameters: normalizedJobParameters,
       parameterizedModel
     });
   },
 
-  getDefaultBuildParameters() {
+  getDefaultPipelineParameters() {
     return this.getWithDefault('pipeline.parameters', {});
+  },
+
+  getDefaultJobParameters() {
+    const jobs = this.getWithDefault('pipeline.jobs', []);
+    const parameters = {};
+
+    jobs.forEach(job => {
+      const jobParameters = job.permutations[0].parameters; // TODO: Revisit while supporting matrix job
+
+      if (jobParameters) {
+        parameters[job.name] = jobParameters;
+      }
+    });
   },
 
   /**
@@ -84,7 +114,6 @@ export default Component.extend({
    */
   normalizeParameters(parameters = {}, defaultParameters = {}) {
     const normalizedParameters = [];
-    const normalizedParameterizedModel = {};
 
     Object.entries(parameters).forEach(([propertyName, propertyVal]) => {
       let value = propertyVal.value || propertyVal || '';
@@ -102,15 +131,56 @@ export default Component.extend({
         defaultValues: defaultValue,
         description
       });
+    });
+
+    return normalizedParameters;
+  },
+
+  normalizeJobParameters(jobParameters = {}, defaultJobParameters = {}) {
+    const normalizedJobParameters = [];
+
+    Object.entries(jobParameters).forEach(([jobName, parameters]) => {
+      normalizedJobParameters.push({
+        jobName,
+        parameters: this.normalizeParameters(
+          parameters,
+          defaultJobParameters[jobName]
+        )
+      });
+    });
+
+    return normalizedJobParameters;
+  },
+
+  getNormalizedParameterizedModel(normalizedParameters = []) {
+    const normalizedParameterizedModel = {};
+
+    normalizedParameters.forEach(normalizedParam => {
+      let { value } = normalizedParam;
 
       if (Array.isArray(value)) {
         value = getWithDefault(value, '0', '');
       }
 
-      normalizedParameterizedModel[propertyName] = value;
+      normalizedParameterizedModel[normalizedParam.name] = value;
     });
 
-    return [normalizedParameters, normalizedParameterizedModel];
+    return normalizedParameterizedModel;
+  },
+
+  getNormalizedParameterizedPipelineModel(normalizedPipelineParameters = []) {
+    return this.getNormalizedParameterizedModel(normalizedPipelineParameters);
+  },
+
+  getNormalizedParameterizedJobModel(normalizedJobParameters = []) {
+    const normalizedParameterizedModel = {};
+
+    normalizedJobParameters.forEach(entry => {
+      normalizedParameterizedModel[entry.jobName] =
+        this.getNormalizedParameterizedModel(entry.parameters);
+    });
+
+    return normalizedParameterizedModel;
   },
 
   /**
@@ -142,14 +212,21 @@ export default Component.extend({
   },
 
   actions: {
-    searchOrAddtoList(model, propertyName, value, e) {
+    searchOrAddtoList(model, jobName, propertyName, value, e) {
       if (e.keyCode === 13) {
-        this.updateValue({ model, propertyName, value: value.searchText });
+        this.updateValue({
+          model,
+          jobName,
+          propertyName,
+          value: value.searchText
+        });
       }
     },
 
-    onUpdateValue(model, propertyName, value) {
-      this.updateValue({ model, propertyName, value });
+    onUpdateValue(model, jobName, propertyName, value) {
+      const property = `${jobName}.${propertyName}`;
+
+      this.updateValue({ model, property, value });
     },
 
     /**
