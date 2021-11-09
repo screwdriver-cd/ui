@@ -20,9 +20,17 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    this.set('buildParameters', this.getDefaultBuildParameters());
-    this.set('pipelineParameters', this.getDefaultPipelineParameters());
-    this.set('jobParameters', this.getDefaultJobParameters());
+    const pipelineParameters = this.getDefaultPipelineParameters();
+    const jobParameters = this.getDefaultJobParameters();
+    const buildParameters = { ...pipelineParameters };
+
+    Object.assign(buildParameters, jobParameters);
+
+    this.setProperties({
+      pipelineParameters,
+      jobParameters,
+      buildParameters
+    });
   },
 
   getDefaultBuildParameters() {

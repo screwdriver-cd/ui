@@ -38,7 +38,7 @@ export default Component.extend({
    */
   init() {
     this._super(...arguments);
-    const normalizedPipelineParameters = this.normalizeParameters(
+    const normalizedPipelineParameters = this.normalizePipelineParameters(
       this.buildParameters,
       this.getDefaultPipelineParameters()
     );
@@ -54,7 +54,7 @@ export default Component.extend({
     );
 
     this.setProperties({
-      parameters: normalizedPipelineParameters,
+      pipelineParameters: normalizedPipelineParameters,
       jobParameters: normalizedJobParameters,
       parameterizedModel
     });
@@ -136,6 +136,19 @@ export default Component.extend({
     return normalizedParameters;
   },
 
+  normalizePipelineParameters(
+    pipelineParameters = {},
+    defaultPipelineParameters = {}
+  ) {
+    return {
+      parameters: this.normalizeParameters(
+        pipelineParameters,
+        defaultPipelineParameters
+      ),
+      isOpen: true
+    };
+  },
+
   normalizeJobParameters(jobParameters = {}, defaultJobParameters = {}) {
     const normalizedJobParameters = [];
 
@@ -145,7 +158,8 @@ export default Component.extend({
         parameters: this.normalizeParameters(
           parameters,
           defaultJobParameters[jobName]
-        )
+        ),
+        isOpen: false
       });
     });
 
@@ -169,7 +183,9 @@ export default Component.extend({
   },
 
   getNormalizedParameterizedPipelineModel(normalizedPipelineParameters = []) {
-    return this.getNormalizedParameterizedModel(normalizedPipelineParameters);
+    return this.getNormalizedParameterizedModel(
+      normalizedPipelineParameters.parameters
+    );
   },
 
   getNormalizedParameterizedJobModel(normalizedJobParameters = []) {
@@ -207,8 +223,15 @@ export default Component.extend({
     throw new Error('Not implemented');
   },
 
-  updateValue({ model, propertyName, value }) {
-    set(model, propertyName, value);
+  updateValue({ model, jobName, propertyName, value }) {
+    if (jobName === null) {
+      set(model, propertyName, value);
+    } else {
+      const jobParameters = model[jobName];
+
+      jobParameters[propertyName] = value;
+      set(model, jobName, jobParameters);
+    }
   },
 
   actions: {
@@ -224,9 +247,23 @@ export default Component.extend({
     },
 
     onUpdateValue(model, jobName, propertyName, value) {
-      const property = `${jobName}.${propertyName}`;
+      this.updateValue({ model, jobName, propertyName, value });
+    },
 
-      this.updateValue({ model, property, value });
+    onExpandCollapseParamGroup(jobName) {
+      if (jobName === null) {
+        set(this.pipelineParameters, 'isOpen', !this.pipelineParameters.isOpen);
+      } else {
+        const jobParamGroup = this.jobParameters.findBy('jobName', jobName);
+
+        set(jobParamGroup, 'isOpen', !jobParamGroup.isOpen);
+      }
+
+      // set(parameterGroup, 'isOpen', !parameterGroup.isOpen);
+      // this.toggleProperty('isOpen');
+      // this.element
+      //   .querySelectorAll('div')
+      //   .forEach(el => el.classList.toggle('hidden'));
     },
 
     /**

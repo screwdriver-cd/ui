@@ -12,6 +12,17 @@ button.start-with-parameters-button {
   }
 }
 
+.parameters-container {
+  max-height: 300px;
+  overflow-y: scroll;
+
+  .parameter-group {
+    &.collapsed {
+      display: none;
+    }
+  }
+}
+
 .notice-default-values-icon {
   position: absolute;
   top: 50%;
@@ -28,7 +39,7 @@ button.start-with-parameters-button {
 
   &:after {
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 8px;
     font-size: 12px;
     font-weight: 700;
