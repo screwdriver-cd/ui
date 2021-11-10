@@ -21,16 +21,16 @@ export default Component.extend({
   submitButtonText: 'Submit',
 
   /**
-   * buildParameters are expected to be an object consists of key value pairs
+   * buildPipelineParameters are expected to be an object consists of key value pairs
    * @type {Object}
    */
-  buildParameters: {},
+  buildPipelineParameters: {},
 
   /**
-   * jobParameters are expected to be an object consists of key value pairs
+   * buildJobParameters are expected to be an object consists of key value pairs
    * @type {Object}
    */
-  jobParameters: {},
+  buildJobParameters: {},
 
   /**
    * parameters expected to be an object
@@ -39,11 +39,11 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const normalizedPipelineParameters = this.normalizePipelineParameters(
-      this.buildParameters,
+      this.buildPipelineParameters,
       this.getDefaultPipelineParameters()
     );
     const normalizedJobParameters = this.normalizeJobParameters(
-      this.jobParameters,
+      this.buildJobParameters,
       this.getDefaultJobParameters()
     );
     const parameterizedModel = Object.assign(

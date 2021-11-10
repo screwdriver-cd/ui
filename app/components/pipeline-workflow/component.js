@@ -142,6 +142,21 @@ export default Component.extend({
       // Find root nodes to determine position of tooltip
       if (job && edges && !/^~/.test(job.name)) {
         const selectedEvent = get(this, 'selectedEventObj');
+        const pipelineParameters = {};
+        const jobParameters = {};
+
+        // Segregate pipeline leval and job level parameters
+        Object.entries(selectedEvent.meta.parameters).forEach(
+          ([propertyName, propertyVal]) => {
+            const keys = Object.keys(propertyVal);
+
+            if (keys.length === 1 && keys[0] === 'value') {
+              pipelineParameters[propertyName] = propertyVal;
+            } else {
+              jobParameters[propertyName] = propertyVal;
+            }
+          }
+        );
 
         toolTipProperties = {
           showTooltip: true,
@@ -152,7 +167,9 @@ export default Component.extend({
             job,
             mouseevent,
             sizes,
-            selectedEvent
+            selectedEvent,
+            pipelineParameters,
+            jobParameters
           }
         };
         isRootNode = isRoot(edges, job.name);
