@@ -216,7 +216,7 @@ module(
         startSingleBuild: (jobId, jobName, status) => {
           assert.equal(jobId, 1);
           assert.equal(jobName, 'a');
-          assert.equal(status, undefined);
+          assert.equal(status, 'START');
         },
         stopBuild: () => {
           assert.ok(false);
