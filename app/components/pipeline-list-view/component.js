@@ -89,11 +89,12 @@ export default Component.extend({
    * @param  {integer} jobId
    * @return {undefined}
    */
-  openParametersModal(jobId) {
+  openParametersModal(jobId, buildState) {
     const job = this.jobs.findBy('id', `${jobId}`);
 
     this.setProperties({
       job,
+      buildState,
       isShowingModal: true
     });
   },
@@ -157,7 +158,8 @@ export default Component.extend({
         startSingleBuild: this.get('startSingleBuild'),
         stopBuild: this.get('stopBuild'),
         isShowingModal: this.isShowingModal,
-        hasParameters: Object.keys(this.get('buildParameters')).length > 0,
+        hasParameters:
+          Object.keys(this.getWithDefault('buildParameters', {})).length > 0,
         openParametersModal: this.openParametersModal.bind(this)
       };
 
@@ -292,7 +294,10 @@ export default Component.extend({
     },
 
     startBuild(parameterizedModel) {
-      this.startDetachedBuild(this.job, parameterizedModel);
+      const buildState = this.get('buildState');
+      const job = this.get('job');
+
+      this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
     }
   }
 });
