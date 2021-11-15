@@ -15,13 +15,13 @@ export default Component.extend({
     }
   }),
   actions: {
-    startSingleBuild(status = undefined) {
+    startSingleBuild(buildState = undefined) {
       const value = this.get('value');
 
-      if (value.hasParameters) {
-        value.openParametersModal(value.jobId);
+      if (buildState === 'START' && value.hasParameters) {
+        value.openParametersModal(value.jobId, buildState);
       } else {
-        value.startSingleBuild(value.jobId, value.jobName, status);
+        value.startSingleBuild(value.jobId, value.jobName, buildState);
       }
     },
     stopBuild() {

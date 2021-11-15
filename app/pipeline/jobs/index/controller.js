@@ -10,12 +10,7 @@ import ModelReloaderMixin, {
 } from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob, isActiveBuild } from 'screwdriver-ui/utils/build';
 import moment from 'moment';
-import {
-  createEvent,
-  startDetachedBuild,
-  stopBuild,
-  updateEvents
-} from '../../events/controller';
+import { createEvent, stopBuild, updateEvents } from '../../events/controller';
 
 const PAST_TIME = moment().subtract(1, 'day');
 
@@ -201,8 +196,7 @@ export default Controller.extend(ModelReloaderMixin, {
     async updateListViewJobs() {
       return this.updateListViewJobs();
     },
-    startDetachedBuild,
-    async startSingleBuild(jobId, jobName, buildState = undefined) {
+    async startSingleBuild(jobId, jobName, buildState = undefined, parameters) {
       this.set('isShowingModal', true);
 
       const pipelineId = get(this, 'pipeline.id');
@@ -215,7 +209,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
       let eventPayload;
 
-      if (buildState) {
+      if (buildState === 'RESTART') {
         const buildQueryConfig = { jobId };
 
         const build = await this.store.queryRecord('build', buildQueryConfig);
@@ -246,6 +240,10 @@ export default Controller.extend(ModelReloaderMixin, {
           startFrom,
           causeMessage
         };
+      }
+
+      if (parameters) {
+        eventPayload.meta = { parameters };
       }
 
       await this.createEvent(eventPayload);

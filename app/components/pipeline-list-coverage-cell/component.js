@@ -18,13 +18,15 @@ export default Component.extend(InViewportMixin, {
   async didEnterViewport() {
     if (this.loaded === false) {
       try {
-        this.set('loading', true);
-        const coverage = await this.shuttle.fetchCoverage(this.value);
+        if (!this.isDestroyed && !this.isDestroying) {
+          this.set('loading', true);
+          const coverage = await this.shuttle.fetchCoverage(this.value);
 
-        this.setProperties({
-          coverage,
-          loaded: true
-        });
+          this.setProperties({
+            coverage,
+            loaded: true
+          });
+        }
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error('err', err);
