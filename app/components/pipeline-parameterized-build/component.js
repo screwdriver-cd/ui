@@ -229,7 +229,7 @@ export default Component.extend({
     } else {
       const jobParameters = model[jobName];
 
-      jobParameters[propertyName] = value;
+      set(jobParameters, propertyName, value);
       set(model, jobName, jobParameters);
     }
   },
@@ -258,12 +258,6 @@ export default Component.extend({
 
         set(jobParamGroup, 'isOpen', !jobParamGroup.isOpen);
       }
-
-      // set(parameterGroup, 'isOpen', !parameterGroup.isOpen);
-      // this.toggleProperty('isOpen');
-      // this.element
-      //   .querySelectorAll('div')
-      //   .forEach(el => el.classList.toggle('hidden'));
     },
 
     /**

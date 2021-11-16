@@ -75,18 +75,20 @@
                       {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
                     {{/unless}}
                   {{/with}}
-                  {{#power-select
-                    options=parameter.value
-                    renderInPlace=true
-                    selected=(get parameterizedModel parameter.name)
-                    onchange=(action (action "onUpdateValue" parameterizedModel jobParameterGroup.jobName parameter.name))
-                    onkeydown=(action (action "searchOrAddtoList" parameterizedModel jobParameterGroup.jobName parameter.name))
-                    searchPlaceholder="Type to filter"
-                    noMatchesMessage="Hit enter to override"
-                  as |selectedValue|
-                  }}
-                    {{selectedValue}}
-                  {{/power-select}}
+                  {{#with (get parameterizedModel jobParameterGroup.jobName) as |jobParameterizedModel|}}
+                    {{#power-select
+                      options=parameter.value
+                      renderInPlace=true
+                      selected=(get jobParameterizedModel parameter.name)
+                      onchange=(action (action "onUpdateValue" parameterizedModel jobParameterGroup.jobName parameter.name))
+                      onkeydown=(action (action "searchOrAddtoList" parameterizedModel jobParameterGroup.jobName parameter.name))
+                      searchPlaceholder="Type to filter"
+                      noMatchesMessage="Hit enter to override"
+                    as |selectedValue|
+                    }}
+                      {{selectedValue}}
+                    {{/power-select}}
+                  {{/with}}
                 {{else}}
                   {{#unless (array-includes parameter.value parameter.defaultValues)}}
                     {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
