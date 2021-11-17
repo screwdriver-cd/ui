@@ -44,7 +44,8 @@
     {{pipeline-parameterized-build
       pipeline=pipeline
       showSubmitButton=true
-      buildParameters=buildParameters
+      buildPipelineParameters=pipelineParameters
+      buildJobParameters=jobParameters
       onSave=(action "startBuild")
       onClose=(action "closeModal")}}
   {{/modal-dialog}}
