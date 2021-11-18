@@ -75,6 +75,8 @@ export default Component.extend({
         parameters[job.name] = jobParameters;
       }
     });
+
+    return parameters;
   },
 
   /**
