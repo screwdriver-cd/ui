@@ -93,36 +93,90 @@ export default Component.extend({
     return prNum && buildExists.length !== 0;
   }),
 
-  buildParameters: computed('tooltipData', function preselectBuildParameters() {
-    const defaultParameters = this.getWithDefault('pipeline.parameters', {});
-    const buildParameters = copy(defaultParameters, true);
+  getDefaultPipelineParameters() {
+    return this.getWithDefault('pipeline.parameters', {});
+  },
 
-    if (this.tooltipData) {
-      const currentEventParameters =
-        this.tooltipData.selectedEvent.meta.parameters;
-      const parameterNames = Object.keys(buildParameters);
+  getDefaultJobParameters() {
+    const jobs = this.getWithDefault('pipeline.jobs', []);
+    const parameters = {};
 
+    jobs.forEach(job => {
+      const jobParameters = job.permutations[0].parameters; // TODO: Revisit while supporting matrix job
+
+      if (jobParameters) {
+        parameters[job.name] = jobParameters;
+      }
+    });
+
+    return parameters;
+  },
+
+  mergeDefaultAndEventParameters(defaultParameters = {}, eventParameters) {
+    const mergedParameters = copy(defaultParameters, true);
+    const parameterNames = Object.keys(eventParameters);
+
+    if (eventParameters) {
       parameterNames.forEach(parameterName => {
         const parameterValue =
-          buildParameters[parameterName].value ||
-          buildParameters[parameterName];
-        const currentEventParameterValue =
-          currentEventParameters[parameterName].value ||
-          currentEventParameters[parameterName];
+          mergedParameters[parameterName].value ||
+          mergedParameters[parameterName];
+        const eventParameterValue =
+          eventParameters[parameterName].value ||
+          eventParameters[parameterName];
 
         if (Array.isArray(parameterValue)) {
-          parameterValue.removeObject(currentEventParameterValue);
-          parameterValue.unshift(currentEventParameterValue);
-        } else if (buildParameters[parameterName].value) {
-          buildParameters[parameterName].value = currentEventParameterValue;
+          parameterValue.removeObject(eventParameterValue);
+          parameterValue.unshift(eventParameterValue);
+        } else if (mergedParameters[parameterName].value) {
+          mergedParameters[parameterName].value = eventParameterValue;
         } else {
-          buildParameters[parameterName] = currentEventParameterValue;
+          mergedParameters[parameterName] = eventParameterValue;
         }
       });
     }
 
-    return buildParameters;
-  }),
+    return mergedParameters;
+  },
+
+  buildPipelineParameters: computed(
+    'tooltipData',
+    function preselectBuildParameters() {
+      return this.mergeDefaultAndEventParameters(
+        this.getDefaultPipelineParameters(),
+        this.get('tooltipData.pipelineParameters')
+      );
+    }
+  ),
+
+  buildJobParameters: computed(
+    'tooltipData',
+    function preselectBuildParameters() {
+      const defaultParameters = this.getDefaultJobParameters();
+      const buildParameters = copy(defaultParameters, true);
+
+      if (this.tooltipData) {
+        const currentEventParameters = this.tooltipData.jobParameters;
+
+        Object.entries(currentEventParameters).forEach(
+          ([jobName, currentJobParameters]) => {
+            const buildJobParameters = getWithDefault(
+              buildParameters,
+              jobName,
+              {}
+            );
+
+            buildParameters[jobName] = this.mergeDefaultAndEventParameters(
+              buildJobParameters,
+              currentJobParameters
+            );
+          }
+        );
+      }
+
+      return buildParameters;
+    }
+  ),
 
   didUpdateAttrs() {
     this._super(...arguments);
