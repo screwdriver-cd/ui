@@ -145,7 +145,7 @@ export default Component.extend({
         const pipelineParameters = {};
         const jobParameters = {};
 
-        // Segregate pipeline leval and job level parameters
+        // Segregate pipeline level and job level parameters
         Object.entries(selectedEvent.meta.parameters).forEach(
           ([propertyName, propertyVal]) => {
             const keys = Object.keys(propertyVal);

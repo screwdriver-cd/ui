@@ -169,7 +169,7 @@ export default Component.extend({
 
       const hasParameters =
         Object.keys(this.getWithDefault('pipelineParameters', {})).length > 0 ||
-        Object.keys(this.getWithDefault('obParameters', {})).length > 0;
+        Object.keys(this.getWithDefault('jobParameters', {})).length > 0;
 
       const actionsData = {
         jobId,

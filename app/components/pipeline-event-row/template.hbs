@@ -22,7 +22,7 @@
     <div class="date greyOut">Started {{event.createTimeExact}}</div>
     <span class="message" title={{event.commit.message}}>{{event.truncatedMessage}}</span>
     <div class="by">
-      {{#if isCommiterDifferent}}
+      {{#if isCommitterDifferent}}
         <span>Committed by: </span>
         <a href={{event.commit.author.url}}>{{event.commit.author.name}}</a>
         <br>
@@ -72,7 +72,8 @@
           {{pipeline-parameterized-build
             pipeline=pipeline
             showSubmitButton=true
-            buildParameters=event.meta.parameters
+            buildPipelineParameters=pipelineParameters
+            buildJobParameters=jobParameters
             submitButtonText="Close"
             onSave=(action "toggleParametersPreview")}}
         {{/modal-dialog}}
@@ -82,12 +83,34 @@
         {{#if isInlineParameters}}
           <span>Parameters:</span>
           <ul>
-            {{#each-in event.meta.parameters as |pName pVal|}}
+            {{#if (get-length pipelineParameters)}}
               <li>
-                <span class="parameter-name badge">{{pName}}</span>
-                <span class="parameter-value">:{{pVal.value}}</span>
+                <span class="parameter-group badge">Shared</span>
+                <ul>
+                  {{#each-in pipelineParameters as |pName pVal|}}
+                    <li>
+                      <span class="parameter-name badge">{{pName}}</span>
+                      <span class="parameter-value">:{{pVal.value}}</span>
+                    </li>
+                  {{/each-in}}
+                </ul>
               </li>
-            {{/each-in}}
+            {{/if}}
+            {{#if (get-length jobParameters)}}
+              {{#each-in jobParameters as |jobName parameters|}}
+                <li>
+                  <span class="parameter-group badge">Job: {{jobName}}</span>
+                  <ul>
+                    {{#each-in parameters as |pName pVal|}}
+                      <li>
+                        <span class="parameter-name badge">{{pName}}</span>
+                        <span class="parameter-value">:{{pVal.value}}</span>
+                      </li>
+                    {{/each-in}}
+                  </ul>
+                </li>
+              {{/each-in}}
+            {{/if}}
           </ul>
         {{else}}
           <span>
