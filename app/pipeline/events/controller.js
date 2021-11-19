@@ -352,21 +352,27 @@ export default Controller.extend(ModelReloaderMixin, {
       if (!this.prChainEnabled) {
         return prEvents.map(prEvent => {
           const prWorkflowGraph = prEvent.workflowGraph;
-          const prNode = prWorkflowGraph.nodes.findBy('name', '~pr');
-          const edgesToRemove = [];
-          const nodesToAdd = [prNode];
 
+          const prNodes = prWorkflowGraph.nodes.filter(n =>
+            n.name.startsWith('~pr')
+          );
+          const edgesToAdd = [];
+          const nodesToAdd = [...prNodes];
+
+          // 1 level deep
           prWorkflowGraph.edges.forEach(e => {
-            if (prNode.name === e.src) {
-              const endNode = prWorkflowGraph.nodes.findBy('name', e.dest);
+            prNodes.forEach(prNode => {
+              if (prNode.name === e.src) {
+                const endNode = prWorkflowGraph.nodes.findBy('name', e.dest);
 
-              nodesToAdd.pushObject(endNode);
-            } else {
-              edgesToRemove.pushObject(e);
-            }
+                nodesToAdd.pushObject(endNode);
+                edgesToAdd.pushObject(e);
+              }
+            });
           });
 
-          prWorkflowGraph.edges.removeObjects(edgesToRemove);
+          prWorkflowGraph.edges.clear();
+          prWorkflowGraph.edges.pushObjects(edgesToAdd);
           prWorkflowGraph.nodes.clear();
           prWorkflowGraph.nodes.pushObjects(nodesToAdd);
 
