@@ -19,6 +19,12 @@
 
 & {
   position: relative;
+  height: 100%;
+}
+
+svg {
+  min-width: 100%;
+  min-height: 100%;
 }
 
 g {
