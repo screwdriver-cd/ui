@@ -71,7 +71,8 @@ export default Component.extend({
 
     this.setProperties({
       table,
-      buildParameters: this.getDefaultBuildParameters()
+      pipelineParameters: this.getDefaultPipelineParameters(),
+      jobParameters: this.getDefaultJobParameters()
     });
   },
 
@@ -80,8 +81,23 @@ export default Component.extend({
     this.set('jobsDetails', []);
   },
 
-  getDefaultBuildParameters() {
+  getDefaultPipelineParameters() {
     return this.getWithDefault('pipeline.parameters', {});
+  },
+
+  getDefaultJobParameters() {
+    const jobs = this.getWithDefault('pipeline.jobs', []);
+    const parameters = {};
+
+    jobs.forEach(job => {
+      const jobParameters = job.permutations[0].parameters; // TODO: Revisit while supporting matrix job
+
+      if (jobParameters) {
+        parameters[job.name] = jobParameters;
+      }
+    });
+
+    return parameters;
   },
 
   /**
@@ -151,6 +167,10 @@ export default Component.extend({
         build: latestBuild
       };
 
+      const hasParameters =
+        Object.keys(this.getWithDefault('pipelineParameters', {})).length > 0 ||
+        Object.keys(this.getWithDefault('jobParameters', {})).length > 0;
+
       const actionsData = {
         jobId,
         jobName,
@@ -158,8 +178,7 @@ export default Component.extend({
         startSingleBuild: this.get('startSingleBuild'),
         stopBuild: this.get('stopBuild'),
         isShowingModal: this.isShowingModal,
-        hasParameters:
-          Object.keys(this.getWithDefault('buildParameters', {})).length > 0,
+        hasParameters,
         openParametersModal: this.openParametersModal.bind(this)
       };
 
@@ -289,7 +308,8 @@ export default Component.extend({
     resetForm() {
       this.setProperties({
         isShowingModal: false,
-        buildParameters: this.getDefaultBuildParameters()
+        pipelineParameters: this.getDefaultPipelineParameters(),
+        jobParameters: this.getDefaultJobParameters()
       });
     },
 

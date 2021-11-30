@@ -18,7 +18,8 @@
         {{pipeline-parameterized-build
           pipeline=pipeline
           showSubmitButton=true
-          buildParameters=buildParameters
+          buildPipelineParameters=pipelineParameters
+          buildJobParameters=jobParameters
           onSave=(action "startBuild")
           onClose=(action "toggleModal")}}
       {{/modal-dialog}}
@@ -40,7 +41,8 @@
         {{pipeline-parameterized-build
           pipeline=pipeline
           showSubmitButton=true
-          buildParameters=buildParameters
+          buildPipelineParameters=pipelineParameters
+          buildJobParameters=jobParameters
           onSave=(action "startBuild")
           onClose=(action dd.closeDropdown)}}
       {{/dd.menu}}

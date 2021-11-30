@@ -5,26 +5,61 @@ import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
 export default Component.extend({
   direction: 'down',
 
-  hasParameters: computed('buildParameters', function hasParameters() {
-    return Object.keys(this.buildParameters).length > 0;
-  }),
+  hasParameters: computed(
+    'pipelineParameters',
+    'jobParameters',
+    function hasParameters() {
+      return (
+        Object.keys(this.pipelineParameters).length > 0 ||
+        Object.keys(this.jobParameters).length > 0
+      );
+    }
+  ),
 
   hasLargeNumberOfParameters: computed(
-    'buildParameters',
+    'pipelineParameters',
+    'jobParameters',
     function hasLargeNumberOfParameters() {
-      return (
-        Object.keys(this.buildParameters).length > MAX_NUM_OF_PARAMETERS_ALLOWED
-      );
+      const paramCount =
+        Object.keys(this.pipelineParameters).length +
+        Object.values(this.jobParameters).reduce((count, parameters) => {
+          if (count) {
+            return count + Object.keys(parameters).length;
+          }
+
+          return Object.keys(parameters).length;
+        }, 0);
+
+      return paramCount > MAX_NUM_OF_PARAMETERS_ALLOWED;
     }
   ),
 
   init() {
     this._super(...arguments);
-    this.set('buildParameters', this.getDefaultBuildParameters());
+
+    this.setProperties({
+      pipelineParameters: this.getDefaultPipelineParameters(),
+      jobParameters: this.getDefaultJobParameters()
+    });
   },
 
-  getDefaultBuildParameters() {
+  getDefaultPipelineParameters() {
     return this.getWithDefault('pipeline.parameters', {});
+  },
+
+  getDefaultJobParameters() {
+    const jobs = this.getWithDefault('pipeline.jobs', []);
+    const parameters = {};
+
+    jobs.forEach(job => {
+      const jobParameters = job.permutations[0].parameters; // TODO: Revisit while supporting matrix job
+
+      if (jobParameters) {
+        parameters[job.name] = jobParameters;
+      }
+    });
+
+    return parameters;
   },
 
   startArgs: computed('prNum', 'jobs', {
@@ -72,7 +107,8 @@ export default Component.extend({
 
     resetForm() {
       this.setProperties({
-        buildParameters: this.getDefaultBuildParameters(),
+        pipelineParameters: this.getDefaultPipelineParameters(),
+        jobParameters: this.getDefaultJobParameters(),
         direction: 'down',
         isShowingModal: false
       });

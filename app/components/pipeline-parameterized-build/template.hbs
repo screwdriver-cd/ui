@@ -2,49 +2,113 @@
   class="start-with-parameters-form"
   onSubmit=(action "onSave" parameters) as |form|}}
 
-  {{#each parameters as |parameter|}}
-    {{#form.group}}
-      <label class="control-label col-md-4">
-        {{#if parameter.description}}
-          {{fa-icon "question-circle" title=parameter.description}}
-        {{/if}}
-        {{parameter.name}}
-      </label>
-      <div class="col-md-8">
-        {{#if (is-array parameter.value)}}
-          {{#with (get parameterizedModel parameter.name) as |value|}}
-            {{#unless (array-includes value parameter.defaultValues)}}
-              {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
-            {{/unless}}
-          {{/with}}
-          {{#power-select
-            options=parameter.value
-            renderInPlace=true
-            selected=(get parameterizedModel parameter.name)
-            onchange=(action (action "onUpdateValue" parameterizedModel parameter.name))
-            onkeydown=(action (action "searchOrAddtoList" parameterizedModel parameter.name))
-            searchPlaceholder="Type to filter"
-            noMatchesMessage="Hit enter to override"
-            as |selectedValue|
-          }}
-            {{selectedValue}}
-          {{/power-select}}
-        {{else}}
-          {{#unless (array-includes parameter.value parameter.defaultValues)}}
-            {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
-          {{/unless}}
-          {{input
-            value=parameter.value
-            class="form-control"
-            label=parameter.value
-            placeholder=parameter.value
-            property=parameter.name
-            change=(action (action "onUpdateValue" parameterizedModel parameter.name parameter.value))
-          }}
-        {{/if}}
+  <div class="parameter-group-list">
+    {{#if (get-length pipelineParameters.parameters)}}
+      <div class="parameter-group">
+        <h4 {{action "onExpandCollapseParamGroup" null}}>{{fa-icon (if pipelineParameters.isOpen "minus-square" "plus-square")}} Shared</h4>
+        <div class="parameter-list {{if pipelineParameters.isOpen "expanded" "collapsed"}}">
+          {{#each pipelineParameters.parameters as |parameter|}}
+            {{#form.group}}
+              <label class="control-label col-md-4">
+                {{#if parameter.description}}
+                  {{fa-icon "question-circle" title=parameter.description}}
+                {{/if}}
+                {{parameter.name}}
+              </label>
+              <div class="col-md-8">
+                {{#if (is-array parameter.value)}}
+                  {{#with (get parameterizedModel parameter.name) as |value|}}
+                    {{#unless (array-includes value parameter.defaultValues)}}
+                      {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
+                    {{/unless}}
+                  {{/with}}
+                  {{#power-select
+                    options=parameter.value
+                    renderInPlace=true
+                    selected=(get parameterizedModel parameter.name)
+                    onchange=(action (action "onUpdateValue" parameterizedModel null parameter.name))
+                    onkeydown=(action (action "searchOrAddtoList" parameterizedModel null parameter.name))
+                    searchPlaceholder="Type to filter"
+                    noMatchesMessage="Hit enter to override"
+                    as |selectedValue|
+                  }}
+                    {{selectedValue}}
+                  {{/power-select}}
+                {{else}}
+                  {{#unless (array-includes parameter.value parameter.defaultValues)}}
+                    {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
+                  {{/unless}}
+                  {{input
+                    value=parameter.value
+                    class="form-control"
+                    label=parameter.value
+                    placeholder=parameter.value
+                    property=parameter.name
+                    change=(action (action "onUpdateValue" parameterizedModel null parameter.name parameter.value))
+                  }}
+                {{/if}}
+              </div>
+            {{/form.group}}
+          {{/each}}
+        </div>
       </div>
-    {{/form.group}}
-  {{/each}}
+    {{/if}}
+
+    {{#each jobParameters as |jobParameterGroup|}}
+      <div class="parameter-group">
+        <h4 onClick={{action "onExpandCollapseParamGroup" jobParameterGroup.jobName}}>
+          {{fa-icon (if jobParameterGroup.isOpen "minus-square" "plus-square")}} Job: {{jobParameterGroup.jobName}}
+        </h4>
+        <div class="parameter-list {{if jobParameterGroup.isOpen "expanded" "collapsed"}}">
+          {{#each jobParameterGroup.parameters as |parameter|}}
+            {{#form.group}}
+              <label class="control-label col-md-4">
+                {{#if parameter.description}}
+                  {{fa-icon "question-circle" title=parameter.description}}
+                {{/if}}
+                {{parameter.name}}
+              </label>
+              <div class="col-md-8">
+                {{#if (is-array parameter.value)}}
+                  {{#with (get parameterizedModel parameter.name) as |value|}}
+                    {{#unless (array-includes value parameter.defaultValues)}}
+                      {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
+                    {{/unless}}
+                  {{/with}}
+                  {{#with (get parameterizedModel jobParameterGroup.jobName) as |jobParameterizedModel|}}
+                    {{#power-select
+                      options=parameter.value
+                      renderInPlace=true
+                      selected=(get jobParameterizedModel parameter.name)
+                      onchange=(action (action "onUpdateValue" parameterizedModel jobParameterGroup.jobName parameter.name))
+                      onkeydown=(action (action "searchOrAddtoList" parameterizedModel jobParameterGroup.jobName parameter.name))
+                      searchPlaceholder="Type to filter"
+                      noMatchesMessage="Hit enter to override"
+                    as |selectedValue|
+                    }}
+                      {{selectedValue}}
+                    {{/power-select}}
+                  {{/with}}
+                {{else}}
+                  {{#unless (array-includes parameter.value parameter.defaultValues)}}
+                    {{fa-icon "exclamation-triangle" title=(concat "Default value: " parameter.defaultValues) class="notice-default-values-icon"}}
+                  {{/unless}}
+                  {{input
+                    value=parameter.value
+                    class="form-control"
+                    label=parameter.value
+                    placeholder=parameter.value
+                    property=parameter.name
+                    change=(action (action "onUpdateValue" parameterizedModel jobParameterGroup.jobName parameter.name parameter.value))
+                  }}
+                {{/if}}
+              </div>
+            {{/form.group}}
+          {{/each}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
 
   {{#if showSubmitButton}}
     <div class="btn-group">
