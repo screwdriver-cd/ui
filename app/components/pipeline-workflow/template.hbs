@@ -42,8 +42,7 @@
         {{#if (get-length tooltipData.selectedEvent.meta.parameters)}}
           {{#pipeline-parameterized-build
             pipeline=pipeline
-            buildPipelineParameters=tooltipData.pipelineParameters
-            buildJobParameters=tooltipData.jobParameters
+            buildParameters=tooltipData.selectedEvent.meta.parameters
             as |parameterizedBuild| }}
             <div class="form-group form-horizontal">
               <label class="control-label col-md-4">Reason:</label>
@@ -89,8 +88,7 @@
       {{else if (get-length tooltipData.selectedEvent.meta.parameters)}}
         {{#pipeline-parameterized-build
           pipeline=pipeline
-          buildPipelineParameters=buildPipelineParameters
-          buildJobParameters=buildJobParameters
+          buildParameters=buildParameters
           as |parameterizedBuild| }}
           <div class="row">
             <div class="col-xs-6">

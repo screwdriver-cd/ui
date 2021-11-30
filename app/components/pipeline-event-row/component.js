@@ -31,47 +31,13 @@ export default Component.extend({
     }
   }),
 
-  init() {
-    this._super(...arguments);
+  numberOfParameters: computed('event.meta.parameters', {
+    get() {
+      const parameters = this.getWithDefault('event.meta.parameters', {});
 
-    const pipelineParameters = {};
-    const jobParameters = {};
-
-    // Segregate pipeline level and job level parameters
-    Object.entries(this.getWithDefault('event.meta.parameters', {})).forEach(
-      ([propertyName, propertyVal]) => {
-        const keys = Object.keys(propertyVal);
-
-        if (keys.length === 1 && keys[0] === 'value') {
-          pipelineParameters[propertyName] = propertyVal;
-        } else {
-          jobParameters[propertyName] = propertyVal;
-        }
-      }
-    );
-
-    this.setProperties({
-      pipelineParameters,
-      jobParameters
-    });
-  },
-
-  numberOfParameters: computed(
-    'pipelineParameters',
-    'jobParameters',
-    function numberOfParameters() {
-      return (
-        Object.keys(this.pipelineParameters).length +
-        Object.values(this.jobParameters).reduce((count, parameters) => {
-          if (count) {
-            return count + Object.keys(parameters).length;
-          }
-
-          return Object.keys(parameters).length;
-        }, 0)
-      );
+      return Object.keys(parameters).length;
     }
-  ),
+  }),
 
   isInlineParameters: computed('numberOfParameters', {
     get() {
@@ -95,7 +61,7 @@ export default Component.extend({
     }
   }),
 
-  isCommitterDifferent: computed(
+  isCommiterDifferent: computed(
     'isExternalTrigger',
     'event.{creator.name,commit.author.name}',
     {

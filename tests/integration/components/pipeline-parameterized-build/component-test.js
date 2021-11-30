@@ -10,7 +10,7 @@ module(
 
     test('it renders inline', async function (assert) {
       this.setProperties({
-        buildPipelineParameters: {
+        buildParameters: {
           p1: '1',
           p2: '2'
         },
@@ -18,7 +18,7 @@ module(
       });
 
       await render(hbs`{{pipeline-parameterized-build
-      buildPipelineParameters=buildPipelineParameters
+      buildParameters=buildParameters
       showSubmitButton=showSubmitButton}}`);
       assert.dom('input').exists({ count: 2 }, 'There are 2 parameters');
       assert
@@ -30,7 +30,7 @@ module(
       // Set any properties with this.set('myProperty', 'value');
       // Handle any actions with this.set('myAction', function(val) { ... });
       this.setProperties({
-        buildPipelineParameters: {
+        buildParameters: {
           p1: '1',
           p2: '2'
         },
@@ -49,7 +49,7 @@ module(
 
       // Template block usage:
       await render(hbs`
-      {{#pipeline-parameterized-build buildPipelineParameters=buildPipelineParameters as |parameterizedBuild| }}
+      {{#pipeline-parameterized-build buildParameters=buildParameters as |parameterizedBuild| }}
         <button class="test-button is-primary" {{action "checkParameters" parameterizedBuild.parameters}}>Test</button>
       {{/pipeline-parameterized-build}}
     `);
@@ -58,7 +58,7 @@ module(
 
     test('it renders as dropdown list', async function (assert) {
       this.setProperties({
-        buildPipelineParameters: {
+        buildParameters: {
           from: 'latest',
           to: ['test', 'stable']
         },
@@ -66,7 +66,7 @@ module(
       });
 
       await render(hbs`{{pipeline-parameterized-build
-      buildPipelineParameters=buildPipelineParameters
+      buildParameters=buildParameters
       showSubmitButton=showSubmitButton}}`);
       assert.dom('.form-group').exists({ count: 2 }, 'There are 2 parameters');
       assert
@@ -82,7 +82,7 @@ module(
 
     test('it renders description', async function (assert) {
       this.setProperties({
-        buildPipelineParameters: {
+        buildParameters: {
           from: {
             value: 'latest',
             description: 'promote from tag'
@@ -97,7 +97,7 @@ module(
       });
 
       await render(hbs`{{pipeline-parameterized-build
-      buildPipelineParameters=buildPipelineParameters
+      buildParameters=buildParameters
       showSubmitButton=showSubmitButton}}`);
       assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
       assert
@@ -125,7 +125,7 @@ module(
             image: 'test-image'
           }
         },
-        buildPipelineParameters: {
+        buildParameters: {
           from: 'foo',
           to: {
             value: ['bar', 'test', 'stable']
@@ -137,7 +137,7 @@ module(
 
       await render(hbs`{{pipeline-parameterized-build
       pipeline=pipeline
-      buildPipelineParameters=buildPipelineParameters
+      buildParameters=buildParameters
       showSubmitButton=showSubmitButton}}`);
       assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
       assert

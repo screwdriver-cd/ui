@@ -9,8 +9,7 @@ export default () =>
         name: 'main',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
+        archived: false
       },
       {
         id: '12346',
@@ -18,8 +17,7 @@ export default () =>
         name: 'publish',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
+        archived: false
       },
       {
         id: '12347',
@@ -27,8 +25,7 @@ export default () =>
         name: 'PR-42:main',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
+        archived: false
       },
       {
         id: '12348',
@@ -36,8 +33,7 @@ export default () =>
         name: 'PR-42:publish',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
+        archived: false
       },
       {
         id: '12349',
@@ -45,8 +41,7 @@ export default () =>
         name: 'PR-43:main',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
+        archived: false
       }
     ],
     true
@@ -66,32 +61,28 @@ export function metricJobs() {
         name: 'prod',
         pipelineId: 4,
         state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
+        archived: false
       },
       {
         id: 158,
         name: 'beta',
         pipelineId: 4,
         state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
+        archived: false
       },
       {
         id: 157,
         name: 'publish',
         pipelineId: 4,
         state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
+        archived: false
       },
       {
         id: 156,
         name: 'main',
         pipelineId: 4,
         state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
+        archived: false
       }
     ],
     true

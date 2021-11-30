@@ -40,28 +40,6 @@
     </ul>
   </span>
 </div>
-<div class="parameters" title="These are the job-level parameters that the user has defined.">
-  <span class="label">Parameters:</span>
-  <span class="value">
-    <ul>
-      {{#each-in job.parameters as |name value|}}
-        {{#if value.length}}
-          <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
-        {{else}}
-          <li>
-            <span class="name">{{name}}: </span>
-            <ul>
-              <li><span class="value">{{value.value}}</span></li>
-              <li><span class="description">{{value.description}}</span></li>
-            </ul>
-          </li>
-        {{/if}}
-      {{else}}
-        <li>None defined</li>
-      {{/each-in}}
-    </ul>
-  </span>
-</div>
 {{#unless template}}
   <div class="description" title="This is the description of the job">
     <span class="label">Description:</span>

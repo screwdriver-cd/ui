@@ -93,90 +93,36 @@ export default Component.extend({
     return prNum && buildExists.length !== 0;
   }),
 
-  getDefaultPipelineParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
-  },
+  buildParameters: computed('tooltipData', function preselectBuildParameters() {
+    const defaultParameters = this.getWithDefault('pipeline.parameters', {});
+    const buildParameters = copy(defaultParameters, true);
 
-  getDefaultJobParameters() {
-    const jobs = this.getWithDefault('pipeline.jobs', []);
-    const parameters = {};
+    if (this.tooltipData) {
+      const currentEventParameters =
+        this.tooltipData.selectedEvent.meta.parameters;
+      const parameterNames = Object.keys(buildParameters);
 
-    jobs.forEach(job => {
-      const jobParameters = job.permutations[0].parameters; // TODO: Revisit while supporting matrix job
-
-      if (jobParameters) {
-        parameters[job.name] = jobParameters;
-      }
-    });
-
-    return parameters;
-  },
-
-  mergeDefaultAndEventParameters(defaultParameters = {}, eventParameters) {
-    const mergedParameters = copy(defaultParameters, true);
-    const parameterNames = Object.keys(eventParameters);
-
-    if (eventParameters) {
       parameterNames.forEach(parameterName => {
         const parameterValue =
-          mergedParameters[parameterName].value ||
-          mergedParameters[parameterName];
-        const eventParameterValue =
-          eventParameters[parameterName].value ||
-          eventParameters[parameterName];
+          buildParameters[parameterName].value ||
+          buildParameters[parameterName];
+        const currentEventParameterValue =
+          currentEventParameters[parameterName].value ||
+          currentEventParameters[parameterName];
 
         if (Array.isArray(parameterValue)) {
-          parameterValue.removeObject(eventParameterValue);
-          parameterValue.unshift(eventParameterValue);
-        } else if (mergedParameters[parameterName].value) {
-          mergedParameters[parameterName].value = eventParameterValue;
+          parameterValue.removeObject(currentEventParameterValue);
+          parameterValue.unshift(currentEventParameterValue);
+        } else if (buildParameters[parameterName].value) {
+          buildParameters[parameterName].value = currentEventParameterValue;
         } else {
-          mergedParameters[parameterName] = eventParameterValue;
+          buildParameters[parameterName] = currentEventParameterValue;
         }
       });
     }
 
-    return mergedParameters;
-  },
-
-  buildPipelineParameters: computed(
-    'tooltipData',
-    function preselectBuildParameters() {
-      return this.mergeDefaultAndEventParameters(
-        this.getDefaultPipelineParameters(),
-        this.get('tooltipData.pipelineParameters')
-      );
-    }
-  ),
-
-  buildJobParameters: computed(
-    'tooltipData',
-    function preselectBuildParameters() {
-      const defaultParameters = this.getDefaultJobParameters();
-      const buildParameters = copy(defaultParameters, true);
-
-      if (this.tooltipData) {
-        const currentEventParameters = this.tooltipData.jobParameters;
-
-        Object.entries(currentEventParameters).forEach(
-          ([jobName, currentJobParameters]) => {
-            const buildJobParameters = getWithDefault(
-              buildParameters,
-              jobName,
-              {}
-            );
-
-            buildParameters[jobName] = this.mergeDefaultAndEventParameters(
-              buildJobParameters,
-              currentJobParameters
-            );
-          }
-        );
-      }
-
-      return buildParameters;
-    }
-  ),
+    return buildParameters;
+  }),
 
   didUpdateAttrs() {
     this._super(...arguments);
@@ -196,21 +142,6 @@ export default Component.extend({
       // Find root nodes to determine position of tooltip
       if (job && edges && !/^~/.test(job.name)) {
         const selectedEvent = get(this, 'selectedEventObj');
-        const pipelineParameters = {};
-        const jobParameters = {};
-
-        // Segregate pipeline level and job level parameters
-        Object.entries(selectedEvent.meta.parameters).forEach(
-          ([propertyName, propertyVal]) => {
-            const keys = Object.keys(propertyVal);
-
-            if (keys.length === 1 && keys[0] === 'value') {
-              pipelineParameters[propertyName] = propertyVal;
-            } else {
-              jobParameters[propertyName] = propertyVal;
-            }
-          }
-        );
 
         toolTipProperties = {
           showTooltip: true,
@@ -221,9 +152,7 @@ export default Component.extend({
             job,
             mouseevent,
             sizes,
-            selectedEvent,
-            pipelineParameters,
-            jobParameters
+            selectedEvent
           }
         };
         isRootNode = isRoot(edges, job.name);
