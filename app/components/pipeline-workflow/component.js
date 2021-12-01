@@ -196,11 +196,16 @@ export default Component.extend({
       // Find root nodes to determine position of tooltip
       if (job && edges && !/^~/.test(job.name)) {
         const selectedEvent = get(this, 'selectedEventObj');
+        const eventParameters = getWithDefault(
+          selectedEvent,
+          'meta.parameters',
+          {}
+        );
         const pipelineParameters = {};
         const jobParameters = {};
 
         // Segregate pipeline level and job level parameters
-        Object.entries(selectedEvent.meta.parameters).forEach(
+        Object.entries(eventParameters).forEach(
           ([propertyName, propertyVal]) => {
             const keys = Object.keys(propertyVal);
 
