@@ -161,6 +161,10 @@ export default Service.extend({
       newSetting = { ...newSetting, public: settings.publicPipeline };
     }
 
+    if (typeof settings.groupedEvents === 'boolean') {
+      newSetting = { ...newSetting, groupedEvents: settings.groupedEvents };
+    }
+
     const data = { settings: newSetting };
 
     return this.fetchFromApi(method, url, data);
