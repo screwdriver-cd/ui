@@ -17,8 +17,6 @@ export default Component.extend({
         false
       );
 
-      console.log('isGroupedEvents', isGroupedEvents);
-
       return isGroupedEvents;
     }
   }),
