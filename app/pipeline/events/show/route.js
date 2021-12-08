@@ -49,8 +49,11 @@ export default class PipelineEventsShowRoute extends Route {
 
       pipelineEventsController.paginateEvents.pushObject(event);
     } else {
-      const { settings } = pipelineEventsController.pipeline;
-      const isGroupedEvents = getWithDefault(settings, 'groupedEvents', false);
+      const isGroupedEvents = getWithDefault(
+        pipelineEventsController,
+        'settings.groupedEvents',
+        false
+      );
 
       if (isGroupedEvents === true) {
         const { groupEventId } = desiredEvent;
