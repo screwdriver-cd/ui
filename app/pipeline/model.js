@@ -22,7 +22,13 @@ export default DS.Model.extend({
   secrets: DS.hasMany('secret', { async: true }),
   tokens: DS.hasMany('token', { async: true }),
   metrics: DS.hasMany('metric', { async: true }),
-  settings: DS.attr(),
+  settings: DS.attr({
+    defaultValue() {
+      return {
+        groupedEvents: true
+      };
+    }
+  }),
 
   appId: alias('scmRepo.name'),
   branch: computed('scmRepo.{branch,rootDir}', {

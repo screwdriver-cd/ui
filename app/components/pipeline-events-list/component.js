@@ -14,7 +14,7 @@ export default Component.extend({
       const isGroupedEvents = getWithDefault(
         this,
         'pipeline.settings.groupedEvents',
-        false
+        true
       );
 
       return isGroupedEvents;
