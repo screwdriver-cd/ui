@@ -1,3 +1,4 @@
+
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
 <div class="row">
@@ -182,6 +183,31 @@
             </li>
           {{/unless}}
         {{/each}}
+      </ul>
+    </section>
+  </div>
+
+  <div class="col-xs-12 col-md-8">
+    <section class="preference">
+      <h3>Pipeline Preference</h3>
+      <ul>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Group Events</h4>
+              <p>Setup your pipeline preference to group events or not. {{fa-icon "question-circle" title="When grouping is enabled, events which share a common accesstor will be grouped together"}}</p>
+            </div>
+            <div class="col-xs-2 right" title="Toggle to {{if groupedEvents "group" "ungroup"}} the pipeline">
+              {{x-toggle
+                size="small"
+                value=groupedEvents
+                onLabel="groupedEvents:true"
+                offLabel="groupedEvents::false"
+                onToggle=(action "updatePipelineGroupedEvents")
+              }}
+            </div>
+          </div>
+        </li>
       </ul>
     </section>
   </div>

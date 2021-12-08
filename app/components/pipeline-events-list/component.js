@@ -1,4 +1,4 @@
-import { computed, get, set } from '@ember/object';
+import { computed, get, set, getWithDefault } from '@ember/object';
 import Component from '@ember/component';
 import { scheduleOnce } from '@ember/runloop';
 import { inject as service } from '@ember/service';
@@ -7,7 +7,28 @@ import moment from 'moment';
 
 export default Component.extend({
   router: service(),
+  shuttle: service(),
   errorMessage: '',
+  isGroupedEvents: computed('pipeline', {
+    get() {
+      const isGroupedEvents = getWithDefault(
+        this,
+        'pipeline.settings.groupedEvents',
+        true
+      );
+
+      return isGroupedEvents;
+    }
+  }),
+  eventsList: computed('events.[]', {
+    get() {
+      this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
+        this.set('latestCommit', event);
+      });
+
+      return get(this, 'events');
+    }
+  }),
   groups: computed('events.[]', {
     get() {
       const events = get(this, 'events');
@@ -30,6 +51,7 @@ export default Component.extend({
   }),
   init() {
     this._super(...arguments);
+
     scheduleOnce('afterRender', this, 'updateEvents', this.eventsPage + 1);
   },
   actions: {
@@ -43,12 +65,19 @@ export default Component.extend({
       set(this, 'selected', id);
 
       if (eventType !== 'pr') {
-        const currentEvent = this.groups.find(g => g.find(e => e.id === id))[0];
-        const { pipelineId } = currentEvent;
-        const expandedEventsGroup = get(this, 'expandedEventsGroup') || {};
+        let currentEvent;
 
-        expandedEventsGroup[currentEvent.groupEventId] = true;
-        set(this, 'expandedEventsGroup', expandedEventsGroup);
+        if (this.isGroupedEvents === true) {
+          currentEvent = this.groups.find(g => g.find(e => e.id === id))[0];
+          const expandedEventsGroup = get(this, 'expandedEventsGroup') || {};
+
+          expandedEventsGroup[currentEvent.groupEventId] = true;
+          set(this, 'expandedEventsGroup', expandedEventsGroup);
+        } else {
+          currentEvent = this.eventsList.findBy('id', id);
+        }
+
+        const { pipelineId } = currentEvent;
 
         this.router.transitionTo('pipeline.events.show', pipelineId, id);
       }

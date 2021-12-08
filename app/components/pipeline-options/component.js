@@ -313,6 +313,17 @@ export default Component.extend({
         );
 
       this.set('showPRJobs', showPRJobs);
+    },
+    async updatePipelineGroupedEvents(groupedEvents) {
+      try {
+        const pipelineId = this.get('pipeline.id');
+
+        await this.shuttle.updatePipelineSettings(pipelineId, {
+          groupedEvents
+        });
+      } finally {
+        this.set('groupedEvents', groupedEvents);
+      }
     }
   }
 });
