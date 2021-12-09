@@ -44,6 +44,7 @@
             pipeline=pipeline
             buildPipelineParameters=tooltipData.pipelineParameters
             buildJobParameters=tooltipData.jobParameters
+            startFrom=tooltipData.job.name
             as |parameterizedBuild| }}
             <div class="form-group form-horizontal">
               <label class="control-label col-md-4">Reason:</label>
@@ -91,6 +92,7 @@
           pipeline=pipeline
           buildPipelineParameters=buildPipelineParameters
           buildJobParameters=buildJobParameters
+          startFrom=tooltipData.job.name
           as |parameterizedBuild| }}
           <div class="row">
             <div class="col-xs-6">
