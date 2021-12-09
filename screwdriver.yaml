@@ -44,6 +44,8 @@ jobs:
     requires:
       - main
   docker-publish:
+    environment:
+      SD_HAB_ENABLED: true
     requires: publish
     template: sd/dind@latest
   # Deploy to our beta environment and run tests
