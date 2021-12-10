@@ -48,18 +48,7 @@ export default Component.extend({
   },
 
   getDefaultJobParameters() {
-    const jobs = this.getWithDefault('pipeline.jobs', []);
-    const parameters = {};
-
-    jobs.forEach(job => {
-      const jobParameters = job.permutations[0].parameters; // TODO: Revisit while supporting matrix job
-
-      if (jobParameters) {
-        parameters[job.name] = jobParameters;
-      }
-    });
-
-    return parameters;
+    return this.getWithDefault('pipeline.jobParameters', {});
   },
 
   startArgs: computed('prNum', 'jobs', {

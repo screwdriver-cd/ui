@@ -59,6 +59,12 @@ export default DS.Model.extend({
       return get(this, 'permutations[0].annotations') || {};
     }
   }),
+  parameters: computed('permutations.[]', {
+    get() {
+      // TODO: Revisit while supporting matrix job
+      return this.permutations[0].parameters;
+    }
+  }),
   builds: DS.hasMany('build', { async: true }),
   isDisabled: equal('state', 'DISABLED'),
   modelToReload: 'builds',

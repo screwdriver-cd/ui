@@ -1,5 +1,5 @@
 import { alias } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
@@ -42,5 +42,22 @@ export default DS.Model.extend({
       return branch;
     }
   }),
-  hubUrl: alias('scmRepo.url')
+  hubUrl: alias('scmRepo.url'),
+  jobParameters: computed('jobs.[]', {
+    get() {
+      const parameters = {};
+
+      getWithDefault(this, 'jobs', []).forEach(job => {
+        if (job.prParentJobId === null || job.prParentJobId === undefined) {
+          const jobParameters = job.parameters;
+
+          if (jobParameters) {
+            parameters[job.name] = jobParameters;
+          }
+        }
+      });
+
+      return parameters;
+    }
+  })
 });

@@ -33,29 +33,31 @@ export default Component.extend({
   buildJobParameters: {},
 
   /**
+   * startFrom name of the job which is the entry point for the event
+   * @type {String}
+   */
+  startFrom: null,
+
+  /**
    * parameters expected to be an object
    * @type {String}
    */
   init() {
     this._super(...arguments);
-    const normalizedPipelineParameters = this.normalizePipelineParameters(
+
+    const normalizedParameters = this.getNormalizedParameterGroups(
       this.buildPipelineParameters,
-      this.getDefaultPipelineParameters()
-    );
-    const normalizedJobParameters = this.normalizeJobParameters(
+      this.getDefaultPipelineParameters(),
       this.buildJobParameters,
-      this.getDefaultJobParameters()
-    );
-    const parameterizedModel = Object.assign(
-      this.getNormalizedParameterizedPipelineModel(
-        normalizedPipelineParameters
-      ),
-      this.getNormalizedParameterizedJobModel(normalizedJobParameters)
+      this.getDefaultJobParameters(),
+      this.startFrom
     );
 
+    const parameterizedModel =
+      this.getNormalizedParameterizedModel(normalizedParameters);
+
     this.setProperties({
-      pipelineParameters: normalizedPipelineParameters,
-      jobParameters: normalizedJobParameters,
+      parameters: normalizedParameters,
       parameterizedModel
     });
   },
@@ -65,18 +67,7 @@ export default Component.extend({
   },
 
   getDefaultJobParameters() {
-    const jobs = this.getWithDefault('pipeline.jobs', []);
-    const parameters = {};
-
-    jobs.forEach(job => {
-      const jobParameters = job.permutations[0].parameters; // TODO: Revisit while supporting matrix job
-
-      if (jobParameters) {
-        parameters[job.name] = jobParameters;
-      }
-    });
-
-    return parameters;
+    return this.getWithDefault('pipeline.jobParameters', {});
   },
 
   /**
@@ -138,37 +129,58 @@ export default Component.extend({
     return normalizedParameters;
   },
 
-  normalizePipelineParameters(
+  getNormalizedParameterGroups(
     pipelineParameters = {},
-    defaultPipelineParameters = {}
+    defaultPipelineParameters = {},
+    jobParameters = {},
+    defaultJobParameters = {},
+    startFrom
   ) {
-    return {
-      parameters: this.normalizeParameters(
-        pipelineParameters,
-        defaultPipelineParameters
-      ),
-      isOpen: true
-    };
-  },
-
-  normalizeJobParameters(jobParameters = {}, defaultJobParameters = {}) {
-    const normalizedJobParameters = [];
+    let normalizedParameterGroups = [];
+    const normalizedJobParameterGroups = [];
 
     Object.entries(jobParameters).forEach(([jobName, parameters]) => {
-      normalizedJobParameters.push({
+      const paramGroup = {
         jobName,
         parameters: this.normalizeParameters(
           parameters,
           defaultJobParameters[jobName]
         ),
-        isOpen: false
-      });
+        isOpen: false,
+        paramGroupTitle: `Job: ${jobName}`
+      };
+
+      if (startFrom === jobName) {
+        normalizedParameterGroups.push(paramGroup);
+      } else {
+        normalizedJobParameterGroups.push(paramGroup);
+      }
     });
 
-    return normalizedJobParameters;
+    if (Object.keys(pipelineParameters).length > 0) {
+      normalizedParameterGroups.push({
+        jobName: null,
+        parameters: this.normalizeParameters(
+          pipelineParameters,
+          defaultPipelineParameters
+        ),
+        isOpen: false,
+        paramGroupTitle: 'Shared'
+      });
+    }
+
+    normalizedParameterGroups = normalizedParameterGroups.concat(
+      normalizedJobParameterGroups
+    );
+
+    if (normalizedParameterGroups.length > 0) {
+      normalizedParameterGroups[0].isOpen = true;
+    }
+
+    return normalizedParameterGroups;
   },
 
-  getNormalizedParameterizedModel(normalizedParameters = []) {
+  normalizedParameterizedModel(normalizedParameters = []) {
     const normalizedParameterizedModel = {};
 
     normalizedParameters.forEach(normalizedParam => {
@@ -184,18 +196,19 @@ export default Component.extend({
     return normalizedParameterizedModel;
   },
 
-  getNormalizedParameterizedPipelineModel(normalizedPipelineParameters = []) {
-    return this.getNormalizedParameterizedModel(
-      normalizedPipelineParameters.parameters
-    );
-  },
-
-  getNormalizedParameterizedJobModel(normalizedJobParameters = []) {
+  getNormalizedParameterizedModel(normalizedParameters = []) {
     const normalizedParameterizedModel = {};
 
-    normalizedJobParameters.forEach(entry => {
-      normalizedParameterizedModel[entry.jobName] =
-        this.getNormalizedParameterizedModel(entry.parameters);
+    normalizedParameters.forEach(entry => {
+      if (entry.jobName === null) {
+        Object.assign(
+          normalizedParameterizedModel,
+          this.normalizedParameterizedModel(entry.parameters)
+        );
+      } else {
+        normalizedParameterizedModel[entry.jobName] =
+          this.normalizedParameterizedModel(entry.parameters);
+      }
     });
 
     return normalizedParameterizedModel;
@@ -253,13 +266,9 @@ export default Component.extend({
     },
 
     onExpandCollapseParamGroup(jobName) {
-      if (jobName === null) {
-        set(this.pipelineParameters, 'isOpen', !this.pipelineParameters.isOpen);
-      } else {
-        const jobParamGroup = this.jobParameters.findBy('jobName', jobName);
+      const jobParamGroup = this.parameters.findBy('jobName', jobName);
 
-        set(jobParamGroup, 'isOpen', !jobParamGroup.isOpen);
-      }
+      set(jobParamGroup, 'isOpen', !jobParamGroup.isOpen);
     },
 
     /**
