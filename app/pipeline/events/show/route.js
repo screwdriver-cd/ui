@@ -51,7 +51,7 @@ export default class PipelineEventsShowRoute extends Route {
     } else {
       const isGroupedEvents = getWithDefault(
         pipelineEventsController,
-        'settings.groupedEvents',
+        'pipeline.settings.groupedEvents',
         true
       );
 
