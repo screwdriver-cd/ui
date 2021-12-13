@@ -208,6 +208,23 @@
             </div>
           </div>
         </li>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Show Triggers</h4>
+              <p>Setup your pipeline preference to show event triggers by default</p>
+            </div>
+            <div class="col-xs-2 right" title="Toggle to {{if showEventTriggers "hide" "show"}} event tiggers">
+              {{x-toggle
+                size="small"
+                value=showEventTriggers
+                onLabel="showEventTriggers:true"
+                offLabel="showEventTriggers::false"
+                onToggle=(action "updatePipelineShowTriggers")
+              }}
+            </div>
+          </div>
+        </li>
       </ul>
     </section>
   </div>

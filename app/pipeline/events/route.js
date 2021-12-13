@@ -28,7 +28,14 @@ export default Route.extend({
     const pipelineId = this.get('pipeline.id');
     const pipelineEventsController = this.controllerFor('pipeline.events');
 
-    pipelineEventsController.set('pipeline', this.pipeline);
+    pipelineEventsController.setProperties({
+      pipeline: this.pipeline,
+      showDownstreamTriggers: getWithDefault(
+        this.pipeline,
+        'settings.showEventTriggers',
+        false
+      )
+    });
 
     return RSVP.hash({
       jobs: this.get('pipeline.jobs'),

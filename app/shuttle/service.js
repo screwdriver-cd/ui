@@ -165,6 +165,13 @@ export default Service.extend({
       newSetting = { ...newSetting, groupedEvents: settings.groupedEvents };
     }
 
+    if (typeof settings.showEventTriggers === 'boolean') {
+      newSetting = {
+        ...newSetting,
+        showEventTriggers: settings.showEventTriggers
+      };
+    }
+
     const data = { settings: newSetting };
 
     return this.fetchFromApi(method, url, data);
