@@ -34,6 +34,7 @@ export default Component.extend({
   showPipelineVisibilityButtons: false,
   privateRepo: false,
   publicPipeline: false,
+  groupedEvents: true,
   // Job disable/enable
   name: null,
   state: null,
@@ -84,6 +85,8 @@ export default Component.extend({
 
     let publicPipeline = this.get('pipeline.settings.public');
 
+    let groupedEvents = this.get('pipeline.settings.groupedEvents');
+
     if (typeof privateRepo !== 'boolean') {
       privateRepo = false;
     }
@@ -92,7 +95,11 @@ export default Component.extend({
       publicPipeline = !privateRepo;
     }
 
-    this.setProperties({ privateRepo, publicPipeline });
+    if (typeof publicPipeline !== 'boolean') {
+      groupedEvents = true;
+    }
+
+    this.setProperties({ privateRepo, publicPipeline, groupedEvents });
 
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
