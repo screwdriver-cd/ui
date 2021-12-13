@@ -95,7 +95,7 @@ export default Component.extend({
       publicPipeline = !privateRepo;
     }
 
-    if (typeof publicPipeline !== 'boolean') {
+    if (typeof groupedEvents !== 'boolean') {
       groupedEvents = true;
     }
 
