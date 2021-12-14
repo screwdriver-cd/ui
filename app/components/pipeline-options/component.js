@@ -322,13 +322,15 @@ export default Component.extend({
       this.set('showPRJobs', showPRJobs);
     },
     async updatePipelineGroupedEvents(groupedEvents) {
-      try {
-        const pipelineId = this.get('pipeline.id');
+      const pipeline = this.get('pipeline');
 
-        await this.shuttle.updatePipelineSettings(pipelineId, {
+      try {
+        await this.shuttle.updatePipelineSettings(pipeline.id, {
           groupedEvents
         });
       } finally {
+        pipeline.set('settings.groupedEvents', groupedEvents);
+
         this.set('groupedEvents', groupedEvents);
       }
     }
