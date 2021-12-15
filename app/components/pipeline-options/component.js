@@ -106,7 +106,12 @@ export default Component.extend({
       showEventTriggers = false;
     }
 
-    this.setProperties({ privateRepo, publicPipeline, groupedEvents, showEventTriggers });
+    this.setProperties({
+      privateRepo,
+      publicPipeline,
+      groupedEvents,
+      showEventTriggers
+    });
 
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
