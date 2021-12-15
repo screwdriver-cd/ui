@@ -313,7 +313,6 @@ export default Component.extend({
       try {
         const pipelineId = this.get('pipeline.id');
 
-        console.log(showEventTriggers);
         await this.shuttle.updatePipelineSettings(pipelineId, {
           showEventTriggers
         });
