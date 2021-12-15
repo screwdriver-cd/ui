@@ -212,10 +212,7 @@ export default Controller.extend(ModelReloaderMixin, {
   init() {
     this._super(...arguments);
     this.startReloading();
-    this.setProperties({
-      eventsPage: 1,
-      showDownstreamTriggers: false
-    });
+    this.set('eventsPage', 1);
   },
   showListView: false,
   showPRJobs: true,

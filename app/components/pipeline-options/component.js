@@ -47,6 +47,7 @@ export default Component.extend({
   displayJobNameLength: 20,
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
+  showEventTriggers: false,
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
@@ -87,6 +88,8 @@ export default Component.extend({
 
     let groupedEvents = this.get('pipeline.settings.groupedEvents');
 
+    let showEventTriggers = this.get('pipeline.settings.showEventTriggers');
+
     if (typeof privateRepo !== 'boolean') {
       privateRepo = false;
     }
@@ -99,7 +102,16 @@ export default Component.extend({
       groupedEvents = true;
     }
 
-    this.setProperties({ privateRepo, publicPipeline, groupedEvents });
+    if (typeof showEventTriggers !== 'boolean') {
+      showEventTriggers = false;
+    }
+
+    this.setProperties({
+      privateRepo,
+      publicPipeline,
+      groupedEvents,
+      showEventTriggers
+    });
 
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
@@ -294,6 +306,18 @@ export default Component.extend({
           isUpdatingPipelineVisibility: false,
           publicPipeline
         });
+      }
+    },
+
+    async updatePipelineShowTriggers(showEventTriggers) {
+      try {
+        const pipelineId = this.get('pipeline.id');
+
+        await this.shuttle.updatePipelineSettings(pipelineId, {
+          showEventTriggers
+        });
+      } finally {
+        this.set('showEventTriggers', showEventTriggers);
       }
     },
 

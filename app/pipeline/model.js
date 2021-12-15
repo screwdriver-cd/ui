@@ -25,7 +25,8 @@ export default DS.Model.extend({
   settings: DS.attr({
     defaultValue() {
       return {
-        groupedEvents: true
+        groupedEvents: true,
+        showEventTriggers: false
       };
     }
   }),
