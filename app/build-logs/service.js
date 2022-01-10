@@ -57,7 +57,7 @@ export default Service.extend({
               started && jqXHR.getResponseHeader('x-more-data') === 'false';
           })
           .catch(error => {
-            if (error.jqXHR && [403, 404].includes(error.jqXHR.status)) {
+            if (error.jqXHR && [403, 404, 500].includes(error.jqXHR.status)) {
               done = true;
             }
           })
