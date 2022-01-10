@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Service from '@ember/service';
 import Pretender from 'pretender';
-import Ember from 'ember';
 
 let server;
 const now = Date.now();
@@ -49,16 +48,6 @@ const noNewLogs = () => {
       'x-more-data': true
     },
     '[]'
-  ]);
-};
-
-const badLogs = () => {
-  server.get('http://localhost:8080/v4/builds/1/steps/banana/logs/', () => [
-    500,
-    {
-      'Content-Type': 'application/json'
-    },
-    ''
   ]);
 };
 
@@ -169,28 +158,6 @@ module('Unit | Service | build logs', function (hooks) {
       request.url,
       'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
     );
-  });
-
-  test('it handles log api failure by treating it as there are more logs', async function (assert) {
-    assert.expect(3);
-    badLogs();
-    const service = this.owner.lookup('service:build-logs');
-
-    try {
-      const { lines, done } = await service.fetchLogs(serviceConfig);
-
-      assert.notOk(done);
-      assert.equal(lines.length, 0);
-
-      const [request] = server.handledRequests;
-
-      assert.equal(
-        request.url,
-        'http://localhost:8080/v4/builds/1/steps/banana/logs?from=0&pages=10&sort=ascending'
-      );
-    } catch (err) {
-      Ember.Logger.error('err', err);
-    }
   });
 
   test('it handles fetching multiple pages', async function (assert) {
