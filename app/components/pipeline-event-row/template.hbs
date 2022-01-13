@@ -11,7 +11,7 @@
         {{/if}}
         {{#if event.label}}<div class="label">{{event.label}}</div>{{/if}}
       {{/if}}
-      {{#if (and event.isRunning (not-eq event.status "UNKNOWN"))}}
+      {{#if event.isRunning }}
         {{#bs-button onClick=(action stopEvent) class="stopButton" title="Stop all builds for this event"}}Stop{{/bs-button}}
       {{else}}
         {{#if (eq event.type "pr")}}

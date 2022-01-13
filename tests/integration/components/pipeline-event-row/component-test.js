@@ -112,6 +112,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     let eventMock = EmberObject.create(copy(event, true));
 
     eventMock.isRunning = true;
+    eventMock.status = 'RUNNING';
 
     this.set('event', eventMock);
     this.set('latestCommit', {
@@ -127,9 +128,10 @@ module('Integration | Component | pipeline event row', function (hooks) {
       lastSuccessful=3
     }}`);
 
-    assert.dom('.SUCCESS').exists({ count: 1 });
+    assert.dom('.RUNNING').exists({ count: 1 });
     assert.dom('.stopButton').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.status').exists({ count: 1 });
+    assert.dom('.fa-spinner').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful Stop');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
@@ -151,6 +153,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
 
     let eventMock = EmberObject.create(copy(event, true));
 
+    eventMock.isRunning = false;
     eventMock.status = 'UNKNOWN';
 
     this.set('event', eventMock);
