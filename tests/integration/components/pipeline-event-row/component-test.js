@@ -153,7 +153,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
 
     let eventMock = EmberObject.create(copy(event, true));
 
-    eventMock.isRunning = false;
+    eventMock.isRunning = true;
     eventMock.status = 'UNKNOWN';
 
     this.set('event', eventMock);
