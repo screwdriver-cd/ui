@@ -35,16 +35,7 @@ export default Component.extend({
           'showDownstreamTriggers',
           false
         );
-
-        console.log('.......selectedEventObj id', this.selectedEventObj.id);
-
         const builds = getWithDefault(this, 'builds', []);
-
-        console.log('========= d3 builds', builds);
-
-        builds.forEach(b => {
-          console.log(`${b.id}, ${b.status}`);
-        });
 
         const { startFrom } = this;
         const jobs = getWithDefault(this, 'jobs', []);
@@ -92,12 +83,6 @@ export default Component.extend({
           removeBranch(prNode, graph);
         }
 
-        if (this.minified) {
-          console.log('decoratedGraph called for minified', graph);
-        } else {
-          console.log('decoratedGraph called for big graph', graph);
-        }
-
         set(this, 'graph', graph);
 
         return decorateGraph({
@@ -136,12 +121,7 @@ export default Component.extend({
   // Listen for changes to workflow and update graph accordingly.
   didReceiveAttrs() {
     this._super(...arguments);
-
-    console.log('didReceiveAttrs called');
-
     const dg = this.get('decoratedGraph');
-
-    console.log('decoratedGraph is', dg);
 
     this.doRedraw(dg);
   },
