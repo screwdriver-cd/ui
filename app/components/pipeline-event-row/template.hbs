@@ -50,6 +50,8 @@
       <div class="workflow">
         {{workflow-graph-d3
           pipeline=pipeline
+          selectedEventObj=selectedEventObj
+          selectedEventObjStatus=selectedEventObj.status
           builds=event.builds
           workflowGraph=event.workflowGraph
           startFrom=event.startFrom

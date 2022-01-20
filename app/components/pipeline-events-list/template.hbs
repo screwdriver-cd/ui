@@ -4,6 +4,7 @@
       {{pipeline-events-row-group
         pipeline=pipeline
         expandedEventsGroup=expandedEventsGroup
+        selectedEventObj=selectedEventObj
         events=group
         selectedEvent=selectedEvent
         latestCommit=latestCommit
@@ -20,6 +21,7 @@
       {{pipeline-event-row
         event=event
         selectedEvent=selectedEvent
+        selectedEventObj=selectedEventObj
         latestCommit=latestCommit
         lastSuccessful=lastSuccessful
         startPRBuild=(action "startPRBuild")

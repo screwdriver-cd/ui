@@ -20,6 +20,7 @@ export default Component.extend({
     'workflowGraph',
     'completeWorkflowGraph',
     'showDownstreamTriggers',
+    'selectedEventObj.status',
     {
       get() {
         const { jobs } = this;

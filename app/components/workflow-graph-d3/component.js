@@ -27,6 +27,7 @@ export default Component.extend({
     'builds.@each.{status,id}',
     'jobs.@each.{isDisabled,state,stateChanger}',
     'completeWorkflowGraph',
+    'selectedEventObj.status',
     {
       get() {
         const showDownstreamTriggers = getWithDefault(
@@ -34,7 +35,17 @@ export default Component.extend({
           'showDownstreamTriggers',
           false
         );
+
+        console.log('.......selectedEventObj id', this.selectedEventObj.id);
+
         const builds = getWithDefault(this, 'builds', []);
+
+        console.log('========= d3 builds', builds);
+
+        builds.forEach(b => {
+          console.log(`${b.id}, ${b.status}`);
+        });
+
         const { startFrom } = this;
         const jobs = getWithDefault(this, 'jobs', []);
         const workflowGraph = getWithDefault(this, 'workflowGraph', {
@@ -81,6 +92,12 @@ export default Component.extend({
           removeBranch(prNode, graph);
         }
 
+        if (this.minified) {
+          console.log('decoratedGraph called for minified', graph);
+        } else {
+          console.log('decoratedGraph called for big graph', graph);
+        }
+
         set(this, 'graph', graph);
 
         return decorateGraph({
@@ -115,11 +132,18 @@ export default Component.extend({
 
     set(this, 'lastGraph', this.get('graph'));
   },
+
   // Listen for changes to workflow and update graph accordingly.
   didReceiveAttrs() {
     this._super(...arguments);
 
-    this.doRedraw(this.get('decoratedGraph'));
+    console.log('didReceiveAttrs called');
+
+    const dg = this.get('decoratedGraph');
+
+    console.log('decoratedGraph is', dg);
+
+    this.doRedraw(dg);
   },
   doRedraw(decoratedGraph) {
     const lg = this.lastGraph;
@@ -136,7 +160,7 @@ export default Component.extend({
       this.draw(decoratedGraph);
       set(this, 'lastGraph', wg);
     } else {
-      this.redraw(decoratedGraph.graph);
+      this.redraw(decoratedGraph);
     }
   },
   actions: {
