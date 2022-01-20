@@ -53,8 +53,8 @@ export default Component.extend({
   isRunning: computed('allJobBuilds.@each.status', 'inited', {
     get() {
       const isActive = this.allJobBuilds.any(b => {
-        const status = b.get('status');
-        const endTime = b.get('endTime');
+        const { status } = b;
+        const { endTime } = b;
 
         return isActiveBuild(status, endTime);
       });
