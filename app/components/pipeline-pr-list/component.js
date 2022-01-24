@@ -39,16 +39,29 @@ export default Component.extend({
       return this.inited || this.jobs.some(j => !!j.get('builds.length'));
     }
   }),
-  isRunning: computed('jobs.@each.builds', 'inited', {
+
+  allJobBuilds: computed('jobs.@each.builds', function () {
+    const builds = [];
+
+    this.jobs.forEach(j => {
+      builds.pushObjects(j.builds.toArray());
+    });
+
+    return builds;
+  }),
+
+  isRunning: computed('allJobBuilds.@each.status', 'inited', {
     get() {
-      return this.jobs.some(j => {
-        const status = j.builds.get('firstObject.status');
-        const endTime = j.builds.get('firstObject.endTime');
+      const isActive = this.allJobBuilds.any(b => {
+        const { status, endTime } = b;
 
         return isActiveBuild(status, endTime);
       });
+
+      return isActive;
     }
   }),
+
   actions: {
     selectPR() {
       set(this, 'selected', this.get('eventId'));

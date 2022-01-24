@@ -27,6 +27,7 @@ export default Component.extend({
     'builds.@each.{status,id}',
     'jobs.@each.{isDisabled,state,stateChanger}',
     'completeWorkflowGraph',
+    'selectedEventObj.status',
     {
       get() {
         const showDownstreamTriggers = getWithDefault(
@@ -35,6 +36,7 @@ export default Component.extend({
           false
         );
         const builds = getWithDefault(this, 'builds', []);
+
         const { startFrom } = this;
         const jobs = getWithDefault(this, 'jobs', []);
         const workflowGraph = getWithDefault(this, 'workflowGraph', {
@@ -115,11 +117,13 @@ export default Component.extend({
 
     set(this, 'lastGraph', this.get('graph'));
   },
+
   // Listen for changes to workflow and update graph accordingly.
   didReceiveAttrs() {
     this._super(...arguments);
+    const dg = this.get('decoratedGraph');
 
-    this.doRedraw(this.get('decoratedGraph'));
+    this.doRedraw(dg);
   },
   doRedraw(decoratedGraph) {
     const lg = this.lastGraph;
@@ -136,7 +140,7 @@ export default Component.extend({
       this.draw(decoratedGraph);
       set(this, 'lastGraph', wg);
     } else {
-      this.redraw(decoratedGraph.graph);
+      this.redraw(decoratedGraph);
     }
   },
   actions: {
