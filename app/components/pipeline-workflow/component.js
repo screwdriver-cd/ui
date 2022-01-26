@@ -103,27 +103,38 @@ export default Component.extend({
   },
 
   mergeDefaultAndEventParameters(defaultParameters = {}, eventParameters) {
+    const defaultParameterNames = Object.keys(defaultParameters);
     const mergedParameters = copy(defaultParameters, true);
-    const parameterNames = Object.keys(eventParameters);
 
     if (eventParameters) {
-      parameterNames.forEach(parameterName => {
-        const parameterValue =
-          mergedParameters[parameterName].value ||
-          mergedParameters[parameterName];
-        const eventParameterValue =
-          eventParameters[parameterName].value ||
-          eventParameters[parameterName];
+      Object.entries(eventParameters).forEach(
+        ([eventParameterName, eventParameterDefinition]) => {
+          if (defaultParameterNames.includes(eventParameterName)) {
+            const defaultParameterValue =
+              mergedParameters[eventParameterName].value ||
+              mergedParameters[eventParameterName];
 
-        if (Array.isArray(parameterValue)) {
-          parameterValue.removeObject(eventParameterValue);
-          parameterValue.unshift(eventParameterValue);
-        } else if (mergedParameters[parameterName].value) {
-          mergedParameters[parameterName].value = eventParameterValue;
-        } else {
-          mergedParameters[parameterName] = eventParameterValue;
+            const eventParameterValue =
+              eventParameterDefinition.value || eventParameterDefinition;
+
+            if (Array.isArray(defaultParameterValue)) {
+              defaultParameterValue.removeObject(eventParameterValue);
+              defaultParameterValue.unshift(eventParameterValue);
+            } else if (mergedParameters[eventParameterName].value) {
+              mergedParameters[eventParameterName].value = eventParameterValue;
+            } else {
+              mergedParameters[eventParameterName] = eventParameterValue;
+            }
+          } else if (typeof eventParameters[eventParameterName] === 'object') {
+            mergedParameters[eventParameterName] = copy(
+              eventParameterDefinition,
+              true
+            );
+          } else {
+            mergedParameters[eventParameterName] = eventParameterDefinition;
+          }
         }
-      });
+      );
     }
 
     return mergedParameters;
