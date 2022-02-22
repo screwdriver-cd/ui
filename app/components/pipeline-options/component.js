@@ -310,13 +310,15 @@ export default Component.extend({
     },
 
     async updatePipelineShowTriggers(showEventTriggers) {
-      try {
-        const pipelineId = this.get('pipeline.id');
+      const pipeline = this.get('pipeline');
 
-        await this.shuttle.updatePipelineSettings(pipelineId, {
+      try {
+        await this.shuttle.updatePipelineSettings(pipeline.id, {
           showEventTriggers
         });
       } finally {
+        pipeline.set('settings.showEventTriggers', showEventTriggers);
+
         this.set('showEventTriggers', showEventTriggers);
       }
     },
