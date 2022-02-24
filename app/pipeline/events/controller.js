@@ -1,13 +1,13 @@
 import Controller from '@ember/controller';
-import { inject as service } from '@ember/service';
-import { get, computed } from '@ember/object';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { computed, get } from '@ember/object';
 import { alias } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
+import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import uniqBy from 'lodash.uniqby';
+import moment from 'moment';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
-import moment from 'moment';
 import {
   SHOULD_RELOAD_SKIP,
   SHOULD_RELOAD_YES
@@ -336,7 +336,18 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('latestCommit', event);
       });
 
-      return [].concat(this.modelEvents, this.paginateEvents);
+      const pipelineEvents = [].concat(this.modelEvents, this.paginateEvents);
+
+      // filter events for no builds
+      if (this.isFilteredEventsForNoBuilds) {
+        const filteredEvents = pipelineEvents.filter(
+          (event, idx) => event.status !== 'SKIPPED' || idx === 0
+        );
+
+        return filteredEvents;
+      }
+
+      return pipelineEvents;
     }
   }),
   prEvents: computed('model.events.@each.workflowGraph', 'prChainEnabled', {

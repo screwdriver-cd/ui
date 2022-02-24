@@ -1,8 +1,7 @@
 import { computed, getWithDefault } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
-import ENV from 'screwdriver-ui/config/environment';
-
 import $ from 'jquery';
+import ENV from 'screwdriver-ui/config/environment';
 
 /**
  * Screwdriver Shuttle Service
@@ -169,6 +168,13 @@ export default Service.extend({
       newSetting = {
         ...newSetting,
         showEventTriggers: settings.showEventTriggers
+      };
+    }
+
+    if (typeof settings.filterEventsForNoBuilds === 'boolean') {
+      newSetting = {
+        ...newSetting,
+        filterEventsForNoBuilds: settings.filterEventsForNoBuilds
       };
     }
 
