@@ -1,13 +1,13 @@
-import { resolve, reject } from 'rsvp';
-import Service from '@ember/service';
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
-import { module, test } from 'qunit';
+import Service from '@ember/service';
+import { click, fillIn, render, triggerKeyEvent } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 import Pretender from 'pretender';
+import { module, test } from 'qunit';
+import { reject, resolve } from 'rsvp';
 import injectSessionStub from '../../../helpers/inject-session';
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
@@ -436,6 +436,70 @@ module('Integration | Component | pipeline options', function (hooks) {
     await click('.toggle-form__create');
 
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
+  });
+
+  test('it handles filterEventsForNobuilds enabling', async function (assert) {
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234',
+        settings: {
+          groupedEvents: true,
+          showEventTriggers: false,
+          filterEventsForNoBuilds: false
+        }
+      })
+    );
+
+    const shuttleStub = Service.extend({
+      // eslint-disable-next-line no-unused-vars
+      updatePipelineSettings(pipelineId, settings) {
+        assert.ok(true, 'updatePipelineSettings called');
+        assert.equal(pipelineId, 'abc1234');
+        assert.deepEqual(settings, {
+          filterEventsForNoBuilds: true
+        });
+
+        return resolve({});
+      },
+      getUserPipelinePreference(pipelineId) {
+        assert.ok(true, 'getUserPipelinePreference called');
+        assert.equal(pipelineId, 'abc1234');
+
+        return resolve({});
+      }
+    });
+
+    this.owner.unregister('service:shuttle');
+    this.owner.register('service:shuttle', shuttleStub);
+
+    await render(hbs`{{pipeline-options pipeline=mockPipeline }}`);
+
+    assert
+      .dom('section.preference li:nth-of-type(3) h4')
+      .hasText('Filter Events For No Builds');
+    assert
+      .dom('section.preference li:nth-of-type(3) p')
+      .hasText(
+        'Setup your pipeline preference to not show events with no builds'
+      );
+    assert
+      .dom('section.preference li:nth-of-type(3) .x-toggle-container')
+      .hasNoClass('x-toggle-container-checked');
+
+    await click('section.preference li:nth-of-type(3) .x-toggle-btn');
+
+    assert
+      .dom('section.preference li:nth-of-type(1) .x-toggle-container')
+      .hasClass('x-toggle-container-checked');
+    assert
+      .dom('section.preference li:nth-of-type(2) .x-toggle-container')
+      .hasNoClass('x-toggle-container-checked');
+    assert
+      .dom('section.preference li:nth-of-type(3) .x-toggle-container')
+      .hasClass('x-toggle-container-checked');
   });
 
   test('it handles pipeline remove flow', async function (assert) {

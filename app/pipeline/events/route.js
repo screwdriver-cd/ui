@@ -1,9 +1,9 @@
-import { inject as service } from '@ember/service';
+import { getWithDefault } from '@ember/object';
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
+import RSVP from 'rsvp';
 import ENV from 'screwdriver-ui/config/environment';
 import getErrorMessage from 'screwdriver-ui/utils/error-messages';
-import { getWithDefault } from '@ember/object';
-import RSVP from 'rsvp';
 
 export default Route.extend({
   shuttle: service(),
@@ -33,6 +33,11 @@ export default Route.extend({
       showDownstreamTriggers: getWithDefault(
         this.pipeline,
         'settings.showEventTriggers',
+        false
+      ),
+      isFilteredEventsForNoBuilds: getWithDefault(
+        this.pipeline,
+        'settings.filterEventsForNoBuilds',
         false
       )
     });

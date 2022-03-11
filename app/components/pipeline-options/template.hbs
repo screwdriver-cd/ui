@@ -225,6 +225,22 @@
             </div>
           </div>
         </li>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Filter Events For No Builds</h4>
+              <p>Setup your pipeline preference to not show events with no builds</p>
+            </div>
+            <div class="col-xs-2 right" title="Toggle to {{if filterEventsForNoBuilds "filter" "unfilter"}} events for no builds">
+              {{x-toggle
+                size="small"
+                value=filterEventsForNoBuilds
+                showLabels=false
+                onToggle=(action "updateFilterEventsForNoBuilds")
+              }}
+            </div>
+          </div>
+        </li>
       </ul>
     </section>
   </div>

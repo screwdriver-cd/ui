@@ -1,11 +1,11 @@
-import $ from 'jquery';
-import { inject as service } from '@ember/service';
-import { not, or } from '@ember/object/computed';
-import { computed, getWithDefault, set } from '@ember/object';
-import { debounce } from '@ember/runloop';
 import Component from '@ember/component';
+import { computed, getWithDefault, set } from '@ember/object';
+import { not, or } from '@ember/object/computed';
+import { debounce } from '@ember/runloop';
+import { inject as service } from '@ember/service';
+import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
-import { parse, getCheckoutUrl } from 'screwdriver-ui/utils/git';
+import { getCheckoutUrl, parse } from 'screwdriver-ui/utils/git';
 
 const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH, DOWNTIME_JOBS } =
   ENV.APP;
@@ -48,6 +48,7 @@ export default Component.extend({
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
   showEventTriggers: false,
+  filterEventsForNoBuilds: false,
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
@@ -90,6 +91,10 @@ export default Component.extend({
 
     let showEventTriggers = this.get('pipeline.settings.showEventTriggers');
 
+    let filterEventsForNoBuilds = this.get(
+      'pipeline.settings.filterEventsForNoBuilds'
+    );
+
     if (typeof privateRepo !== 'boolean') {
       privateRepo = false;
     }
@@ -106,11 +111,16 @@ export default Component.extend({
       showEventTriggers = false;
     }
 
+    if (typeof filterEventsForNoBuilds !== 'boolean') {
+      filterEventsForNoBuilds = false;
+    }
+
     this.setProperties({
       privateRepo,
       publicPipeline,
       groupedEvents,
-      showEventTriggers
+      showEventTriggers,
+      filterEventsForNoBuilds
     });
 
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
@@ -310,14 +320,33 @@ export default Component.extend({
     },
 
     async updatePipelineShowTriggers(showEventTriggers) {
-      try {
-        const pipelineId = this.get('pipeline.id');
+      const pipeline = this.get('pipeline');
 
-        await this.shuttle.updatePipelineSettings(pipelineId, {
+      try {
+        await this.shuttle.updatePipelineSettings(pipeline.id, {
           showEventTriggers
         });
       } finally {
+        pipeline.set('settings.showEventTriggers', showEventTriggers);
+
         this.set('showEventTriggers', showEventTriggers);
+      }
+    },
+
+    async updateFilterEventsForNoBuilds(filterEventsForNoBuilds) {
+      const pipeline = this.get('pipeline');
+
+      try {
+        await this.shuttle.updatePipelineSettings(pipeline.id, {
+          filterEventsForNoBuilds
+        });
+      } finally {
+        pipeline.set(
+          'settings.filterEventsForNoBuilds',
+          filterEventsForNoBuilds
+        );
+
+        this.set('filterEventsForNoBuilds', filterEventsForNoBuilds);
       }
     },
 
