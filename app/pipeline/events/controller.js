@@ -250,7 +250,7 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   hasAdmins: computed('pipeline.admins', 'numberOfAdmins', {
     get() {
-      const admins = this.get('pipeline.admins');
+      const admins = this.getWithDefault('pipeline.admins', {});
 
       return Object.keys(admins).length;
     }
