@@ -9,6 +9,24 @@
 
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle" scmContext=pipeline.scmContext}}
 
+{{#unless hasAdmins}}
+  {{#bs-alert type="warning" dismissible=false}}
+    <p>This repo has no admins, click <span class="text-info" onclick={{action "syncAdmins"}}>here</span> to sync from git repo, you must be an admin to do so.</p>
+  {{/bs-alert}}
+{{/unless}}
+
+{{#if (eq syncAdmins "success")}}
+  {{#bs-alert type="success"}}
+    <p>Good job, pipeline's admins are in sync</p>
+  {{/bs-alert}}
+{{/if}}
+
+{{#if (eq syncAdmins "failure")}}
+  {{#bs-alert type="danger"}}
+    <p>Something went wrong, please try syncing again</p>
+  {{/bs-alert}}
+{{/if}}
+
 <div class="row">
   <div class="col-xs-12 col-md-9 separator partial-view">
     {{pipeline-graph-nav

@@ -484,4 +484,90 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     assert.equal(controller.get('prEvents')[0].id, 3);
     assert.equal(controller.get('prEvents')[0].prNum, '3');
   });
+
+  test('From no admins to have admins after sync', async function (assert) {
+    assert.expect(4);
+
+    const pipelineData = {
+      id: 1234,
+      name: 'adong/fp-www',
+      scmUri: 'git.example.com:488454:adong/x',
+      scmContext: 'github:git.example.com',
+      scmRepo: {
+        branch: 'adong/x',
+        name: 'adong/fp-www',
+        url: 'https://git.example.com/adong/fp-www/tree/adong/x',
+        rootDir: '',
+        private: false
+      },
+      createTime: '2021-03-30T17:08:32.581Z',
+      admins: {},
+      workflowGraph: {
+        nodes: [
+          { name: '~pr' },
+          { name: '~commit' },
+          { name: 'pull-request1', id: 2071771 },
+          { name: 'pull-request2', id: 2071772 },
+          { name: 'component', id: 2071773 }
+        ],
+        edges: [
+          { src: '~pr', dest: 'pull-request1' },
+          { src: '~pr', dest: 'pull-request2' },
+          { src: 'pull-request2', dest: 'component' }
+        ]
+      },
+      annotations: { 'screwdriver.cd/buildCluster': 'gq1' },
+      lastEventId: 14412878,
+      prChain: false,
+      parameters: {},
+      subscribedScmUrlsWithActions: []
+    };
+    const adminsData = { adong: true };
+
+    server.get('http://localhost:8080/v4/pipelines/1234', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify(pipelineData)
+    ]);
+
+    server.post('http://localhost:8080/v4/pipelines/1234/sync/', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
+
+    const controller = this.owner.lookup('controller:pipeline/events');
+    const pipeline = await controller.store.findRecord('pipeline', 1234);
+
+    controller.set('pipeline', pipeline);
+
+    console.log(controller.get('hasAdmins'), false);
+
+    assert.notOk(controller.get('hasAdmins'), 'has no admins');
+    assert.deepEqual(
+      controller.get('pipeline.admins'),
+      {},
+      'pipeline admins is empty'
+    );
+
+    run(() => {
+      // add admins data
+      server.get('http://localhost:8080/v4/pipelines/1234', () => [
+        200,
+        { 'Content-Type': 'application/json' },
+        JSON.stringify({ ...pipelineData, admins: adminsData })
+      ]);
+
+      controller.send('syncAdmins');
+    });
+
+    await settled();
+
+    assert.ok(controller.get('hasAdmins'), 'now has admins');
+    assert.deepEqual(
+      controller.get('pipeline.admins'),
+      adminsData,
+      'pipeline admins is NOT empty'
+    );
+  });
 });
