@@ -209,6 +209,7 @@ export default Controller.extend(ModelReloaderMixin, {
   jobId: '',
   session: service(),
   stop: service('event-stop'),
+  sync: service(),
   init() {
     this._super(...arguments);
     this.startReloading();
@@ -245,6 +246,13 @@ export default Controller.extend(ModelReloaderMixin, {
       return this.get('pipeline.jobs')
         .filter(j => !isPRJob(j.get('name')))
         .map(j => j.id);
+    }
+  }),
+  hasAdmins: computed('pipeline.admins', 'numberOfAdmins', {
+    get() {
+      const admins = this.getWithDefault('pipeline.admins', {});
+
+      return Object.keys(admins).length;
     }
   }),
   jobsDetails: [],
@@ -604,6 +612,21 @@ export default Controller.extend(ModelReloaderMixin, {
           );
         })
         .finally(() => jobs.forEach(j => j.hasMany('builds').reload()));
+    },
+
+    async syncAdmins() {
+      this.set('syncAdmins', 'init');
+
+      try {
+        const syncPath = '';
+
+        await this.sync.syncRequests(this.get('pipeline.id'), syncPath);
+        this.set('syncAdmins', 'success');
+
+        await this.get('pipeline').reload();
+      } catch (e) {
+        this.set('syncAdmins', 'failure');
+      }
     }
   },
   willDestroy() {
