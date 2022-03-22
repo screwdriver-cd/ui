@@ -1,5 +1,7 @@
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 import { schedule } from '@ember/runloop';
 
 export default Component.extend({
@@ -7,6 +9,9 @@ export default Component.extend({
   description: null,
   errorMessage: null,
   store: service(),
+  isSaveDisabled: computed('name', function isSaveDisabled() {
+    return isEmpty(this.get('name'));
+  }),
   actions: {
     setModal(open) {
       if (!open) {
@@ -27,7 +32,10 @@ export default Component.extend({
       }
 
       schedule('actions', () => {
-        const newCollection = this.store.createRecord('collection', newCollectionRecord);
+        const newCollection = this.store.createRecord(
+          'collection',
+          newCollectionRecord
+        );
 
         return newCollection
           .save()

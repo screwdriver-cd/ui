@@ -5,10 +5,10 @@ import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
-module('Acceptance | secrets', function(hooks) {
+module('Acceptance | secrets', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/pipelines/1', () => [
@@ -48,11 +48,11 @@ module('Acceptance | secrets', function(hooks) {
     ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('visiting /pipelines/:id/secrets', async function(assert) {
+  test('visiting /pipelines/:id/secrets', async function (assert) {
     await authenticateSession({ token: 'faketoken' });
     await visit('/pipelines/1/secrets');
 

@@ -1,0 +1,40 @@
+.pipeline-viz-row {
+  border-radius: 4px;
+  border: 1px solid rgb(232, 232, 232);
+  min-width: 210px;
+  display: flex;
+
+  &.selected {
+    background-color: #ebf4ff;
+    border-left-width: 3px;
+    border-left-color: rgb(0, 109, 251);
+  }
+
+  .repo {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    display: inline-block;
+
+    .success {
+      color: #3bc046;
+    }
+
+    .repo-name {
+      color: rgb(1, 110, 255);
+      font-family: Helvetica;
+      font-size: 14px;
+      height: 17px;
+      width: 151px;
+    }
+  }
+
+  .repo-action {
+    display: inline-block;
+    float: right;
+    margin-right: 10px;
+    align-self: center;
+    margin-left: auto;
+    cursor: pointer;
+  }
+}

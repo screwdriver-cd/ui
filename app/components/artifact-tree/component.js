@@ -57,7 +57,9 @@ export default Component.extend({
       const artifactPath = this.getWithDefault('selectedArtifact', '');
       const paths = artifactPath.split('/');
       const jstree = this.jstreeActionReceiver.target.treeObject.jstree(true);
+
       let nodeList = jstree.get_json();
+
       let targetNode = null;
 
       // traversing jstree to find target artifact node
@@ -86,7 +88,10 @@ export default Component.extend({
 
         if (type === 'directory') {
           instance.toggle_node(node);
-          this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
+          this.router.transitionTo(
+            'pipeline.build.artifacts.detail',
+            artifactPath
+          );
 
           return;
         }
@@ -98,7 +103,10 @@ export default Component.extend({
             isModalOpen: true
           });
         }
-        this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
+        this.router.transitionTo(
+          'pipeline.build.artifacts.detail',
+          artifactPath
+        );
       }
     }
   }

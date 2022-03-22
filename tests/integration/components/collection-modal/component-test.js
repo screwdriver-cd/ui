@@ -2,7 +2,7 @@ import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click } from '@ember/test-helpers';
+import { render, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';
 
@@ -21,28 +21,31 @@ const collectionModel = {
   destroyRecord() {}
 };
 
-module('Integration | Component | collection modal', function(hooks) {
+module('Integration | Component | collection modal', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.unregister('service:store');
   });
 
-  test('it renders', async function(assert) {
-    assert.expect(5);
+  test('it renders', async function (assert) {
+    assert.expect(6);
 
     this.set('showModal', true);
 
     await render(hbs`{{collection-modal showModal=showModal}}`);
 
     assert.dom('.modal-title').hasText('Create New Collection');
-    assert.dom('.name .control-label').hasText('Collection Name');
+    assert.dom('.name .control-label').hasText('Collection Name *');
     assert.dom('.description .control-label').hasText('Description');
     assert.dom('.collection-form__cancel').hasText('Cancel');
-    assert.dom('.collection-form__create').hasText('Save');
+    assert
+      .dom('.collection-form__create')
+      .hasText('Create')
+      .isDisabled('Should disable Create button when Name is empty');
   });
 
-  test('it cancels creation of a collection', async function(assert) {
+  test('it cancels creation of a collection', async function (assert) {
     assert.expect(2);
 
     this.set('showModal', true);
@@ -56,8 +59,8 @@ module('Integration | Component | collection modal', function(hooks) {
     assert.dom('.modal-dialog').doesNotExist();
   });
 
-  test('it creates a collection', async function(assert) {
-    assert.expect(4);
+  test('it creates a collection', async function (assert) {
+    assert.expect(5);
 
     injectSessionStub(this);
 
@@ -77,27 +80,32 @@ module('Integration | Component | collection modal', function(hooks) {
       }
     });
 
-    const stubAddFunction = function() {
+    const stubAddFunction = function () {
       assert.ok(true);
     };
 
     this.set('showModal', true);
-    this.set('name', 'Test');
-    this.set('description', 'Test description');
     this.set('addToCollection', stubAddFunction);
 
     this.owner.register('service:store', storeStub);
 
-    await render(hbs`{{collection-modal showModal=showModal name=name description=description}}`);
+    await render(
+      hbs`{{collection-modal showModal=showModal name=name description=description}}`
+    );
 
     assert.dom('.modal-dialog').exists({ count: 1 });
 
+    await fillIn('.name input', 'Test');
+    await fillIn('.description textArea', 'Test description');
+    assert
+      .dom('.collection-form__create')
+      .isEnabled('Should enable Create button when Name is Filled');
     await click('.collection-form__create');
 
     assert.notOk(this.get('showModal'));
   });
 
-  test('it cancels creation of a collection', async function(assert) {
+  test('it cancels creation of a collection', async function (assert) {
     assert.expect(3);
 
     injectSessionStub(this);

@@ -7,16 +7,17 @@ const NAMESPACE = ENV.APP.SDAPI_NAMESPACE;
 const HOSTNAME = ENV.APP.SDAPI_HOSTNAME;
 const { SDDOC_URL, SLACK_URL } = ENV.APP;
 
-module('Unit | Instance Initializer | supplementary config', function(hooks) {
-  hooks.beforeEach(function() {
+module('Unit | Instance Initializer | supplementary config', function (hooks) {
+  hooks.beforeEach(function () {
     run(() => {
-      this.application = Application.create();
+      this.TestApplication = Application.extend();
+      this.application = this.TestApplication.create({ autoboot: false });
       this.appInstance = this.application.buildInstance();
       delete window.SUPPLEMENTARY_CONFIG;
     });
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     run(this.appInstance, 'destroy');
     run(this.application, 'destroy');
     delete window.SUPPLEMENTARY_CONFIG;
@@ -26,7 +27,7 @@ module('Unit | Instance Initializer | supplementary config', function(hooks) {
     ENV.APP.SLACK_URL = SLACK_URL;
   });
 
-  test('it uses the pre-configured settings', function(assert) {
+  test('it uses the pre-configured settings', function (assert) {
     initialize(this.appInstance);
 
     assert.equal(ENV.APP.SDAPI_NAMESPACE, NAMESPACE);
@@ -35,7 +36,7 @@ module('Unit | Instance Initializer | supplementary config', function(hooks) {
     assert.equal(ENV.APP.SLACK_URL, SLACK_URL);
   });
 
-  test('it uses the supplementary-config settings', function(assert) {
+  test('it uses the supplementary-config settings', function (assert) {
     window.SUPPLEMENTARY_CONFIG = {
       SDAPI_NAMESPACE: 'v5',
       SDAPI_HOSTNAME: 'http://example.com',

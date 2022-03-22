@@ -1,14 +1,37 @@
 <div>
-  {{#each eventsList as |event|}}
-    {{pipeline-event-row
-      event=event
-      selectedEvent=selectedEvent
-      lastSuccessful=lastSuccessful
-      eventClick=(action "eventClick")
-    }}
+  {{#if isGroupedEvents}}
+    {{#each groups as |group|}}
+      {{pipeline-events-row-group
+        pipeline=pipeline
+        expandedEventsGroup=expandedEventsGroup
+        selectedEventObj=selectedEventObj
+        events=group
+        selectedEvent=selectedEvent
+        latestCommit=latestCommit
+        lastSuccessful=lastSuccessful
+        startPRBuild=(action "startPRBuild")
+        stopEvent=(action "stopEvent")
+        eventClick=(action "eventClick")
+      }}
+    {{else}}
+      <div class="alert">No events have been run for this pipeline</div>
+    {{/each}}
   {{else}}
-    <div class="alert">No events have been run for this pipeline</div>
-  {{/each}}
+    {{#each eventsList as |event|}}
+      {{pipeline-event-row
+        event=event
+        selectedEvent=selectedEvent
+        selectedEventObj=selectedEventObj
+        latestCommit=latestCommit
+        lastSuccessful=lastSuccessful
+        startPRBuild=(action "startPRBuild")
+        stopEvent=(action "stopEvent")
+        eventClick=(action "eventClick")
+      }}
+    {{else}}
+      <div class="alert">No events have been run for this pipeline</div>
+    {{/each}}
+  {{/if}}
 </div>
 
 {{yield}}

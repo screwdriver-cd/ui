@@ -13,67 +13,80 @@ const sessionStub = Service.extend({
   }
 });
 
-module('Unit | Service | cache', function(hooks) {
+module('Unit | Service | cache', function (hooks) {
   setupTest(hooks);
 
   // Specify the other units that are required for this test.
   // needs: ['service:session'],
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     this.owner.register('service:session', sessionStub);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     const service = this.owner.lookup('service:cache');
 
     assert.ok(service);
   });
 
-  test('it makes a call to delete pipeline cache successfully', function(assert) {
-    server.delete('http://localhost:8081/v1/caches/pipelines/1', () => [204]);
+  test('it makes a call to delete pipeline cache successfully', function (assert) {
+    let url = 'http://localhost:8080/v4/pipelines/1/caches';
+
+    server.delete(url, () => [204]);
 
     let service = this.owner.lookup('service:cache');
 
     assert.ok(service);
 
-    const p = service.clearCache({ scope: 'pipelines', id: '1' });
+    const p = service.clearCache({
+      scope: 'pipelines',
+      cacheId: '1',
+      pipelineId: 1
+    });
 
     p.then(() => {
       const [request] = server.handledRequests;
 
       assert.equal(request.status, '204');
       assert.equal(request.method, 'DELETE');
-      assert.equal(request.url, 'http://localhost:8081/v1/caches/pipelines/1');
+      assert.equal(request.url, `${url}?scope=pipelines&cacheId=1`);
     });
   });
 
-  test('it makes a call to delete job cache successfully', function(assert) {
-    server.delete('http://localhost:8081/v1/caches/jobs/1', () => [204]);
+  test('it makes a call to delete job cache successfully', function (assert) {
+    let url = 'http://localhost:8080/v4/pipelines/1/caches';
+
+    server.delete(url, () => [204]);
 
     let service = this.owner.lookup('service:cache');
 
     assert.ok(service);
 
-    const p = service.clearCache({ scope: 'jobs', id: '1' });
+    const p = service.clearCache({
+      scope: 'jobs',
+      cacheId: '1',
+      pipelineId: 1
+    });
 
     p.then(() => {
       const [request] = server.handledRequests;
 
       assert.equal(request.status, '204');
       assert.equal(request.method, 'DELETE');
-      assert.equal(request.url, 'http://localhost:8081/v1/caches/jobs/1');
+      assert.equal(request.url, `${url}?scope=jobs&cacheId=1`);
     });
   });
 
-  test('it returns 401 on unauthorized deletion', function(assert) {
+  test('it returns 401 on unauthorized deletion', function (assert) {
     assert.expect(2);
+    let url = 'http://localhost:8080/v4/pipelines/1/caches';
 
-    server.delete('http://localhost:8081/v1/caches/pipelines/1', () => [
+    server.delete(url, () => [
       401,
       {
         'Content-Type': 'application/json'
@@ -85,12 +98,19 @@ module('Unit | Service | cache', function(hooks) {
 
     assert.ok(service);
 
-    const p = service.clearCache({ scope: 'pipelines', id: '1' });
+    const p = service.clearCache({
+      scope: 'pipelines',
+      cacheId: '1',
+      pipelineId: 1
+    });
 
     p.then(
       () => {},
       err => {
-        assert.equal(err, 'You do not have the permissions to clear the cache.');
+        assert.equal(
+          err,
+          'You do not have the permissions to clear the cache.'
+        );
       }
     );
   });

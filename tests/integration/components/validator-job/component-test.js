@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | validator job', function(hooks) {
+module('Integration | Component | validator job', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       commands: [
@@ -36,7 +36,7 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.annotations .value').hasText('None defined');
   });
 
-  test('it renders a template, description, images', async function(assert) {
+  test('it renders a template, description, images', async function (assert) {
     this.set('templateMock', {
       description: 'Test template',
       maintainer: 'bruce@wayne.com',
@@ -67,16 +67,22 @@ module('Integration | Component | validator job', function(hooks) {
       }
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock template=templateMock}}`);
+    await render(
+      hbs`{{validator-job name="int-test" index=0 job=jobMock template=templateMock}}`
+    );
 
     assert.dom('.template-description .label').hasText('Template Description:');
     assert.dom('.template-description .value').hasText('Test template');
     assert.dom('.images > .label').hasText('Supported Images:');
-    assert.dom('.images > .value > ul > li:first-child').hasText('stable: node:6');
-    assert.dom('.images > .value > ul > li:nth-child(2)').hasText('development: node:7');
+    assert
+      .dom('.images > .value > ul > li:first-child')
+      .hasText('stable: node:6');
+    assert
+      .dom('.images > .value > ul > li:nth-child(2)')
+      .hasText('development: node:7');
   });
 
-  test('it renders settings, env, secrets, annotations', async function(assert) {
+  test('it renders settings, env, secrets, annotations', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       commands: [
@@ -109,7 +115,7 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.annotations ul li').hasText('FOO: bar');
   });
 
-  test('it renders template steps', async function(assert) {
+  test('it renders template steps', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       steps: [{ step1: 'echo hello' }, { step2: 'echo goodbye' }],
@@ -139,12 +145,57 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.sourcePaths ul li').hasText('None defined');
   });
 
-  test('it renders template name', async function(assert) {
+  test('it renders template name when template is used', async function (assert) {
+    this.set('templateMock', {
+      description: 'Test template',
+      maintainer: 'bruce@wayne.com',
+      images: {
+        stable: 'node:6',
+        development: 'node:7'
+      },
+      name: 'test',
+      namespace: 'batman',
+      version: '2.0.0'
+    });
+    this.set('jobMock', {
+      image: 'int-test:1',
+      template: 'baz',
+      steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
+      secrets: [],
+      environment: {
+        SD_TEMPLATE_FULLNAME: 'baz',
+        SD_TEMPLATE_NAMESPACE: 'default',
+        SD_TEMPLATE_NAME: 'baz',
+        SD_TEMPLATE_VERSION: '2.0.0'
+      },
+      settings: {},
+      annotations: {}
+    });
+
+    await render(
+      hbs`{{validator-job name="int-test" index=0 job=jobMock template=templateMock}}`
+    );
+
+    assert.dom('h4:nth-of-type(1)').hasText('int-test');
+    assert
+      .dom('h4:nth-of-type(2)')
+      .hasText('This template extends baz template.');
+    assert
+      .dom('h4:nth-of-type(2) a')
+      .hasAttribute('href', '/templates/default/baz/2.0.0');
+  });
+
+  test('it renders template name with version tag', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
       secrets: [],
-      environment: { SD_TEMPLATE_FULLNAME: 'foo/bar' },
+      environment: {
+        SD_TEMPLATE_FULLNAME: 'foo/bar',
+        SD_TEMPLATE_NAMESPACE: 'foo',
+        SD_TEMPLATE_NAME: 'bar',
+        SD_TEMPLATE_VERSION: 'latest'
+      },
       settings: {},
       annotations: {}
     });
@@ -153,15 +204,22 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('h4:nth-of-type(1)').hasText('int-test');
     assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
-    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar/');
+    assert
+      .dom('h4:nth-of-type(2) a')
+      .hasAttribute('href', '/templates/foo/bar/latest');
   });
 
-  test('it renders template name with version tag', async function(assert) {
+  test('it renders template name with version number', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
       secrets: [],
-      environment: { SD_TEMPLATE_FULLNAME: 'foo/bar', SD_TEMPLATE_VERSION: 'latest' },
+      environment: {
+        SD_TEMPLATE_FULLNAME: 'foo/bar',
+        SD_TEMPLATE_NAMESPACE: 'foo',
+        SD_TEMPLATE_NAME: 'bar',
+        SD_TEMPLATE_VERSION: '0.0.1'
+      },
       settings: {},
       annotations: {}
     });
@@ -170,27 +228,12 @@ module('Integration | Component | validator job', function(hooks) {
 
     assert.dom('h4:nth-of-type(1)').hasText('int-test');
     assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
-    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar/latest');
+    assert
+      .dom('h4:nth-of-type(2) a')
+      .hasAttribute('href', '/templates/foo/bar/0.0.1');
   });
 
-  test('it renders template name with version number', async function(assert) {
-    this.set('jobMock', {
-      image: 'int-test:1',
-      steps: [{ step1: 'echo hello' }, { step2: 'echo goodby' }],
-      secrets: [],
-      environment: { SD_TEMPLATE_FULLNAME: 'foo/bar', SD_TEMPLATE_VERSION: '0.0.1' },
-      settings: {},
-      annotations: {}
-    });
-
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
-
-    assert.dom('h4:nth-of-type(1)').hasText('int-test');
-    assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
-    assert.dom('h4:nth-of-type(2) a').hasAttribute('href', '/templates/foo/bar/0.0.1');
-  });
-
-  test('it renders when there are no steps or commands', async function(assert) {
+  test('it renders when there are no steps or commands', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       secrets: [],
@@ -206,7 +249,7 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.steps ul .value').doesNotExist();
   });
 
-  test('it handles clicks on header', async function(assert) {
+  test('it handles clicks on header', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       commands: [
@@ -225,7 +268,9 @@ module('Integration | Component | validator job', function(hooks) {
 
     this.set('openMock', true);
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock isOpen=openMock}}`);
+    await render(
+      hbs`{{validator-job name="int-test" index=0 job=jobMock isOpen=openMock}}`
+    );
 
     assert.ok(this.get('openMock'));
 
@@ -238,7 +283,7 @@ module('Integration | Component | validator job', function(hooks) {
     assert.ok(this.get('openMock'));
   });
 
-  test('it renders a description', async function(assert) {
+  test('it renders a description', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       description: 'This is a description',
@@ -255,7 +300,7 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.description .value').hasText('This is a description');
   });
 
-  test('it renders sourcePaths', async function(assert) {
+  test('it renders sourcePaths', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       description: 'This is a description',
@@ -274,15 +319,21 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.sourcePaths .value ul li:last-child').hasText('src/folder/');
   });
 
-  test('it renders sd-commands', async function(assert) {
+  test('it renders sd-commands', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       commands: [
         { name: 'step1', command: 'sd-cmd exec bar/foo@latest' },
         { name: 'step2', command: 'sd-cmd exec foo/bar@0.0.1 foobar' },
         { name: 'step3', command: 'sd-cmd exec bar/foo@stable' },
-        { name: 'step4', command: 'sd-cmd exec foo/bar@stable; sd-cmd exec foo/bar@stable' },
-        { name: 'step5', command: 'sd-cmd exec foo/bar@stable; sd-cmd exec foo/bar@latest' },
+        {
+          name: 'step4',
+          command: 'sd-cmd exec foo/bar@stable; sd-cmd exec foo/bar@stable'
+        },
+        {
+          name: 'step5',
+          command: 'sd-cmd exec foo/bar@stable; sd-cmd exec foo/bar@latest'
+        },
         { name: 'step6', command: 'sd-cmd exec bar/foo@latest' }
       ],
       secrets: [],
@@ -313,7 +364,7 @@ module('Integration | Component | validator job', function(hooks) {
     assert.dom('.sd-commands ul li:nth-of-type(6)').doesNotExist();
   });
 
-  test('it renders without a collapsible heading', async function(assert) {
+  test('it renders without a collapsible heading', async function (assert) {
     this.set('jobMock', {
       image: 'int-test:1',
       commands: [
@@ -325,7 +376,9 @@ module('Integration | Component | validator job', function(hooks) {
       settings: {}
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock collapsible=false}}`);
+    await render(
+      hbs`{{validator-job name="int-test" index=0 job=jobMock collapsible=false}}`
+    );
 
     assert.dom('h4').doesNotExist();
   });

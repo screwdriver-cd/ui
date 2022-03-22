@@ -48,10 +48,10 @@ const BINARY_COMMAND = {
   pipelineId: 303
 };
 
-module('Integration | Component | command format', function(hooks) {
+module('Integration | Component | command format', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders docker', async function(assert) {
+  test('it renders docker', async function (assert) {
     this.set('mock', DOCKER_COMMAND);
     await render(hbs`{{command-format command=mock}}`);
 
@@ -62,7 +62,7 @@ module('Integration | Component | command format', function(hooks) {
     assert.dom('.docker-command .value').hasText('example');
   });
 
-  test('it renders habitat', async function(assert) {
+  test('it renders habitat', async function (assert) {
     this.set('mock', HABITAT_COMMAND);
     await render(hbs`{{command-format command=mock}}`);
 
@@ -75,7 +75,7 @@ module('Integration | Component | command format', function(hooks) {
     assert.dom('.habitat-command .value').hasText('bananaberry');
   });
 
-  test('it renders binary', async function(assert) {
+  test('it renders binary', async function (assert) {
     this.set('mock', BINARY_COMMAND);
     await render(hbs`{{command-format command=mock}}`);
 

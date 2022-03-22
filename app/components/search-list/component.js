@@ -1,4 +1,3 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["pipelineSorting"]] */
 import { computed, get, set } from '@ember/object';
 import { empty } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
@@ -17,7 +16,10 @@ export default Component.extend({
     get() {
       const pipelines = get(this, 'filteredPipelines');
 
-      if (Array.isArray(pipelines) && pipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
+      if (
+        Array.isArray(pipelines) &&
+        pipelines.length < ENV.APP.NUM_PIPELINES_LISTED
+      ) {
         return false;
       }
 
@@ -81,7 +83,9 @@ export default Component.extend({
           this.set('addCollectionError', null);
           this.set(
             'addCollectionSuccess',
-            `Successfully added Pipeline to Collection ${collection.get('name')}`
+            `Successfully added Pipeline to Collection ${collection.get(
+              'name'
+            )}`
           );
         })
         .catch(() => {

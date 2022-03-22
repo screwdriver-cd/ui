@@ -12,21 +12,44 @@ const SEPARATOR = '  '; // 2 spaces
 export default Component.extend({
   selectedTemplate: {},
   templates: [],
-  overrideScrewdriverYaml: false,
+  manualYamlCreation: false,
+  scmService: service('scm'),
   template: service(),
   results: '',
   validator: service(),
-
+  session: service(),
+  prUrl: '',
   scmUrl: '',
   rootDir: '',
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
+  autoKeysGeneration: false,
+
+  messageForSearching: computed('templates.[]', {
+    get() {
+      if (this.templates.length) {
+        return 'Not found.';
+      }
+
+      return 'Loading...';
+    }
+  }),
 
   isValid: computed('scmUrl', {
     get() {
       const val = this.scmUrl;
 
       return val.length !== 0 && parse(val).valid;
+    }
+  }),
+
+  hasAutoDeployEnabled: computed({
+    get() {
+      const { session } = this;
+      const currentContext = session.get('data.authenticated.scmContext');
+      const scm = this.scmService.getScm(currentContext);
+
+      return scm.autoDeployKeyGeneration;
     }
   }),
 
@@ -78,15 +101,22 @@ export default Component.extend({
      */
     saveData() {
       if (this.isValid) {
-        this.onCreatePipeline({
+        const payload = {
           scmUrl: this.scmUrl,
-          rootDir: this.rootDir
-        });
+          rootDir: this.rootDir,
+          autoKeysGeneration: this.autoKeysGeneration
+        };
+
+        if (!this.manualYamlCreation) {
+          payload.yaml = this.yaml;
+        }
+
+        this.onCreatePipeline(payload);
       }
     },
 
     async selectTemplate(selectedTemplate) {
-      const yaml = `jobs:\n${SEPARATOR}main:\n${SEPARATOR}${SEPARATOR}template: ${selectedTemplate.name}\n${SEPARATOR}${SEPARATOR}steps:\n${SEPARATOR}${SEPARATOR}${SEPARATOR}- step1: echo ok\n${SEPARATOR}${SEPARATOR}${SEPARATOR}- step2: echo ok`;
+      const yaml = `jobs:\n${SEPARATOR}main:\n${SEPARATOR}${SEPARATOR}template: ${selectedTemplate.namespace}/${selectedTemplate.name}\n${SEPARATOR}${SEPARATOR}requires: [~pr, ~commit]`;
 
       this.setProperties({ selectedTemplate, yaml });
     }

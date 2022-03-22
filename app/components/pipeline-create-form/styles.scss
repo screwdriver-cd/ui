@@ -6,6 +6,23 @@
 
   h1 {
     font-weight: $weight-bold;
+    font-size: 28px;
+  }
+
+  h4 {
+    font-size: 16px;
+  }
+
+  h5 {
+    font-size: 14px;
+
+    &.bold {
+      font-weight: $weight-bold;
+    }
+  }
+
+  section {
+    margin-bottom: 48px;
   }
 }
 
@@ -13,11 +30,11 @@
   box-sizing: border-box;
   margin-top: 10px;
   outline: 0;
-  height: 45px;
-  width: 50%;
+  height: 34px;
+  width: 100%;
   border-radius: 2px;
   border: 2px solid $sd-separator;
-  font-size: 16px;
+  font-size: 14px;
   padding-left: 10px;
   color: $sd-text;
 
@@ -48,10 +65,10 @@
   &.good-text-input {
     border-color: $sd-success;
   }
+}
 
-  &.root-dir {
-    width: calc(50% - 15px);
-  }
+.repo-url {
+  position: relative;
 }
 
 .success i {
@@ -59,6 +76,8 @@
   padding: 8px 8px 2px 8px;
   vertical-align: bottom;
   font-size: 36px;
+  right: 0;
+  position: absolute;
 }
 
 .blue-button {
@@ -107,6 +126,7 @@
 
 .normal-weight {
   font-weight: normal;
+  font-size: 14px;
 }
 
 .templates-dropdown {
@@ -117,4 +137,10 @@
   position: absolute;
   left: 50%;
   width: 85%;
+}
+
+.tooltips {
+  a {
+    color: $sd-lighter-blue;
+  }
 }

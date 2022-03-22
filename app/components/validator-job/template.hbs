@@ -1,5 +1,12 @@
 {{#if collapsible}}
-  <h4 class="job" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>{{#if getTemplateName}}<h4>This job uses <a href="/templates/{{getTemplateName}}/{{getTemplateVersion}}">{{getTemplateName}}</a> template.</h4>{{/if}}
+  <h4 class="job" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} {{name}}{{#if index }}.{{index}}{{/if}}</h4>
+{{/if}}
+{{#if getTemplateName}}
+  {{#if template}}
+    <h4>This template extends <a href={{getTemplateLink}}>{{getTemplateName}}</a> template.</h4>
+  {{else}}
+    <h4>This job uses <a href={{getTemplateLink}}>{{getTemplateName}}</a> template.</h4>
+  {{/if}}
 {{/if}}
 {{#if template.description}}
   <div class="template-description" title="This is the description of the template">
@@ -33,6 +40,28 @@
     </ul>
   </span>
 </div>
+<div class="parameters" title="These are the job-level parameters that the user has defined.">
+  <span class="label">Parameters:</span>
+  <span class="value">
+    <ul>
+      {{#each-in job.parameters as |name value|}}
+        {{#if value.length}}
+          <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
+        {{else}}
+          <li>
+            <span class="name">{{name}}: </span>
+            <ul>
+              <li><span class="value">{{value.value}}</span></li>
+              <li><span class="description">{{value.description}}</span></li>
+            </ul>
+          </li>
+        {{/if}}
+      {{else}}
+        <li>None defined</li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
 {{#unless template}}
   <div class="description" title="This is the description of the job">
     <span class="label">Description:</span>
@@ -48,7 +77,7 @@
   <span class="value">
     <ul>
       {{#each steps as |command|}}
-        <li><div class="name">{{command.name}}: </div><div class="value">{{command.command}}</div></li>
+        <li><div class="name">{{command.name}}: {{#if command.locked}}{{fa-icon "lock"}}{{/if}}</div><div class="value">{{command.command}}</div></li>
       {{/each}}
     </ul>
   </span>

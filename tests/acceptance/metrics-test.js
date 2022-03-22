@@ -12,10 +12,10 @@ import makeGraph from '../mock/workflow-graph';
 
 let server;
 
-module('Acceptance | metrics', function(hooks) {
+module('Acceptance | metrics', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     const graph = makeGraph();
     const metrics = makeMetrics();
     const jobs = makeJobs();
@@ -43,21 +43,21 @@ module('Acceptance | metrics', function(hooks) {
     ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('visiting /pipelines/4/metrics', async function(assert) {
+  test('visiting /pipelines/4/metrics', async function (assert) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/pipelines/4/metrics');
 
-    assert.dom('.chart-c3').exists({ count: 2 });
+    assert.dom('.chart-c3').exists({ count: 3 });
     assert.dom('.range-selection button').exists({ count: 7 });
     assert.dom('.custom-date-selection input').exists({ count: 1 });
     assert.dom('.filters-selection input').exists({ count: 1 });
     assert.dom('.chart-pipeline-info .measure').exists({ count: 5 });
-    assert.dom('.chart-c3 svg').exists({ count: 2 });
-    assert.dom('.chart-c3 .c3-event-rects').exists({ count: 2 });
+    assert.dom('.chart-c3 svg').exists({ count: 3 });
+    assert.dom('.chart-c3 .c3-event-rects').exists({ count: 3 });
     assert.dom('.chart-cta').exists({ count: 1 });
     assert.dom('.chart-cta select').exists({ count: 1 });
   });

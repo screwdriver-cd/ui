@@ -8,8 +8,9 @@ export default Controller.extend({
   showQuickStartGuide: false,
   templates: [],
   actions: {
-    createPipeline({ scmUrl, rootDir }) {
-      let payload = { checkoutUrl: scmUrl, rootDir };
+    createPipeline({ scmUrl, rootDir, autoKeysGeneration }) {
+      let payload = { checkoutUrl: scmUrl, rootDir, autoKeysGeneration };
+
       let pipeline = this.store.createRecord('pipeline', payload);
 
       this.set('isSaving', true);
@@ -23,7 +24,11 @@ export default Controller.extend({
           err => {
             let error = err.errors[0] || {};
 
-            if (error.status === 409 && typeof error.data === 'object' && error.data.existingId) {
+            if (
+              error.status === 409 &&
+              typeof error.data === 'object' &&
+              error.data.existingId
+            ) {
               this.transitionToRoute('pipeline', error.data.existingId);
             } else {
               this.set('errorMessage', error.detail);

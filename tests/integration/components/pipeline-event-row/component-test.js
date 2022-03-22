@@ -4,7 +4,7 @@ import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 import { assign } from '@ember/polyfills';
-import { copy } from '@ember/object/internals';
+import { copy } from 'ember-copy';
 
 const event = {
   id: 3,
@@ -12,6 +12,7 @@ const event = {
   status: 'SUCCESS',
   type: 'pipeline',
   causeMessage: 'test',
+  sha: 'sha3',
   commit: {
     author: {
       url: '#',
@@ -25,6 +26,7 @@ const event = {
     name: 'batman'
   },
   createTimeWords: 'now',
+  createTimeExact: '06/30/2021, 04:39 PM',
   durationText: '1 sec',
   truncatedMessage: 'this was a test',
   truncatedSha: 'abc123',
@@ -49,43 +51,153 @@ const event = {
     { jobId: 1, id: 4, status: 'SUCCESS' },
     { jobId: 2, id: 5, status: 'SUCCESS' },
     { jobId: 3, id: 6, status: 'FAILURE' }
-  ]
+  ],
+  isRunning: false
 };
 
-module('Integration | Component | pipeline event row', function(hooks) {
+module('Integration | Component | pipeline event row', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send = (actionName, ...args) =>
+      this.actions[actionName].apply(this, args);
   });
 
-  test('it renders with pipeline event', async function(assert) {
+  test('it renders with pipeline event', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
 
-    const eventMock = EmberObject.create(copy(event, true));
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
+
+    let eventMock = EmberObject.create(copy(event, true));
+
+    eventMock.isRunning = false;
+    eventMock.status = 'SUCCESS';
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
+    assert.dom('.stopButton').doesNotExist();
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it renders with pr event', async function(assert) {
+  test('it renders with running pipeline event', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
+
+    let eventMock = EmberObject.create(copy(event, true));
+
+    eventMock.isRunning = true;
+    eventMock.status = 'RUNNING';
+
+    this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
+
+    await render(hbs`{{pipeline-event-row
+      event=event
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
+
+    assert.dom('.RUNNING').exists({ count: 1 });
+    assert.dom('.stopButton').exists({ count: 1 });
+    assert.dom('.status').exists({ count: 1 });
+    assert.dom('.fa-spinner').exists({ count: 1 });
+    assert.dom('.commit').hasText('#abc123 Last successful Stop');
+    assert.dom('.message').hasText('this was a test');
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.graph-node').exists({ count: 4 });
+    assert.dom('.graph-edge').exists({ count: 3 });
+    assert.dom('.by').hasText('Started and committed by: batman');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
+  });
+
+  test('it renders with unknown pipeline event', async function (assert) {
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
+
+    let eventMock = EmberObject.create(copy(event, true));
+
+    eventMock.isRunning = true;
+    eventMock.status = 'UNKNOWN';
+
+    this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
+
+    await render(hbs`{{pipeline-event-row
+      event=event
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
+
+    assert.dom('.UNKNOWN').exists({ count: 1 });
+    assert.dom('.stopButton').doesNotExist();
+    assert.dom('.status').exists({ count: 1 });
+    assert.dom('.commit').hasText('#abc123 Last successful');
+    assert.dom('.message').hasText('this was a test');
+    assert.dom('svg').exists({ count: 1 });
+    assert.dom('.graph-node').exists({ count: 4 });
+    assert.dom('.graph-edge').exists({ count: 3 });
+    assert.dom('.by').hasText('Started and committed by: batman');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
+  });
+
+  test('it renders with pr event', async function (assert) {
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
+
+    this.set('startBuild', (prNum, jobs) => {
+      assert.equal(prNum, 2);
+      assert.equal(jobs[0].group, 2);
+    });
+    this.set('stopEvent', Function.prototype);
 
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
@@ -100,24 +212,39 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=4 lastSuccessful=3}}`);
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startBuild
+      stopEvent=stopEvent
+      selectedEvent=4
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('PR-2');
+    assert.dom('.commit').hasText('PR-2 Start');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
+    assert.dom('.last-successful').doesNotExist();
+    assert.dom('.latest-commit').doesNotExist();
   });
 
-  test('it render when event creator and commit author is different', async function(assert) {
+  test('it render when event creator and commit author is different', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
 
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
@@ -131,24 +258,39 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Committed by: superman Started by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it render when event is trigger by external pipeline', async function(assert) {
+  test('it render when event is trigger by external pipeline', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
 
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
@@ -158,25 +300,42 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
-    assert.dom('.by').hasText('Committed by: batman Started by: External Trigger');
-    assert.dom('.date').hasText('Started now');
+    assert
+      .dom('.by')
+      .hasText('Committed by: batman Started by: External Trigger');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it render when event is trigger by same pipeline', async function(assert) {
-    assert.expect(9);
+  test('it render when event is trigger by same pipeline', async function (assert) {
+    assert.expect(11);
     this.actions.eventClick = () => {
       assert.ok(true);
     };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
 
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
@@ -187,25 +346,40 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 1 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it render when startFrom is missing', async function(assert) {
-    assert.expect(6);
+  test('it render when startFrom is missing', async function (assert) {
+    assert.expect(8);
     this.actions.eventClick = () => {
       assert.ok(true);
     };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
 
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
@@ -214,21 +388,36 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 
-  test('it does not render graph when skipped event', async function(assert) {
+  test('it does not render graph when skipped event', async function (assert) {
     this.actions.eventClick = () => {
       assert.ok(true);
     };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
 
     const eventMock = EmberObject.create(
       assign(copy(event, true), {
@@ -246,14 +435,26 @@ module('Integration | Component | pipeline event row', function(hooks) {
     );
 
     this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
 
-    await render(hbs`{{pipeline-event-row event=event selectedEvent=3 lastSuccessful=3}}`);
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
 
     assert.dom('.SKIPPED').exists({ count: 1 });
     assert.dom('.status .fa-exclamation-circle').exists({ count: 1 });
-    assert.dom('.commit').hasText('#abc123');
+    assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('[skip ci] skip ci build.');
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.date').hasText('Started now');
+    assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 });

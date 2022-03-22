@@ -22,17 +22,6 @@ export default Route.extend({
     );
   },
 
-  afterModel(model) {
-    const pipelineId = model.pipeline.get('id');
-
-    // Build not found for this pipeline, redirecting to the pipeline page
-    if (pipelineId !== model.job.get('pipelineId')) {
-      this.transitionTo('pipeline', pipelineId);
-    } else {
-      set(model.event, 'isPaused', true);
-    }
-  },
-
   titleToken(model) {
     return `${model.job.get('name')} > #${model.build.get('truncatedSha')}`;
   },
@@ -59,16 +48,28 @@ export default Route.extend({
   },
 
   redirect(model, transition) {
-    if (['pipeline.build.step', 'pipeline.build.index'].includes(transition.targetName)) {
-      const name = getActiveStep(get(model, 'build.steps'));
+    const pipelineId = model.pipeline.get('id');
 
-      if (name) {
-        this.transitionTo(
-          'pipeline.build.step',
-          model.pipeline.get('id'),
-          model.build.get('id'),
-          name
-        );
+    // Build not found for this pipeline, redirecting to the pipeline page
+    if (pipelineId !== model.job.get('pipelineId')) {
+      this.transitionTo('pipeline', pipelineId);
+    } else {
+      set(model.event, 'isPaused', true);
+      if (
+        ['pipeline.build.step', 'pipeline.build.index'].includes(
+          transition.targetName
+        )
+      ) {
+        const name = getActiveStep(get(model, 'build.steps'));
+
+        if (name) {
+          this.transitionTo(
+            'pipeline.build.step',
+            model.pipeline.get('id'),
+            model.build.get('id'),
+            name
+          );
+        }
       }
     }
   }

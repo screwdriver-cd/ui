@@ -1,4 +1,3 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["secretsSorting"]] */
 import { sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import Component from '@ember/component';
@@ -32,7 +31,12 @@ export default Component.extend({
         return false;
       }
 
-      this.onCreateSecret(this.newName, this.newValue, this.get('pipeline.id'), this.newAllow);
+      this.onCreateSecret(
+        this.newName,
+        this.newValue,
+        this.get('pipeline.id'),
+        this.newAllow
+      );
       this.set('newName', null);
       this.set('newValue', null);
       this.set('newAllow', false);

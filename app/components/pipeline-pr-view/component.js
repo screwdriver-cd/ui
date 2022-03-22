@@ -11,10 +11,15 @@ export default Component.extend({
   }),
   displayName: computed('job.name', {
     get() {
-      return this.get('job.name')
-        .replace('PR-', '')
-        .split(':')
-        .pop();
+      const nodes = this.get('workflowGraph.nodes');
+      const jobName = this.get('job.name').replace('PR-', '').split(':').pop();
+      const matchedNode = nodes.find(node => node.name === jobName);
+
+      if (matchedNode && matchedNode.displayName) {
+        return matchedNode.displayName;
+      }
+
+      return jobName;
     }
   }),
   icon: computed('build.status', {

@@ -45,19 +45,30 @@ export default Route.extend({
     }
 
     return RSVP.all([
-      this.template.getOneTemplateWithMetrics(`${params.namespace}/${params.name}`),
+      this.template.getOneTemplateWithMetrics(
+        `${params.namespace}/${params.name}`
+      ),
       this.template.getTemplateTags(params.namespace, params.name)
     ]).then(arr => {
       let [verPayload, tagPayload] = arr;
-      let version = this.determineVersion(params.version, verPayload, tagPayload);
+
+      let version = this.determineVersion(
+        params.version,
+        verPayload,
+        tagPayload
+      );
 
       verPayload = verPayload.filter(t => t.namespace === params.namespace);
 
       tagPayload.forEach(tagObj => {
-        const taggedVerObj = verPayload.find(verObj => verObj.version === tagObj.version);
+        const taggedVerObj = verPayload.find(
+          verObj => verObj.version === tagObj.version
+        );
 
         if (taggedVerObj) {
-          taggedVerObj.tag = taggedVerObj.tag ? `${taggedVerObj.tag} ${tagObj.tag}` : tagObj.tag;
+          taggedVerObj.tag = taggedVerObj.tag
+            ? `${taggedVerObj.tag} ${tagObj.tag}`
+            : tagObj.tag;
         }
       });
 

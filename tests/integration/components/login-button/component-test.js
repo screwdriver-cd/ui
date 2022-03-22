@@ -4,10 +4,10 @@ import { render, click, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import injectScmServiceStub from '../../../helpers/inject-scm';
 
-module('Integration | Component | login button', function(hooks) {
+module('Integration | Component | login button', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     assert.expect(2);
     this.set('externalAction', () => {
       assert.ok(true);
@@ -18,7 +18,7 @@ module('Integration | Component | login button', function(hooks) {
     await click('a');
   });
 
-  test('it renders multiple buttons', async function(assert) {
+  test('it renders multiple buttons', async function (assert) {
     assert.expect(5);
 
     injectScmServiceStub(this);
@@ -29,16 +29,21 @@ module('Integration | Component | login button', function(hooks) {
       assert.ok(context);
     });
     this.set('model', contexts);
-    await render(hbs`{{login-button authenticate=(action externalAction) scmContexts=model}}`);
+    await render(
+      hbs`{{login-button authenticate=(action externalAction) scmContexts=model}}`
+    );
 
     assert.dom('a').exists({ count: 2 });
 
     const a = findAll('a');
 
     contexts.forEach(async (context, i) => {
-      assert.dom(a[i]).hasText(`Sign in with ${context.displayName}`);
+      // Should skip showing read-only SCM logins
+      if (!context.readOnly) {
+        assert.dom(a[i]).hasText(`Sign in with ${context.displayName}`);
 
-      await click(a[i]);
+        await click(a[i]);
+      }
     });
   });
 });

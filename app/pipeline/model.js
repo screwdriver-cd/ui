@@ -1,5 +1,5 @@
 import { alias } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
@@ -7,6 +7,7 @@ export default DS.Model.extend({
   annotations: DS.attr(),
   checkoutUrl: DS.attr('string'),
   rootDir: DS.attr('string'),
+  autoKeysGeneration: DS.attr('boolean', { defaultValue: false }),
   scmContext: DS.attr('string'),
   createTime: DS.attr('date'),
   scmRepo: DS.attr(),
@@ -21,6 +22,14 @@ export default DS.Model.extend({
   secrets: DS.hasMany('secret', { async: true }),
   tokens: DS.hasMany('token', { async: true }),
   metrics: DS.hasMany('metric', { async: true }),
+  settings: DS.attr({
+    defaultValue() {
+      return {
+        groupedEvents: true,
+        showEventTriggers: false
+      };
+    }
+  }),
 
   appId: alias('scmRepo.name'),
   branch: computed('scmRepo.{branch,rootDir}', {
@@ -28,11 +37,28 @@ export default DS.Model.extend({
       let { branch, rootDir } = this.scmRepo || {};
 
       if (rootDir) {
-        branch = `${branch}#${rootDir}`;
+        branch = `${branch}:${rootDir}`;
       }
 
       return branch;
     }
   }),
-  hubUrl: alias('scmRepo.url')
+  hubUrl: alias('scmRepo.url'),
+  jobParameters: computed('jobs.[]', {
+    get() {
+      const parameters = {};
+
+      getWithDefault(this, 'jobs', []).forEach(job => {
+        if (job.prParentJobId === null || job.prParentJobId === undefined) {
+          const jobParameters = job.parameters;
+
+          if (jobParameters) {
+            parameters[job.name] = jobParameters;
+          }
+        }
+      });
+
+      return parameters;
+    }
+  })
 });

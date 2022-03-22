@@ -5,10 +5,10 @@ import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
-module('Acceptance | child pipeline', function(hooks) {
+module('Acceptance | child pipeline', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/pipelines/1', () => [
@@ -21,7 +21,10 @@ module('Acceptance | child pipeline', function(hooks) {
         admins: { batman: true },
         workflow: ['main', 'publish'],
         childPipelines: {
-          scmUrls: ['git@github.com:child/one.git#master', 'git@github.com:child/two.git#master']
+          scmUrls: [
+            'git@github.com:child/one.git#master',
+            'git@github.com:child/two.git#master'
+          ]
         }
       })
     ]);
@@ -56,18 +59,27 @@ module('Acceptance | child pipeline', function(hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
+
+    server.get('http://localhost:8080/v4/pipelines/1/latestCommitEvent', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({ id: '2', sha: 'abcdef1029384' })
+    ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('visiting /pipelines/:id/child-pipelines', async function(assert) {
+  test('visiting /pipelines/:id/child-pipelines', async function (assert) {
     await authenticateSession({ token: 'faketoken' });
     await visit('/pipelines/1/child-pipelines');
 
     assert.equal(currentURL(), '/pipelines/1/child-pipelines');
-    assert.dom('.appId:nth-child(1)').hasText('child/one');
-    assert.dom('.appId:nth-child(2)').hasText('child/two');
+    assert.dom('.appId:nth-child(1)').hasText('Name');
+    assert.dom('tbody tr:first-child td.appId').hasText('child/one');
+    assert.dom('tbody tr:first-child td.branch').hasText('master');
+    assert.dom('tbody tr:nth-child(2) td.appId').hasText('child/two');
+    assert.dom('tbody tr:nth-child(2) td.branch').hasText('master');
   });
 });

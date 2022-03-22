@@ -1,14 +1,20 @@
-import { click, fillIn, currentURL, triggerEvent, visit } from '@ember/test-helpers';
+import {
+  click,
+  fillIn,
+  currentURL,
+  triggerEvent,
+  visit
+} from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
-module('Acceptance | create', function(hooks) {
+module('Acceptance | create', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/collections', () => [
@@ -16,19 +22,25 @@ module('Acceptance | create', function(hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
+
+    server.get('http://localhost:8080/v4/pipelines/1/latestCommitEvent', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('/create a pipeline: not logged in will redirect', async function(assert) {
+  test('/create a pipeline: not logged in will redirect', async function (assert) {
     await visit('/create');
 
     assert.equal(currentURL(), '/login');
   });
 
-  test('/create a pipeline: SUCCESS', async function(assert) {
+  test('/create a pipeline: SUCCESS', async function (assert) {
     server.post('http://localhost:8080/v4/pipelines', () => [
       200,
       { 'Content-Type': 'application/json' },
@@ -68,10 +80,16 @@ module('Acceptance | create', function(hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
-
-    server.get('http://localhost:8080/v4/templates', () => {
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
-    });
+    server.get('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
+    server.get('http://localhost:8080/v4/templates', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
 
     await authenticateSession({ token: 'faketoken' });
     await visit('/create');
@@ -83,7 +101,7 @@ module('Acceptance | create', function(hooks) {
     assert.equal(currentURL(), '/pipelines/1/events');
   });
 
-  test('/create a pipeline with rootDir: SUCCESS', async function(assert) {
+  test('/create a pipeline with rootDir: SUCCESS', async function (assert) {
     server.post('http://localhost:8080/v4/pipelines', () => [
       200,
       { 'Content-Type': 'application/json' },
@@ -124,9 +142,17 @@ module('Acceptance | create', function(hooks) {
       JSON.stringify([])
     ]);
 
-    server.get('http://localhost:8080/v4/templates', () => {
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
-    });
+    server.get('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
+
+    server.get('http://localhost:8080/v4/templates', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
 
     await authenticateSession({ token: 'faketoken' });
     await visit('/create');
@@ -140,7 +166,7 @@ module('Acceptance | create', function(hooks) {
     assert.equal(currentURL(), '/pipelines/1/events');
   });
 
-  test('/create a pipeline: FAILURE', async function(assert) {
+  test('/create a pipeline: FAILURE', async function (assert) {
     server.post('http://localhost:8080/v4/pipelines', () => [
       409,
       { 'Content-Type': 'application/json' },
@@ -150,9 +176,11 @@ module('Acceptance | create', function(hooks) {
         message: 'something conflicting'
       })
     ]);
-    server.get('http://localhost:8080/v4/templates', () => {
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
-    });
+    server.get('http://localhost:8080/v4/templates', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
 
     await authenticateSession({ token: 'faketoken' });
     await visit('/create');
@@ -165,7 +193,7 @@ module('Acceptance | create', function(hooks) {
     assert.dom('.alert > span').hasText('something conflicting');
   });
 
-  test('Create Screwdriver.yaml', async function(assert) {
+  test('Create Screwdriver.yaml', async function (assert) {
     server.post('http://localhost:8080/v4/pipelines', () => [
       409,
       { 'Content-Type': 'application/json' },
@@ -176,24 +204,24 @@ module('Acceptance | create', function(hooks) {
       })
     ]);
 
-    server.get('http://localhost:8080/v4/templates', () => {
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
-    });
+    server.get('http://localhost:8080/v4/templates', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
 
     await authenticateSession({ token: 'faketoken' });
     await visit('/create');
 
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
     await triggerEvent('.text-input', 'keyup');
-    await click('input.create-screwdriver-yaml');
 
     assert.dom('.select-template').hasText('template');
     assert.dom('.templates-dropdown').exists();
     assert.dom('.ace_editor').exists();
-    assert.dom('#template-validate-results').exists();
   });
 
-  test('Quick start guide', async function(assert) {
+  test('Create Screwdriver.yaml later', async function (assert) {
     server.post('http://localhost:8080/v4/pipelines', () => [
       409,
       { 'Content-Type': 'application/json' },
@@ -204,9 +232,40 @@ module('Acceptance | create', function(hooks) {
       })
     ]);
 
-    server.get('http://localhost:8080/v4/templates', () => {
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
-    });
+    server.get('http://localhost:8080/v4/templates', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+
+    await authenticateSession({ token: 'faketoken' });
+    await visit('/create');
+
+    await fillIn('.text-input', 'git@github.com:foo/bar.git');
+    await triggerEvent('.text-input', 'keyup');
+    await click('input.create-screwdriver-yaml-later');
+
+    assert.dom('.templates-dropdown').doesNotExist();
+    assert.dom('.ace_editor').doesNotExist();
+    assert.dom('#template-validate-results').doesNotExist();
+  });
+
+  test('Quick start guide', async function (assert) {
+    server.post('http://localhost:8080/v4/pipelines', () => [
+      409,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        statusCode: 409,
+        error: 'Conflict',
+        message: 'something conflicting'
+      })
+    ]);
+
+    server.get('http://localhost:8080/v4/templates', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
 
     await authenticateSession({ token: 'faketoken' });
     await visit('/create');

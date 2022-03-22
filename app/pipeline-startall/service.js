@@ -21,7 +21,10 @@ export default Service.extend({
         url,
         type: 'POST',
         headers: {
-          Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+          Authorization: `Bearer ${get(
+            this,
+            'session.data.authenticated.token'
+          )}`
         }
       })
         .done(() => resolve())

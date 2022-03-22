@@ -4,10 +4,10 @@ import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 
-module('Integration | Component | pipeline list', function(hooks) {
+module('Integration | Component | pipeline list', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const pipelines = [
       EmberObject.create({
         id: 3,
@@ -33,15 +33,17 @@ module('Integration | Component | pipeline list', function(hooks) {
     this.set('pipelineList', pipelines);
     this.set('pipeline', pipeline);
 
-    await render(hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`);
+    await render(
+      hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`
+    );
 
-    assert.dom(find('ul li:first-child')).hasText('foo/bar');
-    assert.dom('ul li:nth-child(2)').hasText('batman/tumbler');
+    assert.dom(find('tbody tr:first-child')).hasText('foo/bar master');
+    assert.dom('tbody tr:nth-child(2)').hasText('batman/tumbler waynecorp');
     assert.dom('button').hasText('Start All');
     assert.dom('.num-results span').hasText('Found 2 child pipeline(s)');
   });
 
-  test('it renders with zero child piplines found', async function(assert) {
+  test('it renders with zero child piplines found', async function (assert) {
     const pipelines = [];
 
     const pipeline = EmberObject.create({
@@ -54,7 +56,9 @@ module('Integration | Component | pipeline list', function(hooks) {
     this.set('pipelineList', pipelines);
     this.set('pipeline', pipeline);
 
-    await render(hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`);
+    await render(
+      hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`
+    );
 
     assert.dom('.num-results span').hasText('No child pipeline(s) created');
   });

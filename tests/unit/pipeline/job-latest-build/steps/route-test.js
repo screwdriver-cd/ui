@@ -2,16 +2,16 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
 
-module('Unit | Route | pipeline/job-latest-build/steps', function(hooks) {
+module('Unit | Route | pipeline/job-latest-build/steps', function (hooks) {
   setupTest(hooks);
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let route = this.owner.lookup('route:pipeline/job-latest-build/steps');
 
     assert.ok(route);
   });
 
-  sinonTest('it redirects to build step page', function(assert) {
+  sinonTest('it redirects to build step page', function (assert) {
     assert.expect(3);
 
     const route = this.owner.lookup('route:pipeline/job-latest-build/steps');

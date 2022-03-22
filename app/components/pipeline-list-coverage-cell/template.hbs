@@ -1,0 +1,13 @@
+<div class="coverage">
+  {{#if loading}}
+    Loading
+  {{else}}
+    {{#if loaded}}
+      <span class="coverage-value">
+        {{get coverage "coverage"}}{{if (is-number (get coverage "coverage")) "%"}}
+      </span>
+    {{else}}
+      N/A
+    {{/if}}
+  {{/if}}
+</div>

@@ -27,9 +27,9 @@ export default Service.extend({
     const fullName = `${namespace}/${name}`;
     const url =
       // eslint-disable-next-line max-len
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/${encodeURIComponent(
-        fullName
-      )}/tags`;
+      `${ENV.APP.SDAPI_HOSTNAME}/${
+        ENV.APP.SDAPI_NAMESPACE
+      }/templates/${encodeURIComponent(fullName)}/tags`;
 
     return this.fetchData(url);
   },
@@ -108,12 +108,17 @@ export default Service.extend({
         .fail(response => {
           let message = `${response.status} Request Failed`;
 
-          if (response && response.responseJSON && typeof response.responseJSON === 'object') {
+          if (
+            response &&
+            response.responseJSON &&
+            typeof response.responseJSON === 'object'
+          ) {
             message = `${response.status} ${response.responseJSON.error}`;
           }
 
           if (response.status === 403) {
-            message = 'You do not have the permissions to remove this template.';
+            message =
+              'You do not have the permissions to remove this template.';
           }
 
           return reject(message);
@@ -121,9 +126,9 @@ export default Service.extend({
     });
   },
   updateTrust(fullName, trusted) {
-    const url =
-      `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/templates/` +
-      `${encodeURIComponent(fullName)}/trusted`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/templates/${encodeURIComponent(fullName)}/trusted`;
     const ajaxConfig = {
       method: 'PUT',
       dataType: 'json',
@@ -146,7 +151,8 @@ export default Service.extend({
           let message = `${response.status} Request Failed`;
 
           if (response.status === 401 || response.status === 403) {
-            message = 'You do not have the permissions to update this template.';
+            message =
+              'You do not have the permissions to update this template.';
           }
 
           return reject(message);

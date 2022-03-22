@@ -1,9 +1,13 @@
 & {
-  margin-left: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
 
   .error {
     border: 1px solid $sd-failure;
+    padding: 10px;
+  }
+
+  .warning {
+    border: 1px solid $sd-warning;
     padding: 10px;
   }
 }

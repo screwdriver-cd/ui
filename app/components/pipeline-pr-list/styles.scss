@@ -11,7 +11,7 @@
   }
 
   &:hover {
-    background: none;
+    background-color: $brand-200;
   }
 
   .view {
@@ -55,6 +55,21 @@
   &:hover {
     border-color: $sd-link;
     color: $sd-white;
+  }
+}
+
+.stopButton {
+  float: right;
+  border: 1px solid $sd-aborted;
+  background-color: $sd-white;
+  color: $sd-aborted;
+  border-radius: 2px;
+  padding: 5px 15px;
+  margin-top: 5px;
+
+  &:hover {
+    border-color: #ccc;
+    color: $grey-800;
   }
 }
 

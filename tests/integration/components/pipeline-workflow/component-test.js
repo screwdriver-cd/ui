@@ -14,14 +14,18 @@ const GRAPH = {
     { id: 2, name: 'batman' },
     { id: 3, name: 'robin' },
     { id: 4, name: 'sd@123:main' },
-    { id: 5, name: 'deploy' }
+    { id: 5, name: 'deploy' },
+    { id: 6, name: 'foo01job' },
+    { id: 7, name: 'foo1job' }
   ],
   edges: [
     { src: '~pr', dest: 'main' },
     { src: '~commit', dest: 'main' },
     { src: 'main', dest: 'batman' },
     { src: 'batman', dest: 'robin' },
-    { src: 'robin', dest: 'sd@123:main' }
+    { src: 'robin', dest: 'sd@123:main' },
+    { src: 'main', dest: 'foo01job' },
+    { src: 'main', dest: 'foo1job' }
   ]
 };
 
@@ -32,10 +36,10 @@ const BUILDS = [
   { jobId: 5, id: 8, status: 'FAILURE' }
 ];
 
-module('Integration | Component | pipeline workflow', function(hooks) {
+module('Integration | Component | pipeline workflow', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders an event', async function(assert) {
+  test('it renders an event', async function (assert) {
     this.set(
       'obj',
       EmberObject.create({
@@ -48,13 +52,36 @@ module('Integration | Component | pipeline workflow', function(hooks) {
       EmberObject.create(GRAPH)
     );
 
-    await render(hbs`{{pipeline-workflow selectedEventObj=obj graph=graph}}`);
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=true}}`
+    );
 
-    assert.dom('.graph-node').exists({ count: 6 });
+    assert.dom('.graph-node').exists({ count: 8 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
   });
 
-  test('it renders with frozen window', async function(assert) {
+  test('it renders an event without pr job', async function (assert) {
+    this.set(
+      'obj',
+      EmberObject.create({
+        builds: rsvp.resolve(BUILDS),
+        workflowGraph: GRAPH,
+        startFrom: '~commit',
+        causeMessage: 'test'
+      }),
+      'graph',
+      EmberObject.create(GRAPH)
+    );
+
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=false}}`
+    );
+
+    assert.dom('.graph-node').exists({ count: 7 });
+    assert.dom('.workflow-tooltip').exists({ count: 1 });
+  });
+
+  test('it renders with frozen window', async function (assert) {
     this.setProperties({
       obj: frozenBuild,
       builds: [],
@@ -119,9 +146,63 @@ module('Integration | Component | pipeline workflow', function(hooks) {
       }
     });
 
-    await render(hbs`{{pipeline-workflow selectedEventObj=obj jobs=jobs graph=workflowGraph}}`);
-    assert.dom('.pipelineWorkflow [data-job="mainFreeze"]').exists({ count: 1 });
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj jobs=jobs graph=workflowGraph}}`
+    );
+    assert
+      .dom('.pipelineWorkflow [data-job="mainFreeze"]')
+      .exists({ count: 1 });
     assert.dom('.graph-node.build-frozen').exists({ count: 1 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
+  });
+
+  test('it renders with latest-commit', async function (assert) {
+    this.set(
+      'obj',
+      EmberObject.create({
+        builds: rsvp.resolve(BUILDS),
+        workflowGraph: GRAPH,
+        startFrom: '~commit',
+        causeMessage: 'test',
+        sha: 'abc123'
+      })
+    );
+    this.set(
+      'latestCommit',
+      EmberObject.create({
+        sha: 'abc123'
+      })
+    );
+
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj latestCommit=latestCommit graph=graph showPRJobs=true isShowingModal=true}}`
+    );
+
+    assert.dom('.latest-commit').exists({ count: 1 });
+  });
+
+  test('it renders without latest-commit', async function (assert) {
+    this.set(
+      'obj',
+      EmberObject.create({
+        builds: rsvp.resolve(BUILDS),
+        workflowGraph: GRAPH,
+        startFrom: '~commit',
+        causeMessage: 'test',
+        sha: 'abc123'
+      })
+    );
+    this.set(
+      'latestCommit',
+      EmberObject.create({
+        sha: 'efg456'
+      })
+    );
+
+    await render(
+      hbs`{{pipeline-workflow selectedEventObj=obj latestCommit=latestCommit graph=graph showPRJobs=true isShowingModal=true}}`
+    );
+
+    assert.dom('.latest-commit').doesNotExist();
   });
 });

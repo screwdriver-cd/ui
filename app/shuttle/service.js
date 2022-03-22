@@ -1,5 +1,6 @@
-import { computed } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
+import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
 
 /**
@@ -11,7 +12,7 @@ import ENV from 'screwdriver-ui/config/environment';
  */
 export default Service.extend({
   ajax: service(),
-
+  store: service(),
   session: service(),
 
   storeHost: `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}`,
@@ -46,6 +47,7 @@ export default Service.extend({
     }
 
     let optionsType = method.toUpperCase();
+
     let requestType = method.toLowerCase();
 
     if (raw) {
@@ -58,10 +60,7 @@ export default Service.extend({
 
     const uri = `${baseHost}${url}`;
 
-    const options = Object.assign({}, this.ajaxOptions(), {
-      data,
-      type: optionsType
-    });
+    const options = { ...this.ajaxOptions(), data, type: optionsType };
 
     return this.get('ajax')[requestType](uri, options);
   },
@@ -74,7 +73,13 @@ export default Service.extend({
     return this.fetchFrom('store', method, url, data, raw);
   },
 
-  fetchLogs({ buildId, stepName, logNumber = 0, pageSize = 10, sortOrder = 'ascending' }) {
+  fetchLogs({
+    buildId,
+    stepName,
+    logNumber = 0,
+    pageSize = 10,
+    sortOrder = 'ascending'
+  }) {
     const method = 'get';
     const url = `/builds/${buildId}/steps/${stepName}/logs`;
     const data = { from: logNumber, pages: pageSize, sort: sortOrder };
@@ -89,5 +94,222 @@ export default Service.extend({
     const data = { sortBy: 'createTime', sort: 'descending', compact: true };
 
     return this.fetchFromApi(method, url, data);
+  },
+
+  /**
+   * Fetch coverage info from coverage plugin
+   * @param  {Object}  data
+   * @param  {String}  [data.jobId]        Job ID
+   * @param  {String}  [data.jobName]      Job name
+   * @param  {String}  [data.pipelineId]	 Pipeline ID
+   * @param  {String}  [data.pipelineName] Pipeline name
+   * @param  {String}  data.startTime      Build start time
+   * @param  {String}  data.endTime        Build end time
+   * @param  {String}  [data.prNum]        PR number
+   * @param  {String}  [data.scope]        Coverage scope (pipeline or job)
+   * @param  {String}  data.projectKey     Coverage key
+   * @return {Promise} Coverage object with coverage results and test data
+   */
+  async fetchCoverage(data) {
+    const method = 'get';
+    const url = `/coverage/info`;
+
+    return this.fetchFromApi(method, url, data);
+  },
+
+  async openPr(checkoutUrl, yaml = '', pipelineId = 1) {
+    const method = 'post';
+    const url = `/pipelines/${pipelineId}/openPr`;
+    const data = {
+      checkoutUrl,
+      files: [
+        {
+          name: 'screwdriver.yaml',
+          content: yaml
+        }
+      ],
+      title: 'Onboard to Screwdriver',
+      message: 'Add screwdriver.yaml file'
+    };
+    const raw = true;
+
+    return this.fetchFromApi(method, url, data, raw);
+  },
+
+  /**
+   * updatePipelineSettings
+   * @param  {Number}   pipelineId  Pipeline Id
+   * @param  {Object}   settings
+   * @param  {Array}    settings.metricsDowntimeJobs Job Ids to caluclate downtime
+   * @param  {Boolean}  settings.public pipeline visibility
+   * @return {Promise}
+   */
+  async updatePipelineSettings(pipelineId, settings) {
+    const method = 'put';
+    const url = `/pipelines/${pipelineId}`;
+
+    let newSetting = {};
+
+    if (settings.metricsDowntimeJobs) {
+      newSetting = {
+        metricsDowntimeJobs: settings.metricsDowntimeJobs.map(job => job.id)
+      };
+    }
+
+    if (typeof settings.publicPipeline === 'boolean') {
+      newSetting = { ...newSetting, public: settings.publicPipeline };
+    }
+
+    if (typeof settings.groupedEvents === 'boolean') {
+      newSetting = { ...newSetting, groupedEvents: settings.groupedEvents };
+    }
+
+    if (typeof settings.showEventTriggers === 'boolean') {
+      newSetting = {
+        ...newSetting,
+        showEventTriggers: settings.showEventTriggers
+      };
+    }
+
+    if (typeof settings.filterEventsForNoBuilds === 'boolean') {
+      newSetting = {
+        ...newSetting,
+        filterEventsForNoBuilds: settings.filterEventsForNoBuilds
+      };
+    }
+
+    const data = { settings: newSetting };
+
+    return this.fetchFromApi(method, url, data);
+  },
+
+  /**
+   * getPipelineDowntimeJobsMetrics
+   * @param  {Number} pipelineId        Pipeline Id
+   * @param  {Array}  downtimeJobs      Job Ids
+   * @param  {Array}  downtimeStatuses  Build Statuses
+   * @return {Promise}
+   */
+  async getPipelineDowntimeJobsMetrics(
+    pipelineId,
+    downtimeJobs,
+    downtimeStatuses,
+    startTime,
+    endTime
+  ) {
+    const method = 'get';
+    const query = $.param({
+      downtimeJobs,
+      downtimeStatuses,
+      startTime,
+      endTime
+    });
+    const url = `/pipelines/${pipelineId}/metrics?${query}`;
+
+    return this.fetchFromApi(method, url);
+  },
+
+  /**
+   * getLatestCommitEvent
+   * @param  {Number} pipelineId  Pipeline Id
+   * @return {Promise}
+   */
+  async getLatestCommitEvent(pipelineId) {
+    const method = 'get';
+    const url = `/pipelines/${pipelineId}/latestCommitEvent`;
+
+    return this.fetchFromApi(method, url);
+  },
+
+  /**
+   * getUserSetting
+   * @return {Promise}
+   */
+  async getUserSetting() {
+    const method = 'get';
+    const url = `/users/settings`;
+
+    try {
+      const userSettings = await this.fetchFromApi(method, url);
+
+      return userSettings;
+    } catch (e) {
+      return {};
+    }
+  },
+
+  /**
+   * getUserPipelinePreference
+   * @param  {Number} pipelineId  pipeline Id
+   * @return {Promise}
+   */
+  async getUserPipelinePreference(pipelineId) {
+    if (pipelineId === undefined) {
+      return {};
+    }
+
+    const remotePreferences = await this.getUserSetting();
+    const remotePipelineConfig = getWithDefault(
+      remotePreferences,
+      pipelineId,
+      {}
+    );
+    const localPipelinePreference = await this.store
+      .peekAll('preference/pipeline')
+      .findBy('id', pipelineId);
+
+    // local preference takes precedence
+    if (localPipelinePreference && remotePipelineConfig) {
+      localPipelinePreference.setProperties(remotePipelineConfig);
+      localPipelinePreference.save();
+
+      return localPipelinePreference;
+    }
+
+    const pipelinePreference = await this.store.createRecord(
+      'preference/pipeline',
+      {
+        id: pipelineId,
+        ...remotePipelineConfig
+      }
+    );
+
+    return pipelinePreference;
+  },
+
+  /**
+   * updateUserPreference
+   * @param  {Number}  [pipelineId]
+   * @param  {Object}  pipelineSettings
+   * @param  {Boolean} [pipelineSettings.showPRJobs]
+   * @return {Promise}
+   */
+  async updateUserPreference(pipelineId, pipelineSettings) {
+    const method = 'put';
+    const url = `/users/settings`;
+    const userSettings = await this.getUserSetting();
+    const data = {
+      settings: {
+        ...userSettings,
+        [pipelineId]: pipelineSettings
+      }
+    };
+
+    return this.fetchFromApi(method, url, data);
+  },
+
+  async searchPipelines(pipelineName) {
+    const method = 'get';
+    const query = $.param({
+      page: 1,
+      count: 50,
+      sort: 'ascending',
+      sortBy: 'name',
+      search: pipelineName
+    });
+
+    const url = `/pipelines?${query}`;
+
+    return this.fetchFromApi(method, url);
   }
 });

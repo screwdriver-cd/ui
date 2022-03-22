@@ -3,13 +3,14 @@ import { setupTest } from 'ember-qunit';
 
 import { run } from '@ember/runloop';
 
-module('Unit | Model | job', function(hooks) {
+module('Unit | Model | job', function (hooks) {
   setupTest(hooks);
 
-  test('it exists', function(assert) {
-    let model = run(() => this.owner.lookup('service:store').createRecord('job'));
+  test('it exists', function (assert) {
+    let model = run(() =>
+      this.owner.lookup('service:store').createRecord('job')
+    );
 
-    // let store = this.store();
     assert.ok(!!model);
   });
 });

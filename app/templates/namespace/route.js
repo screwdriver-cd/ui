@@ -6,7 +6,10 @@ export default Route.extend({
   templateName: 'templates/index',
   setupController(controller, model) {
     this._super(controller, model);
-    controller.set('targetNamespace', this.paramsFor('templates.namespace').namespace);
+    controller.set(
+      'targetNamespace',
+      this.paramsFor('templates.namespace').namespace
+    );
   },
   model(params) {
     return this.template.getAllTemplates(params.namespace);

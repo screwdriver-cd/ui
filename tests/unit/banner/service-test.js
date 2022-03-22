@@ -2,6 +2,7 @@ import Pretender from 'pretender';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 const actualMessage = 'shutdown imminent';
+
 let server;
 
 const getBanners = () => {
@@ -14,24 +15,24 @@ const getBanners = () => {
   ]);
 };
 
-module('Unit | Service | banner', function(hooks) {
+module('Unit | Service | banner', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     const service = this.owner.lookup('service:banner');
 
     assert.ok(service);
   });
 
-  test('it fetches active banners', function(assert) {
+  test('it fetches active banners', function (assert) {
     assert.expect(1);
     getBanners();
     const service = this.owner.lookup('service:banner');

@@ -34,7 +34,8 @@ export default Service.extend({
       $.ajax(ajaxConfig)
         .done(content =>
           resolve({
-            coverage: content.coverage !== 'N/A' ? `${content.coverage}%` : 'N/A',
+            coverage:
+              content.coverage !== 'N/A' ? `${content.coverage}%` : 'N/A',
             coverageUrl: content.coverage !== 'N/A' ? content.projectUrl : '#',
             tests: content.tests,
             testsUrl: content.tests !== 'N/A' ? content.projectUrl : '#'

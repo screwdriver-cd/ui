@@ -19,26 +19,32 @@ const sessionServiceMock = Service.extend({
     }
   }
 });
+
 let server;
 
-module('Unit | Controller | pipeline/events', function(hooks) {
+module('Unit | Controller | pipeline/events', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     this.owner.register('service:session', sessionServiceMock);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     assert.ok(this.owner.lookup('controller:pipeline/events'));
   });
 
-  test('it starts a build', async function(assert) {
+  test('it starts a build', async function (assert) {
     assert.expect(7);
+    server.get('http://localhost:8080/v4/events/5678/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -65,7 +71,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       controller.transitionToRoute = (path, id) => {
@@ -91,8 +97,13 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it restarts a build', async function(assert) {
+  test('it restarts a build', async function (assert) {
     assert.expect(6);
+    server.get('http://localhost:8080/v4/events/2/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -132,7 +143,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       controller.transitionToRoute = path => {
@@ -160,8 +171,13 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it restarts a PR build', async function(assert) {
+  test('it restarts a PR build', async function (assert) {
     assert.expect(6);
+    server.get('http://localhost:8080/v4/events/2/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -204,7 +220,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       controller.transitionToRoute = path => {
@@ -232,7 +248,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it stops a build', async function(assert) {
+  test('it stops a build', async function (assert) {
     assert.expect(3);
     server.put('http://localhost:8080/v4/builds/123', () => [
       200,
@@ -266,7 +282,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       const build = controller.store.peekRecord('build', '123');
@@ -288,7 +304,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('it stops PR build(s)', async function(assert) {
+  test('it stops PR build(s)', async function (assert) {
     assert.expect(1);
     server.put('http://localhost:8080/v4/builds/123', () => [
       200,
@@ -307,7 +323,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
     const controller = this.owner.lookup('controller:pipeline/events');
 
-    const jobs = EmberObject.create([
+    const jobs = newArray([
       {
         builds: [
           {
@@ -329,7 +345,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       });
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       const build = controller.store.peekRecord('build', '123');
@@ -343,14 +359,15 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     await settled();
 
     const [request] = server.handledRequests;
-    const payload = JSON.parse(request.requestBody);
+    const { responseText } = request;
+    const payload = JSON.parse(responseText);
 
     assert.deepEqual(payload, {
-      status: 'ABORTED'
+      id: '123'
     });
   });
 
-  test('it starts PR build(s)', async function(assert) {
+  test('it starts PR build(s)', async function (assert) {
     const prNum = 999;
 
     assert.expect(5);
@@ -376,7 +393,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       );
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       assert.notOk(controller.get('isShowingModal'));
@@ -398,7 +415,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     });
   });
 
-  test('New event comes top of PR list when it starts a PR build with prChain', async function(assert) {
+  test('New event comes top of PR list when it starts a PR build with prChain', async function (assert) {
     const prNum = 3;
     const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
 
@@ -413,11 +430,13 @@ module('Unit | Controller | pipeline/events', function(hooks) {
     ]);
 
     const createRecordStub = sinon.stub();
-    const controller = this.owner.factoryFor('controller:pipeline/events').create({
-      store: {
-        createRecord: createRecordStub
-      }
-    });
+    const controller = this.owner
+      .factoryFor('controller:pipeline/events')
+      .create({
+        store: {
+          createRecord: createRecordStub
+        }
+      });
 
     const newEvent = EmberObject.create({
       id: 3,
@@ -452,7 +471,7 @@ module('Unit | Controller | pipeline/events', function(hooks) {
       );
 
       controller.set('model', {
-        events: EmberObject.create({})
+        events: newArray()
       });
 
       assert.notOk(controller.get('isShowingModal'));
@@ -464,5 +483,91 @@ module('Unit | Controller | pipeline/events', function(hooks) {
 
     assert.equal(controller.get('prEvents')[0].id, 3);
     assert.equal(controller.get('prEvents')[0].prNum, '3');
+  });
+
+  test('From no admins to have admins after sync', async function (assert) {
+    assert.expect(4);
+
+    const pipelineData = {
+      id: 1234,
+      name: 'adong/fp-www',
+      scmUri: 'git.example.com:488454:adong/x',
+      scmContext: 'github:git.example.com',
+      scmRepo: {
+        branch: 'adong/x',
+        name: 'adong/fp-www',
+        url: 'https://git.example.com/adong/fp-www/tree/adong/x',
+        rootDir: '',
+        private: false
+      },
+      createTime: '2021-03-30T17:08:32.581Z',
+      admins: {},
+      workflowGraph: {
+        nodes: [
+          { name: '~pr' },
+          { name: '~commit' },
+          { name: 'pull-request1', id: 2071771 },
+          { name: 'pull-request2', id: 2071772 },
+          { name: 'component', id: 2071773 }
+        ],
+        edges: [
+          { src: '~pr', dest: 'pull-request1' },
+          { src: '~pr', dest: 'pull-request2' },
+          { src: 'pull-request2', dest: 'component' }
+        ]
+      },
+      annotations: { 'screwdriver.cd/buildCluster': 'gq1' },
+      lastEventId: 14412878,
+      prChain: false,
+      parameters: {},
+      subscribedScmUrlsWithActions: []
+    };
+    const adminsData = { adong: true };
+
+    server.get('http://localhost:8080/v4/pipelines/1234', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify(pipelineData)
+    ]);
+
+    server.post('http://localhost:8080/v4/pipelines/1234/sync/', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
+
+    const controller = this.owner.lookup('controller:pipeline/events');
+    const pipeline = await controller.store.findRecord('pipeline', 1234);
+
+    controller.set('pipeline', pipeline);
+
+    console.log(controller.get('hasAdmins'), false);
+
+    assert.notOk(controller.get('hasAdmins'), 'has no admins');
+    assert.deepEqual(
+      controller.get('pipeline.admins'),
+      {},
+      'pipeline admins is empty'
+    );
+
+    run(() => {
+      // add admins data
+      server.get('http://localhost:8080/v4/pipelines/1234', () => [
+        200,
+        { 'Content-Type': 'application/json' },
+        JSON.stringify({ ...pipelineData, admins: adminsData })
+      ]);
+
+      controller.send('syncAdmins');
+    });
+
+    await settled();
+
+    assert.ok(controller.get('hasAdmins'), 'now has admins');
+    assert.deepEqual(
+      controller.get('pipeline.admins'),
+      adminsData,
+      'pipeline admins is NOT empty'
+    );
   });
 });

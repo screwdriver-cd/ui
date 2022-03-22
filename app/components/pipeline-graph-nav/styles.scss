@@ -21,12 +21,16 @@
     border-radius: 2px;
     padding: 5px 10px;
     font-weight: $weight-normal;
+    margin-left: 5px;
 
     &:hover,
     &.active:hover {
       border-color: #ccc;
       color: $grey-800;
     }
+  }
+
+  .view-toggle {
   }
 
   .btn {
@@ -93,6 +97,10 @@
 
     a {
       line-height: inherit;
+    }
+
+    .customize-label {
+      word-break: break-all;
     }
   }
 }

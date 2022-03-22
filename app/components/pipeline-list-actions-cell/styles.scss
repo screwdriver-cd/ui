@@ -1,0 +1,21 @@
+& {
+  .fa {
+    width: 0.8em;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+
+  .fa-play-circle-o,
+  .fa-repeat {
+    color: $sd-link;
+  }
+
+  .clicks-enabled {
+    color: $sd-failure;
+  }
+
+  .clicks-disabled {
+    color: $grey-600 !important;
+    pointer-events: none;
+  }
+}

@@ -58,7 +58,9 @@ export default Service.extend({
             context: scmContext.context,
             displayName: scmContext.displayName,
             iconType: getIconType(scmContext.context),
-            isSignedIn
+            isSignedIn,
+            autoDeployKeyGeneration: scmContext.autoDeployKeyGeneration,
+            readOnly: scmContext.readOnly || false
           });
         });
 
@@ -90,7 +92,9 @@ export default Service.extend({
         ret = {
           context: scm.get('context'),
           displayName: scm.get('displayName'),
-          iconType: getIconType(scmContext)
+          iconType: getIconType(scmContext),
+          autoDeployKeyGeneration: scm.get('autoDeployKeyGeneration'),
+          readOnly: scm.get('readOnly')
         };
       }
     });

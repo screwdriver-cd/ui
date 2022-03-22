@@ -1,13 +1,20 @@
+'use strict';
+
 module.exports = {
   root: true,
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: 'module',
+    ecmaFeatures: {
+      legacyDecorators: true
+    }
   },
   plugins: ['ember', 'prettier'],
   extends: [
     'screwdriver',
     'plugin:ember/recommended',
+    'plugin:prettier/recommended',
     'prettier' // last one wins
   ],
   env: {
@@ -18,7 +25,6 @@ module.exports = {
     humanizeDuration: true
   },
   rules: {
-    indent: ['error', 2, { SwitchCase: 1 }],
     'no-underscore-dangle': 'off',
     'prefer-const': 'off',
     'prefer-destructuring': [
@@ -45,8 +51,22 @@ module.exports = {
     'ember/avoid-leaking-state-in-ember-objects': 'off',
     'ember/jquery-ember-run': 'off',
     'ember/no-global-jquery': 'off',
+    'ember/no-jquery': 'off',
+    'ember/no-new-mixins': 'off',
+    'ember/no-observers': 'off',
     'ember/no-side-effects': 'off',
-    'prettier/prettier': 'error'
+    'ember/no-arrow-function-computed-properties': [
+      'error',
+      { onlyThisContexts: true }
+    ],
+    'max-lines-per-function': ['warn', { max: 1500, skipComments: true }],
+    'prettier/prettier': [
+      'error',
+      {},
+      {
+        usePrettierrc: true
+      }
+    ]
   },
   overrides: [
     // node files
@@ -61,6 +81,9 @@ module.exports = {
         'lib/*/index.js',
         'server/**/*.js'
       ],
+      parserOptions: {
+        sourceType: 'script'
+      },
       env: {
         browser: false,
         node: true

@@ -5,28 +5,30 @@ import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
 let server;
 
-module('Unit | Serializer | job', function(hooks) {
+module('Unit | Serializer | job', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it serializes records', function(assert) {
-    let record = run(() => this.owner.lookup('service:store').createRecord('job'));
+  test('it serializes records', function (assert) {
+    let record = run(() =>
+      this.owner.lookup('service:store').createRecord('job')
+    );
 
     let serializedRecord = record.serialize();
 
     assert.ok(serializedRecord);
   });
 
-  test('it serializes only dirty fields', function(assert) {
+  test('it serializes only dirty fields', function (assert) {
     assert.expect(1);
-    server.put('http://localhost:8080/v4/jobs/abcd', function() {
+    server.put('http://localhost:8080/v4/jobs/abcd', function () {
       return [200, {}, JSON.stringify({ id: 'abcd' })];
     });
 

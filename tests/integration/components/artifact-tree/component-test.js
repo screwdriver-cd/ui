@@ -36,16 +36,16 @@ const routerService = Service.extend({
   }
 });
 
-module('Integration | Component | artifact tree', function(hooks) {
+module('Integration | Component | artifact tree', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.register('service:build-artifact', artifactService);
     this.owner.unregister('service:router');
     this.owner.register('service:router', routerService);
   });
 
-  test('it renders only title when build is running', async function(assert) {
+  test('it renders only title when build is running', async function (assert) {
     await render(hbs`
       {{artifact-tree
         buildStatus="RUNNING"
@@ -56,7 +56,7 @@ module('Integration | Component | artifact tree', function(hooks) {
     assert.dom('.jstree-node').doesNotExist();
   });
 
-  test('it renders with artifacts if build finished', async function(assert) {
+  test('it renders with artifacts if build finished', async function (assert) {
     await render(hbs`
       {{artifact-tree
         buildStatus="SUCCESS"
@@ -74,7 +74,7 @@ module('Integration | Component | artifact tree', function(hooks) {
     });
   });
 
-  test('it renders with artifacts with artifact preselected', async function(assert) {
+  test('it renders with artifacts with artifact preselected', async function (assert) {
     await render(hbs`
       {{artifact-tree
         buildStatus="SUCCESS"
@@ -86,9 +86,15 @@ module('Integration | Component | artifact tree', function(hooks) {
       // Check if it has two nodes and one of them is a leaf/file
       assert.dom('.jstree-leaf').exists({ count: 2 });
       assert.dom('.jstree-node').exists({ count: 3 });
-      assert.equal(find('.jstree-clicked').href, parsedManifest[0].children[0].a_attr.href);
+      assert.equal(
+        find('.jstree-clicked').href,
+        parsedManifest[0].children[0].a_attr.href
+      );
       // Check if the href is correctly set and then click the link
-      assert.equal(findAll('.jstree-leaf a')[1].href, parsedManifest[1].a_attr.href);
+      assert.equal(
+        findAll('.jstree-leaf a')[1].href,
+        parsedManifest[1].a_attr.href
+      );
       await click('.jstree-leaf a');
     });
   });

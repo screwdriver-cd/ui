@@ -23,7 +23,7 @@ export default Component.extend({
 
   prNumber: computed('event.pr.url', {
     get() {
-      let url = this.get('event.pr.url');
+      let url = this.getWithDefault('event.pr.url', '');
 
       return url.split('/').pop();
     }
@@ -77,13 +77,22 @@ export default Component.extend({
 
     // override coverage info if set in build meta
     if (buildMeta && buildMeta.tests) {
-      const { coverage, coverageUrl, results: tests, resultsUrl: testsUrl } = buildMeta.tests;
+      const {
+        coverage,
+        coverageUrl,
+        results: tests,
+        resultsUrl: testsUrl
+      } = buildMeta.tests;
       const BUILD_URL_REGEX = /^.+\/pipelines\/\d+\/builds\/\d+/;
       const buildUrl = window.location.href.match(BUILD_URL_REGEX);
-      let coverageInfo = Object.assign({}, this.get('coverageInfo'));
+      const coverageFloat = parseFloat(coverage)
+        ? Number(parseFloat(coverage).toFixed(2))
+        : null;
 
-      if (String(coverage).match(/^\d+$/)) {
-        coverageInfo.coverage = `${coverage}%`;
+      let coverageInfo = { ...this.get('coverageInfo') };
+
+      if (coverageFloat) {
+        coverageInfo.coverage = `${coverageFloat}%`;
         coverageInfo.coverageUrl = '#';
       }
 
@@ -107,7 +116,7 @@ export default Component.extend({
   coverageInfoCompute() {
     // Set coverage query startTime to build start time since user can do coverage during user step
     const buildStartTime = this.buildSteps[0].startTime;
-    const { coverageStepEndTime } = this;
+    const { coverageStepEndTime, buildMeta } = this;
 
     if (!coverageStepEndTime) {
       this.set('coverageInfo', {
@@ -124,8 +133,17 @@ export default Component.extend({
       buildId: this.buildId,
       jobId: this.jobId,
       startTime: buildStartTime,
-      endTime: coverageStepEndTime
+      endTime: coverageStepEndTime,
+      pipelineId: this.pipelineId,
+      prNum: this.prNumber,
+      jobName: this.jobName,
+      pipelineName: this.pipelineName,
+      projectKey: buildMeta.build?.coverageKey || null
     };
+
+    if (this.annotations && this.annotations['screwdriver.cd/coverageScope']) {
+      config.scope = this.annotations['screwdriver.cd/coverageScope'];
+    }
 
     this.coverage.getCoverageInfo(config).then(data => {
       this.set('coverageInfo', data);

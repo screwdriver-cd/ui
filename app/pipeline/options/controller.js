@@ -9,14 +9,14 @@ export default Controller.extend({
   pipeline: reads('model.pipeline'),
   jobs: reads('model.jobs'),
   actions: {
-    setJobStatus(id, state, stateChanger, stateChangeMessage) {
+    setJobStatus(id, state, stateChangeMessage) {
       const job = this.store.peekRecord('job', id);
 
       job.set('state', state);
-      job.set('stateChanger', stateChanger);
       job.set('stateChangeMessage', stateChangeMessage);
-      job.set('stateChangeTime', new Date());
-      job.save().catch(error => this.set('errorMessage', error.errors[0].detail || ''));
+      job
+        .save()
+        .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
     removePipeline() {
       this.pipeline
@@ -27,10 +27,12 @@ export default Controller.extend({
         .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },
     updatePipeline({ scmUrl, rootDir }) {
-      let { pipeline } = this;
+      const { pipeline } = this;
 
-      pipeline.set('checkoutUrl', scmUrl);
-      pipeline.set('rootDir', rootDir);
+      pipeline.setProperties({
+        checkoutUrl: scmUrl,
+        rootDir
+      });
 
       this.set('isSaving', true);
 

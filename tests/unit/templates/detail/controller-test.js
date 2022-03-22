@@ -26,7 +26,7 @@ const sessionServiceMock = Service.extend({
   }
 });
 
-module('Unit | Controller | templates/detail', function(hooks) {
+module('Unit | Controller | templates/detail', function (hooks) {
   setupTest(hooks);
 
   // Specify the other units that are required for this test.
@@ -36,12 +36,12 @@ module('Unit | Controller | templates/detail', function(hooks) {
     this.owner.register('service:template', templateServiceStub);
   });
 
-  test('it parses model properly', function(assert) {
+  test('it parses model properly', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
     controller.set('model', {
       templateData: [
-        { id: 3, version: '3.0.0', trusted: true },
+        { id: 3, version: '3.0.0', trusted: true, latest: true },
         { id: 2, version: '2.0.0' },
         { id: 1, version: '1.0.0' }
       ],
@@ -59,7 +59,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('trusted'), true);
   });
 
-  test('it handles version changes', function(assert) {
+  test('it handles version changes', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
     controller.set('model', {
@@ -80,7 +80,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('versionTemplate.id'), 3);
   });
 
-  test('it handles model changes', function(assert) {
+  test('it handles model changes', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
@@ -104,7 +104,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('latest.id'), 4);
   });
 
-  test('it handles template deletion', function(assert) {
+  test('it handles template deletion', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
     // eslint-disable-next-line new-cap
     const arr = A([
@@ -124,7 +124,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     controller.send('removeTemplate', 'sample');
   });
 
-  test('it handles template update', function(assert) {
+  test('it handles template update', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
     // eslint-disable-next-line new-cap
     const arr = A([
@@ -141,7 +141,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     controller.send('updateTrust', 'sample');
     assert.ok(updateTrustStub.calledOnce);
   });
-  test('it handles undefined tag or version', function(assert) {
+  test('it handles undefined tag or version', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
     controller.set('model', {
@@ -161,7 +161,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('versionTemplate.version'), '3.0.0');
   });
 
-  test('it handles a version that is exist', function(assert) {
+  test('it handles a version that is exist', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
     controller.set('model', {
@@ -181,7 +181,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('versionTemplate.version'), '2.0.0');
   });
 
-  test('it handles a tag that is exist', function(assert) {
+  test('it handles a tag that is exist', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
     controller.set('model', {
@@ -201,7 +201,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('versionTemplate.version'), '1.0.0');
   });
 
-  test('it handles a version that is not exist', function(assert) {
+  test('it handles a version that is not exist', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
     controller.set('model', {
@@ -221,7 +221,7 @@ module('Unit | Controller | templates/detail', function(hooks) {
     assert.equal(controller.get('versionTemplate.version'), undefined);
   });
 
-  test('it handles a tag that is not exist', function(assert) {
+  test('it handles a tag that is not exist', function (assert) {
     let controller = this.owner.lookup('controller:templates/detail');
 
     controller.set('model', {

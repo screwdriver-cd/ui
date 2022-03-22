@@ -122,9 +122,22 @@ a {
 }
 
 .partial-view {
-  height: 78vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
+}
+
+.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.latest-commit {
+  display: inline-block;
+  background-color: $sd-running;
+  color: $sd-white !important;
+  border-radius: 3px;
+  padding: 3px 5px;
 }
 
 .column-tabs-view {

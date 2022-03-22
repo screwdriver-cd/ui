@@ -9,15 +9,47 @@ button.start-with-parameters-button {
 
   .btn-group {
     padding-left: 38%;
+    margin-top: 10px;
   }
 }
+
+.parameter-group-list {
+  max-height: 70vh;
+  overflow-y: scroll;
+
+  .parameter-group {
+    margin: 10px 10px 0 0;
+    border-radius: 3px;
+    border: 1px solid $sd-separator;
+    padding: 10px;
+    font-weight: 300;
+    color: $sd-text;
+  }
+
+  .parameter-list {
+    &.collapsed {
+      display: none;
+    }
+  }
+}
+
+.notice-default-values-icon {
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  transform: translate(-50%, -50%);
+  left: 3%;
+  height: 1em;
+  color: $sd-warning;
+}
+
 & {
   position: relative;
   padding-top: 20px;
 
   &:after {
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 8px;
     font-size: 12px;
     font-weight: 700;

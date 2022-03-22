@@ -22,18 +22,17 @@ export default Component.extend({
     };
 
     const svg = select(this.element.getElementsByTagName('svg')[0]);
+
     let [barSpace, barWidth, paddingLeft, paddingRight] = getParameters(svg);
     const totalNumberOfEvents = this.events.length;
+
     let maxDuration = Math.max(...this.events.map(event => event.duration));
 
     if (maxDuration === -Infinity) {
       maxDuration = 100;
     }
 
-    const y = d3
-      .scaleLinear()
-      .domain([0, maxDuration])
-      .range([0, 40]);
+    const y = d3.scaleLinear().domain([0, maxDuration]).range([0, 40]);
 
     // Add padding to the svg element so that it stays symmetrical
     svg.style('padding', `0 ${paddingLeft} 0 ${paddingRight}`);
@@ -66,7 +65,7 @@ export default Component.extend({
       this.classList.add(bar.statusColor);
     });
 
-    d3.select(window).on(`resize.${this.pipelineId}`, function resize() {
+    d3.select(window).on(`resize.${this.pipelineId}`, () => {
       [barSpace, barWidth, paddingLeft, paddingRight] = getParameters(svg);
 
       // change padding to the svg element so that it stays symmetrical

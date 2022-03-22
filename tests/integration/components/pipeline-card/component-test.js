@@ -5,19 +5,17 @@ import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import $ from 'jquery';
+import wait from 'ember-test-helpers/wait';
+import Pretender from 'pretender';
 
+let server;
+const hasEmptyMetrics = () => [
+  200,
+  { 'Content-Type': 'application/json' },
+  JSON.stringify([])
+];
 const mockPipeline = EmberObject.create({
   id: 1,
-  eventsInfo: [],
-  lastEventInfo: {
-    commitMessage: 'No events have been run for this pipeline',
-    commitUrl: '#',
-    durationText: '--',
-    icon: 'question-circle',
-    sha: 'Not available',
-    startTime: '--/--/----',
-    statusColor: 'build-empty'
-  },
   scmRepo: {
     branch: 'master',
     name: 'screwdriver-cd/ui',
@@ -26,14 +24,26 @@ const mockPipeline = EmberObject.create({
   },
   branch: 'master'
 });
+const lastEventInfo = EmberObject.create({
+  startTime: '--/--/----',
+  statusColor: 'build-empty',
+  durationText: '--',
+  sha: 'Not available',
+  icon: 'question-circle',
+  commitMessage: 'No events have been run for this pipeline',
+  commitUrl: '#'
+});
 const removePipelineSpy = sinon.spy();
 const selectPipelineSpy = sinon.spy();
 const deselectPipelineSpy = sinon.spy();
 
-module('Integration | Component | pipeline card', function(hooks) {
+module('Integration | Component | pipeline card', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
+    server = new Pretender();
+    server.get('http://localhost:8080/v4/pipelines/1/metrics', hasEmptyMetrics);
+
     this.setProperties({
       pipeline: mockPipeline,
       removePipeline: removePipelineSpy,
@@ -43,9 +53,17 @@ module('Integration | Component | pipeline card', function(hooks) {
       isOrganizing: false,
       reset: false
     });
+
+    // make sure component is in viewport to trigger didEnterView event
+    document.getElementById('ember-testing').scrollIntoView();
   });
 
-  test('it renders', async function(assert) {
+  hooks.afterEach(function () {
+    server.shutdown();
+  });
+
+  test('it renders', async function (assert) {
+    assert.expect(12);
     this.owner.setupRouter();
 
     await render(hbs`
@@ -54,29 +72,35 @@ module('Integration | Component | pipeline card', function(hooks) {
       }}
     `);
 
+    await wait();
+
     assert.dom('.branch-info a').hasText(mockPipeline.scmRepo.name);
-    assert.dom('.branch-info a').hasAttribute('href', `/pipelines/${mockPipeline.id}`);
+    assert
+      .dom('.branch-info a')
+      .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert.dom('.commit-info').exists({ count: 1 });
     assert
       .dom('.commit-status a:nth-of-type(1)')
       .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
-    assert.dom('.commit-status a:nth-of-type(1) i').hasClass('fa-question-circle');
-    assert.dom('.commit-status a:nth-of-type(2)').hasText(mockPipeline.lastEventInfo.sha);
+    assert
+      .dom('.commit-status a:nth-of-type(1) i')
+      .hasClass('fa-question-circle');
+    assert.dom('.commit-status a:nth-of-type(2)').hasText(lastEventInfo.sha);
     assert
       .dom('.commit-status a:nth-of-type(2)')
-      .hasAttribute('href', mockPipeline.lastEventInfo.commitUrl);
-    assert.dom('.commit-message').hasText(mockPipeline.lastEventInfo.commitMessage);
+      .hasAttribute('href', lastEventInfo.commitUrl);
+    assert.dom('.commit-message').hasText(lastEventInfo.commitMessage);
     assert.dom('.time-metrics').exists({ count: 1 });
     assert
       .dom('.duration-badge span:nth-of-type(2)')
-      .hasText(mockPipeline.lastEventInfo.durationText);
+      .hasText(lastEventInfo.durationText);
     assert
       .dom('.start-time-badge span:nth-of-type(2)')
-      .hasText(mockPipeline.lastEventInfo.startTime);
+      .hasText(lastEventInfo.startTime);
     assert.dom('.events-thumbnail-wrapper').exists({ count: 1 });
   });
 
-  test('it renders no remove button and no checkbox when not authenticated', async function(assert) {
+  test('it renders no remove button and no checkbox when not authenticated', async function (assert) {
     this.set('isAuthenticated', false);
 
     await render(hbs`
@@ -90,7 +114,7 @@ module('Integration | Component | pipeline card', function(hooks) {
     assert.dom('td.collection-pipeline__remove span').doesNotExist();
   });
 
-  test('it renders with a checkbox when organizing', async function(assert) {
+  test('it renders with a checkbox when organizing', async function (assert) {
     this.set('isOrganizing', true);
 
     await render(hbs`
@@ -105,7 +129,7 @@ module('Integration | Component | pipeline card', function(hooks) {
     assert.dom('td.collection-pipeline__remove span').doesNotExist();
   });
 
-  test('it renders with a remove button when not organizing', async function(assert) {
+  test('it renders with a remove button when not organizing', async function (assert) {
     await render(hbs`
       {{pipeline-card
         pipeline=pipeline
@@ -118,7 +142,7 @@ module('Integration | Component | pipeline card', function(hooks) {
     assert.dom('.remove-button').exists();
   });
 
-  test('it deletes the pipeline displayed', async function(assert) {
+  test('it deletes the pipeline displayed', async function (assert) {
     await render(hbs`
       {{pipeline-card
         pipeline=pipeline
@@ -132,7 +156,7 @@ module('Integration | Component | pipeline card', function(hooks) {
     assert.ok(removePipelineSpy.calledWith(mockPipeline.id));
   });
 
-  test('it selects and deselects the pipeline displayed', async function(assert) {
+  test('it selects and deselects the pipeline displayed', async function (assert) {
     this.set('isOrganizing', true);
 
     await render(hbs`

@@ -7,11 +7,11 @@ export default Controller.extend({
   routeParams: computed('model', {
     get() {
       let route = this.model;
-      let params = Object.assign(
-        {},
-        route.paramsFor('templates.namespace'),
-        route.paramsFor('templates.detail')
-      );
+
+      let params = {
+        ...route.paramsFor('templates.namespace'),
+        ...route.paramsFor('templates.detail')
+      };
 
       return params;
     }
@@ -19,6 +19,7 @@ export default Controller.extend({
   crumbs: computed('routeParams', {
     get() {
       let breadcrumbs = [];
+
       let params = this.routeParams;
 
       // add name and namespace together to get full name, compare fullname  to params.name

@@ -4,6 +4,7 @@ import Controller from '@ember/controller';
 const { alias } = computed;
 
 export default Controller.extend({
+  showCreatePipeline: false,
   collections: [],
   session: service(),
   scmContexts: alias('model'),
@@ -20,11 +21,13 @@ export default Controller.extend({
       const { session } = this;
       const currentContext = session.get('data.authenticated.scmContext');
 
-      session.authenticate('authenticator:screwdriver-api', scmContext).then(() => {
-        if (currentContext && currentContext !== scmContext) {
-          session.set('data.sessionChanged', true);
-        }
-      });
+      session
+        .authenticate('authenticator:screwdriver-api', scmContext)
+        .then(() => {
+          if (currentContext && currentContext !== scmContext) {
+            session.set('data.sessionChanged', true);
+          }
+        });
     }
   }
 });

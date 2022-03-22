@@ -18,10 +18,10 @@ const TEST_TEMPLATES = [
   }
 ];
 
-module('Integration | Component | bread crumbs', function(hooks) {
+module('Integration | Component | bread crumbs', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     this.set('mocks', TEST_TEMPLATES);
     await render(hbs`{{bread-crumbs crumbs=mocks}}`);
 

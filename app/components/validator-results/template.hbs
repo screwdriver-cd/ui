@@ -1,14 +1,18 @@
 {{#each errors as |msg|}}
   <div class="error">{{msg}}</div>
 {{/each}}
+{{#each warnMessages as |msg|}}
+  <div class="warning">{{msg}}</div>
+{{/each}}
 {{#if isTemplate}}
-  {{validator-job name=templateName job=results.template.config template=results.template}}
+  {{validator-job name=templateName job=results.template.config template=results.template isOpen=(unbound isOpen)}}
 {{else}}
-  {{validator-pipeline name=pipelineName workflowGraph=workflowGraph annotations=annotations parameters=parameters}}
+  {{validator-pipeline name=pipelineName workflowGraph=workflowGraph annotations=annotations parameters=parameters isOpen=(unbound isOpen)}}
   {{#each workflowGraph.nodes as |node|}}
     {{#if (get jobs node.name)}}
       {{#each (get jobs node.name) as |jobConfig index|}}
-        {{validator-job name=node.name job=jobConfig index=index}}
+        {{validator-job name=node.name job=jobConfig index=index
+          isOpen=(unbound isOpen)}}
       {{/each}}
     {{/if}}
   {{/each}}

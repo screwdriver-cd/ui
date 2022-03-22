@@ -8,6 +8,7 @@
  */
 const getFullName = config => {
   let { name, namespace } = config;
+
   let fullName = name;
 
   if (namespace && namespace !== 'default') {
@@ -29,7 +30,10 @@ const getLastUpdatedTime = ({ createTime }) => {
   }
 
   let timeDiff = Date.now() - new Date(createTime).getTime();
-  const lastUpdated = `${humanizeDuration(timeDiff, { round: true, largest: 1 })} ago`;
+  const lastUpdated = `${humanizeDuration(timeDiff, {
+    round: true,
+    largest: 1
+  })} ago`;
 
   return lastUpdated;
 };

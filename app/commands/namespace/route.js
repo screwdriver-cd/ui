@@ -6,7 +6,10 @@ export default Route.extend({
   templateName: 'commands/index',
   setupController(controller, model) {
     this._super(controller, model);
-    controller.set('targetNamespace', this.paramsFor('commands.namespace').namespace);
+    controller.set(
+      'targetNamespace',
+      this.paramsFor('commands.namespace').namespace
+    );
   },
   model(params) {
     return this.command.getAllCommands(params.namespace);

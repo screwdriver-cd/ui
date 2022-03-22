@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | validator pipeline', function(hooks) {
+module('Integration | Component | validator pipeline', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders default empty settings', async function(assert) {
+  test('it renders default empty settings', async function (assert) {
     await render(hbs`{{validator-pipeline}}`);
 
     assert.dom('h4.pipeline').hasText('Pipeline Settings');
@@ -18,7 +18,7 @@ module('Integration | Component | validator pipeline', function(hooks) {
     assert.ok(this.$('.workflow canvas'), 'workflow canvas');
   });
 
-  test('it renders pipeline annotations and workflow', async function(assert) {
+  test('it renders pipeline annotations and workflow', async function (assert) {
     this.set('plMock', {
       annotations: {
         hello: 'hi'

@@ -8,7 +8,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
   actions: {
     willTransition(transition) {
-      let newParams = transition.params[transition.targetName];
+      let newParams = transition.to.params;
 
       this.controller.set('routeParams', newParams);
     }

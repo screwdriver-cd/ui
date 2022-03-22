@@ -5,10 +5,10 @@ import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
-module('Acceptance | pipeline/options', function(hooks) {
+module('Acceptance | pipeline/options', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
 
     server.get('http://localhost:8080/v4/pipelines/1', () => [
@@ -43,18 +43,24 @@ module('Acceptance | pipeline/options', function(hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
+
+    server.get('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('visiting /pipelines/:id/options', async function(assert) {
+  test('visiting /pipelines/:id/options', async function (assert) {
     await authenticateSession({ token: 'faketoken' });
     await visit('/pipelines/1/options');
 
     assert.equal(currentURL(), '/pipelines/1/options');
-    assert.dom('section.pipeline li').exists({ count: 1 });
+    assert.dom('section.pipeline li').exists({ count: 3 });
     assert.dom('section.jobs li').exists({ count: 3 });
     assert.dom('section.danger li').exists({ count: 1 });
   });

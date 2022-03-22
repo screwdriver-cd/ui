@@ -6,22 +6,18 @@
 {{/if}}
 <div class="pipeline-card-content {{if showCheckbox "show-checkbox" ""}}">
   {{#if showRemoveButton}}
-    <span class="remove-button" onclick={{action "removePipeline"}}>
+    <span class="remove-button" title="Remove {{pipeline.scmRepo.name}} pipeline from {{collectionName}} collection" onclick={{action "removePipeline"}}>
       &times;
     </span>
   {{/if}}
+
   <div class="branch-info">
     {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
-      {{!-- {{line-clamp
-        lines=1
-        interactive=false
-        text=pipeline.scmRepo.name
-      }} --}}
       {{pipeline.scmRepo.name}}
     {{/link-to}}
-    <div title={{pipeline.branch}}>
+    <div title={{branch}}>
       {{fa-icon "code-fork"}}
-      {{pipeline.branch}}
+      {{branch}}
     </div>
   </div>
   <div class="commit-info">
@@ -29,17 +25,18 @@
       {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
         {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
       {{/link-to}}
-      <a href={{lastEventInfo.commitUrl}}> 
+      <a href={{lastEventInfo.commitUrl}}>
         {{lastEventInfo.sha}}
       </a>
     </div>
     <p class="commit-message" title={{lastEventInfo.commitMessage}}>
-      {{!-- {{line-clamp
-        lines=2
-        interactive=false
-        text=lastEventInfo.commitMessage
-      }} --}}
-      {{lastEventInfo.commitMessage}}
+      {{#if storeQueryError}}
+        An error occur while loading events
+      {{else if hasBothEventsAndLatestEventInfo}}
+        {{lastEventInfo.commitMessage}}
+      {{else}}
+        Loading events
+      {{/if}}
     </p>
   </div>
   <div class="time-metrics">
@@ -52,11 +49,16 @@
       <span class="badge-info">{{lastEventInfo.startTime}}</span>
     </div>
   </div>
+
   <div class="events-thumbnail-wrapper">
-    {{events-thumbnail
-        class="events-thumbnail"
-        events=eventsInfo
-        pipelineId=pipeline.id
-    }}
+    {{#if hasBothEventsAndLatestEventInfo}}
+      {{events-thumbnail
+          class="events-thumbnail"
+          events=eventsInfo
+          pipelineId=pipeline.id
+      }}
+    {{else}}
+      <div class="placeholder"/>
+    {{/if}}
   </div>
 </div>

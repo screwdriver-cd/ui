@@ -2,17 +2,21 @@ import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
-module('Unit | Model | pipeline', function(hooks) {
+module('Unit | Model | pipeline', function (hooks) {
   setupTest(hooks);
 
-  test('it exists', function(assert) {
-    let model = run(() => this.owner.lookup('service:store').createRecord('pipeline'));
+  test('it exists', function (assert) {
+    let model = run(() =>
+      this.owner.lookup('service:store').createRecord('pipeline')
+    );
 
     assert.ok(!!model);
   });
 
-  test('it gets correct appId', function(assert) {
-    let model = run(() => this.owner.lookup('service:store').createRecord('pipeline'));
+  test('it gets correct appId', function (assert) {
+    let model = run(() =>
+      this.owner.lookup('service:store').createRecord('pipeline')
+    );
 
     run(() => {
       const scmRepoMock = {
@@ -27,8 +31,10 @@ module('Unit | Model | pipeline', function(hooks) {
     });
   });
 
-  test('it gets correct hub url', function(assert) {
-    let model = run(() => this.owner.lookup('service:store').createRecord('pipeline'));
+  test('it gets correct hub url', function (assert) {
+    let model = run(() =>
+      this.owner.lookup('service:store').createRecord('pipeline')
+    );
 
     run(() => {
       const scmRepoMock = {
@@ -43,8 +49,10 @@ module('Unit | Model | pipeline', function(hooks) {
     });
   });
 
-  test('it gets correct branch', function(assert) {
-    let model = run(() => this.owner.lookup('service:store').createRecord('pipeline'));
+  test('it gets correct branch', function (assert) {
+    let model = run(() =>
+      this.owner.lookup('service:store').createRecord('pipeline')
+    );
 
     run(() => {
       const scmRepoMock = {

@@ -12,6 +12,7 @@
 }
 
 .last-successful {
+  display: inline-block;
   background-color: $sd-success;
   color: $sd-white;
   border-radius: 3px;

@@ -19,6 +19,12 @@
 
 & {
   position: relative;
+  height: 100%;
+}
+
+svg {
+  min-width: 100%;
+  min-height: 100%;
 }
 
 g {
@@ -28,6 +34,10 @@ g {
   // &.build-running {
   //   animation: spin 2s infinite linear;
   // }
+}
+
+.selected-job {
+  fill: $sd-failure;
 }
 
 .graph-node {

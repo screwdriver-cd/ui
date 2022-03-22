@@ -1,0 +1,45 @@
+<div class="pipeline-events-group">
+  {{#each events as |event index|}}
+    {{#if (eq index 0)}}
+      {{#if (not-eq events.length 1)}}
+        <a onclick={{action "toggleExpanded"}} class="pull-right expand-collapse">
+          {{#if (eq isExpanded true)}}
+            Collapse
+            {{fa-icon "chevron-circle-up"}}
+          {{else}}
+            Expand
+            {{fa-icon "chevron-circle-down"}}
+          {{/if}}
+        </a>
+        <span class="clearfix" />
+      {{/if}}
+      {{pipeline-event-row
+              pipeline=pipeline
+              event=event
+              selectedEventObj=selectedEventObj
+              selectedEvent=selectedEvent
+              lastSuccessful=lastSuccessful
+              latestCommit=latestCommit
+              startPRBuild=startPRBuild
+              stopEvent=stopEvent
+              eventClick=eventClick
+      }}
+    {{else if (eq isExpanded true)}}
+      {{pipeline-event-row
+              pipeline=pipeline
+              event=event
+              selectedEvent=selectedEvent
+              selectedEventObj=selectedEventObj
+              latestCommit=latestCommit
+              lastSuccessful=lastSuccessful
+              startPRBuild=startPRBuild
+              stopEvent=stopEvent
+              eventClick=eventClick
+      }}
+    {{/if}}
+  {{else}}
+    <div class="alert">No events have been run for this pipeline</div>
+  {{/each}}
+</div>
+
+{{yield}}

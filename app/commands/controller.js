@@ -5,11 +5,11 @@ export default Controller.extend({
   routeParams: computed('model', {
     get() {
       let route = this.model;
-      let params = Object.assign(
-        {},
-        route.paramsFor('commands.namespace'),
-        route.paramsFor('commands.detail')
-      );
+
+      let params = {
+        ...route.paramsFor('commands.namespace'),
+        ...route.paramsFor('commands.detail')
+      };
 
       return params;
     }
@@ -17,6 +17,7 @@ export default Controller.extend({
   crumbs: computed('routeParams', {
     get() {
       let breadcrumbs = [];
+
       let params = this.routeParams;
 
       if (params.namespace || params.detail) {

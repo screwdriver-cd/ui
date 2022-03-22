@@ -36,7 +36,9 @@ export default Component.extend({
         return collection.type !== 'default';
       });
 
-      return defaultCollection ? [defaultCollection, ...normalCollections] : normalCollections;
+      return defaultCollection
+        ? [defaultCollection, ...normalCollections]
+        : normalCollections;
     }
   }),
 

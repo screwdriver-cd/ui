@@ -5,7 +5,7 @@
   {{info-message message=addCollectionSuccess type="success" icon="check"}}
 {{/if}}
 {{#link-to "pipeline" pipeline.id}}<h1>{{pipeline.appId}}</h1>{{/link-to}}
-<a href={{branch-url-encode pipeline.hubUrl}} class="branch">{{fa-icon "code-fork"}} {{pipeline.branch}}</a>
+<a href={{branch-url-encode pipeline.hubUrl}} class="branch">{{fa-icon "code-fork" title="Source code"}} {{pipeline.branch}}</a>
 <span class="scm">{{fa-icon scmContext.scmIcon}} {{scmContext.scm}}</span>
 {{#if pipeline.configPipelineId}}
   {{fa-icon "cog"}} {{#link-to "pipeline" pipeline.configPipelineId}}Parent Pipeline{{/link-to}}

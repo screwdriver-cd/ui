@@ -27,10 +27,10 @@ const mockPipeline = {
   }
 };
 
-module('Integration | Component | command header', function(hooks) {
+module('Integration | Component | command header', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const storeStub = Service.extend({
       findRecord() {
         return new EmberPromise(resolve => resolve(mockPipeline));
@@ -43,13 +43,17 @@ module('Integration | Component | command header', function(hooks) {
     this.set('trusted', false);
     this.set('isAdmin', false);
 
-    await render(hbs`{{command-header command=mock trusted=trusted isAdmin=isAdmin}}`);
+    await render(
+      hbs`{{command-header command=mock trusted=trusted isAdmin=isAdmin}}`
+    );
 
     assert.dom('h1').hasText('foo/bar');
     assert.dom('h2').hasText('1.0.0');
     assert.dom('p').hasText('A test example');
     assert.dom('ul li:first-child').hasText('Released by: test@example.com');
-    assert.dom('ul li:first-child a').hasAttribute('href', 'mailto:test@example.com');
+    assert
+      .dom('ul li:first-child a')
+      .hasAttribute('href', 'mailto:test@example.com');
     assert.dom('h4').hasText('Usage:');
     assert.dom('pre').hasText('sd-cmd exec foo/bar@1.0.0');
 

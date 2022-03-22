@@ -5,29 +5,31 @@ import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
 let server;
 
-module('Unit | Serializer | token', function(hooks) {
+module('Unit | Serializer | token', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
   // Replace this with your real tests.
-  test('it serializes records', function(assert) {
-    let record = run(() => this.owner.lookup('service:store').createRecord('token'));
+  test('it serializes records', function (assert) {
+    let record = run(() =>
+      this.owner.lookup('service:store').createRecord('token')
+    );
 
     let serializedRecord = record.serialize();
 
     assert.ok(serializedRecord);
   });
 
-  test('it does not post with model name as key', function(assert) {
+  test('it does not post with model name as key', function (assert) {
     assert.expect(2);
-    server.post('http://localhost:8080/v4/tokens', function() {
+    server.post('http://localhost:8080/v4/tokens', function () {
       return [200, {}, JSON.stringify({ id: 1234 })];
     });
 
@@ -53,9 +55,9 @@ module('Unit | Serializer | token', function(hooks) {
     });
   });
 
-  test('it serializes only dirty fields', function(assert) {
+  test('it serializes only dirty fields', function (assert) {
     assert.expect(1);
-    server.put('http://localhost:8080/v4/tokens/1234', function() {
+    server.put('http://localhost:8080/v4/tokens/1234', function () {
       return [200, {}, JSON.stringify({ id: 1234 })];
     });
 
@@ -71,7 +73,9 @@ module('Unit | Serializer | token', function(hooks) {
         }
       });
 
-      const token = this.owner.lookup('service:store').peekRecord('token', 1234);
+      const token = this.owner
+        .lookup('service:store')
+        .peekRecord('token', 1234);
 
       token.set('description', 'newDescription');
       token.save();

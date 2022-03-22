@@ -35,27 +35,28 @@ const routerServiceMock = Service.extend({
     name: 'someRouteName'
   }
 });
+
 let server;
 
-module('Unit | Controller | pipeline/build', function(hooks) {
+module('Unit | Controller | pipeline/build', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     this.owner.register('service:session', sessionServiceMock);
     this.owner.register('service:pr-events', prEventsService);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
     invalidateStub.reset();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     assert.ok(this.owner.lookup('controller:pipeline/build'));
   });
 
-  test('it restarts a build', async function(assert) {
+  test('it restarts a build', async function (assert) {
     assert.expect(5);
 
     server.post('http://localhost:8080/v4/events', () => [
@@ -108,7 +109,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     });
   });
 
-  test('it fails to restart a build', async function(assert) {
+  test('it fails to restart a build', async function (assert) {
     assert.expect(6);
 
     server.post('http://localhost:8080/v4/events', () => [
@@ -158,10 +159,13 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     });
     assert.notOk(controller.get('isShowingModal'));
     assert.ok(invalidateStub.called);
-    assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
+    assert.deepEqual(
+      controller.get('errorMessage'),
+      'User does not have permission'
+    );
   });
 
-  test('it stops a build', async function(assert) {
+  test('it stops a build', async function (assert) {
     assert.expect(2);
     server.put('http://localhost:8080/v4/builds/5678', () => [
       200,
@@ -202,7 +206,7 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     assert.deepEqual(controller.get('errorMessage'), '');
   });
 
-  test('it fails to stop a build', async function(assert) {
+  test('it fails to stop a build', async function (assert) {
     assert.expect(3);
     server.put('http://localhost:8080/v4/builds/5678', () => [
       401,
@@ -242,10 +246,13 @@ module('Unit | Controller | pipeline/build', function(hooks) {
       status: 'ABORTED'
     });
     assert.ok(invalidateStub.called);
-    assert.deepEqual(controller.get('errorMessage'), 'User does not have permission');
+    assert.deepEqual(
+      controller.get('errorMessage'),
+      'User does not have permission'
+    );
   });
 
-  test('it reloads a build', async function(assert) {
+  test('it reloads a build', async function (assert) {
     assert.expect(4);
     const controller = this.owner.lookup('controller:pipeline/build');
     const build = EmberObject.create({
@@ -288,23 +295,26 @@ module('Unit | Controller | pipeline/build', function(hooks) {
     assert.ok(true);
   });
 
-  sinonTest('it will not change build step in pipeline.events', function(assert) {
-    assert.expect(1);
-    this.owner.unregister('service:router');
-    this.owner.register('service:router', routerServiceMock);
-    const routerService = this.owner.lookup('service:router');
+  sinonTest(
+    'it will not change build step in pipeline.events',
+    function (assert) {
+      assert.expect(1);
+      this.owner.unregister('service:router');
+      this.owner.register('service:router', routerServiceMock);
+      const routerService = this.owner.lookup('service:router');
 
-    routerService.set('currentRoute', { name: 'pipeline.events' });
+      routerService.set('currentRoute', { name: 'pipeline.events' });
 
-    const controller = this.owner.lookup('controller:pipeline/build');
-    const spy = this.spy(controller, 'transitionToRoute');
+      const controller = this.owner.lookup('controller:pipeline/build');
+      const spy = this.spy(controller, 'transitionToRoute');
 
-    controller.changeBuildStep();
-    assert.ok(spy.notCalled, 'transition was not called');
-    this.owner.unregister('service:router');
-  });
+      controller.changeBuildStep();
+      assert.ok(spy.notCalled, 'transition was not called');
+      this.owner.unregister('service:router');
+    }
+  );
 
-  sinonTest('it changes build step in pipeline.build.step', function(assert) {
+  sinonTest('it changes build step in pipeline.build.step', function (assert) {
     assert.expect(3);
     this.owner.unregister('service:router');
     this.owner.register('service:router', routerServiceMock);

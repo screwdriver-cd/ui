@@ -1,16 +1,22 @@
-/* eslint ember/avoid-leaking-state-in-components: [2, ["jobSorting"]] */
-import $ from 'jquery';
-import { inject as service } from '@ember/service';
-import { not, or, sort } from '@ember/object/computed';
-import { computed } from '@ember/object';
 import Component from '@ember/component';
-import { parse, getCheckoutUrl } from '../../utils/git';
+import { computed, getWithDefault, set } from '@ember/object';
+import { not, or } from '@ember/object/computed';
+import { debounce } from '@ember/runloop';
+import { inject as service } from '@ember/service';
+import $ from 'jquery';
+import ENV from 'screwdriver-ui/config/environment';
+import { getCheckoutUrl, parse } from 'screwdriver-ui/utils/git';
+
+const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH, DOWNTIME_JOBS } =
+  ENV.APP;
 
 export default Component.extend({
+  store: service(),
   // Syncing a pipeline
   sync: service('sync'),
   // Clearing a cache
   cache: service('cache'),
+  shuttle: service(),
   errorMessage: '',
   scmUrl: '',
   rootDir: '',
@@ -18,17 +24,38 @@ export default Component.extend({
   // Removing a pipeline
   isRemoving: false,
   isShowingModal: false,
-  showDangerButton: true,
+  showRemoveDangerButton: true,
   showRemoveButtons: false,
   showToggleModal: false,
+  showPRJobs: true,
+  // Set pipeline visibility
+  isUpdatingPipelineVisibility: false,
+  showPipelineVisibilityDangerButton: true,
+  showPipelineVisibilityButtons: false,
+  privateRepo: false,
+  publicPipeline: false,
+  groupedEvents: true,
   // Job disable/enable
   name: null,
   state: null,
   stateChange: null,
   user: null,
   jobId: null,
-  jobSorting: ['name'],
-  sortedJobs: sort('jobs', 'jobSorting'),
+  isUpdatingMetricsDowntimeJobs: false,
+  metricsDowntimeJobs: [],
+  displayDowntimeJobs: DOWNTIME_JOBS,
+  displayJobNameLength: 20,
+  minDisplayLength: MINIMUM_JOBNAME_LENGTH,
+  maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
+  showEventTriggers: false,
+  filterEventsForNoBuilds: false,
+  sortedJobs: computed('jobs', function filterThenSortJobs() {
+    const prRegex = /PR-\d+:.*/;
+
+    return getWithDefault(this, 'jobs', [])
+      .filter(j => !j.name.match(prRegex))
+      .sortBy('name');
+  }),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
   isValid: computed('scmUrl', {
@@ -39,7 +66,7 @@ export default Component.extend({
     }
   }),
   // Updating a pipeline
-  init() {
+  async init() {
     this._super(...arguments);
     this.set(
       'scmUrl',
@@ -55,6 +82,83 @@ export default Component.extend({
         hasRootDir: true
       });
     }
+
+    let privateRepo = this.get('pipeline.scmRepo.private');
+
+    let publicPipeline = this.get('pipeline.settings.public');
+
+    let groupedEvents = this.get('pipeline.settings.groupedEvents');
+
+    let showEventTriggers = this.get('pipeline.settings.showEventTriggers');
+
+    let filterEventsForNoBuilds = this.get(
+      'pipeline.settings.filterEventsForNoBuilds'
+    );
+
+    if (typeof privateRepo !== 'boolean') {
+      privateRepo = false;
+    }
+
+    if (typeof publicPipeline !== 'boolean') {
+      publicPipeline = !privateRepo;
+    }
+
+    if (typeof groupedEvents !== 'boolean') {
+      groupedEvents = true;
+    }
+
+    if (typeof showEventTriggers !== 'boolean') {
+      showEventTriggers = false;
+    }
+
+    if (typeof filterEventsForNoBuilds !== 'boolean') {
+      filterEventsForNoBuilds = false;
+    }
+
+    this.setProperties({
+      privateRepo,
+      publicPipeline,
+      groupedEvents,
+      showEventTriggers,
+      filterEventsForNoBuilds
+    });
+
+    let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
+
+    let showPRJobs = true;
+
+    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
+      this.get('pipeline.id')
+    );
+
+    if (pipelinePreference) {
+      desiredJobNameLength = pipelinePreference.displayJobNameLength;
+      showPRJobs = getWithDefault(pipelinePreference, 'showPRJobs', true);
+    }
+
+    this.setProperties({ desiredJobNameLength, showPRJobs });
+
+    if (this.displayDowntimeJobs) {
+      const metricsDowntimeJobs = this.getWithDefault(
+        'pipeline.settings.metricsDowntimeJobs',
+        []
+      ).map(jobId => this.jobs.findBy('id', `${jobId}`));
+
+      this.set('metricsDowntimeJobs', metricsDowntimeJobs);
+    }
+  },
+  async updateJobNameLength(displayJobNameLength) {
+    const pipelineId = this.get('pipeline.id');
+    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
+      pipelineId
+    );
+
+    set(pipelinePreference, 'displayJobNameLength', displayJobNameLength);
+    pipelinePreference
+      .save()
+      .then(() =>
+        this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
+      );
   },
   actions: {
     // Checks if scm URL is valid or not
@@ -74,39 +178,55 @@ export default Component.extend({
       this.set('rootDir', val.trim());
     },
     updatePipeline() {
-      const { scmUrl, rootDir, hasRootDir } = this;
+      const {
+        scmUrl,
+        rootDir,
+        hasRootDir,
+        metricsDowntimeJobs /* , metricsDowntimeStatuses */
+      } = this;
       const pipelineConfig = {
         scmUrl,
         rootDir: ''
       };
+      const settings = {};
+
+      if (metricsDowntimeJobs) {
+        settings.metricsDowntimeJobs = metricsDowntimeJobs;
+      }
+
+      pipelineConfig.settings = settings;
 
       if (hasRootDir) {
         pipelineConfig.rootDir = rootDir;
       }
+
       this.onUpdatePipeline(pipelineConfig);
     },
     toggleJob(jobId, user, name, stillActive) {
       const status = stillActive ? 'ENABLED' : 'DISABLED';
 
       this.set('name', name);
-      this.set('stateChange', status[0].toUpperCase() + status.slice(1, -1).toLowerCase());
+      this.set(
+        'stateChange',
+        status[0].toUpperCase() + status.slice(1, -1).toLowerCase()
+      );
       this.set('state', status);
       this.set('user', user);
       this.set('jobId', jobId);
       this.set('showToggleModal', true);
     },
     updateMessage(message) {
-      const { state, user, jobId } = this;
+      const { state, jobId } = this;
 
-      this.setJobStatus(jobId, state, user, message || ' ');
+      this.setJobStatus(jobId, state, message || ' ');
       this.set('showToggleModal', false);
     },
     showRemoveButtons() {
-      this.set('showDangerButton', false);
+      this.set('showRemoveDangerButton', false);
       this.set('showRemoveButtons', true);
     },
     cancelRemove() {
-      this.set('showDangerButton', true);
+      this.set('showRemoveDangerButton', true);
       this.set('showRemoveButtons', false);
     },
     removePipeline() {
@@ -123,21 +243,149 @@ export default Component.extend({
         .finally(() => this.set('isShowingModal', false));
     },
     clearCache(scope, id) {
+      const pipelineId = this.get('pipeline.id');
+
       let config = {
         scope,
-        id
+        cacheId: id,
+        pipelineId
       };
 
       this.set('isShowingModal', true);
 
       if (scope === 'pipelines') {
-        config.id = this.get('pipeline.id');
+        config.cacheId = pipelineId;
       }
 
       return this.cache
         .clearCache(config)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
+    },
+
+    async updateJobNameLength(inputJobNameLength) {
+      let displayJobNameLength = inputJobNameLength;
+
+      if (parseInt(displayJobNameLength, 10) > MAXIMUM_JOBNAME_LENGTH) {
+        displayJobNameLength = MAXIMUM_JOBNAME_LENGTH;
+      }
+
+      if (parseInt(displayJobNameLength, 10) < MINIMUM_JOBNAME_LENGTH) {
+        displayJobNameLength = MINIMUM_JOBNAME_LENGTH;
+      }
+
+      this.$('input.display-job-name').val(displayJobNameLength);
+
+      debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
+    },
+    async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
+      try {
+        const pipelineId = this.get('pipeline.id');
+
+        this.set('isUpdatingMetricsDowntimeJobs', true);
+        await this.shuttle.updatePipelineSettings(pipelineId, {
+          metricsDowntimeJobs
+        });
+      } finally {
+        this.set('isUpdatingMetricsDowntimeJobs', false);
+      }
+    },
+
+    showPipelineVisibilityButtons() {
+      this.set('showPipelineVisibilityDangerButton', false);
+      this.set('showPipelineVisibilityButtons', true);
+    },
+    cancelPipelineVisibility() {
+      this.set('showPipelineVisibilityDangerButton', true);
+      this.set('showPipelineVisibilityButtons', false);
+    },
+    async updatePipelineVisibility(publicPipeline) {
+      try {
+        const pipelineId = this.get('pipeline.id');
+
+        this.setProperties({
+          isUpdatingPipelineVisibility: true,
+          showPipelineVisibilityButtons: false
+        });
+        await this.shuttle.updatePipelineSettings(pipelineId, {
+          publicPipeline
+        });
+      } finally {
+        this.setProperties({
+          showPipelineVisibilityDangerButton: true,
+          isUpdatingPipelineVisibility: false,
+          publicPipeline
+        });
+      }
+    },
+
+    async updatePipelineShowTriggers(showEventTriggers) {
+      const pipeline = this.get('pipeline');
+
+      try {
+        await this.shuttle.updatePipelineSettings(pipeline.id, {
+          showEventTriggers
+        });
+      } finally {
+        pipeline.set('settings.showEventTriggers', showEventTriggers);
+
+        this.set('showEventTriggers', showEventTriggers);
+      }
+    },
+
+    async updateFilterEventsForNoBuilds(filterEventsForNoBuilds) {
+      const pipeline = this.get('pipeline');
+
+      try {
+        await this.shuttle.updatePipelineSettings(pipeline.id, {
+          filterEventsForNoBuilds
+        });
+      } finally {
+        pipeline.set(
+          'settings.filterEventsForNoBuilds',
+          filterEventsForNoBuilds
+        );
+
+        this.set('filterEventsForNoBuilds', filterEventsForNoBuilds);
+      }
+    },
+
+    async updateShowPRJobs(showPRJobs) {
+      const pipelineId = this.get('pipeline.id');
+
+      let pipelinePreference = await this.store
+        .peekAll('preference/pipeline')
+        .findBy('id', pipelineId);
+
+      if (pipelinePreference) {
+        pipelinePreference.showPRJobs = showPRJobs;
+      } else {
+        pipelinePreference = this.store.createRecord('preference/pipeline', {
+          pipelineId,
+          showPRJobs
+        });
+      }
+
+      pipelinePreference
+        .save()
+        .then(() =>
+          this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
+        );
+
+      this.set('showPRJobs', showPRJobs);
+    },
+    async updatePipelineGroupedEvents(groupedEvents) {
+      const pipeline = this.get('pipeline');
+
+      try {
+        await this.shuttle.updatePipelineSettings(pipeline.id, {
+          groupedEvents
+        });
+      } finally {
+        pipeline.set('settings.groupedEvents', groupedEvents);
+
+        this.set('groupedEvents', groupedEvents);
+      }
     }
   }
 });

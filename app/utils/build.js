@@ -64,6 +64,7 @@ const statusIcon = (status, isLight) => {
  */
 const getActiveStep = (steps = []) => {
   const runningStep = steps.find(s => s.startTime && !s.endTime);
+
   let name;
 
   if (runningStep && runningStep.name) {
@@ -81,4 +82,31 @@ const getActiveStep = (steps = []) => {
   return name;
 };
 
-export { isActiveBuild, isPRJob, statusIcon, getActiveStep };
+const unfinishedStatuses = [
+  'CREATED',
+  'RUNNING',
+  'QUEUED',
+  'BLOCKED',
+  'FROZEN'
+];
+const statuses = [
+  'ABORTED',
+  'CREATED',
+  'FAILURE',
+  'QUEUED',
+  'RUNNING',
+  'SUCCESS',
+  'BLOCKED',
+  'UNSTABLE',
+  'COLLAPSED',
+  'FROZEN'
+];
+
+export {
+  isActiveBuild,
+  isPRJob,
+  statusIcon,
+  getActiveStep,
+  unfinishedStatuses,
+  statuses
+};

@@ -4,8 +4,8 @@ import timeRange, {
 } from 'screwdriver-ui/utils/time-range';
 import { module, test } from 'qunit';
 
-module('Unit | Utility | time range', function() {
-  test('it returns a range of date times given duration', function(assert) {
+module('Unit | Utility | time range', function () {
+  test('it returns a range of date times given duration', function (assert) {
     const d = new Date('2019-03-26T21:03:05.183Z');
 
     let { startTime, endTime } = timeRange(d, '1hr');
@@ -34,11 +34,14 @@ module('Unit | Utility | time range', function() {
     assert.equal(endTime, '2019-03-26T21:03');
   });
 
-  test('it returns a 16-character ISO 8601 up to minute', function(assert) {
-    assert.equal(iso8601UpToMinute(new Date('2019-03-26T21:03:05.183Z')), '2019-03-26T21:03');
+  test('it returns a 16-character ISO 8601 up to minute', function (assert) {
+    assert.equal(
+      iso8601UpToMinute(new Date('2019-03-26T21:03:05.183Z')),
+      '2019-03-26T21:03'
+    );
   });
 
-  test('it returns a locale date time string', function(assert) {
+  test('it returns a locale date time string', function (assert) {
     assert.equal(
       toCustomLocaleString(new Date('2019-03-26T21:03:05.183Z'), {
         timeZone: 'UTC',

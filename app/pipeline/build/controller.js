@@ -44,7 +44,10 @@ export default Controller.extend({
       build.set('status', 'ABORTED');
 
       return build.save().catch(e => {
-        this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+        this.set(
+          'errorMessage',
+          Array.isArray(e.errors) ? e.errors[0].detail : ''
+        );
       });
     },
 
@@ -65,12 +68,18 @@ export default Controller.extend({
           newEvent.get('builds').then(builds => {
             this.set('isShowingModal', false);
 
-            return this.transitionToRoute('pipeline.build', builds.get('lastObject.id'));
+            return this.transitionToRoute(
+              'pipeline.build',
+              builds.get('lastObject.id')
+            );
           })
         )
         .catch(e => {
           this.set('isShowingModal', false);
-          this.set('errorMessage', Array.isArray(e.errors) ? e.errors[0].detail : '');
+          this.set(
+            'errorMessage',
+            Array.isArray(e.errors) ? e.errors[0].detail : ''
+          );
         });
     },
 
@@ -88,7 +97,11 @@ export default Controller.extend({
       if (activeTab === 'artifacts') {
         this.transitionToRoute('pipeline.build.artifacts');
       } else {
-        this.transitionToRoute('pipeline.build', this.get('pipeline.id'), this.get('build.id'));
+        this.transitionToRoute(
+          'pipeline.build',
+          this.get('pipeline.id'),
+          this.get('build.id')
+        );
       }
     }
   },
@@ -127,14 +140,22 @@ export default Controller.extend({
   },
 
   changeBuildStep(name) {
-    const currentRouteName = this.getWithDefault('router.currentRoute.name', '');
+    const currentRouteName = this.getWithDefault(
+      'router.currentRoute.name',
+      ''
+    );
 
-    if (!['pipeline.build.step', 'pipeline.build.index'].includes(currentRouteName)) {
+    if (
+      !['pipeline.build.step', 'pipeline.build.index'].includes(
+        currentRouteName
+      )
+    ) {
       return;
     }
 
     const build = this.get('build');
     const pipelineId = this.get('pipeline.id');
+
     let activeStep;
 
     if (name) {
@@ -145,7 +166,12 @@ export default Controller.extend({
     }
 
     if (activeStep && this.get('preselectedStepName') !== activeStep) {
-      this.transitionToRoute('pipeline.build.step', pipelineId, build.get('id'), activeStep);
+      this.transitionToRoute(
+        'pipeline.build.step',
+        pipelineId,
+        build.get('id'),
+        activeStep
+      );
     }
   }
 });

@@ -32,15 +32,22 @@
                 <span>Commands</span>
               {{/link-to}}
             {{/ddm.item}}
+            {{#ddm.item}}
+              {{#link-to "pipeline-visualizer" classNames="icon pipeline-visualizer"}}
+                <span>Visualizer</span>
+              {{/link-to}}
+            {{/ddm.item}}
           {{/dd.menu}}
         {{/nav.dropdown}}
       {{/nav.item}}
-      {{#nav.item}}
-        {{#link-to "create" class="icon create"}}
-          {{inline-svg "add-circle" class="img"}}
-          <span>Create Pipeline</span>
-        {{/link-to}}
-      {{/nav.item}}
+      {{#if session.isAuthenticated}}
+        {{#nav.item}}
+          <a class="icon create" onclick={{action "openCreatePipeline"}}>
+            {{inline-svg "add-circle" class="img"}}
+            <span>Create Pipeline</span>
+          </a>
+        {{/nav.item}}
+      {{/if}}
     {{/navbar.nav}}
 
     {{#navbar.nav classNames="navbar-nav navbar-right" as |nav|}}
@@ -55,12 +62,12 @@
               escape-press=(action "cancelSearch")
               autofocus="true"
               value=searchTerm}}
-            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search"}}</button>
+            <button class="search-button" {{action "triggerSearch"}}>{{fa-icon "search" title="Search"}}</button>
           </form>
         {{/nav.item}}
       {{else}}
         {{#nav.item}}
-          <a href="#" class="icon search" {{action (mut showSearch) (not showSearch) preventDefault=false}}>{{inline-svg "search" class="img"}}</a>
+          <a href="#" class="icon search" title="Search" {{action (mut showSearch) (not showSearch) preventDefault=false}}>{{inline-svg "search" class="img"}}</a>
         {{/nav.item}}
       {{/if}}
 
@@ -71,9 +78,12 @@
           {{/dd.toggle}}
           {{#dd.menu as |ddm|}}
             {{#ddm.item}}
-              <a href={{docUrl}} class="icon docs">
+              <a href={{docUrl}} class="icon docs" title="Documentation and Contact">
                 {{inline-svg "file-text" class="img"}}<span>Documentation</span>
               </a>
+            {{/ddm.item}}
+            {{#ddm.item}}
+              <a class="release">{{fa-icon "tag"}}<span>{{releaseVersion}}</span></a>
             {{/ddm.item}}
             {{ddm.divider}}
             {{#ddm.item}}
@@ -83,12 +93,12 @@
             {{/ddm.item}}
             {{#ddm.item}}
               <a href={{slackUrl}} class="icon community">
-                {{inline-svg "slack" class="img"}}<span>Slack Channel</span>
+                {{inline-svg "slack" class="img"}}<span>Slack Workspace</span>
               </a>
             {{/ddm.item}}
             {{#ddm.item}}
               <a href="https://github.com/screwdriver-cd" class="icon github">
-                {{inline-svg "github" class="img"}}<span>Github</span>
+                {{inline-svg "github" class="img"}}<span>GitHub</span>
               </a>
             {{/ddm.item}}
           {{/dd.menu}}
@@ -105,15 +115,17 @@
             {{#dd.menu as |ddm|}}
               {{#ddm.item}}<span class="title">ACCOUNTS</span>{{/ddm.item}}
               {{#each scmContexts as |scmContext|}}
-                {{#ddm.item}}
-                  {{#if scmContext.isSignedIn}}
-                    <a class="active">{{fa-icon scmContext.iconType}} {{scmContext.displayName}} <span>active</span></a>
-                  {{else}}
-                    <a href="#authenticate"{{action "authenticate" scmContext.context}}>
-                      {{fa-icon scmContext.iconType}} {{scmContext.displayName}}
-                    </a>
-                  {{/if}}
-                {{/ddm.item}}
+                {{#unless scmContext.readOnly}}
+                  {{#ddm.item}}
+                    {{#if scmContext.isSignedIn}}
+                      <a class="active">{{fa-icon scmContext.iconType}} {{scmContext.displayName}} <span>active</span></a>
+                    {{else}}
+                      <a href="#authenticate"{{action "authenticate" scmContext.context}}>
+                        {{fa-icon scmContext.iconType}} {{scmContext.displayName}}
+                      </a>
+                    {{/if}}
+                  {{/ddm.item}}
+                {{/unless}}
               {{/each}}
               {{ddm.divider}}
               {{#if (not session.data.authenticated.isGuest)}}
@@ -136,7 +148,9 @@
 {{/bs-navbar}}
 
 <div class="tooltips">
-  {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
+  {{#if session.isAuthenticated}}
+    {{#bs-tooltip placement="bottom" triggerElement=".icon.create" renderInPlace=true}}Create a new Pipeline{{/bs-tooltip}}
+  {{/if}}
   {{#if session.isAuthenticated}}
     {{#each scmContexts as |scmContext|}}
       {{#if scmContext.isSignedIn}}

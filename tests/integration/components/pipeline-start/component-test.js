@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | pipeline start', function(hooks) {
+module('Integration | Component | pipeline start', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     assert.expect(2);
     this.set('onStartBuild', () => {
       assert.ok(true);
@@ -17,17 +17,18 @@ module('Integration | Component | pipeline start', function(hooks) {
     await click('button');
   });
 
-  test('it renders start PR', async function(assert) {
-    assert.expect(3);
+  test('it doesnt render start PR', async function (assert) {
+    assert.expect(1);
     // Starting PR job requires the PR number and PR jobs
     this.set('jobs', ['job1', 'job2']);
     this.set('onPRStartBuild', (prNum, prJobs) => {
       assert.equal(prNum, 5);
       assert.equal(prJobs.length, 2);
     });
-    await render(hbs`{{pipeline-start startBuild=onPRStartBuild prNum=5 jobs=jobs}}`);
+    await render(
+      hbs`{{pipeline-start startBuild=onPRStartBuild prNum=5 jobs=jobs}}`
+    );
 
-    assert.dom('button').hasText('Start PR-5');
-    await click('button');
+    assert.dom('button').doesNotExist();
   });
 });

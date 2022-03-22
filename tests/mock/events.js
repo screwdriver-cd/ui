@@ -1,4 +1,4 @@
-import { copy } from '@ember/object/internals';
+import { copy } from 'ember-copy';
 import { assign } from '@ember/polyfills';
 
 const events = [
@@ -23,7 +23,8 @@ const events = [
       url: 'http://example.com/u/batman'
     },
     startFrom: '~commit',
-    pipelineId: '12345',
+    pipelineId: '4',
+    groupEventId: '23452',
     sha: 'abcdef1029384',
     type: 'pipeline',
     workflowGraph: {
@@ -55,7 +56,8 @@ const events = [
     pr: {
       url: 'http://example.com/batcave/batmobile/pulls/42'
     },
-    pipelineId: '12345',
+    pipelineId: '4',
+    groupEventId: '23453',
     type: 'pr',
     prNum: 42,
     sha: '1029384bbb',
@@ -88,7 +90,8 @@ const events = [
     pr: {
       url: 'http://example.com/batcave/batmobile/pulls/43'
     },
-    pipelineId: '12345',
+    pipelineId: '4',
+    groupEventId: '23454',
     sha: '1030384bbb',
     type: 'pr',
     prNum: 43,
@@ -99,4 +102,5 @@ const events = [
   }
 ];
 
-export default workflowGraph => events.map(e => assign(copy(e, true), { workflowGraph }));
+export default workflowGraph =>
+  events.map(e => assign(copy(e, true), { workflowGraph }));

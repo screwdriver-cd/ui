@@ -88,6 +88,32 @@
 </div>
 
 {{#if measures.total}}
+  {{#if (is-fulfilled this.downtimeJobsMetrics)}}
+    {{#if this.downtimeJobsChartData}}
+      <Metrics::Chart
+        @chartTitle="Downtime vs Build Count"
+        @chartName={{this.downtimeJobsChartName}}
+        @legends={{this.downtimeJobsLegends}}
+        @resetZoom={{action "resetZoom"}}
+
+        @name={{this.downtimeJobsChartName}}
+        @metrics={{await this.downtimeJobsMetrics}}
+        @axis={{this.downtimeJobsAxis}}
+        @tooltip={{this.tooltip}}
+        @onrendered={{this.onrendered}}
+        @onresized={{this.onresized}}
+        @oninit={{get onInitFns this.downtimeJobsChartName}}
+      />
+    {{else}}
+      <div class="chart-cta">Not enough metric available for Downtime Jobs!</div>
+    {{/if}}
+  {{else}}
+    {{#if (is-pending this.downtimeJobsMetrics)}}
+      <div class="chart-cta">Loading...</div>
+    {{else}}
+      <div class="chart-cta">No metric available for Downtime Jobs!</div>
+    {{/if}}
+  {{/if}}
   <div class="chart-c3">
     <p class="chart-title">Events</p>
     {{x-toggle

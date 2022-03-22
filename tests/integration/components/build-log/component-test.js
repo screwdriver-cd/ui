@@ -2,7 +2,7 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, find, click } from '@ember/test-helpers';
+import { render, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import moment from 'moment';
 import sinon from 'sinon';
@@ -44,10 +44,10 @@ const logService = Service.extend({
   revokeLogBlobUrls() {}
 });
 
-module('Integration | Component | build log', function(hooks) {
+module('Integration | Component | build log', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.register('service:build-logs', logService);
     doneStub.onCall(0).returns(true);
     doneStub.onCall(1).returns(false);
@@ -56,12 +56,12 @@ module('Integration | Component | build log', function(hooks) {
     logsStub.returns(sampleLogs.concat(sampleLogs));
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     doneStub.reset();
     logsStub.reset();
   });
 
-  test('it displays some help when no step is selected', async function(assert) {
+  test('it displays some help when no step is selected', async function (assert) {
     await render(hbs`{{build-log
       stepName=null
       buildId=1
@@ -85,7 +85,7 @@ module('Integration | Component | build log', function(hooks) {
     assert.dom(this.element).includesText('Click a step to see logs');
   });
 
-  test('it starts loading when step chosen', async function(assert) {
+  test('it starts loading when step chosen', async function (assert) {
     this.set('step', null);
     await render(hbs`{{build-log
       stepName=step
@@ -103,11 +103,13 @@ module('Integration | Component | build log', function(hooks) {
         .hasText(`${moment(startTime).format('HH:mm:ss')} ${startTime}`);
       assert
         .dom('.line:last-child')
-        .hasText(`${moment(startTime + 99).format('HH:mm:ss')} ${startTime + 99}`);
+        .hasText(
+          `${moment(startTime + 99).format('HH:mm:ss')} ${startTime + 99}`
+        );
     });
   });
 
-  test('it generate logs for init step', async function(assert) {
+  test('it generate logs for init step', async function (assert) {
     this.set('stats', {
       queueEnterTime: '2019-01-14T20:10:41.238Z',
       imagePullStartTime: '2019-01-14T20:11:41.238Z',
@@ -126,12 +128,14 @@ module('Integration | Component | build log', function(hooks) {
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
       assert.dom('.line:nth-child(2)').includesText('Build enqueued');
-      assert.dom('.line:nth-child(3)').includesText('Build scheduled on node12.foo.bar.com');
+      assert
+        .dom('.line:nth-child(3)')
+        .includesText('Build scheduled on node12.foo.bar.com');
       assert.dom('.line:last-child').includesText('Image pull completed');
     });
   });
 
-  test('it generate logs for init step with parameters', async function(assert) {
+  test('it generate logs for init step with parameters', async function (assert) {
     this.owner.unregister('service:store');
     const storeStub = Service.extend({
       peekRecord() {
@@ -174,12 +178,14 @@ module('Integration | Component | build log', function(hooks) {
       assert.dom('.line:first-child').includesText('Build created');
       assert.dom('.line:nth-child(2)').includesText('Build parameters');
       assert.dom('.line:nth-child(3)').includesText('Build enqueued');
-      assert.dom('.line:nth-child(4)').includesText('Build scheduled on node12.foo.bar.com');
+      assert
+        .dom('.line:nth-child(4)')
+        .includesText('Build scheduled on node12.foo.bar.com');
       assert.dom('.line:last-child').includesText('Image pull completed');
     });
   });
 
-  test('it generate logs for init step when build is blocked', async function(assert) {
+  test('it generate logs for init step when build is blocked', async function (assert) {
     this.set('stats', {
       queueEnterTime: '2019-01-14T20:10:41.238Z',
       blockedStartTime: '2019-01-14T20:10:42.238Z',
@@ -199,13 +205,17 @@ module('Integration | Component | build log', function(hooks) {
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
       assert.dom('.line:nth-child(2)').includesText('Build enqueued');
-      assert.dom('.line:nth-child(3)').includesText('Build blocked, putting back into queue');
-      assert.dom('.line:nth-child(4)').includesText('Build scheduled on node12.foo.bar.com');
+      assert
+        .dom('.line:nth-child(3)')
+        .includesText('Build blocked, putting back into queue');
+      assert
+        .dom('.line:nth-child(4)')
+        .includesText('Build scheduled on node12.foo.bar.com');
       assert.dom('.line:last-child').includesText('Image pull completed');
     });
   });
 
-  test('it generate logs for COLLAPSED build', async function(assert) {
+  test('it generate logs for COLLAPSED build', async function (assert) {
     this.set('stats', {
       queueEnterTime: '2019-01-14T20:10:41.238Z'
     });
@@ -222,11 +232,13 @@ module('Integration | Component | build log', function(hooks) {
 
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
-      assert.dom('.line:last-child').includesText('Build collapsed and removed from the queue.');
+      assert
+        .dom('.line:last-child')
+        .includesText('Build collapsed and removed from the queue.');
     });
   });
 
-  test('it generate logs for FROZEN build', async function(assert) {
+  test('it generate logs for FROZEN build', async function (assert) {
     this.set('step', 'sd-setup-init');
     await render(hbs`{{build-log
       stepName=step
@@ -240,11 +252,13 @@ module('Integration | Component | build log', function(hooks) {
 
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
-      assert.dom('.line:last-child').includesText('Build frozen and removed from the queue.');
+      assert
+        .dom('.line:last-child')
+        .includesText('Build frozen and removed from the queue.');
     });
   });
 
-  test('it generate logs for failed init step', async function(assert) {
+  test('it generate logs for failed init step', async function (assert) {
     this.set('stats', {
       queueEnterTime: '2019-01-14T20:10:41.238Z',
       imagePullStartTime: '2019-01-14T20:11:41.238Z',
@@ -263,12 +277,14 @@ module('Integration | Component | build log', function(hooks) {
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
       assert.dom('.line:nth-child(2)').includesText('Build enqueued');
-      assert.dom('.line:nth-child(3)').includesText('Build scheduled on node12.foo.bar.com');
+      assert
+        .dom('.line:nth-child(3)')
+        .includesText('Build scheduled on node12.foo.bar.com');
       assert.dom('.line:last-child').includesText('Build init failed');
     });
   });
 
-  test('it generate logs for init step with empty build stats', async function(assert) {
+  test('it generate logs for init step with empty build stats', async function (assert) {
     this.set('stats', {});
     this.set('step', 'sd-setup-init');
     await render(hbs`{{build-log
@@ -286,7 +302,7 @@ module('Integration | Component | build log', function(hooks) {
     });
   });
 
-  test('it starts fetching more log for a chosen completed step', async function(assert) {
+  test('it starts fetching more log for a chosen completed step', async function (assert) {
     doneStub.onCall(0).returns(false);
     doneStub.onCall(1).returns(false);
     doneStub.onCall(2).returns(true);
@@ -315,22 +331,5 @@ module('Integration | Component | build log', function(hooks) {
       sinon.assert.called(logsStub);
       assert.ok(container.scrollTop > lastScrollTop);
     });
-  });
-
-  test('it generates object url for the log when clicking download button', async function(assert) {
-    this.set('step', 'banana');
-    await render(hbs`{{build-log
-      stepName=step
-      totalLine=1000
-      buildId=1
-      stepStartTime=null
-      buildStartTime="1478912844724"
-    }}`);
-
-    assert.dom(find('#downloadLink').previousElementSibling).hasText('Download');
-
-    await click(find('#downloadLink').previousElementSibling);
-
-    assert.dom('#downloadLink').hasAttribute('href', blobUrl);
   });
 });

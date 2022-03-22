@@ -5,21 +5,50 @@ import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
 export default Component.extend({
   direction: 'down',
 
-  hasParameters: computed('buildParameters', function hasParameters() {
-    return Object.keys(this.buildParameters).length > 0;
-  }),
+  hasParameters: computed(
+    'pipelineParameters',
+    'jobParameters',
+    function hasParameters() {
+      return (
+        Object.keys(this.pipelineParameters).length > 0 ||
+        Object.keys(this.jobParameters).length > 0
+      );
+    }
+  ),
 
-  hasLargeNumberOfParameters: computed('buildParameters', function hasLargeNumberOfParameters() {
-    return Object.keys(this.buildParameters).length > MAX_NUM_OF_PARAMETERS_ALLOWED;
-  }),
+  hasLargeNumberOfParameters: computed(
+    'pipelineParameters',
+    'jobParameters',
+    function hasLargeNumberOfParameters() {
+      const paramCount =
+        Object.keys(this.pipelineParameters).length +
+        Object.values(this.jobParameters).reduce((count, parameters) => {
+          if (count) {
+            return count + Object.keys(parameters).length;
+          }
+
+          return Object.keys(parameters).length;
+        }, 0);
+
+      return paramCount > MAX_NUM_OF_PARAMETERS_ALLOWED;
+    }
+  ),
 
   init() {
     this._super(...arguments);
-    this.set('buildParameters', this.getDefaultBuildParameters());
+
+    this.setProperties({
+      pipelineParameters: this.getDefaultPipelineParameters(),
+      jobParameters: this.getDefaultJobParameters()
+    });
   },
 
-  getDefaultBuildParameters() {
+  getDefaultPipelineParameters() {
     return this.getWithDefault('pipeline.parameters', {});
+  },
+
+  getDefaultJobParameters() {
+    return this.getWithDefault('pipeline.jobParameters', {});
   },
 
   startArgs: computed('prNum', 'jobs', {
@@ -47,14 +76,10 @@ export default Component.extend({
 
   actions: {
     startBuild(parameters) {
-      let args = this.startArgs;
-
-      if (parameters) {
-        args.push(parameters);
-      }
+      const args = this.startArgs;
       const startFunc = this.startBuild;
 
-      startFunc.apply(null, args);
+      startFunc.apply(null, [...args, parameters]);
     },
 
     toggleDropdown(toggleAction) {
@@ -71,7 +96,8 @@ export default Component.extend({
 
     resetForm() {
       this.setProperties({
-        buildParameters: this.getDefaultBuildParameters(),
+        pipelineParameters: this.getDefaultPipelineParameters(),
+        jobParameters: this.getDefaultJobParameters(),
         direction: 'down',
         isShowingModal: false
       });

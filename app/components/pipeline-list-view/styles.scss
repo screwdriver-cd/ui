@@ -1,0 +1,75 @@
+& {
+  height: 100%;
+  padding: 15px 0 15px 10px;
+
+  .list-view-nav {
+    margin-bottom: 15px;
+  }
+  .btn {
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: $brand-600;
+    background-color: $sd-white;
+    border-color: $brand-600;
+    font-weight: $weight-normal;
+
+    &:hover,
+    &:focus,
+    &.active,
+    &.active:hover,
+    &.active:focus {
+      outline: none;
+      box-shadow: none;
+      color: $brand-600;
+      background-color: $button-background;
+      border-color: $brand-600;
+    }
+
+    &:hover,
+    &.active:hover {
+      color: $brand-700;
+    }
+  }
+
+  .refresh-btn {
+    width: 100px;
+    float: right;
+  }
+
+  .ember-light-table {
+    padding-left: 15px;
+    width: 100%;
+  }
+
+  .ember-light-table thead .lt-column {
+    padding-left: 15px;
+    border-bottom: 2px solid $sd-light-gray;
+    font-weight: 150;
+    font-size: 1.2rem;
+    color: $sd-light-gray;
+  }
+
+  .ember-light-table tbody .lt-cell {
+    padding-left: 15px;
+  }
+
+  .ember-light-table .lt-row {
+    height: 40px;
+  }
+
+  .ember-light-table .lt-row:not(:last-child) {
+    border-bottom: 1px solid $sd-light-gray;
+  }
+
+  .ember-light-table .lt-row:hover {
+    background-color: $brand-200;
+  }
+
+  .ember-light-table .tse-scrollbar {
+    display: none;
+  }
+
+  .ember-light-table div.lt-body-wrap {
+    overflow-y: auto;
+  }
+}

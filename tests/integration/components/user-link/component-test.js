@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | user link', function(hooks) {
+module('Integration | Component | user link', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const userMock = {
       username: 'batman',
       name: 'Bruce W',
@@ -24,7 +24,7 @@ module('Integration | Component | user link', function(hooks) {
     assert.dom('a').hasText('Bruce W');
   });
 
-  test('it renders scheduler', async function(assert) {
+  test('it renders scheduler', async function (assert) {
     const userMock = {
       username: 'sd:scheduler',
       name: 'Screwdriver scheduler'

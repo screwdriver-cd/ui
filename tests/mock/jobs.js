@@ -1,42 +1,52 @@
-import { copy } from '@ember/object/internals';
+import { copy } from 'ember-copy';
 
 export default () =>
   copy(
     [
       {
         id: '12345',
+        groupEventId: '23456',
         name: 'main',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false
+        archived: false,
+        permutations: [{}]
       },
       {
         id: '12346',
+        groupEventId: '23456',
         name: 'publish',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false
+        archived: false,
+        permutations: [{}]
       },
       {
         id: '12347',
+        groupEventId: '23457',
         name: 'PR-42:main',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false
+        archived: false,
+        permutations: [{}]
       },
       {
         id: '12348',
+        groupEventId: '23457',
         name: 'PR-42:publish',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false
+        archived: false,
+        permutations: [{}]
       },
       {
         id: '12349',
+        groupEventId: '23458',
         name: 'PR-43:main',
         pipelineId: '4',
         state: 'ENABLED',
-        archived: false
+        archived: false,
+        permutations: [{}]
       }
     ],
     true
@@ -56,28 +66,32 @@ export function metricJobs() {
         name: 'prod',
         pipelineId: 4,
         state: 'ENABLED',
-        archived: false
+        archived: false,
+        permutations: [{}]
       },
       {
         id: 158,
         name: 'beta',
         pipelineId: 4,
         state: 'ENABLED',
-        archived: false
+        archived: false,
+        permutations: [{}]
       },
       {
         id: 157,
         name: 'publish',
         pipelineId: 4,
         state: 'ENABLED',
-        archived: false
+        archived: false,
+        permutations: [{}]
       },
       {
         id: 156,
         name: 'main',
         pipelineId: 4,
         state: 'ENABLED',
-        archived: false
+        archived: false,
+        permutations: [{}]
       }
     ],
     true

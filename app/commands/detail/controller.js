@@ -19,7 +19,7 @@ export default Controller.extend({
     }
   }),
   trusted: computed('commands.commandData.[]', function computeTrusted() {
-    return this.commands.commandData.some(c => c.trusted);
+    return this.commands.commandData.some(c => c.trusted && c.latest);
   }),
   isAdmin: computed(function isAdmin() {
     const token = this.get('session.data.authenticated.token');
@@ -41,7 +41,10 @@ export default Controller.extend({
       let tagExists = commandTagData.filter(t => t.tag === versionOrTagFromUrl);
 
       if (tagExists.length > 0) {
-        return this.commands.commandData.findBy('version', tagExists[0].version);
+        return this.commands.commandData.findBy(
+          'version',
+          tagExists[0].version
+        );
       }
 
       return this.commands.commandData.findBy('version', versionOrTagFromUrl);
@@ -54,9 +57,10 @@ export default Controller.extend({
   }),
   actions: {
     removeCommand(namespace, name) {
-      return this.command
-        .deleteCommands(namespace, name)
-        .then(() => this.transitionToRoute('commands'), err => this.set('errorMessage', err));
+      return this.command.deleteCommands(namespace, name).then(
+        () => this.transitionToRoute('commands'),
+        err => this.set('errorMessage', err)
+      );
     },
     updateTrust(namespace, name, toTrust) {
       return (

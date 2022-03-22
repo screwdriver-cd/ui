@@ -11,7 +11,9 @@ import Controller from '@ember/controller';
  * @private
  */
 function getResults() {
-  this.validator.getValidationResults(this.yaml).then(results => this.set('results', results));
+  this.validator
+    .getValidationResults(this.yaml)
+    .then(results => this.set('results', results));
 }
 
 export default Controller.extend({

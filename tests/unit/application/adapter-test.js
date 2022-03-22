@@ -4,24 +4,24 @@ import Pretender from 'pretender';
 import DS from 'ember-data';
 let server;
 
-module('Unit | Adapter | application', function(hooks) {
+module('Unit | Adapter | application', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     assert.ok(adapter);
   });
 
-  test('it uses cors for ajax', function(assert) {
+  test('it uses cors for ajax', function (assert) {
     assert.expect(3);
 
     server.get('https://sd.cd/fake', () => [
@@ -30,7 +30,7 @@ module('Unit | Adapter | application', function(hooks) {
       '{"foo": "bar"}'
     ]);
 
-    server.handledRequest = function(verb, path, request) {
+    server.handledRequest = function (verb, path, request) {
       assert.equal(verb, 'GET');
       assert.equal(request.withCredentials, true);
     };
@@ -42,7 +42,7 @@ module('Unit | Adapter | application', function(hooks) {
     });
   });
 
-  test('it wraps non-array payload with model name', function(assert) {
+  test('it wraps non-array payload with model name', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -56,21 +56,26 @@ module('Unit | Adapter | application', function(hooks) {
     });
   });
 
-  test('it wraps array payload with model name', function(assert) {
+  test('it wraps array payload with model name', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/builds'
     };
 
-    const payload = adapter.handleResponse(200, {}, [{ id: 1234 }], requestData);
+    const payload = adapter.handleResponse(
+      200,
+      {},
+      [{ id: 1234 }],
+      requestData
+    );
 
     assert.deepEqual(payload, {
       builds: [{ id: 1234 }]
     });
   });
 
-  test('it adds links to pipelines', function(assert) {
+  test('it adds links to pipelines', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -93,21 +98,31 @@ module('Unit | Adapter | application', function(hooks) {
     });
   });
 
-  test('it adds links to jobs', function(assert) {
+  test('it adds links to jobs', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/pipelines/1234/jobs'
     };
 
-    const payload = adapter.handleResponse(200, {}, [{ id: 1234 }], requestData);
+    const payload = adapter.handleResponse(
+      200,
+      {},
+      [{ id: 1234 }],
+      requestData
+    );
 
     assert.deepEqual(payload, {
-      jobs: [{ id: 1234, links: { builds: 'builds?count=10&page=1', metrics: 'metrics' } }]
+      jobs: [
+        {
+          id: 1234,
+          links: { builds: 'builds?count=10&page=1', metrics: 'metrics' }
+        }
+      ]
     });
   });
 
-  test('it adds links to jobs', function(assert) {
+  test('it adds links to jobs', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -121,19 +136,24 @@ module('Unit | Adapter | application', function(hooks) {
     });
   });
 
-  test('it wraps errors', function(assert) {
+  test('it wraps errors', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/pipelines/1234/jobs'
     };
 
-    const payload = adapter.handleResponse(404, {}, { error: 'bananas' }, requestData);
+    const payload = adapter.handleResponse(
+      404,
+      {},
+      { error: 'bananas' },
+      requestData
+    );
 
     assert.ok(payload instanceof DS.AdapterError);
   });
 
-  test('it wraps error objects', function(assert) {
+  test('it wraps error objects', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -156,7 +176,7 @@ module('Unit | Adapter | application', function(hooks) {
     assert.ok(payload instanceof DS.AdapterError);
   });
 
-  test('it takes care of empty payload', function(assert) {
+  test('it takes care of empty payload', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
@@ -168,7 +188,7 @@ module('Unit | Adapter | application', function(hooks) {
     assert.deepEqual(payload, {});
   });
 
-  test('it returns pipelinetoken endpoint when model is token with pipelineId', function(assert) {
+  test('it returns pipelinetoken endpoint when model is token with pipelineId', function (assert) {
     let adapter = this.owner.lookup('adapter:application');
 
     const modelname = 'token';
@@ -177,8 +197,16 @@ module('Unit | Adapter | application', function(hooks) {
     const baseUrl = 'http://localhost:8080/v4/pipelines/1/tokens';
     const urlForFindAll = adapter.urlForFindAll(modelname, snapshot);
     const urlForCreateRecord = adapter.urlForCreateRecord(modelname, snapshot);
-    const urlForUpdateRecord = adapter.urlForUpdateRecord(id, modelname, snapshot);
-    const urlForDeleteRecord = adapter.urlForDeleteRecord(id, modelname, snapshot);
+    const urlForUpdateRecord = adapter.urlForUpdateRecord(
+      id,
+      modelname,
+      snapshot
+    );
+    const urlForDeleteRecord = adapter.urlForDeleteRecord(
+      id,
+      modelname,
+      snapshot
+    );
 
     assert.deepEqual(urlForFindAll, baseUrl);
     assert.deepEqual(urlForCreateRecord, baseUrl);
@@ -186,7 +214,7 @@ module('Unit | Adapter | application', function(hooks) {
     assert.deepEqual(urlForDeleteRecord, `${baseUrl}/${id}`);
   });
 
-  test('it returns endpoint for metric and event given pipeline id', function(assert) {
+  test('it returns endpoint for metric and event given pipeline id', function (assert) {
     const adapter = this.owner.lookup('adapter:application');
     const metricsUrl = 'http://localhost:8080/v4/pipelines/1/metrics';
     const eventsUrl = 'http://localhost:8080/v4/pipelines/1/events';

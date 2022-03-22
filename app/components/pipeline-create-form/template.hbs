@@ -1,70 +1,81 @@
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
 
+<section>
+  <h1>Create Pipeline</h1>
+  <h4>For more information on how to get started with Screwdriver, check out our <a href="https://docs.screwdriver.cd/user-guide/quickstart" target="_blank" rel="noopener">quickstart guide</a>.</h4>
+</section>
 
-<h1>Create Pipeline</h1>
-<div class="row">
-  <div class="col-xs-12 col-md-6">
-    <p>Add a Git repository to Screwdriver by pasting your repository link below.<br>We accept both HTTPS and SSH URLs.</p>
-  </div>
-  <div id="template-validate-results"></div>
-</div>
-
-<div>
-  {{input
-    class="text-input scm-url"
-    key-up=(action "scmChange")
-    placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#master)"
-    value=scmUrl
-    enter=(action "saveData")
-  }}
-  {{#if isValid}}
-    <i class="success">{{fa-icon "check"}}</i>
-  {{/if}}
-</div>
-<div>
-  {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
-</div>
-
-<div>
-  {{input class="create-screwdriver-yaml" type="checkbox" checked=overrideScrewdriverYaml}}
-  <label class="normal-weight">Create <span class="select-screwdriver-yaml">Screwdriver.yaml {{fa-icon "question-circle"}}</span></label>
-
-  <div>
-    {{#if overrideScrewdriverYaml}}
-      <label class="normal-weight">Select from a <span class="select-template">template {{fa-icon "question-circle"}}</span></label>
-
-      <div class="templates-dropdown">
-        {{#power-select
-          options=templates
-          selected=selectedTemplate
-          onchange=(action "selectTemplate")
-          searchField="name"
-          as |template| }}
-          {{template.name}}
-        {{/power-select}}
-      </div>
-
-      {{#if selectedTemplate}}
-        <div class="row">
-          <div class="col-xs-12 col-md-6">
-            {{validator-input yaml=(mut yaml)}}
-          </div>
-          {{#ember-wormhole to="template-validate-results"}}
-            <div class="col-xs-12 col-md-6">
-              {{validator-results results=results}}
-            </div>
-          {{/ember-wormhole}}
-        </div>
-      {{/if}}
-
-      <div class="tooltips">
-        {{#bs-tooltip placement="right" triggerElement=".select-template" renderInPlace=true delayHide="1000"}}
-          What are <a href="https://docs.screwdriver.cd/user-guide/templates">templates</a>?
-        {{/bs-tooltip}}
-      </div>
+<section>
+  <h5 class="bold">Repo Url</h5>
+  <h5>Add a Git repository to Screwdriver by pasting your repository link below. We accept both HTTPS and SSH URLs.</h5>
+  <div class="repo-url">
+    {{input
+      class="text-input scm-url"
+      key-up=(action "scmChange")
+      placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#branchName)"
+      value=scmUrl
+      enter=(action "saveData")
+    }}
+    {{#if isValid}}
+      <i class="success">{{fa-icon "check"}}</i>
     {{/if}}
   </div>
-</div>
+  {{#if prUrl}}
+    <span>PR Created: <a href={{prUrl}} target="_blank" rel="noopener">{{prUrl}}</a></span>
+  {{/if}}
+  <div>
+    {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
+
+    {{#if hasAutoDeployEnabled}}
+      {{input class="toggle-auto-deploy-key-generation" type="checkbox" checked=autoKeysGeneration}}
+      <label class="normal-weight">Generate deploy key pair automatically and add to pipeline.</label>
+    {{/if}}
+  </div>
+</section>
+
+<section>
+  <h5 class="bold">Create screwdriver.yaml file</h5>
+  <h5>Choose a template to automatically generate the screwdriver.yaml file for your project or select to create the file manually.</h5>
+  <div>
+    {{input class="create-screwdriver-yaml-later" type="checkbox" checked=manualYamlCreation}}
+    <label class="normal-weight">I will create the <span class="select-screwdriver-yaml">screwdriver.yaml {{fa-icon "question-circle"}}</span> later</label>
+
+    <div>
+      {{#unless manualYamlCreation}}
+        <label class="normal-weight">Start with a <span class="select-template">template {{fa-icon "question-circle"}}</span></label>
+
+        <div class="templates-dropdown">
+          {{#power-select
+            options=templates
+            selected=selectedTemplate
+            onchange=(action "selectTemplate")
+            searchField="name"
+            searchEnabled=true
+            noMatchesMessage=messageForSearching
+            as |template| }}
+            {{template.name}}
+          {{/power-select}}
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-md-12">
+            {{validator-input yaml=(mut yaml)}}
+          </div>
+          <div class="col-xs-12 col-md-12">
+            {{validator-results results=results}}
+          </div>
+        </div>
+
+        <div class="tooltips">
+          {{#bs-tooltip placement="right" triggerElement=".select-template" renderInPlace=true delayHide="1000"}}
+            What are <a href="https://docs.screwdriver.cd/user-guide/templates" target="_blank" rel="noopener">templates</a>?
+          {{/bs-tooltip}}
+        </div>
+      {{/unless}}
+    </div>
+  </div>
+
+</section>
 
 <div>
   <button {{action "saveData"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
@@ -79,6 +90,6 @@
 <div class="tooltips">
   {{#bs-tooltip placement="right" triggerElement=".select-screwdriver-yaml" renderInPlace=true
   delayHide="1000"}}
-    What is <a href="https://docs.screwdriver.cd/user-guide/configuration/">screwdriver.yaml</a>
+    What is a <a href="https://docs.screwdriver.cd/user-guide/configuration/" target="_blank" rel="noopener">screwdriver.yaml</a>?
   {{/bs-tooltip}}
 </div>

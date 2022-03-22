@@ -173,6 +173,10 @@
     color: $sd-text-light;
   }
 
+  .dropdown-menu > li > a.release {
+    pointer-events: none;
+  }
+
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: $sd-white;
 
@@ -211,6 +215,10 @@
   .dropdown-menu > li > a.active > span {
     font-size: 12px;
     color: $sd-text-light;
+  }
+
+  .dropdown-menu > li > a.release {
+    pointer-events: none;
   }
 
   .dropdown-menu > li > a {

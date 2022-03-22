@@ -4,11 +4,12 @@ import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { get, set } from '@ember/object';
 
-module('Integration | Component | pipeline graph nav', function(hooks) {
+module('Integration | Component | pipeline graph nav', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     set(this, 'obj', {
+      sha: 'abc123',
       truncatedSha: 'abc123',
       status: 'SUCCESS',
       commit: {
@@ -16,6 +17,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       }
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -24,9 +28,13 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -36,83 +44,49 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
-    assert.dom('.row strong').hasText('Pipeline');
-    assert.dom('.row button').exists({ count: 2 });
+    assert.dom('.row button').exists({ count: 4 });
 
-    const $columnTitles = this.$('.event-info .title');
-    const $links = this.$('.event-info a');
+    const $columnTitles = this.element.querySelectorAll(
+      '.row .event-info .title'
+    );
+    const $links = this.element.querySelectorAll('.row .event-info a');
 
-    assert.equal(
-      $columnTitles
-        .eq(0)
-        .text()
-        .trim(),
-      'Commit'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(1)
-        .text()
-        .trim(),
-      'Message'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(2)
-        .text()
-        .trim(),
-      'Status'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(3)
-        .text()
-        .trim(),
-      'Committer'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(4)
-        .text()
-        .trim(),
-      'Start Date'
-    );
-    assert.equal(
-      $columnTitles
-        .eq(5)
-        .text()
-        .trim(),
-      'Duration'
-    );
+    const compare = (elem, expected) => {
+      assert.equal(
+        (elem.innerText.trim() || elem.innerHTML.trim()).toUpperCase(),
+        expected.toUpperCase()
+      );
+    };
 
-    assert.equal(
-      $links
-        .eq(0)
-        .text()
-        .trim(),
-      '#abc123'
-    );
-    assert.equal(
-      $links
-        .eq(1)
-        .text()
-        .trim(),
-      'anonymous'
-    );
+    compare($columnTitles[0], 'COMMIT');
+    compare($columnTitles[1], 'MESSAGE');
+    compare($columnTitles[2], 'STATUS');
+    compare($columnTitles[3], 'COMMITTER');
+    compare($columnTitles[4], 'START DATE');
+    compare($columnTitles[5], 'DURATION');
+
+    compare($links[0], '#abc123');
+    compare($links[1], 'anonymous');
 
     assert.dom('.SUCCESS').exists({ count: 1 });
 
-    assert.dom('.btn-group').hasText('Most Recent Last Successful');
+    assert.dom('.latest-commit').doesNotExist();
+
+    assert.dom('.event-options-toggle').hasText('Most Recent Last Successful');
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
 
-  test('it updates selected event id', async function(assert) {
+  test('it updates selected event id', async function (assert) {
     assert.expect(1);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -121,9 +95,13 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -133,15 +111,14 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
-    this.$('button')
-      .filter(':first')
-      .click();
+    this.element.querySelectorAll('button')[2].click();
     assert.equal(get(this, 'selected'), 3);
   });
 
-  test('it renders when selectedEvent is a PR event', async function(assert) {
+  test('it renders when selectedEvent is a PR event', async function (assert) {
     assert.expect(2);
     set(this, 'obj', {
       truncatedSha: 'abc123',
@@ -151,22 +128,31 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pr'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', (prNum, jobs) => {
       assert.equal(prNum, 1);
       assert.equal(jobs[0].group, 1);
     });
     set(this, 'currentEventType', 'pr');
     set(this, 'pullRequestGroups', {
-      1: [{ name: 'PR-1:foo', isPR: true, group: 1 }, { name: 'PR-1:bar', isPR: true, group: 1 }],
+      1: [
+        { name: 'PR-1:foo', isPR: true, group: 1 },
+        { name: 'PR-1:bar', isPR: true, group: 1 }
+      ],
       2: [{ name: 'PR-2:foo', isPR: true, group: 2 }]
     });
     set(this, 'showDownstreamTriggers', false);
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
-
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -177,13 +163,14 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       prGroups=pullrequestGroups
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.row strong').hasText('Pull Requests');
     assert.dom('.row button').exists({ count: 2 });
   });
 
-  test('it renders when selectedEvent is a skipped event', async function(assert) {
+  test('it renders when selectedEvent is a skipped event', async function (assert) {
     set(this, 'obj', {
       truncatedSha: 'abc123',
       status: 'SKIPPED',
@@ -192,6 +179,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pipeline'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -200,9 +190,12 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
-
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -212,19 +205,22 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
-    assert.dom('.row strong').hasText('Pipeline');
-    assert.dom('.row button').exists({ count: 2 });
+    assert.dom('.row button').exists({ count: 4 });
     assert.dom('.SKIPPED').exists({ count: 1 });
-    assert.dom('.btn-group').hasText('Most Recent Last Successful');
+    assert.dom('.event-options-toggle').hasText('Most Recent Last Successful');
     assert.dom('.x-toggle-component').includesText('Show triggers');
   });
 
-  test('it handles toggling triggers', async function(assert) {
+  test('it handles toggling triggers', async function (assert) {
     assert.expect(2);
     set(this, 'obj', { truncatedSha: 'abc123' });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -233,9 +229,12 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     });
     set(this, 'currentEventType', 'pipeline');
     set(this, 'showDownstreamTriggers', false);
-
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       graphType=currentEventType
       selectedEvent=2
@@ -245,13 +244,14 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       startPRBuild=startBuild
       setDownstreamTrigger=setTrigger
       showDownstreamTriggers=showDownstreamTriggers
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
     await click('.x-toggle-btn');
   });
 
-  test('it renders when selectedEvent is a FAILURE event', async function(assert) {
+  test('it renders when selectedEvent is a FAILURE event', async function (assert) {
     set(this, 'obj', {
       truncatedSha: 'abc123',
       status: 'FAILURE',
@@ -260,6 +260,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pipeline'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -268,9 +271,12 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
-
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -280,13 +286,14 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.FAILURE').exists({ count: 1 });
     assert.dom('.status .fa-times-circle').exists({ count: 1 });
   });
 
-  test('it renders when selectedEvent is a ABORTED event', async function(assert) {
+  test('it renders when selectedEvent is a ABORTED event', async function (assert) {
     set(this, 'obj', {
       truncatedSha: 'abc123',
       status: 'ABORTED',
@@ -295,6 +302,9 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       type: 'pipeline'
     });
     set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
     set(this, 'startBuild', () => {
       assert.ok(true);
     });
@@ -303,9 +313,13 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
     set(this, 'setDownstreamTrigger', () => {
       assert.ok(true);
     });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`{{pipeline-graph-nav
       mostRecent=3
+      latestCommit=latestCommit
       lastSuccessful=2
       selectedEvent=2
       selectedEventObj=obj
@@ -315,9 +329,53 @@ module('Integration | Component | pipeline graph nav', function(hooks) {
       graphType=currentEventType
       showDownstreamTriggers=showDownstreamTriggers
       setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
     }}`);
 
     assert.dom('.ABORTED').exists({ count: 1 });
     assert.dom('.status .fa-stop-circle').exists({ count: 1 });
+  });
+
+  test('it renders when selectedEvent is latestCommit event', async function (assert) {
+    set(this, 'obj', {
+      sha: 'latestSha',
+      truncatedSha: 'latestSha',
+      status: 'SUCCESS',
+      commit: { message: 'this is success event.' },
+      creator: { name: 'anonymous' },
+      type: 'pipeline'
+    });
+    set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      latestCommit=latestCommit
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
+    }}`);
+
+    assert.dom('.latest-commit').exists({ count: 1 });
   });
 });

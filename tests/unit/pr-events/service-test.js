@@ -37,6 +37,7 @@ const initServer = () => {
           url: 'https://github.com/screwdriver-cd/ui/pull/292'
         },
         pipelineId: '12345',
+        groupEventId: '23455',
         sha: 'abcdef1029384',
         truncatedSha: 'abcdef',
         type: 'pr',
@@ -69,32 +70,36 @@ const sessionServiceMock = Service.extend({
   }
 });
 
-module('Unit | Service | pr events', function(hooks) {
+module('Unit | Service | pr events', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     server = new Pretender();
     this.owner.register('service:session', sessionServiceMock);
     this.session = this.owner.lookup('service:session');
     this.session.set('isAuthenticated', true);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     const service = this.owner.lookup('service:pr-events');
 
     assert.ok(service);
   });
 
-  test('it fetches events with type pr', function(assert) {
+  test('it fetches events with type pr', function (assert) {
     initServer();
 
     assert.expect(3);
     const service = this.owner.lookup('service:pr-events');
-    const b = service.getPRevents(12345, 'https://github.com/screwdriver-cd/ui/pull/292', 2);
+    const b = service.getPRevents(
+      12345,
+      'https://github.com/screwdriver-cd/ui/pull/292',
+      2
+    );
 
     b.then(pair => {
       assert.equal(pair[0].event.id, 'abcd');

@@ -14,10 +14,10 @@ const mockCollection = {
   get: name => name
 };
 
-module('Integration | Component | collection add button', function(hooks) {
+module('Integration | Component | collection add button', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     this.set('collections', [EmberObject.create(mockCollection)]);
     this.set('pipeline', { id: 1 });
     this.set('onAddToCollection', true);
@@ -41,7 +41,7 @@ module('Integration | Component | collection add button', function(hooks) {
     assert.dom('.dropdown-menu > li:nth-child(2)').hasText('CREATE');
   });
 
-  test('it does not render default collection', async function(assert) {
+  test('it does not render default collection', async function (assert) {
     assert.expect(4);
 
     const collections = [
@@ -83,7 +83,7 @@ module('Integration | Component | collection add button', function(hooks) {
     assert.dom('.dropdown-menu > li:nth-child(2)').hasText('CREATE');
   });
 
-  test('it adds a pipeline to a collection', async function(assert) {
+  test('it adds a pipeline to a collection', async function (assert) {
     assert.expect(2);
 
     injectSessionStub(this);
@@ -145,7 +145,7 @@ module('Integration | Component | collection add button', function(hooks) {
     await click('td.add .dropdown-menu span');
   });
 
-  test('it fails to add a pipeline to a collection', async function(assert) {
+  test('it fails to add a pipeline to a collection', async function (assert) {
     assert.expect(1);
 
     injectSessionStub(this);

@@ -37,6 +37,7 @@ function changeFiles(tree) {
  */
 function arrangeIntoTree(paths, baseUrl) {
   const tree = [];
+
   let currentLevel;
 
   paths.forEach(path => {
@@ -85,9 +86,7 @@ export default Service.extend({
     let manifest = [];
 
     // Fetch the manifest directly from the store to prevent CORS issues
-    const manifestUrl =
-      `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}` +
-      `/builds/${buildId}/ARTIFACTS/manifest.txt`;
+    const manifestUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}/builds/${buildId}/ARTIFACTS/manifest.txt`;
 
     // Set artifact file links to api to get redirects to store with short-lived jwt tokens
     const baseUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/artifacts/`;
@@ -99,7 +98,11 @@ export default Service.extend({
 
       return $.ajax({
         url: manifestUrl,
-        headers: { Authorization: `Bearer ${this.session.get('data.authenticated.token')}` }
+        headers: {
+          Authorization: `Bearer ${this.session.get(
+            'data.authenticated.token'
+          )}`
+        }
       })
         .done(data => {
           const paths = data.split('\n').sort(); // sort in alphabetical order

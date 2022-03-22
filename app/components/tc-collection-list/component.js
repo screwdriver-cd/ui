@@ -30,7 +30,11 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let table = new Table(this.columns, this.refinedModel);
+    let table = Table.create({
+      columns: this.columns,
+      rows: this.refinedModel
+    });
+
     let sortColumn = table.get('allColumns').findBy('valuePath', this.sort);
 
     // Setup initial sort column
@@ -89,18 +93,12 @@ export default Component.extend({
   }),
   namespaces: computed('model', {
     get() {
-      return this.model
-        .mapBy('namespace')
-        .uniq()
-        .sort();
+      return this.model.mapBy('namespace').uniq().sort();
     }
   }),
   maintainers: computed('model', {
     get() {
-      return this.model
-        .mapBy('maintainer')
-        .uniq()
-        .sort();
+      return this.model.mapBy('maintainer').uniq().sort();
     }
   }),
   columns: computed(() => [
@@ -156,19 +154,13 @@ export default Component.extend({
       if (this.filteringNamespace) {
         this.set(
           'maintainers',
-          this.filteredModel
-            .mapBy('maintainer')
-            .uniq()
-            .sort()
+          this.filteredModel.mapBy('maintainer').uniq().sort()
         );
       }
       if (this.filteringMaintainer) {
         this.set(
           'namespaces',
-          this.filteredModel
-            .mapBy('namespace')
-            .uniq()
-            .sort()
+          this.filteredModel.mapBy('namespace').uniq().sort()
         );
       }
     }
@@ -203,10 +195,7 @@ export default Component.extend({
       if (!ns) {
         this.set(
           'namespaces',
-          this.filteredModel
-            .mapBy('namespace')
-            .uniq()
-            .sort()
+          this.filteredModel.mapBy('namespace').uniq().sort()
         );
       }
       this.refineModel();
@@ -223,10 +212,7 @@ export default Component.extend({
       if (!m) {
         this.set(
           'maintainers',
-          this.filteredModel
-            .mapBy('maintainer')
-            .uniq()
-            .sort()
+          this.filteredModel.mapBy('maintainer').uniq().sort()
         );
       }
       this.refineModel();

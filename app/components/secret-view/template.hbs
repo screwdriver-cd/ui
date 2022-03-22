@@ -1,4 +1,28 @@
 <td class="name">{{secret.name}}</td>
 <td class="pass">{{input type="password" placeholder=passwordPlaceholder size="40" value=newValue}}{{fa-icon "eye" class="toggle-icon" click=(action "togglePasswordInput")}}</td>
 <td class="allow">{{input type="checkbox" checked=secret.allowInPR}}</td>
-<td><button {{action "modifySecret"}}>{{buttonAction}}</button></td>
+<td><button {{action "modifySecret"}} class={{buttonAction}}>{{buttonAction}}</button></td>
+{{#if secretToRemove}}
+  {{#if isRemoving}}
+    {{#modal-dialog clickOutsideToClose="false"
+      targetAttachment="center"
+      translucentOverlay=true
+    }}
+      {{loading-view}}
+    {{/modal-dialog}}
+  {{else}}
+    {{#bs-modal onSubmit=(action "removeSecret") onHide=(action "cancelRemovingSecret") as |modal|}}
+      {{#modal.header}}
+        <h4>Are you sure?</h4>
+      {{/modal.header}}
+      {{#modal.body}}
+        {{fa-icon "exclamation-triangle" pull="left" size=3}}
+        You're about to delete a secret <strong>{{secret.name}}</strong>. There might be existing jobs using this secret.
+      {{/modal.body}}
+      {{#modal.footer}}
+        {{#bs-button onClick=(action "cancelRemovingSecret")}}Cancel{{/bs-button}}
+        {{#bs-button onClick=(action "removeSecret") type="danger"}}{{fa-icon "trash"}} Confirm{{/bs-button}}
+      {{/modal.footer}}
+    {{/bs-modal}}
+  {{/if}}
+{{/if}}
