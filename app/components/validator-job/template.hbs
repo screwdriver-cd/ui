@@ -154,4 +154,16 @@
     </ul>
   </span>
 </div>
+<div class="provider" title="This is the cloud provider you have added to the job for AWS Native builds.">
+  <span class="label">Provider:</span>
+  <span class="value">
+    <ul>
+      {{#each-in job.provider as |name value|}}
+        <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
+      {{else}}
+        <li>None defined</li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
 {{yield}}
