@@ -1,14 +1,16 @@
-import { A } from '@ember/array';
-import EmberObject from '@ember/object';
-import Service from '@ember/service';
 import { click, fillIn, render, triggerKeyEvent } from '@ember/test-helpers';
-import { setupRenderingTest } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
-import Pretender from 'pretender';
 import { module, test } from 'qunit';
 import { reject, resolve } from 'rsvp';
+
+import $ from 'jquery';
+import { A } from '@ember/array';
+import EmberObject from '@ember/object';
+import Pretender from 'pretender';
+import Service from '@ember/service';
+import hbs from 'htmlbars-inline-precompile';
+import { setupRenderingTest } from 'ember-qunit';
 import injectSessionStub from '../../../helpers/inject-session';
+
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
 
 let syncService;
@@ -483,7 +485,7 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert
       .dom('section.preference li:nth-of-type(3) p')
       .hasText(
-        'Setup your pipeline preference to not show events with no builds'
+        'Setup your pipeline preference to not show events with no builds. (latest event is not hidden)'
       );
     assert
       .dom('section.preference li:nth-of-type(3) .x-toggle-container')
