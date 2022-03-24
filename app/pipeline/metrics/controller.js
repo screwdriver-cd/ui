@@ -139,14 +139,15 @@ export default Controller.extend({
         colors: {
           queuedTime: '#c5c5c5',
           imagePullTime: '#dfdfdf',
-          duration: '#16c045',
+          duration: '#03af7a',
           total: '#0066df'
         },
         groups: [['queuedTime', 'imagePullTime', 'duration']],
         color(color, d) {
           // return color of the status of the corresponding event in the pipeline
+
           return d && d.id === 'duration' && status[d.index] !== 'SUCCESS'
-            ? '#ea0000'
+            ? '#ff4b00'
             : color;
         }
       };
@@ -257,7 +258,7 @@ export default Controller.extend({
         {
           key: 'duration',
           name: 'Duration',
-          style: htmlSafe('border-color:#16c045 #ea0000 #ea0000 #16c045')
+          style: htmlSafe('border-color:#03af7a #ff4b00 #ff4b00 #03af7a')
         },
         {
           key: 'queuedTime',
@@ -535,7 +536,7 @@ export default Controller.extend({
               (html, d) => {
                 const c =
                   d.id === 'duration' && s !== 'SUCCESS'
-                    ? '#ea0000'
+                    ? '#ff4b00'
                     : color(d.id);
 
                 let { name } = d;

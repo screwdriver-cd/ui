@@ -14,8 +14,8 @@ const eventsInfo = [
     duration: 20
   }
 ];
-const BUILD_SUCCESS_COLOR = 'rgb(26, 197, 103)';
-const BUILD_FAILURE_COLOR = 'rgb(220, 20, 45)';
+const BUILD_SUCCESS_COLOR = 'rgb(3, 175, 122)';
+const BUILD_FAILURE_COLOR = 'rgb(255, 75, 0)';
 const BUILD_EMPTY_COLOR = 'rgb(232, 232, 232)';
 
 module('Integration | Component | events thumbnail', function (hooks) {
