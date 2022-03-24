@@ -1,11 +1,11 @@
 <div class="actions">
-  <span {{action "startSingleBuild" "START"}}>
+  <span {{action "startSingleBuild" "START"}} class={{startButtonClass}}>
     {{fa-icon "play-circle-o" fixedWidth=true title="Start a new build."}}
   </span>
   <span {{action "stopBuild"}} class={{stopButtonClass}}>
     {{fa-icon "stop-circle-o" fixedWidth=true title="Stop build."}}
   </span>
-  <span {{action "startSingleBuild" "RESTART"}}>
+  <span {{action "startSingleBuild" "RESTART"}} class={{startButtonClass}}>
     {{fa-icon "repeat" fixedWidth=true title="Restart from latest build."}}
   </span>
 </div>

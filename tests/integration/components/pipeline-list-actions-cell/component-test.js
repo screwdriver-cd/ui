@@ -22,7 +22,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(true);
-        }
+        },
+        manualStartEnabled: true
       });
 
       assert.expect(4);
@@ -50,7 +51,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(true);
-        }
+        },
+        manualStartEnabled: true
       });
 
       assert.expect(4);
@@ -78,7 +80,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(true);
-        }
+        },
+        manualStartEnabled: true
       });
 
       assert.expect(4);
@@ -106,7 +109,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(true);
-        }
+        },
+        manualStartEnabled: true
       });
 
       await render(hbs`{{pipeline-list-actions-cell
@@ -134,7 +138,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(true);
-        }
+        },
+        manualStartEnabled: true
       });
 
       assert.expect(4);
@@ -162,7 +167,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(true);
-        }
+        },
+        manualStartEnabled: true
       });
 
       assert.expect(4);
@@ -190,7 +196,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(true);
-        }
+        },
+        manualStartEnabled: true
       });
 
       assert.expect(4);
@@ -203,6 +210,35 @@ module(
       assert.dom('.fa-stop-circle-o').exists({ count: 1 });
       assert.dom('.fa-repeat').exists({ count: 1 });
       assert.dom('.clicks-disabled').exists({ count: 1 });
+    });
+
+    test('it renders with annotation manualStartEnabled: false', async function (assert) {
+      set(this, 'value', {
+        jobId: 1,
+        jobName: 'a',
+        latestBuild: {
+          id: 2,
+          status: 'SUCCESS'
+        },
+        startSingleBuild: () => {
+          assert.ok(true);
+        },
+        stopBuild: () => {
+          assert.ok(true);
+        },
+        manualStartEnabled: false
+      });
+
+      assert.expect(4);
+
+      await render(hbs`{{pipeline-list-actions-cell
+      value=value
+    }}`);
+
+      assert.dom('.fa-play-circle-o').exists({ count: 1 });
+      assert.dom('.fa-stop-circle-o').exists({ count: 1 });
+      assert.dom('.fa-repeat').exists({ count: 1 });
+      assert.dom('.clicks-disabled').exists({ count: 3 });
     });
 
     test('start build a new build', async function (assert) {
@@ -220,7 +256,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(false);
-        }
+        },
+        manualStartEnabled: true
       });
 
       assert.expect(3);
@@ -247,7 +284,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(false);
-        }
+        },
+        manualStartEnabled: true
       });
 
       assert.expect(3);
@@ -272,7 +310,8 @@ module(
         },
         stopBuild: () => {
           assert.ok(true);
-        }
+        },
+        manualStartEnabled: true
       });
 
       assert.expect(1);

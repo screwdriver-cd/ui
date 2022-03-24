@@ -56,7 +56,7 @@ export default DS.Model.extend({
   permutations: DS.attr(),
   annotations: computed('permutations.[]', {
     get() {
-      return get(this, 'permutations[0].annotations') || {};
+      return get(this, 'permutations.0.annotations') || {};
     }
   }),
   parameters: computed('permutations.[]', {
