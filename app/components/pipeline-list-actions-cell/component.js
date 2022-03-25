@@ -8,7 +8,18 @@ export default Component.extend({
       const status = this.get('value.latestBuild.status');
 
       if (unfinishedStatuses.includes(status)) {
-        return 'clicks-enabled';
+        return 'clicks-enabled-stop';
+      }
+
+      return 'clicks-disabled';
+    }
+  }),
+  startButtonClass: computed('value.manualStartEnabled', {
+    get() {
+      const manualStartEnabled = this.get('value.manualStartEnabled');
+
+      if (manualStartEnabled) {
+        return 'clicks-enabled-start';
       }
 
       return 'clicks-disabled';

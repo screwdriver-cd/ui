@@ -160,6 +160,15 @@ export default Component.extend({
         Object.keys(this.getWithDefault('pipelineParameters', {})).length > 0 ||
         Object.keys(this.getWithDefault('jobParameters', {})).length > 0;
 
+      let manualStartEnabled = true;
+
+      if (annotations) {
+        manualStartEnabled =
+          'screwdriver.cd/manualStartEnabled' in annotations
+            ? annotations['screwdriver.cd/manualStartEnabled']
+            : true;
+      }
+
       const actionsData = {
         jobId,
         jobName,
@@ -168,7 +177,8 @@ export default Component.extend({
         stopBuild: this.get('stopBuild'),
         isShowingModal: this.isShowingModal,
         hasParameters,
-        openParametersModal: this.openParametersModal.bind(this)
+        openParametersModal: this.openParametersModal.bind(this),
+        manualStartEnabled
       };
 
       let duration;

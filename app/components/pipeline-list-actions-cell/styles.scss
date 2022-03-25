@@ -5,12 +5,11 @@
     cursor: pointer;
   }
 
-  .fa-play-circle-o,
-  .fa-repeat {
+  .clicks-enabled-start {
     color: $sd-link;
   }
 
-  .clicks-enabled {
+  .clicks-enabled-stop {
     color: $sd-failure;
   }
 
