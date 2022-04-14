@@ -35,13 +35,13 @@
 
 <section>
   <h5 class="bold">Create screwdriver.yaml file</h5>
-  <h5>Choose a template to automatically generate the screwdriver.yaml file for your project or select to create the file manually.</h5>
+  <h5>Create the screwdriver.yaml file manually or choose a template to automatically generate the file for your project.</h5>
   <div>
     {{input class="create-screwdriver-yaml-later" type="checkbox" checked=manualYamlCreation}}
-    <label class="normal-weight">I will create the <span class="select-screwdriver-yaml">screwdriver.yaml {{fa-icon "question-circle"}}</span> later</label>
+    <label class="normal-weight">I choose a template to automatically generate the <span class="select-screwdriver-yaml">screwdriver.yaml {{fa-icon "question-circle"}}</span></label>
 
     <div>
-      {{#unless manualYamlCreation}}
+      {{#if manualYamlCreation}}
         <label class="normal-weight">Start with a <span class="select-template">template {{fa-icon "question-circle"}}</span></label>
 
         <div class="templates-dropdown">
@@ -71,7 +71,7 @@
             What are <a href="https://docs.screwdriver.cd/user-guide/templates" target="_blank" rel="noopener">templates</a>?
           {{/bs-tooltip}}
         </div>
-      {{/unless}}
+      {{/if}}
     </div>
   </div>
 
