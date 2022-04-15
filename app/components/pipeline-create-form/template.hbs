@@ -37,11 +37,11 @@
   <h5 class="bold">Create screwdriver.yaml file</h5>
   <h5>Create the screwdriver.yaml file manually or choose a template to automatically generate the file for your project.</h5>
   <div>
-    {{input class="create-screwdriver-yaml-later" type="checkbox" checked=manualYamlCreation}}
+    {{input class="autogenerate-screwdriver-yaml" type="checkbox" checked=automaticYamlCreation}}
     <label class="normal-weight">I choose a template to automatically generate the <span class="select-screwdriver-yaml">screwdriver.yaml {{fa-icon "question-circle"}}</span></label>
 
     <div>
-      {{#if manualYamlCreation}}
+      {{#if automaticYamlCreation}}
         <label class="normal-weight">Start with a <span class="select-template">template {{fa-icon "question-circle"}}</span></label>
 
         <div class="templates-dropdown">
