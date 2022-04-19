@@ -193,7 +193,7 @@ module('Acceptance | create', function (hooks) {
     assert.dom('.alert > span').hasText('something conflicting');
   });
 
-  test('Create Screwdriver.yaml', async function (assert) {
+  test('Generate Screwdriver.yaml automatically', async function (assert) {
     server.post('http://localhost:8080/v4/pipelines', () => [
       409,
       { 'Content-Type': 'application/json' },
@@ -215,13 +215,14 @@ module('Acceptance | create', function (hooks) {
 
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
     await triggerEvent('.text-input', 'keyup');
+    await click('input.autogenerate-screwdriver-yaml');
 
     assert.dom('.select-template').hasText('template');
     assert.dom('.templates-dropdown').exists();
     assert.dom('.ace_editor').exists();
   });
 
-  test('Create Screwdriver.yaml later', async function (assert) {
+  test('Create Screwdriver.yaml manually', async function (assert) {
     server.post('http://localhost:8080/v4/pipelines', () => [
       409,
       { 'Content-Type': 'application/json' },
@@ -243,7 +244,6 @@ module('Acceptance | create', function (hooks) {
 
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
     await triggerEvent('.text-input', 'keyup');
-    await click('input.create-screwdriver-yaml-later');
 
     assert.dom('.templates-dropdown').doesNotExist();
     assert.dom('.ace_editor').doesNotExist();

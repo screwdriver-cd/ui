@@ -55,6 +55,7 @@ module('Integration | Component | create-pipeline', function (hooks) {
       hbs`{{create-pipeline showCreatePipeline=showCreatePipeline}}`
     );
 
+    await click('.autogenerate-screwdriver-yaml');
     await click('.ember-basic-dropdown-trigger');
     assert
       .dom('.ember-power-select-group-name')
