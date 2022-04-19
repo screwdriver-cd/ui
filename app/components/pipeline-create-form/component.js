@@ -12,7 +12,7 @@ const SEPARATOR = '  '; // 2 spaces
 export default Component.extend({
   selectedTemplate: {},
   templates: [],
-  manualYamlCreation: false,
+  automaticYamlCreation: false,
   scmService: service('scm'),
   template: service(),
   results: '',
@@ -107,7 +107,7 @@ export default Component.extend({
           autoKeysGeneration: this.autoKeysGeneration
         };
 
-        if (!this.manualYamlCreation) {
+        if (this.automaticYamlCreation) {
           payload.yaml = this.yaml;
         }
 
