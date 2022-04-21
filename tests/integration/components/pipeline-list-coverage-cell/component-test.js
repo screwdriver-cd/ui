@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find, settled } from '@ember/test-helpers';
+import { render, find, settled, waitFor } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import ENV from 'screwdriver-ui/config/environment';
 import hbs from 'htmlbars-inline-precompile';
@@ -74,6 +74,7 @@ module(
 
       await render(hbs`{{pipeline-list-coverage-cell value=value}}`);
       await settled();
+      await waitFor('.coverage-value');
 
       assert.dom('.coverage-value').exists({ count: 1 });
       assert.equal(find('.coverage-value').textContent.trim(), '71.4%');

@@ -82,6 +82,7 @@ module('Acceptance | dashboards', function (hooks) {
   test('visiting / when logged in and have collections among which the default collection is not empty', async function (assert) {
     await authenticateSession({ token: 'fakeToken' });
     localStorage.setItem('lastViewedCollectionId', 1);
+    localStorage.setItem('activeViewOptionValue', 'Card');
     await visit('/');
 
     assert.equal(currentURL(), '/dashboards/1');
