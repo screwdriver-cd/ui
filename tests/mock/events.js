@@ -4,6 +4,7 @@ import { assign } from '@ember/polyfills';
 const events = [
   {
     id: '2',
+    baseBranch: 'main',
     causeMessage: 'Merged by batman',
     commit: {
       message: 'Merge pull request #2 from batcave/batmobile',
@@ -34,6 +35,7 @@ const events = [
   },
   {
     id: '3',
+    baseBranch: 'main',
     causeMessage: 'Opened by github:robin',
     commit: {
       message: 'fix bug',
@@ -68,6 +70,7 @@ const events = [
   },
   {
     id: '4',
+    baseBranch: 'main',
     causeMessage: 'Opened by github:robin',
     commit: {
       message: 'fix docs',

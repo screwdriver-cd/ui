@@ -10,11 +10,15 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
   test('it renders', async function (assert) {
     set(this, 'obj', {
       sha: 'abc123',
+      baseBranch: 'main',
       truncatedSha: 'abc123',
       status: 'SUCCESS',
       commit: {
         author: { name: 'anonymous' }
-      }
+      },
+      createTimeExact: '04/11/2016, 08:09 PM',
+      truncatedMessage: 'test message',
+      durationText: '10 seconds'
     });
     set(this, 'selected', 2);
     set(this, 'latestCommit', {
@@ -52,21 +56,32 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     const $columnTitles = this.element.querySelectorAll(
       '.row .event-info .title'
     );
+    const $columnValues = this.element.querySelectorAll(
+      '.row .event-info .title ~ span'
+    );
     const $links = this.element.querySelectorAll('.row .event-info a');
 
     const compare = (elem, expected) => {
-      assert.equal(
-        (elem.innerText.trim() || elem.innerHTML.trim()).toUpperCase(),
-        expected.toUpperCase()
-      );
+      const actual = elem.innerText.trim() || elem.innerHTML.trim();
+
+      assert.strictEqual(actual, expected);
     };
 
     compare($columnTitles[0], 'COMMIT');
     compare($columnTitles[1], 'MESSAGE');
-    compare($columnTitles[2], 'STATUS');
-    compare($columnTitles[3], 'COMMITTER');
-    compare($columnTitles[4], 'START DATE');
-    compare($columnTitles[5], 'DURATION');
+    compare($columnTitles[2], 'BRANCH');
+    compare($columnTitles[3], 'STATUS');
+    compare($columnTitles[4], 'COMMITTER');
+    compare($columnTitles[5], 'START DATE');
+    compare($columnTitles[6], 'DURATION');
+
+    compare($columnValues[0], '#abc123');
+    compare($columnValues[1], 'test message');
+    compare($columnValues[2], 'main');
+    compare($columnValues[3], 'SUCCESS');
+    compare($columnValues[4], 'anonymous');
+    compare($columnValues[5], '04/11/2016, 08:09 PM');
+    compare($columnValues[6], '10 seconds');
 
     compare($links[0], '#abc123');
     compare($links[1], 'anonymous');
