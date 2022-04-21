@@ -58,11 +58,15 @@
       <div class="event-info">
         <div class="col">
           <span class="title">Commit</span><br>
-          <a class={{if (eq selectedEventObj.sha latestCommit.sha) "latest-commit"}} href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a>
+          <span><a class={{if (eq selectedEventObj.sha latestCommit.sha) "latest-commit"}} href={{selectedEventObj.commit.url}}>#{{selectedEventObj.truncatedSha}}</a></span>
         </div>
         <div class="col">
           <span class="title">Message</span><br>
           <span title={{selectedEventObj.commit.message}}>{{selectedEventObj.truncatedMessage}}</span>
+        </div>
+        <div class="col">
+          <span class="title">Branch</span><br>
+          <span>{{selectedEventObj.baseBranch}}</span>
         </div>
         <div class="col">
           <span class="title">Status</span><br>
@@ -70,15 +74,15 @@
         </div>
         <div class="col">
           <span class="title">Committer</span><br>
-          <a href={{selectedEventObj.commit.author.url}}>{{selectedEventObj.commit.author.name}}</a>
+          <span><a href={{selectedEventObj.commit.author.url}}>{{selectedEventObj.commit.author.name}}</a></span>
         </div>
         <div class="col">
           <span class="title">Start Date</span><br>
-          {{selectedEventObj.createTimeExact}}
+          <span>{{selectedEventObj.createTimeExact}}</span>
         </div>
         <div class="col">
           <span class="title">Duration</span><br>
-          {{selectedEventObj.durationText}}
+          <span>{{selectedEventObj.durationText}}</span>
         </div>
         {{#if selectedEventObj.label}}
           <div class="col">

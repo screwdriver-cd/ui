@@ -9,6 +9,7 @@ import { SHOULD_RELOAD_NO, SHOULD_RELOAD_YES } from '../mixins/model-reloader';
 
 export default DS.Model.extend(ModelReloaderMixin, {
   buildId: DS.attr('number'),
+  baseBranch: DS.attr('string'),
   causeMessage: DS.attr('string'),
   commit: DS.attr(),
   createTime: DS.attr('date'),
