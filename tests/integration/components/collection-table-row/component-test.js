@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click } from '@ember/test-helpers';
+import { render, click, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import $ from 'jquery';
@@ -70,6 +70,7 @@ module('Integration | Component | collection table row', function (hooks) {
     `);
 
     await wait();
+    await waitFor('td.status a i.fa-question-circle');
 
     assert.dom('td.collection-pipeline__choose').exists({ count: 1 });
     assert.dom('td.app-id a').hasText(mockPipeline.scmRepo.name);

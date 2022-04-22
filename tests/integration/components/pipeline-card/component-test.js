@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click } from '@ember/test-helpers';
+import { render, click, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import $ from 'jquery';
@@ -73,6 +73,7 @@ module('Integration | Component | pipeline card', function (hooks) {
     `);
 
     await wait();
+    await waitFor('.commit-status i.fa-question-circle');
 
     assert.dom('.branch-info a').hasText(mockPipeline.scmRepo.name);
     assert
