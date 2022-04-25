@@ -24,12 +24,13 @@ module('Integration | Component | pipeline create form', function (hooks) {
     });
 
     await render(
-      hbs`{{pipeline-create-form errorMessage="" isSaving=false onCreatePipeline=(action createPipeline)}}`
+      hbs`{{pipeline-create-form errorMessage="" isSaving=false hasAutoDeployEnabled=true onCreatePipeline=(action createPipeline)}}`
     );
 
     await fillIn('.scm-url', scm);
-    await click('.checkbox-input');
-    await fillIn('.root-dir', root);
+    await click('label.toggle-use-root-dir');
+    await fillIn('input.root-dir', root);
+    await click('label.toggle-auto-deploy-key-generation');
     await triggerKeyEvent('.scm-url', 'keyup', 32);
     await triggerKeyEvent('.root-dir', 'keyup', 32);
 

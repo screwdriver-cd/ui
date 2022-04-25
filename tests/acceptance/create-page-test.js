@@ -215,7 +215,7 @@ module('Acceptance | create', function (hooks) {
 
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
     await triggerEvent('.text-input', 'keyup');
-    await click('input.autogenerate-screwdriver-yaml');
+    await click('label.autogenerate-screwdriver-yaml');
 
     assert.dom('.select-template').hasText('template');
     assert.dom('.templates-dropdown').exists();
