@@ -27,8 +27,10 @@
     {{pipeline-rootdir hasRootDir=false updateRootDir=(action "updateRootDir")}}
 
     {{#if hasAutoDeployEnabled}}
-      {{input class="toggle-auto-deploy-key-generation" type="checkbox" checked=autoKeysGeneration}}
-      <label class="normal-weight">Generate deploy key pair automatically and add to pipeline.</label>
+      <label class="normal-weight toggle-auto-deploy-key-generation">
+        {{input class="toggle-auto-deploy-key-generation" type="checkbox" checked=autoKeysGeneration}}
+        Generate deploy key pair automatically and add to pipeline.
+      </label>
     {{/if}}
   </div>
 </section>
@@ -37,8 +39,10 @@
   <h5 class="bold">Create screwdriver.yaml file</h5>
   <h5>Create the screwdriver.yaml file manually or choose a template to automatically generate the file for your project.</h5>
   <div>
-    {{input class="autogenerate-screwdriver-yaml" type="checkbox" checked=automaticYamlCreation}}
-    <label class="normal-weight">I choose a template to automatically generate the <span class="select-screwdriver-yaml">screwdriver.yaml {{fa-icon "question-circle"}}</span></label>
+    <label class="normal-weight autogenerate-screwdriver-yaml">
+      {{input class="autogenerate-screwdriver-yaml" type="checkbox" checked=automaticYamlCreation}}
+      I choose a template to automatically generate the <span class="select-screwdriver-yaml">screwdriver.yaml {{fa-icon "question-circle"}}</span>
+    </label>
 
     <div>
       {{#if automaticYamlCreation}}
