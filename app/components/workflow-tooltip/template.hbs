@@ -15,7 +15,7 @@
 
     {{#if tooltipData.job.isDisabled}}
       <p>{{tooltipData.job.stateChangeMessage}}</p>
-      <a {{action "toggleJob" tooltipData.job.id tooltipData.job.name true}}>Enable this job</a>
+      <a {{action "toggleJob" tooltipData.job.id tooltipData.job.name}}>Enable this job</a>
     {{else}}
       {{#if displayRestartButton}}
         {{#if tooltipData.job.manualStartDisabled}}
@@ -30,7 +30,7 @@
           {{/if}}
         {{/if}}
       {{/if}}
-      <a {{action "toggleJob" tooltipData.job.id tooltipData.job.name false}}>Disable this job</a>
+      <a {{action "toggleJob" tooltipData.job.id tooltipData.job.name}}>Disable this job</a>
     {{/if}}
 
     {{#if tooltipData.displayStop}}
