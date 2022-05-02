@@ -1,4 +1,4 @@
-import { get } from '@ember/object';
+import { get, getWithDefault } from '@ember/object';
 import DS from 'ember-data';
 
 const STATUS_MAP = {
@@ -226,10 +226,11 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
 
     if (jobsAvailable) {
       const j = job(jobs, jobId);
-      const jobIsDisabled = j ? get(j, 'isDisabled') : null;
+
+      n.isDisabled = j ? getWithDefault(j, 'isDisabled', false) : false;
 
       // Set build status to disabled if job is disabled
-      if (jobIsDisabled) {
+      if (n.isDisabled) {
         const state = get(j, 'state');
         const stateWithCapitalization =
           state[0].toUpperCase() + state.substring(1).toLowerCase();

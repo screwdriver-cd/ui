@@ -250,6 +250,8 @@ module('Unit | Utility | graph tools', function () {
       { id: 1 },
       {
         id: 2,
+        isDisabled: true,
+        state: 'DISABLED',
         permutations: [
           { annotations: { 'screwdriver.cd/manualStartEnabled': true } }
         ]
@@ -268,23 +270,51 @@ module('Unit | Utility | graph tools', function () {
     ];
     const expectedOutput = {
       nodes: [
-        { name: '~pr', pos: { x: 0, y: 0 } },
-        { name: '~commit', pos: { x: 0, y: 1 } },
-        { name: 'main', id: 1, pos: { x: 1, y: 0 } },
+        {
+          name: '~pr',
+          isDisabled: false,
+          pos: { x: 0, y: 0 }
+        },
+        {
+          name: '~commit',
+          isDisabled: false,
+          pos: { x: 0, y: 1 }
+        },
+        {
+          name: 'main',
+          id: 1,
+          isDisabled: false,
+          pos: { x: 1, y: 0 }
+        },
         {
           name: 'A',
           id: 2,
-          pos: { x: 2, y: 0 },
-          manualStartDisabled: false
+          isDisabled: true,
+          manualStartDisabled: false,
+          stateChangeMessage: 'Disabled',
+          status: 'DISABLED',
+          pos: { x: 2, y: 0 }
         },
-        { name: 'B', id: 3, pos: { x: 2, y: 1 }, manualStartDisabled: true },
+        {
+          name: 'B',
+          id: 3,
+          isDisabled: false,
+          manualStartDisabled: true,
+          pos: { x: 2, y: 1 }
+        },
         {
           name: 'C',
           id: 4,
-          pos: { x: 3, y: 0 },
-          manualStartDisabled: false
+          isDisabled: false,
+          manualStartDisabled: false,
+          pos: { x: 3, y: 0 }
         },
-        { name: 'D', id: 5, pos: { x: 4, y: 0 } }
+        {
+          name: 'D',
+          id: 5,
+          isDisabled: false,
+          pos: { x: 4, y: 0 }
+        }
       ],
       edges: [
         { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
@@ -296,7 +326,13 @@ module('Unit | Utility | graph tools', function () {
         },
         { src: 'main', dest: 'A', from: { x: 1, y: 0 }, to: { x: 2, y: 0 } },
         { src: 'main', dest: 'B', from: { x: 1, y: 0 }, to: { x: 2, y: 1 } },
-        { src: 'A', dest: 'C', from: { x: 2, y: 0 }, to: { x: 3, y: 0 } },
+        {
+          src: 'A',
+          dest: 'C',
+          status: 'DISABLED',
+          from: { x: 2, y: 0 },
+          to: { x: 3, y: 0 }
+        },
         { src: 'B', dest: 'D', from: { x: 2, y: 1 }, to: { x: 4, y: 0 } },
         { src: 'C', dest: 'D', from: { x: 3, y: 0 }, to: { x: 4, y: 0 } }
       ],
