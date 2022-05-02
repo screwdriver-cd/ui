@@ -12,21 +12,27 @@
       {{/if}}
     {{/if}}
     {{#link-to "pipeline.metrics" (query-params jobId=tooltipData.job.id)}}Go to build metrics{{/link-to}}
-    {{#if displayRestartButton}}
-      {{#if (eq tooltipData.job.status "DISABLED")}}
-        <p>{{tooltipData.job.stateChangeMessage}}</p>
-      {{else if tooltipData.job.manualStartDisabled}}
-        <p>Disabled manually starting</p>
-      {{else}}
-        {{#if (eq isPrChainJob false)}}
-          <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+
+    {{#if tooltipData.job.isDisabled}}
+      <p>{{tooltipData.job.stateChangeMessage}}</p>
+      <a {{action "toggleJob" tooltipData.job.id tooltipData.job.name true}}>Enable this job</a>
+    {{else}}
+      {{#if displayRestartButton}}
+        {{#if tooltipData.job.manualStartDisabled}}
+          <p>Disabled manually starting</p>
         {{else}}
-          {{#if (eq prBuildExists true)}}
+          {{#if (eq isPrChainJob false)}}
             <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+          {{else}}
+            {{#if (eq prBuildExists true)}}
+              <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+            {{/if}}
           {{/if}}
         {{/if}}
       {{/if}}
+      <a {{action "toggleJob" tooltipData.job.id tooltipData.job.name false}}>Disable this job</a>
     {{/if}}
+
     {{#if tooltipData.displayStop}}
       <a {{action stopBuild tooltipData.selectedEvent tooltipData.job}}>Stop build</a>
     {{/if}}
@@ -36,3 +42,4 @@
   {{/if}}
   {{yield}}
 </div>
+{{job-toggle-modal showToggleModal=showToggleModal updateMessage=(action "updateMessage") name=toggleJobName stateChange=stateChange}}

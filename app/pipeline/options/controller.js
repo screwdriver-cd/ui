@@ -1,8 +1,9 @@
-import Controller from '@ember/controller';
+import Controller, { inject } from '@ember/controller';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
+  pipelineController: inject('pipeline'),
   session: service(),
   errorMessage: '',
   isSaving: false,
@@ -10,13 +11,12 @@ export default Controller.extend({
   jobs: reads('model.jobs'),
   actions: {
     setJobStatus(id, state, stateChangeMessage) {
-      const job = this.store.peekRecord('job', id);
-
-      job.set('state', state);
-      job.set('stateChangeMessage', stateChangeMessage);
-      job
-        .save()
-        .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
+      this.pipelineController.send(
+        'setJobStatus',
+        id,
+        state,
+        stateChangeMessage
+      );
     },
     removePipeline() {
       this.pipeline
