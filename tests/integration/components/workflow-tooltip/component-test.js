@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | workflow tooltip', function (hooks) {
@@ -9,7 +9,8 @@ module('Integration | Component | workflow tooltip', function (hooks) {
   test('it renders', async function (assert) {
     await render(hbs`{{workflow-tooltip}}`);
 
-    assert.dom(this.element).hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(1)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(2)').hasText('Disable this job');
 
     // Template block usage:
     await render(hbs`
@@ -34,9 +35,10 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`{{workflow-tooltip tooltipData=data}}`);
 
-    assert.dom('.content a').exists({ count: 2 });
-    assert.dom('a:first-child').hasText('Go to build details');
-    assert.dom('a:last-child').hasText('Go to build metrics');
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
   });
 
   test('it renders remote trigger link', async function (assert) {
@@ -102,9 +104,12 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       confirmStartBuild="confirmStartBuild"
     }}`);
 
-    assert.dom('.content a').exists({ count: 2 });
-    assert.dom('a:first-child').hasText('Go to build details');
-    assert.dom('p:last-child').hasText('Disabled manually starting');
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('.content p').exists({ count: 1 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
+    assert.dom('p:nth-of-type(1)').hasText('Disabled manually starting');
   });
 
   test('it renders start link', async function (assert) {
@@ -127,9 +132,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       isPrChainJob=isPrChainJob
     }}`);
 
-    assert.dom('.content a').exists({ count: 3 });
-    assert.dom('a:first-child').hasText('Go to build details');
-    assert.dom('a:last-child').hasText('Start pipeline from here');
+    assert.dom('.content a').exists({ count: 4 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Start pipeline from here');
+    assert.dom('a:nth-of-type(4)').hasText('Disable this job');
   });
 
   test('it renders restart link', async function (assert) {
@@ -153,9 +160,67 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       isPrChainJob=isPrChainJob
     }}`);
 
+    assert.dom('.content a').exists({ count: 4 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Restart pipeline from here');
+    assert.dom('a:nth-of-type(4)').hasText('Disable this job');
+  });
+
+  test('it renders disable link', async function (assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        isDisabled: false
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+      isPrChainJob=isPrChainJob
+    }}`);
+
+    assert.dom('.content a').exists({ count: 4 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Start pipeline from here');
+    assert.dom('a:nth-of-type(4)').hasText('Disable this job');
+  });
+
+  test('it renders enable link', async function (assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'DISABLED',
+        isDisabled: true
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+      displayRestartButton=true
+      confirmStartBuild="confirmStartBuild"
+      isPrChainJob=isPrChainJob
+    }}`);
+
     assert.dom('.content a').exists({ count: 3 });
-    assert.dom('a:first-child').hasText('Go to build details');
-    assert.dom('a:last-child').hasText('Restart pipeline from here');
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Enable this job');
   });
 
   test('it hides restart link if no build exists in PRChain', async function (assert) {
@@ -181,9 +246,10 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       prBuildExists=prBuildExists
     }}`);
 
-    assert.dom('.content a').exists({ count: 2 });
-    assert.dom('a:first-child').hasText('Go to build details');
-    assert.dom('a:last-child').hasText('Go to build metrics');
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
   });
 
   test('it renders stop frozen build link', async function (assert) {
@@ -207,9 +273,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       action="action"
     }}`);
 
-    assert.dom('.content a').exists({ count: 3 });
-    assert.dom('a:first-child').hasText('Go to build details');
-    assert.dom('a:last-child').hasText('Stop frozen build');
+    assert.dom('.content a').exists({ count: 4 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
+    assert.dom('a:nth-of-type(4)').hasText('Stop frozen build');
   });
 
   test('it shows restart link if build exists in PRChain', async function (assert) {
@@ -235,9 +303,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       prBuildExists=prBuildExists
     }}`);
 
-    assert.dom('.content a').exists({ count: 3 });
-    assert.dom('a:first-child').hasText('Go to build details');
-    assert.dom('a:last-child').hasText('Restart pipeline from here');
+    assert.dom('.content a').exists({ count: 4 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Restart pipeline from here');
+    assert.dom('a:nth-of-type(4)').hasText('Disable this job');
   });
 
   test('it should update position and hidden status', async function (assert) {
@@ -258,5 +328,55 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     assert.dom('.workflow-tooltip').hasNoClass('show-tooltip');
     assert.dom('.workflow-tooltip').hasNoClass('left');
+  });
+
+  test('it shows job toggle modal when click disable link', async function (assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        isDisabled: false
+      }
+    };
+
+    this.set('data', data);
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+    }}`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
+
+    await click('a:nth-of-type(3)');
+
+    assert.dom('.toggle-modal').exists({ count: 1 });
+    assert.dom('.modal-title').hasText('Disable the "batmobile" job?');
+  });
+
+  test('it shows job toggle modal when click enable link', async function (assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        isDisabled: true
+      }
+    };
+
+    this.set('data', data);
+
+    await render(hbs`{{
+      workflow-tooltip
+      tooltipData=data
+    }}`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:nth-of-type(3)').hasText('Enable this job');
+
+    await click('a:nth-of-type(3)');
+
+    assert.dom('.toggle-modal').exists({ count: 1 });
+    assert.dom('.modal-title').hasText('Enable the "batmobile" job?');
   });
 });
