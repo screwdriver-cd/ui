@@ -2,6 +2,7 @@ import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import { get, set } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { later } from '@ember/runloop';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   routeAfterAuthentication: 'pipeline',
@@ -29,6 +30,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
         error.errors[0].status === 404
       ) {
         this.transitionTo('/404');
+        later(function () {
+          window.location.href = 'http://cd.screwdriver.cd/';
+        }, 3000);
       }
 
       return true;
