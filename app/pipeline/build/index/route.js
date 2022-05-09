@@ -11,6 +11,13 @@ export default Route.extend({
         selectedArtifact: '',
         activeTab: 'steps'
       });
+    },
+    error(error) {
+      if (error && Array.isArray(error.errors)) {
+        this.transitionTo('/404');
+      }
+
+      return false;
     }
   }
 });
