@@ -13,7 +13,7 @@ export default Route.extend({
       const pipelineId = getWithDefault(
         this.router.currentRoute.parent.parent.params,
         'pipeline_id',
-        '/'
+        ''
       );
 
       later(
