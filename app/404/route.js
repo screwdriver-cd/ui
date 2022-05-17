@@ -11,8 +11,8 @@ export default Route.extend({
 
     if (name === 'pipeline.build.index') {
       const pipelineId = getWithDefault(
-        this.router.currentRoute.parent.parent.params,
-        'pipeline_id',
+        this.router.currentRoute,
+        'parent.parent.params.pipeline_id',
         ''
       );
 
