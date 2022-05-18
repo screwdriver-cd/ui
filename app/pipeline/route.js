@@ -28,7 +28,13 @@ export default Route.extend(AuthenticatedRouteMixin, {
         Array.isArray(error.errors) &&
         error.errors[0].status === 404
       ) {
-        this.transitionTo('/404');
+        if (error.errors[0].detail === 'Build does not exist') {
+          const pipelineBuildController = this.controllerFor('pipeline.build');
+
+          pipelineBuildController.set('errorMessage', `build does not exist`);
+
+          return false;
+        }
       }
 
       return true;

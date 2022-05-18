@@ -3,8 +3,6 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
 import { getActiveStep } from 'screwdriver-ui/utils/build';
-import { visit, currentURL } from '@ember/test-helpers';
-import sinon from 'sinon';
 
 module('Unit | Route | pipeline/build', function (hooks) {
   setupTest(hooks);
@@ -126,23 +124,6 @@ module('Unit | Route | pipeline/build', function (hooks) {
 
       route.redirect(model, transition);
       assert.ok(spy.notCalled, 'redirect was not called');
-    }
-  );
-
-  sinonTest(
-    'it redirects to /pipeline/:pipeline_id after 3 seconds if build not found',
-    async function (assert) {
-      const clock = sinon.useFakeTimers();
-
-      const buildId = 34565845;
-      const pipelineId = 9373;
-
-      await visit(`/pipelines/${pipelineId}/builds/${buildId}`);
-      clock.tick(100);
-      assert.equal(currentURL(), '/404');
-      clock.tick(3002);
-      assert.equal(currentURL(), `/pipelines/${pipelineId}/events`);
-      clock.restore();
     }
   );
 });
