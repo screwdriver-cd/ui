@@ -149,13 +149,15 @@
           <thead>
             <tr>
               <th class="collection-pipeline__choose"></th>
-              <th class="alias" rowspan="1">Alias</th>
               <th class="app-id" rowspan="1">Name</th>
               <th class="branch" rowspan="1">Branch</th>
               <th class="status" rowspan="1">Status</th>
               <th class="start" rowspan="1">Start Date</th>
               <th class="duration" rowspan="1">Duration</th>
-              <th class="last-run" rowspan="1">Last Run Job</th>
+              <th class="last-run" rowspan="1"> Last Run Job
+                <span onclick={{action "setSortBy" "createTime:asc"}}>{{fa-icon "sort-asc" }}</span>
+                <span onclick={{action "setSortBy" "createTime:desc"}}>{{fa-icon "sort-desc" }}</span>
+              </th>
               <th class="history" rowspan="1">Build History</th>
               <th class="collection-pipeline__remove"></th>
             </tr>
