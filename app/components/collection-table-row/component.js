@@ -25,6 +25,13 @@ export default Component.extend({
 
     return rootDir ? `${branch}#${rootDir}` : branch;
   }),
+  lastRun: computed('lastRun', function get() {
+    const startTime = this.pipeline.createTime;
+    const timeDifference = Math.abs(new Date() - new Date(startTime).getTime());
+    const days = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+    return days;
+  }),
   showRemoveButton: computed(
     'isOrganizing',
     'isAuthenticated',
@@ -78,6 +85,7 @@ export default Component.extend({
       lastEventInfo
     });
   },
+
   actions: {
     removePipeline() {
       this.removePipeline(this.pipeline.id, this.pipeline.name);
