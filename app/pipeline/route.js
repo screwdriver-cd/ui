@@ -31,7 +31,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
         if (error.errors[0].detail === 'Build does not exist') {
           const pipelineBuildController = this.controllerFor('pipeline.events');
 
-          pipelineBuildController.set('errorMessage', 'build does not exist');
+          pipelineBuildController.set('errorMessage', 'Build does not exist');
           this.transitionTo('pipeline.index');
 
           return false;
