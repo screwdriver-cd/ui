@@ -111,7 +111,6 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
     const payload = JSON.parse(request.requestBody);
 
     assert.notOk(controller.get('isShowingModal'));
-    console.log(payload);
     assert.deepEqual(payload, {
       buildId: 99,
       pipelineId: '1234',
