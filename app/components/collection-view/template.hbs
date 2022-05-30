@@ -155,10 +155,18 @@
               <th class="start" rowspan="1">Start Date</th>
               <th class="duration" rowspan="1">Duration</th>
               <th class="last-run" rowspan="1"> Last Run Job
-                <span onclick={{action "setSortBy" "createTime:asc"}}>{{fa-icon "sort-asc" }}</span>
-                <span onclick={{action "setSortBy" "createTime:desc"}}>{{fa-icon "sort-desc" }}</span>
+                <span class="icon-wrapper">
+                  <i class="fa fa-sort-asc" onclick={{action "setSortBy" "createTime"}}></i>
+                  <i class="fa fa-sort-desc" onclick={{action "setSortBy" "createTime:desc"}}></i>
+                </span>
               </th>
-              <th class="history" rowspan="1">Build History</th>
+              <th class="history" rowspan="1">
+                 Build History
+                <span class="icon-wrapper">
+                  <i class="fa fa-sort-asc" onclick={{action "sortByFailedBuilds" "failedBuildCount"}}></i>
+                  <i class="fa fa-sort-desc" onclick={{action "sortByFailedBuilds" "failedBuildCount:desc"}}></i>
+                </span>
+              </th>
               <th class="collection-pipeline__remove"></th>
             </tr>
           </thead>
@@ -168,7 +176,7 @@
                   class="collection-pipeline"
                   removePipeline=(action "removePipeline")
                   pipeline=pipeline
-                  isAuthenticated=session.isAuthenticated
+                  isAuthenticated=session.isAuthenticayqted
                   isOrganizing=isOrganizing
                   isDefaultCollection=isDefaultCollection
                   selectPipeline=(action "selectPipeline")
