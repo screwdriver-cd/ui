@@ -145,6 +145,24 @@ export default Component.extend({
       );
     }
   ),
+  updateFailedBuild() {
+    this.collectionPipelines.forEach(async pipeline => {
+      const metrics = await this.store.query('metric', {
+        pipelineId: pipeline.id,
+        page: 1,
+        count: 20
+      });
+
+      let failedBuildCount = 0;
+
+      metrics.toArray().forEach(event => {
+        if (event.status === 'FAILURE' || event.status === 'ABORTED') {
+          failedBuildCount += 1;
+        }
+      });
+      pipeline.failedBuildCount = failedBuildCount;
+    });
+  },
 
   actions: {
     /**
@@ -207,6 +225,10 @@ export default Component.extend({
         default:
           this.set('sortBy', [option]);
       }
+    },
+    sortByFailedBuilds(option) {
+      this.updateFailedBuild();
+      this.set('sortBy', [option]);
     },
     organize() {
       this.set('isOrganizing', true);
