@@ -89,7 +89,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         });
 
         return Promise.resolve(
-          EmberObject.create({ eventId: '10', parentBuildId: '57' })
+          EmberObject.create({ eventId: '10', parentBuildId: '57', id: '99' })
         );
       });
 
@@ -112,6 +112,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
 
     assert.notOk(controller.get('isShowingModal'));
     assert.deepEqual(payload, {
+      buildId: 99,
       pipelineId: '1234',
       startFrom: 'name',
       parentBuildId: 57,
