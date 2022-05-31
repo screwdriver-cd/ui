@@ -23,8 +23,10 @@
           <li>
             <span class="name">{{name}}: </span>
             <ul>
-              <li><span class="value">{{value.value}}</span></li>
-              <li><span class="description">{{value.description}}</span></li>
+              <li><span class="name">value: </span><span class="value">{{value.value}}</span></li>
+              {{#if value.description}}
+                <li><span class="name">description: </span><span class="value">{{value.description}}</span></li>
+              {{/if}}
             </ul>
           </li>
         {{/if}}
