@@ -218,6 +218,7 @@ export default Controller.extend(ModelReloaderMixin, {
           get(build, 'eventId')
         );
 
+        const buildId = get(build, 'id');
         const parentBuildId = get(build, 'parentBuildId');
         const parentEventId = get(event, 'id');
         const prNum = get(event, 'prNum');
@@ -228,6 +229,7 @@ export default Controller.extend(ModelReloaderMixin, {
         }
 
         eventPayload = {
+          buildId,
           pipelineId,
           startFrom,
           parentBuildId,
