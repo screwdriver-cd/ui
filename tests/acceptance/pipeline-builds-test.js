@@ -1,4 +1,4 @@
-import { currentURL, visit } from '@ember/test-helpers';
+import { currentURL, visit, settled } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
@@ -105,6 +105,44 @@ module('Acceptance | pipeline build', function (hooks) {
 
   hooks.afterEach(function () {
     server.shutdown();
+  });
+
+  test('it redirects to /pipeline/:pipeline_id if build not found', async function (assert) {
+    const pipelineId = 4;
+    const buildId = 1000000;
+
+    server.get(`http://localhost:8080/v4/builds/${buildId}`, () => [
+      404,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        error: 'Not Found',
+        message: 'Build does not exist',
+        statusCode: 404
+      })
+    ]);
+
+    await authenticateSession({ token: 'fakeToken' });
+
+    assert.step('visiting');
+
+    await visit(`/pipelines/${pipelineId}/builds/${buildId}`);
+
+    assert.step('after visit invocation');
+
+    assert.step('after visit resolved');
+
+    return settled().then(() => {
+      assert.equal(
+        currentURL(),
+        `/pipelines/${pipelineId}/events/${desiredEventId}`
+      );
+
+      assert.verifySteps([
+        'visiting',
+        'after visit invocation',
+        'after visit resolved'
+      ]);
+    });
   });
 
   test('visiting /pipelines/4 when not logged in', async function (assert) {
