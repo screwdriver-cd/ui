@@ -3,7 +3,6 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinonTest from 'ember-sinon-qunit/test-support/test';
 import { getActiveStep } from 'screwdriver-ui/utils/build';
-import { visit, currentURL } from '@ember/test-helpers';
 
 module('Unit | Route | pipeline/build', function (hooks) {
   setupTest(hooks);
@@ -125,18 +124,6 @@ module('Unit | Route | pipeline/build', function (hooks) {
 
       route.redirect(model, transition);
       assert.ok(spy.notCalled, 'redirect was not called');
-    }
-  );
-
-  sinonTest(
-    'it redirects to /pipeline/:pipeline_id if build not found',
-    async function (assert) {
-      const buildId = 34578965;
-      const pipelineId = 9373;
-
-      await visit(`/pipelines/${pipelineId}/builds/${buildId}`);
-
-      assert.equal(currentURL(), `/pipelines/${pipelineId}/events`);
     }
   );
 });
