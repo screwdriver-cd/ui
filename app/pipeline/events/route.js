@@ -24,6 +24,11 @@ export default Route.extend({
 
     this.get('pipelineService').setBuildsLink('pipeline.events');
   },
+  resetController(controller, isExiting, transition) {
+    if (isExiting && transition.targetName !== 'error') {
+      controller.set('errorMessage', '');
+    }
+  },
   model() {
     const pipelineId = this.get('pipeline.id');
     const pipelineEventsController = this.controllerFor('pipeline.events');
