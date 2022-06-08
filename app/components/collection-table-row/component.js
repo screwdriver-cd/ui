@@ -3,6 +3,8 @@ import { computed } from '@ember/object';
 import { and } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { formatMetrics } from 'screwdriver-ui/utils/metric';
+import templateHelper from 'screwdriver-ui/utils/template';
+const { getLastUpdatedTime } = templateHelper;
 
 export default Component.extend({
   store: service(),
@@ -27,10 +29,11 @@ export default Component.extend({
   }),
   lastRun: computed('lastRun', function get() {
     const startTime = this.pipeline.createTime;
-    const timeDifference = Math.abs(new Date() - new Date(startTime).getTime());
-    const days = Math.ceil(timeDifference / (1000 * 3600 * 24));
+    const lastRun = getLastUpdatedTime({
+      createTime: startTime
+    });
 
-    return days;
+    return lastRun;
   }),
   showRemoveButton: computed(
     'isOrganizing',

@@ -61,7 +61,7 @@ export default DS.Model.extend({
       return parameters;
     }
   }),
-  failedBuildCount: computed('failedBuildCount', {
+  failedBuildCount: computed('metrics.[]', {
     get() {
       let failedBuildCount = 0;
 
