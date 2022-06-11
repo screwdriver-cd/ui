@@ -44,6 +44,11 @@ export default Route.extend({
         this.pipeline,
         'settings.filterEventsForNoBuilds',
         false
+      ),
+      pipelineAliasName: getWithDefault(
+        this.pipeline,
+        'settings.pipelineAliasName',
+        'appId'
       )
     });
 

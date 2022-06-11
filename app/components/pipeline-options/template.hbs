@@ -249,7 +249,10 @@
             </div>
             <div class="col-xs-2 right">
               <input type="text"
-                class="pipeline-name"
+                class="pipeline-alias-name"
+                placeholder="alias"
+                value={{pipelineAliasName}}
+                onchange={{action "updatePipelineAlias" value="target.value"}}
               >
             </div>
           </div>

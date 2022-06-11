@@ -3,6 +3,9 @@
     <input type="checkbox" value={{pipelineSelected}} onchange={{action "togglePipeline"}}>
   {{/if}}
 </td>
+<td class="alias">
+  {{pipeline.scmRepo.name}}
+</td>
 <td class="app-id">
   {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}{{pipeline.scmRepo.name}}{{/link-to}}
 </td>
