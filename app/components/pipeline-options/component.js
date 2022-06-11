@@ -278,6 +278,13 @@ export default Component.extend({
 
       this.updatePipelineAlias('');
     },
+    async updatePipelineAlias(inputPipelinAlias) {
+      let pipelineAliasName = inputPipelinAlias;
+
+      this.$('input.pipeline-alias-name').val(pipelineAliasName);
+
+      debounce(this, this.updatePipelineAlias, pipelineAliasName, 1000);
+    },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {
         const pipelineId = this.get('pipeline.id');

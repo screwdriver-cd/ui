@@ -127,8 +127,9 @@
     text-align: right;
   }
 
-  input.pipeline-name {
+  input.pipeline-alias-name {
     width: 90px;
+    max-width: 90px;
   }
 
   input.display-job-name {
