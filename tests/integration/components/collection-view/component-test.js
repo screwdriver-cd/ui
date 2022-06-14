@@ -458,6 +458,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('th.status').hasText('Status');
     assert.dom('th.start').hasText('Start Date');
     assert.dom('th.duration').hasText('Duration');
+    assert.dom('th.last-run').hasText('Last Run Job');
     assert.dom('th.history').exists({ count: 1 });
 
     assert.dom('.collection-pipeline').exists({ count: 4 });
