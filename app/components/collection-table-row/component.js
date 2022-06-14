@@ -28,9 +28,9 @@ export default Component.extend({
     return rootDir ? `${branch}#${rootDir}` : branch;
   }),
   lastRun: computed('lastRun', function get() {
-    const startTime = this.pipeline.createTime;
+    const { createTime } = this.pipeline;
     const lastRun = getLastUpdatedTime({
-      createTime: startTime
+      createTime
     });
 
     return lastRun;

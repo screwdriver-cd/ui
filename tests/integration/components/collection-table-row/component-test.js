@@ -7,6 +7,8 @@ import sinon from 'sinon';
 import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
 import Pretender from 'pretender';
+import templateHelper from 'screwdriver-ui/utils/template';
+const { getLastUpdatedTime } = templateHelper;
 
 let server;
 const hasEmptyMetrics = () => [
@@ -22,7 +24,8 @@ const mockPipeline = EmberObject.create({
     rootDir: '',
     url: 'https://github.com/screwdriver-cd/ui/tree/master'
   },
-  branch: 'master'
+  branch: 'master',
+  createTime: Date.now()
 });
 const lastEventInfo = EmberObject.create({
   startTime: '--/--/----',
@@ -60,7 +63,7 @@ module('Integration | Component | collection table row', function (hooks) {
   });
 
   test('it renders', async function (assert) {
-    assert.expect(12);
+    assert.expect(13);
     this.owner.setupRouter();
     await render(hbs`
       {{collection-table-row
@@ -88,6 +91,11 @@ module('Integration | Component | collection table row', function (hooks) {
       .hasAttribute('href', lastEventInfo.commitUrl);
     assert.dom('td.start').hasText(lastEventInfo.startTime);
     assert.dom('td.duration').hasText(lastEventInfo.durationText);
+    assert.dom('td.last-run').hasText(
+      getLastUpdatedTime({
+        createTime: mockPipeline.createTime
+      })
+    );
     assert.dom('td.history').exists({ count: 1 });
     assert.dom('td.collection-pipeline__remove').exists({ count: 1 });
 

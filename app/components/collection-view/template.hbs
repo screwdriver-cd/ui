@@ -154,14 +154,15 @@
               <th class="status" rowspan="1">Status</th>
               <th class="start" rowspan="1">Start Date</th>
               <th class="duration" rowspan="1">Duration</th>
-              <th class="last-run" rowspan="1"> Last Run Job
+              <th class="last-run" rowspan="1">
+                Last Run Job
                 <span class="icon-wrapper">
                   <i class="fa fa-sort-asc" onclick={{action "setSortBy" "createTime:asc"}}></i>
                   <i class="fa fa-sort-desc" onclick={{action "setSortBy" "createTime:desc"}}></i>
                 </span>
               </th>
               <th class="history" rowspan="1">
-                 Build History
+                Build History
                 <span class="icon-wrapper">
                   <i class="fa fa-sort-asc" onclick={{action "sortByFailedBuilds" "failedBuildCount:asc"}}></i>
                   <i class="fa fa-sort-desc" onclick={{action "sortByFailedBuilds" "failedBuildCount:desc"}}></i>
