@@ -68,13 +68,6 @@ export default Component.extend({
     }
   },
   async updateEventMetrics() {
-    // const metrics = await this.store
-    //   .query('metric', {
-    //     pipelineId: this.pipeline.id,
-    //     page: 1,
-    //     count: 20
-    //   })
-
     const metrics = await this.pipeline.get('metrics').catch(() => {
       this.setProperties({
         storeQueryError: true
