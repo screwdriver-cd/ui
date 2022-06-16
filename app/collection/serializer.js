@@ -8,24 +8,12 @@ export default DS.RESTSerializer.extend(EmbeddedRecordsMixin, {
   },
 
   normalizeResponse(store, typeClass, payload, id, requestType) {
-    console.log('here, collection serializer normalizeResponse');
-    console.log(
-      'typeClass',
-      typeClass,
-      'requestType',
-      requestType,
-      'payload',
-      payload
-    );
-
     if (requestType === 'findRecord') {
       payload.collection.pipelines.forEach(p => {
         p.links = {
           metrics: `/v4/pipelines/${p.id}/metrics?count=20&page=1`
         };
       });
-
-      console.log('updated payload collection', payload.collection);
     }
 
     return this._super(store, typeClass, payload, id, requestType);
@@ -36,8 +24,6 @@ export default DS.RESTSerializer.extend(EmbeddedRecordsMixin, {
    * @method serializeIntoHash
    */
   serializeIntoHash(hash, typeClass, snapshot) {
-    console.log('here, collection serializer serializeIntoHash');
-
     const dirty = snapshot.changedAttributes();
 
     Object.keys(dirty).forEach(key => {
