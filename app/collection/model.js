@@ -5,5 +5,5 @@ export default DS.Model.extend({
   description: DS.attr('string'),
   type: DS.attr('string'),
   pipelineIds: DS.attr(),
-  pipelines: DS.attr()
+  pipelines: DS.hasMany('pipeline', { sync: true })
 });
