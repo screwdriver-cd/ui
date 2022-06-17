@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
@@ -10,14 +11,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     await render(hbs`{{workflow-tooltip}}`);
 
     assert.dom('a:nth-of-type(1)').hasText('Go to build metrics');
-    assert.dom('a:nth-of-type(2)').hasText('Disable this job');
 
     // Template block usage:
     await render(hbs`
-      {{#workflow-tooltip}}
-        template block text
-      {{/workflow-tooltip}}
-    `);
+        {{#workflow-tooltip}}
+          template block text
+        {{/workflow-tooltip}}
+      `);
 
     assert.dom(this.element).includesText('template block text');
   });
@@ -27,7 +27,8 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       job: {
         id: 1,
         buildId: 1234,
-        name: 'batmobile'
+        name: 'batmobile',
+        isDisabled: false
       }
     };
 
@@ -90,7 +91,8 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       job: {
         buildId: 1234,
         name: 'batmobile',
-        manualStartDisabled: true
+        manualStartDisabled: true,
+        isDisabled: false
       }
     };
 
@@ -98,11 +100,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('confirmStartBuild', () => {});
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-      displayRestartButton=true
-      confirmStartBuild="confirmStartBuild"
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        displayRestartButton=true
+        confirmStartBuild="confirmStartBuild"
+      }}`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('.content p').exists({ count: 1 });
@@ -116,7 +118,8 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     const data = {
       job: {
         buildId: 1234,
-        name: 'batmobile'
+        name: 'batmobile',
+        isDisabled: false
       }
     };
 
@@ -125,12 +128,12 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('isPrChainJob', false);
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-      displayRestartButton=true
-      confirmStartBuild="confirmStartBuild"
-      isPrChainJob=isPrChainJob
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        displayRestartButton=true
+        confirmStartBuild="confirmStartBuild"
+        isPrChainJob=isPrChainJob
+      }}`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -144,7 +147,8 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       job: {
         buildId: 1234,
         name: 'batmobile',
-        status: 'SUCCESS'
+        status: 'SUCCESS',
+        isDisabled: false
       }
     };
 
@@ -153,12 +157,12 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('isPrChainJob', false);
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-      displayRestartButton=true
-      confirmStartBuild="confirmStartBuild"
-      isPrChainJob=isPrChainJob
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        displayRestartButton=true
+        confirmStartBuild="confirmStartBuild"
+        isPrChainJob=isPrChainJob
+      }}`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -181,12 +185,12 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('isPrChainJob', false);
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-      displayRestartButton=true
-      confirmStartBuild="confirmStartBuild"
-      isPrChainJob=isPrChainJob
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        displayRestartButton=true
+        confirmStartBuild="confirmStartBuild"
+        isPrChainJob=isPrChainJob
+      }}`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -210,12 +214,12 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('isPrChainJob', false);
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-      displayRestartButton=true
-      confirmStartBuild="confirmStartBuild"
-      isPrChainJob=isPrChainJob
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        displayRestartButton=true
+        confirmStartBuild="confirmStartBuild"
+        isPrChainJob=isPrChainJob
+      }}`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -228,7 +232,8 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       job: {
         buildId: 1234,
         name: 'batmobile',
-        status: 'SUCCESS'
+        status: 'SUCCESS',
+        isDisabled: false
       }
     };
 
@@ -238,13 +243,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('prBuildExists', false);
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-      displayRestartButton=true
-      confirmStartBuild="confirmStartBuild"
-      isPrChain=isPrChain
-      prBuildExists=prBuildExists
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        displayRestartButton=true
+        confirmStartBuild="confirmStartBuild"
+        isPrChain=isPrChain
+        prBuildExists=prBuildExists
+      }}`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -257,7 +262,8 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       job: {
         buildId: 1234,
         name: 'batmobile',
-        status: 'FROZEN'
+        status: 'FROZEN',
+        isDisabled: false
       },
       selectedEvent: 'Stop frozen build'
     };
@@ -267,11 +273,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('action', () => {});
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-      stopBuild="stopBuild"
-      action="action"
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        stopBuild="stopBuild"
+        action="action"
+      }}`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -285,7 +291,8 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       job: {
         buildId: 1234,
         name: 'batmobile',
-        status: 'SUCCESS'
+        status: 'SUCCESS',
+        isDisabled: false
       }
     };
 
@@ -295,13 +302,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('prBuildExists', true);
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-      displayRestartButton=true
-      confirmStartBuild="confirmStartBuild"
-      isPrChain=isPrChain
-      prBuildExists=prBuildExists
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        displayRestartButton=true
+        confirmStartBuild="confirmStartBuild"
+        isPrChain=isPrChain
+        prBuildExists=prBuildExists
+      }}`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -315,10 +322,10 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('pos', 'left');
 
     await render(hbs`{{
-      workflow-tooltip
-      showTooltip=show
-      showTooltipPosition=pos
-    }}`);
+        workflow-tooltip
+        showTooltip=show
+        showTooltipPosition=pos
+      }}`);
 
     assert.dom('.workflow-tooltip').hasClass('show-tooltip');
     assert.dom('.workflow-tooltip').hasClass('left');
@@ -333,18 +340,34 @@ module('Integration | Component | workflow tooltip', function (hooks) {
   test('it shows job toggle modal when click disable link', async function (assert) {
     const data = {
       job: {
+        id: 1,
         buildId: 1234,
         name: 'batmobile',
         isDisabled: false
       }
     };
 
+    const pipelineMock = EmberObject.create({
+      jobs: [
+        {
+          id: 1,
+          name: 'batmobile'
+        },
+        {
+          id: 2,
+          name: 'foo'
+        }
+      ]
+    });
+
     this.set('data', data);
+    this.set('pipeline', pipelineMock);
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        pipeline=pipeline
+      }}`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(3)').hasText('Disable this job');
@@ -358,18 +381,34 @@ module('Integration | Component | workflow tooltip', function (hooks) {
   test('it shows job toggle modal when click enable link', async function (assert) {
     const data = {
       job: {
+        id: 1,
         buildId: 1234,
         name: 'batmobile',
         isDisabled: true
       }
     };
 
+    const pipelineMock = EmberObject.create({
+      jobs: [
+        {
+          id: 1,
+          name: 'batmobile'
+        },
+        {
+          id: 2,
+          name: 'foo'
+        }
+      ]
+    });
+
     this.set('data', data);
+    this.set('pipeline', pipelineMock);
 
     await render(hbs`{{
-      workflow-tooltip
-      tooltipData=data
-    }}`);
+        workflow-tooltip
+        tooltipData=data
+        pipeline=pipeline
+      }}`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(3)').hasText('Enable this job');

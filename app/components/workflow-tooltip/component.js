@@ -33,8 +33,12 @@ export default Component.extend({
     return isDisabled ? 'ENABLED' : 'DISABLED';
   }),
   actions: {
-    toggleJob(jobId, toggleJobName) {
+    toggleJob(toggleJobName) {
       const state = this.jobState;
+
+      const originalJob = this.get('pipeline.jobs').find(
+        j => j.name === toggleJobName
+      );
 
       this.set('toggleJobName', toggleJobName);
       this.set(
@@ -42,13 +46,13 @@ export default Component.extend({
         state[0].toUpperCase() + state.slice(1, -1).toLowerCase()
       );
 
-      this.set('jobId', jobId);
+      this.set('originalJobId', originalJob.id);
       this.set('showToggleModal', true);
     },
     updateMessage(message) {
-      const { jobId, jobState } = this;
+      const { originalJobId, jobState } = this;
 
-      this.setJobStatus(jobId, jobState, message || ' ');
+      this.setJobStatus(originalJobId, jobState, message || ' ');
       this.set('showToggleModal', false);
       this.set('showTooltip', false);
     }
