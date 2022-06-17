@@ -208,9 +208,6 @@ export default Component.extend({
           this.set('sortBy', [option]);
       }
     },
-    sortByFailedBuilds(option) {
-      this.set('sortBy', [option]);
-    },
     organize() {
       this.set('isOrganizing', true);
     },
