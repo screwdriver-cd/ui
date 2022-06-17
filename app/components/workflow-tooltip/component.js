@@ -36,8 +36,6 @@ export default Component.extend({
     toggleJob(toggleJobName) {
       const state = this.jobState;
 
-      console.log(toggleJobName);
-      console.log(this.get('pipeline.jobs'));
       const originalJob = this.get('pipeline.jobs').find(
         j => j.name === toggleJobName
       );
