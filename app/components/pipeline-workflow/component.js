@@ -204,6 +204,7 @@ export default Component.extend({
         );
         const pipelineParameters = {};
         const jobParameters = {};
+        const isPR = this.get('selectedEventObj.prNum');
 
         // Segregate pipeline level and job level parameters
         Object.entries(eventParameters).forEach(
@@ -217,6 +218,18 @@ export default Component.extend({
             }
           }
         );
+
+        if (isPR) {
+          const originalJob = this.get('pipeline.jobs').find(
+            j => j.name === job.name
+          );
+
+          if (originalJob) {
+            job.isDisabled = originalJob.isDisabled;
+          } else {
+            delete job.isDisabled;
+          }
+        }
 
         toolTipProperties = {
           showTooltip: true,
