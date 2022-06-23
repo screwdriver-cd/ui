@@ -49,7 +49,7 @@ export default Component.extend({
   maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
-  pipelineAliasName: '',
+  aliasName: '',
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
@@ -96,7 +96,7 @@ export default Component.extend({
       'pipeline.settings.filterEventsForNoBuilds'
     );
 
-    let pipelineAliasName = this.get('pipeline.settings.pipelineAliasName');
+    let aliasName = this.get('pipeline.settings.aliasName');
 
     if (typeof privateRepo !== 'boolean') {
       privateRepo = false;
@@ -124,7 +124,7 @@ export default Component.extend({
       groupedEvents,
       showEventTriggers,
       filterEventsForNoBuilds,
-      pipelineAliasName
+      aliasName
     });
 
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
@@ -164,17 +164,17 @@ export default Component.extend({
         this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
       );
   },
-  async updatePipelineAlias(pipelineAliasName) {
+  async updatePipelineAlias(aliasName) {
     const pipeline = this.get('pipeline');
 
     try {
       await this.shuttle.updatePipelineSettings(pipeline.id, {
-        pipelineAliasName
+        aliasName
       });
     } finally {
-      pipeline.set('settings.pipelineAliasName', pipelineAliasName);
+      pipeline.set('settings.aliasName', aliasName);
 
-      this.set('pipelineAliasName', pipelineAliasName);
+      this.set('aliasName', aliasName);
     }
   },
 
@@ -297,11 +297,11 @@ export default Component.extend({
       debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
     },
     async updatePipelineAlias(inputPipelinAlias) {
-      let pipelineAliasName = inputPipelinAlias;
+      let aliasName = inputPipelinAlias;
 
-      this.$('input.pipeline-alias-name').val(pipelineAliasName);
+      this.$('input.pipeline-alias-name').val(aliasName);
 
-      debounce(this, this.updatePipelineAlias, pipelineAliasName, 1000);
+      debounce(this, this.updatePipelineAlias, aliasName, 1000);
     },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {

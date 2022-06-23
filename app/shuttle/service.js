@@ -178,10 +178,10 @@ export default Service.extend({
       };
     }
 
-    if (typeof settings.pipelineAliasName === 'string') {
+    if (typeof settings.aliasName === 'string') {
       newSetting = {
         ...newSetting,
-        pipelineAliasName: settings.pipelineAliasName
+        aliasName: settings.aliasName
       };
     }
 
