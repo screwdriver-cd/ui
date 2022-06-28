@@ -157,9 +157,9 @@
               <th class="last-run" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "createTime:desc") "createTime:asc" "createTime:desc")}}>
                 Last Run Job
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) 'createTime:asc')}}
+                  {{#if (eq (get sortBy 0) "createTime:asc")}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) 'createTime:desc')}}
+                  {{else if (eq (get sortBy 0) "createTime:desc")}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>
@@ -169,9 +169,9 @@
               <th class="history" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "failedBuildCount:desc") "failedBuildCount:asc" "failedBuildCount:desc")}}>
                 Build History
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) 'failedBuildCount:asc')}}
+                  {{#if (eq (get sortBy 0) "failedBuildCount:asc")}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) 'failedBuildCount:desc')}}
+                  {{else if (eq (get sortBy 0) "failedBuildCount:desc")}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>
