@@ -1,6 +1,6 @@
-FROM nginx:1.14.2-alpine
-COPY nginx.conf /etc/nginx/nginx.conf
-WORKDIR /usr/share/nginx/html
+FROM openresty/openresty:1.21.4.1-2-alpine
+COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+WORKDIR /usr/local/openresty/nginx/html
 RUN set -x \
    # Missing https for some magic reason
    && apk add --no-cache --update ca-certificates \
