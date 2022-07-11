@@ -242,6 +242,23 @@ export default Controller.extend(ModelReloaderMixin, {
       return jobs.filter(j => !isPRJob(j.get('name')));
     }
   }),
+  prJobs: computed('model.jobs', {
+    get() {
+      const jobs = this.getWithDefault('model.jobs', []);
+      const prJobs = jobs.filter(j => isPRJob(j.get('name')));
+
+      prJobs.forEach(prJob => {
+        const originalJob = jobs.find(j => j.id === prJob.prParentJobId);
+
+        if (originalJob) {
+          prJob.state = originalJob.state;
+          prJob.isDisabled = originalJob.isDisabled;
+        }
+      });
+
+      return prJobs;
+    }
+  }),
   jobIds: computed('pipeline.jobs', {
     get() {
       return this.get('pipeline.jobs')
