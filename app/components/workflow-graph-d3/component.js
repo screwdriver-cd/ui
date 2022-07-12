@@ -38,7 +38,10 @@ export default Component.extend({
         const builds = getWithDefault(this, 'builds', []);
 
         const { startFrom } = this;
-        const jobs = getWithDefault(this, 'jobs', []);
+
+        const prJobs = getWithDefault(this, 'prJobs', []);
+        const jobs = getWithDefault(this, 'jobs', []).concat(prJobs);
+
         const workflowGraph = getWithDefault(this, 'workflowGraph', {
           nodes: [],
           edges: []
