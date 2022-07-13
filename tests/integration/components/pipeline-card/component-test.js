@@ -7,6 +7,7 @@ import sinon from 'sinon';
 import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
 import Pretender from 'pretender';
+import { mockMetricsPromise as makeMetricsMock } from 'screwdriver-ui/tests/mock/metrics';
 
 let server;
 const hasEmptyMetrics = () => [
@@ -14,6 +15,8 @@ const hasEmptyMetrics = () => [
   { 'Content-Type': 'application/json' },
   JSON.stringify([])
 ];
+
+const metricsMock = makeMetricsMock();
 const mockPipeline = EmberObject.create({
   id: 1,
   scmRepo: {
@@ -22,7 +25,8 @@ const mockPipeline = EmberObject.create({
     rootDir: '',
     url: 'https://github.com/screwdriver-cd/ui/tree/master'
   },
-  branch: 'master'
+  branch: 'master',
+  metrics: metricsMock
 });
 const lastEventInfo = EmberObject.create({
   startTime: '--/--/----',
