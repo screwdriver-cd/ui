@@ -43,7 +43,7 @@
           #{{selectedEventObj.truncatedSha}}
         </a>
       </p>
-      {{#if (not-eq selectedEventObj.sha latestCommit.sha)}}
+      {{#if (and (not-eq selectedEventObj.type "pr") (not-eq selectedEventObj.sha latestCommit.sha))}}
         <p>{{fa-icon "exclamation-circle"}} This is not the latest commit.</p>
       {{/if}}
       {{#if (eq tooltipData.job.status "FROZEN")}}
