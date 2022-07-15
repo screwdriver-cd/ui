@@ -1,5 +1,6 @@
 import { copy } from 'ember-copy';
 import { assign } from '@ember/polyfills';
+import { Promise as EmberPromise } from 'rsvp';
 
 export const pipeline = {
   id: '4',
@@ -93,3 +94,115 @@ export const hasPipelines = () => [
 ];
 
 export default workflowGraph => assign(copy(pipeline, true), { workflowGraph });
+
+/**
+ * return mock pipeline promise
+ *
+ * @returns promise
+ */
+export function mockPipelinesPromise() {
+  return new EmberPromise(resolve =>
+    resolve(
+      copy(
+        [
+          {
+            id: 1,
+            scmUri: 'github.com:12345678:master',
+            createTime: '2017-01-05T00:55:46.775Z',
+            admins: {
+              username: true
+            },
+            workflow: ['main'],
+            scmRepo: {
+              name: 'screwdriver-cd/screwdriver',
+              branch: 'master',
+              url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
+            },
+            scmContext: 'github:github.com',
+            annotations: {},
+            lastEventId: 12,
+            lastBuilds: [
+              {
+                id: 123,
+                status: 'SUCCESS',
+                // Most recent build
+                createTime: '2017-09-05T04:02:20.890Z'
+              }
+            ]
+          },
+          {
+            id: 2,
+            scmUri: 'github.com:87654321:master',
+            createTime: '2017-01-05T00:55:46.775Z',
+            admins: {
+              username: true
+            },
+            workflow: ['main', 'publish'],
+            scmRepo: {
+              name: 'screwdriver-cd/ui',
+              branch: 'master',
+              url: 'https://github.com/screwdriver-cd/ui/tree/master'
+            },
+            scmContext: 'github:github.com',
+            annotations: {},
+            prs: {
+              open: 2,
+              failing: 1
+            }
+          },
+          {
+            id: 3,
+            scmUri: 'github.com:54321876:master',
+            createTime: '2017-01-05T00:55:46.775Z',
+            admins: {
+              username: true
+            },
+            workflow: ['main'],
+            scmRepo: {
+              name: 'screwdriver-cd/models',
+              branch: 'master',
+              url: 'https://github.com/screwdriver-cd/models/tree/master'
+            },
+            scmContext: 'bitbucket:bitbucket.org',
+            annotations: {},
+            lastEventId: 23,
+            lastBuilds: [
+              {
+                id: 125,
+                status: 'FAILURE',
+                // 2nd most recent build
+                createTime: '2017-09-05T04:01:41.789Z'
+              }
+            ]
+          },
+          {
+            id: 4,
+            scmUri: 'github.com:54321879:master:lib',
+            createTime: '2017-01-05T00:55:46.775Z',
+            admins: {
+              username: true
+            },
+            workflow: ['main'],
+            scmRepo: {
+              name: 'screwdriver-cd/zzz',
+              branch: 'master',
+              url: 'https://github.com/screwdriver-cd/zzz/tree/master',
+              rootDir: 'lib'
+            },
+            scmContext: 'bitbucket:bitbucket.org',
+            annotations: {},
+            lastEventId: 23,
+            lastBuilds: [
+              {
+                id: 125,
+                status: 'UNSTABLE',
+                createTime: '2017-09-05T04:01:41.789Z'
+              }
+            ]
+          }
+        ],
+        true
+      )
+    )
+  );
+}
