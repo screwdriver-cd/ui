@@ -1,4 +1,4 @@
-import { resolve, reject, Promise as EmberPromise } from 'rsvp';
+import { resolve, reject } from 'rsvp';
 import EmberObject from '@ember/object';
 import { module, test, todo } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
@@ -7,234 +7,26 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import Service from '@ember/service';
 import $ from 'jquery';
-import { copy } from 'ember-copy';
-import { mockMetricsPromise as makeMetricsMock } from 'screwdriver-ui/tests/mock/metrics';
 import injectSessionStub from '../../../helpers/inject-session';
 import injectScmServiceStub from '../../../helpers/inject-scm';
+import { mockPipelinesPromise as makePipelinePromise } from '../../../mock/pipeline';
 
-/**
- * Return a promise based collection mock
- *
- * @returns Promise
- */
-function mockCollectionPromise() {
-  return new EmberPromise(emberResolve =>
-    emberResolve(
-      copy(
-        {
-          id: 1,
-          name: 'My Pipelines',
-          description: 'Default Collection',
-          type: 'default',
-          pipelines: [
-            {
-              id: 1,
-              scmUri: 'github.com:12345678:master',
-              createTime: '2017-01-05T00:55:46.775Z',
-              admins: {
-                username: true
-              },
-              workflow: ['main'],
-              scmRepo: {
-                name: 'screwdriver-cd/screwdriver',
-                branch: 'master',
-                url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
-              },
-              scmContext: 'github:github.com',
-              annotations: {},
-              lastEventId: 12,
-              lastBuilds: [
-                {
-                  id: 123,
-                  status: 'SUCCESS',
-                  // Most recent build
-                  createTime: '2017-09-05T04:02:20.890Z'
-                }
-              ]
-            },
-            {
-              id: 2,
-              scmUri: 'github.com:87654321:master',
-              createTime: '2017-01-05T00:55:46.775Z',
-              admins: {
-                username: true
-              },
-              workflow: ['main', 'publish'],
-              scmRepo: {
-                name: 'screwdriver-cd/ui',
-                branch: 'master',
-                url: 'https://github.com/screwdriver-cd/ui/tree/master'
-              },
-              scmContext: 'github:github.com',
-              annotations: {},
-              prs: {
-                open: 2,
-                failing: 1
-              }
-            },
-            {
-              id: 3,
-              scmUri: 'github.com:54321876:master',
-              createTime: '2017-01-05T00:55:46.775Z',
-              admins: {
-                username: true
-              },
-              workflow: ['main'],
-              scmRepo: {
-                name: 'screwdriver-cd/models',
-                branch: 'master',
-                url: 'https://github.com/screwdriver-cd/models/tree/master'
-              },
-              scmContext: 'bitbucket:bitbucket.org',
-              annotations: {},
-              lastEventId: 23,
-              lastBuilds: [
-                {
-                  id: 125,
-                  status: 'FAILURE',
-                  // 2nd most recent build
-                  createTime: '2017-09-05T04:01:41.789Z'
-                }
-              ]
-            },
-            {
-              id: 4,
-              scmUri: 'github.com:54321879:master:lib',
-              createTime: '2017-01-05T00:55:46.775Z',
-              admins: {
-                username: true
-              },
-              workflow: ['main'],
-              scmRepo: {
-                name: 'screwdriver-cd/zzz',
-                branch: 'master',
-                url: 'https://github.com/screwdriver-cd/zzz/tree/master',
-                rootDir: 'lib'
-              },
-              scmContext: 'bitbucket:bitbucket.org',
-              annotations: {},
-              lastEventId: 23,
-              lastBuilds: [
-                {
-                  id: 125,
-                  status: 'UNSTABLE',
-                  createTime: '2017-09-05T04:01:41.789Z'
-                }
-              ]
-            }
-          ],
-          pipelineIds: [1, 2, 3, 4]
-        },
-        true
-      )
-    )
-  );
-}
-
-const mockDefaultCollection = mockCollectionPromise();
+const mockPipeline = makePipelinePromise();
+const mockDefaultCollection = EmberObject.create({
+  id: 1,
+  name: 'My Pipelines',
+  description: 'Default Collection',
+  type: 'default',
+  pipelines: mockPipeline,
+  pipelineIds: [1, 2, 3, 4]
+});
 
 const mockNormalCollection = EmberObject.create({
   id: 1,
   name: 'My Pipelines',
   description: 'Normal Collection',
   type: 'normal',
-  pipelines: [
-    {
-      id: 1,
-      scmUri: 'github.com:12345678:master',
-      createTime: '2017-01-05T00:55:46.775Z',
-      admins: {
-        username: true
-      },
-      workflow: ['main'],
-      scmRepo: {
-        name: 'screwdriver-cd/screwdriver',
-        branch: 'master',
-        url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
-      },
-      scmContext: 'github:github.com',
-      annotations: {},
-      lastEventId: 12,
-      lastBuilds: [
-        {
-          id: 123,
-          status: 'SUCCESS',
-          // Most recent build
-          createTime: '2017-09-05T04:02:20.890Z'
-        }
-      ]
-    },
-    {
-      id: 2,
-      scmUri: 'github.com:87654321:master',
-      createTime: '2017-01-05T00:55:46.775Z',
-      admins: {
-        username: true
-      },
-      workflow: ['main', 'publish'],
-      scmRepo: {
-        name: 'screwdriver-cd/ui',
-        branch: 'master',
-        url: 'https://github.com/screwdriver-cd/ui/tree/master'
-      },
-      scmContext: 'github:github.com',
-      annotations: {},
-      prs: {
-        open: 2,
-        failing: 1
-      }
-    },
-    {
-      id: 3,
-      scmUri: 'github.com:54321876:master',
-      createTime: '2017-01-05T00:55:46.775Z',
-      admins: {
-        username: true
-      },
-      workflow: ['main'],
-      scmRepo: {
-        name: 'screwdriver-cd/models',
-        branch: 'master',
-        url: 'https://github.com/screwdriver-cd/models/tree/master'
-      },
-      scmContext: 'bitbucket:bitbucket.org',
-      annotations: {},
-      lastEventId: 23,
-      lastBuilds: [
-        {
-          id: 125,
-          status: 'FAILURE',
-          // 2nd most recent build
-          createTime: '2017-09-05T04:01:41.789Z'
-        }
-      ]
-    },
-    {
-      id: 4,
-      scmUri: 'github.com:54321879:master:lib',
-      createTime: '2017-01-05T00:55:46.775Z',
-      admins: {
-        username: true
-      },
-      workflow: ['main'],
-      scmRepo: {
-        name: 'screwdriver-cd/zzz',
-        branch: 'master',
-        url: 'https://github.com/screwdriver-cd/zzz/tree/master',
-        rootDir: 'lib'
-      },
-      scmContext: 'bitbucket:bitbucket.org',
-      annotations: {},
-      lastEventId: 23,
-      lastBuilds: [
-        {
-          id: 125,
-          status: 'UNSTABLE',
-          createTime: '2017-09-05T04:01:41.789Z'
-        }
-      ]
-    }
-  ],
+  pipelines: mockPipeline,
   pipelineIds: [1, 2, 3, 4]
 });
 
@@ -294,7 +86,31 @@ const mockCollections = [
   }
 ];
 
-const mockMetrics = makeMetricsMock();
+const mockMetrics = [
+  {
+    id: 3,
+    createTime: '2020-10-06T17:57:53.388Z',
+    causeMessage: 'Manually started by klu909',
+    sha: '9af92ba134322',
+    commit: {
+      message: '3',
+      url: 'https://github.com/batman/foo/commit/9af92ba134322'
+    },
+    duration: 14,
+    status: 'SUCCESS'
+  },
+  {
+    id: 2,
+    createTime: '2020-10-06T17:47:55.089Z',
+    sha: '9af92ba134321',
+    commit: {
+      message: '2',
+      url: 'https://github.com/batman/foo/commit/9af92ba134321'
+    },
+    duration: 14,
+    status: 'SUCCESS'
+  }
+];
 
 const onRemovePipelineSpy = sinon.spy();
 const addMultipleToCollectionSpy = sinon.spy();
@@ -452,7 +268,6 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('th.status').hasText('Status');
     assert.dom('th.start').hasText('Start Date');
     assert.dom('th.duration').hasText('Duration');
-    assert.dom('th.last-run').hasText('Last Run Job');
     assert.dom('th.history').exists({ count: 1 });
 
     assert.dom('.collection-pipeline').exists({ count: 4 });
