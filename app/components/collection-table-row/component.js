@@ -22,6 +22,12 @@ export default Component.extend({
   hasBothEventsAndLatestEventInfo: and('eventsInfo', 'lastEventInfo'),
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
+  aliasName: computed('pipeline', function get() {
+    const aliasName = this.pipeline.settings?.aliasName;
+    const { name } = this.pipeline.scmRepo;
+
+    return aliasName || name;
+  }),
   branch: computed('pipeline', function get() {
     const { branch, rootDir } = this.pipeline.scmRepo;
 
