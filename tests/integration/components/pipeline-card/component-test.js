@@ -3,11 +3,11 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import { resolve } from 'rsvp';
 import sinon from 'sinon';
 import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
 import Pretender from 'pretender';
-import { mockMetricsPromise as makeMetricsMock } from 'screwdriver-ui/tests/mock/metrics';
 
 let server;
 const hasEmptyMetrics = () => [
@@ -16,7 +16,6 @@ const hasEmptyMetrics = () => [
   JSON.stringify([])
 ];
 
-const metricsMock = makeMetricsMock();
 const mockPipeline = EmberObject.create({
   id: 1,
   scmRepo: {
@@ -26,7 +25,7 @@ const mockPipeline = EmberObject.create({
     url: 'https://github.com/screwdriver-cd/ui/tree/master'
   },
   branch: 'master',
-  metrics: metricsMock
+  metrics: resolve([])
 });
 const lastEventInfo = EmberObject.create({
   startTime: '--/--/----',
