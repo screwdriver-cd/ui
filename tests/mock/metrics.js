@@ -1,4 +1,5 @@
 import { copy } from 'ember-copy';
+import { Promise as EmberPromise } from 'rsvp';
 
 export default () =>
   copy(
@@ -226,6 +227,189 @@ export default () =>
     ],
     true
   );
+
+/**
+ * Return a promise based metrics mock
+ *
+ * @returns Promise
+ */
+export function mockMetricsPromise() {
+  return new EmberPromise(resolve =>
+    resolve(
+      copy(
+        [
+          {
+            id: 631630,
+            createTime: '2021-05-21T18:54:43.093Z',
+            causeMessage: 'Manually started by adong',
+            sha: 'fb3d95d9f73190c1e2eb9561e3c5579f5146c0c9',
+            commit: {
+              author: {
+                avatar: 'https://cd.screwdriver.cd/assets/unknown_user.png',
+                name: 'Alan Dong',
+                username: 'n/a',
+                url: 'https://cd.screwdriver.cd/'
+              },
+              committer: {
+                avatar: 'https://cd.screwdriver.cd/assets/unknown_user.png',
+                name: 'Alan Dong',
+                username: 'n/a',
+                url: 'https://cd.screwdriver.cd/'
+              },
+              message: 'update',
+              url: 'https://github.com/adong/sd-pipeline1/commit/fb3d95d9f73190c1e2eb9561e3c5579f5146c0c9'
+            },
+            duration: 3,
+            queuedTime: 1,
+            imagePullTime: 7,
+            status: 'SUCCESS',
+            builds: [
+              {
+                id: 707350,
+                jobId: 34625,
+                eventId: 631630,
+                createTime: '2021-05-21T18:54:43.281Z',
+                startTime: '2021-05-21T18:54:52.177Z',
+                endTime: '2021-05-21T18:54:55.310Z',
+                duration: 3,
+                status: 'SUCCESS',
+                queuedTime: 1,
+                imagePullTime: 7
+              }
+            ],
+            isDowntimeEvent: false,
+            maxEndTime: '2021-05-21T18:54:55.310Z'
+          },
+          {
+            id: 628914,
+            createTime: '2021-05-06T06:05:11.070Z',
+            causeMessage: 'Manually started by adong',
+            sha: 'fb3d95d9f73190c1e2eb9561e3c5579f5146c0c9',
+            commit: {
+              author: {
+                avatar: 'https://cd.screwdriver.cd/assets/unknown_user.png',
+                name: 'Alan Dong',
+                username: 'n/a',
+                url: 'https://cd.screwdriver.cd/'
+              },
+              committer: {
+                avatar: 'https://cd.screwdriver.cd/assets/unknown_user.png',
+                name: 'Alan Dong',
+                username: 'n/a',
+                url: 'https://cd.screwdriver.cd/'
+              },
+              message: 'update',
+              url: 'https://github.com/adong/sd-pipeline1/commit/fb3d95d9f73190c1e2eb9561e3c5579f5146c0c9'
+            },
+            duration: 3,
+            queuedTime: 2,
+            imagePullTime: 7,
+            status: 'SUCCESS',
+            builds: [
+              {
+                id: 703324,
+                jobId: 34625,
+                eventId: 628914,
+                createTime: '2021-05-06T06:05:11.265Z',
+                startTime: '2021-05-06T06:05:20.802Z',
+                endTime: '2021-05-06T06:05:24.401Z',
+                duration: 3,
+                status: 'SUCCESS',
+                queuedTime: 2,
+                imagePullTime: 7
+              }
+            ],
+            isDowntimeEvent: false,
+            maxEndTime: '2021-05-06T06:05:24.401Z'
+          },
+          {
+            id: 628913,
+            createTime: '2021-05-06T06:02:48.436Z',
+            causeMessage: 'Manually started by adong',
+            sha: 'fb3d95d9f73190c1e2eb9561e3c5579f5146c0c9',
+            commit: {
+              author: {
+                avatar: 'https://cd.screwdriver.cd/assets/unknown_user.png',
+                name: 'Alan Dong',
+                username: 'n/a',
+                url: 'https://cd.screwdriver.cd/'
+              },
+              committer: {
+                avatar: 'https://cd.screwdriver.cd/assets/unknown_user.png',
+                name: 'Alan Dong',
+                username: 'n/a',
+                url: 'https://cd.screwdriver.cd/'
+              },
+              message: 'update',
+              url: 'https://github.com/adong/sd-pipeline1/commit/fb3d95d9f73190c1e2eb9561e3c5579f5146c0c9'
+            },
+            duration: null,
+            queuedTime: 4,
+            imagePullTime: 0,
+            status: 'ABORTED',
+            builds: [
+              {
+                id: 703323,
+                jobId: 34625,
+                eventId: 628913,
+                createTime: '2021-05-06T06:02:48.638Z',
+                duration: null,
+                status: 'ABORTED',
+                queuedTime: 4,
+                imagePullTime: null
+              }
+            ],
+            isDowntimeEvent: false,
+            maxEndTime: null
+          },
+          {
+            id: 621172,
+            createTime: '2021-03-30T02:44:20.219Z',
+            causeMessage: 'Manually started by adong',
+            sha: 'fb3d95d9f73190c1e2eb9561e3c5579f5146c0c9',
+            commit: {
+              author: {
+                avatar: 'https://cd.screwdriver.cd/assets/unknown_user.png',
+                name: 'Alan Dong',
+                username: 'n/a',
+                url: 'https://cd.screwdriver.cd/'
+              },
+              committer: {
+                avatar: 'https://cd.screwdriver.cd/assets/unknown_user.png',
+                name: 'Alan Dong',
+                username: 'n/a',
+                url: 'https://cd.screwdriver.cd/'
+              },
+              message: 'update',
+              url: 'https://github.com/adong/sd-pipeline1/commit/fb3d95d9f73190c1e2eb9561e3c5579f5146c0c9'
+            },
+            duration: 3,
+            queuedTime: 1,
+            imagePullTime: 5,
+            status: 'SUCCESS',
+            builds: [
+              {
+                id: 691444,
+                jobId: 34625,
+                eventId: 621172,
+                createTime: '2021-03-30T02:44:20.403Z',
+                startTime: '2021-03-30T02:44:27.954Z',
+                endTime: '2021-03-30T02:44:31.180Z',
+                duration: 3,
+                status: 'SUCCESS',
+                queuedTime: 1,
+                imagePullTime: 5
+              }
+            ],
+            isDowntimeEvent: false,
+            maxEndTime: '2021-03-30T02:44:31.180Z'
+          }
+        ],
+        true
+      )
+    )
+  );
+}
 
 /**
  * Return mock model for metrics

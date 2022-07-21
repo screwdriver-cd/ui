@@ -3,6 +3,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import { resolve } from 'rsvp';
 import sinon from 'sinon';
 import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
@@ -14,6 +15,7 @@ const hasEmptyMetrics = () => [
   { 'Content-Type': 'application/json' },
   JSON.stringify([])
 ];
+
 const mockPipeline = EmberObject.create({
   id: 1,
   scmRepo: {
@@ -22,7 +24,8 @@ const mockPipeline = EmberObject.create({
     rootDir: '',
     url: 'https://github.com/screwdriver-cd/ui/tree/master'
   },
-  branch: 'master'
+  branch: 'master',
+  metrics: resolve([])
 });
 const lastEventInfo = EmberObject.create({
   startTime: '--/--/----',

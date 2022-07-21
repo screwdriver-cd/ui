@@ -541,8 +541,6 @@ module('Unit | Controller | pipeline/events', function (hooks) {
 
     controller.set('pipeline', pipeline);
 
-    console.log(controller.get('hasAdmins'), false);
-
     assert.notOk(controller.get('hasAdmins'), 'has no admins');
     assert.deepEqual(
       controller.get('pipeline.admins'),
