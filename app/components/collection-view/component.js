@@ -113,6 +113,7 @@ export default Component.extend({
       }
     }
   }),
+
   collectionPipelines: computed('collection.pipelines', {
     get() {
       let viewingId = this.get('collection.id');

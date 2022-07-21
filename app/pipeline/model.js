@@ -60,5 +60,18 @@ export default DS.Model.extend({
 
       return parameters;
     }
+  }),
+  failedBuildCount: computed('metrics.[]', {
+    get() {
+      let failedBuildCount = 0;
+
+      this.metrics.toArray().forEach(event => {
+        if (['FAILURE', 'ABORTED'].includes(event.status)) {
+          failedBuildCount += 1;
+        }
+      });
+
+      return failedBuildCount;
+    }
   })
 });

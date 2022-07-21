@@ -20,7 +20,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   actions: {
-    error() {
+    error(/* error, transition */) {
       localStorage.removeItem('lastViewedCollectionId');
 
       return this.transitionTo('/404');
