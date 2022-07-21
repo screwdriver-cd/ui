@@ -184,19 +184,39 @@
 
   .start {
     width: 10%;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-      'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 
   .duration {
     width: 10%;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-      'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  .last-run {
+    width: 12%;
+    max-width: 200px;
+
+    .icon-wrapper {
+      .fa {
+        line-height: 0;
+      }
+    }
   }
 
   .history {
-    width: 25%;
-    padding: 5px;
+    display: flex;
+    align-items: center;
+
+    .icon-wrapper {
+      display: flex;
+      flex-direction: column;
+
+      .fa {
+        line-height: 0;
+      }
+    }
   }
 
   tbody tr:hover {
