@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, waitFor } from '@ember/test-helpers';
@@ -8,7 +9,6 @@ import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
 import Pretender from 'pretender';
 import templateHelper from 'screwdriver-ui/utils/template';
-import { mockMetricsPromise as makeMetricsMock } from 'screwdriver-ui/tests/mock/metrics';
 const { getLastUpdatedTime } = templateHelper;
 
 let server;
@@ -17,8 +17,6 @@ const hasEmptyMetrics = () => [
   { 'Content-Type': 'application/json' },
   JSON.stringify([])
 ];
-
-const metricsMock = makeMetricsMock();
 const mockPipeline = EmberObject.create({
   id: 1,
   scmRepo: {
@@ -28,7 +26,7 @@ const mockPipeline = EmberObject.create({
     url: 'https://github.com/screwdriver-cd/ui/tree/master'
   },
   branch: 'master',
-  metrics: metricsMock,
+  metrics: EmberPromise.resolve([]),
   createTime: Date.now()
 });
 const lastEventInfo = EmberObject.create({

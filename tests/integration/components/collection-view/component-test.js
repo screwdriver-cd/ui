@@ -1,23 +1,152 @@
-import { resolve, reject } from 'rsvp';
+import { resolve, reject, Promise as EmberPromise } from 'rsvp';
 import EmberObject from '@ember/object';
 import { module, test, todo } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, findAll, fillIn, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import Service from '@ember/service';
 import $ from 'jquery';
+import { copy } from 'ember-copy';
+import Pretender from 'pretender';
+
 import injectSessionStub from '../../../helpers/inject-session';
 import injectScmServiceStub from '../../../helpers/inject-scm';
-import { mockPipelinesPromise as makePipelinePromise } from '../../../mock/pipeline';
+let server;
 
-const mockPipeline = makePipelinePromise();
+const mockMetrics = [
+  {
+    id: 3,
+    createTime: '2020-10-06T17:57:53.388Z',
+    causeMessage: 'Manually started by klu909',
+    sha: '9af92ba134322',
+    commit: {
+      message: '3',
+      url: 'https://github.com/batman/foo/commit/9af92ba134322'
+    },
+    duration: 14,
+    status: 'SUCCESS'
+  },
+  {
+    id: 2,
+    createTime: '2020-10-06T17:47:55.089Z',
+    sha: '9af92ba134321',
+    commit: {
+      message: '2',
+      url: 'https://github.com/batman/foo/commit/9af92ba134321'
+    },
+    duration: 14,
+    status: 'SUCCESS'
+  }
+];
+
+const mockDefaultPipelines = copy([
+  EmberObject.create({
+    id: 1,
+    scmUri: 'github.com:12345678:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/screwdriver',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
+    },
+    scmContext: 'github:github.com',
+    annotations: {},
+    lastEventId: 12,
+    lastBuilds: [
+      {
+        id: 123,
+        status: 'SUCCESS',
+        // Most recent build
+        createTime: '2017-09-05T04:02:20.890Z'
+      }
+    ],
+    metrics: EmberPromise.resolve(mockMetrics)
+  }),
+  EmberObject.create({
+    id: 2,
+    scmUri: 'github.com:87654321:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main', 'publish'],
+    scmRepo: {
+      name: 'screwdriver-cd/ui',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/ui/tree/master'
+    },
+    scmContext: 'github:github.com',
+    annotations: {},
+    prs: {
+      open: 2,
+      failing: 1
+    },
+    metrics: EmberPromise.resolve([])
+  }),
+  EmberObject.create({
+    id: 3,
+    scmUri: 'github.com:54321876:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/models',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/models/tree/master'
+    },
+    scmContext: 'bitbucket:bitbucket.org',
+    annotations: {},
+    lastEventId: 23,
+    lastBuilds: [
+      {
+        id: 125,
+        status: 'FAILURE',
+        // 2nd most recent build
+        createTime: '2017-09-05T04:01:41.789Z'
+      }
+    ],
+    metrics: EmberPromise.resolve([])
+  }),
+  EmberObject.create({
+    id: 4,
+    scmUri: 'github.com:54321879:master:lib',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/zzz',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/zzz/tree/master',
+      rootDir: 'lib'
+    },
+    scmContext: 'bitbucket:bitbucket.org',
+    annotations: {},
+    lastEventId: 23,
+    lastBuilds: [
+      {
+        id: 125,
+        status: 'UNSTABLE',
+        createTime: '2017-09-05T04:01:41.789Z'
+      }
+    ],
+    metrics: EmberPromise.resolve([])
+  })
+]);
+
 const mockDefaultCollection = EmberObject.create({
   id: 1,
   name: 'My Pipelines',
   description: 'Default Collection',
   type: 'default',
-  pipelines: mockPipeline,
+  pipelines: mockDefaultPipelines,
   pipelineIds: [1, 2, 3, 4]
 });
 
@@ -26,7 +155,113 @@ const mockNormalCollection = EmberObject.create({
   name: 'My Pipelines',
   description: 'Normal Collection',
   type: 'normal',
-  pipelines: mockPipeline,
+  pipelines: mockDefaultPipelines,
+  pipelineIds: [1, 2, 3, 4]
+});
+
+const mockPipelinesReponse = copy([
+  EmberObject.create({
+    id: 1,
+    scmUri: 'github.com:12345678:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/screwdriver',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
+    },
+    scmContext: 'github:github.com',
+    annotations: {},
+    lastEventId: 12,
+    lastBuilds: [
+      {
+        id: 123,
+        status: 'SUCCESS',
+        // Most recent build
+        createTime: '2017-09-05T04:02:20.890Z'
+      }
+    ]
+  }),
+  EmberObject.create({
+    id: 2,
+    scmUri: 'github.com:87654321:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main', 'publish'],
+    scmRepo: {
+      name: 'screwdriver-cd/ui',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/ui/tree/master'
+    },
+    scmContext: 'github:github.com',
+    annotations: {},
+    prs: {
+      open: 2,
+      failing: 1
+    }
+  }),
+  EmberObject.create({
+    id: 3,
+    scmUri: 'github.com:54321876:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/models',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/models/tree/master'
+    },
+    scmContext: 'bitbucket:bitbucket.org',
+    annotations: {},
+    lastEventId: 23,
+    lastBuilds: [
+      {
+        id: 125,
+        status: 'FAILURE',
+        // 2nd most recent build
+        createTime: '2017-09-05T04:01:41.789Z'
+      }
+    ]
+  }),
+  EmberObject.create({
+    id: 4,
+    scmUri: 'github.com:54321879:master:lib',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/zzz',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/zzz/tree/master',
+      rootDir: 'lib'
+    },
+    scmContext: 'bitbucket:bitbucket.org',
+    annotations: {},
+    lastEventId: 23,
+    lastBuilds: [
+      {
+        id: 125,
+        status: 'UNSTABLE',
+        createTime: '2017-09-05T04:01:41.789Z'
+      }
+    ]
+  })
+]);
+const mockCollectionReponse = EmberObject.create({
+  id: 1,
+  name: 'My Pipelines',
+  description: 'Normal Collection',
+  type: 'normal',
+  pipelines: mockPipelinesReponse,
   pipelineIds: [1, 2, 3, 4]
 });
 
@@ -86,32 +321,6 @@ const mockCollections = [
   }
 ];
 
-const mockMetrics = [
-  {
-    id: 3,
-    createTime: '2020-10-06T17:57:53.388Z',
-    causeMessage: 'Manually started by klu909',
-    sha: '9af92ba134322',
-    commit: {
-      message: '3',
-      url: 'https://github.com/batman/foo/commit/9af92ba134322'
-    },
-    duration: 14,
-    status: 'SUCCESS'
-  },
-  {
-    id: 2,
-    createTime: '2020-10-06T17:47:55.089Z',
-    sha: '9af92ba134321',
-    commit: {
-      message: '2',
-      url: 'https://github.com/batman/foo/commit/9af92ba134321'
-    },
-    duration: 14,
-    status: 'SUCCESS'
-  }
-];
-
 const onRemovePipelineSpy = sinon.spy();
 const addMultipleToCollectionSpy = sinon.spy();
 const removeMultiplePipelinesSpy = sinon.spy();
@@ -120,18 +329,33 @@ module('Integration | Component | collection view', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.owner.unregister('service:store');
-    const storeStub = Service.extend({
-      query(model, filter) {
-        if (filter.pipelineId === 1) {
-          return resolve(mockMetrics);
+    server = new Pretender();
+
+    server.get('http://localhost:8080/v4/collections/1', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify(mockCollectionReponse)
+    ]);
+
+    server.get(
+      'http://localhost:8080/v4/pipelines/:pipelineId/metrics',
+      request => {
+        const paramPipelineId = request.params.pipelineId;
+
+        let metricsData = mockMetrics;
+
+        if (paramPipelineId !== '1') {
+          metricsData = [];
         }
 
-        return resolve([]);
+        return [
+          200,
+          { 'Content-Type': 'application/json' },
+          JSON.stringify(metricsData)
+        ];
       }
-    });
+    );
 
-    this.owner.register('service:store', storeStub);
     this.setProperties({
       collection: mockDefaultCollection,
       normalCollection: mockNormalCollection,
@@ -140,6 +364,10 @@ module('Integration | Component | collection view', function (hooks) {
       addMultipleToCollection: addMultipleToCollectionSpy,
       removeMultiplePipelines: removeMultiplePipelinesSpy
     });
+  });
+
+  hooks.afterEach(function () {
+    server.shutdown();
   });
 
   test('it renders in card mode', async function (assert) {
@@ -268,6 +496,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('th.status').hasText('Status');
     assert.dom('th.start').hasText('Start Date');
     assert.dom('th.duration').hasText('Duration');
+    assert.dom('th.last-run').hasText('Last Run Job');
     assert.dom('th.history').exists({ count: 1 });
 
     assert.dom('.collection-pipeline').exists({ count: 4 });
@@ -382,23 +611,7 @@ module('Integration | Component | collection view', function (hooks) {
   });
 
   test('it removes a pipeline from a collection in card mode', async function (assert) {
-    assert.expect(3);
-
-    const storeStub = Service.extend({
-      query(model, filter) {
-        if (filter.pipelineId === 1) {
-          return resolve(mockMetrics);
-        }
-
-        return resolve([]);
-      },
-      findRecord(model, id) {
-        assert.strictEqual(model, 'collection');
-        assert.strictEqual(id, 1);
-
-        return resolve(mockNormalCollection);
-      }
-    });
+    assert.expect(1);
 
     const onRemovePipelineMock = pipelineId => {
       // Make sure the models pipeline is the one being removed
@@ -408,7 +621,6 @@ module('Integration | Component | collection view', function (hooks) {
     };
 
     this.set('onRemovePipeline', onRemovePipelineMock);
-    this.owner.register('service:store', storeStub);
     injectSessionStub(this);
     injectScmServiceStub(this);
 
@@ -429,23 +641,7 @@ module('Integration | Component | collection view', function (hooks) {
   });
 
   test('it removes a pipeline from a collection in list mode', async function (assert) {
-    assert.expect(3);
-
-    const storeStub = Service.extend({
-      query(model, filter) {
-        if (filter.pipelineId === 1) {
-          return resolve(mockMetrics);
-        }
-
-        return resolve([]);
-      },
-      findRecord(model, id) {
-        assert.strictEqual(model, 'collection');
-        assert.strictEqual(id, 1);
-
-        return resolve(mockNormalCollection);
-      }
-    });
+    assert.expect(1);
 
     const onRemovePipelineMock = pipelineId => {
       // Make sure the models pipeline is the one being removed
@@ -455,7 +651,7 @@ module('Integration | Component | collection view', function (hooks) {
     };
 
     this.set('onRemovePipeline', onRemovePipelineMock);
-    this.owner.register('service:store', storeStub);
+    // this.owner.register('service:store', storeStub);
     injectSessionStub(this);
     injectScmServiceStub(this);
 
@@ -727,23 +923,7 @@ module('Integration | Component | collection view', function (hooks) {
   });
 
   test('it removes multiple pipelines from collection in card mode', async function (assert) {
-    assert.expect(4);
-
-    const storeStub = Service.extend({
-      query(model, filter) {
-        if (filter.pipelineId === 1) {
-          return resolve(mockMetrics);
-        }
-
-        return resolve([]);
-      },
-      findRecord(model, id) {
-        assert.strictEqual(model, 'collection');
-        assert.strictEqual(id, 1);
-
-        return resolve(mockNormalCollection);
-      }
-    });
+    assert.expect(2);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [3, 1]);
@@ -753,7 +933,6 @@ module('Integration | Component | collection view', function (hooks) {
     };
 
     this.set('removeMultiplePipelines', removeMultiplePipelinesMock);
-    this.owner.register('service:store', storeStub);
     injectSessionStub(this);
     injectScmServiceStub(this);
 
@@ -784,23 +963,7 @@ module('Integration | Component | collection view', function (hooks) {
   });
 
   test('it removes multiple pipelines from collection in list mode', async function (assert) {
-    assert.expect(4);
-
-    const storeStub = Service.extend({
-      query(model, filter) {
-        if (filter.pipelineId === 1) {
-          return resolve(mockMetrics);
-        }
-
-        return resolve([]);
-      },
-      findRecord(model, id) {
-        assert.strictEqual(model, 'collection');
-        assert.strictEqual(id, 1);
-
-        return resolve(mockNormalCollection);
-      }
-    });
+    assert.expect(2);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [3, 1]);
@@ -810,7 +973,6 @@ module('Integration | Component | collection view', function (hooks) {
     };
 
     this.set('removeMultiplePipelines', removeMultiplePipelinesMock);
-    this.owner.register('service:store', storeStub);
     injectSessionStub(this);
     injectScmServiceStub(this);
 
@@ -843,22 +1005,6 @@ module('Integration | Component | collection view', function (hooks) {
   test('it fails to remove multiple pipelines from collection in card mode', async function (assert) {
     assert.expect(3);
 
-    const storeStub = Service.extend({
-      query(model, filter) {
-        if (filter.pipelineId === 1) {
-          return resolve(mockMetrics);
-        }
-
-        return resolve([]);
-      },
-      findRecord(model, id) {
-        assert.strictEqual(model, 'collection');
-        assert.strictEqual(id, 1);
-
-        return resolve(mockNormalCollection);
-      }
-    });
-
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [3, 1]);
       assert.strictEqual(collectionId, 1);
@@ -873,7 +1019,6 @@ module('Integration | Component | collection view', function (hooks) {
     };
 
     this.set('removeMultiplePipelines', removeMultiplePipelinesMock);
-    this.owner.register('service:store', storeStub);
     injectSessionStub(this);
     injectScmServiceStub(this);
 
@@ -911,22 +1056,6 @@ module('Integration | Component | collection view', function (hooks) {
   test('it fails to remove multiple pipelines from collection in list mode', async function (assert) {
     assert.expect(3);
 
-    const storeStub = Service.extend({
-      query(model, filter) {
-        if (filter.pipelineId === 1) {
-          return resolve(mockMetrics);
-        }
-
-        return resolve([]);
-      },
-      findRecord(model, id) {
-        assert.strictEqual(model, 'collection');
-        assert.strictEqual(id, 1);
-
-        return resolve(mockNormalCollection);
-      }
-    });
-
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [3, 1]);
       assert.strictEqual(collectionId, 1);
@@ -941,7 +1070,6 @@ module('Integration | Component | collection view', function (hooks) {
     };
 
     this.set('removeMultiplePipelines', removeMultiplePipelinesMock);
-    this.owner.register('service:store', storeStub);
     injectSessionStub(this);
     injectScmServiceStub(this);
 
@@ -1155,65 +1283,64 @@ module('Integration | Component | collection view', function (hooks) {
       return resolve();
     };
 
-    const storeStub = Service.extend({
-      query(model, filter) {
-        if (model === 'pipeline') {
-          return resolve(mockPipelines);
-        }
+    // http://localhost:8080/v4/pipelines?count=3&page=1&search=screwdriver-cd&sort=ascending&sortBy=name
+    server.get('http://localhost:8080/v4/pipelines', request => {
+      const searchString = request.queryParams.search;
 
-        if (filter.pipelineId === 1) {
-          return resolve(mockMetrics);
-        }
+      assert.strictEqual(searchString, 'screwdriver-cd');
 
-        return resolve([]);
-      },
-      findRecord(model, id) {
-        assert.strictEqual(model, 'collection');
-        assert.strictEqual(id, 2);
+      return [
+        200,
+        { 'Content-Type': 'application/json' },
+        JSON.stringify(mockPipelines)
+      ];
+    });
 
-        const updatedCollection = EmberObject.create({
-          id: 2,
-          name: 'collection1',
-          description: 'Collection1',
-          type: 'normal',
-          userId: 1,
-          pipelineIds: [1],
-          pipelines: [
+    const updatedCollection = EmberObject.create({
+      id: 2,
+      name: 'collection1',
+      description: 'Collection1',
+      type: 'normal',
+      userId: 1,
+      pipelineIds: [1],
+      pipelines: [
+        {
+          id: 1,
+          scmUri: 'github.com:12345678:master',
+          createTime: '2017-01-05T00:55:46.775Z',
+          admins: {
+            username: true
+          },
+          workflow: ['main'],
+          scmRepo: {
+            name: 'screwdriver-cd/screwdriver',
+            branch: 'master',
+            url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
+          },
+          scmContext: 'github:github.com',
+          annotations: {},
+          lastEventId: 12,
+          lastBuilds: [
             {
-              id: 1,
-              scmUri: 'github.com:12345678:master',
-              createTime: '2017-01-05T00:55:46.775Z',
-              admins: {
-                username: true
-              },
-              workflow: ['main'],
-              scmRepo: {
-                name: 'screwdriver-cd/screwdriver',
-                branch: 'master',
-                url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
-              },
-              scmContext: 'github:github.com',
-              annotations: {},
-              lastEventId: 12,
-              lastBuilds: [
-                {
-                  id: 123,
-                  status: 'SUCCESS',
-                  // Most recent build
-                  createTime: '2017-09-05T04:02:20.890Z'
-                }
-              ]
+              id: 123,
+              status: 'SUCCESS',
+              // Most recent build
+              createTime: '2017-09-05T04:02:20.890Z'
             }
           ]
-        });
-
-        return resolve(updatedCollection);
-      }
+        }
+      ]
     });
+
+    server.get('http://localhost:8080/v4/collections/2', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify(updatedCollection)
+    ]);
 
     this.set('collection', mockEmptyCollection);
     this.set('addMultipleToCollection', addMultipleToCollectionMock);
-    this.owner.register('service:store', storeStub);
+
     injectSessionStub(this);
     injectScmServiceStub(this);
 
