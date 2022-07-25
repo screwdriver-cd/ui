@@ -278,8 +278,8 @@ export default Component.extend({
 
       this.updatePipelineAlias('');
     },
-    async updatePipelineAlias(inputPipelinAlias) {
-      let aliasName = inputPipelinAlias;
+    async updatePipelineAlias(inputPipelineAlias) {
+      let aliasName = inputPipelineAlias;
 
       this.$('input.pipeline-alias-name').val(aliasName);
 
