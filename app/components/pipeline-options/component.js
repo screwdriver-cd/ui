@@ -296,8 +296,8 @@ export default Component.extend({
 
       debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
     },
-    async updatePipelineAlias(inputPipelinAlias) {
-      let aliasName = inputPipelinAlias;
+    async updatePipelineAlias(inputPipelineAlias) {
+      let aliasName = inputPipelineAlias;
 
       this.$('input.pipeline-alias-name').val(aliasName);
 
