@@ -4,12 +4,12 @@
   {{/if}}
 </td>
 {{#if isAliasName}}
-<td class="alias">
-  {{aliasName}}
-    {{#bs-tooltip placement="bottom" renderInPlace=true}}
+  <td class="alias">
     {{aliasName}}
-  {{/bs-tooltip}}
-</td>
+    {{#bs-tooltip placement="bottom" renderInPlace=true}}
+      {{aliasName}}
+    {{/bs-tooltip}}
+  </td>
 {{/if}}
 <td class="app-id">
   {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}{{pipeline.scmRepo.name}}{{/link-to}}

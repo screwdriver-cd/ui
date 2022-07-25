@@ -120,10 +120,8 @@ export default Component.extend({
 
       this.sortedPipelines.forEach(element => {
         if (element.settings.aliasName) {
-          console.log(element.settings.aliasName);
           isAliasName = true;
         } else {
-          console.log('hererere');
           isAliasName = false;
         }
       });
