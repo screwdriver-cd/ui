@@ -114,6 +114,24 @@ export default Component.extend({
     }
   }),
 
+  isAliasName: computed('collection.pipelines', {
+    get() {
+      let isAliasName;
+
+      this.sortedPipelines.forEach(element => {
+        if (element.settings.aliasName) {
+          console.log(element.settings.aliasName);
+          isAliasName = true;
+        } else {
+          console.log('hererere');
+          isAliasName = false;
+        }
+      });
+
+      return isAliasName;
+    }
+  }),
+
   collectionPipelines: computed('collection.pipelines', {
     get() {
       let viewingId = this.get('collection.id');

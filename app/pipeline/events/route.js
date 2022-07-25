@@ -45,7 +45,7 @@ export default Route.extend({
         'settings.filterEventsForNoBuilds',
         false
       ),
-      aliasName: getWithDefault(this.pipeline, 'settings.aliasName', 'appId')
+      aliasName: getWithDefault(this.pipeline, 'settings.aliasName', '')
     });
 
     return RSVP.hash({

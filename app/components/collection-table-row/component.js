@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import { and } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { formatMetrics } from 'screwdriver-ui/utils/metric';
@@ -23,10 +23,9 @@ export default Component.extend({
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
   aliasName: computed('pipeline', function get() {
-    const aliasName = this.pipeline.settings?.aliasName;
     const { name } = this.pipeline.scmRepo;
 
-    return aliasName || name;
+    return getWithDefault(this.pipeline.settings, 'aliasName', name);
   }),
   branch: computed('pipeline', function get() {
     const { branch, rootDir } = this.pipeline.scmRepo;
