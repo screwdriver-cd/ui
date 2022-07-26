@@ -149,7 +149,7 @@
           <thead>
             <tr>
               <th class="collection-pipeline__choose"></th>
-              {{#if this.isAliasName}}
+              {{#if this.hasAliasName}}
                 <th class="alias" rowspan="1">Alias</th>
               {{/if}}
               <th class="app-id" rowspan="1">Name</th>
@@ -197,7 +197,7 @@
                   deselectPipeline=(action "deselectPipeline")
                   reset=reset
                   collectionName=collection.name
-                  isAliasName = isAliasName
+                  hasAliasName = hasAliasName
               }}
             {{/each}}
           </tbody>
