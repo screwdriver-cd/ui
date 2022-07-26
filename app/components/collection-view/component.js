@@ -114,17 +114,13 @@ export default Component.extend({
     }
   }),
 
-  isAliasName: computed('collection.pipelines', {
+  hasAliasName: computed('collection.pipelines', {
     get() {
-      let isAliasName;
+      let isAliasName = this.collectionPipelines
+        .toArray()
+        .some(element => element.settings.aliasName);
 
-      this.sortedPipelines.forEach(element => {
-        if (element.settings.aliasName) {
-          isAliasName = true;
-        } else {
-          isAliasName = false;
-        }
-      });
+      console.log('aliasname', this.collection.pipelines, isAliasName);
 
       return isAliasName;
     }
