@@ -3,7 +3,7 @@
     <input type="checkbox" value={{pipelineSelected}} onchange={{action "togglePipeline"}}>
   {{/if}}
 </td>
-{{#if isAliasName}}
+{{#if hasAliasName}}
   <td class="alias">
     {{aliasName}}
     {{#bs-tooltip placement="bottom" renderInPlace=true}}
