@@ -555,7 +555,9 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     await fillIn('section.preference li:nth-of-type(4) input', 'test-pr');
 
-    assert.dom('section.preference li:nth-of-type(4) input').hasText('test-pr');
+    assert
+      .dom('section.preference li:nth-of-type(4) input')
+      .hasValue('test-pr');
   });
 
   test('it handles pipeline remove flow', async function (assert) {
