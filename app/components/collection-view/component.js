@@ -116,13 +116,11 @@ export default Component.extend({
 
   hasAliasName: computed('collection.pipelines', {
     get() {
-      let isAliasName = this.collectionPipelines
+      let hasAliasName = this.collectionPipelines
         .toArray()
         .some(element => element.settings.aliasName);
 
-      console.log('aliasname', this.collection.pipelines, isAliasName);
-
-      return isAliasName;
+      return hasAliasName;
     }
   }),
 

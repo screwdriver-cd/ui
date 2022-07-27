@@ -549,7 +549,7 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert
       .dom('section.preference li:nth-of-type(4) p')
       .hasText(
-        'Setup your own preferred pipeline name to display in the pipeline list.'
+        'Setup your own preferred pipeline name in the dashboard list view.'
       );
     assert.dom('section.preference li:nth-of-type(4) input').hasNoText();
 
