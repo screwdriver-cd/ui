@@ -172,8 +172,6 @@ export default Component.extend({
         aliasName
       });
     } finally {
-      pipeline.set('settings.aliasName', aliasName);
-
       this.set('aliasName', aliasName);
     }
   },
