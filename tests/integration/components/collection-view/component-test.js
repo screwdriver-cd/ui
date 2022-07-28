@@ -64,7 +64,10 @@ const mockDefaultPipelines = copy([
         createTime: '2017-09-05T04:02:20.890Z'
       }
     ],
-    metrics: EmberPromise.resolve(mockMetrics)
+    metrics: EmberPromise.resolve(mockMetrics),
+    settings: {
+      aliasName: 'screwdriver'
+    }
   }),
   EmberObject.create({
     id: 2,
@@ -85,7 +88,10 @@ const mockDefaultPipelines = copy([
       open: 2,
       failing: 1
     },
-    metrics: EmberPromise.resolve([])
+    metrics: EmberPromise.resolve([]),
+    settings: {
+      aliasName: 'ui'
+    }
   }),
   EmberObject.create({
     id: 3,
@@ -111,7 +117,10 @@ const mockDefaultPipelines = copy([
         createTime: '2017-09-05T04:01:41.789Z'
       }
     ],
-    metrics: EmberPromise.resolve([])
+    metrics: EmberPromise.resolve([]),
+    settings: {
+      aliasName: 'models'
+    }
   }),
   EmberObject.create({
     id: 4,
@@ -137,7 +146,10 @@ const mockDefaultPipelines = copy([
         createTime: '2017-09-05T04:01:41.789Z'
       }
     ],
-    metrics: EmberPromise.resolve([])
+    metrics: EmberPromise.resolve([]),
+    settings: {
+      aliasName: 'zzz'
+    }
   })
 ]);
 
@@ -183,7 +195,10 @@ const mockPipelinesReponse = copy([
         // Most recent build
         createTime: '2017-09-05T04:02:20.890Z'
       }
-    ]
+    ],
+    settings: {
+      aliasName: 'screwdriver'
+    }
   }),
   EmberObject.create({
     id: 2,
@@ -203,6 +218,9 @@ const mockPipelinesReponse = copy([
     prs: {
       open: 2,
       failing: 1
+    },
+    settings: {
+      aliasName: 'ui'
     }
   }),
   EmberObject.create({
@@ -228,7 +246,10 @@ const mockPipelinesReponse = copy([
         // 2nd most recent build
         createTime: '2017-09-05T04:01:41.789Z'
       }
-    ]
+    ],
+    settings: {
+      aliasName: 'models'
+    }
   }),
   EmberObject.create({
     id: 4,
@@ -253,9 +274,13 @@ const mockPipelinesReponse = copy([
         status: 'UNSTABLE',
         createTime: '2017-09-05T04:01:41.789Z'
       }
-    ]
+    ],
+    settings: {
+      aliasName: 'zzz'
+    }
   })
 ]);
+
 const mockCollectionReponse = EmberObject.create({
   id: 1,
   name: 'My Pipelines',
@@ -491,6 +516,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('.header__description').hasText('Default Collection');
     assert.dom('table').exists({ count: 1 });
     assert.dom('th.collection-pipeline__choose').exists({ count: 1 });
+    assert.dom('th.alias').hasText('Alias');
     assert.dom('th.app-id').hasText('Name');
     assert.dom('th.branch').hasText('Branch');
     assert.dom('th.status').hasText('Status');
@@ -502,6 +528,13 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('.collection-pipeline').exists({ count: 4 });
 
     // check that collection table row order is correct
+    assert.dom('.collection-pipeline:nth-of-type(1) .alias').hasText('models');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .alias')
+      .hasText('screwdriver');
+    assert.dom('.collection-pipeline:nth-of-type(3) .alias').hasText('ui');
+    assert.dom('.collection-pipeline:nth-of-type(4) .alias').hasText('zzz');
+
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id a')
       .hasText('screwdriver-cd/models');

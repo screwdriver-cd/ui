@@ -49,6 +49,7 @@ export default Component.extend({
   maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
+  aliasName: '',
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
@@ -95,6 +96,8 @@ export default Component.extend({
       'pipeline.settings.filterEventsForNoBuilds'
     );
 
+    let aliasName = this.get('pipeline.settings.aliasName');
+
     if (typeof privateRepo !== 'boolean') {
       privateRepo = false;
     }
@@ -120,7 +123,8 @@ export default Component.extend({
       publicPipeline,
       groupedEvents,
       showEventTriggers,
-      filterEventsForNoBuilds
+      filterEventsForNoBuilds,
+      aliasName
     });
 
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
@@ -160,6 +164,18 @@ export default Component.extend({
         this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
       );
   },
+  async updatePipelineAlias(aliasName) {
+    const pipeline = this.get('pipeline');
+
+    try {
+      await this.shuttle.updatePipelineSettings(pipeline.id, {
+        aliasName
+      });
+    } finally {
+      this.set('aliasName', aliasName);
+    }
+  },
+
   actions: {
     // Checks if scm URL is valid or not
     scmChange(val) {
@@ -277,6 +293,13 @@ export default Component.extend({
       this.$('input.display-job-name').val(displayJobNameLength);
 
       debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
+    },
+    async updatePipelineAlias(inputPipelineAlias) {
+      let aliasName = inputPipelineAlias;
+
+      this.$('input.pipeline-alias-name').val(aliasName);
+
+      debounce(this, this.updatePipelineAlias, aliasName, 1000);
     },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {

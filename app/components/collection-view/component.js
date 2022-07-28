@@ -114,6 +114,16 @@ export default Component.extend({
     }
   }),
 
+  hasAliasName: computed('collection.pipelines', {
+    get() {
+      let hasAliasName = this.collectionPipelines
+        .toArray()
+        .some(element => element.settings.aliasName);
+
+      return hasAliasName;
+    }
+  }),
+
   collectionPipelines: computed('collection.pipelines', {
     get() {
       let viewingId = this.get('collection.id');
