@@ -42,10 +42,11 @@
         <a class={{if (eq selectedEventObj.sha latestCommit.sha) "latest-commit"}} href={{selectedEventObj.commit.url}}>
           #{{selectedEventObj.truncatedSha}}
         </a>
+        {{#if (and (not-eq selectedEventObj.type "pr") (not-eq selectedEventObj.sha latestCommit.sha))}}
+          <br>
+          <div class="commit-warning alert alert-warning">{{fa-icon "exclamation-triangle"}} This is <strong>NOT</strong> the latest commit.</div>
+        {{/if}}
       </p>
-      {{#if (and (not-eq selectedEventObj.type "pr") (not-eq selectedEventObj.sha latestCommit.sha))}}
-        <p>{{fa-icon "exclamation-circle"}} This is not the latest commit.</p>
-      {{/if}}
       {{#if (eq tooltipData.job.status "FROZEN")}}
         {{#if (get-length tooltipData.selectedEvent.meta.parameters)}}
           {{#pipeline-parameterized-build
