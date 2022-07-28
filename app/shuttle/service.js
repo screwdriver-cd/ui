@@ -178,6 +178,13 @@ export default Service.extend({
       };
     }
 
+    if (typeof settings.aliasName === 'string') {
+      newSetting = {
+        ...newSetting,
+        aliasName: settings.aliasName
+      };
+    }
+
     const data = { settings: newSetting };
 
     return this.fetchFromApi(method, url, data);

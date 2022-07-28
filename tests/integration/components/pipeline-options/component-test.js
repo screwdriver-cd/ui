@@ -504,6 +504,62 @@ module('Integration | Component | pipeline options', function (hooks) {
       .hasClass('x-toggle-container-checked');
   });
 
+  test('it updates pipeline aliasName', async function (assert) {
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234',
+        settings: {
+          groupedEvents: true,
+          showEventTriggers: false,
+          filterEventsForNoBuilds: false
+        }
+      })
+    );
+
+    const shuttleStub = Service.extend({
+      // eslint-disable-next-line no-unused-vars
+      updatePipelineSettings(pipelineId, settings) {
+        assert.ok(true, 'updatePipelineSettings called');
+        assert.equal(pipelineId, 'abc1234');
+        assert.deepEqual(settings, {
+          aliasName: 'test-pr'
+        });
+
+        return resolve({});
+      },
+      getUserPipelinePreference(pipelineId) {
+        assert.ok(true, 'getUserPipelinePreference called');
+        assert.equal(pipelineId, 'abc1234');
+
+        return resolve({});
+      }
+    });
+
+    this.owner.unregister('service:shuttle');
+    this.owner.register('service:shuttle', shuttleStub);
+
+    await render(hbs`{{pipeline-options pipeline=mockPipeline }}`);
+
+    assert
+      .dom('section.preference li:nth-of-type(4) h4')
+      .hasText('Re-name pipeline');
+    assert
+      .dom('section.preference li:nth-of-type(4) p')
+      .hasText(
+        'Setup your own preferred pipeline name in the dashboard list view.'
+      );
+    assert.dom('section.preference li:nth-of-type(4) input').hasNoText();
+
+    await fillIn('section.preference li:nth-of-type(4) input', 'test-pr');
+
+    assert
+      .dom('section.preference li:nth-of-type(4) input')
+      .hasValue('test-pr');
+  });
+
   test('it handles pipeline remove flow', async function (assert) {
     this.set(
       'mockPipeline',
