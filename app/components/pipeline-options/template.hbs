@@ -308,6 +308,26 @@
             </div>
           </div>
         </li>
+        <li>
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Choose timestamp format</h4>
+              <p>Choose your preferred timestamp format</p>
+            </div>
+            <div class="col-xs-2" >
+              {{#power-select
+                options=timestampOptions
+                renderInPlace=true
+                selected=selectedTimestampFormat
+                searchEnabled=false
+                placeholder="Select timestamp..."
+                onchange=(action 'selectTimestampFormat')
+                as |timestampFormat|}}
+                {{timestampFormat}}
+              {{/power-select}}
+            </div>
+          </div>
+        </li>
       </ul>
     </section>
   </div>
