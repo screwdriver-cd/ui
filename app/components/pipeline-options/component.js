@@ -57,6 +57,8 @@ export default Component.extend({
       .filter(j => !j.name.match(prRegex))
       .sortBy('name');
   }),
+  selectedTimestampFormat: '',
+  timestampOptions: ['UTC', 'Local timezone', 'Human readible'],
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
   isValid: computed('scmUrl', {
@@ -158,6 +160,19 @@ export default Component.extend({
     );
 
     set(pipelinePreference, 'displayJobNameLength', displayJobNameLength);
+    pipelinePreference
+      .save()
+      .then(() =>
+        this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
+      );
+  },
+  async updateTimestampFormat(timestampFormat) {
+    const pipelineId = this.get('pipeline.id');
+    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
+      pipelineId
+    );
+
+    set(pipelinePreference, 'timestampFormat', timestampFormat);
     pipelinePreference
       .save()
       .then(() =>
@@ -300,6 +315,11 @@ export default Component.extend({
       this.$('input.pipeline-alias-name').val(aliasName);
 
       debounce(this, this.updatePipelineAlias, aliasName, 1000);
+    },
+    async selectTimestampFormat(selectedTimestampFormat) {
+      let timestampFormat = selectedTimestampFormat;
+
+      debounce(this, this.updateTimestampFormat, timestampFormat, 1000);
     },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {
