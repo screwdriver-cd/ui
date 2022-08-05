@@ -16,6 +16,8 @@ export default Component.extend({
   sync: service('sync'),
   // Clearing a cache
   cache: service('cache'),
+  // Update the job status
+  jobService: service('job'),
   shuttle: service(),
   errorMessage: '',
   scmUrl: '',
@@ -234,7 +236,9 @@ export default Component.extend({
     updateMessage(message) {
       const { state, jobId } = this;
 
-      this.setJobStatus(jobId, state, message || ' ');
+      this.jobService
+        .setJobState(jobId, state, message || ' ')
+        .catch(error => this.set('errorMessage', error));
       this.set('showToggleModal', false);
     },
     showRemoveButtons() {

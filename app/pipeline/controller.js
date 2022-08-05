@@ -16,15 +16,6 @@ export default Controller.extend({
       }
 
       return collection.save();
-    },
-    setJobStatus(id, state, stateChangeMessage) {
-      const job = this.store.peekRecord('job', id);
-
-      job.set('state', state);
-      job.set('stateChangeMessage', stateChangeMessage);
-      job
-        .save()
-        .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     }
   }
 });

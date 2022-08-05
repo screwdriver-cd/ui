@@ -1,4 +1,4 @@
-import Controller, { inject } from '@ember/controller';
+import Controller from '@ember/controller';
 import { computed, get } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
@@ -175,8 +175,9 @@ export async function updateEvents(page) {
 }
 
 export default Controller.extend(ModelReloaderMixin, {
-  pipelineController: inject('pipeline'),
   shuttle: service(),
+  // Update the job status
+  jobService: service('job'),
   lastRefreshed: moment(),
   expandedEventsGroup: {},
   shouldReload(model) {
@@ -646,13 +647,10 @@ export default Controller.extend(ModelReloaderMixin, {
         this.set('syncAdmins', 'failure');
       }
     },
-    setJobStatus(id, state, stateChangeMessage) {
-      this.pipelineController.send(
-        'setJobStatus',
-        id,
-        state,
-        stateChangeMessage
-      );
+    setJobState(id, state, stateChangeMessage) {
+      this.jobService
+        .setJobState(id, state, stateChangeMessage || ' ')
+        .catch(error => this.set('errorMessage', error));
       this.reload();
     }
   },
