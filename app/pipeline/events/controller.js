@@ -650,8 +650,8 @@ export default Controller.extend(ModelReloaderMixin, {
     setJobState(id, state, stateChangeMessage) {
       this.jobService
         .setJobState(id, state, stateChangeMessage || ' ')
-        .catch(error => this.set('errorMessage', error));
-      this.reload();
+        .catch(error => this.set('errorMessage', error))
+        .finally(() => this.reload());
     }
   },
   willDestroy() {
