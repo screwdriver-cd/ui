@@ -57,8 +57,12 @@ export default Component.extend({
       .filter(j => !j.name.match(prRegex))
       .sortBy('name');
   }),
-  selectedTimestampFormat: '',
-  timestampOptions: ['UTC', 'Local timezone', 'Human readible'],
+  selectedTimestampFormat: {},
+  timestampOptions: [
+    { key: 'UTC', name: 'UTC' },
+    { key: 'LOCAL_TIMEZONE', name: 'Local timezone' },
+    { key: 'HUMAN_READABLE', name: 'Human readable' }
+  ],
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
   isValid: computed('scmUrl', {
@@ -133,6 +137,10 @@ export default Component.extend({
 
     let showPRJobs = true;
 
+    let selectedTimestampFormat = this.timestampOptions.find(
+      timestamp => timestamp.key === 'HUMAN_READABLE'
+    );
+
     const pipelinePreference = await this.shuttle.getUserPipelinePreference(
       this.get('pipeline.id')
     );
@@ -140,9 +148,16 @@ export default Component.extend({
     if (pipelinePreference) {
       desiredJobNameLength = pipelinePreference.displayJobNameLength;
       showPRJobs = getWithDefault(pipelinePreference, 'showPRJobs', true);
+      selectedTimestampFormat = this.timestampOptions.find(
+        timestamp => timestamp.key === pipelinePreference.timestampFormat
+      );
     }
 
-    this.setProperties({ desiredJobNameLength, showPRJobs });
+    this.setProperties({
+      desiredJobNameLength,
+      showPRJobs,
+      selectedTimestampFormat
+    });
 
     if (this.displayDowntimeJobs) {
       const metricsDowntimeJobs = this.getWithDefault(
@@ -172,7 +187,7 @@ export default Component.extend({
       pipelineId
     );
 
-    set(pipelinePreference, 'timestampFormat', timestampFormat);
+    set(pipelinePreference, 'timestampFormat', timestampFormat.key);
     pipelinePreference
       .save()
       .then(() =>
