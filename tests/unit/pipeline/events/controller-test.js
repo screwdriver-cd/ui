@@ -568,4 +568,117 @@ module('Unit | Controller | pipeline/events', function (hooks) {
       'pipeline admins is NOT empty'
     );
   });
+
+  test('it handles job enabling', async function (assert) {
+    server.put('http://localhost:8080/v4/jobs/1234', () => [
+      200,
+      {},
+      JSON.stringify({})
+    ]);
+
+    const controller = this.owner.lookup('controller:pipeline/events');
+
+    run(() => {
+      controller.store.push({
+        data: {
+          id: '1234',
+          type: 'job',
+          attributes: {
+            state: 'DISABLED',
+            stateChangeMessage: 'foo'
+          }
+        }
+      });
+
+      controller.send('setJobState', 1234, 'ENABLED', 'testing');
+    });
+
+    await settled();
+
+    const job = await controller.store.peekRecord('job', 1234);
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.equal(job.state, 'ENABLED');
+    assert.equal(job.stateChangeMessage, 'testing');
+    assert.equal(payload.state, 'ENABLED');
+    assert.equal(payload.stateChangeMessage, 'testing');
+  });
+
+  test('it handles job disabling', async function (assert) {
+    server.put('http://localhost:8080/v4/jobs/1234', () => [
+      200,
+      {},
+      JSON.stringify({})
+    ]);
+
+    const controller = this.owner.lookup('controller:pipeline/events');
+
+    run(() => {
+      controller.store.push({
+        data: {
+          id: '1234',
+          type: 'job',
+          attributes: {
+            state: 'ENABLED',
+            stateChangeMessage: 'foo'
+          }
+        }
+      });
+
+      controller.send('setJobState', 1234, 'DISABLED', 'testing');
+    });
+
+    await settled();
+
+    const job = await controller.store.peekRecord('job', 1234);
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.equal(job.state, 'DISABLED');
+    assert.equal(job.stateChangeMessage, 'testing');
+    assert.equal(payload.state, 'DISABLED');
+    assert.equal(payload.stateChangeMessage, 'testing');
+  });
+
+  test('it fails to handle job enabling', async function (assert) {
+    server.put('http://localhost:8080/v4/jobs/1234', () => [
+      403,
+      {},
+      JSON.stringify({
+        statusCode: 403,
+        error: 'Forbidden',
+        message: 'Test Error'
+      })
+    ]);
+
+    const controller = this.owner.lookup('controller:pipeline/events');
+
+    run(() => {
+      controller.store.push({
+        data: {
+          id: '1234',
+          type: 'job',
+          attributes: {
+            state: 'DISABLED',
+            stateChangeMessage: 'foo'
+          }
+        }
+      });
+
+      controller.send('setJobState', 1234, 'ENABLED', 'testing');
+    });
+
+    await settled();
+
+    const job = await controller.store.peekRecord('job', 1234);
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.equal(job.state, 'DISABLED');
+    assert.equal(job.stateChangeMessage, 'foo');
+    assert.equal(payload.state, 'ENABLED');
+    assert.equal(payload.stateChangeMessage, 'testing');
+    assert.equal(controller.get('errorMessage'), 'Test Error');
+  });
 });
