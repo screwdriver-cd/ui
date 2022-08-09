@@ -21,6 +21,23 @@ export default Controller.extend({
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
   errorMessage: '',
+  jobDisabled: computed('model.job', {
+    get() {
+      const job = this.get('model.job');
+      const jobsPromise = this.get('model.pipeline.jobs');
+
+      return jobsPromise.then(jobs => {
+        if (this.get('model.event.type') === 'pr') {
+          const originalJob = jobs.find(j => j.id === job.prParentJobId);
+
+          return originalJob ? originalJob.isDisabled : false;
+        }
+
+        return job.isDisabled;
+      });
+    }
+  }),
+
   prEvents: computed('model.{event.pr.url,pipeline.id}', {
     get() {
       if (this.get('model.event.type') === 'pr') {
