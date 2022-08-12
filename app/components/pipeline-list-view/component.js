@@ -1,16 +1,20 @@
 import Component from '@ember/component';
 import { get, set, observer } from '@ember/object';
 import moment from 'moment';
+import { inject as service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import Table from 'ember-light-table';
 import isEqual from 'lodash.isequal';
 
 export default Component.extend({
+  store: service(),
+  shuttle: service(),
   isLoading: false,
   isShowingModal: false,
   sortingDirection: 'asc',
   sortingValuePath: 'job',
   sortedRows: [],
+  timestampPreference: null,
   columns: [
     {
       label: 'JOB',
@@ -68,6 +72,18 @@ export default Component.extend({
     if (sortColumn) {
       sortColumn.set('sorted', true);
     }
+
+    this.store
+      .findRecord('preference/pipeline', this.get('pipeline.id'))
+      .then(pipelinePreference => {
+        this.set(
+          'timestampPreference',
+          pipelinePreference.get('timestampFormat')
+        );
+      })
+      .catch(() => {
+        this.set('timestampPreference', null);
+      });
 
     this.setProperties({
       table,
@@ -190,9 +206,24 @@ export default Component.extend({
       let coverageData = {};
 
       if (latestBuild) {
-        startTime = latestBuild.startTime
-          ? `${toCustomLocaleString(new Date(latestBuild.startTime))}`
-          : 'Invalid date';
+        if (latestBuild.startTime) {
+          if (this.timestampPreference === 'LOCAL_TIMEZONE') {
+            startTime = `${toCustomLocaleString(
+              new Date(latestBuild.startTime)
+            )}`;
+          } else if (this.timestampPreference === 'UTC') {
+            startTime = `${toCustomLocaleString(
+              new Date(latestBuild.startTime),
+              { timezone: 'UTC' }
+            )} UTC`;
+          } else if (this.timestampPreference === 'HUMAN_READABLE') {
+            startTime = `${toCustomLocaleString(
+              new Date(latestBuild.startTime)
+            )}`;
+          }
+        } else {
+          startTime = 'Invalid date';
+        }
         buildId = latestBuild.id;
         duration = this.getDuration(
           latestBuild.startTime,
