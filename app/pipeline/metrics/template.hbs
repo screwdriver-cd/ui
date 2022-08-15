@@ -41,16 +41,14 @@
     onToggle=(action (mut isUTC))
   }}
 
-  <div class="chart-control filters-selection">
+  <label class="chart-control filters-selection">
     {{x-toggle
       size="small"
       theme="material"
-      showLabels=true
       value=successOnly
-      offLabel=null
-      onLabel="Success Only"
       onToggle=(action "toggleSuccessOnly")}}
-  </div>
+      <div class="success-only">Success Only</div>
+  </label>
 </div>
 
 <div class="chart-pipeline-info">
@@ -116,14 +114,14 @@
   {{/if}}
   <div class="chart-c3">
     <p class="chart-title">Events</p>
+    <label class="toggle-trend">
     {{x-toggle
       size="small"
       theme="material"
-      showLabels=true
       value=inTrendlineView
-      offLabel=null
-      onLabel="Trendline View"
       onToggle=(action "toggleTrendlineView")}}
+      <div class="trendline-view">Trendline View</div>
+    </label>
     <ul class="list-inline chart-legend">
       {{#each eventLegend as |lg|}}
         <li
