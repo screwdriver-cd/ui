@@ -9,13 +9,13 @@
   {{#if isAdmin}}
     <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
     <label class="trusted-toggle">
-    {{x-toggle
-      size="medium"
-      theme="light"
-      value=trusted
-      onToggle=(action "updateTrust" template.fullName)
-    }}
-    Trust?
+      {{x-toggle
+        size="medium"
+        theme="light"
+        value=trusted
+        onToggle=(action "updateTrust" template.fullName)
+      }}
+      Trust?
     </label>
   {{else}}
     {{#if scmUrl}}

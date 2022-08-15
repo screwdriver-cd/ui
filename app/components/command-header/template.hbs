@@ -9,13 +9,13 @@
   {{#if isAdmin}}
     <a href="#" {{action "setCommandToRemove" command}} class="remove">{{fa-icon "trash" title="Delete command"}}</a>
     <label class="trusted-toggle">
-    {{x-toggle
-      size="medium"
-      theme="light"
-      value=trusted
-      onToggle=(action "updateTrust" command.namespace command.name)
-    }}
-    Trust?
+      {{x-toggle
+        size="medium"
+        theme="light"
+        value=trusted
+        onToggle=(action "updateTrust" command.namespace command.name)
+      }}
+      Trust?
     </label>
   {{else}}
     {{#if scmUrl}}
