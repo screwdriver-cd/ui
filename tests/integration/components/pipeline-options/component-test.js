@@ -599,7 +599,7 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     assert
       .dom('section.preference li:nth-of-type(4) h4')
-      .hasText('Re-name pipeline');
+      .hasText('Rename pipeline');
     assert
       .dom('section.preference li:nth-of-type(4) p')
       .hasText(

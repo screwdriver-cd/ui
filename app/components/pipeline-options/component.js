@@ -20,6 +20,7 @@ export default Component.extend({
   jobService: service('job'),
   shuttle: service(),
   errorMessage: '',
+  successMessage: '',
   scmUrl: '',
   rootDir: '',
   hasRootDir: false,
@@ -173,6 +174,7 @@ export default Component.extend({
       await this.shuttle.updatePipelineSettings(pipeline.id, {
         aliasName
       });
+      this.set('successMessage', 'Pipeline alias-name updated successfully');
     } finally {
       this.set('aliasName', aliasName);
     }
@@ -298,12 +300,13 @@ export default Component.extend({
 
       debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
     },
-    async updatePipelineAlias(inputPipelineAlias) {
-      let aliasName = inputPipelineAlias;
+
+    async updatePipelineAlias() {
+      let { aliasName } = this;
 
       this.$('input.pipeline-alias-name').val(aliasName);
 
-      debounce(this, this.updatePipelineAlias, aliasName, 1000);
+      this.updatePipelineAlias(aliasName);
     },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {
