@@ -92,6 +92,11 @@
   }
 
   .x-toggle-component {
-    padding: 10px;
+    padding-right: 3px;
+  }
+
+  .trusted-toggle {
+    display: flex;
+    padding: 10px 10px 10px 0px;
   }
 }

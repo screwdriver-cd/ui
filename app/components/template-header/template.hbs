@@ -8,15 +8,15 @@
   {{/if}}
   {{#if isAdmin}}
     <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
-    {{x-toggle
-      size="medium"
-      theme="light"
-      showLabels=true
-      value=trusted
-      offLabel=null
-      onLabel="Trust?"
-      onToggle=(action "updateTrust" template.fullName)
-    }}
+    <label class="trusted-toggle">
+      {{x-toggle
+        size="medium"
+        theme="light"
+        value=trusted
+        onToggle=(action "updateTrust" template.fullName)
+      }}
+      Trust?
+    </label>
   {{else}}
     {{#if scmUrl}}
       <a href="#" {{action "setTemplateToRemove" template}} class="remove">{{fa-icon "trash" title="Delete template"}}</a>
