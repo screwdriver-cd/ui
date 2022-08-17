@@ -1,0 +1,16 @@
+<div class="row">
+    <h3>Choose timestamp format</h3>
+    <p>Choose your preferred timestamp format</p>
+    <div class="col-xs-4">
+        {{#power-select
+            options=timestampOptions
+            renderInPlace=true
+            selected=selectedTimestampFormat
+            searchEnabled=false
+            placeholder="Select timestamp"
+            onchange=(action "selectTimestampFormat")
+            as |timestampFormat|}}
+          {{timestampFormat.name}}
+        {{/power-select}}
+    </div>
+</div>

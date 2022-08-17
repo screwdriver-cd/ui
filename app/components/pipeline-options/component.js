@@ -57,12 +57,6 @@ export default Component.extend({
       .filter(j => !j.name.match(prRegex))
       .sortBy('name');
   }),
-  selectedTimestampFormat: {},
-  timestampOptions: [
-    { key: 'UTC', name: 'UTC' },
-    { key: 'LOCAL_TIMEZONE', name: 'Local timezone' },
-    { key: 'HUMAN_READABLE', name: 'Human readable' }
-  ],
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
   isValid: computed('scmUrl', {
@@ -137,10 +131,6 @@ export default Component.extend({
 
     let showPRJobs = true;
 
-    let selectedTimestampFormat = this.timestampOptions.find(
-      timestamp => timestamp.key === 'HUMAN_READABLE'
-    );
-
     const pipelinePreference = await this.shuttle.getUserPipelinePreference(
       this.get('pipeline.id')
     );
@@ -148,15 +138,11 @@ export default Component.extend({
     if (pipelinePreference) {
       desiredJobNameLength = pipelinePreference.displayJobNameLength;
       showPRJobs = getWithDefault(pipelinePreference, 'showPRJobs', true);
-      selectedTimestampFormat = this.timestampOptions.find(
-        timestamp => timestamp.key === pipelinePreference.timestampFormat
-      );
     }
 
     this.setProperties({
       desiredJobNameLength,
-      showPRJobs,
-      selectedTimestampFormat
+      showPRJobs
     });
 
     if (this.displayDowntimeJobs) {
@@ -181,19 +167,7 @@ export default Component.extend({
         this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
       );
   },
-  async updateTimestampFormat(timestampFormat) {
-    const pipelineId = this.get('pipeline.id');
-    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
-      pipelineId
-    );
 
-    set(pipelinePreference, 'timestampFormat', timestampFormat.key);
-    pipelinePreference
-      .save()
-      .then(() =>
-        this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
-      );
-  },
   async updatePipelineAlias(aliasName) {
     const pipeline = this.get('pipeline');
 
@@ -330,11 +304,6 @@ export default Component.extend({
       this.$('input.pipeline-alias-name').val(aliasName);
 
       debounce(this, this.updatePipelineAlias, aliasName, 1000);
-    },
-    async selectTimestampFormat(selectedTimestampFormat) {
-      let timestampFormat = selectedTimestampFormat;
-
-      debounce(this, this.updateTimestampFormat, timestampFormat, 1000);
     },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {
