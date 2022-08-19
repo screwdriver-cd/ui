@@ -211,15 +211,11 @@ export default Component.extend({
             startTime = `${toCustomLocaleString(
               new Date(latestBuild.startTime)
             )}`;
-          } else if (this.timestampPreference === 'UTC') {
+          } else {
             startTime = `${toCustomLocaleString(
               new Date(latestBuild.startTime),
               { timezone: 'UTC' }
             )} UTC`;
-          } else if (this.timestampPreference === 'HUMAN_READABLE') {
-            startTime = `${toCustomLocaleString(
-              new Date(latestBuild.startTime)
-            )}`;
           }
         } else {
           startTime = 'Invalid date';
