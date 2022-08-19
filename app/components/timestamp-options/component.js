@@ -8,14 +8,13 @@ export default Component.extend({
   selectedTimestampFormat: {},
   timestampOptions: [
     { key: 'UTC', name: 'UTC' },
-    { key: 'LOCAL_TIMEZONE', name: 'Local timezone' },
-    { key: 'HUMAN_READABLE', name: 'Human readable' }
+    { key: 'LOCAL_TIMEZONE', name: 'Local timezone' }
   ],
   async init() {
     this._super(...arguments);
 
     let selectedTimestampFormat = this.timestampOptions.find(
-      timestamp => timestamp.key === 'HUMAN_READABLE'
+      timestamp => timestamp.key === 'LOCAL_TIMEZONE'
     );
     const userSetting = await this.shuttle.getUserSetting();
 
