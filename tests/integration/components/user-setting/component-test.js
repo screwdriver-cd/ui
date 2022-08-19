@@ -16,7 +16,7 @@ module('Integration | Component | user-settings', function (hooks) {
 
     // Template block usage:
     await render(hbs`
-      <UserSettings>
+      <UserSetting>
         template block text
       </UserSettings>
     `);
