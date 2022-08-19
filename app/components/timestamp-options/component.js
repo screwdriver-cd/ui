@@ -19,8 +19,6 @@ export default Component.extend({
     );
     const userSetting = await this.shuttle.getUserSetting();
 
-    console.log('mehu', userSetting);
-
     if (userSetting) {
       selectedTimestampFormat = this.timestampOptions.find(
         timestamp => timestamp.key === userSetting.timestampFormat
@@ -33,7 +31,6 @@ export default Component.extend({
   async updateTimestampFormat(timestampFormat) {
     const userSetting = await this.shuttle.getUserSetting();
 
-    console.log('mehu', userSetting);
     set(userSetting, 'timestampFormat', timestampFormat.key);
     await this.shuttle.updateUserSettings(userSetting);
   },
