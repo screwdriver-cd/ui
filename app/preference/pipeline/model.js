@@ -5,5 +5,5 @@ export default class PreferencePipelineModel extends Model {
 
   @attr('boolean', { defaultValue: true }) showPRJobs;
 
-  @attr('string', { defaultValue: 'HUMAN_READABLE' }) timestampFormat;
+  @attr('string', { defaultValue: 'LOCAL_TIMEZONE' }) timestampFormat;
 }
