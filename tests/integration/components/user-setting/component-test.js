@@ -18,7 +18,7 @@ module('Integration | Component | user-settings', function (hooks) {
     await render(hbs`
       <UserSetting>
         template block text
-      </UserSettings>
+      </UserSetting>
     `);
 
     assert.equal(this.element.textContent.trim(), 'template block text');
