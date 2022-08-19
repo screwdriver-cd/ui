@@ -305,6 +305,27 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data);
   },
 
+  /**
+   * updateUserPreference
+   * @param  {Number}  [pipelineId]
+   * @param  {Object}  pipelineSettings
+   * @param  {Boolean} [pipelineSettings.showPRJobs]
+   * @return {Promise}
+   */
+  async updateUserSettings(userSetting) {
+    const method = 'put';
+    const url = `/users/settings`;
+    const userSettings = await this.getUserSetting();
+    const data = {
+      settings: {
+        ...userSettings,
+        ...userSetting
+      }
+    };
+
+    return this.fetchFromApi(method, url, data);
+  },
+
   async searchPipelines(pipelineName) {
     const method = 'get';
     const query = $.param({

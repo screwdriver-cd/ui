@@ -8,7 +8,7 @@ export default Component.extend({
   selectedTimestampFormat: {},
   timestampOptions: [
     { key: 'UTC', name: 'UTC' },
-    { key: 'LOCAL_TIMEZONE', name: 'Local timezone' }
+    { key: 'LOCAL_TIMEZONE', name: 'Local Timezone' }
   ],
   async init() {
     this._super(...arguments);
@@ -32,6 +32,7 @@ export default Component.extend({
 
     set(userSetting, 'timestampFormat', timestampFormat.key);
     await this.shuttle.updateUserSettings(userSetting);
+    this.set('selectedTimestampFormat', timestampFormat);
   },
 
   actions: {
