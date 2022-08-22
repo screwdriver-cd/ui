@@ -315,10 +315,8 @@ export default Service.extend({
   async updateUserSettings(userSetting) {
     const method = 'put';
     const url = `/users/settings`;
-    const userSettings = await this.getUserSetting();
     const data = {
       settings: {
-        ...userSettings,
         ...userSetting
       }
     };

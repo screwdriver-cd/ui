@@ -1,3 +1,6 @@
+{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+
+{{info-message message=successMessage type="success" icon="check"}}
 {{token-list
     tokens=tokens
     newToken=newToken
@@ -6,4 +9,7 @@
     tokenName="User access"
     tokenScope="your account"
 }}
-{{user-setting}}
+{{user-setting
+    errorMessage=errorMessage
+    successMessage=successMessage
+}}

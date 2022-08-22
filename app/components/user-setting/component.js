@@ -31,8 +31,14 @@ export default Component.extend({
     const userSetting = await this.shuttle.getUserSetting();
 
     set(userSetting, 'timestampFormat', timestampFormat.key);
+
     await this.shuttle.updateUserSettings(userSetting);
     this.set('selectedTimestampFormat', timestampFormat);
+
+    this.set(
+      'successMessage',
+      `Timestamp preference updated successfully to ${timestampFormat.name}`
+    );
   },
 
   actions: {
