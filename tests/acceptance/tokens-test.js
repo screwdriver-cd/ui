@@ -1,4 +1,4 @@
-import { visit } from '@ember/test-helpers';
+import { currentURL, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
@@ -41,6 +41,8 @@ module('Acceptance | tokens', function (hooks) {
     await authenticateSession({ token: 'faketoken' });
     await visit('/user-settings');
 
+    assert.equal(currentURL(), '/user-settings');
     assert.dom('.token-list tbody tr').exists({ count: 2 });
+    assert.dom('section.preference li').exists({ count: 2 });
   });
 });
