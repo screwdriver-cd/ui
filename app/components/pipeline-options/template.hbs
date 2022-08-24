@@ -42,6 +42,25 @@
             </div>
           </li>
 
+          <li>
+            <div class="row">
+              <div class="col-xs-12">
+                <h4>Rename pipeline</h4>
+                <p>Setup your own preferred pipeline name in the dashboard list view.</p>
+              </div>
+              <div class="col-md-8 right">
+                <input type="text"
+                  class="pipeline-alias-name col-xs-12"
+                  placeholder="alias"
+                  value={{aliasName}}
+                  oninput={{action (mut aliasName) value="target.value"}}
+                >
+                <button {{action "resetPipelineAlias"}} class="reset-button"> Reset {{fa-icon "refresh"}}</button>
+                <button {{action "updatePipelineAlias"}} class="blue-button-alias"> Submit </button>
+              </div>
+            </div>
+          </li>
+
           {{#if displayDowntimeJobs}}
             <li>
               <div class="row">
@@ -238,23 +257,6 @@
                 showLabels=false
                 onToggle=(action "updateFilterEventsForNoBuilds")
               }}
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row">
-            <div class="col-xs-8">
-              <h4>Rename pipeline</h4>
-              <p>Setup your own preferred pipeline name in the dashboard list view.</p>
-            </div>
-            <div class="col-xs-4 right">
-              <input type="text"
-                class="pipeline-alias-name"
-                placeholder="alias"
-                value={{aliasName}}
-                oninput={{action (mut aliasName) value="target.value"}}
-              >
-              <button {{action "updatePipelineAlias"}} class="blue-button-alias"> Submit </button>
             </div>
           </div>
         </li>

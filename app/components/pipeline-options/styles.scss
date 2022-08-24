@@ -128,8 +128,7 @@
   }
 
   input.pipeline-alias-name {
-    width: 90px;
-    max-width: 90px;
+    margin: 5px;
   }
 
   input.display-job-name {
@@ -244,4 +243,20 @@
   color: $sd-white;
   font-size: 14px;
   background: $sd-running;
+}
+
+.reset-button {
+  cursor: pointer;
+  font-size: 14px;
+  height: 30px;
+  padding: 0 10px;
+  color: #9a9a9a;
+
+  &:hover {
+    color: #0a0a0a;
+
+    .fa {
+      @include scale(1.5);
+    }
+  }
 }

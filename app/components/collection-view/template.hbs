@@ -149,10 +149,12 @@
           <thead>
             <tr>
               <th class="collection-pipeline__choose"></th>
-              {{#if this.hasAliasName}}
-                <th class="alias" rowspan="1">Alias</th>
-              {{/if}}
-              <th class="app-id" rowspan="1">Name</th>
+              <th class="app-id">
+                {{#if this.hasAliasName}}
+                  <p rowspan="1">Alias/</p>
+                {{/if}}
+                <p rowspan="1">Name</p>
+              </th>
               <th class="branch" rowspan="1">Branch</th>
               <th class="status" rowspan="1">Status</th>
               <th class="start" rowspan="1">Start Date</th>
