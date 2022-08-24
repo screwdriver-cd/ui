@@ -309,20 +309,6 @@ module('Integration | Component | pipeline options', function (hooks) {
     this.set('showToggleModal', false);
     this.set('mockJobs', A([main]));
     this.set('username', 'tkyi');
-    this.set('setJobStatsMock', (id, state, name, message) => {
-      assert.equal(id, '1234');
-      assert.equal(message, ' ');
-      assert.equal(name, 'tkyi');
-      assert.equal(state, 'DISABLED');
-
-      main.set('state', state);
-      main.set('stateChanger', 'tkyi');
-      main.set('stateChangeMessage', ' ');
-      main.set('isDisabled', state === 'DISABLED');
-
-      this.set('state', state);
-      this.set('showToggleModal', false);
-    });
 
     this.owner.unregister('service:store');
     this.owner.register('service:store', storeStub);
@@ -330,7 +316,6 @@ module('Integration | Component | pipeline options', function (hooks) {
     await render(hbs`{{pipeline-options
       username=username
       pipeline=mockPipeline
-      setJobStatus=setJobStatsMock
       jobs=mockJobs
       showToggleModal=showToggleModal
     }}`);
@@ -355,7 +340,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       name: 'main',
       state: 'ENABLED',
       stateChanger: 'tkyi',
-      stateChangeMessage: 'testing',
+      stateChangeMessage: 'foo',
       isDisabled: false
     });
 
@@ -370,23 +355,35 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     this.set('mockJobs', A([main]));
     this.set('username', 'tkyi');
-    this.set('setJobStatsMock', (id, state) => {
-      assert.equal(id, '1234');
-      assert.equal(state, 'DISABLED');
 
-      main.set('isDisabled', state === 'DISABLED');
+    const jobServiceStub = Service.extend({
+      setJobState: (id, state, message) => {
+        assert.equal(id, '1234');
+        assert.equal(state, 'DISABLED');
+        assert.equal(message, 'testing');
+
+        main.set('state', state);
+        main.set('stateChanger', 'tkyi');
+        main.set('stateChangeMessage', 'testing');
+        main.set('isDisabled', true);
+
+        return Promise.resolve();
+      }
     });
+
+    this.owner.unregister('service:job');
+    this.owner.register('service:job', jobServiceStub);
 
     await render(hbs`{{pipeline-options
       username=username
       pipeline=mockPipeline
-      setJobStatus=setJobStatsMock
       jobs=mockJobs
     }}`);
 
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
 
     await click('.x-toggle-btn');
+    await fillIn('.message input', 'testing');
     await click('.toggle-form__create');
 
     assert.dom('section.jobs h4').hasText('main');
@@ -403,6 +400,8 @@ module('Integration | Component | pipeline options', function (hooks) {
     const main = EmberObject.create({
       id: '1234',
       name: 'main',
+      state: 'DISABLED',
+      stateChangeMessage: 'testing',
       isDisabled: true
     });
 
@@ -415,16 +414,27 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
     this.set('mockJobs', A([main]));
-    this.set('setJobStatsMock', (id, state) => {
-      assert.equal(id, '1234');
-      assert.equal(state, 'ENABLED');
 
-      main.set('isDisabled', state === 'DISABLED');
+    const jobServiceStub = Service.extend({
+      setJobState: (id, state, message) => {
+        assert.equal(id, '1234');
+        assert.equal(state, 'ENABLED');
+        assert.equal(message, ' ');
+
+        main.set('state', state);
+        main.set('stateChanger', 'tkyi');
+        main.set('stateChangeMessage', ' ');
+        main.set('isDisabled', false);
+
+        return Promise.resolve();
+      }
     });
+
+    this.owner.unregister('service:job');
+    this.owner.register('service:job', jobServiceStub);
 
     await render(hbs`{{pipeline-options
       pipeline=mockPipeline
-      setJobStatus=setJobStatsMock
       jobs=mockJobs
     }}`);
 
@@ -438,6 +448,50 @@ module('Integration | Component | pipeline options', function (hooks) {
     await click('.toggle-form__create');
 
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
+  });
+
+  test('it fails to handle job enabling', async function (assert) {
+    const main = EmberObject.create({
+      id: '1234',
+      name: 'main',
+      state: 'DISABLED',
+      stateChangeMessage: 'testing',
+      isDisabled: true
+    });
+
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234'
+      })
+    );
+    this.set('mockJobs', A([main]));
+
+    const jobServiceStub = Service.extend({
+      setJobState: () => reject('Error message')
+    });
+
+    this.owner.unregister('service:job');
+    this.owner.register('service:job', jobServiceStub);
+
+    await render(hbs`{{pipeline-options
+      pipeline=mockPipeline
+      jobs=mockJobs
+    }}`);
+
+    assert.dom('section.jobs h4').hasText('main');
+    assert
+      .dom('section.jobs p')
+      .hasText('Toggle to disable or enable the job.');
+    assert.dom('.x-toggle-container').hasNoClass('x-toggle-container-checked');
+
+    await click('.x-toggle-btn');
+    await click('.toggle-form__create');
+
+    assert.dom('.x-toggle-container').hasNoClass('x-toggle-container-checked');
+    assert.dom('.alert > span').hasText('Error message');
   });
 
   test('it handles filterEventsForNobuilds enabling', async function (assert) {
@@ -545,7 +599,7 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     assert
       .dom('section.preference li:nth-of-type(4) h4')
-      .hasText('Re-name pipeline');
+      .hasText('Rename pipeline');
     assert
       .dom('section.preference li:nth-of-type(4) p')
       .hasText(

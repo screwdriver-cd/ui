@@ -42,10 +42,6 @@
   justify-content: flex-start;
   align-items: center;
 
-  label {
-    margin: 0;
-  }
-
   .title {
     margin-right: 5px;
   }
@@ -106,7 +102,26 @@
 }
 
 .filters-selection {
+  padding-left: 7px;
   margin-left: auto;
+  display: flex;
+  cursor: pointer;
+}
+
+.success-only {
+  margin-left: 7px;
+}
+
+.toggle-trend {
+  display: flex;
+  cursor: pointer;
+  float: right;
+}
+
+.trendline-view {
+  font-weight: normal;
+  font-size: 0.85em;
+  margin-top: -1em;
 }
 
 .chart-c3,

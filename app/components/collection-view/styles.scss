@@ -4,6 +4,10 @@
   height: calc(100vh - 56px);
   width: 100%;
 
+  table {
+    cursor: default;
+  }
+
   button {
     border: none;
 
@@ -164,8 +168,8 @@
   }
 
   .alias {
-    width: 15%;
-    max-width: 150px;
+    width: 10%;
+    max-width: 100px;
   }
 
   .app-id {
@@ -202,6 +206,7 @@
   .last-run {
     width: 12%;
     max-width: 200px;
+    cursor: pointer;
 
     .icon-wrapper {
       .fa {
@@ -213,6 +218,7 @@
   .history {
     display: flex;
     align-items: center;
+    cursor: pointer;
 
     .icon-wrapper {
       display: flex;

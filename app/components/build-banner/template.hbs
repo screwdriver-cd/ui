@@ -80,7 +80,9 @@
   </li>
   <li class="call-to-action button-right">
     {{#if isAuthenticated}}
-      {{#bs-button onClick=(action "buildButtonClick")}}{{buildAction}}{{/bs-button}}
+      {{#bs-button onClick=(action "buildButtonClick") disabled=(or (await isButtonDisabled) (not isButtonDisabledLoaded))}}
+        {{buildAction}}
+      {{/bs-button}}
     {{/if}}
   </li>
 </ul>

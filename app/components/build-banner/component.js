@@ -72,6 +72,23 @@ export default Component.extend({
     }
   }),
 
+  isButtonDisabledLoaded: false,
+  isButtonDisabled: computed('buildStatus', 'jobDisabled', {
+    get() {
+      if (this.buildAction === 'Restart') {
+        return this.jobDisabled.then(jobDisabled => {
+          this.set('isButtonDisabledLoaded', true);
+
+          return jobDisabled;
+        });
+      }
+
+      this.set('isButtonDisabledLoaded', true);
+
+      return false;
+    }
+  }),
+
   overrideCoverageInfo() {
     const { buildMeta } = this;
 

@@ -45,7 +45,7 @@
     vertical-align: middle;
   }
 
-  .x-toggle-component {
+  .trusted-toggle {
     display: inline-flex;
     font-size: 0.5em;
     float: right;
@@ -53,5 +53,6 @@
 
   .x-toggle-container {
     font-size: 0.75rem;
+    margin-right: 7px;
   }
 }

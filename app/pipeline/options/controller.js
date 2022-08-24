@@ -1,23 +1,14 @@
-import Controller, { inject } from '@ember/controller';
+import Controller from '@ember/controller';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
-  pipelineController: inject('pipeline'),
   session: service(),
   errorMessage: '',
   isSaving: false,
   pipeline: reads('model.pipeline'),
   jobs: reads('model.jobs'),
   actions: {
-    setJobStatus(id, state, stateChangeMessage) {
-      this.pipelineController.send(
-        'setJobStatus',
-        id,
-        state,
-        stateChangeMessage
-      );
-    },
     removePipeline() {
       this.pipeline
         .destroyRecord()

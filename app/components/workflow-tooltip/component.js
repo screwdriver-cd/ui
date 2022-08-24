@@ -52,7 +52,7 @@ export default Component.extend({
     updateMessage(message) {
       const { originalJobId, jobState } = this;
 
-      this.setJobStatus(originalJobId, jobState, message || ' ');
+      this.setJobState(originalJobId, jobState, message || ' ');
       this.set('showToggleModal', false);
       this.set('showTooltip', false);
     }
