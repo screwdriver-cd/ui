@@ -306,10 +306,9 @@ export default Service.extend({
   },
 
   /**
-   * updateUserPreference
-   * @param  {Number}  [pipelineId]
-   * @param  {Object}  pipelineSettings
-   * @param  {Boolean} [pipelineSettings.showPRJobs]
+   * updateUserSetting
+   * @param  {Object}  userSetting
+   * @param  {String} [userSetting.timestampFormat]
    * @return {Promise}
    */
   async updateUserSettings(userSetting) {

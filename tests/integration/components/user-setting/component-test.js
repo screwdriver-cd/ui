@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import $ from 'jquery';
 
 module('Integration | Component | user setting', function (hooks) {
   setupRenderingTest(hooks);
@@ -25,9 +24,5 @@ module('Integration | Component | user setting', function (hooks) {
     assert
       .dom('section > ul > li:nth-child(2) p')
       .hasText('Choose your preferred timestamp format');
-    assert.equal(
-      $('section > ul > li:nth-child(2) input').attr('placeholder'),
-      'Select timestamp'
-    );
   });
 });

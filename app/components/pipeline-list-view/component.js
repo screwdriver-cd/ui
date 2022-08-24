@@ -74,11 +74,11 @@ export default Component.extend({
     }
 
     this.store
-      .findRecord('preference/pipeline', this.get('pipeline.id'))
+      .findAll('preference/pipeline')
       .then(pipelinePreference => {
         this.set(
           'timestampPreference',
-          pipelinePreference.get('timestampFormat')
+          pipelinePreference.firstObject.get('timestampFormat')
         );
       })
       .catch(() => {
