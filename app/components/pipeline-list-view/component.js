@@ -78,7 +78,7 @@ export default Component.extend({
       .then(pipelinePreference => {
         this.set(
           'timestampPreference',
-          pipelinePreference.firstObject.get('timestampFormat')
+          pipelinePreference.lastObject.get('timestampFormat')
         );
       })
       .catch(() => {
@@ -214,8 +214,8 @@ export default Component.extend({
           } else {
             startTime = `${toCustomLocaleString(
               new Date(latestBuild.startTime),
-              { timezone: 'UTC' }
-            )} UTC`;
+              { timeZone: 'UTC' }
+            )}`;
           }
         } else {
           startTime = 'Invalid date';
