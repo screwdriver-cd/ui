@@ -247,16 +247,16 @@
 
 .reset-button {
   cursor: pointer;
+  border: 1px solid $sd-running;
+  border-radius: 3px;
   font-size: 14px;
   height: 30px;
   padding: 0 10px;
-  color: #9a9a9a;
+  color: $sd-running;
+  background: transparent;
 
   &:hover {
-    color: #0a0a0a;
-
-    .fa {
-      @include scale(1.5);
-    }
+    color: $sd-link;
+    @include scale(1);
   }
 }

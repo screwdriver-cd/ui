@@ -60,7 +60,7 @@ module('Acceptance | pipeline/options', function (hooks) {
     await visit('/pipelines/1/options');
 
     assert.equal(currentURL(), '/pipelines/1/options');
-    assert.dom('section.pipeline li').exists({ count: 3 });
+    assert.dom('section.pipeline li').exists({ count: 4 });
     assert.dom('section.jobs li').exists({ count: 3 });
     assert.dom('section.danger li').exists({ count: 1 });
   });
