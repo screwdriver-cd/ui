@@ -137,10 +137,14 @@ export default Component.extend({
     const pipelinePreference = await this.shuttle.getUserPipelinePreference(
       this.get('pipeline.id')
     );
+    const userSetting = await this.shuttle.getUserSetting();
 
     if (pipelinePreference) {
-      desiredJobNameLength = pipelinePreference.displayJobNameLength;
       showPRJobs = getWithDefault(pipelinePreference, 'showPRJobs', true);
+    }
+
+    if (userSetting) {
+      desiredJobNameLength = userSetting.displayJobNameLength;
     }
 
     this.setProperties({
@@ -158,17 +162,16 @@ export default Component.extend({
     }
   },
   async updateJobNameLength(displayJobNameLength) {
-    const pipelineId = this.get('pipeline.id');
-    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
-      pipelineId
-    );
+    const pipelinePreference = await this.shuttle.getUserSetting();
 
     set(pipelinePreference, 'displayJobNameLength', displayJobNameLength);
-    pipelinePreference
-      .save()
-      .then(() =>
-        this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
-      );
+    await this.shuttle.updateUserSettings(pipelinePreference);
+    this.set('displayJobNameLength', displayJobNameLength);
+
+    this.set(
+      'successMessage',
+      `displayJobNameLength updated successfully to ${displayJobNameLength}`
+    );
   },
 
   async updatePipelineAlias(aliasName) {

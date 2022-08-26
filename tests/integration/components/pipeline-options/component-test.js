@@ -525,6 +525,17 @@ module('Integration | Component | pipeline options', function (hooks) {
         assert.equal(pipelineId, 'abc1234');
 
         return resolve({});
+      },
+      getUserSetting() {
+        assert.ok(true, 'getUserSetting called');
+
+        return resolve({});
+      },
+      // eslint-disable-next-line no-unused-vars
+      updateUserSettings(userSettings) {
+        assert.ok(true, 'updateUserSettings called');
+
+        return resolve({});
       }
     });
 
@@ -587,6 +598,17 @@ module('Integration | Component | pipeline options', function (hooks) {
       getUserPipelinePreference(pipelineId) {
         assert.ok(true, 'getUserPipelinePreference called');
         assert.equal(pipelineId, 'abc1234');
+
+        return resolve({});
+      },
+      getUserSetting() {
+        assert.ok(true, 'getUserSetting called');
+
+        return resolve({});
+      },
+      // eslint-disable-next-line no-unused-vars
+      updateUserSettings(userSettings) {
+        assert.ok(true, 'updateUserSettings called');
 
         return resolve({});
       }

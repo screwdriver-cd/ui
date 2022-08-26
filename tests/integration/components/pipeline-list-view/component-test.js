@@ -66,7 +66,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
-    set(this, 'timestampFormat', () => Promise.resolve('UTC'));
+    set(this, 'timestampFormat', () => Promise.resolve('LOCAL_TIMEZONE'));
 
     await render(hbs`{{pipeline-list-view
       jobsDetails=jobsDetails
