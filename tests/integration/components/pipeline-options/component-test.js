@@ -599,11 +599,11 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     assert
       .dom('section.pipeline li:nth-of-type(3) h4')
-      .hasText('Rename pipeline');
+      .hasText('Pipeline alias');
     assert
       .dom('section.pipeline li:nth-of-type(3) p')
       .hasText(
-        'Setup your own preferred pipeline name in the dashboard list view.'
+        'Setup your own preferred pipeline name for the dashboard list view.'
       );
     assert.dom('section.pipeline li:nth-of-type(3) input').hasNoText();
 
