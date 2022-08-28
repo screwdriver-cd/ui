@@ -315,6 +315,11 @@ export default Component.extend({
 
       this.updatePipelineAlias(aliasName);
     },
+    async resetPipelineAlias() {
+      this.$('input.pipeline-alias-name').val('');
+
+      this.updatePipelineAlias('');
+    },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {
         const pipelineId = this.get('pipeline.id');
