@@ -516,8 +516,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('.header__description').hasText('Default Collection');
     assert.dom('table').exists({ count: 1 });
     assert.dom('th.collection-pipeline__choose').exists({ count: 1 });
-    assert.dom('th.alias').hasText('Alias');
-    assert.dom('th.app-id').hasText('Name');
+    assert.dom('th.app-id').hasText('Alias/ Name');
     assert.dom('th.branch').hasText('Branch');
     assert.dom('th.status').hasText('Status');
     assert.dom('th.start').hasText('Start Date');
@@ -528,12 +527,6 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('.collection-pipeline').exists({ count: 4 });
 
     // check that collection table row order is correct
-    assert.dom('.collection-pipeline:nth-of-type(1) .alias').hasText('models');
-    assert
-      .dom('.collection-pipeline:nth-of-type(2) .alias')
-      .hasText('screwdriver');
-    assert.dom('.collection-pipeline:nth-of-type(3) .alias').hasText('ui');
-    assert.dom('.collection-pipeline:nth-of-type(4) .alias').hasText('zzz');
 
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id a')

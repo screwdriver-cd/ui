@@ -71,7 +71,7 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     // Pipeline
     assert.dom('section.pipeline h3').hasText('Pipeline');
-    assert.dom('section.pipeline li').exists({ count: 3 });
+    assert.dom('section.pipeline li').exists({ count: 4 });
     assert
       .dom('section.pipeline h4')
       .hasText('Checkout URL and Source Directory');
@@ -80,13 +80,13 @@ module('Integration | Component | pipeline options', function (hooks) {
       .hasText('Update your checkout URL and / or source directory.');
     assert.dom('section.pipeline .button-label').hasText('Update');
     assert
-      .dom('section > ul > li:nth-child(3) p')
+      .dom('section > ul > li:nth-child(4) p')
       .hasText(
         'Pick your own preferred jobs to be counted in metrics graph (default all jobs)'
       );
-    assert.dom('section > ul > li:nth-child(3) h4').hasText('Downtime Jobs');
+    assert.dom('section > ul > li:nth-child(4) h4').hasText('Downtime Jobs');
     assert.equal(
-      $('section > ul > li:nth-child(3) input').attr('placeholder'),
+      $('section > ul > li:nth-child(4) input').attr('placeholder'),
       'Select Jobs...'
     );
 
@@ -598,20 +598,18 @@ module('Integration | Component | pipeline options', function (hooks) {
     await render(hbs`{{pipeline-options pipeline=mockPipeline }}`);
 
     assert
-      .dom('section.preference li:nth-of-type(4) h4')
-      .hasText('Rename pipeline');
+      .dom('section.pipeline li:nth-of-type(3) h4')
+      .hasText('Pipeline alias');
     assert
-      .dom('section.preference li:nth-of-type(4) p')
+      .dom('section.pipeline li:nth-of-type(3) p')
       .hasText(
-        'Setup your own preferred pipeline name in the dashboard list view.'
+        'Setup your own preferred pipeline name for the dashboard list view.'
       );
-    assert.dom('section.preference li:nth-of-type(4) input').hasNoText();
+    assert.dom('section.pipeline li:nth-of-type(3) input').hasNoText();
 
-    await fillIn('section.preference li:nth-of-type(4) input', 'test-pr');
+    await fillIn('section.pipeline li:nth-of-type(3) input', 'test-pr');
 
-    assert
-      .dom('section.preference li:nth-of-type(4) input')
-      .hasValue('test-pr');
+    assert.dom('section.pipeline li:nth-of-type(3) input').hasValue('test-pr');
   });
 
   test('it handles pipeline remove flow', async function (assert) {
