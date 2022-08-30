@@ -22,12 +22,31 @@
               selected=selectedTimestampFormat
               searchEnabled=false
               placeholder="Select timestamp"
-              onchange=(action "selectTimestampFormat")
+              onchange=(action (mut selectedTimestampFormat))
               as |timestampFormat|}}
               {{timestampFormat.name}}
             {{/power-select}}
           </div>
         </div>
+      </li>
+      <li>
+        <div class="row">
+          <div class="col-xs-12 right">
+            <button {{action "resetUserSettings"}} disabled={{isDisabled}} class="reset-button{{if isSaving " saving"}}">
+              <div class="saving-loading">
+                Updating settings
+              </div>
+              <div class="button-label">{{fa-icon "refresh"}} Reset </div>
+            </button>
+            <button {{action "updateUserSettings"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
+              <div class="saving-loading">
+                Updating settings
+              </div>
+              <div class="button-label">Save</div>
+            </button>
+            {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}        
+          </div>
+        </div> 
       </li>
     </ul>
   </section>

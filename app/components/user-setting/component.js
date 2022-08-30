@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { set } from '@ember/object';
-import { debounce } from '@ember/runloop';
+import { or } from '@ember/object/computed';
 
 export default Component.extend({
   shuttle: service(),
@@ -10,6 +10,8 @@ export default Component.extend({
     { key: 'UTC', name: 'UTC' },
     { key: 'LOCAL_TIMEZONE', name: 'Local Timezone' }
   ],
+  isDisabled: or('isSaving', 'isInvalid'),
+
   async init() {
     this._super(...arguments);
 
@@ -27,25 +29,35 @@ export default Component.extend({
       selectedTimestampFormat
     });
   },
-  async updateTimestampFormat(timestampFormat) {
+  async updateUserSettings() {
+    this.set('isSaving', true);
     const userSetting = await this.shuttle.getUserSetting();
 
-    set(userSetting, 'timestampFormat', timestampFormat.key);
+    set(userSetting, 'timestampFormat', this.selectedTimestampFormat.key);
 
     await this.shuttle.updateUserSettings(userSetting);
-    this.set('selectedTimestampFormat', timestampFormat);
+    this.set('isSaving', false);
 
-    this.set(
-      'successMessage',
-      `Timestamp preference updated successfully to ${timestampFormat.name}`
-    );
+    this.set('successMessage', 'User setttings updated successfully!');
   },
 
   actions: {
-    async selectTimestampFormat(selectedTimestampFormat) {
-      let timestampFormat = selectedTimestampFormat;
-
-      debounce(this, this.updateTimestampFormat, timestampFormat, 1000);
+    async updateUserSettings() {
+      this.updateUserSettings();
+    },
+    async resetUserSettings() {
+      this.set('isSaving', true);
+      try {
+        await this.shuttle.deleteUserSettings();
+        this.set('isSaving', false);
+        this.set('successMessage', 'Timestamp preference reseted successfully');
+      } catch {
+        this.set('isSaving', false);
+        this.set(
+          'errorMessage',
+          'Error occured while resetting Timestamp preference, Please try again'
+        );
+      }
     }
   }
 });

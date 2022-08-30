@@ -112,3 +112,73 @@
     width: calc(100% - 15px);
   }
 }
+.blue-button {
+  @include transition(all, 50ms);
+  border: none;
+  border-radius: 3px;
+  height: 30px;
+  padding: 0 15px;
+  color: $sd-white;
+  font-size: 14px;
+  background: $sd-running;
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    background: $sd-link;
+  }
+  &:disabled {
+    background: $sd-text-med;
+  }
+  .saving-loading {
+    display: none;
+  }
+  &.saving {
+    .saving-loading {
+      display: block;
+    }
+    .button-label {
+      display: none;
+    }
+  }
+  &:active {
+    &:not(:disabled) {
+      @include scale(0.97);
+    }
+  }
+}
+
+.reset-button {
+  cursor: pointer;
+  border: 1px solid $sd-running;
+  border-radius: 3px;
+  font-size: 14px;
+  height: 30px;
+  padding: 0 10px;
+  color: $sd-running;
+  background: transparent;
+
+  &:hover {
+    color: $sd-link;
+    @include scale(1);
+  }
+  &:disabled {
+    background: $sd-text-med;
+  }
+  .saving-loading {
+    display: none;
+  }
+  &.saving {
+    .saving-loading {
+      display: block;
+    }
+    .button-label {
+      display: none;
+    }
+  }
+  &:active {
+    &:not(:disabled) {
+      @include scale(0.97);
+    }
+  }
+}
