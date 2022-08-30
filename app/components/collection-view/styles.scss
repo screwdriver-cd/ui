@@ -211,14 +211,12 @@
   }
 
   .history {
-    display: flex;
+    width: 12%;
+    max-width: 200px;
     align-items: center;
     cursor: pointer;
 
     .icon-wrapper {
-      display: flex;
-      flex-direction: column;
-
       .fa {
         line-height: 0;
       }
