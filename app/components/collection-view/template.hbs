@@ -156,7 +156,6 @@
                 <p rowspan="1">Name</p>
               </th>
               <th class="branch" rowspan="1">Branch</th>
-              <th class="status" rowspan="1">Status</th>
               <th class="start" rowspan="1">Start Date</th>
               <th class="duration" rowspan="1">Duration</th>
               <th class="last-run" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "createTime:desc") "createTime:asc" "createTime:desc")}}>
@@ -171,6 +170,7 @@
                   {{/if}}
                 </span>
               </th>
+              <th class="status" rowspan="1">Status</th>
               <th class="history" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "failedBuildCount:desc") "failedBuildCount:asc" "failedBuildCount:desc")}}>
                 Build History
                 <span class="icon-wrapper">

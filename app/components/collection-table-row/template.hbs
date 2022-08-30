@@ -20,6 +20,15 @@
   {{fa-icon "code-fork"}}
   <span title={{branch}}>{{branch}}</span>
 </td>
+<td class="start">
+  {{lastEventInfo.startTime}}
+</td>
+<td class="duration">
+  {{lastEventInfo.durationText}}
+</td>
+<td class="last-run">
+  <span title={{lastRun}}> {{lastRun}}</span>
+</td>
 <td class="status">
   {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
     {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
@@ -33,15 +42,6 @@
   {{else}}
     Loading events
   {{/if}}
-</td>
-<td class="start">
-  {{lastEventInfo.startTime}}
-</td>
-<td class="duration">
-  {{lastEventInfo.durationText}}
-</td>
-<td class="last-run">
-  <span title={{lastRun}}> {{lastRun}}</span>
 </td>
 <td class="history">
   {{#if hasBothEventsAndLatestEventInfo}}
