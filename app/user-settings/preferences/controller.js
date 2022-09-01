@@ -19,17 +19,15 @@ export default Controller.extend({
   async init() {
     this._super(...arguments);
 
-    const desiredJobNameLength = await this.userSettings.getDesiredJobNameLength();
+    const desiredJobNameLength = await this.userSettings.getDisplayJobNameLength();
 
     this.setProperties({ desiredJobNameLength });
-
-    console.log('query desiredJobNameLength', desiredJobNameLength);
   },
 
-  async updateJobNameLength(desiredJobNameLength) {
-    this.setProperties({ displayJobNameLength: desiredJobNameLength });
+  async updateJobNameLength(displayJobNameLength) {
+    this.setProperties({ displayJobNameLength });
 
-    await this.userSettings.updateDisplayJobNameLength(desiredJobNameLength);
+    await this.userSettings.updateDisplayJobNameLength(displayJobNameLength);
   },
 
   actions: {
@@ -44,6 +42,7 @@ export default Controller.extend({
         displayJobNameLength = MINIMUM_JOBNAME_LENGTH;
       }
 
+      // correct user input that are outside the min and max
       $('input.display-job-name').val(displayJobNameLength);
 
       debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);

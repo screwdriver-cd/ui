@@ -8,8 +8,10 @@ export default Route.extend({
 
   model() {
     return RSVP.hash({
-      desiredJobNameLength: this.userSettings.getDesiredJobNameLength()
-    }).catch(err => {
+      desiredJobNameLength: this.userSettings.getDisplayJobNameLength()
+    }).catch(e => {
+      console.log('error', e);
+
       this.transitionTo('/404');
     });
   }

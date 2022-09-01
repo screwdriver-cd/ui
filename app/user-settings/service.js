@@ -41,20 +41,20 @@ export default Service.extend({
     });
   },
 
-  async getDesiredJobNameLength() {
-  // async getActualDesiredJobNameLength() {
-    console.log('called getDesiredJobNameLength');
+  async getUserPreference() {
+      let userPreference = await this.store.peekRecord('preference/user', 1);
+
+      if (userPreference === null) {
+        userPreference = await this.store.queryRecord('preference/user', {});
+      }
+
+      return userPreference;
+  },
+
+  async getDisplayJobNameLength() {
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
-    let userPreference = await this.store.peekRecord('preference/user', 1);
-
-    if (userPreference === null) {
-      console.log('record is null, querying record');
-
-      userPreference = await this.store.queryRecord('preference/user', {});
-    } else {
-      console.log('got record');
-    }
+    const userPreference = this.getUserPreference();
 
     if (userPreference) {
       const { displayJobNameLength } = userPreference;
@@ -70,15 +70,7 @@ export default Service.extend({
   },
 
   async updateDisplayJobNameLength(displayJobNameLength) {
-    let userPreference = await this.store.peekRecord('preference/user', 1);
-
-    if (userPreference === null) {
-      console.log('record is null, querying record');
-
-      userPreference = await this.store.queryRecord('preference/user', {});
-    } else {
-      console.log('got record');
-    }
+    const userPreference = this.getUserPreference();
 
     userPreference.set('displayJobNameLength', displayJobNameLength);
 
@@ -87,6 +79,5 @@ export default Service.extend({
     } catch(e) {
       console.error('e', e);
     }
-
   }
 });
