@@ -1,12 +1,6 @@
-// import Model from '@ember-data/model';
+import Model, { attr, hasMany } from '@ember-data/model';
 
-// export default class PreferenceUserModel extends Model {
-
-// }
-
-import DS from 'ember-data';
-
-export default DS.Model.extend({
-  displayJobNameLength: DS.attr('string'),
-  'preference/pipelines': DS.hasMany('preference/pipeline', { sync: true })
-});
+export default class PreferenceUserModel extends Model {
+  @attr('number') displayJobNameLength;
+  @hasMany('preference/pipeline', { async: false }) 'preference/pipelines';
+}

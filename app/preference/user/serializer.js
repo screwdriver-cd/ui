@@ -1,15 +1,18 @@
-import { assign } from '@ember/polyfills';
 import DS from 'ember-data';
 import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
+import { getWithDefault } from '@ember/object';
 
-
-export function extractPayload(payload, options = {}) {
+export function extractPayload(payload) {
   const { desiredJobNameLength, displayJobNameLength } = payload;
   delete payload.desiredJobNameLength;
   delete payload.displayJobNameLength;
 
-  const preferencePipelines = Object.keys(payload).map((id) => {
-    return { id, ...payload[id] };
+  const preferencePipelines = Object.keys(payload).map(id => {
+    const parsed = parseInt(id, 10);
+
+    if (Number.isInteger(parsed)) {
+      return { id, ...payload[id] };
+    }
   });
 
   const data = {
@@ -18,7 +21,21 @@ export function extractPayload(payload, options = {}) {
       displayJobNameLength,
       'preference/pipelines': preferencePipelines
     }
-  }
+  };
+
+  return data;
+}
+
+export function preparePayload(preferenceUser) {
+  const { displayJobNameLength } = preferenceUser;
+  const data = { displayJobNameLength };
+  const preferencePipelines = preferenceUser['preference/pipelines'] ?? [];
+
+  preferencePipelines.forEach(({id, showPRJobs }) => {
+    data[id] = {
+      showPRJobs
+    }
+  });
 
   return data;
 }
@@ -28,56 +45,30 @@ export default DS.RESTSerializer.extend(EmbeddedRecordsMixin, {
     'preference/pipelines': { embedded: 'always' }
   },
 
-  // primaryKey: 'username',
+  normalizeResponse(store, typeClass, payload, id, requestType) {
+    let data = payload;
 
-  // normalizeResponse(store, typeClass, payload, id, requestType) {
-
-  // },
-
-  normalizeQueryRecordResponse(store, typeClass, payload, id, requestType) {
-    if (requestType === 'queryRecord') {
-      // payload.collection.pipelines.forEach(p => {
-      //   p.links = {
-      //     metrics: `/v4/pipelines/${p.id}/metrics?count=20&page=1`
-      //   };
-      // });
+    if (['queryRecord', 'updateRecord'].includes(requestType)) {
       console.log('payload here', payload);
+      console.log('payload', payload);
+
+      data = extractPayload(payload);
+
+      console.log('data', data);
     }
-
-    console.log('payload', payload);
-
-    const data = extractPayload(payload);
-
-    console.log('data', data);
 
     return this._super(store, typeClass, data, id, requestType);
   },
 
-  // normalizeResponse(store, typeClass, payload, id, requestType) {
-  //   if (requestType === 'findRecord') {
-  //     payload.collection.pipelines.forEach(p => {
-  //       p.links = {
-  //         metrics: `/v4/pipelines/${p.id}/metrics?count=20&page=1`
-  //       };
-  //     });
-  //   }
+  /**
+   * Override the serializeIntoHash
+   * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
+   * @method serializeIntoHash
+   */
+  serializeIntoHash(hash, typeClass, snapshot) {
+    // const json = snapshot.record.toJSON();
+    const json = this.serialize(snapshot);
 
-  //   return this._super(store, typeClass, payload, id, requestType);
-  // },
-  // *
-  //  * Override the serializeIntoHash method
-  //  * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash
-  //  * @method serializeIntoHash
-
-  // serializeIntoHash(hash, typeClass, snapshot) {
-  //   const dirty = snapshot.changedAttributes();
-
-  //   Object.keys(dirty).forEach(key => {
-  //     dirty[key] = dirty[key][1];
-  //   });
-
-  //   const h = assign(hash, dirty);
-
-  //   return h;
-  // }
+    return preparePayload(json);
+  }
 });

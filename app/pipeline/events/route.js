@@ -10,6 +10,7 @@ export default Route.extend({
   triggerService: service('pipeline-triggers'),
   routeAfterAuthentication: 'pipeline.events',
   pipelineService: service('pipeline'),
+  userSettings: service(),
   beforeModel() {
     this.set('pipeline', this.modelFor('pipeline').pipeline);
   },
@@ -25,7 +26,7 @@ export default Route.extend({
     this.get('pipelineService').setBuildsLink('pipeline.events');
   },
   resetController(controller, isExiting, transition) {
-    if (isExiting && transition.targetName !== 'error') {
+    if (isExiting && transition && transition.targetName !== 'error') {
       controller.set('errorMessage', '');
     }
   },
@@ -56,7 +57,8 @@ export default Route.extend({
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
       triggers: this.triggerService.getDownstreamTriggers(pipelineId),
-      pipelinePreference: this.shuttle.getUserPipelinePreference(pipelineId)
+      pipelinePreference: this.shuttle.getUserPipelinePreference(pipelineId),
+      desiredJobNameLength: this.userSettings.getDesiredJobNameLength()
     }).catch(err => {
       let errorMessage = getErrorMessage(err);
 

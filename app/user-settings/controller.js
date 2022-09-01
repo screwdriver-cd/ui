@@ -16,27 +16,19 @@ export default Controller.extend({
   // displayJobNameLength: 20,
   // minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   // maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
-
   // async init() {
   //   this._super(...arguments);
-
   //   let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
-
   //   const userPreference = await this.shuttle.getUserPreference();
-
   //   if (userPreference) {
   //     desiredJobNameLength = userPreference.displayJobNameLength;
   //   }
-
   //   this.setProperties({ desiredJobNameLength });
   // },
-
   // async updateJobNameLength(desiredJobNameLength) {
   //   this.setProperties({ displayJobNameLength: desiredJobNameLength });
-
   //   this.shuttle.updateUserPreference(null, { displayJobNameLength: desiredJobNameLength });
   // },
-
   // actions: {
   //   createToken(name, description) {
   //     const newToken = this.store.createRecord('token', {
@@ -44,7 +36,6 @@ export default Controller.extend({
   //       description: description || '',
   //       action: 'created'
   //     });
-
   //     return newToken
   //       .save()
   //       .then(token => {
@@ -60,20 +51,15 @@ export default Controller.extend({
   //       this.set('newToken', token);
   //     });
   //   },
-
   //   async updateJobNameLength(inputJobNameLength) {
   //     let displayJobNameLength = inputJobNameLength;
-
   //     if (parseInt(displayJobNameLength, 10) > MAXIMUM_JOBNAME_LENGTH) {
   //       displayJobNameLength = MAXIMUM_JOBNAME_LENGTH;
   //     }
-
   //     if (parseInt(displayJobNameLength, 10) < MINIMUM_JOBNAME_LENGTH) {
   //       displayJobNameLength = MINIMUM_JOBNAME_LENGTH;
   //     }
-
   //     $('input.display-job-name').val(displayJobNameLength);
-
   //     debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
   //   }
   // }

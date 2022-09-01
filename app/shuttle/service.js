@@ -245,6 +245,16 @@ export default Service.extend({
     }
   },
 
+  async updateUserSetting(settings) {
+    const method = 'put';
+    const url = `/users/settings`;
+
+    const data = { settings };
+
+
+    return this.fetchFromApi(method, url, data);
+  },
+
   /**
    * getUserPipelinePreference
    * @param  {Number} pipelineId  pipeline Id
@@ -284,8 +294,6 @@ export default Service.extend({
     return pipelinePreference;
   },
 
-
-
   /**
    * getUserPreference
    * @return {Promise}
@@ -308,25 +316,12 @@ export default Service.extend({
     const url = `/users/settings`;
     const userSettings = await this.getUserSetting();
 
-    let data;
-
-    if (pipelineId !== null) {
-      data = {
-        settings: {
-          ...userSettings,
-          [pipelineId]: pipelineSettings
-        }
-      };
-    } else {
-      const userPreference = pipelineSettings;
-
-      data = {
-        settings: {
-          ...userSettings,
-          ...userPreference
-        }
-      };
-    }
+    let data = {
+      settings: {
+        ...userSettings,
+        [pipelineId]: pipelineSettings
+      }
+    };
 
     return this.fetchFromApi(method, url, data);
   },

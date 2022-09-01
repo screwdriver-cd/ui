@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import { computed, getWithDefault, set } from '@ember/object';
 import { not, or } from '@ember/object/computed';
-import { debounce } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
@@ -367,11 +366,7 @@ export default Component.extend({
         });
       }
 
-      pipelinePreference
-        .save()
-        .then(() =>
-          this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
-        );
+      pipelinePreference.save();
 
       this.set('showPRJobs', showPRJobs);
     },
