@@ -18,18 +18,34 @@ const allTemplates = [
   }
 ];
 
+const userSettingsMock = {
+  1018240: {
+    showPRJobs: true
+  },
+  1048190: {
+    showPRJobs: false
+  },
+  displayJobNameLength: 30
+};
+
 module('Integration | Component | create-pipeline', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function (assert) {
+  hooks.beforeEach(function () {
     const shuttleStub = Service.extend({
       fetchAllTemplates() {
         return new EmberPromise(resolve => resolve(allTemplates));
+      },
+      getUserSetting() {
+        return userSettingsMock;
       }
     });
 
+    this.owner.unregister('service:shuttle');
     this.owner.register('service:shuttle', shuttleStub);
+  });
 
+  test('it renders', async function (assert) {
     this.set('showCreatePipeline', true);
     await render(
       hbs`{{create-pipeline showCreatePipeline=showCreatePipeline}}`
@@ -42,14 +58,6 @@ module('Integration | Component | create-pipeline', function (hooks) {
   });
 
   test('it renders with template selections with namespace', async function (assert) {
-    const shuttleStub = Service.extend({
-      fetchAllTemplates() {
-        return new EmberPromise(resolve => resolve(allTemplates));
-      }
-    });
-
-    this.owner.register('service:shuttle', shuttleStub);
-
     this.set('showCreatePipeline', true);
     await render(
       hbs`{{create-pipeline showCreatePipeline=showCreatePipeline}}`

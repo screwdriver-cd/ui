@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, getWithDefault, set } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import { not, or } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import $ from 'jquery';

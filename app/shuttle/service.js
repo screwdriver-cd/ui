@@ -251,7 +251,6 @@ export default Service.extend({
 
     const data = { settings };
 
-
     return this.fetchFromApi(method, url, data);
   },
 

@@ -101,6 +101,14 @@ module('Acceptance | pipeline build', function (hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify({})
     ]);
+
+    server.put('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        // {“1018240”:{“showPRJobs”:true},“1048190”:{“showPRJobs”:false},“displayJobNameLength”:30}
+      })
+    ]);
   });
 
   hooks.afterEach(function () {
