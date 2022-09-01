@@ -1,0 +1,10 @@
+<div>access token route</div>
+
+{{token-list
+  tokens=tokens
+  newToken=newToken
+  onCreateToken=(action "createToken")
+  onRefreshToken=(action "refreshToken")
+  tokenName="User access"
+  tokenScope="your account"
+}}

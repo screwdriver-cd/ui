@@ -1,8 +1,67 @@
-{{token-list
-    tokens=tokens
-    newToken=newToken
-    onCreateToken=(action "createToken")
-    onRefreshToken=(action "refreshToken")
-    tokenName="User access"
-    tokenScope="your account"
-}}
+<h2>Settings</h2>
+
+{{#bs-nav type="tabs" as |nav|}}
+  {{#nav.item active=(bs-eq activeTab "user-preferences")}}
+    {{#nav.link-to "user-settings.user-preferences" class="nav-link"}}User Preferences{{/nav.link-to}}
+  {{/nav.item}}
+
+  {{#nav.item active=(bs-eq activeTab "access-tokens")}}
+    {{#nav.link-to "user-settings.access-tokens" class="nav-link"}}Access Tokens{{/nav.link-to}}
+  {{/nav.item}}
+
+{{!--   {{#tab.pane activeId=activeTab elementId="user-preferences" title="user-preferences"}}
+  {{/tab.pane}}
+
+  {{#tab.pane activeId=activeTab elementId="access-tokens" title="access-tokens"}}
+    {{token-list
+      tokens=tokens
+      newToken=newToken
+      onCreateToken=(action "createToken")
+      onRefreshToken=(action "refreshToken")
+      tokenName="User access"
+      tokenScope="your account"
+    }}
+  {{/tab.pane}} --}}
+{{/bs-nav}}
+
+{{!--
+{{#bs-tab as |tab|}}
+  {{#tab.pane title="User Preferences"}}
+  <div class="col-xs-12 col-md-8">
+    <section class="preference">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-10">
+              <h4>Display Name Length</h4>
+              <p>Setup your own preferred job name length to display on the workflow graph (range: 20 - 99)</p>
+            </div>
+            <div class="col-xs-2 right">
+              <input type="number"
+                class="display-job-name"
+                min={{minDisplayLength}}
+                max={{maxDisplayLength}}
+                placeholder={{minDisplayLength}}
+                value={{desiredJobNameLength}}
+                onchange={{action "updateJobNameLength" value="target.value"}}>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+  {{/tab.pane}}
+
+  {{#tab.pane title="Access Tokens"}}
+    {{token-list
+        tokens=tokens
+        newToken=newToken
+        onCreateToken=(action "createToken")
+        onRefreshToken=(action "refreshToken")
+        tokenName="User access"
+        tokenScope="your account"
+    }}
+  {{/tab.pane}}
+{{/bs-tab}} --}}
+
+{{outlet}}

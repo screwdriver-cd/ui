@@ -284,6 +284,18 @@ export default Service.extend({
     return pipelinePreference;
   },
 
+
+
+  /**
+   * getUserPreference
+   * @return {Promise}
+   */
+  async getUserPreference() {
+    const userSetting = await this.getUserSetting();
+
+    return userSetting;
+  },
+
   /**
    * updateUserPreference
    * @param  {Number}  [pipelineId]
@@ -295,12 +307,26 @@ export default Service.extend({
     const method = 'put';
     const url = `/users/settings`;
     const userSettings = await this.getUserSetting();
-    const data = {
-      settings: {
-        ...userSettings,
-        [pipelineId]: pipelineSettings
-      }
-    };
+
+    let data;
+
+    if (pipelineId !== null) {
+      data = {
+        settings: {
+          ...userSettings,
+          [pipelineId]: pipelineSettings
+        }
+      };
+    } else {
+      const userPreference = pipelineSettings;
+
+      data = {
+        settings: {
+          ...userSettings,
+          ...userPreference
+        }
+      };
+    }
 
     return this.fetchFromApi(method, url, data);
   },
