@@ -1,14 +1,12 @@
 import Component from '@ember/component';
-import { computed, getWithDefault, set } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import { not, or } from '@ember/object/computed';
-import { debounce } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
 import { getCheckoutUrl, parse } from 'screwdriver-ui/utils/git';
 
-const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH, DOWNTIME_JOBS } =
-  ENV.APP;
+const { DOWNTIME_JOBS } = ENV.APP;
 
 export default Component.extend({
   store: service(),
@@ -47,9 +45,7 @@ export default Component.extend({
   isUpdatingMetricsDowntimeJobs: false,
   metricsDowntimeJobs: [],
   displayDowntimeJobs: DOWNTIME_JOBS,
-  displayJobNameLength: 20,
-  minDisplayLength: MINIMUM_JOBNAME_LENGTH,
-  maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
+
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
   aliasName: '',
@@ -130,8 +126,6 @@ export default Component.extend({
       aliasName
     });
 
-    let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
-
     let showPRJobs = true;
 
     const pipelinePreference = await this.shuttle.getUserPipelinePreference(
@@ -143,14 +137,7 @@ export default Component.extend({
       showPRJobs = getWithDefault(pipelinePreference, 'showPRJobs', true);
     }
 
-    if (userSetting) {
-      desiredJobNameLength = userSetting.displayJobNameLength;
-    }
-
-    this.setProperties({
-      desiredJobNameLength,
-      showPRJobs
-    });
+    this.setProperties({ showPRJobs });
 
     if (this.displayDowntimeJobs) {
       const metricsDowntimeJobs = this.getWithDefault(
@@ -161,19 +148,6 @@ export default Component.extend({
       this.set('metricsDowntimeJobs', metricsDowntimeJobs);
     }
   },
-  async updateJobNameLength(displayJobNameLength) {
-    const pipelinePreference = await this.shuttle.getUserSetting();
-
-    set(pipelinePreference, 'displayJobNameLength', displayJobNameLength);
-    await this.shuttle.updateUserSettings(pipelinePreference);
-    this.set('displayJobNameLength', displayJobNameLength);
-
-    this.set(
-      'successMessage',
-      `displayJobNameLength updated successfully to ${displayJobNameLength}`
-    );
-  },
-
   async updatePipelineAlias(aliasName) {
     const pipeline = this.get('pipeline');
 
@@ -292,22 +266,6 @@ export default Component.extend({
         .finally(() => this.set('isShowingModal', false));
     },
 
-    async updateJobNameLength(inputJobNameLength) {
-      let displayJobNameLength = inputJobNameLength;
-
-      if (parseInt(displayJobNameLength, 10) > MAXIMUM_JOBNAME_LENGTH) {
-        displayJobNameLength = MAXIMUM_JOBNAME_LENGTH;
-      }
-
-      if (parseInt(displayJobNameLength, 10) < MINIMUM_JOBNAME_LENGTH) {
-        displayJobNameLength = MINIMUM_JOBNAME_LENGTH;
-      }
-
-      this.$('input.display-job-name').val(displayJobNameLength);
-
-      debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
-    },
-
     async updatePipelineAlias() {
       let { aliasName } = this;
 
@@ -408,11 +366,7 @@ export default Component.extend({
         });
       }
 
-      pipelinePreference
-        .save()
-        .then(() =>
-          this.shuttle.updateUserPreference(pipelineId, pipelinePreference)
-        );
+      pipelinePreference.save();
 
       this.set('showPRJobs', showPRJobs);
     },

@@ -37,9 +37,9 @@ module('Acceptance | tokens', function (hooks) {
     server.shutdown();
   });
 
-  test('visiting /user-settings', async function (assert) {
+  test('visiting /user-settings/access-tokens', async function (assert) {
     await authenticateSession({ token: 'faketoken' });
-    await visit('/user-settings');
+    await visit('/user-settings/access-tokens');
 
     assert.equal(currentURL(), '/user-settings');
     assert.dom('.token-list tbody tr').exists({ count: 2 });

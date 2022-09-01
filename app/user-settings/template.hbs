@@ -1,14 +1,13 @@
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
-{{info-message message=successMessage type="success" icon="check"}}
-{{token-list
-    tokens=tokens
-    newToken=newToken
-    onCreateToken=(action "createToken")
-    onRefreshToken=(action "refreshToken")
-    tokenName="User access"
-    tokenScope="your account"
-}}
-{{user-setting
-    errorMessage=errorMessage
-    successMessage=successMessage
-}}
+<h2>Settings</h2>
+
+{{#bs-nav type="tabs" as |nav|}}
+  {{#nav.item active=(bs-eq activeTab "preferences")}}
+    {{#nav.link-to "user-settings.preferences" class="nav-link"}}User Preferences{{/nav.link-to}}
+  {{/nav.item}}
+
+  {{#nav.item active=(bs-eq activeTab "access-tokens")}}
+    {{#nav.link-to "user-settings.access-tokens" class="nav-link"}}Access Tokens{{/nav.link-to}}
+  {{/nav.item}}
+{{/bs-nav}}
+
+{{outlet}}
