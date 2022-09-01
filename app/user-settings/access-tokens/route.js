@@ -1,3 +1,7 @@
 import Route from '@ember/routing/route';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default class UserSettingsAccessTokensRoute extends Route {}
+export default Route.extend(AuthenticatedRouteMixin, {
+  titleToken: 'Access Tokens',
+  routeAfterAuthentication: 'user-settings'
+});
