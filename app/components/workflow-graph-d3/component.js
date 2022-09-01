@@ -8,7 +8,6 @@ import {
   subgraphFilter,
   removeBranch
 } from 'screwdriver-ui/utils/graph-tools';
-import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
   shuttle: service(),
@@ -182,8 +181,8 @@ export default Component.extend({
     const self = this;
 
     // let desiredJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
-    const desiredJobNameLength = await this.userSettings.getDesiredJobNameLength();
-    console.log('desiredJobNameLength', desiredJobNameLength);
+    const desiredJobNameLength =
+      await this.userSettings.getDisplayJobNameLength();
 
     const MAX_LENGTH = Math.min(
       data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
@@ -192,6 +191,7 @@ export default Component.extend({
 
     if (this.isDestroying || this.isDestroyed) {
       console.log('something happened here');
+
       return;
     }
 

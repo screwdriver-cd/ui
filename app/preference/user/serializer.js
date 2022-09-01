@@ -1,19 +1,28 @@
 import DS from 'ember-data';
 import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
-import { getWithDefault } from '@ember/object';
 
+/**
+ * extractPayload
+ * Make the raw payload into Ember Data expected format for RestAdapater
+ * @param  {JSON} payload [raw json data]
+ * @return {JSON}         [data]
+ */
 export function extractPayload(payload) {
-  const { desiredJobNameLength, displayJobNameLength } = payload;
-  delete payload.desiredJobNameLength;
+  const { displayJobNameLength } = payload;
+
   delete payload.displayJobNameLength;
 
-  const preferencePipelines = Object.keys(payload).map(id => {
-    const parsed = parseInt(id, 10);
+  const preferencePipelines = Object.keys(payload)
+    .map(id => {
+      const parsed = parseInt(id, 10);
 
-    if (Number.isInteger(parsed)) {
-      return { id, ...payload[id] };
-    }
-  });
+      if (Number.isInteger(parsed)) {
+        return { id, ...payload[id] };
+      }
+
+      return null;
+    })
+    .filter(_ => _);
 
   const data = {
     'preference/user': {
@@ -26,15 +35,22 @@ export function extractPayload(payload) {
   return data;
 }
 
+/**
+ * preparePayload
+ * The reverse operation of extractPayload
+ * This method helps prepare ember data into format that backend expects
+ * @param  {[JSON]} preferenceUser [data]
+ * @return {[JSON]}                [raw data]
+ */
 export function preparePayload(preferenceUser) {
   const { displayJobNameLength } = preferenceUser;
   const data = { displayJobNameLength };
   const preferencePipelines = preferenceUser['preference/pipelines'] ?? [];
 
-  preferencePipelines.forEach(({id, showPRJobs }) => {
+  preferencePipelines.forEach(({ id, showPRJobs }) => {
     data[id] = {
       showPRJobs
-    }
+    };
   });
 
   return data;
@@ -49,12 +65,7 @@ export default DS.RESTSerializer.extend(EmbeddedRecordsMixin, {
     let data = payload;
 
     if (['queryRecord', 'updateRecord'].includes(requestType)) {
-      console.log('payload here', payload);
-      console.log('payload', payload);
-
       data = extractPayload(payload);
-
-      console.log('data', data);
     }
 
     return this._super(store, typeClass, data, id, requestType);
@@ -66,7 +77,6 @@ export default DS.RESTSerializer.extend(EmbeddedRecordsMixin, {
    * @method serializeIntoHash
    */
   serializeIntoHash(hash, typeClass, snapshot) {
-    // const json = snapshot.record.toJSON();
     const json = this.serialize(snapshot);
 
     return preparePayload(json);

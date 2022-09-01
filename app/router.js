@@ -52,10 +52,10 @@ Router.map(function route() {
   this.route('create');
   this.route('page-not-found', { path: '/*path' });
   this.route('search');
-  this.route('user-settings', function () {
+  this.route('user-settings', function userSettingsRoute() {
     this.route('index', { path: '/' });
     this.route('access-tokens');
-    this.route('user-preferences');
+    this.route('preferences');
   });
   this.route('validator');
 
