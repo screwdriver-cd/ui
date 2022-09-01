@@ -1,6 +1,4 @@
 import { inject as service } from '@ember/service';
-import { alias } from '@ember/object/computed';
-import { set } from '@ember/object';
 import Controller from '@ember/controller';
 import { debounce } from '@ember/runloop';
 import $ from 'jquery';
@@ -19,7 +17,8 @@ export default Controller.extend({
   async init() {
     this._super(...arguments);
 
-    const desiredJobNameLength = await this.userSettings.getDisplayJobNameLength();
+    const desiredJobNameLength =
+      await this.userSettings.getDisplayJobNameLength();
 
     this.setProperties({ desiredJobNameLength });
   },
