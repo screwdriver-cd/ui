@@ -8,12 +8,12 @@ import {
   subgraphFilter,
   removeBranch
 } from 'screwdriver-ui/utils/graph-tools';
-import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
   shuttle: service(),
   store: service(),
   router: service(),
+  userSettings: service(),
   classNameBindings: ['minified'],
   displayJobNames: true,
   showPRJobs: true,
@@ -114,8 +114,10 @@ export default Component.extend({
       };
     }
   }),
+
   didInsertElement() {
     this._super(...arguments);
+
     this.draw(this.decoratedGraph);
 
     set(this, 'lastGraph', this.get('graph'));
@@ -178,25 +180,21 @@ export default Component.extend({
   async draw(data) {
     const self = this;
 
-    let desiredJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
-
-    const pipelineId = this.get('pipeline.id');
-    const pipelinePreference = await this.store
-      .peekAll('preference/pipeline')
-      .findBy('id', pipelineId);
-
-    if (pipelinePreference) {
-      const { displayJobNameLength } = pipelinePreference;
-
-      if (displayJobNameLength > desiredJobNameLength) {
-        desiredJobNameLength = displayJobNameLength;
-      }
-    }
+    // let desiredJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
+    const desiredJobNameLength =
+      await this.userSettings.getDisplayJobNameLength();
 
     const MAX_LENGTH = Math.min(
       data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
       desiredJobNameLength
     );
+
+    if (this.isDestroying || this.isDestroyed) {
+      console.log('something happened here');
+
+      return;
+    }
+
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = this.elementSizes;
 
     let X_WIDTH = ICON_SIZE * 2;

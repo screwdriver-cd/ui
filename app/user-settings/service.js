@@ -3,9 +3,13 @@ import { Promise as EmberPromise } from 'rsvp';
 import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
+const { MINIMUM_JOBNAME_LENGTH } = ENV.APP;
 
 export default Service.extend({
   session: service('session'),
+  store: service(),
+  desiredJobNameLength: null,
+
   refreshToken(id) {
     const token = get(this, 'session.data.authenticated.token');
 
@@ -34,5 +38,46 @@ export default Service.extend({
           return reject(message);
         });
     });
+  },
+
+  async getUserPreference() {
+    let userPreference = await this.store.peekRecord('preference/user', 1);
+
+    if (userPreference === null) {
+      userPreference = await this.store.queryRecord('preference/user', {});
+    }
+
+    return userPreference;
+  },
+
+  async getDisplayJobNameLength() {
+    let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
+
+    const userPreference = await this.getUserPreference();
+
+    if (userPreference) {
+      const { displayJobNameLength } = userPreference;
+
+      if (displayJobNameLength > desiredJobNameLength) {
+        desiredJobNameLength = displayJobNameLength;
+      }
+    }
+
+    this.set('desiredJobNameLength', desiredJobNameLength);
+
+    return desiredJobNameLength;
+  },
+
+  async updateDisplayJobNameLength(displayJobNameLength) {
+    const userPreference = await this.getUserPreference();
+
+    userPreference.set('displayJobNameLength', displayJobNameLength);
+
+    try {
+      userPreference.save();
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('e', e);
+    }
   }
 });

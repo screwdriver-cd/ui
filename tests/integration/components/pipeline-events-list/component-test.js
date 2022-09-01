@@ -12,15 +12,34 @@ const latestCommitEvent = {
   sha: 'sha3'
 };
 
+const userSettingsMock = {
+  1018240: {
+    showPRJobs: true
+  },
+  1048190: {
+    showPRJobs: false
+  },
+  displayJobNameLength: 30
+};
+
 module('Integration | Component | pipeline events list', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function (assert) {
+  hooks.beforeEach(function () {
     const shuttleStub = Service.extend({
       getLatestCommitEvent() {
         return new EmberPromise(resolve => resolve(latestCommitEvent));
+      },
+      getUserSetting() {
+        return userSettingsMock;
       }
     });
+
+    this.owner.unregister('service:shuttle');
+    this.owner.register('service:shuttle', shuttleStub);
+  });
+
+  test('it renders', async function (assert) {
     const pipeline = EmberObject.create({
       id: 1
     });
@@ -101,8 +120,6 @@ module('Integration | Component | pipeline events list', function (hooks) {
       })
     ];
 
-    this.owner.register('service:shuttle', shuttleStub);
-
     this.set('pipelineMock', pipeline);
     this.set('eventsMock', events);
     this.set('updateEventsMock', page => {
@@ -118,11 +135,6 @@ module('Integration | Component | pipeline events list', function (hooks) {
   });
 
   test('it will redirect to event page when click on pipeline event', async function (assert) {
-    const shuttleStub = Service.extend({
-      getLatestCommitEvent() {
-        return new EmberPromise(resolve => resolve(latestCommitEvent));
-      }
-    });
     const events = [
       EmberObject.create({
         pipelineId: 10000,
@@ -165,8 +177,6 @@ module('Integration | Component | pipeline events list', function (hooks) {
       })
     ];
 
-    this.owner.register('service:shuttle', shuttleStub);
-
     this.set('eventsMock', events);
     this.set('updateEventsMock', page => {
       assert.equal(page, 2);
@@ -185,11 +195,6 @@ module('Integration | Component | pipeline events list', function (hooks) {
   });
 
   test('it will not redirect to event page when click on PR event', async function (assert) {
-    const shuttleStub = Service.extend({
-      getLatestCommitEvent() {
-        return new EmberPromise(resolve => resolve(latestCommitEvent));
-      }
-    });
     const events = [
       EmberObject.create({
         pipelineId: 10000,
@@ -231,8 +236,6 @@ module('Integration | Component | pipeline events list', function (hooks) {
         ]
       })
     ];
-
-    this.owner.register('service:shuttle', shuttleStub);
 
     this.set('eventsMock', events);
     this.set('updateEventsMock', page => {
