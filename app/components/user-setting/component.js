@@ -1,5 +1,4 @@
 import Component from '@ember/component';
-import { set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 import { or } from '@ember/object/computed';
@@ -9,6 +8,7 @@ const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH } = ENV.APP;
 export default Component.extend({
   store: service(),
   shuttle: service(),
+  userSettings: service(),
   displayJobNameLength: 20,
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
@@ -20,7 +20,7 @@ export default Component.extend({
 
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
-    const userSetting = await this.shuttle.getUserSetting();
+    const userSetting = await this.userSettings.getUserPreference();
 
     if (userSetting) {
       desiredJobNameLength = userSetting.displayJobNameLength;
@@ -31,13 +31,16 @@ export default Component.extend({
 
   async updateUserSettings() {
     this.set('isSaving', true);
-    const userSetting = await this.shuttle.getUserSetting();
+    const userSetting = await this.userSettings.getUserPreference();
+
+    userSetting.set('displayJobNameLength', this.displayJobNameLength);
 
     try {
-      set(userSetting, 'displayJobNameLength', this.displayJobNameLength);
-      await this.shuttle.updateUserSettings(userSetting);
-      this.set('isSaving', false);
-      this.set('successMessage', 'User setttings updated successfully!');
+      userSetting.save();
+      this.setProperties({
+        isSaving: false,
+        successMessage: 'User settings updated successfully!'
+      });
     } catch (error) {
       this.set('errorMessage', error);
     }
@@ -50,14 +53,16 @@ export default Component.extend({
       this.set('isSaving', true);
       try {
         await this.shuttle.deleteUserSettings();
-        this.set('isSaving', false);
-        this.set('successMessage', 'Timestamp preference reseted successfully');
+        this.setProperties({
+          isSaving: false,
+          successMessage: 'User settings reset successfully!'
+        });
       } catch {
-        this.set('isSaving', false);
-        this.set(
-          'errorMessage',
-          'Error occured while resetting Timestamp preference, Please try again'
-        );
+        this.set({
+          isSaving: false,
+          errorMessage:
+            'Error occured while resetting user settings, Please try again'
+        });
       }
     }
   }

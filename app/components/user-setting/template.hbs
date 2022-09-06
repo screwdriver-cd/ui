@@ -1,3 +1,5 @@
+{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+{{info-message message=successMessage type="success" icon="check"}}
 <div class="col-xs-12 col-md-8">
   <section class="preference">
     <ul>
@@ -14,10 +16,26 @@
               max={{maxDisplayLength}}   
               placeholder={{minDisplayLength}}
               value={{desiredJobNameLength}}
-              onchange={{action "updateJobNameLength" value="target.value"}}>
+              oninput={{action (mut displayJobNameLength) value="target.value"}}>
           </div>
         </div>
       </li>
+      <li>
+        <div class="row">
+          <div class="col-xs-12 right">
+            <button {{action "resetUserSettings"}} disabled={{isDisabled}} class="reset-button{{if isSaving " saving"}}">
+              {{fa-icon "refresh"}} Reset
+            </button>
+            <button {{action "updateUserSettings"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
+              <div class="saving-loading">
+                Updating settings
+              </div> 
+              <div class="button-label">Save</div>
+            </button>
+            {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}        
+          </div>
+        </div> 
+      </li>
     </ul>
   </section>
-  </div>
+</div>
