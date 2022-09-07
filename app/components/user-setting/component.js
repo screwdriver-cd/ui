@@ -51,14 +51,15 @@ export default Component.extend({
     },
     async resetUserSettings() {
       this.set('isSaving', true);
+
       try {
-        await this.shuttle.deleteUserSettings();
+        await this.store.deleteRecord('preference/user');
         this.setProperties({
           isSaving: false,
           successMessage: 'User settings reset successfully!'
         });
       } catch {
-        this.set({
+        this.setProperties({
           isSaving: false,
           errorMessage:
             'Error occured while resetting user settings, Please try again'
