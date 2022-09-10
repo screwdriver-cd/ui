@@ -332,11 +332,8 @@ export default Service.extend({
   async deleteUserSettings() {
     const method = 'delete';
     const url = `/users/settings`;
-    const data = {
-      settings: {}
-    };
 
-    return this.fetchFromApi(method, url, data);
+    return this.fetchFromApi(method, url);
   },
 
   async searchPipelines(pipelineName) {
