@@ -1,16 +1,20 @@
 import Component from '@ember/component';
 import { get, set, observer } from '@ember/object';
 import moment from 'moment';
+import { inject as service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import Table from 'ember-light-table';
 import isEqual from 'lodash.isequal';
 
 export default Component.extend({
+  store: service(),
+  userSettings: service(),
   isLoading: false,
   isShowingModal: false,
   sortingDirection: 'asc',
   sortingValuePath: 'job',
   sortedRows: [],
+  timestampPreference: null,
   columns: [
     {
       label: 'JOB',
@@ -52,7 +56,7 @@ export default Component.extend({
     }
   ],
 
-  init() {
+  async init() {
     this._super(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
     const table = Table.create({
@@ -68,6 +72,15 @@ export default Component.extend({
     if (sortColumn) {
       sortColumn.set('sorted', true);
     }
+
+    this.userSettings
+      .getTimestampFormat()
+      .then(timestampFormat => {
+        this.set('timestampPreference', timestampFormat);
+      })
+      .catch(() => {
+        this.set('timestampPreference', null);
+      });
 
     this.setProperties({
       table,
@@ -190,9 +203,20 @@ export default Component.extend({
       let coverageData = {};
 
       if (latestBuild) {
-        startTime = latestBuild.startTime
-          ? `${toCustomLocaleString(new Date(latestBuild.startTime))}`
-          : 'Invalid date';
+        if (latestBuild.startTime) {
+          if (this.timestampPreference === 'LOCAL_TIMEZONE') {
+            startTime = `${toCustomLocaleString(
+              new Date(latestBuild.startTime)
+            )}`;
+          } else {
+            startTime = `${toCustomLocaleString(
+              new Date(latestBuild.startTime),
+              { timeZone: 'UTC' }
+            )}`;
+          }
+        } else {
+          startTime = 'Invalid date';
+        }
         buildId = latestBuild.id;
         duration = this.getDuration(
           latestBuild.startTime,

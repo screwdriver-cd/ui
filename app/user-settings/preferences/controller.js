@@ -13,24 +13,42 @@ export default Controller.extend({
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
   isDisabled: or('isSaving', 'isInvalid'),
+  selectedTimestampFormat: {},
+  timestampOptions: [
+    { key: 'UTC', name: 'UTC' },
+    { key: 'LOCAL_TIMEZONE', name: 'Local Timezone' }
+  ],
 
   async init() {
     this._super(...arguments);
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
+    let selectedTimestampFormat = this.timestampOptions.find(
+      timestamp => timestamp.key === 'LOCAL_TIMEZONE'
+    );
     const userPreferences = await this.userSettings.getUserPreference();
 
     if (userPreferences) {
       desiredJobNameLength = userPreferences.displayJobNameLength;
+      selectedTimestampFormat = this.timestampOptions.find(
+        timestamp => timestamp.key === userPreferences.timestampFormat
+      );
     }
 
-    this.setProperties({ desiredJobNameLength, userPreferences });
+    this.setProperties({
+      desiredJobNameLength,
+      userPreferences,
+      selectedTimestampFormat
+    });
   },
 
   async updateUserSettings() {
     this.set('isSaving', true);
     this.userPreferences.set('displayJobNameLength', this.displayJobNameLength);
-
+    this.userPreferences.set(
+      'timestampFormat',
+      this.selectedTimestampFormat.key
+    );
     try {
       await this.userPreferences.save();
       this.set('successMessage', 'User settings updated successfully!');

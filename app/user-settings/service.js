@@ -9,6 +9,7 @@ export default Service.extend({
   session: service('session'),
   store: service(),
   desiredJobNameLength: null,
+  desiredTimestampFormat: null,
 
   refreshToken(id) {
     const token = get(this, 'session.data.authenticated.token');
@@ -66,6 +67,22 @@ export default Service.extend({
     this.set('desiredJobNameLength', desiredJobNameLength);
 
     return desiredJobNameLength;
+  },
+
+  async getTimestampFormat() {
+    let desiredTimestampFormat = 'LOCAL_TIMEZONE';
+
+    const userPreference = await this.getUserPreference();
+
+    if (userPreference) {
+      const { timestampFormat } = userPreference;
+
+      desiredTimestampFormat = timestampFormat;
+    }
+
+    this.set('desiredTimestampFormat', desiredTimestampFormat);
+
+    return desiredTimestampFormat;
   },
 
   async updateDisplayJobNameLength(displayJobNameLength) {
