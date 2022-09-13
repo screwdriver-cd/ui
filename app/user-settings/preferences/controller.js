@@ -18,31 +18,26 @@ export default Controller.extend({
     this._super(...arguments);
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
-    const userSetting = await this.userSettings.getUserPreference();
+    const userPreferences = await this.userSettings.getUserPreference();
 
-    if (userSetting) {
-      desiredJobNameLength = userSetting.displayJobNameLength;
+    if (userPreferences) {
+      desiredJobNameLength = userPreferences.displayJobNameLength;
     }
 
-    this.setProperties({ desiredJobNameLength, userSetting });
+    this.setProperties({ desiredJobNameLength, userPreferences });
   },
 
   async updateUserSettings() {
     this.set('isSaving', true);
-
-    this.userSetting.set('displayJobNameLength', this.displayJobNameLength);
+    this.userPreferences.set('displayJobNameLength', this.displayJobNameLength);
 
     try {
-      await this.userSetting.save();
-      this.setProperties({
-        isSaving: false,
-        successMessage: 'User settings updated successfully!'
-      });
+      await this.userPreferences.save();
+      this.set('successMessage', 'User settings updated successfully!');
     } catch (error) {
-      this.setProperties({
-        isSaving: false,
-        errorMessage: error
-      });
+      this.set('errorMessage', error);
+    } finally {
+      this.set('isSaving', false);
     }
   },
 
@@ -54,17 +49,13 @@ export default Controller.extend({
       this.set('isSaving', true);
 
       try {
-        await this.store.deleteRecord(this.userSetting);
-
-        this.setProperties({
-          isSaving: false,
-          successMessage: 'User settings reset successfully!'
-        });
+        await this.store.deleteRecord(this.userPreferences);
+        await this.userPreferences.save();
+        this.set('successMessage', 'User settings reset successfully!');
       } catch (error) {
-        this.setProperties({
-          isSaving: false,
-          errorMessage: error
-        });
+        this.set('errorMessage', error);
+      } finally {
+        this.set('isSaving', false);
       }
     }
   }
