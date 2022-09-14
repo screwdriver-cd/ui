@@ -28,11 +28,11 @@
             </button>
             <button {{action "updateUserSettings"}} disabled={{isDisabled}} class="blue-button">
               {{#if isSaving}}
-              <div>
-                Updating settings
-              </div>
+                <div>
+                  Updating settings
+                </div>
               {{else}}
-              <div class="button-label">Save</div>
+                <div class="button-label">Save</div>
               {{/if}}
             </button>
             {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}        
