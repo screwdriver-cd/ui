@@ -43,14 +43,17 @@
       <li>
         <div class="row">
           <div class="col-xs-12 right">
-            <button {{action "resetUserSettings"}} disabled={{isDisabled}} class="reset-button{{if isSaving " saving"}}">
+            <button {{action "resetUserSettings"}} disabled={{isDisabled}} class="reset-button">
               {{fa-icon "refresh"}} Reset
             </button>
-            <button {{action "updateUserSettings"}} disabled={{isDisabled}} class="blue-button{{if isSaving " saving"}}">
-              <div class="saving-loading">
+            <button {{action "updateUserSettings"}} disabled={{isDisabled}} class="blue-button">
+              {{#if isSaving}}
+              <div>
                 Updating settings
-              </div> 
+              </div>
+              {{else}}
               <div class="button-label">Save</div>
+              {{/if}}
             </button>
             {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}        
           </div>

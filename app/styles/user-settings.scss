@@ -130,17 +130,6 @@
   &:disabled {
     background: $sd-text-med;
   }
-  .saving-loading {
-    display: none;
-  }
-  &.saving {
-    .saving-loading {
-      display: block;
-    }
-    .button-label {
-      display: none;
-    }
-  }
   &:active {
     &:not(:disabled) {
       @include scale(0.97);
@@ -164,17 +153,6 @@
   }
   &:disabled {
     background: $sd-text-med;
-  }
-  .saving-loading {
-    display: none;
-  }
-  &.saving {
-    .saving-loading {
-      display: block;
-    }
-    .button-label {
-      display: none;
-    }
   }
   &:active {
     &:not(:disabled) {
