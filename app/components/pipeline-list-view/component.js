@@ -204,14 +204,14 @@ export default Component.extend({
 
       if (latestBuild) {
         if (latestBuild.startTime) {
-          if (this.timestampPreference === 'LOCAL_TIMEZONE') {
-            startTime = `${toCustomLocaleString(
-              new Date(latestBuild.startTime)
-            )}`;
-          } else {
+          if (this.timestampPreference === 'UTC') {
             startTime = `${toCustomLocaleString(
               new Date(latestBuild.startTime),
               { timeZone: 'UTC' }
+            )}`;
+          } else {
+            startTime = `${toCustomLocaleString(
+              new Date(latestBuild.startTime)
             )}`;
           }
         } else {
