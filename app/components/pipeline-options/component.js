@@ -156,6 +156,8 @@ export default Component.extend({
         aliasName
       });
       this.set('successMessage', 'Pipeline alias-name updated successfully');
+    } catch (error) {
+      this.set('errorMessage', error);
     } finally {
       this.set('aliasName', aliasName);
     }
