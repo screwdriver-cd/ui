@@ -1,18 +1,21 @@
 import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
-import { or } from '@ember/object/computed';
+import { bool } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
 
 const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH } = ENV.APP;
 
 export default Controller.extend({
+  isSaving: false,
   store: service(),
   shuttle: service(),
   userSettings: service(),
   displayJobNameLength: 20,
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
-  isDisabled: or('isSaving', 'isInvalid'),
+  isDisabled: bool('isSaving'),
+  successMessage: '',
+  errorMessage: '',
 
   async init() {
     this._super(...arguments);
@@ -49,7 +52,7 @@ export default Controller.extend({
       this.set('isSaving', true);
 
       try {
-        await this.store.deleteRecord(this.userPreferences);
+        this.store.deleteRecord(this.userPreferences);
         await this.userPreferences.save();
         this.set('successMessage', 'User settings reset successfully!');
       } catch (error) {
