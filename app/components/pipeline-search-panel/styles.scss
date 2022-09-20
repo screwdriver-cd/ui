@@ -4,6 +4,16 @@
   justify-content: center;
   flex-wrap: wrap;
 
+  .name {
+    text-align: left;
+    width: 30%;
+  }
+
+  .branch {
+    width: 25%;
+    text-align: right;
+  }
+
   .search-pipeline-searchbar {
     display: flex;
     width: 88%;
