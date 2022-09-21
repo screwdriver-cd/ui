@@ -18,4 +18,8 @@ export default class PreferenceUserAdapter extends Adapter {
 
     return this.shuttle.updateUserSetting(data);
   }
+
+  async deleteRecord(/* store, type, query */) {
+    return this.shuttle.deleteUserSettings();
+  }
 }
