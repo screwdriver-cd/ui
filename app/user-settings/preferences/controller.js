@@ -1,50 +1,65 @@
 import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
-import { debounce } from '@ember/runloop';
-import $ from 'jquery';
+import { bool } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
 
 const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH } = ENV.APP;
 
 export default Controller.extend({
-  shuttle: service(),
+  isSaving: false,
   store: service(),
+  shuttle: service(),
   userSettings: service(),
   displayJobNameLength: 20,
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
+  isDisabled: bool('isSaving'),
+  successMessage: '',
+  errorMessage: '',
 
   async init() {
     this._super(...arguments);
+    let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
-    const desiredJobNameLength =
-      await this.userSettings.getDisplayJobNameLength();
+    const userPreferences = await this.userSettings.getUserPreference();
 
-    this.setProperties({ desiredJobNameLength });
+    if (userPreferences) {
+      desiredJobNameLength = userPreferences.displayJobNameLength;
+    }
+
+    this.setProperties({ desiredJobNameLength, userPreferences });
   },
 
-  async updateJobNameLength(displayJobNameLength) {
-    this.setProperties({ displayJobNameLength });
+  async updateUserSettings() {
+    this.set('isSaving', true);
+    this.userPreferences.set('displayJobNameLength', this.displayJobNameLength);
 
-    await this.userSettings.updateDisplayJobNameLength(displayJobNameLength);
+    try {
+      await this.userPreferences.save();
+      this.set('successMessage', 'User settings updated successfully!');
+    } catch (error) {
+      this.set('errorMessage', error);
+    } finally {
+      this.set('isSaving', false);
+    }
   },
 
   actions: {
-    async updateJobNameLength(inputJobNameLength) {
-      let displayJobNameLength = inputJobNameLength;
+    async updateUserSettings() {
+      this.updateUserSettings();
+    },
+    async resetUserSettings() {
+      this.set('isSaving', true);
 
-      if (parseInt(displayJobNameLength, 10) > MAXIMUM_JOBNAME_LENGTH) {
-        displayJobNameLength = MAXIMUM_JOBNAME_LENGTH;
+      try {
+        this.store.deleteRecord(this.userPreferences);
+        await this.userPreferences.save();
+        this.set('successMessage', 'User settings reset successfully!');
+      } catch (error) {
+        this.set('errorMessage', error);
+      } finally {
+        this.set('isSaving', false);
       }
-
-      if (parseInt(displayJobNameLength, 10) < MINIMUM_JOBNAME_LENGTH) {
-        displayJobNameLength = MINIMUM_JOBNAME_LENGTH;
-      }
-
-      // correct user input that are outside the min and max
-      $('input.display-job-name').val(displayJobNameLength);
-
-      debounce(this, this.updateJobNameLength, displayJobNameLength, 1000);
     }
   }
 });
