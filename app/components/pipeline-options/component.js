@@ -155,9 +155,7 @@ export default Component.extend({
       await this.shuttle.updatePipelineSettings(pipeline.id, {
         aliasName
       });
-      this.set('successMessage', 'Pipeline alias-name updated successfully');
-    } catch (error) {
-      this.set('errorMessage', error);
+      this.set('successMessage', 'Pipeline alias updated successfully');
     } finally {
       this.set('aliasName', aliasName);
     }
@@ -278,7 +276,7 @@ export default Component.extend({
     async resetPipelineAlias() {
       this.$('input.pipeline-alias-name').val('');
 
-      this.updatePipelineAlias('');
+      this.set('aliasName', '');
     },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {
