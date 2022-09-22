@@ -541,6 +541,16 @@ module('Integration | Component | collection view', function (hooks) {
       .dom('.collection-pipeline:nth-of-type(4) .app-id a')
       .hasText('screwdriver-cd/zzz');
 
+    // test aliasname
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .app-id p')
+      .hasText('models');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id p')
+      .hasText('screwdriver');
+    assert.dom('.collection-pipeline:nth-of-type(3) .app-id p').hasText('ui');
+    assert.dom('.collection-pipeline:nth-of-type(4) .app-id p').hasText('zzz');
+
     // check that helper function getColor() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status i')
