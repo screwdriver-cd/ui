@@ -153,12 +153,127 @@ const mockDefaultPipelines = copy([
   })
 ]);
 
+const mockDefaultPipelinesWithoutAlias = copy([
+  EmberObject.create({
+    id: 1,
+    scmUri: 'github.com:12345678:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/screwdriver',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
+    },
+    scmContext: 'github:github.com',
+    annotations: {},
+    lastEventId: 12,
+    lastBuilds: [
+      {
+        id: 123,
+        status: 'SUCCESS',
+        // Most recent build
+        createTime: '2017-09-05T04:02:20.890Z'
+      }
+    ],
+    metrics: EmberPromise.resolve(mockMetrics),
+    settings: {}
+  }),
+  EmberObject.create({
+    id: 2,
+    scmUri: 'github.com:87654321:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main', 'publish'],
+    scmRepo: {
+      name: 'screwdriver-cd/ui',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/ui/tree/master'
+    },
+    scmContext: 'github:github.com',
+    annotations: {},
+    prs: {
+      open: 2,
+      failing: 1
+    },
+    metrics: EmberPromise.resolve([]),
+    settings: {}
+  }),
+  EmberObject.create({
+    id: 3,
+    scmUri: 'github.com:54321876:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/models',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/models/tree/master'
+    },
+    scmContext: 'bitbucket:bitbucket.org',
+    annotations: {},
+    lastEventId: 23,
+    lastBuilds: [
+      {
+        id: 125,
+        status: 'FAILURE',
+        // 2nd most recent build
+        createTime: '2017-09-05T04:01:41.789Z'
+      }
+    ],
+    metrics: EmberPromise.resolve([]),
+    settings: {}
+  }),
+  EmberObject.create({
+    id: 4,
+    scmUri: 'github.com:54321879:master:lib',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/zzz',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/zzz/tree/master',
+      rootDir: 'lib'
+    },
+    scmContext: 'bitbucket:bitbucket.org',
+    annotations: {},
+    lastEventId: 23,
+    lastBuilds: [
+      {
+        id: 125,
+        status: 'UNSTABLE',
+        createTime: '2017-09-05T04:01:41.789Z'
+      }
+    ],
+    metrics: EmberPromise.resolve([]),
+    settings: {}
+  })
+]);
+
 const mockDefaultCollection = EmberObject.create({
   id: 1,
   name: 'My Pipelines',
   description: 'Default Collection',
   type: 'default',
   pipelines: mockDefaultPipelines,
+  pipelineIds: [1, 2, 3, 4]
+});
+
+const mockDefaultCollectionWithoutAlias = EmberObject.create({
+  id: 1,
+  name: 'My Pipelines',
+  description: 'Default Collection',
+  type: 'default',
+  pipelines: mockDefaultPipelinesWithoutAlias,
   pipelineIds: [1, 2, 3, 4]
 });
 
@@ -387,7 +502,8 @@ module('Integration | Component | collection view', function (hooks) {
       collections: mockCollections,
       onRemovePipeline: onRemovePipelineSpy,
       addMultipleToCollection: addMultipleToCollectionSpy,
-      removeMultiplePipelines: removeMultiplePipelinesSpy
+      removeMultiplePipelines: removeMultiplePipelinesSpy,
+      mockCollection: mockDefaultCollectionWithoutAlias
     });
   });
 
@@ -598,6 +714,53 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('14s');
     assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('--');
     assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('--');
+  });
+
+  test('it renders just the name without alias', async function (assert) {
+    injectScmServiceStub(this);
+
+    await render(hbs`
+      {{collection-view
+        collection=mockCollection
+        collections=collections
+        metricsMap=metricsMap
+      }}`);
+
+    // switch to list mode
+    await click('.header__change-view button:nth-of-type(2)');
+    await waitFor('.collection-list-view');
+
+    // check that necessage elements exist
+    assert.dom('.collection-list-view').exists({ count: 1 });
+
+    assert.dom('.header__name').hasText('My Pipelines');
+    assert.dom('.header__description').hasText('Default Collection');
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('th.collection-pipeline__choose').exists({ count: 1 });
+    assert.dom('th.app-id').hasText('Name');
+    assert.dom('th.branch').hasText('Branch');
+    assert.dom('th.status').hasText('Status');
+    assert.dom('th.start').hasText('Start Date');
+    assert.dom('th.duration').hasText('Duration');
+    assert.dom('th.last-run').hasText('Last Run Job');
+    assert.dom('th.history').exists({ count: 1 });
+
+    assert.dom('.collection-pipeline').exists({ count: 4 });
+
+    // check that collection table row order is correct
+
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .app-id')
+      .hasText('screwdriver-cd/models');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id')
+      .hasText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .app-id')
+      .hasText('screwdriver-cd/ui');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .app-id')
+      .hasText('screwdriver-cd/zzz');
   });
 
   test('it renders empty view if the collection has no pipelines', async function (assert) {
