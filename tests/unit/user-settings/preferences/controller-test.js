@@ -25,9 +25,6 @@ module('Unit | Controller | user-settings/preferences', function (hooks) {
   test('it calls resetUserSettings', async function (assert) {
     assert.expect(4);
 
-    const controller = this.owner.lookup(
-      'controller:user-settings/preferences'
-    );
     const userSettingsServiceMock = Service.extend({
       getUserPreference() {
         const record = {
@@ -59,12 +56,16 @@ module('Unit | Controller | user-settings/preferences', function (hooks) {
 
     this.owner.register('service:store', storeStub);
 
-    await settled();
+    const controller = this.owner.lookup(
+      'controller:user-settings/preferences'
+    );
 
     const resetUserSettingsActionStub = sinon.spy(
       controller.actions,
       'resetUserSettings'
     );
+
+    await settled();
 
     controller.send('resetUserSettings');
 
