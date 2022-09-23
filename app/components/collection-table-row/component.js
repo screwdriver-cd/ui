@@ -23,9 +23,7 @@ export default Component.extend({
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
   aliasName: computed('pipeline', function get() {
-    const { name } = this.pipeline.scmRepo;
-
-    return getWithDefault(this.pipeline.settings, 'aliasName', name);
+    return getWithDefault(this.pipeline.settings, 'aliasName', '');
   }),
   branch: computed('pipeline', function get() {
     const { branch, rootDir } = this.pipeline.scmRepo;
