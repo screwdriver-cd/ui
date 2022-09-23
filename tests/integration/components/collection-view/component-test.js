@@ -660,12 +660,20 @@ module('Integration | Component | collection view', function (hooks) {
     // test aliasname
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id p')
-      .hasText('models');
+      .hasText('models')
+      .doesNotIncludeText('screwdriver-cd/models');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .app-id p')
-      .hasText('screwdriver');
-    assert.dom('.collection-pipeline:nth-of-type(3) .app-id p').hasText('ui');
-    assert.dom('.collection-pipeline:nth-of-type(4) .app-id p').hasText('zzz');
+      .hasText('screwdriver')
+      .doesNotIncludeText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .app-id p')
+      .hasText('ui')
+      .doesNotIncludeText('screwdriver-cd/ui');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .app-id p')
+      .hasText('zzz')
+      .doesNotIncludeText('screwdriver-cd/zzz');
 
     // check that helper function getColor() works correctly
     assert
@@ -730,7 +738,6 @@ module('Integration | Component | collection view', function (hooks) {
     await click('.header__change-view button:nth-of-type(2)');
     await waitFor('.collection-list-view');
 
-    // check that necessage elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -746,8 +753,6 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('th.history').exists({ count: 1 });
 
     assert.dom('.collection-pipeline').exists({ count: 4 });
-
-    // check that collection table row order is correct
 
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id')
