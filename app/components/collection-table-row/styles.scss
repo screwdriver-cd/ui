@@ -23,9 +23,7 @@
     font-weight: bold;
   }
 
-  .alias,
-  .branch span,
-  .app-id a {
+  .branch span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

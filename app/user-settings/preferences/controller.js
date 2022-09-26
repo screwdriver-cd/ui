@@ -25,7 +25,6 @@ export default Controller.extend({
   async init() {
     this._super(...arguments);
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
-
     let selectedTimestampFormat = this.get('timestampOptions', 'lastObject');
     const userPreferences = await this.userSettings.getUserPreference();
 
@@ -50,6 +49,8 @@ export default Controller.extend({
       'timestampFormat',
       this.selectedTimestampFormat.key
     );
+
+    this.setProperties({ desiredJobNameLength, userPreferences });
     try {
       await this.userPreferences.save();
       this.set('successMessage', 'User settings updated successfully!');
@@ -72,9 +73,8 @@ export default Controller.extend({
         this.store.deleteRecord(this.userPreferences);
         await this.userPreferences.save();
         this.userPreferences.unloadRecord();
-
         const newUserPreferences = await this.userSettings.getUserPreference();
-
+        
         this.setProperties({
           successMessage: 'User settings reset successfully!',
           userPreferences: newUserPreferences
