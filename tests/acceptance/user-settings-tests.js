@@ -21,7 +21,8 @@ module('Acceptance |user-settings', function (hooks) {
         1048190: {
           showPRJobs: false
         },
-        displayJobNameLength: 30
+        displayJobNameLength: 30,
+        timestamFormat: 'LOCAL_TIMEZONE'
       })
     ]);
   });
@@ -38,7 +39,7 @@ module('Acceptance |user-settings', function (hooks) {
     assert.dom('section.preference li').exists({ count: 2 });
   });
 
-  test('update displayJobNameLength', async function (assert) {
+  test('update user preferences', async function (assert) {
     server.put('http://localhost:8080/v4/users/settings', () => [
       200,
       { 'Content-Type': 'application/json' },
@@ -58,10 +59,13 @@ module('Acceptance |user-settings', function (hooks) {
     await visit('/user-settings/preferences');
 
     assert.equal(currentURL(), '/user-settings/preferences');
+    assert.dom('.ember-power-select-selected-item').hasText('LOCAL_TIMEZONE');
     await fillIn('.display-job-name', 50);
+    await fillIn('.ember-power-select-selected-item', 'UTC');
 
     await click('button.blue-button');
     assert.dom('.display-job-name').hasValue(50);
+    assert.dom('.ember-power-select-selected-item').hasValue('UTC');
     assert.deepEqual(
       controller.get('successMessage'),
       'User settings updated successfully!'
