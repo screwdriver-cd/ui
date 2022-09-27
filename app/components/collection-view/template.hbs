@@ -149,15 +149,15 @@
           <thead>
             <tr>
               <th class="collection-pipeline__choose"></th>
-              <th class="app-id" onclick={{action "setSortBy" (if (eq (get sortBy 0) "scmRepo.name:desc") "scmRepo.name:asc" "scmRepo.name:desc")}}>
+              <th class="app-id" onclick={{action "setSortBy" (if (eq (get sortBy 0) (if pipeline.settings.aliasName "pipeline.settings.aliasName:desc" "scmRepo.name:desc")) (if pipeline.settings.aliasName "pipeline.settings.aliasName:asc" "scmRepo.name:asc") (if pipeline.settings.aliasName "pipeline.settings.aliasName:desc" "scmRepo.name:desc"))}}>
                 {{#if this.hasAliasName}}
                   Alias/
                 {{/if}}
                 Name
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) "scmRepo.name:asc")}}
+                  {{#if (eq (get sortBy 0) (if pipeline.settings.aliasName "pipeline.settings.aliasName:asc" "scmRepo.name:asc"))}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) "scmRepo.name:desc")}}
+                  {{else if (eq (get sortBy 0) (if pipeline.settings.aliasName "pipeline.settings.aliasName:desc" "scmRepo.name:desc"))}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>
