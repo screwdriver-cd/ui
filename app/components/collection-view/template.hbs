@@ -155,7 +155,18 @@
                 {{/if}}
                 <p rowspan="1">Name</p>
               </th>
-              <th class="branch" rowspan="1">Branch</th>
+              <th class="branch" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "scmRepo.name scmRepo.branch:desc") "scmRepo.name scmRepo.branch:asc" "scmRepo.name scmRepo.branch:desc")}} >
+                Branch
+                <span class="icon-wrapper">
+                  {{#if (eq (get sortBy 0) "scmRepo.name scmRepo.branch:asc")}}
+                    <i class="fa fa-sort-asc"></i>
+                  {{else if (eq (get sortBy 0) "scmRepo.name scmRepo.branch:desc")}}
+                    <i class="fa fa-sort-desc"></i>
+                  {{else}}
+                    <i class="fa fa-sort"></i>
+                  {{/if}}
+                </span>
+              </th>
               <th class="start" rowspan="1">Start Date</th>
               <th class="duration" rowspan="1">Duration</th>
               <th class="last-run" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "createTime:desc") "createTime:asc" "createTime:desc")}}>
