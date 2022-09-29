@@ -52,9 +52,17 @@ export default Controller.extend({
       this.set('isSaving', true);
 
       try {
+        // can be replaced with destroyRecord after ember-data 3.28
         this.store.deleteRecord(this.userPreferences);
         await this.userPreferences.save();
-        this.set('successMessage', 'User settings reset successfully!');
+        this.userPreferences.unloadRecord();
+
+        const newUserPreferences = await this.userSettings.getUserPreference();
+
+        this.setProperties({
+          successMessage: 'User settings reset successfully!',
+          userPreferences: newUserPreferences
+        });
       } catch (error) {
         this.set('errorMessage', error);
       } finally {
