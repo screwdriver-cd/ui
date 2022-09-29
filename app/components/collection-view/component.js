@@ -155,6 +155,28 @@ export default Component.extend({
       );
     }
   ),
+  aliasNameSort: computed(
+    'pipeline.settings.aliasName',
+    'scmRepo.name',
+    'sortBy',
+    function () {
+      let sortingCriteria = '';
+
+      if (this.hasAliasName) {
+        sortingCriteria =
+          this.sortBy[0] === 'pipeline.settings.aliasName:desc'
+            ? 'pipeline.settings.aliasName:asc'
+            : 'pipeline.settings.aliasName:desc';
+      } else {
+        sortingCriteria =
+          this.sortBy[0] === 'scmRepo.name:desc'
+            ? 'scmRepo.name:asc'
+            : 'scmRepo.name:desc';
+      }
+
+      return sortingCriteria;
+    }
+  ),
 
   actions: {
     /**
