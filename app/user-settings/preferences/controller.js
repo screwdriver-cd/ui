@@ -2,6 +2,7 @@ import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
 import { bool } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
+import { TIMESTAMP_OPTIONS } from '../../utils/timestamp-format';
 
 const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH } = ENV.APP;
 
@@ -17,10 +18,7 @@ export default Controller.extend({
   successMessage: '',
   errorMessage: '',
   selectedTimestampFormat: {},
-  timestampOptions: [
-    { key: 'UTC', name: 'UTC' },
-    { key: 'LOCAL_TIMEZONE', name: 'Local Timezone' }
-  ],
+  timestampOptions: TIMESTAMP_OPTIONS,
 
   async init() {
     this._super(...arguments);

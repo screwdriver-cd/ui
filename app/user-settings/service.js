@@ -70,7 +70,7 @@ export default Service.extend({
   },
 
   async getTimestampFormat() {
-    let desiredTimestampFormat = 'LOCAL_TIMEZONE';
+    let desiredTimestampFormat;
 
     const userPreference = await this.getUserPreference();
 
