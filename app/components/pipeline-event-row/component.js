@@ -5,6 +5,10 @@ import { statusIcon } from 'screwdriver-ui/utils/build';
 import { inject as service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
+
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
   userSettings: service(),
@@ -84,26 +88,28 @@ export default Component.extend({
   }),
   startDate: computed('event.createTime', {
     get() {
-      let startDate;
+      return ObjectPromiseProxy.create({
+        promise: this.userSettings.getUserPreference().then(userPreference => {
+          let startDate = 'n/a';
 
-      const userPreferences = this.store.peekAll('preference/user');
-      const timestampPreference = get(
-        userPreferences.lastObject,
-        'timestampFormat'
-      );
+          const timestampPreference = get(userPreference, 'timestampFormat');
 
-      if (timestampPreference === 'UTC') {
-        startDate = `${toCustomLocaleString(
-          new Date(this.get('event.createTime')),
-          { timeZone: 'UTC' }
-        )}`;
-      } else {
-        startDate = `${toCustomLocaleString(
-          new Date(this.get('event.createTime'))
-        )}`;
-      }
+          if (timestampPreference === 'UTC') {
+            startDate = `${toCustomLocaleString(
+              new Date(this.get('event.createTime')),
+              { timeZone: 'UTC' }
+            )}`;
+          } else {
+            startDate = `${toCustomLocaleString(
+              new Date(this.get('event.createTime'))
+            )}`;
+          }
 
-      return startDate;
+          console.log('startDate', startDate);
+
+          return startDate;
+        })
+      });
     }
   }),
 
