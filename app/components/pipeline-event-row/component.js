@@ -82,24 +82,29 @@ export default Component.extend({
       return this.get('numberOfParameters') < MAX_NUM_OF_PARAMETERS_ALLOWED;
     }
   }),
-  startDate: computed('event.createTime', function () {
-    let startDate;
+  startDate: computed('event.createTime', {
+    get() {
+      let startDate;
 
-    const userPreferences = this.store.peekAll('preference/user');
-    const timestampPreference = userPreferences.lastObject.timestampFormat;
+      const userPreferences = this.store.peekAll('preference/user');
+      const timestampPreference = get(
+        userPreferences.lastObject,
+        'timestampFormat'
+      );
 
-    if (timestampPreference === 'UTC') {
-      startDate = `${toCustomLocaleString(
-        new Date(this.get('event.createTime')),
-        { timeZone: 'UTC' }
-      )}`;
-    } else {
-      startDate = `${toCustomLocaleString(
-        new Date(this.get('event.createTime'))
-      )}`;
+      if (timestampPreference === 'UTC') {
+        startDate = `${toCustomLocaleString(
+          new Date(this.get('event.createTime')),
+          { timeZone: 'UTC' }
+        )}`;
+      } else {
+        startDate = `${toCustomLocaleString(
+          new Date(this.get('event.createTime'))
+        )}`;
+      }
+
+      return startDate;
     }
-
-    return startDate;
   }),
 
   isExternalTrigger: computed('event.startFrom', {
