@@ -3,6 +3,10 @@ import { inject as service } from '@ember/service';
 import { computed, get } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
+
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
   session: service(),
@@ -42,32 +46,28 @@ export default Component.extend({
       return statusIcon(this.get('selectedEventObj.status'));
     }
   }),
-  startDate: computed(
-    'selectedEventObj.createTime',
-    async function getStartDate() {
-      let startDate = 'n/a';
+  startDate: computed('selectedEventObj.createTime', {
+    get() {
+      return ObjectPromiseProxy.create({
+        promise: this.userSettings.getUserPreference().then(userPreference => {
+          let startDate = 'n/a';
 
-      let timestampPreference;
+          const timestampPreference = get(userPreference, 'timestampFormat');
 
-      let timestamp;
+          if (timestampPreference === 'UTC') {
+            startDate = `${toCustomLocaleString(
+              new Date(this.get('selectedEventObj.createTime')),
+              { timeZone: 'UTC' }
+            )}`;
+          } else {
+            startDate = `${toCustomLocaleString(
+              new Date(this.get('selectedEventObj.createTime'))
+            )}`;
+          }
 
-      if (this.get('selectedEventObj.createTime')) {
-        const userPreferences = await this.userSettings.getUserPreference();
-
-        timestampPreference = get(userPreferences, 'timestampFormat');
-      }
-      if (timestampPreference === 'UTC') {
-        timestamp = `${toCustomLocaleString(
-          new Date(this.get('selectedEventObj.createTime')),
-          { timeZone: 'UTC' }
-        )}`;
-      } else {
-        timestamp = `${toCustomLocaleString(
-          new Date(this.get('selectedEventObj.createTime'))
-        )}`;
-      }
-
-      return timestamp || startDate;
+          return startDate;
+        })
+      });
     }
-  )
+  })
 });

@@ -5,6 +5,10 @@ import { statusIcon } from 'screwdriver-ui/utils/build';
 import { inject as service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
+
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
   userSettings: service(),
@@ -82,30 +86,29 @@ export default Component.extend({
       return this.get('numberOfParameters') < MAX_NUM_OF_PARAMETERS_ALLOWED;
     }
   }),
-  startDate: computed('event.createTime', async function getStartDate() {
-    let startDate = 'n/a';
+  startDate: computed('event.createTime', {
+    get() {
+      return ObjectPromiseProxy.create({
+        promise: this.userSettings.getUserPreference().then(userPreference => {
+          let startDate = 'n/a';
 
-    let timestampPreference;
+          const timestampPreference = get(userPreference, 'timestampFormat');
 
-    let timestamp;
+          if (timestampPreference === 'UTC') {
+            startDate = `${toCustomLocaleString(
+              new Date(this.get('event.createTime')),
+              { timeZone: 'UTC' }
+            )}`;
+          } else {
+            startDate = `${toCustomLocaleString(
+              new Date(this.get('event.createTime'))
+            )}`;
+          }
 
-    if (this.get('event.createTime')) {
-      const userPreferences = await this.userSettings.getUserPreference();
-
-      timestampPreference = get(userPreferences, 'timestampFormat');
+          return startDate;
+        })
+      });
     }
-    if (timestampPreference === 'UTC') {
-      timestamp = `${toCustomLocaleString(
-        new Date(this.get('event.createTime')),
-        { timeZone: 'UTC' }
-      )}`;
-    } else {
-      timestamp = `${toCustomLocaleString(
-        new Date(this.get('event.createTime'))
-      )}`;
-    }
-
-    return timestamp || startDate;
   }),
 
   isExternalTrigger: computed('event.startFrom', {
