@@ -8,7 +8,7 @@ export default class PreferenceUserModel extends Model {
   @attr('number') displayJobNameLength;
 
   @attr('string', {
-    defaultValue: TIMESTAMP_OPTIONS[TIMESTAMP_DEFAULT_OPTION].key
+    defaultValue: TIMESTAMP_OPTIONS[TIMESTAMP_DEFAULT_OPTION].value
   })
   timestampFormat;
 

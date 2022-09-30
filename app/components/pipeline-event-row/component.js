@@ -2,9 +2,13 @@ import Component from '@ember/component';
 import { bool } from '@ember/object/computed';
 import { computed, get, getProperties } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
+import { inject as service } from '@ember/service';
+import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
 
 export default Component.extend({
+  userSettings: service(),
+  store: service(),
   classNameBindings: ['highlighted', 'event.status'],
   highlighted: computed('selectedEvent', 'event.id', {
     get() {
@@ -77,6 +81,25 @@ export default Component.extend({
     get() {
       return this.get('numberOfParameters') < MAX_NUM_OF_PARAMETERS_ALLOWED;
     }
+  }),
+  startDate: computed('event.createTime', function () {
+    let startDate;
+
+    const userPreferences = this.store.peekAll('preference/user');
+    const timestampPreference = userPreferences.lastObject.timestampFormat;
+
+    if (timestampPreference === 'UTC') {
+      startDate = `${toCustomLocaleString(
+        new Date(this.get('event.createTime')),
+        { timeZone: 'UTC' }
+      )}`;
+    } else {
+      startDate = `${toCustomLocaleString(
+        new Date(this.get('event.createTime'))
+      )}`;
+    }
+
+    return startDate;
   }),
 
   isExternalTrigger: computed('event.startFrom', {
