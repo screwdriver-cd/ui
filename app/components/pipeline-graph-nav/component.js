@@ -42,23 +42,29 @@ export default Component.extend({
       return statusIcon(this.get('selectedEventObj.status'));
     }
   }),
-  startDate: computed('selectedEventObj.createTime', function get() {
-    let startDate;
+  startDate: computed('selectedEventObj.createTime', async function get() {
+    let startDate = 'n/a';
 
-    const userPreferences = this.store.peekAll('preference/user');
-    const timestampPreference = userPreferences.lastObject.timestampFormat;
+    let timestampPreference;
 
+    let timestamp;
+
+    if (this.get('selectedEventObj.createTime')) {
+      const userPreferences = await this.userSettings.getUserPreference();
+
+      timestampPreference = get(userPreferences, 'timestampFormat');
+    }
     if (timestampPreference === 'UTC') {
-      startDate = `${toCustomLocaleString(
+      timestamp = `${toCustomLocaleString(
         new Date(this.get('selectedEventObj.createTime')),
         { timeZone: 'UTC' }
       )}`;
     } else {
-      startDate = `${toCustomLocaleString(
+      timestamp = `${toCustomLocaleString(
         new Date(this.get('selectedEventObj.createTime'))
       )}`;
     }
 
-    return startDate;
+    return timestamp || startDate;
   })
 });
