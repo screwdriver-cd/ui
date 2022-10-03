@@ -3,6 +3,20 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { get, set } from '@ember/object';
+import Service from '@ember/service';
+import { Promise as EmberPromise } from 'rsvp';
+import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
+
+const userSettingsMock = {
+  1018240: {
+    showPRJobs: true
+  },
+  1048190: {
+    showPRJobs: false
+  },
+  displayJobNameLength: 30,
+  timestampFormat: 'UTC'
+};
 
 module('Integration | Component | pipeline graph nav', function (hooks) {
   setupRenderingTest(hooks);
@@ -94,6 +108,87 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     assert.dom('.event-options-toggle').hasText('Most Recent Last Successful');
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
+  });
+
+  test('it renders UTC timestamp', async function (assert) {
+    const userSettingsStub = Service.extend({
+      getUserPreference() {
+        return new EmberPromise(resolve => resolve(userSettingsMock));
+      },
+      getDisplayJobNameLength() {
+        return null;
+      }
+    });
+
+    this.owner.unregister('service:userSettings');
+    this.owner.register('service:userSettings', userSettingsStub);
+    set(this, 'obj', {
+      sha: 'abc123',
+      baseBranch: 'main',
+      truncatedSha: 'abc123',
+      status: 'SUCCESS',
+      commit: {
+        author: { name: 'anonymous' }
+      },
+      createTime: '04/11/2016, 08:09 PM',
+      createTimeExact: '04/11/2016, 08:09 PM',
+      truncatedMessage: 'test message',
+      durationText: '10 seconds'
+    });
+    set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      latestCommit=latestCommit
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
+    }}`);
+
+    assert.dom('.row button').exists({ count: 4 });
+
+    const $columnTitles = this.element.querySelectorAll(
+      '.row .event-info .title'
+    );
+    const $columnValues = this.element.querySelectorAll(
+      '.row .event-info .title ~ span'
+    );
+
+    const compare = (elem, expected) => {
+      const actual = elem.innerText.trim() || elem.innerHTML.trim();
+
+      assert.strictEqual(actual, expected);
+    };
+
+    compare($columnTitles[5], 'START DATE');
+
+    compare(
+      $columnValues[5],
+      `${toCustomLocaleString(new Date('04/11/2016, 08:09 PM'), {
+        timeZone: 'UTC'
+      })}`
+    );
   });
 
   test('it updates selected event id', async function (assert) {
