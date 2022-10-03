@@ -25,6 +25,7 @@ const event = {
     url: '#',
     name: 'batman'
   },
+  createTime: '06/30/2021, 04:39 PM',
   createTimeWords: 'now',
   createTimeExact: '06/30/2021, 04:39 PM',
   durationText: '1 sec',

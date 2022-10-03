@@ -16,6 +16,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       commit: {
         author: { name: 'anonymous' }
       },
+      createTime: '04/11/2016, 08:09 PM',
       createTimeExact: '04/11/2016, 08:09 PM',
       truncatedMessage: 'test message',
       durationText: '10 seconds'
