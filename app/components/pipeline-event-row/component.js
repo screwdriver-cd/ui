@@ -4,11 +4,7 @@ import { computed, get, getProperties } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { inject as service } from '@ember/service';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
-import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
-import ObjectProxy from '@ember/object/proxy';
 import { getTimestamp } from '../../utils/timestamp-format';
-
-const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
   userSettings: service(),
@@ -88,20 +84,11 @@ export default Component.extend({
   }),
   startDate: computed('event.createTime', {
     get() {
-      return ObjectPromiseProxy.create({
-        promise: this.userSettings.getUserPreference().then(userPreference => {
-          let startDate = 'n/a';
+      let startDate = 'n/a';
 
-          const timestampPreference = get(userPreference, 'timestampFormat');
+      startDate = getTimestamp(this.userSettings, this.get('event.createTime'));
 
-          startDate = getTimestamp(
-            timestampPreference,
-            this.get('event.createTime')
-          );
-
-          return startDate;
-        })
-      });
+      return startDate;
     }
   }),
 

@@ -1,4 +1,9 @@
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
+import { get } from '@ember/object';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
+
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export const TIMESTAMP_OPTIONS = [
   { value: 'LOCAL_TIMEZONE', name: 'Local Timezone' },
@@ -14,16 +19,22 @@ export const TIMESTAMP_DEFAULT_OPTION = 0;
  * @param {string} startDate input date
  * @returns {String} custom locale string as per user preference
  */
-export function getTimestamp(timestampPreference, startDate) {
-  let timestamp = 'n/a';
+export function getTimestamp(userSettings, startDate) {
+  return ObjectPromiseProxy.create({
+    promise: userSettings.getUserPreference().then(userPreference => {
+      let timestamp = 'n/a';
 
-  if (timestampPreference === 'UTC') {
-    timestamp = `${toCustomLocaleString(new Date(startDate), {
-      timeZone: 'UTC'
-    })}`;
-  } else {
-    timestamp = `${toCustomLocaleString(new Date(startDate))}`;
-  }
+      const timestampPreference = get(userPreference, 'timestampFormat');
 
-  return timestamp;
+      if (timestampPreference === 'UTC') {
+        timestamp = `${toCustomLocaleString(new Date(startDate), {
+          timeZone: 'UTC'
+        })}`;
+      } else {
+        timestamp = `${toCustomLocaleString(new Date(startDate))}`;
+      }
+
+      return timestamp;
+    })
+  });
 }
