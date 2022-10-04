@@ -3,10 +3,10 @@ import { bool } from '@ember/object/computed';
 import { computed, get, getProperties } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { inject as service } from '@ember/service';
-import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import ObjectProxy from '@ember/object/proxy';
+import { getTimestamp } from '../../utils/timestamp-format';
 
 const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
@@ -94,16 +94,10 @@ export default Component.extend({
 
           const timestampPreference = get(userPreference, 'timestampFormat');
 
-          if (timestampPreference === 'UTC') {
-            startDate = `${toCustomLocaleString(
-              new Date(this.get('event.createTime')),
-              { timeZone: 'UTC' }
-            )}`;
-          } else {
-            startDate = `${toCustomLocaleString(
-              new Date(this.get('event.createTime'))
-            )}`;
-          }
+          startDate = getTimestamp(
+            timestampPreference,
+            this.get('event.createTime')
+          );
 
           return startDate;
         })
