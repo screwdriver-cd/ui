@@ -184,6 +184,9 @@
               <th class="status" rowspan="1">Status</th>
               <th class="history" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "failedBuildCount:desc") "failedBuildCount:asc" "failedBuildCount:desc")}}>
                 Build History
+                {{#bs-tooltip placement="top" renderInPlace=true}}
+                  sort on number of failed builds
+                {{/bs-tooltip}}
                 <span class="icon-wrapper">
                   {{#if (eq (get sortBy 0) "failedBuildCount:asc")}}
                     <i class="fa fa-sort-asc"></i>
