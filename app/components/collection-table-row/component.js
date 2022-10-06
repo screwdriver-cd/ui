@@ -3,7 +3,11 @@ import { computed, getWithDefault } from '@ember/object';
 import { and } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { formatMetrics } from 'screwdriver-ui/utils/metric';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
 import templateHelper from 'screwdriver-ui/utils/template';
+
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 const { getLastUpdatedTime } = templateHelper;
 
 export default Component.extend({
@@ -32,13 +36,21 @@ export default Component.extend({
 
     return rootDir ? `${branch}#${rootDir}` : branch;
   }),
-  lastRun: computed('lastRun', function get() {
-    const { createTime } = this.pipeline;
-    const lastRun = getLastUpdatedTime({
-      createTime
-    });
+  lastRun: computed('pipeline', function get() {
+    return ObjectPromiseProxy.create({
+      promise: this.pipeline.get('metrics').then(metrics => {
+        let lastRun = 'n/a';
+        const lastRunBuild = metrics.lastObject.builds.lastObject;
 
-    return lastRun;
+        const { createTime } = lastRunBuild;
+
+        lastRun = getLastUpdatedTime({
+          createTime
+        });
+
+        return lastRun;
+      })
+    });
   }),
   showRemoveButton: computed(
     'isOrganizing',
