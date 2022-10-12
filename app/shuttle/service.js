@@ -325,6 +325,17 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data);
   },
 
+  /**
+   * deleteUserSettings
+   * @return {Promise}
+   */
+  async deleteUserSettings() {
+    const method = 'delete';
+    const url = `/users/settings`;
+
+    return this.fetchFromApi(method, url);
+  },
+
   async searchPipelines(pipelineName) {
     const method = 'get';
     const query = $.param({
