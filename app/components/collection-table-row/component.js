@@ -38,13 +38,16 @@ export default Component.extend({
     return ObjectPromiseProxy.create({
       promise: this.pipeline.get('metrics').then(metrics => {
         let lastRun = 'n/a';
-        const lastRunBuild = metrics.lastObject.builds.lastObject;
 
-        const { createTime } = lastRunBuild;
+        const lastRunBuild = metrics.lastObject?.builds?.lastObject;
 
-        lastRun = getLastUpdatedTime({
-          createTime
-        });
+        if (lastRunBuild) {
+          const { createTime } = lastRunBuild;
+
+          lastRun = getLastUpdatedTime({
+            createTime
+          });
+        }
 
         return lastRun;
       })

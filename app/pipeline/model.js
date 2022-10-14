@@ -76,7 +76,7 @@ export default DS.Model.extend({
   }),
   lastRunJob: computed('metrics.[]', {
     get() {
-      let lastRun;
+      let lastRun = 'n/a';
 
       this.metrics.toArray().forEach(event => {
         lastRun = event.builds.lastObject;
