@@ -15,8 +15,8 @@ export const TIMESTAMP_DEFAULT_OPTION = 0;
 /**
  * Return custom locale string for date
  * @export
- * @param {string} timestampPreference timestamp preferred e.g UTc
- * @param {string} startDate input date
+ * @param {Object} userSettings  User settings
+ * @param {String} startDate     Input date
  * @returns {String} custom locale string as per user preference
  */
 export function getTimestamp(userSettings, startDate) {
