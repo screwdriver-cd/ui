@@ -2,6 +2,10 @@ import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
 import { bool } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
+import {
+  TIMESTAMP_OPTIONS,
+  TIMESTAMP_DEFAULT_OPTION
+} from '../../utils/timestamp-format';
 
 const { MINIMUM_JOBNAME_LENGTH, MAXIMUM_JOBNAME_LENGTH } = ENV.APP;
 
@@ -16,23 +20,41 @@ export default Controller.extend({
   isDisabled: bool('isSaving'),
   successMessage: '',
   errorMessage: '',
+  selectedTimestampFormat: {},
+  timestampOptions: TIMESTAMP_OPTIONS,
 
   async init() {
     this._super(...arguments);
+
     let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
+
+    let selectedTimestampFormat = this.get(
+      `timestampOptions.${TIMESTAMP_DEFAULT_OPTION}`
+    );
 
     const userPreferences = await this.userSettings.getUserPreference();
 
     if (userPreferences) {
       desiredJobNameLength = userPreferences.displayJobNameLength;
+      selectedTimestampFormat = this.timestampOptions.find(
+        timestamp => timestamp.value === userPreferences.timestampFormat
+      );
     }
 
-    this.setProperties({ desiredJobNameLength, userPreferences });
+    this.setProperties({
+      desiredJobNameLength,
+      userPreferences,
+      selectedTimestampFormat
+    });
   },
 
   async updateUserSettings() {
     this.set('isSaving', true);
     this.userPreferences.set('displayJobNameLength', this.displayJobNameLength);
+    this.userPreferences.set(
+      'timestampFormat',
+      this.selectedTimestampFormat.value
+    );
 
     try {
       await this.userPreferences.save();
@@ -56,7 +78,6 @@ export default Controller.extend({
         this.store.deleteRecord(this.userPreferences);
         await this.userPreferences.save();
         this.userPreferences.unloadRecord();
-
         const newUserPreferences = await this.userSettings.getUserPreference();
 
         this.setProperties({
