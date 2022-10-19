@@ -34,13 +34,10 @@ module('Unit | Controller | application', function (hooks) {
 
     const controller = this.owner.lookup('controller:application');
 
-    assert.equal(
-      controller.get('session').get('data.sessionChanged'),
-      undefined
-    );
+    assert.equal(controller.session.get('data.sessionChanged'), undefined);
 
     controller.send('invalidateSession');
-    assert.equal(controller.get('session').get('data.sessionChanged'), false);
+    assert.equal(controller.session.get('data.sessionChanged'), false);
   });
 
   test('it calls session.authenticate', function (assert) {
@@ -60,14 +57,11 @@ module('Unit | Controller | application', function (hooks) {
     this.owner.register('service:session', sessionServiceMock);
 
     controller.send('authenticate');
-    assert.equal(
-      controller.get('session').get('data.sessionChanged'),
-      undefined
-    );
+    assert.equal(controller.session.get('data.sessionChanged'), undefined);
 
-    controller.get('session').set('data.authenticated.scmContext', 'new');
+    controller.session.set('data.authenticated.scmContext', 'new');
     controller.send('authenticate');
-    assert.equal(controller.get('session').get('data.sessionChanged'), true);
+    assert.equal(controller.session.get('data.sessionChanged'), true);
   });
 
   test('it calls search in controller', function (assert) {

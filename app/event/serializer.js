@@ -1,5 +1,5 @@
+import RESTSerializer from '@ember-data/serializer/rest';
 import { assign } from '@ember/polyfills';
-import DS from 'ember-data';
 
 const compare = (s1, s2) =>
   (s1 || '').localeCompare(s2 || '', undefined, {
@@ -43,7 +43,7 @@ export const sortWorkflowGraph = workflowGraph => {
   }
 };
 
-export default DS.RESTSerializer.extend({
+export default RESTSerializer.extend({
   normalizeResponse(store, typeClass, payload, id, requestType) {
     if (payload.events) {
       payload.events.forEach(event => {

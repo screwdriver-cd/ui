@@ -11,7 +11,7 @@ module('Integration | Helper | getLength', function (hooks) {
 
     await render(hbs`{{get-length inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '3');
+    assert.dom(this.element).hasText('3');
   });
 
   test('it renders with array', async function (assert) {
@@ -19,7 +19,7 @@ module('Integration | Helper | getLength', function (hooks) {
 
     await render(hbs`{{get-length inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '4');
+    assert.dom(this.element).hasText('4');
   });
 
   test('it renders with string', async function (assert) {
@@ -27,7 +27,7 @@ module('Integration | Helper | getLength', function (hooks) {
 
     await render(hbs`{{get-length inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '2');
+    assert.dom(this.element).hasText('2');
   });
 
   test('it renders with number format', async function (assert) {
@@ -35,6 +35,6 @@ module('Integration | Helper | getLength', function (hooks) {
 
     await render(hbs`{{get-length inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '0');
+    assert.dom(this.element).hasText('0');
   });
 });

@@ -18,7 +18,7 @@ export default Component.extend({
       this.set('showCollectionModal', true);
     },
     addToCollection(collection) {
-      if (this.get('pipeline') && this.addToCollection) {
+      if (this.pipeline && this.addToCollection) {
         return this.addToCollection(+this.pipeline.id, collection)
           .then(() => {
             this.setProperties({

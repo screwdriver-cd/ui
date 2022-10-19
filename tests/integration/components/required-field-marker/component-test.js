@@ -15,6 +15,6 @@ module('Integration | Component | required-field-marker', function (hooks) {
   test('should add asterisk when it render', async function (assert) {
     await render(hbs`{{required-field-marker}}`);
 
-    assert.equal(this.element.textContent.trim(), '*');
+    assert.dom(this.element).hasText('*');
   });
 });

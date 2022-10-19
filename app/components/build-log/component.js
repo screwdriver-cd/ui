@@ -318,8 +318,8 @@ export default Component.extend({
    */
   getLogs(fetchMax = false) {
     if (
-      !this.get('isDestroyed') &&
-      !this.get('isDestroying') &&
+      !this.isDestroyed &&
+      !this.isDestroying &&
       !this.isFetching &&
       this.shouldLoad
     ) {

@@ -187,7 +187,7 @@ export default Controller.extend(ModelReloaderMixin, {
       const event = model.events.find(m => m.isRunning);
 
       let diff;
-      const lastRefreshed = this.get('lastRefreshed');
+      const { lastRefreshed } = this;
 
       if (event) {
         res = SHOULD_RELOAD_YES;
@@ -515,7 +515,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
   actions: {
     setDownstreamTrigger() {
-      this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
+      this.set('showDownstreamTriggers', !this.showDownstreamTriggers);
     },
     setShowListView(showListView) {
       if (showListView) {
@@ -552,11 +552,11 @@ export default Controller.extend(ModelReloaderMixin, {
     startDetachedBuild,
     stopBuild,
     async stopEvent() {
-      const event = get(this, 'selectedEventObj');
+      const event = this.selectedEventObj;
       const eventId = get(event, 'id');
 
       try {
-        return await this.get('stop').stopBuilds(eventId);
+        return await this.stop.stopBuilds(eventId);
       } catch (e) {
         this.set(
           'errorMessage',
@@ -570,7 +570,7 @@ export default Controller.extend(ModelReloaderMixin, {
       const eventId = jobs.get('firstObject.builds.firstObject.eventId');
 
       try {
-        await this.get('stop').stopBuilds(eventId);
+        await this.stop.stopBuilds(eventId);
         if (this.refreshListViewJobs) {
           await this.refreshListViewJobs();
         }
@@ -642,7 +642,7 @@ export default Controller.extend(ModelReloaderMixin, {
         await this.sync.syncRequests(this.get('pipeline.id'), syncPath);
         this.set('syncAdmins', 'success');
 
-        await this.get('pipeline').reload();
+        await this.pipeline.reload();
       } catch (e) {
         this.set('syncAdmins', 'failure');
       }

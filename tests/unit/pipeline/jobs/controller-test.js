@@ -100,9 +100,9 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         return Promise.resolve(EmberObject.create({ id: '10' }));
       });
 
-      assert.notOk(controller.get('isShowingModal'));
+      assert.notOk(controller.isShowingModal);
       controller.send('startSingleBuild', 1, 'name', 'RESTART');
-      assert.ok(controller.get('isShowingModal'));
+      assert.ok(controller.isShowingModal);
     });
 
     await settled();
@@ -110,7 +110,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
-    assert.notOk(controller.get('isShowingModal'));
+    assert.notOk(controller.isShowingModal);
     assert.deepEqual(payload, {
       buildId: 99,
       pipelineId: '1234',
@@ -186,7 +186,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
 
     await settled();
 
-    assert.deepEqual(controller.get('jobsDetails'), [
+    assert.deepEqual(controller.jobsDetails, [
       {
         jobId: '1',
         jobName: 'a',
@@ -283,7 +283,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
 
     await settled();
 
-    assert.deepEqual(controller.get('jobsDetails'), [
+    assert.deepEqual(controller.jobsDetails, [
       {
         jobId: '1',
         jobName: 'a',
@@ -334,11 +334,11 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
       });
 
       assert.equal(
-        controller.get('listViewOffset'),
+        controller.listViewOffset,
         listViewOffset,
         `has listViewOffset of ${listViewOffset}`
       );
-      assert.equal(controller.get('jobsDetails').length, 3, 'has 3 jobs');
+      assert.equal(controller.jobsDetails.length, 3, 'has 3 jobs');
     });
   });
 });

@@ -72,9 +72,9 @@ export default Component.extend({
   }),
 
   prBuildExists: computed('tooltipData', function isStartablePrChainJob() {
-    const selectedEvent = get(this, 'selectedEventObj');
+    const selectedEvent = this.selectedEventObj;
 
-    const tooltipData = get(this, 'tooltipData');
+    const { tooltipData } = this;
 
     let selectedJobId;
 
@@ -196,7 +196,7 @@ export default Component.extend({
 
       // Find root nodes to determine position of tooltip
       if (job && edges && !/^~/.test(job.name)) {
-        const selectedEvent = get(this, 'selectedEventObj');
+        const selectedEvent = this.selectedEventObj;
         const eventParameters = getWithDefault(
           selectedEvent,
           'meta.parameters',

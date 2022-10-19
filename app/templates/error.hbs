@@ -1,5 +1,1 @@
-{{error-view
-  statusCode=model.reason.errors.statusCode
-  statusMessage=model.reason.errors.error
-  errorMessage=model.reason.errors.message
-}}
+<ErrorView @statusCode={{model.reason.errors.statusCode}} @statusMessage={{model.reason.errors.error}} @errorMessage={{model.reason.errors.message}} />

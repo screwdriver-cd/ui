@@ -32,8 +32,8 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-circle').hasClass('RUNNING');
       assert.dom('.fa-circle').exists({ count: 2 });
@@ -48,8 +48,8 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-circle').hasClass('RUNNING');
       assert.dom('.fa-circle').exists({ count: 1 });
@@ -68,8 +68,8 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-circle').hasClass('SUCCESS');
       assert.dom('.fa-circle').exists({ count: 2 });
@@ -88,8 +88,8 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-circle').hasClass('ABORTED');
       assert.dom('.fa-circle').exists({ count: 2 });
@@ -108,8 +108,8 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-circle').hasClass('RANDOM');
       assert.dom('.fa-circle').exists({ count: 2 });

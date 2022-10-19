@@ -29,7 +29,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
     let res;
 
-    const lastRefreshed = this.get('lastRefreshed');
+    const { lastRefreshed } = this;
     const diff = moment().diff(lastRefreshed, 'milliseconds');
 
     if (job) {
@@ -90,7 +90,7 @@ export default Controller.extend(ModelReloaderMixin, {
   paginateEvents: [],
   updateEvents,
   async getNewListViewJobs(listViewOffset, listViewCutOff) {
-    const jobIds = this.get('jobIds');
+    const { jobIds } = this;
 
     if (listViewOffset < jobIds.length) {
       const jobsDetails = await Promise.all(
@@ -131,7 +131,7 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   async refreshListViewJobs() {
-    const listViewCutOff = this.get('listViewOffset');
+    const listViewCutOff = this.listViewOffset;
 
     if (listViewCutOff > 0) {
       const updatedJobsDetails = await this.getNewListViewJobs(
@@ -147,7 +147,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
   async updateListViewJobs() {
     // purge unmatched pipeline jobs
-    let jobsDetails = this.get('jobsDetails');
+    let { jobsDetails } = this;
 
     if (
       jobsDetails.some(j => j.get('jobPipelineId') !== this.get('pipeline.id'))
@@ -159,7 +159,7 @@ export default Controller.extend(ModelReloaderMixin, {
       this.set('listViewOffset', 0);
     }
 
-    const listViewOffset = this.get('listViewOffset');
+    const { listViewOffset } = this;
     const listViewCutOff = listViewOffset + ENV.APP.LIST_VIEW_PAGE_SIZE;
     const nextJobsDetails = await this.getNewListViewJobs(
       listViewOffset,
@@ -185,7 +185,7 @@ export default Controller.extend(ModelReloaderMixin, {
       }
     },
     setDownstreamTrigger() {
-      this.set('showDownstreamTriggers', !this.get('showDownstreamTriggers'));
+      this.set('showDownstreamTriggers', !this.showDownstreamTriggers);
     },
     async updateEvents(page) {
       await this.updateEvents(page);

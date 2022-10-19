@@ -75,9 +75,9 @@ export default Route.extend({
           : RSVP.resolve(this.pipelineMetrics),
         // eslint-disable-next-line no-nested-ternary
         fetchJob || fetchAll
-          ? this.get('jobId')
+          ? this.jobId
             ? this.store.query('metric', {
-                jobId: this.get('jobId'),
+                jobId: this.jobId,
                 startTime,
                 endTime
               })
@@ -258,7 +258,7 @@ export default Route.extend({
       startTime,
       endTime,
       successOnly,
-      jobId: this.get('jobId')
+      jobId: this.jobId
     });
   },
   actions: {

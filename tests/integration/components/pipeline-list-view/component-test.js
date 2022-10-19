@@ -1,9 +1,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { set } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 
 module('Integration | Component | pipeline list view', function (hooks) {
   setupRenderingTest(hooks);
@@ -162,8 +161,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       {{/if}}`);
     set(this, 'showPipelineListView', false);
 
-    return wait().then(() => {
-      assert.equal(this.get('jobsDetails').length, 0);
+    return settled().then(() => {
+      assert.equal(this.jobsDetails.length, 0);
     });
   });
 

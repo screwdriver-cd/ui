@@ -1,17 +1,17 @@
-import DS from 'ember-data';
+import Model, { attr } from '@ember-data/model';
 
-export default DS.Model.extend({
-  pipelineId: DS.attr('string'),
-  createTime: DS.attr('date'),
-  causeMessage: DS.attr('string'),
-  sha: DS.attr('string'),
-  queuedTime: DS.attr('number'),
-  imagePullTime: DS.attr('number'),
-  duration: DS.attr('number'),
-  status: DS.attr('string', { defaultValue: 'UNKNOWN' }),
-  builds: DS.attr(),
-  commit: DS.attr(),
-  jobId: DS.attr('number'),
-  eventId: DS.attr('number'),
-  steps: DS.attr()
+export default Model.extend({
+  pipelineId: attr('string'),
+  createTime: attr('date'),
+  causeMessage: attr('string'),
+  sha: attr('string'),
+  queuedTime: attr('number'),
+  imagePullTime: attr('number'),
+  duration: attr('number'),
+  status: attr('string', { defaultValue: 'UNKNOWN' }),
+  builds: attr(),
+  commit: attr(),
+  jobId: attr('number'),
+  eventId: attr('number'),
+  steps: attr()
 });

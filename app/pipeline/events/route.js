@@ -23,7 +23,7 @@ export default Route.extend({
       showPRJobs: getWithDefault(pipelinePreference, 'showPRJobs', true)
     });
 
-    this.get('pipelineService').setBuildsLink('pipeline.events');
+    this.pipelineService.setBuildsLink('pipeline.events');
   },
   resetController(controller, isExiting, transition) {
     if (isExiting && transition && transition.targetName !== 'error') {

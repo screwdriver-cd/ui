@@ -60,13 +60,13 @@ export default Component.extend({
     this._super(...arguments);
     const sortedRows = this.getRows(this.jobsDetails);
     const table = Table.create({
-      columns: this.get('columns'),
+      columns: this.columns,
       rows: sortedRows
     });
 
     let sortColumn = table
       .get('allColumns')
-      .findBy('valuePath', this.get('sortingValuePath'));
+      .findBy('valuePath', this.sortingValuePath);
 
     // Setup initial sort column
     if (sortColumn) {
@@ -186,8 +186,8 @@ export default Component.extend({
         jobId,
         jobName,
         latestBuild,
-        startSingleBuild: this.get('startSingleBuild'),
-        stopBuild: this.get('stopBuild'),
+        startSingleBuild: this.startSingleBuild,
+        stopBuild: this.stopBuild,
         isShowingModal: this.isShowingModal,
         hasParameters,
         openParametersModal: this.openParametersModal.bind(this),
@@ -283,7 +283,7 @@ export default Component.extend({
     'jobsDetails.[]',
     function jobsObserverFunc({ jobsDetails }) {
       const rows = this.getRows(jobsDetails);
-      const lastRows = get(this, 'lastRows') || [];
+      const lastRows = this.lastRows || [];
       const isEqualRes = isEqual(
         rows
           .map(r => r.job)
@@ -303,7 +303,7 @@ export default Component.extend({
   actions: {
     async onScrolledToBottom() {
       this.set('isLoading', true);
-      this.get('updateListViewJobs')().then(jobs => {
+      this.updateListViewJobs().then(jobs => {
         const rows = this.getRows(jobs);
 
         this.table.addRows(rows);
@@ -337,8 +337,8 @@ export default Component.extend({
     },
 
     startBuild(parameterizedModel) {
-      const buildState = this.get('buildState');
-      const job = this.get('job');
+      const { buildState } = this;
+      const { job } = this;
 
       this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
     }

@@ -1,5 +1,5 @@
+import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
-import DS from 'ember-data';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 
 /**
@@ -47,25 +47,25 @@ function durationText(start, end, largest = 1) {
   });
 }
 
-export default DS.Model.extend({
+export default Model.extend({
   // ember-data has some reservations with the "container" attribute name
-  buildContainer: DS.attr('string'),
-  cause: DS.attr('string'),
-  commit: DS.attr(),
-  createTime: DS.attr('date'),
-  endTime: DS.attr('date'),
-  eventId: DS.attr('string'),
-  jobId: DS.attr('string'),
-  meta: DS.attr(),
-  number: DS.attr('number'),
-  parameters: DS.attr(),
-  parentBuildId: DS.attr('string'),
-  sha: DS.attr('string'),
-  startTime: DS.attr('date'),
-  status: DS.attr('string'),
-  stats: DS.attr(),
-  statusMessage: DS.attr('string', { defaultValue: null }),
-  steps: DS.attr(),
+  buildContainer: attr('string'),
+  cause: attr('string'),
+  commit: attr(),
+  createTime: attr('date'),
+  endTime: attr('date'),
+  eventId: attr('string'),
+  jobId: attr('string'),
+  meta: attr(),
+  number: attr('number'),
+  parameters: attr(),
+  parentBuildId: attr('string'),
+  sha: attr('string'),
+  startTime: attr('date'),
+  status: attr('string'),
+  stats: attr(),
+  statusMessage: attr('string', { defaultValue: null }),
+  steps: attr(),
   startTimeWords: computed('startTime', {
     get() {
       return `${durationText.call(this, 'startTime', 'now')} ago`;

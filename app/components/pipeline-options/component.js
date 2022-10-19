@@ -149,7 +149,7 @@ export default Component.extend({
   },
 
   async updatePipelineAlias(aliasName) {
-    const pipeline = this.get('pipeline');
+    const { pipeline } = this;
 
     try {
       await this.shuttle.updatePipelineSettings(pipeline.id, {
@@ -322,7 +322,7 @@ export default Component.extend({
     },
 
     async updatePipelineShowTriggers(showEventTriggers) {
-      const pipeline = this.get('pipeline');
+      const { pipeline } = this;
 
       try {
         await this.shuttle.updatePipelineSettings(pipeline.id, {
@@ -336,7 +336,7 @@ export default Component.extend({
     },
 
     async updateFilterEventsForNoBuilds(filterEventsForNoBuilds) {
-      const pipeline = this.get('pipeline');
+      const { pipeline } = this;
 
       try {
         await this.shuttle.updatePipelineSettings(pipeline.id, {
@@ -373,7 +373,7 @@ export default Component.extend({
       this.set('showPRJobs', showPRJobs);
     },
     async updatePipelineGroupedEvents(groupedEvents) {
-      const pipeline = this.get('pipeline');
+      const { pipeline } = this;
 
       try {
         await this.shuttle.updatePipelineSettings(pipeline.id, {

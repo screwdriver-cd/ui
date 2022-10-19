@@ -120,19 +120,19 @@ export default Component.extend({
 
     this.draw(this.decoratedGraph);
 
-    set(this, 'lastGraph', this.get('graph'));
+    set(this, 'lastGraph', this.graph);
   },
 
   // Listen for changes to workflow and update graph accordingly.
   didReceiveAttrs() {
     this._super(...arguments);
-    const dg = this.get('decoratedGraph');
+    const dg = this.decoratedGraph;
 
     this.doRedraw(dg);
   },
   doRedraw(decoratedGraph) {
     const lg = this.lastGraph;
-    const wg = this.get('graph');
+    const wg = this.graph;
 
     if (!this.graphNode) {
       return;

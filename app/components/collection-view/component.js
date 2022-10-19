@@ -293,7 +293,7 @@ export default Component.extend({
       });
     },
     toggleAddPipelineModal() {
-      if (this.get('showAddPipelineModal')) {
+      if (this.showAddPipelineModal) {
         if (this.selectedSearchedPipelines.length !== 0) {
           this.addMultipleToCollection(
             this.selectedSearchedPipelines,

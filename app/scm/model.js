@@ -1,10 +1,10 @@
-import DS from 'ember-data';
+import Model, { attr } from '@ember-data/model';
 
-export default DS.Model.extend({
-  context: DS.attr('string'),
-  displayName: DS.attr('string'),
-  iconType: DS.attr('string'),
-  isSignedIn: DS.attr('boolean', { defaultValue: false }),
-  autoDeployKeyGeneration: DS.attr('boolean', { defaultValue: false }),
-  readOnly: DS.attr('boolean', { defaultValue: false })
+export default Model.extend({
+  context: attr('string'),
+  displayName: attr('string'),
+  iconType: attr('string'),
+  isSignedIn: attr('boolean', { defaultValue: false }),
+  autoDeployKeyGeneration: attr('boolean', { defaultValue: false }),
+  readOnly: attr('boolean', { defaultValue: false })
 });

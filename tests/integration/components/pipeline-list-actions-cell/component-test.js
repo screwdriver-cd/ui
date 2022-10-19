@@ -29,8 +29,8 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-play-circle-o').exists({ count: 1 });
       assert.dom('.fa-stop-circle-o').exists({ count: 1 });
@@ -58,8 +58,8 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-play-circle-o').exists({ count: 1 });
       assert.dom('.fa-stop-circle-o').exists({ count: 1 });
@@ -87,8 +87,8 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-play-circle-o').exists({ count: 1 });
       assert.dom('.fa-stop-circle-o').exists({ count: 1 });
@@ -114,8 +114,8 @@ module(
       });
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.expect(4);
 
@@ -145,8 +145,8 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-play-circle-o').exists({ count: 1 });
       assert.dom('.fa-stop-circle-o').exists({ count: 1 });
@@ -174,8 +174,8 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-play-circle-o').exists({ count: 1 });
       assert.dom('.fa-stop-circle-o').exists({ count: 1 });
@@ -203,8 +203,8 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-play-circle-o').exists({ count: 1 });
       assert.dom('.fa-stop-circle-o').exists({ count: 1 });
@@ -232,8 +232,8 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       assert.dom('.fa-play-circle-o').exists({ count: 1 });
       assert.dom('.fa-stop-circle-o').exists({ count: 1 });
@@ -263,8 +263,8 @@ module(
       assert.expect(3);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       this.element.querySelectorAll('.actions span')[0].click();
     });
@@ -291,8 +291,8 @@ module(
       assert.expect(3);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       this.element.querySelectorAll('.actions span')[2].click();
     });
@@ -317,8 +317,8 @@ module(
       assert.expect(1);
 
       await render(hbs`{{pipeline-list-actions-cell
-      value=value
-    }}`);
+    value=value
+  }}`);
 
       this.element.querySelectorAll('.actions span')[1].click();
     });

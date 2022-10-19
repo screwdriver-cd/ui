@@ -12,7 +12,7 @@ export default Component.extend({
   classNameBindings: ['highlighted', 'event.status'],
   highlighted: computed('selectedEvent', 'event.id', {
     get() {
-      return get(this, 'selectedEvent') === get(this, 'event.id');
+      return this.selectedEvent === get(this, 'event.id');
     }
   }),
   icon: computed('event.status', {
@@ -79,7 +79,7 @@ export default Component.extend({
 
   isInlineParameters: computed('numberOfParameters', {
     get() {
-      return this.get('numberOfParameters') < MAX_NUM_OF_PARAMETERS_ALLOWED;
+      return this.numberOfParameters < MAX_NUM_OF_PARAMETERS_ALLOWED;
     }
   }),
   startDate: computed('event.createTime', {
@@ -116,7 +116,7 @@ export default Component.extend({
         const creatorName = this.get('event.creator.name');
         const authorName = this.get('event.commit.author.name');
 
-        return this.get('isExternalTrigger') || creatorName !== authorName;
+        return this.isExternalTrigger || creatorName !== authorName;
       }
     }
   ),
@@ -145,7 +145,7 @@ export default Component.extend({
 
   actions: {
     clickRow() {
-      const fn = get(this, 'eventClick');
+      const fn = this.eventClick;
 
       if (typeof fn === 'function') {
         const { id, type } = this.event;

@@ -106,7 +106,7 @@ export default Component.extend({
         ? Number(parseFloat(coverage).toFixed(2))
         : null;
 
-      let coverageInfo = { ...this.get('coverageInfo') };
+      let coverageInfo = { ...this.coverageInfo };
 
       if (coverageFloat) {
         coverageInfo.coverage = `${coverageFloat}%`;

@@ -27,7 +27,7 @@ export default Component.extend({
   }),
   actions: {
     startSingleBuild(buildState = undefined) {
-      const value = this.get('value');
+      const { value } = this;
 
       if (buildState === 'START' && value.hasParameters) {
         value.openParametersModal(value.jobId, buildState);
@@ -36,7 +36,7 @@ export default Component.extend({
       }
     },
     stopBuild() {
-      const value = this.get('value');
+      const { value } = this;
 
       value.stopBuild(null, { buildId: value.latestBuild.id });
     }

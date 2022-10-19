@@ -105,15 +105,12 @@ module('Unit | Controller | pipeline/secrets', function (hooks) {
     assert.ok(controller);
 
     run(() => {
-      assert.equal(controller.get('errorMessage'), '');
+      assert.equal(controller.errorMessage, '');
       controller.send('createSecret', 'batman', 'robin', 'abcd', false);
     });
 
     return settled().then(() => {
-      assert.equal(
-        controller.get('errorMessage'),
-        'a series of unfortunate events'
-      );
+      assert.equal(controller.errorMessage, 'a series of unfortunate events');
     });
   });
 });

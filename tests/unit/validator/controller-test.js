@@ -58,8 +58,8 @@ module('Unit | Controller | validator', function (hooks) {
       controller.set('yaml', EXAMPLE_TEMPLATE);
 
       return settled().then(() => {
-        assert.equal(controller.get('isTemplate'), true);
-        assert.deepEqual(controller.get('results'), expectedResult);
+        assert.equal(controller.isTemplate, true);
+        assert.deepEqual(controller.results, expectedResult);
       });
     });
   });
@@ -78,8 +78,8 @@ module('Unit | Controller | validator', function (hooks) {
       controller.set('yaml', EXAMPLE_CONFIG);
 
       return settled().then(() => {
-        assert.equal(controller.get('isTemplate'), false);
-        assert.deepEqual(controller.get('results'), expectedResult);
+        assert.equal(controller.isTemplate, false);
+        assert.deepEqual(controller.results, expectedResult);
       });
     });
   });
@@ -98,12 +98,12 @@ module('Unit | Controller | validator', function (hooks) {
       controller.set('yaml', EXAMPLE_CONFIG);
 
       return settled().then(() => {
-        assert.equal(controller.get('isTemplate'), false);
-        assert.deepEqual(controller.get('results'), expectedResult);
+        assert.equal(controller.isTemplate, false);
+        assert.deepEqual(controller.results, expectedResult);
         controller.set('yaml', '');
 
         settled().then(() => {
-          assert.equal(controller.get('results'), '');
+          assert.equal(controller.results, '');
         });
       });
     });

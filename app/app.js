@@ -2,7 +2,7 @@ import Application from '@ember/application';
 import loadInitializers from 'ember-load-initializers';
 import { run } from '@ember/runloop';
 import Resolver from 'ember-resolver';
-import config from './config/environment';
+import config from 'screwdriver-ui/config/environment';
 
 const App = Application.extend({
   modulePrefix: config.modulePrefix,

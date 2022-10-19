@@ -21,7 +21,7 @@ module('Unit | Controller | Commands', function (hooks) {
         name: 'testName'
       });
 
-      assert.deepEqual(controller.get('crumbs'), [
+      assert.deepEqual(controller.crumbs, [
         {
           name: 'Commands',
           params: ['commands']

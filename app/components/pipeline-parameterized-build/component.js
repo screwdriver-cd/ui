@@ -277,14 +277,14 @@ export default Component.extend({
      * @return {[type]} [description]
      */
     onSave() {
-      this.get('onSave')(this.parameterizedModel);
+      this.onSave(this.parameterizedModel);
       if (this.onClose) {
         this.onClose();
       }
     },
 
     onCancel() {
-      this.get('onCancel')();
+      this.onCancel();
       if (this.onClose) {
         this.onClose();
       }

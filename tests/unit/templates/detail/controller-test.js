@@ -53,10 +53,10 @@ module('Unit | Controller | templates/detail', function (hooks) {
 
     assert.ok(controller);
 
-    assert.equal(controller.get('selectedVersion'), null);
+    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionTemplate.id'), 3);
-    assert.equal(controller.get('trusted'), true);
+    assert.equal(controller.trusted, true);
   });
 
   test('it handles version changes', function (assert) {
@@ -75,7 +75,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
     });
 
     assert.ok(controller);
-    assert.equal(controller.get('selectedVersion'), null);
+    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionTemplate.id'), 3);
   });
@@ -94,12 +94,12 @@ module('Unit | Controller | templates/detail', function (hooks) {
     controller.set('model', arr);
 
     assert.ok(controller);
-    assert.equal(controller.get('selectedVersion'), null);
+    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('versionTemplate.id'), 3);
     assert.equal(controller.get('latest.id'), 3);
 
     arr.templateData.unshiftObject({ id: 4, version: '4.0.0' });
-    assert.equal(controller.get('selectedVersion'), null);
+    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('versionTemplate.id'), 4);
     assert.equal(controller.get('latest.id'), 4);
   });
@@ -136,7 +136,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
     controller.set('model', arr);
 
     assert.ok(controller);
-    assert.ok(controller.get('isAdmin'));
+    assert.ok(controller.isAdmin);
 
     controller.send('updateTrust', 'sample');
     assert.ok(updateTrustStub.calledOnce);

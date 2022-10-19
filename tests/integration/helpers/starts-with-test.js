@@ -12,7 +12,7 @@ module('Integration | Helper | startsWith', function (hooks) {
 
     await render(hbs`{{starts-with str 'PR-'}}`);
 
-    assert.equal(this.element.textContent.trim(), 'true');
+    assert.dom(this.element).hasText('true');
   });
 
   test('it does not render', async function (assert) {
@@ -20,6 +20,6 @@ module('Integration | Helper | startsWith', function (hooks) {
 
     await render(hbs`{{starts-with str 'PR-'}}`);
 
-    assert.equal(this.element.textContent.trim(), 'false');
+    assert.dom(this.element).hasText('false');
   });
 });

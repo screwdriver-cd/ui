@@ -11,7 +11,7 @@ module('Integration | Helper | is-number', function (hooks) {
 
     await render(hbs`{{is-number inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), 'false');
+    assert.dom(this.element).hasText('false');
   });
 
   test('N/A is not a number', async function (assert) {
@@ -19,7 +19,7 @@ module('Integration | Helper | is-number', function (hooks) {
 
     await render(hbs`{{is-number inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), 'false');
+    assert.dom(this.element).hasText('false');
   });
 
   test('71 is a number', async function (assert) {
@@ -27,6 +27,6 @@ module('Integration | Helper | is-number', function (hooks) {
 
     await render(hbs`{{is-number inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), 'true');
+    assert.dom(this.element).hasText('true');
   });
 });

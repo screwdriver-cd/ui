@@ -79,9 +79,9 @@ module('Unit | Controller | pipeline/events', function (hooks) {
         assert.equal(id, 1234);
       };
 
-      assert.notOk(controller.get('isShowingModal'));
+      assert.notOk(controller.isShowingModal);
       controller.send('startMainBuild');
-      assert.ok(controller.get('isShowingModal'));
+      assert.ok(controller.isShowingModal);
     });
 
     await settled();
@@ -89,7 +89,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
-    assert.notOk(controller.get('isShowingModal'));
+    assert.notOk(controller.isShowingModal);
     assert.deepEqual(payload, {
       pipelineId: '1234',
       startFrom: '~commit',
@@ -150,9 +150,9 @@ module('Unit | Controller | pipeline/events', function (hooks) {
         assert.equal(path, 'pipeline/1234/events');
       };
 
-      assert.notOk(controller.get('isShowingModal'));
+      assert.notOk(controller.isShowingModal);
       controller.send('startDetachedBuild', { buildId: '123', name: 'deploy' });
-      assert.ok(controller.get('isShowingModal'));
+      assert.ok(controller.isShowingModal);
     });
 
     await settled();
@@ -160,7 +160,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
-    assert.notOk(controller.get('isShowingModal'));
+    assert.notOk(controller.isShowingModal);
     assert.deepEqual(payload, {
       pipelineId: '1234',
       startFrom: 'deploy',
@@ -227,9 +227,9 @@ module('Unit | Controller | pipeline/events', function (hooks) {
         assert.equal(path, 'pipeline/1234/pulls');
       };
 
-      assert.notOk(controller.get('isShowingModal'));
+      assert.notOk(controller.isShowingModal);
       controller.send('startDetachedBuild', { buildId: '123', name: 'deploy' });
-      assert.ok(controller.get('isShowingModal'));
+      assert.ok(controller.isShowingModal);
     });
 
     await settled();
@@ -237,7 +237,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
-    assert.notOk(controller.get('isShowingModal'));
+    assert.notOk(controller.isShowingModal);
     assert.deepEqual(payload, {
       pipelineId: '1234',
       startFrom: 'PR-3:deploy',
@@ -298,7 +298,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
-    assert.notOk(controller.get('isShowingModal'));
+    assert.notOk(controller.isShowingModal);
     assert.deepEqual(payload, {
       status: 'ABORTED'
     });
@@ -396,9 +396,9 @@ module('Unit | Controller | pipeline/events', function (hooks) {
         events: newArray()
       });
 
-      assert.notOk(controller.get('isShowingModal'));
+      assert.notOk(controller.isShowingModal);
       controller.send('startPRBuild', prNum, jobs);
-      assert.ok(controller.get('isShowingModal'));
+      assert.ok(controller.isShowingModal);
     });
 
     await settled();
@@ -406,7 +406,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
-    assert.notOk(controller.get('isShowingModal'));
+    assert.notOk(controller.isShowingModal);
     assert.deepEqual(payload, {
       causeMessage: 'Manually started by apple',
       pipelineId: '1234',
@@ -474,15 +474,15 @@ module('Unit | Controller | pipeline/events', function (hooks) {
         events: newArray()
       });
 
-      assert.notOk(controller.get('isShowingModal'));
+      assert.notOk(controller.isShowingModal);
       controller.send('startPRBuild', prNum, jobs);
-      assert.ok(controller.get('isShowingModal'));
+      assert.ok(controller.isShowingModal);
     });
 
     await settled();
 
-    assert.equal(controller.get('prEvents')[0].id, 3);
-    assert.equal(controller.get('prEvents')[0].prNum, '3');
+    assert.equal(controller.prEvents[0].id, 3);
+    assert.equal(controller.prEvents[0].prNum, '3');
   });
 
   test('From no admins to have admins after sync', async function (assert) {
@@ -541,7 +541,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
 
     controller.set('pipeline', pipeline);
 
-    assert.notOk(controller.get('hasAdmins'), 'has no admins');
+    assert.notOk(controller.hasAdmins, 'has no admins');
     assert.deepEqual(
       controller.get('pipeline.admins'),
       {},
@@ -561,7 +561,7 @@ module('Unit | Controller | pipeline/events', function (hooks) {
 
     await settled();
 
-    assert.ok(controller.get('hasAdmins'), 'now has admins');
+    assert.ok(controller.hasAdmins, 'now has admins');
     assert.deepEqual(
       controller.get('pipeline.admins'),
       adminsData,
@@ -679,6 +679,6 @@ module('Unit | Controller | pipeline/events', function (hooks) {
     assert.equal(job.stateChangeMessage, 'foo');
     assert.equal(payload.state, 'ENABLED');
     assert.equal(payload.stateChangeMessage, 'testing');
-    assert.equal(controller.get('errorMessage'), 'Test Error');
+    assert.equal(controller.errorMessage, 'Test Error');
   });
 });

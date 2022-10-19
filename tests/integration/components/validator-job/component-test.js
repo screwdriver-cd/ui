@@ -272,15 +272,15 @@ module('Integration | Component | validator job', function (hooks) {
       hbs`{{validator-job name="int-test" index=0 job=jobMock isOpen=openMock}}`
     );
 
-    assert.ok(this.get('openMock'));
+    assert.ok(this.openMock);
 
     await click('h4');
 
-    assert.notOk(this.get('openMock'));
+    assert.notOk(this.openMock);
 
     await click('h4');
 
-    assert.ok(this.get('openMock'));
+    assert.ok(this.openMock);
   });
 
   test('it renders a description', async function (assert) {
