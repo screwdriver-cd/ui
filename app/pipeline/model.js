@@ -73,5 +73,16 @@ export default DS.Model.extend({
 
       return failedBuildCount;
     }
+  }),
+  lastRunJob: computed('metrics.[]', {
+    get() {
+      let lastRun = 'n/a';
+
+      this.metrics.toArray().forEach(event => {
+        lastRun = event.builds.lastObject;
+      });
+
+      return lastRun;
+    }
   })
 });
