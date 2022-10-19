@@ -8,9 +8,10 @@ import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
  * @return {JSON}         [data]
  */
 export function extractPayload(payload) {
-  const { displayJobNameLength } = payload;
+  const { displayJobNameLength, timestampFormat } = payload;
 
   delete payload.displayJobNameLength;
+  delete payload.timestampFormat;
 
   const preferencePipelines = Object.keys(payload)
     .map(id => {
@@ -28,6 +29,7 @@ export function extractPayload(payload) {
     'preference/user': {
       id: 1,
       displayJobNameLength,
+      timestampFormat,
       'preference/pipelines': preferencePipelines
     }
   };
@@ -43,8 +45,8 @@ export function extractPayload(payload) {
  * @return {[JSON]}                [raw data]
  */
 export function preparePayload(preferenceUser) {
-  const { displayJobNameLength } = preferenceUser;
-  const data = { displayJobNameLength };
+  const { displayJobNameLength, timestampFormat } = preferenceUser;
+  const data = { displayJobNameLength, timestampFormat };
   const preferencePipelines = preferenceUser['preference/pipelines'] ?? [];
 
   preferencePipelines.forEach(({ id, showPRJobs }) => {
