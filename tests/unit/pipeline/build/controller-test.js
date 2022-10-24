@@ -7,7 +7,6 @@ import { settled } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import sinon from 'sinon';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
 
 const invalidateStub = sinon.stub();
 
@@ -289,26 +288,23 @@ module('Unit | Controller | pipeline/build', function (hooks) {
     assert.ok(true);
   });
 
-  sinonTest(
-    'it will not change build step in pipeline.events',
-    function (assert) {
-      assert.expect(1);
-      this.owner.unregister('service:router');
-      this.owner.register('service:router', routerServiceMock);
-      const routerService = this.owner.lookup('service:router');
+  test('it will not change build step in pipeline.events', function (assert) {
+    assert.expect(1);
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+    const routerService = this.owner.lookup('service:router');
 
-      routerService.set('currentRoute', { name: 'pipeline.events' });
+    routerService.set('currentRoute', { name: 'pipeline.events' });
 
-      const controller = this.owner.lookup('controller:pipeline/build');
-      const spy = this.spy(controller, 'transitionToRoute');
+    const controller = this.owner.lookup('controller:pipeline/build');
+    const spy = sinon.spy(controller, 'transitionToRoute');
 
-      controller.changeBuildStep();
-      assert.ok(spy.notCalled, 'transition was not called');
-      this.owner.unregister('service:router');
-    }
-  );
+    controller.changeBuildStep();
+    assert.ok(spy.notCalled, 'transition was not called');
+    this.owner.unregister('service:router');
+  });
 
-  sinonTest('it changes build step in pipeline.build.step', function (assert) {
+  test('it changes build step in pipeline.build.step', function (assert) {
     assert.expect(3);
     this.owner.unregister('service:router');
     this.owner.register('service:router', routerServiceMock);
@@ -317,7 +313,7 @@ module('Unit | Controller | pipeline/build', function (hooks) {
     routerService.set('currentRoute', { name: 'pipeline.build.step' });
 
     const controller = this.owner.lookup('controller:pipeline/build');
-    const stub = this.stub(controller, 'transitionToRoute');
+    const stub = sinon.stub(controller, 'transitionToRoute');
     const build = EmberObject.create({
       id: 5678,
       jobId: 'abcd',

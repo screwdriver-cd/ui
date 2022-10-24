@@ -2,7 +2,7 @@
   <div class="quickstart-guide-menu" onclick={{action "openMenu"}}>
     <div class="mini-menu-oval">
       <div class="mini-menu">
-        {{fa-icon "info"}}
+        <FaIcon @icon="info" />
       </div>
     </div>
   </div>
@@ -12,12 +12,16 @@
   <div class="header">
     <div class="item">
       <div class="icon">
-        {{fa-icon "info"}}
+        <FaIcon @icon="info" />
       </div>
       <div class="section">
         <span class="title">
-          <span class="text">Quickstart Guide</span>
-          <span class="close-quickstart-guide" onclick={{action "closeMenu"}}>×</span>
+          <span class="text">
+            Quickstart Guide
+          </span>
+          <span class="close-quickstart-guide" onclick={{action "closeMenu"}}>
+            ×
+          </span>
         </span>
       </div>
     </div>
@@ -25,7 +29,9 @@
     <div class="item">
       <div class="icon"></div>
       <div class="section">
-        <span>This will cover how to build and deploy a sample app with Screwdriver.</span>
+        <span>
+          This will cover how to build and deploy a sample app with Screwdriver.
+        </span>
       </div>
     </div>
   </div>
@@ -33,19 +39,27 @@
   <div class="content">
     <div class="item">
       <div class="icon">
-        <span class="badge">1</span>
+        <span class="badge">
+          1
+        </span>
       </div>
       <div class="section">
-        <span>Click on the Create icon. (You will be redirected to login if you have not already.)</span>
+        <span>
+          Click on the Create icon. (You will be redirected to login if you have not already.)
+        </span>
       </div>
     </div>
 
     <div class="item">
       <div class="icon">
-        <span class="badge">2</span>
+        <span class="badge">
+          2
+        </span>
       </div>
       <div class="section">
-        <span>Enter your repository link into the field. SSH or HTTPS link is fine, with #&lt;YOUR_BRANCH_NAME&gt; immediately after.</span>
+        <span>
+          Enter your repository link into the field. SSH or HTTPS link is fine, with #&amp;lt;YOUR_BRANCH_NAME&amp;gt; immediately after.
+        </span>
       </div>
     </div>
 
@@ -67,23 +81,37 @@
     <div class="item">
       <div class="icon"></div>
       <div class="section">
-        <span>If no BRANCH_NAME is provided, it will set to the default branch. Click Use this repository to confirm and then click Create Pipeline.</span>
+        <span>
+          If no BRANCH_NAME is provided, it will set to the default branch. Click Use this repository to confirm and then click Create Pipeline.
+        </span>
       </div>
     </div>
 
     <div class="item">
       <div class="icon">
-        <span class="badge">3</span>
+        <span class="badge">
+          3
+        </span>
       </div>
       <div class="section">
-        <span>Now that you’ve created a pipeline, you should be directed to your new pipeline page. Click the Start button to start your build.</span>
+        <span>
+          Now that you’ve created a pipeline, you should be directed to your new pipeline page. Click the Start button to start your build.
+        </span>
       </div>
     </div>
   </div>
 
   <div class="footer">
     <span type="button" class="quickstart-doc-button">
-      <a href="https://docs.screwdriver.cd/user-guide/quickstart" target="_blank" rel="noopener"><span>QuickStart Documentation {{fa-icon "share-square-o"}}</span></a>
+      <a
+        href="https://docs.screwdriver.cd/user-guide/quickstart"
+        target="_blank"
+        rel="noopener"
+      >
+        <span>
+          QuickStart Documentation <FaIcon @icon="share-square-o" />
+        </span>
+      </a>
     </span>
   </div>
 </div>

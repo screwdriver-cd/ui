@@ -4,7 +4,9 @@
       <h2 class="header__text col-xs-9">
         Collections
       </h2>
-      <a {{action "openModal"}} class="header__create col-xs-3">create</a>
+      <a class="header__create col-xs-3" {{action "openModal"}}>
+        create
+      </a>
     {{else}}
       <h2 class="header__text col-xs-12">
         Collections
@@ -12,35 +14,45 @@
     {{/if}}
   </div>
   {{#each orderedCollections as |collection|}}
-    <div class="collection-wrapper row {{if (eq collection.id selectedCollectionId) " row--active"}}">
-      {{#link-to "dashboard.show" collection.id title=collection.name}}
+    <div
+      class="collection-wrapper row
+        {{if (eq collection.id selectedCollectionId) " row--active"}}"
+    >
+      <LinkTo
+        @route="dashboard.show"
+        @model={{collection.id}}
+        @title={{collection.name}}
+      >
         {{collection.name}}
-      {{/link-to}}
+      </LinkTo>
       {{#if (eq collection.type "normal")}}
         <button
           class="collection-wrapper__delete"
           onclick={{action "setCollectionToDelete" collection}}
         >
-          {{fa-icon "trash" title="Delete collection" size="md"}}
+          <FaIcon @icon="trash" @title="Delete collection" @size="md" />
         </button>
       {{/if}}
     </div>
   {{else}}
-    <p class="no-collections-text">Please create a collection.</p>
+    <p class="no-collections-text">
+      Please create a collection.
+    </p>
   {{/each}}
   {{#if collectionToDelete}}
-    {{!-- Confirmation modal for deleting a collection --}}
-    {{#bs-modal-simple
-      title="Confirm deletion"
-      closeTitle="Cancel"
-      submitTitle="Confirm"
-      size=null
-      fade=false
-      onSubmit=(action "deleteCollection" collectionToDelete)
-      onHide=(action "cancelDeletingCollection")
-    }}
-      You're about to delete the collection "{{collectionToDelete.name}}". This action cannot be undone. Are you sure?
-    {{/bs-modal-simple}}
+    {{! Confirmation modal for deleting a collection }}
+    <BsModalSimple
+      @title="Confirm deletion"
+      @closeTitle="Cancel"
+      @submitTitle="Confirm"
+      @size={{null}}
+      @fade={{false}}
+      @onSubmit={{action "deleteCollection" collectionToDelete}}
+      @onHide={{action "cancelDeletingCollection"}}
+    >
+      You're about to delete the collection "{{collectionToDelete.name
+      }}". This action cannot be undone. Are you sure?
+    </BsModalSimple>
   {{/if}}
-  {{collection-modal showModal=showModal}}
+  <CollectionModal @showModal={{showModal}} />
 </div>

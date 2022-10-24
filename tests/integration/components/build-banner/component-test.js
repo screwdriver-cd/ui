@@ -1,12 +1,12 @@
 import EmberObject from '@ember/object';
 import moment from 'moment';
 import hbs from 'htmlbars-inline-precompile';
-import { module } from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, settled, click } from '@ember/test-helpers';
-import test from 'ember-sinon-qunit/test-support/test';
 import { resolve, Promise as EmberPromise } from 'rsvp';
 import Service from '@ember/service';
+import sinon from 'sinon';
 
 const coverageService = Service.extend({
   getCoverageInfo() {
@@ -307,7 +307,7 @@ module('Integration | Component | build banner', function (hooks) {
 
     await click('.commit .dropdown-toggle');
 
-    assert.dom('.commit .pr-item a').hasText('1. abcdef1');
+    assert.dom('.commit .dropdown-menu a').hasText('1. abcdef1');
     assert
       .dom('.duration .banner-value')
       .hasAttribute(
@@ -323,7 +323,7 @@ module('Integration | Component | build banner', function (hooks) {
   test('it renders a restart button for completed jobs when authenticated', async function (assert) {
     assert.expect(4);
 
-    const reloadBuildSpy = this.spy();
+    const reloadBuildSpy = sinon.spy();
 
     this.set('buildStepsMock', buildStepsMock);
     this.set('reloadCb', reloadBuildSpy);
@@ -359,7 +359,7 @@ module('Integration | Component | build banner', function (hooks) {
   test('it renders a disabled restart button for completed disabled jobs when authenticated', async function (assert) {
     assert.expect(3);
 
-    const reloadBuildSpy = this.spy();
+    const reloadBuildSpy = sinon.spy();
 
     this.set('buildStepsMock', buildStepsMock);
     this.set('reloadCb', reloadBuildSpy);

@@ -526,11 +526,11 @@ module('Integration | Component | collection view', function (hooks) {
 
     // wait for rendering
     await waitFor('.collection-card-view');
-    await waitFor('.pipeline-card .commit-status i.build-success', {
+    await waitFor('.pipeline-card .commit-status svg.fa-check-circle', {
       count: 1,
       timeout: Infinity
     });
-    await waitFor('.pipeline-card .commit-status i.build-empty', {
+    await waitFor('.pipeline-card .commit-status svg.fa-question-circle', {
       count: 3,
       timeout: Infinity
     });
@@ -556,30 +556,30 @@ module('Integration | Component | collection view', function (hooks) {
 
     // check that helper function getColor() works correctly
     assert
-      .dom('.pipeline-card:nth-of-type(1) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(1) .commit-status svg')
       .hasClass('build-empty');
     assert
-      .dom('.pipeline-card:nth-of-type(2) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(2) .commit-status svg')
       .hasClass('build-success');
     assert
-      .dom('.pipeline-card:nth-of-type(3) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(3) .commit-status svg')
       .hasClass('build-empty');
     assert
-      .dom('.pipeline-card:nth-of-type(4) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(4) .commit-status svg')
       .hasClass('build-empty');
 
     // check that helper function getIcon() works correctly
     assert
-      .dom('.pipeline-card:nth-of-type(1) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(1) .commit-status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.pipeline-card:nth-of-type(2) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(2) .commit-status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.pipeline-card:nth-of-type(3) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(3) .commit-status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.pipeline-card:nth-of-type(4) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(4) .commit-status svg')
       .hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
@@ -677,30 +677,30 @@ module('Integration | Component | collection view', function (hooks) {
 
     // check that helper function getColor() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('build-empty');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('build-success');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('build-empty');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('build-empty');
 
     // check that helper function getIcon() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
@@ -1708,6 +1708,9 @@ module('Integration | Component | collection view', function (hooks) {
   });
 
   test('it should verify collection edit modal', async function (assert) {
+    const collectionSaveSpy = sinon.spy();
+
+    this.collection.set('save', collectionSaveSpy);
     this.collection.set('type', 'normal');
 
     await render(hbs`

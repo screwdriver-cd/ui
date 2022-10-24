@@ -1,24 +1,36 @@
 <td class="collection-pipeline__choose">
   {{#if showCheckbox}}
-    <input type="checkbox" value={{pipelineSelected}} onchange={{action "togglePipeline"}}>
+    <input
+      type="checkbox"
+      value={{pipelineSelected}}
+      onchange={{action "togglePipeline"}}
+    />
   {{/if}}
 </td>
 <td class="app-id">
   {{#if hasAliasName}}
     <p class="alias">
       {{aliasName}}
-      {{#bs-tooltip placement="bottom" renderInPlace=true}}
+      <BsTooltip @placement="bottom" @renderInPlace={{true}}>
         {{aliasName}}
-      {{/bs-tooltip}}
+      </BsTooltip>
     </p>
   {{/if}}
   <p>
-    {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}{{pipeline.scmRepo.name}}{{/link-to}}
+    <LinkTo
+      @route="pipeline"
+      @model={{pipeline.id}}
+      @title={{pipeline.scmRepo.name}}
+    >
+      {{pipeline.scmRepo.name}}
+    </LinkTo>
   </p>
 </td>
 <td class="branch">
-  {{fa-icon "code-fork"}}
-  <span title={{branch}}>{{branch}}</span>
+  <FaIcon @icon="code-branch" />
+  <span title={{branch}}>
+    {{branch}}
+  </span>
 </td>
 <td class="start">
   {{lastEventInfo.startTime}}
@@ -27,12 +39,18 @@
   {{lastEventInfo.durationText}}
 </td>
 <td class="last-run">
-  <span title={{lastRun}}> {{lastRun}}</span>
+  <span title={{lastRun}}>
+    {{lastRun}}
+  </span>
 </td>
 <td class="status">
-  {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
-    {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
-  {{/link-to}}
+  <LinkTo
+    @route="pipeline"
+    @model={{pipeline.id}}
+    @title={{pipeline.scmRepo.name}}
+  >
+    <FaIcon @icon={{lastEventInfo.icon}} class={{lastEventInfo.statusColor}} />
+  </LinkTo>
   {{#if storeQueryError}}
     An error occur while loading events
   {{else if hasBothEventsAndLatestEventInfo}}
@@ -45,17 +63,24 @@
 </td>
 <td class="history">
   {{#if hasBothEventsAndLatestEventInfo}}
-    {{events-thumbnail
-        events=eventsInfo
-        pipelineId=pipeline.id
-        class="events-thumbnail"
-    }}
+    <EventsThumbnail
+      @events={{eventsInfo}}
+      @pipelineId={{pipeline.id}}
+      class="events-thumbnail"
+    />
   {{/if}}
 </td>
 <td class="collection-pipeline__remove">
   {{#if showRemoveButton}}
-    <span title="Remove {{pipeline.scmRepo.name}} pipeline from {{collectionName}} collection" onclick={{action "removePipeline"}}>
-      &times;
+    <span
+      title="Remove
+        {{pipeline.scmRepo.name}}
+         pipeline from
+        {{collectionName}}
+         collection"
+      onclick={{action "removePipeline"}}
+    >
+      &amp;times;
     </span>
   {{/if}}
 </td>

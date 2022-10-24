@@ -1,98 +1,169 @@
 <div class="view">
-  <div class="status">{{fa-icon icon fixedWidth=true}}</div>
+  <div class="status">
+    <FaIcon
+      @icon={{icon.name}}
+      @fixedWidth=true
+      @prefix={{icon.prefix}}
+      @spin={{icon.spin}}
+      @flip={{icon.flip}}
+    />
+  </div>
   <div class="detail">
     <div class="commit" title={{event.causeMessage}}>
-      {{#if (eq event.type "pr") }}
-        <a href={{event.pr.url}}>PR-{{event.prNum}}</a>
+      {{#if (eq event.type "pr")}}
+        <a href={{event.pr.url}}>
+          PR-{{event.prNum}}
+        </a>
       {{else}}
-        <a class={{if (eq event.sha latestCommit.sha) "latest-commit"}} href={{event.commit.url}}>#{{event.truncatedSha}}</a>
+        <a
+          class={{if (eq event.sha latestCommit.sha) "latest-commit"}}
+          href={{event.commit.url}}
+        >
+          #{{event.truncatedSha}}
+        </a>
         {{#if (eq event.id lastSuccessful)}}
-          <div class="last-successful">Last successful</div>
+          <div class="last-successful">
+            Last successful
+          </div>
         {{/if}}
-        {{#if event.label}}<div class="label">{{event.label}}</div>{{/if}}
+        {{#if event.label}}
+          <div class="label">
+            {{event.label}}
+          </div>
+        {{/if}}
       {{/if}}
       {{#if (and event.isRunning (not-eq event.status "UNKNOWN"))}}
-        {{#bs-button onClick=(action stopEvent) class="stopButton" title="Stop all builds for this event"}}Stop{{/bs-button}}
+        <BsButton
+          @onClick={{action stopEvent}}
+          class="stopButton"
+          @title="Stop all builds for this event"
+        >
+          Stop
+        </BsButton>
       {{else}}
         {{#if (eq event.type "pr")}}
-          {{#bs-button onClick=(action startPRBuild event.prNum events) class="startButton" title="Start all builds for this event"}}Start{{/bs-button}}
+          <BsButton
+            @onClick={{action startPRBuild event.prNum events}}
+            class="startButton"
+            @title="Start all builds for this event"
+          >
+            Start
+          </BsButton>
         {{/if}}
       {{/if}}
     </div>
-    <div class="date greyOut">Started {{startDate.content}}</div>
-    <span class="message" title={{event.commit.message}}>{{event.truncatedMessage}}</span>
+    <div class="date greyOut">
+      Started {{startDate.content}}
+    </div>
+    <span class="message" title={{event.commit.message}}>
+      {{event.truncatedMessage}}
+    </span>
     <div class="by">
       {{#if isCommitterDifferent}}
-        <span>Committed by: </span>
-        <a href={{event.commit.author.url}}>{{event.commit.author.name}}</a>
-        <br>
-        <span>Started by: </span>
+        <span>
+          Committed by:
+        </span>
+        <a href={{event.commit.author.url}}>
+          {{event.commit.author.name}}
+        </a>
+        <br />
+        <span>
+          Started by:
+        </span>
         {{#if isExternalTrigger}}
           {{#if externalBuild.build_id}}
-            {{#link-to "pipeline.build" externalBuild.pipeline_id externalBuild.build_id}}External Trigger{{/link-to}}
+            <LinkTo
+              @route="pipeline.build"
+              @models={{array externalBuild.pipeline_id externalBuild.build_id}}
+            >
+              External Trigger
+            </LinkTo>
           {{else}}
-            {{#link-to "pipeline" externalBuild.pipeline_id}}External Trigger{{/link-to}}
+            <LinkTo @route="pipeline" @model={{externalBuild.pipeline_id}}>
+              External Trigger
+            </LinkTo>
           {{/if}}
         {{else}}
-          <a href={{event.creator.url}}>{{event.creator.name}}</a>
+          <a href={{event.creator.url}}>
+            {{event.creator.name}}
+          </a>
         {{/if}}
       {{else}}
         {{#if isSubscribedEvent}}
-          <span>Started by subscribed event: </span>
-          <a href={{event.meta.subscribedSourceUrl}}>Subscribed Source</a>
+          <span>
+            Started by subscribed event:
+          </span>
+          <a href={{event.meta.subscribedSourceUrl}}>
+            Subscribed Source
+          </a>
         {{else}}
-          <span>Started and committed by: </span>
-          <a href={{event.creator.url}}>{{event.creator.name}}</a>
+          <span>
+            Started and committed by:
+          </span>
+          <a href={{event.creator.url}}>
+            {{event.creator.name}}
+          </a>
         {{/if}}
       {{/if}}
     </div>
     {{#if (and (is-fulfilled event.builds) isShowGraph)}}
       <div class="workflow">
-        {{workflow-graph-d3
-          pipeline=pipeline
-          selectedEventObj=selectedEventObj
-          selectedEventObjStatus=selectedEventObj.status
-          builds=event.builds
-          workflowGraph=event.workflowGraph
-          startFrom=event.startFrom
-          causeMessage=event.causeMessage
-          minified=true
-        }}
+        <WorkflowGraphD3
+          @pipeline={{pipeline}}
+          @selectedEventObj={{selectedEventObj}}
+          @selectedEventObjStatus={{selectedEventObj.status}}
+          @builds={{event.builds}}
+          @workflowGraph={{event.workflowGraph}}
+          @startFrom={{event.startFrom}}
+          @causeMessage={{event.causeMessage}}
+          @minified={{true}}
+        />
       </div>
     {{/if}}
 
     {{#if (get-length event.meta.parameters)}}
       {{#if isShowingModal}}
-        {{#modal-dialog
-          targetAttachment="center"
-          translucentOverlay=true
-          clickOutsideToClose=true
-          onClickOverlay=(action "toggleParametersPreview")
-          containerClass="detached-confirm-dialog"
-        }}
-          <h3>Parameters:</h3>
-          {{pipeline-parameterized-build
-            pipeline=pipeline
-            showSubmitButton=true
-            buildPipelineParameters=pipelineParameters
-            buildJobParameters=jobParameters
-            submitButtonText="Close"
-            onSave=(action "toggleParametersPreview")}}
-        {{/modal-dialog}}
+        <ModalDialog
+          @targetAttachment="center"
+          @translucentOverlay={{true}}
+          @clickOutsideToClose={{true}}
+          @onClickOverlay={{action "toggleParametersPreview"}}
+          @containerClass="detached-confirm-dialog"
+        >
+          <h3>
+            Parameters:
+          </h3>
+          <PipelineParameterizedBuild
+            @pipeline={{pipeline}}
+            @showSubmitButton={{true}}
+            @buildPipelineParameters={{pipelineParameters}}
+            @buildJobParameters={{jobParameters}}
+            @submitButtonText="Close"
+            @onSave={{action "toggleParametersPreview"}}
+          />
+        </ModalDialog>
       {{/if}}
 
       <div class="parameters">
         {{#if isInlineParameters}}
-          <span>Parameters:</span>
+          <span>
+            Parameters:
+          </span>
           <ul>
             {{#if (get-length pipelineParameters)}}
               <li>
-                <span class="parameter-group badge">Shared</span>
+                <span class="parameter-group badge">
+                  Shared
+                </span>
                 <ul>
                   {{#each-in pipelineParameters as |pName pVal|}}
                     <li>
-                      <span class="parameter-name badge">{{pName}}</span>
-                      <span class="parameter-value">:{{pVal.value}}</span>
+                      <span class="parameter-name badge">
+                        {{pName}}
+                      </span>
+                      <span class="parameter-value">
+                        :{{pVal.value}}
+                      </span>
                     </li>
                   {{/each-in}}
                 </ul>
@@ -101,12 +172,18 @@
             {{#if (get-length jobParameters)}}
               {{#each-in jobParameters as |jobName parameters|}}
                 <li>
-                  <span class="parameter-group badge">Job: {{jobName}}</span>
+                  <span class="parameter-group badge">
+                    Job: {{jobName}}
+                  </span>
                   <ul>
                     {{#each-in parameters as |pName pVal|}}
                       <li>
-                        <span class="parameter-name badge">{{pName}}</span>
-                        <span class="parameter-value">:{{pVal.value}}</span>
+                        <span class="parameter-name badge">
+                          {{pName}}
+                        </span>
+                        <span class="parameter-value">
+                          :{{pVal.value}}
+                        </span>
                       </li>
                     {{/each-in}}
                   </ul>
@@ -116,9 +193,15 @@
           </ul>
         {{else}}
           <span>
-            <button class="btn btn-primary btn-xs" type="button"
-              onClick={{action "toggleParametersPreview"}}>
-              Parameters...<span class="badge">{{numberOfParameters}}</span>
+            <button
+              class="btn btn-primary btn-xs"
+              type="button"
+              onClick={{action "toggleParametersPreview"}}
+            >
+              Parameters...
+              <span class="badge">
+                {{numberOfParameters}}
+              </span>
             </button>
           </span>
         {{/if}}

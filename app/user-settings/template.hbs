@@ -1,13 +1,19 @@
-<h2>Settings</h2>
+<h2>
+  Settings
+</h2>
 
-{{#bs-nav type="tabs" as |nav|}}
-  {{#nav.item active=(bs-eq activeTab "preferences")}}
-    {{#nav.link-to "user-settings.preferences" class="nav-link"}}User Preferences{{/nav.link-to}}
-  {{/nav.item}}
+<BsNav @type="tabs" as |nav|>
+  <nav.item @active={{bs-eq activeTab "preferences"}}>
+    {{#nav.link-to "user-settings.preferences" class="nav-link"}}
+      User Preferences
+    {{/nav.link-to}}
+  </nav.item>
 
-  {{#nav.item active=(bs-eq activeTab "access-tokens")}}
-    {{#nav.link-to "user-settings.access-tokens" class="nav-link"}}Access Tokens{{/nav.link-to}}
-  {{/nav.item}}
-{{/bs-nav}}
+  <nav.item @active={{bs-eq activeTab "access-tokens"}}>
+    {{#nav.link-to "user-settings.access-tokens" class="nav-link"}}
+      Access Tokens
+    {{/nav.link-to}}
+  </nav.item>
+</BsNav>
 
 {{outlet}}

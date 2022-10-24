@@ -1,4 +1,6 @@
-<h2>Sign in to Screwdriver</h2>
+<h2>
+  Sign in to Screwdriver
+</h2>
 <p>
   Screwdriver uses your source code management solution to handle user authentication.
   Giving Screwdriver access to your repos will allow us to automatically add webhooks,
@@ -11,10 +13,14 @@
 {{#each scmContexts as |scmContext|}}
   {{#unless scmContext.readOnly}}
     <p>
-      <a href="#authenticate"{{action "authenticate" scmContext.context}}>{{fa-icon "sign-in"}} Sign in with {{scmContext.displayName}}</a>
+      <a href="#authenticate" {{action "authenticate" scmContext.context}}>
+        <FaIcon @icon="sign-in" /> Sign in with {{scmContext.displayName}}
+      </a>
     </p>
   {{/unless}}
 {{else}}
-  <a href="#authenticate"{{action "authenticate"}}>{{fa-icon "sign-in"}} Sign in with SCM Provider</a>
+  <a href="#authenticate" {{action "authenticate"}}>
+    <FaIcon @icon="sign-in" /> Sign in with SCM Provider
+  </a>
 {{/each}}
 {{yield}}

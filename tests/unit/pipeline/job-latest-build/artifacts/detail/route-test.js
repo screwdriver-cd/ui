@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
+import sinon from 'sinon';
 
 module(
   'Unit | Route | pipeline/job-latest-build/artifacts/detail',
@@ -15,14 +15,14 @@ module(
       assert.ok(route);
     });
 
-    sinonTest('it redirects to artifacts page', function (assert) {
+    test('it redirects to artifacts page', function (assert) {
       assert.expect(3);
 
       const route = this.owner.lookup(
         'route:pipeline/job-latest-build/artifacts/detail'
       );
-      const transitionStub = this.stub(route, 'transitionTo');
-      const paramStub = this.stub(route, 'paramsFor').returns({
+      const transitionStub = sinon.stub(route, 'transitionTo');
+      const paramStub = sinon.stub(route, 'paramsFor').returns({
         file_path: 123
       });
       const model = {

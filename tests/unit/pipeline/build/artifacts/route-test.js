@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
 import EmberObject from '@ember/object';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
 
 module('Unit | Route | pipeline/build/artifacts', function (hooks) {
   setupTest(hooks);
@@ -13,7 +12,7 @@ module('Unit | Route | pipeline/build/artifacts', function (hooks) {
     assert.ok(route);
   });
 
-  sinonTest('its activetTab is artifacts', function (assert) {
+  test('its activetTab is artifacts', function (assert) {
     assert.expect(2);
     const route = this.owner.lookup('route:pipeline/build/artifacts');
     const parentController = EmberObject.create({ activeTab: false });

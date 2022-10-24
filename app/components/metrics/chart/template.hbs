@@ -1,5 +1,7 @@
 <div class="chart-c3">
-  <p class="chart-title">{{this.chartTitle}}</p>
+  <p class="chart-title">
+    {{this.chartTitle}}
+  </p>
 
   {{#if @legends}}
     {{#if @legends.left}}
@@ -35,5 +37,11 @@
     />
   {{/if}}
 
-  <p class="reset-button" onClick={{action "resetZoom" chartName dependentChartNames}} title="Reset Zoom Level">{{fa-icon "refresh"}}</p>
+  <p
+    class="reset-button"
+    onClick={{action "resetZoom" chartName dependentChartNames}}
+    title="Reset Zoom Level"
+  >
+    <FaIcon @icon="refresh" />
+  </p>
 </div>

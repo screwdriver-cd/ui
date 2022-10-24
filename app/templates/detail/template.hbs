@@ -1,9 +1,27 @@
-<InfoMessage @message={{errorMessage}} @type="warning" @icon="exclamation-triangle" />
+<InfoMessage
+  @message={{errorMessage}}
+  @type="warning"
+  @icon="exclamation-triangle"
+/>
 
-<TemplateHeader @template={{versionTemplate}} @trusted={{trusted}} @isAdmin={{isAdmin}} @onUpdateTrust={{action "updateTrust"}} @onRemoveTemplate={{action "removeTemplate"}} />
+<TemplateHeader
+  @template={{versionTemplate}}
+  @trusted={{trusted}}
+  @isAdmin={{isAdmin}}
+  @onUpdateTrust={{action "updateTrust"}}
+  @onRemoveTemplate={{action "removeTemplate"}}
+/>
 
-<h4>Contents:</h4>
-<ValidatorJob @name={{versionTemplate.fullName}} @job={{versionTemplate.config}} @template={{versionTemplate}} @collapsible={{false}} @isOpen={{true}} />
+<h4>
+  Contents:
+</h4>
+<ValidatorJob
+  @name={{versionTemplate.fullName}}
+  @job={{versionTemplate.config}}
+  @template={{versionTemplate}}
+  @collapsible={{false}}
+  @isOpen={{true}}
+/>
 
 <TemplateVersions @templates={{templates}} />
 

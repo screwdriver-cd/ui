@@ -7,8 +7,9 @@ import Application from 'screwdriver-ui/app';
 import config from 'screwdriver-ui/config/environment';
 
 setApplication(Application.create(config.APP));
-setup(QUnit.assert);
 
 setupSinon();
+
+setup(QUnit.assert);
 
 start();

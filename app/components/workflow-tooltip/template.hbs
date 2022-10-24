@@ -1,47 +1,80 @@
 <div class="content">
   {{#if tooltipData.externalTrigger}}
-    {{#link-to "pipeline" tooltipData.externalTrigger.pipelineId}}Go to remote pipeline{{/link-to}}
+    <LinkTo @route="pipeline" @model={{tooltipData.externalTrigger.pipelineId}}>
+      Go to remote pipeline
+    </LinkTo>
   {{else if tooltipData.triggers}}
     {{#each tooltipData.triggers as |t|}}
-      {{#link-to "pipeline" t.pipelineId}}Go to downstream pipeline {{t.triggerName}}{{/link-to}}
+      <LinkTo @route="pipeline" @model={{t.pipelineId}}>
+        Go to downstream pipeline {{t.triggerName}}
+      </LinkTo>
     {{/each}}
   {{else}}
     {{#if tooltipData.job.buildId}}
       {{#if (not-eq tooltipData.job.status "CREATED")}}
-        {{#link-to "pipeline.build" tooltipData.job.buildId}}Go to build details{{/link-to}}
+        <LinkTo @route="pipeline.build" @model={{tooltipData.job.buildId}}>
+          Go to build details
+        </LinkTo>
       {{/if}}
     {{/if}}
-    {{#link-to "pipeline.metrics" (query-params jobId=tooltipData.job.id)}}Go to build metrics{{/link-to}}
+    <LinkTo @route="pipeline.metrics" @query={{hash jobId=tooltipData.job.id}}>
+      Go to build metrics
+    </LinkTo>
 
     {{#if tooltipData.job.isDisabled}}
-      <p>{{tooltipData.job.stateChangeMessage}}</p>
-      <a {{action "toggleJob" tooltipData.job.name}}>Enable this job</a>
+      <p>
+        {{tooltipData.job.stateChangeMessage}}
+      </p>
+      <a {{action "toggleJob" tooltipData.job.name}}>
+        Enable this job
+      </a>
     {{else}}
       {{#if displayRestartButton}}
         {{#if tooltipData.job.manualStartDisabled}}
-          <p>Disabled manually starting</p>
+          <p>
+            Disabled manually starting
+          </p>
         {{else}}
           {{#if (eq isPrChainJob false)}}
-            <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+            <a {{action confirmStartBuild}}>
+              {{if tooltipData.job.status "Restart" "Start"}} pipeline from here
+            </a>
           {{else}}
             {{#if (eq prBuildExists true)}}
-              <a {{action confirmStartBuild}}>{{if tooltipData.job.status "Restart" "Start"}} pipeline from here</a>
+              <a {{action confirmStartBuild}}>
+                {{if
+                  tooltipData.job.status
+                  "Restart"
+                  "Start"
+                }} pipeline from here
+              </a>
             {{/if}}
           {{/if}}
         {{/if}}
       {{/if}}
       {{#if (eq tooltipData.job.isDisabled false)}}
-        <a {{action "toggleJob" tooltipData.job.name}}>Disable this job</a>
+        <a {{action "toggleJob" tooltipData.job.name}}>
+          Disable this job
+        </a>
       {{/if}}
     {{/if}}
 
     {{#if tooltipData.displayStop}}
-      <a {{action stopBuild tooltipData.selectedEvent tooltipData.job}}>Stop build</a>
+      <a {{action stopBuild tooltipData.selectedEvent tooltipData.job}}>
+        Stop build
+      </a>
     {{/if}}
     {{#if (eq tooltipData.job.status "FROZEN")}}
-      <a {{action stopBuild tooltipData.selectedEvent tooltipData.job}}>Stop frozen build</a>
+      <a {{action stopBuild tooltipData.selectedEvent tooltipData.job}}>
+        Stop frozen build
+      </a>
     {{/if}}
   {{/if}}
   {{yield}}
 </div>
-{{job-toggle-modal showToggleModal=showToggleModal updateMessage=(action "updateMessage") name=toggleJobName stateChange=stateChange}}
+<JobToggleModal
+  @showToggleModal={{showToggleModal}}
+  @updateMessage={{action "updateMessage"}}
+  @name={{toggleJobName}}
+  @stateChange={{stateChange}}
+/>

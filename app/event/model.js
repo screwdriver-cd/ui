@@ -151,9 +151,9 @@ export default Model.extend(ModelReloaderMixin, {
     }
   ),
   // eslint-disable-next-line ember/no-observers
-  isCompleteObserver: observer(
-    'builds.@each.{status,endTime}',
-    function isCompleteObserver() {
+  isCompleteObserver: observer({
+    dependentKeys: ['builds.@each.{status,endTime}'],
+    fn() {
       if (this.isSaving) {
         return;
       }
@@ -225,8 +225,9 @@ export default Model.extend(ModelReloaderMixin, {
 
         return false;
       });
-    }
-  ),
+    },
+    sync: true
+  }),
 
   modelToReload: 'builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,

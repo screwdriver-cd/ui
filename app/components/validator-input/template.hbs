@@ -1,16 +1,22 @@
-<h4 class="pipeline" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} Validate Screwdriver Configuration</h4>
-<h5 class="pipeline">Paste a screwdriver.yaml or a template yaml below to verify.<br>Template yamls must contain the "name" field.</h5>
+<h4 class="pipeline" {{action "nameClick"}}>
+  <FaIcon
+    @icon={{if isOpen "minus-square" "plus-square"}}
+  /> Validate Screwdriver Configuration
+</h4>
+<h5 class="pipeline">
+  Paste a screwdriver.yaml or a template yaml below to verify.<br />Template yamls must contain the "name" field.
+</h5>
 <div id="validator-ace-editor">
-  {{ember-ace
-    value=yaml
-    update=(action (mut yaml))
-    tabSize=4
-    useSoftTabs=true
-    minLines=10
-    maxLines=75
-    showPrintMargin=false
-    useWrapMode=false
-    highlightActiveLine=true
-  }}
+  <EmberAce
+    @value={{yaml}}
+    @update={{action (mut yaml)}}
+    @tabSize={{4}}
+    @useSoftTabs={{true}}
+    @minLines={{10}}
+    @maxLines={{75}}
+    @showPrintMargin={{false}}
+    @useWrapMode={{false}}
+    @highlightActiveLine={{true}}
+  />
   {{yield}}
 </div>

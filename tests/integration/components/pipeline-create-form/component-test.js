@@ -34,7 +34,7 @@ module('Integration | Component | pipeline create form', function (hooks) {
     await triggerKeyEvent('.scm-url', 'keyup', 32);
     await triggerKeyEvent('.root-dir', 'keyup', 32);
 
-    assert.dom('i.fa').hasClass('fa-check');
+    assert.dom('svg').hasClass('fa-check');
 
     await click('button.blue-button');
   });

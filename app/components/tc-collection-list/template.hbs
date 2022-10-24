@@ -1,63 +1,103 @@
 <header>
   <h4>
     {{collectionType}}
-    <a href="http://docs.screwdriver.cd/user-guide/{{routes.prefix}}" title="More Information" target="_blank" rel="noopener" class="link pull-right">{{collectionType}} Docs {{fa-icon "question-circle"}}</a>
+    <a
+      href="http://docs.screwdriver.cd/user-guide/{{routes.prefix}}"
+      title="More Information"
+      target="_blank"
+      rel="noopener"
+      class="link pull-right"
+    >
+      {{collectionType}} Docs <FaIcon @icon="question-circle" />
+    </a>
   </h4>
-  <div class="collection-description">{{yield}}</div>
+  <div class="collection-description">
+    {{yield}}
+  </div>
 </header>
 
 <section class="row">
   <h5>
-    <b>Screwdriver {{collectionType}}</b>
+    <b>
+      Screwdriver {{collectionType}}
+    </b>
     <span class="pull-right">
-      <span class="text-uppercase total">Total </span><span>{{filteredModel.length}}</span>
+      <span class="text-uppercase total">
+        Total
+      </span>
+      <span>
+        {{filteredModel.length}}
+      </span>
     </span>
   </h5>
 
   <div class="row">
     <div class="col-sm-1">
       <label class="trusted-toggle">
-        {{x-toggle
-          size="small"
-          theme="material"
-          value=trustedOnly
-          onToggle=(action "toggleTrustedOnly")
-        }}
+        <XToggle
+          @size="small"
+          @theme="material"
+          @value={{trustedOnly}}
+          @onToggle={{action "toggleTrustedOnly"}}
+        />
         Trusted
       </label>
     </div>
 
     <div class="col-sm-3">
       <select onchange={{action "onFilterNamespace" value="target.value"}}>
-        <option value="">All Namespaces</option>
+        <option value="">
+          All Namespaces
+        </option>
         {{#each namespaces as |ns|}}
           {{#if (eq ns filteringNamespace)}}
-            <option value={{ns}} selected="selected">{{ns}}</option>
+            <option value={{ns}} selected="selected">
+              {{ns}}
+            </option>
           {{else}}
-            <option value={{ns}}>{{ns}}</option>
+            <option value={{ns}}>
+              {{ns}}
+            </option>
           {{/if}}
         {{/each}}
       </select>
-      <span class="control-icon">{{fa-icon "caret-down"}}</span>
+      <span class="control-icon">
+        <FaIcon @icon="caret-down" />
+      </span>
     </div>
 
     <div class="col-sm-3">
       <select onchange={{action "onFilterMaintainer" value="target.value"}}>
-        <option value="">All Maintainers</option>
+        <option value="">
+          All Maintainers
+        </option>
         {{#each maintainers as |m|}}
           {{#if (eq ns filteringMaintainer)}}
-            <option value={{m}} selected="selected">{{m}}</option>
+            <option value={{m}} selected="selected">
+              {{m}}
+            </option>
           {{else}}
-            <option value={{m}}>{{m}}</option>
+            <option value={{m}}>
+              {{m}}
+            </option>
           {{/if}}
         {{/each}}
       </select>
-      <span class="control-icon">{{fa-icon "caret-down"}}</span>
+      <span class="control-icon">
+        <FaIcon @icon="caret-down" />
+      </span>
     </div>
 
     <div class="col-sm-5">
-      <input value="" placeholder="Search {{collectionType}}" type="search" oninput={{action (mut query) value="target.value"}}>
-      <span class="control-icon">{{fa-icon "search"}}</span>
+      <input
+        value=""
+        placeholder="Search {{collectionType}}"
+        type="search"
+        oninput={{action (mut query) value="target.value"}}
+      />
+      <span class="control-icon">
+        <FaIcon @icon="search" />
+      </span>
     </div>
   </div>
 
@@ -69,21 +109,35 @@
     tableClassNames="collection-list-table"
     extra=(hash routes=routes) as |t|
   }}
-    {{t.head
-      onColumnClick=(action "sortByColumn")
-      iconSortable="fa fa-sort"
-      iconAscending="fa fa-sort-asc"
-      iconDescending="fa fa-sort-desc"
-      resizeOnDrag=true
-    }}
-    {{#t.body canSelect=false as |body|}}
+    <t.head
+      @onColumnClick={{action "sortByColumn"}}
+      @iconSortable="fa fa-sort"
+      @iconAscending="fa fa-sort-asc"
+      @iconDescending="fa fa-sort-desc"
+      @resizeOnDrag={{true}}
+    />
+    <t.body @canSelect={{false}} as |body|>
       {{#if table.isEmpty}}
-        {{#body.no-data}}
+        <body.no-data>
           Sorry! No result is found.
-          {{#if filteringNamespace}} under <b><i>{{filteringNamespace}}</i></b>{{/if}}
-          {{#if filteringMaintainer}} by <b><i>{{filteringMaintainer}}</i></b>{{/if}}
-        {{/body.no-data}}
+          {{#if filteringNamespace}}
+            under
+            <b>
+              <i>
+                {{filteringNamespace}}
+              </i>
+            </b>
+          {{/if}}
+          {{#if filteringMaintainer}}
+            by
+            <b>
+              <i>
+                {{filteringMaintainer}}
+              </i>
+            </b>
+          {{/if}}
+        </body.no-data>
       {{/if}}
-    {{/t.body}}
+    </t.body>
   {{/light-table}}
 </section>

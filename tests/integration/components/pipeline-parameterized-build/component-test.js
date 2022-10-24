@@ -18,8 +18,8 @@ module(
       });
 
       await render(hbs`{{pipeline-parameterized-build
-  buildPipelineParameters=buildPipelineParameters
-  showSubmitButton=showSubmitButton}}`);
+buildPipelineParameters=buildPipelineParameters
+showSubmitButton=showSubmitButton}}`);
       assert.dom('input').exists({ count: 2 }, 'There are 2 parameters');
       assert
         .dom('button[type=submit]')
@@ -49,9 +49,9 @@ module(
 
       // Template block usage:
       await render(hbs`
-  {{#pipeline-parameterized-build buildPipelineParameters=buildPipelineParameters as |parameterizedBuild| }}
-    <button class="test-button is-primary" {{action "checkParameters" parameterizedBuild.parameters}}>Test</button>
-  {{/pipeline-parameterized-build}}
+{{#pipeline-parameterized-build buildPipelineParameters=buildPipelineParameters as |parameterizedBuild| }}
+  <button class="test-button is-primary" {{action "checkParameters" parameterizedBuild.parameters}}>Test</button>
+{{/pipeline-parameterized-build}}
 `);
       await click('button.test-button');
     });
@@ -66,8 +66,8 @@ module(
       });
 
       await render(hbs`{{pipeline-parameterized-build
-  buildPipelineParameters=buildPipelineParameters
-  showSubmitButton=showSubmitButton}}`);
+buildPipelineParameters=buildPipelineParameters
+showSubmitButton=showSubmitButton}}`);
       assert.dom('.form-group').exists({ count: 2 }, 'There are 2 parameters');
       assert
         .dom('.ember-basic-dropdown')
@@ -97,8 +97,8 @@ module(
       });
 
       await render(hbs`{{pipeline-parameterized-build
-  buildPipelineParameters=buildPipelineParameters
-  showSubmitButton=showSubmitButton}}`);
+buildPipelineParameters=buildPipelineParameters
+showSubmitButton=showSubmitButton}}`);
       assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
       assert
         .dom('.fa-question-circle')
@@ -136,9 +136,9 @@ module(
       });
 
       await render(hbs`{{pipeline-parameterized-build
-  pipeline=pipeline
-  buildPipelineParameters=buildPipelineParameters
-  showSubmitButton=showSubmitButton}}`);
+pipeline=pipeline
+buildPipelineParameters=buildPipelineParameters
+showSubmitButton=showSubmitButton}}`);
       assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
       assert
         .dom('.fa-exclamation-triangle')

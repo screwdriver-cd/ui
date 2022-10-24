@@ -1,3 +1,7 @@
-{{pipeline-header pipeline=pipeline collections=collections addToCollection=(action "addToCollection")}}
+<PipelineHeader
+  @pipeline={{pipeline}}
+  @collections={{collections}}
+  @addToCollection={{action "addToCollection"}}
+/>
 
 {{outlet}}

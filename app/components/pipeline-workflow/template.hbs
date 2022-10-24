@@ -1,127 +1,201 @@
 {{#if (and (is-fulfilled selectedEventObj.builds) (is-fulfilled graph))}}
-  {{#workflow-graph-d3
-    jobId=jobId
-    pipeline=pipeline
-    completeWorkflowGraph=completeWorkflowGraph
-    showDownstreamTriggers=showDownstreamTriggers
-    showPRJobs=showPRJobs
-    selectedEventObj=selectedEventObj
-    selectedEventObjStatus=selectedEventObj.status
-    builds=selectedEventObj.builds
-    jobs=jobs
-    prJobs=prJobs
-    workflowGraph=selectedEventObj.workflowGraph
-    startFrom=selectedEventObj.startFrom
-    causeMessage=selectedEventObj.causeMessage
-    graphClicked=(action "graphClicked")
-    isSkipped=selectedEventObj.isSkipped
-  }}
-    {{workflow-tooltip
-      pipeline=pipeline
-      tooltipData=tooltipData
-      isPrChainJob=isPrChainJob
-      prBuildExists=prBuildExists
-      displayRestartButton=displayRestartButton
-      stopBuild=stopBuild
-      showTooltip=showTooltip
-      showTooltipPosition=showTooltipPosition
-      setJobState=setJobState
-      confirmStartBuild=(action "confirmStartBuild")
-    }}
-  {{/workflow-graph-d3}}
+  <WorkflowGraphD3
+    @jobId={{jobId}}
+    @pipeline={{pipeline}}
+    @completeWorkflowGraph={{completeWorkflowGraph}}
+    @showDownstreamTriggers={{showDownstreamTriggers}}
+    @showPRJobs={{showPRJobs}}
+    @selectedEventObj={{selectedEventObj}}
+    @selectedEventObjStatus={{selectedEventObj.status}}
+    @builds={{selectedEventObj.builds}}
+    @jobs={{jobs}}
+    @prJobs={{prJobs}}
+    @workflowGraph={{selectedEventObj.workflowGraph}}
+    @startFrom={{selectedEventObj.startFrom}}
+    @causeMessage={{selectedEventObj.causeMessage}}
+    @graphClicked={{action "graphClicked"}}
+    @isSkipped={{selectedEventObj.isSkipped}}
+  >
+    <WorkflowTooltip
+      @pipeline={{pipeline}}
+      @tooltipData={{tooltipData}}
+      @isPrChainJob={{isPrChainJob}}
+      @prBuildExists={{prBuildExists}}
+      @displayRestartButton={{displayRestartButton}}
+      @stopBuild={{stopBuild}}
+      @showTooltip={{showTooltip}}
+      @showTooltipPosition={{showTooltipPosition}}
+      @setJobState={{setJobState}}
+      @confirmStartBuild={{action "confirmStartBuild"}}
+    />
+  </WorkflowGraphD3>
   {{#if isShowingModal}}
-    {{#modal-dialog
-      targetAttachment="center"
-      translucentOverlay=true
-      containerClass="detached-confirm-dialog"
-    }}
-      <h3>Are you sure to start?</h3>
+    <ModalDialog
+      @targetAttachment="center"
+      @translucentOverlay={{true}}
+      @containerClass="detached-confirm-dialog"
+    >
+      <h3>
+        Are you sure to start?
+      </h3>
       <p>
-        Job: <code>{{tooltipData.job.name}}</code><br>
-        Commit: <code>{{selectedEventObj.truncatedMessage}}</code>
-        <a class={{if (eq selectedEventObj.sha latestCommit.sha) "latest-commit"}} href={{selectedEventObj.commit.url}}>
+        Job:
+        <code>
+          {{tooltipData.job.name}}
+        </code>
+        <br />
+        Commit:
+        <code>
+          {{selectedEventObj.truncatedMessage}}
+        </code>
+        <a
+          class={{if
+            (eq selectedEventObj.sha latestCommit.sha)
+            "latest-commit"
+          }}
+          href={{selectedEventObj.commit.url}}
+        >
           #{{selectedEventObj.truncatedSha}}
         </a>
-        {{#if (and (not-eq selectedEventObj.type "pr") (not-eq selectedEventObj.sha latestCommit.sha))}}
-          <br>
-          <div class="commit-warning alert alert-warning">{{fa-icon "exclamation-triangle"}} This is <strong>NOT</strong> the latest commit.</div>
+        {{#if
+          (and
+            (not-eq selectedEventObj.type "pr")
+            (not-eq selectedEventObj.sha latestCommit.sha)
+          )
+        }}
+          <br />
+          <div class="commit-warning alert alert-warning">
+            <FaIcon @icon="exclamation-triangle" /> This is
+            <strong>
+              NOT
+            </strong>
+            the latest commit.
+          </div>
         {{/if}}
       </p>
       {{#if (eq tooltipData.job.status "FROZEN")}}
         {{#if (get-length tooltipData.selectedEvent.meta.parameters)}}
-          {{#pipeline-parameterized-build
-            pipeline=pipeline
-            buildPipelineParameters=tooltipData.pipelineParameters
-            buildJobParameters=tooltipData.jobParameters
-            startFrom=tooltipData.job.name
-            as |parameterizedBuild| }}
+          <PipelineParameterizedBuild
+            @pipeline={{pipeline}}
+            @buildPipelineParameters={{tooltipData.pipelineParameters}}
+            @buildJobParameters={{tooltipData.jobParameters}}
+            @startFrom={{tooltipData.job.name}} as |parameterizedBuild|
+          >
             <div class="form-group form-horizontal">
-              <label class="control-label col-md-4">Reason:</label>
+              <label class="control-label col-md-4">
+                Reason:
+              </label>
               <div class="col-md-8">
-                {{input class="form-control" type="text" value=reason
-                  placeholder="Please enter reason"}}
+                <Input
+                  class="form-control"
+                  @type="text"
+                  @value={{reason}}
+                  placeholder="Please enter reason"
+                />
               </div>
             </div>
             <div class="row">
               <div class="col-xs-6">
-                <button class="d-button is-primary"
-                disabled={{eq (get-length reason) 0}}
-                {{action "startDetachedBuild" (hash reason=reason
-                parameters=parameterizedBuild.parameters)}}>
+                <button
+                  class="d-button is-primary"
+                  disabled={{eq (get-length reason) 0}}
+                  {{action
+                    "startDetachedBuild"
+                    (hash
+                      reason=reason parameters=parameterizedBuild.parameters
+                    )
+                  }}
+                >
                   Yes
                 </button>
               </div>
               <div class="col-xs-6 right">
-                <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+                <button
+                  class="d-button is-secondary"
+                  {{action "cancelStartBuild"}}
+                >
+                  No
+                </button>
               </div>
             </div>
-          {{/pipeline-parameterized-build}}
+          </PipelineParameterizedBuild>
         {{else}}
           <div class="form-group form-horizontal">
-            <label class="control-label col-md-4">Reason:</label>
+            <label class="control-label col-md-4">
+              Reason:
+            </label>
             <div class="col-md-8">
-              {{input class="form-control" type="text" value=reason
-                placeholder="Please enter reason"}}
+              <Input
+                class="form-control"
+                @type="text"
+                @value={{reason}}
+                placeholder="Please enter reason"
+              />
             </div>
           </div>
           <div class="row non-parameters-build">
             <div class="col-xs-6">
-              <button class="d-button is-primary" disabled={{eq (get-length reason) 0}}
-              {{action "startDetachedBuild" (hash reason=reason)}}>
+              <button
+                class="d-button is-primary"
+                disabled={{eq (get-length reason) 0}}
+                {{action "startDetachedBuild" (hash reason=reason)}}
+              >
                 Yes
               </button>
             </div>
             <div class="col-xs-6 right">
-              <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+              <button
+                class="d-button is-secondary"
+                {{action "cancelStartBuild"}}
+              >
+                No
+              </button>
             </div>
           </div>
         {{/if}}
       {{else if (get-length tooltipData.selectedEvent.meta.parameters)}}
-        {{#pipeline-parameterized-build
-          pipeline=pipeline
-          buildPipelineParameters=buildPipelineParameters
-          buildJobParameters=buildJobParameters
-          startFrom=tooltipData.job.name
-          as |parameterizedBuild| }}
+        <PipelineParameterizedBuild
+          @pipeline={{pipeline}}
+          @buildPipelineParameters={{buildPipelineParameters}}
+          @buildJobParameters={{buildJobParameters}}
+          @startFrom={{tooltipData.job.name}} as |parameterizedBuild|
+        >
           <div class="row">
             <div class="col-xs-6">
-              <button class="d-button is-primary" {{action "startDetachedBuild" (hash parameters=parameterizedBuild.parameters)}}>Yes</button>
+              <button
+                class="d-button is-primary"
+                {{action
+                  "startDetachedBuild"
+                  (hash parameters=parameterizedBuild.parameters)
+                }}
+              >
+                Yes
+              </button>
             </div>
             <div class="col-xs-6 right">
-              <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+              <button
+                class="d-button is-secondary"
+                {{action "cancelStartBuild"}}
+              >
+                No
+              </button>
             </div>
           </div>
-        {{/pipeline-parameterized-build}}
+        </PipelineParameterizedBuild>
       {{else}}
         <div class="row non-parameters-build">
           <div class="col-xs-6">
-            <button class="d-button is-primary" {{action "startDetachedBuild"}}>Yes</button>
+            <button class="d-button is-primary" {{action "startDetachedBuild"}}>
+              Yes
+            </button>
           </div>
           <div class="col-xs-6 right">
-            <button class="d-button is-secondary" {{action "cancelStartBuild"}}>No</button>
+            <button class="d-button is-secondary" {{action "cancelStartBuild"}}>
+              No
+            </button>
           </div>
         </div>
       {{/if}}
-    {{/modal-dialog}}
+    </ModalDialog>
   {{/if}}
 {{/if}}

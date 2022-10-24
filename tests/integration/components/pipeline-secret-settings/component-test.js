@@ -43,8 +43,8 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
     assert.dom('tfoot tr').exists({ count: 1 });
 
     // eye-icons are present and have fa-eye class as default
-    assert.dom('tbody i').hasClass('fa-eye');
-    assert.dom('tfoot i').hasClass('fa-eye');
+    assert.dom('tbody svg').hasClass('fa-eye');
+    assert.dom('tfoot svg').hasClass('fa-eye');
 
     // the type of input is a password as default
     assert.dom('tbody .pass input').hasAttribute('type', 'password');
@@ -232,20 +232,20 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
       hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
     );
 
-    await click('tbody i');
-    await click('tfoot i');
+    await click('tbody svg');
+    await click('tfoot svg');
 
-    assert.dom('tbody i').hasClass('fa-eye-slash');
+    assert.dom('tbody svg').hasClass('fa-eye-slash');
     assert.dom('tbody .pass input').hasAttribute('type', 'text');
-    assert.dom('tfoot i').hasClass('fa-eye-slash');
+    assert.dom('tfoot svg').hasClass('fa-eye-slash');
     assert.dom('tfoot .pass input').hasAttribute('type', 'text');
 
-    await click('tbody i');
-    await click('tfoot i');
+    await click('tbody svg');
+    await click('tfoot svg');
 
-    assert.dom('tbody i').hasClass('fa-eye');
+    assert.dom('tbody svg').hasClass('fa-eye');
     assert.dom('tbody .pass input').hasAttribute('type', 'password');
-    assert.dom('tfoot i').hasClass('fa-eye');
+    assert.dom('tfoot svg').hasClass('fa-eye');
     assert.dom('tfoot .pass input').hasAttribute('type', 'password');
   });
 });

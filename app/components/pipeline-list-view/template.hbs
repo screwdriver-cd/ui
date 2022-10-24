@@ -1,52 +1,60 @@
 <div class="row list-view-nav">
   <div class="col-xs-2">
-    {{#bs-button-group
-            class="view-toggle"
-            value=showListView
-            type="radio"
-            onChange=(action setShowListView) as |bg|
-    }}
-      {{#bg.button value=false}}{{fa-icon "th"}}{{/bg.button}}
-      {{#bg.button value=true}}{{fa-icon "th-list"}}{{/bg.button}}
-    {{/bs-button-group}}
+    <BsButtonGroup
+      class="view-toggle"
+      @value={{showListView}}
+      @type="radio"
+      @onChange={{action setShowListView}} as |bg|
+    >
+      <bg.button @value={{false}}>
+        <FaIcon @icon="th" />
+      </bg.button>
+      <bg.button @value={{true}}>
+        <FaIcon @icon="th-list" />
+      </bg.button>
+    </BsButtonGroup>
   </div>
 </div>
 
 {{#light-table table height="60vh" as |t|}}
-  {{t.head
-    onColumnClick=(action "onColumnClick")
-    iconSortable="fa fa-sort"
-    iconAscending="fa fa-sort-asc"
-    iconDescending="fa fa-sort-desc"
-    fixed=true}}
-  {{#t.body
-    canSelect=false
-    scrollBuffer=700
-    onScrolledToBottom=(action "onScrolledToBottom") as |body|
-  }}
+  <t.head
+    @onColumnClick={{action "onColumnClick"}}
+    @iconSortable="fa fa-sort"
+    @iconAscending="fa fa-sort-asc"
+    @iconDescending="fa fa-sort-desc"
+    @fixed={{true}}
+  />
+  <t.body
+    @canSelect={{false}}
+    @scrollBuffer={{700}}
+    @onScrolledToBottom={{action "onScrolledToBottom"}} as |body|
+  >
     {{#if isLoading}}
-      {{#body.loader}}
+      <body.loader>
         Loading...
-      {{/body.loader}}
+      </body.loader>
     {{/if}}
-  {{/t.body}}
+  </t.body>
 {{/light-table}}
 
 {{#if isShowingModal}}
-  {{#modal-dialog
-    targetAttachment="center"
-    translucentOverlay=true
-    clickOutsideToClose=true
-    onClickOverlay=(action "resetForm")
-    containerClass="detached-confirm-dialog"
-  }}
-    <h3>Are you sure to start?</h3>
-    {{pipeline-parameterized-build
-      pipeline=pipeline
-      showSubmitButton=true
-      buildPipelineParameters=pipelineParameters
-      buildJobParameters=jobParameters
-      onSave=(action "startBuild")
-      onClose=(action "closeModal")}}
-  {{/modal-dialog}}
+  <ModalDialog
+    @targetAttachment="center"
+    @translucentOverlay={{true}}
+    @clickOutsideToClose={{true}}
+    @onClickOverlay={{action "resetForm"}}
+    @containerClass="detached-confirm-dialog"
+  >
+    <h3>
+      Are you sure to start?
+    </h3>
+    <PipelineParameterizedBuild
+      @pipeline={{pipeline}}
+      @showSubmitButton={{true}}
+      @buildPipelineParameters={{pipelineParameters}}
+      @buildJobParameters={{jobParameters}}
+      @onSave={{action "startBuild"}}
+      @onClose={{action "closeModal"}}
+    />
+  </ModalDialog>
 {{/if}}

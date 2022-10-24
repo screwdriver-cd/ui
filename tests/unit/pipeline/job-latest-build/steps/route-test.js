@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
+import sinon from 'sinon';
 
 module('Unit | Route | pipeline/job-latest-build/steps', function (hooks) {
   setupTest(hooks);
@@ -11,12 +11,14 @@ module('Unit | Route | pipeline/job-latest-build/steps', function (hooks) {
     assert.ok(route);
   });
 
-  sinonTest('it redirects to build step page', function (assert) {
+  test('it redirects to build step page', function (assert) {
     assert.expect(3);
 
     const route = this.owner.lookup('route:pipeline/job-latest-build/steps');
-    const transitionStub = this.stub(route, 'transitionTo');
-    const paramStub = this.stub(route, 'paramsFor').returns({ step_name: 123 });
+    const transitionStub = sinon.stub(route, 'transitionTo');
+    const paramStub = sinon
+      .stub(route, 'paramsFor')
+      .returns({ step_name: 123 });
     const model = {
       pipelineId: 1,
       id: 2

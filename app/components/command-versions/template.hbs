@@ -1,8 +1,21 @@
-<h4>Versions:</h4>
+<h4>
+  Versions:
+</h4>
 <ul>
   {{#each commands.commandData as |c|}}
     <li>
-      {{#link-to "commands.detail" c.namespace c.name c.version}}<span class="version">{{c.version}}{{#if c.tag}} - {{c.tag}}{{/if}}</span>{{/link-to}}{{#if c.lastUpdated}} {{c.lastUpdated}}{{/if}}
+      <LinkTo
+        @route="commands.detail"
+        @models={{array c.namespace c.name c.version}}
+      >
+        <span class="version">
+          {{c.version}}{{#if c.tag}}
+            - {{c.tag}}
+          {{/if}}
+        </span>
+      </LinkTo>{{#if c.lastUpdated}}
+        {{c.lastUpdated}}
+      {{/if}}
     </li>
   {{/each}}
 </ul>

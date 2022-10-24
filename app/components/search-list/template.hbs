@@ -1,37 +1,70 @@
 {{#if addCollectionError}}
-  {{info-message message=addCollectionError type="warning" icon="exclamation-triangle"}}
+  <InfoMessage
+    @message={{addCollectionError}}
+    @type="warning"
+    @icon="exclamation-triangle"
+  />
 {{/if}}
 {{#if addCollectionSuccess}}
-  {{info-message message=addCollectionSuccess type="success" icon="check"}}
+  <InfoMessage
+    @message={{addCollectionSuccess}}
+    @type="success"
+    @icon="check"
+  />
 {{/if}}
 <div class="num-results">
-  {{if isEmpty "No results" (concat "Showing " filteredPipelines.length " result(s)")}}
+  {{if
+    isEmpty
+    "No results"
+    (concat "Showing " filteredPipelines.length " result(s)")
+  }}
 </div>
 <table>
   <thead>
     <tr>
-      <th class="appId">Name</th>
-      <th class="branch">Branch</th>
-      <th class="account">Account</th>
+      <th class="appId">
+        Name
+      </th>
+      <th class="branch">
+        Branch
+      </th>
+      <th class="account">
+        Account
+      </th>
       {{#if session.isAuthenticated}}
-        <th class="add">Add to Collection</th>
+        <th class="add">
+          Add to Collection
+        </th>
       {{/if}}
     </tr>
   </thead>
   <tbody>
     {{#each filteredPipelines as |pipeline|}}
       <tr>
-        <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
-        <td class="branch"><a href={{branch-url-encode pipeline.hubUrl}}>{{fa-icon "code-fork"}}{{pipeline.branch}}</a></td>
-        <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
+        <td class="appId">
+          {{#highlight-terms query}}
+            <LinkTo @route="pipeline" @model={{pipeline.id}}>
+              {{pipeline.appId}}
+            </LinkTo>
+          {{/highlight-terms}}
+        </td>
+        <td class="branch">
+          <a href={{branch-url-encode pipeline.hubUrl}}>
+            <FaIcon @icon="code-branch" />{{pipeline.branch}}
+          </a>
+        </td>
+        <td class="account">
+          <FaIcon @icon={{pipeline.scmIcon}} @prefix="fab" /> {{pipeline.scm}}
+        </td>
         {{#if session.isAuthenticated}}
           <td class="add">
-            {{collection-dropdown
-              pipeline=pipeline
-              collections=collections
-              addToCollection=(action "addToCollection")
-              addCollectionError=addCollectionError
-              addCollectionSuccess=addCollectionSuccess}}
+            <CollectionDropdown
+              @pipeline={{pipeline}}
+              @collections={{collections}}
+              @addToCollection={{action "addToCollection"}}
+              @addCollectionError={{addCollectionError}}
+              @addCollectionSuccess={{addCollectionSuccess}}
+            />
           </td>
         {{/if}}
       </tr>
@@ -39,7 +72,12 @@
   </tbody>
 </table>
 {{#if showMore}}
-  <a class="showMore" {{action "moreClick"}}>Show more results...</a>
+  <a class="showMore" {{action "moreClick"}}>
+    Show more results...
+  </a>
 {{/if}}
 
-{{collection-modal showModal=showModal addNewCollection=addNewCollection}}
+<CollectionModal
+  @showModal={{showModal}}
+  @addNewCollection={{addNewCollection}}
+/>

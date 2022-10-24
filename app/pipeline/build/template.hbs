@@ -1,60 +1,69 @@
-{{build-banner
-  buildContainer=build.buildContainer
-  duration=build.totalDuration
-  blockDuration=build.blockedDuration
-  imagePullDuration=build.imagePullDuration
-  buildDuration=build.buildDuration
-  buildStatus=build.status
-  buildCreate=build.createTime
-  buildStart=build.startTime
-  buildEnd=build.endTime
-  buildSteps=build.steps
-  buildId=build.id
-  buildMeta=build.meta
-  jobName=job.name
-  jobId=job.id
-  jobDisabled=jobDisabled
-  annotations=job.annotations
-  pipelineId=pipeline.id
-  pipelineName=pipeline.name
-  isAuthenticated=session.isAuthenticated
-  event=event
-  prEvents=prEvents
-  prNumber=job.prNumber
-  onStart=(action "startBuild")
-  onStop=(action "stopBuild")
-  reloadBuild=(action "reload")
-  changeBuild=(action "changeBuild")
-}}
+<BuildBanner
+  @buildContainer={{build.buildContainer}}
+  @duration={{build.totalDuration}}
+  @blockDuration={{build.blockedDuration}}
+  @imagePullDuration={{build.imagePullDuration}}
+  @buildDuration={{build.buildDuration}}
+  @buildStatus={{build.status}}
+  @buildCreate={{build.createTime}}
+  @buildStart={{build.startTime}}
+  @buildEnd={{build.endTime}}
+  @buildSteps={{build.steps}}
+  @buildId={{build.id}}
+  @buildMeta={{build.meta}}
+  @jobName={{job.name}}
+  @jobId={{job.id}}
+  @jobDisabled={{jobDisabled}}
+  @annotations={{job.annotations}}
+  @pipelineId={{pipeline.id}}
+  @pipelineName={{pipeline.name}}
+  @isAuthenticated={{session.isAuthenticated}}
+  @event={{event}}
+  @prEvents={{prEvents}}
+  @prNumber={{job.prNumber}}
+  @onStart={{action "startBuild"}}
+  @onStop={{action "stopBuild"}}
+  @reloadBuild={{action "reload"}}
+  @changeBuild={{action "changeBuild"}}
+/>
 
 {{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false
-    targetAttachment="center"
-    translucentOverlay=true
-  }}
-    {{loading-view}}
-  {{/modal-dialog}}
+  <ModalDialog
+    @clickOutsideToClose={{false}}
+    @targetAttachment="center"
+    @translucentOverlay={{true}}
+  >
+    <LoadingView />
+  </ModalDialog>
 {{/if}}
 
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+<InfoMessage
+  @message={{errorMessage}}
+  @type="warning"
+  @icon="exclamation-triangle"
+/>
 {{#if build.statusMessage}}
-  {{info-message message=build.statusMessage type="warning" icon="exclamation-triangle"}}
+  <InfoMessage
+    @message={{build.statusMessage}}
+    @type="warning"
+    @icon="exclamation-triangle"
+  />
 {{/if}}
 
 {{#if stepList}}
-  {{build-step-collection
-    preselectedStepName=preselectedStepName
-    selectedArtifact=selectedArtifact
-    pipelineId=pipeline.id
-    buildStatus=build.status
-    buildId=build.id
-    buildSteps=build.steps
-    buildStart=build.startTime
-    buildStats=build.stats
-    activeTab=activeTab
-    changeBuildStep=(action "changeBuildStep")
-    changeRouteTo=(action "changeRouteTo")
-  }}
+  <BuildStepCollection
+    @preselectedStepName={{preselectedStepName}}
+    @selectedArtifact={{selectedArtifact}}
+    @pipelineId={{pipeline.id}}
+    @buildStatus={{build.status}}
+    @buildId={{build.id}}
+    @buildSteps={{build.steps}}
+    @buildStart={{build.startTime}}
+    @buildStats={{build.stats}}
+    @activeTab={{activeTab}}
+    @changeBuildStep={{action "changeBuildStep"}}
+    @changeRouteTo={{action "changeRouteTo"}}
+  />
 {{/if}}
 
 {{outlet}}

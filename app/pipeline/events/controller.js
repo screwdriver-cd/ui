@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { computed, get } from '@ember/object';
+import { computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
@@ -308,7 +308,11 @@ export default Controller.extend(ModelReloaderMixin, {
           });
         }
         if (completeGraph) {
-          completeGraph.nodes = uniqBy(completeGraph.nodes || [], n => n.name);
+          set(
+            completeGraph,
+            'nodes',
+            uniqBy(completeGraph.nodes || [], n => n.name)
+          );
 
           completeGraph.edges = (completeGraph.edges || []).filter(e => {
             const srcFound =

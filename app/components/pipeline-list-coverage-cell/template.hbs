@@ -4,7 +4,10 @@
   {{else}}
     {{#if loaded}}
       <span class="coverage-value">
-        {{get coverage "coverage"}}{{if (is-number (get coverage "coverage")) "%"}}
+        {{get coverage "coverage"}}{{if
+          (is-number (get coverage "coverage"))
+          "%"
+        }}
       </span>
     {{else}}
       N/A

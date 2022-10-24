@@ -33,19 +33,17 @@ module('Unit | Controller | search', function (hooks) {
       })
     ];
 
-    controller.set('store', {
-      query(modelName, params) {
-        assert.strictEqual(modelName, 'pipeline');
-        assert.deepEqual(params, {
-          page: 2,
-          count: 3,
-          sortBy: 'name',
-          sort: 'ascending'
-        });
+    controller.store.query = (modelName, params) => {
+      assert.strictEqual(modelName, 'pipeline');
+      assert.deepEqual(params, {
+        page: 2,
+        count: 3,
+        sortBy: 'name',
+        sort: 'ascending'
+      });
 
-        return resolve(pipelineModelMockArray);
-      }
-    });
+      return resolve(pipelineModelMockArray);
+    };
 
     controller.send('updatePipelines', { page: 2 });
   });
@@ -69,20 +67,18 @@ module('Unit | Controller | search', function (hooks) {
       })
     ];
 
-    controller.set('store', {
-      query(modelName, params) {
-        assert.strictEqual(modelName, 'pipeline');
-        assert.deepEqual(params, {
-          page: 2,
-          count: 3,
-          sortBy: 'name',
-          sort: 'ascending',
-          search: 'ba'
-        });
+    controller.store.query = (modelName, params) => {
+      assert.strictEqual(modelName, 'pipeline');
+      assert.deepEqual(params, {
+        page: 2,
+        count: 3,
+        sortBy: 'name',
+        sort: 'ascending',
+        search: 'ba'
+      });
 
-        return resolve(pipelineModelMockArray);
-      }
-    });
+      return resolve(pipelineModelMockArray);
+    };
 
     controller.send('updatePipelines', { page: 2, search: 'ba' });
   });
@@ -122,14 +118,12 @@ module('Unit | Controller | search', function (hooks) {
       }
     };
 
-    controller.set('store', {
-      findRecord(modelName, collectionId) {
-        assert.strictEqual(modelName, 'collection');
-        assert.strictEqual(collectionId, 1);
+    controller.store.findRecord = (modelName, collectionId) => {
+      assert.strictEqual(modelName, 'collection');
+      assert.strictEqual(collectionId, 1);
 
-        return resolve(collectionModelMock);
-      }
-    });
+      return resolve(collectionModelMock);
+    };
 
     // Add pipeline with id 3 to collection with id 1
     controller.send('addToCollection', 3, 1);

@@ -9,8 +9,10 @@ export default Component.extend({
   description: null,
   errorMessage: null,
   store: service(),
-  isSaveDisabled: computed('name', function isSaveDisabled() {
-    return isEmpty(this.name);
+  isSaveDisabled: computed('name', {
+    get() {
+      return isEmpty(this.name);
+    }
   }),
   actions: {
     setModal(open) {

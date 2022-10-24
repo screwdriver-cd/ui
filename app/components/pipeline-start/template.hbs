@@ -2,54 +2,84 @@
   {{#if hasLargeNumberOfParameters}}
     {{#if (not prNum)}}
       <div class="btn-group">
-        <button {{action "startBuild"}} class="btn start-button" title="Start a new event from latest commit">Start</button>
-        <button class="btn start-with-parameters-button" onClick={{action "toggleModal"}}>{{fa-icon (concat "caret-" direction)}}</button>
+        <button
+          class="btn start-button"
+          title="Start a new event from latest commit"
+          {{action "startBuild"}}
+        >
+          Start
+        </button>
+        <button
+          class="btn start-with-parameters-button"
+          onClick={{action "toggleModal"}}
+        >
+          <FaIcon @icon={{(concat "caret-" direction)}} />
+        </button>
       </div>
     {{/if}}
     {{#if isShowingModal}}
-      {{#modal-dialog
-        targetAttachment="center"
-        translucentOverlay=true
-        clickOutsideToClose=true
-        onClickOverlay=(action "resetForm")
-        containerClass="detached-confirm-dialog"
-      }}
-        <h3>Are you sure to start?</h3>
-        {{pipeline-parameterized-build
-          pipeline=pipeline
-          showSubmitButton=true
-          buildPipelineParameters=pipelineParameters
-          buildJobParameters=jobParameters
-          onSave=(action "startBuild")
-          onClose=(action "toggleModal")}}
-      {{/modal-dialog}}
+      <ModalDialog
+        @targetAttachment="center"
+        @translucentOverlay={{true}}
+        @clickOutsideToClose={{true}}
+        @onClickOverlay={{action "resetForm"}}
+        @containerClass="detached-confirm-dialog"
+      >
+        <h3>
+          Are you sure to start?
+        </h3>
+        <PipelineParameterizedBuild
+          @pipeline={{pipeline}}
+          @showSubmitButton={{true}}
+          @buildPipelineParameters={{pipelineParameters}}
+          @buildJobParameters={{jobParameters}}
+          @onSave={{action "startBuild"}}
+          @onClose={{action "toggleModal"}}
+        />
+      </ModalDialog>
     {{/if}}
   {{else}}
-    {{#bs-dropdown
-      onHide=(action "resetForm")
-      closeOnMenuClick=false as |dd|}}
+    <BsDropdown
+      @onHide={{action "resetForm"}}
+      @closeOnMenuClick={{false}} as |dd|
+    >
       <div class="btn-group">
         {{#if (not prNum)}}
-          <button {{action "startBuild"}} class="start-button btn" title="Start a new event from latest commit">Start</button>
+          <button
+            class="start-button btn"
+            title="Start a new event from latest commit"
+            {{action "startBuild"}}
+          >
+            Start
+          </button>
         {{/if}}
-        {{#dd.button class="start-with-parameters-button"
-          onClick=(action "toggleDropdown" dd.toggleDropdown)}}
-          {{fa-icon (concat "caret-" direction)}}
-        {{/dd.button}}
+        <dd.button
+          class="start-with-parameters-button"
+          @onClick={{action "toggleDropdown" dd.toggleDropdown}}
+        >
+          <FaIcon @icon={{(concat "caret-" direction)}} />
+        </dd.button>
       </div>
-      {{#dd.menu class="start-with-parameters-menu"}}
-        {{pipeline-parameterized-build
-          pipeline=pipeline
-          showSubmitButton=true
-          buildPipelineParameters=pipelineParameters
-          buildJobParameters=jobParameters
-          onSave=(action "startBuild")
-          onClose=(action dd.closeDropdown)}}
-      {{/dd.menu}}
-    {{/bs-dropdown}}
+      <dd.menu class="start-with-parameters-menu">
+        <PipelineParameterizedBuild
+          @pipeline={{pipeline}}
+          @showSubmitButton={{true}}
+          @buildPipelineParameters={{pipelineParameters}}
+          @buildJobParameters={{jobParameters}}
+          @onSave={{action "startBuild"}}
+          @onClose={{action dd.closeDropdown}}
+        />
+      </dd.menu>
+    </BsDropdown>
   {{/if}}
 {{else}}
   {{#if (not prNum)}}
-    <button {{action "startBuild"}} class="start-button" title="Start a new event from latest commit">Start</button>
+    <button
+      class="start-button"
+      title="Start a new event from latest commit"
+      {{action "startBuild"}}
+    >
+      Start
+    </button>
   {{/if}}
 {{/if}}

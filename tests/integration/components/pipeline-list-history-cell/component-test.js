@@ -32,7 +32,7 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-  value=value
+value=value
 }}`);
 
       assert.dom('.fa-circle').hasClass('RUNNING');
@@ -48,7 +48,7 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-  value=value
+value=value
 }}`);
 
       assert.dom('.fa-circle').hasClass('RUNNING');
@@ -68,7 +68,7 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-  value=value
+value=value
 }}`);
 
       assert.dom('.fa-circle').hasClass('SUCCESS');
@@ -88,7 +88,7 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-  value=value
+value=value
 }}`);
 
       assert.dom('.fa-circle').hasClass('ABORTED');
@@ -108,7 +108,7 @@ module(
       ]);
 
       await render(hbs`{{pipeline-list-history-cell
-  value=value
+value=value
 }}`);
 
       assert.dom('.fa-circle').hasClass('RANDOM');

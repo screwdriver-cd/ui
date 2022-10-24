@@ -10,6 +10,8 @@ import makeBuilds from '../mock/builds';
 import makeGraph from '../mock/workflow-graph';
 import makeJobs from '../mock/jobs';
 
+import injectScmServiceStub from '../helpers/inject-scm';
+
 let server;
 
 let desiredEventId;
@@ -159,6 +161,8 @@ module('Acceptance | pipeline build', function (hooks) {
   });
 
   test('visiting /pipelines/4 when logged in', async function (assert) {
+    injectScmServiceStub(this);
+
     const controller = this.owner.lookup('controller:pipeline/events');
 
     await authenticateSession({ token: 'fakeToken' });

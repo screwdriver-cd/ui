@@ -5,7 +5,7 @@ import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
 
 import { setupTest } from 'ember-qunit';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
+import sinon from 'sinon';
 
 module('Unit | Route | builds', function (hooks) {
   setupTest(hooks);
@@ -16,9 +16,9 @@ module('Unit | Route | builds', function (hooks) {
     assert.ok(route);
   });
 
-  sinonTest('it redirects', function (assert) {
+  test('it redirects', function (assert) {
     const route = this.owner.lookup('route:builds');
-    const transitionStub = this.stub(route, 'transitionTo');
+    const transitionStub = sinon.stub(route, 'transitionTo');
 
     const model = {
       pipeline: { id: 1 },

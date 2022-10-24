@@ -73,7 +73,7 @@ module('Integration | Component | collection table row', function (hooks) {
       }}
     `);
 
-    await waitFor('td.status a i.fa-question-circle');
+    await waitFor('td.status a svg.fa-question-circle');
 
     assert.dom('td.collection-pipeline__choose').exists({ count: 1 });
     assert.dom('td.app-id a').hasText(mockPipeline.scmRepo.name);
@@ -84,7 +84,7 @@ module('Integration | Component | collection table row', function (hooks) {
     assert
       .dom('td.status a:nth-of-type(1)')
       .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
-    assert.dom('td.status a:nth-of-type(1) i').hasClass('fa-question-circle');
+    assert.dom('td.status a:nth-of-type(1) svg').hasClass('fa-question-circle');
     assert.dom('td.status a:nth-of-type(2)').hasText(lastEventInfo.sha);
     assert
       .dom('td.status a:nth-of-type(2)')

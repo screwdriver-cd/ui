@@ -1,19 +1,27 @@
 <div class="pipeline-search-panel">
   <div class="search-pipeline-searchbar">
-    {{input
+    <Input
       class="search-pipeline-input"
-      name="query"
+      @name="query"
       placeholder="Search Screwdriver pipelines"
-      enter=(action "searchPipelines")
-      autofocus="true"
-      value=searchTerm}}
-    <button class="search-pipeline-button" {{action "searchPipelines"}}>{{fa-icon "search"}}</button>
+      @enter={{action "searchPipelines"}}
+      @autofocus="true"
+      @value={{searchTerm}}
+    />
+    <button class="search-pipeline-button" {{action "searchPipelines"}}>
+      <FaIcon @icon="search" />
+    </button>
   </div>
   <div class="searched-pipelines">
     {{#each searchedPipelines as |pipeline|}}
       <div class="searched-pipeline">
-        <span>{{pipeline.name}}</span>
-        <span onclick={{action "selectSearchedPipeline" pipeline.id}} class="add-pipeline-button">
+        <span>
+          {{pipeline.name}}
+        </span>
+        <span
+          onclick={{action "selectSearchedPipeline" pipeline.id}}
+          class="add-pipeline-button"
+        >
           {{inline-svg "add" class="img"}}
         </span>
       </div>

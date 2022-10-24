@@ -38,7 +38,7 @@ module('Integration | Component | collection add button', function (hooks) {
 
     // Validate that list items exist
     assert.dom('.dropdown-menu > li:nth-child(1)').hasText('Test');
-    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('CREATE');
+    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('Create CREATE');
   });
 
   test('it does not render default collection', async function (assert) {
@@ -80,7 +80,7 @@ module('Integration | Component | collection add button', function (hooks) {
 
     // Validate that list items exist
     assert.dom('.dropdown-menu > li:nth-child(1)').hasText('collection2');
-    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('CREATE');
+    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('Create CREATE');
   });
 
   test('it adds a pipeline to a collection', async function (assert) {

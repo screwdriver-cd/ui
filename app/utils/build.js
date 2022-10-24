@@ -18,39 +18,50 @@ const isActiveBuild = (status, endTime) =>
 const isPRJob = jobName => /^PR-/.test(jobName);
 
 const statusIcon = (status, isLight) => {
-  let icon;
+  let icon = {
+    prefix: 'fa',
+    spin: false,
+    flip: false
+  };
 
   switch (status) {
     case 'QUEUED':
     case 'RUNNING':
-      icon = 'spinner fa-spin';
+      icon.name = 'spinner';
+      icon.spin = true;
       break;
     case 'CREATED':
     case 'SUCCESS':
-      icon = `check-circle${isLight ? '-o' : ''}`;
+      icon.name = 'check-circle';
+      icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'UNSTABLE':
-      icon = 'exclamation-circle';
+      icon.name = 'exclamation-circle';
       break;
     case 'FROZEN':
-      icon = 'fa-snowflake-o';
+      icon.name = 'snowflake';
+      icon.prefix = 'fas';
       break;
     case 'BLOCKED':
     case 'COLLAPSED':
-      icon = 'fa-ban fa-flip-horizontal';
+      icon.name = 'ban';
+      icon.flip = true;
       break;
     case 'FAILURE':
-      icon = `times-circle${isLight ? '-o' : ''}`;
+      icon.name = 'times-circle';
+      icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'ABORTED':
-      icon = `stop-circle${isLight ? '-o' : ''}`;
+      icon.name = 'stop-circle';
+      icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'SKIPPED':
       // TODO: Replace skipped property if necessary.
-      icon = 'exclamation-circle';
+      icon.name = 'exclamation-circle';
       break;
     default:
-      icon = 'circle-o';
+      icon.name = 'circle';
+      icon.prefix = 'far';
       break;
   }
 

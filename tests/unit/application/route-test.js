@@ -1,8 +1,7 @@
 import { setupTest } from 'ember-qunit';
-import { module } from 'qunit';
+import { module, test } from 'qunit';
 import { later } from '@ember/runloop';
 import sinon from 'sinon';
-import test from 'ember-sinon-qunit/test-support/test';
 import injectScmServiceStub from '../../helpers/inject-scm';
 
 module('Unit | Route | application', function (hooks) {
@@ -24,7 +23,7 @@ module('Unit | Route | application', function (hooks) {
 
   test('it should reload on sessionInvalidated', function (assert) {
     const route = this.owner.lookup('route:application');
-    const reloadStub = this.stub(route, 'reloadPage');
+    const reloadStub = sinon.stub(route, 'reloadPage');
 
     route.sessionInvalidated();
     assert.ok(reloadStub.calledOnce, 'reloadPage was not called');

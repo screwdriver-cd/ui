@@ -1,32 +1,64 @@
 <div class="top">
   {{inline-svg "Screwdriver_Icon_Full" class="img"}}
-  <h1>Introducing Screwdriver</h1>
-  <span>Build. Test. Deliver.</span>
+  <h1>
+    Introducing Screwdriver
+  </h1>
+  <span>
+    Build. Test. Deliver.
+  </span>
 </div>
 <div class="start">
   <div>
-    <h2>Getting started, by the numbers...</h2>
+    <h2>
+      Getting started, by the numbers...
+    </h2>
     <ul>
       <li>
-        <div class="num"><span>1</span></div>
+        <div class="num">
+          <span>
+            1
+          </span>
+        </div>
         <span>
           For
           <select {{action "changeLanguage" on="change"}}>
             {{#each languages as |lang|}}
-              <option value={{lang.url}}>{{lang.name}}</option>
+              <option value={{lang.url}}>
+                {{lang.name}}
+              </option>
             {{/each}}
-          </select>,
-          <a href={{forkUrl}} target="_blank" rel="noopener"><span>fork this repo</span></a>
+          </select>
+          ,
+          <a href={{forkUrl}} target="_blank" rel="noopener">
+            <span>
+              fork this repo
+            </span>
+          </a>
         </span>
         <div id="langList"></div>
       </li>
       <li>
-        <div class="num"><span>2</span></div>
-        <span>{{#link-to "create"}}Create a new pipeline{{/link-to}} with your repo</span>
+        <div class="num">
+          <span>
+            2
+          </span>
+        </div>
+        <span>
+          <LinkTo @route="create">
+            Create a new pipeline
+          </LinkTo>
+          with your repo
+        </span>
       </li>
       <li>
-        <div class="num"><span>3</span></div>
-        <span>Click the start button on your new pipeline</span>
+        <div class="num">
+          <span>
+            3
+          </span>
+        </div>
+        <span>
+          Click the start button on your new pipeline
+        </span>
       </li>
     </ul>
   </div>

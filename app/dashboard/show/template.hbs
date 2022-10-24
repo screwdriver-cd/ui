@@ -1,16 +1,16 @@
 <div class="row">
-  {{collections-flyout
-      class="col-md-2"
-      onDeleteCollection=(action "onDeleteCollection")
-      selectedCollectionId=collection.id
-  }}
-  {{collection-view
-      class="col-md-10"
-      onRemovePipeline=(action "removePipeline")
-      addMultipleToCollection=(action "addMultipleToCollection")
-      removeMultiplePipelines=(action "removeMultiplePipelines")
-      collection=collection
-  }}
+  <CollectionsFlyout
+    class="col-md-2"
+    @onDeleteCollection={{action "onDeleteCollection"}}
+    @selectedCollectionId={{collection.id}}
+  />
+  <CollectionView
+    class="col-md-10"
+    @onRemovePipeline={{action "removePipeline"}}
+    @addMultipleToCollection={{action "addMultipleToCollection"}}
+    @removeMultiplePipelines={{action "removeMultiplePipelines"}}
+    @collection={{collection}}
+  />
 </div>
 
 {{outlet}}

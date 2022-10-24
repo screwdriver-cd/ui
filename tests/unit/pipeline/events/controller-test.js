@@ -379,6 +379,11 @@ module('Unit | Controller | pipeline/events', function (hooks) {
         pipelineId: '1234'
       })
     ]);
+    server.get('http://localhost:8080/v4/events/5679/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
 
     const controller = this.owner.lookup('controller:pipeline/events');
 

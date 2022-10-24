@@ -1,14 +1,19 @@
 <label class="toggle-use-root-dir">
-  {{input class="checkbox-input toggle-use-root-dir" type="checkbox" name="hasRootDir" checked=hasRootDir}}
+  <Input
+    class="checkbox-input toggle-use-root-dir"
+    @type="checkbox"
+    @name="hasRootDir"
+    @checked={{hasRootDir}}
+  />
   My source directory is not at the checkout root
 </label>
 {{#if hasRootDir}}
   <div>
-    {{input
+    <Input
       class="text-input root-dir"
       placeholder="Enter your source directory path relative to the checkout URL (eg: src)"
-      value=rootDir
-      key-up=updateRootDir
-    }}
+      @value={{rootDir}}
+      @key-up={{updateRootDir}}
+    />
   </div>
 {{/if}}

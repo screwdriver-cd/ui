@@ -108,7 +108,9 @@ module('Integration | Component | search list', function (hooks) {
     assert
       .dom('td.add .dropdown-menu li:nth-child(2) span')
       .hasText('collection2');
-    assert.dom('td.add .dropdown-menu li:nth-child(3) span').hasText('CREATE');
+    assert
+      .dom('td.add .dropdown-menu li:nth-child(3) span')
+      .hasText('Create CREATE');
   });
 
   test('it filters the list', async function (assert) {

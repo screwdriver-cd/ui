@@ -15,7 +15,7 @@ module('Integration | Component | validator pipeline', function (hooks) {
     assert.dom('.annotations ul li').hasText('None defined');
 
     assert.dom('.workflow .label').hasText('Workflow:');
-    assert.ok(this.$('.workflow canvas'), 'workflow canvas');
+    assert.dom('.workflow svg').exists({ count: 1 });
   });
 
   test('it renders pipeline annotations and workflow', async function (assert) {
@@ -34,6 +34,6 @@ module('Integration | Component | validator pipeline', function (hooks) {
     assert.dom('.annotations ul li').hasText('hello: hi');
 
     assert.dom('.workflow .label').hasText('Workflow:');
-    assert.ok(this.$('.workflow canvas'), 'workflow canvas');
+    assert.dom('.workflow svg').exists({ count: 1 });
   });
 });

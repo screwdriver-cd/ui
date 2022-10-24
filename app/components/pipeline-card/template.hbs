@@ -1,30 +1,50 @@
 {{#if showCheckbox}}
   <label class="checkbox-container">
-    <input type="checkbox" value={{pipelineSelected}} onchange={{action "togglePipeline"}}>
+    <input
+      type="checkbox"
+      value={{pipelineSelected}}
+      onchange={{action "togglePipeline"}}
+    />
     <span class="checkmark"></span>
   </label>
 {{/if}}
 <div class="pipeline-card-content {{if showCheckbox "show-checkbox" ""}}">
   {{#if showRemoveButton}}
-    <span class="remove-button" title="Remove {{pipeline.scmRepo.name}} pipeline from {{collectionName}} collection" onclick={{action "removePipeline"}}>
-      &times;
+    <span
+      class="remove-button"
+      title="Remove
+        {{pipeline.scmRepo.name}}
+         pipeline from
+        {{collectionName}}
+         collection"
+      onclick={{action "removePipeline"}}
+    >
+      &amp;times;
     </span>
   {{/if}}
 
   <div class="branch-info">
-    {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
+    <LinkTo
+      @route="pipeline"
+      @model={{pipeline.id}}
+      @title={{pipeline.scmRepo.name}}
+    >
       {{pipeline.scmRepo.name}}
-    {{/link-to}}
+    </LinkTo>
     <div title={{branch}}>
-      {{fa-icon "code-fork"}}
+      <FaIcon @icon="code-branch" />
       {{branch}}
     </div>
   </div>
   <div class="commit-info">
     <div class="commit-status">
-      {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
-        {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
-      {{/link-to}}
+      <LinkTo
+        @route="pipeline"
+        @model={{pipeline.id}}
+        @title={{pipeline.scmRepo.name}}
+      >
+        <FaIcon @icon={{lastEventInfo.icon}} class={{lastEventInfo.statusColor}} />
+      </LinkTo>
       <a href={{lastEventInfo.commitUrl}}>
         {{lastEventInfo.sha}}
       </a>
@@ -41,24 +61,32 @@
   </div>
   <div class="time-metrics">
     <div class="duration-badge">
-      <span class="badge-label">duration</span>
-      <span class="badge-info">{{lastEventInfo.durationText}}</span>
+      <span class="badge-label">
+        duration
+      </span>
+      <span class="badge-info">
+        {{lastEventInfo.durationText}}
+      </span>
     </div>
     <div class="start-time-badge">
-      <span class="badge-label">start Date</span>
-      <span class="badge-info">{{lastEventInfo.startTime}}</span>
+      <span class="badge-label">
+        start Date
+      </span>
+      <span class="badge-info">
+        {{lastEventInfo.startTime}}
+      </span>
     </div>
   </div>
 
   <div class="events-thumbnail-wrapper">
     {{#if hasBothEventsAndLatestEventInfo}}
-      {{events-thumbnail
-          class="events-thumbnail"
-          events=eventsInfo
-          pipelineId=pipeline.id
-      }}
+      <EventsThumbnail
+        class="events-thumbnail"
+        @events={{eventsInfo}}
+        @pipelineId={{pipeline.id}}
+      />
     {{else}}
-      <div class="placeholder"/>
+      <div class="placeholder"></div>
     {{/if}}
   </div>
 </div>

@@ -1,49 +1,75 @@
 <div class="collection-view">
   {{#if addCollectionError}}
-    {{info-message message=addCollectionError type="warning" icon="exclamation-triangle"}}
+    <InfoMessage
+      @message={{addCollectionError}}
+      @type="warning"
+      @icon="exclamation-triangle"
+    />
   {{/if}}
   {{#if removePipelineError}}
-    {{info-message message=removePipelineError type="warning" icon="exclamation-triangle"}}
+    <InfoMessage
+      @message={{removePipelineError}}
+      @type="warning"
+      @icon="exclamation-triangle"
+    />
   {{/if}}
   {{#if linkCopied}}
-    {{info-message message=linkCopied type="success" icon="check"}}
+    <InfoMessage @message={{linkCopied}} @type="success" @icon="check" />
   {{/if}}
   {{#if pipelineRemovedMessage}}
-    {{info-message message=pipelineRemovedMessage type="success" icon="check"}}
+    <InfoMessage
+      @message={{pipelineRemovedMessage}}
+      @type="success"
+      @icon="check"
+    />
   {{/if}}
   <div class="header row">
     <div class="col-xs-12 col-sm-8">
-      <h2 class="header__name">{{collection.name}}</h2>
+      <h2 class="header__name">
+        {{collection.name}}
+      </h2>
 
       {{#if (eq collection.type "normal")}}
-        <span onclick={{action "toggleAddPipelineModal"}} title="Add pipeline(s) to collection" class="collection-operation add-pipeline-operation">
+        <span
+          onclick={{action "toggleAddPipelineModal"}}
+          title="Add pipeline(s) to collection"
+          class="collection-operation add-pipeline-operation"
+        >
           {{inline-svg "add" class="img"}}
         </span>
-        <span onclick={{action "toggleSettingModal"}} title="Collection settings" class="collection-operation settings-operation">
+        <span
+          onclick={{action "toggleSettingModal"}}
+          title="Collection settings"
+          class="collection-operation settings-operation"
+        >
           {{inline-svg "setting" class="img"}}
         </span>
       {{/if}}
 
-      <span onclick={{action "copyLink"}} title="Copy collection link" class="collection-operation copy-operation">
+      <span
+        onclick={{action "copyLink"}}
+        title="Copy collection link"
+        class="collection-operation copy-operation"
+      >
         {{inline-svg "link" class="img"}}
       </span>
 
       <BsModal
         @class="add-pipeline-modal"
         @open={{showAddPipelineModal}}
-        @onHidden={{action "toggleAddPipelineModal"}}
-      as |modal|>
+        @onHidden={{action "toggleAddPipelineModal"}} as |modal|
+      >
         <modal.header>
           <h4 class="modal-title">
             Add Pipeline
           </h4>
         </modal.header>
         <modal.body>
-          {{pipeline-search-panel
-              searchedPipelines=searchedPipelines
-              searchPipelines=(action "searchPipelines")
-              selectSearchedPipeline=(action "selectSearchedPipeline")
-          }}
+          <PipelineSearchPanel
+            @searchedPipelines={{searchedPipelines}}
+            @searchPipelines={{action "searchPipelines"}}
+            @selectSearchedPipeline={{action "selectSearchedPipeline"}}
+          />
         </modal.body>
       </BsModal>
 
@@ -51,7 +77,8 @@
         @class="setting-modal"
         @open={{showSettingModal}}
         @onHide={{action "toggleSettingModal"}}
-        @onSubmit={{action "onSubmitSettingModal"}} as |modal|>
+        @onSubmit={{action "onSubmitSettingModal"}} as |modal|
+      >
         <modal.header>
           <h4 class="modal-title">
             Settings
@@ -77,8 +104,16 @@
           </BsForm>
         </modal.body>
         <modal.footer>
-          <BsButton @onClick={{action modal.close}}>Cancel</BsButton>
-          <BsButton @type="primary" @disabled={{isModelSaveDisabled}} @onClick={{action "onSubmitSettingModal"}}>Save</BsButton>
+          <BsButton @onClick={{action modal.close}}>
+            Cancel
+          </BsButton>
+          <BsButton
+            @type="primary"
+            disabled={{isModelSaveDisabled}}
+            @onClick={{action "onSubmitSettingModal"}}
+          >
+            Save
+          </BsButton>
         </modal.footer>
       </BsModal>
 
@@ -89,39 +124,58 @@
           </p>
         </div>
       {{else}}
-        <p class="description-placeholder">Add a description</p>
+        <p class="description-placeholder">
+          Add a description
+        </p>
       {{/if}}
     </div>
     <div class="header__organize col-xs-6 col-sm-3">
       {{#if showOrganizeButton}}
         {{#if isOrganizing}}
           {{#if showOperations}}
-            <span>{{selectedPipelines.length}}&nbsp;&nbsp;Selected</span>
+            <span>
+              {{selectedPipelines.length}}&amp;nbsp;&amp;nbsp;Selected
+            </span>
             {{#unless isDefaultCollection}}
-              <BsButton class="operation-button" onclick={{action "removeSelectedPipelines"}}>Remove</BsButton>
+              <BsButton
+                class="operation-button"
+                onclick={{action "removeSelectedPipelines"}}
+              >
+                Remove
+              </BsButton>
             {{/unless}}
-            {{collection-dropdown
-                class="copy-pipeline"
-                collections=collections
-                addMultipleToCollection=(action "addMultipleToCollection")
-                buttonClass="operation-button"
-                buttonText="Copy To"
-            }}
+            <CollectionDropdown
+              class="copy-pipeline"
+              @collections={{collections}}
+              @addMultipleToCollection={{action "addMultipleToCollection"}}
+              @buttonClass="operation-button"
+              @buttonText="Copy To"
+            />
           {{/if}}
-          <BsButton class="cancel-organize-button" onclick={{action "resetView"}}>Cancel</BsButton>
+          <BsButton
+            class="cancel-organize-button"
+            onclick={{action "resetView"}}
+          >
+            Cancel
+          </BsButton>
         {{else}}
-          <BsButton class="organize-button" onclick={{action "organize"}}>Organize</BsButton>
+          <BsButton class="organize-button" onclick={{action "organize"}}>
+            Organize
+          </BsButton>
         {{/if}}
       {{/if}}
     </div>
-    {{#if showViewSwitch }}
+    {{#if showViewSwitch}}
       <BsButtonGroup
         class="header__change-view col-xs-6 col-sm-1"
         @value={{activeViewOptionValue}}
         @type="radio"
-        @onChange={{action (mut activeViewOptionValue)}} as |bg|>
+        @onChange={{action (mut activeViewOptionValue)}} as |bg|
+      >
         {{#each viewOptions as |viewOption|}}
-          <bg.button @value={{viewOption.value}} onclick={{action "resetView"}}>{{inline-svg viewOption.svgName class="img"}}</bg.button>
+          <bg.button @value={{viewOption.value}} onclick={{action "resetView"}}>
+            {{inline-svg viewOption.svgName class="img"}}
+          </bg.button>
         {{/each}}
       </BsButtonGroup>
     {{/if}}
@@ -130,14 +184,27 @@
   {{#if (eq sortedPipelines.length 0)}}
     <div class="collection-empty-view">
       <div class="guide">
-        <img class="guide-image" src="/assets/images/jobs-example.png" alt="example diagram of pipeline jobs">
-        <p class="guide-text">You haven't created a pipeline yet. Once you create a pipeline it will show up in this collection. To help you get started check out our documentation or if you already know what you are doing, create a new pipeline</p>
+        <img
+          class="guide-image"
+          src="/assets/images/jobs-example.png"
+          alt="example diagram of pipeline jobs"
+        />
+        <p class="guide-text">
+          You haven't created a pipeline yet. Once you create a pipeline it will show up in this collection. To help you get started check out our documentation or if you already know what you are doing, create a new pipeline
+        </p>
         <div class="guide-buttons">
-          {{#link-to "create"}}
-            <BsButton class="guide-create-pipeline-button" onclick={{action "organize"}}>Create Pipeline</BsButton>
-          {{/link-to}}
+          <LinkTo @route="create">
+            <BsButton
+              class="guide-create-pipeline-button"
+              onclick={{action "organize"}}
+            >
+              Create Pipeline
+            </BsButton>
+          </LinkTo>
           <a href="https://docs.screwdriver.cd/" target="_blank" rel="noopener">
-            <BsButton class="guide-docs-button" onclick={{action "goToDocs"}}>View Docs</BsButton>
+            <BsButton class="guide-docs-button" onclick={{action "goToDocs"}}>
+              View Docs
+            </BsButton>
           </a>
         </div>
       </div>
@@ -151,11 +218,26 @@
               <th class="collection-pipeline__choose"></th>
               <th class="app-id">
                 {{#if this.hasAliasName}}
-                  <p rowspan="1">Alias/</p>
+                  <p rowspan="1">
+                    Alias/
+                  </p>
                 {{/if}}
-                <p rowspan="1">Name</p>
+                <p rowspan="1">
+                  Name
+                </p>
               </th>
-              <th class="branch" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "scmRepo.branch:desc") "scmRepo.branch:asc" "scmRepo.branch:desc")}} >
+              <th
+                class="branch"
+                rowspan="1"
+                onclick={{action
+                  "setSortBy"
+                  (if
+                    (eq (get sortBy 0) "scmRepo.branch:desc")
+                    "scmRepo.branch:asc"
+                    "scmRepo.branch:desc"
+                  )
+                }}
+              >
                 Branch
                 <span class="icon-wrapper">
                   {{#if (eq (get sortBy 0) "scmRepo.branch:asc")}}
@@ -167,9 +249,24 @@
                   {{/if}}
                 </span>
               </th>
-              <th class="start" rowspan="1">Start Date</th>
-              <th class="duration" rowspan="1">Duration</th>
-              <th class="last-run" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "createTime:desc") "createTime:asc" "createTime:desc")}}>
+              <th class="start" rowspan="1">
+                Start Date
+              </th>
+              <th class="duration" rowspan="1">
+                Duration
+              </th>
+              <th
+                class="last-run"
+                rowspan="1"
+                onclick={{action
+                  "setSortBy"
+                  (if
+                    (eq (get sortBy 0) "createTime:desc")
+                    "createTime:asc"
+                    "createTime:desc"
+                  )
+                }}
+              >
                 Last Run Job
                 <span class="icon-wrapper">
                   {{#if (eq (get sortBy 0) "createTime:asc")}}
@@ -181,12 +278,25 @@
                   {{/if}}
                 </span>
               </th>
-              <th class="status" rowspan="1">Status</th>
-              <th class="history" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "failedBuildCount:desc") "failedBuildCount:asc" "failedBuildCount:desc")}}>
+              <th class="status" rowspan="1">
+                Status
+              </th>
+              <th
+                class="history"
+                rowspan="1"
+                onclick={{action
+                  "setSortBy"
+                  (if
+                    (eq (get sortBy 0) "failedBuildCount:desc")
+                    "failedBuildCount:asc"
+                    "failedBuildCount:desc"
+                  )
+                }}
+              >
                 Build History
-                {{#bs-tooltip placement="top" renderInPlace=true}}
+                <BsTooltip @placement="top" @renderInPlace={{true}}>
                   sort on number of failed builds
-                {{/bs-tooltip}}
+                </BsTooltip>
                 <span class="icon-wrapper">
                   {{#if (eq (get sortBy 0) "failedBuildCount:asc")}}
                     <i class="fa fa-sort-asc"></i>
@@ -202,19 +312,19 @@
           </thead>
           <tbody>
             {{#each sortedPipelines as |pipeline|}}
-              {{collection-table-row
-                  class="collection-pipeline"
-                  removePipeline=(action "removePipeline")
-                  pipeline=pipeline
-                  isAuthenticated=session.isAuthenticated
-                  isOrganizing=isOrganizing
-                  isDefaultCollection=isDefaultCollection
-                  selectPipeline=(action "selectPipeline")
-                  deselectPipeline=(action "deselectPipeline")
-                  reset=reset
-                  collectionName=collection.name
-                  hasAliasName = hasAliasName
-              }}
+              <CollectionTableRow
+                class="collection-pipeline"
+                @removePipeline={{action "removePipeline"}}
+                @pipeline={{pipeline}}
+                @isAuthenticated={{session.isAuthenticated}}
+                @isOrganizing={{isOrganizing}}
+                @isDefaultCollection={{isDefaultCollection}}
+                @selectPipeline={{action "selectPipeline"}}
+                @deselectPipeline={{action "deselectPipeline"}}
+                @reset={{reset}}
+                @collectionName={{collection.name}}
+                @hasAliasName={{hasAliasName}}
+              />
             {{/each}}
           </tbody>
         </table>
@@ -222,18 +332,17 @@
     {{else}}
       <div class="collection-card-view">
         {{#each sortedPipelines as |pipeline|}}
-          {{pipeline-card
-              class="pipeline-card"
-              removePipeline=(action "removePipeline")
-              pipeline=pipeline
-              isAuthenticated=session.isAuthenticated
-              isOrganizing=isOrganizing
-              isDefaultCollection=isDefaultCollection
-              selectPipeline=(action "selectPipeline")
-              deselectPipeline=(action "deselectPipeline")
-              reset=reset
-              collectionName=collection.name
-          }}
+          <PipelineCard
+            @removePipeline={{action "removePipeline"}}
+            @pipeline={{pipeline}}
+            @isAuthenticated={{session.isAuthenticated}}
+            @isOrganizing={{isOrganizing}}
+            @isDefaultCollection={{isDefaultCollection}}
+            @selectPipeline={{action "selectPipeline"}}
+            @deselectPipeline={{action "deselectPipeline"}}
+            @reset={{reset}}
+            @collectionName={{collection.name}}
+          />
         {{/each}}
       </div>
     {{/if}}

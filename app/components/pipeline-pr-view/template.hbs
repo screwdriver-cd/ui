@@ -1,16 +1,32 @@
 {{#if build}}
   <div class="view">
-    <div class="status">{{fa-icon icon fixedWidth=true}}</div>
+    <div class="status">
+      <FaIcon
+        @icon={{icon.name}}
+        @fixedWidth=true
+        @prefix={{icon.prefix}}
+        @spin={{icon.spin}}
+        @flip={{icon.flip}}
+      />
+    </div>
     <div class="detail">
       {{#if build.id}}
-        {{#link-to "pipeline.build" build.id}}{{displayName}}{{/link-to}}
+        <LinkTo @route="pipeline.build" @model={{build.id}}>
+          {{displayName}}
+        </LinkTo>
       {{else}}
-        <span class="greyOut">{{displayName}}</span>
+        <span class="greyOut">
+          {{displayName}}
+        </span>
       {{/if}}
       {{#if build.endTimeExact}}
-        <div class="date greyOut">Finished {{build.endTimeExact}}</div>
+        <div class="date greyOut">
+          Finished {{build.endTimeExact}}
+        </div>
       {{else if build.startTimeExact}}
-        <div class="date greyOut">Started {{build.startTimeExact}}</div>
+        <div class="date greyOut">
+          Started {{build.startTimeExact}}
+        </div>
       {{/if}}
     </div>
   </div>

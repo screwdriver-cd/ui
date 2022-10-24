@@ -91,7 +91,6 @@ export default Component.extend({
 
           removeBranch(prNode, graph);
         }
-
         set(this, 'graph', graph);
 
         return decorateGraph({

@@ -1,4 +1,3 @@
-import sinonTest from 'ember-sinon-qunit/test-support/test';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
@@ -55,7 +54,7 @@ module('Unit | Route | pipeline/job-latest-build', function (hooks) {
     assert.ok(route);
   });
 
-  sinonTest('it rejects if the user is not authenticated', function (assert) {
+  test('it rejects if the user is not authenticated', function (assert) {
     assert.expect(3);
 
     const route = this.owner.lookup('route:pipeline/job-latest-build');
@@ -71,52 +70,49 @@ module('Unit | Route | pipeline/job-latest-build', function (hooks) {
     });
   });
 
-  sinonTest(
-    'it makes call to get latest build successfully',
-    function (assert) {
-      assert.expect(3);
-      this.session.set('isAuthenticated', true);
-      server.get(
-        'http://localhost:8080/v4/pipelines/123/jobs/main/latestBuild',
-        request => {
-          if (request.queryParams.status === 'SUCCESS') {
-            return [
-              200,
-              {
-                'Content-Type': 'application/json'
-              },
-              JSON.stringify({ id: 456 })
-            ];
-          }
-
+  test('it makes call to get latest build successfully', function (assert) {
+    assert.expect(3);
+    this.session.set('isAuthenticated', true);
+    server.get(
+      'http://localhost:8080/v4/pipelines/123/jobs/main/latestBuild',
+      request => {
+        if (request.queryParams.status === 'SUCCESS') {
           return [
             200,
             {
               'Content-Type': 'application/json'
             },
-            JSON.stringify({ id: 100 })
+            JSON.stringify({ id: 456 })
           ];
         }
+
+        return [
+          200,
+          {
+            'Content-Type': 'application/json'
+          },
+          JSON.stringify({ id: 100 })
+        ];
+      }
+    );
+
+    const route = this.owner.lookup('route:pipeline/job-latest-build');
+    const paramsForStub = sinon
+      .stub(route, 'paramsFor')
+      .callsFake(() => ({ pipeline_id: 123 }));
+
+    const p = route.model(params, transition);
+
+    p.then(data => {
+      const [request] = server.handledRequests;
+
+      assert.ok(paramsForStub.called, 'paramsFor got called');
+      assert.deepEqual(
+        request.url,
+        'http://localhost:8080/v4/pipelines/123/jobs/main/latestBuild?status=SUCCESS',
+        'called with right url'
       );
-
-      const route = this.owner.lookup('route:pipeline/job-latest-build');
-      const paramsForStub = sinon
-        .stub(route, 'paramsFor')
-        .callsFake(() => ({ pipeline_id: 123 }));
-
-      const p = route.model(params, transition);
-
-      p.then(data => {
-        const [request] = server.handledRequests;
-
-        assert.ok(paramsForStub.called, 'paramsFor got called');
-        assert.deepEqual(
-          request.url,
-          'http://localhost:8080/v4/pipelines/123/jobs/main/latestBuild?status=SUCCESS',
-          'called with right url'
-        );
-        assert.deepEqual(data, latestBuild);
-      });
-    }
-  );
+      assert.deepEqual(data, latestBuild);
+    });
+  });
 });

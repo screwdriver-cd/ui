@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import EmberObject from '@ember/object';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
+import sinon from 'sinon';
 
 module('Unit | Route | pipeline/build/step', function (hooks) {
   setupTest(hooks);
@@ -10,9 +10,9 @@ module('Unit | Route | pipeline/build/step', function (hooks) {
     assert.ok(this.owner.lookup('route:pipeline/build/step'));
   });
 
-  sinonTest('it redirects if step is not found in build', function (assert) {
+  test('it redirects if step is not found in build', function (assert) {
     const route = this.owner.lookup('route:pipeline/build/step');
-    const stub = this.stub(route, 'transitionTo');
+    const stub = sinon.stub(route, 'transitionTo');
     const model = {
       event: EmberObject.create(),
       pipeline: EmberObject.create({ id: 1 }),

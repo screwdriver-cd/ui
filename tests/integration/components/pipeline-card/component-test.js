@@ -74,7 +74,7 @@ module('Integration | Component | pipeline card', function (hooks) {
       }}
     `);
 
-    await waitFor('.commit-status i.fa-question-circle');
+    await waitFor('.commit-status svg.fa-question-circle');
 
     assert.dom('.branch-info a').hasText(mockPipeline.scmRepo.name);
     assert
@@ -85,7 +85,7 @@ module('Integration | Component | pipeline card', function (hooks) {
       .dom('.commit-status a:nth-of-type(1)')
       .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert
-      .dom('.commit-status a:nth-of-type(1) i')
+      .dom('.commit-status a:nth-of-type(1) svg')
       .hasClass('fa-question-circle');
     assert.dom('.commit-status a:nth-of-type(2)').hasText(lastEventInfo.sha);
     assert

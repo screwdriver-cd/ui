@@ -29,12 +29,12 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
-      assert.dom('.fa-play-circle-o').exists({ count: 1 });
-      assert.dom('.fa-stop-circle-o').exists({ count: 1 });
-      assert.dom('.fa-repeat').exists({ count: 1 });
+      assert.dom('.fa-play-circle').exists({ count: 1 });
+      assert.dom('.fa-stop-circle').exists({ count: 1 });
+      assert.dom('.fa-redo-alt').exists({ count: 1 });
       assert.dom('.clicks-disabled').doesNotExist();
     });
 
@@ -58,12 +58,12 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
-      assert.dom('.fa-play-circle-o').exists({ count: 1 });
-      assert.dom('.fa-stop-circle-o').exists({ count: 1 });
-      assert.dom('.fa-repeat').exists({ count: 1 });
+      assert.dom('.fa-play-circle').exists({ count: 1 });
+      assert.dom('.fa-stop-circle').exists({ count: 1 });
+      assert.dom('.fa-redo-alt').exists({ count: 1 });
       assert.dom('.clicks-disabled').doesNotExist();
     });
 
@@ -87,12 +87,12 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
-      assert.dom('.fa-play-circle-o').exists({ count: 1 });
-      assert.dom('.fa-stop-circle-o').exists({ count: 1 });
-      assert.dom('.fa-repeat').exists({ count: 1 });
+      assert.dom('.fa-play-circle').exists({ count: 1 });
+      assert.dom('.fa-stop-circle').exists({ count: 1 });
+      assert.dom('.fa-redo-alt').exists({ count: 1 });
       assert.dom('.clicks-disabled').doesNotExist();
     });
 
@@ -114,14 +114,14 @@ module(
       });
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
       assert.expect(4);
 
-      assert.dom('.fa-play-circle-o').exists({ count: 1 });
-      assert.dom('.fa-stop-circle-o').exists({ count: 1 });
-      assert.dom('.fa-repeat').exists({ count: 1 });
+      assert.dom('.fa-play-circle').exists({ count: 1 });
+      assert.dom('.fa-stop-circle').exists({ count: 1 });
+      assert.dom('.fa-redo-alt').exists({ count: 1 });
       assert.dom('.clicks-disabled').doesNotExist();
     });
 
@@ -145,12 +145,12 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
-      assert.dom('.fa-play-circle-o').exists({ count: 1 });
-      assert.dom('.fa-stop-circle-o').exists({ count: 1 });
-      assert.dom('.fa-repeat').exists({ count: 1 });
+      assert.dom('.fa-play-circle').exists({ count: 1 });
+      assert.dom('.fa-stop-circle').exists({ count: 1 });
+      assert.dom('.fa-redo-alt').exists({ count: 1 });
       assert.dom('.clicks-disabled').doesNotExist();
     });
 
@@ -174,12 +174,12 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
-      assert.dom('.fa-play-circle-o').exists({ count: 1 });
-      assert.dom('.fa-stop-circle-o').exists({ count: 1 });
-      assert.dom('.fa-repeat').exists({ count: 1 });
+      assert.dom('.fa-play-circle').exists({ count: 1 });
+      assert.dom('.fa-stop-circle').exists({ count: 1 });
+      assert.dom('.fa-redo-alt').exists({ count: 1 });
       assert.dom('.clicks-disabled').exists({ count: 1 });
     });
 
@@ -203,12 +203,12 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
-      assert.dom('.fa-play-circle-o').exists({ count: 1 });
-      assert.dom('.fa-stop-circle-o').exists({ count: 1 });
-      assert.dom('.fa-repeat').exists({ count: 1 });
+      assert.dom('.fa-play-circle').exists({ count: 1 });
+      assert.dom('.fa-stop-circle').exists({ count: 1 });
+      assert.dom('.fa-redo-alt').exists({ count: 1 });
       assert.dom('.clicks-disabled').exists({ count: 1 });
     });
 
@@ -232,12 +232,12 @@ module(
       assert.expect(4);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
-      assert.dom('.fa-play-circle-o').exists({ count: 1 });
-      assert.dom('.fa-stop-circle-o').exists({ count: 1 });
-      assert.dom('.fa-repeat').exists({ count: 1 });
+      assert.dom('.fa-play-circle').exists({ count: 1 });
+      assert.dom('.fa-stop-circle').exists({ count: 1 });
+      assert.dom('.fa-redo-alt').exists({ count: 1 });
       assert.dom('.clicks-disabled').exists({ count: 3 });
     });
 
@@ -263,7 +263,7 @@ module(
       assert.expect(3);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
       this.element.querySelectorAll('.actions span')[0].click();
@@ -291,7 +291,7 @@ module(
       assert.expect(3);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
       this.element.querySelectorAll('.actions span')[2].click();
@@ -317,7 +317,7 @@ module(
       assert.expect(1);
 
       await render(hbs`{{pipeline-list-actions-cell
-  value=value
+value=value
 }}`);
 
       this.element.querySelectorAll('.actions span')[1].click();

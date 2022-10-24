@@ -26,7 +26,7 @@ module('Integration | Component | pipeline header', function (hooks) {
     );
 
     assert.dom('h1').hasText('batman/batmobile');
-    assert.dom('a.branch').hasText('master');
+    assert.dom('a.branch').hasText('Source code master');
     assert
       .dom('a.branch')
       .hasAttribute('href', 'http://example.com/batman/batmobile');

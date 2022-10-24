@@ -2,7 +2,6 @@ import { click, fillIn, render, triggerKeyEvent } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { reject, resolve } from 'rsvp';
 
-import $ from 'jquery';
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import Pretender from 'pretender';
@@ -85,10 +84,9 @@ module('Integration | Component | pipeline options', function (hooks) {
         'Pick your own preferred jobs to be counted in metrics graph (default all jobs)'
       );
     assert.dom('section > ul > li:nth-child(4) h4').hasText('Downtime Jobs');
-    assert.equal(
-      $('section > ul > li:nth-child(4) input').attr('placeholder'),
-      'Select Jobs...'
-    );
+    assert
+      .dom('section > ul > li:nth-child(4) ul span')
+      .hasText('Select Jobs...');
 
     // Jobs
     assert.dom('section.jobs h3').hasText('Jobs');
@@ -119,7 +117,7 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert
       .dom('section.danger p')
       .hasText('Once you delete a pipeline, there is no going back.');
-    assert.dom('section.danger a i').hasClass('fa-trash');
+    assert.dom('section.danger a svg').hasClass('fa-trash');
   });
 
   test('it renders pipeline visibility toggle for private pipeline', async function (assert) {
@@ -169,7 +167,7 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert
       .dom('section.danger li:nth-child(2) p')
       .hasText('Once you delete a pipeline, there is no going back.');
-    assert.dom('section.danger li:nth-child(2) a i').hasClass('fa-trash');
+    assert.dom('section.danger li:nth-child(2) a svg').hasClass('fa-trash');
   });
 
   test('it updates a pipeline', async function (assert) {
