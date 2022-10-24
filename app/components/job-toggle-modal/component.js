@@ -16,7 +16,7 @@ export default Component.extend({
     },
     updateState() {
       schedule('actions', () => {
-        let addMessage = this.updateMessage;
+        const addMessage = this.updateMessage;
 
         if (addMessage) {
           addMessage(this.message);

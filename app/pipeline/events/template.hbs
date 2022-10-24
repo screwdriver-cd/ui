@@ -79,7 +79,7 @@
       {{/bs-nav}}
 
       <div class="tab-content">
-        {{#tab.pane activeId=activeTab elementId="events" title="Events"}}
+        {{#tab.pane activeId=activeTab id="events" title="Events"}}
           {{pipeline-events-list
             pipeline=pipeline
             expandedEventsGroup=expandedEventsGroup
@@ -97,7 +97,7 @@
           }}
           <div style="padding: 20px;" onMouseEnter={{action "onEventListScroll"}}></div>
         {{/tab.pane}}
-        {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
+        {{#tab.pane activeId=activeTab id="pulls" title="Pull Requests"}}
           {{#if prChainEnabled}}
             {{pipeline-events-list
             pipeline=pipeline

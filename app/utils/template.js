@@ -7,7 +7,7 @@
  * @return {String}                         Returns the template full name
  */
 const getFullName = config => {
-  let { name, namespace } = config;
+  const { name, namespace } = config;
 
   let fullName = name;
 
@@ -29,7 +29,7 @@ const getLastUpdatedTime = ({ createTime }) => {
     return null;
   }
 
-  let timeDiff = Date.now() - new Date(createTime).getTime();
+  const timeDiff = Date.now() - new Date(createTime).getTime();
   const lastUpdated = `${humanizeDuration(timeDiff, {
     round: true,
     largest: 1

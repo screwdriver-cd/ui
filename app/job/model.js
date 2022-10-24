@@ -43,7 +43,7 @@ export default Model.extend({
   createTimeExact: computed('createTime', {
     get() {
       if (this.createTime) {
-        let dateTime = this.createTime.getTime();
+        const dateTime = this.createTime.getTime();
 
         return `${toCustomLocaleString(new Date(dateTime))}`;
       }
@@ -54,7 +54,7 @@ export default Model.extend({
   prParentJobId: attr('string'),
   // } for pr job only
   permutations: attr(),
-  annotations: computed('permutations.[]', {
+  annotations: computed('permutations.0.annotations', 'permutations.[]', {
     get() {
       return get(this, 'permutations.0.annotations') || {};
     }

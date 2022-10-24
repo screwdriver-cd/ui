@@ -58,7 +58,7 @@ export default function timeRange(end, range) {
     return null;
   }
 
-  let current = new Date(end);
+  const current = new Date(end);
 
   let startTime;
 

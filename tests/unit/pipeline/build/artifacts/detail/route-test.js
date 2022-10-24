@@ -6,7 +6,7 @@ module('Unit | Route | pipeline/build/artifacts/detail', function (hooks) {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:pipeline/build/artifacts/detail');
+    const route = this.owner.lookup('route:pipeline/build/artifacts/detail');
 
     assert.ok(route);
   });

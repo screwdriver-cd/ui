@@ -20,7 +20,7 @@ export default Component.extend({
   hasBothEventsAndLatestEventInfo: and('eventsInfo', 'lastEventInfo'),
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
-  branch: computed('pipeline', function get() {
+  branch: computed('pipeline.scmRepo', function get() {
     const { branch, rootDir } = this.pipeline.scmRepo;
 
     return rootDir ? `${branch}#${rootDir}` : branch;
@@ -37,6 +37,7 @@ export default Component.extend({
   ),
 
   didInsertElement() {
+    this._super(...arguments);
     if (!this.hasBothEventsAndLatestEventInfo) {
       this.setupInViewport();
     }

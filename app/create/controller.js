@@ -9,9 +9,9 @@ export default Controller.extend({
   templates: [],
   actions: {
     createPipeline({ scmUrl, rootDir, autoKeysGeneration }) {
-      let payload = { checkoutUrl: scmUrl, rootDir, autoKeysGeneration };
+      const payload = { checkoutUrl: scmUrl, rootDir, autoKeysGeneration };
 
-      let pipeline = this.store.createRecord('pipeline', payload);
+      const pipeline = this.store.createRecord('pipeline', payload);
 
       this.set('isSaving', true);
 
@@ -22,7 +22,7 @@ export default Controller.extend({
             this.transitionToRoute('pipeline', pipeline.get('id'));
           },
           err => {
-            let error = err.errors[0] || {};
+            const error = err.errors[0] || {};
 
             if (
               error.status === 409 &&

@@ -40,7 +40,7 @@ export default Route.extend(ApplicationRouteMixin, {
     }
   ),
   title(tokens) {
-    let arr = Array.isArray(tokens) ? tokens : [];
+    const arr = Array.isArray(tokens) ? tokens : [];
 
     arr.push('screwdriver.cd');
 

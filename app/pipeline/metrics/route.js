@@ -91,7 +91,7 @@ export default Route.extend({
 
           const total = pipelineMetrics.get('length');
 
-          let events = {
+          const events = {
             queuedTime: [],
             imagePullTime: [],
             duration: [],
@@ -103,17 +103,17 @@ export default Route.extend({
 
           let steps = {};
 
-          let builds = [];
+          const builds = [];
 
-          let buildIds = [];
+          const buildIds = [];
 
-          let stepGroup = new Set();
+          const stepGroup = new Set();
 
-          let jobMap = {};
+          const jobMap = {};
 
           let passCount = 0;
 
-          let sum = { queuedTime: 0, imagePullTime: 0, duration: 0 };
+          const sum = { queuedTime: 0, imagePullTime: 0, duration: 0 };
 
           /**
            * Map index to build id, gathered from pipeline and job metrics

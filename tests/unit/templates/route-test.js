@@ -5,7 +5,7 @@ module('Unit | Route | templates', function (hooks) {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:templates');
+    const route = this.owner.lookup('route:templates');
 
     assert.ok(route);
     assert.equal(route.titleToken, 'Templates');

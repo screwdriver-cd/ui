@@ -7,7 +7,7 @@ module('Unit | Controller | Commands', function (hooks) {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    let controller = this.owner.lookup('controller:commands');
+    const controller = this.owner.lookup('controller:commands');
 
     assert.ok(controller);
   });

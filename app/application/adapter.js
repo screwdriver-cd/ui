@@ -139,7 +139,7 @@ export default RESTAdapter.extend(DataAdapterMixin, {
       return this._super(status, headers, { errors }, requestData);
     }
 
-    let data = {};
+    const data = {};
 
     let key;
 

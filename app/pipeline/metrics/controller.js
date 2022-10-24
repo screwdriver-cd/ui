@@ -109,9 +109,9 @@ export default Controller.extend({
       (_, i) => start + i * step
     )
   ),
-  eventMetrics: computed('metrics.events', {
+  eventMetrics: computed('inTrendlineView', 'metrics.events', {
     get() {
-      let { queuedTime, imagePullTime, duration, total, status } =
+      const { queuedTime, imagePullTime, duration, total, status } =
         this.get('metrics.events');
 
       return {
@@ -181,9 +181,9 @@ export default Controller.extend({
             .then(metrics => {
               this.set('downtimeJobsChartData', metrics);
 
-              let builds = metrics.map(m => m.builds.length);
+              const builds = metrics.map(m => m.builds.length);
 
-              let duration = metrics.map(m => {
+              const duration = metrics.map(m => {
                 let downtime = 0;
 
                 if (m.isDowntimeEvent) {
@@ -194,7 +194,7 @@ export default Controller.extend({
                 return downtime;
               });
 
-              let downtimeJobsChartData = {
+              const downtimeJobsChartData = {
                 columns: [
                   ['duration', ...duration],
                   ['builds', ...builds]
@@ -291,7 +291,7 @@ export default Controller.extend({
       };
     }
   }),
-  buildLegend: computed('jobs', 'selectedJobName', {
+  buildLegend: computed('color.pattern', 'jobs', 'selectedJobName', {
     get() {
       const colors = this.get('color.pattern');
       const { selectedJobName } = this;
@@ -325,7 +325,7 @@ export default Controller.extend({
       };
     }
   }),
-  stepLegend: computed('metrics.stepGroup}', {
+  stepLegend: computed('color.pattern', 'metrics.stepGroup', {
     get() {
       const stepGroup = this.get('metrics.stepGroup');
       const colors = this.get('color.pattern');
@@ -496,7 +496,7 @@ export default Controller.extend({
       return this.generateAxis('steps');
     }
   }),
-  tooltip: computed('metrics.events', 'isUTC', {
+  tooltip: computed('isUTC', 'metrics.events', 'name', {
     get() {
       const self = this;
 
@@ -702,260 +702,278 @@ export default Controller.extend({
   zoom: {
     rescale: true
   },
-  onInitFns: computed(function onInitOuter() {
-    const self = this;
-    const {
-      eventsChartName,
-      buildsChartName,
-      stepsChartName,
-      downtimeJobsChartName
-    } = this;
+  onInitFns: computed(
+    'CLASS.eventRects',
+    'api.tooltip',
+    'config.bar_width_ratio',
+    'data.targets',
+    'eventRect',
+    'height',
+    'hiddenTargetIds',
+    'main',
+    'selectChart',
+    'svg',
+    'tooltip',
+    'x',
+    'xAxis',
+    function onInitOuter() {
+      const self = this;
+      const {
+        eventsChartName,
+        buildsChartName,
+        stepsChartName,
+        downtimeJobsChartName
+      } = this;
 
-    /**
-     * unlock tooltip
-     *
-     */
-    function unlockTooltip() {
-      this.tooltip.classed('locked', false);
-    }
+      /**
+       * unlock tooltip
+       *
+       */
+      function unlockTooltip() {
+        this.tooltip.classed('locked', false);
+      }
 
-    /**
-     * Set up custom elements and event handlers
-     *
-     */
-    function setupExtras() {
-      // add the cursor line
-      const cursorLine = this.svg
-        .append('line')
-        .style('stroke', '#888')
-        .style('stroke-dasharray', '3')
-        .style('pointer-events', 'none')
-        .attr('class', 'cursor-line')
-        .attr('x1', -100)
-        .attr('x2', -100)
-        .attr('y1', 0)
-        .attr('y2', this.height)
-        .attr('transform', this.getTranslate('main'));
+      /**
+       * Set up custom elements and event handlers
+       *
+       */
+      function setupExtras() {
+        // add the cursor line
+        const cursorLine = this.svg
+          .append('line')
+          .style('stroke', '#888')
+          .style('stroke-dasharray', '3')
+          .style('pointer-events', 'none')
+          .attr('class', 'cursor-line')
+          .attr('x1', -100)
+          .attr('x2', -100)
+          .attr('y1', 0)
+          .attr('y2', this.height)
+          .attr('transform', this.getTranslate('main'));
 
-      let previousIndexDomain = null;
+        let previousIndexDomain = null;
 
-      this.api.tooltip[locked] = false;
+        this.api.tooltip[locked] = false;
 
-      this.eventRect.on('mousedown.cursor', () => {
-        // click again to unlock tooltip
-        if (this.api.tooltip[locked]) {
-          this.api.tooltip[locked] = false;
-          previousIndexDomain = null;
-          unlockTooltip.call(this);
-          this.hideTooltip();
+        this.eventRect.on('mousedown.cursor', () => {
+          // click again to unlock tooltip
+          if (this.api.tooltip[locked]) {
+            this.api.tooltip[locked] = false;
+            previousIndexDomain = null;
+            unlockTooltip.call(this);
+            this.hideTooltip();
 
-          return;
-        }
+            return;
+          }
 
-        if (previousIndexDomain === null) {
-          this.hideTooltip();
-        } else {
-          // clicked near data domain
-          this.api.tooltip[locked] = true;
-          this.tooltip.classed('locked', true);
-        }
-      });
+          if (previousIndexDomain === null) {
+            this.hideTooltip();
+          } else {
+            // clicked near data domain
+            this.api.tooltip[locked] = true;
+            this.tooltip.classed('locked', true);
+          }
+        });
 
-      this.eventRect.on('mousemove.cursor', () => {
-        const [x] = d3.mouse(this.eventRect.node());
+        this.eventRect.on('mousemove.cursor', () => {
+          const [x] = d3.mouse(this.eventRect.node());
 
-        // always move the cursor line
-        cursorLine.attr('x1', x).attr('x2', x);
+          // always move the cursor line
+          cursorLine.attr('x1', x).attr('x2', x);
 
-        const rangeOffset = this.xAxis.tickOffset();
+          const rangeOffset = this.xAxis.tickOffset();
 
-        // calculate reference distance for edges and midpoint of a bar
-        // reuse the same for line chart
-        const [leftEdgeDomain, midPointDomain, rightEdgeDomain] = [
-          -1, 0, 1
-        ].map(n =>
-          Math.floor(
-            this.x.invert(
-              x - rangeOffset * (1 - n * this.config.bar_width_ratio)
+          // calculate reference distance for edges and midpoint of a bar
+          // reuse the same for line chart
+          const [leftEdgeDomain, midPointDomain, rightEdgeDomain] = [
+            -1, 0, 1
+          ].map(n =>
+            Math.floor(
+              this.x.invert(
+                x - rangeOffset * (1 - n * this.config.bar_width_ratio)
+              )
             )
-          )
-        );
-        const currentIndexDomain = rightEdgeDomain;
-
-        // if all three are the same, we are outside of bar
-        if (
-          leftEdgeDomain === midPointDomain &&
-          midPointDomain === rightEdgeDomain
-        ) {
-          previousIndexDomain = null;
-          this.eventRect.classed('data', false);
-
-          // remains locked if it was locked before
-          if (this.api.tooltip[locked]) {
-            return;
-          }
-
-          this.api.tooltip[locked] = false;
-          this.hideTooltip();
-        } else if (
-          previousIndexDomain === null ||
-          currentIndexDomain !== previousIndexDomain
-        ) {
-          this.eventRect.classed('data', true);
-
-          if (this.api.tooltip[locked]) {
-            return;
-          }
-
-          let hidden = new Set(this.hiddenTargetIds);
-
-          previousIndexDomain = currentIndexDomain;
-          this.showTooltip(
-            this.data.targets.reduce((data, { id, values }) => {
-              if (!hidden.has(id)) {
-                data.push(this.addName(values[currentIndexDomain]));
-              }
-
-              return data;
-            }, []),
-            this.eventRect.node()
           );
-        }
-      });
+          const currentIndexDomain = rightEdgeDomain;
 
-      // escape hatch for last chance to cancel out tooltip effect
-      this.selectChart.on('mouseleave', () => {
-        previousIndexDomain = null;
-        if (!this.api.tooltip[locked]) {
-          this.hideTooltip();
-        }
-      });
+          // if all three are the same, we are outside of bar
+          if (
+            leftEdgeDomain === midPointDomain &&
+            midPointDomain === rightEdgeDomain
+          ) {
+            previousIndexDomain = null;
+            this.eventRect.classed('data', false);
 
-      // copy all text inside the tooltip
-      this.tooltip.on('click', () => {
-        if (d3.event.target.classList.contains('clipboard')) {
-          const range = document.createRange();
-          const selection = window.getSelection();
+            // remains locked if it was locked before
+            if (this.api.tooltip[locked]) {
+              return;
+            }
 
-          selection.removeAllRanges();
-          range.selectNodeContents(this.tooltip.node());
-          selection.addRange(range);
-          document.execCommand('copy');
-          selection.removeAllRanges();
-        }
-      });
-    }
+            this.api.tooltip[locked] = false;
+            this.hideTooltip();
+          } else if (
+            previousIndexDomain === null ||
+            currentIndexDomain !== previousIndexDomain
+          ) {
+            this.eventRect.classed('data', true);
 
-    /**
-     * Set up drag and zoom
-     *
-     * @param {Array<String>} conjugateChartNames names of the conjugate chart, e.g. Events <-> Builds
-     */
-    function setupDragZoom(...conjugateChartNames) {
-      // get the inverted domain values from d3
-      const getZoomedDomain = selection =>
-        selection && selection.map(x => this.x.invert(x));
-      const brush = d3
-        .brushX()
-        .on('start', () => {
-          const [x0, x1] = getZoomedDomain(d3.event.selection);
+            if (this.api.tooltip[locked]) {
+              return;
+            }
 
-          // this won't reset zoom level on every click drag event
-          if (x0 !== x1 && Math.abs(x1 - x0) >= 1) {
+            const hidden = new Set(this.hiddenTargetIds);
+
+            previousIndexDomain = currentIndexDomain;
+            this.showTooltip(
+              this.data.targets.reduce((data, { id, values }) => {
+                if (!hidden.has(id)) {
+                  data.push(this.addName(values[currentIndexDomain]));
+                }
+
+                return data;
+              }, []),
+              this.eventRect.node()
+            );
+          }
+        });
+
+        // escape hatch for last chance to cancel out tooltip effect
+        this.selectChart.on('mouseleave', () => {
+          previousIndexDomain = null;
+          if (!this.api.tooltip[locked]) {
+            this.hideTooltip();
+          }
+        });
+
+        // copy all text inside the tooltip
+        this.tooltip.on('click', () => {
+          if (d3.event.target.classList.contains('clipboard')) {
+            const range = document.createRange();
+            const selection = window.getSelection();
+
+            selection.removeAllRanges();
+            range.selectNodeContents(this.tooltip.node());
+            selection.addRange(range);
+            document.execCommand('copy');
+            selection.removeAllRanges();
+          }
+        });
+      }
+
+      /**
+       * Set up drag and zoom
+       *
+       * @param {Array<String>} conjugateChartNames names of the conjugate chart, e.g. Events <-> Builds
+       */
+      function setupDragZoom(...conjugateChartNames) {
+        // get the inverted domain values from d3
+        const getZoomedDomain = selection =>
+          selection && selection.map(x => this.x.invert(x));
+        const brush = d3
+          .brushX()
+          .on('start', () => {
+            const [x0, x1] = getZoomedDomain(d3.event.selection);
+
+            // this won't reset zoom level on every click drag event
+            if (x0 !== x1 && Math.abs(x1 - x0) >= 1) {
+              [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
+                c => {
+                  if (c) {
+                    c.unzoom();
+                  }
+                }
+              );
+            }
+
+            this.svg
+              .select(`.${this.CLASS.eventRects} .selection`)
+              .classed('hide', false);
+          })
+          .on('brush', () => {
             [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
               c => {
                 if (c) {
-                  c.unzoom();
+                  unlockTooltip.call(c.internal);
+                  c.tooltip[locked] = false;
+                  c.internal.hideTooltip();
                 }
               }
             );
-          }
-
-          this.svg
-            .select(`.${this.CLASS.eventRects} .selection`)
-            .classed('hide', false);
-        })
-        .on('brush', () => {
-          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
-            c => {
-              if (c) {
-                unlockTooltip.call(c.internal);
-                c.tooltip[locked] = false;
-                c.internal.hideTooltip();
-              }
+          })
+          .on('end', () => {
+            if (d3.event.selection === null) {
+              return;
             }
-          );
-        })
-        .on('end', () => {
-          if (d3.event.selection === null) {
-            return;
-          }
 
-          let zoomedDomain = getZoomedDomain(d3.event.selection);
-          const offsetFromRightEdge = 0.01;
-          const [x0, x1] = zoomedDomain;
+            let zoomedDomain = getZoomedDomain(d3.event.selection);
+            const offsetFromRightEdge = 0.01;
+            const [x0, x1] = zoomedDomain;
 
-          // need to have a tiny bit offset from right edge to prevent crossing over the next point
-          zoomedDomain = [Math.floor(x0), Math.ceil(x1) - offsetFromRightEdge];
+            // need to have a tiny bit offset from right edge to prevent crossing over the next point
+            zoomedDomain = [
+              Math.floor(x0),
+              Math.ceil(x1) - offsetFromRightEdge
+            ];
 
-          [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
-            c => {
-              if (c) {
-                c.zoom(zoomedDomain);
+            [this.api, ...conjugateChartNames.map(n => self.get(n))].forEach(
+              c => {
+                if (c) {
+                  c.zoom(zoomedDomain);
+                }
               }
-            }
-          );
+            );
 
-          this.svg
-            .select(`.${this.CLASS.eventRects} .selection`)
-            .classed('hide', true);
-        });
+            this.svg
+              .select(`.${this.CLASS.eventRects} .selection`)
+              .classed('hide', true);
+          });
 
-      // make the default event listening area also the overlay for d3 brush for drag event
-      d3.select(
-        this.eventRect.data([{ type: 'overlay' }]).node().parentElement
-      ).call(brush);
+        // make the default event listening area also the overlay for d3 brush for drag event
+        d3.select(
+          this.eventRect.data([{ type: 'overlay' }]).node().parentElement
+        ).call(brush);
 
-      // remove the default overlay area generated by d3 brush
-      this.main.select('.overlay').remove();
-    }
-
-    /**
-     * Set up different shims for overriding c3 behaviors
-     *
-     */
-    function shimHandlers() {
-      this.windowFocusHandler = Function.prototype;
-    }
-
-    /**
-     * Custom init callback for setting up custom behaviors
-     *
-     * @param {String} chartName name of the targeted chart
-     * @param {Array<String>} conjugateChartNames names of the conjugate chart
-     */
-    function onInitInner(chartName, ...conjugateChartNames) {
-      self.set(chartName, this.api);
-      setupExtras.call(this);
-      setupDragZoom.apply(this, conjugateChartNames);
-      shimHandlers.call(this);
-    }
-
-    return {
-      [eventsChartName]() {
-        onInitInner.call(this, eventsChartName, buildsChartName);
-      },
-      [buildsChartName]() {
-        onInitInner.call(this, buildsChartName, eventsChartName);
-      },
-      [stepsChartName]() {
-        onInitInner.call(this, stepsChartName);
-      },
-      [downtimeJobsChartName]() {
-        onInitInner.call(this, downtimeJobsChartName);
+        // remove the default overlay area generated by d3 brush
+        this.main.select('.overlay').remove();
       }
-    };
-  }),
+
+      /**
+       * Set up different shims for overriding c3 behaviors
+       *
+       */
+      function shimHandlers() {
+        this.windowFocusHandler = Function.prototype;
+      }
+
+      /**
+       * Custom init callback for setting up custom behaviors
+       *
+       * @param {String} chartName name of the targeted chart
+       * @param {Array<String>} conjugateChartNames names of the conjugate chart
+       */
+      function onInitInner(chartName, ...conjugateChartNames) {
+        self.set(chartName, this.api);
+        setupExtras.call(this);
+        setupDragZoom.apply(this, conjugateChartNames);
+        shimHandlers.call(this);
+      }
+
+      return {
+        [eventsChartName]() {
+          onInitInner.call(this, eventsChartName, buildsChartName);
+        },
+        [buildsChartName]() {
+          onInitInner.call(this, buildsChartName, eventsChartName);
+        },
+        [stepsChartName]() {
+          onInitInner.call(this, stepsChartName);
+        },
+        [downtimeJobsChartName]() {
+          onInitInner.call(this, downtimeJobsChartName);
+        }
+      };
+    }
+  ),
   setDates(start, end) {
     if (this.startTime !== start || this.endTime !== end) {
       this.set('startTime', start);

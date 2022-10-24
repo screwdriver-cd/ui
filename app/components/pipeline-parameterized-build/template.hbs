@@ -27,7 +27,7 @@
                       options=parameter.value
                       renderInPlace=true
                       selected=value
-                      onchange=(action (action "onUpdateValue" parameterizedModel parameterGroup.jobName parameter.name))
+                      onChange=(action (action "onUpdateValue" parameterizedModel parameterGroup.jobName parameter.name))
                       onkeydown=(action (action "searchOrAddtoList" parameterizedModel parameterGroup.jobName parameter.name))
                       searchPlaceholder="Type to filter"
                       noMatchesMessage="Hit enter to override"

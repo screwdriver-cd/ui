@@ -1,6 +1,6 @@
+import EmberObject, { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
-import EmberObject, { getWithDefault } from '@ember/object';
 import { all, Promise as EmberPromise } from 'rsvp';
 import { copy } from 'ember-copy';
 import $ from 'jquery';
@@ -44,11 +44,14 @@ export default Controller.extend({
   selectedConnectedPipelineId: null,
 
   async extractConnectedPipelines(pipeline) {
-    const edges = getWithDefault(pipeline, 'workflowGraph.edges', []);
+    const edges =
+      get(pipeline, 'workflowGraph.edges') === undefined
+        ? []
+        : get(pipeline, 'workflowGraph.edges');
 
-    let upstreams = new Set();
+    const upstreams = new Set();
 
-    let downstreams = new Set();
+    const downstreams = new Set();
 
     edges.forEach(e => {
       if (isExternalTrigger(e.src)) {
@@ -96,7 +99,7 @@ export default Controller.extend({
       pipelineGraph = copy(selectedPipeline, true);
     }
 
-    let { workflowGraph } = pipelineGraph;
+    const { workflowGraph } = pipelineGraph;
 
     workflowGraph.nodes.forEach(n => {
       if (!isExternalTrigger(n.name)) {

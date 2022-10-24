@@ -1,4 +1,4 @@
-import { getWithDefault } from '@ember/object';
+import { get } from '@ember/object';
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
@@ -16,11 +16,15 @@ export default Route.extend({
   },
   setupController(controller, model = {}) {
     this._super(controller, model);
-    const pipelinePreference = getWithDefault(model, 'pipelinePreference', {});
+    const pipelinePreference =
+      model.pipelinePreference === undefined ? {} : model.pipelinePreference;
 
     controller.setProperties({
       activeTab: 'events',
-      showPRJobs: getWithDefault(pipelinePreference, 'showPRJobs', true)
+      showPRJobs:
+        pipelinePreference.showPRJobs === undefined
+          ? true
+          : pipelinePreference.showPRJobs
     });
 
     this.pipelineService.setBuildsLink('pipeline.events');
@@ -36,17 +40,18 @@ export default Route.extend({
 
     pipelineEventsController.setProperties({
       pipeline: this.pipeline,
-      showDownstreamTriggers: getWithDefault(
-        this.pipeline,
-        'settings.showEventTriggers',
-        false
-      ),
-      isFilteredEventsForNoBuilds: getWithDefault(
-        this.pipeline,
-        'settings.filterEventsForNoBuilds',
-        false
-      ),
-      aliasName: getWithDefault(this.pipeline, 'settings.aliasName', '')
+      showDownstreamTriggers:
+        get(this.pipeline, 'settings.showEventTriggers') === undefined
+          ? false
+          : get(this.pipeline, 'settings.showEventTriggers'),
+      isFilteredEventsForNoBuilds:
+        get(this.pipeline, 'settings.filterEventsForNoBuilds') === undefined
+          ? false
+          : get(this.pipeline, 'settings.filterEventsForNoBuilds'),
+      aliasName:
+        get(this.pipeline, 'settings.aliasName') === undefined
+          ? ''
+          : get(this.pipeline, 'settings.aliasName')
     });
 
     return RSVP.hash({
@@ -60,7 +65,7 @@ export default Route.extend({
       pipelinePreference: this.shuttle.getUserPipelinePreference(pipelineId),
       desiredJobNameLength: this.userSettings.getDisplayJobNameLength()
     }).catch(err => {
-      let errorMessage = getErrorMessage(err);
+      const errorMessage = getErrorMessage(err);
 
       if (errorMessage !== '') {
         pipelineEventsController.set('errorMessage', errorMessage);

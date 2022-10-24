@@ -33,7 +33,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   });
 
   test('it asks for the list of commands for a given namespace and name without version', function (assert) {
-    let route = this.owner.lookup('route:commands/detail');
+    const route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
     assert.equal(
@@ -53,7 +53,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   });
 
   test('it asks for the list of commands for a given name and exist version', function (assert) {
-    let route = this.owner.lookup('route:commands/detail');
+    const route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
     assert.equal(
@@ -76,7 +76,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   });
 
   test('it asks for the list of commands for a given name and exist version of according to ember', function (assert) {
-    let route = this.owner.lookup('route:commands/detail');
+    const route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
 
@@ -91,7 +91,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   });
 
   test('it asks for the list of commands for a given name and exist tag', function (assert) {
-    let route = this.owner.lookup('route:commands/detail');
+    const route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
     assert.equal(
@@ -116,7 +116,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   sinonTest(
     'it asks for the list of commands for a given name and non-exist version',
     function (assert) {
-      let route = this.owner.lookup('route:commands/detail');
+      const route = this.owner.lookup('route:commands/detail');
       const stub = this.stub(route, 'transitionTo');
 
       assert.ok(route);
@@ -132,7 +132,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   sinonTest(
     'it asks for the list of commands for a given name and non-exist tag',
     function (assert) {
-      let route = this.owner.lookup('route:commands/detail');
+      const route = this.owner.lookup('route:commands/detail');
       const stub = this.stub(route, 'transitionTo');
 
       assert.ok(route);

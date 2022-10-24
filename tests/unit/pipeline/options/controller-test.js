@@ -24,7 +24,7 @@ module('Unit | Controller | pipeline/options', function (hooks) {
       '{"id": "abc1234"}'
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/options');
+    const controller = this.owner.lookup('controller:pipeline/options');
 
     run(() => {
       controller.store.push({

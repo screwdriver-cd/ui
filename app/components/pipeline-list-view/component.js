@@ -64,7 +64,7 @@ export default Component.extend({
       rows: sortedRows
     });
 
-    let sortColumn = table
+    const sortColumn = table
       .get('allColumns')
       .findBy('valuePath', this.sortingValuePath);
 
@@ -95,11 +95,15 @@ export default Component.extend({
   },
 
   getDefaultPipelineParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
+    return this.get('pipeline.parameters') === undefined
+      ? {}
+      : this.get('pipeline.parameters');
   },
 
   getDefaultJobParameters() {
-    return this.getWithDefault('pipeline.jobParameters', {});
+    return this.get('pipeline.jobParameters') === undefined
+      ? {}
+      : this.get('pipeline.jobParameters');
   },
 
   /**
@@ -170,8 +174,11 @@ export default Component.extend({
       };
 
       const hasParameters =
-        Object.keys(this.getWithDefault('pipelineParameters', {})).length > 0 ||
-        Object.keys(this.getWithDefault('jobParameters', {})).length > 0;
+        Object.keys(
+          this.pipelineParameters === undefined ? {} : this.pipelineParameters
+        ).length > 0 ||
+        Object.keys(this.jobParameters === undefined ? {} : this.jobParameters)
+          .length > 0;
 
       let manualStartEnabled = true;
 

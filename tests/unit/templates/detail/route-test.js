@@ -88,7 +88,7 @@ module('Unit | Route | templates/detail', function (hooks) {
   });
 
   test('it asks for the list of templates for a given name without version', function (assert) {
-    let route = this.owner.lookup('route:templates/detail');
+    const route = this.owner.lookup('route:templates/detail');
 
     assert.ok(route);
     assert.equal(
@@ -110,7 +110,7 @@ module('Unit | Route | templates/detail', function (hooks) {
   });
 
   test('it asks for the list of templates for a given name and exist version', function (assert) {
-    let route = this.owner.lookup('route:templates/detail');
+    const route = this.owner.lookup('route:templates/detail');
 
     assert.ok(route);
     assert.equal(
@@ -135,7 +135,7 @@ module('Unit | Route | templates/detail', function (hooks) {
   });
 
   test('it asks for the list of templates for a given name and exist version of according to ember', function (assert) {
-    let route = this.owner.lookup('route:templates/detail');
+    const route = this.owner.lookup('route:templates/detail');
 
     assert.ok(route);
 
@@ -152,7 +152,7 @@ module('Unit | Route | templates/detail', function (hooks) {
   });
 
   test('it asks for the list of templates for a given name and exist tag', function (assert) {
-    let route = this.owner.lookup('route:templates/detail');
+    const route = this.owner.lookup('route:templates/detail');
 
     assert.ok(route);
     assert.equal(
@@ -179,7 +179,7 @@ module('Unit | Route | templates/detail', function (hooks) {
   sinonTest(
     'it asks for the list of templates for a given name and non-exist version',
     function (assert) {
-      let route = this.owner.lookup('route:templates/detail');
+      const route = this.owner.lookup('route:templates/detail');
       const stub = this.stub(route, 'transitionTo');
 
       assert.ok(route);
@@ -195,7 +195,7 @@ module('Unit | Route | templates/detail', function (hooks) {
   sinonTest(
     'it asks for the list of templates for a given name and non-exist tag',
     function (assert) {
-      let route = this.owner.lookup('route:templates/detail');
+      const route = this.owner.lookup('route:templates/detail');
       const stub = this.stub(route, 'transitionTo');
 
       assert.ok(route);

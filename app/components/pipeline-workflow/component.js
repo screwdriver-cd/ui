@@ -1,12 +1,6 @@
 import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
-import {
-  get,
-  getWithDefault,
-  computed,
-  set,
-  setProperties
-} from '@ember/object';
+import { get, computed, set, setProperties } from '@ember/object';
 import { reject } from 'rsvp';
 import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
@@ -35,12 +29,12 @@ export default Component.extend({
 
         // Preload the builds for the jobs
         jobs.forEach(j => {
-          const jobName = get(j, 'name');
+          const jobName = j.name;
           const node = graph.nodes.find(n => n.name === jobName);
 
           // push the job id into the graph
           if (node) {
-            node.id = get(j, 'id');
+            node.id = j.id;
           }
         });
 
@@ -63,43 +57,59 @@ export default Component.extend({
     });
   },
 
-  isPrChainJob: computed('tooltipData', function isPrChainJob() {
-    const selectedEvent = getWithDefault(this, 'selectedEventObj', {});
-    const { prNum } = selectedEvent;
-    const isPrChain = get(this, 'pipeline.prChain');
+  isPrChainJob: computed(
+    'pipeline.prChain',
+    'selectedEventObj',
+    'tooltipData',
+    function isPrChainJob() {
+      const selectedEvent =
+        this.selectedEventObj === undefined ? {} : this.selectedEventObj;
+      const { prNum } = selectedEvent;
+      const isPrChain = get(this, 'pipeline.prChain');
 
-    return prNum !== undefined && isPrChain;
-  }),
-
-  prBuildExists: computed('tooltipData', function isStartablePrChainJob() {
-    const selectedEvent = this.selectedEventObj;
-
-    const { tooltipData } = this;
-
-    let selectedJobId;
-
-    if (tooltipData && tooltipData.job) {
-      selectedJobId = tooltipData.job.id ? tooltipData.job.id.toString() : null;
-    } else {
-      // job is not selected or upstream/downstream node are selected
-      return false;
+      return prNum !== undefined && isPrChain;
     }
+  ),
 
-    const buildExists = selectedEvent.buildsSorted.filter(
-      b => b.jobId === selectedJobId
-    );
+  prBuildExists: computed(
+    'selectedEventObj',
+    'tooltipData',
+    function isStartablePrChainJob() {
+      const selectedEvent = this.selectedEventObj;
 
-    const { prNum } = selectedEvent;
+      const { tooltipData } = this;
 
-    return prNum && buildExists.length !== 0;
-  }),
+      let selectedJobId;
+
+      if (tooltipData && tooltipData.job) {
+        selectedJobId = tooltipData.job.id
+          ? tooltipData.job.id.toString()
+          : null;
+      } else {
+        // job is not selected or upstream/downstream node are selected
+        return false;
+      }
+
+      const buildExists = selectedEvent.buildsSorted.filter(
+        b => b.jobId === selectedJobId
+      );
+
+      const { prNum } = selectedEvent;
+
+      return prNum && buildExists.length !== 0;
+    }
+  ),
 
   getDefaultPipelineParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
+    return this.get('pipeline.parameters') === undefined
+      ? {}
+      : this.get('pipeline.parameters');
   },
 
   getDefaultJobParameters() {
-    return this.getWithDefault('pipeline.jobParameters', {});
+    return this.get('pipeline.jobParameters') === undefined
+      ? {}
+      : this.get('pipeline.jobParameters');
   },
 
   mergeDefaultAndEventParameters(defaultParameters = {}, eventParameters) {
@@ -141,7 +151,7 @@ export default Component.extend({
   },
 
   buildPipelineParameters: computed(
-    'tooltipData',
+    'tooltipData.pipelineParameters',
     function preselectBuildParameters() {
       return this.mergeDefaultAndEventParameters(
         this.getDefaultPipelineParameters(),
@@ -151,7 +161,7 @@ export default Component.extend({
   ),
 
   buildJobParameters: computed(
-    'tooltipData',
+    'tooltipData.jobParameters',
     function preselectBuildParameters() {
       const defaultParameters = this.getDefaultJobParameters();
       const buildParameters = copy(defaultParameters, true);
@@ -161,11 +171,10 @@ export default Component.extend({
 
         Object.entries(currentEventParameters).forEach(
           ([jobName, currentJobParameters]) => {
-            const buildJobParameters = getWithDefault(
-              buildParameters,
-              jobName,
-              {}
-            );
+            const buildJobParameters =
+              get(buildParameters, jobName) === undefined
+                ? {}
+                : get(buildParameters, jobName);
 
             buildParameters[jobName] = this.mergeDefaultAndEventParameters(
               buildJobParameters,
@@ -197,11 +206,10 @@ export default Component.extend({
       // Find root nodes to determine position of tooltip
       if (job && edges && !/^~/.test(job.name)) {
         const selectedEvent = this.selectedEventObj;
-        const eventParameters = getWithDefault(
-          selectedEvent,
-          'meta.parameters',
-          {}
-        );
+        const eventParameters =
+          get(selectedEvent, 'meta.parameters') === undefined
+            ? {}
+            : get(selectedEvent, 'meta.parameters');
         const pipelineParameters = {};
         const jobParameters = {};
         const isPR = this.get('selectedEventObj.prNum');

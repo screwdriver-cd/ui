@@ -35,13 +35,13 @@ module('Unit | Controller | pipeline/metrics', function (hooks) {
   });
 
   test('it exists', function (assert) {
-    let controller = this.owner.lookup('controller:pipeline/metrics');
+    const controller = this.owner.lookup('controller:pipeline/metrics');
 
     assert.ok(controller);
   });
 
   test('it creates chart configurations for events, builds and steps charts', function (assert) {
-    let controller = this.owner.lookup('controller:pipeline/metrics');
+    const controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {
       controller.set('model', metricsMock);
@@ -225,7 +225,7 @@ module('Unit | Controller | pipeline/metrics', function (hooks) {
   });
 
   test('it toggles trendline chart', function (assert) {
-    let controller = this.owner.lookup('controller:pipeline/metrics');
+    const controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {
       controller.set('model', metricsMock);
@@ -258,7 +258,7 @@ module('Unit | Controller | pipeline/metrics', function (hooks) {
   });
 
   test('it sets dates, range and job id', function (assert) {
-    let controller = this.owner.lookup('controller:pipeline/metrics');
+    const controller = this.owner.lookup('controller:pipeline/metrics');
 
     controller.transitionToRoute = sinon.stub();
 
@@ -298,7 +298,7 @@ module('Unit | Controller | pipeline/metrics', function (hooks) {
   });
 
   test('it resets chart zoom level', function (assert) {
-    let controller = this.owner.lookup('controller:pipeline/metrics');
+    const controller = this.owner.lookup('controller:pipeline/metrics');
 
     run(() => {
       controller.set('model', metricsMock);

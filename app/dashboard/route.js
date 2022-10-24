@@ -16,7 +16,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   model() {
-    return this.controllerFor('application').getWithDefault('collections', []);
+    return this.controllerFor('application').get('collections') === undefined
+      ? []
+      : this.controllerFor('application').get('collections');
   },
 
   actions: {

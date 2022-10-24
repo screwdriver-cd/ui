@@ -13,14 +13,14 @@ export default Route.extend(AuthenticatedRouteMixin, {
       this.store
         .findAll('collection')
         .then(collections => {
-          if (get(collections, 'length')) {
+          if (collections.length) {
             // Get the id of the default collection.
             const defaultCollection = collections.find(
               collection => collection.type === 'default'
             );
             const routeId = defaultCollection.id;
 
-            let lastViewedCollectionId = localStorage.getItem(
+            const lastViewedCollectionId = localStorage.getItem(
               'lastViewedCollectionId'
             );
 

@@ -44,11 +44,15 @@ export default Component.extend({
   },
 
   getDefaultPipelineParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
+    return this.get('pipeline.parameters') === undefined
+      ? {}
+      : this.get('pipeline.parameters');
   },
 
   getDefaultJobParameters() {
-    return this.getWithDefault('pipeline.jobParameters', {});
+    return this.get('pipeline.jobParameters') === undefined
+      ? {}
+      : this.get('pipeline.jobParameters');
   },
 
   startArgs: computed('prNum', 'jobs', {

@@ -6,9 +6,9 @@ export default Controller.extend({
   template: service(),
   routeParams: computed('model', {
     get() {
-      let route = this.model;
+      const route = this.model;
 
-      let params = {
+      const params = {
         ...route.paramsFor('templates.namespace'),
         ...route.paramsFor('templates.detail')
       };
@@ -18,9 +18,9 @@ export default Controller.extend({
   }),
   crumbs: computed('routeParams', {
     get() {
-      let breadcrumbs = [];
+      const breadcrumbs = [];
 
-      let params = this.routeParams;
+      const params = this.routeParams;
 
       // add name and namespace together to get full name, compare fullname  to params.name
       // if equal, use name

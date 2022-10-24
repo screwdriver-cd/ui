@@ -37,7 +37,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it parses model properly', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -59,7 +59,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles version changes', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -80,7 +80,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles model changes', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
       commandData: [
@@ -104,7 +104,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles command deletion', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
       commandData: [
@@ -126,7 +126,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles command update', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
       commandData: [
@@ -146,7 +146,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles undefined tag or version', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -166,7 +166,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles a version that is exist', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -186,7 +186,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles a tag that is exist', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -206,7 +206,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles a version that is not exist', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -226,7 +226,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles a tag that is not exist', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [

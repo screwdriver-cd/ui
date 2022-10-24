@@ -23,7 +23,8 @@ export default Component.extend({
 
   prNumber: computed('event.pr.url', {
     get() {
-      let url = this.getWithDefault('event.pr.url', '');
+      const url =
+        this.get('event.pr.url') === undefined ? '' : this.get('event.pr.url');
 
       return url.split('/').pop();
     }
@@ -42,7 +43,7 @@ export default Component.extend({
     }
   }),
 
-  buildAction: computed('buildStatus', {
+  buildAction: computed('buildEnd', 'buildStatus', {
     get() {
       if (isActiveBuild(this.buildStatus, this.buildEnd)) {
         return 'Stop';
@@ -73,7 +74,7 @@ export default Component.extend({
   }),
 
   isButtonDisabledLoaded: false,
-  isButtonDisabled: computed('buildStatus', 'jobDisabled', {
+  isButtonDisabled: computed('buildAction', 'buildStatus', 'jobDisabled', {
     get() {
       if (this.buildAction === 'Restart') {
         return this.jobDisabled.then(jobDisabled => {
@@ -106,7 +107,7 @@ export default Component.extend({
         ? Number(parseFloat(coverage).toFixed(2))
         : null;
 
-      let coverageInfo = { ...this.coverageInfo };
+      const coverageInfo = { ...this.coverageInfo };
 
       if (coverageFloat) {
         coverageInfo.coverage = `${coverageFloat}%`;

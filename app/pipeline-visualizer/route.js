@@ -19,7 +19,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
     this._super(...arguments);
     const { selectedPipelineId, selectedConnectedPipelineId } = params;
 
-    let model = {};
+    const model = {};
 
     try {
       let selectedPipeline = null;

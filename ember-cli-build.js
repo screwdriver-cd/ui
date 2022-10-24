@@ -3,7 +3,7 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function (defaults) {
-  let app = new EmberApp(defaults, {
+  const app = new EmberApp(defaults, {
     autoImport: {
       forbidEval: true
     },
@@ -30,7 +30,7 @@ module.exports = function (defaults) {
     },
 
     'ember-bootstrap': {
-      bootstrapVersion: 3,
+      bootstrapVersion: 4,
       importBootstrapFont: true,
       importBootstrapCSS: false
     },

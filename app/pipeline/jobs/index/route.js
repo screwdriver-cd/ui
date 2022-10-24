@@ -35,7 +35,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
         this.get('pipeline.id')
       )
     }).catch(err => {
-      let errorMessage = getErrorMessage(err);
+      const errorMessage = getErrorMessage(err);
 
       if (errorMessage !== '') {
         pipelineJobsIndexController.set('errorMessage', errorMessage);

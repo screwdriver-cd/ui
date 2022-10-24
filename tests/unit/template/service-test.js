@@ -47,7 +47,7 @@ module('Unit | Service | template', function (hooks) {
       ])
     ]);
 
-    let service = this.owner.lookup('service:template');
+    const service = this.owner.lookup('service:template');
 
     assert.ok(service);
 
@@ -107,7 +107,7 @@ module('Unit | Service | template', function (hooks) {
       ])
     ]);
 
-    let service = this.owner.lookup('service:template');
+    const service = this.owner.lookup('service:template');
 
     assert.ok(service);
 
@@ -156,7 +156,7 @@ module('Unit | Service | template', function (hooks) {
       ])
     ]);
 
-    let service = this.owner.lookup('service:template');
+    const service = this.owner.lookup('service:template');
 
     assert.ok(service);
 
@@ -202,7 +202,7 @@ module('Unit | Service | template', function (hooks) {
 
     server.delete('http://localhost:8080/v4/templates/foo%2Fbar', () => [204]);
 
-    let service = this.owner.lookup('service:template');
+    const service = this.owner.lookup('service:template');
 
     assert.ok(service);
 
@@ -228,7 +228,7 @@ module('Unit | Service | template', function (hooks) {
       'Unauthorized'
     ]);
 
-    let service = this.owner.lookup('service:template');
+    const service = this.owner.lookup('service:template');
 
     assert.ok(service);
 
@@ -256,7 +256,7 @@ module('Unit | Service | template', function (hooks) {
       'Unauthorized'
     ]);
 
-    let service = this.owner.lookup('service:template');
+    const service = this.owner.lookup('service:template');
 
     assert.ok(service);
 
@@ -280,7 +280,7 @@ module('Unit | Service | template', function (hooks) {
       204
     ]);
 
-    let service = this.owner.lookup('service:template');
+    const service = this.owner.lookup('service:template');
 
     assert.ok(service);
 

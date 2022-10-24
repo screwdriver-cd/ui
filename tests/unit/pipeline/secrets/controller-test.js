@@ -23,7 +23,7 @@ module('Unit | Controller | pipeline/secrets', function (hooks) {
       JSON.stringify({ id: 1234 })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/secrets');
+    const controller = this.owner.lookup('controller:pipeline/secrets');
 
     assert.ok(controller);
 
@@ -59,7 +59,7 @@ module('Unit | Controller | pipeline/secrets', function (hooks) {
       JSON.stringify({ id: 123 })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/secrets');
+    const controller = this.owner.lookup('controller:pipeline/secrets');
 
     assert.ok(controller);
 
@@ -100,7 +100,7 @@ module('Unit | Controller | pipeline/secrets', function (hooks) {
       })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/secrets');
+    const controller = this.owner.lookup('controller:pipeline/secrets');
 
     assert.ok(controller);
 

@@ -21,35 +21,42 @@ export default Controller.extend({
   trusted: computed('commands.commandData.[]', function computeTrusted() {
     return this.commands.commandData.some(c => c.trusted && c.latest);
   }),
-  isAdmin: computed(function isAdmin() {
+  isAdmin: computed('session.data.authenticated.token', function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
     return (decoder(token).scope || []).includes('admin');
   }),
-  versionCommand: computed('selectedVersion', 'commands.commandData.[]', {
-    get() {
-      const version = this.selectedVersion || this.get('latest.version');
+  versionCommand: computed(
+    'commands.commandData.[]',
+    'latest.version',
+    'selectedVersion',
+    {
+      get() {
+        const version = this.selectedVersion || this.get('latest.version');
 
-      let { versionOrTagFromUrl } = this.commands;
+        const { versionOrTagFromUrl } = this.commands;
 
-      let { commandTagData } = this.commands;
+        const { commandTagData } = this.commands;
 
-      if (versionOrTagFromUrl === undefined) {
-        return this.commands.commandData.findBy('version', version);
-      }
+        if (versionOrTagFromUrl === undefined) {
+          return this.commands.commandData.findBy('version', version);
+        }
 
-      let tagExists = commandTagData.filter(t => t.tag === versionOrTagFromUrl);
-
-      if (tagExists.length > 0) {
-        return this.commands.commandData.findBy(
-          'version',
-          tagExists[0].version
+        const tagExists = commandTagData.filter(
+          t => t.tag === versionOrTagFromUrl
         );
-      }
 
-      return this.commands.commandData.findBy('version', versionOrTagFromUrl);
+        if (tagExists.length > 0) {
+          return this.commands.commandData.findBy(
+            'version',
+            tagExists[0].version
+          );
+        }
+
+        return this.commands.commandData.findBy('version', versionOrTagFromUrl);
+      }
     }
-  }),
+  ),
   // Set selected version to null whenever the list of commands changes
   // eslint-disable-next-line ember/no-observers
   modelObserver: observer('commands.commandData.[]', function modelObserver() {

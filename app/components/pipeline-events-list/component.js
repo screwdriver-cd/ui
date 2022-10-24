@@ -1,4 +1,4 @@
-import { computed, set, getWithDefault } from '@ember/object';
+import { get, computed, set } from '@ember/object';
 import Component from '@ember/component';
 import { scheduleOnce } from '@ember/runloop';
 import { inject as service } from '@ember/service';
@@ -9,18 +9,17 @@ export default Component.extend({
   router: service(),
   shuttle: service(),
   errorMessage: '',
-  isGroupedEvents: computed('pipeline', {
+  isGroupedEvents: computed('pipeline.settings.groupedEvents', {
     get() {
-      const isGroupedEvents = getWithDefault(
-        this,
-        'pipeline.settings.groupedEvents',
-        true
-      );
+      const isGroupedEvents =
+        get(this, 'pipeline.settings.groupedEvents') === undefined
+          ? true
+          : get(this, 'pipeline.settings.groupedEvents');
 
       return isGroupedEvents;
     }
   }),
-  eventsList: computed('events.[]', {
+  eventsList: computed('events.[]', 'pipeline.id', {
     get() {
       this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
         this.set('latestCommit', event);

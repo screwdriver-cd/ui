@@ -210,7 +210,7 @@ module('Integration | Component | collections flyout', function (hooks) {
 
     this.set('collections', mockCollections);
 
-    let onDeleteSpy = sinon.spy();
+    const onDeleteSpy = sinon.spy();
 
     this.set('showModal', false);
     this.set('name', null);

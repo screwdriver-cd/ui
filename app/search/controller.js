@@ -7,7 +7,7 @@ import Controller from '@ember/controller';
 export default Controller.extend({
   session: service(),
   moreToShow: true,
-  modelPipelines: computed('model.pipelines', {
+  modelPipelines: computed('model.pipelines', 'pipelinesToShow', {
     get() {
       const currentModelPipelines = this.get('model.pipelines').toArray();
       const currentPipelinesShown = this.pipelinesToShow;

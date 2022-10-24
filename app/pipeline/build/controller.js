@@ -21,38 +21,49 @@ export default Controller.extend({
   stepList: mapBy('build.steps', 'name'),
   isShowingModal: false,
   errorMessage: '',
-  jobDisabled: computed('model.job', {
-    get() {
-      const job = this.get('model.job');
-      const jobsPromise = this.get('model.pipeline.jobs');
+  jobDisabled: computed(
+    'model.event.type',
+    'model.job',
+    'model.pipeline.jobs',
+    {
+      get() {
+        const job = this.get('model.job');
+        const jobsPromise = this.get('model.pipeline.jobs');
 
-      return jobsPromise.then(jobs => {
-        if (this.get('model.event.type') === 'pr') {
-          const originalJob = jobs.find(j => j.id === job.prParentJobId);
+        return jobsPromise.then(jobs => {
+          if (this.get('model.event.type') === 'pr') {
+            const originalJob = jobs.find(j => j.id === job.prParentJobId);
 
-          return originalJob ? originalJob.isDisabled : false;
-        }
+            return originalJob ? originalJob.isDisabled : false;
+          }
 
-        return job.isDisabled;
-      });
-    }
-  }),
-
-  prEvents: computed('model.{event.pr.url,pipeline.id}', {
-    get() {
-      if (this.get('model.event.type') === 'pr') {
-        const event = this.get('model.event.pr.url');
-        const pipeline = this.get('model.pipeline.id');
-        const jobId = this.get('job.id');
-
-        if (event) {
-          return this.prEventsService.getPRevents(pipeline, event, jobId);
-        }
+          return job.isDisabled;
+        });
       }
-
-      return [];
     }
-  }),
+  ),
+
+  prEvents: computed(
+    'job.id',
+    'model.event.pr.url',
+    'model.event.type',
+    'model.pipeline.id',
+    {
+      get() {
+        if (this.get('model.event.type') === 'pr') {
+          const event = this.get('model.event.pr.url');
+          const pipeline = this.get('model.pipeline.id');
+          const jobId = this.get('job.id');
+
+          if (event) {
+            return this.prEventsService.getPRevents(pipeline, event, jobId);
+          }
+        }
+
+        return [];
+      }
+    }
+  ),
 
   actions: {
     stopBuild() {
@@ -72,7 +83,7 @@ export default Controller.extend({
       this.set('isShowingModal', true);
       const buildId = get(this, 'build.id');
       const token = get(this, 'session.data.authenticated.token');
-      const user = get(decoder(token), 'username');
+      const user = decoder(token).username;
       const causeMessage = `Manually started by ${user}`;
       const newEvent = this.store.createRecord('event', {
         buildId,
@@ -157,10 +168,10 @@ export default Controller.extend({
   },
 
   changeBuildStep(name) {
-    const currentRouteName = this.getWithDefault(
-      'router.currentRoute.name',
-      ''
-    );
+    const currentRouteName =
+      this.get('router.currentRoute.name') === undefined
+        ? ''
+        : this.get('router.currentRoute.name');
 
     if (
       !['pipeline.build.step', 'pipeline.build.index'].includes(
@@ -179,7 +190,7 @@ export default Controller.extend({
       activeStep = name;
       this.set('userSelectedStepName', name);
     } else if (!this.userSelectedStepName) {
-      activeStep = getActiveStep(get(build, 'steps'));
+      activeStep = getActiveStep(build.steps);
     }
 
     if (activeStep && this.preselectedStepName !== activeStep) {

@@ -1,6 +1,6 @@
+import { get, action } from '@ember/object';
 import Route from '@ember/routing/route';
 import { debounce, later } from '@ember/runloop';
-import { action, getWithDefault } from '@ember/object';
 import { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
@@ -49,11 +49,11 @@ export default class PipelineEventsShowRoute extends Route {
 
       pipelineEventsController.paginateEvents.pushObject(event);
     } else {
-      const isGroupedEvents = getWithDefault(
-        pipelineEventsController,
-        'pipeline.settings.groupedEvents',
-        true
-      );
+      const isGroupedEvents =
+        get(pipelineEventsController, 'pipeline.settings.groupedEvents') ===
+        undefined
+          ? true
+          : get(pipelineEventsController, 'pipeline.settings.groupedEvents');
 
       if (isGroupedEvents === true) {
         const { groupEventId } = desiredEvent;

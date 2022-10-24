@@ -36,7 +36,7 @@ export default Service.extend({
     const { session, store } = this;
     const scms = this.getScms();
 
-    if (get(scms, 'length') !== 0) {
+    if (scms.length !== 0) {
       return scms;
     }
 
@@ -45,7 +45,7 @@ export default Service.extend({
         scmContexts.forEach(scmContext => {
           let isSignedIn = false;
 
-          if (get(session, 'isAuthenticated')) {
+          if (session.isAuthenticated) {
             const jwtContext = get(session, 'data.authenticated.scmContext');
 
             if (jwtContext === scmContext.context) {

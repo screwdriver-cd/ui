@@ -29,7 +29,7 @@ export default Component.extend({
       }
     }
   ),
-  setupCollapsed: computed('selectedStep', {
+  setupCollapsed: computed('selectedStep', 'setupSteps', {
     get() {
       const name = this.selectedStep;
 
@@ -40,7 +40,7 @@ export default Component.extend({
       return true;
     }
   }),
-  teardownCollapsed: computed('selectedStep', {
+  teardownCollapsed: computed('selectedStep', 'teardownSteps', {
     get() {
       const name = this.selectedStep;
 

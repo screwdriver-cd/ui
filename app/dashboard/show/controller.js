@@ -1,5 +1,5 @@
+import { set } from '@ember/object';
 import { alias } from '@ember/object/computed';
-import { getWithDefault, set } from '@ember/object';
 import Controller from '@ember/controller';
 
 export default Controller.extend({
@@ -11,7 +11,8 @@ export default Controller.extend({
       return this.store
         .findRecord('collection', collectionId)
         .then(collection => {
-          const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
+          const pipelineIds =
+            collection.pipelineIds === undefined ? [] : collection.pipelineIds;
 
           set(
             collection,
@@ -28,7 +29,8 @@ export default Controller.extend({
       return this.store
         .findRecord('collection', collectionId)
         .then(collection => {
-          const pipelineIds = getWithDefault(collection, 'pipelineIds', []);
+          const pipelineIds =
+            collection.pipelineIds === undefined ? [] : collection.pipelineIds;
 
           set(
             collection,

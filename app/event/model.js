@@ -1,6 +1,6 @@
 import Model, { attr, hasMany } from '@ember-data/model';
 import { computed, observer, get, set } from '@ember/object';
-import { sort } from '@ember/object/computed';
+import { sort, equal } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
@@ -65,7 +65,7 @@ export default Model.extend(ModelReloaderMixin, {
   createTimeExact: computed('createTime', {
     get() {
       if (this.createTime) {
-        let dateTime = this.createTime.getTime();
+        const dateTime = this.createTime.getTime();
 
         return `${toCustomLocaleString(new Date(dateTime))}`;
       }
@@ -76,15 +76,13 @@ export default Model.extend(ModelReloaderMixin, {
   duration: computed('builds.[]', 'isComplete', {
     get() {
       const { builds } = this;
-      const firstCreateTime = builds
-        .map(item => get(item, 'createTime'))
-        .sort()[0];
+      const firstCreateTime = builds.map(item => item.createTime).sort()[0];
 
       let lastEndTime = new Date();
 
       if (this.isComplete) {
         lastEndTime = builds
-          .map(item => get(item, 'endTime'))
+          .map(item => item.endTime)
           .sort()
           .pop();
       }
@@ -104,7 +102,7 @@ export default Model.extend(ModelReloaderMixin, {
       });
     }
   }),
-  label: computed('meta', {
+  label: computed('meta.label', {
     get() {
       return this.get('meta.label') || null;
     }
@@ -138,12 +136,11 @@ export default Model.extend(ModelReloaderMixin, {
       builds.then(list => {
         if (!this.isDestroying && !this.isDestroyed) {
           const validList = list.filter(
-            b =>
-              get(b, 'status') !== 'SUCCESS' && get(b, 'status') !== 'CREATED'
+            b => b.status !== 'SUCCESS' && b.status !== 'CREATED'
           );
 
           if (validList.length) {
-            status = get(validList[0], 'status');
+            status = validList[0].status;
           } else {
             status = this.isComplete ? 'SUCCESS' : 'RUNNING';
           }
@@ -172,7 +169,7 @@ export default Model.extend(ModelReloaderMixin, {
         this.startReloading();
         set(this, 'reload', this.reload + 1);
 
-        const numBuilds = get(list, 'length');
+        const numBuilds = list.length;
 
         // no builds yet
         if (!numBuilds) {
@@ -183,8 +180,8 @@ export default Model.extend(ModelReloaderMixin, {
 
         // See if any builds are running
         const runningBuild = list.find(b => {
-          const status = get(b, 'status');
-          const endTime = get(b, 'endTime');
+          const { status } = b;
+          const { endTime } = b;
 
           return isActiveBuild(status, endTime);
         });
@@ -233,9 +230,7 @@ export default Model.extend(ModelReloaderMixin, {
 
   modelToReload: 'builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
-  isAborted: computed('status', function isAbortedFunc() {
-    return this.status === 'ABORTED';
-  }),
+  isAborted: equal('status', 'ABORTED'),
   isSkipped: computed('commit.message', 'type', 'numBuilds', {
     get() {
       if (this.type === 'pr') {

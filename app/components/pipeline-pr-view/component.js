@@ -9,7 +9,7 @@ export default Component.extend({
       return this.get('job.builds').objectAt(0);
     }
   }),
-  displayName: computed('job.name', {
+  displayName: computed('job.name', 'workflowGraph.nodes', {
     get() {
       const nodes = this.get('workflowGraph.nodes');
       const jobName = this.get('job.name').replace('PR-', '').split(':').pop();

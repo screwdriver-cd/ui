@@ -52,7 +52,7 @@ export default Component.extend({
     async createPipeline({ scmUrl, rootDir, autoKeysGeneration, yaml }) {
       this.set('isSaving', true);
 
-      let payload = {
+      const payload = {
         checkoutUrl: scmUrl,
         rootDir,
         autoKeysGeneration
@@ -67,7 +67,7 @@ export default Component.extend({
           this.set('showCreatePipeline', false);
         }
       } catch (err) {
-        let error = err.errors[0] || {};
+        const error = err.errors[0] || {};
 
         if (
           error.status === 409 &&
@@ -117,7 +117,7 @@ export default Component.extend({
         } catch (err) {
           const { payload: responsePayload } = err;
 
-          let { message } = responsePayload;
+          const { message } = responsePayload;
 
           this.setProperties({
             isSaving: false,

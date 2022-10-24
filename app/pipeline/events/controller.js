@@ -15,7 +15,7 @@ import {
 
 // eslint-disable-next-line require-jsdoc
 export async function stopBuild(givenEvent, job) {
-  const buildId = get(job, 'buildId');
+  const { buildId } = job;
 
   let build;
 
@@ -26,7 +26,7 @@ export async function stopBuild(givenEvent, job) {
     build.set('status', 'ABORTED');
 
     if (!event && this.modelEvents) {
-      event = this.modelEvents.filter(e => e.id === get(build, 'eventId'));
+      event = this.modelEvents.filter(e => e.id === build.eventId);
     }
 
     try {
@@ -55,30 +55,30 @@ export async function startDetachedBuild(job, options = {}) {
 
   let parentBuildId = null;
 
-  const buildId = get(job, 'buildId');
+  const { buildId } = job;
   const { parameters, reason } = options;
 
   if (buildId) {
     const build = this.store.peekRecord('build', buildId);
 
-    parentBuildId = get(build, 'parentBuildId');
+    parentBuildId = build.parentBuildId;
   } else if (event === undefined) {
-    const builds = await get(job, 'builds');
-    const latestBuild = get(builds, 'firstObject');
+    const builds = await job.builds;
+    const latestBuild = builds.firstObject;
 
-    event = await this.store.findRecord('event', get(latestBuild, 'eventId'));
+    event = await this.store.findRecord('event', latestBuild.eventId);
   }
 
-  const parentEventId = get(event, 'id');
-  const groupEventId = get(event, 'groupEventId');
+  const parentEventId = event.id;
+  const { groupEventId } = event;
   const pipelineId = get(this, 'pipeline.id');
   const token = get(this, 'session.data.authenticated.token');
-  const user = get(decoder(token), 'username');
+  const user = decoder(token).username;
 
   let causeMessage = `Manually started by ${user}`;
-  const prNum = get(event, 'prNum');
+  const { prNum } = event;
 
-  let startFrom = get(job, 'name');
+  let startFrom = job.name;
 
   if (reason) {
     causeMessage = `[force start]${reason}`;
@@ -238,14 +238,16 @@ export default Controller.extend(ModelReloaderMixin, {
   errorMessage: '',
   jobs: computed('model.jobs', {
     get() {
-      const jobs = this.getWithDefault('model.jobs', []);
+      const jobs =
+        this.get('model.jobs') === undefined ? [] : this.get('model.jobs');
 
       return jobs.filter(j => !isPRJob(j.get('name')));
     }
   }),
   prJobs: computed('model.jobs', {
     get() {
-      const jobs = this.getWithDefault('model.jobs', []);
+      const jobs =
+        this.get('model.jobs') === undefined ? [] : this.get('model.jobs');
       const prJobs = jobs.filter(j => isPRJob(j.get('name')));
 
       prJobs.forEach(prJob => {
@@ -269,7 +271,10 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   hasAdmins: computed('pipeline.admins', 'numberOfAdmins', {
     get() {
-      const admins = this.getWithDefault('pipeline.admins', {});
+      const admins =
+        this.get('pipeline.admins') === undefined
+          ? {}
+          : this.get('pipeline.admins');
 
       return Object.keys(admins).length;
     }
@@ -277,57 +282,60 @@ export default Controller.extend(ModelReloaderMixin, {
   jobsDetails: [],
   paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
-  completeWorkflowGraph: computed('model.triggers.@each.triggers', {
-    get() {
-      const workflowGraph = this.get('pipeline.workflowGraph');
-      const triggers = this.get('model.triggers');
-      const completeGraph = workflowGraph;
+  completeWorkflowGraph: computed(
+    'model.triggers.@each.triggers',
+    'pipeline.workflowGraph',
+    {
+      get() {
+        const workflowGraph = this.get('pipeline.workflowGraph');
+        const triggers = this.get('model.triggers');
+        const completeGraph = workflowGraph;
 
-      // Add extra node if downstream triggers exist
-      if (triggers && triggers.length > 0) {
-        triggers.forEach(t => {
-          if (t.triggers && t.triggers.length > 0) {
-            completeGraph.edges.push({
-              src: t.jobName,
-              dest: `~sd-${t.jobName}-triggers`
-            });
-            completeGraph.nodes.push({
-              name: `~sd-${t.jobName}-triggers`,
-              triggers: t.triggers,
-              status: 'DOWNSTREAM_TRIGGER'
-            });
-          }
-        });
+        // Add extra node if downstream triggers exist
+        if (triggers && triggers.length > 0) {
+          triggers.forEach(t => {
+            if (t.triggers && t.triggers.length > 0) {
+              completeGraph.edges.push({
+                src: t.jobName,
+                dest: `~sd-${t.jobName}-triggers`
+              });
+              completeGraph.nodes.push({
+                name: `~sd-${t.jobName}-triggers`,
+                triggers: t.triggers,
+                status: 'DOWNSTREAM_TRIGGER'
+              });
+            }
+          });
+        }
+        if (completeGraph) {
+          completeGraph.nodes = uniqBy(completeGraph.nodes || [], n => n.name);
+
+          completeGraph.edges = (completeGraph.edges || []).filter(e => {
+            const srcFound =
+              !e.src || !!completeGraph.nodes.find(n => n.name === e.src);
+            const destFound =
+              !e.dest || !!completeGraph.nodes.find(n => n.name === e.dest);
+
+            return srcFound && destFound;
+          });
+        }
+
+        return completeGraph;
       }
-      if (completeGraph) {
-        completeGraph.nodes = uniqBy(completeGraph.nodes || [], n => n.name);
-
-        completeGraph.edges = (completeGraph.edges || []).filter(e => {
-          const srcFound =
-            !e.src || !!completeGraph.nodes.find(n => n.name === e.src);
-          const destFound =
-            !e.dest || !!completeGraph.nodes.find(n => n.name === e.dest);
-
-          return srcFound && destFound;
-        });
-      }
-
-      return completeGraph;
     }
-  }),
+  ),
   currentEventType: computed('activeTab', {
     get() {
       return this.activeTab === 'pulls' ? 'pr' : 'pipeline';
     }
   }),
   // Aggregates first page events and events via ModelReloaderMixin
-  modelEvents: computed('model.events', {
+  modelEvents: computed('model.events', 'pipeline.id', 'previousModelEvents', {
     get() {
       let previousModelEvents = this.previousModelEvents || [];
 
-      let currentModelEvents = this.getWithDefault(
-        'model.events',
-        []
+      const currentModelEvents = (
+        this.get('model.events') === undefined ? [] : this.get('model.events')
       ).toArray();
 
       let newModelEvents = [];
@@ -357,26 +365,34 @@ export default Controller.extend(ModelReloaderMixin, {
       return newModelEvents;
     }
   }),
-  pipelineEvents: computed('modelEvents', 'paginateEvents.[]', {
-    get() {
-      this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
-        this.set('latestCommit', event);
-      });
+  pipelineEvents: computed(
+    'isFilteredEventsForNoBuilds',
+    'modelEvents',
+    'paginateEvents.[]',
+    'pipeline.id',
+    {
+      get() {
+        this.shuttle
+          .getLatestCommitEvent(this.get('pipeline.id'))
+          .then(event => {
+            this.set('latestCommit', event);
+          });
 
-      const pipelineEvents = [].concat(this.modelEvents, this.paginateEvents);
+        const pipelineEvents = [].concat(this.modelEvents, this.paginateEvents);
 
-      // filter events for no builds
-      if (this.isFilteredEventsForNoBuilds) {
-        const filteredEvents = pipelineEvents.filter(
-          (event, idx) => event.status !== 'SKIPPED' || idx === 0
-        );
+        // filter events for no builds
+        if (this.isFilteredEventsForNoBuilds) {
+          const filteredEvents = pipelineEvents.filter(
+            (event, idx) => event.status !== 'SKIPPED' || idx === 0
+          );
 
-        return filteredEvents;
+          return filteredEvents;
+        }
+
+        return pipelineEvents;
       }
-
-      return pipelineEvents;
     }
-  }),
+  ),
   prEvents: computed('model.events.@each.workflowGraph', 'prChainEnabled', {
     get() {
       const prEvents = this.get('model.events')
@@ -429,9 +445,10 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   pullRequestGroups: computed('model.jobs', {
     get() {
-      const jobs = this.getWithDefault('model.jobs', []);
+      const jobs =
+        this.get('model.jobs') === undefined ? [] : this.get('model.jobs');
 
-      let groups = {};
+      const groups = {};
 
       return jobs
         .filter(j => j.get('isPR'))
@@ -453,7 +470,10 @@ export default Controller.extend(ModelReloaderMixin, {
   }),
   isRestricted: computed('pipeline.annotations', {
     get() {
-      const annotations = this.getWithDefault('pipeline.annotations', {});
+      const annotations =
+        this.get('pipeline.annotations') === undefined
+          ? {}
+          : this.get('pipeline.annotations');
 
       return (annotations['screwdriver.cd/restrictPR'] || 'none') !== 'none';
     }
@@ -470,37 +490,37 @@ export default Controller.extend(ModelReloaderMixin, {
     }
   }),
 
-  selectedEventObj: computed('selectedEvent', {
+  selectedEventObj: computed('events', 'selectedEvent', {
     get() {
       const selected = this.selectedEvent;
 
-      return this.events.find(e => get(e, 'id') === selected);
+      return this.events.find(e => e.id === selected);
     }
   }),
 
   mostRecent: computed('events.@each.status', {
     get() {
       const list = this.events || [];
-      const event = list.find(e => get(e, 'status') === 'RUNNING');
+      const event = list.find(e => e.status === 'RUNNING');
 
       if (!event) {
-        return list.length ? get(list[0], 'id') : 0;
+        return list.length ? list[0].id : 0;
       }
 
-      return get(event, 'id');
+      return event.id;
     }
   }),
 
   lastSuccessful: computed('events.@each.status', {
     get() {
       const list = this.events || [];
-      const event = list.find(e => get(e, 'status') === 'SUCCESS');
+      const event = list.find(e => e.status === 'SUCCESS');
 
       if (!event) {
         return 0;
       }
 
-      return get(event, 'id');
+      return event.id;
     }
   }),
 
@@ -534,10 +554,10 @@ export default Controller.extend(ModelReloaderMixin, {
       this.set('isShowingModal', true);
 
       const token = get(this, 'session.data.authenticated.token');
-      const user = get(decoder(token), 'username');
+      const user = decoder(token).username;
       const pipelineId = this.get('pipeline.id');
 
-      let eventPayload = {
+      const eventPayload = {
         pipelineId,
         startFrom: '~commit',
         causeMessage: `Manually started by ${user}`
@@ -553,7 +573,7 @@ export default Controller.extend(ModelReloaderMixin, {
     stopBuild,
     async stopEvent() {
       const event = this.selectedEventObj;
-      const eventId = get(event, 'id');
+      const eventId = event.id;
 
       try {
         return await this.stop.stopBuilds(eventId);
@@ -583,12 +603,11 @@ export default Controller.extend(ModelReloaderMixin, {
     },
     startPRBuild(prNum, jobs, parameters) {
       this.set('isShowingModal', true);
-      const user = get(
-        decoder(this.get('session.data.authenticated.token')),
-        'username'
-      );
+      const user = decoder(
+        this.get('session.data.authenticated.token')
+      ).username;
 
-      let eventPayload = {
+      const eventPayload = {
         causeMessage: `Manually started by ${user}`,
         pipelineId: this.get('pipeline.id'),
         startFrom: '~pr',

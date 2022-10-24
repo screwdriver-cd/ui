@@ -1,5 +1,5 @@
+import { set } from '@ember/object';
 import Component from '@ember/component';
-import { getWithDefault, set } from '@ember/object';
 
 /**
  @class PipelineParameterizedBuild
@@ -63,11 +63,15 @@ export default Component.extend({
   },
 
   getDefaultPipelineParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
+    return this.get('pipeline.parameters') === undefined
+      ? {}
+      : this.get('pipeline.parameters');
   },
 
   getDefaultJobParameters() {
-    return this.getWithDefault('pipeline.jobParameters', {});
+    return this.get('pipeline.jobParameters') === undefined
+      ? {}
+      : this.get('pipeline.jobParameters');
   },
 
   /**
@@ -109,7 +113,7 @@ export default Component.extend({
     const normalizedParameters = [];
 
     Object.entries(parameters).forEach(([propertyName, propertyVal]) => {
-      let value = propertyVal.value || propertyVal || '';
+      const value = propertyVal.value || propertyVal || '';
       const description = propertyVal.description || '';
       // If no default value is found, fill with build parameter value
       const defaultPropertyVal = defaultParameters[propertyName]
@@ -187,7 +191,7 @@ export default Component.extend({
       let { value } = normalizedParam;
 
       if (Array.isArray(value)) {
-        value = getWithDefault(value, '0', '');
+        value = value[0] === undefined ? '' : value[0];
       }
 
       normalizedParameterizedModel[normalizedParam.name] = value;

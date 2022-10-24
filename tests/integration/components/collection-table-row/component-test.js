@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { click, render, settled, waitFor } from '@ember/test-helpers';
+import { click, render, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import $ from 'jquery';
@@ -73,7 +73,6 @@ module('Integration | Component | collection table row', function (hooks) {
       }}
     `);
 
-    await settled();
     await waitFor('td.status a i.fa-question-circle');
 
     assert.dom('td.collection-pipeline__choose').exists({ count: 1 });
@@ -114,7 +113,6 @@ module('Integration | Component | collection table row', function (hooks) {
       }}
     `);
 
-    await settled();
     assert.dom('td.collection-pipeline__choose input').doesNotExist();
     assert.dom('td.collection-pipeline__remove span').doesNotExist();
   });
@@ -131,7 +129,6 @@ module('Integration | Component | collection table row', function (hooks) {
       }}
     `);
 
-    await settled();
     assert.dom('td.collection-pipeline__choose input').exists();
     assert.dom('td.collection-pipeline__remove span').doesNotExist();
   });
@@ -146,7 +143,6 @@ module('Integration | Component | collection table row', function (hooks) {
       }}
     `);
 
-    await settled();
     assert.dom('td.collection-pipeline__choose input').doesNotExist();
     assert.dom('td.collection-pipeline__remove span').exists();
   });
@@ -161,8 +157,6 @@ module('Integration | Component | collection table row', function (hooks) {
         removePipeline=removePipeline
       }}
     `);
-
-    await settled();
 
     await click('.collection-pipeline__remove span');
     assert.ok(removePipelineSpy.calledWith(mockPipeline.id));
@@ -181,8 +175,6 @@ module('Integration | Component | collection table row', function (hooks) {
         deselectPipeline=deselectPipeline
       }}
     `);
-
-    await settled();
 
     await click('.collection-pipeline__choose input');
     assert.ok(selectPipelineSpy.calledWith(mockPipeline.id));

@@ -8,23 +8,28 @@ export default Component.extend({
   collectionToDelete: null,
   showConfirmation: false,
   showModal: false,
-  collections: computed('store', {
-    get() {
-      if (
-        !get(this, 'session.isAuthenticated') ||
-        get(this, 'session.data.authenticated.isGuest')
-      ) {
-        return [];
-      }
-      const collections = this.store.peekAll('collection');
+  collections: computed(
+    'session.data.authenticated.isGuest',
+    'session.isAuthenticated',
+    'store',
+    {
+      get() {
+        if (
+          !get(this, 'session.isAuthenticated') ||
+          get(this, 'session.data.authenticated.isGuest')
+        ) {
+          return [];
+        }
+        const collections = this.store.peekAll('collection');
 
-      if (collections.isLoaded) {
-        return collections;
-      }
+        if (collections.isLoaded) {
+          return collections;
+        }
 
-      return this.store.findAll('collection');
+        return this.store.findAll('collection');
+      }
     }
-  }),
+  ),
   orderedCollections: computed('collections.[]', {
     get() {
       let defaultCollection;

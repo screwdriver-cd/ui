@@ -20,7 +20,7 @@ module('Unit | Controller | dashboard/show', function (hooks) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:dashboard/show');
 
-    let pipelineIds = [1, 2, 3];
+    const pipelineIds = [1, 2, 3];
 
     const mock = EmberObject.create({
       id: 2,

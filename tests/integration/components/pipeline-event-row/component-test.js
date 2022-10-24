@@ -87,7 +87,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(event, true));
+    const eventMock = EmberObject.create(copy(event, true));
 
     eventMock.isRunning = false;
     eventMock.status = 'SUCCESS';
@@ -128,7 +128,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(event, true));
+    const eventMock = EmberObject.create(copy(event, true));
 
     eventMock.isRunning = true;
     eventMock.status = 'RUNNING';
@@ -170,7 +170,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(event, true));
+    const eventMock = EmberObject.create(copy(event, true));
 
     eventMock.isRunning = true;
     eventMock.status = 'UNKNOWN';
@@ -445,7 +445,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(event, true));
+    const eventMock = EmberObject.create(copy(event, true));
 
     eventMock.isRunning = false;
     eventMock.status = 'SUCCESS';

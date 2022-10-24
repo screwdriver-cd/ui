@@ -74,7 +74,7 @@ export default Model.extend({
   startTimeExact: computed('startTime', {
     get() {
       if (this.startTime) {
-        let dateTime = this.startTime.getTime();
+        const dateTime = this.startTime.getTime();
 
         return `${toCustomLocaleString(new Date(dateTime))}`;
       }
@@ -92,7 +92,7 @@ export default Model.extend({
   createTimeExact: computed('createTime', {
     get() {
       if (this.createTime) {
-        let dateTime = this.createTime.getTime();
+        const dateTime = this.createTime.getTime();
 
         return `${toCustomLocaleString(new Date(dateTime))}`;
       }
@@ -112,7 +112,7 @@ export default Model.extend({
   endTimeExact: computed('endTime', {
     get() {
       if (this.endTime) {
-        let dateTime = this.endTime.getTime();
+        const dateTime = this.endTime.getTime();
 
         return `${toCustomLocaleString(new Date(dateTime))}`;
       }

@@ -17,7 +17,9 @@ module('Unit | Controller | user-settings/preferences', function (hooks) {
   });
 
   test('it exists', function (assert) {
-    let controller = this.owner.lookup('controller:user-settings/preferences');
+    const controller = this.owner.lookup(
+      'controller:user-settings/preferences'
+    );
 
     assert.ok(controller);
   });

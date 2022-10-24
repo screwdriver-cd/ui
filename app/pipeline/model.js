@@ -1,6 +1,6 @@
+import { computed } from '@ember/object';
 import Model, { attr, hasMany } from '@ember-data/model';
 import { alias } from '@ember/object/computed';
-import { computed, getWithDefault } from '@ember/object';
 
 export default Model.extend({
   admins: attr(),
@@ -48,7 +48,7 @@ export default Model.extend({
     get() {
       const parameters = {};
 
-      getWithDefault(this, 'jobs', []).forEach(job => {
+      (this.jobs === undefined ? [] : this.jobs).forEach(job => {
         if (job.prParentJobId === null || job.prParentJobId === undefined) {
           const jobParameters = job.parameters;
 

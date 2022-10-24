@@ -1,4 +1,4 @@
-import { get, getWithDefault } from '@ember/object';
+import { get } from '@ember/object';
 import DS from 'ember-data';
 
 const STATUS_MAP = {
@@ -38,7 +38,7 @@ const node = (nodes, name) => nodes.find(o => o.name === name);
  * @return {Object}         Reference to the build object from the list if found
  */
 const build = (builds, jobId) =>
-  builds.find(b => b && `${get(b, 'jobId')}` === `${jobId}`);
+  builds.find(b => b && `${b.jobId}` === `${jobId}`);
 
 /**
  * Find a job for the given job id
@@ -47,8 +47,7 @@ const build = (builds, jobId) =>
  * @param  {String} jobId   The job id of the build
  * @return {Object}         Reference to the job object from the list if found
  */
-const job = (jobs, jobId) =>
-  jobs.find(j => j && `${get(j, 'id')}` === `${jobId}`);
+const job = (jobs, jobId) => jobs.find(j => j && `${j.id}` === `${jobId}`);
 
 /**
  * Find the icon to set as the text for a node
@@ -194,10 +193,9 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   const { nodes } = graph;
   const buildsAvailable =
     (Array.isArray(builds) || builds instanceof DS.PromiseArray) &&
-    get(builds, 'length');
+    builds.length;
   const jobsAvailable =
-    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) &&
-    get(jobs, 'length');
+    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) && jobs.length;
   const { edges } = graph;
 
   let y = [0]; // accumulator for column heights
@@ -207,7 +205,7 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
     if (isRoot(edges, n.name)) {
       if (!hasProcessedDest(graph, n.name)) {
         // find the next unused row
-        let tmp = Math.max(...y);
+        const tmp = Math.max(...y);
 
         // Set all the starting pos for columns to that row
         y = y.map(() => tmp);
@@ -222,19 +220,24 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
     }
 
     // Get job information
-    const jobId = get(n, 'id');
+    const jobId = n.id;
 
     if (jobsAvailable) {
       const j = job(jobs, jobId);
 
-      n.isDisabled = j ? getWithDefault(j, 'isDisabled', false) : false;
+      // eslint-disable-next-line no-nested-ternary
+      n.isDisabled = j
+        ? j.isDisabled === undefined
+          ? false
+          : j.isDisabled
+        : false;
 
       // Set build status to disabled if job is disabled
       if (n.isDisabled) {
-        const state = get(j, 'state');
+        const { state } = j;
         const stateWithCapitalization =
           state[0].toUpperCase() + state.substring(1).toLowerCase();
-        const stateChanger = get(j, 'stateChanger');
+        const { stateChanger } = j;
 
         n.status = state;
         n.stateChangeMessage = stateChanger
@@ -259,8 +262,8 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
 
       // Add build information to node
       if (b) {
-        n.status = get(b, 'status');
-        n.buildId = get(b, 'id');
+        n.status = b.status;
+        n.buildId = b.id;
       }
     }
 
@@ -316,13 +319,13 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
     start = startNode.split(':')[1];
   }
 
-  let visiting = [start];
+  const visiting = [start];
 
-  let visited = new Set(visiting);
+  const visited = new Set(visiting);
 
   if (edges.length) {
     while (visiting.length) {
-      let cur = visiting.shift();
+      const cur = visiting.shift();
 
       edges.forEach(e => {
         if (e.src === cur && !visited.has(e.dest)) {

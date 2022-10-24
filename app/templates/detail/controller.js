@@ -17,7 +17,7 @@ export default Controller.extend({
   trusted: computed('templates.templateData.[]', function computeTrusted() {
     return this.templates.templateData.some(t => t.trusted && t.latest);
   }),
-  isAdmin: computed(function isAdmin() {
+  isAdmin: computed('session.data.authenticated.token', function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
     return (decoder(token).scope || []).includes('admin');
@@ -27,32 +27,40 @@ export default Controller.extend({
       return this.templates.templateData[0];
     }
   }),
-  versionTemplate: computed('selectedVersion', 'templates.templateData.[]', {
-    get() {
-      const version = this.selectedVersion || this.get('latest.version');
+  versionTemplate: computed(
+    'latest.version',
+    'selectedVersion',
+    'templates.templateData.[]',
+    {
+      get() {
+        const version = this.selectedVersion || this.get('latest.version');
 
-      let { versionOrTagFromUrl } = this.templates;
+        const { versionOrTagFromUrl } = this.templates;
 
-      let { templateTagData } = this.templates;
+        const { templateTagData } = this.templates;
 
-      if (versionOrTagFromUrl === undefined) {
-        return this.templates.templateData.findBy('version', version);
-      }
+        if (versionOrTagFromUrl === undefined) {
+          return this.templates.templateData.findBy('version', version);
+        }
 
-      let tagExists = templateTagData.filter(
-        t => t.tag === versionOrTagFromUrl
-      );
+        const tagExists = templateTagData.filter(
+          t => t.tag === versionOrTagFromUrl
+        );
 
-      if (tagExists.length > 0) {
+        if (tagExists.length > 0) {
+          return this.templates.templateData.findBy(
+            'version',
+            tagExists[0].version
+          );
+        }
+
         return this.templates.templateData.findBy(
           'version',
-          tagExists[0].version
+          versionOrTagFromUrl
         );
       }
-
-      return this.templates.templateData.findBy('version', versionOrTagFromUrl);
     }
-  }),
+  ),
   actions: {
     removeTemplate(name) {
       return this.template.deleteTemplates(name).then(

@@ -30,12 +30,12 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let table = Table.create({
+    const table = Table.create({
       columns: this.columns,
       rows: this.refinedModel
     });
 
-    let sortColumn = table.get('allColumns').findBy('valuePath', this.sort);
+    const sortColumn = table.get('allColumns').findBy('valuePath', this.sort);
 
     // Setup initial sort column
     if (sortColumn) {
@@ -174,7 +174,7 @@ export default Component.extend({
   actions: {
     sortByColumn(column) {
       if (column.sorted) {
-        let vp = column.get('valuePath');
+        const vp = column.get('valuePath');
 
         this.setProperties({
           dir: column.ascending ? 'asc' : 'desc',

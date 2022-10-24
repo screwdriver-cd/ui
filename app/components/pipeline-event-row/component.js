@@ -42,17 +42,19 @@ export default Component.extend({
     const jobParameters = {};
 
     // Segregate pipeline level and job level parameters
-    Object.entries(this.getWithDefault('event.meta.parameters', {})).forEach(
-      ([propertyName, propertyVal]) => {
-        const keys = Object.keys(propertyVal);
+    Object.entries(
+      this.get('event.meta.parameters') === undefined
+        ? {}
+        : this.get('event.meta.parameters')
+    ).forEach(([propertyName, propertyVal]) => {
+      const keys = Object.keys(propertyVal);
 
-        if (keys.length === 1 && keys[0] === 'value') {
-          pipelineParameters[propertyName] = propertyVal;
-        } else {
-          jobParameters[propertyName] = propertyVal;
-        }
+      if (keys.length === 1 && keys[0] === 'value') {
+        pipelineParameters[propertyName] = propertyVal;
+      } else {
+        jobParameters[propertyName] = propertyVal;
       }
-    );
+    });
 
     this.setProperties({
       pipelineParameters,
@@ -92,7 +94,7 @@ export default Component.extend({
     }
   }),
 
-  isExternalTrigger: computed('event.startFrom', {
+  isExternalTrigger: computed('event.{pipelineId,startFrom}', {
     get() {
       const startFrom = this.get('event.startFrom');
       const pipelineId = this.get('event.pipelineId');

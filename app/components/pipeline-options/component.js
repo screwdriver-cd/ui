@@ -1,5 +1,5 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
-import { computed, getWithDefault } from '@ember/object';
 import { not, or } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import $ from 'jquery';
@@ -52,7 +52,7 @@ export default Component.extend({
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
-    return getWithDefault(this, 'jobs', [])
+    return (this.jobs === undefined ? [] : this.jobs)
       .filter(j => !j.name.match(prRegex))
       .sortBy('name');
   }),
@@ -95,7 +95,7 @@ export default Component.extend({
       'pipeline.settings.filterEventsForNoBuilds'
     );
 
-    let aliasName = this.get('pipeline.settings.aliasName');
+    const aliasName = this.get('pipeline.settings.aliasName');
 
     if (typeof privateRepo !== 'boolean') {
       privateRepo = false;
@@ -133,15 +133,19 @@ export default Component.extend({
     );
 
     if (pipelinePreference) {
-      showPRJobs = getWithDefault(pipelinePreference, 'showPRJobs', true);
+      showPRJobs =
+        pipelinePreference.showPRJobs === undefined
+          ? true
+          : pipelinePreference.showPRJobs;
     }
 
     this.setProperties({ showPRJobs });
 
     if (this.displayDowntimeJobs) {
-      const metricsDowntimeJobs = this.getWithDefault(
-        'pipeline.settings.metricsDowntimeJobs',
-        []
+      const metricsDowntimeJobs = (
+        this.get('pipeline.settings.metricsDowntimeJobs') === undefined
+          ? []
+          : this.get('pipeline.settings.metricsDowntimeJobs')
       ).map(jobId => this.jobs.findBy('id', `${jobId}`));
 
       this.set('metricsDowntimeJobs', metricsDowntimeJobs);
@@ -250,7 +254,7 @@ export default Component.extend({
     clearCache(scope, id) {
       const pipelineId = this.get('pipeline.id');
 
-      let config = {
+      const config = {
         scope,
         cacheId: id,
         pipelineId
@@ -269,7 +273,7 @@ export default Component.extend({
     },
 
     async updatePipelineAlias() {
-      let { aliasName } = this;
+      const { aliasName } = this;
 
       this.$('input.pipeline-alias-name').val(aliasName);
 

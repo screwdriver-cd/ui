@@ -8,7 +8,7 @@ module(
     setupTest(hooks);
 
     test('it exists', function (assert) {
-      let route = this.owner.lookup(
+      const route = this.owner.lookup(
         'route:pipeline/job-latest-build/artifacts/detail'
       );
 

@@ -56,7 +56,7 @@ $weight-bold: 600;
   box-shadow: none;
 }
 
-@import 'font-awesome';
+// @import 'font-awesome';
 @import 'denali-button';
 @import 'denali-colors';
 @import 'screwdriver-colors';
@@ -187,3 +187,5 @@ body {
 }
 
 @import 'ember-power-select';
+
+@import 'ember-bootstrap/bootstrap';

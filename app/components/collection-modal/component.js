@@ -42,7 +42,7 @@ export default Component.extend({
           .then(() => {
             this.set('showModal', false);
 
-            let addDirectly = this.addToCollection;
+            const addDirectly = this.addToCollection;
 
             if (addDirectly) {
               addDirectly(newCollection);

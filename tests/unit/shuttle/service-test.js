@@ -20,7 +20,7 @@ module('Unit | Service | shuttle', function (hooks) {
 
   test('fetchLogs payload', function (assert) {
     assert.expect(2);
-    let service = this.owner.lookup('service:shuttle');
+    const service = this.owner.lookup('service:shuttle');
 
     server.get(
       `${ENV.APP.SDAPI_HOSTNAME}/v4/builds/170338/steps/step6/logs`,
@@ -58,7 +58,7 @@ module('Unit | Service | shuttle', function (hooks) {
 
   test('fetchCoverage payload', function (assert) {
     assert.expect(2);
-    let service = this.owner.lookup('service:shuttle');
+    const service = this.owner.lookup('service:shuttle');
 
     server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info`, () => [
       200,
@@ -100,7 +100,7 @@ module('Unit | Service | shuttle', function (hooks) {
 
   test('getLatestCommitEvent payload', function (assert) {
     assert.expect(2);
-    let service = this.owner.lookup('service:shuttle');
+    const service = this.owner.lookup('service:shuttle');
 
     server.get(
       `${ENV.APP.SDAPI_HOSTNAME}/v4/pipelines/123456/latestCommitEvent`,

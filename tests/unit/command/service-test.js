@@ -74,7 +74,7 @@ module('Unit | Service | command', function (hooks) {
       JSON.stringify(dummyCommands)
     ]);
 
-    let service = this.owner.lookup('service:command');
+    const service = this.owner.lookup('service:command');
 
     assert.ok(service);
 
@@ -96,7 +96,7 @@ module('Unit | Service | command', function (hooks) {
       JSON.stringify(dummyCommandTags)
     ]);
 
-    let service = this.owner.lookup('service:command');
+    const service = this.owner.lookup('service:command');
 
     assert.ok(service);
 
@@ -118,7 +118,7 @@ module('Unit | Service | command', function (hooks) {
       JSON.stringify(dummyCommands)
     ]);
 
-    let service = this.owner.lookup('service:command');
+    const service = this.owner.lookup('service:command');
 
     assert.ok(service);
 
@@ -145,7 +145,7 @@ module('Unit | Service | command', function (hooks) {
 
     server.delete('http://localhost:8080/v4/commands/foo/bar', () => [204]);
 
-    let service = this.owner.lookup('service:command');
+    const service = this.owner.lookup('service:command');
 
     assert.ok(service);
 
@@ -171,7 +171,7 @@ module('Unit | Service | command', function (hooks) {
       'Unauthorized'
     ]);
 
-    let service = this.owner.lookup('service:command');
+    const service = this.owner.lookup('service:command');
 
     assert.ok(service);
 
@@ -199,7 +199,7 @@ module('Unit | Service | command', function (hooks) {
       'Unauthorized'
     ]);
 
-    let service = this.owner.lookup('service:command');
+    const service = this.owner.lookup('service:command');
 
     assert.ok(service);
 
@@ -223,7 +223,7 @@ module('Unit | Service | command', function (hooks) {
       204
     ]);
 
-    let service = this.owner.lookup('service:command');
+    const service = this.owner.lookup('service:command');
 
     assert.ok(service);
 

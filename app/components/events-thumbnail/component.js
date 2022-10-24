@@ -10,6 +10,7 @@ export default Component.extend({
   pipelineId: undefined,
 
   didInsertElement() {
+    this._super(...arguments);
     const getParameters = svg => {
       const chartSize = parseInt(svg.style('width'), 10);
       const barSpace = (chartSize * 0.96) / MAX_NUM_EVENTS_SHOWN;

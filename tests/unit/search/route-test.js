@@ -16,7 +16,7 @@ module('Unit | Route | search', function (hooks) {
   });
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:search');
+    const route = this.owner.lookup('route:search');
 
     assert.ok(route);
     assert.equal(route.titleToken, 'Search');

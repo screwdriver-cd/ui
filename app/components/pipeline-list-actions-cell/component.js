@@ -3,7 +3,7 @@ import { computed } from '@ember/object';
 import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
-  stopButtonClass: computed('value.latestBuild', {
+  stopButtonClass: computed('value.latestBuild.status', {
     get() {
       const status = this.get('value.latestBuild.status');
 

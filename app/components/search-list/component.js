@@ -28,7 +28,7 @@ export default Component.extend({
   }),
   filteredPipelines: computed('pipelines', {
     get() {
-      let filtered = this.pipelines;
+      const filtered = this.pipelines;
 
       // add scm contexts into pipelines.
       return filtered.map(pipeline => {
@@ -73,7 +73,7 @@ export default Component.extend({
       this.set('showModal', true);
     },
     addNewCollectionHelper() {
-      let addNewCollectionParent = this.addNewCollection;
+      const addNewCollectionParent = this.addNewCollection;
 
       addNewCollectionParent();
     },

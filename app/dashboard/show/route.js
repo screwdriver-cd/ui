@@ -4,10 +4,10 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 
 export default Route.extend(AuthenticatedRouteMixin, {
   model(params) {
-    const collections = this.controllerFor('application').getWithDefault(
-      'collections',
-      []
-    );
+    const collections =
+      this.controllerFor('application').get('collections') === undefined
+        ? []
+        : this.controllerFor('application').get('collections');
 
     return this.store
       .findRecord('collection', params.collection_id, { reload: true })

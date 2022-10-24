@@ -1,5 +1,4 @@
 import { isEmpty } from '@ember/utils';
-import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
@@ -68,7 +67,7 @@ export default Base.extend({
    */
   restore(data) {
     return new EmberPromise((resolve, reject) => {
-      const jwt = get(data, 'token');
+      const jwt = data.token;
 
       if (!isEmpty(jwt)) {
         const decodedJWT = decoder(jwt);
@@ -97,7 +96,7 @@ export default Base.extend({
     const scm = this.scmService;
 
     return new EmberPromise((resolve, reject) => {
-      let url = [loginUrlBase];
+      const url = [loginUrlBase];
 
       if (scmContext) {
         url.push(scmContext);

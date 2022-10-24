@@ -18,7 +18,7 @@ export default Component.extend({
       };
     }
   }),
-  jobName: computed('value', {
+  jobName: computed('value.jobName', {
     get() {
       return this.value.jobName;
     }

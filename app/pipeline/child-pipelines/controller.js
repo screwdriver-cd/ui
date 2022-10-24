@@ -8,7 +8,7 @@ export default Controller.extend({
   scmService: service('scm'),
   pipelines: computed('model.pipelines', {
     get() {
-      let pipelines = this.get('model.pipelines');
+      const pipelines = this.get('model.pipelines');
 
       // add scm contexts into pipelines.
       return pipelines.map(pipeline => {
