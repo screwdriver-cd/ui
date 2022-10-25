@@ -39,10 +39,10 @@ export default Component.extend({
       promise: this.pipeline.get('metrics').then(metrics => {
         let lastRun = 'n/a';
 
-        const lastRunBuild = metrics.lastObject?.builds?.lastObject;
+        const { lastEventInfo } = formatMetrics(metrics);
 
-        if (lastRunBuild) {
-          const { createTime } = lastRunBuild;
+        if (lastEventInfo) {
+          const { createTime } = lastEventInfo;
 
           lastRun = getLastUpdatedTime({
             createTime

@@ -79,7 +79,8 @@ const formatMetrics = metrics => {
         sha: 'Not available',
         icon: 'question-circle',
         commitMessage: 'No events have been run for this pipeline',
-        commitUrl: '#'
+        commitUrl: '#',
+        createTime: 'n/a'
       }
     };
   }
@@ -106,7 +107,8 @@ const formatMetrics = metrics => {
     sha: getSha(lastEvent.sha),
     icon: getIcon(lastEvent.status.toLowerCase()),
     commitMessage: lastEvent.commit.message,
-    commitUrl: lastEvent.commit.url
+    commitUrl: lastEvent.commit.url,
+    createTime: lastEvent.createTime
   };
 
   return { eventsInfo, lastEventInfo };

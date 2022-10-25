@@ -1,6 +1,7 @@
 import { alias } from '@ember/object/computed';
 import { computed, getWithDefault } from '@ember/object';
 import DS from 'ember-data';
+import { formatMetrics } from 'screwdriver-ui/utils/metric';
 
 export default DS.Model.extend({
   admins: DS.attr(),
@@ -74,14 +75,16 @@ export default DS.Model.extend({
       return failedBuildCount;
     }
   }),
-  lastRunJob: computed('metrics.[]', {
+  lastRunEvent: computed('metrics.[]', {
     get() {
       let lastRun = 'n/a';
 
-      this.metrics.toArray().forEach(event => {
-        lastRun = event.builds.lastObject;
-      });
+      this.metrics.toArray().forEach(metrics => {
+        const { lastEventInfo } = formatMetrics(metrics);
 
+       lastRun = lastEventInfo;
+      });
+      
       return lastRun;
     }
   })
