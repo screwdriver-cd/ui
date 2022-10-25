@@ -82,9 +82,9 @@ export default DS.Model.extend({
       this.metrics.toArray().forEach(metrics => {
         const { lastEventInfo } = formatMetrics(metrics);
 
-       lastRun = lastEventInfo;
+        lastRun = lastEventInfo;
       });
-      
+
       return lastRun;
     }
   })

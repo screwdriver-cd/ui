@@ -91,7 +91,7 @@ module('Integration | Component | collection table row', function (hooks) {
       .hasAttribute('href', lastEventInfo.commitUrl);
     assert.dom('td.start').hasText(lastEventInfo.startTime);
     assert.dom('td.duration').hasText(lastEventInfo.durationText);
-    assert.dom('td.last-run').hasText('n/a'); // 'n/a' because no metrics data available
+    assert.dom('td.last-run').hasText('0 seconds ago'); // '0 seconds ago' because no last run event data available
     assert.dom('td.history').exists({ count: 1 });
     assert.dom('td.collection-pipeline__remove').exists({ count: 1 });
 
