@@ -3,8 +3,11 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { assign } from '@ember/polyfills';
 import { copy } from 'ember-copy';
+import { Promise as EmberPromise } from 'rsvp';
+import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 
 const event = {
   id: 3,
@@ -25,6 +28,7 @@ const event = {
     url: '#',
     name: 'batman'
   },
+  createTime: '06/30/2021, 04:39 PM',
   createTimeWords: 'now',
   createTimeExact: '06/30/2021, 04:39 PM',
   durationText: '1 sec',
@@ -53,6 +57,17 @@ const event = {
     { jobId: 3, id: 6, status: 'FAILURE' }
   ],
   isRunning: false
+};
+
+const userSettingsMock = {
+  1018240: {
+    showPRJobs: true
+  },
+  1048190: {
+    showPRJobs: false
+  },
+  displayJobNameLength: 30,
+  timestampFormat: 'UTC'
 };
 
 module('Integration | Component | pipeline event row', function (hooks) {
@@ -409,6 +424,51 @@ module('Integration | Component | pipeline event row', function (hooks) {
     assert.dom('.date').hasText('Started 06/30/2021, 04:39 PM');
     assert.dom('.last-successful').exists({ count: 1 });
     assert.dom('.latest-commit').exists({ count: 1 });
+  });
+
+  test('it renders UTC timestamp', async function (assert) {
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
+    const userSettingsStub = Service.extend({
+      getUserPreference() {
+        return new EmberPromise(resolve => resolve(userSettingsMock));
+      },
+      getDisplayJobNameLength() {
+        return null;
+      }
+    });
+
+    this.owner.unregister('service:userSettings');
+    this.owner.register('service:userSettings', userSettingsStub);
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
+
+    let eventMock = EmberObject.create(copy(event, true));
+
+    eventMock.isRunning = false;
+    eventMock.status = 'SUCCESS';
+
+    this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
+
+    await render(hbs`{{pipeline-event-row 
+      event=event 
+      startPRBuild=startPRBuild
+      stopEvent=stopEvent
+      selectedEvent=3
+      latestCommit=latestCommit
+      lastSuccessful=3
+    }}`);
+
+    assert.dom('.date').hasText(
+      `Started ${toCustomLocaleString(new Date('06/30/2021, 04:39 PM'), {
+        timeZone: 'UTC'
+      })}`
+    );
   });
 
   test('it does not render graph when skipped event', async function (assert) {

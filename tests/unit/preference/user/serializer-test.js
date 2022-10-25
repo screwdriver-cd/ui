@@ -10,7 +10,8 @@ const userSettingsMock = {
   1048190: {
     showPRJobs: false
   },
-  displayJobNameLength: 30
+  displayJobNameLength: 30,
+  timestampFormat: 'LOCAL_TIMEZONE'
 };
 
 module('Unit | Serializer | preference/user', function (hooks) {
@@ -29,7 +30,7 @@ module('Unit | Serializer | preference/user', function (hooks) {
   });
 
   test('it converts', async function (assert) {
-    assert.expect(6);
+    assert.expect(7);
 
     const userPreference = await this.owner
       .lookup('service:store')
@@ -37,10 +38,12 @@ module('Unit | Serializer | preference/user', function (hooks) {
 
     const {
       displayJobNameLength,
+      timestampFormat,
       'preference/pipelines': preferencePipelines
     } = userPreference;
 
     assert.equal(displayJobNameLength, 30);
+    assert.equal(timestampFormat, 'LOCAL_TIMEZONE');
     assert.equal(preferencePipelines.length, 2);
 
     const { firstObject } = preferencePipelines;
@@ -55,7 +58,7 @@ module('Unit | Serializer | preference/user', function (hooks) {
   });
 
   test('it saves preference/user', async function (assert) {
-    assert.expect(2);
+    assert.expect(3);
 
     server.put('http://localhost:8080/v4/users/settings', function (request) {
       const payload = JSON.parse(request.requestBody);
@@ -64,7 +67,8 @@ module('Unit | Serializer | preference/user', function (hooks) {
         settings: {
           1018240: { showPRJobs: true },
           1048190: { showPRJobs: false },
-          displayJobNameLength: 50
+          displayJobNameLength: 50,
+          timestampFormat: 'UTC'
         }
       });
 
@@ -76,10 +80,15 @@ module('Unit | Serializer | preference/user', function (hooks) {
       .queryRecord('preference/user', {});
 
     const displayJobNameLength = 50;
+    const timestampFormat = 'UTC';
 
-    userPreference.set('displayJobNameLength', displayJobNameLength);
+    userPreference.setProperties({
+      displayJobNameLength,
+      timestampFormat
+    });
     userPreference.save().then(userPref => {
       assert.equal(userPref.displayJobNameLength, displayJobNameLength);
+      assert.equal(userPref.timestampFormat, timestampFormat);
     });
   });
 });
