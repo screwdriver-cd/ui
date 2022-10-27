@@ -1,5 +1,4 @@
 import EmberObject from '@ember/object';
-import moment from 'moment';
 import hbs from 'htmlbars-inline-precompile';
 import { module } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
@@ -142,9 +141,7 @@ module('Integration | Component | build banner', function (hooks) {
       changeBuild=(action changeB)
     }}`);
 
-    const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
-      'YYYY-MM-DD HH:mm:ss'
-    );
+    const expectedTime = '11/04/2016, 04:08 PM';
 
     assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/pulls');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
@@ -228,9 +225,7 @@ module('Integration | Component | build banner', function (hooks) {
       prEvents=prEvents
       reloadBuild=(action reloadCb)
     }}`);
-    const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
-      'YYYY-MM-DD HH:mm:ss'
-    );
+    const expectedTime = '11/04/2016, 04:08 PM';
 
     assert
       .dom('.pr .pr-url-holder a')
@@ -288,9 +283,7 @@ module('Integration | Component | build banner', function (hooks) {
       prEvents=prEvents
       reloadBuild=(action reloadCb)
     }}`);
-    const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
-      'YYYY-MM-DD HH:mm:ss'
-    );
+    const expectedTime = '11/04/2016, 04:08 PM';
 
     assert
       .dom('.pr .pr-url-holder a')
