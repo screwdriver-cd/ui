@@ -63,7 +63,7 @@ module('Integration | Component | collection table row', function (hooks) {
   });
 
   test('it renders', async function (assert) {
-    assert.expect(13);
+    assert.expect(12);
     this.owner.setupRouter();
     await render(hbs`
       {{collection-table-row
@@ -89,9 +89,8 @@ module('Integration | Component | collection table row', function (hooks) {
     assert
       .dom('td.status a:nth-of-type(2)')
       .hasAttribute('href', lastEventInfo.commitUrl);
-    assert.dom('td.start').hasText(lastEventInfo.startTime);
+    assert.dom('td.last-run').hasText(lastEventInfo.startTime);
     assert.dom('td.duration').hasText(lastEventInfo.durationText);
-    assert.dom('td.last-run').hasText('0 seconds ago'); // '0 seconds ago' because no last run event data available
     assert.dom('td.history').exists({ count: 1 });
     assert.dom('td.collection-pipeline__remove').exists({ count: 1 });
 

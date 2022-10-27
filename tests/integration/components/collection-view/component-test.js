@@ -635,9 +635,8 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('th.app-id').hasText('Alias/ Name');
     assert.dom('th.branch').hasText('Branch');
     assert.dom('th.status').hasText('Status');
-    assert.dom('th.start').hasText('Start Date');
+    assert.dom('th.last-run').hasText('Last run');
     assert.dom('th.duration').hasText('Duration');
-    assert.dom('th.last-run').hasText('Last Run');
     assert.dom('th.history').exists({ count: 1 });
 
     assert.dom('.collection-pipeline').exists({ count: 4 });
@@ -747,9 +746,8 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('th.app-id').hasText('Name');
     assert.dom('th.branch').hasText('Branch');
     assert.dom('th.status').hasText('Status');
-    assert.dom('th.start').hasText('Start Date');
+    assert.dom('th.last-run').hasText('Last run');
     assert.dom('th.duration').hasText('Duration');
-    assert.dom('th.last-run').hasText('Last Run');
     assert.dom('th.history').exists({ count: 1 });
 
     assert.dom('.collection-pipeline').exists({ count: 4 });

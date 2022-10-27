@@ -77,15 +77,9 @@ export default DS.Model.extend({
   }),
   lastRunEvent: computed('metrics.[]', {
     get() {
-      let lastRun = 'n/a';
+      const { lastEventInfo } = formatMetrics(this.metrics);
 
-      this.metrics.toArray().forEach(metrics => {
-        const { lastEventInfo } = formatMetrics(metrics);
-
-        lastRun = lastEventInfo;
-      });
-
-      return lastRun;
+      return lastEventInfo;
     }
   })
 });
