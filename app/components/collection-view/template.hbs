@@ -167,21 +167,31 @@
                   {{/if}}
                 </span>
               </th>
-              <th class="start" rowspan="1">Start Date</th>
-              <th class="duration" rowspan="1">Duration</th>
-              <th class="last-run" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "createTime:desc") "createTime:asc" "createTime:desc")}}>
-                Last Run Job
+              <th class="last-run" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "lastRunEvent.startTime:desc") "lastRunEvent.startTime:asc" "lastRunEvent.startTime:desc")}}>
+                Last run
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) "createTime:asc")}}
+                  {{#if (eq (get sortBy 0) "lastRunEvent.startTime:asc")}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) "createTime:desc")}}
+                  {{else if (eq (get sortBy 0) "lastRunEvent.startTime:desc")}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}
                 </span>
               </th>
-              <th class="status" rowspan="1">Status</th>
+              <th class="duration" rowspan="1">Duration</th>
+              <th class="status" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "lastRunJob.status:desc") "lastRunJob.status:asc" "lastRunJob.status:desc")}} >
+                Status
+                <span class="icon-wrapper">
+                  {{#if (eq (get sortBy 0) "lastRunJob.status:asc")}}
+                    <i class="fa fa-sort-asc"></i>
+                  {{else if (eq (get sortBy 0) "lastRunJob.status:desc")}}
+                    <i class="fa fa-sort-desc"></i>
+                  {{else}}
+                    <i class="fa fa-sort"></i>
+                  {{/if}}
+                </span>
+              </th>
               <th class="history" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "failedBuildCount:desc") "failedBuildCount:asc" "failedBuildCount:desc")}}>
                 Build History
                 {{#bs-tooltip placement="top" renderInPlace=true}}

@@ -2,9 +2,13 @@ import Component from '@ember/component';
 import { bool } from '@ember/object/computed';
 import { computed, get, getProperties } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
+import { inject as service } from '@ember/service';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
+import { getTimestamp } from '../../utils/timestamp-format';
 
 export default Component.extend({
+  userSettings: service(),
+  store: service(),
   classNameBindings: ['highlighted', 'event.status'],
   highlighted: computed('selectedEvent', 'event.id', {
     get() {
@@ -76,6 +80,15 @@ export default Component.extend({
   isInlineParameters: computed('numberOfParameters', {
     get() {
       return this.get('numberOfParameters') < MAX_NUM_OF_PARAMETERS_ALLOWED;
+    }
+  }),
+  startDate: computed('event.createTime', {
+    get() {
+      let startDate = 'n/a';
+
+      startDate = getTimestamp(this.userSettings, this.get('event.createTime'));
+
+      return startDate;
     }
   }),
 
