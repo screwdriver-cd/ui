@@ -36,6 +36,7 @@ export default Component.extend({
   selectedSearchedPipelines: [],
   linkCopied: '',
   pipelineRemovedMessage: '',
+  sortOrder: '',
   reset: false,
 
   showViewSwitch: computed('collection.pipelineIds', function showViewSwitch() {
@@ -155,28 +156,6 @@ export default Component.extend({
       );
     }
   ),
-  aliasNameSort: computed(
-    'pipeline.settings.aliasName',
-    'scmRepo.name',
-    'sortBy',
-    function () {
-      let sortingCriteria = '';
-
-      if (this.hasAliasName) {
-        sortingCriteria =
-          this.sortBy[0] === 'pipeline.settings.aliasName:desc'
-            ? 'pipeline.settings.aliasName:asc'
-            : 'pipeline.settings.aliasName:desc';
-      } else {
-        sortingCriteria =
-          this.sortBy[0] === 'scmRepo.name:desc'
-            ? 'scmRepo.name:asc'
-            : 'scmRepo.name:desc';
-      }
-
-      return sortingCriteria;
-    }
-  ),
 
   actions: {
     /**
@@ -240,6 +219,25 @@ export default Component.extend({
           this.set('sortBy', [option]);
       }
     },
+    aliasNameSort() {
+        if (this.hasAliasName) {
+          if (this.sortBy[0] === 'settings.aliasName:desc') {
+            this.set('sortBy', ['settings.aliasName:asc']);
+            this.set('sortOrder ', 'asc');
+          } else {
+            this.set('sortBy', ['settings.aliasName:desc']);
+            this.set('sortOrder ', 'desc');
+          }
+        } else {
+          if (this.sortBy[0] === 'scmRepo.name:desc') {
+            this.set('sortBy', ['scmRepo.name:asc']);
+            this.set('sortOrder ', 'asc');
+          } else {
+            this.set('sortBy', ['scmRepo.name:desc']);
+            this.set('sortOrder ', 'desc');
+          }
+        }
+      },
     organize() {
       this.set('isOrganizing', true);
     },
