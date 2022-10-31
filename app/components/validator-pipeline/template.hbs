@@ -1,7 +1,6 @@
 <h4 class="pipeline" {{action "nameClick"}}>
-  <FaIcon
-    @icon={{if isOpen "minus-square" "plus-square"}}
-  /> Pipeline Settings
+  <FaIcon @icon={{if this.isOpen "minus-square" "plus-square"}} />
+  Pipeline Settings
 </h4>
 <div
   class="annotations"
@@ -12,7 +11,7 @@
   </span>
   <span class="value">
     <ul>
-      {{#each-in annotations as |name value|}}
+      {{#each-in this.annotations as |name value|}}
         <li>
           <span class="name">
             {{name}}:
@@ -39,7 +38,7 @@
   </span>
   <span class="value">
     <ul>
-      {{#each-in parameters as |name value|}}
+      {{#each-in this.parameters as |name value|}}
         {{#if value.length}}
           <li>
             <span class="name">
@@ -89,6 +88,6 @@
   <span class="label" title="This is the order that the jobs will run in.">
     Workflow:
   </span>
-  <WorkflowGraphD3 @workflowGraph={{workflowGraph}} />
+  <WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} />
 </div>
 {{yield}}

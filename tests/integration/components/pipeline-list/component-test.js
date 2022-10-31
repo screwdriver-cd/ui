@@ -34,7 +34,7 @@ module('Integration | Component | pipeline list', function (hooks) {
     this.set('pipeline', pipeline);
 
     await render(
-      hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`
+      hbs`<PipelineList @pipelines={{this.pipelineList}} @pipeline={{this.pipeline}} />`
     );
 
     assert.dom(find('tbody tr:first-child')).hasText('foo/bar master');
@@ -57,7 +57,7 @@ module('Integration | Component | pipeline list', function (hooks) {
     this.set('pipeline', pipeline);
 
     await render(
-      hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`
+      hbs`<PipelineList @pipelines={{this.pipelineList}} @pipeline={{this.pipeline}} />`
     );
 
     assert.dom('.num-results span').hasText('No child pipeline(s) created');

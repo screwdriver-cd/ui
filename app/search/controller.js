@@ -6,8 +6,10 @@ import Controller from '@ember/controller';
 
 export default Controller.extend({
   session: service(),
+  store: service(),
   moreToShow: true,
-  modelPipelines: computed('model.pipelines', 'pipelinesToShow', {
+  // eslint-disable-next-line ember/require-computed-property-dependencies
+  modelPipelines: computed('model.pipelines', {
     get() {
       const currentModelPipelines = this.get('model.pipelines').toArray();
       const currentPipelinesShown = this.pipelinesToShow;

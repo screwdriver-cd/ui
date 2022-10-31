@@ -6,6 +6,8 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 import getErrorMessage from 'screwdriver-ui/utils/error-messages';
 
 export default Route.extend(AuthenticatedRouteMixin, {
+  store: service(),
+  router: service(),
   triggerService: service('pipeline-triggers'),
   routeAfterAuthentication: 'pipeline.jobs.index',
   pipelineService: service('pipeline'),
@@ -40,7 +42,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
       if (errorMessage !== '') {
         pipelineJobsIndexController.set('errorMessage', errorMessage);
       } else {
-        this.transitionTo('/404');
+        this.router.transitionTo('/404');
       }
     });
   },

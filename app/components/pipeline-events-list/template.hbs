@@ -1,14 +1,14 @@
 <div>
-  {{#if isGroupedEvents}}
-    {{#each groups as |group|}}
+  {{#if this.isGroupedEvents}}
+    {{#each this.groups as |group|}}
       <PipelineEventsRowGroup
-        @pipeline={{pipeline}}
-        @expandedEventsGroup={{expandedEventsGroup}}
-        @selectedEventObj={{selectedEventObj}}
+        @pipeline={{this.pipeline}}
+        @expandedEventsGroup={{this.expandedEventsGroup}}
+        @selectedEventObj={{this.selectedEventObj}}
         @events={{group}}
-        @selectedEvent={{selectedEvent}}
-        @latestCommit={{latestCommit}}
-        @lastSuccessful={{lastSuccessful}}
+        @selectedEvent={{this.selectedEvent}}
+        @latestCommit={{this.latestCommit}}
+        @lastSuccessful={{this.lastSuccessful}}
         @startPRBuild={{action "startPRBuild"}}
         @stopEvent={{action "stopEvent"}}
         @eventClick={{action "eventClick"}}
@@ -19,13 +19,13 @@
       </div>
     {{/each}}
   {{else}}
-    {{#each eventsList as |event|}}
+    {{#each this.eventsList as |event|}}
       <PipelineEventRow
         @event={{event}}
-        @selectedEvent={{selectedEvent}}
-        @selectedEventObj={{selectedEventObj}}
-        @latestCommit={{latestCommit}}
-        @lastSuccessful={{lastSuccessful}}
+        @selectedEvent={{this.selectedEvent}}
+        @selectedEventObj={{this.selectedEventObj}}
+        @latestCommit={{this.latestCommit}}
+        @lastSuccessful={{this.lastSuccessful}}
         @startPRBuild={{action "startPRBuild"}}
         @stopEvent={{action "stopEvent"}}
         @eventClick={{action "eventClick"}}

@@ -11,7 +11,7 @@ module('Integration | Component | pipeline start', function (hooks) {
     this.set('onStartBuild', () => {
       assert.ok(true);
     });
-    await render(hbs`{{pipeline-start startBuild=onStartBuild}}`);
+    await render(hbs`<PipelineStart @startBuild={{this.onStartBuild}} />`);
 
     assert.dom('button').hasText('Start');
     await click('button');
@@ -26,7 +26,7 @@ module('Integration | Component | pipeline start', function (hooks) {
       assert.equal(prJobs.length, 2);
     });
     await render(
-      hbs`{{pipeline-start startBuild=onPRStartBuild prNum=5 jobs=jobs}}`
+      hbs`<PipelineStart @startBuild={{this.onPRStartBuild}} @prNum={{5}} @jobs={{this.jobs}} />`
     );
 
     assert.dom('button').doesNotExist();

@@ -1,12 +1,17 @@
 <div>
-  {{#each crumbs as |crumb index|}}
-    {{#if (eq index 0) }}
-      {{#link-to params=crumb.params}}{{crumb.name}}{{/link-to}}
+  {{#each this.crumbs as |crumb index|}}
+    {{#if (eq index 0)}}
+      <LinkTo @route="home" params="crumb.param">
+        {{crumb.name}}
+      </LinkTo>
     {{else}}
-      {{#if (eq crumb crumbs.lastObject)}}
+      {{#if (eq crumb this.crumbs.lastObject)}}
         / {{crumb.name}}
       {{else}}
-        / {{#link-to params=crumb.params}}{{crumb.name}}{{/link-to}}
+        /
+        <LinkTo @route="home" params="crumb.params">
+          {{crumb.name}}
+        </LinkTo>
       {{/if}}
     {{/if}}
   {{/each}}

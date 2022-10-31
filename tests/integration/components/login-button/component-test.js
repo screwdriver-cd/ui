@@ -12,7 +12,7 @@ module('Integration | Component | login button', function (hooks) {
     this.set('externalAction', () => {
       assert.ok(true);
     });
-    await render(hbs`{{login-button authenticate=(action externalAction)}}`);
+    await render(hbs`<LoginButton @authenticate={{action this.externalAction}} />`);
 
     assert.dom('h2').hasText('Sign in to Screwdriver');
     await click('a');
@@ -30,7 +30,7 @@ module('Integration | Component | login button', function (hooks) {
     });
     this.set('model', contexts);
     await render(
-      hbs`{{login-button authenticate=(action externalAction) scmContexts=model}}`
+      hbs`<LoginButton @authenticate={{action this.externalAction}} @scmContexts={{this.model}} />`
     );
 
     assert.dom('a').exists({ count: 2 });

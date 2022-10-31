@@ -3,13 +3,13 @@
 </h2>
 
 <BsNav @type="tabs" as |nav|>
-  <nav.item @active={{bs-eq activeTab "preferences"}}>
+  <nav.item @active={{bs-eq this.activeTab "preferences"}}>
     {{#nav.link-to "user-settings.preferences" class="nav-link"}}
       User Preferences
     {{/nav.link-to}}
   </nav.item>
 
-  <nav.item @active={{bs-eq activeTab "access-tokens"}}>
+  <nav.item @active={{bs-eq this.activeTab "access-tokens"}}>
     {{#nav.link-to "user-settings.access-tokens" class="nav-link"}}
       Access Tokens
     {{/nav.link-to}}

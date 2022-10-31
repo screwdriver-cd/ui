@@ -1,7 +1,7 @@
 import { reads } from '@ember/object/computed';
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { htmlSafe } from '@ember/string';
+import { htmlSafe } from '@ember/template';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({

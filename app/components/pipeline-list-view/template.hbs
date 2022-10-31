@@ -2,9 +2,9 @@
   <div class="col-xs-2">
     <BsButtonGroup
       class="view-toggle"
-      @value={{showListView}}
+      @value={{this.showListView}}
       @type="radio"
-      @onChange={{action setShowListView}} as |bg|
+      @onChange={{action this.setShowListView}} as |bg|
     >
       <bg.button @value={{false}}>
         <FaIcon @icon="th" />
@@ -16,28 +16,19 @@
   </div>
 </div>
 
-{{#light-table table height="60vh" as |t|}}
-  <t.head
-    @onColumnClick={{action "onColumnClick"}}
-    @iconSortable="fa fa-sort"
-    @iconAscending="fa fa-sort-asc"
-    @iconDescending="fa fa-sort-desc"
-    @fixed={{true}}
-  />
-  <t.body
-    @canSelect={{false}}
-    @scrollBuffer={{700}}
-    @onScrolledToBottom={{action "onScrolledToBottom"}} as |body|
-  >
-    {{#if isLoading}}
-      <body.loader>
-        Loading...
-      </body.loader>
-    {{/if}}
-  </t.body>
-{{/light-table}}
+<ModelsTable
+  @data={{this.data}}
+  @columns={{this.columns}}
+  @themeInstance={{this.theme}}
+  @showComponentFooter={{false}}
+  @showColumnsDropdown={{false}}
+  @useFilteringByColumns={{false}}
+  @showGlobalFilter={{false}}
+  @showCurrentPageNumberSelect={{false}}
+  @multipleColumnsSorting={{false}}
+/>
 
-{{#if isShowingModal}}
+{{#if this.isShowingModal}}
   <ModalDialog
     @targetAttachment="center"
     @translucentOverlay={{true}}
@@ -49,10 +40,10 @@
       Are you sure to start?
     </h3>
     <PipelineParameterizedBuild
-      @pipeline={{pipeline}}
+      @pipeline={{this.pipeline}}
       @showSubmitButton={{true}}
-      @buildPipelineParameters={{pipelineParameters}}
-      @buildJobParameters={{jobParameters}}
+      @buildPipelineParameters={{this.pipelineParameters}}
+      @buildJobParameters={{this.jobParameters}}
       @onSave={{action "startBuild"}}
       @onClose={{action "closeModal"}}
     />

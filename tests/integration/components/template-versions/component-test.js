@@ -24,7 +24,7 @@ module('Integration | Component | template versions', function (hooks) {
     this.set('mock', TEMPLATES);
     this.actions.mockAction = function () {};
 
-    await render(hbs`{{template-versions templates=mock}}`);
+    await render(hbs`<TemplateVersions @templates={{this.mock}} />`);
 
     assert.dom('h4').hasText('Versions:');
     assert.dom('ul li:first-child').hasText('3.0.0 - latest stable');
@@ -42,7 +42,7 @@ module('Integration | Component | template versions', function (hooks) {
       assert.equal(ver, '1.0.0');
     };
 
-    await render(hbs`{{template-versions templates=mock}}`);
+    await render(hbs`<TemplateVersions @templates={{this.mock}} />`);
 
     assert.dom('h4').hasText('Versions:');
     assert.dom('ul li:first-child').hasText('3.0.0 - latest stable');

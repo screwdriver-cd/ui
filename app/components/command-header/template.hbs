@@ -1,84 +1,81 @@
 <h1>
-  {{#if trusted}}
+  {{#if this.trusted}}
     <span title="Trusted">
-      {{inline-svg "trusted" class="trusted"}}
+      {{svg-jar "trusted" class="trusted"}}
     </span>
   {{/if}}
   <LinkTo
     @route="pipeline"
-    @model={{command.pipelineId}}
+    @model={{this.command.pipelineId}}
     @title="Go to command pipeline"
   >
-    {{command.namespace}}/{{command.name}}
+    {{this.command.namespace}}/{{this.command.name}}
   </LinkTo>
-  {{#if scmUrl}}
-    <a href={{scmUrl}}>
+  {{#if this.scmUrl}}
+    <a href={{this.scmUrl}}>
       <FaIcon @icon="code-branch" @title="Source code" />
     </a>
   {{else}}
-    <FaIcon @icon="code-branch"
+    <FaIcon
+      @icon="code-branch"
       @title="The pipeline for this command does not exist."
     />
   {{/if}}
-  {{#if isAdmin}}
-    <a href="#" class="remove" {{action "setCommandToRemove" command}}>
+  {{#if this.isAdmin}}
+    <a href="#" class="remove" {{action "setCommandToRemove" this.command}}>
       <FaIcon @icon="trash" @title="Delete command" />
     </a>
     <label class="trusted-toggle">
       <XToggle
         @size="medium"
         @theme="light"
-        @value={{trusted}}
-        @onToggle={{action "updateTrust" command.namespace command.name}}
+        @value={{this.trusted}}
+        @onToggle={{action "updateTrust" this.command.namespace this.command.name}}
       />
       Trust?
     </label>
   {{else}}
-    {{#if scmUrl}}
-      <a href="#" class="remove" {{action "setCommandToRemove" command}}>
+    {{#if this.scmUrl}}
+      <a href="#" class="remove" {{action "setCommandToRemove" this.command}}>
         <FaIcon @icon="trash" @title="Delete command" />
       </a>
     {{else}}
-      <FaIcon @icon="trash"
+      <FaIcon
+        @icon="trash"
         @title="Cannot delete command; pipeline could not be found."
       />
     {{/if}}
   {{/if}}
 </h1>
 <h2>
-  {{command.version}}
+  {{this.command.version}}
 </h2>
 <p>
-  {{command.description}}
+  {{this.command.description}}
 </p>
 <ul>
   <li>
     Released by:
-    <a href="mailto:{{command.maintainer}}">
-      {{command.maintainer}}
+    <a href="mailto:{{this.command.maintainer}}">
+      {{this.command.maintainer}}
     </a>
   </li>
-  {{#if command.lastUpdated}}
+  {{#if this.command.lastUpdated}}
     <li>
-      Last published: {{command.lastUpdated}}
+      Last published: {{this.command.lastUpdated}}
     </li>
   {{/if}}
 </ul>
 <h4>
   Usage:
 </h4>
-{{#if command.usage}}
-  <pre>
-    {{command.usage}}
-  </pre>
+{{#if this.command.usage}}
+  <pre>    {{this.command.usage}}  </pre>
 {{else}}
-  <pre>
-    sd-cmd exec {{command.namespace}}/{{command.name}}@{{command.version}}
-  </pre>
+  <pre>    sd-cmd exec {{this.command.namespace}}/{{this.command.name}}@{{this.command.version}}  </pre>
 {{/if}}
-
-{{#if commandToRemove}}
-  {{#if isRemoving}}
+{{#if this.commandToRemove}}
+  {{#if this.isRemoving}}
     <ModalDialog
       @clickOutsideToClose="false"
       @targetAttachment="center"
@@ -88,7 +85,7 @@
     </ModalDialog>
   {{else}}
     <BsModal
-      @onSubmit={{action "removeCommand" command.namespace command.name}}
+      @onSubmit={{action "removeCommand" this.command.namespace this.command.name}}
       @onHide={{action "cancelRemovingCommand"}} as |modal|
     >
       <modal.header>
@@ -97,10 +94,10 @@
         </h4>
       </modal.header>
       <modal.body>
-        <FaIcon @icon="exclamation-triangle" @pull="left" @size=3 />
+        <FaIcon @icon="exclamation-triangle" @pull="left" @size="3" />
         You're about to delete all versions and tags of
         <strong>
-          {{command.namespace}}/{{command.name}}
+          {{this.command.namespace}}/{{this.command.name}}
         </strong>
         . There might be existing pipelines using this command.
       </modal.body>
@@ -109,10 +106,11 @@
           Cancel
         </BsButton>
         <BsButton
-          @onClick={{action "removeCommand" command.namespace command.name}}
+          @onClick={{action "removeCommand" this.command.namespace this.command.name}}
           @type="danger"
         >
-          <FaIcon @icon="trash" /> Confirm
+          <FaIcon @icon="trash" />
+          Confirm
         </BsButton>
       </modal.footer>
     </BsModal>

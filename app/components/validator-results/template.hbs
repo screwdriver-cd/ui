@@ -1,36 +1,36 @@
-{{#each errors as |msg|}}
+{{#each this.errors as |msg|}}
   <div class="error">
     {{msg}}
   </div>
 {{/each}}
-{{#each warnMessages as |msg|}}
+{{#each this.warnMessages as |msg|}}
   <div class="warning">
     {{msg}}
   </div>
 {{/each}}
-{{#if isTemplate}}
+{{#if this.isTemplate}}
   <ValidatorJob
-    @name={{templateName}}
-    @job={{results.template.config}}
-    @template={{results.template}}
-    @isOpen={{unbound isOpen}}
+    @name={{this.templateName}}
+    @job={{this.results.template.config}}
+    @template={{this.results.template}}
+    @isOpen={{unbound this.isOpen}}
   />
 {{else}}
   <ValidatorPipeline
-    @name={{pipelineName}}
-    @workflowGraph={{workflowGraph}}
-    @annotations={{annotations}}
-    @parameters={{parameters}}
-    @isOpen={{unbound isOpen}}
+    @name={{this.pipelineName}}
+    @workflowGraph={{this.workflowGraph}}
+    @annotations={{this.annotations}}
+    @parameters={{this.parameters}}
+    @isOpen={{unbound this.isOpen}}
   />
-  {{#each workflowGraph.nodes as |node|}}
-    {{#if (get jobs node.name)}}
-      {{#each (get jobs node.name) as |jobConfig index|}}
+  {{#each this.workflowGraph.nodes as |node|}}
+    {{#if (get this.jobs node.name)}}
+      {{#each (get this.jobs node.name) as |jobConfig index|}}
         <ValidatorJob
           @name={{node.name}}
           @job={{jobConfig}}
           @index={{index}}
-          @isOpen={{unbound isOpen}}
+          @isOpen={{unbound this.isOpen}}
         />
       {{/each}}
     {{/if}}

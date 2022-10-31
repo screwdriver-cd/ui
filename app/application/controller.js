@@ -1,9 +1,10 @@
-import { computed } from '@ember/object';
+// import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
-const { alias } = computed;
+import { alias } from '@ember/object/computed';
 
 export default Controller.extend({
+  router: service(),
   showCreatePipeline: false,
   collections: [],
   session: service(),
@@ -15,7 +16,7 @@ export default Controller.extend({
       return this.session.invalidate();
     },
     search(params) {
-      this.transitionToRoute('search', { queryParams: { query: params } });
+      this.router.transitionTo('search', { queryParams: { query: params } });
     },
     authenticate(scmContext) {
       const { session } = this;

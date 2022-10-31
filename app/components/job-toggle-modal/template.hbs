@@ -1,15 +1,15 @@
-{{#if showToggleModal}}
+{{#if this.showToggleModal}}
   <BsModal @onHide={{action "setModal" false}} as |modal|>
     <div class="toggle-modal">
       <modal.header>
         <h4 class="modal-title">
-          {{stateChange}} the "{{name}}" job?
+          {{this.stateChange}} the "{{this.name}}" job?
         </h4>
       </modal.header>
       <modal.body>
-        {{#if errorMessage}}
+        {{#if this.errorMessage}}
           <InfoMessage
-            @message={{errorMessage}}
+            @message={{this.errorMessage}}
             @type="warning"
             @icon="exclamation-triangle"
           />
@@ -18,34 +18,30 @@
           class="toggle-form"
           @onSubmit={{action "updateState"}} as |form|
         >
-          <form.group class="message">
-            <label class="control-label">
-              Reason
-            </label>
-            <input
-              value={{message}}
-              class="form-control"
-              oninput={{action (mut message) value="target.value"}}
-              type="text"
-              placeholder="Reason for the job state change (optional)"
-            />
-          </form.group>
-          <form.group class="footer">
-            <BsButton
-              @buttonType="submit"
-              class="toggle-form__create"
-              @type="primary"
-            >
-              Confirm
-            </BsButton>
-            <BsButton
-              class="toggle-form__cancel"
-              @onClick={{action modal.close}}
-              @type="default"
-            >
-              Cancel
-            </BsButton>
-          </form.group>
+          <form.element
+            @controlType="text"
+            @label="Reason"
+            @value={{this.message}}
+            @onChange={{action (mut this.message)}}
+            class="control-label message" as |el|
+          >
+            <el.control placeholder="Reason for the job state change (optional)" class="message-input form-control" />
+          </form.element>
+
+          <form.submitButton
+            class="toggle-form__create"
+            disabled={{this.isSaveDisabled}}
+            @type="primary"
+          >
+            Confirm
+          </form.submitButton>
+          <BsButton
+            class="toggle-form__cancel"
+            @onClick={{action modal.close}}
+            @type="default"
+          >
+            Cancel
+          </BsButton>
         </BsForm>
       </modal.body>
     </div>

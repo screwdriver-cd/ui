@@ -9,7 +9,7 @@ module('Integration | Helper | getLength', function (hooks) {
   test('it renders with object', async function (assert) {
     this.set('inputValue', { a: 1, b: 2, c: 3 });
 
-    await render(hbs`{{get-length inputValue}}`);
+    await render(hbs`{{get-length this.inputValue}}`);
 
     assert.dom(this.element).hasText('3');
   });
@@ -17,7 +17,7 @@ module('Integration | Helper | getLength', function (hooks) {
   test('it renders with array', async function (assert) {
     this.set('inputValue', [1, 2, 3, 4]);
 
-    await render(hbs`{{get-length inputValue}}`);
+    await render(hbs`{{get-length this.inputValue}}`);
 
     assert.dom(this.element).hasText('4');
   });
@@ -25,7 +25,7 @@ module('Integration | Helper | getLength', function (hooks) {
   test('it renders with string', async function (assert) {
     this.set('inputValue', '12');
 
-    await render(hbs`{{get-length inputValue}}`);
+    await render(hbs`{{get-length this.inputValue}}`);
 
     assert.dom(this.element).hasText('2');
   });
@@ -33,7 +33,7 @@ module('Integration | Helper | getLength', function (hooks) {
   test('it renders with number format', async function (assert) {
     this.set('inputValue', 1991);
 
-    await render(hbs`{{get-length inputValue}}`);
+    await render(hbs`{{get-length this.inputValue}}`);
 
     assert.dom(this.element).hasText('0');
   });

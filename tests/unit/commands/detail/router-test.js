@@ -115,9 +115,16 @@ module('Unit | Route | commands/detail', function (hooks) {
 
   test('it asks for the list of commands for a given name and non-exist version', function (assert) {
     const route = this.owner.lookup('route:commands/detail');
-    const stub = sinon.stub(route, 'transitionTo');
+    const stub = sinon.stub();
 
     assert.ok(route);
+
+    const routerServiceMock = Service.extend({
+      transitionTo: stub,
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
     return route
       .model({ namespace: 'foo', name: 'baz', version: '9.9.9' })
@@ -128,9 +135,16 @@ module('Unit | Route | commands/detail', function (hooks) {
 
   test('it asks for the list of commands for a given name and non-exist tag', function (assert) {
     const route = this.owner.lookup('route:commands/detail');
-    const stub = sinon.stub(route, 'transitionTo');
+    const stub = sinon.stub();
 
     assert.ok(route);
+
+    const routerServiceMock = Service.extend({
+      transitionTo: stub,
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
     return route
       .model({ namespace: 'foo', name: 'baz', version: 'foo' })

@@ -15,9 +15,16 @@ module('Unit | Controller | Commands', function (hooks) {
     const controller = this.owner.lookup('controller:commands');
 
     run(() => {
-      controller.set('routeParams', {
-        namespace: 'testNamespace',
-        name: 'testName'
+      controller.set('model', {
+        paramsFor: (arg) => {
+          if (arg === 'commands.namespace') {
+            return { namespace: 'testNamespace' };
+          }
+          if (arg === 'commands.detail') {
+            return { name: 'testName' };
+          }
+          assert.ok(false);
+        }
       });
 
       assert.deepEqual(controller.crumbs, [

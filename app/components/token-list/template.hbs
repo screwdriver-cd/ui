@@ -2,32 +2,33 @@
   Access Tokens
 </h3>
 <InfoMessage
-  @message={{errorMessage}}
+  @message={{this.errorMessage}}
   @type="warning"
   @icon="exclamation-triangle"
 />
-{{#if newToken}}
+{{#if this.newToken}}
   <BsAlert @type="success" @onDismissed={{action "clearNewToken"}}>
     <div class="new-token">
       <p>
-        <FaIcon @icon="check" /> Token {{newToken.action
+        <FaIcon @icon="check" />
+        Token {{this.newToken.action
         }}. You can only see this value once, so remember to copy it!
       </p>
       <span class="new-name">
-        {{newToken.name}}:
+        {{this.newToken.name}}:
       </span>
       <span class="new-value">
-        {{newToken.value}}
+        {{this.newToken.value}}
       </span>
     </div>
   </BsAlert>
 {{/if}}
 <p>
-  {{tokenName}} tokens provide access to the
+  {{this.tokenName}} tokens provide access to the
   <a href="http://docs.screwdriver.cd/user-guide/api">
     Screwdriver API
   </a>
-  . They are scoped to {{tokenScope}}.
+  . They are scoped to {{this.tokenScope}}.
 </p>
 <table class="token-list">
   <thead>
@@ -47,10 +48,10 @@
     </tr>
   </thead>
   <tbody>
-    {{#each sortedTokens as |token|}}
+    {{#each this.sortedTokens as |token|}}
       <TokenView
         @token={{token}}
-        @pipelineId={{pipelineId}}
+        @pipelineId={{this.pipelineId}}
         @confirmAction={{action "confirmAction"}}
         @setErrorMessage={{action "setErrorMessage"}}
         @setIsSaving={{action "setIsSaving"}}
@@ -60,15 +61,15 @@
   <tfoot>
     <tr class="new">
       <td class="name">
-        <Input placeholder="NAME" @size="40" @value={{newName}} />
+        <Input placeholder="NAME" @size="40" @value={{this.newName}} />
       </td>
       <td class="description" colspan="2">
-        <Input placeholder="DESCRIPTION" @size="40" @value={{newDescription}} />
+        <Input placeholder="DESCRIPTION" @size="40" @value={{this.newDescription}} />
       </td>
       <td>
         <button
           class="add"
-          disabled={{isButtonDisabled}}
+          disabled={{this.isButtonDisabled}}
           {{action "addNewToken"}}
         >
           Add
@@ -77,7 +78,7 @@
     </tr>
   </tfoot>
 </table>
-{{#if isShowingModal}}
+{{#if this.isShowingModal}}
   <ModalDialog
     @translucentOverlay={{true}}
     @onClickOverlay={{action "closeModal" false}}
@@ -87,15 +88,15 @@
         Are you sure?
       </h3>
       <p>
-        {{modalText}}
+        {{this.modalText}}
       </p>
-      <button onclick={{action "closeModal" true}} class={{modalAction}}>
-        {{modalButtonText}}
+      <button onclick={{action "closeModal" true}} class={{this.modalAction}}>
+        {{this.modalButtonText}}
       </button>
     </div>
   </ModalDialog>
 {{/if}}
-{{#if isSaving}}
+{{#if this.isSaving}}
   <ModalDialog
     @clickOutsideToClose={{false}}
     @targetAttachment="center"

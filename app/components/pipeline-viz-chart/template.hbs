@@ -1,20 +1,20 @@
-{{#if pipeline}}
+{{#if this.pipeline}}
   <div class="workflow">
     <WorkflowGraphD3
-      @pipeline={{pipeline}}
-      @workflowGraph={{workflowGraph}}
-      @startFrom={{startFrom}}
+      @pipeline={{this.pipeline}}
+      @workflowGraph={{this.workflowGraph}}
+      @startFrom={{this.startFrom}}
       @graphClicked={{action "graphClicked"}}
     >
       <WorkflowTooltip
-        @tooltipData={{tooltipData}}
-        @showTooltip={{showTooltip}}
-        @showTooltipPosition={{showTooltipPosition}}
+        @tooltipData={{this.tooltipData}}
+        @showTooltip={{this.showTooltip}}
+        @showTooltipPosition={{this.showTooltipPosition}}
       />
     </WorkflowGraphD3>
   </div>
 {{else}}
   <div class="pipeline-vis empty">
-    {{inline-svg "pipeline-vis-display"}}
+    {{svg-jar "pipeline-vis-display"}}
   </div>
 {{/if}}

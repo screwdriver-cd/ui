@@ -7,7 +7,7 @@ module('Integration | Component | workflow graph d3', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders empty when no graph supplied', async function (assert) {
-    await render(hbs`{{workflow-graph-d3}}`);
+    await render(hbs`<WorkflowGraphD3 />`);
 
     assert.dom('svg').exists({ count: 1 });
     this.element
@@ -29,7 +29,7 @@ module('Integration | Component | workflow graph d3', function (hooks) {
         { src: 'main', dest: 'foo' }
       ]
     });
-    await render(hbs`{{workflow-graph-d3 workflowGraph=workflowGraph}}`);
+    await render(hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} />`);
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
     assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 4);
@@ -72,7 +72,7 @@ module('Integration | Component | workflow graph d3', function (hooks) {
     });
     this.set('showDownstreamTriggers', true);
     await render(
-      hbs`{{workflow-graph-d3 workflowGraph=workflowGraph completeWorkflowGraph=completeWorkflowGraph showDownstreamTriggers=showDownstreamTriggers}}`
+      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @completeWorkflowGraph={{this.completeWorkflowGraph}} @showDownstreamTriggers={{this.showDownstreamTriggers}} />`
     );
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
@@ -108,7 +108,7 @@ module('Integration | Component | workflow graph d3', function (hooks) {
       { jobId: 3, id: 6, status: 'FAILURE' }
     ]);
     await render(
-      hbs`{{workflow-graph-d3 workflowGraph=workflowGraph builds=builds startFrom=startFrom}}`
+      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @builds={{this.builds}} @startFrom={{this.startFrom}} />`
     );
 
     const el = this.element;
@@ -160,7 +160,7 @@ module('Integration | Component | workflow graph d3', function (hooks) {
       { jobId: 3, id: 6, status: 'FAILURE' }
     ]);
     await render(
-      hbs`{{workflow-graph-d3 workflowGraph=workflowGraph builds=builds startFrom=startFrom}}`
+      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @builds={{this.builds}} @startFrom={{this.startFrom}} />`
     );
 
     const el = this.element;
@@ -211,11 +211,12 @@ module('Integration | Component | workflow graph d3', function (hooks) {
       { jobId: 2, id: 5, status: 'SUCCESS' },
       { jobId: 3, id: 6, status: 'FAILURE' }
     ]);
-    await render(hbs`{{workflow-graph-d3
-          workflowGraph=workflowGraph
-          builds=builds
-          startFrom=startFrom
-          minified=true}}`);
+    await render(hbs`<WorkflowGraphD3
+          @workflowGraph={{this.workflowGraph}}
+          @builds={{this.builds}}
+          @startFrom={{this.startFrom}}
+          @minified={{true}}
+        />`);
 
     const el = this.element;
 

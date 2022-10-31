@@ -4,10 +4,10 @@
     style="background:white;min-height: calc(100vh - 56px);"
   >
     <PipelineVizNav
-      @selectedPipeline={{selectedPipeline}}
-      @selectedConnectedPipeline={{selectedConnectedPipeline}}
-      @pipelines={{pipelines}}
-      @connectedPipelines={{connectedPipelines}}
+      @selectedPipeline={{this.selectedPipeline}}
+      @selectedConnectedPipeline={{this.selectedConnectedPipeline}}
+      @pipelines={{this.pipelines}}
+      @connectedPipelines={{this.connectedPipelines}}
       @onSearchPipeline={{action "searchPipeline"}}
       @onSelectPipeline={{action "selectPipeline"}}
       @onClickConnectedPipeline={{action "selectConnectedPipeline"}}
@@ -15,8 +15,8 @@
   </div>
   <div class="col-md-10">
     <PipelineVizChart
-      @pipeline={{pipelineGraph}}
-      @selectedConnectedPipeline={{selectedConnectedPipeline}}
+      @pipeline={{this.pipelineGraph}}
+      @selectedConnectedPipeline={{this.selectedConnectedPipeline}}
     />
   </div>
 </div>

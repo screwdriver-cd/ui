@@ -1,13 +1,13 @@
 <h4>
-  Format: {{command.format}}
+  Format: {{this.command.format}}
 </h4>
-{{#if isHabitat}}
+{{#if this.isHabitat}}
   <div class="mode" title="This is the habitat mode.">
     <span class="label">
       Mode:
     </span>
     <span class="value">
-      {{command.habitat.mode}}
+      {{this.command.habitat.mode}}
     </span>
   </div>
   <div class="package" title="This is the habitat package.">
@@ -15,7 +15,7 @@
       Package:
     </span>
     <span class="value">
-      {{command.habitat.package}}
+      {{this.command.habitat.package}}
     </span>
   </div>
   <div class="habitat-command" title="This is the habitat command.">
@@ -23,16 +23,16 @@
       Command:
     </span>
     <span class="value">
-      {{command.habitat.command}}
+      {{this.command.habitat.command}}
     </span>
   </div>
-{{else if isDocker}}
+{{else if this.isDocker}}
   <div class="image" title="This is the docker image.">
     <span class="label">
       Image:
     </span>
     <span class="value">
-      {{command.docker.image}}
+      {{this.command.docker.image}}
     </span>
   </div>
   <div class="docker-command" title="This is the docker command.">
@@ -40,16 +40,16 @@
       Command:
     </span>
     <span class="value">
-      {{command.docker.command}}
+      {{this.command.docker.command}}
     </span>
   </div>
-{{else if isBinary}}
+{{else if this.isBinary}}
   <div class="file" title="This is the binary file.">
     <span class="label">
       File:
     </span>
     <span class="value">
-      {{command.binary.file}}
+      {{this.command.binary.file}}
     </span>
   </div>
 {{else}}

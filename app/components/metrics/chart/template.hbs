@@ -39,7 +39,7 @@
 
   <p
     class="reset-button"
-    onClick={{action "resetZoom" chartName dependentChartNames}}
+    onClick={{action "resetZoom" this.chartName this.dependentChartNames}}
     title="Reset Zoom Level"
   >
     <FaIcon @icon="refresh" />

@@ -23,7 +23,7 @@ module('Integration | Component | nav banner', function (hooks) {
 
     this.owner.register('service:banner', bannerStub);
 
-    await render(hbs`{{nav-banner}}`);
+    await render(hbs`<NavBanner />`);
 
     assert.dom('.banner').hasText('× shutdown imminent');
   });

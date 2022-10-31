@@ -3,6 +3,7 @@ import { setupTest } from 'ember-qunit';
 import { settled } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 import sinon from 'sinon';
+import Service from '@ember/service';
 import { model as makeMetricsMock } from '../../../mock/metrics';
 
 let chartMock;
@@ -260,7 +261,14 @@ module('Unit | Controller | pipeline/metrics', function (hooks) {
   test('it sets dates, range and job id', function (assert) {
     const controller = this.owner.lookup('controller:pipeline/metrics');
 
-    controller.transitionToRoute = sinon.stub();
+    const routerServiceMock = Service.extend({
+      transitionTo: () => {
+        assert.ok(true);
+      }
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
     run(() => {
       controller.set('model', metricsMock);
@@ -290,7 +298,6 @@ module('Unit | Controller | pipeline/metrics', function (hooks) {
 
       controller.send('selectJob', 'publish');
       assert.ok(controller.get('actions.setJobId').calledWith('157'));
-      assert.ok(controller.transitionToRoute.called);
 
       controller.send('selectJob', 'do not exist');
       assert.equal(controller.errorMessage, 'Unknown Job: do not exist');

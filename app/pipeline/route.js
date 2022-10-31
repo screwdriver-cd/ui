@@ -2,19 +2,21 @@ import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import { get, set } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { inject as service } from '@ember/service';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   routeAfterAuthentication: 'pipeline',
+  store: service(),
+  router: service(),
   model(params) {
     set(this, 'pipelineId', params.pipeline_id);
-
     const collections = this.store.findAll('collection').catch(() => []);
 
     return RSVP.hash({
       pipeline: this.store
         .findRecord('pipeline', params.pipeline_id)
         .catch(() => {
-          this.transitionTo('/404');
+          this.router.transitionTo('/404');
 
           return [];
         }),
@@ -33,7 +35,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
             this.controllerFor('pipeline.events');
 
           pipelineEventsController.set('errorMessage', 'Build does not exist');
-          this.transitionTo('pipeline.index');
+          this.router.transitionTo('pipeline.index');
 
           return false;
         }

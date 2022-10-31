@@ -1,6 +1,7 @@
 import { reject } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import Service from '@ember/service';
 import sinon from 'sinon';
 
 module('Unit | Controller | create', function (hooks) {
@@ -16,15 +17,29 @@ module('Unit | Controller | create', function (hooks) {
     const controller = this.owner.lookup('controller:create');
     const done = assert.async();
     const conflictError = { status: 409, data: { existingId: 1 } };
-    const stub = sinon.stub(controller, 'transitionToRoute');
+    const transitionToStub = sinon.stub();
 
-    stub.callsFake(function () {
-      assert.ok(stub.calledOnce, 'transitionToRoute was called once');
-      assert.ok(stub.calledWithExactly('pipeline', 1), 'invalid data');
+    const routerServiceMock = Service.extend({
+      transitionTo: transitionToStub
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+
+    transitionToStub.callsFake(function () {
+      assert.ok(transitionToStub.calledOnce, 'transitionTo was called once');
+      assert.ok(transitionToStub.calledWithExactly('pipeline', 1), 'invalid data');
       done();
     });
 
     const createRecordStub = sinon.stub(controller.store, 'createRecord');
+
+    const storeServiceMock = Service.extend({
+      createRecord: createRecordStub
+    });
+
+    this.owner.register('service:store', storeServiceMock);
+
     const payload = {
       checkoutUrl: 'dummy',
       rootDir: '',

@@ -1,11 +1,11 @@
-<div class="coverage">
-  {{#if loading}}
+<div class="coverage" {{in-viewport onEnter=(action "didEnterViewport")}}>
+  {{#if this.loading}}
     Loading
   {{else}}
-    {{#if loaded}}
+    {{#if this.loaded}}
       <span class="coverage-value">
-        {{get coverage "coverage"}}{{if
-          (is-number (get coverage "coverage"))
+        {{get this.coverage "coverage"}}{{if
+          (is-number (get this.coverage "coverage"))
           "%"
         }}
       </span>

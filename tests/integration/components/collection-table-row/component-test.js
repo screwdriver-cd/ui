@@ -67,10 +67,10 @@ module('Integration | Component | collection table row', function (hooks) {
     assert.expect(13);
     this.owner.setupRouter();
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        viewportEnabled=true
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @viewportEnabled={{true}}
+      />
     `);
 
     await waitFor('td.status a svg.fa-question-circle');
@@ -107,10 +107,10 @@ module('Integration | Component | collection table row', function (hooks) {
     this.set('isAuthenticated', false);
 
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isAuthenticated=isAuthenticated
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isAuthenticated={{this.isAuthenticated}}
+      />
     `);
 
     assert.dom('td.collection-pipeline__choose input').doesNotExist();
@@ -122,11 +122,11 @@ module('Integration | Component | collection table row', function (hooks) {
     this.set('isOrganizing', true);
 
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+      />
     `);
 
     assert.dom('td.collection-pipeline__choose input').exists();
@@ -136,11 +136,11 @@ module('Integration | Component | collection table row', function (hooks) {
   test('it renders with a remove button when not organizing', async function (assert) {
     assert.expect(2);
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+      />
     `);
 
     assert.dom('td.collection-pipeline__choose input').doesNotExist();
@@ -150,12 +150,12 @@ module('Integration | Component | collection table row', function (hooks) {
   test('it deletes the pipeline displayed', async function (assert) {
     assert.expect(1);
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-        removePipeline=removePipeline
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+        @removePipeline={{this.removePipeline}}
+      />
     `);
 
     await click('.collection-pipeline__remove span');
@@ -167,13 +167,13 @@ module('Integration | Component | collection table row', function (hooks) {
     this.set('isOrganizing', true);
 
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-        selectPipeline=selectPipeline
-        deselectPipeline=deselectPipeline
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+        @selectPipeline={{this.selectPipeline}}
+        @deselectPipeline={{this.deselectPipeline}}
+      />
     `);
 
     await click('.collection-pipeline__choose input');

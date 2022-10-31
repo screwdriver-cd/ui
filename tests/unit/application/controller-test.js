@@ -11,6 +11,7 @@ module('Unit | Controller | application', function (hooks) {
       // Need this to mock any core services
       // https://github.com/emberjs/ember-qunit/issues/325
       this.owner.unregister('service:session');
+      this.owner.unregister('service:router');
     });
   });
 
@@ -67,10 +68,14 @@ module('Unit | Controller | application', function (hooks) {
   test('it calls search in controller', function (assert) {
     const controller = this.owner.lookup('controller:application');
 
-    controller.transitionToRoute = (path, params) => {
-      assert.equal(path, 'search');
-      assert.deepEqual(params, { queryParams: { query: 'myquery' } });
-    };
+    const routerServiceMock = Service.extend({
+      transitionTo: (path, params) => {
+        assert.equal(path, 'search');
+        assert.deepEqual(params, { queryParams: { query: 'myquery' } });
+      }
+    });
+
+    this.owner.register('service:router', routerServiceMock);
 
     controller.send('search', 'myquery');
   });

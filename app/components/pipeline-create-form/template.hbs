@@ -1,5 +1,5 @@
 <InfoMessage
-  @message={{errorMessage}}
+  @message={{@errorMessage}}
   @type="warning"
   @icon="exclamation-triangle"
 />
@@ -33,35 +33,36 @@
       class="text-input scm-url"
       @key-up={{action "scmChange"}}
       placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#branchName)"
-      @value={{scmUrl}}
+      @value={{this.scmUrl}}
       @enter={{action "saveData"}}
     />
-    {{#if isValid}}
+    {{#if this.isValid}}
       <i class="success">
         <FaIcon @icon="check" />
       </i>
     {{/if}}
   </div>
-  {{#if prUrl}}
+  {{#if this.prUrl}}
     <span>
       PR Created:
-      <a href={{prUrl}} target="_blank" rel="noopener">
-        {{prUrl}}
+      <a href={{this.prUrl}} target="_blank" rel="noopener">
+        {{this.prUrl}}
       </a>
     </span>
   {{/if}}
   <div>
     <PipelineRootdir
+      @value={{this.rootDir}}
       @hasRootDir={{false}}
       @updateRootDir={{action "updateRootDir"}}
     />
 
-    {{#if hasAutoDeployEnabled}}
+    {{#if this.hasAutoDeployEnabled}}
       <label class="normal-weight toggle-auto-deploy-key-generation">
         <Input
           class="toggle-auto-deploy-key-generation"
           @type="checkbox"
-          @checked={{autoKeysGeneration}}
+          @checked={{this.autoKeysGeneration}}
         />
         Generate deploy key pair automatically and add to pipeline.
       </label>
@@ -81,42 +82,44 @@
       <Input
         class="autogenerate-screwdriver-yaml"
         @type="checkbox"
-        @checked={{automaticYamlCreation}}
+        @checked={{this.automaticYamlCreation}}
       />
       I choose a template to automatically generate the
       <span class="select-screwdriver-yaml">
-        screwdriver.yaml <FaIcon @icon="question-circle" />
+        screwdriver.yaml
+        <FaIcon @icon="question-circle" />
       </span>
     </label>
 
     <div>
-      {{#if automaticYamlCreation}}
+      {{#if this.automaticYamlCreation}}
         <label class="normal-weight">
           Start with a
           <span class="select-template">
-            template <FaIcon @icon="question-circle" />
+            template
+            <FaIcon @icon="question-circle" />
           </span>
         </label>
 
         <div class="templates-dropdown">
           <PowerSelect
-            @options={{templates}}
-            @selected={{selectedTemplate}}
+            @options={{this.templates}}
+            @selected={{this.selectedTemplate}}
             @onChange={{action "selectTemplate"}}
             @searchField="name"
-            @searchEnabled={{true}}
-            @noMatchesMessage={{messageForSearching}} as |template|
+            @searchEnabled=true
+            @noMatchesMessage={{this.messageForSearching}} as |template|
           >
-            {{template.name}}
+            {{this.template.name}}
           </PowerSelect>
         </div>
 
         <div class="row">
           <div class="col-xs-12 col-md-12">
-            <ValidatorInput @yaml={{mut yaml}} />
+            <ValidatorInput @yaml={{mut this.yaml}} />
           </div>
           <div class="col-xs-12 col-md-12">
-            <ValidatorResults @results={{results}} />
+            <ValidatorResults @results={{this.results}} />
           </div>
         </div>
 
@@ -145,8 +148,8 @@
 
 <div>
   <button
-    disabled={{isDisabled}}
-    class="blue-button{{if isSaving " saving"}}"
+    disabled={{this.isDisabled}}
+    class="blue-button{{if @isSaving " saving"}}"
     {{action "saveData"}}
   >
     <div class="saving-loading">
@@ -156,8 +159,8 @@
       Create Pipeline
     </div>
   </button>
-  {{#if isSaving}}
-    <FaIcon @icon="spinner" @spin=true />
+  {{#if @isSaving}}
+    <FaIcon @icon="spinner" @spin="true" />
   {{/if}}
 </div>
 

@@ -1,5 +1,5 @@
 <div class="top">
-  {{inline-svg "Screwdriver_Icon_Full" class="img"}}
+  {{svg-jar "Screwdriver_Icon_Full" class="img"}}
   <h1>
     Introducing Screwdriver
   </h1>
@@ -22,14 +22,14 @@
         <span>
           For
           <select {{action "changeLanguage" on="change"}}>
-            {{#each languages as |lang|}}
+            {{#each this.languages as |lang|}}
               <option value={{lang.url}}>
                 {{lang.name}}
               </option>
             {{/each}}
           </select>
           ,
-          <a href={{forkUrl}} target="_blank" rel="noopener">
+          <a href={{this.forkUrl}} target="_blank" rel="noopener">
             <span>
               fork this repo
             </span>

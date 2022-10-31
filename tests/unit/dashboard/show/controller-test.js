@@ -1,6 +1,7 @@
 import { resolve } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import Service from '@ember/service';
 import EmberObject from '@ember/object';
 import sinon from 'sinon';
 import injectSessionStub from '../../../helpers/inject-session';
@@ -53,11 +54,18 @@ module('Unit | Controller | dashboard/show', function (hooks) {
 
   test('it calls onDeleteCollection', function (assert) {
     const controller = this.owner.lookup('controller:dashboard/show');
-    const stub = sinon.stub(controller, 'transitionToRoute');
+    const stub = sinon.stub();
+
+    const routerServiceMock = Service.extend({
+      transitionTo: stub
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
     controller.send('onDeleteCollection');
 
-    assert.ok(stub.calledOnce, 'transitionToRoute was called once');
+    assert.ok(stub.calledOnce, 'transitionTo was called once');
     assert.ok(stub.calledWithExactly('home'), 'transition to home');
   });
 });

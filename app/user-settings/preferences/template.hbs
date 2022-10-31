@@ -1,9 +1,9 @@
 <InfoMessage
-  @message={{errorMessage}}
+  @message={{this.errorMessage}}
   @type="warning"
   @icon="exclamation-triangle"
 />
-<InfoMessage @message={{successMessage}} @type="success" @icon="check" />
+<InfoMessage @message={{this.successMessage}} @type="success" @icon="check" />
 <div class="col-xs-12 col-md-8 user-preference">
   <section class="preference">
     <ul>
@@ -21,11 +21,11 @@
             <input
               type="number"
               class="display-job-name"
-              min={{minDisplayLength}}
-              max={{maxDisplayLength}}
-              placeholder={{minDisplayLength}}
-              value={{desiredJobNameLength}}
-              oninput={{action (mut displayJobNameLength) value="target.value"}}
+              min={{this.minDisplayLength}}
+              max={{this.maxDisplayLength}}
+              placeholder={{this.minDisplayLength}}
+              value={{this.desiredJobNameLength}}
+              oninput={{action (mut this.displayJobNameLength) value="target.value"}}
             />
           </div>
         </div>
@@ -42,13 +42,13 @@
           </div>
           <div class="col-xs-3">
             <PowerSelect
-              @options={{timestampOptions}}
+              @options={{this.timestampOptions}}
               @renderInPlace={{true}}
-              @selected={{selectedTimestampFormat}}
+              @selected={{this.selectedTimestampFormat}}
               @searchEnabled={{false}}
               placeholder="Select timestamp"
               @onChange={{action
-                (mut selectedTimestampFormat)
+                (mut this.selectedTimestampFormat)
               }} as |timestampFormat|
             >
               {{timestampFormat.name}}
@@ -60,18 +60,19 @@
         <div class="row">
           <div class="col-xs-12 right">
             <button
-              disabled={{isDisabled}}
+              disabled={{this.isDisabled}}
               class="reset-button"
               {{action "resetUserSettings"}}
             >
-             <FaIcon @icon="refresh" /> Reset
+              <FaIcon @icon="refresh" />
+              Reset
             </button>
             <button
-              disabled={{isDisabled}}
+              disabled={{this.isDisabled}}
               class="blue-button"
               {{action "updateUserSettings"}}
             >
-              {{#if isSaving}}
+              {{#if this.isSaving}}
                 <div>
                   Updating settings
                 </div>
@@ -81,8 +82,8 @@
                 </div>
               {{/if}}
             </button>
-            {{#if isSaving}}
-              <FaIcon @icon="spinner" @spin=true />
+            {{#if this.isSaving}}
+              <FaIcon @icon="spinner" @spin="true" />
             {{/if}}
           </div>
         </div>

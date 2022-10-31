@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import ENV from 'screwdriver-ui/config/environment';
 import convertToBool from 'screwdriver-ui/utils/convert-to-bool';
 

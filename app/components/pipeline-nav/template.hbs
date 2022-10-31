@@ -1,10 +1,10 @@
-{{#if pipelineDescription}}
+{{#if this.pipelineDescription}}
   <span>
-    {{pipelineDescription}}
+    {{this.pipelineDescription}}
   </span>
 {{/if}}
 <BsNav @type="pills" as |nav|>
-  {{#if pipeline.childPipelines}}
+  {{#if this.pipeline.childPipelines}}
     <nav.item>
       {{#nav.link-to "pipeline.child-pipelines"}}
         Child Pipelines
@@ -12,7 +12,7 @@
     </nav.item>
   {{/if}}
   <nav.item>
-    {{#nav.link-to buildsLink}}
+    {{#nav.link-to this.buildsLink}}
       Builds
     {{/nav.link-to}}
   </nav.item>

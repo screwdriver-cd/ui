@@ -1,22 +1,22 @@
-{{#if addCollectionError}}
+{{#if this.addCollectionError}}
   <InfoMessage
-    @message={{addCollectionError}}
+    @message={{this.addCollectionError}}
     @type="warning"
     @icon="exclamation-triangle"
   />
 {{/if}}
-{{#if addCollectionSuccess}}
+{{#if this.addCollectionSuccess}}
   <InfoMessage
-    @message={{addCollectionSuccess}}
+    @message={{this.addCollectionSuccess}}
     @type="success"
     @icon="check"
   />
 {{/if}}
 <div class="num-results">
   {{if
-    isEmpty
+    this.isEmpty
     "No results"
-    (concat "Showing " filteredPipelines.length " result(s)")
+    (concat "Showing " this.filteredPipelines.length " result(s)")
   }}
 </div>
 <table>
@@ -31,7 +31,7 @@
       <th class="account">
         Account
       </th>
-      {{#if session.isAuthenticated}}
+      {{#if this.session.isAuthenticated}}
         <th class="add">
           Add to Collection
         </th>
@@ -39,14 +39,14 @@
     </tr>
   </thead>
   <tbody>
-    {{#each filteredPipelines as |pipeline|}}
+    {{#each this.filteredPipelines as |pipeline|}}
       <tr>
         <td class="appId">
-          {{#highlight-terms query}}
-            <LinkTo @route="pipeline" @model={{pipeline.id}}>
-              {{pipeline.appId}}
-            </LinkTo>
-          {{/highlight-terms}}
+          {{!-- {{#highlight-terms query}} --}}
+          <LinkTo @route="pipeline" @model={{pipeline.id}}>
+            {{pipeline.appId}}
+          </LinkTo>
+          {{!-- {{/highlight-terms}} --}}
         </td>
         <td class="branch">
           <a href={{branch-url-encode pipeline.hubUrl}}>
@@ -54,16 +54,17 @@
           </a>
         </td>
         <td class="account">
-          <FaIcon @icon={{pipeline.scmIcon}} @prefix="fab" /> {{pipeline.scm}}
+          <FaIcon @icon={{pipeline.scmIcon}} @prefix="fab" />
+          {{pipeline.scm}}
         </td>
-        {{#if session.isAuthenticated}}
+        {{#if this.session.isAuthenticated}}
           <td class="add">
             <CollectionDropdown
               @pipeline={{pipeline}}
-              @collections={{collections}}
+              @collections={{this.collections}}
               @addToCollection={{action "addToCollection"}}
-              @addCollectionError={{addCollectionError}}
-              @addCollectionSuccess={{addCollectionSuccess}}
+              @addCollectionError={{this.addCollectionError}}
+              @addCollectionSuccess={{this.addCollectionSuccess}}
             />
           </td>
         {{/if}}
@@ -71,13 +72,13 @@
     {{/each}}
   </tbody>
 </table>
-{{#if showMore}}
+{{#if this.showMore}}
   <a class="showMore" {{action "moreClick"}}>
     Show more results...
   </a>
 {{/if}}
 
 <CollectionModal
-  @showModal={{showModal}}
-  @addNewCollection={{addNewCollection}}
+  @showModal={{this.showModal}}
+  @addNewCollection={{this.addNewCollection}}
 />

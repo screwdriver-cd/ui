@@ -9,7 +9,7 @@ import PipelineCellComponent from 'screwdriver-ui/components/pipeline-list-cover
 let server;
 
 module(
-  'Integration | Component | pipeline-list-coverage-cell',
+  'Integration | Component | pipeline list coverage cell',
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -35,7 +35,7 @@ module(
         })
       );
 
-      await render(hbs`{{pipeline-list-coverage-cell}}`);
+      await render(hbs`<PipelineListCoverageCell />`);
 
       assert.dom('.coverage-value').exists({ count: 0 });
       assert.dom('.coverage').hasText('N/A');
@@ -55,7 +55,9 @@ module(
         prParentJobId: null
       };
 
-      this.set('value', jobData);
+      this.set('record', {
+        coverage: jobData
+      });
 
       server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info`, () => [
         200,
@@ -71,7 +73,7 @@ module(
         })
       ]);
 
-      await render(hbs`{{pipeline-list-coverage-cell value=value}}`);
+      await render(hbs`<PipelineListCoverageCell @record={{this.record}} />`);
 
       await waitFor('.coverage-value');
 

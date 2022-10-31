@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinon from 'sinon';
+import Service from '@ember/service';
 
 module(
   'Unit | Route | pipeline/job-latest-build/artifacts/detail',
@@ -16,33 +17,35 @@ module(
     });
 
     test('it redirects to artifacts page', function (assert) {
-      assert.expect(3);
+      assert.expect(5);
 
       const route = this.owner.lookup(
         'route:pipeline/job-latest-build/artifacts/detail'
       );
-      const transitionStub = sinon.stub(route, 'transitionTo');
-      const paramStub = sinon.stub(route, 'paramsFor').returns({
-        file_path: 123
-      });
+
+      const paramStub = sinon
+        .stub(route, 'paramsFor')
+        .returns({ file_path: 123 });
       const model = {
         pipelineId: 1,
         id: 2
       };
 
+      const routerServiceMock = Service.extend({
+        transitionTo: (path, pipelineId, buildId, filePath) => {
+          assert.equal(path, 'pipeline.build.artifacts.detail');
+          assert.equal(pipelineId, 1);
+          assert.equal(buildId, 2);
+          assert.equal(filePath, 123);
+        }
+      });
+
+      this.owner.unregister('service:router');
+      this.owner.register('service:router', routerServiceMock);
+
       route.afterModel(model);
 
-      assert.ok(transitionStub.calledOnce, 'transitionTo was called once');
       assert.ok(paramStub.calledOnce, 'paramsFor was called once');
-      assert.ok(
-        transitionStub.calledWithExactly(
-          'pipeline.build.artifacts.detail',
-          1,
-          2,
-          123
-        ),
-        'transition to build artifacts detail'
-      );
     });
   }
 );

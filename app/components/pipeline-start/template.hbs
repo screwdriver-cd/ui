@@ -1,6 +1,6 @@
-{{#if hasParameters}}
+{{#if this.hasParameters}}
   {{#if hasLargeNumberOfParameters}}
-    {{#if (not prNum)}}
+    {{#if (not this.prNum)}}
       <div class="btn-group">
         <button
           class="btn start-button"
@@ -13,7 +13,7 @@
           class="btn start-with-parameters-button"
           onClick={{action "toggleModal"}}
         >
-          <FaIcon @icon={{(concat "caret-" direction)}} />
+          <FaIcon @icon={{(concat "caret-" this.direction)}} />
         </button>
       </div>
     {{/if}}
@@ -44,7 +44,7 @@
       @closeOnMenuClick={{false}} as |dd|
     >
       <div class="btn-group">
-        {{#if (not prNum)}}
+        {{#if (not this.prNum)}}
           <button
             class="start-button btn"
             title="Start a new event from latest commit"
@@ -73,7 +73,7 @@
     </BsDropdown>
   {{/if}}
 {{else}}
-  {{#if (not prNum)}}
+  {{#if (not this.prNum)}}
     <button
       class="start-button"
       title="Start a new event from latest commit"

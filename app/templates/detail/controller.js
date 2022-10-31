@@ -1,11 +1,11 @@
-import { oneWay } from '@ember/object/computed';
+import { oneWay, alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import Controller from '@ember/controller';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
-const { alias } = computed;
 
 export default Controller.extend({
+  router: service(),
   selectedVersion: oneWay('model.versionOrTagFromUrl'),
   errorMessage: '',
   session: service(),
@@ -64,7 +64,7 @@ export default Controller.extend({
   actions: {
     removeTemplate(name) {
       return this.template.deleteTemplates(name).then(
-        () => this.transitionToRoute('templates'),
+        () => this.router.transitionTo('templates'),
         err => this.set('errorMessage', err)
       );
     },

@@ -3,7 +3,7 @@ import { resolve } from 'rsvp';
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
-import { htmlSafe } from '@ember/string';
+import { htmlSafe } from '@ember/template';
 import { inject as service } from '@ember/service';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import $ from 'jquery';
@@ -1009,7 +1009,7 @@ export default Controller.extend({
 
       if (id && this.selectedJobName !== name) {
         this.send('setJobId', id);
-        this.transitionToRoute({ queryParams: { jobId: id } });
+        this.router.transitionTo({ queryParams: { jobId: id } });
       } else {
         this.set('errorMessage', `Unknown Job: ${name}`);
       }

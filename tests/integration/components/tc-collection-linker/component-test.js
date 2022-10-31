@@ -50,7 +50,7 @@ module('Integration | Component | tc collection linker', function (hooks) {
     );
 
     await render(
-      hbs`{{tc-collection-linker column=column extra=extra value=value row=row}}`
+      hbs`<TcCollectionLinker @column={{this.column}} @extra={{this.extra}} @value={{this.value}} @row={{this.row}} />`
     );
 
     assert.dom('a .namespace').hasText('baz');
@@ -62,7 +62,7 @@ module('Integration | Component | tc collection linker', function (hooks) {
     );
 
     await render(
-      hbs`{{tc-collection-linker column=column extra=extra value=value row=row}}`
+      hbs`<TcCollectionLinker @column={{this.column}} @extra={{this.extra}} @value={{this.value}} @row={{this.row}} />`
     );
 
     assert.dom('a .name').hasText('bar');

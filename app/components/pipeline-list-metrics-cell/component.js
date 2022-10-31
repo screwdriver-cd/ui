@@ -4,11 +4,11 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   shuttle: service(),
-  jobId: computed('value', {
+  jobId: computed('record.job', {
     get() {
-      const { value } = this;
+      const { job } = this.record;
 
-      return value && value.build && value.build.jobId ? value.build.jobId : '';
+      return job && job.build && job.build.jobId ? job.build.jobId : '';
     }
   })
 });

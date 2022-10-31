@@ -1,28 +1,34 @@
 <BsForm
   @formLayout="horizontal"
-  @model={{parameterizedModel}}
+  @model={{this.parameterizedModel}}
   class="start-with-parameters-form"
-  @onSubmit={{action "onSave" parameters}} as |form|
+  @onSubmit={{action "onSave" this.parameters}} as |form|
 >
   <div class="parameter-group-list">
-    {{#each parameters as |parameterGroup|}}
+    {{#each this.parameters as |parameterGroup|}}
       <div class="parameter-group">
         <h4
           onClick={{action "onExpandCollapseParamGroup" parameterGroup.jobName}}
         >
           <FaIcon
             @icon={{if parameterGroup.isOpen "minus-square" "plus-square"}}
-          /> {{parameterGroup.paramGroupTitle}}
+          />
+          {{parameterGroup.paramGroupTitle}}
         </h4>
         <div
           class="parameter-list
+
+
             {{if parameterGroup.isOpen "expanded" "collapsed"}}"
         >
           {{#each parameterGroup.parameters as |parameter|}}
-            <form.group>
+            <form.element>
               <label class="control-label col-md-4">
                 {{#if parameter.description}}
-                  <FaIcon @icon="question-circle" @title={{parameter.description}} />
+                  <FaIcon
+                    @icon="question-circle"
+                    @title={{parameter.description}}
+                  />
                 {{/if}}
                 {{parameter.name}}
               </label>
@@ -32,15 +38,19 @@
                     (get
                       (if
                         (eq parameterGroup.jobName null)
-                        parameterizedModel
-                        (get parameterizedModel parameterGroup.jobName)
+                        this.parameterizedModel
+                        (get this.parameterizedModel parameterGroup.jobName)
                       )
                       parameter.name
                     ) as |value|
                   }}
                     {{#unless (array-includes value parameter.defaultValues)}}
-                      <FaIcon @icon="exclamation-triangle"
-                        @title={{concat "Default value: " parameter.defaultValues}}
+                      <FaIcon
+                        @icon="exclamation-triangle"
+                        @title={{concat
+                          "Default value: "
+                          parameter.defaultValues
+                        }}
                         @class="notice-default-values-icon"
                       />
                     {{/unless}}
@@ -51,7 +61,7 @@
                       @onChange={{action
                         (action
                           "onUpdateValue"
-                          parameterizedModel
+                          this.parameterizedModel
                           parameterGroup.jobName
                           parameter.name
                         )
@@ -59,7 +69,7 @@
                       @onkeydown={{action
                         (action
                           "searchOrAddtoList"
-                          parameterizedModel
+                          this.parameterizedModel
                           parameterGroup.jobName
                           parameter.name
                         )
@@ -74,8 +84,12 @@
                   {{#unless
                     (array-includes parameter.value parameter.defaultValues)
                   }}
-                    <FaIcon @icon="exclamation-triangle"
-                      @title={{concat "Default value: " parameter.defaultValues}}
+                    <FaIcon
+                      @icon="exclamation-triangle"
+                      @title={{concat
+                        "Default value: "
+                        parameter.defaultValues
+                      }}
                       class="notice-default-values-icon"
                     />
                   {{/unless}}
@@ -88,7 +102,7 @@
                     @change={{action
                       (action
                         "onUpdateValue"
-                        parameterizedModel
+                        this.parameterizedModel
                         parameterGroup.jobName
                         parameter.name
                         parameter.value
@@ -97,17 +111,17 @@
                   />
                 {{/if}}
               </div>
-            </form.group>
+            </form.element>
           {{/each}}
         </div>
       </div>
     {{/each}}
   </div>
 
-  {{#if showSubmitButton}}
+  {{#if this.showSubmitButton}}
     <div class="btn-group">
       <BsButton
-        @defaultText={{submitButtonText}}
+        @defaultText={{this.submitButtonText}}
         @type="primary"
         @buttonType="submit"
       />
@@ -115,4 +129,4 @@
   {{/if}}
 </BsForm>
 
-{{yield (hash parameters=parameterizedModel)}}
+{{yield (hash parameters=this.parameterizedModel)}}

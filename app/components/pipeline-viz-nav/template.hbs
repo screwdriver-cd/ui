@@ -7,7 +7,7 @@
     @searchField="name"
     @searchEnabled={{true}}
     @searchPlaceholder="Search pipeline..."
-    @selected={{selectedPipeline}}
+    @selected={{this.selectedPipeline}}
     @onChange={{action "handleSelectedPipeline"}} as |repo|
   >
     {{repo.name}}
@@ -18,11 +18,11 @@
   <h4 class="title">
     Connected Pipelines
   </h4>
-  {{#each connectedPipelines as |pipeline|}}
+  {{#each this.connectedPipelines as |pipeline|}}
     <PipelineVizRow
       @pipeline={{pipeline}}
-      @selectedPipeline={{selectedPipeline}}
-      @selectedConnectedPipeline={{selectedConnectedPipeline}}
+      @selectedPipeline={{this.selectedPipeline}}
+      @selectedConnectedPipeline={{this.selectedConnectedPipeline}}
       @onClick={{action "handleSelectedConnectedPipeline"}}
       @onActionClick={{action "handleSelectedPipeline"}}
     />

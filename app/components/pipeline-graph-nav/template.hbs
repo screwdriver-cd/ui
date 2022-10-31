@@ -1,12 +1,12 @@
-{{#if showGraphNavRow}}
+{{#if this.showGraphNavRow}}
   <div class="row">
-    {{#if (not isPR)}}
+    {{#if (not this.isPR)}}
       <div class="col-xs-2">
         <BsButtonGroup
           class="view-toggle"
-          @value={{showListView}}
+          @value={{this.showListView}}
           @type="radio"
-          @onChange={{action setShowListView}} as |bg|
+          @onChange={{action this.setShowListView}} as |bg|
         >
           <bg.button @value={{false}}>
             <FaIcon @icon="th" />
@@ -19,56 +19,60 @@
     {{/if}}
 
     <div class="col-xs-4">
-      {{#if isPR}}
+      {{#if this.isPR}}
         <strong>
           Pull Requests
         </strong>
       {{/if}}
       <BsButtonGroup
         class="event-options-toggle"
-        @value={{selectedEvent}}
+        @value={{this.selectedEvent}}
         @type="radio"
-        @onChange={{action (mut selected)}} as |bg|
+        @onChange={{action (mut this.selected)}} as |bg|
       >
-        {{#each eventOptions as |opt|}}
+        {{#each this.eventOptions as |opt|}}
           <bg.button @value={{opt.value}}>
             {{opt.label}}
           </bg.button>
         {{/each}}
       </BsButtonGroup>
     </div>
-    {{#if (not isPR)}}
+    {{#if (not this.isPR)}}
       <div
         class="col-xs-3"
         title="Toggle to
-          {{if showDownstreamTriggers "hide" "show"}}
+
+
+          {{if this.showDownstreamTriggers "hide" "show"}}
+
+
            the downstream trigger nodes."
       >
         <XToggle
           @size="medium"
           @theme="material"
           @showLabels={{true}}
-          @value={{showDownstreamTriggers}}
+          @value={{this.showDownstreamTriggers}}
           @offLabel="Hide triggers"
           @onLabel="Show triggers"
-          @onToggle={{action setDownstreamTrigger}}
+          @onToggle={{action this.setDownstreamTrigger}}
         />
       </div>
     {{/if}}
     <div class="col-xs-3">
-      {{#if session.isAuthenticated}}
-        {{#if (not-eq selectedEventObj.type "pr")}}
+      {{#if this.session.isAuthenticated}}
+        {{#if (not-eq this.selectedEventObj.type "pr")}}
           <PipelineStart
-            @startBuild={{action startMainBuild}}
-            @pipeline={{pipeline}}
+            @startBuild={{action this.startMainBuild}}
+            @pipeline={{this.pipeline}}
           />
         {{/if}}
       {{/if}}
     </div>
   </div>
 {{/if}}
-{{#if selectedEventObj}}
-  <div class="row {{selectedEventObj.status}}">
+{{#if this.selectedEventObj}}
+  <div class="row {{this.selectedEventObj.status}}">
     <div class="col-xs-12">
       <div class="event-info">
         <div class="col">
@@ -79,12 +83,12 @@
           <span>
             <a
               class={{if
-                (eq selectedEventObj.sha latestCommit.sha)
+                (eq this.selectedEventObj.sha this.latestCommit.sha)
                 "latest-commit"
               }}
-              href={{selectedEventObj.commit.url}}
+              href={{this.selectedEventObj.commit.url}}
             >
-              #{{selectedEventObj.truncatedSha}}
+              #{{this.selectedEventObj.truncatedSha}}
             </a>
           </span>
         </div>
@@ -93,8 +97,8 @@
             Message
           </span>
           <br />
-          <span title={{selectedEventObj.commit.message}}>
-            {{selectedEventObj.truncatedMessage}}
+          <span title={{this.selectedEventObj.commit.message}}>
+            {{this.selectedEventObj.truncatedMessage}}
           </span>
         </div>
         <div class="col">
@@ -103,7 +107,7 @@
           </span>
           <br />
           <span>
-            {{selectedEventObj.baseBranch}}
+            {{this.selectedEventObj.baseBranch}}
           </span>
         </div>
         <div class="col">
@@ -112,13 +116,14 @@
           </span>
           <br />
           <span class="status">
-                <FaIcon
-                  @icon={{icon.name}}
-                  @fixedWidth=true
-                  @prefix={{icon.prefix}}
-                  @spin={{icon.spin}}
-                  @flip={{icon.flip}}
-                /> {{selectedEventObj.status}}
+            <FaIcon
+              @icon={{this.icon.name}}
+              @fixedWidth="true"
+              @prefix={{this.icon.prefix}}
+              @spin={{this.icon.spin}}
+              @flip={{this.icon.flip}}
+            />
+            {{this.selectedEventObj.status}}
           </span>
         </div>
         <div class="col">
@@ -127,8 +132,8 @@
           </span>
           <br />
           <span>
-            <a href={{selectedEventObj.commit.author.url}}>
-              {{selectedEventObj.commit.author.name}}
+            <a href={{this.selectedEventObj.commit.author.url}}>
+              {{this.selectedEventObj.commit.author.name}}
             </a>
           </span>
         </div>
@@ -138,7 +143,7 @@
           </span>
           <br />
           <span>
-            {{startDate.content}}
+            {{this.startDate.content}}
           </span>
         </div>
         <div class="col">
@@ -147,17 +152,17 @@
           </span>
           <br />
           <span>
-            {{selectedEventObj.durationText}}
+            {{this.selectedEventObj.durationText}}
           </span>
         </div>
-        {{#if selectedEventObj.label}}
+        {{#if this.selectedEventObj.label}}
           <div class="col">
             <span class="title">
               Label
             </span>
             <br />
-            <span class="customize-label" title={{selectedEventObj.label}}>
-              {{selectedEventObj.label}}
+            <span class="customize-label" title={{this.selectedEventObj.label}}>
+              {{this.selectedEventObj.label}}
             </span>
           </div>
         {{/if}}

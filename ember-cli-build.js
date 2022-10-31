@@ -7,6 +7,7 @@ module.exports = function (defaults) {
     autoImport: {
       forbidEval: true
     },
+
     // Add options here
     'ember-font-awesome': {
       useScss: true // for ember-cli-sass
@@ -30,13 +31,16 @@ module.exports = function (defaults) {
     },
 
     'ember-bootstrap': {
-      bootstrapVersion: 3,
-      importBootstrapFont: true,
+      bootstrapVersion: 4,
       importBootstrapCSS: false
     },
 
     babel: {
       plugins: []
+    },
+
+    'ember-models-table': {
+      includeDefaultCss: true
     }
   });
 
@@ -46,6 +50,7 @@ module.exports = function (defaults) {
   app.import('node_modules/c3/c3.min.js');
   app.import('node_modules/c3/c3.min.css');
   app.import('node_modules/memoizerific/memoizerific.min.js');
+  app.import('node_modules/jstree/dist/jstree.js');
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //

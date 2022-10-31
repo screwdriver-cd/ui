@@ -10,13 +10,13 @@ module('Integration | Component | quickstart-guide', function (hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{quickstart-guide isOpen=true}}`);
+    await render(hbs`<QuickstartGuide @isOpen={{true}} />`);
     assert.dom('.quickstart-guide.menu-open').exists();
     assert.dom('.quickstart-guide.menu-close').doesNotExist();
   });
 
   test('it renders close', async function (assert) {
-    await render(hbs`{{quickstart-guide isOpen=false}}`);
+    await render(hbs`<QuickstartGuide @isOpen={{false}} />`);
     assert.dom('.quickstart-guide.menu-open').doesNotExist();
     assert.dom('.quickstart-guide.menu-close').exists();
   });

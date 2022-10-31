@@ -118,9 +118,14 @@ module('Unit | Controller | commands/detail', function (hooks) {
 
     assert.ok(controller);
 
-    controller.transitionToRoute = route => {
-      assert.equal(route, 'commands');
-    };
+    const routerServiceMock = Service.extend({
+      transitionTo: path => {
+        assert.equal(path, 'commands');
+      }
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
     controller.send('removeCommand', 'sample');
   });

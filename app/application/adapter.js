@@ -26,10 +26,8 @@ export default RESTAdapter.extend(DataAdapterMixin, {
   ajax(url, method, hash) {
     const finalHash = hash || {};
 
+    finalHash.credentials = 'include';
     finalHash.crossDomain = true;
-    finalHash.xhrFields = {
-      withCredentials: true
-    };
 
     return this._super(url, method, finalHash);
   },

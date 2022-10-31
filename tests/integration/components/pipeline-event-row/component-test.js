@@ -97,14 +97,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.stopButton').doesNotExist();
@@ -138,14 +138,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row
-      event=event
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.RUNNING').exists({ count: 1 });
     assert.dom('.stopButton').exists({ count: 1 });
@@ -180,14 +180,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row
-      event=event
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.UNKNOWN').exists({ count: 1 });
     assert.dom('.stopButton').doesNotExist();
@@ -231,14 +231,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startBuild
-      stopEvent=stopEvent
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startBuild}}
+      @stopEvent={{this.stopEvent}}
       selectedEvent=4
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle').exists({ count: 1 });
@@ -277,14 +277,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle').exists({ count: 1 });
@@ -319,14 +319,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle').exists({ count: 1 });
@@ -365,14 +365,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle').exists({ count: 1 });
@@ -407,14 +407,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.status .fa-check-circle').exists({ count: 1 });
@@ -455,14 +455,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.date').hasText(
       `Started ${toCustomLocaleString(new Date('06/30/2021, 04:39 PM'), {
@@ -499,14 +499,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SKIPPED').exists({ count: 1 });
     assert.dom('.status .fa-exclamation-circle').exists({ count: 1 });

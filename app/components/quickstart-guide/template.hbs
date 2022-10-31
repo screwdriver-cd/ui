@@ -1,4 +1,4 @@
-{{#unless isOpen}}
+{{#unless this.isOpen}}
   <div class="quickstart-guide-menu" onclick={{action "openMenu"}}>
     <div class="mini-menu-oval">
       <div class="mini-menu">
@@ -8,7 +8,7 @@
   </div>
 {{/unless}}
 
-<div class="quickstart-guide {{if isOpen "menu-open" "menu-close"}}">
+<div class="quickstart-guide {{if this.isOpen "menu-open" "menu-close"}}">
   <div class="header">
     <div class="item">
       <div class="icon">
@@ -58,7 +58,7 @@
       </div>
       <div class="section">
         <span>
-          Enter your repository link into the field. SSH or HTTPS link is fine, with #&amp;lt;YOUR_BRANCH_NAME&amp;gt; immediately after.
+          Enter your repository link into the field. SSH or HTTPS link is fine, with #&amp;amp;amp;amp;amp;amp;lt;YOUR_BRANCH_NAME&amp;amp;amp;amp;amp;amp;gt; immediately after.
         </span>
       </div>
     </div>
@@ -109,7 +109,8 @@
         rel="noopener"
       >
         <span>
-          QuickStart Documentation <FaIcon @icon="share-square-o" />
+          QuickStart Documentation
+          <FaIcon @icon="share-square-o" />
         </span>
       </a>
     </span>

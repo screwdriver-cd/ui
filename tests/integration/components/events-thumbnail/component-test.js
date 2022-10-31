@@ -24,7 +24,7 @@ module('Integration | Component | events thumbnail', function (hooks) {
   test('it renders', async function (assert) {
     this.set('eventsInfo', eventsInfo);
 
-    await render(hbs`{{events-thumbnail events=eventsInfo}}`);
+    await render(hbs`<EventsThumbnail @events={{this.eventsInfo}} />`);
     assert.dom('svg').exists({ count: 1 });
     assert.dom('svg rect').exists({ count: 20 });
 

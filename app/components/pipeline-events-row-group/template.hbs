@@ -1,12 +1,12 @@
 <div class="pipeline-events-group">
-  {{#each events as |event index|}}
+  {{#each this.events as |event index|}}
     {{#if (eq index 0)}}
-      {{#if (not-eq events.length 1)}}
+      {{#if (not-eq this.events.length 1)}}
         <a
           onclick={{action "toggleExpanded"}}
           class="pull-right expand-collapse"
         >
-          {{#if (eq isExpanded true)}}
+          {{#if (eq this.isExpanded true)}}
             Collapse
             <FaIcon @icon="chevron-circle-up" />
           {{else}}
@@ -17,27 +17,27 @@
         <span class="clearfix"></span>
       {{/if}}
       <PipelineEventRow
-        @pipeline={{pipeline}}
+        @pipeline={{this.pipeline}}
         @event={{event}}
-        @selectedEventObj={{selectedEventObj}}
-        @selectedEvent={{selectedEvent}}
-        @lastSuccessful={{lastSuccessful}}
-        @latestCommit={{latestCommit}}
-        @startPRBuild={{startPRBuild}}
-        @stopEvent={{stopEvent}}
-        @eventClick={{eventClick}}
+        @selectedEventObj={{this.selectedEventObj}}
+        @selectedEvent={{this.selectedEvent}}
+        @lastSuccessful={{this.lastSuccessful}}
+        @latestCommit={{this.latestCommit}}
+        @startPRBuild={{this.startPRBuild}}
+        @stopEvent={{this.stopEvent}}
+        @eventClick={{this.eventClick}}
       />
-    {{else if (eq isExpanded true)}}
+    {{else if (eq this.isExpanded true)}}
       <PipelineEventRow
-        @pipeline={{pipeline}}
+        @pipeline={{this.pipeline}}
         @event={{event}}
-        @selectedEvent={{selectedEvent}}
-        @selectedEventObj={{selectedEventObj}}
-        @latestCommit={{latestCommit}}
-        @lastSuccessful={{lastSuccessful}}
-        @startPRBuild={{startPRBuild}}
-        @stopEvent={{stopEvent}}
-        @eventClick={{eventClick}}
+        @selectedEvent={{this.selectedEvent}}
+        @selectedEventObj={{this.selectedEventObj}}
+        @latestCommit={{this.latestCommit}}
+        @lastSuccessful={{this.lastSuccessful}}
+        @startPRBuild={{this.startPRBuild}}
+        @stopEvent={{this.stopEvent}}
+        @eventClick={{this.eventClick}}
       />
     {{/if}}
   {{else}}

@@ -5,6 +5,7 @@ import { set } from '@ember/object';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 
 export default Route.extend({
+  router: service(),
   template: service(),
   resultCache: Object(),
   determineVersion(pVersion, verPayload, tagPayload) {
@@ -17,7 +18,7 @@ export default Route.extend({
       const tagExists = tagPayload.filter(t => t.tag === pVersion);
 
       if (tagExists.length === 0 && versionExists.length === 0) {
-        this.transitionTo('/404');
+        this.router.transitionTo('/404');
       }
 
       if (versionExists.length > 0) {
@@ -92,7 +93,7 @@ export default Route.extend({
   actions: {
     error(error) {
       if (error.status === 404) {
-        this.transitionTo('/404');
+        this.router.transitionTo('/404');
       }
 
       return true;

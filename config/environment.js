@@ -6,6 +6,7 @@ module.exports = environment => {
     environment,
     rootURL: '/',
     locationType: 'auto',
+    // locationType: 'history',
     contentSecurityPolicyHeader: 'Content-Security-Policy',
     contentSecurityPolicy: {
       'script-src': ["'self'", "'unsafe-inline'"],

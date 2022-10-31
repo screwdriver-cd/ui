@@ -1,11 +1,26 @@
 <div class="actions">
-  <span class={{startButtonClass}} {{action "startSingleBuild" "START"}}>
-    <FaIcon @icon="play-circle" @fixedWidth=true @prefix="far" @title="Start a new build." />
+  <span class={{this.startButtonClass}} {{action "startSingleBuild" "START"}}>
+    <FaIcon
+      @icon="play-circle"
+      @fixedWidth="true"
+      @prefix="far"
+      @title="Start a new build."
+    />
   </span>
-  <span class={{stopButtonClass}} {{action "stopBuild"}}>
-    <FaIcon @icon="stop-circle" @fixedWidth=true @prefix="far" @title="Stop build." />
+  <span class={{this.stopButtonClass}} {{action "stopBuild"}}>
+    <FaIcon
+      @icon="stop-circle"
+      @fixedWidth="true"
+      @prefix="far"
+      @title="Stop build."
+    />
   </span>
-  <span class={{startButtonClass}} {{action "startSingleBuild" "RESTART"}}>
-    <FaIcon @icon="redo-alt" @fixedWidth=true @prefix="fas" @title="Restart from latest build." />
+  <span class={{this.startButtonClass}} {{action "startSingleBuild" "RESTART"}}>
+    <FaIcon
+      @icon="redo-alt"
+      @fixedWidth="true"
+      @prefix="fas"
+      @title="Restart from latest build."
+    />
   </span>
 </div>

@@ -1,13 +1,13 @@
 <InfoMessage
-  @message={{errorMessage}}
+  @message={{this.errorMessage}}
   @type="warning"
   @icon="exclamation-triangle"
 />
 
 <TemplateHeader
-  @template={{versionTemplate}}
-  @trusted={{trusted}}
-  @isAdmin={{isAdmin}}
+  @template={{this.versionTemplate}}
+  @trusted={{this.trusted}}
+  @isAdmin={{this.isAdmin}}
   @onUpdateTrust={{action "updateTrust"}}
   @onRemoveTemplate={{action "removeTemplate"}}
 />
@@ -16,13 +16,13 @@
   Contents:
 </h4>
 <ValidatorJob
-  @name={{versionTemplate.fullName}}
-  @job={{versionTemplate.config}}
-  @template={{versionTemplate}}
+  @name={{this.versionTemplate.fullName}}
+  @job={{this.versionTemplate.config}}
+  @template={{this.versionTemplate}}
   @collapsible={{false}}
   @isOpen={{true}}
 />
 
-<TemplateVersions @templates={{templates}} />
+<TemplateVersions @templates={{this.templates}} />
 
 {{outlet}}

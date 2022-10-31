@@ -7,7 +7,7 @@ module('Integration | Component | validator pipeline', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders default empty settings', async function (assert) {
-    await render(hbs`{{validator-pipeline}}`);
+    await render(hbs`<ValidatorPipeline />`);
 
     assert.dom('h4.pipeline').hasText('Pipeline Settings');
 
@@ -27,7 +27,7 @@ module('Integration | Component | validator pipeline', function (hooks) {
     });
 
     await render(
-      hbs`{{validator-pipeline annotations=plMock.annotations workflow=plMock.workflow}}`
+      hbs`<ValidatorPipeline @annotations={{this.plMock.annotations}} @workflow={{this.plMock.workflow}} />`
     );
 
     assert.dom('.annotations .label').hasText('Annotations:');

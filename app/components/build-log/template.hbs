@@ -1,15 +1,15 @@
-{{#if (gt logs.length 1)}}
+{{#if (gt this.logs.length 1)}}
   <div class="heading">
     <div class="row">
       <div>
         <span class="time" onClick={{action "toggleTimeDisplay"}}>
-          {{#if (eq timeFormat "datetime")}}
+          {{#if (eq this.timeFormat "datetime")}}
             Local Timestamp
-          {{else if (eq timeFormat "datetimeUTC")}}
+          {{else if (eq this.timeFormat "datetimeUTC")}}
             UTC Timestamp
-          {{else if (eq timeFormat "elapsedBuild")}}
+          {{else if (eq this.timeFormat "elapsedBuild")}}
             Since build started
-          {{else if (eq timeFormat "elapsedStep")}}
+          {{else if (eq this.timeFormat "elapsedStep")}}
             Since step started
           {{/if}}
         </span>
@@ -28,7 +28,7 @@
           alt="Toggle line wrapping"
           title="Toggle wrap lines"
         >
-          {{inline-svg "word-wrap" class="img"}}
+          {{svg-jar "word-wrap" class="img"}}
         </a>
         <a onClick={{action "scrollToTop"}} title="Go to Top">
           <FaIcon @icon="arrow-up" />
@@ -36,10 +36,11 @@
         <a onClick={{action "scrollToBottom"}} title="Go to Bottom">
           <FaIcon @icon="arrow-down" />
         </a>
-        {{#unless inProgress}}
-          {{#if isDownloading}}
+        {{#unless this.inProgress}}
+          {{#if this.isDownloading}}
             <span>
-              <FaIcon @icon="spinner" @spin=true /> Downloading
+              <FaIcon @icon="spinner" @spin="true" />
+              Downloading
             </span>
           {{else}}
             <a onClick={{action "download"}} title="Download">
@@ -55,17 +56,19 @@
 {{yield}}
 <div class="wrap" onScroll={{action "logScroll"}}>
   <div class="logs">
-    {{#each logs as |log|}}
+    {{#each this.logs as |log|}}
       <div class="line">
         <span class="time" onClick={{action "toggleTimeDisplay"}}>
-          {{#if (eq timeFormat "datetime")}}
-            {{moment-format log.t "HH:mm:ss"}}
-          {{else if (eq timeFormat "datetimeUTC")}}
-            {{moment-format (utc log.t) "HH:mm:ss"}}
-          {{else if (eq timeFormat "elapsedBuild")}}
-            {{x-duration buildStartTime log.t precision="seconds"}}
-          {{else if (eq timeFormat "elapsedStep")}}
-            {{x-duration stepStartTime log.t precision="seconds"}}
+          {{#if log.t}}
+            {{#if (eq this.timeFormat "datetime")}}
+              {{moment-format log.t "HH:mm:ss"}}
+            {{else if (eq this.timeFormat "datetimeUTC")}}
+              {{moment-format (utc log.t) "HH:mm:ss"}}
+            {{else if (eq this.timeFormat "elapsedBuild")}}
+              {{x-duration this.buildStartTime log.t precision="seconds"}}
+            {{else if (eq this.timeFormat "elapsedStep")}}
+              {{x-duration this.stepStartTime log.t precision="seconds"}}
+            {{/if}}
           {{/if}}
         </span>
         <span class="content">

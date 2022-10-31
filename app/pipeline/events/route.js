@@ -6,6 +6,8 @@ import ENV from 'screwdriver-ui/config/environment';
 import getErrorMessage from 'screwdriver-ui/utils/error-messages';
 
 export default Route.extend({
+  store: service(),
+  router: service(),
   shuttle: service(),
   triggerService: service('pipeline-triggers'),
   routeAfterAuthentication: 'pipeline.events',
@@ -70,7 +72,7 @@ export default Route.extend({
       if (errorMessage !== '') {
         pipelineEventsController.set('errorMessage', errorMessage);
       } else {
-        this.transitionTo('/404');
+        this.router.transitionTo('/404');
       }
     });
   },

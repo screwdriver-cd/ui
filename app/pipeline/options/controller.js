@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service';
 
 export default Controller.extend({
   session: service(),
+  router: service(),
   errorMessage: '',
   isSaving: false,
   pipeline: reads('model.pipeline'),
@@ -13,7 +14,7 @@ export default Controller.extend({
       this.pipeline
         .destroyRecord()
         .then(() => {
-          this.transitionToRoute('home');
+          this.router.transitionTo('home');
         })
         .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
     },

@@ -24,7 +24,7 @@ module('Integration | Component | command versions', function (hooks) {
     this.set('mock', COMMANDS);
     this.actions.mockAction = function () {};
 
-    await render(hbs`{{command-versions commands=mock}}`);
+    await render(hbs`<CommandVersions @commands={{this.mock}} />`);
 
     assert.dom('h4').hasText('Versions:');
     assert.dom('ul li:first-child').hasText('3.0.0 - latest stable');
@@ -42,7 +42,7 @@ module('Integration | Component | command versions', function (hooks) {
       assert.equal(ver, '1.0.0');
     };
 
-    await render(hbs`{{command-versions commands=mock }}`);
+    await render(hbs`<CommandVersions @commands={{this.mock}}  />`);
 
     assert.dom('h4').hasText('Versions:');
     assert.dom('ul li:first-child').hasText('3.0.0 - latest stable');

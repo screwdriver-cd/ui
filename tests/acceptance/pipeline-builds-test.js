@@ -191,9 +191,7 @@ module('Acceptance | pipeline build', function (hooks) {
     await visit('/pipelines/4');
 
     assert.dom('.column-tabs-view').hasClass('disabled');
-
     await visit('/pipelines/4/pulls');
-
     assert.equal(currentURL(), '/pipelines/4/pulls');
     assert.dom('.column-tabs-view .nav-link.active').hasText('Pull Requests');
   });

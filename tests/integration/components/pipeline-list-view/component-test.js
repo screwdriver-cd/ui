@@ -66,24 +66,25 @@ module('Integration | Component | pipeline list view', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-list-view
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineListView
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{this.updateListViewJobs}}
+      @refreshListViewJobs={{this.refreshListViewJobs}}
+      @startSingleBuild={{this.startSingleBuild}}
+      @stopBuild={{this.stopBuild}}
+      @buildParameters={{this.buildParameters}}
+      @showListView={{this.showListView}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
-    assert.dom('.lt-head-wrap').exists({ count: 1 });
-    assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 7 });
     assert
-      .dom('.lt-head')
+      .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('.lt-row').exists({ count: 2 });
+    assert.dom('tbody tr').exists({ count: 2 });
   });
 
   test('it renders then resets jobDetails', async function (assert) {
@@ -147,17 +148,17 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`
-      {{#if showPipelineListView}}
-        {{pipeline-list-view
-          jobsDetails=jobsDetails
-          updateListViewJobs=updateListViewJobs
-          refreshListViewJobs=refreshListViewJobs
-          startSingleBuild=startSingleBuild
-          stopBuild=stopBuild
-          buildParameters=buildParameters
-          showListView=showListView
-          setShowListView=setShowListView
-        }}
+      {{#if this.showPipelineListView}}
+        <PipelineListView
+          @jobsDetails={{this.jobsDetails}}
+          @updateListViewJobs={{this.updateListViewJobs}}
+          @refreshListViewJobs={{this.refreshListViewJobs}}
+          @startSingleBuild={{this.startSingleBuild}}
+          @stopBuild={{this.stopBuild}}
+          @buildParameters={{this.buildParameters}}
+          @showListView={{this.showListView}}
+          @setShowListView={{this.setShowListView}}
+        />
       {{/if}}`);
     set(this, 'showPipelineListView', false);
 
@@ -199,26 +200,27 @@ module('Integration | Component | pipeline list view', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-list-view
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineListView
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{this.updateListViewJobs}}
+      @refreshListViewJobs={{this.refreshListViewJobs}}
+      @startSingleBuild={{this.startSingleBuild}}
+      @stopBuild={{this.stopBuild}}
+      @buildParameters={{this.buildParameters}}
+      @showListView={{this.showListView}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
-    assert.dom('.lt-head-wrap').exists({ count: 1 });
-    assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 7 });
     assert
-      .dom('.lt-head')
+      .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').includesText('6h 13m 8s');
-    assert.dom('.lt-body').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tbody tr').includesText('6h 13m 8s');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build running', async function (assert) {
@@ -253,26 +255,27 @@ module('Integration | Component | pipeline list view', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-list-view
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineListView
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{this.updateListViewJobs}}
+      @refreshListViewJobs={{this.refreshListViewJobs}}
+      @startSingleBuild={{this.startSingleBuild}}
+      @stopBuild={{this.stopBuild}}
+      @buildParameters={{this.buildParameters}}
+      @showListView={{this.showListView}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
-    assert.dom('.lt-head-wrap').exists({ count: 1 });
-    assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 7 });
     assert
-      .dom('.lt-head')
+      .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tbody tr').includesText('Still running.');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build created', async function (assert) {
@@ -307,26 +310,27 @@ module('Integration | Component | pipeline list view', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-list-view
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineListView
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{this.updateListViewJobs}}
+      @refreshListViewJobs={{this.refreshListViewJobs}}
+      @startSingleBuild={{this.startSingleBuild}}
+      @stopBuild={{this.stopBuild}}
+      @buildParameters={{this.buildParameters}}
+      @showListView={{this.showListView}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
-    assert.dom('.lt-head-wrap').exists({ count: 1 });
-    assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 7 });
     assert
-      .dom('.lt-head')
+      .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tbody tr').includesText('Still running.');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build queued', async function (assert) {
@@ -361,26 +365,27 @@ module('Integration | Component | pipeline list view', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-list-view
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineListView
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{this.updateListViewJobs}}
+      @refreshListViewJobs={{this.refreshListViewJobs}}
+      @startSingleBuild={{this.startSingleBuild}}
+      @stopBuild={{this.stopBuild}}
+      @buildParameters={{this.buildParameters}}
+      @showListView={{this.showListView}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
-    assert.dom('.lt-head-wrap').exists({ count: 1 });
-    assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 7 });
     assert
-      .dom('.lt-head')
+      .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tbody tr').includesText('Still running.');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build blocked', async function (assert) {
@@ -415,26 +420,27 @@ module('Integration | Component | pipeline list view', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-list-view
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineListView
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{this.updateListViewJobs}}
+      @refreshListViewJobs={{this.refreshListViewJobs}}
+      @startSingleBuild={{this.startSingleBuild}}
+      @stopBuild={{this.stopBuild}}
+      @buildParameters={{this.buildParameters}}
+      @showListView={{this.showListView}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
-    assert.dom('.lt-head-wrap').exists({ count: 1 });
-    assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 7 });
     assert
-      .dom('.lt-head')
+      .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tbody tr').includesText('Still running.');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build frozen', async function (assert) {
@@ -469,26 +475,27 @@ module('Integration | Component | pipeline list view', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-list-view
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineListView
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{this.updateListViewJobs}}
+      @refreshListViewJobs={{this.refreshListViewJobs}}
+      @startSingleBuild={{this.startSingleBuild}}
+      @stopBuild={{this.stopBuild}}
+      @buildParameters={{this.buildParameters}}
+      @showListView={{this.showListView}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
-    assert.dom('.lt-head-wrap').exists({ count: 1 });
-    assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 7 });
     assert
-      .dom('.lt-head')
+      .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').includesText('Still running.');
-    assert.dom('.lt-body').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tbody tr').includesText('Still running.');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and not started', async function (assert) {
@@ -523,25 +530,26 @@ module('Integration | Component | pipeline list view', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-list-view
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineListView
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{this.updateListViewJobs}}
+      @refreshListViewJobs={{this.refreshListViewJobs}}
+      @startSingleBuild={{this.startSingleBuild}}
+      @stopBuild={{this.stopBuild}}
+      @buildParameters={{this.buildParameters}}
+      @showListView={{this.showListView}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
-    assert.dom('.lt-head-wrap').exists({ count: 1 });
-    assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 7 });
     assert
-      .dom('.lt-head')
+      .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').includesText('Not started.');
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tbody tr').includesText('Not started.');
   });
 
   test('it renders and aborted', async function (assert) {
@@ -576,24 +584,25 @@ module('Integration | Component | pipeline list view', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-list-view
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineListView
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{this.updateListViewJobs}}
+      @refreshListViewJobs={{this.refreshListViewJobs}}
+      @startSingleBuild={{this.startSingleBuild}}
+      @stopBuild={{this.stopBuild}}
+      @buildParameters={{this.buildParameters}}
+      @showListView={{this.showListView}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
-    assert.dom('.lt-head-wrap').exists({ count: 1 });
-    assert.dom('.lt-body-wrap').exists({ count: 1 });
-    assert.dom('.lt-column').exists({ count: 7 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 7 });
     assert
-      .dom('.lt-head')
+      .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('.lt-row').exists({ count: 1 });
-    assert.dom('.lt-body').doesNotIncludeText('Still running.');
+    assert.dom('tbody tr').exists({ count: 1 });
+    assert.dom('tbody tr').doesNotIncludeText('Still running.');
   });
 });

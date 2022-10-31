@@ -1,8 +1,12 @@
-{{#each banners as |banner|}}
+{{#each this.banners as |banner|}}
   <div class="banner">
     <BsAlert @type={{banner.type}}>
       <FaIcon
-        @icon={{if (eq banner.type "info") "info-circle" "exclamation-triangle"}}
+        @icon={{if
+          (eq banner.type "info")
+          "info-circle"
+          "exclamation-triangle"
+        }}
       />
       {{! template-lint-disable no-triple-curlies }}
       <span>

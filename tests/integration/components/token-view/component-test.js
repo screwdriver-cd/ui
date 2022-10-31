@@ -16,7 +16,7 @@ module('Integration | Component | token view', function (hooks) {
 
     this.set('mockToken', testToken);
 
-    await render(hbs`{{token-view token=mockToken}}`);
+    await render(hbs`<TokenView @token={{this.mockToken}} />`);
 
     assert.dom('.name input').hasValue('TEST_TOKEN');
     assert.dom('.description input').hasValue('hunter2');
@@ -59,7 +59,7 @@ module('Integration | Component | token view', function (hooks) {
     });
 
     await render(
-      hbs`{{token-view token=mockToken confirmAction=(action confirmAction)}}`
+      hbs`<TokenView @token={{this.mockToken}} @confirmAction={{action this.confirmAction}} />`
     );
     await click('button:last-child');
   });
@@ -94,7 +94,7 @@ module('Integration | Component | token view', function (hooks) {
     });
 
     await render(
-      hbs`{{token-view token=mockToken setIsSaving=setIsSavingMock}}`
+      hbs`<TokenView @token={{this.mockToken}} @setIsSaving={{this.setIsSavingMock}} />`
     );
     await fillIn('.name input', 'TEST_TOKEN_2');
     await triggerEvent('.name input', 'keyup');

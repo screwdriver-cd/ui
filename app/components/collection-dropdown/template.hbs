@@ -1,36 +1,39 @@
 <BsDropdown as |dd|>
-  {{#if dropdownText}}
+  {{#if this.dropdownText}}
     <dd.toggle>
       <a class="toggler-text">
-        {{dropdownText}}<span class="caret caret-display"></span>
+        {{this.dropdownText}}<span class="caret caret-display"></span>
       </a>
     </dd.toggle>
   {{else}}
-    <dd.button class={{if buttonClass buttonClass "add-to-collection"}}>
-      {{#if buttonText}}
-        {{buttonText}}
+    <dd.button class={{if this.buttonClass this.buttonClass "add-to-collection"}}>
+      {{#if this.buttonText}}
+        {{this.buttonText}}
       {{else}}
         <FaIcon @icon="plus" @title="Add to collection" @size="sm" />
       {{/if}}
     </dd.button>
   {{/if}}
   <dd.menu @align="right" class="dropdown" as |menu|>
-    {{#each normalCollections as |collection|}}
+    {{#each this.normalCollections as |collection|}}
       <menu.item>
-        <span onclick={{action "addToCollection" collection}}>
-          {{collection.name}}
-        </span>
+        <li>
+          <span onclick={{action "addToCollection" collection}}>
+            {{collection.name}}
+          </span>
+        </li>
       </menu.item>
     {{/each}}
     <li>
       <span class="create-dropdown" onclick={{action "openModal"}}>
-        <FaIcon @icon="plus-circle" @title="Create" @size="md" /> CREATE
+        <FaIcon @icon="plus-circle" @title="Create" @size="md" />
+        CREATE
       </span>
     </li>
   </dd.menu>
 </BsDropdown>
 <CollectionModal
-  @showModal={{showCollectionModal}}
-  @addNewCollection={{addNewCollection}}
+  @showModal={{this.showCollectionModal}}
+  @addNewCollection={{this.addNewCollection}}
   @addToCollection={{action "addToCollection"}}
 />

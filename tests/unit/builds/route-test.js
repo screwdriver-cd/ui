@@ -17,21 +17,26 @@ module('Unit | Route | builds', function (hooks) {
   });
 
   test('it redirects', function (assert) {
+    assert.expect(3);
     const route = this.owner.lookup('route:builds');
-    const transitionStub = sinon.stub(route, 'transitionTo');
 
     const model = {
       pipeline: { id: 1 },
       build: { id: 2 }
     };
 
-    route.redirect(model);
+    const routerServiceMock = Service.extend({
+      transitionTo: (path, pipelineId, buildId) => {
+        assert.equal(path, 'pipeline.build');
+        assert.equal(pipelineId, 1);
+        assert.equal(buildId, 2);
+      }
+    });
 
-    assert.ok(transitionStub.calledOnce, 'transitionTo was called once');
-    assert.ok(
-      transitionStub.calledWithExactly('pipeline.build', 1, 2),
-      'transition to pipeline'
-    );
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+
+    route.redirect(model);
   });
 
   test('it fetches pipeline & build', function (assert) {

@@ -38,19 +38,22 @@ module('Integration | Component | tc collection list', function (hooks) {
       this.set(prop, TEST_TEMPLATES[prop])
     );
 
-    await render(hbs`{{#tc-collection-list
-      model=model
-      collectionType="Collection"
-    }}
-      This is a collection
-    {{/tc-collection-list}}`);
+    await render(hbs`<TcCollectionList
+      @model={{this.model}}
+      @collectionType="Collection"
+    />
+    "This is a collection"
+    `);
 
     assert.dom('header h4 a').hasText('Collection Docs');
     assert
       .dom('header h4 a')
       .hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
-    assert.dom('.collection-list-table th').exists({ count: 5 });
-    assert.dom('.collection-list-table .lt-body td').exists({ count: 10 });
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('thead').exists({ count: 1 });
+    assert.dom('tbody').exists({ count: 1 });
+    assert.dom('th.table-header').exists({ count: 5 });
+    assert.dom('tbody tr td').exists({ count: 10 });
   });
 
   test('it renders with filter namespace', async function (assert) {
@@ -60,19 +63,22 @@ module('Integration | Component | tc collection list', function (hooks) {
       this.set(prop, TEST_TEMPLATES[prop])
     );
 
-    await render(hbs`{{#tc-collection-list
-      model=model
-      filteringNamespace=targetNamespace
-      collectionType="Collection"
-    }}
-      This is a collection
-    {{/tc-collection-list}}`);
+    await render(hbs`<TcCollectionList
+      @model={{this.model}}
+      @filteringNamespace={{this.targetNamespace}}
+      @collectionType="Collection"
+    />
+      "This is a collection"
+    `);
 
     assert.dom('header h4 a').hasText('Collection Docs');
     assert
       .dom('header h4 a')
       .hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
-    assert.dom('.collection-list-table th').exists({ count: 5 });
-    assert.dom('.collection-list-table .lt-body td').exists({ count: 5 });
-  });
+      assert.dom('table').exists({ count: 1 });
+      assert.dom('thead').exists({ count: 1 });
+      assert.dom('tbody').exists({ count: 1 });
+      assert.dom('th.table-header').exists({ count: 5 });
+      assert.dom('tbody tr td').exists({ count: 5 });
+    });
 });

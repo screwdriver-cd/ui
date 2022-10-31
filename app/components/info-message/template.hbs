@@ -1,31 +1,31 @@
-{{#if message}}
-  <BsAlert @onDismissed={{action "clearMessage"}} @type={{type}}>
+{{#if @message}}
+  <BsAlert @onDismissed={{action "clearMessage"}} @type={{this.type}}>
     {{#if
       (eq
-        message "This checkoutUrl is not supported for your current login host."
+        @message "This checkoutUrl is not supported for your current login host."
       )
     }}
-      {{#if scmContext}}
+      {{#if @scmContext}}
         {{! template-lint-disable no-triple-curlies }}
-        <FaIcon @icon={{icon}} />
+        <FaIcon @icon={{@icon}} />
         <span>
-          {{{message}}} Please login to
+          {{{@message}}} Please login to
         </span>
 
-        <a href="#authenticate" {{action "authenticate" scmContext}}>
-          {{scmContext}}
+        <a href="#authenticate" {{action "authenticate" @scmContext}}>
+          {{@scmContext}}
         </a>
       {{else}}
-        <FaIcon @icon={{icon}} />
+        <FaIcon @icon={{@icon}} />
         <span>
-          {{{message}}}
+          {{{@message}}}
         </span>
       {{/if}}
     {{else}}
       {{! template-lint-disable no-triple-curlies }}
-      <FaIcon @icon={{icon}} />
+      <FaIcon @icon={{@icon}} />
       <span>
-        {{{message}}}
+        {{{@message}}}
       </span>
     {{/if}}
   </BsAlert>

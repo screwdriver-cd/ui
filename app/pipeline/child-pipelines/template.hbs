@@ -1,7 +1,7 @@
-{{#if session.isAuthenticated}}
-  <PipelineNav @pipeline={{pipeline}} />
+{{#if this.session.isAuthenticated}}
+  <PipelineNav @pipeline={{this.pipeline}} />
 {{/if}}
 
-<PipelineList @pipelines={{pipelines}} @pipeline={{pipeline}} />
+<PipelineList @pipelines={{this.pipelines}} @pipeline={{this.pipeline}} />
 
 {{outlet}}

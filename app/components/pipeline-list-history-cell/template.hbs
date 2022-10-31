@@ -1,12 +1,12 @@
 <div class="history">
   <div>
-    {{#each builds as |build|}}
+    {{#each this.builds as |build|}}
       {{#if (not-eq build.status "CREATED")}}
         <LinkTo @route="pipeline.build" @model={{build.id}} @title={{build.id}}>
-          <FaIcon @icon="circle" @fixedWidth=true class={{build.status}} />
+          <FaIcon @icon="circle" @fixedWidth="true" class={{build.status}} />
         </LinkTo>
       {{else}}
-        <FaIcon @icon="circle" @fixedWidth=true class={{build.status}} />
+        <FaIcon @icon="circle" @fixedWidth="true" class={{build.status}} />
       {{/if}}
     {{/each}}
   </div>

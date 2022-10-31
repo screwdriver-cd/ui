@@ -2,8 +2,11 @@ import { all } from 'rsvp';
 import Route from '@ember/routing/route';
 import { set, get } from '@ember/object';
 import { getActiveStep } from 'screwdriver-ui/utils/build';
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
+  router: service(),
+  store: service(),
   routeAfterAuthentication: 'pipeline.build',
 
   model(params) {
@@ -38,7 +41,7 @@ export default Route.extend({
     const name = getActiveStep(get(model, 'build.steps'));
 
     if (name) {
-      this.transitionTo(
+      this.router.transitionTo(
         'pipeline.build.step',
         model.pipeline.get('id'),
         model.build.get('id'),
@@ -52,7 +55,7 @@ export default Route.extend({
 
     // Build not found for this pipeline, redirecting to the pipeline page
     if (pipelineId !== model.job.get('pipelineId')) {
-      this.transitionTo('pipeline', pipelineId);
+      this.router.transitionTo('pipeline', pipelineId);
     } else {
       set(model.event, 'isPaused', true);
       if (
@@ -63,7 +66,7 @@ export default Route.extend({
         const name = getActiveStep(get(model, 'build.steps'));
 
         if (name) {
-          this.transitionTo(
+          this.router.transitionTo(
             'pipeline.build.step',
             model.pipeline.get('id'),
             model.build.get('id'),

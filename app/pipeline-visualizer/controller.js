@@ -34,6 +34,7 @@ function prefixJobName(jobName, pipelineId) {
 export default Controller.extend({
   session: service(),
   store: service(),
+  router: service(),
   shuttle: service(),
   pipelines: [],
   selectedPipeline: null,
@@ -217,7 +218,7 @@ export default Controller.extend({
     async selectPipeline(selectedPipeline) {
       const selectedPipelineId = selectedPipeline.id;
 
-      this.transitionToRoute('pipeline-visualizer', {
+      this.router.transitionTo('pipeline-visualizer', {
         queryParams: {
           selectedPipelineId,
           selectedConnectedPipelineId: selectedPipelineId

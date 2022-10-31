@@ -66,7 +66,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       ])
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`);
 
     // Pipeline
     assert.dom('section.pipeline h3').hasText('Pipeline');
@@ -131,7 +131,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`);
 
     // Danger Zone
     assert.dom('section.danger h3').hasText('Danger Zone');
@@ -187,9 +187,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(
-      hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=(action updatePipeline)}}`
-    );
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @errorMessage="" @isSaving={{false}} @onUpdatePipeline={{action this.updatePipeline}} />`);
     assert.dom('.scm-url').hasValue('git@github.com:foo/bar.git#notMaster');
     assert.dom('.root-dir').doesNotExist();
 
@@ -222,9 +220,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(
-      hbs`{{pipeline-options pipeline=mockPipeline errorMessage="" isSaving=false onUpdatePipeline=(action updatePipeline)}}`
-    );
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @errorMessage="" @isSaving={{false}} @onUpdatePipeline={{action this.updatePipeline}} />`);
     assert.dom('.scm-url').hasValue('git@github.com:foo/bar.git#notMaster');
     assert.dom('.root-dir').doesNotExist('');
 
@@ -311,12 +307,12 @@ module('Integration | Component | pipeline options', function (hooks) {
     this.owner.unregister('service:store');
     this.owner.register('service:store', storeStub);
 
-    await render(hbs`{{pipeline-options
-      username=username
-      pipeline=mockPipeline
-      jobs=mockJobs
-      showToggleModal=showToggleModal
-    }}`);
+    await render(hbs`<PipelineOptions
+      @username={{this.username}}
+      @pipeline={{this.mockPipeline}}
+      @jobs={{this.mockJobs}}
+      @showToggleModal={{this.showToggleModal}}
+    />`);
 
     assert.equal(this.showToggleModal, false);
     assert.dom('.modal').doesNotExist();
@@ -372,11 +368,11 @@ module('Integration | Component | pipeline options', function (hooks) {
     this.owner.unregister('service:job');
     this.owner.register('service:job', jobServiceStub);
 
-    await render(hbs`{{pipeline-options
-      username=username
-      pipeline=mockPipeline
-      jobs=mockJobs
-    }}`);
+    await render(hbs`<PipelineOptions
+      @username={{this.username}}
+      @pipeline={{this.mockPipeline}}
+      @jobs={{this.mockJobs}}
+    />`);
 
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
 
@@ -431,10 +427,10 @@ module('Integration | Component | pipeline options', function (hooks) {
     this.owner.unregister('service:job');
     this.owner.register('service:job', jobServiceStub);
 
-    await render(hbs`{{pipeline-options
-      pipeline=mockPipeline
-      jobs=mockJobs
-    }}`);
+    await render(hbs`<PipelineOptions
+      @pipeline={{this.mockPipeline}}
+      @jobs={{this.mockJobs}}
+    />`);
 
     assert.dom('section.jobs h4').hasText('main');
     assert
@@ -474,10 +470,10 @@ module('Integration | Component | pipeline options', function (hooks) {
     this.owner.unregister('service:job');
     this.owner.register('service:job', jobServiceStub);
 
-    await render(hbs`{{pipeline-options
-      pipeline=mockPipeline
-      jobs=mockJobs
-    }}`);
+    await render(hbs`<PipelineOptions
+      @pipeline={{this.mockPipeline}}
+      @jobs={{this.mockJobs}}
+    />`);
 
     assert.dom('section.jobs h4').hasText('main');
     assert
@@ -529,7 +525,7 @@ module('Integration | Component | pipeline options', function (hooks) {
     this.owner.unregister('service:shuttle');
     this.owner.register('service:shuttle', shuttleStub);
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline }}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
 
     assert
       .dom('section.preference li:nth-of-type(3) h4')
@@ -593,7 +589,7 @@ module('Integration | Component | pipeline options', function (hooks) {
     this.owner.unregister('service:shuttle');
     this.owner.register('service:shuttle', shuttleStub);
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline }}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
 
     assert
       .dom('section.pipeline li:nth-of-type(3) h4')
@@ -625,7 +621,7 @@ module('Integration | Component | pipeline options', function (hooks) {
     });
 
     await render(
-      hbs`{{pipeline-options pipeline=mockPipeline onRemovePipeline=removePipelineMock}}`
+      hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @onRemovePipeline={{this.removePipelineMock}} />`
     );
 
     assert.dom('section.danger h4').hasText('Delete this pipeline');
@@ -669,7 +665,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
 
     await click('section.sync a');
   });
@@ -695,7 +691,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
     await click('section.sync li:nth-child(2) a');
   });
 
@@ -720,7 +716,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
     await click('section.sync li:nth-child(3) a');
   });
 
@@ -742,7 +738,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
 
     await click('section.sync li:nth-child(3) a');
 
@@ -786,7 +782,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       ])
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`);
 
     // Pipeline should not render
     assert.dom('section.pipeline h3').doesNotExist();
@@ -843,7 +839,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
     await click('section.cache a');
   });
 
@@ -889,7 +885,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       ])
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline jobs=mockJobs}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`);
     await click('section.cache li:nth-child(2) a');
   });
 
@@ -911,7 +907,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`{{pipeline-options pipeline=mockPipeline}}`);
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
 
     await click('section.cache a');
 

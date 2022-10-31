@@ -43,7 +43,7 @@ module('Integration | Component | pipeline pr view', function (hooks) {
     this.set('workflowGraphMock', workflowgraph);
 
     await render(
-      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+      hbs`<PipelinePrView @job={{this.jobMock}} @workflowGraph={{this.workflowGraphMock}} />`
     );
 
     assert.dom('.SUCCESS').exists({ count: 1 });
@@ -94,7 +94,7 @@ module('Integration | Component | pipeline pr view', function (hooks) {
     this.set('workflowGraphMock', workflowgraph);
 
     await render(
-      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+      hbs`<PipelinePrView @job={{this.jobMock}} @workflowGraph={{this.workflowGraphMock}} />`
     );
 
     assert.dom('.UNSTABLE').exists({ count: 1 });
@@ -137,7 +137,7 @@ module('Integration | Component | pipeline pr view', function (hooks) {
     this.set('workflowGraphMock', workflowgraph);
 
     await render(
-      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+      hbs`<PipelinePrView @job={{this.jobMock}} @workflowGraph={{this.workflowGraphMock}} />`
     );
 
     assert.dom('.FAILURE').exists({ count: 1 });
@@ -180,7 +180,7 @@ module('Integration | Component | pipeline pr view', function (hooks) {
     this.set('workflowGraphMock', workflowgraph);
 
     await render(
-      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+      hbs`<PipelinePrView @job={{this.jobMock}} @workflowGraph={{this.workflowGraphMock}} />`
     );
 
     assert.dom('.QUEUED').exists({ count: 1 });
@@ -223,7 +223,7 @@ module('Integration | Component | pipeline pr view', function (hooks) {
     this.set('workflowGraphMock', workflowgraph);
 
     await render(
-      hbs`{{pipeline-pr-view job=jobMock workflowGraph=workflowGraphMock}}`
+      hbs`<PipelinePrView @job={{this.jobMock}} @workflowGraph={{this.workflowGraphMock}} />`
     );
 
     assert.dom('.RUNNING').exists({ count: 1 });

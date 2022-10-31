@@ -1,8 +1,8 @@
 <AppHeader
-  @currentUrl={{currentUrl}}
-  @scmContexts={{scmContexts}}
-  @session={{session}}
-  @showCreatePipeline={{showCreatePipeline}}
+  @currentUrl={{this.currentUrl}}
+  @scmContexts={{this.scmContexts}}
+  @session={{this.session}}
+  @showCreatePipeline={{this.showCreatePipeline}}
   @authenticate={{action "authenticate"}}
   @onInvalidate={{action "invalidateSession"}}
   @searchPipelines={{action "search"}}
@@ -13,8 +13,8 @@
   {{outlet}}
 </div>
 
-{{#if showCreatePipeline}}
-  <CreatePipeline @showCreatePipeline={{showCreatePipeline}} />
+{{#if this.showCreatePipeline}}
+  <CreatePipeline @showCreatePipeline={{this.showCreatePipeline}} />
 {{/if}}
 
-{{feedback}}
+{{this.feedback}}

@@ -1,12 +1,12 @@
 <td class="name">
-  <Input @type="text" @size="40" @value={{newName}} />
+  <Input @type="text" @size="40" @value={{this.newName}} />
 </td>
 <td class="description">
-  <Input @type="text" @size="40" @value={{newDescription}} />
+  <Input @type="text" @size="40" @value={{this.newDescription}} />
 </td>
 <td class="last-used">
-  {{#if token.lastUsed}}
-    {{moment-from-now token.lastUsed}}
+  {{#if this.token.lastUsed}}
+    {{moment-from-now this.token.lastUsed}}
   {{else}}
     Never used
   {{/if}}
@@ -15,7 +15,7 @@
   <button {{action "refresh"}}>
     Refresh
   </button>
-  <button class={{buttonAction}} {{action "modifyToken" pipelineId}}>
-    {{buttonAction}}
+  <button class={{this.buttonAction}} {{action "modifyToken" this.pipelineId}}>
+    {{this.buttonAction}}
   </button>
 </td>

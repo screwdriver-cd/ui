@@ -1,15 +1,15 @@
 <div>
   <FaIcon
-    @icon={{icon}}
-    @spin={{(eq icon "spinner")}}
-    @prefix={{if (eq icon "circle") "far" "fa"}}
+    @icon={{this.icon}}
+    @spin={{if (eq this.icon "spinner") true false}}
+    @prefix={{if (eq this.icon "circle") "far" "fa"}}
   />
 </div>
 <div>
   <span class="name">
-    {{stepName}}
+    {{this.stepName}}
   </span>
   <span class="duration">
-    {{duration}}
+    {{this.duration}}
   </span>
 </div>

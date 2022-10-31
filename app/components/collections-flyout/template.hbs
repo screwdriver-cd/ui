@@ -1,6 +1,6 @@
 <div class="flyout row">
   <div class="header row">
-    {{#if session.isAuthenticated}}
+    {{#if this.session.isAuthenticated}}
       <h2 class="header__text col-xs-9">
         Collections
       </h2>
@@ -13,10 +13,10 @@
       </h2>
     {{/if}}
   </div>
-  {{#each orderedCollections as |collection|}}
+  {{#each this.orderedCollections as |collection|}}
     <div
       class="collection-wrapper row
-        {{if (eq collection.id selectedCollectionId) " row--active"}}"
+        {{if (eq collection.id this.selectedCollectionId) " row--active"}}"
     >
       <LinkTo
         @route="dashboard.show"
@@ -39,7 +39,7 @@
       Please create a collection.
     </p>
   {{/each}}
-  {{#if collectionToDelete}}
+  {{#if this.collectionToDelete}}
     {{! Confirmation modal for deleting a collection }}
     <BsModalSimple
       @title="Confirm deletion"
@@ -47,12 +47,12 @@
       @submitTitle="Confirm"
       @size={{null}}
       @fade={{false}}
-      @onSubmit={{action "deleteCollection" collectionToDelete}}
+      @onSubmit={{action "deleteCollection" this.collectionToDelete}}
       @onHide={{action "cancelDeletingCollection"}}
     >
-      You're about to delete the collection "{{collectionToDelete.name
+      You're about to delete the collection "{{this.collectionToDelete.name
       }}". This action cannot be undone. Are you sure?
     </BsModalSimple>
   {{/if}}
-  <CollectionModal @showModal={{showModal}} />
+  <CollectionModal @showModal={{this.showModal}} />
 </div>

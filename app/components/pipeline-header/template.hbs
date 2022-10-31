@@ -1,41 +1,43 @@
-{{#if addCollectionError}}
+{{#if this.addCollectionError}}
   <InfoMessage
-    @message={{addCollectionError}}
+    @message={{this.addCollectionError}}
     @type="warning"
     @icon="exclamation-triangle"
   />
 {{/if}}
-{{#if addCollectionSuccess}}
+{{#if this.addCollectionSuccess}}
   <InfoMessage
-    @message={{addCollectionSuccess}}
+    @message={{this.addCollectionSuccess}}
     @type="success"
     @icon="check"
   />
 {{/if}}
-<LinkTo @route="pipeline" @model={{pipeline.id}}>
+<LinkTo @route="pipeline" @model={{this.pipeline.id}}>
   <h1>
-    {{pipeline.appId}}
+    {{this.pipeline.appId}}
   </h1>
 </LinkTo>
-<a href={{branch-url-encode pipeline.hubUrl}} class="branch">
-  <FaIcon @icon="code-branch" @title="Source code" /> {{pipeline.branch}}
+<a href={{branch-url-encode this.pipeline.hubUrl}} class="branch">
+  <FaIcon @icon="code-branch" @title="Source code" />
+  {{this.pipeline.branch}}
 </a>
 <span class="scm">
   {{!-- <FaIcon @icon={{scmContext.scmIcon}} @prefix="fab" /> {{scmContext.scm}} --}}
-  <FaIcon @icon={{scmContext.scmIcon}} @prefix="fab" /> {{scmContext.scm}}
+  <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
+  {{this.scmContext.scm}}
 </span>
-{{#if pipeline.configPipelineId}}
+{{#if this.pipeline.configPipelineId}}
   <FaIcon @icon="cog" />
-  <LinkTo @route="pipeline" @model={{pipeline.configPipelineId}}>
+  <LinkTo @route="pipeline" @model={{this.pipeline.configPipelineId}}>
     Parent Pipeline
   </LinkTo>
 {{/if}}
 <CollectionDropdown
-  @pipeline={{pipeline}}
-  @pipelineId={{pipeline.id}}
-  @collections={{collections}}
-  @addToCollection={{addToCollection}}
-  @addCollectionSuccess={{addCollectionSuccess}}
-  @addCollectionError={{addCollectionError}}
-  @dropdownText={{dropdownText}}
+  @pipeline={{this.pipeline}}
+  @pipelineId={{this.pipeline.id}}
+  @collections={{this.collections}}
+  @addToCollection={{this.addToCollection}}
+  @addCollectionSuccess={{this.addCollectionSuccess}}
+  @addCollectionError={{this.addCollectionError}}
+  @dropdownText={{this.dropdownText}}
 />

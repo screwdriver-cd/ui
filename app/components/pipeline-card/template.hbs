@@ -1,59 +1,70 @@
-{{#if showCheckbox}}
+{{#if this.showCheckbox}}
   <label class="checkbox-container">
     <input
       type="checkbox"
-      value={{pipelineSelected}}
+      value={{this.pipelineSelected}}
       onchange={{action "togglePipeline"}}
     />
     <span class="checkmark"></span>
   </label>
 {{/if}}
-<div class="pipeline-card-content {{if showCheckbox "show-checkbox" ""}}">
-  {{#if showRemoveButton}}
+<div class="pipeline-card-content {{if this.showCheckbox "show-checkbox" ""}}">
+  {{#if this.showRemoveButton}}
     <span
       class="remove-button"
       title="Remove
-        {{pipeline.scmRepo.name}}
+
+
+        {{this.pipeline.scmRepo.name}}
+
+
          pipeline from
-        {{collectionName}}
+
+
+        {{this.collectionName}}
+
+
          collection"
       onclick={{action "removePipeline"}}
     >
-      &amp;times;
+      &amp;amp;amp;amp;amp;amp;times;
     </span>
   {{/if}}
 
   <div class="branch-info">
     <LinkTo
       @route="pipeline"
-      @model={{pipeline.id}}
-      @title={{pipeline.scmRepo.name}}
+      @model={{this.pipeline.id}}
+      @title={{this.pipeline.scmRepo.name}}
     >
-      {{pipeline.scmRepo.name}}
+      {{this.pipeline.scmRepo.name}}
     </LinkTo>
-    <div title={{branch}}>
+    <div title={{this.branch}}>
       <FaIcon @icon="code-branch" />
-      {{branch}}
+      {{this.branch}}
     </div>
   </div>
   <div class="commit-info">
     <div class="commit-status">
       <LinkTo
         @route="pipeline"
-        @model={{pipeline.id}}
-        @title={{pipeline.scmRepo.name}}
+        @model={{this.pipeline.id}}
+        @title={{this.pipeline.scmRepo.name}}
       >
-        <FaIcon @icon={{lastEventInfo.icon}} class={{lastEventInfo.statusColor}} />
+        <FaIcon
+          @icon={{this.lastEventInfo.icon}}
+          class={{this.lastEventInfo.statusColor}}
+        />
       </LinkTo>
-      <a href={{lastEventInfo.commitUrl}}>
-        {{lastEventInfo.sha}}
+      <a href={{this.lastEventInfo.commitUrl}}>
+        {{this.lastEventInfo.sha}}
       </a>
     </div>
-    <p class="commit-message" title={{lastEventInfo.commitMessage}}>
-      {{#if storeQueryError}}
+    <p class="commit-message" title={{this.lastEventInfo.commitMessage}}>
+      {{#if this.storeQueryError}}
         An error occur while loading events
-      {{else if hasBothEventsAndLatestEventInfo}}
-        {{lastEventInfo.commitMessage}}
+      {{else if this.hasBothEventsAndLatestEventInfo}}
+        {{this.lastEventInfo.commitMessage}}
       {{else}}
         Loading events
       {{/if}}
@@ -65,7 +76,7 @@
         duration
       </span>
       <span class="badge-info">
-        {{lastEventInfo.durationText}}
+        {{this.lastEventInfo.durationText}}
       </span>
     </div>
     <div class="start-time-badge">
@@ -73,17 +84,17 @@
         start Date
       </span>
       <span class="badge-info">
-        {{lastEventInfo.startTime}}
+        {{this.lastEventInfo.startTime}}
       </span>
     </div>
   </div>
 
   <div class="events-thumbnail-wrapper">
-    {{#if hasBothEventsAndLatestEventInfo}}
+    {{#if this.hasBothEventsAndLatestEventInfo}}
       <EventsThumbnail
         class="events-thumbnail"
-        @events={{eventsInfo}}
-        @pipelineId={{pipeline.id}}
+        @events={{this.eventsInfo}}
+        @pipelineId={{this.pipeline.id}}
       />
     {{else}}
       <div class="placeholder"></div>

@@ -53,7 +53,7 @@ module('Integration | Component | template header', function (hooks) {
     this.owner.register('service:store', storeStub);
 
     await render(
-      hbs`{{template-header template=mock trusted=trusted isAdmin=isAdmin}}`
+      hbs`<TemplateHeader @template={{this.mock}} @trusted={{this.trusted}} @isAdmin={{this.isAdmin}} />`
     );
 
     assert.dom('h1').hasText('foo/bar Source code Delete template');

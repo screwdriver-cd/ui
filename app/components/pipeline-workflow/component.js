@@ -21,7 +21,6 @@ export default Component.extend({
         const graph = this.showDownstreamTriggers
           ? this.completeWorkflowGraph
           : this.workflowGraph;
-
         // Hack to make page display stuff when a workflow is not provided
         if (!graph) {
           return reject(new Error('No workflow graph provided'));

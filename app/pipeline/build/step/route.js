@@ -1,6 +1,8 @@
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
+  router: service(),
   routeAfterAuthentication: 'pipeline.build',
   model(params) {
     this.controllerFor('pipeline.build').set(
@@ -21,7 +23,7 @@ export default Route.extend({
     );
 
     if (!model.build.get('steps').findBy('name', stepName)) {
-      this.transitionTo(
+      this.router.transitionTo(
         'pipeline.build',
         model.pipeline.get('id'),
         model.build.get('id')

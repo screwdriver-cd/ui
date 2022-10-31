@@ -1,29 +1,29 @@
 <div class="row">
-  {{#if session.isAuthenticated}}
+  {{#if this.session.isAuthenticated}}
     <CollectionsFlyout
       @changeCollection={{action "changeCollection"}}
       class="col-md-2"
     />
     <SearchList
-      @moreToShow={{moreToShow}}
-      @pipelines={{pipelines}}
+      @moreToShow={{this.moreToShow}}
+      @pipelines={{this.pipelines}}
       @updatePipelines={{action "updatePipelines"}}
-      @collections={{collections}}
+      @collections={{this.collections}}
       @addToCollection={{action "addToCollection"}}
-      @query={{query}}
+      @query={{this.query}}
       class="col-md-10"
     />
   {{else}}
     <SearchList
-      @moreToShow={{moreToShow}}
-      @pipelines={{pipelines}}
+      @moreToShow={{this.moreToShow}}
+      @pipelines={{this.pipelines}}
       @updatePipelines={{action "updatePipelines"}}
-      @collections={{collections}}
+      @collections={{this.collections}}
       @addToCollection={{action "addToCollection"}}
-      @query={{query}}
-      @name={{name}}
-      @description={{description}}
-      @errorMessage={{errorMessage}}
+      @query={{this.query}}
+      @name={{this.name}}
+      @description={{this.description}}
+      @errorMessage={{this.errorMessage}}
       @addNewCollection={{action "addNewCollection"}}
     />
   {{/if}}

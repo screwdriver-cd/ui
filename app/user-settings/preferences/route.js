@@ -4,6 +4,7 @@ import RSVP from 'rsvp';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 export default Route.extend(AuthenticatedRouteMixin, {
+  router: service(),
   routeAfterAuthentication: 'user-settings',
   userSettings: service(),
   titleToken: 'Preferences',
@@ -14,7 +15,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
     }).catch(e => {
       console.log('error', e);
 
-      this.transitionTo('/404');
+      this.router.transitionTo('/404');
     });
   }
 });

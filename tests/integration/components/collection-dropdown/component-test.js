@@ -22,11 +22,11 @@ module('Integration | Component | collection add button', function (hooks) {
     this.set('pipeline', { id: 1 });
     this.set('onAddToCollection', true);
 
-    await render(hbs`{{collection-dropdown
-      collections=collections
-      pipeline=pipeline
-      onAddToCollection=onAddToCollection
-    }}`);
+    await render(hbs`<CollectionDropdown
+      @collections={{this.collections}}
+      @pipeline={{this.pipeline}}
+      @onAddToCollection={{this.onAddToCollection}}
+    />`);
 
     // the button should be there
     assert.dom('.dropdown-toggle').exists({ count: 1 });
@@ -64,11 +64,11 @@ module('Integration | Component | collection add button', function (hooks) {
     this.set('pipeline', { id: 1 });
     this.set('onAddToCollection', true);
 
-    await render(hbs`{{collection-dropdown
-      collections=collections
-      pipeline=pipeline
-      onAddToCollection=onAddToCollection
-    }}`);
+    await render(hbs`<CollectionDropdown
+      @collections={{this.collections}}
+      @pipeline={{this.pipeline}}
+      @onAddToCollection={{this.onAddToCollection}}
+    />`);
 
     // the button should be there
     assert.dom('.dropdown-toggle').exists({ count: 1 });
@@ -134,11 +134,11 @@ module('Integration | Component | collection add button', function (hooks) {
     this.set('addToCollection', addToCollectionMock);
 
     await render(hbs`
-      {{search-list
-        pipelines=pipelineList
-        collections=collections
-        addToCollection=addToCollection
-      }}
+      <SearchList
+        @pipelines={{this.pipelineList}}
+        @collections={{this.collections}}
+        @addToCollection={{this.addToCollection}}
+      />
     `);
 
     await click(findAll('.dropdown-toggle')[0]);
@@ -178,11 +178,11 @@ module('Integration | Component | collection add button', function (hooks) {
     this.set('addToCollection', addToCollectionMock);
 
     await render(hbs`
-      {{search-list
-        pipelines=pipelineList
-        collections=collections
-        addToCollection=addToCollection
-      }}
+      <SearchList
+        @pipelines={{this.pipelineList}}
+        @collections={{this.collections}}
+        @addToCollection={{this.addToCollection}}
+      />
     `);
 
     await click(findAll('.dropdown-toggle')[0]);

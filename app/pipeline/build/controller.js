@@ -9,6 +9,7 @@ import ENV from 'screwdriver-ui/config/environment';
 import { getActiveStep } from 'screwdriver-ui/utils/build';
 
 export default Controller.extend({
+  store: service(),
   router: service(),
   prEventsService: service('pr-events'),
   session: service('session'),
@@ -96,7 +97,7 @@ export default Controller.extend({
           newEvent.get('builds').then(builds => {
             this.set('isShowingModal', false);
 
-            return this.transitionToRoute(
+            return this.router.transitionTo(
               'pipeline.build',
               builds.get('lastObject.id')
             );
@@ -116,16 +117,16 @@ export default Controller.extend({
     },
 
     changeBuild(pipelineId, buildId) {
-      return this.transitionToRoute('pipeline.build', pipelineId, buildId);
+      return this.router.transitionTo('pipeline.build', pipelineId, buildId);
     },
     changeBuildStep(name) {
       this.changeBuildStep(name);
     },
     changeRouteTo(activeTab) {
       if (activeTab === 'artifacts') {
-        this.transitionToRoute('pipeline.build.artifacts');
+        this.router.transitionTo('pipeline.build.artifacts');
       } else {
-        this.transitionToRoute(
+        this.router.transitionTo(
           'pipeline.build',
           this.get('pipeline.id'),
           this.get('build.id')
@@ -194,7 +195,7 @@ export default Controller.extend({
     }
 
     if (activeStep && this.preselectedStepName !== activeStep) {
-      this.transitionToRoute(
+      this.router.transitionTo(
         'pipeline.build.step',
         pipelineId,
         build.get('id'),

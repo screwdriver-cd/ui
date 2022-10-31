@@ -10,17 +10,19 @@
   Clicking this button will open a new window with your SCM provider.
 </p>
 
-{{#each scmContexts as |scmContext|}}
+{{#each @scmContexts as |scmContext|}}
   {{#unless scmContext.readOnly}}
     <p>
-      <a href="#authenticate" {{action "authenticate" scmContext.context}}>
-        <FaIcon @icon="sign-in" /> Sign in with {{scmContext.displayName}}
+      <a href="#authenticate" onClick={{action "authenticate" scmContext.context}}>
+        <FaIcon @icon="sign-in" />
+        Sign in with {{scmContext.displayName}}
       </a>
     </p>
   {{/unless}}
 {{else}}
-  <a href="#authenticate" {{action "authenticate"}}>
-    <FaIcon @icon="sign-in" /> Sign in with SCM Provider
+  <a href="#authenticate" onClick={{action "authenticate"}}>
+    <FaIcon @icon="sign-in" />
+    Sign in with SCM Provider
   </a>
 {{/each}}
 {{yield}}

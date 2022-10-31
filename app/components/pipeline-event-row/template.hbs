@@ -1,49 +1,49 @@
 <div class="view">
   <div class="status">
     <FaIcon
-      @icon={{icon.name}}
-      @fixedWidth=true
-      @prefix={{icon.prefix}}
-      @spin={{icon.spin}}
-      @flip={{icon.flip}}
+      @icon={{this.icon.name}}
+      @fixedWidth="true"
+      @prefix={{this.icon.prefix}}
+      @spin={{this.icon.spin}}
+      @flip={{this.icon.flip}}
     />
   </div>
   <div class="detail">
-    <div class="commit" title={{event.causeMessage}}>
-      {{#if (eq event.type "pr")}}
-        <a href={{event.pr.url}}>
-          PR-{{event.prNum}}
+    <div class="commit" title={{this.event.causeMessage}}>
+      {{#if (eq this.event.type "pr")}}
+        <a href={{this.event.pr.url}}>
+          PR-{{this.event.prNum}}
         </a>
       {{else}}
         <a
-          class={{if (eq event.sha latestCommit.sha) "latest-commit"}}
-          href={{event.commit.url}}
+          class={{if (eq this.event.sha this.latestCommit.sha) "latest-commit"}}
+          href={{this.event.commit.url}}
         >
-          #{{event.truncatedSha}}
+          #{{this.event.truncatedSha}}
         </a>
-        {{#if (eq event.id lastSuccessful)}}
+        {{#if (eq this.event.id this.lastSuccessful)}}
           <div class="last-successful">
             Last successful
           </div>
         {{/if}}
-        {{#if event.label}}
+        {{#if this.event.label}}
           <div class="label">
-            {{event.label}}
+            {{this.event.label}}
           </div>
         {{/if}}
       {{/if}}
-      {{#if (and event.isRunning (not-eq event.status "UNKNOWN"))}}
+      {{#if (and this.event.isRunning (not-eq this.event.status "UNKNOWN"))}}
         <BsButton
-          @onClick={{action stopEvent}}
+          @onClick={{action this.stopEvent}}
           class="stopButton"
           @title="Stop all builds for this event"
         >
           Stop
         </BsButton>
       {{else}}
-        {{#if (eq event.type "pr")}}
+        {{#if (eq this.event.type "pr")}}
           <BsButton
-            @onClick={{action startPRBuild event.prNum events}}
+            @onClick={{action this.startPRBuild this.event.prNum this.events}}
             class="startButton"
             @title="Start all builds for this event"
           >
@@ -53,76 +53,76 @@
       {{/if}}
     </div>
     <div class="date greyOut">
-      Started {{startDate.content}}
+      Started {{this.startDate.content}}
     </div>
-    <span class="message" title={{event.commit.message}}>
-      {{event.truncatedMessage}}
+    <span class="message" title={{this.event.commit.message}}>
+      {{this.event.truncatedMessage}}
     </span>
     <div class="by">
-      {{#if isCommitterDifferent}}
+      {{#if this.isCommitterDifferent}}
         <span>
           Committed by:
         </span>
-        <a href={{event.commit.author.url}}>
-          {{event.commit.author.name}}
+        <a href={{this.event.commit.author.url}}>
+          {{this.event.commit.author.name}}
         </a>
         <br />
         <span>
           Started by:
         </span>
-        {{#if isExternalTrigger}}
-          {{#if externalBuild.build_id}}
+        {{#if this.isExternalTrigger}}
+          {{#if this.externalBuild.build_id}}
             <LinkTo
               @route="pipeline.build"
-              @models={{array externalBuild.pipeline_id externalBuild.build_id}}
+              @models={{array this.externalBuild.pipeline_id this.externalBuild.build_id}}
             >
               External Trigger
             </LinkTo>
           {{else}}
-            <LinkTo @route="pipeline" @model={{externalBuild.pipeline_id}}>
+            <LinkTo @route="pipeline" @model={{this.externalBuild.pipeline_id}}>
               External Trigger
             </LinkTo>
           {{/if}}
         {{else}}
-          <a href={{event.creator.url}}>
-            {{event.creator.name}}
+          <a href={{this.event.creator.url}}>
+            {{this.event.creator.name}}
           </a>
         {{/if}}
       {{else}}
-        {{#if isSubscribedEvent}}
+        {{#if this.isSubscribedEvent}}
           <span>
             Started by subscribed event:
           </span>
-          <a href={{event.meta.subscribedSourceUrl}}>
+          <a href={{this.event.meta.subscribedSourceUrl}}>
             Subscribed Source
           </a>
         {{else}}
           <span>
             Started and committed by:
           </span>
-          <a href={{event.creator.url}}>
-            {{event.creator.name}}
+          <a href={{this.event.creator.url}}>
+            {{this.event.creator.name}}
           </a>
         {{/if}}
       {{/if}}
     </div>
-    {{#if (and (is-fulfilled event.builds) isShowGraph)}}
+    {{#if (and (is-fulfilled this.event.builds) this.isShowGraph)}}
       <div class="workflow">
         <WorkflowGraphD3
-          @pipeline={{pipeline}}
-          @selectedEventObj={{selectedEventObj}}
-          @selectedEventObjStatus={{selectedEventObj.status}}
-          @builds={{event.builds}}
-          @workflowGraph={{event.workflowGraph}}
-          @startFrom={{event.startFrom}}
-          @causeMessage={{event.causeMessage}}
+          @pipeline={{this.pipeline}}
+          @selectedEventObj={{this.selectedEventObj}}
+          @selectedEventObjStatus={{this.selectedEventObj.status}}
+          @builds={{this.event.builds}}
+          @workflowGraph={{this.event.workflowGraph}}
+          @startFrom={{this.event.startFrom}}
+          @causeMessage={{this.event.causeMessage}}
           @minified={{true}}
         />
       </div>
     {{/if}}
 
-    {{#if (get-length event.meta.parameters)}}
-      {{#if isShowingModal}}
+    {{#if (get-length this.event.meta.parameters)}}
+      {{#if this.isShowingModal}}
         <ModalDialog
           @targetAttachment="center"
           @translucentOverlay={{true}}
@@ -134,10 +134,10 @@
             Parameters:
           </h3>
           <PipelineParameterizedBuild
-            @pipeline={{pipeline}}
+            @pipeline={{this.pipeline}}
             @showSubmitButton={{true}}
-            @buildPipelineParameters={{pipelineParameters}}
-            @buildJobParameters={{jobParameters}}
+            @buildPipelineParameters={{this.pipelineParameters}}
+            @buildJobParameters={{this.jobParameters}}
             @submitButtonText="Close"
             @onSave={{action "toggleParametersPreview"}}
           />
@@ -145,18 +145,18 @@
       {{/if}}
 
       <div class="parameters">
-        {{#if isInlineParameters}}
+        {{#if this.isInlineParameters}}
           <span>
             Parameters:
           </span>
           <ul>
-            {{#if (get-length pipelineParameters)}}
+            {{#if (get-length this.pipelineParameters)}}
               <li>
                 <span class="parameter-group badge">
                   Shared
                 </span>
                 <ul>
-                  {{#each-in pipelineParameters as |pName pVal|}}
+                  {{#each-in this.pipelineParameters as |pName pVal|}}
                     <li>
                       <span class="parameter-name badge">
                         {{pName}}
@@ -169,8 +169,8 @@
                 </ul>
               </li>
             {{/if}}
-            {{#if (get-length jobParameters)}}
-              {{#each-in jobParameters as |jobName parameters|}}
+            {{#if (get-length this.jobParameters)}}
+              {{#each-in this.jobParameters as |jobName parameters|}}
                 <li>
                   <span class="parameter-group badge">
                     Job: {{jobName}}
@@ -200,7 +200,7 @@
             >
               Parameters...
               <span class="badge">
-                {{numberOfParameters}}
+                {{this.numberOfParameters}}
               </span>
             </button>
           </span>

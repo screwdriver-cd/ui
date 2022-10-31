@@ -1,4 +1,4 @@
-import { click, currentURL, visit } from '@ember/test-helpers';
+import { click, currentURL, visit, waitUntil, find } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
@@ -130,6 +130,9 @@ module('Acceptance | search', function (hooks) {
     assert.dom('.num-results').hasText('Showing 3 result(s)');
 
     await click('.showMore');
+    await waitUntil(() =>
+      find('div.num-results').textContent.includes('Showing 6 result(s)')
+    );
     assert.dom('tr').exists({ count: 7 });
     assert.dom('.showMore').hasText('Show more results...');
     assert.dom('.num-results').hasText('Showing 6 result(s)');

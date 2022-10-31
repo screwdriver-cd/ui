@@ -62,24 +62,24 @@ module('Integration | Component | build log', function (hooks) {
   });
 
   test('it displays some help when no step is selected', async function (assert) {
-    await render(hbs`{{build-log
+    await render(hbs`<BuildLog
       stepName=null
-      buildId=1
-      stepStartTime=null
-      buildStartTime="1478912844724"
-    }}`);
+      @buildId=1
+      @stepStartTime={{null}}
+      @buildStartTime="1478912844724"
+    />`);
 
     assert.dom('.logs').includesText('Click a step to see logs');
 
     // Template block usage:
-    await render(hbs`{{#build-log
-      stepName=null
-      buildId=1
-      stepStartTime=null
-      buildStartTime="1478912844724"
-    }}
+    await render(hbs`<BuildLog
+      @stepName={{null}}
+      @buildId=1
+      @stepStartTime={{null}}
+      @buildStartTime="1478912844724"
+    >
     template block text
-    {{/build-log}}`);
+    </BuildLog>`);
 
     assert.dom(this.element).includesText('template block text');
     assert.dom(this.element).includesText('Click a step to see logs');
@@ -87,14 +87,15 @@ module('Integration | Component | build log', function (hooks) {
 
   test('it starts loading when step chosen', async function (assert) {
     this.set('step', null);
-    await render(hbs`{{build-log
-      stepName=step
-      buildId=1
-      stepStartTime=null
-      buildStartTime="1478912844724"
-    }}`);
+    await render(hbs`<BuildLog
+      @stepName={{this.step}}
+      @buildId=1
+      @stepStartTime={{null}}
+      @buildStartTime="1478912844724"
+      @timeFormat="datetime"
+    />`);
 
-    assert.dom('.logs').hasText('Click a step to see logs');
+    assert.dom('.logs').includesText('Click a step to see logs');
     this.set('step', 'banana');
 
     return settled().then(() => {
@@ -116,14 +117,14 @@ module('Integration | Component | build log', function (hooks) {
       hostname: 'node12.foo.bar.com'
     });
     this.set('step', 'sd-setup-init');
-    await render(hbs`{{build-log
-      stepName=step
-      buildId=1
-      buildStartTime="2019-01-14T20:12:41.238Z"
-      stepStartTime="2019-01-14T20:09:41.238Z"
-      stepEndTime="2019-01-14T20:12:41.238Z"
-      buildStats=stats
-    }}`);
+    await render(hbs`<BuildLog
+      @stepName={{this.step}}
+      @buildId=1
+      @buildStartTime="2019-01-14T20:12:41.238Z"
+      @stepStartTime="2019-01-14T20:09:41.238Z"
+      @stepEndTime="2019-01-14T20:12:41.238Z"
+      @buildStats={{this.stats}}
+    />`);
 
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
@@ -165,14 +166,14 @@ module('Integration | Component | build log', function (hooks) {
       }
     });
 
-    await render(hbs`{{build-log
-      stepName=step
-      buildId=1
-      buildStartTime="2019-01-14T20:12:41.238Z"
-      stepStartTime="2019-01-14T20:09:41.238Z"
-      stepEndTime="2019-01-14T20:12:41.238Z"
-      buildStats=stats
-    }}`);
+    await render(hbs`<BuildLog
+      @stepName={{this.step}}
+      @buildId=1
+      @buildStartTime="2019-01-14T20:12:41.238Z"
+      @stepStartTime="2019-01-14T20:09:41.238Z"
+      @stepEndTime="2019-01-14T20:12:41.238Z"
+      @buildStats={{this.stats}}
+    />`);
 
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
@@ -193,14 +194,14 @@ module('Integration | Component | build log', function (hooks) {
       hostname: 'node12.foo.bar.com'
     });
     this.set('step', 'sd-setup-init');
-    await render(hbs`{{build-log
-      stepName=step
-      buildId=1
-      buildStartTime="2019-01-14T20:12:41.238Z"
-      stepStartTime="2019-01-14T20:09:41.238Z"
-      stepEndTime="2019-01-14T20:12:41.238Z"
-      buildStats=stats
-    }}`);
+    await render(hbs`<BuildLog
+      @stepName={{this.step}}
+      @buildId=1
+      @buildStartTime="2019-01-14T20:12:41.238Z"
+      @stepStartTime="2019-01-14T20:09:41.238Z"
+      @stepEndTime="2019-01-14T20:12:41.238Z"
+      @buildStats={{this.stats}}
+    />`);
 
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
@@ -220,15 +221,15 @@ module('Integration | Component | build log', function (hooks) {
       queueEnterTime: '2019-01-14T20:10:41.238Z'
     });
     this.set('step', 'sd-setup-init');
-    await render(hbs`{{build-log
-      stepName=step
-      buildId=1
-      buildStartTime="2019-01-14T20:12:41.238Z"
-      stepStartTime="2019-01-14T20:09:41.238Z"
-      stepEndTime="2019-01-14T20:12:41.238Z"
-      buildStats=stats
-      buildStatus="COLLAPSED"
-    }}`);
+    await render(hbs`<BuildLog
+      @stepName={{this.step}}
+      @buildId=1
+      @buildStartTime="2019-01-14T20:12:41.238Z"
+      @stepStartTime="2019-01-14T20:09:41.238Z"
+      @stepEndTime="2019-01-14T20:12:41.238Z"
+      @buildStats={{this.stats}}
+      @buildStatus="COLLAPSED"
+    />`);
 
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
@@ -240,15 +241,15 @@ module('Integration | Component | build log', function (hooks) {
 
   test('it generate logs for FROZEN build', async function (assert) {
     this.set('step', 'sd-setup-init');
-    await render(hbs`{{build-log
-      stepName=step
-      buildId=1
-      buildStartTime="2019-01-14T20:12:41.238Z"
-      stepStartTime="2019-01-14T20:09:41.238Z"
-      stepEndTime="2019-01-14T20:12:41.238Z"
-      buildStats=stats
-      buildStatus="FROZEN"
-    }}`);
+    await render(hbs`<BuildLog
+      @stepName={{this.step}}
+      @buildId=1
+      @buildStartTime="2019-01-14T20:12:41.238Z"
+      @stepStartTime="2019-01-14T20:09:41.238Z"
+      @stepEndTime="2019-01-14T20:12:41.238Z"
+      @buildStats={{this.stats}}
+      @buildStatus="FROZEN"
+    />`);
 
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
@@ -265,14 +266,14 @@ module('Integration | Component | build log', function (hooks) {
       hostname: 'node12.foo.bar.com'
     });
     this.set('step', 'sd-setup-init');
-    await render(hbs`{{build-log
-      stepName=step
-      buildId=1
-      stepStartTime="2019-01-14T20:09:41.238Z"
-      stepEndTime="2019-01-14T20:12:41.238Z"
-      buildStartTime=""
-      buildStats=stats
-    }}`);
+    await render(hbs`<BuildLog
+      @stepName={{this.step}}
+      @buildId=1
+      @stepStartTime="2019-01-14T20:09:41.238Z"
+      @stepEndTime="2019-01-14T20:12:41.238Z"
+      @buildStartTime=""
+      @buildStats={{this.stats}}
+    />`);
 
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
@@ -287,14 +288,14 @@ module('Integration | Component | build log', function (hooks) {
   test('it generate logs for init step with empty build stats', async function (assert) {
     this.set('stats', {});
     this.set('step', 'sd-setup-init');
-    await render(hbs`{{build-log
-      stepName=step
-      buildId=1
-      buildStartTime="2019-01-14T20:12:41.238Z"
-      stepStartTime="2019-01-14T20:09:41.238Z"
-      stepEndTime="2019-01-14T20:12:41.238Z"
-      buildStats=stats
-    }}`);
+    await render(hbs`<BuildLog
+      @stepName={{this.step}}
+      @buildId=1
+      @buildStartTime="2019-01-14T20:12:41.238Z"
+      @stepStartTime="2019-01-14T20:09:41.238Z"
+      @stepEndTime="2019-01-14T20:12:41.238Z"
+      @buildStats={{this.stats}}
+    />`);
 
     return settled().then(() => {
       assert.dom('.line:first-child').includesText('Build created');
@@ -310,13 +311,14 @@ module('Integration | Component | build log', function (hooks) {
 
     this.set('step', null);
     this.set('scrollStill', sinon.stub());
-    await render(hbs`{{build-log
-      stepName=step
-      totalLine=1000
-      buildId=1
-      stepStartTime=null
-      buildStartTime="1478912844724"
-    }}`);
+    await render(hbs`<BuildLog
+      @stepName={{this.step}}
+      @totalLine=1000
+      @buildId=1
+      @stepStartTime={{null}}
+      @buildStartTime="1478912844724"
+      @timeFormat="datetime"
+    />`);
 
     assert.dom('.logs').hasText('Click a step to see logs');
     this.set('step', 'banana');

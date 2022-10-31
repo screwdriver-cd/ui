@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import sinon from 'sinon';
+import Service from '@ember/service';
 
 module('Unit | Route | pipeline/job-latest-build/index', function (hooks) {
   setupTest(hooks);
@@ -12,21 +12,25 @@ module('Unit | Route | pipeline/job-latest-build/index', function (hooks) {
   });
 
   test('it redirects to builds page', function (assert) {
-    assert.expect(2);
+    assert.expect(3);
 
     const route = this.owner.lookup('route:pipeline/job-latest-build/index');
-    const transitionStub = sinon.stub(route, 'transitionTo');
     const model = {
       pipelineId: 1,
       id: 2
     };
 
-    route.afterModel(model);
+    const routerServiceMock = Service.extend({
+      transitionTo: (path, pipelineId, buildId) => {
+        assert.equal(path, 'pipeline.build');
+        assert.equal(pipelineId, 1);
+        assert.equal(buildId, 2);
+      }
+    });
 
-    assert.ok(transitionStub.calledOnce, 'transitionTo was called once');
-    assert.ok(
-      transitionStub.calledWithExactly('pipeline.build', 1, 2),
-      'transition to pipeline build'
-    );
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+
+    route.afterModel(model);
   });
 });

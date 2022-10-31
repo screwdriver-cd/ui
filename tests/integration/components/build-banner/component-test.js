@@ -122,25 +122,25 @@ module('Integration | Component | build banner', function (hooks) {
 
     this.set('buildStepsMock', buildStepsMock);
     this.set('eventMock', prEventMock);
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="11 seconds"
-      blockDuration="4 seconds"
-      imagePullDuration="5 seconds"
-      buildDuration="2 seconds"
-      buildStatus="RUNNING"
-      buildCreate="2016-11-04T20:08:41.238Z"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobId=1
-      jobName="PR-671"
-      isAuthenticated=false
-      event=eventMock
-      pipelineId=12345
-      prEvents=prEvents
-      reloadBuild=(action reloadCb)
-      changeBuild=(action changeB)
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="11 seconds"
+      @blockDuration="4 seconds"
+      @imagePullDuration="5 seconds"
+      @buildDuration="2 seconds"
+      @buildStatus="RUNNING"
+      @buildCreate="2016-11-04T20:08:41.238Z"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobId=1
+      @jobName="PR-671"
+      @isAuthenticated={{false}}
+      @event={{this.eventMock}}
+      @pipelineId=12345
+      @prEvents={{this.prEvents}}
+      @reloadBuild={{action this.reloadCb}}
+      @changeBuild={{action this.changeB}}
+    />`);
 
     const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
       'YYYY-MM-DD HH:mm:ss'
@@ -180,20 +180,20 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('eventMock', eventMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildStatus="RUNNING"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobId=1
-      jobName="main"
-      isAuthenticated=true
-      event=eventMock
-      pipelineId=12345
-      prEvents=prEvents
-      reloadBuild=(action reloadCb)
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildStatus="RUNNING"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobId=1
+      @jobName="main"
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @pipelineId=12345
+      @prEvents={{this.prEvents}}
+      @reloadBuild={{action this.reloadCb}}
+    />`);
 
     assert.dom('li.job-name .banner-value').hasText('main');
     assert
@@ -212,22 +212,22 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('eventMock', prEventMock);
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      blockDuration="0 seconds"
-      imagePullDuration="0 seconds"
-      buildDuration="0 seconds"
-      buildStatus="RUNNING"
-      buildCreate="2016-11-04T20:08:41.238Z"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobName="PR-671"
-      isAuthenticated=false
-      event=eventMock
-      prEvents=prEvents
-      reloadBuild=(action reloadCb)
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @blockDuration="0 seconds"
+      @imagePullDuration="0 seconds"
+      @buildDuration="0 seconds"
+      @buildStatus="RUNNING"
+      @buildCreate="2016-11-04T20:08:41.238Z"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobName="PR-671"
+      @isAuthenticated={{false}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+      @reloadBuild={{action this.reloadCb}}
+    />`);
     const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
       'YYYY-MM-DD HH:mm:ss'
     );
@@ -272,22 +272,22 @@ module('Integration | Component | build banner', function (hooks) {
       )
     );
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      blockDuration="0 seconds"
-      imagePullDuration="0 seconds"
-      buildDuration="0 seconds"
-      buildStatus="RUNNING"
-      buildCreate="2016-11-04T20:08:41.238Z"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobName="PR-671"
-      isAuthenticated=false
-      event=eventMock
-      prEvents=prEvents
-      reloadBuild=(action reloadCb)
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @blockDuration="0 seconds"
+      @imagePullDuration="0 seconds"
+      @buildDuration="0 seconds"
+      @buildStatus="RUNNING"
+      @buildCreate="2016-11-04T20:08:41.238Z"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobName="PR-671"
+      @isAuthenticated={{false}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+      @reloadBuild={{action this.reloadCb}}
+    />`);
     const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
       'YYYY-MM-DD HH:mm:ss'
     );
@@ -335,20 +335,20 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('isButtonDisabledLoaded', true);
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildStatus="ABORTED"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobName="PR-671"
-      jobDisabled=jobDisabled
-      isAuthenticated=true
-      event=eventMock
-      prEvents=prEvents
-      onStart=(action externalStart)
-      reloadBuild=(action reloadCb)
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildStatus="ABORTED"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobName="PR-671"
+      @jobDisabled={{this.jobDisabled}}
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+      @onStart={{action this.externalStart}}
+      @reloadBuild={{action this.reloadCb}}
+    />`);
 
     assert.dom('button').hasText('Restart');
     assert.dom('.clicks-disabled').doesNotExist();
@@ -371,20 +371,20 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('isButtonDisabledLoaded', true);
     this.set('jobDisabled', new EmberPromise(resolves => resolves(true)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildStatus="ABORTED"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobName="PR-671"
-      jobDisabled=jobDisabled
-      isAuthenticated=true
-      event=eventMock
-      prEvents=prEvents
-      onStart=(action externalStart)
-      reloadBuild=(action reloadCb)
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildStatus="ABORTED"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobName="PR-671"
+      @jobDisabled={{this.jobDisabled}}
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+      @onStart={{action this.externalStart}}
+      @reloadBuild={{action this.reloadCb}}
+    />`);
 
     assert.dom('button').hasText('Restart');
     assert.dom('button').hasAttribute('disabled');
@@ -392,8 +392,9 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for running job when authenticated', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     this.set('willRender', () => {
+      console.log('will render');
       assert.ok(true);
     });
 
@@ -406,27 +407,27 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('isButtonDisabledLoaded', true);
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildStatus="RUNNING"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobName="main"
-      jobDisabled=jobDisabled
-      isAuthenticated=true
-      event=eventMock
-      prEvents=prEvents
-      onStop=(action externalStop)
-      reloadBuild=(action willRender)
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildStatus="RUNNING"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobName="main"
+      @jobDisabled={{this.jobDisabled}}
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+      @onStop={{action this.externalStop}}
+      @reloadBuild={{action this.willRender}}
+    />`);
 
     assert.dom('button').hasText('Stop');
     await click('button');
   });
 
   test('it renders a stop button for running disabled job when authenticated', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -440,20 +441,20 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('isButtonDisabledLoaded', true);
     this.set('jobDisabled', new EmberPromise(resolves => resolves(true)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildStatus="RUNNING"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobName="main"
-      jobDisabled=jobDisabled
-      isAuthenticated=true
-      event=eventMock
-      prEvents=prEvents
-      onStop=(action externalStop)
-      reloadBuild=(action willRender)
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildStatus="RUNNING"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobName="main"
+      @jobDisabled={{this.jobDisabled}}
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+      @onStop={{action this.externalStop}}
+      @reloadBuild={{action this.willRender}}
+    />`);
 
     assert.dom('button').hasText('Stop');
     assert.dom('.clicks-disabled').doesNotExist();
@@ -461,7 +462,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for blocked job when authenticated', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -475,20 +476,20 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('isButtonDisabledLoaded', true);
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildStatus="BLOCKED"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobName="main"
-      jobDisabled=jobDisabled
-      isAuthenticated=true
-      event=eventMock
-      prEvents=prEvents
-      onStop=(action externalStop)
-      reloadBuild=(action willRender)
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildStatus="BLOCKED"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobName="main"
+      @jobDisabled={{this.jobDisabled}}
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+      @onStop={{action this.externalStop}}
+      @reloadBuild={{action this.willRender}}
+    />`);
 
     assert.dom('button').hasText('Stop');
     await click('button');
@@ -515,24 +516,23 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildId=123
-      buildMeta=buildMetaMock
-      buildStatus="SUCCESS"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobId=1
-      jobDisabled=jobDisabled
-      jobName="main"
-      isAuthenticated=true
-      event=eventMock
-      pipelineId=456
-      pipelineName="d2lam/mytest"
-      prNumber=null
-      prEvents=prEvents
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildId=123
+      @buildMeta={{this.buildMetaMock}}
+      @buildStatus="SUCCESS"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobId=1
+      @jobDisabled={{this.jobDisabled}}
+      @jobName="main"
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @pipelineId=456
+      @pipelineName="d2lam/mytest"
+      @prEvents={{this.prEvents}}
+    />`);
 
     return settled().then(() => {
       assert.dom('.coverage .banner-value').hasText('98%');
@@ -564,22 +564,22 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('isButtonDisabledLoaded', true);
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildId=123
-      buildMeta=buildMetaMock
-      buildStatus="RUNNING"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobId=1
-      jobDisabled=jobDisabled
-      jobName="main"
-      isAuthenticated=true
-      event=eventMock
-      reloadBuild=(action reloadCb)
-      prEvents=prEvents
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildId=123
+      @buildMeta={{this.buildMetaMock}}
+      @buildStatus="RUNNING"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobId=1
+      @jobDisabled={{this.jobDisabled}}
+      @jobName="main"
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @reloadBuild={{action this.reloadCb}}
+      @prEvents={{this.prEvents}}
+    />`);
 
     return settled().then(() => {
       assert.dom('button').hasText('Stop');
@@ -620,21 +620,21 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildId=123
-      buildStatus="SUCCESS"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      buildMeta=buildMetaMock
-      jobId=1
-      jobDisabled=jobDisabled
-      jobName="main"
-      isAuthenticated=true
-      event=eventMock
-      prEvents=prEvents
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildId=123
+      @buildStatus="SUCCESS"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @buildMeta={{this.buildMetaMock}}
+      @jobId=1
+      @jobDisabled={{this.jobDisabled}}
+      @jobName="main"
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+    />`);
 
     return settled().then(() => {
       assert.dom('.coverage .banner-value').hasText('100%');
@@ -668,21 +668,21 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildId=123
-      buildStatus="SUCCESS"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      buildMeta=buildMetaMock
-      jobId=1
-      jobDisabled=jobDisabled
-      jobName="main"
-      isAuthenticated=true
-      event=eventMock
-      prEvents=prEvents
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildId=123
+      @buildStatus="SUCCESS"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @buildMeta={{this.buildMetaMock}}
+      @jobId=1
+      @jobDisabled={{this.jobDisabled}}
+      @jobName="main"
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+    />`);
 
     return settled().then(() => {
       assert.dom('.coverage .banner-value').hasText('98%');
@@ -704,20 +704,20 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildId=123
-      buildStatus="SUCCESS"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobId=1
-      jobDisabled=jobDisabled
-      jobName="main"
-      isAuthenticated=true
-      event=eventMock
-      prEvents=prEvents
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildId=123
+      @buildStatus="SUCCESS"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobId=1
+      @jobDisabled={{this.jobDisabled}}
+      @jobName="main"
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+    />`);
 
     return settled().then(() => {
       assert.dom('li').doesNotHaveClass('coverage');
@@ -741,21 +741,21 @@ module('Integration | Component | build banner', function (hooks) {
     this.set('isButtonDisabledLoaded', true);
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
 
-    await render(hbs`{{build-banner
-      buildContainer="node:6"
-      duration="5 seconds"
-      buildId=123
-      buildStatus="UNSTABLE"
-      buildStart="2016-11-04T20:09:41.238Z"
-      buildSteps=buildStepsMock
-      jobId=1
-      jobDisabled=jobDisabled
-      jobName="main"
-      isAuthenticated=true
-      event=eventMock
-      reloadBuild=(action reloadCb)
-      prEvents=prEvents
-    }}`);
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildId=123
+      @buildStatus="UNSTABLE"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobId=1
+      @jobDisabled={{this.jobDisabled}}
+      @jobName="main"
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @reloadBuild={{action this.reloadCb}}
+      @prEvents={{this.prEvents}}
+    />`);
 
     return settled().then(() => {
       assert.dom('button').hasText('Stop');

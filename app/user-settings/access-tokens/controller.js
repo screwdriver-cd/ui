@@ -4,6 +4,7 @@ import Controller from '@ember/controller';
 
 export default Controller.extend({
   refreshService: service('user-settings'),
+  store: service(),
   tokens: alias('model'),
   newToken: null,
 

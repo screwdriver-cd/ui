@@ -1,8 +1,10 @@
 import Route from '@ember/routing/route';
 import { get } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { inject as service } from '@ember/service';
 
 export default Route.extend(AuthenticatedRouteMixin, {
+  router: service(),
   titleToken: 'Dashboard',
   routeAfterAuthentication: 'home',
 
@@ -11,7 +13,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
       !get(this, 'session.isAuthenticated') ||
       get(this, 'session.data.authenticated.isGuest')
     ) {
-      this.replaceWith('home');
+      this.router.replaceWith('home');
     }
   },
 
@@ -23,7 +25,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
   actions: {
     error(/* error, transition */) {
-      this.replaceWith('home');
+      this.router.replaceWith('home');
     }
   }
 });

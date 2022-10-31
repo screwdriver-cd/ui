@@ -178,7 +178,14 @@ module('Unit | Route | templates/detail', function (hooks) {
 
   test('it asks for the list of templates for a given name and non-exist version', function (assert) {
     const route = this.owner.lookup('route:templates/detail');
-    const stub = sinon.stub(route, 'transitionTo');
+    const stub = sinon.stub();
+
+    const routerServiceMock = Service.extend({
+      transitionTo: stub
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
     assert.ok(route);
 
@@ -191,7 +198,14 @@ module('Unit | Route | templates/detail', function (hooks) {
 
   test('it asks for the list of templates for a given name and non-exist tag', function (assert) {
     const route = this.owner.lookup('route:templates/detail');
-    const stub = sinon.stub(route, 'transitionTo');
+    const stub = sinon.stub();
+
+    const routerServiceMock = Service.extend({
+      transitionTo: stub
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
     assert.ok(route);
 

@@ -1,21 +1,21 @@
 <ul>
-  <li class="job-name build-{{buildStatus}}">
-    {{#if event.pr.url}}
+  <li class="job-name build-{{this.buildStatus}}">
+    {{#if this.event.pr.url}}
       <LinkTo
         @route="pipeline.pulls"
-        @model={{pipelineId}}
+        @model={{this.pipelineId}}
         class="banner-value"
       >
-        {{jobName}}
+        {{this.jobName}}
       </LinkTo>
     {{else}}
       <LinkTo
         @route="pipeline.events.show"
-        @models={{array pipelineId this.event.id}}
-        @query={{hash jobId=jobId}}
+        @models={{array this.pipelineId this.event.id}}
+        @query={{hash jobId=this.jobId}}
         class="banner-value"
       >
-        {{jobName}}
+        {{this.jobName}}
       </LinkTo>
     {{/if}}
     <span class="banner-label">
@@ -24,16 +24,16 @@
   </li>
   <li class="commit">
     <span class="banner-value commit-list">
-      <a href={{event.commit.url}} class="sha commit-sha">
-        #{{event.truncatedSha}}
+      <a href={{this.event.commit.url}} class="sha commit-sha">
+        #{{this.event.truncatedSha}}
       </a>
-      {{#if event.pr.url}}
+      {{#if this.event.pr.url}}
         <BsDropdown as |dd|>
           <dd.toggle>
             <span class="caret caret-display"></span>
           </dd.toggle>
           <dd.menu as |ddm|>
-            {{#each (await shortenedPrShas) as |prSha|}}
+            {{#each (await this.shortenedPrShas) as |prSha|}}
               <ddm.item class="pr-item">
                 <a onClick={{action "changeCurPr" prSha}}>
                   {{prSha.index}}. {{prSha.shortenedSha}}
@@ -48,13 +48,13 @@
       Commit
     </span>
   </li>
-  {{#if event.pr.url}}
+  {{#if this.event.pr.url}}
     <li class="pr">
       <span class="banner-value pr-url-holder">
-        <a href={{event.pr.url}} class="sha pr-url">
-          {{inline-svg "github" class="pr-img"}}
+        <a href={{this.event.pr.url}} class="sha pr-url">
+          {{svg-jar "github" class="pr-img"}}
           <span class="pr-link">
-            PR#{{prNumber}}
+            PR#{{this.prNumber}}
           </span>
         </a>
       </span>
@@ -66,33 +66,30 @@
   <li class="duration">
     <details>
       <summary>
-        <a
-          class="banner-value"
-          title="Total duration: {{duration}}, Blocked time: {{blockDuration}}, Image pull time: {{imagePullDuration}}, Build time: {{buildDuration}}"
-        >
-          {{duration}}
+        <a class="banner-value" title="Total duration: {{this.duration}}, Blocked time: {{this.blockDuration}}, Image pull time: {{this.imagePullDuration}}, Build time: {{this.buildDuration}}">
+          {{this.duration}}
         </a>
       </summary>
       <li class="subsection">
         <span class="banner-value">
-          {{blockDuration}} blocked
+          {{this.blockDuration}} blocked
         </span>
       </li>
       <li class="subsection">
         <span class="banner-value">
-          {{imagePullDuration}} pulling image
+          {{this.imagePullDuration}} pulling image
         </span>
       </li>
       <li class="subsection">
         <span class="banner-value">
-          {{buildDuration}} in build
+          {{this.buildDuration}} in build
         </span>
       </li>
     </details>
     <LinkTo
       @route="pipeline.metrics"
-      @model={{pipelineId}}
-      @query={{hash jobId=jobId}}
+      @model={{this.pipelineId}}
+      @query={{hash jobId=this.jobId}}
     >
       See build metrics
     </LinkTo>
@@ -101,8 +98,8 @@
     </span>
   </li>
   <li class="created">
-    <span class="banner-value" title={{buildCreate}}>
-      {{moment-format buildCreate "YYYY-MM-DD HH:mm:ss"}}
+    <span class="banner-value" title={{this.buildCreate}}>
+      {{moment-format this.buildCreate "YYYY-MM-DD HH:mm:ss"}}
     </span>
     <span class="banner-label">
       Create Time
@@ -111,25 +108,25 @@
   <li class="user">
     <span class="banner-value">
       <UserLink
-        @user={{event.commit.author}}
-        @causeMessage={{event.causeMessage}}
+        @user={{this.event.commit.author}}
+        @causeMessage={{this.event.causeMessage}}
       />
     </span>
     <span class="banner-label">
       Committer
     </span>
   </li>
-  {{#if coverageStep}}
+  {{#if this.coverageStep}}
     <li class="coverage">
       <span class="banner-value">
         <a
-          href={{coverageInfo.coverageUrl}}
+          href={{this.coverageInfo.coverageUrl}}
           title={{if
-            (eq coverageInfo.coverage "N/A")
+            (eq this.coverageInfo.coverage "N/A")
             "Coverage report not generated"
           }}
         >
-          {{coverageInfo.coverage}}
+          {{this.coverageInfo.coverage}}
         </a>
       </span>
       <span class="banner-label">
@@ -139,13 +136,13 @@
     <li class="tests">
       <span class="banner-value">
         <a
-          href={{coverageInfo.testsUrl}}
+          href={{this.coverageInfo.testsUrl}}
           title={{if
-            (eq coverageInfo.tests "N/A")
+            (eq this.coverageInfo.tests "N/A")
             "Tests report not generated"
           }}
         >
-          {{coverageInfo.tests}}
+          {{this.coverageInfo.tests}}
         </a>
       </span>
       <span class="banner-label">
@@ -155,19 +152,19 @@
   {{/if}}
   <li class="docker-container">
     <span class="banner-value">
-      {{buildContainer}}
+      {{this.buildContainer}}
     </span>
     <span class="banner-label">
       Container
     </span>
   </li>
   <li class="call-to-action button-right">
-    {{#if isAuthenticated}}
+    {{#if this.isAuthenticated}}
       <BsButton
         @onClick={{action "buildButtonClick"}}
-        disabled={{or (await isButtonDisabled) (not isButtonDisabledLoaded)}}
+        disabled={{or (await this.isButtonDisabled) (not this.isButtonDisabledLoaded)}}
       >
-        {{buildAction}}
+        {{this.buildAction}}
       </BsButton>
     {{/if}}
   </li>

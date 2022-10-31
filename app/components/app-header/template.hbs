@@ -1,8 +1,8 @@
 <BsNavbar as |navbar|>
   <div class="navbar-header">
     {{navbar.toggle}}
-    <LinkTo @route="home" class="logo navbar-brand" @title="Screwdriver Home">
-      {{inline-svg "Screwdriver_Logo_FullWhite" class="img"}}
+    <LinkTo @route="home" class="logo navbar-brand" title="Screwdriver Home">
+      {{svg-jar "Screwdriver_Logo_FullWhite" class="img"}}
     </LinkTo>
   </div>
   <navbar.content>
@@ -24,43 +24,43 @@
           </dd.toggle>
           <dd.menu as |ddm|>
             <ddm.item>
-              <LinkTo @route="validator" @classNames="icon validator">
+              <ddm.linkTo @route="validator" class="icon validator">
                 <span>
                   Validator
                 </span>
-              </LinkTo>
+              </ddm.linkTo>
             </ddm.item>
             <ddm.item>
-              <LinkTo @route="templates" @classNames="icon templates">
+              <ddm.linkTo @route="templates" class="icon templates">
                 <span>
                   Templates
                 </span>
-              </LinkTo>
+              </ddm.linkTo>
             </ddm.item>
             <ddm.item>
-              <LinkTo @route="commands" @classNames="icon commands">
+              <ddm.linkTo @route="commands" class="icon commands">
                 <span>
                   Commands
                 </span>
-              </LinkTo>
+              </ddm.linkTo>
             </ddm.item>
             <ddm.item>
-              <LinkTo
+              <ddm.linkTo
                 @route="pipeline-visualizer"
-                @classNames="icon pipeline-visualizer"
+                class="icon pipeline-visualizer"
               >
                 <span>
                   Visualizer
                 </span>
-              </LinkTo>
+              </ddm.linkTo>
             </ddm.item>
           </dd.menu>
         </nav.dropdown>
       </nav.item>
-      {{#if session.isAuthenticated}}
+      {{#if @session.isAuthenticated}}
         <nav.item>
           <a class="icon create" onclick={{action "openCreatePipeline"}}>
-            {{inline-svg "add-circle" class="img"}}
+            {{svg-jar "add-circle" class="img"}}
             <span>
               Create Pipeline
             </span>
@@ -70,7 +70,7 @@
     </navbar.nav>
 
     <navbar.nav @classNames="navbar-nav navbar-right" as |nav|>
-      {{#if showSearch}}
+      {{#if this.showSearch}}
         <nav.item>
           <form class="navbar-form navbar-right" role="search">
             <Input
@@ -80,7 +80,7 @@
               @enter={{action "triggerSearch"}}
               @escape-press={{action "cancelSearch"}}
               @autofocus="true"
-              @value={{searchTerm}}
+              @value={{this.searchTerm}}
             />
             <button class="search-button" {{action "triggerSearch"}}>
               <FaIcon @icon="search" @title="Search" />
@@ -93,55 +93,62 @@
             href="#"
             class="icon search"
             title="Search"
-            {{action (mut showSearch) (not showSearch) preventDefault=false}}
+            {{action
+              "openSearchForm"
+              preventDefault=false
+            }}
           >
-            {{inline-svg "search" class="img"}}
+            {{svg-jar "search" class="img"}}
           </a>
         </nav.item>
       {{/if}}
-
       <nav.item>
         <nav.dropdown as |dd|>
           <dd.toggle class="icon docs-outline">
-            {{inline-svg "help-circle" class="img"}}
+            {{svg-jar "help-circle" class="img"}}
           </dd.toggle>
           <dd.menu as |ddm|>
             <ddm.item>
               <a
-                href={{docUrl}}
+                href={{this.docUrl}}
                 class="icon docs"
                 title="Documentation and Contact"
               >
-                {{inline-svg "file-text" class="img"}}<span>
+                {{svg-jar "file-text" class="img"}}
+                <span>
                   Documentation
                 </span>
               </a>
             </ddm.item>
             <ddm.item>
               <a class="release">
-                <FaIcon @icon="tag" /><span>
-                  {{releaseVersion}}
+                <FaIcon @icon="tag" />
+                <span>
+                  {{this.releaseVersion}}
                 </span>
               </a>
             </ddm.item>
             {{ddm.divider}}
             <ddm.item>
               <a href="http://blog.screwdriver.cd" class="icon blog">
-                {{inline-svg "tumblr" class="img"}}<span>
+                {{svg-jar "tumblr" class="img"}}
+                <span>
                   Blog
                 </span>
               </a>
             </ddm.item>
             <ddm.item>
-              <a href={{slackUrl}} class="icon community">
-                {{inline-svg "slack" class="img"}}<span>
+              <a href={{this.slackUrl}} class="icon community">
+                {{svg-jar "slack" class="img"}}
+                <span>
                   Slack Workspace
                 </span>
               </a>
             </ddm.item>
             <ddm.item>
               <a href="https://github.com/screwdriver-cd" class="icon github">
-                {{inline-svg "github" class="img"}}<span>
+                {{svg-jar "github" class="img"}}
+                <span>
                   GitHub
                 </span>
               </a>
@@ -150,12 +157,12 @@
         </nav.dropdown>
       </nav.item>
       <nav.item>
-        {{#if session.isAuthenticated}}
+        {{#if @session.isAuthenticated}}
           <nav.dropdown as |dd|>
             <dd.toggle class="icon profile-outline">
-              {{inline-svg "profile-outline" class="img"}}
+              {{!-- {{svg-jar "profile-outline" class="img"}} --}}
               <span class="icontitle">
-                {{session.data.authenticated.username}}
+                {{@session.data.authenticated.username}}
               </span>
               <span class="caret"></span>
             </dd.toggle>
@@ -165,13 +172,13 @@
                   ACCOUNTS
                 </span>
               </ddm.item>
-              {{#each scmContexts as |scmContext|}}
+              {{#each @scmContexts as |scmContext|}}
                 {{#unless scmContext.readOnly}}
                   <ddm.item>
                     {{#if scmContext.isSignedIn}}
                       <a class="active">
-                        <FaIcon @icon={{scmContext.iconType}} @prefix="fab" /> {{scmContext.displayName
-                        }}
+                        <FaIcon @icon={{scmContext.iconType}} @prefix="fab" />
+                        {{scmContext.displayName}}
                         <span>
                           active
                         </span>
@@ -181,19 +188,19 @@
                         href="#authenticate"
                         {{action "authenticate" scmContext.context}}
                       >
-                        <FaIcon @icon={{scmContext.iconType}} @prefix="fab" /> {{scmContext.displayName
-                        }}
+                        <FaIcon @icon={{scmContext.iconType}} @prefix="fab" />
+                        {{scmContext.displayName}}
                       </a>
                     {{/if}}
                   </ddm.item>
                 {{/unless}}
               {{/each}}
               {{ddm.divider}}
-              {{#if (not session.data.authenticated.isGuest)}}
+              {{#if (not @session.data.authenticated.isGuest)}}
                 <ddm.item>
-                  <LinkTo @route="user-settings" @title="User Settings">
+                  <ddm.linkTo @route="user-settings" @title="User Settings">
                     User Settings
-                  </LinkTo>
+                  </ddm.linkTo>
                 </ddm.item>
               {{/if}}
               <ddm.item>
@@ -211,11 +218,11 @@
         {{else}}
           <LinkTo
             @route="login"
-            @query={{hash fromUrl=currentUrl}}
-            @title="Sign in to Screwdriver"
+            @query={{hash fromUrl=@currentUrl}}
+            title="Sign in to Screwdriver"
             class="icon profile-outline"
           >
-            {{inline-svg "profile-outline" class="img"}}
+            {{svg-jar "profile-outline" class="img"}}
             <span class="icontitle">
               Sign in
             </span>
@@ -227,7 +234,7 @@
 </BsNavbar>
 
 <div class="tooltips">
-  {{#if session.isAuthenticated}}
+  {{#if @session.isAuthenticated}}
     <BsTooltip
       @placement="bottom"
       @triggerElement=".icon.create"
@@ -236,8 +243,8 @@
       Create a new Pipeline
     </BsTooltip>
   {{/if}}
-  {{#if session.isAuthenticated}}
-    {{#each scmContexts as |scmContext|}}
+  {{#if @session.isAuthenticated}}
+    {{#each @scmContexts as |scmContext|}}
       {{#if scmContext.isSignedIn}}
         <BsTooltip
           @placement="bottom"

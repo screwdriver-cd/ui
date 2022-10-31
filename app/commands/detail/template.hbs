@@ -1,19 +1,19 @@
 <InfoMessage
-  @message={{errorMessage}}
+  @message={{this.errorMessage}}
   @type="warning"
   @icon="exclamation-triangle"
 />
 
 <CommandHeader
-  @command={{versionCommand}}
-  @trusted={{trusted}}
-  @isAdmin={{isAdmin}}
+  @command={{this.versionCommand}}
+  @trusted={{this.trusted}}
+  @isAdmin={{this.isAdmin}}
   @onUpdateTrust={{action "updateTrust"}}
   @onRemoveCommand={{action "removeCommand"}}
 />
 
-<CommandFormat @command={{versionCommand}} />
+<CommandFormat @command={{this.versionCommand}} />
 
-<CommandVersions @commands={{commands}} />
+<CommandVersions @commands={{this.commands}} />
 
 {{outlet}}

@@ -10,11 +10,17 @@ import ModelReloaderMixin, {
 } from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob, isActiveBuild } from 'screwdriver-ui/utils/build';
 import moment from 'moment';
-import { createEvent, stopBuild, updateEvents } from '../../events/controller';
+import {
+  createEvent,
+  stopBuild,
+  updateEvents
+} from 'screwdriver-ui/components/pipeline-events/component';
 
 const PAST_TIME = moment().subtract(1, 'day');
 
 export default Controller.extend(ModelReloaderMixin, {
+  store: service(),
+  router: service(),
   lastRefreshed: moment(),
   shouldReload(model) {
     const job = model.jobs.find(j => {
@@ -182,7 +188,7 @@ export default Controller.extend(ModelReloaderMixin, {
   actions: {
     setShowListView(showListView) {
       if (!showListView) {
-        this.transitionToRoute('pipeline.events');
+        this.router.transitionTo('pipeline.events');
       }
     },
     setDownstreamTrigger() {

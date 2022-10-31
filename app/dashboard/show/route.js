@@ -1,8 +1,11 @@
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { inject as service } from '@ember/service';
 
 export default Route.extend(AuthenticatedRouteMixin, {
+  store: service(),
+  router: service(),
   model(params) {
     const collections =
       this.controllerFor('application').get('collections') === undefined
@@ -23,7 +26,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
     error(/* error, transition */) {
       localStorage.removeItem('lastViewedCollectionId');
 
-      return this.transitionTo('/404');
+      return this.router.transitionTo('/404');
     }
   }
 });

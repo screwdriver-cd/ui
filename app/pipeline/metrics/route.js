@@ -1,8 +1,10 @@
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
 import timeRange from 'screwdriver-ui/utils/time-range';
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
+  store: service(),
   init() {
     this._super(...arguments);
     this.reinit();

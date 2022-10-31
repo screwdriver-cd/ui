@@ -30,7 +30,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
     this.set('mockPipeline', testPipeline);
 
     await render(
-      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+      hbs`<PipelineSecretSettings @secrets={{this.mockSecrets}} @pipeline={{this.mockPipeline}} />`
     );
 
     assert
@@ -53,7 +53,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
   test('it updates the add button properly', async function (assert) {
     this.set('mockPipeline', { id: 'abcd' });
-    await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline}}`);
+    await render(hbs`<PipelineSecretSettings @pipeline={{this.mockPipeline}} />`);
 
     // starts disabled
     assert.dom('tfoot button').isDisabled();
@@ -96,7 +96,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
     // eslint-disable-next-line max-len
     await render(
-      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
+      hbs`<PipelineSecretSettings @pipeline={{this.mockPipeline}} @onCreateSecret={{action this.externalAction}} />`
     );
 
     await fillIn('.key input', 'SECRET_KEY');
@@ -121,7 +121,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
     // eslint-disable-next-line max-len
     await render(
-      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
+      hbs`<PipelineSecretSettings @pipeline={{this.mockPipeline}} @onCreateSecret={{action this.externalAction}} />`
     );
 
     await fillIn('.key input', '0banana');
@@ -171,7 +171,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
     this.set('mockPipeline', testPipeline);
     await render(
-      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+      hbs`<PipelineSecretSettings @secrets={{this.mockSecrets}} @pipeline={{this.mockPipeline}} />`
     );
 
     // secrets are sorted by name
@@ -197,7 +197,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
     this.set('mockPipeline', testPipeline);
     await render(
-      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+      hbs`<PipelineSecretSettings @secrets={{this.mockSecrets}} @pipeline={{this.mockPipeline}} />`
     );
 
     assert
@@ -229,7 +229,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
     this.set('mockPipeline', testPipeline);
 
     await render(
-      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+      hbs`<PipelineSecretSettings @secrets={{this.mockSecrets}} @pipeline={{this.mockPipeline}} />`
     );
 
     await click('tbody svg');

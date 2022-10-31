@@ -44,7 +44,7 @@ module('Integration | Component | command header', function (hooks) {
     this.set('isAdmin', false);
 
     await render(
-      hbs`{{command-header command=mock trusted=trusted isAdmin=isAdmin}}`
+      hbs`<CommandHeader @command={{this.mock}} @trusted={{this.trusted}} @isAdmin={{this.isAdmin}} />`
     );
 
     assert.dom('h1').hasText('foo/bar Source code Delete command');
