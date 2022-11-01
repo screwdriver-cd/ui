@@ -220,24 +220,24 @@ export default Component.extend({
       }
     },
     aliasNameSort() {
-        if (this.hasAliasName) {
-          if (this.sortBy[0] === 'settings.aliasName:desc') {
-            this.set('sortBy', ['settings.aliasName:asc']);
-            this.set('sortOrder ', 'asc');
-          } else {
-            this.set('sortBy', ['settings.aliasName:desc']);
-            this.set('sortOrder ', 'desc');
-          }
+      if (this.hasAliasName) {
+        if (this.sortBy[0] === 'settings.aliasName:desc') {
+          this.set('sortBy', ['settings.aliasName:asc']);
+          this.set('sortOrder ', 'asc');
         } else {
-          if (this.sortBy[0] === 'scmRepo.name:desc') {
-            this.set('sortBy', ['scmRepo.name:asc']);
-            this.set('sortOrder ', 'asc');
-          } else {
-            this.set('sortBy', ['scmRepo.name:desc']);
-            this.set('sortOrder ', 'desc');
-          }
+          this.set('sortBy', ['settings.aliasName:desc']);
+          this.set('sortOrder ', 'desc');
         }
-      },
+      } else {
+        if (this.sortBy[0] === 'scmRepo.name:desc') {
+          this.set('sortBy', ['scmRepo.name:asc']);
+          this.set('sortOrder ', 'asc');
+        } else {
+          this.set('sortBy', ['scmRepo.name:desc']);
+          this.set('sortOrder ', 'desc');
+        }
+      }
+    },
     organize() {
       this.set('isOrganizing', true);
     },
