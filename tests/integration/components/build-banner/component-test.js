@@ -6,6 +6,7 @@ import { render, settled, click } from '@ember/test-helpers';
 import test from 'ember-sinon-qunit/test-support/test';
 import { resolve, Promise as EmberPromise } from 'rsvp';
 import Service from '@ember/service';
+import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 
 const coverageService = Service.extend({
   getCoverageInfo() {
@@ -141,7 +142,9 @@ module('Integration | Component | build banner', function (hooks) {
       changeBuild=(action changeB)
     }}`);
 
-    const expectedTime = '11/04/2016, 04:08 PM';
+    const expectedTime = toCustomLocaleString(
+      new Date('2016-11-04T20:08:41.238Z')
+    );
 
     assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/pulls');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
@@ -225,7 +228,9 @@ module('Integration | Component | build banner', function (hooks) {
       prEvents=prEvents
       reloadBuild=(action reloadCb)
     }}`);
-    const expectedTime = '11/04/2016, 04:08 PM';
+    const expectedTime = toCustomLocaleString(
+      new Date('2016-11-04T20:08:41.238Z')
+    );
 
     assert
       .dom('.pr .pr-url-holder a')
@@ -283,7 +288,9 @@ module('Integration | Component | build banner', function (hooks) {
       prEvents=prEvents
       reloadBuild=(action reloadCb)
     }}`);
-    const expectedTime = '11/04/2016, 04:08 PM';
+    const expectedTime = toCustomLocaleString(
+      new Date('2016-11-04T20:08:41.238Z')
+    );
 
     assert
       .dom('.pr .pr-url-holder a')
