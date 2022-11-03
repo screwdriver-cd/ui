@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { hasInactivePipelines } from 'screwdriver-ui/utils/pipeline';
 
 export default Controller.extend({
   session: service(),
@@ -19,6 +20,11 @@ export default Controller.extend({
 
         return pipeline;
       });
+    }
+  }),
+  hasInactivePipelines: computed('model.pipelines', {
+    get() {
+      return hasInactivePipelines(this.get('model.pipelines'));
     }
   }),
   pipeline: reads('model.pipeline'),
