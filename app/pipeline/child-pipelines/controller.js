@@ -21,5 +21,11 @@ export default Controller.extend({
       });
     }
   }),
-  pipeline: reads('model.pipeline')
+  pipeline: reads('model.pipeline'),
+
+  actions: {
+    onDeleteChildPipeline() {
+      this.send('refreshModel');
+    }
+  }
 });

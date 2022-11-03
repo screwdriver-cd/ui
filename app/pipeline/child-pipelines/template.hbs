@@ -2,6 +2,6 @@
   {{pipeline-nav pipeline=pipeline}}
 {{/if}}
 
-{{pipeline-list pipelines=pipelines pipeline=pipeline}}
+{{pipeline-list pipelines=pipelines pipeline=pipeline onDeleteChildPipeline=(action "onDeleteChildPipeline")}}
 
 {{outlet}}

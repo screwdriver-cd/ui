@@ -14,6 +14,7 @@ export default DS.Model.extend({
   scmRepo: DS.attr(),
   scmUri: DS.attr('string'),
   name: DS.attr('string'),
+  state: DS.attr('string'),
   workflowGraph: DS.attr(),
   configPipelineId: DS.attr('string'),
   childPipelines: DS.attr(),

@@ -14,6 +14,11 @@ export default Component.extend({
         .startAll(this.pipeline.id)
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
+    },
+    deletePipeline(pipeline) {
+      return pipeline.destroyRecord().then(() => {
+        this.onDeleteChildPipeline();
+      });
     }
   }
 });
