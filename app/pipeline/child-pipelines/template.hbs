@@ -3,7 +3,7 @@
 {{/if}}
 
 {{#if hasInactivePipelines}}
-  {{info-message message="You have one or more inactive pipelines. You can activate these by adding back the corresponding scm URL in the yaml configuration." type="info" icon="exclamation-triangle"}}
+  {{info-message message="You have one or more inactive pipelines. You can activate these by adding back the corresponding SCM URL in the yaml configuration." type="info" icon="exclamation-triangle"}}
 {{/if}}
 
 {{pipeline-list pipelines=pipelines pipeline=pipeline onDeleteChildPipeline=(action "onDeleteChildPipeline")}}
