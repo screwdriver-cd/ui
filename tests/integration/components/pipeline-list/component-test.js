@@ -13,13 +13,15 @@ module('Integration | Component | pipeline list', function (hooks) {
         id: 3,
         appId: 'foo/bar',
         branch: 'master',
-        scmContext: 'github:github.com'
+        scmContext: 'github:github.com',
+        state: 'ACTIVE'
       }),
       EmberObject.create({
         id: 4,
         appId: 'batman/tumbler',
         branch: 'waynecorp',
-        scmContext: 'bitbucket:bitbucket.org'
+        scmContext: 'bitbucket:bitbucket.org',
+        state: 'INACTIVE'
       })
     ];
 
@@ -27,7 +29,8 @@ module('Integration | Component | pipeline list', function (hooks) {
       id: 1,
       appId: 'foo/bar',
       branch: 'master',
-      scmContext: 'github:github.com'
+      scmContext: 'github:github.com',
+      state: 'ACTIVE'
     });
 
     this.set('pipelineList', pipelines);
@@ -37,8 +40,10 @@ module('Integration | Component | pipeline list', function (hooks) {
       hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`
     );
 
-    assert.dom(find('tbody tr:first-child')).hasText('foo/bar master');
-    assert.dom('tbody tr:nth-child(2)').hasText('batman/tumbler waynecorp');
+    assert.dom(find('tbody tr:first-child')).hasText('foo/bar master active');
+    assert
+      .dom('tbody tr:nth-child(2)')
+      .hasText('batman/tumbler waynecorp inactive');
     assert.dom('button').hasText('Start All');
     assert.dom('.num-results span').hasText('Found 2 child pipeline(s)');
   });
@@ -50,7 +55,8 @@ module('Integration | Component | pipeline list', function (hooks) {
       id: 1,
       appId: 'foo/bar',
       branch: 'master',
-      scmContext: 'github:github.com'
+      scmContext: 'github:github.com',
+      state: 'ACTIVE'
     });
 
     this.set('pipelineList', pipelines);

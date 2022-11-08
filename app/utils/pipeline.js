@@ -26,4 +26,20 @@ const hasInactivePipelines = pipelines => {
   return !!inactivePipeline;
 };
 
-export { getStateIcon, isInactivePipeline, hasInactivePipelines };
+const isActivePipeline = pipeline => {
+  return pipeline.state === 'ACTIVE';
+};
+
+const hasActivePipelines = pipelines => {
+  const activePipeline = pipelines.find(p => isActivePipeline(p));
+
+  return !!activePipeline;
+};
+
+export {
+  getStateIcon,
+  isInactivePipeline,
+  hasInactivePipelines,
+  isActivePipeline,
+  hasActivePipelines
+};

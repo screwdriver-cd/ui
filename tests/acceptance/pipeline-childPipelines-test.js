@@ -40,7 +40,8 @@ module('Acceptance | child pipeline', function (hooks) {
             name: 'child/one',
             branch: 'master',
             url: 'https://github.com/child/one'
-          }
+          },
+          state: 'ACTIVE'
         },
         {
           id: '3',
@@ -49,7 +50,8 @@ module('Acceptance | child pipeline', function (hooks) {
             name: 'child/two',
             branch: 'master',
             url: 'https://github.com/child/two'
-          }
+          },
+          state: 'INACTIVE'
         }
       ])
     ]);

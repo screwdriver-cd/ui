@@ -1,4 +1,4 @@
-import { alias } from '@ember/object/computed';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import Component from '@ember/component';
 import {
   get,
@@ -51,7 +51,11 @@ export default Component.extend({
     }
   ),
 
-  displayRestartButton: alias('authenticated'),
+  displayRestartButton: computed('authenticated', 'pipeline.state', {
+    get() {
+      return this.authenticated && isActivePipeline(this.get('pipeline'));
+    }
+  }),
 
   init() {
     this._super(...arguments);

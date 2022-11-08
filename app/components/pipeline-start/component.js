@@ -1,14 +1,14 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
-import { isInactivePipeline } from 'screwdriver-ui/utils/pipeline';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 
 export default Component.extend({
   direction: 'down',
 
   isStartButtonDisabled: computed('pipeline.state', {
     get() {
-      return isInactivePipeline(this.get('pipeline'));
+      return !isActivePipeline(this.get('pipeline'));
     }
   }),
 

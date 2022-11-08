@@ -3,7 +3,7 @@
 {{#if pipelines.length}}
   <div class="num-results col-xs-12 col-md-8">
     <span>Found {{pipelines.length}} child pipeline(s)</span>
-    <button {{action "startAll"}} class="start-button">Start All</button>
+    {{#bs-button onClick=(action "startAll") class="start-button" disabled=isStartAllButtonDisabled title="Start a new event for all the active pipelines"}}Start All{{/bs-button}}
   </div>
   <ul class="col-xs-12 col-md-8">
     <table>
