@@ -3,7 +3,7 @@
 {{#if pipelines.length}}
   <div class="num-results col-xs-12 col-md-8">
     <span>Found {{pipelines.length}} child pipeline(s)</span>
-    <button {{action "startAll"}} class="start-button">Start All</button>
+    {{#bs-button onClick=(action "startAll") class="start-button" disabled=isStartAllButtonDisabled title="Start a new event for all the active pipelines"}}Start All{{/bs-button}}
   </div>
   <ul class="col-xs-12 col-md-8">
     <table>
@@ -12,6 +12,8 @@
           <th class="appId">Name</th>
           <th class="branch">Branch</th>
           <th class="account">Account</th>
+          <th class="state">Status</th>
+          <th class="state">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -20,6 +22,12 @@
             <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
             <td class="branch"><a href={{branch-url-encode pipeline.hubUrl}}>{{fa-icon "code-fork"}}{{pipeline.branch}}</a></td>
             <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
+            <td class="state">
+              {{pipeline-child-list-state-cell state=pipeline.state}}
+            </td>
+            <td class="action">
+              {{pipeline-child-list-actions-cell pipeline=pipeline pipelines=pipelines onDeletePipeline=(action "deletePipeline")}}
+            </td>
           </tr>
         {{/each}}
       </tbody>
