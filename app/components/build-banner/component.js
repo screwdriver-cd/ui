@@ -73,9 +73,15 @@ export default Component.extend({
   }),
 
   isButtonDisabledLoaded: false,
-  isButtonDisabled: computed('buildStatus', 'jobDisabled', {
+  isButtonDisabled: computed('buildStatus', 'jobDisabled', 'pipelineState', {
     get() {
       if (this.buildAction === 'Restart') {
+        if (this.pipelineState === 'INACTIVE') {
+          this.set('isButtonDisabledLoaded', true);
+
+          return true;
+        }
+
         return this.jobDisabled.then(jobDisabled => {
           this.set('isButtonDisabledLoaded', true);
 

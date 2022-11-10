@@ -22,5 +22,10 @@ export default Route.extend({
         pipelines,
         pipeline
       }));
+  },
+  actions: {
+    refreshModel: function refreshModel() {
+      this.refresh();
+    }
   }
 });

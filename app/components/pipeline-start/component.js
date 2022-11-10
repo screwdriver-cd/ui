@@ -1,9 +1,16 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 
 export default Component.extend({
   direction: 'down',
+
+  isStartButtonDisabled: computed('pipeline.state', {
+    get() {
+      return !isActivePipeline(this.get('pipeline'));
+    }
+  }),
 
   hasParameters: computed(
     'pipelineParameters',

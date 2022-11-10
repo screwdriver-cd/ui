@@ -10,6 +10,7 @@ import ModelReloaderMixin, {
 } from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob, isActiveBuild } from 'screwdriver-ui/utils/build';
 import moment from 'moment';
+import { isInactivePipeline } from 'screwdriver-ui/utils/pipeline';
 import { createEvent, stopBuild, updateEvents } from '../../events/controller';
 
 const PAST_TIME = moment().subtract(1, 'day');
@@ -178,6 +179,13 @@ export default Controller.extend(ModelReloaderMixin, {
   },
   createEvent,
   showListView: true,
+
+  isInactivePipeline: computed('pipeline', {
+    get() {
+      return isInactivePipeline(this.get('pipeline'));
+    }
+  }),
+
   actions: {
     setShowListView(showListView) {
       if (!showListView) {
