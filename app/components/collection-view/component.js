@@ -222,19 +222,27 @@ export default Component.extend({
     aliasNameSort() {
       if (this.hasAliasName) {
         if (this.sortBy[0] === 'settings.aliasName:desc') {
-          this.set('sortBy', ['settings.aliasName:asc']);
-          this.set('sortOrder ', 'asc');
+          this.setProperties({
+            sortOrder: 'asc',
+            sortBy: ['settings.aliasName:asc']
+          });
         } else {
-          this.set('sortBy', ['settings.aliasName:desc']);
-          this.set('sortOrder ', 'desc');
+          this.setProperties({
+            sortOrder: 'desc',
+            sortBy: ['settings.aliasName:desc']
+          });
         }
       } else {
         if (this.sortBy[0] === 'scmRepo.name:desc') {
-          this.set('sortBy', ['scmRepo.name:asc']);
-          this.set('sortOrder ', 'asc');
+          this.setProperties({
+            sortOrder: 'asc',
+            sortBy: ['scmRepo.name:asc']
+          });
         } else {
-          this.set('sortBy', ['scmRepo.name:desc']);
-          this.set('sortOrder ', 'desc');
+          this.setProperties({
+            sortOrder: 'desc',
+            sortBy: ['scmRepo.name:desc']
+          });
         }
       }
     },
