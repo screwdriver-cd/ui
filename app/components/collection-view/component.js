@@ -233,6 +233,7 @@ export default Component.extend({
           });
         }
       } else {
+        // eslint-disable-next-line no-lonely-if
         if (this.sortBy[0] === 'scmRepo.name:desc') {
           this.setProperties({
             sortOrder: 'asc',
