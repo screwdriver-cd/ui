@@ -50,6 +50,6 @@
   {{/if}}
 {{else}}
   {{#if (not prNum)}}
-    <button {{action "startBuild"}} class="start-button" title="Start a new event from latest commit">Start</button>
+    {{#bs-button onClick=(action "startBuild") class="start-button" disabled=isStartButtonDisabled title="Start a new event from latest commit"}}Start{{/bs-button}}
   {{/if}}
 {{/if}}
