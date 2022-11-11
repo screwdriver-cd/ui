@@ -95,7 +95,10 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     compare($columnValues[2], 'main');
     compare($columnValues[3], 'SUCCESS');
     compare($columnValues[4], 'anonymous');
-    compare($columnValues[5], '04/11/2016, 08:09 PM EDT');
+    compare(
+      $columnValues[5],
+      `${toCustomLocaleString(new Date('04/11/2016, 08:09 PM'))}`
+    );
     compare($columnValues[6], '10 seconds');
 
     compare($links[0], '#abc123');
