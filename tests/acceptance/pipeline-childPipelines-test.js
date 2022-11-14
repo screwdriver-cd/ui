@@ -40,7 +40,8 @@ module('Acceptance | child pipeline', function (hooks) {
             name: 'child/one',
             branch: 'master',
             url: 'https://github.com/child/one'
-          }
+          },
+          state: 'ACTIVE'
         },
         {
           id: '3',
@@ -49,7 +50,8 @@ module('Acceptance | child pipeline', function (hooks) {
             name: 'child/two',
             branch: 'master',
             url: 'https://github.com/child/two'
-          }
+          },
+          state: 'INACTIVE'
         }
       ])
     ]);
@@ -81,5 +83,10 @@ module('Acceptance | child pipeline', function (hooks) {
     assert.dom('tbody tr:first-child td.branch').hasText('master');
     assert.dom('tbody tr:nth-child(2) td.appId').hasText('child/two');
     assert.dom('tbody tr:nth-child(2) td.branch').hasText('master');
+    assert
+      .dom('div.alert > span')
+      .hasText(
+        'You have one or more inactive pipelines. You can activate these by adding back the corresponding SCM URL in the yaml configuration.'
+      );
   });
 });

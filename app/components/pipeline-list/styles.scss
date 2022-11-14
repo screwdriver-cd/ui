@@ -18,11 +18,11 @@
 
   .appId {
     text-align: left;
-    width: 45%;
+    width: 40%;
   }
 
   .branch {
-    width: 25%;
+    width: 20%;
     text-align: right;
   }
 
@@ -30,6 +30,11 @@
     width: 20%;
     text-align: left;
     white-space: nowrap;
+  }
+
+  .state,
+  .action {
+    width: 10%;
   }
 
   tbody tr:hover {

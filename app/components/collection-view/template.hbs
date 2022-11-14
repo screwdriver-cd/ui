@@ -167,12 +167,12 @@
                   {{/if}}
                 </span>
               </th>
-              <th class="last-run" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "lastRunEvent.startTime:desc") "lastRunEvent.startTime:asc" "lastRunEvent.startTime:desc")}}>
+              <th class="last-run" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "lastRunEvent.createTime:desc") "lastRunEvent.createTime:asc" "lastRunEvent.createTime:desc")}}>
                 Last run
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) "lastRunEvent.startTime:asc")}}
+                  {{#if (eq (get sortBy 0) "lastRunEvent.createTime:asc")}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) "lastRunEvent.startTime:desc")}}
+                  {{else if (eq (get sortBy 0) "lastRunEvent.createTime:desc")}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>
