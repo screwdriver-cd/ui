@@ -77,6 +77,7 @@ const formatMetrics = metrics => {
       lastEventInfo: {
         startTime: '--/--/----',
         statusColor: 'build-empty',
+        status: 'build-empty',
         durationText: '--',
         sha: 'Not available',
         icon: 'question-circle',
@@ -105,6 +106,7 @@ const formatMetrics = metrics => {
   const lastEventInfo = {
     startTime: `${lastEventStartMonth}/${lastEventStartDay}/${lastEventStartYear}`,
     statusColor: getColor(lastEvent.status.toLowerCase()),
+    status: lastEvent.status.toLowerCase(),
     durationText: lastEvent.duration ? formatTime(lastEvent.duration) : '--',
     sha: getSha(lastEvent.sha),
     icon: getIcon(lastEvent.status.toLowerCase()),

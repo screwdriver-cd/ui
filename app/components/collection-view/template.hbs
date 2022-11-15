@@ -183,9 +183,9 @@
               <th class="status" rowspan="1" onclick={{action "sortByStatus"}} >
                 Status
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) "lastRunJob.status:asc")}}
+                  {{#if (eq (get sortBy 0) "lastRunEvent.status:asc")}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) "lastRunJob.status:desc")}}
+                  {{else if (eq (get sortBy 0) "lastRunEvent.status:desc")}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>

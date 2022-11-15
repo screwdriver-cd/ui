@@ -235,7 +235,7 @@ export default Component.extend({
         'FROZEN' : 8
       }
       this.set('sortBy', function(a,b) {
-          return priorities[a.lastRunJob.status] - priorities[b.lastRunJob.status];
+          return priorities[a.lastRunEvent.status] - priorities[b.lastRunEvent.status];
       });
     },
     selectPipeline(pipelineId) {
