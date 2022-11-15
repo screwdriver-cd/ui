@@ -180,7 +180,7 @@
                 </span>
               </th>
               <th class="duration" rowspan="1">Duration</th>
-              <th class="status" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "lastRunJob.status:desc") "lastRunJob.status:asc" "lastRunJob.status:desc")}} >
+              <th class="status" rowspan="1" onclick={{action "sortByStatus"}} >
                 Status
                 <span class="icon-wrapper">
                   {{#if (eq (get sortBy 0) "lastRunJob.status:asc")}}

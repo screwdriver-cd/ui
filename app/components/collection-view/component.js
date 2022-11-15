@@ -221,6 +221,23 @@ export default Component.extend({
     organize() {
       this.set('isOrganizing', true);
     },
+    sortByStatus() {
+      const priorities = {
+        'ABORTED' : 6,
+        'CREATED': 4,
+        'FAILURE' : 9,
+        'QUEUED' : 3 ,
+        'RUNNING' : 2 ,
+        'SUCCESS' : 1 ,
+        'BLOCKED' : 10,
+        'UNSTABLE' : 5 ,
+        'COLLAPSED' : 7,
+        'FROZEN' : 8
+      }
+      this.set('sortBy', function(a,b) {
+          return priorities[a.lastRunJob.status] - priorities[b.lastRunJob.status];
+      });
+    },
     selectPipeline(pipelineId) {
       const newSelectedPipelines = this.selectedPipelines.slice(0);
 
