@@ -2,6 +2,8 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { computed, set, get } from '@ember/object';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
+
 export default Component.extend({
   store: service(),
   classNameBindings: ['highlighted'],
@@ -59,6 +61,12 @@ export default Component.extend({
       });
 
       return isActive;
+    }
+  }),
+
+  isStartButtonDisabled: computed('pipeline.state', {
+    get() {
+      return !isActivePipeline(this.get('pipeline'));
     }
   }),
 

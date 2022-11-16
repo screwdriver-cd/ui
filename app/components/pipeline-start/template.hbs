@@ -2,7 +2,7 @@
   {{#if hasLargeNumberOfParameters}}
     {{#if (not prNum)}}
       <div class="btn-group">
-        <button {{action "startBuild"}} class="btn start-button" title="Start a new event from latest commit">Start</button>
+        {{#bs-button onClick=(action "startBuild") class="btn start-button" disabled=isStartButtonDisabled title="Start a new event from latest commit"}}Start{{/bs-button}}
         <button class="btn start-with-parameters-button" onClick={{action "toggleModal"}}>{{fa-icon (concat "caret-" direction)}}</button>
       </div>
     {{/if}}
@@ -17,7 +17,7 @@
         <h3>Are you sure to start?</h3>
         {{pipeline-parameterized-build
           pipeline=pipeline
-          showSubmitButton=true
+          showSubmitButton=(eq isStartButtonDisabled false)
           buildPipelineParameters=pipelineParameters
           buildJobParameters=jobParameters
           onSave=(action "startBuild")
@@ -30,7 +30,7 @@
       closeOnMenuClick=false as |dd|}}
       <div class="btn-group">
         {{#if (not prNum)}}
-          <button {{action "startBuild"}} class="start-button btn" title="Start a new event from latest commit">Start</button>
+          {{#bs-button onClick=(action "startBuild") class="start-button btn" disabled=isStartButtonDisabled title="Start a new event from latest commit"}}Start{{/bs-button}}
         {{/if}}
         {{#dd.button class="start-with-parameters-button"
           onClick=(action "toggleDropdown" dd.toggleDropdown)}}
@@ -40,7 +40,7 @@
       {{#dd.menu class="start-with-parameters-menu"}}
         {{pipeline-parameterized-build
           pipeline=pipeline
-          showSubmitButton=true
+          showSubmitButton=(eq isStartButtonDisabled false)
           buildPipelineParameters=pipelineParameters
           buildJobParameters=jobParameters
           onSave=(action "startBuild")
