@@ -107,7 +107,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders', async function (assert) {
-    assert.expect(12);
+    assert.expect(13);
     this.owner.setupRouter();
 
     this.set('reloadCb', () => {
@@ -169,7 +169,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders events list link if event is not pr', async function (assert) {
-    assert.expect(3);
+    assert.expect(4);
     this.owner.setupRouter();
 
     this.set('reloadCb', () => {
@@ -202,7 +202,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders pr link if pr url info is available', async function (assert) {
-    assert.expect(12);
+    assert.expect(13);
 
     this.set('reloadCb', () => {
       assert.ok(true);
@@ -257,7 +257,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders prCommit dropdown if event type is pr', async function (assert) {
-    assert.expect(16);
+    assert.expect(17);
 
     this.set('reloadCb', () => {
       assert.ok(true);
@@ -392,7 +392,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for running job when authenticated', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -426,7 +426,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for running disabled job when authenticated', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -461,7 +461,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for blocked job when authenticated', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -552,7 +552,7 @@ module('Integration | Component | build banner', function (hooks) {
       { name: 'sd-teardown-screwdriver-coverage-bookend' }
     ];
 
-    assert.expect(7);
+    assert.expect(8);
 
     this.set('reloadCb', () => {
       assert.ok(true);
@@ -730,7 +730,7 @@ module('Integration | Component | build banner', function (hooks) {
       { name: 'sd-teardown-screwdriver-coverage-bookend' }
     ];
 
-    assert.expect(3);
+    assert.expect(4);
 
     this.set('reloadCb', () => {
       assert.ok(true);
