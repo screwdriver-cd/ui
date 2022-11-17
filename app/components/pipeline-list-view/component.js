@@ -5,6 +5,7 @@ import { inject as service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import Table from 'ember-light-table';
 import isEqual from 'lodash.isequal';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 
 export default Component.extend({
   store: service(),
@@ -173,9 +174,9 @@ export default Component.extend({
         Object.keys(this.getWithDefault('pipelineParameters', {})).length > 0 ||
         Object.keys(this.getWithDefault('jobParameters', {})).length > 0;
 
-      let manualStartEnabled = true;
+      let manualStartEnabled = isActivePipeline(this.get('pipeline'));
 
-      if (annotations) {
+      if (manualStartEnabled && annotations) {
         manualStartEnabled =
           'screwdriver.cd/manualStartEnabled' in annotations
             ? annotations['screwdriver.cd/manualStartEnabled']

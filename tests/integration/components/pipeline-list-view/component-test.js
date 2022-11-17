@@ -8,7 +8,12 @@ import wait from 'ember-test-helpers/wait';
 module('Integration | Component | pipeline list view', function (hooks) {
   setupRenderingTest(hooks);
 
+  const PIPELINE = {
+    state: 'ACTIVE'
+  };
+
   test('it renders', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -68,6 +73,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`{{pipeline-list-view
+      pipeline=pipeline
       jobsDetails=jobsDetails
       updateListViewJobs=updateListViewJobs
       refreshListViewJobs=refreshListViewJobs
@@ -88,6 +94,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders then resets jobDetails', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -150,6 +157,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     await render(hbs`
       {{#if showPipelineListView}}
         {{pipeline-list-view
+          pipeline=pipeline
           jobsDetails=jobsDetails
           updateListViewJobs=updateListViewJobs
           refreshListViewJobs=refreshListViewJobs
@@ -168,6 +176,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders with duration', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -201,6 +210,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`{{pipeline-list-view
+      pipeline=pipeline
       jobsDetails=jobsDetails
       updateListViewJobs=updateListViewJobs
       refreshListViewJobs=refreshListViewJobs
@@ -223,6 +233,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders and build running', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -255,6 +266,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`{{pipeline-list-view
+      pipeline=pipeline
       jobsDetails=jobsDetails
       updateListViewJobs=updateListViewJobs
       refreshListViewJobs=refreshListViewJobs
@@ -277,6 +289,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders and build created', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -309,6 +322,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`{{pipeline-list-view
+      pipeline=pipeline
       jobsDetails=jobsDetails
       updateListViewJobs=updateListViewJobs
       refreshListViewJobs=refreshListViewJobs
@@ -331,6 +345,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders and build queued', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -363,6 +378,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`{{pipeline-list-view
+      pipeline=pipeline
       jobsDetails=jobsDetails
       updateListViewJobs=updateListViewJobs
       refreshListViewJobs=refreshListViewJobs
@@ -385,6 +401,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders and build blocked', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -417,6 +434,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`{{pipeline-list-view
+      pipeline=pipeline
       jobsDetails=jobsDetails
       updateListViewJobs=updateListViewJobs
       refreshListViewJobs=refreshListViewJobs
@@ -439,6 +457,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders and build frozen', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -471,6 +490,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`{{pipeline-list-view
+      pipeline=pipeline
       jobsDetails=jobsDetails
       updateListViewJobs=updateListViewJobs
       refreshListViewJobs=refreshListViewJobs
@@ -493,6 +513,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders and not started', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -525,6 +546,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`{{pipeline-list-view
+      pipeline=pipeline
       jobsDetails=jobsDetails
       updateListViewJobs=updateListViewJobs
       refreshListViewJobs=refreshListViewJobs
@@ -546,6 +568,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders and aborted', async function (assert) {
+    set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
       {
         jobId: 1,
@@ -578,6 +601,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`{{pipeline-list-view
+      pipeline=pipeline
       jobsDetails=jobsDetails
       updateListViewJobs=updateListViewJobs
       refreshListViewJobs=refreshListViewJobs
