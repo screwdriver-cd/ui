@@ -559,7 +559,7 @@ module('Integration | Component | build banner', function (hooks) {
     });
     this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
-    this.set('buildMetaMock', buildMetaMock);
+    this.set('buildMetaMock', {}); // empty as build step is not finished
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
     this.set('isButtonDisabledLoaded', true);
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
