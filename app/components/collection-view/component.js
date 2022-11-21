@@ -222,21 +222,27 @@ export default Component.extend({
       this.set('isOrganizing', true);
     },
     sortByStatus() {
-      const priorities = {
-        'ABORTED' : 6,
-        'CREATED': 4,
-        'FAILURE' : 9,
-        'QUEUED' : 3 ,
-        'RUNNING' : 2 ,
-        'SUCCESS' : 1 ,
-        'BLOCKED' : 10,
-        'UNSTABLE' : 5 ,
-        'COLLAPSED' : 7,
-        'FROZEN' : 8
-      }
-      this.set('sortBy', function(a,b) {
-          return priorities[a.lastRunEvent.status] - priorities[b.lastRunEvent.status];
+      const priorities = [
+        'SUCCESS',
+        'RUNNING',
+        'QUEUED',
+        'CREATED',
+        'UNSTABLE',
+        'ABORTED',
+        'COLLAPSED',
+        'FROZEN',
+        'FAILURE',
+        'BLOCKED'
+      ];
+
+      const newSortedPipelines = this.sortedPipelines.sort((a, b) => {
+        const aStatus = get(a, 'lastRunEvent.status');
+        const bStatus = get(b, 'lastRunEvent.status');
+
+        return priorities.indexOf(aStatus) - priorities.indexOf(bStatus);
       });
+
+      this.set('sortedPipelines', newSortedPipelines);
     },
     selectPipeline(pipelineId) {
       const newSelectedPipelines = this.selectedPipelines.slice(0);
