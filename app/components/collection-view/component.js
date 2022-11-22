@@ -235,14 +235,20 @@ export default Component.extend({
         'BLOCKED'
       ];
 
-      const newSortedPipelines = this.sortedPipelines.sort((a, b) => {
+      this.set('sortBy', (a, b) => {
         const aStatus = get(a, 'lastRunEvent.status');
         const bStatus = get(b, 'lastRunEvent.status');
 
-        return priorities.indexOf(aStatus) - priorities.indexOf(bStatus);
-      });
+        if(priorities.indexOf(aStatus) > priorities.indexOf(bStatus)){
 
-      this.set('sortedPipelines', newSortedPipelines);
+          return 1;
+        } else if(priorities.indexOf(aStatus) < priorities.indexOf(bStatus)){
+
+          return -1;
+        }
+
+        return 0;
+      });
     },
     selectPipeline(pipelineId) {
       const newSelectedPipelines = this.selectedPipelines.slice(0);
