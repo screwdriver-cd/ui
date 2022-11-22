@@ -224,7 +224,7 @@ export default Component.extend({
     selectPipeline(pipelineId) {
       const newSelectedPipelines = this.selectedPipelines.slice(0);
 
-      newSelectedPipelines.push(pipelineId);
+      newSelectedPipelines.push(parseInt(pipelineId, 10));
       this.set('selectedPipelines', newSelectedPipelines);
     },
     deselectPipeline(pipelineId) {
