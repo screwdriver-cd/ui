@@ -12,7 +12,8 @@
   <div class="searched-pipelines">
     {{#each searchedPipelines as |pipeline|}}
       <div class="searched-pipeline">
-        <span>{{pipeline.name}}</span>
+        <span class="name">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.name}}{{/link-to}}{{/highlight-terms}}</span>
+        <span class="branch"><a href={{branch-url-encode pipeline.hubUrl}}>{{fa-icon "code-fork"}}{{pipeline.branch}}</a></span>
         <span onclick={{action "selectSearchedPipeline" pipeline.id}} class="add-pipeline-button">
           {{inline-svg "add" class="img"}}
         </span>

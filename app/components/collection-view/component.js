@@ -224,11 +224,11 @@ export default Component.extend({
     selectPipeline(pipelineId) {
       const newSelectedPipelines = this.selectedPipelines.slice(0);
 
-      newSelectedPipelines.push(pipelineId);
+      newSelectedPipelines.push(parseInt(pipelineId, 10));
       this.set('selectedPipelines', newSelectedPipelines);
     },
     deselectPipeline(pipelineId) {
-      const idx = this.selectedPipelines.indexOf(pipelineId);
+      const idx = this.selectedPipelines.indexOf(parseInt(pipelineId, 10));
       const newSelectedPipelines = this.selectedPipelines.slice(0);
 
       if (idx !== -1) {

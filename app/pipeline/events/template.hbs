@@ -9,6 +9,10 @@
 
 {{info-message message=errorMessage type="warning" icon="exclamation-triangle" scmContext=pipeline.scmContext}}
 
+{{#if isInactivePipeline}}
+  {{info-message message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration." type="info" icon="exclamation-triangle"}}
+{{/if}}
+
 {{#unless hasAdmins}}
   {{#bs-alert type="warning" dismissible=false}}
     <p>This repo has no admins, click <span class="text-info" onclick={{action "syncAdmins"}}>here</span> to sync from git repo, you must be an admin to do so.</p>

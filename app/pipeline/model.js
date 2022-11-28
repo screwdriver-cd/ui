@@ -1,6 +1,7 @@
 import { alias } from '@ember/object/computed';
 import { computed, getWithDefault } from '@ember/object';
 import DS from 'ember-data';
+import { formatMetrics } from 'screwdriver-ui/utils/metric';
 
 export default DS.Model.extend({
   admins: DS.attr(),
@@ -13,6 +14,7 @@ export default DS.Model.extend({
   scmRepo: DS.attr(),
   scmUri: DS.attr('string'),
   name: DS.attr('string'),
+  state: DS.attr('string'),
   workflowGraph: DS.attr(),
   configPipelineId: DS.attr('string'),
   childPipelines: DS.attr(),
@@ -72,6 +74,13 @@ export default DS.Model.extend({
       });
 
       return failedBuildCount;
+    }
+  }),
+  lastRunEvent: computed('metrics.[]', {
+    get() {
+      const { lastEventInfo } = formatMetrics(this.metrics);
+
+      return lastEventInfo;
     }
   })
 });

@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const getIcon = status => {
   switch (status) {
     case 'queued':
@@ -79,7 +81,8 @@ const formatMetrics = metrics => {
         sha: 'Not available',
         icon: 'question-circle',
         commitMessage: 'No events have been run for this pipeline',
-        commitUrl: '#'
+        commitUrl: '#',
+        createTime: '--/--/----'
       }
     };
   }
@@ -106,7 +109,8 @@ const formatMetrics = metrics => {
     sha: getSha(lastEvent.sha),
     icon: getIcon(lastEvent.status.toLowerCase()),
     commitMessage: lastEvent.commit.message,
-    commitUrl: lastEvent.commit.url
+    commitUrl: lastEvent.commit.url,
+    createTime: moment(lastEvent.createTime).format()
   };
 
   return { eventsInfo, lastEventInfo };
