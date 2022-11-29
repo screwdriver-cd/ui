@@ -19,7 +19,8 @@ const viewOptions = [
 export default Component.extend({
   store: service(),
   session: service(),
-  sortBy: ['scmRepo.name'],
+  sortBy: 'scmRepo.name',
+  sortOrder: 'asc',
   collection: null,
   removePipelineError: null,
   activeViewOptionValue:
@@ -100,7 +101,39 @@ export default Component.extend({
       return description;
     }
   }),
-  sortedPipelines: sort('collectionPipelines', 'sortBy'),
+  sortedPipelines: computed('collectionPipelines', 'sortBy', 'sortOrder', function sortedPipelines() {
+    let sorted;
+    if (this.sortBy === 'lastRun') {
+      const priorities = [
+        'SUCCESS',
+        'RUNNING',
+        'QUEUED',
+        'CREATED',
+        'UNSTABLE',
+        'ABORTED',
+        'COLLAPSED',
+        'FROZEN',
+        'FAILURE',
+        'BLOCKED'
+      ];
+
+      sorted = this.collectionPipelines.toArray().sort((a,b) => {
+        const aStatus = get(a, 'lastRunEvent.status');
+        const bStatus = get(b, 'lastRunEvent.status');
+
+        return priorities.indexOf(aStatus) - priorities.indexOf(bStatus);
+      })
+    } else if(this.sortBy === 'scmRepo.name') {
+      sorted = this.collectionPipelines.toArray().sort((a,b) => {
+        return a.scmRepo.name - b.scmRepo.name;
+      });
+    }
+    if (this.sortOrder === 'asc') {
+     return sorted;
+    } else {
+      return sorted.reverse();
+    }
+ }),
   sortByText: computed('sortBy', {
     get() {
       switch (this.sortBy.get(0)) {
@@ -206,7 +239,7 @@ export default Component.extend({
           this.set('removePipelineError', error.errors[0].detail);
         });
     },
-    setSortBy(option) {
+    setSortBy(option, order) {
       switch (option) {
         case 'name':
           this.set('sortBy', ['scmRepo.name']);
@@ -215,40 +248,14 @@ export default Component.extend({
           this.set('sortBy', [`${option}:desc`]);
           break;
         default:
-          this.set('sortBy', [option]);
+          this.setProperties({
+            sortBy: option,
+            sortByText: order
+          });
       }
     },
     organize() {
       this.set('isOrganizing', true);
-    },
-    sortByStatus() {
-      const priorities = [
-        'SUCCESS',
-        'RUNNING',
-        'QUEUED',
-        'CREATED',
-        'UNSTABLE',
-        'ABORTED',
-        'COLLAPSED',
-        'FROZEN',
-        'FAILURE',
-        'BLOCKED'
-      ];
-
-      this.set('sortBy', (a, b) => {
-        const aStatus = get(a, 'lastRunEvent.status');
-        const bStatus = get(b, 'lastRunEvent.status');
-
-        if(priorities.indexOf(aStatus) > priorities.indexOf(bStatus)){
-
-          return 1;
-        } else if(priorities.indexOf(aStatus) < priorities.indexOf(bStatus)){
-
-          return -1;
-        }
-
-        return 0;
-      });
     },
     selectPipeline(pipelineId) {
       const newSelectedPipelines = this.selectedPipelines.slice(0);
