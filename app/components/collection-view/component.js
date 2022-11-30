@@ -1,4 +1,3 @@
-import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
 import { isEmpty, isEqual } from '@ember/utils';
 import { inject as service } from '@ember/service';
@@ -15,6 +14,52 @@ const viewOptions = [
     value: 'List'
   }
 ];
+
+const sortByLastRunStatus = function (a, b) {
+  const priorities = [
+    'success',
+    'running',
+    'queued',
+    'created',
+    'unstable',
+    'aborted',
+    'collapsed',
+    'frozen',
+    'failure',
+    'blocked'
+  ];
+  const aStatus = get(a, 'lastRunEvent.status');
+  const bStatus = get(b, 'lastRunEvent.status');
+
+  return priorities.indexOf(aStatus) - priorities.indexOf(bStatus);
+}
+
+const sortByName = function (a, b) {
+  return a.scmRepo.name - b.scmRepo.name;
+}
+
+const sortByLastRun = function (a, b) {
+
+  const aCreateTime = get(a, 'lastRunEvent.createTime');
+  const bCreateTime = get(b, 'lastRunEvent.createTime');
+
+  return new Date(aCreateTime) - new Date(bCreateTime);
+}
+
+const sortByHistory = function (a, b) {
+
+  const aFailedBuildCount = get(a, 'failedBuildCount');
+  const bFailedBuildCount = get(b, 'failedBuildCount');
+
+  console.log('mehul', aFailedBuildCount - bFailedBuildCount);
+
+  return aFailedBuildCount - bFailedBuildCount;
+}
+
+const sortByBranch = function (a, b) {
+
+  return a.scmRepo.branch - b.scmRepo.branch;
+}
 
 export default Component.extend({
   store: service(),
@@ -103,33 +148,19 @@ export default Component.extend({
   }),
   sortedPipelines: computed('collectionPipelines', 'sortBy', 'sortOrder', function sortedPipelines() {
     let sorted;
-    if (this.sortBy === 'lastRun') {
-      const priorities = [
-        'SUCCESS',
-        'RUNNING',
-        'QUEUED',
-        'CREATED',
-        'UNSTABLE',
-        'ABORTED',
-        'COLLAPSED',
-        'FROZEN',
-        'FAILURE',
-        'BLOCKED'
-      ];
-
-      sorted = this.collectionPipelines.toArray().sort((a,b) => {
-        const aStatus = get(a, 'lastRunEvent.status');
-        const bStatus = get(b, 'lastRunEvent.status');
-
-        return priorities.indexOf(aStatus) - priorities.indexOf(bStatus);
-      })
+    if (this.sortBy === 'lastRunStatus') {
+      sorted = this.collectionPipelines.toArray().sort(sortByLastRunStatus);
     } else if(this.sortBy === 'scmRepo.name') {
-      sorted = this.collectionPipelines.toArray().sort((a,b) => {
-        return a.scmRepo.name - b.scmRepo.name;
-      });
+      sorted = this.collectionPipelines.toArray().sort(sortByName);
+    } else if(this.sortBy === 'lastRun') {
+      sorted = this.collectionPipelines.toArray().sort(sortByLastRun);
+    } else if(this.sortBy === 'history') {
+      sorted = this.collectionPipelines.toArray().sort(sortByHistory);
+    } else if(this.sortBy === 'branch') {
+      sorted = this.collectionPipelines.toArray().sort(sortByBranch);
     }
     if (this.sortOrder === 'asc') {
-     return sorted;
+      return sorted;
     } else {
       return sorted.reverse();
     }
