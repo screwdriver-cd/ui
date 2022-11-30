@@ -3,8 +3,10 @@ import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
+import { getTimestamp } from '../../utils/timestamp-format';
 
 export default Component.extend({
+  userSettings: service(),
   classNames: ['build-banner', 'row'],
   classNameBindings: ['buildStatus'],
   coverage: service(),
@@ -49,6 +51,15 @@ export default Component.extend({
       }
 
       return 'Restart';
+    }
+  }),
+  buildCreateTime: computed('buildCreate', {
+    get() {
+      let createTime = 'n/a';
+
+      createTime = getTimestamp(this.userSettings, this.buildCreate);
+
+      return createTime;
     }
   }),
 

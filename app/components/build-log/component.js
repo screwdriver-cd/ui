@@ -10,6 +10,7 @@ const timeTypes = ['datetime', 'datetimeUTC', 'elapsedBuild', 'elapsedStep'];
 export default Component.extend({
   logService: service('build-logs'),
   store: service(),
+  userSettings: service(),
   classNames: ['build-log'],
   classNameBindings: ['fullScreen:fullScreen', 'lineWrap:lineWrap'],
   fullScreen: false,
@@ -221,10 +222,19 @@ export default Component.extend({
     }
   }),
 
-  init() {
+  async init() {
     this._super(...arguments);
 
-    const timeFormat = localStorage.getItem('screwdriver.logs.timeFormat');
+    const userPreferredTimeStampFormat =
+      await this.userSettings.getTimestampFormat();
+
+    let timeFormat;
+
+    if (userPreferredTimeStampFormat === 'UTC') {
+      timeFormat = 'datetimeUTC';
+    } else {
+      timeFormat = localStorage.getItem('screwdriver.logs.timeFormat');
+    }
 
     if (timeFormat && timeTypes.includes(timeFormat)) {
       set(this, 'timeFormat', timeFormat);
