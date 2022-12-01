@@ -632,7 +632,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('.header__description').hasText('Default Collection');
     assert.dom('table').exists({ count: 1 });
     assert.dom('th.collection-pipeline__choose').exists({ count: 1 });
-    assert.dom('th.app-id').hasText('Alias/ Name');
+    assert.dom('th.app-id').hasText('Alias / Name');
     assert.dom('th.branch').hasText('Branch');
     assert.dom('th.status').hasText('Status');
     assert.dom('th.last-run').hasText('Last run');

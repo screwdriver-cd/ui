@@ -170,6 +170,11 @@
   .app-id {
     width: 15%;
     max-width: 250px;
+    .icon-wrapper {
+      .fa {
+        line-height: 0;
+      }
+    }
   }
 
   .branch {

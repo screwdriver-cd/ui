@@ -15,7 +15,7 @@ const viewOptions = [
   }
 ];
 
-const sortByLastRunStatus = function (a, b) {
+const sortByLastRunStatus = (a, b) => {
   const priorities = [
     'success',
     'running',
@@ -32,39 +32,41 @@ const sortByLastRunStatus = function (a, b) {
   const bStatus = get(b, 'lastRunEvent.status');
 
   return priorities.indexOf(aStatus) - priorities.indexOf(bStatus);
-}
+};
 
-const sortByName = function (a, b) {
+const sortByName = (a, b) => {
   return a.scmRepo.name - b.scmRepo.name;
-}
+};
 
-const sortByLastRun = function (a, b) {
-
+const sortByLastRun = (a, b) => {
   const aCreateTime = get(a, 'lastRunEvent.createTime');
   const bCreateTime = get(b, 'lastRunEvent.createTime');
 
   return new Date(aCreateTime) - new Date(bCreateTime);
-}
+};
 
-const sortByHistory = function (a, b) {
-
+const sortByHistory = (a, b) => {
   const aFailedBuildCount = get(a, 'failedBuildCount');
   const bFailedBuildCount = get(b, 'failedBuildCount');
 
-  console.log('mehul', aFailedBuildCount - bFailedBuildCount);
-
   return aFailedBuildCount - bFailedBuildCount;
-}
+};
 
-const sortByBranch = function (a, b) {
-
+const sortByBranch = (a, b) => {
   return a.scmRepo.branch - b.scmRepo.branch;
-}
+};
+
+const sortByDuration = (a, b) => {
+  const aDuration = get(a, 'lastRunEvent.duration');
+  const bDuration = get(b, 'lastRunEvent.duration');
+
+  return aDuration - bDuration;
+};
 
 export default Component.extend({
   store: service(),
   session: service(),
-  sortBy: 'scmRepo.name',
+  sortBy: 'pipelineName',
   sortOrder: 'asc',
   collection: null,
   removePipelineError: null,
@@ -146,25 +148,33 @@ export default Component.extend({
       return description;
     }
   }),
-  sortedPipelines: computed('collectionPipelines', 'sortBy', 'sortOrder', function sortedPipelines() {
-    let sorted;
-    if (this.sortBy === 'lastRunStatus') {
-      sorted = this.collectionPipelines.toArray().sort(sortByLastRunStatus);
-    } else if(this.sortBy === 'scmRepo.name') {
-      sorted = this.collectionPipelines.toArray().sort(sortByName);
-    } else if(this.sortBy === 'lastRun') {
-      sorted = this.collectionPipelines.toArray().sort(sortByLastRun);
-    } else if(this.sortBy === 'history') {
-      sorted = this.collectionPipelines.toArray().sort(sortByHistory);
-    } else if(this.sortBy === 'branch') {
-      sorted = this.collectionPipelines.toArray().sort(sortByBranch);
-    }
-    if (this.sortOrder === 'asc') {
-      return sorted;
-    } else {
+  sortedPipelines: computed(
+    'collectionPipelines',
+    'sortBy',
+    'sortOrder',
+    function sortedPipelines() {
+      let sorted;
+
+      if (this.sortBy === 'lastRunStatus') {
+        sorted = this.collectionPipelines.toArray().sort(sortByLastRunStatus);
+      } else if (this.sortBy === 'pipelineName') {
+        sorted = this.collectionPipelines.toArray().sort(sortByName);
+      } else if (this.sortBy === 'lastRun') {
+        sorted = this.collectionPipelines.toArray().sort(sortByLastRun);
+      } else if (this.sortBy === 'history') {
+        sorted = this.collectionPipelines.toArray().sort(sortByHistory);
+      } else if (this.sortBy === 'branch') {
+        sorted = this.collectionPipelines.toArray().sort(sortByBranch);
+      } else if (this.sortBy === 'duration') {
+        sorted = this.collectionPipelines.toArray().sort(sortByDuration);
+      }
+      if (this.sortOrder === 'asc') {
+        return sorted;
+      }
+
       return sorted.reverse();
     }
- }),
+  ),
   sortByText: computed('sortBy', {
     get() {
       switch (this.sortBy.get(0)) {
@@ -281,7 +291,7 @@ export default Component.extend({
         default:
           this.setProperties({
             sortBy: option,
-            sortByText: order
+            sortOrder: order
           });
       }
     },

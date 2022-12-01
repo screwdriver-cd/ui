@@ -83,7 +83,8 @@ const formatMetrics = metrics => {
         icon: 'question-circle',
         commitMessage: 'No events have been run for this pipeline',
         commitUrl: '#',
-        createTime: '--/--/----'
+        createTime: '--/--/----',
+        duration: '--'
       }
     };
   }
@@ -112,7 +113,8 @@ const formatMetrics = metrics => {
     icon: getIcon(lastEvent.status.toLowerCase()),
     commitMessage: lastEvent.commit.message,
     commitUrl: lastEvent.commit.url,
-    createTime: moment(lastEvent.createTime).format()
+    createTime: moment(lastEvent.createTime).format(),
+    duration: lastEvent.duration
   };
 
   return { eventsInfo, lastEventInfo };
