@@ -34,7 +34,29 @@ const mockMetrics = [
       message: '2',
       url: 'https://github.com/batman/foo/commit/9af92ba134321'
     },
-    duration: 14,
+    duration: 20,
+    status: 'SUCCESS'
+  },
+  {
+    id: 3,
+    createTime: '2020-10-06T18:07:55.089Z',
+    sha: '9af92ba134321',
+    commit: {
+      message: '2',
+      url: 'https://github.com/batman/foo/commit/9af92ba134321'
+    },
+    duration: 30,
+    status: 'SUCCESS'
+  },
+  {
+    id: 4,
+    createTime: '2020-10-06T18:27:55.089Z',
+    sha: '9af92ba134321',
+    commit: {
+      message: '2',
+      url: 'https://github.com/batman/foo/commit/9af92ba134321'
+    },
+    duration: 50,
     status: 'SUCCESS'
   }
 ];
@@ -461,6 +483,137 @@ const mockCollections = [
   }
 ];
 
+const mockPipelinesWithDuration = copy([
+  EmberObject.create({
+    id: 1,
+    scmUri: 'github.com:12345678:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/screwdriver',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
+    },
+    scmContext: 'github:github.com',
+    annotations: {},
+    lastEventId: 12,
+    lastBuilds: [
+      {
+        id: 123,
+        status: 'SUCCESS',
+        // Most recent build
+        createTime: '2017-09-05T04:02:20.890Z'
+      }
+    ],
+    metrics: EmberPromise.resolve([mockMetrics[0]]),
+    settings: {
+      aliasName: 'screwdriver'
+    }
+  }),
+  EmberObject.create({
+    id: 2,
+    scmUri: 'github.com:87654321:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main', 'publish'],
+    scmRepo: {
+      name: 'screwdriver-cd/ui',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/ui/tree/master'
+    },
+    scmContext: 'github:github.com',
+    annotations: {},
+    prs: {
+      open: 2,
+      failing: 1
+    },
+    lastBuilds: [
+      {
+        id: 123,
+        status: 'SUCCESS',
+        // Most recent build
+        createTime: '2017-09-05T04:02:20.890Z'
+      }
+    ],
+    metrics: EmberPromise.resolve([mockMetrics[1]]),
+    settings: {
+      aliasName: 'ui'
+    }
+  }),
+  EmberObject.create({
+    id: 3,
+    scmUri: 'github.com:54321876:master',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/models',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/models/tree/master'
+    },
+    scmContext: 'bitbucket:bitbucket.org',
+    annotations: {},
+    lastEventId: 23,
+    lastBuilds: [
+      {
+        id: 125,
+        status: 'FAILURE',
+        // 2nd most recent build
+        createTime: '2017-09-05T04:01:41.789Z'
+      }
+    ],
+    metrics: EmberPromise.resolve([mockMetrics[2]]),
+    settings: {
+      aliasName: 'models'
+    }
+  }),
+  EmberObject.create({
+    id: 4,
+    scmUri: 'github.com:54321879:master:lib',
+    createTime: '2017-01-05T00:55:46.775Z',
+    admins: {
+      username: true
+    },
+    workflow: ['main'],
+    scmRepo: {
+      name: 'screwdriver-cd/zzz',
+      branch: 'master',
+      url: 'https://github.com/screwdriver-cd/zzz/tree/master',
+      rootDir: 'lib'
+    },
+    scmContext: 'bitbucket:bitbucket.org',
+    annotations: {},
+    lastEventId: 23,
+    lastBuilds: [
+      {
+        id: 125,
+        status: 'UNSTABLE',
+        createTime: '2017-09-05T04:01:41.789Z'
+      }
+    ],
+    metrics: EmberPromise.resolve([mockMetrics[3]]),
+    settings: {
+      aliasName: 'zzz'
+    }
+  })
+]);
+
+const mockCollectionDuration = EmberObject.create({
+  id: 1,
+  name: 'My Pipelines',
+  description: 'Default Collection',
+  type: 'default',
+  pipelines: mockPipelinesWithDuration,
+  pipelineIds: [1, 2, 3, 4]
+});
+
 const onRemovePipelineSpy = sinon.spy();
 const addMultipleToCollectionSpy = sinon.spy();
 const removeMultiplePipelinesSpy = sinon.spy();
@@ -503,7 +656,8 @@ module('Integration | Component | collection view', function (hooks) {
       onRemovePipeline: onRemovePipelineSpy,
       addMultipleToCollection: addMultipleToCollectionSpy,
       removeMultiplePipelines: removeMultiplePipelinesSpy,
-      mockCollection: mockDefaultCollectionWithoutAlias
+      mockCollection: mockDefaultCollectionWithoutAlias,
+      mockCollectionDuration
     });
   });
 
@@ -766,7 +920,7 @@ module('Integration | Component | collection view', function (hooks) {
       .hasText('screwdriver-cd/zzz');
   });
 
-  test('it renders pipeline name coloumn in desc ', async function (assert) {
+  test('it renders pipelines based on name coloumn in desc order', async function (assert) {
     injectScmServiceStub(this);
 
     await render(hbs`
@@ -828,6 +982,45 @@ module('Integration | Component | collection view', function (hooks) {
     assert
       .dom('.collection-pipeline:nth-of-type(4) .app-id a')
       .hasText('screwdriver-cd/models');
+  });
+
+  test('it renders pipelines list according to duration asc desc order', async function (assert) {
+    injectScmServiceStub(this);
+
+    await render(hbs`
+      {{collection-view
+        collection=mockCollectionDuration
+        collections=collections
+        metricsMap=metricsMap
+      }}`);
+
+    // switch to list mode
+    await click('.header__change-view button:nth-of-type(2)');
+    await waitFor('.collection-list-view');
+
+    // Initial order based on pipeline name asc order
+    assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('30s');
+    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('14s');
+    assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('20s');
+    assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('50s');
+
+    await click('th.duration');
+    await waitFor('.collection-list-view');
+
+    // first click duration desc order as default sort is scmRepo.name:asc
+    assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('50s');
+    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('30s');
+    assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('20s');
+    assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('14s');
+
+    await click('th.duration');
+    await waitFor('.collection-list-view');
+
+    // second click duration asc order
+    assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('14s');
+    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('20s');
+    assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('30s');
+    assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('50s');
   });
 
   test('it renders empty view if the collection has no pipelines', async function (assert) {
