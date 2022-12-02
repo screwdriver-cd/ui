@@ -766,6 +766,70 @@ module('Integration | Component | collection view', function (hooks) {
       .hasText('screwdriver-cd/zzz');
   });
 
+  test('it renders pipeline name coloumn in desc ', async function (assert) {
+    injectScmServiceStub(this);
+
+    await render(hbs`
+      {{collection-view
+        collection=collection
+        collections=collections
+        metricsMap=metricsMap
+      }}`);
+
+    // switch to list mode
+    await click('.header__change-view button:nth-of-type(2)');
+    await waitFor('.collection-list-view');
+
+    // check that necessage elements exist
+    assert.dom('.collection-list-view').exists({ count: 1 });
+
+    assert.dom('.header__name').hasText('My Pipelines');
+    assert.dom('.header__description').hasText('Default Collection');
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('th.collection-pipeline__choose').exists({ count: 1 });
+    assert.dom('th.app-id').hasText('Alias / Name');
+    assert.dom('th.branch').hasText('Branch');
+    assert.dom('th.status').hasText('Status');
+    assert.dom('th.last-run').hasText('Last run');
+    assert.dom('th.duration').hasText('Duration');
+    assert.dom('th.history').exists({ count: 1 });
+
+    assert.dom('.collection-pipeline').exists({ count: 4 });
+
+    // check that collection table row order is correct
+
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .app-id a')
+      .hasText('screwdriver-cd/models');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id a')
+      .hasText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .app-id a')
+      .hasText('screwdriver-cd/ui');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .app-id a')
+      .hasText('screwdriver-cd/zzz');
+
+    // click to change sort order to desc
+    await click('th.app-id');
+    await waitFor('.collection-list-view');
+
+    // pipeline list desc order based on name
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .app-id a')
+      .hasText('screwdriver-cd/zzz');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id a')
+      .hasText('screwdriver-cd/ui');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .app-id a')
+      .hasText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .app-id a')
+      .hasText('screwdriver-cd/models');
+  });
+
   test('it renders empty view if the collection has no pipelines', async function (assert) {
     this.set('collection', mockEmptyCollection);
     injectScmServiceStub(this);

@@ -35,7 +35,17 @@ const sortByLastRunStatus = (a, b) => {
 };
 
 const sortByName = (a, b) => {
-  return a.scmRepo.name - b.scmRepo.name;
+  const aName = get(a, 'scmRepo.name');
+  const bName = get(b, 'scmRepo.name');
+
+  if (aName > bName) {
+    return 1;
+  }
+  if (aName < bName) {
+    return -1;
+  }
+
+  return 0;
 };
 
 const sortByLastRun = (a, b) => {
@@ -154,19 +164,20 @@ export default Component.extend({
     'sortOrder',
     function sortedPipelines() {
       let sorted;
+      const collectionPipelinesArray = this.collectionPipelines.toArray();
 
       if (this.sortBy === 'lastRunStatus') {
-        sorted = this.collectionPipelines.toArray().sort(sortByLastRunStatus);
+        sorted = collectionPipelinesArray.sort(sortByLastRunStatus);
       } else if (this.sortBy === 'pipelineName') {
-        sorted = this.collectionPipelines.toArray().sort(sortByName);
+        sorted = collectionPipelinesArray.sort(sortByName);
       } else if (this.sortBy === 'lastRun') {
-        sorted = this.collectionPipelines.toArray().sort(sortByLastRun);
+        sorted = collectionPipelinesArray.sort(sortByLastRun);
       } else if (this.sortBy === 'history') {
-        sorted = this.collectionPipelines.toArray().sort(sortByHistory);
+        sorted = collectionPipelinesArray.sort(sortByHistory);
       } else if (this.sortBy === 'branch') {
-        sorted = this.collectionPipelines.toArray().sort(sortByBranch);
+        sorted = collectionPipelinesArray.sort(sortByBranch);
       } else if (this.sortBy === 'duration') {
-        sorted = this.collectionPipelines.toArray().sort(sortByDuration);
+        sorted = collectionPipelinesArray.sort(sortByDuration);
       }
       if (this.sortOrder === 'asc') {
         return sorted;
