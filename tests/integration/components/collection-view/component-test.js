@@ -28,7 +28,7 @@ const mockMetrics = [
   },
   {
     id: 2,
-    createTime: '2020-10-06T17:47:55.089Z',
+    createTime: '2020-10-07T17:47:55.089Z',
     sha: '9af92ba134321',
     commit: {
       message: '2',
@@ -39,7 +39,7 @@ const mockMetrics = [
   },
   {
     id: 3,
-    createTime: '2020-10-06T18:07:55.089Z',
+    createTime: '2020-10-08T18:07:55.089Z',
     sha: '9af92ba134321',
     commit: {
       message: '2',
@@ -50,7 +50,7 @@ const mockMetrics = [
   },
   {
     id: 4,
-    createTime: '2020-10-06T18:27:55.089Z',
+    createTime: '2020-10-10T18:27:55.089Z',
     sha: '9af92ba134321',
     commit: {
       message: '2',
@@ -920,7 +920,7 @@ module('Integration | Component | collection view', function (hooks) {
       .hasText('screwdriver-cd/zzz');
   });
 
-  test('it renders pipelines based on name coloumn in desc order', async function (assert) {
+  test('it renders pipelines according to name in desc order', async function (assert) {
     injectScmServiceStub(this);
 
     await render(hbs`
@@ -1021,6 +1021,85 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('20s');
     assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('30s');
     assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('50s');
+  });
+
+  test('it renders pipelines list according to last-run asc desc order', async function (assert) {
+    injectScmServiceStub(this);
+
+    await render(hbs`
+      {{collection-view
+        collection=mockCollectionDuration
+        collections=collections
+        metricsMap=metricsMap
+      }}`);
+
+    // switch to list mode
+    await click('.header__change-view button:nth-of-type(2)');
+    await waitFor('.collection-list-view');
+
+    // check that necessage elements exist
+    assert.dom('.collection-list-view').exists({ count: 1 });
+
+    assert.dom('.header__name').hasText('My Pipelines');
+    assert.dom('.header__description').hasText('Default Collection');
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('th.collection-pipeline__choose').exists({ count: 1 });
+    assert.dom('th.app-id').hasText('Alias / Name');
+    assert.dom('th.branch').hasText('Branch');
+    assert.dom('th.status').hasText('Status');
+    assert.dom('th.last-run').hasText('Last run');
+    assert.dom('th.duration').hasText('Duration');
+    assert.dom('th.history').exists({ count: 1 });
+
+    assert.dom('.collection-pipeline').exists({ count: 4 });
+
+    // Initial order based on pipeline name asc order
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .last-run')
+      .hasText('10/08/2020');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .last-run')
+      .hasText('10/06/2020');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .last-run')
+      .hasText('10/07/2020');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .last-run')
+      .hasText('10/10/2020');
+
+    await click('th.last-run');
+    await waitFor('.collection-list-view');
+
+    // first click duration desc order as default sort is scmRepo.name:asc
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .last-run')
+      .hasText('10/10/2020');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .last-run')
+      .hasText('10/08/2020');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .last-run')
+      .hasText('10/07/2020');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .last-run')
+      .hasText('10/06/2020');
+
+    await click('th.last-run');
+    await waitFor('.collection-list-view');
+
+    // second click duration asc order
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .last-run')
+      .hasText('10/06/2020');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .last-run')
+      .hasText('10/07/2020');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .last-run')
+      .hasText('10/08/2020');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .last-run')
+      .hasText('10/10/2020');
   });
 
   test('it renders empty view if the collection has no pipelines', async function (assert) {
