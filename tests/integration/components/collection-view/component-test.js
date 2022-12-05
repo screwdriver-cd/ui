@@ -29,7 +29,7 @@ const mockMetrics = [
   {
     id: 2,
     createTime: '2020-10-07T17:47:55.089Z',
-    sha: '9af92ba134321',
+    sha: '9af9234ba134321',
     commit: {
       message: '2',
       url: 'https://github.com/batman/foo/commit/9af92ba134321'
@@ -40,7 +40,7 @@ const mockMetrics = [
   {
     id: 3,
     createTime: '2020-10-08T18:07:55.089Z',
-    sha: '9af92ba134321',
+    sha: '9af92c4ba134321',
     commit: {
       message: '2',
       url: 'https://github.com/batman/foo/commit/9af92ba134321'
@@ -51,13 +51,13 @@ const mockMetrics = [
   {
     id: 4,
     createTime: '2020-10-10T18:27:55.089Z',
-    sha: '9af92ba134321',
+    sha: '9af92c11ba134321',
     commit: {
       message: '2',
       url: 'https://github.com/batman/foo/commit/9af92ba134321'
     },
     duration: 50,
-    status: 'SUCCESS'
+    status: 'ABORTED'
   }
 ];
 
@@ -1100,6 +1100,174 @@ module('Integration | Component | collection view', function (hooks) {
     assert
       .dom('.collection-pipeline:nth-of-type(4) .last-run')
       .hasText('10/10/2020');
+  });
+
+  test('it renders pipelines list according to status priority asc desc order', async function (assert) {
+    injectScmServiceStub(this);
+
+    await render(hbs`
+      {{collection-view
+        collection=mockCollectionDuration
+        collections=collections
+        metricsMap=metricsMap
+      }}`);
+
+    // switch to list mode
+    await click('.header__change-view button:nth-of-type(2)');
+    await waitFor('.collection-list-view');
+
+    // check that necessage elements exist
+    assert.dom('.collection-list-view').exists({ count: 1 });
+
+    assert.dom('.header__name').hasText('My Pipelines');
+    assert.dom('.header__description').hasText('Default Collection');
+    assert.dom('table').exists({ count: 1 });
+    assert.dom('th.collection-pipeline__choose').exists({ count: 1 });
+    assert.dom('th.app-id').hasText('Alias / Name');
+    assert.dom('th.branch').hasText('Branch');
+    assert.dom('th.status').hasText('Status');
+    assert.dom('th.last-run').hasText('Last run');
+    assert.dom('th.duration').hasText('Duration');
+    assert.dom('th.history').exists({ count: 1 });
+
+    assert.dom('.collection-pipeline').exists({ count: 4 });
+
+    // check that helper function getColor() works correctly
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .hasClass('build-success');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .hasClass('build-success');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .hasClass('build-success');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .hasClass('build-failure');
+
+    // check that helper function getIcon() works correctly
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .hasClass('fa-stop-circle');
+
+    // check that helper function getSha() works correctly
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status a:nth-of-type(2)')
+      .hasText('9af92c4');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status a:nth-of-type(2)')
+      .hasText('9af92ba');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status a:nth-of-type(2)')
+      .hasText('9af9234');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status a:nth-of-type(2)')
+      .hasText('9af92c1');
+
+    await click('th.status');
+    await waitFor('.collection-list-view');
+
+    // first click desc order based status priorties as default sort is scmRepo.name:asc
+
+    // check that helper function getColor() works correctly
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .hasClass('build-failure');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .hasClass('build-success');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .hasClass('build-success');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .hasClass('build-success');
+
+    // check that helper function getIcon() works correctly
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .hasClass('fa-stop-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .hasClass('fa-check-circle');
+
+    // check that helper function getSha() works correctly
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status a:nth-of-type(2)')
+      .hasText('9af92c1');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status a:nth-of-type(2)')
+      .hasText('9af92c4');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status a:nth-of-type(2)')
+      .hasText('9af9234');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status a:nth-of-type(2)')
+      .hasText('9af92ba');
+
+    await click('th.last-run');
+    await waitFor('.collection-list-view');
+
+    // second click asc order based status priorties
+
+    // check that helper function getColor() works correctly
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .hasClass('build-success');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .hasClass('build-success');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .hasClass('build-success');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .hasClass('build-failure');
+
+    // check that helper function getIcon() works correctly
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .hasClass('fa-check-circle');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .hasClass('fa-stop-circle');
+
+    // check that helper function getSha() works correctly
+
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .status a:nth-of-type(2)')
+      .hasText('9af92ba');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .status a:nth-of-type(2)')
+      .hasText('9af9234');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .status a:nth-of-type(2)')
+      .hasText('9af92c4');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .status a:nth-of-type(2)')
+      .hasText('9af92c1');
   });
 
   test('it renders empty view if the collection has no pipelines', async function (assert) {
