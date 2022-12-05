@@ -46,7 +46,7 @@ const mockMetrics = [
       url: 'https://github.com/batman/foo/commit/9af92ba134321'
     },
     duration: 30,
-    status: 'SUCCESS'
+    status: 'ABORTED'
   },
   {
     id: 4,
@@ -1135,7 +1135,7 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getColor() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status i')
-      .hasClass('build-success');
+      .hasClass('build-failure');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status i')
       .hasClass('build-success');
@@ -1149,7 +1149,7 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status i')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-stop-circle');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status i')
       .hasClass('fa-check-circle');
@@ -1185,7 +1185,7 @@ module('Integration | Component | collection view', function (hooks) {
       .hasClass('build-failure');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status i')
-      .hasClass('build-success');
+      .hasClass('build-failure');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status i')
       .hasClass('build-success');
@@ -1199,7 +1199,7 @@ module('Integration | Component | collection view', function (hooks) {
       .hasClass('fa-stop-circle');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status i')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-stop-circle');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status i')
       .hasClass('fa-check-circle');
@@ -1235,7 +1235,7 @@ module('Integration | Component | collection view', function (hooks) {
       .hasClass('build-success');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status i')
-      .hasClass('build-success');
+      .hasClass('build-failure');
     assert
       .dom('.collection-pipeline:nth-of-type(4) .status i')
       .hasClass('build-failure');
@@ -1249,7 +1249,7 @@ module('Integration | Component | collection view', function (hooks) {
       .hasClass('fa-check-circle');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status i')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-stop-circle');
     assert
       .dom('.collection-pipeline:nth-of-type(4) .status i')
       .hasClass('fa-stop-circle');
@@ -1268,6 +1268,70 @@ module('Integration | Component | collection view', function (hooks) {
     assert
       .dom('.collection-pipeline:nth-of-type(4) .status a:nth-of-type(2)')
       .hasText('9af92c1');
+  });
+
+  test('it renders pipelines list according to history asc desc order', async function (assert) {
+    injectScmServiceStub(this);
+
+    await render(hbs`
+      {{collection-view
+        collection=mockCollectionDuration
+        collections=collections
+        metricsMap=metricsMap
+      }}`);
+
+    // switch to list mode
+    await click('.header__change-view button:nth-of-type(2)');
+    await waitFor('.collection-list-view');
+
+    // Initial order based on pipeline name asc order
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .app-id a')
+      .hasText('screwdriver-cd/models');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id a')
+      .hasText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .app-id a')
+      .hasText('screwdriver-cd/ui');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .app-id a')
+      .hasText('screwdriver-cd/zzz');
+
+    await click('th.history');
+    await waitFor('.collection-list-view');
+
+    // first click failedBuildCount desc order as default sort is scmRepo.name:asc
+
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .app-id a')
+      .hasText('screwdriver-cd/zzz');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id a')
+      .hasText('screwdriver-cd/models');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .app-id a')
+      .hasText('screwdriver-cd/ui');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .app-id a')
+      .hasText('screwdriver-cd/screwdriver');
+
+    await click('th.history');
+    await waitFor('.collection-list-view');
+
+    // second click failedBuildCount asc order
+    assert
+      .dom('.collection-pipeline:nth-of-type(1) .app-id a')
+      .hasText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id a')
+      .hasText('screwdriver-cd/ui');
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .app-id a')
+      .hasText('screwdriver-cd/models');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .app-id a')
+      .hasText('screwdriver-cd/zzz');
   });
 
   test('it renders empty view if the collection has no pipelines', async function (assert) {
