@@ -10,7 +10,7 @@ shared:
 
 jobs:
   main:
-    image: node:12
+    image: node:14
     environment:
       COVERAGE: "true"
       SD_SONAR_OPTS: "-Dsonar.sources=app -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
@@ -24,7 +24,7 @@ jobs:
 
   # Publish the package to GitHub and build docker image
   publish:
-    image: node:12
+    image: node:14
     annotations:
       screwdriver.cd/ram: TURBO
     environment:
@@ -49,7 +49,7 @@ jobs:
     template: sd/dind@latest
   # Deploy to our beta environment and run tests
   beta:
-    image: node:12
+    image: node:14
     steps:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
       - get-tag: ./ci/git-latest.sh
@@ -70,7 +70,7 @@ jobs:
 
   # Deploy to our prod environment and run tests
   prod:
-    image: node:12
+    image: node:14
     steps:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
       - get-tag: ./ci/git-latest.sh
