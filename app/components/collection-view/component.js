@@ -291,20 +291,11 @@ export default Component.extend({
           this.set('removePipelineError', error.errors[0].detail);
         });
     },
-    setSortBy(option, order) {
-      switch (option) {
-        case 'name':
-          this.set('sortBy', ['scmRepo.name']);
-          break;
-        case 'lastEventTime':
-          this.set('sortBy', [`${option}:desc`]);
-          break;
-        default:
-          this.setProperties({
-            sortBy: option,
-            sortOrder: order
-          });
-      }
+    setSortBy(sortBy, sortOrder) {
+      this.setProperties({
+        sortBy,
+        sortOrder
+      });
     },
     organize() {
       this.set('isOrganizing', true);
