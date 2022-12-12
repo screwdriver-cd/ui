@@ -44,7 +44,9 @@ export default Component.extend({
   }),
 
   searchInputMatcher: function matcher(template, term) {
-    return `${template.name} ${template.namespace}`.indexOf(term);
+    const searchString = term.trim().toLowerCase();
+
+    return `${template.name} ${template.namespace}`.indexOf(searchString);
   },
 
   hasAutoDeployEnabled: computed({
