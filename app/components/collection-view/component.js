@@ -3,6 +3,14 @@ import { isEmpty, isEqual } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
+import {
+  sortByBranch,
+  sortByLastRunStatus,
+  sortByName,
+  sortByLastRun,
+  sortByHistory,
+  sortByDuration
+} from 'screwdriver-ui/utils/sort-functions';
 
 const viewOptions = [
   {
@@ -14,64 +22,6 @@ const viewOptions = [
     value: 'List'
   }
 ];
-
-const sortByLastRunStatus = (a, b) => {
-  const priorities = [
-    'success',
-    'running',
-    'queued',
-    'created',
-    'unstable',
-    'aborted',
-    'collapsed',
-    'frozen',
-    'failure',
-    'blocked'
-  ];
-  const aStatus = get(a, 'lastRunEvent.status');
-  const bStatus = get(b, 'lastRunEvent.status');
-
-  return priorities.indexOf(aStatus) - priorities.indexOf(bStatus);
-};
-
-const sortByName = (a, b) => {
-  const aName = get(a, 'scmRepo.name');
-  const bName = get(b, 'scmRepo.name');
-
-  if (aName > bName) {
-    return 1;
-  }
-  if (aName < bName) {
-    return -1;
-  }
-
-  return 0;
-};
-
-const sortByLastRun = (a, b) => {
-  const aCreateTime = get(a, 'lastRunEvent.createTime');
-  const bCreateTime = get(b, 'lastRunEvent.createTime');
-
-  return new Date(aCreateTime) - new Date(bCreateTime);
-};
-
-const sortByHistory = (a, b) => {
-  const aFailedBuildCount = get(a, 'failedBuildCount');
-  const bFailedBuildCount = get(b, 'failedBuildCount');
-
-  return aFailedBuildCount - bFailedBuildCount;
-};
-
-const sortByBranch = (a, b) => {
-  return a.scmRepo.branch - b.scmRepo.branch;
-};
-
-const sortByDuration = (a, b) => {
-  const aDuration = get(a, 'lastRunEvent.duration');
-  const bDuration = get(b, 'lastRunEvent.duration');
-
-  return aDuration - bDuration;
-};
 
 export default Component.extend({
   store: service(),
