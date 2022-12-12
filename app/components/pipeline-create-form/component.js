@@ -43,6 +43,10 @@ export default Component.extend({
     }
   }),
 
+  searchInputMatcher: function matcher(template, term) {
+    return `${template.name} ${template.namespace}`.indexOf(term);
+  },
+
   hasAutoDeployEnabled: computed({
     get() {
       const { session } = this;
