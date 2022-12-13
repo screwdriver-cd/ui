@@ -149,58 +149,78 @@
           <thead>
             <tr>
               <th class="collection-pipeline__choose"></th>
-              <th class="app-id">
+              <th class="app-id" rowspan="1" onclick={{action "setSortBy" "pipelineName" (if (eq sortOrder "desc") "asc" "desc")}} >
                 {{#if this.hasAliasName}}
-                  <p rowspan="1">Alias/</p>
+                  Alias /
                 {{/if}}
-                <p rowspan="1">Name</p>
+                Name
+                <span class="icon-wrapper">
+                  {{#if (eq sortOrder "desc")}}
+                    <i class="fa fa-sort-asc"></i>
+                  {{else if (eq sortOrder "asc")}}
+                    <i class="fa fa-sort-desc"></i>
+                  {{else}}
+                    <i class="fa fa-sort"></i>
+                  {{/if}}
+                </span>
               </th>
-              <th class="branch" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "scmRepo.branch:desc") "scmRepo.branch:asc" "scmRepo.branch:desc")}} >
+              <th class="branch" rowspan="1" onclick={{action "setSortBy" "branch" (if (eq sortOrder "desc") "asc" "desc")}} >
                 Branch
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) "scmRepo.branch:asc")}}
+                  {{#if (eq sortOrder "desc")}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) "scmRepo.branch:desc")}}
+                  {{else if (eq sortOrder "asc")}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}
                 </span>
               </th>
-              <th class="last-run" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "lastRunEvent.createTime:desc") "lastRunEvent.createTime:asc" "lastRunEvent.createTime:desc")}}>
+              <th class="last-run" rowspan="1" onclick={{action "setSortBy" "lastRun" (if (eq sortOrder "desc") "asc" "desc")}}>
                 Last run
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) "lastRunEvent.createTime:asc")}}
+                  {{#if (eq sortOrder "desc")}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) "lastRunEvent.createTime:desc")}}
+                  {{else if (eq sortOrder "asc")}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}
                 </span>
               </th>
-              <th class="duration" rowspan="1">Duration</th>
-              <th class="status" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "lastRunJob.status:desc") "lastRunJob.status:asc" "lastRunJob.status:desc")}} >
+              <th class="duration" rowspan="1" onclick={{action "setSortBy" "duration" (if (eq sortOrder "desc") "asc" "desc")}} >
+                Duration
+                <span class="icon-wrapper">
+                  {{#if (eq sortOrder "desc")}}
+                    <i class="fa fa-sort-asc"></i>
+                  {{else if (eq sortOrder "asc")}}
+                    <i class="fa fa-sort-desc"></i>
+                  {{else}}
+                    <i class="fa fa-sort"></i>
+                  {{/if}}
+                </span>
+              </th>
+              <th class="status" rowspan="1" onclick={{action "setSortBy" "lastRunStatus" (if (eq sortOrder "desc") "asc" "desc")}} >
                 Status
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) "lastRunJob.status:asc")}}
+                  {{#if (eq sortOrder "desc")}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) "lastRunJob.status:desc")}}
+                  {{else if (eq sortOrder "asc")}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}
                 </span>
               </th>
-              <th class="history" rowspan="1" onclick={{action "setSortBy" (if (eq (get sortBy 0) "failedBuildCount:desc") "failedBuildCount:asc" "failedBuildCount:desc")}}>
+              <th class="history" rowspan="1" onclick={{action "setSortBy" "history" (if (eq sortOrder "desc") "asc" "desc")}}>
                 Build History
                 {{#bs-tooltip placement="top" renderInPlace=true}}
                   sort on number of failed builds
                 {{/bs-tooltip}}
                 <span class="icon-wrapper">
-                  {{#if (eq (get sortBy 0) "failedBuildCount:asc")}}
+                  {{#if (eq sortOrder "desc")}}
                     <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get sortBy 0) "failedBuildCount:desc")}}
+                  {{else if (eq sortOrder "asc")}}
                     <i class="fa fa-sort-desc"></i>
                   {{else}}
                     <i class="fa fa-sort"></i>
