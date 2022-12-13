@@ -1,11 +1,19 @@
 & {
-  padding: 10px 25px;
+  padding: 10px 10px;
 
+  .token-descripton {
+    color: $sd-text-med;
+  }
   table {
     width: 100%;
   }
 
-  tbody tr {
+  section {
+    border-radius: 5px 5px 0 0;
+    border: 1px solid $sd-separator;
+  }
+
+  tbody tr, tfoot tr {
     border: 1px solid $sd-text-light;
   }
 
@@ -16,22 +24,27 @@
     padding-left: 5px;
   }
 
-  .new td {
-    padding: 5px;
-    background-color: $sd-text-light;
-  }
-
-  tfoot button {
-    border-width: 0;
-    width: 100px;
-    background-color: $sd-primary;
-    color: $sd-white;
-    border-radius: 3px;
+  .new {
+    td {
+      padding: 5px;
+    }
+    .last-used {
+      width: 25%;
+      max-width: 100px;
+    }
+    .actions {
+      color: $sd-running;
+    }
   }
 
   tfoot button:disabled {
     background-color: inherit;
     color: inherit;
+  }
+
+  tfoot {
+    border: 1px solid $sd-separator;
+    padding: 10px 0px;
   }
 
   .new-token {
@@ -45,8 +58,35 @@
       color: $sd-text-med;
     }
   }
+  
+  .token-name, .token-description {
+    width: 30%;
+    max-width: 200px;
+  }
+
+  .name, .description {
+    width: 30%;
+    max-width: 200px;
+    input{
+      max-width: 200px;
+    }
+  }
+
+  .last-used, .actions {
+    width: 20%;
+    max-width: 100px;
+  }
+
+
 
   .add {
-    background-color: $sd-running;
+    cursor: pointer;
+    border: 1px solid $sd-running;
+    border-radius: 3px;
+    font-size: 14px;
+    height: 25px;
+    padding: 0 14px;
+    color: $sd-running;
+    background: transparent;
   }
 }

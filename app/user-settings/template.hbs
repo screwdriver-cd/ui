@@ -1,6 +1,8 @@
 <h2>Settings</h2>
 
-{{#bs-nav type="tabs" as |nav|}}
+{{#bs-nav type="pills"
+  justified=false
+  fill=false as |nav|}}
   {{#nav.item active=(bs-eq activeTab "preferences")}}
     {{#nav.link-to "user-settings.preferences" class="nav-link"}}User Preferences{{/nav.link-to}}
   {{/nav.item}}

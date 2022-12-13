@@ -25,12 +25,13 @@
   h4 {
     font-weight: $weight-bold;
     margin: 0;
-    padding: 0;
+    padding: 4px 0;
   }
 
   p {
     margin: 0;
-    padding: 0;
+    padding: 6px 0;
+    color: $sd-text-med;
   }
 
   ul {
@@ -41,7 +42,7 @@
 
   li {
     font-size: 14px;
-    padding: 5px 10px;
+    padding: 15px 10px;
     border-bottom: 1px solid $sd-separator;
 
     &:last-child {
@@ -64,99 +65,101 @@
   }
 
   input.display-job-name {
-    width: 45px;
-  }
-}
-
-.text-input {
-  box-sizing: border-box;
-  margin-top: 10px;
-  outline: 0;
-  height: 45px;
-  width: 100%;
-  border-radius: 2px;
-  border: 2px solid $sd-separator;
-  font-size: 16px;
-  padding-left: 10px;
-  color: $sd-text;
-
-  &:focus {
-    border-color: $sd-running;
+    width: 100%;
   }
 
-  &::-webkit-input-placeholder {
-    color: $sd-text-med;
-  }
 
-  &:-moz-placeholder {
-    color: $sd-text-med;
-  }
+  .text-input {
+    box-sizing: border-box;
+    margin-top: 10px;
+    outline: 0;
+    height: 45px;
+    width: 100%;
+    border-radius: 2px;
+    border: 2px solid $sd-text-med;;
+    font-size: 16px;
+    padding-left: 10px;
+    color: $sd-text;
 
-  &::-moz-placeholder {
-    color: $sd-text-med;
-  }
+    &:focus {
+      border-color: $sd-running;
+    }
 
-  &:-ms-input-placeholder {
-    color: $sd-text-med;
-  }
+    &::-webkit-input-placeholder {
+      color: $sd-text-med;
+    }
 
-  &.bad-text-input {
-    border-color: $sd-failure;
-  }
+    &:-moz-placeholder {
+      color: $sd-text-med;
+    }
 
-  &.good-text-input {
-    border-color: $sd-success;
-  }
+    &::-moz-placeholder {
+      color: $sd-text-med;
+    }
 
-  &.root-dir {
-    width: calc(100% - 15px);
-  }
-}
-.blue-button {
-  @include transition(all, 50ms);
-  border: none;
-  border-radius: 3px;
-  height: 30px;
-  padding: 0 15px;
-  color: $sd-white;
-  font-size: 14px;
-  background: $sd-running;
-  &:focus {
-    outline: none;
-  }
-  &:hover {
-    background: $sd-link;
-  }
-  &:disabled {
-    background: $sd-text-med;
-  }
-  &:active {
-    &:not(:disabled) {
-      @include scale(0.97);
+    &:-ms-input-placeholder {
+      color: $sd-text-med;
+    }
+
+    &.bad-text-input {
+      border-color: $sd-failure;
+    }
+
+    &.good-text-input {
+      border-color: $sd-success;
+    }
+
+    &.root-dir {
+      width: calc(100% - 15px);
     }
   }
-}
-
-.reset-button {
-  cursor: pointer;
-  border: 1px solid $sd-running;
-  border-radius: 3px;
-  font-size: 14px;
-  height: 30px;
-  padding: 0 10px;
-  color: $sd-running;
-  background: transparent;
-
-  &:hover {
-    color: $sd-link;
-    @include scale(1);
+  
+  .blue-button {
+    @include transition(all, 50ms);
+    border: none;
+    border-radius: 3px;
+    height: 25px;
+    padding: 0 15px;
+    color: $sd-white;
+    font-size: 14px;
+    background: $sd-running;
+    &:focus {
+      outline: none;
+    }
+    &:hover {
+      background: $sd-link;
+    }
+    &:disabled {
+      background: $sd-text-med;
+    }
+    &:active {
+      &:not(:disabled) {
+        @include scale(0.97);
+      }
+    }
   }
-  &:disabled {
-    background: $sd-text-med;
-  }
-  &:active {
-    &:not(:disabled) {
-      @include scale(0.97);
+
+  .reset-button {
+    cursor: pointer;
+    border: 1px solid $sd-running;
+    border-radius: 3px;
+    font-size: 14px;
+    height: 25px;
+    padding: 0 10px;
+    color: $sd-running;
+    background: transparent;
+
+    &:hover {
+      color: $sd-link;
+      @include scale(1);
+    }
+    &:disabled {
+      background: $sd-text-med;
+    }
+    &:active {
+      &:not(:disabled) {
+        @include scale(0.97);
+      }
     }
   }
 }
