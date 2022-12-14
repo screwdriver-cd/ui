@@ -1,9 +1,16 @@
-import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
 import { isEmpty, isEqual } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
+import {
+  sortByBranch,
+  sortByLastRunStatus,
+  sortByName,
+  sortByLastRun,
+  sortByHistory,
+  sortByDuration
+} from 'screwdriver-ui/utils/sort-functions';
 
 const viewOptions = [
   {
@@ -19,7 +26,8 @@ const viewOptions = [
 export default Component.extend({
   store: service(),
   session: service(),
-  sortBy: ['scmRepo.name'],
+  sortBy: 'pipelineName',
+  sortOrder: 'asc',
   collection: null,
   removePipelineError: null,
   activeViewOptionValue:
@@ -100,7 +108,34 @@ export default Component.extend({
       return description;
     }
   }),
-  sortedPipelines: sort('collectionPipelines', 'sortBy'),
+  sortedPipelines: computed(
+    'collectionPipelines',
+    'sortBy',
+    'sortOrder',
+    function sortedPipelines() {
+      let sorted;
+      const collectionPipelinesArray = this.collectionPipelines.toArray();
+
+      if (this.sortBy === 'lastRunStatus') {
+        sorted = collectionPipelinesArray.sort(sortByLastRunStatus);
+      } else if (this.sortBy === 'pipelineName') {
+        sorted = collectionPipelinesArray.sort(sortByName);
+      } else if (this.sortBy === 'lastRun') {
+        sorted = collectionPipelinesArray.sort(sortByLastRun);
+      } else if (this.sortBy === 'history') {
+        sorted = collectionPipelinesArray.sort(sortByHistory);
+      } else if (this.sortBy === 'branch') {
+        sorted = collectionPipelinesArray.sort(sortByBranch);
+      } else if (this.sortBy === 'duration') {
+        sorted = collectionPipelinesArray.sort(sortByDuration);
+      }
+      if (this.sortOrder === 'asc') {
+        return sorted;
+      }
+
+      return sorted.reverse();
+    }
+  ),
   sortByText: computed('sortBy', {
     get() {
       switch (this.sortBy.get(0)) {
@@ -206,17 +241,11 @@ export default Component.extend({
           this.set('removePipelineError', error.errors[0].detail);
         });
     },
-    setSortBy(option) {
-      switch (option) {
-        case 'name':
-          this.set('sortBy', ['scmRepo.name']);
-          break;
-        case 'lastEventTime':
-          this.set('sortBy', [`${option}:desc`]);
-          break;
-        default:
-          this.set('sortBy', [option]);
-      }
+    setSortBy(sortBy, sortOrder) {
+      this.setProperties({
+        sortBy,
+        sortOrder
+      });
     },
     organize() {
       this.set('isOrganizing', true);
