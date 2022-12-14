@@ -121,10 +121,10 @@ export default Component.extend({
       collectionPipelinesArray.forEach(p => {
         const { lastRunEvent } = p;
 
-        if (lastRunEvent && lastRunEvent.status !== 'build-empty') {
-          knownStatusPipelines.push(p);
-        } else {
+        if (lastRunEvent && lastRunEvent.status === 'build-empty') {
           unknownStatusPipelines.push(p);
+        } else {
+          knownStatusPipelines.push(p);
         }
       });
 
