@@ -21,11 +21,7 @@
   <span title={{branch}}>{{branch}}</span>
 </td>
 <td class="last-run">
-  {{#if (eq lastEventInfo.createTime 0)}}
-    --/--/----
-  {{else}}
-    {{lastEventInfo.startTime}}
-  {{/if}}
+  {{lastEventInfo.startTime}}
 </td>
 <td class="duration">
   {{lastEventInfo.durationText}}

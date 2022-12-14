@@ -75,7 +75,7 @@ const formatMetrics = metrics => {
     return {
       eventsInfo: [],
       lastEventInfo: {
-        startTime: 0,
+        startTime: '--/--/----',
         statusColor: 'build-empty',
         status: 'build-empty',
         durationText: '--',
