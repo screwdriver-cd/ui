@@ -155,10 +155,12 @@
                 {{/if}}
                 Name
                 <span class="icon-wrapper">
-                  {{#if (eq sortOrder "desc")}}
-                    <i class="fa fa-sort-asc"></i>
-                  {{else if (eq sortOrder "asc")}}
-                    <i class="fa fa-sort-desc"></i>
+                  {{#if (eq sortBy "pipelineName")}}
+                    {{#if (eq sortOrder "desc")}}
+                      <i class="fa fa-sort-asc"></i>
+                    {{else}}
+                      <i class="fa fa-sort-desc"></i>
+                    {{/if}}
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}
@@ -167,10 +169,12 @@
               <th class="branch" rowspan="1" onclick={{action "setSortBy" "branch" (if (eq sortOrder "desc") "asc" "desc")}} >
                 Branch
                 <span class="icon-wrapper">
-                  {{#if (eq sortOrder "desc")}}
-                    <i class="fa fa-sort-asc"></i>
-                  {{else if (eq sortOrder "asc")}}
-                    <i class="fa fa-sort-desc"></i>
+                  {{#if (eq sortBy "branch")}}
+                    {{#if (eq sortOrder "desc")}}
+                      <i class="fa fa-sort-asc"></i>
+                    {{else}}
+                      <i class="fa fa-sort-desc"></i>
+                    {{/if}}
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}
@@ -179,10 +183,12 @@
               <th class="last-run" rowspan="1" onclick={{action "setSortBy" "lastRun" (if (eq sortOrder "desc") "asc" "desc")}}>
                 Last run
                 <span class="icon-wrapper">
-                  {{#if (eq sortOrder "desc")}}
-                    <i class="fa fa-sort-asc"></i>
-                  {{else if (eq sortOrder "asc")}}
-                    <i class="fa fa-sort-desc"></i>
+                  {{#if (eq sortBy "lastRun")}}
+                    {{#if (eq sortOrder "desc")}}
+                      <i class="fa fa-sort-asc"></i>
+                    {{else}}
+                      <i class="fa fa-sort-desc"></i>
+                    {{/if}}
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}
@@ -191,10 +197,12 @@
               <th class="duration" rowspan="1" onclick={{action "setSortBy" "duration" (if (eq sortOrder "desc") "asc" "desc")}} >
                 Duration
                 <span class="icon-wrapper">
-                  {{#if (eq sortOrder "desc")}}
-                    <i class="fa fa-sort-asc"></i>
-                  {{else if (eq sortOrder "asc")}}
-                    <i class="fa fa-sort-desc"></i>
+                  {{#if (eq sortBy "duration")}}
+                    {{#if (eq sortOrder "desc")}}
+                      <i class="fa fa-sort-asc"></i>
+                    {{else}}
+                      <i class="fa fa-sort-desc"></i>
+                    {{/if}}
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}
@@ -203,10 +211,12 @@
               <th class="status" rowspan="1" onclick={{action "setSortBy" "lastRunStatus" (if (eq sortOrder "desc") "asc" "desc")}} >
                 Status
                 <span class="icon-wrapper">
-                  {{#if (eq sortOrder "desc")}}
-                    <i class="fa fa-sort-asc"></i>
-                  {{else if (eq sortOrder "asc")}}
-                    <i class="fa fa-sort-desc"></i>
+                  {{#if (eq sortBy "lastRunStatus")}}
+                    {{#if (eq sortOrder "desc")}}
+                      <i class="fa fa-sort-asc"></i>
+                    {{else}}
+                      <i class="fa fa-sort-desc"></i>
+                    {{/if}}
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}
@@ -218,10 +228,12 @@
                   sort on number of failed builds
                 {{/bs-tooltip}}
                 <span class="icon-wrapper">
-                  {{#if (eq sortOrder "desc")}}
-                    <i class="fa fa-sort-asc"></i>
-                  {{else if (eq sortOrder "asc")}}
-                    <i class="fa fa-sort-desc"></i>
+                  {{#if (eq sortBy "history")}}
+                    {{#if (eq sortOrder "desc")}}
+                      <i class="fa fa-sort-asc"></i>
+                    {{else}}
+                      <i class="fa fa-sort-desc"></i>
+                    {{/if}}
                   {{else}}
                     <i class="fa fa-sort"></i>
                   {{/if}}

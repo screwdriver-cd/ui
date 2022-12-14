@@ -75,7 +75,7 @@ const formatMetrics = metrics => {
     return {
       eventsInfo: [],
       lastEventInfo: {
-        startTime: '--/--/----',
+        startTime: 0,
         statusColor: 'build-empty',
         status: 'build-empty',
         durationText: '--',
@@ -83,8 +83,8 @@ const formatMetrics = metrics => {
         icon: 'question-circle',
         commitMessage: 'No events have been run for this pipeline',
         commitUrl: '#',
-        createTime: '--/--/----',
-        duration: '--'
+        createTime: 0,
+        duration: 0
       }
     };
   }
@@ -114,7 +114,7 @@ const formatMetrics = metrics => {
     commitMessage: lastEvent.commit.message,
     commitUrl: lastEvent.commit.url,
     createTime: moment(lastEvent.createTime).format(),
-    duration: lastEvent.duration
+    duration: lastEvent.duration || 0
   };
 
   return { eventsInfo, lastEventInfo };
