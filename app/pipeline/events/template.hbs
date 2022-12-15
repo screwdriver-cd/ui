@@ -51,7 +51,9 @@
       stopEvent=(action "stopEvent")
       setShowListView=(action "setShowListView")
     }}
-
+{{#if showStages}}
+  please show stages
+{{/if}}
     {{pipeline-workflow
       jobId=jobId
       pipeline=pipeline
@@ -61,6 +63,7 @@
       completeWorkflowGraph=completeWorkflowGraph
       workflowGraph=pipeline.workflowGraph
       jobs=jobs
+      stages=stages
       prJobs=prJobs
       selectedEventObj=selectedEventObj
       selected=selected

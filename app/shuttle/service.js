@@ -381,5 +381,13 @@ export default Service.extend({
     const url = `/collections/${collectionId}/pipelines?${pipelineIdsQuery}`;
 
     return this.fetchFromApi(method, url);
+  },
+
+  // GET /pipelines/{id}/stages?eventId={eventId}
+  async fetchStages(pipelineId, eventId) {
+    const method = 'get';
+    const url = `/pipelines/${pipelineId}/stages?eventId=${eventId}`;
+
+    return this.fetchFromApi(method, url);
   }
 });
