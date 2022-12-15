@@ -104,3 +104,24 @@ g {
     stroke: $sd-success;
   }
 }
+
+.stage-container {
+  rx: 5;
+  ry: 5;
+}
+
+.stage-info {
+  padding: 10px;
+}
+
+.stage-name {
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stage-description {
+  color: $sd-text-med;
+  margin-top: 5px;
+}

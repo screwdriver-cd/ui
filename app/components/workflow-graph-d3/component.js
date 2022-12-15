@@ -8,6 +8,7 @@ import {
   subgraphFilter,
   removeBranch
 } from 'screwdriver-ui/utils/graph-tools';
+import groupBy from 'lodash.groupby';
 
 export default Component.extend({
   shuttle: service(),
@@ -18,6 +19,13 @@ export default Component.extend({
   displayJobNames: true,
   showPRJobs: true,
   graph: { nodes: [], edges: [] },
+  showStages: computed('minified', 'stages', {
+    get() {
+      const stages = this.stages === undefined ? [] : this.stages;
+
+      return !(this.minified || stages.length === 0);
+    }
+  }),
   decoratedGraph: computed(
     'builds.@each.{id,status}',
     'completeWorkflowGraph',
@@ -31,6 +39,7 @@ export default Component.extend({
     'startFrom',
     'workflowGraph',
     'prChainEnabled',
+    'stages',
     {
       get() {
         const showDownstreamTriggers =
@@ -41,6 +50,7 @@ export default Component.extend({
 
         const { startFrom } = this;
 
+        const stages = this.stages === undefined ? [] : this.stages;
         const prJobs = this.prJobs === undefined ? [] : this.prJobs;
         const jobs = (this.jobs === undefined ? [] : this.jobs).concat(prJobs);
 
@@ -110,7 +120,8 @@ export default Component.extend({
           jobs,
           start: startFrom,
           chainPR: this.prChainEnabled,
-          prNum: this.selectedEventObj?.prNum
+          prNum: this.selectedEventObj?.prNum,
+          stages
         });
       }
     }
@@ -215,6 +226,18 @@ export default Component.extend({
 
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = this.elementSizes;
 
+    // Need this if stage is in first row
+    const Y_DISPLACEMENT = this.showStages ? ICON_SIZE / 2 : 0;
+    // gap between stages
+    const STAGE_GAP = ICON_SIZE / 9;
+
+    const stagesGroupedByRowPosition = groupBy(data.stages, 'pos.y');
+
+    const verticalDisplacementByRowPosition = {};
+    const getVerticalDisplacementByRowPosition = pos => {
+      return verticalDisplacementByRowPosition[pos] || 0;
+    };
+
     let X_WIDTH = ICON_SIZE * 2;
 
     // When displaying job names use estimate of 7 per character
@@ -230,6 +253,10 @@ export default Component.extend({
     const h =
       this.height ||
       data.meta.height * ICON_SIZE + data.meta.height * Y_SPACING;
+
+    const calcSVGHeight = (totalYDisplacement = 0) => {
+      return h + totalYDisplacement;
+    };
 
     // Add the SVG element
     const svg = d3
@@ -251,9 +278,131 @@ export default Component.extend({
 
     // Calculate the start/end point of a line
     const calcPos = (pos, spacer) =>
-      (pos + 1) * ICON_SIZE + (pos * spacer - ICON_SIZE / 2);
+      (pos + 1) * ICON_SIZE +
+      (pos * spacer - ICON_SIZE / 2) +
+      getVerticalDisplacementByRowPosition(pos);
 
     const isSkipped = this.isSkipped === undefined ? false : this.isSkipped;
+
+    // stages
+    if (this.showStages) {
+      const calcStageY = (stage, yDisplacement = 0) => {
+        return (
+          calcPos(stage.pos.y, Y_SPACING) -
+          Y_DISPLACEMENT -
+          yDisplacement +
+          STAGE_GAP
+        );
+      };
+
+      const calcStageX = stage => {
+        return stage.pos.x * X_WIDTH + STAGE_GAP;
+      };
+
+      const calcStageWidth = stage => {
+        return X_WIDTH * stage.graph.meta.width - STAGE_GAP;
+      };
+
+      const calcStageHeight = (stage, ydisplacement = 0) => {
+        return (
+          (ICON_SIZE + Y_SPACING) * stage.graph.meta.height -
+          STAGE_GAP +
+          ydisplacement
+        );
+      };
+
+      const stageNameToYDisplacementMap = {};
+      const stageNameToStageElementsMap = {};
+
+      data.stages.forEach(stage => {
+        // stage container
+        const stageContainer = svg
+          .append('rect')
+          .attr('class', 'stage-container')
+          .attr('x', calcStageX(stage))
+          .attr('y', calcStageY(stage))
+          .attr('width', calcStageWidth(stage))
+          .attr('height', calcStageHeight(stage))
+          .attr('stroke', 'grey')
+          .attr('fill', '#ffffff');
+
+        // stage info
+        const fo = svg
+          .append('foreignObject')
+          .attr('width', X_WIDTH * stage.graph.meta.width - ICON_SIZE / 2)
+          .attr('height', 0) // Actual height will be computed and set later
+          .attr('x', calcStageX(stage))
+          .attr('y', calcStageY(stage))
+          .attr('class', 'stage-info-wrapper');
+
+        const stageInfo = fo.append('xhtml:div').attr('class', 'stage-info');
+
+        // stage info - name
+        stageInfo
+          .append('div')
+          .html(stage.name)
+          .attr('title', stage.name)
+          .attr('class', 'stage-name')
+          .style('font-size', `${TITLE_SIZE}px`);
+
+        // stage info - description
+        if (stage.description && stage.description.length > 0) {
+          stageInfo
+            .append('div')
+            .html(stage.description)
+            .attr('class', 'stage-description')
+            .style('font-size', `${TITLE_SIZE}px`);
+        }
+
+        const foHeight = stageInfo.node().getBoundingClientRect().height;
+
+        stageNameToYDisplacementMap[stage.name] = foHeight;
+        stageNameToStageElementsMap[stage.name] = {
+          stageContainer,
+          stageInfoWrapper: fo
+        };
+      });
+
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < data.meta.height; i++) {
+        const stages = stagesGroupedByRowPosition[i];
+
+        if (stages === undefined) {
+          verticalDisplacementByRowPosition[i] =
+            i === 0 ? 0 : verticalDisplacementByRowPosition[i - 1];
+        } else {
+          const maxDisplacement = Math.max(
+            ...stages.map(s => stageNameToYDisplacementMap[s.name])
+          );
+
+          verticalDisplacementByRowPosition[i] =
+            maxDisplacement +
+            (i === 0
+              ? Y_DISPLACEMENT
+              : verticalDisplacementByRowPosition[i - 1]);
+        }
+      }
+
+      // Adjust height and position of SVG and stage elements
+      data.stages.forEach(stage => {
+        const yDisplacement = stageNameToYDisplacementMap[stage.name];
+        const { stageContainer, stageInfoWrapper } =
+          stageNameToStageElementsMap[stage.name];
+
+        stageInfoWrapper.attr('height', yDisplacement);
+        stageInfoWrapper.attr('y', calcStageY(stage, yDisplacement));
+
+        stageContainer.attr('height', calcStageHeight(stage, yDisplacement));
+        stageContainer.attr('y', calcStageY(stage, yDisplacement));
+      });
+
+      svg.attr(
+        'height',
+        calcSVGHeight(
+          getVerticalDisplacementByRowPosition(data.meta.height - 1)
+        )
+      );
+    }
 
     // edges
     svg
@@ -317,7 +466,13 @@ export default Component.extend({
       .attr('font-size', `${ICON_SIZE}px`)
       .style('text-anchor', 'middle')
       .attr('x', d => calcXCenter(d.pos.x))
-      .attr('y', d => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING)
+      .attr(
+        'y',
+        d =>
+          (d.pos.y + 1) * ICON_SIZE +
+          d.pos.y * Y_SPACING +
+          getVerticalDisplacementByRowPosition(d.pos.y)
+      )
       .on('click', e => {
         this.send('buildClicked', e);
       })
@@ -367,7 +522,11 @@ export default Component.extend({
         .attr('x', d => calcXCenter(d.pos.x))
         .attr(
           'y',
-          d => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING + TITLE_SIZE
+          d =>
+            (d.pos.y + 1) * ICON_SIZE +
+            d.pos.y * Y_SPACING +
+            TITLE_SIZE +
+            getVerticalDisplacementByRowPosition(d.pos.y)
         )
         .insert('title')
         .text(d => d.name);
