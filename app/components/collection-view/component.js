@@ -114,26 +114,39 @@ export default Component.extend({
     'sortOrder',
     function sortedPipelines() {
       let sorted;
+      const unknownStatusPipelines = [];
+      const knownStatusPipelines = [];
       const collectionPipelinesArray = this.collectionPipelines.toArray();
 
+      collectionPipelinesArray.forEach(p => {
+        const { lastRunEvent } = p;
+
+        if (lastRunEvent && lastRunEvent.status === 'build-empty') {
+          unknownStatusPipelines.push(p);
+        } else {
+          knownStatusPipelines.push(p);
+        }
+      });
+
       if (this.sortBy === 'lastRunStatus') {
-        sorted = collectionPipelinesArray.sort(sortByLastRunStatus);
+        sorted = knownStatusPipelines.sort(sortByLastRunStatus);
       } else if (this.sortBy === 'pipelineName') {
-        sorted = collectionPipelinesArray.sort(sortByName);
+        sorted = knownStatusPipelines.sort(sortByName);
       } else if (this.sortBy === 'lastRun') {
-        sorted = collectionPipelinesArray.sort(sortByLastRun);
+        sorted = knownStatusPipelines.sort(sortByLastRun);
       } else if (this.sortBy === 'history') {
-        sorted = collectionPipelinesArray.sort(sortByHistory);
+        sorted = knownStatusPipelines.sort(sortByHistory);
       } else if (this.sortBy === 'branch') {
-        sorted = collectionPipelinesArray.sort(sortByBranch);
+        sorted = knownStatusPipelines.sort(sortByBranch);
       } else if (this.sortBy === 'duration') {
-        sorted = collectionPipelinesArray.sort(sortByDuration);
-      }
-      if (this.sortOrder === 'asc') {
-        return sorted;
+        sorted = knownStatusPipelines.sort(sortByDuration);
       }
 
-      return sorted.reverse();
+      if (this.sortOrder === 'desc') {
+        sorted = sorted.reverse();
+      }
+
+      return sorted.concat(unknownStatusPipelines);
     }
   ),
   sortByText: computed('sortBy', {
