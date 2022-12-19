@@ -113,10 +113,11 @@ export default Component.extend({
     'sortBy',
     'sortOrder',
     function sortedPipelines() {
-      let sorted;
       const unknownStatusPipelines = [];
       const knownStatusPipelines = [];
       const collectionPipelinesArray = this.collectionPipelines.toArray();
+
+      let sorted = collectionPipelinesArray.sort(sortByName);
 
       collectionPipelinesArray.forEach(p => {
         const { lastRunEvent } = p;
