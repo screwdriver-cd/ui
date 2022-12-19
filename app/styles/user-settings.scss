@@ -152,4 +152,45 @@
       }
     }
   }
+
+  .column-tabs-view {
+    overflow: auto;
+  
+    .nav-tabs {
+      position: sticky;
+      top: 0;
+      background: $sd-white;
+      z-index: 1;
+  
+      & > li {
+        width: 20%;
+        float: none;
+        display: inline-block;
+        vertical-align: bottom;
+        text-align: left;
+        font-weight: bold;
+        border-bottom: 2px solid $grey-400;
+  
+        & > a {
+          color: #555555;
+          
+          &,
+          &:hover {
+            border: none !important;
+            margin: 0 !important;
+            background: none !important;
+          }
+        }
+  
+        &.active,
+        &:hover {
+          border-bottom: 2px solid $brand-600;
+
+          a {
+            color: $brand-600;
+          }
+        }
+      }
+    }
+  }
 }
