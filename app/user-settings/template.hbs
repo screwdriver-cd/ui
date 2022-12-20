@@ -2,7 +2,7 @@
   <h2>Settings</h2>
 
   <div class="column-tabs-view">
-    {{#bs-tab customTabs=true as |tab|}}
+    {{#bs-tab customTabs=true}}
       {{#bs-nav type="tabs" as |nav|}}
         {{#nav.item active=(bs-eq activeTab "preferences")}}
           {{#nav.link-to "user-settings.preferences" class="nav-link"}}User Preferences{{/nav.link-to}}
