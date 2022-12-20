@@ -61,19 +61,20 @@ export default Component.extend({
     }
   },
   async updateEventMetrics() {
-    const metrics = await this.pipeline.get('metrics').catch(() => {
+    try {
+      const metrics = await this.pipeline.get('metrics');
+      const result = formatMetrics(metrics);
+      const { eventsInfo, lastEventInfo } = result;
+
+      this.setProperties({
+        eventsInfo,
+        lastEventInfo
+      });
+    } catch (e) {
       this.setProperties({
         storeQueryError: true
       });
-    });
-
-    const result = formatMetrics(metrics);
-    const { eventsInfo, lastEventInfo } = result;
-
-    this.setProperties({
-      eventsInfo,
-      lastEventInfo
-    });
+    }
   },
 
   actions: {
