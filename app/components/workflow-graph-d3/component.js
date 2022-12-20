@@ -248,7 +248,7 @@ export default Component.extend({
           ? 'graph-edge build-skipped'
           : `graph-edge ${d.status ? `build-${d.status.toLowerCase()}` : ''}`
       )
-      .attr('stroke-dasharray', d => (!d.status || isSkipped ? 5 : 500))
+      .attr('stroke-dasharray', d => (!d.status || isSkipped ? 5 : 0))
       .attr('stroke-width', 2)
       .attr('fill', 'transparent')
       .attr('d', d => {
