@@ -721,10 +721,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that pipeline card order is correct
     assert
       .dom('.pipeline-card:nth-of-type(1) .branch-info a')
-      .hasText('screwdriver-cd/models');
+      .hasText('screwdriver-cd/screwdriver');
     assert
       .dom('.pipeline-card:nth-of-type(2) .branch-info a')
-      .hasText('screwdriver-cd/screwdriver');
+      .hasText('screwdriver-cd/models');
     assert
       .dom('.pipeline-card:nth-of-type(3) .branch-info a')
       .hasText('screwdriver-cd/ui');
@@ -735,10 +735,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getColor() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .commit-status i')
-      .hasClass('build-empty');
+      .hasClass('build-success');
     assert
       .dom('.pipeline-card:nth-of-type(2) .commit-status i')
-      .hasClass('build-success');
+      .hasClass('build-empty');
     assert
       .dom('.pipeline-card:nth-of-type(3) .commit-status i')
       .hasClass('build-empty');
@@ -749,10 +749,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .commit-status i')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-check-circle');
     assert
       .dom('.pipeline-card:nth-of-type(2) .commit-status i')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-question-circle');
     assert
       .dom('.pipeline-card:nth-of-type(3) .commit-status i')
       .hasClass('fa-question-circle');
@@ -763,10 +763,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getSha() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .commit-status a:nth-of-type(2)')
-      .hasText('Not available');
+      .hasText('9af92ba');
     assert
       .dom('.pipeline-card:nth-of-type(2) .commit-status a:nth-of-type(2)')
-      .hasText('9af92ba');
+      .hasText('Not available');
     assert
       .dom('.pipeline-card:nth-of-type(3) .commit-status a:nth-of-type(2)')
       .hasText('Not available');
@@ -777,10 +777,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function formatTime() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .duration-badge span:nth-of-type(2)')
-      .hasText('--');
+      .hasText('14s');
     assert
       .dom('.pipeline-card:nth-of-type(2) .duration-badge span:nth-of-type(2)')
-      .hasText('14s');
+      .hasText('--');
     assert
       .dom('.pipeline-card:nth-of-type(3) .duration-badge span:nth-of-type(2)')
       .hasText('--');
@@ -796,7 +796,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-              }}`);
+      }}`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -821,10 +821,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that collection table row order is correct
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id a')
-      .hasText('screwdriver-cd/models');
+      .hasText('screwdriver-cd/screwdriver');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .app-id a')
-      .hasText('screwdriver-cd/screwdriver');
+      .hasText('screwdriver-cd/models');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .app-id a')
       .hasText('screwdriver-cd/ui');
@@ -835,12 +835,12 @@ module('Integration | Component | collection view', function (hooks) {
     // test aliasname
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id p')
-      .hasText('models')
-      .doesNotIncludeText('screwdriver-cd/models');
-    assert
-      .dom('.collection-pipeline:nth-of-type(2) .app-id p')
       .hasText('screwdriver')
       .doesNotIncludeText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id p')
+      .hasText('models')
+      .doesNotIncludeText('screwdriver-cd/models');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .app-id p')
       .hasText('ui')
@@ -853,10 +853,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getColor() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status i')
-      .hasClass('build-empty');
+      .hasClass('build-success');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status i')
-      .hasClass('build-success');
+      .hasClass('build-empty');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status i')
       .hasClass('build-empty');
@@ -867,10 +867,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status i')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-check-circle');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status i')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-question-circle');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status i')
       .hasClass('fa-question-circle');
@@ -881,10 +881,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getSha() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status a:nth-of-type(2)')
-      .hasText('Not available');
+      .hasText('9af92ba');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status a:nth-of-type(2)')
-      .hasText('9af92ba');
+      .hasText('Not available');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status a:nth-of-type(2)')
       .hasText('Not available');
@@ -893,8 +893,8 @@ module('Integration | Component | collection view', function (hooks) {
       .hasText('Not available');
 
     // check that helper function formatTime() works correctly
-    assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('--');
-    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('14s');
+    assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('14s');
+    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('--');
     assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('--');
     assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('--');
   });
@@ -906,7 +906,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollection
         collections=collections
-              }}`);
+      }}`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -929,10 +929,10 @@ module('Integration | Component | collection view', function (hooks) {
 
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id')
-      .hasText('screwdriver-cd/models');
+      .hasText('screwdriver-cd/screwdriver');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .app-id')
-      .hasText('screwdriver-cd/screwdriver');
+      .hasText('screwdriver-cd/models');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .app-id')
       .hasText('screwdriver-cd/ui');
@@ -948,7 +948,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-              }}`);
+      }}`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -1012,7 +1012,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollectionDuration
         collections=collections
-              }}`);
+      }}`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -1050,7 +1050,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollectionDuration
         collections=collections
-              }}`);
+      }}`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -1128,7 +1128,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollectionDuration
         collections=collections
-              }}`);
+      }}`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -1295,7 +1295,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollectionDuration
         collections=collections
-              }}`);
+      }}`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -1359,7 +1359,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-              }}`);
+      }}`);
 
     assert.dom('.collection-empty-view').exists({ count: 1 });
     assert.dom('.guide-image').exists({ count: 1 });
@@ -1401,7 +1401,7 @@ module('Integration | Component | collection view', function (hooks) {
 
     const onRemovePipelineMock = pipelineId => {
       // Make sure the models pipeline is the one being removed
-      assert.strictEqual(pipelineId, 3);
+      assert.strictEqual(pipelineId, 1);
 
       return resolve();
     };
@@ -1414,7 +1414,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-                onRemovePipeline=onRemovePipeline
+        onRemovePipeline=onRemovePipeline
       }}`);
 
     // switch to card mode
@@ -1430,7 +1430,7 @@ module('Integration | Component | collection view', function (hooks) {
 
     const onRemovePipelineMock = pipelineId => {
       // Make sure the models pipeline is the one being removed
-      assert.strictEqual(pipelineId, 3);
+      assert.strictEqual(pipelineId, 1);
 
       return resolve();
     };
@@ -1444,7 +1444,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-                onRemovePipeline=onRemovePipeline
+        onRemovePipeline=onRemovePipeline
       }}`);
 
     // switch to list mode
@@ -1461,7 +1461,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const onRemovePipelineMock = pipelineId => {
-      assert.strictEqual(pipelineId, 3);
+      assert.strictEqual(pipelineId, 1);
 
       return reject({
         errors: [
@@ -1499,7 +1499,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const onRemovePipelineMock = pipelineId => {
-      assert.strictEqual(pipelineId, 3);
+      assert.strictEqual(pipelineId, 1);
 
       return reject({
         errors: [
@@ -1703,7 +1703,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 1);
 
       return resolve();
@@ -1742,7 +1742,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 1);
 
       return resolve();
@@ -1781,7 +1781,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(3);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 1);
 
       return reject({
@@ -1831,7 +1831,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(3);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 1);
 
       return reject({
@@ -1881,7 +1881,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 3);
 
       return resolve();
@@ -1921,7 +1921,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 3);
 
       return resolve();
@@ -1961,7 +1961,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(3);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 3);
 
       return reject();
@@ -2006,7 +2006,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 3);
 
       return reject();
