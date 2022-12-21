@@ -38,14 +38,7 @@ export const sortByName = (a, b) => {
   const aName = get(a, 'scmRepo.name');
   const bName = get(b, 'scmRepo.name');
 
-  if (aName > bName) {
-    return 1;
-  }
-  if (aName < bName) {
-    return -1;
-  }
-
-  return 0;
+  return aName.localeCompare(bName, 'en', { sensitivity: 'base' });
 };
 
 /**
