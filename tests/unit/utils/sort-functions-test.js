@@ -68,7 +68,7 @@ const mockPipelines = copy([
     },
     workflow: ['main'],
     scmRepo: {
-      name: 'screwdriver-cd/screwdriver',
+      name: 'screwdriver-cd/Screwdriver',
       branch: 'master',
       url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
     },
@@ -206,7 +206,7 @@ const mockPipelines = copy([
 
 const expectedPipelinesSortedByName = [
   'screwdriver-cd/models',
-  'screwdriver-cd/screwdriver',
+  'screwdriver-cd/Screwdriver',
   'screwdriver-cd/ui',
   'screwdriver-cd/zzz'
 ];
