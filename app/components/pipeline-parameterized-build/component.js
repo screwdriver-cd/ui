@@ -84,8 +84,8 @@ export default Component.extend({
           "value": "adong",
           "description": "User running build"
         }
-     }
-     defaultParameters = {
+    }
+    defaultParameters = {
         "user": {
           "value": "dummy",
           "description": "User running build"

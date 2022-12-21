@@ -33,7 +33,6 @@ export default Component.extend({
       if (buildStatus === 'RUNNING' || buildStatus === 'QUEUED') {
         return resolve([]);
       }
-
       return ObjectPromiseProxy.create({
         promise: this.artifact.fetchManifest(this.buildId)
       });
@@ -75,6 +74,21 @@ export default Component.extend({
       if (targetNode) {
         this.jstreeActionReceiver.send('selectNode', targetNode.id);
       }
+    },
+
+    showArtifactPreview(treeData) {
+      const href = treeData.a_attr.href;
+      const artifactPath = href.split('artifacts/')[1];
+
+      this.setProperties({
+        href,
+        iframeUrl: `${href}?type=preview`,
+      });
+
+      this.router.transitionTo(
+        'pipeline.build.artifacts.detail',
+        artifactPath
+      );
     },
 
     handleJstreeEventDidChange(data = {}) {

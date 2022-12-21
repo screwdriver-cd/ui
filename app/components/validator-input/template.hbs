@@ -9,13 +9,15 @@
   <AceEditor
     @value={{this.yaml}}
     @update={{action (mut this.yaml)}}
-    @tabSize={{4}}
-    @useSoftTabs={{true}}
-    @minLines={{10}}
-    @maxLines={{75}}
-    @showPrintMargin={{false}}
-    @useWrapMode={{false}}
-    @highlightActiveLine={{true}}
+    @options={{hash
+      tabSize=4
+      useSoftTabs=true
+      minLines=10
+      maxLines=75
+      showPrintMargin=false
+      useWrapMode=false
+      highlightActiveLine=true
+    }}
   />
   {{yield}}
 </div>

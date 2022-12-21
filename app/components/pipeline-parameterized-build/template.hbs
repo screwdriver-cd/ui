@@ -15,35 +15,34 @@
           />
           {{parameterGroup.paramGroupTitle}}
         </h4>
-        <div
-          class="parameter-list
-
-
-            {{if parameterGroup.isOpen "expanded" "collapsed"}}"
-        >
+        <div class="parameter-list {{if parameterGroup.isOpen "expanded" "collapsed"}}">
           {{#each parameterGroup.parameters as |parameter|}}
-            <form.element>
-              <label class="control-label col-md-4">
-                {{#if parameter.description}}
-                  <FaIcon
-                    @icon="question-circle"
-                    @title={{parameter.description}}
-                  />
-                {{/if}}
-                {{parameter.name}}
-              </label>
-              <div class="col-md-8">
-                {{#if (is-array parameter.value)}}
-                  {{#with
-                    (get
-                      (if
-                        (eq parameterGroup.jobName null)
-                        this.parameterizedModel
-                        (get this.parameterizedModel parameterGroup.jobName)
-                      )
-                      parameter.name
-                    ) as |value|
-                  }}
+            <form.element
+              @formLayout="inline"
+              as |el|
+            >
+              <div class="row">
+                <label class="control-label col-4" for={{el.id}}>
+                  {{#if parameter.description}}
+                    <FaIcon
+                      @icon="question-circle"
+                      @title={{parameter.description}}
+                    />
+                  {{/if}}
+                  {{parameter.name}}
+                </label>
+                <div class="col-8">
+                  {{#if (is-array parameter.value)}}
+                    {{#with
+                      (get
+                        (if
+                          (eq parameterGroup.jobName null)
+                          this.parameterizedModel
+                          (get this.parameterizedModel parameterGroup.jobName)
+                        )
+                        parameter.name
+                      ) as |value|
+                    }}
                     {{#unless (array-includes value parameter.defaultValues)}}
                       <FaIcon
                         @icon="exclamation-triangle"
@@ -54,62 +53,58 @@
                         @class="notice-default-values-icon"
                       />
                     {{/unless}}
-                    <PowerSelect
-                      @options={{parameter.value}}
-                      @renderInPlace={{true}}
-                      @selected={{value}}
-                      @onChange={{action
-                        (action
-                          "onUpdateValue"
-                          this.parameterizedModel
-                          parameterGroup.jobName
-                          parameter.name
-                        )
-                      }}
-                      @onkeydown={{action
-                        (action
-                          "searchOrAddtoList"
-                          this.parameterizedModel
-                          parameterGroup.jobName
-                          parameter.name
-                        )
-                      }}
-                      @searchPlaceholder="Type to filter"
-                      @noMatchesMessage="Hit enter to override" as |selectedValue|
-                    >
-                      {{selectedValue}}
-                    </PowerSelect>
-                  {{/with}}
-                {{else}}
-                  {{#unless
-                    (array-includes parameter.value parameter.defaultValues)
-                  }}
-                    <FaIcon
-                      @icon="exclamation-triangle"
-                      @title={{concat
-                        "Default value: "
-                        parameter.defaultValues
-                      }}
-                      class="notice-default-values-icon"
-                    />
-                  {{/unless}}
-                  <Input
-                    @value={{parameter.value}}
-                    class="form-control"
-                    @label={{parameter.value}}
-                    placeholder={{parameter.value}}
-                    @property={{parameter.name}}
-                    @change={{action
-                      (action
+                      <PowerSelect
+                        @options={{parameter.value}}
+                        @renderInPlace={{true}}
+                        @searchEnabled={{true}}
+                        @selected={{value}}
+                        @onChange={{fn (action
+                            "onUpdateValue"
+                            this.parameterizedModel
+                            parameterGroup.jobName
+                            parameter.name
+                        )}}
+                        @onkeydown={{fn (action
+                            "searchOrAddtoList"
+                            this.parameterizedModel
+                            parameterGroup.jobName
+                            parameter.name
+                        )}}
+                        @searchPlaceholder="Type to filter"
+                        @noMatchesMessage="Hit enter to override" as |selectedValue|
+                      >
+                        {{selectedValue}}
+                      </PowerSelect>
+                    {{/with}}
+                  {{else}}
+                    {{#unless
+                      (array-includes parameter.value parameter.defaultValues)
+                    }}
+                      <FaIcon
+                        @icon="exclamation-triangle"
+                        @title={{concat
+                          "Default value: "
+                          parameter.defaultValues
+                        }}
+                        class="notice-default-values-icon"
+                      />
+                    {{/unless}}
+                    <Input
+                      @value={{parameter.value}}
+                      class="form-control"
+                      @label={{parameter.value}}
+                      placeholder={{parameter.value}}
+                      @property={{parameter.name}}
+                      {{on "change" (action
                         "onUpdateValue"
                         this.parameterizedModel
                         parameterGroup.jobName
                         parameter.name
                         parameter.value
-                      )
-                    }}
-                  />
-                {{/if}}
+                      )}}
+                    />
+                  {{/if}}
+                </div>
               </div>
             </form.element>
           {{/each}}

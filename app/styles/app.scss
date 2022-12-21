@@ -74,20 +74,20 @@ $weight-bold: 600;
 }
 
 .SUCCESS {
-  .status .fa {
+  .status svg {
     color: $sd-success;
   }
 }
 
 .UNSTABLE {
-  .status .fa {
+  .status svg {
     color: $sd-unstable;
   }
 }
 
 .FAILURE,
 .ABORTED {
-  .status .fa {
+  .status svg {
     color: $sd-failure;
   }
 }
@@ -98,14 +98,14 @@ $weight-bold: 600;
 .CREATED,
 // TODO: Replace skipped property if necessary.
 .SKIPPED {
-  .status .fa {
+  .status svg {
     color: $sd-running;
   }
 }
 
 .COLLAPSED,
 .FROZEN {
-  .status .fa {
+  .status svg {
     color: $sd-text-light;
   }
 }
@@ -186,4 +186,7 @@ body {
   font-weight: $weight-normal;
 }
 
-// @import 'ember-power-select';
+$ember-power-select-border-color: #64A5ED;
+$ember-power-select-border-radius: 0;
+
+@import 'ember-power-select';

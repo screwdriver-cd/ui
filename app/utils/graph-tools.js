@@ -182,8 +182,8 @@ const hasProcessedDest = (graph, name) => {
  * a custom directed graph
  * @method decorateGraph
  * @param  {Object}      inputGraph A directed graph representation { nodes: [], edges: [] }
- * @param  {Array|DS.PromiseArray}  [builds]     A list of build metadata
- * @param  {Array|DS.PromiseArray}  [jobs]       A list of job metadata
+ * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [builds]     A list of build metadata
+ * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [jobs]       A list of job metadata
  * @param  {String}      [start]    Node name that indicates what started the graph
  * @return {Object}                 A graph representation with row/column coordinates for drawing, and meta information for scaling
  */
@@ -192,10 +192,10 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const { nodes } = graph;
   const buildsAvailable =
-    (Array.isArray(builds) || builds instanceof DS.PromiseArray) &&
+    (Array.isArray(builds) || builds instanceof DS.PromiseArray || builds instanceof DS.PromiseManyArray) &&
     builds.length;
   const jobsAvailable =
-    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray) && jobs.length;
+    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray || jobs instanceof DS.PromiseManyArray) && jobs.length;
   const { edges } = graph;
 
   let y = [0]; // accumulator for column heights

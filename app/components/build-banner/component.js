@@ -23,10 +23,17 @@ export default Component.extend({
 
   prNumber: computed('event.pr.url', {
     get() {
+      if (this._prNumber) {
+        return this._prNumber;
+      }
+
       const url =
         this.get('event.pr.url') === undefined ? '' : this.get('event.pr.url');
 
       return url.split('/').pop();
+    },
+    set(_, value) {
+      return this._prNumber = value;
     }
   }),
 

@@ -4,9 +4,21 @@ import { statusIcon } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
   classNameBindings: ['build.status'],
+  setBuild: async function() {
+    this.build = (await this.job.builds).objectAt(0);
+  },
   build: computed('job.builds', {
     get() {
-      return this.get('job.builds').objectAt(0);
+      this.setBuild();
+
+      if (this._build) {
+        return this._build;
+      }
+
+      return {};
+    },
+    set(_, value) {
+      return this._build = value;
     }
   }),
   displayName: computed('job.name', 'workflowGraph.nodes', {
@@ -24,7 +36,7 @@ export default Component.extend({
   }),
   icon: computed('build.status', {
     get() {
-      return statusIcon(this.get('build.status'), true);
-    }
+      return statusIcon(this.build.status, true);
+    },
   })
 });

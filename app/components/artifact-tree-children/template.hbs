@@ -1,0 +1,19 @@
+{{#if @node.isExpanded}}
+  <div ...attributes>
+    {{#each @node.directory as |directory|}}
+      {{#if (eq 'directory' directory.type)}}
+        <@tree.Node
+          @directory={{directory.children}}
+          @fileName={{directory.text}}
+          @isExpandable={{true}}
+        />
+      {{/if}}
+      {{#if (eq 'file' directory.type)}}
+        <@tree.Node
+          @file={{directory}}
+          @isExpandable={{false}}
+        />
+      {{/if}}
+    {{/each}}
+  </div>
+{{/if}}

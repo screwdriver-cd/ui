@@ -24,7 +24,7 @@
     />
   {{/if}}
   <div class="header row">
-    <div class="col-xs-12 col-sm-8">
+    <div class="col-12 col-sm-8">
       <h2 class="header__name">
         {{this.collection.name}}
       </h2>
@@ -129,7 +129,7 @@
         </p>
       {{/if}}
     </div>
-    <div class="header__organize col-xs-6 col-sm-3">
+    <div class="header__organize col-6 col-sm-3">
       {{#if this.showOrganizeButton}}
         {{#if this.isOrganizing}}
           {{#if this.showOperations}}
@@ -167,7 +167,7 @@
     </div>
     {{#if this.showViewSwitch}}
       <BsButtonGroup
-        class="header__change-view col-xs-6 col-sm-1"
+        class="header__change-view col-6 col-sm-1"
         @value={{this.activeViewOptionValue}}
         @type="radio"
         @onChange={{action (mut this.activeViewOptionValue)}} as |bg|

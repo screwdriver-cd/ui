@@ -9,7 +9,7 @@ export default Component.extend({
   activeTab: 'steps',
   selectedArtifact: '',
   isArtifacts: equal('activeTab', 'artifacts'),
-  classNames: ['build-step-collection', 'row'],
+  classNames: ['build-step-collection'],
   stepNames: mapBy('buildSteps', 'name'),
   setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
   teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
@@ -31,6 +31,10 @@ export default Component.extend({
   ),
   setupCollapsed: computed('selectedStep', 'setupSteps', {
     get() {
+      if (this._setupCollapsed !== undefined) {
+        return this._setupCollapsed;
+      }
+
       const name = this.selectedStep;
 
       if (name && this.setupSteps.includes(name)) {
@@ -38,10 +42,17 @@ export default Component.extend({
       }
 
       return true;
+    },
+    set(_, value) {
+      return this._setupCollapsed = value;
     }
   }),
   teardownCollapsed: computed('selectedStep', 'teardownSteps', {
     get() {
+      if (this._teardownCollapsed !== undefined) {
+        return this._teardownCollapsed;
+      }
+
       const name = this.selectedStep;
 
       if (name && this.teardownSteps.includes(name)) {
@@ -49,6 +60,9 @@ export default Component.extend({
       }
 
       return true;
+    },
+    set(_, value) {
+      return this._teardownCollapsed = value;
     }
   }),
   userSteps: filter(
@@ -57,10 +71,10 @@ export default Component.extend({
   ),
   actions: {
     toggleSetup() {
-      set(this, 'setupCollapsed', !this.setupCollapsed);
+      this.setupCollapsed = !this.setupCollapsed;
     },
     toggleTeardown() {
-      set(this, 'teardownCollapsed', !this.teardownCollapsed);
+      this.teardownCollapsed = !this.teardownCollapsed;
     },
     changeActiveTabPane(activeTab) {
       this.changeRouteTo(activeTab);

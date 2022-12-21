@@ -25,7 +25,7 @@
       <p>
         {{this.tooltipData.job.stateChangeMessage}}
       </p>
-      <a {{action "toggleJob" this.tooltipData.job.name}}>
+      <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
         Enable this job
       </a>
     {{else}}
@@ -36,12 +36,12 @@
           </p>
         {{else}}
           {{#if (eq this.isPrChainJob false)}}
-            <a {{action this.confirmStartBuild}}>
+            <a href="#" {{action this.confirmStartBuild}}>
               {{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here
             </a>
           {{else}}
             {{#if (eq this.prBuildExists true)}}
-              <a {{action this.confirmStartBuild}}>
+              <a href="#" {{action this.confirmStartBuild}}>
                 {{if
                   this.tooltipData.job.status
                   "Restart"
@@ -53,19 +53,19 @@
         {{/if}}
       {{/if}}
       {{#if (eq this.tooltipData.job.isDisabled false)}}
-        <a {{action "toggleJob" this.tooltipData.job.name}}>
+        <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
           Disable this job
         </a>
       {{/if}}
     {{/if}}
 
     {{#if this.tooltipData.displayStop}}
-      <a {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>
+      <a href="#" {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>
         Stop build
       </a>
     {{/if}}
     {{#if (eq this.tooltipData.job.status "FROZEN")}}
-      <a {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>
+      <a href="#" {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>
         Stop frozen build
       </a>
     {{/if}}

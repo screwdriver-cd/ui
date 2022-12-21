@@ -1,5 +1,5 @@
 <div class="row list-view-nav">
-  <div class="col-xs-2">
+  <div class="col-2">
     <BsButtonGroup
       class="view-toggle"
       @value={{this.showListView}}
@@ -26,7 +26,13 @@
   @showGlobalFilter={{false}}
   @showCurrentPageNumberSelect={{false}}
   @multipleColumnsSorting={{false}}
+  @pageSize={{100}}
 />
+<div class="loader" {{in-viewport onEnter=(action "onScrolledToBottom")}}>
+  {{#if this.isLoading}}
+      Loading...
+  {{/if}}
+</div>
 
 {{#if this.isShowingModal}}
   <ModalDialog

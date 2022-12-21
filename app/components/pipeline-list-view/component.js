@@ -13,7 +13,7 @@ const collator = new Intl.Collator('en', {
 export default Component.extend({
   store: service(),
   userSettings: service(),
-  theme: service('emt-themes/ember-bootstrap-v5'),
+  theme: service('emt-themes/ember-bootstrap-v4'),
   isLoading: false,
   isShowingModal: false,
   data: [],
@@ -70,6 +70,8 @@ export default Component.extend({
   async init() {
     this._super(...arguments);
     const rows = this.getRows(this.jobsDetails);
+
+    this.theme.table = 'table table-condensed table-sm';
 
     this.userSettings
       .getTimestampFormat()
@@ -283,12 +285,11 @@ export default Component.extend({
   actions: {
     async onScrolledToBottom() {
       this.set('isLoading', true);
-      this.updateListViewJobs().then(jobs => {
-        const rows = this.getRows(jobs);
+      const jobs = await this.updateListViewJobs();
+      const rows = this.getRows(jobs);
 
-        this.set('data', rows);
-        this.set('isLoading', false);
-      });
+      this.set('data', rows);
+      this.set('isLoading', false);
     },
 
     closeModal() {

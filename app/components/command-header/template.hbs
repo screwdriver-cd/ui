@@ -70,9 +70,9 @@
   Usage:
 </h4>
 {{#if this.command.usage}}
-  <pre>    {{this.command.usage}}  </pre>
+  <pre>{{this.command.usage}}  </pre>
 {{else}}
-  <pre>    sd-cmd exec {{this.command.namespace}}/{{this.command.name}}@{{this.command.version}}  </pre>
+  <pre>sd-cmd exec {{this.command.namespace}}/{{this.command.name}}@{{this.command.version}}  </pre>
 {{/if}}
 {{#if this.commandToRemove}}
   {{#if this.isRemoving}}

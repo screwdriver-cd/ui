@@ -5,7 +5,6 @@ import Component from '@ember/component';
 export default Component.extend({
   showCollectionModal: false,
   scmService: service('scm'),
-  classNames: ['row'],
   classNameBindings: ['isBuildPage'],
   router: service(),
   addCollectionError: null,

@@ -162,6 +162,7 @@
     {{#if this.isAuthenticated}}
       <BsButton
         @onClick={{action "buildButtonClick"}}
+        @outline={{true}}
         disabled={{or (await this.isButtonDisabled) (not this.isButtonDisabledLoaded)}}
       >
         {{this.buildAction}}

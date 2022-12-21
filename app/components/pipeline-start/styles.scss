@@ -29,3 +29,7 @@ button.start-with-parameters-button {
   left: auto;
   padding-top: 10px;
 }
+
+.dropdown-toggle::after {
+  display: none;
+}

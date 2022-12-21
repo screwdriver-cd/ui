@@ -18,6 +18,5 @@
 </div>
 
 <div class="right {{if this.showQuickStartGuide "menu-open"}}">
-  <QuickstartGuide @isOpen={{true}} />
-  {{!-- <QuickstartGuide @isOpen={{showQuickStartGuide}} /> --}}
+  <QuickstartGuide @isOpen={{this.showQuickStartGuide}} />
 </div>

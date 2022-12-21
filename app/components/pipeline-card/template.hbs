@@ -12,22 +12,10 @@
   {{#if this.showRemoveButton}}
     <span
       class="remove-button"
-      title="Remove
-
-
-        {{this.pipeline.scmRepo.name}}
-
-
-         pipeline from
-
-
-        {{this.collectionName}}
-
-
-         collection"
+      title="Remove {{this.pipeline.scmRepo.name}} pipeline from {{this.collectionName}} collection"
       onclick={{action "removePipeline"}}
     >
-      &amp;amp;amp;amp;amp;amp;times;
+      &times;
     </span>
   {{/if}}
 

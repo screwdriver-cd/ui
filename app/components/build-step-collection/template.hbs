@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-xs-3 step-list no-padding column-tabs-view partial-view">
+  <div class="col-3 step-list no-padding column-tabs-view partial-view">
     <BsTab @customTabs={{true}} as |tab|>
       <BsNav @type="tabs" as |nav|>
         <nav.item
@@ -103,7 +103,7 @@
       </div>
     </BsTab>
   </div>
-  <div class="col-xs-9 partial-view">
+  <div class="col-9 partial-view">
     {{#if (and this.isArtifacts this.iframeUrl)}}
       <ArtifactPreview @iframeUrl={{this.iframeUrl}} />
     {{else}}

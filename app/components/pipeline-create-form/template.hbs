@@ -31,15 +31,12 @@
   <div class="repo-url">
     <Input
       class="text-input scm-url"
-      @key-up={{action "scmChange"}}
       placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#branchName)"
       @value={{this.scmUrl}}
       @enter={{action "saveData"}}
     />
     {{#if this.isValid}}
-      <i class="success">
-        <FaIcon @icon="check" />
-      </i>
+        <FaIcon class="success" @icon="check" />
     {{/if}}
   </div>
   {{#if this.prUrl}}
@@ -53,10 +50,8 @@
   <div>
     <PipelineRootdir
       @value={{this.rootDir}}
-      @hasRootDir={{false}}
       @updateRootDir={{action "updateRootDir"}}
     />
-
     {{#if this.hasAutoDeployEnabled}}
       <label class="normal-weight toggle-auto-deploy-key-generation">
         <Input
@@ -115,10 +110,10 @@
         </div>
 
         <div class="row">
-          <div class="col-xs-12 col-md-12">
+          <div class="col-12 col-md-12">
             <ValidatorInput @yaml={{mut this.yaml}} />
           </div>
-          <div class="col-xs-12 col-md-12">
+          <div class="col-12 col-md-12">
             <ValidatorResults @results={{this.results}} />
           </div>
         </div>
