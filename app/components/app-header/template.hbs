@@ -1,18 +1,14 @@
-<BsNavbar as |navbar|>
+<BsNavbar @type="dark" @backgroundColor="grey-800" as |navbar|>
   <div class="navbar-header">
-    {{navbar.toggle}}
     <LinkTo @route="home" class="logo navbar-brand" title="Screwdriver Home">
       {{svg-jar "Screwdriver_Logo_FullWhite" class="img"}}
     </LinkTo>
+   <navbar.toggle/>
   </div>
   <navbar.content>
-    <navbar.nav @classNames="navbar-nav navbar-left" as |nav|>
+    <navbar.nav class="mr-auto" as |nav|>
       <nav.item>
-        <LinkTo @route="home" class="icon">
-          <span>
-            Collections
-          </span>
-        </LinkTo>
+        <nav.link-to @route="home" clsass="icon">Collection</nav.link-to>
       </nav.item>
       <nav.item>
         <nav.dropdown as |dd|>
@@ -59,20 +55,19 @@
       </nav.item>
       {{#if @session.isAuthenticated}}
         <nav.item>
-          <a class="icon create" onclick={{action "openCreatePipeline"}}>
-            {{svg-jar "add-circle" class="img"}}
+          <nav.link-to onclick={{action "openCreatePipeline"}} class="icon">
+            {{svg-jar "add-circle" class="img" width="20px"}}
             <span>
               Create Pipeline
             </span>
-          </a>
+          </nav.link-to>
         </nav.item>
       {{/if}}
     </navbar.nav>
-
-    <navbar.nav @classNames="navbar-nav navbar-right" as |nav|>
+    <navbar.nav as |nav|>
       {{#if this.showSearch}}
         <nav.item>
-          <form class="navbar-form navbar-right" role="search">
+          <form class="navbar-form" role="search">
             <Input
               class="search-input"
               @name="query"
@@ -83,23 +78,15 @@
               @value={{this.searchTerm}}
             />
             <button class="search-button" {{action "triggerSearch"}}>
-              <FaIcon @icon="search" @title="Search" />
+              {{svg-jar "search" class="img"}}
             </button>
           </form>
         </nav.item>
       {{else}}
         <nav.item>
-          <a
-            href="#"
-            class="icon search"
-            title="Search"
-            {{action
-              "openSearchForm"
-              preventDefault=false
-            }}
-          >
+          <nav.link-to onclick={{action "openSearchForm" preventDefault=false}} class="icon search">
             {{svg-jar "search" class="img"}}
-          </a>
+          </nav.link-to>
         </nav.item>
       {{/if}}
       <nav.item>
@@ -111,7 +98,7 @@
             <ddm.item>
               <a
                 href={{this.docUrl}}
-                class="icon docs"
+                class="dropdown-item"
                 title="Documentation and Contact"
               >
                 {{svg-jar "file-text" class="img"}}
@@ -121,7 +108,7 @@
               </a>
             </ddm.item>
             <ddm.item>
-              <a class="release">
+              <a class="release dropdown-item">
                 <FaIcon @icon="tag" />
                 <span>
                   {{this.releaseVersion}}
@@ -130,27 +117,21 @@
             </ddm.item>
             {{ddm.divider}}
             <ddm.item>
-              <a href="http://blog.screwdriver.cd" class="icon blog">
+              <a href="http://blog.screwdriver.cd" class="icon blog dropdown-item">
                 {{svg-jar "tumblr" class="img"}}
-                <span>
                   Blog
-                </span>
               </a>
             </ddm.item>
             <ddm.item>
-              <a href={{this.slackUrl}} class="icon community">
+              <a href={{this.slackUrl}} class="icon community dropdown-item">
                 {{svg-jar "slack" class="img"}}
-                <span>
                   Slack Workspace
-                </span>
               </a>
             </ddm.item>
             <ddm.item>
-              <a href="https://github.com/screwdriver-cd" class="icon github">
+              <a href="https://github.com/screwdriver-cd" class="icon github dropdown-item">
                 {{svg-jar "github" class="img"}}
-                <span>
                   GitHub
-                </span>
               </a>
             </ddm.item>
           </dd.menu>
@@ -160,7 +141,7 @@
         {{#if @session.isAuthenticated}}
           <nav.dropdown as |dd|>
             <dd.toggle class="icon profile-outline">
-              {{!-- {{svg-jar "profile-outline" class="img"}} --}}
+              {{svg-jar "profile-outline" class="img"}}
               <span class="icontitle">
                 {{@session.data.authenticated.username}}
               </span>
@@ -176,8 +157,8 @@
                 {{#unless scmContext.readOnly}}
                   <ddm.item>
                     {{#if scmContext.isSignedIn}}
-                      <a class="active">
-                        <FaIcon @icon={{scmContext.iconType}} @prefix="fab" />
+                      <a class="active dropdown-item">
+                        <FaIcon @icon={{scmContext.iconType}} @prefix="fab"/>
                         {{scmContext.displayName}}
                         <span>
                           active
@@ -187,8 +168,9 @@
                       <a
                         href="#authenticate"
                         {{action "authenticate" scmContext.context}}
+                        class="dropdown-item"
                       >
-                        <FaIcon @icon={{scmContext.iconType}} @prefix="fab" />
+                        <FaIcon @icon={{scmContext.iconType}} @prefix="fab"/>
                         {{scmContext.displayName}}
                       </a>
                     {{/if}}
@@ -206,7 +188,7 @@
               <ddm.item>
                 <a
                   href="#signout"
-                  class="logout"
+                  class="logout dropdown-item"
                   title="Sign out of Screwdriver"
                   {{action "invalidateSession"}}
                 >
@@ -220,7 +202,7 @@
             @route="login"
             @query={{hash fromUrl=@currentUrl}}
             title="Sign in to Screwdriver"
-            class="icon profile-outline"
+            class="icon profile-outline dropdown-item"
           >
             {{svg-jar "profile-outline" class="img"}}
             <span class="icontitle">
@@ -231,6 +213,7 @@
       </nav.item>
     </navbar.nav>
   </navbar.content>
+
 </BsNavbar>
 
 <div class="tooltips">
