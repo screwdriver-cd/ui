@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { getTimestamp } from '../../utils/timestamp-format';
+import { DoesTextContainsLink, TransformTextToClickableContent } from '../../utils/convert-url';
 
 export default Component.extend({
   session: service(),
@@ -58,7 +59,11 @@ export default Component.extend({
     get() {
       let label = this.get('selectedEventObj.label');
 
-      label = label.replace(/(https?\/\/[^\s+])/g, '<a href="$1">$1</a>');
+      const isTextLinkable = DoesTextContainsLink(label);
+      
+      if(isTextLinkable) {
+        return label = TransformTextToClickableContent(label);
+      }
 
       return label;
     }
