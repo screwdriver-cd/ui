@@ -53,5 +53,14 @@ export default Component.extend({
 
       return startDate;
     }
+  }),
+  label: computed('selectedEventObj.label', {
+    get() {
+      let label = this.get('selectedEventObj.label');
+
+      label = label.replace(/(https?\/\/[^\s+])/g, '<a href="$1">$1</a>');
+
+      return label;
+    }
   })
 });
