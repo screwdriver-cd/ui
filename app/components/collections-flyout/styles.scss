@@ -106,10 +106,3 @@
     }
   }
 }
-
-// match with bootstrap min-width: for .col-md-2
-@media (min-width: 992px) {
-  .flyout {
-    min-height: calc(100vh - 56px);
-  }
-}
