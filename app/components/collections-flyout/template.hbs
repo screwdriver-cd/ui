@@ -1,21 +1,21 @@
 <div class="flyout row">
   <div class="header row">
     {{#if this.session.isAuthenticated}}
-      <h2 class="header__text col-xs-9">
+      <h2 class="header__text col-9">
         Collections
       </h2>
-      <a class="header__create col-xs-3" {{action "openModal"}}>
+      <a class="header__create col-3" {{action "openModal"}}>
         create
       </a>
     {{else}}
-      <h2 class="header__text col-xs-12">
+      <h2 class="header__text col-12">
         Collections
       </h2>
     {{/if}}
   </div>
   {{#each this.orderedCollections as |collection|}}
     <div
-      class="collection-wrapper row
+      class="collection-wrapper w-100 row
         {{if (eq collection.id this.selectedCollectionId) " row--active"}}"
     >
       <LinkTo
