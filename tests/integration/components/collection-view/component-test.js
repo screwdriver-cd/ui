@@ -1,5 +1,5 @@
-import { resolve, reject, Promise as EmberPromise } from 'rsvp';
-import EmberObject from '@ember/object';
+import { resolve, reject } from 'rsvp';
+import EmberObject, { computed } from '@ember/object';
 import { module, test, todo } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, findAll, fillIn, waitFor } from '@ember/test-helpers';
@@ -8,10 +8,34 @@ import sinon from 'sinon';
 import $ from 'jquery';
 import { copy } from 'ember-copy';
 import Pretender from 'pretender';
-
+import { formatMetrics } from 'screwdriver-ui/utils/metric';
 import injectSessionStub from '../../../helpers/inject-session';
 import injectScmServiceStub from '../../../helpers/inject-scm';
+
 let server;
+
+const mockPipelineModel = EmberObject.extend({
+  failedBuildCount: computed('metrics.[]', {
+    get() {
+      let failedBuildCount = 0;
+
+      this.metrics.toArray().forEach(event => {
+        if (['FAILURE', 'ABORTED'].includes(event.status)) {
+          failedBuildCount += 1;
+        }
+      });
+
+      return failedBuildCount;
+    }
+  }),
+  lastRunEvent: computed('metrics.[]', {
+    get() {
+      const { lastEventInfo } = formatMetrics(this.metrics);
+
+      return lastEventInfo;
+    }
+  })
+});
 
 const mockMetrics = [
   {
@@ -62,7 +86,7 @@ const mockMetrics = [
 ];
 
 const mockDefaultPipelines = copy([
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 1,
     scmUri: 'github.com:12345678:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -86,12 +110,12 @@ const mockDefaultPipelines = copy([
         createTime: '2017-09-05T04:02:20.890Z'
       }
     ],
-    metrics: EmberPromise.resolve(mockMetrics),
+    metrics: mockMetrics,
     settings: {
       aliasName: 'screwdriver'
     }
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 2,
     scmUri: 'github.com:87654321:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -110,12 +134,12 @@ const mockDefaultPipelines = copy([
       open: 2,
       failing: 1
     },
-    metrics: EmberPromise.resolve([]),
+    metrics: [],
     settings: {
       aliasName: 'ui'
     }
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 3,
     scmUri: 'github.com:54321876:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -139,12 +163,12 @@ const mockDefaultPipelines = copy([
         createTime: '2017-09-05T04:01:41.789Z'
       }
     ],
-    metrics: EmberPromise.resolve([]),
+    metrics: [],
     settings: {
       aliasName: 'models'
     }
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 4,
     scmUri: 'github.com:54321879:master:lib',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -168,7 +192,7 @@ const mockDefaultPipelines = copy([
         createTime: '2017-09-05T04:01:41.789Z'
       }
     ],
-    metrics: EmberPromise.resolve([]),
+    metrics: [],
     settings: {
       aliasName: 'zzz'
     }
@@ -176,7 +200,7 @@ const mockDefaultPipelines = copy([
 ]);
 
 const mockDefaultPipelinesWithoutAlias = copy([
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 1,
     scmUri: 'github.com:12345678:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -200,10 +224,10 @@ const mockDefaultPipelinesWithoutAlias = copy([
         createTime: '2017-09-05T04:02:20.890Z'
       }
     ],
-    metrics: EmberPromise.resolve(mockMetrics),
+    metrics: mockMetrics,
     settings: {}
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 2,
     scmUri: 'github.com:87654321:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -222,10 +246,10 @@ const mockDefaultPipelinesWithoutAlias = copy([
       open: 2,
       failing: 1
     },
-    metrics: EmberPromise.resolve([]),
+    metrics: [],
     settings: {}
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 3,
     scmUri: 'github.com:54321876:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -249,10 +273,10 @@ const mockDefaultPipelinesWithoutAlias = copy([
         createTime: '2017-09-05T04:01:41.789Z'
       }
     ],
-    metrics: EmberPromise.resolve([]),
+    metrics: [],
     settings: {}
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 4,
     scmUri: 'github.com:54321879:master:lib',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -276,7 +300,7 @@ const mockDefaultPipelinesWithoutAlias = copy([
         createTime: '2017-09-05T04:01:41.789Z'
       }
     ],
-    metrics: EmberPromise.resolve([]),
+    metrics: [],
     settings: {}
   })
 ]);
@@ -309,7 +333,7 @@ const mockNormalCollection = EmberObject.create({
 });
 
 const mockPipelinesReponse = copy([
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 1,
     scmUri: 'github.com:12345678:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -337,7 +361,7 @@ const mockPipelinesReponse = copy([
       aliasName: 'screwdriver'
     }
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 2,
     scmUri: 'github.com:87654321:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -360,7 +384,7 @@ const mockPipelinesReponse = copy([
       aliasName: 'ui'
     }
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 3,
     scmUri: 'github.com:54321876:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -388,7 +412,7 @@ const mockPipelinesReponse = copy([
       aliasName: 'models'
     }
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 4,
     scmUri: 'github.com:54321879:master:lib',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -484,7 +508,7 @@ const mockCollections = [
 ];
 
 const mockPipelinesWithDuration = copy([
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 1,
     scmUri: 'github.com:12345678:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -508,12 +532,12 @@ const mockPipelinesWithDuration = copy([
         createTime: '2017-09-05T04:02:20.890Z'
       }
     ],
-    metrics: EmberPromise.resolve([mockMetrics[0]]),
+    metrics: [mockMetrics[0]],
     settings: {
       aliasName: 'screwdriver'
     }
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 2,
     scmUri: 'github.com:87654321:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -540,12 +564,12 @@ const mockPipelinesWithDuration = copy([
         createTime: '2017-09-05T04:02:20.890Z'
       }
     ],
-    metrics: EmberPromise.resolve([mockMetrics[1]]),
+    metrics: [mockMetrics[1]],
     settings: {
       aliasName: 'ui'
     }
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 3,
     scmUri: 'github.com:54321876:master',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -569,12 +593,12 @@ const mockPipelinesWithDuration = copy([
         createTime: '2017-09-05T04:01:41.789Z'
       }
     ],
-    metrics: EmberPromise.resolve([mockMetrics[2]]),
+    metrics: [mockMetrics[2]],
     settings: {
       aliasName: 'models'
     }
   }),
-  EmberObject.create({
+  mockPipelineModel.create({
     id: 4,
     scmUri: 'github.com:54321879:master:lib',
     createTime: '2017-01-05T00:55:46.775Z',
@@ -598,7 +622,7 @@ const mockPipelinesWithDuration = copy([
         createTime: '2017-09-05T04:01:41.789Z'
       }
     ],
-    metrics: EmberPromise.resolve([mockMetrics[3]]),
+    metrics: [mockMetrics[3]],
     settings: {
       aliasName: 'zzz'
     }
@@ -697,10 +721,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that pipeline card order is correct
     assert
       .dom('.pipeline-card:nth-of-type(1) .branch-info a')
-      .hasText('screwdriver-cd/models');
+      .hasText('screwdriver-cd/screwdriver');
     assert
       .dom('.pipeline-card:nth-of-type(2) .branch-info a')
-      .hasText('screwdriver-cd/screwdriver');
+      .hasText('screwdriver-cd/models');
     assert
       .dom('.pipeline-card:nth-of-type(3) .branch-info a')
       .hasText('screwdriver-cd/ui');
@@ -711,10 +735,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getColor() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .commit-status i')
-      .hasClass('build-empty');
+      .hasClass('build-success');
     assert
       .dom('.pipeline-card:nth-of-type(2) .commit-status i')
-      .hasClass('build-success');
+      .hasClass('build-empty');
     assert
       .dom('.pipeline-card:nth-of-type(3) .commit-status i')
       .hasClass('build-empty');
@@ -725,10 +749,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .commit-status i')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-check-circle');
     assert
       .dom('.pipeline-card:nth-of-type(2) .commit-status i')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-question-circle');
     assert
       .dom('.pipeline-card:nth-of-type(3) .commit-status i')
       .hasClass('fa-question-circle');
@@ -739,10 +763,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getSha() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .commit-status a:nth-of-type(2)')
-      .hasText('Not available');
+      .hasText('9af92ba');
     assert
       .dom('.pipeline-card:nth-of-type(2) .commit-status a:nth-of-type(2)')
-      .hasText('9af92ba');
+      .hasText('Not available');
     assert
       .dom('.pipeline-card:nth-of-type(3) .commit-status a:nth-of-type(2)')
       .hasText('Not available');
@@ -753,10 +777,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function formatTime() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .duration-badge span:nth-of-type(2)')
-      .hasText('--');
+      .hasText('14s');
     assert
       .dom('.pipeline-card:nth-of-type(2) .duration-badge span:nth-of-type(2)')
-      .hasText('14s');
+      .hasText('--');
     assert
       .dom('.pipeline-card:nth-of-type(3) .duration-badge span:nth-of-type(2)')
       .hasText('--');
@@ -772,7 +796,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
       }}`);
 
     // switch to list mode
@@ -796,13 +819,12 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('.collection-pipeline').exists({ count: 4 });
 
     // check that collection table row order is correct
-
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id a')
-      .hasText('screwdriver-cd/models');
+      .hasText('screwdriver-cd/screwdriver');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .app-id a')
-      .hasText('screwdriver-cd/screwdriver');
+      .hasText('screwdriver-cd/models');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .app-id a')
       .hasText('screwdriver-cd/ui');
@@ -813,12 +835,12 @@ module('Integration | Component | collection view', function (hooks) {
     // test aliasname
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id p')
-      .hasText('models')
-      .doesNotIncludeText('screwdriver-cd/models');
-    assert
-      .dom('.collection-pipeline:nth-of-type(2) .app-id p')
       .hasText('screwdriver')
       .doesNotIncludeText('screwdriver-cd/screwdriver');
+    assert
+      .dom('.collection-pipeline:nth-of-type(2) .app-id p')
+      .hasText('models')
+      .doesNotIncludeText('screwdriver-cd/models');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .app-id p')
       .hasText('ui')
@@ -831,10 +853,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getColor() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status i')
-      .hasClass('build-empty');
+      .hasClass('build-success');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status i')
-      .hasClass('build-success');
+      .hasClass('build-empty');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status i')
       .hasClass('build-empty');
@@ -845,10 +867,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status i')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-check-circle');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status i')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-question-circle');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status i')
       .hasClass('fa-question-circle');
@@ -859,10 +881,10 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getSha() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status a:nth-of-type(2)')
-      .hasText('Not available');
+      .hasText('9af92ba');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status a:nth-of-type(2)')
-      .hasText('9af92ba');
+      .hasText('Not available');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status a:nth-of-type(2)')
       .hasText('Not available');
@@ -871,8 +893,8 @@ module('Integration | Component | collection view', function (hooks) {
       .hasText('Not available');
 
     // check that helper function formatTime() works correctly
-    assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('--');
-    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('14s');
+    assert.dom('.collection-pipeline:nth-of-type(1) .duration').hasText('14s');
+    assert.dom('.collection-pipeline:nth-of-type(2) .duration').hasText('--');
     assert.dom('.collection-pipeline:nth-of-type(3) .duration').hasText('--');
     assert.dom('.collection-pipeline:nth-of-type(4) .duration').hasText('--');
   });
@@ -884,7 +906,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollection
         collections=collections
-        metricsMap=metricsMap
       }}`);
 
     // switch to list mode
@@ -908,10 +929,10 @@ module('Integration | Component | collection view', function (hooks) {
 
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id')
-      .hasText('screwdriver-cd/models');
+      .hasText('screwdriver-cd/screwdriver');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .app-id')
-      .hasText('screwdriver-cd/screwdriver');
+      .hasText('screwdriver-cd/models');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .app-id')
       .hasText('screwdriver-cd/ui');
@@ -927,7 +948,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
       }}`);
 
     // switch to list mode
@@ -951,13 +971,12 @@ module('Integration | Component | collection view', function (hooks) {
     assert.dom('.collection-pipeline').exists({ count: 4 });
 
     // check that collection table row order is correct
-
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id a')
-      .hasText('screwdriver-cd/models');
+      .hasText('screwdriver-cd/screwdriver');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .app-id a')
-      .hasText('screwdriver-cd/screwdriver');
+      .hasText('screwdriver-cd/models');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .app-id a')
       .hasText('screwdriver-cd/ui');
@@ -972,16 +991,18 @@ module('Integration | Component | collection view', function (hooks) {
     // pipeline list desc order based on name
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id a')
-      .hasText('screwdriver-cd/zzz');
-    assert
-      .dom('.collection-pipeline:nth-of-type(2) .app-id a')
-      .hasText('screwdriver-cd/ui');
-    assert
-      .dom('.collection-pipeline:nth-of-type(3) .app-id a')
       .hasText('screwdriver-cd/screwdriver');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .app-id a')
+      .dom('.collection-pipeline:nth-of-type(2) .app-id a')
       .hasText('screwdriver-cd/models');
+
+    // unknown status remains at the bottm regardless
+    assert
+      .dom('.collection-pipeline:nth-of-type(3) .app-id a')
+      .hasText('screwdriver-cd/ui');
+    assert
+      .dom('.collection-pipeline:nth-of-type(4) .app-id a')
+      .hasText('screwdriver-cd/zzz');
   });
 
   test('it renders pipelines list according to duration asc desc order', async function (assert) {
@@ -991,7 +1012,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollectionDuration
         collections=collections
-        metricsMap=metricsMap
       }}`);
 
     // switch to list mode
@@ -1030,7 +1050,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollectionDuration
         collections=collections
-        metricsMap=metricsMap
       }}`);
 
     // switch to list mode
@@ -1109,7 +1128,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollectionDuration
         collections=collections
-        metricsMap=metricsMap
       }}`);
 
     // switch to list mode
@@ -1277,7 +1295,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=mockCollectionDuration
         collections=collections
-        metricsMap=metricsMap
       }}`);
 
     // switch to list mode
@@ -1342,7 +1359,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
       }}`);
 
     assert.dom('.collection-empty-view').exists({ count: 1 });
@@ -1385,7 +1401,7 @@ module('Integration | Component | collection view', function (hooks) {
 
     const onRemovePipelineMock = pipelineId => {
       // Make sure the models pipeline is the one being removed
-      assert.strictEqual(pipelineId, 3);
+      assert.strictEqual(pipelineId, 1);
 
       return resolve();
     };
@@ -1398,7 +1414,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
       }}`);
 
@@ -1415,7 +1430,7 @@ module('Integration | Component | collection view', function (hooks) {
 
     const onRemovePipelineMock = pipelineId => {
       // Make sure the models pipeline is the one being removed
-      assert.strictEqual(pipelineId, 3);
+      assert.strictEqual(pipelineId, 1);
 
       return resolve();
     };
@@ -1429,7 +1444,6 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
         onRemovePipeline=onRemovePipeline
       }}`);
 
@@ -1447,7 +1461,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const onRemovePipelineMock = pipelineId => {
-      assert.strictEqual(pipelineId, 3);
+      assert.strictEqual(pipelineId, 1);
 
       return reject({
         errors: [
@@ -1466,8 +1480,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
-        onRemovePipeline=onRemovePipeline
+                onRemovePipeline=onRemovePipeline
       }}
     `);
 
@@ -1486,7 +1499,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const onRemovePipelineMock = pipelineId => {
-      assert.strictEqual(pipelineId, 3);
+      assert.strictEqual(pipelineId, 1);
 
       return reject({
         errors: [
@@ -1505,8 +1518,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
-        onRemovePipeline=onRemovePipeline
+                onRemovePipeline=onRemovePipeline
       }}
     `);
 
@@ -1530,8 +1542,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
-        onRemovePipeline=onRemovePipeline
+                onRemovePipeline=onRemovePipeline
       }}
     `);
 
@@ -1551,8 +1562,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
-        onRemovePipeline=onRemovePipeline
+                onRemovePipeline=onRemovePipeline
       }}
     `);
 
@@ -1571,8 +1581,7 @@ module('Integration | Component | collection view', function (hooks) {
         {{collection-view
           collection=collection
           collections=collections
-          metricsMap=metricsMap
-          onRemovePipeline=onRemovePipeline
+                    onRemovePipeline=onRemovePipeline
         }}
       `);
 
@@ -1588,8 +1597,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-      }}
+              }}
     `);
 
     // switch to card mode
@@ -1645,8 +1653,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-      }}
+              }}
     `);
 
     // switch to list mode
@@ -1696,7 +1703,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 1);
 
       return resolve();
@@ -1710,8 +1717,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
-        removeMultiplePipelines=removeMultiplePipelines
+                removeMultiplePipelines=removeMultiplePipelines
       }}
     `);
 
@@ -1736,7 +1742,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 1);
 
       return resolve();
@@ -1750,8 +1756,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
-        removeMultiplePipelines=removeMultiplePipelines
+                removeMultiplePipelines=removeMultiplePipelines
       }}
     `);
 
@@ -1776,7 +1781,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(3);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 1);
 
       return reject({
@@ -1796,8 +1801,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
-        removeMultiplePipelines=removeMultiplePipelines
+                removeMultiplePipelines=removeMultiplePipelines
       }}
     `);
 
@@ -1827,7 +1831,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(3);
 
     const removeMultiplePipelinesMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 1);
 
       return reject({
@@ -1847,8 +1851,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=normalCollection
         collections=collections
-        metricsMap=metricsMap
-        removeMultiplePipelines=removeMultiplePipelines
+                removeMultiplePipelines=removeMultiplePipelines
       }}
     `);
 
@@ -1878,7 +1881,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 3);
 
       return resolve();
@@ -1892,8 +1895,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-        addMultipleToCollection=addMultipleToCollection
+                addMultipleToCollection=addMultipleToCollection
       }}
     `);
 
@@ -1919,7 +1921,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 3);
 
       return resolve();
@@ -1933,8 +1935,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-        addMultipleToCollection=addMultipleToCollection
+                addMultipleToCollection=addMultipleToCollection
       }}
     `);
 
@@ -1960,7 +1961,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(3);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 3);
 
       return reject();
@@ -1974,8 +1975,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-        addMultipleToCollection=addMultipleToCollection
+                addMultipleToCollection=addMultipleToCollection
       }}
     `);
 
@@ -2006,7 +2006,7 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(2);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
-      assert.deepEqual(pipelineIds, [3, 1]);
+      assert.deepEqual(pipelineIds, [1, 3]);
       assert.strictEqual(collectionId, 3);
 
       return reject();
@@ -2020,8 +2020,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-        addMultipleToCollection=addMultipleToCollection
+                addMultipleToCollection=addMultipleToCollection
       }}
     `);
 
@@ -2119,8 +2118,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-        addMultipleToCollection=addMultipleToCollection
+                addMultipleToCollection=addMultipleToCollection
       }}
     `);
 
@@ -2195,8 +2193,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-      }}
+              }}
     `);
 
     // open the setting modal
@@ -2261,8 +2258,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-      }}
+              }}
     `);
 
     // click the copy button
@@ -2280,8 +2276,7 @@ module('Integration | Component | collection view', function (hooks) {
       {{collection-view
         collection=collection
         collections=collections
-        metricsMap=metricsMap
-      }}
+              }}
     `);
 
     await click('.collection-operation.settings-operation');
