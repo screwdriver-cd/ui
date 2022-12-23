@@ -20,18 +20,10 @@ export function transformTextToClickableContent(text) {
     let hyperlink = url;
 
     // eslint-disable-next-line no-useless-escape
-    if (!hyperlink.match('^https?:\/\/')) {
-      // eslint-disable-next-line prefer-template
-      hyperlink = 'http://' + hyperlink;
+    if (!hyperlink.match('^https?://')) {
+      hyperlink = `http://${hyperlink}`;
     }
 
-    return (
-      // eslint-disable-next-line prefer-template
-      '<a href="' +
-      hyperlink +
-      '" target="_blank" rel="noopener noreferrer">' +
-      url +
-      '</a>'
-    );
+    return `<a href="${hyperlink}" target="_blank" rel="noopener noreferrer">${url}</a>`;
   });
 }
