@@ -1,9 +1,13 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
+import { htmlSafe } from '@ember/template';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { getTimestamp } from '../../utils/timestamp-format';
-import { DoesTextContainsLink, TransformTextToClickableContent } from '../../utils/convert-url';
+import {
+  doesTextContainsLink,
+  transformTextToClickableContent
+} from '../../utils/url-helper';
 
 export default Component.extend({
   session: service(),
@@ -55,17 +59,22 @@ export default Component.extend({
       return startDate;
     }
   }),
+  hasLinkableText: computed('selectedEventObj.label', {
+    get() {
+      let label = this.get('selectedEventObj.label');
+
+      const isTextLinkable = doesTextContainsLink(label);
+
+      return isTextLinkable;
+    }
+  }),
   label: computed('selectedEventObj.label', {
     get() {
       let label = this.get('selectedEventObj.label');
 
-      const isTextLinkable = DoesTextContainsLink(label);
-      
-      if(isTextLinkable) {
-        return label = TransformTextToClickableContent(label);
-      }
+      label = transformTextToClickableContent(label);
 
-      return label;
+      return htmlSafe(label);
     }
   })
 });

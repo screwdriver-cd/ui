@@ -87,7 +87,11 @@
         {{#if selectedEventObj.label}}
           <div class="col">
             <span class="title">Label</span><br>
-            <span class="customize-label" title={{selectedEventObj.label}}>{{{label}}}</span>
+            {{#if this.hasLinkableText}}
+              <span class="customize-label" title={{selectedEventObj.label}}>{{label}}</span>
+            {{else}}
+              <span class="customize-label" title={{selectedEventObj.label}}>{{selectedEventObj.label}}</span>
+            {{/if}}
           </div>
         {{/if}}
       </div>
