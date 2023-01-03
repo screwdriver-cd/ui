@@ -60,6 +60,76 @@ const icon = status =>
   STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MAP.UNKNOWN.icon;
 
 /**
+ * extract graph only part of given stage
+ */
+const extractStageGraph = (graph, stage) => {
+  const { nodes, edges } = graph;
+  const jobIds = stage.jobs.map(j => parseInt(j.id, 10));
+  const newNodes = [];
+  const newNodesSet = new Set();
+  const newEdges = [];
+
+  nodes.forEach(n => {
+    const { id, name } = n;
+
+    if (jobIds.includes(parseInt(id, 10))) {
+      newNodes.push(n);
+      newNodesSet.add(name);
+    }
+  });
+
+  edges.forEach(e => {
+    const { src, dest } = e;
+
+    if (newNodesSet.has(src) && newNodesSet.has(dest)) {
+      newEdges.push(e);
+    }
+  });
+
+  let xMin;
+
+  let xMax;
+
+  let yMin;
+
+  let yMax;
+
+  newNodes.forEach(n => {
+    xMin = xMin === undefined ? n.pos.x : Math.min(xMin, n.pos.x);
+    xMax = xMax === undefined ? n.pos.x : Math.max(xMax, n.pos.x);
+    yMin = yMin === undefined ? n.pos.y : Math.min(yMin, n.pos.y);
+    yMax = yMax === undefined ? n.pos.y : Math.max(yMax, n.pos.y);
+  });
+
+  return {
+    nodes: newNodes,
+    edges: newEdges,
+    meta: {
+      width: xMax - xMin + 1,
+      height: yMax - yMin + 1
+    }
+  };
+};
+
+const getStagePosition = graph => {
+  const { nodes } = graph;
+
+  let x;
+
+  let y;
+
+  nodes.forEach(n => {
+    x = x === undefined ? n.pos.x : Math.min(x, n.pos.x);
+    y = y === undefined ? n.pos.y : Math.min(y, n.pos.y);
+  });
+
+  return {
+    x,
+    y
+  };
+};
+
+/**
  * Calculate how many nodes are visited in the graph from the given starting point
  * @method graphDepth
  * @param  {Array}   edges    List of graph edges
@@ -186,9 +256,10 @@ const hasProcessedDest = (graph, name) => {
  * @param  {Array|DS.PromiseArray}  [builds]     A list of build metadata
  * @param  {Array|DS.PromiseArray}  [jobs]       A list of job metadata
  * @param  {String}      [start]    Node name that indicates what started the graph
+ * @param  {Array|DS.PromiseArray}  [stages]     A list of stag metadata
  * @return {Object}                 A graph representation with row/column coordinates for drawing, and meta information for scaling
  */
-const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
+const decorateGraph = ({ inputGraph, builds, jobs, start, stages }) => {
   // deep clone
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const { nodes } = graph;
@@ -293,6 +364,17 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
     height: Math.max(1, ...y),
     width: Math.max(1, y.length - 1)
   };
+
+  if (stages) {
+    graph.stages = stages.map(s => {
+      const stageGraph = extractStageGraph(graph, s);
+
+      s.graph = stageGraph;
+      s.pos = getStagePosition(stageGraph);
+
+      return s;
+    });
+  }
 
   return graph;
 };

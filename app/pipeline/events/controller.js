@@ -206,12 +206,10 @@ export default Controller.extend(ModelReloaderMixin, {
   },
   queryParams: [
     {
-      jobId: { type: 'string' },
-      showStages: { type: 'boolean' }
+      jobId: { type: 'string' }
     }
   ],
   jobId: '',
-  showStages: false,
   session: service(),
   stop: service('event-stop'),
   sync: service(),

@@ -467,6 +467,322 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
+  test('it processes graph with stages', function (assert) {
+    const GRAPH = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'component', id: 1 },
+        { name: 'publish', id: 2 },
+        { name: 'ci-deploy', id: 21 },
+        { name: 'ci-test', id: 22 },
+        { name: 'ci-certify', id: 23 },
+        { name: 'prod-deploy', id: 31 },
+        { name: 'prod-test', id: 32 },
+        { name: 'prod-certify', id: 33 }
+      ],
+      edges: [
+        { src: '~pr', dest: 'component' },
+        { src: '~commit', dest: 'component' },
+        { src: 'component', dest: 'publish' },
+        { src: 'publish', dest: 'ci-deploy' },
+        { src: 'ci-deploy', dest: 'ci-test' },
+        { src: 'ci-test', dest: 'ci-certify' },
+        { src: 'ci-certify', dest: 'prod-deploy' },
+        { src: 'prod-deploy', dest: 'prod-test' },
+        { src: 'prod-test', dest: 'prod-certify' }
+      ]
+    };
+
+    const STAGES = [
+      {
+        id: 7,
+        name: 'integration',
+        jobs: [{ id: 21 }, { id: 22 }, { id: 23 }]
+      },
+      {
+        id: 8,
+        name: 'production',
+        jobs: [{ id: 31 }, { id: 32 }, { id: 33 }]
+      }
+    ];
+    // const builds = [
+    //   { jobId: 1, status: 'SUCCESS', id: 6 },
+    //   { jobId: 2, status: 'SUCCESS', id: 7 },
+    //   { jobId: 3, status: 'SUCCESS', id: 8 },
+    //   { jobId: 4, status: 'SUCCESS', id: 9 },
+    //   { jobId: 5, status: 'FAILURE', id: 10 }
+    // ];
+    const expectedOutput = {
+      edges: [
+        {
+          dest: 'component',
+          from: {
+            x: 0,
+            y: 0
+          },
+          src: '~pr',
+          to: {
+            x: 1,
+            y: 0
+          }
+        },
+        {
+          dest: 'component',
+          from: {
+            x: 0,
+            y: 1
+          },
+          src: '~commit',
+          to: {
+            x: 1,
+            y: 0
+          }
+        },
+        {
+          dest: 'publish',
+          from: {
+            x: 1,
+            y: 0
+          },
+          src: 'component',
+          to: {
+            x: 2,
+            y: 0
+          }
+        },
+        {
+          dest: 'ci-deploy',
+          from: {
+            x: 2,
+            y: 0
+          },
+          src: 'publish',
+          to: {
+            x: 3,
+            y: 0
+          }
+        },
+        {
+          dest: 'ci-test',
+          from: {
+            x: 3,
+            y: 0
+          },
+          src: 'ci-deploy',
+          to: {
+            x: 4,
+            y: 0
+          }
+        },
+        {
+          dest: 'ci-certify',
+          from: {
+            x: 4,
+            y: 0
+          },
+          src: 'ci-test',
+          to: {
+            x: 5,
+            y: 0
+          }
+        },
+        {
+          dest: 'prod-deploy',
+          from: {
+            x: 5,
+            y: 0
+          },
+          src: 'ci-certify',
+          to: {
+            x: 6,
+            y: 0
+          }
+        },
+        {
+          dest: 'prod-test',
+          from: {
+            x: 6,
+            y: 0
+          },
+          src: 'prod-deploy',
+          to: {
+            x: 7,
+            y: 0
+          }
+        },
+        {
+          dest: 'prod-certify',
+          from: {
+            x: 7,
+            y: 0
+          },
+          src: 'prod-test',
+          to: {
+            x: 8,
+            y: 0
+          }
+        }
+      ],
+      meta: {
+        height: 2,
+        width: 9
+      },
+      nodes: [
+        {
+          name: '~pr',
+          pos: {
+            x: 0,
+            y: 0
+          }
+        },
+        {
+          name: '~commit',
+          pos: {
+            x: 0,
+            y: 1
+          }
+        },
+        {
+          id: 1,
+          name: 'component',
+          pos: {
+            x: 1,
+            y: 0
+          }
+        },
+        {
+          id: 2,
+          name: 'publish',
+          pos: {
+            x: 2,
+            y: 0
+          }
+        },
+        {
+          id: 21,
+          name: 'ci-deploy',
+          pos: {
+            x: 3,
+            y: 0
+          }
+        },
+        {
+          id: 22,
+          name: 'ci-test',
+          pos: {
+            x: 4,
+            y: 0
+          }
+        },
+        {
+          id: 23,
+          name: 'ci-certify',
+          pos: {
+            x: 5,
+            y: 0
+          }
+        },
+        {
+          id: 31,
+          name: 'prod-deploy',
+          pos: {
+            x: 6,
+            y: 0
+          }
+        },
+        {
+          id: 32,
+          name: 'prod-test',
+          pos: {
+            x: 7,
+            y: 0
+          }
+        },
+        {
+          id: 33,
+          name: 'prod-certify',
+          pos: {
+            x: 8,
+            y: 0
+          }
+        }
+      ]
+    };
+
+    expectedOutput.stages = [
+      {
+        graph: {
+          edges: [expectedOutput.edges[4], expectedOutput.edges[5]],
+          meta: {
+            height: 1,
+            width: 3
+          },
+          nodes: [
+            expectedOutput.nodes[4],
+            expectedOutput.nodes[5],
+            expectedOutput.nodes[6]
+          ]
+        },
+        id: 7,
+        jobs: [
+          {
+            id: 21
+          },
+          {
+            id: 22
+          },
+          {
+            id: 23
+          }
+        ],
+        name: 'integration',
+        pos: {
+          x: 3,
+          y: 0
+        }
+      },
+      {
+        graph: {
+          edges: [expectedOutput.edges[7], expectedOutput.edges[8]],
+          meta: {
+            height: 1,
+            width: 3
+          },
+          nodes: [
+            expectedOutput.nodes[7],
+            expectedOutput.nodes[8],
+            expectedOutput.nodes[9]
+          ]
+        },
+        id: 8,
+        jobs: [
+          {
+            id: 31
+          },
+          {
+            id: 32
+          },
+          {
+            id: 33
+          }
+        ],
+        name: 'production',
+        pos: {
+          x: 6,
+          y: 0
+        }
+      }
+    ];
+
+    const result = decorateGraph({
+      inputGraph: GRAPH,
+      stages: STAGES
+    });
+
+    assert.deepEqual(result, expectedOutput);
+  });
+
   test('it determines the depth of a graph from various starting points', function (assert) {
     // edges not array
     assert.equal(graphDepth('meow', '~commit'), Number.MAX_VALUE, 'not array');

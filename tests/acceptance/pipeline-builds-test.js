@@ -68,6 +68,12 @@ module('Acceptance | pipeline build', function (hooks) {
       ];
     });
 
+    server.get('http://localhost:8080/v4/pipelines/4/stages', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+
     server.get('http://localhost:8080/v4/jobs/:jobId/builds', request => {
       const jobId = parseInt(request.params.jobId, 10);
 

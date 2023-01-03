@@ -96,3 +96,16 @@ g {
     stroke: $sd-success;
   }
 }
+
+.stage-container {
+  rx: 5;
+  ry: 5;
+}
+
+.stage-name {
+  font-weight: bold;
+}
+
+.stage-description {
+  color: $sd-text-med;
+}
