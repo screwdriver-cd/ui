@@ -1,9 +1,11 @@
 import { alias } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 import { getWithDefault, set } from '@ember/object';
 import Controller from '@ember/controller';
 
 export default Controller.extend({
   collection: alias('model.collection'),
+  shuttle: service(),
   actions: {
     removePipeline(pipelineId) {
       const collectionId = this.get('collection.id');
@@ -48,11 +50,7 @@ export default Controller.extend({
         .then(collection => {
           const pipelineIds = collection.get('pipelineIds');
 
-          collection.set('pipelineIds', [
-            ...new Set([...pipelineIds, ...addedPipelineIds])
-          ]);
-
-          return collection.save();
+          this.shuttle.updateCollection(collectionId, addedPipelineIds);
         });
     }
   }

@@ -349,5 +349,13 @@ export default Service.extend({
     const url = `/pipelines?${query}`;
 
     return this.fetchFromApi(method, url);
+  },
+
+  async updateCollection(collectionId, pipelineIds) {
+    const method = 'put';
+    const query = decodeURIComponent($.param({ ids: pipelineIds}));
+    const url = `/collections/${collectionId}/pipelines?${query}`;
+
+    return this.fetchFromApi(method, url);
   }
 });
