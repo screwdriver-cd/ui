@@ -357,5 +357,13 @@ export default Service.extend({
     const url = `/collections/${collectionId}/pipelines?${query}`;
 
     return this.fetchFromApi(method, url);
+  },
+
+  async removePipelines(collectionId, pipelineIds) {
+    const method = 'delete';
+    const query = decodeURIComponent($.param({ ids: pipelineIds}));
+    const url = `/collections/${collectionId}/pipelines?${query}`;
+
+    return this.fetchFromApi(method, url);
   }
 });

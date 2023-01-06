@@ -21,7 +21,7 @@ export default Controller.extend({
             pipelineIds.filter(id => id !== pipelineId)
           );
 
-          return collection.save();
+          this.shuttle.removePipelines(collectionId, pipelineId);
         });
     },
     removeMultiplePipelines(removedPipelineIds) {
@@ -38,7 +38,7 @@ export default Controller.extend({
             pipelineIds.filter(id => !removedPipelineIds.includes(id))
           );
 
-          return collection.save();
+          this.shuttle.removePipelines(collectionId, removedPipelineIds);
         });
     },
     onDeleteCollection() {
@@ -48,7 +48,6 @@ export default Controller.extend({
       return this.store
         .findRecord('collection', collectionId)
         .then(collection => {
-          const pipelineIds = collection.get('pipelineIds');
 
           this.shuttle.updateCollection(collectionId, addedPipelineIds);
         });
