@@ -353,15 +353,22 @@ export default Service.extend({
 
   async updateCollection(collectionId, pipelineIds) {
     const method = 'put';
-    const query = decodeURIComponent($.param({ ids: pipelineIds}));
+    const query = decodeURIComponent($.param({ ids: pipelineIds }));
     const url = `/collections/${collectionId}/pipelines?${query}`;
 
     return this.fetchFromApi(method, url);
   },
 
-  async removePipelines(collectionId, pipelineIds) {
+  async removePipeline(collectionId, pipelineId) {
     const method = 'delete';
-    const query = decodeURIComponent($.param({ ids: pipelineIds}));
+    const url = `/collections/${collectionId}/pipelines?ids[]=${pipelineId}`;
+
+    return this.fetchFromApi(method, url);
+  },
+
+  async removeMultiplePipelines(collectionId, pipelineIds) {
+    const method = 'delete';
+    const query = decodeURIComponent($.param({ ids: pipelineIds }));
     const url = `/collections/${collectionId}/pipelines?${query}`;
 
     return this.fetchFromApi(method, url);

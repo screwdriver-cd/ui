@@ -21,7 +21,7 @@ export default Controller.extend({
             pipelineIds.filter(id => id !== pipelineId)
           );
 
-          this.shuttle.removePipelines(collectionId, pipelineId);
+          this.shuttle.removePipeline(collectionId, pipelineId);
         });
     },
     removeMultiplePipelines(removedPipelineIds) {
@@ -38,7 +38,7 @@ export default Controller.extend({
             pipelineIds.filter(id => !removedPipelineIds.includes(id))
           );
 
-          this.shuttle.removePipelines(collectionId, removedPipelineIds);
+          this.shuttle.removeMultiplePipelines(collectionId, removedPipelineIds);
         });
     },
     onDeleteCollection() {
