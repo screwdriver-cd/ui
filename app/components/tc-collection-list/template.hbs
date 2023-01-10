@@ -105,6 +105,18 @@
   <ModelsTable
     @data={{this.data}}
     @columns={{this.columns}}
+    @columnComponents={{hash
+    tcCollectionLinker=(
+      component "tc-collection-linker"
+      prefix=this.routes.prefix
+      label="Name"
+    )
+    tcCollectionNamespaceLinker=(
+      component "tc-collection-linker"
+      prefix=this.routes.prefix
+      label="Namespace"
+    )
+  }}
     @themeInstance={{this.theme}}
     @showComponentFooter={{false}}
     @showColumnsDropdown={{false}}
