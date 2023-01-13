@@ -13,10 +13,11 @@ export default Controller.extend({
         await this.shuttle.removePipeline(collectionId, pipelineId);
         const collection = await this.store.findRecord('collection', collectionId);
 
-        return collection.save();
+        return collection;
       }
       catch (e) {
-        return e;
+
+       return e;
       }
     },
     async removeMultiplePipelines(removedPipelineIds) {
@@ -26,7 +27,7 @@ export default Controller.extend({
         await this.shuttle.removeMultiplePipelines(collectionId, removedPipelineIds);
         const collection = await this.store.findRecord('collection', collectionId);
 
-        return collection.save();
+        return collection;
       }
       catch (e) {
         return e;
@@ -40,7 +41,7 @@ export default Controller.extend({
         await this.shuttle.updateCollection(collectionId, addedPipelineIds);
         const collection = await this.store.findRecord('collection', collectionId);
 
-        return collection.save();
+        return collection;
       }
       catch (e) {
         return e;

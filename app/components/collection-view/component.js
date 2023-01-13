@@ -224,6 +224,7 @@ export default Component.extend({
           this.store.findRecord('collection', collectionId).then(collection => {
             this.setProperties({
               removePipelineError: null,
+              reset: true,
               collection,
               pipelineRemovedMessage: message
             });
