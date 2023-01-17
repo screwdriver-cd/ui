@@ -180,19 +180,7 @@
                   </div>
                   <div
                     class="col-xs-2 right"
-                    title="Toggle to
-
-
-                      {{if job.isDisabled "enable" "disable"}}
-
-
-                       the
-
-
-                      {{job.name}}
-
-
-                       job."
+                    title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job."
                   >
                     <XToggle
                       @size="small"
@@ -345,13 +333,7 @@
             </div>
             <div
               class="col-xs-2 right"
-              title="Toggle to
-
-
-                {{if this.groupedEvents "group" "ungroup"}}
-
-
-                 the pipeline"
+              title="Toggle to {{if this.groupedEvents "group" "ungroup"}} the pipeline"
             >
               <XToggle
                 @size="small"
@@ -375,13 +357,7 @@
             </div>
             <div
               class="col-xs-2 right"
-              title="Toggle to
-
-
-                {{if this.showEventTriggers "hide" "show"}}
-
-
-                 event tiggers"
+              title="Toggle to {{if this.showEventTriggers "hide" "show"}} event tiggers"
             >
               <XToggle
                 @size="small"
@@ -405,13 +381,7 @@
             </div>
             <div
               class="col-xs-2 right"
-              title="Toggle to
-
-
-                {{if this.filterEventsForNoBuilds "filter" "unfilter"}}
-
-
-                 events for no builds"
+              title="Toggle to {{if this.filterEventsForNoBuilds "filter" "unfilter"}} events for no builds"
             >
               <XToggle
                 @size="small"
@@ -453,13 +423,7 @@
             </div>
             <div
               class="col-xs-2 right"
-              title="Toggle to
-
-
-                {{if this.showPRJobs "show" "hide"}}
-
-
-                 the jobs that are triggered from PRs"
+              title="Toggle to {{if this.showPRJobs "show" "hide"}} the jobs that are triggered from PRs"
             >
               <XToggle
                 @size="small"
