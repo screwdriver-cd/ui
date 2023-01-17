@@ -1,5 +1,6 @@
+import { Sanitizer } from './sanitize';
+
 const URL_REGEX = /(((https?:\/\/)|(www\.))[^\s]+)/g;
-const TAGS_REGEX = /<(.|\n)*>/g;
 
 /**
  * @param {String} text to check if it contains link
@@ -16,7 +17,8 @@ export function doesTextContainsLink(text) {
 export function transformTextToClickableContent(text) {
   if (!text) return;
 
-  const filteredString = text.replace(TAGS_REGEX, '');
+  const sanitizer = new Sanitizer();
+  const filteredString = sanitizer.parseFromString(text);
 
   // eslint-disable-next-line consistent-return
   return filteredString.replace(URL_REGEX, function transformUrl(url) {
