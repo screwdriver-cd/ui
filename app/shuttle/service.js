@@ -353,8 +353,12 @@ export default Service.extend({
 
   async updateCollection(collectionId, pipelineIds) {
     const method = 'put';
-    const query = decodeURIComponent($.param({ ids: pipelineIds }));
-    const url = `/collections/${collectionId}/pipelines?${query}`;
+    const pipelineIdsEntries = pipelineIds.map(pipelineId => [
+      'ids[]',
+      pipelineId
+    ]);
+    const pipelineIdsQuery = new URLSearchParams(pipelineIdsEntries);
+    const url = `/collections/${collectionId}/pipelines?${pipelineIdsQuery}`;
 
     return this.fetchFromApi(method, url);
   },
@@ -368,8 +372,13 @@ export default Service.extend({
 
   async removeMultiplePipelines(collectionId, pipelineIds) {
     const method = 'delete';
-    const query = decodeURIComponent($.param({ ids: pipelineIds }));
-    const url = `/collections/${collectionId}/pipelines?${query}`;
+    const pipelineIdsEntries = pipelineIds.map(pipelineId => [
+      'ids[]',
+      pipelineId
+    ]);
+    const pipelineIdsQuery = new URLSearchParams(pipelineIdsEntries);
+
+    const url = `/collections/${collectionId}/pipelines?${pipelineIdsQuery}`;
 
     return this.fetchFromApi(method, url);
   }
