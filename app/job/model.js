@@ -25,7 +25,14 @@ export default Model.extend({
   title: attr('string'),
   group: computed('isPR', 'name', {
     get() {
+      if (this._group) {
+        return this.group;
+      }
+
       return this.isPR ? parseInt(this.name.slice('PR-'.length), 10) : null;
+    },
+    set(_, value) {
+      return this._group = value;
     }
   }),
   prNumber: alias('group'),

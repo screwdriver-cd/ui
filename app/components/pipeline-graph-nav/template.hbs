@@ -1,24 +1,24 @@
 {{#if this.showGraphNavRow}}
   <div class="row">
     {{#if (not this.isPR)}}
-      <div class="col-xs-2">
+      <div class="col-2">
         <BsButtonGroup
           class="view-toggle"
           @value={{this.showListView}}
           @type="radio"
           @onChange={{action this.setShowListView}} as |bg|
         >
-          <bg.button @value={{false}}>
+          <bg.button @value={{false}} @type="primary" @outline={{true}}>
             <FaIcon @icon="th" />
           </bg.button>
-          <bg.button @value={{true}}>
+          <bg.button @value={{true}} @type="primary" @outline={{true}}>
             <FaIcon @icon="th-list" />
           </bg.button>
         </BsButtonGroup>
       </div>
     {{/if}}
 
-    <div class="col-xs-4">
+    <div class="col-4">
       {{#if this.isPR}}
         <strong>
           Pull Requests
@@ -31,7 +31,7 @@
         @onChange={{action (mut this.selected)}} as |bg|
       >
         {{#each this.eventOptions as |opt|}}
-          <bg.button @value={{opt.value}}>
+          <bg.button @value={{opt.value}} @type="primary" @outline={{true}}>
             {{opt.label}}
           </bg.button>
         {{/each}}
@@ -39,7 +39,7 @@
     </div>
     {{#if (not this.isPR)}}
       <div
-        class="col-xs-3"
+        class="col-3"
         title="Toggle to {{if this.showDownstreamTriggers "hide" "show"}} the downstream trigger nodes."
       >
         <XToggle
@@ -53,7 +53,7 @@
         />
       </div>
     {{/if}}
-    <div class="col-xs-3">
+    <div class="col-3">
       {{#if this.session.isAuthenticated}}
         {{#if (not-eq this.selectedEventObj.type "pr")}}
           <PipelineStart
@@ -67,7 +67,7 @@
 {{/if}}
 {{#if this.selectedEventObj}}
   <div class="row {{this.selectedEventObj.status}}">
-    <div class="col-xs-12">
+    <div class="col-12">
       <div class="event-info">
         <div class="col">
           <span class="title">
