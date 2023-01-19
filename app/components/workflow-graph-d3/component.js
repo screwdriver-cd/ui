@@ -209,27 +209,16 @@ export default Component.extend({
     const { ICON_SIZE, TITLE_SIZE, ARROWHEAD } = this.elementSizes;
 
     // Need this if stage is in first row
-    const Y_DISPLACEMENT = this.showStages ? ICON_SIZE : 0;
-    // padding for stage title and description
-    const STAGE_Y_DISPLACEMENT = this.showStages ? 2 * ICON_SIZE : 0;
+    const Y_DISPLACEMENT = this.showStages ? ICON_SIZE / 2 : 0;
+    // gap between stages
+    const STAGE_GAP = ICON_SIZE / 9;
 
     const stagesGroupedByRowPosition = groupBy(data.stages, 'pos.y');
 
     const verticalDisplacementByRowPosition = {};
-
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < data.meta.height; i++) {
-      const stages = stagesGroupedByRowPosition[i];
-
-      if (stages === undefined) {
-        verticalDisplacementByRowPosition[i] =
-          i === 0 ? 0 : verticalDisplacementByRowPosition[i - 1];
-      } else {
-        verticalDisplacementByRowPosition[i] =
-          STAGE_Y_DISPLACEMENT +
-          (i === 0 ? Y_DISPLACEMENT : verticalDisplacementByRowPosition[i - 1]);
-      }
-    }
+    const getVerticalDisplacementByRowPosition = pos => {
+      return verticalDisplacementByRowPosition[pos] || 0;
+    };
 
     let X_WIDTH = ICON_SIZE * 2;
 
@@ -245,9 +234,11 @@ export default Component.extend({
     const w = this.width || data.meta.width * X_WIDTH;
     const h =
       this.height ||
-      data.meta.height * ICON_SIZE +
-        data.meta.height * Y_SPACING +
-        Y_DISPLACEMENT;
+      data.meta.height * ICON_SIZE + data.meta.height * Y_SPACING;
+
+    const calcSVGHeight = (totalYDisplacement = 0) => {
+      return h + totalYDisplacement;
+    };
 
     // Add the SVG element
     const svg = d3
@@ -271,88 +262,128 @@ export default Component.extend({
     const calcPos = (pos, spacer) =>
       (pos + 1) * ICON_SIZE +
       (pos * spacer - ICON_SIZE / 2) +
-      verticalDisplacementByRowPosition[pos];
+      getVerticalDisplacementByRowPosition(pos);
 
     const isSkipped = getWithDefault(this, 'isSkipped', false);
 
+    // stages
     if (this.showStages) {
-      const calcYForStageElement = pos => {
-        let y =
-          verticalDisplacementByRowPosition[pos] +
-          (2 * ICON_SIZE) / 3 +
-          -Y_DISPLACEMENT;
-
-        if (pos === 0) {
-          y -= STAGE_Y_DISPLACEMENT;
-        }
-
-        return y;
+      const calcStageY = (stage, yDisplacement = 0) => {
+        return (
+          calcPos(stage.pos.y, Y_SPACING) -
+          Y_DISPLACEMENT -
+          yDisplacement +
+          STAGE_GAP
+        );
       };
 
-      // stages
-      svg
-        .selectAll('stages')
-        .data(data.stages)
-        .enter()
-        .append('rect')
-        .attr('class', 'stage-container')
-        .attr('x', d => {
-          return d.pos.x * X_WIDTH + ICON_SIZE / 9;
-        })
-        .attr('y', d => {
-          return calcYForStageElement(d.pos.y);
-        })
-        .attr('width', d => {
-          return X_WIDTH * d.graph.meta.width - ICON_SIZE / 9;
-        })
-        .attr(
-          'height',
-          ICON_SIZE + Y_SPACING - ICON_SIZE / 9 + STAGE_Y_DISPLACEMENT
+      const calcStageX = stage => {
+        return stage.pos.x * X_WIDTH + STAGE_GAP;
+      };
+
+      const calcStageWidth = stage => {
+        return X_WIDTH * stage.graph.meta.width - STAGE_GAP;
+      };
+
+      const calcStageHeight = (stage, ydisplacement = 0) => {
+        return (
+          (ICON_SIZE + Y_SPACING) * stage.graph.meta.height -
+          STAGE_GAP +
+          ydisplacement
+        );
+      };
+
+      const stageIdToYDisplacmentMap = {};
+      const stageIdToStageElementsMap = {};
+
+      data.stages.forEach(stage => {
+        // stage container
+        const stageContainer = svg
+          .append('rect')
+          .attr('class', 'stage-container')
+          .attr('x', calcStageX(stage))
+          .attr('y', calcStageY(stage))
+          .attr('width', calcStageWidth(stage))
+          .attr('height', calcStageHeight(stage))
+          .attr('stroke', 'grey')
+          .attr('fill', '#ffffff');
+
+        // stage info
+        const fo = svg
+          .append('foreignObject')
+          .attr('width', X_WIDTH * stage.graph.meta.width - ICON_SIZE / 2)
+          .attr('height', 0) // Actual height will be computed and set later
+          .attr('x', calcStageX(stage))
+          .attr('y', calcStageY(stage))
+          .attr('class', 'stage-info-wrapper');
+
+        const stageInfo = fo.append('xhtml:div').attr('class', 'stage-info');
+
+        // stage info - name
+        stageInfo
+          .append('div')
+          .html(stage.name)
+          .attr('title', stage.name)
+          .attr('class', 'stage-name')
+          .style('font-size', `${TITLE_SIZE}px`);
+
+        // stage info - description
+        if (stage.description && stage.description.length > 0) {
+          stageInfo
+            .append('div')
+            .html(stage.description)
+            .attr('class', 'stage-description')
+            .style('font-size', `${TITLE_SIZE}px`);
+        }
+
+        const foHeight = stageInfo.node().getBoundingClientRect().height;
+
+        stageIdToYDisplacmentMap[stage.id] = foHeight;
+        stageIdToStageElementsMap[stage.id] = {
+          stageContainer,
+          stageInfoWrapper: fo
+        };
+      });
+
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < data.meta.height; i++) {
+        const stages = stagesGroupedByRowPosition[i];
+
+        if (stages === undefined) {
+          verticalDisplacementByRowPosition[i] =
+            i === 0 ? 0 : verticalDisplacementByRowPosition[i - 1];
+        } else {
+          const maxDisplacement = Math.max(
+            ...stages.map(s => stageIdToYDisplacmentMap[s.id])
+          );
+
+          verticalDisplacementByRowPosition[i] =
+            maxDisplacement +
+            (i === 0
+              ? Y_DISPLACEMENT
+              : verticalDisplacementByRowPosition[i - 1]);
+        }
+      }
+
+      // Adjust height and position of SVG and stage elements
+      data.stages.forEach(stage => {
+        const yDisplacement = stageIdToYDisplacmentMap[stage.id];
+        const { stageContainer, stageInfoWrapper } =
+          stageIdToStageElementsMap[stage.id];
+
+        stageInfoWrapper.attr('height', yDisplacement);
+        stageInfoWrapper.attr('y', calcStageY(stage, yDisplacement));
+
+        stageContainer.attr('height', calcStageHeight(stage, yDisplacement));
+        stageContainer.attr('y', calcStageY(stage, yDisplacement));
+      });
+
+      svg.attr(
+        'height',
+        calcSVGHeight(
+          getVerticalDisplacementByRowPosition(data.meta.height - 1)
         )
-        .attr('stroke', 'grey')
-        .attr('fill', '#ffffff');
-
-      // stage names
-      svg
-        .selectAll('stages')
-        .data(data.stages)
-        .enter()
-        .append('text')
-        .attr('class', 'stage-name')
-        .text(d => {
-          return d.name;
-        })
-        .attr('font-size', `${TITLE_SIZE}px`)
-        .style('text-anchor', 'left')
-        .style('inline-size', X_WIDTH * 3 - ICON_SIZE / 9)
-        .style('writing-mode', 'horizontal-tb')
-        .attr('x', d => {
-          return d.pos.x * X_WIDTH + 10;
-        })
-        .attr('y', d => {
-          return calcYForStageElement(d.pos.y) + 20;
-        });
-
-      // stage description
-      svg
-        .selectAll('stages')
-        .data(data.stages)
-        .enter()
-        .append('foreignObject')
-        .attr('width', X_WIDTH * 3 - ICON_SIZE / 2)
-        .attr('height', 50)
-        .attr('x', d => {
-          return d.pos.x * X_WIDTH + 10;
-        })
-        .attr('y', d => {
-          return calcYForStageElement(d.pos.y) + 30;
-        })
-        .append('xhtml:div')
-        .html(d => {
-          return d.description;
-        })
-        .attr('class', 'stage-description')
-        .style('font-size', `${TITLE_SIZE}px`);
+      );
     }
 
     // edges
@@ -422,7 +453,7 @@ export default Component.extend({
         d =>
           (d.pos.y + 1) * ICON_SIZE +
           d.pos.y * Y_SPACING +
-          verticalDisplacementByRowPosition[d.pos.y]
+          getVerticalDisplacementByRowPosition(d.pos.y)
       )
       .on('click', e => {
         this.send('buildClicked', e);
@@ -466,7 +497,7 @@ export default Component.extend({
             (d.pos.y + 1) * ICON_SIZE +
             d.pos.y * Y_SPACING +
             TITLE_SIZE +
-            verticalDisplacementByRowPosition[d.pos.y]
+            getVerticalDisplacementByRowPosition(d.pos.y)
         )
         .insert('title')
         .text(d => d.name);
