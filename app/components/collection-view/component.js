@@ -173,7 +173,7 @@ export default Component.extend({
     }
   }),
 
-  collectionPipelines: computed('collection.pipelines', {
+  collectionPipelines: computed('collection.pipelines.[]', {
     get() {
       let viewingId = this.get('collection.id');
 
@@ -219,11 +219,12 @@ export default Component.extend({
       const pipelineLabel = pipelineName ? ` ${pipelineName}` : '';
       const message = `The pipeline${pipelineLabel} has been removed from the ${collectionName} collection.`;
 
-      return this.onRemovePipeline(+pipelineId)
+      return this.onRemovePipeline(+pipelineId, collectionId)
         .then(() => {
           this.store.findRecord('collection', collectionId).then(collection => {
             this.setProperties({
               removePipelineError: null,
+              reset: true,
               collection,
               pipelineRemovedMessage: message
             });
