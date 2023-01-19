@@ -31,15 +31,12 @@
   <div class="repo-url">
     <Input
       class="text-input scm-url"
-      @key-up={{action "scmChange"}}
       placeholder="Enter your repository url (eg: git@github.com:screwdriver-cd/ui.git#branchName)"
       @value={{this.scmUrl}}
       @enter={{action "saveData"}}
     />
     {{#if this.isValid}}
-      <i class="success">
-        <FaIcon @icon="check" />
-      </i>
+        <FaIcon class="success" @icon="check" />
     {{/if}}
   </div>
   {{#if this.prUrl}}
