@@ -4,41 +4,25 @@ import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const TEMPLATE_DATA_WITH_NAME = {
-  column: {
-    label: 'Name'
+  label: 'Name',
+  prefix: 'collection.detail',
+  component: 'tc-collection-linker',
+  record: {
+    namespace: 'foo',
+    name: 'bar',
+    trusted: true,
   },
-  extra: {
-    routes: {
-      namespace: 'collection.namespace',
-      detail: 'collection.detail'
-    }
-  },
-  row: {
-    content: {
-      namespace: 'foo',
-      name: 'bar',
-      trusted: true
-    }
-  },
-  value: 'bar'
 };
 
 const TEMPLATE_DATA_WITH_NAMESPACE = {
-  column: {
-    label: 'Namespace'
+  label: 'Namespace',
+  prefix: 'collection.detail',
+  component: 'tc-collection-linker',
+  record: {
+    namespace: 'baz',
+    name: 'qux',
+    trusted: false,
   },
-  extra: {
-    routes: {
-      namespace: 'collection.namespace',
-      detail: 'collection.detail'
-    }
-  },
-  row: {
-    content: {
-      namespace: 'baz'
-    }
-  },
-  value: 'baz'
 };
 
 module('Integration | Component | tc collection linker', function (hooks) {
@@ -50,7 +34,7 @@ module('Integration | Component | tc collection linker', function (hooks) {
     );
 
     await render(
-      hbs`<TcCollectionLinker @column={{this.column}} @extra={{this.extra}} @value={{this.value}} @row={{this.row}} />`
+      hbs`<TcCollectionLinker @record={{this.record}} @component={{this.component}} @prefix={{this.prefix}} @label={{this.label}} />`
     );
 
     assert.dom('a .namespace').hasText('baz');
@@ -62,7 +46,7 @@ module('Integration | Component | tc collection linker', function (hooks) {
     );
 
     await render(
-      hbs`<TcCollectionLinker @column={{this.column}} @extra={{this.extra}} @value={{this.value}} @row={{this.row}} />`
+      hbs`<TcCollectionLinker @record={{this.record}} @component={{this.component}} @prefix={{this.prefix}} @label={{this.label}} />`
     );
 
     assert.dom('a .name').hasText('bar');
