@@ -55,7 +55,7 @@
       </nav.item>
       {{#if @session.isAuthenticated}}
         <nav.item>
-          <nav.link-to onclick={{action "openCreatePipeline"}} class="icon">
+          <nav.link-to onclick={{action "openCreatePipeline"}} class="icon create">
             {{svg-jar "add-circle" class="img" width="20px"}}
             <span>
               Create Pipeline
