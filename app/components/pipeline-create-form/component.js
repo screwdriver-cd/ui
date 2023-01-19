@@ -86,6 +86,7 @@ export default Component.extend({
      * @param  {String}      val The value of the rootDir input box
      */
     updateRootDir(val) {
+      console.log(val)
       this.set('rootDir', val.trim());
     },
 
@@ -101,6 +102,8 @@ export default Component.extend({
           rootDir: this.rootDir,
           autoKeysGeneration: this.autoKeysGeneration
         };
+
+        console.log(payload)
 
         if (this.automaticYamlCreation) {
           payload.yaml = this.yaml;

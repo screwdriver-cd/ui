@@ -50,10 +50,8 @@
   <div>
     <PipelineRootdir
       @value={{this.rootDir}}
-      @hasRootDir={{false}}
       @updateRootDir={{action "updateRootDir"}}
     />
-
     {{#if this.hasAutoDeployEnabled}}
       <label class="normal-weight toggle-auto-deploy-key-generation">
         <Input
