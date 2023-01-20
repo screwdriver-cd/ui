@@ -8,6 +8,7 @@ import moment from 'moment';
 export default Component.extend({
   router: service(),
   shuttle: service(),
+  store: service(),
   errorMessage: '',
   isGroupedEvents: computed('pipeline.settings.groupedEvents', {
     get() {
@@ -53,6 +54,37 @@ export default Component.extend({
 
     scheduleOnce('afterRender', this, 'updateEvents', this.eventsPage + 1);
   },
+  async appendEvent() {
+    const eventId = this.selected;
+    const desiredEvent = this.events.findBy('id', eventId);
+
+    if (!desiredEvent) {
+      const event = await this.store.findRecord('event', eventId);
+
+      this.paginateEvents.pushObject(event);
+    } else {
+      const isGroupedEvents =
+        get(this, 'pipeline.settings.groupedEvents') ===
+        undefined
+          ? true
+          : get(this, 'pipeline.settings.groupedEvents');
+
+      if (isGroupedEvents === true) {
+        const { groupEventId } = desiredEvent;
+
+        const expandedEventsGroup =
+          this.expandedEventsGroup || {};
+
+        if (expandedEventsGroup[groupEventId] === undefined) {
+          expandedEventsGroup[groupEventId] = true;
+        }
+        this.set(
+          'expandedEventsGroup',
+          expandedEventsGroup
+        );
+      }
+    }
+  },
   actions: {
     startPRBuild(parameters) {
       this.startPRBuild.apply(null, [parameters, this.events]);
@@ -60,8 +92,10 @@ export default Component.extend({
     stopEvent() {
       this.stopEvent();
     },
-    eventClick(id, eventType) {
+    async eventClick(id, eventType) {
       set(this, 'selected', id);
+
+      await this.appendEvent();
 
       if (eventType !== 'pr') {
         let currentEvent;
