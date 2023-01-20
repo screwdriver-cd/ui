@@ -7,8 +7,9 @@ export default Component.extend({
   jobId: computed('record.job', {
     get() {
       const { job } = this.record;
+      console.log(job);
 
-      return job && job.build && job.build.jobId ? job.build.jobId : '';
+      return job?.build?.jobId ?? '';
     }
   })
 });

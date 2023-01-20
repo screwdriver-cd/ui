@@ -26,7 +26,13 @@
   @showGlobalFilter={{false}}
   @showCurrentPageNumberSelect={{false}}
   @multipleColumnsSorting={{false}}
+  @pageSize={{100}}
 />
+<div class="loader" {{in-viewport onEnter=(action "onScrolledToBottom")}}>
+  {{#if this.isLoading}}
+      Loading...
+  {{/if}}
+</div>
 
 {{#if this.isShowingModal}}
   <ModalDialog
