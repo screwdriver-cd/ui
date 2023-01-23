@@ -73,7 +73,18 @@ export default Model.extend({
     }
   }),
   builds: hasMany('build', { async: true }),
-  isDisabled: equal('state', 'DISABLED'),
+  isDisabled: computed({
+    get() {
+      if (this._isDisabled !== undefined) {
+        return this._isDisabled;
+      }
+
+      return this.state === 'DISABLED';
+    },
+    set(_, value) {
+      return this._isDisabled = value;
+    }
+  }),
   modelToReload: 'builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   // Reload builds only if the pr job build is still running

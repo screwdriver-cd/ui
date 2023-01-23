@@ -1,5 +1,5 @@
 {{#if this.hasParameters}}
-  {{#if hasLargeNumberOfParameters}}
+  {{#if this.hasLargeNumberOfParameters}}
     {{#if (not this.prNum)}}
       <div class="btn-group">
         <button
@@ -57,15 +57,15 @@
           class="start-with-parameters-button"
           @onClick={{action "toggleDropdown" dd.toggleDropdown}}
         >
-          <FaIcon @icon={{(concat "caret-" direction)}} />
+          <FaIcon @icon={{(concat "caret-" this.direction)}} />
         </dd.button>
       </div>
       <dd.menu class="start-with-parameters-menu">
         <PipelineParameterizedBuild
-          @pipeline={{pipeline}}
+          @pipeline={{this.pipeline}}
           @showSubmitButton={{true}}
-          @buildPipelineParameters={{pipelineParameters}}
-          @buildJobParameters={{jobParameters}}
+          @buildPipelineParameters={{this.pipelineParameters}}
+          @buildJobParameters={{this.jobParameters}}
           @onSave={{action "startBuild"}}
           @onClose={{action dd.closeDropdown}}
         />
