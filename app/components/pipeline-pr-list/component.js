@@ -35,8 +35,16 @@ export default Component.extend({
   },
 
   showJobs: computed('jobs.@each.builds', 'inited', {
-    get() {
-      return this.inited || this.jobs.some(j => !!j.get('builds.length'));
+    async get() {
+      if (this.inited) {
+        return true;
+      }
+
+      for (const j of this.jobs) {
+        if ((await j.builds).length) return true;
+      }
+
+      return false;
     }
   }),
 
