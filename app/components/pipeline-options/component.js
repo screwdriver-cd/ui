@@ -56,14 +56,6 @@ export default Component.extend({
       .filter(j => !j.name.match(prRegex))
       .sortBy('name');
   }),
-  sortedJobsName: computed('jobs', function filterThenSortJobs() {
-    const prRegex = /PR-\d+:.*/;
-
-    return (this.jobs === undefined ? [] : this.jobs)
-      .filter(j => !j.name.match(prRegex))
-      .sortBy('name')
-      .map(value => value.name);
-  }),
   isInvalid: not('isValid'),
   isDisabled: or('isSaving', 'isInvalid'),
   isValid: computed('scmUrl', {
