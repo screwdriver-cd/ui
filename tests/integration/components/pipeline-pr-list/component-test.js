@@ -158,7 +158,7 @@ module('Integration | Component | pipeline pr list', function (hooks) {
       })
     ];
 
-    const workflowgraph = {
+    const workflowGraph = {
       nodes: [
         { name: '~pr' },
         { name: '~commit' },
@@ -173,7 +173,7 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     };
 
     this.set('jobsMock', jobs);
-    this.set('workflowGraphMock', workflowgraph);
+    this.set('workflowGraphMock', workflowGraph);
     this.set('startBuild', Function.prototype);
     this.set('stopPRBuilds', Function.prototype);
     this.set('pipelineMock', mockPipelineData);
@@ -204,7 +204,22 @@ module('Integration | Component | pipeline pr list', function (hooks) {
       })
     ];
 
+    const workflowGraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
+
     this.set('jobsMock', jobs);
+    this.set('workflowGraphMock', workflowGraph);
     this.set('isRestricted', true);
     this.set('startBuild', Function.prototype);
     this.set('stopPRBuilds', Function.prototype);
@@ -213,6 +228,7 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     await render(hbs`<PipelinePrList
       @jobs={{this.jobsMock}}
       @pipeline={{this.pipelineMock}}
+      @workflowGraph={{this.workflowGraphMock}}
       @isRestricted={{this.isRestricted}}
       @startBuild={{this.startBuild}}
       @stopPRBuilds={{this.stopPRBuilds}}
@@ -243,7 +259,7 @@ module('Integration | Component | pipeline pr list', function (hooks) {
       })
     ];
 
-    const workflowgraph = {
+    const workflowGraph = {
       nodes: [
         { name: '~pr' },
         { name: '~commit' },
@@ -261,7 +277,7 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     this.set('isRestricted', true);
     this.set('startBuild', Function.prototype);
     this.set('stopPRBuilds', Function.prototype);
-    this.set('workflowGraphMock', workflowgraph);
+    this.set('workflowGraphMock', workflowGraph);
     this.set('pipelineMock', mockPipelineData);
 
     await render(hbs`<PipelinePrList
