@@ -23,22 +23,18 @@
                 </p>
               </div>
             </div>
-            <div class="row">
-              <div class="col-xs-10">
-                <div>
-                  <Input
-                    class="text-input scm-url"
-                    @key-up={{action "scmChange"}}
-                    @value={{this.scmUrl}}
-                  />
-                </div>
-                <PipelineRootdir
-                  @hasRootDir={{this.hasRootDir}}
-                  @rootDir={{this.rootDir}}
-                  @updateRootDir={{action "updateRootDir"}}
-                />
-              </div>
+            <div>
+              <Input
+                class="text-input scm-url"
+                @key-up={{action "scmChange"}}
+                @value={{this.scmUrl}}
+              />
             </div>
+            <PipelineRootdir
+              @hasRootDir={{this.hasRootDir}}
+              @rootDir={{this.rootDir}}
+              @updateRootDir={{action "updateRootDir"}}
+            />
           </li>
 
           <li>
@@ -108,15 +104,16 @@
                   <div class="row">
                     <div class="col-xs-5">
                       <PowerSelectMultiple
+                        @searchEnabled={{true}}
                         @options={{this.sortedJobs}}
-                        @renderInPlace={{true}}
                         @selected={{this.metricsDowntimeJobs}}
+                        @searchField="name"
                         @placeholder="Select Jobs..."
                         @onChange={{action
                           (mut this.metricsDowntimeJobs)
                         }} as |metricsDowntimeJob|
                       >
-                        {{metricsDowntimeJob.name}}
+                        {{metricsDowntimeJob}}
                       </PowerSelectMultiple>
                     </div>
                   </div>
@@ -127,7 +124,7 @@
                     {{action "updateMetricsDowntimeJobs" this.metricsDowntimeJobs}}
                   >
                     <FaIcon
-                      @icon="refresh"
+                      @icon="trash"
                       @spin={{this.isUpdatingMetricsDowntimeJobs}}
                     />
                   </a>
