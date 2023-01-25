@@ -96,7 +96,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-xs-6">
+              <div class="col-6">
                 <button
                   class="d-button is-primary"
                   disabled={{eq (get-length this.reason) 0}}
@@ -110,7 +110,7 @@
                   Yes
                 </button>
               </div>
-              <div class="col-xs-6 right">
+              <div class="col-6 right">
                 <button
                   class="d-button is-secondary"
                   {{action "cancelStartBuild"}}
@@ -135,7 +135,7 @@
             </div>
           </div>
           <div class="row non-parameters-build">
-            <div class="col-xs-6">
+            <div class="col-6">
               <button
                 class="d-button is-primary"
                 disabled={{eq (get-length this.reason) 0}}
@@ -144,7 +144,7 @@
                 Yes
               </button>
             </div>
-            <div class="col-xs-6 right">
+            <div class="col-6 right">
               <button
                 class="d-button is-secondary"
                 {{action "cancelStartBuild"}}
@@ -162,7 +162,7 @@
           @startFrom={{this.tooltipData.job.name}} as |parameterizedBuild|
         >
           <div class="row">
-            <div class="col-xs-6">
+            <div class="col-6">
               <button
                 class="d-button is-primary"
                 {{action
@@ -173,7 +173,7 @@
                 Yes
               </button>
             </div>
-            <div class="col-xs-6 right">
+            <div class="col-6 right">
               <button
                 class="d-button is-secondary"
                 {{action "cancelStartBuild"}}
@@ -185,12 +185,12 @@
         </PipelineParameterizedBuild>
       {{else}}
         <div class="row non-parameters-build">
-          <div class="col-xs-6">
+          <div class="col-6">
             <button class="d-button is-primary" {{action "startDetachedBuild"}}>
               Yes
             </button>
           </div>
-          <div class="col-xs-6 right">
+          <div class="col-6 right">
             <button class="d-button is-secondary" {{action "cancelStartBuild"}}>
               No
             </button>
