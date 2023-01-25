@@ -6,7 +6,7 @@
 <InfoMessage @message={{this.successMessage}} @type="success" @icon="check" />
 <div class="row">
   {{#unless this.pipeline.configPipelineId}}
-    <div class="col-xs-12 col-md-8">
+    <div class="col-12 col-md-8">
       <section class="pipeline">
         <h3>
           Pipeline
@@ -14,7 +14,7 @@
         <ul>
           <li>
             <div class="row">
-              <div class="col-xs-10">
+              <div class="col-10">
                 <h4>
                   Checkout URL and Source Directory
                 </h4>
@@ -39,7 +39,7 @@
 
           <li>
             <div class="row">
-              <div class="col-xs-12 right">
+              <div class="col-12 right">
                 <button
                   disabled={{this.isDisabled}}
                   class="blue-button{{if this.isSaving " saving"}}"
@@ -61,7 +61,7 @@
 
           <li>
             <div class="row">
-              <div class="col-xs-12">
+              <div class="col-12">
                 <h4>
                   Pipeline alias
                 </h4>
@@ -72,13 +72,13 @@
               <div class="col-md-8 right">
                 <input
                   type="text"
-                  class="pipeline-alias-name col-xs-12"
+                  class="pipeline-alias-name col-12"
                   placeholder="alias"
                   value={{this.aliasName}}
                   oninput={{action (mut this.aliasName) value="target.value"}}
                 />
                 <button class="reset-button" {{action "resetPipelineAlias"}}>
-                  <FaIcon @icon="refresh" />
+                  <FaIcon @icon="sync" />
                   Reset
                 </button>
                 <button
@@ -94,7 +94,7 @@
           {{#if this.displayDowntimeJobs}}
             <li>
               <div class="row">
-                <div class="col-xs-10">
+                <div class="col-10">
                   <h4>
                     Downtime Jobs
                   </h4>
@@ -102,7 +102,7 @@
                     Pick your own preferred jobs to be counted in metrics graph (default all jobs)
                   </p>
                   <div class="row">
-                    <div class="col-xs-5">
+                    <div class="col-5">
                       <PowerSelectMultiple
                         @searchEnabled={{true}}
                         @options={{this.sortedJobs}}
@@ -113,18 +113,18 @@
                           (mut this.metricsDowntimeJobs)
                         }} as |metricsDowntimeJob|
                       >
-                        {{metricsDowntimeJob}}
+                        {{metricsDowntimeJob.name}}
                       </PowerSelectMultiple>
                     </div>
                   </div>
                 </div>
-                <div class="col-xs-2 right sync">
+                <div class="col-2 right sync">
                   <a
                     href="#"
                     {{action "updateMetricsDowntimeJobs" this.metricsDowntimeJobs}}
                   >
                     <FaIcon
-                      @icon="trash"
+                      @icon="sync"
                       @spin={{this.isUpdatingMetricsDowntimeJobs}}
                     />
                   </a>
@@ -137,7 +137,7 @@
     </div>
   {{/unless}}
 
-  <div class="col-xs-12 col-md-8">
+  <div class="col-12 col-md-8">
     <section class="jobs">
       <h3>
         Jobs
@@ -145,7 +145,7 @@
       <ul>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <p>
                 Toggle to disable or enable the job.
               </p>
@@ -155,7 +155,7 @@
             {{#unless (starts-with job.name "PR-")}}
               <li>
                 <div class="row">
-                  <div class="col-xs-10">
+                  <div class="col-10">
                     <h4>
                       {{job.name}}
                     </h4>
@@ -176,7 +176,7 @@
                     {{/if}}
                   </div>
                   <div
-                    class="col-xs-2 right"
+                    class="col-2 right"
                     title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job."
                   >
                     <XToggle
@@ -196,7 +196,7 @@
     </section>
   </div>
 
-  <div class="col-xs-12 col-md-8">
+  <div class="col-12 col-md-8">
     <section class="sync">
       <h3>
         Sync
@@ -204,7 +204,7 @@
       <ul>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <h4>
                 SCM webhooks
               </h4>
@@ -212,16 +212,16 @@
                 Update the webhooks if they are not working correctly.
               </p>
             </div>
-            <div class="col-xs-2 right">
+            <div class="col-2 right">
               <a href="#" {{action "sync" "webhooks"}}>
-                <FaIcon @icon="refresh" />
+                <FaIcon @icon="sync" />
               </a>
             </div>
           </div>
         </li>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <h4>
                 Pull requests
               </h4>
@@ -229,16 +229,16 @@
                 Create or update pull-request jobs if they are not displaying properly.
               </p>
             </div>
-            <div class="col-xs-2 right">
+            <div class="col-2 right">
               <a href="#" {{action "sync" "pullrequests"}}>
-                <FaIcon @icon="refresh" />
+                <FaIcon @icon="sync" />
               </a>
             </div>
           </div>
         </li>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <h4>
                 Pipeline
               </h4>
@@ -246,9 +246,9 @@
                 Update jobs if they are not displaying properly.
               </p>
             </div>
-            <div class="col-xs-2 right">
+            <div class="col-2 right">
               <a href="#" {{action "sync"}}>
-                <FaIcon @icon="refresh" />
+                <FaIcon @icon="sync" />
               </a>
             </div>
           </div>
@@ -257,7 +257,7 @@
     </section>
   </div>
 
-  <div class="col-xs-12 col-md-8">
+  <div class="col-12 col-md-8">
     <section class="cache">
       <h3>
         Cache
@@ -265,7 +265,7 @@
       <ul>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <h4>
                 Pipeline
               </h4>
@@ -273,7 +273,7 @@
                 Click to clear the cache for the pipeline.
               </p>
             </div>
-            <div class="col-xs-2 right">
+            <div class="col-2 right">
               <a href="#" {{action "clearCache" "pipelines"}}>
                 <FaIcon @icon="trash" />
               </a>
@@ -284,7 +284,7 @@
           {{#unless job.isPR}}
             <li>
               <div class="row">
-                <div class="col-xs-10">
+                <div class="col-10">
                   <h4>
                     Job {{job.name}}
                   </h4>
@@ -293,7 +293,7 @@
                   </p>
                 </div>
                 <div
-                  class="col-xs-2 right"
+                  class="col-2 right"
                   title="Click to clear cache for {{job.name}} job."
                 >
                   <a href="#" {{action "clearCache" "jobs" job.id}}>
@@ -308,7 +308,7 @@
     </section>
   </div>
 
-  <div class="col-xs-12 col-md-8">
+  <div class="col-12 col-md-8">
     <section class="preference">
       <h3>
         Pipeline Preferences
@@ -316,7 +316,7 @@
       <ul>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <h4>
                 Group Events
               </h4>
@@ -329,7 +329,7 @@
               </p>
             </div>
             <div
-              class="col-xs-2 right"
+              class="col-2 right"
               title="Toggle to {{if this.groupedEvents "group" "ungroup"}} the pipeline"
             >
               <XToggle
@@ -344,7 +344,7 @@
         </li>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <h4>
                 Show Triggers
               </h4>
@@ -353,7 +353,7 @@
               </p>
             </div>
             <div
-              class="col-xs-2 right"
+              class="col-2 right"
               title="Toggle to {{if this.showEventTriggers "hide" "show"}} event tiggers"
             >
               <XToggle
@@ -368,7 +368,7 @@
         </li>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <h4>
                 Filter Events For No Builds
               </h4>
@@ -377,7 +377,7 @@
               </p>
             </div>
             <div
-              class="col-xs-2 right"
+              class="col-2 right"
               title="Toggle to {{if this.filterEventsForNoBuilds "filter" "unfilter"}} events for no builds"
             >
               <XToggle
@@ -393,7 +393,7 @@
     </section>
   </div>
 
-  <div class="col-xs-12 col-md-8">
+  <div class="col-12 col-md-8">
     <section class="preference">
       <h3>
         User Preference
@@ -401,7 +401,7 @@
       <ul>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <p>
                 All settings here are stored locally in your browser.
               </p>
@@ -410,7 +410,7 @@
         </li>
         <li>
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <h4>
                 Show PR Jobs
               </h4>
@@ -419,7 +419,7 @@
               </p>
             </div>
             <div
-              class="col-xs-2 right"
+              class="col-2 right"
               title="Toggle to {{if this.showPRJobs "show" "hide"}} the jobs that are triggered from PRs"
             >
               <XToggle
@@ -437,7 +437,7 @@
   </div>
 
   {{#unless this.pipeline.configPipelineId}}
-    <div class="col-xs-12 col-md-8">
+    <div class="col-12 col-md-8">
       <section class="danger">
         <h3>
           Danger Zone
@@ -447,7 +447,7 @@
             <li>
               {{#if this.showPipelineVisibilityDangerButton}}
                 <div class="row">
-                  <div class="col-xs-10">
+                  <div class="col-10">
                     <h4>
                       Set pipeline visibility
                     </h4>
@@ -455,7 +455,7 @@
                       Think twice before setting pipeline to public.
                     </p>
                   </div>
-                  <div class="col-xs-2 right" title="Set pipeline visibility">
+                  <div class="col-2 right" title="Set pipeline visibility">
                     <XToggle
                       @size="small"
                       @value={{this.publicPipeline}}
@@ -503,7 +503,7 @@
           <li>
             {{#if this.showRemoveDangerButton}}
               <div class="row">
-                <div class="col-xs-1 col-md-8">
+                <div class="col-1 col-md-8">
                   <h4>
                     Delete this pipeline
                   </h4>
@@ -511,7 +511,7 @@
                     Once you delete a pipeline, there is no going back.
                   </p>
                 </div>
-                <div class="col-xs-1 col-md-4 right">
+                <div class="col-1 col-md-4 right">
                   <a
                     href="#"
                     class="trash"
