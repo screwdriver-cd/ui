@@ -30,15 +30,18 @@ module('Unit | Controller | Commands', function (hooks) {
       assert.deepEqual(controller.crumbs, [
         {
           name: 'Commands',
+          route: 'commands',
           params: ['commands']
         },
         {
           name: 'testNamespace',
-          params: ['commands.namespace', 'testNamespace']
+          route: 'commands.namespace',
+          params: ['testNamespace']
         },
         {
           name: 'testName',
-          params: ['commands.detail', 'testNamespace', 'testName']
+          route: 'commands.detail',
+          params: ['testNamespace', 'testName']
         }
       ]);
     });
