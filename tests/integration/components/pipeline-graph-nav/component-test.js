@@ -492,4 +492,117 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
 
     assert.dom('.latest-commit').exists({ count: 1 });
   });
+
+  test('label does not contain any URLs', async function (assert) {
+    set(this, 'obj', {
+      sha: 'abc123',
+      baseBranch: 'main',
+      truncatedSha: 'abc123',
+      status: 'SUCCESS',
+      commit: {
+        author: { name: 'anonymous' }
+      },
+      createTime: '04/11/2016, 08:09 PM',
+      createTimeExact: '04/11/2016, 08:09 PM',
+      truncatedMessage: 'test message',
+      durationText: '10 seconds',
+      label:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'
+    });
+    set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      latestCommit=latestCommit
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
+    }}`);
+
+    assert
+      .dom('.col .customize-label')
+      .hasText(
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'
+      );
+  });
+
+  test('label contain URLs', async function (assert) {
+    set(this, 'obj', {
+      sha: 'abc123',
+      baseBranch: 'main',
+      truncatedSha: 'abc123',
+      status: 'SUCCESS',
+      commit: {
+        author: { name: 'anonymous' }
+      },
+      createTime: '04/11/2016, 08:09 PM',
+      createTimeExact: '04/11/2016, 08:09 PM',
+      truncatedMessage: 'test message',
+      durationText: '10 seconds',
+      label:
+        'Lorem ipsum dolor sit amet, https://abc.com consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'
+    });
+    set(this, 'selected', 2);
+    set(this, 'latestCommit', {
+      sha: 'latestSha'
+    });
+    set(this, 'startBuild', () => {
+      assert.ok(true);
+    });
+    set(this, 'currentEventType', 'pipeline');
+    set(this, 'showDownstreamTriggers', false);
+    set(this, 'setDownstreamTrigger', () => {
+      assert.ok(true);
+    });
+    set(this, 'setShowListView', () => {
+      assert.ok(true);
+    });
+
+    await render(hbs`{{pipeline-graph-nav
+      mostRecent=3
+      latestCommit=latestCommit
+      lastSuccessful=2
+      selectedEvent=2
+      selectedEventObj=obj
+      selected=selected
+      startMainBuild=startBuild
+      startPRBuild=startBuild
+      graphType=currentEventType
+      showDownstreamTriggers=showDownstreamTriggers
+      setDownstreamTrigger=setDownstreamTrigger
+      setShowListView=setShowListView
+    }}`);
+    const compare = (elem, expected) => {
+      const actual = elem.innerHTML.trim();
+
+      assert.strictEqual(actual, expected);
+    };
+    const labelColumn = this.element.querySelector('.col .customize-label');
+
+    compare(
+      labelColumn,
+      'Lorem ipsum dolor sit amet, <a href="https://abc.com">https://abc.com</a> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'
+    );
+  });
 });
