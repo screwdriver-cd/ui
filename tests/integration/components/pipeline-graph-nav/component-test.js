@@ -494,35 +494,36 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
   });
 
   test('label does not contain any URLs', async function (assert) {
-    set(this, 'obj', {
-      sha: 'abc123',
-      baseBranch: 'main',
-      truncatedSha: 'abc123',
-      status: 'SUCCESS',
-      commit: {
-        author: { name: 'anonymous' }
+    this.setProperties({
+      obj: {
+        sha: 'abc123',
+        baseBranch: 'main',
+        truncatedSha: 'abc123',
+        status: 'SUCCESS',
+        commit: {
+          author: { name: 'anonymous' }
+        },
+        createTime: '04/11/2016, 08:09 PM',
+        createTimeExact: '04/11/2016, 08:09 PM',
+        truncatedMessage: 'test message',
+        durationText: '10 seconds',
+        label: 'Yahoo new project, and Version #2.0'
       },
-      createTime: '04/11/2016, 08:09 PM',
-      createTimeExact: '04/11/2016, 08:09 PM',
-      truncatedMessage: 'test message',
-      durationText: '10 seconds',
-      label:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'
-    });
-    set(this, 'selected', 2);
-    set(this, 'latestCommit', {
-      sha: 'latestSha'
-    });
-    set(this, 'startBuild', () => {
-      assert.ok(true);
-    });
-    set(this, 'currentEventType', 'pipeline');
-    set(this, 'showDownstreamTriggers', false);
-    set(this, 'setDownstreamTrigger', () => {
-      assert.ok(true);
-    });
-    set(this, 'setShowListView', () => {
-      assert.ok(true);
+      selected: 2,
+      latestCommit: {
+        sha: 'latestSha'
+      },
+      startBuild: () => {
+        assert.ok(true);
+      },
+      currentEventType: 'pipeline',
+      showDownstreamTriggers: false,
+      setDownstreamTrigger: () => {
+        assert.ok(true);
+      },
+      setShowListView: () => {
+        assert.ok(true);
+      }
     });
 
     await render(hbs`{{pipeline-graph-nav
@@ -542,41 +543,40 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
 
     assert
       .dom('.col .customize-label')
-      .hasText(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'
-      );
+      .hasText('Yahoo new project, and Version #2.0');
   });
 
   test('label contain URLs', async function (assert) {
-    set(this, 'obj', {
-      sha: 'abc123',
-      baseBranch: 'main',
-      truncatedSha: 'abc123',
-      status: 'SUCCESS',
-      commit: {
-        author: { name: 'anonymous' }
+    this.setProperties({
+      obj: {
+        sha: 'abc123',
+        baseBranch: 'main',
+        truncatedSha: 'abc123',
+        status: 'SUCCESS',
+        commit: {
+          author: { name: 'anonymous' }
+        },
+        createTime: '04/11/2016, 08:09 PM',
+        createTimeExact: '04/11/2016, 08:09 PM',
+        truncatedMessage: 'test message',
+        durationText: '10 seconds',
+        label: 'Yahoo http://yahoo.com, and Version #2.0'
       },
-      createTime: '04/11/2016, 08:09 PM',
-      createTimeExact: '04/11/2016, 08:09 PM',
-      truncatedMessage: 'test message',
-      durationText: '10 seconds',
-      label:
-        'Lorem ipsum dolor sit amet, https://abc.com consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'
-    });
-    set(this, 'selected', 2);
-    set(this, 'latestCommit', {
-      sha: 'latestSha'
-    });
-    set(this, 'startBuild', () => {
-      assert.ok(true);
-    });
-    set(this, 'currentEventType', 'pipeline');
-    set(this, 'showDownstreamTriggers', false);
-    set(this, 'setDownstreamTrigger', () => {
-      assert.ok(true);
-    });
-    set(this, 'setShowListView', () => {
-      assert.ok(true);
+      selected: 2,
+      latestCommit: {
+        sha: 'latestSha'
+      },
+      startBuild: () => {
+        assert.ok(true);
+      },
+      currentEventType: 'pipeline',
+      showDownstreamTriggers: false,
+      setDownstreamTrigger: () => {
+        assert.ok(true);
+      },
+      setShowListView: () => {
+        assert.ok(true);
+      }
     });
 
     await render(hbs`{{pipeline-graph-nav
@@ -594,15 +594,15 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       setShowListView=setShowListView
     }}`);
     const compare = (elem, expected) => {
-      const actual = elem.innerHTML.trim();
-
-      assert.strictEqual(actual, expected);
+      assert.strictEqual(elem, expected);
     };
-    const labelColumn = this.element.querySelector('.col .customize-label');
+    const labelColumn = this.element
+      .querySelector('.col .customize-label')
+      .innerHTML.trim();
 
     compare(
       labelColumn,
-      'Lorem ipsum dolor sit amet, <a href="https://abc.com">https://abc.com</a> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'
+      'Yahoo <a href="http://yahoo.com" rel="nofollow" target="_blank">http://yahoo.com</a>, and Version #2.0'
     );
   });
 });
