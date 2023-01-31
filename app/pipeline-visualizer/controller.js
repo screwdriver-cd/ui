@@ -44,6 +44,10 @@ export default Controller.extend({
   selectedPipelineId: null,
   selectedConnectedPipelineId: null,
 
+  async getPipelineGraph(pipeline) {
+    return pipeline.getProperties('id','workflowGraph');
+  },
+
   async extractConnectedPipelines(pipeline) {
     const edges =
       get(pipeline, 'workflowGraph.edges') === undefined
@@ -95,7 +99,7 @@ export default Controller.extend({
     let pipelineGraph;
 
     if (selectedPipeline instanceof EmberObject) {
-      pipelineGraph = selectedPipeline.toJSON({ includeId: true });
+      pipelineGraph = await this.getPipelineGraph(selectedPipeline);
     } else {
       pipelineGraph = copy(selectedPipeline, true);
     }

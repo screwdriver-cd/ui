@@ -3,6 +3,10 @@
   padding-top: 15px;
   padding-left: 15px;
 
+  .header {
+    display: block;
+  }
+  
   .results {
     overflow-y: auto;
     max-height: 85vh;
