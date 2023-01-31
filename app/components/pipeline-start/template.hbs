@@ -4,8 +4,9 @@
       <div class="btn-group">
         <button
           class="btn start-button"
-          title="Start a new event from latest commit"
-          {{action "startBuild"}}
+          @title="Start a new event from latest commit"
+          @onClick={{action "startBuild"}}
+          @disabled={{this.isStartButtonDisabled}}
         >
           Start
         </button>
@@ -25,14 +26,12 @@
         @onClickOverlay={{action "resetForm"}}
         @containerClass="detached-confirm-dialog"
       >
-        <h3>
-          Are you sure to start?
-        </h3>
+        <h3>Are you sure to start?</h3>
         <PipelineParameterizedBuild
-          @pipeline={{pipeline}}
-          @showSubmitButton={{true}}
-          @buildPipelineParameters={{pipelineParameters}}
-          @buildJobParameters={{jobParameters}}
+          @pipeline={{this.pipeline}}
+          @showSubmitButton={{(eq this.isStartButtonDisabled false)}}
+          @buildPipelineParameters={{this.pipelineParameters}}
+          @buildJobParameters={{this.jobParameters}}
           @onSave={{action "startBuild"}}
           @onClose={{action "toggleModal"}}
         />
@@ -47,8 +46,9 @@
         {{#if (not this.prNum)}}
           <button
             class="start-button btn"
-            title="Start a new event from latest commit"
-            {{action "startBuild"}}
+            @title="Start a new event from latest commit"
+            @onClisk={{action "startBuild"}}
+            @disabled={{this.isStartButtonDisabled}}
           >
             Start
           </button>
@@ -63,7 +63,7 @@
       <dd.menu class="start-with-parameters-menu">
         <PipelineParameterizedBuild
           @pipeline={{this.pipeline}}
-          @showSubmitButton={{true}}
+          @showSubmitButton={{(eq this.isStartButtonDisabled false)}}
           @buildPipelineParameters={{this.pipelineParameters}}
           @buildJobParameters={{this.jobParameters}}
           @onSave={{action "startBuild"}}
@@ -76,8 +76,9 @@
   {{#if (not this.prNum)}}
     <button
       class="start-button"
-      title="Start a new event from latest commit"
-      {{action "startBuild"}}
+      @title="Start a new event from latest commit"
+      @onClick={{action "startBuild"}}
+      @disabled={{this.isStartButtonDisabled}}
     >
       Start
     </button>

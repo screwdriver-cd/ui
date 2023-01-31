@@ -248,6 +248,12 @@ export default Component.extend({
 
       return this.sync
         .syncRequests(this.get('pipeline.id'), syncPath)
+        .then(() =>
+          this.setProperties({
+            successMessage: 'Pipeline sync successful',
+            errorMessage: ''
+          })
+        )
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     },

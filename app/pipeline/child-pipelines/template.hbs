@@ -1,7 +1,10 @@
 {{#if this.session.isAuthenticated}}
   <PipelineNav @pipeline={{this.pipeline}} />
 {{/if}}
+{{#if this.hasInactivePipelines}}
+  {{info-message message="You have one or more inactive pipelines. You can activate these by adding back the corresponding SCM URL in the yaml configuration." type="info" icon="exclamation-triangle"}}
+{{/if}}
 
-<PipelineList @pipelines={{this.pipelines}} @pipeline={{this.pipeline}} />
+<PipelineList @pipelines={{this.pipelines}} @pipeline={{this.pipeline}} @onDeleteChildPipeline={{action "onDeleteChildPipeline"}}/>
 
 {{outlet}}

@@ -64,7 +64,6 @@ export default Controller.extend(ModelReloaderMixin, {
   activeTab: 'events',
   errorMessage: '',
   paginateEvents: [],
-
   willDestroy() {
     // FIXME: Never called when route is no longer active
     this.stopReloading();

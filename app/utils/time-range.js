@@ -38,7 +38,14 @@ export function toCustomLocaleString(
   if (tz) {
     options.timeZone = tz;
     options.timeZoneName = 'short';
+
+    return date.toLocaleString('en-US', options);
   }
+  // eslint-disable-next-line new-cap
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  options.timeZone = userTimeZone;
+  options.timeZoneName = 'short';
 
   return date.toLocaleString('en-US', options);
 }

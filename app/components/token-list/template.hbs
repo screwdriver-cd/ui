@@ -1,107 +1,92 @@
-<h3>
-  Access Tokens
-</h3>
-<InfoMessage
-  @message={{this.errorMessage}}
-  @type="warning"
-  @icon="exclamation-triangle"
-/>
-{{#if this.newToken}}
-  <BsAlert @type="success" @onDismissed={{action "clearNewToken"}}>
-    <div class="new-token">
-      <p>
-        <FaIcon @icon="check" />
-        Token {{this.newToken.action
-        }}. You can only see this value once, so remember to copy it!
-      </p>
-      <span class="new-name">
-        {{this.newToken.name}}:
-      </span>
-      <span class="new-value">
-        {{this.newToken.value}}
-      </span>
-    </div>
-  </BsAlert>
-{{/if}}
-<p>
-  {{this.tokenName}} tokens provide access to the
-  <a href="http://docs.screwdriver.cd/user-guide/api">
-    Screwdriver API
-  </a>
-  . They are scoped to {{this.tokenScope}}.
-</p>
-<table class="token-list">
-  <thead>
-    <tr>
-      <th class="token-name">
-        Name
-      </th>
-      <th class="token-description">
-        Description
-      </th>
-      <th class="last-used">
-        Last Used
-      </th>
-      <th class="actions">
-        Actions
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each this.sortedTokens as |token|}}
-      <TokenView
-        @token={{token}}
-        @pipelineId={{this.pipelineId}}
-        @confirmAction={{action "confirmAction"}}
-        @setErrorMessage={{action "setErrorMessage"}}
-        @setIsSaving={{action "setIsSaving"}}
-      />
-    {{/each}}
-  </tbody>
-  <tfoot>
-    <tr class="new">
-      <td class="name">
-        <Input placeholder="NAME" @size="40" @value={{this.newName}} />
-      </td>
-      <td class="description" colspan="2">
-        <Input placeholder="DESCRIPTION" @size="40" @value={{this.newDescription}} />
-      </td>
-      <td>
-        <button
-          class="add"
-          disabled={{this.isButtonDisabled}}
-          {{action "addNewToken"}}
-        >
-          Add
+<section>
+  <h3>
+    Access Tokens
+  </h3>
+  <InfoMessage
+    @message={{this.errorMessage}}
+    @type="warning"
+    @icon="exclamation-triangle"
+  />
+  {{#if this.newToken}}
+    <BsAlert @type="success" @onDismissed={{action "clearNewToken"}}>
+      <div class="new-token">
+        <p><FaIcon @icon="check" />Token {{this.newToken.action}}. You can only see this value once, so remember to copy it!</p>
+        <span class="new-name">
+          {{this.newToken.name}}:
+        </span>
+        <span class="new-value">
+          {{this.newToken.value}}
+        </span>
+      </div>
+    </BsAlert>
+  {{/if}}
+  <p>{{this.tokenName}} tokens provide access to the <a href="http://docs.screwdriver.cd/user-guide/api">Screwdriver API</a>. They are scoped to {{this.tokenScope}}.</p>
+  <table class="token-list">
+    <thead>
+      <tr>
+        <th class="token-name">
+          Name
+        </th>
+        <th class="token-description">
+          Description
+        </th>
+        <th class="last-used">
+          Last Used
+        </th>
+        <th class="actions">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each this.sortedTokens as |token|}}
+        <TokenView
+          @token={{token}}
+          @pipelineId={{this.pipelineId}}
+          @confirmAction={{action "confirmAction"}}
+          @setErrorMessage={{action "setErrorMessage"}}
+          @setIsSaving={{action "setIsSaving"}}
+        />
+      {{/each}}
+    </tbody>
+    <tfoot>
+      <tr class="new">
+        <td class="name"><Input placeholder="NAME" @size="40" @value={{this.newName}} /></td>
+        <td class="description" colspan="2"><Input placeholder="DESCRIPTION" @size="40" @value={{this.newDescription}} /></td>
+        <td class="last-used" colspan="1">--/--/----</td>
+        <td class="actions" colspan="1">
+          <button
+            class="add"
+            disabled={{this.isButtonDisabled}}
+            {{action "addNewToken"}}
+          >
+            <FaIcon @icon="plus" />Add
+          </button>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  {{#if this.isShowingModal}}
+    <ModalDialog
+      @translucentOverlay={{true}}
+      @onClickOverlay={{action "closeModal" false}}
+    >
+      <div class="token-confirm-dialog">
+        <h3>Are you sure?</h3>
+        <p>{{this.modalText}}</p>
+        <button onclick={{action "closeModal" true}} class={{this.modalAction}}>
+          {{this.modalButtonText}}
         </button>
-      </td>
-    </tr>
-  </tfoot>
-</table>
-{{#if this.isShowingModal}}
-  <ModalDialog
-    @translucentOverlay={{true}}
-    @onClickOverlay={{action "closeModal" false}}
-  >
-    <div class="token-confirm-dialog">
-      <h3>
-        Are you sure?
-      </h3>
-      <p>
-        {{this.modalText}}
-      </p>
-      <button onclick={{action "closeModal" true}} class={{this.modalAction}}>
-        {{this.modalButtonText}}
-      </button>
-    </div>
-  </ModalDialog>
-{{/if}}
-{{#if this.isSaving}}
-  <ModalDialog
-    @clickOutsideToClose={{false}}
-    @targetAttachment="center"
-    @translucentOverlay={{true}}
-  >
-    <LoadingView />
-  </ModalDialog>
-{{/if}}
+      </div>
+    </ModalDialog>
+  {{/if}}
+  {{#if this.isSaving}}
+    <ModalDialog
+      @clickOutsideToClose={{false}}
+      @targetAttachment="center"
+      @translucentOverlay={{true}}
+    >
+      <LoadingView />
+    </ModalDialog>
+  {{/if}}
+</section>

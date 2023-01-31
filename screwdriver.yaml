@@ -24,7 +24,7 @@ jobs:
 
   # Publish the package to GitHub and build docker image
   publish:
-    image: node:16
+    image: node:18
     annotations:
       screwdriver.cd/ram: TURBO
     environment:

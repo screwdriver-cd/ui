@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const getIcon = status => {
   switch (status) {
     case 'queued':
@@ -75,11 +77,14 @@ const formatMetrics = metrics => {
       lastEventInfo: {
         startTime: '--/--/----',
         statusColor: 'build-empty',
+        status: 'build-empty',
         durationText: '--',
         sha: 'Not available',
         icon: 'question-circle',
         commitMessage: 'No events have been run for this pipeline',
-        commitUrl: '#'
+        commitUrl: '#',
+        createTime: 0,
+        duration: 0
       }
     };
   }
@@ -102,11 +107,14 @@ const formatMetrics = metrics => {
   const lastEventInfo = {
     startTime: `${lastEventStartMonth}/${lastEventStartDay}/${lastEventStartYear}`,
     statusColor: getColor(lastEvent.status.toLowerCase()),
+    status: lastEvent.status.toLowerCase(),
     durationText: lastEvent.duration ? formatTime(lastEvent.duration) : '--',
     sha: getSha(lastEvent.sha),
     icon: getIcon(lastEvent.status.toLowerCase()),
     commitMessage: lastEvent.commit.message,
-    commitUrl: lastEvent.commit.url
+    commitUrl: lastEvent.commit.url,
+    createTime: moment(lastEvent.createTime).format(),
+    duration: lastEvent.duration || 0
   };
 
   return { eventsInfo, lastEventInfo };

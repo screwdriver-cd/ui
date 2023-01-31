@@ -101,6 +101,7 @@
             @options={{this.templates}}
             @selected={{this.selectedTemplate}}
             @onChange={{action "selectTemplate"}}
+            @matcher={{this.searchInputMatcher}}
             @searchField="name"
             @searchEnabled=true
             @noMatchesMessage={{this.messageForSearching}} as |template|

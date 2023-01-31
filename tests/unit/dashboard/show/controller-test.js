@@ -2,8 +2,9 @@ import { resolve } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Service from '@ember/service';
-import EmberObject from '@ember/object';
 import sinon from 'sinon';
+import EmberObject from '@ember/object';
+import { settled } from '@ember/test-helpers';
 import injectSessionStub from '../../../helpers/inject-session';
 
 module('Unit | Controller | dashboard/show', function (hooks) {
@@ -17,11 +18,23 @@ module('Unit | Controller | dashboard/show', function (hooks) {
     assert.ok(controller);
   });
 
-  test('it calls removePipeline', function (assert) {
+  test('it calls removePipeline', async function (assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:dashboard/show');
+    const shuttleStub = Service.extend({
+      removePipeline(collectionId, pipelineId) {
+        assert.ok(true, 'relovePipeline called');
+        assert.equal(pipelineId, 3);
+        assert.equal(collectionId, 1);
 
-    const pipelineIds = [1, 2, 3];
+        return resolve({});
+      }
+    });
+
+    this.owner.unregister('service:shuttle');
+    this.owner.register('service:shuttle', shuttleStub);
+
+    let pipelineIds = [1, 2, 3];
 
     const mock = EmberObject.create({
       id: 2,
@@ -48,8 +61,20 @@ module('Unit | Controller | dashboard/show', function (hooks) {
       return resolve(mock);
     };
 
+    const removePipelineActionStub = sinon.spy(
+      controller.actions,
+      'removePipeline'
+    );
+
+    await settled();
+
     // Remove pipeline with id 3 from collection with id 1
-    controller.send('removePipeline', 3);
+    controller.send('removePipeline', 3, 1);
+
+    assert.ok(
+      removePipelineActionStub.calledOnce,
+      'action removePipeline called once'
+    );
   });
 
   test('it calls onDeleteCollection', function (assert) {

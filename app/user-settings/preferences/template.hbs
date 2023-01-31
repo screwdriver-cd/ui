@@ -1,57 +1,45 @@
-<InfoMessage
-  @message={{this.errorMessage}}
-  @type="warning"
-  @icon="exclamation-triangle"
-/>
+<InfoMessage @message={{this.errorMessage}} @type="warning" @icon="exclamation-triangle" />
 <InfoMessage @message={{this.successMessage}} @type="success" @icon="check" />
-<div class="col-12 col-md-8 user-preference">
+<div>
   <section class="preference">
     <ul>
       <li>
-        <div class="row">
-          <div class="col-10">
-            <h4>
-              Display Name Length
-            </h4>
-            <p>
-              Setup your own preferred job name length to display on the workflow graph (range: 20 - 99)
-            </p>
+        <div class="row align-items-start">
+          <div class="col-4">
+            <h4>Display Name Length</h4>
+            <p>Setup your own preferred job name length to display on the workflow graph (range: 20 - 99)</p>
           </div>
-          <div class="col-2 right">
+          <div class="col-8">
             <input
-              type="number"
+              @type="number"
               class="display-job-name"
-              min={{this.minDisplayLength}}
-              max={{this.maxDisplayLength}}
-              placeholder={{this.minDisplayLength}}
-              value={{this.desiredJobNameLength}}
-              oninput={{action (mut this.displayJobNameLength) value="target.value"}}
+              @min={{this.minDisplayLength}}
+              @max={{this.maxDisplayLength}}
+              @placeholder={{this.minDisplayLength}}
+              @value={{this.desiredJobNameLength}}
+              @oninput={{action (mut this.displayJobNameLength) value="target.value"}}
             />
           </div>
         </div>
       </li>
       <li>
-        <div class="row">
-          <div class="col-9">
-            <h4>
-              Choose timestamp format
-            </h4>
-            <p>
-              Choose your preferred timestamp format
-            </p>
+        <div class="row align-items-start">
+          <div class="col-4">
+            <h4>Timestamp format</h4>
+            <p>Choose your preferred timestamp format</p>
           </div>
-          <div class="col-3">
+          <div class="col-8">
             <PowerSelect
               @options={{this.timestampOptions}}
               @renderInPlace={{true}}
               @selected={{this.selectedTimestampFormat}}
               @searchEnabled={{false}}
-              placeholder="Select timestamp"
+              @placeholder="Select timestamp"
               @onChange={{action
                 (mut this.selectedTimestampFormat)
               }} as |timestampFormat|
             >
-              {{timestampFormat.name}}
+              {{this.timestampFormat.name}}
             </PowerSelect>
           </div>
         </div>

@@ -7,58 +7,22 @@ export default Controller.extend({
   store: service(),
   router: service(),
   collection: alias('model.collection'),
+  shuttle: service(),
   actions: {
-    removePipeline(pipelineId) {
-      const collectionId = this.get('collection.id');
-
-      return this.store
-        .findRecord('collection', collectionId)
-        .then(collection => {
-          const pipelineIds =
-            collection.pipelineIds === undefined ? [] : collection.pipelineIds;
-
-          set(
-            collection,
-            'pipelineIds',
-            pipelineIds.filter(id => id !== pipelineId)
-          );
-
-          return collection.save();
-        });
+    removePipeline(pipelineId, collectionId) {
+      return this.shuttle.removePipeline(collectionId, pipelineId);
     },
-    removeMultiplePipelines(removedPipelineIds) {
-      const collectionId = this.get('collection.id');
-
-      return this.store
-        .findRecord('collection', collectionId)
-        .then(collection => {
-          const pipelineIds =
-            collection.pipelineIds === undefined ? [] : collection.pipelineIds;
-
-          set(
-            collection,
-            'pipelineIds',
-            pipelineIds.filter(id => !removedPipelineIds.includes(id))
-          );
-
-          return collection.save();
-        });
+    removeMultiplePipelines(removedPipelineIds, collectionId) {
+      return this.shuttle.removeMultiplePipelines(
+        collectionId,
+        removedPipelineIds
+      );
     },
     onDeleteCollection() {
       this.router.transitionTo('home');
     },
     addMultipleToCollection(addedPipelineIds, collectionId) {
-      return this.store
-        .findRecord('collection', collectionId)
-        .then(collection => {
-          const pipelineIds = collection.get('pipelineIds');
-
-          collection.set('pipelineIds', [
-            ...new Set([...pipelineIds, ...addedPipelineIds])
-          ]);
-
-          return collection.save();
-        });
+      return this.shuttle.updateCollection(collectionId, addedPipelineIds);
     }
   }
 });

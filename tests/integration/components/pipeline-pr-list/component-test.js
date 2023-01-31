@@ -6,7 +6,8 @@ import hbs from 'htmlbars-inline-precompile';
 import Pretender from 'pretender';
 
 const mockPipelineData = {
-  id: 3709
+  id: 3709,
+  state: 'ACTIVE'
 };
 
 let server;
@@ -190,6 +191,8 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     assert.dom('.view .view .detail').exists({ count: 2 });
     assert.dom('.title').hasText('update readme');
     assert.dom('.by').hasText('anonymous');
+    assert.dom('.view .startButton').exists();
+    assert.dom('.view .startButton').doesNotHaveAttribute('disabled');
   });
 
   test('it renders start build for restricted PR pipeline', async function (assert) {
@@ -239,6 +242,7 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     assert.dom('.title').hasText('update readme');
     assert.dom('.by').hasText('anonymous');
     assert.dom('.view .startButton').exists({ count: 1 });
+    assert.dom('.view .startButton').doesNotHaveAttribute('disabled');
   });
 
   test('it renders PR stop button', async function (assert) {
@@ -290,6 +294,62 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     />`);
 
     assert.dom('.stopButton').exists({ count: 1 });
+    assert.dom('.view .startButton').doesNotExist();
+    assert.dom('.view .view .detail').exists({ count: 1 });
+    assert.dom('.title').hasText('update readme');
+    assert.dom('.by').hasText('anonymous');
+  });
+
+  test('it renders disabled PR start button for inactive pipeline', async function (assert) {
+    const jobs = [
+      EmberObject.create({
+        id: 'abcd',
+        name: 'PR-1234:main',
+        createTimeWords: 'now',
+        title: 'update readme',
+        username: 'anonymous',
+        builds: [
+          {
+            id: '1235',
+            status: 'SUCCESS',
+            endTime: null
+          }
+        ]
+      })
+    ];
+
+    const workflowgraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
+
+    this.set('jobsMock', jobs);
+    this.set('isRestricted', true);
+    this.set('startBuild', Function.prototype);
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('workflowGraphMock', workflowgraph);
+    this.set('pipelineMock', { ...mockPipelineData, state: 'INACTIVE' });
+
+    await render(hbs`{{pipeline-pr-list
+      jobs=jobsMock
+      pipeline=pipelineMock
+      isRestricted=isRestricted
+      startBuild=startBuild
+      workflowGraph=workflowGraphMock
+      stopPRBuilds=stopPRBuilds}}`);
+
+    assert.dom('.stopButton').doesNotExist();
+    assert.dom('.view .startButton').exists({ count: 1 });
+    assert.dom('.view .startButton').hasAttribute('disabled');
     assert.dom('.view .view .detail').exists({ count: 1 });
     assert.dom('.title').hasText('update readme');
     assert.dom('.by').hasText('anonymous');
