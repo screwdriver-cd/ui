@@ -392,7 +392,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for running job when authenticated', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
     this.set('willRender', () => {
       console.log('will render');
       assert.ok(true);
@@ -427,7 +427,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for running disabled job when authenticated', async function (assert) {
-    assert.expect(6);
+    assert.expect(7);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -462,7 +462,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for blocked job when authenticated', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
     this.set('willRender', () => {
       assert.ok(true);
     });

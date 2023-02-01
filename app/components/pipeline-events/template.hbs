@@ -11,7 +11,7 @@
   @scmContext={{this.pipeline.scmContext}}
 />
 
-{{#if}}
+{{#if this.hasInactivePipelines}}
 <InfoMessage
   @message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration."
   @type="info"

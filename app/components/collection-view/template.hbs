@@ -226,7 +226,7 @@
                 Name
                 </p>
                 <span class="icon-wrapper">
-                  {{#if (eq sortBy "pipelineName")}}
+                  {{#if (eq this.sortBy "pipelineName")}}
                     {{#if (eq this.sortOrder "desc")}}
                       <FaIcon @icon="sort-asc" />
                     {{else}}
@@ -240,7 +240,7 @@
               <th class="branch" rowspan="1" onclick={{action "setSortBy" "branch" (if (eq this.sortOrder "desc") "asc" "desc")}} >
                 Branch
                 <span class="icon-wrapper">
-                  {{#if (eq sortBy "branch")}}
+                  {{#if (eq this.sortBy "branch")}}
                     {{#if (eq this.sortOrder "desc")}}
                       <FaIcon @icon="sort-asc" />
                     {{else}}
@@ -254,7 +254,7 @@
               <th class="last-run" rowspan="1" onclick={{action "setSortBy" "lastRun" (if (eq this.sortOrder "desc") "asc" "desc")}}>
                 Last run
                 <span class="icon-wrapper">
-                  {{#if (eq sortBy "lastRun")}}
+                  {{#if (eq this.sortBy "lastRun")}}
                     {{#if (eq this.sortOrder "desc")}}
                       <FaIcon @icon="sort-asc" />
                     {{else}}
@@ -268,7 +268,7 @@
               <th class="duration" rowspan="1" onclick={{action "setSortBy" "duration" (if (eq this.sortOrder "desc") "asc" "desc")}} >
                 Duration
                 <span class="icon-wrapper">
-                  {{#if (eq sortBy "duration")}}
+                  {{#if (eq this.sortBy "duration")}}
                     {{#if (eq this.sortOrder "desc")}}
                       <FaIcon @icon="sort-asc" />
                     {{else}}
@@ -282,7 +282,7 @@
               <th class="status" rowspan="1" onclick={{action "setSortBy" "lastRunStatus" (if (eq this.sortOrder "desc") "asc" "desc")}} >
                 Status
                 <span class="icon-wrapper">
-                  {{#if (eq sortBy "lastRunStatus")}}
+                  {{#if (eq this.sortBy "lastRunStatus")}}
                     {{#if (eq this.sortOrder "desc")}}
                       <FaIcon @icon="sort-asc" />
                     {{else}}
@@ -299,7 +299,7 @@
                   sort on number of failed builds
                 </BsTooltip>
                 <span class="icon-wrapper">
-                  {{#if (eq sortBy "history")}}
+                  {{#if (eq this.sortBy "history")}}
                     {{#if (eq this.sortOrder "desc")}}
                       <FaIcon @icon="sort-asc" />
                     {{else}}

@@ -526,20 +526,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       }
     });
 
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+  />`);
 
     assert
       .dom('.col .customize-label')
@@ -579,20 +579,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       }
     });
 
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
     const compare = (elem, expected) => {
       assert.strictEqual(elem, expected);
     };

@@ -1,4 +1,5 @@
 import { get, computed } from '@ember/object';
+import { gt, equal } from '@ember/object/computed';
 import { isEmpty, isEqual } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -70,6 +71,9 @@ export default Component.extend({
         }
 
         return this.store.findAll('collection');
+      },
+      set(_, value) {
+        return this._collections = value;
       }
     }
   ),
@@ -108,8 +112,9 @@ export default Component.extend({
   sortedPipelines: computed(
     'collectionPipelines',
     'sortBy',
-    'sortOrder',
-    function sortedPipelines() {
+    'sortOrder', {
+    //function sortedPipelines() {
+    get() {
       const unknownStatusPipelines = [];
       const knownStatusPipelines = [];
       const collectionPipelinesArray = this.collectionPipelines.toArray();
@@ -145,8 +150,11 @@ export default Component.extend({
       }
 
       return sorted.concat(unknownStatusPipelines);
+    },
+    set(_, value) {
+      return this._sortedPipelines = value;
     }
-  ),
+  }),
   sortByText: computed('sortBy', {
     get() {
       switch (this.sortBy.get(0)) {
@@ -167,6 +175,9 @@ export default Component.extend({
         .some(element => element.settings.aliasName);
 
       return hasAliasName;
+    },
+    set(_, value) {
+      return this._hasAliasName = value;
     }
   }),
   collectionPipelines: computed('collection.pipelines.[]', {

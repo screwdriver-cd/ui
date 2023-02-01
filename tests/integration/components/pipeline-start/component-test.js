@@ -24,9 +24,7 @@ module('Integration | Component | pipeline start', function (hooks) {
     this.set('onStartBuild', () => {
       assert.ok(true);
     });
-    await render(
-      hbs`{{pipeline-start startBuild=onStartBuild pipeline=pipeline}}`
-    );
+    await render(hbs`<PipelineStart @startBuild={{this.onStartBuild}} @pipeline={{this.pipeline}}/>`);
 
     assert.dom('button').hasText('Start');
     assert.dom('button').hasAttribute('disabled');

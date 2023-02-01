@@ -11,13 +11,13 @@
           </div>
           <div class="col-8">
             <input
-              @type="number"
+              type="number"
               class="display-job-name"
-              @min={{this.minDisplayLength}}
-              @max={{this.maxDisplayLength}}
-              @placeholder={{this.minDisplayLength}}
-              @value={{this.desiredJobNameLength}}
-              @oninput={{action (mut this.displayJobNameLength) value="target.value"}}
+              min={{this.minDisplayLength}}
+              max={{this.maxDisplayLength}}
+              placeholder={{this.minDisplayLength}}
+              value={{this.desiredJobNameLength}}
+              oninput={{action (mut this.displayJobNameLength) value="target.value"}}
             />
           </div>
         </div>

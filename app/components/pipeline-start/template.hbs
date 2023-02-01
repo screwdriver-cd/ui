@@ -4,9 +4,9 @@
       <div class="btn-group">
         <button
           class="btn start-button"
-          @title="Start a new event from latest commit"
-          @onClick={{action "startBuild"}}
-          @disabled={{this.isStartButtonDisabled}}
+          title="Start a new event from latest commit"
+          onClick={{action "startBuild"}}
+          disabled={{this.isStartButtonDisabled}}
         >
           Start
         </button>
@@ -46,9 +46,9 @@
         {{#if (not this.prNum)}}
           <button
             class="start-button btn"
-            @title="Start a new event from latest commit"
-            @onClisk={{action "startBuild"}}
-            @disabled={{this.isStartButtonDisabled}}
+            title="Start a new event from latest commit"
+            onClisk={{action "startBuild"}}
+            disabled={{this.isStartButtonDisabled}}
           >
             Start
           </button>
@@ -76,9 +76,9 @@
   {{#if (not this.prNum)}}
     <button
       class="start-button"
-      @title="Start a new event from latest commit"
-      @onClick={{action "startBuild"}}
-      @disabled={{this.isStartButtonDisabled}}
+      title="Start a new event from latest commit"
+      onClick={{action "startBuild"}}
+      disabled={{this.isStartButtonDisabled}}
     >
       Start
     </button>

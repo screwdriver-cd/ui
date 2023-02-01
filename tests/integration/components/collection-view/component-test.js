@@ -1,5 +1,5 @@
 import { resolve, reject, Promise as EmberPromise } from 'rsvp';
-import EmberObject from '@ember/object';
+import EmberObject , { computed } from '@ember/object';
 import Service from '@ember/service';
 import { module, test, todo } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
@@ -708,10 +708,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to card mode
     await click('.header__change-view button:nth-of-type(1)');
@@ -807,10 +807,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-      }}`);
+    <CollectionView
+      @collection={{this.collection}}
+      @collections={{this.collections}}
+    />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -917,10 +917,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=mockCollection
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -959,10 +959,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -1023,10 +1023,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=mockCollectionDuration
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');

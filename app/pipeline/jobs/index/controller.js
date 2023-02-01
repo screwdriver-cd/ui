@@ -190,6 +190,9 @@ export default Controller.extend(ModelReloaderMixin, {
   isInactivePipeline: computed('pipeline', {
     get() {
       return isInactivePipeline(this.get('pipeline'));
+    },
+    set(_, value) {
+      return this._isInactivePipeline = value;
     }
   }),
 

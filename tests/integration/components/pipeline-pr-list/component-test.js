@@ -339,13 +339,14 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     this.set('workflowGraphMock', workflowgraph);
     this.set('pipelineMock', { ...mockPipelineData, state: 'INACTIVE' });
 
-    await render(hbs`{{pipeline-pr-list
-      jobs=jobsMock
-      pipeline=pipelineMock
-      isRestricted=isRestricted
-      startBuild=startBuild
-      workflowGraph=workflowGraphMock
-      stopPRBuilds=stopPRBuilds}}`);
+    await render(hbs`<PipelinePrList
+    @jobs={{this.jobsMock}}
+    @pipeline={{this.pipelineMock}}
+    @isRestricted={{this.isRestricted}}
+    @startBuild={{this.startBuild}}
+    @workflowGraph={{this.workflowGraphMock}}
+    @stopPRBuilds={{this.stopPRBuilds}}
+  />`);
 
     assert.dom('.stopButton').doesNotExist();
     assert.dom('.view .startButton').exists({ count: 1 });

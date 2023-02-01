@@ -55,7 +55,7 @@ module('Integration | Component | pipeline list', function (hooks) {
     this.set('pipeline', PIPELINE);
 
     await render(
-      hbs`{{pipeline-list pipelines=pipelineList pipeline=pipeline}}`
+      hbs`<PipelineList @pipelines={{this.pipelineList}} @pipeline={{this.pipeline}} />`
     );
 
     assert

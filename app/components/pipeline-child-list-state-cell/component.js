@@ -6,11 +6,17 @@ export default Component.extend({
   stateIcon: computed('state', {
     get() {
       return getStateIcon(this.get('state'));
+    },
+    set(_, value) {
+      return this._stateIcon = value;
     }
   }),
   stateName: computed('state', {
     get() {
       return this.get('state').toLowerCase();
+    },
+    set(_, value) {
+      return this._stateName = value;
     }
   })
 });
