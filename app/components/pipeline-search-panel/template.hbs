@@ -15,8 +15,13 @@
   <div class="searched-pipelines">
     {{#each this.searchedPipelines as |pipeline|}}
       <div class="searched-pipeline">
-        <span>
-          {{pipeline.name}}
+        <span class="name">
+          <LinkTo @route="pipeline" >
+            {{pipeline.name}}
+          </LinkTo>
+        </span>
+        <span class="branch">
+          <a href={{branch-url-encode pipeline.hubUrl}}><FaIcon @icon="code-fork" />{{pipeline.branch}}</a>
         </span>
         <span
           onclick={{action "selectSearchedPipeline" pipeline.id}}

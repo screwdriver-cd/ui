@@ -348,5 +348,37 @@ export default Service.extend({
     const url = `/pipelines?${query}`;
 
     return this.fetchFromApi(method, url);
+  },
+
+  async updateCollection(collectionId, pipelineIds) {
+    const method = 'put';
+    const pipelineIdsEntries = pipelineIds.map(pipelineId => [
+      'ids[]',
+      pipelineId
+    ]);
+    const pipelineIdsQuery = new URLSearchParams(pipelineIdsEntries);
+    const url = `/collections/${collectionId}/pipelines?${pipelineIdsQuery}`;
+
+    return this.fetchFromApi(method, url);
+  },
+
+  async removePipeline(collectionId, pipelineId) {
+    const method = 'delete';
+    const url = `/collections/${collectionId}/pipelines?ids[]=${pipelineId}`;
+
+    return this.fetchFromApi(method, url);
+  },
+
+  async removeMultiplePipelines(collectionId, pipelineIds) {
+    const method = 'delete';
+    const pipelineIdsEntries = pipelineIds.map(pipelineId => [
+      'ids[]',
+      pipelineId
+    ]);
+    const pipelineIdsQuery = new URLSearchParams(pipelineIdsEntries);
+
+    const url = `/collections/${collectionId}/pipelines?${pipelineIdsQuery}`;
+
+    return this.fetchFromApi(method, url);
   }
 });

@@ -6,10 +6,8 @@
 
 {{#if this.pipelines.length}}
   <div class="num-results col-12 col-md-8">
-    <span>
-      Found {{this.pipelines.length}} child pipeline(s)
-    </span>
-    <button class="start-button" {{action "startAll"}}>
+    <span>Found {{this.pipelines.length}} child pipeline(s)</span>
+    <button class="start-button" {{action "startAll"}} disabled={{this.isStartAllButtonDisabled}} title="Start a new event for all the active pipelines">
       Start All
     </button>
   </div>
@@ -17,15 +15,11 @@
     <table>
       <thead>
         <tr>
-          <th class="appId">
-            Name
-          </th>
-          <th class="branch">
-            Branch
-          </th>
-          <th class="account">
-            Account
-          </th>
+          <th class="appId">Name</th>
+          <th class="branch">Branch</th>
+          <th class="account">Account</th>
+          <th class="state">Status</th>
+          <th class="state">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -46,6 +40,12 @@
             <td class="account">
               <FaIcon @icon={{pipeline.scmIcon}} @prefix="fab" />
               {{pipeline.scm}}
+            </td>
+            <td class="state">
+              <PipelineChildListStateCell @state={{pipeline.state}} />
+            </td>
+            <td class="action">
+              <PipelineChildListActionsCell @pipeline={{pipeline}} @pipelines={{this.pipelines}} @onDeletePipeline={{action "deletePipeline"}} />
             </td>
           </tr>
         {{/each}}

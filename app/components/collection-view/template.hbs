@@ -216,94 +216,97 @@
           <thead>
             <tr>
               <th class="collection-pipeline__choose"></th>
-              <th class="app-id">
+              <th class="app-id" rowspan="1" onclick={{action "setSortBy" "pipelineName" (if (eq this.sortOrder "desc") "asc" "desc")}} >
                 {{#if this.hasAliasName}}
-                  <p rowspan="1">
-                    Alias/
-                  </p>
+                <p rowspan="1">
+                  Alias /
+                </p>
                 {{/if}}
                 <p rowspan="1">
-                  Name
+                Name
                 </p>
+                <span class="icon-wrapper">
+                  {{#if (eq this.sortBy "pipelineName")}}
+                    {{#if (eq this.sortOrder "desc")}}
+                      <FaIcon @icon="sort-asc" />
+                    {{else}}
+                      <FaIcon @icon="sort-desc" />
+                    {{/if}}
+                  {{else}}
+                    <FaIcon @icon="unsorted" />
+                  {{/if}}
+                </span>
               </th>
-              <th
-                class="branch"
-                rowspan="1"
-                onclick={{action
-                  "setSortBy"
-                  (if
-                    (eq (get this.sortBy 0) "scmRepo.branch:desc")
-                    "scmRepo.branch:asc"
-                    "scmRepo.branch:desc"
-                  )
-                }}
-              >
+              <th class="branch" rowspan="1" onclick={{action "setSortBy" "branch" (if (eq this.sortOrder "desc") "asc" "desc")}} >
                 Branch
                 <span class="icon-wrapper">
-                  {{#if (eq (get this.sortBy 0) "scmRepo.branch:asc")}}
-                    <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get this.sortBy 0) "scmRepo.branch:desc")}}
-                    <i class="fa fa-sort-desc"></i>
+                  {{#if (eq this.sortBy "branch")}}
+                    {{#if (eq this.sortOrder "desc")}}
+                      <FaIcon @icon="sort-asc" />
+                    {{else}}
+                      <FaIcon @icon="sort-desc" />
+                    {{/if}}
                   {{else}}
-                    <i class="fa fa-sort"></i>
+                    <FaIcon @icon="unsorted" />
                   {{/if}}
                 </span>
               </th>
-              <th class="start" rowspan="1">
-                Start Date
-              </th>
-              <th class="duration" rowspan="1">
-                Duration
-              </th>
-              <th
-                class="last-run"
-                rowspan="1"
-                onclick={{action
-                  "setSortBy"
-                  (if
-                    (eq (get this.sortBy 0) "createTime:desc")
-                    "createTime:asc"
-                    "createTime:desc"
-                  )
-                }}
-              >
-                Last Run Job
+              <th class="last-run" rowspan="1" onclick={{action "setSortBy" "lastRun" (if (eq this.sortOrder "desc") "asc" "desc")}}>
+                Last run
                 <span class="icon-wrapper">
-                  {{#if (eq (get this.sortBy 0) "createTime:asc")}}
-                    <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get this.sortBy 0) "createTime:desc")}}
-                    <i class="fa fa-sort-desc"></i>
+                  {{#if (eq this.sortBy "lastRun")}}
+                    {{#if (eq this.sortOrder "desc")}}
+                      <FaIcon @icon="sort-asc" />
+                    {{else}}
+                      <FaIcon @icon="sort-desc" />
+                    {{/if}}
                   {{else}}
-                    <i class="fa fa-sort"></i>
+                    <FaIcon @icon="unsorted" />
                   {{/if}}
                 </span>
               </th>
-              <th class="status" rowspan="1">
-                Status
+              <th class="duration" rowspan="1" onclick={{action "setSortBy" "duration" (if (eq this.sortOrder "desc") "asc" "desc")}} >
+                Duration
+                <span class="icon-wrapper">
+                  {{#if (eq this.sortBy "duration")}}
+                    {{#if (eq this.sortOrder "desc")}}
+                      <FaIcon @icon="sort-asc" />
+                    {{else}}
+                      <FaIcon @icon="sort-desc" />
+                    {{/if}}
+                  {{else}}
+                    <FaIcon @icon="unsorted" />
+                  {{/if}}
+                </span>
               </th>
-              <th
-                class="history"
-                rowspan="1"
-                onclick={{action
-                  "setSortBy"
-                  (if
-                    (eq (get this.sortBy 0) "failedBuildCount:desc")
-                    "failedBuildCount:asc"
-                    "failedBuildCount:desc"
-                  )
-                }}
-              >
+              <th class="status" rowspan="1" onclick={{action "setSortBy" "lastRunStatus" (if (eq this.sortOrder "desc") "asc" "desc")}} >
+                Status
+                <span class="icon-wrapper">
+                  {{#if (eq this.sortBy "lastRunStatus")}}
+                    {{#if (eq this.sortOrder "desc")}}
+                      <FaIcon @icon="sort-asc" />
+                    {{else}}
+                      <FaIcon @icon="sort-desc" />
+                    {{/if}}
+                  {{else}}
+                    <FaIcon @icon="unsorted" />
+                  {{/if}}
+                </span>
+              </th>
+              <th class="history" rowspan="1" onclick={{action "setSortBy" "history" (if (eq this.sortOrder "desc") "asc" "desc")}}>
                 Build History
                 <BsTooltip @placement="top" @renderInPlace={{true}}>
                   sort on number of failed builds
                 </BsTooltip>
                 <span class="icon-wrapper">
-                  {{#if (eq (get this.sortBy 0) "failedBuildCount:asc")}}
-                    <i class="fa fa-sort-asc"></i>
-                  {{else if (eq (get this.sortBy 0) "failedBuildCount:desc")}}
-                    <i class="fa fa-sort-desc"></i>
+                  {{#if (eq this.sortBy "history")}}
+                    {{#if (eq this.sortOrder "desc")}}
+                      <FaIcon @icon="sort-asc" />
+                    {{else}}
+                      <FaIcon @icon="sort-desc" />
+                    {{/if}}
                   {{else}}
-                    <i class="fa fa-sort"></i>
+                    <FaIcon @icon="unsorted" />
                   {{/if}}
                 </span>
               </th>

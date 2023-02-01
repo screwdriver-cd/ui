@@ -3,8 +3,6 @@ import Component from '@ember/component';
 import { and } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { formatMetrics } from 'screwdriver-ui/utils/metric';
-import templateHelper from 'screwdriver-ui/utils/template';
-const { getLastUpdatedTime } = templateHelper;
 
 export default Component.extend({
   store: service(),
@@ -31,14 +29,6 @@ export default Component.extend({
     const { branch, rootDir } = this.pipeline.scmRepo;
 
     return rootDir ? `${branch}#${rootDir}` : branch;
-  }),
-  lastRun: computed('lastRun', 'pipeline', function get() {
-    const { createTime } = this.pipeline;
-    const lastRun = getLastUpdatedTime({
-      createTime
-    });
-
-    return lastRun;
   }),
   showRemoveButton: computed(
     'isOrganizing',
@@ -74,19 +64,20 @@ export default Component.extend({
     }
   },
   async updateEventMetrics() {
-    const metrics = await this.pipeline.get('metrics').catch(() => {
+    try {
+      const metrics = await this.pipeline.get('metrics');
+      const result = formatMetrics(metrics);
+      const { eventsInfo, lastEventInfo } = result;
+
+      this.setProperties({
+        eventsInfo,
+        lastEventInfo
+      });
+    } catch (e) {
       this.setProperties({
         storeQueryError: true
       });
-    });
-
-    const result = formatMetrics(metrics);
-    const { eventsInfo, lastEventInfo } = result;
-
-    this.setProperties({
-      eventsInfo,
-      lastEventInfo
-    });
+    }
   },
 
   actions: {

@@ -1,5 +1,4 @@
 import EmberObject from '@ember/object';
-import moment from 'moment';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
@@ -7,6 +6,7 @@ import { render, settled, click } from '@ember/test-helpers';
 import { resolve, Promise as EmberPromise } from 'rsvp';
 import Service from '@ember/service';
 import sinon from 'sinon';
+import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 
 const coverageService = Service.extend({
   getCoverageInfo() {
@@ -107,7 +107,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders', async function (assert) {
-    assert.expect(12);
+    assert.expect(13);
     this.owner.setupRouter();
 
     this.set('reloadCb', () => {
@@ -142,8 +142,8 @@ module('Integration | Component | build banner', function (hooks) {
       @changeBuild={{action this.changeB}}
     />`);
 
-    const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
-      'YYYY-MM-DD HH:mm:ss'
+    const expectedTime = toCustomLocaleString(
+      new Date('2016-11-04T20:08:41.238Z')
     );
 
     assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/pulls');
@@ -169,7 +169,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders events list link if event is not pr', async function (assert) {
-    assert.expect(3);
+    assert.expect(4);
     this.owner.setupRouter();
 
     this.set('reloadCb', () => {
@@ -202,7 +202,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders pr link if pr url info is available', async function (assert) {
-    assert.expect(12);
+    assert.expect(13);
 
     this.set('reloadCb', () => {
       assert.ok(true);
@@ -228,8 +228,8 @@ module('Integration | Component | build banner', function (hooks) {
       @prEvents={{this.prEvents}}
       @reloadBuild={{action this.reloadCb}}
     />`);
-    const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
-      'YYYY-MM-DD HH:mm:ss'
+    const expectedTime = toCustomLocaleString(
+      new Date('2016-11-04T20:08:41.238Z')
     );
 
     assert
@@ -257,7 +257,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders prCommit dropdown if event type is pr', async function (assert) {
-    assert.expect(16);
+    assert.expect(17);
 
     this.set('reloadCb', () => {
       assert.ok(true);
@@ -288,8 +288,8 @@ module('Integration | Component | build banner', function (hooks) {
       @prEvents={{this.prEvents}}
       @reloadBuild={{action this.reloadCb}}
     />`);
-    const expectedTime = moment('2016-11-04T20:08:41.238Z').format(
-      'YYYY-MM-DD HH:mm:ss'
+    const expectedTime = toCustomLocaleString(
+      new Date('2016-11-04T20:08:41.238Z')
     );
 
     assert
@@ -392,7 +392,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for running job when authenticated', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
     this.set('willRender', () => {
       console.log('will render');
       assert.ok(true);
@@ -427,7 +427,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for running disabled job when authenticated', async function (assert) {
-    assert.expect(6);
+    assert.expect(7);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -462,7 +462,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for blocked job when authenticated', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -552,14 +552,14 @@ module('Integration | Component | build banner', function (hooks) {
       { name: 'sd-teardown-screwdriver-coverage-bookend' }
     ];
 
-    assert.expect(7);
+    assert.expect(8);
 
     this.set('reloadCb', () => {
       assert.ok(true);
     });
     this.set('eventMock', prEventMock);
     this.set('buildStepsMock', coverageStepsMock);
-    this.set('buildMetaMock', buildMetaMock);
+    this.set('buildMetaMock', {}); // empty as build step is not finished
     this.set('prEvents', new EmberPromise(resolves => resolves([])));
     this.set('isButtonDisabledLoaded', true);
     this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
@@ -730,7 +730,7 @@ module('Integration | Component | build banner', function (hooks) {
       { name: 'sd-teardown-screwdriver-coverage-bookend' }
     ];
 
-    assert.expect(3);
+    assert.expect(4);
 
     this.set('reloadCb', () => {
       assert.ok(true);

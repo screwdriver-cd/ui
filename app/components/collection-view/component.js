@@ -1,9 +1,17 @@
-import { sort, gt, equal } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
+import { gt, equal } from '@ember/object/computed';
 import { isEmpty, isEqual } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
+import {
+  sortByBranch,
+  sortByLastRunStatus,
+  sortByName,
+  sortByLastRun,
+  sortByHistory,
+  sortByDuration
+} from 'screwdriver-ui/utils/sort-functions';
 
 const viewOptions = [
   {
@@ -19,7 +27,8 @@ const viewOptions = [
 export default Component.extend({
   store: service(),
   session: service(),
-  sortBy: ['scmRepo.name'],
+  sortBy: 'pipelineName',
+  sortOrder: 'asc',
   collection: null,
   removePipelineError: null,
   activeViewOptionValue:
@@ -62,6 +71,9 @@ export default Component.extend({
         }
 
         return this.store.findAll('collection');
+      },
+      set(_, value) {
+        return this._collections = value;
       }
     }
   ),
@@ -97,7 +109,52 @@ export default Component.extend({
       return description;
     }
   }),
-  sortedPipelines: sort('collectionPipelines', 'sortBy'),
+  sortedPipelines: computed(
+    'collectionPipelines',
+    'sortBy',
+    'sortOrder', {
+    //function sortedPipelines() {
+    get() {
+      const unknownStatusPipelines = [];
+      const knownStatusPipelines = [];
+      const collectionPipelinesArray = this.collectionPipelines.toArray();
+
+      let sorted = collectionPipelinesArray.sort(sortByName);
+
+      collectionPipelinesArray.forEach(p => {
+        const { lastRunEvent } = p;
+
+        if (lastRunEvent && lastRunEvent.status === 'build-empty') {
+          unknownStatusPipelines.push(p);
+        } else {
+          knownStatusPipelines.push(p);
+        }
+      });
+
+      if (this.sortBy === 'lastRunStatus') {
+        sorted = knownStatusPipelines.sort(sortByLastRunStatus);
+      } else if (this.sortBy === 'pipelineName') {
+        sorted = knownStatusPipelines.sort(sortByName);
+      } else if (this.sortBy === 'lastRun') {
+        sorted = knownStatusPipelines.sort(sortByLastRun);
+      } else if (this.sortBy === 'history') {
+        sorted = knownStatusPipelines.sort(sortByHistory);
+      } else if (this.sortBy === 'branch') {
+        sorted = knownStatusPipelines.sort(sortByBranch);
+      } else if (this.sortBy === 'duration') {
+        sorted = knownStatusPipelines.sort(sortByDuration);
+      }
+
+      if (this.sortOrder === 'desc') {
+        sorted = sorted.reverse();
+      }
+
+      return sorted.concat(unknownStatusPipelines);
+    },
+    set(_, value) {
+      return this._sortedPipelines = value;
+    }
+  }),
   sortByText: computed('sortBy', {
     get() {
       switch (this.sortBy.get(0)) {
@@ -118,10 +175,12 @@ export default Component.extend({
         .some(element => element.settings.aliasName);
 
       return hasAliasName;
+    },
+    set(_, value) {
+      return this._hasAliasName = value;
     }
   }),
-
-  collectionPipelines: computed('collection.{id,pipelines}', {
+  collectionPipelines: computed('collection.pipelines.[]', {
     get() {
       const viewingId = this.get('collection.id');
 
@@ -168,11 +227,12 @@ export default Component.extend({
       const pipelineLabel = pipelineName ? ` ${pipelineName}` : '';
       const message = `The pipeline${pipelineLabel} has been removed from the ${collectionName} collection.`;
 
-      return this.onRemovePipeline(+pipelineId)
+      return this.onRemovePipeline(+pipelineId, collectionId)
         .then(() => {
           this.store.findRecord('collection', collectionId).then(collection => {
             this.setProperties({
               removePipelineError: null,
+              reset: true,
               collection,
               pipelineRemovedMessage: message
             });
@@ -204,17 +264,11 @@ export default Component.extend({
           this.set('removePipelineError', error.errors[0].detail);
         });
     },
-    setSortBy(option) {
-      switch (option) {
-        case 'name':
-          this.set('sortBy', ['scmRepo.name']);
-          break;
-        case 'lastEventTime':
-          this.set('sortBy', [`${option}:desc`]);
-          break;
-        default:
-          this.set('sortBy', [option]);
-      }
+    setSortBy(sortBy, sortOrder) {
+      this.setProperties({
+        sortBy,
+        sortOrder
+      });
     },
     organize() {
       this.set('isOrganizing', true);
@@ -222,11 +276,11 @@ export default Component.extend({
     selectPipeline(pipelineId) {
       const newSelectedPipelines = this.selectedPipelines.slice(0);
 
-      newSelectedPipelines.push(pipelineId);
+      newSelectedPipelines.push(parseInt(pipelineId, 10));
       this.set('selectedPipelines', newSelectedPipelines);
     },
     deselectPipeline(pipelineId) {
-      const idx = this.selectedPipelines.indexOf(pipelineId);
+      const idx = this.selectedPipelines.indexOf(parseInt(pipelineId, 10));
       const newSelectedPipelines = this.selectedPipelines.slice(0);
 
       if (idx !== -1) {

@@ -151,12 +151,9 @@
         </div>
         {{#if this.selectedEventObj.label}}
           <div class="col">
-            <span class="title">
-              Label
-            </span>
-            <br />
+            <span class="title">Label</span><br>
             <span class="customize-label" title={{this.selectedEventObj.label}}>
-              {{this.selectedEventObj.label}}
+              {{linkify this.selectedEventObj.label target="_blank" rel="nofollow" urlLength=30}}
             </span>
           </div>
         {{/if}}

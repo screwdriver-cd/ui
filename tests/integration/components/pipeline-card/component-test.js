@@ -96,7 +96,7 @@ module('Integration | Component | pipeline card', function (hooks) {
       .dom('.duration-badge span:nth-of-type(2)')
       .hasText(lastEventInfo.durationText);
     assert
-      .dom('.start-time-badge span:nth-of-type(2)')
+      .dom('.last-run-badge span:nth-of-type(2)')
       .hasText(lastEventInfo.startTime);
     assert.dom('.events-thumbnail-wrapper').exists({ count: 1 });
   });

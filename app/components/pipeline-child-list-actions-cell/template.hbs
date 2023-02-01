@@ -1,0 +1,20 @@
+<div class="actions-cell">
+  {{#if this.deleteAllowed}}
+    <span {{action "showDeleteConfirmation"}}>
+      {{fa-icon "trash" fixedWidth=true title="Delete pipeline"}}
+    </span>
+  {{/if}}
+  {{#if this.howDeleteConfirmation}}
+    {{#bs-modal-simple
+      title="Confirm deletion"
+      closeTitle="Cancel"
+      submitTitle="Confirm"
+      size=null
+      fade=false
+      onSubmit=(action "deletePipeline" pipelineToDelete)
+      onHide=(action "cancelDelete")
+    }}
+      You're about to delete the pipeline "{{this.pipeline.appId}}". This action cannot be undone. Are you sure?
+    {{/bs-modal-simple}}
+  {{/if}}
+</div>

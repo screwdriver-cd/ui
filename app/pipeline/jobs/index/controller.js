@@ -15,6 +15,7 @@ import {
   stopBuild,
   updateEvents
 } from 'screwdriver-ui/components/pipeline-events/component';
+import { isInactivePipeline } from 'screwdriver-ui/utils/pipeline';
 
 const PAST_TIME = moment().subtract(1, 'day');
 
@@ -185,6 +186,16 @@ export default Controller.extend(ModelReloaderMixin, {
   },
   createEvent,
   showListView: true,
+
+  isInactivePipeline: computed('pipeline', {
+    get() {
+      return isInactivePipeline(this.get('pipeline'));
+    },
+    set(_, value) {
+      return this._isInactivePipeline = value;
+    }
+  }),
+
   actions: {
     setShowListView(showListView) {
       if (!showListView) {

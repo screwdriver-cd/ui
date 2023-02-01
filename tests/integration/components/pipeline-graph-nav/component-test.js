@@ -95,7 +95,10 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     compare($columnValues[2], 'main');
     compare($columnValues[3], 'SUCCESS');
     compare($columnValues[4], 'anonymous');
-    compare($columnValues[5], '04/11/2016, 08:09 PM');
+    compare(
+      $columnValues[5],
+      `${toCustomLocaleString(new Date('04/11/2016, 08:09 PM'))}`
+    );
     compare($columnValues[6], '10 seconds');
 
     compare($links[0], '#abc123');
@@ -488,5 +491,118 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     />`);
 
     assert.dom('.latest-commit').exists({ count: 1 });
+  });
+
+  test('label does not contain any URLs', async function (assert) {
+    this.setProperties({
+      obj: {
+        sha: 'abc123',
+        baseBranch: 'main',
+        truncatedSha: 'abc123',
+        status: 'SUCCESS',
+        commit: {
+          author: { name: 'anonymous' }
+        },
+        createTime: '04/11/2016, 08:09 PM',
+        createTimeExact: '04/11/2016, 08:09 PM',
+        truncatedMessage: 'test message',
+        durationText: '10 seconds',
+        label: 'Yahoo new project, and Version #2.0'
+      },
+      selected: 2,
+      latestCommit: {
+        sha: 'latestSha'
+      },
+      startBuild: () => {
+        assert.ok(true);
+      },
+      currentEventType: 'pipeline',
+      showDownstreamTriggers: false,
+      setDownstreamTrigger: () => {
+        assert.ok(true);
+      },
+      setShowListView: () => {
+        assert.ok(true);
+      }
+    });
+
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+  />`);
+
+    assert
+      .dom('.col .customize-label')
+      .hasText('Yahoo new project, and Version #2.0');
+  });
+
+  test('label contain URLs', async function (assert) {
+    this.setProperties({
+      obj: {
+        sha: 'abc123',
+        baseBranch: 'main',
+        truncatedSha: 'abc123',
+        status: 'SUCCESS',
+        commit: {
+          author: { name: 'anonymous' }
+        },
+        createTime: '04/11/2016, 08:09 PM',
+        createTimeExact: '04/11/2016, 08:09 PM',
+        truncatedMessage: 'test message',
+        durationText: '10 seconds',
+        label: 'Yahoo http://yahoo.com, and Version #2.0'
+      },
+      selected: 2,
+      latestCommit: {
+        sha: 'latestSha'
+      },
+      startBuild: () => {
+        assert.ok(true);
+      },
+      currentEventType: 'pipeline',
+      showDownstreamTriggers: false,
+      setDownstreamTrigger: () => {
+        assert.ok(true);
+      },
+      setShowListView: () => {
+        assert.ok(true);
+      }
+    });
+
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
+    const compare = (elem, expected) => {
+      assert.strictEqual(elem, expected);
+    };
+    const labelColumn = this.element
+      .querySelector('.col .customize-label')
+      .innerHTML.trim();
+
+    compare(
+      labelColumn,
+      'Yahoo <a href="http://yahoo.com" rel="nofollow" target="_blank">http://yahoo.com</a>, and Version #2.0'
+    );
   });
 });

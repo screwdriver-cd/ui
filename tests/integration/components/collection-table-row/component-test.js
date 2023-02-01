@@ -7,8 +7,6 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import $ from 'jquery';
 import Pretender from 'pretender';
-import templateHelper from 'screwdriver-ui/utils/template';
-const { getLastUpdatedTime } = templateHelper;
 
 let server;
 const hasEmptyMetrics = () => [
@@ -64,7 +62,7 @@ module('Integration | Component | collection table row', function (hooks) {
   });
 
   test('it renders', async function (assert) {
-    assert.expect(13);
+    assert.expect(12);
     this.owner.setupRouter();
     await render(hbs`
       <CollectionTableRow
@@ -89,13 +87,8 @@ module('Integration | Component | collection table row', function (hooks) {
     assert
       .dom('td.status a:nth-of-type(2)')
       .hasAttribute('href', lastEventInfo.commitUrl);
-    assert.dom('td.start').hasText(lastEventInfo.startTime);
+    assert.dom('td.last-run').hasText(lastEventInfo.startTime);
     assert.dom('td.duration').hasText(lastEventInfo.durationText);
-    assert.dom('td.last-run').hasText(
-      getLastUpdatedTime({
-        createTime: mockPipeline.createTime
-      })
-    );
     assert.dom('td.history').exists({ count: 1 });
     assert.dom('td.collection-pipeline__remove').exists({ count: 1 });
 

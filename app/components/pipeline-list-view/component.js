@@ -4,6 +4,7 @@ import moment from 'moment';
 import { inject as service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import isEqual from 'lodash.isequal';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 
 const collator = new Intl.Collator('en', {
   numeric: true,
@@ -180,9 +181,9 @@ export default Component.extend({
         Object.keys(this.jobParameters === undefined ? {} : this.jobParameters)
           .length > 0;
 
-      let manualStartEnabled = true;
+      let manualStartEnabled = isActivePipeline(this.get('pipeline'));
 
-      if (annotations) {
+      if (manualStartEnabled && annotations) {
         manualStartEnabled =
           'screwdriver.cd/manualStartEnabled' in annotations
             ? annotations['screwdriver.cd/manualStartEnabled']
