@@ -82,17 +82,6 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
     />`);
-    await render(hbs`{{pipeline-list-view
-      pipeline=pipeline
-      jobsDetails=jobsDetails
-      updateListViewJobs=updateListViewJobs
-      refreshListViewJobs=refreshListViewJobs
-      startSingleBuild=startSingleBuild
-      stopBuild=stopBuild
-      buildParameters=buildParameters
-      showListView=showListView
-      setShowListView=setShowListView
-    }}`);
 
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
@@ -222,7 +211,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     });
 
     await render(hbs`<PipelineListView
-    @pipeline={{this.pipeline}}
+      @pipeline={{this.pipeline}}
       @jobsDetails={{this.jobsDetails}}
       @updateListViewJobs={{this.updateListViewJobs}}
       @refreshListViewJobs={{this.refreshListViewJobs}}
@@ -618,7 +607,6 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
-
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}

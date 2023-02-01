@@ -1,5 +1,5 @@
-import { resolve, reject, Promise as EmberPromise } from 'rsvp';
-import EmberObject , { computed } from '@ember/object';
+import { resolve, reject } from 'rsvp';
+import EmberObject, { computed } from '@ember/object';
 import Service from '@ember/service';
 import { module, test, todo } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
@@ -866,30 +866,30 @@ module('Integration | Component | collection view', function (hooks) {
 
     // check that helper function getColor() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('build-success');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('build-empty');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('build-empty');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('build-empty');
 
     // check that helper function getIcon() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly

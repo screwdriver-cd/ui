@@ -24,7 +24,7 @@
           <BsButton
             @type="primary"
             class="startButton"
-            @disabled={{this.isStartButtonDisabled}}
+            disabled={{this.isStartButtonDisabled}}
             @onClick={{action this.startBuild this.jobs.0.group this.jobs}}
           >
             Start
