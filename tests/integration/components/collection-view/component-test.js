@@ -918,7 +918,7 @@ module('Integration | Component | collection view', function (hooks) {
 
     await render(hbs`
       <CollectionView
-        @collection={{this.collection}}
+        @collection={{this.mockCollection}}
         @collections={{this.collections}}
       />`);
 
@@ -1024,7 +1024,7 @@ module('Integration | Component | collection view', function (hooks) {
 
     await render(hbs`
       <CollectionView
-        @collection={{this.collection}}
+        @collection={{this.mockCollectionDuration}}
         @collections={{this.collections}}
       />`);
 
@@ -1062,7 +1062,7 @@ module('Integration | Component | collection view', function (hooks) {
 
     await render(hbs`
       <CollectionView
-        @collection={{this.collection}}
+        @collection={{this.mockCollectionDuration}}
         @collections={{this.collections}}
       />`);
 
@@ -1163,7 +1163,7 @@ module('Integration | Component | collection view', function (hooks) {
 
     await render(hbs`
       <CollectionView
-        @collection={{this.collection}}
+        @collection={{this.mockCollectionDuration}}
         @collections={{this.collections}}
         @metricsMap={{this.metricsMap}}
       />`);
