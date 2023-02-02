@@ -218,22 +218,18 @@
               <th class="collection-pipeline__choose"></th>
               <th class="app-id" rowspan="1" onclick={{action "setSortBy" "pipelineName" (if (eq this.sortOrder "desc") "asc" "desc")}} >
                 {{#if this.hasAliasName}}
-                <p rowspan="1">
                   Alias /
-                </p>
                 {{/if}}
-                <p rowspan="1">
                 Name
-                </p>
                 <span class="icon-wrapper">
                   {{#if (eq this.sortBy "pipelineName")}}
                     {{#if (eq this.sortOrder "desc")}}
-                      <FaIcon @icon="sort-asc" />
+                      <FaIcon @icon="sort-up" />
                     {{else}}
-                      <FaIcon @icon="sort-desc" />
+                      <FaIcon @icon="sort-down" />
                     {{/if}}
                   {{else}}
-                    <FaIcon @icon="unsorted" />
+                    <FaIcon @icon="sort" />
                   {{/if}}
                 </span>
               </th>
@@ -242,12 +238,12 @@
                 <span class="icon-wrapper">
                   {{#if (eq this.sortBy "branch")}}
                     {{#if (eq this.sortOrder "desc")}}
-                      <FaIcon @icon="sort-asc" />
+                      <FaIcon @icon="sort-up" />
                     {{else}}
-                      <FaIcon @icon="sort-desc" />
+                      <FaIcon @icon="sort-down" />
                     {{/if}}
                   {{else}}
-                    <FaIcon @icon="unsorted" />
+                    <FaIcon @icon="sort" />
                   {{/if}}
                 </span>
               </th>
@@ -256,12 +252,12 @@
                 <span class="icon-wrapper">
                   {{#if (eq this.sortBy "lastRun")}}
                     {{#if (eq this.sortOrder "desc")}}
-                      <FaIcon @icon="sort-asc" />
+                      <FaIcon @icon="sort-up" />
                     {{else}}
-                      <FaIcon @icon="sort-desc" />
+                      <FaIcon @icon="sort-down" />
                     {{/if}}
                   {{else}}
-                    <FaIcon @icon="unsorted" />
+                    <FaIcon @icon="sort" />
                   {{/if}}
                 </span>
               </th>
@@ -270,12 +266,12 @@
                 <span class="icon-wrapper">
                   {{#if (eq this.sortBy "duration")}}
                     {{#if (eq this.sortOrder "desc")}}
-                      <FaIcon @icon="sort-asc" />
+                      <FaIcon @icon="sort-up" />
                     {{else}}
-                      <FaIcon @icon="sort-desc" />
+                      <FaIcon @icon="sort-down" />
                     {{/if}}
                   {{else}}
-                    <FaIcon @icon="unsorted" />
+                    <FaIcon @icon="sort" />
                   {{/if}}
                 </span>
               </th>
@@ -284,12 +280,12 @@
                 <span class="icon-wrapper">
                   {{#if (eq this.sortBy "lastRunStatus")}}
                     {{#if (eq this.sortOrder "desc")}}
-                      <FaIcon @icon="sort-asc" />
+                      <FaIcon @icon="sort-up" />
                     {{else}}
-                      <FaIcon @icon="sort-desc" />
+                      <FaIcon @icon="sort-down" />
                     {{/if}}
                   {{else}}
-                    <FaIcon @icon="unsorted" />
+                    <FaIcon @icon="sort" />
                   {{/if}}
                 </span>
               </th>
@@ -301,12 +297,12 @@
                 <span class="icon-wrapper">
                   {{#if (eq this.sortBy "history")}}
                     {{#if (eq this.sortOrder "desc")}}
-                      <FaIcon @icon="sort-asc" />
+                      <FaIcon @icon="sort-up" />
                     {{else}}
-                      <FaIcon @icon="sort-desc" />
+                      <FaIcon @icon="sort-down" />
                     {{/if}}
                   {{else}}
-                    <FaIcon @icon="unsorted" />
+                    <FaIcon @icon="sort" />
                   {{/if}}
                 </span>
               </th>
