@@ -96,6 +96,10 @@
           </span>
         </label>
 
+      {{#each this.templates.options as |template|}}
+        {{template}}
+      {{/each}}
+
         <div class="templates-dropdown">
           <PowerSelect
             @options={{this.templates}}
@@ -106,7 +110,7 @@
             @searchEnabled=true
             @noMatchesMessage={{this.messageForSearching}} as |template|
           >
-            {{this.template.name}}
+            {{template.name}}
           </PowerSelect>
         </div>
 

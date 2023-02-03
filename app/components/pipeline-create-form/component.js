@@ -27,7 +27,7 @@ export default Component.extend({
 
   messageForSearching: computed('templates.[]', {
     get() {
-      if (this.templates.length) {
+      if (this.templates.options.length) {
         return 'Not found.';
       }
 
