@@ -198,6 +198,7 @@
             </dd.menu>
           </nav.dropdown>
         {{else}}
+          <nav.dropdown as |dd|>
           <LinkTo
             @route="login"
             @query={{hash fromUrl=@currentUrl}}
@@ -205,10 +206,8 @@
             class="icon profile-outline dropdown-item"
           >
             {{svg-jar "profile-outline" class="img"}}
-            <span class="icontitle">
-              Sign in
-            </span>
           </LinkTo>
+          </nav.dropdown>
         {{/if}}
       </nav.item>
     </navbar.nav>
