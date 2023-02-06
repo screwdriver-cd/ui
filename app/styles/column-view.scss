@@ -34,19 +34,19 @@ a {
 }
 
 .status {
-  font-size: 2rem;
+  font-size: 20px;
   padding-right: 5px;
   color: $sd-no-build;
 }
 
 .detail {
-  font-size: 1.35rem;
+  font-size: 13px;
   line-height: 1.5;
   flex-grow: 1;
 }
 
 .name {
-  font-size: 1.35rem;
+  font-size: 13px;
   padding-right: 10px;
   position: relative;
   color: $grey-800;
@@ -60,7 +60,7 @@ a {
 
 .date,
 .by {
-  font-size: 1.2rem;
+  font-size: 12px;
 }
 
 .greyOut {
