@@ -84,9 +84,10 @@ module('Integration | Component | pipeline options', function (hooks) {
         'Pick your own preferred jobs to be counted in metrics graph (default all jobs)'
       );
     assert.dom('section > ul > li:nth-child(4) h4').hasText('Downtime Jobs');
-    assert
-      .dom('section > ul > li:nth-child(4) ul span')
-      .hasText('Select Jobs...');
+    assert.equal(
+      $('section > ul > li:nth-child(4) input').attr('placeholder'),
+      'Select Jobs...'
+    );
 
     // Jobs
     assert.dom('section.jobs h3').hasText('Jobs');
