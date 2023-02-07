@@ -48,7 +48,7 @@
         <td class="key">
           <Input
             placeholder="SECRET_KEY"
-            @size="40"
+            size="40"
             @value={{this.newName}}
             @title="Secret keys can only consist of numbers, uppercase letters and underscores, and cannot begin with a number."
           />
@@ -57,7 +57,7 @@
           <Input
             @type={{if this.eyeSlash "text" "password"}}
             placeholder="SECRET_VALUE"
-            @size="40"
+            size="40"
             @value={{this.newValue}}
           />
           <span onclick={{action "togglePasswordInput"}}>
