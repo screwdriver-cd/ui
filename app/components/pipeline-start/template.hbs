@@ -5,7 +5,7 @@
         <button
           class="btn start-button"
           title="Start a new event from latest commit"
-          onClick={{action "startBuild"}}
+          onClick={{action "startBuild" null}}
           disabled={{this.isStartButtonDisabled}}
         >
           Start
@@ -47,7 +47,7 @@
           <button
             class="start-button btn"
             title="Start a new event from latest commit"
-            onClisk={{action "startBuild"}}
+            onClick={{action "startBuild" null}}
             disabled={{this.isStartButtonDisabled}}
           >
             Start
@@ -77,7 +77,7 @@
     <button
       class="start-button"
       title="Start a new event from latest commit"
-      onClick={{action "startBuild"}}
+      onClick={{action "startBuild" null}}
       disabled={{this.isStartButtonDisabled}}
     >
       Start
