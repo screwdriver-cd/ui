@@ -8,6 +8,7 @@ import moment from 'moment';
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isPRJob } from 'screwdriver-ui/utils/build';
+import { isInactivePipeline } from 'screwdriver-ui/utils/pipeline';
 import {
   SHOULD_RELOAD_SKIP,
   SHOULD_RELOAD_YES
@@ -532,6 +533,15 @@ export default Component.extend(ModelReloaderMixin, {
   },
 
   createEvent,
+
+  isInactivePipeline: computed('pipeline', {
+    get() {
+      return isInactivePipeline(this.get('pipeline'));
+    },
+    set(_, value) {
+      return this._isInactivePipeline = value;
+    }
+  }),
 
   actions: {
     setDownstreamTrigger() {
