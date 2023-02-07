@@ -134,6 +134,10 @@ export default Model.extend(ModelReloaderMixin, {
       let status = 'UNKNOWN';
 
       builds.then(list => {
+        if (list.length === 0) {
+          return;
+        }
+
         if (!this.isDestroying && !this.isDestroyed) {
           const validList = list.filter(
             b => b.status !== 'SUCCESS' && b.status !== 'CREATED'
