@@ -340,7 +340,7 @@ const mockNormalCollection = EmberObject.create({
   pipelineIds: [1, 2, 3, 4]
 });
 
-const mockPipelinesReponse = copy([
+const mockPipelinesResponse = copy([
   mockPipelineModel.create({
     id: 1,
     scmUri: 'github.com:12345678:master',
@@ -450,12 +450,12 @@ const mockPipelinesReponse = copy([
   })
 ]);
 
-const mockCollectionReponse = EmberObject.create({
+const mockCollectionResponse = EmberObject.create({
   id: 1,
   name: 'My Pipelines',
   description: 'Normal Collection',
   type: 'normal',
-  pipelines: mockPipelinesReponse,
+  pipelines: mockPipelinesResponse,
   pipelineIds: [1, 2, 3, 4]
 });
 
@@ -659,13 +659,13 @@ module('Integration | Component | collection view', function (hooks) {
     server.get('http://localhost:8080/v4/collections', () => [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify(mockCollectionReponse)
+      JSON.stringify(mockCollectionResponse)
     ]);
 
     server.get('http://localhost:8080/v4/collections/1', () => [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify(mockCollectionReponse)
+      JSON.stringify(mockCollectionResponse)
     ]);
 
     server.get(
@@ -727,7 +727,7 @@ module('Integration | Component | collection view', function (hooks) {
       timeout: Infinity
     });
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-card-view').exists({ count: 1 });
     assert.dom('.collection-list-view').doesNotExist();
     assert.dom('.pipeline-card').exists({ count: 4 });
@@ -816,7 +816,7 @@ module('Integration | Component | collection view', function (hooks) {
     await click('.header__change-view button:nth-of-type(2)');
     await waitFor('.collection-list-view');
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -846,7 +846,7 @@ module('Integration | Component | collection view', function (hooks) {
       .dom('.collection-pipeline:nth-of-type(4) .app-id a')
       .hasText('screwdriver-cd/zzz');
 
-    // test aliasname
+    // test alias name
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id p')
       .hasText('screwdriver')
@@ -968,7 +968,7 @@ module('Integration | Component | collection view', function (hooks) {
     await click('.header__change-view button:nth-of-type(2)');
     await waitFor('.collection-list-view');
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -1010,7 +1010,7 @@ module('Integration | Component | collection view', function (hooks) {
       .dom('.collection-pipeline:nth-of-type(2) .app-id a')
       .hasText('screwdriver-cd/models');
 
-    // unknown status remains at the bottm regardless
+    // unknown status remains at the bottom regardless
     assert
       .dom('.collection-pipeline:nth-of-type(3) .app-id a')
       .hasText('screwdriver-cd/ui');
@@ -1070,7 +1070,7 @@ module('Integration | Component | collection view', function (hooks) {
     await click('.header__change-view button:nth-of-type(2)');
     await waitFor('.collection-list-view');
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -1149,7 +1149,7 @@ module('Integration | Component | collection view', function (hooks) {
     await click('.header__change-view button:nth-of-type(2)');
     await waitFor('.collection-list-view');
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -1210,7 +1210,7 @@ module('Integration | Component | collection view', function (hooks) {
     await click('th.status');
     await waitFor('.collection-list-view');
 
-    // first click desc order based status priorties as default sort is scmRepo.name:asc
+    // first click desc order based status priorities as default sort is scmRepo.name:asc
 
     // check that helper function getColor() works correctly
     assert
@@ -1257,7 +1257,7 @@ module('Integration | Component | collection view', function (hooks) {
     await click('th.last-run');
     await waitFor('.collection-list-view');
 
-    // second click asc order based status priorties
+    // second click asc order based status priorities
 
     // check that helper function getColor() works correctly
     assert
@@ -1308,9 +1308,8 @@ module('Integration | Component | collection view', function (hooks) {
 
     await render(hbs`
       <CollectionView
-        @collection={{this.mockCollection}}
+        @collection={{this.mockCollectionDuration}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
       />`);
 
     // switch to list mode
@@ -1375,7 +1374,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
       />`);
 
     assert.dom('.collection-empty-view').exists({ count: 1 });
@@ -1390,6 +1388,7 @@ module('Integration | Component | collection view', function (hooks) {
     await render(hbs`
       <CollectionView
         @collection={{this.collection}}
+        @collections={{this.collections}}
       />`);
 
     // switch to card mode
@@ -1429,7 +1428,7 @@ module('Integration | Component | collection view', function (hooks) {
     await render(hbs`
       <CollectionView
         @collection={{this.normalCollection}}
-        @metricsMap={{this.metricsMap}}
+        @collections={{this.collections}}
         @onRemovePipeline={{this.onRemovePipeline}}
       />`);
 
@@ -1460,7 +1459,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.normalCollection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @onRemovePipeline={{this.onRemovePipeline}}
       />`);
 
@@ -1496,8 +1494,7 @@ module('Integration | Component | collection view', function (hooks) {
     await render(hbs`
       <CollectionView
         @collection={{this.normalCollection}}
-        @collections={{this.colledtions}}
-        @metricsMap={{this.metricsMap}}
+        @collections={{this.collections}}
         @onRemovePipeline={{this.onRemovePipeline}}
       />
     `);
@@ -1536,7 +1533,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.normalCollection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @onRemovePipeline={{this.onRemovePipeline}}
       />
     `);
@@ -1560,7 +1556,7 @@ module('Integration | Component | collection view', function (hooks) {
     await render(hbs`
       <CollectionView
         @collection={{this.normalCollection}}
-        @metricsMap={{this.metricsMap}}
+        @collections={{this.collections}}
         @onRemovePipeline={{this.onRemovePipeline}}
       />
     `);
@@ -1581,7 +1577,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.normalCollection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @onRemovePipeline={{this.onRemovePipeline}}
       />
     `);
@@ -1601,7 +1596,6 @@ module('Integration | Component | collection view', function (hooks) {
         <CollectionView
           @collection={{this.collection}}
           @collections={{this.collections}}
-          @metricsMap={{this.metricsMap}}
           @onRemovePipeline={{this.onRemovePipeline}}
         />
     `);
@@ -1618,7 +1612,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
       />
     `);
 
@@ -1675,7 +1668,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
       />
     `);
 
@@ -1740,7 +1732,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.normalCollection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @removeMultiplePipelines={{this.removeMultiplePipelines}}
       />
     `);
@@ -1780,7 +1771,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.normalCollection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @removeMultiplePipelines={{this.removeMultiplePipelines}}
       />
     `);
@@ -1826,7 +1816,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.normalCollection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @removeMultiplePipelines={{this.removeMultiplePipelines}}
       />
     `);
@@ -1877,7 +1866,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.normalCollection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @removeMultiplePipelines={{this.removeMultiplePipelines}}
       />
     `);
@@ -1918,22 +1906,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectSessionStub(this);
     injectScmServiceStub(this);
 
-    const storeStub = Service.extend({
-      peekAll() {
-        return {};
-      },
-      findAll() {
-        return mockCollections;
-      }
-    });
-
-    this.owner.register('service:store', storeStub);
-
     await render(hbs`
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @addMultipleToCollection={{this.addMultipleToCollection}}
       />
     `);
@@ -1970,22 +1946,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectSessionStub(this);
     injectScmServiceStub(this);
 
-    const storeStub = Service.extend({
-      peekAll() {
-        return {};
-      },
-      findAll() {
-        return mockCollections;
-      }
-    });
-
-    this.owner.register('service:store', storeStub);
-
     await render(hbs`
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @addMultipleToCollection={{this.addMultipleToCollection}}
       />
     `);
@@ -2022,22 +1986,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectSessionStub(this);
     injectScmServiceStub(this);
 
-    const storeStub = Service.extend({
-      peekAll() {
-        return {};
-      },
-      findAll() {
-        return mockCollections;
-      }
-    });
-
-    this.owner.register('service:store', storeStub);
-
     await render(hbs`
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @addMultipleToCollection={{this.addMultipleToCollection}}
       />
     `);
@@ -2079,22 +2031,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectSessionStub(this);
     injectScmServiceStub(this);
 
-    const storeStub = Service.extend({
-      peekAll() {
-        return {};
-      },
-      findAll() {
-        return mockCollections;
-      }
-    });
-
-    this.owner.register('service:store', storeStub);
-
     await render(hbs`
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @addMultipleToCollection={{this.addMultipleToCollection}}
       />
     `);
@@ -2193,7 +2133,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
         @addMultipleToCollection={{this.addMultipleToCollection}}
       />
     `);
@@ -2277,7 +2216,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
       />
     `);
 
@@ -2336,7 +2274,6 @@ module('Integration | Component | collection view', function (hooks) {
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
       />
     `);
 
@@ -2349,17 +2286,12 @@ module('Integration | Component | collection view', function (hooks) {
   });
 
   test('it should verify collection edit modal', async function (assert) {
-    const collectionSaveSpy = sinon.spy();
-
-    this.collection.set('save', collectionSaveSpy);
     this.collection.set('type', 'normal');
 
     await render(hbs`
       <CollectionView
         @collection={{this.collection}}
         @collections={{this.collections}}
-        @metricsMap={{this.metricsMap}}
-
       />
     `);
 
