@@ -50,8 +50,6 @@ module.exports = function (defaults) {
   app.import('node_modules/c3/c3.min.js');
   app.import('node_modules/c3/c3.min.css');
   app.import('node_modules/memoizerific/memoizerific.min.js');
-  app.import('node_modules/jstree/dist/jstree.js');
-  app.import('node_modules/jstree/dist/themes/default/style.css');
 
   // Use `app.import` to add additional libraries to the generated
   // output files.

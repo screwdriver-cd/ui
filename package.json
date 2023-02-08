@@ -134,7 +134,6 @@
     "humanize-duration": "^3.27.1",
     "husky": "^2.7.0",
     "jquery-highlight": "^3.5.0",
-    "jstree": "^3.3.12",
     "lint-staged": "^8.1.7",
     "loader.js": "^4.7.0",
     "lodash.groupby": "^4.6.0",
