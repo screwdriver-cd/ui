@@ -1,4 +1,5 @@
 {{build-banner
+  build=build
   buildContainer=build.buildContainer
   duration=build.totalDuration
   blockDuration=build.blockedDuration
@@ -22,6 +23,7 @@
   event=event
   prEvents=prEvents
   prNumber=job.prNumber
+  templateId=build.templateId
   onStart=(action "startBuild")
   onStop=(action "stopBuild")
   reloadBuild=(action "reload")

@@ -66,6 +66,7 @@ export default DS.Model.extend({
   stats: DS.attr(),
   statusMessage: DS.attr('string', { defaultValue: null }),
   steps: DS.attr(),
+  templateId: DS.attr('number'),
   startTimeWords: computed('startTime', {
     get() {
       return `${durationText.call(this, 'startTime', 'now')} ago`;

@@ -78,6 +78,10 @@
     <span class="banner-value">{{buildContainer}}</span>
     <span class="banner-label">Container</span>
   </li>
+  <li class="template-info">
+    <span class="banner-value">{{buildContainer}}</span>
+    <span class="banner-label">Template</span>
+  </li>
   <li class="call-to-action button-right">
     {{#if isAuthenticated}}
       {{#bs-button onClick=(action "buildButtonClick") disabled=(or (await isButtonDisabled) (not isButtonDisabledLoaded))}}
@@ -85,4 +89,5 @@
       {{/bs-button}}
     {{/if}}
   </li>
-</ul>
+</ul> 
+      
