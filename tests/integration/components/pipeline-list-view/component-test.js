@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled } from '@ember/test-helpers';
+import { render, settled, pauseTest } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { set } from '@ember/object';
 
@@ -252,8 +252,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]
+
     set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
-    // set(this, 'updateListViewJobs', () =>  Promise.resolve([jobs]));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
     });
@@ -282,6 +282,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @setShowListView={{this.setShowListView}}
     />`);
 
+
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
@@ -289,9 +290,11 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert
       .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+
     assert.dom('tbody tr').exists({ count: 1 });
+    // assert.dom('tbody tr').includesText('a 6h 13m 8s 04/16/2020, 01:30 AM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.')
     assert.dom('tbody tr').includesText('6h 13m 8s');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
   });
 
   test('it renders and build running', async function (assert) {
@@ -364,7 +367,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
   });
 
   test('it renders and build created', async function (assert) {
@@ -436,7 +439,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
+    // assert.dom('tbody tr').includesText('a Still running. 04/16/2020, 01:30 AM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.')
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
   });
 
   test('it renders and build queued', async function (assert) {
@@ -509,7 +513,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
+    // assert.dom('tbody tr').includesText(' a Still running. 04/16/2020, 01:30 AM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.')
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
   });
 
   test('it renders and build blocked', async function (assert) {
@@ -582,7 +587,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM')
+    // assert.dom('tbody tr').includesText('a Still running. 04/16/2020, 01:30 AM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.')
   });
 
   test('it renders and build frozen', async function (assert) {
@@ -654,8 +660,9 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
-    assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').includesText('a Still running. 04/16/2020, 01:30\u202FAM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.');
+    // assert.dom('tbody tr').includesText('Still running.');
+    // assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and not started', async function (assert) {
