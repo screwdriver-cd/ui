@@ -55,7 +55,50 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => Promise.resolve([]));
+
+    let jobs = [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'RUNNING',
+            startTime: '',
+            endTime: ''
+          },
+          {
+            id: 2,
+            jobId: 1,
+            status: 'RUNNING',
+            startTime: '',
+            endTime: ''
+          }
+        ]
+      },
+      {
+        jobId: 2,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 2,
+            status: 'ABORTED',
+            startTime: '',
+            endTime: ''
+          },
+          {
+            id: 2,
+            jobId: 2,
+            status: 'RUNNING',
+            startTime: '',
+            endTime: ''
+          }
+        ]
+      }
+    ]
+    set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
     });
@@ -193,7 +236,24 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => Promise.resolve([]));
+
+    let jobs = [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'RUNNING',
+            startTime: '2020-04-16T01:30:01.447',
+            endTime: '2020-04-16T07:43:09.447'
+          }
+        ]
+      }
+    ]
+    set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
+    // set(this, 'updateListViewJobs', () =>  Promise.resolve([jobs]));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
     });
@@ -251,7 +311,23 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => Promise.resolve([]));
+    let jobs = [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'RUNNING',
+            startTime: '2020-04-16T01:30:01.447',
+            endTime: null
+          }
+        ]
+      }
+    ]
+
+    set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
     });
@@ -308,7 +384,22 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => Promise.resolve([]));
+    let jobs = [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'CREATED',
+            startTime: '2020-04-16T01:30:01.447',
+            endTime: null
+          }
+        ]
+      }
+    ]
+    set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
     });
@@ -365,7 +456,23 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => Promise.resolve([]));
+
+    let jobs = [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'QUEUED',
+            startTime: '2020-04-16T01:30:01.447',
+            endTime: null
+          }
+        ]
+      }
+    ]
+    set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
     });
@@ -422,7 +529,23 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => Promise.resolve([]));
+
+    let jobs = [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'BLOCKED',
+            startTime: '2020-04-16T01:30:01.447',
+            endTime: null
+          }
+        ]
+      }
+    ]
+    set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
     });
@@ -479,7 +602,23 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => Promise.resolve([]));
+
+    let jobs = [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'FROZEN',
+            startTime: '2020-04-16T01:30:01.447',
+            endTime: null
+          }
+        ]
+      }
+    ]
+    set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
     });
@@ -536,7 +675,23 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]);
-    set(this, 'updateListViewJobs', () => Promise.resolve([]));
+
+    let jobs = [
+      {
+        jobId: 1,
+        jobName: 'a',
+        builds: [
+          {
+            id: 1,
+            jobId: 1,
+            status: 'RUNNING',
+            startTime: null,
+            endTime: null
+          }
+        ]
+      }
+    ]
+    set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
     });
