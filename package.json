@@ -99,6 +99,7 @@
     "ember-copy": "^2.0.0",
     "ember-d3": "^0.5.1",
     "ember-data": "~4.4.1",
+    "ember-data-codemod": "^0.1.1",
     "ember-export-application-global": "^2.0.1",
     "ember-flatpickr": "^3.2.3",
     "ember-in-viewport": "^4.1.0",
@@ -144,8 +145,5 @@
     "qunit-dom": "^2.0.0",
     "sass": "^1.49.9",
     "webpack": "^5.72.1"
-  },
-  "dependencies": {
-    "ember-data-codemod": "^0.1.1"
   }
 }
