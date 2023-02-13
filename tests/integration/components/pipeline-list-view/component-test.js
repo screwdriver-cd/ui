@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, pauseTest } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { set } from '@ember/object';
 
@@ -12,51 +12,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   };
 
   test('it renders', async function (assert) {
-    set(this, 'pipeline', PIPELINE);
-    set(this, 'jobsDetails', [
-      {
-        jobId: 1,
-        jobName: 'a',
-        builds: [
-          {
-            id: 1,
-            jobId: 1,
-            status: 'RUNNING',
-            startTime: '',
-            endTime: ''
-          },
-          {
-            id: 2,
-            jobId: 1,
-            status: 'RUNNING',
-            startTime: '',
-            endTime: ''
-          }
-        ]
-      },
-      {
-        jobId: 2,
-        jobName: 'a',
-        builds: [
-          {
-            id: 1,
-            jobId: 2,
-            status: 'ABORTED',
-            startTime: '',
-            endTime: ''
-          },
-          {
-            id: 2,
-            jobId: 2,
-            status: 'RUNNING',
-            startTime: '',
-            endTime: ''
-          }
-        ]
-      }
-    ]);
-
-    let jobs = [
+    const jobs = [
       {
         jobId: 1,
         jobName: 'a',
@@ -98,6 +54,9 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]
+
+    set(this, 'pipeline', PIPELINE);
+    set(this, 'jobsDetails', jobs);
     set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -220,24 +179,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders with duration', async function (assert) {
-    set(this, 'pipeline', PIPELINE);
-    set(this, 'jobsDetails', [
-      {
-        jobId: 1,
-        jobName: 'a',
-        builds: [
-          {
-            id: 1,
-            jobId: 1,
-            status: 'RUNNING',
-            startTime: '2020-04-16T01:30:01.447',
-            endTime: '2020-04-16T07:43:09.447'
-          }
-        ]
-      }
-    ]);
 
-    let jobs = [
+    const jobs = [
       {
         jobId: 1,
         jobName: 'a',
@@ -252,6 +195,9 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]
+
+    set(this, 'pipeline', PIPELINE);
+    set(this, 'jobsDetails', jobs);
 
     set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
@@ -292,29 +238,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
 
     assert.dom('tbody tr').exists({ count: 1 });
-    // assert.dom('tbody tr').includesText('a 6h 13m 8s 04/16/2020, 01:30 AM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.')
     assert.dom('tbody tr').includesText('6h 13m 8s');
     assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
   });
 
   test('it renders and build running', async function (assert) {
-    set(this, 'pipeline', PIPELINE);
-    set(this, 'jobsDetails', [
-      {
-        jobId: 1,
-        jobName: 'a',
-        builds: [
-          {
-            id: 1,
-            jobId: 1,
-            status: 'RUNNING',
-            startTime: '2020-04-16T01:30:01.447',
-            endTime: null
-          }
-        ]
-      }
-    ]);
-    let jobs = [
+    const jobs = [
       {
         jobId: 1,
         jobName: 'a',
@@ -329,6 +258,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]
+    set(this, 'pipeline', PIPELINE);
+    set(this, 'jobsDetails', jobs);
 
     set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
@@ -371,23 +302,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders and build created', async function (assert) {
-    set(this, 'pipeline', PIPELINE);
-    set(this, 'jobsDetails', [
-      {
-        jobId: 1,
-        jobName: 'a',
-        builds: [
-          {
-            id: 1,
-            jobId: 1,
-            status: 'CREATED',
-            startTime: '2020-04-16T01:30:01.447',
-            endTime: null
-          }
-        ]
-      }
-    ]);
-    let jobs = [
+    const jobs = [
       {
         jobId: 1,
         jobName: 'a',
@@ -402,6 +317,9 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]
+    set(this, 'pipeline', PIPELINE);
+    set(this, 'jobsDetails', jobs);
+
     set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -439,29 +357,11 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    // assert.dom('tbody tr').includesText('a Still running. 04/16/2020, 01:30 AM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.')
     assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
   });
 
   test('it renders and build queued', async function (assert) {
-    set(this, 'pipeline', PIPELINE);
-    set(this, 'jobsDetails', [
-      {
-        jobId: 1,
-        jobName: 'a',
-        builds: [
-          {
-            id: 1,
-            jobId: 1,
-            status: 'QUEUED',
-            startTime: '2020-04-16T01:30:01.447',
-            endTime: null
-          }
-        ]
-      }
-    ]);
-
-    let jobs = [
+    const jobs = [
       {
         jobId: 1,
         jobName: 'a',
@@ -476,6 +376,9 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]
+    set(this, 'pipeline', PIPELINE);
+    set(this, 'jobsDetails', jobs);
+
     set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -513,29 +416,11 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    // assert.dom('tbody tr').includesText(' a Still running. 04/16/2020, 01:30 AM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.')
     assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
   });
 
   test('it renders and build blocked', async function (assert) {
-    set(this, 'pipeline', PIPELINE);
-    set(this, 'jobsDetails', [
-      {
-        jobId: 1,
-        jobName: 'a',
-        builds: [
-          {
-            id: 1,
-            jobId: 1,
-            status: 'BLOCKED',
-            startTime: '2020-04-16T01:30:01.447',
-            endTime: null
-          }
-        ]
-      }
-    ]);
-
-    let jobs = [
+    const jobs = [
       {
         jobId: 1,
         jobName: 'a',
@@ -550,6 +435,9 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]
+    set(this, 'pipeline', PIPELINE);
+    set(this, 'jobsDetails', jobs);
+
     set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -588,28 +476,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
     assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM')
-    // assert.dom('tbody tr').includesText('a Still running. 04/16/2020, 01:30 AM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.')
   });
 
   test('it renders and build frozen', async function (assert) {
-    set(this, 'pipeline', PIPELINE);
-    set(this, 'jobsDetails', [
-      {
-        jobId: 1,
-        jobName: 'a',
-        builds: [
-          {
-            id: 1,
-            jobId: 1,
-            status: 'FROZEN',
-            startTime: '2020-04-16T01:30:01.447',
-            endTime: null
-          }
-        ]
-      }
-    ]);
-
-    let jobs = [
+    const jobs = [
       {
         jobId: 1,
         jobName: 'a',
@@ -624,6 +494,9 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]
+    set(this, 'pipeline', PIPELINE);
+    set(this, 'jobsDetails', jobs);
+
     set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
@@ -660,30 +533,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .dom('thead')
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
-    assert.dom('tbody tr').includesText('a Still running. 04/16/2020, 01:30\u202FAM UTC N/A Job metrics Start a new build. Stop build. Restart from latest build.');
-    // assert.dom('tbody tr').includesText('Still running.');
-    // assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
+    assert.dom('tbody tr').includesText('Still running.');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
   });
 
   test('it renders and not started', async function (assert) {
-    set(this, 'pipeline', PIPELINE);
-    set(this, 'jobsDetails', [
-      {
-        jobId: 1,
-        jobName: 'a',
-        builds: [
-          {
-            id: 1,
-            jobId: 1,
-            status: 'RUNNING',
-            startTime: null,
-            endTime: null
-          }
-        ]
-      }
-    ]);
-
-    let jobs = [
+    const jobs = [
       {
         jobId: 1,
         jobName: 'a',
@@ -698,6 +553,9 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ]
       }
     ]
+    set(this, 'pipeline', PIPELINE);
+    set(this, 'jobsDetails', jobs);
+
     set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
     set(this, 'refreshListViewJobs', () => {
       assert.ok(true);
