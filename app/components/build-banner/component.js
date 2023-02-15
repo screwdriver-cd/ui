@@ -7,6 +7,7 @@ import { getTimestamp } from '../../utils/timestamp-format';
 
 export default Component.extend({
   userSettings: service(),
+  shuttle: service(),
   classNames: ['build-banner', 'row'],
   classNameBindings: ['buildStatus'],
   coverage: service(),
@@ -60,6 +61,14 @@ export default Component.extend({
       createTime = getTimestamp(this.userSettings, this.buildCreate);
 
       return createTime;
+    }
+  }),
+
+  getTemplate: computed('build', {
+    get() {
+      const template = this.shuttle.getTemlateDetails(7633);
+
+      return template;
     }
   }),
 

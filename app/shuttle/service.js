@@ -381,5 +381,23 @@ export default Service.extend({
     const url = `/collections/${collectionId}/pipelines?${pipelineIdsQuery}`;
 
     return this.fetchFromApi(method, url);
+  },
+
+  /**
+   * getTemlateDetails
+   * @param {Number} templateId template id
+   * @return {Promise} temlate details
+   */
+  async getTemlateDetails(templateId) {
+    const method = 'get';
+    const url = `/template/${templateId}`;
+
+    try {
+      const temlateDetails = await this.fetchFromApi(method, url);
+
+      return temlateDetails;
+    } catch (e) {
+      return {};
+    }
   }
 });
