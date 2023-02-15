@@ -239,7 +239,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
 
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('6h 13m 8s');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build running', async function (assert) {
@@ -298,7 +298,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build created', async function (assert) {
@@ -357,7 +357,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build queued', async function (assert) {
@@ -416,7 +416,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build blocked', async function (assert) {
@@ -475,7 +475,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM')
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM')
   });
 
   test('it renders and build frozen', async function (assert) {
@@ -534,7 +534,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30\u202FAM');
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and not started', async function (assert) {
