@@ -200,7 +200,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     });
 
     await render(hbs`{{pipeline-event-row 
-      event=eventWithLable
+      event=event
       startPRBuild=startPRBuild
       stopEvent=stopEvent
       selectedEvent=3
@@ -677,7 +677,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     });
 
     await render(hbs`{{pipeline-event-row 
-      event=eventWithLinksInLable
+      event=event
       startPRBuild=startPRBuild
       stopEvent=stopEvent
       selectedEvent=3
@@ -685,7 +685,9 @@ module('Integration | Component | pipeline event row', function (hooks) {
       lastSuccessful=3
     }}`);
 
-    const labelColumn = this.element.querySelector('.commit.label');
+    const labelColumn = this.element
+      .querySelector('.commit .label')
+      .innerHTML.trim();
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.stopButton').doesNotExist();
