@@ -184,8 +184,7 @@ export default Model.extend(ModelReloaderMixin, {
 
         // See if any builds are running
         const runningBuild = list.find(b => {
-          const { status } = b;
-          const { endTime } = b;
+          const { status, endTime } = b;
 
           return isActiveBuild(status, endTime);
         });

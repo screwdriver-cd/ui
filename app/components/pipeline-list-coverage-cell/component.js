@@ -20,7 +20,9 @@ export default Component.extend({
         try {
           if (!this.isDestroyed && !this.isDestroying) {
             this.set('loading', true);
-            const coverage = await this.shuttle.fetchCoverage(this.record.coverage);
+            const coverage = await this.shuttle.fetchCoverage(
+              this.record.coverage
+            );
 
             this.setProperties({
               coverage,

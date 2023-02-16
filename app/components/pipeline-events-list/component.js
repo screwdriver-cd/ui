@@ -64,24 +64,19 @@ export default Component.extend({
       this.paginateEvents.pushObject(event);
     } else {
       const isGroupedEvents =
-        get(this, 'pipeline.settings.groupedEvents') ===
-        undefined
+        get(this, 'pipeline.settings.groupedEvents') === undefined
           ? true
           : get(this, 'pipeline.settings.groupedEvents');
 
       if (isGroupedEvents === true) {
         const { groupEventId } = desiredEvent;
 
-        const expandedEventsGroup =
-          this.expandedEventsGroup || {};
+        const expandedEventsGroup = this.expandedEventsGroup || {};
 
         if (expandedEventsGroup[groupEventId] === undefined) {
           expandedEventsGroup[groupEventId] = true;
         }
-        this.set(
-          'expandedEventsGroup',
-          expandedEventsGroup
-        );
+        this.set('expandedEventsGroup', expandedEventsGroup);
       }
     }
   },

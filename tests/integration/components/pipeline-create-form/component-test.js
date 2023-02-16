@@ -9,7 +9,9 @@ module('Integration | Component | pipeline create form', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    await render(hbs`<PipelineCreateForm @errorMessage="" @isSaving={{false}} />`);
+    await render(
+      hbs`<PipelineCreateForm @errorMessage="" @isSaving={{false}} />`
+    );
 
     assert.dom('h1').hasText('Create Pipeline');
     assert.dom('.button-label').hasText('Create Pipeline');

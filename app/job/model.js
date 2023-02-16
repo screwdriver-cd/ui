@@ -1,6 +1,6 @@
 import Model, { attr, hasMany } from '@ember-data/model';
 import { computed, get } from '@ember/object';
-import { alias, equal, match } from '@ember/object/computed';
+import { alias, match } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
@@ -23,7 +23,7 @@ export default Model.extend({
   stateChangeMessage: attr('string'),
   // !for pr job only {
   title: attr('string'),
-  group: computed('isPR', 'name', {
+  group: computed('_group', 'group', 'isPR', 'name', {
     get() {
       if (this._group) {
         return this.group;
@@ -32,7 +32,7 @@ export default Model.extend({
       return this.isPR ? parseInt(this.name.slice('PR-'.length), 10) : null;
     },
     set(_, value) {
-      return this._group = value;
+      return (this._group = value);
     }
   }),
   prNumber: alias('group'),
@@ -73,7 +73,7 @@ export default Model.extend({
     }
   }),
   builds: hasMany('build', { async: true }),
-  isDisabled: computed({
+  isDisabled: computed('_isDisabled', 'state', {
     get() {
       if (this._isDisabled !== undefined) {
         return this._isDisabled;
@@ -82,7 +82,7 @@ export default Model.extend({
       return this.state === 'DISABLED';
     },
     set(_, value) {
-      return this._isDisabled = value;
+      return (this._isDisabled = value);
     }
   }),
   modelToReload: 'builds',

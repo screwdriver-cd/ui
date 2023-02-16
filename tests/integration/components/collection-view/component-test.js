@@ -1,6 +1,5 @@
 import { resolve, reject } from 'rsvp';
 import EmberObject, { computed } from '@ember/object';
-import Service from '@ember/service';
 import { module, test, todo } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import {
@@ -1451,7 +1450,6 @@ module('Integration | Component | collection view', function (hooks) {
     };
 
     this.set('onRemovePipeline', onRemovePipelineMock);
-    // this.owner.register('service:store', storeStub);
     injectSessionStub(this);
     injectScmServiceStub(this);
 

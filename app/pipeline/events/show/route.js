@@ -1,4 +1,4 @@
-import { get, action } from '@ember/object';
+import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 import { debounce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
@@ -6,6 +6,7 @@ import ENV from 'screwdriver-ui/config/environment';
 
 export default class PipelineEventsShowRoute extends Route {
   @service router;
+
   @service store;
 
   eventId = undefined;

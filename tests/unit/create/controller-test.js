@@ -28,7 +28,10 @@ module('Unit | Controller | create', function (hooks) {
 
     transitionToStub.callsFake(function () {
       assert.ok(transitionToStub.calledOnce, 'transitionTo was called once');
-      assert.ok(transitionToStub.calledWithExactly('pipeline', 1), 'invalid data');
+      assert.ok(
+        transitionToStub.calledWithExactly('pipeline', 1),
+        'invalid data'
+      );
       done();
     });
 

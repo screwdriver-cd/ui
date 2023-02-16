@@ -53,7 +53,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
           }
         ]
       }
-    ]
+    ];
 
     set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', jobs);
@@ -179,7 +179,6 @@ module('Integration | Component | pipeline list view', function (hooks) {
   });
 
   test('it renders with duration', async function (assert) {
-
     const jobs = [
       {
         jobId: 1,
@@ -194,7 +193,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
           }
         ]
       }
-    ]
+    ];
 
     set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', jobs);
@@ -228,7 +227,6 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @setShowListView={{this.setShowListView}}
     />`);
 
-
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
@@ -257,7 +255,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
           }
         ]
       }
-    ]
+    ];
+
     set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', jobs);
 
@@ -316,7 +315,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
           }
         ]
       }
-    ]
+    ];
+
     set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', jobs);
 
@@ -375,7 +375,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
           }
         ]
       }
-    ]
+    ];
+
     set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', jobs);
 
@@ -434,7 +435,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
           }
         ]
       }
-    ]
+    ];
+
     set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', jobs);
 
@@ -475,7 +477,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
       .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
-    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM')
+    assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
   });
 
   test('it renders and build frozen', async function (assert) {
@@ -493,7 +495,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
           }
         ]
       }
-    ]
+    ];
+
     set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', jobs);
 
@@ -552,7 +555,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
           }
         ]
       }
-    ]
+    ];
+
     set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', jobs);
 

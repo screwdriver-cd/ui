@@ -12,7 +12,9 @@ module('Integration | Component | login button', function (hooks) {
     this.set('externalAction', () => {
       assert.ok(true);
     });
-    await render(hbs`<LoginButton @authenticate={{action this.externalAction}} />`);
+    await render(
+      hbs`<LoginButton @authenticate={{action this.externalAction}} />`
+    );
 
     assert.dom('h2').hasText('Sign in to Screwdriver');
     await click('a');

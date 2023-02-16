@@ -192,10 +192,15 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const { nodes } = graph;
   const buildsAvailable =
-    (Array.isArray(builds) || builds instanceof DS.PromiseArray || builds instanceof DS.PromiseManyArray) &&
+    (Array.isArray(builds) ||
+      builds instanceof DS.PromiseArray ||
+      builds instanceof DS.PromiseManyArray) &&
     builds.length;
   const jobsAvailable =
-    (Array.isArray(jobs) || jobs instanceof DS.PromiseArray || jobs instanceof DS.PromiseManyArray) && jobs.length;
+    (Array.isArray(jobs) ||
+      jobs instanceof DS.PromiseArray ||
+      jobs instanceof DS.PromiseManyArray) &&
+    jobs.length;
   const { edges } = graph;
 
   let y = [0]; // accumulator for column heights

@@ -10,8 +10,8 @@ const TEMPLATE_DATA_WITH_NAME = {
   record: {
     namespace: 'foo',
     name: 'bar',
-    trusted: true,
-  },
+    trusted: true
+  }
 };
 
 const TEMPLATE_DATA_WITH_NAMESPACE = {
@@ -21,8 +21,8 @@ const TEMPLATE_DATA_WITH_NAMESPACE = {
   record: {
     namespace: 'baz',
     name: 'qux',
-    trusted: false,
-  },
+    trusted: false
+  }
 };
 
 module('Integration | Component | tc collection linker', function (hooks) {

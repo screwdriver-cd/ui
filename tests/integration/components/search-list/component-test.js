@@ -128,7 +128,9 @@ module('Integration | Component | search list', function (hooks) {
     this.set('pipelineList', pipelines);
     this.set('q', 'foo');
 
-    await render(hbs`<SearchList @pipelines={{this.pipelineList}} @query={{this.q}} />`);
+    await render(
+      hbs`<SearchList @pipelines={{this.pipelineList}} @query={{this.q}} />`
+    );
 
     assert.dom('tr').exists({ count: 2 });
     assert.dom('td.appId').hasText('foo/bar');

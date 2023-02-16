@@ -281,7 +281,7 @@ export default Component.extend(ModelReloaderMixin, {
     {
       get() {
         const workflowGraph = this.get('pipeline.workflowGraph');
-        const triggers = this.model.triggers;
+        const { triggers } = this.model;
         const completeGraph = workflowGraph;
 
         // Add extra node if downstream triggers exist
@@ -539,7 +539,7 @@ export default Component.extend(ModelReloaderMixin, {
       return isInactivePipeline(this.get('pipeline'));
     },
     set(_, value) {
-      return this._isInactivePipeline = value;
+      return (this._isInactivePipeline = value);
     }
   }),
 

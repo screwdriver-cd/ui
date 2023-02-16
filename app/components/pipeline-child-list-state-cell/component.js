@@ -8,7 +8,7 @@ export default Component.extend({
       return getStateIcon(this.get('state'));
     },
     set(_, value) {
-      return this._stateIcon = value;
+      return (this._stateIcon = value);
     }
   }),
   stateName: computed('state', {
@@ -16,7 +16,7 @@ export default Component.extend({
       return this.get('state').toLowerCase();
     },
     set(_, value) {
-      return this._stateName = value;
+      return (this._stateName = value);
     }
   })
 });

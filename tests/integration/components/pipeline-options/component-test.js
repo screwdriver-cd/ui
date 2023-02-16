@@ -66,7 +66,9 @@ module('Integration | Component | pipeline options', function (hooks) {
       ])
     );
 
-    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`);
+    await render(
+      hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`
+    );
 
     // Pipeline
     assert.dom('section.pipeline h3').hasText('Pipeline');
@@ -85,7 +87,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       );
     assert.dom('section > ul > li:nth-child(4) h4').hasText('Downtime Jobs');
     assert.equal(
-      $('section > ul > li:nth-child(4) input').attr('placeholder'),
+      'section > ul > li:nth-child(4) input'.attr('placeholder'),
       'Select Jobs...'
     );
 
@@ -132,7 +134,9 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`);
+    await render(
+      hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`
+    );
 
     // Danger Zone
     assert.dom('section.danger h3').hasText('Danger Zone');
@@ -188,7 +192,9 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @errorMessage="" @isSaving={{false}} @onUpdatePipeline={{action this.updatePipeline}} />`);
+    await render(
+      hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @errorMessage="" @isSaving={{false}} @onUpdatePipeline={{action this.updatePipeline}} />`
+    );
     assert.dom('.scm-url').hasValue('git@github.com:foo/bar.git#notMaster');
     assert.dom('.root-dir').doesNotExist();
 
@@ -221,7 +227,9 @@ module('Integration | Component | pipeline options', function (hooks) {
       })
     );
 
-    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @errorMessage="" @isSaving={{false}} @onUpdatePipeline={{action this.updatePipeline}} />`);
+    await render(
+      hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @errorMessage="" @isSaving={{false}} @onUpdatePipeline={{action this.updatePipeline}} />`
+    );
     assert.dom('.scm-url').hasValue('git@github.com:foo/bar.git#notMaster');
     assert.dom('.root-dir').doesNotExist('');
 
@@ -783,7 +791,9 @@ module('Integration | Component | pipeline options', function (hooks) {
       ])
     );
 
-    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`);
+    await render(
+      hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`
+    );
 
     // Pipeline should not render
     assert.dom('section.pipeline h3').doesNotExist();
@@ -886,7 +896,9 @@ module('Integration | Component | pipeline options', function (hooks) {
       ])
     );
 
-    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`);
+    await render(
+      hbs`<PipelineOptions @pipeline={{this.mockPipeline}} @jobs={{this.mockJobs}} />`
+    );
     await click('section.cache li:nth-child(2) a');
   });
 

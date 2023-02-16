@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, fillIn, triggerKeyEvent, waitFor } from '@ember/test-helpers';
+import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | secret view', function (hooks) {
@@ -23,7 +23,9 @@ module('Integration | Component | secret view', function (hooks) {
 
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
 
     assert.dom('.name').hasText('TEST_SECRET');
     assert.dom('.pass input').hasAttribute('placeholder', 'Protected');
@@ -69,7 +71,9 @@ module('Integration | Component | secret view', function (hooks) {
     );
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
     // open dialog
     await click('button');
 
@@ -102,7 +106,9 @@ module('Integration | Component | secret view', function (hooks) {
     );
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
     // open dialog
     await click('button');
     // click cancel
@@ -189,7 +195,9 @@ module('Integration | Component | secret view', function (hooks) {
     );
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
 
     await fillIn('.pass input', 'banana');
     await triggerKeyEvent('.pass input', 'keyup', 13);
@@ -215,7 +223,9 @@ module('Integration | Component | secret view', function (hooks) {
     this.set('mockSecret', testSecret);
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
 
     assert
       .dom('.pass input')

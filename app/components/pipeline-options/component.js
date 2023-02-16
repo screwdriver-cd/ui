@@ -284,7 +284,6 @@ export default Component.extend({
       this.updatePipelineAlias(aliasName);
     },
     async resetPipelineAlias() {
-
       this.set('aliasName', '');
     },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {

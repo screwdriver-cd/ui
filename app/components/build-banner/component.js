@@ -1,4 +1,4 @@
-import { computed } from '@ember/object';
+import { set, computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -23,7 +23,7 @@ export default Component.extend({
 
   coverageStepEndTime: alias('coverageStep.endTime'),
 
-  prNumber: computed('event.pr.url', {
+  prNumber: computed('_prNumber', 'event.pr.url', {
     get() {
       if (this._prNumber) {
         return this._prNumber;
@@ -35,7 +35,7 @@ export default Component.extend({
       return url.split('/').pop();
     },
     set(_, value) {
-      return this._prNumber = value;
+      return set(this, '_prNumber', value);
     }
   }),
 
@@ -92,27 +92,33 @@ export default Component.extend({
   }),
 
   isButtonDisabledLoaded: false,
-  isButtonDisabled: computed('buildStatus', 'jobDisabled', 'pipelineState', {
-    get() {
-      if (this.buildAction === 'Restart') {
-        if (this.pipelineState === 'INACTIVE') {
-          this.set('isButtonDisabledLoaded', true);
+  isButtonDisabled: computed(
+    'buildAction',
+    'buildStatus',
+    'jobDisabled',
+    'pipelineState',
+    {
+      get() {
+        if (this.buildAction === 'Restart') {
+          if (this.pipelineState === 'INACTIVE') {
+            this.set('isButtonDisabledLoaded', true);
 
-          return true;
+            return true;
+          }
+
+          return this.jobDisabled.then(jobDisabled => {
+            this.set('isButtonDisabledLoaded', true);
+
+            return jobDisabled;
+          });
         }
 
-        return this.jobDisabled.then(jobDisabled => {
-          this.set('isButtonDisabledLoaded', true);
+        this.set('isButtonDisabledLoaded', true);
 
-          return jobDisabled;
-        });
+        return false;
       }
-
-      this.set('isButtonDisabledLoaded', true);
-
-      return false;
     }
-  }),
+  ),
 
   overrideCoverageInfo() {
     const { buildMeta } = this;

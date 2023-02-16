@@ -1,11 +1,8 @@
 import EmberObject from '@ember/object';
 import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
-
 import { module, test } from 'qunit';
-
 import { setupTest } from 'ember-qunit';
-import sinon from 'sinon';
 
 module('Unit | Route | builds', function (hooks) {
   setupTest(hooks);

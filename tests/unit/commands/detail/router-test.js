@@ -120,7 +120,7 @@ module('Unit | Route | commands/detail', function (hooks) {
     assert.ok(route);
 
     const routerServiceMock = Service.extend({
-      transitionTo: stub,
+      transitionTo: stub
     });
 
     this.owner.unregister('service:router');
@@ -140,7 +140,7 @@ module('Unit | Route | commands/detail', function (hooks) {
     assert.ok(route);
 
     const routerServiceMock = Service.extend({
-      transitionTo: stub,
+      transitionTo: stub
     });
 
     this.owner.unregister('service:router');

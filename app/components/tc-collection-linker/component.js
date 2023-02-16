@@ -16,5 +16,5 @@ export default Component.extend({
     get() {
       return this.record.trusted;
     }
-  }),
+  })
 });

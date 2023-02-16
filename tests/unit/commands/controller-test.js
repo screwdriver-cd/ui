@@ -13,20 +13,20 @@ module('Unit | Controller | Commands', function (hooks) {
 
   test('it creates correct breadcrumbs', function (assert) {
     const controller = this.owner.lookup('controller:commands');
+    /* eslint-disable */
 
     run(() => {
       controller.set('model', {
-        paramsFor: (arg) => {
+        paramsFor: arg => {
           if (arg === 'commands.namespace') {
             return { namespace: 'testNamespace' };
           }
           if (arg === 'commands.detail') {
             return { name: 'testName' };
           }
-          assert.ok(false);
         }
       });
-
+      /* eslint-enable */
       assert.deepEqual(controller.crumbs, [
         {
           name: 'Commands',

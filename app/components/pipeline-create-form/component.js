@@ -25,7 +25,7 @@ export default Component.extend({
   isDisabled: or('isSaving', 'isInvalid'),
   autoKeysGeneration: false,
 
-  messageForSearching: computed('templates.[]', {
+  messageForSearching: computed('templates.[]', 'templates.options.length', {
     get() {
       if (this.templates.options.length) {
         return 'Not found.';
@@ -52,7 +52,7 @@ export default Component.extend({
         input.addClass('bad-text-input');
       }
 
-      return isValid
+      return isValid;
     }
   }),
 

@@ -29,7 +29,7 @@ export default Component.extend({
       }
     }
   ),
-  setupCollapsed: computed('selectedStep', 'setupSteps', {
+  setupCollapsed: computed('_setupCollapsed', 'selectedStep', 'setupSteps', {
     get() {
       if (this._setupCollapsed !== undefined) {
         return this._setupCollapsed;
@@ -44,27 +44,32 @@ export default Component.extend({
       return true;
     },
     set(_, value) {
-      return this._setupCollapsed = value;
+      return set(this, '_setupCollapsed', value);
     }
   }),
-  teardownCollapsed: computed('selectedStep', 'teardownSteps', {
-    get() {
-      if (this._teardownCollapsed !== undefined) {
-        return this._teardownCollapsed;
+  teardownCollapsed: computed(
+    '_teardownCollapsed',
+    'selectedStep',
+    'teardownSteps',
+    {
+      get() {
+        if (this._teardownCollapsed !== undefined) {
+          return this._teardownCollapsed;
+        }
+
+        const name = this.selectedStep;
+
+        if (name && this.teardownSteps.includes(name)) {
+          return false;
+        }
+
+        return true;
+      },
+      set(_, value) {
+        return set(this, '_teardownCollapsed', value);
       }
-
-      const name = this.selectedStep;
-
-      if (name && this.teardownSteps.includes(name)) {
-        return false;
-      }
-
-      return true;
-    },
-    set(_, value) {
-      return this._teardownCollapsed = value;
     }
-  }),
+  ),
   userSteps: filter(
     'stepNames',
     item => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)

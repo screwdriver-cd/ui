@@ -45,7 +45,7 @@ export default Controller.extend({
   selectedConnectedPipelineId: null,
 
   async getPipelineGraph(pipeline) {
-    return pipeline.getProperties('id','workflowGraph');
+    return pipeline.getProperties('id', 'workflowGraph');
   },
 
   async extractConnectedPipelines(pipeline) {

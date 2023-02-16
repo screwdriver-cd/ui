@@ -12,7 +12,9 @@ module('Integration | Component | pipeline start', function (hooks) {
     this.set('onStartBuild', () => {
       assert.ok(true);
     });
-    await render(hbs`<PipelineStart @startBuild={{this.onStartBuild}} @pipeline={{this.pipeline}}/>`);
+    await render(
+      hbs`<PipelineStart @startBuild={{this.onStartBuild}} @pipeline={{this.pipeline}}/>`
+    );
 
     assert.dom('button').hasText('Start');
     await click('button');
@@ -24,7 +26,9 @@ module('Integration | Component | pipeline start', function (hooks) {
     this.set('onStartBuild', () => {
       assert.ok(true);
     });
-    await render(hbs`<PipelineStart @startBuild={{this.onStartBuild}} @pipeline={{this.pipeline}}/>`);
+    await render(
+      hbs`<PipelineStart @startBuild={{this.onStartBuild}} @pipeline={{this.pipeline}}/>`
+    );
 
     assert.dom('button').hasText('Start');
     assert.dom('button').hasAttribute('disabled');

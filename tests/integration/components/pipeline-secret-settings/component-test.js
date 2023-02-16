@@ -53,7 +53,9 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
   test('it updates the add button properly', async function (assert) {
     this.set('mockPipeline', { id: 'abcd' });
-    await render(hbs`<PipelineSecretSettings @pipeline={{this.mockPipeline}} />`);
+    await render(
+      hbs`<PipelineSecretSettings @pipeline={{this.mockPipeline}} />`
+    );
 
     // starts disabled
     assert.dom('tfoot button').isDisabled();

@@ -7,6 +7,7 @@ import { waitUntil } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
+import sinon from 'sinon';
 
 const latestCommitEvent = {
   id: 3,
@@ -493,7 +494,7 @@ module('Integration | Component | pipeline events', function (hooks) {
     });
 
     const storeServiceMock = Service.extend({
-      createRecord: sinon.stub().returns(newEvent),
+      createRecord: sinon.stub().returns(newEvent)
     });
 
     this.owner.unregister('service:store');
@@ -532,7 +533,7 @@ module('Integration | Component | pipeline events', function (hooks) {
 
     await waitUntil(() => !component.isShowingModal);
 
-    const prEvents = component.prEvents;
+    const { prEvents } = component;
 
     assert.equal(prEvents[0].id, 3);
     assert.equal(prEvents[0].prNum, '3');

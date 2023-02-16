@@ -22,7 +22,9 @@ module('Integration | Component | pipeline-rootdir', function (hooks) {
       this.set('rootDir', val.trim());
     });
 
-    await render(hbs`<PipelineRootdir @hasRootDir={{true}} @rootDir='lib' @updateRootDir={{action this.updateRootDir}} />`);
+    await render(
+      hbs`<PipelineRootdir @hasRootDir={{true}} @rootDir='lib' @updateRootDir={{action this.updateRootDir}} />`
+    );
     assert.dom('.root-dir').hasValue('lib');
   });
 });

@@ -73,7 +73,7 @@ export default Component.extend({
         return this.store.findAll('collection');
       },
       set(_, value) {
-        return this._collections = value;
+        return (this._collections = value);
       }
     }
   ),
@@ -109,11 +109,8 @@ export default Component.extend({
       return description;
     }
   }),
-  sortedPipelines: computed(
-    'collectionPipelines',
-    'sortBy',
-    'sortOrder', {
-    //function sortedPipelines() {
+  sortedPipelines: computed('collectionPipelines', 'sortBy', 'sortOrder', {
+    // function sortedPipelines() {
     get() {
       const unknownStatusPipelines = [];
       const knownStatusPipelines = [];
@@ -152,7 +149,7 @@ export default Component.extend({
       return sorted.concat(unknownStatusPipelines);
     },
     set(_, value) {
-      return this._sortedPipelines = value;
+      return (this._sortedPipelines = value);
     }
   }),
   sortByText: computed('sortBy', {
@@ -177,10 +174,10 @@ export default Component.extend({
       return hasAliasName;
     },
     set(_, value) {
-      return this._hasAliasName = value;
+      return (this._hasAliasName = value);
     }
   }),
-  collectionPipelines: computed('collection.pipelines.[]', {
+  collectionPipelines: computed('collection.id', 'collection.pipelines.[]', {
     get() {
       const viewingId = this.get('collection.id');
 

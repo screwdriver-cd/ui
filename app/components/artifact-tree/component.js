@@ -33,6 +33,7 @@ export default Component.extend({
       if (buildStatus === 'RUNNING' || buildStatus === 'QUEUED') {
         return resolve([]);
       }
+
       return ObjectPromiseProxy.create({
         promise: this.artifact.fetchManifest(this.buildId)
       });
@@ -77,18 +78,15 @@ export default Component.extend({
     },
 
     showArtifactPreview(treeData) {
-      const href = treeData.a_attr.href;
+      const { href } = treeData.a_attr;
       const artifactPath = href.split('artifacts/')[1];
 
       this.setProperties({
         href,
-        iframeUrl: `${href}?type=preview`,
+        iframeUrl: `${href}?type=preview`
       });
 
-      this.router.transitionTo(
-        'pipeline.build.artifacts.detail',
-        artifactPath
-      );
+      this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
     },
 
     handleJstreeEventDidChange(data = {}) {

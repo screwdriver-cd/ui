@@ -29,7 +29,9 @@ module('Integration | Component | workflow graph d3', function (hooks) {
         { src: 'main', dest: 'foo' }
       ]
     });
-    await render(hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} />`);
+    await render(
+      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} />`
+    );
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
     assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 4);

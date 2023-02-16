@@ -16,7 +16,7 @@ export default Controller.extend({
       return params;
     },
     set(_, value) {
-      return this._routeParams = value;
+      return (this._routeParams = value);
     }
   }),
   crumbs: computed('routeParams', {
@@ -31,7 +31,7 @@ export default Controller.extend({
         breadcrumbs.push({
           name: 'Templates',
           route: 'templates',
-          params: [ 'templates' ]
+          params: ['templates']
         });
       }
 
@@ -39,7 +39,7 @@ export default Controller.extend({
         breadcrumbs.push({
           name: params.namespace,
           route: `templates.namespace`,
-          params: [ params.namespace ]
+          params: [params.namespace]
         });
       }
 
@@ -47,14 +47,14 @@ export default Controller.extend({
         breadcrumbs.push({
           name: params.name,
           route: `templates.detail`,
-          params: [ params.namespace, params.name ]
+          params: [params.namespace, params.name]
         });
       }
 
       return breadcrumbs;
     },
     set(_, value) {
-      return this._crumbs = value;
+      return (this._crumbs = value);
     }
   })
 });

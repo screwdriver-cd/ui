@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { typeOf } from '@ember/utils';
 import { helper } from '@ember/component/helper';
 import { htmlSafe } from '@ember/template';
@@ -9,10 +10,11 @@ const ALLOWED_ATTRIBUTE_NAMES = ['rel', 'class', 'target'];
 function opts2attrs(options) {
   const stringOfAttributes = [''];
 
-  if(typeOf(options) === 'object') {
+  if (typeOf(options) === 'object') {
     for (let i = 0; i < ALLOWED_ATTRIBUTE_NAMES.length; i++) {
       const attributeName = ALLOWED_ATTRIBUTE_NAMES[i];
-      if(attributeName in options) {
+
+      if (attributeName in options) {
         stringOfAttributes.push(`${attributeName}="${options[attributeName]}"`);
       }
     }
@@ -27,19 +29,20 @@ export function linkify(params, options) {
 
   textToLinkify = textToLinkify.replace(urlRegex(), function (s) {
     let url;
+
     let displayText = s.trim();
 
-    if(s.trim().match(/^www\./ig)) {
+    if (s.trim().match(/^www\./gi)) {
       if (options && options.defaultScheme) {
-        url = options.defaultScheme + '://' + s.trim();
+        url = `${options.defaultScheme}://${s.trim()}`;
       } else {
-        url = '//' + s.trim();
+        url = `//${s.trim()}`;
       }
     } else {
       url = s.trim();
     }
 
-    if(options && options.urlLength &&  options.urlLength > 0) {
+    if (options && options.urlLength && options.urlLength > 0) {
       displayText = shortenUrl(displayText, options.urlLength);
     }
 

@@ -53,7 +53,7 @@ export default Component.extend({
       return null;
     },
     set(_, value) {
-      return this._duration = value;
+      return (this._duration = value);
     }
   }),
   click() {
