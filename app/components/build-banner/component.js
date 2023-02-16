@@ -68,7 +68,7 @@ export default Component.extend({
     }
   }),
 
-  getTemplate: computed('build', {
+  getTemplate: computed('templateId', {
     get() {
       const templateId = this.get('templateId');
 
