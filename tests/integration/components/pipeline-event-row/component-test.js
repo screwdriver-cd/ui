@@ -59,7 +59,7 @@ const event = {
   isRunning: false
 };
 
-const eventWithLable = {
+const eventWithLabel = {
   id: 3,
   startFrom: '~commit',
   status: 'SUCCESS',
@@ -110,7 +110,7 @@ const eventWithLable = {
   label: 'Yahoo new project, and Version #2.0'
 };
 
-const eventWithLinksInLable = {
+const eventWithLinksInLabel = {
   id: 3,
   startFrom: '~commit',
   status: 'SUCCESS',
@@ -189,7 +189,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(eventWithLable, true));
+    let eventMock = EmberObject.create(copy(eventWithLabel, true));
 
     eventMock.isRunning = false;
     eventMock.status = 'SUCCESS';
@@ -666,7 +666,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(eventWithLinksInLable, true));
+    let eventMock = EmberObject.create(copy(eventWithLinksInLabel, true));
 
     eventMock.isRunning = false;
     eventMock.status = 'SUCCESS';
