@@ -22,6 +22,11 @@
     "start:dev": "sudo ember serve --ssl true --port 443 --environment=development",
     "test": "ember test"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.js": [
       "eslint --fix",

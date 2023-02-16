@@ -5,8 +5,7 @@ module.exports = environment => {
     modulePrefix: 'screwdriver-ui',
     environment,
     rootURL: '/',
-    locationType: 'auto',
-    // locationType: 'history',
+    locationType: 'history',
     contentSecurityPolicyHeader: 'Content-Security-Policy',
     contentSecurityPolicy: {
       'script-src': ["'self'", "'unsafe-inline'"],
