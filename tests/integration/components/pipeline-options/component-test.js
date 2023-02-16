@@ -87,7 +87,7 @@ module('Integration | Component | pipeline options', function (hooks) {
       );
     assert.dom('section > ul > li:nth-child(4) h4').hasText('Downtime Jobs');
     assert.equal(
-      'section > ul > li:nth-child(4) input'.attr('placeholder'),
+      $('section > ul > li:nth-child(4) input').attr('placeholder'),
       'Select Jobs...'
     );
 
