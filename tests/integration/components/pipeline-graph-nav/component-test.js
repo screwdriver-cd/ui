@@ -602,7 +602,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
 
     compare(
       labelColumn,
-      'Yahoo <a href="http://yahoo.com" rel="nofollow" target="_blank">http://yahoo.com</a>, and Version #2.0'
+      'Yahoo <a href="http://yahoo.com" rel="nofollow" target="_blank" urllength="30">http://yahoo.com</a>, and Version #2.0'
     );
   });
 });
