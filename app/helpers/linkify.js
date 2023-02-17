@@ -5,7 +5,7 @@ import { htmlSafe } from '@ember/template';
 import Ember from 'ember';
 import { urlRegex, shortenUrl } from '../utils/url-regex';
 
-const ALLOWED_ATTRIBUTE_NAMES = ['rel', 'class', 'target'];
+const ALLOWED_ATTRIBUTE_NAMES = ['rel', 'class', 'target', 'urlLength'];
 
 function opts2attrs(options) {
   const stringOfAttributes = [''];

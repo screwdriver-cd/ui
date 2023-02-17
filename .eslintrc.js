@@ -25,6 +25,7 @@ module.exports = {
     humanizeDuration: true
   },
   rules: {
+    'no-return-assign': 'off',
     'no-underscore-dangle': 'off',
     'prefer-const': 'off',
     'prefer-destructuring': [
