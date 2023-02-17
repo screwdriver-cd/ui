@@ -391,13 +391,8 @@ export default Service.extend({
   async getTemplateDetails(templateId) {
     const method = 'get';
     const url = `/template/${templateId}`;
+    const templateDetails = await this.fetchFromApi(method, url);
 
-    try {
-      const templateDetails = await this.fetchFromApi(method, url);
-
-      return templateDetails;
-    } catch (e) {
-      return {};
-    }
+    return templateDetails;
   }
 });
