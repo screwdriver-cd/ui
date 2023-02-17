@@ -384,18 +384,18 @@ export default Service.extend({
   },
 
   /**
-   * getTemlateDetails
+   * getTemplateDetails
    * @param {Number} templateId template id
-   * @return {Promise} temlate details
+   * @return {Promise} template details
    */
-  async getTemlateDetails(templateId) {
+  async getTemplateDetails(templateId) {
     const method = 'get';
     const url = `/template/${templateId}`;
 
     try {
-      const temlateDetails = await this.fetchFromApi(method, url);
+      const templateDetails = await this.fetchFromApi(method, url);
 
-      return temlateDetails;
+      return templateDetails;
     } catch (e) {
       return {};
     }

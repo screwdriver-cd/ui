@@ -68,18 +68,18 @@ export default Component.extend({
     }
   }),
 
-  getTemplate: computed('templateId', {
+  template: computed('templateId', {
     get() {
       const templateId = this.get('templateId');
 
       return ObjectPromiseProxy.create({
-        promise: this.shuttle.getTemlateDetails(templateId).then(template => {
+        promise: this.shuttle.getTemplateDetails(templateId).then(template => {
           const { namespace, name, version } = template;
 
           return {
-            link: `/templates/${namespace}/${name}/${version}`,
             name,
-            version
+            version,
+            namespace
           };
         })
       });
