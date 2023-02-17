@@ -31,6 +31,7 @@
             {{this.event.label}}
           </div>
         {{/if}}
+        {{#if event.label}}<div class="label">{{linkify event.label target="_blank" rel="nofollow" urlLength=30}}</div>{{/if}}
       {{/if}}
       {{#if (and this.event.isRunning (not-eq this.event.status "UNKNOWN"))}}
         <BsButton
