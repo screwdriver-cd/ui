@@ -3,10 +3,15 @@ import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
 import { getTimestamp } from '../../utils/timestamp-format';
+
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
   userSettings: service(),
+  shuttle: service(),
   classNames: ['build-banner', 'row'],
   classNameBindings: ['buildStatus'],
   coverage: service(),
@@ -60,6 +65,24 @@ export default Component.extend({
       createTime = getTimestamp(this.userSettings, this.buildCreate);
 
       return createTime;
+    }
+  }),
+
+  template: computed('templateId', {
+    get() {
+      const templateId = this.get('templateId');
+
+      return ObjectPromiseProxy.create({
+        promise: this.shuttle.getTemplateDetails(templateId).then(template => {
+          const { namespace, name, version } = template;
+
+          return {
+            name,
+            version,
+            namespace
+          };
+        })
+      });
     }
   }),
 

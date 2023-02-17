@@ -78,6 +78,14 @@
     <span class="banner-value">{{buildContainer}}</span>
     <span class="banner-label">Container</span>
   </li>
+  {{#if templateId}}
+    {{#if template.content}}
+      <li class="template-info">
+        {{#link-to "templates.detail" template.content.namespace template.content.name template.content.version}}<span class="banner-value">{{template.content.name}}:{{template.content.version}}</span>{{/link-to}}
+        <span class="banner-label">Template</span>
+      </li>
+    {{/if}}
+  {{/if}}
   <li class="call-to-action button-right">
     {{#if isAuthenticated}}
       {{#bs-button onClick=(action "buildButtonClick") disabled=(or (await isButtonDisabled) (not isButtonDisabledLoaded))}}
@@ -85,4 +93,5 @@
       {{/bs-button}}
     {{/if}}
   </li>
-</ul>
+</ul> 
+      
