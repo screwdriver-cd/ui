@@ -107,7 +107,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders', async function (assert) {
-    assert.expect(13);
+    assert.expect(14);
     this.owner.setupRouter();
 
     this.set('reloadCb', () => {
@@ -165,6 +165,8 @@ module('Integration | Component | build banner', function (hooks) {
     assert.dom('.created .banner-value').hasText(expectedTime);
     assert.dom('.user .banner-value').hasText('Bruce W');
     assert.dom('.docker-container .banner-value').hasText('node:6');
+    // template info doesnot exists because we haven't passed yet
+    assert.dom('.template-info .banner-value').doesNotExist();
     assert.dom('button').doesNotExist();
   });
 
@@ -760,5 +762,89 @@ module('Integration | Component | build banner', function (hooks) {
     return settled().then(() => {
       assert.dom('button').hasText('Stop');
     });
+  });
+
+  test('it renders template info if user is using template', async function (assert) {
+    assert.expect(15);
+    this.owner.setupRouter();
+
+    this.set('reloadCb', () => {
+      assert.ok(true);
+    });
+
+    this.set('changeB', () => {
+      assert.ok(true);
+    });
+
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
+
+    this.set('buildStepsMock', buildStepsMock);
+    this.set('eventMock', prEventMock);
+    const shuttleStub = Service.extend({
+      // eslint-disable-next-line no-unused-vars
+      getTemplateDetails(templateId) {
+        assert.ok(true, 'getTemplateDetails called');
+        assert.equal(templateId, 9333);
+
+        return resolve({
+          namespace: 'nodejs',
+          name: 'test',
+          version: '2.0'
+        });
+      },
+      getUserSetting() {
+        return resolve({});
+      }
+    });
+
+    this.owner.unregister('service:shuttle');
+    this.owner.register('service:shuttle', shuttleStub);
+
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="11 seconds"
+      @blockDuration="4 seconds"
+      @imagePullDuration="5 seconds"
+      @buildDuration="2 seconds"
+      @buildStatus="RUNNING"
+      @buildCreate="2016-11-04T20:08:41.238Z"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobId=1
+      @jobName="PR-671"
+      @isAuthenticated={{false}}
+      @event={{this.eventMock}}
+      @pipelineId=12345
+      @prEvents={{this.prEvents}}
+      @templateId=9333
+      @reloadBuild={{action this.reloadCb}}
+      @changeBuild={{action this.changeB}}
+    />`);
+
+    const expectedTime = toCustomLocaleString(
+      new Date('2016-11-04T20:08:41.238Z')
+    );
+
+    assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/pulls');
+    assert.dom('li.job-name .banner-value').hasText('PR-671');
+    assert
+      .dom('.commit a')
+      .hasAttribute(
+        'href',
+        'http://example.com/batcave/batmobile/commit/abcdef1029384'
+      );
+    assert.dom('.commit a').hasText('#abcdef1');
+    assert
+      .dom('.duration .banner-value')
+      .hasAttribute(
+        'title',
+        'Total duration: 11 seconds, Blocked time: 4 seconds, Image pull time: 5 seconds, Build time: 2 seconds'
+      );
+    assert.dom('.duration > a').hasText('See build metrics');
+    assert.dom('.created .banner-value').hasText(expectedTime);
+    assert.dom('.user .banner-value').hasText('Bruce W');
+    assert.dom('.docker-container .banner-value').hasText('node:6');
+    assert.dom('.template-info .banner-value').hasText('test:2.0');
+    assert.dom('button').doesNotExist();
   });
 });

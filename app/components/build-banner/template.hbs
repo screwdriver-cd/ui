@@ -154,6 +154,20 @@
       Container
     </span>
   </li>
+  {{#if this.templateId}}
+    {{#if this.template}}
+      <li class="template-info">
+        <LinkTo
+          @route="templates.detail"
+          @models={{array this.template.namespace this.template.name this.template.version}}
+        >
+          <span class="banner-value">
+            {{this.template.name}}:{{this.template.version}}
+          </span>
+        </LinkTo>
+      </li>
+    {{/if}}
+  {{/if}}
   <li class="call-to-action button-right">
     {{#if this.isAuthenticated}}
       <BsButton
@@ -165,4 +179,5 @@
       </BsButton>
     {{/if}}
   </li>
-</ul>
+</ul> 
+      
