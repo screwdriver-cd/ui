@@ -38,9 +38,9 @@ module('Integration | Component | pipeline search panel', function (hooks) {
 
   test('it renders', async function (assert) {
     await render(hbs`
-      {{pipeline-search-panel
-        searchedPipelines=searchedPipelines
-      }}
+      <PipelineSearchPanel
+        @searchedPipelines={{this.searchedPipelines}}
+      />
     `);
 
     assert.dom('.search-pipeline-searchbar').exists({ count: 1 });
@@ -48,18 +48,18 @@ module('Integration | Component | pipeline search panel', function (hooks) {
 
     const wrapperEls = findAll('.searched-pipeline');
 
-    assert.dom(wrapperEls[0]).hasText(mockSearchedPipelines[0].name);
-    assert.dom(wrapperEls[1]).hasText(mockSearchedPipelines[1].name);
-    assert.dom(wrapperEls[2]).hasText(mockSearchedPipelines[2].name);
-    assert.dom(wrapperEls[3]).hasText(mockSearchedPipelines[3].name);
+    assert.dom(wrapperEls[0]).containsText(mockSearchedPipelines[0].name);
+    assert.dom(wrapperEls[1]).containsText(mockSearchedPipelines[1].name);
+    assert.dom(wrapperEls[2]).containsText(mockSearchedPipelines[2].name);
+    assert.dom(wrapperEls[3]).containsText(mockSearchedPipelines[3].name);
   });
 
   test('it searches pipelines with a query', async function (assert) {
     await render(hbs`
-      {{pipeline-search-panel
-        searchedPipelines=searchedPipelines
-        searchPipelines=searchPipelines
-      }}
+      <PipelineSearchPanel
+        @searchedPipelines={{this.searchedPipelines}}
+        @searchPipelines={{this.searchPipelines}}
+      />
     `);
 
     const testQuery = 'screwdriver-cd';
@@ -73,10 +73,10 @@ module('Integration | Component | pipeline search panel', function (hooks) {
 
   test('it selects searhced pipeline', async function (assert) {
     await render(hbs`
-      {{pipeline-search-panel
-        searchedPipelines=searchedPipelines
-        selectSearchedPipeline=selectSearchedPipeline
-      }}
+      <PipelineSearchPanel
+        @searchedPipelines={{this.searchedPipelines}}
+        @selectSearchedPipeline={{this.selectSearchedPipeline}}
+      />
     `);
 
     const addPipelineButtons = findAll('.add-pipeline-button');

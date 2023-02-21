@@ -1,11 +1,11 @@
 import { computed } from '@ember/object';
 import Component from '@ember/component';
-import $ from 'jquery';
 
 export default Component.extend({
   tagName: 'tr',
   newValue: null,
   originalAllowInPR: null,
+  eyeSlash: false,
   buttonAction: computed('newValue', 'secret.allowInPR', 'originalAllowInPR', {
     get() {
       const { secret, pipeline } = this;
@@ -75,17 +75,8 @@ export default Component.extend({
      * @method togglePasswordInput
      * @param {Object} event Click event
      */
-    togglePasswordInput(event) {
-      const { target } = event;
-      const passwordInput = target.previousSibling;
-
-      $(target).toggleClass('fa-eye fa-eye-slash');
-
-      if ($(passwordInput).attr('type') === 'password') {
-        $(passwordInput).attr('type', 'text');
-      } else {
-        $(passwordInput).attr('type', 'password');
-      }
+    togglePasswordInput() {
+      this.set('eyeSlash', !this.eyeSlash);
     },
     removeSecret() {
       const { secret } = this;

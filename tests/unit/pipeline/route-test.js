@@ -17,7 +17,7 @@ module('Unit | Route | pipeline', function (hooks) {
   });
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:pipeline');
+    const route = this.owner.lookup('route:pipeline');
 
     assert.ok(route);
     assert.equal(

@@ -1,3 +1,3 @@
-import DS from 'ember-data';
+import Store from '@ember-data/store';
 
-export default DS.Store.extend({});
+export default Store.extend({});

@@ -1,0 +1,9 @@
+{{#if (eq 'file' @node.file.type)}}
+  <a {{on "click" (fn @tree.clicked @node.file)}}>
+    <FaIcon @icon="file" @fixedWidth={{true}}/>
+    {{@node.file.text}}
+  </a>
+{{else}}
+  <FaIcon @icon="folder{{if @node.isExpanded "-open"}}" @fixedWidth={{true}}/>
+  {{@node.fileName}}
+{{/if}}

@@ -54,7 +54,8 @@ export default Component.extend({
     },
 
     handleJstreeEventDidRedraw() {
-      const artifactPath = this.getWithDefault('selectedArtifact', '');
+      const artifactPath =
+        this.selectedArtifact === undefined ? '' : this.selectedArtifact;
       const paths = artifactPath.split('/');
       const jstree = this.jstreeActionReceiver.target.treeObject.jstree(true);
 
@@ -74,6 +75,18 @@ export default Component.extend({
       if (targetNode) {
         this.jstreeActionReceiver.send('selectNode', targetNode.id);
       }
+    },
+
+    showArtifactPreview(treeData) {
+      const { href } = treeData.a_attr;
+      const artifactPath = href.split('artifacts/')[1];
+
+      this.setProperties({
+        href,
+        iframeUrl: `${href}?type=preview`
+      });
+
+      this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
     },
 
     handleJstreeEventDidChange(data = {}) {

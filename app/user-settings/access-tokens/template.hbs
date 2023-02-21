@@ -1,8 +1,8 @@
-{{token-list
-  tokens=tokens
-  newToken=newToken
-  onCreateToken=(action "createToken")
-  onRefreshToken=(action "refreshToken")
-  tokenName="User access"
-  tokenScope="your account"
-}}
+<TokenList
+  @tokens={{this.tokens}}
+  @newToken={{this.newToken}}
+  @onCreateToken={{action "createToken"}}
+  @onRefreshToken={{action "refreshToken"}}
+  @tokenName="User access"
+  @tokenScope="your account"
+/>

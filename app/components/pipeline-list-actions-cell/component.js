@@ -3,9 +3,9 @@ import { computed } from '@ember/object';
 import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
-  stopButtonClass: computed('value.latestBuild', {
+  stopButtonClass: computed('record.actions.latestBuild.status', {
     get() {
-      const status = this.get('value.latestBuild.status');
+      const status = this.get('record.actions.latestBuild.status');
 
       if (unfinishedStatuses.includes(status)) {
         return 'clicks-enabled-stop';
@@ -14,9 +14,9 @@ export default Component.extend({
       return 'clicks-disabled';
     }
   }),
-  startButtonClass: computed('value.manualStartEnabled', {
+  startButtonClass: computed('record.actions.manualStartEnabled', {
     get() {
-      const manualStartEnabled = this.get('value.manualStartEnabled');
+      const manualStartEnabled = this.get('record.actions.manualStartEnabled');
 
       if (manualStartEnabled) {
         return 'clicks-enabled-start';
@@ -27,18 +27,18 @@ export default Component.extend({
   }),
   actions: {
     startSingleBuild(buildState = undefined) {
-      const value = this.get('value');
+      const { actions } = this.record;
 
-      if (buildState === 'START' && value.hasParameters) {
-        value.openParametersModal(value.jobId, buildState);
+      if (buildState === 'START' && actions.hasParameters) {
+        actions.openParametersModal(actions.jobId, buildState);
       } else {
-        value.startSingleBuild(value.jobId, value.jobName, buildState);
+        actions.startSingleBuild(actions.jobId, actions.jobName, buildState);
       }
     },
     stopBuild() {
-      const value = this.get('value');
+      const { actions } = this.record;
 
-      value.stopBuild(null, { buildId: value.latestBuild.id });
+      actions.stopBuild(null, { buildId: actions.latestBuild.id });
     }
   }
 });

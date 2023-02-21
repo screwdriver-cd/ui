@@ -6,27 +6,31 @@ export default Controller.extend({
   template: service(),
   routeParams: computed('model', {
     get() {
-      let route = this.model;
+      const route = this.model;
 
-      let params = {
+      const params = {
         ...route.paramsFor('templates.namespace'),
         ...route.paramsFor('templates.detail')
       };
 
       return params;
+    },
+    set(_, value) {
+      return (this._routeParams = value);
     }
   }),
   crumbs: computed('routeParams', {
     get() {
-      let breadcrumbs = [];
+      const breadcrumbs = [];
 
-      let params = this.routeParams;
+      const params = this.routeParams;
 
       // add name and namespace together to get full name, compare fullname  to params.name
       // if equal, use name
       if (params.namespace || params.detail) {
         breadcrumbs.push({
           name: 'Templates',
+          route: 'templates',
           params: ['templates']
         });
       }
@@ -34,18 +38,23 @@ export default Controller.extend({
       if (params.namespace) {
         breadcrumbs.push({
           name: params.namespace,
-          params: ['templates.namespace', params.namespace]
+          route: `templates.namespace`,
+          params: [params.namespace]
         });
       }
 
       if (params.name) {
         breadcrumbs.push({
           name: params.name,
-          params: ['templates.detail', params.namespace, params.name]
+          route: `templates.detail`,
+          params: [params.namespace, params.name]
         });
       }
 
       return breadcrumbs;
+    },
+    set(_, value) {
+      return (this._crumbs = value);
     }
   })
 });

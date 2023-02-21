@@ -1,6 +1,6 @@
+import RESTAdapter from '@ember-data/adapter/rest';
 import { inject as service } from '@ember/service';
 import { pluralize } from 'ember-inflector';
-import DS from 'ember-data';
 import ENV from 'screwdriver-ui/config/environment';
 import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 
@@ -9,7 +9,7 @@ const urlPathParser = new RegExp(
   `/${ENV.APP.SDAPI_NAMESPACE}/([^/]+)(/([^/]+))?(/([^/]+))?`
 );
 
-export default DS.RESTAdapter.extend(DataAdapterMixin, {
+export default RESTAdapter.extend(DataAdapterMixin, {
   session: service('session'),
   namespace: ENV.APP.SDAPI_NAMESPACE,
   host: ENV.APP.SDAPI_HOSTNAME,
@@ -26,10 +26,8 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
   ajax(url, method, hash) {
     const finalHash = hash || {};
 
+    finalHash.credentials = 'include';
     finalHash.crossDomain = true;
-    finalHash.xhrFields = {
-      withCredentials: true
-    };
 
     return this._super(url, method, finalHash);
   },
@@ -139,7 +137,7 @@ export default DS.RESTAdapter.extend(DataAdapterMixin, {
       return this._super(status, headers, { errors }, requestData);
     }
 
-    let data = {};
+    const data = {};
 
     let key;
 

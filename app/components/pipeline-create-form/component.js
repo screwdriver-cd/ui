@@ -25,9 +25,9 @@ export default Component.extend({
   isDisabled: or('isSaving', 'isInvalid'),
   autoKeysGeneration: false,
 
-  messageForSearching: computed('templates.[]', {
+  messageForSearching: computed('templates.[]', 'templates.options.length', {
     get() {
-      if (this.templates.length) {
+      if (this.templates.options.length) {
         return 'Not found.';
       }
 
@@ -39,7 +39,20 @@ export default Component.extend({
     get() {
       const val = this.scmUrl;
 
-      return val.length !== 0 && parse(val).valid;
+      const isValid = val.length !== 0 && parse(val).valid;
+
+      this.set('scmUrl', val.trim());
+      const input = $('.scm-url');
+
+      input.removeClass('bad-text-input good-text-input');
+
+      if (isValid) {
+        input.addClass('good-text-input');
+      } else if (val.trim().length > 0) {
+        input.addClass('bad-text-input');
+      }
+
+      return isValid;
     }
   }),
 
@@ -74,24 +87,6 @@ export default Component.extend({
   }),
 
   actions: {
-    /**
-     * Handles when a git url is entered in step 1
-     * @method scmChange
-     * @param  {String} val     The value of the input box
-     */
-    scmChange(val) {
-      this.set('scmUrl', val.trim());
-      const input = $('.scm-url');
-
-      input.removeClass('bad-text-input good-text-input');
-
-      if (this.isValid) {
-        input.addClass('good-text-input');
-      } else if (val.trim().length > 0) {
-        input.addClass('bad-text-input');
-      }
-    },
-
     /**
      * Update rootdir
      * @method updateRootDir

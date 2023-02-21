@@ -53,10 +53,10 @@ module('Integration | Component | template header', function (hooks) {
     this.owner.register('service:store', storeStub);
 
     await render(
-      hbs`{{template-header template=mock trusted=trusted isAdmin=isAdmin}}`
+      hbs`<TemplateHeader @template={{this.mock}} @trusted={{this.trusted}} @isAdmin={{this.isAdmin}} />`
     );
 
-    assert.dom('h1').hasText('foo/bar');
+    assert.dom('h1').hasText('foo/bar Source code Delete template');
     assert.dom('h2').hasText('2.0.0');
     assert.dom('p').hasText('A test example');
     assert.dom('#template-namespace').hasText('Namespace: foo');
@@ -72,7 +72,7 @@ module('Integration | Component | template header', function (hooks) {
     this.set('trusted', true);
     this.set('isAdmin', true);
 
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 3 });
     assert.dom('.x-toggle-component').exists({ count: 1 });
   });
 });

@@ -1,11 +1,12 @@
+import { oneWay, alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import Controller from '@ember/controller';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
-const { alias } = computed;
 
 export default Controller.extend({
-  selectedVersion: computed.oneWay('model.versionOrTagFromUrl'),
+  router: service(),
+  selectedVersion: oneWay('model.versionOrTagFromUrl'),
   errorMessage: '',
   session: service(),
   template: service(),
@@ -16,7 +17,7 @@ export default Controller.extend({
   trusted: computed('templates.templateData.[]', function computeTrusted() {
     return this.templates.templateData.some(t => t.trusted && t.latest);
   }),
-  isAdmin: computed(function isAdmin() {
+  isAdmin: computed('session.data.authenticated.token', function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
     return (decoder(token).scope || []).includes('admin');
@@ -26,36 +27,42 @@ export default Controller.extend({
       return this.templates.templateData[0];
     }
   }),
-  versionTemplate: computed('selectedVersion', 'templates.templateData.[]', {
-    get() {
-      const version = this.selectedVersion || this.get('latest.version');
+  versionTemplate: computed(
+    'latest.version',
+    'selectedVersion',
+    'templates.templateData.[]',
+    {
+      get() {
+        const version = this.selectedVersion || this.get('latest.version');
 
-      let { versionOrTagFromUrl } = this.templates;
+        const { versionOrTagFromUrl, templateTagData } = this.templates;
 
-      let { templateTagData } = this.templates;
+        if (versionOrTagFromUrl === undefined) {
+          return this.templates.templateData.findBy('version', version);
+        }
 
-      if (versionOrTagFromUrl === undefined) {
-        return this.templates.templateData.findBy('version', version);
-      }
+        const tagExists = templateTagData.filter(
+          t => t.tag === versionOrTagFromUrl
+        );
 
-      let tagExists = templateTagData.filter(
-        t => t.tag === versionOrTagFromUrl
-      );
+        if (tagExists.length > 0) {
+          return this.templates.templateData.findBy(
+            'version',
+            tagExists[0].version
+          );
+        }
 
-      if (tagExists.length > 0) {
         return this.templates.templateData.findBy(
           'version',
-          tagExists[0].version
+          versionOrTagFromUrl
         );
       }
-
-      return this.templates.templateData.findBy('version', versionOrTagFromUrl);
     }
-  }),
+  ),
   actions: {
     removeTemplate(name) {
       return this.template.deleteTemplates(name).then(
-        () => this.transitionToRoute('templates'),
+        () => this.router.transitionTo('templates'),
         err => this.set('errorMessage', err)
       );
     },

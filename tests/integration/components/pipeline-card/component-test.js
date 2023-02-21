@@ -1,12 +1,11 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, waitFor } from '@ember/test-helpers';
+import { click, render, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { resolve } from 'rsvp';
 import sinon from 'sinon';
 import $ from 'jquery';
-import wait from 'ember-test-helpers/wait';
 import Pretender from 'pretender';
 
 let server;
@@ -69,14 +68,12 @@ module('Integration | Component | pipeline card', function (hooks) {
     assert.expect(12);
     this.owner.setupRouter();
 
-    await render(hbs`
-      {{pipeline-card
-        pipeline=pipeline
-      }}
+    await render(hbs`<PipelineCard
+        @pipeline={{this.pipeline}}
+      />
     `);
 
-    await wait();
-    await waitFor('.commit-status i.fa-question-circle');
+    await waitFor('.commit-status svg.fa-question-circle');
 
     assert.dom('.branch-info a').hasText(mockPipeline.scmRepo.name);
     assert
@@ -87,7 +84,7 @@ module('Integration | Component | pipeline card', function (hooks) {
       .dom('.commit-status a:nth-of-type(1)')
       .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert
-      .dom('.commit-status a:nth-of-type(1) i')
+      .dom('.commit-status a:nth-of-type(1) svg')
       .hasClass('fa-question-circle');
     assert.dom('.commit-status a:nth-of-type(2)').hasText(lastEventInfo.sha);
     assert
@@ -107,11 +104,10 @@ module('Integration | Component | pipeline card', function (hooks) {
   test('it renders no remove button and no checkbox when not authenticated', async function (assert) {
     this.set('isAuthenticated', false);
 
-    await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isAuthenticated=isAuthenticated
-      }}
+    await render(hbs`<CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isAuthenticated={{this.isAuthenticated}}
+      />
     `);
 
     assert.dom('td.collection-pipeline__choose input').doesNotExist();
@@ -121,12 +117,11 @@ module('Integration | Component | pipeline card', function (hooks) {
   test('it renders with a checkbox when organizing', async function (assert) {
     this.set('isOrganizing', true);
 
-    await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-      }}
+    await render(hbs`<CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+      />
     `);
 
     assert.dom('td.collection-pipeline__choose input').exists();
@@ -134,12 +129,11 @@ module('Integration | Component | pipeline card', function (hooks) {
   });
 
   test('it renders with a remove button when not organizing', async function (assert) {
-    await render(hbs`
-      {{pipeline-card
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-      }}
+    await render(hbs`<PipelineCard
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+      />
     `);
 
     assert.dom('.checkbox-container').doesNotExist();
@@ -147,13 +141,12 @@ module('Integration | Component | pipeline card', function (hooks) {
   });
 
   test('it deletes the pipeline displayed', async function (assert) {
-    await render(hbs`
-      {{pipeline-card
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-        removePipeline=removePipeline
-      }}
+    await render(hbs`<PipelineCard
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+        @removePipeline={{this.removePipeline}}
+      />
     `);
 
     await click('.remove-button');
@@ -163,14 +156,13 @@ module('Integration | Component | pipeline card', function (hooks) {
   test('it selects and deselects the pipeline displayed', async function (assert) {
     this.set('isOrganizing', true);
 
-    await render(hbs`
-      {{pipeline-card
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-        selectPipeline=selectPipeline
-        deselectPipeline=deselectPipeline
-      }}
+    await render(hbs`<PipelineCard
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+        @selectPipeline={{this.selectPipeline}}
+        @deselectPipeline={{this.deselectPipeline}}
+      />
     `);
 
     await click('.checkbox-container input');

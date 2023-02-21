@@ -1,7 +1,7 @@
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { settled } from '@ember/test-helpers';
+import { settled, waitUntil } from '@ember/test-helpers';
 import Pretender from 'pretender';
 let server;
 
@@ -23,7 +23,7 @@ module('Unit | Controller | pipeline/secrets', function (hooks) {
       JSON.stringify({ id: 1234 })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/secrets');
+    const controller = this.owner.lookup('controller:pipeline/secrets');
 
     assert.ok(controller);
 
@@ -59,7 +59,7 @@ module('Unit | Controller | pipeline/secrets', function (hooks) {
       JSON.stringify({ id: 123 })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/secrets');
+    const controller = this.owner.lookup('controller:pipeline/secrets');
 
     assert.ok(controller);
 
@@ -89,7 +89,7 @@ module('Unit | Controller | pipeline/secrets', function (hooks) {
     });
   });
 
-  test('it shows errors from server', function (assert) {
+  test('it shows errors from server', async function (assert) {
     server.post('http://localhost:8080/v4/secrets', () => [
       400,
       {},
@@ -100,20 +100,21 @@ module('Unit | Controller | pipeline/secrets', function (hooks) {
       })
     ]);
 
-    let controller = this.owner.lookup('controller:pipeline/secrets');
+    const controller = this.owner.lookup('controller:pipeline/secrets');
 
     assert.ok(controller);
 
     run(() => {
-      assert.equal(controller.get('errorMessage'), '');
+      assert.equal(controller.errorMessage, '');
       controller.send('createSecret', 'batman', 'robin', 'abcd', false);
     });
 
+    await waitUntil(() => {
+      return controller.errorMessage === 'a series of unfortunate events';
+    });
+
     return settled().then(() => {
-      assert.equal(
-        controller.get('errorMessage'),
-        'a series of unfortunate events'
-      );
+      assert.equal(controller.errorMessage, 'a series of unfortunate events');
     });
   });
 });

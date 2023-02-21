@@ -29,13 +29,13 @@ export default Component.extend({
     get() {
       switch (this.status) {
         case 'running':
-          return 'spinner fa-spin';
+          return 'spinner';
         case 'success':
           return 'check';
         case 'failure':
           return 'times';
         default:
-          return 'circle-o';
+          return 'circle';
       }
     }
   }),
@@ -51,6 +51,9 @@ export default Component.extend({
       }
 
       return null;
+    },
+    set(_, value) {
+      return (this._duration = value);
     }
   }),
   click() {

@@ -1,6 +1,6 @@
-import DS from 'ember-data';
+import RESTSerializer from '@ember-data/serializer/rest';
 
-export default DS.RESTSerializer.extend({
+export default RESTSerializer.extend({
   /**
    * Override the serializeIntoHash
    * See http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash

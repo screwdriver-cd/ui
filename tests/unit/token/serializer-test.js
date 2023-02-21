@@ -18,11 +18,11 @@ module('Unit | Serializer | token', function (hooks) {
 
   // Replace this with your real tests.
   test('it serializes records', function (assert) {
-    let record = run(() =>
+    const record = run(() =>
       this.owner.lookup('service:store').createRecord('token')
     );
 
-    let serializedRecord = record.serialize();
+    const serializedRecord = record.serialize();
 
     assert.ok(serializedRecord);
   });

@@ -9,8 +9,10 @@ export default Component.extend({
   description: null,
   errorMessage: null,
   store: service(),
-  isSaveDisabled: computed('name', function isSaveDisabled() {
-    return isEmpty(this.get('name'));
+  isSaveDisabled: computed('name', {
+    get() {
+      return isEmpty(this.name);
+    }
   }),
   actions: {
     setModal(open) {
@@ -42,7 +44,7 @@ export default Component.extend({
           .then(() => {
             this.set('showModal', false);
 
-            let addDirectly = this.addToCollection;
+            const addDirectly = this.addToCollection;
 
             if (addDirectly) {
               addDirectly(newCollection);

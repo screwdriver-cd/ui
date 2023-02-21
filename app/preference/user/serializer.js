@@ -1,5 +1,6 @@
-import DS from 'ember-data';
-import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
+import RESTSerializer, {
+  EmbeddedRecordsMixin
+} from '@ember-data/serializer/rest';
 
 /**
  * extractPayload
@@ -58,7 +59,7 @@ export function preparePayload(preferenceUser) {
   return data;
 }
 
-export default DS.RESTSerializer.extend(EmbeddedRecordsMixin, {
+export default RESTSerializer.extend(EmbeddedRecordsMixin, {
   attrs: {
     'preference/pipelines': { embedded: 'always' }
   },

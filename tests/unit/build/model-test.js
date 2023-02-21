@@ -6,7 +6,7 @@ module('Unit | Model | build', function (hooks) {
   setupTest(hooks);
 
   test('it exists and has statusMessage defaults to null', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('build')
     );
 
@@ -15,7 +15,7 @@ module('Unit | Model | build', function (hooks) {
   });
 
   test('it calculates blockedDuration', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         createTime: new Date(1472244582531),
         stats: {
@@ -32,7 +32,7 @@ module('Unit | Model | build', function (hooks) {
   });
 
   test('it calculates imagePullDuration', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         stats: {
           imagePullStartTime: 'Fri Aug 26 2016 13:48:52 GMT-0700 (PDT)'
@@ -49,7 +49,7 @@ module('Unit | Model | build', function (hooks) {
   });
 
   test('it calculates buildDuration', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         createTime: new Date(1472244572531),
         startTime: new Date(1472244582531),
@@ -71,7 +71,7 @@ module('Unit | Model | build', function (hooks) {
   });
 
   test('it calculates totalDuration', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         createTime: new Date(1472244572531),
         startTime: new Date(1472244582531),
@@ -95,7 +95,7 @@ module('Unit | Model | build', function (hooks) {
   test('it humanizes createTime', function (assert) {
     const createTime = new Date(1472244582531);
 
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         createTime
       })
@@ -115,7 +115,7 @@ module('Unit | Model | build', function (hooks) {
   test('it truncates the sha', function (assert) {
     const sha = '026c5b76b210f96dc27011b553679a7663b38698';
 
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('build', {
         sha
       })

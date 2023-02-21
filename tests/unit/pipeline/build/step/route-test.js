@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import EmberObject from '@ember/object';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
+import Service from '@ember/service';
 
 module('Unit | Route | pipeline/build/step', function (hooks) {
   setupTest(hooks);
@@ -10,9 +10,19 @@ module('Unit | Route | pipeline/build/step', function (hooks) {
     assert.ok(this.owner.lookup('route:pipeline/build/step'));
   });
 
-  sinonTest('it redirects if step is not found in build', function (assert) {
+  test('it redirects if step is not found in build', function (assert) {
     const route = this.owner.lookup('route:pipeline/build/step');
-    const stub = this.stub(route, 'transitionTo');
+    const routerServiceMock = Service.extend({
+      transitionTo: (path, pipelineId, buildId) => {
+        assert.equal(path, 'pipeline.build');
+        assert.equal(pipelineId, 1);
+        assert.equal(buildId, 2);
+      }
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+
     const model = {
       event: EmberObject.create(),
       pipeline: EmberObject.create({ id: 1 }),
@@ -21,11 +31,5 @@ module('Unit | Route | pipeline/build/step', function (hooks) {
     };
 
     route.afterModel(model);
-
-    assert.ok(stub.calledOnce, 'transitionTo was called once');
-    assert.ok(
-      stub.calledWithExactly('pipeline.build', 1, 2),
-      'transition to pipeline'
-    );
   });
 });

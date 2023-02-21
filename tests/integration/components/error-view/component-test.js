@@ -10,7 +10,7 @@ module('Integration | Component | error view', function (hooks) {
     this.set('sc', 400);
     this.set('sm', 'they are dead, dave');
     await render(
-      hbs`{{error-view errorMessage="bananas" statusCode=sc statusMessage=sm}}`
+      hbs`<ErrorView @errorMessage="bananas" @statusCode={{this.sc}} @statusMessage={{this.sm}} />`
     );
 
     assert.dom('h1').hasText('400');

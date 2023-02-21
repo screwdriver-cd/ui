@@ -2,8 +2,10 @@ import Route from '@ember/routing/route';
 import ENV from 'screwdriver-ui/config/environment';
 import RSVP from 'rsvp';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { inject as service } from '@ember/service';
 
 export default Route.extend(AuthenticatedRouteMixin, {
+  store: service(),
   queryParams: {
     query: {
       refreshModel: true,

@@ -1,10 +1,10 @@
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
-import { get } from '@ember/object';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 
 export default Route.extend({
+  router: service(),
   command: service(),
   model(params) {
     return RSVP.all([
@@ -22,7 +22,7 @@ export default Route.extend({
         const tagExists = tagPayload.filter(c => c.tag === params.version);
 
         if (tagExists.length === 0 && versionExists.length === 0) {
-          this.transitionTo('/404');
+          this.router.transitionTo('/404');
         }
 
         if (versionExists.length > 0) {
@@ -44,7 +44,7 @@ export default Route.extend({
         }
       });
 
-      let result = {};
+      const result = {};
 
       result.namespace = params.namespace;
       result.name = params.name;
@@ -62,15 +62,15 @@ export default Route.extend({
   actions: {
     error(error) {
       if (error.status === 404) {
-        this.transitionTo('/404');
+        this.router.transitionTo('/404');
       }
 
       return true;
     }
   },
   titleToken(model) {
-    let title = `${get(model, 'namespace') || ''}/${get(model, 'name') || ''}`;
-    const version = get(model, 'versionOrTagFromUrl');
+    let title = `${model.namespace || ''}/${model.name || ''}`;
+    const version = model.versionOrTagFromUrl;
 
     if (version !== undefined) {
       title = `${title}@${version}`;

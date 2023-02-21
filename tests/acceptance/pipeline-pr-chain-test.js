@@ -1,4 +1,4 @@
-import { visit } from '@ember/test-helpers';
+import { visit, waitFor } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
@@ -94,6 +94,7 @@ module('Acceptance | pipeline pr-chain', function (hooks) {
     await visit('/pipelines/4/pulls');
 
     assert.dom('a h1').hasText('foo/bar', 'incorrect pipeline name');
+    await waitFor('.pipelineWorkflow svg');
     assert
       .dom('.pipelineWorkflow svg')
       .exists({ count: 1 }, 'not enough workflow');

@@ -3,7 +3,7 @@ import { A as newArray } from '@ember/array';
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { settled } from '@ember/test-helpers';
+import { settled, waitUntil } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
@@ -56,6 +56,15 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
 
     const controller = this.owner.lookup('controller:pipeline/jobs/index');
 
+    const routerService = Service.extend({
+      transitionTo: () => {
+        assert.fail('we are not supposed to transitionTo for jobs.');
+      }
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerService);
+
     run(() => {
       controller.set(
         'pipeline',
@@ -78,10 +87,6 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         jobs: newArray()
       });
 
-      controller.transitionToRoute = () => {
-        assert.fail('we are not supposed to transitionToRoute for jobs.');
-      };
-
       controller.set('store.queryRecord', (modelName, params) => {
         assert.equal(modelName, 'build');
         assert.deepEqual(params, {
@@ -100,17 +105,17 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         return Promise.resolve(EmberObject.create({ id: '10' }));
       });
 
-      assert.notOk(controller.get('isShowingModal'));
+      assert.notOk(controller.isShowingModal);
       controller.send('startSingleBuild', 1, 'name', 'RESTART');
-      assert.ok(controller.get('isShowingModal'));
+      assert.ok(controller.isShowingModal);
     });
 
-    await settled();
+    await waitUntil(() => !controller.isShowingModal);
 
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
 
-    assert.notOk(controller.get('isShowingModal'));
+    assert.notOk(controller.isShowingModal);
     assert.deepEqual(payload, {
       buildId: 99,
       pipelineId: '1234',
@@ -186,7 +191,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
 
     await settled();
 
-    assert.deepEqual(controller.get('jobsDetails'), [
+    assert.deepEqual(controller.jobsDetails, [
       {
         jobId: '1',
         jobName: 'a',
@@ -283,7 +288,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
 
     await settled();
 
-    assert.deepEqual(controller.get('jobsDetails'), [
+    assert.deepEqual(controller.jobsDetails, [
       {
         jobId: '1',
         jobName: 'a',
@@ -334,11 +339,11 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
       });
 
       assert.equal(
-        controller.get('listViewOffset'),
+        controller.listViewOffset,
         listViewOffset,
         `has listViewOffset of ${listViewOffset}`
       );
-      assert.equal(controller.get('jobsDetails').length, 3, 'has 3 jobs');
+      assert.equal(controller.jobsDetails.length, 3, 'has 3 jobs');
     });
   });
 });

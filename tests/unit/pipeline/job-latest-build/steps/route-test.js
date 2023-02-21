@@ -1,34 +1,43 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
+import Service from '@ember/service';
+import sinon from 'sinon';
 
 module('Unit | Route | pipeline/job-latest-build/steps', function (hooks) {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:pipeline/job-latest-build/steps');
+    const route = this.owner.lookup('route:pipeline/job-latest-build/steps');
 
     assert.ok(route);
   });
 
-  sinonTest('it redirects to build step page', function (assert) {
-    assert.expect(3);
+  test('it redirects to build step page', function (assert) {
+    assert.expect(5);
 
     const route = this.owner.lookup('route:pipeline/job-latest-build/steps');
-    const transitionStub = this.stub(route, 'transitionTo');
-    const paramStub = this.stub(route, 'paramsFor').returns({ step_name: 123 });
+    const paramStub = sinon
+      .stub(route, 'paramsFor')
+      .returns({ step_name: 123 });
     const model = {
       pipelineId: 1,
       id: 2
     };
 
+    const routerServiceMock = Service.extend({
+      transitionTo: (path, pipelineId, buildId, stepName) => {
+        assert.equal(path, 'pipeline.build.step');
+        assert.equal(pipelineId, 1);
+        assert.equal(buildId, 2);
+        assert.equal(stepName, 123);
+      }
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+
     route.afterModel(model);
 
-    assert.ok(transitionStub.calledOnce, 'transitionTo was called once');
     assert.ok(paramStub.calledOnce, 'paramsFor was called once');
-    assert.ok(
-      transitionStub.calledWithExactly('pipeline.build.step', 1, 2, 123),
-      'transition to build step'
-    );
   });
 });

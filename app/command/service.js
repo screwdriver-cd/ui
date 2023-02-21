@@ -25,17 +25,17 @@ export default Service.extend({
   getAllCommands(namespace) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/commands`;
 
-    let params = { compact: true, sortBy: 'createTime' };
+    const params = { compact: true, sortBy: 'createTime' };
 
     if (namespace) {
       params.namespace = namespace;
     }
 
     return this.fetchData(url, params).then(commands => {
-      let unique = {};
+      const unique = {};
 
-      let uniqueCommands = commands.filter(c => {
-        let fullName = `${c.namespace}/${c.name}`;
+      const uniqueCommands = commands.filter(c => {
+        const fullName = `${c.namespace}/${c.name}`;
 
         if (fullName in unique) {
           return false;

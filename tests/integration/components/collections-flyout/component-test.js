@@ -51,7 +51,18 @@ module('Integration | Component | collections flyout', function (hooks) {
 
     this.set('collections', mockCollections);
 
-    await render(hbs`{{collections-flyout collections=collections}}`);
+    const storeStub = Service.extend({
+      peekAll() {
+        return {};
+      },
+      findAll() {
+        return mockCollections;
+      }
+    });
+
+    this.owner.register('service:store', storeStub);
+
+    await render(hbs`<CollectionsFlyout />`);
 
     assert.dom('.header__text').hasText('Collections');
     assert.dom('.header__create').hasText('create');
@@ -69,7 +80,7 @@ module('Integration | Component | collections flyout', function (hooks) {
 
     this.set('collections', []);
 
-    await render(hbs`{{collections-flyout collections=collections}}`);
+    await render(hbs`<CollectionsFlyout />`);
 
     assert.dom('.no-collections-text').exists({ count: 1 });
     assert.dom('.no-collections-text').hasText('Please create a collection.');
@@ -86,19 +97,19 @@ module('Integration | Component | collections flyout', function (hooks) {
       this.set('showModal', true);
     });
 
-    await render(hbs`{{collections-flyout
-      collections=collections
-      showModal=showModal
-      setModal=setModal}}`);
+    await render(hbs`<CollectionsFlyout
+      @showModal={{this.showModal}}
+      @setModal={{this.setModal}}
+    />`);
 
-    assert.equal(this.get('showModal'), false);
+    assert.equal(this.showModal, false);
 
     // Make sure there are no modals
     assert.dom('.modal').doesNotExist();
 
     await click('.header__create');
 
-    assert.equal(this.get('showModal'), true);
+    assert.equal(this.showModal, true);
 
     // Make sure there is only 1 modal
     assert.dom('.modal').exists({ count: 1 });
@@ -112,11 +123,24 @@ module('Integration | Component | collections flyout', function (hooks) {
   test('it renders an active collection', async function (assert) {
     assert.expect(4);
 
-    this.set('collections', [EmberObject.create(mockCollection)]);
+    injectSessionStub(this);
+
     this.set('selectedCollectionId', 1);
 
-    await render(hbs`{{collections-flyout collections=collections
-      selectedCollectionId=selectedCollectionId}}`);
+    const storeStub = Service.extend({
+      peekAll() {
+        return {};
+      },
+      findAll() {
+        return [EmberObject.create(mockCollection)];
+      }
+    });
+
+    this.owner.register('service:store', storeStub);
+
+    await render(hbs`<CollectionsFlyout
+      @selectedCollectionId={{this.selectedCollectionId}}
+    />`);
 
     assert.dom('.header__text').hasText('Collections');
     assert.dom('.header__text a i').doesNotExist();
@@ -146,6 +170,12 @@ module('Integration | Component | collections flyout', function (hooks) {
     const storeStub = Service.extend({
       createRecord() {
         return model;
+      },
+      peekAll() {
+        return [];
+      },
+      findAll() {
+        return [];
       }
     });
 
@@ -158,23 +188,22 @@ module('Integration | Component | collections flyout', function (hooks) {
     this.owner.unregister('service:store');
     this.owner.register('service:store', storeStub);
 
-    await render(hbs`{{collections-flyout
-      collections=collections
-      showModal=showModal
-      name=name
-      description=description
-    }}`);
+    await render(hbs`<CollectionsFlyout
+      @showModal={{this.showModal}}
+      @name={{this.name}}
+      @description={{this.description}}
+    />`);
 
     await click('.header__create');
 
-    assert.ok(this.get('showModal'));
+    assert.ok(this.showModal);
 
     await fillIn('.name input', 'Test');
     await fillIn('.description textArea', 'Test description');
     await click('.collection-form__create');
 
     // Modal should remain open because of error
-    assert.ok(this.get('showModal'));
+    assert.ok(this.showModal);
     assert.dom('.alert-warning > span').hasText('This is an error message');
   });
 
@@ -203,14 +232,17 @@ module('Integration | Component | collections flyout', function (hooks) {
 
         return collectionModelMock;
       },
+      peekAll() {
+        return {};
+      },
       findAll() {
-        return new EmberPromise(resolve => resolve([mockCollection]));
+        return mockCollections;
       }
     });
 
     this.set('collections', mockCollections);
 
-    let onDeleteSpy = sinon.spy();
+    const onDeleteSpy = sinon.spy();
 
     this.set('showModal', false);
     this.set('name', null);
@@ -220,13 +252,12 @@ module('Integration | Component | collections flyout', function (hooks) {
     this.owner.unregister('service:store');
     this.owner.register('service:store', storeStub);
 
-    await render(hbs`{{collections-flyout
-      collections=collections
-      showModal=showModal
-      name=name
-      description=description
-      onDeleteCollection=onDeleteCollection
-    }}`);
+    await render(hbs`<CollectionsFlyout
+      @showModal={{this.showModal}}
+      @name={{this.name}}
+      @description={{this.description}}
+      @onDeleteCollection={{this.onDeleteCollection}}
+    />`);
 
     // Make sure delete buttons exist but aren't shown
     assert.dom('.collection-wrapper__delete').exists({ count: 2 });

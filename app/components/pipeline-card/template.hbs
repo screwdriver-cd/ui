@@ -1,39 +1,58 @@
-{{#if showCheckbox}}
+{{#if this.showCheckbox}}
   <label class="checkbox-container">
-    <input type="checkbox" value={{pipelineSelected}} onchange={{action "togglePipeline"}}>
+    <input
+      type="checkbox"
+      value={{this.pipelineSelected}}
+      onchange={{action "togglePipeline"}}
+    />
     <span class="checkmark"></span>
   </label>
 {{/if}}
-<div class="pipeline-card-content {{if showCheckbox "show-checkbox" ""}}">
-  {{#if showRemoveButton}}
-    <span class="remove-button" title="Remove {{pipeline.scmRepo.name}} pipeline from {{collectionName}} collection" onclick={{action "removePipeline"}}>
+<div class="pipeline-card-content {{if this.showCheckbox "show-checkbox" ""}}">
+  {{#if this.showRemoveButton}}
+    <span
+      class="remove-button"
+      title="Remove {{this.pipeline.scmRepo.name}} pipeline from {{this.collectionName}} collection"
+      onclick={{action "removePipeline"}}
+    >
       &times;
     </span>
   {{/if}}
 
   <div class="branch-info">
-    {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
-      {{pipeline.scmRepo.name}}
-    {{/link-to}}
-    <div title={{branch}}>
-      {{fa-icon "code-fork"}}
-      {{branch}}
+    <LinkTo
+      @route="pipeline"
+      @model={{this.pipeline.id}}
+      @title={{this.pipeline.scmRepo.name}}
+    >
+      {{this.pipeline.scmRepo.name}}
+    </LinkTo>
+    <div title={{this.branch}}>
+      <FaIcon @icon="code-branch" />
+      {{this.branch}}
     </div>
   </div>
   <div class="commit-info">
     <div class="commit-status">
-      {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
-        {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
-      {{/link-to}}
-      <a href={{lastEventInfo.commitUrl}}>
-        {{lastEventInfo.sha}}
+      <LinkTo
+        @route="pipeline"
+        @model={{this.pipeline.id}}
+        @title={{this.pipeline.scmRepo.name}}
+      >
+        <FaIcon
+          @icon={{this.lastEventInfo.icon}}
+          class={{this.lastEventInfo.statusColor}}
+        />
+      </LinkTo>
+      <a href={{this.lastEventInfo.commitUrl}}>
+        {{this.lastEventInfo.sha}}
       </a>
     </div>
-    <p class="commit-message" title={{lastEventInfo.commitMessage}}>
-      {{#if storeQueryError}}
+    <p class="commit-message" title={{this.lastEventInfo.commitMessage}}>
+      {{#if this.storeQueryError}}
         An error occur while loading events
-      {{else if hasBothEventsAndLatestEventInfo}}
-        {{lastEventInfo.commitMessage}}
+      {{else if this.hasBothEventsAndLatestEventInfo}}
+        {{this.lastEventInfo.commitMessage}}
       {{else}}
         Loading events
       {{/if}}
@@ -42,23 +61,27 @@
   <div class="time-metrics">
     <div class="last-run-badge">
       <span class="badge-label">last run</span>
-      <span class="badge-info">{{lastEventInfo.startTime}}</span>
+      <span class="badge-info">{{this.lastEventInfo.startTime}}</span>
     </div>
     <div class="duration-badge">
-      <span class="badge-label">duration</span>
-      <span class="badge-info">{{lastEventInfo.durationText}}</span>
+      <span class="badge-label">
+        duration
+      </span>
+      <span class="badge-info">
+        {{this.lastEventInfo.durationText}}
+      </span>
     </div>
   </div>
 
   <div class="events-thumbnail-wrapper">
-    {{#if hasBothEventsAndLatestEventInfo}}
-      {{events-thumbnail
-          class="events-thumbnail"
-          events=eventsInfo
-          pipelineId=pipeline.id
-      }}
+    {{#if this.hasBothEventsAndLatestEventInfo}}
+      <EventsThumbnail
+        class="events-thumbnail"
+        @events={{this.eventsInfo}}
+        @pipelineId={{this.pipeline.id}}
+      />
     {{else}}
-      <div class="placeholder"/>
+      <div class="placeholder"></div>
     {{/if}}
   </div>
 </div>

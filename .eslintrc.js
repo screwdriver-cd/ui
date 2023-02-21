@@ -25,6 +25,7 @@ module.exports = {
     humanizeDuration: true
   },
   rules: {
+    'no-return-assign': 'off',
     'no-underscore-dangle': 'off',
     'prefer-const': 'off',
     'prefer-destructuring': [
@@ -55,6 +56,17 @@ module.exports = {
     'ember/no-new-mixins': 'off',
     'ember/no-observers': 'off',
     'ember/no-side-effects': 'off',
+    'ember/no-classic-classes': 'off',
+    'ember/no-get': 'off',
+    'ember/no-mixins': 'off',
+    'ember/use-ember-data-rfc-395-imports': 'off',
+    'ember/no-actions-hash': 'off',
+    'ember/no-controller-access-in-routes': 'off',
+    'ember/no-component-lifecycle-hooks': 'off',
+    'ember/no-classic-components': 'off',
+    'ember/require-tagless-components': 'off',
+    'ember/use-brace-expansion': 'off',
+    'ember/no-invalid-dependent-keys': 'off',
     'ember/no-arrow-function-computed-properties': [
       'error',
       { onlyThisContexts: true }
@@ -73,6 +85,7 @@ module.exports = {
     {
       files: [
         '.eslintrc.js',
+        '.prettierrc.js',
         '.template-lintrc.js',
         'ember-cli-build.js',
         'testem.js',
@@ -88,7 +101,12 @@ module.exports = {
         browser: false,
         node: true
       },
+      // plugins: ['node'],
+      // extends: ['plugin:node/recommended'],
       rules: {
+        // this can be removed once the following is fixed
+        // https://github.com/mysticatea/eslint-plugin-node/issues/77
+        // 'node/no-unpublished-require': 'off',
         'func-names': 'off'
       }
     },

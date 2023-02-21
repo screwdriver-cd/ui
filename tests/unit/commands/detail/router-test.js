@@ -2,7 +2,7 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
+import sinon from 'sinon';
 
 const commandServiceStub = Service.extend({
   getOneCommand(namespace, name) {
@@ -33,7 +33,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   });
 
   test('it asks for the list of commands for a given namespace and name without version', function (assert) {
-    let route = this.owner.lookup('route:commands/detail');
+    const route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
     assert.equal(
@@ -53,7 +53,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   });
 
   test('it asks for the list of commands for a given name and exist version', function (assert) {
-    let route = this.owner.lookup('route:commands/detail');
+    const route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
     assert.equal(
@@ -76,7 +76,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   });
 
   test('it asks for the list of commands for a given name and exist version of according to ember', function (assert) {
-    let route = this.owner.lookup('route:commands/detail');
+    const route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
 
@@ -91,7 +91,7 @@ module('Unit | Route | commands/detail', function (hooks) {
   });
 
   test('it asks for the list of commands for a given name and exist tag', function (assert) {
-    let route = this.owner.lookup('route:commands/detail');
+    const route = this.owner.lookup('route:commands/detail');
 
     assert.ok(route);
     assert.equal(
@@ -113,35 +113,43 @@ module('Unit | Route | commands/detail', function (hooks) {
       });
   });
 
-  sinonTest(
-    'it asks for the list of commands for a given name and non-exist version',
-    function (assert) {
-      let route = this.owner.lookup('route:commands/detail');
-      const stub = this.stub(route, 'transitionTo');
+  test('it asks for the list of commands for a given name and non-exist version', function (assert) {
+    const route = this.owner.lookup('route:commands/detail');
+    const stub = sinon.stub();
 
-      assert.ok(route);
+    assert.ok(route);
 
-      return route
-        .model({ namespace: 'foo', name: 'baz', version: '9.9.9' })
-        .then(() => {
-          assert.ok(stub.calledOnce, 'transitionTo was called once');
-        });
-    }
-  );
+    const routerServiceMock = Service.extend({
+      transitionTo: stub
+    });
 
-  sinonTest(
-    'it asks for the list of commands for a given name and non-exist tag',
-    function (assert) {
-      let route = this.owner.lookup('route:commands/detail');
-      const stub = this.stub(route, 'transitionTo');
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
-      assert.ok(route);
+    return route
+      .model({ namespace: 'foo', name: 'baz', version: '9.9.9' })
+      .then(() => {
+        assert.ok(stub.calledOnce, 'transitionTo was called once');
+      });
+  });
 
-      return route
-        .model({ namespace: 'foo', name: 'baz', version: 'foo' })
-        .then(() => {
-          assert.ok(stub.calledOnce, 'transitionTo was called once');
-        });
-    }
-  );
+  test('it asks for the list of commands for a given name and non-exist tag', function (assert) {
+    const route = this.owner.lookup('route:commands/detail');
+    const stub = sinon.stub();
+
+    assert.ok(route);
+
+    const routerServiceMock = Service.extend({
+      transitionTo: stub
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+
+    return route
+      .model({ namespace: 'foo', name: 'baz', version: 'foo' })
+      .then(() => {
+        assert.ok(stub.calledOnce, 'transitionTo was called once');
+      });
+  });
 });

@@ -4,25 +4,29 @@ import { computed } from '@ember/object';
 export default Controller.extend({
   routeParams: computed('model', {
     get() {
-      let route = this.model;
+      const route = this.model;
 
-      let params = {
+      const params = {
         ...route.paramsFor('commands.namespace'),
         ...route.paramsFor('commands.detail')
       };
 
       return params;
+    },
+    set(_, value) {
+      return (this._routeParams = value);
     }
   }),
   crumbs: computed('routeParams', {
     get() {
-      let breadcrumbs = [];
+      const breadcrumbs = [];
 
-      let params = this.routeParams;
+      const params = this.routeParams;
 
       if (params.namespace || params.detail) {
         breadcrumbs.push({
           name: 'Commands',
+          route: 'commands',
           params: ['commands']
         });
       }
@@ -30,18 +34,23 @@ export default Controller.extend({
       if (params.namespace) {
         breadcrumbs.push({
           name: params.namespace,
-          params: ['commands.namespace', params.namespace]
+          route: 'commands.namespace',
+          params: [params.namespace]
         });
       }
 
       if (params.name) {
         breadcrumbs.push({
           name: params.name,
-          params: ['commands.detail', params.namespace, params.name]
+          route: 'commands.detail',
+          params: [params.namespace, params.name]
         });
       }
 
       return breadcrumbs;
+    },
+    set(_, value) {
+      return (this._crumbs = value);
     }
   })
 });

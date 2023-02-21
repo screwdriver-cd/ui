@@ -5,7 +5,6 @@ import Component from '@ember/component';
 export default Component.extend({
   showCollectionModal: false,
   scmService: service('scm'),
-  classNames: ['row'],
   classNameBindings: ['isBuildPage'],
   router: service(),
   addCollectionError: null,
@@ -16,7 +15,7 @@ export default Component.extend({
       return get(this, 'router.currentRouteName') === 'pipeline.build';
     }
   }),
-  scmContext: computed({
+  scmContext: computed('pipeline', {
     get() {
       const scm = this.scmService.getScm(this.pipeline.get('scmContext'));
 

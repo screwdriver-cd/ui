@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { get, set } from '@ember/object';
+import { set } from '@ember/object';
 import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
@@ -51,20 +51,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
     assert.dom('.row button').exists({ count: 4 });
 
@@ -154,20 +154,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
     assert.dom('.row button').exists({ count: 4 });
 
@@ -213,23 +213,23 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
     this.element.querySelectorAll('button')[2].click();
-    assert.equal(get(this, 'selected'), 3);
+    assert.equal(this.selected, 3);
   });
 
   test('it renders when selectedEvent is a PR event', async function (assert) {
@@ -264,21 +264,21 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      prGroups=pullrequestGroups
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @prGroups={{this.pullrequestGroups}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
     assert.dom('.row strong').hasText('Pull Requests');
     assert.dom('.row button').exists({ count: 2 });
@@ -307,20 +307,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
     assert.dom('.row button').exists({ count: 4 });
     assert.dom('.SKIPPED').exists({ count: 1 });
@@ -346,20 +346,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      graphType=currentEventType
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      setDownstreamTrigger=setTrigger
-      showDownstreamTriggers=showDownstreamTriggers
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @graphType={{this.currentEventType}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @setDownstreamTrigger={{this.setTrigger}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
     assert.dom('.x-toggle-component').includesText('Show triggers');
     await click('.x-toggle-btn');
@@ -388,20 +388,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
     assert.dom('.FAILURE').exists({ count: 1 });
     assert.dom('.status .fa-times-circle').exists({ count: 1 });
@@ -431,20 +431,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
     assert.dom('.ABORTED').exists({ count: 1 });
     assert.dom('.status .fa-stop-circle').exists({ count: 1 });
@@ -475,20 +475,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       assert.ok(true);
     });
 
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
 
     assert.dom('.latest-commit').exists({ count: 1 });
   });
@@ -526,20 +526,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       }
     });
 
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+  />`);
 
     assert
       .dom('.col .customize-label')
@@ -579,20 +579,20 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       }
     });
 
-    await render(hbs`{{pipeline-graph-nav
-      mostRecent=3
-      latestCommit=latestCommit
-      lastSuccessful=2
-      selectedEvent=2
-      selectedEventObj=obj
-      selected=selected
-      startMainBuild=startBuild
-      startPRBuild=startBuild
-      graphType=currentEventType
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=setDownstreamTrigger
-      setShowListView=setShowListView
-    }}`);
+    await render(hbs`<PipelineGraphNav
+      @mostRecent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{2}}
+      @selectedEvent={{2}}
+      @selectedEventObj={{this.obj}}
+      @selected={{this.selected}}
+      @startMainBuild={{this.startBuild}}
+      @startPRBuild={{this.startBuild}}
+      @graphType={{this.currentEventType}}
+      @showDownstreamTriggers={{this.showDownstreamTriggers}}
+      @setDownstreamTrigger={{this.setDownstreamTrigger}}
+      @setShowListView={{this.setShowListView}}
+    />`);
     const compare = (elem, expected) => {
       assert.strictEqual(elem, expected);
     };
@@ -602,7 +602,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
 
     compare(
       labelColumn,
-      'Yahoo <a href="http://yahoo.com" rel="nofollow" target="_blank">http://yahoo.com</a>, and Version #2.0'
+      'Yahoo <a href="http://yahoo.com" rel="nofollow" target="_blank" urllength="30">http://yahoo.com</a>, and Version #2.0'
     );
   });
 });

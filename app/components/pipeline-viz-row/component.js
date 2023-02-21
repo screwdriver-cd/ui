@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
@@ -9,13 +9,11 @@ export default Component.extend({
   icon: computed(() => statusIcon('success', true)),
 
   isSelectedConnectedPipeline: computed(
-    'selectedConnectedPipeline',
-    'pipeline',
+    'pipeline.id',
+    'selectedConnectedPipeline.id',
     function isSelected() {
       if (this.selectedConnectedPipeline) {
-        return (
-          get(this.selectedConnectedPipeline, 'id') === get(this.pipeline, 'id')
-        );
+        return this.selectedConnectedPipeline.id === this.pipeline.id;
       }
 
       return false;
@@ -23,11 +21,11 @@ export default Component.extend({
   ),
 
   isSelectedPipeline: computed(
-    'selectedPipeline',
-    'pipeline',
+    'pipeline.id',
+    'selectedPipeline.id',
     function isSelected() {
       if (this.selectedPipeline) {
-        return get(this.selectedPipeline, 'id') === get(this.pipeline, 'id');
+        return this.selectedPipeline.id === this.pipeline.id;
       }
 
       return false;

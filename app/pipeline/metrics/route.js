@@ -1,8 +1,10 @@
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
 import timeRange from 'screwdriver-ui/utils/time-range';
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
+  store: service(),
   init() {
     this._super(...arguments);
     this.reinit();
@@ -75,9 +77,9 @@ export default Route.extend({
           : RSVP.resolve(this.pipelineMetrics),
         // eslint-disable-next-line no-nested-ternary
         fetchJob || fetchAll
-          ? this.get('jobId')
+          ? this.jobId
             ? this.store.query('metric', {
-                jobId: this.get('jobId'),
+                jobId: this.jobId,
                 startTime,
                 endTime
               })
@@ -91,7 +93,7 @@ export default Route.extend({
 
           const total = pipelineMetrics.get('length');
 
-          let events = {
+          const events = {
             queuedTime: [],
             imagePullTime: [],
             duration: [],
@@ -103,17 +105,17 @@ export default Route.extend({
 
           let steps = {};
 
-          let builds = [];
+          const builds = [];
 
-          let buildIds = [];
+          const buildIds = [];
 
-          let stepGroup = new Set();
+          const stepGroup = new Set();
 
-          let jobMap = {};
+          const jobMap = {};
 
           let passCount = 0;
 
-          let sum = { queuedTime: 0, imagePullTime: 0, duration: 0 };
+          const sum = { queuedTime: 0, imagePullTime: 0, duration: 0 };
 
           /**
            * Map index to build id, gathered from pipeline and job metrics
@@ -258,7 +260,7 @@ export default Route.extend({
       startTime,
       endTime,
       successOnly,
-      jobId: this.get('jobId')
+      jobId: this.jobId
     });
   },
   actions: {

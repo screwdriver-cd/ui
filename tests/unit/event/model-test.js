@@ -1,5 +1,4 @@
 import { run } from '@ember/runloop';
-import { get } from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { settled } from '@ember/test-helpers';
@@ -16,7 +15,7 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const isComplete = get(model, 'isComplete');
+    const { isComplete } = model;
 
     assert.notOk(isComplete);
   });
@@ -71,7 +70,7 @@ module('Unit | Model | event', function (hooks) {
         }
 
         // New build added during reload, event not complete
-        const isComplete = get(model, 'isComplete');
+        const { isComplete } = model;
 
         assert.notOk(isComplete);
       });
@@ -80,7 +79,7 @@ module('Unit | Model | event', function (hooks) {
     await settled();
 
     // Since no new builds added after 2 reloads, event eventually finishes
-    const isComplete = get(model, 'isComplete');
+    const { isComplete } = model;
 
     assert.ok(isComplete);
   });
@@ -109,7 +108,7 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const isComplete = get(model, 'isComplete');
+    const { isComplete } = model;
 
     assert.ok(isComplete);
   });
@@ -124,7 +123,7 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const isSkipped = get(model, 'isSkipped');
+    const { isSkipped } = model;
 
     assert.ok(isSkipped);
   });
@@ -139,7 +138,7 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const isSkipped = get(model, 'isSkipped');
+    const { isSkipped } = model;
 
     assert.notOk(isSkipped);
   });
@@ -158,12 +157,12 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const isSkipped = get(model, 'isSkipped');
+    const { isSkipped } = model;
 
     assert.notOk(isSkipped);
   });
 
-  test('it is RUNNING when there are no builds', async function (assert) {
+  test('it is UNKNOWN when there are no builds', async function (assert) {
     const model = run(() =>
       this.owner.lookup('service:store').createRecord('event')
     );
@@ -172,9 +171,9 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const status = get(model, 'status');
+    const { status } = model;
 
-    assert.equal(status, 'RUNNING');
+    assert.equal(status, 'UNKNOWN');
   });
 
   test('it returns build status when a build is not SUCCESS', async function (assert) {
@@ -192,7 +191,7 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const status = get(model, 'status');
+    const { status } = model;
 
     assert.equal(status, 'ABORTED');
   });
@@ -221,7 +220,7 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const status = get(model, 'status');
+    const { status } = model;
 
     assert.equal(status, 'SUCCESS');
   });
@@ -250,7 +249,7 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const duration = get(model, 'duration');
+    const { duration } = model;
 
     assert.equal(duration, 20000);
   });
@@ -283,7 +282,7 @@ module('Unit | Model | event', function (hooks) {
 
     await settled();
 
-    const duration = get(model, 'duration');
+    const { duration } = model;
     const testFinishedTime = new Date().getTime();
 
     assert.ok(

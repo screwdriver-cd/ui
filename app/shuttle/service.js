@@ -1,4 +1,4 @@
-import { computed, getWithDefault } from '@ember/object';
+import { get, computed } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
@@ -46,7 +46,7 @@ export default Service.extend({
       baseHost = this.storeHost;
     }
 
-    let optionsType = method.toUpperCase();
+    const optionsType = method.toUpperCase();
 
     let requestType = method.toLowerCase();
 
@@ -62,7 +62,7 @@ export default Service.extend({
 
     const options = { ...this.ajaxOptions(), data, type: optionsType };
 
-    return this.get('ajax')[requestType](uri, options);
+    return this.ajax[requestType](uri, options);
   },
 
   fetchFromApi(method = 'get', url, data, raw = false) {
@@ -265,11 +265,10 @@ export default Service.extend({
     }
 
     const remotePreferences = await this.getUserSetting();
-    const remotePipelineConfig = getWithDefault(
-      remotePreferences,
-      pipelineId,
-      {}
-    );
+    const remotePipelineConfig =
+      get(remotePreferences, pipelineId) === undefined
+        ? {}
+        : get(remotePreferences, pipelineId);
     const localPipelinePreference = await this.store
       .peekAll('preference/pipeline')
       .findBy('id', pipelineId);
@@ -315,7 +314,7 @@ export default Service.extend({
     const url = `/users/settings`;
     const userSettings = await this.getUserSetting();
 
-    let data = {
+    const data = {
       settings: {
         ...userSettings,
         [pipelineId]: pipelineSettings

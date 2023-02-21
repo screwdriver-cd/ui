@@ -9,16 +9,16 @@
       text-transform: capitalize;
     }
 
-    .fa {
+    .fa-check-circle {
+      color: $sd-success;
+    }
+
+    .fa-times-circle {
+      color: $sd-disabled;
+    }
+    .state-icon {
       width: 0.8em;
       font-size: 1.5em;
-
-      &.ACTIVE {
-        color: $sd-success;
-      }
-      &.INACTIVE {
-        color: $sd-disabled;
-      }
     }
   }
 }

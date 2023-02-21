@@ -7,7 +7,7 @@ module('Unit | Model | collection', function (hooks) {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('collection')
     );
 

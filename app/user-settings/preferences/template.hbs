@@ -1,63 +1,80 @@
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
-{{info-message message=successMessage type="success" icon="check"}}
+<InfoMessage @message={{this.errorMessage}} @type="warning" @icon="exclamation-triangle" />
+<InfoMessage @message={{this.successMessage}} @type="success" @icon="check" />
 <div>
   <section class="preference">
     <ul>
       <li>
         <div class="row align-items-start">
-          <div class="col-md-4">
+          <div class="col-4">
             <h4>Display Name Length</h4>
             <p>Setup your own preferred job name length to display on the workflow graph (range: 20 - 99)</p>
           </div>
-          <div class="col-md-8">
-            <input type="number"
+          <div class="col-8">
+            <input
+              type="number"
               class="display-job-name"
-              min={{minDisplayLength}}
-              max={{maxDisplayLength}}   
-              placeholder={{minDisplayLength}}
-              value={{desiredJobNameLength}}
-              oninput={{action (mut displayJobNameLength) value="target.value"}}>
+              min={{this.minDisplayLength}}
+              max={{this.maxDisplayLength}}
+              placeholder={{this.minDisplayLength}}
+              value={{this.desiredJobNameLength}}
+              oninput={{action (mut this.displayJobNameLength) value="target.value"}}
+            />
           </div>
         </div>
       </li>
       <li>
         <div class="row align-items-start">
-          <div class="col-md-4">
+          <div class="col-4">
             <h4>Timestamp format</h4>
             <p>Choose your preferred timestamp format</p>
           </div>
-          <div class="col-md-8">
-            {{#power-select
-              options=timestampOptions
-              renderInPlace=true
-              selected=selectedTimestampFormat
-              searchEnabled=false
-              placeholder="Select timestamp"
-              onchange=(action (mut selectedTimestampFormat))
-              as |timestampFormat|}}
+          <div class="col-8">
+            <PowerSelect
+              @options={{this.timestampOptions}}
+              @renderInPlace={{true}}
+              @selected={{this.selectedTimestampFormat}}
+              @searchEnabled={{false}}
+              @placeholder="Select timestamp"
+              @onChange={{action
+                (mut this.selectedTimestampFormat)
+              }} as |timestampFormat|
+            >
               {{timestampFormat.name}}
-            {{/power-select}}
+            </PowerSelect>
           </div>
         </div>
       </li>
       <li>
         <div class="row">
-          <div class="col-xs-12 right">
-            <button {{action "resetUserSettings"}} disabled={{isDisabled}} class="reset-button">
-              {{fa-icon "refresh"}} Reset
+          <div class="col-12 right">
+            <button
+              disabled={{this.isDisabled}}
+              class="reset-button"
+              {{action "resetUserSettings"}}
+            >
+              <FaIcon @icon="refresh" />
+              Reset
             </button>
-            <button {{action "updateUserSettings"}} disabled={{isDisabled}} class="blue-button">
-              {{#if isSaving}}
+            <button
+              disabled={{this.isDisabled}}
+              class="blue-button"
+              {{action "updateUserSettings"}}
+            >
+              {{#if this.isSaving}}
                 <div>
                   Updating settings
                 </div>
               {{else}}
-                <div class="button-label">Save</div>
+                <div class="button-label">
+                  Save
+                </div>
               {{/if}}
             </button>
-            {{#if isSaving}}{{fa-icon "spinner" spin=true}}{{/if}}        
+            {{#if this.isSaving}}
+              <FaIcon @icon="spinner" @spin="true" />
+            {{/if}}
           </div>
-        </div> 
+        </div>
       </li>
     </ul>
   </section>

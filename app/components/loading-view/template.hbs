@@ -1,4 +1,9 @@
 <div class="loading">
-  <h2>{{fa-icon "spinner fa-spin fa-fw"}} Loading...</h2>
-  <p>{{loadingMessage}}</p>
+  <h2>
+    <FaIcon @icon="spinner" @spin="true" class="fa-fw" />
+    Loading...
+  </h2>
+  <p>
+    {{this.loadingMessage}}
+  </p>
 </div>

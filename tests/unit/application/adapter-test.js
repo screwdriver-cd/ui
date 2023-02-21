@@ -16,7 +16,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it exists', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     assert.ok(adapter);
   });
@@ -35,7 +35,7 @@ module('Unit | Adapter | application', function (hooks) {
       assert.equal(request.withCredentials, true);
     };
 
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     return adapter.ajax('https://sd.cd/fake', 'GET').then(response => {
       assert.deepEqual(response, { foo: 'bar' });
@@ -43,7 +43,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it wraps non-array payload with model name', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/builds/12345'
@@ -57,7 +57,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it wraps array payload with model name', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/builds'
@@ -76,7 +76,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it adds links to pipelines', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/pipelines/1234324'
@@ -99,7 +99,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it adds links to jobs', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/pipelines/1234/jobs'
@@ -123,7 +123,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it adds links to jobs', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/pipelines/1234/jobs'
@@ -137,7 +137,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it wraps errors', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/pipelines/1234/jobs'
@@ -154,7 +154,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it wraps error objects', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/pipelines/1234/jobs'
@@ -177,7 +177,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it takes care of empty payload', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     const requestData = {
       url: 'http://localhost:8080/v4/pipelines/1234'
@@ -189,7 +189,7 @@ module('Unit | Adapter | application', function (hooks) {
   });
 
   test('it returns pipelinetoken endpoint when model is token with pipelineId', function (assert) {
-    let adapter = this.owner.lookup('adapter:application');
+    const adapter = this.owner.lookup('adapter:application');
 
     const modelname = 'token';
     const snapshot = { adapterOptions: { pipelineId: '1' } };

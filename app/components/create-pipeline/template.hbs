@@ -1,20 +1,22 @@
 <div class="left">
   <div class="back">
-    {{inline-svg "arrowhead-left" class="img"}}
-    <span onclick={{action (mut showCreatePipeline) false}}>Back</span>
+    {{svg-jar "arrowhead-left" class="img"}}
+    <span onclick={{action (mut this.showCreatePipeline) false}}>
+      Back
+    </span>
   </div>
 </div>
 
-<div class="center {{if showQuickStartGuide "menu-open"}}">
-  {{pipeline-create-form
-    isSaving=isSaving
-    prUrl=prUrl
-    errorMessage=errorMessage
-    onCreatePipeline=(action "createPipeline")
-    templates=templates
-  }}
+<div class="center {{if this.showQuickStartGuide "menu-open"}}">
+  <PipelineCreateForm
+    @isSaving={{this.isSaving}}
+    @prUrl={{this.prUrl}}
+    @errorMessage={{this.errorMessage}}
+    @onCreatePipeline={{action "createPipeline"}}
+    @templates={{this.templates}}
+  />
 </div>
 
-<div class="right {{if showQuickStartGuide "menu-open"}}">
-  {{quickstart-guide isOpen=showQuickStartGuide}}
+<div class="right {{if this.showQuickStartGuide "menu-open"}}">
+  <QuickstartGuide @isOpen={{this.showQuickStartGuide}} />
 </div>

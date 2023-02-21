@@ -1,15 +1,19 @@
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+<InfoMessage
+  @message={{this.errorMessage}}
+  @type="warning"
+  @icon="exclamation-triangle"
+/>
 
-{{command-header
-  command=versionCommand
-  trusted=trusted
-  isAdmin=isAdmin
-  onUpdateTrust=(action "updateTrust")
-  onRemoveCommand=(action "removeCommand")
-}}
+<CommandHeader
+  @command={{this.versionCommand}}
+  @trusted={{this.trusted}}
+  @isAdmin={{this.isAdmin}}
+  @onUpdateTrust={{action "updateTrust"}}
+  @onRemoveCommand={{action "removeCommand"}}
+/>
 
-{{command-format command=versionCommand}}
+<CommandFormat @command={{this.versionCommand}} />
 
-{{command-versions commands=commands}}
+<CommandVersions @commands={{this.commands}} />
 
 {{outlet}}

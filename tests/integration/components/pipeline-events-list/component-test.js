@@ -125,11 +125,11 @@ module('Integration | Component | pipeline events list', function (hooks) {
     this.set('updateEventsMock', page => {
       assert.equal(page, 2);
     });
-    await render(hbs`{{pipeline-events-list
-                      pipeline=pipelineMock
-                      events=eventsMock
-                      eventsPage=1
-                      updateEvents=updateEventsMock}}`);
+    await render(hbs`<PipelineEventsList
+                      @pipeline={{this.pipelineMock}}
+                      @events={{this.eventsMock}}
+                      @eventsPage={{1}}
+                      @updateEvents={{this.updateEventsMock}} />`);
 
     assert.dom('.view').exists({ count: 2 });
   });
@@ -182,10 +182,10 @@ module('Integration | Component | pipeline events list', function (hooks) {
       assert.equal(page, 2);
     });
 
-    await render(hbs`{{pipeline-events-list
-                      events=eventsMock
-                      eventsPage=1
-                      updateEvents=updateEventsMock}}`);
+    await render(hbs`<PipelineEventsList
+                      @events={{this.eventsMock}}
+                      @eventsPage={{1}}
+                      @updateEvents={{this.updateEventsMock}} />`);
 
     const routerService = this.owner.lookup('service:router');
     const transitionToStub = sinon.stub(routerService, 'transitionTo');
@@ -242,10 +242,10 @@ module('Integration | Component | pipeline events list', function (hooks) {
       assert.equal(page, 2);
     });
 
-    await render(hbs`{{pipeline-events-list
-                      events=eventsMock
-                      eventsPage=1
-                      updateEvents=updateEventsMock}}`);
+    await render(hbs`<PipelineEventsList
+                      @events={{this.eventsMock}}
+                      @eventsPage={{1}}
+                      @updateEvents={{this.updateEventsMock}} />`);
 
     const routerService = this.owner.lookup('service:router');
     const transitionToStub = sinon.stub(routerService, 'transitionTo');

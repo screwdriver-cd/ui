@@ -1,10 +1,19 @@
 <div class="job-cell">
-  {{#if build}}
-    {{#link-to "pipeline.build" build.id}}
-      {{fa-icon build.icon fixedWidth=true class=build.status}}
-    {{/link-to}}
+  {{#if this.build}}
+    <LinkTo @route="pipeline.build" @model={{this.build.id}}>
+      <FaIcon
+        @icon={{this.build.icon.name}}
+        @fixedWidth="true"
+        @prefix={{this.build.icon.prefix}}
+        @spin={{this.build.icon.spin}}
+        @flip={{this.build.icon.flip}}
+        class={{this.build.status}}
+      />
+    </LinkTo>
   {{else}}
     <span class="fa"></span>
   {{/if}}
-  <div class="job-name">{{jobName}}</div>
+  <div class="job-name">
+    {{this.jobName}}
+  </div>
 </div>

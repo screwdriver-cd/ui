@@ -1,151 +1,18 @@
-{{#if session.isAuthenticated}}
-  {{#if (not session.data.authenticated.isGuest)}}
-    {{pipeline-nav
-      pipeline=pipeline
-    }}
-  {{/if}}
-{{/if}}
-
-
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle" scmContext=pipeline.scmContext}}
-
-{{#if isInactivePipeline}}
-  {{info-message message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration." type="info" icon="exclamation-triangle"}}
-{{/if}}
-
-{{#unless hasAdmins}}
-  {{#bs-alert type="warning" dismissible=false}}
-    <p>This repo has no admins, click <span class="text-info" onclick={{action "syncAdmins"}}>here</span> to sync from git repo, you must be an admin to do so.</p>
-  {{/bs-alert}}
-{{/unless}}
-
-{{#if (eq syncAdmins "success")}}
-  {{#bs-alert type="success"}}
-    <p>Good job, pipeline's admins are in sync</p>
-  {{/bs-alert}}
-{{/if}}
-
-{{#if (eq syncAdmins "failure")}}
-  {{#bs-alert type="danger"}}
-    <p>Something went wrong, please try syncing again</p>
-  {{/bs-alert}}
-{{/if}}
-
-<div class="row">
-  <div class="col-xs-12 col-md-9 separator partial-view">
-    {{pipeline-graph-nav
-      pipeline=pipeline
-      mostRecent=mostRecent
-      latestCommit=latestCommit
-      lastSuccessful=lastSuccessful
-      graphType=currentEventType
-      selectedEvent=selectedEvent
-      selectedEventObj=selectedEventObj
-      selected=selected
-      showListView=showListView
-      showDownstreamTriggers=showDownstreamTriggers
-      setDownstreamTrigger=(action "setDownstreamTrigger")
-      startMainBuild=(action "startMainBuild")
-      startPRBuild=(action "startPRBuild")
-      prGroups=pullRequestGroups
-      stopEvent=(action "stopEvent")
-      setShowListView=(action "setShowListView")
-    }}
-
-    {{pipeline-workflow
-      jobId=jobId
-      pipeline=pipeline
-      latestCommit=latestCommit
-      showDownstreamTriggers=showDownstreamTriggers
-      showPRJobs=showPRJobs
-      completeWorkflowGraph=completeWorkflowGraph
-      workflowGraph=pipeline.workflowGraph
-      jobs=jobs
-      prJobs=prJobs
-      selectedEventObj=selectedEventObj
-      selected=selected
-      startDetachedBuild=(action "startDetachedBuild")
-      stopBuild=(action "stopBuild")
-      setJobState=(action "setJobState")
-      authenticated=session.isAuthenticated
-    }}
-
-  </div>
-  <div class="col-xs-12 col-md-3 no-padding column-tabs-view partial-view {{if showListView "disabled"}}" onScroll={{action "onEventListScroll"}}>
-    {{#bs-tab customTabs=true as |tab|}}
-      {{#bs-nav type="tabs" as |nav|}}
-        {{#nav.item active=(bs-eq activeTab "events")}}
-          {{#nav.link-to "pipeline.events" class="nav-link"}}Events{{/nav.link-to}}
-        {{/nav.item}}
-        {{#nav.item active=(bs-eq activeTab "pulls")}}
-          {{#nav.link-to "pipeline.pulls" class="nav-link"}}Pull Requests{{/nav.link-to}}
-        {{/nav.item}}
-      {{/bs-nav}}
-
-      <div class="tab-content">
-        {{#tab.pane activeId=activeTab elementId="events" title="Events"}}
-          {{pipeline-events-list
-            pipeline=pipeline
-            expandedEventsGroup=expandedEventsGroup
-            events=events
-            selected=(mut selected)
-            selectedEvent=selectedEvent
-            selectedEventObj=selectedEventObj
-            latestCommit=latestCommit
-            lastSuccessful=lastSuccessful
-            mostRecent=mostRecent
-            eventsPage=eventsPage
-            startPRBuild=(action "startPRBuild")
-            stopEvent=(action "stopEvent")
-            updateEvents=(action "updateEvents")
-          }}
-          <div style="padding: 20px;" onMouseEnter={{action "onEventListScroll"}}></div>
-        {{/tab.pane}}
-        {{#tab.pane activeId=activeTab elementId="pulls" title="Pull Requests"}}
-          {{#if prChainEnabled}}
-            {{pipeline-events-list
-            pipeline=pipeline
-            expandedEventsGroup=expandedEventsGroup
-            events=events
-            selected=(mut selected)
-            selectedEventObj=selectedEventObj
-            selectedEvent=selectedEvent
-            latestCommit=latestCommit
-            lastSuccessful=lastSuccessful
-            eventsPage=eventsPage
-            startPRBuild=(action "startPRBuild")
-            stopEvent=(action "stopEvent")
-            updateEvents=(action "updateEvents")
-            }}
-          {{else}}
-            {{#each pullRequestGroups as |prg|}}
-              {{pipeline-pr-list
-                jobs=prg
-                pipeline=pipeline
-                selected=(mut selected)
-                selectedEvent=selectedEvent
-                isRestricted=isRestricted
-                startBuild=(action "startPRBuild")
-                stopPRBuilds=(action "stopPRBuilds")
-                workflowGraph=pipeline.workflowGraph
-              }}
-            {{else}}
-              <div class="alert">No open pull requests</div>
-            {{/each}}
-          {{/if}}
-        {{/tab.pane}}
-      </div>
-    {{/bs-tab}}
-  </div>
-</div>
-
-{{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false
-    targetAttachment="center"
-    translucentOverlay=true
-  }}
-    {{loading-view}}
-  {{/modal-dialog}}
-{{/if}}
+<PipelineEvents
+    @session={{this.session}}
+    @model={{this.model}}
+    @pipeline={{this.pipeline}}
+    @errorMessage={{this.errorMessage}}
+    @selected={{mut this.selected}}
+    @showListView={{this.showListView}}
+    @showDownstreamTriggers={{this.showDownstreamTriggers}}
+    @jobId={{this.jobId}}
+    @showPRJobs={{this.showPRJobs}}
+    @activeTab={{this.activeTab}}
+    @expandedEventsGroup={{mut this.expandedEventsGroup}}
+    @paginateEvents={{mut this.paginateEvents}}
+    @eventsPage={{this.eventsPage}}
+    @isShowingModal={{this.isShowingModal}}
+/>
 
 {{outlet}}

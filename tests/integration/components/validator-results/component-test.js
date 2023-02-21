@@ -57,8 +57,7 @@ module('Integration | Component | validator results', function (hooks) {
       }
     });
 
-    await render(hbs`{{validator-results results=validationMock}}`);
-
+    await render(hbs`<ValidatorResults @results={{this.validationMock}} />`);
     const jobs = findAll('h4.job');
 
     assert.dom(jobs[0]).hasText('main');
@@ -82,7 +81,7 @@ module('Integration | Component | validator results', function (hooks) {
     });
 
     await render(
-      hbs`{{validator-results results=validationMock isTemplate=true}}`
+      hbs`<ValidatorResults @results={{this.validationMock}} @isTemplate={{true}} />`
     );
 
     assert.dom('.error').doesNotExist();
@@ -104,7 +103,7 @@ module('Integration | Component | validator results', function (hooks) {
     });
 
     await render(
-      hbs`{{validator-results results=validationMock isTemplate=true}}`
+      hbs`<ValidatorResults @results={{this.validationMock}} @isTemplate={{true}} />`
     );
 
     assert.dom('.error').doesNotExist();
@@ -125,7 +124,7 @@ module('Integration | Component | validator results', function (hooks) {
     });
 
     await render(
-      hbs`{{validator-results results=validationMock isTemplate=true}}`
+      hbs`<ValidatorResults @results={{this.validationMock}} @isTemplate={{true}} />`
     );
 
     assert.dom('.error').hasText('there is an error');
@@ -146,7 +145,7 @@ module('Integration | Component | validator results', function (hooks) {
     });
 
     await render(
-      hbs`{{validator-results results=validationMock isTemplate=true}}`
+      hbs`<ValidatorResults @results={{this.validationMock}} @isTemplate={{true}} />`
     );
 
     assert.dom('.warning').hasText('there is an warning');

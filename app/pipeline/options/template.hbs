@@ -1,13 +1,13 @@
-{{#if session.isAuthenticated}}
-  {{pipeline-nav pipeline=pipeline}}
+{{#if this.session.isAuthenticated}}
+  <PipelineNav @pipeline={{this.pipeline}} />
 {{/if}}
-{{pipeline-options
-  username=session.data.authenticated.username
-  pipeline=pipeline
-  jobs=jobs
-  errorMessage=errorMessage
-  onRemovePipeline=(action "removePipeline")
-  isSaving=isSaving
-  onUpdatePipeline=(action "updatePipeline")
-}}
+<PipelineOptions
+  @username={{this.session.data.authenticated.username}}
+  @pipeline={{this.pipeline}}
+  @jobs={{this.jobs}}
+  @errorMessage={{this.errorMessage}}
+  @onRemovePipeline={{action "removePipeline"}}
+  @isSaving={{this.isSaving}}
+  @onUpdatePipeline={{action "updatePipeline"}}
+/>
 {{outlet}}

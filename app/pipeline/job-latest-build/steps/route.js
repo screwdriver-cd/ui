@@ -1,6 +1,8 @@
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
+  router: service(),
   model() {
     // return parent route model
     return this.modelFor('pipeline.job-latest-build');
@@ -10,6 +12,11 @@ export default Route.extend({
     const { id: buildId, pipelineId } = model;
     const stepName = this.paramsFor(this.routeName).step_name;
 
-    this.transitionTo('pipeline.build.step', pipelineId, buildId, stepName);
+    this.router.transitionTo(
+      'pipeline.build.step',
+      pipelineId,
+      buildId,
+      stepName
+    );
   }
 });

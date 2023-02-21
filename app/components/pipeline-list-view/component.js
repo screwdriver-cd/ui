@@ -3,76 +3,76 @@ import { get, set, observer } from '@ember/object';
 import moment from 'moment';
 import { inject as service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
-import Table from 'ember-light-table';
 import isEqual from 'lodash.isequal';
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
+
+const collator = new Intl.Collator('en', {
+  numeric: true,
+  sensitivity: 'base'
+});
 
 export default Component.extend({
   store: service(),
   userSettings: service(),
+  theme: service('emt-themes/ember-bootstrap-v4'),
   isLoading: false,
   isShowingModal: false,
-  sortingDirection: 'asc',
-  sortingValuePath: 'job',
-  sortedRows: [],
+  data: [],
   timestampPreference: null,
   columns: [
     {
-      label: 'JOB',
-      valuePath: 'job',
-      cellComponent: 'pipeline-list-job-cell'
+      title: 'JOB',
+      propertyName: 'job',
+      component: 'pipeline-list-job-cell',
+      sortFunction: (a, b) => collator.compare(a.jobName, b.jobName)
     },
     {
-      label: 'HISTORY',
-      valuePath: 'history',
-      sortable: false,
-      cellComponent: 'pipeline-list-history-cell'
+      title: 'HISTORY',
+      propertyName: 'history',
+      disableSorting: true,
+      component: 'pipeline-list-history-cell'
     },
     {
-      label: 'DURATION',
-      sortable: false,
-      valuePath: 'duration'
+      title: 'DURATION',
+      propertyName: 'duration',
+      disableSorting: true
     },
     {
-      label: 'START TIME',
-      valuePath: 'startTime'
+      title: 'START TIME',
+      propertyName: 'startTime',
+      sortedBy: 'history',
+      sortFunction: (a, b) => {
+        const aStartTime = get(a, 'lastObject.startTime');
+        const bStartTime = get(b, 'lastObject.startTime');
+
+        return moment.compare(moment(aStartTime), moment(bStartTime));
+      }
     },
     {
-      label: 'COVERAGE',
-      valuePath: 'coverage',
-      sortable: false,
-      cellComponent: 'pipeline-list-coverage-cell'
+      title: 'COVERAGE',
+      propertyName: 'coverage',
+      disableSorting: true,
+      component: 'pipeline-list-coverage-cell'
     },
     {
-      label: 'METRICS',
-      sortable: false,
-      valuePath: 'job',
-      cellComponent: 'pipeline-list-metrics-cell'
+      title: 'METRICS',
+      propertyName: 'job',
+      disableSorting: true,
+      component: 'pipeline-list-metrics-cell'
     },
     {
-      label: 'ACTIONS',
-      valuePath: 'actions',
-      sortable: false,
-      cellComponent: 'pipeline-list-actions-cell'
+      title: 'ACTIONS',
+      propertyName: 'actions',
+      disableSorting: true,
+      component: 'pipeline-list-actions-cell'
     }
   ],
 
   async init() {
     this._super(...arguments);
-    const sortedRows = this.getRows(this.jobsDetails);
-    const table = Table.create({
-      columns: this.get('columns'),
-      rows: sortedRows
-    });
+    const rows = this.getRows(this.jobsDetails);
 
-    let sortColumn = table
-      .get('allColumns')
-      .findBy('valuePath', this.get('sortingValuePath'));
-
-    // Setup initial sort column
-    if (sortColumn) {
-      sortColumn.set('sorted', true);
-    }
+    this.theme.table = 'table table-condensed table-sm';
 
     this.userSettings
       .getTimestampFormat()
@@ -84,7 +84,7 @@ export default Component.extend({
       });
 
     this.setProperties({
-      table,
+      data: rows,
       pipelineParameters: this.getDefaultPipelineParameters(),
       jobParameters: this.getDefaultJobParameters()
     });
@@ -96,11 +96,15 @@ export default Component.extend({
   },
 
   getDefaultPipelineParameters() {
-    return this.getWithDefault('pipeline.parameters', {});
+    return this.get('pipeline.parameters') === undefined
+      ? {}
+      : this.get('pipeline.parameters');
   },
 
   getDefaultJobParameters() {
-    return this.getWithDefault('pipeline.jobParameters', {});
+    return this.get('pipeline.jobParameters') === undefined
+      ? {}
+      : this.get('pipeline.jobParameters');
   },
 
   /**
@@ -159,7 +163,7 @@ export default Component.extend({
   },
 
   getRows(jobsDetails = []) {
-    let rows = jobsDetails.map(jobDetails => {
+    const rows = jobsDetails.map(jobDetails => {
       const { jobId, jobName, annotations, prParentJobId, prNum } = jobDetails;
       const latestBuild = jobDetails.builds.length
         ? get(jobDetails, 'builds.lastObject')
@@ -171,8 +175,11 @@ export default Component.extend({
       };
 
       const hasParameters =
-        Object.keys(this.getWithDefault('pipelineParameters', {})).length > 0 ||
-        Object.keys(this.getWithDefault('jobParameters', {})).length > 0;
+        Object.keys(
+          this.pipelineParameters === undefined ? {} : this.pipelineParameters
+        ).length > 0 ||
+        Object.keys(this.jobParameters === undefined ? {} : this.jobParameters)
+          .length > 0;
 
       let manualStartEnabled = isActivePipeline(this.get('pipeline'));
 
@@ -187,8 +194,8 @@ export default Component.extend({
         jobId,
         jobName,
         latestBuild,
-        startSingleBuild: this.get('startSingleBuild'),
-        stopBuild: this.get('stopBuild'),
+        startSingleBuild: this.startSingleBuild,
+        stopBuild: this.stopBuild,
         isShowingModal: this.isShowingModal,
         hasParameters,
         openParametersModal: this.openParametersModal.bind(this),
@@ -253,38 +260,13 @@ export default Component.extend({
       };
     });
 
-    const collator = new Intl.Collator('en', {
-      numeric: true,
-      sensitivity: 'base'
-    });
-
-    switch (this.sortingValuePath) {
-      case 'job':
-        rows.sort((a, b) => collator.compare(a.job.jobName, b.job.jobName));
-        break;
-      case 'startTime':
-        rows.sort((a, b) => {
-          const aStartTime = get(a, 'history.lastObject.startTime');
-          const bStartTime = get(b, 'history.lastObject.startTime');
-
-          return moment.compare(moment(aStartTime), moment(bStartTime));
-        });
-        break;
-      default:
-        break;
-    }
-
-    if (this.sortingDirection === 'desc') {
-      rows = rows.reverse();
-    }
-
     return rows;
   },
   jobsObserver: observer(
     'jobsDetails.[]',
     function jobsObserverFunc({ jobsDetails }) {
       const rows = this.getRows(jobsDetails);
-      const lastRows = get(this, 'lastRows') || [];
+      const lastRows = this.lastRows || [];
       const isEqualRes = isEqual(
         rows
           .map(r => r.job)
@@ -295,8 +277,8 @@ export default Component.extend({
       );
 
       if (!isEqualRes) {
-        set(this, 'lastRows', rows);
-        this.table.setRows(rows);
+        set(this, 'lastRows', lastRows);
+        this.set('data', rows);
       }
     }
   ),
@@ -304,25 +286,11 @@ export default Component.extend({
   actions: {
     async onScrolledToBottom() {
       this.set('isLoading', true);
-      this.get('updateListViewJobs')().then(jobs => {
-        const rows = this.getRows(jobs);
+      const jobs = await this.updateListViewJobs();
+      const rows = this.getRows(jobs);
 
-        this.table.addRows(rows);
-        this.set('isLoading', false);
-      });
-    },
-
-    onColumnClick(column) {
-      if (column.sorted) {
-        const sortingValuePath = column.get('valuePath');
-        const sortingDirection = column.ascending ? 'asc' : 'desc';
-
-        this.setProperties({ sortingDirection, sortingValuePath });
-
-        const sortedRows = this.getRows(this.jobsDetails);
-
-        this.table.setRows(sortedRows);
-      }
+      this.set('data', rows);
+      this.set('isLoading', false);
     },
 
     closeModal() {
@@ -338,8 +306,8 @@ export default Component.extend({
     },
 
     startBuild(parameterizedModel) {
-      const buildState = this.get('buildState');
-      const job = this.get('job');
+      const { buildState } = this;
+      const { job } = this;
 
       this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
     }

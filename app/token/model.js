@@ -1,11 +1,11 @@
-import DS from 'ember-data';
+import Model, { attr } from '@ember-data/model';
 
-export default DS.Model.extend({
-  pipelineId: DS.attr('number'),
-  userId: DS.attr('number'),
-  name: DS.attr('string'),
-  description: DS.attr('string', { defaultValue: '' }),
-  lastUsed: DS.attr('string'),
-  value: DS.attr('string'),
-  action: DS.attr('string')
+export default Model.extend({
+  pipelineId: attr('number'),
+  userId: attr('number'),
+  name: attr('string'),
+  description: attr('string', { defaultValue: '' }),
+  lastUsed: attr('string'),
+  value: attr('string'),
+  action: attr('string')
 });

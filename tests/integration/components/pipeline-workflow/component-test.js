@@ -10,13 +10,13 @@ const GRAPH = {
   nodes: [
     { name: '~pr' },
     { name: '~commit' },
-    { id: 1, name: 'main' },
-    { id: 2, name: 'batman' },
-    { id: 3, name: 'robin' },
-    { id: 4, name: 'sd@123:main' },
-    { id: 5, name: 'deploy' },
-    { id: 6, name: 'foo01job' },
-    { id: 7, name: 'foo1job' }
+    { name: 'main' },
+    { name: 'batman' },
+    { name: 'robin' },
+    { name: 'sd@123:main' },
+    { name: 'deploy' },
+    { name: 'foo01job' },
+    { name: 'foo1job' }
   ],
   edges: [
     { src: '~pr', dest: 'main' },
@@ -28,6 +28,16 @@ const GRAPH = {
     { src: 'main', dest: 'foo1job' }
   ]
 };
+
+const JOBS = [
+  { id: 1, name: 'main' },
+  { id: 2, name: 'batman' },
+  { id: 3, name: 'robin' },
+  { id: 4, name: 'sd@123:main' },
+  { id: 5, name: 'deploy' },
+  { id: 6, name: 'foo01job' },
+  { id: 7, name: 'foo1job' }
+];
 
 const BUILDS = [
   { jobId: 1, id: 4, status: 'SUCCESS' },
@@ -47,13 +57,12 @@ module('Integration | Component | pipeline workflow', function (hooks) {
         workflowGraph: GRAPH,
         startFrom: '~commit',
         causeMessage: 'test'
-      }),
-      'graph',
-      EmberObject.create(GRAPH)
+      })
     );
-
+    this.set('workflowGraph', GRAPH);
+    this.set('jobs', JOBS);
     await render(
-      hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=true}}`
+      hbs`<PipelineWorkflow @selectedEventObj={{this.obj}} @workflowGraph={{this.workflowGraph}} @jobs={{this.jobs}} @showPRJobs={{true}} />`
     );
 
     assert.dom('.graph-node').exists({ count: 8 });
@@ -68,13 +77,12 @@ module('Integration | Component | pipeline workflow', function (hooks) {
         workflowGraph: GRAPH,
         startFrom: '~commit',
         causeMessage: 'test'
-      }),
-      'graph',
-      EmberObject.create(GRAPH)
+      })
     );
-
+    this.set('workflowGraph', GRAPH);
+    this.set('jobs', JOBS);
     await render(
-      hbs`{{pipeline-workflow selectedEventObj=obj graph=graph showPRJobs=false}}`
+      hbs`<PipelineWorkflow @selectedEventObj={{this.obj}} @workflowGraph={{this.workflowGraph}} @jobs={{this.jobs}} @showPRJobs={{false}} />`
     );
 
     assert.dom('.graph-node').exists({ count: 7 });
@@ -147,7 +155,7 @@ module('Integration | Component | pipeline workflow', function (hooks) {
     });
 
     await render(
-      hbs`{{pipeline-workflow selectedEventObj=obj jobs=jobs graph=workflowGraph}}`
+      hbs`<PipelineWorkflow @selectedEventObj={{this.obj}} @workflowGraph={{this.workflowGraph}} @jobs={{this.jobs}} />`
     );
     assert
       .dom('.pipelineWorkflow [data-job="mainFreeze"]')
@@ -173,9 +181,10 @@ module('Integration | Component | pipeline workflow', function (hooks) {
         sha: 'abc123'
       })
     );
-
+    this.set('workflowGraph', GRAPH);
+    this.set('jobs', JOBS);
     await render(
-      hbs`{{pipeline-workflow selectedEventObj=obj latestCommit=latestCommit graph=graph showPRJobs=true isShowingModal=true}}`
+      hbs`<PipelineWorkflow @selectedEventObj={{this.obj}} @latestCommit={{this.latestCommit}} @workflowGraph={{this.workflowGraph}} @jobs={{this.jobs}} @showPRJobs={{true}} @isShowingModal={{true}} />`
     );
 
     assert.dom('.latest-commit').exists({ count: 1 });
@@ -199,9 +208,11 @@ module('Integration | Component | pipeline workflow', function (hooks) {
         sha: 'efg456'
       })
     );
+    this.set('workflowGraph', GRAPH);
+    this.set('jobs', JOBS);
 
     await render(
-      hbs`{{pipeline-workflow selectedEventObj=obj latestCommit=latestCommit graph=graph showPRJobs=true isShowingModal=true}}`
+      hbs`<PipelineWorkflow @selectedEventObj={{this.obj}} @latestCommit={{this.latestCommit}} @workflowGraph={{this.workflowGraph}} @jobs={{this.jobs}} @showPRJobs={{true}} @isShowingModal={{true}} />`
     );
 
     assert.dom('.latest-commit').doesNotExist();

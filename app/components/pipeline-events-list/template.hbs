@@ -1,35 +1,39 @@
 <div>
-  {{#if isGroupedEvents}}
-    {{#each groups as |group|}}
-      {{pipeline-events-row-group
-        pipeline=pipeline
-        expandedEventsGroup=expandedEventsGroup
-        selectedEventObj=selectedEventObj
-        events=group
-        selectedEvent=selectedEvent
-        latestCommit=latestCommit
-        lastSuccessful=lastSuccessful
-        startPRBuild=(action "startPRBuild")
-        stopEvent=(action "stopEvent")
-        eventClick=(action "eventClick")
-      }}
+  {{#if this.isGroupedEvents}}
+    {{#each this.groups as |group|}}
+      <PipelineEventsRowGroup
+        @pipeline={{this.pipeline}}
+        @expandedEventsGroup={{this.expandedEventsGroup}}
+        @selectedEventObj={{this.selectedEventObj}}
+        @events={{group}}
+        @selectedEvent={{this.selectedEvent}}
+        @latestCommit={{this.latestCommit}}
+        @lastSuccessful={{this.lastSuccessful}}
+        @startPRBuild={{action "startPRBuild"}}
+        @stopEvent={{action "stopEvent"}}
+        @eventClick={{action "eventClick"}}
+      />
     {{else}}
-      <div class="alert">No events have been run for this pipeline</div>
+      <div class="alert">
+        No events have been run for this pipeline
+      </div>
     {{/each}}
   {{else}}
-    {{#each eventsList as |event|}}
-      {{pipeline-event-row
-        event=event
-        selectedEvent=selectedEvent
-        selectedEventObj=selectedEventObj
-        latestCommit=latestCommit
-        lastSuccessful=lastSuccessful
-        startPRBuild=(action "startPRBuild")
-        stopEvent=(action "stopEvent")
-        eventClick=(action "eventClick")
-      }}
+    {{#each this.eventsList as |event|}}
+      <PipelineEventRow
+        @event={{event}}
+        @selectedEvent={{this.selectedEvent}}
+        @selectedEventObj={{this.selectedEventObj}}
+        @latestCommit={{this.latestCommit}}
+        @lastSuccessful={{this.lastSuccessful}}
+        @startPRBuild={{action "startPRBuild"}}
+        @stopEvent={{action "stopEvent"}}
+        @eventClick={{action "eventClick"}}
+      />
     {{else}}
-      <div class="alert">No events have been run for this pipeline</div>
+      <div class="alert">
+        No events have been run for this pipeline
+      </div>
     {{/each}}
   {{/if}}
 </div>

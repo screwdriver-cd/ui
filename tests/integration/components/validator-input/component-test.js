@@ -7,7 +7,7 @@ module('Integration | Component | validator input', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    await render(hbs`{{validator-input}}`);
+    await render(hbs`<ValidatorInput />`);
 
     assert.dom('h4').hasText('Validate Screwdriver Configuration');
     assert

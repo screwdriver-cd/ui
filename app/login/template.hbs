@@ -1,3 +1,6 @@
-{{login-button authenticate=(action "authenticate") scmContexts=scmContexts}}
+<LoginButton
+  @authenticate={{action "authenticate"}}
+  @scmContexts={{this.scmContexts}}
+/>
 
 {{outlet}}

@@ -1,12 +1,34 @@
-{{#if pipelineDescription}}
-  <span>{{pipelineDescription}}</span>
+{{#if this.pipelineDescription}}
+  <span>
+    {{this.pipelineDescription}}
+  </span>
 {{/if}}
-{{#bs-nav type="pills" as |nav|}}
-  {{#if pipeline.childPipelines}}
-    {{#nav.item}}{{#nav.link-to "pipeline.child-pipelines"}}Child Pipelines{{/nav.link-to}}{{/nav.item}}
+<BsNav @type="pills" as |nav|>
+  {{#if this.pipeline.childPipelines}}
+    <nav.item>
+      {{#nav.link-to "pipeline.child-pipelines"}}
+        Child Pipelines
+      {{/nav.link-to}}
+    </nav.item>
   {{/if}}
-  {{#nav.item}}{{#nav.link-to buildsLink}}Builds{{/nav.link-to}}{{/nav.item}}
-  {{#nav.item}}{{#nav.link-to "pipeline.secrets"}}Secrets{{/nav.link-to}}{{/nav.item}}
-  {{#nav.item}}{{#nav.link-to "pipeline.options"}}Options{{/nav.link-to}}{{/nav.item}}
-  {{#nav.item}}{{#nav.link-to "pipeline.metrics"}}Metrics{{/nav.link-to}}{{/nav.item}}
-{{/bs-nav}}
+  <nav.item>
+    {{#nav.link-to this.buildsLink}}
+      Builds
+    {{/nav.link-to}}
+  </nav.item>
+  <nav.item>
+    {{#nav.link-to "pipeline.secrets"}}
+      Secrets
+    {{/nav.link-to}}
+  </nav.item>
+  <nav.item>
+    {{#nav.link-to "pipeline.options"}}
+      Options
+    {{/nav.link-to}}
+  </nav.item>
+  <nav.item>
+    {{#nav.link-to "pipeline.metrics"}}
+      Metrics
+    {{/nav.link-to}}
+  </nav.item>
+</BsNav>

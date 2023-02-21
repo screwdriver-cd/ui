@@ -2,7 +2,6 @@ import { currentURL, visit, settled } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
-import { get } from '@ember/object';
 import Pretender from 'pretender';
 
 import makePipeline from '../mock/pipeline';
@@ -10,6 +9,8 @@ import makeEvents from '../mock/events';
 import makeBuilds from '../mock/builds';
 import makeGraph from '../mock/workflow-graph';
 import makeJobs from '../mock/jobs';
+
+import injectScmServiceStub from '../helpers/inject-scm';
 
 let server;
 
@@ -23,7 +24,7 @@ module('Acceptance | pipeline build', function (hooks) {
     const jobs = makeJobs();
     const pipeline = makePipeline(graph);
     const events = makeEvents(graph);
-    const desiredEvent = get(events, 'firstObject');
+    const desiredEvent = events.firstObject;
 
     desiredEventId = desiredEvent.id;
     server = new Pretender();
@@ -160,6 +161,8 @@ module('Acceptance | pipeline build', function (hooks) {
   });
 
   test('visiting /pipelines/4 when logged in', async function (assert) {
+    injectScmServiceStub(this);
+
     const controller = this.owner.lookup('controller:pipeline/events');
 
     await authenticateSession({ token: 'fakeToken' });
@@ -188,9 +191,7 @@ module('Acceptance | pipeline build', function (hooks) {
     await visit('/pipelines/4');
 
     assert.dom('.column-tabs-view').hasClass('disabled');
-
     await visit('/pipelines/4/pulls');
-
     assert.equal(currentURL(), '/pipelines/4/pulls');
     assert.dom('.column-tabs-view .nav-link.active').hasText('Pull Requests');
   });

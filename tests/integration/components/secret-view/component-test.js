@@ -23,7 +23,9 @@ module('Integration | Component | secret view', function (hooks) {
 
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
 
     assert.dom('.name').hasText('TEST_SECRET');
     assert.dom('.pass input').hasAttribute('placeholder', 'Protected');
@@ -69,7 +71,9 @@ module('Integration | Component | secret view', function (hooks) {
     );
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
     // open dialog
     await click('button');
 
@@ -80,7 +84,7 @@ module('Integration | Component | secret view', function (hooks) {
       .hasText(
         "You're about to delete a secret TEST_SECRET. There might be existing jobs using this secret."
       );
-    assert.dom('button.btn-default').hasText('Cancel');
+    assert.dom('button.btn-secondary').hasText('Cancel');
     assert.dom('button.btn-danger').hasText('Confirm');
   });
 
@@ -102,11 +106,13 @@ module('Integration | Component | secret view', function (hooks) {
     );
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
     // open dialog
     await click('button');
     // click cancel
-    await click('button.btn-default');
+    await click('button.btn-secondary');
 
     assert.dom('div.modal-dialog').doesNotExist();
   });
@@ -152,7 +158,7 @@ module('Integration | Component | secret view', function (hooks) {
     });
 
     await render(
-      hbs`{{secret-view secret=mockSecret secrets=secrets pipeline=mockPipeline}}`
+      hbs`<SecretView @secret={{this.mockSecret}} @secrets={{this.secrets}} @pipeline={{this.mockPipeline}} />`
     );
     // open dialog
     await click('button');
@@ -177,8 +183,8 @@ module('Integration | Component | secret view', function (hooks) {
         },
         save() {
           // update called
-          assert.equal(this.get('value'), 'banana');
-          assert.equal(this.get('allowInPR'), true);
+          assert.equal(this.value, 'banana');
+          assert.equal(this.allowInPR, true);
         }
       }).create({
         name: 'TEST_SECRET',
@@ -189,7 +195,9 @@ module('Integration | Component | secret view', function (hooks) {
     );
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
 
     await fillIn('.pass input', 'banana');
     await triggerKeyEvent('.pass input', 'keyup', 13);
@@ -215,7 +223,9 @@ module('Integration | Component | secret view', function (hooks) {
     this.set('mockSecret', testSecret);
     this.set('mockPipeline', testPipeline);
 
-    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline}}`);
+    await render(
+      hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}} />`
+    );
 
     assert
       .dom('.pass input')
@@ -245,8 +255,8 @@ module('Integration | Component | secret view', function (hooks) {
       assert.equal(id, '123');
     });
 
-    await render(hbs`{{secret-view secret=mockSecret pipeline=mockPipeline
-      onCreateSecret=(action externalAction)}}`);
+    await render(hbs`<SecretView @secret={{this.mockSecret}} @pipeline={{this.mockPipeline}}
+      @onCreateSecret={{action this.externalAction}} />`);
 
     await fillIn('.pass input', 'apple');
     await triggerKeyEvent('.pass input', 'keyup', 13);

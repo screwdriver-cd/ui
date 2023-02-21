@@ -21,7 +21,7 @@ module('Integration | Component | token list', function (hooks) {
       })
     ]);
 
-    await render(hbs`{{token-list tokens=tokens}}`);
+    await render(hbs`<TokenList @tokens={{this.tokens}} />`);
 
     assert.dom('td.name input').hasValue('baz');
     assert.dom('td.description input').hasValue('qux');

@@ -6,7 +6,7 @@ module('Unit | Adapter | build history', function (hooks) {
 
   // Replace this with your real tests.
   test('it exists', function (assert) {
-    let adapter = this.owner.lookup('adapter:build-history');
+    const adapter = this.owner.lookup('adapter:build-history');
 
     assert.ok(adapter);
   });

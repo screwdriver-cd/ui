@@ -1,10 +1,9 @@
 import { resolve } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import EmberObject, { get } from '@ember/object';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
-import sinon from 'sinon';
 import Service from '@ember/service';
+import sinon from 'sinon';
+import EmberObject from '@ember/object';
 import { settled } from '@ember/test-helpers';
 import injectSessionStub from '../../../helpers/inject-session';
 
@@ -22,7 +21,6 @@ module('Unit | Controller | dashboard/show', function (hooks) {
   test('it calls removePipeline', async function (assert) {
     injectSessionStub(this);
     const controller = this.owner.lookup('controller:dashboard/show');
-
     const shuttleStub = Service.extend({
       removePipeline(collectionId, pipelineId) {
         assert.ok(true, 'relovePipeline called');
@@ -44,7 +42,7 @@ module('Unit | Controller | dashboard/show', function (hooks) {
       description: 'description1',
       pipelineIds,
       save() {
-        assert.deepEqual(get(this, 'pipelineIds'), [1, 2]);
+        assert.deepEqual(this.pipelineIds, [1, 2]);
 
         return resolve(this);
       }
@@ -56,14 +54,12 @@ module('Unit | Controller | dashboard/show', function (hooks) {
       }
     });
 
-    controller.set('store', {
-      findRecord(modelName, collectionId) {
-        assert.strictEqual(modelName, 'collection');
-        assert.strictEqual(collectionId, 2);
+    controller.store.findRecord = (modelName, collectionId) => {
+      assert.strictEqual(modelName, 'collection');
+      assert.strictEqual(collectionId, 2);
 
-        return resolve(mock);
-      }
-    });
+      return resolve(mock);
+    };
 
     const removePipelineActionStub = sinon.spy(
       controller.actions,
@@ -81,13 +77,20 @@ module('Unit | Controller | dashboard/show', function (hooks) {
     );
   });
 
-  sinonTest('it calls onDeleteCollection', function (assert) {
+  test('it calls onDeleteCollection', function (assert) {
     const controller = this.owner.lookup('controller:dashboard/show');
-    const stub = this.stub(controller, 'transitionToRoute');
+    const stub = sinon.stub();
+
+    const routerServiceMock = Service.extend({
+      transitionTo: stub
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
     controller.send('onDeleteCollection');
 
-    assert.ok(stub.calledOnce, 'transitionToRoute was called once');
+    assert.ok(stub.calledOnce, 'transitionTo was called once');
     assert.ok(stub.calledWithExactly('home'), 'transition to home');
   });
 });

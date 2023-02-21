@@ -30,13 +30,13 @@ module('Integration | Component | pipeline-viz-row', function (hooks) {
     });
 
     await render(
-      hbs`{{pipeline-viz-row
-        pipeline=pipeline
-        selectedPipeline=selectedPipeline
-        selectedConnectedPipeline=selectedConnectedPipeline
-        onClick=handleSelectedConnectedPipeline
-        onActionClick=handleSelectedPipeline
-      }}`
+      hbs`<PipelineVizRow
+        @pipeline={{this.pipeline}}
+        @selectedPipeline={{this.selectedPipeline}}
+        @selectedConnectedPipeline={{this.selectedConnectedPipeline}}
+        @onClick={{this.handleSelectedConnectedPipeline}}
+        @onActionClick={{this.handleSelectedPipeline}}
+      />`
     );
 
     assert.dom('.repo-name').includesText('screwdriver-cd/screwdriver');

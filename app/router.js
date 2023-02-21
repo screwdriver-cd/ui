@@ -1,5 +1,5 @@
 import EmberRouter from '@ember/routing/router';
-import config from './config/environment';
+import config from 'screwdriver-ui/config/environment';
 
 const Router = EmberRouter.extend({
   location: config.locationType,
@@ -73,7 +73,9 @@ Router.map(function route() {
     this.route('detail', { path: '/:namespace/:name' });
     this.route('detail', { path: '/:namespace/:name/:version' });
   });
+  /* eslint-disable ember/no-shadow-route-definition */
   this.route('404', { path: '/*path' });
+
   this.route('pipeline-visualizer');
 });
 /* eslint-enable array-callback-return */

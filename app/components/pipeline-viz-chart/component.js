@@ -1,3 +1,4 @@
+import { reads } from '@ember/object/computed';
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import $ from 'jquery';
@@ -29,9 +30,7 @@ export default Component.extend({
     }
   },
 
-  workflowGraph: computed('pipeline', function workflowGraph() {
-    return this.pipeline.workflowGraph;
-  }),
+  workflowGraph: reads('pipeline.workflowGraph'),
   startFrom: computed('pipeline', () => ['~pr', '~commit']),
   actions: {
     graphClicked(job, mouseevent, sizes) {

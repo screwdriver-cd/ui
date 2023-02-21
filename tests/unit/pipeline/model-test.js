@@ -6,7 +6,7 @@ module('Unit | Model | pipeline', function (hooks) {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('pipeline')
     );
 
@@ -14,7 +14,7 @@ module('Unit | Model | pipeline', function (hooks) {
   });
 
   test('it gets correct appId', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('pipeline')
     );
 
@@ -32,7 +32,7 @@ module('Unit | Model | pipeline', function (hooks) {
   });
 
   test('it gets correct hub url', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('pipeline')
     );
 
@@ -50,7 +50,7 @@ module('Unit | Model | pipeline', function (hooks) {
   });
 
   test('it gets correct branch', function (assert) {
-    let model = run(() =>
+    const model = run(() =>
       this.owner.lookup('service:store').createRecord('pipeline')
     );
 

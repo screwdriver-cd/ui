@@ -1,8 +1,10 @@
 import { alias } from '@ember/object/computed';
-import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
+import { inject as service } from '@ember/service';
 
 export default Controller.extend({
+  store: service(),
+  router: service(),
   collection: alias('model.collection'),
   shuttle: service(),
   actions: {
@@ -16,7 +18,7 @@ export default Controller.extend({
       );
     },
     onDeleteCollection() {
-      this.transitionToRoute('home');
+      this.router.transitionTo('home');
     },
     addMultipleToCollection(addedPipelineIds, collectionId) {
       return this.shuttle.updateCollection(collectionId, addedPipelineIds);

@@ -67,7 +67,7 @@ module('Acceptance |user-settings', function (hooks) {
     assert.dom('.display-job-name').hasValue(50);
     assert.dom('.ember-power-select-selected-item').hasValue('UTC');
     assert.deepEqual(
-      controller.get('successMessage'),
+      controller.successMessage,
       'User settings updated successfully!'
     );
   });

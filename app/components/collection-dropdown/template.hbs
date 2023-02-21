@@ -1,35 +1,39 @@
-{{#bs-dropdown as |dd|}}
-  {{#if dropdownText}}
-    {{#dd.toggle}}
+<BsDropdown as |dd|>
+  {{#if this.dropdownText}}
+    <dd.toggle>
       <a class="toggler-text">
-        {{dropdownText}}<span class="caret caret-display"></span>
+        {{this.dropdownText}}<span class="caret caret-display"></span>
       </a>
-    {{/dd.toggle}}
+    </dd.toggle>
   {{else}}
-    {{#dd.button class=(if buttonClass buttonClass "add-to-collection")}}
-      {{#if buttonText}}
-        {{buttonText}}
+    <dd.button class={{if this.buttonClass this.buttonClass "add-to-collection"}}>
+      {{#if this.buttonText}}
+        {{this.buttonText}}
       {{else}}
-        {{fa-icon "plus" title="Add to collection" size="sm"}}
+        <FaIcon @icon="plus" @title="Add to collection" @size="sm" />
       {{/if}}
-    {{/dd.button}}
+    </dd.button>
   {{/if}}
-  {{#dd.menu align="right" class="dropdown" as |menu|}}
-    {{#each normalCollections as |collection|}}
-      {{#menu.item}}
-        <span onclick={{action "addToCollection" collection}}>
-          {{collection.name}}
-        </span>
-      {{/menu.item}}
+  <dd.menu @align="right" class="dropdown" as |menu|>
+    {{#each this.normalCollections as |collection|}}
+      <menu.item>
+        <li>
+          <span onclick={{action "addToCollection" collection}}>
+            {{collection.name}}
+          </span>
+        </li>
+      </menu.item>
     {{/each}}
     <li>
       <span class="create-dropdown" onclick={{action "openModal"}}>
-        {{fa-icon "plus-circle" title="Create" size="md"}} CREATE
+        <FaIcon @icon="plus-circle" @title="Create" @size="md" />
+        CREATE
       </span>
     </li>
-  {{/dd.menu}}
-{{/bs-dropdown}}
-{{collection-modal
-  showModal=showCollectionModal
-  addNewCollection=addNewCollection
-  addToCollection=(action "addToCollection")}}
+  </dd.menu>
+</BsDropdown>
+<CollectionModal
+  @showModal={{this.showCollectionModal}}
+  @addNewCollection={{this.addNewCollection}}
+  @addToCollection={{action "addToCollection"}}
+/>

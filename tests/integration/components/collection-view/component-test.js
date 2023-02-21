@@ -2,7 +2,14 @@ import { resolve, reject } from 'rsvp';
 import EmberObject, { computed } from '@ember/object';
 import { module, test, todo } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, findAll, fillIn, waitFor } from '@ember/test-helpers';
+import {
+  render,
+  click,
+  findAll,
+  fillIn,
+  waitFor,
+  waitUntil
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import $ from 'jquery';
@@ -332,7 +339,7 @@ const mockNormalCollection = EmberObject.create({
   pipelineIds: [1, 2, 3, 4]
 });
 
-const mockPipelinesReponse = copy([
+const mockPipelinesResponse = copy([
   mockPipelineModel.create({
     id: 1,
     scmUri: 'github.com:12345678:master',
@@ -442,12 +449,12 @@ const mockPipelinesReponse = copy([
   })
 ]);
 
-const mockCollectionReponse = EmberObject.create({
+const mockCollectionResponse = EmberObject.create({
   id: 1,
   name: 'My Pipelines',
   description: 'Normal Collection',
   type: 'normal',
-  pipelines: mockPipelinesReponse,
+  pipelines: mockPipelinesResponse,
   pipelineIds: [1, 2, 3, 4]
 });
 
@@ -648,10 +655,16 @@ module('Integration | Component | collection view', function (hooks) {
   hooks.beforeEach(function () {
     server = new Pretender();
 
+    server.get('http://localhost:8080/v4/collections', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify(mockCollectionResponse)
+    ]);
+
     server.get('http://localhost:8080/v4/collections/1', () => [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify(mockCollectionReponse)
+      JSON.stringify(mockCollectionResponse)
     ]);
 
     server.get(
@@ -694,26 +707,26 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to card mode
     await click('.header__change-view button:nth-of-type(1)');
 
     // wait for rendering
     await waitFor('.collection-card-view');
-    await waitFor('.pipeline-card .commit-status i.build-success', {
+    await waitFor('.pipeline-card .commit-status svg.build-success', {
       count: 1,
       timeout: Infinity
     });
-    await waitFor('.pipeline-card .commit-status i.build-empty', {
+    await waitFor('.pipeline-card .commit-status svg.build-empty', {
       count: 3,
       timeout: Infinity
     });
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-card-view').exists({ count: 1 });
     assert.dom('.collection-list-view').doesNotExist();
     assert.dom('.pipeline-card').exists({ count: 4 });
@@ -734,30 +747,30 @@ module('Integration | Component | collection view', function (hooks) {
 
     // check that helper function getColor() works correctly
     assert
-      .dom('.pipeline-card:nth-of-type(1) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(1) .commit-status svg')
       .hasClass('build-success');
     assert
-      .dom('.pipeline-card:nth-of-type(2) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(2) .commit-status svg')
       .hasClass('build-empty');
     assert
-      .dom('.pipeline-card:nth-of-type(3) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(3) .commit-status svg')
       .hasClass('build-empty');
     assert
-      .dom('.pipeline-card:nth-of-type(4) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(4) .commit-status svg')
       .hasClass('build-empty');
 
     // check that helper function getIcon() works correctly
     assert
-      .dom('.pipeline-card:nth-of-type(1) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(1) .commit-status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.pipeline-card:nth-of-type(2) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(2) .commit-status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.pipeline-card:nth-of-type(3) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(3) .commit-status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.pipeline-card:nth-of-type(4) .commit-status i')
+      .dom('.pipeline-card:nth-of-type(4) .commit-status svg')
       .hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
@@ -793,16 +806,16 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-      }}`);
+    <CollectionView
+      @collection={{this.collection}}
+      @collections={{this.collections}}
+    />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
     await waitFor('.collection-list-view');
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -832,7 +845,7 @@ module('Integration | Component | collection view', function (hooks) {
       .dom('.collection-pipeline:nth-of-type(4) .app-id a')
       .hasText('screwdriver-cd/zzz');
 
-    // test aliasname
+    // test alias name
     assert
       .dom('.collection-pipeline:nth-of-type(1) .app-id p')
       .hasText('screwdriver')
@@ -852,30 +865,30 @@ module('Integration | Component | collection view', function (hooks) {
 
     // check that helper function getColor() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('build-success');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('build-empty');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('build-empty');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('build-empty');
 
     // check that helper function getIcon() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('fa-question-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('fa-question-circle');
 
     // check that helper function getSha() works correctly
@@ -903,10 +916,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=mockCollection
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.mockCollection}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -945,16 +958,16 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
     await waitFor('.collection-list-view');
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -996,7 +1009,7 @@ module('Integration | Component | collection view', function (hooks) {
       .dom('.collection-pipeline:nth-of-type(2) .app-id a')
       .hasText('screwdriver-cd/models');
 
-    // unknown status remains at the bottm regardless
+    // unknown status remains at the bottom regardless
     assert
       .dom('.collection-pipeline:nth-of-type(3) .app-id a')
       .hasText('screwdriver-cd/ui');
@@ -1009,10 +1022,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=mockCollectionDuration
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.mockCollectionDuration}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -1047,16 +1060,16 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=mockCollectionDuration
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.mockCollectionDuration}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
     await waitFor('.collection-list-view');
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -1125,16 +1138,17 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=mockCollectionDuration
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.mockCollectionDuration}}
+        @collections={{this.collections}}
+        @metricsMap={{this.metricsMap}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
     await waitFor('.collection-list-view');
 
-    // check that necessage elements exist
+    // check that necessary elements exist
     assert.dom('.collection-list-view').exists({ count: 1 });
 
     assert.dom('.header__name').hasText('My Pipelines');
@@ -1152,30 +1166,30 @@ module('Integration | Component | collection view', function (hooks) {
 
     // check that helper function getColor() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('build-failure');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('build-success');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('build-success');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('build-failure');
 
     // check that helper function getIcon() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('fa-stop-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('fa-stop-circle');
 
     // check that helper function getSha() works correctly
@@ -1195,34 +1209,34 @@ module('Integration | Component | collection view', function (hooks) {
     await click('th.status');
     await waitFor('.collection-list-view');
 
-    // first click desc order based status priorties as default sort is scmRepo.name:asc
+    // first click desc order based status priorities as default sort is scmRepo.name:asc
 
     // check that helper function getColor() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('build-failure');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('build-failure');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('build-success');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('build-success');
 
     // check that helper function getIcon() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('fa-stop-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('fa-stop-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('fa-check-circle');
 
     // check that helper function getSha() works correctly
@@ -1242,34 +1256,34 @@ module('Integration | Component | collection view', function (hooks) {
     await click('th.last-run');
     await waitFor('.collection-list-view');
 
-    // second click asc order based status priorties
+    // second click asc order based status priorities
 
     // check that helper function getColor() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('build-success');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('build-success');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('build-failure');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('build-failure');
 
     // check that helper function getIcon() works correctly
     assert
-      .dom('.collection-pipeline:nth-of-type(1) .status i')
+      .dom('.collection-pipeline:nth-of-type(1) .status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(2) .status i')
+      .dom('.collection-pipeline:nth-of-type(2) .status svg')
       .hasClass('fa-check-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(3) .status i')
+      .dom('.collection-pipeline:nth-of-type(3) .status svg')
       .hasClass('fa-stop-circle');
     assert
-      .dom('.collection-pipeline:nth-of-type(4) .status i')
+      .dom('.collection-pipeline:nth-of-type(4) .status svg')
       .hasClass('fa-stop-circle');
 
     // check that helper function getSha() works correctly
@@ -1292,10 +1306,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=mockCollectionDuration
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.mockCollectionDuration}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -1356,10 +1370,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />`);
 
     assert.dom('.collection-empty-view').exists({ count: 1 });
     assert.dom('.guide-image').exists({ count: 1 });
@@ -1371,10 +1385,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-      }}`);
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />`);
 
     // switch to card mode
     await click('.header__change-view button:nth-of-type(1)');
@@ -1411,11 +1425,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-        onRemovePipeline=onRemovePipeline
-      }}`);
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @onRemovePipeline={{this.onRemovePipeline}}
+      />`);
 
     // switch to card mode
     await click('.header__change-view button:nth-of-type(1)');
@@ -1436,16 +1450,15 @@ module('Integration | Component | collection view', function (hooks) {
     };
 
     this.set('onRemovePipeline', onRemovePipelineMock);
-    // this.owner.register('service:store', storeStub);
     injectSessionStub(this);
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-        onRemovePipeline=onRemovePipeline
-      }}`);
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @onRemovePipeline={{this.onRemovePipeline}}
+      />`);
 
     // switch to list mode
     await click('.header__change-view button:nth-of-type(2)');
@@ -1477,11 +1490,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-                onRemovePipeline=onRemovePipeline
-      }}
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @onRemovePipeline={{this.onRemovePipeline}}
+      />
     `);
 
     // switch to card mode
@@ -1515,11 +1528,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-                onRemovePipeline=onRemovePipeline
-      }}
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @onRemovePipeline={{this.onRemovePipeline}}
+      />
     `);
 
     // switch to list mode
@@ -1539,11 +1552,11 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(1);
 
     await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-                onRemovePipeline=onRemovePipeline
-      }}
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @onRemovePipeline={{this.onRemovePipeline}}
+      />
     `);
 
     // switch to card mode
@@ -1559,11 +1572,11 @@ module('Integration | Component | collection view', function (hooks) {
       assert.expect(1);
 
       await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-                onRemovePipeline=onRemovePipeline
-      }}
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @onRemovePipeline={{this.onRemovePipeline}}
+      />
     `);
 
       // switch to list mode
@@ -1578,12 +1591,12 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(1);
 
     await render(hbs`
-        {{collection-view
-          collection=collection
-          collections=collections
-                    onRemovePipeline=onRemovePipeline
-        }}
-      `);
+        <CollectionView
+          @collection={{this.collection}}
+          @collections={{this.collections}}
+          @onRemovePipeline={{this.onRemovePipeline}}
+        />
+    `);
 
     assert.dom('.organize-button').doesNotExist();
   });
@@ -1594,10 +1607,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectSessionStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-              }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />
     `);
 
     // switch to card mode
@@ -1650,10 +1663,10 @@ module('Integration | Component | collection view', function (hooks) {
     injectSessionStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-              }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />
     `);
 
     // switch to list mode
@@ -1714,11 +1727,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-                removeMultiplePipelines=removeMultiplePipelines
-      }}
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @removeMultiplePipelines={{this.removeMultiplePipelines}}
+      />
     `);
 
     // switch to card mode
@@ -1753,11 +1766,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-                removeMultiplePipelines=removeMultiplePipelines
-      }}
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @removeMultiplePipelines={{this.removeMultiplePipelines}}
+      />
     `);
 
     // switch to list mode
@@ -1798,11 +1811,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-                removeMultiplePipelines=removeMultiplePipelines
-      }}
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @removeMultiplePipelines={{this.removeMultiplePipelines}}
+      />
     `);
 
     // switch to card mode
@@ -1848,11 +1861,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=normalCollection
-        collections=collections
-                removeMultiplePipelines=removeMultiplePipelines
-      }}
+      <CollectionView
+        @collection={{this.normalCollection}}
+        @collections={{this.collections}}
+        @removeMultiplePipelines={{this.removeMultiplePipelines}}
+      />
     `);
 
     // switch to list mode
@@ -1892,11 +1905,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-                addMultipleToCollection=addMultipleToCollection
-      }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+        @addMultipleToCollection={{this.addMultipleToCollection}}
+      />
     `);
 
     // switch to card mode
@@ -1932,11 +1945,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-                addMultipleToCollection=addMultipleToCollection
-      }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+        @addMultipleToCollection={{this.addMultipleToCollection}}
+      />
     `);
 
     // switch to list mode
@@ -1972,11 +1985,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-                addMultipleToCollection=addMultipleToCollection
-      }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+        @addMultipleToCollection={{this.addMultipleToCollection}}
+      />
     `);
 
     // switch to card mode
@@ -2017,11 +2030,11 @@ module('Integration | Component | collection view', function (hooks) {
     injectScmServiceStub(this);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-                addMultipleToCollection=addMultipleToCollection
-      }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+        @addMultipleToCollection={{this.addMultipleToCollection}}
+      />
     `);
 
     // switch to list mode
@@ -2043,7 +2056,7 @@ module('Integration | Component | collection view', function (hooks) {
   });
 
   test('it searches and adds pipelines into the collection', async function (assert) {
-    assert.expect(19);
+    assert.expect(20);
 
     const addMultipleToCollectionMock = (pipelineIds, collectionId) => {
       assert.deepEqual(pipelineIds, [1]);
@@ -2115,18 +2128,19 @@ module('Integration | Component | collection view', function (hooks) {
 
     // render an empty collection
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-                addMultipleToCollection=addMultipleToCollection
-      }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+        @addMultipleToCollection={{this.addMultipleToCollection}}
+      />
     `);
 
     await waitFor('.add-pipeline-operation');
 
     // open pipeline search modal
     await click('.add-pipeline-operation');
-    assert.dom('.add-pipeline-modal .modal-body').exists({ count: 1 });
+    assert.dom('.modal-body').exists({ count: 1 });
+    assert.dom('.modal-title').hasText('Add Pipeline');
     assert
       .dom('.add-pipeline-modal .search-pipeline-searchbar')
       .exists({ count: 1 });
@@ -2136,6 +2150,9 @@ module('Integration | Component | collection view', function (hooks) {
     await click('.search-pipeline-button');
 
     // check that all pipelines matched show up
+    await waitUntil(
+      () => findAll('.searched-pipeline span:nth-of-type(1)').length === 4
+    );
     let searchedPipelines = findAll('.searched-pipeline span:nth-of-type(1)');
 
     assert.equal(searchedPipelines.length, 4);
@@ -2149,6 +2166,7 @@ module('Integration | Component | collection view', function (hooks) {
     await click('.modal-content .close');
 
     // switch to card mode
+    await waitFor('.header__change-view button:nth-of-type(1)');
     await click('.header__change-view button:nth-of-type(1)');
     await waitFor('.collection-card-view');
     await waitFor('.pipeline-card');
@@ -2165,6 +2183,9 @@ module('Integration | Component | collection view', function (hooks) {
     await click('.search-pipeline-button');
 
     // check that the previously first pipeline no long shows up
+    await waitUntil(
+      () => findAll('.searched-pipeline span:nth-of-type(1)').length === 3
+    );
     searchedPipelines = findAll('.searched-pipeline span:nth-of-type(1)');
     assert.equal(searchedPipelines.length, 3);
     assert.dom(searchedPipelines[0]).hasText('screwdriver-cd/ui');
@@ -2182,7 +2203,7 @@ module('Integration | Component | collection view', function (hooks) {
   });
 
   test('it changes the name and description of the normal collection', async function (assert) {
-    assert.expect(11);
+    assert.expect(12);
 
     const collectionSaveSpy = sinon.spy();
 
@@ -2190,31 +2211,29 @@ module('Integration | Component | collection view', function (hooks) {
     this.collection.set('type', 'normal');
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-              }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />
     `);
 
     // open the setting modal
     await click('.settings-operation');
-    assert.dom('.setting-modal .modal-body').exists({ count: 1 });
+    assert.dom('.modal-body').exists({ count: 1 });
+    assert.dom('.modal-title').hasText('Settings');
 
     // check the collection name and description is correct
     assert
-      .dom('.form .form-group:nth-of-type(1) .form-control')
+      .dom('form .form-group:nth-of-type(1) input')
       .hasValue('My Pipelines');
     assert
-      .dom('.form .form-group:nth-of-type(2) .form-control')
+      .dom('form .form-group:nth-of-type(2) textarea')
       .hasValue('Default Collection');
 
     // change two inputs and close the modal
-    await fillIn('.form .form-group:nth-of-type(1) .form-control', 'New Name');
-    await fillIn(
-      '.form .form-group:nth-of-type(1) .form-control',
-      'New Description'
-    );
-    await click('.setting-modal .close');
+    await fillIn('form .form-group:nth-of-type(1) input', 'New Name');
+    await fillIn('form .form-group:nth-of-type(2) textarea', 'New Description');
+    await click('.modal .modal-footer button:nth-of-type(1)');
 
     // check nothing changes
     assert.dom('.header__name').hasText('My Pipelines');
@@ -2223,19 +2242,16 @@ module('Integration | Component | collection view', function (hooks) {
     // open the modal again and check input default values aren't changed
     await click('.settings-operation');
     assert
-      .dom('.form .form-group:nth-of-type(1) .form-control')
+      .dom('form .form-group:nth-of-type(1) input')
       .hasValue('My Pipelines');
     assert
-      .dom('.form .form-group:nth-of-type(2) .form-control')
+      .dom('form .form-group:nth-of-type(2) textarea')
       .hasValue('Default Collection');
 
     // change two inputs and submit the form
-    await fillIn('.form .form-group:nth-of-type(1) .form-control', 'New Name');
-    await fillIn(
-      '.form .form-group:nth-of-type(2) .form-control',
-      'New Description'
-    );
-    await click('.setting-modal .modal-footer button:nth-of-type(2)');
+    await fillIn('form .form-group:nth-of-type(1) input', 'New Name');
+    await fillIn('form .form-group:nth-of-type(2) textarea', 'New Description');
+    await click('.modal .modal-footer button:nth-of-type(2)');
 
     // check the displayed name and description are changed
     assert.dom('.header__name').hasText('New Name');
@@ -2243,11 +2259,9 @@ module('Integration | Component | collection view', function (hooks) {
 
     // open the modal again and check input default values are also changed
     await click('.settings-operation');
+    assert.dom('form .form-group:nth-of-type(1) input').hasValue('New Name');
     assert
-      .dom('.form .form-group:nth-of-type(1) .form-control')
-      .hasValue('New Name');
-    assert
-      .dom('.form .form-group:nth-of-type(2) .form-control')
+      .dom('form .form-group:nth-of-type(2) textarea')
       .hasValue('New Description');
   });
 
@@ -2255,10 +2269,10 @@ module('Integration | Component | collection view', function (hooks) {
     assert.expect(1);
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-              }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />
     `);
 
     // click the copy button
@@ -2273,17 +2287,17 @@ module('Integration | Component | collection view', function (hooks) {
     this.collection.set('type', 'normal');
 
     await render(hbs`
-      {{collection-view
-        collection=collection
-        collections=collections
-              }}
+      <CollectionView
+        @collection={{this.collection}}
+        @collections={{this.collections}}
+      />
     `);
 
     await click('.collection-operation.settings-operation');
 
     assert.dom('.modal-title').hasText('Settings');
-    assert.dom('.is-required .control-label').hasText('Name');
-    assert.dom('.modal-footer .btn-default').hasText('Cancel');
+    assert.dom('.modal-body label:nth-of-type(1)').hasText('Name');
+    assert.dom('.modal-footer .btn:nth-of-type(1)').hasText('Cancel');
     assert
       .dom('.modal-footer .btn-primary')
       .hasText('Save')
@@ -2310,7 +2324,7 @@ module('Integration | Component | collection view', function (hooks) {
       .isEnabled('Should enable save when name value is changed');
     await fillIn('.form-group input', 'Test Collection Updated');
 
-    await click('.modal-footer .btn-default');
+    await click('.modal-footer .btn-secondary');
     assert.dom('.header__name').hasText('Test Collection');
   });
 });

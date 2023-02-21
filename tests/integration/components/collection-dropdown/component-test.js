@@ -22,11 +22,11 @@ module('Integration | Component | collection add button', function (hooks) {
     this.set('pipeline', { id: 1 });
     this.set('onAddToCollection', true);
 
-    await render(hbs`{{collection-dropdown
-      collections=collections
-      pipeline=pipeline
-      onAddToCollection=onAddToCollection
-    }}`);
+    await render(hbs`<CollectionDropdown
+      @collections={{this.collections}}
+      @pipeline={{this.pipeline}}
+      @onAddToCollection={{this.onAddToCollection}}
+    />`);
 
     // the button should be there
     assert.dom('.dropdown-toggle').exists({ count: 1 });
@@ -38,7 +38,7 @@ module('Integration | Component | collection add button', function (hooks) {
 
     // Validate that list items exist
     assert.dom('.dropdown-menu > li:nth-child(1)').hasText('Test');
-    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('CREATE');
+    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('Create CREATE');
   });
 
   test('it does not render default collection', async function (assert) {
@@ -64,11 +64,11 @@ module('Integration | Component | collection add button', function (hooks) {
     this.set('pipeline', { id: 1 });
     this.set('onAddToCollection', true);
 
-    await render(hbs`{{collection-dropdown
-      collections=collections
-      pipeline=pipeline
-      onAddToCollection=onAddToCollection
-    }}`);
+    await render(hbs`<CollectionDropdown
+      @collections={{this.collections}}
+      @pipeline={{this.pipeline}}
+      @onAddToCollection={{this.onAddToCollection}}
+    />`);
 
     // the button should be there
     assert.dom('.dropdown-toggle').exists({ count: 1 });
@@ -80,7 +80,7 @@ module('Integration | Component | collection add button', function (hooks) {
 
     // Validate that list items exist
     assert.dom('.dropdown-menu > li:nth-child(1)').hasText('collection2');
-    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('CREATE');
+    assert.dom('.dropdown-menu > li:nth-child(2)').hasText('Create CREATE');
   });
 
   test('it adds a pipeline to a collection', async function (assert) {
@@ -134,11 +134,11 @@ module('Integration | Component | collection add button', function (hooks) {
     this.set('addToCollection', addToCollectionMock);
 
     await render(hbs`
-      {{search-list
-        pipelines=pipelineList
-        collections=collections
-        addToCollection=addToCollection
-      }}
+      <SearchList
+        @pipelines={{this.pipelineList}}
+        @collections={{this.collections}}
+        @addToCollection={{this.addToCollection}}
+      />
     `);
 
     await click(findAll('.dropdown-toggle')[0]);
@@ -178,11 +178,11 @@ module('Integration | Component | collection add button', function (hooks) {
     this.set('addToCollection', addToCollectionMock);
 
     await render(hbs`
-      {{search-list
-        pipelines=pipelineList
-        collections=collections
-        addToCollection=addToCollection
-      }}
+      <SearchList
+        @pipelines={{this.pipelineList}}
+        @collections={{this.collections}}
+        @addToCollection={{this.addToCollection}}
+      />
     `);
 
     await click(findAll('.dropdown-toggle')[0]);

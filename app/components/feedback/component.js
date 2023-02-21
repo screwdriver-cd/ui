@@ -4,6 +4,7 @@ import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
   didInsertElement() {
+    this._super(...arguments);
     if (
       ENV.APP.FEEDBACK_HOSTNAME &&
       ENV.APP.FEEDBACK_SCRIPT &&

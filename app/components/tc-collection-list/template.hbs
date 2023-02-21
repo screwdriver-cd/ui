@@ -1,89 +1,129 @@
 <header>
   <h4>
-    {{collectionType}}
-    <a href="http://docs.screwdriver.cd/user-guide/{{routes.prefix}}" title="More Information" target="_blank" rel="noopener" class="link pull-right">{{collectionType}} Docs {{fa-icon "question-circle"}}</a>
+    {{this.collectionType}}
+    <a
+      href="http://docs.screwdriver.cd/user-guide/{{this.routes.prefix}}"
+      title="More Information"
+      target="_blank"
+      rel="noopener"
+      class="link pull-right"
+    >
+      {{this.collectionType}} Docs
+      <FaIcon @icon="question-circle" />
+    </a>
   </h4>
-  <div class="collection-description">{{yield}}</div>
+  <div class="collection-description">
+    {{yield}}
+  </div>
 </header>
 
-<section class="row">
+<section>
   <h5>
-    <b>Screwdriver {{collectionType}}</b>
+    <b>
+      Screwdriver {{this.collectionType}}
+    </b>
     <span class="pull-right">
-      <span class="text-uppercase total">Total </span><span>{{filteredModel.length}}</span>
+      <span class="text-uppercase total">
+        Total
+      </span>
+      <span>
+        {{this.filteredModel.length}}
+      </span>
     </span>
   </h5>
 
   <div class="row">
-    <div class="col-sm-1">
+    <div class="col-sm-2">
       <label class="trusted-toggle">
-        {{x-toggle
-          size="small"
-          theme="material"
-          value=trustedOnly
-          onToggle=(action "toggleTrustedOnly")
-        }}
+        <XToggle
+          @size="small"
+          @theme="material"
+          @value={{this.trustedOnly}}
+          @onToggle={{action "toggleTrustedOnly"}}
+        />
         Trusted
       </label>
     </div>
 
     <div class="col-sm-3">
       <select onchange={{action "onFilterNamespace" value="target.value"}}>
-        <option value="">All Namespaces</option>
-        {{#each namespaces as |ns|}}
-          {{#if (eq ns filteringNamespace)}}
-            <option value={{ns}} selected="selected">{{ns}}</option>
+        <option value="">
+          All Namespaces
+        </option>
+        {{#each this.namespaces as |ns|}}
+          {{#if (eq ns this.filteringNamespace)}}
+            <option value={{ns}} selected="selected">
+              {{ns}}
+            </option>
           {{else}}
-            <option value={{ns}}>{{ns}}</option>
+            <option value={{ns}}>
+              {{ns}}
+            </option>
           {{/if}}
         {{/each}}
       </select>
-      <span class="control-icon">{{fa-icon "caret-down"}}</span>
+      <span class="control-icon">
+        <FaIcon @icon="caret-down" />
+      </span>
     </div>
 
     <div class="col-sm-3">
       <select onchange={{action "onFilterMaintainer" value="target.value"}}>
-        <option value="">All Maintainers</option>
-        {{#each maintainers as |m|}}
-          {{#if (eq ns filteringMaintainer)}}
-            <option value={{m}} selected="selected">{{m}}</option>
+        <option value="">
+          All Maintainers
+        </option>
+        {{#each this.maintainers as |m|}}
+          {{#if (eq this.ns this.filteringMaintainer)}}
+            <option value={{m}} selected="selected">
+              {{m}}
+            </option>
           {{else}}
-            <option value={{m}}>{{m}}</option>
+            <option value={{m}}>
+              {{m}}
+            </option>
           {{/if}}
         {{/each}}
       </select>
-      <span class="control-icon">{{fa-icon "caret-down"}}</span>
+      <span class="control-icon">
+        <FaIcon @icon="caret-down" />
+      </span>
     </div>
 
-    <div class="col-sm-5">
-      <input value="" placeholder="Search {{collectionType}}" type="search" oninput={{action (mut query) value="target.value"}}>
-      <span class="control-icon">{{fa-icon "search"}}</span>
+    <div class="col-sm-4">
+      <input
+        value=""
+        placeholder="Search {{this.collectionType}}"
+        type="search"
+        oninput={{action (mut this.query) value="target.value"}}
+      />
+      <span class="control-icon">
+        <FaIcon @icon="search" />
+      </span>
     </div>
   </div>
 
-  {{#light-table
-    table
-    height="75vh"
-    responsive=true
-    classNames="collection-list"
-    tableClassNames="collection-list-table"
-    extra=(hash routes=routes) as |t|
+  <ModelsTable
+    @data={{this.refinedModel}}
+    @columns={{this.columns}}
+    @columnComponents={{hash
+    tcCollectionLinker=(
+      component "tc-collection-linker"
+      prefix=this.routes.prefix
+      label="Name"
+    )
+    tcCollectionNamespaceLinker=(
+      component "tc-collection-linker"
+      prefix=this.routes.prefix
+      label="Namespace"
+    )
   }}
-    {{t.head
-      onColumnClick=(action "sortByColumn")
-      iconSortable="fa fa-sort"
-      iconAscending="fa fa-sort-asc"
-      iconDescending="fa fa-sort-desc"
-      resizeOnDrag=true
-    }}
-    {{#t.body canSelect=false as |body|}}
-      {{#if table.isEmpty}}
-        {{#body.no-data}}
-          Sorry! No result is found.
-          {{#if filteringNamespace}} under <b><i>{{filteringNamespace}}</i></b>{{/if}}
-          {{#if filteringMaintainer}} by <b><i>{{filteringMaintainer}}</i></b>{{/if}}
-        {{/body.no-data}}
-      {{/if}}
-    {{/t.body}}
-  {{/light-table}}
+    @themeInstance={{this.theme}}
+    @showComponentFooter={{false}}
+    @showColumnsDropdown={{false}}
+    @useFilteringByColumns={{false}}
+    @showGlobalFilter={{false}}
+    @showCurrentPageNumberSelect={{false}}
+    @multipleColumnsSorting={{false}}
+    @noDataToShowMsg="Sorry! No result is found."
+  />
 </section>

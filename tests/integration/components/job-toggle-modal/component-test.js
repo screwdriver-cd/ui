@@ -17,15 +17,15 @@ module('Integration | Component | job toggle modal', function (hooks) {
       assert.equal(message, 'testing');
     });
 
-    await render(hbs`{{job-toggle-modal
-      showToggleModal=showToggleModal
-      updateMessage=updateMessageMock
-      name=name
-      stateChange=stateChange
-    }}`);
+    await render(hbs`<JobToggleModal
+      @showToggleModal={{this.showToggleModal}}
+      @updateMessage={{this.updateMessageMock}}
+      @name={{this.name}}
+      @stateChange={{this.stateChange}}
+    />`);
 
     assert.dom('.modal-title').hasText('Disable the "main" job?');
-    assert.dom('.message .control-label').hasText('Reason');
+    assert.dom('.message.control-label label').hasText('Reason');
     assert.dom('.toggle-form__cancel').hasText('Cancel');
     assert.dom('.toggle-form__create').hasText('Confirm');
   });
@@ -39,12 +39,12 @@ module('Integration | Component | job toggle modal', function (hooks) {
     this.set('updateMessageMock', message => {
       assert.equal(message, 'testing');
     });
-    await render(hbs`{{job-toggle-modal
-      showToggleModal=showToggleModal
-      updateMessage=updateMessageMock
-      name=name
-      stateChange=stateChange
-    }}`);
+    await render(hbs`<JobToggleModal
+      @showToggleModal={{this.showToggleModal}}
+      @updateMessage={{this.updateMessageMock}}
+      @name={{this.name}}
+      @stateChange={{this.stateChange}}
+    />`);
 
     assert.dom('.modal-dialog').exists({ count: 1 });
 
@@ -65,18 +65,18 @@ module('Integration | Component | job toggle modal', function (hooks) {
     this.set('message', 'testing');
     this.set('updateMessageMock', stubUpdateFunction);
 
-    await render(hbs`{{job-toggle-modal
-      showToggleModal=showToggleModal
-      updateMessage=updateMessageMock
-      name=name
-      message=message
-      stateChange=stateChange
-    }}`);
+    await render(hbs`<JobToggleModal
+      @showToggleModal={{this.showToggleModal}}
+      @updateMessage={{this.updateMessageMock}}
+      @name={{this.name}}
+      @message={{this.message}}
+      @stateChange={{this.stateChange}}
+    />`);
 
     assert.dom('.modal-dialog').exists({ count: 1 });
 
     await click('.toggle-form__create');
 
-    assert.notOk(this.get('showToggleModal'));
+    assert.notOk(this.showToggleModal);
   });
 });

@@ -1,11 +1,17 @@
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+<InfoMessage
+  @message={{this.errorMessage}}
+  @type="warning"
+  @icon="exclamation-triangle"
+/>
 
-{{#if pipelines.length}}
-  <div class="num-results col-xs-12 col-md-8">
-    <span>Found {{pipelines.length}} child pipeline(s)</span>
-    {{#bs-button onClick=(action "startAll") class="start-button" disabled=isStartAllButtonDisabled title="Start a new event for all the active pipelines"}}Start All{{/bs-button}}
+{{#if this.pipelines.length}}
+  <div class="num-results col-12 col-md-8">
+    <span>Found {{this.pipelines.length}} child pipeline(s)</span>
+    <button class="start-button" {{action "startAll"}} disabled={{this.isStartAllButtonDisabled}} title="Start a new event for all the active pipelines">
+      Start All
+    </button>
   </div>
-  <ul class="col-xs-12 col-md-8">
+  <ul class="col-12 col-md-8">
     <table>
       <thead>
         <tr>
@@ -17,16 +23,29 @@
         </tr>
       </thead>
       <tbody>
-        {{#each pipelines as |pipeline|}}
+        {{#each this.pipelines as |pipeline|}}
           <tr>
-            <td class="appId">{{#highlight-terms query}}{{#link-to "pipeline" pipeline.id}}{{pipeline.appId}}{{/link-to}}{{/highlight-terms}}</td>
-            <td class="branch"><a href={{branch-url-encode pipeline.hubUrl}}>{{fa-icon "code-fork"}}{{pipeline.branch}}</a></td>
-            <td class="account">{{fa-icon pipeline.scmIcon}} {{pipeline.scm}}</td>
+            <td class="appId">
+              {{!-- {{#highlight-terms query}} --}}
+              <LinkTo @route="pipeline" @model={{pipeline.id}}>
+                {{pipeline.appId}}
+              </LinkTo>
+              {{!-- {{/highlight-terms}} --}}
+            </td>
+            <td class="branch">
+              <a href={{branch-url-encode pipeline.hubUrl}}>
+                <FaIcon @icon="code-branch" />{{pipeline.branch}}
+              </a>
+            </td>
+            <td class="account">
+              <FaIcon @icon={{pipeline.scmIcon}} @prefix="fab" />
+              {{pipeline.scm}}
+            </td>
             <td class="state">
-              {{pipeline-child-list-state-cell state=pipeline.state}}
+              <PipelineChildListStateCell @state={{pipeline.state}} />
             </td>
             <td class="action">
-              {{pipeline-child-list-actions-cell pipeline=pipeline pipelines=pipelines onDeletePipeline=(action "deletePipeline")}}
+              <PipelineChildListActionsCell @pipeline={{pipeline}} @pipelines={{this.pipelines}} @onDeletePipeline={{action "deletePipeline"}} />
             </td>
           </tr>
         {{/each}}
@@ -35,15 +54,18 @@
   </ul>
 {{else}}
   <div class="num-results">
-    <span>No child pipeline(s) created</span>
+    <span>
+      No child pipeline(s) created
+    </span>
   </div>
 {{/if}}
 
-{{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false
-    targetAttachment="center"
-    translucentOverlay=true
-  }}
-    {{loading-view}}
-  {{/modal-dialog}}
+{{#if this.isShowingModal}}
+  <ModalDialog
+    @clickOutsideToClose={{false}}
+    @targetAttachment="center"
+    @translucentOverlay={{true}}
+  >
+    <LoadingView />
+  </ModalDialog>
 {{/if}}

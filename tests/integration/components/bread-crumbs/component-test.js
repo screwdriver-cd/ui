@@ -23,7 +23,7 @@ module('Integration | Component | bread crumbs', function (hooks) {
 
   test('it renders', async function (assert) {
     this.set('mocks', TEST_TEMPLATES);
-    await render(hbs`{{bread-crumbs crumbs=mocks}}`);
+    await render(hbs`<BreadCrumbs @crumbs={{this.mocks}} />`);
 
     assert.dom('div a').exists({ count: 2 });
     assert.dom('div a:first-of-type').hasText('Templates');

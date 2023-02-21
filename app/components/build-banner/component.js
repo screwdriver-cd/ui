@@ -1,6 +1,7 @@
-import { computed } from '@ember/object';
+import { set, computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { resolve } from 'rsvp';
 import Component from '@ember/component';
 import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
@@ -28,11 +29,19 @@ export default Component.extend({
 
   coverageStepEndTime: alias('coverageStep.endTime'),
 
-  prNumber: computed('event.pr.url', {
+  prNumber: computed('_prNumber', 'event.pr.url', {
     get() {
-      let url = this.getWithDefault('event.pr.url', '');
+      if (this._prNumber) {
+        return this._prNumber;
+      }
+
+      const url =
+        this.get('event.pr.url') === undefined ? '' : this.get('event.pr.url');
 
       return url.split('/').pop();
+    },
+    set(_, value) {
+      return set(this, '_prNumber', value);
     }
   }),
 
@@ -49,7 +58,7 @@ export default Component.extend({
     }
   }),
 
-  buildAction: computed('buildStatus', {
+  buildAction: computed('buildEnd', 'buildStatus', {
     get() {
       if (isActiveBuild(this.buildStatus, this.buildEnd)) {
         return 'Stop';
@@ -72,17 +81,23 @@ export default Component.extend({
     get() {
       const templateId = this.get('templateId');
 
-      return ObjectPromiseProxy.create({
-        promise: this.shuttle.getTemplateDetails(templateId).then(template => {
-          const { namespace, name, version } = template;
+      const templateProxy = ObjectPromiseProxy.create({
+        promise: resolve(this.shuttle.getTemplateDetails(templateId))
+      })
 
-          return {
-            name,
-            version,
-            namespace
-          };
-        })
-      });
+      
+      templateProxy.then(template => {
+       const usageTemplate = {
+          'name': template.name,
+          'namsespace': template.namespace,
+          'version': template.version
+        }
+
+        this.set('template', usageTemplate)
+      })
+    },
+    set(_, value ) {
+      return set(this, '_template', value);
     }
   }),
 
@@ -107,27 +122,33 @@ export default Component.extend({
   }),
 
   isButtonDisabledLoaded: false,
-  isButtonDisabled: computed('buildStatus', 'jobDisabled', 'pipelineState', {
-    get() {
-      if (this.buildAction === 'Restart') {
-        if (this.pipelineState === 'INACTIVE') {
-          this.set('isButtonDisabledLoaded', true);
+  isButtonDisabled: computed(
+    'buildAction',
+    'buildStatus',
+    'jobDisabled',
+    'pipelineState',
+    {
+      get() {
+        if (this.buildAction === 'Restart') {
+          if (this.pipelineState === 'INACTIVE') {
+            this.set('isButtonDisabledLoaded', true);
 
-          return true;
+            return true;
+          }
+
+          return this.jobDisabled.then(jobDisabled => {
+            this.set('isButtonDisabledLoaded', true);
+
+            return jobDisabled;
+          });
         }
 
-        return this.jobDisabled.then(jobDisabled => {
-          this.set('isButtonDisabledLoaded', true);
+        this.set('isButtonDisabledLoaded', true);
 
-          return jobDisabled;
-        });
+        return false;
       }
-
-      this.set('isButtonDisabledLoaded', true);
-
-      return false;
     }
-  }),
+  ),
 
   overrideCoverageInfo() {
     const { buildMeta } = this;
@@ -146,7 +167,7 @@ export default Component.extend({
         ? Number(parseFloat(coverage).toFixed(2))
         : null;
 
-      let coverageInfo = { ...this.get('coverageInfo') };
+      const coverageInfo = { ...this.coverageInfo };
 
       if (coverageFloat) {
         coverageInfo.coverage = `${coverageFloat}%`;

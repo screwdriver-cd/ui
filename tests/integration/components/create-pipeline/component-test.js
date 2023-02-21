@@ -48,11 +48,11 @@ module('Integration | Component | create-pipeline', function (hooks) {
   test('it renders', async function (assert) {
     this.set('showCreatePipeline', true);
     await render(
-      hbs`{{create-pipeline showCreatePipeline=showCreatePipeline}}`
+      hbs`<CreatePipeline @showCreatePipeline={{this.showCreatePipeline}} />`
     );
 
     assert.dom('.left').exists('create-pipeline has left secetion');
-    assert.dom('.back').hasText('Back');
+    assert.dom('.back span').hasText('Back');
     assert.dom('.center').exists('create-pipeline has center secetion');
     assert.dom('.right').exists('create-pipeline has right secetion');
   });
@@ -60,7 +60,7 @@ module('Integration | Component | create-pipeline', function (hooks) {
   test('it renders with template selections with namespace', async function (assert) {
     this.set('showCreatePipeline', true);
     await render(
-      hbs`{{create-pipeline showCreatePipeline=showCreatePipeline}}`
+      hbs`<CreatePipeline @showCreatePipeline={{this.showCreatePipeline}} />`
     );
 
     await click('.autogenerate-screwdriver-yaml');

@@ -14,7 +14,7 @@ module('Integration | Component | app header', function (hooks) {
       isAuthenticated: false
     });
 
-    await render(hbs`{{app-header session=sessionMock}}`);
+    await render(hbs`<AppHeader @session={{this.sessionMock}} />`);
 
     assert.dom('.logo').hasAttribute('title', 'Screwdriver Home');
     assert.dom('.icon.create').doesNotExist();
@@ -52,7 +52,7 @@ module('Integration | Component | app header', function (hooks) {
     });
 
     await render(
-      hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`
+      hbs`<AppHeader @session={{this.sessionMock}} @onInvalidate={{action this.invalidateSession}} />`
     );
     assert.dom('.profile-outline > .icontitle').hasText('foofoo');
     assert.dom('.icon.create').exists({ count: 1 });
@@ -71,7 +71,7 @@ module('Integration | Component | app header', function (hooks) {
     });
 
     await render(
-      hbs`{{app-header session=sessionMock onInvalidate=(action invalidateSession)}}`
+      hbs`<AppHeader @session={{this.sessionMock}} @onInvalidate={{action this.invalidateSession}} />`
     );
     await click('.icon.profile-outline');
 
@@ -90,7 +90,9 @@ module('Integration | Component | app header', function (hooks) {
     });
     this.set('scmMock', this.owner.lookup('service:scm').getScms());
 
-    await render(hbs`{{app-header session=sessionMock scmContexts=scmMock}}`);
+    await render(
+      hbs`<AppHeader @session={{this.sessionMock}} @scmContexts={{this.scmMock}} />`
+    );
     await click('.icon.profile-outline');
 
     assert.dom('span.title').hasText('ACCOUNTS');
@@ -103,7 +105,7 @@ module('Integration | Component | app header', function (hooks) {
       isAuthenticated: false
     });
 
-    await render(hbs`{{app-header session=sessionMock showSearch=true}}`);
+    await render(hbs`{{app-header session=this.sessionMock showSearch=true}}`);
 
     assert.dom('.search-input').exists({ count: 1 });
   });
@@ -114,7 +116,7 @@ module('Integration | Component | app header', function (hooks) {
     });
 
     await render(
-      hbs`{{app-header showSearch=true searchPipelines=(action search)}}`
+      hbs`<AppHeader @showSearch=true @searchPipelines={{action this.search}} />`
     );
 
     assert.dom('.search-input').hasNoValue();

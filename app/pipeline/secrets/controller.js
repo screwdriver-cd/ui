@@ -3,6 +3,7 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
+  store: service(),
   session: service(),
   errorMessage: '',
   pipeline: reads('model.pipeline'),

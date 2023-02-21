@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = environment => {
-  let ENV = {
+  const ENV = {
     modulePrefix: 'screwdriver-ui',
     environment,
     rootURL: '/',
-    locationType: 'auto',
+    locationType: 'history',
     contentSecurityPolicyHeader: 'Content-Security-Policy',
     contentSecurityPolicy: {
       'script-src': ["'self'", "'unsafe-inline'"],
@@ -29,6 +29,9 @@ module.exports = environment => {
         // bitbucket avatars
         'bitbucket.org/account/*/avatar/*'
       ]
+    },
+    fontawesome: {
+      defaultPrefix: 'fa'
     },
     EmberENV: {
       FEATURES: {

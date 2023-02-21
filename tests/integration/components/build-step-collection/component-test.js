@@ -35,13 +35,13 @@ module('Integration | Component | build step collection', function (hooks) {
   test('it renders', async function (assert) {
     this.set('stepList', []);
     this.set('buildSteps', []);
-    await render(hbs`{{build-step-collection
-      stepList=stepList
-      buildStatus="SUCCESS"
-      buildId=1
-      buildSteps=buildSteps
-      buildStart=null
-    }}`);
+    await render(hbs`<BuildStepCollection
+      @stepList={{this.stepList}}
+      @buildStatus="SUCCESS"
+      @buildId=1
+      @buildSteps={{this.buildSteps}}
+      @buildStart={{null}}
+    />`);
 
     assert.dom('.step-list .nav-tabs li:nth-of-type(1) a').hasText('Steps');
     assert.dom('.step-list .nav-tabs li:nth-of-type(2) a').hasText('Artifacts');
@@ -51,15 +51,15 @@ module('Integration | Component | build step collection', function (hooks) {
     assert.dom('.step-list .tab-content a:nth-of-type(2)').hasText('Teardown');
     assert.dom('.setup-spinner').doesNotExist();
 
-    await render(hbs`{{#build-step-collection
-      stepList=stepList
-      buildStatus="SUCCESS"
-      buildId=1
-      buildSteps=buildSteps
-      buildStart=null
-    }}
+    await render(hbs`<BuildStepCollection
+      @stepList={{this.stepList}}
+      @buildStatus="SUCCESS"
+      @buildId=1
+      @buildSteps={{this.buildSteps}}
+      @buildStart={{null}}
+    >
       <div class="hello">hello</div>
-    {{/build-step-collection}}`);
+    </BuildStepCollection>`);
 
     assert.dom('.hello').hasText('hello');
   });
@@ -90,15 +90,15 @@ module('Integration | Component | build step collection', function (hooks) {
     this.set('preselectedStepName', 'user-step2');
     this.set('changeBuildStep', () => {});
 
-    await render(hbs`{{build-step-collection
-      preselectedStepName=preselectedStepName
-      stepList=stepList
-      buildStatus="SUCCESS"
-      buildId=1
-      buildSteps=buildSteps
-      buildStart=null
-      changeBuildStep=(action changeBuildStep)
-    }}`);
+    await render(hbs`<BuildStepCollection
+      @preselectedStepName={{this.preselectedStepName}}
+      @stepList={{this.stepList}}
+      @buildStatus="SUCCESS"
+      @buildId=1
+      @buildSteps={{this.buildSteps}}
+      @buildStart={{null}}
+      @changeBuildStep={{action this.changeBuildStep}}
+    />`);
 
     assert.dom('h3').hasText('Steps');
     assert.dom('.step-list ul.setup li').exists({ count: 3 });

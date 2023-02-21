@@ -34,15 +34,58 @@ module('Unit | Utility | build', function () {
   });
 
   test('it gets the right fs class name for given status', assert => {
-    assert.equal(statusIcon('SUCCESS', true), 'check-circle-o');
-    assert.equal(statusIcon('SUCCESS'), 'check-circle');
-    assert.equal(statusIcon('CREATED', true), 'check-circle-o');
-    assert.equal(statusIcon('CREATED'), 'check-circle');
-    assert.equal(statusIcon('RUNNING'), 'spinner fa-spin');
-    assert.equal(statusIcon('QUEUED'), 'spinner fa-spin');
-    assert.equal(statusIcon('UNSTABLE'), 'exclamation-circle');
-    assert.equal(statusIcon('FAILURE', true), 'times-circle-o');
-    assert.equal(statusIcon('FAILURE'), 'times-circle');
-    assert.equal(statusIcon(), 'circle-o');
+    const successLight = {
+      flip: false,
+      name: 'check-circle',
+      prefix: 'far',
+      spin: false
+    };
+    const success = {
+      flip: false,
+      name: 'check-circle',
+      prefix: 'fas',
+      spin: false
+    };
+    const spinner = {
+      flip: false,
+      name: 'spinner',
+      prefix: 'fa',
+      spin: true
+    };
+    const unstable = {
+      flip: false,
+      name: 'exclamation-circle',
+      prefix: 'fa',
+      spin: false
+    };
+    const failureLight = {
+      flip: false,
+      name: 'times-circle',
+      prefix: 'far',
+      spin: false
+    };
+    const failure = {
+      flip: false,
+      name: 'times-circle',
+      prefix: 'fas',
+      spin: false
+    };
+    const defaultIcon = {
+      flip: false,
+      name: 'circle',
+      prefix: 'far',
+      spin: false
+    };
+
+    assert.deepEqual(statusIcon('SUCCESS', true), successLight);
+    assert.deepEqual(statusIcon('SUCCESS'), success);
+    assert.deepEqual(statusIcon('CREATED', true), successLight);
+    assert.deepEqual(statusIcon('CREATED'), success);
+    assert.deepEqual(statusIcon('RUNNING'), spinner);
+    assert.deepEqual(statusIcon('QUEUED'), spinner);
+    assert.deepEqual(statusIcon('UNSTABLE'), unstable);
+    assert.deepEqual(statusIcon('FAILURE', true), failureLight);
+    assert.deepEqual(statusIcon('FAILURE'), failure);
+    assert.deepEqual(statusIcon(), defaultIcon);
   });
 });

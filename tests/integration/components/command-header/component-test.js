@@ -44,10 +44,10 @@ module('Integration | Component | command header', function (hooks) {
     this.set('isAdmin', false);
 
     await render(
-      hbs`{{command-header command=mock trusted=trusted isAdmin=isAdmin}}`
+      hbs`<CommandHeader @command={{this.mock}} @trusted={{this.trusted}} @isAdmin={{this.isAdmin}} />`
     );
 
-    assert.dom('h1').hasText('foo/bar');
+    assert.dom('h1').hasText('foo/bar Source code Delete command');
     assert.dom('h2').hasText('1.0.0');
     assert.dom('p').hasText('A test example');
     assert.dom('ul li:first-child').hasText('Released by: test@example.com');
@@ -60,7 +60,7 @@ module('Integration | Component | command header', function (hooks) {
     this.set('trusted', true);
     this.set('isAdmin', true);
 
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 3 });
     assert.dom('.x-toggle-component').exists({ count: 1 });
   });
 });

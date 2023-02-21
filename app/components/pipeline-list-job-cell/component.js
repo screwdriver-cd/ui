@@ -3,9 +3,9 @@ import { computed } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
-  build: computed('value', {
+  build: computed('record.job', {
     get() {
-      const { build } = this.get('value');
+      const { build } = this.record.job;
 
       if (!build) {
         return null;
@@ -18,9 +18,9 @@ export default Component.extend({
       };
     }
   }),
-  jobName: computed('value', {
+  jobName: computed('record.job.jobName', {
     get() {
-      return this.get('value').jobName;
+      return this.record.job.jobName;
     }
   })
 });

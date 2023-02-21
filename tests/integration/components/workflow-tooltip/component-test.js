@@ -8,15 +8,14 @@ module('Integration | Component | workflow tooltip', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    await render(hbs`{{workflow-tooltip}}`);
+    await render(hbs`<WorkflowTooltip/>`);
 
     assert.dom('a:nth-of-type(1)').hasText('Go to build metrics');
 
     // Template block usage:
     await render(hbs`
-        {{#workflow-tooltip}}
-          template block text
-        {{/workflow-tooltip}}
+        <WorkflowTooltip/>
+        "template block text"
       `);
 
     assert.dom(this.element).includesText('template block text');
@@ -34,7 +33,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
 
-    await render(hbs`{{workflow-tooltip tooltipData=data}}`);
+    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -52,7 +51,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
 
-    await render(hbs`{{workflow-tooltip tooltipData=data}}`);
+    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
 
     assert.dom('.content a').exists({ count: 1 });
     assert.dom(this.element).hasText('Go to remote pipeline');
@@ -76,7 +75,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
 
-    await render(hbs`{{workflow-tooltip tooltipData=data}}`);
+    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
 
     assert.dom('.content a').exists({ count: 2 });
     assert
@@ -99,12 +98,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        displayRestartButton=true
-        confirmStartBuild="confirmStartBuild"
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @displayRestartButton={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+      />`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('.content p').exists({ count: 1 });
@@ -127,13 +125,12 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('confirmStartBuild', () => {});
     this.set('isPrChainJob', false);
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        displayRestartButton=true
-        confirmStartBuild="confirmStartBuild"
-        isPrChainJob=isPrChainJob
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @displayRestartButton={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChainJob={{this.isPrChainJob}}
+      />`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -156,13 +153,12 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('confirmStartBuild', () => {});
     this.set('isPrChainJob', false);
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        displayRestartButton=true
-        confirmStartBuild="confirmStartBuild"
-        isPrChainJob=isPrChainJob
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @displayRestartButton={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChainJob={{this.isPrChainJob}}
+      />`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -184,13 +180,12 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('confirmStartBuild', () => {});
     this.set('isPrChainJob', false);
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        displayRestartButton=true
-        confirmStartBuild="confirmStartBuild"
-        isPrChainJob=isPrChainJob
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @displayRestartButton={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChainJob={{this.isPrChainJob}}
+      />`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -213,13 +208,12 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('confirmStartBuild', () => {});
     this.set('isPrChainJob', false);
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        displayRestartButton=true
-        confirmStartBuild="confirmStartBuild"
-        isPrChainJob=isPrChainJob
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @displayRestartButton={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChainJob={{this.isPrChainJob}}
+      />`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -242,14 +236,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('isPrChainJob', true);
     this.set('prBuildExists', false);
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        displayRestartButton=true
-        confirmStartBuild="confirmStartBuild"
-        isPrChain=isPrChain
-        prBuildExists=prBuildExists
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @displayRestartButton={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChain={{this.isPrChain}}
+        @prBuildExists={{this.prBuildExists}}
+      />`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -272,12 +265,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('stopBuild', () => {});
     this.set('action', () => {});
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        stopBuild="stopBuild"
-        action="action"
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @stopBuild={{this.stopBuild}}
+        @action={{this.action}}
+      />`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -301,14 +293,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('isPrChainJob', true);
     this.set('prBuildExists', true);
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        displayRestartButton=true
-        confirmStartBuild="confirmStartBuild"
-        isPrChain=isPrChain
-        prBuildExists=prBuildExists
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @displayRestartButton={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChain={{this.isPrChain}}
+        @prBuildExists={{this.prBuildExists}}
+      />`);
 
     assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -321,11 +312,10 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('show', true);
     this.set('pos', 'left');
 
-    await render(hbs`{{
-        workflow-tooltip
-        showTooltip=show
-        showTooltipPosition=pos
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @showTooltip={{this.show}}
+        @showTooltipPosition={{this.pos}}
+      />`);
 
     assert.dom('.workflow-tooltip').hasClass('show-tooltip');
     assert.dom('.workflow-tooltip').hasClass('left');
@@ -363,11 +353,10 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('data', data);
     this.set('pipeline', pipelineMock);
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        pipeline=pipeline
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @pipeline={{this.pipeline}}
+      />`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(3)').hasText('Disable this job');
@@ -404,11 +393,10 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('data', data);
     this.set('pipeline', pipelineMock);
 
-    await render(hbs`{{
-        workflow-tooltip
-        tooltipData=data
-        pipeline=pipeline
-      }}`);
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @pipeline={{this.pipeline}}
+      />`);
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(3)').hasText('Enable this job');

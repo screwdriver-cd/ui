@@ -9,7 +9,7 @@ export default Component.extend({
   activeTab: 'steps',
   selectedArtifact: '',
   isArtifacts: equal('activeTab', 'artifacts'),
-  classNames: ['build-step-collection', 'row'],
+  classNames: ['build-step-collection'],
   stepNames: mapBy('buildSteps', 'name'),
   setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
   teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
@@ -29,8 +29,12 @@ export default Component.extend({
       }
     }
   ),
-  setupCollapsed: computed('selectedStep', {
+  setupCollapsed: computed('_setupCollapsed', 'selectedStep', 'setupSteps', {
     get() {
+      if (this._setupCollapsed !== undefined) {
+        return this._setupCollapsed;
+      }
+
       const name = this.selectedStep;
 
       if (name && this.setupSteps.includes(name)) {
@@ -38,29 +42,44 @@ export default Component.extend({
       }
 
       return true;
+    },
+    set(_, value) {
+      return set(this, '_setupCollapsed', value);
     }
   }),
-  teardownCollapsed: computed('selectedStep', {
-    get() {
-      const name = this.selectedStep;
+  teardownCollapsed: computed(
+    '_teardownCollapsed',
+    'selectedStep',
+    'teardownSteps',
+    {
+      get() {
+        if (this._teardownCollapsed !== undefined) {
+          return this._teardownCollapsed;
+        }
 
-      if (name && this.teardownSteps.includes(name)) {
-        return false;
+        const name = this.selectedStep;
+
+        if (name && this.teardownSteps.includes(name)) {
+          return false;
+        }
+
+        return true;
+      },
+      set(_, value) {
+        return set(this, '_teardownCollapsed', value);
       }
-
-      return true;
     }
-  }),
+  ),
   userSteps: filter(
     'stepNames',
     item => !/^sd-setup/.test(item) && !/^sd-teardown/.test(item)
   ),
   actions: {
     toggleSetup() {
-      set(this, 'setupCollapsed', !this.setupCollapsed);
+      this.setupCollapsed = !this.setupCollapsed;
     },
     toggleTeardown() {
-      set(this, 'teardownCollapsed', !this.teardownCollapsed);
+      this.teardownCollapsed = !this.teardownCollapsed;
     },
     changeActiveTabPane(activeTab) {
       this.changeRouteTo(activeTab);

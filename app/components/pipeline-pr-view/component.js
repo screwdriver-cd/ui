@@ -1,15 +1,27 @@
-import { computed } from '@ember/object';
+import { set, computed } from '@ember/object';
 import Component from '@ember/component';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 
 export default Component.extend({
   classNameBindings: ['build.status'],
-  build: computed('job.builds', {
+  async setBuild() {
+    set(this, 'build', (await this.job.builds).objectAt(0));
+  },
+  build: computed('_build', 'job.builds', {
     get() {
-      return this.get('job.builds').objectAt(0);
+      this.setBuild();
+
+      if (this._build) {
+        return this._build;
+      }
+
+      return {};
+    },
+    set(_, value) {
+      return set(this, '_build', value);
     }
   }),
-  displayName: computed('job.name', {
+  displayName: computed('job.name', 'workflowGraph.nodes', {
     get() {
       const nodes = this.get('workflowGraph.nodes');
       const jobName = this.get('job.name').replace('PR-', '').split(':').pop();
@@ -24,7 +36,7 @@ export default Component.extend({
   }),
   icon: computed('build.status', {
     get() {
-      return statusIcon(this.get('build.status'), true);
+      return statusIcon(this.build.status, true);
     }
   })
 });

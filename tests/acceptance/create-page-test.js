@@ -3,7 +3,8 @@ import {
   fillIn,
   currentURL,
   triggerEvent,
-  visit
+  visit,
+  waitFor
 } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
@@ -53,7 +54,11 @@ module('Acceptance | create', function (hooks) {
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
-        id: '1'
+        id: '1',
+        workflowGraph: {
+          nodes: ['dummy'],
+          edges: ['dummy']
+        }
       })
     ]);
 
@@ -98,6 +103,7 @@ module('Acceptance | create', function (hooks) {
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
     await triggerEvent('.text-input', 'keyup');
     await click('button.blue-button');
+    await waitFor('button.start-button');
     assert.equal(currentURL(), '/pipelines/1/events');
   });
 
@@ -114,7 +120,11 @@ module('Acceptance | create', function (hooks) {
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify({
-        id: '1'
+        id: '1',
+        workflowGraph: {
+          nodes: ['dummy'],
+          edges: ['dummy']
+        }
       })
     ]);
 
@@ -163,6 +173,7 @@ module('Acceptance | create', function (hooks) {
     await click('.checkbox-input');
     await fillIn('.root-dir', 'lib');
     await click('button.blue-button');
+    await waitFor('button.start-button');
     assert.equal(currentURL(), '/pipelines/1/events');
   });
 
@@ -190,6 +201,7 @@ module('Acceptance | create', function (hooks) {
     await triggerEvent('.text-input', 'keyup');
     await click('button.blue-button');
     assert.equal(currentURL(), '/create');
+    await waitFor('.alert > span');
     assert.dom('.alert > span').hasText('something conflicting');
   });
 

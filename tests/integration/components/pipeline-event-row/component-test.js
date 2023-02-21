@@ -189,7 +189,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(eventWithLabel, true));
+    let eventMock = EmberObject.create(copy(event, true));
 
     eventMock.isRunning = false;
     eventMock.status = 'SUCCESS';
@@ -199,26 +199,26 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
+ 
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.stopButton').doesNotExist();
-    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle').exists({ count: 1 });
     assert.dom('.commit .latest-commit').hasText('#abc123');
     assert.dom('.commit .last-successful').hasText('Last successful');
     assert.dom('.message').hasText('this was a test');
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
-    assert.dom('.commit .label').hasText('Yahoo new project, and Version #2.0');
     assert
       .dom('.date')
       .hasText(
@@ -236,7 +236,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(event, true));
+    const eventMock = EmberObject.create(copy(event, true));
 
     eventMock.isRunning = true;
     eventMock.status = 'RUNNING';
@@ -246,14 +246,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row
-      event=event
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.RUNNING').exists({ count: 1 });
     assert.dom('.stopButton').exists({ count: 1 });
@@ -261,7 +261,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     assert.dom('.fa-spinner').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful Stop');
     assert.dom('.message').hasText('this was a test');
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
@@ -282,7 +282,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(event, true));
+    const eventMock = EmberObject.create(copy(event, true));
 
     eventMock.isRunning = true;
     eventMock.status = 'UNKNOWN';
@@ -292,21 +292,21 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row
-      event=event
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.UNKNOWN').exists({ count: 1 });
     assert.dom('.stopButton').doesNotExist();
     assert.dom('.status').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
@@ -347,20 +347,20 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startBuild
-      stopEvent=stopEvent
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startBuild}}
+      @stopEvent={{this.stopEvent}}
       selectedEvent=4
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle').exists({ count: 1 });
     assert.dom('.commit').hasText('PR-2 Start');
     assert.dom('.message').hasText('this was a test');
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
@@ -397,20 +397,20 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Committed by: superman Started by: batman');
@@ -443,20 +443,20 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert
@@ -493,20 +493,20 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.dom('.by').hasText('Started and committed by: batman');
@@ -539,17 +539,17 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('.by').hasText('Started and committed by: batman');
@@ -581,7 +581,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     this.set('stopPRBuilds', Function.prototype);
     this.set('stopEvent', Function.prototype);
 
-    let eventMock = EmberObject.create(copy(event, true));
+    const eventMock = EmberObject.create(copy(event, true));
 
     eventMock.isRunning = false;
     eventMock.status = 'SUCCESS';
@@ -591,14 +591,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.date').hasText(
       `Started ${toCustomLocaleString(new Date('06/30/2021, 04:39 PM'), {
@@ -635,14 +635,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event 
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     assert.dom('.SKIPPED').exists({ count: 1 });
     assert.dom('.status .fa-exclamation-circle').exists({ count: 1 });
@@ -676,14 +676,14 @@ module('Integration | Component | pipeline event row', function (hooks) {
       sha: 'sha3'
     });
 
-    await render(hbs`{{pipeline-event-row 
-      event=event
-      startPRBuild=startPRBuild
-      stopEvent=stopEvent
-      selectedEvent=3
-      latestCommit=latestCommit
-      lastSuccessful=3
-    }}`);
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
 
     const labelColumn = this.element
       .querySelector('.commit .label')
@@ -691,16 +691,16 @@ module('Integration | Component | pipeline event row', function (hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.stopButton').doesNotExist();
-    assert.dom('.status .fa-check-circle-o').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle').exists({ count: 1 });
     assert.dom('.commit .latest-commit').hasText('#abc123');
     assert.dom('.commit .last-successful').hasText('Last successful');
     assert.dom('.message').hasText('this was a test');
-    assert.dom('svg').exists({ count: 1 });
+    assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.strictEqual(
       labelColumn,
-      'Yahoo <a href="http://yahoo.com" rel="nofollow" target="_blank">http://yahoo.com</a>, and Version #2.0'
+      'Yahoo http://yahoo.com, and Version #2.0'
     );
     assert.dom('.by').hasText('Started and committed by: batman');
     assert

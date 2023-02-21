@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find, settled, waitFor } from '@ember/test-helpers';
+import { render, waitFor } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import ENV from 'screwdriver-ui/config/environment';
 import hbs from 'htmlbars-inline-precompile';
@@ -9,7 +9,7 @@ import PipelineCellComponent from 'screwdriver-ui/components/pipeline-list-cover
 let server;
 
 module(
-  'Integration | Component | pipeline-list-coverage-cell',
+  'Integration | Component | pipeline list coverage cell',
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -35,11 +35,10 @@ module(
         })
       );
 
-      await render(hbs`{{pipeline-list-coverage-cell}}`);
-      await settled();
+      await render(hbs`<PipelineListCoverageCell />`);
 
       assert.dom('.coverage-value').exists({ count: 0 });
-      assert.equal(find('.coverage').textContent.trim(), 'N/A');
+      assert.dom('.coverage').hasText('N/A');
     });
 
     test('it renders with actual coverage value', async function (assert) {
@@ -56,7 +55,9 @@ module(
         prParentJobId: null
       };
 
-      this.set('value', jobData);
+      this.set('record', {
+        coverage: jobData
+      });
 
       server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info`, () => [
         200,
@@ -72,12 +73,12 @@ module(
         })
       ]);
 
-      await render(hbs`{{pipeline-list-coverage-cell value=value}}`);
-      await settled();
+      await render(hbs`<PipelineListCoverageCell @record={{this.record}} />`);
+
       await waitFor('.coverage-value');
 
       assert.dom('.coverage-value').exists({ count: 1 });
-      assert.equal(find('.coverage-value').textContent.trim(), '71.4%');
+      assert.dom('.coverage-value').hasText('71.4%');
     });
   }
 );

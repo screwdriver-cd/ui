@@ -40,7 +40,7 @@ module('Integration | Component | search list', function (hooks) {
     this.set('collections', collections);
 
     await render(
-      hbs`{{search-list pipelines=pipelineList collections=collections}}`
+      hbs`<SearchList @pipelines={{this.pipelineList}} @collections={{this.collections}} />`
     );
 
     assert.dom('tbody tr:first-child td.appId').hasText('batman/tumbler');
@@ -89,7 +89,7 @@ module('Integration | Component | search list', function (hooks) {
     this.set('collections', collections);
 
     await render(
-      hbs`{{search-list pipelines=pipelineList collections=collections}}`
+      hbs`<SearchList @pipelines={{this.pipelineList}} @collections={{this.collections}} />`
     );
 
     assert.dom('tbody tr:first-child td.appId').hasText('batman/tumbler');
@@ -108,7 +108,9 @@ module('Integration | Component | search list', function (hooks) {
     assert
       .dom('td.add .dropdown-menu li:nth-child(2) span')
       .hasText('collection2');
-    assert.dom('td.add .dropdown-menu li:nth-child(3) span').hasText('CREATE');
+    assert
+      .dom('td.add .dropdown-menu li:nth-child(3) span')
+      .hasText('Create CREATE');
   });
 
   test('it filters the list', async function (assert) {
@@ -126,7 +128,9 @@ module('Integration | Component | search list', function (hooks) {
     this.set('pipelineList', pipelines);
     this.set('q', 'foo');
 
-    await render(hbs`{{search-list pipelines=pipelineList query=q}}`);
+    await render(
+      hbs`<SearchList @pipelines={{this.pipelineList}} @query={{this.q}} />`
+    );
 
     assert.dom('tr').exists({ count: 2 });
     assert.dom('td.appId').hasText('foo/bar');

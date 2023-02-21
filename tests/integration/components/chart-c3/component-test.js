@@ -13,11 +13,11 @@ module('Integration | Component | chart c3', function (hooks) {
     });
 
     await render(hbs`
-      {{chart-c3
-        name="test-chart"
-        data=data
-        oninit=oninit
-      }}
+      <ChartC3
+        @name="test-chart"
+        @data={{this.data}}
+        @oninit={{this.oninit}}
+      />
     `);
 
     assert.dom('svg').exists({ count: 1 });

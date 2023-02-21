@@ -18,7 +18,9 @@ module('Integration | Component | validator job', function (hooks) {
       settings: {}
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.image .label').hasText('Image:');
@@ -68,7 +70,7 @@ module('Integration | Component | validator job', function (hooks) {
     });
 
     await render(
-      hbs`{{validator-job name="int-test" index=0 job=jobMock template=templateMock}}`
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} @template={{this.templateMock}} />`
     );
 
     assert.dom('.template-description .label').hasText('Template Description:');
@@ -101,7 +103,9 @@ module('Integration | Component | validator job', function (hooks) {
       }
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.secrets .label').hasText('Secrets:');
@@ -125,7 +129,9 @@ module('Integration | Component | validator job', function (hooks) {
       annotations: {}
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.image .label').hasText('Image:');
@@ -173,7 +179,7 @@ module('Integration | Component | validator job', function (hooks) {
     });
 
     await render(
-      hbs`{{validator-job name="int-test" index=0 job=jobMock template=templateMock}}`
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} @template={{this.templateMock}} />`
     );
 
     assert.dom('h4:nth-of-type(1)').hasText('int-test');
@@ -200,7 +206,9 @@ module('Integration | Component | validator job', function (hooks) {
       annotations: {}
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
 
     assert.dom('h4:nth-of-type(1)').hasText('int-test');
     assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
@@ -224,7 +232,9 @@ module('Integration | Component | validator job', function (hooks) {
       annotations: {}
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
 
     assert.dom('h4:nth-of-type(1)').hasText('int-test');
     assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
@@ -242,7 +252,9 @@ module('Integration | Component | validator job', function (hooks) {
       annotations: {}
     });
 
-    await render(hbs`{{validator-job name="int-test" index=1 job=jobMock}}`);
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{1}} @job={{this.jobMock}} />`
+    );
 
     assert.dom('h4').hasText('int-test.1');
     assert.dom('.steps .label').hasText('Steps:');
@@ -269,18 +281,18 @@ module('Integration | Component | validator job', function (hooks) {
     this.set('openMock', true);
 
     await render(
-      hbs`{{validator-job name="int-test" index=0 job=jobMock isOpen=openMock}}`
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} @isOpen={{this.openMock}} />`
     );
 
-    assert.ok(this.get('openMock'));
+    assert.ok(this.openMock);
 
     await click('h4');
 
-    assert.notOk(this.get('openMock'));
+    assert.notOk(this.openMock);
 
     await click('h4');
 
-    assert.ok(this.get('openMock'));
+    assert.ok(this.openMock);
   });
 
   test('it renders a description', async function (assert) {
@@ -293,7 +305,9 @@ module('Integration | Component | validator job', function (hooks) {
       annotations: {}
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.description .label').hasText('Description:');
@@ -311,7 +325,9 @@ module('Integration | Component | validator job', function (hooks) {
       sourcePaths: ['README.md', 'src/folder/']
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.sourcePaths .label').hasText('Source Paths:');
@@ -342,7 +358,9 @@ module('Integration | Component | validator job', function (hooks) {
       annotations: {}
     });
 
-    await render(hbs`{{validator-job name="int-test" index=0 job=jobMock}}`);
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
 
     assert.dom('h4').hasText('int-test');
     assert.dom('.sd-commands .label').hasText('Commands:');
@@ -377,7 +395,7 @@ module('Integration | Component | validator job', function (hooks) {
     });
 
     await render(
-      hbs`{{validator-job name="int-test" index=0 job=jobMock collapsible=false}}`
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} @collapsible={{false}} />`
     );
 
     assert.dom('h4').doesNotExist();

@@ -2,12 +2,16 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import Service from '@ember/service';
+import injectScmServiceStub from '../../../helpers/inject-scm';
 
 module('Integration | Component | pipeline create form', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    await render(hbs`{{pipeline-create-form errorMessage="" isSaving=false}}`);
+    await render(
+      hbs`<PipelineCreateForm @errorMessage="" @isSaving={{false}} />`
+    );
 
     assert.dom('h1').hasText('Create Pipeline');
     assert.dom('.button-label').hasText('Create Pipeline');
@@ -15,6 +19,17 @@ module('Integration | Component | pipeline create form', function (hooks) {
 
   test('it handles the entire ui flow', async function (assert) {
     assert.expect(3);
+
+    injectScmServiceStub(this);
+
+    const sessionStub = Service.extend({
+      get() {
+        return 'github:github.com';
+      }
+    });
+
+    this.owner.register('service:session', sessionStub);
+
     const scm = 'git@github.com:foo/bar.git';
     const root = 'lib';
 
@@ -24,7 +39,11 @@ module('Integration | Component | pipeline create form', function (hooks) {
     });
 
     await render(
-      hbs`{{pipeline-create-form errorMessage="" isSaving=false hasAutoDeployEnabled=true onCreatePipeline=(action createPipeline)}}`
+      hbs`<PipelineCreateForm
+        @errorMessage=""
+        @isSaving={{false}}
+        @onCreatePipeline={{action this.createPipeline}}
+        />`
     );
 
     await fillIn('.scm-url', scm);
@@ -34,7 +53,7 @@ module('Integration | Component | pipeline create form', function (hooks) {
     await triggerKeyEvent('.scm-url', 'keyup', 32);
     await triggerKeyEvent('.root-dir', 'keyup', 32);
 
-    assert.dom('i.fa').hasClass('fa-check');
+    assert.dom('svg').hasClass('fa-check');
 
     await click('button.blue-button');
   });

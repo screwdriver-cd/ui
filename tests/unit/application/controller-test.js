@@ -11,6 +11,7 @@ module('Unit | Controller | application', function (hooks) {
       // Need this to mock any core services
       // https://github.com/emberjs/ember-qunit/issues/325
       this.owner.unregister('service:session');
+      this.owner.unregister('service:router');
     });
   });
 
@@ -34,13 +35,10 @@ module('Unit | Controller | application', function (hooks) {
 
     const controller = this.owner.lookup('controller:application');
 
-    assert.equal(
-      controller.get('session').get('data.sessionChanged'),
-      undefined
-    );
+    assert.equal(controller.session.get('data.sessionChanged'), undefined);
 
     controller.send('invalidateSession');
-    assert.equal(controller.get('session').get('data.sessionChanged'), false);
+    assert.equal(controller.session.get('data.sessionChanged'), false);
   });
 
   test('it calls session.authenticate', function (assert) {
@@ -60,23 +58,24 @@ module('Unit | Controller | application', function (hooks) {
     this.owner.register('service:session', sessionServiceMock);
 
     controller.send('authenticate');
-    assert.equal(
-      controller.get('session').get('data.sessionChanged'),
-      undefined
-    );
+    assert.equal(controller.session.get('data.sessionChanged'), undefined);
 
-    controller.get('session').set('data.authenticated.scmContext', 'new');
+    controller.session.set('data.authenticated.scmContext', 'new');
     controller.send('authenticate');
-    assert.equal(controller.get('session').get('data.sessionChanged'), true);
+    assert.equal(controller.session.get('data.sessionChanged'), true);
   });
 
   test('it calls search in controller', function (assert) {
     const controller = this.owner.lookup('controller:application');
 
-    controller.transitionToRoute = (path, params) => {
-      assert.equal(path, 'search');
-      assert.deepEqual(params, { queryParams: { query: 'myquery' } });
-    };
+    const routerServiceMock = Service.extend({
+      transitionTo: (path, params) => {
+        assert.equal(path, 'search');
+        assert.deepEqual(params, { queryParams: { query: 'myquery' } });
+      }
+    });
+
+    this.owner.register('service:router', routerServiceMock);
 
     controller.send('search', 'myquery');
   });

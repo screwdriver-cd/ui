@@ -5,6 +5,7 @@ import { Promise as EmberPromise } from 'rsvp';
 export const pipeline = {
   id: '4',
   scmUrl: 'git@github.com:foo/bar.git#master',
+  scmContext: 'github:github.com',
   scmRepo: {
     name: 'foo/bar',
     branch: 'master',

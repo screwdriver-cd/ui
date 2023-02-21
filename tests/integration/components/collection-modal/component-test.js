@@ -33,11 +33,11 @@ module('Integration | Component | collection modal', function (hooks) {
 
     this.set('showModal', true);
 
-    await render(hbs`{{collection-modal showModal=showModal}}`);
+    await render(hbs`<CollectionModal @showModal={{this.showModal}} />`);
 
     assert.dom('.modal-title').hasText('Create New Collection');
-    assert.dom('.name .control-label').hasText('Collection Name *');
-    assert.dom('.description .control-label').hasText('Description');
+    assert.dom('.name.control-label label').hasText('Collection Name');
+    assert.dom('.description.control-label label').hasText('Description');
     assert.dom('.collection-form__cancel').hasText('Cancel');
     assert
       .dom('.collection-form__create')
@@ -50,7 +50,7 @@ module('Integration | Component | collection modal', function (hooks) {
 
     this.set('showModal', true);
 
-    await render(hbs`{{collection-modal showModal=showModal}}`);
+    await render(hbs`<CollectionModal @showModal={{this.showModal}} />`);
 
     assert.dom('.modal-dialog').exists({ count: 1 });
 
@@ -90,19 +90,19 @@ module('Integration | Component | collection modal', function (hooks) {
     this.owner.register('service:store', storeStub);
 
     await render(
-      hbs`{{collection-modal showModal=showModal name=name description=description}}`
+      hbs`<CollectionModal @showModal={{this.showModal}} @name={{this.name}} @description={{this.description}} />`
     );
 
     assert.dom('.modal-dialog').exists({ count: 1 });
 
     await fillIn('.name input', 'Test');
-    await fillIn('.description textArea', 'Test description');
+    await fillIn('.description textarea', 'Test description');
     assert
       .dom('.collection-form__create')
       .isEnabled('Should enable Create button when Name is Filled');
     await click('.collection-form__create');
 
-    assert.notOk(this.get('showModal'));
+    assert.notOk(this.showModal);
   });
 
   test('it cancels creation of a collection', async function (assert) {
@@ -138,23 +138,23 @@ module('Integration | Component | collection modal', function (hooks) {
 
     this.owner.register('service:store', storeStub);
 
-    await render(hbs`{{collection-modal
-      collections=collections
-      showModal=showModal
-      name=name
-      description=description
-      errorMessage=errorMessage
-    }}`);
+    await render(hbs`<CollectionModal
+      @collections={{this.collections}}
+      @showModal={{this.showModal}}
+      @name={{this.name}}
+      @description={{this.description}}
+      @errorMessage={{this.errorMessage}}
+    />`);
 
     this.set('name', 'Test');
     this.set('description', 'Test description');
 
-    assert.ok(this.get('showModal'));
+    assert.ok(this.showModal);
 
     await click('.collection-form__create');
 
     // Modal should remain open because of error
-    assert.ok(this.get('showModal'));
+    assert.ok(this.showModal);
     assert.dom('.alert-warning > span').hasText('This is an error message');
   });
 });

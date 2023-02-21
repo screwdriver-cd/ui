@@ -1,42 +1,48 @@
-{{#if session.isAuthenticated}}
-  {{#if (not session.data.authenticated.isGuest)}}
-    {{pipeline-nav
-      pipeline=pipeline
-    }}
+{{#if this.session.isAuthenticated}}
+  {{#if (not this.session.data.authenticated.isGuest)}}
+    <PipelineNav @pipeline={{this.pipeline}} />
   {{/if}}
 {{/if}}
 
+<InfoMessage
+  @message={{this.errorMessage}}
+  @type="warning"
+  @icon="exclamation-triangle"
+  @scmContext={{this.pipeline.scmContext}}
+/>
 
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle" scmContext=pipeline.scmContext}}
-
-{{#if isInactivePipeline}}
-  {{info-message message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration." type="info" icon="exclamation-triangle"}}
+{{#if this.isInactivePipeline}}
+  <InfoMessage
+    @message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration."
+    @type="info"
+    @icon="exclamation-triangle"
+  />
 {{/if}}
 
 <div class="row">
-  <div class="col-xs-12 separator partial-view">
-    {{pipeline-list-view
-            pipeline=pipeline
-            jobs=jobs
-            jobsDetails=jobsDetails
-            updateListViewJobs=(action "updateListViewJobs")
-            startSingleBuild=(action "startSingleBuild")
-            stopBuild=(action "stopBuild")
-            showListView=showListView
-            setShowListView=(action "setShowListView")
-            refreshListViewJobs=(action "refreshListViewJobs")
-    }}
-
+  <div class="col-12 separator partial-view">
+    <PipelineListView
+      @pipeline={{this.pipeline}}
+      @jobs={{this.jobs}}
+      @jobsDetails={{this.jobsDetails}}
+      @updateListViewJobs={{action "updateListViewJobs"}}
+      @startSingleBuild={{action "startSingleBuild"}}
+      @stopBuild={{action "stopBuild"}}
+      @showListView={{this.showListView}}
+      @setShowListView={{action "setShowListView"}}
+      @refreshListViewJobs={{action "refreshListViewJobs"}}
+    />
   </div>
 </div>
 
-{{#if isShowingModal}}
-  {{#modal-dialog clickOutsideToClose=false
-                  targetAttachment="center"
-                  translucentOverlay=true
-  }}
-    {{loading-view}}
-  {{/modal-dialog}}
+{{#if this.isShowingModal}}
+  <ModalDialog
+    @clickOutsideToClose={{false}}
+    @targetAttachment="center"
+    @translucentOverlay={{true}}
+  >
+    <LoadingView />
+  </ModalDialog>
 {{/if}}
 
 {{outlet}}

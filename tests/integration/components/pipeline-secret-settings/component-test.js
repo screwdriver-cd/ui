@@ -30,7 +30,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
     this.set('mockPipeline', testPipeline);
 
     await render(
-      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+      hbs`<PipelineSecretSettings @secrets={{this.mockSecrets}} @pipeline={{this.mockPipeline}} />`
     );
 
     assert
@@ -43,8 +43,8 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
     assert.dom('tfoot tr').exists({ count: 1 });
 
     // eye-icons are present and have fa-eye class as default
-    assert.dom('tbody i').hasClass('fa-eye');
-    assert.dom('tfoot i').hasClass('fa-eye');
+    assert.dom('tbody svg').hasClass('fa-eye');
+    assert.dom('tfoot svg').hasClass('fa-eye');
 
     // the type of input is a password as default
     assert.dom('tbody .pass input').hasAttribute('type', 'password');
@@ -53,7 +53,9 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
   test('it updates the add button properly', async function (assert) {
     this.set('mockPipeline', { id: 'abcd' });
-    await render(hbs`{{pipeline-secret-settings pipeline=mockPipeline}}`);
+    await render(
+      hbs`<PipelineSecretSettings @pipeline={{this.mockPipeline}} />`
+    );
 
     // starts disabled
     assert.dom('tfoot button').isDisabled();
@@ -96,7 +98,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
     // eslint-disable-next-line max-len
     await render(
-      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
+      hbs`<PipelineSecretSettings @pipeline={{this.mockPipeline}} @onCreateSecret={{action this.externalAction}} />`
     );
 
     await fillIn('.key input', 'SECRET_KEY');
@@ -121,7 +123,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
     // eslint-disable-next-line max-len
     await render(
-      hbs`{{pipeline-secret-settings pipeline=mockPipeline onCreateSecret=(action externalAction)}}`
+      hbs`<PipelineSecretSettings @pipeline={{this.mockPipeline}} @onCreateSecret={{action this.externalAction}} />`
     );
 
     await fillIn('.key input', '0banana');
@@ -171,7 +173,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
     this.set('mockPipeline', testPipeline);
     await render(
-      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+      hbs`<PipelineSecretSettings @secrets={{this.mockSecrets}} @pipeline={{this.mockPipeline}} />`
     );
 
     // secrets are sorted by name
@@ -197,7 +199,7 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
 
     this.set('mockPipeline', testPipeline);
     await render(
-      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+      hbs`<PipelineSecretSettings @secrets={{this.mockSecrets}} @pipeline={{this.mockPipeline}} />`
     );
 
     assert
@@ -229,23 +231,23 @@ module('Integration | Component | pipeline secret settings', function (hooks) {
     this.set('mockPipeline', testPipeline);
 
     await render(
-      hbs`{{pipeline-secret-settings secrets=mockSecrets pipeline=mockPipeline}}`
+      hbs`<PipelineSecretSettings @secrets={{this.mockSecrets}} @pipeline={{this.mockPipeline}} />`
     );
 
-    await click('tbody i');
-    await click('tfoot i');
+    await click('tbody svg');
+    await click('tfoot svg');
 
-    assert.dom('tbody i').hasClass('fa-eye-slash');
+    assert.dom('tbody svg').hasClass('fa-eye-slash');
     assert.dom('tbody .pass input').hasAttribute('type', 'text');
-    assert.dom('tfoot i').hasClass('fa-eye-slash');
+    assert.dom('tfoot svg').hasClass('fa-eye-slash');
     assert.dom('tfoot .pass input').hasAttribute('type', 'text');
 
-    await click('tbody i');
-    await click('tfoot i');
+    await click('tbody svg');
+    await click('tfoot svg');
 
-    assert.dom('tbody i').hasClass('fa-eye');
+    assert.dom('tbody svg').hasClass('fa-eye');
     assert.dom('tbody .pass input').hasAttribute('type', 'password');
-    assert.dom('tfoot i').hasClass('fa-eye');
+    assert.dom('tfoot svg').hasClass('fa-eye');
     assert.dom('tfoot .pass input').hasAttribute('type', 'password');
   });
 });

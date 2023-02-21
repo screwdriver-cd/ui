@@ -1,13 +1,18 @@
-{{info-message message=errorMessage type="warning" icon="exclamation-triangle"}}
+<InfoMessage
+  @message={{this.errorMessage}}
+  @type="warning"
+  @icon="exclamation-triangle"
+/>
 <h3>
   Secrets
   <a href="http://docs.screwdriver.cd/user-guide/configuration/secrets">
-    {{fa-icon "question-circle" title="More information"}}
+    <FaIcon @icon="question-circle" @title="More information" />
   </a>
 </h3>
 <p>
-  {{#if pipeline.configPipelineId}}
-    Secrets are inherited from the {{#link-to "pipeline.secrets" pipeline.configPipelineId}}parent pipeline{{/link-to}}. You may override a secret or revert it back to its original value.
+  {{#if this.pipeline.configPipelineId}}
+    Secrets are inherited from the
+    <LinkTo @route="pipeline.secrets" @model={{this.pipeline.configPipelineId}}>parent pipeline</LinkTo>. You may override a secret or revert it back to its original value.
   {{else}}
     User secrets must also be added to the Screwdriver YAML.
   {{/if}}
@@ -16,28 +21,66 @@
 <table class="secrets">
   <thead>
     <tr>
-      <th>Key</th>
-      <th>Value</th>
-      <th colspan="2">Allow in PR</th>
+      <th>
+        Key
+      </th>
+      <th>
+        Value
+      </th>
+      <th colspan="2">
+        Allow in PR
+      </th>
     </tr>
   </thead>
   <tbody>
-    {{#each sortedSecrets as |secret|}}
-      {{secret-view
-        secret=secret
-        secrets=secrets
-        pipeline=pipeline
-        onCreateSecret=onCreateSecret
-      }}
+    {{#each this.sortedSecrets as |secret|}}
+      <SecretView
+        @secret={{secret}}
+        @secrets={{this.secrets}}
+        @pipeline={{this.pipeline}}
+        @onCreateSecret={{this.onCreateSecret}}
+      />
     {{/each}}
   </tbody>
-  {{#unless pipeline.configPipelineId}}
+  {{#unless this.pipeline.configPipelineId}}
     <tfoot>
       <tr class="new">
-        <td class="key">{{input placeholder="SECRET_KEY" size="40" value=newName title="Secret keys can only consist of numbers, uppercase letters and underscores, and cannot begin with a number."}}</td>
-        <td class="pass">{{input type="password" placeholder="SECRET_VALUE" size="40" value=newValue}}{{fa-icon "eye" class="toggle-icon" click=(action "togglePasswordInput")}}</td>
-        <td class="allow"><div title="Check to allow this secret to be used in pull-requests">{{input type="checkbox" checked=newAllow}}</div></td>
-        <td><button class="add" disabled={{isButtonDisabled}} {{action "addNewSecret"}}>Add</button></td>
+        <td class="key">
+          <Input
+            placeholder="SECRET_KEY"
+            size="40"
+            @value={{this.newName}}
+            @title="Secret keys can only consist of numbers, uppercase letters and underscores, and cannot begin with a number."
+          />
+        </td>
+        <td class="pass">
+          <Input
+            @type={{if this.eyeSlash "text" "password"}}
+            placeholder="SECRET_VALUE"
+            size="40"
+            @value={{this.newValue}}
+          />
+          <span onclick={{action "togglePasswordInput"}}>
+            <FaIcon
+              @icon={{if this.eyeSlash "eye-slash" "eye"}}
+              class="toggle-icon"
+            />
+          </span>
+        </td>
+        <td class="allow">
+          <div title="Check to allow this secret to be used in pull-requests">
+            <Input @type="checkbox" @checked={{this.newAllow}} />
+          </div>
+        </td>
+        <td>
+          <button
+            class="add"
+            disabled={{this.isButtonDisabled}}
+            {{action "addNewSecret"}}
+          >
+            Add
+          </button>
+        </td>
       </tr>
     </tfoot>
   {{/unless}}

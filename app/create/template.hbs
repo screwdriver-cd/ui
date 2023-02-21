@@ -1,11 +1,10 @@
-{{pipeline-create-form
-  isSaving=isSaving
-  errorMessage=errorMessage
-  onCreatePipeline=(action "createPipeline")
-  templates=templates
-}}
+<PipelineCreateForm
+  @isSaving={{this.isSaving}}
+  @errorMessage={{this.errorMessage}}
+  @onCreatePipeline={{action "createPipeline"}}
+  @templates={{this.templates}}
+/>
 
-{{quickstart-guide
-  isOpen=showQuickStartGuide}}
+<QuickstartGuide @isOpen={{this.showQuickStartGuide}} />
 
 {{outlet}}

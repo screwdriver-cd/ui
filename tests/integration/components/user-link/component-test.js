@@ -16,7 +16,9 @@ module('Integration | Component | user link', function (hooks) {
 
     this.set('userMock', userMock);
 
-    await render(hbs`{{user-link user=userMock causeMessage="merged it"}}`);
+    await render(
+      hbs`<UserLink @user={{this.userMock}} @causeMessage="merged it" />`
+    );
 
     assert.equal(find('a').href, 'http://example.com/u/batman');
     assert.equal(find('a').title, 'merged it');
@@ -33,7 +35,7 @@ module('Integration | Component | user link', function (hooks) {
     this.set('userMock', userMock);
 
     await render(
-      hbs`{{user-link user=userMock causeMessage="Automatically started by scheduler"}}`
+      hbs`<UserLink @user={{this.userMock}} @causeMessage="Automatically started by scheduler" />`
     );
 
     assert.equal(find('a').title, 'Automatically started by scheduler');

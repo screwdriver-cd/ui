@@ -3,13 +3,13 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('helper:branch-url-encode', function (hooks) {
+module('Integration | Helper | branch url encode', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders a encoded url of branch name including #', async function (assert) {
     this.set('url', 'https://github/org/repo/tree/branch#hash');
 
-    await render(hbs`{{branch-url-encode url}}`);
+    await render(hbs`{{branch-url-encode this.url}}`);
 
     assert
       .dom(this.element)
@@ -17,7 +17,7 @@ module('helper:branch-url-encode', function (hooks) {
 
     this.set('url', null);
 
-    await render(hbs`{{branch-url-encode url}}`);
+    await render(hbs`{{branch-url-encode this.url}}`);
 
     assert.dom(this.element).hasText('');
   });

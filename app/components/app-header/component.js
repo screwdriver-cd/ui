@@ -23,6 +23,9 @@ export default Component.extend({
     },
     openCreatePipeline() {
       this.set('showCreatePipeline', true);
+    },
+    openSearchForm() {
+      this.set('showSearch', true);
     }
   }
 });

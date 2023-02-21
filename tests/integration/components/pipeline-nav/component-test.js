@@ -18,7 +18,7 @@ module('Integration | Component | sd pipeline nav', function (hooks) {
 
     this.set('pipelineMock', pipeline);
 
-    await render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
+    await render(hbs`<PipelineNav @pipeline={{this.pipelineMock}} />`);
 
     assert.dom('li:nth-child(1) a').hasText('Builds');
     assert.dom('li:nth-child(2) a').hasText('Secrets');
@@ -40,7 +40,7 @@ module('Integration | Component | sd pipeline nav', function (hooks) {
 
     this.set('pipelineMock', pipeline);
 
-    await render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
+    await render(hbs`<PipelineNav @pipeline={{this.pipelineMock}} />`);
 
     assert.dom('li:nth-child(1) a').hasText('Child Pipelines');
     assert.dom('li:nth-child(2) a').hasText('Builds');
@@ -60,7 +60,7 @@ module('Integration | Component | sd pipeline nav', function (hooks) {
 
     this.set('pipelineMock', pipeline);
 
-    await render(hbs`{{pipeline-nav pipeline=pipelineMock}}`);
+    await render(hbs`<PipelineNav @pipeline={{this.pipelineMock}} />`);
 
     assert.dom('span').hasText('description');
   });

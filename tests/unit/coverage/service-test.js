@@ -39,7 +39,7 @@ module('Unit | Service | coverage ', function (hooks) {
       })
     ]);
 
-    let service = this.owner.lookup('service:coverage');
+    const service = this.owner.lookup('service:coverage');
 
     assert.ok(service);
 
@@ -87,7 +87,7 @@ module('Unit | Service | coverage ', function (hooks) {
       })
     ]);
 
-    let service = this.owner.lookup('service:coverage');
+    const service = this.owner.lookup('service:coverage');
 
     assert.ok(service);
 
@@ -132,7 +132,7 @@ module('Unit | Service | coverage ', function (hooks) {
       JSON.stringify({})
     ]);
 
-    let service = this.owner.lookup('service:coverage');
+    const service = this.owner.lookup('service:coverage');
 
     assert.ok(service);
 

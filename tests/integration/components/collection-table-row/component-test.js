@@ -2,11 +2,10 @@ import EmberObject from '@ember/object';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, waitFor } from '@ember/test-helpers';
+import { click, render, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import $ from 'jquery';
-import wait from 'ember-test-helpers/wait';
 import Pretender from 'pretender';
 
 let server;
@@ -66,14 +65,13 @@ module('Integration | Component | collection table row', function (hooks) {
     assert.expect(12);
     this.owner.setupRouter();
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        viewportEnabled=true
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @viewportEnabled={{true}}
+      />
     `);
 
-    await wait();
-    await waitFor('td.status a i.fa-question-circle');
+    await waitFor('td.status a svg.fa-question-circle');
 
     assert.dom('td.collection-pipeline__choose').exists({ count: 1 });
     assert.dom('td.app-id a').hasText(mockPipeline.scmRepo.name);
@@ -84,7 +82,7 @@ module('Integration | Component | collection table row', function (hooks) {
     assert
       .dom('td.status a:nth-of-type(1)')
       .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
-    assert.dom('td.status a:nth-of-type(1) i').hasClass('fa-question-circle');
+    assert.dom('td.status a:nth-of-type(1) svg').hasClass('fa-question-circle');
     assert.dom('td.status a:nth-of-type(2)').hasText(lastEventInfo.sha);
     assert
       .dom('td.status a:nth-of-type(2)')
@@ -102,13 +100,12 @@ module('Integration | Component | collection table row', function (hooks) {
     this.set('isAuthenticated', false);
 
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isAuthenticated=isAuthenticated
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isAuthenticated={{this.isAuthenticated}}
+      />
     `);
 
-    await wait();
     assert.dom('td.collection-pipeline__choose input').doesNotExist();
     assert.dom('td.collection-pipeline__remove span').doesNotExist();
   });
@@ -118,14 +115,13 @@ module('Integration | Component | collection table row', function (hooks) {
     this.set('isOrganizing', true);
 
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+      />
     `);
 
-    await wait();
     assert.dom('td.collection-pipeline__choose input').exists();
     assert.dom('td.collection-pipeline__remove span').doesNotExist();
   });
@@ -133,14 +129,13 @@ module('Integration | Component | collection table row', function (hooks) {
   test('it renders with a remove button when not organizing', async function (assert) {
     assert.expect(2);
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+      />
     `);
 
-    await wait();
     assert.dom('td.collection-pipeline__choose input').doesNotExist();
     assert.dom('td.collection-pipeline__remove span').exists();
   });
@@ -148,15 +143,13 @@ module('Integration | Component | collection table row', function (hooks) {
   test('it deletes the pipeline displayed', async function (assert) {
     assert.expect(1);
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-        removePipeline=removePipeline
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+        @removePipeline={{this.removePipeline}}
+      />
     `);
-
-    await wait();
 
     await click('.collection-pipeline__remove span');
     assert.ok(removePipelineSpy.calledWith(mockPipeline.id));
@@ -167,16 +160,14 @@ module('Integration | Component | collection table row', function (hooks) {
     this.set('isOrganizing', true);
 
     await render(hbs`
-      {{collection-table-row
-        pipeline=pipeline
-        isOrganizing=isOrganizing
-        isAuthenticated=isAuthenticated
-        selectPipeline=selectPipeline
-        deselectPipeline=deselectPipeline
-      }}
+      <CollectionTableRow
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+        @selectPipeline={{this.selectPipeline}}
+        @deselectPipeline={{this.deselectPipeline}}
+      />
     `);
-
-    await wait();
 
     await click('.collection-pipeline__choose input');
     assert.ok(selectPipelineSpy.calledWith(mockPipeline.id));

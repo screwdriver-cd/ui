@@ -1,5 +1,5 @@
+import { get, set, computed, observer } from '@ember/object';
 import { Promise } from 'rsvp';
-import { set, getWithDefault, computed, observer } from '@ember/object';
 import { scheduleOnce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -34,7 +34,7 @@ export default Component.extend({
 
     this.set('inProgress', inProgress);
   }),
-  sortOrder: computed('inProgress', {
+  sortOrder: computed('inProgress', 'justFinished', {
     get() {
       return this.inProgress || this.justFinished ? 'ascending' : 'descending';
     }
@@ -67,11 +67,14 @@ export default Component.extend({
         ) + 1;
   },
   logs: computed(
-    'stepStartTime',
-    'isFetching',
     'buildId',
-    'stepName',
+    'buildStartTime',
     'buildStatus',
+    'isFetching',
+    'justFinished',
+    'stepEndTime',
+    'stepName',
+    'stepStartTime',
     {
       get() {
         const { buildId, stepName, isFetching, buildStats, buildStatus } = this;
@@ -93,11 +96,10 @@ export default Component.extend({
           });
 
           const currentBuild = this.store.peekRecord('build', buildId);
-          const parameters = getWithDefault(
-            currentBuild || {},
-            'meta.parameters',
-            {}
-          );
+          const parameters =
+            get(currentBuild || {}, 'meta.parameters') === undefined
+              ? {}
+              : get(currentBuild || {}, 'meta.parameters');
 
           if (currentBuild && Object.keys(parameters).length > 0) {
             initLogs.push({
@@ -328,8 +330,8 @@ export default Component.extend({
    */
   getLogs(fetchMax = false) {
     if (
-      !this.get('isDestroyed') &&
-      !this.get('isDestroying') &&
+      !this.isDestroyed &&
+      !this.isDestroying &&
       !this.isFetching &&
       this.shouldLoad
     ) {

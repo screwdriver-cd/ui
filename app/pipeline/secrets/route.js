@@ -4,12 +4,14 @@ import { get } from '@ember/object';
 
 export default Route.extend({
   session: service(),
+  store: service(),
+  router: service(),
   routeAfterAuthentication: 'pipeline.secrets',
   titleToken: 'Secrets',
   model() {
     // Guests should not access this page
     if (get(this, 'session.data.authenticated.isGuest')) {
-      this.transitionTo('pipeline');
+      this.router.transitionTo('pipeline');
     }
 
     const { pipeline } = this.modelFor('pipeline');

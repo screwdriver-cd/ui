@@ -1,6 +1,6 @@
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import { computed, set, get } from '@ember/object';
+import { computed, set } from '@ember/object';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 
@@ -9,7 +9,7 @@ export default Component.extend({
   classNameBindings: ['highlighted'],
   highlighted: computed('selectedEvent', 'eventId', {
     get() {
-      return get(this, 'selectedEvent') === get(this, 'eventId');
+      return this.selectedEvent === this.eventId;
     }
   }),
   didInsertElement() {
@@ -37,8 +37,16 @@ export default Component.extend({
   },
 
   showJobs: computed('jobs.@each.builds', 'inited', {
-    get() {
-      return this.inited || this.jobs.some(j => !!j.get('builds.length'));
+    async get() {
+      if (this.inited) {
+        return true;
+      }
+
+      for (const j of this.jobs) {
+        if ((await j.builds).length) return true;
+      }
+
+      return false;
     }
   }),
 
@@ -72,7 +80,7 @@ export default Component.extend({
 
   actions: {
     selectPR() {
-      set(this, 'selected', this.get('eventId'));
+      set(this, 'selected', this.eventId);
     }
   }
 });

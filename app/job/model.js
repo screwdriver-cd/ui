@@ -1,18 +1,18 @@
+import Model, { attr, hasMany } from '@ember-data/model';
 import { computed, get } from '@ember/object';
-import { alias, equal, match } from '@ember/object/computed';
-import DS from 'ember-data';
+import { alias, match } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
 import { SHOULD_RELOAD_NO, SHOULD_RELOAD_YES } from '../mixins/model-reloader';
 
-export default DS.Model.extend({
-  pipelineId: DS.attr('string'),
-  name: DS.attr('string'),
+export default Model.extend({
+  pipelineId: attr('string'),
+  name: attr('string'),
   isPR: match('name', /^PR-/),
-  state: DS.attr('string'),
-  stateChanger: DS.attr('string'),
-  stateChangeTime: DS.attr('date'),
+  state: attr('string'),
+  stateChanger: attr('string'),
+  stateChangeTime: attr('date'),
   stateChangeTimeWords: computed('stateChangeTime', {
     get() {
       const duration = Date.now() - +this.stateChangeTime;
@@ -20,19 +20,26 @@ export default DS.Model.extend({
       return `${humanizeDuration(duration, { round: true, largest: 1 })} ago`;
     }
   }),
-  stateChangeMessage: DS.attr('string'),
+  stateChangeMessage: attr('string'),
   // !for pr job only {
-  title: DS.attr('string'),
-  group: computed('isPR', 'name', {
+  title: attr('string'),
+  group: computed('_group', 'group', 'isPR', 'name', {
     get() {
+      if (this._group) {
+        return this.group;
+      }
+
       return this.isPR ? parseInt(this.name.slice('PR-'.length), 10) : null;
+    },
+    set(_, value) {
+      return (this._group = value);
     }
   }),
   prNumber: alias('group'),
-  username: DS.attr('string'),
-  userProfile: DS.attr('string'),
-  url: DS.attr('string'),
-  createTime: DS.attr('date'),
+  username: attr('string'),
+  userProfile: attr('string'),
+  url: attr('string'),
+  createTime: attr('date'),
   createTimeWords: computed('createTime', {
     get() {
       const duration = Date.now() - +this.createTime;
@@ -42,8 +49,8 @@ export default DS.Model.extend({
   }),
   createTimeExact: computed('createTime', {
     get() {
-      if (get(this, 'createTime')) {
-        let dateTime = get(this, 'createTime').getTime();
+      if (this.createTime) {
+        const dateTime = this.createTime.getTime();
 
         return `${toCustomLocaleString(new Date(dateTime))}`;
       }
@@ -51,10 +58,10 @@ export default DS.Model.extend({
       return '';
     }
   }),
-  prParentJobId: DS.attr('string'),
+  prParentJobId: attr('string'),
   // } for pr job only
-  permutations: DS.attr(),
-  annotations: computed('permutations.[]', {
+  permutations: attr(),
+  annotations: computed('permutations.0.annotations', 'permutations.[]', {
     get() {
       return get(this, 'permutations.0.annotations') || {};
     }
@@ -65,8 +72,19 @@ export default DS.Model.extend({
       return this.permutations[0].parameters;
     }
   }),
-  builds: DS.hasMany('build', { async: true }),
-  isDisabled: equal('state', 'DISABLED'),
+  builds: hasMany('build', { async: true }),
+  isDisabled: computed('_isDisabled', 'state', {
+    get() {
+      if (this._isDisabled !== undefined) {
+        return this._isDisabled;
+      }
+
+      return this.state === 'DISABLED';
+    },
+    set(_, value) {
+      return (this._isDisabled = value);
+    }
+  }),
   modelToReload: 'builds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   // Reload builds only if the pr job build is still running

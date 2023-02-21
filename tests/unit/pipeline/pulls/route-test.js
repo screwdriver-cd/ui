@@ -5,7 +5,7 @@ module('Unit | Route | pipeline/pulls', function (hooks) {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:pipeline/pulls');
+    const route = this.owner.lookup('route:pipeline/pulls');
 
     assert.ok(route);
   });

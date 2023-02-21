@@ -1,8 +1,11 @@
 import Route from '@ember/routing/route';
 import { get } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { inject as service } from '@ember/service';
 
 export default Route.extend(AuthenticatedRouteMixin, {
+  store: service(),
+  router: service(),
   model() {
     if (get(this, 'session.isAuthenticated')) {
       // No reason to go fetch collections for a guest user
@@ -13,21 +16,21 @@ export default Route.extend(AuthenticatedRouteMixin, {
       this.store
         .findAll('collection')
         .then(collections => {
-          if (get(collections, 'length')) {
+          if (collections.length) {
             // Get the id of the default collection.
             const defaultCollection = collections.find(
               collection => collection.type === 'default'
             );
             const routeId = defaultCollection.id;
 
-            let lastViewedCollectionId = localStorage.getItem(
+            const lastViewedCollectionId = localStorage.getItem(
               'lastViewedCollectionId'
             );
 
             if (lastViewedCollectionId) {
-              this.replaceWith(`/dashboards/${lastViewedCollectionId}`);
+              this.router.replaceWith(`/dashboards/${lastViewedCollectionId}`);
             } else {
-              this.replaceWith(`/dashboards/${routeId}`);
+              this.router.replaceWith(`/dashboards/${routeId}`);
             }
           }
         })

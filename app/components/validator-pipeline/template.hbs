@@ -1,44 +1,93 @@
-<h4 class="pipeline" {{action "nameClick"}}>{{fa-icon (if isOpen "minus-square" "plus-square")}} Pipeline Settings</h4>
-<div class="annotations" title="These are the pipeline-level annotations that the user has defined.">
-  <span class="label">Annotations:</span>
+<h4 class="pipeline" {{action "nameClick"}}>
+  <FaIcon @icon={{if this.isOpen "minus-square" "plus-square"}} />
+  Pipeline Settings
+</h4>
+<div
+  class="annotations"
+  title="These are the pipeline-level annotations that the user has defined."
+>
+  <span class="label">
+    Annotations:
+  </span>
   <span class="value">
     <ul>
-      {{#each-in annotations as |name value|}}
-        <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
+      {{#each-in this.annotations as |name value|}}
+        <li>
+          <span class="name">
+            {{name}}:
+          </span>
+          <span class="value">
+            {{value}}
+          </span>
+        </li>
       {{else}}
-        <li>None defined</li>
+        <li>
+          None defined
+        </li>
       {{/each-in}}
     </ul>
   </span>
 </div>
 
-<div class="parameters" title="These are the pipeline-level parameters that the user has defined.">
-  <span class="label">Parameters:</span>
+<div
+  class="parameters"
+  title="These are the pipeline-level parameters that the user has defined."
+>
+  <span class="label">
+    Parameters:
+  </span>
   <span class="value">
     <ul>
-      {{#each-in parameters as |name value|}}
+      {{#each-in this.parameters as |name value|}}
         {{#if value.length}}
-          <li><span class="name">{{name}}: </span><span class="value">{{value}}</span></li>
+          <li>
+            <span class="name">
+              {{name}}:
+            </span>
+            <span class="value">
+              {{value}}
+            </span>
+          </li>
         {{else}}
           <li>
-            <span class="name">{{name}}: </span>
+            <span class="name">
+              {{name}}:
+            </span>
             <ul>
-              <li><span class="name">value: </span><span class="value">{{value.value}}</span></li>
+              <li>
+                <span class="name">
+                  value:
+                </span>
+                <span class="value">
+                  {{value.value}}
+                </span>
+              </li>
               {{#if value.description}}
-                <li><span class="name">description: </span><span class="value">{{value.description}}</span></li>
+                <li>
+                  <span class="name">
+                    description:
+                  </span>
+                  <span class="value">
+                    {{value.description}}
+                  </span>
+                </li>
               {{/if}}
             </ul>
           </li>
         {{/if}}
       {{else}}
-        <li>None defined</li>
+        <li>
+          None defined
+        </li>
       {{/each-in}}
     </ul>
   </span>
 </div>
 
 <div class="workflow">
-  <span class="label" title="This is the order that the jobs will run in.">Workflow:</span>
-  {{workflow-graph-d3 workflowGraph=workflowGraph}}
+  <span class="label" title="This is the order that the jobs will run in.">
+    Workflow:
+  </span>
+  <WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} />
 </div>
 {{yield}}

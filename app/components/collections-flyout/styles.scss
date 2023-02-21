@@ -7,6 +7,8 @@
     padding: 20px;
     background-color: $sd-flyout-bg;
     color: $sd-text;
+    display: block;
+    min-height: calc(100vh - 56px);
   }
 
   .collection {
@@ -104,12 +106,5 @@
       margin-top: 20;
       padding: 0 20px 0;
     }
-  }
-}
-
-// match with bootstrap min-width: for .col-md-2
-@media (min-width: 992px) {
-  .flyout {
-    min-height: calc(100vh - 56px);
   }
 }

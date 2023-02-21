@@ -13,7 +13,7 @@ module('Integration | Component | pipeline start', function (hooks) {
       assert.ok(true);
     });
     await render(
-      hbs`{{pipeline-start startBuild=onStartBuild pipeline=pipeline}}`
+      hbs`<PipelineStart @startBuild={{this.onStartBuild}} @pipeline={{this.pipeline}}/>`
     );
 
     assert.dom('button').hasText('Start');
@@ -27,7 +27,7 @@ module('Integration | Component | pipeline start', function (hooks) {
       assert.ok(true);
     });
     await render(
-      hbs`{{pipeline-start startBuild=onStartBuild pipeline=pipeline}}`
+      hbs`<PipelineStart @startBuild={{this.onStartBuild}} @pipeline={{this.pipeline}}/>`
     );
 
     assert.dom('button').hasText('Start');
@@ -44,7 +44,7 @@ module('Integration | Component | pipeline start', function (hooks) {
       assert.equal(prJobs.length, 2);
     });
     await render(
-      hbs`{{pipeline-start startBuild=onPRStartBuild prNum=5 jobs=jobs pipeline=pipeline}}`
+      hbs`<PipelineStart @startBuild={{this.onPRStartBuild}} @prNum={{5}} @jobs={{this.jobs}} @pipeline={{this.pipeline}}/>`
     );
 
     assert.dom('button').doesNotExist();

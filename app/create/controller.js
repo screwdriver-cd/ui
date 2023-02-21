@@ -1,17 +1,20 @@
 /* eslint-disable ember/alias-model-in-controller */
 // The route for this controller does not expose a model to alias.
 import Controller from '@ember/controller';
+import { inject as service } from '@ember/service';
 
 export default Controller.extend({
+  store: service(),
+  router: service(),
   isSaving: false,
   errorMessage: '',
   showQuickStartGuide: false,
   templates: [],
   actions: {
     createPipeline({ scmUrl, rootDir, autoKeysGeneration }) {
-      let payload = { checkoutUrl: scmUrl, rootDir, autoKeysGeneration };
+      const payload = { checkoutUrl: scmUrl, rootDir, autoKeysGeneration };
 
-      let pipeline = this.store.createRecord('pipeline', payload);
+      const pipeline = this.store.createRecord('pipeline', payload);
 
       this.set('isSaving', true);
 
@@ -19,17 +22,17 @@ export default Controller.extend({
         .save()
         .then(
           () => {
-            this.transitionToRoute('pipeline', pipeline.get('id'));
+            this.router.transitionTo('pipeline', pipeline.get('id'));
           },
           err => {
-            let error = err.errors[0] || {};
+            const error = err.errors[0] || {};
 
             if (
               error.status === 409 &&
               typeof error.data === 'object' &&
               error.data.existingId
             ) {
-              this.transitionToRoute('pipeline', error.data.existingId);
+              this.router.transitionTo('pipeline', error.data.existingId);
             } else {
               this.set('errorMessage', error.detail);
             }

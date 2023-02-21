@@ -81,7 +81,8 @@ a.d-button.has-icon {
 .d-button.is-disabled,
 .d-button[disabled],
 .d-button.is-disabled:hover,
-.d-button:hover[disabled] {
+.d-button:hover[disabled],
+.start-button[disabled] {
   background: rgba(48, 48, 48, 0.1);
   box-shadow: none;
   color: rgba(48, 48, 48, 0.2);

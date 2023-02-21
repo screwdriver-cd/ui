@@ -21,13 +21,13 @@ module('Unit | Controller | login', function (hooks) {
   });
 
   test('it exists', function (assert) {
-    let controller = this.owner.lookup('controller:login');
+    const controller = this.owner.lookup('controller:login');
 
     assert.ok(controller);
   });
 
   test('it calls session.authenticate', function (assert) {
-    let controller = this.owner.lookup('controller:login');
+    const controller = this.owner.lookup('controller:login');
 
     controller.send('authenticate');
     assert.equal(authType, 'authenticator:screwdriver-api');

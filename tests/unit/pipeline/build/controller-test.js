@@ -3,11 +3,10 @@ import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { settled } from '@ember/test-helpers';
+import { settled, waitUntil } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import sinon from 'sinon';
-import sinonTest from 'ember-sinon-qunit/test-support/test';
 
 const invalidateStub = sinon.stub();
 
@@ -33,7 +32,8 @@ const sessionServiceMock = Service.extend({
 const routerServiceMock = Service.extend({
   currentRoute: {
     name: 'someRouteName'
-  }
+  },
+  transitionTo: () => {}
 });
 
 let server;
@@ -57,7 +57,7 @@ module('Unit | Controller | pipeline/build', function (hooks) {
   });
 
   test('it restarts a build', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     server.post('http://localhost:8080/v4/events', () => [
       201,
@@ -73,6 +73,8 @@ module('Unit | Controller | pipeline/build', function (hooks) {
     ]);
 
     const controller = this.owner.lookup('controller:pipeline/build');
+    const routerService = this.owner.lookup('service:router');
+    const transitionToStub = sinon.stub(routerService, 'transitionTo');
 
     run(() => {
       controller.set('model', {
@@ -88,17 +90,17 @@ module('Unit | Controller | pipeline/build', function (hooks) {
         })
       });
 
-      assert.notOk(controller.get('isShowingModal'));
-      controller.transitionToRoute = (path, id) => {
-        assert.equal(path, 'pipeline.build');
-        assert.equal(id, 9999);
-      };
+      assert.notOk(controller.isShowingModal);
 
       controller.send('startBuild');
-      assert.ok(controller.get('isShowingModal'));
+      assert.ok(controller.isShowingModal);
     });
 
-    await settled();
+    await waitUntil(() => {
+      return transitionToStub.called;
+    });
+
+    assert.ok(transitionToStub.calledWith('pipeline.build', '9999'));
 
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
@@ -143,12 +145,14 @@ module('Unit | Controller | pipeline/build', function (hooks) {
         })
       });
 
-      assert.notOk(controller.get('isShowingModal'));
+      assert.notOk(controller.isShowingModal);
       controller.send('startBuild');
-      assert.ok(controller.get('isShowingModal'));
+      assert.ok(controller.isShowingModal);
     });
 
-    await settled();
+    await waitUntil(() => {
+      return controller.errorMessage !== '';
+    });
 
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
@@ -157,12 +161,9 @@ module('Unit | Controller | pipeline/build', function (hooks) {
       buildId: 123,
       causeMessage: 'Manually started by apple'
     });
-    assert.notOk(controller.get('isShowingModal'));
+    assert.notOk(controller.isShowingModal);
     assert.ok(invalidateStub.called);
-    assert.deepEqual(
-      controller.get('errorMessage'),
-      'User does not have permission'
-    );
+    assert.deepEqual(controller.errorMessage, 'User does not have permission');
   });
 
   test('it stops a build', async function (assert) {
@@ -203,7 +204,7 @@ module('Unit | Controller | pipeline/build', function (hooks) {
     assert.deepEqual(payload, {
       status: 'ABORTED'
     });
-    assert.deepEqual(controller.get('errorMessage'), '');
+    assert.deepEqual(controller.errorMessage, '');
   });
 
   test('it fails to stop a build', async function (assert) {
@@ -237,7 +238,9 @@ module('Unit | Controller | pipeline/build', function (hooks) {
       controller.send('stopBuild');
     });
 
-    await settled();
+    await waitUntil(() => {
+      return controller.errorMessage !== '';
+    });
 
     const [request] = server.handledRequests;
     const payload = JSON.parse(request.requestBody);
@@ -246,10 +249,7 @@ module('Unit | Controller | pipeline/build', function (hooks) {
       status: 'ABORTED'
     });
     assert.ok(invalidateStub.called);
-    assert.deepEqual(
-      controller.get('errorMessage'),
-      'User does not have permission'
-    );
+    assert.deepEqual(controller.errorMessage, 'User does not have permission');
   });
 
   test('it reloads a build', async function (assert) {
@@ -295,35 +295,41 @@ module('Unit | Controller | pipeline/build', function (hooks) {
     assert.ok(true);
   });
 
-  sinonTest(
-    'it will not change build step in pipeline.events',
-    function (assert) {
-      assert.expect(1);
-      this.owner.unregister('service:router');
-      this.owner.register('service:router', routerServiceMock);
-      const routerService = this.owner.lookup('service:router');
+  test('it will not change build step in pipeline.events', function (assert) {
+    assert.expect(0);
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
+    const routerService = this.owner.lookup('service:router');
 
-      routerService.set('currentRoute', { name: 'pipeline.events' });
+    routerService.set('currentRoute', { name: 'pipeline.events' });
+    routerService.set('transitionTo', () => {
+      assert.ok(true);
+    });
 
-      const controller = this.owner.lookup('controller:pipeline/build');
-      const spy = this.spy(controller, 'transitionToRoute');
+    const controller = this.owner.lookup('controller:pipeline/build');
 
-      controller.changeBuildStep();
-      assert.ok(spy.notCalled, 'transition was not called');
-      this.owner.unregister('service:router');
-    }
-  );
+    controller.changeBuildStep();
+    this.owner.unregister('service:router');
+  });
 
-  sinonTest('it changes build step in pipeline.build.step', function (assert) {
-    assert.expect(3);
+  test('it changes build step in pipeline.build.step', function (assert) {
+    assert.expect(5);
     this.owner.unregister('service:router');
     this.owner.register('service:router', routerServiceMock);
     const routerService = this.owner.lookup('service:router');
 
     routerService.set('currentRoute', { name: 'pipeline.build.step' });
+    routerService.set(
+      'transitionTo',
+      (path, pipelineId, buildId, stepsName) => {
+        assert.equal(path, 'pipeline.build.step');
+        assert.equal(pipelineId, 1);
+        assert.equal(buildId, 5678);
+        assert.equal(stepsName, 'active');
+      }
+    );
 
     const controller = this.owner.lookup('controller:pipeline/build');
-    const stub = this.stub(controller, 'transitionToRoute');
     const build = EmberObject.create({
       id: 5678,
       jobId: 'abcd',
@@ -343,11 +349,6 @@ module('Unit | Controller | pipeline/build', function (hooks) {
     controller.changeBuildStep();
 
     assert.ok(true);
-    assert.ok(stub.calledOnce, 'transition was called once');
-    assert.ok(
-      stub.calledWithExactly('pipeline.build.step', 1, 5678, 'active'),
-      'transition to build step page'
-    );
     this.owner.unregister('service:router');
   });
 });

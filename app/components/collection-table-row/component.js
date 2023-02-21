@@ -1,5 +1,5 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
-import { computed, getWithDefault } from '@ember/object';
 import { and } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { formatMetrics } from 'screwdriver-ui/utils/metric';
@@ -20,10 +20,12 @@ export default Component.extend({
   hasBothEventsAndLatestEventInfo: and('eventsInfo', 'lastEventInfo'),
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
-  aliasName: computed('pipeline', function get() {
-    return getWithDefault(this.pipeline.settings, 'aliasName', '');
+  aliasName: computed('pipeline.settings.aliasName', function get() {
+    return this.pipeline.settings.aliasName === undefined
+      ? ''
+      : this.pipeline.settings.aliasName;
   }),
-  branch: computed('pipeline', function get() {
+  branch: computed('pipeline.scmRepo', function get() {
     const { branch, rootDir } = this.pipeline.scmRepo;
 
     return rootDir ? `${branch}#${rootDir}` : branch;
@@ -40,6 +42,7 @@ export default Component.extend({
   ),
 
   didInsertElement() {
+    this._super(...arguments);
     if (!this.hasBothEventsAndLatestEventInfo) {
       this.setupInViewport();
     }

@@ -1,10 +1,10 @@
-<a href={{user.url}} title={{causeMessage}}>
-  {{#if (eq user.username "sd:scheduler")}}
-    <img src="/favicon.ico" alt="Screwdriver scheduler's avatar">
+<a href={{this.user.url}} title={{this.causeMessage}}>
+  {{#if (eq this.user.username "sd:scheduler")}}
+    <img src="/favicon.ico" alt="Screwdriver scheduler's avatar" />
   {{else}}
-    {{#if showAvatar}}
-      <img src={{user.avatar}} alt="{{user.name}}'s avatar">
+    {{#if this.showAvatar}}
+      <img src={{this.user.avatar}} alt="{{this.user.name}}'s avatar" />
     {{/if}}
   {{/if}}
-  {{user.name}}
+  {{this.user.name}}
 </a>

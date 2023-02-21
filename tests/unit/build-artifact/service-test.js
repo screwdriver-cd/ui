@@ -74,7 +74,7 @@ module('Unit | Service | build artifact', function (hooks) {
   });
 
   test('it exists', function (assert) {
-    let service = this.owner.lookup('service:build-artifact');
+    const service = this.owner.lookup('service:build-artifact');
 
     assert.ok(service);
   });

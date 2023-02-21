@@ -1,7 +1,6 @@
-import DS from 'ember-data';
-const { Model } = DS;
+import Model, { attr } from '@ember-data/model';
 
 export default Model.extend({
-  jobId: DS.attr('number'),
-  builds: DS.attr()
+  jobId: attr('number'),
+  builds: attr()
 });

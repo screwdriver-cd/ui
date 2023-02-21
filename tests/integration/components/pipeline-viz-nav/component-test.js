@@ -32,15 +32,15 @@ module('Integration | Component | pipeline-viz-nav', function (hooks) {
     });
 
     await render(
-      hbs`{{pipeline-viz-nav
-        selectedPipeline=selectedPipeline
-        selectedConnectedPipeline=selectedConnectedPipeline
-        pipelines=pipelines
-        connectedPipelines=connectedPipelines
-        onSearchPipeline=searchPipeline
-        onSelectPipeline=selectPipeline
-        onClickConnectedPipeline=selectConnectedPipeline
-      }}`
+      hbs`<PipelineVizNav
+        @selectedPipeline={{this.selectedPipeline}}
+        @selectedConnectedPipeline={{this.selectedConnectedPipeline}}
+        @pipelines={{this.pipelines}}
+        @connectedPipelines={{this.connectedPipelines}}
+        @onSearchPipeline={{this.searchPipeline}}
+        @onSelectPipeline={{this.selectPipeline}}
+        @onClickConnectedPipeline={{this.selectConnectedPipeline}}
+      />`
     );
 
     assert

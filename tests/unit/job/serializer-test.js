@@ -17,11 +17,11 @@ module('Unit | Serializer | job', function (hooks) {
   });
 
   test('it serializes records', function (assert) {
-    let record = run(() =>
+    const record = run(() =>
       this.owner.lookup('service:store').createRecord('job')
     );
 
-    let serializedRecord = record.serialize();
+    const serializedRecord = record.serialize();
 
     assert.ok(serializedRecord);
   });

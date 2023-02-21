@@ -1,8 +1,21 @@
-<h4>Versions:</h4>
+<h4>
+  Versions:
+</h4>
 <ul>
-  {{#each templates.templateData as |t|}}
+  {{#each this.templates.templateData as |t|}}
     <li>
-      {{#link-to "templates.detail" t.namespace t.name t.version}}<span class="version">{{t.version}}{{#if t.tag}} - {{t.tag}}{{/if}}</span>{{/link-to}}{{#if t.lastUpdated}} {{t.lastUpdated}}{{/if}}
+      <LinkTo
+        @route="templates.detail"
+        @models={{array t.namespace t.name t.version}}
+      >
+        <span class="version">
+          {{t.version}}{{#if t.tag}}
+            - {{t.tag}}
+          {{/if}}
+        </span>
+      </LinkTo>{{#if t.lastUpdated}}
+        {{t.lastUpdated}}
+      {{/if}}
     </li>
   {{/each}}
 </ul>

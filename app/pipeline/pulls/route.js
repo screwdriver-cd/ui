@@ -1,9 +1,11 @@
 // import Route from '@ember/routing/route';
 import { A as newArray } from '@ember/array';
 import RSVP from 'rsvp';
+import { inject as service } from '@ember/service';
 import EventsRoute from '../events/route';
 
 export default EventsRoute.extend({
+  store: service(),
   controllerName: 'pipeline.events',
   setupController(controller, model) {
     this._super(controller, model);
@@ -11,9 +13,6 @@ export default EventsRoute.extend({
       activeTab: 'pulls',
       selected: null
     });
-  },
-  renderTemplate() {
-    this.render('pipeline.events');
   },
   model() {
     const pipelineEventsController = this.controllerFor('pipeline.events');

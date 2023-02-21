@@ -18,68 +18,76 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
   });
 
   test('it renders', async function (assert) {
-    this.set('value', {
-      jobName: 'a',
-      build: {
-        id: 2,
-        status: 'RUNNING'
+    this.set('record', {
+      job: {
+        jobName: 'a',
+        build: {
+          id: 2,
+          status: 'RUNNING'
+        }
       }
     });
 
-    await render(hbs`{{pipeline-list-job-cell
-      value=value
-    }}`);
+    await render(hbs`<PipelineListJobCell
+      @record={{this.record}}
+    />`);
 
     assert.dom('.fa-spinner').exists({ count: 1 });
     assert.dom('.job-name').hasText('a');
   });
 
   test('it renders an aborted build', async function (assert) {
-    this.set('value', {
-      jobName: 'b',
-      build: {
-        id: 2,
-        status: 'ABORTED'
+    this.set('record', {
+      job: {
+        jobName: 'b',
+        build: {
+          id: 2,
+          status: 'ABORTED'
+        }
       }
     });
 
-    await render(hbs`{{pipeline-list-job-cell
-      value=value
-    }}`);
+    await render(hbs`<PipelineListJobCell
+      @record={{this.record}}
+    />`);
 
     assert.dom('.fa-stop-circle').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
   test('it renders a successful build', async function (assert) {
-    this.set('value', {
-      jobName: 'b',
-      build: {
-        id: 2,
-        status: 'SUCCESS'
+    this.set('record', {
+      job: {
+        jobName: 'b',
+        build: {
+          id: 2,
+          status: 'SUCCESS'
+        }
       }
     });
 
-    await render(hbs`{{pipeline-list-job-cell
-      value=value
-    }}`);
+    await render(hbs`<PipelineListJobCell
+      @record={{this.record}}
+    />`);
 
     assert.dom('.fa-check-circle').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
   test('it renders a failed build', async function (assert) {
-    this.set('value', {
-      jobName: 'b',
-      build: {
-        id: 2,
-        status: 'FAILURE'
+    this.set('record', {
+      job: {
+        jobName: 'b',
+        build: {
+          id: 2,
+          status: 'FAILURE'
+        }
       }
     });
 
-    await render(hbs`{{pipeline-list-job-cell
-      value=value
-    }}`);
+    await render(hbs`<PipelineListJobCell
+      @record={{this.record}}
+    />`);
 
     assert.dom('.fa-times-circle').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');

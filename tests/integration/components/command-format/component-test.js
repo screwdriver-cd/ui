@@ -53,7 +53,7 @@ module('Integration | Component | command format', function (hooks) {
 
   test('it renders docker', async function (assert) {
     this.set('mock', DOCKER_COMMAND);
-    await render(hbs`{{command-format command=mock}}`);
+    await render(hbs`<CommandFormat @command={{this.mock}} />`);
 
     assert.dom('h4').hasText('Format: docker');
     assert.dom('.image .label').hasText('Image:');
@@ -64,7 +64,7 @@ module('Integration | Component | command format', function (hooks) {
 
   test('it renders habitat', async function (assert) {
     this.set('mock', HABITAT_COMMAND);
-    await render(hbs`{{command-format command=mock}}`);
+    await render(hbs`<CommandFormat @command={{this.mock}} />`);
 
     assert.dom('h4').hasText('Format: habitat');
     assert.dom('.mode .label').hasText('Mode:');
@@ -77,7 +77,7 @@ module('Integration | Component | command format', function (hooks) {
 
   test('it renders binary', async function (assert) {
     this.set('mock', BINARY_COMMAND);
-    await render(hbs`{{command-format command=mock}}`);
+    await render(hbs`<CommandFormat @command={{this.mock}} />`);
 
     assert.dom('h4').hasText('Format: binary');
     assert.dom('.file .label').hasText('File:');

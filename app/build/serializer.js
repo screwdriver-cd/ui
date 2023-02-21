@@ -1,8 +1,7 @@
+import RESTSerializer from '@ember-data/serializer/rest';
 import { assign } from '@ember/polyfills';
-import { get } from '@ember/object';
-import DS from 'ember-data';
 
-export default DS.RESTSerializer.extend({
+export default RESTSerializer.extend({
   attrs: {
     buildContainer: 'container'
   },
@@ -18,10 +17,10 @@ export default DS.RESTSerializer.extend({
       payload.builds
         .filter(b => store.hasRecordForId('build', b.id))
         .forEach(b => {
-          let storeBuild = store.peekRecord('build', b.id);
+          const storeBuild = store.peekRecord('build', b.id);
 
           if (storeBuild) {
-            b.steps = get(storeBuild, 'steps').toArray();
+            b.steps = storeBuild.steps.toArray();
           }
         });
     }

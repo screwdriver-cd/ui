@@ -18,7 +18,7 @@ module('Integration | Component | pipeline-viz-chart', function (hooks) {
     this.setProperties({ pipeline, selectedConnectedPipeline });
 
     await render(
-      hbs`{{pipeline-viz-chart pipeline=pipeline selectedConnectedPipeline=selectedConnectedPipeline}}`
+      hbs`<PipelineVizChart @pipeline={{this.pipeline}} @selectedConnectedPipeline={{this.selectedConnectedPipeline}} />`
     );
 
     assert.dom('.graph-node').exists({ count: 8 });

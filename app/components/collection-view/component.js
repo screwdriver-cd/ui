@@ -1,4 +1,5 @@
 import { get, computed } from '@ember/object';
+import { gt, equal } from '@ember/object/computed';
 import { isEmpty, isEqual } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -46,30 +47,40 @@ export default Component.extend({
   pipelineRemovedMessage: '',
   reset: false,
 
-  showViewSwitch: computed('collection.pipelineIds', function showViewSwitch() {
-    return this.collection.pipelineIds.length !== 0;
-  }),
-  collections: computed({
-    get() {
-      if (
-        !get(this, 'session.isAuthenticated') ||
-        get(this, 'session.data.authenticated.isGuest')
-      ) {
-        return [];
-      }
-      const collections = this.store.peekAll('collection');
-
-      if (collections.isLoaded) {
-        return collections;
-      }
-
-      return this.store.findAll('collection');
+  showViewSwitch: computed(
+    'collection.pipelineIds.length',
+    function showViewSwitch() {
+      return this.collection.pipelineIds.length !== 0;
     }
-  }),
+  ),
+  collections: computed(
+    'session.data.authenticated.isGuest',
+    'session.isAuthenticated',
+    {
+      get() {
+        if (
+          !get(this, 'session.isAuthenticated') ||
+          get(this, 'session.data.authenticated.isGuest')
+        ) {
+          return [];
+        }
+        const collections = this.store.peekAll('collection');
+
+        if (collections.isLoaded) {
+          return collections;
+        }
+
+        return this.store.findAll('collection');
+      },
+      set(_, value) {
+        return (this._collections = value);
+      }
+    }
+  ),
 
   showOrganizeButton: computed(
+    'collection.pipelineIds.length',
     'session.isAuthenticated',
-    'collection.pipelineIds',
     function showOrganizeButton() {
       return (
         this.session.isAuthenticated && this.collection.pipelineIds.length !== 0
@@ -83,23 +94,13 @@ export default Component.extend({
     return this.activeViewOptionValue === viewOptions[1].value;
   }),
 
-  showOperations: computed(
-    'selectedPipelines.length',
-    function showOperations() {
-      return this.selectedPipelines.length > 0;
-    }
-  ),
+  showOperations: gt('selectedPipelines.length', 0),
 
-  isDefaultCollection: computed(
-    'collection.type',
-    function isDefaultCollection() {
-      return this.collection.type === 'default';
-    }
-  ),
+  isDefaultCollection: equal('collection.type', 'default'),
 
-  description: computed('collection', {
+  description: computed('collection.description', {
     get() {
-      let description = this.get('collection.description');
+      const description = this.get('collection.description');
 
       if (!description) {
         return 'Add a description';
@@ -108,11 +109,9 @@ export default Component.extend({
       return description;
     }
   }),
-  sortedPipelines: computed(
-    'collectionPipelines',
-    'sortBy',
-    'sortOrder',
-    function sortedPipelines() {
+  sortedPipelines: computed('collectionPipelines', 'sortBy', 'sortOrder', {
+    // function sortedPipelines() {
+    get() {
       const unknownStatusPipelines = [];
       const knownStatusPipelines = [];
       const collectionPipelinesArray = this.collectionPipelines.toArray();
@@ -148,8 +147,11 @@ export default Component.extend({
       }
 
       return sorted.concat(unknownStatusPipelines);
+    },
+    set(_, value) {
+      return (this._sortedPipelines = value);
     }
-  ),
+  }),
   sortByText: computed('sortBy', {
     get() {
       switch (this.sortBy.get(0)) {
@@ -163,19 +165,21 @@ export default Component.extend({
     }
   }),
 
-  hasAliasName: computed('collection.pipelines', {
+  hasAliasName: computed('collection.pipelines', 'collectionPipelines', {
     get() {
-      let hasAliasName = this.collectionPipelines
+      const hasAliasName = this.collectionPipelines
         .toArray()
         .some(element => element.settings.aliasName);
 
       return hasAliasName;
+    },
+    set(_, value) {
+      return (this._hasAliasName = value);
     }
   }),
-
-  collectionPipelines: computed('collection.pipelines.[]', {
+  collectionPipelines: computed('collection.id', 'collection.pipelines.[]', {
     get() {
-      let viewingId = this.get('collection.id');
+      const viewingId = this.get('collection.id');
 
       localStorage.setItem('lastViewedCollectionId', viewingId);
 
@@ -187,8 +191,9 @@ export default Component.extend({
     }
   }),
   isModelSaveDisabled: computed(
-    'collectionName',
+    'collection.{description,name}',
     'collectionDescription',
+    'collectionName',
     'showSettingModal',
     function isModelSaveDisabled() {
       const isDescriptionNotChanged = this.collection.description
@@ -337,7 +342,7 @@ export default Component.extend({
       });
     },
     toggleAddPipelineModal() {
-      if (this.get('showAddPipelineModal')) {
+      if (this.showAddPipelineModal) {
         if (this.selectedSearchedPipelines.length !== 0) {
           this.addMultipleToCollection(
             this.selectedSearchedPipelines,

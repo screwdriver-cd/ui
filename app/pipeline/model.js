@@ -1,30 +1,30 @@
+import { computed } from '@ember/object';
+import Model, { attr, hasMany } from '@ember-data/model';
 import { alias } from '@ember/object/computed';
-import { computed, getWithDefault } from '@ember/object';
-import DS from 'ember-data';
 import { formatMetrics } from 'screwdriver-ui/utils/metric';
 
-export default DS.Model.extend({
-  admins: DS.attr(),
-  annotations: DS.attr(),
-  checkoutUrl: DS.attr('string'),
-  rootDir: DS.attr('string'),
-  autoKeysGeneration: DS.attr('boolean', { defaultValue: false }),
-  scmContext: DS.attr('string'),
-  createTime: DS.attr('date'),
-  scmRepo: DS.attr(),
-  scmUri: DS.attr('string'),
-  name: DS.attr('string'),
-  state: DS.attr('string'),
-  workflowGraph: DS.attr(),
-  configPipelineId: DS.attr('string'),
-  childPipelines: DS.attr(),
-  prChain: DS.attr('boolean', { defaultValue: false }),
-  parameters: DS.attr(),
-  jobs: DS.hasMany('job', { async: true }),
-  secrets: DS.hasMany('secret', { async: true }),
-  tokens: DS.hasMany('token', { async: true }),
-  metrics: DS.hasMany('metric', { async: true }),
-  settings: DS.attr({
+export default Model.extend({
+  admins: attr(),
+  annotations: attr(),
+  checkoutUrl: attr('string'),
+  rootDir: attr('string'),
+  autoKeysGeneration: attr('boolean', { defaultValue: false }),
+  scmContext: attr('string'),
+  createTime: attr('date'),
+  scmRepo: attr(),
+  scmUri: attr('string'),
+  name: attr('string'),
+  state: attr('string'),
+  workflowGraph: attr(),
+  configPipelineId: attr('string'),
+  childPipelines: attr(),
+  prChain: attr('boolean', { defaultValue: false }),
+  parameters: attr(),
+  jobs: hasMany('job', { async: true }),
+  secrets: hasMany('secret', { async: true }),
+  tokens: hasMany('token', { async: true }),
+  metrics: hasMany('metric', { async: true }),
+  settings: attr({
     defaultValue() {
       return {
         groupedEvents: true,
@@ -50,7 +50,7 @@ export default DS.Model.extend({
     get() {
       const parameters = {};
 
-      getWithDefault(this, 'jobs', []).forEach(job => {
+      (this.jobs === undefined ? [] : this.jobs).forEach(job => {
         if (job.prParentJobId === null || job.prParentJobId === undefined) {
           const jobParameters = job.parameters;
 

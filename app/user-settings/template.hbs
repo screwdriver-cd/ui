@@ -1,19 +1,21 @@
 <div class="user-preference">
   <h2>Settings</h2>
-
   <div class="column-tabs-view">
-    {{#bs-tab customTabs=true}}
-      {{#bs-nav type="tabs" as |nav|}}
-        {{#nav.item active=(bs-eq activeTab "preferences")}}
-          {{#nav.link-to "user-settings.preferences" class="nav-link"}}User Preferences{{/nav.link-to}}
-        {{/nav.item}}
+    <BsTab @customTabs={{true}}>
+      <BsNav @type="tabs" as |nav|>
+        <nav.item @active={{bs-eq this.activeTab "preferences"}}>
+          {{#nav.link-to "user-settings.preferences" class="nav-link"}}
+            User Preferences
+          {{/nav.link-to}}
+        </nav.item>
 
-        {{#nav.item active=(bs-eq activeTab "access-tokens")}}
-          {{#nav.link-to "user-settings.access-tokens" class="nav-link"}}Access Tokens{{/nav.link-to}}
-        {{/nav.item}}
-      {{/bs-nav}}
-
+        <nav.item @active={{bs-eq this.activeTab "access-tokens"}}>
+          {{#nav.link-to "user-settings.access-tokens" class="nav-link"}}
+            Access Tokens
+          {{/nav.link-to}}
+        </nav.item>
+      </BsNav>
       {{outlet}}
-    {{/bs-tab}}
+    </BsTab>
   </div>
 </div>

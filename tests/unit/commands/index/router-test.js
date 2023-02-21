@@ -23,7 +23,7 @@ module('Unix | Route | commands/index', function (hooks) {
   });
 
   test('it dedupes the commands by namespace and name', function (assert) {
-    let route = this.owner.lookup('route:commands/index');
+    const route = this.owner.lookup('route:commands/index');
 
     assert.ok(route);
 

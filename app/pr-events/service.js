@@ -17,7 +17,7 @@ export default Service.extend({
     const buildUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/jobs/${jobId}/builds`;
     const prNum = eventPrUrl.split('/').pop();
 
-    let buildPromise = new EmberPromise(resolve =>
+    const buildPromise = new EmberPromise(resolve =>
       $.ajax({
         method: 'GET',
         url: buildUrl,
@@ -36,7 +36,7 @@ export default Service.extend({
       })
     );
 
-    let eventPromise = new EmberPromise(resolve =>
+    const eventPromise = new EmberPromise(resolve =>
       $.ajax({
         method: 'GET',
         url: eventUrl,
@@ -61,14 +61,14 @@ export default Service.extend({
         .catch(() => resolve([]))
     );
 
-    let promises = [buildPromise, eventPromise];
+    const promises = [buildPromise, eventPromise];
 
     return new EmberPromise(resolve =>
       RSVP.allSettled(promises).then(array => {
         const builds = array[0].value;
         const prCommits = array[1].value;
 
-        let eventBuildPairs = [];
+        const eventBuildPairs = [];
 
         prCommits.forEach(commit => {
           const matchingBuild = builds.find(

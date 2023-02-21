@@ -1,38 +1,47 @@
-import { module } from 'qunit';
+import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
-import test from 'ember-sinon-qunit/test-support/test';
 
 module('Unit | Controller | Commands', function (hooks) {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    let controller = this.owner.lookup('controller:commands');
+    const controller = this.owner.lookup('controller:commands');
 
     assert.ok(controller);
   });
 
   test('it creates correct breadcrumbs', function (assert) {
     const controller = this.owner.lookup('controller:commands');
+    /* eslint-disable */
 
     run(() => {
-      controller.set('routeParams', {
-        namespace: 'testNamespace',
-        name: 'testName'
+      controller.set('model', {
+        paramsFor: arg => {
+          if (arg === 'commands.namespace') {
+            return { namespace: 'testNamespace' };
+          }
+          if (arg === 'commands.detail') {
+            return { name: 'testName' };
+          }
+        }
       });
-
-      assert.deepEqual(controller.get('crumbs'), [
+      /* eslint-enable */
+      assert.deepEqual(controller.crumbs, [
         {
           name: 'Commands',
+          route: 'commands',
           params: ['commands']
         },
         {
           name: 'testNamespace',
-          params: ['commands.namespace', 'testNamespace']
+          route: 'commands.namespace',
+          params: ['testNamespace']
         },
         {
           name: 'testName',
-          params: ['commands.detail', 'testNamespace', 'testName']
+          route: 'commands.detail',
+          params: ['testNamespace', 'testName']
         }
       ]);
     });

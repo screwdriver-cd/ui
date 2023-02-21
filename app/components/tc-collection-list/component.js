@@ -1,12 +1,13 @@
 import { sort } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { computed, observer } from '@ember/object';
-import Table from 'ember-light-table';
 import { debounce } from '@ember/runloop';
 
 export default Component.extend({
+  theme: service('emt-themes/ember-bootstrap-v5'),
   classNames: [''],
-  table: null,
+  data: [],
   model: null,
   search: null,
   query: null,
@@ -30,19 +31,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let table = Table.create({
-      columns: this.columns,
-      rows: this.refinedModel
-    });
-
-    let sortColumn = table.get('allColumns').findBy('valuePath', this.sort);
-
-    // Setup initial sort column
-    if (sortColumn) {
-      sortColumn.set('sorted', true);
-    }
-
-    this.set('table', table);
+    this.set('data', this.refinedModel);
   },
   filteredModel: computed(
     'filteringNamespace',
@@ -103,47 +92,45 @@ export default Component.extend({
   }),
   columns: computed(() => [
     {
-      label: 'Name',
-      valuePath: 'name',
-      cellComponent: 'tc-collection-linker',
+      title: 'Name',
+      component: 'tcCollectionLinker',
       resizable: true,
       width: '20%',
       minResizeWidth: 175
     },
     {
-      label: 'Description',
-      sortable: false,
-      valuePath: 'description',
+      title: 'Description',
+      propertyName: 'description',
+      disableSorting: true,
       resizable: true,
       width: '30%',
       minResizeWidth: 350
     },
     {
-      label: 'Namespace',
-      valuePath: 'namespace',
-      cellComponent: 'tc-collection-linker',
+      title: 'Namespace',
+      component: 'tcCollectionNamespaceLinker',
       resizable: true,
       width: '15%',
       minResizeWidth: 150
     },
     {
-      label: 'Updated',
-      valuePath: 'lastUpdated',
+      title: 'Updated',
+      propertyName: 'lastUpdated',
+      sortBy: 'createTime',
       resizable: true,
       width: '15%',
       minResizeWidth: 100
     },
     {
-      label: 'Released By',
-      sortable: true,
-      valuePath: 'maintainer',
+      title: 'Released By',
+      propertyName: 'maintainer',
       resizable: true,
       width: '20%',
       minResizeWidth: 150
     }
   ]),
   refineModel() {
-    this.table.setRows(this.refinedModel);
+    this.data = this.refinedModel;
   },
   onSearch() {
     const search = this.query.trim().toLowerCase();
@@ -172,17 +159,6 @@ export default Component.extend({
     debounce(this, 'onSearch', 250);
   }),
   actions: {
-    sortByColumn(column) {
-      if (column.sorted) {
-        let vp = column.get('valuePath');
-
-        this.setProperties({
-          dir: column.ascending ? 'asc' : 'desc',
-          sort: vp === 'lastUpdated' ? 'createTime' : vp
-        });
-        this.refineModel();
-      }
-    },
     onFilterNamespace(ns) {
       this.set('filteringNamespace', ns || null);
       this.set(

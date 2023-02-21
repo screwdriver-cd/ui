@@ -37,7 +37,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it parses model properly', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -52,14 +52,14 @@ module('Unit | Controller | commands/detail', function (hooks) {
     });
 
     assert.ok(controller);
-    assert.equal(controller.get('selectedVersion'), null);
+    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionCommand.id'), 3);
-    assert.equal(controller.get('trusted'), true);
+    assert.equal(controller.trusted, true);
   });
 
   test('it handles version changes', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -74,13 +74,13 @@ module('Unit | Controller | commands/detail', function (hooks) {
     });
 
     assert.ok(controller);
-    assert.equal(controller.get('selectedVersion'), null);
+    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionCommand.id'), 3);
   });
 
   test('it handles model changes', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
       commandData: [
@@ -93,18 +93,18 @@ module('Unit | Controller | commands/detail', function (hooks) {
     controller.set('model', arr);
 
     assert.ok(controller);
-    assert.equal(controller.get('selectedVersion'), null);
+    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('versionCommand.id'), 3);
     assert.equal(controller.get('latest.id'), 3);
 
     arr.commandData.unshiftObject({ id: 4, version: '4.0.0' });
-    assert.equal(controller.get('selectedVersion'), null);
+    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('versionCommand.id'), 4);
     assert.equal(controller.get('latest.id'), 4);
   });
 
   test('it handles command deletion', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
       commandData: [
@@ -118,15 +118,20 @@ module('Unit | Controller | commands/detail', function (hooks) {
 
     assert.ok(controller);
 
-    controller.transitionToRoute = route => {
-      assert.equal(route, 'commands');
-    };
+    const routerServiceMock = Service.extend({
+      transitionTo: path => {
+        assert.equal(path, 'commands');
+      }
+    });
+
+    this.owner.unregister('service:router');
+    this.owner.register('service:router', routerServiceMock);
 
     controller.send('removeCommand', 'sample');
   });
 
   test('it handles command update', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
       commandData: [
@@ -139,14 +144,14 @@ module('Unit | Controller | commands/detail', function (hooks) {
     controller.set('model', arr);
 
     assert.ok(controller);
-    assert.ok(controller.get('isAdmin'));
+    assert.ok(controller.isAdmin);
 
     controller.send('updateTrust', 'sample');
     assert.ok(updateTrustStub.calledOnce);
   });
 
   test('it handles undefined tag or version', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -166,7 +171,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles a version that is exist', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -186,7 +191,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles a tag that is exist', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -206,7 +211,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles a version that is not exist', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [
@@ -226,7 +231,7 @@ module('Unit | Controller | commands/detail', function (hooks) {
   });
 
   test('it handles a tag that is not exist', function (assert) {
-    let controller = this.owner.lookup('controller:commands/detail');
+    const controller = this.owner.lookup('controller:commands/detail');
 
     controller.set('model', {
       commandData: [

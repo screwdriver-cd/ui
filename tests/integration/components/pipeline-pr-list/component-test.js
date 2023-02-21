@@ -159,7 +159,7 @@ module('Integration | Component | pipeline pr list', function (hooks) {
       })
     ];
 
-    const workflowgraph = {
+    const workflowGraph = {
       nodes: [
         { name: '~pr' },
         { name: '~commit' },
@@ -174,18 +174,19 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     };
 
     this.set('jobsMock', jobs);
-    this.set('workflowGraphMock', workflowgraph);
+    this.set('workflowGraphMock', workflowGraph);
     this.set('startBuild', Function.prototype);
     this.set('stopPRBuilds', Function.prototype);
     this.set('pipelineMock', mockPipelineData);
 
-    await render(hbs`{{pipeline-pr-list
-      jobs=jobsMock
-      pipeline=pipelineMock
-      isRestricted=isRestricted
-      startBuild=startBuild
-      workflowGraph=workflowGraphMock
-      stopPRBuilds=stopPRBuilds}}`);
+    await render(hbs`<PipelinePrList
+      @jobs={{this.jobsMock}}
+      @pipeline={{this.pipelineMock}}
+      @isRestricted={{this.isRestricted}}
+      @startBuild={{this.startBuild}}
+      @workflowGraph={{this.workflowGraphMock}}
+      @stopPRBuilds={{this.stopPRBuilds}}
+    />`);
 
     assert.dom('.view .view .detail').exists({ count: 2 });
     assert.dom('.title').hasText('update readme');
@@ -206,18 +207,35 @@ module('Integration | Component | pipeline pr list', function (hooks) {
       })
     ];
 
+    const workflowGraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { id: 1, name: 'main', displayName: 'myname' },
+        { id: 2, name: 'A' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'A' }
+      ]
+    };
+
     this.set('jobsMock', jobs);
+    this.set('workflowGraphMock', workflowGraph);
     this.set('isRestricted', true);
     this.set('startBuild', Function.prototype);
     this.set('stopPRBuilds', Function.prototype);
     this.set('pipelineMock', mockPipelineData);
 
-    await render(hbs`{{pipeline-pr-list
-      jobs=jobsMock
-      pipeline=pipelineMock
-      isRestricted=isRestricted
-      startBuild=startBuild
-      stopPRBuilds=stopPRBuilds}}`);
+    await render(hbs`<PipelinePrList
+      @jobs={{this.jobsMock}}
+      @pipeline={{this.pipelineMock}}
+      @workflowGraph={{this.workflowGraphMock}}
+      @isRestricted={{this.isRestricted}}
+      @startBuild={{this.startBuild}}
+      @stopPRBuilds={{this.stopPRBuilds}}
+    />`);
 
     assert.dom('.stopButton').doesNotExist();
     assert.dom('.view .view .detail').doesNotExist();
@@ -245,7 +263,7 @@ module('Integration | Component | pipeline pr list', function (hooks) {
       })
     ];
 
-    const workflowgraph = {
+    const workflowGraph = {
       nodes: [
         { name: '~pr' },
         { name: '~commit' },
@@ -263,16 +281,17 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     this.set('isRestricted', true);
     this.set('startBuild', Function.prototype);
     this.set('stopPRBuilds', Function.prototype);
-    this.set('workflowGraphMock', workflowgraph);
+    this.set('workflowGraphMock', workflowGraph);
     this.set('pipelineMock', mockPipelineData);
 
-    await render(hbs`{{pipeline-pr-list
-      jobs=jobsMock
-      pipeline=pipelineMock
-      isRestricted=isRestricted
-      startBuild=startBuild
-      workflowGraph=workflowGraphMock
-      stopPRBuilds=stopPRBuilds}}`);
+    await render(hbs`<PipelinePrList
+      @jobs={{this.jobsMock}}
+      @pipeline={{this.pipelineMock}}
+      @isRestricted={{this.isRestricted}}
+      @startBuild={{this.startBuild}}
+      @workflowGraph={{this.workflowGraphMock}}
+      @stopPRBuilds={{this.stopPRBuilds}}
+    />`);
 
     assert.dom('.stopButton').exists({ count: 1 });
     assert.dom('.view .startButton').doesNotExist();
@@ -320,13 +339,14 @@ module('Integration | Component | pipeline pr list', function (hooks) {
     this.set('workflowGraphMock', workflowgraph);
     this.set('pipelineMock', { ...mockPipelineData, state: 'INACTIVE' });
 
-    await render(hbs`{{pipeline-pr-list
-      jobs=jobsMock
-      pipeline=pipelineMock
-      isRestricted=isRestricted
-      startBuild=startBuild
-      workflowGraph=workflowGraphMock
-      stopPRBuilds=stopPRBuilds}}`);
+    await render(hbs`<PipelinePrList
+    @jobs={{this.jobsMock}}
+    @pipeline={{this.pipelineMock}}
+    @isRestricted={{this.isRestricted}}
+    @startBuild={{this.startBuild}}
+    @workflowGraph={{this.workflowGraphMock}}
+    @stopPRBuilds={{this.stopPRBuilds}}
+  />`);
 
     assert.dom('.stopButton').doesNotExist();
     assert.dom('.view .startButton').exists({ count: 1 });

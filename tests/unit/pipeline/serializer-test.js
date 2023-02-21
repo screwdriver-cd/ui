@@ -101,11 +101,11 @@ module('Unit | Serializer | pipeline', function (hooks) {
   });
 
   test('it serializes records', function (assert) {
-    let record = run(() =>
+    const record = run(() =>
       this.owner.lookup('service:store').createRecord('pipeline')
     );
 
-    let serializedRecord = record.serialize();
+    const serializedRecord = record.serialize();
 
     assert.ok(serializedRecord);
   });

@@ -66,7 +66,7 @@ export default Service.extend({
             this.setCache(buildId, stepName, { done });
 
             if (lines.length) {
-              let existings = this.getCache(buildId, stepName, 'logs') || [];
+              const existings = this.getCache(buildId, stepName, 'logs') || [];
 
               this.setCache(buildId, stepName, {
                 nextLine: inProgress
