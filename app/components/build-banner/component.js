@@ -83,20 +83,19 @@ export default Component.extend({
 
       const templateProxy = ObjectPromiseProxy.create({
         promise: resolve(this.shuttle.getTemplateDetails(templateId))
-      })
+      });
 
-      
       templateProxy.then(template => {
-       const usageTemplate = {
-          'name': template.name,
-          'namsespace': template.namespace,
-          'version': template.version
-        }
+        const usageTemplate = {
+          name: template.name,
+          namespace: template.namespace,
+          version: template.version
+        };
 
-        this.set('template', usageTemplate)
-      })
+        return this.set('template', usageTemplate);
+      });
     },
-    set(_, value ) {
+    set(_, value) {
       return set(this, '_template', value);
     }
   }),
