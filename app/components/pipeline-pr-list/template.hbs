@@ -6,12 +6,11 @@
           <span>
             <FaIcon @icon="code-branch" />
           </span>
-          PR-{{this.jobs.0.group}}
+          PR-{{this.jobs.0.group}}:
+          <span class="title">
+            {{this.jobs.0.title}}
+          </span>
         </a>
-        <br />
-        <span class="title">
-          {{this.jobs.0.title}}
-        </span>
         {{#if this.isRunning}}
           <BsButton
             @type="primary"

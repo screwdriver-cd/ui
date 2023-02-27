@@ -73,7 +73,8 @@ const prEventMock = EmberObject.create({
     url: 'http://example.com/u/batman'
   },
   pr: {
-    url: 'https://github.com/screwdriver-cd/ui/pull/292'
+    url: 'https://github.com/screwdriver-cd/ui/pull/292',
+    title: 'feat: test pr title'
   },
   pipelineId: '12345',
   groupEventId: '23450',
@@ -237,7 +238,7 @@ module('Integration | Component | build banner', function (hooks) {
     assert
       .dom('.pr .pr-url-holder a')
       .hasAttribute('href', 'https://github.com/screwdriver-cd/ui/pull/292');
-    assert.dom('.pr .pr-url-holder a').hasText('PR#292');
+    assert.dom('.pr .pr-url-holder a').hasText('PR#292: feat: test pr title');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
     assert
       .dom('.commit a')
@@ -297,7 +298,7 @@ module('Integration | Component | build banner', function (hooks) {
     assert
       .dom('.pr .pr-url-holder a')
       .hasAttribute('href', 'https://github.com/screwdriver-cd/ui/pull/292');
-    assert.dom('.pr .pr-url-holder a').hasText('PR#292');
+    assert.dom('.pr .pr-url-holder a').hasText('PR#292: feat: test pr title');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
     assert
       .dom('.commit a')
