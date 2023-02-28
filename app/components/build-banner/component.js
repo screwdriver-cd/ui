@@ -92,7 +92,9 @@ export default Component.extend({
           version: template.version
         };
 
-        return this.set('template', usageTemplate);
+        this.set('template', usageTemplate);
+
+        return this.template;
       });
     },
     set(_, value) {
