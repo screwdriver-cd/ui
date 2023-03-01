@@ -1,7 +1,6 @@
 import { set, computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { resolve } from 'rsvp';
 import Component from '@ember/component';
 import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
@@ -81,23 +80,17 @@ export default Component.extend({
     get() {
       const templateId = this.get('templateId');
 
-      const templateProxy = ObjectPromiseProxy.create({
-        promise: resolve(this.shuttle.getTemplateDetails(templateId))
-      })
+      return ObjectPromiseProxy.create({
+        promise: this.shuttle.getTemplateDetails(templateId).then(template => {
+          const usageTemplate = {
+            name: template.name,
+            namespace: template.namespace,
+            version: template.version
+          };
 
-      
-      templateProxy.then(template => {
-       const usageTemplate = {
-          'name': template.name,
-          'namsespace': template.namespace,
-          'version': template.version
-        }
-
-        this.set('template', usageTemplate)
-      })
-    },
-    set(_, value ) {
-      return set(this, '_template', value);
+          return usageTemplate;
+        })
+      });
     }
   }),
 
