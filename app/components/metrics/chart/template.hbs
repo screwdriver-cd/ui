@@ -5,7 +5,7 @@
 
   {{#if @legends}}
     {{#if @legends.left}}
-      <ul class="list-inline chart-legend pull-left">
+      <ul class="list-inline chart-legend float-left">
         {{#each @legends.left as |leg|}}
           <li style={{leg.style}}>
             {{leg.name}}
@@ -15,7 +15,7 @@
     {{/if}}
 
     {{#if @legends.right}}
-      <ul class="list-inline chart-legend pull-right">
+      <ul class="list-inline chart-legend float-right">
         {{#each @legends.right as |leg|}}
           <li style={{leg.style}}>
             {{leg.name}}

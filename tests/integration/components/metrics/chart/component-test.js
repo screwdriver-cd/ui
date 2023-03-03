@@ -152,8 +152,8 @@ module('Integration | Component | metrics/chart', function (hooks) {
     assert.dom('.chart-c3').exists({ count: 1 });
     assert.dom('.chart-title').exists({ count: 1 });
     assert.dom('.chart-title').hasText(chartTitle, 'has chart title');
-    assert.dom('.pull-left').hasText('Downtime (MIN)', 'has left legend');
-    assert.dom('.pull-right').hasText('Build Count', 'has right legend');
+    assert.dom('.float-left').hasText('Downtime (MIN)', 'has left legend');
+    assert.dom('.float-right').hasText('Build Count', 'has right legend');
     assert.dom('.reset-button').exists({ count: 1 });
     assert.dom('.c3-text').exists({ count: 1 });
     assert

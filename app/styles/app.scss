@@ -185,7 +185,11 @@ body {
   font-weight: $weight-normal;
 }
 
-$ember-power-select-border-color: #64A5ED;
+html {
+  font-size: 14px;
+}
+
+$ember-power-select-border-color: #64a5ed;
 $ember-power-select-border-radius: 0;
 
 @import 'ember-power-select';

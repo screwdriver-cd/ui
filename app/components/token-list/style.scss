@@ -11,10 +11,11 @@
 
   section {
     border-radius: 5px 5px 0 0;
-    border: 1px solid $sd-separator;
+    padding: 25px;
   }
 
-  tbody tr, tfoot tr {
+  tbody tr,
+  tfoot tr {
     border: 1px solid $sd-text-light;
   }
 
@@ -58,26 +59,27 @@
       color: $sd-text-med;
     }
   }
-  
-  .token-name, .token-description {
+
+  .token-name,
+  .token-description {
     width: 30%;
     max-width: 200px;
   }
 
-  .name, .description {
+  .name,
+  .description {
     width: 30%;
     max-width: 200px;
-    input{
+    input {
       max-width: 200px;
     }
   }
 
-  .last-used, .actions {
+  .last-used,
+  .actions {
     width: 20%;
     max-width: 100px;
   }
-
-
 
   .add {
     cursor: pointer;
