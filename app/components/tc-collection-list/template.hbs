@@ -6,7 +6,7 @@
       title="More Information"
       target="_blank"
       rel="noopener"
-      class="link pull-right"
+      class="link float-right"
     >
       {{this.collectionType}} Docs
       <FaIcon @icon="question-circle" />
@@ -22,7 +22,7 @@
     <b>
       Screwdriver {{this.collectionType}}
     </b>
-    <span class="pull-right">
+    <span class="float-right">
       <span class="text-uppercase total">
         Total
       </span>
@@ -125,5 +125,6 @@
     @showCurrentPageNumberSelect={{false}}
     @multipleColumnsSorting={{false}}
     @noDataToShowMsg="Sorry! No result is found."
+    @pageSize={{this.refinedModel.length}}
   />
 </section>

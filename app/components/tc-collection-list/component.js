@@ -93,6 +93,7 @@ export default Component.extend({
   columns: computed(() => [
     {
       title: 'Name',
+      propertyName: 'name',
       component: 'tcCollectionLinker',
       resizable: true,
       width: '20%',
@@ -108,6 +109,7 @@ export default Component.extend({
     },
     {
       title: 'Namespace',
+      propertyName: 'namespace',
       component: 'tcCollectionNamespaceLinker',
       resizable: true,
       width: '15%',
