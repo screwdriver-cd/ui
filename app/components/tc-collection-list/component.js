@@ -32,6 +32,8 @@ export default Component.extend({
     this._super(...arguments);
 
     this.set('data', this.refinedModel);
+
+    this.theme.table = 'table table-condensed table-sm collection-list';
   },
   filteredModel: computed(
     'filteringNamespace',
