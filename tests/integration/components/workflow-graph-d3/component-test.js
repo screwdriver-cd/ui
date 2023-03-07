@@ -312,16 +312,22 @@ module('Integration | Component | workflow graph d3', function (hooks) {
 
     assert.equal(
       this.element.querySelectorAll(
-        'svg > .stage-info-wrapper .stage-info .stage-name'
+        'svg > .stage-info-wrapper .stage-info .stage-header .stage-name'
+      ).length,
+      2
+    );
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-header .stage-job-count'
       ).length,
       2
     );
     assert
-      .dom('svg > .stage-info-wrapper:nth-of-type(1) .stage-info .stage-name')
-      .hasText('integration');
+      .dom('svg > .stage-info-wrapper:nth-of-type(1) .stage-info .stage-header')
+      .hasText('integration(3)');
     assert
-      .dom('svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-name')
-      .hasText('production');
+      .dom('svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-header')
+      .hasText('production(3)');
 
     assert.equal(
       this.element.querySelectorAll(
@@ -339,6 +345,155 @@ module('Integration | Component | workflow graph d3', function (hooks) {
         'svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-description'
       )
       .hasText(STAGE_PROD_DESC);
+  });
+
+  test('it renders stages when stages are supplied along with build details', async function (assert) {
+    const STAGE_INT_DESC =
+      'This stage will deploy the latest application to CI environment and certifies it after the tests are passed.';
+    const STAGE_PROD_BLUE_DESC =
+      'This stage will deploy the CI certified application to production blue environment and certifies it after the tests are passed.';
+    const STAGE_PROD_GREEN_DESC =
+      'This stage will deploy the CI certified application to production green environment and certifies it after the tests are passed.';
+
+    this.set('workflowGraph', {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'component', id: 1 },
+        { name: 'publish', id: 2 },
+        { name: 'ci-deploy', id: 21 },
+        { name: 'ci-test', id: 22 },
+        { name: 'ci-certify', id: 23 },
+        { name: 'prod-blue-deploy', id: 31 },
+        { name: 'prod-blue-test', id: 32 },
+        { name: 'prod-blue-certify', id: 33 },
+        { name: 'prod-green-deploy', id: 34 },
+        { name: 'prod-green-test', id: 35 }
+      ],
+      edges: [
+        { src: '~pr', dest: 'component' },
+        { src: '~commit', dest: 'component' },
+        { src: 'component', dest: 'publish' },
+        { src: 'publish', dest: 'ci-deploy' },
+        { src: 'ci-deploy', dest: 'ci-test' },
+        { src: 'ci-test', dest: 'ci-certify' },
+        { src: 'ci-certify', dest: 'prod-blue-deploy' },
+        { src: 'prod-blue-deploy', dest: 'prod-blue-test' },
+        { src: 'prod-blue-test', dest: 'prod-blue-certify' },
+        { src: 'prod-blue-certify', dest: 'prod-green-deploy' },
+        { src: 'prod-green-deploy', dest: 'prod-green-test' }
+      ]
+    });
+
+    this.set('stages', [
+      {
+        id: 7,
+        name: 'integration',
+        jobs: [{ id: 21 }, { id: 22 }, { id: 23 }],
+        description: STAGE_INT_DESC
+      },
+      {
+        id: 8,
+        name: 'production-blue',
+        jobs: [{ id: 31 }, { id: 32 }, { id: 33 }],
+        description: STAGE_PROD_BLUE_DESC
+      },
+      {
+        id: 8,
+        name: 'production-green',
+        jobs: [{ id: 34 }, { id: 35 }],
+        description: STAGE_PROD_GREEN_DESC
+      }
+    ]);
+
+    // this.set('startFrom', '~commit');
+    this.set('builds', [
+      { jobId: 1, id: 81, status: 'SUCCESS' },
+      { jobId: 1, id: 82, status: 'SUCCESS' },
+      { jobId: 21, id: 83, status: 'SUCCESS' },
+      { jobId: 22, id: 84, status: 'SUCCESS' },
+      { jobId: 23, id: 85, status: 'SUCCESS' },
+      { jobId: 31, id: 86, status: 'SUCCESS' },
+      { jobId: 32, id: 87, status: 'FAILURE' }
+    ]);
+
+    await render(
+      hbs`{{workflow-graph-d3 workflowGraph=workflowGraph stages=stages}}`
+    );
+
+    assert.equal(this.element.querySelectorAll('svg').length, 1);
+    assert.equal(
+      this.element.querySelectorAll('svg > g.graph-node').length,
+      12
+    );
+    assert.equal(
+      this.element.querySelectorAll('svg > path.graph-edge').length,
+      11
+    );
+
+    assert.equal(
+      this.element.querySelectorAll('svg > .stage-container').length,
+      3
+    );
+    assert.equal(
+      this.element.querySelectorAll('svg > .stage-container.stage-success')
+        .length,
+      1
+    );
+    assert.equal(
+      this.element.querySelectorAll('svg > .stage-container.stage-failure')
+        .length,
+      1
+    );
+    assert.equal(
+      this.element.querySelectorAll('svg > .stage-container.stage-not_complete')
+        .length,
+      1
+    );
+
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-header .stage-name'
+      ).length,
+      3
+    );
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-header .stage-job-count'
+      ).length,
+      3
+    );
+    assert
+      .dom('svg > .stage-info-wrapper:nth-of-type(1) .stage-info .stage-header')
+      .hasText('integration(3)');
+    assert
+      .dom('svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-header')
+      .hasText('production-blue(3)');
+    assert
+      .dom('svg > .stage-info-wrapper:nth-of-type(3) .stage-info .stage-header')
+      .hasText('production-green(2)');
+
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-description'
+      ).length,
+      3
+    );
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(1) .stage-info .stage-description'
+      )
+      .hasText(STAGE_INT_DESC);
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-description'
+      )
+      .hasText(STAGE_PROD_BLUE_DESC);
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(3) .stage-info .stage-description'
+      )
+      .hasText(STAGE_PROD_GREEN_DESC);
   });
 
   test('it does not render stages for minified case', async function (assert) {
