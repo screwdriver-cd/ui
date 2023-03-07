@@ -100,20 +100,41 @@ g {
 .stage-container {
   rx: 5;
   ry: 5;
+  stroke: $grey-600;
+
+  &.stage-success {
+    stroke: $sd-success;
+  }
+
+  &.stage-failure {
+    stroke: $sd-failure;
+  }
+
+  &.stage-not_complete {
+    stroke: $grey-600;
+  }
 }
 
 .stage-info {
   padding: 10px;
-}
 
-.stage-name {
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .stage-header {
+    .stage-name {
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.stage-description {
-  color: $sd-text-med;
-  margin-top: 5px;
+    .stage-job-count {
+      padding-left: 4px;
+      font-weight: bold;
+      color: #9a9a9a;
+    }
+  }
+
+  .stage-description {
+    color: $sd-text-med;
+    margin-top: 5px;
+  }
 }

@@ -129,6 +129,24 @@ const getStagePosition = graph => {
   };
 };
 
+const getStageStatus = graph => {
+  const { nodes } = graph;
+
+  let status = 'SUCCESS';
+
+  for (const n of nodes) {
+    if (['FAILURE', 'ABORTED'].includes(n.status)) {
+      return 'FAILURE';
+    }
+
+    if (!['SUCCESS', 'STARTED_FROM'].includes(n.status)) {
+      status = 'NOT_COMPLETE';
+    }
+  }
+
+  return status;
+};
+
 /**
  * Calculate how many nodes are visited in the graph from the given starting point
  * @method graphDepth
@@ -371,6 +389,7 @@ const decorateGraph = ({ inputGraph, builds, jobs, start, stages }) => {
 
       s.graph = stageGraph;
       s.pos = getStagePosition(stageGraph);
+      s.status = getStageStatus(stageGraph);
 
       return s;
     });

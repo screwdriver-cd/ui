@@ -300,7 +300,12 @@ export default Component.extend({
         // stage container
         const stageContainer = svg
           .append('rect')
-          .attr('class', 'stage-container')
+          .attr(
+            'class',
+            `stage-container${
+              stage.status ? ` stage-${stage.status.toLowerCase()}` : ''
+            }`
+          )
           .attr('x', calcStageX(stage))
           .attr('y', calcStageY(stage))
           .attr('width', calcStageWidth(stage))
@@ -319,12 +324,23 @@ export default Component.extend({
 
         const stageInfo = fo.append('xhtml:div').attr('class', 'stage-info');
 
-        // stage info - name
-        stageInfo
+        // stage info - header
+        const stageHeader = stageInfo
           .append('div')
+          .attr('class', 'stage-header')
+          .style('font-size', `${TITLE_SIZE}px`);
+
+        stageHeader
+          .append('span')
           .html(stage.name)
           .attr('title', stage.name)
           .attr('class', 'stage-name')
+          .style('font-size', `${TITLE_SIZE}px`);
+
+        stageHeader
+          .append('span')
+          .html(`(${stage.graph.nodes.length})`)
+          .attr('class', 'stage-job-count')
           .style('font-size', `${TITLE_SIZE}px`);
 
         // stage info - description
