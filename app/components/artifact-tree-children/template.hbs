@@ -2,11 +2,22 @@
   <div ...attributes>
     {{#each @node.directory as |directory|}}
       {{#if (eq 'directory' directory.type)}}
-        <@tree.Node
-          @directory={{directory.children}}
-          @fileName={{directory.text}}
-          @isExpandable={{true}}
-        />
+        {{#if (eq directory.text this.nextDir)}}
+          <@tree.Node
+            @directory={{directory.children}}
+            @fileName={{directory.text}}
+            @isExpandable={{true}}
+            @isExpanded={{true}}
+            @childrenComponent={{component "artifact-tree-children" selectedArtifactRelative=this.selectedArtifactRelativeChild}}
+          />
+        {{else}}
+          <@tree.Node
+            @directory={{directory.children}}
+            @fileName={{directory.text}}
+            @isExpandable={{true}}
+            @childrenComponent={{component "artifact-tree-children" selectedArtifactRelative=''}}
+          />
+        {{/if}}
       {{/if}}
       {{#if (eq 'file' directory.type)}}
         <@tree.Node

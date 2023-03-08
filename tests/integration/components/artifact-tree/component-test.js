@@ -1,8 +1,8 @@
 import { resolve } from 'rsvp';
 import Service from '@ember/service';
-import { module, test, todo } from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, find, findAll, waitFor } from '@ember/test-helpers';
+import { render, click, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const parsedManifest = [
@@ -58,38 +58,31 @@ module('Integration | Component | artifact tree', function (hooks) {
 
     await waitFor('.ember-basic-tree');
 
-    assert.dom('.ember-basic-tree-children').exists({ count: 2 });
     assert.dom('.ember-basic-tree-node').exists({ count: 3 });
 
     // Check if the href is correctly set and then click the link
     assert
-      .dom('.ember-basic-tree > li > .ember-basic-tree-children > li > a')
+      .dom(
+        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > a'
+      )
       .hasText('test.txt');
-    await click('.ember-basic-tree > li > .ember-basic-tree-children > li > a');
+    await click(
+      '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > a'
+    );
   });
 
-  todo(
-    'it renders with artifacts with artifact preselected',
-    async function (assert) {
-      await render(
-        hbs`<ArtifactTree @buildStatus="SUCCESS" @selectedArtifact="coverage/coverage.json" />`
-      );
+  test('it renders with artifacts with artifact preselected', async function (assert) {
+    await render(
+      hbs`<ArtifactTree @buildStatus="SUCCESS" @selectedArtifact="coverage/coverage.json" />`
+    );
 
-      await waitFor('.ember-basic-tree');
+    await waitFor('.ember-basic-tree');
 
-      assert.dom('.ember-basic-tree-children').exists({ count: 2 });
-      assert.dom('.ember-basic-tree-node').exists({ count: 3 });
-
-      assert.equal(
-        find('.jstree-clicked').href,
-        parsedManifest[0].children[0].a_attr.href
-      );
-      // Check if the href is correctly set and then click the link
-      assert.equal(
-        findAll('.jstree-leaf a')[1].href,
-        parsedManifest[1].a_attr.href
-      );
-      await click('.jstree-leaf a');
-    }
-  );
+    assert.dom('.ember-basic-tree-node').exists({ count: 4 });
+    assert
+      .dom(
+        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > .ember-basic-tree-children > .ember-basic-tree-children > li > a'
+      )
+      .hasText('coverage.json');
+  });
 });
