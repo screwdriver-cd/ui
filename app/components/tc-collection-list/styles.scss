@@ -1,7 +1,6 @@
 & {
   .row,
-  .collection-table,
-  .lt-body-wrap {
+  .collection-table {
     margin-top: 15px;
   }
 
@@ -47,6 +46,8 @@
   }
 
   .collection-list {
+    margin-top: 15px;
+
     th {
       padding: 10px;
       color: $grey-600;
