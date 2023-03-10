@@ -32,7 +32,9 @@ export default Model.extend({
       return this.isPR ? parseInt(this.name.slice('PR-'.length), 10) : null;
     },
     set(_, value) {
-      return (this._group = value);
+      this.set('_group', value);
+
+      return value;
     }
   }),
   prNumber: alias('group'),
@@ -82,7 +84,9 @@ export default Model.extend({
       return this.state === 'DISABLED';
     },
     set(_, value) {
-      return (this._isDisabled = value);
+      this.set('_isDisabled', value);
+
+      return value;
     }
   }),
   modelToReload: 'builds',
