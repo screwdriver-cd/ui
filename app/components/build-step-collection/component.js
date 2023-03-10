@@ -29,7 +29,9 @@ export default Component.extend({
       return '';
     },
     set(_, value) {
-      return set(this, '_iframeUrl', value);
+      set(this, '_iframeUrl', value);
+
+      return value;
     }
   }),
   selectedStep: computed(
@@ -85,7 +87,9 @@ export default Component.extend({
         return true;
       },
       set(_, value) {
-        return set(this, '_teardownCollapsed', value);
+        set(this, '_teardownCollapsed', value);
+
+        return value;
       }
     }
   ),

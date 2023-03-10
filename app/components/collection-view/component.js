@@ -73,7 +73,9 @@ export default Component.extend({
         return this.store.findAll('collection');
       },
       set(_, value) {
-        return (this._collections = value);
+        this.set('_collections', value);
+
+        return value;
       }
     }
   ),
@@ -149,7 +151,9 @@ export default Component.extend({
       return sorted.concat(unknownStatusPipelines);
     },
     set(_, value) {
-      return (this._sortedPipelines = value);
+      this.set('_sortedPipelines', value);
+
+      return value;
     }
   }),
   sortByText: computed('sortBy', {
@@ -174,7 +178,9 @@ export default Component.extend({
       return hasAliasName;
     },
     set(_, value) {
-      return (this._hasAliasName = value);
+      this.set('_hasAliasName', value);
+
+      return value;
     }
   }),
   collectionPipelines: computed('collection.id', 'collection.pipelines.[]', {
