@@ -40,7 +40,9 @@ export default Component.extend({
       return url.split('/').pop();
     },
     set(_, value) {
-      return set(this, '_prNumber', value);
+      set(this, '_prNumber', value);
+
+      return value;
     }
   }),
 

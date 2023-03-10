@@ -539,7 +539,9 @@ export default Component.extend(ModelReloaderMixin, {
       return isInactivePipeline(this.get('pipeline'));
     },
     set(_, value) {
-      return (this._isInactivePipeline = value);
+      this.set('_isInactivePipeline', value);
+
+      return value;
     }
   }),
 
