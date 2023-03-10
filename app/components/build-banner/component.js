@@ -12,7 +12,7 @@ const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 export default Component.extend({
   userSettings: service(),
   shuttle: service(),
-  classNames: ['build-banner', 'row'],
+  classNames: ['build-banner', 'grid'],
   classNameBindings: ['buildStatus'],
   coverage: service(),
   coverageInfo: {},
