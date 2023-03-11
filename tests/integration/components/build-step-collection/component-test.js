@@ -106,4 +106,47 @@ module('Integration | Component | build step collection', function (hooks) {
     assert.dom('.step-list ul.teardown li').exists({ count: 2 });
     assert.dom('.step-list div.user-steps li:nth-child(2)').hasClass('active');
   });
+
+  test('it can preselect an artifact', async function (assert) {
+    const stepList = [
+      'sd-setup-step1',
+      'sd-setup-step2',
+      'sd-setup-step3',
+      'user-step1',
+      'user-step2',
+      'user-step3',
+      'user-step4',
+      'sd-teardown-step1',
+      'sd-teardown-step2'
+    ];
+
+    this.set('stepList', stepList);
+    this.set(
+      'buildSteps',
+      stepList.map(name => ({
+        name,
+        startTime: new Date(),
+        endTime: new Date(),
+        code: 0
+      }))
+    );
+    this.set('selectedArtifact', 'environment.json');
+    this.set('changeBuildStep', () => {});
+
+    await render(hbs`<BuildStepCollection
+      @selectedArtifact={{this.selectedArtifact}}
+      @buildStatus="SUCCESS"
+      @buildId=1
+      @buildSteps={{this.buildSteps}}
+      @buildStart={{null}}
+      @activeTab="artifacts"
+      @changeBuildStep={{action this.changeBuildStep}}
+    />`);
+
+    const artifactURL = new RegExp(`.*environment.json.*`);
+
+    assert
+      .dom('.build-step-collection > div > .partial-view > div > div > iframe')
+      .hasAttribute('src', artifactURL);
+  });
 });

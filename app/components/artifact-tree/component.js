@@ -79,7 +79,9 @@ export default Component.extend({
 
     showArtifactPreview(treeData) {
       const { href } = treeData.a_attr;
-      const artifactPath = href.split('artifacts/')[1];
+      const artifactPath = href.substring(
+        href.split('artifacts/')[0].length + 10
+      );
 
       this.setProperties({
         href,
