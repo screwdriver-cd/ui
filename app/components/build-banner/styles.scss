@@ -29,6 +29,7 @@ li {
   padding: 5px 10px;
   min-width: 120px;
   vertical-align: top;
+  overflow-wrap: break-word;
 
   span {
     display: block;
@@ -78,19 +79,28 @@ li {
   display: none;
 }
 
-.open .dropdown-menu,
+.show .dropdown-menu,
 .commit-list,
 .caret-display,
 .dropdown {
   display: inline-block;
 }
 
-.dropdown-menu {
+.commit-dropdown {
   position: absolute;
-  left: -70px;
+  top: 1.5rem !important;
+  left: -70px !important;
   min-width: 60px;
   max-height: 150px;
   overflow: auto;
+  transform: none !important;
+  padding: 0;
+  > li > a {
+    display: block;
+    padding: 3px 20px;
+    line-height: 1.428571429;
+    white-space: nowrap;
+  }
 }
 
 .pr-item {

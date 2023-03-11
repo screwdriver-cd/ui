@@ -12,7 +12,7 @@ const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 export default Component.extend({
   userSettings: service(),
   shuttle: service(),
-  classNames: ['build-banner', 'row'],
+  classNames: ['build-banner', 'grid'],
   classNameBindings: ['buildStatus'],
   coverage: service(),
   coverageInfo: {},
@@ -40,7 +40,9 @@ export default Component.extend({
       return url.split('/').pop();
     },
     set(_, value) {
-      return set(this, '_prNumber', value);
+      set(this, '_prNumber', value);
+
+      return value;
     }
   }),
 

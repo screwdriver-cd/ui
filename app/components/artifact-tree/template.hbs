@@ -12,6 +12,7 @@
       @directory={{this.treedata.content}}
       @isExpandable={{true}}
       @isExpanded={{true}}
+      @childrenComponent={{component "artifact-tree-children" selectedArtifactRelative=this.selectedArtifact}}
     />
   </BasicTree>
 {{/if}}

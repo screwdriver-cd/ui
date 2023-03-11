@@ -2,9 +2,9 @@ import Component from '@ember/component';
 import { filter, mapBy, equal } from '@ember/object/computed';
 import { set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
-  iframeUrl: '',
   router: service(),
   activeTab: 'steps',
   selectedArtifact: '',
@@ -13,6 +13,27 @@ export default Component.extend({
   stepNames: mapBy('buildSteps', 'name'),
   setupSteps: filter('stepNames', item => /^sd-setup/.test(item)),
   teardownSteps: filter('stepNames', item => /^sd-teardown/.test(item)),
+
+  iframeUrl: computed('_iframeUrl', 'buildId', 'selectedArtifact.length', {
+    get() {
+      if (this._iframeUrl !== undefined) {
+        return this._iframeUrl;
+      }
+      if (
+        this.selectedArtifact !== '' &&
+        this.selectedArtifact[this.selectedArtifact.length - 1] !== '/'
+      ) {
+        return `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${this.buildId}/artifacts/${this.selectedArtifact}?type=preview`;
+      }
+
+      return '';
+    },
+    set(_, value) {
+      set(this, '_iframeUrl', value);
+
+      return value;
+    }
+  }),
   selectedStep: computed(
     'buildSteps.@each.{code,startTime,endTime}',
     'preselectedStepName',
@@ -66,7 +87,9 @@ export default Component.extend({
         return true;
       },
       set(_, value) {
-        return set(this, '_teardownCollapsed', value);
+        set(this, '_teardownCollapsed', value);
+
+        return value;
       }
     }
   ),

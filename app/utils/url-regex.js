@@ -9,7 +9,7 @@ function urlRegex() {
 // Shortens the URL and adds three dots to the end
 function shortenUrl(url, length) {
   if (!isBlank(url) && url.length > length) {
-    const url = `${url.substr(0, length)}...`;
+    url = url.substr(0, length) + '...';
   }
 
   return url;
