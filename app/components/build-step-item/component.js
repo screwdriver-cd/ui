@@ -53,7 +53,9 @@ export default Component.extend({
       return null;
     },
     set(_, value) {
-      return (this._duration = value);
+      this.set('_duration', value);
+
+      return value;
     }
   }),
   click() {
