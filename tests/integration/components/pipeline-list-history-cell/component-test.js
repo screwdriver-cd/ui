@@ -136,7 +136,7 @@ module(
           },
           {
             id: 2,
-            status: 'SUCCESS',
+            status: 'FAILURE',
             startTime: '2023-03-02T18:58:46.493Z',
             endTime: '2023-03-02T20:58:56.411Z'
           }
@@ -152,6 +152,9 @@ module(
 
       await triggerEvent('.build-status:first-child', 'mouseenter');
       assert.dom('.tooltip').exists({ count: 1 });
+      assert
+        .dom('.tooltip')
+        .hasText('Build# 1 Start - 02/03/2023 10:58 End - 02/03/2023 10:58');
     });
   }
 );
