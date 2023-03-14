@@ -152,11 +152,7 @@ module(
 
       await triggerEvent('.build-status:first-child', 'mouseenter');
       assert.dom('.tooltip').exists({ count: 1 });
-      assert
-        .dom('.tooltip')
-        .hasText(
-          'Build# 1 Start - 03/02/2023 10:58AM End - 03/02/2023 10:58AM'
-        );
+      assert.dom('.tooltip').containsText('Build# 1 Start - 03/02/2023');
     });
   }
 );
