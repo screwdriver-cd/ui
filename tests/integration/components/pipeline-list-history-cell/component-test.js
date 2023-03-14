@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, triggerEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 
@@ -123,6 +123,35 @@ module(
 
       assert.dom('.fa-circle').hasClass('RANDOM');
       assert.dom('.fa-circle').exists({ count: 2 });
+    });
+
+    test('it renders tooltip upon hover with build details', async function (assert) {
+      this.set('record', {
+        history: [
+          {
+            id: 1,
+            status: 'SUCCESS',
+            startTime: '2023-03-02T18:58:46.493Z',
+            endTime: '2023-03-02T18:58:56.411Z'
+          },
+          {
+            id: 2,
+            status: 'SUCCESS',
+            startTime: '2023-03-02T18:58:46.493Z',
+            endTime: '2023-03-02T20:58:56.411Z'
+          }
+        ]
+      });
+
+      await render(hbs`<PipelineListHistoryCell
+        @record={{this.record}}
+      />`);
+
+      assert.dom('.fa-circle').hasClass('SUCCESS');
+      assert.dom('.fa-circle').exists({ count: 2 });
+
+      await triggerEvent('.build-status:first-child', 'mouseenter');
+      assert.dom('.tooltip').exists({ count: 1 });
     });
   }
 );
