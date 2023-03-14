@@ -154,7 +154,9 @@ module(
       assert.dom('.tooltip').exists({ count: 1 });
       assert
         .dom('.tooltip')
-        .hasText('Build# 1 Start - 02/03/2023 10:58 End - 02/03/2023 10:58');
+        .hasText(
+          'Build# 1 Start - 03/02/2023 10:58AM End - 03/02/2023 10:58AM'
+        );
     });
   }
 );
