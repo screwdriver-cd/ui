@@ -2,9 +2,16 @@
   <div>
     {{#each this.builds as |build|}}
       {{#if (not-eq build.status "CREATED")}}
+      <span class="build-status">
+        <BsTooltip @placement="top" @renderInPlace={{true}} class="tooltip">
+          <p>Build# {{build.id}}</p>
+          <p>Start - {{moment-format build.startTime "MM/DD/YYYY HH:mmA"}}</p>
+          <p>End - {{moment-format build.endTime "MM/DD/YYYY HH:mmA"}}</p>
+        </BsTooltip>
         <LinkTo @route="pipeline.build" @model={{build.id}} @title={{build.id}}>
           <FaIcon @icon="circle" @fixedWidth="true" class={{build.status}} />
         </LinkTo>
+      </span>
       {{else}}
         <FaIcon @icon="circle" @fixedWidth="true" class={{build.status}} />
       {{/if}}

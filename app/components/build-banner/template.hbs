@@ -32,12 +32,14 @@
           <dd.toggle>
             <span class="caret caret-display"></span>
           </dd.toggle>
-          <dd.menu as |ddm|>
+          <dd.menu class="commit-dropdown" as |ddm|>
             {{#each (await this.shortenedPrShas) as |prSha|}}
-              <ddm.item class="pr-item">
-                <a onClick={{action "changeCurPr" prSha}}>
-                  {{prSha.index}}. {{prSha.shortenedSha}}
-                </a>
+              <ddm.item>
+                <li class="pr-item">
+                  <a onClick={{action "changeCurPr" prSha}}>
+                    {{prSha.index}}. {{prSha.shortenedSha}}
+                  </a>
+                </li>
               </ddm.item>
             {{/each}}
           </dd.menu>

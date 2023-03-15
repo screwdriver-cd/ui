@@ -18,7 +18,9 @@ export default Component.extend({
       return {};
     },
     set(_, value) {
-      return set(this, '_build', value);
+      set(this, '_build', value);
+
+      return value;
     }
   }),
   displayName: computed('job.name', 'workflowGraph.nodes', {

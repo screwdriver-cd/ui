@@ -16,7 +16,9 @@ export default Controller.extend({
       return params;
     },
     set(_, value) {
-      return (this._routeParams = value);
+      this.set('_routeParams', value);
+
+      return value;
     }
   }),
   crumbs: computed('routeParams', {
@@ -54,7 +56,9 @@ export default Controller.extend({
       return breadcrumbs;
     },
     set(_, value) {
-      return (this._crumbs = value);
+      this.set('_crumbs', value);
+
+      return value;
     }
   })
 });
