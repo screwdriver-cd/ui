@@ -139,7 +139,7 @@
     "humanize-duration": "^3.27.1",
     "husky": "^2.7.0",
     "jquery-highlight": "^3.5.0",
-    "lint-staged": "^8.1.7",
+    "lint-staged": "^13.1.2",
     "loader.js": "^4.7.0",
     "lodash.groupby": "^4.6.0",
     "lodash.isequal": "^4.5.0",
