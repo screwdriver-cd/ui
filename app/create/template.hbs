@@ -1,10 +1,25 @@
-<PipelineCreateForm
-  @isSaving={{this.isSaving}}
-  @errorMessage={{this.errorMessage}}
-  @onCreatePipeline={{action "createPipeline"}}
-  @templates={{this.templates}}
-/>
+<div class="create-pipeline">
+  <div class="left">
+    <div class="back" onclick={{action "goBack"}}>
+      {{svg-jar "arrowhead-left" class="img"}}
+      <span>
+        Back
+      </span>
+    </div>
+  </div>
 
-<QuickstartGuide @isOpen={{this.showQuickStartGuide}} />
+  <div class="center {{if this.showQuickStartGuide "menu-open"}}">
+  <PipelineCreateForm
+    @isSaving={{this.isSaving}}
+    @errorMessage={{this.errorMessage}}
+    @onCreatePipeline={{action "createPipeline"}}
+    @templates={{this.templates}}
+  />
+  </div>
 
-{{outlet}}
+  <div class="right {{if this.showQuickStartGuide "menu-open"}}">
+    <QuickstartGuide @isOpen={{this.showQuickStartGuide}} />
+  </div>
+
+  {{outlet}}
+</div>

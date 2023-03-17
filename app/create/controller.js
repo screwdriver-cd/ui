@@ -41,6 +41,11 @@ export default Controller.extend({
         .finally(() => {
           this.set('isSaving', false);
         });
+    },
+
+    goBack(event) {
+      event.stopPropagation();
+      window.history.back();
     }
   }
 });
