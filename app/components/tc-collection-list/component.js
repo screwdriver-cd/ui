@@ -2,7 +2,8 @@ import { sort } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { computed, observer } from '@ember/object';
-import { debounce } from '@ember/runloop';
+import { dom } from '@fortawesome/fontawesome-svg-core';
+import { debounce, next } from '@ember/runloop';
 
 export default Component.extend({
   theme: service('emt-themes/ember-bootstrap-v5'),
@@ -28,11 +29,26 @@ export default Component.extend({
   filteringMaintainer: null,
   sort: 'createTime',
   dir: 'desc',
+  didRender() {
+    this._super(...arguments);
+
+    next(() => {
+      if (this.element) {
+        dom.i2svg({ node: this.element });
+      }
+    });
+  },
   init() {
     this._super(...arguments);
 
     this.set('data', this.refinedModel);
 
+    const customIcons = {
+      sortAscIcon: 'fa fa-fw fa-sort-up',
+      sortDescIcon: 'fa fa-fw fa-sort-down'
+    };
+
+    this.theme.setProperties(customIcons);
     this.theme.table = 'table table-condensed table-sm collection-list';
   },
   filteredModel: computed(

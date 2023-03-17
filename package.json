@@ -112,7 +112,7 @@
     "ember-load-initializers": "^2.1.2",
     "ember-local-storage": "~2.0.4",
     "ember-modal-dialog": "^4.0.1",
-    "ember-models-table": "^4.6.0",
+    "ember-models-table": "^4.8.0",
     "ember-moment": "^10.0.0",
     "ember-page-title": "^7.0.0",
     "ember-power-select": "^6.0.1",
