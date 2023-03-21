@@ -171,6 +171,7 @@ export default Component.extend({
 
       const jobData = {
         jobName,
+        displayName: annotations['screwdriver.cd/displayName'],
         build: latestBuild
       };
 
