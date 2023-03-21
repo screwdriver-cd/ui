@@ -10,7 +10,7 @@ export default Component.extend({
         return '';
       }
 
-      return dividePath[0];
+      return decodeURIComponent(dividePath[0]);
     }
   }),
   selectedArtifactRelativeChild: computed('selectedArtifactRelative', {
