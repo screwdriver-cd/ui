@@ -43,13 +43,13 @@ export default Component.extend({
 
     this.set('data', this.refinedModel);
 
-    const customIcons = {
+    const customTheme = {
+      table: 'table table-condensed table-sm collection-list',
       sortAscIcon: 'fa fa-fw fa-sort-up',
       sortDescIcon: 'fa fa-fw fa-sort-down'
     };
 
-    this.theme.setProperties(customIcons);
-    this.theme.table = 'table table-condensed table-sm collection-list';
+    this.theme.setProperties(customTheme);
   },
   filteredModel: computed(
     'filteringNamespace',
