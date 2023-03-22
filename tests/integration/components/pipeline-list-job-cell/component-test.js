@@ -92,4 +92,24 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
     assert.dom('.fa-times-circle').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
+
+  test('it renders displayName if present', async function (assert) {
+    this.set('record', {
+      job: {
+        jobName: 'a',
+        build: {
+          id: 2,
+          status: 'RUNNING'
+        },
+        displayName: 'dummyjob'
+      }
+    });
+
+    await render(hbs`<PipelineListJobCell
+      @record={{this.record}}
+    />`);
+
+    assert.dom('.fa-spinner').exists({ count: 1 });
+    assert.dom('.job-name').hasText('dummyjob');
+  });
 });
