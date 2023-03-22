@@ -14,6 +14,9 @@
     <span class="fa"></span>
   {{/if}}
   <div class="job-name">
+    <BsTooltip @placement="bottom">
+      {{this.record.job.jobName}}
+    </BsTooltip>
     {{this.jobName}}
   </div>
 </div>

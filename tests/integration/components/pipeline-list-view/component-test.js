@@ -31,7 +31,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '',
             endTime: ''
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       },
       {
         jobId: 2,
@@ -51,7 +54,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '',
             endTime: ''
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': null
+        }
       }
     ];
 
@@ -116,7 +122,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '',
             endTime: ''
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       },
       {
         jobId: 2,
@@ -136,7 +145,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '',
             endTime: ''
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       }
     ]);
     set(this, 'updateListViewJobs', () => Promise.resolve([]));
@@ -191,7 +203,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '2020-04-16T01:30:01.447',
             endTime: '2020-04-16T07:43:09.447'
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       }
     ];
 
@@ -253,7 +268,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       }
     ];
 
@@ -313,7 +331,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       }
     ];
 
@@ -373,7 +394,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       }
     ];
 
@@ -433,7 +457,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       }
     ];
 
@@ -493,7 +520,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       }
     ];
 
@@ -553,7 +583,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: null,
             endTime: null
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': 'a'
+        }
       }
     ];
 
@@ -613,7 +646,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
             startTime: '2020-04-16T01:30:01.447',
             endTime: null
           }
-        ]
+        ],
+        annotations: {
+          'screwdriver.cd/displayName': undefined
+        }
       }
     ]);
     set(this, 'updateListViewJobs', () => Promise.resolve([]));

@@ -18,8 +18,13 @@ export default Component.extend({
       };
     }
   }),
-  jobName: computed('record.job.jobName', {
+  jobName: computed('record.job.jobName', 'record.job.displayName', {
     get() {
+      if (this.record.job.displayName) {
+
+        return this.record.job.displayName;
+      }
+
       return this.record.job.jobName;
     }
   })
