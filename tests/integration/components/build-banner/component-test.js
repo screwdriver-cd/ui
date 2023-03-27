@@ -687,7 +687,7 @@ module('Integration | Component | build banner', function (hooks) {
       @prEvents={{this.prEvents}}
     />`);
 
-    await settled().then(() => {
+    return settled().then(() => {
       assert.dom('.coverage .banner-value').hasText('98%');
       assert.dom('.tests .banner-value').hasText('7/10');
       assert
