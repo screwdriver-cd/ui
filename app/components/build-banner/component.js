@@ -6,7 +6,6 @@ import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import ObjectProxy from '@ember/object/proxy';
 import { getTimestamp } from '../../utils/timestamp-format';
-
 const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
@@ -150,14 +149,22 @@ export default Component.extend({
 
     // override coverage info if set in build meta
     if (buildMeta && buildMeta.tests) {
+      let testOutput = buildMeta.tests;
+      const { sonarqube, saucelabs } = buildMeta.tests;
+
+      if (saucelabs) {
+        testOutput = saucelabs;
+      } else if (sonarqube) {
+        testOutput = sonarqube;
+      }
+
       const {
         coverage,
         coverageUrl,
         results: tests,
         resultsUrl: testsUrl
-      } = buildMeta.tests;
-      const BUILD_URL_REGEX = /^.+\/pipelines\/\d+\/builds\/\d+/;
-      const buildUrl = window.location.href.match(BUILD_URL_REGEX);
+      } = testOutput;
+
       const coverageFloat = parseFloat(coverage)
         ? Number(parseFloat(coverage).toFixed(2))
         : null;
@@ -169,17 +176,17 @@ export default Component.extend({
         coverageInfo.coverageUrl = '#';
       }
 
-      if (String(coverageUrl).match(/^(\/[^/]+)+$/) && buildUrl) {
-        coverageInfo.coverageUrl = `${buildUrl[0]}/artifacts${coverageUrl}`;
+      if (coverageUrl) {
+        coverageInfo.coverageUrl = coverageUrl;
       }
 
-      if (String(tests).match(/^\d+\/\d+$/)) {
+      if (tests) {
         coverageInfo.tests = tests;
         coverageInfo.testsUrl = '#';
       }
 
-      if (String(testsUrl).match(/^(\/[^/]+)+$/) && buildUrl) {
-        coverageInfo.testsUrl = `${buildUrl[0]}/artifacts${testsUrl}`;
+      if (testsUrl) {
+        coverageInfo.testsUrl = testsUrl;
       }
 
       this.set('coverageInfo', coverageInfo);
