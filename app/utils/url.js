@@ -18,7 +18,7 @@ function shortenUrl(url, length) {
 function isValidHttpOrHttpsUrl(url) {
   try {
     const newUrl = new URL(url);
-    return newUrl.protocol === 'http:' || newUrl.protocol === 'https:';
+    return ['http:', 'https:'].includes(newUrl.protocol);
   } catch (err) {
     return false;
   }

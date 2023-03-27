@@ -6,7 +6,7 @@ import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import ObjectProxy from '@ember/object/proxy';
 import { getTimestamp } from '../../utils/timestamp-format';
-import { isValidHttpOrHttpsUrl } from '../../utils/url-regex';
+import { isValidHttpOrHttpsUrl } from '../../utils/url';
 
 const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
