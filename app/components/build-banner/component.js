@@ -6,6 +6,8 @@ import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import ObjectProxy from '@ember/object/proxy';
 import { getTimestamp } from '../../utils/timestamp-format';
+import { isValidHttpOrHttpsUrl } from '../../utils/url-regex';
+
 const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
@@ -176,16 +178,16 @@ export default Component.extend({
         coverageInfo.coverageUrl = '#';
       }
 
-      if (coverageUrl) {
+      if (coverageUrl && isValidHttpOrHttpsUrl(coverageUrl)) {
         coverageInfo.coverageUrl = coverageUrl;
       }
 
-      if (tests) {
+      if (String(tests).match(/^\d+\/\d+$/)) {
         coverageInfo.tests = tests;
         coverageInfo.testsUrl = '#';
       }
 
-      if (testsUrl) {
+      if (testsUrl && isValidHttpOrHttpsUrl(testsUrl)) {
         coverageInfo.testsUrl = testsUrl;
       }
 

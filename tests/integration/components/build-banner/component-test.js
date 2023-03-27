@@ -687,7 +687,7 @@ module('Integration | Component | build banner', function (hooks) {
       @prEvents={{this.prEvents}}
     />`);
 
-    return settled().then(() => {
+    await settled().then(() => {
       assert.dom('.coverage .banner-value').hasText('98%');
       assert.dom('.tests .banner-value').hasText('7/10');
       assert
@@ -847,5 +847,69 @@ module('Integration | Component | build banner', function (hooks) {
     assert.dom('.docker-container .banner-value').hasText('node:6');
     assert.dom('.template-info .banner-value').hasText('test:2.0');
     assert.dom('button').doesNotExist();
+  });
+
+  test('it overrides coverage info if build meta format has saucelabs info', async function (assert) {
+    const coverageStepsMock = [
+      {
+        name: 'sd-setup-screwdriver-scm-bookend',
+        startTime: '2016-11-04T20:09:41.238Z'
+      },
+      {
+        name: 'sd-teardown-screwdriver-coverage-bookend',
+        endTime: '2016-11-04T21:09:41.238Z'
+      }
+    ];
+
+    buildMetaMock.tests = {
+      coverage: '98%',
+      coverageUrl: 'http://example.com/coverage/111222333',
+      tests: '7/10',
+      testsUrl: 'http://example.com/coverage/111222333',
+      saucelabs: {
+        buildId: 'aabbccddeeffggIsNotAReadBuildID',
+        results: '2/2',
+        resultsUrl:
+          'https://app.saucelabs.com/builds/vdc/aabbccddeeffggIsNotAReadBuildID',
+        status: 'success'
+      }
+    };
+
+    assert.expect(4);
+    this.set('eventMock', prEventMock);
+    this.set('buildStepsMock', coverageStepsMock);
+    this.set('buildMetaMock', buildMetaMock);
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
+    this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
+
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildId=123
+      @buildStatus="SUCCESS"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @buildMeta={{this.buildMetaMock}}
+      @jobId=1
+      @jobDisabled={{this.jobDisabled}}
+      @jobName="main"
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+    />`);
+
+    return settled().then(() => {
+      assert.dom('.coverage .banner-value').hasText('98%');
+      assert
+        .dom('.coverage a')
+        .hasAttribute('href', 'http://example.com/coverage/123');
+      assert.dom('.tests .banner-value').hasText('2/2');
+      assert
+        .dom('.tests a')
+        .hasAttribute(
+          'href',
+          'https://app.saucelabs.com/builds/vdc/aabbccddeeffggIsNotAReadBuildID'
+        );
+    });
   });
 });
