@@ -687,16 +687,14 @@ module('Integration | Component | build banner', function (hooks) {
       @prEvents={{this.prEvents}}
     />`);
 
-    return settled().then(() => {
-      assert.dom('.coverage .banner-value').hasText('98%');
-      assert.dom('.tests .banner-value').hasText('7/10');
-      assert
-        .dom('.coverage a')
-        .hasAttribute('href', 'http://example.com/coverage/123');
-      assert
-        .dom('.tests a')
-        .hasAttribute('href', 'http://example.com/coverage/123');
-    });
+    assert.dom('.coverage .banner-value').hasText('98%');
+    assert.dom('.tests .banner-value').hasText('7/10');
+    assert
+      .dom('.coverage a')
+      .hasAttribute('href', 'http://example.com/coverage/123');
+    assert
+      .dom('.tests a')
+      .hasAttribute('href', 'http://example.com/coverage/123');
   });
 
   test('it does not render coverage info if there is no coverage step', async function (assert) {
@@ -898,18 +896,16 @@ module('Integration | Component | build banner', function (hooks) {
       @prEvents={{this.prEvents}}
     />`);
 
-    return settled().then(() => {
-      assert.dom('.coverage .banner-value').hasText('98%');
-      assert
-        .dom('.coverage a')
-        .hasAttribute('href', 'http://example.com/coverage/123');
-      assert.dom('.tests .banner-value').hasText('2/2');
-      assert
-        .dom('.tests a')
-        .hasAttribute(
-          'href',
-          'https://app.saucelabs.com/builds/vdc/aabbccddeeffggIsNotAReadBuildID'
-        );
-    });
+    assert.dom('.coverage .banner-value').hasText('98%');
+    assert
+      .dom('.coverage a')
+      .hasAttribute('href', 'http://example.com/coverage/123');
+    assert.dom('.tests .banner-value').hasText('2/2');
+    assert
+      .dom('.tests a')
+      .hasAttribute(
+        'href',
+        'https://app.saucelabs.com/builds/vdc/aabbccddeeffggIsNotAReadBuildID'
+      );
   });
 });
