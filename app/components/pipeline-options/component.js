@@ -49,6 +49,7 @@ export default Component.extend({
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
   aliasName: '',
+  pipelineName: '',
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
@@ -63,6 +64,13 @@ export default Component.extend({
       const val = this.scmUrl;
 
       return val.length !== 0 && parse(val).valid;
+    }
+  }),
+  isPipelineDeletionDisabled: computed('pipelineName', 'pipeline.scmRepo.name', {
+    get() {
+      const isDisabled = this.get('pipeline.scmRepo.name') !== this.pipelineName;
+
+      return isDisabled;
     }
   }),
   // Updating a pipeline
