@@ -49,6 +49,8 @@ export default Component.extend({
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
   aliasName: '',
+  pipelineName: '',
+  deleteBtnDisabled: true,
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
@@ -233,6 +235,16 @@ export default Component.extend({
     showRemoveButtons() {
       this.set('showRemoveDangerButton', false);
       this.set('showRemoveButtons', true);
+    },
+    checkPipelineName(val) {
+      this.set('pipelineName', val.trim());
+      const originalPipeline = this.get('pipeline.scmRepo.name');
+
+      if (originalPipeline === this.pipelineName) {
+        this.set('deleteBtnDisabled', false);
+      } else {
+        this.set('deleteBtnDisabled', true);
+      }
     },
     cancelRemove() {
       this.set('showRemoveDangerButton', true);
