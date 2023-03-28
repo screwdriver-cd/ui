@@ -238,9 +238,9 @@ export default Component.extend({
     },
     checkPipelineName(val) {
       this.set('pipelineName', val.trim());
-      const originalPipeline = this.get('pipeline.scmRepo.name');
+      const originalPipelineName = this.get('pipeline.scmRepo.name');
 
-      if (originalPipeline === this.pipelineName) {
+      if (originalPipelineName === this.pipelineName) {
         this.set('deleteBtnDisabled', false);
       } else {
         this.set('deleteBtnDisabled', true);
