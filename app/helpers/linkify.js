@@ -3,7 +3,7 @@ import { typeOf } from '@ember/utils';
 import { helper } from '@ember/component/helper';
 import { htmlSafe } from '@ember/template';
 import Ember from 'ember';
-import { urlRegex, shortenUrl } from '../utils/url-regex';
+import { urlRegex, shortenUrl } from '../utils/url';
 
 const ALLOWED_ATTRIBUTE_NAMES = ['rel', 'class', 'target', 'urlLength'];
 

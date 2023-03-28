@@ -15,4 +15,13 @@ function shortenUrl(url, length) {
   return url;
 }
 
-export { urlRegex, shortenUrl };
+function isValidHttpOrHttpsUrl(url) {
+  try {
+    const newUrl = new URL(url);
+    return ['http:', 'https:'].includes(newUrl.protocol);
+  } catch (err) {
+    return false;
+  }
+}
+
+export { urlRegex, shortenUrl, isValidHttpOrHttpsUrl };
