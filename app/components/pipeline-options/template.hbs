@@ -524,17 +524,41 @@
               </div>
             {{/if}}
             {{#if this.showRemoveButtons}}
-              <h4>
-                Are you absolutely sure?
-              </h4>
-              <a href="#" class="cancel" {{action "cancelRemove"}}>
-                <FaIcon @icon="ban" />
-                Cancel
-              </a>
-              <a href="#" class="remove" {{action "removePipeline"}}>
-                <FaIcon @icon="trash" />
-                Delete
-              </a>
+              <BsModal
+                @onSubmit={{action "removePipeline"}}
+                @onHide={{action "cancelRemove"}} as |modal|
+              >
+                <div class="delete-pipeline__modal">
+                    <modal.header>
+                      <h4>
+                        Are you absolutely sure?
+                      </h4>
+                    </modal.header>
+                    <modal.body>
+                      <FaIcon @icon="exclamation-triangle" @pull="left" @size="4" />
+                      <span>This action cannot be undone. Are you sure you want to delete the pipeline?</span>
+                      <p>Please type <b>{{this.pipeline.scmRepo.name}}</b>  to confirm.</p> 
+                      <Input
+                        @type="text"
+                        class="delete-pipeline__input col-12"
+                        @value={{this.pipelineName}}
+                      />
+                    </modal.body>
+                    <modal.footer>
+                      <BsButton
+                        class="delete-pipeline-cancel"
+                        @onClick={{action modal.close}}
+                        @outline={{true}}
+                        @type="secondary"
+                      >
+                        Cancel
+                      </BsButton>
+                      <BsButton disabled={{this.isPipelineDeletionDisabled}} @outline={{true}} @onClick={{action "removePipeline"}} @type="danger" class="delete-pipeline-btn">
+                        Delete
+                      </BsButton>
+                    </modal.footer>
+                  </div>
+                </BsModal>
             {{/if}}
             {{#if this.isRemoving}}
               <p>
