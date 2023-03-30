@@ -16,6 +16,7 @@ export default Component.extend({
   fullScreen: false,
   lineWrap: true,
   autoscroll: true,
+  autoscrollSelected: true,
   isFetching: false,
   isDownloading: false,
   inProgress: false,
@@ -418,12 +419,20 @@ export default Component.extend({
       }
 
       // autoscroll when the bottom of the logs is roughly in view
-      set(
-        this,
-        'autoscroll',
-        this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
-          .top < 1500
-      );
+      if(this.autoscrollSelected) {
+        set(
+          this,
+          'autoscroll',
+          this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
+            .top < 1500
+        );
+      } else {
+        set(
+          this,
+          'autoscroll',
+          false
+        );
+      }
     },
     toggleTimeDisplay() {
       let index = timeTypes.indexOf(this.timeFormat);
@@ -437,6 +446,22 @@ export default Component.extend({
     },
     toggleLineWrap() {
       this.toggleProperty('lineWrap');
+    },
+    toggleAutoscroll() {
+      if(this.autoscrollSelected) {
+        set(
+          this,
+          'autoscroll',
+          this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
+            .top < 1500
+        );
+      } else {
+        set(
+          this,
+          'autoscroll',
+          false
+        );
+      }
     }
   }
 });

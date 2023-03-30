@@ -16,6 +16,12 @@
         <span class="content"></span>
       </div>
       <div>
+        <a>
+          <BsTooltip @placement="bottom" >
+            auto scroll bottom when new log
+          </BsTooltip>
+          <Input @type="checkbox" @checked={{this.autoscrollSelected}} oninput={{action "toggleAutoscroll"}} class="checkbox-input" />
+        </a>
         <a
           onClick={{action "toggleZoom"}}
           alt="Toggle full screen logs"
