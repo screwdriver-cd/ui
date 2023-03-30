@@ -7,7 +7,7 @@ export default Component.extend({
       this.toggleProperty('isOpen');
       this.element
         .querySelector('#validator-ace-editor')
-        .classList.toggle('hidden');
+        .classList.toggle('d-none');
     }
   }
 });
