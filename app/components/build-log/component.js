@@ -365,11 +365,19 @@ export default Component.extend({
             let cb = 'scrollTop';
 
             if (!fetchMax) {
-              cb = inProgress ? 'scrollDown' : 'scrollStill';
+              if (this.autoscrollSelected) {
+                cb = inProgress ? 'scrollDown' : 'scrollStill';
+              } else {
+                cb = 'scrollStill';
+              }
             }
 
             if (justFinished) {
-              cb = 'scrollDown';
+              if(this.autoscrollSelected) {
+                cb = 'scrollDown';
+              } else {
+                cb = 'scrollStill';
+              }
             }
 
             scheduleOnce('afterRender', this, cb);
@@ -419,20 +427,12 @@ export default Component.extend({
       }
 
       // autoscroll when the bottom of the logs is roughly in view
-      if(this.autoscrollSelected) {
-        set(
-          this,
-          'autoscroll',
-          this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
-            .top < 1500
-        );
-      } else {
-        set(
-          this,
-          'autoscroll',
-          false
-        );
-      }
+      set(
+        this,
+        'autoscroll',
+        this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
+          .top < 1500
+      );
     },
     toggleTimeDisplay() {
       let index = timeTypes.indexOf(this.timeFormat);
