@@ -365,19 +365,15 @@ export default Component.extend({
             let cb = 'scrollTop';
 
             if (!fetchMax) {
-              if (this.autoscrollSelected) {
-                cb = inProgress ? 'scrollDown' : 'scrollStill';
-              } else {
-                cb = 'scrollStill';
-              }
+              cb = inProgress ? 'scrollDown' : 'scrollStill';
             }
 
             if (justFinished) {
-              if(this.autoscrollSelected) {
-                cb = 'scrollDown';
-              } else {
-                cb = 'scrollStill';
-              }
+              cb = 'scrollDown';
+            }
+
+            if (!this.autoScrollSelected) {
+              cb = 'scrollStill';
             }
 
             scheduleOnce('afterRender', this, cb);
@@ -446,22 +442,6 @@ export default Component.extend({
     },
     toggleLineWrap() {
       this.toggleProperty('lineWrap');
-    },
-    toggleAutoscroll() {
-      if(this.autoscrollSelected) {
-        set(
-          this,
-          'autoscroll',
-          this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
-            .top < 1500
-        );
-      } else {
-        set(
-          this,
-          'autoscroll',
-          false
-        );
-      }
     }
   }
 });
