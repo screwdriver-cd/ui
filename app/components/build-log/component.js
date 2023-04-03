@@ -318,8 +318,7 @@ export default Component.extend({
     set(
       this,
       'lastScrollTop',
-      (container.scrollTop =
-        this.lastScrollTop + (container.scrollHeight - this.lastScrollHeight))
+      container.scrollHeight - container.clientHeight
     );
   },
 
@@ -429,6 +428,9 @@ export default Component.extend({
         this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
           .top < 1500
       );
+      if(event.target.scrollTop === 0) {
+        set(this, 'autoscroll', false);
+      }
     },
     toggleTimeDisplay() {
       let index = timeTypes.indexOf(this.timeFormat);
