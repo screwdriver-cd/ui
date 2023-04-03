@@ -621,7 +621,10 @@ module('Integration | Component | pipeline options', function (hooks) {
       EmberObject.create({
         appId: 'foo/bar',
         scmUri: 'github.com:84604643:master',
-        id: 'abc1234'
+        id: 'abc1234',
+        scmRepo: {
+          name: 'test/test-pipeline'
+        }
       })
     );
 
@@ -636,19 +639,36 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert.dom('section.danger h4').hasText('Delete this pipeline');
 
     await click('section.danger a');
+    
+    assert.dom('.modal-dialog').exists();
+    assert.dom('.modal-dialog h4').hasText('Are you absolutely sure?');
+    //starts with button disabled
+    assert.dom('.modal-footer .delete-pipeline-btn').isDisabled();
 
-    assert.dom('section.danger h4').hasText('Are you absolutely sure?');
-    assert.dom('section.danger a').exists({ count: 2 });
+    //cancel button closes the modal
+    await click('.modal-footer .delete-pipeline-cancel');
+    assert.dom('.modal-dialog').doesNotExist();
 
     await click('section.danger a');
+    assert.dom('.modal-dialog').exists();
+    assert.dom('.modal-dialog h4').hasText('Are you absolutely sure?');
 
-    assert.dom('section.danger h4').hasText('Delete this pipeline');
+    await fillIn('.modal-body input', 'screwdriver');
+    //wrong pipeline name button is still disabled
+    assert.dom('.modal-footer .delete-pipeline-btn').isDisabled();
+
+    await click('.modal-footer .delete-pipeline-cancel');
 
     await click('section.danger a');
+    assert.dom('.modal-dialog').exists();
+    assert.dom('.modal-dialog h4').hasText('Are you absolutely sure?');
 
-    assert.dom('section.danger h4').hasText('Are you absolutely sure?');
+    await fillIn('.modal-body input', 'test/test-pipeline');
+    // correct pipeline so button is enable
+    assert.dom('.modal-footer .delete-pipeline-btn').isEnabled();
 
-    await click('section.danger a:last-child');
+    await click('.modal-footer .delete-pipeline-btn');
+    assert.dom('.modal-dialog').doesNotExist();
 
     assert.dom('section.danger p').hasText('Please wait...');
   });

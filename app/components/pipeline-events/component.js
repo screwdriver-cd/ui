@@ -217,6 +217,7 @@ export default Component.extend(ModelReloaderMixin, {
     this._super(...arguments);
     this.startReloading();
     this.set('eventsPage', 1);
+    this.set('paginateEvents', []);
   },
 
   reload() {

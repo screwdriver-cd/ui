@@ -700,7 +700,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     assert.dom('.graph-edge').exists({ count: 3 });
     assert.strictEqual(
       labelColumn,
-      'Yahoo http://yahoo.com, and Version #2.0'
+      'Yahoo <a href="http://yahoo.com" rel="nofollow" target="_blank" urllength="30">http://yahoo.com</a>, and Version #2.0'
     );
     assert.dom('.by').hasText('Started and committed by: batman');
     assert

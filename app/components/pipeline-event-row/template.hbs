@@ -26,11 +26,6 @@
             Last successful
           </div>
         {{/if}}
-        {{#if this.event.label}}
-          <div class="label">
-            {{this.event.label}}
-          </div>
-        {{/if}}
         {{#if this.event.label}}<div class="label">{{linkify this.event.label target="_blank" rel="nofollow" urlLength=30}}</div>{{/if}}
       {{/if}}
       {{#if (and this.event.isRunning (not-eq this.event.status "UNKNOWN"))}}
