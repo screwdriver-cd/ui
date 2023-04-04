@@ -428,7 +428,7 @@ export default Component.extend({
         this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
           .top < 1500
       );
-      if(event.target.scrollTop === 0) {
+      if (event.target.scrollTop === 0) {
         set(this, 'autoscroll', false);
       }
     },
