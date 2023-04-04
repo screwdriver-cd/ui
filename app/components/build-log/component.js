@@ -16,7 +16,7 @@ export default Component.extend({
   fullScreen: false,
   lineWrap: true,
   autoscroll: true,
-  autoscrollSelected: true,
+  autoScrollSelected: true,
   isFetching: false,
   isDownloading: false,
   inProgress: false,
