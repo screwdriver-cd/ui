@@ -5,6 +5,8 @@ import { inject as service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import isEqual from 'lodash.isequal';
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
+import { dom } from '@fortawesome/fontawesome-svg-core';
+import { next } from '@ember/runloop';
 
 const collator = new Intl.Collator('en', {
   numeric: true,
@@ -14,7 +16,7 @@ const collator = new Intl.Collator('en', {
 export default Component.extend({
   store: service(),
   userSettings: service(),
-  theme: service('emt-themes/ember-bootstrap-v4'),
+  theme: service('emt-themes/ember-bootstrap-v5'),
   isLoading: false,
   isShowingModal: false,
   data: [],
@@ -72,7 +74,13 @@ export default Component.extend({
     this._super(...arguments);
     const rows = this.getRows(this.jobsDetails);
 
-    this.theme.table = 'table table-condensed table-sm';
+    const customTheme = {
+      table: 'table table-condensed table-sm',
+      sortAscIcon: 'fa fa-fw fa-sort-up',
+      sortDescIcon: 'fa fa-fw fa-sort-down'
+    };
+
+    this.theme.setProperties(customTheme);
 
     this.userSettings
       .getTimestampFormat()
@@ -87,6 +95,16 @@ export default Component.extend({
       data: rows,
       pipelineParameters: this.getDefaultPipelineParameters(),
       jobParameters: this.getDefaultJobParameters()
+    });
+  },
+
+  didUpdate() {
+    this._super(...arguments);
+
+    next(() => {
+      if (this.element) {
+        dom.i2svg({ node: this.element });
+      }
     });
   },
 
