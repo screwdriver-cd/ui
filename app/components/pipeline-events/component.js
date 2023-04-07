@@ -437,16 +437,7 @@ export default Component.extend(ModelReloaderMixin, {
       return newPrEvents;
     }
   }),
-  events: computed('pipelineEvents', 'prEvents', 'currentEventType', {
-    get() {
-      if (this.currentEventType === 'pr') {
-        return this.prEvents;
-      }
-
-      return this.pipelineEvents;
-    }
-  }),
-  filteredEvents: computed('pipelineEvents', 'prEvents', 'currentEventType', 'filterSubstantialEvents', {
+  events: computed('pipelineEvents', 'prEvents', 'currentEventType', 'filterSubstantialEvents', {
     get() {
       if (this.currentEventType === 'pr') {
         return this.prEvents;
