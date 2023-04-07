@@ -6,7 +6,7 @@ export default Component.extend({
     get() {
       const dividePath = this.selectedArtifactRelative.split('/');
 
-      if (dividePath.length <= 1) {
+      if (dividePath.length === 0) {
         return '';
       }
 
@@ -17,11 +17,20 @@ export default Component.extend({
     get() {
       const dividePath = this.selectedArtifactRelative.split('/');
 
-      if (dividePath.length <= 1) {
+      if (dividePath.length === 0) {
         return '';
       }
 
       return this.selectedArtifactRelative.substring(dividePath[0].length + 1);
+    }
+  }),
+  absolutePath: computed('parentAbsolutePath', 'fileName', {
+    get() {
+      if (this.fileName === '') {
+        return '';
+      }
+
+      return this.parentAbsolutePath.concat(this.fileName).concat('/');
     }
   })
 });
