@@ -217,7 +217,6 @@ export default Component.extend(ModelReloaderMixin, {
     this._super(...arguments);
     this.startReloading();
     this.set('eventsPage', 1);
-    this.set('paginateEvents', []);
   },
 
   reload() {
@@ -275,6 +274,7 @@ export default Component.extend(ModelReloaderMixin, {
     }
   }),
   jobsDetails: [],
+  paginateEvents: [],
   prChainEnabled: alias('pipeline.prChain'),
   completeWorkflowGraph: computed(
     'model.triggers.@each.triggers',
@@ -368,12 +368,18 @@ export default Component.extend(ModelReloaderMixin, {
     'pipeline.id',
     {
       get() {
-        this.shuttle
-          .getLatestCommitEvent(this.get('pipeline.id'))
-          .then(event => {
-            this.set('latestCommit', event);
-          });
-        const pipelineEvents = [].concat(this.modelEvents, this.paginateEvents);
+        const pipelineId = this.get('pipeline.id');
+        const filteredPaginateEvents = this.paginateEvents.filter(
+          e => e.pipelineId === pipelineId
+        );
+        const pipelineEvents = [].concat(
+          this.modelEvents,
+          filteredPaginateEvents
+        );
+
+        this.shuttle.getLatestCommitEvent(pipelineId).then(event => {
+          this.set('latestCommit', event);
+        });
 
         // filter events for no builds
         if (this.isFilteredEventsForNoBuilds) {
