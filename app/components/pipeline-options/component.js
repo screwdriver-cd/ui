@@ -48,6 +48,7 @@ export default Component.extend({
 
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
+  filterSchedulerEvents: false,
   aliasName: '',
   pipelineName: '',
   sortedJobs: computed('jobs', function filterThenSortJobs() {
@@ -347,6 +348,11 @@ export default Component.extend({
 
         this.set('showEventTriggers', showEventTriggers);
       }
+    },
+
+    filterEvents(filterSchedulerEvents) {
+      //console.log('mehul', filterSchedulerEvents);
+      this.set('filterSchedulerEvents', filterSchedulerEvents);
     },
 
     async updateFilterEventsForNoBuilds(filterEventsForNoBuilds) {

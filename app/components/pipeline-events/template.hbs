@@ -109,15 +109,6 @@
 
       <div class="tab-content">
         <tab.pane @activeId={{this.activeTab}} @id="events" @title="Events">
-          <div class="col-12" >
-            Toggle to filter substantial events:
-            <XToggle
-              @size="small"
-              @value={{this.filterSubstantialEvents}}
-              @showLabels={{false}}
-              @onToggle={{action "filterEvents"}}
-            />
-          </div>
           <PipelineEventsList
             @pipeline={{this.pipeline}}
             @expandedEventsGroup={{this.expandedEventsGroup}}
