@@ -421,15 +421,25 @@ export default Component.extend({
         return;
       }
 
-      // autoscroll when the bottom of the logs is roughly in view
-      set(
-        this,
-        'autoscroll',
-        this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
-          .top < 1500
-      );
-      if (event.target.scrollTop === 0) {
-        set(this, 'autoscroll', false);
+      // autoscroll based upon user-opt when the bottom of the logs is roughly in view
+      if (this.autoScrollSelected) {
+        if (container.scrollTop === 0) {
+          set(this, 'autoscroll', false);
+        }
+        if (container.scrollTop + container.clientHeight === container.scrollHeight) {
+          if (this.inProgress && this.isFetching) {
+            set(this, 'autoscroll', true);  
+          } else {
+            set(this, 'autoscroll', false);
+          }
+        }
+      } else {
+        set(
+          this,
+          'autoscroll',
+          this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
+            .top < 1500
+        );
       }
     },
     toggleTimeDisplay() {
