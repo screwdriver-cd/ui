@@ -8,14 +8,16 @@
             @fileName={{directory.text}}
             @isExpandable={{true}}
             @isExpanded={{true}}
-            @childrenComponent={{component "artifact-tree-children" selectedArtifactRelative=this.selectedArtifactRelativeChild}}
+            @expanderComponent={{component "artifact-tree-expander" parentAbsolutePath=this.absolutePath fileName=directory.text}}
+            @childrenComponent={{component "artifact-tree-children" selectedArtifactRelative=this.selectedArtifactRelativeChild parentAbsolutePath=this.absolutePath fileName=directory.text}}
           />
         {{else}}
           <@tree.Node
             @directory={{directory.children}}
             @fileName={{directory.text}}
             @isExpandable={{true}}
-            @childrenComponent={{component "artifact-tree-children" selectedArtifactRelative=''}}
+            @expanderComponent={{component "artifact-tree-expander" parentAbsolutePath=this.absolutePath fileName=directory.text}}
+            @childrenComponent={{component "artifact-tree-children" selectedArtifactRelative='' parentAbsolutePath=this.absolutePath fileName=directory.text}}
           />
         {{/if}}
       {{/if}}

@@ -8,21 +8,23 @@
     @route="pipeline"
     @model={{this.command.pipelineId}}
     @title="Go to command pipeline"
+    class="link"
   >
     {{this.command.namespace}}/{{this.command.name}}
   </LinkTo>
   {{#if this.scmUrl}}
-    <a href={{this.scmUrl}}>
+    <a href={{this.scmUrl}} class="link">
       <FaIcon @icon="code-branch" @title="Source code" />
     </a>
   {{else}}
     <FaIcon
       @icon="code-branch"
       @title="The pipeline for this command does not exist."
+      class="link"
     />
   {{/if}}
   {{#if this.isAdmin}}
-    <a href="#" class="remove" {{action "setCommandToRemove" this.command}}>
+    <a href="#" class="link" {{action "setCommandToRemove" this.command}}>
       <FaIcon @icon="trash" @title="Delete command" />
     </a>
     <label class="trusted-toggle">
@@ -36,13 +38,14 @@
     </label>
   {{else}}
     {{#if this.scmUrl}}
-      <a href="#" class="remove" {{action "setCommandToRemove" this.command}}>
+      <a href="#" class="link" {{action "setCommandToRemove" this.command}}>
         <FaIcon @icon="trash" @title="Delete command" />
       </a>
     {{else}}
       <FaIcon
         @icon="trash"
         @title="Cannot delete command; pipeline could not be found."
+        class="link"
       />
     {{/if}}
   {{/if}}
@@ -56,7 +59,7 @@
 <ul>
   <li>
     Released by:
-    <a href="mailto:{{this.command.maintainer}}">
+    <a href="mailto:{{this.command.maintainer}}" class="link">
       {{this.command.maintainer}}
     </a>
   </li>
