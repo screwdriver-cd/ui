@@ -16,7 +16,7 @@
     {{#each this.searchedPipelines as |pipeline|}}
       <div class="searched-pipeline">
         <span class="name">
-          <LinkTo @route="pipeline" @model={{this.pipeline.id}}>
+          <LinkTo @route="pipeline" @model={{pipeline.id}}>
             {{pipeline.name}}
           </LinkTo>
         </span>
