@@ -350,9 +350,18 @@ export default Component.extend({
       }
     },
 
-    filterEvents(filterSchedulerEvents) {
-      //console.log('mehul', filterSchedulerEvents);
-      this.set('filterSchedulerEvents', filterSchedulerEvents);
+    async filterEvents(filterSchedulerEvents) {
+      const { pipeline } = this;
+
+      try {
+        await this.shuttle.updatePipelineSettings(pipeline.id, {
+          filterSchedulerEvents
+        });
+      } finally {
+        pipeline.set('settings.filterSchedulerEvents', filterSchedulerEvents);
+
+        this.set('filterSchedulerEvents', filterSchedulerEvents);
+      }
     },
 
     async updateFilterEventsForNoBuilds(filterEventsForNoBuilds) {

@@ -178,6 +178,13 @@ export default Service.extend({
       };
     }
 
+    if (typeof settings.filterSchedulerEvents === 'boolean') {
+      newSetting = {
+        ...newSetting,
+        filterSchedulerEvents: settings.filterSchedulerEvents
+      };
+    }
+
     if (typeof settings.aliasName === 'string') {
       newSetting = {
         ...newSetting,
