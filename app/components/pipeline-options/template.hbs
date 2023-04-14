@@ -393,7 +393,7 @@
           <div class="row">
             <div class="col-10">
               <h4>
-                Show Scheduler Events
+                Filter Scheduler Events
               </h4>
               <p>
                 Toggle to hide the events started by Scheduler
@@ -408,7 +408,7 @@
               @value={{this.filterSchedulerEvents}}
               @onLabel="filterSchedulerEvents:true"
               @offLabel="filterSchedulerEvents::false"
-              @onToggle={{action "filterEvents"}}
+              @onToggle={{action "updateSchedulerEventsFilter"}}
             />
             </div>
           </div>

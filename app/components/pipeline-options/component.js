@@ -350,7 +350,7 @@ export default Component.extend({
       }
     },
 
-    async filterEvents(filterSchedulerEvents) {
+    async updateSchedulerEventsFilter(filterSchedulerEvents) {
       const { pipeline } = this;
 
       try {
