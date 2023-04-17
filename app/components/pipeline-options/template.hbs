@@ -389,6 +389,30 @@
             </div>
           </div>
         </li>
+        <li>
+          <div class="row">
+            <div class="col-10">
+              <h4>
+                Filter Scheduler Events
+              </h4>
+              <p>
+                Toggle to hide the events started by Scheduler
+              </p>
+            </div>
+            <div
+              class="col-2 right"
+              title="Toggle to {{if this.filterSchedulerEvents "filter" "unfilter"}} events by scheduler"
+            >
+              <XToggle
+              @size="small"
+              @value={{this.filterSchedulerEvents}}
+              @onLabel="filterSchedulerEvents:true"
+              @offLabel="filterSchedulerEvents::false"
+              @onToggle={{action "updateSchedulerEventsFilter"}}
+            />
+            </div>
+          </div>
+        </li>
       </ul>
     </section>
   </div>

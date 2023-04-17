@@ -1,0 +1,10 @@
+& {
+
+  .x-toggle-component {
+    display: inline-flex;
+  }
+
+  .x-toggle:checked + label > .x-toggle-default.x-toggle-btn {
+    background-color: $sd-success;
+  }
+}

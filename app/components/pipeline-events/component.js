@@ -183,6 +183,7 @@ export default Component.extend(ModelReloaderMixin, {
   // Update the job status
   jobService: service('job'),
   lastRefreshed: moment(),
+  filterSchedulerEvents: false,
   shouldReload(model) {
     let res = SHOULD_RELOAD_SKIP;
 
@@ -442,10 +443,18 @@ export default Component.extend(ModelReloaderMixin, {
       return newPrEvents;
     }
   }),
-  events: computed('pipelineEvents', 'prEvents', 'currentEventType', {
+  events: computed('pipelineEvents', 'prEvents', 'currentEventType', 'filterSchedulerEvents', {
     get() {
       if (this.currentEventType === 'pr') {
         return this.prEvents;
+      } else if (this.filterSchedulerEvents) {
+        // logic to filter the events created by screwdriver scheduler
+        const filteredEvents = this.pipelineEvents.filter(event => {
+          if (event.creator.name !== "Screwdriver scheduler") {
+            return event;
+          }
+        })
+        return filteredEvents;
       }
 
       return this.pipelineEvents;
@@ -690,6 +699,9 @@ export default Component.extend(ModelReloaderMixin, {
         .setJobState(id, state, stateChangeMessage || ' ')
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.reload());
+    },
+    filterEvents() {
+      this.set('filterSchedulerEvents', !this.filterSchedulerEvents);
     }
   },
   willDestroy() {

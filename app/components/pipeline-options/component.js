@@ -48,6 +48,7 @@ export default Component.extend({
 
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
+  filterSchedulerEvents: false,
   aliasName: '',
   pipelineName: '',
   sortedJobs: computed('jobs', function filterThenSortJobs() {
@@ -346,6 +347,20 @@ export default Component.extend({
         pipeline.set('settings.showEventTriggers', showEventTriggers);
 
         this.set('showEventTriggers', showEventTriggers);
+      }
+    },
+
+    async updateSchedulerEventsFilter(filterSchedulerEvents) {
+      const { pipeline } = this;
+
+      try {
+        await this.shuttle.updatePipelineSettings(pipeline.id, {
+          filterSchedulerEvents
+        });
+      } finally {
+        pipeline.set('settings.filterSchedulerEvents', filterSchedulerEvents);
+
+        this.set('filterSchedulerEvents', filterSchedulerEvents);
       }
     },
 
