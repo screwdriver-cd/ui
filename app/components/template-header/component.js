@@ -36,7 +36,7 @@ export default Component.extend({
       });
     },
     updateTrust(fullName, toTrust) {
-      this.set('isTrusted', toTrust)
+      this.set('isTrusted', toTrust);
       this.onUpdateTrust(fullName, toTrust);
     }
   }
