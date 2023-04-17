@@ -14,7 +14,8 @@ const COMMAND = {
   maintainer: 'test@example.com',
   format: 'docker',
   docker: '{"image":"test","command":"example"}',
-  pipelineId: 100
+  pipelineId: 100,
+  trusted: true
 };
 
 const mockPipeline = {
@@ -40,7 +41,6 @@ module('Integration | Component | command header', function (hooks) {
     this.owner.register('service:store', storeStub);
 
     this.set('mock', COMMAND);
-    this.set('trusted', false);
     this.set('isAdmin', false);
 
     await render(
@@ -57,7 +57,6 @@ module('Integration | Component | command header', function (hooks) {
     assert.dom('h4').hasText('Usage:');
     assert.dom('pre').hasText('sd-cmd exec foo/bar@1.0.0');
 
-    this.set('trusted', true);
     this.set('isAdmin', true);
 
     assert.dom('svg').exists({ count: 3 });

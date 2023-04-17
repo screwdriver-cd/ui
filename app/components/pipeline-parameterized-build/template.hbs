@@ -64,12 +64,12 @@
                             parameterGroup.jobName
                             parameter.name
                         )}}
-                        @onkeydown={{fn (action
+                        @onkeydown={{ action
                             "searchOrAddtoList"
                             this.parameterizedModel
                             parameterGroup.jobName
                             parameter.name
-                        )}}
+                        }}
                         @searchPlaceholder="Type to filter"
                         @noMatchesMessage="Hit enter to override" as |selectedValue|
                       >
