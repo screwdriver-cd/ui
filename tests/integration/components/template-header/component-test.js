@@ -22,7 +22,8 @@ const TEMPLATE = {
   images: {
     stable: 'node:6',
     development: 'node:7'
-  }
+  },
+  trusted: true
 };
 
 const mockPipeline = {
@@ -46,7 +47,6 @@ module('Integration | Component | template header', function (hooks) {
     });
 
     this.set('mock', TEMPLATE);
-    this.set('trusted', false);
     this.set('isAdmin', false);
 
     this.owner.unregister('service:store');
@@ -69,7 +69,6 @@ module('Integration | Component | template header', function (hooks) {
     assert.dom('h4').hasText('Usage:');
     assert.dom('pre').hasText('jobs: main: template: foo/bar@2.0.0');
 
-    this.set('trusted', true);
     this.set('isAdmin', true);
 
     assert.dom('svg').exists({ count: 3 });
