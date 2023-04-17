@@ -6,6 +6,7 @@ export default Component.extend({
   scmUrl: null,
   isRemoving: false,
   store: service(),
+  isTrusted: null, 
   init() {
     this._super(...arguments);
     this.store
@@ -16,6 +17,8 @@ export default Component.extend({
       .catch(() => {
         this.set('scmUrl', null);
       });
+
+    this.set('isTrusted', this.template.trusted);
   },
   actions: {
     setTemplateToRemove(template) {
@@ -33,7 +36,7 @@ export default Component.extend({
       });
     },
     updateTrust(fullName, toTrust) {
-      this.set('trusted', toTrust);
+      this.set('isTrusted', toTrust)
       this.onUpdateTrust(fullName, toTrust);
     }
   }
