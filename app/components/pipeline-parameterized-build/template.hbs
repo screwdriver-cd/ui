@@ -58,13 +58,13 @@
                         @renderInPlace={{true}}
                         @searchEnabled={{true}}
                         @selected={{value}}
-                        @onChange={{fn (action
+                        @onChange={{ action
                             "onUpdateValue"
                             this.parameterizedModel
                             parameterGroup.jobName
                             parameter.name
-                        )}}
-                        @onkeydown={{ action
+                        }}
+                        @onKeydown={{ action
                             "searchOrAddtoList"
                             this.parameterizedModel
                             parameterGroup.jobName
