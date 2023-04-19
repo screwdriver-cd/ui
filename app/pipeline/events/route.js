@@ -50,7 +50,7 @@ export default Route.extend({
         get(this.pipeline, 'settings.filterEventsForNoBuilds') === undefined
           ? false
           : get(this.pipeline, 'settings.filterEventsForNoBuilds'),
-          filterSchedulerEvents:
+      filterSchedulerEvents:
         get(this.pipeline, 'settings.filterSchedulerEvents') === undefined
           ? false
           : get(this.pipeline, 'settings.filterSchedulerEvents'),
