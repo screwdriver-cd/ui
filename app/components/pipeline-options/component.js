@@ -45,7 +45,6 @@ export default Component.extend({
   isUpdatingMetricsDowntimeJobs: false,
   metricsDowntimeJobs: [],
   displayDowntimeJobs: DOWNTIME_JOBS,
-
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
   filterSchedulerEvents: false,
@@ -67,13 +66,18 @@ export default Component.extend({
       return val.length !== 0 && parse(val).valid;
     }
   }),
-  isPipelineDeletionDisabled: computed('pipelineName', 'pipeline.scmRepo.name', {
-    get() {
-      const isDisabled = this.get('pipeline.scmRepo.name') !== this.pipelineName;
+  isPipelineDeletionDisabled: computed(
+    'pipelineName',
+    'pipeline.scmRepo.name',
+    {
+      get() {
+        const isDisabled =
+          this.get('pipeline.scmRepo.name') !== this.pipelineName;
 
-      return isDisabled;
+        return isDisabled;
+      }
     }
-  }),
+  ),
   // Updating a pipeline
   async init() {
     this._super(...arguments);
@@ -104,6 +108,10 @@ export default Component.extend({
       'pipeline.settings.filterEventsForNoBuilds'
     );
 
+    let filterSchedulerEvents = this.get(
+      'pipeline.settings.filterSchedulerEvents'
+    );
+
     const aliasName = this.get('pipeline.settings.aliasName');
 
     if (typeof privateRepo !== 'boolean') {
@@ -126,12 +134,17 @@ export default Component.extend({
       filterEventsForNoBuilds = false;
     }
 
+    if (typeof filterSchedulerEvents !== 'boolean') {
+      filterSchedulerEvents = false;
+    }
+
     this.setProperties({
       privateRepo,
       publicPipeline,
       groupedEvents,
       showEventTriggers,
       filterEventsForNoBuilds,
+      filterSchedulerEvents,
       aliasName
     });
 
@@ -357,6 +370,9 @@ export default Component.extend({
         await this.shuttle.updatePipelineSettings(pipeline.id, {
           filterSchedulerEvents
         });
+        this.set('successMessage', `Pipeline preferences updated successfully`);
+      } catch (error) {
+        this.set('errorMessage', error?.payload?.message);
       } finally {
         pipeline.set('settings.filterSchedulerEvents', filterSchedulerEvents);
 

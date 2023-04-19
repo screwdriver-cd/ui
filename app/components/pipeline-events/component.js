@@ -183,7 +183,7 @@ export default Component.extend(ModelReloaderMixin, {
   // Update the job status
   jobService: service('job'),
   lastRefreshed: moment(),
-  filterSchedulerEvents: false,
+  filterSchedulerEvents: alias('pipeline.settings.filterSchedulerEvents'),
   shouldReload(model) {
     let res = SHOULD_RELOAD_SKIP;
 
@@ -364,6 +364,7 @@ export default Component.extend(ModelReloaderMixin, {
   }),
   pipelineEvents: computed(
     'isFilteredEventsForNoBuilds',
+    'filterSchedulerEvents',
     'modelEvents',
     'paginateEvents.[]',
     'pipeline.id',
@@ -378,20 +379,27 @@ export default Component.extend(ModelReloaderMixin, {
           filteredPaginateEvents
         );
 
+        let filteredEvents = pipelineEvents;
+
         this.shuttle.getLatestCommitEvent(pipelineId).then(event => {
           this.set('latestCommit', event);
         });
 
         // filter events for no builds
         if (this.isFilteredEventsForNoBuilds) {
-          const filteredEvents = pipelineEvents.filter(
+          filteredEvents = filteredEvents.filter(
             (event, idx) => event.status !== 'SKIPPED' || idx === 0
           );
-
-          return filteredEvents;
         }
 
-        return pipelineEvents;
+        // filter events created by screwdriver scheduler
+        if (this.filterSchedulerEvents) {
+          filteredEvents = filteredEvents.filter(event => {
+            return event.creator.name !== 'Screwdriver scheduler';
+          });
+        }
+
+        return filteredEvents;
       }
     }
   ),
@@ -443,18 +451,10 @@ export default Component.extend(ModelReloaderMixin, {
       return newPrEvents;
     }
   }),
-  events: computed('pipelineEvents', 'prEvents', 'currentEventType', 'filterSchedulerEvents', {
+  events: computed('pipelineEvents', 'prEvents', 'currentEventType', {
     get() {
       if (this.currentEventType === 'pr') {
         return this.prEvents;
-      } else if (this.filterSchedulerEvents) {
-        // logic to filter the events created by screwdriver scheduler
-        const filteredEvents = this.pipelineEvents.filter(event => {
-          if (event.creator.name !== "Screwdriver scheduler") {
-            return event;
-          }
-        })
-        return filteredEvents;
       }
 
       return this.pipelineEvents;
@@ -699,9 +699,6 @@ export default Component.extend(ModelReloaderMixin, {
         .setJobState(id, state, stateChangeMessage || ' ')
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.reload());
-    },
-    filterEvents() {
-      this.set('filterSchedulerEvents', !this.filterSchedulerEvents);
     }
   },
   willDestroy() {

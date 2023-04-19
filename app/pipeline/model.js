@@ -28,7 +28,9 @@ export default Model.extend({
     defaultValue() {
       return {
         groupedEvents: true,
-        showEventTriggers: false
+        showEventTriggers: false,
+        filterEventsForNoBuilds: false,
+        filterSchedulerEvents: false
       };
     }
   }),
