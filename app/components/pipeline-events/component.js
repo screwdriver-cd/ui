@@ -396,9 +396,7 @@ export default Component.extend(ModelReloaderMixin, {
 
         // filter events created by screwdriver scheduler
         if (this.filterSchedulerEvents) {
-          filteredEvents = filteredEvents.filter(event => {
-            return event.creator.name !== SD_SCHEDULER;
-          });
+          filteredEvents = filteredEvents.filter(event => event.creator.name !== SD_SCHEDULER);
         }
 
         return filteredEvents;
