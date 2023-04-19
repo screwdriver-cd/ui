@@ -14,6 +14,8 @@ import {
   SHOULD_RELOAD_YES
 } from '../../mixins/model-reloader';
 
+const SD_SCHEDULER = 'Screwdriver scheduler';
+
 // eslint-disable-next-line require-jsdoc
 export async function stopBuild(givenEvent, job) {
   const { buildId } = job;
@@ -395,7 +397,7 @@ export default Component.extend(ModelReloaderMixin, {
         // filter events created by screwdriver scheduler
         if (this.filterSchedulerEvents) {
           filteredEvents = filteredEvents.filter(event => {
-            return event.creator.name !== 'Screwdriver scheduler';
+            return event.creator.name !== SD_SCHEDULER;
           });
         }
 
