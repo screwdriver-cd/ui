@@ -185,6 +185,9 @@ export default Component.extend(ModelReloaderMixin, {
   // Update the job status
   jobService: service('job'),
   lastRefreshed: moment(),
+  isFilteredEventsForNoBuilds: alias(
+    'pipeline.settings.isFilteredEventsForNoBuilds'
+  ),
   filterSchedulerEvents: alias('pipeline.settings.filterSchedulerEvents'),
   shouldReload(model) {
     let res = SHOULD_RELOAD_SKIP;
@@ -396,7 +399,9 @@ export default Component.extend(ModelReloaderMixin, {
 
         // filter events created by screwdriver scheduler
         if (this.filterSchedulerEvents) {
-          filteredEvents = filteredEvents.filter(event => event.creator.name !== SD_SCHEDULER);
+          filteredEvents = filteredEvents.filter(
+            event => event.creator.name !== SD_SCHEDULER
+          );
         }
 
         return filteredEvents;
