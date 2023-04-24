@@ -385,7 +385,6 @@ export default Component.extend(ModelReloaderMixin, {
           filteredPaginateEvents
         );
         const selectedEventId = this.selected;
-        const selectedEvent = this.modelEvents.findBy('id', selectedEventId);
 
         let filteredEvents = pipelineEvents;
 
@@ -395,21 +394,24 @@ export default Component.extend(ModelReloaderMixin, {
 
         // filter events for no builds
         if (this.isFilteredEventsForNoBuilds) {
-          filteredEvents = filteredEvents.filter(
-            (event, idx) => event.status !== 'SKIPPED' || idx === 0
-          );
+          filteredEvents = filteredEvents.filter((event, idx) => {
+            if (event.id === selectedEventId) {
+              return true;
+            }
+
+            return event.status !== 'SKIPPED' || idx === 0;
+          });
         }
 
         // filter events created by screwdriver scheduler
         if (this.filterSchedulerEvents) {
-          filteredEvents = filteredEvents.filter(
-            event => event.creator.name !== SD_SCHEDULER
-          );
-        }
+          filteredEvents = filteredEvents.filter(event => {
+            if (event.id === selectedEventId) {
+              return true;
+            }
 
-        // ensure selected event from url is not filtered
-        if (!filteredEvents.findBy('id', selectedEventId)) {
-          filteredEvents.pushObject(selectedEvent);
+            return event.creator.name !== SD_SCHEDULER;
+          });
         }
 
         return filteredEvents;
