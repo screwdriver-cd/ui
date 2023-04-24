@@ -368,11 +368,12 @@ export default Component.extend(ModelReloaderMixin, {
     }
   }),
   pipelineEvents: computed(
-    'isFilteredEventsForNoBuilds',
     'filterSchedulerEvents',
+    'isFilteredEventsForNoBuilds',
     'modelEvents',
     'paginateEvents.[]',
     'pipeline.id',
+    'selected',
     {
       get() {
         const pipelineId = this.get('pipeline.id');
@@ -383,6 +384,8 @@ export default Component.extend(ModelReloaderMixin, {
           this.modelEvents,
           filteredPaginateEvents
         );
+        const selectedEventId = this.selected;
+        const selectedEvent = this.modelEvents.findBy('id', selectedEventId);
 
         let filteredEvents = pipelineEvents;
 
@@ -402,6 +405,11 @@ export default Component.extend(ModelReloaderMixin, {
           filteredEvents = filteredEvents.filter(
             event => event.creator.name !== SD_SCHEDULER
           );
+        }
+
+        // ensure selected event from url is not filtered
+        if (!filteredEvents.findBy('id', selectedEventId)) {
+          filteredEvents.pushObject(selectedEvent);
         }
 
         return filteredEvents;
