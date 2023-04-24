@@ -368,8 +368,8 @@ export default Component.extend(ModelReloaderMixin, {
     }
   }),
   pipelineEvents: computed(
-    'filterSchedulerEvents',
     'isFilteredEventsForNoBuilds',
+    'filterSchedulerEvents',
     'modelEvents',
     'paginateEvents.[]',
     'pipeline.id',
