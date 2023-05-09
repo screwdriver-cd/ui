@@ -122,15 +122,11 @@ export async function createEvent(eventPayload, toActiveTab) {
     this.set('isShowingModal', false);
     this.forceReload();
 
-    if (typeof toActiveTab === `boolean`) {
-      if (toActiveTab) {
-        const path = `pipeline/${newEvent.get('pipelineId')}/${this.activeTab}`;
-
-        return this.router.transitionTo(path);
-      }
+    if (toActiveTab === true && this.activeTab === 'pulls') {
+      return this.router.transitionTo('pipeline.pulls', newEvent.get('pipelineId'));
+    }
 
       return this.router.transitionTo('pipeline', newEvent.get('pipelineId'));
-    }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log('***** error', e);
