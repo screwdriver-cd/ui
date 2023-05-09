@@ -254,19 +254,14 @@ export default Component.extend({
     if (this.stepName) {
       this.getLogs();
     }
-
-    // this.element.addEventListener('scrollDirectionDetector', this.scrollDirectionDetector);
   },
 
-  scrollDirectionDetector(e) {
+  scrollDirectionDetector(/* e */) {
     let direction = '';
     const oldScrollY = this.scrollY;
-    // const newScrollY = window.scrollY; // global scroll
     const newScrollY = this.element.querySelectorAll('.wrap')[0].scrollTop;
 
-    console.log(`oldScrollY ${oldScrollY}, newScrollY ${newScrollY}`);
-
-    if(oldScrollY < newScrollY){
+    if (oldScrollY < newScrollY) {
       direction = 'DOWN';
     } else {
       direction = 'UP';
@@ -277,7 +272,6 @@ export default Component.extend({
       this.autoscroll = false;
     }
 
-    console.log(`direction, ${direction}`);
     this.set('scrollY', newScrollY);
   },
 
@@ -310,8 +304,6 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this.logService.resetCache();
-
-    // this.element.removeEventListener('scrollDirectionDetector');
   },
 
   /**
@@ -430,16 +422,11 @@ export default Component.extend({
 
       window.open(downloadLink, '_blank');
     },
-    logScroll(e) {
+    logScroll() {
       const container = this.element.querySelectorAll('.wrap')[0];
 
+      // plugin stop autoscroll feature
       this.scrollDirectionDetector();
-
-      // console.log(`this.hasEnabledAutoscroll ${this.hasEnabledAutoscroll}, and this.autoscroll ${this.autoscroll},
-      //    logScroll got called, 
-      //    this.lastScrollTop: ${this.lastScrollTop}
-      //    this.lastScrollHeight: ${this.lastScrollHeight}
-      //    event ${e}`);
 
       if (
         !this.inProgress &&
@@ -479,17 +466,12 @@ export default Component.extend({
     toggleHasAutoScroll() {
       this.toggleProperty('hasEnabledAutoscroll');
 
-      console.log(`autoScroll is now: ${this.hasEnabledAutoscroll}`);
-
       if (this.hasEnabledAutoscroll) {
-        console.log(`autoScroll is now on, scroll to bottom`);
-
-        this.sendAction('scrollToBottom');
+        set(this, 'autoscroll', true);
+        this.scrollDown();
       } else {
-        console.log(`autoScroll is now off`);
-        this.set('autscroll', false);
+        set(this, 'autoscroll', false);
       }
-      
     }
   }
 });
