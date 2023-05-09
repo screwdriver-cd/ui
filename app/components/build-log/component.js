@@ -16,6 +16,7 @@ export default Component.extend({
   fullScreen: false,
   lineWrap: true,
   autoscroll: true,
+  hasEnabledAutoscroll: false,
   isFetching: false,
   isDownloading: false,
   inProgress: false,
@@ -253,6 +254,31 @@ export default Component.extend({
     if (this.stepName) {
       this.getLogs();
     }
+
+    // this.element.addEventListener('scrollDirectionDetector', this.scrollDirectionDetector);
+  },
+
+  scrollDirectionDetector(e) {
+    let direction = '';
+    const oldScrollY = this.scrollY;
+    // const newScrollY = window.scrollY; // global scroll
+    const newScrollY = this.element.querySelectorAll('.wrap')[0].scrollTop;
+
+    console.log(`oldScrollY ${oldScrollY}, newScrollY ${newScrollY}`);
+
+    if(oldScrollY < newScrollY){
+      direction = 'DOWN';
+    } else {
+      direction = 'UP';
+    }
+
+    // if users intention is to scroll up, then we will disable auto scroll
+    if (direction === 'UP') {
+      this.autoscroll = false;
+    }
+
+    console.log(`direction, ${direction}`);
+    this.set('scrollY', newScrollY);
   },
 
   didReceiveAttrs() {
@@ -284,6 +310,8 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this.logService.resetCache();
+
+    // this.element.removeEventListener('scrollDirectionDetector');
   },
 
   /**
@@ -402,8 +430,16 @@ export default Component.extend({
 
       window.open(downloadLink, '_blank');
     },
-    logScroll() {
+    logScroll(e) {
       const container = this.element.querySelectorAll('.wrap')[0];
+
+      this.scrollDirectionDetector();
+
+      // console.log(`this.hasEnabledAutoscroll ${this.hasEnabledAutoscroll}, and this.autoscroll ${this.autoscroll},
+      //    logScroll got called, 
+      //    this.lastScrollTop: ${this.lastScrollTop}
+      //    this.lastScrollHeight: ${this.lastScrollHeight}
+      //    event ${e}`);
 
       if (
         !this.inProgress &&
@@ -417,13 +453,15 @@ export default Component.extend({
         return;
       }
 
-      // autoscroll when the bottom of the logs is roughly in view
-      set(
-        this,
-        'autoscroll',
-        this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
-          .top < 1500
-      );
+      if (this.autoscroll) {
+        // autoscroll when the bottom of the logs is roughly in view
+        set(
+          this,
+          'autoscroll',
+          this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
+            .top < 1500
+        );
+      }
     },
     toggleTimeDisplay() {
       let index = timeTypes.indexOf(this.timeFormat);
@@ -437,6 +475,21 @@ export default Component.extend({
     },
     toggleLineWrap() {
       this.toggleProperty('lineWrap');
+    },
+    toggleHasAutoScroll() {
+      this.toggleProperty('hasEnabledAutoscroll');
+
+      console.log(`autoScroll is now: ${this.hasEnabledAutoscroll}`);
+
+      if (this.hasEnabledAutoscroll) {
+        console.log(`autoScroll is now on, scroll to bottom`);
+
+        this.sendAction('scrollToBottom');
+      } else {
+        console.log(`autoScroll is now off`);
+        this.set('autscroll', false);
+      }
+      
     }
   }
 });
