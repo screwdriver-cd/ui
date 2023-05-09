@@ -327,6 +327,11 @@ export default Component.extend({
     }
   },
 
+  scrollToBottom() {
+    set(this, 'autoscroll', true);
+    this.scrollDown();
+  },
+
   /**
    * Scroll back to the last anchor point
    * @method scrollStill
@@ -413,8 +418,7 @@ export default Component.extend({
       this.scrollTop();
     },
     scrollToBottom() {
-      set(this, 'autoscroll', true);
-      this.scrollDown();
+      this.scrollToBottom();
     },
     download() {
       const { buildId, stepName } = this;
@@ -467,8 +471,7 @@ export default Component.extend({
       this.toggleProperty('hasEnabledAutoscroll');
 
       if (this.hasEnabledAutoscroll) {
-        set(this, 'autoscroll', true);
-        this.scrollDown();
+        this.scrollToBottom();
       } else {
         set(this, 'autoscroll', false);
       }
