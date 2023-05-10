@@ -42,7 +42,6 @@ export default Component.extend({
   stateChange: null,
   user: null,
   jobId: null,
-  isUpdatingMetricsDowntimeJobs: false,
   metricsDowntimeJobs: [],
   displayDowntimeJobs: DOWNTIME_JOBS,
   showEventTriggers: false,
@@ -308,16 +307,20 @@ export default Component.extend({
     async resetPipelineAlias() {
       this.set('aliasName', '');
     },
+    async resetMetricsDowntimeJobs() {
+      this.set('metricsDowntimeJobs', []);
+    },
     async updateMetricsDowntimeJobs(metricsDowntimeJobs) {
       try {
         const pipelineId = this.get('pipeline.id');
 
-        this.set('isUpdatingMetricsDowntimeJobs', true);
         await this.shuttle.updatePipelineSettings(pipelineId, {
           metricsDowntimeJobs
         });
-      } finally {
-        this.set('isUpdatingMetricsDowntimeJobs', false);
+
+        this.set('successMessage', 'Pipeline downtime jobs updated successfully');
+      } catch (error) {
+        this.set('errorMessage', error);
       }
     },
 
