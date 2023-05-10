@@ -8,19 +8,13 @@
   {{#unless this.pipeline.configPipelineId}}
     <div class="col-12 col-md-8">
       <section class="pipeline">
-        <h3>
-          Pipeline
-        </h3>
+        <h3>Pipeline</h3>
         <ul>
           <li>
             <div class="row">
               <div class="col-10">
-                <h4>
-                  Checkout URL and Source Directory
-                </h4>
-                <p>
-                  Update your checkout URL and / or source directory.
-                </p>
+                <h4>Checkout URL and Source Directory</h4>
+                <p>Update your checkout URL and / or source directory.</p>
               </div>
             </div>
             <div>
@@ -69,7 +63,7 @@
                   Setup your own preferred pipeline name for the dashboard list view.
                 </p>
               </div>
-              <div class="col-md-8 right">
+              <div class="col-8">
                 <input
                   type="text"
                   class="pipeline-alias-name col-12"
@@ -77,6 +71,8 @@
                   value={{this.aliasName}}
                   oninput={{action (mut this.aliasName) value="target.value"}}
                 />
+              </div>
+              <div class="col-4 right">
                 <button class="reset-button" {{action "resetPipelineAlias"}}>
                   <FaIcon @icon="sync" />
                   Reset
@@ -94,7 +90,7 @@
           {{#if this.displayDowntimeJobs}}
             <li>
               <div class="row">
-                <div class="col-10">
+                <div class="col-12">
                   <h4>
                     Downtime Jobs
                   </h4>
@@ -102,7 +98,7 @@
                     Pick your own preferred jobs to be counted in metrics graph (default all jobs)
                   </p>
                   <div class="row">
-                    <div class="col-5">
+                    <div class="col-8">
                       <PowerSelectMultiple
                         @searchEnabled={{true}}
                         @options={{this.sortedJobs}}
@@ -116,18 +112,19 @@
                         {{metricsDowntimeJob.name}}
                       </PowerSelectMultiple>
                     </div>
+                    <div class="col-4 right">
+                      <button class="reset-button" {{action "resetMetricsDowntimeJobs"}}>
+                        <FaIcon @icon="sync" />
+                        Reset
+                      </button>
+                      <button
+                        class="blue-button-alias"
+                        {{action "updateMetricsDowntimeJobs" this.metricsDowntimeJobs}}
+                      >
+                        Save
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div class="col-2 right sync">
-                  <a
-                    href="#"
-                    {{action "updateMetricsDowntimeJobs" this.metricsDowntimeJobs}}
-                  >
-                    <FaIcon
-                      @icon="sync"
-                      @spin={{this.isUpdatingMetricsDowntimeJobs}}
-                    />
-                  </a>
                 </div>
               </div>
             </li>
@@ -151,47 +148,47 @@
               </p>
             </div>
           </div>
-          {{#each this.sortedJobs as |job|}}
-            {{#unless (starts-with job.name "PR-")}}
-              <li>
-                <div class="row">
-                  <div class="col-10">
-                    <h4>
-                      {{job.name}}
-                    </h4>
-                    {{#if job.stateChanger}}
-                      <i class="float-right">
-                        <small>
-                          {{job.stateChangeTimeWords}}
-                        </small>
-                      </i>
-                      <p>
-                        {{if
-                          job.isDisabled
-                          "Disabled"
-                          "Enabled"
-                        }} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}
-                        {{/if}}
-                      </p>
-                    {{/if}}
-                  </div>
-                  <div
-                    class="col-2 right"
-                    title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job."
-                  >
+        </li>
+        {{#each this.sortedJobs as |job|}}
+          {{#unless (starts-with job.name "PR-")}}
+            <li>
+              <div class="row">
+                <div class="col-10">
+                  <h4>
+                    {{job.name}}
+                  </h4>
+                  {{#if job.stateChanger}}
+                    <i class="float-right">
+                      <small>
+                        {{job.stateChangeTimeWords}}
+                      </small>
+                    </i>
+                    <p>
+                      {{if
+                        job.isDisabled
+                        "Disabled"
+                        "Enabled"
+                      }} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}
+                      {{/if}}
+                    </p>
+                  {{/if}}
+                </div>
+                <div class="col-2">
+                  <div class="toggle-wrapper">
                     <XToggle
                       @size="small"
                       @value={{not job.isDisabled}}
                       @onLabel="Enabled::false"
                       @offLabel="Disabled::true"
                       @onToggle={{action "toggleJob" job.id this.username job.name}}
+                      title="Toggle to {{if job.isDisabled "enable" "disable"}} the {{job.name}} job."
                     />
                   </div>
                 </div>
-              </li>
-            {{/unless}}
-          {{/each}}
-        </li>
+              </div>
+            </li>
+          {{/unless}}
+        {{/each}}
       </ul>
     </section>
   </div>
@@ -212,7 +209,7 @@
                 Update the webhooks if they are not working correctly.
               </p>
             </div>
-            <div class="col-2 right">
+            <div class="col-2 right" title="Click to sync the webhooks.">
               <a href="#" {{action "sync" "webhooks"}}>
                 <FaIcon @icon="sync" />
               </a>
@@ -229,7 +226,7 @@
                 Create or update pull-request jobs if they are not displaying properly.
               </p>
             </div>
-            <div class="col-2 right">
+            <div class="col-2 right" title="Click to sync pull requests.">
               <a href="#" {{action "sync" "pullrequests"}}>
                 <FaIcon @icon="sync" />
               </a>
@@ -246,7 +243,7 @@
                 Update jobs if they are not displaying properly.
               </p>
             </div>
-            <div class="col-2 right">
+            <div class="col-2 right" title="Click to sync the pipeline property.">
               <a href="#" {{action "sync"}}>
                 <FaIcon @icon="sync" />
               </a>
@@ -273,7 +270,7 @@
                 Click to clear the cache for the pipeline.
               </p>
             </div>
-            <div class="col-2 right">
+            <div class="col-2 right" title="Click to clear cache for this pipeline.">
               <a href="#" {{action "clearCache" "pipelines"}}>
                 <FaIcon @icon="trash" />
               </a>
@@ -292,11 +289,8 @@
                     Click to clear the cache for the {{job.name}} job.
                   </p>
                 </div>
-                <div
-                  class="col-2 right"
-                  title="Click to clear cache for {{job.name}} job."
-                >
-                  <a href="#" {{action "clearCache" "jobs" job.id}}>
+                <div class="col-2 right">
+                  <a href="#" title="Click to clear cache for {{job.name}} job." {{action "clearCache" "jobs" job.id}}>
                     <FaIcon @icon="trash" />
                   </a>
                 </div>
@@ -328,17 +322,17 @@
                 />
               </p>
             </div>
-            <div
-              class="col-2 right"
-              title="Toggle to {{if this.groupedEvents "group" "ungroup"}} the pipeline"
-            >
-              <XToggle
-                @size="small"
-                @value={{this.groupedEvents}}
-                @onLabel="groupedEvents:true"
-                @offLabel="groupedEvents::false"
-                @onToggle={{action "updatePipelineGroupedEvents"}}
-              />
+            <div class="col-2 right">
+              <div class="toggle-wrapper">
+                <XToggle
+                  @size="small"
+                  @value={{this.groupedEvents}}
+                  @onLabel="groupedEvents:true"
+                  @offLabel="groupedEvents::false"
+                  @onToggle={{action "updatePipelineGroupedEvents"}}
+                  title="Toggle to {{if this.groupedEvents "group" "ungroup"}} the pipeline"
+                />
+              </div>
             </div>
           </div>
         </li>
@@ -352,17 +346,17 @@
                 Setup your pipeline preference to show event triggers by default
               </p>
             </div>
-            <div
-              class="col-2 right"
-              title="Toggle to {{if this.showEventTriggers "hide" "show"}} event tiggers"
-            >
-              <XToggle
-                @size="small"
-                @value={{this.showEventTriggers}}
-                @onLabel="showEventTriggers:true"
-                @offLabel="showEventTriggers::false"
-                @onToggle={{action "updatePipelineShowTriggers"}}
-              />
+            <div class="col-2 right">
+              <div class="toggle-wrapper">
+                <XToggle
+                  @size="small"
+                  @value={{this.showEventTriggers}}
+                  @onLabel="showEventTriggers:true"
+                  @offLabel="showEventTriggers::false"
+                  @onToggle={{action "updatePipelineShowTriggers"}}
+                  title="Toggle to {{if this.showEventTriggers "hide" "show"}} event tiggers"
+                />
+              </div>
             </div>
           </div>
         </li>
@@ -376,16 +370,16 @@
                 Setup your pipeline preference to not show events with no builds. (latest event is not hidden)
               </p>
             </div>
-            <div
-              class="col-2 right"
-              title="Toggle to {{if this.filterEventsForNoBuilds "filter" "unfilter"}} events for no builds"
-            >
-              <XToggle
-                @size="small"
-                @value={{this.filterEventsForNoBuilds}}
-                @showLabels={{false}}
-                @onToggle={{action "updateFilterEventsForNoBuilds"}}
-              />
+            <div class="col-2 right">
+              <div class="toggle-wrapper">
+                <XToggle
+                  @size="small"
+                  @value={{this.filterEventsForNoBuilds}}
+                  @showLabels={{false}}
+                  @onToggle={{action "updateFilterEventsForNoBuilds"}}
+                  title="Toggle to {{if this.filterEventsForNoBuilds "filter" "unfilter"}} events for no builds"
+                />
+              </div>
             </div>
           </div>
         </li>
@@ -399,17 +393,17 @@
                 Toggle to hide the events started by Scheduler
               </p>
             </div>
-            <div
-              class="col-2 right"
-              title="Toggle to {{if this.filterSchedulerEvents "filter" "unfilter"}} events by scheduler"
-            >
-              <XToggle
-              @size="small"
-              @value={{this.filterSchedulerEvents}}
-              @onLabel="filterSchedulerEvents:true"
-              @offLabel="filterSchedulerEvents::false"
-              @onToggle={{action "updateSchedulerEventsFilter"}}
-            />
+            <div class="col-2 right">
+              <div class="toggle-wrapper">
+                <XToggle
+                  @size="small"
+                  @value={{this.filterSchedulerEvents}}
+                  @onLabel="filterSchedulerEvents:true"
+                  @offLabel="filterSchedulerEvents::false"
+                  @onToggle={{action "updateSchedulerEventsFilter"}}
+                  title="Toggle to {{if this.filterSchedulerEvents "filter" "unfilter"}} events by scheduler"
+                />
+              </div>
             </div>
           </div>
         </li>
@@ -442,17 +436,17 @@
                 Show or Hide jobs that are triggered from Pull Request
               </p>
             </div>
-            <div
-              class="col-2 right"
-              title="Toggle to {{if this.showPRJobs "show" "hide"}} the jobs that are triggered from PRs"
-            >
-              <XToggle
-                @size="small"
-                @value={{this.showPRJobs}}
-                @onLabel="showPRJobs:true"
-                @offLabel="showPRJobs::false"
-                @onToggle={{action "updateShowPRJobs"}}
-              />
+            <div class="col-2 right">
+              <div class="toggle-wrapper">
+                <XToggle
+                  @size="small"
+                  @value={{this.showPRJobs}}
+                  @onLabel="showPRJobs:true"
+                  @offLabel="showPRJobs::false"
+                  @onToggle={{action "updateShowPRJobs"}}
+                  title="Toggle to {{if this.showPRJobs "show" "hide"}} the jobs that are triggered from PRs"
+                />
+              </div>
             </div>
           </div>
         </li>
@@ -480,19 +474,21 @@
                     </p>
                   </div>
                   <div class="col-2 right" title="Set pipeline visibility">
-                    <XToggle
-                      @size="small"
-                      @value={{this.publicPipeline}}
-                      @onLabel="publicPipeline::true"
-                      @offLabel="publicPipeline::false"
-                      @onToggle={{action
-                        (if
-                          this.publicPipeline
-                          "updatePipelineVisibility"
-                          "showPipelineVisibilityButtons"
-                        )
-                      }}
-                    />
+                    <div class="toggle-wrapper">
+                      <XToggle
+                        @size="small"
+                        @value={{this.publicPipeline}}
+                        @onLabel="publicPipeline::true"
+                        @offLabel="publicPipeline::false"
+                        @onToggle={{action
+                          (if
+                            this.publicPipeline
+                            "updatePipelineVisibility"
+                            "showPipelineVisibilityButtons"
+                          )
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               {{/if}}

@@ -179,9 +179,8 @@
               <FaIcon @icon="lock" />
             {{/if}}
           </div>
-          <div class="value">
-            {{command.command}}
-          </div>
+          {{!-- This line will be displayed with pre-wrap, so don't include white spaces and line breaks. --}}
+          <div class="value">{{command.command}}</div>
         </li>
       {{/each}}
     </ul>

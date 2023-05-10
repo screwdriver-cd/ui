@@ -79,6 +79,18 @@
     }
   }
 
+  .toggle-wrapper {
+    width: 100px;
+    height: 100%;
+    margin-left: auto;
+    text-align: center;
+  }
+
+  .x-toggle-component {
+    height: 100%;
+    align-items: center;
+  }
+
   .sync {
     a {
       color: $sd-success;
@@ -86,6 +98,16 @@
 
     a:hover {
       border: 1px solid $sd-success;
+    }
+  }
+
+  .cache {
+    a {
+      color: $sd-link;
+    }
+
+    a:hover {
+      border: 1px solid $sd-link
     }
   }
 
@@ -131,11 +153,11 @@
     margin: 5px;
   }
 
-  input.display-job-name {
-    width: 45px;
-  }
-
   .pipeline {
+    .ember-basic-dropdown-trigger {
+      margin: 5px;
+    }
+
     .ember-power-select-multiple-option {
       padding-top: 0;
       padding-bottom: 0;

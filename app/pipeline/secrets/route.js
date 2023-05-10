@@ -9,6 +9,9 @@ export default Route.extend({
   routeAfterAuthentication: 'pipeline.secrets',
   titleToken: 'Secrets',
   model() {
+    //Refresh error message
+    this.controllerFor('pipeline.secrets').set('errorMessage', '');
+
     // Guests should not access this page
     if (get(this, 'session.data.authenticated.isGuest')) {
       this.router.transitionTo('pipeline');

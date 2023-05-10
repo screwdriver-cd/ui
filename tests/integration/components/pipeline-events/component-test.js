@@ -117,7 +117,7 @@ module('Integration | Component | pipeline events', function (hooks) {
   });
 
   test('it restarts a build', async function (assert) {
-    assert.expect(6);
+    assert.expect(7);
     server.get('http://localhost:8080/v4/events/2/builds', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -175,8 +175,9 @@ module('Integration | Component | pipeline events', function (hooks) {
       });
 
       const routerServiceMock = Service.extend({
-        transitionTo: path => {
-          assert.equal(path, 'pipeline/1234/events');
+        transitionTo: (routeName, pipelineId) => {
+          assert.equal(routeName, 'pipeline');
+          assert.equal(pipelineId, 1234);
         }
       });
 
@@ -205,7 +206,7 @@ module('Integration | Component | pipeline events', function (hooks) {
   });
 
   test('it restarts a PR build', async function (assert) {
-    assert.expect(6);
+    assert.expect(7);
     server.get('http://localhost:8080/v4/events/2/builds', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -274,8 +275,9 @@ module('Integration | Component | pipeline events', function (hooks) {
       });
 
       const routerServiceMock = Service.extend({
-        transitionTo: path => {
-          assert.equal(path, 'pipeline/1234/pulls');
+        transitionTo: (routeName, pipelineId) => {
+          assert.equal(routeName, 'pipeline.pulls');
+          assert.equal(pipelineId, 1234);
         }
       });
 
