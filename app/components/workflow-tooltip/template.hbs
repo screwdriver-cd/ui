@@ -10,13 +10,15 @@
       </LinkTo>
     {{/each}}
   {{else}}
-    {{#if this.tooltipData.job.buildId}}
-      {{#if (not-eq this.tooltipData.job.status "CREATED")}}
-        <LinkTo @route="pipeline.build" @model={{this.tooltipData.job.buildId}}>
-          Go to build details
-        </LinkTo>
-      {{/if}}
-    {{/if}}
+
+    <LinkTo
+      @route="pipeline.build"
+      @model={{this.tooltipData.job.buildId}}
+      @disabled={{not (and this.tooltipData.job.buildId (not-eq this.tooltipData.job.status "CREATED"))}}
+    >
+      Go to build details
+    </LinkTo>
+
     <LinkTo @route="pipeline.metrics" @query={{hash jobId=this.tooltipData.job.id}}>
       Go to build metrics
     </LinkTo>
