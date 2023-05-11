@@ -59,7 +59,6 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     };
 
     this.set('data', data);
-
     await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
 
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -73,6 +72,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       }
     };
 
+    this.set('data', data);
     await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
 
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
