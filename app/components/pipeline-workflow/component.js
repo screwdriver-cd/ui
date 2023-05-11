@@ -217,6 +217,13 @@ export default Component.extend({
         const pipelineParameters = {};
         const jobParameters = {};
         const isPR = this.get('selectedEventObj.prNum');
+        const builds = this.get('selectedEventObj.builds') || [];
+        const build = builds.find(b => `${b.jobId}` === `${job.id}`);
+
+        if (build) {
+          job.buildId = build.id;
+          job.status = build.status;
+        }
 
         // Segregate pipeline level and job level parameters
         Object.entries(eventParameters).forEach(

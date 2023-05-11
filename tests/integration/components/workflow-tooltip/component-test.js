@@ -10,7 +10,8 @@ module('Integration | Component | workflow tooltip', function (hooks) {
   test('it renders', async function (assert) {
     await render(hbs`<WorkflowTooltip/>`);
 
-    assert.dom('a:nth-of-type(1)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
 
     // Template block usage:
     await render(hbs`
@@ -39,6 +40,43 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
     assert.dom('a:nth-of-type(3)').hasText('Disable this job');
+  });
+
+  test('it renders disabled build detail link', async function (assert) {
+    await render(hbs`<WorkflowTooltip />`);
+
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(1)').hasClass('disabled');
+
+    let data = {
+      job: {
+        id: 1,
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'CREATED',
+        isDisabled: false
+      }
+    };
+
+    this.set('data', data);
+    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
+
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(1)').hasClass('disabled');
+
+    data = {
+      job: {
+        id: 1,
+        name: 'batmobile',
+        isDisabled: false
+      }
+    };
+
+    this.set('data', data);
+    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
+
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(1)').hasClass('disabled');
   });
 
   test('it renders remote trigger link', async function (assert) {
