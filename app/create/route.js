@@ -4,7 +4,6 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 import { hash } from 'rsvp';
 
 export default Route.extend(AuthenticatedRouteMixin, {
-  titleToken: 'Create Pipeline',
   routeAfterAuthentication: 'create',
   shuttle: service(),
 

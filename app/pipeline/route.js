@@ -43,9 +43,5 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
       return true;
     }
-  },
-
-  titleToken(model) {
-    return get(model, 'pipeline.name');
   }
 });

@@ -5,7 +5,7 @@ import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 let server;
 
-module('Acceptance |user-settings', function (hooks) {
+module('Acceptance | user-settings', function (hooks) {
   setupApplicationTest(hooks);
 
   hooks.beforeEach(function () {

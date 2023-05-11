@@ -38,12 +38,5 @@ export default Route.extend(ApplicationRouteMixin, {
         this.reloadPage();
       }
     }
-  ),
-  title(tokens) {
-    const arr = Array.isArray(tokens) ? tokens : [];
-
-    arr.push('screwdriver.cd');
-
-    return arr.join(' > ');
-  }
+  )
 });

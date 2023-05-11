@@ -7,7 +7,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
   router: service(),
   store: service(),
   session: service(),
-  titleToken: 'User Settings',
   routeAfterAuthentication: 'user-settings',
   model() {
     // Guests should not access this page

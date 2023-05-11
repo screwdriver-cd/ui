@@ -7,7 +7,6 @@ export default Route.extend({
   router: service(),
   store: service(),
   routeAfterAuthentication: 'pipeline.child-pipelines',
-  titleToken: 'Child Pipelines',
   model() {
     // Guests should not access this page
     if (get(this, 'session.data.authenticated.isGuest')) {

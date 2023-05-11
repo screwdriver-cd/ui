@@ -5,7 +5,6 @@ import { inject as service } from '@ember/service';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   router: service(),
-  titleToken: 'Dashboard',
   routeAfterAuthentication: 'home',
 
   beforeModel(/* transition */) {
