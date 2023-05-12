@@ -55,7 +55,7 @@
 .range-selection {
   margin-right: 10px;
 
-  button {
+  button:not(:disabled):not(.disabled) {
     background: #eff4ff;
     padding: 5px 10px;
     line-height: 1;
@@ -72,6 +72,7 @@
     &.active:hover,
     &.active:focus,
     &.active {
+      color: black;
       background: white;
       border-radius: 3px !important;
       border: none;

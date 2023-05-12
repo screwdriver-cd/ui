@@ -33,7 +33,7 @@
   .view-toggle {
   }
 
-  .btn {
+  .btn:not(:disabled):not(.disabled) {
     border-radius: 3px;
     padding: 5px 10px;
     color: $brand-600;
