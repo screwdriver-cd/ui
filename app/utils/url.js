@@ -24,4 +24,16 @@ function isValidHttpOrHttpsUrl(url) {
   }
 }
 
-export { urlRegex, shortenUrl, isValidHttpOrHttpsUrl };
+
+function isValidRelativePath(path) {
+  return String(path).match(/^(\/[^/]+)+$/);
+}
+
+function getPipelineBuildUrl() {
+  const BUILD_URL_REGEX = /^.+\/pipelines\/\d+\/builds\/\d+/;
+  const buildUrlMatch = window.location.href.match(BUILD_URL_REGEX);
+
+  return buildUrlMatch;
+}
+
+export { urlRegex, shortenUrl, isValidHttpOrHttpsUrl, isValidRelativePath, getPipelineBuildUrl };
