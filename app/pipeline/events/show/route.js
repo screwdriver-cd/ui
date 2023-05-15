@@ -44,8 +44,10 @@ export default class PipelineEventsShowRoute extends Route {
 
     const { event_id: eventId } = this.paramsFor(this.routeName);
     const pipelineEventsController = this.controllerFor('pipeline.events');
-
-    const desiredEvent = pipelineEventsController.events.findBy('id', eventId);
+    const desiredEvent = pipelineEventsController.paginateEvents.findBy(
+      'id',
+      eventId
+    );
 
     if (!desiredEvent) {
       const event = await this.store.findRecord('event', eventId);
