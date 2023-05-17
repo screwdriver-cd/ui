@@ -188,7 +188,7 @@ export default Component.extend({
           coverageInfo.coverageUrl = coverageUrl;
         }
 
-        if (isValidRelativePath(coverageUrl)) {
+        if (isValidRelativePath(coverageUrl) && pipelineBuildUrlMatch) {
           coverageInfo.coverageUrl = `${pipelineBuildUrlMatch[0]}/artifacts${coverageUrl}`;
         }
       }
@@ -203,7 +203,7 @@ export default Component.extend({
           coverageInfo.testsUrl = testsUrl;
         }
 
-        if (isValidRelativePath(testsUrl)) {
+        if (isValidRelativePath(testsUrl) && pipelineBuildUrlMatch) {
           coverageInfo.testsUrl = `${pipelineBuildUrlMatch[0]}/artifacts${testsUrl}`;
         }
       }
