@@ -6,7 +6,11 @@ import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import ObjectProxy from '@ember/object/proxy';
 import { getTimestamp } from '../../utils/timestamp-format';
-import { isValidHttpOrHttpsUrl } from '../../utils/url';
+import {
+  isValidHttpOrHttpsUrl,
+  isValidRelativePath,
+  getPipelineBuildUrl
+} from '../../utils/url';
 
 const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
@@ -172,14 +176,21 @@ export default Component.extend({
         : null;
 
       const coverageInfo = { ...this.coverageInfo };
+      const pipelineBuildUrlMatch = getPipelineBuildUrl();
 
       if (coverageFloat) {
         coverageInfo.coverage = `${coverageFloat}%`;
         coverageInfo.coverageUrl = '#';
       }
 
-      if (coverageUrl && isValidHttpOrHttpsUrl(coverageUrl)) {
-        coverageInfo.coverageUrl = coverageUrl;
+      if (coverageUrl) {
+        if (isValidHttpOrHttpsUrl(coverageUrl)) {
+          coverageInfo.coverageUrl = coverageUrl;
+        }
+
+        if (isValidRelativePath(coverageUrl) && pipelineBuildUrlMatch) {
+          coverageInfo.coverageUrl = `${pipelineBuildUrlMatch[0]}/artifacts${coverageUrl}`;
+        }
       }
 
       if (String(tests).match(/^\d+\/\d+$/)) {
@@ -187,8 +198,14 @@ export default Component.extend({
         coverageInfo.testsUrl = '#';
       }
 
-      if (testsUrl && isValidHttpOrHttpsUrl(testsUrl)) {
-        coverageInfo.testsUrl = testsUrl;
+      if (testsUrl) {
+        if (isValidHttpOrHttpsUrl(testsUrl)) {
+          coverageInfo.testsUrl = testsUrl;
+        }
+
+        if (isValidRelativePath(testsUrl) && pipelineBuildUrlMatch) {
+          coverageInfo.testsUrl = `${pipelineBuildUrlMatch[0]}/artifacts${testsUrl}`;
+        }
       }
 
       this.set('coverageInfo', coverageInfo);
