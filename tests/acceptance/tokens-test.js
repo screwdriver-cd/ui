@@ -43,6 +43,10 @@ module('Acceptance | tokens', function (hooks) {
     await visit('/user-settings/access-tokens');
 
     assert.dom('.token-list tbody tr').exists({ count: 2 });
-    assert.equal(getPageTitle(), 'User Settings > Access Tokens');
+    assert.equal(
+      getPageTitle(),
+      'User Settings > Access Tokens',
+      'Page title is correct'
+    );
   });
 });
