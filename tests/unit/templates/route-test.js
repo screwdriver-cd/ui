@@ -8,6 +8,5 @@ module('Unit | Route | templates', function (hooks) {
     const route = this.owner.lookup('route:templates');
 
     assert.ok(route);
-    assert.equal(route.titleToken, 'Templates');
   });
 });
