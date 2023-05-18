@@ -6,10 +6,10 @@ import { getPageTitle } from 'ember-page-title/test-support';
 module('Acceptance | commands', function (hooks) {
   setupApplicationTest(hooks);
 
-  test('visiting /login', async (assert) => {
+  test('visiting /login', async assert => {
     await visit('/login');
 
     assert.equal(currentURL(), '/login');
-    assert.equal(getPageTitle(), 'Login');
+    assert.equal(getPageTitle(), 'Login', 'Page title is correct');
   });
 });

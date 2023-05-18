@@ -170,8 +170,8 @@ module('Acceptance | pipeline build', function (hooks) {
     await visit('/pipelines/4');
 
     assert.equal(currentURL(), `/pipelines/4/events/${desiredEventId}`);
-    assert.equal(getPageTitle(), 'foo/bar', 'Page title is foo/bar');
-    assert.dom('a h1').hasText('foo/bar', 'Pipeline name is foo/bar');
+    assert.equal(getPageTitle(), 'foo/bar', 'Page title is correct');
+    assert.dom('a h1').hasText('foo/bar', 'Pipeline name is correct');
     assert
       .dom('.pipelineWorkflow svg')
       .exists({ count: 1 }, 'not enough workflow');

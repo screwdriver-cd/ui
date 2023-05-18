@@ -3,6 +3,8 @@ import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
+import { getPageTitle } from 'ember-page-title/test-support';
+
 let server;
 
 module('Acceptance | user-settings', function (hooks) {
@@ -59,6 +61,7 @@ module('Acceptance | user-settings', function (hooks) {
     await visit('/user-settings/preferences');
 
     assert.equal(currentURL(), '/user-settings/preferences');
+    assert.equal(getPageTitle(), 'Preferences', 'Page title is correct');
     assert.dom('.ember-power-select-selected-item').hasText('LOCAL_TIMEZONE');
     await fillIn('.display-job-name', 50);
     await fillIn('.ember-power-select-selected-item', 'UTC');

@@ -102,7 +102,7 @@ module('Acceptance | create', function (hooks) {
     await visit('/create');
 
     assert.equal(currentURL(), '/create');
-    assert.equal(getPageTitle(), 'Create Pipeline');
+    assert.equal(getPageTitle(), 'Create Pipeline', 'Page title is correct');
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
     await triggerEvent('.text-input', 'keyup');
     await click('button.blue-button');
