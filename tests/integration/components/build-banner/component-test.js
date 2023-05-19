@@ -617,11 +617,13 @@ module('Integration | Component | build banner', function (hooks) {
     };
 
     assert.expect(2);
-    this.set('eventMock', prEventMock);
-    this.set('buildStepsMock', coverageStepsMock);
-    this.set('buildMetaMock', buildMetaMock);
-    this.set('prEvents', new EmberPromise(resolves => resolves([])));
-    this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
+    this.setProperties({
+      eventMock: prEventMock,
+      buildStepsMock: coverageStepsMock,
+      buildMetaMock,
+      prEvents: new EmberPromise(resolves => resolves([])),
+      jobDisabled: new EmberPromise(resolves => resolves(false))
+    });
 
     await render(hbs`<BuildBanner
       @buildContainer="node:6"
