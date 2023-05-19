@@ -27,6 +27,22 @@ module('Acceptance | user-settings', function (hooks) {
         timestamFormat: 'LOCAL_TIMEZONE'
       })
     ]);
+
+    server.get('http://localhost:8080/v4/tokens', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '1'
+      })
+    ]);
+
+    server.get('http://localhost:8080/v4/collections', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '1'
+      })
+    ]);
   });
 
   hooks.afterEach(function () {
@@ -38,7 +54,7 @@ module('Acceptance | user-settings', function (hooks) {
     await visit('/user-settings/preferences');
 
     assert.equal(currentURL(), '/user-settings/preferences');
-    assert.dom('section.preference li').exists({ count: 2 });
+    assert.dom('section.preference li').exists({ count: 3 });
   });
 
   test('update user preferences', async function (assert) {
@@ -55,23 +71,28 @@ module('Acceptance | user-settings', function (hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify({})
     ]);
-    const controller = this.owner.lookup('controller:user-settings/preference');
 
     await authenticateSession({ token: 'faketoken' });
     await visit('/user-settings/preferences');
 
     assert.equal(currentURL(), '/user-settings/preferences');
-    assert.equal(getPageTitle(), 'Preferences', 'Page title is correct');
-    assert.dom('.ember-power-select-selected-item').hasText('LOCAL_TIMEZONE');
-    await fillIn('.display-job-name', 50);
-    await fillIn('.ember-power-select-selected-item', 'UTC');
-
-    await click('button.blue-button');
-    assert.dom('.display-job-name').hasValue(50);
-    assert.dom('.ember-power-select-selected-item').hasValue('UTC');
-    assert.deepEqual(
-      controller.successMessage,
-      'User settings updated successfully!'
+    assert.equal(
+      getPageTitle(),
+      'User Settings > Preferences',
+      'Page title is correct'
     );
+    assert.dom('.ember-power-select-selected-item').hasText('Local Timezone');
+    assert.dom('.display-job-name').hasProperty('placeholder', '20');
+
+    await click('.ember-basic-dropdown-trigger');
+    await click('.ember-power-select-options li:last-child');
+    await fillIn('.display-job-name', 50);
+    await click('button.blue-button');
+
+    assert.dom('.ember-power-select-selected-item').hasText('UTC');
+    assert.dom('.display-job-name').hasValue('50');
+    assert
+      .dom('.alert-success span:not(button span)')
+      .hasText('User settings updated successfully!');
   });
 });
