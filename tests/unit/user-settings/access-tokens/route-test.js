@@ -8,6 +8,5 @@ module('Unit | Route | user-settings/access-tokens', function (hooks) {
     const route = this.owner.lookup('route:user-settings/access-tokens');
 
     assert.ok(route);
-    assert.equal(route.titleToken, 'Access Tokens');
   });
 });

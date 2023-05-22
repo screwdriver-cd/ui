@@ -8,6 +8,5 @@ module('Unit | Route | commands', function (hooks) {
     const route = this.owner.lookup('route:commands');
 
     assert.ok(route);
-    assert.equal(route.titleToken, 'Commands');
   });
 });

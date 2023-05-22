@@ -25,10 +25,6 @@ export default Route.extend({
     );
   },
 
-  titleToken(model) {
-    return `${model.job.get('name')} > #${model.build.get('truncatedSha')}`;
-  },
-
   deactivate() {
     const model = this.modelFor(this.routeName);
 
