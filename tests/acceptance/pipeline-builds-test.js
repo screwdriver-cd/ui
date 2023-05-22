@@ -80,11 +80,34 @@ module('Acceptance | pipeline build', function (hooks) {
       ];
     });
 
+    server.get('https://localhost:8080/v4/jobs/:jobId', request => {
+      const jobId = parseInt(request.params.jobId, 10);
+
+      return [
+        200,
+        { 'Content-Type': 'application/json' },
+        JSON.stringify(makeJobs(jobId)[0])
+      ];
+    });
+
     server.get('http://localhost:8080/v4/collections', () => [
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
+
+    server.get('http://localhost:8080/v4/builds/1000000', () => {
+      const build = makeBuilds(1000000)[0];
+
+      build.id = 1000000;
+      build.status = 'FAILURE';
+
+      return [
+        200,
+        { 'Content-Type': 'application/json' },
+        JSON.stringify(build)
+      ];
+    });
 
     server.get('http://localhost:8080/v4/builds/statuses', () => [
       200,
@@ -115,6 +138,38 @@ module('Acceptance | pipeline build', function (hooks) {
 
   hooks.afterEach(function () {
     server.shutdown();
+  });
+
+  test('visiting /pipelines/4/builds/1000000 when logged in', async function (assert) {
+    const pipelineId = 4;
+    const buildId = 1000000;
+
+    const controller = this.owner.lookup('controller:pipeline/build');
+
+    controller.actions.reload = () => {
+      assert.ok();
+    };
+
+    const service = this.owner.lookup('service:build-logs');
+
+    service.getCache = () => {
+      return 'cache';
+    };
+
+    await authenticateSession({ token: 'fakeToken' });
+
+    await visit(`/pipelines/${pipelineId}/builds/${buildId}`);
+
+    assert.equal(
+      currentURL(),
+      `/pipelines/${pipelineId}/builds/${buildId}/steps/install`
+    );
+
+    assert.equal(
+      getPageTitle(),
+      'foo/bar > main > #abcd123',
+      'Page title is correct'
+    );
   });
 
   test('it redirects to /pipeline/:pipeline_id if build not found', async function (assert) {
