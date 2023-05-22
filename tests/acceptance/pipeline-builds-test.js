@@ -144,12 +144,6 @@ module('Acceptance | pipeline build', function (hooks) {
     const pipelineId = 4;
     const buildId = 1000000;
 
-    const controller = this.owner.lookup('controller:pipeline/build');
-
-    controller.actions.reload = () => {
-      assert.ok();
-    };
-
     const service = this.owner.lookup('service:build-logs');
 
     service.getCache = () => {
