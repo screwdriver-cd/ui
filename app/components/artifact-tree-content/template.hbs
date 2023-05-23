@@ -1,5 +1,5 @@
 {{#if (eq 'file' @node.file.type)}}
-  <a href={{this.nodeURL}} {{on "click" (fn @tree.clicked @node.file)}}>
+  <a href={{this.nodeURL}}>
     <FaIcon @icon="file" @fixedWidth={{true}}/>
     {{@node.file.text}}
   </a>
