@@ -13,7 +13,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
     }
   },
   routeAfterAuthentication: 'search',
-  titleToken: 'Search',
   model(params) {
     const pipelineListConfig = {
       page: 1,

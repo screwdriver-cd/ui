@@ -6,6 +6,7 @@ export const pipeline = {
   id: '4',
   scmUrl: 'git@github.com:foo/bar.git#master',
   scmContext: 'github:github.com',
+  name: 'foo/bar',
   scmRepo: {
     name: 'foo/bar',
     branch: 'master',

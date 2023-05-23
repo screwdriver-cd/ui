@@ -10,6 +10,8 @@ import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
+import { getPageTitle } from 'ember-page-title/test-support';
+
 let server;
 
 module('Acceptance | create', function (hooks) {
@@ -100,6 +102,7 @@ module('Acceptance | create', function (hooks) {
     await visit('/create');
 
     assert.equal(currentURL(), '/create');
+    assert.equal(getPageTitle(), 'Create Pipeline', 'Page title is correct');
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
     await triggerEvent('.text-input', 'keyup');
     await click('button.blue-button');

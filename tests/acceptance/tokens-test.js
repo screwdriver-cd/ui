@@ -4,6 +4,7 @@ import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 import { hasCollections } from 'screwdriver-ui/tests/mock/collections';
+import { getPageTitle } from 'ember-page-title/test-support';
 
 let server;
 
@@ -42,5 +43,10 @@ module('Acceptance | tokens', function (hooks) {
     await visit('/user-settings/access-tokens');
 
     assert.dom('.token-list tbody tr').exists({ count: 2 });
+    assert.equal(
+      getPageTitle(),
+      'User Settings > Access Tokens',
+      'Page title is correct'
+    );
   });
 });

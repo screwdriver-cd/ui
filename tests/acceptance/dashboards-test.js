@@ -12,6 +12,7 @@ import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
+import { getPageTitle } from 'ember-page-title/test-support';
 
 import {
   hasCollections,
@@ -74,6 +75,7 @@ module('Acceptance | dashboards', function (hooks) {
     await visit('/');
     await waitFor('h2.header__name');
     assert.equal(currentURL(), '/dashboards/1');
+    assert.equal(getPageTitle(), 'Dashboard', 'Page title is correct');
     assert.dom('.header__name').hasText('My Pipelines');
     assert
       .dom('.header__description')

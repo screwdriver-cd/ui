@@ -1,4 +1,3 @@
-import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinon from 'sinon';
@@ -12,16 +11,6 @@ module('Unit | Route | pipeline/build', function (hooks) {
     const route = this.owner.lookup('route:pipeline/build');
 
     assert.ok(route);
-    assert.equal(
-      route.titleToken({
-        job: EmberObject.create({ name: 'main' }),
-        build: EmberObject.create({
-          sha: 'abcd1234567890',
-          truncatedSha: 'abcd123'
-        })
-      }),
-      'main > #abcd123'
-    );
   });
 
   test('it redirects if build not found', function (assert) {

@@ -13,14 +13,6 @@ module('Unit | Route | application', function (hooks) {
     assert.ok(route);
   });
 
-  test('it calculates title', function (assert) {
-    const route = this.owner.lookup('route:application');
-
-    assert.equal(route.title(), 'screwdriver.cd');
-    assert.equal(route.title([]), 'screwdriver.cd');
-    assert.equal(route.title(['a', 'b', 'c']), 'a > b > c > screwdriver.cd');
-  });
-
   test('it should reload on sessionInvalidated', function (assert) {
     const route = this.owner.lookup('route:application');
     const reloadStub = sinon.stub(route, 'reloadPage');
