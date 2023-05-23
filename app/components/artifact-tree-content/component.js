@@ -44,9 +44,6 @@ export default Component.extend({
         this.router.currentURL.split('artifacts/')[0].length
       );
 
-      console.log(baseURL);
-      console.log(this.artifactPath);
-
       return `${baseURL}artifacts/${this.artifactPath}`;
     }
   }),
