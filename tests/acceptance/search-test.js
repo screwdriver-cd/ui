@@ -3,6 +3,7 @@ import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
+import { getPageTitle } from 'ember-page-title/test-support';
 let server;
 
 module('Acceptance | search', function (hooks) {
@@ -125,6 +126,7 @@ module('Acceptance | search', function (hooks) {
     await visit('/search');
 
     assert.equal(currentURL(), '/search');
+    assert.equal(getPageTitle(), 'Search', 'Page title is correct');
     assert.dom('tr').exists({ count: 4 });
     assert.dom('.showMore').hasText('Show more results...');
     assert.dom('.num-results').hasText('Showing 3 result(s)');

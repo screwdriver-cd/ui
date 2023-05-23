@@ -98,15 +98,5 @@ export default Route.extend({
 
       return true;
     }
-  },
-  titleToken(model) {
-    let title = `${model.namespace || ''}/${model.name || ''}`;
-    const version = model.versionOrTagFromUrl;
-
-    if (version !== undefined) {
-      title = `${title}@${version}`;
-    }
-
-    return title;
   }
 });

@@ -80,7 +80,11 @@ module.exports = environment => {
     'ember-local-storage': {
       namespace: true,
       keyDelimiter: ':'
-    }
+    },
+    pageTitle: {
+      separator: ' > ',
+      prepend: false
+    },
   };
 
   if (environment === 'development') {

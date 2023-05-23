@@ -7,7 +7,6 @@ export default Route.extend({
   store: service(),
   router: service(),
   routeAfterAuthentication: 'pipeline.secrets',
-  titleToken: 'Secrets',
   model() {
     //Refresh error message
     this.controllerFor('pipeline.secrets').set('errorMessage', '');

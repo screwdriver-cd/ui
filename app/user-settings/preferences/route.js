@@ -7,7 +7,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
   router: service(),
   routeAfterAuthentication: 'user-settings',
   userSettings: service(),
-  titleToken: 'Preferences',
 
   model() {
     return RSVP.hash({

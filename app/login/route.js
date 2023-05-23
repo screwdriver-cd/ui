@@ -4,7 +4,6 @@ import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-
 
 export default Route.extend(UnauthenticatedRouteMixin, {
   scmService: service('scm'),
-  titleToken: 'Login',
   routeIfAlreadyAuthenticated: 'home',
   model() {
     return this.modelFor('application');

@@ -1,5 +1,4 @@
 import Service from '@ember/service';
-import EmberObject from '@ember/object';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
@@ -20,16 +19,6 @@ module('Unit | Route | pipeline', function (hooks) {
     const route = this.owner.lookup('route:pipeline');
 
     assert.ok(route);
-    assert.equal(
-      route.titleToken(
-        EmberObject.create({
-          pipeline: EmberObject.create({
-            name: 'foo:bar'
-          })
-        })
-      ),
-      'foo:bar'
-    );
   });
 
   test('it returns model', function (assert) {

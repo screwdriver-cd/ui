@@ -13,7 +13,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
     }
   },
   routeAfterAuthentication: 'pipeline-visualizer',
-  titleToken: 'Pipeline Visualizer',
 
   async model(params) {
     this._super(...arguments);
