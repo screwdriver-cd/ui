@@ -2,7 +2,7 @@ import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, waitFor } from '@ember/test-helpers';
+import { render, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const parsedManifest = [
@@ -13,14 +13,14 @@ const parsedManifest = [
       {
         text: 'coverage.json',
         type: 'file',
-        a_attr: { href: 'http://foo.com/coverage.json' }
+        a_attr: { href: 'http://foo.com/artifacts/coverage.json' }
       }
     ]
   },
   {
     text: 'test.txt',
     type: 'file',
-    a_attr: { href: 'http://foo.com/test.txt' }
+    a_attr: { href: 'http://foo.com/artifacts/test.txt' }
   }
 ];
 
@@ -54,24 +54,33 @@ module('Integration | Component | artifact tree', function (hooks) {
   });
 
   test('it renders with artifacts if build finished', async function (assert) {
-    await render(hbs`<ArtifactTree @buildStatus="SUCCESS" />`);
+    const component = this.owner.lookup('component:artifact-tree-content');
 
-    await waitFor('.ember-basic-tree');
+    component.router.currentURL = 'http://foo.com/artifacts';
+
+    await render(hbs`<ArtifactTree @buildStatus="SUCCESS" />`);
 
     assert.dom('.ember-basic-tree-node').exists({ count: 3 });
 
     // Check if the href is correctly set and then click the link
     assert
       .dom(
-        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > a'
+        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > div > a'
       )
       .hasText('test.txt');
-    await click(
-      '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > a'
-    );
+
+    assert
+      .dom(
+        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > div > a'
+      )
+      .hasAttribute('href', 'http://foo.com/artifactsartifacts/test.txt');
   });
 
   test('it renders with artifacts with artifact preselected', async function (assert) {
+    const component = this.owner.lookup('component:artifact-tree-content');
+
+    component.router.currentURL = 'http://foo.com/artifacts';
+
     await render(
       hbs`<ArtifactTree @buildStatus="SUCCESS" @selectedArtifact="coverage/coverage.json" />`
     );
@@ -81,7 +90,7 @@ module('Integration | Component | artifact tree', function (hooks) {
     assert.dom('.ember-basic-tree-node').exists({ count: 4 });
     assert
       .dom(
-        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > .ember-basic-tree-children > .ember-basic-tree-children > li > a'
+        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > .ember-basic-tree-children > .ember-basic-tree-children > li > div > a'
       )
       .hasText('coverage.json');
   });
