@@ -8,6 +8,5 @@ module('Unit | Route | login', function (hooks) {
     const route = this.owner.lookup('route:login');
 
     assert.ok(route);
-    assert.equal(route.titleToken, 'Login');
   });
 });

@@ -1,3 +1,9 @@
+{{#if @model.versionOrTagFromUrl}}
+  {{page-title @model.namespace '/' @model.name '@' @model.versionOrTagFromUrl}}
+{{else}}
+  {{page-title @model.namespace '/' @model.name}}
+{{/if}}
+
 <InfoMessage
   @message={{this.errorMessage}}
   @type="warning"

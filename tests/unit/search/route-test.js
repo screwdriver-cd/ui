@@ -19,7 +19,6 @@ module('Unit | Route | search', function (hooks) {
     const route = this.owner.lookup('route:search');
 
     assert.ok(route);
-    assert.equal(route.titleToken, 'Search');
   });
 
   test('it returns model even on collections fetch error', function (assert) {

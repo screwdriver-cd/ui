@@ -12,6 +12,5 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
       this.controller.set('routeParams', newParams);
     }
-  },
-  titleToken: 'Commands'
+  }
 });

@@ -123,7 +123,10 @@ export async function createEvent(eventPayload, toActiveTab) {
     this.forceReload();
 
     if (toActiveTab === true && this.activeTab === 'pulls') {
-      return this.router.transitionTo('pipeline.pulls', newEvent.get('pipelineId'));
+      return this.router.transitionTo(
+        'pipeline.pulls',
+        newEvent.get('pipelineId')
+      );
     }
 
     return this.router.transitionTo('pipeline', newEvent.get('pipelineId'));
@@ -223,7 +226,7 @@ export default Component.extend(ModelReloaderMixin, {
 
   reload() {
     try {
-      this.send('refreshModel');
+      this.refresh();
     } catch (e) {
       return Promise.resolve(e);
     } finally {
@@ -376,10 +379,13 @@ export default Component.extend(ModelReloaderMixin, {
         const filteredPaginateEvents = this.paginateEvents.filter(
           e => e.pipelineId === pipelineId
         );
-        const pipelineEvents = [].concat(
-          this.modelEvents,
-          filteredPaginateEvents
-        );
+
+        // remove duplicate event
+        const pipelineEvents = [
+          ...this.modelEvents,
+          ...filteredPaginateEvents
+        ].uniqBy('id');
+
         const selectedEventId = this.selected;
 
         let filteredEvents = pipelineEvents;

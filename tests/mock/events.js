@@ -11,17 +11,17 @@ const events = [
       author: {
         username: 'batman',
         name: 'Bruce W',
-        avatar: 'http://example.com/u/batman/avatar',
-        url: 'http://example.com/u/batman'
+        avatar: 'https://avatars.githubusercontent.com/u/15989893?v=4',
+        url: 'https://github.com/adong'
       },
-      url: 'http://example.com/batcave/batmobile/commit/abcdef1029384'
+      url: 'https://github.com/adong/commit/abcdef1029384'
     },
     createTime: '2016-11-04T20:09:41.238Z',
     creator: {
       username: 'batman',
       name: 'Bruce W',
-      avatar: 'http://example.com/u/batman/avatar',
-      url: 'http://example.com/u/batman'
+      avatar: 'https://avatars.githubusercontent.com/u/15989893?v=4',
+      url: 'https://github.com/adong'
     },
     startFrom: '~commit',
     pipelineId: '4',
@@ -42,21 +42,21 @@ const events = [
       author: {
         username: 'robin',
         name: 'Tim D',
-        avatar: 'http://example.com/u/robin/avatar',
-        url: 'http://example.com/u/robin'
+        avatar: 'https://avatars.githubusercontent.com/u/15989893?v=4',
+        url: 'https://github.com/adong'
       },
-      url: 'http://example.com/batcave/batmobile/commit/1029384bbb'
+      url: 'https://github.com/adong/commit/abcdef1029384'
     },
     createTime: '2016-11-05T20:09:41.238Z',
     creator: {
       username: 'robin',
       name: 'Tim D',
-      avatar: 'http://example.com/u/robin/avatar',
-      url: 'http://example.com/u/robin'
+      avatar: 'https://avatars.githubusercontent.com/u/15989893?v=4',
+      url: 'https://github.com/adong'
     },
     startFrom: '~pr',
     pr: {
-      url: 'http://example.com/batcave/batmobile/pulls/42'
+      url: 'https://github.com/adong/batmobile/pulls/42'
     },
     pipelineId: '4',
     groupEventId: '23453',
@@ -77,21 +77,21 @@ const events = [
       author: {
         username: 'robin',
         name: 'Tim D',
-        avatar: 'http://example.com/u/robin/avatar',
-        url: 'http://example.com/u/robin'
+        avatar: 'https://avatars.githubusercontent.com/u/15989893?v=4',
+        url: 'https://github.com/adong'
       },
-      url: 'http://example.com/batcave/batmobile/commit/1030384bbb'
+      url: 'https://github.com/adong/batmobile/commit/1030384bbb'
     },
     createTime: '2016-11-04T20:09:41.238Z',
     creator: {
       username: 'robin',
       name: 'Tim D',
-      avatar: 'http://example.com/u/robin/avatar',
-      url: 'http://example.com/u/robin'
+      avatar: 'https://avatars.githubusercontent.com/u/15989893?v=4',
+      url: 'https://github.com/adong'
     },
     startFrom: '~pr',
     pr: {
-      url: 'http://example.com/batcave/batmobile/pulls/43'
+      url: 'https://github.com/adong/batmobile/pulls/43'
     },
     pipelineId: '4',
     groupEventId: '23454',

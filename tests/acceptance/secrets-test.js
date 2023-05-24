@@ -3,6 +3,7 @@ import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
+import { getPageTitle } from 'ember-page-title/test-support';
 let server;
 
 module('Acceptance | secrets', function (hooks) {
@@ -57,6 +58,7 @@ module('Acceptance | secrets', function (hooks) {
     await visit('/pipelines/1/secrets');
 
     assert.equal(currentURL(), '/pipelines/1/secrets');
+    assert.equal(getPageTitle(), 'Secrets', 'Page title is correct');
     assert.dom('.secrets tbody tr').exists({ count: 2 });
     assert.dom('.token-list tbody tr').exists({ count: 2 });
   });
