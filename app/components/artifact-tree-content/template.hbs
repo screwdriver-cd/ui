@@ -1,8 +1,10 @@
 {{#if (eq 'file' @node.file.type)}}
-  <a href={{this.nodeURL}}>
+  <LinkTo
+    @route="pipeline.build.artifacts.detail"
+    @model={{this.artifactPath}}>
     <FaIcon @icon="file" @fixedWidth={{true}}/>
     {{@node.file.text}}
-  </a>
+  </LinkTo>
 {{else}}
   <span onclick={{action "toggle"}}>
     <FaIcon @icon="folder{{if @node.isExpanded "-open"}}" @fixedWidth={{true}}/>

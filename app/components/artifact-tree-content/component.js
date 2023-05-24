@@ -37,17 +37,6 @@ export default Component.extend({
     }
   }),
 
-  nodeURL: computed('artifactPath', 'router.currentURL', {
-    get() {
-      const baseURL = this.router.currentURL.substring(
-        0,
-        this.router.currentURL.split('artifacts/')[0].length
-      );
-
-      return `${baseURL}artifacts/${this.artifactPath}`;
-    }
-  }),
-
   actions: {
     toggle() {
       this.node.actions.toggle();

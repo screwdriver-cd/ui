@@ -77,20 +77,6 @@ export default Component.extend({
       }
     },
 
-    showArtifactPreview(treeData) {
-      const { href } = treeData.a_attr;
-      const artifactPath = href.substring(
-        href.split('artifacts/')[0].length + 10
-      );
-
-      this.setProperties({
-        href,
-        iframeUrl: `${href}?type=preview`
-      });
-
-      this.router.transitionTo('pipeline.build.artifacts.detail', artifactPath);
-    },
-
     handleJstreeEventDidChange(data = {}) {
       const { node, instance } = data;
 
