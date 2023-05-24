@@ -68,5 +68,10 @@ export default Controller.extend(ModelReloaderMixin, {
     // FIXME: Never called when route is no longer active
     this.stopReloading();
   },
-  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER
+  reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
+  actions: {
+    refresh: function() {
+      this.send('refreshModel');
+    }
+  }
 });
