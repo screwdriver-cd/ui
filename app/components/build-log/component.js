@@ -16,6 +16,7 @@ export default Component.extend({
   fullScreen: false,
   lineWrap: true,
   autoscroll: true,
+  hasEnabledAutoscroll: false,
   isFetching: false,
   isDownloading: false,
   inProgress: false,
@@ -255,6 +256,25 @@ export default Component.extend({
     }
   },
 
+  scrollDirectionDetector(/* e */) {
+    let direction = '';
+    const oldScrollY = this.scrollY;
+    const newScrollY = this.element.querySelectorAll('.wrap')[0].scrollTop;
+
+    if (oldScrollY < newScrollY) {
+      direction = 'DOWN';
+    } else {
+      direction = 'UP';
+    }
+
+    // if users intention is to scroll up, then we will disable auto scroll
+    if (direction === 'UP') {
+      this.autoscroll = false;
+    }
+
+    this.set('scrollY', newScrollY);
+  },
+
   didReceiveAttrs() {
     this._super(...arguments);
     this.set('inProgress', this.totalLine === undefined);
@@ -305,6 +325,11 @@ export default Component.extend({
       this.element.querySelector('.wrap').scrollTop = bottom;
       set(this, 'lastScrollTop', bottom);
     }
+  },
+
+  scrollToBottom() {
+    set(this, 'autoscroll', true);
+    this.scrollDown();
   },
 
   /**
@@ -393,8 +418,7 @@ export default Component.extend({
       this.scrollTop();
     },
     scrollToBottom() {
-      set(this, 'autoscroll', true);
-      this.scrollDown();
+      this.scrollToBottom();
     },
     download() {
       const { buildId, stepName } = this;
@@ -404,6 +428,9 @@ export default Component.extend({
     },
     logScroll() {
       const container = this.element.querySelectorAll('.wrap')[0];
+
+      // plugin stop autoscroll feature
+      this.scrollDirectionDetector();
 
       if (
         !this.inProgress &&
@@ -417,13 +444,15 @@ export default Component.extend({
         return;
       }
 
-      // autoscroll when the bottom of the logs is roughly in view
-      set(
-        this,
-        'autoscroll',
-        this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
-          .top < 1500
-      );
+      if (this.autoscroll) {
+        // autoscroll when the bottom of the logs is roughly in view
+        set(
+          this,
+          'autoscroll',
+          this.element.querySelectorAll('.bottom')[0].getBoundingClientRect()
+            .top < 1500
+        );
+      }
     },
     toggleTimeDisplay() {
       let index = timeTypes.indexOf(this.timeFormat);
@@ -437,6 +466,15 @@ export default Component.extend({
     },
     toggleLineWrap() {
       this.toggleProperty('lineWrap');
+    },
+    toggleHasAutoScroll() {
+      this.toggleProperty('hasEnabledAutoscroll');
+
+      if (this.hasEnabledAutoscroll) {
+        this.scrollToBottom();
+      } else {
+        set(this, 'autoscroll', false);
+      }
     }
   }
 });
