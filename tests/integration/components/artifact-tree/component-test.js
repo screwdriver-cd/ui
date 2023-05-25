@@ -13,14 +13,14 @@ const parsedManifest = [
       {
         text: 'coverage.json',
         type: 'file',
-        a_attr: { href: 'http://foo.com/coverage.json' }
+        a_attr: { href: 'http://foo.com/artifacts/coverage.json' }
       }
     ]
   },
   {
     text: 'test.txt',
     type: 'file',
-    a_attr: { href: 'http://foo.com/test.txt' }
+    a_attr: { href: 'http://foo.com/artifacts/test.txt' }
   }
 ];
 
@@ -56,18 +56,17 @@ module('Integration | Component | artifact tree', function (hooks) {
   test('it renders with artifacts if build finished', async function (assert) {
     await render(hbs`<ArtifactTree @buildStatus="SUCCESS" />`);
 
-    await waitFor('.ember-basic-tree');
-
     assert.dom('.ember-basic-tree-node').exists({ count: 3 });
 
     // Check if the href is correctly set and then click the link
     assert
       .dom(
-        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > a'
+        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > div > a'
       )
       .hasText('test.txt');
+
     await click(
-      '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > a'
+      '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > div > span'
     );
   });
 
@@ -81,7 +80,7 @@ module('Integration | Component | artifact tree', function (hooks) {
     assert.dom('.ember-basic-tree-node').exists({ count: 4 });
     assert
       .dom(
-        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > .ember-basic-tree-children > .ember-basic-tree-children > li > a'
+        '.ember-basic-tree > li > .ember-basic-tree-children > .ember-basic-tree-children > li > .ember-basic-tree-children > .ember-basic-tree-children > li > div > a'
       )
       .hasText('coverage.json');
   });
