@@ -129,7 +129,9 @@ export async function createEvent(eventPayload, toActiveTab) {
       );
     }
 
-    return this.router.transitionTo('pipeline', newEvent.get('pipelineId'));
+    if (this.showListView !== true) {
+      return this.router.transitionTo('pipeline', newEvent.get('pipelineId'));
+    }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log('***** error', e);
