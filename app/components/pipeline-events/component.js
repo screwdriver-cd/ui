@@ -226,7 +226,7 @@ export default Component.extend(ModelReloaderMixin, {
 
   reload() {
     try {
-      this.send('refreshModel');
+      this.refresh();
     } catch (e) {
       return Promise.resolve(e);
     } finally {

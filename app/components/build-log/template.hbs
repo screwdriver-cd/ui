@@ -17,6 +17,13 @@
       </div>
       <div>
         <a
+          onClick={{action "toggleHasAutoScroll"}}
+          alt="Toggle auto scroll screen logs"
+          title="Toggle auto scroll logs"
+        >
+          <FaIcon @icon="scroll" />
+        </a>
+        <a
           onClick={{action "toggleZoom"}}
           alt="Toggle full screen logs"
           title="Toggle fullscreen"
