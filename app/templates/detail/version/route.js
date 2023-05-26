@@ -29,14 +29,15 @@ export default Route.extend({
     const verPayload = this.modelFor('templates.detail').templateData;
     const tagPayload = this.modelFor('templates.detail').templateTagData;
 
-    const result = {};
-
-    result.versionOrTagFromUrl = this.determineVersion(
-      params.version,
-      verPayload,
-      tagPayload
+    this.controllerFor('templates.detail').set(
+      'versionOrTagFromUrl',
+      this.determineVersion(params.version, verPayload, tagPayload)
     );
-
-    return result;
+  },
+  setupController(controller, model) {
+    console.log(model);
+    console.log(controller);
+    console.log('ddd');
+    this.controllerFor('application').set('showingPhotos', true);
   }
 });
