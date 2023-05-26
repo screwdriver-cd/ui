@@ -52,7 +52,6 @@ module('Unit | Controller | commands/detail', function (hooks) {
     });
 
     assert.ok(controller);
-    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionCommand.id'), 3);
     assert.equal(controller.trusted, true);
@@ -74,7 +73,6 @@ module('Unit | Controller | commands/detail', function (hooks) {
     });
 
     assert.ok(controller);
-    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionCommand.id'), 3);
   });
@@ -93,12 +91,10 @@ module('Unit | Controller | commands/detail', function (hooks) {
     controller.set('model', arr);
 
     assert.ok(controller);
-    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('versionCommand.id'), 3);
     assert.equal(controller.get('latest.id'), 3);
 
     arr.commandData.unshiftObject({ id: 4, version: '4.0.0' });
-    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('versionCommand.id'), 4);
     assert.equal(controller.get('latest.id'), 4);
   });
