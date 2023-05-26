@@ -26,10 +26,9 @@ export default Route.extend({
       ({ version } = versionExists[0]);
     }
 
-    const result = {};
-
-    result.versionOrTagFromUrl = version || params.version;
-
-    return result;
+    this.controllerFor('templates.detail').set(
+      'versionOrTagFromUrl',
+      version || params.version
+    );
   }
 });
