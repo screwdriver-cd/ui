@@ -5,7 +5,7 @@
   {{#each this.templates.templateData as |t|}}
     <li>
       <LinkTo
-        @route="templates.detail"
+        @route="templates.detail.version"
         @models={{array t.namespace t.name t.version}}
       >
         <span class="version">

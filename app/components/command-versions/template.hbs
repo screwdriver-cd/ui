@@ -5,7 +5,7 @@
   {{#each this.commands.commandData as |c|}}
     <li>
       <LinkTo
-        @route="commands.detail"
+        @route="commands.detail.version"
         @models={{array c.namespace c.name c.version}}
       >
         <span class="version">

@@ -65,13 +65,17 @@ Router.map(function route() {
   });
   this.route('templates', function templatesRoute() {
     this.route('namespace', { path: '/:namespace' });
-    this.route('detail', { path: '/:namespace/:name' });
-    this.route('detail', { path: '/:namespace/:name/:version' });
+    this.route('detail', { path: '/:namespace/:name' }, function detailRoute() {
+      this.route('index', { path: '/' });
+      this.route('version', { path: '/:version' });
+    });
   });
   this.route('commands', function commandsRoute() {
     this.route('namespace', { path: '/:namespace' });
-    this.route('detail', { path: '/:namespace/:name' });
-    this.route('detail', { path: '/:namespace/:name/:version' });
+    this.route('detail', { path: '/:namespace/:name' }, function detailRoute() {
+      this.route('index', { path: '/' });
+      this.route('version', { path: '/:version' });
+    });
   });
   /* eslint-disable ember/no-shadow-route-definition */
   this.route('404', { path: '/*path' });
