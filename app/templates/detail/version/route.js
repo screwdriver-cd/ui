@@ -33,11 +33,5 @@ export default Route.extend({
       'versionOrTagFromUrl',
       this.determineVersion(params.version, verPayload, tagPayload)
     );
-  },
-  setupController(controller, model) {
-    console.log(model);
-    console.log(controller);
-    console.log('ddd');
-    this.controllerFor('application').set('showingPhotos', true);
   }
 });

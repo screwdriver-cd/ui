@@ -37,9 +37,6 @@ export default Controller.extend({
 
         const { templateTagData } = this.templates;
 
-        console.log(this.versionOrTagFromUrl);
-        console.log('this.versionOrTagFromUrl');
-
         if (this.versionOrTagFromUrl === '') {
           return this.templates.templateData.findBy('version', version);
         }
