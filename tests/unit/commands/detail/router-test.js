@@ -35,7 +35,7 @@ const commandServiceStub2 = Service.extend({
 module('Unit | Route | commands/detail', function (hooks) {
   setupTest(hooks);
 
-  test('it asks for the list of commands for a given namespace and name without version', function (assert) {
+  test('it asks for the list of commands for a given namespace and name', function (assert) {
     this.owner.register('service:command', commandServiceStub);
     const route = this.owner.lookup('route:commands/detail');
 

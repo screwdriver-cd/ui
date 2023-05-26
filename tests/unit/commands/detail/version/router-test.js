@@ -71,7 +71,7 @@ module('Unit | Route | commands/detail/version', function (hooks) {
     assert.equal(controller.versionOrTagFromUrl, 'stable');
   });
 
-  test('it asks for the list of commands for a given name and non-exist version', function (assert) {
+  test('it asks for the command for a given name and non-exist version', function (assert) {
     const route = this.owner.lookup('route:commands/detail/version');
 
     route.modelFor = () => {
@@ -93,7 +93,7 @@ module('Unit | Route | commands/detail/version', function (hooks) {
     assert.ok(stub.calledOnce, 'transitionTo was called once');
   });
 
-  test('it asks for the list of commands for a given name and non-exist tag', function (assert) {
+  test('it asks for the command for a given name and non-exist tag', function (assert) {
     const route = this.owner.lookup('route:commands/detail/version');
 
     route.modelFor = () => {
