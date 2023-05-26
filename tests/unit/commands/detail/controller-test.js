@@ -182,9 +182,9 @@ module('Unit | Controller | commands/detail', function (hooks) {
       commandTagData: [
         { id: 2, version: '3.0.0', tag: 'latest' },
         { id: 1, version: '1.0.0', tag: 'stable' }
-      ],
-      versionOrTagFromUrl: '2.0.0'
+      ]
     });
+    controller.set('versionOrTagFromUrl', '2.0.0');
 
     assert.ok(controller);
     assert.equal(controller.get('versionCommand.version'), '2.0.0');
@@ -202,9 +202,9 @@ module('Unit | Controller | commands/detail', function (hooks) {
       commandTagData: [
         { id: 2, version: '3.0.0', tag: 'latest' },
         { id: 1, version: '1.0.0', tag: 'stable' }
-      ],
-      versionOrTagFromUrl: 'stable'
+      ]
     });
+    controller.set('versionOrTagFromUrl', 'stable');
 
     assert.ok(controller);
     assert.equal(controller.get('versionCommand.version'), '1.0.0');
@@ -222,9 +222,9 @@ module('Unit | Controller | commands/detail', function (hooks) {
       commandTagData: [
         { id: 2, version: '3.0.0', tag: 'latest' },
         { id: 1, version: '1.0.0', tag: 'stable' }
-      ],
-      versionOrTagFromUrl: '9.9.9'
+      ]
     });
+    controller.set('versionOrTagFromUrl', '9.9.9');
 
     assert.ok(controller);
     assert.equal(controller.get('versionCommand.version'), undefined);
@@ -242,9 +242,9 @@ module('Unit | Controller | commands/detail', function (hooks) {
       commandTagData: [
         { id: 2, version: '3.0.0', tag: 'latest' },
         { id: 1, version: '1.0.0', tag: 'stable' }
-      ],
-      versionOrTagFromUrl: 'foo'
+      ]
     });
+    controller.set('versionOrTagFromUrl', 'foo');
 
     assert.ok(controller);
     assert.equal(controller.get('versionCommand.version'), undefined);
