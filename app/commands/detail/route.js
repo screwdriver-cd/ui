@@ -12,6 +12,10 @@ export default Route.extend({
     ]).then(arr => {
       const [verPayload, tagPayload] = arr;
 
+      if (verPayload.length === 0) {
+        this.router.transitionTo('/404');
+      }
+
       tagPayload.forEach(tagObj => {
         const taggedVerObj = verPayload.find(
           verObj => verObj.version === tagObj.version

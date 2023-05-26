@@ -1,5 +1,5 @@
-{{#if @model.versionOrTagFromUrl}}
-  {{page-title @model.namespace '/' @model.name '@' @model.versionOrTagFromUrl}}
+{{#if this.versionOrTagFromUrl}}
+  {{page-title @model.namespace '/' @model.name '@' this.versionOrTagFromUrl}}
 {{else}}
   {{page-title @model.namespace '/' @model.name}}
 {{/if}}

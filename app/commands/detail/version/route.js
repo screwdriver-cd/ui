@@ -26,7 +26,7 @@ export default Route.extend({
       ({ version } = versionExists[0]);
     }
 
-    this.controllerFor('templates.detail').set(
+    this.controllerFor('commands.detail').set(
       'versionOrTagFromUrl',
       version || params.version
     );
