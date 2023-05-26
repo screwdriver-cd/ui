@@ -37,7 +37,7 @@ export default Controller.extend({
         const version = this.get('latest.version');
         const { commandTagData } = this.commands;
 
-        if (this.versionOrTagFromUrl === undefined) {
+        if (this.versionOrTagFromUrl === '') {
           return this.commands.commandData.findBy('version', version);
         }
 
