@@ -11,6 +11,7 @@ export default Controller.extend({
   session: service(),
   command: service(),
   commands: alias('model'),
+  versionOrTagFromUrl: '',
   reset() {
     this.set('errorMessage', '');
   },
@@ -30,18 +31,18 @@ export default Controller.extend({
   versionCommand: computed(
     'commands.commandData.[]',
     'latest.version',
-    'selectedVersion',
+    'versionOrTagFromUrl',
     {
       get() {
-        const version = this.selectedVersion || this.get('latest.version');
-        const { versionOrTagFromUrl, commandTagData } = this.commands;
+        const version = this.get('latest.version');
+        const { commandTagData } = this.commands;
 
-        if (versionOrTagFromUrl === undefined) {
+        if (this.versionOrTagFromUrl === '') {
           return this.commands.commandData.findBy('version', version);
         }
 
         const tagExists = commandTagData.filter(
-          t => t.tag === versionOrTagFromUrl
+          t => t.tag === this.versionOrTagFromUrl
         );
 
         if (tagExists.length > 0) {
@@ -51,15 +52,13 @@ export default Controller.extend({
           );
         }
 
-        return this.commands.commandData.findBy('version', versionOrTagFromUrl);
+        return this.commands.commandData.findBy(
+          'version',
+          this.versionOrTagFromUrl
+        );
       }
     }
   ),
-  // Set selected version to null whenever the list of commands changes
-  // eslint-disable-next-line ember/no-observers
-  modelObserver: observer('commands.commandData.[]', function modelObserver() {
-    this.set('selectedVersion', null);
-  }),
   actions: {
     removeCommand(namespace, name) {
       return this.command.deleteCommands(namespace, name).then(

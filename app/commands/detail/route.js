@@ -1,7 +1,6 @@
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
-import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 
 export default Route.extend({
   router: service(),
@@ -13,23 +12,8 @@ export default Route.extend({
     ]).then(arr => {
       const [verPayload, tagPayload] = arr;
 
-      let version;
-
-      if (params.version) {
-        const versionExists = verPayload.filter(t =>
-          t.version.concat('.').startsWith(params.version.concat('.'))
-        );
-        const tagExists = tagPayload.filter(c => c.tag === params.version);
-
-        if (tagExists.length === 0 && versionExists.length === 0) {
-          this.router.transitionTo('/404');
-        }
-
-        if (versionExists.length > 0) {
-          // Sort commands by descending order
-          versionExists.sort((a, b) => compareVersions(b.version, a.version));
-          ({ version } = versionExists[0]);
-        }
+      if (verPayload.length === 0) {
+        this.router.transitionTo('/404');
       }
 
       tagPayload.forEach(tagObj => {
@@ -49,7 +33,6 @@ export default Route.extend({
       result.namespace = params.namespace;
       result.name = params.name;
       result.commandData = verPayload;
-      result.versionOrTagFromUrl = version || params.version;
       result.commandTagData = tagPayload;
 
       return result;

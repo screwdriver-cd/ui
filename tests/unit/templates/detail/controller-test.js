@@ -53,7 +53,6 @@ module('Unit | Controller | templates/detail', function (hooks) {
 
     assert.ok(controller);
 
-    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionTemplate.id'), 3);
     assert.equal(controller.trusted, true);
@@ -75,7 +74,6 @@ module('Unit | Controller | templates/detail', function (hooks) {
     });
 
     assert.ok(controller);
-    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('latest.id'), 3);
     assert.equal(controller.get('versionTemplate.id'), 3);
   });
@@ -94,12 +92,10 @@ module('Unit | Controller | templates/detail', function (hooks) {
     controller.set('model', arr);
 
     assert.ok(controller);
-    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('versionTemplate.id'), 3);
     assert.equal(controller.get('latest.id'), 3);
 
     arr.templateData.unshiftObject({ id: 4, version: '4.0.0' });
-    assert.equal(controller.selectedVersion, null);
     assert.equal(controller.get('versionTemplate.id'), 4);
     assert.equal(controller.get('latest.id'), 4);
   });
@@ -153,9 +149,9 @@ module('Unit | Controller | templates/detail', function (hooks) {
       templateTagData: [
         { id: 2, version: '3.0.0', tag: 'latest' },
         { id: 1, version: '1.0.0', tag: 'stable' }
-      ],
-      versionOrTagFromUrl: undefined
+      ]
     });
+    controller.set('versionOrTagFromUrl', '');
 
     assert.ok(controller);
     assert.equal(controller.get('versionTemplate.version'), '3.0.0');
@@ -173,9 +169,9 @@ module('Unit | Controller | templates/detail', function (hooks) {
       templateTagData: [
         { id: 2, version: '3.0.0', tag: 'latest' },
         { id: 1, version: '1.0.0', tag: 'stable' }
-      ],
-      versionOrTagFromUrl: '2.0.0'
+      ]
     });
+    controller.set('versionOrTagFromUrl', '2.0.0');
 
     assert.ok(controller);
     assert.equal(controller.get('versionTemplate.version'), '2.0.0');
@@ -193,9 +189,9 @@ module('Unit | Controller | templates/detail', function (hooks) {
       templateTagData: [
         { id: 2, version: '3.0.0', tag: 'latest' },
         { id: 1, version: '1.0.0', tag: 'stable' }
-      ],
-      versionOrTagFromUrl: 'stable'
+      ]
     });
+    controller.set('versionOrTagFromUrl', 'stable');
 
     assert.ok(controller);
     assert.equal(controller.get('versionTemplate.version'), '1.0.0');
@@ -213,9 +209,9 @@ module('Unit | Controller | templates/detail', function (hooks) {
       templateTagData: [
         { id: 2, version: '3.0.0', tag: 'latest' },
         { id: 1, version: '1.0.0', tag: 'stable' }
-      ],
-      versionOrTagFromUrl: '9.9.9'
+      ]
     });
+    controller.set('versionOrTagFromUrl', '9.9.9');
 
     assert.ok(controller);
     assert.equal(controller.get('versionTemplate.version'), undefined);
@@ -233,9 +229,9 @@ module('Unit | Controller | templates/detail', function (hooks) {
       templateTagData: [
         { id: 2, version: '3.0.0', tag: 'latest' },
         { id: 1, version: '1.0.0', tag: 'stable' }
-      ],
-      versionOrTagFromUrl: 'foo'
+      ]
     });
+    controller.set('versionOrTagFromUrl', 'foo');
 
     assert.ok(controller);
     assert.equal(controller.get('versionTemplate.version'), undefined);

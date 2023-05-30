@@ -1,4 +1,4 @@
-import { oneWay, alias } from '@ember/object/computed';
+import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import Controller from '@ember/controller';
@@ -6,11 +6,11 @@ import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 
 export default Controller.extend({
   router: service(),
-  selectedVersion: oneWay('model.versionOrTagFromUrl'),
   errorMessage: '',
   session: service(),
   template: service(),
   templates: alias('model'),
+  versionOrTagFromUrl: '',
   reset() {
     this.set('errorMessage', '');
   },
@@ -29,20 +29,20 @@ export default Controller.extend({
   }),
   versionTemplate: computed(
     'latest.version',
-    'selectedVersion',
     'templates.templateData.[]',
+    'versionOrTagFromUrl',
     {
       get() {
-        const version = this.selectedVersion || this.get('latest.version');
+        const version = this.get('latest.version');
 
-        const { versionOrTagFromUrl, templateTagData } = this.templates;
+        const { templateTagData } = this.templates;
 
-        if (versionOrTagFromUrl === undefined) {
+        if (this.versionOrTagFromUrl === '') {
           return this.templates.templateData.findBy('version', version);
         }
 
         const tagExists = templateTagData.filter(
-          t => t.tag === versionOrTagFromUrl
+          t => t.tag === this.versionOrTagFromUrl
         );
 
         if (tagExists.length > 0) {
@@ -54,7 +54,7 @@ export default Controller.extend({
 
         return this.templates.templateData.findBy(
           'version',
-          versionOrTagFromUrl
+          this.versionOrTagFromUrl
         );
       }
     }
