@@ -73,6 +73,14 @@ g {
     }
   }
 
+  &.build-warning {
+    fill: $sd-unstable;
+
+    &:hover {
+      fill: darken($sd-unstable, 10%);
+    }
+  }
+
   &.build-running,
   &.build-queued,
   &.build-blocked,

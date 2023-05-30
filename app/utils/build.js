@@ -31,6 +31,7 @@ const statusIcon = (status, isLight) => {
       icon.spin = true;
       break;
     case 'CREATED':
+    case 'WARNING':
     case 'SUCCESS':
       icon.name = 'check-circle';
       icon.prefix = isLight ? 'far' : 'fas';

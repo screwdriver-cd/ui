@@ -53,6 +53,15 @@
     @icon="exclamation-triangle"
   />
 {{/if}}
+{{#if this.build.meta.meta.warning}}
+  {{#each-in this.build.meta.meta.warning as |name value|}}
+    <InfoMessage
+      @message="{{name}} - {{value}}"
+      @type="warning"
+      @icon="exclamation-triangle"
+    />
+  {{/each-in}}
+{{/if}}
 
 {{#if this.stepList}}
   <BuildStepCollection
