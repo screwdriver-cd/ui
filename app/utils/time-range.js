@@ -88,6 +88,9 @@ export default function timeRange(end, range) {
     case 'mo':
       current.setUTCMonth(current.getUTCMonth() - quantity);
       break;
+    case 'yr':
+      current.setUTCFullYear(current.getUTCFullYear() - quantity);
+      break;
     default:
       return null;
   }

@@ -7,4 +7,17 @@
       text-decoration: underline;
     }
   }
+
+  .metric-cell,
+  .actions-cell,
+  .published-time-cell {
+    text-align: right;
+    padding-right: 5px;
+  }
+
+  .table-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
 }

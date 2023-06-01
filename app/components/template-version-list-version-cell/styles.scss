@@ -1,0 +1,19 @@
+& {
+  a {
+    color: #3697f2;
+    text-decoration: none;
+  }
+
+  .trusted-wrapper {
+    display: inline-block;
+    width: 1em;
+
+    .trusted {
+      fill: #16c047;
+      height: 1em;
+      width: 1em;
+      margin-right: 0.25em;
+      vertical-align: middle;
+    }
+  }
+}

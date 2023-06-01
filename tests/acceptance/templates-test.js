@@ -19,7 +19,11 @@ const dummyTemplates = [
     createTime: '2016-09-23T16:53:00.274Z',
     trusted: false,
     latest: true,
-    lastUpdated: '4 days ago'
+    lastUpdated: '4 days ago',
+    metrics: {
+      jobs: { count: 6 },
+      builds: { count: 32 }
+    }
   },
   {
     id: 1,
@@ -32,7 +36,11 @@ const dummyTemplates = [
     createTime: '2016-09-23T16:53:00.274Z',
     trusted: false,
     latest: true,
-    lastUpdated: '4 days ago'
+    lastUpdated: '4 days ago',
+    metrics: {
+      jobs: { count: 2 },
+      builds: { count: 235 }
+    }
   }
 ];
 

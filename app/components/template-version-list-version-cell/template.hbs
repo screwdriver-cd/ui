@@ -1,0 +1,20 @@
+<div class="version-cell">
+
+  <span title="Trusted" class="trusted-wrapper">
+    {{#if this.trusted}}
+      {{svg-jar "trusted" class="trusted"}}
+    {{/if}}
+  </span>
+
+
+  <LinkTo
+    @route="templates.detail.version"
+    @models={{array this.namespace this.name this.version}}>
+      <span class="version">
+        {{this.version}}
+        {{#if this.tag}}
+          - {{this.tag}}
+        {{/if}}
+      </span>
+  </LinkTo>
+</div>

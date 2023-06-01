@@ -1,21 +1,24 @@
 <h4>
-  Versions:
+  All Versions
 </h4>
-<ul>
-  {{#each this.templates.templateData as |t|}}
-    <li>
-      <LinkTo
-        @route="templates.detail.version"
-        @models={{array t.namespace t.name t.version}}
-      >
-        <span class="version">
-          {{t.version}}{{#if t.tag}}
-            - {{t.tag}}
-          {{/if}}
-        </span>
-      </LinkTo>{{#if t.lastUpdated}}
-        {{t.lastUpdated}}
-      {{/if}}
-    </li>
-  {{/each}}
-</ul>
+
+<div class="table-controls">
+  <TimeRangePicker
+    @startTime={{@startTime}}
+    @endTime={{@endTime}}
+    @onTimeRangeChange={{action "timeRangeChange"}}
+  />
+</div>
+
+<ModelsTable
+  @data={{this.data}}
+  @columns={{this.columns}}
+  @themeInstance={{this.theme}}
+  @showComponentFooter={{false}}
+  @showColumnsDropdown={{false}}
+  @useFilteringByColumns={{false}}
+  @showGlobalFilter={{false}}
+  @multipleColumnsSorting={{false}}
+  @showCurrentPageNumberSelect={{false}}
+  @pageSize={{this.data.length}}
+/>
