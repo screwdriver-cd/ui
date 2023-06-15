@@ -54,7 +54,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
     assert.ok(controller);
 
     assert.equal(controller.get('latest.id'), 3);
-    assert.equal(controller.get('versionTemplate.id'), 3);
+    assert.equal(controller.get('selectedVersionTemplate.id'), 3);
     assert.equal(controller.trusted, true);
   });
 
@@ -75,7 +75,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
 
     assert.ok(controller);
     assert.equal(controller.get('latest.id'), 3);
-    assert.equal(controller.get('versionTemplate.id'), 3);
+    assert.equal(controller.get('selectedVersionTemplate.id'), 3);
   });
 
   test('it handles model changes', function (assert) {
@@ -92,11 +92,11 @@ module('Unit | Controller | templates/detail', function (hooks) {
     controller.set('model', arr);
 
     assert.ok(controller);
-    assert.equal(controller.get('versionTemplate.id'), 3);
+    assert.equal(controller.get('selectedVersionTemplate.id'), 3);
     assert.equal(controller.get('latest.id'), 3);
 
     arr.templateData.unshiftObject({ id: 4, version: '4.0.0' });
-    assert.equal(controller.get('versionTemplate.id'), 4);
+    assert.equal(controller.get('selectedVersionTemplate.id'), 4);
     assert.equal(controller.get('latest.id'), 4);
   });
 
@@ -154,7 +154,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
     controller.set('versionOrTagFromUrl', '');
 
     assert.ok(controller);
-    assert.equal(controller.get('versionTemplate.version'), '3.0.0');
+    assert.equal(controller.get('selectedVersionTemplate.version'), '3.0.0');
   });
 
   test('it handles a version that is exist', function (assert) {
@@ -174,7 +174,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
     controller.set('versionOrTagFromUrl', '2.0.0');
 
     assert.ok(controller);
-    assert.equal(controller.get('versionTemplate.version'), '2.0.0');
+    assert.equal(controller.get('selectedVersionTemplate.version'), '2.0.0');
   });
 
   test('it handles a tag that is exist', function (assert) {
@@ -194,7 +194,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
     controller.set('versionOrTagFromUrl', 'stable');
 
     assert.ok(controller);
-    assert.equal(controller.get('versionTemplate.version'), '1.0.0');
+    assert.equal(controller.get('selectedVersionTemplate.version'), '1.0.0');
   });
 
   test('it handles a version that is not exist', function (assert) {
@@ -214,7 +214,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
     controller.set('versionOrTagFromUrl', '9.9.9');
 
     assert.ok(controller);
-    assert.equal(controller.get('versionTemplate.version'), undefined);
+    assert.equal(controller.get('selectedVersionTemplate.version'), undefined);
   });
 
   test('it handles a tag that is not exist', function (assert) {
@@ -234,6 +234,6 @@ module('Unit | Controller | templates/detail', function (hooks) {
     controller.set('versionOrTagFromUrl', 'foo');
 
     assert.ok(controller);
-    assert.equal(controller.get('versionTemplate.version'), undefined);
+    assert.equal(controller.get('selectedVersionTemplate.version'), undefined);
   });
 });

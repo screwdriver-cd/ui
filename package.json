@@ -79,6 +79,7 @@
     "bootstrap-sass": "^3.4.1",
     "broccoli-asset-rev": "^2.7.0",
     "c3": "^0.7.20",
+    "compare-versions": "^5.0.3",
     "d3": "^5.16.0",
     "ember-ace": "^3.0.0",
     "ember-ajax": "^5.1.1",

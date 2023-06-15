@@ -11,7 +11,7 @@
 />
 
 <TemplateHeader
-  @template={{this.versionTemplate}}
+  @template={{this.selectedVersionTemplate}}
   @trusted={{this.trusted}}
   @isAdmin={{this.isAdmin}}
   @onUpdateTrust={{action "updateTrust"}}
@@ -22,13 +22,22 @@
   Contents:
 </h4>
 <ValidatorJob
-  @name={{this.versionTemplate.fullName}}
-  @job={{this.versionTemplate.config}}
-  @template={{this.versionTemplate}}
+  @name={{this.selectedVersionTemplate.fullName}}
+  @job={{this.selectedVersionTemplate.config}}
+  @template={{this.selectedVersionTemplate}}
   @collapsible={{false}}
   @isOpen={{true}}
 />
 
-<TemplateVersions @templates={{this.templates}} />
+<hr class="section-divider"/>
+
+<TemplateVersions
+  @templates={{this.filteredTemplates}}
+  @startTime={{this.startTime}}
+  @endTime={{this.endTime}}
+  @isAdmin={{this.isAdmin}}
+  @onRemoveVersion={{action "removeVersion"}}
+  @onTimeRangeChange={{action "timeRangeChange"}}
+/>
 
 {{outlet}}

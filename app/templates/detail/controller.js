@@ -9,36 +9,42 @@ export default Controller.extend({
   errorMessage: '',
   session: service(),
   template: service(),
-  templates: alias('model'),
   versionOrTagFromUrl: '',
   reset() {
     this.set('errorMessage', '');
   },
-  trusted: computed('templates.templateData.[]', function computeTrusted() {
-    return this.templates.templateData.some(t => t.trusted && t.latest);
+  templates: alias('model.templateData'),
+  templateTags: alias('model.templateTagData'),
+  filteredTemplates: alias('model.templateDataFiltered'),
+  startTime: alias('model.filter.startTime'),
+  endTime: alias('model.filter.endTime'),
+  trusted: computed('templates.[]', function computeTrusted() {
+    return this.get('templates').some(t => t.trusted && t.latest);
   }),
   isAdmin: computed('session.data.authenticated.token', function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
     return (decoder(token).scope || []).includes('admin');
   }),
-  latest: computed('templates.templateData.[]', {
+  latest: computed('templates.[]', {
     get() {
-      return this.templates.templateData[0];
+      return this.get('templates')[0];
     }
   }),
-  versionTemplate: computed(
+  selectedVersionTemplate: computed(
     'latest.version',
-    'templates.templateData.[]',
+    'templates.[]',
+    'templateTags.[]',
     'versionOrTagFromUrl',
     {
       get() {
         const version = this.get('latest.version');
 
-        const { templateTagData } = this.templates;
+        const templateData = this.get('templates');
+        const templateTagData = this.get('templateTags');
 
         if (this.versionOrTagFromUrl === '') {
-          return this.templates.templateData.findBy('version', version);
+          return templateData.findBy('version', version);
         }
 
         const tagExists = templateTagData.filter(
@@ -46,16 +52,10 @@ export default Controller.extend({
         );
 
         if (tagExists.length > 0) {
-          return this.templates.templateData.findBy(
-            'version',
-            tagExists[0].version
-          );
+          return templateData.findBy('version', tagExists[0].version);
         }
 
-        return this.templates.templateData.findBy(
-          'version',
-          this.versionOrTagFromUrl
-        );
+        return templateData.findBy('version', this.versionOrTagFromUrl);
       }
     }
   ),
@@ -66,6 +66,14 @@ export default Controller.extend({
         err => this.set('errorMessage', err)
       );
     },
+    removeVersion(fullName, versionToDelete) {
+      return this.template
+        .deleteVersion(fullName, versionToDelete)
+        .then(() => {
+          this.send('refreshModel');
+        })
+        .catch(err => this.set('errorMessage', err));
+    },
     updateTrust(fullName, toTrust) {
       return (
         this.isAdmin &&
@@ -73,6 +81,10 @@ export default Controller.extend({
           .updateTrust(fullName, toTrust)
           .catch(err => this.set('errorMessage', err))
       );
+    },
+    timeRangeChange(startTime, endTime) {
+      // send to router to refresh model accordingly
+      this.send('setFetchDates', startTime, endTime);
     }
   }
 });

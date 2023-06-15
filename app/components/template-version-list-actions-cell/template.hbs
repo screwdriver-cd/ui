@@ -1,0 +1,21 @@
+<div class="actions-cell">
+  {{#if this.deleteAllowed}}
+    <span class={{this.deleteButtonClass}} {{action "showDeleteConfirmation"}}>
+      <FaIcon @icon="trash" @fixedWidth={{true}} title="Delete version" />
+    </span>
+    {{#if this.showDeleteConfirmation}}
+      {{#bs-modal-simple
+        title="Confirm deletion"
+        closeTitle="Cancel"
+        submitTitle="Confirm"
+        size=null
+        fade=false
+        onSubmit=(action "deleteVersion")
+        onHide=(action "cancelDelete")
+      }}
+        You're about to delete the version "{{this.record.version}}". This action cannot be undone. Are you sure?
+      {{/bs-modal-simple}}
+    {{/if}}
+  {{/if}}
+
+</div>
