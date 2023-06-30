@@ -436,25 +436,18 @@ export default Component.extend(ModelReloaderMixin, {
           const prNodes = prWorkflowGraph.nodes.filter(n =>
             n.name.startsWith('~pr')
           );
-          const edgesToAdd = [];
-          const nodesToAdd = [...prNodes];
+          const uniqueNodes = [...new Set(prNodes)];
+          const edgesToAdd = prWorkflowGraph.edges.filter(e =>
+            uniqueNodes.some(n => n.name === e.src)
+          );
+          const nodesToAdd = uniqueNodes.concat(
+            prWorkflowGraph.nodes.filter(n =>
+              edgesToAdd.some(e => e.dest === n.name)
+            )
+          );
 
-          // 1 level deep
-          prWorkflowGraph.edges.forEach(e => {
-            prNodes.forEach(prNode => {
-              if (prNode.name === e.src) {
-                const endNode = prWorkflowGraph.nodes.findBy('name', e.dest);
-
-                nodesToAdd.pushObject(endNode);
-                edgesToAdd.pushObject(e);
-              }
-            });
-          });
-
-          prWorkflowGraph.edges.clear();
-          prWorkflowGraph.edges.pushObjects(edgesToAdd);
-          prWorkflowGraph.nodes.clear();
-          prWorkflowGraph.nodes.pushObjects(nodesToAdd);
+          prWorkflowGraph.edges.setObjects(edgesToAdd);
+          prWorkflowGraph.nodes.setObjects(nodesToAdd);
 
           return prEvent;
         });
