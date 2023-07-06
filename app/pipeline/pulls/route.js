@@ -13,6 +13,7 @@ export default EventsRoute.extend({
       activeTab: 'pulls',
       selected: null
     });
+    this.pipelineService.setBuildsLink('pipeline.pulls');
   },
   model() {
     const pipelineEventsController = this.controllerFor('pipeline.events');
