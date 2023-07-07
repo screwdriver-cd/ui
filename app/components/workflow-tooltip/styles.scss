@@ -51,6 +51,14 @@
       border-width: 10px;
       margin-left: -10px;
     }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    svg {
+      min-width: initial;
+    }
   }
   .content :last-child {
     margin-bottom: 0;

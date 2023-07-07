@@ -8,6 +8,10 @@ export default Component.extend({
   showTooltip: false,
   showToggleModal: false,
   left: equal('showTooltipPosition', 'left'),
+  is: false,
+  isDescriptionClicked: false,
+  enableHiddenDescription: false,
+  viewDescriptionMaxLength: 25,
 
   didUpdateAttrs() {
     this._super(...arguments);
@@ -26,12 +30,37 @@ export default Component.extend({
       el.style.top = `${top}px`;
       el.style.left = `${left}px`;
     }
+    this.set('isDescriptionClicked', false);
+    const description = String(get(this, 'tooltipData.job.description'));
+
+    this.set(
+      'enableHiddenDescription',
+      description.length > this.viewDescriptionMaxLength
+    );
   },
   jobState: computed('tooltipData.job.isDisabled', function jobState() {
     const isDisabled = get(this, 'tooltipData.job.isDisabled');
 
     return isDisabled ? 'ENABLED' : 'DISABLED';
   }),
+  jobDescription: computed(
+    'tooltipData.job.description',
+    'viewDescriptionMaxLength',
+    function jobDescription() {
+      let description = String(get(this, 'tooltipData.job.description'));
+      // maxLength is the umber of characters.
+
+      console.log(description, typeof description);
+      if (description.length > this.viewDescriptionMaxLength) {
+        description = `${description.substr(
+          0,
+          this.viewDescriptionMaxLength
+        )}...`;
+      }
+
+      return description;
+    }
+  ),
   actions: {
     toggleJob(toggleJobName) {
       const state = this.jobState;
@@ -55,6 +84,9 @@ export default Component.extend({
       this.setJobState(originalJobId, jobState, message || ' ');
       this.set('showToggleModal', false);
       this.set('showTooltip', false);
+    },
+    clickDescription() {
+      this.set('isDescriptionClicked', !this.isDescriptionClicked);
     }
   }
 });

@@ -259,6 +259,13 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
             ? !annotations['screwdriver.cd/manualStartEnabled']
             : false;
       }
+
+      // 追加部分
+      const description = j ? get(j, 'permutations.0.description') : null;
+
+      if (description) {
+        n.description = description;
+      }
     }
 
     // Get build information

@@ -68,6 +68,11 @@ export default Model.extend({
       return get(this, 'permutations.0.annotations') || {};
     }
   }),
+  description: computed('permutations.0.description', {
+    get() {
+      return get(this, 'permutations.0.description') || {};
+    }
+  }),
   parameters: computed('permutations.[]', {
     get() {
       // TODO: Revisit while supporting matrix job

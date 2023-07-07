@@ -42,6 +42,8 @@ export default Component.extend({
         const prJobs = this.prJobs === undefined ? [] : this.prJobs;
         const jobs = (this.jobs === undefined ? [] : this.jobs).concat(prJobs);
 
+        console.log('workflow graph d3 decoratedGraph this.jobs', jobs);
+
         const workflowGraph =
           this.workflowGraph === undefined
             ? {
@@ -183,6 +185,7 @@ export default Component.extend({
     });
   },
   async draw(data) {
+    console.log('workflow graph d3 data top', data);
     const self = this;
 
     // let desiredJobNameLength = ENV.APP.MINIMUM_JOBNAME_LENGTH;
@@ -306,6 +309,8 @@ export default Component.extend({
       .attr('x', d => calcXCenter(d.pos.x))
       .attr('y', d => (d.pos.y + 1) * ICON_SIZE + d.pos.y * Y_SPACING)
       .on('click', e => {
+        console.log('workflow graph d3 e', e);
+        console.log('workflow graph d3 data', data);
         this.send('buildClicked', e);
       })
       // add a tooltip

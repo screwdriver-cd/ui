@@ -32,6 +32,8 @@ export default Component.extend({
           const jobName = j.name;
           const node = graph.nodes.find(n => n.name === jobName);
 
+          console.log('foreach', j);
+          // ここの jobs は description を持っている
           // push the job id into the graph
           if (node) {
             node.id = j.id;
@@ -220,10 +222,12 @@ export default Component.extend({
         const builds = this.get('selectedEventObj.builds') || [];
         const build = builds.find(b => `${b.jobId}` === `${job.id}`);
 
+        console.log('Clicked A', job);
         if (build) {
           job.buildId = build.id;
           job.status = build.status;
         }
+        console.log('Clicked B', job);
 
         // Segregate pipeline level and job level parameters
         Object.entries(eventParameters).forEach(
