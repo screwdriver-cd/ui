@@ -46,7 +46,7 @@ export default Component.extend({
     'viewDescriptionMaxLength',
     function jobDescription() {
       let description = String(get(this, 'tooltipData.job.description'));
-      // maxLength is the umber of characters.
+      // maxLength is the number of characters.
 
       if (description.length > this.viewDescriptionMaxLength) {
         description = `${description.substr(
