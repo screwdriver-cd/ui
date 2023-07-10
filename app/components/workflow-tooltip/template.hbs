@@ -75,7 +75,7 @@
     {{#if this.tooltipData.job.description}}
       <hr>
       {{#if this.enableHiddenDescription}}
-        <span class="nowrap" onClick={{action "clickDescription"}}>
+        <span class="text-nowrap" onClick={{action "clickDescription"}}>
           {{#if this.isDescriptionClicked}}
             <FaIcon @icon="caret-down" />
             Description: {{this.tooltipData.job.description}}

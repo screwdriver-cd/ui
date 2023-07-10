@@ -8,8 +8,6 @@ export default Component.extend({
   showTooltip: false,
   showToggleModal: false,
   left: equal('showTooltipPosition', 'left'),
-  is: false,
-  // isDescriptionClicked: false,
   enableHiddenDescription: false,
   viewDescriptionMaxLength: 25,
 
