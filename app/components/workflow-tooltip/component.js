@@ -9,7 +9,7 @@ export default Component.extend({
   showToggleModal: false,
   left: equal('showTooltipPosition', 'left'),
   is: false,
-  isDescriptionClicked: false,
+  // isDescriptionClicked: false,
   enableHiddenDescription: false,
   viewDescriptionMaxLength: 25,
 
@@ -50,7 +50,6 @@ export default Component.extend({
       let description = String(get(this, 'tooltipData.job.description'));
       // maxLength is the umber of characters.
 
-      console.log(description, typeof description);
       if (description.length > this.viewDescriptionMaxLength) {
         description = `${description.substr(
           0,

@@ -260,7 +260,6 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
             : false;
       }
 
-      // 追加部分
       const description = j ? get(j, 'permutations.0.description') : null;
 
       if (description) {
