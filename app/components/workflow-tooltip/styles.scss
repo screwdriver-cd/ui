@@ -51,6 +51,10 @@
       border-width: 10px;
       margin-left: -10px;
     }
+
+    svg {
+      min-width: initial;
+    }
   }
   .content :last-child {
     margin-bottom: 0;

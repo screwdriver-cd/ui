@@ -444,4 +444,68 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     assert.dom('.toggle-modal').exists({ count: 1 });
     assert.dom('.modal-title').hasText('Enable the "batmobile" job?');
   });
+
+  test('it renders short description', async function (assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        description: 'Test'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
+
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @displayRestartButton={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChainJob={{this.isPrChainJob}}
+      />`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Start pipeline from here');
+    assert.dom('span').hasText('Description: Test');
+  });
+
+  test('it renders long description', async function (assert) {
+    const fullDescription =
+      '123456789,123456789,123456789,123456789,123456789,';
+    const description = '123456789,123456789,12345...';
+
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        description: fullDescription
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
+    this.set('enableHiddenDescription', true);
+
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @displayRestartButton={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChainJob={{this.isPrChainJob}}
+        @enableHiddenDescription={{this.enableHiddenDescription}}
+      />`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Start pipeline from here');
+    assert.dom('span').hasText(`Description: ${description}`);
+
+    await click('span');
+
+    assert.dom('span').hasText(`Description: ${fullDescription}`);
+  });
 });
