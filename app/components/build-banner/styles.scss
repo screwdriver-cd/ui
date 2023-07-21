@@ -136,6 +136,7 @@ li {
   }
 }
 
+&.WARNING,
 &.UNSTABLE {
   .job-name {
     border-left-color: $sd-unstable;

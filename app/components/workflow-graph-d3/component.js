@@ -59,6 +59,15 @@ export default Component.extend({
 
         const graph = showDownstreamTriggers ? completeGraph : workflowGraph;
 
+        // set warning status if has warning
+        if (builds.length) {
+          builds.forEach(build => {
+            if (build.meta && build.meta.build && build.meta.build.warning) {
+              build.status = 'WARNING';
+            }
+          });
+        }
+
         // only remove node if it is not a source node
         const endNodes = graph.nodes.filter(node => {
           if (node.name.startsWith('sd@')) {
