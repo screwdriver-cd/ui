@@ -138,6 +138,12 @@ export default Model.extend(ModelReloaderMixin, {
           return;
         }
 
+        list.forEach(build => {
+          if (build.meta && build.meta.build && build.meta.build.warning) {
+            build.status = 'WARNING';
+          }
+        });
+
         if (!this.isDestroying && !this.isDestroyed) {
           const validList = list.filter(
             b => b.status !== 'SUCCESS' && b.status !== 'CREATED'

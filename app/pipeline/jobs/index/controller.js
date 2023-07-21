@@ -120,6 +120,14 @@ export default Controller.extend(ModelReloaderMixin, {
             j => j.id === String(nextJobDetail.jobId)
           );
 
+          if (nextJobDetail.builds) {
+            nextJobDetail.builds.forEach(build => {
+              if (build.meta && build.meta.build && build.meta.build.warning) {
+                build.status = 'WARNING';
+              }
+            });
+          }
+
           if (job) {
             nextJobDetail.jobName = job.name;
             nextJobDetail.jobPipelineId = job.pipelineId;
