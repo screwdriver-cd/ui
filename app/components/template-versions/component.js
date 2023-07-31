@@ -55,6 +55,16 @@ export default Component.extend({
       minResizeWidth: 150
     },
     {
+      title: 'PIPELINES',
+      propertyName: 'metrics.pipelineCount',
+      className: 'metric-cell',
+      componentForFooterCell:
+        'template-version-list-footer-pipeline-count-cell',
+      resizable: false,
+      width: '15%',
+      minResizeWidth: 150
+    },
+    {
       title: 'ACTIONS',
       propertyName: 'actions',
       className: 'actions-cell',
@@ -128,7 +138,8 @@ export default Component.extend({
             publishedTime,
             metrics: {
               jobCount: metrics.jobs.count,
-              buildCount: metrics.builds.count
+              buildCount: metrics.builds.count,
+              pipelineCount: metrics.pipelines.count
             },
             actions: actionsData
           };
