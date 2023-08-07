@@ -3,6 +3,7 @@ import Route from '@ember/routing/route';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 
 export default Route.extend({
+  store: service(),
   router: service(),
   template: service(),
   determineVersion(pVersion, verPayload, tagPayload) {
@@ -25,7 +26,7 @@ export default Route.extend({
 
     return version || pVersion;
   },
-  model(params) {
+  async model(params) {
     const verPayload = this.modelFor('templates.detail').templateData;
     const tagPayload = this.modelFor('templates.detail').templateTagData;
 
@@ -33,5 +34,7 @@ export default Route.extend({
       'versionOrTagFromUrl',
       this.determineVersion(params.version, verPayload, tagPayload)
     );
+
+    return params.version;
   }
 });

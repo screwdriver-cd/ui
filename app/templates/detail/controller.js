@@ -3,8 +3,10 @@ import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import Controller from '@ember/controller';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { all } from 'rsvp';
 
 export default Controller.extend({
+  store: service(),
   router: service(),
   errorMessage: '',
   session: service(),
@@ -56,6 +58,23 @@ export default Controller.extend({
         }
 
         return templateData.findBy('version', this.versionOrTagFromUrl);
+      }
+    }
+  ),
+  pipelinesUsingSelectedTemplate: computed(
+    'selectedVersionTemplate.metrics.pipelines.ids',
+    {
+      async get() {
+        const pipelineIds = this.selectedVersionTemplate.metrics.pipelines.ids;
+
+        // return pipelineIds;
+        const pipelines = await all(
+          pipelineIds.map(p => this.store.findRecord('pipeline', p))
+        );
+
+        console.log(pipelines);
+
+        return pipelines;
       }
     }
   ),
