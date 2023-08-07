@@ -84,8 +84,8 @@ export default Component.extend({
     startPRBuild(parameters) {
       this.startPRBuild.apply(null, [parameters, this.events]);
     },
-    stopEvent() {
-      this.stopEvent();
+    stopEvent(eventId) {
+      this.stopEvent(eventId);
     },
     async eventClick(id, eventType) {
       set(this, 'selected', id);

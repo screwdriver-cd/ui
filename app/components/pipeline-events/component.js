@@ -611,12 +611,19 @@ export default Component.extend(ModelReloaderMixin, {
     },
     startDetachedBuild,
     stopBuild,
-    async stopEvent() {
-      const event = this.selectedEventObj;
-      const eventId = event.id;
+    async stopEvent(eventId) {
+      let stopEventId;
+
+      if (!eventId) {
+        const event = this.selectedEventObj;
+
+        stopEventId = event.id;
+      } else {
+        stopEventId = eventId;
+      }
 
       try {
-        return await this.stop.stopBuilds(eventId);
+        return await this.stop.stopBuilds(stopEventId);
       } catch (e) {
         this.set(
           'errorMessage',
