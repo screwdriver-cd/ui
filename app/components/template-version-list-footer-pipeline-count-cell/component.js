@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 export default Component.extend({
   tagName: 'td',
   classNames: ['metric-cell'],
-  totalJobCount: computed('data.[]', {
+  totalPipelineCount: computed('data.[]', {
     get() {
       const data = this.get('data') || [];
 
