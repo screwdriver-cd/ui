@@ -1,7 +1,7 @@
 import { all } from 'rsvp';
 import Route from '@ember/routing/route';
 import { set, get } from '@ember/object';
-import { getActiveStep } from 'screwdriver-ui/utils/build';
+import { getActiveStep, isActiveBuild } from 'screwdriver-ui/utils/build';
 import { inject as service } from '@ember/service';
 
 export default Route.extend({
@@ -59,15 +59,19 @@ export default Route.extend({
           transition.targetName
         )
       ) {
-        const name = getActiveStep(get(model, 'build.steps'));
+        const currentBuildStatus = model.build.get('status');
 
-        if (name) {
-          this.router.transitionTo(
-            'pipeline.build.step',
-            model.pipeline.get('id'),
-            model.build.get('id'),
-            name
-          );
+        if (isActiveBuild(currentBuildStatus)) {
+          const name = getActiveStep(get(model, 'build.steps'));
+
+          if (name) {
+            this.router.transitionTo(
+              'pipeline.build.step',
+              model.pipeline.get('id'),
+              model.build.get('id'),
+              name
+            );
+          }
         }
       }
     }
