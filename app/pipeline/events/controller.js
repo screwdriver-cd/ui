@@ -70,7 +70,7 @@ export default Controller.extend(ModelReloaderMixin, {
   },
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   actions: {
-    refresh() {
+    refresh: function() {
       this.send('refreshModel');
     }
   }

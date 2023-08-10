@@ -6,7 +6,7 @@ export default Component.extend({
   scmUrl: null,
   isRemoving: false,
   store: service(),
-  isTrusted: null,
+  isTrusted: null, 
   init() {
     this._super(...arguments);
     this.store

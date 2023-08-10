@@ -39,4 +39,11 @@
   @onRemoveVersion={{action "removeVersion"}}
   @onTimeRangeChange={{action "timeRangeChange"}}
 />
+
+<TemplateVersionPipelineUsage
+  @template={{this.selectedVersionTemplate}}
+  @pipelineIds={{this.selectedVersionTemplate.metrics.pipelines.ids}}
+  @pipelines={{this.pipelinesUsingSelectedTemplate}}
+/>
+
 {{outlet}}

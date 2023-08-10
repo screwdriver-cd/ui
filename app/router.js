@@ -87,10 +87,6 @@ Router.map(function route() {
   this.route('404', { path: '/*path' });
 
   this.route('pipeline-visualizer');
-
-  this.route('templateusage', function () {
-    this.route('id', { path: '/:id' });
-  });
 });
 /* eslint-enable array-callback-return */
 

@@ -8,7 +8,7 @@ export default Route.extend({
   router: service(),
   routeAfterAuthentication: 'pipeline.secrets',
   model() {
-    // Refresh error message
+    //Refresh error message
     this.controllerFor('pipeline.secrets').set('errorMessage', '');
 
     // Guests should not access this page

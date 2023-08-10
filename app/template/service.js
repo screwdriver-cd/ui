@@ -9,14 +9,6 @@ const { templatesFormatter } = templateHelper;
 
 export default Service.extend({
   session: service(),
-  getOneTemplateByIdWithMetrics(id) {
-    console.log(`template service called ${id}`);
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
-      ENV.APP.SDAPI_NAMESPACE
-    }/template/${encodeURIComponent(id)}/metrics`;
-
-    return this.fetchData(url);
-  },
   getOneTemplate(name) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE

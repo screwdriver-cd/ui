@@ -16,4 +16,7 @@
   @pageSize={{get (await this.data) 'length'}}
 />
 {{/if}}
+
+{{else}}
+<h3>No pipelines using {{this.template.version}}</h3>
 {{/if}}
