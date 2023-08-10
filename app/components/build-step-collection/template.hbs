@@ -104,7 +104,7 @@
     </BsTab>
   </div>
   <div class="col-9 partial-view">
-    {{#if (and this.isArtifacts this.iframeUrl)}}
+    {{#if this.isArtifacts}}
       <ArtifactPreview @iframeUrl={{this.iframeUrl}} />
     {{else}}
       <BuildLog
