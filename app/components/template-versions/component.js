@@ -42,7 +42,7 @@ export default Component.extend({
       className: 'metric-cell',
       componentForFooterCell: 'template-version-list-footer-job-count-cell',
       resizable: false,
-      width: '15%',
+      width: '10%',
       minResizeWidth: 150
     },
     {
@@ -51,17 +51,18 @@ export default Component.extend({
       className: 'metric-cell',
       componentForFooterCell: 'template-version-list-footer-build-count-cell',
       resizable: false,
-      width: '15%',
+      width: '10%',
       minResizeWidth: 150
     },
     {
       title: 'PIPELINES',
+      component: 'template-version-list-pipeline-cell',
       propertyName: 'metrics.pipelineCount',
       className: 'metric-cell',
       componentForFooterCell:
         'template-version-list-footer-pipeline-count-cell',
       resizable: false,
-      width: '15%',
+      width: '10%',
       minResizeWidth: 150
     },
     {

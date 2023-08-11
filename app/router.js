@@ -89,7 +89,7 @@ Router.map(function route() {
   this.route('pipeline-visualizer');
 
   this.route('templateusage', function () {
-    this.route('id', { path: '/:id' });
+    this.route('index', { path: '/:namespace/:name/:version' });
   });
 });
 /* eslint-enable array-callback-return */

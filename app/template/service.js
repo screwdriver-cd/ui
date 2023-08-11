@@ -24,6 +24,16 @@ export default Service.extend({
 
     return this.fetchData(url).then(templatesFormatter);
   },
+  getOneTemplateVersionWithMetrics(name, namespace, version) {
+    const fullName = `${namespace}/${name}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/templates/${encodeURIComponent(fullName)}/${encodeURIComponent(
+      version
+    )}/metrics`;
+
+    return this.fetchData(url);
+  },
   getOneTemplateWithMetrics(name, params) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE

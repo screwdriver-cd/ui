@@ -10,17 +10,16 @@ export default Controller.extend({
   template: service(),
   store: service(),
 
-  thisTemplate: computed({
+  thisTemplate: computed('routeParams', {
     async get() {
-      // const { id, template } = this;
       const { template } = this;
-      const id = 4; // TESTING
-      const promise = template.getOneTemplateByIdWithMetrics(id);
-      const resolved = await promise;
+      const { name, namespace, version } = this.routeParams;
 
-      console.log(resolved);
-
-      return resolved;
+      return template.getOneTemplateVersionWithMetrics(
+        name,
+        namespace,
+        version
+      );
     }
   }),
 
