@@ -17,7 +17,7 @@ export default Component.extend({
       .catch(() => {
         this.set('scmUrl', null);
       });
-    this.set('isTrusted', this.command.trusted)
+    this.set('isTrusted', this.command.trusted);
   },
   actions: {
     setCommandToRemove(command) {
