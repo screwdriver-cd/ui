@@ -12,7 +12,9 @@ export default Controller.extend({
 
   thisTemplate: computed({
     async get() {
-      const { id, template } = this;
+      // const { id, template } = this;
+      const { template } = this;
+      const id = 4; // TESTING
       const promise = template.getOneTemplateByIdWithMetrics(id);
       const resolved = await promise;
 
