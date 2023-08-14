@@ -39,24 +39,26 @@ module('Unit | Route | pipeline/build', function (hooks) {
     route.redirect(model);
   });
 
-  test('it redirects if not step route', function (assert) {
+  test('it redirects step route if is running build', function (assert) {
     const route = this.owner.lookup('route:pipeline/build');
 
     const buildId = 345;
     const pipelineId = 123;
+    const jobId = 567;
 
     const transition = { targetName: 'pipeline.build.index' };
 
     const model = {
       pipeline: {
-        get: type => (type === 'id' ? pipelineId : null)
+        id: pipelineId
       },
       build: {
-        get: type => (type === 'id' ? buildId : null),
+        id: buildId,
         steps: []
       },
       job: {
-        get: type => (type === 'pipelineId' ? pipelineId : null)
+        id: jobId,
+        pipelineId
       },
       event: {
         isPaused: true
@@ -75,8 +77,7 @@ module('Unit | Route | pipeline/build', function (hooks) {
     this.owner.unregister('service:router');
     this.owner.register('service:router', routerServiceMock);
 
-    route.redirect(model, transition);
-
+    model.build.status = 'RUNNING';
     model.build.steps = [
       { startTime: 's', endTime: 'e', name: 'error', code: 1 }
     ];
