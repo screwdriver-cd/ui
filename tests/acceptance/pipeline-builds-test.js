@@ -154,10 +154,7 @@ module('Acceptance | pipeline build', function (hooks) {
 
     await visit(`/pipelines/${pipelineId}/builds/${buildId}`);
 
-    assert.equal(
-      currentURL(),
-      `/pipelines/${pipelineId}/builds/${buildId}/steps/install`
-    );
+    assert.equal(currentURL(), `/pipelines/${pipelineId}/builds/${buildId}`);
 
     assert.equal(
       getPageTitle(),

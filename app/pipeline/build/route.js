@@ -1,7 +1,7 @@
 import { all } from 'rsvp';
 import Route from '@ember/routing/route';
 import { set, get } from '@ember/object';
-import { getActiveStep } from 'screwdriver-ui/utils/build';
+import { getActiveStep, isActiveBuild } from 'screwdriver-ui/utils/build';
 import { inject as service } from '@ember/service';
 
 export default Route.extend({
@@ -39,18 +39,18 @@ export default Route.extend({
     if (name) {
       this.router.transitionTo(
         'pipeline.build.step',
-        model.pipeline.get('id'),
-        model.build.get('id'),
+        get(model, 'pipeline.id'),
+        get(model, 'build.id'),
         name
       );
     }
   },
 
   redirect(model, transition) {
-    const pipelineId = model.pipeline.get('id');
+    const pipelineId = get(model, 'pipeline.id');
 
     // Build not found for this pipeline, redirecting to the pipeline page
-    if (pipelineId !== model.job.get('pipelineId')) {
+    if (pipelineId !== get(model, 'job.pipelineId')) {
       this.router.transitionTo('pipeline', pipelineId);
     } else {
       set(model.event, 'isPaused', true);
@@ -59,15 +59,19 @@ export default Route.extend({
           transition.targetName
         )
       ) {
-        const name = getActiveStep(get(model, 'build.steps'));
+        const currentBuildStatus = get(model, 'build.status');
 
-        if (name) {
-          this.router.transitionTo(
-            'pipeline.build.step',
-            model.pipeline.get('id'),
-            model.build.get('id'),
-            name
-          );
+        if (isActiveBuild(currentBuildStatus)) {
+          const name = getActiveStep(get(model, 'build.steps'));
+
+          if (name) {
+            this.router.transitionTo(
+              'pipeline.build.step',
+              get(model, 'pipeline.id'),
+              get(model, 'build.id'),
+              name
+            );
+          }
         }
       }
     }
