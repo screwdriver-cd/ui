@@ -13,30 +13,27 @@ module('Unit | Route | pipeline/build', function (hooks) {
     assert.ok(route);
   });
 
-  test('it redirects if build not found', function (assert) {
+  test('it will NOT redirect if transition is null', function (assert) {
     const route = this.owner.lookup('route:pipeline/build');
     const jobId = 345;
     const pipelineId = 123;
+    const transition = { targetName: null };
     const model = {
       pipeline: {
-        get: type => (type === 'id' ? pipelineId : null)
+        id: pipelineId
       },
       job: {
-        get: type => (type === 'id' ? jobId : null)
-      }
+        id: jobId,
+        pipelineId
+      },
+      event: {}
     };
 
-    const routerServiceMock = Service.extend({
-      transitionTo: (path, id) => {
-        assert.equal(path, 'pipeline');
-        assert.equal(id, pipelineId);
-      }
-    });
+    const spy = sinon.spy(getActiveStep);
 
-    this.owner.unregister('service:router');
-    this.owner.register('service:router', routerServiceMock);
+    route.redirect(model, transition);
 
-    route.redirect(model);
+    assert.ok(spy.notCalled, 'redirect was not called');
   });
 
   test('it redirects step route if is running build', function (assert) {
