@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
+import moment from 'moment';
 
 export default Component.extend({
   userSettings: service(),
@@ -26,35 +27,35 @@ export default Component.extend({
       title: 'LAST RUN',
       resizable: true,
       propertyName: 'lastRunDate'
+    },
+    {
+      title: 'ADMIN',
+      resizable: true,
+      propertyName: 'admins'
     }
   ],
-  getBranch(pipeline) {
-    const { branch, rootDir } = pipeline.scmRepo;
-
-    return rootDir ? `${branch}#${rootDir}` : branch;
-  },
-  data: computed('template', 'pipelines', {
+  data: computed('pipelineMetrics', {
     async get() {
-      const { pipelines } = this;
-      const _pipelines = await pipelines;
-      // console.log(_pipelines);
+      return (await this.pipelineMetrics).map(m => {
+        const lastRun =
+          m.lastRun !== null
+            ? moment(m.lastRun).format('YYYY-MM-DD')
+            : '----/--/--';
 
-      return _pipelines.map(pipeline => {
         return {
-          name: pipeline.name,
-          branch: this.getBranch(pipeline),
-          lastRunDate: pipeline.lastRunEvent.startTime,
-          url: pipeline.hubUrl
+          name: m.name,
+          branch: m.scmRepo.branch,
+          url: m.scmRepo.url,
+          lastRunDate: lastRun,
+          admins: Object.keys(m.admins)
         };
       });
     }
   }),
 
-  hasPipelines: computed('pipelines', {
+  hasPipelines: computed('pipelineMetrics', {
     async get() {
-      const { pipelines } = this;
-
-      return (await pipelines).length > 0;
+      return (await this.pipelineMetrics).length > 0;
     }
   })
 });

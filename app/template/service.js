@@ -9,14 +9,6 @@ const { templatesFormatter } = templateHelper;
 
 export default Service.extend({
   session: service(),
-  getOneTemplateByIdWithMetrics(id) {
-    console.log(`template service called ${id}`);
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
-      ENV.APP.SDAPI_NAMESPACE
-    }/template/${encodeURIComponent(id)}/metrics`;
-
-    return this.fetchData(url);
-  },
   getOneTemplate(name) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE
@@ -24,13 +16,13 @@ export default Service.extend({
 
     return this.fetchData(url).then(templatesFormatter);
   },
-  getOneTemplateVersionWithMetrics(name, namespace, version) {
+  getTemplatePipelineUsage(name, namespace, version) {
     const fullName = `${namespace}/${name}`;
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE
     }/templates/${encodeURIComponent(fullName)}/${encodeURIComponent(
       version
-    )}/metrics`;
+    )}/pipelineUsage`;
 
     return this.fetchData(url);
   },

@@ -3,9 +3,10 @@
 {{#if (await this.hasUsers)}} P{{else}} No p{{/if}}ipelines using {{await this.templateName}}/{{await this.templateNamespace}}@{{await this.templateVersion}}</h1>
 
 <TemplateVersionPipelineUsage
-  @template={{this.thisTemplate}}
-  @pipelineIds={{this.pipelineIds}}
-  @pipelines={{this.pipelines}}
+  @templateName={{this.templateName}}
+  @templateNamespace={{this.templateNamespace}}
+  @templateVersion={{this.templateVersion}}
+  @pipelineMetrics={{this.pipelineMetrics}}
 />
 
 {{outlet}}
