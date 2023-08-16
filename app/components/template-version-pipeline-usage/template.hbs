@@ -1,7 +1,5 @@
 {{#if (await this.hasPipelines)}}
 
-<h3>Usage for {{this.template.version}}</h3>
-
 {{#if (await this.data)}}
 <ModelsTable
   @data={{await this.data}}
