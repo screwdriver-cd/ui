@@ -1,6 +1,7 @@
 <br>
-<h1>
-{{#if (await this.hasUsers)}} P{{else}} No p{{/if}}ipelines using {{await this.templateName}}/{{await this.templateNamespace}}@{{await this.templateVersion}}</h1>
+{{#if (await this.hasUsers)}}
+
+<h1>Pipelines using {{await this.templateName}}/{{await this.templateNamespace}}@{{await this.templateVersion}}</h1>
 
 <TemplateVersionPipelineUsage
   @templateName={{this.templateName}}
@@ -8,5 +9,6 @@
   @templateVersion={{this.templateVersion}}
   @pipelineMetrics={{this.pipelineMetrics}}
 />
+{{/if}}
 
 {{outlet}}
