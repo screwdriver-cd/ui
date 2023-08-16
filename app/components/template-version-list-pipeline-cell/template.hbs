@@ -1,6 +1,10 @@
+{{#if this.pipelineCount}}
 <LinkTo
   @route="templateusage.index"
   @models={{array this.namespace this.name this.version}}>
     {{this.pipelineCount}}
 </LinkTo>
+{{else}}
+{{this.pipelineCount}}
+{{/if}}
 {{yield}}
