@@ -37,6 +37,17 @@ export default Component.extend({
       minResizeWidth: 150
     },
     {
+      title: 'PIPELINES',
+      component: 'template-version-list-pipeline-cell',
+      propertyName: 'metrics.pipelineCount',
+      className: 'metric-cell',
+      componentForFooterCell:
+        'template-version-list-footer-pipeline-count-cell',
+      resizable: false,
+      width: '10%',
+      minResizeWidth: 150
+    },
+    {
       title: 'JOBS',
       propertyName: 'metrics.jobCount',
       className: 'metric-cell',
@@ -50,17 +61,6 @@ export default Component.extend({
       propertyName: 'metrics.buildCount',
       className: 'metric-cell',
       componentForFooterCell: 'template-version-list-footer-build-count-cell',
-      resizable: false,
-      width: '10%',
-      minResizeWidth: 150
-    },
-    {
-      title: 'PIPELINES',
-      component: 'template-version-list-pipeline-cell',
-      propertyName: 'metrics.pipelineCount',
-      className: 'metric-cell',
-      componentForFooterCell:
-        'template-version-list-footer-pipeline-count-cell',
       resizable: false,
       width: '10%',
       minResizeWidth: 150

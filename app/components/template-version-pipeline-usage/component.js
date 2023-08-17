@@ -19,11 +19,6 @@ export default Component.extend({
       propertyName: 'branch'
     },
     {
-      title: 'URL',
-      resizable: true,
-      propertyName: 'url'
-    },
-    {
       title: 'LAST RUN',
       resizable: true,
       propertyName: 'lastRunDate'
@@ -37,14 +32,19 @@ export default Component.extend({
   data: computed('pipelineMetrics', {
     async get() {
       return (await this.pipelineMetrics).map(m => {
+        console.log(m);
         const lastRun =
           m.lastRun !== null
-            ? moment(m.lastRun).format('YYYY-MM-DD')
-            : '----/--/--';
+            ? moment(m.lastRun).format('MM/DD/YYYY')
+            : '--/--/----';
+
+        const branchWithDir = m.scmRepo.rootDir
+          ? `${m.scmRepo.branch}:${m.scmRepo.rootDir}`
+          : m.scmRepo.branch;
 
         return {
           name: m.name,
-          branch: m.scmRepo.branch,
+          branch: branchWithDir,
           url: m.scmRepo.url,
           lastRunDate: lastRun,
           admins: Object.keys(m.admins)
