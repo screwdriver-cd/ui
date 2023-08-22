@@ -11,12 +11,12 @@ export default Component.extend({
     {
       title: 'NAME',
       resizable: true,
-      propertyName: 'name'
+      component: 'pipeline-usage-table-name'
     },
     {
       title: 'BRANCH',
       resizable: true,
-      propertyName: 'branch'
+      component: 'pipeline-usage-table-branch'
     },
     {
       title: 'LAST RUN',
@@ -43,6 +43,7 @@ export default Component.extend({
           : m.scmRepo.branch;
 
         return {
+          id: m.id,
           name: m.name,
           branch: branchWithDir,
           url: m.scmRepo.url,
