@@ -22,7 +22,7 @@ export default Service.extend({
       ENV.APP.SDAPI_NAMESPACE
     }/templates/${encodeURIComponent(fullName)}/${encodeURIComponent(
       version
-    )}/pipelineUsage`;
+    )}/usage/pipelines`;
 
     return this.fetchData(url);
   },
