@@ -400,4 +400,50 @@ module('Integration | Component | validator job', function (hooks) {
 
     assert.dom('h4').doesNotExist();
   });
+
+  test('it has freezeWindow data and renders freezeWindow', async function (assert) {
+    this.set('jobMock', {
+      image: 'int-test:1',
+      commands: [
+        { name: 'step1', command: 'echo hello' },
+        { name: 'step2', command: 'echo goodbye' }
+      ],
+      secrets: [],
+      environment: {},
+      settings: {},
+      freezeWindows: ['* * 01 01 ?', '* * 16 01 ?']
+    });
+
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
+
+    assert.dom('.freezeWindow .label').hasText('Freeze Windows:');
+    assert
+      .dom('.freezeWindow .value ul > li:nth-child(1)')
+      .hasText('* * 01 01 ?');
+    assert
+      .dom('.freezeWindow .value ul > li:nth-child(2)')
+      .hasText('* * 16 01 ?');
+  });
+
+  test('it has no freezeWindow data and renders freezeWindow', async function (assert) {
+    this.set('jobMock', {
+      image: 'int-test:1',
+      commands: [
+        { name: 'step1', command: 'echo hello' },
+        { name: 'step2', command: 'echo goodbye' }
+      ],
+      secrets: [],
+      environment: {},
+      settings: {}
+    });
+
+    await render(
+      hbs`<ValidatorJob @name="int-test" @index={{0}} @job={{this.jobMock}} />`
+    );
+
+    assert.dom('.freezeWindow .label').hasText('Freeze Windows:');
+    assert.dom('.freezeWindow .value').hasText('None defined');
+  });
 });
