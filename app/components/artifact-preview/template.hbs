@@ -6,9 +6,17 @@
   >
     Download
   </BsButton>
-  <iframe id={{this.iframeId}} src={{this.iframeUrl}} width="100%" height="625px">
-    <h4>
-      Alternative content for browsers which do not support iframe.
-    </h4>
-  </iframe>
+  {{#if this.iframeUrl}}
+    <iframe id={{this.iframeId}} src={{this.iframeUrl}} width="100%" height="625px">
+      <h4>
+        Alternative content for browsers which do not support iframe.
+      </h4>
+    </iframe>
+  {{else}}
+    <iframe id={{this.iframeId}} src="about:blank" width="100%" height="625px">
+      <h4>
+        Alternative content for browsers which do not support iframe.
+      </h4>
+    </iframe>
+  {{/if}}
 </div>

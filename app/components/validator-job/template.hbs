@@ -88,6 +88,29 @@
   </span>
 </div>
 <div
+  class="freezeWindow"
+  title="These freezeWindows are used to freeze your jobs and prevent them from running during specific time windows. The setting takes a cron expression or a list of them as the value. Timezone is in UTC."
+>
+  <span class="label">
+    Freeze Windows:
+  </span>
+  <span class="value">
+    <ul>
+      {{#each-in this.job.freezeWindows as |index freezeWindow|}}
+        <li>
+          <span class="name">
+            {{freezeWindow}}
+          </span>
+        </li>
+      {{else}}
+        <li>
+          None defined
+        </li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
+<div
   class="parameters"
   title="These are the job-level parameters that the user has defined."
 >
