@@ -22,7 +22,8 @@ const dummyTemplates = [
     lastUpdated: '4 days ago',
     metrics: {
       jobs: { count: 6 },
-      builds: { count: 32 }
+      builds: { count: 32 },
+      pipelines: { count: 3 }
     }
   },
   {
@@ -39,7 +40,8 @@ const dummyTemplates = [
     lastUpdated: '4 days ago',
     metrics: {
       jobs: { count: 2 },
-      builds: { count: 235 }
+      builds: { count: 235 },
+      pipelines: { count: 1 }
     }
   }
 ];
