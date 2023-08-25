@@ -90,6 +90,9 @@ module(
       assert
         .dom('tbody tr:nth-child(1) td:nth-child(2) svg.fa-code-branch')
         .exists({ count: 1 });
+      assert
+        .dom('tbody tr:nth-child(1) td:nth-child(2) a')
+        .hasAttribute('href', metrics[0].scmRepo.url);
       assert.dom('tbody tr:nth-child(1) td:nth-child(3)').hasText('08/17/2023');
       assert.dom('tbody tr:nth-child(1) td:nth-child(4)').hasText('test');
 
@@ -105,6 +108,9 @@ module(
       assert
         .dom('tbody tr:nth-child(2) td:nth-child(2) svg.fa-code-branch')
         .exists({ count: 1 });
+      assert
+        .dom('tbody tr:nth-child(2) td:nth-child(2) a')
+        .hasAttribute('href', metrics[1].scmRepo.url);
       assert.dom('tbody tr:nth-child(2) td:nth-child(3)').hasText('--/--/----');
       assert.dom('tbody tr:nth-child(2) td:nth-child(4)').hasText('test');
 
@@ -120,6 +126,9 @@ module(
       assert
         .dom('tbody tr:nth-child(3) td:nth-child(2) svg.fa-code-branch')
         .exists({ count: 1 });
+      assert
+        .dom('tbody tr:nth-child(3) td:nth-child(2) a')
+        .hasAttribute('href', metrics[2].scmRepo.url);
       assert.dom('tbody tr:nth-child(3) td:nth-child(3)').hasText('07/31/2023');
       assert.dom('tbody tr:nth-child(3) td:nth-child(4)').hasText('test');
     });
