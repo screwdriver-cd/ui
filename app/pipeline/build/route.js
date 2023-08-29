@@ -1,7 +1,7 @@
 import { all } from 'rsvp';
 import Route from '@ember/routing/route';
 import { set, get } from '@ember/object';
-import { getActiveStep, isActiveBuild } from 'screwdriver-ui/utils/build';
+import { getActiveStep } from 'screwdriver-ui/utils/build';
 import { inject as service } from '@ember/service';
 
 export default Route.extend({
@@ -32,20 +32,6 @@ export default Route.extend({
     set(model, 'userSelectedStepName', null);
   },
 
-  goToActiveStep() {
-    const model = this.controller.get('model');
-    const name = getActiveStep(get(model, 'build.steps'));
-
-    if (name) {
-      this.router.transitionTo(
-        'pipeline.build.step',
-        get(model, 'pipeline.id'),
-        get(model, 'build.id'),
-        name
-      );
-    }
-  },
-
   redirect(model, transition) {
     const pipelineId = get(model, 'pipeline.id');
 
@@ -59,19 +45,21 @@ export default Route.extend({
           transition.targetName
         )
       ) {
-        const currentBuildStatus = get(model, 'build.status');
+        const preselectedStepName = transition?.to?.params?.step_id;
 
-        if (isActiveBuild(currentBuildStatus)) {
-          const name = getActiveStep(get(model, 'build.steps'));
+        let stepName = preselectedStepName;
 
-          if (name) {
-            this.router.transitionTo(
-              'pipeline.build.step',
-              get(model, 'pipeline.id'),
-              get(model, 'build.id'),
-              name
-            );
-          }
+        if (!preselectedStepName) {
+          stepName = getActiveStep(get(model, 'build.steps'));
+        }
+
+        if (stepName) {
+          this.router.transitionTo(
+            'pipeline.build.step',
+            get(model, 'pipeline.id'),
+            get(model, 'build.id'),
+            stepName
+          );
         }
       }
     }
