@@ -53,12 +53,14 @@ export default Route.extend({
           stepName = getActiveStep(get(model, 'build.steps'));
         }
 
-        this.router.transitionTo(
-          'pipeline.build.step',
-          get(model, 'pipeline.id'),
-          get(model, 'build.id'),
-          stepName
-        );
+        if (stepName) {
+          this.router.transitionTo(
+            'pipeline.build.step',
+            get(model, 'pipeline.id'),
+            get(model, 'build.id'),
+            stepName
+          );
+        }
       }
     }
   }
