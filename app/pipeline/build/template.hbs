@@ -53,8 +53,8 @@
     @icon="exclamation-triangle"
   />
 {{/if}}
-{{#if this.build.meta.meta.warning}}
-  {{#each-in this.build.meta.meta.warning as |name value|}}
+{{#if this.build.meta.build.warning}}
+  {{#each-in this.build.meta.build.warning as |name value|}}
     <InfoMessage
       @message="{{name}} - {{value}}"
       @type="warning"
