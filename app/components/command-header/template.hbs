@@ -51,7 +51,7 @@
   {{/if}}
 </h1>
 <h2>
-  {{this.command.version}}
+  {{this.command.version}}{{if this.isLatestVersion " - latest"}}
 </h2>
 <p>
   {{this.command.description}}
@@ -73,9 +73,13 @@
   Usage:
 </h4>
 {{#if this.command.usage}}
-  <pre>{{this.command.usage}}  </pre>
+  <pre>{{this.command.usage}} </pre>
 {{else}}
-  <pre>sd-cmd exec {{this.command.namespace}}/{{this.command.name}}@{{this.command.version}}  </pre>
+  {{#if this.isLatestVersion}}
+    <pre>sd-cmd exec {{this.command.namespace}}/{{this.command.name}}@latest </pre>
+  {{else}}
+    <pre>sd-cmd exec {{this.command.namespace}}/{{this.command.name}}@{{this.command.version}} </pre>
+  {{/if}}
 {{/if}}
 {{#if this.commandToRemove}}
   {{#if this.isRemoving}}
