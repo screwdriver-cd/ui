@@ -34,7 +34,5 @@ export default Route.extend({
       'versionOrTagFromUrl',
       this.determineVersion(params.version, verPayload, tagPayload)
     );
-
-    return params.version;
   }
 });
