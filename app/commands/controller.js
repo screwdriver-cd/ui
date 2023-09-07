@@ -27,8 +27,6 @@ export default Controller.extend({
 
       const params = this.routeParams;
 
-      console.log('params', params);
-
       if (params.namespace || params.detail) {
         breadcrumbs.push({
           name: 'Commands',
