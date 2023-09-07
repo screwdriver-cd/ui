@@ -73,11 +73,8 @@ module('Integration | Component | template versions', function (hooks) {
 
   test('it renders template versions in a table', async function (assert) {
     this.set('mock', TEMPLATES);
-    this.set('isAdmin', true);
 
-    await render(
-      hbs`<TemplateVersions @templates={{this.mock}} @isAdmin={{this.isAdmin}}/>;`
-    );
+    await render(hbs`<TemplateVersions @templates={{this.mock}}/>;`);
 
     assert.dom('h4').hasText('All Versions');
 
@@ -167,25 +164,6 @@ module('Integration | Component | template versions', function (hooks) {
     assert.dom('tfoot tr td:nth-child(6)').hasText('');
   });
 
-  test('it does not show remove button for non admins', async function (assert) {
-    this.set('mock', TEMPLATES);
-    this.set('isAdmin', false);
-
-    await render(
-      hbs`<TemplateVersions @templates={{this.mock}} @isAdmin={{this.isAdmin}}/>;`
-    );
-
-    assert.dom('table').exists({ count: 1 });
-    assert.dom('thead').exists({ count: 1 });
-    assert.dom('thead tr th').exists({ count: 6 });
-    assert.dom('tbody').exists({ count: 1 });
-    assert.dom('tbody tr').exists({ count: 3 });
-    assert.dom('tbody tr:nth-child(1) td').exists({ count: 6 });
-    assert.dom('tbody tr:nth-child(2) td').exists({ count: 6 });
-    assert.dom('tbody tr:nth-child(3) td').exists({ count: 6 });
-    assert.dom('tbody tr td svg.fa-trash').doesNotExist();
-  });
-
   test('it removes a version', async function (assert) {
     assert.expect(4);
 
@@ -198,10 +176,9 @@ module('Integration | Component | template versions', function (hooks) {
 
     this.set('onRemoveVersion', onRemoveVersionMock);
     this.set('mock', TEMPLATES);
-    this.set('isAdmin', true);
 
     await render(
-      hbs`<TemplateVersions @templates={{this.mock}} @isAdmin={{this.isAdmin}} @onRemoveVersion={{this.onRemoveVersion}}/>;`
+      hbs`<TemplateVersions @templates={{this.mock}} @onRemoveVersion={{this.onRemoveVersion}}/>;`
     );
 
     await click('tbody tr:nth-child(3) td:nth-child(6) svg.fa-trash');
