@@ -4,19 +4,19 @@ import { computed } from '@ember/object';
 import moment from 'moment';
 
 export default Component.extend({
-  userSettings: service(),
   theme: service('emt-themes/ember-bootstrap-v5'),
   timestampPreference: null,
   columns: [
     {
       title: 'NAME',
       resizable: true,
-      component: 'pipeline-usage-table-name'
+      component: 'pipeline-usage-table-name',
+      sortedBy: 'name'
     },
     {
       title: 'BRANCH',
       resizable: true,
-      component: 'pipeline-usage-table-branch'
+      component: 'pipeline-branch-cell'
     },
     {
       title: 'LAST RUN',
@@ -32,7 +32,6 @@ export default Component.extend({
   data: computed('pipelineMetrics', {
     async get() {
       return (await this.pipelineMetrics).map(m => {
-        console.log(m);
         const lastRun =
           m.lastRun !== null
             ? moment(m.lastRun).format('MM/DD/YYYY')

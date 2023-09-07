@@ -3,7 +3,6 @@ import { computed } from '@ember/object';
 import Controller from '@ember/controller';
 
 export default Controller.extend({
-  userSettings: service(),
   theme: service('emt-themes/ember-bootstrap-v5'),
   timestampPreference: null,
   template: service(),
