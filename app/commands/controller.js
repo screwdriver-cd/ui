@@ -1,7 +1,9 @@
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default Controller.extend({
+  router: service(),
   routeParams: computed('model', {
     get() {
       const route = this.model;
