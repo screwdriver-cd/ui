@@ -92,62 +92,55 @@ export default Component.extend({
     this.set('jobsDetails', []);
   },
 
-  data: computed(
-    'isAdmin',
-    'removeVersion',
-    'templates.[]',
-    'timestampPreference',
-    {
-      get() {
-        const { templates, isAdmin, timestampPreference } = this;
+  data: computed('removeVersion', 'templates.[]', 'timestampPreference', {
+    get() {
+      const { templates, timestampPreference } = this;
 
-        return templates.map(template => {
-          const {
-            name,
-            namespace,
-            fullName,
-            version,
-            createTime,
-            trusted,
-            metrics,
-            tag
-          } = template;
+      return templates.map(template => {
+        const {
+          name,
+          namespace,
+          fullName,
+          version,
+          createTime,
+          trusted,
+          metrics,
+          tag
+        } = template;
 
-          let publishedTime;
+        let publishedTime;
 
-          if (timestampPreference === 'UTC') {
-            publishedTime = `${toCustomLocaleString(new Date(createTime), {
-              timeZone: 'UTC'
-            })}`;
-          } else {
-            publishedTime = `${toCustomLocaleString(new Date(createTime))}`;
-          }
+        if (timestampPreference === 'UTC') {
+          publishedTime = `${toCustomLocaleString(new Date(createTime), {
+            timeZone: 'UTC'
+          })}`;
+        } else {
+          publishedTime = `${toCustomLocaleString(new Date(createTime))}`;
+        }
 
-          const actionsData = {
-            removeVersion: this.removeVersion.bind(this),
-            fullName,
-            version,
-            isAdmin
-          };
+        const actionsData = {
+          removeVersion: this.removeVersion.bind(this),
+          fullName,
+          version
+        };
 
-          return {
-            name,
-            namespace,
-            version,
-            trusted,
-            tag,
-            publishedTime,
-            metrics: {
-              jobCount: metrics.jobs.count,
-              buildCount: metrics.builds.count,
-              pipelineCount: metrics.pipelines.count
-            },
-            actions: actionsData
-          };
-        });
-      }
+        return {
+          name,
+          namespace,
+          version,
+          trusted,
+          tag,
+          publishedTime,
+          metrics: {
+            jobCount: metrics.jobs.count,
+            buildCount: metrics.builds.count,
+            pipelineCount: metrics.pipelines.count
+          },
+          actions: actionsData
+        };
+      });
     }
-  ),
+  }),
 
   removeVersion(fullName, version) {
     this.onRemoveVersion(fullName, version);
