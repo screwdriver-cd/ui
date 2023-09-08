@@ -8,22 +8,22 @@ export default Component.extend({
       return this.record.truncatedCellConfig[this.column.title] || {};
     }
   }),
-  data: computed('config.data', {
+  data: computed('config', {
     get() {
       return this.config.data || [];
     }
   }),
-  delimiter: computed('config.delimiter', {
+  delimiter: computed('config', {
     get() {
       return this.config.delimiter || ', ';
     }
   }),
-  maxColumnWidth: computed('config.maxColumnWidth', {
+  maxColumnWidth: computed('config', {
     get() {
       return this.config.maxColumnWidth || 40;
     }
   }),
-  ellipsis: computed('config.ellipsis', 'delimiter', {
+  ellipsis: computed('config', 'delimiter', {
     get() {
       return this.config.ellipsis || `${this.delimiter}...`;
     }
