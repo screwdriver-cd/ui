@@ -16,6 +16,16 @@ export default Service.extend({
 
     return this.fetchData(url).then(templatesFormatter);
   },
+  getTemplatePipelineUsage(name, namespace, version) {
+    const fullName = `${namespace}/${name}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/templates/${encodeURIComponent(fullName)}/${encodeURIComponent(
+      version
+    )}/usage/pipelines`;
+
+    return this.fetchData(url);
+  },
   getOneTemplateWithMetrics(name, params) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE

@@ -318,7 +318,10 @@ export default Component.extend({
           metricsDowntimeJobs
         });
 
-        this.set('successMessage', 'Pipeline downtime jobs updated successfully');
+        this.set(
+          'successMessage',
+          'Pipeline downtime jobs updated successfully'
+        );
       } catch (error) {
         this.set('errorMessage', error);
       }

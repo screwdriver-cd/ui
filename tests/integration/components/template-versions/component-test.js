@@ -16,7 +16,8 @@ const TEMPLATES = [
     createTime: '2023-05-12T16:21:37.500Z',
     metrics: {
       jobs: { count: 6 },
-      builds: { count: 32 }
+      builds: { count: 32 },
+      pipelines: { count: 1 }
     }
   },
   {
@@ -29,7 +30,8 @@ const TEMPLATES = [
     createTime: '2023-05-08T17:44:05.148Z',
     metrics: {
       jobs: { count: 2 },
-      builds: { count: 235 }
+      builds: { count: 235 },
+      pipelines: { count: 12 }
     }
   },
   {
@@ -41,7 +43,8 @@ const TEMPLATES = [
     createTime: '2023-04-21T15:16:45.171Z',
     metrics: {
       jobs: { count: 0 },
-      builds: { count: 44 }
+      builds: { count: 44 },
+      pipelines: { count: 40 }
     }
   }
 ];
@@ -80,17 +83,18 @@ module('Integration | Component | template versions', function (hooks) {
 
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
-    assert.dom('thead tr th').exists({ count: 5 });
+    assert.dom('thead tr th').exists({ count: 6 });
     assert.dom('thead tr th:nth-child(1)').hasText('VERSION');
     assert.dom('thead tr th:nth-child(2)').hasText('PUBLISHED');
-    assert.dom('thead tr th:nth-child(3)').hasText('JOBS');
-    assert.dom('thead tr th:nth-child(4)').hasText('BUILDS');
-    assert.dom('thead tr th:nth-child(5)').hasText('ACTIONS');
+    assert.dom('thead tr th:nth-child(3)').hasText('PIPELINES');
+    assert.dom('thead tr th:nth-child(4)').hasText('JOBS');
+    assert.dom('thead tr th:nth-child(5)').hasText('BUILDS');
+    assert.dom('thead tr th:nth-child(6)').hasText('ACTIONS');
 
     assert.dom('tbody').exists({ count: 1 });
     assert.dom('tbody tr').exists({ count: 3 });
 
-    assert.dom('tbody tr:nth-child(1) td').exists({ count: 5 });
+    assert.dom('tbody tr:nth-child(1) td').exists({ count: 6 });
     assert
       .dom('tbody tr:nth-child(1) td:nth-child(1)')
       .hasText('3.0.0 - latest stable');
@@ -103,15 +107,16 @@ module('Integration | Component | template versions', function (hooks) {
     assert
       .dom('tbody tr:nth-child(1) td:nth-child(2)')
       .hasText('05/12/2023, 04:21 PM UTC');
-    assert.dom('tbody tr:nth-child(1) td:nth-child(3)').hasText('6');
-    assert.dom('tbody tr:nth-child(1) td:nth-child(4)').hasText('32');
-    assert.dom('tbody tr:nth-child(1) td:nth-child(5)').hasText('');
+    assert.dom('tbody tr:nth-child(1) td:nth-child(3)').hasText('1');
+    assert.dom('tbody tr:nth-child(1) td:nth-child(4)').hasText('6');
+    assert.dom('tbody tr:nth-child(1) td:nth-child(5)').hasText('32');
+    assert.dom('tbody tr:nth-child(1) td:nth-child(6)').hasText('');
     assert
-      .dom('tbody tr:nth-child(1) td:nth-child(5) svg.fa-trash')
+      .dom('tbody tr:nth-child(1) td:nth-child(6) svg.fa-trash')
       .exists({ count: 1 });
 
-    assert.dom('tbody tr:nth-child(2) td').exists({ count: 5 });
-    assert.dom('tbody tr:nth-child(2) td').exists({ count: 5 });
+    assert.dom('tbody tr:nth-child(2) td').exists({ count: 6 });
+    assert.dom('tbody tr:nth-child(2) td').exists({ count: 6 });
     assert
       .dom('tbody tr:nth-child(2) td:nth-child(1)')
       .hasText('2.0.0 - meeseeks');
@@ -124,15 +129,16 @@ module('Integration | Component | template versions', function (hooks) {
     assert
       .dom('tbody tr:nth-child(2) td:nth-child(2)')
       .hasText('05/08/2023, 05:44 PM UTC');
-    assert.dom('tbody tr:nth-child(2) td:nth-child(3)').hasText('2');
-    assert.dom('tbody tr:nth-child(2) td:nth-child(4)').hasText('235');
-    assert.dom('tbody tr:nth-child(2) td:nth-child(5)').hasText('');
+    assert.dom('tbody tr:nth-child(2) td:nth-child(3)').hasText('12');
+    assert.dom('tbody tr:nth-child(2) td:nth-child(4)').hasText('2');
+    assert.dom('tbody tr:nth-child(2) td:nth-child(5)').hasText('235');
+    assert.dom('tbody tr:nth-child(2) td:nth-child(6)').hasText('');
     assert
-      .dom('tbody tr:nth-child(2) td:nth-child(5) svg.fa-trash')
+      .dom('tbody tr:nth-child(2) td:nth-child(6) svg.fa-trash')
       .exists({ count: 1 });
 
-    assert.dom('tbody tr:nth-child(3) td').exists({ count: 5 });
-    assert.dom('tbody tr:nth-child(3) td').exists({ count: 5 });
+    assert.dom('tbody tr:nth-child(3) td').exists({ count: 6 });
+    assert.dom('tbody tr:nth-child(3) td').exists({ count: 6 });
     assert.dom('tbody tr:nth-child(3) td:nth-child(1)').hasText('1.0.0');
     assert
       .dom('tbody tr:nth-child(3) td:nth-child(1) svg.trusted')
@@ -143,20 +149,22 @@ module('Integration | Component | template versions', function (hooks) {
     assert
       .dom('tbody tr:nth-child(3) td:nth-child(2)')
       .hasText('04/21/2023, 03:16 PM UTC');
-    assert.dom('tbody tr:nth-child(3) td:nth-child(3)').hasText('0');
-    assert.dom('tbody tr:nth-child(3) td:nth-child(4)').hasText('44');
-    assert.dom('tbody tr:nth-child(3) td:nth-child(5)').hasText('');
+    assert.dom('tbody tr:nth-child(3) td:nth-child(3)').hasText('40');
+    assert.dom('tbody tr:nth-child(3) td:nth-child(4)').hasText('0');
+    assert.dom('tbody tr:nth-child(3) td:nth-child(5)').hasText('44');
+    assert.dom('tbody tr:nth-child(3) td:nth-child(6)').hasText('');
     assert
-      .dom('tbody tr:nth-child(3) td:nth-child(5) svg.fa-trash')
+      .dom('tbody tr:nth-child(3) td:nth-child(6) svg.fa-trash')
       .exists({ count: 1 });
 
     assert.dom('tfoot tr').exists({ count: 1 });
-    assert.dom('tfoot tr td').exists({ count: 5 });
+    assert.dom('tfoot tr td').exists({ count: 6 });
     assert.dom('tfoot tr td:nth-child(1)').hasText('');
     assert.dom('tfoot tr td:nth-child(2)').hasText('Total:');
-    assert.dom('tfoot tr td:nth-child(3)').hasText('8');
-    assert.dom('tfoot tr td:nth-child(4)').hasText('311');
-    assert.dom('tfoot tr td:nth-child(5)').hasText('');
+    assert.dom('tfoot tr td:nth-child(3)').hasText('53');
+    assert.dom('tfoot tr td:nth-child(4)').hasText('8');
+    assert.dom('tfoot tr td:nth-child(5)').hasText('311');
+    assert.dom('tfoot tr td:nth-child(6)').hasText('');
   });
 
   test('it does not show remove button for non admins', async function (assert) {
@@ -169,12 +177,12 @@ module('Integration | Component | template versions', function (hooks) {
 
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
-    assert.dom('thead tr th').exists({ count: 5 });
+    assert.dom('thead tr th').exists({ count: 6 });
     assert.dom('tbody').exists({ count: 1 });
     assert.dom('tbody tr').exists({ count: 3 });
-    assert.dom('tbody tr:nth-child(1) td').exists({ count: 5 });
-    assert.dom('tbody tr:nth-child(2) td').exists({ count: 5 });
-    assert.dom('tbody tr:nth-child(3) td').exists({ count: 5 });
+    assert.dom('tbody tr:nth-child(1) td').exists({ count: 6 });
+    assert.dom('tbody tr:nth-child(2) td').exists({ count: 6 });
+    assert.dom('tbody tr:nth-child(3) td').exists({ count: 6 });
     assert.dom('tbody tr td svg.fa-trash').doesNotExist();
   });
 
@@ -196,7 +204,7 @@ module('Integration | Component | template versions', function (hooks) {
       hbs`<TemplateVersions @templates={{this.mock}} @isAdmin={{this.isAdmin}} @onRemoveVersion={{this.onRemoveVersion}}/>;`
     );
 
-    await click('tbody tr:nth-child(3) td:nth-child(5) svg.fa-trash');
+    await click('tbody tr:nth-child(3) td:nth-child(6) svg.fa-trash');
     await waitFor('.modal-dialog');
     assert
       .dom('.modal-dialog .modal-content .modal-body')

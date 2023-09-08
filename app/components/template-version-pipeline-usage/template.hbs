@@ -1,0 +1,17 @@
+{{#if (await this.hasPipelines)}}
+
+{{#if (await this.data)}}
+<ModelsTable
+  @data={{await this.data}}
+  @columns={{this.columns}}
+  @themeInstance={{this.theme}}
+  @showComponentFooter={{false}}
+  @showColumnsDropdown={{false}}
+  @useFilteringByColumns={{false}}
+  @showGlobalFilter={{false}}
+  @multipleColumnsSorting={{false}}
+  @showCurrentPageNumberSelect={{false}}
+  @pageSize={{get (await this.data) 'length'}}
+/>
+{{/if}}
+{{/if}}

@@ -69,6 +69,7 @@ Router.map(function route() {
       this.route('index', { path: '/' });
       this.route('version', { path: '/:version' });
     });
+    this.route('template-usage', { path: '/:namespace/:name/:version/usage' });
   });
   this.route('commands', function commandsRoute() {
     this.route('namespace', { path: '/:namespace' });

@@ -1,0 +1,10 @@
+{{#if this.pipelineCount}}
+<LinkTo
+  @route="templates.template-usage"
+  @models={{array this.namespace this.name this.version}}>
+    {{this.pipelineCount}}
+</LinkTo>
+{{else}}
+{{this.pipelineCount}}
+{{/if}}
+{{yield}}
