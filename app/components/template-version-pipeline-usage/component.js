@@ -24,8 +24,10 @@ export default Component.extend({
       propertyName: 'lastRunDate'
     },
     {
-      title: 'ADMIN',
-      resizable: true,
+      title: 'ADMINS',
+      resizable: false,
+      width: '10%',
+      component: 'truncated-table-cell-with-hover-tooltip',
       propertyName: 'admins'
     }
   ],
@@ -47,7 +49,13 @@ export default Component.extend({
           branch: branchWithDir,
           url: m.scmRepo.url,
           lastRunDate: lastRun,
-          admins: Object.keys(m.admins)
+          truncatedCellConfig: {
+            ADMINS: {
+              maxColumnWidth: 40,
+              delimiter: ', ',
+              data: Object.keys(m.admins)
+            }
+          }
         };
       });
     }

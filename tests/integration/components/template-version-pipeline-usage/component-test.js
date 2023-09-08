@@ -31,7 +31,9 @@ const metrics = [
     },
     lastRun: null,
     admins: {
-      test: true
+      test1: true,
+      test2: true,
+      test3: true
     }
   },
   {
@@ -46,7 +48,17 @@ const metrics = [
     },
     lastRun: '2023-07-31T17:15:37.510Z',
     admins: {
-      test: true
+      test1: true,
+      test2: true,
+      test3: true,
+      test4: true,
+      test5: true,
+      test6: true,
+      test7: true,
+      test8: true,
+      test9: true,
+      test10: true,
+      test11: true
     }
   }
 ];
@@ -74,7 +86,7 @@ module(
       assert.dom('thead tr th:nth-child(1)').hasText('NAME');
       assert.dom('thead tr th:nth-child(2)').hasText('BRANCH');
       assert.dom('thead tr th:nth-child(3)').hasText('LAST RUN');
-      assert.dom('thead tr th:nth-child(4)').hasText('ADMIN');
+      assert.dom('thead tr th:nth-child(4)').hasText('ADMINS');
       assert.dom('tbody').exists({ count: 1 });
       assert.dom('tbody tr').exists({ count: 3 });
 
@@ -112,7 +124,9 @@ module(
         .dom('tbody tr:nth-child(2) td:nth-child(2) a')
         .hasAttribute('href', metrics[1].scmRepo.url);
       assert.dom('tbody tr:nth-child(2) td:nth-child(3)').hasText('--/--/----');
-      assert.dom('tbody tr:nth-child(2) td:nth-child(4)').hasText('test');
+      assert
+        .dom('tbody tr:nth-child(2) td:nth-child(4)')
+        .hasText('test1, test2, test3');
 
       // Third row
       assert.dom('tbody tr:nth-child(3) td').exists({ count: 4 });
@@ -130,7 +144,9 @@ module(
         .dom('tbody tr:nth-child(3) td:nth-child(2) a')
         .hasAttribute('href', metrics[2].scmRepo.url);
       assert.dom('tbody tr:nth-child(3) td:nth-child(3)').hasText('07/31/2023');
-      assert.dom('tbody tr:nth-child(3) td:nth-child(4)').hasText('test');
+      assert
+        .dom('tbody tr:nth-child(3) td:nth-child(4)')
+        .hasText('test1, test2, test3, test4, test5, ...');
     });
   }
 );
