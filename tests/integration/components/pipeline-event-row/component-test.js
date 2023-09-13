@@ -59,6 +59,7 @@ const event = {
   isRunning: false
 };
 
+// eslint-disable-next-line no-unused-vars
 const eventWithLabel = {
   id: 3,
   startFrom: '~commit',
@@ -207,7 +208,6 @@ module('Integration | Component | pipeline event row', function (hooks) {
       @latestCommit={{this.latestCommit}}
       @lastSuccessful={{3}}
     />`);
- 
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.stopButton').doesNotExist();

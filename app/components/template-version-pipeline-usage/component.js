@@ -26,7 +26,8 @@ export default Component.extend({
     {
       title: 'ADMIN',
       resizable: true,
-      propertyName: 'admins'
+      propertyName: 'admins',
+      component: 'pipeline-usage-admin-cell'
     }
   ],
   data: computed('pipelineMetrics', {
@@ -41,13 +42,15 @@ export default Component.extend({
           ? `${m.scmRepo.branch}:${m.scmRepo.rootDir}`
           : m.scmRepo.branch;
 
+        const admins = Object.keys(m.admins).join(',');
+
         return {
           id: m.id,
           name: m.name,
           branch: branchWithDir,
           url: m.scmRepo.url,
           lastRunDate: lastRun,
-          admins: Object.keys(m.admins)
+          admins
         };
       });
     }

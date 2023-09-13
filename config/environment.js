@@ -84,7 +84,7 @@ module.exports = environment => {
     pageTitle: {
       separator: ' > ',
       prepend: false
-    },
+    }
   };
 
   if (environment === 'development') {

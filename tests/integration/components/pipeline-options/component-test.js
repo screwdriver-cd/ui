@@ -1,7 +1,7 @@
 import { click, fillIn, render, triggerKeyEvent } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { reject, resolve } from 'rsvp';
-
+import $ from 'jquery';
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import Pretender from 'pretender';
@@ -639,13 +639,13 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert.dom('section.danger h4').hasText('Delete this pipeline');
 
     await click('section.danger a');
-    
+
     assert.dom('.modal-dialog').exists();
     assert.dom('.modal-dialog h4').hasText('Are you absolutely sure?');
-    //starts with button disabled
+    // starts with button disabled
     assert.dom('.modal-footer .delete-pipeline-btn').isDisabled();
 
-    //cancel button closes the modal
+    // cancel button closes the modal
     await click('.modal-footer .delete-pipeline-cancel');
     assert.dom('.modal-dialog').doesNotExist();
 
@@ -654,7 +654,7 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert.dom('.modal-dialog h4').hasText('Are you absolutely sure?');
 
     await fillIn('.modal-body input', 'screwdriver');
-    //wrong pipeline name button is still disabled
+    // wrong pipeline name button is still disabled
     assert.dom('.modal-footer .delete-pipeline-btn').isDisabled();
 
     await click('.modal-footer .delete-pipeline-cancel');
