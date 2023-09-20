@@ -30,7 +30,7 @@
       {{/if}}
       {{#if (and this.event.isRunning (not-eq this.event.status "UNKNOWN"))}}
         <BsButton
-          @onClick={{action this.stopEvent this.event.id}}
+          @onClick={{action this.stopEvent this.event}}
           class="stopButton"
           @title="Stop all builds for this event"
         >
