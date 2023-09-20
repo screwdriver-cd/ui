@@ -623,7 +623,7 @@ export default Component.extend(ModelReloaderMixin, {
       }
 
       try {
-        return await this.stop.stopBuilds(stopEventId);
+        await this.stop.stopBuilds(stopEventId);
       } catch (e) {
         this.set(
           'errorMessage',
