@@ -6,6 +6,7 @@ const getIcon = status => {
     case 'running':
       return 'refresh fa-spin';
     case 'success':
+    case 'warning':
       return 'check-circle';
     case 'failure':
       return 'times-circle';
@@ -37,6 +38,8 @@ const getColor = status => {
       return 'build-running';
     case 'unstable':
       return 'build-unstable';
+    case 'warning':
+      return 'build-warning';
     case 'frozen':
       return 'build-frozen';
     default:
@@ -100,13 +103,38 @@ const formatMetrics = metrics => {
     .toString()
     .padStart(2, '0');
 
-  const eventsInfo = metrics.map(event => ({
-    duration: event.duration || 0,
-    statusColor: getColor(event.status.toLowerCase())
-  }));
+  const eventsInfo = metrics.map(event => {
+    let eventStatus = event.status.toLowerCase();
+
+    // only overwrite success event with warning
+    if (event && event.builds && eventStatus === 'success') {
+      event.builds.forEach(build => {
+        if (build.meta && build.meta.build && build.meta.build.warning) {
+          eventStatus = 'warning';
+        }
+      });
+    }
+
+    return {
+      duration: event.duration || 0,
+      statusColor: getColor(eventStatus)
+    };
+  });
+
+  let lastEventStatus = lastEvent.status.toLowerCase();
+
+  // only overwrite success event with warning
+  if (lastEvent && lastEvent.builds && lastEventStatus === 'success') {
+    lastEvent.builds.forEach(build => {
+      if (build.meta && build.meta.build && build.meta.build.warning) {
+        lastEventStatus = 'warning';
+      }
+    });
+  }
+
   const lastEventInfo = {
     startTime: `${lastEventStartMonth}/${lastEventStartDay}/${lastEventStartYear}`,
-    statusColor: getColor(lastEvent.status.toLowerCase()),
+    statusColor: getColor(lastEventStatus),
     status: lastEvent.status.toLowerCase(),
     durationText: lastEvent.duration ? formatTime(lastEvent.duration) : '--',
     sha: getSha(lastEvent.sha),

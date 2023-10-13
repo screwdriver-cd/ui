@@ -62,7 +62,12 @@ export default Component.extend({
         // set warning status if has warning
         if (builds.length) {
           builds.forEach(build => {
-            if (build.meta && build.meta.build && build.meta.build.warning) {
+            if (
+              build.meta &&
+              build.meta.build &&
+              build.meta.build.warning &&
+              build.status === 'SUCCESS'
+            ) {
               build.status = 'WARNING';
             }
           });

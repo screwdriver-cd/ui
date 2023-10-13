@@ -218,4 +218,49 @@ module('Integration | Component | pipeline workflow', function (hooks) {
     assert.dom('.latest-commit').doesNotExist();
     assert.dom('.fa-exclamation-triangle').exists({ count: 1 });
   });
+
+  test('it renders with warning build', async function (assert) {
+    const graphMock = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'main', status: 'SUCCESS' },
+        { name: 'batman', status: 'WARNING' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'batman' }
+      ]
+    };
+
+    const jobsMock = [
+      { id: 1, name: 'main' },
+      { id: 2, name: 'batman' }
+    ];
+
+    this.set(
+      'obj',
+      EmberObject.create({
+        builds: [],
+        workflowGraph: graphMock,
+        startFrom: '~commit',
+        causeMessage: 'test'
+      })
+    );
+    this.set('workflowGraph', graphMock);
+    this.set('jobs', jobsMock);
+    await render(
+      hbs`<PipelineWorkflow @selectedEventObj={{this.obj}} @workflowGraph={{this.workflowGraph}} @jobs={{this.jobs}} @showPRJobs={{true}} />`
+    );
+
+    assert.dom('.graph-node').exists({ count: 4 });
+    assert.dom('.workflow-tooltip').exists({ count: 1 });
+    assert.dom('.pipelineWorkflow g:nth-of-type(1)').hasClass('graph-node');
+    assert
+      .dom('.pipelineWorkflow g:nth-of-type(2)')
+      .hasClass('build-started_from');
+    assert.dom('.pipelineWorkflow g:nth-of-type(3)').hasClass('build-success');
+    assert.dom('.pipelineWorkflow g:nth-of-type(4)').hasClass('build-warning');
+  });
 });

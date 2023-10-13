@@ -173,4 +173,136 @@ module('Integration | Component | pipeline card', function (hooks) {
     assert.ok(deselectPipelineSpy.calledWith(mockPipeline.id));
     assert.equal($('.checkbox-container input').val(), 'false');
   });
+
+  test('it renders build with warning', async function (assert) {
+    assert.expect(6);
+    const normalBuilds = [
+      {
+        meta: {
+          build: {
+            buildId: 1
+          }
+        }
+      },
+      {
+        meta: {
+          build: {
+            buildId: 2
+          }
+        }
+      }
+    ];
+    const buildsWithWarning = [
+      {
+        meta: {
+          build: {
+            buildId: 1,
+            warning: true
+          }
+        }
+      },
+      {
+        meta: {
+          build: {
+            buildId: 2
+          }
+        }
+      }
+    ];
+    const mockMetrics = [
+      {
+        builds: buildsWithWarning,
+        id: 3,
+        createTime: '2020-10-06T17:57:53.388Z',
+        causeMessage: 'Manually started by klu909',
+        sha: '9af92ba134322',
+        commit: {
+          message: '3',
+          url: 'https://github.com/batman/foo/commit/9af92ba134322'
+        },
+        duration: 14,
+        status: 'SUCCESS'
+      },
+      {
+        builds: normalBuilds,
+        id: 2,
+        createTime: '2020-10-07T17:47:55.089Z',
+        sha: '9af9234ba134321',
+        commit: {
+          message: '2',
+          url: 'https://github.com/batman/foo/commit/9af92ba134321'
+        },
+        duration: 20,
+        status: 'SUCCESS'
+      },
+      {
+        builds: buildsWithWarning,
+        id: 3,
+        createTime: '2020-10-08T18:07:55.089Z',
+        sha: '9af92c4ba134321',
+        commit: {
+          message: '2',
+          url: 'https://github.com/batman/foo/commit/9af92ba134321'
+        },
+        duration: 30,
+        status: 'FAILURE'
+      },
+      {
+        builds: buildsWithWarning,
+        id: 4,
+        createTime: '2020-10-10T18:27:55.089Z',
+        sha: '9af92c11ba134321',
+        commit: {
+          message: '2',
+          url: 'https://github.com/batman/foo/commit/9af92ba134321'
+        },
+        duration: 50,
+        status: 'ABORTED'
+      }
+    ];
+    const mockPipelineWithMetrics = EmberObject.create({
+      id: 1,
+      scmRepo: {
+        branch: 'master',
+        name: 'screwdriver-cd/ui',
+        rootDir: '',
+        url: 'https://github.com/screwdriver-cd/ui/tree/master'
+      },
+      branch: 'master',
+      metrics: resolve(mockMetrics)
+    });
+
+    this.set('pipeline', mockPipelineWithMetrics);
+
+    await render(hbs`<PipelineCard
+        @pipeline={{this.pipeline}}
+        @isOrganizing={{this.isOrganizing}}
+        @isAuthenticated={{this.isAuthenticated}}
+        @selectPipeline={{this.selectPipeline}}
+        @deselectPipeline={{this.deselectPipeline}}
+      />
+    `);
+
+    // wait for svg to render
+    await waitFor('.pipeline-card .commit-status svg', {
+      count: 1,
+      timeout: Infinity
+    });
+
+    assert.dom('.commit-status svg').hasClass('build-warning');
+    assert.dom('.commit-status svg').hasClass('fa-check-circle');
+
+    assert
+      .dom('.events-thumbnail-wrapper rect:nth-of-type(1)')
+      .hasClass('build-failure');
+    assert
+      .dom('.events-thumbnail-wrapper rect:nth-of-type(2)')
+      .hasClass('build-failure');
+    assert
+      .dom('.events-thumbnail-wrapper rect:nth-of-type(3)')
+      .hasClass('build-success');
+    assert
+      .dom('.events-thumbnail-wrapper rect:nth-of-type(4)')
+      .hasClass('build-warning');
+  });
 });
