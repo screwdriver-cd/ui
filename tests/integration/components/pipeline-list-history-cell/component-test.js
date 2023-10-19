@@ -154,5 +154,27 @@ module(
       assert.dom('.tooltip').exists({ count: 1 });
       assert.dom('.tooltip').containsText('Build# 1 Start - 03/02/2023');
     });
+
+    test('it renders warning build', async function (assert) {
+      this.set('record', {
+        history: [
+          {
+            id: 2,
+            status: 'WARNING'
+          },
+          {
+            id: 1,
+            status: 'SUCCESS'
+          }
+        ]
+      });
+
+      await render(hbs`<PipelineListHistoryCell
+        @record={{this.record}}
+      />`);
+
+      assert.dom('.fa-circle').hasClass('WARNING');
+      assert.dom('.fa-circle').exists({ count: 2 });
+    });
   }
 );
