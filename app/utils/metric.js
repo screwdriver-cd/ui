@@ -109,7 +109,7 @@ const formatMetrics = metrics => {
     // only overwrite success event with warning
     if (event && event.builds && eventStatus === 'success') {
       event.builds.forEach(build => {
-        if (build.meta && build.meta.build && build.meta.build.warning) {
+        if (build?.meta?.build?.warning) {
           eventStatus = 'warning';
         }
       });
@@ -126,7 +126,7 @@ const formatMetrics = metrics => {
   // only overwrite success event with warning
   if (lastEvent && lastEvent.builds && lastEventStatus === 'success') {
     lastEvent.builds.forEach(build => {
-      if (build.meta && build.meta.build && build.meta.build.warning) {
+      if (build?.meta?.build?.warning) {
         lastEventStatus = 'warning';
       }
     });

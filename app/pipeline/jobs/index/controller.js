@@ -122,12 +122,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
           if (nextJobDetail.builds) {
             nextJobDetail.builds.forEach(build => {
-              if (
-                build.meta &&
-                build.meta.build &&
-                build.meta.build.warning &&
-                build.status === 'SUCCESS'
-              ) {
+              if (build?.meta?.build?.warning && build.status === 'SUCCESS') {
                 build.status = 'WARNING';
               }
             });
