@@ -711,4 +711,78 @@ module('Integration | Component | pipeline event row', function (hooks) {
     assert.dom('.last-successful').exists({ count: 1 });
     assert.dom('.latest-commit').exists({ count: 1 });
   });
+
+  test('it renders build with warning', async function (assert) {
+    assert.expect(15);
+    this.actions.eventClick = () => {
+      assert.ok(true);
+    };
+
+    this.set('stopPRBuilds', Function.prototype);
+    this.set('stopEvent', Function.prototype);
+
+    const eventMock = EmberObject.create(
+      assign(copy(event, true), {
+        builds: [
+          { jobId: 1, id: 4, status: 'SUCCESS' },
+          {
+            jobId: 2,
+            id: 5,
+            status: 'SUCCESS',
+            meta: {
+              build: {
+                buildId: 1,
+                warning: true
+              }
+            }
+          },
+          {
+            jobId: 3,
+            id: 6,
+            status: 'FAILURE',
+            meta: {
+              build: {
+                buildId: 1,
+                warning: true
+              }
+            }
+          }
+        ]
+      })
+    );
+
+    this.set('event', eventMock);
+    this.set('latestCommit', {
+      sha: 'sha3'
+    });
+
+    await render(hbs`<PipelineEventRow
+      @event={{this.event}}
+      @startPRBuild={{this.startPRBuild}}
+      @stopEvent={{this.stopEvent}}
+      @selectedEvent={{3}}
+      @latestCommit={{this.latestCommit}}
+      @lastSuccessful={{3}}
+    />`);
+
+    assert.dom('.SUCCESS').exists({ count: 1 });
+    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.commit').hasText('#abc123 Last successful');
+    assert.dom('.message').hasText('this was a test');
+    assert.dom('svg').exists({ count: 2 });
+    assert.dom('.graph-node').exists({ count: 4 });
+    assert.dom('.graph-edge').exists({ count: 3 });
+    assert.dom('.by').hasText('Started and committed by: batman');
+    assert
+      .dom('.date')
+      .hasText(
+        `Started ${toCustomLocaleString(new Date('06/30/2021, 04:39 PM'))}`
+      );
+    assert.dom('.last-successful').exists({ count: 1 });
+    assert.dom('.latest-commit').exists({ count: 1 });
+    assert.dom('.workflow g:nth-of-type(1)').hasClass('build-started_from');
+    assert.dom('.workflow g:nth-of-type(2)').hasClass('build-success');
+    assert.dom('.workflow g:nth-of-type(3)').hasClass('build-warning');
+    assert.dom('.workflow g:nth-of-type(4)').hasClass('build-failure');
+  });
 });
