@@ -400,5 +400,20 @@ export default Service.extend({
     const templateDetails = await this.fetchFromApi(method, url);
 
     return templateDetails;
+  },
+
+  async updateSonarBadge(pipelineId, name = '', uri = '') {
+    const method = 'put';
+    const url = `/pipelines/${pipelineId}`;
+
+    const badges = {
+      sonar: {
+        name,
+        uri
+      }
+    };
+    const data = { badges };
+
+    return this.fetchFromApi(method, url, data);
   }
 });

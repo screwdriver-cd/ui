@@ -173,18 +173,23 @@ export default Component.extend({
     }
   },
 
-  async updatePipelineAlias(aliasName) {
-    const { pipeline } = this;
+  sonar: {
+    name: '',
+    uri: ''
+  },
+
+  async updatePipelineSonarBadge() {
+    const { pipeline, sonar } = this;
+    const { name, uri } = sonar;
 
     try {
-      await this.shuttle.updatePipelineSettings(pipeline.id, {
-        aliasName
-      });
-      this.set('successMessage', 'Pipeline alias updated successfully');
+      await this.shuttle.updateSonarBadge(pipeline.id, name, uri);
+
+      this.set('successMessage', 'Pipeline Sonar Badge updated successfully');
     } catch (error) {
       this.set('errorMessage', error);
     } finally {
-      this.set('aliasName', aliasName);
+      this.set('sonar', { name, uri });
     }
   },
 
@@ -304,8 +309,14 @@ export default Component.extend({
 
       this.updatePipelineAlias(aliasName);
     },
+    async updatePipelineSonarBadge() {
+      this.updatePipelineSonarBadge();
+    },
     async resetPipelineAlias() {
       this.set('aliasName', '');
+    },
+    async resetPipelineSonarBadge() {
+      this.set('sonar', { name: '', uri: '' });
     },
     async resetMetricsDowntimeJobs() {
       this.set('metricsDowntimeJobs', []);

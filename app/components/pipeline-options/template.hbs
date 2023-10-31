@@ -56,6 +56,47 @@
           <li>
             <div class="row">
               <div class="col-12">
+                <h4>Badges</h4>
+                <p>
+                  Customize your own sonar badge dashboard and link
+                </p>
+              </div>
+              <div class="col-8">
+                <input
+                  type="text"
+                  class="pipeline-badge-name col-12"
+                  placeholder="Sonar badge name"
+                  value={{this.sonar.name}}
+                  oninput={{action (mut this.sonar.name) value="target.value"}}
+                />
+              </div>
+              <div class="col-8">
+                <input
+                  type="text"
+                  class="pipeline-badge-uri col-12"
+                  placeholder="Sonar badge uri"
+                  value={{this.sonar.uri}}
+                  oninput={{action (mut this.sonar.uri) value="target.value"}}
+                />
+              </div>
+              <div class="col-4 right">
+                <button class="reset-button" {{action "resetPipelineSonarBadge"}}>
+                  <FaIcon @icon="sync" />
+                  Reset
+                </button>
+                <button
+                  class="blue-button-alias"
+                  {{action "updatePipelineSonarBadge"}}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <div class="row">
+              <div class="col-12">
                 <h4>
                   Pipeline alias
                 </h4>
