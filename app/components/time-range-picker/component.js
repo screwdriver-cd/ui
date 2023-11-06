@@ -20,6 +20,8 @@ export default Component.extend({
   // flatpickr addon seems to prefer dates in string
   customRange: computed('startTime', 'endTime', {
     get() {
+      if (!this.get('startTime')) return null;
+
       return ['startTime', 'endTime'].map(t =>
         toCustomLocaleString(new Date(this.get(t)), {
           options: {

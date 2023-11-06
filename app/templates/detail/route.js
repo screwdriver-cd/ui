@@ -1,7 +1,6 @@
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
-import timeRange from 'screwdriver-ui/utils/time-range';
 
 export default Route.extend({
   router: service(),
@@ -15,11 +14,6 @@ export default Route.extend({
   fetchFiltered: false,
   init() {
     this._super(...arguments);
-    const { startTime, endTime } = timeRange(new Date(), '1yr');
-
-    // these are used for querying, so they are in ISO8601 format
-    this.set('startTime', startTime);
-    this.set('endTime', endTime);
 
     this.set('fetchAll', true);
     this.set('fetchFiltered', false);
@@ -33,6 +27,15 @@ export default Route.extend({
 
     const { startTime, endTime, fetchAll, fetchFiltered } = this;
 
+    let query = {};
+
+    if (startTime) {
+      query = {
+        startTime,
+        endTime
+      };
+    }
+
     return RSVP.all([
       fetchAll
         ? this.template.getOneTemplateWithMetrics(
@@ -42,10 +45,7 @@ export default Route.extend({
       fetchAll || fetchFiltered
         ? this.template.getOneTemplateWithMetrics(
             `${params.namespace}/${params.name}`,
-            {
-              startTime,
-              endTime
-            }
+            query
           )
         : RSVP.resolve(this.templateDataFiltered),
       fetchAll
