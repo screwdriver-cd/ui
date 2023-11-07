@@ -43,6 +43,7 @@ export default Component.extend({
   user: null,
   jobId: null,
   metricsDowntimeJobs: [],
+  sonar: { name: '', uri: '' },
   displayDowntimeJobs: DOWNTIME_JOBS,
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
@@ -112,6 +113,7 @@ export default Component.extend({
     );
 
     const aliasName = this.get('pipeline.settings.aliasName');
+    const sonar = this.get('pipeline.badges.sonar');
 
     if (typeof privateRepo !== 'boolean') {
       privateRepo = false;
@@ -144,7 +146,8 @@ export default Component.extend({
       showEventTriggers,
       filterEventsForNoBuilds,
       filterSchedulerEvents,
-      aliasName
+      aliasName,
+      sonar
     });
 
     let showPRJobs = true;
@@ -173,9 +176,19 @@ export default Component.extend({
     }
   },
 
-  sonar: {
-    name: '',
-    uri: ''
+  async updatePipelineAlias(aliasName) {
+    const { pipeline } = this;
+
+    try {
+      await this.shuttle.updatePipelineSettings(pipeline.id, {
+        aliasName
+      });
+      this.set('successMessage', 'Pipeline alias updated successfully');
+    } catch (error) {
+      this.set('errorMessage', error);
+    } finally {
+      this.set('aliasName', aliasName);
+    }
   },
 
   async updatePipelineSonarBadge() {
@@ -303,17 +316,16 @@ export default Component.extend({
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     },
-
     async updatePipelineAlias() {
       const { aliasName } = this;
 
       this.updatePipelineAlias(aliasName);
     },
-    async updatePipelineSonarBadge() {
-      this.updatePipelineSonarBadge();
-    },
     async resetPipelineAlias() {
       this.set('aliasName', '');
+    },
+    async updatePipelineSonarBadge() {
+      this.updatePipelineSonarBadge();
     },
     async resetPipelineSonarBadge() {
       this.set('sonar', { name: '', uri: '' });
