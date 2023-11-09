@@ -33,28 +33,33 @@ export default Route.extend({
 
     const { startTime, endTime, fetchAll, fetchFiltered } = this;
 
+    let query = {};
+
+    if (startTime) {
+      query = {
+        startTime,
+        endTime
+      };
+    }
+
     return RSVP.all([
-      fetchAll
-        ? this.template.getOneTemplateWithMetrics(
-            `${params.namespace}/${params.name}`
-          )
-        : RSVP.resolve(this.templateData),
       fetchAll || fetchFiltered
         ? this.template.getOneTemplateWithMetrics(
             `${params.namespace}/${params.name}`,
-            {
-              startTime,
-              endTime
-            }
+            query
           )
         : RSVP.resolve(this.templateDataFiltered),
       fetchAll
         ? this.template.getTemplateTags(params.namespace, params.name)
         : this.templateTagData
     ]).then(arr => {
-      let [templateData, templateDataFiltered, templateTagData] = arr;
+      let [templateDataFiltered, templateTagData] = arr;
 
-      templateData = templateData.filter(t => t.namespace === params.namespace);
+      // templateData is a property for displaying aggregate values for 1 year in template-header.
+      // It should not be updated when the time range is changed.
+      const templateData = this.controller?.templates
+        ? this.controller.templates
+        : templateDataFiltered.filter(t => t.namespace === params.namespace);
 
       if (templateData.length === 0) {
         this.router.transitionTo('/404');
