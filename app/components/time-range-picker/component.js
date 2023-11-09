@@ -6,7 +6,7 @@ import timeRange, {
 
 export default Component.extend({
   classNames: ['chart-controls'],
-  selectedRange: null,
+  selectedRange: '1yr',
   timeRanges: [
     { alias: '6hr', value: '6hr' },
     { alias: '12hr', value: '12hr' },
