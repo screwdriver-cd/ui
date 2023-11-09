@@ -20,6 +20,7 @@ export default Route.extend({
     // these are used for querying, so they are in ISO8601 format
     this.set('startTime', startTime);
     this.set('endTime', endTime);
+
     this.set('fetchAll', true);
     this.set('fetchFiltered', false);
   },
