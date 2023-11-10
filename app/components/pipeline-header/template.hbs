@@ -17,10 +17,28 @@
     {{this.pipeline.appId}}
   </h1>
 </LinkTo>
-<a href={{branch-url-encode this.pipeline.hubUrl}} class="branch">
-  <FaIcon @icon="code-branch" @title="Source code" />
-  {{this.pipeline.branch}}
-</a>
+<span class="branch-move">
+  <a href={{branch-url-encode this.pipeline.hubUrl}} class="branch">
+    <FaIcon @icon="code-branch" @title="Source code" />
+    {{this.pipeline.branch}}
+  </a>
+  <BsDropdown as |dd|>
+    <dd.toggle>
+      <span class="caret caret-display"></span>
+    </dd.toggle>
+    <dd.menu class="commit-dropdown" as |ddm|>
+      {{#each (await this.sameRepoPipeline) as |pipe|}}
+        <ddm.item>
+          <li class="branch-item">
+            <a href={{pipe.url}}>
+              {{pipe.branchAndRootDir}}
+            </a>
+          </li>
+        </ddm.item>
+      {{/each}}
+    </dd.menu>
+  </BsDropdown>
+</span>
 <span class="scm">
   <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
   {{this.scmContext.scm}}

@@ -42,3 +42,19 @@ a.active {
   right: 25px;
   display: inline;
 }
+
+.branch-move {
+  padding-right: 6px;
+}
+
+.branch-item {
+  padding: 1px 0px;
+}
+
+.branch-item a:hover {
+  background-color: #d1edff;
+}
+
+.dropdown {
+  display:inline-block;
+}
