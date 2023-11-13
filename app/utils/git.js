@@ -7,7 +7,7 @@
 function parse(scmUrl) {
   const match = scmUrl.match(
     // eslint-disable-next-line no-irregular-whitespace
-    /^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@|org-\d+@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)(#([^:\s]|(　))+)?(:[^\s]+)?$/
+    /^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@|org-\d+@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)(#[^:　\s]*　[^:　\s]*|#[^:　\s]+)?(:[^:　\s]*　[^:　\s]*|:[^:　\s]+)?$/
   );
 
   if (!match) {
