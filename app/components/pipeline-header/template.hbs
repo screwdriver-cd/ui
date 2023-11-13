@@ -18,14 +18,14 @@
   </h1>
 </LinkTo>
 <span class="branch-move">
-  <a href={{branch-url-encode this.pipeline.hubUrl}} class="branch">
-    <FaIcon @icon="code-branch" @title="Source code" />
-    {{this.pipeline.branch}}
-  </a>
   <BsDropdown as |dd|>
     <dd.toggle>
+      <span class="branch">
+        <FaIcon @icon="code-branch" @title="Source code" />
+        {{this.pipeline.branch}}
+      </span>
       <span class="caret caret-display"></span>
-      <BsTooltip @placement="bottom" @renderInPlace={{true}} @triggerEvents="hover" class="tooltip">
+      <BsTooltip @placement="bottom" @renderInPlace={{false}} @triggerEvents="hover" class="tooltip">
         Move to a same repository Pipeline
       </BsTooltip>
     </dd.toggle>
@@ -46,10 +46,10 @@
     </dd.menu>
   </BsDropdown>
 </span>
-<span class="scm">
+<a href={{branch-url-encode this.pipeline.hubUrl}}  class="scm">
   <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
   {{this.scmContext.scm}}
-</span>
+</a>
 {{#if this.pipeline.configPipelineId}}
   <FaIcon @icon="cog" />
   <LinkTo @route="pipeline" @model={{this.pipeline.configPipelineId}}>
