@@ -25,16 +25,23 @@
   <BsDropdown as |dd|>
     <dd.toggle>
       <span class="caret caret-display"></span>
+      <BsTooltip @placement="bottom" @renderInPlace={{true}} @triggerEvents="hover" class="tooltip">
+        Move to a same repository Pipeline
+      </BsTooltip>
     </dd.toggle>
     <dd.menu class="branch-dropdown" as |ddm|>
       {{#each (await this.sameRepoPipeline) as |pipe|}}
         <ddm.item>
           <li class="branch-item">
             <a href={{pipe.url}}>
-              {{pipe.branchAndRootDir}}
+              {{svg-jar "link" class="img"}} {{pipe.branchAndRootDir}}
             </a>
           </li>
         </ddm.item>
+      {{else}}
+        <li class="branch-item">
+          No same repository Pipeline
+        </li>
       {{/each}}
     </dd.menu>
   </BsDropdown>
