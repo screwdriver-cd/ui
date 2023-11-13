@@ -5,9 +5,9 @@
  * @return {Object}         Data about the url
  */
 function parse(scmUrl) {
-  // eslint-disable-next-line max-len
   const match = scmUrl.match(
-    /^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@|org-\d+@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)(#[^:\s]+)?(:[^\s]+)?$/
+    // eslint-disable-next-line no-irregular-whitespace
+    /^(?:(?:https:\/\/(?:[^@/:\s]+@)?)|git@|org-\d+@)+([^/:\s]+)(?:\/|:)([^/:\s]+)\/([^\s]+?)(?:\.git)(#([^:\s]|(　))+)?(:[^\s]+)?$/
   );
 
   if (!match) {
