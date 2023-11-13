@@ -26,7 +26,7 @@
     <dd.toggle>
       <span class="caret caret-display"></span>
     </dd.toggle>
-    <dd.menu class="commit-dropdown" as |ddm|>
+    <dd.menu class="branch-dropdown" as |ddm|>
       {{#each (await this.sameRepoPipeline) as |pipe|}}
         <ddm.item>
           <li class="branch-item">
