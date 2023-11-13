@@ -22,13 +22,13 @@ module('Integration | Component | pipeline header', function (hooks) {
     await render(hbs`<PipelineHeader @pipeline={{this.pipelineMock}} />`);
 
     assert.dom('h1').hasText('batman/batmobile');
-    assert.dom('a.branch').hasText('Source code master');
-    assert
-      .dom('a.branch')
-      .hasAttribute('href', 'http://example.com/batman/batmobile');
+    assert.dom('span.branch').hasText('Source code master');
     assert.dom('a.dropdown-toggle').exists();
+    assert
+      .dom('a.scm')
+      .hasAttribute('href', 'http://example.com/batman/batmobile');
 
-    assert.dom('span.scm').hasText('github.com');
+    assert.dom('a.scm').hasText('github.com');
     assert.dom('.scm > .fa-github').exists({ count: 1 });
   });
 
