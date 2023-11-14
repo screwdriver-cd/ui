@@ -26,16 +26,22 @@ module('Unit | Utility | git', function () {
       branch: 'tree',
       valid: true
     });
+  });
+
+  test('it parses the checkout URL correctly with special characters', assert => {
+    let result = git.parse('!"#$%&\'()-=|@`{;+]},<.>/　🚗');
+
+    assert.notOk(result.valid);
 
     result = git.parse(
-      'git@github.com:bananas/peel.git#!"#$%&\'() -= | @`{;+]},<.>/　a'
+      'git@github.com:bananas/peel.git#!"#$%&\'()-=|@`{;+]},<.>/　🚗'
     );
 
     assert.deepEqual(result, {
       server: 'github.com',
       owner: 'bananas',
       repo: 'peel',
-      branch: '#!"#$%&\'() -= | @`{;+]},<.>/　a',
+      branch: '!"#$%&\'()-=|@`{;+]},<.>/　🚗',
       valid: true
     });
   });
@@ -52,12 +58,12 @@ module('Unit | Utility | git', function () {
   test('it generates the checkout URL correctly with special characters', assert => {
     const result = git.getCheckoutUrl({
       appId: 'bananas/peel',
-      scmUri: 'github.com:12345:!"#$%&\'() -= | @`{;+]},<.>/　a'
+      scmUri: 'github.com:12345:!"#$%&\'()-=|@`{;+]},<.>/　🚗'
     });
 
     assert.strictEqual(
       result,
-      'git@github.com:bananas/peel.git#!"#$%&\'() -= | @`{;+]},<.>/　a'
+      'git@github.com:bananas/peel.git#!"#$%&\'()-=|@`{;+]},<.>/　🚗'
     );
   });
 
@@ -71,7 +77,7 @@ module('Unit | Utility | git', function () {
 
   test('it parses the org checkout URL correctly with special characters', assert => {
     const orgGitUrl =
-      'org-1000@github.com:bananas/peel.git#!"#$%&\'() -= | @`{;+]},<.>/　a';
+      'org-1000@github.com:bananas/peel.git#!"#$%&\'()-=|@`{;+]},<.>/　🚗';
 
     const result = git.parse(orgGitUrl);
 
