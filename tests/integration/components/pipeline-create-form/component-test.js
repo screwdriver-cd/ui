@@ -112,8 +112,8 @@ module('Integration | Component | pipeline create form', function (hooks) {
 
     this.owner.register('service:session', sessionStub);
 
-    const scm = 'git@github.com:foo/bar.git#!"#$%&\'()-=|@`{;+]},<.>/　🚗';
-    const root = 'lib';
+    const scm = 'git@github.com:foo/bar.git#baz!"#$%&\'()-=|@`{;+]},<.>/　🚗';
+    const root = 'path/to/!"#$%&\'()-=|@`{;+]},<.>/　🚗';
 
     this.set('createPipeline', ({ scmUrl, rootDir }) => {
       assert.equal(scmUrl, scm);
