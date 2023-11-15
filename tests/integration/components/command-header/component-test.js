@@ -47,7 +47,8 @@ module('Integration | Component | command header', function (hooks) {
       hbs`<CommandHeader @command={{this.mock}} @trusted={{this.trusted}} @isAdmin={{this.isAdmin}} />`
     );
 
-    assert.dom('h1').hasText('foo/bar Source code Delete command');
+    assert.dom('.header .left-header h1').hasText('foo/bar Source code');
+    assert.dom('.header .right-header h1').hasText('Delete command');
     assert.dom('h2').hasText('1.0.0');
     assert.dom('p').hasText('A test example');
     assert.dom('ul li:first-child').hasText('Released by: test@example.com');

@@ -1,4 +1,16 @@
 & {
+  .header {
+    justify-content: space-between;
+    display: flex;
+
+    .danger {
+      color: $sd-failure;
+    }
+    .danger:hover {
+      text-decoration: none;
+    }
+  }
+
   .template-label {
     margin: 0 5px;
     padding: 3px 5px;
@@ -46,10 +58,13 @@
   }
 
   .trusted-toggle {
-    display: inline-flex;
+    display: inline-block;
+  }
+
+  .trusted-toggle-label {
+    display: flex;
     cursor: pointer;
     font-size: 0.5em;
-    float: right;
   }
 
   .link {

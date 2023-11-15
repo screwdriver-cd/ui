@@ -6,6 +6,18 @@
     list-style: none;
   }
 
+  .header {
+    justify-content: space-between;
+    display: flex;
+
+    .danger {
+      color: $sd-failure;
+    }
+    .danger:hover {
+      text-decoration: none;
+    }
+  }
+
   .back {
     float: right;
   }
@@ -18,10 +30,20 @@
   }
 
   .trusted-toggle {
-    display: inline-flex;
+    display: inline-block;
+  }
+
+  .trusted-toggle-label {
+    display: flex;
     cursor: pointer;
     font-size: 0.5em;
-    float: right;
+  }
+
+  .command-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
 
   .link {
