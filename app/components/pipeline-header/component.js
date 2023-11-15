@@ -5,6 +5,7 @@ import Component from '@ember/component';
 export default Component.extend({
   showCollectionModal: false,
   scmService: service('scm'),
+  pipelineService: service('pipeline'),
   classNameBindings: ['isBuildPage'],
   router: service(),
   addCollectionError: null,
@@ -23,6 +24,17 @@ export default Component.extend({
         scm: scm.displayName,
         scmIcon: scm.iconType
       };
+    }
+  }),
+  sameRepoPipeline: computed('pipeline', {
+    get() {
+      return this.pipelineService.getSiblingPipeline(this.pipeline.scmRepo.name).then(value =>
+        value.toArray().filter(pipe => pipe.id !== this.pipeline.id).map((pipe, i) => ({
+          index: i,
+          url: `/pipelines/${pipe.id}`,
+          branchAndRootDir: pipe.scmRepo.rootDir ? `${pipe.scmRepo.branch}:${pipe.scmRepo.rootDir}` : pipe.scmRepo.branch
+        }))
+      );
     }
   }),
   actions: {
