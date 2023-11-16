@@ -1,10 +1,22 @@
 <div class="header">
   <div class="left-header">
     <h1>
-      {{#if this.isTrusted}}
-        <span title="Trusted">
-          {{svg-jar "trusted" class="trusted"}}
-        </span>
+      {{#if this.isAdmin}}
+        {{#if this.isTrusted}}
+          <span title="Trusted" class="clickable" onclick={{action "updateTrust" this.command.namespace this.command.name false}}>
+            {{svg-jar "trusted" class="trusted"}}
+          </span>
+        {{else}}
+          <span title="Trusted" class="clickable" onclick={{action "updateTrust" this.command.namespace this.command.name true}} >
+            {{svg-jar "trusted" class="trusted distrusted"}}
+          </span>
+        {{/if}}
+      {{else}}
+        {{#if this.isTrusted}}
+          <span title="Trusted">
+            {{svg-jar "trusted" class="trusted"}}
+          </span>
+        {{/if}}
       {{/if}}
       <LinkTo
         @route="pipeline"
@@ -33,17 +45,6 @@
         <a href="#" class="danger link" {{action "setCommandToRemove" this.command}}>
           <FaIcon @icon="trash" @title="Delete command" />
         </a>
-        <div class="trusted-toggle">
-          <label class="trusted-toggle-label">
-            <XToggle
-              @size="medium"
-              @theme="light"
-              @value={{this.isTrusted}}
-              @onToggle={{action "updateTrust" this.command.namespace this.command.name}}
-            />
-            <div>Trust?</div>
-          </label>
-        </div>
       {{else}}
         {{#if this.scmUrl}}
           <a href="#" class="danger link" {{action "setCommandToRemove" this.command}}>

@@ -73,6 +73,6 @@ module('Integration | Component | template header', function (hooks) {
     this.set('isAdmin', true);
 
     assert.dom('svg').exists({ count: 3 });
-    assert.dom('.x-toggle-component').exists({ count: 1 });
+    assert.dom('.clickable .trusted').exists({ count: 1 });
   });
 });
