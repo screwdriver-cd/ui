@@ -2,15 +2,13 @@
   <div class="left-header">
     <h1>
       {{#if this.isAdmin}}
-        {{#if this.isTrusted}}
-          <span title="Trusted" class="clickable" onclick={{action "updateTrust" this.command.namespace this.command.name false}}>
+        <span title="Toggle command trusted" class="clickable" onclick={{action "showToggleTrustModal"}}>
+          {{#if this.isTrusted}}
             {{svg-jar "trusted" class="trusted"}}
-          </span>
-        {{else}}
-          <span title="Trusted" class="clickable" onclick={{action "updateTrust" this.command.namespace this.command.name true}} >
+          {{else}}
             {{svg-jar "trusted" class="trusted distrusted"}}
-          </span>
-        {{/if}}
+          {{/if}}
+        </span>
       {{else}}
         {{#if this.isTrusted}}
           <span title="Trusted">
@@ -130,4 +128,18 @@
       </modal.footer>
     </BsModal>
   {{/if}}
+{{/if}}
+{{#if this.showToggleTrustModal}}
+  <BsModalSimple
+    @title="Confirm command trusted"
+    @closeTitle="Cancel"
+    @submitTitle="Confirm"
+    @submitButtonType="primary"
+    @size={{null}}
+    @fade={{true}}
+    @onSubmit={{action "updateTrust" this.command.namespace this.command.name (not this.isTrusted)}}
+    @onHide={{action "cancelToggleTrustModal"}}
+  >
+    Set {{this.command.namespace}}/{{this.command.name}} command to {{if this.isTrusted "Distrusted" "Trusted"}}.
+  </BsModalSimple>
 {{/if}}

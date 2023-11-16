@@ -6,6 +6,7 @@ export default Component.extend({
   commandToRemove: null,
   scmUrl: null,
   isRemoving: false,
+  showToggleTrustModal: false,
   store: service(),
   isTrusted: null,
   isLatestVersion: alias('command.latest'),
@@ -36,9 +37,16 @@ export default Component.extend({
         this.set('isRemoving', false);
       });
     },
+    showToggleTrustModal() {
+      this.set('showToggleTrustModal', true);
+    },
+    cancelToggleTrustModal() {
+      this.set('showToggleTrustModal', false);
+    },
     updateTrust(namespace, name, toTrust) {
-      this.set('isTrusted', toTrust);
       this.onUpdateTrust(namespace, name, toTrust);
+      this.set('isTrusted', toTrust);
+      this.set('showToggleTrustModal', false);
     }
   }
 });
