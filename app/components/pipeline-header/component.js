@@ -28,8 +28,12 @@ export default Component.extend({
   }),
   sameRepoPipeline: computed('pipeline', {
     get() {
+      const [scm, repositoryId] = this.pipeline.scmUri.split(':');
       return this.pipelineService.getSiblingPipeline(this.pipeline.scmRepo.name).then(value =>
-        value.toArray().filter(pipe => pipe.id !== this.pipeline.id && this.pipeline.scmUri.substring(0, this.pipeline.scmUri.lastIndexOf(':')) === pipe.scmUri.substring(0, pipe.scmUri.lastIndexOf(':'))).map((pipe, i) => ({
+        value.toArray().filter(pipe => {
+          const [s, r] = pipe.scmUri.split(':');
+          return pipe.id !== this.pipeline.id && scm === s && repositoryId === r;
+        }).map((pipe, i) => ({
           index: i,
           url: `/pipelines/${pipe.id}`,
           branchAndRootDir: pipe.scmRepo.rootDir ? `${pipe.scmRepo.branch}:${pipe.scmRepo.rootDir}` : pipe.scmRepo.branch

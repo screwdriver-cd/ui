@@ -68,7 +68,7 @@ module('Integration | Component | pipeline header', function (hooks) {
           branch: 'develop',
           rootDir: 'src'
         },
-        scmUri: 'github.com:123456:develop',
+        scmUri: 'github.com:123456:develop:src',
       },
       {
         id: 4,
