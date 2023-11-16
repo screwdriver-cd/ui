@@ -40,6 +40,7 @@ module('Integration | Component | pipeline header', function (hooks) {
       hubUrl: 'http://example.com/batman/batmobile',
       branch: 'master',
       scmContext: 'github:github.com',
+      scmUri: 'github.com:123456:master',
       scmRepo: {
         name: 'batman/batmobile',
         branch: 'master'
@@ -51,20 +52,30 @@ module('Integration | Component | pipeline header', function (hooks) {
         id: 1,
         scmRepo: {
           branch: 'master'
-        }
+        },
+        scmUri: 'github.com:123456:master',
       },
       {
         id: 2,
         scmRepo: {
           branch: 'develop'
-        }
+        },
+        scmUri: 'github.com:123456:develop',
       },
       {
         id: 3,
         scmRepo: {
           branch: 'develop',
           rootDir: 'src'
-        }
+        },
+        scmUri: 'github.com:123456:develop',
+      },
+      {
+        id: 4,
+        scmRepo: {
+          branch: 'develop'
+        },
+        scmUri: 'github.com:654321:develop',
       }
     ];
 
