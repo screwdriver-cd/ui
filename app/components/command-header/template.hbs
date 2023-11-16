@@ -41,23 +41,17 @@
   </div>
   <div class="right-header">
     <h1>
-      {{#if this.isAdmin}}
+      {{#if (or this.isAdmin this.scmUrl)}}
         <a href="#" class="danger link" {{action "setCommandToRemove" this.command}}>
           <FaIcon @icon="trash" @title="Delete command" />
         </a>
       {{else}}
-        {{#if this.scmUrl}}
-          <a href="#" class="danger link" {{action "setCommandToRemove" this.command}}>
-            <FaIcon @icon="trash" @title="Delete command" />
-          </a>
-        {{else}}
-          <span title="Cannot delete command; pipeline could not be found.">
-            <FaIcon
-              @icon="trash"
-              class="danger link disabled"
-            />
-          </span>
-        {{/if}}
+        <span title="Cannot delete command; pipeline could not be found.">
+          <FaIcon
+            @icon="trash"
+            class="danger link disabled"
+          />
+        </span>
       {{/if}}
     </h1>
   </div>
