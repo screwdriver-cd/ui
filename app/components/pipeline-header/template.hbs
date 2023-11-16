@@ -17,14 +17,39 @@
     {{this.pipeline.appId}}
   </h1>
 </LinkTo>
-<a href={{branch-url-encode this.pipeline.hubUrl}} class="branch">
-  <FaIcon @icon="code-branch" @title="Source code" />
-  {{this.pipeline.branch}}
-</a>
-<span class="scm">
+<span class="branch-move">
+  <BsDropdown as |dd|>
+    <dd.toggle>
+      <span class="branch">
+        <FaIcon @icon="code-branch" @title="Source code" />
+        {{this.pipeline.branch}}
+      </span>
+      <span class="caret caret-display"></span>
+      <BsTooltip @placement="bottom" @renderInPlace={{false}} @triggerEvents="hover" class="tooltip">
+        Switch to another Pipeline with the same repository
+      </BsTooltip>
+    </dd.toggle>
+    <dd.menu class="branch-dropdown" as |ddm|>
+      {{#each (await this.sameRepoPipeline) as |pipe|}}
+        <ddm.item>
+          <li class="branch-item">
+            <a href={{pipe.url}}>
+              {{svg-jar "link" class="img"}} {{pipe.branchAndRootDir}}
+            </a>
+          </li>
+        </ddm.item>
+      {{else}}
+        <li class="branch-item">
+          No other Pipelines with the same repository
+        </li>
+      {{/each}}
+    </dd.menu>
+  </BsDropdown>
+</span>
+<a href={{branch-url-encode this.pipeline.hubUrl}}  class="scm">
   <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
   {{this.scmContext.scm}}
-</span>
+</a>
 {{#if this.pipeline.configPipelineId}}
   <FaIcon @icon="cog" />
   <LinkTo @route="pipeline" @model={{this.pipeline.configPipelineId}}>
