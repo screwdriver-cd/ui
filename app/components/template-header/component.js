@@ -5,6 +5,7 @@ export default Component.extend({
   templateToRemove: null,
   scmUrl: null,
   isRemoving: false,
+  showToggleTrustModal: false,
   store: service(),
   isTrusted: null,
   init() {
@@ -35,9 +36,16 @@ export default Component.extend({
         this.set('isRemoving', false);
       });
     },
+    showToggleTrustModal() {
+      this.set('showToggleTrustModal', true);
+    },
+    cancelToggleTrustModal() {
+      this.set('showToggleTrustModal', false);
+    },
     updateTrust(fullName, toTrust) {
-      this.set('isTrusted', toTrust);
       this.onUpdateTrust(fullName, toTrust);
+      this.set('isTrusted', toTrust);
+      this.set('showToggleTrustModal', false);
     }
   }
 });
