@@ -16,12 +16,18 @@ export default Route.extend({
       all([
         this.store.findRecord('job', build.get('jobId')),
         this.store.findRecord('event', build.get('eventId'))
-      ]).then(([job, event]) => ({
-        build,
-        job,
-        event,
-        pipeline: this.pipeline
-      }))
+      ]).then(([job, event]) => {
+        if (build?.meta?.build?.warning && build.status === 'SUCCESS') {
+          build.status = 'WARNING';
+        }
+
+        return {
+          build,
+          job,
+          event,
+          pipeline: this.pipeline
+        };
+      })
     );
   },
 
