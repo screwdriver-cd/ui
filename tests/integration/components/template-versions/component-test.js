@@ -189,10 +189,10 @@ module('Integration | Component | template versions', function (hooks) {
         'You\'re about to delete the version "1.0.0". This action cannot be undone. Are you sure?'
       );
     assert
-      .dom('.modal-dialog .modal-content .modal-footer button.btn-primary')
+      .dom('.modal-dialog .modal-content .modal-footer button.btn-danger')
       .hasText('Confirm');
     await click(
-      '.modal-dialog .modal-content .modal-footer button.btn-primary'
+      '.modal-dialog .modal-content .modal-footer button.btn-danger'
     );
   });
 });

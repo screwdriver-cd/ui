@@ -56,7 +56,8 @@ module('Integration | Component | template header', function (hooks) {
       hbs`<TemplateHeader @template={{this.mock}} @trusted={{this.trusted}} @isAdmin={{this.isAdmin}} />`
     );
 
-    assert.dom('h1').hasText('foo/bar Source code Delete template');
+    assert.dom('.header .left-header h1').hasText('foo/bar Source code');
+    assert.dom('.header .right-header h1').hasText('Delete template');
     assert.dom('h2').hasText('2.0.0');
     assert.dom('p').hasText('A test example');
     assert.dom('#template-namespace').hasText('Namespace: foo');
@@ -72,6 +73,6 @@ module('Integration | Component | template header', function (hooks) {
     this.set('isAdmin', true);
 
     assert.dom('svg').exists({ count: 3 });
-    assert.dom('.x-toggle-component').exists({ count: 1 });
+    assert.dom('.clickable .trusted').exists({ count: 1 });
   });
 });
