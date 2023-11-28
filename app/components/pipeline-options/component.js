@@ -43,7 +43,7 @@ export default Component.extend({
   user: null,
   jobId: null,
   metricsDowntimeJobs: [],
-  sonar: { name: '', uri: '' },
+  sonar: { name: '', uri: '', defaultUri: '', defaultName: '' },
   displayDowntimeJobs: DOWNTIME_JOBS,
   showEventTriggers: false,
   filterEventsForNoBuilds: false,
