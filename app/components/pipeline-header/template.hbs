@@ -58,7 +58,7 @@
 {{/if}}
 
 {{#if this.pipeline.badges.sonar}}
-  <a href={{sonarBadgeUri}} tooltip={{sonarBadgeName}} target="_blank" rel="noopener">{{svg-jar "sonarqube" class="img"}}</a>
+  <a href={{this.sonarBadgeUri}} tooltip={{this.sonarBadgeName}} target="_blank" rel="noopener">{{svg-jar "sonarqube" class="img"}}</a>
 {{/if}}
 
 <CollectionDropdown
