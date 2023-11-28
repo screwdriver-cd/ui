@@ -348,6 +348,15 @@ export default Component.extend({
           return 'graph-label';
         })
         .attr('font-size', `${TITLE_SIZE}px`)
+        .each(function () {
+          const text = d3.select(this);
+          const textWidth = text.node().getBBox().width;
+          const maxWidth = X_WIDTH - EDGE_GAP / 2;
+          if (textWidth > maxWidth) {
+            const fontSize = TITLE_SIZE * maxWidth / textWidth; // calculate the new font-size based on the maximum width
+            text.style("font-size", fontSize + "px");
+          }
+        })
         .style('text-anchor', 'middle')
         .attr('x', d => calcXCenter(d.pos.x))
         .attr(
