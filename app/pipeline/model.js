@@ -37,7 +37,12 @@ export default Model.extend({
   badges: attr({
     defaultValue() {
       return {
-        sonar: {}
+        sonar: {
+          name: '',
+          defaultName: '',
+          uri: '',
+          defaultUri: ''
+        }
       };
     }
   }),

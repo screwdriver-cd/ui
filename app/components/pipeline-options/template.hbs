@@ -62,21 +62,19 @@
                 </p>
               </div>
               <div class="col-8">
-                <input
-                  type="text"
+                <Input 
                   class="pipeline-badge-name col-12"
                   placeholder="Sonar badge name"
-                  value={{this.sonar.name}}
-                  oninput={{action (mut this.sonar.name) value="target.value"}}
+                  @type="text"
+                  @value={{this.sonarName}}
                 />
               </div>
               <div class="col-8">
-                <input
-                  type="text"
+                <Input 
                   class="pipeline-badge-uri col-12"
                   placeholder="Sonar badge uri"
-                  value={{this.sonar.uri}}
-                  oninput={{action (mut this.sonar.uri) value="target.value"}}
+                  @type="text"
+                  @value={{this.sonarUri}}
                 />
               </div>
               <div class="col-4 right">
@@ -84,7 +82,7 @@
                   <FaIcon @icon="sync" />
                   Reset
                 </button>
-                <button
+                <button type="submit"
                   class="blue-button-alias"
                   {{action "updatePipelineSonarBadge"}}
                 >

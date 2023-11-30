@@ -412,6 +412,7 @@ export default Service.extend({
         uri
       }
     };
+
     const data = { badges };
 
     return this.fetchFromApi(method, url, data);
