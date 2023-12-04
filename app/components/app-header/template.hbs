@@ -3,7 +3,7 @@
     <LinkTo @route="home" class="logo navbar-brand" title="Screwdriver Home">
       {{svg-jar "Screwdriver_Logo_FullWhite" class="img"}}
     </LinkTo>
-   <navbar.toggle/>
+    <navbar.toggle/>
   </div>
   <navbar.content>
     <navbar.nav class="mr-auto" as |nav|>
@@ -100,6 +100,7 @@
                 href={{this.docUrl}}
                 class="dropdown-item icon docs"
                 title="Documentation and Contact"
+                target="_blank"
               >
                 {{svg-jar "file-text" class="img"}}
                 <span>
@@ -117,19 +118,19 @@
             </ddm.item>
             {{ddm.divider}}
             <ddm.item>
-              <a href="http://blog.screwdriver.cd" class="icon blog dropdown-item">
+              <a href="http://blog.screwdriver.cd" target="_blank" class="icon blog dropdown-item">
                 {{svg-jar "tumblr" class="img"}}
                   Blog
               </a>
             </ddm.item>
             <ddm.item>
-              <a href={{this.slackUrl}} class="icon community dropdown-item">
+              <a href={{this.slackUrl}} target="_blank" class="icon community dropdown-item">
                 {{svg-jar "slack" class="img"}}
                   Slack Workspace
               </a>
             </ddm.item>
             <ddm.item>
-              <a href="https://github.com/screwdriver-cd" class="icon github dropdown-item">
+              <a href="https://github.com/screwdriver-cd" target="_blank" class="icon github dropdown-item">
                 {{svg-jar "github" class="img"}}
                   GitHub
               </a>
