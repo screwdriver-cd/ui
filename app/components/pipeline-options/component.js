@@ -114,8 +114,8 @@ export default Component.extend({
 
     const aliasName = this.get('pipeline.settings.aliasName');
     const sonar = this.get('pipeline.badges.sonar');
-    const sonarName = sonar?.name ?? sonar.defaultName;
-    const sonarUri = sonar?.uri ?? sonar.defaultUri;
+    const sonarName = sonar?.name ?? sonar?.defaultName;
+    const sonarUri = sonar?.uri ?? sonar?.defaultUri;
 
     if (typeof privateRepo !== 'boolean') {
       privateRepo = false;
