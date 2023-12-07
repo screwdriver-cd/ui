@@ -69,6 +69,24 @@
       {{this.command.maintainer}}
     </a>
   </li>
+  {{#if this.command.compatibilities}}
+    {{#if this.command.compatibilities.clouds.length}}
+    <li>
+      Supported Clouds: 
+      {{#each this.command.compatibilities.clouds as |cloud|}}
+        <span>{{cloud}}</span>
+      {{/each}}
+    </li>
+    {{/if}}
+    {{#if this.command.compatibilities.architectures.length}}
+    <li>
+      Supported Arches:
+      {{#each this.command.compatibilities.architectures as |arch|}}
+        <span>{{arch}}</span>
+      {{/each}}
+    </li>
+    {{/if}}
+  {{/if}}
   {{#if this.command.lastUpdated}}
     <li>
       Last published: {{this.command.lastUpdated}}

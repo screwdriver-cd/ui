@@ -101,14 +101,11 @@
     </div>
     <div class="template-details--value">
       {{#each this.template.compatibilities.clouds as |cloud|}}
-        <span class="template-label">
-          {{cloud}}
-        </span>
+        <span>{{cloud}}</span>
       {{/each}}
     </div>
   </div>
   {{/if}}
-
   {{#if this.template.compatibilities.architectures.length}}
   <div class="template-details--item" id="template-compatibilities">
     <div class="template-details--label">
@@ -116,9 +113,7 @@
     </div>
     <div class="template-details--value">
       {{#each this.template.compatibilities.architectures as |arch|}}
-        <span class="template-label">
-          {{arch}}
-        </span>
+        <span>{{arch}}</span>
       {{/each}}
     </div>
   </div>
