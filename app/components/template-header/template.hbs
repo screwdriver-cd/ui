@@ -93,6 +93,33 @@
     </a>
   </div>
 </div>
+{{#if this.template.compatibilities}}
+  {{#if this.template.compatibilities.clouds.length}}
+  <div class="template-details--item" id="template-compatibilities">
+    <div class="template-details--label">
+      Supported Clouds:
+    </div>
+    <div class="template-details--value">
+      {{#each this.template.compatibilities.clouds as |cloud|}}
+        <span>{{cloud}}</span>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+  {{#if this.template.compatibilities.architectures.length}}
+  <div class="template-details--item" id="template-compatibilities">
+    <div class="template-details--label">
+      Supported Arches:
+    </div>
+    <div class="template-details--value">
+      {{#each this.template.compatibilities.architectures as |arch|}}
+        <span>{{arch}}</span>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+{{/if}}
+
 {{#if this.template.labels.length}}
   <div class="template-details--item" id="template-tags">
     <div class="template-details--label">
