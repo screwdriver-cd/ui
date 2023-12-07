@@ -58,25 +58,41 @@ module('Integration | Component | pipeline header', function (hooks) {
       {
         id: 2,
         scmRepo: {
-          branch: 'develop'
+          branch: 'efg'
         },
-        scmUri: 'github.com:123456:develop',
+        scmUri: 'github.com:123456:efg',
       },
       {
         id: 3,
         scmRepo: {
-          branch: 'develop',
+          branch: 'efg',
           rootDir: 'src'
         },
-        scmUri: 'github.com:123456:develop:src',
+        scmUri: 'github.com:123456:efg:src',
       },
       {
         id: 4,
         scmRepo: {
-          branch: 'develop'
+          branch: 'abc',
+          rootDir: 'zzz'
         },
-        scmUri: 'github.com:654321:develop',
-      }
+        scmUri: 'github.com:123456:abc:zzz',
+      },
+      {
+        id: 5,
+        scmRepo: {
+          branch: 'abc',
+          rootDir: 'aaa'
+        },
+        scmUri: 'github.com:123456:abc:aaa',
+      },
+      {
+        id: 6,
+        scmRepo: {
+          branch: 'abc'
+        },
+        scmUri: 'github.com:654321:abc',
+      },
     ];
 
     const pipelineStub = Service.extend({
@@ -95,7 +111,11 @@ module('Integration | Component | pipeline header', function (hooks) {
 
     await click('span.branch');
 
-    assert.dom('li.branch-item').exists({ count: 2 });
+    assert.dom('li.branch-item').exists({ count: 4 });
+    assert.dom('li.branch-item:nth-child(1)').hasText('link abc:aaa');
+    assert.dom('li.branch-item:nth-child(2)').hasText('link abc:zzz');
+    assert.dom('li.branch-item:nth-child(3)').hasText('link efg');
+    assert.dom('li.branch-item:nth-child(4)').hasText('link efg:src');
   });
 
   test('it renders link to parent pipeline for child pipeline', async function (assert) {

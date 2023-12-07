@@ -37,7 +37,7 @@ export default Component.extend({
           index: i,
           url: `/pipelines/${pipe.id}`,
           branchAndRootDir: pipe.scmRepo.rootDir ? `${pipe.scmRepo.branch}:${pipe.scmRepo.rootDir}` : pipe.scmRepo.branch
-        }))
+        })).sort((l, r) => l.branchAndRootDir.localeCompare(r.branchAndRootDir))
       );
     }
   }),
