@@ -7,8 +7,10 @@ import { htmlSafe } from '@ember/template';
  * @param  {String}  string  String to be sanitized
  * @return {String}          Sanitized string
  */
-export function inputSanitizer(params /* , hash */) {
-  const string = params[0];
+export function inputSanitizer([string] /* , hash */) {
+  if (typeof string !== 'string') {
+    return string;
+  }
 
   const escape = {
     '&': '&amp;',
