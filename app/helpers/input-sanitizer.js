@@ -9,7 +9,7 @@ import { htmlSafe } from '@ember/template';
  */
 export function inputSanitizer([string] /* , hash */) {
   if (typeof string !== 'string') {
-    return string;
+    return '';
   }
 
   const escape = {
@@ -23,7 +23,7 @@ export function inputSanitizer([string] /* , hash */) {
     '=': '&#x3D;'
   };
 
-  return htmlSafe(string.replace(/[&<>"'`=/]/g, match => escape[match]));
+  return htmlSafe(string.replace(/[&<>"'/`=]/g, match => escape[match]));
 }
 
 export default helper(inputSanitizer);
