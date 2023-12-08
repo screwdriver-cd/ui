@@ -9,23 +9,22 @@
         {{! template-lint-disable no-triple-curlies }}
         <FaIcon @icon={{@icon}} />
         <span>
-          {{{this.sanitizedMessgae}}} Please login to
+          {{{input-sanitizer @message}}} Please login to
         </span>
-
         <a href="#authenticate" {{action "authenticate" @scmContext}}>
           {{@scmContext}}
         </a>
       {{else}}
         <FaIcon @icon={{@icon}} />
         <span>
-          {{{this.sanitizedMessgae}}}
+          {{{input-sanitizer @message}}}
         </span>
       {{/if}}
     {{else}}
       {{! template-lint-disable no-triple-curlies }}
       <FaIcon @icon={{@icon}} />
       <span>
-        {{{this.sanitizedMessgae}}}
+        {{{input-sanitizer @message}}}
       </span>
     {{/if}}
   </BsAlert>

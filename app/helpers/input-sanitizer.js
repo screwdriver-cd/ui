@@ -3,11 +3,13 @@ import { htmlSafe } from '@ember/template';
 
 /**
  * Sanitizes given string
- * @method sanitizeString
+ * @method inputSanitizer
  * @param  {String}  string  String to be sanitized
  * @return {String}          Sanitized string
  */
-export function sanitizeString(string) {
+export function inputSanitizer(params /* , hash */) {
+  const string = params[0];
+
   const escape = {
     '&': '&amp;',
     '<': '&lt;',
@@ -22,4 +24,4 @@ export function sanitizeString(string) {
   return htmlSafe(string.replace(/[&<>"'`=/]/g, match => escape[match]));
 }
 
-export default helper(sanitizeString);
+export default helper(inputSanitizer);

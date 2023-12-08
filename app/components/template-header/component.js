@@ -18,6 +18,12 @@ export default Component.extend({
       .catch(() => {
         this.set('scmUrl', null);
       });
+    let compatibilities = {
+      clouds: ['aws', 'gcp'],
+      architectures: ['arm64']
+    };
+
+    this.template.compatibilities = compatibilities;
 
     this.set('isTrusted', this.template.trusted);
   },
