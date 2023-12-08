@@ -20,7 +20,6 @@ export default Component.extend({
       .catch(() => {
         this.set('scmUrl', null);
       });
-
     this.set('isTrusted', this.command.trusted);
   },
   actions: {
