@@ -14,7 +14,7 @@ export default Controller.extend({
   store: service(),
   shuttle: service(),
   userSettings: service(),
-  displayJobNameLength: 20,
+  displayJobNameLength: MINIMUM_JOBNAME_LENGTH,
   minDisplayLength: MINIMUM_JOBNAME_LENGTH,
   maxDisplayLength: MAXIMUM_JOBNAME_LENGTH,
   isDisabled: bool('isSaving'),
@@ -26,7 +26,7 @@ export default Controller.extend({
   async init() {
     this._super(...arguments);
 
-    let desiredJobNameLength = MINIMUM_JOBNAME_LENGTH;
+    let displayJobNameLength = MINIMUM_JOBNAME_LENGTH;
 
     let selectedTimestampFormat = this.get(
       `timestampOptions.${TIMESTAMP_DEFAULT_OPTION}`
@@ -35,14 +35,14 @@ export default Controller.extend({
     const userPreferences = await this.userSettings.getUserPreference();
 
     if (userPreferences) {
-      desiredJobNameLength = userPreferences.displayJobNameLength;
+      displayJobNameLength = userPreferences.displayJobNameLength;
       selectedTimestampFormat = this.timestampOptions.find(
         timestamp => timestamp.value === userPreferences.timestampFormat
       );
     }
 
     this.setProperties({
-      desiredJobNameLength,
+      displayJobNameLength,
       userPreferences,
       selectedTimestampFormat
     });
