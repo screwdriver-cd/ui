@@ -56,6 +56,13 @@
     Parent Pipeline
   </LinkTo>
 {{/if}}
+
+{{#if this.pipeline.badges.sonar}}
+  {{#if this.sonarBadgeUri}}
+  <a href={{this.sonarBadgeUri}} tooltip={{this.sonarBadgeName}} target="_blank" rel="noopener">{{svg-jar "sonarqube" class="img"}}</a>
+  {{/if}}
+{{/if}}
+
 <CollectionDropdown
   @pipeline={{this.pipeline}}
   @pipelineId={{this.pipeline.id}}

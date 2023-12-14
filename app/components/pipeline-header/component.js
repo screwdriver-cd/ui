@@ -11,6 +11,28 @@ export default Component.extend({
   addCollectionError: null,
   addCollectionSuccess: null,
   dropdownText: 'Add to collection',
+  sonarBadgeName: computed('pipeline.badges.sonar.{defaultName,name}', {
+    get() {
+      let name = get(this, 'pipeline.badges.sonar.name');
+
+      if (!name) {
+        name = get(this, 'pipeline.badges.sonar.defaultName');
+      }
+
+      return name;
+    }
+  }),
+  sonarBadgeUri: computed('pipeline.badges.sonar.{defaultUri,uri}', {
+    get() {
+      let uri = get(this, 'pipeline.badges.sonar.uri');
+
+      if (!uri) {
+        uri = get(this, 'pipeline.badges.sonar.defaultUri');
+      }
+
+      return uri;
+    }
+  }),
   isBuildPage: computed('router.currentRouteName', {
     get() {
       return get(this, 'router.currentRouteName') === 'pipeline.build';

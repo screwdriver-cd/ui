@@ -34,6 +34,18 @@ export default Model.extend({
       };
     }
   }),
+  badges: attr({
+    defaultValue() {
+      return {
+        sonar: {
+          name: '',
+          defaultName: '',
+          uri: '',
+          defaultUri: ''
+        }
+      };
+    }
+  }),
 
   appId: alias('scmRepo.name'),
   branch: computed('scmRepo.{branch,rootDir}', {
