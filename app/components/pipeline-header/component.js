@@ -11,6 +11,17 @@ export default Component.extend({
   addCollectionError: null,
   addCollectionSuccess: null,
   dropdownText: 'Add to collection',
+  sonarBadgeDescription: computed('sonarBadgeName', {
+    get() {
+      let sonarBadgeDescription = 'SonarQube project';
+
+      if (this.sonarBadgeName) {
+        sonarBadgeDescription = `SonarQube project: ${this.sonarBadgeName}`;
+      }
+
+      return sonarBadgeDescription;
+    }
+  }),
   sonarBadgeName: computed('pipeline.badges.sonar.{defaultName,name}', {
     get() {
       let name = get(this, 'pipeline.badges.sonar.name');
@@ -48,19 +59,33 @@ export default Component.extend({
       };
     }
   }),
-  sameRepoPipeline: computed('pipeline', {
+  sameRepoPipeline: computed('pipeline.scmRepo.name', 'pipeline.{id,scmUri}', {
     get() {
       const [scm, repositoryId] = this.pipeline.scmUri.split(':');
-      return this.pipelineService.getSiblingPipeline(this.pipeline.scmRepo.name).then(value =>
-        value.toArray().filter(pipe => {
-          const [s, r] = pipe.scmUri.split(':');
-          return pipe.id !== this.pipeline.id && scm === s && repositoryId === r;
-        }).map((pipe, i) => ({
-          index: i,
-          url: `/pipelines/${pipe.id}`,
-          branchAndRootDir: pipe.scmRepo.rootDir ? `${pipe.scmRepo.branch}:${pipe.scmRepo.rootDir}` : pipe.scmRepo.branch
-        })).sort((l, r) => l.branchAndRootDir.localeCompare(r.branchAndRootDir))
-      );
+
+      return this.pipelineService
+        .getSiblingPipeline(this.pipeline.scmRepo.name)
+        .then(value =>
+          value
+            .toArray()
+            .filter(pipe => {
+              const [s, r] = pipe.scmUri.split(':');
+
+              return (
+                pipe.id !== this.pipeline.id && scm === s && repositoryId === r
+              );
+            })
+            .map((pipe, i) => ({
+              index: i,
+              url: `/pipelines/${pipe.id}`,
+              branchAndRootDir: pipe.scmRepo.rootDir
+                ? `${pipe.scmRepo.branch}:${pipe.scmRepo.rootDir}`
+                : pipe.scmRepo.branch
+            }))
+            .sort((l, r) =>
+              l.branchAndRootDir.localeCompare(r.branchAndRootDir)
+            )
+        );
     }
   }),
   actions: {
