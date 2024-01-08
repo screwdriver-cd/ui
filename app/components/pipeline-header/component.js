@@ -11,6 +11,17 @@ export default Component.extend({
   addCollectionError: null,
   addCollectionSuccess: null,
   dropdownText: 'Add to collection',
+  sonarBadgeDescription: computed('sonarBadgeName', {
+    get() {
+      let sonarBadgeDescription = 'SonarQube project';
+
+      if (this.sonarBadgeName) {
+        sonarBadgeDescription = `SonarQube project: ${this.sonarBadgeName}`;
+      }
+
+      return sonarBadgeDescription;
+    }
+  }),
   sonarBadgeName: computed('pipeline.badges.sonar.{defaultName,name}', {
     get() {
       let name = get(this, 'pipeline.badges.sonar.name');
