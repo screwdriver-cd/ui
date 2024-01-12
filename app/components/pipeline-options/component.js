@@ -307,12 +307,16 @@ export default Component.extend({
 
       return this.sync
         .syncRequests(this.get('pipeline.id'), syncPath)
-        .then(() =>
-          this.setProperties({
-            successMessage: 'Pipeline sync successful',
-            errorMessage: ''
-          })
-        )
+        .then(() => {
+          if (syncPath) {
+            this.setProperties({
+              successMessage: 'Pipeline sync successful',
+              errorMessage: ''
+            });
+          } else {
+            window.location.reload(true);
+          }
+        })
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     },
