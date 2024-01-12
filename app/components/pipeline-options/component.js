@@ -225,6 +225,9 @@ export default Component.extend({
       this.set('errorMessage', error);
     }
   },
+  reloadPage() {
+    window.location.reload(true);
+  },
 
   actions: {
     // Checks if scm URL is valid or not
@@ -314,7 +317,7 @@ export default Component.extend({
               errorMessage: ''
             });
           } else {
-            window.location.reload(true);
+            this.reloadPage();
           }
         })
         .catch(error => this.set('errorMessage', error))
