@@ -7,6 +7,7 @@ import EmberObject from '@ember/object';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import hbs from 'htmlbars-inline-precompile';
+import sinon from 'sinon';
 import { setupRenderingTest } from 'ember-qunit';
 import injectSessionStub from '../../../helpers/inject-session';
 
@@ -790,7 +791,9 @@ module('Integration | Component | pipeline options', function (hooks) {
         return resolve({});
       }
     });
+    const store = this.owner.lookup('service:store');
 
+    sinon.stub(store, 'findRecord');
     this.owner.register('service:sync', syncService);
 
     this.set(
@@ -804,6 +807,7 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
     await click('section.sync li:nth-child(3) a');
+    assert.ok(store.findRecord.calledWith('pipeline', '1'));
   });
 
   test('it fails to sync the pipeline', async function (assert) {
