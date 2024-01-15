@@ -7,9 +7,7 @@ import EmberObject from '@ember/object';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import hbs from 'htmlbars-inline-precompile';
-import sinon from 'sinon';
 import { setupRenderingTest } from 'ember-qunit';
-import PipelineOptionsComponent from 'screwdriver-ui/components/pipeline-options/component';
 import injectSessionStub from '../../../helpers/inject-session';
 
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
@@ -792,16 +790,8 @@ module('Integration | Component | pipeline options', function (hooks) {
         return resolve({});
       }
     });
-    const reloadPageMock = sinon.stub();
 
     this.owner.register('service:sync', syncService);
-    this.owner.unregister('component:pipeline-options');
-    this.owner.register(
-      'component:pipeline-options',
-      PipelineOptionsComponent.extend({
-        reloadPage: reloadPageMock
-      })
-    );
 
     this.set(
       'mockPipeline',
@@ -814,7 +804,6 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
     await click('section.sync li:nth-child(3) a');
-    assert.ok(reloadPageMock.calledOnce, 'reloadPage was called once');
   });
 
   test('it fails to sync the pipeline', async function (assert) {

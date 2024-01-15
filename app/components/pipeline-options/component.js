@@ -225,9 +225,6 @@ export default Component.extend({
       this.set('errorMessage', error);
     }
   },
-  reloadPage() {
-    window.location.reload(true);
-  },
 
   actions: {
     // Checks if scm URL is valid or not
@@ -311,15 +308,18 @@ export default Component.extend({
       return this.sync
         .syncRequests(this.get('pipeline.id'), syncPath)
         .then(() => {
-          if (syncPath) {
-            this.setProperties({
-              successMessage: 'Pipeline sync successful',
-              errorMessage: ''
+          if (!syncPath) {
+            this.store.findRecord('pipeline', this.get('pipeline.id'), {
+              reload: true
             });
-          } else {
-            this.reloadPage();
           }
         })
+        .then(() =>
+          this.setProperties({
+            successMessage: 'Pipeline sync successful',
+            errorMessage: ''
+          })
+        )
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     },
