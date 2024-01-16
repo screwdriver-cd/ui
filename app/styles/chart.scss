@@ -193,7 +193,7 @@
     &:hover {
       color: #0a0a0a;
 
-      .fa {
+      svg {
         @include scale(1.5);
       }
     }
