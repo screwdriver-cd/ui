@@ -307,6 +307,13 @@ export default Component.extend({
 
       return this.sync
         .syncRequests(this.get('pipeline.id'), syncPath)
+        .then(() => {
+          if (!syncPath) {
+            this.store.findRecord('pipeline', this.get('pipeline.id'), {
+              reload: true
+            });
+          }
+        })
         .then(() =>
           this.setProperties({
             successMessage: 'Pipeline sync successful',
