@@ -53,8 +53,8 @@ export default Component.extend({
   allJobBuilds: computed('jobs.@each.builds', function () {
     const builds = [];
 
-    this.jobs.forEach(j => {
-      builds.pushObjects(j.builds.toArray());
+    this.jobs.forEach(async j => {
+      builds.pushObjects((await j.builds).toArray());
     });
 
     return builds;

@@ -427,7 +427,7 @@ module('Integration | Component | pipeline events', function (hooks) {
   test('it starts PR build(s)', async function (assert) {
     const prNum = 999;
 
-    assert.expect(5);
+    assert.expect(6);
     server.post('http://localhost:8080/v4/events', () => [
       201,
       { 'Content-Type': 'application/json' },
@@ -444,7 +444,10 @@ module('Integration | Component | pipeline events', function (hooks) {
 
     const component = this.owner.lookup('component:pipeline-events');
 
-    const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
+    const jobs = [{
+      hasMany: () => ({ reload: () => assert.ok(true) }),
+      notifyPropertyChange: key => assert.equal(key, 'builds')
+    }];
 
     run(() => {
       component.set(
@@ -479,9 +482,12 @@ module('Integration | Component | pipeline events', function (hooks) {
 
   test('New event comes top of PR list when it starts a PR build with prChain', async function (assert) {
     const prNum = 3;
-    const jobs = [{ hasMany: () => ({ reload: () => assert.ok(true) }) }];
+    const jobs = [{
+      hasMany: () => ({ reload: () => assert.ok(true) }),
+      notifyPropertyChange: key => assert.equal(key, 'builds')
+    }];
 
-    assert.expect(5);
+    assert.expect(6);
 
     server.post('http://localhost:8080/v4/events', () => [
       201,
