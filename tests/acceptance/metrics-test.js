@@ -56,7 +56,7 @@ module('Acceptance | metrics', function (hooks) {
     assert.dom('.custom-date-selection input').exists({ count: 1 });
     assert.dom('.filters-selection input').exists({ count: 1 });
     assert.dom('.chart-pipeline-info .measure').exists({ count: 5 });
-    assert.dom('.chart-c3 svg').exists({ count: 3 });
+    assert.dom('.chart-c3 svg').exists({ count: 6 });
     assert.dom('.chart-c3 .c3-event-rects').exists({ count: 3 });
     assert.dom('.chart-cta').exists({ count: 1 });
     assert.dom('.chart-cta select').exists({ count: 1 });

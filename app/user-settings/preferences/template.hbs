@@ -18,7 +18,7 @@
               min={{this.minDisplayLength}}
               max={{this.maxDisplayLength}}
               placeholder={{this.minDisplayLength}}
-              value={{this.desiredJobNameLength}}
+              value={{this.displayJobNameLength}}
               oninput={{action (mut this.displayJobNameLength) value="target.value"}}
             />
           </div>
@@ -54,7 +54,7 @@
               class="reset-button"
               {{action "resetUserSettings"}}
             >
-              <FaIcon @icon="refresh" />
+              <FaIcon @icon="sync" />
               Reset
             </button>
             <button

@@ -1,7 +1,8 @@
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import Component from '@ember/component';
 import { not, or } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { isBlank } from '@ember/utils';
 import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
 import { getCheckoutUrl, parse } from 'screwdriver-ui/utils/git';
@@ -113,6 +114,9 @@ export default Component.extend({
     );
 
     const aliasName = this.get('pipeline.settings.aliasName');
+    const sonar = this.get('pipeline.badges.sonar');
+    const sonarName = sonar?.name ?? sonar?.defaultName;
+    const sonarUri = sonar?.uri ?? sonar?.defaultUri;
 
     if (typeof privateRepo !== 'boolean') {
       privateRepo = false;
@@ -145,7 +149,9 @@ export default Component.extend({
       showEventTriggers,
       filterEventsForNoBuilds,
       filterSchedulerEvents,
-      aliasName
+      aliasName,
+      sonarName,
+      sonarUri
     });
 
     let showPRJobs = true;
@@ -186,6 +192,38 @@ export default Component.extend({
       this.set('errorMessage', error);
     } finally {
       this.set('aliasName', aliasName);
+    }
+  },
+
+  async updatePipelineSonarBadge() {
+    const { pipeline, sonarName, sonarUri } = this;
+
+    if (isBlank(sonarName)) {
+      this.set('errorMessage', 'Sonar Name cannot be blank');
+
+      return;
+    }
+
+    if (isBlank(sonarUri)) {
+      this.set('errorMessage', 'Sonar Uri cannot be blank');
+
+      return;
+    }
+
+    try {
+      await this.shuttle.updateSonarBadge(pipeline.id, sonarName, sonarUri);
+
+      const sonar = this.get('pipeline.badges.sonar');
+
+      set(sonar, 'name', sonarName);
+      set(sonar, 'uri', sonarUri);
+
+      this.setProperties({
+        successMessage: 'Pipeline Sonar Badge updated successfully',
+        errorMessage: ''
+      });
+    } catch (error) {
+      this.set('errorMessage', error);
     }
   },
 
@@ -276,6 +314,13 @@ export default Component.extend({
 
       return this.sync
         .syncRequests(this.get('pipeline.id'), syncPath)
+        .then(() => {
+          if (!syncPath) {
+            this.store.findRecord('pipeline', this.get('pipeline.id'), {
+              reload: true
+            });
+          }
+        })
         .then(() =>
           this.setProperties({
             successMessage: 'Pipeline sync successful',
@@ -305,7 +350,6 @@ export default Component.extend({
         .catch(error => this.set('errorMessage', error))
         .finally(() => this.set('isShowingModal', false));
     },
-
     async updatePipelineAlias() {
       const { aliasName } = this;
 
@@ -313,6 +357,15 @@ export default Component.extend({
     },
     async resetPipelineAlias() {
       this.set('aliasName', '');
+    },
+    async updatePipelineSonarBadge() {
+      this.updatePipelineSonarBadge();
+    },
+    async resetPipelineSonarBadge() {
+      this.setProperties({
+        sonarName: '',
+        sonarUri: ''
+      });
     },
     async resetMetricsDowntimeJobs() {
       this.set('metricsDowntimeJobs', []);

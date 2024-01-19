@@ -1,4 +1,16 @@
 & {
+  .header {
+    justify-content: space-between;
+    display: flex;
+
+    .danger {
+      color: $sd-failure;
+    }
+    .danger:hover {
+      text-decoration: none;
+    }
+  }
+
   .template-label {
     margin: 0 5px;
     padding: 3px 5px;
@@ -45,11 +57,12 @@
     vertical-align: middle;
   }
 
-  .trusted-toggle {
-    display: inline-flex;
+  .clickable {
     cursor: pointer;
-    font-size: 0.5em;
-    float: right;
+  }
+
+  .trusted.distrusted {
+    fill: $sd-text-med;
   }
 
   .link {
@@ -67,10 +80,5 @@
     background-color: #f5f5f5;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
-
-  .x-toggle-container {
-    font-size: 0.75rem;
-    margin-right: 7px;
   }
 }

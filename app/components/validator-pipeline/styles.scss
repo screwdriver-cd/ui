@@ -5,10 +5,12 @@
   padding: 10px;
   font-weight: 300;
   color: $sd-text;
+  overflow-x: scroll;
 
   > div {
     padding: 3px;
     border-radius: 3px;
+    width: fit-content;
   }
 
   > div:hover {

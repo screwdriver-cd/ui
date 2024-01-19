@@ -7,6 +7,7 @@ import EmberObject from '@ember/object';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import hbs from 'htmlbars-inline-precompile';
+import sinon from 'sinon';
 import { setupRenderingTest } from 'ember-qunit';
 import injectSessionStub from '../../../helpers/inject-session';
 
@@ -77,7 +78,7 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     // Pipeline
     assert.dom('section.pipeline h3').hasText('Pipeline');
-    assert.dom('section.pipeline li').exists({ count: 4 });
+    assert.dom('section.pipeline li').exists({ count: 5 });
     assert
       .dom('section.pipeline h4')
       .hasText('Checkout URL and Source Directory');
@@ -86,13 +87,13 @@ module('Integration | Component | pipeline options', function (hooks) {
       .hasText('Update your checkout URL and / or source directory.');
     assert.dom('section.pipeline .button-label').hasText('Update');
     assert
-      .dom('section > ul > li:nth-child(4) p')
+      .dom('section > ul > li:nth-child(5) p')
       .hasText(
         'Pick your own preferred jobs to be counted in metrics graph (default all jobs)'
       );
-    assert.dom('section > ul > li:nth-child(4) h4').hasText('Downtime Jobs');
+    assert.dom('section > ul > li:nth-child(5) h4').hasText('Downtime Jobs');
     assert.equal(
-      $('section > ul > li:nth-child(4) input').attr('placeholder'),
+      $('section > ul > li:nth-child(5) input').attr('placeholder'),
       'Select Jobs...'
     );
 
@@ -740,6 +741,63 @@ module('Integration | Component | pipeline options', function (hooks) {
       .hasClass('x-toggle-container-checked');
   });
 
+  test('it updates pipeline sonar name and uri', async function (assert) {
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234',
+        settings: {
+          groupedEvents: true,
+          showEventTriggers: false,
+          filterEventsForNoBuilds: false
+        }
+      })
+    );
+
+    const shuttleStub = Service.extend({
+      // eslint-disable-next-line no-unused-vars
+      updatePipelineSettings(pipelineId, settings) {
+        assert.ok(true, 'updatePipelineSettings called');
+        assert.equal(pipelineId, 'abc1234');
+        assert.deepEqual(settings, {
+          aliasName: 'test-pr'
+        });
+
+        return resolve({});
+      },
+      getUserPipelinePreference(pipelineId) {
+        assert.ok(true, 'getUserPipelinePreference called');
+        assert.equal(pipelineId, 'abc1234');
+
+        return resolve({});
+      }
+    });
+
+    this.owner.unregister('service:shuttle');
+    this.owner.register('service:shuttle', shuttleStub);
+
+    await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
+
+    assert.dom('section.pipeline li:nth-of-type(3) h4').hasText('Badges');
+    assert
+      .dom('section.pipeline li:nth-of-type(3) p')
+      .hasText('Customize your own sonar badge dashboard and link');
+    assert.dom('section.pipeline li:nth-of-type(3) input').hasNoText();
+
+    const sonarName = 'sonar random name';
+    const sonarUri = 'random sonar uri';
+
+    await fillIn('section.pipeline li:nth-of-type(3) input', sonarName);
+
+    assert.dom('section.pipeline li:nth-of-type(3) input').hasValue(sonarName);
+
+    await fillIn('section.pipeline li:nth-of-type(3) input', sonarUri);
+
+    assert.dom('section.pipeline li:nth-of-type(3) input').hasValue(sonarUri);
+  });
+
   test('it updates pipeline aliasName', async function (assert) {
     this.set(
       'mockPipeline',
@@ -780,18 +838,18 @@ module('Integration | Component | pipeline options', function (hooks) {
     await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
 
     assert
-      .dom('section.pipeline li:nth-of-type(3) h4')
+      .dom('section.pipeline li:nth-of-type(4) h4')
       .hasText('Pipeline alias');
     assert
-      .dom('section.pipeline li:nth-of-type(3) p')
+      .dom('section.pipeline li:nth-of-type(4) p')
       .hasText(
         'Setup your own preferred pipeline name for the dashboard list view.'
       );
-    assert.dom('section.pipeline li:nth-of-type(3) input').hasNoText();
+    assert.dom('section.pipeline li:nth-of-type(4) input').hasNoText();
 
-    await fillIn('section.pipeline li:nth-of-type(3) input', 'test-pr');
+    await fillIn('section.pipeline li:nth-of-type(4) input', 'test-pr');
 
-    assert.dom('section.pipeline li:nth-of-type(3) input').hasValue('test-pr');
+    assert.dom('section.pipeline li:nth-of-type(4) input').hasValue('test-pr');
   });
 
   test('it handles pipeline remove flow', async function (assert) {
@@ -912,7 +970,9 @@ module('Integration | Component | pipeline options', function (hooks) {
         return resolve({});
       }
     });
+    const store = this.owner.lookup('service:store');
 
+    sinon.stub(store, 'findRecord');
     this.owner.register('service:sync', syncService);
 
     this.set(
@@ -926,6 +986,7 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
     await click('section.sync li:nth-child(3) a');
+    assert.ok(store.findRecord.calledWith('pipeline', '1'));
   });
 
   test('it fails to sync the pipeline', async function (assert) {

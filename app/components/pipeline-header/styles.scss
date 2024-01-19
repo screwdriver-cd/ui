@@ -5,6 +5,11 @@
   margin: 0;
   padding: 20px 25px;
   white-space: nowrap;
+
+  .img {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .toggler-text {
@@ -41,4 +46,29 @@ a.active {
   position: absolute;
   right: 25px;
   display: inline;
+}
+
+.branch-move {
+  padding-right: 6px;
+}
+
+.branch-item {
+  padding: 1px 0px;
+  .img {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+.branch-item a:hover {
+  background-color: #d1edff;
+}
+
+.branch-dropdown {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.dropdown {
+  display:inline-block;
 }

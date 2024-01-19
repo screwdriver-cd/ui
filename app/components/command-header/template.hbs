@@ -1,58 +1,64 @@
-<h1>
-  {{#if this.isTrusted}}
-    <span title="Trusted">
-      {{svg-jar "trusted" class="trusted"}}
-    </span>
-  {{/if}}
-  <LinkTo
-    @route="pipeline"
-    @model={{this.command.pipelineId}}
-    @title="Go to command pipeline"
-    class="link"
-  >
-    {{this.command.namespace}}/{{this.command.name}}
-  </LinkTo>
-  {{#if this.scmUrl}}
-    <a href={{this.scmUrl}} class="link">
-      <FaIcon @icon="code-branch" @title="Source code" />
-    </a>
-  {{else}}
-    <FaIcon
-      @icon="code-branch"
-      @title="The pipeline for this command does not exist."
-      class="link"
-    />
-  {{/if}}
-  {{#if this.isAdmin}}
-    <a href="#" class="link" {{action "setCommandToRemove" this.command}}>
-      <FaIcon @icon="trash" @title="Delete command" />
-    </a>
-    <label class="trusted-toggle">
-      <XToggle
-        @size="medium"
-        @theme="light"
-        @value={{this.isTrusted}}
-        @onToggle={{action "updateTrust" this.command.namespace this.command.name}}
-      />
-      Trust?
-    </label>
-  {{else}}
-    {{#if this.scmUrl}}
-      <a href="#" class="link" {{action "setCommandToRemove" this.command}}>
-        <FaIcon @icon="trash" @title="Delete command" />
-      </a>
-    {{else}}
-      <FaIcon
-        @icon="trash"
-        @title="Cannot delete command; pipeline could not be found."
+<div class="header">
+  <div class="left-header">
+    <h1>
+      {{#if this.isAdmin}}
+        <span title="Toggle command trusted" class="clickable" onclick={{action "showToggleTrustModal"}}>
+          {{#if this.isTrusted}}
+            {{svg-jar "trusted" class="trusted"}}
+          {{else}}
+            {{svg-jar "trusted" class="trusted distrusted"}}
+          {{/if}}
+        </span>
+      {{else}}
+        {{#if this.isTrusted}}
+          <span title="Trusted">
+            {{svg-jar "trusted" class="trusted"}}
+          </span>
+        {{/if}}
+      {{/if}}
+      <LinkTo
+        @route="pipeline"
+        @model={{this.command.pipelineId}}
+        @title="Go to command pipeline"
         class="link"
-      />
-    {{/if}}
-  {{/if}}
-</h1>
-<h2>
-  {{this.command.version}}{{if this.isLatestVersion " - latest"}}
-</h2>
+      >
+        {{this.command.namespace}}/{{this.command.name}}
+      </LinkTo>
+      {{#if this.scmUrl}}
+        <a href={{this.scmUrl}} class="link">
+          <FaIcon @icon="code-branch" @title="Source code" />
+        </a>
+      {{else}}
+        <FaIcon
+          @icon="code-branch"
+          @title="The pipeline for this command does not exist."
+          class="link"
+        />
+      {{/if}}
+    </h1>
+  </div>
+  <div class="right-header">
+    <h1>
+      {{#if (or this.isAdmin this.scmUrl)}}
+        <a href="#" class="danger link" {{action "setCommandToRemove" this.command}}>
+          <FaIcon @icon="trash" @title="Delete command" />
+        </a>
+      {{else}}
+        <span title="Cannot delete command; pipeline could not be found.">
+          <FaIcon
+            @icon="trash"
+            class="danger link disabled"
+          />
+        </span>
+      {{/if}}
+    </h1>
+  </div>
+</div>
+<div class="command-stats">
+  <h2>
+    {{this.command.version}}{{if this.isLatestVersion " - latest"}}
+  </h2>
+</div>
 <p>
   {{this.command.description}}
 </p>
@@ -63,6 +69,24 @@
       {{this.command.maintainer}}
     </a>
   </li>
+  {{#if this.command.compatibilities}}
+    {{#if this.command.compatibilities.clouds.length}}
+    <li>
+      Supported Clouds: 
+      {{#each this.command.compatibilities.clouds as |cloud|}}
+        <span>{{cloud}}</span>
+      {{/each}}
+    </li>
+    {{/if}}
+    {{#if this.command.compatibilities.architectures.length}}
+    <li>
+      Supported Arches:
+      {{#each this.command.compatibilities.architectures as |arch|}}
+        <span>{{arch}}</span>
+      {{/each}}
+    </li>
+    {{/if}}
+  {{/if}}
   {{#if this.command.lastUpdated}}
     <li>
       Last published: {{this.command.lastUpdated}}
@@ -122,4 +146,18 @@
       </modal.footer>
     </BsModal>
   {{/if}}
+{{/if}}
+{{#if this.showToggleTrustModal}}
+  <BsModalSimple
+    @title="Confirm command trusted"
+    @closeTitle="Cancel"
+    @submitTitle="Confirm"
+    @submitButtonType="primary"
+    @size={{null}}
+    @fade={{true}}
+    @onSubmit={{action "updateTrust" this.command.namespace this.command.name (not this.isTrusted)}}
+    @onHide={{action "cancelToggleTrustModal"}}
+  >
+    Set {{this.command.namespace}}/{{this.command.name}} command to {{if this.isTrusted "Distrusted" "Trusted"}}.
+  </BsModalSimple>
 {{/if}}
