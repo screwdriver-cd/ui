@@ -154,8 +154,8 @@
             <li>
               <div class="row">
                 <div class="col-10">
-                  <h4>
-                    {{job.name}}
+                  <h4 title="Job: {{job.name}}">
+                    {{truncate job.name 50}}
                   </h4>
                   {{#if job.stateChanger}}
                     <i class="float-right">
@@ -164,12 +164,28 @@
                       </small>
                     </i>
                     <p>
-                      {{if
-                        job.isDisabled
-                        "Disabled"
-                        "Enabled"
-                      }} by {{job.stateChanger}}{{#if job.stateChangeMessage}}: {{job.stateChangeMessage}}
-                      {{/if}}
+                      {{if job.isDisabled "Disabled" "Enabled"}} by {{job.stateChanger}}:
+                      <span>
+                        {{#if (get this.expandedState job.id)}}
+                          {{job.stateChangeMessage}}
+                          <span
+                            class="toggle-expand"
+                            {{action "toggleJobExpansion" job.id}}
+                            role="button"
+                            tabindex="0"
+                          >less</span>
+                        {{else}}
+                          {{truncate job.stateChangeMessage 50}}
+                          {{#if (gt job.stateChangeMessage.length 50)}}
+                            <span
+                              class="toggle-expand"
+                              {{action "toggleJobExpansion" job.id}}
+                              role="button"
+                              tabindex="0"
+                            >more</span>
+                          {{/if}}
+                        {{/if}}
+                      </span>
                     </p>
                   {{/if}}
                 </div>
@@ -282,15 +298,15 @@
             <li>
               <div class="row">
                 <div class="col-10">
-                  <h4>
-                    Job {{job.name}}
+                  <h4 title="Job: {{job.name}}">
+                    Job {{truncate job.name 50}}
                   </h4>
                   <p>
-                    Click to clear the cache for the {{job.name}} job.
+                    Click to clear the cache for the {{truncate job.name 50}} job.
                   </p>
                 </div>
                 <div class="col-2 right">
-                  <a href="#" title="Click to clear cache for {{job.name}} job." {{action "clearCache" "jobs" job.id}}>
+                  <a href="#" title="Click to clear cache for {{truncate job.name 50}} job." {{action "clearCache" "jobs" job.id}}>
                     <FaIcon @icon="trash" />
                   </a>
                 </div>
@@ -557,7 +573,7 @@
                     <modal.body>
                       <FaIcon @icon="exclamation-triangle" @pull="left" @size="4" />
                       <span>This action cannot be undone. Are you sure you want to delete the pipeline?</span>
-                      <p>Please type <b>{{this.pipeline.scmRepo.name}}</b>  to confirm.</p> 
+                      <p>Please type <b>{{this.pipeline.scmRepo.name}}</b>  to confirm.</p>
                       <Input
                         @type="text"
                         class="delete-pipeline__input col-12"
