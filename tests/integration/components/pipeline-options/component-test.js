@@ -63,6 +63,11 @@ module('Integration | Component | pipeline options', function (hooks) {
           id: '2345',
           name: 'A',
           isDisabled: false
+        }),
+        EmberObject.create({
+          id: '4567',
+          name: 'long-long-long-long-long-long-long-long-long-long-long-job-name',
+          isDisabled: false
         })
       ])
     );
@@ -94,10 +99,13 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     // Jobs
     assert.dom('section.jobs h3').hasText('Jobs');
-    assert.dom('section.jobs li').exists({ count: 4 });
+    assert.dom('section.jobs li').exists({ count: 5 });
     assert.dom('section.jobs li:nth-child(2) h4').hasText('A');
     assert.dom('section.jobs li:nth-child(3) h4').hasText('B');
-    assert.dom('section.jobs li:nth-child(4) h4').hasText('main');
+    assert
+      .dom('section.jobs li:nth-child(4) h4')
+      .hasText('long-long-long-long-long-long-long-long-long-long-...');
+    assert.dom('section.jobs li:nth-child(5) h4').hasText('main');
     assert
       .dom('section.jobs p')
       .hasText('Toggle to disable or enable the job.');
@@ -112,6 +120,9 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert.dom('section.cache li:first-child h4').hasText('Pipeline');
     assert.dom('section.cache li:nth-child(2) h4').hasText('Job A');
     assert.dom('section.cache li:nth-child(3) h4').hasText('Job B');
+    assert
+      .dom('section.cache li:nth-child(4) h4')
+      .hasText('Job long-long-long-long-long-long-long-long-long-long-...');
     assert.dom('section.cache li:last-child h4').hasText('Job main');
 
     // Danger Zone
@@ -452,6 +463,174 @@ module('Integration | Component | pipeline options', function (hooks) {
     await click('.toggle-form__create');
 
     assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
+  });
+
+  test('it handles job enabling long job name', async function (assert) {
+    const main = EmberObject.create({
+      id: '1234',
+      name: 'long-long-long-long-long-long-long-long-long-long-long-job-name',
+      state: 'DISABLED',
+      stateChangeMessage:
+        'This text is significantly longer than the specified maximum length of 50 characters',
+      isDisabled: true
+    });
+
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234'
+      })
+    );
+    this.set('mockJobs', A([main]));
+
+    const jobServiceStub = Service.extend({
+      setJobState: (id, state, message) => {
+        assert.equal(id, '1234');
+        assert.equal(state, 'ENABLED');
+        assert.equal(
+          message,
+          'This text is significantly longer than the specified maximum length of 50 characters'
+        );
+
+        main.set('state', state);
+        main.set('stateChanger', 'tkyi');
+        main.set(
+          'stateChangeMessage',
+          'This text is significantly longer than the specified maximum length of 50 characters'
+        );
+        main.set('isDisabled', false);
+
+        return Promise.resolve();
+      }
+    });
+
+    this.owner.unregister('service:job');
+    this.owner.register('service:job', jobServiceStub);
+
+    await render(hbs`<PipelineOptions
+      @pipeline={{this.mockPipeline}}
+      @jobs={{this.mockJobs}}
+    />`);
+
+    assert
+      .dom('section.jobs h4')
+      .hasText('long-long-long-long-long-long-long-long-long-long-...');
+    assert
+      .dom('section.jobs p')
+      .hasText('Toggle to disable or enable the job.');
+    assert.dom('.x-toggle-container').hasNoClass('x-toggle-container-checked');
+
+    await click('.x-toggle-btn');
+    await fillIn(
+      '.message input',
+      'This text is significantly longer than the specified maximum length of 50 characters'
+    );
+    await click('.toggle-form__create');
+
+    assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
+
+    assert
+      .dom('section.jobs p')
+      .hasText('Toggle to disable or enable the job.');
+    assert
+      .dom('section.jobs li:nth-child(2) p')
+      .hasText(
+        'Enabled by tkyi: This text is significantly longer than the specifi... more'
+      );
+
+    await click('.toggle-expand');
+
+    assert
+      .dom('section.jobs li:nth-child(2) p')
+      .hasText(
+        'Enabled by tkyi: This text is significantly longer than the specified maximum length of 50 characters less'
+      );
+  });
+
+  test('it handles job disabling long job name', async function (assert) {
+    const main = EmberObject.create({
+      id: '1234',
+      name: 'long-long-long-long-long-long-long-long-long-long-long-job-name',
+      state: 'ENABLED',
+      stateChanger: 'tkyi',
+      stateChangeMessage:
+        'This text is significantly longer than the specified maximum length of 50 characters',
+      isDisabled: false
+    });
+
+    this.set(
+      'mockPipeline',
+      EmberObject.create({
+        appId: 'foo/bar',
+        scmUri: 'github.com:84604643:master',
+        id: 'abc1234'
+      })
+    );
+
+    this.set('mockJobs', A([main]));
+    this.set('username', 'tkyi');
+
+    const jobServiceStub = Service.extend({
+      setJobState: (id, state, message) => {
+        assert.equal(id, '1234');
+        assert.equal(state, 'DISABLED');
+        assert.equal(
+          message,
+          'This text is significantly longer than the specified maximum length of 50 characters'
+        );
+
+        main.set('state', state);
+        main.set('stateChanger', 'tkyi');
+        main.set(
+          'stateChangeMessage',
+          'This text is significantly longer than the specified maximum length of 50 characters'
+        );
+        main.set('isDisabled', true);
+
+        return Promise.resolve();
+      }
+    });
+
+    this.owner.unregister('service:job');
+    this.owner.register('service:job', jobServiceStub);
+
+    await render(hbs`<PipelineOptions
+      @username={{this.username}}
+      @pipeline={{this.mockPipeline}}
+      @jobs={{this.mockJobs}}
+    />`);
+
+    assert.dom('.x-toggle-container').hasClass('x-toggle-container-checked');
+
+    await click('.x-toggle-btn');
+    await fillIn(
+      '.message input',
+      'This text is significantly longer than the specified maximum length of 50 characters'
+    );
+    await click('.toggle-form__create');
+
+    assert
+      .dom('section.jobs h4')
+      .hasText('long-long-long-long-long-long-long-long-long-long-...');
+    assert.dom('.x-toggle-container').hasNoClass('x-toggle-container-checked');
+    assert
+      .dom('section.jobs p')
+      .hasText('Toggle to disable or enable the job.');
+    assert
+      .dom('section.jobs li:nth-child(2) p')
+      .hasText(
+        'Disabled by tkyi: This text is significantly longer than the specifi... more'
+      );
+
+    await click('.toggle-expand');
+
+    assert
+      .dom('section.jobs li:nth-child(2) p')
+      .hasText(
+        'Disabled by tkyi: This text is significantly longer than the specified maximum length of 50 characters less'
+      );
   });
 
   test('it fails to handle job enabling', async function (assert) {

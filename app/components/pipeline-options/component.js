@@ -50,6 +50,7 @@ export default Component.extend({
   filterSchedulerEvents: false,
   aliasName: '',
   pipelineName: '',
+  expandedState: {},
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
@@ -280,6 +281,12 @@ export default Component.extend({
       this.set('user', user);
       this.set('jobId', jobId);
       this.set('showToggleModal', true);
+    },
+    toggleJobExpansion(jobId) {
+      this.set('expandedState', {
+        ...this.expandedState,
+        [jobId]: !this.expandedState[jobId]
+      });
     },
     updateMessage(message) {
       const { state, jobId } = this;

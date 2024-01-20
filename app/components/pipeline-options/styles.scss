@@ -34,11 +34,15 @@
     font-weight: $weight-bold;
     margin: 0;
     padding: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   p {
     margin: 0;
     padding: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   ul {
@@ -79,6 +83,16 @@
     }
   }
 
+  .toggle-expand {
+    color: $sd-link;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
   .toggle-wrapper {
     width: 100px;
     height: 100%;
@@ -107,7 +121,7 @@
     }
 
     a:hover {
-      border: 1px solid $sd-link
+      border: 1px solid $sd-link;
     }
   }
 
