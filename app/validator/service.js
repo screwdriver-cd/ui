@@ -22,7 +22,9 @@ export default Service.extend({
    * @return {Boolean}
    */
   isPipelineTemplate(yaml) {
-    return /^(namespace: |name: |config:\s*\n\s*jobs:)/.test(yaml);
+    return /^(?=.*\bnamespace:)(?=.*\bname:)(?=.*\bconfig:.*\bjobs:).*/.test(
+      yaml
+    );
   },
 
   /**
