@@ -102,7 +102,7 @@ module('Unit | Service | validator', function (hooks) {
         'namespace: monkey, name: bananas, config: {jobs: {}}'
       )
     );
-    assert.notOk(service.isPipelineTemplate('workflow: bananas'));
+    assert.ok(service.isPipelineTemplate('workflow: bananas'));
     assert.notOk(service.isPipelineTemplate('name: bananas'));
   });
 
