@@ -12,7 +12,11 @@ export default Service.extend({
    * @return {Boolean}
    */
   isTemplate(yaml) {
-    return /^name|\n+name: |\n+namespace: /.test(yaml);
+    return /^name|\n+name: |\n+namespace: |\n+config:\s*\n\s*jobs: /.test(yaml);
+  },
+
+  isPipelineTemplate(yaml) {
+    return /^(namespace: |name: |config:\s*\n\s*jobs:)/.test(yaml);
   },
 
   /**
@@ -22,10 +26,12 @@ export default Service.extend({
    * @return {Promise}
    */
   getValidationResults(yaml) {
-    let url = `${ENV.APP.SDAPI_HOSTNAME}/v4/validator`;
+    let url = `${ENV.APP.SDAPI_HOSTNAME}/v4`;
 
-    if (this.isTemplate(yaml)) {
-      url += '/template';
+    if (this.isPipelineTemplate(yaml)) {
+      url += '/pipeline/template/validate';
+    } else if (this.isTemplate(yaml)) {
+      url += '/validator/template';
     }
 
     const ajaxConfig = {

@@ -31,6 +31,18 @@ jobs:
       - forgreatjustice: ba.sh
 `;
 
+const EXAMPLE_PIPELINE_TEMPLATE = `
+name: batman/batmobile
+version: 2.0.1
+description: Big noisy car
+maintainer: batman@batcave.com
+config:
+  image: batman:4
+  jobs:
+    main:
+      steps:
+        - forgreatjustice: ba.sh`;
+
 module('Unit | Controller | validator', function (hooks) {
   setupTest(hooks);
 
@@ -59,6 +71,26 @@ module('Unit | Controller | validator', function (hooks) {
 
       return settled().then(() => {
         assert.equal(controller.isTemplate, true);
+        assert.deepEqual(controller.results, expectedResult);
+      });
+    });
+  });
+
+  test('it handles pipelineTemplate yaml', function (assert) {
+    const controller = this.owner.lookup('controller:validator');
+    const expectedResult = { foo: 'bar' };
+
+    serviceMock.isTemplate.withArgs(EXAMPLE_PIPELINE_TEMPLATE).returns(true);
+    serviceMock.getValidationResults
+      .withArgs(EXAMPLE_PIPELINE_TEMPLATE)
+      .returns(resolve(expectedResult));
+
+    // wrap the test in the run loop because we are dealing with async functions
+    return run(() => {
+      controller.set('yaml', EXAMPLE_PIPELINE_TEMPLATE);
+
+      return settled().then(() => {
+        assert.equal(controller.isPipelineTemplate, true);
         assert.deepEqual(controller.results, expectedResult);
       });
     });
