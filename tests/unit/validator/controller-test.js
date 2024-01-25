@@ -7,8 +7,9 @@ import { settled } from '@ember/test-helpers';
 import sinon from 'sinon';
 
 const serviceMock = {
-  isTemplate: sinon.stub(),
-  getValidationResults: sinon.stub()
+  isJobTemplate: sinon.stub(),
+  getValidationResults: sinon.stub(),
+  isPipelineTemplate: sinon.stub()
 };
 
 const validatorStub = Service.extend(serviceMock);
@@ -52,7 +53,7 @@ module('Unit | Controller | validator', function (hooks) {
     this.owner.register('service:validator', validatorStub);
     this.validator = this.owner.lookup('service:validator');
 
-    serviceMock.isTemplate.reset();
+    serviceMock.isJobTemplate.reset();
     serviceMock.getValidationResults.reset();
   });
 
@@ -60,7 +61,7 @@ module('Unit | Controller | validator', function (hooks) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
-    serviceMock.isTemplate.withArgs(EXAMPLE_TEMPLATE).returns(true);
+    serviceMock.isJobTemplate.withArgs(EXAMPLE_TEMPLATE).returns(true);
     serviceMock.getValidationResults
       .withArgs(EXAMPLE_TEMPLATE)
       .returns(resolve(expectedResult));
@@ -70,7 +71,7 @@ module('Unit | Controller | validator', function (hooks) {
       controller.set('yaml', EXAMPLE_TEMPLATE);
 
       return settled().then(() => {
-        assert.equal(controller.isTemplate, true);
+        assert.equal(controller.isJobTemplate, true);
         assert.deepEqual(controller.results, expectedResult);
       });
     });
@@ -102,7 +103,7 @@ module('Unit | Controller | validator', function (hooks) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
-    serviceMock.isTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
+    serviceMock.isJobTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
     serviceMock.getValidationResults
       .withArgs(EXAMPLE_CONFIG)
       .returns(resolve(expectedResult));
@@ -112,7 +113,7 @@ module('Unit | Controller | validator', function (hooks) {
       controller.set('yaml', EXAMPLE_CONFIG);
 
       return settled().then(() => {
-        assert.equal(controller.isTemplate, false);
+        assert.equal(controller.isJobTemplate, false);
         assert.deepEqual(controller.results, expectedResult);
       });
     });
@@ -122,7 +123,7 @@ module('Unit | Controller | validator', function (hooks) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
-    serviceMock.isTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
+    serviceMock.isJobTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
     serviceMock.getValidationResults
       .withArgs(EXAMPLE_CONFIG)
       .returns(resolve(expectedResult));
@@ -132,7 +133,7 @@ module('Unit | Controller | validator', function (hooks) {
       controller.set('yaml', EXAMPLE_CONFIG);
 
       return settled().then(() => {
-        assert.equal(controller.isTemplate, false);
+        assert.equal(controller.isJobTemplate, false);
         assert.deepEqual(controller.results, expectedResult);
         controller.set('yaml', '');
 

@@ -90,8 +90,8 @@ module('Unit | Service | validator', function (hooks) {
   test('it determines if something looks like a template', function (assert) {
     const service = this.owner.lookup('service:validator');
 
-    assert.ok(service.isTemplate('name: bananas'));
-    assert.notOk(service.isTemplate('workflow: bananas'));
+    assert.ok(service.isJobTemplate('name: bananas'));
+    assert.notOk(service.isJobTemplate('workflow: bananas'));
   });
 
   test('it determines if something looks like a pipeline template', function (assert) {

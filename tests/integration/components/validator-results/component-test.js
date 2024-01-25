@@ -81,7 +81,7 @@ module('Integration | Component | validator results', function (hooks) {
     });
 
     await render(
-      hbs`<ValidatorResults @results={{this.validationMock}} @isTemplate={{true}} />`
+      hbs`<ValidatorResults @results={{this.validationMock}} @isJobTemplate={{true}} />`
     );
 
     assert.dom('.error').doesNotExist();
@@ -103,7 +103,7 @@ module('Integration | Component | validator results', function (hooks) {
     });
 
     await render(
-      hbs`<ValidatorResults @results={{this.validationMock}} @isTemplate={{true}} />`
+      hbs`<ValidatorResults @results={{this.validationMock}} @isJobTemplate={{true}} />`
     );
 
     assert.dom('.error').doesNotExist();
@@ -124,7 +124,7 @@ module('Integration | Component | validator results', function (hooks) {
     });
 
     await render(
-      hbs`<ValidatorResults @results={{this.validationMock}} @isTemplate={{true}} />`
+      hbs`<ValidatorResults @results={{this.validationMock}} @isJobTemplate={{true}} />`
     );
 
     assert.dom('.error').hasText('there is an error');
@@ -145,7 +145,7 @@ module('Integration | Component | validator results', function (hooks) {
     });
 
     await render(
-      hbs`<ValidatorResults @results={{this.validationMock}} @isTemplate={{true}} />`
+      hbs`<ValidatorResults @results={{this.validationMock}} @isJobTemplate={{true}} />`
     );
 
     assert.dom('.warning').hasText('there is an warning');

@@ -7,14 +7,20 @@ export default Service.extend({
   session: service(),
   /**
    * Simple test to determine if yaml looks like a template file
-   * @method isTemplate
+   * @method isJobTemplate
    * @param  {String}   yaml Raw yaml text
    * @return {Boolean}
    */
-  isTemplate(yaml) {
+  isJobTemplate(yaml) {
     return /^name|\n+name: |\n+namespace: |\n+config:\s*\n\s*jobs: /.test(yaml);
   },
 
+  /**
+   * Simple test to determine if yaml looks like a pipeline template file
+   * @method isPipelineTemplate
+   * @param  {String}   yaml Raw yaml text
+   * @return {Boolean}
+   */
   isPipelineTemplate(yaml) {
     return /^(namespace: |name: |config:\s*\n\s*jobs:)/.test(yaml);
   },
@@ -30,8 +36,10 @@ export default Service.extend({
 
     if (this.isPipelineTemplate(yaml)) {
       url += '/pipeline/template/validate';
-    } else if (this.isTemplate(yaml)) {
+    } else if (this.isJobTemplate(yaml)) {
       url += '/validator/template';
+    } else {
+      url += '/validator';
     }
 
     const ajaxConfig = {
