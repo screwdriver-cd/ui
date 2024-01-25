@@ -696,10 +696,12 @@ export default Component.extend(ModelReloaderMixin, {
             Array.isArray(e.errors) ? e.errors[0].detail : ''
           );
         })
-        .finally(() => jobs.forEach(async j => {
-          await j.hasMany('builds').reload();
-          j.notifyPropertyChange('builds');
-        }));
+        .finally(() =>
+          jobs.forEach(async j => {
+            await j.hasMany('builds').reload();
+            j.notifyPropertyChange('builds');
+          })
+        );
     },
 
     async syncAdmins() {

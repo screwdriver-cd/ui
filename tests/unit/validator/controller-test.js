@@ -80,7 +80,9 @@ module('Unit | Controller | validator', function (hooks) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
-    serviceMock.isTemplate.withArgs(EXAMPLE_PIPELINE_TEMPLATE).returns(true);
+    serviceMock.isPipelineTemplate
+      .withArgs(EXAMPLE_PIPELINE_TEMPLATE)
+      .returns(true);
     serviceMock.getValidationResults
       .withArgs(EXAMPLE_PIPELINE_TEMPLATE)
       .returns(resolve(expectedResult));

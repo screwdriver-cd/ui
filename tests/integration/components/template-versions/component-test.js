@@ -191,8 +191,6 @@ module('Integration | Component | template versions', function (hooks) {
     assert
       .dom('.modal-dialog .modal-content .modal-footer button.btn-danger')
       .hasText('Confirm');
-    await click(
-      '.modal-dialog .modal-content .modal-footer button.btn-danger'
-    );
+    await click('.modal-dialog .modal-content .modal-footer button.btn-danger');
   });
 });

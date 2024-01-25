@@ -7,7 +7,7 @@ let pipelines;
 
 const storeServiceStub = Service.extend({
   query() {
-    return pipelines
+    return pipelines;
   }
 });
 
@@ -26,10 +26,12 @@ module('Unit | Service | pipeline', function (hooks) {
   });
 
   test('it handles updating job state', function (assert) {
-    pipelines = EmberObject.create([{
-      id: 123456,
-      name: 'screwdriver-cd/screwdriver'
-    }]);
+    pipelines = EmberObject.create([
+      {
+        id: 123456,
+        name: 'screwdriver-cd/screwdriver'
+      }
+    ]);
 
     const service = this.owner.lookup('service:pipeline');
     const value = service.getSiblingPipeline('screwdriver-cd/screwdriver');

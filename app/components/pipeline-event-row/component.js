@@ -139,9 +139,9 @@ export default Component.extend({
       if (pipeline_id) {
         pipeline_id = pipeline_id[1];
       }
-      /* eslint-enable camelcase */
 
       return { build_id, pipeline_id };
+      /* eslint-enable camelcase */
     }
   }),
 
