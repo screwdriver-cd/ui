@@ -29,7 +29,7 @@ export default Component.extend({
     startSingleBuild(buildState = undefined) {
       const { actions } = this.record;
 
-      if (buildState === 'START' && actions.hasParameters) {
+      if (['START', 'RESTART'].includes(buildState) && actions.hasParameters) {
         actions.openParametersModal(actions.jobId, buildState);
       } else {
         actions.startSingleBuild(actions.jobId, actions.jobName, buildState);
