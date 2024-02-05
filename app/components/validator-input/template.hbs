@@ -1,7 +1,24 @@
-<h4 class="pipeline" {{action "nameClick"}}>
-  <FaIcon @icon={{if this.isOpen "minus-square" "plus-square"}} />
-  Validate Screwdriver Configuration
-</h4>
+<div class="header row">
+  <h4 class="pipeline col-10" {{action "nameClick"}}>
+    <FaIcon @icon={{if this.isOpen "minus-square" "plus-square"}} />
+    Validate Screwdriver Configuration
+  </h4>
+  <div class="col-2 text-right">
+    <BsButtonGroup
+      class="view-toggle"
+      @value={{this.spreadView}}
+      @type="radio"
+      @onChange={{action (mut this.spreadView)}} as |bg|
+    >
+      <bg.button @value={{false}} @type="primary" @outline={{true}}>
+        <FaIcon @icon="compress" />
+      </bg.button>
+      <bg.button @value={{true}} @type="primary" @outline={{true}}>
+        <FaIcon @icon="expand" />
+      </bg.button>
+    </BsButtonGroup>
+  </div>
+</div>
 <h5 class="pipeline">
   Paste a screwdriver.yaml or a template yaml below to verify.<br />Template yamls must contain the "name" field.
 </h5>
