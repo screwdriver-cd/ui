@@ -20,6 +20,7 @@ export default Controller.extend({
   validator: service(),
   yaml: '',
   results: '',
+  spreadView: false,
   isTemplate: computed('yaml', {
     get() {
       return this.validator.isTemplate(this.yaml);
