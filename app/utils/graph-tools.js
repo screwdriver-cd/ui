@@ -196,9 +196,9 @@ const hasProcessedDest = (graph, name) => {
  * @param  {Object}      inputGraph A directed graph representation { nodes: [], edges: [] }
  * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [builds]     A list of build metadata
  * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [jobs]       A list of job metadata
- * @param  {String}   start     Node name that indicates what started the graph
- * @param  {Boolean}  chainPR   Boolean flag for the chainPR setting
- * @param  {number}   prNum     The pull request number
+ * @param  {String}   [start]     Node name that indicates what started the graph
+ * @param  {Boolean}  [chainPR]   Boolean flag for the chainPR setting
+ * @param  {number}   [prNum]     The pull request number
  * @return {Object}                 A graph representation with row/column coordinates for drawing, and meta information for scaling
  */
 const decorateGraph = ({ inputGraph, builds, jobs, start, chainPR, prNum }) => {
