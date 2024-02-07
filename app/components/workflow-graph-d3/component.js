@@ -24,6 +24,7 @@ export default Component.extend({
     'jobs.@each.{isDisabled,state,stateChanger}',
     'minified',
     'prJobs',
+    'selectedEventObj.status',
     'selectedEventObj.prNum',
     'showDownstreamTriggers',
     'showPRJobs',
