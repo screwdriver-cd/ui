@@ -51,6 +51,17 @@ const build = (builds, jobId) =>
 const job = (jobs, jobId) => jobs.find(j => j && `${j.id}` === `${jobId}`);
 
 /**
+ * Find a PR job for the given PR number and job name
+ * @method prJob
+ * @param  {Array}  jobs    List of job objects
+ * @param  {number} prNum   The pull request number of the job
+ * @param  {String} name    The name of the pull request job
+ * @return {Object}         Reference to the job object from the list if found
+ */
+const prJob = (jobs, prNum, name) =>
+  jobs.find(j => j && j.group === prNum && j.name.endsWith(name));
+
+/**
  * Find the icon to set as the text for a node
  * @method icon
  * @param  {String} status Text that denotes a build status
@@ -185,10 +196,12 @@ const hasProcessedDest = (graph, name) => {
  * @param  {Object}      inputGraph A directed graph representation { nodes: [], edges: [] }
  * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [builds]     A list of build metadata
  * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [jobs]       A list of job metadata
- * @param  {String}      [start]    Node name that indicates what started the graph
+ * @param  {String}   [start]     Node name that indicates what started the graph
+ * @param  {Boolean}  [chainPR]   Boolean flag for the chainPR setting
+ * @param  {number}   [prNum]     The pull request number
  * @return {Object}                 A graph representation with row/column coordinates for drawing, and meta information for scaling
  */
-const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
+const decorateGraph = ({ inputGraph, builds, jobs, start, chainPR, prNum }) => {
   // deep clone
   const graph = JSON.parse(JSON.stringify(inputGraph));
   const { nodes } = graph;
@@ -226,10 +239,15 @@ const decorateGraph = ({ inputGraph, builds, jobs, start }) => {
     }
 
     // Get job information
-    const jobId = n.id;
+    let jobId = n.id;
 
     if (jobsAvailable) {
-      const j = job(jobs, jobId);
+      let j = job(jobs, jobId);
+
+      if (!jobId && !chainPR && prNum) {
+        j = prJob(jobs, prNum, n.name);
+        jobId = j?.id;
+      }
 
       // eslint-disable-next-line no-nested-ternary
       n.isDisabled = j

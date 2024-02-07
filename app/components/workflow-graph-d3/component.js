@@ -25,10 +25,12 @@ export default Component.extend({
     'minified',
     'prJobs',
     'selectedEventObj.status',
+    'selectedEventObj.prNum',
     'showDownstreamTriggers',
     'showPRJobs',
     'startFrom',
     'workflowGraph',
+    'prChainEnabled',
     {
       get() {
         const showDownstreamTriggers =
@@ -106,7 +108,9 @@ export default Component.extend({
           inputGraph: this.minified ? subgraphFilter(graph, startFrom) : graph,
           builds,
           jobs,
-          start: startFrom
+          start: startFrom,
+          chainPR: this.prChainEnabled,
+          prNum: this.selectedEventObj?.prNum
         });
       }
     }
