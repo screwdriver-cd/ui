@@ -138,7 +138,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
-        @displayRestartButton={{true}}
+        @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
       />`);
 
@@ -165,7 +165,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
-        @displayRestartButton={{true}}
+        @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
         @isPrChainJob={{this.isPrChainJob}}
       />`);
@@ -193,7 +193,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
-        @displayRestartButton={{true}}
+        @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
         @isPrChainJob={{this.isPrChainJob}}
       />`);
@@ -220,7 +220,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
-        @displayRestartButton={{true}}
+        @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
         @isPrChainJob={{this.isPrChainJob}}
       />`);
@@ -248,7 +248,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
-        @displayRestartButton={{true}}
+        @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
         @isPrChainJob={{this.isPrChainJob}}
       />`);
@@ -276,10 +276,65 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
-        @displayRestartButton={{true}}
+        @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
         @isPrChain={{this.isPrChain}}
         @prBuildExists={{this.prBuildExists}}
+      />`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
+  });
+
+  test('it hides start link for stage jobs', async function (assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        isDisabled: false,
+        stageName: 'integration'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
+
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @canRestartPipeline={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChainJob={{this.isPrChainJob}}
+      />`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
+  });
+
+  test('it hides restart link for stage jobs', async function (assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        status: 'SUCCESS',
+        isDisabled: false,
+        stageName: 'integration'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('isPrChainJob', false);
+
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @canRestartPipeline={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @isPrChainJob={{this.isPrChainJob}}
       />`);
 
     assert.dom('.content a').exists({ count: 3 });
@@ -333,7 +388,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
-        @displayRestartButton={{true}}
+        @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
         @isPrChain={{this.isPrChain}}
         @prBuildExists={{this.prBuildExists}}
@@ -460,7 +515,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
-        @displayRestartButton={{true}}
+        @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
         @isPrChainJob={{this.isPrChainJob}}
       />`);
@@ -492,7 +547,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
-        @displayRestartButton={{true}}
+        @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
         @isPrChainJob={{this.isPrChainJob}}
         @enableHiddenDescription={{this.enableHiddenDescription}}

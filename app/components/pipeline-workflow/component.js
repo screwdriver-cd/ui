@@ -45,7 +45,7 @@ export default Component.extend({
     }
   ),
 
-  displayRestartButton: computed('authenticated', 'pipeline.state', {
+  canRestartPipeline: computed('authenticated', 'pipeline.state', {
     get() {
       return this.authenticated && isActivePipeline(this.get('pipeline'));
     }

@@ -58,6 +58,17 @@ export default Component.extend({
       return description;
     }
   ),
+  displayRestartButton: computed(
+    'canRestartPipeline',
+
+    'tooltipData.job.stageName',
+    function displayRestartButton() {
+      return (
+        get(this, 'canRestartPipeline') &&
+        !get(this, 'tooltipData.job.stageName')
+      );
+    }
+  ),
   actions: {
     toggleJob(toggleJobName) {
       const state = this.jobState;
