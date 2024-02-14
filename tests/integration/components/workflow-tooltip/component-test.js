@@ -161,13 +161,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', false);
+    this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChainJob={{this.isPrChainJob}}
+        @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
     assert.dom('.content a').exists({ count: 4 });
@@ -189,13 +189,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', false);
+    this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChainJob={{this.isPrChainJob}}
+        @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
     assert.dom('.content a').exists({ count: 4 });
@@ -216,13 +216,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', false);
+    this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChainJob={{this.isPrChainJob}}
+        @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
     assert.dom('.content a').exists({ count: 4 });
@@ -244,13 +244,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', false);
+    this.set('canJobStartFromView', false);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChainJob={{this.isPrChainJob}}
+        @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
     assert.dom('.content a').exists({ count: 3 });
@@ -271,15 +271,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', true);
-    this.set('prBuildExists', false);
+    this.set('canJobStartFromView', false);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChain={{this.isPrChain}}
-        @prBuildExists={{this.prBuildExists}}
+        @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
     assert.dom('.content a').exists({ count: 3 });
@@ -300,13 +298,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', false);
+    this.set('canJobStartFromView', false);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChainJob={{this.isPrChainJob}}
+        @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
     assert.dom('.content a').exists({ count: 3 });
@@ -328,13 +326,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', false);
+    this.set('canJobStartFromView', false);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChainJob={{this.isPrChainJob}}
+        @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
     assert.dom('.content a').exists({ count: 3 });
@@ -383,15 +381,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', true);
-    this.set('prBuildExists', true);
+    this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChain={{this.isPrChain}}
-        @prBuildExists={{this.prBuildExists}}
+        @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
     assert.dom('.content a').exists({ count: 4 });
@@ -511,13 +507,13 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', false);
+    this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChainJob={{this.isPrChainJob}}
+        @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
     assert.dom('.content a').exists({ count: 3 });
@@ -542,14 +538,14 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('isPrChainJob', false);
+    this.set('canJobStartFromView', true);
     this.set('enableHiddenDescription', true);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
-        @isPrChainJob={{this.isPrChainJob}}
+        @canJobStartFromView={{this.canJobStartFromView}}
         @enableHiddenDescription={{this.enableHiddenDescription}}
       />`);
 
