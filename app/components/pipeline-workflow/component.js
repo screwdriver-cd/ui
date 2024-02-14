@@ -65,49 +65,6 @@ export default Component.extend({
     });
   },
 
-  isPrChainJob: computed(
-    'pipeline.prChain',
-    'selectedEventObj',
-    'tooltipData',
-    function isPrChainJob() {
-      const selectedEvent =
-        this.selectedEventObj === undefined ? {} : this.selectedEventObj;
-      const { prNum } = selectedEvent;
-      const isPrChain = get(this, 'pipeline.prChain');
-
-      return prNum !== undefined && isPrChain;
-    }
-  ),
-
-  prBuildExists: computed(
-    'selectedEventObj',
-    'tooltipData',
-    function isStartablePrChainJob() {
-      const selectedEvent = this.selectedEventObj;
-
-      const { tooltipData } = this;
-
-      let selectedJobId;
-
-      if (tooltipData && tooltipData.job) {
-        selectedJobId = tooltipData.job.id
-          ? tooltipData.job.id.toString()
-          : null;
-      } else {
-        // job is not selected or upstream/downstream node are selected
-        return false;
-      }
-
-      const buildExists = selectedEvent.buildsSorted.filter(
-        b => b.jobId === selectedJobId
-      );
-
-      const { prNum } = selectedEvent;
-
-      return prNum && buildExists.length !== 0;
-    }
-  ),
-
   canJobStartFromView: computed(
     'selectedEventObj.workflowGraph',
     'tooltipData',
