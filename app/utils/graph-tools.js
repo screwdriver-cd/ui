@@ -616,6 +616,25 @@ const removeBranch = (n, graph) => {
   }
 };
 
+/**
+ * Reverses a graph by flipping the edge source and destinations values
+ * @param {Graph} graph   A directed graph representation { nodes: [], edges: [] }
+ * @return {Graph}        A new graph representing the reversed graph
+ */
+const reverseGraph = graph => {
+  // deep clone
+  const reversedGraph = JSON.parse(JSON.stringify(graph));
+
+  reversedGraph.edges.forEach(edge => {
+    const { src } = edge;
+
+    edge.src = edge.dest;
+    edge.dest = src;
+  });
+
+  return reversedGraph;
+};
+
 export {
   node,
   icon,
@@ -624,5 +643,6 @@ export {
   isRoot,
   isTrigger,
   subgraphFilter,
-  removeBranch
+  removeBranch,
+  reverseGraph
 };

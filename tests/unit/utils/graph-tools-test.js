@@ -5,7 +5,8 @@ import {
   subgraphFilter,
   graphDepth,
   isRoot,
-  isTrigger
+  isTrigger,
+  reverseGraph
 } from 'screwdriver-ui/utils/graph-tools';
 import { module, test } from 'qunit';
 
@@ -899,6 +900,17 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(subgraphFilter(MORE_COMPLEX_GRAPH, 'wow_new_main'), {
       nodes: [{ name: 'other_publish' }, { name: 'wow_new_main' }],
       edges: [{ src: 'wow_new_main', dest: 'other_publish' }]
+    });
+  });
+
+  test('it reverses a graph', function (assert) {
+    const reversedGraph = reverseGraph(COMPLEX_GRAPH);
+
+    assert.deepEqual(reversedGraph.nodes, COMPLEX_GRAPH.nodes);
+    assert.equal(reversedGraph.edges.length, COMPLEX_GRAPH.edges.length);
+    reversedGraph.edges.forEach((edge, index) => {
+      assert.equal(edge.src, COMPLEX_GRAPH.edges[index].dest);
+      assert.equal(edge.dest, COMPLEX_GRAPH.edges[index].src);
     });
   });
 });
