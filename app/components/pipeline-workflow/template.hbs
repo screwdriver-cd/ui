@@ -15,13 +15,15 @@
     @causeMessage={{this.selectedEventObj.causeMessage}}
     @graphClicked={{action "graphClicked"}}
     @isSkipped={{this.selectedEventObj.isSkipped}}
+    @prChainEnabled={{this.prChainEnabled}}
+    @stages={{this.stages}}
   >
     <WorkflowTooltip
       @pipeline={{this.pipeline}}
       @tooltipData={{this.tooltipData}}
       @isPrChainJob={{this.isPrChainJob}}
       @prBuildExists={{this.prBuildExists}}
-      @displayRestartButton={{this.displayRestartButton}}
+      @canRestartPipeline={{this.canRestartPipeline}}
       @stopBuild={{this.stopBuild}}
       @showTooltip={{this.showTooltip}}
       @showTooltipPosition={{this.showTooltipPosition}}

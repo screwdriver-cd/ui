@@ -93,7 +93,7 @@ module('Integration | Component | pipeline workflow', function (hooks) {
     this.setProperties({
       obj: frozenBuild,
       builds: [],
-      displayRestartButton: true,
+      canRestartPipeline: true,
       jobs: [
         {
           id: 6,

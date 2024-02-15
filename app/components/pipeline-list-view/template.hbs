@@ -52,6 +52,7 @@
       @buildJobParameters={{this.jobParameters}}
       @onSave={{action "startBuild"}}
       @onClose={{action "closeModal"}}
+      @startFrom={{this.job.name}}
     />
   </ModalDialog>
 {{/if}}

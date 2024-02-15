@@ -1,4 +1,4 @@
-import Model, { attr, hasMany } from '@ember-data/model';
+import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 import { computed, get } from '@ember/object';
 import { alias, match } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
@@ -102,5 +102,6 @@ export default Model.extend({
       this.builds.any(b => isActiveBuild(b.get('status'), b.get('endTime')))
       ? SHOULD_RELOAD_YES
       : SHOULD_RELOAD_NO;
-  }
+  },
+  stage: belongsTo('stage')
 });
