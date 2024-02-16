@@ -59,7 +59,7 @@ export default Component.extend({
       };
     }
   }),
-  sameRepoPipeline: computed('pipeline.scmRepo.name', 'pipeline.{id,scmUri}', {
+  sameRepoPipeline: computed('pipeline', {
     get() {
       const [scm, repositoryId] = this.pipeline.scmUri.split(':');
 
