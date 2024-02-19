@@ -10,6 +10,7 @@ export default Service.extend({
   store: service(),
   desiredJobNameLength: null,
   desiredTimestampFormat: null,
+  desiredAllowNotification: false,
 
   refreshToken(id) {
     const token = get(this, 'session.data.authenticated.token');
@@ -83,6 +84,22 @@ export default Service.extend({
     this.set('desiredTimestampFormat', desiredTimestampFormat);
 
     return desiredTimestampFormat;
+  },
+
+  async getAllowNotification() {
+    let desiredAllowNotification;
+
+    const userPreference = await this.getUserPreference();
+
+    if (userPreference) {
+      const { allowNotification } = userPreference;
+
+      desiredAllowNotification = allowNotification;
+    }
+
+    this.set('desiredAllowNotification', desiredAllowNotification);
+
+    return desiredAllowNotification;
   },
 
   async updateDisplayJobNameLength(displayJobNameLength) {

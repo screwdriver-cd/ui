@@ -58,7 +58,7 @@ module('Unit | Serializer | preference/user', function (hooks) {
   });
 
   test('it saves preference/user', async function (assert) {
-    assert.expect(3);
+    assert.expect(4);
 
     server.put('http://localhost:8080/v4/users/settings', function (request) {
       const payload = JSON.parse(request.requestBody);
@@ -68,7 +68,8 @@ module('Unit | Serializer | preference/user', function (hooks) {
           1018240: { showPRJobs: true },
           1048190: { showPRJobs: false },
           displayJobNameLength: 50,
-          timestampFormat: 'UTC'
+          timestampFormat: 'UTC',
+          allowNotification: true
         }
       });
 
@@ -81,14 +82,17 @@ module('Unit | Serializer | preference/user', function (hooks) {
 
     const displayJobNameLength = 50;
     const timestampFormat = 'UTC';
+    const allowNotification = true;
 
     userPreference.setProperties({
       displayJobNameLength,
-      timestampFormat
+      timestampFormat,
+      allowNotification
     });
     userPreference.save().then(userPref => {
       assert.equal(userPref.displayJobNameLength, displayJobNameLength);
       assert.equal(userPref.timestampFormat, timestampFormat);
+      assert.equal(userPref.allowNotification, allowNotification);
     });
   });
 });

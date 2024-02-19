@@ -22,6 +22,7 @@ export default Controller.extend({
   errorMessage: '',
   selectedTimestampFormat: {},
   timestampOptions: TIMESTAMP_OPTIONS,
+  allowNotification: false,
 
   async init() {
     this._super(...arguments);
@@ -32,6 +33,8 @@ export default Controller.extend({
       `timestampOptions.${TIMESTAMP_DEFAULT_OPTION}`
     );
 
+    let allowNotification = false;
+
     const userPreferences = await this.userSettings.getUserPreference();
 
     if (userPreferences) {
@@ -39,12 +42,14 @@ export default Controller.extend({
       selectedTimestampFormat = this.timestampOptions.find(
         timestamp => timestamp.value === userPreferences.timestampFormat
       );
+      allowNotification = userPreferences.allowNotification;
     }
 
     this.setProperties({
       displayJobNameLength,
       userPreferences,
-      selectedTimestampFormat
+      selectedTimestampFormat,
+      allowNotification
     });
   },
 
@@ -55,6 +60,7 @@ export default Controller.extend({
       'timestampFormat',
       this.selectedTimestampFormat.value
     );
+    this.userPreferences.set('allowNotification', this.allowNotification);
 
     try {
       await this.userPreferences.save();
@@ -84,6 +90,37 @@ export default Controller.extend({
           successMessage: 'User settings reset successfully!',
           userPreferences: newUserPreferences
         });
+      } catch (error) {
+        this.set('errorMessage', error);
+      } finally {
+        this.set('isSaving', false);
+      }
+    },
+    async requestPermission(enableNotification) {
+      if (enableNotification) {
+        if (Notification.permission !== 'granted') {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              this.userPreferences.set('allowNotification', true);
+            } else {
+              this.userPreferences.set('allowNotification', false);
+            }
+          });
+        } else {
+          this.userPreferences.set('allowNotification', true);
+        }
+      } else {
+        this.userPreferences.set('allowNotification', false);
+      }
+
+      this.set(
+        'allowNotification',
+        this.userPreferences.get('allowNotification')
+      );
+
+      try {
+        await this.userPreferences.save();
+        this.set('successMessage', 'User settings updated successfully!');
       } catch (error) {
         this.set('errorMessage', error);
       } finally {

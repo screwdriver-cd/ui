@@ -1,4 +1,4 @@
-import { set, computed } from '@ember/object';
+import { set, computed, observer } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -80,6 +80,16 @@ export default Component.extend({
       createTime = getTimestamp(this.userSettings, this.buildCreate);
 
       return createTime;
+    }
+  }),
+  buildNotify: observer('buildStatus', function buildNotify() {
+    if (Notification.permission === 'granted' && this.allowNotification) {
+      if (['SUCCESS', 'FAILURE', 'ABORTED'].includes(this.buildStatus)) {
+        // eslint-disable-next-line no-new
+        new Notification('Screwdriver.cd', {
+          body: `${this.buildStatus}`
+        });
+      }
     }
   }),
 
@@ -257,6 +267,14 @@ export default Component.extend({
 
     this.coverageInfoCompute();
     this.overrideCoverageInfo();
+    this.userSettings
+      .getAllowNotification()
+      .then(allowNotification => {
+        this.set('allowNotification', allowNotification);
+      })
+      .catch(() => {
+        this.set('allowNotification', false);
+      });
   },
 
   willRender() {
