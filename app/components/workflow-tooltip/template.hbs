@@ -37,20 +37,10 @@
             Disabled manually starting
           </p>
         {{else}}
-          {{#if (eq this.isPrChainJob false)}}
+          {{#if (eq this.canJobStartFromView true)}}
             <a href="#" {{action this.confirmStartBuild}}>
               {{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here
             </a>
-          {{else}}
-            {{#if (eq this.prBuildExists true)}}
-              <a href="#" {{action this.confirmStartBuild}}>
-                {{if
-                  this.tooltipData.job.status
-                  "Restart"
-                  "Start"
-                }} pipeline from here
-              </a>
-            {{/if}}
           {{/if}}
         {{/if}}
       {{/if}}
