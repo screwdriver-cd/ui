@@ -2,7 +2,11 @@ import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import Component from '@ember/component';
 import { get, computed, set, setProperties } from '@ember/object';
 import { reject } from 'rsvp';
-import { isRoot } from 'screwdriver-ui/utils/graph-tools';
+import {
+  isRoot,
+  reverseGraph,
+  subgraphFilter
+} from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
 import { copy } from 'ember-copy';
 
@@ -61,46 +65,37 @@ export default Component.extend({
     });
   },
 
-  isPrChainJob: computed(
-    'pipeline.prChain',
-    'selectedEventObj',
+  canJobStartFromView: computed(
+    'selectedEventObj.workflowGraph',
     'tooltipData',
-    function isPrChainJob() {
-      const selectedEvent =
-        this.selectedEventObj === undefined ? {} : this.selectedEventObj;
-      const { prNum } = selectedEvent;
-      const isPrChain = get(this, 'pipeline.prChain');
-
-      return prNum !== undefined && isPrChain;
-    }
-  ),
-
-  prBuildExists: computed(
-    'selectedEventObj',
-    'tooltipData',
-    function isStartablePrChainJob() {
-      const selectedEvent = this.selectedEventObj;
-
+    'activeTab',
+    function canJobStartFromView() {
       const { tooltipData } = this;
 
-      let selectedJobId;
-
       if (tooltipData && tooltipData.job) {
-        selectedJobId = tooltipData.job.id
-          ? tooltipData.job.id.toString()
-          : null;
-      } else {
-        // job is not selected or upstream/downstream node are selected
-        return false;
+        const reversedGraph = reverseGraph(this.selectedEventObj.workflowGraph);
+        const subgraph = subgraphFilter(reversedGraph, tooltipData.job.name);
+
+        const isOnPrPath =
+          subgraph.nodes.filter(node => node.name === '~pr').length > 0;
+
+        if (this.activeTab === 'pulls') {
+          // In the pull request view, only allow restarting nodes that are reachable from the ~pr node
+          return isOnPrPath;
+        }
+        // In the events view:
+        const isOnCommitPath =
+          subgraph.nodes.filter(node => node.name === '~commit').length > 0;
+
+        // If the job is detached, allow restart:  isOnPrPath = false, isOnCommitPath = false
+        // If the job is only on the commit path, allow restart: isOnPrPath = false, isOnCommitPath = true
+        // If the job is on the commit and pr path, allow restart: isOnPrPath = true, isOnCommitPath = true
+        // If the job is only on the pr path, do not allow restart: isOnPrPath = true, isOnCommitPath = false
+        return !(isOnPrPath && !isOnCommitPath);
       }
 
-      const buildExists = selectedEvent.buildsSorted.filter(
-        b => b.jobId === selectedJobId
-      );
-
-      const { prNum } = selectedEvent;
-
-      return prNum && buildExists.length !== 0;
+      // job is not selected or upstream/downstream node are selected
+      return false;
     }
   ),
 
