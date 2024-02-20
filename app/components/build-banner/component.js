@@ -27,6 +27,8 @@ export default Component.extend({
         /^sd-teardown-screwdriver-coverage/.test(item.name)
       );
 
+      console.log('something here', coverageStep);
+
       return coverageStep;
     }
   }),

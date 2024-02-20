@@ -64,13 +64,44 @@ Router.map(function route() {
     this.route('show', { path: '/:collection_id' });
   });
   this.route('templates', function templatesRoute() {
-    this.route('namespace', { path: '/:namespace' });
-    this.route('detail', { path: '/:namespace/:name' }, function detailRoute() {
-      this.route('index', { path: '/' });
-      this.route('version', { path: '/:version' });
+    // this.route('namespace', { path: '/:namespace' });
+    // this.route('detail', { path: '/:namespace/:name' }, function detailRoute() {
+    //   this.route('index', { path: '/' });
+    //   this.route('version', { path: '/:version' });
+    // });
+    // this.route('template-usage', { path: '/:namespace/:name/:version/usage' });
+
+    this.route('pipeline', { path: '/pipeline' }, function pipelineTemplate() {
+      this.route(
+        'detail',
+        { path: '/:namespace/:name' },
+        function pipelineTemplateDetail() {
+          this.route('index', { path: '/' });
+          this.route('version', { path: '/:version' });
+        }
+      );
+      this.route('namespace', { path: '/:namespace' });
+      this.route('template-usage', {
+        path: '/:namespace/:name/:version/usage'
+      });
     });
-    this.route('template-usage', { path: '/:namespace/:name/:version/usage' });
+
+    this.route('job', { path: '/job' }, function jobTemplate() {
+      this.route(
+        'detail',
+        { path: '/:namespace/:name' },
+        function jobTemplateDetail() {
+          this.route('index', { path: '/' });
+          this.route('version', { path: '/:version' });
+        }
+      );
+      this.route('namespace', { path: '/:namespace' });
+      this.route('template-usage', {
+        path: '/:namespace/:name/:version/usage'
+      });
+    });
   });
+
   this.route('commands', function commandsRoute() {
     this.route('namespace', { path: '/:namespace' });
     this.route('detail', { path: '/:namespace/:name' }, function detailRoute() {

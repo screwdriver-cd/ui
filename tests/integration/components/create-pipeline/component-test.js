@@ -33,7 +33,7 @@ module('Integration | Component | create-pipeline', function (hooks) {
 
   hooks.beforeEach(function () {
     const shuttleStub = Service.extend({
-      fetchAllTemplates() {
+      fetchAllJobTemplates() {
         return new EmberPromise(resolve => resolve(allTemplates));
       },
       getUserSetting() {

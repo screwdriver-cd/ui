@@ -43,7 +43,7 @@ export default Component.extend({
 
   async init() {
     this._super(...arguments);
-    const allTemplates = await this.shuttle.fetchAllTemplates();
+    const allTemplates = await this.shuttle.fetchAllJobTemplates();
 
     this.set('allTemplates', allTemplates);
   },

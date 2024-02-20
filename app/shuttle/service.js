@@ -3,6 +3,10 @@ import Service, { inject as service } from '@ember/service';
 import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
 
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /**
  * Screwdriver Shuttle Service
  * Only certain methods are allowed: get, request, post, put, patch, del, raw
@@ -88,12 +92,33 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data, raw);
   },
 
-  fetchAllTemplates() {
+  fetchAllJobTemplates() {
     const method = 'get';
     const url = `/templates`;
     const data = { sortBy: 'createTime', sort: 'descending', compact: true };
 
     return this.fetchFromApi(method, url, data);
+  },
+
+  fetchAllPipelineTemplates() {
+    const method = 'get';
+    const url = `/pipeline/templates`;
+    const data = { page: 1, count: 10 };
+
+    const mockData = {
+        "id": 123345,
+        "pipelineId": 123345,
+        "namespace": "node",
+        "name": "nodePipeline",
+        "maintainer": "foo@bar.com",
+        "trustedSinceVersion": "1.2.3",
+        "latestVersion": "1.2.3",
+        "createTime": "2038-01-19T03:14:08.131Z",
+        "updateTime": "2038-01-19T03:14:08.131Z",
+        "templateType": "PIPELINE"
+    };
+    // return this.fetchFromApi(method, url, data);
+    return delay(3000).then(() => [mockData, mockData, mockData]);
   },
 
   /**

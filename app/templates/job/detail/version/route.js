@@ -1,8 +1,9 @@
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend({
+export default Route.extend(AuthenticatedRouteMixin, {
   store: service(),
   router: service(),
   template: service(),
