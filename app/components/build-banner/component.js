@@ -1,5 +1,4 @@
-import { set, computed, observer } from '@ember/object';
-import { alias } from '@ember/object/computed';
+import { set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
@@ -26,28 +25,6 @@ export default Component.extend({
       const coverageStep = this.buildSteps.find(item =>
         /^sd-teardown-screwdriver-coverage/.test(item.name)
       );
-
-      console.log('something here', coverageStep);
-
-      return coverageStep;
-    }
-  }),
-
-  coverageStepEndTime: alias('coverageStep.endTime'),
-
-  prNumber: computed('_prNumber', 'event.pr.url', {
-    get() {
-      if (this._prNumber) {
-        return this._prNumber;
-      }
-
-      const url =
-        this.get('event.pr.url') === undefined ? '' : this.get('event.pr.url');
-
-      return url.split('/').pop();
-    },
-    set(_, value) {
-      set(this, '_prNumber', value);
 
       return value;
     }
@@ -82,28 +59,6 @@ export default Component.extend({
       createTime = getTimestamp(this.userSettings, this.buildCreate);
 
       return createTime;
-    }
-  }),
-  buildNotify: observer('buildStatus', function buildNotify() {
-    if (Notification.permission === 'granted' && this.allowNotification) {
-      if (['SUCCESS', 'FAILURE', 'ABORTED'].includes(this.buildStatus)) {
-        const screwdriverIconPath = '/assets/icons/android-chrome-144x144.png';
-        const statusMap = {
-          SUCCESS: '✅',
-          FAILURE: '❌',
-          ABORTED: '⛔'
-        };
-
-        const notificationIcon = statusMap[this.buildStatus];
-
-        // eslint-disable-next-line no-new
-        new Notification(`SD.cd ${this.pipelineName}`, {
-          body: `${notificationIcon} ${this.buildStatus}: ${this.jobName}`,
-          icon: screwdriverIconPath
-        }).onclick = () => {
-          window.focus();
-        };
-      }
     }
   }),
 
@@ -281,14 +236,6 @@ export default Component.extend({
 
     this.coverageInfoCompute();
     this.overrideCoverageInfo();
-    this.userSettings
-      .getAllowNotification()
-      .then(allowNotification => {
-        this.set('allowNotification', allowNotification);
-      })
-      .catch(() => {
-        this.set('allowNotification', false);
-      });
   },
 
   willRender() {
