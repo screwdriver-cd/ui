@@ -1,4 +1,5 @@
 import { set, computed } from '@ember/object';
+import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { isActiveBuild, isPRJob } from 'screwdriver-ui/utils/build';
@@ -25,6 +26,26 @@ export default Component.extend({
       const coverageStep = this.buildSteps.find(item =>
         /^sd-teardown-screwdriver-coverage/.test(item.name)
       );
+
+      return coverageStep;
+    }
+  }),
+
+  coverageStepEndTime: alias('coverageStep.endTime'),
+
+  prNumber: computed('_prNumber', 'event.pr.url', {
+    get() {
+      if (this._prNumber) {
+        return this._prNumber;
+      }
+
+      const url =
+        this.get('event.pr.url') === undefined ? '' : this.get('event.pr.url');
+
+      return url.split('/').pop();
+    },
+    set(_, value) {
+      set(this, '_prNumber', value);
 
       return value;
     }
