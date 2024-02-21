@@ -99,7 +99,7 @@ export default Controller.extend({
     async requestPermission(enableNotification) {
       if (enableNotification) {
         if (Notification.permission !== 'granted') {
-          Notification.requestPermission().then(permission => {
+          await Notification.requestPermission().then(permission => {
             if (permission === 'granted') {
               this.userPreferences.set('allowNotification', true);
             } else {
