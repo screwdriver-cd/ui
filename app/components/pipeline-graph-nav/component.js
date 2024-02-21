@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { getTimestamp } from '../../utils/timestamp-format';
 
@@ -53,5 +53,41 @@ export default Component.extend({
 
       return startDate;
     }
-  })
+  }),
+  notificationReady: false,
+  notificationEventId: null,
+  buildNotify: observer('selectedEventObj.status', function buildNotify() {
+    if (Notification.permission === 'granted' && this.allowNotification) {
+      const eventStatus = this.get('selectedEventObj.status');
+
+      if (['QUEUED', 'RUNNING'].includes(eventStatus)) {
+        this.set('notificationEventId', this.get('selectedEventObj.id'));
+        this.set('notificationReady', true);
+      } else if (
+        ['SUCCESS', 'FAILURE', 'ABORTED'].includes(eventStatus) &&
+        this.notificationReady &&
+        this.notificationEventId === this.get('selectedEventObj.id')
+      ) {
+        // eslint-disable-next-line no-new
+        new Notification(`Event: ${this.get('selectedEventObj.id')}`, {
+          body: `${eventStatus}`
+        });
+        this.set('notificationReady', false);
+      } else {
+        this.set('notificationReady', false);
+      }
+    }
+  }),
+  init() {
+    this._super(...arguments);
+
+    this.userSettings
+      .getAllowNotification()
+      .then(allowNotification => {
+        this.set('allowNotification', allowNotification);
+      })
+      .catch(() => {
+        this.set('allowNotification', false);
+      });
+  }
 });

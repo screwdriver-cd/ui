@@ -120,6 +120,9 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       },
       getDisplayJobNameLength() {
         return null;
+      },
+      getAllowNotification() {
+        return new EmberPromise(resolve => resolve(false));
       }
     });
 
