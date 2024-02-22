@@ -18,6 +18,7 @@ export default Component.extend({
   // Update the job status
   jobService: service('job'),
   shuttle: service(),
+  pipelineService: service('pipeline'),
   errorMessage: '',
   successMessage: '',
   scmUrl: '',
@@ -156,9 +157,10 @@ export default Component.extend({
 
     let showPRJobs = true;
 
-    const pipelinePreference = await this.shuttle.getUserPipelinePreference(
-      this.get('pipeline.id')
-    );
+    const pipelinePreference =
+      await this.pipelineService.getUserPipelinePreference(
+        this.get('pipeline.id')
+      );
 
     if (pipelinePreference) {
       showPRJobs =
