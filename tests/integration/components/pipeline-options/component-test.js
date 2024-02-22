@@ -257,7 +257,7 @@ module('Integration | Component | pipeline options', function (hooks) {
   });
 
   test('it opens job toggle modal', async function (assert) {
-    assert.expect(10);
+    assert.expect(11);
 
     injectSessionStub(this);
 
@@ -702,7 +702,10 @@ module('Integration | Component | pipeline options', function (hooks) {
         });
 
         return resolve({});
-      },
+      }
+    });
+
+    const pipelineServiceStub = Service.extend({
       getUserPipelinePreference(pipelineId) {
         assert.ok(true, 'getUserPipelinePreference called');
         assert.equal(pipelineId, 'abc1234');
@@ -713,6 +716,8 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     this.owner.unregister('service:shuttle');
     this.owner.register('service:shuttle', shuttleStub);
+    this.owner.unregister('service:pipeline');
+    this.owner.register('service:pipeline', pipelineServiceStub);
 
     await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
 
@@ -766,7 +771,10 @@ module('Integration | Component | pipeline options', function (hooks) {
         });
 
         return resolve({});
-      },
+      }
+    });
+
+    const pipelineServiceStub = Service.extend({
       getUserPipelinePreference(pipelineId) {
         assert.ok(true, 'getUserPipelinePreference called');
         assert.equal(pipelineId, 'abc1234');
@@ -777,6 +785,8 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     this.owner.unregister('service:shuttle');
     this.owner.register('service:shuttle', shuttleStub);
+    this.owner.unregister('service:pipeline');
+    this.owner.register('service:pipeline', pipelineServiceStub);
 
     await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
 
@@ -823,7 +833,10 @@ module('Integration | Component | pipeline options', function (hooks) {
         });
 
         return resolve({});
-      },
+      }
+    });
+
+    const pipelineServiceStub = Service.extend({
       getUserPipelinePreference(pipelineId) {
         assert.ok(true, 'getUserPipelinePreference called');
         assert.equal(pipelineId, 'abc1234');
@@ -834,6 +847,8 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     this.owner.unregister('service:shuttle');
     this.owner.register('service:shuttle', shuttleStub);
+    this.owner.unregister('service:pipeline');
+    this.owner.register('service:pipeline', pipelineServiceStub);
 
     await render(hbs`<PipelineOptions @pipeline={{this.mockPipeline}} />`);
 
