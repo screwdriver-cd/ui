@@ -62,6 +62,7 @@ export default Route.extend({
 
     return RSVP.hash({
       jobs: this.get('pipeline.jobs'),
+      stages: this.get('pipeline.stages'),
       events: this.store.query('event', {
         pipelineId,
         page: 1,

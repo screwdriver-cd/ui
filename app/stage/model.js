@@ -1,8 +1,10 @@
-import Model, { attr, hasMany } from '@ember-data/model';
+import Model, { attr } from '@ember-data/model';
 
 export default Model.extend({
   name: attr('string'),
   pipelineId: attr('number'),
   description: attr('string'),
-  jobs: hasMany('job')
+  jobIds: attr(),
+  setup: attr('number'),
+  teardown: attr('number')
 });
