@@ -80,6 +80,14 @@ export default Controller.extend({
       this.set('isSaving', true);
 
       try {
+        const localPipelinePreferences = await this.store.peekAll(
+          'preference/pipeline'
+        );
+
+        localPipelinePreferences.forEach(pipelinePreference => {
+          pipelinePreference.unloadRecord();
+        });
+
         // can be replaced with destroyRecord after ember-data 3.28
         this.store.deleteRecord(this.userPreferences);
         await this.userPreferences.save();
