@@ -1,4 +1,4 @@
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
@@ -257,76 +257,6 @@ export default Service.extend({
     const url = `/users/settings`;
 
     const data = { settings };
-
-    return this.fetchFromApi(method, url, data);
-  },
-
-  /**
-   * getUserPipelinePreference
-   * @param  {Number} pipelineId  pipeline Id
-   * @return {Promise}
-   */
-  async getUserPipelinePreference(pipelineId) {
-    if (pipelineId === undefined) {
-      return {};
-    }
-
-    const remotePreferences = await this.getUserSetting();
-    const remotePipelineConfig =
-      get(remotePreferences, pipelineId) === undefined
-        ? {}
-        : get(remotePreferences, pipelineId);
-    const localPipelinePreference = await this.store
-      .peekAll('preference/pipeline')
-      .findBy('id', pipelineId);
-
-    // local preference takes precedence
-    if (localPipelinePreference && remotePipelineConfig) {
-      localPipelinePreference.setProperties(remotePipelineConfig);
-      localPipelinePreference.save();
-
-      return localPipelinePreference;
-    }
-
-    const pipelinePreference = await this.store.createRecord(
-      'preference/pipeline',
-      {
-        id: pipelineId,
-        ...remotePipelineConfig
-      }
-    );
-
-    return pipelinePreference;
-  },
-
-  /**
-   * getUserPreference
-   * @return {Promise}
-   */
-  async getUserPreference() {
-    const userSetting = await this.getUserSetting();
-
-    return userSetting;
-  },
-
-  /**
-   * updateUserPreference
-   * @param  {Number}  [pipelineId]
-   * @param  {Object}  pipelineSettings
-   * @param  {Boolean} [pipelineSettings.showPRJobs]
-   * @return {Promise}
-   */
-  async updateUserPreference(pipelineId, pipelineSettings) {
-    const method = 'put';
-    const url = `/users/settings`;
-    const userSettings = await this.getUserSetting();
-
-    let data = {
-      settings: {
-        ...userSettings,
-        [pipelineId]: pipelineSettings
-      }
-    };
 
     return this.fetchFromApi(method, url, data);
   },
