@@ -614,17 +614,23 @@ module('Unit | Utility | graph tools', function () {
       {
         id: 7,
         name: 'integration',
-        jobs: [{ id: 21 }, { id: 22 }, { id: 23 }, { id: 24 }]
+        jobIds: [21, 22, 23, 24],
+        setup: 28,
+        teardown: 29
       },
       {
         id: 8,
         name: 'production',
-        jobs: [{ id: 31 }, { id: 32 }]
+        jobs: [31, 32],
+        setup: 38,
+        teardown: 39
       },
       {
         id: 9,
         name: 'canary',
-        jobs: [{ id: 41 }, { id: 42 }]
+        jobs: [41, 42],
+        setup: 48,
+        teardown: 49
       }
     ];
     const expectedOutput = {
@@ -846,22 +852,14 @@ module('Unit | Utility | graph tools', function () {
           ]
         },
         id: 7,
-        jobs: [
-          {
-            id: 21
-          },
-          {
-            id: 22
-          },
-          {
-            id: 23
-          }
-        ],
+        jobIds: [21, 22, 23],
         name: 'integration',
         pos: {
           x: 3,
           y: 0
-        }
+        },
+        setup: 28,
+        teardown: 29
       },
       {
         description: undefined,
@@ -878,22 +876,14 @@ module('Unit | Utility | graph tools', function () {
           ]
         },
         id: 8,
-        jobs: [
-          {
-            id: 31
-          },
-          {
-            id: 32
-          },
-          {
-            id: 33
-          }
-        ],
+        jobIds: [31, 32, 33],
         name: 'production',
         pos: {
           x: 6,
           y: 0
-        }
+        },
+        setup: 38,
+        teardown: 39
       }
     ];
 

@@ -21,6 +21,7 @@ export default Model.extend({
   prChain: attr('boolean', { defaultValue: false }),
   parameters: attr(),
   jobs: hasMany('job', { async: true }),
+  stages: hasMany('stage', { async: true }),
   secrets: hasMany('secret', { async: true }),
   tokens: hasMany('token', { async: true }),
   metrics: hasMany('metric', { async: true }),

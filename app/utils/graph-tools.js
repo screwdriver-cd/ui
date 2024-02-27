@@ -99,18 +99,20 @@ const extractEventStages = (graph, pipelineStages) => {
       let eventStage = stageNameToEventStageMap[stageName];
 
       if (eventStage === undefined) {
-        const pipelineStage = stageToPipelineStageMap[stageName] || {};
+        const pipelineStage = stageToPipelineStageMap[stageName];
 
         eventStage = {
-          name: stageName,
-          jobs: [],
           id: pipelineStage.id,
-          description: pipelineStage.description
+          name: pipelineStage.name,
+          description: pipelineStage.description,
+          setup: pipelineStage.setup,
+          teardown: pipelineStage.teardown,
+          jobIds: []
         };
 
         stageNameToEventStageMap[stageName] = eventStage;
       }
-      eventStage.jobs.push({ id: n.id });
+      eventStage.jobIds.push(n.id);
     }
   });
 
@@ -163,7 +165,7 @@ const bypassSetupTeardownEdges = (edges, nodeName) => {
  */
 const extractStageGraph = (graph, stage) => {
   const { nodes, edges } = graph;
-  const jobIds = stage.jobs.map(j => parseInt(j.id, 10));
+  const { jobIds } = stage;
   const newNodes = [];
   const newNodesSet = new Set();
   const newEdges = [];
@@ -409,7 +411,7 @@ const decorateGraph = ({
   start,
   chainPR,
   prNum,
-  stages
+  stages: pipelineStages
 }) => {
   // deep clone
   const originalGraph = JSON.parse(JSON.stringify(inputGraph));
@@ -582,8 +584,8 @@ const decorateGraph = ({
     width: Math.max(1, y.length - 1)
   };
 
-  if (stages) {
-    const eventStages = extractEventStages(graph, stages);
+  if (pipelineStages && pipelineStages.length > 0) {
+    const eventStages = extractEventStages(graph, pipelineStages);
 
     graph.stages = eventStages.map(s => {
       const stageGraph = extractStageGraph(graph, s);
