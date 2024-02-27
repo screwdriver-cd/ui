@@ -348,6 +348,48 @@ const hasProcessedDest = (graph, name) => {
 };
 
 /**
+ * Filter to the subgraph in which the root is the start from node
+ * @param   {Array}   [{nodes}]   Array of graph vertices
+ * @param   {Array}   [{edges}]   Array of graph edges
+ * @param   {String}  [startNode] Starting/trigger node
+ * @returns {Object}              Nodes and edges for the filtered subgraph
+ */
+const subgraphFilter = ({ nodes, edges }, startNode) => {
+  if (!startNode || !nodes.length) {
+    return { nodes, edges };
+  }
+
+  let start = startNode;
+
+  // startNode can be a PR job in PR events, so trim PR prefix from node name
+  if (startNode.match(/^PR-[0-9]+:/)) {
+    start = startNode.split(':')[1];
+  }
+
+  const visiting = [start];
+
+  const visited = new Set(visiting);
+
+  if (edges.length) {
+    while (visiting.length) {
+      const cur = visiting.shift();
+
+      edges.forEach(e => {
+        if (e.src === cur && !visited.has(e.dest)) {
+          visiting.push(e.dest);
+          visited.add(e.dest);
+        }
+      });
+    }
+  }
+
+  return {
+    nodes: nodes.filter(n => visited.has(n.name)),
+    edges: edges.filter(e => visited.has(e.src) && visited.has(e.dest))
+  };
+};
+
+/**
  * Clones and decorates an input graph data structure into something that can be used to display
  * a custom directed graph
  * @method decorateGraph
@@ -542,48 +584,6 @@ const decorateGraph = ({
   }
 
   return graph;
-};
-
-/**
- * Filter to the subgraph in which the root is the start from node
- * @param   {Array}   [{nodes}]   Array of graph vertices
- * @param   {Array}   [{edges}]   Array of graph edges
- * @param   {String}  [startNode] Starting/trigger node
- * @returns {Object}              Nodes and edges for the filtered subgraph
- */
-const subgraphFilter = ({ nodes, edges }, startNode) => {
-  if (!startNode || !nodes.length) {
-    return { nodes, edges };
-  }
-
-  let start = startNode;
-
-  // startNode can be a PR job in PR events, so trim PR prefix from node name
-  if (startNode.match(/^PR-[0-9]+:/)) {
-    start = startNode.split(':')[1];
-  }
-
-  const visiting = [start];
-
-  const visited = new Set(visiting);
-
-  if (edges.length) {
-    while (visiting.length) {
-      const cur = visiting.shift();
-
-      edges.forEach(e => {
-        if (e.src === cur && !visited.has(e.dest)) {
-          visiting.push(e.dest);
-          visited.add(e.dest);
-        }
-      });
-    }
-  }
-
-  return {
-    nodes: nodes.filter(n => visited.has(n.name)),
-    edges: edges.filter(e => visited.has(e.src) && visited.has(e.dest))
-  };
 };
 
 /**
