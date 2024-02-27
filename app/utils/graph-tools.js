@@ -546,6 +546,14 @@ const decorateGraph = ({
     }
   });
 
+  // prTriggeredNodes is only calculated for non-chain PR pipelines in the PR view
+  const prTriggeredNodes =
+    !chainPR && prNum
+      ? subgraphFilter(graph, '~pr').nodes.filter(
+          graphNode => graphNode.name !== '~pr'
+        )
+      : null;
+
   // Decorate edges with positions and status
   edges.forEach(e => {
     const srcNode = node(nodes, e.src);
@@ -559,7 +567,11 @@ const decorateGraph = ({
     e.to = destNode.pos;
 
     if (srcNode.status && srcNode.status !== 'RUNNING') {
-      e.status = srcNode.status;
+      if (prTriggeredNodes && node(prTriggeredNodes, srcNode.name)) {
+        // For non-chain PR pipelines, PR triggered jobs do not need outbound edges to have a status as they are the last node in the chain.
+      } else {
+        e.status = srcNode.status;
+      }
     }
   });
 
