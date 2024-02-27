@@ -68,6 +68,13 @@ export default Model.extend({
       return get(this, 'permutations.0.annotations') || {};
     }
   }),
+  virtualJob: computed('annotations', 'permutations.0.annotations', {
+    get() {
+      const annotations = get(this, 'annotations');
+
+      return annotations && annotations['screwdriver.cd/virtualJob'] === true;
+    }
+  }),
   description: computed('permutations.0.description', {
     get() {
       return get(this, 'permutations.0.description') || {};
