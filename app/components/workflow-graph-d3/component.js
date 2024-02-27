@@ -5,6 +5,7 @@ import { inject as service } from '@ember/service';
 import {
   icon,
   decorateGraph,
+  node as findNode,
   subgraphFilter,
   removeBranch
 } from 'screwdriver-ui/utils/graph-tools';
@@ -42,6 +43,7 @@ export default Component.extend({
     'stages',
     {
       get() {
+        let { showPRJobs } = this;
         const showDownstreamTriggers =
           this.showDownstreamTriggers === undefined
             ? false
@@ -69,7 +71,52 @@ export default Component.extend({
               }
             : this.completeWorkflowGraph;
 
-        const graph = showDownstreamTriggers ? completeGraph : workflowGraph;
+        let graph = showDownstreamTriggers ? completeGraph : workflowGraph;
+
+        if (!this.minified && this.selectedEventObj?.prNum) {
+          // When initially onboarding the screwdriver configuration, there is a node named ~pr:/.*/ in completeGraph that must be merged with the node data in the workflow graph.  Additional edge data clean up must also be done.
+          const prJobWildcard = '~pr:/.*/';
+          const completePrGraph = JSON.parse(JSON.stringify(completeGraph));
+          const nodesAdded = [];
+
+          // Update the graph with the correct job id from the workflow graph
+          workflowGraph.nodes.forEach(workflowGraphNode => {
+            const nodeToUpdate = findNode(
+              completePrGraph.nodes,
+              workflowGraphNode.name
+            );
+
+            if (!this.prChainEnabled && !nodeToUpdate) {
+              nodesAdded.push(workflowGraphNode);
+            } else {
+              nodeToUpdate.id = workflowGraphNode.id;
+            }
+          });
+
+          // Nodes are only added when initially onboarding the screwdriver configuration.  Node and edge data will be merged with the workflow graph data for the placeholder node
+          if (nodesAdded.length > 0) {
+            const nodes = completeGraph.nodes.filter(
+              graphNode => graphNode.name !== prJobWildcard
+            );
+            const edges = completePrGraph.edges.filter(
+              edge => edge.src !== '~pr' && edge.src !== prJobWildcard
+            );
+
+            nodes.push(...nodesAdded);
+            nodesAdded.forEach(addedNode => {
+              edges.push({
+                src: '~pr',
+                dest: addedNode.name
+              });
+            });
+
+            completePrGraph.nodes = nodes;
+            completePrGraph.edges = edges;
+          }
+
+          graph = completePrGraph;
+          showPRJobs = true;
+        }
 
         // set warning status if has warning
         if (builds.length) {
@@ -107,7 +154,7 @@ export default Component.extend({
         }
 
         // remove jobs that starts from ~pr
-        if (!this.showPRJobs) {
+        if (!showPRJobs) {
           const prNode = graph.nodes.findBy('name', '~pr');
 
           removeBranch(prNode, graph);
