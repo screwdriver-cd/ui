@@ -562,8 +562,8 @@ module('Unit | Utility | graph tools', function () {
   });
 
   /**
-   * 1. Should exclude stage setup/teardown nodes
-   * 2. Should bypass stage setup/teardown edges
+   * 1. Should exclude nodes corresponding to implicit stage setup/teardown jobs
+   * 2. Should bypass edges associated with implicit stage setup/teardown jobs
    * 3. Should derive event stages from the workflow graph and enrich it with latest stage definition (Ex: description)
    * 4. Should generate sub workflow graph for each stage
    */
@@ -633,6 +633,22 @@ module('Unit | Utility | graph tools', function () {
         teardown: 49
       }
     ];
+
+    const JOBS = [
+      { id: 1, name: 'component', virtualJob: false },
+      { id: 2, name: 'publish', virtualJob: false },
+      { id: 21, name: 'ci-deploy', virtualJob: false },
+      { id: 22, name: 'ci-test', virtualJob: false },
+      { id: 23, name: 'ci-certify', virtualJob: false },
+      { id: 28, name: 'stage@integration:setup', virtualJob: true },
+      { id: 29, name: 'stage@integration:teardown', virtualJob: true },
+      { id: 31, name: 'prod-deploy', virtualJob: false },
+      { id: 32, name: 'prod-test', virtualJob: false },
+      { id: 33, name: 'prod-certify', virtualJob: false },
+      { id: 38, name: 'stage@production:setup', virtualJob: false },
+      { id: 39, name: 'stage@production:teardown', virtualJob: false }
+    ];
+
     const expectedOutput = {
       edges: [
         {
@@ -696,26 +712,50 @@ module('Unit | Utility | graph tools', function () {
           }
         },
         {
-          dest: 'prod-test',
+          dest: 'prod-deploy',
           from: {
             x: 6,
             y: 0
           },
-          src: 'prod-deploy',
+          src: 'stage@production:setup',
           to: {
             x: 7,
             y: 0
           }
         },
         {
-          dest: 'prod-certify',
+          dest: 'prod-test',
           from: {
             x: 7,
             y: 0
           },
-          src: 'prod-test',
+          src: 'prod-deploy',
           to: {
             x: 8,
+            y: 0
+          }
+        },
+        {
+          dest: 'prod-certify',
+          from: {
+            x: 8,
+            y: 0
+          },
+          src: 'prod-test',
+          to: {
+            x: 9,
+            y: 0
+          }
+        },
+        {
+          dest: 'stage@production:teardown',
+          from: {
+            x: 9,
+            y: 0
+          },
+          src: 'prod-certify',
+          to: {
+            x: 10,
             y: 0
           }
         },
@@ -732,7 +772,7 @@ module('Unit | Utility | graph tools', function () {
           }
         },
         {
-          dest: 'prod-deploy',
+          dest: 'stage@production:setup',
           from: {
             x: 5,
             y: 0
@@ -746,10 +786,11 @@ module('Unit | Utility | graph tools', function () {
       ],
       meta: {
         height: 2,
-        width: 9
+        width: 11
       },
       nodes: [
         {
+          isDisabled: false,
           name: '~pr',
           pos: {
             x: 0,
@@ -757,6 +798,7 @@ module('Unit | Utility | graph tools', function () {
           }
         },
         {
+          isDisabled: false,
           name: '~commit',
           pos: {
             x: 0,
@@ -765,6 +807,7 @@ module('Unit | Utility | graph tools', function () {
         },
         {
           id: 1,
+          isDisabled: false,
           name: 'component',
           pos: {
             x: 1,
@@ -773,6 +816,7 @@ module('Unit | Utility | graph tools', function () {
         },
         {
           id: 2,
+          isDisabled: false,
           name: 'publish',
           pos: {
             x: 2,
@@ -781,57 +825,83 @@ module('Unit | Utility | graph tools', function () {
         },
         {
           id: 21,
+          isDisabled: false,
           name: 'ci-deploy',
-          stageName: 'integration',
           pos: {
             x: 3,
             y: 0
-          }
+          },
+          stageName: 'integration'
         },
         {
           id: 22,
+          isDisabled: false,
           name: 'ci-test',
-          stageName: 'integration',
           pos: {
             x: 4,
             y: 0
-          }
+          },
+          stageName: 'integration'
         },
         {
           id: 23,
+          isDisabled: false,
           name: 'ci-certify',
-          stageName: 'integration',
           pos: {
             x: 5,
             y: 0
-          }
+          },
+          stageName: 'integration'
         },
         {
-          id: 31,
-          name: 'prod-deploy',
-          stageName: 'production',
+          id: 38,
+          isDisabled: false,
+          name: 'stage@production:setup',
           pos: {
             x: 6,
             y: 0
-          }
+          },
+          stageName: 'production'
         },
         {
-          id: 32,
-          name: 'prod-test',
-          stageName: 'production',
+          id: 31,
+          isDisabled: false,
+          name: 'prod-deploy',
           pos: {
             x: 7,
             y: 0
-          }
+          },
+          stageName: 'production'
         },
         {
-          id: 33,
-          name: 'prod-certify',
-          stageName: 'production',
+          id: 32,
+          isDisabled: false,
+          name: 'prod-test',
           pos: {
             x: 8,
             y: 0
-          }
+          },
+          stageName: 'production'
+        },
+        {
+          id: 33,
+          isDisabled: false,
+          name: 'prod-certify',
+          pos: {
+            x: 9,
+            y: 0
+          },
+          stageName: 'production'
+        },
+        {
+          id: 39,
+          isDisabled: false,
+          name: 'stage@production:teardown',
+          pos: {
+            x: 10,
+            y: 0
+          },
+          stageName: 'production'
         }
       ]
     };
@@ -864,15 +934,22 @@ module('Unit | Utility | graph tools', function () {
       {
         description: undefined,
         graph: {
-          edges: [expectedOutput.edges[5], expectedOutput.edges[6]],
+          edges: [
+            expectedOutput.edges[5],
+            expectedOutput.edges[6],
+            expectedOutput.edges[7],
+            expectedOutput.edges[8]
+          ],
           meta: {
             height: 1,
-            width: 3
+            width: 5
           },
           nodes: [
             expectedOutput.nodes[7],
             expectedOutput.nodes[8],
-            expectedOutput.nodes[9]
+            expectedOutput.nodes[9],
+            expectedOutput.nodes[10],
+            expectedOutput.nodes[11]
           ]
         },
         id: 8,
@@ -889,11 +966,8 @@ module('Unit | Utility | graph tools', function () {
 
     const result = decorateGraph({
       inputGraph: GRAPH,
-      stages: STAGES
-    });
-
-    ['edges'].forEach(key => {
-      assert.deepEqual(result[key], expectedOutput[key]);
+      stages: STAGES,
+      jobs: JOBS
     });
 
     assert.deepEqual(result, expectedOutput);
