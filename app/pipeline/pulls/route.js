@@ -21,7 +21,6 @@ export default EventsRoute.extend({
 
     pipelineEventsController.setProperties({
       pipeline: this.pipeline,
-      showDownstreamTriggers: false,
       showPRJobs: true
     });
 
