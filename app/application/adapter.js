@@ -73,7 +73,8 @@ export default RESTAdapter.extend(DataAdapterMixin, {
         jobs: 'jobs',
         secrets: 'secrets',
         tokens: 'tokens',
-        metrics: 'metrics'
+        metrics: 'metrics',
+        stages: 'stages'
       };
     } else if (key === 'event' || key === 'events') {
       o.links = {

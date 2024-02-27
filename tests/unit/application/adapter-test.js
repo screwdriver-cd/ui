@@ -92,7 +92,8 @@ module('Unit | Adapter | application', function (hooks) {
           secrets: 'secrets',
           events: 'events',
           tokens: 'tokens',
-          metrics: 'metrics'
+          metrics: 'metrics',
+          stages: 'stages'
         }
       }
     });
