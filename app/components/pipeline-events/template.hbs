@@ -112,59 +112,63 @@
 
       <div class="tab-content">
         <tab.pane @activeId={{this.activeTab}} @id="events" @title="Events">
-          <PipelineEventsList
-            @pipeline={{this.pipeline}}
-            @expandedEventsGroup={{this.expandedEventsGroup}}
-            @events={{this.events}}
-            @selected={{mut this.selected}}
-            @selectedEvent={{this.selectedEvent}}
-            @selectedEventObj={{this.selectedEventObj}}
-            @latestCommit={{this.latestCommit}}
-            @lastSuccessful={{this.lastSuccessful}}
-            @mostRecent={{this.mostRecent}}
-            @eventsPage={{this.eventsPage}}
-            @startPRBuild={{action "startPRBuild"}}
-            @stopEvent={{action "stopEvent"}}
-            @updateEvents={{action "updateEvents"}}
-          />
-          <div
-            style="padding: 20px;"
-            onMouseEnter={{action "onEventListScroll"}}
-          ></div>
-        </tab.pane>
-        <tab.pane @activeId={{this.activeTab}} @id="pulls" @title="Pull Requests">
-          {{#if this.prChainEnabled}}
+          {{#if (eq this.activeTab "events")}}
             <PipelineEventsList
               @pipeline={{this.pipeline}}
               @expandedEventsGroup={{this.expandedEventsGroup}}
               @events={{this.events}}
               @selected={{mut this.selected}}
-              @selectedEventObj={{this.selectedEventObj}}
               @selectedEvent={{this.selectedEvent}}
+              @selectedEventObj={{this.selectedEventObj}}
               @latestCommit={{this.latestCommit}}
               @lastSuccessful={{this.lastSuccessful}}
+              @mostRecent={{this.mostRecent}}
               @eventsPage={{this.eventsPage}}
               @startPRBuild={{action "startPRBuild"}}
               @stopEvent={{action "stopEvent"}}
               @updateEvents={{action "updateEvents"}}
             />
-          {{else}}
-            {{#each this.pullRequestGroups as |prg|}}
-              <PipelinePrList
-                @jobs={{prg}}
+            <div
+              style="padding: 20px;"
+              onMouseEnter={{action "onEventListScroll"}}
+            ></div>
+          {{/if}}
+        </tab.pane>
+        <tab.pane @activeId={{this.activeTab}} @id="pulls" @title="Pull Requests">
+          {{#if (eq this.activeTab "pulls")}}
+            {{#if this.prChainEnabled}}
+              <PipelineEventsList
                 @pipeline={{this.pipeline}}
+                @expandedEventsGroup={{this.expandedEventsGroup}}
+                @events={{this.events}}
                 @selected={{mut this.selected}}
+                @selectedEventObj={{this.selectedEventObj}}
                 @selectedEvent={{this.selectedEvent}}
-                @isRestricted={{this.isRestricted}}
-                @startBuild={{action "startPRBuild"}}
-                @stopPRBuilds={{action "stopPRBuilds"}}
-                @workflowGraph={{this.pipeline.workflowGraph}}
+                @latestCommit={{this.latestCommit}}
+                @lastSuccessful={{this.lastSuccessful}}
+                @eventsPage={{this.eventsPage}}
+                @startPRBuild={{action "startPRBuild"}}
+                @stopEvent={{action "stopEvent"}}
+                @updateEvents={{action "updateEvents"}}
               />
             {{else}}
-              <div class="alert">
-                No open pull requests
-              </div>
-            {{/each}}
+              {{#each this.pullRequestGroups as |prg|}}
+                <PipelinePrList
+                  @jobs={{prg}}
+                  @pipeline={{this.pipeline}}
+                  @selected={{mut this.selected}}
+                  @selectedEvent={{this.selectedEvent}}
+                  @isRestricted={{this.isRestricted}}
+                  @startBuild={{action "startPRBuild"}}
+                  @stopPRBuilds={{action "stopPRBuilds"}}
+                  @workflowGraph={{this.pipeline.workflowGraph}}
+                />
+              {{else}}
+                <div class="alert">
+                  No open pull requests
+                </div>
+              {{/each}}
+            {{/if}}
           {{/if}}
         </tab.pane>
       </div>
