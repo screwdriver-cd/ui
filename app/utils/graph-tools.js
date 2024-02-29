@@ -369,6 +369,48 @@ const hasProcessedDest = (graph, name) => {
 };
 
 /**
+ * Filter to the subgraph in which the root is the start from node
+ * @param   {Array}   [{nodes}]   Array of graph vertices
+ * @param   {Array}   [{edges}]   Array of graph edges
+ * @param   {String}  [startNode] Starting/trigger node
+ * @returns {Object}              Nodes and edges for the filtered subgraph
+ */
+const subgraphFilter = ({ nodes, edges }, startNode) => {
+  if (!startNode || !nodes.length) {
+    return { nodes, edges };
+  }
+
+  let start = startNode;
+
+  // startNode can be a PR job in PR events, so trim PR prefix from node name
+  if (startNode.match(/^PR-[0-9]+:/)) {
+    start = startNode.split(':')[1];
+  }
+
+  const visiting = [start];
+
+  const visited = new Set(visiting);
+
+  if (edges.length) {
+    while (visiting.length) {
+      const cur = visiting.shift();
+
+      edges.forEach(e => {
+        if (e.src === cur && !visited.has(e.dest)) {
+          visiting.push(e.dest);
+          visited.add(e.dest);
+        }
+      });
+    }
+  }
+
+  return {
+    nodes: nodes.filter(n => visited.has(n.name)),
+    edges: edges.filter(e => visited.has(e.src) && visited.has(e.dest))
+  };
+};
+
+/**
  * Clones and decorates an input graph data structure into something that can be used to display
  * a custom directed graph
  * @method decorateGraph
@@ -537,6 +579,14 @@ const decorateGraph = ({
     }
   });
 
+  // prTriggeredNodes is only calculated for non-chain PR pipelines in the PR view
+  const prTriggeredNodes =
+    !chainPR && prNum
+      ? subgraphFilter(graph, '~pr').nodes.filter(
+          graphNode => graphNode.name !== '~pr'
+        )
+      : null;
+
   // Decorate edges with positions and status
   edges.forEach(e => {
     const srcNode = node(nodes, e.src);
@@ -550,7 +600,11 @@ const decorateGraph = ({
     e.to = destNode.pos;
 
     if (srcNode.status && srcNode.status !== 'RUNNING') {
-      e.status = srcNode.status;
+      if (prTriggeredNodes && node(prTriggeredNodes, srcNode.name)) {
+        // For non-chain PR pipelines, PR triggered jobs do not need outbound edges to have a status as they are the last node in the chain.
+      } else {
+        e.status = srcNode.status;
+      }
     }
   });
 
@@ -575,48 +629,6 @@ const decorateGraph = ({
   }
 
   return graph;
-};
-
-/**
- * Filter to the subgraph in which the root is the start from node
- * @param   {Array}   [{nodes}]   Array of graph vertices
- * @param   {Array}   [{edges}]   Array of graph edges
- * @param   {String}  [startNode] Starting/trigger node
- * @returns {Object}              Nodes and edges for the filtered subgraph
- */
-const subgraphFilter = ({ nodes, edges }, startNode) => {
-  if (!startNode || !nodes.length) {
-    return { nodes, edges };
-  }
-
-  let start = startNode;
-
-  // startNode can be a PR job in PR events, so trim PR prefix from node name
-  if (startNode.match(/^PR-[0-9]+:/)) {
-    start = startNode.split(':')[1];
-  }
-
-  const visiting = [start];
-
-  const visited = new Set(visiting);
-
-  if (edges.length) {
-    while (visiting.length) {
-      const cur = visiting.shift();
-
-      edges.forEach(e => {
-        if (e.src === cur && !visited.has(e.dest)) {
-          visiting.push(e.dest);
-          visited.add(e.dest);
-        }
-      });
-    }
-  }
-
-  return {
-    nodes: nodes.filter(n => visited.has(n.name)),
-    edges: edges.filter(e => visited.has(e.src) && visited.has(e.dest))
-  };
 };
 
 /**

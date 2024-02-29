@@ -347,6 +347,99 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
+  test('it processes a non-chained pr pipeline with a join from a pr trigger', function (assert) {
+    const inputGraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'main' },
+        { name: 'downstream' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'downstream' }
+      ]
+    };
+    const jobs = [
+      {
+        id: 1,
+        group: 2,
+        name: 'pr-2:main'
+      }
+    ];
+    const builds = [
+      {
+        id: 3,
+        jobId: 1,
+        status: 'SUCCESS'
+      }
+    ];
+    const expectedOutput = {
+      nodes: [
+        {
+          name: '~pr',
+          isDisabled: false,
+          status: 'STARTED_FROM',
+          pos: { x: 0, y: 0 }
+        },
+        {
+          name: '~commit',
+          isDisabled: false,
+          pos: { x: 0, y: 1 }
+        },
+        {
+          name: 'main',
+          buildId: 3,
+          isDisabled: false,
+          status: 'SUCCESS',
+          pos: { x: 1, y: 0 }
+        },
+        {
+          name: 'downstream',
+          isDisabled: false,
+          pos: { x: 2, y: 0 }
+        }
+      ],
+      edges: [
+        {
+          src: '~pr',
+          dest: 'main',
+          status: 'STARTED_FROM',
+          from: { x: 0, y: 0 },
+          to: { x: 1, y: 0 }
+        },
+        {
+          src: '~commit',
+          dest: 'main',
+          from: { x: 0, y: 1 },
+          to: { x: 1, y: 0 }
+        },
+        {
+          src: 'main',
+          dest: 'downstream',
+          from: { x: 1, y: 0 },
+          to: { x: 2, y: 0 }
+        }
+      ],
+      meta: {
+        height: 2,
+        width: 3
+      }
+    };
+
+    const result = decorateGraph({
+      inputGraph,
+      builds,
+      jobs,
+      start: '~pr',
+      prNum: 2
+    });
+
+    console.log(JSON.stringify(result));
+    assert.deepEqual(result, expectedOutput);
+  });
+
   test('it handles detached jobs', function (assert) {
     const inputGraph = {
       nodes: [
