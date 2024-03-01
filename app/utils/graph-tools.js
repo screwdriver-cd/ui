@@ -45,12 +45,12 @@ const build = (builds, jobId) =>
 
 /**
  * Find a job for the given job id
- * @method job
+ * @method findJob
  * @param  {Array}  jobs    List of job objects
  * @param  {String} jobId   The job id of the build
  * @return {Object}         Reference to the job object from the list if found
  */
-const job = (jobs, jobId) => jobs.find(j => j && `${j.id}` === `${jobId}`);
+const findJob = (jobs, jobId) => jobs.find(j => j && `${j.id}` === `${jobId}`);
 
 /**
  * Find a PR job for the given PR number and job name
@@ -71,6 +71,22 @@ const prJob = (jobs, prNum, name) =>
  */
 const icon = status =>
   STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MAP.UNKNOWN.icon;
+
+/**
+ * Determines if a job is a setup job of a stage based on the name
+ * @method  isStageSetupJob
+ * @param   {String}  jobName Name of a job
+ * @returns {boolean} true if it is a setup job name; false otherwise
+ */
+const isStageSetupJob = jobName => STAGE_SETUP_PATTERN.test(jobName);
+
+/**
+ * Determines if a job is a setup job of a stage based on the name
+ * @method  isStageTeardownJob
+ * @param   {String}  jobName Name of a job
+ * @returns {boolean} true if it is a setup job name; false otherwise
+ */
+const isStageTeardownJob = jobName => STAGE_TEARDOWN_PATTERN.test(jobName);
 
 /**
  * Compiles and returns a list of stages and associated jobs by traversing the event workflow graph
@@ -99,18 +115,23 @@ const extractEventStages = (graph, pipelineStages) => {
       let eventStage = stageNameToEventStageMap[stageName];
 
       if (eventStage === undefined) {
-        const pipelineStage = stageToPipelineStageMap[stageName] || {};
+        const pipelineStage = stageToPipelineStageMap[stageName];
 
         eventStage = {
-          name: stageName,
-          jobs: [],
           id: pipelineStage.id,
-          description: pipelineStage.description
+          name: pipelineStage.name,
+          description: pipelineStage.description,
+          jobIds: [],
+          setup: pipelineStage.setup,
+          teardown: pipelineStage.teardown
         };
 
         stageNameToEventStageMap[stageName] = eventStage;
       }
-      eventStage.jobs.push({ id: n.id });
+
+      if (!isStageSetupJob(n.name) && !isStageTeardownJob(n.name)) {
+        eventStage.jobIds.push(n.id);
+      }
     }
   });
 
@@ -163,7 +184,7 @@ const bypassSetupTeardownEdges = (edges, nodeName) => {
  */
 const extractStageGraph = (graph, stage) => {
   const { nodes, edges } = graph;
-  const jobIds = stage.jobs.map(j => parseInt(j.id, 10));
+  const jobIds = [...stage.jobIds, stage.setup, stage.teardown];
   const newNodes = [];
   const newNodesSet = new Set();
   const newEdges = [];
@@ -348,6 +369,48 @@ const hasProcessedDest = (graph, name) => {
 };
 
 /**
+ * Filter to the subgraph in which the root is the start from node
+ * @param   {Array}   [{nodes}]   Array of graph vertices
+ * @param   {Array}   [{edges}]   Array of graph edges
+ * @param   {String}  [startNode] Starting/trigger node
+ * @returns {Object}              Nodes and edges for the filtered subgraph
+ */
+const subgraphFilter = ({ nodes, edges }, startNode) => {
+  if (!startNode || !nodes.length) {
+    return { nodes, edges };
+  }
+
+  let start = startNode;
+
+  // startNode can be a PR job in PR events, so trim PR prefix from node name
+  if (startNode.match(/^PR-[0-9]+:/)) {
+    start = startNode.split(':')[1];
+  }
+
+  const visiting = [start];
+
+  const visited = new Set(visiting);
+
+  if (edges.length) {
+    while (visiting.length) {
+      const cur = visiting.shift();
+
+      edges.forEach(e => {
+        if (e.src === cur && !visited.has(e.dest)) {
+          visiting.push(e.dest);
+          visited.add(e.dest);
+        }
+      });
+    }
+  }
+
+  return {
+    nodes: nodes.filter(n => visited.has(n.name)),
+    edges: edges.filter(e => visited.has(e.src) && visited.has(e.dest))
+  };
+};
+
+/**
  * Clones and decorates an input graph data structure into something that can be used to display
  * a custom directed graph
  * @method decorateGraph
@@ -367,7 +430,7 @@ const decorateGraph = ({
   start,
   chainPR,
   prNum,
-  stages
+  stages: pipelineStages
 }) => {
   // deep clone
   const originalGraph = JSON.parse(JSON.stringify(inputGraph));
@@ -384,6 +447,17 @@ const decorateGraph = ({
       jobs instanceof DS.PromiseArray ||
       jobs instanceof DS.PromiseManyArray) &&
     jobs.length;
+
+  const jobIdToJobMap = jobsAvailable
+    ? jobs.reduce(
+        (obj, job) => ({
+          ...obj,
+          [job.id]: job
+        }),
+        {}
+      )
+    : {};
+
   const graph = {};
 
   let y = [0]; // accumulator for column heights
@@ -395,10 +469,11 @@ const decorateGraph = ({
   // Remove setup and teardown nodes
   originalNodes.forEach(n => {
     const jobName = n.name;
+    const job = jobIdToJobMap[n.id];
 
-    if (STAGE_SETUP_PATTERN.test(jobName)) {
+    if (isStageSetupJob(jobName) && job && job.virtualJob) {
       setupNodes.push(n);
-    } else if (STAGE_TEARDOWN_PATTERN.test(jobName)) {
+    } else if (isStageTeardownJob(jobName) && job && job.virtualJob) {
       teardownNodes.push(n);
     } else {
       nodes.push(n);
@@ -443,26 +518,26 @@ const decorateGraph = ({
     let jobId = n.id;
 
     if (jobsAvailable) {
-      let j = job(jobs, jobId);
+      let job = findJob(jobs, jobId);
 
       if (!jobId && !chainPR && prNum) {
-        j = prJob(jobs, prNum, n.name);
-        jobId = j?.id;
+        job = prJob(jobs, prNum, n.name);
+        jobId = job?.id;
       }
 
       // eslint-disable-next-line no-nested-ternary
-      n.isDisabled = j
-        ? j.isDisabled === undefined
+      n.isDisabled = job
+        ? job.isDisabled === undefined
           ? false
-          : j.isDisabled
+          : job.isDisabled
         : false;
 
       // Set build status to disabled if job is disabled
       if (n.isDisabled) {
-        const { state } = j;
+        const { state } = job;
         const stateWithCapitalization =
           state[0].toUpperCase() + state.substring(1).toLowerCase();
-        const { stateChanger } = j;
+        const { stateChanger } = job;
 
         n.status = state;
         n.stateChangeMessage = stateChanger
@@ -471,7 +546,7 @@ const decorateGraph = ({
       }
 
       // Set manualStartEnabled on the node
-      const annotations = j ? get(j, 'permutations.0.annotations') : null;
+      const annotations = job ? get(job, 'permutations.0.annotations') : null;
 
       if (annotations) {
         n.manualStartDisabled =
@@ -480,7 +555,7 @@ const decorateGraph = ({
             : false;
       }
 
-      const description = j ? get(j, 'permutations.0.description') : null;
+      const description = job ? get(job, 'permutations.0.description') : null;
 
       if (description) {
         n.description = description;
@@ -504,6 +579,14 @@ const decorateGraph = ({
     }
   });
 
+  // prTriggeredNodes is only calculated for non-chain PR pipelines in the PR view
+  const prTriggeredNodes =
+    !chainPR && prNum
+      ? subgraphFilter(graph, '~pr').nodes.filter(
+          graphNode => graphNode.name !== '~pr'
+        )
+      : null;
+
   // Decorate edges with positions and status
   edges.forEach(e => {
     const srcNode = node(nodes, e.src);
@@ -517,7 +600,11 @@ const decorateGraph = ({
     e.to = destNode.pos;
 
     if (srcNode.status && srcNode.status !== 'RUNNING') {
-      e.status = srcNode.status;
+      if (prTriggeredNodes && node(prTriggeredNodes, srcNode.name)) {
+        // For non-chain PR pipelines, PR triggered jobs do not need outbound edges to have a status as they are the last node in the chain.
+      } else {
+        e.status = srcNode.status;
+      }
     }
   });
 
@@ -528,8 +615,8 @@ const decorateGraph = ({
     width: Math.max(1, y.length - 1)
   };
 
-  if (stages) {
-    const eventStages = extractEventStages(graph, stages);
+  if (pipelineStages && pipelineStages.length > 0) {
+    const eventStages = extractEventStages(graph, pipelineStages);
 
     graph.stages = eventStages.map(s => {
       const stageGraph = extractStageGraph(graph, s);
@@ -542,48 +629,6 @@ const decorateGraph = ({
   }
 
   return graph;
-};
-
-/**
- * Filter to the subgraph in which the root is the start from node
- * @param   {Array}   [{nodes}]   Array of graph vertices
- * @param   {Array}   [{edges}]   Array of graph edges
- * @param   {String}  [startNode] Starting/trigger node
- * @returns {Object}              Nodes and edges for the filtered subgraph
- */
-const subgraphFilter = ({ nodes, edges }, startNode) => {
-  if (!startNode || !nodes.length) {
-    return { nodes, edges };
-  }
-
-  let start = startNode;
-
-  // startNode can be a PR job in PR events, so trim PR prefix from node name
-  if (startNode.match(/^PR-[0-9]+:/)) {
-    start = startNode.split(':')[1];
-  }
-
-  const visiting = [start];
-
-  const visited = new Set(visiting);
-
-  if (edges.length) {
-    while (visiting.length) {
-      const cur = visiting.shift();
-
-      edges.forEach(e => {
-        if (e.src === cur && !visited.has(e.dest)) {
-          visiting.push(e.dest);
-          visited.add(e.dest);
-        }
-      });
-    }
-  }
-
-  return {
-    nodes: nodes.filter(n => visited.has(n.name)),
-    edges: edges.filter(e => visited.has(e.src) && visited.has(e.dest))
-  };
 };
 
 /**

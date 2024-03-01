@@ -12,5 +12,7 @@ export default class PreferenceUserModel extends Model {
   })
   timestampFormat;
 
+  @attr('boolean') allowNotification;
+
   @hasMany('preference/pipeline', { async: false }) 'preference/pipelines';
 }

@@ -263,6 +263,8 @@ export default Component.extend(ModelReloaderMixin, {
       return prJobs;
     }
   }),
+  stages: alias('model.stages'),
+  // TODO: this is not being used
   jobIds: computed('pipeline.jobs', {
     get() {
       return this.get('pipeline.jobs')

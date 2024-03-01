@@ -36,7 +36,7 @@ export default Route.extend({
       controller.set('errorMessage', '');
     }
   },
-  model() {
+  async model() {
     const pipelineId = this.get('pipeline.id');
     const pipelineEventsController = this.controllerFor('pipeline.events');
 
@@ -62,14 +62,17 @@ export default Route.extend({
 
     return RSVP.hash({
       jobs: this.get('pipeline.jobs'),
+      stages: this.get('pipeline.stages'),
       events: this.store.query('event', {
         pipelineId,
         page: 1,
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
       triggers: this.triggerService.getDownstreamTriggers(pipelineId),
-      pipelinePreference: this.shuttle.getUserPipelinePreference(pipelineId),
-      desiredJobNameLength: this.userSettings.getDisplayJobNameLength()
+      pipelinePreference: await this.pipelineService.getUserPipelinePreference(
+        pipelineId
+      ),
+      desiredJobNameLength: await this.userSettings.getDisplayJobNameLength()
     }).catch(err => {
       const errorMessage = getErrorMessage(err);
 

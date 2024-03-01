@@ -47,6 +47,26 @@
         </div>
       </li>
       <li>
+        <div class="row align-items-start">
+          <div class="col-4">
+            <h4>Browser Notification</h4>
+            <p>Enable browser notification</p>
+          </div>
+          <div class="col-8">
+            <div class="toggle-wrapper">
+              <XToggle
+                @size="small"
+                @value={{this.allowNotification}}
+                @onLabel="enableNotification:true"
+                @offLabel="disableNotification::false"
+                @onToggle={{action "requestPermission"}}
+                title="Enable browser notification"
+              />
+            </div>
+          </div>
+        </div>
+      </li>
+      <li>
         <div class="row">
           <div class="col-12 right">
             <button

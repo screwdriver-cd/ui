@@ -1,4 +1,4 @@
-import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
+import Model, { attr, hasMany } from '@ember-data/model';
 import { computed, get } from '@ember/object';
 import { alias, match } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
@@ -68,6 +68,13 @@ export default Model.extend({
       return get(this, 'permutations.0.annotations') || {};
     }
   }),
+  virtualJob: computed('annotations', 'permutations.0.annotations', {
+    get() {
+      const annotations = get(this, 'annotations');
+
+      return annotations && annotations['screwdriver.cd/virtualJob'] === true;
+    }
+  }),
   description: computed('permutations.0.description', {
     get() {
       return get(this, 'permutations.0.description') || {};
@@ -102,6 +109,5 @@ export default Model.extend({
       this.builds.any(b => isActiveBuild(b.get('status'), b.get('endTime')))
       ? SHOULD_RELOAD_YES
       : SHOULD_RELOAD_NO;
-  },
-  stage: belongsTo('stage')
+  }
 });

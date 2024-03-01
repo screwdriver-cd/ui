@@ -347,6 +347,99 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
+  test('it processes a non-chained pr pipeline with a join from a pr trigger', function (assert) {
+    const inputGraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'main' },
+        { name: 'downstream' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'downstream' }
+      ]
+    };
+    const jobs = [
+      {
+        id: 1,
+        group: 2,
+        name: 'pr-2:main'
+      }
+    ];
+    const builds = [
+      {
+        id: 3,
+        jobId: 1,
+        status: 'SUCCESS'
+      }
+    ];
+    const expectedOutput = {
+      nodes: [
+        {
+          name: '~pr',
+          isDisabled: false,
+          status: 'STARTED_FROM',
+          pos: { x: 0, y: 0 }
+        },
+        {
+          name: '~commit',
+          isDisabled: false,
+          pos: { x: 0, y: 1 }
+        },
+        {
+          name: 'main',
+          buildId: 3,
+          isDisabled: false,
+          status: 'SUCCESS',
+          pos: { x: 1, y: 0 }
+        },
+        {
+          name: 'downstream',
+          isDisabled: false,
+          pos: { x: 2, y: 0 }
+        }
+      ],
+      edges: [
+        {
+          src: '~pr',
+          dest: 'main',
+          status: 'STARTED_FROM',
+          from: { x: 0, y: 0 },
+          to: { x: 1, y: 0 }
+        },
+        {
+          src: '~commit',
+          dest: 'main',
+          from: { x: 0, y: 1 },
+          to: { x: 1, y: 0 }
+        },
+        {
+          src: 'main',
+          dest: 'downstream',
+          from: { x: 1, y: 0 },
+          to: { x: 2, y: 0 }
+        }
+      ],
+      meta: {
+        height: 2,
+        width: 3
+      }
+    };
+
+    const result = decorateGraph({
+      inputGraph,
+      builds,
+      jobs,
+      start: '~pr',
+      prNum: 2
+    });
+
+    console.log(JSON.stringify(result));
+    assert.deepEqual(result, expectedOutput);
+  });
+
   test('it handles detached jobs', function (assert) {
     const inputGraph = {
       nodes: [
@@ -469,8 +562,8 @@ module('Unit | Utility | graph tools', function () {
   });
 
   /**
-   * 1. Should exclude stage setup/teardown nodes
-   * 2. Should bypass stage setup/teardown edges
+   * 1. Should exclude nodes corresponding to implicit stage setup/teardown jobs
+   * 2. Should bypass edges associated with implicit stage setup/teardown jobs
    * 3. Should derive event stages from the workflow graph and enrich it with latest stage definition (Ex: description)
    * 4. Should generate sub workflow graph for each stage
    */
@@ -521,19 +614,41 @@ module('Unit | Utility | graph tools', function () {
       {
         id: 7,
         name: 'integration',
-        jobs: [{ id: 21 }, { id: 22 }, { id: 23 }, { id: 24 }]
+        jobIds: [21, 22, 23, 24],
+        setup: 28,
+        teardown: 29
       },
       {
         id: 8,
         name: 'production',
-        jobs: [{ id: 31 }, { id: 32 }]
+        jobs: [31, 32],
+        setup: 38,
+        teardown: 39
       },
       {
         id: 9,
         name: 'canary',
-        jobs: [{ id: 41 }, { id: 42 }]
+        jobs: [41, 42],
+        setup: 48,
+        teardown: 49
       }
     ];
+
+    const JOBS = [
+      { id: 1, name: 'component', virtualJob: false },
+      { id: 2, name: 'publish', virtualJob: false },
+      { id: 21, name: 'ci-deploy', virtualJob: false },
+      { id: 22, name: 'ci-test', virtualJob: false },
+      { id: 23, name: 'ci-certify', virtualJob: false },
+      { id: 28, name: 'stage@integration:setup', virtualJob: true },
+      { id: 29, name: 'stage@integration:teardown', virtualJob: true },
+      { id: 31, name: 'prod-deploy', virtualJob: false },
+      { id: 32, name: 'prod-test', virtualJob: false },
+      { id: 33, name: 'prod-certify', virtualJob: false },
+      { id: 38, name: 'stage@production:setup', virtualJob: false },
+      { id: 39, name: 'stage@production:teardown', virtualJob: false }
+    ];
+
     const expectedOutput = {
       edges: [
         {
@@ -597,26 +712,50 @@ module('Unit | Utility | graph tools', function () {
           }
         },
         {
-          dest: 'prod-test',
+          dest: 'prod-deploy',
           from: {
             x: 6,
             y: 0
           },
-          src: 'prod-deploy',
+          src: 'stage@production:setup',
           to: {
             x: 7,
             y: 0
           }
         },
         {
-          dest: 'prod-certify',
+          dest: 'prod-test',
           from: {
             x: 7,
             y: 0
           },
-          src: 'prod-test',
+          src: 'prod-deploy',
           to: {
             x: 8,
+            y: 0
+          }
+        },
+        {
+          dest: 'prod-certify',
+          from: {
+            x: 8,
+            y: 0
+          },
+          src: 'prod-test',
+          to: {
+            x: 9,
+            y: 0
+          }
+        },
+        {
+          dest: 'stage@production:teardown',
+          from: {
+            x: 9,
+            y: 0
+          },
+          src: 'prod-certify',
+          to: {
+            x: 10,
             y: 0
           }
         },
@@ -633,7 +772,7 @@ module('Unit | Utility | graph tools', function () {
           }
         },
         {
-          dest: 'prod-deploy',
+          dest: 'stage@production:setup',
           from: {
             x: 5,
             y: 0
@@ -647,10 +786,11 @@ module('Unit | Utility | graph tools', function () {
       ],
       meta: {
         height: 2,
-        width: 9
+        width: 11
       },
       nodes: [
         {
+          isDisabled: false,
           name: '~pr',
           pos: {
             x: 0,
@@ -658,6 +798,7 @@ module('Unit | Utility | graph tools', function () {
           }
         },
         {
+          isDisabled: false,
           name: '~commit',
           pos: {
             x: 0,
@@ -666,6 +807,7 @@ module('Unit | Utility | graph tools', function () {
         },
         {
           id: 1,
+          isDisabled: false,
           name: 'component',
           pos: {
             x: 1,
@@ -674,6 +816,7 @@ module('Unit | Utility | graph tools', function () {
         },
         {
           id: 2,
+          isDisabled: false,
           name: 'publish',
           pos: {
             x: 2,
@@ -682,57 +825,83 @@ module('Unit | Utility | graph tools', function () {
         },
         {
           id: 21,
+          isDisabled: false,
           name: 'ci-deploy',
-          stageName: 'integration',
           pos: {
             x: 3,
             y: 0
-          }
+          },
+          stageName: 'integration'
         },
         {
           id: 22,
+          isDisabled: false,
           name: 'ci-test',
-          stageName: 'integration',
           pos: {
             x: 4,
             y: 0
-          }
+          },
+          stageName: 'integration'
         },
         {
           id: 23,
+          isDisabled: false,
           name: 'ci-certify',
-          stageName: 'integration',
           pos: {
             x: 5,
             y: 0
-          }
+          },
+          stageName: 'integration'
         },
         {
-          id: 31,
-          name: 'prod-deploy',
-          stageName: 'production',
+          id: 38,
+          isDisabled: false,
+          name: 'stage@production:setup',
           pos: {
             x: 6,
             y: 0
-          }
+          },
+          stageName: 'production'
         },
         {
-          id: 32,
-          name: 'prod-test',
-          stageName: 'production',
+          id: 31,
+          isDisabled: false,
+          name: 'prod-deploy',
           pos: {
             x: 7,
             y: 0
-          }
+          },
+          stageName: 'production'
         },
         {
-          id: 33,
-          name: 'prod-certify',
-          stageName: 'production',
+          id: 32,
+          isDisabled: false,
+          name: 'prod-test',
           pos: {
             x: 8,
             y: 0
-          }
+          },
+          stageName: 'production'
+        },
+        {
+          id: 33,
+          isDisabled: false,
+          name: 'prod-certify',
+          pos: {
+            x: 9,
+            y: 0
+          },
+          stageName: 'production'
+        },
+        {
+          id: 39,
+          isDisabled: false,
+          name: 'stage@production:teardown',
+          pos: {
+            x: 10,
+            y: 0
+          },
+          stageName: 'production'
         }
       ]
     };
@@ -753,64 +922,52 @@ module('Unit | Utility | graph tools', function () {
           ]
         },
         id: 7,
-        jobs: [
-          {
-            id: 21
-          },
-          {
-            id: 22
-          },
-          {
-            id: 23
-          }
-        ],
+        jobIds: [21, 22, 23],
         name: 'integration',
         pos: {
           x: 3,
           y: 0
-        }
+        },
+        setup: 28,
+        teardown: 29
       },
       {
         description: undefined,
         graph: {
-          edges: [expectedOutput.edges[5], expectedOutput.edges[6]],
+          edges: [
+            expectedOutput.edges[5],
+            expectedOutput.edges[6],
+            expectedOutput.edges[7],
+            expectedOutput.edges[8]
+          ],
           meta: {
             height: 1,
-            width: 3
+            width: 5
           },
           nodes: [
             expectedOutput.nodes[7],
             expectedOutput.nodes[8],
-            expectedOutput.nodes[9]
+            expectedOutput.nodes[9],
+            expectedOutput.nodes[10],
+            expectedOutput.nodes[11]
           ]
         },
         id: 8,
-        jobs: [
-          {
-            id: 31
-          },
-          {
-            id: 32
-          },
-          {
-            id: 33
-          }
-        ],
+        jobIds: [31, 32, 33],
         name: 'production',
         pos: {
           x: 6,
           y: 0
-        }
+        },
+        setup: 38,
+        teardown: 39
       }
     ];
 
     const result = decorateGraph({
       inputGraph: GRAPH,
-      stages: STAGES
-    });
-
-    ['edges'].forEach(key => {
-      assert.deepEqual(result[key], expectedOutput[key]);
+      stages: STAGES,
+      jobs: JOBS
     });
 
     assert.deepEqual(result, expectedOutput);

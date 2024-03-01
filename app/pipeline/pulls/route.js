@@ -15,12 +15,12 @@ export default EventsRoute.extend({
     });
     this.pipelineService.setBuildsLink('pipeline.pulls');
   },
-  model() {
+  async model() {
+    const pipelineId = this.get('pipeline.id');
     const pipelineEventsController = this.controllerFor('pipeline.events');
 
     pipelineEventsController.setProperties({
       pipeline: this.pipeline,
-      showDownstreamTriggers: false,
       showPRJobs: true
     });
 
@@ -69,7 +69,11 @@ export default EventsRoute.extend({
 
     return RSVP.hash({
       jobs: jobsPromise,
-      events
+      events,
+      pipelinePreference: await this.pipelineService.getUserPipelinePreference(
+        pipelineId
+      ),
+      desiredJobNameLength: await this.userSettings.getDisplayJobNameLength()
     });
   },
   actions: {

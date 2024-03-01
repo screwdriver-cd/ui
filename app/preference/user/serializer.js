@@ -9,7 +9,7 @@ import RESTSerializer, {
  * @return {JSON}         [data]
  */
 export function extractPayload(payload) {
-  const { displayJobNameLength, timestampFormat } = payload;
+  const { displayJobNameLength, timestampFormat, allowNotification } = payload;
 
   delete payload.displayJobNameLength;
   delete payload.timestampFormat;
@@ -31,6 +31,7 @@ export function extractPayload(payload) {
       id: 1,
       displayJobNameLength,
       timestampFormat,
+      allowNotification,
       'preference/pipelines': preferencePipelines
     }
   };
@@ -46,8 +47,13 @@ export function extractPayload(payload) {
  * @return {[JSON]}                [raw data]
  */
 export function preparePayload(preferenceUser) {
-  const { displayJobNameLength, timestampFormat } = preferenceUser;
-  const data = { displayJobNameLength, timestampFormat };
+  const { displayJobNameLength, timestampFormat, allowNotification } =
+    preferenceUser;
+  const data = {
+    displayJobNameLength,
+    timestampFormat,
+    allowNotification
+  };
   const preferencePipelines = preferenceUser['preference/pipelines'] ?? [];
 
   preferencePipelines.forEach(({ id, showPRJobs }) => {
