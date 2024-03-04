@@ -31,7 +31,13 @@ export default class PipelineEventsShowRoute extends Route {
 
   async beforeModel() {
     const { event_id: eventId } = this.paramsFor(this.routeName);
-    const event = await this.store.findRecord('event', eventId);
+
+    let event = this.store.peekRecord('event', eventId);
+
+    if (!event) {
+      event = await this.store.findRecord('event', eventId);
+    }
+
     const { pipeline_id: pipelineId } = this.paramsFor('pipeline');
 
     if (event.get('pipelineId') !== pipelineId) {
@@ -50,7 +56,11 @@ export default class PipelineEventsShowRoute extends Route {
     );
 
     if (!desiredEvent) {
-      const event = await this.store.findRecord('event', eventId);
+      let event = await this.store.peekRecord('event', eventId);
+
+      if (!event) {
+        event = await this.store.findRecord('event', eventId);
+      }
 
       pipelineEventsController.paginateEvents.pushObject(event);
     } else {
