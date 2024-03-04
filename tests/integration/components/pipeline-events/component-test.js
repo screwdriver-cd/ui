@@ -444,10 +444,12 @@ module('Integration | Component | pipeline events', function (hooks) {
 
     const component = this.owner.lookup('component:pipeline-events');
 
-    const jobs = [{
-      hasMany: () => ({ reload: () => assert.ok(true) }),
-      notifyPropertyChange: key => assert.equal(key, 'builds')
-    }];
+    const jobs = [
+      {
+        hasMany: () => ({ reload: () => assert.ok(true) }),
+        notifyPropertyChange: key => assert.equal(key, 'builds')
+      }
+    ];
 
     run(() => {
       component.set(
@@ -482,10 +484,12 @@ module('Integration | Component | pipeline events', function (hooks) {
 
   test('New event comes top of PR list when it starts a PR build with prChain', async function (assert) {
     const prNum = 3;
-    const jobs = [{
-      hasMany: () => ({ reload: () => assert.ok(true) }),
-      notifyPropertyChange: key => assert.equal(key, 'builds')
-    }];
+    const jobs = [
+      {
+        hasMany: () => ({ reload: () => assert.ok(true) }),
+        notifyPropertyChange: key => assert.equal(key, 'builds')
+      }
+    ];
 
     assert.expect(6);
 

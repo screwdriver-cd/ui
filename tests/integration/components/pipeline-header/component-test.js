@@ -53,14 +53,14 @@ module('Integration | Component | pipeline header', function (hooks) {
         scmRepo: {
           branch: 'master'
         },
-        scmUri: 'github.com:123456:master',
+        scmUri: 'github.com:123456:master'
       },
       {
         id: 2,
         scmRepo: {
           branch: 'efg'
         },
-        scmUri: 'github.com:123456:efg',
+        scmUri: 'github.com:123456:efg'
       },
       {
         id: 3,
@@ -68,7 +68,7 @@ module('Integration | Component | pipeline header', function (hooks) {
           branch: 'efg',
           rootDir: 'src'
         },
-        scmUri: 'github.com:123456:efg:src',
+        scmUri: 'github.com:123456:efg:src'
       },
       {
         id: 4,
@@ -76,7 +76,7 @@ module('Integration | Component | pipeline header', function (hooks) {
           branch: 'abc',
           rootDir: 'zzz'
         },
-        scmUri: 'github.com:123456:abc:zzz',
+        scmUri: 'github.com:123456:abc:zzz'
       },
       {
         id: 5,
@@ -84,15 +84,15 @@ module('Integration | Component | pipeline header', function (hooks) {
           branch: 'abc',
           rootDir: 'aaa'
         },
-        scmUri: 'github.com:123456:abc:aaa',
+        scmUri: 'github.com:123456:abc:aaa'
       },
       {
         id: 6,
         scmRepo: {
           branch: 'abc'
         },
-        scmUri: 'github.com:654321:abc',
-      },
+        scmUri: 'github.com:654321:abc'
+      }
     ];
 
     const pipelineStub = Service.extend({

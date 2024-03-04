@@ -7,12 +7,24 @@ export default Service.extend({
   session: service(),
   /**
    * Simple test to determine if yaml looks like a template file
-   * @method isTemplate
+   * @method isJobTemplate
    * @param  {String}   yaml Raw yaml text
    * @return {Boolean}
    */
-  isTemplate(yaml) {
+  isJobTemplate(yaml) {
     return /^name|\n+name: |\n+namespace: /.test(yaml);
+  },
+
+  /**
+   * Simple test to determine if yaml looks like a pipeline template file
+   * @method isPipelineTemplate
+   * @param  {String}   yaml Raw yaml text
+   * @return {Boolean}
+   */
+  isPipelineTemplate(yaml) {
+    return /^(?=.*\bnamespace:)(?=.*\bname:)(?=.*\bconfig:.*\bjobs:).*/.test(
+      yaml
+    );
   },
 
   /**
@@ -22,10 +34,14 @@ export default Service.extend({
    * @return {Promise}
    */
   getValidationResults(yaml) {
-    let url = `${ENV.APP.SDAPI_HOSTNAME}/v4/validator`;
+    let url = `${ENV.APP.SDAPI_HOSTNAME}/v4`;
 
-    if (this.isTemplate(yaml)) {
-      url += '/template';
+    if (this.isPipelineTemplate(yaml)) {
+      url += '/pipeline/template/validate';
+    } else if (this.isJobTemplate(yaml)) {
+      url += '/validator/template';
+    } else {
+      url += '/validator';
     }
 
     const ajaxConfig = {

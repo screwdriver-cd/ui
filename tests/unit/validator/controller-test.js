@@ -7,8 +7,9 @@ import { settled } from '@ember/test-helpers';
 import sinon from 'sinon';
 
 const serviceMock = {
-  isTemplate: sinon.stub(),
-  getValidationResults: sinon.stub()
+  isJobTemplate: sinon.stub(),
+  getValidationResults: sinon.stub(),
+  isPipelineTemplate: sinon.stub()
 };
 
 const validatorStub = Service.extend(serviceMock);
@@ -31,6 +32,18 @@ jobs:
       - forgreatjustice: ba.sh
 `;
 
+const EXAMPLE_PIPELINE_TEMPLATE = `
+name: batman/batmobile
+version: 2.0.1
+description: Big noisy car
+maintainer: batman@batcave.com
+config:
+  image: batman:4
+  jobs:
+    main:
+      steps:
+        - forgreatjustice: ba.sh`;
+
 module('Unit | Controller | validator', function (hooks) {
   setupTest(hooks);
 
@@ -40,7 +53,7 @@ module('Unit | Controller | validator', function (hooks) {
     this.owner.register('service:validator', validatorStub);
     this.validator = this.owner.lookup('service:validator');
 
-    serviceMock.isTemplate.reset();
+    serviceMock.isJobTemplate.reset();
     serviceMock.getValidationResults.reset();
   });
 
@@ -48,7 +61,7 @@ module('Unit | Controller | validator', function (hooks) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
-    serviceMock.isTemplate.withArgs(EXAMPLE_TEMPLATE).returns(true);
+    serviceMock.isJobTemplate.withArgs(EXAMPLE_TEMPLATE).returns(true);
     serviceMock.getValidationResults
       .withArgs(EXAMPLE_TEMPLATE)
       .returns(resolve(expectedResult));
@@ -58,7 +71,29 @@ module('Unit | Controller | validator', function (hooks) {
       controller.set('yaml', EXAMPLE_TEMPLATE);
 
       return settled().then(() => {
-        assert.equal(controller.isTemplate, true);
+        assert.equal(controller.isJobTemplate, true);
+        assert.deepEqual(controller.results, expectedResult);
+      });
+    });
+  });
+
+  test('it handles pipelineTemplate yaml', function (assert) {
+    const controller = this.owner.lookup('controller:validator');
+    const expectedResult = { foo: 'bar' };
+
+    serviceMock.isPipelineTemplate
+      .withArgs(EXAMPLE_PIPELINE_TEMPLATE)
+      .returns(true);
+    serviceMock.getValidationResults
+      .withArgs(EXAMPLE_PIPELINE_TEMPLATE)
+      .returns(resolve(expectedResult));
+
+    // wrap the test in the run loop because we are dealing with async functions
+    return run(() => {
+      controller.set('yaml', EXAMPLE_PIPELINE_TEMPLATE);
+
+      return settled().then(() => {
+        assert.equal(controller.isPipelineTemplate, true);
         assert.deepEqual(controller.results, expectedResult);
       });
     });
@@ -68,7 +103,7 @@ module('Unit | Controller | validator', function (hooks) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
-    serviceMock.isTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
+    serviceMock.isJobTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
     serviceMock.getValidationResults
       .withArgs(EXAMPLE_CONFIG)
       .returns(resolve(expectedResult));
@@ -78,7 +113,7 @@ module('Unit | Controller | validator', function (hooks) {
       controller.set('yaml', EXAMPLE_CONFIG);
 
       return settled().then(() => {
-        assert.equal(controller.isTemplate, false);
+        assert.equal(controller.isJobTemplate, false);
         assert.deepEqual(controller.results, expectedResult);
       });
     });
@@ -88,7 +123,7 @@ module('Unit | Controller | validator', function (hooks) {
     const controller = this.owner.lookup('controller:validator');
     const expectedResult = { foo: 'bar' };
 
-    serviceMock.isTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
+    serviceMock.isJobTemplate.withArgs(EXAMPLE_CONFIG).returns(false);
     serviceMock.getValidationResults
       .withArgs(EXAMPLE_CONFIG)
       .returns(resolve(expectedResult));
@@ -98,7 +133,7 @@ module('Unit | Controller | validator', function (hooks) {
       controller.set('yaml', EXAMPLE_CONFIG);
 
       return settled().then(() => {
-        assert.equal(controller.isTemplate, false);
+        assert.equal(controller.isJobTemplate, false);
         assert.deepEqual(controller.results, expectedResult);
         controller.set('yaml', '');
 

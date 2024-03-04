@@ -21,9 +21,14 @@ export default Controller.extend({
   yaml: '',
   results: '',
   spreadView: false,
-  isTemplate: computed('yaml', {
+  isJobTemplate: computed('yaml', {
     get() {
-      return this.validator.isTemplate(this.yaml);
+      return this.validator.isJobTemplate(this.yaml);
+    }
+  }),
+  isPipelineTemplate: computed('yaml', {
+    get() {
+      return this.validator.isPipelineTemplate(this.yaml);
     }
   }),
   // eslint-disable-next-line ember/no-observers

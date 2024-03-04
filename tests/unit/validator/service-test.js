@@ -24,6 +24,11 @@ const EXAMPLE_TEMPLATE_PAYLOAD = {
   template: {}
 };
 
+const EXAMPLE_PIPELINE_TEMPLATE_PAYLOAD = {
+  errors: [],
+  template: {}
+};
+
 module('Unit | Service | validator', function (hooks) {
   setupTest(hooks);
 
@@ -54,6 +59,28 @@ module('Unit | Service | validator', function (hooks) {
         JSON.stringify(EXAMPLE_TEMPLATE_PAYLOAD)
       ];
     });
+
+    server.post(
+      'http://localhost:8080/v4/pipeline/template/validate',
+      request => {
+        if (
+          request.requestBody ===
+          '{"yaml":"namespace: mad-hatter, name: joker, config: {jobs: {}}"}'
+        ) {
+          return [
+            400,
+            { 'Content-Type': 'application/json' },
+            JSON.stringify({ error: 'villains' })
+          ];
+        }
+
+        return [
+          200,
+          { 'Content-Type': 'application/json' },
+          JSON.stringify(EXAMPLE_PIPELINE_TEMPLATE_PAYLOAD)
+        ];
+      }
+    );
   });
 
   hooks.afterEach(function () {
@@ -63,8 +90,20 @@ module('Unit | Service | validator', function (hooks) {
   test('it determines if something looks like a template', function (assert) {
     const service = this.owner.lookup('service:validator');
 
-    assert.ok(service.isTemplate('name: bananas'));
-    assert.notOk(service.isTemplate('workflow: bananas'));
+    assert.ok(service.isJobTemplate('name: bananas'));
+    assert.notOk(service.isJobTemplate('workflow: bananas'));
+  });
+
+  test('it determines if something looks like a pipeline template', function (assert) {
+    const service = this.owner.lookup('service:validator');
+
+    assert.ok(
+      service.isPipelineTemplate(
+        'namespace: monkey, name: bananas, config: {jobs: {}}'
+      )
+    );
+    assert.notOk(service.isPipelineTemplate('workflow: bananas'));
+    assert.notOk(service.isPipelineTemplate('name: bananas'));
   });
 
   test('it uploads a template to the validator', function (assert) {
