@@ -436,7 +436,6 @@ module('Unit | Utility | graph tools', function () {
       prNum: 2
     });
 
-    console.log(JSON.stringify(result));
     assert.deepEqual(result, expectedOutput);
   });
 
