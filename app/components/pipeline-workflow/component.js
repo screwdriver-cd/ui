@@ -2,12 +2,9 @@ import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import Component from '@ember/component';
 import { get, computed, set, setProperties } from '@ember/object';
 import { reject } from 'rsvp';
-import {
-  isRoot,
-  reverseGraph,
-  subgraphFilter
-} from 'screwdriver-ui/utils/graph-tools';
+import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import canJobStart from 'screwdriver-ui/utils/pipeline-workflow';
 import { copy } from 'ember-copy';
 
 export default Component.extend({
@@ -73,25 +70,11 @@ export default Component.extend({
       const { tooltipData } = this;
 
       if (tooltipData && tooltipData.job) {
-        const reversedGraph = reverseGraph(this.selectedEventObj.workflowGraph);
-        const subgraph = subgraphFilter(reversedGraph, tooltipData.job.name);
-
-        const isOnPrPath =
-          subgraph.nodes.filter(node => node.name === '~pr').length > 0;
-
-        if (this.activeTab === 'pulls') {
-          // In the pull request view, only allow restarting nodes that are reachable from the ~pr node
-          return isOnPrPath;
-        }
-        // In the events view:
-        const isOnCommitPath =
-          subgraph.nodes.filter(node => node.name === '~commit').length > 0;
-
-        // If the job is detached, allow restart:  isOnPrPath = false, isOnCommitPath = false
-        // If the job is only on the commit path, allow restart: isOnPrPath = false, isOnCommitPath = true
-        // If the job is on the commit and pr path, allow restart: isOnPrPath = true, isOnCommitPath = true
-        // If the job is only on the pr path, do not allow restart: isOnPrPath = true, isOnCommitPath = false
-        return !(isOnPrPath && !isOnCommitPath);
+        return canJobStart(
+          this.activeTab,
+          this.selectedEventObj.workflowGraph,
+          tooltipData.job.name
+        );
       }
 
       // job is not selected or upstream/downstream node are selected
