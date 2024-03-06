@@ -7,17 +7,11 @@ export default Route.extend(AuthenticatedRouteMixin, {
   store: service(),
   router: service(),
   model(params) {
-    const collections =
-      this.controllerFor('application').get('collections') === undefined
-        ? []
-        : this.controllerFor('application').get('collections');
-
     return this.store
       .findRecord('collection', params.collection_id, { reload: true })
       .then(collection =>
         RSVP.hash({
-          collection,
-          collections
+          collection
         })
       );
   },
