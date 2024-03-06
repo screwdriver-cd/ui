@@ -88,6 +88,6 @@
   <span class="label" title="This is the order that the jobs will run in.">
     Workflow:
   </span>
-  <WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} />
+  <WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @stages={{this.stages}} @jobs={{this.jobs}}/>
 </div>
 {{yield}}
