@@ -5,6 +5,7 @@ import { inject as service } from '@ember/service';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   router: service(),
+  store: service(),
   routeAfterAuthentication: 'home',
 
   beforeModel(/* transition */) {
@@ -16,10 +17,14 @@ export default Route.extend(AuthenticatedRouteMixin, {
     }
   },
 
-  model() {
-    return this.controllerFor('application').get('collections') === undefined
-      ? []
-      : this.controllerFor('application').get('collections');
+  async model() {
+    let collections = this.store.peekAll('collection');
+
+    if (!collections.length) {
+      collections = await this.store.findAll('collection');
+    }
+
+    return collections;
   },
 
   actions: {
