@@ -278,8 +278,6 @@ export default Component.extend({
     // gap between stages
     const STAGE_GAP = ICON_SIZE / 9;
 
-    const stagesGroupedByRowPosition = groupBy(data.stages, 'pos.y');
-
     const verticalDisplacementByRowPosition = {};
     const getVerticalDisplacementByRowPosition = pos => {
       return verticalDisplacementByRowPosition[pos] || 0;
@@ -333,6 +331,7 @@ export default Component.extend({
 
     // stages
     if (this.showStages) {
+      const stagesGroupedByRowPosition = groupBy(data.stages, 'pos.y');
       const calcStageY = (stage, yDisplacement = 0) => {
         return (
           calcPos(stage.pos.y, Y_SPACING) -

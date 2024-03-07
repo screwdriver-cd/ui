@@ -259,23 +259,35 @@ module('Integration | Component | workflow graph d3', function (hooks) {
         { name: '~commit' },
         { name: 'component', id: 1 },
         { name: 'publish', id: 2 },
+        { name: 'stage@integration:setup', id: 28, stageName: 'integration' },
         { name: 'ci-deploy', id: 21, stageName: 'integration' },
         { name: 'ci-test', id: 22, stageName: 'integration' },
         { name: 'ci-certify', id: 23, stageName: 'integration' },
+        {
+          name: 'stage@integration:teardown',
+          id: 29,
+          stageName: 'integration'
+        },
+        { name: 'stage@production:setup', id: 38, stageName: 'production' },
         { name: 'prod-deploy', id: 31, stageName: 'production' },
         { name: 'prod-test', id: 32, stageName: 'production' },
-        { name: 'prod-certify', id: 33, stageName: 'production' }
+        { name: 'prod-certify', id: 33, stageName: 'production' },
+        { name: 'stage@production:teardown', id: 39, stageName: 'production' }
       ],
       edges: [
         { src: '~pr', dest: 'component' },
         { src: '~commit', dest: 'component' },
         { src: 'component', dest: 'publish' },
-        { src: 'publish', dest: 'ci-deploy' },
+        { src: 'publish', dest: 'stage@integration:setup' },
+        { src: 'stage@integration:setup', dest: 'ci-deploy' },
         { src: 'ci-deploy', dest: 'ci-test' },
         { src: 'ci-test', dest: 'ci-certify' },
-        { src: 'ci-certify', dest: 'prod-deploy' },
+        { src: 'ci-certify', dest: 'stage@integration:teardown' },
+        { src: 'stage@integration:teardown', dest: 'stage@production:setup' },
+        { src: 'stage@production:setup', dest: 'prod-deploy' },
         { src: 'prod-deploy', dest: 'prod-test' },
-        { src: 'prod-test', dest: 'prod-certify' }
+        { src: 'prod-test', dest: 'prod-certify' },
+        { src: 'prod-certify', dest: 'stage@production:teardown' }
       ]
     });
 
@@ -284,13 +296,17 @@ module('Integration | Component | workflow graph d3', function (hooks) {
         id: 7,
         name: 'integration',
         jobs: [{ id: 21 }, { id: 22 }, { id: 23 }],
-        description: STAGE_INT_DESC
+        description: STAGE_INT_DESC,
+        setup: 28,
+        teardown: 29
       },
       {
         id: 8,
         name: 'production',
         jobs: [{ id: 31 }, { id: 32 }, { id: 33 }],
-        description: STAGE_PROD_DESC
+        description: STAGE_PROD_DESC,
+        setup: 38,
+        teardown: 39
       }
     ]);
 
@@ -301,11 +317,11 @@ module('Integration | Component | workflow graph d3', function (hooks) {
     assert.equal(this.element.querySelectorAll('svg').length, 1);
     assert.equal(
       this.element.querySelectorAll('svg > g.graph-node').length,
-      10
+      14
     );
     assert.equal(
       this.element.querySelectorAll('svg > path.graph-edge').length,
-      9
+      13
     );
 
     assert.equal(
@@ -356,23 +372,35 @@ module('Integration | Component | workflow graph d3', function (hooks) {
         { name: '~commit' },
         { name: 'component', id: 1 },
         { name: 'publish', id: 2 },
+        { name: 'stage@integration:setup', id: 28, stageName: 'integration' },
         { name: 'ci-deploy', id: 21, stageName: 'integration' },
         { name: 'ci-test', id: 22, stageName: 'integration' },
         { name: 'ci-certify', id: 23, stageName: 'integration' },
+        {
+          name: 'stage@integration:teardown',
+          id: 29,
+          stageName: 'integration'
+        },
+        { name: 'stage@production:setup', id: 38, stageName: 'production' },
         { name: 'prod-deploy', id: 31, stageName: 'production' },
         { name: 'prod-test', id: 32, stageName: 'production' },
-        { name: 'prod-certify', id: 33, stageName: 'production' }
+        { name: 'prod-certify', id: 33, stageName: 'production' },
+        { name: 'stage@production:teardown', id: 39, stageName: 'production' }
       ],
       edges: [
         { src: '~pr', dest: 'component' },
         { src: '~commit', dest: 'component' },
         { src: 'component', dest: 'publish' },
-        { src: 'publish', dest: 'ci-deploy' },
+        { src: 'publish', dest: 'stage@integration:setup' },
+        { src: 'stage@integration:setup', dest: 'ci-deploy' },
         { src: 'ci-deploy', dest: 'ci-test' },
         { src: 'ci-test', dest: 'ci-certify' },
-        { src: 'ci-certify', dest: 'prod-deploy' },
+        { src: 'ci-certify', dest: 'stage@integration:teardown' },
+        { src: 'stage@integration:teardown', dest: 'stage@production:setup' },
+        { src: 'stage@production:setup', dest: 'prod-deploy' },
         { src: 'prod-deploy', dest: 'prod-test' },
-        { src: 'prod-test', dest: 'prod-certify' }
+        { src: 'prod-test', dest: 'prod-certify' },
+        { src: 'prod-certify', dest: 'stage@production:teardown' }
       ]
     });
 
@@ -381,13 +409,17 @@ module('Integration | Component | workflow graph d3', function (hooks) {
         id: 7,
         name: 'integration',
         jobs: [{ id: 21 }, { id: 22 }, { id: 23 }],
-        description: STAGE_INT_DESC
+        description: STAGE_INT_DESC,
+        setup: 28,
+        teardown: 29
       },
       {
         id: 8,
         name: 'production',
         jobs: [{ id: 31 }, { id: 32 }, { id: 33 }],
-        description: STAGE_PROD_DESC
+        description: STAGE_PROD_DESC,
+        setup: 38,
+        teardown: 39
       }
     ]);
 
@@ -398,11 +430,11 @@ module('Integration | Component | workflow graph d3', function (hooks) {
     assert.equal(this.element.querySelectorAll('svg').length, 1);
     assert.equal(
       this.element.querySelectorAll('svg > g.graph-node').length,
-      10
+      14
     );
     assert.equal(
       this.element.querySelectorAll('svg > path.graph-edge').length,
-      9
+      13
     );
 
     assert.equal(
