@@ -81,5 +81,13 @@ export default Component.extend({
 
       return `${fullName}@${get(this, 'results.template.version')}`;
     }
+  }),
+  pipelineTemplateJobs: reads('results.template.config.jobs'),
+  pipelineTemplateJobKeys: computed('results.template.config.jobs', {
+    get() {
+      return get(this, 'results.template.config.jobs') === undefined
+        ? []
+        : Object.keys(this.get('results.template.config.jobs'));
+    }
   })
 });
