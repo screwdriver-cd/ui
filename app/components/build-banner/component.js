@@ -92,11 +92,11 @@ export default Component.extend({
           ABORTED: '⛔'
         };
 
-        const statusIcon = statusMap[this.buildStatus];
+        const notificationIcon = statusMap[this.buildStatus];
 
         // eslint-disable-next-line no-new
         new Notification(`SD.cd ${this.pipelineName}`, {
-          body: `${statusIcon} ${this.buildStatus}: ${this.jobName}`,
+          body: `${notificationIcon} ${this.buildStatus}: ${this.jobName}`,
           icon: screwdriverIconPath
         }).onclick = () => {
           window.focus();
