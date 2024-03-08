@@ -1,7 +1,24 @@
 <h4 class="pipeline" {{action "nameClick"}}>
   <FaIcon @icon={{if this.isOpen "minus-square" "plus-square"}} />
-  Pipeline Settings
+  {{#if this.template.name}}
+    {{this.name}}
+  {{else}}
+    Pipeline Settings
+  {{/if}}
 </h4>
+{{#if this.template.description}}
+  <div
+    class="template-description"
+    title="This is the description of the template"
+  >
+    <span class="label">
+      Template Description:
+    </span>
+    <span class="value">
+      {{this.template.description}}
+    </span>
+  </div>
+{{/if}}
 <div
   class="annotations"
   title="These are the pipeline-level annotations that the user has defined."

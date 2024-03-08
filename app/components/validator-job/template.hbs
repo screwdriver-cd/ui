@@ -23,6 +23,25 @@
     </h4>
   {{/if}}
 {{/if}}
+{{#if this.getPipelineTemplateName}}
+  {{#if this.template}}
+    <h4>
+      This template extends
+      <a href={{this.getPipelineTemplateLink}}>
+        {{this.getPipelineTemplateName}}
+      </a>
+      pipeline template.
+    </h4>
+  {{else}}
+    <h4>
+      This job is inherited from
+      <a href={{this.getPipelineTemplateLink}}>
+        {{this.getPipelineTemplateName}}
+      </a>
+      pipeline template.
+    </h4>
+  {{/if}}
+{{/if}}
 {{#if this.template.description}}
   <div
     class="template-description"
