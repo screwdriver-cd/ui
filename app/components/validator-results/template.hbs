@@ -18,16 +18,18 @@
 {{else}}
   <ValidatorPipeline
     @name={{this.pipelineName}}
+    @jobs={{this.jobs}}
+    @stages={{this.stages}}
     @workflowGraph={{this.workflowGraph}}
     @annotations={{this.annotations}}
     @parameters={{this.parameters}}
     @isOpen={{unbound this.isOpen}}
   />
-  {{#each this.workflowGraph.nodes as |node|}}
-    {{#if (get this.jobs node.name)}}
-      {{#each (get this.jobs node.name) as |jobConfig index|}}
+  {{#each this.jobs as |job|}}
+    {{#if (not job.virtualJob) }}
+      {{#each job.permutations as |jobConfig index|}}
         <ValidatorJob
-          @name={{node.name}}
+          @name={{job.name}}
           @job={{jobConfig}}
           @index={{index}}
           @isOpen={{unbound this.isOpen}}

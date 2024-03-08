@@ -94,6 +94,7 @@ module('Unit | Utility | graph tools', function () {
           to: { x: 1, y: 0 }
         }
       ],
+      stages: [],
       meta: {
         height: 2,
         width: 2
@@ -129,6 +130,7 @@ module('Unit | Utility | graph tools', function () {
         { src: 'B', dest: 'D', from: { x: 2, y: 1 }, to: { x: 4, y: 0 } },
         { src: 'C', dest: 'D', from: { x: 3, y: 0 }, to: { x: 4, y: 0 } }
       ],
+      stages: [],
       meta: {
         height: 2,
         width: 5
@@ -232,6 +234,7 @@ module('Unit | Utility | graph tools', function () {
           status: 'SUCCESS'
         }
       ],
+      stages: [],
       meta: {
         height: 2,
         width: 5
@@ -337,6 +340,7 @@ module('Unit | Utility | graph tools', function () {
         { src: 'B', dest: 'D', from: { x: 2, y: 1 }, to: { x: 4, y: 0 } },
         { src: 'C', dest: 'D', from: { x: 3, y: 0 }, to: { x: 4, y: 0 } }
       ],
+      stages: [],
       meta: {
         height: 2,
         width: 5
@@ -422,6 +426,7 @@ module('Unit | Utility | graph tools', function () {
           to: { x: 2, y: 0 }
         }
       ],
+      stages: [],
       meta: {
         height: 2,
         width: 3
@@ -470,6 +475,7 @@ module('Unit | Utility | graph tools', function () {
           to: { x: 1, y: 0 }
         }
       ],
+      stages: [],
       meta: {
         height: 4,
         width: 2
@@ -550,6 +556,7 @@ module('Unit | Utility | graph tools', function () {
           to: { x: 1, y: 3 }
         }
       ],
+      stages: [],
       meta: {
         width: 3,
         height: 5
@@ -921,14 +928,18 @@ module('Unit | Utility | graph tools', function () {
           ]
         },
         id: 7,
-        jobIds: [21, 22, 23],
+        jobs: [
+          { id: 21, name: 'ci-deploy' },
+          { id: 22, name: 'ci-test' },
+          { id: 23, name: 'ci-certify' }
+        ],
         name: 'integration',
         pos: {
           x: 3,
           y: 0
         },
-        setup: 28,
-        teardown: 29
+        setup: { id: 28, name: 'stage@integration:setup' },
+        teardown: { id: 29, name: 'stage@integration:teardown' }
       },
       {
         description: undefined,
@@ -952,14 +963,18 @@ module('Unit | Utility | graph tools', function () {
           ]
         },
         id: 8,
-        jobIds: [31, 32, 33],
+        jobs: [
+          { id: 31, name: 'prod-deploy' },
+          { id: 32, name: 'prod-test' },
+          { id: 33, name: 'prod-certify' }
+        ],
         name: 'production',
         pos: {
           x: 6,
           y: 0
         },
-        setup: 38,
-        teardown: 39
+        setup: { id: 38, name: 'stage@production:setup' },
+        teardown: { id: 39, name: 'stage@production:teardown' }
       }
     ];
 
