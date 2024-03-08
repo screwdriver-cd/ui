@@ -85,10 +85,22 @@ export default Component.extend({
   buildNotify: observer('buildStatus', function buildNotify() {
     if (Notification.permission === 'granted' && this.allowNotification) {
       if (['SUCCESS', 'FAILURE', 'ABORTED'].includes(this.buildStatus)) {
+        const screwdriverIconPath = '/assets/icons/android-chrome-144x144.png';
+        const statusMap = {
+          SUCCESS: '✅',
+          FAILURE: '❌',
+          ABORTED: '⛔'
+        };
+
+        const statusIcon = statusMap[this.buildStatus];
+
         // eslint-disable-next-line no-new
-        new Notification('Screwdriver.cd', {
-          body: `${this.buildStatus}`
-        });
+        new Notification(`SD.cd ${this.pipelineName}`, {
+          body: `${statusIcon} ${this.buildStatus}: ${this.jobName}`,
+          icon: screwdriverIconPath
+        }).onclick = () => {
+          window.focus();
+        };
       }
     }
   }),
