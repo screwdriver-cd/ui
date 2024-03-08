@@ -121,16 +121,22 @@ const extractEventStages = (graph, pipelineStages) => {
           id: pipelineStage.id,
           name: pipelineStage.name,
           description: pipelineStage.description,
-          jobIds: [],
-          setup: pipelineStage.setup,
-          teardown: pipelineStage.teardown
+          jobs: [],
+          setup: null,
+          teardown: null
         };
 
         stageNameToEventStageMap[stageName] = eventStage;
       }
 
-      if (!isStageSetupJob(n.name) && !isStageTeardownJob(n.name)) {
-        eventStage.jobIds.push(n.id);
+      const jobInfo = { id: n.id, name: n.name };
+
+      if (isStageSetupJob(n.name)) {
+        eventStage.setup = jobInfo;
+      } else if (isStageTeardownJob(n.name)) {
+        eventStage.teardown = jobInfo;
+      } else {
+        eventStage.jobs.push(jobInfo);
       }
     }
   });
@@ -184,15 +190,17 @@ const bypassSetupTeardownEdges = (edges, nodeName) => {
  */
 const extractStageGraph = (graph, stage) => {
   const { nodes, edges } = graph;
-  const jobIds = [...stage.jobIds, stage.setup, stage.teardown];
+  const jobNames = [...stage.jobs, stage.setup, stage.teardown].map(
+    j => j.name
+  );
   const newNodes = [];
   const newNodesSet = new Set();
   const newEdges = [];
 
   nodes.forEach(n => {
-    const { id, name } = n;
+    const { name } = n;
 
-    if (jobIds.includes(parseInt(id, 10))) {
+    if (jobNames.includes(name)) {
       newNodes.push(n);
       newNodesSet.add(name);
     }
@@ -448,33 +456,38 @@ const decorateGraph = ({
       jobs instanceof DS.PromiseManyArray) &&
     jobs.length;
 
-  const jobIdToJobMap = jobsAvailable
+  const jobNameToJobMap = jobsAvailable
     ? jobs.reduce(
         (obj, job) => ({
           ...obj,
-          [job.id]: job
+          [job.name]: job
         }),
         {}
       )
     : {};
 
+  const eventStages =
+    pipelineStages && pipelineStages.length > 0
+      ? extractEventStages(inputGraph, pipelineStages)
+      : [];
+
   const graph = {};
 
   let y = [0]; // accumulator for column heights
 
-  const setupNodes = [];
-  const teardownNodes = [];
+  const virtualSetupNodes = [];
+  const virtualTeardownNodes = [];
   const nodes = [];
 
   // Remove setup and teardown nodes
   originalNodes.forEach(n => {
     const jobName = n.name;
-    const job = jobIdToJobMap[n.id];
+    const job = jobNameToJobMap[jobName];
 
     if (isStageSetupJob(jobName) && job && job.virtualJob) {
-      setupNodes.push(n);
+      virtualSetupNodes.push(n);
     } else if (isStageTeardownJob(jobName) && job && job.virtualJob) {
-      teardownNodes.push(n);
+      virtualTeardownNodes.push(n);
     } else {
       nodes.push(n);
     }
@@ -485,11 +498,11 @@ const decorateGraph = ({
   let edges = originalEdges;
 
   // Bypass setup/teardown edges
-  setupNodes.forEach(setupNode => {
+  virtualSetupNodes.forEach(setupNode => {
     edges = bypassSetupTeardownEdges(edges, setupNode.name);
   });
 
-  teardownNodes.forEach(teardownNode => {
+  virtualTeardownNodes.forEach(teardownNode => {
     edges = bypassSetupTeardownEdges(edges, teardownNode.name);
   });
 
@@ -615,18 +628,14 @@ const decorateGraph = ({
     width: Math.max(1, y.length - 1)
   };
 
-  if (pipelineStages && pipelineStages.length > 0) {
-    const eventStages = extractEventStages(graph, pipelineStages);
+  graph.stages = eventStages.map(s => {
+    const stageGraph = extractStageGraph(graph, s);
 
-    graph.stages = eventStages.map(s => {
-      const stageGraph = extractStageGraph(graph, s);
+    s.graph = stageGraph;
+    s.pos = getStagePosition(stageGraph);
 
-      s.graph = stageGraph;
-      s.pos = getStagePosition(stageGraph);
-
-      return s;
-    });
-  }
+    return s;
+  });
 
   return graph;
 };

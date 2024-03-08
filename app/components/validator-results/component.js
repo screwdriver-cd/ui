@@ -1,12 +1,48 @@
 import { computed, get } from '@ember/object';
-import { reads, map } from '@ember/object/computed';
+import { map } from '@ember/object/computed';
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 import templateHelper from 'screwdriver-ui/utils/template';
 const { getFullName } = templateHelper;
 
 export default Component.extend({
+  store: service(),
   results: null,
-  jobs: reads('results.jobs'),
+  jobs: computed('results.jobs', {
+    get() {
+      const configJobs = get(this, 'results.jobs') || {};
+      const jobs = [];
+
+      Object.entries(configJobs).forEach(([jobName, jobConfig]) => {
+        jobs.push(
+          this.store.createRecord('job', {
+            name: jobName,
+            permutations: jobConfig,
+            archived: false
+          })
+        );
+      });
+
+      return jobs;
+    }
+  }),
+  stages: computed('results.stages', {
+    get() {
+      const configStages = get(this, 'results.stages') || {};
+      const stages = [];
+
+      Object.entries(configStages).forEach(([stageName, stageConfig]) => {
+        stages.push(
+          this.store.createRecord('stage', {
+            name: stageName,
+            description: stageConfig.description
+          })
+        );
+      });
+
+      return stages;
+    }
+  }),
   errors: map('results.errors', e => (typeof e === 'string' ? e : e.message)),
   workflowGraph: computed('results.workflowGraph', {
     get() {
