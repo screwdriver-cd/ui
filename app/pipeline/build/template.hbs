@@ -41,27 +41,30 @@
   </ModalDialog>
 {{/if}}
 
-<InfoMessage
-  @message={{this.errorMessage}}
-  @type="warning"
-  @icon="exclamation-triangle"
-/>
-{{#if this.build.statusMessage}}
+<div class="padded-container">
   <InfoMessage
-    @message={{this.build.statusMessage}}
+    @message={{this.errorMessage}}
     @type="warning"
     @icon="exclamation-triangle"
   />
-{{/if}}
-{{#if this.build.meta.build.warning}}
-  {{#each-in this.build.meta.build.warning as |name value|}}
+  {{#if this.build.statusMessage}}
     <InfoMessage
-      @message="{{name}} - {{value}}"
+      @message={{this.build.statusMessage}}
       @type="warning"
       @icon="exclamation-triangle"
     />
-  {{/each-in}}
-{{/if}}
+  {{/if}}
+  {{#if this.build.meta.build.warning}}
+    {{#each-in this.build.meta.build.warning as |name value|}}
+      <InfoMessage
+        @message="{{name}} - {{value}}"
+        @type="warning"
+        @icon="exclamation-triangle"
+      />
+    {{/each-in}}
+  {{/if}}
+</div>
+
 
 {{#if this.stepList}}
   <BuildStepCollection
