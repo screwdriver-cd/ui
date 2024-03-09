@@ -4,50 +4,52 @@
   {{/if}}
 {{/if}}
 
-<InfoMessage
-  @message={{this.errorMessage}}
-  @type="warning"
-  @icon="exclamation-triangle"
-  @scmContext={{this.pipeline.scmContext}}
-/>
+<div class="padded-container">
+  <InfoMessage
+    @message={{this.errorMessage}}
+    @type="warning"
+    @icon="exclamation-triangle"
+    @scmContext={{this.pipeline.scmContext}}
+  />
 
-{{#if this.isInactivePipeline}}
-<InfoMessage
-  @message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration."
-  @type="info"
-  @icon="exclamation-triangle"
-/>
-{{/if}}
+  {{#if this.isInactivePipeline}}
+    <InfoMessage
+      @message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration."
+      @type="info"
+      @icon="exclamation-triangle"
+    />
+  {{/if}}
 
-{{#unless this.hasAdmins}}
-  <BsAlert @type="warning" @dismissible={{false}}>
-    <p>
-      This repo has no admins, click
-      <span class="text-info" onclick={{action "syncAdmins"}}>
-        here
-      </span>
-      to sync from git repo, you must be an admin to do so.
-    </p>
-  </BsAlert>
-{{/unless}}
+  {{#unless this.hasAdmins}}
+    <BsAlert @type="warning" @dismissible={{false}}>
+      <p>
+        This repo has no admins, click
+        <span class="text-info" onclick={{action "syncAdmins"}}>
+          here
+        </span>
+        to sync from git repo, you must be an admin to do so.
+      </p>
+    </BsAlert>
+  {{/unless}}
 
-{{#if (eq this.syncAdmins "success")}}
-  <BsAlert @type="success">
-    <p>
-      Good job, pipeline's admins are in sync
-    </p>
-  </BsAlert>
-{{/if}}
+  {{#if (eq this.syncAdmins "success")}}
+    <BsAlert @type="success">
+      <p>
+        Good job, pipeline's admins are in sync
+      </p>
+    </BsAlert>
+  {{/if}}
 
-{{#if (eq this.syncAdmins "failure")}}
-  <BsAlert @type="danger">
-    <p>
-      Something went wrong, please try syncing again
-    </p>
-  </BsAlert>
-{{/if}}
+  {{#if (eq this.syncAdmins "failure")}}
+    <BsAlert @type="danger">
+      <p>
+        Something went wrong, please try syncing again
+      </p>
+    </BsAlert>
+  {{/if}}
+</div>
 
-<div class="row">
+<div class="pipeline-container">
   <div class="col-12 col-md-9 separator partial-view">
     <PipelineGraphNav
       @pipeline={{this.pipeline}}

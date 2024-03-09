@@ -9,9 +9,7 @@
 />
 <NavBanner />
 
-<div id="appContainer" class="container-fluid">
-  {{outlet}}
-</div>
+<AppBody />
 
 {{#if this.showCreatePipeline}}
   <CreatePipeline @showCreatePipeline={{this.showCreatePipeline}} />
