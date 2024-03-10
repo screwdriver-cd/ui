@@ -52,3 +52,11 @@
     color: $grey-800;
   }
 }
+
+.detail {
+  overflow: auto;
+
+  .workflow {
+    overflow-x: auto;
+  }
+}

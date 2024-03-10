@@ -8,7 +8,24 @@
     {{msg}}
   </div>
 {{/each}}
-{{#if this.isJobTemplate}}
+{{#if this.isPipelineTemplate}}
+  <ValidatorPipeline
+    @name={{this.templateName}}
+    @template={{this.results.template}}
+    @annotations={{this.results.template.config.shared.annotations}}
+    @parameters={{this.results.template.config.parameters}}
+    @isOpen={{unbound this.isOpen}}
+  />
+  {{#each this.pipelineTemplateJobKeys as | node index|}}
+      <ValidatorJob
+        @name={{node}}
+        @job={{get this.pipelineTemplateJobs node}}
+        @template={{this.results.template}}
+        @index={{index}}
+        @isOpen={{unbound this.isOpen}}
+      />
+  {{/each}}
+{{else if this.isJobTemplate}}
   <ValidatorJob
     @name={{this.templateName}}
     @job={{this.results.template.config}}
