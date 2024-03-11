@@ -276,7 +276,11 @@ module('Unit | Controller | pipeline/build', function (hooks) {
         assert.equal(key, 'builds');
 
         return {
-          reload: () => assert.ok(true)
+          reload: () => {
+            assert.ok(true);
+
+            return resolve();
+          }
         };
       }
     });
