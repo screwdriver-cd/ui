@@ -68,10 +68,24 @@ export default Component.extend({
         this.notificationReady &&
         this.notificationEventId === this.get('selectedEventObj.id')
       ) {
+        const screwdriverIconPath = '/assets/icons/android-chrome-144x144.png';
+        const statusMap = {
+          SUCCESS: '✅',
+          FAILURE: '❌',
+          ABORTED: '⛔'
+        };
+
+        const notificationIcon = statusMap[eventStatus];
+
         // eslint-disable-next-line no-new
-        new Notification(`Event: ${this.get('selectedEventObj.id')}`, {
-          body: `${eventStatus}`
-        });
+        new Notification(`SD.cd ${this.pipeline.name}`, {
+          body: `${notificationIcon} ${eventStatus}: Event ${this.get(
+            'selectedEventObj.id'
+          )}`,
+          icon: screwdriverIconPath
+        }).onclick = () => {
+          window.focus();
+        };
         this.set('notificationReady', false);
       } else {
         this.set('notificationReady', false);
