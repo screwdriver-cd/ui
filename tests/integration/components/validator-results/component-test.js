@@ -447,6 +447,37 @@ module('Integration | Component | validator results', function (hooks) {
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
+  test('it renders a pipeline template', async function (assert) {
+    this.set('validationMock', {
+      errors: [],
+      template: {
+        namespace: 'batman',
+        name: 'batmobile',
+        version: '1.0.0',
+        config: {
+          shared: {
+            image: 'int-test:1'
+          },
+          jobs: {
+            main: {
+              steps: [{ forgreatjustice: 'ba.sh' }]
+            },
+            publish: {
+              steps: [{ joker: 'ha' }]
+            }
+          }
+        }
+      }
+    });
+
+    await render(
+      hbs`<ValidatorResults @results={{this.validationMock}} @isPipelineTemplate={{true}} />`
+    );
+
+    assert.dom('.error').doesNotExist();
+    assert.dom('h4').hasText('batman/batmobile@1.0.0');
+  });
+
   test('it renders joi error results', async function (assert) {
     this.set('validationMock', {
       errors: [{ message: 'there is an error' }],

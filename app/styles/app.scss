@@ -72,6 +72,10 @@ $weight-bold: 600;
   box-sizing: border-box;
   overflow: hidden;
 }
+.padded-container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
 
 .SUCCESS {
   .status svg {

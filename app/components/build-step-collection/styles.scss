@@ -4,6 +4,10 @@
 
   background-color: $grey-200;
 
+  .step-container {
+    display: flex;
+  }
+
   .setup-spinner {
     float: right;
     font-size: 14px;

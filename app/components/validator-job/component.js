@@ -27,6 +27,38 @@ export default Component.extend({
       return this.get('job.environment.SD_TEMPLATE_VERSION');
     }
   }),
+  getPipelineTemplateName: computed(
+    'job.environment.SD_PIPELINE_TEMPLATE_FULLNAME',
+    {
+      get() {
+        return this.get('job.environment.SD_PIPELINE_TEMPLATE_FULLNAME');
+      }
+    }
+  ),
+  getPipelineTemplateLink: computed(
+    'job.environment.{SD_PIPELINE_TEMPLATE_NAME,SD_PIPELINE_TEMPLATE_NAMESPACE,SD_PIPELINE_TEMPLATE_VERSION}',
+    {
+      get() {
+        const namespace = this.get(
+          'job.environment.SD_PIPELINE_TEMPLATE_NAMESPACE'
+        );
+        const name = this.get('job.environment.SD_PIPELINE_TEMPLATE_NAME');
+        const version = this.get(
+          'job.environment.SD_PIPELINE_TEMPLATE_VERSION'
+        );
+
+        return `/pipeline/template/${namespace}/${name}/${version}`;
+      }
+    }
+  ),
+  getPipelineTemplateVersion: computed(
+    'job.environment.{SD_PIPELINE_TEMPLATE_VERSION,SD_TEMPLATE_VERSION}',
+    {
+      get() {
+        return this.get('job.environment.SD_PIPELINE_TEMPLATE_VERSION');
+      }
+    }
+  ),
   hasParseError: computed('job.commands.0.name', {
     get() {
       return this.get('job.commands.0.name') === 'config-parse-error';
