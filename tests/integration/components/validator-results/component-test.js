@@ -313,14 +313,22 @@ module('Integration | Component | validator results', function (hooks) {
           { name: 'component', displayName: 'compJob' },
           { name: 'publish' },
           { name: 'ci-deploy', stageName: 'integration' },
-          { name: 'stage@integration:setup', stageName: 'integration' },
+          {
+            name: 'stage@integration:setup',
+            stageName: 'integration',
+            virtual: true
+          },
           { name: 'ci-test', stageName: 'integration' },
           { name: 'ci-certify', stageName: 'integration' },
           { name: 'prod-deploy', stageName: 'production' },
           { name: 'stage@production:setup', stageName: 'production' },
           { name: 'prod-test', stageName: 'production' },
           { name: 'prod-certify', stageName: 'production' },
-          { name: 'stage@integration:teardown', stageName: 'integration' },
+          {
+            name: 'stage@integration:teardown',
+            stageName: 'integration',
+            virtual: true
+          },
           { name: 'stage@production:teardown', stageName: 'production' }
         ],
         edges: [

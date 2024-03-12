@@ -456,16 +456,6 @@ const decorateGraph = ({
       jobs instanceof DS.PromiseManyArray) &&
     jobs.length;
 
-  const jobNameToJobMap = jobsAvailable
-    ? jobs.reduce(
-        (obj, job) => ({
-          ...obj,
-          [job.name]: job
-        }),
-        {}
-      )
-    : {};
-
   const eventStages =
     pipelineStages && pipelineStages.length > 0
       ? extractEventStages(inputGraph, pipelineStages)
@@ -481,12 +471,11 @@ const decorateGraph = ({
 
   // Remove setup and teardown nodes
   originalNodes.forEach(n => {
-    const jobName = n.name;
-    const job = jobNameToJobMap[jobName];
+    const { name: jobName, virtual } = n;
 
-    if (isStageSetupJob(jobName) && job && job.virtualJob) {
+    if (virtual && isStageSetupJob(jobName)) {
       virtualSetupNodes.push(n);
-    } else if (isStageTeardownJob(jobName) && job && job.virtualJob) {
+    } else if (virtual && isStageTeardownJob(jobName)) {
       virtualTeardownNodes.push(n);
     } else {
       nodes.push(n);
