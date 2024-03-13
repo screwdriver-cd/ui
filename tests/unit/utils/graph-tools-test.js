@@ -580,14 +580,20 @@ module('Unit | Utility | graph tools', function () {
         { name: '~commit' },
         { name: 'component', id: 1 },
         { name: 'publish', id: 2 },
-        { name: 'stage@integration:setup', id: 28, stageName: 'integration' },
+        {
+          name: 'stage@integration:setup',
+          id: 28,
+          stageName: 'integration',
+          virtual: true
+        },
         { name: 'ci-deploy', id: 21, stageName: 'integration' },
         { name: 'ci-test', id: 22, stageName: 'integration' },
         { name: 'ci-certify', id: 23, stageName: 'integration' },
         {
           name: 'stage@integration:teardown',
           id: 29,
-          stageName: 'integration'
+          stageName: 'integration',
+          virtual: true
         },
         { name: 'stage@production:setup', id: 38, stageName: 'production' },
         { name: 'prod-deploy', id: 31, stageName: 'production' },
