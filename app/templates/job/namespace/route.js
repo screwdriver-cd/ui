@@ -7,9 +7,16 @@ export default Route.extend(AuthenticatedRouteMixin, {
   templateName: 'templates/index',
   setupController(controller, model) {
     this._super(controller, model);
+
+    console.log(
+      `templates.job.namespace params: ${
+        this.paramsFor('templates.job.namespace').namespace
+      }`
+    );
+
     controller.set(
       'targetNamespace',
-      this.paramsFor('templates.namespace').namespace
+      this.paramsFor('templates.job.namespace').namespace
     );
   },
   model(params) {

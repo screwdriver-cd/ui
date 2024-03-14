@@ -6,9 +6,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
   model() {
     return this;
   },
-  redirect(model, transition) {
-    this.transitionTo('templates.pipeline');
-  },
+  // redirect(model, transition) {
+  //   this.transitionTo('templates.pipeline');
+  // },
   actions: {
     willTransition(transition) {
       const newParams = transition.to.params;

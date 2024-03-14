@@ -1,17 +1,28 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
   template: service(),
+  router: service(),
+  isPipelineTemplatePage: computed('router.currentRouteName', {
+    get() {
+      const currentRouteName = get(this, 'router.currentRouteName');
+      const isPipelineTemplateRoute = currentRouteName.includes('pipeline');
+
+      return isPipelineTemplateRoute;
+    }
+  }),
   routeParams: computed('model', {
     get() {
       const route = this.model;
 
       const params = {
-        ...route.paramsFor('templates.namespace'),
-        ...route.paramsFor('templates.detail')
+        ...route.paramsFor('templates.job.namespace'),
+        ...route.paramsFor('templates.job.detail')
       };
+
+      console.log('routeParams', params);
 
       return params;
     },
@@ -21,11 +32,16 @@ export default Controller.extend({
       return value;
     }
   }),
-  crumbs: computed('routeParams', {
+  crumbs: computed('routeParams', 'isPipelineTemplatePage', {
     get() {
       const breadcrumbs = [];
-
       const params = this.routeParams;
+
+      let paramRouteName = 'job';
+
+      if (this.isPipelineTemplatePage) {
+        paramRouteName = 'pipeline';
+      }
 
       // add name and namespace together to get full name, compare fullname  to params.name
       // if equal, use name
@@ -40,7 +56,7 @@ export default Controller.extend({
       if (params.namespace) {
         breadcrumbs.push({
           name: params.namespace,
-          route: `templates.namespace`,
+          route: `templates.${paramRouteName}.namespace`,
           params: [params.namespace]
         });
       }
@@ -48,7 +64,7 @@ export default Controller.extend({
       if (params.name) {
         breadcrumbs.push({
           name: params.name,
-          route: `templates.detail`,
+          route: `templates.${paramRouteName}.detail`,
           params: [params.namespace, params.name]
         });
       }

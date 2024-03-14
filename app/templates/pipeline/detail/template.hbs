@@ -1,3 +1,65 @@
 {{page-title "Detail"}}
 > template pipeline detail
 {{outlet}}
+
+{{#if this.versionOrTagFromUrl}}
+  {{page-title @model.namespace '/' @model.name '@' this.versionOrTagFromUrl}}
+{{else}}
+  {{page-title @model.namespace '/' @model.name}}
+{{/if}}
+
+<InfoMessage
+  @message={{this.errorMessage}}
+  @type="warning"
+  @icon="exclamation-triangle"
+/>
+
+{{!-- <TemplateHeader
+  @template={{this.selectedVersionTemplate}}
+  @trusted={{this.trusted}}
+  @isAdmin={{this.isAdmin}}
+  @onUpdateTrust={{action "updateTrust"}}
+  @onRemoveTemplate={{action "removeTemplate"}}
+/> --}}
+
+<h4>
+  Contents:
+</h4>
+{{!-- <ValidatorJob
+  @name={{this.selectedVersionTemplate.fullName}}
+  @job={{this.selectedVersionTemplate.config}}
+  @template={{this.selectedVersionTemplate}}
+  @collapsible={{false}}
+  @isOpen={{true}}
+/> --}}
+
+<ValidatorPipeline
+  @name={{this.pipelineName}}
+  @workflowGraph={{this.workflowGraph}}
+  @annotations={{this.annotations}}
+  @parameters={{this.parameters}}
+  @isOpen={{unbound this.isOpen}}
+/>
+{{#each this.workflowGraph.nodes as |node|}}
+  {{#if (get this.jobs node.name)}}
+    {{#each (get this.jobs node.name) as |jobConfig index|}}
+      <ValidatorJob
+        @name={{node.name}}
+        @job={{jobConfig}}
+        @index={{index}}
+        @isOpen={{unbound this.isOpen}}
+      />
+    {{/each}}
+  {{/if}}
+{{/each}}
+
+<hr class="section-divider"/>
+
+<TemplateVersions
+  @templates={{this.filteredTemplates}}
+  @startTime={{this.startTime}}
+  @endTime={{this.endTime}}
+  @onRemoveVersion={{action "removeVersion"}}
+  @onTimeRangeChange={{action "timeRangeChange"}}
+/>
+{{outlet}}

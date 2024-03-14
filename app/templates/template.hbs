@@ -1,5 +1,17 @@
 {{page-title "Templates"}}
 
+<header>
+  <h4>Templates</h4>
+  <div>
+    {{#if this.isPipelineTemplatePage}}
+    Pipeline Templates are snippets of predefined code that people can use to replace a job definition in a screwdriver.yaml.
+    {{else}}
+    Job Templates are snippets of predefined code that people can use to replace a job definition in a screwdriver.yaml.
+    {{/if}}
+  </div>
+  A template contains a series of predefined steps along with a selected Docker image.
+</header>
+
 <BreadCrumbs @crumbs={{this.crumbs}} />
 
 <BsNav @type="tabs" as |nav|>
@@ -10,4 +22,5 @@
     <nav.link-to @route="templates.job">Jobs</nav.link-to>
   </nav.item>
 </BsNav>
+
 {{outlet}}

@@ -100,27 +100,6 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data);
   },
 
-  fetchAllPipelineTemplates() {
-    const method = 'get';
-    const url = `/pipeline/templates`;
-    const data = { page: 1, count: 10 };
-
-    const mockData = {
-        "id": 123345,
-        "pipelineId": 123345,
-        "namespace": "node",
-        "name": "nodePipeline",
-        "maintainer": "foo@bar.com",
-        "trustedSinceVersion": "1.2.3",
-        "latestVersion": "1.2.3",
-        "createTime": "2038-01-19T03:14:08.131Z",
-        "updateTime": "2038-01-19T03:14:08.131Z",
-        "templateType": "PIPELINE"
-    };
-    // return this.fetchFromApi(method, url, data);
-    return delay(3000).then(() => [mockData, mockData, mockData]);
-  },
-
   /**
    * Fetch coverage info from coverage plugin
    * @param  {Object}  data

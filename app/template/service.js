@@ -71,6 +71,41 @@ export default Service.extend({
         return result;
       });
   },
+  getOnePipelineTemplateVersion(namespace, name, version) {},
+  getPipelineTemplateVersions(namespace, name) {
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/templates/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}/versions`;
+
+    return this.fetchData(url);
+  },
+  fetchAllPipelineTemplates(namespace) {
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipeline/templates`;
+    const params = { sortBy: 'createTime', sort: 'descending' };
+
+    if (namespace) {
+      params.namespace = namespace;
+    }
+
+    return this.fetchData(url, params)
+      .then(templatesFormatter)
+      .then(templates => {
+        const result = [];
+        const names = {};
+
+        templates.forEach(t => {
+          if (!names[t.fullName]) {
+            names[t.fullName] = 1;
+            result.push(t);
+          }
+        });
+
+        return result;
+      });
+  },
+
   fetchData(url, params = {}) {
     const ajaxConfig = {
       method: 'GET',
