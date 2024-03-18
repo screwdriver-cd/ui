@@ -97,6 +97,34 @@ module('Acceptance | user-settings', function (hooks) {
       .dom('.alert-success span:not(button span)')
       .hasText('User settings updated successfully!');
   });
+  test('update display job name length by overflowing value', async function (assert) {
+    server.put('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '1'
+      })
+    ]);
+
+    server.get('http://localhost:8080/v4/users/settings', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({})
+    ]);
+
+    await authenticateSession({ token: 'faketoken' });
+    await visit('/user-settings/preferences');
+
+    assert.equal(currentURL(), '/user-settings/preferences');
+
+    await fillIn('.display-job-name', 300);
+    await click('button.blue-button');
+
+    assert.dom('.display-job-name').hasValue('99');
+    assert
+      .dom('.alert-success span:not(button span)')
+      .hasText('User settings updated successfully!');
+  });
   test('enable notifications', async function (assert) {
     server.put('http://localhost:8080/v4/users/settings', () => [
       200,
