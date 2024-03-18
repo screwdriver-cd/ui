@@ -59,7 +59,9 @@ export default Component.extend({
       };
     }
   }),
-  sameRepoPipeline: computed('pipeline.scmRepo.name', 'pipeline.{id,scmUri}', {
+  // Disabling the eslint rule for computed properties as that causes rendering issues and an infinite loop to the API call with the current setup of ember data
+  // eslint-disable-next-line ember/require-computed-property-dependencies
+  sameRepoPipeline: computed('pipeline', {
     get() {
       const [scm, repositoryId] = this.pipeline.scmUri.split(':');
 
