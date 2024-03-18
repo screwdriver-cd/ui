@@ -55,6 +55,16 @@ export default Controller.extend({
 
   async updateUserSettings() {
     this.set('isSaving', true);
+
+    // Normalize display job name length between MINIMUM and MAXIMUM
+    let normalizedLength = this.displayJobNameLength;
+    normalizedLength = Math.max(normalizedLength, MINIMUM_JOBNAME_LENGTH);
+    normalizedLength = Math.min(normalizedLength, MAXIMUM_JOBNAME_LENGTH);
+
+    this.setProperties({
+      displayJobNameLength: normalizedLength
+    });
+
     this.userPreferences.set('displayJobNameLength', this.displayJobNameLength);
     this.userPreferences.set(
       'timestampFormat',
