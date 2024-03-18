@@ -173,13 +173,13 @@ export default Component.extend({
       });
     }
 
-    normalizedParameterGroups = normalizedParameterGroups.concat(
-      normalizedJobParameterGroups
-    );
-
     if (normalizedParameterGroups.length > 0) {
       normalizedParameterGroups[0].isOpen = true;
     }
+
+    normalizedParameterGroups = normalizedParameterGroups.concat(
+      normalizedJobParameterGroups
+    );
 
     return normalizedParameterGroups;
   },
