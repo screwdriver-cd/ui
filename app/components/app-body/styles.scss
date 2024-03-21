@@ -1,0 +1,11 @@
+& {
+  height: calc(100vh - $app-header-height);
+  display: flex;
+  flex-direction: column;
+
+  #appContainer {
+    flex: 1;
+    min-height: calc(100% - $nav-banner-height);
+    max-height: 100%;
+  }
+}
