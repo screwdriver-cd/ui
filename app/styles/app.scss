@@ -5,6 +5,7 @@ $weight-normal: 400;
 $weight-bold: 600;
 
 $app-header-height: 55px;
+$nav-banner-height: 42px;
 
 @mixin transition($prop, $duration, $delay: 0ms, $easing: ease) {
   -webkit-transition: $prop $duration $delay $easing;
