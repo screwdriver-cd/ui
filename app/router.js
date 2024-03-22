@@ -74,9 +74,6 @@ Router.map(function route() {
         }
       );
       this.route('namespace', { path: '/:namespace' });
-      this.route('template-usage', {
-        path: '/:namespace/:name/:version/usage'
-      });
     });
 
     this.route('job', function jobTemplate() {
