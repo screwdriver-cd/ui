@@ -180,6 +180,21 @@
   .dropdown-item > a.release {
     pointer-events: none;
   }
+
+  .dropdown-submenu {
+    position: relative;
+    padding: 10px 15px;
+    // & {
+    &:hover {
+      & > ul.dropdown-menu {
+        display: block;
+
+        position: absolute;
+        left: 100%;
+        top: 0;
+      }
+    }
+  }
 }
 
 @media screen and (min-width: 880px) {
