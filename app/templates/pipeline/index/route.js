@@ -7,24 +7,14 @@ export default class TemplatesPipelineIndexRoute extends Route.extend(
 ) {
   @service template;
 
-  constructor() {
-    super(...arguments);
-  }
-
   async loadAllPipelineTemplates() {
     const pipelineTemplates = await this.template.getAllPipelineTemplates();
-
-    console.log('pipelineTemplates', pipelineTemplates);
 
     return pipelineTemplates;
   }
 
   async model() {
-    console.log('===hererere');
-
     const pipelineTemplates = await this.loadAllPipelineTemplates();
-
-    console.log('pipelineTemplates', pipelineTemplates);
 
     return pipelineTemplates;
   }
