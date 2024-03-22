@@ -12,16 +12,9 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
 
   @service store;
 
-  constructor() {
-    super(...arguments);
-    console.log('TemplatesPipelineDetailRoute');
-  }
-
   async loadOnePipelineTemplateVersions(namespace, name) {
     const pipelineTemplateVersions =
       await this.template.getPipelineTemplateVersions(namespace, name);
-
-    console.log('pipelineTemplateVersions', pipelineTemplateVersions);
 
     return pipelineTemplateVersions;
   }
@@ -30,8 +23,6 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
     const pipelineDetailsParams = this.paramsFor('templates.pipeline.detail');
     const { namespace, name } = pipelineDetailsParams;
     const fullName = `${namespace}/${name}`;
-
-    console.log('pipelineDetailsParams', pipelineDetailsParams);
 
     let pipelineTemplateVersions;
 
@@ -80,6 +71,12 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
       edges: []
     };
 
+    // polyfill pipeline template attributes
+    pipelineTemplateVersions.forEach(v => {
+      v.name = name;
+      v.namespace = namespace;
+    });
+
     const configJobs = get(config, 'jobs') || {};
     const jobs = [];
 
@@ -89,18 +86,6 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
         permutations: [jobConfig]
       });
     });
-
-    // Object.entries(configJobs).forEach(([jobName, jobConfig]) => {
-    //   jobs.push(
-    //     this.store.createRecord('job', {
-    //       name: jobName,
-    //       permutations: [jobConfig],
-    //       archived: false
-    //     })
-    //   );
-    // });
-
-    console.log('jobs', jobs);
 
     this.controllerFor('templates.pipeline.detail').setProperties({
       jobs,

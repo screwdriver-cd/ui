@@ -28,8 +28,6 @@ export default Controller.extend({
         ...route.paramsFor(`templates.${paramRouteName}.detail`)
       };
 
-      console.log('routeParams', params);
-
       return params;
     },
     set(_, value) {
