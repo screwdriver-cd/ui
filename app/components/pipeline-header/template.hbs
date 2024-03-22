@@ -1,74 +1,95 @@
 {{#if this.addCollectionError}}
-  <InfoMessage
-    @message={{this.addCollectionError}}
-    @type="warning"
-    @icon="exclamation-triangle"
-  />
+  <div class="pipeline-header-message-container">
+    <InfoMessage
+      @message={{this.addCollectionError}}
+      @type="warning"
+      @icon="exclamation-triangle"
+    />
+  </div>
 {{/if}}
 {{#if this.addCollectionSuccess}}
-  <InfoMessage
-    @message={{this.addCollectionSuccess}}
-    @type="success"
-    @icon="check"
-  />
+  <div class="pipeline-header-message-container">
+    <InfoMessage
+      @message={{this.addCollectionSuccess}}
+      @type="success"
+      @icon="check"
+    />
+  </div>
 {{/if}}
-<LinkTo @route="pipeline" @model={{this.pipeline.id}}>
-  <h1>
-    {{this.pipeline.appId}}
-  </h1>
-</LinkTo>
-<span class="branch-move">
-  <BsDropdown as |dd|>
-    <dd.toggle>
-      <span class="branch">
+
+<div class="header-items-container">
+  <div class="header-item">
+    <LinkTo @route="pipeline" @model={{this.pipeline.id}}>
+      <div class="pipeline-name">
+        {{this.pipeline.appId}}
+      </div>
+    </LinkTo>
+  </div>
+
+  <div class="header-item branch-item">
+    <BsDropdown as |dd|>
+      <dd.toggle>
         <FaIcon @icon="code-branch" @title="Source code" />
-        {{this.pipeline.branch}}
-      </span>
-      <span class="caret caret-display"></span>
-      <BsTooltip @placement="bottom" @renderInPlace={{false}} @triggerEvents="hover" class="tooltip">
-        Switch to another Pipeline with the same repository
-      </BsTooltip>
-    </dd.toggle>
-    <dd.menu class="branch-dropdown" as |ddm|>
-      {{#each (await this.sameRepoPipeline) as |pipe|}}
-        <ddm.item>
+        <span class="branch">
+          {{this.pipeline.branch}}
+        </span>
+        <BsTooltip @placement="bottom" @renderInPlace={{false}} @triggerEvents="hover" class="tooltip">
+          Switch to another Pipeline with the same repository
+        </BsTooltip>
+      </dd.toggle>
+      <dd.menu class="branch-dropdown" as |ddm|>
+        {{#each (await this.sameRepoPipeline) as |pipe|}}
+          <ddm.item>
+            <li class="branch-item">
+              <a href={{pipe.url}}>
+                {{svg-jar "link" class="img"}} {{pipe.branchAndRootDir}}
+              </a>
+            </li>
+          </ddm.item>
+        {{else}}
           <li class="branch-item">
-            <a href={{pipe.url}}>
-              {{svg-jar "link" class="img"}} {{pipe.branchAndRootDir}}
-            </a>
+            No other Pipelines with the same repository
           </li>
-        </ddm.item>
-      {{else}}
-        <li class="branch-item">
-          No other Pipelines with the same repository
-        </li>
-      {{/each}}
-    </dd.menu>
-  </BsDropdown>
-</span>
-<a href={{branch-url-encode this.pipeline.hubUrl}}  class="scm">
-  <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
-  {{this.scmContext.scm}}
-</a>
-{{#if this.pipeline.configPipelineId}}
-  <FaIcon @icon="cog" />
-  <LinkTo @route="pipeline" @model={{this.pipeline.configPipelineId}}>
-    Parent Pipeline
-  </LinkTo>
-{{/if}}
+        {{/each}}
+      </dd.menu>
+    </BsDropdown>
+  </div>
 
-{{#if this.pipeline.badges.sonar}}
-  {{#if this.sonarBadgeUri}}
-  <a href={{this.sonarBadgeUri}} title={{this.sonarBadgeDescription}} target="_blank" rel="noopener">{{svg-jar "sonarqube" class="img"}}</a>
+  <div class="header-item">
+    <a href={{branch-url-encode this.pipeline.hubUrl}}  class="scm">
+      <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
+      {{this.scmContext.scm}}
+    </a>
+  </div>
+
+  {{#if this.pipeline.configPipelineId}}
+    <div class="header-item">
+      <FaIcon @icon="cog" />
+      <LinkTo @route="pipeline" @model={{this.pipeline.configPipelineId}}>
+        Parent Pipeline
+      </LinkTo>
+    </div>
   {{/if}}
-{{/if}}
 
-<CollectionDropdown
-  @pipeline={{this.pipeline}}
-  @pipelineId={{this.pipeline.id}}
-  @collections={{this.collections}}
-  @addToCollection={{this.addToCollection}}
-  @addCollectionSuccess={{this.addCollectionSuccess}}
-  @addCollectionError={{this.addCollectionError}}
-  @dropdownText={{this.dropdownText}}
-/>
+  {{#if this.pipeline.badges.sonar}}
+    {{#if this.sonarBadgeUri}}
+      <div class="header-item">
+        <a href={{this.sonarBadgeUri}} title={{this.sonarBadgeDescription}} target="_blank" rel="noopener">
+          {{svg-jar "sonarqube" class="img sonarqube"}}
+        </a>
+      </div>
+    {{/if}}
+  {{/if}}
+
+  <div class="header-item">
+    <CollectionDropdown
+      @pipeline={{this.pipeline}}
+      @pipelineId={{this.pipeline.id}}
+      @collections={{this.collections}}
+      @addToCollection={{this.addToCollection}}
+      @addCollectionSuccess={{this.addCollectionSuccess}}
+      @addCollectionError={{this.addCollectionError}}
+      @dropdownText={{this.dropdownText}}
+    />
+  </div>
+</div>

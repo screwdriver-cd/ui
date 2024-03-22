@@ -1,5 +1,8 @@
+$pipeline-graph-nav-height: 156px;
+
 & {
   padding: 15px 0 15px 10px;
+  height: $pipeline-graph-nav-height;
 
   strong {
     font-size: 16px;
@@ -59,13 +62,6 @@
     }
   }
 
-  .event-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    margin: 15px 0;
-  }
-
   .title {
     text-transform: uppercase;
     color: $grey-600;
@@ -73,8 +69,12 @@
   }
 
   .x-toggle-component {
-    label.on-label {
-      padding-left: 1.5rem;
+    .x-toggle-container.medium {
+      width: auto;
+    }
+
+    label {
+      margin-bottom: 0;
     }
 
     .x-toggle-btn {
@@ -82,25 +82,101 @@
     }
   }
 
-  .col {
-    flex: 1 0 calc(100% / 12);
-    padding-left: 10px;
-    border-right: 1px solid $grey-500;
+  .nav-button-container {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    overflow: scroll;
 
-    &:nth-child(2) {
-      flex-basis: calc(100% / 8 * 2);
+    .button-container {
+      margin: auto;
+      padding-left: 15px;
+      padding-right: 15px;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+
+      &.layout-buttons {
+        margin-left: 0;
+      }
+
+      &.start-build-button {
+        margin-right: 0;
+      }
     }
+  }
 
-    &:last-child {
-      border: none;
-    }
+  .event-info-container {
+    display: flex;
+    height: 4.5rem;
+    margin: 15px 0;
+    overflow: scroll;
 
-    a {
-      line-height: inherit;
-    }
+    .info-col {
+      max-height: 4rem;
+      padding-left: 10px;
+      padding-right: 10px;
+      border-right: 1px solid $grey-500;
 
-    .customize-label {
-      word-break: break-all;
+      a {
+        line-height: inherit;
+      }
+
+      &:last-child {
+        border: none;
+      }
+
+      &.info-col-commit {
+        min-width: 7rem;
+      }
+
+      &.info-col-message {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 10rem;
+
+        .commit-message {
+          overflow: scroll;
+        }
+      }
+
+      &.info-col-branch {
+        display: flex;
+        flex-direction: column;
+        width: 9rem;
+
+        .branch-name {
+          height: 100%;
+          overflow: scroll;
+          word-break: break-all;
+        }
+      }
+
+      &.info-col-status {
+        min-width: 8.5rem;
+      }
+
+      &.info-col-build-date {
+        min-width: 9rem;
+      }
+
+      &.info-col-label {
+        display: flex;
+        flex-direction: column;
+        min-width: 7rem;
+
+        .customize-label {
+          height: 100%;
+          overflow: scroll;
+          word-break: break-all;
+        }
+      }
     }
   }
 }
