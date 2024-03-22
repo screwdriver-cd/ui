@@ -32,9 +32,10 @@ export default class TemplatesPipelineDetailIndexRoute extends Route.extend(
         name
       );
     } catch (err) {
-      console.log('err', err);
+      // console.log('err', err);
+      // throw(err);
 
-      throw(err);
+      this.router.transitionTo('/404');
     }
 
     const pipelineTemplateLatestVersion = pipelineTemplateVersions.get('firstObject');
