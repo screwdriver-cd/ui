@@ -12,7 +12,7 @@ export default class TemplatesPipelineIndexRoute extends Route.extend(
   }
 
   async loadAllPipelineTemplates() {
-    const pipelineTemplates = await this.template.fetchAllPipelineTemplates();
+    const pipelineTemplates = await this.template.getAllPipelineTemplates();
 
     console.log('pipelineTemplates', pipelineTemplates);
 

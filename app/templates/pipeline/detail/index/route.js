@@ -1,11 +1,16 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
-import { get } from '@ember/object';
+import { get, setProperties } from '@ember/object';
 
 export default class TemplatesPipelineDetailIndexRoute extends Route.extend(
   AuthenticatedRouteMixin
 ) {
+  constructor() {
+    super(...arguments);
+    console.log('TemplatesPipelineDetailIndexRoute');
+  }
+
   @service template;
   @service router;
   @service store;
@@ -38,55 +43,14 @@ export default class TemplatesPipelineDetailIndexRoute extends Route.extend(
       this.router.transitionTo('/404');
     }
 
-    const pipelineTemplateLatestVersion = pipelineTemplateVersions.get('firstObject');
+    const pipelineTemplateLatestVersion =
+      pipelineTemplateVersions.get('firstObject');
 
     return {
       name,
-      namespace, 
+      namespace,
       pipelineTemplateLatestVersion,
       pipelineTemplateVersions
     };
-  }
-
-  async setupController(controller, model) {
-    const { name, namespace, pipelineTemplateLatestVersion, pipelineTemplateVersions } = model;
-    const pipelineName = `${namespace}/${name}`;
-    const { config } = pipelineTemplateLatestVersion;
-    const { parameters, shared, annotations } = config; 
-    const workflowGraph = {
-      nodes: [],
-      edges: []
-    }; 
-
-    const configJobs = get(config, 'jobs') || {};
-    const jobs = [];
-
-    Object.entries(configJobs).forEach(([jobName, jobConfig]) => {
-      jobs.push({
-        name: jobName,
-        permutations: [jobConfig],
-      });
-    });
-
-    // Object.entries(configJobs).forEach(([jobName, jobConfig]) => {
-    //   jobs.push(
-    //     this.store.createRecord('job', {
-    //       name: jobName,
-    //       permutations: [jobConfig],
-    //       archived: false
-    //     })
-    //   );
-    // });
-
-    console.log('jobs', jobs);
-
-    this.controllerFor('templates.pipeline.detail').setProperties({
-      jobs,
-      pipelineName,
-      workflowGraph, 
-      annotations,
-      parameters,
-      // filteredTemplates: model
-    });
   }
 }

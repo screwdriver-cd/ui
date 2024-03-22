@@ -13,13 +13,19 @@ export default Controller.extend({
       return isPipelineTemplateRoute;
     }
   }),
-  routeParams: computed('model', {
+  routeParams: computed('model', 'isPipelineTemplatePage', {
     get() {
       const route = this.model;
 
+      let paramRouteName = 'job';
+
+      if (this.isPipelineTemplatePage) {
+        paramRouteName = 'pipeline';
+      }
+
       const params = {
-        ...route.paramsFor('templates.job.namespace'),
-        ...route.paramsFor('templates.job.detail')
+        ...route.paramsFor(`templates.${paramRouteName}.namespace`),
+        ...route.paramsFor(`templates.${paramRouteName}.detail`)
       };
 
       console.log('routeParams', params);

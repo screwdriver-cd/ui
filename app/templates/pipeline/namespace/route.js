@@ -1,30 +1,44 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import { service } from '@ember/service';
+import { inject as service } from '@ember/service';
 
-export default class TemplatesPipelineNamespaceRoute extends Route.extend(
+export default class TemplatesPipelineNamespaceIndexRoute extends Route.extend(
   AuthenticatedRouteMixin
 ) {
   @service template;
 
-  templateName = 'templates/index';
+  constructor() {
+    super(...arguments);
 
-  model(params) {
-    this.routeParams = params;
-
-    return this.template.getAllTemplates(params.namespace);
+    console.log('TemplatesPipelineNamespaceIndexRoute');
   }
 
   setupController(controller, model) {
-    // Call _super for default behavior
-    super.setupController(controller, model);
+    this._super(controller, model);
 
-    // Implement your custom setup after
-    controller.set('routeParams', this.routeParams);
+    const ctl = this.controllerFor('templates.pipeline.namespace.index');
 
-    controller.set(
+    ctl.set(
       'targetNamespace',
-      this.paramsFor('templates.namespace').namespace
+      this.paramsFor('templates.pipeline.namespace').namespace
     );
+  }
+
+  async loadAllPipelineTemplates() {
+    const pipelineTemplates = await this.template.getAllPipelineTemplates();
+
+    console.log('pipelineTemplates', pipelineTemplates);
+
+    return pipelineTemplates;
+  }
+
+  async model() {
+    console.log('===hererere');
+
+    const pipelineTemplates = await this.loadAllPipelineTemplates();
+
+    console.log('pipelineTemplates', pipelineTemplates);
+
+    return pipelineTemplates;
   }
 }

@@ -65,6 +65,10 @@ Router.map(function route() {
   });
   this.route('templates', function templatesRoute() {
     this.route('pipeline', function pipelineTemplate() {
+      this.route('namespace', { path: '/:namespace' }, function() {
+        this.route('index', { path: '/' });
+      });
+
       this.route(
         'detail',
         { path: '/:namespace/:name' },
@@ -73,10 +77,13 @@ Router.map(function route() {
           this.route('version', { path: '/:version' });
         }
       );
-      this.route('namespace', { path: '/:namespace' });
     });
 
     this.route('job', function jobTemplate() {
+      this.route('namespace', { path: '/:namespace' }, function() {
+        this.route('index', { path: '/' });
+      });
+
       this.route(
         'detail',
         { path: '/:namespace/:name' },
@@ -85,7 +92,7 @@ Router.map(function route() {
           this.route('version', { path: '/:version' });
         }
       );
-      this.route('namespace', { path: '/:namespace' });
+
       this.route('template-usage', {
         path: '/:namespace/:name/:version/usage'
       });

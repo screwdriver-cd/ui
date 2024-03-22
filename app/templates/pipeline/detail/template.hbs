@@ -1,6 +1,5 @@
 {{page-title "Detail"}}
 > template pipeline detail
-{{outlet}}
 
 {{#if this.versionOrTagFromUrl}}
   {{page-title @model.namespace '/' @model.name '@' this.versionOrTagFromUrl}}
@@ -14,18 +13,17 @@
   @icon="exclamation-triangle"
 />
 
-{{!-- <TemplateHeader
+<TemplateHeader
   @template={{this.selectedVersionTemplate}}
   @trusted={{this.trusted}}
   @isAdmin={{this.isAdmin}}
   @onUpdateTrust={{action "updateTrust"}}
   @onRemoveTemplate={{action "removeTemplate"}}
-/> --}}
+/>
 
 <h4>
-  Contents:
+  Pipeline Contents:
 </h4>
-
 
 <ValidatorPipeline
   @name={{this.pipelineName}}
@@ -36,8 +34,10 @@
   @isOpen={{true}}
 />
 
-<div>Validate jobs
-{{log 'this.jobs' this.jobs}}
+<h4>
+  Jobs Contents:
+</h4>
+<div>
 {{#each this.jobs as |job|}}
   {{#each job.permutations as |jobConfig index|}}
     <ValidatorJob
@@ -59,4 +59,5 @@
   @onRemoveVersion={{action "removeVersion"}}
   @onTimeRangeChange={{action "timeRangeChange"}}
 /> --}}
+
 {{outlet}}

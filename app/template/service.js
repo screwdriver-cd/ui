@@ -81,7 +81,8 @@ export default Service.extend({
 
     return this.fetchData(url);
   },
-  fetchAllPipelineTemplates(namespace) {
+
+  getAllPipelineTemplates(namespace) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipeline/templates`;
     const params = { sortBy: 'createTime', sort: 'descending' };
 
