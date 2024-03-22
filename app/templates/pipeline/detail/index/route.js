@@ -1,13 +1,14 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
+import { get } from '@ember/object';
 
 export default class TemplatesPipelineDetailIndexRoute extends Route.extend(
   AuthenticatedRouteMixin
 ) {
   @service template;
-
   @service router;
+  @service store;
 
   async loadOnePipelineTemplateVersions(namespace, name) {
     const pipelineTemplateVersions =
@@ -23,29 +24,68 @@ export default class TemplatesPipelineDetailIndexRoute extends Route.extend(
     const { namespace, name } = pipelineDetailsParams;
 
     console.log('pipelineDetailsParams', pipelineDetailsParams);
+    let pipelineTemplateVersions;
 
-    const pipelineTemplateVersions = await this.loadOnePipelineTemplateVersions(
-      namespace,
-      name
-    );
+    try {
+      pipelineTemplateVersions = await this.loadOnePipelineTemplateVersions(
+        namespace,
+        name
+      );
+    } catch (err) {
+      console.log('err', err);
 
-    return pipelineTemplateVersions;
-    // return false;
-    // return true;
+      throw(err);
+    }
+
+    const pipelineTemplateLatestVersion = pipelineTemplateVersions.get('firstObject');
+
+    return {
+      name,
+      namespace, 
+      pipelineTemplateLatestVersion,
+      pipelineTemplateVersions
+    };
   }
 
   async setupController(controller, model) {
-    const pipelineName = model;
-    const workflowGraph = undefined; 
-    const annotations = undefined; 
-    const parameters = undefined; 
+    const { name, namespace, pipelineTemplateLatestVersion, pipelineTemplateVersions } = model;
+    const pipelineName = `${namespace}/${name}`;
+    const { config } = pipelineTemplateLatestVersion;
+    const { parameters, shared, annotations } = config; 
+    const workflowGraph = {
+      nodes: [],
+      edges: []
+    }; 
 
-    this.controllerFor('templates.detail').setProperties({
+    const configJobs = get(config, 'jobs') || {};
+    const jobs = [];
+
+    Object.entries(configJobs).forEach(([jobName, jobConfig]) => {
+      jobs.push({
+        name: jobName,
+        permutations: [jobConfig],
+      });
+    });
+
+    // Object.entries(configJobs).forEach(([jobName, jobConfig]) => {
+    //   jobs.push(
+    //     this.store.createRecord('job', {
+    //       name: jobName,
+    //       permutations: [jobConfig],
+    //       archived: false
+    //     })
+    //   );
+    // });
+
+    console.log('jobs', jobs);
+
+    this.controllerFor('templates.pipeline.detail').setProperties({
+      jobs,
       pipelineName,
       workflowGraph, 
       annotations,
       parameters,
-      filteredTemplates: model
+      // filteredTemplates: model
     });
   }
 }

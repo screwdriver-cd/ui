@@ -25,41 +25,38 @@
 <h4>
   Contents:
 </h4>
-{{!-- <ValidatorJob
-  @name={{this.selectedVersionTemplate.fullName}}
-  @job={{this.selectedVersionTemplate.config}}
-  @template={{this.selectedVersionTemplate}}
-  @collapsible={{false}}
-  @isOpen={{true}}
-/> --}}
+
 
 <ValidatorPipeline
   @name={{this.pipelineName}}
+  @jobs={{this.jobs}}
   @workflowGraph={{this.workflowGraph}}
   @annotations={{this.annotations}}
   @parameters={{this.parameters}}
-  @isOpen={{unbound this.isOpen}}
+  @isOpen={{true}}
 />
-{{#each this.workflowGraph.nodes as |node|}}
-  {{#if (get this.jobs node.name)}}
-    {{#each (get this.jobs node.name) as |jobConfig index|}}
-      <ValidatorJob
-        @name={{node.name}}
-        @job={{jobConfig}}
-        @index={{index}}
-        @isOpen={{unbound this.isOpen}}
-      />
-    {{/each}}
-  {{/if}}
+
+<div>Validate jobs
+{{log 'this.jobs' this.jobs}}
+{{#each this.jobs as |job|}}
+  {{#each job.permutations as |jobConfig index|}}
+    <ValidatorJob
+      @name={{job.name}}
+      @job={{jobConfig}}
+      @index={{index}}
+      @isOpen={{true}}
+    />
+  {{/each}}
 {{/each}}
+</div>
 
 <hr class="section-divider"/>
 
-<TemplateVersions
+{{!-- <TemplateVersions
   @templates={{this.filteredTemplates}}
   @startTime={{this.startTime}}
   @endTime={{this.endTime}}
   @onRemoveVersion={{action "removeVersion"}}
   @onTimeRangeChange={{action "timeRangeChange"}}
-/>
+/> --}}
 {{outlet}}
