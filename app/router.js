@@ -106,7 +106,7 @@ Router.map(function route() {
       });
     });
 
-    // backward compatiblity:
+    // backward compatibility:
     // 1) /templates/namespace to /templates/job/namespace
     // 2) /templates/namespace/name to /templates/job/namespace/name
     /* eslint-disable ember/no-shadow-route-definition */
