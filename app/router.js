@@ -65,9 +65,13 @@ Router.map(function route() {
   });
   this.route('templates', function templatesRoute() {
     this.route('pipeline', function pipelineTemplate() {
-      this.route('namespace', { path: '/:namespace' }, function() {
-        this.route('index', { path: '/' });
-      });
+      this.route(
+        'namespace',
+        { path: '/:namespace' },
+        function namespaceRoute() {
+          this.route('index', { path: '/' });
+        }
+      );
 
       this.route(
         'detail',
@@ -80,9 +84,13 @@ Router.map(function route() {
     });
 
     this.route('job', function jobTemplate() {
-      this.route('namespace', { path: '/:namespace' }, function() {
-        this.route('index', { path: '/' });
-      });
+      this.route(
+        'namespace',
+        { path: '/:namespace' },
+        function namespaceRoute() {
+          this.route('index', { path: '/' });
+        }
+      );
 
       this.route(
         'detail',
@@ -97,6 +105,12 @@ Router.map(function route() {
         path: '/:namespace/:name/:version/usage'
       });
     });
+
+    // backward compatiblity:
+    // 1) /templates/namespace to /templates/job/namespace
+    // 2) /templates/namespace/name to /templates/job/namespace/name
+    /* eslint-disable ember/no-shadow-route-definition */
+    this.route('catch-all', { path: '/*path' });
   });
 
   this.route('commands', function commandsRoute() {

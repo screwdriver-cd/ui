@@ -58,6 +58,7 @@ export default Controller.extend({
 
     // Normalize display job name length between MINIMUM and MAXIMUM
     let normalizedLength = this.displayJobNameLength;
+
     normalizedLength = Math.max(normalizedLength, MINIMUM_JOBNAME_LENGTH);
     normalizedLength = Math.min(normalizedLength, MAXIMUM_JOBNAME_LENGTH);
 
