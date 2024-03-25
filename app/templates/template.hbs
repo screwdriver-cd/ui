@@ -1,5 +1,6 @@
 {{page-title "Templates"}}
 
+{{#if this.isTemplateRoute}}
 <header>
   <h4>{{if this.isPipelineTemplatePage "Pipeline" "Job"}} Templates
     <a
@@ -23,8 +24,6 @@
   </div>
 </header>
 
-<BreadCrumbs @crumbs={{this.crumbs}} />
-
 <BsNav @type="tabs" as |nav|>
   <nav.item>
     <nav.link-to @route="templates.pipeline">Pipelines</nav.link-to>
@@ -33,5 +32,8 @@
     <nav.link-to @route="templates.job">Jobs</nav.link-to>
   </nav.item>
 </BsNav>
+{{/if}}
+
+<BreadCrumbs @crumbs={{this.crumbs}} />
 
 {{outlet}}

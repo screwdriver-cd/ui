@@ -13,6 +13,17 @@ export default Controller.extend({
       return isPipelineTemplateRoute;
     }
   }),
+
+  isTemplateRoute: computed('router.currentRouteName', {
+    get() {
+      const currentRouteName = get(this, 'router.currentRouteName');
+      const isTemplateRoute = currentRouteName.includes(
+        'templates.pipeline.index'
+      );
+
+      return isTemplateRoute;
+    }
+  }),
   routeParams: computed('model', 'isPipelineTemplatePage', {
     get() {
       const route = this.model;
@@ -51,7 +62,7 @@ export default Controller.extend({
       // if equal, use name
       if (params.namespace || params.detail) {
         breadcrumbs.push({
-          name: 'Templates',
+          name: `${paramRouteName} Templates`,
           route: 'templates',
           params: ['templates']
         });
