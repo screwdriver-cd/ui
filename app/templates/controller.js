@@ -17,9 +17,10 @@ export default Controller.extend({
   isTemplateRoute: computed('router.currentRouteName', {
     get() {
       const currentRouteName = get(this, 'router.currentRouteName');
-      const isTemplateRoute = currentRouteName.includes(
-        'templates.pipeline.index'
-      );
+      const isTemplateRoute = [
+        'templates.pipeline.index',
+        'templates.job.index'
+      ].includes(currentRouteName);
 
       return isTemplateRoute;
     }
@@ -58,8 +59,8 @@ export default Controller.extend({
         paramRouteName = 'pipeline';
       }
 
-      // add name and namespace together to get full name, compare fullname  to params.name
-      // if equal, use name
+      // add name and namespace together to get full name, compare fullname
+      // to params.name if equal, use name
       if (params.namespace || params.detail) {
         breadcrumbs.push({
           name: `${paramRouteName} Templates`,
