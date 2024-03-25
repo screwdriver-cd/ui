@@ -1,8 +1,9 @@
+@import '../pipeline-graph-nav/styles.scss';
+
 & {
   margin-left: 10px;
-  margin-bottom: 15px;
-  height: 100%;
+  height: calc(100% - $pipeline-graph-nav-height);
   overflow: auto;
   background-color: $grey-200;
-  padding: 10px 5px;
+  padding: 10px 0;
 }

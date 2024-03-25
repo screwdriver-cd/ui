@@ -22,8 +22,8 @@ module('Integration | Component | pipeline header', function (hooks) {
     this.set('pipelineMock', pipelineMock);
     await render(hbs`<PipelineHeader @pipeline={{this.pipelineMock}} />`);
 
-    assert.dom('h1').hasText('batman/batmobile');
-    assert.dom('span.branch').hasText('Source code master');
+    assert.dom('div.pipeline-name').hasText('batman/batmobile');
+    assert.dom('span.branch').hasText('master');
     assert.dom('a.dropdown-toggle').exists();
     assert
       .dom('a.scm')
@@ -132,6 +132,8 @@ module('Integration | Component | pipeline header', function (hooks) {
     this.set('pipelineMock', pipelineMock);
     await render(hbs`<PipelineHeader @pipeline={{this.pipelineMock}} />`);
 
-    assert.dom('a:nth-child(5)').hasText('Parent Pipeline');
+    assert
+      .dom('div.header-items-container .header-item:nth-child(4)')
+      .hasText('Parent Pipeline');
   });
 });

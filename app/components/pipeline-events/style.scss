@@ -1,4 +1,37 @@
+$pipeline-nav-height-min: 35px;
+$pipeline-nav-height-max: 56px;
+$pipeline-message-height-min: 10px;
+$pipeline-message-height-max: 68px;
+
 & {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 75% 25%;
+  grid-template-areas:
+    'pipeline-nav pipeline-nav'
+    'pipeline-messages pipeline-messages'
+    'event-main events-sidebar';
+  grid-template-rows:
+    auto
+    auto
+    minmax(
+      calc(100% - $pipeline-nav-height-max - $pipeline-message-height-max),
+      calc(100% - $pipeline-nav-height-min - $pipeline-message-height-min)
+    );
+
+  max-height: calc(100% - $pipeline-header-height-min);
+  min-height: calc(100% - $pipeline-header-height-max);
+
+  .pipeline-message {
+    grid-area: pipeline-messages;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: $pipeline-message-height-min;
+
+    .alert {
+      margin-bottom: 0;
+    }
+  }
   .x-toggle-component {
     display: inline-flex;
   }
@@ -7,7 +40,23 @@
     background-color: $sd-success;
   }
 
-  .pipeline-container {
+  .pipeline-event-container {
+    grid-area: event-main;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-bottom: 10px;
+  }
+
+  .events-sidebar {
+    grid-area: events-sidebar;
     display: flex;
+    flex-direction: column;
+    overflow: visible;
+    margin-bottom: 10px;
+
+    .tab-content {
+      height: 100%;
+      overflow: scroll;
+    }
   }
 }

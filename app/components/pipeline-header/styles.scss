@@ -1,7 +1,6 @@
 & {
   background-color: $brand-100;
   color: $grey-800;
-  min-height: 50px;
   margin: 0;
   padding: 20px 40px;
   white-space: nowrap;
@@ -10,65 +9,99 @@
     width: 24px;
     height: 24px;
   }
-}
 
-.toggler-text {
-  color: #3697f2;
-}
-
-&.is-build-page {
-  background-color: $sd-white;
-}
-
-h1 {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  font-size: 24px;
-  font-weight: $weight-bold;
-}
-
-a {
-  color: $grey-800;
-  cursor: pointer;
-  text-decoration: none;
-  overflow: hidden;
-  vertical-align: middle;
-}
-
-a:hover,
-a:active,
-a.active {
-  color: $grey-800;
-}
-
-.collection-dropdown {
-  position: absolute;
-  right: 25px;
-  display: inline;
-}
-
-.branch-move {
-  padding-right: 6px;
-}
-
-.branch-item {
-  padding: 1px 0px;
-  .img {
-    width: 10px;
-    height: 10px;
+  a {
+    color: $grey-800;
+    cursor: pointer;
+    text-decoration: none;
+    overflow: hidden;
+    vertical-align: middle;
   }
-}
 
-.branch-item a:hover {
-  background-color: #d1edff;
-}
+  a:hover,
+  a:active,
+  a.active {
+    color: $grey-800;
+  }
 
-.branch-dropdown {
-  padding-left: 10px;
-  padding-right: 10px;
-}
+  .pipeline-header-message-container {
+    margin-top: -10px;
+  }
 
-.dropdown {
-  display: inline-block;
+  .header-items-container {
+    display: flex;
+
+    .header-item {
+      margin-top: auto;
+      margin-bottom: auto;
+      padding-left: 3px;
+      padding-right: 3px;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+        flex-grow: 1;
+        display: flex;
+        justify-content: right;
+      }
+
+      .pipeline-name {
+        font-size: 24px;
+        font-weight: $weight-bold;
+      }
+
+      &.branch-item {
+        max-width: 20rem;
+
+        svg {
+          margin-top: auto;
+          margin-bottom: auto;
+        }
+
+        .branch {
+          padding-left: 0.25rem;
+          overflow-x: scroll;
+        }
+
+        .dropdown-toggle {
+          display: flex;
+          justify-content: space-between;
+
+          &::after {
+            margin-top: auto;
+            margin-bottom: 0.75rem;
+          }
+        }
+      }
+
+      .branch-dropdown {
+        padding-left: 10px;
+        padding-right: 10px;
+
+        .branch-item {
+          padding: 1px 0;
+
+          a:hover {
+            background-color: #d1edff;
+          }
+
+          .img {
+            width: 10px;
+            height: 10px;
+          }
+        }
+      }
+
+      .sonarqube {
+        height: 14px;
+      }
+
+      .toggler-text {
+        color: #3697f2;
+      }
+    }
+  }
 }

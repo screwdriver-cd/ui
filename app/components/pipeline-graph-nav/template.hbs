@@ -1,7 +1,7 @@
 {{#if this.showGraphNavRow}}
-  <div class="row">
+  <div class="nav-button-container">
     {{#if (not this.isPR)}}
-      <div class="col-2">
+      <div class="button-container layout-buttons">
         <BsButtonGroup
           class="view-toggle"
           @value={{this.showListView}}
@@ -18,7 +18,7 @@
       </div>
     {{/if}}
 
-    <div class="col-4">
+    <div class="button-container">
       {{#if this.isPR}}
         <strong>
           Pull Requests
@@ -39,7 +39,7 @@
     </div>
     {{#if (not this.isPR)}}
       <div
-        class="col-3"
+        class="button-container"
         title="Toggle to {{if this.showDownstreamTriggers "hide" "show"}} the downstream trigger nodes."
       >
         <XToggle
@@ -53,7 +53,7 @@
         />
       </div>
     {{/if}}
-    <div class="col-3">
+    <div class="button-container start-build-button">
       {{#if this.session.isAuthenticated}}
         {{#if (not-eq this.selectedEventObj.type "pr")}}
           <PipelineStart
@@ -66,98 +66,94 @@
   </div>
 {{/if}}
 {{#if this.selectedEventObj}}
-  <div class="row {{this.selectedEventObj.status}}">
-    <div class="col-12">
-      <div class="event-info">
-        <div class="col">
-          <span class="title">
-            Commit
-          </span>
-          <br />
-          <span>
-            <a
-              class={{if
-                (eq this.selectedEventObj.sha this.latestCommit.sha)
-                "latest-commit"
-              }}
-              href={{this.selectedEventObj.commit.url}}
-            >
-              #{{this.selectedEventObj.truncatedSha}}
-            </a>
-          </span>
-        </div>
-        <div class="col">
-          <span class="title">
-            Message
-          </span>
-          <br />
-          <span title={{this.selectedEventObj.commit.message}}>
-            {{this.selectedEventObj.truncatedMessage}}
-          </span>
-        </div>
-        <div class="col">
-          <span class="title">
-            Branch
-          </span>
-          <br />
-          <span>
-            {{this.selectedEventObj.baseBranch}}
-          </span>
-        </div>
-        <div class="col">
-          <span class="title">
-            Status
-          </span>
-          <br />
-          <span class="status">
-            <FaIcon
-              @icon={{this.icon.name}}
-              @fixedWidth="true"
-              @prefix={{this.icon.prefix}}
-              @spin={{this.icon.spin}}
-              @flip={{this.icon.flip}}
-            />
-            {{this.selectedEventObj.status}}
-          </span>
-        </div>
-        <div class="col">
-          <span class="title">
-            Committer
-          </span>
-          <br />
-          <span>
-            <a href={{this.selectedEventObj.commit.author.url}}>
-              {{this.selectedEventObj.commit.author.name}}
-            </a>
-          </span>
-        </div>
-        <div class="col">
-          <span class="title">
-            Start Date
-          </span>
-          <br />
-          <span>
-            {{this.startDate.content}}
-          </span>
-        </div>
-        <div class="col">
-          <span class="title">
-            Duration
-          </span>
-          <br />
-          <span>
-            {{this.selectedEventObj.durationText}}
-          </span>
-        </div>
-        {{#if this.selectedEventObj.label}}
-          <div class="col">
-            <span class="title">Label</span><br>
-            <span class="customize-label" title={{this.selectedEventObj.label}}>
-              {{linkify this.selectedEventObj.label target="_blank" rel="nofollow" urlLength=30}}
-            </span>
-          </div>
-        {{/if}}
+  <div class="event-info-container {{this.selectedEventObj.status}}">
+    <div class="info-col info-col-commit">
+      <span class="title">
+        Commit
+      </span>
+      <br />
+      <span>
+        <a
+          class={{if
+            (eq this.selectedEventObj.sha this.latestCommit.sha)
+            "latest-commit"
+          }}
+          href={{this.selectedEventObj.commit.url}}
+        >
+          #{{this.selectedEventObj.truncatedSha}}
+        </a>
+      </span>
+    </div>
+    <div class="info-col info-col-message">
+      <span class="title">
+        Message
+      </span>
+      <br />
+      <div class="commit-message" title={{this.selectedEventObj.commit.message}}>
+        {{this.selectedEventObj.truncatedMessage}}
       </div>
     </div>
+    <div class="info-col info-col-branch">
+      <span class="title">
+        Branch
+      </span>
+      <br />
+      <span class="branch-name">
+        {{this.selectedEventObj.baseBranch}}
+      </span>
+    </div>
+    <div class="info-col info-col-status">
+      <span class="title">
+        Status
+      </span>
+      <br />
+      <span class="status">
+        <FaIcon
+          @icon={{this.icon.name}}
+          @fixedWidth="true"
+          @prefix={{this.icon.prefix}}
+          @spin={{this.icon.spin}}
+          @flip={{this.icon.flip}}
+        />
+        {{this.selectedEventObj.status}}
+      </span>
+    </div>
+    <div class="info-col info-col-committer">
+      <span class="title">
+        Committer
+      </span>
+      <br />
+      <span>
+        <a href={{this.selectedEventObj.commit.author.url}}>
+          {{this.selectedEventObj.commit.author.name}}
+        </a>
+      </span>
+    </div>
+    <div class="info-col info-col-build-date">
+      <span class="title">
+        Start Date
+      </span>
+      <br />
+      <span>
+        {{this.startDate.content}}
+      </span>
+    </div>
+    <div class="info-col info-col-build-duration">
+      <span class="title">
+        Duration
+      </span>
+      <br />
+      <span>
+        {{this.selectedEventObj.durationText}}
+      </span>
+    </div>
+    {{#if this.selectedEventObj.label}}
+      <div class="info-col info-col-label">
+        <span class="title">Label</span><br>
+        <span class="customize-label" title={{this.selectedEventObj.label}}>
+          {{linkify this.selectedEventObj.label target="_blank" rel="nofollow" urlLength=30}}
+        </span>
+      </div>
+    {{/if}}
   </div>
 {{/if}}

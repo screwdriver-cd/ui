@@ -93,7 +93,9 @@ module('Acceptance | pipeline pr-chain', function (hooks) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/pipelines/4/pulls');
 
-    assert.dom('a h1').hasText('foo/bar', 'incorrect pipeline name');
+    assert
+      .dom('a div.pipeline-name')
+      .hasText('foo/bar', 'incorrect pipeline name');
     await waitFor('.pipelineWorkflow svg');
     assert
       .dom('.pipelineWorkflow svg')
@@ -105,7 +107,6 @@ module('Acceptance | pipeline pr-chain', function (hooks) {
       .dom('.column-tabs-view .view .detail .commit')
       .hasText('PR-42 Start');
     assert.dom('.separator').exists({ count: 1 });
-    assert.dom('.partial-view').exists({ count: 2 });
     assert.dom('.last-successful').doesNotExist();
     assert.dom('.latest-commit').doesNotExist();
   });

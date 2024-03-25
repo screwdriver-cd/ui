@@ -66,15 +66,17 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       @setShowListView={{this.setShowListView}}
     />`);
 
-    assert.dom('.row button').exists({ count: 4 });
+    assert.dom('.nav-button-container button').exists({ count: 4 });
 
     const $columnTitles = this.element.querySelectorAll(
-      '.row .event-info .title'
+      '.event-info-container .info-col .title'
     );
     const $columnValues = this.element.querySelectorAll(
-      '.row .event-info .title ~ span'
+      '.event-info-container .info-col .title ~ :nth-child(3)'
     );
-    const $links = this.element.querySelectorAll('.row .event-info a');
+    const $links = this.element.querySelectorAll(
+      '.event-info-container .info-col a'
+    );
 
     const compare = (elem, expected) => {
       const actual = elem.innerText.trim() || elem.innerHTML.trim();
@@ -172,13 +174,13 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       @setShowListView={{this.setShowListView}}
     />`);
 
-    assert.dom('.row button').exists({ count: 4 });
+    assert.dom('.nav-button-container button').exists({ count: 4 });
 
     const $columnTitles = this.element.querySelectorAll(
-      '.row .event-info .title'
+      '.event-info-container .info-col .title'
     );
     const $columnValues = this.element.querySelectorAll(
-      '.row .event-info .title ~ span'
+      '.event-info-container .info-col .title ~ :nth-child(3)'
     );
 
     const compare = (elem, expected) => {
@@ -283,8 +285,8 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       @setShowListView={{this.setShowListView}}
     />`);
 
-    assert.dom('.row strong').hasText('Pull Requests');
-    assert.dom('.row button').exists({ count: 2 });
+    assert.dom('.nav-button-container strong').hasText('Pull Requests');
+    assert.dom('.nav-button-container button').exists({ count: 2 });
   });
 
   test('it renders when selectedEvent is a skipped event', async function (assert) {
@@ -325,7 +327,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       @setShowListView={{this.setShowListView}}
     />`);
 
-    assert.dom('.row button').exists({ count: 4 });
+    assert.dom('.nav-button-container button').exists({ count: 4 });
     assert.dom('.SKIPPED').exists({ count: 1 });
     assert.dom('.event-options-toggle').hasText('Most Recent Last Successful');
     assert.dom('.x-toggle-component').includesText('Show triggers');
@@ -545,7 +547,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
   />`);
 
     assert
-      .dom('.col .customize-label')
+      .dom('.info-col .customize-label')
       .hasText('Yahoo new project, and Version #2.0');
   });
 
@@ -600,7 +602,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       assert.strictEqual(elem, expected);
     };
     const labelColumn = this.element
-      .querySelector('.col .customize-label')
+      .querySelector('.info-col .customize-label')
       .innerHTML.trim();
 
     compare(

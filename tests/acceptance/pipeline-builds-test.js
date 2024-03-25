@@ -226,7 +226,9 @@ module('Acceptance | pipeline build', function (hooks) {
 
     assert.equal(currentURL(), `/pipelines/4/events/${desiredEventId}`);
     assert.equal(getPageTitle(), 'foo/bar', 'Page title is correct');
-    assert.dom('a h1').hasText('foo/bar', 'Pipeline name is correct');
+    assert
+      .dom('a div.pipeline-name')
+      .hasText('foo/bar', 'Pipeline name is correct');
     assert
       .dom('.pipelineWorkflow svg')
       .exists({ count: 1 }, 'not enough workflow');
@@ -241,7 +243,6 @@ module('Acceptance | pipeline build', function (hooks) {
       .hasText('Pull Requests');
     assert.dom('.column-tabs-view').doesNotHaveClass('disabled');
     assert.dom('.separator').exists({ count: 1 });
-    assert.dom('.partial-view').exists({ count: 2 });
 
     controller.set('showListView', true);
 

@@ -7,6 +7,9 @@ $weight-bold: 600;
 $app-header-height: 55px;
 $nav-banner-height: 42px;
 
+$pipeline-header-height-min: 76px;
+$pipeline-header-height-max: 134px;
+
 @mixin transition($prop, $duration, $delay: 0ms, $easing: ease) {
   -webkit-transition: $prop $duration $delay $easing;
   -moz-transition: $prop $duration $delay $easing;
