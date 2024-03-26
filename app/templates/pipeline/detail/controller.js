@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { service } from '@ember/service';
-import { computed, action, setProperties } from '@ember/object';
+import { action, setProperties, get } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
 import timeRange from 'screwdriver-ui/utils/time-range';
@@ -8,24 +8,76 @@ import timeRange from 'screwdriver-ui/utils/time-range';
 export default class TemplatesPipelineDetailController extends Controller {
   @service store;
 
+  @service template;
+
   @service session;
 
-  @computed('pipelineTemplateVersion', 'pipelineTemplateVersions')
-  get selectedPipelineTemplate() {
-    const { pipelineTemplateVersion } = this;
-    const currentPipelineVersion = this.pipelineTemplateVersions.find(v => {
-      return v.version === pipelineTemplateVersion;
+  isPipelineTemplatePage = true;
+
+  pipelineTemplateVersions = [];
+
+  pipelineTemplateTags = [];
+
+  get jobs() {
+    const { config } = this.selectedVersionTemplate;
+    const configJobs = get(config, 'jobs') || {};
+    const jobs = [];
+
+    Object.entries(configJobs).forEach(([jobName, jobConfig]) => {
+      jobs.push({
+        name: jobName,
+        permutations: [jobConfig]
+      });
     });
 
-    return currentPipelineVersion;
+    return jobs;
   }
+
+  workflowGraph = {
+    nodes: [],
+    edges: []
+  };
+
+  get templateName() {
+    const templateName = `${this.model.name}/${this.model.namespace}`;
+
+    return templateName;
+  }
+
+  @tracked versionOrTagFromUrl = '';
 
   @tracked token = this.session.get('data.authenticated.token');
 
   get isAdmin() {
-    const token = this.get('token');
+    const token = get(this, 'token');
 
     return (decoder(token).scope || []).includes('admin');
+  }
+
+  get selectedVersionTemplate() {
+    const { pipelineTemplateVersions, pipelineTemplateTags } = this.model;
+
+    if (this.versionOrTagFromUrl === '') {
+      const pipelineTemplateLatestVersion =
+        pipelineTemplateVersions.get('firstObject');
+
+      return pipelineTemplateLatestVersion;
+    }
+
+    const tagExists = pipelineTemplateTags.filter(
+      t => t.tag === this.versionOrTagFromUrl
+    );
+
+    if (tagExists.length > 0) {
+      return pipelineTemplateVersions.findBy('version', tagExists[0].version);
+    }
+
+    const foundVersion = pipelineTemplateVersions.findBy(
+      'version',
+      this.versionOrTagFromUrl
+    );
+
+    return foundVersion;
   }
 
   constructor() {
@@ -41,8 +93,23 @@ export default class TemplatesPipelineDetailController extends Controller {
   }
 
   @action
-  removeVersion() {
-    // TODO
+  updateTrust() {
+    const { namespace, name } = this.selectedVersionTemplate;
+    const isTrusted = !!this.selectedVersionTemplate.trusted;
+
+    return (
+      this.isAdmin &&
+      this.template.updateTrustPipelineTemplate(namespace, name, !isTrusted)
+    );
+  }
+
+  @action
+  removeTemplate() {
+    const { namespace, name } = this.selectedVersionTemplate;
+
+    return (
+      this.isAdmin && this.template.deletePipelineTemplate(namespace, name)
+    );
   }
 
   @action
@@ -51,12 +118,7 @@ export default class TemplatesPipelineDetailController extends Controller {
   }
 
   @action
-  updateTrust() {
-    // TODO
-  }
-
-  @action
-  removeTemplate() {
+  removeVersion() {
     // TODO
   }
 }

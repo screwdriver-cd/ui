@@ -1,5 +1,7 @@
 {{page-title "Detail"}}
 
+<p>debug verison: {{this.versionOrTagFromUrl}}</p>
+
 {{#if this.versionOrTagFromUrl}}
   {{page-title @model.namespace '/' @model.name '@' this.versionOrTagFromUrl}}
 {{else}}
@@ -18,6 +20,7 @@
   @isAdmin={{this.isAdmin}}
   @onUpdateTrust={{action "updateTrust"}}
   @onRemoveTemplate={{action "removeTemplate"}}
+  @isPipelineTemplatePage={{this.isPipelineTemplatePage}}
 />
 
 <h4>
@@ -25,7 +28,7 @@
 </h4>
 
 <ValidatorPipeline
-  @name={{this.pipelineName}}
+  @name={{this.templateName}}
   @jobs={{this.jobs}}
   @workflowGraph={{this.workflowGraph}}
   @annotations={{this.annotations}}
@@ -37,6 +40,7 @@
   Jobs Contents:
 </h4>
 <div>
+{{log 'this.jobs' this.jobs}}
 {{#each this.jobs as |job|}}
   {{#each job.permutations as |jobConfig index|}}
     <ValidatorJob

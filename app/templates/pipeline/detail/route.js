@@ -1,7 +1,6 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
-import { get, setProperties } from '@ember/object';
 
 export default class TemplatesPipelineDetailRoute extends Route.extend(
   AuthenticatedRouteMixin
@@ -12,87 +11,56 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
 
   @service store;
 
-  async loadOnePipelineTemplateVersions(namespace, name) {
+  async loadOnePipelineTemplateAllVersions(namespace, name) {
     const pipelineTemplateVersions =
       await this.template.getPipelineTemplateVersions(namespace, name);
 
     return pipelineTemplateVersions;
   }
 
-  async model() {
-    const pipelineDetailsParams = this.paramsFor('templates.pipeline.detail');
-    const { namespace, name } = pipelineDetailsParams;
+  async loadOnePipelineTemplateAllTags(namespace, name) {
+    const pipelineTemplateTags = await this.template.getPipelineTemplateTags(
+      namespace,
+      name
+    );
+
+    return pipelineTemplateTags;
+  }
+
+  async model(params) {
+    const { namespace, name } = params;
     const fullName = `${namespace}/${name}`;
 
     let pipelineTemplateVersions;
 
+    let pipelineTemplateTags;
+
     try {
-      pipelineTemplateVersions = await this.loadOnePipelineTemplateVersions(
+      pipelineTemplateTags = await this.loadOnePipelineTemplateAllTags(
         namespace,
         name
       );
-    } catch (err) {
-      // console.log('err', err);
-      // throw(err);
 
+      pipelineTemplateVersions = await this.loadOnePipelineTemplateAllVersions(
+        namespace,
+        name
+      );
+
+      // polyfill pipeline template attributes
+      pipelineTemplateVersions.forEach(v => {
+        v.name = name;
+        v.namespace = namespace;
+        v.fullName = fullName;
+      });
+    } catch (err) {
       this.router.transitionTo('/404');
     }
-
-    const pipelineTemplateLatestVersion =
-      pipelineTemplateVersions.get('firstObject');
 
     return {
       name,
       namespace,
-      fullName,
-      pipelineTemplateLatestVersion,
-      pipelineTemplateVersions
+      pipelineTemplateVersions,
+      pipelineTemplateTags
     };
-  }
-
-  async setupController(controller, model) {
-    const {
-      name,
-      namespace,
-      fullName,
-      pipelineTemplateLatestVersion,
-      pipelineTemplateVersions
-    } = model;
-
-    const { config } = pipelineTemplateLatestVersion;
-
-    setProperties(pipelineTemplateLatestVersion, {
-      fullName
-    });
-
-    // polyfill pipeline template workflowGraph
-    const workflowGraph = {
-      nodes: [],
-      edges: []
-    };
-
-    // polyfill pipeline template attributes
-    pipelineTemplateVersions.forEach(v => {
-      v.name = name;
-      v.namespace = namespace;
-    });
-
-    const configJobs = get(config, 'jobs') || {};
-    const jobs = [];
-
-    Object.entries(configJobs).forEach(([jobName, jobConfig]) => {
-      jobs.push({
-        name: jobName,
-        permutations: [jobConfig]
-      });
-    });
-
-    this.controllerFor('templates.pipeline.detail').setProperties({
-      jobs,
-      pipelineName: fullName,
-      workflowGraph,
-      selectedVersionTemplate: pipelineTemplateLatestVersion,
-      filteredTemplates: pipelineTemplateVersions
-    });
   }
 }

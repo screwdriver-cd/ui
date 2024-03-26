@@ -137,10 +137,16 @@
 <h4>
   Usage:
 </h4>
+{{#if this.isPipelineTemplatePage}}
+{{! template-lint-disable block-indentation }}
+<pre>template: {{this.template.fullName}}@{{this.template.version}}</pre>
+{{else}}
 {{! template-lint-disable block-indentation }}
 <pre>jobs:
   main:
     template: {{this.template.fullName}}@{{this.template.version}}</pre>
+{{/if}}
+
 {{#if this.templateToRemove}}
   {{#if this.isRemoving}}
     <ModalDialog

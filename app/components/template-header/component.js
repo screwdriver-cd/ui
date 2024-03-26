@@ -8,6 +8,7 @@ export default Component.extend({
   showToggleTrustModal: false,
   store: service(),
   isTrusted: null,
+  isPipelineTemplatePage: false,
   init() {
     this._super(...arguments);
 
