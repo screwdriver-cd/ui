@@ -15,11 +15,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
   actions: {
     willTransition(transition) {
-      const newParams = transition.to.params;
-      const parentParams = transition.to.parent.params;
-
-      this.controller.set('routeParams', { ...parentParams, ...newParams });
-
       if (transition.to?.name === 'templates.index') {
         this.transitionTo('templates.pipeline.index');
       }
