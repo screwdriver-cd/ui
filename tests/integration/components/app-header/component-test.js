@@ -22,6 +22,8 @@ module('Integration | Component | app header', function (hooks) {
     await click('.icon.tools');
     assert.dom('.icon.validator').exists({ count: 1 });
     assert.dom('.icon.templates').exists({ count: 1 });
+    assert.dom('.icon.templates .job-template').exists({ count: 1 });
+    assert.dom('.icon.templates .pipeline-template').exists({ count: 1 });
     assert.dom('.icon.commands').exists({ count: 1 });
 
     await click('.icon.docs-outline');
