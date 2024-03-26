@@ -28,10 +28,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
     return version || pVersion;
   },
   async model(params) {
-    const verPayload = this.modelFor('templates.detail').templateData;
-    const tagPayload = this.modelFor('templates.detail').templateTagData;
+    const verPayload = this.modelFor('templates.job.detail').templateData;
+    const tagPayload = this.modelFor('templates.job.detail').templateTagData;
 
-    this.controllerFor('templates.detail').set(
+    this.controllerFor('templates.job.detail').set(
       'versionOrTagFromUrl',
       this.determineVersion(params.version, verPayload, tagPayload)
     );
