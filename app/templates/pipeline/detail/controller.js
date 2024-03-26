@@ -108,7 +108,6 @@ export default class TemplatesPipelineDetailController extends Controller {
         builds: { count: '' },
         pipelines: { count: '' }
       };
-      v.templateType = 'PIPELINE';
 
       const createTimeInDate = new Date(v.createTime);
 
