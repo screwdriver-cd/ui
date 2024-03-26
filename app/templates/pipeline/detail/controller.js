@@ -102,7 +102,7 @@ export default class TemplatesPipelineDetailController extends Controller {
     const endTimeInDate = new Date(endTime);
 
     let filteredVersions = this.model.pipelineTemplateVersions.filter(v => {
-      // polyfill pipeline template metrics data
+      // TODO: polyfill pipeline template metrics data
       v.metrics = {
         jobs: { count: 0 },
         builds: { count: 0 },

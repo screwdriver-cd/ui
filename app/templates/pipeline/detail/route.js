@@ -47,7 +47,7 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
         name
       );
 
-      // polyfill pipeline template attributes
+      // TODO: polyfill pipeline template attributes
       pipelineTemplateVersions.forEach(v => {
         v.name = name;
         v.namespace = namespace;
