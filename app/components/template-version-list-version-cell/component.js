@@ -6,5 +6,6 @@ export default Component.extend({
   name: alias('record.name'),
   version: alias('record.version'),
   trusted: alias('record.trusted'),
-  tag: alias('record.tag')
+  tag: alias('record.tag'),
+  routeLink: alias('record.routeLink')
 });

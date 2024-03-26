@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
 
 export default class TemplatesPipelineDetailRoute extends Route.extend(
   AuthenticatedRouteMixin
@@ -62,5 +63,10 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
       pipelineTemplateVersions,
       pipelineTemplateTags
     };
+  }
+
+  @action
+  resetFilter() {
+    this.refresh();
   }
 }

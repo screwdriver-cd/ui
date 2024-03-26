@@ -54,6 +54,8 @@
     </h1>
   </div>
 </div>
+
+{{#if this.hideMetrics}}
 <div class="template-stats">
   <h2 class="template-version">
     {{this.template.version}}
@@ -62,6 +64,8 @@
     Usage - Jobs: {{this.template.metrics.jobs.count}} | Builds: {{this.template.metrics.builds.count}}
   </div>
 </div>
+{{/if}}
+
 <p>
   {{this.template.description}}
 </p>

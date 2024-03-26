@@ -18,6 +18,25 @@ export default class TemplatesPipelineDetailController extends Controller {
 
   pipelineTemplateTags = [];
 
+  workflowGraph = {
+    nodes: [],
+    edges: []
+  };
+
+  @tracked startTime;
+
+  @tracked endTime;
+
+  @tracked versionOrTagFromUrl = '';
+
+  @tracked token = this.session.get('data.authenticated.token');
+
+  get isAdmin() {
+    const token = get(this, 'token');
+
+    return (decoder(token).scope || []).includes('admin');
+  }
+
   get jobs() {
     const { config } = this.selectedVersionTemplate;
     const configJobs = get(config, 'jobs') || {};
@@ -33,25 +52,10 @@ export default class TemplatesPipelineDetailController extends Controller {
     return jobs;
   }
 
-  workflowGraph = {
-    nodes: [],
-    edges: []
-  };
-
   get templateName() {
     const templateName = `${this.model.name}/${this.model.namespace}`;
 
     return templateName;
-  }
-
-  @tracked versionOrTagFromUrl = '';
-
-  @tracked token = this.session.get('data.authenticated.token');
-
-  get isAdmin() {
-    const token = get(this, 'token');
-
-    return (decoder(token).scope || []).includes('admin');
   }
 
   get selectedVersionTemplate() {
@@ -92,6 +96,35 @@ export default class TemplatesPipelineDetailController extends Controller {
     });
   }
 
+  get filteredTemplates() {
+    const { startTime, endTime } = this;
+    const startTimeInDate = new Date(startTime);
+    const endTimeInDate = new Date(endTime);
+
+    let filteredVersions = this.model.pipelineTemplateVersions.filter(v => {
+      // polyfill pipeline template metrics data
+      v.metrics = {
+        jobs: { count: 0 },
+        builds: { count: 0 },
+        pipelines: { count: 0 }
+      };
+      v.templateType = 'PIPELINE';
+
+      const createTimeInDate = new Date(v.createTime);
+
+      return (
+        createTimeInDate >= startTimeInDate && createTimeInDate <= endTimeInDate
+      );
+    });
+
+    return filteredVersions;
+  }
+
+  @action
+  timeRangeChange(startTime, endTime) {
+    setProperties(this, { startTime, endTime });
+  }
+
   @action
   updateTrust() {
     const { namespace, name } = this.selectedVersionTemplate;
@@ -113,12 +146,16 @@ export default class TemplatesPipelineDetailController extends Controller {
   }
 
   @action
-  timeRangeChange() {
-    // TODO
-  }
-
-  @action
   removeVersion() {
-    // TODO
+    const { namespace, name, version } = this.selectedVersionTemplate;
+
+    return (
+      this.isAdmin &&
+      this.template
+        .deletePipelineTemplateByVersion(namespace, name, version)
+        .catch(errorMessage => {
+          this.errorMessage = errorMessage;
+        })
+    );
   }
 }

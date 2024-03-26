@@ -16,6 +16,7 @@
   @template={{this.selectedVersionTemplate}}
   @trusted={{this.trusted}}
   @isAdmin={{this.isAdmin}}
+  @hideMetrics={{true}}
   @onUpdateTrust={{action "updateTrust"}}
   @onRemoveTemplate={{action "removeTemplate"}}
   @isPipelineTemplatePage={{this.isPipelineTemplatePage}}
@@ -38,7 +39,6 @@
   Jobs Contents:
 </h4>
 <div>
-{{log 'this.jobs' this.jobs}}
 {{#each this.jobs as |job|}}
   {{#each job.permutations as |jobConfig index|}}
     <ValidatorJob
@@ -53,12 +53,12 @@
 
 <hr class="section-divider"/>
 
-{{!-- <TemplateVersions
+<TemplateVersions
   @templates={{this.filteredTemplates}}
   @startTime={{this.startTime}}
   @endTime={{this.endTime}}
   @onRemoveVersion={{action "removeVersion"}}
   @onTimeRangeChange={{action "timeRangeChange"}}
-/> --}}
+/>
 
 {{outlet}}
