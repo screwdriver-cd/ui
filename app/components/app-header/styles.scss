@@ -132,6 +132,12 @@
         opacity: 0.6;
       }
     }
+
+    &.profile-outline {
+      &:hover {
+        background-color: transparent;
+      }
+    }
   }
 
   .dropdown {
