@@ -72,8 +72,6 @@ export default Controller.extend({
           pipelineIds.map(p => this.store.findRecord('pipeline', p))
         );
 
-        console.log(pipelines);
-
         return pipelines;
       }
     }
