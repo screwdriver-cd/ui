@@ -1,7 +1,5 @@
 {{page-title "Detail"}}
 
-<p>debug verison: {{this.versionOrTagFromUrl}}</p>
-
 {{#if this.versionOrTagFromUrl}}
   {{page-title @model.namespace '/' @model.name '@' this.versionOrTagFromUrl}}
 {{else}}
