@@ -7,7 +7,7 @@ module(
     setupTest(hooks);
 
     test('it exists', function (assert) {
-      let route = this.owner.lookup('route:templates.template-usage');
+      let route = this.owner.lookup('route:templates.job.template-usage');
 
       assert.ok(route);
     });

@@ -16,6 +16,7 @@ const lastUpdated = `${humanizeDuration(Date.now() - created, {
   round: true,
   largest: 1
 })} ago`;
+const description = '';
 
 let server;
 
@@ -63,7 +64,8 @@ module('Unit | Service | template', function (hooks) {
           version: '2.0.0',
           fullName: 'foo/bar',
           createTime,
-          lastUpdated
+          lastUpdated,
+          description
         },
         {
           id: 1,
@@ -72,7 +74,8 @@ module('Unit | Service | template', function (hooks) {
           version: '1.0.0',
           fullName: 'foo/bar',
           createTime,
-          lastUpdated
+          lastUpdated,
+          description
         }
       ]);
       /* eslint-enable max-len */
@@ -124,6 +127,7 @@ module('Unit | Service | template', function (hooks) {
           fullName: 'foo/bar',
           createTime,
           lastUpdated,
+          description,
           metrics: { jobs: { count: 7 }, builds: { count: 7 } }
         },
         {
@@ -134,6 +138,7 @@ module('Unit | Service | template', function (hooks) {
           fullName: 'foo/bar',
           createTime,
           lastUpdated,
+          description,
           metrics: { jobs: { count: 3 }, builds: { count: 9 } }
         }
       ]);
@@ -172,7 +177,8 @@ module('Unit | Service | template', function (hooks) {
           name: 'baz',
           version: '2.0.0',
           createTime,
-          lastUpdated
+          lastUpdated,
+          description
         },
         {
           id: 2,
@@ -181,7 +187,8 @@ module('Unit | Service | template', function (hooks) {
           name: 'baz',
           version: '2.0.0',
           createTime,
-          lastUpdated
+          lastUpdated,
+          description
         },
         {
           id: 1,
@@ -190,7 +197,8 @@ module('Unit | Service | template', function (hooks) {
           name: 'bar',
           version: '1.0.0',
           createTime,
-          lastUpdated
+          lastUpdated,
+          description
         }
       ]);
       /* eslint-enable max-len */

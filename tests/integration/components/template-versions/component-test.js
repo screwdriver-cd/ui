@@ -100,7 +100,7 @@ module('Integration | Component | template versions', function (hooks) {
       .exists({ count: 1 });
     assert
       .dom('tbody tr:nth-child(1) td:nth-child(1) a')
-      .hasAttribute('href', '/templates/boo/baz/3.0.0');
+      .hasAttribute('href', '/templates/job/boo/baz/3.0.0');
     assert
       .dom('tbody tr:nth-child(1) td:nth-child(2)')
       .hasText('05/12/2023, 04:21 PM UTC');
@@ -122,7 +122,7 @@ module('Integration | Component | template versions', function (hooks) {
       .doesNotExist();
     assert
       .dom('tbody tr:nth-child(2) td:nth-child(1) a')
-      .hasAttribute('href', '/templates/boo/baz/2.0.0');
+      .hasAttribute('href', '/templates/job/boo/baz/2.0.0');
     assert
       .dom('tbody tr:nth-child(2) td:nth-child(2)')
       .hasText('05/08/2023, 05:44 PM UTC');
@@ -142,7 +142,7 @@ module('Integration | Component | template versions', function (hooks) {
       .doesNotExist();
     assert
       .dom('tbody tr:nth-child(3) td:nth-child(1) a')
-      .hasAttribute('href', '/templates/boo/baz/1.0.0');
+      .hasAttribute('href', '/templates/job/boo/baz/1.0.0');
     assert
       .dom('tbody tr:nth-child(3) td:nth-child(2)')
       .hasText('04/21/2023, 03:16 PM UTC');

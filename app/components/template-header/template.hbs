@@ -55,16 +55,16 @@
   </div>
 </div>
 
-{{#if this.hideMetrics}}
 <div class="template-stats">
   <h2 class="template-version">
     {{this.template.version}}
   </h2>
+  {{#unless this.isPipelineTemplatePage}}
   <div class="template-metrics">
     Usage - Jobs: {{this.template.metrics.jobs.count}} | Builds: {{this.template.metrics.builds.count}}
   </div>
+  {{/unless}}
 </div>
-{{/if}}
 
 <p>
   {{this.template.description}}

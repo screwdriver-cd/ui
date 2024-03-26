@@ -104,9 +104,9 @@ export default class TemplatesPipelineDetailController extends Controller {
     let filteredVersions = this.model.pipelineTemplateVersions.filter(v => {
       // TODO: polyfill pipeline template metrics data
       v.metrics = {
-        jobs: { count: 0 },
-        builds: { count: 0 },
-        pipelines: { count: 0 }
+        jobs: { count: '' },
+        builds: { count: '' },
+        pipelines: { count: '' }
       };
       v.templateType = 'PIPELINE';
 

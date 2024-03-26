@@ -9,6 +9,7 @@ export default Component.extend({
   store: service(),
   isTrusted: null,
   isPipelineTemplatePage: false,
+  hideMetrics: false,
   init() {
     this._super(...arguments);
 
