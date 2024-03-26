@@ -66,7 +66,7 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
   }
 
   @action
-  resetFilter() {
+  reloadModel() {
     this.refresh();
   }
 }

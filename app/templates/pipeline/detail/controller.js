@@ -27,6 +27,8 @@ export default class TemplatesPipelineDetailController extends Controller {
 
   @tracked endTime;
 
+  @tracked errorMessage = '';
+
   @tracked versionOrTagFromUrl = '';
 
   @tracked token = this.session.get('data.authenticated.token');
@@ -140,7 +142,15 @@ export default class TemplatesPipelineDetailController extends Controller {
     const { namespace, name } = this.selectedVersionTemplate;
 
     return (
-      this.isAdmin && this.template.deletePipelineTemplate(namespace, name)
+      this.isAdmin &&
+      this.template
+        .deletePipelineTemplate(namespace, name)
+        .then(() => {
+          this.send('reloadModel');
+        })
+        .catch(err => {
+          this.errorMessage = err;
+        })
     );
   }
 
@@ -152,8 +162,11 @@ export default class TemplatesPipelineDetailController extends Controller {
       this.isAdmin &&
       this.template
         .deletePipelineTemplateByVersion(namespace, name, version)
-        .catch(errorMessage => {
-          this.errorMessage = errorMessage;
+        .then(() => {
+          this.send('reloadModel');
+        })
+        .catch(err => {
+          this.errorMessage = err;
         })
     );
   }
