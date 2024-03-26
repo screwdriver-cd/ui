@@ -14,15 +14,15 @@ export default Controller.extend({
     }
   }),
 
-  isTemplateRoute: computed('router.currentRouteName', {
+  isTemplateIndexRoute: computed('router.currentRouteName', {
     get() {
       const currentRouteName = get(this, 'router.currentRouteName');
-      const isTemplateRoute = [
+      const isTemplateIndexRoute = [
         'templates.pipeline.index',
         'templates.job.index'
       ].includes(currentRouteName);
 
-      return isTemplateRoute;
+      return isTemplateIndexRoute;
     }
   }),
   routeParams: computed('model', 'isPipelineTemplatePage', {
