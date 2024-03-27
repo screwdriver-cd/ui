@@ -12,6 +12,8 @@ export default class TemplatesPipelineDetailController extends Controller {
 
   @service session;
 
+  @service router;
+
   isPipelineTemplatePage = true;
 
   pipelineTemplateVersions = [];
@@ -146,7 +148,7 @@ export default class TemplatesPipelineDetailController extends Controller {
       this.template
         .deletePipelineTemplate(namespace, name)
         .then(() => {
-          this.send('reloadModel');
+          this.router.transitionTo('/templates/pipeline');
         })
         .catch(err => {
           this.errorMessage = err;
