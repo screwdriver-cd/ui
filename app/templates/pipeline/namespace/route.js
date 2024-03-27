@@ -18,15 +18,7 @@ export default class TemplatesPipelineNamespaceIndexRoute extends Route.extend(
     );
   }
 
-  async loadAllPipelineTemplates() {
-    const pipelineTemplates = await this.template.getAllPipelineTemplates();
-
-    return pipelineTemplates;
-  }
-
   async model() {
-    const pipelineTemplates = await this.loadAllPipelineTemplates();
-
-    return pipelineTemplates;
+    return this.modelFor('templates.pipeline');
   }
 }

@@ -2,6 +2,7 @@ import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 
 export default class TemplatesPipelineDetailRoute extends Route.extend(
   AuthenticatedRouteMixin
@@ -11,6 +12,15 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
   @service router;
 
   @service store;
+
+  async loadOnePipelineTemplateMeta(namespace, name) {
+    const pipelineTemplateMeta = await this.template.getPipelineTemplateMeta(
+      namespace,
+      name
+    );
+
+    return pipelineTemplateMeta;
+  }
 
   async loadOnePipelineTemplateAllVersions(namespace, name) {
     const pipelineTemplateVersions =
@@ -32,11 +42,20 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
     const { namespace, name } = params;
     const fullName = `${namespace}/${name}`;
 
+    let pipelineTemplateMeta;
+
     let pipelineTemplateVersions;
 
     let pipelineTemplateTags;
 
     try {
+      pipelineTemplateMeta = await this.loadOnePipelineTemplateMeta(
+        namespace,
+        name
+      );
+
+      const { trustedSinceVersion, pipelineId } = pipelineTemplateMeta;
+
       pipelineTemplateTags = await this.loadOnePipelineTemplateAllTags(
         namespace,
         name
@@ -47,8 +66,15 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
         name
       );
 
-      // TODO: polyfill pipeline template attributes
       pipelineTemplateVersions.forEach(v => {
+        if (
+          trustedSinceVersion &&
+          compareVersions(v.version, trustedSinceVersion) >= 0
+        ) {
+          v.trusted = true;
+        }
+
+        v.pipelineId = pipelineId;
         v.name = name;
         v.namespace = namespace;
         v.fullName = fullName;
@@ -61,7 +87,8 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
       name,
       namespace,
       pipelineTemplateVersions,
-      pipelineTemplateTags
+      pipelineTemplateTags,
+      pipelineTemplateMeta
     };
   }
 

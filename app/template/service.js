@@ -214,6 +214,15 @@ export default Service.extend({
         });
     });
   },
+  getPipelineTemplateMeta(namespace, name) {
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/template/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}`;
+
+    return this.fetchData(url);
+  },
   getPipelineTemplateVersions(namespace, name) {
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE
@@ -258,7 +267,11 @@ export default Service.extend({
   },
 
   updateTrustPipelineTemplate(namespace, name, trusted) {
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipeline/templates/${namespace}/${name}/trusted`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/templates/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}/trusted`;
 
     const ajaxConfig = {
       method: 'PUT',
@@ -292,7 +305,11 @@ export default Service.extend({
   },
   deletePipelineTemplate(namespace, name) {
     // eslint-disable-next-line max-len
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipeline/templates/${namespace}/${name}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/templates/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}`;
 
     const ajaxConfig = {
       method: 'DELETE',
@@ -333,7 +350,11 @@ export default Service.extend({
   },
   deletePipelineTemplateByVersion(namespace, name, version) {
     // eslint-disable-next-line max-len
-    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipeline/templates/${namespace}/${name}/versions/${version}`;
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/templates/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}/versions/${version}`;
 
     const ajaxConfig = {
       method: 'DELETE',
