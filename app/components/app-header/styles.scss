@@ -134,7 +134,8 @@
     }
 
     &.profile-outline {
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: transparent;
       }
     }
