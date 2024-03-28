@@ -64,7 +64,7 @@ export default Controller.extend({
       if (params.namespace || params.detail) {
         breadcrumbs.push({
           name: `${paramRouteName} Templates`,
-          route: 'templates',
+          route: `templates.${paramRouteName}`,
           params: ['templates']
         });
       }
