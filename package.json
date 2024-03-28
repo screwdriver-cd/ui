@@ -20,12 +20,8 @@
     "lint:fix": "./node_modules/eslint/bin/eslint.js --fix .",
     "start": "ember serve",
     "start:dev": "sudo ember serve --ssl true --port 443 --environment=development",
-    "test": "ember test"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "test": "ember test",
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.js": [
@@ -138,7 +134,7 @@
     "eslint-plugin-qunit": "^7.2.0",
     "exists-sync": "^0.1.0",
     "humanize-duration": "^3.27.1",
-    "husky": "^2.7.0",
+    "husky": "^9.0.11",
     "jquery-highlight": "^3.5.0",
     "lint-staged": "^13.1.2",
     "loader.js": "^4.7.0",
