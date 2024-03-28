@@ -5,10 +5,10 @@
         {{crumb.name}}
       </LinkTo>
     {{else}}
+      <span class="bread-crumb-divider">/</span>
       {{#if (eq crumb this.crumbs.lastObject)}}
-        / {{crumb.name}}
+        {{crumb.name}}
       {{else}}
-        /
         <LinkTo @route={{crumb.route}} @model={{crumb.name}} class="link" >
           {{crumb.name}}
         </LinkTo>

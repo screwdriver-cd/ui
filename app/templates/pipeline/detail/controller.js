@@ -135,7 +135,11 @@ export default class TemplatesPipelineDetailController extends Controller {
 
     return (
       this.isAdmin &&
-      this.template.updateTrustPipelineTemplate(namespace, name, !isTrusted)
+      this.template
+        .updateTrustPipelineTemplate(namespace, name, !isTrusted)
+        .catch(err => {
+          this.errorMessage = err;
+        })
     );
   }
 

@@ -1,20 +1,10 @@
 <div class="header">
   <div class="left-header">
     <h1>
-      {{#if this.isAdmin}}
-        <span title="Toggle template trusted" class="clickable" onclick={{action "showToggleTrustModal"}}>
-          {{#if this.isTrusted}}
-            {{svg-jar "trusted" class="trusted"}}
-          {{else}}
-            {{svg-jar "trusted" class="trusted distrusted"}}
-          {{/if}}
-        </span>
+      {{#if this.isTrusted}}
+        {{svg-jar "trusted" class="trusted"}}
       {{else}}
-        {{#if this.isTrusted}}
-          <span title="Trusted">
-            {{svg-jar "trusted" class="trusted"}}
-          </span>
-        {{/if}}
+        {{svg-jar "trusted" class="trusted distrusted"}}
       {{/if}}
       <LinkTo
         @route="pipeline"
@@ -25,23 +15,16 @@
         {{this.template.fullName}}
       </LinkTo>
       {{#if this.scmUrl}}
-        <a href={{this.scmUrl}} class="link">
-          <FaIcon @icon="code-branch" @title="Source code" />
-        </a>
+        <a href={{this.scmUrl}} class="link"><span class="branch-icon"><FaIcon @icon="code-branch" @title="Source code" /></span></a>
       {{else}}
-        <FaIcon
+        <span class="branch-icon"><FaIcon
           @icon="code-branch"
           @title="The pipeline for this template does not exist."
           class="link"
-        />
+        /></span>
       {{/if}}
-    </h1>
-  </div>
-  <div class="right-header">
-    <h1>
       {{#if (or this.isAdmin this.scmUrl)}}
-        <a href="#" class="danger link" disabled {{action "setTemplateToRemove" this.template}}>
-          <FaIcon @icon="trash" @title="Delete template" />
+        <a href="#" class="danger link" disabled {{action "setTemplateToRemove" this.template}}><span class="trash-icon"><FaIcon @icon="trash" @title="Delete template" /></span>
         </a>
       {{else}}
         <span title="Cannot delete template; pipeline could not be found.">
@@ -53,6 +36,23 @@
       {{/if}}
     </h1>
   </div>
+
+  {{#if this.isAdmin}}
+  <div class="right-header">
+    <div class="stack">
+      <div class="stack-item"><span class="stack-label">Trusted</span></div>
+      <div class="stack-item">
+      <XToggle
+        @theme='ios'
+        @size="small"
+        @value={{this.isTrusted}}
+        @onToggle={{action "showToggleTrustModal"}}
+        title="Toggle mark template as trusted"
+        />
+      </div>
+    </div>
+  </div>
+  {{/if}}
 </div>
 
 <div class="template-stats">
@@ -204,6 +204,6 @@
     @onSubmit={{action "updateTrust" this.template.fullName (not this.isTrusted)}}
     @onHide={{action "cancelToggleTrustModal"}}
   >
-    Set {{this.template.fullName}} template to {{if this.isTrusted "Distrusted" "Trusted"}}.
+    Set <span style="font-weight: bold;">{{this.template.fullName}}</span> template to {{if this.isTrusted "Distrusted" "Trusted"}}.
   </BsModalSimple>
 {{/if}}
