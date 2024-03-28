@@ -19,9 +19,9 @@ export default Component.extend({
       const prefix = this.collectionType.toLowerCase();
 
       return {
-        prefix,
-        detail: `${prefix}.detail`,
-        namespace: `${prefix}.namespace`
+        prefix: `templates/${prefix}`,
+        detail: `templates.${prefix}.detail`,
+        namespace: `templates.${prefix}.namespace`
       };
     }
   }),
