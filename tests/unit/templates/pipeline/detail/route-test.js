@@ -10,7 +10,7 @@ const templateServiceStub = Service.extend({
       pipelineId: 13606,
       namespace: 'adong',
       name: 'sd-job-template-builder',
-      maintainer: 'adong@yahooinc.com',
+      maintainer: 'adong@example.com',
       latestVersion: '1.0.2',
       createTime: '2024-03-27T17:29:23.242Z',
       updateTime: '2024-03-27T17:30:53.396Z',

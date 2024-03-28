@@ -163,7 +163,7 @@ const modelMock = {
     pipelineId: 13606,
     namespace: 'adong',
     name: 'sd-job-template-builder',
-    maintainer: 'adong@yahooinc.com',
+    maintainer: 'adong@example.com',
     trustedSinceVersion: '1.0.2',
     latestVersion: '1.0.2',
     createTime: '2024-03-27T17:29:23.242Z',
