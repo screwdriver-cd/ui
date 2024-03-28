@@ -1,8 +1,8 @@
 {{page-title "Templates"}}
-
+<div class="templates">
 {{#if this.isTemplateIndexRoute}}
-<header>
-  <h4>{{if this.isPipelineTemplatePage "Pipeline" "Job"}} Templates
+<header class="templates-header">
+  <h4>Templates
     <a
       href="http://docs.screwdriver.cd/user-guide/templates/{{if this.isPipelineTemplatePage "pipeline" "job"}}-templates"
       title="More Information"
@@ -11,16 +11,14 @@
       class="doc-link float-right"
       style="font-size: 1.25rem; font-weight: normal; color: #3697f2;"
     >
-      {{if this.isPipelineTemplatePage "Pipeline" "Job"}} Templates Docs
+      Templates Docs
       <FaIcon @icon="question-circle" />
     </a>
   </h4>
   <div class="template-description">
-    {{#if this.isPipelineTemplatePage}}
-    Pipeline Templates are snippets of predefined code that people can use to replace a job definition in a screwdriver.yaml.
-    {{else}}
-    Job Templates are snippets of predefined code that people can use to replace a job definition in a screwdriver.yaml.
-    {{/if}}
+    Templates are snippets of predefined code that people can use to replace a job definition in a screwdriver.yaml.
+    <br>
+    A template contains a series of predefined steps along with a selected Docker image.
   </div>
 </header>
 
@@ -37,3 +35,4 @@
 <BreadCrumbs @crumbs={{this.crumbs}} />
 
 {{outlet}}
+</div>
