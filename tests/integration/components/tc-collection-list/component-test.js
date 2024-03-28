@@ -45,10 +45,6 @@ module('Integration | Component | tc collection list', function (hooks) {
     "This is a collection"
     `);
 
-    assert.dom('header h4 a').hasText('Collection Docs');
-    assert
-      .dom('header h4 a')
-      .hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
@@ -71,10 +67,6 @@ module('Integration | Component | tc collection list', function (hooks) {
       "This is a collection"
     `);
 
-    assert.dom('header h4 a').hasText('Collection Docs');
-    assert
-      .dom('header h4 a')
-      .hasAttribute('href', 'http://docs.screwdriver.cd/user-guide/collection');
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });

@@ -183,6 +183,7 @@ export default Service.extend({
     const url = `${ENV.APP.SDAPI_HOSTNAME}/${
       ENV.APP.SDAPI_NAMESPACE
     }/templates/${encodeURIComponent(fullName)}/trusted`;
+
     const ajaxConfig = {
       method: 'PUT',
       dataType: 'json',
@@ -207,6 +208,185 @@ export default Service.extend({
           if (response.status === 401 || response.status === 403) {
             message =
               'You do not have the permissions to update this template.';
+          }
+
+          return reject(message);
+        });
+    });
+  },
+  getPipelineTemplateMeta(namespace, name) {
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/template/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}`;
+
+    return this.fetchData(url);
+  },
+  getPipelineTemplateVersions(namespace, name) {
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/templates/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}/versions`;
+
+    return this.fetchData(url);
+  },
+  getPipelineTemplateTags(namespace, name) {
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/templates/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}/tags`;
+
+    return this.fetchData(url);
+  },
+  getAllPipelineTemplates(namespace) {
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/pipeline/templates`;
+    const params = { sortBy: 'createTime', sort: 'descending' };
+
+    if (namespace) {
+      params.namespace = namespace;
+    }
+
+    return this.fetchData(url, params)
+      .then(templatesFormatter)
+      .then(templates => {
+        const result = [];
+        const names = {};
+
+        templates.forEach(t => {
+          if (!names[t.fullName]) {
+            names[t.fullName] = 1;
+            result.push(t);
+          }
+        });
+
+        return result;
+      });
+  },
+
+  updateTrustPipelineTemplate(namespace, name, trusted) {
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/templates/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}/trusted`;
+
+    const ajaxConfig = {
+      method: 'PUT',
+      dataType: 'json',
+      url,
+      contentType: 'application/json',
+      crossDomain: true,
+      xhrFields: {
+        withCredentials: true
+      },
+      headers: {
+        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+      },
+      data: JSON.stringify({ trusted })
+    };
+
+    return new EmberPromise((resolve, reject) => {
+      $.ajax(ajaxConfig)
+        .done(content => resolve(content))
+        .fail(response => {
+          let message = `${response.status} Request Failed`;
+
+          if (response.status === 401 || response.status === 403) {
+            message =
+              'You do not have the permissions to update this template.';
+          }
+
+          return reject(message);
+        });
+    });
+  },
+  deletePipelineTemplate(namespace, name) {
+    // eslint-disable-next-line max-len
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/templates/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}`;
+
+    const ajaxConfig = {
+      method: 'DELETE',
+      url,
+      contentType: 'application/json',
+      crossDomain: true,
+      xhrFields: {
+        withCredentials: true
+      },
+      headers: {
+        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+      }
+    };
+
+    return new EmberPromise((resolve, reject) => {
+      // Call the token api to get the session info
+      $.ajax(ajaxConfig)
+        .done(content => resolve(content))
+        .fail(response => {
+          let message = `${response.status} Request Failed`;
+
+          if (
+            response &&
+            response.responseJSON &&
+            typeof response.responseJSON === 'object'
+          ) {
+            message = `${response.status} ${response.responseJSON.error}`;
+          }
+
+          if (response.status === 403) {
+            message =
+              'You do not have the permissions to remove this template.';
+          }
+
+          return reject(message);
+        });
+    });
+  },
+  deletePipelineTemplateByVersion(namespace, name, version) {
+    // eslint-disable-next-line max-len
+    const url = `${ENV.APP.SDAPI_HOSTNAME}/${
+      ENV.APP.SDAPI_NAMESPACE
+    }/pipeline/templates/${encodeURIComponent(namespace)}/${encodeURIComponent(
+      name
+    )}/versions/${version}`;
+
+    const ajaxConfig = {
+      method: 'DELETE',
+      url,
+      contentType: 'application/json',
+      crossDomain: true,
+      xhrFields: {
+        withCredentials: true
+      },
+      headers: {
+        Authorization: `Bearer ${get(this, 'session.data.authenticated.token')}`
+      }
+    };
+
+    return new EmberPromise((resolve, reject) => {
+      // Call the token api to get the session info
+      $.ajax(ajaxConfig)
+        .done(content => resolve(content))
+        .fail(response => {
+          let message = `${response.status} Request Failed`;
+
+          if (
+            response &&
+            response.responseJSON &&
+            typeof response.responseJSON === 'object'
+          ) {
+            message = `${response.status} ${response.responseJSON.error}`;
+          }
+
+          if (response.status === 403) {
+            message =
+              'You do not have the permissions to remove this template.';
           }
 
           return reject(message);

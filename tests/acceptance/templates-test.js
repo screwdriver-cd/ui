@@ -83,18 +83,18 @@ module('Acceptance | templates', function (hooks) {
 
   test('visiting /templates', async assert => {
     await authenticateSession({ token: 'faketoken' });
-    await visit('/templates');
+    await visit('/templates/job');
 
     assert.dom('.models-table-wrapper').exists({ count: 1 });
-    assert.equal(currentURL(), '/templates');
+    assert.equal(currentURL(), '/templates/job');
     assert.equal(getPageTitle(), 'Templates', 'Page title is correct');
   });
 
-  test('visiting /templates/foo/bar', async assert => {
+  test('visiting /templates/job/foo/bar', async assert => {
     await authenticateSession({ token: adminJWT });
-    await visit('/templates/foo/bar');
+    await visit('/templates/job/foo/bar');
 
-    assert.equal(currentURL(), '/templates/foo/bar');
+    assert.equal(currentURL(), '/templates/job/foo/bar');
     assert.equal(
       getPageTitle(),
       'Templates > foo/bar',
@@ -102,11 +102,11 @@ module('Acceptance | templates', function (hooks) {
     );
   });
 
-  test('visiting /templates/foo/bar/1.0.0', async assert => {
+  test('visiting /templates/job/foo/bar/1.0.0', async assert => {
     await authenticateSession({ token: adminJWT });
-    await visit('/templates/foo/bar/1.0.0');
+    await visit('/templates/job/foo/bar/1.0.0');
 
-    assert.equal(currentURL(), '/templates/foo/bar/1.0.0');
+    assert.equal(currentURL(), '/templates/job/foo/bar/1.0.0');
     assert.equal(
       getPageTitle(),
       'Templates > foo/bar@1.0.0',

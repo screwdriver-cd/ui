@@ -90,12 +90,12 @@ const templateServiceStub2 = Service.extend({
   }
 });
 
-module('Unit | Route | templates/detail', function (hooks) {
+module('Unit | Route | templates/job/detail', function (hooks) {
   setupTest(hooks);
 
   test('it asks for the list of templates for a given name', function (assert) {
     this.owner.register('service:template', templateServiceStub);
-    const route = this.owner.lookup('route:templates/detail');
+    const route = this.owner.lookup('route:templates/job/detail');
 
     assert.ok(route);
 
@@ -110,7 +110,7 @@ module('Unit | Route | templates/detail', function (hooks) {
 
   test('it asks for the list of templates for a non-exist name', function (assert) {
     this.owner.register('service:template', templateServiceStub2);
-    const route = this.owner.lookup('route:templates/detail');
+    const route = this.owner.lookup('route:templates/job/detail');
     const stub = sinon.stub();
 
     const routerServiceMock = Service.extend({

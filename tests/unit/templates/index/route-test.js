@@ -23,7 +23,7 @@ module('Unit | Route | templates/index', function (hooks) {
   });
 
   test('it dedupes the templates by name', function (assert) {
-    const route = this.owner.lookup('route:templates/index');
+    const route = this.owner.lookup('route:templates/job/index');
 
     assert.ok(route);
 

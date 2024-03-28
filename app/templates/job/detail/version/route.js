@@ -1,8 +1,9 @@
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend({
+export default Route.extend(AuthenticatedRouteMixin, {
   store: service(),
   router: service(),
   template: service(),
@@ -27,10 +28,10 @@ export default Route.extend({
     return version || pVersion;
   },
   async model(params) {
-    const verPayload = this.modelFor('templates.detail').templateData;
-    const tagPayload = this.modelFor('templates.detail').templateTagData;
+    const verPayload = this.modelFor('templates.job.detail').templateData;
+    const tagPayload = this.modelFor('templates.job.detail').templateTagData;
 
-    this.controllerFor('templates.detail').set(
+    this.controllerFor('templates.job.detail').set(
       'versionOrTagFromUrl',
       this.determineVersion(params.version, verPayload, tagPayload)
     );

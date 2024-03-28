@@ -3,6 +3,10 @@ import Service, { inject as service } from '@ember/service';
 import $ from 'jquery';
 import ENV from 'screwdriver-ui/config/environment';
 
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /**
  * Screwdriver Shuttle Service
  * Only certain methods are allowed: get, request, post, put, patch, del, raw
@@ -88,7 +92,7 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data, raw);
   },
 
-  fetchAllTemplates() {
+  fetchAllJobTemplates() {
     const method = 'get';
     const url = `/templates`;
     const data = { sortBy: 'createTime', sort: 'descending', compact: true };

@@ -64,13 +64,55 @@ Router.map(function route() {
     this.route('show', { path: '/:collection_id' });
   });
   this.route('templates', function templatesRoute() {
-    this.route('namespace', { path: '/:namespace' });
-    this.route('detail', { path: '/:namespace/:name' }, function detailRoute() {
-      this.route('index', { path: '/' });
-      this.route('version', { path: '/:version' });
+    this.route('pipeline', function pipelineTemplate() {
+      this.route(
+        'namespace',
+        { path: '/:namespace' },
+        function namespaceRoute() {
+          this.route('index', { path: '/' });
+        }
+      );
+
+      this.route(
+        'detail',
+        { path: '/:namespace/:name' },
+        function pipelineTemplateDetail() {
+          this.route('index', { path: '/' });
+          this.route('version', { path: '/:version' });
+        }
+      );
     });
-    this.route('template-usage', { path: '/:namespace/:name/:version/usage' });
+
+    this.route('job', function jobTemplate() {
+      this.route(
+        'namespace',
+        { path: '/:namespace' },
+        function namespaceRoute() {
+          this.route('index', { path: '/' });
+        }
+      );
+
+      this.route(
+        'detail',
+        { path: '/:namespace/:name' },
+        function jobTemplateDetail() {
+          this.route('index', { path: '/' });
+          this.route('version', { path: '/:version' });
+        }
+      );
+
+      this.route('template-usage', {
+        path: '/:namespace/:name/:version/usage'
+      });
+    });
+
+    // backward compatibility:
+    // 1) /templates/namespace to /templates/job/namespace
+    // 2) /templates/namespace/name to /templates/job/namespace/name
+    /* eslint-disable ember/no-shadow-route-definition */
+    this.route('catch-all', { path: '/*path' });
   });
+
   this.route('commands', function commandsRoute() {
     this.route('namespace', { path: '/:namespace' });
     this.route('detail', { path: '/:namespace/:name' }, function detailRoute() {

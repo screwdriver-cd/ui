@@ -37,7 +37,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
   });
 
   test('it parses model properly', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     controller.set('model', {
       templateData: [
@@ -59,7 +59,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
   });
 
   test('it handles version changes', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     controller.set('model', {
       templateData: [
@@ -79,7 +79,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
   });
 
   test('it handles model changes', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
     // eslint-disable-next-line new-cap
     const arr = A({
       templateData: [
@@ -101,7 +101,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
   });
 
   test('it handles template deletion', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
     // eslint-disable-next-line new-cap
     const arr = A([
       { id: 3, name: 'sample', version: '3.0.0' },
@@ -121,7 +121,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
   });
 
   test('it handles template update', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
     // eslint-disable-next-line new-cap
     const arr = A([
       { id: 3, name: 'sample', version: '3.0.0' },
@@ -138,7 +138,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
     assert.ok(updateTrustStub.calledOnce);
   });
   test('it handles undefined tag or version', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     controller.set('model', {
       templateData: [
@@ -158,7 +158,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
   });
 
   test('it handles a version that is exist', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     controller.set('model', {
       templateData: [
@@ -178,7 +178,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
   });
 
   test('it handles a tag that is exist', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     controller.set('model', {
       templateData: [
@@ -198,7 +198,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
   });
 
   test('it handles a version that is not exist', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     controller.set('model', {
       templateData: [
@@ -218,7 +218,7 @@ module('Unit | Controller | templates/detail', function (hooks) {
   });
 
   test('it handles a tag that is not exist', function (assert) {
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     controller.set('model', {
       templateData: [

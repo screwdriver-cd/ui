@@ -163,11 +163,17 @@ export default Controller.extend({
         );
       } else {
         // refetch builds which are part of current event
-        this.event.hasMany('builds').reload().then(() => {
-          if (this.build.meta?.build?.warning && this.build.status === 'SUCCESS') {
-            this.build.status = 'WARNING';
-          }
-        });
+        this.event
+          .hasMany('builds')
+          .reload()
+          .then(() => {
+            if (
+              this.build.meta?.build?.warning &&
+              this.build.status === 'SUCCESS'
+            ) {
+              this.build.status = 'WARNING';
+            }
+          });
       }
     }
   },

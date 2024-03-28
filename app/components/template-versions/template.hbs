@@ -2,6 +2,7 @@
   All Versions
 </h4>
 
+{{#unless this.isPipelineTemplatePage}}
 <div class="table-controls">
   <TimeRangePicker
     @startTime={{@startTime}}
@@ -9,6 +10,7 @@
     @onTimeRangeChange={{action "timeRangeChange"}}
   />
 </div>
+{{/unless}}
 
 <ModelsTable
   @data={{this.data}}

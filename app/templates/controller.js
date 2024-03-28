@@ -1,16 +1,43 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
   template: service(),
-  routeParams: computed('model', {
+  router: service(),
+  isPipelineTemplatePage: computed('router.currentRouteName', {
+    get() {
+      const currentRouteName = get(this, 'router.currentRouteName');
+      const isPipelineTemplateRoute = currentRouteName.includes('pipeline');
+
+      return isPipelineTemplateRoute;
+    }
+  }),
+
+  isTemplateIndexRoute: computed('router.currentRouteName', {
+    get() {
+      const currentRouteName = get(this, 'router.currentRouteName');
+      const isTemplateIndexRoute = [
+        'templates.pipeline.index',
+        'templates.job.index'
+      ].includes(currentRouteName);
+
+      return isTemplateIndexRoute;
+    }
+  }),
+  routeParams: computed('model', 'isPipelineTemplatePage', {
     get() {
       const route = this.model;
 
+      let paramRouteName = 'job';
+
+      if (this.isPipelineTemplatePage) {
+        paramRouteName = 'pipeline';
+      }
+
       const params = {
-        ...route.paramsFor('templates.namespace'),
-        ...route.paramsFor('templates.detail')
+        ...route.paramsFor(`templates.${paramRouteName}.namespace`),
+        ...route.paramsFor(`templates.${paramRouteName}.detail`)
       };
 
       return params;
@@ -21,17 +48,22 @@ export default Controller.extend({
       return value;
     }
   }),
-  crumbs: computed('routeParams', {
+  crumbs: computed('routeParams', 'isPipelineTemplatePage', {
     get() {
       const breadcrumbs = [];
-
       const params = this.routeParams;
 
-      // add name and namespace together to get full name, compare fullname  to params.name
-      // if equal, use name
+      let paramRouteName = 'job';
+
+      if (this.isPipelineTemplatePage) {
+        paramRouteName = 'pipeline';
+      }
+
+      // add name and namespace together to get full name, compare fullname
+      // to params.name if equal, use name
       if (params.namespace || params.detail) {
         breadcrumbs.push({
-          name: 'Templates',
+          name: `${paramRouteName} Templates`,
           route: 'templates',
           params: ['templates']
         });
@@ -40,7 +72,7 @@ export default Controller.extend({
       if (params.namespace) {
         breadcrumbs.push({
           name: params.namespace,
-          route: `templates.namespace`,
+          route: `templates.${paramRouteName}.namespace`,
           params: [params.namespace]
         });
       }
@@ -48,7 +80,7 @@ export default Controller.extend({
       if (params.name) {
         breadcrumbs.push({
           name: params.name,
-          route: `templates.detail`,
+          route: `templates.${paramRouteName}.detail`,
           params: [params.namespace, params.name]
         });
       }

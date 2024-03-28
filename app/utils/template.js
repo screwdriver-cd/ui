@@ -55,6 +55,10 @@ const templatesFormatter = templates => {
       // Add last updated time
       t.lastUpdated = getLastUpdatedTime({ createTime: t.createTime });
     }
+
+    if (!t.description) {
+      t.description = '';
+    }
   });
 
   return templates;
