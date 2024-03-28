@@ -8,16 +8,21 @@ export default Component.extend({
   showToggleTrustModal: false,
   store: service(),
   isTrusted: null,
+  isPipelineTemplatePage: false,
+  hideMetrics: false,
   init() {
     this._super(...arguments);
-    this.store
-      .findRecord('pipeline', this.template.pipelineId)
-      .then(pipeline => {
-        this.set('scmUrl', pipeline.scmRepo.url);
-      })
-      .catch(() => {
-        this.set('scmUrl', null);
-      });
+
+    if (this.template.pipelineId) {
+      this.store
+        .findRecord('pipeline', this.template.pipelineId)
+        .then(pipeline => {
+          this.set('scmUrl', pipeline.scmRepo.url);
+        })
+        .catch(() => {
+          this.set('scmUrl', null);
+        });
+    }
 
     this.set('isTrusted', this.template.trusted);
   },

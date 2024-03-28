@@ -3,7 +3,7 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinon from 'sinon';
 
-module('Unit | Route | templates/detail/version', function (hooks) {
+module('Unit | Route | templates/job/detail/version', function (hooks) {
   setupTest(hooks);
   const data = {
     templateData: [
@@ -47,12 +47,12 @@ module('Unit | Route | templates/detail/version', function (hooks) {
   };
 
   test('it asks for the template for a given exist version', function (assert) {
-    const route = this.owner.lookup('route:templates/detail/version');
+    const route = this.owner.lookup('route:templates/job/detail/version');
 
     route.modelFor = () => {
       return data;
     };
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     assert.ok(route);
 
@@ -62,12 +62,12 @@ module('Unit | Route | templates/detail/version', function (hooks) {
   });
 
   test('it asks for the template for a given exist version of according to ember', function (assert) {
-    const route = this.owner.lookup('route:templates/detail/version');
+    const route = this.owner.lookup('route:templates/job/detail/version');
 
     route.modelFor = () => {
       return data;
     };
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     assert.ok(route);
 
@@ -77,12 +77,12 @@ module('Unit | Route | templates/detail/version', function (hooks) {
   });
 
   test('it asks for the template for a given exist tag', function (assert) {
-    const route = this.owner.lookup('route:templates/detail/version');
+    const route = this.owner.lookup('route:templates/job/detail/version');
 
     route.modelFor = () => {
       return data;
     };
-    const controller = this.owner.lookup('controller:templates/detail');
+    const controller = this.owner.lookup('controller:templates/job/detail');
 
     assert.ok(route);
 
@@ -92,7 +92,7 @@ module('Unit | Route | templates/detail/version', function (hooks) {
   });
 
   test('it asks for the template for a given name and non-exist version', function (assert) {
-    const route = this.owner.lookup('route:templates/detail/version');
+    const route = this.owner.lookup('route:templates/job/detail/version');
 
     route.modelFor = () => {
       return data;
@@ -115,7 +115,7 @@ module('Unit | Route | templates/detail/version', function (hooks) {
   });
 
   test('it asks for the template for a given name and non-exist tag', function (assert) {
-    const route = this.owner.lookup('route:templates/detail/version');
+    const route = this.owner.lookup('route:templates/job/detail/version');
 
     route.modelFor = () => {
       return data;

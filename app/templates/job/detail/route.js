@@ -2,8 +2,9 @@ import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import timeRange from 'screwdriver-ui/utils/time-range';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend({
+export default Route.extend(AuthenticatedRouteMixin, {
   router: service(),
   template: service(),
   templateData: null,

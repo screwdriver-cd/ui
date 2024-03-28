@@ -54,14 +54,18 @@
     </h1>
   </div>
 </div>
+
 <div class="template-stats">
   <h2 class="template-version">
     {{this.template.version}}
   </h2>
+  {{#unless this.isPipelineTemplatePage}}
   <div class="template-metrics">
     Usage - Jobs: {{this.template.metrics.jobs.count}} | Builds: {{this.template.metrics.builds.count}}
   </div>
+  {{/unless}}
 </div>
+
 <p>
   {{this.template.description}}
 </p>
@@ -137,10 +141,16 @@
 <h4>
   Usage:
 </h4>
+{{#if this.isPipelineTemplatePage}}
+{{! template-lint-disable block-indentation }}
+<pre>template: {{this.template.fullName}}@{{this.template.version}}</pre>
+{{else}}
 {{! template-lint-disable block-indentation }}
 <pre>jobs:
   main:
     template: {{this.template.fullName}}@{{this.template.version}}</pre>
+{{/if}}
+
 {{#if this.templateToRemove}}
   {{#if this.isRemoving}}
     <ModalDialog

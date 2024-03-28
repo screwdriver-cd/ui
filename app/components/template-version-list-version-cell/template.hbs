@@ -6,9 +6,8 @@
     {{/if}}
   </span>
 
-
   <LinkTo
-    @route="templates.detail.version"
+    @route={{this.routeLink}}
     @models={{array this.namespace this.name this.version}}>
       <span class="version">
         {{this.version}}

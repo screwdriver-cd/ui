@@ -9,7 +9,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
   model() {
     return hash({
-      templates: this.shuttle.fetchAllTemplates()
+      templates: this.shuttle.fetchAllJobTemplates()
     });
   },
 

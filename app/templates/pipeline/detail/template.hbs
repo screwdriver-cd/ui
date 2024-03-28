@@ -1,0 +1,64 @@
+{{page-title "Detail"}}
+
+{{#if this.versionOrTagFromUrl}}
+  {{page-title @model.namespace '/' @model.name '@' this.versionOrTagFromUrl}}
+{{else}}
+  {{page-title @model.namespace '/' @model.name}}
+{{/if}}
+
+<InfoMessage
+  @message={{this.errorMessage}}
+  @type="warning"
+  @icon="exclamation-triangle"
+/>
+
+<TemplateHeader
+  @template={{this.selectedVersionTemplate}}
+  @trusted={{this.trusted}}
+  @isAdmin={{this.isAdmin}}
+  @onUpdateTrust={{action "updateTrust"}}
+  @onRemoveTemplate={{action "removeTemplate"}}
+  @isPipelineTemplatePage={{this.isPipelineTemplatePage}}
+/>
+
+<h4>
+  Pipeline Contents:
+</h4>
+
+<ValidatorPipeline
+  @name={{this.templateName}}
+  @jobs={{this.jobs}}
+  @workflowGraph={{this.workflowGraph}}
+  @annotations={{this.annotations}}
+  @parameters={{this.parameters}}
+  @isOpen={{true}}
+/>
+
+<h4>
+  Jobs Contents:
+</h4>
+<div>
+{{#each this.jobs as |job|}}
+  {{#each job.permutations as |jobConfig index|}}
+    <ValidatorJob
+      @name={{job.name}}
+      @job={{jobConfig}}
+      @index={{index}}
+      @isOpen={{true}}
+    />
+  {{/each}}
+{{/each}}
+</div>
+
+<hr class="section-divider"/>
+
+<TemplateVersions
+  @templates={{this.filteredTemplates}}
+  @startTime={{this.startTime}}
+  @endTime={{this.endTime}}
+  @onRemoveVersion={{action "removeVersion"}}
+  @onTimeRangeChange={{action "timeRangeChange"}}
+  @isPipelineTemplatePage={{this.isPipelineTemplatePage}}
+/>
+
+{{outlet}}
