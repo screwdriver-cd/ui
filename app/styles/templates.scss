@@ -1,0 +1,28 @@
+.templates {
+  header.templates-header {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  ul.nav-tabs.nav {
+    border: none;
+
+    li {
+      border-bottom: 3px solid #fff;
+
+      &.active {
+        border-bottom-color: #1e293b;
+      }
+
+      a {
+        color: initial;
+        border: none;
+        padding: 8px 16px 9px 16px;
+      }
+    }
+  }
+
+  .section-divider {
+    border: 1px solid $grey-400;
+  }
+}

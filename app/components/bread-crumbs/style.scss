@@ -1,11 +1,17 @@
 & {
-  font-size: 2rem;
+  color: #303030;
+  font-size: 1.2rem;
   margin-top: 10px;
+
   & ::first-letter {
     text-transform: uppercase;
+  }
+
+  .bread-crumb-divider {
+    color: #d5d5d5;
   }
 }
 
 .link {
-  color: #337ab7;
+  color: #016eff;
 }

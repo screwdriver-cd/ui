@@ -1,6 +1,5 @@
 & {
   .header {
-    justify-content: space-between;
     display: flex;
 
     .danger {
@@ -55,6 +54,7 @@
     height: 1em;
     width: 1em;
     vertical-align: middle;
+    font-size: 36px;
   }
 
   .clickable {
@@ -67,6 +67,31 @@
 
   .link {
     color: #337ab7;
+    font-size: 26px;
+  }
+
+  .trash-icon,
+  .branch-icon {
+    font-size: 22px;
+    padding-left: 2px;
+  }
+
+  .stack {
+    border-left: 1px solid $grey-400;
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
+    padding-left: 5px;
+
+    .stack-item {
+      flex-grow: 1;
+
+      .stack-label {
+        color: #232a31;
+        font-weight: 600;
+        padding-left: 5px;
+      }
+    }
   }
 
   pre {
