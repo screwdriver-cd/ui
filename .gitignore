@@ -10,6 +10,7 @@
 
 # misc
 /.env*
+/.husky/_
 /.pnp*
 /.sass-cache
 /.eslintcache
