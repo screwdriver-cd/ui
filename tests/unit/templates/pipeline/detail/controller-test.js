@@ -211,12 +211,25 @@ module('Unit | Controller | templates/pipeline/detail', function (hooks) {
       'target',
       Controller.extend({
         actions: {
-          reloadModel: () => assert.ok(true, 'reloadModel action bubbled')
+          reloadModel() {
+            assert.ok(true, 'reloadModel action bubbled');
+          }
         }
       }).create()
     );
 
-    controller.send('removeVersion');
+    controller.set(
+      'template.deletePipelineTemplateByVersion',
+      (namespace, name, version) => {
+        assert.equal(namespace, 'adong');
+        assert.equal(name, 'sd-job-template-builder');
+        assert.equal(version, '1.0.0');
+
+        return resolve();
+      }
+    );
+
+    controller.send('removeVersion', 'adong/sd-job-template-builder', '1.0.0');
   });
 
   test('it handles template update trust', function (assert) {
