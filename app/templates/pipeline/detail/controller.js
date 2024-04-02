@@ -161,7 +161,7 @@ export default class TemplatesPipelineDetailController extends Controller {
   }
 
   @action
-  removeVersion(fullName, version) {
+  removeVersion(_, version) {
     const { namespace, name } = this.selectedVersionTemplate;
 
     return (
