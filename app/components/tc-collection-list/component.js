@@ -18,6 +18,14 @@ export default Component.extend({
     get() {
       const prefix = this.collectionType.toLowerCase();
 
+      if (prefix === 'commands') {
+        return {
+          prefix: `${prefix}`,
+          detail: `${prefix}.detail`,
+          namespace: `${prefix}.namespace`
+        };
+      }
+
       return {
         prefix: `templates/${prefix}`,
         detail: `templates.${prefix}.detail`,
