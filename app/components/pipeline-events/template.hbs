@@ -94,7 +94,6 @@
 </div>
 <div
   class="events-sidebar column-tabs-view {{if this.showListView "disabled"}}"
-  onScroll={{action "onEventListScroll"}}
 >
   <BsTab @customTabs={{true}} as |tab|>
     <BsNav @type="tabs" as |nav|>
@@ -110,7 +109,10 @@
       </nav.item>
     </BsNav>
   </BsTab>
-  <div class="tab-content">
+  <div
+    class="tab-content"
+    onScroll={{action "onEventListScroll"}}
+  >
     {{#if (eq this.activeTab "events")}}
         <PipelineEventsList
           @pipeline={{this.pipeline}}
