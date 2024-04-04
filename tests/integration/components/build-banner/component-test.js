@@ -766,7 +766,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders template info if user is using template', async function (assert) {
-    assert.expect(15);
+    assert.expect(16);
     this.owner.setupRouter();
 
     this.set('reloadCb', () => {
@@ -846,6 +846,9 @@ module('Integration | Component | build banner', function (hooks) {
     assert.dom('.user .banner-value').hasText('Bruce W');
     assert.dom('.docker-container .banner-value').hasText('node:6');
     assert.dom('.template-info .banner-value').hasText('test:2.0');
+    assert
+      .dom('.template-info > a')
+      .hasAttribute('href', '/templates/job/nodejs/test/2.0');
     assert.dom('button').doesNotExist();
   });
 

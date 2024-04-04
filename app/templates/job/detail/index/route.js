@@ -5,6 +5,6 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 export default Route.extend(AuthenticatedRouteMixin, {
   router: service(),
   model() {
-    return this.modelFor('templates.detail');
+    return this.modelFor('templates.job.detail');
   }
 });
