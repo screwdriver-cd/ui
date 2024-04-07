@@ -372,16 +372,15 @@ export default Component.extend({
      */
     onOpen(value) {
       // Wait until select-options frame is displayed
-      const collections = document.getElementsByClassName(
-        'parameter-group-list'
-      );
-
-      if (collections.length === 0) {
-        return;
-      }
-      const scrollFrame = collections[0];
-
       setTimeout(() => {
+        const collections = document.getElementsByClassName(
+          'parameter-group-list'
+        );
+
+        if (collections.length === 0) {
+          return;
+        }
+        const scrollFrame = collections[0];
         const optionsBox = document.getElementById(
           `ember-power-select-options-${value.uniqueId}`
         );
@@ -408,17 +407,16 @@ export default Component.extend({
      * Therefore, it is necessary to cause a recalculation of the scroll position when closing.
      */
     onClose() {
-      const collections = document.getElementsByClassName(
-        'parameter-group-list'
-      );
-
-      if (collections.length === 0) {
-        return;
-      }
-      const scrollFrame = collections[0];
       // Wait until select-options frame is hidden and scrollbar of parameter-group-list height is recalculated.
-
       setTimeout(() => {
+        const collections = document.getElementsByClassName(
+          'parameter-group-list'
+        );
+
+        if (collections.length === 0) {
+          return;
+        }
+        const scrollFrame = collections[0];
         const scrollRatio =
           scrollFrame.scrollTop /
           (scrollFrame.scrollHeight - scrollFrame.clientHeight);
