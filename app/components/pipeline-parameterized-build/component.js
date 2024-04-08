@@ -367,31 +367,27 @@ export default Component.extend({
 
     /**
      * Callback when clicked and opened ember-power-select-options
+     * @param {string} propertyName
      * @param {import('ember-power-select/components/power-select').Select} value
      */
     onOpen(value) {
-      // Try until ember-power-select-options is displayed
-      let counter = 0;
-      const nTry = 100;
-      const intervalId = setInterval(() => {
-        counter += 1;
-        if (counter > nTry) {
-          clearInterval(intervalId);
-
-          return;
-        }
+      setTimeout(() => {
+        // Wait until select-options frame is displayed
         const collections = document.getElementsByClassName(
           'parameter-group-list'
         );
+
+        if (collections.length === 0) {
+          return;
+        }
+        const scrollFrame = collections[0];
         const optionsBox = document.getElementById(
           `ember-power-select-options-${value.uniqueId}`
         );
 
-        if (optionsBox === null || collections.length === 0) {
+        if (optionsBox === null) {
           return;
         }
-        clearInterval(intervalId);
-        const scrollFrame = collections[0];
         const optionsBoxRect = optionsBox.getBoundingClientRect();
         const scrollFrameRect = scrollFrame.getBoundingClientRect();
         const hiddenAreaHeight = optionsBoxRect.bottom - scrollFrameRect.bottom;
@@ -399,7 +395,7 @@ export default Component.extend({
         if (hiddenAreaHeight > 0) {
           scrollFrame.scrollBy({ top: hiddenAreaHeight + 10 });
         }
-      }, 10);
+      }, 100);
     },
 
     /**
@@ -411,7 +407,6 @@ export default Component.extend({
      * Therefore, it is necessary to cause a recalculation of the scroll position when closing.
      */
     onClose() {
-      // Wait until select-options frame is hidden and scrollbar of parameter-group-list height is recalculated.
       setTimeout(() => {
         const collections = document.getElementsByClassName(
           'parameter-group-list'
@@ -421,6 +416,7 @@ export default Component.extend({
           return;
         }
         const scrollFrame = collections[0];
+        // Wait until select-options frame is hidden and scrollbar of parameter-group-list height is recalculated.
         const scrollRatio =
           scrollFrame.scrollTop /
           (scrollFrame.scrollHeight - scrollFrame.clientHeight);
