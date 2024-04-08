@@ -422,7 +422,7 @@ export default Component.extend({
           (scrollFrame.scrollHeight - scrollFrame.clientHeight);
 
         if (scrollRatio === 1) {
-          scrollFrame.scrollBy({ top: -0.001 });
+          scrollFrame.scrollBy({ top: -1 });
         }
       }, 100);
     },
