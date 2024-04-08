@@ -367,27 +367,31 @@ export default Component.extend({
 
     /**
      * Callback when clicked and opened ember-power-select-options
-     * @param {string} propertyName
      * @param {import('ember-power-select/components/power-select').Select} value
      */
     onOpen(value) {
-      // Wait until select-options frame is displayed
-      setTimeout(() => {
+      // Try until ember-power-select-options is displayed
+      let counter = 0;
+      const nTry = 100;
+      const intervalId = setInterval(() => {
+        counter += 1;
+        if (counter > nTry) {
+          clearInterval(intervalId);
+
+          return;
+        }
         const collections = document.getElementsByClassName(
           'parameter-group-list'
         );
-
-        if (collections.length === 0) {
-          return;
-        }
-        const scrollFrame = collections[0];
         const optionsBox = document.getElementById(
           `ember-power-select-options-${value.uniqueId}`
         );
 
-        if (optionsBox === null) {
+        if (optionsBox === null || collections.length === 0) {
           return;
         }
+        clearInterval(intervalId);
+        const scrollFrame = collections[0];
         const optionsBoxRect = optionsBox.getBoundingClientRect();
         const scrollFrameRect = scrollFrame.getBoundingClientRect();
         const hiddenAreaHeight = optionsBoxRect.bottom - scrollFrameRect.bottom;
@@ -424,7 +428,7 @@ export default Component.extend({
         if (scrollRatio === 1) {
           scrollFrame.scrollBy({ top: -0.001 });
         }
-      }, 10);
+      }, 100);
     },
 
     onUpdateValue(model, jobName, propertyName, value) {
