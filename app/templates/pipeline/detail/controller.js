@@ -41,6 +41,18 @@ export default class TemplatesPipelineDetailController extends Controller {
     return (decoder(token).scope || []).includes('admin');
   }
 
+  get parameters() {
+    const { config } = this.selectedVersionTemplate;
+
+    return config.parameters || {};
+  }
+
+  get annotations() {
+    const { config } = this.selectedVersionTemplate;
+
+    return config.annotations || {};
+  }
+
   get jobs() {
     const { config } = this.selectedVersionTemplate;
     const configJobs = get(config, 'jobs') || {};
