@@ -16,6 +16,7 @@ button.start-with-parameters-button {
 .parameter-group-list {
   max-height: 70vh;
   overflow-y: scroll;
+  scroll-behavior: smooth;
 
   .parameter-group {
     margin: 10px 10px 0 0;
