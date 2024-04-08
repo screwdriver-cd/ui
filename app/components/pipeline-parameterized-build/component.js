@@ -87,10 +87,10 @@ export default Component.extend({
   },
 
   /**
-   * Get Shared parameters
-   * @return {Record<string, ParameterValue>} Parameter name and value (optional: description) pairs
+   * Get Pipeline parameters
+   * @return {Record<string, PipelineParameterValue>} Pipeline parameter name and value (optional: description) pairs
    * @example
-   *    >>> getDefaultJobParameters(...)
+   *    >>> getDefaultPipelineParameters(...)
    *    {
    *      namespace: 'sandbox'
    *      ...,
