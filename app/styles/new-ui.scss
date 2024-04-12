@@ -1,0 +1,29 @@
+.new-ui {
+  // height: 100vh;
+  height: 100%;
+
+  .grid-container {
+    display: grid;
+    height: 100%;
+
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+    grid-template-columns: 50px;
+    grid-template-rows: auto;
+
+    grid-template-areas: "left right";
+
+    .grid-item.left {
+      background-color: #FFF;
+      border-left: 1px solid #F2F2F2;
+      border-right: 1px solid #F2F2F2;
+
+      grid-area: left; 
+    }
+
+    .grid-item.right {
+      grid-area: right; 
+    }
+  }
+}
