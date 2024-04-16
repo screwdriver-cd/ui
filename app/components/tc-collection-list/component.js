@@ -33,6 +33,17 @@ export default Component.extend({
       };
     }
   }),
+  placeholder: computed('collectionType', {
+    get() {
+      const collectionType = this.collectionType.toLowerCase();
+
+      if (collectionType === 'commands') {
+        return 'Search commands';
+      }
+
+      return `Search ${collectionType} templates`;
+    }
+  }),
   filteringNamespace: null,
   filteringMaintainer: null,
   sort: 'createTime',
