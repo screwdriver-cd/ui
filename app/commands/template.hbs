@@ -1,5 +1,24 @@
+<div class="commands">
 {{page-title "Commands"}}
-
+<header class="commands-header">
+  <h4>Commands
+    <a
+      href="http://docs.screwdriver.cd/user-guide/commands"
+      title="More Information"
+      target="_blank"
+      rel="noopener"
+      class="doc-link float-right"
+      style="font-size: 1.25rem; font-weight: normal; color: #3697f2;"
+    >
+      Commands Docs
+      <FaIcon @icon="question-circle" />
+    </a>
+  </h4>
+  <div class="command-description">
+    Commands share binaries (or scripts) across multiple jobs.
+  </div>
+</header>
 <BreadCrumbs @crumbs={{this.crumbs}} />
 
 {{outlet}}
+</div>

@@ -102,4 +102,20 @@ module('Acceptance | commands', function (hooks) {
       'Page title is correct'
     );
   });
+
+  test('visiting /commands has headers and description', async assert => {
+    await authenticateSession({ token: adminJWT });
+    await visit('/commands');
+
+    assert.strictEqual(currentURL(), '/commands');
+
+    assert.equal(currentURL(), '/commands');
+    assert.dom('.commands-header > h4').includesText('Commands');
+    assert.dom('.commands-header > h4 > a').includesText('Commands Docs');
+    assert
+      .dom('.commands-header > .command-description')
+      .includesText(
+        'Commands share binaries (or scripts) across multiple jobs.'
+      );
+  });
 });

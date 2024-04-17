@@ -1,7 +1,11 @@
 <section>
   <h5>
     <b>
-      {{this.collectionType}} Templates
+      {{#if (eq this.collectionType "Commands")}}
+        Commands
+      {{else}}
+        {{this.collectionType}} Templates
+      {{/if}}
     </b>
     <span class="float-right">
       <span class="text-uppercase total">
@@ -73,7 +77,7 @@
     <div class="col-sm-4">
       <input
         value=""
-        placeholder="Search {{this.collectionType}} Templates"
+        placeholder="{{this.placeholder}}"
         type="search"
         oninput={{action (mut this.query) value="target.value"}}
       />
