@@ -2,7 +2,7 @@ ul.pipeline-nav {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  
+
   text-align: center;
 
   display: grid;
@@ -12,13 +12,20 @@ ul.pipeline-nav {
   grid-template-columns: auto;
   grid-template-rows: 40px 40px 40px 40px auto;
 
-  grid-template-areas: 
-    "builds"
-    "secrets"
-    "options"
-    "metrics"
-    "rest"
-  ;
+  grid-template-areas:
+    'builds'
+    'secrets'
+    'options'
+    'metrics'
+    'rest';
+
+  a {
+    &.active {
+      color: #1c64f2;
+    }
+
+    color: #6b7280;
+  }
 
   &:first-child {
     padding-top: 20px;
@@ -29,17 +36,17 @@ ul.pipeline-nav {
   }
 
   .builds {
-    grid-area: builds; 
+    grid-area: builds;
   }
 
   .secrets {
-    grid-area: secrets; 
+    grid-area: secrets;
   }
 
   .options {
-    grid-area: options; 
-  } 
-  .metrics {
-    grid-area: metrics; 
+    grid-area: options;
   }
-}  
+  .metrics {
+    grid-area: metrics;
+  }
+}
