@@ -1,6 +1,9 @@
 .new-ui {
-  // height: 100vh;
+  // to accommodate and offset old ui margins
+  margin-right: -15px;
+  margin-left: -15px;
   height: 100%;
+  // height: 100vh;
 
   .grid-container {
     display: grid;
