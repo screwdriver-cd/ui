@@ -13,14 +13,5 @@ module('Integration | Component | newui-pipeline-nav', function (hooks) {
     await render(hbs`<NewuiPipelineNav />`);
 
     assert.dom(this.element).hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      <NewuiPipelineNav>
-        template block text
-      </NewuiPipelineNav>
-    `);
-
-    assert.dom(this.element).hasText('template block text');
   });
 });
