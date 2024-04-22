@@ -5,7 +5,7 @@ import { statusIcon } from 'screwdriver-ui/utils/build';
 export default Component.extend({
   classNameBindings: ['build.status'],
   async setBuild() {
-    set(this, 'build', (await this.job.builds).objectAt(0));
+    set(this, 'build', (await this.job.builds)[0]);
   },
   build: computed('_build', 'job.builds', {
     get() {
