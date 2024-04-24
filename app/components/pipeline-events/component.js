@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import { computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import uniqBy from 'lodash.uniqby';
 import moment from 'moment';
 import ENV from 'screwdriver-ui/config/environment';
@@ -76,7 +76,7 @@ export async function startDetachedBuild(job, options = {}) {
   const { groupEventId } = event;
   const pipelineId = get(this, 'pipeline.id');
   const token = get(this, 'session.data.authenticated.token');
-  const user = decoder(token).username;
+  const user = jwtDecode(token).username;
 
   let causeMessage = `Manually started by ${user}`;
   const { prNum } = event;
@@ -596,7 +596,7 @@ export default Component.extend(ModelReloaderMixin, {
       this.set('isShowingModal', true);
 
       const token = get(this, 'session.data.authenticated.token');
-      const user = decoder(token).username;
+      const user = jwtDecode(token).username;
       const pipelineId = this.get('pipeline.id');
 
       const eventPayload = {
@@ -652,7 +652,7 @@ export default Component.extend(ModelReloaderMixin, {
     },
     startPRBuild(prNum, jobs, parameters) {
       this.set('isShowingModal', true);
-      const user = decoder(
+      const user = jwtDecode(
         this.get('session.data.authenticated.token')
       ).username;
 

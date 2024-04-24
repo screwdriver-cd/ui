@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { service } from '@ember/service';
 import { action, setProperties, get } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import timeRange from 'screwdriver-ui/utils/time-range';
 
 export default class TemplatesPipelineDetailController extends Controller {
@@ -38,7 +38,7 @@ export default class TemplatesPipelineDetailController extends Controller {
   get isAdmin() {
     const token = get(this, 'token');
 
-    return (decoder(token).scope || []).includes('admin');
+    return (jwtDecode(token).scope || []).includes('admin');
   }
 
   get parameters() {
