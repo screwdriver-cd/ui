@@ -1,7 +1,7 @@
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { alias } from '@ember/object/computed';
 
 export default Controller.extend({
@@ -26,7 +26,7 @@ export default Controller.extend({
   isAdmin: computed('session.data.authenticated.token', function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
-    return (decoder(token).scope || []).includes('admin');
+    return (jwtDecode(token).scope || []).includes('admin');
   }),
   versionCommand: computed(
     'commands.commandData.[]',

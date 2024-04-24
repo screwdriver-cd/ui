@@ -2,7 +2,7 @@ import { later, throttle } from '@ember/runloop';
 import { get, computed } from '@ember/object';
 import { reads, mapBy } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 import Controller from '@ember/controller';
 import ENV from 'screwdriver-ui/config/environment';
@@ -84,7 +84,7 @@ export default Controller.extend({
       this.set('isShowingModal', true);
       const buildId = get(this, 'build.id');
       const token = get(this, 'session.data.authenticated.token');
-      const user = decoder(token).username;
+      const user = jwtDecode(token).username;
       const causeMessage = `Manually started by ${user}`;
       const newEvent = this.store.createRecord('event', {
         buildId,

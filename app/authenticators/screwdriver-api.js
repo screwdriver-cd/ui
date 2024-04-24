@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Base from 'ember-simple-auth/authenticators/base';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import ENV from 'screwdriver-ui/config/environment';
 const loginUrlBase = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/login`;
 const tokenUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/token`;
@@ -50,7 +50,7 @@ function fetchToken() {
     })
       .done(jwt =>
         // Add some data from the JWT to the session data
-        resolve(getData(jwt.token, decoder(jwt.token)))
+        resolve(getData(jwt.token, jwtDecode(jwt.token)))
       )
       .fail(() => reject('Could not get a token'));
   });
@@ -70,7 +70,7 @@ export default Base.extend({
       const jwt = data.token;
 
       if (!isEmpty(jwt)) {
-        const decodedJWT = decoder(jwt);
+        const decodedJWT = jwtDecode(jwt);
 
         // Token expired, reject
         if (decodedJWT.exp * 1000 < Date.now()) {

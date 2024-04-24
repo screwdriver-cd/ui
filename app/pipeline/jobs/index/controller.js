@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { get, set, computed } from '@ember/object';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
 import ModelReloaderMixin, {
@@ -229,7 +229,7 @@ export default Controller.extend(ModelReloaderMixin, {
 
       const pipelineId = get(this, 'pipeline.id');
       const token = get(this, 'session.data.authenticated.token');
-      const user = decoder(token).username;
+      const user = jwtDecode(token).username;
 
       const causeMessage = `Manually started by ${user}`;
 
