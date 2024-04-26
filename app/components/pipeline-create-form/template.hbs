@@ -104,7 +104,8 @@
             @matcher={{this.searchInputMatcher}}
             @searchField="name"
             @searchEnabled=true
-            @noMatchesMessage={{this.messageForSearching}} as |template|
+            @noMatchesMessage="Not found."
+            as |template|
           >
             {{template.name}}
           </PowerSelect>
