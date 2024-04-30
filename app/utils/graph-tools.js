@@ -182,17 +182,20 @@ const bypassSetupTeardownEdges = (edges, nodeName) => {
 };
 
 /**
- * Extracts the workflow graph associated with the specified stage.
- * @method  extractStageGraph
- * @param  {Object} graph   Event workflow graph
- * @param  {Object} stage   Stage metadata
- * @return {Array}          Workflow graph associated with the specified stage
+ * Extracts the workflow graph (containing nodes and edges) associated with the specified stage
+ *
+ * @method extractStageNodesAndEdges
+ * @param {Object} eventWorkflowGraph   Event workflow graph
+ * @param {Object} eventStage           Stage metadata
+ * @returns {{nodes: *[], edges: *[]}}  Workflow graph associated with the specified stage
  */
-const extractStageGraph = (graph, stage) => {
-  const { nodes, edges } = graph;
-  const jobNames = [...stage.jobs, stage.setup, stage.teardown].map(
-    j => j.name
-  );
+const extractStageNodesAndEdges = (eventWorkflowGraph, eventStage) => {
+  const { nodes, edges } = eventWorkflowGraph;
+  const jobNames = [
+    ...eventStage.jobs,
+    eventStage.setup,
+    eventStage.teardown
+  ].map(j => j.name);
   const newNodes = [];
   const newNodesSet = new Set();
   const newEdges = [];
@@ -214,46 +217,9 @@ const extractStageGraph = (graph, stage) => {
     }
   });
 
-  let xMin;
-
-  let xMax;
-
-  let yMin;
-
-  let yMax;
-
-  newNodes.forEach(n => {
-    xMin = xMin === undefined ? n.pos.x : Math.min(xMin, n.pos.x);
-    xMax = xMax === undefined ? n.pos.x : Math.max(xMax, n.pos.x);
-    yMin = yMin === undefined ? n.pos.y : Math.min(yMin, n.pos.y);
-    yMax = yMax === undefined ? n.pos.y : Math.max(yMax, n.pos.y);
-  });
-
   return {
     nodes: newNodes,
-    edges: newEdges,
-    meta: {
-      width: xMax - xMin + 1,
-      height: yMax - yMin + 1
-    }
-  };
-};
-
-const getStagePosition = graph => {
-  const { nodes } = graph;
-
-  let x;
-
-  let y;
-
-  nodes.forEach(n => {
-    x = x === undefined ? n.pos.x : Math.min(x, n.pos.x);
-    y = y === undefined ? n.pos.y : Math.min(y, n.pos.y);
-  });
-
-  return {
-    x,
-    y
+    edges: newEdges
   };
 };
 
@@ -291,12 +257,13 @@ const graphDepth = (edges, start, visited = new Set()) => {
 /**
  * Walks the graph to find siblings and set their positions
  * @method walkGraph
- * @param  {Object}  graph Raw graph definition
- * @param  {String}  start The job name to start from for this iteration
- * @param  {Number}  x     The column for this iteration
- * @param  {Array}   y     Accumulator of column depth
+ * @param  {Object}  graph                Raw graph definition
+ * @param  {String}  start                The job name to start from for this iteration
+ * @param  {Number}  x                    The column for this iteration
+ * @param  {Array}   y                    Accumulator of column depth
+ * @param  {Object}  stageNameToStageMap  Map of stage name to stage metadata (also includes workflow graph)
  */
-const walkGraph = (graph, start, x, y) => {
+const walkGraph = (graph, start, x, y, stageNameToStageMap) => {
   if (!y[x]) {
     y[x] = y[0] - 1;
   }
@@ -305,12 +272,47 @@ const walkGraph = (graph, start, x, y) => {
   nodeNames.forEach(name => {
     const obj = node(graph.nodes, name);
 
-    if (!obj.pos) {
+    const { stageName } = obj;
+
+    if (stageName && stageNameToStageMap) {
+      const stage = stageNameToStageMap.get(stageName);
+      const stageGraph = stage.graph;
+
+      if (!stage.pos) {
+        const stageStartX = x;
+        const stageEndX = stageStartX + stageGraph.meta.width - 1;
+        // Find a row with no items for all the stage columns
+        const stageStartY = Math.max(...y.slice(stageStartX, stageEndX));
+
+        stage.pos = { x: stageStartX, y: stageStartY };
+
+        // Apply offset for all the stage nodes
+        stageGraph.nodes.forEach(stageNode => {
+          stageNode.pos = {
+            x: stageNode.pos.x + stageStartX,
+            y: stageNode.pos.y + stageStartY
+          };
+        });
+
+        // block all the columns for stage rows
+        const afterStageY = stageStartY + stageGraph.meta.height;
+
+        let stageColumn = stageStartX;
+
+        while (stageColumn <= stageEndX) {
+          y[stageColumn] = afterStageY;
+          stageColumn += 1;
+        }
+      }
+
+      // walk if not yet visited
+      walkGraph(graph, name, x + 1, y, stageNameToStageMap); // TODO (Sagar) This is duplicate. Can we eliminate?
+    } else if (!obj.pos) {
       obj.pos = { x, y: y[x] };
       y[x] += 1;
 
       // walk if not yet visited
-      walkGraph(graph, name, x + 1, y);
+      walkGraph(graph, name, x + 1, y, stageNameToStageMap);
     }
   });
 };
@@ -357,7 +359,7 @@ const isTrigger = (name, start) => {
 };
 
 /**
- * Determine if an node has destinations that have already been processed.
+ * Determine if a node has destinations that have already been processed.
  * This allows a graph's common root nodes to collapse instead of taking up multiple lines.
  * @method hasProcessedDest
  * @param  {Object}         graph The processed graph
@@ -374,6 +376,104 @@ const hasProcessedDest = (graph, name) => {
 
     return found && typeof found.pos === 'object';
   });
+};
+
+/**
+ * For each node in the graph, determines the position (x and y coordinates) in the workflow graph matrix
+ *
+ * @method positionGraphNodes
+ * @param {Object} graph  Workflow graph
+ * @returns {*}           Returns the graph with position assigned for all the nodes
+ */
+const positionGraphNodes = graph => {
+  const { nodes, edges, stages } = graph;
+
+  const stageNameToStageMap = stages
+    ? stages.reduce((map, s) => {
+        map.set(s.name, s);
+
+        return map;
+      }, new Map())
+    : null;
+
+  let y = [0]; // accumulator for column heights
+
+  nodes.forEach(n => {
+    // Set root nodes on left
+    if (isRoot(edges, n.name)) {
+      if (!hasProcessedDest(graph, n.name)) {
+        // find the next unused row
+        const tmp = Math.max(...y);
+
+        // Set all the starting pos for columns to that row
+        y = y.map(() => tmp);
+      }
+
+      const { stageName } = n;
+
+      if (stageName && stageNameToStageMap) {
+        const stage = stageNameToStageMap.get(stageName);
+        const stageGraph = stage.graph;
+
+        if (!stage.pos) {
+          // Find a row with no items for all the stage columns
+          const stageStartY = Math.max(
+            ...y.slice(0, stageGraph.meta.width - 1)
+          );
+
+          const stageStartX = 0;
+
+          stage.pos = { x: stageStartX, y: stageStartY };
+
+          // Apply offset for all the stage nodes
+          stageGraph.nodes.forEach(stageNode => {
+            stageNode.pos = {
+              x: stageNode.pos.x + stageStartX,
+              y: stageNode.pos.y + stageStartY
+            };
+          });
+
+          // block all the columns for stage rows
+          const stageEndX = stageStartX + stageGraph.meta.width - 1;
+          const afterStageY = stageStartY + stageGraph.meta.height;
+
+          let stageColumn = stageStartX;
+
+          while (stageColumn <= stageEndX) {
+            y[stageColumn] = afterStageY;
+            stageColumn += 1;
+          }
+        }
+      } else {
+        // Set the node position
+        n.pos = { x: 0, y: y[0] };
+
+        // increment by one for next root node
+        y[0] += 1;
+      }
+
+      // recursively walk the graph from root/ detached node
+      walkGraph(graph, n.name, 1, y, stageNameToStageMap);
+    }
+  });
+
+  // For auto-scaling canvas size
+  graph.meta = {
+    // Validator starts with a graph with no nodes or edges. Should have a size of at least 1
+    height: Math.max(1, ...y),
+    width: Math.max(1, y.length - 1)
+  };
+
+  return graph;
+};
+
+// eslint-disable-next-line no-unused-vars
+const initStageGraph = (eventWorkflowGraph, eventStage) => {
+  const stageGraph = extractStageNodesAndEdges(eventWorkflowGraph, eventStage);
+
+  positionGraphNodes(stageGraph);
+
+  return stageGraph;
 };
 
 /**
@@ -463,8 +563,6 @@ const decorateGraph = ({
 
   const graph = {};
 
-  let y = [0]; // accumulator for column heights
-
   const virtualSetupNodes = [];
   const virtualTeardownNodes = [];
   const nodes = [];
@@ -497,25 +595,20 @@ const decorateGraph = ({
 
   graph.edges = edges;
 
+  graph.stages = eventStages.map(s => {
+    const stageGraph = initStageGraph(graph, s);
+
+    s.graph = stageGraph;
+
+    return s;
+  });
+
+  // Decorate nodes with position
+  positionGraphNodes(graph);
+
+  // Decorate nodes with status
+
   nodes.forEach(n => {
-    // Set root nodes on left
-    if (isRoot(edges, n.name)) {
-      if (!hasProcessedDest(graph, n.name)) {
-        // find the next unused row
-        const tmp = Math.max(...y);
-
-        // Set all the starting pos for columns to that row
-        y = y.map(() => tmp);
-      }
-
-      // Set the node position
-      n.pos = { x: 0, y: y[0] };
-      // increment by one for next root node
-      y[0] += 1;
-      // recursively walk the graph from root/ detached node
-      walkGraph(graph, n.name, 1, y);
-    }
-
     // Get job information
     let jobId = n.id;
 
@@ -608,22 +701,6 @@ const decorateGraph = ({
         e.status = srcNode.status;
       }
     }
-  });
-
-  // For auto-scaling canvas size
-  graph.meta = {
-    // Validator starts with a graph with no nodes or edges. Should have a size of at least 1
-    height: Math.max(1, ...y),
-    width: Math.max(1, y.length - 1)
-  };
-
-  graph.stages = eventStages.map(s => {
-    const stageGraph = extractStageGraph(graph, s);
-
-    s.graph = stageGraph;
-    s.pos = getStagePosition(stageGraph);
-
-    return s;
   });
 
   return graph;

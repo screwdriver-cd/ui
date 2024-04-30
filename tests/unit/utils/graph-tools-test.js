@@ -993,6 +993,225 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
+  test('Non stage jobs should not be positioned inside stages', function (assert) {
+    const GRAPH = {
+      nodes: [
+        {
+          name: '~pr'
+        },
+        {
+          name: '~commit'
+        },
+        {
+          name: 'triggering-stage',
+          id: 1
+        },
+        {
+          name: 'overlapping-non-stage-job-at-start-1',
+          id: 2
+        },
+        {
+          name: 'overlapping-non-stage-job-at-start-2a',
+          id: 3
+        },
+        {
+          name: 'overlapping-non-stage-job-at-start-2b',
+          id: 4
+        },
+        {
+          name: 'ci-deploy',
+          stageName: 'integration',
+          id: 52
+        },
+        {
+          name: 'stage@integration:setup',
+          virtual: true,
+          stageName: 'integration',
+          id: 51
+        },
+        {
+          name: 'ci-test-batch-1',
+          stageName: 'integration',
+          id: 53
+        },
+        {
+          name: 'ci-test-batch-2',
+          stageName: 'integration',
+          id: 54
+        },
+        {
+          name: 'ci-certify',
+          stageName: 'integration',
+          id: 55
+        },
+        {
+          name: 'overlapping-non-stage-job-at-end-1',
+          id: 6
+        },
+        {
+          name: 'overlapping-non-stage-job-at-end-2',
+          id: 7
+        },
+        {
+          name: 'triggered-by-stage',
+          id: 8
+        },
+        {
+          name: 'stage@integration:teardown',
+          virtual: true,
+          stageName: 'integration',
+          id: 56
+        }
+      ],
+      edges: [
+        {
+          src: '~pr',
+          dest: 'triggering-stage'
+        },
+        {
+          src: '~commit',
+          dest: 'triggering-stage'
+        },
+        {
+          src: 'triggering-stage',
+          dest: 'overlapping-non-stage-job-at-start-1',
+          join: true
+        },
+        {
+          src: 'overlapping-non-stage-job-at-start-1',
+          dest: 'overlapping-non-stage-job-at-start-2a',
+          join: true
+        },
+        {
+          src: 'overlapping-non-stage-job-at-start-1',
+          dest: 'overlapping-non-stage-job-at-start-2b',
+          join: true
+        },
+        {
+          src: 'stage@integration:setup',
+          dest: 'ci-deploy'
+        },
+        {
+          src: 'ci-deploy',
+          dest: 'ci-test-batch-1',
+          join: true
+        },
+        {
+          src: 'ci-deploy',
+          dest: 'ci-test-batch-2',
+          join: true
+        },
+        {
+          src: 'ci-test-batch-1',
+          dest: 'ci-certify',
+          join: true
+        },
+        {
+          src: 'ci-test-batch-2',
+          dest: 'ci-certify',
+          join: true
+        },
+        {
+          src: 'ci-test-batch-1',
+          dest: 'overlapping-non-stage-job-at-end-1',
+          join: true
+        },
+        {
+          src: 'ci-test-batch-2',
+          dest: 'overlapping-non-stage-job-at-end-2',
+          join: true
+        },
+        {
+          src: 'stage@integration:teardown',
+          dest: 'triggered-by-stage'
+        },
+        {
+          src: 'triggering-stage',
+          dest: 'stage@integration:setup',
+          join: true
+        },
+        {
+          src: 'ci-certify',
+          dest: 'stage@integration:teardown',
+          join: true
+        }
+      ]
+    };
+
+    const STAGES = [
+      {
+        id: 1,
+        name: 'integration',
+        jobIds: [52, 53, 54, 55],
+        setup: 51,
+        teardown: 56
+      }
+    ];
+
+    const JOBS = [
+      { id: 1, name: 'triggering-stage', virtualJob: false },
+      {
+        id: 2,
+        name: 'overlapping-non-stage-job-at-start-1',
+        virtualJob: false
+      },
+      {
+        id: 3,
+        name: 'overlapping-non-stage-job-at-start-2a',
+        virtualJob: false
+      },
+      {
+        id: 4,
+        name: 'overlapping-non-stage-job-at-start-2a',
+        virtualJob: false
+      },
+      { id: 51, name: 'stage@integration:setup', virtualJob: true },
+      { id: 52, name: 'stage@integration:setup', virtualJob: true },
+      { id: 53, name: 'stage@integration:setup', virtualJob: true },
+      { id: 54, name: 'stage@integration:setup', virtualJob: true },
+      { id: 55, name: 'stage@integration:setup', virtualJob: true },
+      { id: 56, name: 'stage@integration:teardown', virtualJob: true },
+      { id: 6, name: 'overlapping-non-stage-job-at-end-1', virtualJob: false },
+      { id: 7, name: 'overlapping-non-stage-job-at-end-2', virtualJob: false },
+      { id: 8, name: 'triggered-by-stage', virtualJob: false }
+    ];
+
+    const result = decorateGraph({
+      inputGraph: GRAPH,
+      stages: STAGES,
+      jobs: JOBS
+    });
+
+    const {
+      nodes: decoratedNodes,
+      edges: decoratedEdges,
+      stages: decoratedStages
+    } = result;
+
+    // nodes and edges associated with stage setup/teardown are excluded
+    assert.equal(13, decoratedNodes.length);
+    assert.equal(13, decoratedEdges.length);
+
+    assert.equal(1, decoratedStages.length);
+
+    const decoratedIntegrationStage = decoratedStages[0];
+    const { x: stageStartX, y: stageStartY } = decoratedIntegrationStage.pos;
+    const stageEndX =
+      stageStartX + decoratedIntegrationStage.graph.meta.width - 1;
+    const stageEndY =
+      stageStartY + decoratedIntegrationStage.graph.meta.height - 1;
+
+    decoratedNodes.forEach(n => {
+      if (n.stageName) {
+        assert.isTrue(n.pos.x >= stageStartX && n.pos.x <= stageEndX);
+        assert.isTrue(n.pos.y >= stageStartY && n.pos.x <= stageEndY);
+      } else {
+        assert.isTrue(n.pos.x < stageStartX || n.pos.x > stageEndX);
+        assert.isTrue(n.pos.y < stageStartY || n.pos.x > stageEndY);
+      }
+    });
+  });
+
   test('it determines the depth of a graph from various starting points', function (assert) {
     // edges not array
     assert.equal(graphDepth('meow', '~commit'), Number.MAX_VALUE, 'not array');
