@@ -3,8 +3,10 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 
 export default class NewPipelineEventsShowRoute extends Route.extend(
   AuthenticatedRouteMixin
-) {
+) {  
+  /* eslint-disable camelcase */
   model({ event_id }) {
     return this;
   }
+  /* eslint-enable camelcase */
 }

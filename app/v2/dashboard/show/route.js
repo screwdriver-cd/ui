@@ -4,7 +4,9 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 export default class NewDashboardShowRoute extends Route.extend(
   AuthenticatedRouteMixin
 ) {
+  /* eslint-disable camelcase */
   model({ collection_id }) {
     return this;
   }
+  /* eslint-enable camelcase */
 }

@@ -125,7 +125,7 @@ Router.map(function route() {
 
   this.route('pipeline-visualizer');
 
-  this.route('new', function newUIRoute() {
+  this.route('v2', function v2Route() {
     this.route('home');
     this.route(
       'pipeline',

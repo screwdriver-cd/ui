@@ -21,7 +21,7 @@ export default Component.extend({
   isNewUI: computed('router.{currentRouteName,currentURL}', {
     get() {
       const currentURL = get(this, 'router.currentURL');
-      const isNewUIRoute = currentURL.includes('/new/');
+      const isNewUIRoute = currentURL.includes('/v2/');
 
       return isNewUIRoute;
     }
@@ -48,10 +48,10 @@ export default Component.extend({
     switchUI() {
       const currentURL = get(this, 'router.currentURL');
 
-      let targetURL = `/new${currentURL}`;
+      let targetURL = `/v2${currentURL}`;
 
       if (this.isNewUI) {
-        targetURL = currentURL.split('/new/').join('/');
+        targetURL = currentURL.split('/v2/').join('/');
       }
 
       this.router.transitionTo(targetURL);

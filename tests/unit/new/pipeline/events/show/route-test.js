@@ -1,11 +1,11 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'screwdriver-ui/tests/helpers';
 
-module('Unit | Route | new/pipeline/events/show', function (hooks) {
+module('Unit | Route | v2/pipeline/events/show', function (hooks) {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:new/pipeline/events/show');
+    let route = this.owner.lookup('route:v2/pipeline/events/show');
 
     assert.ok(route);
   });
