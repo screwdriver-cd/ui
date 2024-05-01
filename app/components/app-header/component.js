@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { jwt_decode as decoder } from 'ember-cli-jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 export default Component.extend({
   router: service(),
@@ -16,7 +16,7 @@ export default Component.extend({
   isAdmin: computed('session.data.authenticated.token', function isAdmin() {
     const token = this.get('session.data.authenticated.token');
 
-    return (decoder(token).scope || []).includes('admin');
+    return (jwtDecode(token).scope || []).includes('admin');
   }),
   isNewUI: computed('router.{currentRouteName,currentURL}', {
     get() {
