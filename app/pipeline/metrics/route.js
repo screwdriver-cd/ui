@@ -126,7 +126,7 @@ export default Route.extend({
            */
           function getBuildId(type, index) {
             if (type === 'step') {
-              return jobMetrics[index].id;
+              return +jobMetrics.objectAt(index).get('id');
             }
 
             if (type === 'build') {
