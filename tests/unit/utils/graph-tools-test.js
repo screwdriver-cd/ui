@@ -1202,12 +1202,16 @@ module('Unit | Utility | graph tools', function () {
       stageStartY + decoratedIntegrationStage.graph.meta.height - 1;
 
     decoratedNodes.forEach(n => {
+      const isInsideStageMatrix =
+        n.pos.x >= stageStartX &&
+        n.pos.x <= stageEndX &&
+        n.pos.y >= stageStartY &&
+        n.pos.y <= stageEndY;
+
       if (n.stageName) {
-        assert.isTrue(n.pos.x >= stageStartX && n.pos.x <= stageEndX);
-        assert.isTrue(n.pos.y >= stageStartY && n.pos.x <= stageEndY);
+        assert.ok(isInsideStageMatrix);
       } else {
-        assert.isTrue(n.pos.x < stageStartX || n.pos.x > stageEndX);
-        assert.isTrue(n.pos.y < stageStartY || n.pos.x > stageEndY);
+        assert.notOk(isInsideStageMatrix);
       }
     });
   });

@@ -255,6 +255,45 @@ const graphDepth = (edges, start, visited = new Set()) => {
 };
 
 /**
+ * Determines the position (x and y coordinates) for the stage in the event workflow graph.
+ * Apply offsets to stage nodes to determine absolute position of the nodes in the event workflow graph.
+ * Blocks the cells within stage rows and columns so that non-stage nodes are not positioned inside stage matrix.
+ *
+ * @method positionStage
+ * @param {Number}  x     Start column to position the stage
+ * @param {Array}   y     Accumulator of column depth
+ * @param {Object}  stage Stage metadata including workflow graph with nodes positioned relatively with in the stage
+ */
+const positionStage = (x, y, stage) => {
+  const stageGraph = stage.graph;
+  const stageStartX = x;
+  const stageEndX = stageStartX + stageGraph.meta.width - 1;
+
+  // Find a row with no items for all the stage columns
+  const stageStartY = Math.max(...y.slice(stageStartX, stageEndX));
+
+  stage.pos = { x: stageStartX, y: stageStartY };
+
+  // Apply offset for all the stage nodes
+  stageGraph.nodes.forEach(stageNode => {
+    stageNode.pos = {
+      x: stageNode.pos.x + stageStartX,
+      y: stageNode.pos.y + stageStartY
+    };
+  });
+
+  // Block all the columns for stage rows
+  const afterStageY = stageStartY + stageGraph.meta.height;
+
+  let stageColumn = stageStartX;
+
+  while (stageColumn <= stageEndX) {
+    y[stageColumn] = afterStageY;
+    stageColumn += 1;
+  }
+};
+
+/**
  * Walks the graph to find siblings and set their positions
  * @method walkGraph
  * @param  {Object}  graph                Raw graph definition
@@ -276,37 +315,13 @@ const walkGraph = (graph, start, x, y, stageNameToStageMap) => {
 
     if (stageName && stageNameToStageMap) {
       const stage = stageNameToStageMap.get(stageName);
-      const stageGraph = stage.graph;
 
       if (!stage.pos) {
-        const stageStartX = x;
-        const stageEndX = stageStartX + stageGraph.meta.width - 1;
-        // Find a row with no items for all the stage columns
-        const stageStartY = Math.max(...y.slice(stageStartX, stageEndX));
-
-        stage.pos = { x: stageStartX, y: stageStartY };
-
-        // Apply offset for all the stage nodes
-        stageGraph.nodes.forEach(stageNode => {
-          stageNode.pos = {
-            x: stageNode.pos.x + stageStartX,
-            y: stageNode.pos.y + stageStartY
-          };
-        });
-
-        // block all the columns for stage rows
-        const afterStageY = stageStartY + stageGraph.meta.height;
-
-        let stageColumn = stageStartX;
-
-        while (stageColumn <= stageEndX) {
-          y[stageColumn] = afterStageY;
-          stageColumn += 1;
-        }
+        positionStage(x, y, stage);
       }
 
       // walk if not yet visited
-      walkGraph(graph, name, x + 1, y, stageNameToStageMap); // TODO (Sagar) This is duplicate. Can we eliminate?
+      walkGraph(graph, name, x + 1, y, stageNameToStageMap);
     } else if (!obj.pos) {
       obj.pos = { x, y: y[x] };
       y[x] += 1;
@@ -379,7 +394,7 @@ const hasProcessedDest = (graph, name) => {
 };
 
 /**
- * For each node in the graph, determines the position (x and y coordinates) in the workflow graph matrix
+ * For each node in the graph, determines the position (x and y coordinates) in the workflow graph matrix.
  *
  * @method positionGraphNodes
  * @param {Object} graph  Workflow graph
@@ -413,36 +428,9 @@ const positionGraphNodes = graph => {
 
       if (stageName && stageNameToStageMap) {
         const stage = stageNameToStageMap.get(stageName);
-        const stageGraph = stage.graph;
 
         if (!stage.pos) {
-          // Find a row with no items for all the stage columns
-          const stageStartY = Math.max(
-            ...y.slice(0, stageGraph.meta.width - 1)
-          );
-
-          const stageStartX = 0;
-
-          stage.pos = { x: stageStartX, y: stageStartY };
-
-          // Apply offset for all the stage nodes
-          stageGraph.nodes.forEach(stageNode => {
-            stageNode.pos = {
-              x: stageNode.pos.x + stageStartX,
-              y: stageNode.pos.y + stageStartY
-            };
-          });
-
-          // block all the columns for stage rows
-          const stageEndX = stageStartX + stageGraph.meta.width - 1;
-          const afterStageY = stageStartY + stageGraph.meta.height;
-
-          let stageColumn = stageStartX;
-
-          while (stageColumn <= stageEndX) {
-            y[stageColumn] = afterStageY;
-            stageColumn += 1;
-          }
+          positionStage(0, y, stage);
         }
       } else {
         // Set the node position
@@ -467,7 +455,15 @@ const positionGraphNodes = graph => {
   return graph;
 };
 
-// eslint-disable-next-line no-unused-vars
+/**
+ * Extracts the workflow graph (containing nodes and edges) associated with the specified stage.
+ * Determines the relative position of the nodes within the stage matrix.
+ *
+ * @method initStageGraph
+ * @param {Object} eventWorkflowGraph   Event workflow graph
+ * @param {Object} eventStage           Stage metadata
+ * @returns {{nodes: *[], edges: *[]}}
+ */
 const initStageGraph = (eventWorkflowGraph, eventStage) => {
   const stageGraph = extractStageNodesAndEdges(eventWorkflowGraph, eventStage);
 
