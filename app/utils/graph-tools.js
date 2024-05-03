@@ -270,7 +270,7 @@ const positionStage = (x, y, stage) => {
   const stageEndX = stageStartX + stageGraph.meta.width - 1;
 
   // Find a row with no items for all the stage columns
-  const stageStartY = Math.max(...y.slice(stageStartX, stageEndX));
+  const stageStartY = Math.max(...y.slice(stageStartX, stageEndX + 1));
 
   stage.pos = { x: stageStartX, y: stageStartY };
 
