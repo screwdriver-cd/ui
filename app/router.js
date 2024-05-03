@@ -126,12 +126,11 @@ Router.map(function route() {
   this.route('pipeline-visualizer');
 
   this.route('v2', function v2Route() {
-    this.route('home');
+    this.route('index', { path: '/' });
     this.route(
       'pipeline',
       { path: '/pipelines/:pipeline_id' },
       function pipelinesRoute() {
-        this.route('index', { path: '/' });
         this.route('builds');
         this.route('secrets');
         this.route('options');
