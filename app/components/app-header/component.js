@@ -2,7 +2,6 @@ import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { jwtDecode } from 'jwt-decode';
 
 export default Component.extend({
   router: service(),
@@ -13,10 +12,10 @@ export default Component.extend({
   slackUrl: ENV.APP.SLACK_URL,
   releaseVersion: ENV.APP.RELEASE_VERSION,
   searchTerm: '',
-  isAdmin: computed('session.data.authenticated.token', function isAdmin() {
-    const token = this.get('session.data.authenticated.token');
+  isAdmin: computed('session.data.authenticated.scope', function isAdminFunction() {
+    const isAdmin = (this.session.data.authenticated.scope || []).includes('admin');
 
-    return (jwtDecode(token).scope || []).includes('admin');
+    return isAdmin;
   }),
   isNewUI: computed('router.{currentRouteName,currentURL}', {
     get() {

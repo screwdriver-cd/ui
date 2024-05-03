@@ -1,14 +1,9 @@
 import Route from '@ember/routing/route';
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-// import PipelineRoute from 'screwdriver-ui/pipeline/route';
 import RSVP from 'rsvp';
 import { service } from '@ember/service';
 import { set } from '@ember/object';
 
-export default class NewPipelineRoute extends Route.extend(
-  // export default class NewPipelineRoute extends PipelineRoute.extend(
-  AuthenticatedRouteMixin
-) {
+export default class NewPipelineRoute extends Route {
   @service router;
 
   @service store;

@@ -33,11 +33,12 @@
       grid-row-gap: 0px;
 
       grid-template-areas:
-        'pipeline-header  pipeline-header  pipeline-header        pipeline-header        pipeline-header'
-        'pipeline-tab     pipeline-tab     pipeline-tab           pipeline-tab           pipeline-tab'
-        'pipeline-content pipeline-content pipeline-workflowgraph pipeline-workflowgraph pipeline-workflowgraph';
+        'pipeline-header  pipeline-header'
+        'pipeline-tab     pipeline-tab'
+        'pipeline-content pipeline-workflowgraph';
 
       grid-template-rows: 80px 52px 1fr;
+      grid-template-columns: 2fr 8fr;
 
       .grid-item.pipeline-header {
         grid-area: pipeline-header;
