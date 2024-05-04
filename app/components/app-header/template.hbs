@@ -182,6 +182,17 @@
                 {{/unless}}
               {{/each}}
               {{ddm.divider}}
+              {{#if this.isAdmin}}
+              <ddm.item>
+                {{#if this.hasAlternativeRoute}}
+                  <span class="switch-ui dropdown-item"
+                    title="Switch to {{if this.isNewUIRoute "Old" "New"}}"
+                    {{action "switchUI"}}
+                  >Switch to {{if this.isNewUI "Old" "New"}} UI
+                  </span>
+                {{/if}}
+              </ddm.item>
+              {{/if}}
               {{#if (not @session.data.authenticated.isGuest)}}
                 <ddm.item>
                   <ddm.linkTo @route="user-settings" @title="User Settings">

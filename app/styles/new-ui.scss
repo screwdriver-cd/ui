@@ -1,0 +1,85 @@
+.new-ui {
+  // to accommodate and offset old ui margins
+  margin-right: -15px;
+  margin-left: -15px;
+  height: 100%;
+  // height: 100vh;
+
+  .grid-container {
+    display: grid;
+    height: 100%;
+
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+    grid-template-columns: 50px;
+    grid-template-rows: auto;
+
+    grid-template-areas: 'left right';
+
+    .grid-item.left {
+      background-color: #fff;
+      border-left: 1px solid #f2f2f2;
+      border-right: 1px solid #f2f2f2;
+
+      grid-area: left;
+    }
+
+    .grid-item.right {
+      grid-area: right;
+
+      display: grid;
+      grid-column-gap: 0px;
+      grid-row-gap: 0px;
+
+      grid-template-areas:
+        'pipeline-header  pipeline-header'
+        'pipeline-tab     pipeline-tab'
+        'pipeline-content pipeline-workflowgraph';
+
+      grid-template-rows: 80px 52px 1fr;
+      grid-template-columns: 2fr 8fr;
+
+      .grid-item.pipeline-header {
+        grid-area: pipeline-header;
+      }
+
+      .grid-item.pipeline-tab {
+        grid-area: pipeline-tab;
+
+        display: grid;
+        padding-top: 8px;
+        padding-bottom: 1px;
+
+        ul.nav-tabs.nav {
+          border: none;
+
+          li {
+            border-bottom: 3px solid #fff;
+            padding-left: 15px;
+            padding-right: 15px;
+            text-align: center;
+
+            &.active {
+              border-bottom-color: #1c64f2;
+            }
+
+            a {
+              &.active {
+                color: #1c64f2;
+              }
+
+              color: #6b7280;
+              border: none;
+              padding: 8px 16px 9px 16px;
+            }
+          }
+        }
+      }
+
+      .grid-item.pipeline-content {
+        grid-area: pipeline-content;
+      }
+    }
+  }
+}
