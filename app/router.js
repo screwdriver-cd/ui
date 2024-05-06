@@ -145,15 +145,6 @@ Router.map(function route() {
         this.route('pulls');
       }
     );
-
-    this.route(
-      'dashboard',
-      { path: '/dashboards' },
-      function dashboardsRoute() {
-        this.route('index', { path: '/' });
-        this.route('show', { path: '/:collection_id' });
-      }
-    );
   });
 });
 /* eslint-enable array-callback-return */
