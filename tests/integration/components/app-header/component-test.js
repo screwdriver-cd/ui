@@ -2,8 +2,10 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-
 import injectScmServiceStub from '../../../helpers/inject-scm';
+
+const fakeToken =
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwianRpIjoiNTA1NTQzYTUtNDhjZi00OTAyLWE3YTktZGY0NTI1ODFjYWM0IiwiaWF0IjoxNTIxNTcyMDE5LCJleHAiOjE1MjE1NzU2MTl9.ImS1ajOnksl1X74uL85jOjzdUXmBW3HfMdPfP1vjrmc';
 
 module('Integration | Component | app header', function (hooks) {
   setupRenderingTest(hooks);
@@ -45,7 +47,8 @@ module('Integration | Component | app header', function (hooks) {
       isAuthenticated: true,
       data: {
         authenticated: {
-          username: 'foofoo'
+          username: 'foofoo',
+          token: fakeToken
         }
       }
     });
@@ -66,7 +69,13 @@ module('Integration | Component | app header', function (hooks) {
   test('it calls the logout method on logout', async function (assert) {
     assert.expect(2);
     this.set('sessionMock', {
-      isAuthenticated: true
+      isAuthenticated: true,
+      data: {
+        authenticated: {
+          username: 'foofoo',
+          token: fakeToken
+        }
+      }
     });
     this.set('invalidateSession', () => {
       assert.ok(true);
@@ -88,7 +97,13 @@ module('Integration | Component | app header', function (hooks) {
     injectScmServiceStub(this);
 
     this.set('sessionMock', {
-      isAuthenticated: true
+      isAuthenticated: true,
+      data: {
+        authenticated: {
+          username: 'foofoo',
+          token: fakeToken
+        }
+      }
     });
     this.set('scmMock', this.owner.lookup('service:scm').getScms());
 

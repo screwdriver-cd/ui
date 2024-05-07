@@ -15,7 +15,7 @@ Router.map(function route() {
     'pipeline',
     { path: '/pipelines/:pipeline_id' },
     function secretsRoute() {
-      this.route('jobs', function eventsRoute() {
+      this.route('jobs', function jobsRoute() {
         this.route('index', { path: '/' });
       });
       this.route('events', function eventsRoute() {
@@ -124,6 +124,28 @@ Router.map(function route() {
   this.route('404', { path: '/*path' });
 
   this.route('pipeline-visualizer');
+
+  this.route('v2', function v2Route() {
+    this.route('index', { path: '/' });
+    this.route(
+      'pipeline',
+      { path: '/pipelines/:pipeline_id' },
+      function pipelinesRoute() {
+        this.route('builds');
+        this.route('secrets');
+        this.route('options');
+        this.route('metrics');
+
+        this.route('events', function eventsRoute() {
+          this.route('show', { path: '/:event_id' });
+        });
+        this.route('jobs', function jobsRoute() {
+          this.route('index', { path: '/' });
+        });
+        this.route('pulls');
+      }
+    );
+  });
 });
 /* eslint-enable array-callback-return */
 
