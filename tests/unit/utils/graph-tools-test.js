@@ -993,6 +993,213 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
+  /**
+   * 1. Should not derive event stages from the workflow graph
+   * 2. Should not include stages in the resulting decorated graph
+   */
+  test('it processes graph with stages nodes as regular workflow graph when stage metadata is not provided', function (assert) {
+    const GRAPH = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'component', id: 1 },
+        { name: 'publish', id: 2 },
+        {
+          name: 'stage@integration:setup',
+          id: 28,
+          stageName: 'integration',
+          virtual: true
+        },
+        { name: 'ci-deploy', id: 21, stageName: 'integration' },
+        { name: 'ci-test', id: 22, stageName: 'integration' },
+        { name: 'ci-certify', id: 23, stageName: 'integration' },
+        {
+          name: 'stage@integration:teardown',
+          id: 29,
+          stageName: 'integration',
+          virtual: true
+        }
+      ],
+      edges: [
+        { src: '~pr', dest: 'component' },
+        { src: '~commit', dest: 'component' },
+        { src: 'component', dest: 'publish' },
+        { src: 'publish', dest: 'stage@integration:setup' },
+        { src: 'stage@integration:setup', dest: 'ci-deploy' },
+        { src: 'ci-deploy', dest: 'ci-test' },
+        { src: 'ci-test', dest: 'ci-certify' },
+        { src: 'ci-certify', dest: 'stage@integration:teardown' }
+      ]
+    };
+
+    const JOBS = [
+      { id: 1, name: 'component', virtualJob: false },
+      { id: 2, name: 'publish', virtualJob: false },
+      { id: 21, name: 'ci-deploy', virtualJob: false },
+      { id: 22, name: 'ci-test', virtualJob: false },
+      { id: 23, name: 'ci-certify', virtualJob: false },
+      { id: 28, name: 'stage@integration:setup', virtualJob: true },
+      { id: 29, name: 'stage@integration:teardown', virtualJob: true }
+    ];
+
+    const expectedOutput = {
+      edges: [
+        {
+          dest: 'component',
+          from: {
+            x: 0,
+            y: 0
+          },
+          src: '~pr',
+          to: {
+            x: 1,
+            y: 0
+          }
+        },
+        {
+          dest: 'component',
+          from: {
+            x: 0,
+            y: 1
+          },
+          src: '~commit',
+          to: {
+            x: 1,
+            y: 0
+          }
+        },
+        {
+          dest: 'publish',
+          from: {
+            x: 1,
+            y: 0
+          },
+          src: 'component',
+          to: {
+            x: 2,
+            y: 0
+          }
+        },
+        {
+          dest: 'ci-test',
+          from: {
+            x: 3,
+            y: 0
+          },
+          src: 'ci-deploy',
+          to: {
+            x: 4,
+            y: 0
+          }
+        },
+        {
+          dest: 'ci-certify',
+          from: {
+            x: 4,
+            y: 0
+          },
+          src: 'ci-test',
+          to: {
+            x: 5,
+            y: 0
+          }
+        },
+        {
+          dest: 'ci-deploy',
+          from: {
+            x: 2,
+            y: 0
+          },
+          src: 'publish',
+          to: {
+            x: 3,
+            y: 0
+          }
+        }
+      ],
+      meta: {
+        height: 2,
+        width: 6
+      },
+      nodes: [
+        {
+          isDisabled: false,
+          name: '~pr',
+          pos: {
+            x: 0,
+            y: 0
+          }
+        },
+        {
+          isDisabled: false,
+          name: '~commit',
+          pos: {
+            x: 0,
+            y: 1
+          }
+        },
+        {
+          id: 1,
+          isDisabled: false,
+          name: 'component',
+          pos: {
+            x: 1,
+            y: 0
+          }
+        },
+        {
+          id: 2,
+          isDisabled: false,
+          name: 'publish',
+          pos: {
+            x: 2,
+            y: 0
+          }
+        },
+        {
+          id: 21,
+          isDisabled: false,
+          name: 'ci-deploy',
+          pos: {
+            x: 3,
+            y: 0
+          },
+          stageName: 'integration'
+        },
+        {
+          id: 22,
+          isDisabled: false,
+          name: 'ci-test',
+          pos: {
+            x: 4,
+            y: 0
+          },
+          stageName: 'integration'
+        },
+        {
+          id: 23,
+          isDisabled: false,
+          name: 'ci-certify',
+          pos: {
+            x: 5,
+            y: 0
+          },
+          stageName: 'integration'
+        }
+      ]
+    };
+
+    expectedOutput.stages = [];
+
+    const result = decorateGraph({
+      inputGraph: GRAPH,
+      stages: [],
+      jobs: JOBS
+    });
+
+    assert.deepEqual(result, expectedOutput);
+  });
+
   test('Non stage jobs should not be positioned inside stages', function (assert) {
     const GRAPH = {
       nodes: [

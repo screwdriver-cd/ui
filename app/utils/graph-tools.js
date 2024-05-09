@@ -403,13 +403,14 @@ const hasProcessedDest = (graph, name) => {
 const positionGraphNodes = graph => {
   const { nodes, edges, stages } = graph;
 
-  const stageNameToStageMap = stages
-    ? stages.reduce((map, s) => {
-        map.set(s.name, s);
+  const stageNameToStageMap =
+    stages && stages.length > 0
+      ? stages.reduce((map, s) => {
+          map.set(s.name, s);
 
-        return map;
-      }, new Map())
-    : null;
+          return map;
+        }, new Map())
+      : null;
 
   let y = [0]; // accumulator for column heights
 
