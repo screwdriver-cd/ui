@@ -1,0 +1,26 @@
+<div class="event-status" title={{this.event.status}}>
+  <div class="status">
+    <FaIcon
+      @icon={{this.icon.name}}
+      @fixedWidth="true"
+      @prefix={{this.icon.prefix}}
+      @spin={{this.icon.spin}}
+      @flip={{this.icon.flip}}
+    />
+  </div>
+  {{!-- {{this.event.status}} --}}
+</div>
+<div class="sha" title={{truncate this.event.sha}}>#{{truncate this.event.sha 7 true}} </div>
+<div class="branch" title={{this.event.baseBranch}}>
+  <FaIcon @icon="code-branch" />
+  <span class="branch-name">{{truncate this.event.baseBranch 7 true}}</span>
+</div>
+
+<div class="last-successful">{{if this.event.lastSuccessful "Last Successful"}} </div>
+<div class="label" title={{truncate this.event.meta.label}}>{{truncate this.event.meta.label}} </div>
+
+<div class="message" title={{this.event.commit.message}}>{{truncate this.event.commit.message 30}} </div>
+<div class="time">{{this.event.createTime}} | Duration </div>
+<div class="commit">@{{this.event.commit.author.name}} | @{{this.event.creator.username}}</div>
+
+{{yield}}

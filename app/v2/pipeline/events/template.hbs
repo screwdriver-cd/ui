@@ -1,2 +1,35 @@
 {{page-title "Events"}}
-{{outlet}}
+
+<div class="grid-item pipeline-events">
+  <div class="search-filter-bar">
+
+    <span class="search-filter">
+      <span class="search">
+        {{svg-jar "search" class="img"}}
+      </span>
+      <span class="filter">
+        <FaIcon @icon="filter" />
+      </span>
+    </span>
+
+    <span class="new-event">
+      <span>Start a new event</span>
+      <FaIcon @icon="plus" />
+    </span>
+  </div>
+
+  <div class="event-cards">
+  {{#each this.events as |event|}}
+    <NewuiEventCard @event={{event}} 
+     @selectedEventId={{this.selectedEventId}} 
+     @pipelineId={{this.pipelineId}}/>
+  {{/each}}
+  </div>
+  {{outlet}}
+</div>
+
+<div class="grid-item pipeline-workflowgraph">
+  <div class="workflowgraph-chart">
+    WorkflowGraph placeholder for event {{this.selectedEventId}} 
+  </div> 
+</div>
