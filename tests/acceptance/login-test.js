@@ -1,6 +1,6 @@
 import { visit, currentURL } from '@ember/test-helpers';
 import { module, test } from 'qunit';
-import { setupApplicationTest } from 'ember-qunit';
+import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
 import { getPageTitle } from 'ember-page-title/test-support';
 
 module('Acceptance | logins', function (hooks) {

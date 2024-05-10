@@ -4,7 +4,7 @@ import ModelReloaderMixin, {
   SHOULD_RELOAD_YES
 } from 'screwdriver-ui/mixins/model-reloader';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import DS from 'ember-data';
 
 let subject;

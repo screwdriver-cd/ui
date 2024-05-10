@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render, waitFor } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import ENV from 'screwdriver-ui/config/environment';

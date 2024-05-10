@@ -2,7 +2,7 @@ import { run } from '@ember/runloop';
 import { resolve } from 'rsvp';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import { settled } from '@ember/test-helpers';
 import sinon from 'sinon';
 

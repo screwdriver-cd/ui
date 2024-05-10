@@ -1,7 +1,7 @@
 import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import { run } from '@ember/runloop';
 
 module('Unit | Route | pipeline', function (hooks) {

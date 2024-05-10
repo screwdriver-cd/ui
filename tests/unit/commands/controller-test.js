@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import { run } from '@ember/runloop';
 
 module('Unit | Controller | Commands', function (hooks) {

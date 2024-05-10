@@ -1,7 +1,7 @@
 import { resolve } from 'rsvp';
 import { A } from '@ember/array';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import sinon from 'sinon';
 import Service from '@ember/service';
 

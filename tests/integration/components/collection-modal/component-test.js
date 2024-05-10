@@ -1,7 +1,7 @@
 import Service from '@ember/service';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import injectSessionStub from '../../../helpers/inject-session';

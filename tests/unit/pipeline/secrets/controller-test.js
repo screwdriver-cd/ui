@@ -1,6 +1,6 @@
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import { settled, waitUntil } from '@ember/test-helpers';
 import Pretender from 'pretender';
 let server;

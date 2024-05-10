@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { click, render, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';

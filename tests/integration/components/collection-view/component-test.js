@@ -1,7 +1,7 @@
 import { resolve, reject } from 'rsvp';
 import EmberObject, { computed } from '@ember/object';
 import { module, test, todo } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import {
   render,
   click,
