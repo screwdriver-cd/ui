@@ -23,7 +23,8 @@ module.exports = function (defaults) {
     },
 
     sassOptions: {
-      implementation: sass
+      implementation: sass,
+      includePaths: ['app/styles', 'app']
     },
 
     svg: {
