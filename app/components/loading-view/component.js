@@ -70,7 +70,8 @@ export default Component.extend({
     'Finding cat pictures...',
     'Calculating route through hyperspace...',
     'Solving for "X"...',
-    'Recounting votes...'
+    'Recounting votes...',
+    'Give an engineer a screwdriver, and they will conquer the world… one screw at a time.'
   ],
   /**
    * Get a random quote
