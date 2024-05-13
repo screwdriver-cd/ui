@@ -1,6 +1,7 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const sass = require('sass-embedded');
 
 module.exports = function (defaults) {
   const app = new EmberApp(defaults, {
@@ -19,6 +20,11 @@ module.exports = function (defaults) {
 
     fingerprint: {
       exclude: ['supplementary_config', 'unknown_user']
+    },
+
+    sassOptions: {
+      implementation: sass,
+      includePaths: ['app/styles', 'app']
     },
 
     svg: {
