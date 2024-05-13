@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import Pretender from 'pretender';
 import Service from '@ember/service';
 import sinon from 'sinon';

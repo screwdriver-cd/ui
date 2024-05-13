@@ -1,7 +1,7 @@
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import Service from '@ember/service';
 import { resolve } from 'rsvp';
 

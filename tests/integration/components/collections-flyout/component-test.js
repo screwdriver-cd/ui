@@ -3,7 +3,7 @@ import Service from '@ember/service';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render, click, findAll, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';

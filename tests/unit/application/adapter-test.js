@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import Pretender from 'pretender';
 import DS from 'ember-data';
 let server;

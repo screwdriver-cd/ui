@@ -1,6 +1,6 @@
 import { visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
-import { setupApplicationTest } from 'ember-qunit';
+import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 import { hasCollections } from 'screwdriver-ui/tests/mock/collections';

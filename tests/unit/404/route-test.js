@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 
 module('Unit | Route | 404', function (hooks) {
   setupTest(hooks);

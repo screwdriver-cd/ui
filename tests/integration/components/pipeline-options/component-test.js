@@ -8,7 +8,7 @@ import Pretender from 'pretender';
 import Service from '@ember/service';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import injectSessionStub from '../../../helpers/inject-session';
 
 /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */

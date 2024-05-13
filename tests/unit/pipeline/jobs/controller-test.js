@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 import { A as newArray } from '@ember/array';
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import { settled, waitUntil } from '@ember/test-helpers';
 import Pretender from 'pretender';
 import Service from '@ember/service';

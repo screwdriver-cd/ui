@@ -1,7 +1,7 @@
 import { resolve } from 'rsvp';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render, click, fillIn, triggerEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 

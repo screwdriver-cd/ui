@@ -1,6 +1,6 @@
 import { resolve, reject } from 'rsvp';
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render, click, findAll } from '@ember/test-helpers';
 import EmberObject from '@ember/object';
 import hbs from 'htmlbars-inline-precompile';

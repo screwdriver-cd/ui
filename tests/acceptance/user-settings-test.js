@@ -1,6 +1,6 @@
 import { currentURL, visit, fillIn, click } from '@ember/test-helpers';
 import { module, test } from 'qunit';
-import { setupApplicationTest } from 'ember-qunit';
+import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import Pretender from 'pretender';
 import { getPageTitle } from 'ember-page-title/test-support';

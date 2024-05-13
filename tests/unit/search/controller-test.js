@@ -1,6 +1,6 @@
 import { resolve } from 'rsvp';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import EmberObject from '@ember/object';
 import injectSessionStub from '../../helpers/inject-session';
 

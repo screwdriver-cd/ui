@@ -1,4 +1,4 @@
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import { module, test } from 'qunit';
 import { later } from '@ember/runloop';
 import sinon from 'sinon';

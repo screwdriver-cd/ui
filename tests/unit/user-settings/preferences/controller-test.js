@@ -1,6 +1,6 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest } from 'screwdriver-ui/tests/helpers';
 import { settled } from '@ember/test-helpers';
 import { Promise as EmberPromise } from 'rsvp';
 import sinon from 'sinon';
