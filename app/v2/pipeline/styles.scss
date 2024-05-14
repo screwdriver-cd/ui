@@ -4,6 +4,7 @@
   .pipeline-content {
     display: grid;
     height: 100%;
+    min-width: 300px;
 
     grid-template-columns: 50px;
     grid-template-rows: auto;
@@ -18,13 +19,11 @@
       grid-template-areas:
         'pipeline-header pipeline-header'
         'pipeline-tab pipeline-tab'
-        'pipeline-events pipeline-workflowgraph'
-
+        'pipeline-content pipeline-workflowgraph'
         'pipeline-jobs pipeline-jobs'
         'pipeline-options pipeline-options'
         'pipeline-secrets pipeline-secrets'
         'pipeline-metrics pipeline-metrics';
-
 
       grid-template-rows: 80px 52px 1fr;
       grid-template-columns: 2fr 8fr;
@@ -69,77 +68,71 @@
       .pipeline-content {
         grid-area: pipeline-content;
 
-        .grid-item.pipeline-events {
-          grid-area: pipeline-events;
+        border: 1px solid #cbd5e1;
+        background-color: white;
 
-          border: 1px solid #CBD5E1;
-          background-color: white;
+        // scroll
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
 
-          // scroll
-          height: 100vh;
+        .search-filter-bar {
           display: flex;
-          flex-direction: column;
-          overflow: hidden;
+          padding: 12px 24px;
+          justify-content: space-between;
 
-          .search-filter-bar {
+          .search-filter {
             display: flex;
-            padding: 12px 24px;
-            justify-content: space-between;
-            
-            .search-filter {
-              display: flex;
-              align-items: center;
-              gap: 12px;
+            align-items: center;
+            gap: 12px;
 
-              .search { }
-              .filter { }
+            .search {
             }
-
-
-            .new-event {
-              cursor: pointer;
-            }
-
-            .img {
-              width: 18px;
-              height: 18px;
+            .filter {
             }
           }
 
+          .new-event {
+            cursor: pointer;
+          }
 
-          .event-cards {
-            overflow-y: scroll;
-
-            .event-card {
-              border-top: 1px solid #CBD5E1;
-            }
-            .event-card:first-child { 
-              border-top: none; 
-            }
-            .event-card { 
-              border-top: 1px solid #CBD5E1; 
-            }
+          .img {
+            width: 18px;
+            height: 18px;
           }
         }
 
-        .grid-item.pipeline-jobs {
-          grid-area: pipeline-jobs;
-          grid-column: 1 / -1;
-        }
-        .grid-item.pipeline-options {
-          grid-area: pipeline-options;
-          grid-column: 1 / -1;
-        }
-        .grid-item.pipeline-secrets {
-          grid-area: pipeline-secrets;
-          grid-column: 1 / -1;
-        }
-        .grid-item.pipeline-metrics {
-          grid-area: pipeline-metrics;
-          grid-column: 1 / -1;
+        .event-cards {
+          overflow-y: scroll;
+
+          .event-card {
+            border-top: 1px solid #cbd5e1;
+          }
+          .event-card:first-child {
+            border-top: none;
+          }
+          .event-card {
+            border-top: 1px solid #cbd5e1;
+          }
         }
       }
-
+      .pipeline-jobs {
+        grid-area: pipeline-jobs;
+        grid-column: 1 / -1;
+      }
+      .pipeline-options {
+        grid-area: pipeline-options;
+        grid-column: 1 / -1;
+      }
+      .pipeline-secrets {
+        grid-area: pipeline-secrets;
+        grid-column: 1 / -1;
+      }
+      .pipeline-metrics {
+        grid-area: pipeline-metrics;
+        grid-column: 1 / -1;
+      }
     }
   }
 }
