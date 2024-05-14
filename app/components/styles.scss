@@ -1,0 +1,5 @@
+@use 'pipeline/styles' as pipeline;
+
+@mixin styles {
+  @include pipeline.styles;
+}

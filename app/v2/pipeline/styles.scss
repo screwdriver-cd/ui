@@ -1,36 +1,19 @@
-.new-ui {
-  // to accommodate and offset old ui margins
-  margin-right: -15px;
-  margin-left: -15px;
-  height: 100%;
-  // height: 100vh;
+@use 'screwdriver-colors' as colors;
 
-  .grid-container {
+@mixin styles {
+  .pipeline-content {
     display: grid;
     height: 100%;
-
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
 
     grid-template-columns: 50px;
     grid-template-rows: auto;
 
-    grid-template-areas: 'left right';
+    grid-template-areas: 'pipeline-nav pipeline-main';
 
-    .grid-item.left {
-      background-color: #fff;
-      border-left: 1px solid #f2f2f2;
-      border-right: 1px solid #f2f2f2;
-
-      grid-area: left;
-    }
-
-    .grid-item.right {
-      grid-area: right;
+    .pipeline-main-content {
+      grid-area: pipeline-main;
 
       display: grid;
-      grid-column-gap: 0px;
-      grid-row-gap: 0px;
 
       grid-template-areas:
         'pipeline-header  pipeline-header'
@@ -40,11 +23,11 @@
       grid-template-rows: 80px 52px 1fr;
       grid-template-columns: 2fr 8fr;
 
-      .grid-item.pipeline-header {
+      .pipeline-header {
         grid-area: pipeline-header;
       }
 
-      .grid-item.pipeline-tab {
+      .pipeline-tab {
         grid-area: pipeline-tab;
 
         display: grid;
@@ -55,9 +38,9 @@
           border: none;
 
           li {
-            border-bottom: 3px solid #fff;
-            padding-left: 15px;
-            padding-right: 15px;
+            border-bottom: 3px solid colors.$sd-white;
+            padding-left: 1rem;
+            padding-right: 1rem;
             text-align: center;
 
             &.active {
@@ -77,7 +60,7 @@
         }
       }
 
-      .grid-item.pipeline-content {
+      .pipeline-content {
         grid-area: pipeline-content;
       }
     }

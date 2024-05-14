@@ -1,34 +1,29 @@
 {{page-title "Pipeline"}}
 {{!-- > pipeline  --}}
 
-<div class="new-ui">
-  <div class="grid-container">
-    <div class="grid-item left">
-      <NewuiPipelineNav />
+<div class="pipeline-content">
+  <Pipeline::Nav />
+  <div class="pipeline-main-content">
+    <div class="pipeline-header">
+      <PipelineHeader
+        @pipeline={{this.pipeline}}
+        @collections={{this.collections}}
+        @addToCollection={{action "addToCollection"}}
+      />
     </div>
-    <div class="grid-item right">
-      <div class="grid-item pipeline-header">
-        <PipelineHeader
-          @pipeline={{this.pipeline}}
-          @collections={{this.collections}}
-          @addToCollection={{action "addToCollection"}}
-        />
-      </div>
 
-      <div class="grid-item pipeline-tab">
-        <BsNav @type="tabs" as |nav|>
-          <nav.item>
-            <nav.link-to @route="v2.pipeline.events">Events</nav.link-to>
-          </nav.item>
-          <nav.item>
-            <nav.link-to @route="v2.pipeline.pulls">Pull Requests</nav.link-to>
-          </nav.item>
-          <nav.item>
-            <nav.link-to @route="v2.pipeline.jobs">Jobs</nav.link-to>
-          </nav.item>
-        </BsNav>
-      </div>
-
+    <div class="pipeline-tab">
+      <BsNav @type="tabs" as |nav|>
+        <nav.item>
+          <nav.link-to @route="v2.pipeline.events">Events</nav.link-to>
+        </nav.item>
+        <nav.item>
+          <nav.link-to @route="v2.pipeline.pulls">Pull Requests</nav.link-to>
+        </nav.item>
+        <nav.item>
+          <nav.link-to @route="v2.pipeline.jobs">Jobs</nav.link-to>
+        </nav.item>
+      </BsNav>
     </div>
   </div>
 </div>

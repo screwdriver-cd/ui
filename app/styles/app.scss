@@ -1,11 +1,15 @@
+@use 'variables';
+@use 'components/styles' as components;
+@use 'v2/pipeline/styles' as pipeline;
+
 $animate: 300ms;
 $animate-delay: 250ms;
 $animate-done: 600ms;
-$weight-normal: 400;
-$weight-bold: 600;
+$weight-normal: variables.$weight-normal;
+$weight-bold: variables.$weight-bold;
 
-$app-header-height: 55px;
-$nav-banner-height: 42px;
+$app-header-height: variables.$app-header-height;
+$nav-banner-height: variables.$nav-banner-height;
 
 $pipeline-header-height-min: 76px;
 $pipeline-header-height-max: 134px;
@@ -74,7 +78,6 @@ $pipeline-header-height-max: 134px;
 @import 'app/styles/user-settings';
 @import 'app/styles/create';
 @import 'app/styles/commands-templates';
-@import 'app/styles/new-ui';
 
 .container {
   box-sizing: border-box;
@@ -194,13 +197,16 @@ a {
 
 $grid-float-breakpoint: 880px;
 
-body {
-  font-family: Helvetica, Arial, sans-serif;
-  font-weight: $weight-normal;
-}
-
 html {
-  font-size: 14px;
+  font-size: variables.$font-size;
+
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: variables.$weight-normal;
+
+    @include components.styles;
+    @include pipeline.styles;
+  }
 }
 
 $ember-power-select-border-color: #64a5ed;

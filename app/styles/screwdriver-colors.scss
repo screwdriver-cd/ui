@@ -1,3 +1,5 @@
+@use 'denali-colors' as denali;
+
 $sd-dark-blue: #0b5289;
 $sd-light-blue: #0071bc;
 $sd-lighter-blue: #63a4ee;
@@ -41,8 +43,8 @@ $sd-failure: #ff4b00;
 $sd-aborted: $sd-failure;
 $sd-failure-gradient-start: #f0162f;
 $sd-failure-gradient-end: #f80e5d;
-$sd-no-build: $grey-600;
-$sd-disabled: $grey-600;
+$sd-no-build: denali.$grey-600;
+$sd-disabled: denali.$grey-600;
 $sd-empty: #e8e8e8;
 
 $sd-running: #0f69ff;
