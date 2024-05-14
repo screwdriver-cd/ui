@@ -1,0 +1,5 @@
+@use 'nav/styles' as nav;
+
+@mixin styles {
+  @include nav.styles;
+}
