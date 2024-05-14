@@ -19,11 +19,7 @@
       grid-template-areas:
         'pipeline-header pipeline-header'
         'pipeline-tab pipeline-tab'
-        'pipeline-content pipeline-workflowgraph'
-        'pipeline-jobs pipeline-jobs'
-        'pipeline-options pipeline-options'
-        'pipeline-secrets pipeline-secrets'
-        'pipeline-metrics pipeline-metrics';
+        'pipeline-content pipeline-workflowgraph';
 
       grid-template-rows: 80px 52px 1fr;
       grid-template-columns: 366px 8fr;
@@ -116,22 +112,6 @@
             border-top: 1px solid #cbd5e1;
           }
         }
-      }
-      .pipeline-jobs {
-        grid-area: pipeline-jobs;
-        grid-column: 1 / -1;
-      }
-      .pipeline-options {
-        grid-area: pipeline-options;
-        grid-column: 1 / -1;
-      }
-      .pipeline-secrets {
-        grid-area: pipeline-secrets;
-        grid-column: 1 / -1;
-      }
-      .pipeline-metrics {
-        grid-area: pipeline-metrics;
-        grid-column: 1 / -1;
       }
     }
   }
