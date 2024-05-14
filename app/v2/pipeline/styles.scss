@@ -4,7 +4,6 @@
   .pipeline-content {
     display: grid;
     height: 100%;
-    min-width: 300px;
 
     grid-template-columns: 50px;
     grid-template-rows: auto;
@@ -13,7 +12,7 @@
 
     .pipeline-main-content {
       grid-area: pipeline-main;
-
+      min-width: 300px;
       display: grid;
 
       grid-template-areas:

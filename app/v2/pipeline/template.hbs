@@ -9,7 +9,7 @@
         @addToCollection={{action "addToCollection"}}
       />
     </div>
-
+    {{#if this.isEventsPullsJobsRoute}}
     <div class="pipeline-tab">
       <BsNav @type="tabs" as |nav|>
         <nav.item>
@@ -23,6 +23,7 @@
         </nav.item>
       </BsNav>
     </div>
+    {{/if}}
     {{outlet}}
   </div>
 </div>
