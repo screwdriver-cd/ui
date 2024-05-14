@@ -5,7 +5,7 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   router: service(),
-  classNames: ["event-card"],
+  classNames: ['event-card'],
   classNameBindings: ['highlighted'],
   highlighted: false,
   icon: computed('event.status', {
@@ -14,25 +14,20 @@ export default Component.extend({
     }
   }),
 
-  // click() {
-  //   // redirect to event id route and highlight when eventId match
-  //   this.toggleProperty('highlighted');
-  // },
-
   click() {
     // redirect to event id route and highlight when eventId match
-    // this.toggleProperty('highlighted');
     const eventId = this.event.id;
-    const pipelineId = this.pipelineId;
+    const { pipelineId } = this;
 
     this.router.transitionTo(`/v2/pipelines/${pipelineId}/events/${eventId}`);
   },
 
   didReceiveAttrs() {
+    this._super();
     const eventId = this.event.id;
-    const currentEventId =  this.selectedEventId;
+    const currentEventId = this.selectedEventId;
 
-    if (eventId === currentEventId) {      
+    if (eventId === currentEventId) {
       this.set('highlighted', true);
     } else {
       this.set('highlighted', false);
