@@ -2,57 +2,62 @@
   padding: 12px 24px;
   cursor: pointer;
 
-  display: grid;
-  grid-template-areas: 
-  "event-status sha branch last-successful label"
-  "message message message message message"
-  "time time time time time"
-  "commit commit commit commit commit";
-
   font-family: Helvetica, Arial, sans-serif;
 
   &.highlighted {
     background-color: black;
     color: white;
-  }
 
-  .event-status {
-    grid-area: event-status;
-  }
-
-  .branch {
-    grid-area: branch;
-
-    .branch-name {
-
+    .last-successful {
+      color: darkblue;
+      background-color: var(--blue-100, #020f1c);
     }
   }
 
-  .message {
-    grid-area: message;
-    grid-column: 1 / -1;
+  .event-card-first-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
 
+    .event-status {
+    }
+
+    .sha {
+    }
+
+    .branch {
+      .branch-name {
+      }
+    }
+
+    .last-successful {
+      border-radius: 6px;
+      padding: 0 8px;
+      background: var(--blue-100, #e1effe);
+    }
+  }
+
+  .label {
+  }
+
+  .message {
     font-size: 14px;
     font-style: normal;
     font-weight: 700;
     line-height: 21px;
     grid-column: 1 / -1;
-
   }
 
   .time {
-    grid-area: time;
-    grid-column: 1 / -1;
-
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
     line-height: 150%; /* 18px */
-
   }
 
-  .commit {
-    grid-area: commit;
-    grid-column: 1 / -1;
+  .by {
+  }
+
+  .parameters-section {
   }
 }

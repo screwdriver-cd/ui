@@ -3,7 +3,6 @@ import RSVP from 'rsvp';
 import { inject as service } from '@ember/service';
 
 export default class NewPipelineEventsRoute extends Route {
-
   @service
   store;
 
@@ -26,8 +25,14 @@ export default class NewPipelineEventsRoute extends Route {
     const { pipeline_id: pipelineId } = this.paramsFor('v2.pipeline');
     const { event_id: eventId } = this.paramsFor('v2.pipeline.events.show');
 
+    // static
     controller.pipelineId = pipelineId;
-    controller.selectedEventId = eventId;
-    controller.events = events;
+
+    // dynamic
+    // controller.selectedEventId = eventId;
+    // controller.events = events;
+
+    controller.set('selectedEventId', eventId);
+    controller.set('events', events);
   }
 }

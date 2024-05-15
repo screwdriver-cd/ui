@@ -22,7 +22,9 @@
   {{#each this.events as |event|}}
     <NewuiEventCard @event={{event}} 
      @selectedEventId={{this.selectedEventId}} 
-     @pipelineId={{this.pipelineId}}/>
+     @pipelineId={{this.pipelineId}}
+     @lastSuccessful={{this.lastSuccessful}}
+    />
   {{/each}}
   </div>
   {{outlet}}
