@@ -72,7 +72,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
       '.event-info-container .info-col .title'
     );
     const $columnValues = this.element.querySelectorAll(
-      '.event-info-container .info-col .title ~ :nth-child(3)'
+      '.event-info-container .info-col .title ~ :nth-child(2)'
     );
     const $links = this.element.querySelectorAll(
       '.event-info-container .info-col a'
