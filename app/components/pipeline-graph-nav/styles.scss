@@ -1,4 +1,4 @@
-$pipeline-graph-nav-height: 156px;
+$pipeline-graph-nav-height: 166px;
 
 & {
   padding: 15px 0 15px 10px;
@@ -112,7 +112,7 @@ $pipeline-graph-nav-height: 156px;
 
   .event-info-container {
     display: flex;
-    height: 4.5rem;
+    height: 6rem;
     margin: 15px 0;
     overflow: scroll;
 
@@ -131,6 +131,8 @@ $pipeline-graph-nav-height: 156px;
       }
 
       &.info-col-commit {
+        display: flex;
+        flex-direction: column;
         min-width: 7rem;
       }
 
@@ -141,7 +143,8 @@ $pipeline-graph-nav-height: 156px;
         min-width: 10rem;
 
         .commit-message {
-          overflow: scroll;
+          overflow-y: scroll;
+          word-break: break-all;
         }
       }
 
@@ -152,17 +155,31 @@ $pipeline-graph-nav-height: 156px;
 
         .branch-name {
           height: 100%;
-          overflow: scroll;
+          overflow-y: scroll;
           word-break: break-all;
         }
       }
 
       &.info-col-status {
+        display: flex;
+        flex-direction: column;
         min-width: 8.5rem;
       }
 
+      &.info-col-committer {
+        display: flex;
+        flex-direction: column;
+      }
+
       &.info-col-build-date {
+        display: flex;
+        flex-direction: column;
         min-width: 9rem;
+      }
+
+      &.info-col-build-duration {
+        display: flex;
+        flex-direction: column;
       }
 
       &.info-col-label {
