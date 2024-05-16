@@ -71,7 +71,6 @@
       <span class="title">
         Commit
       </span>
-      <br />
       <span>
         <a
           class={{if
@@ -88,7 +87,6 @@
       <span class="title">
         Message
       </span>
-      <br />
       <div class="commit-message" title={{this.selectedEventObj.commit.message}}>
         {{this.selectedEventObj.truncatedMessage}}
       </div>
@@ -97,7 +95,6 @@
       <span class="title">
         Branch
       </span>
-      <br />
       <span class="branch-name">
         {{this.selectedEventObj.baseBranch}}
       </span>
@@ -106,7 +103,6 @@
       <span class="title">
         Status
       </span>
-      <br />
       <span class="status">
         <FaIcon
           @icon={{this.icon.name}}
@@ -122,7 +118,6 @@
       <span class="title">
         Committer
       </span>
-      <br />
       <span>
         <a href={{this.selectedEventObj.commit.author.url}}>
           {{this.selectedEventObj.commit.author.name}}
@@ -133,7 +128,6 @@
       <span class="title">
         Start Date
       </span>
-      <br />
       <span>
         {{this.startDate.content}}
       </span>
@@ -142,7 +136,6 @@
       <span class="title">
         Duration
       </span>
-      <br />
       <span>
         {{this.selectedEventObj.durationText}}
       </span>

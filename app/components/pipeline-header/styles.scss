@@ -80,6 +80,9 @@
       .branch-dropdown {
         padding-left: 10px;
         padding-right: 10px;
+        overflow: scroll;
+        max-width: 40rem;
+        max-height: calc(100vh - 120px);
 
         .branch-item {
           padding: 1px 0;
