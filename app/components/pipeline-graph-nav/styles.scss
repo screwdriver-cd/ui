@@ -114,7 +114,7 @@ $pipeline-graph-nav-height: 166px;
     display: flex;
     height: 6rem;
     margin: 15px 0;
-    overflow: scroll;
+    overflow: auto;
 
     .info-col {
       max-height: 4rem;
@@ -143,7 +143,7 @@ $pipeline-graph-nav-height: 166px;
         min-width: 10rem;
 
         .commit-message {
-          overflow-y: scroll;
+          overflow: auto;
           word-break: break-all;
         }
       }
@@ -155,7 +155,7 @@ $pipeline-graph-nav-height: 166px;
 
         .branch-name {
           height: 100%;
-          overflow-y: scroll;
+          overflow: auto;
           word-break: break-all;
         }
       }
@@ -189,7 +189,7 @@ $pipeline-graph-nav-height: 166px;
 
         .customize-label {
           height: 100%;
-          overflow: scroll;
+          overflow: auto;
           word-break: break-all;
         }
       }
