@@ -63,7 +63,7 @@
 
         .branch {
           padding-left: 0.25rem;
-          overflow-x: scroll;
+          overflow: auto;
         }
 
         .dropdown-toggle {
@@ -80,7 +80,7 @@
       .branch-dropdown {
         padding-left: 10px;
         padding-right: 10px;
-        overflow: scroll;
+        overflow: auto;
         max-width: 40rem;
         max-height: calc(100vh - 120px);
 
