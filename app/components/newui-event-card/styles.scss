@@ -4,9 +4,19 @@
 
   font-family: Helvetica, Arial, sans-serif;
 
+  // darkmode
   &.highlighted {
     background-color: black;
     color: white;
+
+    .sha {
+      > a {
+        color: white;
+        background-color: #007bff;
+        border-radius: 3px;
+        padding: 3px 5px;
+      }
+    }
 
     .last-successful {
       color: darkblue;
@@ -16,13 +26,23 @@
 
   .event-card-first-row {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
 
     .event-status {
     }
 
     .sha {
+      > a {
+        border-radius: 3px;
+        padding: 3px 5px;
+      }
+
+      &:has(> .latest-commit) {
+        border-color: #007bff;
+        border-style: dotted;
+        border-width: 2px;
+      }
     }
 
     .branch {
@@ -38,6 +58,7 @@
   }
 
   .label {
+    color: #9a9a9a;
   }
 
   .message {
@@ -48,7 +69,8 @@
     grid-column: 1 / -1;
   }
 
-  .time {
+  .time,
+  .duration {
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -59,5 +81,9 @@
   }
 
   .parameters-section {
+  }
+
+  .builds > span {
+    padding-left: 12px;
   }
 }
