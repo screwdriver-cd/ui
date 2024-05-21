@@ -3,6 +3,8 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import EmberObject from '@ember/object';
+import { Promise as EmberPromise } from 'rsvp';
+import Service from '@ember/service';
 
 module('Integration | Component | newui-event-card', function (hooks) {
   setupRenderingTest(hooks);
@@ -10,6 +12,19 @@ module('Integration | Component | newui-event-card', function (hooks) {
   test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
+
+    const userSettingsStub = Service.extend({
+      getUserPreference() {
+        return new EmberPromise(resolve => {
+          resolve({
+            timestampFormat: 'UTC'
+          });
+        });
+      }
+    });
+
+    this.owner.unregister('service:userSettings');
+    this.owner.register('service:userSettings', userSettingsStub);
 
     const mockEvent = EmberObject.create({
       id: 786169,
@@ -142,7 +157,7 @@ module('Integration | Component | newui-event-card', function (hooks) {
     assert
       .dom(this.element)
       .hasText(
-        '# main Started 01/29/2024, 12:00 PM PST Duration: Started and committed by: Alan'
+        '# main Started 01/29/2024, 08:00 PM UTC Duration: Started and committed by: Alan'
       );
   });
 });
