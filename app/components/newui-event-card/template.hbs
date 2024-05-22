@@ -122,4 +122,14 @@
   </div>
 </div>
 {{/if}}
+<div class="builds">Builds: 
+  {{#if (await this.hasAllSuccessBuilds)}}
+    <span>✅</span>
+  {{else}}
+    <br/>
+    <span>Unstable/Failure: {{await this.numberOfUnstableOrFailureBuilds}}</span>
+    <br/>
+    <span>Running: {{await this.numberOfRunningBuilds}}</span> 
+  {{/if}}
+</div>
 {{yield}}

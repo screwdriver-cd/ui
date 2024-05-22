@@ -9,6 +9,6 @@ export default class NewPipelineEventsShowRoute extends Route {
     const { event_id: eventId } = this.paramsFor('v2.pipeline.events.show');
     const eventsController = this.controllerFor('v2.pipeline.events');
 
-    eventsController.selectedEventId = eventId;
+    eventsController.set('selectedEventId', eventId);
   }
 }

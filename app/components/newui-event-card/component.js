@@ -4,7 +4,6 @@ import { inject as service } from '@ember/service';
 import { bool } from '@ember/object/computed';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { getTimestamp } from 'screwdriver-ui/utils/timestamp-format';
-import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
 
 export default Component.extend({
   router: service(),
@@ -124,9 +123,35 @@ export default Component.extend({
     }
   ),
 
-  isInlineParameters: computed('numberOfParameters', {
-    get() {
-      return this.numberOfParameters < MAX_NUM_OF_PARAMETERS_ALLOWED;
+  numberOfUnstableOrFailureBuilds: computed('event.builds.@each.status', {
+    async get() {
+      const list = await this.event.builds;
+
+      const targetEvents = list.filter(e =>
+        ['UNSTABLE', 'FAILURE', 'ABORTED'].includes(e.status)
+      );
+
+      return targetEvents.length;
+    }
+  }),
+
+  numberOfRunningBuilds: computed('event.builds.@each.status', {
+    async get() {
+      const list = await this.event.builds;
+
+      const targetEvents = list.filter(e =>
+        ['QUEUED', 'RUNNING', 'UNKNOWN'].includes(e.status)
+      );
+
+      return targetEvents.length;
+    }
+  }),
+
+  hasAllSuccessBuilds: computed('event.builds.@each.status', {
+    async get() {
+      const list = await this.event.builds;
+
+      return list.every(e => e.status === 'SUCCESS');
     }
   }),
 
