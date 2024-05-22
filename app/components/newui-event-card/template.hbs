@@ -1,0 +1,125 @@
+<div class="event-card-first-row">
+  <div class="event-status" title={{this.event.status}}>
+    <div class="status">
+      <FaIcon
+        @icon={{this.icon.name}}
+        @fixedWidth="true"
+        @prefix={{this.icon.prefix}}
+        @spin={{this.icon.spin}}
+        @flip={{this.icon.flip}}
+      />
+    </div>
+  </div>
+  <div class="sha" title={{truncate this.event.sha}}>
+    <a
+      class={{if (eq this.event.sha this.latestCommit.sha) "latest-commit"}}
+      href={{this.event.commit.url}}
+    >#{{this.event.truncatedSha}}
+    </a>
+  </div>
+  <div class="branch" title={{this.event.baseBranch}}>
+    <FaIcon @icon="code-branch" />
+    <span class="branch-name">{{truncate this.event.baseBranch 7 true}}</span>
+  </div>
+  {{#if (eq this.event.id this.lastSuccessful)}}
+    <div class="last-successful">Last Successful</div>
+  {{/if}}
+</div>
+
+<div class="message" title={{this.event.commit.message}}>{{this.event.truncatedMessage}} </div>
+
+{{#if this.event.label}}
+<div class="label">{{linkify this.event.label target="_blank" rel="nofollow" urlLength=30}}</div>{{/if}}
+
+<div class="time">Started {{this.startDate.content}}</div>
+<div class="duration">Duration: {{this.event.durationText}}</div>
+<div class="by">
+  {{#if this.isCommitterDifferent}}
+    <span>
+      Committed by:
+    </span>
+    <a href={{this.event.commit.author.url}}>
+      {{this.event.commit.author.name}}
+    </a>
+    <br />
+    <span>
+      Started by:
+    </span>
+    {{#if this.isExternalTrigger}}
+      {{#if this.externalBuild.build_id}}
+        <LinkTo
+          @route="pipeline.build"
+          @models={{array this.externalBuild.pipeline_id this.externalBuild.build_id}}
+        >
+          External Trigger
+        </LinkTo>
+      {{else}}
+        <LinkTo @route="pipeline" @model={{this.externalBuild.pipeline_id}}>
+          External Trigger
+        </LinkTo>
+      {{/if}}
+    {{else}}
+      <a href={{this.event.creator.url}}>
+        {{this.event.creator.name}}
+      </a>
+    {{/if}}
+  {{else}}
+    {{#if this.isSubscribedEvent}}
+      <span>
+        Started by subscribed event:
+      </span>
+      <a href={{this.event.meta.subscribedSourceUrl}}>
+        Subscribed Source
+      </a>
+    {{else}}
+      <span>
+        Started and committed by:
+      </span>
+      <a href={{this.event.creator.url}}>
+        {{this.event.creator.name}}
+      </a>
+    {{/if}}
+  {{/if}}
+</div>
+
+{{#if (get-length this.event.meta.parameters)}}
+<div class="parameters-section">
+  {{#if this.isShowingModal}}
+    <ModalDialog
+      @targetAttachment="center"
+      @translucentOverlay={{true}}
+      @clickOutsideToClose={{true}}
+      @onClickOverlay={{action "toggleParametersPreview"}}
+      @containerClass="detached-confirm-dialog"
+    >
+      <h3>
+        Parameters:
+      </h3>
+      <PipelineParameterizedBuild
+        @pipeline={{this.pipeline}}
+        @showSubmitButton={{true}}
+        @buildPipelineParameters={{this.pipelineParameters}}
+        @buildJobParameters={{this.jobParameters}}
+        @submitButtonText="Close"
+        @onSave={{action "toggleParametersPreview"}}
+      />
+    </ModalDialog>
+  {{/if}}
+
+  <div class="parameters">
+    <span>
+      <button
+        class="btn btn-primary btn-xs"
+        type="button"
+        onClick={{action "toggleParametersPreview"}}
+      >
+        Parameters...
+        <span class="badge">
+          {{this.numberOfParameters}}
+        </span>
+      </button>
+    </span>
+  </div>
+</div>
+{{/if}}
+{{yield}}

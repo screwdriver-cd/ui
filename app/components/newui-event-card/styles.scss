@@ -1,0 +1,87 @@
+& {
+  padding: 12px 24px;
+  cursor: pointer;
+
+  // darkmode
+  &.highlighted {
+    background-color: black;
+    color: white;
+
+    .sha {
+      > a {
+        color: white;
+        background-color: #007bff;
+        border-radius: 3px;
+        padding: 3px 5px;
+      }
+    }
+
+    .last-successful {
+      color: darkblue;
+      background-color: var(--blue-100, #020f1c);
+    }
+  }
+
+  .event-card-first-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .event-status {
+    }
+
+    .sha {
+      > a {
+        border-radius: 3px;
+        padding: 3px 5px;
+      }
+
+      &:has(> .latest-commit) {
+        border-color: #007bff;
+        border-style: dotted;
+        border-width: 2px;
+      }
+    }
+
+    .branch {
+      .branch-name {
+      }
+    }
+
+    .last-successful {
+      border-radius: 6px;
+      padding: 0 8px;
+      background: var(--blue-100, #e1effe);
+    }
+  }
+
+  .label {
+    color: #9a9a9a;
+  }
+
+  .message {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    // line-height: 21px;
+    grid-column: 1 / -1;
+  }
+
+  .time,
+  .duration {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 18px */
+  }
+
+  .by {
+  }
+
+  .parameters-section {
+  }
+
+  .builds > span {
+    padding-left: 12px;
+  }
+}

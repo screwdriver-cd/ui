@@ -12,16 +12,16 @@
 
     .pipeline-main-content {
       grid-area: pipeline-main;
-
+      min-width: 300px;
       display: grid;
 
       grid-template-areas:
-        'pipeline-header  pipeline-header'
-        'pipeline-tab     pipeline-tab'
+        'pipeline-header pipeline-header'
+        'pipeline-tab pipeline-tab'
         'pipeline-content pipeline-workflowgraph';
 
       grid-template-rows: 80px 52px 1fr;
-      grid-template-columns: 2fr 8fr;
+      grid-template-columns: 366px 8fr;
 
       .pipeline-header {
         grid-area: pipeline-header;
@@ -62,6 +62,55 @@
 
       .pipeline-content {
         grid-area: pipeline-content;
+
+        border: 1px solid #cbd5e1;
+        background-color: white;
+
+        // scroll
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .search-filter-bar {
+          display: flex;
+          padding: 12px 24px;
+          justify-content: space-between;
+
+          .search-filter {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .search {
+            }
+            .filter {
+            }
+          }
+
+          .new-event {
+            cursor: pointer;
+          }
+
+          .img {
+            width: 18px;
+            height: 18px;
+          }
+        }
+
+        .event-cards {
+          overflow-y: scroll;
+
+          .event-card {
+            border-top: 1px solid #cbd5e1;
+          }
+          .event-card:first-child {
+            border-top: none;
+          }
+          .event-card {
+            border-top: 1px solid #cbd5e1;
+          }
+        }
       }
     }
   }

@@ -131,7 +131,6 @@ Router.map(function route() {
       'pipeline',
       { path: '/pipelines/:pipeline_id' },
       function pipelinesRoute() {
-        this.route('builds');
         this.route('secrets');
         this.route('options');
         this.route('metrics');
