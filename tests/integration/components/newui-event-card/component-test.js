@@ -3,8 +3,7 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import EmberObject from '@ember/object';
-import { Promise as EmberPromise } from 'rsvp';
-import Service from '@ember/service';
+import sinon from 'sinon';
 
 module('Integration | Component | newui-event-card', function (hooks) {
   setupRenderingTest(hooks);
@@ -12,19 +11,11 @@ module('Integration | Component | newui-event-card', function (hooks) {
   test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
+    const userSettings = this.owner.lookup('service:user-settings');
 
-    const userSettingsStub = Service.extend({
-      getUserPreference() {
-        return new EmberPromise(resolve => {
-          resolve({
-            timestampFormat: 'UTC'
-          });
-        });
-      }
-    });
-
-    this.owner.unregister('service:userSettings');
-    this.owner.register('service:userSettings', userSettingsStub);
+    sinon
+      .stub(userSettings, 'getUserPreference')
+      .resolves({ timestampFormat: 'UTC' });
 
     const mockEvent = EmberObject.create({
       id: 786169,

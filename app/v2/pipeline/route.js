@@ -12,9 +12,9 @@ export default class NewPipelineRoute extends Route {
     return RSVP.hash({
       pipeline: this.store.findRecord('pipeline', pipeline_id).catch(err => {
         console.log('err', err);
-
         // throw err;
-        // this.router.transitionTo('/404');
+        this.router.transitionTo('/404');
+
         return [];
       })
     });

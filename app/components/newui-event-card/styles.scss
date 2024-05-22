@@ -2,8 +2,6 @@
   padding: 12px 24px;
   cursor: pointer;
 
-  font-family: Helvetica, Arial, sans-serif;
-
   // darkmode
   &.highlighted {
     background-color: black;
@@ -65,7 +63,7 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 700;
-    line-height: 21px;
+    // line-height: 21px;
     grid-column: 1 / -1;
   }
 
