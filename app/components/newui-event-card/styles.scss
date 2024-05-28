@@ -2,10 +2,9 @@
   padding: 12px 24px;
   cursor: pointer;
 
-  // darkmode
   &.highlighted {
-    background-color: black;
-    color: white;
+    background-color: hsla(214, 77%, 82%, 1);
+    color: black;
 
     .sha {
       > a {
@@ -80,7 +79,17 @@
   .parameters-section {
   }
 
-  .builds > span {
-    padding-left: 12px;
+  .builds {
+    span.FAILURE + span.RUNNING::before {
+      content: '|';
+    }
+
+    span.FAILURE + span.UNSTABLE::before {
+      content: '|';
+    }
+
+    span.RUNNING + span.UNSTABLE::before {
+      content: '|';
+    }
   }
 }

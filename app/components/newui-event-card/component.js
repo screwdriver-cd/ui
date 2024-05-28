@@ -5,6 +5,22 @@ import { bool } from '@ember/object/computed';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { getTimestamp } from 'screwdriver-ui/utils/timestamp-format';
 
+const shortEnglishHumanizer = humanizeDuration.humanizer({
+  language: 'shortEn',
+  languages: {
+    shortEn: {
+      y: () => 'y',
+      mo: () => 'mo',
+      w: () => 'w',
+      d: () => 'd',
+      h: () => 'h',
+      m: () => 'm',
+      s: () => 's',
+      ms: () => 'ms'
+    }
+  }
+});
+
 export default Component.extend({
   router: service(),
   userSettings: service(),
@@ -23,6 +39,14 @@ export default Component.extend({
       startDate = getTimestamp(this.userSettings, this.get('event.createTime'));
 
       return startDate;
+    }
+  }),
+  durationText: computed('event.duration', {
+    get() {
+      return shortEnglishHumanizer(this.event.duration, {
+        round: true,
+        largest: 1
+      });
     }
   }),
   externalBuild: computed('event.{causeMessage,startFrom}', {
@@ -123,12 +147,22 @@ export default Component.extend({
     }
   ),
 
-  numberOfUnstableOrFailureBuilds: computed('event.builds.@each.status', {
+  numberOfUnstableBuilds: computed('event.builds.@each.status', {
+    async get() {
+      const list = await this.event.builds;
+
+      const targetEvents = list.filter(e => ['UNSTABLE'].includes(e.status));
+
+      return targetEvents.length;
+    }
+  }),
+
+  numberOfFailureBuilds: computed('event.builds.@each.status', {
     async get() {
       const list = await this.event.builds;
 
       const targetEvents = list.filter(e =>
-        ['UNSTABLE', 'FAILURE', 'ABORTED'].includes(e.status)
+        ['FAILURE', 'ABORTED'].includes(e.status)
       );
 
       return targetEvents.length;
@@ -144,14 +178,6 @@ export default Component.extend({
       );
 
       return targetEvents.length;
-    }
-  }),
-
-  hasAllSuccessBuilds: computed('event.builds.@each.status', {
-    async get() {
-      const list = await this.event.builds;
-
-      return list.every(e => e.status === 'SUCCESS');
     }
   }),
 
