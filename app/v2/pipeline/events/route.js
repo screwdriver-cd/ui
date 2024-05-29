@@ -1,10 +1,11 @@
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
-export default Route.extend({
-  store: service(),
-  shuttle: service(),
+export default class NewPipelineEventsRoute extends Route {
+  @service store;
+
+  @service shuttle;
 
   /* eslint-disable camelcase */
   model() {
@@ -19,7 +20,7 @@ export default Route.extend({
       }),
       latestCommit: this.shuttle.getLatestCommitEvent(pipelineId)
     });
-  },
+  }
   /* eslint-enable camelcase */
 
   setupController(controller, { events, latestCommit }) {
@@ -31,4 +32,4 @@ export default Route.extend({
 
     controller.setProperties({ events, latestCommit });
   }
-});
+}
