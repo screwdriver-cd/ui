@@ -3,8 +3,9 @@ import RSVP from 'rsvp';
 import { service } from '@ember/service';
 
 export default class NewPipelineEventsRoute extends Route {
-  @service
-  store;
+  @service store;
+
+  @service shuttle;
 
   /* eslint-disable camelcase */
   model() {
@@ -16,23 +17,19 @@ export default class NewPipelineEventsRoute extends Route {
         page: 1,
         // count: ENV.APP.NUM_EVENTS_LISTED
         count: 20
-      })
+      }),
+      latestCommit: this.shuttle.getLatestCommitEvent(pipelineId)
     });
   }
   /* eslint-enable camelcase */
 
-  setupController(controller, { events }) {
+  setupController(controller, { events, latestCommit }) {
     const { pipeline_id: pipelineId } = this.paramsFor('v2.pipeline');
     const { event_id: eventId } = this.paramsFor('v2.pipeline.events.show');
 
-    // static
     controller.pipelineId = pipelineId;
+    controller.selectedEventId = eventId;
 
-    // dynamic
-    // controller.selectedEventId = eventId;
-    // controller.events = events;
-
-    controller.set('selectedEventId', eventId);
-    controller.set('events', events);
+    controller.setProperties({ events, latestCommit });
   }
 }

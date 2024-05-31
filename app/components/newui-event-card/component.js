@@ -4,7 +4,22 @@ import { inject as service } from '@ember/service';
 import { bool } from '@ember/object/computed';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { getTimestamp } from 'screwdriver-ui/utils/timestamp-format';
-import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
+
+const shortEnglishHumanizer = humanizeDuration.humanizer({
+  language: 'shortEn',
+  languages: {
+    shortEn: {
+      y: () => 'y',
+      mo: () => 'mo',
+      w: () => 'w',
+      d: () => 'd',
+      h: () => 'h',
+      m: () => 'm',
+      s: () => 's',
+      ms: () => 'ms'
+    }
+  }
+});
 
 export default Component.extend({
   router: service(),
@@ -24,6 +39,14 @@ export default Component.extend({
       startDate = getTimestamp(this.userSettings, this.get('event.createTime'));
 
       return startDate;
+    }
+  }),
+  durationText: computed('event.duration', {
+    get() {
+      return shortEnglishHumanizer(this.event.duration, {
+        round: true,
+        largest: 1
+      });
     }
   }),
   externalBuild: computed('event.{causeMessage,startFrom}', {
@@ -124,9 +147,37 @@ export default Component.extend({
     }
   ),
 
-  isInlineParameters: computed('numberOfParameters', {
-    get() {
-      return this.numberOfParameters < MAX_NUM_OF_PARAMETERS_ALLOWED;
+  numberOfUnstableBuilds: computed('event.builds.@each.status', {
+    async get() {
+      const list = await this.event.builds;
+
+      const targetEvents = list.filter(e => ['UNSTABLE'].includes(e.status));
+
+      return targetEvents.length;
+    }
+  }),
+
+  numberOfFailureBuilds: computed('event.builds.@each.status', {
+    async get() {
+      const list = await this.event.builds;
+
+      const targetEvents = list.filter(e =>
+        ['FAILURE', 'ABORTED'].includes(e.status)
+      );
+
+      return targetEvents.length;
+    }
+  }),
+
+  numberOfRunningBuilds: computed('event.builds.@each.status', {
+    async get() {
+      const list = await this.event.builds;
+
+      const targetEvents = list.filter(e =>
+        ['QUEUED', 'RUNNING', 'UNKNOWN'].includes(e.status)
+      );
+
+      return targetEvents.length;
     }
   }),
 

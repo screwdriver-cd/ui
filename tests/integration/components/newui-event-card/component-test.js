@@ -148,7 +148,7 @@ module('Integration | Component | newui-event-card', function (hooks) {
     assert
       .dom(this.element)
       .hasText(
-        '# main Started 01/29/2024, 08:00 PM UTC Duration: Started and committed by: Alan'
+        '# main 01/29/2024, 08:00 PM UTC | Duration: 0 s Started and committed by: Alan'
       );
   });
 });
