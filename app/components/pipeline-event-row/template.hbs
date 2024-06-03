@@ -80,7 +80,7 @@
             </LinkTo>
           {{/if}}
         {{else}}
-          <a href={{this.event.creator.url}}>
+          <a href={{this.event.creator.url}} title={{this.event.creator.username}}>
             {{this.event.creator.name}}
           </a>
         {{/if}}
@@ -96,7 +96,7 @@
           <span>
             Started and committed by:
           </span>
-          <a href={{this.event.creator.url}}>
+          <a href={{this.event.creator.url}} title={{this.event.creator.username}}>
             {{this.event.creator.name}}
           </a>
         {{/if}}

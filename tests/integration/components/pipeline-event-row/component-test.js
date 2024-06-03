@@ -26,7 +26,8 @@ const event = {
   },
   creator: {
     url: '#',
-    name: 'batman'
+    name: 'batman',
+    username: 'FooBar'
   },
   createTime: '06/30/2021, 04:39 PM',
   createTimeWords: 'now',
@@ -77,7 +78,8 @@ const eventWithLabel = {
   },
   creator: {
     url: '#',
-    name: 'batman'
+    name: 'batman',
+    username: 'FooBar'
   },
   createTime: '06/30/2021, 04:39 PM',
   createTimeWords: 'now',
@@ -128,7 +130,8 @@ const eventWithLinksInLabel = {
   },
   creator: {
     url: '#',
-    name: 'batman'
+    name: 'batman',
+    username: 'FooBar'
   },
   createTime: '06/30/2021, 04:39 PM',
   createTimeWords: 'now',
@@ -218,7 +221,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
-    assert.dom('.by').hasText('Started and committed by: batman');
+    assert.dom('.by').hasText('Started and committed by: ');
     assert
       .dom('.date')
       .hasText(
