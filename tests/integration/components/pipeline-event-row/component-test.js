@@ -221,7 +221,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     assert.dom('svg').exists({ count: 2 });
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.graph-edge').exists({ count: 3 });
-    assert.dom('.by').hasText('Started and committed by: ');
+    assert.dom('.by').hasText('Started and committed by: batman');
     assert
       .dom('.date')
       .hasText(
