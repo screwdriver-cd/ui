@@ -26,7 +26,8 @@ const event = {
   },
   creator: {
     url: '#',
-    name: 'batman'
+    name: 'batman',
+    username: 'FooBar'
   },
   createTime: '06/30/2021, 04:39 PM',
   createTimeWords: 'now',
@@ -77,7 +78,8 @@ const eventWithLabel = {
   },
   creator: {
     url: '#',
-    name: 'batman'
+    name: 'batman',
+    username: 'FooBar'
   },
   createTime: '06/30/2021, 04:39 PM',
   createTimeWords: 'now',
@@ -128,7 +130,8 @@ const eventWithLinksInLabel = {
   },
   creator: {
     url: '#',
-    name: 'batman'
+    name: 'batman',
+    username: 'FooBar'
   },
   createTime: '06/30/2021, 04:39 PM',
   createTimeWords: 'now',
