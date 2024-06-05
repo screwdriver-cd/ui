@@ -1,0 +1,35 @@
+<BsModal
+  class="toggle-job"
+  @onHide={{fn @closeModal}}
+  @onSubmit={{fn this.updateJob}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">
+      {{@toggleAction}} the "{{truncate @name 30}}" job?
+    </div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="exclamation-triangle"
+      />
+    {{/if}}
+    {{#if this.successMessage}}
+      <InfoMessage
+        @message={{this.successMessage}}
+        @type="success"
+        @icon="check-circle"
+      />
+    {{/if}}
+    <label>
+      Reason
+      <Input @value={{this.stateChangeMessage}}  autofocus="autofocus" placeholder="Reason for the job state change (optional)"/>
+    </label>
+  </modal.body>
+  <modal.footer>
+    <BsButton class="confirm" @onClick={{modal.submit}} disabled={{this.isDisabled}}>Save</BsButton>
+  </modal.footer>
+</BsModal>
