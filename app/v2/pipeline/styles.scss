@@ -110,18 +110,26 @@
 
           .event-card-group {
             // padding-bottom: 10px;
-            margin: 0.5rem 0.25rem;
-            border: 1px solid #cbd5e1;
+            // margin: 0.5rem 0.25rem;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+
+            // border: 1px solid #cbd5e1;
+            border-top: 1px solid #cbd5e1;
+            border-bottom: 1px solid #cbd5e1;
             // border-radius: 0.25rem;
 
             position: relative;
 
             .event-card-group-toggle {
               position: absolute;
+
               display: flex;
               width: 100%;
               flex-wrap: wrap;
               justify-content: flex-end;
+
+              cursor: pointer;
 
               .badge {
                 color: #007bff;
