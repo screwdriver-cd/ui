@@ -1,0 +1,36 @@
+<div class="event-card-group">
+  {{#unless (eq @events.length 1)}}
+  <div class="event-card-group-toggle">
+    <div class="badge" tooltip="this event card group has {{@events.length}} events"
+    {{on "click" (fn this.toggleExpand)}}
+    ><span class="fa-layers fa-lg">
+      <FaIcon @icon="circle" />
+      <span class="fa-layers-text fa-inverse">{{@events.length}}</span>
+    </span>
+    <FaIcon @icon="chevron-circle-{{if this.isExpanded "down" "up"}}" />
+   </div>
+  </div>
+  {{/unless}}
+
+  {{#if this.isExpanded}}
+    {{!-- show everything --}}
+    {{#each @events as |event index|}}
+      <NewuiEventCard 
+       @event={{event}} 
+       @selectedEventId={{@selectedEventId}} 
+       @pipelineId={{@pipelineId}}
+       @lastSuccessful={{@lastSuccessful}}
+       @latestCommit={{@latestCommit}}
+      />
+    {{/each}}
+  {{else}}
+    {{!-- only show first one --}}
+    <NewuiEventCard 
+     @event={{(get @events 0)}} 
+     @selectedEventId={{@selectedEventId}} 
+     @pipelineId={{@pipelineId}}
+     @lastSuccessful={{@lastSuccessful}}
+     @latestCommit={{@latestCommit}}
+    />
+  {{/if}}
+</div>

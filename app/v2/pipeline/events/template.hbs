@@ -20,12 +20,14 @@
 
   <div class="event-cards">
   {{#if this.isGroupedEvents}}
-    {{#each this.groupedEvents as |group|}}
-    Total Events: {{group.length}}
-      {{#each group as |event|}}
-        <div>{{event.id}} | {{event.groupEventId}}</div>
-      {{/each}}
-    <br />
+    {{#each this.groupedEvents as |eventGroup| }}
+      <NewuiEventCardGroup
+       @selectedEventId={{this.selectedEventId}} 
+       @pipelineId={{this.pipelineId}}
+       @lastSuccessful={{this.lastSuccessful}}
+       @latestCommit={{this.latestCommit}}
+       @events={{eventGroup}}
+      />
     {{/each}}
   {{else}}
     {{#each this.events as |event|}}
