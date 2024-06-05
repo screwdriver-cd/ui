@@ -26,10 +26,14 @@ export default class NewPipelineEventsRoute extends Route {
   setupController(controller, { events, latestCommit }) {
     const { pipeline_id: pipelineId } = this.paramsFor('v2.pipeline');
     const { event_id: eventId } = this.paramsFor('v2.pipeline.events.show');
+    const pipelineController = this.controllerFor('v2.pipeline');
 
-    controller.pipelineId = pipelineId;
-    controller.selectedEventId = eventId;
-
-    controller.setProperties({ events, latestCommit });
+    controller.setProperties({
+      events,
+      latestCommit,
+      pipelineId,
+      selectedEventId: eventId,
+      pipeline: pipelineController.pipeline
+    });
   }
 }
