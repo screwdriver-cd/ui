@@ -290,6 +290,17 @@ export default Component.extend({
     // stages
     if (this.showStages) {
       const stagesGroupedByRowPosition = groupBy(data.stages, 'pos.y');
+      const stageVerticalDisplacementByRowPosition = {};
+      const getStageVerticalDisplacementByRowPosition = (startRow, endRow) => {
+        let yDisplacement = 0;
+
+        // eslint-disable-next-line no-plusplus
+        for (let i = startRow; i <= endRow; i++) {
+          yDisplacement += stageVerticalDisplacementByRowPosition[i];
+        }
+
+        return yDisplacement;
+      };
       const calcStageY = (stage, yDisplacement = 0) => {
         return (
           calcPos(stage.pos.y, Y_SPACING) -
@@ -372,6 +383,7 @@ export default Component.extend({
         const stages = stagesGroupedByRowPosition[i];
 
         if (stages === undefined) {
+          stageVerticalDisplacementByRowPosition[i] = 0;
           verticalDisplacementByRowPosition[i] =
             i === 0 ? 0 : verticalDisplacementByRowPosition[i - 1];
         } else {
@@ -379,6 +391,7 @@ export default Component.extend({
             ...stages.map(s => stageNameToYDisplacementMap[s.name])
           );
 
+          stageVerticalDisplacementByRowPosition[i] = maxDisplacement;
           verticalDisplacementByRowPosition[i] =
             maxDisplacement +
             (i === 0
@@ -390,13 +403,23 @@ export default Component.extend({
       // Adjust height and position of SVG and stage elements
       data.stages.forEach(stage => {
         const yDisplacement = stageNameToYDisplacementMap[stage.name];
+
         const { stageContainer, stageInfoWrapper } =
           stageNameToStageElementsMap[stage.name];
 
         stageInfoWrapper.attr('height', yDisplacement);
         stageInfoWrapper.attr('y', calcStageY(stage, yDisplacement));
 
-        stageContainer.attr('height', calcStageHeight(stage, yDisplacement));
+        stageContainer.attr(
+          'height',
+          calcStageHeight(
+            stage,
+            getStageVerticalDisplacementByRowPosition(
+              stage.pos.y,
+              stage.pos.y + stage.graph.meta.height - 1
+            )
+          )
+        );
         stageContainer.attr('y', calcStageY(stage, yDisplacement));
       });
 
