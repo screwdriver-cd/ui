@@ -15,7 +15,7 @@
   {{#if this.isExpanded}}
     {{!-- show everything --}}
     {{#each @events as |event index|}}
-      <NewuiEventCard 
+      <Newui::EventCard 
        @event={{event}} 
        @selectedEventId={{@selectedEventId}} 
        @pipelineId={{@pipelineId}}
@@ -25,7 +25,7 @@
     {{/each}}
   {{else}}
     {{!-- only show first one --}}
-    <NewuiEventCard 
+    <Newui::EventCard 
      @event={{(get @events 0)}} 
      @selectedEventId={{@selectedEventId}} 
      @pipelineId={{@pipelineId}}
