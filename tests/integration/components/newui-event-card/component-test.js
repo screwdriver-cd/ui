@@ -139,7 +139,7 @@ module('Integration | Component | Newui::EventCard', function (hooks) {
       lastSuccessful
     });
 
-    await render(hbs`<NewuiEventCard 
+    await render(hbs`<Newui::EventCard 
       @event={{this.event}} 
       @selectedEventId={{this.selectedEventId}} 
       @pipelineId={{this.pipelineId}}
