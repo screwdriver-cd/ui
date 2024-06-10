@@ -5,7 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import EmberObject from '@ember/object';
 import sinon from 'sinon';
 
-module('Integration | Component | newui-event-card', function (hooks) {
+module('Integration | Component | Newui::EventCard', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
@@ -139,7 +139,7 @@ module('Integration | Component | newui-event-card', function (hooks) {
       lastSuccessful
     });
 
-    await render(hbs`<NewuiEventCard 
+    await render(hbs`<Newui::EventCard 
       @event={{this.event}} 
       @selectedEventId={{this.selectedEventId}} 
       @pipelineId={{this.pipelineId}}

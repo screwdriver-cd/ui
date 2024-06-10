@@ -19,14 +19,26 @@
   </div>
 
   <div class="event-cards">
-  {{#each this.events as |event|}}
-    <NewuiEventCard @event={{event}} 
-     @selectedEventId={{this.selectedEventId}} 
-     @pipelineId={{this.pipelineId}}
-     @lastSuccessful={{this.lastSuccessful}}
-     @latestCommit={{this.latestCommit}}
-    />
-  {{/each}}
+  {{#if this.isGroupedEvents}}
+    {{#each this.groupedEvents as |eventGroup| }}
+      <Newui::EventCardGroup
+       @selectedEventId={{this.selectedEventId}} 
+       @pipelineId={{this.pipelineId}}
+       @lastSuccessful={{this.lastSuccessful}}
+       @latestCommit={{this.latestCommit}}
+       @events={{eventGroup}}
+      />
+    {{/each}}
+  {{else}}
+    {{#each this.events as |event|}}
+      <Newui::EventCard @event={{event}} 
+       @selectedEventId={{this.selectedEventId}} 
+       @pipelineId={{this.pipelineId}}
+       @lastSuccessful={{this.lastSuccessful}}
+       @latestCommit={{this.latestCommit}}
+      />
+    {{/each}}
+  {{/if}}
   </div>
   {{outlet}}
 </div>
