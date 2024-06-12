@@ -487,6 +487,7 @@ module('Integration | Component | validator results', function (hooks) {
 
     assert.dom('.error').doesNotExist();
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
+    assert.dom('div').hasClass('cache');
     assert.dom('span').hasText('node_modules');
   });
 
@@ -508,7 +509,7 @@ module('Integration | Component | validator results', function (hooks) {
     );
 
     assert.dom('.error').hasText('there is an error');
-    assert.dom('span').hasText('batman/batmobile@1.0.0');
+    assert.dom('h4').hasText('batman/batmobile@1.0.0');
   });
 
   test('it renders warnMessages results', async function (assert) {
