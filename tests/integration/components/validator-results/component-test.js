@@ -463,6 +463,9 @@ module('Integration | Component | validator results', function (hooks) {
         name: 'batmobile',
         version: '1.0.0',
         config: {
+          cache: {
+            pipeline: ['node_modules']
+          },
           shared: {
             image: 'int-test:1'
           },
@@ -484,6 +487,7 @@ module('Integration | Component | validator results', function (hooks) {
 
     assert.dom('.error').doesNotExist();
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
+    assert.dom('span').hasText('node_modules');
   });
 
   test('it renders joi error results', async function (assert) {
@@ -504,7 +508,7 @@ module('Integration | Component | validator results', function (hooks) {
     );
 
     assert.dom('.error').hasText('there is an error');
-    assert.dom('h4').hasText('batman/batmobile@1.0.0');
+    assert.dom('span').hasText('batman/batmobile@1.0.0');
   });
 
   test('it renders warnMessages results', async function (assert) {
