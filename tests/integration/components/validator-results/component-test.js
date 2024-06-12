@@ -466,6 +466,12 @@ module('Integration | Component | validator results', function (hooks) {
           cache: {
             pipeline: ['node_modules']
           },
+          parameters: {
+            nameA: 'value1'
+          },
+          subscribe: {
+            scmUrls: [{ 'https://github.com/test/hello-world.git': ['~pr'] }]
+          },
           shared: {
             image: 'int-test:1'
           },
@@ -487,8 +493,9 @@ module('Integration | Component | validator results', function (hooks) {
 
     assert.dom('.error').doesNotExist();
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
-    assert.dom('div').hasClass('cache');
-    assert.dom('span').hasText('node_modules');
+    assert.dom('.cache').exists({ count: 1 });
+    assert.dom('.parameters').exists({ count: 1 });
+    assert.dom('.subscribe').exists({ count: 1 });
   });
 
   test('it renders joi error results', async function (assert) {
