@@ -75,6 +75,13 @@ export default Component.extend({
         : get(this, 'results.cache');
     }
   }),
+  subscribe: computed('results.subscribe', {
+    get() {
+      return get(this, 'results.subscribe') === undefined
+        ? {}
+        : get(this, 'results.subscribe');
+    }
+  }),
   warnMessages: map('results.warnMessages', w =>
     typeof w === 'string' ? w : w.message
   ),
