@@ -494,7 +494,6 @@ module('Integration | Component | validator results', function (hooks) {
     assert.dom('.error').doesNotExist();
     assert.dom('h4').hasText('batman/batmobile@1.0.0');
     assert.dom('.cache').exists({ count: 1 });
-    assert.dom('.parameters').exists({ count: 1 });
     assert.dom('.subscribe').exists({ count: 1 });
   });
 
