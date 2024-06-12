@@ -6,12 +6,19 @@ import { hbs } from 'ember-cli-htmlbars';
 module('Integration | Helper | is-array', function (hooks) {
   setupRenderingTest(hooks);
 
-  // TODO: Replace this with your real tests.
-  test('it renders', async function (assert) {
-    this.set('inputValue', '1234');
+  test('it is array', async function (assert) {
+    this.set('inputValue', [1, 2, 3, 4]);
 
     await render(hbs`{{is-array this.inputValue}}`);
 
-    assert.dom(this.element).hasText('1234');
+    assert.dom(this.element).hasText('true');
+  });
+
+  test('it is not array', async function (assert) {
+    this.set('inputValue', 'hello world');
+
+    await render(hbs`{{is-array this.inputValue}}`);
+
+    assert.dom(this.element).hasText('false');
   });
 });
