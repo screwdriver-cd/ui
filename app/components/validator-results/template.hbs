@@ -14,6 +14,8 @@
     @template={{this.results.template}}
     @annotations={{this.results.template.config.shared.annotations}}
     @parameters={{this.results.template.config.parameters}}
+    @cache={{this.results.template.config.cache}}
+    @subscribe={{this.results.template.config.subscribe}}
     @isOpen={{unbound this.isOpen}}
   />
   {{#each this.pipelineTemplateJobKeys as | node index|}}
@@ -40,6 +42,8 @@
     @workflowGraph={{this.workflowGraph}}
     @annotations={{this.annotations}}
     @parameters={{this.parameters}}
+    @cache={{this.cache}}
+    @subscribe={{this.subscribe}}
     @isOpen={{unbound this.isOpen}}
   />
   {{#each this.jobs as |job|}}
