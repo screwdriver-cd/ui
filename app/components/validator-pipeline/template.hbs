@@ -101,6 +101,93 @@
   </span>
 </div>
 
+{{!-- should follow this pattern from data-schema: --}}
+{{!-- https://github.com/screwdriver-cd/data-schema/blob/af17ddbdd63bc0c18d8867f39b23c07660b598d7/config/base.js#L14-L18 --}}
+<div
+  class="cache"
+  title="These are the pipeline-level cache that the user has defined."
+>
+  <span class="label">
+    Cache:
+  </span>
+  <span class="value">
+    <ul>
+      {{#each-in this.cache as |name value|}}
+        {{#if value.length}}
+          <li>
+            <span class="name">
+              {{name}}:
+            </span>
+            {{#if (is-array value)}}
+            <span class="value">
+              [{{value}}]
+            </span>
+            {{else}}
+            <span class="value">
+              {{value}}
+            </span>
+            {{/if}}
+          </li>
+        {{/if}}
+      {{else}}
+        <li>
+          None defined
+        </li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
+
+{{!-- should follow this pattern from data-schema: --}}
+{{!-- https://github.com/screwdriver-cd/data-schema/blob/af17ddbdd63bc0c18d8867f39b23c07660b598d7/config/base.js#L60-L64 --}}
+<div
+  class="subscribe"
+  title="These are the pipeline-level subscribe config that the user has defined."
+>
+  <span class="label">
+    Subscribe:
+  </span>
+  <span class="value">
+    <ul>
+      {{#each-in this.subscribe as |name value|}}
+        <li>
+          <span class="name">
+            {{name}}:
+          </span>
+          {{#if (is-array value)}}
+          <ul>
+            {{#each value as |url|}}
+              {{#each-in url as |name value|}}
+              <li>
+                <span class="name">
+                  {{name}}:
+                </span>
+                <span class="value">
+                  {{#if (is-array value)}}
+                    [{{value}}]
+                  {{else}}
+                    {{value}}
+                  {{/if}}
+                </span>
+              </li>
+              {{/each-in}}
+            {{/each}}
+          </ul>
+          {{else}}
+          <span class="value">
+            {{value}}
+          </span>
+          {{/if}}
+        </li>
+      {{else}}
+        <li>
+          None defined
+        </li>
+      {{/each-in}}
+    </ul>
+  </span>
+</div>
+
 <div class="workflow">
   <span class="label" title="This is the order that the jobs will run in.">
     Workflow:
