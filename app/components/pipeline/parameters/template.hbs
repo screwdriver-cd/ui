@@ -1,0 +1,42 @@
+<div class="pipeline-parameters">
+  <div class="parameter-title">
+    {{this.title}}
+  </div>
+  <div class="parameters-container">
+    {{#each this.parameters as |parameterGroup|}}
+      <div class="parameter-group">
+        <div class="group-title">
+          <FaIcon @icon={{if parameterGroup.isOpen "minus-square" "plus-square"}} {{on "click" (fn this.toggleParameterGroup parameterGroup.paramGroupTitle)}}></FaIcon>
+          {{parameterGroup.paramGroupTitle}}
+        </div>
+        <div class="parameter-list {{if parameterGroup.isOpen "expanded" "collapsed"}}">
+          {{#each parameterGroup.parameters as |parameter|}}
+            <div class="parameter">
+              <label>
+                {{parameter.name}}
+                {{#if parameter.description}}
+                  <FaIcon @icon="question-circle" @title={{parameter.description}}></FaIcon>
+                {{/if}}
+              </label>
+              {{#if (is-array parameter.defaultValues)}}
+                <div class="dropdown-selection-container">
+                  <Pipeline::Parameters::Selectable
+                    @parameter={{parameter}}
+                    @onOpen={{this.openSelect}}
+                    @onSelectValue={{(fn this.updateParameter parameterGroup.jobName)}}
+                  />
+                </div>
+              {{else}}
+                <Input
+                  @value={{parameter.value}}
+                  defaultValue={{parameter.value}}
+                  {{on "input" (fn this.onInput parameterGroup.jobName parameter)}}
+                />
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>
