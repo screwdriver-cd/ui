@@ -52,6 +52,9 @@
 
             > input {
               flex: 1;
+              border-radius: 4px;
+              border: 1px solid colors.$sd-text-med;
+              padding-left: 8px;
             }
           }
         }
