@@ -1,7 +1,7 @@
 <br>
 {{#if (await this.hasUsers)}}
 
-<h1>Pipelines using {{await this.templateName}}/{{await this.templateNamespace}}@{{await this.templateVersion}}</h1>
+<h1>Pipelines using {{await this.templateNamespace}}/{{await this.templateName}}@{{await this.templateVersion}}</h1>
 
 <TemplateVersionPipelineUsage
   @templateName={{this.templateName}}
