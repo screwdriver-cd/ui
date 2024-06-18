@@ -1,0 +1,64 @@
+@use 'screwdriver-colors' as colors;
+@use 'variables';
+
+@mixin styles {
+  .pipeline-parameters {
+    .parameter-title {
+      font-size: 1.2rem;
+      font-weight: variables.$weight-bold;
+      color: colors.$sd-light-gray;
+    }
+
+    .parameters-container {
+      max-height: 50vh;
+      overflow-y: scroll;
+
+      .parameter-group {
+        border-radius: 8px;
+        border: 1px solid colors.$sd-separator;
+        margin-top: 1rem;
+        padding: 0.5rem;
+
+        .group-title {
+          font-size: 1.5rem;
+        }
+
+        .parameter-list {
+          &.collapsed {
+            display: none;
+          }
+
+          .parameter {
+            display: flex;
+            padding: 0.2rem;
+
+            label {
+              display: flex;
+              margin-top: auto;
+              margin-bottom: auto;
+              padding-right: 0.5rem;
+              flex-basis: 25%;
+
+              svg {
+                margin-top: auto;
+                margin-bottom: auto;
+                padding-left: 0.25rem;
+              }
+            }
+
+            .dropdown-selection-container {
+              flex: 1;
+            }
+
+            > input {
+              flex: 1;
+              border-radius: 4px;
+              border: 1px solid colors.$sd-text-med;
+              padding-left: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

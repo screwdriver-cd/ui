@@ -1,10 +1,68 @@
 import { module, test } from 'qunit';
 import {
+  extractEventParameters,
+  extractJobParameters,
   normalizeParameters,
   getNormalizedParameterGroups
 } from 'screwdriver-ui/utils/pipeline/parameters';
 
 module('Unit | Utility | Pipeline | parameters', function () {
+  test('extractEventParameters extracts parameters from event object', function (assert) {
+    const parameters = extractEventParameters({
+      meta: {
+        parameters: {
+          foo: { value: 'bar' },
+          job1: { p1: { value: 'abc' }, p2: { value: 'xyz' } }
+        }
+      }
+    });
+
+    assert.deepEqual(parameters.pipelineParameters, { foo: { value: 'bar' } });
+    assert.deepEqual(parameters.jobParameters, {
+      job1: { p1: { value: 'abc' }, p2: { value: 'xyz' } }
+    });
+  });
+
+  test('extractEventParameters returns empty objects when no parameters are provided', function (assert) {
+    const parameters = extractEventParameters({
+      meta: {}
+    });
+
+    assert.deepEqual(parameters.pipelineParameters, {});
+    assert.deepEqual(parameters.jobParameters, {});
+  });
+
+  test('extractJobParameters extracts job parameters from jobs response object', function (assert) {
+    const parameters = extractJobParameters([
+      { name: 'job1', permutations: [{ parameters: { a: 1, b: 'abc123' } }] },
+      {
+        name: 'job2',
+        permutations: [
+          {
+            parameters: {
+              c: { description: 'cool stuff', value: true },
+              d: ['yes', 'no']
+            }
+          }
+        ]
+      }
+    ]);
+
+    assert.deepEqual(parameters, {
+      job1: { a: 1, b: 'abc123' },
+      job2: {
+        c: { description: 'cool stuff', value: true },
+        d: ['yes', 'no']
+      }
+    });
+  });
+
+  test('extractJobParameters returns empty object when no jobs are provided', function (assert) {
+    const parameters = extractJobParameters([]);
+
+    assert.deepEqual(parameters, {});
+  });
+
   test('normalizeParameters returns normalized parameters', function (assert) {
     const parameters = normalizeParameters({
       param1: true,
