@@ -1,4 +1,46 @@
 /**
+ * Extracts parameters from the API response object of an event
+ * @param event
+ * @returns {{pipelineParameters: {}, jobParameters: {}}}
+ */
+export function extractEventParameters(event) {
+  const eventParameters = event.meta.parameters || {};
+  const pipelineParameters = {};
+  const jobParameters = {};
+
+  // Extract pipeline level and job level parameters
+  Object.entries(eventParameters).forEach(([propertyName, propertyVal]) => {
+    const keys = Object.keys(propertyVal);
+
+    if (keys.length === 1 && keys[0] === 'value') {
+      pipelineParameters[propertyName] = propertyVal;
+    } else {
+      jobParameters[propertyName] = propertyVal;
+    }
+  });
+
+  return {
+    pipelineParameters,
+    jobParameters
+  };
+}
+
+/**
+ * Extracts job parameters from the API response object of a job
+ */
+export function extractJobParameters(jobs) {
+  if (jobs.length === 0) {
+    return {};
+  }
+
+  return jobs.reduce((jobParameters, job) => {
+    jobParameters[job.name] = job.permutations[0].parameters;
+
+    return jobParameters;
+  }, {});
+}
+
+/**
  * normalizeParameters transform given parameters from object into array of objects
  * this method also backfills with default properties
  * @param  {Record<string, ParameterValue>} [parameters]          Parameter name and value pairs
