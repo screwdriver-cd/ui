@@ -17,6 +17,13 @@
                 {{#if parameter.description}}
                   <FaIcon @icon="question-circle" @title={{parameter.description}}></FaIcon>
                 {{/if}}
+                {{#if (and
+                        (not (is-array parameter.defaultValues))
+                        (not (eq parameter.value parameter.defaultValues))
+                      )
+                }}
+                  <FaIcon @icon="exclamation-triangle" @title="Default value: {{parameter.defaultValues}}"></FaIcon>
+                {{/if}}
               </label>
               {{#if (is-array parameter.defaultValues)}}
                 <div class="dropdown-selection-container">

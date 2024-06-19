@@ -43,6 +43,10 @@
                 margin-top: auto;
                 margin-bottom: auto;
                 padding-left: 0.25rem;
+
+                &.fa-exclamation-triangle {
+                  color: colors.$sd-warning;
+                }
               }
             }
 

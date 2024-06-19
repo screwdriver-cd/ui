@@ -46,7 +46,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
         meta: {
           parameters: {
             bar: { value: 'barzy' },
-            foo: { value: 'foozy' },
+            foo: { value: 'foo' },
             job1: { p1: { value: 'abc' }, p2: { value: 'xyz' } }
           }
         }
@@ -54,7 +54,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       pipeline: {
         parameters: {
           bar: ['barbar', 'bazbaz'],
-          foo: { value: 'foofoo', description: 'awesome' }
+          foo: { value: 'foo', description: 'awesome' }
         }
       },
       jobs: [
@@ -90,7 +90,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       .hasText('barzy');
     assert.dom(parameters[1].querySelector('label')).hasText('foo awesome');
     assert.dom(parameters[1].querySelector('label svg')).exists({ count: 1 });
-    assert.dom(parameters[1].querySelector('input')).hasValue('foozy');
+    assert.dom(parameters[1].querySelector('input')).hasValue('foo');
   });
 
   test('it renders parameters job group expanded', async function (assert) {
@@ -277,5 +277,53 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
         foo: { value: 'bar' }
       })
     );
+  });
+
+  test('it adds icon when input is not equal to default value', async function (assert) {
+    this.setProperties({
+      event: {
+        meta: {
+          parameters: {
+            foo: { value: 'foobar' }
+          }
+        }
+      },
+      pipeline: {
+        parameters: {
+          foo: { value: 'foobar' }
+        }
+      },
+      jobs: [],
+      onUpdateParameters: () => {}
+    });
+
+    await render(
+      hbs`<Pipeline::Parameters
+        @action="start"
+        @event={{this.event}}
+        @pipeline={{this.pipeline}}
+        @jobs={{this.jobs}}
+        @onUpdateParameters={{this.onUpdateParameters}}
+      />`
+    );
+
+    assert
+      .dom(
+        '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle'
+      )
+      .doesNotExist();
+
+    await fillIn('.parameter-list.expanded input', 'foofoofoo');
+
+    assert
+      .dom(
+        '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle'
+      )
+      .exists({ count: 1 });
+    assert
+      .dom(
+        '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle title'
+      )
+      .hasText('Default value: foobar');
   });
 });
