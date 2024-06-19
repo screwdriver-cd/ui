@@ -185,8 +185,8 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     assert.equal(onUpdateParameters.callCount, 1);
     assert.true(
       onUpdateParameters.calledWith({
-        foo: { value: 'foobar' },
-        job1: { p1: { value: 'abc' } }
+        foo: 'foobar',
+        job1: { p1: 'abc' }
       })
     );
   });
@@ -233,8 +233,8 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     assert.equal(onUpdateParameters.callCount, 1);
     assert.true(
       onUpdateParameters.calledWith({
-        foo: { value: 'foozy' },
-        job1: { p1: { value: 'job123abc' } }
+        foo: 'foozy',
+        job1: { p1: 'job123abc' }
       })
     );
   });
@@ -274,7 +274,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     assert.equal(onUpdateParameters.callCount, 1);
     assert.true(
       onUpdateParameters.calledWith({
-        foo: { value: 'bar' }
+        foo: 'bar'
       })
     );
   });
