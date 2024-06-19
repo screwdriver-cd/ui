@@ -1,7 +1,9 @@
 @use 'nav/styles' as nav;
 @use 'modal/toggle-job/styles' as toggle-job;
+@use 'parameters/styles' as parameters;
 
 @mixin styles {
   @include nav.styles;
   @include toggle-job.styles;
+  @include parameters.styles;
 }
