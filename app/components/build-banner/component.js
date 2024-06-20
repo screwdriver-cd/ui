@@ -19,6 +19,7 @@ export default Component.extend({
   shuttle: service(),
   classNames: ['build-banner', 'grid'],
   classNameBindings: ['buildStatus'],
+  shouldSkipNextNotify: false,
   coverage: service(),
   coverageInfo: {},
   coverageStep: computed('buildSteps', {
@@ -83,6 +84,13 @@ export default Component.extend({
     }
   }),
   buildNotify: observer('buildStatus', function buildNotify() {
+    // Not to be notified when transitioning from a commit dropdown to another build
+    if (this.shouldSkipNextNotify) {
+      this.set('shouldSkipNextNotify', false);
+
+      return;
+    }
+
     if (Notification.permission === 'granted' && this.allowNotification) {
       if (['SUCCESS', 'FAILURE', 'ABORTED'].includes(this.buildStatus)) {
         const screwdriverIconPath = '/assets/icons/android-chrome-144x144.png';
@@ -307,6 +315,9 @@ export default Component.extend({
 
   actions: {
     changeCurPr(targetPr) {
+      if (Number(this.buildId) !== targetPr.build.id) {
+        this.set('shouldSkipNextNotify', true);
+      }
       this.changeBuild(targetPr.event.pipelineId, targetPr.build.id);
     },
 
