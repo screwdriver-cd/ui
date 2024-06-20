@@ -6,6 +6,7 @@ import {
   extractEventParameters,
   getNormalizedParameterGroups
 } from 'screwdriver-ui/utils/pipeline/parameters';
+import { flattenParameters } from './util';
 
 export default class PipelineParametersComponent extends Component {
   @tracked parameters;
@@ -91,8 +92,6 @@ export default class PipelineParametersComponent extends Component {
       this.selectedParameters.pipeline[parameter.name] = { value };
     }
 
-    const { pipeline, job } = this.selectedParameters;
-
-    this.args.onUpdateParameters({ ...pipeline, ...job });
+    this.args.onUpdateParameters(flattenParameters(this.selectedParameters));
   }
 }
