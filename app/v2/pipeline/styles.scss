@@ -148,5 +148,9 @@
         }
       }
     }
+
+    .pipeline-main-content.unset-grid-template-columns {
+      grid-template-columns: initial;
+    }
   }
 }

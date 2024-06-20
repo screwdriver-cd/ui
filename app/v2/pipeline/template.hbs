@@ -1,7 +1,8 @@
 {{page-title "Pipeline"}}
 <div class="pipeline-content">
   <Pipeline::Nav />
-  <div class="pipeline-main-content">
+  <div class="pipeline-main-content {{if this.isSecretsRoute "unset-grid-template-columns"}}" 
+  >
     <div class="pipeline-header">
       <PipelineHeader
         @pipeline={{this.pipeline}}
