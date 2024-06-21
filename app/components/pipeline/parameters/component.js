@@ -4,9 +4,9 @@ import { action } from '@ember/object';
 import {
   extractJobParameters,
   extractEventParameters,
+  flattenParameters,
   getNormalizedParameterGroups
 } from 'screwdriver-ui/utils/pipeline/parameters';
-import { flattenParameters } from './util';
 
 export default class PipelineParametersComponent extends Component {
   @tracked parameters;
