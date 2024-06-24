@@ -1,0 +1,15 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  #ember-bootstrap-wormhole {
+    .modal-backdrop.fade.show {
+      background-color: rgba(128, 128, 128, 0.77);
+      opacity: 1;
+    }
+
+    .modal-content {
+      border-radius: 8px;
+      box-shadow: 0 0 10px colors.$sd-black;
+    }
+  }
+}
