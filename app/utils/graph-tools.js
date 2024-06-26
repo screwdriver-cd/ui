@@ -1,24 +1,6 @@
 import { get } from '@ember/object';
 import DS from 'ember-data';
 
-const STATUS_MAP = {
-  SUCCESS: { icon: '\ue903' },
-  WARNING: { icon: '\ue903' },
-  STARTED_FROM: { icon: '\ue907' },
-  DOWNSTREAM_TRIGGER: { icon: '\ue907' },
-  RUNNING: { icon: '\ue905' },
-  QUEUED: { icon: '\ue904' },
-  ABORTED: { icon: '\ue900' },
-  FAILURE: { icon: '\ue906' },
-  DISABLED: { icon: '\ue902' },
-  UNKNOWN: { icon: '\ue901' },
-  UNSTABLE: { icon: '\ue909' },
-  BLOCKED: { icon: '\ue908' },
-  COLLAPSED: { icon: '\ue908' },
-  FROZEN: { icon: '\ue910' },
-  // TODO: Replace skipped property if necessary.
-  SKIPPED: { icon: '\ue909' }
-};
 const edgeSrcBranchRegExp = new RegExp('^~(pr|commit):/(.+)/$');
 const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');
 const STAGE_SETUP_PATTERN = /^stage@([\w-]+)(?::setup)$/;
@@ -62,15 +44,6 @@ const findJob = (jobs, jobId) => jobs.find(j => j && `${j.id}` === `${jobId}`);
  */
 const prJob = (jobs, prNum, name) =>
   jobs.find(j => j && j.group === prNum && j.name.endsWith(name));
-
-/**
- * Find the icon to set as the text for a node
- * @method icon
- * @param  {String} status Text that denotes a build status
- * @return {String}        Unicode character that maps to an icon in screwdriver icon font
- */
-const icon = status =>
-  STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MAP.UNKNOWN.icon;
 
 /**
  * Determines if a job is a setup job of a stage based on the name
@@ -754,7 +727,6 @@ const reverseGraph = graph => {
 
 export {
   node,
-  icon,
   decorateGraph,
   graphDepth,
   isRoot,
