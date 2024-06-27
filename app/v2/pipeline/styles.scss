@@ -11,18 +11,6 @@
     grid-template-areas: 'pipeline-nav pipeline-main';
 
     .pipeline-main-content {
-      grid-area: pipeline-main;
-      min-width: 300px;
-      display: grid;
-
-      grid-template-areas:
-        'pipeline-header pipeline-header'
-        'pipeline-tab pipeline-tab'
-        'pipeline-content pipeline-workflowgraph';
-
-      grid-template-rows: 80px 52px 1fr;
-      grid-template-columns: 366px 8fr;
-
       .pipeline-header {
         grid-area: pipeline-header;
       }
@@ -141,12 +129,22 @@
               border-top: none;
             }
           }
-
-          // .event-card-group + .event-card-group {
-          //   border-top: none;
-          // }
         }
       }
+    }
+
+    .pipeline-main-content.grid {
+      grid-area: pipeline-main;
+      min-width: 300px;
+      display: grid;
+
+      grid-template-areas:
+        'pipeline-header pipeline-header'
+        'pipeline-tab pipeline-tab'
+        'pipeline-content pipeline-workflowgraph';
+
+      grid-template-rows: 80px 52px 1fr;
+      grid-template-columns: 366px 8fr;
     }
   }
 }
