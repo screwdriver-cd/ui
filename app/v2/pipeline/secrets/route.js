@@ -1,18 +1,17 @@
-// import Route from '@ember/routing/route';
-
-// export default class NewPipelineSecretsRoute extends Route {}
 import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { get } from '@ember/object';
 
-export default Route.extend({
-  session: service(),
-  store: service(),
-  router: service(),
-  routeAfterAuthentication: 'pipeline.secrets',
+export default class NewPipelineSecretsRoute extends Route {
+  @service session;
+
+  @service store;
+
+  @service router;
+
   model() {
     // Refresh error message
-    this.controllerFor('pipeline.secrets').set('errorMessage', '');
+    this.controllerFor('v2.pipeline.secrets').set('errorMessage', '');
 
     // Guests should not access this page
     if (get(this, 'session.data.authenticated.isGuest')) {
@@ -40,4 +39,4 @@ export default Route.extend({
         return { secrets, pipeline };
       });
   }
-});
+}
