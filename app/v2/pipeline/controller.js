@@ -25,12 +25,6 @@ export default class NewPipelineController extends Controller {
     ].includes(currentRouteName);
   }
 
-  get isSecretsRoute() {
-    const { currentRouteName } = this.router;
-
-    return ['v2.pipeline.secrets'].includes(currentRouteName);
-  }
-
   @action
   addToCollection(pipelineId, collection) {
     const { pipelineIds } = collection;
