@@ -11,7 +11,7 @@ export default class NewPipelineController extends Controller {
   @service('pipeline.secrets')
   refreshService;
 
-  @tracked newToken = '';
+  @tracked errorMessage = '';
 
   @tracked newToken = null;
 
