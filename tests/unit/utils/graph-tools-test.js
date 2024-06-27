@@ -1,5 +1,4 @@
 import {
-  icon,
   node,
   decorateGraph,
   subgraphFilter,
@@ -66,11 +65,6 @@ const MORE_COMPLEX_GRAPH = {
 };
 
 module('Unit | Utility | graph tools', function () {
-  test('it gets the right icons', function (assert) {
-    assert.equal(icon('SUCCESS'), '\ue903');
-    assert.equal(icon('banana'), '\ue901');
-  });
-
   test('it gets an element from a list', function (assert) {
     const list = [{ name: 'foo' }, { name: 'bar' }];
     const result = node(list, 'bar');
