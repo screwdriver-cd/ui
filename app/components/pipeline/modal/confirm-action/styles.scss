@@ -1,0 +1,73 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  #ember-bootstrap-wormhole {
+    .modal.confirm-action {
+      .modal-dialog {
+        max-width: 50%;
+
+        .modal-body {
+          display: flex;
+          flex-direction: column;
+
+          .modal-title {
+            font-size: 1.75rem;
+            padding-bottom: 0.75rem;
+          }
+
+          .alert {
+            margin-bottom: 0.5rem;
+          }
+
+          .frozen-reason {
+            display: flex;
+            justify-content: space-between;
+
+            label {
+              margin: auto;
+              padding-right: 0.25rem;
+            }
+
+            input {
+              flex: 1;
+              border-radius: 4px;
+              border: 1px solid colors.$sd-text-med;
+              padding-left: 8px;
+            }
+          }
+
+          .pipeline-parameters {
+            padding-top: 2.5rem;
+          }
+        }
+
+        .modal-footer {
+          display: flex;
+          justify-content: space-between;
+
+          button {
+            width: 10rem;
+
+            color: colors.$sd-link;
+            border-color: colors.$sd-link;
+
+            &:hover {
+              background-color: colors.$sd-info-bg;
+            }
+
+            &.confirm {
+              color: colors.$sd-white;
+              background-color: colors.$sd-running;
+              border-color: colors.$sd-running;
+
+              &:hover {
+                background-color: colors.$sd-link;
+                border-color: colors.$sd-link;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

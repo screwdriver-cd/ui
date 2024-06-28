@@ -1,0 +1,66 @@
+<BsModal
+  class="confirm-action"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.body>
+    <div class="modal-title">Are you sure you want to {{this.action}}?</div>
+    <div id="confirm-action-job">Job: <code>{{@job.name}}</code></div>
+    <div id="confirm-action-commit">
+      Commit: <code>{{this.truncatedMessage}}</code>
+      <a
+        id="confirm-action-commit-link"
+        class={{if this.isLatestCommitEvent "latest-commit"}}
+        href={{this.commitUrl}}
+      >
+        #{{this.truncatedSha}}
+      </a>
+      {{#unless this.isLatestNonPrCommitEvent}}
+        <div class="alert alert-warning">
+          <FaIcon @icon="exclamation-triangle" />
+          This is <strong>NOT</strong> the latest commit.
+        </div>
+      {{/unless}}
+    </div>
+
+    {{#if this.isFrozen}}
+      <div class="frozen-reason">
+        <label>
+          Reason:
+        </label>
+        <Input @type="text" @value={{this.reason}} placeholder="Please enter a reason"/>
+      </div>
+    {{/if}}
+
+    {{#if this.isParameterized}}
+      <Pipeline::Parameters
+        @action={{this.action}}
+        @job={{@job}}
+        @event={{@event}}
+        @pipeline={{@pipeline}}
+        @jobs={{@jobs}}
+        @onUpdateParameters={{this.onUpdateParameters}}
+      />
+    {{/if}}
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      class="confirm"
+      disabled={{this.isSubmitButtonDisabled}}
+      @defaultText="Yes"
+      @pendingText={{this.pendingAction}}
+      @fulfilledText={{this.completedAction}}
+      @onClick={{this.startBuild}}
+    />
+    <BsButton
+      @outline={{true}}
+      @onClick={{modal.close}}
+    >
+      {{#if this.wasActionSuccessful}}
+        Close
+      {{else}}
+        No
+      {{/if}}
+    </BsButton>
+  </modal.footer>
+</BsModal>

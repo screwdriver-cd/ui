@@ -1,9 +1,11 @@
 @use 'nav/styles' as nav;
+@use 'modal/confirm-action/styles' as confirm-action-modal;
 @use 'modal/toggle-job/styles' as toggle-job;
 @use 'parameters/styles' as parameters;
 
 @mixin styles {
   @include nav.styles;
+  @include confirm-action-modal.styles;
   @include toggle-job.styles;
   @include parameters.styles;
 }
