@@ -1,6 +1,20 @@
 {{page-title "Events"}}
 
-<div class="pipeline-content">
+<div class="pipeline-tab">
+  <BsNav @type="tabs" as |nav|>
+    <nav.item>
+      <nav.link-to @route="v2.pipeline.events">Events</nav.link-to>
+    </nav.item>
+    <nav.item>
+      <nav.link-to @route="v2.pipeline.pulls">Pull Requests</nav.link-to>
+    </nav.item>
+    <nav.item>
+      <nav.link-to @route="v2.pipeline.jobs">Jobs</nav.link-to>
+    </nav.item>
+  </BsNav>
+</div>
+
+<div class="pipeline-events">
   <div class="search-filter-bar">
 
     <span class="search-filter">
@@ -22,7 +36,7 @@
   {{#if this.isGroupedEvents}}
     {{#each this.groupedEvents as |eventGroup| }}
       <Newui::EventCardGroup
-       @selectedEventId={{this.selectedEventId}} 
+       @selectedEventId={{this.selectedEventId}}
        @pipelineId={{this.pipelineId}}
        @lastSuccessful={{this.lastSuccessful}}
        @latestCommit={{this.latestCommit}}
@@ -31,8 +45,8 @@
     {{/each}}
   {{else}}
     {{#each this.events as |event|}}
-      <Newui::EventCard @event={{event}} 
-       @selectedEventId={{this.selectedEventId}} 
+      <Newui::EventCard @event={{event}}
+       @selectedEventId={{this.selectedEventId}}
        @pipelineId={{this.pipelineId}}
        @lastSuccessful={{this.lastSuccessful}}
        @latestCommit={{this.latestCommit}}
@@ -40,11 +54,8 @@
     {{/each}}
   {{/if}}
   </div>
-  {{outlet}}
 </div>
 
-<div class="pipeline-workflowgraph">
-  <div class="workflowgraph-chart">
-    WorkflowGraph placeholder for event {{this.selectedEventId}} 
-  </div> 
-</div>
+<div class="pipeline-workflow-graph" />
+
+{{outlet}}
