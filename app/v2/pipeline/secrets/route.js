@@ -15,7 +15,7 @@ export default class NewPipelineSecretsRoute extends Route {
 
     // Guests should not access this page
     if (get(this, 'session.data.authenticated.isGuest')) {
-      this.router.transitionTo('pipeline');
+      this.router.transitionTo('v2.pipeline');
     }
 
     const { pipeline } = this.modelFor('v2.pipeline');
