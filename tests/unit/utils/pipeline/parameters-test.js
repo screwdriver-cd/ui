@@ -230,6 +230,35 @@ module('Unit | Utility | Pipeline | parameters', function () {
     });
   });
 
+  test('getNormalizedParameterGroups returns normalized parameter groups with no expanded items', function (assert) {
+    const parameterGroups = getNormalizedParameterGroups(
+      {},
+      {},
+      { job1: { a: true, b: { value: 'xyz' } }, job2: { j2: 123 } },
+      { job1: { b: '123xyz' }, job2: { j2: 999 } },
+      null
+    );
+
+    assert.equal(parameterGroups.length, 2);
+    assert.deepEqual(parameterGroups[0], {
+      jobName: 'job1',
+      parameters: [
+        { name: 'a', value: true, defaultValues: true, description: '' },
+        { name: 'b', value: 'xyz', defaultValues: '123xyz', description: '' }
+      ],
+      isOpen: false,
+      paramGroupTitle: 'Job: job1'
+    });
+    assert.deepEqual(parameterGroups[1], {
+      jobName: 'job2',
+      parameters: [
+        { name: 'j2', value: 123, defaultValues: 999, description: '' }
+      ],
+      isOpen: false,
+      paramGroupTitle: 'Job: job2'
+    });
+  });
+
   test('flattenParameterGroup flattens correctly', function (assert) {
     assert.deepEqual(flattenParameterGroup({ param: { value: 123 } }), {
       param: 123
