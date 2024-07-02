@@ -1,150 +1,28 @@
-@use 'screwdriver-colors' as colors;
+@use 'events/styles' as events;
 
 @mixin styles {
-  .pipeline-content {
+  .pipeline-page {
     display: grid;
     height: 100%;
 
-    grid-template-columns: 50px;
-    grid-template-rows: auto;
+    grid-template-columns: 4rem;
+    grid-auto-rows: min-content auto;
 
-    grid-template-areas: 'pipeline-nav pipeline-main';
+    grid-template-areas:
+      'pipeline-nav pipeline-header'
+      'pipeline-nav pipeline-main';
 
-    .pipeline-main-content {
-      .pipeline-header {
-        grid-area: pipeline-header;
-      }
-
-      .pipeline-tab {
-        grid-area: pipeline-tab;
-
-        display: grid;
-        padding-top: 8px;
-        padding-bottom: 1px;
-
-        ul.nav-tabs.nav {
-          border: none;
-
-          li {
-            border-bottom: 3px solid colors.$sd-white;
-            padding-left: 1rem;
-            padding-right: 1rem;
-            text-align: center;
-
-            &.active {
-              border-bottom-color: #1c64f2;
-            }
-
-            a {
-              &.active {
-                color: #1c64f2;
-              }
-
-              color: #6b7280;
-              border: none;
-              padding: 8px 16px 9px 16px;
-            }
-          }
-        }
-      }
-
-      .pipeline-content {
-        grid-area: pipeline-content;
-
-        border: 1px solid #cbd5e1;
-        background-color: white;
-
-        // scroll
-        height: 100dvh;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-
-        .search-filter-bar {
-          display: flex;
-          padding: 12px 24px;
-          justify-content: space-between;
-
-          .search-filter {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            .search {
-            }
-            .filter {
-            }
-          }
-
-          .new-event {
-            cursor: pointer;
-          }
-
-          .img {
-            width: 18px;
-            height: 18px;
-          }
-        }
-
-        .event-cards {
-          overflow-y: scroll;
-
-          .event-card {
-            border-top: 1px solid #cbd5e1;
-          }
-          .event-card:first-child {
-            border-top: none;
-          }
-
-          .event-card-group {
-            // padding-bottom: 10px;
-            // margin: 0.5rem 0.25rem;
-            margin-top: 0.75rem;
-            margin-bottom: 0.75rem;
-
-            // border: 1px solid #cbd5e1;
-            border-top: 1px solid #cbd5e1;
-            border-bottom: 1px solid #cbd5e1;
-            // border-radius: 0.25rem;
-
-            position: relative;
-
-            .event-card-group-toggle {
-              position: absolute;
-
-              display: flex;
-              width: 100%;
-              flex-wrap: wrap;
-              justify-content: flex-end;
-
-              cursor: pointer;
-
-              .badge {
-                color: #007bff;
-              }
-            }
-
-            div.event-card:nth-child(1),
-            div.event-card:nth-child(2) {
-              border-top: none;
-            }
-          }
-        }
-      }
+    .pipeline-header {
+      grid-area: pipeline-header;
     }
 
-    .pipeline-main-content.grid {
+    .pipeline-main-content {
       grid-area: pipeline-main;
-      min-width: 300px;
-      display: grid;
+      overflow: scroll;
 
-      grid-template-areas:
-        'pipeline-header pipeline-header'
-        'pipeline-tab pipeline-tab'
-        'pipeline-content pipeline-workflowgraph';
-
-      grid-template-rows: 80px 52px 1fr;
-      grid-template-columns: 366px 8fr;
+      &.grid {
+        @include events.styles;
+      }
     }
   }
 }
