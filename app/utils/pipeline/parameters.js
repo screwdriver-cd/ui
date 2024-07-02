@@ -174,7 +174,9 @@ export function getNormalizedParameterGroups(
     });
   }
 
-  normalizedParameterGroups[0].isOpen = true;
+  if (normalizedParameterGroups.length > 0) {
+    normalizedParameterGroups[0].isOpen = true;
+  }
 
   return normalizedParameterGroups.concat(normalizedJobParameterGroups);
 }
