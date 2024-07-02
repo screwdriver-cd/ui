@@ -1,23 +1,29 @@
 import Route from '@ember/routing/route';
-import RSVP from 'rsvp';
 import { service } from '@ember/service';
 
 export default class NewPipelineRoute extends Route {
   @service router;
 
+  @service shuttle;
+
   @service store;
 
-  /* eslint-disable camelcase */
-  model({ pipeline_id }) {
-    return RSVP.hash({
-      pipeline: this.store.findRecord('pipeline', pipeline_id).catch(err => {
-        console.log('err', err);
-        // throw err;
-        this.router.transitionTo('/404');
+  async model(params) {
+    const collections = this.store.findAll('collection').catch(() => []);
 
-        return [];
-      })
-    });
+    const pipeline = await this.shuttle
+      .fetchFromApi('get', `/pipelines/${params.pipeline_id}`)
+      .catch(() => null);
+
+    return {
+      collections,
+      pipeline
+    };
   }
-  /* eslint-enable camelcase */
+
+  afterModel(model) {
+    if (!model.pipeline) {
+      this.router.replaceWith('/404');
+    }
+  }
 }
