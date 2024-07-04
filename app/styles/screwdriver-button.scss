@@ -1,0 +1,23 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  .btn-primary {
+    color: colors.$sd-white;
+    background-color: colors.$sd-running;
+    border-color: colors.$sd-running;
+
+    &:hover {
+      background-color: rgba(colors.$sd-running, 0.75);
+      border-color: transparent;
+    }
+  }
+
+  .btn-outline-primary {
+    color: colors.$sd-running;
+    border-color: colors.$sd-running;
+
+    &:hover {
+      background-color: rgba(colors.$sd-running, 0.1);
+    }
+  }
+}
