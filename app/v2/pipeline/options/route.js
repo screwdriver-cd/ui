@@ -1,30 +1,45 @@
-// import Route from '@ember/routing/route';
-
-// export default class NewPipelineOptionsRoute extends Route {}
-
 import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { get } from '@ember/object';
 
-export default Route.extend({
-  session: service(),
-  router: service(),
-  routeAfterAuthentication: 'pipeline.options',
-  model() {
+export default class PipelineOptionsRoute extends Route {
+  @service session;
+
+  @service router;
+
+  @service shuttle;
+
+  constructor() {
+    super(...arguments);
+    // Reset error message when switching pages
+    this.router.on('routeWillChange', (/* transition */) => {
+      const pipelineOptionsController = this.controllerFor(
+        'v2.pipeline.options'
+      );
+
+      pipelineOptionsController.set('errorMessage', '');
+    });
+  }
+
+  async model() {
     // Guests should not access this page
     if (get(this, 'session.data.authenticated.isGuest')) {
       this.router.transitionTo('pipeline');
     }
 
     const { pipeline } = this.modelFor('v2.pipeline');
+    const pipelineId = pipeline.id;
 
+    let jobs = [];
     // Prevent double render when jobs list updates asynchronously
-    return pipeline.get('jobs').then(jobs => ({ pipeline, jobs }));
-  },
-  actions: {
-    willTransition() {
-      // Reset error message when switching pages
-      this.controller.set('errorMessage', '');
+
+    try {
+      jobs = await this.shuttle.fetchJobs(pipelineId);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
     }
+
+    return { pipeline, jobs };
   }
-});
+}

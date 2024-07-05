@@ -1,42 +1,68 @@
 import Controller from '@ember/controller';
-import { reads } from '@ember/object/computed';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
+import { action } from '@ember/object';
 
-export default Controller.extend({
-  session: service(),
-  router: service(),
-  errorMessage: '',
-  isSaving: false,
-  pipeline: reads('model.pipeline'),
-  jobs: reads('model.jobs'),
-  actions: {
-    removePipeline() {
-      this.pipeline
-        .destroyRecord()
-        .then(() => {
-          this.router.transitionTo('home');
-        })
-        .catch(error => this.set('errorMessage', error.errors[0].detail || ''));
-    },
-    updatePipeline({ scmUrl, rootDir }) {
-      const { pipeline } = this;
+export default class PipelineOptionsController extends Controller {
+  @service session;
 
-      pipeline.setProperties({
-        checkoutUrl: scmUrl,
-        rootDir
-      });
+  @service router;
 
-      this.set('isSaving', true);
+  errorMessage = '';
 
-      pipeline
-        .save()
-        .then(() => this.set('errorMessage', ''))
-        .catch(err => {
-          this.set('errorMessage', err.errors[0].detail || '');
-        })
-        .finally(() => {
-          this.set('isSaving', false);
-        });
-    }
+  isSaving = false;
+
+  get pipeline() {
+    return this.model.pipeline;
   }
-});
+
+  get jobs() {
+    return this.model.jobs;
+  }
+
+  @action
+  async removePipeline() {
+    const currentPipeline = await this.store.findRecord(
+      'pipeline',
+      this.pipeilne.id
+    );
+
+    currentPipeline
+      .destroyRecord()
+      .then(() => {
+        this.router.transitionTo('home');
+      })
+      .catch(err => {
+        this.errorMessage = err.errors[0].detail || '';
+      });
+  }
+
+  @action
+  async updatePipeline({ scmUrl, rootDir }) {
+    const { pipeline } = this;
+
+    pipeline.setProperties({
+      checkoutUrl: scmUrl,
+      rootDir
+    });
+    this.isSaving = true;
+
+    const currentPipeline = await this.store.findRecord(
+      'pipeline',
+      this.pipeline.id
+    );
+
+    currentPipeline.setProperties({
+      ...pipeline
+    });
+
+    currentPipeline
+      .save()
+      .then(() => (this.errorMessage = ''))
+      .catch(err => {
+        this.errorMessage = err.errors[0].detail || '';
+      })
+      .finally(() => {
+        this.isSaving = false;
+      });
+  }
+}

@@ -354,5 +354,13 @@ export default Service.extend({
     const url = `/pipelines/${pipelineId}/stages`;
 
     return this.fetchFromApi(method, url);
+  },
+
+  // GET /pipelines/{id}/jobs
+  async fetchJobs(pipelineId) {
+    const method = 'get';
+    const url = `/pipelines/${pipelineId}/jobs`;
+
+    return this.fetchFromApi(method, url);
   }
 });
