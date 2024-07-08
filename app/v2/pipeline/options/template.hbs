@@ -1,5 +1,13 @@
 {{page-title "Options"}}
 <div class="pipeline-options">
-  <div>options content</div>
-  {{outlet}}
+  <PipelineOptions
+    class="padded-container"
+    @username={{this.session.data.authenticated.username}}
+    @pipeline={{this.pipeline}}
+    @jobs={{this.jobs}}
+    @errorMessage={{this.errorMessage}}
+    @onRemovePipeline={{action "removePipeline"}}
+    @isSaving={{this.isSaving}}
+    @onUpdatePipeline={{action "updatePipeline"}}
+  />
 </div>

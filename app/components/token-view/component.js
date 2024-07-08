@@ -1,4 +1,4 @@
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
@@ -14,8 +14,8 @@ export default Component.extend({
       get() {
         const { token } = this;
 
-        return this.newName !== token.get('name') ||
-          this.newDescription !== token.get('description')
+        return this.newName !== get(token, 'name') ||
+          this.newDescription !== get(token, 'description')
           ? 'Update'
           : 'Delete';
       }

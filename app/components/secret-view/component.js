@@ -1,4 +1,4 @@
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
@@ -10,8 +10,8 @@ export default Component.extend({
     get() {
       const { secret, pipeline } = this;
 
-      if (pipeline.get('configPipelineId')) {
-        if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
+      if (get(pipeline, 'configPipelineId')) {
+        if (get(secret, 'pipelineId') === get(pipeline, 'configPipelineId')) {
           return 'Override';
         }
 
@@ -31,7 +31,7 @@ export default Component.extend({
     get() {
       const { secret, pipeline } = this;
 
-      if (secret.get('pipelineId') === pipeline.get('configPipelineId')) {
+      if (get(secret, 'pipelineId') === get(pipeline, 'configPipelineId')) {
         return 'Inherited from parent pipeline';
       }
 
@@ -57,14 +57,14 @@ export default Component.extend({
         }
         secret.save();
         this.set('newValue', null);
-        this.set('originalAllowInPR', secret.get('allowInPR'));
+        this.set('originalAllowInPR', get(secret, 'allowInPR'));
       } else if (this.newValue) {
         // Create child pipeline secret to override inherited secret of same name
         return this.onCreateSecret(
-          secret.get('name'),
+          get(secret, 'name'),
           this.newValue,
           this.get('pipeline.id'),
-          secret.get('allowInPR')
+          get(secret, 'allowInPR')
         );
       }
 

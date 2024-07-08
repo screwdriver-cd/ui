@@ -16,6 +16,12 @@ const storeServiceStub = Service.extend({
   query() {
     return pipelines;
   },
+  peekRecord(name, id) {
+    return EmberObject.create({
+      id,
+      showPRJobs: true
+    });
+  },
   peekAll() {
     /* eslint new-cap: ["error", { "capIsNewExceptions": ["A"] }] */
     return A([

@@ -42,13 +42,20 @@ export default Service.extend({
     // No preferences for the pipeline exist, so we will create the default set.
     // Note: the newly created preferences for this pipeline are not saved back on the server as they are just default settings.
     // When a user changes the options in the options view of the pipeline, then the settings are saved.
-    const pipelinePreference = await this.store.createRecord(
+    let pipelinePreference = await this.store.peekRecord(
       'preference/pipeline',
-      {
-        id: pipelineId,
-        ...pipelinePreferences
-      }
+      `${pipelineId}`
     );
+
+    if (pipelinePreference === null) {
+      pipelinePreference = await this.store.createRecord(
+        'preference/pipeline',
+        {
+          id: pipelineId,
+          ...pipelinePreferences
+        }
+      );
+    }
 
     return pipelinePreference;
   }
