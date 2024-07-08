@@ -9,8 +9,12 @@ export default class PipelineOptionsRoute extends Route {
 
   @service shuttle;
 
-  constructor() {
-    super(...arguments);
+  beforeModel() {
+    // Guests should not access this page
+    if (get(this, 'session.data.authenticated.isGuest')) {
+      this.router.transitionTo('v2.pipeline');
+    }
+
     // Reset error message when switching pages
     this.router.on('routeWillChange', (/* transition */) => {
       const pipelineOptionsController = this.controllerFor(
@@ -22,18 +26,14 @@ export default class PipelineOptionsRoute extends Route {
   }
 
   async model() {
-    // Guests should not access this page
-    if (get(this, 'session.data.authenticated.isGuest')) {
-      this.router.transitionTo('pipeline');
-    }
-
     const { pipeline } = this.modelFor('v2.pipeline');
     const pipelineId = pipeline.id;
 
-    const jobs = await this.shuttle.fetchJobs(pipelineId).catch (e) {
+    const jobs = await this.shuttle.fetchJobs(pipelineId).catch(e => {
       console.error(e);
+
       return [];
-    }
+    });
 
     return { pipeline, jobs };
   }
