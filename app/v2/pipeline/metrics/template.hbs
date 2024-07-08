@@ -1,5 +1,369 @@
 {{page-title "Metrics"}}
 <div class="pipeline-metrics">
-  <div>metrics content</div>
-  {{outlet}}
+  <div class="padded-container">
+    <InfoMessage
+      @message={{this.errorMessage}}
+      @type="warning"
+      @icon="exclamation-triangle"
+    />
+
+    <div class="chart-controls">
+      <div class="chart-control range-selection">
+      <span class="title">
+        Time Range
+      </span>
+        <BsButtonGroup
+          @value={{this.selectedRange}}
+          @type="radio"
+          @onChange={{action "setTimeRange"}} as |bg|
+        >
+          {{#each this.timeRanges as |range|}}
+            <bg.button @value={{range.value}}>
+              {{range.alias}}
+            </bg.button>
+          {{/each}}
+        </BsButtonGroup>
+      </div>
+
+      <div class="chart-control custom-date-selection">
+      <span class="title">
+        Custom Date Range
+      </span>
+        <EmberFlatpickr
+          @clickOpens={{true}}
+          @dateFormat="m/d/Y"
+          @date={{this.customRange}}
+          @locale="en"
+          @mode="range"
+          @onChange={{action (mut this.dateValues)}}
+          @onClose={{action "setCustomRange"}}
+          placeholder="Choose Start & End Date Time"
+        />
+      </div>
+
+      <XToggle
+        @size="small"
+        @theme="material"
+        @showLabels={{true}}
+        @value={{this.isUTC}}
+        @offLabel="Local"
+        @onLabel="UTC"
+        @onToggle={{action (mut this.isUTC)}}
+      />
+
+      <label class="chart-control filters-selection">
+        <XToggle
+          @size="small"
+          @theme="material"
+          @value={{this.successOnly}}
+          @onToggle={{action "toggleSuccessOnly"}}
+        />
+        <div class="success-only">
+          Success Only
+        </div>
+      </label>
+    </div>
+
+    <div class="chart-pipeline-info">
+      <div class="col">
+      <span class="measure">
+        {{if this.measures.total this.measures.total "N/A"}}
+      </span>
+        <br />
+        <span class="title">
+        Total Events
+      </span>
+      </div>
+      <div class="col">
+      <span class="measure">
+        {{#if this.measures.total}}
+          <span class="passed">
+            {{this.measures.passed}}
+          </span>
+          /
+          <span class="failed">
+            {{this.measures.failed}}
+          </span>
+        {{else}}
+          N/A
+        {{/if}}
+      </span>
+        <br />
+        <span class="title">
+        Passed / Failed Jobs
+      </span>
+      </div>
+      <div class="col">
+      <span class="measure">
+        {{if this.measures.total this.measures.avgs.duration "N/A"}}
+      </span>
+        <br />
+        <span class="title">
+        Avg. Build Time
+      </span>
+      </div>
+      <div class="col">
+      <span class="measure">
+        {{if this.measures.total this.measures.avgs.imagePullTime "N/A"}}
+      </span>
+        <br />
+        <span class="title">
+        Avg. Image Pull Time
+      </span>
+      </div>
+      <div class="col">
+      <span class="measure">
+        {{if this.measures.total this.measures.avgs.queuedTime "N/A"}}
+      </span>
+        <br />
+        <span class="title">
+        Avg. Queued Time
+      </span>
+      </div>
+    </div>
+
+    {{#if this.measures.total}}
+      {{#if (is-fulfilled this.downtimeJobsMetrics)}}
+        {{#if this.downtimeJobsChartData}}
+          <Metrics::Chart
+            @chartTitle="Downtime vs Build Count"
+            @chartName={{this.downtimeJobsChartName}}
+            @legends={{this.downtimeJobsLegends}}
+            @resetZoom={{action "resetZoom"}}
+            @name={{this.downtimeJobsChartName}}
+            @metrics={{await this.downtimeJobsMetrics}}
+            @axis={{this.downtimeJobsAxis}}
+            @tooltip={{this.tooltip}}
+            @onrendered={{this.onrendered}}
+            @onresized={{this.onresized}}
+            @oninit={{get this.onInitFns this.downtimeJobsChartName}}
+          />
+        {{else}}
+          <div class="chart-cta">
+            Not enough metric available for Downtime Jobs!
+          </div>
+        {{/if}}
+      {{else}}
+        {{#if (is-pending this.downtimeJobsMetrics)}}
+          <div class="chart-cta">
+            Loading...
+          </div>
+        {{else}}
+          <div class="chart-cta">
+            No metric available for Downtime Jobs!
+          </div>
+        {{/if}}
+      {{/if}}
+      <div class="chart-c3">
+        <p class="chart-title">
+          Events
+        </p>
+        <label class="toggle-trend">
+          <XToggle
+            @size="small"
+            @theme="material"
+            @value={{this.inTrendlineView}}
+            @onToggle={{action "toggleTrendlineView"}}
+          />
+          <div class="trendline-view">
+            Trendline View
+          </div>
+        </label>
+        <ul class="list-inline chart-legend">
+          {{#each this.eventLegend as |lg|}}
+            <li
+              style={{lg.style}}
+              onclick={{action "onLegendClick" lg.key this.eventsChartName}}
+              onmouseenter={{action "onLegendHover" lg.key this.eventsChartName}}
+              onmouseleave={{action "onLegendHoverOut" this.eventsChartName}}
+            >
+              {{lg.name}}
+              <a>
+                only
+              </a>
+            </li>
+          {{/each}}
+        </ul>
+        <p class="y-axis-label">
+          TIME (MIN)
+        </p>
+        <ChartC3
+          @name={{this.eventsChartName}}
+          @data={{this.eventMetrics}}
+          @axis={{this.eventsAxis}}
+          @grid={{this.grid}}
+          @interaction={{this.interaction}}
+          @bar={{this.bar}}
+          @legend={{this.legend}}
+          @tooltip={{this.tooltip}}
+          @subchart={{this.subchart}}
+          @point={{this.point}}
+          @size={{this.size}}
+          @transition={{this.transition}}
+          @color={{this.color}}
+          @padding={{this.padding}}
+          @zoom={{this.zoom}}
+          @onrendered={{this.onrendered}}
+          @onresized={{this.onresized}}
+          @oninit={{get this.onInitFns this.eventsChartName}}
+        />
+        <p
+          class="reset-button"
+          onClick={{action "resetZoom" this.eventsChartName this.buildsChartName}}
+          title="Reset Zoom Level"
+        >
+          <FaIcon @icon="sync" />
+        </p>
+      </div>
+
+      <div class="chart-c3">
+        <p class="chart-title">
+          Build Breakdown Per Event
+        </p>
+        <ul class="list-inline chart-legend">
+          {{#each this.buildLegend as |lg|}}
+            <li
+              style={{lg.style}}
+              class={{lg.class}}
+              onclick={{action "onLegendClick" lg.key this.buildsChartName}}
+              onmouseenter={{action "onLegendHover" lg.key this.buildsChartName}}
+              onmouseleave={{action "onLegendHoverOut" this.buildsChartName}}
+            >
+              {{lg.name}}
+              <a>
+                only
+              </a>
+            </li>
+          {{/each}}
+        </ul>
+        <p class="y-axis-label">
+          TIME (MIN)
+        </p>
+        <ChartC3
+          @name={{this.buildsChartName}}
+          @data={{this.buildMetrics}}
+          @axis={{this.eventsAxis}}
+          @grid={{this.grid}}
+          @interaction={{this.interaction}}
+          @bar={{this.bar}}
+          @legend={{this.legend}}
+          @tooltip={{this.tooltip}}
+          @subchart={{this.subchart}}
+          @point={{this.point}}
+          @size={{this.size}}
+          @transition={{this.transition}}
+          @color={{this.color}}
+          @padding={{this.padding}}
+          @zoom={{this.zoom}}
+          @onrendered={{this.onrendered}}
+          @onresized={{this.onresized}}
+          @oninit={{get this.onInitFns this.buildsChartName}}
+        />
+        <p
+          class="reset-button"
+          onClick={{action "resetZoom" this.buildsChartName this.eventsChartName}}
+          title="Reset Zoom Level"
+        >
+          <FaIcon @icon="sync" />
+        </p>
+      </div>
+
+      {{#if this.metrics.stepGroup}}
+        <div class="chart-c3">
+          <p class="chart-title">
+            Step Breakdown Per Build
+          <div class="job-selector">
+            <select onchange={{action "selectJob" value="target.value"}}>
+              {{#each this.jobs as |job|}}
+                {{#if (eq job this.selectedJobName)}}
+                  <option value={{job}} selected="selected">
+                    {{job}}
+                  </option>
+                {{else}}
+                  <option value={{job}}>
+                    {{job}}
+                  </option>
+                {{/if}}
+              {{/each}}
+            </select>
+            <span class="control-icon">
+              <FaIcon @icon="caret-down" />
+            </span>
+          </div>
+          </p>
+          <ul class="list-inline chart-legend">
+            {{#each this.stepLegend as |lg|}}
+              <li
+                style={{lg.style}}
+                onclick={{action "onLegendClick" lg.key this.stepsChartName}}
+                onmouseenter={{action "onLegendHover" lg.key this.stepsChartName}}
+                onmouseleave={{action "onLegendHoverOut" this.stepsChartName}}
+              >
+                {{lg.name}}
+                <a>
+                  only
+                </a>
+              </li>
+            {{/each}}
+          </ul>
+          <p class="y-axis-label">
+            TIME (MIN)
+          </p>
+          <ChartC3
+            @name={{this.stepsChartName}}
+            @data={{this.stepMetrics}}
+            @axis={{this.stepsAxis}}
+            @grid={{this.grid}}
+            @interaction={{this.interaction}}
+            @bar={{this.bar}}
+            @legend={{this.legend}}
+            @tooltip={{this.tooltip}}
+            @subchart={{this.subchart}}
+            @point={{this.point}}
+            @size={{this.size}}
+            @transition={{this.transition}}
+            @color={{this.color}}
+            @padding={{this.padding}}
+            @zoom={{this.zoom}}
+            @onrendered={{this.onrendered}}
+            @onresized={{this.onresized}}
+            @oninit={{get this.onInitFns this.stepsChartName}}
+          />
+          <p
+            class="reset-button"
+            onClick={{action "resetZoom" this.stepsChartName}}
+            title="Reset Zoom Level"
+          >
+            <FaIcon @icon="sync" />
+          </p>
+        </div>
+      {{else}}
+        <div class="chart-cta">
+          Please select a job below to see step breakdown per build
+          <br />
+          <br />
+          <div class="job-selector">
+            <select onchange={{action "selectJob" value="target.value"}}>
+              <option value="">
+                Select a job
+              </option>
+              {{#each this.jobs as |job|}}
+                <option value={{job}}>
+                  {{job}}
+                </option>
+              {{/each}}
+            </select>
+            <span class="control-icon">
+            <FaIcon @icon="caret-down" />
+          </span>
+          </div>
+        </div>
+      {{/if}}
+    {{else}}
+      <div class="chart-cta">
+        No metric available for the chosen time range!
+      </div>
+    {{/if}}
+  </div>
+{{outlet}}
 </div>
