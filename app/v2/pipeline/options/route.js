@@ -30,14 +30,9 @@ export default class PipelineOptionsRoute extends Route {
     const { pipeline } = this.modelFor('v2.pipeline');
     const pipelineId = pipeline.id;
 
-    let jobs = [];
-    // Prevent double render when jobs list updates asynchronously
-
-    try {
-      jobs = await this.shuttle.fetchJobs(pipelineId);
-    } catch (e) {
-      // eslint-disable-next-line no-console
+    const jobs = await this.shuttle.fetchJobs(pipelineId).catch (e) {
       console.error(e);
+      return [];
     }
 
     return { pipeline, jobs };
