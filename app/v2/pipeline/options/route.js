@@ -30,6 +30,7 @@ export default class PipelineOptionsRoute extends Route {
     const pipelineId = pipeline.id;
 
     const jobs = await this.shuttle.fetchJobs(pipelineId).catch(e => {
+      // eslint-disable-next-line no-console
       console.error(e);
 
       return [];
