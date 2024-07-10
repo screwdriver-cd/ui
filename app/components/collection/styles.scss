@@ -1,0 +1,5 @@
+@use 'modal/add-to-collection/styles' as modal;
+
+@mixin styles {
+  @include modal.styles;
+}
