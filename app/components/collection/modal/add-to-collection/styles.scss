@@ -1,9 +1,12 @@
 @use 'screwdriver-colors' as colors;
+@use 'screwdriver-button' as button;
 
 @mixin styles {
   #add-to-collection-modal {
     .modal-dialog {
       max-width: 50%;
+
+      @include button.styles;
 
       .modal-body {
         .modal-title {
@@ -42,6 +45,11 @@
             > .btn {
               border-radius: 3px;
               margin: 0.25rem;
+
+              &.active {
+                background-color: rgba(colors.$sd-running, 0.75);
+                color: colors.$sd-white;
+              }
             }
           }
         }
