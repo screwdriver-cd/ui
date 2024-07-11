@@ -1,6 +1,5 @@
 import Controller from '@ember/controller';
 import { service } from '@ember/service';
-import { action } from '@ember/object';
 
 export default class NewPipelineController extends Controller {
   @service session;
@@ -23,16 +22,5 @@ export default class NewPipelineController extends Controller {
       'v2.pipeline.pulls',
       'v2.pipeline.jobs.index'
     ].includes(currentRouteName);
-  }
-
-  @action
-  addToCollection(pipelineId, collection) {
-    const { pipelineIds } = collection;
-
-    if (!pipelineIds.includes(pipelineId)) {
-      collection.set('pipelineIds', [...pipelineIds, pipelineId]);
-    }
-
-    return collection.save();
   }
 }
