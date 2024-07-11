@@ -1,5 +1,7 @@
+@use 'collection/styles' as collection;
 @use 'pipeline/styles' as pipeline;
 
 @mixin styles {
+  @include collection.styles;
   @include pipeline.styles;
 }
