@@ -167,6 +167,32 @@
                 </div>
               </div>
             </li>
+            <li>
+              <div class="row">
+                <div class="col-12">
+                  <h4>Admins</h4>
+                  <p>
+                    Users with write access to the repository are added to the pipeline admins
+                    by starting or stopping builds, or by <a href="#sync-pipeline" class="inline-link">executing a pipeline sync</a>.
+                  </p>
+                  {{#if this.displayAdmins}}
+                    <p class="admins-list">
+                      {{this.displayAdmins}}
+                      {{#if (and (gt this.adminsCount 5) (not this.isAdminsExpanded))}}
+                        ... <a href="#" onclick={{action "toggleExpand"}}>more</a>
+                      {{/if}}
+                      {{#if this.isAdminsExpanded}}
+                        <a href="#" onclick={{action "toggleExpand"}}>collapse</a>
+                      {{/if}}
+                    </p>
+                  {{else}}
+                    <p class="no-admin-message">
+                      This pipeline has no admins.
+                    </p>
+                  {{/if}}
+                </div>
+              </div>
+            </li>
           {{/if}}
         </ul>
       </section>
@@ -291,7 +317,7 @@
         <li>
           <div class="row">
             <div class="col-10">
-              <h4>
+              <h4 id="sync-pipeline">
                 Pipeline
               </h4>
               <p>
