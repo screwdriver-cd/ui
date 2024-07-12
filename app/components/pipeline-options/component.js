@@ -52,6 +52,7 @@ export default Component.extend({
   aliasName: '',
   pipelineName: '',
   expandedState: {},
+  isAdminsExpanded: false,
   sortedJobs: computed('jobs', function filterThenSortJobs() {
     const prRegex = /PR-\d+:.*/;
 
@@ -80,6 +81,34 @@ export default Component.extend({
       }
     }
   ),
+  adminsCount: computed('pipeline.admins', {
+    get() {
+      const admins =
+        this.get('pipeline.admins') === undefined ? {} : this.pipeline.admins;
+
+      return Object.keys(admins).filter(key => admins[key]).length;
+    }
+  }),
+  displayAdmins: computed('pipeline.admins', 'isAdminsExpanded', {
+    get() {
+      const admins =
+        this.get('pipeline.admins') === undefined ? {} : this.pipeline.admins;
+
+      const enabledAdmins = Object.keys(admins).filter(key => admins[key]);
+
+      if (!enabledAdmins) {
+        return '';
+      }
+
+      let displayAdmins = enabledAdmins;
+
+      if (displayAdmins.length > 5 && !this.isAdminsExpanded) {
+        displayAdmins = displayAdmins.slice(0, 5);
+      }
+
+      return displayAdmins.join(', ');
+    }
+  }),
   // Updating a pipeline
   async init() {
     this._super(...arguments);
@@ -270,6 +299,9 @@ export default Component.extend({
       }
 
       this.onUpdatePipeline(pipelineConfig);
+    },
+    toggleExpand() {
+      this.toggleProperty('isAdminsExpanded');
     },
     toggleJob(jobId, user, name, stillActive) {
       const status = stillActive ? 'ENABLED' : 'DISABLED';

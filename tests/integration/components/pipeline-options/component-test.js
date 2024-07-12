@@ -42,7 +42,15 @@ module('Integration | Component | pipeline options', function (hooks) {
       EmberObject.create({
         appId: 'foo/bar',
         scmUri: 'github.com:84604643:master',
-        id: 'abc1234'
+        id: 'abc1234',
+        admins: {
+          admin1: true,
+          admin2: true,
+          admin3: true,
+          admin4: true,
+          admin5: true,
+          admin6: true
+        }
       })
     );
 
@@ -78,7 +86,7 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     // Pipeline
     assert.dom('section.pipeline h3').hasText('Pipeline');
-    assert.dom('section.pipeline li').exists({ count: 5 });
+    assert.dom('section.pipeline li').exists({ count: 6 });
     assert
       .dom('section.pipeline h4')
       .hasText('Checkout URL and Source Directory');
@@ -96,6 +104,20 @@ module('Integration | Component | pipeline options', function (hooks) {
       $('section > ul > li:nth-child(5) input').attr('placeholder'),
       'Select Jobs...'
     );
+    assert.dom('section.pipeline li:nth-child(6) h4').hasText('Admins');
+    assert
+      .dom('section.pipeline li:nth-child(6) p')
+      .hasText(
+        'Users with write access to the repository are added to the pipeline admins by starting or stopping builds, or by executing a pipeline sync.'
+      );
+    assert
+      .dom('section.pipeline li:nth-child(6) .admins-list')
+      .hasText('admin1, admin2, admin3, admin4, admin5 ... more');
+
+    await click('section.pipeline li:nth-child(6) .admins-list a');
+    assert
+      .dom('section.pipeline li:nth-child(6) .admins-list')
+      .hasText('admin1, admin2, admin3, admin4, admin5, admin6 collapse');
 
     // Jobs
     assert.dom('section.jobs h3').hasText('Jobs');

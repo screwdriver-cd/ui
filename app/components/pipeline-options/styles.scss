@@ -179,6 +179,21 @@
       padding-left: 3px;
     }
   }
+
+  .admins-list {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .no-admin-message {
+    font-weight: bold;
+    color: $sd-failure;
+    margin-top: 10px;
+  }
+
+  .inline-link {
+    display: inline;
+  }
 }
 
 .text-input {
