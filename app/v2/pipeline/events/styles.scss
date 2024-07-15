@@ -126,7 +126,69 @@
     }
   }
 
-  .pipeline-workflow-graph {
+  .pipeline-workflow-graph-builds-table {
     grid-area: pipeline-event-main-content;
+    background-color: #f8f8f8;
+    .nav-button-container {
+      margin: 1rem 2rem -0.5rem 2rem;
+    }
+    .btn-group.view-toggle {
+      border: 1px solid #e5e5e5;
+      padding: 3px;
+    }
+    .btn-group.view-toggle,
+    .btn.btn-outline-primary {
+      border-radius: 3px;
+    }
+    .btn:first-child {
+      margin-right: 4px;
+    }
+    .btn.btn-outline-primary {
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 700;
+      padding: 0.2rem 1.75rem;
+      border-color: transparent;
+    }
+    .btn.btn-outline-primary:not(.active) {
+      color: #212529;
+    }
+    .btn.btn-outline-primary:not(.active):hover {
+      background-color: #3570f41f;
+    }
+    .builds-table {
+      padding: 2rem;
+    }
+    .builds-table-wrapper {
+      padding: 0 15px;
+      width: 100%;
+      overflow-y: auto;
+      height: 100vh;
+      background-color: #fff;
+      .header {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+    table.table thead tr {
+      background-color: #f7f7f7;
+    }
+    table.table th,
+    table.table td {
+      padding: 12px;
+    }
+    table.table tr:last-child td {
+      border-bottom: 1px solid #dee2e6;
+    }
+    a.paginate_button {
+      padding: 0.25rem 0.5rem;
+    }
+    .results-pagination-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
   }
 }

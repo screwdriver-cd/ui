@@ -56,6 +56,20 @@
   </div>
 </div>
 
-<div class="pipeline-workflow-graph" />
+<div class="pipeline-workflow-graph-builds-table">
+  <div class="nav-button-container">
+    <div class="button-container layout-buttons">
+        <div class="btn-group view-toggle" role="group">
+            <button class="btn btn-outline-primary" type="button">
+              Workflow    
+            </button>
+            <button class="btn active btn-outline-primary" type="button">
+              Builds
+            </button>
+          </div>
+      </div>
+  </div>
+  <Newui::BuildsTable />
+</div>
 
 {{outlet}}
