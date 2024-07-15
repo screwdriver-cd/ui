@@ -8,7 +8,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders', async function (assert) {
+    test('it renders core components', async function (assert) {
       this.setProperties({
         pipeline: { id: 123 },
         closeModal: () => {}
@@ -21,8 +21,9 @@ module(
         />`
       );
 
+      assert.dom('.modal-header').exists({ count: 1 });
       assert.dom('.alert').doesNotExist();
-      assert.dom('.modal-title').hasText('Add to collection(s)');
+      assert.dom('.modal-title').hasText('Add to a new collection');
       assert.dom('.create-new-collection').exists({ count: 1 });
       assert.dom('.create-new-collection label').exists({ count: 2 });
       assert.dom('.create-new-collection input').exists({ count: 2 });
