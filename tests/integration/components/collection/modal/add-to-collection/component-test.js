@@ -2,13 +2,15 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { click, fillIn, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import sinon from 'sinon';
+import { createCollectionBody } from 'screwdriver-ui/components/collection/modal/add-to-collection/util';
 
 module(
   'Integration | Component | collection/modal/add-to-collection',
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders', async function (assert) {
+    test('it renders core components', async function (assert) {
       this.setProperties({
         pipeline: { id: 123 },
         closeModal: () => {}
@@ -21,8 +23,9 @@ module(
         />`
       );
 
+      assert.dom('.modal-header').exists({ count: 1 });
       assert.dom('.alert').doesNotExist();
-      assert.dom('.modal-title').hasText('Add to collection(s)');
+      assert.dom('.modal-title').hasText('Add to a new collection');
       assert.dom('.create-new-collection').exists({ count: 1 });
       assert.dom('.create-new-collection label').exists({ count: 2 });
       assert.dom('.create-new-collection input').exists({ count: 2 });
@@ -114,6 +117,176 @@ module(
       await click('#collection-1');
 
       assert.dom('#submit-collections').isEnabled();
+    });
+
+    test('it makes API request to create new collection', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+
+      this.setProperties({
+        pipeline: { id: 123 },
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Collection::Modal::AddToCollection
+            @pipeline={{this.pipeline}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await fillIn('#new-collection-name-input', 'New Collection');
+      await click('#submit-collections');
+
+      assert.equal(shuttleStub.calledOnce, true);
+      assert.equal(
+        shuttleStub.calledWith(
+          'post',
+          '/collections',
+          createCollectionBody('New Collection', '', 123)
+        ),
+        true
+      );
+    });
+
+    test('it sets error message when creating a new collection fails', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+
+      sinon.stub(shuttle, 'fetchFromApi').rejects();
+
+      this.setProperties({
+        pipeline: { id: 123 },
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Collection::Modal::AddToCollection
+            @pipeline={{this.pipeline}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await fillIn('#new-collection-name-input', 'New Collection');
+      await click('#submit-collections');
+
+      assert.dom('.alert').exists({ count: 1 });
+      assert
+        .dom('.alert')
+        .hasText('× Failed to create new collection: New Collection');
+    });
+
+    test('it makes API request to add to an existing collection', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+
+      this.setProperties({
+        pipeline: { id: 123 },
+        collections: [{ id: 1, name: 'Test', pipelineIds: [] }],
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Collection::Modal::AddToCollection
+            @pipeline={{this.pipeline}}
+            @collections={{this.collections}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await click('#collection-1');
+      await click('#submit-collections');
+
+      assert.equal(shuttleStub.calledOnce, true);
+      assert.equal(
+        shuttleStub.calledWith('put', '/collections/1', { pipelineIds: [123] }),
+        true
+      );
+    });
+
+    test('it sets error message when adding to an existing collection fails', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+
+      sinon.stub(shuttle, 'fetchFromApi').rejects();
+
+      this.setProperties({
+        pipeline: { id: 123 },
+        collections: [{ id: 1, name: 'Test', pipelineIds: [] }],
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Collection::Modal::AddToCollection
+            @pipeline={{this.pipeline}}
+            @collections={{this.collections}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await click('#collection-1');
+      await click('#submit-collections');
+
+      assert.dom('.alert').exists({ count: 1 });
+      assert
+        .dom('.alert')
+        .hasText('× Failed to add pipeline to collections: Test');
+    });
+
+    test('it makes API requests when creating and adding to collections', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+
+      this.setProperties({
+        pipeline: { id: 123 },
+        collections: [
+          { id: 1, name: 'Test', pipelineIds: [] },
+          { id: 2, name: 'Funny', pipelineIds: [] }
+        ],
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Collection::Modal::AddToCollection
+            @pipeline={{this.pipeline}}
+            @collections={{this.collections}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await fillIn('#new-collection-name-input', 'New Collection');
+      await click('#collection-1');
+      await click('#collection-2');
+      await click('#submit-collections');
+
+      assert.equal(shuttleStub.callCount, 3);
+    });
+
+    test('it sets error messages when creating and adding to collections fails', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+
+      sinon.stub(shuttle, 'fetchFromApi').rejects();
+
+      this.setProperties({
+        pipeline: { id: 123 },
+        collections: [
+          { id: 1, name: 'Test', pipelineIds: [] },
+          { id: 2, name: 'Funny', pipelineIds: [] }
+        ],
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Collection::Modal::AddToCollection
+            @pipeline={{this.pipeline}}
+            @collections={{this.collections}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await fillIn('#new-collection-name-input', 'New Collection');
+      await click('#collection-1');
+      await click('#collection-2');
+      await click('#submit-collections');
+
+      assert.dom('.alert').exists({ count: 1 });
+      assert
+        .dom('.alert')
+        .hasText(
+          '× Failed to create new collection: New Collection.  Also failed to add pipeline to collections: Test, Funny'
+        );
     });
   }
 );

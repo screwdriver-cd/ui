@@ -1,8 +1,12 @@
 <BsModal
   id="add-to-collection-modal"
   @onHide={{fn @closeModal}}
+  @onSubmit={{fn this.submitCollections}}
   as |modal|
 >
+  <modal.header>
+    Add to collection(s)
+  </modal.header>
   <modal.body>
     {{#if this.errorMessage}}
       <InfoMessage
@@ -11,7 +15,7 @@
         @icon="exclamation-triangle"
       />
     {{/if}}
-    <div class="modal-title">Add to collection(s)</div>
+    <div class="modal-title">Add to a new collection</div>
     <div class="create-new-collection">
       <label>
         <div>Collection name:</div>
@@ -34,7 +38,7 @@
 
     {{#if this.hasCollections}}
       <hr />
-
+      <div class="modal-title">Add to an existing collection</div>
       <div class="select-collections">
         <BsButtonGroup
           @value={{this.selectedCollections}}
@@ -66,7 +70,7 @@
       @pendingText="Adding to collection(s)..."
       @fulfilledText="Added to collection(s)"
       @type="primary"
-      @onClick={{this.submitCollections}}
+      @onClick={{modal.submit}}
     />
   </modal.footer>
 </BsModal>
