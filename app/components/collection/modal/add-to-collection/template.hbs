@@ -14,7 +14,7 @@
         @icon="exclamation-triangle"
       />
     {{/if}}
-    <div class="modal-title">Add to collection(s)</div>
+    <div class="modal-title">Add to a new collection</div>
     <div class="create-new-collection">
       <label>
         <div>Collection name:</div>
@@ -37,7 +37,7 @@
 
     {{#if this.hasCollections}}
       <hr />
-
+      <div class="modal-title">Add to an existing collection</div>
       <div class="select-collections">
         <BsButtonGroup
           @value={{this.selectedCollections}}
