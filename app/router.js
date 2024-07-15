@@ -142,6 +142,11 @@ Router.map(function route() {
           this.route('index', { path: '/' });
         });
         this.route('pulls');
+        this.route(
+          'build',
+          { path: 'builds/:build_id' },
+          function buildRoute() {}
+        );
       }
     );
   });
