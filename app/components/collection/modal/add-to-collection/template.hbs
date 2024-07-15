@@ -3,6 +3,9 @@
   @onHide={{fn @closeModal}}
   as |modal|
 >
+  <modal.header>
+    Add to collection(s)
+  </modal.header>
   <modal.body>
     {{#if this.errorMessage}}
       <InfoMessage
