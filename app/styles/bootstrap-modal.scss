@@ -1,4 +1,6 @@
+@use 'screwdriver-button' as screwdriverButton;
 @use 'screwdriver-colors' as colors;
+@use 'variables';
 
 @mixin styles {
   #ember-bootstrap-wormhole {
@@ -7,9 +9,28 @@
       opacity: 1;
     }
 
-    .modal-content {
-      border-radius: 8px;
-      box-shadow: 0 0 10px colors.$sd-black;
+    .modal {
+      .modal-dialog {
+        max-width: 50%;
+
+        .modal-content {
+          border-radius: 8px;
+          box-shadow: 0 0 10px colors.$sd-black;
+
+          @include screwdriverButton.styles;
+
+          .modal-header {
+            font-weight: variables.$weight-bold;
+            font-size: 1.5rem;
+          }
+
+          .modal-footer {
+            button {
+              width: 10rem;
+            }
+          }
+        }
+      }
     }
   }
 }
