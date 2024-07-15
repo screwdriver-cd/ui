@@ -1,46 +1,17 @@
-@use 'variables';
 @use 'screwdriver-colors' as colors;
 
 @mixin styles {
-  #ember-bootstrap-wormhole {
-    .modal.toggle-job {
-      .modal-header {
-        font-weight: variables.$weight-bold;
-        font-size: 1.5rem;
-        padding: 1rem 3rem;
-      }
+  #toggle-job-modal {
+    .modal-body {
+      label {
+        display: flex;
+        flex-direction: column;
 
-      .modal-body {
-        padding: 3.5rem 3rem;
-
-        label {
-          display: flex;
-          flex-direction: column;
-
-          input {
-            background-color: colors.$sd-flyout-bg;
-            border-radius: 3px;
-            border: 1px solid colors.$sd-light-gray;
-            padding: 0.375rem 0.75rem;
-          }
-        }
-      }
-
-      .modal-footer {
-        padding: 1rem 3rem;
-
-        button {
-          width: 150px;
-
-          &.confirm {
-            background-color: colors.$sd-running;
-            border-color: colors.$sd-running;
-
-            &:hover {
-              background-color: colors.$sd-link;
-              border-color: colors.$sd-link;
-            }
-          }
+        input {
+          background-color: colors.$sd-flyout-bg;
+          border-radius: 3px;
+          border: 1px solid colors.$sd-light-gray;
+          padding: 0.375rem 0.75rem;
         }
       }
     }

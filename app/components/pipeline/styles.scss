@@ -1,13 +1,13 @@
 @use 'nav/styles' as nav;
 @use 'header/styles' as header;
 @use 'modal/confirm-action/styles' as confirm-action-modal;
-@use 'modal/toggle-job/styles' as toggle-job;
+@use 'modal/styles' as modal;
 @use 'parameters/styles' as parameters;
 
 @mixin styles {
   @include nav.styles;
   @include header.styles;
   @include confirm-action-modal.styles;
-  @include toggle-job.styles;
+  @include modal.styles;
   @include parameters.styles;
 }

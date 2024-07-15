@@ -1,5 +1,5 @@
 <BsModal
-  class="toggle-job"
+  id="toggle-job-modal"
   @onHide={{fn @closeModal}}
   @onSubmit={{fn this.updateJob}}
   as |modal|
@@ -26,10 +26,21 @@
     {{/if}}
     <label>
       Reason
-      <Input @value={{this.stateChangeMessage}}  autofocus="autofocus" placeholder="Reason for the job state change (optional)"/>
+      <Input
+        @value={{this.stateChangeMessage}}
+        autofocus="autofocus"
+        placeholder="Reason for the job state change (optional)"
+      />
     </label>
   </modal.body>
   <modal.footer>
-    <BsButton class="confirm" @onClick={{modal.submit}} disabled={{this.isDisabled}}>Save</BsButton>
+    <BsButton
+      id="submit-action"
+      @type="primary"
+      @onClick={{modal.submit}}
+      disabled={{this.isDisabled}}
+    >
+      Save
+    </BsButton>
   </modal.footer>
 </BsModal>

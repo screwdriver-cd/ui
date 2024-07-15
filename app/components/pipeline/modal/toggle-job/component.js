@@ -18,7 +18,7 @@ export default class PipelineModalToggleJobComponent extends Component {
   async updateJob() {
     const payload = {
       state:
-        this.args.toggleAction.toLowerCase() === 'disabled'
+        this.args.toggleAction.toLowerCase() === 'disable'
           ? 'DISABLED'
           : 'ENABLED'
     };
