@@ -15,7 +15,12 @@ module('Integration | Component | pipeline/modal/toggle-job', function (hooks) {
       closeModal: () => {}
     });
     await render(
-      hbs`<Pipeline::Modal::ToggleJob @jobId={{this.jobId}} @name={{this.name}} @toggleAction={{this.toggleAction}} @closeModal={{this.closeModal}}/>`
+      hbs`<Pipeline::Modal::ToggleJob
+        @jobId={{this.jobId}}
+        @name={{this.name}}
+        @toggleAction={{this.toggleAction}}
+        @closeModal={{this.closeModal}}
+      />`
     );
 
     assert.dom('.modal-title').hasText('Disable the "main" job?');
@@ -32,7 +37,12 @@ module('Integration | Component | pipeline/modal/toggle-job', function (hooks) {
       closeModal: () => {}
     });
     await render(
-      hbs`<Pipeline::Modal::ToggleJob @jobId={{this.jobId}} @name={{this.name}} @toggleAction={{this.toggleAction}} @closeModal={{this.closeModal}}/>`
+      hbs`<Pipeline::Modal::ToggleJob
+        @jobId={{this.jobId}}
+        @name={{this.name}}
+        @toggleAction={{this.toggleAction}}
+        @closeModal={{this.closeModal}}
+      />`
     );
 
     assert
@@ -53,13 +63,19 @@ module('Integration | Component | pipeline/modal/toggle-job', function (hooks) {
       closeModal: () => {}
     });
     await render(
-      hbs`<Pipeline::Modal::ToggleJob @jobId={{this.jobId}} @name={{this.name}} @toggleAction={{this.toggleAction}} @closeModal={{this.closeModal}}/>`
+      hbs`<Pipeline::Modal::ToggleJob
+        @jobId={{this.jobId}}
+        @name={{this.name}}
+        @toggleAction={{this.toggleAction}}
+        @closeModal={{this.closeModal}}
+      />`
     );
-    await click('button.confirm');
+    await click('#submit-action');
 
     assert.dom('.modal-body .alert.alert-warning').exists({ count: 1 });
     assert.dom('.modal-body .alert.alert-warning > span').hasText(errorMessage);
   });
+
   test('it displays success message when update succeeds', async function (assert) {
     const shuttle = this.owner.lookup('service:shuttle');
 
@@ -72,9 +88,14 @@ module('Integration | Component | pipeline/modal/toggle-job', function (hooks) {
       closeModal: () => {}
     });
     await render(
-      hbs`<Pipeline::Modal::ToggleJob @jobId={{this.jobId}} @name={{this.name}} @toggleAction={{this.toggleAction}} @closeModal={{this.closeModal}}/>`
+      hbs`<Pipeline::Modal::ToggleJob
+        @jobId={{this.jobId}}
+        @name={{this.name}}
+        @toggleAction={{this.toggleAction}}
+        @closeModal={{this.closeModal}}
+      />`
     );
-    await click('button.confirm');
+    await click('#submit-action');
 
     assert.dom('.modal-body .alert.alert-success').exists({ count: 1 });
     assert
@@ -94,13 +115,18 @@ module('Integration | Component | pipeline/modal/toggle-job', function (hooks) {
       closeModal: () => {}
     });
     await render(
-      hbs`<Pipeline::Modal::ToggleJob @jobId={{this.jobId}} @name={{this.name}} @toggleAction={{this.toggleAction}} @closeModal={{this.closeModal}}/>`
+      hbs`<Pipeline::Modal::ToggleJob
+        @jobId={{this.jobId}}
+        @name={{this.name}}
+        @toggleAction={{this.toggleAction}}
+        @closeModal={{this.closeModal}}
+      />`
     );
 
-    assert.dom('button.confirm').isNotDisabled();
+    assert.dom('#submit-action').isNotDisabled();
 
-    await click('button.confirm');
+    await click('#submit-action');
 
-    assert.dom('button.confirm').isDisabled();
+    assert.dom('#submit-action').isDisabled();
   });
 });

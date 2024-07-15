@@ -1,0 +1,5 @@
+@use 'toggle-job/styles' as toggleJob;
+
+@mixin styles {
+  @include toggleJob.styles;
+}
