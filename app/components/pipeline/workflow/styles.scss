@@ -1,0 +1,5 @@
+@use 'tooltip/styles' as tooltip;
+
+@mixin styles {
+  @include tooltip.styles;
+}
