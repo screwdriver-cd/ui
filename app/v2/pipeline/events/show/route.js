@@ -12,7 +12,6 @@ export default class NewPipelineEventsShowRoute extends Route {
     let event = latestCommitEvent;
 
     if (eventId !== latestCommitEvent.id) {
-      console.log('Not the latest commit event');
       event = await this.shuttle.fetchFromApi('get', `/events/${eventId}`);
     }
 
