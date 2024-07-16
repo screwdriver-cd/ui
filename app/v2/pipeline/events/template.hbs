@@ -14,48 +14,4 @@
   </BsNav>
 </div>
 
-<div class="pipeline-events">
-  <div class="search-filter-bar">
-
-    <span class="search-filter">
-      <span class="search">
-        {{svg-jar "search" class="img"}}
-      </span>
-      <span class="filter">
-        <FaIcon @icon="filter" />
-      </span>
-    </span>
-
-    <span class="new-event">
-      <span>Start a new event</span>
-      <FaIcon @icon="plus" />
-    </span>
-  </div>
-
-  <div class="event-cards">
-  {{#if this.isGroupedEvents}}
-    {{#each this.groupedEvents as |eventGroup| }}
-      <Newui::EventCardGroup
-       @selectedEventId={{this.selectedEventId}}
-       @pipelineId={{this.pipelineId}}
-       @lastSuccessful={{this.lastSuccessful}}
-       @latestCommit={{this.latestCommit}}
-       @events={{eventGroup}}
-      />
-    {{/each}}
-  {{else}}
-    {{#each this.events as |event|}}
-      <Newui::EventCard @event={{event}}
-       @selectedEventId={{this.selectedEventId}}
-       @pipelineId={{this.pipelineId}}
-       @lastSuccessful={{this.lastSuccessful}}
-       @latestCommit={{this.latestCommit}}
-      />
-    {{/each}}
-  {{/if}}
-  </div>
-</div>
-
-<div class="pipeline-workflow-graph" />
-
 {{outlet}}
