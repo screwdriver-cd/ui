@@ -110,7 +110,7 @@ module('Unit | Utility | Pipeline | parameters', function () {
       }
     );
 
-    assert.equal(parameters.length, 3);
+    assert.equal(parameters.length, 4);
     assert.deepEqual(parameters[0], {
       name: 'param1',
       value: true,
