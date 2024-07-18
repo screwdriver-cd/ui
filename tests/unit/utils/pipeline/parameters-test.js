@@ -99,12 +99,14 @@ module('Unit | Utility | Pipeline | parameters', function () {
       {
         param1: true,
         param2: 'abc',
-        param3: { value: 'something', description: 'some description' }
+        param3: { value: 'something', description: 'some description' },
+        param4: { value: 'foo' }
       },
       {
         param1: false,
         param2: { value: 'xyz', description: 'param description' },
-        param3: { value: 'default value' }
+        param3: { value: 'default value' },
+        param4: { value: ['foo', 'bar', 'baz'] }
       }
     );
 
@@ -126,6 +128,12 @@ module('Unit | Utility | Pipeline | parameters', function () {
       value: 'something',
       defaultValues: 'default value',
       description: 'some description'
+    });
+    assert.deepEqual(parameters[3], {
+      name: 'param4',
+      value: 'foo',
+      defaultValues: ['foo', 'bar', 'baz'],
+      description: ''
     });
   });
 
