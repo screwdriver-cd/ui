@@ -1,4 +1,8 @@
 & {
+  table + .row {
+    margin-bottom: 1rem;
+  }
+
   .table-summary + .table-nav.col-6 {
     flex: 0 0 66.66666667%;
     max-width: 66.66666667%;
@@ -127,4 +131,23 @@ input.job-name {
 input.job-name::placeholder {
   font-style: normal;
   font-weight: 400;
+}
+
+form.pull-left label {
+  border: none;
+  background: none;
+}
+
+form.pull-left label + select {
+  background-color: #f7f7f7;
+  border-color: #e5e5e5;
+  color: #232a31;
+  border-radius: 0.25rem !important;
+}
+
+form.pull-left label,
+form.pull-left label + select {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
 }

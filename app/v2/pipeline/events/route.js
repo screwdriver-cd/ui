@@ -33,7 +33,8 @@ export default class NewPipelineEventsRoute extends Route {
       latestCommit,
       pipelineId,
       selectedEventId: eventId,
-      pipeline: pipelineController.pipeline
+      pipeline: pipelineController.pipeline,
+      showHideEventsList: pipelineController.showHideEventsList
     });
   }
 }

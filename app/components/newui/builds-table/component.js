@@ -1,6 +1,8 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed, set } from '@ember/object';
+import { dom } from '@fortawesome/fontawesome-svg-core';
+import { next } from '@ember/runloop';
 
 export default Component.extend({
   direction: 'Down',
@@ -222,6 +224,258 @@ export default Component.extend({
       duration: 'xxxx',
       coverage: 'xxxx',
       actions: 'xxxx'
+    },
+    {
+      job: 25,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 26,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 27,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 28,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 29,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 30,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 31,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 32,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 33,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 34,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 35,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 36,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 37,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 38,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 39,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 40,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 41,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 42,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 43,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 44,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 45,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 46,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 47,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 48,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 49,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 50,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 51,
+      history: 'xx',
+      status: 'Success',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
+    },
+    {
+      job: 52,
+      history: 'xx',
+      status: 'Failed',
+      startTime: 'xxx',
+      duration: 'xxxx',
+      coverage: 'xxxx',
+      actions: 'xxxx'
     }
   ],
   columns: [
@@ -259,7 +513,12 @@ export default Component.extend({
     this._super(...arguments);
 
     const customTheme = {
-      table: 'table table-condensed table-sm'
+      table: 'table table-condensed table-sm',
+      footerSummaryNumericPagination: 'col-7',
+      paginationWrapperNumeric: 'col-3',
+      tableSummaryMsg: 'Showing %@ - %@ of %@ builds',
+      sortAscIcon: 'fa fa-fw fa-sort-up',
+      sortDescIcon: 'fa fa-fw fa-sort-down'
     };
 
     this.theme.setProperties(customTheme);
@@ -267,6 +526,16 @@ export default Component.extend({
     this.set('filters', {
       job: '',
       status: ''
+    });
+  },
+
+  didUpdate() {
+    this._super(...arguments);
+
+    next(() => {
+      if (this.element) {
+        dom.i2svg({ node: this.element });
+      }
     });
   },
 

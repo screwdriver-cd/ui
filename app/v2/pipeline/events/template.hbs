@@ -14,7 +14,7 @@
   </BsNav>
 </div>
 
-<div class="pipeline-events">
+<div class="pipeline-events {{if this.isExpanded "hide"}}">
   <div class="search-filter-bar">
 
     <span class="search-filter">
@@ -70,6 +70,13 @@
       </div>
   </div>
   <Newui::BuildsTable />
+  <div>
+    {{#if this.isExpanded}}
+      <button data-button="" class="showHideEventsBtn right" type="button" aria-label="Show events list" {{on "click" this.toggleExpanded}}>{{svg-jar "chevronNext" class="img"}}</button>
+    {{else}}
+      <button data-button="" class="showHideEventsBtn left" type="button" aria-label="Hide events list" {{on "click" this.toggleExpanded}}>{{svg-jar "chevronBack" class="img"}}</button>
+    {{/if}}
+  </div>
 </div>
 
 {{outlet}}

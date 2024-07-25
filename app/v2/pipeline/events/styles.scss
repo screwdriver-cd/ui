@@ -10,6 +10,14 @@
   grid-template-rows: 3.75rem;
   grid-template-columns: 26rem;
 
+  &.expanded {
+    grid-template-areas:
+      'pipeline-tab'
+      'pipeline-event-main-content';
+
+    grid-template-columns: auto;
+  }
+
   .pipeline-tab {
     grid-area: pipeline-tab;
 
@@ -53,6 +61,10 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+
+    &.hide {
+      display: none;
+    }
 
     .search-filter-bar {
       display: flex;
@@ -163,7 +175,8 @@
       padding: 0 15px;
       width: 100%;
       overflow-y: auto;
-      height: 100vh;
+      // height: 100vh;
+      min-height: calc(100vh - 280px);
       background-color: #fff;
       .header {
         margin-top: 1rem;
@@ -189,6 +202,42 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
+    }
+
+    .showHideEventsBtn {
+      height: 12rem;
+      width: 2rem;
+      position: absolute;
+      background-color: #3570f41f;
+      border: none;
+      border-top-right-radius: 50px;
+      border-bottom-right-radius: 50px;
+      z-index: 10;
+      margin: 0 !important;
+      cursor: pointer;
+      box-shadow: 2px 0px 5px 0px rgb(21 24 26 / 25%);
+      top: 50%;
+      transform: translate(0%, -50%);
+    }
+
+    .showHideEventsBtn > svg {
+      color: #3697f2;
+    }
+
+    .showHideEventsBtn.left > svg {
+      margin-left: -5px;
+    }
+
+    .showHideEventsBtn.right > svg {
+      margin-left: -3px;
+    }
+
+    .verticalBtnWrapper {
+      position: absolute;
+      height: auto;
+      border: none;
+      margin-right: 7px;
+      z-index: 10;
     }
   }
 }
