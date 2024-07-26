@@ -36,8 +36,6 @@ export default Component.extend({
           pipelineWorkflowElement.scrollLeft) -
         20;
 
-      // const left = event.layerX + stageInfoWrapperElement.left - 20;
-
       el.style.top = `${top}px`;
       el.style.left = `${left}px`;
     }
