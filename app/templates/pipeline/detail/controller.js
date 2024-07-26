@@ -53,6 +53,30 @@ export default class TemplatesPipelineDetailController extends Controller {
     return config.annotations || {};
   }
 
+  get cache() {
+    const { config } = this.selectedVersionTemplate;
+
+    return config.cache || {};
+  }
+
+  get subscribe() {
+    const { config } = this.selectedVersionTemplate;
+
+    return config.subscribe || {};
+  }
+
+  get stages() {
+    const { config } = this.selectedVersionTemplate;
+
+    return config.stages || {};
+  }
+
+  get workflowGraph() {
+    const { config } = this.selectedVersionTemplate;
+
+    return config.workflowGraph || {};
+  }
+
   get jobs() {
     const { config } = this.selectedVersionTemplate;
     const configJobs = get(config, 'jobs') || {};
