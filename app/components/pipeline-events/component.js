@@ -51,7 +51,7 @@ export async function stopBuild(givenEvent, job) {
 }
 
 // eslint-disable-next-line require-jsdoc
-export async function startDetachedBuild(job, options = {}) {
+export async function startDetachedBuild(job, options = {}, stage) {
   this.set('isShowingModal', true);
 
   let event = this.selectedEventObj;
@@ -81,7 +81,7 @@ export async function startDetachedBuild(job, options = {}) {
   let causeMessage = `Manually started by ${user}`;
   const { prNum } = event;
 
-  let startFrom = job.name;
+  let startFrom = stage ? `stage@${stage.name}` : job.name;
 
   if (reason) {
     causeMessage = `[force start]${reason}`;
