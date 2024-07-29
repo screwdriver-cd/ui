@@ -14,9 +14,11 @@
     @startFrom={{this.selectedEventObj.startFrom}}
     @causeMessage={{this.selectedEventObj.causeMessage}}
     @graphClicked={{action "graphClicked"}}
+    @onShowStageActionsMenu={{action "onShowStageActionsMenu"}}
     @isSkipped={{this.selectedEventObj.isSkipped}}
     @prChainEnabled={{this.prChainEnabled}}
     @stages={{this.stages}}
+    @displayStageMenuHandle={{this.displayStageMenuHandle}}
   >
     <WorkflowTooltip
       @pipeline={{this.pipeline}}
@@ -30,6 +32,14 @@
       @setJobState={{this.setJobState}}
       @confirmStartBuild={{action "confirmStartBuild"}}
     />
+
+    <WorkflowStageActionsMenu
+      @showMenu={{this.showStageActionsMenu}}
+      @canRestartPipeline={{this.canRestartPipeline}}
+      @canStageStartFromView={{this.canStageStartFromView}}
+      @menuData={{this.stageMenuData}}
+      @confirmStartBuild={{action "confirmStartBuild"}}
+    />
   </WorkflowGraphD3>
   {{#if this.isShowingModal}}
     <ModalDialog
@@ -41,10 +51,17 @@
         Are you sure to start?
       </h3>
       <p>
-        Job:
-        <code>
-          {{this.tooltipData.job.name}}
-        </code>
+        {{#if (eq this.newEventStartFromType 'STAGE')}}
+          Stage:
+          <code>
+            {{this.menuData.stage.name}}
+          </code>
+        {{else}}
+          Job:
+          <code>
+            {{this.tooltipData.job.name}}
+          </code>
+        {{/if}}
         <br />
         Commit:
         <code>
