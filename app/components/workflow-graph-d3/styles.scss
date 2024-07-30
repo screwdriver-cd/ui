@@ -112,16 +112,33 @@ g {
 
 .stage-info {
   padding: 10px;
-}
 
-.stage-name {
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .stage-title {
+    display: flex;
+    flex-overflow: wrap;
 
-.stage-description {
-  color: $sd-text-med;
-  margin-top: 5px;
+    .stage-name {
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stage-actions {
+      margin-left: auto;
+
+      .stage-menu-handle {
+        font-weight: bold;
+        font-size: 20px;
+        height: 20px;
+        line-height: 10px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .stage-description {
+    color: $sd-text-med;
+    margin-top: 5px;
+  }
 }

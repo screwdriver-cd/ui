@@ -185,6 +185,14 @@ export default Component.extend({
       if (!this.minified && typeof fn === 'function') {
         fn(job, d3.event, this.elementSizes);
       }
+    },
+
+    stageMenuHandleClicked(stage) {
+      const fn = this.onShowStageActionsMenu;
+
+      if (!this.minified && typeof fn === 'function') {
+        fn(stage, d3.event);
+      }
     }
   },
   redraw(data) {
@@ -227,6 +235,10 @@ export default Component.extend({
       this.send('buildClicked', e);
     };
 
+    const onStageMenuHandleClick = stage => {
+      this.send('stageMenuHandleClicked', stage);
+    };
+
     // Add the SVG element
     const svg = getGraphSvg(
       this.element,
@@ -240,7 +252,14 @@ export default Component.extend({
 
     // stages
     const verticalDisplacements = this.showStages
-      ? addStages(svg, data, this.elementSizes, nodeWidth)
+      ? addStages(
+          svg,
+          data,
+          this.elementSizes,
+          nodeWidth,
+          onStageMenuHandleClick,
+          this.displayStageMenuHandle
+        )
       : {};
 
     // edges
