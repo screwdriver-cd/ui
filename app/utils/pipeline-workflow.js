@@ -7,7 +7,7 @@ import { isRoot, reverseGraph, subgraphFilter } from './graph-tools';
  * @param jobName{string}   Job name of the node in question
  * @returns {boolean}       True if the node can be started from the given view, false otherwise
  */
-export default function canJobStart(activeTab, pipelineGraph, jobName) {
+export function canJobStart(activeTab, pipelineGraph, jobName) {
   const reversedGraph = reverseGraph(pipelineGraph);
   const subgraph = subgraphFilter(reversedGraph, jobName);
 
@@ -36,4 +36,19 @@ export default function canJobStart(activeTab, pipelineGraph, jobName) {
   }
 
   return true;
+}
+
+/**
+ * Determines if a stage can be triggered from the view indicated by the activeTab
+ * @param activeTab{string} The active tab that is selected
+ * @param pipelineGraph     Pipeline graph as {nodes, edges}
+ * @param jobName{string}   Stage in question
+ * @returns {boolean}       True if the stage can be started from the given view, false otherwise
+ */
+export function canStageStart(activeTab, pipelineGraph, stage) {
+  if (activeTab === 'pulls') {
+    return false;
+  }
+
+  return canJobStart(activeTab, pipelineGraph, stage.setup.name);
 }
