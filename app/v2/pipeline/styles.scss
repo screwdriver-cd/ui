@@ -1,7 +1,7 @@
 @use 'events/styles' as events;
 
 @mixin styles {
-  .pipeline-page {
+  .pipeline-page-contents {
     display: grid;
     height: 100%;
 

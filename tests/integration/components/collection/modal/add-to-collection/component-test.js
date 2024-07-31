@@ -119,7 +119,7 @@ module(
       assert.dom('#submit-collections').isEnabled();
     });
 
-    test('it makes API request to create new collection', async function (assert) {
+    test('it makes show message indicating new collection was created successfully', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
       const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
 
@@ -146,6 +146,10 @@ module(
         ),
         true
       );
+      assert.dom('.alert').exists({ count: 1 });
+      assert
+        .dom('.alert > span')
+        .hasText('Successfully created new collection: New Collection');
     });
 
     test('it sets error message when creating a new collection fails', async function (assert) {
@@ -169,11 +173,11 @@ module(
 
       assert.dom('.alert').exists({ count: 1 });
       assert
-        .dom('.alert')
-        .hasText('× Failed to create new collection: New Collection');
+        .dom('.alert > span')
+        .hasText('Failed to create new collection: New Collection');
     });
 
-    test('it makes API request to add to an existing collection', async function (assert) {
+    test('it displays message indicating adding pipeline to existing collection was successful', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
       const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
 
@@ -198,6 +202,10 @@ module(
         shuttleStub.calledWith('put', '/collections/1', { pipelineIds: [123] }),
         true
       );
+      assert.dom('.alert').exists({ count: 1 });
+      assert
+        .dom('.alert > span')
+        .hasText('Successfully added pipeline to collections: Test');
     });
 
     test('it sets error message when adding to an existing collection fails', async function (assert) {
@@ -223,11 +231,11 @@ module(
 
       assert.dom('.alert').exists({ count: 1 });
       assert
-        .dom('.alert')
-        .hasText('× Failed to add pipeline to collections: Test');
+        .dom('.alert > span')
+        .hasText('Failed to add pipeline to collections: Test');
     });
 
-    test('it makes API requests when creating and adding to collections', async function (assert) {
+    test('it displays message indicating creating and adding to collections was successful', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
       const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
 
@@ -253,6 +261,12 @@ module(
       await click('#submit-collections');
 
       assert.equal(shuttleStub.callCount, 3);
+      assert.dom('.alert').exists({ count: 1 });
+      assert
+        .dom('.alert > span')
+        .hasText(
+          'Successfully created new collection: New Collection.  Also added pipeline to collections: Test, Funny'
+        );
     });
 
     test('it sets error messages when creating and adding to collections fails', async function (assert) {
@@ -283,9 +297,9 @@ module(
 
       assert.dom('.alert').exists({ count: 1 });
       assert
-        .dom('.alert')
+        .dom('.alert > span')
         .hasText(
-          '× Failed to create new collection: New Collection.  Also failed to add pipeline to collections: Test, Funny'
+          'Failed to create new collection: New Collection.  Also failed to add pipeline to collections: Test, Funny'
         );
     });
   }
