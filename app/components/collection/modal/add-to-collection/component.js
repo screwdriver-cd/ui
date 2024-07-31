@@ -7,7 +7,9 @@ import { createCollectionBody, getCollectionsWithoutPipeline } from './util';
 export default class CollectionModalAddToCollectionModalComponent extends Component {
   @service shuttle;
 
-  @tracked errorMessage;
+  @tracked errorMessage = null;
+
+  @tracked successMessage = null;
 
   @tracked newCollectionName = '';
 
@@ -60,6 +62,7 @@ export default class CollectionModalAddToCollectionModalComponent extends Compon
           )
         )
         .then(() => {
+          this.successMessage = `Successfully created new collection: ${this.newCollectionName}`;
           this.newCollectionName = '';
           this.newCollectionDescription = '';
         })
@@ -95,6 +98,7 @@ export default class CollectionModalAddToCollectionModalComponent extends Compon
   async submitCollections() {
     this.isAwaitingResponse = true;
     this.errorMessage = null;
+    this.successMessage = null;
 
     return new Promise(resolve => {
       Promise.allSettled([
@@ -114,12 +118,24 @@ export default class CollectionModalAddToCollectionModalComponent extends Compon
             )}`;
           }
         } else {
-          this.selectedCollections.forEach(collection => {
-            document.getElementById(
-              `collection-${collection.id}`
-            ).disabled = true;
-          });
-          this.selectedCollections = [];
+          const collectionNames = this.selectedCollections
+            .map(collection => collection.name)
+            .join(', ');
+
+          if (collectionNames.length > 0) {
+            if (this.successMessage) {
+              this.successMessage += `.  Also added pipeline to collections: ${collectionNames}`;
+            } else {
+              this.successMessage = `Successfully added pipeline to collections: ${collectionNames}`;
+            }
+
+            this.selectedCollections.forEach(collection => {
+              document.getElementById(
+                `collection-${collection.id}`
+              ).disabled = true;
+            });
+            this.selectedCollections = [];
+          }
         }
         resolve();
       });

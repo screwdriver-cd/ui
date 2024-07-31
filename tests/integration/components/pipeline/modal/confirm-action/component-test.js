@@ -1,7 +1,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { fillIn, render } from '@ember/test-helpers';
+import { click, fillIn, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import sinon from 'sinon';
 
 module(
   'Integration | Component | pipeline/modal/confirm-action',
@@ -227,7 +228,7 @@ module(
         />`
       );
 
-      assert.dom('.modal-footer button.confirm').isDisabled();
+      assert.dom('#submit-action').isDisabled();
     });
 
     test('it enables submit button when reason is provided for frozen job', async function (assert) {
@@ -255,7 +256,84 @@ module(
 
       await fillIn('.frozen-reason input', 'Some reason');
 
-      assert.dom('.modal-footer button.confirm').isEnabled();
+      assert.dom('#submit-action').isEnabled();
+    });
+
+    test('it display success message', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+
+      this.setProperties({
+        pipeline: { parameters: {} },
+        event: {
+          commit: { message: 'commit message', url: 'http://foo.com' },
+          sha: 'deadbeef0123456789'
+        },
+        jobs: [],
+        latestCommitEvent: { sha: 'deadbeef0123456789' },
+        job: { name: 'main' },
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @pipeline={{this.pipeline}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @latestCommitEvent={{this.latestCommitEvent}}
+            @job={{this.job}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert.dom('.alert').doesNotExist();
+
+      await click('#submit-action');
+
+      assert.equal(shuttleStub.calledOnce, true);
+      assert.dom('#submit-action').isDisabled();
+      assert.dom('.alert').exists({ count: 1 });
+      assert.dom('.alert > span').hasText('Started successfully');
+    });
+
+    test('it displays error message when API call fails', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const errorMessage = 'Failed to trigger build';
+
+      const shuttleStub = sinon
+        .stub(shuttle, 'fetchFromApi')
+        .rejects({ message: errorMessage });
+
+      this.setProperties({
+        pipeline: { parameters: {} },
+        event: {
+          commit: { message: 'commit message', url: 'http://foo.com' },
+          sha: 'deadbeef0123456789'
+        },
+        jobs: [],
+        latestCommitEvent: { sha: 'deadbeef0123456789' },
+        job: { name: 'main' },
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @pipeline={{this.pipeline}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @latestCommitEvent={{this.latestCommitEvent}}
+            @job={{this.job}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert.dom('.alert').doesNotExist();
+
+      await click('#submit-action');
+
+      assert.equal(shuttleStub.calledOnce, true);
+      assert.dom('.alert').exists({ count: 1 });
+      assert.dom('.alert > span').hasText(errorMessage);
     });
   }
 );
