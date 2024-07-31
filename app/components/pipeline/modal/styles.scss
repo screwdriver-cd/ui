@@ -1,5 +1,7 @@
+@use 'confirm-action/styles' as confirmAction;
 @use 'toggle-job/styles' as toggleJob;
 
 @mixin styles {
+  @include confirmAction.styles;
   @include toggleJob.styles;
 }

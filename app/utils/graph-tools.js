@@ -102,14 +102,12 @@ const extractEventStages = (graph, pipelineStages) => {
         stageNameToEventStageMap[stageName] = eventStage;
       }
 
-      const jobInfo = { id: n.id, name: n.name };
-
       if (isStageSetupJob(n.name)) {
-        eventStage.setup = jobInfo;
+        eventStage.setup = n;
       } else if (isStageTeardownJob(n.name)) {
-        eventStage.teardown = jobInfo;
+        eventStage.teardown = n;
       } else {
-        eventStage.jobs.push(jobInfo);
+        eventStage.jobs.push(n);
       }
     }
   });
