@@ -1,4 +1,5 @@
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import { EXTERNAL_TRIGGER_ALL } from 'screwdriver-data-schema/config/regex';
 
 /**
  * Determines if a node can show a tooltip
@@ -26,7 +27,7 @@ export function getTooltipData(node, event, jobs, builds = []) {
   const isTrigger = node.name.startsWith('~');
 
   if (isTrigger) {
-    const externalTriggerMatch = node.name.match(/^~?sd@(\d+):([\w-]+)$/);
+    const externalTriggerMatch = node.name.match(EXTERNAL_TRIGGER_ALL);
     const downstreamTriggerMatch = node.name.match(/^~sd-([\w-]+)-triggers$/);
 
     // Add external trigger data if relevant
@@ -46,7 +47,7 @@ export function getTooltipData(node, event, jobs, builds = []) {
       const triggers = [];
 
       node.triggers.forEach(t => {
-        const downstreamTrigger = t.match(/^~?sd@(\d+):([\w-]+)$/);
+        const downstreamTrigger = t.match(EXTERNAL_TRIGGER_ALL);
 
         triggers.push({
           triggerName: t,
