@@ -14,6 +14,10 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   @service session;
 
+  @tracked errorMessage = null;
+
+  @tracked successMessage = null;
+
   @tracked isAwaitingResponse = false;
 
   @tracked wasActionSuccessful = false;
@@ -105,20 +109,20 @@ export default class PipelineModalConfirmActionComponent extends Component {
       this.reason
     );
 
-    return new Promise((resolve, reject) => {
-      this.shuttle
-        .fetchFromApi('POST', '/events', data)
-        .then(() => {
-          this.wasActionSuccessful = true;
-          resolve();
-        })
-        .catch(err => {
-          this.wasActionSuccessful = false;
-          reject(err);
-        })
-        .finally(() => {
-          this.isAwaitingResponse = false;
-        });
-    });
+    await this.shuttle
+      .fetchFromApi('post', '/events', data)
+      .then(() => {
+        this.successMessage = `${capitalizeFirstLetter(
+          this.action
+        )}ed successfully`;
+        this.wasActionSuccessful = true;
+      })
+      .catch(err => {
+        this.wasActionSuccessful = false;
+        this.errorMessage = err.message;
+      })
+      .finally(() => {
+        this.isAwaitingResponse = false;
+      });
   }
 }

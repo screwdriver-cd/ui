@@ -311,7 +311,7 @@ module('Integration | Component | workflow graph d3', function (hooks) {
     ]);
 
     await render(
-      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @stages={{this.stages}}/>`
+      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @stages={{this.stages}} @displayStageMenuHandle={{true}}/>`
     );
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
@@ -329,6 +329,7 @@ module('Integration | Component | workflow graph d3', function (hooks) {
       2
     );
 
+    // stage name
     assert.equal(
       this.element.querySelectorAll(
         'svg > .stage-info-wrapper .stage-info .stage-name'
@@ -342,6 +343,15 @@ module('Integration | Component | workflow graph d3', function (hooks) {
       .dom('svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-name')
       .hasText('production');
 
+    // stage actions menu handle
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-actions .stage-menu-handle'
+      ).length,
+      2
+    );
+
+    // stage description
     assert.equal(
       this.element.querySelectorAll(
         'svg > .stage-info-wrapper .stage-info .stage-description'

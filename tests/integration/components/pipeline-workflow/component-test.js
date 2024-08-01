@@ -67,6 +67,7 @@ module('Integration | Component | pipeline workflow', function (hooks) {
 
     assert.dom('.graph-node').exists({ count: 8 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
+    assert.dom('.workflow-stage-actions-menu').exists({ count: 1 });
   });
 
   test('it renders an event without pr job', async function (assert) {
@@ -87,6 +88,7 @@ module('Integration | Component | pipeline workflow', function (hooks) {
 
     assert.dom('.graph-node').exists({ count: 7 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
+    assert.dom('.workflow-stage-actions-menu').exists({ count: 1 });
   });
 
   test('it renders with frozen window', async function (assert) {
@@ -162,6 +164,7 @@ module('Integration | Component | pipeline workflow', function (hooks) {
       .exists({ count: 1 });
     assert.dom('.graph-node.build-frozen').exists({ count: 1 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
+    assert.dom('.workflow-stage-actions-menu').exists({ count: 1 });
   });
 
   test('it renders with latest-commit', async function (assert) {
@@ -256,6 +259,7 @@ module('Integration | Component | pipeline workflow', function (hooks) {
 
     assert.dom('.graph-node').exists({ count: 4 });
     assert.dom('.workflow-tooltip').exists({ count: 1 });
+    assert.dom('.workflow-stage-actions-menu').exists({ count: 1 });
     assert.dom('.pipelineWorkflow g:nth-of-type(1)').hasClass('graph-node');
     assert
       .dom('.pipelineWorkflow g:nth-of-type(2)')

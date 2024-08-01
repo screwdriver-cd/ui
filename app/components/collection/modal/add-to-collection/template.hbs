@@ -15,6 +15,13 @@
         @icon="exclamation-triangle"
       />
     {{/if}}
+    {{#if this.successMessage}}
+      <InfoMessage
+        @message={{this.successMessage}}
+        @type="success"
+        @icon="check-circle"
+      />
+    {{/if}}
     <div class="modal-title">Add to a new collection</div>
     <div class="create-new-collection">
       <label>
