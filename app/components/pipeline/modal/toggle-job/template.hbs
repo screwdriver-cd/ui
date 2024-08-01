@@ -15,6 +15,7 @@
         @message={{this.errorMessage}}
         @type="warning"
         @icon="exclamation-triangle"
+        @dismissible={{false}}
       />
     {{/if}}
     {{#if this.successMessage}}
@@ -22,6 +23,7 @@
         @message={{this.successMessage}}
         @type="success"
         @icon="check-circle"
+        @dismissible={{false}}
       />
     {{/if}}
     <label>
