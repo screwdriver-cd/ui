@@ -13,6 +13,7 @@
         @message={{this.errorMessage}}
         @type="warning"
         @icon="exclamation-triangle"
+        @dismissible={{false}}
       />
     {{/if}}
     {{#if this.successMessage}}
@@ -20,6 +21,7 @@
         @message={{this.successMessage}}
         @type="success"
         @icon="check-circle"
+        @dismissible={{false}}
       />
     {{/if}}
     <div id="confirm-action-job">Job: <code>{{@job.name}}</code></div>

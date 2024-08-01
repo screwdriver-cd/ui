@@ -1,5 +1,5 @@
 {{#if @message}}
-  <BsAlert @onDismissed={{action "clearMessage"}} @type={{this.type}}>
+  <BsAlert @onDismissed={{action "clearMessage"}} @type={{this.type}} @dismissible={{this.dismissible}}>
     {{#if
       (eq
         @message "This checkoutUrl is not supported for your current login host."
