@@ -6,17 +6,12 @@ export default class NewPipelineRoute extends Route {
 
   @service shuttle;
 
-  @service store;
-
   async model(params) {
-    const collections = this.store.findAll('collection').catch(() => []);
-
     const pipeline = await this.shuttle
       .fetchFromApi('get', `/pipelines/${params.pipeline_id}`)
       .catch(() => null);
 
     return {
-      collections,
       pipeline
     };
   }

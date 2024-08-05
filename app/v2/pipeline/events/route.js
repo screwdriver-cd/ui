@@ -1,39 +1,27 @@
 import Route from '@ember/routing/route';
-import RSVP from 'rsvp';
 import { service } from '@ember/service';
 
 export default class NewPipelineEventsRoute extends Route {
-  @service store;
-
   @service shuttle;
 
-  /* eslint-disable camelcase */
-  model() {
-    const { pipeline_id: pipelineId } = this.paramsFor('v2.pipeline');
+  async model() {
+    const model = this.modelFor('v2.pipeline');
+    const pipelineId = this.paramsFor('v2.pipeline').pipeline_id;
 
-    return RSVP.hash({
-      events: this.store.query('event', {
-        pipelineId,
-        page: 1,
-        // count: ENV.APP.NUM_EVENTS_LISTED
-        count: 20
-      }),
-      latestCommit: this.shuttle.getLatestCommitEvent(pipelineId)
-    });
-  }
-  /* eslint-enable camelcase */
+    const userSettings = await this.shuttle.fetchFromApi(
+      'get',
+      '/users/settings'
+    );
 
-  setupController(controller, { events, latestCommit }) {
-    const { pipeline_id: pipelineId } = this.paramsFor('v2.pipeline');
-    const { event_id: eventId } = this.paramsFor('v2.pipeline.events.show');
-    const pipelineController = this.controllerFor('v2.pipeline');
+    const latestCommitEvent = await this.shuttle.fetchFromApi(
+      'get',
+      `/pipelines/${pipelineId}/latestCommitEvent`
+    );
 
-    controller.setProperties({
-      events,
-      latestCommit,
-      pipelineId,
-      selectedEventId: eventId,
-      pipeline: pipelineController.pipeline
-    });
+    return {
+      ...model,
+      userSettings,
+      latestCommitEvent
+    };
   }
 }
