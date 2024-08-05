@@ -67,7 +67,6 @@ export default class TemplatesPipelineDetailController extends Controller {
   }
 
   get workflowGraph() {
-    console.log('selectedVersionTemplate', this.selectedVersionTemplate);
     const { config } = this.selectedVersionTemplate;
 
     const defaultWorkflowGraph = {
