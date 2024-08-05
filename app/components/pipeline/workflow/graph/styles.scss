@@ -1,0 +1,83 @@
+@use 'screwdriver-colors' as colors;
+
+@font-face {
+  font-family: 'screwdriver';
+  src: url('/assets/screwdriver.eot?anwrf#iefix') format('embedded-opentype'),
+    url('/assets/screwdriver.ttf?anwrf') format('truetype'),
+    url('/assets/screwdriver.woff?anwrf') format('woff'),
+    url('/assets/screwdriver.svg?anwrf#screwdriver') format('svg');
+  font-style: normal;
+}
+
+@mixin styles {
+  #workflow-graph {
+    .graph-node {
+      font-family: 'screwdriver';
+      fill: colors.$sd-text-light;
+      cursor: pointer;
+
+      &.build-success,
+      &.build-started_from {
+        fill: colors.$sd-success;
+
+        &:hover {
+          fill: darken(colors.$sd-success, 10%);
+        }
+      }
+
+      &.build-failure,
+      &.build-aborted {
+        fill: colors.$sd-failure;
+
+        &:hover {
+          fill: darken(colors.$sd-failure, 10%);
+        }
+      }
+
+      &.build-unstable,
+      &.build-warning {
+        fill: colors.$sd-unstable;
+
+        &:hover {
+          fill: darken(colors.$sd-unstable, 10%);
+        }
+      }
+
+      &.build-running,
+      &.build-queued,
+      &.build-blocked,
+      &.build-skipped {
+        fill: colors.$sd-queued;
+
+        &:hover {
+          fill: darken(colors.$sd-queued, 10%);
+        }
+      }
+    }
+    .graph-edge {
+      stroke: colors.$sd-text-light;
+      fill: transparent;
+
+      &.build-success,
+      &.build-started_from {
+        stroke: colors.$sd-success;
+      }
+    }
+
+    .stage-info {
+      padding: 10px;
+
+      .stage-name {
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .stage-description {
+        color: colors.$sd-text-med;
+        margin-top: 5px;
+      }
+    }
+  }
+}
