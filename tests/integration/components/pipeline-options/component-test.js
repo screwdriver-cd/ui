@@ -108,7 +108,7 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert
       .dom('section.pipeline li:nth-child(6) p')
       .hasText(
-        'Users with write access to the repository are added to the pipeline admins by starting or stopping builds, or by executing a pipeline sync.'
+        'Users with admin permission to this pipeline.'
       );
     assert
       .dom('section.pipeline li:nth-child(6) .admins-list')
