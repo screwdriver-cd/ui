@@ -1,5 +1,7 @@
+@use 'graph/styles' as graph;
 @use 'tooltip/styles' as tooltip;
 
 @mixin styles {
+  @include graph.styles;
   @include tooltip.styles;
 }
