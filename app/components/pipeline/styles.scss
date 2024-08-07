@@ -2,10 +2,12 @@
 @use 'header/styles' as header;
 @use 'modal/styles' as modal;
 @use 'parameters/styles' as parameters;
+@use 'workflow/styles' as workflow;
 
 @mixin styles {
   @include nav.styles;
   @include header.styles;
   @include modal.styles;
   @include parameters.styles;
+  @include workflow.styles;
 }

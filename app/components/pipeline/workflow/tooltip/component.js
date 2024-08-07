@@ -4,12 +4,10 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import { getTooltipData } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
-import canJobStart from 'screwdriver-ui/utils/pipeline-workflow';
+import { canJobStart } from 'screwdriver-ui/utils/pipeline-workflow';
 
 export default class PipelineWorkflowTooltipComponent extends Component {
   @service router;
-
-  @service shuttle;
 
   @service session;
 
@@ -20,8 +18,6 @@ export default class PipelineWorkflowTooltipComponent extends Component {
   @tracked isDescriptionClicked = false;
 
   @tracked showConfirmActionModal = false;
-
-  @tracked confirmActionMeta;
 
   @tracked showStopBuildModal = false;
 
@@ -85,17 +81,13 @@ export default class PipelineWorkflowTooltipComponent extends Component {
     return description;
   }
 
-  get job() {
-    return this.tooltipData.job;
-  }
-
   @action
   setTooltipPosition(element) {
     const { d3Event } = this.args.d3Data;
     const { ICON_SIZE } = this.args.d3Data.sizes;
 
-    element.style.top = `${d3Event.clientY + ICON_SIZE}px`;
-    element.style.left = `${d3Event.clientX - 30}px`;
+    element.style.top = `${d3Event.layerY + ICON_SIZE}px`;
+    element.style.left = `${d3Event.layerX - 30}px`;
   }
 
   @action
