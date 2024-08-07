@@ -172,8 +172,11 @@
                 <div class="col-12">
                   <h4>Admins</h4>
                   <p>
-                    Users with write access to the repository are added to the pipeline admins
-                    by starting or stopping builds, or by <a href="#sync-pipeline" class="inline-link">executing a pipeline sync</a>.
+                    Users with admin permission to this pipeline.
+                    <FaIcon
+                      @icon="question-circle"
+                      @title="If you have write access to the repository, you can become a pipeline admin by starting/stopping builds or syncing the pipeline."
+                    />
                   </p>
                   {{#if this.displayAdmins}}
                     <p class="admins-list">
