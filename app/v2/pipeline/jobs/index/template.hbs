@@ -1,2 +1,13 @@
 {{page-title "Index"}}
-{{outlet}}
+
+<div class="pipeline-jobs">
+  <div>jobs content</div>
+  <div class="row">
+    <div class="col-12 separator partial-view">
+      boom
+      {{log this.pipeline}}
+      {{log this.jobs}}
+    </div>
+  </div>
+  {{outlet}}
+</div>
