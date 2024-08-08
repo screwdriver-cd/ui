@@ -55,11 +55,11 @@ export default class V2PipelineEventsShowController extends Controller {
   }
 
   @action
-  setShowTooltip(showTooltip, node, d3Event, sizes) {
+  setShowTooltip(showTooltip, node, d3Event) {
     this.showTooltip = showTooltip;
 
     if (showTooltip) {
-      this.d3Data = { node, d3Event, sizes };
+      this.d3Data = { node, d3Event };
     } else {
       this.d3Data = null;
     }
