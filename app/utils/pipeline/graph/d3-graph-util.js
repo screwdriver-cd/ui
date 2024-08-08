@@ -277,7 +277,7 @@ export function addStages(
   onStageMenuHandleClick,
   displayStageMenuHandle
 ) {
-  const { ICON_SIZE, TITLE_SIZE } = sizes;
+  const { TITLE_SIZE } = sizes;
 
   const stageNameDisplacementMap = {};
   const stageNameToStageElementsMap = {};
@@ -297,7 +297,7 @@ export function addStages(
     // stage info
     const fo = svg
       .append('foreignObject')
-      .attr('width', nodeWidth * stage.graph.meta.width - ICON_SIZE / 2)
+      .attr('width', calcStageWidth(stage, nodeWidth, sizes))
       .attr('height', 0) // Actual height will be computed and set later
       .attr('x', calcStageX(stage, nodeWidth, sizes))
       .attr('y', calcStageY(stage, sizes))

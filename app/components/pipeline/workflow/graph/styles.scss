@@ -1,4 +1,5 @@
 @use 'screwdriver-colors' as colors;
+@use 'variables';
 
 @font-face {
   font-family: 'screwdriver';
@@ -67,11 +68,26 @@
     .stage-info {
       padding: 10px;
 
-      .stage-name {
-        font-weight: bold;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+      .stage-title {
+        display: flex;
+        justify-content: space-between;
+
+        .stage-name {
+          font-weight: bold;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .stage-actions {
+          .stage-menu-handle {
+            font-size: 1.5rem;
+            font-weight: variables.$weight-bold;
+            cursor: pointer;
+            height: 1.5rem;
+            line-height: 0.75rem;
+          }
+        }
       }
 
       .stage-description {
