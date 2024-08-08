@@ -53,11 +53,15 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
       const x = stageMenuRect.width / 2 + stageMenuRect.x;
       const y = stageMenuRect.height + stageMenuRect.y;
 
-      element.style.top = `${y - workflowGraphRect.y + 2}px`;
-      // 14 is 1 rem (the padding of the tooltip)
-      // 2 is the border width
-      // 13 is the width of the tooltip triangle
-      element.style.left = `${x - workflowGraphRect.x - 14 - 2 - 13}px`;
+      // The constants below are from the CSS style sheet
+      const padding = 14;
+      const borderWidth = 2;
+      const triangleWidth = 13;
+
+      element.style.top = `${y - workflowGraphRect.y + borderWidth}px`;
+      element.style.left = `${
+        x - workflowGraphRect.x - padding - borderWidth - triangleWidth
+      }px`;
     }
   }
 
