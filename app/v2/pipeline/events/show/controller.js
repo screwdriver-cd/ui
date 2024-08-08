@@ -12,6 +12,8 @@ export default class V2PipelineEventsShowController extends Controller {
 
   @tracked showTooltip = false;
 
+  @tracked showStageTooltip = false;
+
   @tracked d3Data = null;
 
   get workflowGraph() {
@@ -58,6 +60,17 @@ export default class V2PipelineEventsShowController extends Controller {
 
     if (showTooltip) {
       this.d3Data = { node, d3Event };
+    } else {
+      this.d3Data = null;
+    }
+  }
+
+  @action
+  setShowStageTooltip(showStageTooltip, stage, d3Event) {
+    this.showStageTooltip = showStageTooltip;
+
+    if (showStageTooltip) {
+      this.d3Data = { stage, d3Event };
     } else {
       this.d3Data = null;
     }

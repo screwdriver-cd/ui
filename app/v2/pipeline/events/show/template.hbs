@@ -81,5 +81,16 @@
         @latestCommitEvent={{this.model.latestCommitEvent}}
       />
     {{/if}}
+    {{#if this.showStageTooltip}}
+      <Pipeline::Workflow::Tooltip::Stage
+        @d3Data={{this.d3Data}}
+        @event={{this.model.event}}
+        @jobs={{this.model.jobs}}
+        @builds={{this.model.builds}}
+        @workflowGraph={{this.workflowGraph}}
+        @pipeline={{this.model.pipeline}}
+        @latestCommitEvent={{this.model.latestCommitEvent}}
+      />
+    {{/if}}
   </div>
 </div>

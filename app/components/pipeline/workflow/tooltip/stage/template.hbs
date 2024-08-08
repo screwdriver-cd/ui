@@ -1,0 +1,26 @@
+<div id="workflow-graph-tooltip" {{did-insert this.setTooltipPosition}}>
+  <div class="triangle" />
+
+  {{#if this.canStartStageFromView}}
+    <a
+      id="start-job-link"
+      href="#"
+      {{on "click" (fn this.openConfirmActionModal)}}
+    >
+      {{if this.stageStatus "Restart" "Start"}} pipeline from this stage
+    </a>
+  {{else}}
+    <div>Can not {{if this.stageStatus "restart" "start"}} stage</div>
+  {{/if}}
+</div>
+
+{{#if this.showConfirmActionModal}}
+  <Pipeline::Modal::ConfirmAction
+    @pipeline={{@pipeline}}
+    @event={{@event}}
+    @jobs={{@jobs}}
+    @latestCommitEvent={{@latestCommitEvent}}
+    @job={{this.job}}
+    @closeModal={{this.closeConfirmActionModal}}
+  />
+{{/if}}

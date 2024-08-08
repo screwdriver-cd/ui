@@ -40,12 +40,17 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
     const onClickGraph = () => {
       this.args.setShowTooltip(false);
+      this.args.setShowStageTooltip(false);
     };
 
     const onClickNode = node => {
       if (nodeCanShowTooltip(node)) {
         this.args.setShowTooltip(true, node, d3.event);
       }
+    };
+
+    const onClickStageMenu = stage => {
+      this.args.setShowStageTooltip(true, stage, d3.event);
     };
 
     // Add the SVG element
@@ -60,7 +65,14 @@ export default class PipelineWorkflowGraphComponent extends Component {
     // stages
     const verticalDisplacements =
       this.args.stages.length > 0
-        ? addStages(svg, data, elementSizes, nodeWidth)
+        ? addStages(
+            svg,
+            data,
+            elementSizes,
+            nodeWidth,
+            onClickStageMenu,
+            this.args.displayStageTooltip
+          )
         : {};
 
     // edges
