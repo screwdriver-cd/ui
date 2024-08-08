@@ -20,11 +20,6 @@ export default class TemplatesPipelineDetailController extends Controller {
 
   pipelineTemplateTags = [];
 
-  workflowGraph = {
-    nodes: [],
-    edges: []
-  };
-
   @tracked startTime;
 
   @tracked endTime;
@@ -51,6 +46,35 @@ export default class TemplatesPipelineDetailController extends Controller {
     const { config } = this.selectedVersionTemplate;
 
     return config.annotations || {};
+  }
+
+  get cache() {
+    const { config } = this.selectedVersionTemplate;
+
+    return config.cache || {};
+  }
+
+  get subscribe() {
+    const { config } = this.selectedVersionTemplate;
+
+    return config.subscribe || {};
+  }
+
+  get stages() {
+    const { config } = this.selectedVersionTemplate;
+
+    return config.stages || {};
+  }
+
+  get workflowGraph() {
+    const { config } = this.selectedVersionTemplate;
+
+    const defaultWorkflowGraph = {
+      nodes: [],
+      edges: []
+    };
+
+    return config.workflowGraph || defaultWorkflowGraph;
   }
 
   get jobs() {

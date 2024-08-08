@@ -1,16 +1,19 @@
 @use 'events/styles' as events;
 
 @mixin styles {
-  .pipeline-page {
+  .pipeline-page-contents {
     display: grid;
     height: 100%;
-
-    grid-template-columns: 4rem;
-    grid-auto-rows: min-content auto;
 
     grid-template-areas:
       'pipeline-nav pipeline-header'
       'pipeline-nav pipeline-main';
+    grid-template-columns: 4rem calc(100% - 4rem);
+    grid-template-rows: 4.5rem calc(100% - 4.5rem);
+
+    #pipeline-nav {
+      grid-area: pipeline-nav;
+    }
 
     #pipeline-header {
       grid-area: pipeline-header;

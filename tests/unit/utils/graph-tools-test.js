@@ -929,17 +929,27 @@ module('Unit | Utility | graph tools', function () {
         },
         id: 7,
         jobs: [
-          { id: 21, name: 'ci-deploy' },
-          { id: 22, name: 'ci-test' },
-          { id: 23, name: 'ci-certify' }
+          { id: 21, name: 'ci-deploy', stageName: 'integration' },
+          { id: 22, name: 'ci-test', stageName: 'integration' },
+          { id: 23, name: 'ci-certify', stageName: 'integration' }
         ],
         name: 'integration',
         pos: {
           x: 3,
           y: 0
         },
-        setup: { id: 28, name: 'stage@integration:setup' },
-        teardown: { id: 29, name: 'stage@integration:teardown' }
+        setup: {
+          id: 28,
+          name: 'stage@integration:setup',
+          stageName: 'integration',
+          virtual: true
+        },
+        teardown: {
+          id: 29,
+          name: 'stage@integration:teardown',
+          stageName: 'integration',
+          virtual: true
+        }
       },
       {
         description: undefined,
@@ -964,17 +974,25 @@ module('Unit | Utility | graph tools', function () {
         },
         id: 8,
         jobs: [
-          { id: 31, name: 'prod-deploy' },
-          { id: 32, name: 'prod-test' },
-          { id: 33, name: 'prod-certify' }
+          { id: 31, name: 'prod-deploy', stageName: 'production' },
+          { id: 32, name: 'prod-test', stageName: 'production' },
+          { id: 33, name: 'prod-certify', stageName: 'production' }
         ],
         name: 'production',
         pos: {
           x: 6,
           y: 0
         },
-        setup: { id: 38, name: 'stage@production:setup' },
-        teardown: { id: 39, name: 'stage@production:teardown' }
+        setup: {
+          id: 38,
+          name: 'stage@production:setup',
+          stageName: 'production'
+        },
+        teardown: {
+          id: 39,
+          name: 'stage@production:teardown',
+          stageName: 'production'
+        }
       }
     ];
 

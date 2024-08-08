@@ -265,9 +265,18 @@ export function getVerticalDisplacements(
  * @param data
  * @param sizes
  * @param nodeWidth
+ * @param onStageMenuHandleClick
+ * @param displayStageMenuHandle
  * @returns {{}}
  */
-export function addStages(svg, data, sizes, nodeWidth) {
+export function addStages(
+  svg,
+  data,
+  sizes,
+  nodeWidth,
+  onStageMenuHandleClick,
+  displayStageMenuHandle
+) {
   const { ICON_SIZE, TITLE_SIZE } = sizes;
 
   const stageNameDisplacementMap = {};
@@ -292,17 +301,39 @@ export function addStages(svg, data, sizes, nodeWidth) {
       .attr('height', 0) // Actual height will be computed and set later
       .attr('x', calcStageX(stage, nodeWidth, sizes))
       .attr('y', calcStageY(stage, sizes))
-      .attr('class', 'stage-info-wrapper');
+      .attr('class', `stage-info-wrapper _stage_${stage.name}`);
 
     const stageInfo = fo.append('xhtml:div').attr('class', 'stage-info');
 
     // stage info - name
-    stageInfo
+    const stageTitle = stageInfo
       .append('div')
+      .attr('class', 'stage-title')
+      .style('font-size', `${TITLE_SIZE}px`);
+
+    // stage info - name
+    stageTitle
+      .append('span')
       .html(stage.name)
       .attr('title', stage.name)
       .attr('class', 'stage-name')
       .style('font-size', `${TITLE_SIZE}px`);
+
+    if (displayStageMenuHandle) {
+      const stageActions = stageTitle
+        .append('div')
+        .attr('title', 'Stage actions')
+        .attr('class', 'stage-actions');
+
+      stageActions
+        .append('div')
+        .html('...')
+        .attr('title', 'Stage menu')
+        .attr('class', 'stage-menu-handle')
+        .on('click', () => {
+          onStageMenuHandleClick(stage);
+        });
+    }
 
     // stage info - description
     if (stage.description && stage.description.length > 0) {

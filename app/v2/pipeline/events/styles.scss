@@ -6,9 +6,8 @@
   grid-template-areas:
     'pipeline-tab pipeline-tab'
     'pipeline-events pipeline-event-main-content';
-
-  grid-template-rows: 3.75rem;
-  grid-template-columns: 26rem;
+  grid-template-rows: 3.75rem calc(100% - 3.75rem);
+  grid-template-columns: 26rem calc(100% - 26rem);
 
   &.expanded {
     grid-template-areas:
@@ -140,104 +139,27 @@
 
   .pipeline-workflow-graph-builds-table {
     grid-area: pipeline-event-main-content;
-    background-color: #f8f8f8;
-    .nav-button-container {
-      margin: 1rem 2rem -0.5rem 2rem;
+    
+    #pipeline-workflow-graph-controls {
+      display: flex;
+      align-content: center;
+      padding-left: 1rem;
+      height: 2.5rem;
     }
-    .btn-group.view-toggle {
-      border: 1px solid #e5e5e5;
-      padding: 3px;
-    }
-    .btn-group.view-toggle,
-    .btn.btn-outline-primary {
-      border-radius: 3px;
-    }
-    .btn:first-child {
-      margin-right: 4px;
-    }
-    .btn.btn-outline-primary {
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 700;
-      padding: 0.2rem 1.75rem;
-      border-color: transparent;
-    }
-    .btn.btn-outline-primary:not(.active) {
-      color: #212529;
-    }
-    .btn.btn-outline-primary:not(.active):hover {
-      background-color: #3570f41f;
-    }
-    .builds-table {
-      padding: 2rem;
-    }
-    .builds-table-wrapper {
-      padding: 0 15px;
-      width: 100%;
-      overflow-y: auto;
-      // height: 100vh;
-      min-height: calc(100vh - 280px);
-      background-color: #fff;
-      .header {
-        margin-top: 1rem;
-        display: flex;
-        justify-content: flex-end;
+
+    #workflow-graph-container {
+      position: relative;
+      height: calc(100% - 2.5rem);
+      overflow: auto;
+
+      #workflow-graph {
+        height: 100%;
+
+        svg {
+          min-width: 100%;
+          min-height: 100%;
+        }
       }
-    }
-    table.table thead tr {
-      background-color: #f7f7f7;
-    }
-    table.table th,
-    table.table td {
-      padding: 12px;
-    }
-    table.table tr:last-child td {
-      border-bottom: 1px solid #dee2e6;
-    }
-    a.paginate_button {
-      padding: 0.25rem 0.5rem;
-    }
-    .results-pagination-wrapper {
-      display: inline-flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-    }
-
-    .showHideEventsBtn {
-      height: 12rem;
-      width: 2rem;
-      position: absolute;
-      background-color: #3570f41f;
-      border: none;
-      border-top-right-radius: 50px;
-      border-bottom-right-radius: 50px;
-      z-index: 10;
-      margin: 0 !important;
-      cursor: pointer;
-      box-shadow: 2px 0px 5px 0px rgb(21 24 26 / 25%);
-      top: 50%;
-      transform: translate(0%, -50%);
-    }
-
-    .showHideEventsBtn > svg {
-      color: #3697f2;
-    }
-
-    .showHideEventsBtn.left > svg {
-      margin-left: -5px;
-    }
-
-    .showHideEventsBtn.right > svg {
-      margin-left: -3px;
-    }
-
-    .verticalBtnWrapper {
-      position: absolute;
-      height: auto;
-      border: none;
-      margin-right: 7px;
-      z-index: 10;
     }
   }
 }

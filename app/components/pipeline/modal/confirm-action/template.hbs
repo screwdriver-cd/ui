@@ -1,10 +1,29 @@
 <BsModal
-  class="confirm-action"
+  id="confirm-action-modal"
   @onHide={{fn @closeModal}}
+  @onSubmit={{fn this.startBuild}}
   as |modal|
 >
-  <modal.body>
+  <modal.header>
     <div class="modal-title">Are you sure you want to {{this.action}}?</div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="exclamation-triangle"
+        @dismissible={{false}}
+      />
+    {{/if}}
+    {{#if this.successMessage}}
+      <InfoMessage
+        @message={{this.successMessage}}
+        @type="success"
+        @icon="check-circle"
+        @dismissible={{false}}
+      />
+    {{/if}}
     <div id="confirm-action-job">Job: <code>{{@job.name}}</code></div>
     <div id="confirm-action-commit">
       Commit: <code>{{this.truncatedMessage}}</code>
@@ -26,9 +45,13 @@
     {{#if this.isFrozen}}
       <div class="frozen-reason">
         <label>
-          Reason:
+          <div>Reason:</div>
+          <Input
+            @type="text"
+            @value={{this.reason}}
+            placeholder="Please enter a reason"
+          />
         </label>
-        <Input @type="text" @value={{this.reason}} placeholder="Please enter a reason"/>
       </div>
     {{/if}}
 
@@ -45,22 +68,13 @@
   </modal.body>
   <modal.footer>
     <BsButton
-      class="confirm"
+      id="submit-action"
       disabled={{this.isSubmitButtonDisabled}}
+      @type="primary"
       @defaultText="Yes"
       @pendingText={{this.pendingAction}}
       @fulfilledText={{this.completedAction}}
-      @onClick={{this.startBuild}}
+      @onClick={{modal.submit}}
     />
-    <BsButton
-      @outline={{true}}
-      @onClick={{modal.close}}
-    >
-      {{#if this.wasActionSuccessful}}
-        Close
-      {{else}}
-        No
-      {{/if}}
-    </BsButton>
   </modal.footer>
 </BsModal>

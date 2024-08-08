@@ -1,0 +1,147 @@
+<div id="workflow-graph-tooltip" {{did-insert this.setTooltipPosition}}>
+  <div class="triangle" />
+
+  {{#if this.tooltipData.externalTrigger}}
+      <LinkTo
+        id="remote-pipeline-link"
+        @route="v2.pipeline"
+        @model={{this.tooltipData.externalTrigger.pipelineId}}
+      >
+        Go to remote pipeline
+      </LinkTo>
+  {{else if this.tooltipData.triggers}}
+    {{#each this.tooltipData.triggers as |t|}}
+        <LinkTo
+          class="downstream-pipeline-link"
+          @route="v2.pipeline"
+          @model={{t.pipelineId}}
+        >
+          Go to downstream pipeline {{t.triggerName}}
+        </LinkTo>
+    {{/each}}
+  {{else}}
+    <LinkTo
+      id="build-link"
+      @route="v2.pipeline.build"
+      @model={{this.tooltipData.job.buildId}}
+      @disabled={{not this.buildDetailsAvailable}}
+    >
+      Go to build details
+    </LinkTo>
+
+    <LinkTo
+      id="metrics-link"
+      @route="v2.pipeline.metrics"
+      @query={{hash jobId=this.tooltipData.job.id}}
+    >
+      Go to build metrics
+    </LinkTo>
+
+    {{#if this.tooltipData.job.isDisabled}}
+      <p>
+        {{this.tooltipData.job.stateChangeMessage}}
+      </p>
+      <a
+        id="toggle-job-link"
+        href="#"
+        {{on "click" (fn this.openToggleJobModal "Enable")}}
+      >
+        Enable this job
+      </a>
+    {{else}}
+      {{#if this.displayRestartButton}}
+        {{#if this.tooltipData.job.manualStartDisabled}}
+            <p>
+              Disabled manually starting
+            </p>
+        {{else}}
+          {{#if this.canJobStartFromView}}
+              <a
+                id="start-job-link"
+                 href="#"
+                {{on "click" (fn this.openConfirmActionModal)}}
+              >
+                {{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here
+              </a>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+      {{#if (eq this.tooltipData.job.isDisabled false)}}
+        <a
+          id="toggle-job-link"
+          href="#"
+          {{on "click" (fn this.openToggleJobModal "Disable")}}
+        >
+          Disable this job
+        </a>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+
+  {{#if this.tooltipData.displayStop}}
+    <a
+      id="stop-build-link"
+      href="#"
+      {{on "click" (fn this.openStopBuildModal)}}
+    >
+      Stop build
+    </a>
+  {{/if}}
+  {{#if (eq this.tooltipData.job.status "FROZEN")}}
+    <a
+      id="stop-build-link"
+      href="#"
+      {{on "click" (fn this.openStopBuildModal)}}
+    >
+      Stop frozen build
+    </a>
+  {{/if}}
+
+  {{#if this.tooltipData.job.description}}
+    <hr>
+    {{#if this.enableHiddenDescription}}
+      <span
+        id="hidden-tooltip-description"
+        class="text-nowrap"
+        onClick={{fn this.clickDescription}}
+      >
+        {{#if this.isDescriptionClicked}}
+          <FaIcon @icon="caret-down" />
+            Description: {{this.tooltipData.job.description}}
+        {{else}}
+          <FaIcon @icon="caret-right" />
+            Description: {{this.jobDescription}}
+        {{/if}}
+      </span>
+    {{else}}
+      <span id="tooltip-description">
+          Description: {{this.tooltipData.job.description}}
+        </span>
+    {{/if}}
+  {{/if}}
+</div>
+
+{{#if this.showToggleJobModal}}
+  <Pipeline::Modal::ToggleJob
+    @jobId={{this.toggleJobMeta.id}}
+    @name={{this.toggleJobMeta.name}}
+    @toggleAction={{this.toggleJobMeta.action}}
+    @closeModal={{this.closeJobModal}}
+  />
+{{/if}}
+{{#if this.showConfirmActionModal}}
+  <Pipeline::Modal::ConfirmAction
+    @pipeline={{@pipeline}}
+    @event={{@event}}
+    @jobs={{@jobs}}
+    @latestCommitEvent={{@latestCommitEvent}}
+    @job={{this.tooltipData.job}}
+    @closeModal={{this.closeConfirmActionModal}}
+  />
+{{/if}}
+{{#if this.showStopBuildModal}}
+  <Pipeline::Modal::StopBuild
+    @buildId={{this.tooltipData.job.buildId}}
+    @closeModal={{this.closeStopBuildModal}}
+  />
+{{/if}}

@@ -1,13 +1,18 @@
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 import { get, computed, set, setProperties } from '@ember/object';
 import { reject } from 'rsvp';
 import { isRoot } from 'screwdriver-ui/utils/graph-tools';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
-import canJobStart from 'screwdriver-ui/utils/pipeline-workflow';
+import {
+  canJobStart,
+  canStageStart
+} from 'screwdriver-ui/utils/pipeline-workflow';
 import { copy } from 'ember-copy';
 
 export default Component.extend({
+  session: service(),
   // get all downstream triggers for a pipeline
   classNames: ['pipelineWorkflow'],
   showTooltip: false,
@@ -78,6 +83,37 @@ export default Component.extend({
       }
 
       // job is not selected or upstream/downstream node are selected
+      return false;
+    }
+  ),
+
+  displayStageMenuHandle: computed(
+    'selectedEventObj.type',
+    'session.isAuthenticated',
+    function displayStageMenuHandle() {
+      return (
+        this.session.isAuthenticated &&
+        this.get('selectedEventObj.type') !== 'pr'
+      );
+    }
+  ),
+
+  canStageStartFromView: computed(
+    'selectedEventObj.workflowGraph',
+    'stageMenuData',
+    'activeTab',
+    function canStageStartFromView() {
+      const { stageMenuData } = this;
+
+      if (stageMenuData && stageMenuData.stage) {
+        return canStageStart(
+          this.activeTab,
+          this.selectedEventObj.workflowGraph,
+          stageMenuData.stage
+        );
+      }
+
+      // stage is not selected
       return false;
     }
   ),
@@ -177,6 +213,11 @@ export default Component.extend({
   },
   actions: {
     graphClicked(job, mouseevent, sizes) {
+      setProperties(this, {
+        showTooltip: false,
+        showStageActionsMenu: false
+      });
+      this.set('showTooltip', false);
       const EXTERNAL_TRIGGER_REGEX = /^~?sd@(\d+):([\w-]+)$/;
       const edges = get(this, 'directedGraph.edges');
       const isTrigger = job ? /(^~)|(^~?sd@)/.test(job.name) : false;
@@ -313,22 +354,73 @@ export default Component.extend({
 
       return false;
     },
-    confirmStartBuild() {
+    onShowStageActionsMenu(stage, mouseevent) {
+      const selectedEvent = this.selectedEventObj;
+      const eventParameters =
+        get(selectedEvent, 'meta.parameters') === undefined
+          ? {}
+          : get(selectedEvent, 'meta.parameters');
+      const pipelineParameters = {};
+      const jobParameters = {};
+
+      // Segregate pipeline level and job level parameters
+      Object.entries(eventParameters).forEach(([propertyName, propertyVal]) => {
+        const keys = Object.keys(propertyVal);
+
+        if (keys.length === 1 && keys[0] === 'value') {
+          pipelineParameters[propertyName] = propertyVal;
+        } else {
+          jobParameters[propertyName] = propertyVal;
+        }
+      });
+
+      const properties = {
+        showStageActionsMenu: true,
+        // detached jobs should show tooltip on the left
+        // showTooltipPosition: isRootNode ? 'left' : 'center',
+        stageMenuData: {
+          stage,
+          mouseevent,
+          // sizes,
+          selectedEvent,
+          pipelineParameters,
+          jobParameters
+        }
+      };
+
+      setProperties(this, properties);
+    },
+    confirmStartBuild(newEventStartFromType) {
       setProperties(this, {
+        newEventStartFromType,
         isShowingModal: true,
-        showTooltip: false
+        showTooltip: false,
+        showStageActionsMenu: false
       });
     },
     cancelStartBuild() {
       set(this, 'isShowingModal', false);
     },
     startDetachedBuild(options) {
-      set(this, 'isShowingModal', false);
-      this.startDetachedBuild(get(this, 'tooltipData.job'), options).then(
-        () => {
-          this.set('reason', '');
-        }
-      );
+      let job;
+
+      let stage = null;
+
+      if (this.newEventStartFromType === 'STAGE') {
+        stage = get(this, 'stageMenuData.stage');
+        job = stage.setup;
+      } else {
+        job = get(this, 'tooltipData.job');
+      }
+
+      setProperties(this, {
+        isShowingModal: false,
+        newEventStartFromType: null
+      });
+
+      this.startDetachedBuild(job, options, stage).then(() => {
+        this.set('reason', '');
+      });
     }
   }
 });

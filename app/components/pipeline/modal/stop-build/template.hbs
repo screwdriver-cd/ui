@@ -1,0 +1,41 @@
+<BsModal
+  id="stop-build-modal"
+  @onHide={{fn @closeModal}}
+  @onSubmit={{fn this.stopBuild}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">
+      Stop the build
+    </div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="exclamation-triangle"
+        @dismissible={{false}}
+      />
+    {{/if}}
+    {{#if this.successMessage}}
+      <InfoMessage
+        @message={{this.successMessage}}
+        @type="success"
+        @icon="check-circle"
+        @dismissible={{false}}
+      />
+    {{/if}}
+    Are you sure you want to stop the build?
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="stop-build"
+      @type="primary"
+      @onClick={{modal.submit}}
+      disabled={{this.isDisabled}}
+    >
+      Yes
+    </BsButton>
+  </modal.footer>
+</BsModal>
