@@ -44,7 +44,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
     const onClickNode = node => {
       if (nodeCanShowTooltip(node)) {
-        this.args.setShowTooltip(true, node, d3.event, elementSizes);
+        this.args.setShowTooltip(true, node, d3.event);
       }
     };
 
