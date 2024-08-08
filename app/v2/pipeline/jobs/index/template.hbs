@@ -1,12 +1,24 @@
 {{page-title "Index"}}
 
 <div class="pipeline-jobs">
-  <div>jobs content</div>
   <div class="row">
     <div class="col-12 separator partial-view">
-      boom
       {{log this.pipeline}}
       {{log this.jobs}}
+      {{log this.jobIds}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="exclamation-triangle"
+        @scmContext={{this.pipeline.scmContext}}
+      />
+      {{#if this.isInactivePipeline}}
+        <InfoMessage
+          @message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration."
+          @type="info"
+          @icon="exclamation-triangle"
+        />
+      {{/if}}
     </div>
   </div>
   {{outlet}}
