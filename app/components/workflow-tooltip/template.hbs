@@ -31,7 +31,7 @@
         Enable this job
       </a>
     {{else}}
-      {{#if this.displayRestartButton}}
+      {{#if this.canRestartPipeline}}
         {{#if this.tooltipData.job.manualStartDisabled}}
           <p>
             Disabled manually starting

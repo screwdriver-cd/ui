@@ -286,7 +286,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     assert.dom('a:nth-of-type(3)').hasText('Disable this job');
   });
 
-  test('it hides start link for stage jobs', async function (assert) {
+  test('it renders start link for stage jobs', async function (assert) {
     const data = {
       job: {
         buildId: 1234,
@@ -298,7 +298,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('canJobStartFromView', false);
+    this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
@@ -307,13 +307,14 @@ module('Integration | Component | workflow tooltip', function (hooks) {
         @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
-    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
-    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
+    assert.dom('a:nth-of-type(3)').hasText('Start pipeline from here');
+    assert.dom('a:nth-of-type(4)').hasText('Disable this job');
   });
 
-  test('it hides restart link for stage jobs', async function (assert) {
+  test('it renders restart link for stage jobs', async function (assert) {
     const data = {
       job: {
         buildId: 1234,
@@ -326,7 +327,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('canJobStartFromView', false);
+    this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
@@ -335,10 +336,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
         @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
-    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
-    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
+    assert.dom('a:nth-of-type(3)').hasText('Restart pipeline from here');
+    assert.dom('a:nth-of-type(4)').hasText('Disable this job');
   });
 
   test('it renders stop frozen build link', async function (assert) {
