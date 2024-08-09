@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { get } from '@ember/object';
+import { get, action } from '@ember/object';
 import groupBy from 'lodash.groupby';
 import moment from 'moment';
 
@@ -10,6 +10,16 @@ export default class NewPipelineEventsController extends Controller {
   @tracked selectedEventId;
 
   @tracked events;
+
+  @tracked isExpanded = false;
+
+  @action
+  toggleExpanded() {
+    if (this.showHideEventsList) {
+      this.showHideEventsList();
+      this.isExpanded = !this.isExpanded;
+    }
+  }
 
   get isGroupedEvents() {
     const isGroupedEvents =
