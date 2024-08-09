@@ -271,7 +271,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('canJobStartFromView', true);
+    this.set('canJobStartFromView', false);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
@@ -327,7 +327,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
     this.set('confirmStartBuild', () => {});
-    this.set('canJobStartFromView', false);
+    this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
