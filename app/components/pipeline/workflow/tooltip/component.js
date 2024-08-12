@@ -84,10 +84,28 @@ export default class PipelineWorkflowTooltipComponent extends Component {
   @action
   setTooltipPosition(element) {
     const { d3Event } = this.args.d3Data;
-    const { ICON_SIZE } = this.args.d3Data.sizes;
 
-    element.style.top = `${d3Event.layerY + ICON_SIZE}px`;
-    element.style.left = `${d3Event.layerX - 30}px`;
+    const workflowGraphElement = document.getElementById('workflow-graph');
+
+    if (workflowGraphElement && d3Event.target) {
+      const workflowGraphRect = workflowGraphElement.getBoundingClientRect();
+      const nodeRect = d3Event.target.getBoundingClientRect();
+
+      const x = nodeRect.width / 2 + nodeRect.x;
+      const y = nodeRect.height + nodeRect.y;
+
+      // The constants below are from the CSS style sheet
+      const padding = 14;
+      const borderWidth = 2;
+      const triangleWidth = 13;
+
+      element.style.top = `${
+        y - workflowGraphRect.y + padding + triangleWidth
+      }px`;
+      element.style.left = `${
+        x - workflowGraphRect.x - padding - borderWidth - triangleWidth
+      }px`;
+    }
   }
 
   @action

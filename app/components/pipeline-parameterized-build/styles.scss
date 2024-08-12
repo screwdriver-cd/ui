@@ -60,3 +60,9 @@ button.start-with-parameters-button {
     content: 'Start pipeline with parameters';
   }
 }
+
+.ember-basic-dropdown-content {
+  li.ember-power-select-option {
+    width: fit-content;
+  }
+}

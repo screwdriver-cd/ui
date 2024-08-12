@@ -38,7 +38,7 @@ export function capitalizeFirstLetter(string) {
 /**
  * Build post body for starting a job
  * @param username
- * @param pipeline
+ * @param pipelineId
  * @param job
  * @param event
  * @param parameters
