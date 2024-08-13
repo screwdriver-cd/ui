@@ -50,11 +50,13 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    if (this.args.pipeline.parameters) {
-      return Object.keys(this.args.pipeline.parameters).length > 0;
-    }
+    const pipelineParameters = this.args.pipeline.parameters || {};
+    const eventParameters = this.args.event.meta?.parameters || {};
 
-    return false;
+    return (
+      Object.keys(pipelineParameters).length > 0 ||
+      Object.keys(eventParameters).length > 0
+    );
   }
 
   get isSubmitButtonDisabled() {
