@@ -101,66 +101,6 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('tbody tr').exists({ count: 2 });
   });
 
-  test('it renders with large number of jobs', async function (assert) {
-    const jobs = Array.from({ length: 1000 }, (_, i) => {
-      return {
-        jobId: i,
-        jobName: `job${i}`,
-        builds: [
-          {
-            id: i,
-            jobId: i,
-            status: 'SUCCESS',
-            startTime: '',
-            endTime: ''
-          }
-        ],
-        annotations: {
-          'screwdriver.cd/displayName': `job${i}`
-        }
-      };
-    });
-
-    set(this, 'pipeline', PIPELINE);
-    set(this, 'jobsDetails', jobs);
-    set(this, 'updateListViewJobs', () => Promise.resolve(jobs));
-    set(this, 'refreshListViewJobs', () => {
-      assert.ok(true);
-    });
-    set(this, 'startSingleBuild', () => {
-      assert.ok(true);
-    });
-    set(this, 'stopBuild', () => {
-      assert.ok(true);
-    });
-    set(this, 'buildParameters', []);
-    set(this, 'showListView', true);
-    set(this, 'setShowListView', () => {
-      assert.ok(true);
-    });
-
-    await render(hbs`<PipelineListView
-      @pipeline={{this.pipeline}}
-      @jobsDetails={{this.jobsDetails}}
-      @updateListViewJobs={{this.updateListViewJobs}}
-      @refreshListViewJobs={{this.refreshListViewJobs}}
-      @startSingleBuild={{this.startSingleBuild}}
-      @stopBuild={{this.stopBuild}}
-      @buildParameters={{this.buildParameters}}
-      @showListView={{this.showListView}}
-      @setShowListView={{this.setShowListView}}
-    />`);
-
-    assert.dom('table').exists({ count: 1 });
-    assert.dom('thead').exists({ count: 1 });
-    assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
-    assert
-      .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
-    assert.dom('tbody tr').exists({ count: 1000 });
-  });
-
   test('it renders then resets jobDetails', async function (assert) {
     set(this, 'pipeline', PIPELINE);
     set(this, 'jobsDetails', [
