@@ -101,7 +101,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('tbody tr').exists({ count: 2 });
   });
 
-  test.only('it renders with large number of jobs', async function (assert) {
+  test('it renders with large number of jobs', async function (assert) {
     const jobs = Array.from({ length: 1000 }, (_, i) => {
       return {
         jobId: i,
