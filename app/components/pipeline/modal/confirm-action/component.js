@@ -2,12 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import {
-  buildPostBody,
-  capitalizeFirstLetter,
-  initializeParameters,
-  truncateMessage
-} from './util';
+import { buildPostBody, capitalizeFirstLetter, truncateMessage } from './util';
 
 export default class PipelineModalConfirmActionComponent extends Component {
   @service shuttle;
@@ -25,12 +20,6 @@ export default class PipelineModalConfirmActionComponent extends Component {
   @tracked reason = '';
 
   parameters;
-
-  constructor() {
-    super(...arguments);
-
-    this.parameters = initializeParameters(this.args.event);
-  }
 
   get action() {
     return this.args.job.status ? 'restart' : 'start';

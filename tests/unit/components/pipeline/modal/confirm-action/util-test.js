@@ -2,22 +2,10 @@ import { module, test } from 'qunit';
 import {
   buildPostBody,
   capitalizeFirstLetter,
-  initializeParameters,
   truncateMessage
 } from 'screwdriver-ui/components/pipeline/modal/confirm-action/util';
 
 module('Unit | Component | pipeline/modal/confirm-action/util', function () {
-  test('initializeParameters initializes correctly', function (assert) {
-    assert.deepEqual(initializeParameters({ id: 123 }, undefined));
-    assert.deepEqual(initializeParameters({ id: 123, meta: {} }, undefined));
-    assert.deepEqual(
-      initializeParameters(
-        { id: 123, meta: { parameters: { foo: 'bar' } } },
-        { foo: 'bar' }
-      )
-    );
-  });
-
   test('truncateMessage truncates string', function (assert) {
     const shortMessage = 'short message';
 

@@ -1,18 +1,3 @@
-import { flattenParameters } from 'screwdriver-ui/utils/pipeline/parameters';
-
-/**
- * Initialize parameters from an event API response object
- * @param event
- * @returns {undefined|*}
- */
-export function initializeParameters(event) {
-  if (event.meta?.parameters && event.meta.parameters.length > 0) {
-    return flattenParameters(event.meta.parameters);
-  }
-
-  return undefined;
-}
-
 /**
  * Truncate commit message to 150 characters
  * @param commitMessage
