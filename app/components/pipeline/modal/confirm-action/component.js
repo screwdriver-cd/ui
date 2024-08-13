@@ -2,12 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import {
-  buildPostBody,
-  capitalizeFirstLetter,
-  initializeParameters,
-  truncateMessage
-} from './util';
+import { buildPostBody, capitalizeFirstLetter, truncateMessage } from './util';
 
 export default class PipelineModalConfirmActionComponent extends Component {
   @service shuttle;
@@ -25,12 +20,6 @@ export default class PipelineModalConfirmActionComponent extends Component {
   @tracked reason = '';
 
   parameters;
-
-  constructor() {
-    super(...arguments);
-
-    this.parameters = initializeParameters(this.args.event);
-  }
 
   get action() {
     return this.args.job.status ? 'restart' : 'start';
@@ -61,11 +50,13 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    if (this.args.pipeline.parameters) {
-      return Object.keys(this.args.pipeline.parameters).length > 0;
-    }
+    const pipelineParameters = this.args.pipeline.parameters || {};
+    const eventParameters = this.args.event.meta?.parameters || {};
 
-    return false;
+    return (
+      Object.keys(pipelineParameters).length > 0 ||
+      Object.keys(eventParameters).length > 0
+    );
   }
 
   get isSubmitButtonDisabled() {
