@@ -34,7 +34,9 @@ export function extractJobParameters(jobs) {
   }
 
   return jobs.reduce((jobParameters, job) => {
-    jobParameters[job.name] = job.permutations[0].parameters;
+    if (job.permutations && job.permutations.length > 0) {
+      jobParameters[job.name] = job.permutations[0].parameters;
+    }
 
     return jobParameters;
   }, {});

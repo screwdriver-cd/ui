@@ -48,6 +48,10 @@ module('Unit | Utility | Pipeline | parameters', function () {
             }
           }
         ]
+      },
+      {
+        name: 'job3',
+        permutations: []
       }
     ]);
 
