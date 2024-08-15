@@ -74,8 +74,11 @@ export default Component.extend({
 
   async init() {
     this._super(...arguments);
+    this.set('isLoading', true);
     const jobs = await this.updateListViewJobs();
     const rows = this.getRows(jobs);
+
+    this.set('isLoading', false);
     const customTheme = {
       table: 'table table-condensed table-sm',
       sortAscIcon: 'fa fa-fw fa-sort-up',
