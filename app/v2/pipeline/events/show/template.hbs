@@ -14,8 +14,13 @@
     </span>
 
     <span class="new-event">
-      <span>Start a new event</span>
-      <FaIcon @icon="plus" />
+      <BsButton
+        id="start-event"
+        @type="primary"
+        @outline={{true}}
+        @defaultText="Start a new event"
+        @onClick={{this.openStartEventModal}}
+      />
     </span>
   </div>
 
@@ -94,3 +99,11 @@
     {{/if}}
   </div>
 </div>
+
+{{#if this.showStartEventModal}}
+  <Pipeline::Modal::StartEvent
+    @pipeline={{this.model.pipeline}}
+    @jobs={{this.model.jobs}}
+    @closeModal={{this.closeStartEventModal}}
+  />
+{{/if}}

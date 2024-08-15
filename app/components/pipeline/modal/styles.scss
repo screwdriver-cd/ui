@@ -1,7 +1,9 @@
 @use 'confirm-action/styles' as confirmAction;
+@use 'start-event/styles' as startEvent;
 @use 'toggle-job/styles' as toggleJob;
 
 @mixin styles {
   @include confirmAction.styles;
+  @include startEvent.styles;
   @include toggleJob.styles;
 }
