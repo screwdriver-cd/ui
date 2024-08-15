@@ -43,6 +43,61 @@ export function extractJobParameters(jobs) {
 }
 
 /**
+ * Extracts default parameters from the API response object of a parameter
+ * @param parameters A parameter object from the API response (handles both pipeline level and job level parameters)
+ * @return {Object} The default parameters as an object with the shape {parameterName: {value: parameterValue}}.
+ */
+export function extractDefaultParameters(parameters) {
+  const defaultParameters = {};
+
+  if (parameters) {
+    Object.entries(parameters).forEach(([parameterName, parameter]) => {
+      let value;
+
+      if (Array.isArray(parameter)) {
+        value = parameter[0];
+      } else if (parameter.value) {
+        if (Array.isArray(parameter.value)) {
+          value = parameter.value[0];
+        } else {
+          value = parameter.value;
+        }
+      } else {
+        value = parameter;
+      }
+
+      defaultParameters[parameterName] = { value };
+    });
+  }
+
+  return defaultParameters;
+}
+
+/**
+ * Extracts default job parameters from the API response object of a job.
+ * The returned format is the same as the job parameters as returned by the API in an event object.
+ * @param jobs The jobs array from the API response
+ * @return {Object} The job default parameters with the shape {jobName: {parameterName: {value: parameterValue}}}
+ */
+export function extractDefaultJobParameters(jobs) {
+  if (jobs && jobs.length > 0) {
+    return jobs.reduce((jobParameters, job) => {
+      const parameters = extractDefaultParameters(
+        job.permutations[0].parameters
+      );
+
+      if (Object.keys(parameters).length > 0) {
+        jobParameters[job.name] = parameters;
+      }
+
+      return jobParameters;
+    }, {});
+  }
+
+  return {};
+}
+
+/**
  * normalizeParameters transform given parameters from object into array of objects
  * this method also backfills with default properties
  * @param  {Record<string, ParameterValue>} [parameters]          Parameter name and value pairs
