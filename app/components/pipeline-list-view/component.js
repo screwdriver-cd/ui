@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { get, set, observer } from '@ember/object';
+import { get, observer } from '@ember/object';
 import moment from 'moment';
 import { inject as service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
@@ -20,6 +20,8 @@ export default Component.extend({
   isLoading: false,
   isShowingModal: false,
   data: [],
+  lastRows: [],
+  moreJobs: true,
   timestampPreference: null,
   columns: [
     {
@@ -72,8 +74,11 @@ export default Component.extend({
 
   async init() {
     this._super(...arguments);
-    const rows = this.getRows(this.jobsDetails);
+    this.set('isLoading', true);
+    const jobs = await this.updateListViewJobs();
+    const rows = this.getRows(jobs);
 
+    this.set('isLoading', false);
     const customTheme = {
       table: 'table table-condensed table-sm',
       sortAscIcon: 'fa fa-fw fa-sort-up',
@@ -296,20 +301,27 @@ export default Component.extend({
       );
 
       if (!isEqualRes) {
-        set(this, 'lastRows', lastRows);
+        this.set('lastRows', rows);
         this.set('data', rows);
       }
     }
   ),
 
   actions: {
-    async onScrolledToBottom() {
-      this.set('isLoading', true);
-      const jobs = await this.updateListViewJobs();
-      const rows = this.getRows(jobs);
+    async onScrolledToBottom({ currentTarget }) {
+      const { scrollTop, scrollHeight, clientHeight } = currentTarget;
 
-      this.set('data', rows);
-      this.set('isLoading', false);
+      if (scrollTop + clientHeight > scrollHeight - 300) {
+        if (this.moreJobs && !this.isLoading) {
+          this.set('isLoading', true);
+          const newJobs = await this.updateListViewJobs();
+
+          if (newJobs.length === 0) {
+            this.set('moreJobs', false);
+          }
+          this.set('isLoading', false);
+        }
+      }
     },
 
     closeModal() {
