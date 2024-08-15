@@ -27,8 +27,9 @@
   @showCurrentPageNumberSelect={{false}}
   @multipleColumnsSorting={{false}}
   @pageSize={{this.data.length}}
+  onScroll={{action "onScrolledToBottom"}}
 />
-<div class="loader" {{in-viewport onEnter=(action "onScrolledToBottom")}}>
+<div class="loader">
   {{#if this.isLoading}}
       Loading...
   {{/if}}
