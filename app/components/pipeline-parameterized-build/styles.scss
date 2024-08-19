@@ -32,6 +32,13 @@ button.start-with-parameters-button {
       display: none;
     }
   }
+
+  .parameter-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 20em;
+  }
 }
 
 .notice-default-values-icon {
