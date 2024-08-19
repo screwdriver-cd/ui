@@ -29,7 +29,9 @@
                       @title={{parameter.description}}
                     />
                   {{/if}}
-                  {{parameter.name}}
+                  <div title={{parameter.name}} class="parameter-name">
+                    {{parameter.name}}
+                  </div>
                 </label>
                 <div class="col-8">
                   {{#if (is-array parameter.value)}}
