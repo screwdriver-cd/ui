@@ -8,6 +8,8 @@ import { getFilteredGraph } from './util';
 export default class V2PipelineEventsShowController extends Controller {
   @service session;
 
+  @tracked showStartEventModal = false;
+
   @tracked showDownstreamTriggers = false;
 
   @tracked showTooltip = false;
@@ -47,6 +49,16 @@ export default class V2PipelineEventsShowController extends Controller {
     return this.model.userSettings.displayJobNameLength
       ? this.model.userSettings.displayJobNameLength
       : ENV.APP.MINIMUM_JOBNAME_LENGTH;
+  }
+
+  @action
+  openStartEventModal() {
+    this.showStartEventModal = true;
+  }
+
+  @action
+  closeStartEventModal() {
+    this.showStartEventModal = false;
   }
 
   @action

@@ -1,0 +1,12 @@
+@use 'screwdriver-colors' as colors;
+@use 'variables';
+
+@mixin styles {
+  #start-event-modal {
+    .no-parameters-title {
+      font-size: 1.2rem;
+      font-weight: variables.$weight-bold;
+      color: colors.$sd-light-gray;
+    }
+  }
+}

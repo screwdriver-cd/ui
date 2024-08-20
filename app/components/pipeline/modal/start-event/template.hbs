@@ -1,0 +1,54 @@
+<BsModal
+  id="start-event-modal"
+  @onHide={{fn @closeModal}}
+  @onSubmit={{fn this.startBuild}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">Are you sure you want to start a new event?</div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="exclamation-triangle"
+        @dismissible={{false}}
+      />
+    {{/if}}
+    {{#if this.successMessage}}
+      <InfoMessage
+        @message={{this.successMessage}}
+        @type="success"
+        @icon="check-circle"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    {{#if this.isParameterized}}
+      <Pipeline::Parameters
+        @action="start"
+        @pipelineParameters={{this.defaultPipelineParameters}}
+        @jobParameters={{this.defaultJobParameters}}
+        @pipeline={{@pipeline}}
+        @jobs={{@jobs}}
+        @onUpdateParameters={{this.onUpdateParameters}}
+      />
+    {{else}}
+      <div class="no-parameters-title">
+        No parameters to configure
+      </div>
+    {{/if}}
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-action"
+      disabled={{this.isSubmitButtonDisabled}}
+      @type="primary"
+      @defaultText="Yes"
+      @pendingText="Starting"
+      @fulfilledText="Started"
+      @onClick={{modal.submit}}
+    />
+  </modal.footer>
+</BsModal>

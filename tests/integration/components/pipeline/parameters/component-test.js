@@ -23,7 +23,9 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       jobs: [
         {
           name: 'job1',
-          permutations: [{ p1: { value: 'p1' }, p2: { value: 'p2' } }]
+          permutations: [
+            { parameters: { p1: { value: 'p1' }, p2: { value: 'p2' } } }
+          ]
         }
       ]
     });
@@ -40,7 +42,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     assert.dom('.parameter-title').hasText('START PIPELINE WITH PARAMETERS');
   });
 
-  test('it renders parameters with shared group expanded', async function (assert) {
+  test('it renders parameters with shared group expanded from event', async function (assert) {
     this.setProperties({
       event: {
         meta: {
@@ -60,7 +62,9 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       jobs: [
         {
           name: 'job1',
-          permutations: [{ p1: { value: 'p1' }, p2: { value: 'p2' } }]
+          permutations: [
+            { parameters: { p1: { value: 'p1' }, p2: { value: 'p2' } } }
+          ]
         }
       ]
     });
@@ -93,14 +97,14 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     assert.dom(parameters[1].querySelector('input')).hasValue('foo');
   });
 
-  test('it renders parameters job group expanded', async function (assert) {
+  test('it renders parameters job group expanded from event', async function (assert) {
     this.setProperties({
       event: {
         meta: {
           parameters: {
             bar: { value: 'barzy' },
             foo: { value: 'foozy' },
-            job1: { p1: { value: 'abc' }, p2: { value: 'xyz' } }
+            job1: { p1: { value: 'p1' }, p2: { value: 'xyz' } }
           }
         }
       },
@@ -113,7 +117,9 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       jobs: [
         {
           name: 'job1',
-          permutations: [{ p1: { value: 'p1' }, p2: { value: 'p2' } }]
+          permutations: [
+            { parameters: { p1: { value: 'p1' }, p2: { value: 'p2' } } }
+          ]
         }
       ],
       job: { name: 'job1' }
@@ -140,9 +146,82 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     );
 
     assert.dom(parameters[0].querySelector('label')).hasText('p1');
-    assert.dom(parameters[0].querySelector('input')).hasValue('abc');
-    assert.dom(parameters[1].querySelector('label')).hasText('p2');
+    assert.dom(parameters[0].querySelector('input')).hasValue('p1');
+    assert
+      .dom(parameters[1].querySelector('label'))
+      .hasText('p2 Default value: p2');
     assert.dom(parameters[1].querySelector('input')).hasValue('xyz');
+  });
+
+  test('it renders parameters with shared group expanded', async function (assert) {
+    this.setProperties({
+      pipelineParameters: { bar: { value: 'barbar' }, foo: { value: 'foo' } },
+      pipeline: {
+        parameters: {
+          bar: ['barbar', 'bazbaz'],
+          foo: { value: 'foo', description: 'awesome' }
+        }
+      },
+      jobs: [{ name: 'job1' }]
+    });
+
+    await render(
+      hbs`<Pipeline::Parameters
+        @action="start"
+        @pipelineParameters={{this.pipelineParameters}}
+        @pipeline={{this.pipeline}}
+        @jobs={{this.jobs}}
+      />`
+    );
+
+    assert.dom('.group-title').exists({ count: 1 });
+    assert
+      .dom(this.element.querySelectorAll('.group-title')[0])
+      .hasText('Shared');
+    assert.dom('.parameter-list.expanded .parameter').exists({ count: 2 });
+
+    const parameters = this.element.querySelectorAll(
+      '.parameter-list.expanded .parameter'
+    );
+
+    assert.dom(parameters[0].querySelector('label')).hasText('bar');
+    assert
+      .dom(parameters[0].querySelector('.dropdown-selection-container'))
+      .hasText('barbar');
+    assert.dom(parameters[1].querySelector('label')).hasText('foo awesome');
+    assert.dom(parameters[1].querySelector('label svg')).exists({ count: 1 });
+    assert.dom(parameters[1].querySelector('input')).hasValue('foo');
+  });
+
+  test('it renders parameters job group expanded', async function (assert) {
+    this.setProperties({
+      jobParameters: {
+        job1: { p1: { value: 'p1' } }
+      },
+      pipeline: {},
+      jobs: [
+        {
+          name: 'job1',
+          permutations: [{ parameters: { p1: { value: 'p1' } } }]
+        }
+      ]
+    });
+
+    await render(
+      hbs`<Pipeline::Parameters
+        @action="start"
+        @jobParameters={{this.jobParameters}}
+        @pipeline={{this.pipeline}}
+        @jobs={{this.jobs}}
+      />`
+    );
+
+    assert.dom('.group-title').exists({ count: 1 });
+    assert
+      .dom(this.element.querySelectorAll('.group-title')[0])
+      .hasText('Job: job1');
+    assert.dom('.parameter-list').exists({ count: 1 });
+    assert.dom('.parameter-list.expanded').doesNotExist();
   });
 
   test('it updates parameter value on input', async function (assert) {
@@ -165,7 +244,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       jobs: [
         {
           name: 'job1',
-          permutations: [{ p1: { value: 'p1' } }]
+          permutations: [{ parameters: { p1: { value: 'p1' } } }]
         }
       ],
       onUpdateParameters
@@ -211,7 +290,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       jobs: [
         {
           name: 'job1',
-          permutations: [{ p1: { value: 'p1' } }]
+          permutations: [{ parameters: { p1: { value: 'p1' } } }]
         }
       ],
       job: { name: 'job1' },

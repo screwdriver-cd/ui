@@ -2,7 +2,8 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { buildPostBody, capitalizeFirstLetter, truncateMessage } from './util';
+import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
+import { capitalizeFirstLetter, truncateMessage } from './util';
 
 export default class PipelineModalConfirmActionComponent extends Component {
   @service shuttle;
