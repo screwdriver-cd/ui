@@ -1,5 +1,7 @@
 import { module, test } from 'qunit';
 import {
+  extractDefaultJobParameters,
+  extractDefaultParameters,
   extractEventParameters,
   extractJobParameters,
   flattenJobParameters,
@@ -48,6 +50,10 @@ module('Unit | Utility | Pipeline | parameters', function () {
             }
           }
         ]
+      },
+      {
+        name: 'job3',
+        permutations: []
       }
     ]);
 
@@ -62,6 +68,83 @@ module('Unit | Utility | Pipeline | parameters', function () {
 
   test('extractJobParameters returns empty object when no jobs are provided', function (assert) {
     const parameters = extractJobParameters([]);
+
+    assert.deepEqual(parameters, {});
+  });
+
+  test('extractDefaultParameters returns empty object if no parameters are provided', function (assert) {
+    assert.deepEqual(extractDefaultParameters(undefined), {});
+    assert.deepEqual(extractDefaultParameters(null), {});
+    assert.deepEqual(extractDefaultParameters({}), {});
+  });
+
+  test('extractDefaultParameters extracts default parameters', function (assert) {
+    const parameters = extractDefaultParameters({
+      list: ['123', '987'],
+      foo: 'bar',
+      abc: { value: 123, desc: 'abc description' },
+      xyz: { value: [987, 321], desc: 'xyz description' }
+    });
+
+    assert.deepEqual(parameters, {
+      list: { value: '123' },
+      foo: { value: 'bar' },
+      abc: { value: 123 },
+      xyz: { value: 987 }
+    });
+  });
+
+  test('extractDefaultJobParameters returns empty object when no jobs are provided', function (assert) {
+    assert.deepEqual(extractDefaultJobParameters(undefined), {});
+    assert.deepEqual(extractDefaultJobParameters(null), {});
+    assert.deepEqual(extractDefaultJobParameters([]), {});
+  });
+
+  test('extractDefaultJobParameters extracts default parameters from jobs response object', function (assert) {
+    const parameters = extractDefaultJobParameters([
+      {
+        name: 'job1',
+        permutations: [
+          {
+            parameters: {
+              a: 1,
+              b: 'abc123'
+            }
+          }
+        ]
+      },
+      {
+        name: 'job2',
+        permutations: [
+          {
+            parameters: {
+              c: { description: 'cool stuff', value: true },
+              d: ['yes', 'no']
+            }
+          }
+        ]
+      }
+    ]);
+
+    assert.deepEqual(parameters, {
+      job1: {
+        a: { value: 1 },
+        b: { value: 'abc123' }
+      },
+      job2: {
+        c: { value: true },
+        d: { value: 'yes' }
+      }
+    });
+  });
+
+  test('extractDefaultJobParameters returns empty object when jobs have no parameters', function (assert) {
+    const parameters = extractDefaultJobParameters([
+      {
+        name: 'job1',
+        permutations: [{}]
+      }
+    ]);
 
     assert.deepEqual(parameters, {});
   });
