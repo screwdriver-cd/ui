@@ -1,7 +1,9 @@
 <div class="pipeline-parameters">
-  <div class="parameter-title">
-    {{this.title}}
-  </div>
+  {{#if @action}}
+    <div class="parameter-title">
+      {{this.title}}
+    </div>
+  {{/if}}
   <div class="parameters-container">
     {{#each this.parameters as |parameterGroup|}}
       <div class="parameter-group">
@@ -41,6 +43,7 @@
               {{#if (is-array parameter.defaultValues)}}
                 <div class="dropdown-selection-container">
                   <Pipeline::Parameters::Selectable
+                    @disabled={{if @action false true}}
                     @parameter={{parameter}}
                     @onOpen={{this.openSelect}}
                     @onSelectValue={{(fn this.updateParameter parameterGroup.jobName)}}
@@ -49,6 +52,7 @@
               {{else}}
                 <Input
                   @value={{parameter.value}}
+                  disabled={{if @action false true}}
                   defaultValue={{parameter.value}}
                   {{on "input" (fn this.onInput parameterGroup.jobName parameter)}}
                 />

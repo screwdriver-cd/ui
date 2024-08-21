@@ -3,6 +3,11 @@
 @mixin styles {
   .ember-basic-dropdown {
     .parameter-selector {
+      &.ember-power-select-trigger[aria-disabled='true'] {
+        background: rgba(colors.$sd-disabled, 0.25);
+        color: colors.$sd-text;
+      }
+
       .ember-power-select-selected-item {
         display: block;
         overflow: scroll;
