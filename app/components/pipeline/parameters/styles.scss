@@ -1,5 +1,6 @@
 @use 'screwdriver-colors' as colors;
 @use 'variables';
+@use 'selectable/styles' as selectable;
 
 @mixin styles {
   .pipeline-parameters {
@@ -20,7 +21,18 @@
         padding: 0.5rem;
 
         .group-title {
+          display: flex;
           font-size: 1.5rem;
+
+          svg {
+            margin-top: 0.25rem;
+            margin-right: 0.25rem;
+          }
+
+          .title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
 
         .parameter-list {
@@ -38,6 +50,12 @@
               margin-bottom: auto;
               padding-right: 0.5rem;
               flex-basis: 25%;
+              max-width: 50%;
+
+              .name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
 
               svg {
                 margin-top: auto;
@@ -52,6 +70,9 @@
 
             .dropdown-selection-container {
               flex: 1;
+              min-width: 50%;
+
+              @include selectable.styles;
             }
 
             > input {

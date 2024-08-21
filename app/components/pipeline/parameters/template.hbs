@@ -6,14 +6,27 @@
     {{#each this.parameters as |parameterGroup|}}
       <div class="parameter-group">
         <div class="group-title">
-          <FaIcon @icon={{if parameterGroup.isOpen "minus-square" "plus-square"}} {{on "click" (fn this.toggleParameterGroup parameterGroup.paramGroupTitle)}}></FaIcon>
-          {{parameterGroup.paramGroupTitle}}
+          <FaIcon
+            @icon={{if parameterGroup.isOpen "minus-square" "plus-square"}}
+            {{on "click" (fn this.toggleParameterGroup parameterGroup.paramGroupTitle)}}
+          />
+          <div
+            class="title"
+            title={{parameterGroup.paramGroupTitle}}
+          >
+            {{parameterGroup.paramGroupTitle}}
+          </div>
         </div>
         <div class="parameter-list {{if parameterGroup.isOpen "expanded" "collapsed"}}">
           {{#each parameterGroup.parameters as |parameter|}}
             <div class="parameter">
               <label>
-                {{parameter.name}}
+                <div
+                  class="name"
+                  title={{parameter.name}}
+                >
+                  {{parameter.name}}
+                </div>
                 {{#if parameter.description}}
                   <FaIcon @icon="question-circle" @title={{parameter.description}}></FaIcon>
                 {{/if}}
