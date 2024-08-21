@@ -183,6 +183,10 @@
   .admins-list {
     font-weight: bold;
     margin-top: 10px;
+    a {
+      color: $sd-link;
+      display: inline;
+    }
   }
 
   .no-admin-message {
