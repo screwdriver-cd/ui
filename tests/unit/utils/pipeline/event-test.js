@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { isSkipped } from 'screwdriver-ui/utils/pipeline/event';
+import { isAborted, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 
 module('Unit | Utility | Pipeline | event', function () {
   test('pr events are not skipped', function (assert) {
@@ -61,6 +61,16 @@ module('Unit | Utility | Pipeline | event', function () {
         []
       ),
       true
+    );
+  });
+
+  test('isAborted returns correct value', function (assert) {
+    assert.equal(isAborted(null), false);
+    assert.equal(isAborted([]), false);
+    assert.equal(isAborted([{ status: 'ABORTED' }]), true);
+    assert.equal(
+      isAborted([{ status: 'CREATED' }, { status: 'ABORTED' }]),
+      false
     );
   });
 });
