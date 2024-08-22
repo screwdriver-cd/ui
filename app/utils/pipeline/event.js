@@ -5,11 +5,11 @@
  * @returns {boolean}
  */
 export const isSkipped = (event, builds) => {
-  if (event.type === 'pr' || builds.length > 0) {
+  if (event.type === 'pr' || !builds || builds.length > 0) {
     return false;
   }
 
-  return !!event.commit.message.match(/\[(skip ci|ci skip)\]/);
+  return !!event?.commit?.message.match(/\[(skip ci|ci skip)\]/);
 };
 
 /**
