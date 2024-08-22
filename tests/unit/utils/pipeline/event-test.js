@@ -1,5 +1,9 @@
 import { module, test } from 'qunit';
-import { isAborted, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
+import {
+  hasBuildsToComplete,
+  isAborted,
+  isSkipped
+} from 'screwdriver-ui/utils/pipeline/event';
 
 module('Unit | Utility | Pipeline | event', function () {
   test('isSkipped returns correct value', function (assert) {
@@ -63,6 +67,20 @@ module('Unit | Utility | Pipeline | event', function () {
     assert.equal(isAborted([{ status: 'ABORTED' }]), true);
     assert.equal(
       isAborted([{ status: 'CREATED' }, { status: 'ABORTED' }]),
+      false
+    );
+  });
+
+  test('hasBuildsToComplete returns correct value', function (assert) {
+    assert.equal(hasBuildsToComplete(null), false);
+    assert.equal(hasBuildsToComplete([]), false);
+    assert.equal(hasBuildsToComplete([{ status: 'SUCCESS' }]), false);
+    assert.equal(hasBuildsToComplete([{ status: 'QUEUED' }]), true);
+    assert.equal(hasBuildsToComplete([{ status: 'UNSTABLE' }]), true);
+    assert.equal(
+      hasBuildsToComplete([
+        { status: 'UNSTABLE', endTime: '2024-04-01T00:00:00.000Z' }
+      ]),
       false
     );
   });

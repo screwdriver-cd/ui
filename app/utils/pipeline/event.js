@@ -24,3 +24,32 @@ export const isAborted = builds => {
 
   return false;
 };
+
+/**
+ * Determines if the event has builds that still need to complete
+ * @param builds
+ * @returns {boolean}
+ */
+export const hasBuildsToComplete = builds => {
+  if (!builds || builds.length === 0) {
+    return false;
+  }
+
+  const buildsToComplete = builds.find(build => {
+    const { status, endTime } = build;
+
+    switch (status) {
+      case 'CREATED':
+      case 'QUEUED':
+      case 'RUNNING':
+      case 'BLOCKED':
+        return true;
+      case 'UNSTABLE':
+        return endTime === undefined;
+      default:
+        return false;
+    }
+  });
+
+  return buildsToComplete !== undefined;
+};
