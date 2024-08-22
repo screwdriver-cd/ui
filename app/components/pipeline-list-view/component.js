@@ -74,11 +74,15 @@ export default Component.extend({
 
   async init() {
     this._super(...arguments);
-    this.set('isLoading', true);
+    this.setProperties({
+      isLoading: true,
+      pipelineParameters: this.getDefaultPipelineParameters(),
+      jobParameters: this.getDefaultJobParameters()
+    });
+
     const jobs = await this.updateListViewJobs();
     const rows = this.getRows(jobs);
 
-    this.set('isLoading', false);
     const customTheme = {
       table: 'table table-condensed table-sm',
       sortAscIcon: 'fa fa-fw fa-sort-up',
@@ -98,8 +102,7 @@ export default Component.extend({
 
     this.setProperties({
       data: rows,
-      pipelineParameters: this.getDefaultPipelineParameters(),
-      jobParameters: this.getDefaultJobParameters()
+      isLoading: false
     });
   },
 
