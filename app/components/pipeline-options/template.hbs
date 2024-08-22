@@ -182,10 +182,10 @@
                     <p class="admins-list">
                       {{this.displayAdmins}}
                       {{#if (and (gt this.adminsCount 5) (not this.isAdminsExpanded))}}
-                        ... <a href="#" onclick={{action "toggleExpand"}}>more</a>
+                        ... <a class="admin-toggle" {{action "toggleExpand"}}>more</a>
                       {{/if}}
                       {{#if this.isAdminsExpanded}}
-                        <a href="#" onclick={{action "toggleExpand"}}>collapse</a>
+                        <a class="admin-toggle" {{action "toggleExpand"}}>collapse</a>
                       {{/if}}
                     </p>
                   {{else}}
@@ -607,7 +607,7 @@
           <li>
             {{#if this.showRemoveDangerButton}}
               <div class="row">
-                <div class="col-1 col-md-8">
+                <div class="col-10">
                   <h4>
                     Delete this pipeline
                   </h4>
@@ -615,7 +615,7 @@
                     Once you delete a pipeline, there is no going back.
                   </p>
                 </div>
-                <div class="col-1 col-md-4 right">
+                <div class="col-2 right">
                   <a
                     href="#"
                     class="trash"
