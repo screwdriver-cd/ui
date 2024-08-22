@@ -2,11 +2,8 @@ import { module, test } from 'qunit';
 import { isAborted, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 
 module('Unit | Utility | Pipeline | event', function () {
-  test('pr events are not skipped', function (assert) {
+  test('isSkipped returns correct value', function (assert) {
     assert.equal(isSkipped({ type: 'pr' }, []), false);
-  });
-
-  test('pipeline events with builds are not skipped', function (assert) {
     assert.equal(
       isSkipped(
         {
@@ -16,9 +13,6 @@ module('Unit | Utility | Pipeline | event', function () {
       ),
       false
     );
-  });
-
-  test('pipeline events without skip trigger in commit messages are not skipped', function (assert) {
     assert.equal(
       isSkipped(
         {
@@ -39,9 +33,6 @@ module('Unit | Utility | Pipeline | event', function () {
       ),
       false
     );
-  });
-
-  test('pipeline events with skip trigger in commit messages are skipped', function (assert) {
     assert.equal(
       isSkipped(
         {
