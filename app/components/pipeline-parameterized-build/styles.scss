@@ -33,7 +33,7 @@ button.start-with-parameters-button {
     }
   }
 
-  .parameter-name {
+  .control-label {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -71,5 +71,6 @@ button.start-with-parameters-button {
 .ember-basic-dropdown-content {
   li.ember-power-select-option {
     width: fit-content;
+    min-width: 100%;
   }
 }
