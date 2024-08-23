@@ -1,3 +1,5 @@
+import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
+
 /**
  * Determines if the event has been skipped
  * @param event
@@ -13,53 +15,11 @@ export const isSkipped = (event, builds) => {
 };
 
 /**
- * Determines if the event has been aborted
- * @param builds
- * @returns {boolean}
- */
-export const isAborted = builds => {
-  if (builds && builds.length > 0) {
-    return builds[0].status === 'ABORTED';
-  }
-
-  return false;
-};
-
-/**
- * Determines if the event has builds that still need to complete
- * @param builds
- * @returns {boolean}
- */
-export const hasBuildsToComplete = builds => {
-  if (!builds || builds.length === 0) {
-    return false;
-  }
-
-  const buildsToComplete = builds.find(build => {
-    const { status, endTime } = build;
-
-    switch (status) {
-      case 'CREATED':
-      case 'QUEUED':
-      case 'RUNNING':
-      case 'BLOCKED':
-        return true;
-      case 'UNSTABLE':
-        return endTime === undefined;
-      default:
-        return false;
-    }
-  });
-
-  return buildsToComplete !== undefined;
-};
-
-/**
  * Determines if the all builds have completed
- * @param builds
- * @returns {boolean}
+ * @param {Array} builds Array of builds in the format returned by the API
+ * @returns {boolean} true if all builds have a status that indicates they have completed
  */
-export const areAllBuildsComplete = builds => {
+export const isComplete = builds => {
   if (!builds || builds.length === 0) {
     return true;
   }
@@ -71,6 +31,6 @@ export const areAllBuildsComplete = builds => {
       return build.endTime !== undefined;
     }
 
-    return ['SUCCESS', 'FAILURE', 'ABORTED'].includes(status);
+    return !unfinishedStatuses.includes(status);
   });
 };

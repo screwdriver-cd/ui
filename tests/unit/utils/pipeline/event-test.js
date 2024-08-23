@@ -1,10 +1,5 @@
 import { module, test } from 'qunit';
-import {
-  areAllBuildsComplete,
-  hasBuildsToComplete,
-  isAborted,
-  isSkipped
-} from 'screwdriver-ui/utils/pipeline/event';
+import { isComplete, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 
 module('Unit | Utility | Pipeline | event', function () {
   test('isSkipped returns correct value', function (assert) {
@@ -62,41 +57,15 @@ module('Unit | Utility | Pipeline | event', function () {
     );
   });
 
-  test('isAborted returns correct value', function (assert) {
-    assert.equal(isAborted(null), false);
-    assert.equal(isAborted([]), false);
-    assert.equal(isAborted([{ status: 'ABORTED' }]), true);
+  test('isComplete returns correct value', function (assert) {
+    assert.equal(isComplete(null), true);
+    assert.equal(isComplete([]), true);
+    assert.equal(isComplete([{ status: 'UNSTABLE' }]), false);
     assert.equal(
-      isAborted([{ status: 'CREATED' }, { status: 'ABORTED' }]),
-      false
-    );
-  });
-
-  test('hasBuildsToComplete returns correct value', function (assert) {
-    assert.equal(hasBuildsToComplete(null), false);
-    assert.equal(hasBuildsToComplete([]), false);
-    assert.equal(hasBuildsToComplete([{ status: 'SUCCESS' }]), false);
-    assert.equal(hasBuildsToComplete([{ status: 'QUEUED' }]), true);
-    assert.equal(hasBuildsToComplete([{ status: 'UNSTABLE' }]), true);
-    assert.equal(
-      hasBuildsToComplete([
-        { status: 'UNSTABLE', endTime: '2024-04-01T00:00:00.000Z' }
-      ]),
-      false
-    );
-  });
-
-  test('areAllBuildsComplete returns correct value', function (assert) {
-    assert.equal(areAllBuildsComplete(null), true);
-    assert.equal(areAllBuildsComplete([]), true);
-    assert.equal(areAllBuildsComplete([{ status: 'UNSTABLE' }]), false);
-    assert.equal(
-      areAllBuildsComplete([
-        { status: 'UNSTABLE', endTime: '2024-04-01T00:00:00.000Z' }
-      ]),
+      isComplete([{ status: 'UNSTABLE', endTime: '2024-04-01T00:00:00.000Z' }]),
       true
     );
-    assert.equal(areAllBuildsComplete([{ status: 'QUEUED' }]), false);
-    assert.equal(areAllBuildsComplete([{ status: 'SUCCESS' }]), true);
+    assert.equal(isComplete([{ status: 'SUCCESS' }]), true);
+    assert.equal(isComplete([{ status: 'QUEUED' }]), false);
   });
 });
