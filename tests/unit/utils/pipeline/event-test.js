@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import {
+  areAllBuildsComplete,
   hasBuildsToComplete,
   isAborted,
   isSkipped
@@ -83,5 +84,19 @@ module('Unit | Utility | Pipeline | event', function () {
       ]),
       false
     );
+  });
+
+  test('areAllBuildsComplete returns correct value', function (assert) {
+    assert.equal(areAllBuildsComplete(null), true);
+    assert.equal(areAllBuildsComplete([]), true);
+    assert.equal(areAllBuildsComplete([{ status: 'UNSTABLE' }]), false);
+    assert.equal(
+      areAllBuildsComplete([
+        { status: 'UNSTABLE', endTime: '2024-04-01T00:00:00.000Z' }
+      ]),
+      true
+    );
+    assert.equal(areAllBuildsComplete([{ status: 'QUEUED' }]), false);
+    assert.equal(areAllBuildsComplete([{ status: 'SUCCESS' }]), true);
   });
 });

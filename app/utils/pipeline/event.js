@@ -53,3 +53,24 @@ export const hasBuildsToComplete = builds => {
 
   return buildsToComplete !== undefined;
 };
+
+/**
+ * Determines if the all builds have completed
+ * @param builds
+ * @returns {boolean}
+ */
+export const areAllBuildsComplete = builds => {
+  if (!builds || builds.length === 0) {
+    return true;
+  }
+
+  return builds.every(build => {
+    const { status } = build;
+
+    if (status === 'UNSTABLE') {
+      return build.endTime !== undefined;
+    }
+
+    return ['SUCCESS', 'FAILURE', 'ABORTED'].includes(status);
+  });
+};
