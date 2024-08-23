@@ -1,5 +1,9 @@
 import { module, test } from 'qunit';
-import { isComplete, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
+import {
+  getStatus,
+  isComplete,
+  isSkipped
+} from 'screwdriver-ui/utils/pipeline/event';
 
 module('Unit | Utility | Pipeline | event', function () {
   test('isSkipped returns correct value', function (assert) {
@@ -51,5 +55,17 @@ module('Unit | Utility | Pipeline | event', function () {
     );
     assert.equal(isComplete([{ status: 'SUCCESS' }]), true);
     assert.equal(isComplete([{ status: 'QUEUED' }]), false);
+  });
+
+  test('getStatus returns correct value', function (assert) {
+    assert.equal(
+      getStatus({ commit: { message: '[skip ci]' } }, []),
+      'SKIPPED'
+    );
+    assert.equal(getStatus({}, null), 'UNKNOWN');
+    assert.equal(getStatus({}, []), 'UNKNOWN');
+    assert.equal(getStatus({}, [{ status: 'SUCCESS' }]), 'SUCCESS');
+    assert.equal(getStatus({}, [{ status: 'FROZEN' }]), 'FROZEN');
+    assert.equal(getStatus({}, [{ status: 'CREATED' }]), 'RUNNING');
   });
 });

@@ -33,3 +33,25 @@ export const isComplete = builds => {
     return !unfinishedStatuses.includes(status);
   });
 };
+
+/**
+ * Get the status of the event
+ * @param {Object} event Event object in the format returned by the API
+ * @param {Array} builds Array of builds in the format returned by the API
+ * @returns {*} The status of the event
+ */
+export const getStatus = (event, builds) => {
+  if (isSkipped(event)) {
+    return 'SKIPPED';
+  }
+
+  if (isComplete(builds)) {
+    if (!builds || builds.length === 0) {
+      return 'UNKNOWN';
+    }
+
+    return builds[0].status;
+  }
+
+  return builds[0].status === 'FROZEN' ? 'FROZEN' : 'RUNNING';
+};
