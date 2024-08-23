@@ -2,12 +2,11 @@ import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
 
 /**
  * Determines if the event has been skipped
- * @param event
- * @param builds
- * @returns {boolean}
+ * @param {Object} event Event object in the format returned by the API
+ * @returns {boolean} true if the event has been skipped
  */
-export const isSkipped = (event, builds) => {
-  if (event.type === 'pr' || !builds || builds.length > 0) {
+export const isSkipped = event => {
+  if (event.type === 'pr') {
     return false;
   }
 
