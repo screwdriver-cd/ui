@@ -8,7 +8,7 @@
           <p>Start - {{moment-format build.startTime "MM/DD/YYYY HH:mmA"}}</p>
           <p>End - {{moment-format build.endTime "MM/DD/YYYY HH:mmA"}}</p>
         </BsTooltip>
-        <LinkTo @route="pipeline.build" @model={{build.id}} @title={{build.id}}>
+        <LinkTo @route="pipeline.build" @models={{array this.pipeline this.build}} @title={{build.id}}>
           <FaIcon @icon="circle" @fixedWidth="true" class={{build.status}} />
         </LinkTo>
       </span>

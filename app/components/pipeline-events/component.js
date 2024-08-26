@@ -111,11 +111,15 @@ export async function startDetachedBuild(job, options = {}, stage) {
 
 // eslint-disable-next-line require-jsdoc
 export async function createEvent(eventPayload, toActiveTab) {
+  console.log('eventPayload:', eventPayload);
+  console.log('toActiveTab:', toActiveTab);
+
   const newEvent = this.store.createRecord('event', eventPayload);
 
   try {
     await newEvent.save();
     if (this.refreshListViewJobs) {
+      console.log('refreshListViewJobs being called from createEvent');
       await this.refreshListViewJobs();
     }
 

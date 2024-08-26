@@ -18,6 +18,7 @@ export default Component.extend({
       };
     }
   }),
+  pipeline: { id: 1 },
   jobName: computed('record.job.jobName', 'record.job.displayName', {
     get() {
       if (this.record.job.displayName) {

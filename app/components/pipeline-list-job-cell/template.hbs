@@ -1,6 +1,6 @@
 <div class="job-cell">
   {{#if this.build}}
-    <LinkTo @route="pipeline.build" @model={{this.build.id}}>
+    <LinkTo @route="pipeline.build" @models={{array this.pipeline this.build}}>
       <FaIcon
         @icon={{this.build.icon.name}}
         @fixedWidth="true"

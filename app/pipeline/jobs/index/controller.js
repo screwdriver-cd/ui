@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { get, set, computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { jwtDecode } from 'jwt-decode';
 
 import ENV from 'screwdriver-ui/config/environment';
@@ -23,6 +23,7 @@ export default Controller.extend(ModelReloaderMixin, {
   store: service(),
   router: service(),
   lastRefreshed: moment(),
+
   shouldReload(model) {
     const job = model.jobs.find(j => {
       if (j.hasMany('builds').value() !== null) {
@@ -40,10 +41,13 @@ export default Controller.extend(ModelReloaderMixin, {
     const diff = moment().diff(lastRefreshed, 'milliseconds');
 
     if (job) {
+      console.log('job is true');
       res = SHOULD_RELOAD_YES;
     } else if (diff > this.reloadTimeout * 2) {
+      console.log('job is false');
       res = SHOULD_RELOAD_YES;
     } else {
+      console.log('job is false');
       res = SHOULD_RELOAD_SKIP;
     }
 
@@ -112,6 +116,7 @@ export default Controller.extend(ModelReloaderMixin, {
             .catch(() => Promise.resolve([]))
         )
       );
+
       const nextJobsDetails = [];
 
       jobsDetails.toArray().forEach(nextJobDetails => {
@@ -147,6 +152,7 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   async refreshListViewJobs() {
+    console.log('entering refreshListViewJobs');
     const listViewCutOff = this.listViewOffset;
 
     if (listViewCutOff > 0) {
@@ -162,6 +168,7 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   async updateListViewJobs() {
+    console.log('entering updateListViewJobs');
     // purge unmatched pipeline jobs
     let { jobsDetails } = this;
 
@@ -274,12 +281,12 @@ export default Controller.extend(ModelReloaderMixin, {
       }
 
       await this.createEvent(eventPayload);
-      set(this, 'lastRefreshed', PAST_TIME);
+      this.set('lastRefreshed', PAST_TIME);
     },
     stopBuild: async function stopBuildFunc(givenEvent, job) {
       await stopBuild.bind(this)(givenEvent, job);
       await this.reload();
-      set(this, 'lastRefreshed', PAST_TIME);
+      this.set('lastRefreshed', PAST_TIME);
     }
   },
   willDestroy() {

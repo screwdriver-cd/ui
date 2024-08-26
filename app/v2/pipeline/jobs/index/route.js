@@ -1,5 +1,8 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
+import { isPRJob } from 'screwdriver-ui/utils/build';
+import ENV from 'screwdriver-ui/config/environment';
+import { action } from '@ember/object';
 
 export default class NewPipelineJobsIndexRoute extends Route {
   @service session;
@@ -17,16 +20,32 @@ export default class NewPipelineJobsIndexRoute extends Route {
 
   async model() {
     const { pipeline } = this.modelFor('v2.pipeline');
-    const pipelineId = pipeline.id;
 
-    const jobs = await this.shuttle.fetchJobs(pipelineId).catch(e => {
-      // eslint-disable-next-line no-console
-      console.error(e);
+    const jobs = await this.shuttle.fetchJobs(pipeline.id).catch(() => []);
 
-      return [];
+    // Filter out PR jobs
+    jobs.filter(j => !isPRJob(j.name));
+
+    const numBuilds = ENV.APP.NUM_BUILDS_LISTED;
+
+    // get the builds for each job
+    jobs.forEach(async job => {
+      const builds = await this.shuttle
+        .fetchFromApi(
+          'get',
+          `/jobs/${job.id}/builds?fetchSteps=false&count=${numBuilds}&page=1&sort=descending`
+        )
+        .catch(() => []);
+
+      job.builds = builds.slice().reverse();
     });
 
     return { pipeline, jobs };
+  }
+
+  @action
+  async refreshModel() {
+    this.refresh();
   }
 }
 

@@ -287,6 +287,8 @@ export default Component.extend({
       };
     });
 
+    console.log('rows from getRows: ', rows);
+
     return rows;
   },
   jobsObserver: observer(

@@ -6,5 +6,6 @@ export default Component.extend({
     get() {
       return this.record.history;
     }
-  })
+  }),
+  pipeline: { id: 1 }
 });
