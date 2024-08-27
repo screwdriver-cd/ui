@@ -1,0 +1,57 @@
+<div class="builds-table">
+    <div class="builds-table-wrapper">
+      <div class="row my-4">
+        <div class="col-md-6"></div>
+        <div class="col-md-2">
+          <BsDropdown as |dd|>
+            <dd.button @onClick={{action "toggleDropdown" dd.toggleDropdown}} onBlur={{action "handleBlur"}} class="status-dropdown">
+              <div class="status-dropdown-wrapper">
+                {{#if (eq this.filters.status "Success") }}
+                  <span>Status: <FaIcon @icon="check-circle" /> {{this.filters.status}}</span>
+                {{else if (eq this.filters.status "Failed") }}
+                  <span>Status: <FaIcon @icon="times-circle" /> {{this.filters.status}}</span>
+                {{else}}
+                  <span>Status: All</span>
+                {{/if}}
+                {{svg-jar (concat "chevron" this.direction) class="img"}}
+              </div>
+            </dd.button>
+            <dd.menu as |ddm|>
+              <ddm.item>
+                <li {{action "updateStatus" ""}} class="status-item">
+                  <span>All</span>
+                </li>
+              </ddm.item>
+              <ddm.item>
+                <li {{action "updateStatus" "Success"}} class="status-item">
+                  <span><FaIcon @icon="check-circle" /> Success</span>
+                </li>
+              </ddm.item>
+              <ddm.item>
+                <li {{action "updateStatus" "Failed"}} class="status-item">
+                  <span><FaIcon @icon="times-circle" /> Failed</span>
+                </li>
+              </ddm.item>
+            </dd.menu>
+          </BsDropdown>
+        </div>
+        <div class="col-md-4">
+            <input class="w-100 job-name" type="text" placeholder="Search by Job Name" value={{this.filters.job}} oninput={{action (mut this.filters.job) value="target.value"}} />
+        </div>
+      </div>
+
+      <ModelsTable
+        @data={{this.filteredData}}
+        @columns={{this.columns}}
+        @themeInstance={{this.theme}}
+        @showComponentFooter={{true}}
+        @showColumnsDropdown={{false}}
+        @useFilteringByColumns={{false}}
+        @showGlobalFilter={{false}}
+        @showCurrentPageNumberSelect={{false}}
+        @multipleColumnsSorting={{false}}
+        @showPageSize={{true}}
+        @useNumericPagination={{true}}
+      />
+    </div>
+</div>

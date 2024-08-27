@@ -7,7 +7,7 @@
     @collections={{this.collections}}
   />
 
-  <div class="pipeline-main-content {{if this.isEventsPullsJobsRoute "grid"}}">
+  <div class="pipeline-main-content {{if this.isEventsPullsJobsRoute "grid"}} {{if this.isExpanded "expanded"}}">
     {{outlet}}
   </div>
 </div>

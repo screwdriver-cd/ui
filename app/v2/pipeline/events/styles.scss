@@ -9,6 +9,14 @@
   grid-template-rows: 3.75rem calc(100% - 3.75rem);
   grid-template-columns: 26rem calc(100% - 26rem);
 
+  &.expanded {
+    grid-template-areas:
+      'pipeline-tab'
+      'pipeline-event-main-content';
+
+    grid-template-columns: auto;
+  }
+
   .pipeline-tab {
     grid-area: pipeline-tab;
 
@@ -52,6 +60,10 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+
+    &.hide {
+      display: none;
+    }
 
     .search-filter-bar {
       display: flex;
@@ -125,9 +137,9 @@
     }
   }
 
-  .pipeline-workflow-graph {
+  .pipeline-workflow-graph-builds-table {
     grid-area: pipeline-event-main-content;
-
+    
     #pipeline-workflow-graph-controls {
       display: flex;
       align-content: center;

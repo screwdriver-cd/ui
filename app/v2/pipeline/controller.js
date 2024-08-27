@@ -1,10 +1,13 @@
 import Controller from '@ember/controller';
 import { service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 
 export default class NewPipelineController extends Controller {
   @service session;
 
   @service router;
+
+  @tracked isExpanded = false;
 
   get collections() {
     return this.model.collections;
