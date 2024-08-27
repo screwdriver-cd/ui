@@ -74,4 +74,29 @@ module('Integration | Component | pipeline/modal/stop-build', function (hooks) {
     assert.dom('.alert > span').hasText('Build stopped successfully');
     assert.dom('#stop-build').isDisabled();
   });
+
+  test('it calls correct API when no builds are configured', async function (assert) {
+    const shuttle = this.owner.lookup('service:shuttle');
+    const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+    const eventId = 1;
+
+    this.setProperties({
+      eventId,
+      closeModal: () => {}
+    });
+
+    await render(
+      hbs`<Pipeline::Modal::StopBuild
+        @eventId={{this.eventId}}
+        @closeModal={{this.closeModal}}
+      />`
+    );
+
+    await click('#stop-build');
+
+    assert.equal(
+      shuttleStub.calledWith('put', `/events/${eventId}/stop`),
+      true
+    );
+  });
 });
