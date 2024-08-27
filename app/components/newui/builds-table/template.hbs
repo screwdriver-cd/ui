@@ -2,7 +2,7 @@
     <div class="builds-table-wrapper">
       <div class="row my-4">
         <div class="col-md-6"></div>
-        <div class="col-md-2">
+        <div class="col-md-2 right">
           <BsDropdown as |dd|>
             <dd.button @onClick={{action "toggleDropdown" dd.toggleDropdown}} onBlur={{action "handleBlur"}} class="status-dropdown">
               <div class="status-dropdown-wrapper">
@@ -36,14 +36,13 @@
           </BsDropdown>
         </div>
         <div class="col-md-4">
-            <input class="w-100 job-name" type="text" placeholder="Search by Job Name" value={{this.filters.job}} oninput={{action (mut this.filters.job) value="target.value"}} />
+            <input class="w-100 job-name" type="text" placeholder="Search by Job Name" value={{this.filters.job}} {{on "input" this.updateJobFilter}} />
         </div>
       </div>
-
       <ModelsTable
         @data={{this.filteredData}}
         @columns={{this.columns}}
-        @themeInstance={{this.theme}}
+        @themeInstance={{this.themeInstance}}
         @showComponentFooter={{true}}
         @showColumnsDropdown={{false}}
         @useFilteringByColumns={{false}}
@@ -52,6 +51,8 @@
         @multipleColumnsSorting={{false}}
         @showPageSize={{true}}
         @useNumericPagination={{true}}
+        {{did-insert this.attachHeaderListeners}}
+        {{did-update this.attachHeaderListeners}}
       />
     </div>
 </div>

@@ -1,17 +1,22 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
-import { computed, set } from '@ember/object';
+import { action } from '@ember/object';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import { next } from '@ember/runloop';
+import { statusIcon } from 'screwdriver-ui/utils/build';
 
-export default Component.extend({
-  direction: 'Down',
-  dropdownOpen: false,
-  theme: service('emt-themes/ember-bootstrap-v5'),
-  data: [
+export default class NewUIBuildsTable extends Component {
+  @tracked direction = 'Down';
+
+  @tracked dropdownOpen = false;
+
+  @service('emt-themes/ember-bootstrap-v5') themeInstance;
+
+  @tracked data = [
     {
       job: 1,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -20,7 +25,7 @@ export default Component.extend({
     },
     {
       job: 2,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -29,7 +34,7 @@ export default Component.extend({
     },
     {
       job: 3,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -38,7 +43,7 @@ export default Component.extend({
     },
     {
       job: 4,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -47,7 +52,7 @@ export default Component.extend({
     },
     {
       job: 5,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -56,7 +61,7 @@ export default Component.extend({
     },
     {
       job: 6,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -65,7 +70,7 @@ export default Component.extend({
     },
     {
       job: 7,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -74,7 +79,7 @@ export default Component.extend({
     },
     {
       job: 8,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -83,7 +88,7 @@ export default Component.extend({
     },
     {
       job: 9,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -92,7 +97,7 @@ export default Component.extend({
     },
     {
       job: 10,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -101,7 +106,7 @@ export default Component.extend({
     },
     {
       job: 11,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -110,7 +115,7 @@ export default Component.extend({
     },
     {
       job: 12,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -119,7 +124,7 @@ export default Component.extend({
     },
     {
       job: 13,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -128,7 +133,7 @@ export default Component.extend({
     },
     {
       job: 14,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -137,7 +142,7 @@ export default Component.extend({
     },
     {
       job: 15,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -146,7 +151,7 @@ export default Component.extend({
     },
     {
       job: 16,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -155,7 +160,7 @@ export default Component.extend({
     },
     {
       job: 17,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -164,7 +169,7 @@ export default Component.extend({
     },
     {
       job: 18,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -173,7 +178,7 @@ export default Component.extend({
     },
     {
       job: 19,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -182,7 +187,7 @@ export default Component.extend({
     },
     {
       job: 20,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -191,7 +196,7 @@ export default Component.extend({
     },
     {
       job: 21,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -200,7 +205,7 @@ export default Component.extend({
     },
     {
       job: 22,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -209,7 +214,7 @@ export default Component.extend({
     },
     {
       job: 23,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -218,7 +223,7 @@ export default Component.extend({
     },
     {
       job: 24,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -227,7 +232,7 @@ export default Component.extend({
     },
     {
       job: 25,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -236,7 +241,7 @@ export default Component.extend({
     },
     {
       job: 26,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -245,7 +250,7 @@ export default Component.extend({
     },
     {
       job: 27,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -254,7 +259,7 @@ export default Component.extend({
     },
     {
       job: 28,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -263,7 +268,7 @@ export default Component.extend({
     },
     {
       job: 29,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -272,7 +277,7 @@ export default Component.extend({
     },
     {
       job: 30,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -281,7 +286,7 @@ export default Component.extend({
     },
     {
       job: 31,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -290,7 +295,7 @@ export default Component.extend({
     },
     {
       job: 32,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -299,7 +304,7 @@ export default Component.extend({
     },
     {
       job: 33,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -308,7 +313,7 @@ export default Component.extend({
     },
     {
       job: 34,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -317,7 +322,7 @@ export default Component.extend({
     },
     {
       job: 35,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -326,7 +331,7 @@ export default Component.extend({
     },
     {
       job: 36,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -335,7 +340,7 @@ export default Component.extend({
     },
     {
       job: 37,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -344,7 +349,7 @@ export default Component.extend({
     },
     {
       job: 38,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -353,7 +358,7 @@ export default Component.extend({
     },
     {
       job: 39,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -362,7 +367,7 @@ export default Component.extend({
     },
     {
       job: 40,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -371,7 +376,7 @@ export default Component.extend({
     },
     {
       job: 41,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -380,7 +385,7 @@ export default Component.extend({
     },
     {
       job: 42,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -389,7 +394,7 @@ export default Component.extend({
     },
     {
       job: 43,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -398,7 +403,7 @@ export default Component.extend({
     },
     {
       job: 44,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -407,7 +412,7 @@ export default Component.extend({
     },
     {
       job: 45,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -416,7 +421,7 @@ export default Component.extend({
     },
     {
       job: 46,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -425,7 +430,7 @@ export default Component.extend({
     },
     {
       job: 47,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -434,7 +439,7 @@ export default Component.extend({
     },
     {
       job: 48,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -443,7 +448,7 @@ export default Component.extend({
     },
     {
       job: 49,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -452,7 +457,7 @@ export default Component.extend({
     },
     {
       job: 50,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -461,7 +466,7 @@ export default Component.extend({
     },
     {
       job: 51,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Success',
       startTime: 'xxx',
       duration: 'xxxx',
@@ -470,22 +475,23 @@ export default Component.extend({
     },
     {
       job: 52,
-      history: 'xx',
+      buildid: 'xx',
       status: 'Failed',
       startTime: 'xxx',
       duration: 'xxxx',
       coverage: 'xxxx',
       actions: 'xxxx'
     }
-  ],
-  columns: [
+  ];
+
+  @tracked columns = [
     {
       title: 'Job Name',
       propertyName: 'job'
     },
     {
       title: 'Build ID',
-      propertyName: 'history'
+      propertyName: 'buildid'
     },
     {
       title: 'Status',
@@ -507,10 +513,14 @@ export default Component.extend({
       title: 'Actions',
       propertyName: 'actions'
     }
-  ],
+  ];
 
-  async init() {
-    this._super(...arguments);
+  get icon() {
+    return statusIcon(this.args.commitShaDetails.status, true);
+  }
+
+  constructor() {
+    super(...arguments);
 
     const customTheme = {
       table: 'table table-condensed table-sm',
@@ -521,70 +531,96 @@ export default Component.extend({
       sortDescIcon: 'fa fa-fw fa-sort-down'
     };
 
-    this.theme.setProperties(customTheme);
+    this.themeInstance.setProperties(customTheme);
+  }
 
-    this.set('filters', {
-      job: '',
-      status: ''
-    });
-  },
+  @tracked filters = {
+    job: '',
+    status: ''
+  };
 
-  didUpdate() {
-    this._super(...arguments);
-
+  @action
+  convertIcons(element) {
     next(() => {
-      if (this.element) {
-        dom.i2svg({ node: this.element });
+      if (element) {
+        setTimeout(() => {
+          dom.i2svg({ node: element });
+        }, 0);
       }
     });
-  },
+  }
 
-  filteredData: computed(
-    'data.@each.{job,status}',
-    'filters.{job,status}',
-    function () {
-      let { data } = this;
+  @action
+  attachHeaderListeners(element) {
+    let headers = element.querySelectorAll('.models-table-wrapper th');
 
-      let { filters } = this;
-
-      return data.filter(item => {
-        let matchesJob =
-          !filters.job || item.job.toString().includes(filters.job);
-
-        let matchesStatus =
-          !filters.status || item.status.includes(filters.status);
-
-        return matchesJob && matchesStatus;
+    headers.forEach(header => {
+      header.addEventListener('click', () => {
+        this.convertIcons(header);
       });
-    }
-  ),
+    });
+  }
 
+  get filteredData() {
+    let { data, filters } = this;
+
+    return data.filter(item => {
+      let matchesJob =
+        !filters.job || item.job.toString().includes(filters.job);
+
+      let matchesStatus =
+        !filters.status || item.status.includes(filters.status);
+
+      return matchesJob && matchesStatus;
+    });
+  }
+
+  @action
+  updateJobFilter(event) {
+    this.filters = {
+      ...this.filters,
+      job: event.target.value
+    };
+  }
+
+  @action
+  updateStatusFilter(event) {
+    this.filters = {
+      ...this.filters,
+      status: event.target.value
+    };
+  }
+
+  @action
   toggleChevronDirection() {
-    let direction = 'Down';
-
     if (this.direction === 'Down') {
-      direction = 'Up';
-    }
-    this.set('direction', direction);
-  },
-
-  actions: {
-    updateStatus(newStatus) {
-      set(this.filters, 'status', newStatus);
-      this.toggleChevronDirection();
-    },
-
-    toggleDropdown(toggleAction) {
-      this.toggleChevronDirection();
-      if (typeof toggleAction === 'function') {
-        toggleAction();
-      }
-    },
-
-    handleBlur(event) {
-      if (!event.relatedTarget || !this.element.contains(event.relatedTarget)) {
-        this.toggleChevronDirection();
-      }
+      this.direction = 'Up';
+    } else {
+      this.direction = 'Down';
     }
   }
-});
+
+  @action
+  updateStatus(newStatus) {
+    this.filters = {
+      ...this.filters,
+      status: newStatus
+    };
+    this.toggleChevronDirection();
+  }
+
+  @action
+  toggleDropdown(toggleAction) {
+    this.toggleChevronDirection();
+    if (typeof toggleAction === 'function') {
+      toggleAction();
+    }
+  }
+
+  @action
+  handleBlur(event) {
+    if (!event.relatedTarget) {
+      this.toggleChevronDirection();
+    }
+  }
+}

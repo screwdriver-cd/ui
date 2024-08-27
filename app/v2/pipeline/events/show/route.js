@@ -1,8 +1,21 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
+import { action } from '@ember/object';
 
 export default class NewPipelineEventsShowRoute extends Route {
   @service shuttle;
+
+  setupController(controller, model) {
+    super.setupController(controller, model);
+    controller.set('showHideEventsList', this.showHideEventsList.bind(this));
+  }
+
+  @action
+  showHideEventsList() {
+    let pipelineController = this.controllerFor('v2.pipeline');
+
+    pipelineController.set('isExpanded', !pipelineController.isExpanded);
+  }
 
   async model() {
     const eventId = this.paramsFor('v2.pipeline.events.show').event_id;
@@ -24,6 +37,8 @@ export default class NewPipelineEventsShowRoute extends Route {
       'get',
       `/events/${eventId}/builds?fetchSteps=false`
     );
+
+    console.log(builds);
 
     const jobs = await this.shuttle.fetchFromApi(
       'get',
