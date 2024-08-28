@@ -8,6 +8,39 @@ import sinon from 'sinon';
 module('Integration | Component | pipeline/parameters', function (hooks) {
   setupRenderingTest(hooks);
 
+  test('it does not render title when no action is set', async function (assert) {
+    this.setProperties({
+      event: {
+        meta: {
+          parameters: {
+            foo: { value: 'bar' },
+            job1: { p1: { value: 'abc' }, p2: { value: 'xyz' } }
+          }
+        }
+      },
+      job: { name: 'job1' },
+      pipeline: { parameters: { foo: { value: 'foofoo' } } },
+      jobs: [
+        {
+          name: 'job1',
+          permutations: [
+            { parameters: { p1: { value: 'p1' }, p2: { value: 'p2' } } }
+          ]
+        }
+      ]
+    });
+    await render(
+      hbs`<Pipeline::Parameters
+        @event={{this.event}}
+        @job={{this.job}}
+        @pipeline={{this.pipeline}}
+        @jobs={{this.jobs}}
+      />`
+    );
+
+    assert.dom('.parameter-title').doesNotExist();
+  });
+
   test('it renders title with correct action', async function (assert) {
     this.setProperties({
       event: {
@@ -404,5 +437,49 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
         '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle title'
       )
       .hasText('Default value: foobar');
+  });
+
+  test('it renders inputs as read only when no action is set', async function (assert) {
+    this.setProperties({
+      event: {
+        meta: {
+          parameters: {
+            bar: { value: 'barzy' },
+            foo: { value: 'foo' }
+          }
+        }
+      },
+      pipeline: {
+        parameters: {
+          bar: ['barbar', 'bazbaz'],
+          foo: { value: 'foo', description: 'awesome' }
+        }
+      },
+      jobs: [
+        {
+          name: 'job1'
+        }
+      ]
+    });
+
+    await render(
+      hbs`<Pipeline::Parameters
+        @event={{this.event}}
+        @pipeline={{this.pipeline}}
+        @jobs={{this.jobs}}
+      />`
+    );
+
+    const parameters = this.element.querySelectorAll(
+      '.parameter-list.expanded .parameter'
+    );
+
+    assert.dom(parameters[0].querySelector('label')).hasText('bar');
+    assert
+      .dom(parameters[0].querySelector('.parameter-selector'))
+      .hasAria('disabled', 'true');
+    assert.dom(parameters[1].querySelector('label')).hasText('foo awesome');
+    assert.dom(parameters[1].querySelector('input')).hasAttribute('disabled');
+    assert.dom(parameters[1].querySelector('input')).hasValue('foo');
   });
 });
