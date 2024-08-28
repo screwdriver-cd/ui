@@ -1,19 +1,34 @@
 <div class="pipeline-parameters">
-  <div class="parameter-title">
-    {{this.title}}
-  </div>
+  {{#if @action}}
+    <div class="parameter-title">
+      {{this.title}}
+    </div>
+  {{/if}}
   <div class="parameters-container">
     {{#each this.parameters as |parameterGroup|}}
       <div class="parameter-group">
         <div class="group-title">
-          <FaIcon @icon={{if parameterGroup.isOpen "minus-square" "plus-square"}} {{on "click" (fn this.toggleParameterGroup parameterGroup.paramGroupTitle)}}></FaIcon>
-          {{parameterGroup.paramGroupTitle}}
+          <FaIcon
+            @icon={{if parameterGroup.isOpen "minus-square" "plus-square"}}
+            {{on "click" (fn this.toggleParameterGroup parameterGroup.paramGroupTitle)}}
+          />
+          <div
+            class="title"
+            title={{parameterGroup.paramGroupTitle}}
+          >
+            {{parameterGroup.paramGroupTitle}}
+          </div>
         </div>
         <div class="parameter-list {{if parameterGroup.isOpen "expanded" "collapsed"}}">
           {{#each parameterGroup.parameters as |parameter|}}
             <div class="parameter">
               <label>
-                {{parameter.name}}
+                <div
+                  class="name"
+                  title={{parameter.name}}
+                >
+                  {{parameter.name}}
+                </div>
                 {{#if parameter.description}}
                   <FaIcon @icon="question-circle" @title={{parameter.description}}></FaIcon>
                 {{/if}}
@@ -28,6 +43,7 @@
               {{#if (is-array parameter.defaultValues)}}
                 <div class="dropdown-selection-container">
                   <Pipeline::Parameters::Selectable
+                    @disabled={{if @action false true}}
                     @parameter={{parameter}}
                     @onOpen={{this.openSelect}}
                     @onSelectValue={{(fn this.updateParameter parameterGroup.jobName)}}
@@ -36,6 +52,7 @@
               {{else}}
                 <Input
                   @value={{parameter.value}}
+                  disabled={{if @action false true}}
                   defaultValue={{parameter.value}}
                   {{on "input" (fn this.onInput parameterGroup.jobName parameter)}}
                 />
