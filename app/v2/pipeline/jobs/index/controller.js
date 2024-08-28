@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { service } from '@ember/service';
-import { set, action } from '@ember/object';
+import { get, set, action } from '@ember/object';
 import moment from 'moment';
 import { isInactivePipeline } from 'screwdriver-ui/utils/pipeline';
 import {
@@ -14,6 +14,7 @@ import ModelReloaderMixin, {
   SHOULD_RELOAD_YES
 } from 'screwdriver-ui/mixins/model-reloader';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import { jwtDecode } from 'jwt-decode';
 
 const PAST_TIME = moment().subtract(1, 'day');
 
@@ -113,11 +114,14 @@ export default class NewPipelineEventsController extends Controller.extend(
   }
 
   get jobs() {
+    // need await here to get the jobs from the model because it is async
     return this.model.jobs;
   }
 
   get jobIds() {
-    return this.jobs.map(j => j.id);
+    console.log('this.model.jobs: ', this.model.jobs);
+
+    return this.model.jobs.map(j => j.id);
   }
 
   get isInactivePipeline() {
@@ -172,10 +176,14 @@ export default class NewPipelineEventsController extends Controller.extend(
   async getNewListViewJobs(listViewOffset, listViewCutOff) {
     const { jobIds, jobs } = this;
 
+    console.log('jobIds from getNewListViewJobs: ', jobIds);
+    console.log('jobs from getNewListViewJobs: ', jobs);
     if (listViewOffset < jobIds.length) {
-      const jobsDetails = JSON.parse(
-        JSON.stringify(jobs.slice(listViewOffset, listViewCutOff))
-      );
+      const jobsDetails = this.model.jobs
+        .slice(listViewOffset, listViewCutOff)
+        .map(job => ({ ...job }));
+
+      console.log('jobsDetails from getNewListViewJobs: ', jobsDetails);
       const nextJobsDetails = [];
 
       jobsDetails.forEach(nextJobDetail => {
@@ -225,10 +233,9 @@ export default class NewPipelineEventsController extends Controller.extend(
     set(this, 'isShowingModal', true);
 
     const pipelineId = this.pipeline.id;
-    // const token = get(this, 'session.data.authenticated.token');
-    // const user = jwtDecode(token).username;
-    // const causeMessage = `Manually started by ${user}`;
-    const causeMessage = `Manually started by screwdriver-ui`;
+    const token = get(this, 'session.data.authenticated.token');
+    const user = jwtDecode(token).username;
+    const causeMessage = `Manually started by ${user}`;
 
     let startFrom = jobName;
 

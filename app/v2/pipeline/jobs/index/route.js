@@ -20,27 +20,30 @@ export default class NewPipelineJobsIndexRoute extends Route {
 
   async model() {
     const { pipeline } = this.modelFor('v2.pipeline');
-
-    const jobs = await this.shuttle.fetchJobs(pipeline.id).catch(() => []);
-
-    // Filter out PR jobs
-    jobs.filter(j => !isPRJob(j.name));
-
     const numBuilds = ENV.APP.NUM_BUILDS_LISTED;
 
-    // get the builds for each job
-    jobs.forEach(async job => {
-      const builds = await this.shuttle
-        .fetchFromApi(
-          'get',
-          `/jobs/${job.id}/builds?fetchSteps=false&count=${numBuilds}&page=1&sort=descending`
-        )
-        .catch(() => []);
+    // perhaps need to return something different name
+    let jobs = await this.shuttle.fetchJobs(pipeline.id).catch(() => []);
 
-      job.builds = builds.slice().reverse();
-    });
+    // Filter out PR jobs
+    jobs = jobs.filter(j => !isPRJob(j.name));
+    // Resolve all job promises
+    const resolvedJobs = await Promise.all(
+      jobs.map(async job => {
+        const builds = await this.shuttle
+          .fetchFromApi(
+            'get',
+            `/jobs/${job.id}/builds?fetchSteps=false&count=${numBuilds}&page=1&sort=descending`
+          )
+          .catch(() => []);
 
-    return { pipeline, jobs };
+        builds.reverse();
+
+        return { ...job, builds };
+      })
+    );
+
+    return { pipeline, jobs: resolvedJobs };
   }
 
   @action
