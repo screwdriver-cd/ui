@@ -65,7 +65,6 @@ export default class NewPipelineEventsController extends Controller.extend(
   // todo: users authentication or session
   // todo: side effects of not using computed
   // todo: tests
-  // todo: passing multiple things to the linkto
 
   shouldReload(model) {
     const job = model.jobs.find(j => {
