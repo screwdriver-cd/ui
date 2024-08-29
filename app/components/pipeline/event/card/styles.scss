@@ -142,12 +142,11 @@
         }
       }
 
-      .parameters {
+      #show-parameters {
         @include button.styles;
 
-        button {
-          background: colors.$sd-white;
-        }
+        background: colors.$sd-white;
+        border-radius: 3px;
       }
     }
   }

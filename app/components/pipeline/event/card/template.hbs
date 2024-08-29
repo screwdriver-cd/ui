@@ -131,22 +131,24 @@
   </div>
 
     {{#if @event.meta.parameters}}
-      <BsButton
-        @type="primary"
-        @outline={{true}}
-        @onClick={{fn this.openParametersModal}}
-      >
-        Parameters
-      </BsButton>
+      <div id="show-parameters">
+        <BsButton
+          @type="primary"
+          @outline={{true}}
+          @onClick={{fn this.openParametersModal}}
+        >
+          Parameters
+        </BsButton>
 
-      {{#if this.showParametersModal}}
-        <Pipeline::Modal::ShowParameters
-          @event={{@event}}
-          @pipeline={{@pipeline}}
-          @jobs={{@jobs}}
-          @closeModal={{this.closeParametersModal}}
-        />
-      {{/if}}
+        {{#if this.showParametersModal}}
+          <Pipeline::Modal::ShowParameters
+            @event={{@event}}
+            @pipeline={{@pipeline}}
+            @jobs={{@jobs}}
+            @closeModal={{this.closeParametersModal}}
+          />
+        {{/if}}
+      </div>
     {{/if}}
   </div>
 </div>

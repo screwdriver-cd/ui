@@ -49,7 +49,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.event-card-body .by').exists({ count: 1 });
 
     assert.dom('.event-card-footer .counts').exists({ count: 1 });
-    assert.dom('.event-card-footer .parameters').doesNotExist();
+    assert.dom('.event-card-footer #show-parameters').doesNotExist();
   });
 
   test('it does not render highlight', async function (assert) {
@@ -149,7 +149,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       />`
     );
 
-    assert.dom('.event-card-footer .parameters').exists({ count: 1 });
+    assert.dom('.event-card-footer #show-parameters').exists({ count: 1 });
   });
 
   test('it renders abort button for running event', async function (assert) {
