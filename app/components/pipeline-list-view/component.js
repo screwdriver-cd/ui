@@ -278,6 +278,7 @@ export default Component.extend({
       }
 
       return {
+        pipelineId: this.get('pipeline.id'),
         job: jobData,
         startTime: startTime === 'Invalid date' ? 'Not started.' : startTime,
         duration: duration === null ? 'N/A' : duration,

@@ -7,5 +7,11 @@ export default Component.extend({
       return this.record.history;
     }
   }),
-  pipeline: { id: 1 }
+  pipeline: computed('record.pipelineId', {
+    get() {
+      return {
+        id: this.record.pipelineId
+      };
+    }
+  })
 });
