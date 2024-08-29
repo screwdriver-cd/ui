@@ -63,6 +63,10 @@
       &.build-started_from {
         stroke: colors.$sd-success;
       }
+
+      &.build-warning {
+        stroke: colors.$sd-warning;
+      }
     }
 
     .stage-info {
