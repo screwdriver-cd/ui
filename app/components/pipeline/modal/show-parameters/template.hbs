@@ -1,0 +1,16 @@
+<BsModal
+  id="show-event-parameters-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">Configured parameters for event</div>
+  </modal.header>
+  <modal.body>
+    <Pipeline::Parameters
+      @event={{@event}}
+      @pipeline={{@pipeline}}
+      @jobs={{@jobs}}
+    />
+  </modal.body>
+</BsModal>
