@@ -20,4 +20,24 @@
       background-color: rgba(colors.$sd-running, 0.1);
     }
   }
+
+  .btn-danger {
+    color: colors.$sd-white;
+    background-color: colors.$sd-warn-bg;
+    border-color: colors.$sd-warn-bg;
+
+    &:hover {
+      background-color: rgba(colors.$sd-warn-bg, 0.75);
+      border-color: transparent;
+    }
+
+    .btn-outline-danger {
+      color: colors.$sd-warn-bg;
+      border-color: colors.$sd-warn-bg;
+
+      &:hover {
+        background-color: rgba(colors.$sd-warn-bg, 0.1);
+      }
+    }
+  }
 }

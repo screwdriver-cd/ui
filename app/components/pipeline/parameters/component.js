@@ -38,7 +38,9 @@ export default class PipelineParametersComponent extends Component {
   }
 
   get title() {
-    return `${this.args.action} pipeline with parameters`.toUpperCase();
+    return this.args.action
+      ? `${this.args.action} pipeline with parameters`.toUpperCase()
+      : null;
   }
 
   @action
