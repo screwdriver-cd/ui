@@ -29,7 +29,6 @@ export default class PipelineOptionsRoute extends Route {
     const { pipeline } = this.modelFor('v2.pipeline');
     const pipelineId = pipeline.id;
 
-    // this should be moved at the parent route?
     const jobs = await this.shuttle.fetchJobs(pipelineId).catch(e => {
       // eslint-disable-next-line no-console
       console.error(e);

@@ -18,8 +18,6 @@ import { jwtDecode } from 'jwt-decode';
 
 const PAST_TIME = moment().subtract(1, 'day');
 
-// what interactivity needed here and what are the derived properties needed?
-
 export default class NewPipelineEventsController extends Controller.extend(
   ModelReloaderMixin
 ) {
