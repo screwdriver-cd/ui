@@ -1,7 +1,7 @@
 {{page-title "Show"}}
 
 <!-- TODO: if there are no events, then we don't need to display the below -->
-<div class="pipeline-events">
+<div class="pipeline-events {{if this.isExpanded "hide"}}">
   <div class="search-filter-bar">
 
     <span class="search-filter">
@@ -28,7 +28,22 @@
   </div>
 </div>
 
-<div class="pipeline-workflow-graph">
+<div class="pipeline-workflow-graph-builds-table">
+  <div class="nav-button-container">
+    <div class="button-container layout-buttons">
+        <div class="btn-group view-toggle" role="group">
+            <button class="btn btn-outline-primary {{if (not this.isBuilds) "active"}}" type="button" {{on "click" (fn this.toggleBuilds false)}}>
+              Workflow   
+            </button>
+            <button class="btn btn-outline-primary {{if this.isBuilds "active"}}" type="button" {{on "click" (fn this.toggleBuilds true)}}>
+              Builds
+            </button>
+          </div>
+      </div>
+  </div>
+  {{#if this.isBuilds}}
+    <Newui::BuildsTable @buildData={{this.model.builds}} />
+  {{else}}
   <div id="pipeline-workflow-graph-controls">
     <div
       class="button-container"
@@ -96,6 +111,14 @@
         @pipeline={{this.model.pipeline}}
         @latestCommitEvent={{this.model.latestCommitEvent}}
       />
+    {{/if}}
+  </div>
+  {{/if}}
+  <div>
+    {{#if this.isExpanded}}
+      <button data-button="" class="showHideEventsBtn right" type="button" aria-label="Show events list" {{on "click" this.toggleExpanded}}>{{svg-jar "chevronNext" class="img"}}</button>
+    {{else}}
+      <button data-button="" class="showHideEventsBtn left" type="button" aria-label="Hide events list" {{on "click" this.toggleExpanded}}>{{svg-jar "chevronBack" class="img"}}</button>
     {{/if}}
   </div>
 </div>

@@ -18,6 +18,23 @@ export default class V2PipelineEventsShowController extends Controller {
 
   @tracked d3Data = null;
 
+  @tracked isExpanded = false;
+
+  @tracked isBuilds = false;
+
+  @action
+  toggleExpanded() {
+    if (this.showHideEventsList) {
+      this.showHideEventsList();
+      this.isExpanded = !this.isExpanded;
+    }
+  }
+
+  @action
+  toggleBuilds(expectedState) {
+    this.isBuilds = expectedState;
+  }
+
   get workflowGraph() {
     return getFilteredGraph(this.model.event.workflowGraph);
   }
