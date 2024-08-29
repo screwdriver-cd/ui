@@ -5,7 +5,6 @@ import { statusIcon } from 'screwdriver-ui/utils/build';
 export default Component.extend({
   build: computed('record.job', {
     get() {
-      console.log('this.record', this.record);
       const { build } = this.record.job;
 
       if (!build) {
