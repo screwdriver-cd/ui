@@ -62,8 +62,6 @@ export default class NewPipelineEventsController extends Controller.extend(
     this.startReloading();
   }
 
-  // todo: users authentication or session
-  // todo: side effects of not using computed
   // todo: tests
 
   shouldReload(model) {

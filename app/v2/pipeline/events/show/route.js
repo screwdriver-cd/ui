@@ -25,7 +25,6 @@ export default class NewPipelineEventsShowRoute extends Route {
       `/events/${eventId}/builds?fetchSteps=false`
     );
 
-    // should this be moved to a service? or at the parent route?
     const jobs = await this.shuttle.fetchFromApi(
       'get',
       `/pipelines/${model.pipeline.id}/jobs`
