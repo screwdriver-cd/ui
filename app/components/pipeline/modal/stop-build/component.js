@@ -14,16 +14,28 @@ export default class PipelineModalStopBuildComponent extends Component {
 
   @action
   async stopBuild() {
-    await this.shuttle
-      .fetchFromApi('put', `/builds/${this.args.buildId}`, {
-        status: 'ABORTED'
-      })
-      .then(() => {
-        this.successMessage = 'Build stopped successfully';
-        this.isDisabled = true;
-      })
-      .catch(err => {
-        this.errorMessage = err.message;
-      });
+    if (this.args.eventId) {
+      await this.shuttle
+        .fetchFromApi('put', `/events/${this.args.eventId}/stop`)
+        .then(() => {
+          this.successMessage = 'Build stopped successfully';
+          this.isDisabled = true;
+        })
+        .catch(err => {
+          this.errorMessage = err.message;
+        });
+    } else {
+      await this.shuttle
+        .fetchFromApi('put', `/builds/${this.args.buildId}`, {
+          status: 'ABORTED'
+        })
+        .then(() => {
+          this.successMessage = 'Build stopped successfully';
+          this.isDisabled = true;
+        })
+        .catch(err => {
+          this.errorMessage = err.message;
+        });
+    }
   }
 }
