@@ -10,5 +10,10 @@ export default Component.extend({
 
       return job?.build?.jobId ?? '';
     }
+  }),
+  pipelineId: computed('record.pipelineId', {
+    get() {
+      return this.record.pipelineId;
+    }
   })
 });

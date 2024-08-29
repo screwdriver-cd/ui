@@ -1,6 +1,7 @@
 <div>
   {{#if (not-eq this.jobId "")}}
-    <LinkTo @route="pipeline.metrics" @model="1" @query={{hash jobId=this.jobId}}>
+    {{log this.pipelineId}}
+    <LinkTo @route="pipeline.metrics" @model={{this.pipelineId}} @query={{hash jobId=this.jobId}}>
       <FaIcon @icon="chart-line" @fixedWidth="true" @title="Job metrics" />
     </LinkTo>
   {{/if}}
