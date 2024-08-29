@@ -81,8 +81,12 @@
         }
       }
 
-      .abort-event-button {
+      #abort-event-button {
         margin-left: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        background-color: colors.$sd-white;
+        border-radius: 5px;
       }
     }
 
