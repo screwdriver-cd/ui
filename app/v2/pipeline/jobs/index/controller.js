@@ -70,8 +70,6 @@ export default class NewPipelineEventsController extends Controller.extend(
   shouldReload(model) {
     const job = model.jobs.find(j => {
       if (j.builds.length > 0) {
-        console.log('j.builds: ', j.builds);
-
         return j.builds.find(b => {
           return isActiveBuild(b.status, b.endTime);
         });
@@ -114,13 +112,10 @@ export default class NewPipelineEventsController extends Controller.extend(
   }
 
   get jobs() {
-    // need await here to get the jobs from the model because it is async
     return this.model.jobs;
   }
 
   get jobIds() {
-    console.log('this.model.jobs: ', this.model.jobs);
-
     return this.model.jobs.map(j => j.id);
   }
 
@@ -176,14 +171,11 @@ export default class NewPipelineEventsController extends Controller.extend(
   async getNewListViewJobs(listViewOffset, listViewCutOff) {
     const { jobIds, jobs } = this;
 
-    console.log('jobIds from getNewListViewJobs: ', jobIds);
-    console.log('jobs from getNewListViewJobs: ', jobs);
     if (listViewOffset < jobIds.length) {
-      const jobsDetails = this.model.jobs
+      const jobsDetails = jobs
         .slice(listViewOffset, listViewCutOff)
         .map(job => ({ ...job }));
 
-      console.log('jobsDetails from getNewListViewJobs: ', jobsDetails);
       const nextJobsDetails = [];
 
       jobsDetails.forEach(nextJobDetail => {
@@ -213,7 +205,6 @@ export default class NewPipelineEventsController extends Controller.extend(
 
   @action
   async refreshListViewJobs() {
-    console.log('refreshListViewJobs');
     const listViewCutOff = this.listViewOffset;
 
     if (listViewCutOff > 0) {

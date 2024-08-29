@@ -5,10 +5,7 @@ import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
 export default Component.extend({
   stopButtonClass: computed('record.actions.latestBuild.status', {
     get() {
-      // console.log('record.actions: ', record.actions);
       const status = this.get('record.actions.latestBuild.status');
-
-      console.log('record.actions.latestBuild.status: ', status);
 
       if (unfinishedStatuses.includes(status)) {
         return 'clicks-enabled-stop';

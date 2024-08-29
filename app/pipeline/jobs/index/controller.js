@@ -41,13 +41,10 @@ export default Controller.extend(ModelReloaderMixin, {
     const diff = moment().diff(lastRefreshed, 'milliseconds');
 
     if (job) {
-      console.log('job is true');
       res = SHOULD_RELOAD_YES;
     } else if (diff > this.reloadTimeout * 2) {
-      console.log('job is false');
       res = SHOULD_RELOAD_YES;
     } else {
-      console.log('job is false');
       res = SHOULD_RELOAD_SKIP;
     }
 
@@ -152,7 +149,6 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   async refreshListViewJobs() {
-    console.log('entering refreshListViewJobs');
     const listViewCutOff = this.listViewOffset;
 
     if (listViewCutOff > 0) {
@@ -168,7 +164,6 @@ export default Controller.extend(ModelReloaderMixin, {
   },
 
   async updateListViewJobs() {
-    console.log('entering updateListViewJobs');
     // purge unmatched pipeline jobs
     let { jobsDetails } = this;
 
