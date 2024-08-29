@@ -10,10 +10,15 @@ module('Unit | Utility | Pipeline | build', function () {
     assert.equal(hasWarning({}), false);
     assert.equal(hasWarning({ meta: {} }), false);
     assert.equal(hasWarning({ meta: { build: {} } }), false);
-    assert.equal(hasWarning({ meta: { build: { warning: null } } }), false);
     assert.equal(hasWarning({ meta: { build: { warning: {} } } }), false);
     assert.equal(
-      hasWarning({ meta: { build: { warning: 'This is a warning message' } } }),
+      hasWarning({ meta: { build: { warning: { message: '' } } } }),
+      false
+    );
+    assert.equal(
+      hasWarning({
+        meta: { build: { warning: { message: 'This is a warning message' } } }
+      }),
       true
     );
   });
@@ -23,8 +28,11 @@ module('Unit | Utility | Pipeline | build', function () {
       { status: 'SUCCESS' },
       { status: 'FAILED' },
       { status: 'FAILED', meta: { build: { warning: 'No effect' } } },
-      { status: 'SUCCESS', meta: { build: { warning: '' } } },
-      { status: 'SUCCESS', meta: { build: { warning: 'Changed status' } } }
+      { status: 'SUCCESS', meta: { build: { warning: { message: '' } } } },
+      {
+        status: 'SUCCESS',
+        meta: { build: { warning: { message: 'Changed status' } } }
+      }
     ];
 
     builds.forEach(build => {

@@ -69,7 +69,10 @@ module('Unit | Utility | Pipeline | event', function () {
     assert.equal(getStatus({}, [{ status: 'CREATED' }]), 'RUNNING');
     assert.equal(
       getStatus({}, [
-        { status: 'SUCCESS', meta: { build: { warning: 'Warning!' } } }
+        {
+          status: 'SUCCESS',
+          meta: { build: { warning: { message: 'Warning!' } } }
+        }
       ]),
       'WARNING'
     );

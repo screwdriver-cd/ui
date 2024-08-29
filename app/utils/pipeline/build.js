@@ -5,15 +5,7 @@
  */
 
 export const hasWarning = build => {
-  if (build) {
-    const warning = build?.meta?.build?.warning || undefined;
-
-    if (typeof warning === 'string') {
-      return warning.length > 0;
-    }
-  }
-
-  return false;
+  return !!build?.meta?.build?.warning?.message;
 };
 
 /**
