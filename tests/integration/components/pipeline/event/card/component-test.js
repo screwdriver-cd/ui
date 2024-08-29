@@ -181,6 +181,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       />`
     );
 
-    assert.dom('.event-card-title .abort-event-button').exists({ count: 1 });
+    assert.dom('.event-card-title #abort-event-button').exists({ count: 1 });
   });
 });
