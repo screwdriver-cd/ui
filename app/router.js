@@ -138,9 +138,7 @@ Router.map(function route() {
         this.route('events', function eventsRoute() {
           this.route('show', { path: '/:event_id' });
         });
-        this.route('jobs', function jobsRoute() {
-          this.route('index', { path: '/' });
-        });
+        this.route('jobs');
         this.route('pulls');
         this.route(
           'build',

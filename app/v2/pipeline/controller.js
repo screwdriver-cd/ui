@@ -12,7 +12,7 @@ export default class NewPipelineController extends Controller {
     return [
       'v2.pipeline.events.show',
       'v2.pipeline.pulls',
-      'v2.pipeline.jobs.index'
+      'v2.pipeline.jobs'
     ].includes(currentRouteName);
   }
 }
