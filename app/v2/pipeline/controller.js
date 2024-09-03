@@ -6,14 +6,6 @@ export default class NewPipelineController extends Controller {
 
   @service router;
 
-  get collections() {
-    return this.model.collections;
-  }
-
-  get pipeline() {
-    return this.model.pipeline;
-  }
-
   get isEventsPullsJobsRoute() {
     const { currentRouteName } = this.router;
 
