@@ -1,4 +1,5 @@
 import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
+import { hasWarning } from './build';
 
 /**
  * Determines if the event has been skipped
@@ -50,7 +51,9 @@ export const getStatus = (event, builds) => {
       return 'UNKNOWN';
     }
 
-    return builds[0].status;
+    return builds.filter(build => hasWarning(build)).length > 0
+      ? 'WARNING'
+      : builds[0].status;
   }
 
   return builds[0].status === 'FROZEN' ? 'FROZEN' : 'RUNNING';

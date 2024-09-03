@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
+import { setBuildStatus } from 'screwdriver-ui/utils/pipeline/build';
 
 export default class NewPipelineEventsShowRoute extends Route {
   @service shuttle;
@@ -39,6 +40,10 @@ export default class NewPipelineEventsShowRoute extends Route {
       'get',
       `/pipelines/${model.pipeline.id}/triggers`
     );
+
+    builds.forEach(build => {
+      setBuildStatus(build);
+    });
 
     return {
       ...model,
