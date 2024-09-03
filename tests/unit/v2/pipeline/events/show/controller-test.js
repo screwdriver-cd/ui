@@ -10,7 +10,7 @@ module('Unit | Controller | v2/pipeline/events/show', function (hooks) {
     assert.ok(controller);
   });
 
-  test('it gets workflow graph-tooltip', function (assert) {
+  test('it gets workflow graph', function (assert) {
     const controller = this.owner.lookup('controller:v2/pipeline/events/show');
     const workflowGraph = {
       nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }],
@@ -22,7 +22,7 @@ module('Unit | Controller | v2/pipeline/events/show', function (hooks) {
     assert.deepEqual(controller.workflowGraph, workflowGraph);
   });
 
-  test('it gets workflow graph-tooltip with external triggers', function (assert) {
+  test('it gets workflow graph with external triggers', function (assert) {
     const controller = this.owner.lookup('controller:v2/pipeline/events/show');
     const workflowGraph = {
       nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }],
