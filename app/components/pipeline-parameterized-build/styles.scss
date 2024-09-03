@@ -68,6 +68,11 @@ button.start-with-parameters-button {
   }
 }
 
+.ember-basic-dropdown-trigger,
+.ember-power-select-option {
+  white-space: nowrap;
+}
+
 .ember-basic-dropdown-content {
   li.ember-power-select-option {
     width: fit-content;
