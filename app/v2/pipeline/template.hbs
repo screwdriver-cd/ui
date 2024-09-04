@@ -3,8 +3,8 @@
   <Pipeline::Nav />
 
   <Pipeline::Header
-    @pipeline={{this.pipeline}}
-    @collections={{this.collections}}
+    @pipeline={{this.model.pipeline}}
+    @collections={{this.model.collections}}
   />
 
   <div class="pipeline-main-content {{if this.isEventsPullsJobsRoute "grid"}}">

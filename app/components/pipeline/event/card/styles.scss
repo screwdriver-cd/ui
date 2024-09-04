@@ -1,0 +1,157 @@
+@use 'screwdriver-colors' as colors;
+@use 'screwdriver-button' as button;
+@use 'variables';
+
+@mixin styles {
+  .event-card {
+    padding: 1rem;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(colors.$sd-pale-purple, 0.5);
+    }
+
+    &.highlighted {
+      background: rgba(colors.$sd-highlight, 0.75);
+
+      &:hover {
+        background: rgba(colors.$sd-pale-purple, 0.5);
+      }
+    }
+
+    .event-card-title {
+      display: flex;
+      height: 2.5rem;
+
+      .event-status {
+        display: flex;
+
+        &.SUCCESS {
+          svg {
+            color: colors.$sd-success;
+          }
+        }
+
+        &.WARNING,
+        &.UNSTABLE {
+          svg {
+            color: colors.$sd-warning;
+          }
+        }
+
+        &.FAILURE,
+        &.ABORTED {
+          svg {
+            color: colors.$sd-failure;
+          }
+        }
+
+        &.RUNNING,
+        &.QUEUED,
+        &.BLOCKED,
+        &.SKIPPED {
+          svg {
+            color: colors.$sd-running;
+          }
+        }
+
+        &.COLLAPSED {
+          svg {
+            color: colors.$sd-text-light;
+          }
+        }
+
+        &.FROZEN {
+          svg {
+            color: colors.$sd-frozen;
+          }
+        }
+
+        svg {
+          margin: auto;
+        }
+      }
+
+      .sha {
+        display: flex;
+        padding-left: 1rem;
+
+        a {
+          margin: auto;
+        }
+      }
+
+      #abort-event-button {
+        margin-left: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        background-color: colors.$sd-white;
+        border-radius: 5px;
+      }
+    }
+
+    .event-card-body {
+      font-size: 0.85rem;
+
+      .message {
+        font-weight: variables.$weight-bold;
+        font-size: 1rem;
+      }
+
+      .label {
+        display: flex;
+
+        .label-contents {
+          background: colors.$sd-light-gray;
+          border-radius: 3px;
+          padding: 0.25rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .time {
+        font-size: 0.85rem;
+      }
+    }
+
+    .event-card-footer {
+      display: flex;
+      justify-content: space-between;
+
+      .counts {
+        display: flex;
+        margin-top: auto;
+        margin-bottom: auto;
+
+        .count {
+          display: flex;
+          padding-right: 0.5rem;
+
+          .failures {
+            svg {
+              color: colors.$sd-failure;
+            }
+          }
+
+          .warnings {
+            svg {
+              color: colors.$sd-warning;
+            }
+          }
+
+          .successes {
+            color: colors.$sd-success;
+          }
+        }
+      }
+
+      #show-parameters {
+        @include button.styles;
+
+        background: colors.$sd-white;
+        border-radius: 5px;
+      }
+    }
+  }
+}

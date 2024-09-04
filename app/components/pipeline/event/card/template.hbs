@@ -1,0 +1,154 @@
+<div class="event-card {{if this.isHighlighted "highlighted"}}">
+  <div class="event-card-title">
+    <div class="event-status {{this.status}}">
+      <FaIcon
+        @icon={{this.icon.name}}
+        @fixedWidth="true"
+        @prefix={{this.icon.prefix}}
+        @spin={{this.icon.spin}}
+        @flip={{this.icon.flip}}
+      />
+    </div>
+    <div class="sha" title={{this.truncatedSha}}>
+      <a
+        class={{if this.isLatestCommit "latest-commit"}}
+        href={{@event.commit.url}}
+      >
+        {{this.truncatedSha}}
+      </a>
+    </div>
+    {{#if this.isRunning}}
+      <div id="abort-event-button">
+        <BsButton
+          @type="danger"
+          @outline={{true}}
+          @onClick={{fn this.openAbortBuildModal}}
+        >
+          Stop builds
+        </BsButton>
+        {{#if this.showAbortBuildModal}}
+          <Pipeline::Modal::StopBuild
+            @eventId={{@event.id}}
+            @closeModal={{this.closeAbortBuildModal}}
+          />
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="event-card-body">
+    <div class="message" title={{@event.commit.message}}>
+      {{this.truncatedMessage}}
+    </div>
+
+    {{#if this.eventLabel}}
+      <div class="label">
+        <div class="label-contents" title={{this.eventLabel}}>
+          {{linkify this.eventLabel target="_blank" rel="nofollow" urlLength=30}}
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="time">
+      Started {{this.startDate}} | Duration: {{this.durationText}}
+    </div>
+
+    <div class="by">
+      {{#if this.isCommitterDifferent}}
+        <div>
+          Committed by:
+          <a href={{@event.commit.author.url}}>
+            {{@event.commit.author.name}}
+          </a>
+        </div>
+        <div>
+          Started by:
+          {{#if this.isExternalTrigger}}
+            <LinkTo
+              @route="v2.pipeline"
+              @model={{this.externalPipelineId}}
+            >
+              External Trigger
+            </LinkTo>
+          {{else}}
+            <a href={{@event.creator.url}}>
+              {{@event.creator.name}}
+            </a>
+          {{/if}}
+        </div>
+      {{else}}
+        {{#if @event.meta.subscribedSourceUrl}}
+          <div>
+            Started by subscribed event:
+            <a href={{@event.meta.subscribedSourceUrl}}>
+              Subscribed Source
+            </a>
+          </div>
+        {{else}}
+          <div>
+            Started and committed by:
+            <a href={{@event.creator.url}}>
+              {{@event.creator.name}}
+            </a>
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="event-card-footer">
+    <div class="counts">
+    {{#if this.failureCount}}
+      <div class="count">
+        <div class="failures">
+          <FaIcon @icon="times-circle" @fixedWidth="true"/>
+        </div>
+        <div>
+          {{this.failureCount}}
+        </div>
+      </div>
+    {{/if}}
+    {{#if this.warningCount}}
+      <div class="count">
+        <div class="warnings">
+          <FaIcon @icon="exclamation-circle" @fixedWidth="true"/>
+        </div>
+        <div>
+          {{this.warningCount}}
+        </div>
+      </div>
+    {{/if}}
+    {{#if this.successCount}}
+      <div class="count">
+        <div class="successes">
+          <FaIcon @icon="check-circle" @fixedWidth="true"/>
+        </div>
+        <div>
+          {{this.successCount}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+
+    {{#if @event.meta.parameters}}
+      <div id="show-parameters">
+        <BsButton
+          @type="primary"
+          @outline={{true}}
+          @onClick={{fn this.openParametersModal}}
+        >
+          Parameters
+        </BsButton>
+
+        {{#if this.showParametersModal}}
+          <Pipeline::Modal::ShowParameters
+            @event={{@event}}
+            @pipeline={{@pipeline}}
+            @jobs={{@jobs}}
+            @closeModal={{this.closeParametersModal}}
+          />
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+</div>

@@ -1,0 +1,5 @@
+@use 'card/styles' as card;
+
+@mixin styles {
+  @include card.styles;
+}
