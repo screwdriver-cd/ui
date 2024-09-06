@@ -17,6 +17,19 @@ const SIMPLE_GRAPH = {
   ]
 };
 
+const SIMPLE_GRAPH_WITH_DISPLAY_NAME = {
+  nodes: [
+    { name: '~pr' },
+    { name: '~commit' },
+    { name: 'main', displayName: 'abc' },
+    { name: 'detached', displayName: 123 }
+  ],
+  edges: [
+    { src: '~pr', dest: 'main' },
+    { src: '~commit', dest: 'main' }
+  ]
+};
+
 const COMPLEX_GRAPH = {
   nodes: [
     { name: '~pr' },
@@ -95,6 +108,36 @@ module('Unit | Utility | graph tools', function () {
       }
     };
     const result = decorateGraph({ inputGraph: SIMPLE_GRAPH });
+
+    assert.deepEqual(result, expectedOutput);
+  });
+
+  test('it processes a simple graph with displayName', function (assert) {
+    const expectedOutput = {
+      nodes: [
+        { name: '~pr', pos: { x: 0, y: 0 } },
+        { name: '~commit', pos: { x: 0, y: 1 } },
+        { name: 'main', displayName: 'abc', pos: { x: 1, y: 0 } },
+        { name: 'detached', displayName: '123', pos: { x: 0, y: 2 } }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main', from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
+        {
+          src: '~commit',
+          dest: 'main',
+          from: { x: 0, y: 1 },
+          to: { x: 1, y: 0 }
+        }
+      ],
+      stages: [],
+      meta: {
+        height: 3,
+        width: 2
+      }
+    };
+    const result = decorateGraph({
+      inputGraph: SIMPLE_GRAPH_WITH_DISPLAY_NAME
+    });
 
     assert.deepEqual(result, expectedOutput);
   });

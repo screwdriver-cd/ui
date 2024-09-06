@@ -47,6 +47,19 @@ module('Unit | Utility | pipeline-graph | d3-graph-util', function () {
     assert.equal(getMaximumJobNameLength(data, 5), 5);
   });
 
+  test('getMaximumJobNameLength returns maximum job name length when job has displayName', function (assert) {
+    const data = {
+      nodes: [
+        { name: 'job1' },
+        { name: 'job2', displayName: '0123456789' },
+        { name: 'job3' }
+      ]
+    };
+
+    assert.equal(getMaximumJobNameLength(data, 20), 10);
+    assert.equal(getMaximumJobNameLength(data, 5), 5);
+  });
+
   test('getNodeWidth returns correct node width', function (assert) {
     assert.equal(getNodeWidth({ ICON_SIZE: 10, TITLE_SIZE: 5 }, 10), 70);
     assert.equal(getNodeWidth({ ICON_SIZE: 10, TITLE_SIZE: 5 }, 2), 20);
