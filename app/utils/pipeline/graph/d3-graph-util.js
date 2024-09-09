@@ -53,7 +53,10 @@ export function getElementSizes(isMinified = false) {
  */
 export function getMaximumJobNameLength(data, displayJobNameLength) {
   return Math.min(
-    data.nodes.reduce((max, cur) => Math.max(cur.name.length, max), 0),
+    data.nodes.reduce(
+      (max, cur) => Math.max((cur.displayName || cur.name).length, max),
+      0
+    ),
     displayJobNameLength
   );
 }

@@ -535,10 +535,16 @@ const decorateGraph = ({
   const virtualTeardownNodes = [];
   const nodes = [];
 
-  // Remove setup and teardown nodes
   originalNodes.forEach(n => {
     const { name: jobName, virtual } = n;
 
+    // displayName may be Numeric
+    // e.g. screwdriver.cd/displayName: 12345 (NOT "12345")
+    if (n.displayName) {
+      n.displayName = String(n.displayName);
+    }
+
+    // Remove setup and teardown nodes
     if (virtual && isStageSetupJob(jobName)) {
       virtualSetupNodes.push(n);
     } else if (virtual && isStageTeardownJob(jobName)) {
