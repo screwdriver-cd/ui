@@ -71,7 +71,7 @@
     "ace-builds": "^1.8.0",
     "ansi_up": "^5.1.0",
     "babel-eslint": "^10.1.0",
-    "bootstrap": "^4.6.2",
+    "bootstrap": "^5.0.0",
     "bootstrap-sass": "^3.4.1",
     "broccoli-asset-rev": "^2.7.0",
     "c3": "^0.7.20",
@@ -145,7 +145,7 @@
     "qunit": "^2.19.1",
     "qunit-dom": "^2.0.0",
     "sass-embedded": "^1.77.0",
-    "screwdriver-data-schema": "^23.5.1",
+    "screwdriver-data-schema": "^24.0.0",
     "sinon": "^18.0.0",
     "webpack": "^5.76.2"
   }

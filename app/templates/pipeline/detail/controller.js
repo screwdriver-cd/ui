@@ -67,14 +67,14 @@ export default class TemplatesPipelineDetailController extends Controller {
   }
 
   get workflowGraph() {
-    const { config } = this.selectedVersionTemplate;
+    const { workflowGraph } = this.selectedVersionTemplate;
 
     const defaultWorkflowGraph = {
       nodes: [],
       edges: []
     };
 
-    return config.workflowGraph || defaultWorkflowGraph;
+    return workflowGraph || defaultWorkflowGraph;
   }
 
   get jobs() {
