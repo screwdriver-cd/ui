@@ -54,7 +54,14 @@ export function getElementSizes(isMinified = false) {
 export function getMaximumJobNameLength(data, displayJobNameLength) {
   return Math.min(
     data.nodes.reduce(
-      (max, cur) => Math.max((cur.displayName || cur.name).length, max),
+      (max, cur) =>
+        Math.max(
+          (!/sd@/.test(cur.name) && cur.displayName
+            ? cur.displayName
+            : cur.name
+          ).length,
+          max
+        ),
       0
     ),
     displayJobNameLength
@@ -518,7 +525,13 @@ export function addJobIcons( // eslint-disable-line max-params
       onClick(node);
     })
     .insert('title')
-    .text(d => (d.status ? `${d.name} - ${d.status}` : d.name));
+    .text(d => {
+      if (/sd@/.test(d.name) && d.displayName !== undefined) {
+        return d.displayName;
+      }
+
+      return d.status ? `${d.name} - ${d.status}` : d.name;
+    });
 }
 
 /**
@@ -546,7 +559,10 @@ export function addJobNames(
     .enter()
     .append('text')
     .text(d => {
-      const displayName = d.displayName !== undefined ? d.displayName : d.name;
+      const displayName =
+        !/sd@/.test(d.name) && d.displayName !== undefined
+          ? d.displayName
+          : d.name;
 
       return displayName.length > maximumJobNameLength
         ? `${displayName.substring(0, 8)}...${displayName.slice(-8)}`
@@ -575,7 +591,13 @@ export function addJobNames(
         getVerticalDisplacementByRowPosition(d.pos.y, verticalDisplacements)
     )
     .insert('title')
-    .text(d => d.name);
+    .text(d => {
+      if (/sd@/.test(d.name) && d.displayName !== undefined) {
+        return d.displayName;
+      }
+
+      return d.name;
+    });
 }
 
 /**
