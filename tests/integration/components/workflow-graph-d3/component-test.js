@@ -87,6 +87,59 @@ module('Integration | Component | workflow graph d3', function (hooks) {
     assert.dom('svg text.graph-label:nth-of-type(4)').includesText('bar');
   });
 
+  test('it renders a upstream remote triggers', async function (assert) {
+    this.set('workflowGraph', {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: '~sd@123:main', displayName: 'foo/bar@main' },
+        { name: '~sd@456:main' },
+        { name: 'foo', displayName: 'bar' },
+        { name: 'baz' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'foo' },
+        { src: '~commit', dest: 'foo' },
+        { src: '~sd@123:main', dest: 'foo' },
+        { src: '~sd@456:main', dest: 'baz' }
+      ]
+    });
+
+    await render(
+      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} />`
+    );
+
+    assert.equal(this.element.querySelectorAll('svg').length, 1);
+    assert.equal(this.element.querySelectorAll('svg > g.graph-node').length, 6);
+    assert.equal(
+      this.element.querySelectorAll('svg > path.graph-edge').length,
+      4
+    );
+
+    assert
+      .dom('svg text.graph-label:nth-of-type(3)')
+      .includesText('~sd@123:main');
+    assert
+      .dom('svg text.graph-label:nth-of-type(4)')
+      .includesText('~sd@456:main');
+    assert.dom('svg text.graph-label:nth-of-type(5)').includesText('bar');
+    assert.dom('svg text.graph-label:nth-of-type(6)').includesText('baz');
+
+    assert
+      .dom('svg text.graph-label:nth-of-type(3) title')
+      .hasText('foo/bar@main');
+    assert
+      .dom('svg text.graph-label:nth-of-type(4) title')
+      .hasText('~sd@456:main');
+    assert.dom('svg text.graph-label:nth-of-type(5) title').hasText('foo');
+    assert.dom('svg text.graph-label:nth-of-type(6) title').hasText('baz');
+
+    assert.dom('svg g.graph-node:nth-of-type(3) title').hasText('foo/bar@main');
+    assert.dom('svg g.graph-node:nth-of-type(4) title').hasText('~sd@456:main');
+    assert.dom('svg g.graph-node:nth-of-type(5) title').hasText('foo');
+    assert.dom('svg g.graph-node:nth-of-type(6) title').hasText('baz');
+  });
+
   test('it renders statuses when build data is available', async function (assert) {
     this.set('workflowGraph', {
       nodes: [
