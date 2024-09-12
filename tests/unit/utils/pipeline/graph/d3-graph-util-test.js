@@ -52,7 +52,8 @@ module('Unit | Utility | pipeline-graph | d3-graph-util', function () {
       nodes: [
         { name: 'job1' },
         { name: 'job2', displayName: '0123456789' },
-        { name: 'job3' }
+        { name: 'job3' },
+        { name: '~sd@1:foo', displayName: '0123456789/0123456789' }
       ]
     };
 
