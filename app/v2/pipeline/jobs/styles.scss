@@ -1,0 +1,16 @@
+@mixin styles {
+  display: grid;
+
+  grid-template-areas:
+    'pipeline-tab'
+    'pipeline-jobs';
+  grid-template-rows: 3.75rem calc(100% - 3.75rem);
+
+  #pipeline-tab {
+    grid-area: pipeline-tab;
+  }
+
+  #pipeline-jobs {
+    grid-area: pipeline-jobs;
+  }
+}

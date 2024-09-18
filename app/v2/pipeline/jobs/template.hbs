@@ -1,7 +1,9 @@
 {{page-title "Jobs"}}
 
-<div class="pipeline-jobs">
-  <div>jobs content</div>
-  {{outlet}}
-</div>
+<Pipeline::Tab />
 
+<Pipeline::Jobs::Table
+  @pipeline={{this.model.pipeline}}
+  @jobs={{this.model.jobs}}
+  @userSettings={{this.model.userSettings}}
+/>

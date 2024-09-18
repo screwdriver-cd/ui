@@ -6,13 +6,26 @@ export default class NewPipelineController extends Controller {
 
   @service router;
 
-  get isEventsPullsJobsRoute() {
+  isEventsPullsRoute() {
     const { currentRouteName } = this.router;
 
-    return [
-      'v2.pipeline.events.show',
-      'v2.pipeline.pulls',
-      'v2.pipeline.jobs'
-    ].includes(currentRouteName);
+    return ['v2.pipeline.events.show', 'v2.pipeline.pulls'].includes(
+      currentRouteName
+    );
+  }
+
+  isJobsRoute() {
+    return this.router.currentRouteName === 'v2.pipeline.jobs';
+  }
+
+  get routeClasses() {
+    if (this.isEventsPullsRoute()) {
+      return 'grid events-pulls';
+    }
+    if (this.isJobsRoute()) {
+      return 'grid jobs';
+    }
+
+    return null;
   }
 }
