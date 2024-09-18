@@ -8,5 +8,13 @@
       font-weight: variables.$weight-bold;
       color: colors.$sd-light-gray;
     }
+
+    #user-notice {
+      display: flex;
+
+      svg {
+        padding-right: 0.75rem;
+      }
+    }
   }
 }
