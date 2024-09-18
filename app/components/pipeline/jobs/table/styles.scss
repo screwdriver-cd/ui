@@ -1,0 +1,155 @@
+@use 'screwdriver-colors' as colors;
+
+@use 'cell/actions/styles' as actions;
+@use 'cell/history/styles' as history;
+@use 'cell/job/styles' as job;
+@use 'cell/metrics/styles' as metrics;
+
+@mixin styles {
+  #jobs-table {
+    padding: 1rem;
+
+    #jobs-table-search {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      thead {
+        color: colors.$sd-text-med;
+
+        th {
+          &.history-column {
+            width: 15rem;
+          }
+
+          &.duration-column,
+          &.start-time-column {
+            width: 20rem;
+          }
+
+          &.coverage-column,
+          &.metrics-column,
+          &.actions-column {
+            width: 10rem;
+          }
+        }
+      }
+
+      tbody {
+        @include actions.styles;
+        @include history.styles;
+        @include job.styles;
+        @include metrics.styles;
+
+        tr {
+          color: colors.$sd-text;
+
+          &:hover {
+            color: colors.$sd-text;
+            background-color: rgba(colors.$sd-running, 0.1);
+          }
+        }
+
+        td {
+          vertical-align: middle;
+        }
+
+        svg {
+          &.SUCCESS {
+            color: colors.$sd-success;
+          }
+
+          &.WARNING,
+          &.UNSTABLE {
+            color: colors.$sd-unstable;
+          }
+
+          &.FAILURE,
+          &.ABORTED {
+            color: colors.$sd-failure;
+          }
+
+          &.RUNNING,
+          &.QUEUED,
+          &.BLOCKED,
+          &.CREATED,
+          &.SKIPPED {
+            color: colors.$sd-running;
+          }
+
+          &.COLLAPSED,
+          &.FROZEN {
+            color: colors.$sd-text-light;
+          }
+        }
+      }
+    }
+
+    #jobs-table-footer {
+      display: flex;
+      color: colors.$sd-text-med;
+      margin: 5rem 0;
+
+      .table-summary {
+        display: flex;
+        margin: auto;
+      }
+
+      #select-pagination-size {
+        label {
+          background-color: transparent;
+          border: none;
+          color: colors.$sd-text-med;
+        }
+
+        select {
+          border-radius: 0.25rem;
+        }
+      }
+
+      #page-navigation {
+        display: flex;
+
+        button {
+          background-color: transparent;
+          border: none;
+
+          svg {
+            color: colors.$sd-text;
+          }
+
+          &:disabled {
+            svg {
+              color: rgba(colors.$sd-text, 0.5);
+            }
+          }
+        }
+      }
+
+      #pagination-controls {
+        display: flex;
+        justify-content: flex-end;
+
+        #page-select {
+          display: flex;
+          width: 10rem;
+          margin-right: 2.5rem;
+
+          label {
+            background-color: transparent;
+            border: none;
+            color: colors.$sd-text-med;
+          }
+
+          select {
+            display: flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
