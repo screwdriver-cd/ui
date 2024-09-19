@@ -18,7 +18,7 @@ export default class PipelineModalStopBuildComponent extends Component {
       await this.shuttle
         .fetchFromApi('put', `/events/${this.args.eventId}/stop`)
         .then(() => {
-          this.successMessage = 'Build stopped successfully';
+          this.successMessage = 'All builds for the event stopped successfully';
           this.isDisabled = true;
         })
         .catch(err => {
