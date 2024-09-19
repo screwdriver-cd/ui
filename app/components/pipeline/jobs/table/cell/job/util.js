@@ -8,9 +8,7 @@ export default function getDisplayName(job) {
   const { annotations } = job?.permutations?.[0] || {};
 
   if (annotations) {
-    return annotations['screwdriver.cd/displayName']
-      ? annotations['screwdriver.cd/displayName']
-      : jobName;
+    return annotations['screwdriver.cd/displayName'] || jobName;
   }
 
   return jobName;
