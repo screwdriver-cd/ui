@@ -53,7 +53,7 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
     const { job } = this.args.record;
 
     return shouldDisplayNotice(this.args.record.pipeline, job)
-      ? `This will create a new event and then trigger any jobs that are downstream of this job (${job.name}).  Due consider whether job can be successfully completed without having any upstream jobs having been run (i.e., does this job depend on any metadata that was previously set?)`
+      ? `This will create a new event then trigger downstream jobs. Make sure the (${job.name}) job can be successfully completed without rerunning any upstream jobs (i.e., does this job depend on any metadata that was previously set?)`
       : null;
   }
 
