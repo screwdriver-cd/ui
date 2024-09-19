@@ -1,5 +1,5 @@
 {{page-title "Pipeline"}}
-<div class="pipeline-page-contents">
+<div id="pipeline-page-contents">
   <Pipeline::Nav />
 
   <Pipeline::Header
@@ -7,7 +7,10 @@
     @collections={{this.model.collections}}
   />
 
-  <div class="pipeline-main-content {{this.routeClasses}}">
+  <div
+    id="pipeline-main"
+    class="{{this.routeClasses}}"
+  >
     {{outlet}}
   </div>
 </div>
