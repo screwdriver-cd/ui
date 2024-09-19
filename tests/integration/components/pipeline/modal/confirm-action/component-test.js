@@ -68,6 +68,36 @@ module(
       assert.dom('.modal-title').hasText('Are you sure you want to restart?');
     });
 
+    test('it renders stage name if set', async function (assert) {
+      this.setProperties({
+        pipeline: { parameters: {} },
+        event: {
+          commit: { message: 'commit message', url: 'http://foo.com' },
+          sha: 'deadbeef0123456789'
+        },
+        jobs: [],
+        latestCommitEvent: { sha: 'deadbeef0123456789' },
+        job: { name: 'main' },
+        stage: { name: 'stage' },
+        closeModal: () => {}
+      });
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @pipeline={{this.pipeline}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @latestCommitEvent={{this.latestCommitEvent}}
+            @job={{this.job}}
+            @stage={{this.stage}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert.dom('#confirm-action-stage').exists({ count: 1 });
+      assert.dom('#confirm-action-stage').hasText('Stage: stage');
+      assert.dom('#confirm-action-job').doesNotExist();
+    });
+
     test('it renders warning message for non-latest commit event', async function (assert) {
       this.setProperties({
         pipeline: { parameters: {} },

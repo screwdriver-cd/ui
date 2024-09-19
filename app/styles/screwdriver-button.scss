@@ -30,14 +30,14 @@
       background-color: rgba(colors.$sd-warn-bg, 0.75);
       border-color: transparent;
     }
+  }
 
-    .btn-outline-danger {
-      color: colors.$sd-warn-bg;
-      border-color: colors.$sd-warn-bg;
+  .btn-outline-danger {
+    color: colors.$sd-warn-bg;
+    border-color: colors.$sd-warn-bg;
 
-      &:hover {
-        background-color: rgba(colors.$sd-warn-bg, 0.1);
-      }
+    &:hover {
+      background-color: rgba(colors.$sd-warn-bg, 0.1);
     }
   }
 }
