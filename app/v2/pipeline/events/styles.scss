@@ -10,37 +10,8 @@
   grid-template-rows: 3.75rem calc(100% - 3.75rem);
   grid-template-columns: 26rem calc(100% - 26rem);
 
-  .pipeline-tab {
+  #pipeline-tab {
     grid-area: pipeline-tab;
-
-    display: grid;
-    padding-top: 8px;
-    padding-bottom: 1px;
-
-    ul.nav-tabs.nav {
-      border: none;
-
-      li {
-        border-bottom: 0.2rem solid colors.$sd-white;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        text-align: center;
-
-        &.active {
-          border-bottom-color: #1c64f2;
-        }
-
-        a {
-          &.active {
-            color: #1c64f2;
-          }
-
-          color: #6b7280;
-          border: none;
-          padding: 8px 16px 9px 16px;
-        }
-      }
-    }
   }
 
   .pipeline-events {
