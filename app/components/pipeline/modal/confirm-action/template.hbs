@@ -24,7 +24,11 @@
         @dismissible={{false}}
       />
     {{/if}}
-    <div id="confirm-action-job">Job: <code>{{@job.name}}</code></div>
+    {{#if @stage}}
+      <div id="confirm-action-stage">Stage: <code>{{@stage.name}}</code></div>
+    {{else}}
+      <div id="confirm-action-job">Job: <code>{{@job.name}}</code></div>
+    {{/if}}
     <div id="confirm-action-commit">
       Commit: <code>{{this.truncatedMessage}}</code>
       <a
