@@ -1,0 +1,22 @@
+@mixin styles {
+  .history-cell {
+    display: flex;
+
+    .build-history-container {
+      a {
+        display: flex;
+
+        svg {
+          margin: auto;
+        }
+      }
+
+      .tooltip {
+        p {
+          text-align: left;
+          margin: 0;
+        }
+      }
+    }
+  }
+}

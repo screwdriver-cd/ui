@@ -1,0 +1,15 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  .metrics-cell {
+    a {
+      display: flex;
+      font-size: 1.25rem;
+      color: colors.$sd-running;
+
+      &:hover {
+        color: colors.$sd-running;
+      }
+    }
+  }
+}

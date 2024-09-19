@@ -13,6 +13,28 @@ module('Unit | Utility | pipeline/modal/request', function () {
     );
   });
 
+  test('buildPostBody sets correct values for new event', function (assert) {
+    assert.deepEqual(
+      buildPostBody('foobar', 123, null, null, null, false, null),
+      {
+        pipelineId: 123,
+        causeMessage: 'Manually started by foobar',
+        startFrom: '~commit'
+      }
+    );
+  });
+
+  test('buildPostBody sets correct values for new event starting from job', function (assert) {
+    assert.deepEqual(
+      buildPostBody('foobar', 123, { name: 'main' }, null, null, false, null),
+      {
+        pipelineId: 123,
+        causeMessage: 'Manually started by foobar',
+        startFrom: 'main'
+      }
+    );
+  });
+
   test('buildPostBody sets correct values for restart', function (assert) {
     assert.deepEqual(
       buildPostBody(
