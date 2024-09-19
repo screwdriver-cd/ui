@@ -25,6 +25,16 @@
       />
     {{/if}}
 
+    {{#if @notice}}
+      <div
+        id="user-notice"
+        class="alert alert-warning"
+      >
+        <FaIcon @icon="exclamation-triangle" />
+        {{@notice}}
+      </div>
+    {{/if}}
+
     {{#if this.isParameterized}}
       <Pipeline::Parameters
         @action="start"
