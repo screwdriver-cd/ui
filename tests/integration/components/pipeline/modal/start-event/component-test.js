@@ -47,5 +47,23 @@ module(
       assert.dom('.no-parameters-title').doesNotExist();
       assert.dom('.parameter-group').exists({ count: 2 });
     });
+
+    test('it renders optional notice', async function (assert) {
+      this.setProperties({
+        pipeline: {},
+        jobs: [],
+        closeModal: () => {}
+      });
+      await render(
+        hbs`<Pipeline::Modal::StartEvent
+            @pipeline={{this.pipeline}}
+            @jobs={{this.jobs}}
+            @closeModal={{this.closeModal}}
+            @notice="This is a notice to the user"
+        />`
+      );
+
+      assert.dom('#user-notice').exists({ count: 1 });
+    });
   }
 );

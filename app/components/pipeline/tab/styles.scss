@@ -1,0 +1,35 @@
+@use 'screwdriver-colors' as colors;
+@use 'variables';
+
+@mixin styles {
+  #pipeline-tab {
+    padding-top: 0.5rem;
+    height: variables.$pipeline-tab-height;
+
+    ul.nav-tabs.nav {
+      border: none;
+
+      li {
+        border-bottom: 0.2rem solid colors.$sd-white;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        text-align: center;
+
+        &.active {
+          border-bottom-color: colors.$sd-link;
+        }
+
+        a {
+          color: colors.$sd-text-med;
+          border: none;
+          background-color: transparent;
+
+          &.active {
+            color: colors.$sd-link;
+            font-weight: variables.$weight-bold;
+          }
+        }
+      }
+    }
+  }
+}
