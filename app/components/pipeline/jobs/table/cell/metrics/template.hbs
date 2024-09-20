@@ -1,0 +1,15 @@
+<div class="metrics-cell">
+  {{#if this.latestBuild}}
+    <LinkTo
+      @route="pipeline.metrics"
+      @model={{@record.job.pipelineId}}
+      @query={{hash jobId=@record.job.id}}
+    >
+      <FaIcon
+        @icon="chart-line"
+        @fixedWidth="true"
+        @title="Job metrics"
+      />
+    </LinkTo>
+  {{/if}}
+</div>
