@@ -1,0 +1,69 @@
+<div class="actions-cell">
+  <BsButton
+    @type="primary"
+    @outline=true
+    @value="start"
+    disabled={{this.startButtonDisabled}}
+    @onClick={{fn this.openStartEventModal}}
+  >
+    <FaIcon
+      @icon="play-circle"
+      @fixedWidth="true"
+      @prefix="far"
+      @title="Start a new event"
+    />
+  </BsButton>
+  <BsButton
+    @type="danger"
+    @outline=true
+    disabled={{this.stopButtonDisabled}}
+    @onClick={{fn this.openStopBuildModal}}
+  >
+    <FaIcon
+      @icon="stop-circle"
+      @fixedWidth="true"
+      @prefix="far"
+      @title="Stop build"
+    />
+  </BsButton>
+  <BsButton
+    @type="primary"
+    @outline=true
+    @value="restart"
+    disabled={{this.restartButtonDisabled}}
+    @onClick={{fn this.openRestartJobModal}}
+  >
+    <FaIcon
+      @icon="redo-alt"
+      @fixedWidth="true"
+      @prefix="fas"
+      @title="Restart from latest build"
+    />
+  </BsButton>
+
+  {{#if this.showStartEventModal}}
+    <Pipeline::Modal::StartEvent
+      @pipeline={{@record.pipeline}}
+      @jobs={{@record.jobs}}
+      @job={{@record.job}}
+      @notice={{this.notice}}
+      @closeModal={{this.closeStartEventModal}}
+    />
+  {{/if}}
+  {{#if this.showStopBuildModal}}
+    <Pipeline::Modal::StopBuild
+      @buildId={{this.latestBuild.id}}
+      @closeModal={{this.closeStopBuildModal}}
+    />
+  {{/if}}
+  {{#if this.showRestartJobModal}}
+    <Pipeline::Modal::ConfirmAction
+      @pipeline={{@record.pipeline}}
+      @event={{this.latestEvent}}
+      @jobs={{@record.jobs}}
+      @latestCommitEvent={{this.latestCommitEvent}}
+      @job={{this.job}}
+      @closeModal={{this.closeRestartJobModal}}
+    />
+  {{/if}}
+</div>
