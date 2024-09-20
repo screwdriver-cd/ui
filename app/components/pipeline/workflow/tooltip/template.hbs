@@ -22,8 +22,8 @@
   {{else}}
     <LinkTo
       id="build-link"
-      @route="v2.pipeline.build"
-      @model={{this.tooltipData.job.buildId}}
+      @route="pipeline.build"
+      @models={{array @pipeline.id this.tooltipData.job.buildId}}
       @disabled={{not this.buildDetailsAvailable}}
     >
       Go to build details
