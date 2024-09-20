@@ -1,10 +1,14 @@
+@use 'variables';
+
 @mixin styles {
+  $pipeline-tab-height: variables.$pipeline-tab-height;
+
   display: grid;
 
   grid-template-areas:
     'pipeline-tab'
     'pipeline-jobs';
-  grid-template-rows: 3.75rem calc(100% - 3.75rem);
+  grid-template-rows: $pipeline-tab-height calc(100% - $pipeline-tab-height);
 
   #pipeline-tab {
     grid-area: pipeline-tab;
