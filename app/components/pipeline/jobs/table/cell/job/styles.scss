@@ -1,0 +1,25 @@
+@mixin styles {
+  .job-cell {
+    display: flex;
+    max-width: 50rem;
+    padding-right: 2.5rem;
+
+    .job-status {
+      display: flex;
+      height: 1.5rem;
+      width: 1.5rem;
+
+      a {
+        display: flex;
+
+        svg {
+          margin: auto;
+        }
+      }
+    }
+
+    .job-name {
+      overflow: scroll;
+    }
+  }
+}
