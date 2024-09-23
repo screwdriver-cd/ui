@@ -1,0 +1,26 @@
+<div class="job-cell">
+  <div class="job-status">
+    {{#if this.latestBuild}}
+      <LinkTo
+        @route="pipeline.build"
+        @models={{array @record.job.pipelineId this.latestBuild.id}}
+      >
+        <FaIcon
+          @icon={{this.statusIcon.name}}
+          @fixedWidth="true"
+          @prefix={{this.statusIcon.prefix}}
+          @spin={{this.statusIcon.spin}}
+          @flip={{this.statusIcon.flip}}
+          class={{this.latestBuild.status}}
+        />
+      </LinkTo>
+    {{/if}}
+  </div>
+
+  <div class="job-name">
+    <BsTooltip @placement="bottom">
+      {{@record.job.name}}
+    </BsTooltip>
+    {{this.jobName}}
+  </div>
+</div>
