@@ -1,0 +1,5 @@
+@use 'table/styles' as table;
+
+@mixin styles {
+  @include table.styles;
+}
