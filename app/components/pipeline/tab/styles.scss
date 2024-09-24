@@ -3,10 +3,12 @@
 
 @mixin styles {
   #pipeline-tab {
-    padding-top: 0.5rem;
+    display: flex;
     height: variables.$pipeline-tab-height;
 
-    ul.nav-tabs.nav {
+    ul {
+      margin-top: auto;
+      margin-bottom: auto;
       border: none;
 
       li {

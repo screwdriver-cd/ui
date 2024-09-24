@@ -6,97 +6,113 @@
 @use 'cell/metrics/styles' as metrics;
 
 @mixin styles {
-  #jobs-table {
+  #pipeline-jobs {
     padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    $searchbar-height: 2rem;
+    $table-footer-height: 2.5rem;
 
     #jobs-table-search {
       width: 100%;
-      margin-bottom: 1rem;
+      height: $searchbar-height;
     }
 
-    table {
-      thead {
-        color: colors.$sd-text-med;
+    #jobs-table {
+      margin: 2rem 0;
+      max-height: calc(100% - $searchbar-height - $table-footer-height);
+      overflow: scroll;
 
-        th {
-          &.history-column {
-            width: 15rem;
-          }
+      table {
+        thead {
+          color: colors.$sd-text-med;
 
-          &.duration-column,
-          &.start-time-column {
-            width: 20rem;
-          }
+          th {
+            &.history-column {
+              width: 15rem;
+            }
 
-          &.coverage-column,
-          &.metrics-column,
-          &.actions-column {
-            width: 10rem;
+            &.duration-column,
+            &.start-time-column {
+              width: 20rem;
+            }
+
+            &.coverage-column,
+            &.metrics-column,
+            &.actions-column {
+              width: 10rem;
+            }
           }
         }
-      }
 
-      tbody {
-        @include actions.styles;
-        @include history.styles;
-        @include job.styles;
-        @include metrics.styles;
+        tbody {
+          @include actions.styles;
+          @include history.styles;
+          @include job.styles;
+          @include metrics.styles;
 
-        tr {
-          color: colors.$sd-text;
-
-          &:hover {
+          tr {
             color: colors.$sd-text;
-            background-color: rgba(colors.$sd-running, 0.1);
-          }
-        }
 
-        td {
-          vertical-align: middle;
-        }
-
-        svg {
-          &.SUCCESS {
-            color: colors.$sd-success;
+            &:hover {
+              color: colors.$sd-text;
+              background-color: rgba(colors.$sd-running, 0.1);
+            }
           }
 
-          &.WARNING,
-          &.UNSTABLE {
-            color: colors.$sd-unstable;
+          td {
+            vertical-align: middle;
           }
 
-          &.FAILURE,
-          &.ABORTED {
-            color: colors.$sd-failure;
-          }
+          svg {
+            &.SUCCESS {
+              color: colors.$sd-success;
+            }
 
-          &.RUNNING,
-          &.QUEUED,
-          &.BLOCKED,
-          &.CREATED,
-          &.SKIPPED {
-            color: colors.$sd-running;
-          }
+            &.WARNING,
+            &.UNSTABLE {
+              color: colors.$sd-unstable;
+            }
 
-          &.COLLAPSED,
-          &.FROZEN {
-            color: colors.$sd-text-light;
+            &.FAILURE,
+            &.ABORTED {
+              color: colors.$sd-failure;
+            }
+
+            &.RUNNING,
+            &.QUEUED,
+            &.BLOCKED,
+            &.CREATED,
+            &.SKIPPED {
+              color: colors.$sd-running;
+            }
+
+            &.COLLAPSED,
+            &.FROZEN {
+              color: colors.$sd-text-light;
+            }
           }
         }
       }
     }
 
     #jobs-table-footer {
+      height: $table-footer-height;
       display: flex;
       color: colors.$sd-text-med;
-      margin: 5rem 0;
 
-      .table-summary {
+      #table-summary {
         display: flex;
         margin: auto;
       }
 
       #select-pagination-size {
+        display: flex;
+        margin: auto;
+
         label {
           background-color: transparent;
           border: none;
@@ -130,6 +146,7 @@
       #pagination-controls {
         display: flex;
         justify-content: flex-end;
+        margin: auto;
 
         #page-select {
           display: flex;
