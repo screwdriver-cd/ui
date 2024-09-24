@@ -2,7 +2,7 @@
 @use 'jobs/styles' as jobs;
 
 @mixin styles {
-  .pipeline-page-contents {
+  #pipeline-page-contents {
     display: grid;
     height: 100%;
 
@@ -20,18 +20,16 @@
       grid-area: pipeline-header;
     }
 
-    .pipeline-main-content {
+    #pipeline-main {
       grid-area: pipeline-main;
       overflow: scroll;
 
-      &.grid {
-        &.events-pulls {
-          @include events.styles;
-        }
+      &.events-pulls {
+        @include events.styles;
+      }
 
-        &.jobs {
-          @include jobs.styles;
-        }
+      &.jobs {
+        @include jobs.styles;
       }
     }
   }
