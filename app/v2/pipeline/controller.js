@@ -20,10 +20,10 @@ export default class NewPipelineController extends Controller {
 
   get routeClasses() {
     if (this.isEventsPullsRoute()) {
-      return 'grid events-pulls';
+      return 'events-pulls';
     }
     if (this.isJobsRoute()) {
-      return 'grid jobs';
+      return 'jobs';
     }
 
     return null;
