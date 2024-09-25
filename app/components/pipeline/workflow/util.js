@@ -1,6 +1,6 @@
 /**
  * Filters the workflow graph by removing nodes that start with 'sd@' (i.e., triggers external pipelines)
- * @param event
+ * @param workflowGraph {{nodes: Array, edges: Array}} The workflow graph to filter
  */
 // eslint-disable-next-line import/prefer-default-export
 export const getFilteredGraph = workflowGraph => {

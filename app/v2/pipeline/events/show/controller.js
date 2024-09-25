@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import ENV from 'screwdriver-ui/config/environment';
-import { getFilteredGraph } from './util';
+import { getFilteredGraph } from 'screwdriver-ui/components/pipeline/workflow/util';
 
 export default class V2PipelineEventsShowController extends Controller {
   @service session;
