@@ -3,8 +3,17 @@
     @type="primary"
     @icon="glyphicon glyphicon-download"
     @onClick={{action "download"}}
+    @label="Download current artifact"
   >
     Download
+  </BsButton>
+  <BsButton
+    @type="primary"
+    @icon="glyphicon glyphicon-download"
+    @onClick={{action "downloadAll"}}
+    @label="Download all artifacts as ZIP file"
+  >
+    Download All
   </BsButton>
   {{#if this.iframeUrl}}
     <iframe id={{this.iframeId}} src={{this.iframeUrl}}>
