@@ -4,14 +4,17 @@ import { hasWarning } from './build';
 /**
  * Determines if the event has been skipped
  * @param {Object} event Event object in the format returned by the API
+ * @param {Array} builds Array of builds in the format returned by the API
  * @returns {boolean} true if the event has been skipped
  */
-export const isSkipped = event => {
+export const isSkipped = (event, builds) => {
   if (event.type === 'pr') {
     return false;
   }
 
-  return !!event?.commit?.message.match(/\[(skip ci|ci skip)\]/);
+  return builds?.length > 0
+    ? false
+    : !!event?.commit?.message.match(/\[(skip ci|ci skip)\]/);
 };
 
 /**
@@ -42,7 +45,7 @@ export const isComplete = builds => {
  * @returns {*} The status of the event
  */
 export const getStatus = (event, builds) => {
-  if (isSkipped(event)) {
+  if (isSkipped(event, builds)) {
     return 'SKIPPED';
   }
 

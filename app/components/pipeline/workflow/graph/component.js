@@ -41,7 +41,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
   @action
   draw(element) {
-    const isSkippedEvent = isSkipped(this.args.event);
+    const isSkippedEvent = isSkipped(this.args.event, this.args.builds);
     const elementSizes = getElementSizes();
     const maximumJobNameLength = getMaximumJobNameLength(
       this.decoratedGraph,
