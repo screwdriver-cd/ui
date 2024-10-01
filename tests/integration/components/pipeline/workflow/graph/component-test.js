@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { render, rerender } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | pipeline/workflow/graph', function (hooks) {
@@ -251,5 +251,101 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
     assert.dom('svg').exists({ count: 1 });
 
     assert.equal(this.element.querySelector('svg').children.length, 8);
+  });
+
+  test('it rerenders graph when workflowGraph changes', async function (assert) {
+    const workflowGraph = {
+      nodes: [{ name: '~commit' }, { name: 'main' }],
+      edges: [{ src: '~commit', dest: 'main' }]
+    };
+    const workflowGraphWithDownstreamTriggers = {
+      nodes: [
+        { name: '~commit' },
+        { name: 'main' },
+        { name: 'sd-main-triggers', status: 'DOWNSTREAM_TRIGGER' }
+      ],
+      edges: [
+        { src: '~commit', dest: 'main' },
+        { src: 'main', dest: 'sd-main-triggers' }
+      ]
+    };
+    const event = { startFrom: '~commit' };
+    const jobs = [{ id: 1 }];
+    const builds = [{ id: 1, jobId: 1, status: 'SUCCESS' }];
+    const stages = [];
+    const displayJobNameLength = 20;
+
+    this.setProperties({
+      workflowGraph,
+      event,
+      jobs,
+      builds,
+      stages,
+      displayJobNameLength
+    });
+    await render(
+      hbs`<Pipeline::Workflow::Graph
+            @workflowGraph={{this.workflowGraph}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @builds={{this.builds}}
+            @stages={{this.stages}}
+            @chainPr={{false}}
+            @displayJobNameLength={{this.displayJobNameLength}}
+      />`
+    );
+
+    assert.equal(this.element.querySelector('svg').children.length, 5);
+
+    this.setProperties({ workflowGraph: workflowGraphWithDownstreamTriggers });
+    await rerender();
+
+    assert.equal(this.element.querySelector('svg').children.length, 8);
+  });
+
+  test('it rerenders graph when builds update', async function (assert) {
+    const workflowGraph = {
+      nodes: [{ name: '~commit' }, { name: 'main', id: 123 }],
+      edges: [{ src: '~commit', dest: 'main' }]
+    };
+    const event = { startFrom: '~commit' };
+    const jobs = [{ id: 123 }];
+    const builds = [{ id: 1, jobId: 123, status: 'RUNNING' }];
+    const stages = [];
+    const displayJobNameLength = 20;
+
+    this.setProperties({
+      workflowGraph,
+      event,
+      jobs,
+      builds,
+      stages,
+      displayJobNameLength
+    });
+    await render(
+      hbs`<Pipeline::Workflow::Graph
+            @workflowGraph={{this.workflowGraph}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @builds={{this.builds}}
+            @stages={{this.stages}}
+            @chainPr={{false}}
+            @displayJobNameLength={{this.displayJobNameLength}}
+      />`
+    );
+
+    assert.dom('svg [data-job=main]').hasClass('build-running');
+
+    this.setProperties({
+      builds: [{ id: 1, jobId: 123, status: 'SUCCESS' }],
+      workflowGraph,
+      event,
+      jobs,
+      stages,
+      displayJobNameLength
+    });
+    await rerender();
+
+    assert.dom('svg [data-job=main]').hasClass('build-success');
   });
 });
