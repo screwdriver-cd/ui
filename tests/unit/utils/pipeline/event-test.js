@@ -7,14 +7,14 @@ import {
 
 module('Unit | Utility | Pipeline | event', function () {
   test('isSkipped returns correct value', function (assert) {
+    const builds = [{ id: 123 }];
+
     assert.equal(isSkipped({ type: 'pr' }), false);
+    assert.equal(isSkipped({ type: 'pr' }, []), false);
+    assert.equal(isSkipped({ type: 'pr' }, builds), false);
+    assert.equal(isSkipped({ type: 'pipeline' }, builds), false);
     assert.equal(isSkipped({ type: 'pipeline' }), false);
-    assert.equal(
-      isSkipped({
-        type: 'pipeline'
-      }),
-      false
-    );
+    assert.equal(isSkipped({ type: 'pipeline' }, []), false);
     assert.equal(
       isSkipped({
         type: 'pipeline',
