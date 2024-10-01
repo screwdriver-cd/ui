@@ -487,7 +487,7 @@ export function addJobIcons( // eslint-disable-line max-params
 ) {
   const { ICON_SIZE } = sizes;
 
-  svg
+  const nodeGroups = svg
     .selectAll('jobs')
     .data(data.nodes)
     .enter()
@@ -502,8 +502,13 @@ export function addJobIcons( // eslint-disable-line max-params
       return `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`;
     })
     .attr('data-job', d => d.name)
-    // create the icon graphic
-    .insert('text')
+    .on('click', node => {
+      onClick(node);
+    });
+
+  // create the icon graphic
+  nodeGroups
+    .append('text')
     .text(d => {
       if (isSkipped && d.status === 'STARTED_FROM') {
         return icon('SKIPPED');
@@ -520,18 +525,15 @@ export function addJobIcons( // eslint-disable-line max-params
         (d.pos.y + 1) * ICON_SIZE +
         d.pos.y * ICON_SIZE +
         getVerticalDisplacementByRowPosition(d.pos.y, verticalDisplacements)
-    )
-    .on('click', node => {
-      onClick(node);
-    })
-    .insert('title')
-    .text(d => {
-      if (/sd@/.test(d.name) && d.displayName !== undefined) {
-        return d.displayName;
-      }
+    );
 
-      return d.status ? `${d.name} - ${d.status}` : d.name;
-    });
+  nodeGroups.append('title').text(d => {
+    if (/sd@/.test(d.name) && d.displayName !== undefined) {
+      return d.displayName;
+    }
+
+    return d.status ? `${d.name} - ${d.status}` : d.name;
+  });
 }
 
 /**
@@ -597,6 +599,47 @@ export function addJobNames(
       }
 
       return d.name;
+    });
+}
+
+/**
+ * Updates the job statuses in the existing graph SVG
+ * @param svg
+ * @param data
+ */
+export function updateJobStatuses(svg, data) {
+  svg
+    .selectAll('.graph-node')
+    .data(data.nodes)
+    .join()
+    .attr('class', node => {
+      return `graph-node${
+        node.status ? ` build-${node.status.toLowerCase()}` : ''
+      }`;
+    })
+    .select('text')
+    .html(node => {
+      return icon(node.status);
+    });
+}
+
+/**
+ * Updates the edge statuses in the existing graph SVG
+ * @param svg
+ * @param data
+ */
+export function updateEdgeStatuses(svg, data) {
+  svg
+    .selectAll('.graph-edge')
+    .data(data.edges)
+    .join()
+    .attr('class', edge => {
+      return `graph-edge ${
+        edge.status ? `build-${edge.status.toLowerCase()}` : ''
+      }`;
+    })
+    .attr('stroke-dasharray', edge => {
+      return !edge.status ? 5 : 0;
     });
 }
 

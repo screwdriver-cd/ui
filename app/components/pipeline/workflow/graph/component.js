@@ -12,12 +12,15 @@ import {
   getGraphSvg,
   getMaximumJobNameLength,
   getNodeWidth,
-  icon
+  updateEdgeStatuses,
+  updateJobStatuses
 } from 'screwdriver-ui/utils/pipeline/graph/d3-graph-util';
 import { nodeCanShowTooltip } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
 
 export default class PipelineWorkflowGraphComponent extends Component {
   decoratedGraph;
+
+  graphSvg;
 
   constructor() {
     super(...arguments);
@@ -65,7 +68,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
     };
 
     // Add the SVG element
-    const svg = getGraphSvg(
+    this.graphSvg = getGraphSvg(
       element,
       this.decoratedGraph,
       elementSizes,
@@ -77,7 +80,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
     const verticalDisplacements =
       this.args.stages.length > 0
         ? addStages(
-            svg,
+            this.graphSvg,
             this.decoratedGraph,
             elementSizes,
             nodeWidth,
@@ -88,7 +91,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
     // edges
     addEdges(
-      svg,
+      this.graphSvg,
       this.decoratedGraph,
       elementSizes,
       nodeWidth,
@@ -98,7 +101,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
     // Jobs Icons
     addJobIcons(
-      svg,
+      this.graphSvg,
       this.decoratedGraph,
       elementSizes,
       nodeWidth,
@@ -108,7 +111,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
     );
 
     addJobNames(
-      svg,
+      this.graphSvg,
       this.decoratedGraph,
       elementSizes,
       maximumJobNameLength,
@@ -129,20 +132,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
     }
 
     this.getDecoratedGraph();
-    this.decoratedGraph.nodes.forEach(node => {
-      const n = element.querySelector(`g.graph-node[data-job="${node.name}"]`);
-
-      if (n) {
-        const txt = n.querySelector('text');
-
-        txt.firstChild.textContent = icon(node.status);
-        n.setAttribute(
-          'class',
-          `graph-node${
-            node.status ? ` build-${node.status.toLowerCase()}` : ''
-          }`
-        );
-      }
-    });
+    updateEdgeStatuses(this.graphSvg, this.decoratedGraph);
+    updateJobStatuses(this.graphSvg, this.decoratedGraph);
   }
 }
