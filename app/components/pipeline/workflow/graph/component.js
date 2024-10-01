@@ -11,14 +11,22 @@ import {
   getElementSizes,
   getGraphSvg,
   getMaximumJobNameLength,
-  getNodeWidth
+  getNodeWidth,
+  icon
 } from 'screwdriver-ui/utils/pipeline/graph/d3-graph-util';
 import { nodeCanShowTooltip } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
 
 export default class PipelineWorkflowGraphComponent extends Component {
-  @action
-  draw(element) {
-    const data = decorateGraph({
+  decoratedGraph;
+
+  constructor() {
+    super(...arguments);
+
+    this.getDecoratedGraph();
+  }
+
+  getDecoratedGraph() {
+    this.decoratedGraph = decorateGraph({
       inputGraph: this.args.workflowGraph,
       builds: this.args.builds,
       jobs: this.args.jobs.map(job => {
@@ -29,11 +37,14 @@ export default class PipelineWorkflowGraphComponent extends Component {
       prNum: this.args.event.prNum,
       stages: this.args.stages
     });
+  }
 
-    const isSkippedEvent = isSkipped(this.args.event, this.args.builds);
+  @action
+  draw(element) {
+    const isSkippedEvent = isSkipped(this.args.event);
     const elementSizes = getElementSizes();
     const maximumJobNameLength = getMaximumJobNameLength(
-      data,
+      this.decoratedGraph,
       this.args.displayJobNameLength
     );
     const nodeWidth = getNodeWidth(elementSizes, maximumJobNameLength);
@@ -56,7 +67,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
     // Add the SVG element
     const svg = getGraphSvg(
       element,
-      data,
+      this.decoratedGraph,
       elementSizes,
       maximumJobNameLength,
       onClickGraph
@@ -67,7 +78,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
       this.args.stages.length > 0
         ? addStages(
             svg,
-            data,
+            this.decoratedGraph,
             elementSizes,
             nodeWidth,
             onClickStageMenu,
@@ -78,7 +89,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
     // edges
     addEdges(
       svg,
-      data,
+      this.decoratedGraph,
       elementSizes,
       nodeWidth,
       isSkippedEvent,
@@ -88,7 +99,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
     // Jobs Icons
     addJobIcons(
       svg,
-      data,
+      this.decoratedGraph,
       elementSizes,
       nodeWidth,
       verticalDisplacements,
@@ -98,10 +109,40 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
     addJobNames(
       svg,
-      data,
+      this.decoratedGraph,
       elementSizes,
       maximumJobNameLength,
       verticalDisplacements
     );
+  }
+
+  @action
+  redraw(element) {
+    if (
+      this.decoratedGraph.nodes.length !== this.args.workflowGraph.nodes.length
+    ) {
+      this.getDecoratedGraph();
+      element.replaceChildren();
+      this.draw(element);
+
+      return;
+    }
+
+    this.getDecoratedGraph();
+    this.decoratedGraph.nodes.forEach(node => {
+      const n = element.querySelector(`g.graph-node[data-job="${node.name}"]`);
+
+      if (n) {
+        const txt = n.querySelector('text');
+
+        txt.firstChild.textContent = icon(node.status);
+        n.setAttribute(
+          'class',
+          `graph-node${
+            node.status ? ` build-${node.status.toLowerCase()}` : ''
+          }`
+        );
+      }
+    });
   }
 }
