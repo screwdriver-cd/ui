@@ -1,10 +1,9 @@
 <h4>
   Artifacts
 </h4>
-
 {{#if this.treedata.content.length}}
   <BasicTree
-    @contentComponent={{component "artifact-tree-content"}}
+    @contentComponent={{component "artifact-tree-content" iframeUrl=this.iframeUrl}}
     @childrenComponent={{component "artifact-tree-children"}} as |tree|
   >
     <tree.Node

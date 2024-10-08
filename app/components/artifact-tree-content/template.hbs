@@ -6,8 +6,23 @@
     {{@node.file.text}}
   </LinkTo>
 {{else}}
-  <span onclick={{action "toggle"}}>
-    <FaIcon @icon="folder{{if @node.isExpanded "-open"}}" @fixedWidth={{true}}/>
-    {{@node.fileName}}
-  </span>
+  <div class="artifact-folder-container"
+    onmouseenter={{action "setHoverState" true}}
+    onmouseleave={{action "setHoverState" false}}
+  >
+    <span onclick={{action "toggle"}} class="artifact-folder-span">
+      <FaIcon @icon="folder{{if @node.isExpanded "-open"}}" @fixedWidth={{true}}/>
+      {{@node.fileName}}
+    </span>
+    {{!-- only show download all on the root folder --}}
+    {{#if (and this.isHovered (eq @node.fileName undefined))}}
+      <span
+        class="artifact-download-icon"
+        onclick={{action "downloadAll"}}
+      >
+        <FaIcon @icon="download" @fixedWidth={{true}} title="Download All"/>
+        <BsTooltip @title="Download all artifacts as ZIP file" @placement="top"/>
+      </span>
+    {{/if}}
+  </div>
 {{/if}}

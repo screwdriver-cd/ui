@@ -37,13 +37,32 @@ export default Component.extend({
     }
   }),
 
+  isHovered: false,
+
   actions: {
+    setHoverState(state) {
+      this.set('isHovered', state);
+    },
+
     toggle() {
       this.node.actions.toggle();
       this.router.transitionTo(
         'pipeline.build.artifacts.detail',
         this.artifactPath
       );
+    },
+
+    // todo: the downloadLink should not depend on the iframeUrl alone
+    // this works for now because downloadLink to download all artifacts is very predictable
+    // $url/v4/builds/$id/artifacts
+    // but this will not work for downloading a directory that is not the root directory
+    downloadAll() {
+      const downloadLink = this.iframeUrl.replace(
+        /\/artifacts\/.*$/,
+        '/artifacts'
+      );
+
+      window.open(downloadLink, '_blank');
     }
   }
 });

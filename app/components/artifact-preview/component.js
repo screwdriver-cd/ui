@@ -47,14 +47,6 @@ export default Component.extend({
       );
 
       window.open(downloadLink, '_blank');
-    },
-    downloadAll() {
-      const downloadLink = this.iframeUrl.replace(
-        /\/artifacts\/.*$/,
-        '/artifacts'
-      );
-
-      window.open(downloadLink, '_blank');
     }
   }
 });
