@@ -105,7 +105,11 @@
   </div>
   <div class="col-9 partial-view">
     {{#if this.isArtifacts}}
-      <ArtifactPreview @iframeUrl={{this.iframeUrl}} />
+      <ArtifactPreview 
+        @iframeUrl={{this.iframeUrl}}
+        @selectedArtifact={{this.selectedArtifact}}
+        @buildId={{this.buildId}}
+      />
     {{else}}
       <BuildLog
         @stepName={{this.selectedStep}}
