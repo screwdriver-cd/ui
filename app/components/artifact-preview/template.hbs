@@ -7,29 +7,6 @@
   >
     Download
   </BsButton>
-  {{!-- <BsButton
-    @type="primary"
-    @icon="glyphicon glyphicon-download"
-    @onClick={{action "downloadAll"}}
-    title="Download all artifacts as ZIP file"
-  >
-    Download All
-  </BsButton> --}}
-  {{!-- <BsDropdown as |dd|>
-    <dd.button>Download <span class="caret"></span></dd.button>
-    <dd.menu as |ddm|>
-      <ddm.item>
-        <a href onclick={{action "changeItems" item dd.closeDropdown}}>
-          Something
-        </a>
-      </ddm.item>
-      <ddm.item>
-        <a href onclick={{action "changeItems" item dd.closeDropdown}}>
-          Something different
-        </a>
-      </ddm.item>
-    </dd.menu>
-  </BsDropdown> --}}
   {{#if this.iframeUrl}}
     <iframe id={{this.iframeId}} src={{this.iframeUrl}}>
       <h4>
