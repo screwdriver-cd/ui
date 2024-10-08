@@ -49,10 +49,9 @@ export default Component.extend({
       window.open(downloadLink, '_blank');
     },
     downloadAll() {
-      const downloadLink = this.iframeUrl.replace(
-        /\/artifacts\/.*$/,
-        '/artifacts'
-      );
+      // https://api.screwdriver.cd/v4/documentation#/v4/getV4BuildsIdArtifacts
+      // Reconstruct the downloadLink from the env var since iframeUrl is not available for directory-level access.
+      const downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${this.buildId}/artifacts`;
 
       window.open(downloadLink, '_blank');
     }
