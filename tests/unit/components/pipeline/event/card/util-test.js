@@ -3,7 +3,9 @@ import {
   getDuration,
   getDurationText,
   getExternalPipelineId,
+  getFirstCreateTime,
   getFailureCount,
+  getRunningDurationText,
   getStartDate,
   getTruncatedMessage,
   getTruncatedSha,
@@ -41,12 +43,34 @@ module('Unit | Component | pipeline/event/card/util', function () {
     assert.equal(startDate, '04/01/2021, 04:34 PM UTC');
   });
 
+  test('getFirstCreateTime returns start date', function (assert) {
+    assert.equal(getFirstCreateTime(null), null);
+    assert.equal(getFirstCreateTime([]), null);
+
+    const expectedDateString = '2024-03-05T18:16:07.760Z';
+    const builds = [
+      {
+        createTime: '2024-03-05T18:30:07.760Z',
+        endTime: '2024-03-05T18:31:07.760Z'
+      },
+      {
+        createTime: '2024-03-05T18:25:07.760Z',
+        endTime: '2024-03-05T18:26:07.760Z'
+      },
+      {
+        createTime: expectedDateString,
+        endTime: '2024-03-05T18:17:07.760Z'
+      }
+    ];
+
+    assert.deepEqual(getFirstCreateTime(builds), new Date(expectedDateString));
+  });
+
   test('getDuration returns correct duration', function (assert) {
-    let builds = [];
+    assert.equal(getDuration(null), 0);
+    assert.equal(getDuration([]), 0);
 
-    assert.equal(getDuration(builds), 0);
-
-    builds = [
+    const builds = [
       {
         createTime: '2024-03-05T18:30:07.760Z',
         endTime: '2024-03-05T18:31:07.760Z'
@@ -65,8 +89,8 @@ module('Unit | Component | pipeline/event/card/util', function () {
   });
 
   test('getDurationText returns correct text format', function (assert) {
-    assert.equal(getDurationText(null), '0 s');
-    assert.equal(getDurationText([]), '0 s');
+    assert.equal(getDurationText(null), '0s');
+    assert.equal(getDurationText([]), '0s');
     assert.equal(
       getDurationText([
         {
@@ -82,8 +106,15 @@ module('Unit | Component | pipeline/event/card/util', function () {
           endTime: '2024-03-05T18:17:07.760Z'
         }
       ]),
-      '15 m'
+      '15m 10s'
     );
+  });
+
+  test('getRunningDurationText returns correct text format', function (assert) {
+    const now = Date.now();
+    const start = new Date(now - 1000 * 60 * 5 - 30 * 1000);
+
+    assert.equal(getRunningDurationText(start, now), '5m 30s');
   });
 
   test('isExternalTrigger calculates value correctly', function (assert) {
