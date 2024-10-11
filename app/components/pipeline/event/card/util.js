@@ -1,6 +1,25 @@
 import humanizeDuration from 'humanize-duration';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 
+const shortEnglishHumanizer = humanizeDuration.humanizer({
+  round: true,
+  spacer: '',
+  delimiter: ' ',
+  language: 'shortEn',
+  languages: {
+    shortEn: {
+      y: () => 'y',
+      mo: () => 'mo',
+      w: () => 'w',
+      d: () => 'd',
+      h: () => 'h',
+      m: () => 'm',
+      s: () => 's',
+      ms: () => 'ms'
+    }
+  }
+});
+
 export const getTruncatedSha = event => {
   return event.sha.slice(0, 7);
 };
@@ -26,19 +45,27 @@ export const getStartDate = (event, userSettings) => {
   return `${toCustomLocaleString(new Date(startDate))}`;
 };
 
+export const getFirstCreateTime = builds => {
+  return builds
+    ? builds
+        .map(build => {
+          return new Date(build.createTime);
+        })
+        .sort()[0]
+    : null;
+};
+
 export const getDuration = builds => {
-  const firstCreateTime = builds
-    .map(build => {
-      return new Date(build.createTime);
-    })
-    .sort()[0];
+  const firstCreateTime = getFirstCreateTime(builds);
 
   const lastEndTime = builds
-    .map(build => {
-      return new Date(build.endTime);
-    })
-    .sort()
-    .pop();
+    ? builds
+        .map(build => {
+          return new Date(build.endTime);
+        })
+        .sort()
+        .pop()
+    : null;
 
   if (!firstCreateTime || !lastEndTime) {
     return 0;
@@ -48,28 +75,11 @@ export const getDuration = builds => {
 };
 
 export const getDurationText = builds => {
-  const shortEnglishHumanizer = humanizeDuration.humanizer({
-    language: 'shortEn',
-    languages: {
-      shortEn: {
-        y: () => 'y',
-        mo: () => 'mo',
-        w: () => 'w',
-        d: () => 'd',
-        h: () => 'h',
-        m: () => 'm',
-        s: () => 's',
-        ms: () => 'ms'
-      }
-    }
-  });
+  return shortEnglishHumanizer(getDuration(builds));
+};
 
-  const buildsToUse = builds || [];
-
-  return shortEnglishHumanizer(getDuration(buildsToUse), {
-    round: true,
-    largest: 1
-  });
+export const getRunningDurationText = (startTime, endTime) => {
+  return shortEnglishHumanizer(endTime - startTime);
 };
 
 export const isExternalTrigger = event => {
