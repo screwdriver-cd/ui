@@ -49,7 +49,7 @@ export default Component.extend({
     ).forEach(([propertyName, propertyVal]) => {
       const keys = Object.keys(propertyVal);
 
-      if (keys.length === 1 && keys[0] === 'value') {
+      if (keys.length === 2 && keys[0] === 'value') {
         pipelineParameters[propertyName] = propertyVal;
       } else {
         jobParameters[propertyName] = propertyVal;
