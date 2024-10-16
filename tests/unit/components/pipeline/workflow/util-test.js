@@ -1,10 +1,25 @@
 import { module, test } from 'qunit';
 import {
+  getDisplayJobNameLength,
   getFilteredGraph,
   getWorkflowGraph
 } from 'screwdriver-ui/components/pipeline/workflow/util';
+import ENV from 'screwdriver-ui/config/environment';
 
 module('Unit | Component | pipeline/workflow/util', function () {
+  test('getDisplayJobNameLength returns correct value', function (assert) {
+    assert.equal(getDisplayJobNameLength(), ENV.APP.MINIMUM_JOBNAME_LENGTH);
+    assert.equal(getDisplayJobNameLength(null), ENV.APP.MINIMUM_JOBNAME_LENGTH);
+    assert.equal(getDisplayJobNameLength({}), ENV.APP.MINIMUM_JOBNAME_LENGTH);
+
+    const displayJobNameLength = 17;
+
+    assert.equal(
+      getDisplayJobNameLength({ displayJobNameLength }),
+      displayJobNameLength
+    );
+  });
+
   test('getFilteredGraph removes nodes that trigger external pipelines', function (assert) {
     assert.deepEqual(
       getFilteredGraph({

@@ -1,3 +1,16 @@
+import ENV from 'screwdriver-ui/config/environment';
+
+/**
+ * Get the display job name length
+ * @param userSettings {Object} The user settings in the shape returned by the API
+ * @returns {number}
+ */
+export const getDisplayJobNameLength = userSettings => {
+  return userSettings?.displayJobNameLength
+    ? userSettings.displayJobNameLength
+    : ENV.APP.MINIMUM_JOBNAME_LENGTH;
+};
+
 /**
  * Filters the workflow graph by removing nodes that start with 'sd@' (i.e., triggers external pipelines)
  * @param workflowGraph {{nodes: Array, edges: Array}} The workflow graph to filter
