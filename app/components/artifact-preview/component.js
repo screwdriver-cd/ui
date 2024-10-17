@@ -41,10 +41,16 @@ export default Component.extend({
 
   actions: {
     download() {
-      const downloadLink = this.iframeUrl.replace(
+      let downloadLink = this.iframeUrl.replace(
         'type=preview',
         'type=download'
       );
+
+      if (this.type === 'directory') {
+        const dirPath = this.href.replace(/\/$/, '');
+
+        downloadLink = `${dirPath}?type=download&dir=true`;
+      }
 
       window.open(downloadLink, '_blank');
     },
