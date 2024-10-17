@@ -24,17 +24,6 @@
     </span>
   </div>
 
-  <div class="event-cards">
-    <Pipeline::Event::Card
-      @event={{this.model.event}}
-      @userSettings={{this.model.userSettings}}
-      @builds={{this.model.builds}}
-      @jobs={{this.model.jobs}}
-      @pipeline={{this.model.pipeline}}
-      @latestCommitEvent={{this.model.latestCommitEvent}}
-      @enableEventRefresh={{true}}
-    />
-  </div>
 </div>
 
 <div class="pipeline-workflow-graph">

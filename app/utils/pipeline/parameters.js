@@ -1,4 +1,13 @@
 /**
+ * Determines if a parameter is a pipeline parameter
+ * @param parameter {{object}} The parameter object
+ * @returns {boolean}
+ */
+export function isPipelineParameter(parameter) {
+  return parameter.value !== undefined;
+}
+
+/**
  * Extracts parameters from the API response object of an event
  * @param event
  * @returns {{pipelineParameters: {}, jobParameters: {}}}
@@ -10,9 +19,7 @@ export function extractEventParameters(event) {
 
   // Extract pipeline level and job level parameters
   Object.entries(eventParameters).forEach(([propertyName, propertyVal]) => {
-    const keys = Object.keys(propertyVal);
-
-    if (keys.length === 1 && keys[0] === 'value') {
+    if (isPipelineParameter(propertyVal)) {
       pipelineParameters[propertyName] = propertyVal;
     } else {
       jobParameters[propertyName] = propertyVal;
