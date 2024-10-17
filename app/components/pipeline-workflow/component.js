@@ -9,6 +9,7 @@ import {
   canJobStart,
   canStageStart
 } from 'screwdriver-ui/utils/pipeline-workflow';
+import { isPipelineParameter } from 'screwdriver-ui/utils/pipeline/parameters';
 import { copy } from 'ember-copy';
 
 export default Component.extend({
@@ -247,9 +248,7 @@ export default Component.extend({
         // Segregate pipeline level and job level parameters
         Object.entries(eventParameters).forEach(
           ([propertyName, propertyVal]) => {
-            const keys = Object.keys(propertyVal);
-
-            if (keys.length === 1 && keys[0] === 'value') {
+            if (isPipelineParameter(propertyVal)) {
               pipelineParameters[propertyName] = propertyVal;
             } else {
               jobParameters[propertyName] = propertyVal;
@@ -365,9 +364,7 @@ export default Component.extend({
 
       // Segregate pipeline level and job level parameters
       Object.entries(eventParameters).forEach(([propertyName, propertyVal]) => {
-        const keys = Object.keys(propertyVal);
-
-        if (keys.length === 1 && keys[0] === 'value') {
+        if (isPipelineParameter(propertyVal)) {
           pipelineParameters[propertyName] = propertyVal;
         } else {
           jobParameters[propertyName] = propertyVal;

@@ -7,11 +7,19 @@ import {
   flattenJobParameters,
   flattenParameters,
   flattenParameterGroup,
-  normalizeParameters,
-  getNormalizedParameterGroups
+  getNormalizedParameterGroups,
+  isPipelineParameter,
+  normalizeParameters
 } from 'screwdriver-ui/utils/pipeline/parameters';
 
 module('Unit | Utility | Pipeline | parameters', function () {
+  test('isPipelineParameter', function (assert) {
+    assert.equal(isPipelineParameter({}), false);
+    assert.equal(isPipelineParameter({ value: 'abc' }), true);
+    assert.equal(isPipelineParameter({ value: 'abc', default: false }), true);
+    assert.equal(isPipelineParameter({ p1: { value: 'abc' } }), false);
+  });
+
   test('extractEventParameters extracts parameters from event object', function (assert) {
     const parameters = extractEventParameters({
       meta: {
