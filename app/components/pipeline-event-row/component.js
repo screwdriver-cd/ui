@@ -4,6 +4,7 @@ import { computed, get, getProperties } from '@ember/object';
 import { statusIcon } from 'screwdriver-ui/utils/build';
 import { inject as service } from '@ember/service';
 import MAX_NUM_OF_PARAMETERS_ALLOWED from 'screwdriver-ui/utils/constants';
+import { isPipelineParameter } from 'screwdriver-ui/utils/pipeline/parameters';
 import { getTimestamp } from '../../utils/timestamp-format';
 
 export default Component.extend({
@@ -47,9 +48,7 @@ export default Component.extend({
         ? {}
         : this.get('event.meta.parameters')
     ).forEach(([propertyName, propertyVal]) => {
-      const keys = Object.keys(propertyVal);
-
-      if (keys.length === 2 && keys[0] === 'value') {
+      if (isPipelineParameter(propertyVal)) {
         pipelineParameters[propertyName] = propertyVal;
       } else {
         jobParameters[propertyName] = propertyVal;
