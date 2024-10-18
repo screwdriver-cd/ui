@@ -337,12 +337,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
     assert.dom('svg [data-job=main]').hasClass('build-running');
 
     this.setProperties({
-      builds: [{ id: 1, jobId: 123, status: 'SUCCESS' }],
-      workflowGraph,
-      event,
-      jobs,
-      stages,
-      displayJobNameLength
+      builds: [{ id: 1, jobId: 123, status: 'SUCCESS' }]
     });
     await rerender();
 
