@@ -23,6 +23,8 @@ export default class PipelineEventCardComponent extends Component {
 
   @tracked status;
 
+  @tracked event;
+
   @tracked isRunning;
 
   @tracked failureCount;
@@ -40,6 +42,8 @@ export default class PipelineEventCardComponent extends Component {
 
     const { builds } = this.args;
 
+    this.event = this.args.event;
+
     this.showParametersModal = false;
     this.showAbortBuildModal = false;
     this.status = getStatus(this.args.event, builds);
@@ -51,6 +55,16 @@ export default class PipelineEventCardComponent extends Component {
 
   get isHighlighted() {
     return this.router.currentURL.endsWith(this.args.event.id);
+  }
+
+  get title() {
+    const title = `Event: ${this.event.id}`;
+
+    if (this.event.id === this.event.groupEventId) {
+      return title;
+    }
+
+    return `${title}\nGroup: ${this.event.groupEventId}`;
   }
 
   get icon() {

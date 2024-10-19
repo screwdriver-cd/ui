@@ -1,4 +1,7 @@
-<div class="event-card {{if this.isHighlighted "highlighted"}}">
+<div
+  class="event-card{{if this.isHighlighted " highlighted"}}"
+  title={{this.title}}
+>
   <div class="event-card-title">
     <div class="event-status {{this.status}}">
       <FaIcon
