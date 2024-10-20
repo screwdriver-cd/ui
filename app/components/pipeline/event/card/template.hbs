@@ -101,37 +101,37 @@
 
   <div class="event-card-footer">
     <div class="counts">
-    {{#if this.failureCount}}
-      <div class="count">
-        <div class="failures">
-          <FaIcon @icon="times-circle" @fixedWidth="true"/>
+      {{#if this.failureCount}}
+        <div class="count">
+          <div class="failures">
+            <FaIcon @icon="times-circle" @fixedWidth="true"/>
+          </div>
+          <div>
+            {{this.failureCount}}
+          </div>
         </div>
-        <div>
-          {{this.failureCount}}
+      {{/if}}
+      {{#if this.warningCount}}
+        <div class="count">
+          <div class="warnings">
+            <FaIcon @icon="exclamation-circle" @fixedWidth="true"/>
+          </div>
+          <div>
+            {{this.warningCount}}
+          </div>
         </div>
-      </div>
-    {{/if}}
-    {{#if this.warningCount}}
-      <div class="count">
-        <div class="warnings">
-          <FaIcon @icon="exclamation-circle" @fixedWidth="true"/>
+      {{/if}}
+      {{#if this.successCount}}
+        <div class="count">
+          <div class="successes">
+            <FaIcon @icon="check-circle" @fixedWidth="true"/>
+          </div>
+          <div>
+            {{this.successCount}}
+          </div>
         </div>
-        <div>
-          {{this.warningCount}}
-        </div>
-      </div>
-    {{/if}}
-    {{#if this.successCount}}
-      <div class="count">
-        <div class="successes">
-          <FaIcon @icon="check-circle" @fixedWidth="true"/>
-        </div>
-        <div>
-          {{this.successCount}}
-        </div>
-      </div>
-    {{/if}}
-  </div>
+      {{/if}}
+    </div>
 
     {{#if @event.meta.parameters}}
       <div id="show-parameters">
