@@ -7,6 +7,72 @@ import sinon from 'sinon';
 module('Integration | Component | pipeline/event/card', function (hooks) {
   setupRenderingTest(hooks);
 
+  test('it renders title when event is first in group', async function (assert) {
+    const router = this.owner.lookup('service:router');
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
+
+    this.setProperties({
+      event: {
+        id: 11,
+        groupEventId: 11,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {}
+      },
+      pipeline: {},
+      userSettings: {},
+      builds: [],
+      latestCommitEvent: { sha: 'abc123def456' }
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @pipeline={{this.pipeline}}
+        @userSettings={{this.userSettings}}
+        @builds={{this.builds}}
+        @latestCommitEvent={{this.latestCommitEvent}}
+      />`
+    );
+
+    assert.dom('.event-card').hasAttribute('title', 'Event: 11');
+  });
+
+  test('it renders title when event is first in group', async function (assert) {
+    const router = this.owner.lookup('service:router');
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
+
+    this.setProperties({
+      event: {
+        id: 11,
+        groupEventId: 3,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {}
+      },
+      pipeline: {},
+      userSettings: {},
+      builds: [],
+      latestCommitEvent: { sha: 'abc123def456' }
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @pipeline={{this.pipeline}}
+        @userSettings={{this.userSettings}}
+        @builds={{this.builds}}
+        @latestCommitEvent={{this.latestCommitEvent}}
+      />`
+    );
+
+    assert.dom('.event-card').hasAttribute('title', `Event: 11\nGroup: 3`);
+  });
+
   test('it renders core elements', async function (assert) {
     const router = this.owner.lookup('service:router');
 
