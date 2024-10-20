@@ -253,7 +253,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
     assert.equal(this.element.querySelector('svg').children.length, 8);
   });
 
-  test('it rerenders graph when workflowGraph changes', async function (assert) {
+  test('it re-renders graph when workflowGraph changes', async function (assert) {
     const workflowGraph = {
       nodes: [{ name: '~commit' }, { name: 'main' }],
       edges: [{ src: '~commit', dest: 'main' }]
@@ -303,7 +303,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
     assert.equal(this.element.querySelector('svg').children.length, 8);
   });
 
-  test('it rerenders graph when builds update', async function (assert) {
+  test('it re-renders graph when builds update', async function (assert) {
     const workflowGraph = {
       nodes: [{ name: '~commit' }, { name: 'main', id: 123 }],
       edges: [{ src: '~commit', dest: 'main' }]
@@ -337,12 +337,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
     assert.dom('svg [data-job=main]').hasClass('build-running');
 
     this.setProperties({
-      builds: [{ id: 1, jobId: 123, status: 'SUCCESS' }],
-      workflowGraph,
-      event,
-      jobs,
-      stages,
-      displayJobNameLength
+      builds: [{ id: 1, jobId: 123, status: 'SUCCESS' }]
     });
     await rerender();
 

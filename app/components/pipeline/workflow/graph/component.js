@@ -18,33 +18,43 @@ import {
 import { nodeCanShowTooltip } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
 
 export default class PipelineWorkflowGraphComponent extends Component {
+  event;
+
+  builds;
+
   decoratedGraph;
 
   graphSvg;
 
   constructor() {
     super(...arguments);
+    this.event = this.args.event;
+    this.builds = this.args.builds;
 
-    this.getDecoratedGraph();
+    this.getDecoratedGraph(
+      this.args.workflowGraph,
+      this.args.builds,
+      this.args.event
+    );
   }
 
-  getDecoratedGraph() {
+  getDecoratedGraph(workflowGraph, builds, event) {
     this.decoratedGraph = decorateGraph({
-      inputGraph: this.args.workflowGraph,
-      builds: this.args.builds,
+      inputGraph: workflowGraph,
+      builds,
       jobs: this.args.jobs.map(job => {
         return { ...job, isDisabled: job.state === 'DISABLED' };
       }),
-      start: this.args.event.startFrom,
+      start: event.startFrom,
       chainPR: this.args.chainPr,
-      prNum: this.args.event.prNum,
+      prNum: event.prNum,
       stages: this.args.stages
     });
   }
 
   @action
   draw(element) {
-    const isSkippedEvent = isSkipped(this.args.event, this.args.builds);
+    const isSkippedEvent = isSkipped(this.event, this.builds);
     const elementSizes = getElementSizes();
     const maximumJobNameLength = getMaximumJobNameLength(
       this.decoratedGraph,
@@ -120,18 +130,24 @@ export default class PipelineWorkflowGraphComponent extends Component {
   }
 
   @action
-  redraw(element) {
+  redraw(element, [workflowGraph, builds, event]) {
     if (
-      this.decoratedGraph.nodes.length !== this.args.workflowGraph.nodes.length
+      this.event.id !== event.id ||
+      this.decoratedGraph.nodes.length !== workflowGraph.nodes.length
     ) {
-      this.getDecoratedGraph();
+      if (this.event.id !== event.id) {
+        this.event = event;
+      }
+      this.builds = builds;
+
+      this.getDecoratedGraph(workflowGraph, builds, event);
       element.replaceChildren();
       this.draw(element);
 
       return;
     }
 
-    this.getDecoratedGraph();
+    this.getDecoratedGraph(workflowGraph, builds, event);
     updateEdgeStatuses(this.graphSvg, this.decoratedGraph);
     updateJobStatuses(this.graphSvg, this.decoratedGraph);
   }
