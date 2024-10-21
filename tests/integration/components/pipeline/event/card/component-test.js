@@ -111,11 +111,14 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.event-card-body').exists({ count: 1 });
     assert.dom('.event-card-body .message').exists({ count: 1 });
     assert.dom('.event-card-body .label').doesNotExist();
-    assert.dom('.event-card-body .time').exists({ count: 1 });
     assert.dom('.event-card-body .by').exists({ count: 1 });
+    assert.dom('.event-card-body .time').exists({ count: 1 });
 
     assert.dom('.event-card-footer .counts').exists({ count: 1 });
-    assert.dom('.event-card-footer #show-parameters').doesNotExist();
+    assert.dom('.event-card-footer .event-buttons').exists({ count: 1 });
+    assert
+      .dom('.event-card-footer .event-buttons .show-parameters')
+      .doesNotExist();
   });
 
   test('it does not render highlight', async function (assert) {
@@ -212,10 +215,13 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         @pipeline={{this.pipeline}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @userSettings={{this.userSettings}}
+        @showParameters={{true}}
       />`
     );
 
-    assert.dom('.event-card-footer #show-parameters').exists({ count: 1 });
+    assert
+      .dom('.event-card-footer .event-buttons .parameters-button')
+      .exists({ count: 1 });
   });
 
   test('it renders abort button for running event', async function (assert) {
@@ -247,6 +253,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       />`
     );
 
-    assert.dom('.event-card-title #abort-event-button').exists({ count: 1 });
+    assert.dom('.event-card-title .abort-event-button').exists({ count: 1 });
   });
 });
