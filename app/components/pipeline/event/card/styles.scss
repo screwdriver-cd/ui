@@ -4,6 +4,8 @@
 
 @mixin styles {
   .event-card {
+    display: flex;
+    flex-direction: column;
     padding: 1rem;
     cursor: pointer;
 
@@ -86,12 +88,15 @@
         margin-top: auto;
         margin-bottom: auto;
         background-color: colors.$sd-white;
-        border-radius: 5px;
       }
     }
 
     .event-card-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       font-size: 0.85rem;
+      flex: 1;
 
       .message {
         font-weight: variables.$weight-bold;
