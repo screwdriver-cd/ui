@@ -21,21 +21,25 @@
       </a>
     </div>
     {{#if this.isRunning}}
-      <div id="abort-event-button">
-        <BsButton
-          @type="danger"
-          @outline={{true}}
-          @onClick={{fn this.openAbortBuildModal}}
-        >
-          Stop builds
-        </BsButton>
+      <BsButton
+        class="abort-event-button"
+        @type="danger"
+        @outline={{true}}
+        @onClick={{fn this.openAbortBuildModal}}
+        title="Abort event"
+      >
+        <FaIcon
+          @icon="stop-circle"
+          @fixedWidth="true"
+          @prefix="far"
+        />
         {{#if this.showAbortBuildModal}}
           <Pipeline::Modal::StopBuild
             @eventId={{@event.id}}
             @closeModal={{this.closeAbortBuildModal}}
           />
         {{/if}}
-      </div>
+      </BsButton>
     {{/if}}
   </div>
 
@@ -138,25 +142,33 @@
       {{/if}}
     </div>
 
-    {{#if @event.meta.parameters}}
-      <div id="show-parameters">
-        <BsButton
-          @type="primary"
-          @outline={{true}}
-          @onClick={{fn this.openParametersModal}}
-        >
-          Parameters
-        </BsButton>
+    <div class="event-buttons">
+      {{#if @event.meta.parameters}}
+        {{#if @showParameters}}
+          <BsButton
+            class="parameters-button"
+            @type="primary"
+            @outline={{true}}
+            @onClick={{fn this.openParametersModal}}
+            title="View configured parameters"
+          >
+            <FaIcon
+              @icon="cog"
+              @fixedWidth="true"
+              @prefix="fa"
+            />
 
-        {{#if this.showParametersModal}}
-          <Pipeline::Modal::ShowParameters
-            @event={{@event}}
-            @pipeline={{@pipeline}}
-            @jobs={{@jobs}}
-            @closeModal={{this.closeParametersModal}}
-          />
+            {{#if this.showParametersModal}}
+              <Pipeline::Modal::ShowParameters
+                @event={{@event}}
+                @pipeline={{@pipeline}}
+                @jobs={{@jobs}}
+                @closeModal={{this.closeParametersModal}}
+              />
+            {{/if}}
+          </BsButton>
         {{/if}}
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </div>
 </div>

@@ -83,7 +83,7 @@
         }
       }
 
-      #abort-event-button {
+      .abort-event-button {
         margin-left: auto;
         margin-top: auto;
         margin-bottom: auto;
@@ -152,11 +152,13 @@
         }
       }
 
-      #show-parameters {
-        @include button.styles;
+      .event-buttons {
+        margin-top: auto;
+        margin-bottom: auto;
 
-        background: colors.$sd-white;
-        border-radius: 5px;
+        .parameters-button {
+          background: colors.$sd-white;
+        }
       }
     }
   }
