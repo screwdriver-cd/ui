@@ -88,10 +88,6 @@ export default Component.extend({
         const artifactPath = instance.get_path(node, '/');
 
         if (type === 'directory') {
-          this.setProperties({
-            href,
-            type: 'directory'
-          });
           instance.toggle_node(node);
           this.router.transitionTo(
             'pipeline.build.artifacts.detail',
