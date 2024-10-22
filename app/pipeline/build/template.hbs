@@ -50,8 +50,8 @@
   {{#if this.build.statusMessage}}
     <InfoMessage
       @message={{this.build.statusMessage}}
-      @type="warning"
-      @icon="exclamation-triangle"
+      @type={{this.statusMessageAlertType}}
+      @icon={{this.statusMessageAlertIcon}}
     />
   {{/if}}
   {{#if this.build.meta.build.warning}}
@@ -66,7 +66,7 @@
 </div>
 
 
-{{#if this.stepList}}
+{{#if this.showStepCollection}}
   <BuildStepCollection
     @preselectedStepName={{this.preselectedStepName}}
     @selectedArtifact={{this.selectedArtifact}}

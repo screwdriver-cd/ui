@@ -65,6 +65,7 @@ export default Model.extend({
   status: attr('string'),
   stats: attr(),
   statusMessage: attr('string', { defaultValue: null }),
+  statusMessageType: attr('string', { defaultValue: null }),
   steps: attr(),
   templateId: attr('number'),
   startTimeWords: computed('startTime', {
