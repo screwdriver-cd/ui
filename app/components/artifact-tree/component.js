@@ -101,7 +101,6 @@ export default Component.extend({
           this.setProperties({
             href,
             iframeUrl: `${href}?type=preview`,
-            isModalOpen: true
           });
         }
         this.router.transitionTo(
