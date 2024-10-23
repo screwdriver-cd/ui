@@ -117,7 +117,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.event-card-footer .counts').exists({ count: 1 });
     assert.dom('.event-card-footer .event-buttons').exists({ count: 1 });
     assert
-      .dom('.event-card-footer .event-buttons .show-parameters')
+      .dom('.event-card-footer .event-buttons .parameters-button')
       .doesNotExist();
   });
 
