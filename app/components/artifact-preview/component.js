@@ -3,8 +3,8 @@ import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
   iframeUrl: '',
-
   iframeId: '',
+  allowDownloadDir: ENV.APP.DOWNLOAD_ARTIFACT_DIR,
 
   init() {
     this._super(...arguments);
