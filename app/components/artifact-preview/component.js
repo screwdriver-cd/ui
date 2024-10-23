@@ -6,6 +6,7 @@ export default Component.extend({
   router: service(),
   iframeUrl: '',
   iframeId: '',
+  allowDownloadDir: ENV.APP.DOWNLOAD_ARTIFACT_DIR,
 
   init() {
     this._super(...arguments);
