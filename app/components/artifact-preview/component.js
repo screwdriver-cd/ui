@@ -1,9 +1,10 @@
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  router: service(),
   iframeUrl: '',
-
   iframeId: '',
 
   init() {
@@ -41,10 +42,18 @@ export default Component.extend({
 
   actions: {
     download() {
-      const downloadLink = this.iframeUrl.replace(
+      let downloadLink = this.iframeUrl.replace(
         'type=preview',
         'type=download'
       );
+
+      const filePath = this.router.currentRoute.params.file_path;
+
+      if (filePath.endsWith('/')) {
+        const curPath = filePath.replace(/\/$/, '');
+
+        downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${this.buildId}/artifacts/${curPath}?type=download&dir=true`;
+      }
 
       window.open(downloadLink, '_blank');
     },
