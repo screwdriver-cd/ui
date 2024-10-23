@@ -1,6 +1,8 @@
 <div
   class="event-card{{if this.isHighlighted " highlighted"}}"
   title={{this.title}}
+  {{did-insert this.initialize}}
+  {{did-update this.update @event}}
 >
   <div class="event-card-title">
     <div class="event-status {{this.status}}">
@@ -20,7 +22,7 @@
         {{this.truncatedSha}}
       </a>
     </div>
-    {{#if this.isRunning}}
+    {{#if (eq this.status "RUNNING")}}
       <BsButton
         class="abort-event-button"
         @type="danger"
