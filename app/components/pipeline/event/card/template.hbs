@@ -171,6 +171,31 @@
           </BsButton>
         {{/if}}
       {{/if}}
+
+      {{#if @showEventGroup}}
+        <BsButton
+          class="event-group-button"
+          @type="primary"
+          @outline={{true}}
+          @onClick={{fn this.openEventHistoryModal}}
+          title={{this.groupHistoryButtonTitle}}
+        >
+          <FaIcon
+            @icon="history"
+            @fixedWidth="true"
+            @prefix="fa"
+          />
+          {{#if this.showEventHistoryModal}}
+            <Pipeline::Modal::EventGroupHistory
+              @pipeline={{@pipeline}}
+              @event={{@event}}
+              @jobs={{@jobs}}
+              @userSettings={{@userSettings}}
+              @closeModal={{this.closeEventHistoryModal}}
+            />
+          {{/if}}
+        </BsButton>
+      {{/if}}
     </div>
   </div>
 </div>

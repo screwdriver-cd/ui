@@ -47,6 +47,8 @@ export default class PipelineEventCardComponent extends Component {
 
   @tracked showAbortBuildModal;
 
+  @tracked showEventHistoryModal;
+
   queueName;
 
   userSettings;
@@ -196,6 +198,14 @@ export default class PipelineEventCardComponent extends Component {
     return getExternalPipelineId(this.event);
   }
 
+  get groupHistoryButtonTitle() {
+    const groupId = this.event.parentEventId
+      ? this.event.parentEventId
+      : this.event.groupEventId;
+
+    return `View event history for ${groupId}`;
+  }
+
   @action
   openParametersModal() {
     this.showParametersModal = true;
@@ -214,5 +224,15 @@ export default class PipelineEventCardComponent extends Component {
   @action
   closeAbortBuildModal() {
     this.showAbortBuildModal = false;
+  }
+
+  @action
+  openEventHistoryModal() {
+    this.showEventHistoryModal = true;
+  }
+
+  @action
+  closeEventHistoryModal() {
+    this.showEventHistoryModal = false;
   }
 }
