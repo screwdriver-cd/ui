@@ -44,6 +44,56 @@ export default Controller.extend({
     }
   ),
 
+  statusMessageAlertType: computed('model.build.statusMessageType', {
+    get() {
+      const statusMessageType = this.get('model.build.statusMessageType');
+
+      switch (statusMessageType) {
+        case 'ERROR':
+          return 'danger';
+        case 'INFO':
+          return 'info';
+        case 'WARN':
+        default:
+          return 'warning';
+      }
+    }
+  }),
+
+  statusMessageAlertIcon: computed('model.build.statusMessageType', {
+    get() {
+      const statusMessageType = this.get('model.build.statusMessageType');
+
+      switch (statusMessageType) {
+        case 'INFO':
+          return 'info-circle';
+        case 'ERROR':
+        case 'WARN':
+        default:
+          return 'exclamation-triangle';
+      }
+    }
+  }),
+
+  isVirtualBuild: computed(
+    'model.build.jobId',
+    'model.event.workflowGraph.nodes',
+    {
+      get() {
+        const jobId = parseInt(this.get('model.build.jobId'), 10);
+        const nodes = this.get('model.event.workflowGraph.nodes');
+
+        return nodes.find(node => node.id === jobId).virtual;
+      }
+    }
+  ),
+
+  showStepCollection: computed('isVirtualBuild', 'stepList', {
+    get() {
+      return !this.get('isVirtualBuild') && this.get('stepList');
+    }
+  }),
+
   prEvents: computed(
     'job.id',
     'model.event.pr.url',
