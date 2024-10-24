@@ -3,12 +3,18 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { statusIcon } from 'screwdriver-ui/utils/build';
-import { getStatus } from 'screwdriver-ui/utils/pipeline/event';
+import {
+  getStatus,
+  isComplete,
+  isSkipped
+} from 'screwdriver-ui/utils/pipeline/event';
 import {
   getDurationText,
   getFailureCount,
+  getFirstCreateTime,
   getExternalPipelineId,
   getStartDate,
+  getRunningDurationText,
   getTruncatedMessage,
   getTruncatedSha,
   getWarningCount,
@@ -19,13 +25,15 @@ import {
 export default class PipelineEventCardComponent extends Component {
   @service router;
 
-  @service shuttle;
-
-  @tracked status;
+  @service workflowDataReload;
 
   @tracked event;
 
-  @tracked isRunning;
+  @tracked builds;
+
+  @tracked latestCommitEvent;
+
+  @tracked status;
 
   @tracked failureCount;
 
@@ -33,28 +41,113 @@ export default class PipelineEventCardComponent extends Component {
 
   @tracked successCount;
 
+  @tracked durationText;
+
   @tracked showParametersModal;
 
   @tracked showAbortBuildModal;
 
+  queueName;
+
+  userSettings;
+
+  durationIntervalId;
+
+  firstCreateTime;
+
   constructor() {
     super(...arguments);
 
-    const { builds } = this.args;
+    this.queueName = this.args.queueName;
+    this.userSettings = this.args.userSettings;
 
     this.event = this.args.event;
 
     this.showParametersModal = false;
     this.showAbortBuildModal = false;
-    this.status = getStatus(this.args.event, builds);
-    this.isRunning = this.status === 'RUNNING';
-    this.failureCount = getFailureCount(builds);
-    this.warningCount = getWarningCount(builds);
-    this.successCount = builds.length - this.failureCount - this.warningCount;
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    this.workflowDataReload.removeCallback(this.queueName, this.event.id);
+
+    if (this.durationIntervalId) {
+      clearInterval(this.durationIntervalId);
+    }
+    this.durationIntervalId = null;
+  }
+
+  @action
+  initialize() {
+    this.workflowDataReload.registerCallback(
+      this.queueName,
+      this.event.id,
+      this.buildsCallback
+    );
+  }
+
+  @action
+  update(element, [event]) {
+    this.workflowDataReload.removeCallback(this.queueName, this.event.id);
+
+    this.event = event;
+
+    if (this.durationIntervalId) {
+      clearInterval(this.durationIntervalId);
+    }
+    this.durationIntervalId = null;
+    this.durationText = null;
+    this.firstCreateTime = null;
+
+    this.workflowDataReload.registerCallback(
+      this.queueName,
+      this.event.id,
+      this.buildsCallback
+    );
+  }
+
+  @action
+  buildsCallback(builds, latestCommitEvent) {
+    const isEventComplete = isComplete(builds);
+
+    if (isSkipped(this.event, builds) || isEventComplete) {
+      this.workflowDataReload.removeCallback(this.queueName, this.event.id);
+
+      if (this.durationIntervalId) {
+        clearInterval(this.durationIntervalId);
+      }
+      this.durationIntervalId = null;
+
+      this.durationText = getDurationText(builds);
+    }
+
+    this.builds = builds;
+    this.latestCommitEvent = latestCommitEvent;
+    this.status = getStatus(this.event, builds);
+
+    if (this.status !== 'COLLAPSED') {
+      this.failureCount = getFailureCount(builds);
+      this.warningCount = getWarningCount(builds);
+      this.successCount = builds.length - this.failureCount - this.warningCount;
+    }
+
+    if (!this.durationIntervalId && !isEventComplete) {
+      if (!this.firstCreateTime) {
+        this.firstCreateTime = getFirstCreateTime(builds);
+      }
+
+      this.durationIntervalId = setInterval(() => {
+        this.durationText = getRunningDurationText(
+          this.firstCreateTime,
+          Date.now()
+        );
+      }, 1000);
+    }
   }
 
   get isHighlighted() {
-    return this.router.currentURL.endsWith(this.args.event.id);
+    return this.router.currentURL.endsWith(this.event.id);
   }
 
   get title() {
@@ -72,39 +165,35 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   get truncatedSha() {
-    return `#${getTruncatedSha(this.args.event)}`;
+    return `#${getTruncatedSha(this.event)}`;
   }
 
   get isLatestCommit() {
-    return this.args.latestCommitEvent.sha === this.args.event.sha;
+    return this.latestCommitEvent?.sha === this.event.sha;
   }
 
   get truncatedMessage() {
-    return getTruncatedMessage(this.args.event, 150);
+    return getTruncatedMessage(this.event, 150);
   }
 
   get eventLabel() {
-    return this.args.event.meta.label;
+    return this.event.meta.label;
   }
 
   get startDate() {
-    return getStartDate(this.args.event, this.args.userSettings);
-  }
-
-  get durationText() {
-    return getDurationText(this.args.builds);
+    return getStartDate(this.event, this.userSettings);
   }
 
   get isCommitterDifferent() {
-    return isCommitterDifferent(this.args.event);
+    return isCommitterDifferent(this.event);
   }
 
   get isExternalTrigger() {
-    return isExternalTrigger(this.args.event);
+    return isExternalTrigger(this.event);
   }
 
   get externalPipelineId() {
-    return getExternalPipelineId(this.args.event);
+    return getExternalPipelineId(this.event);
   }
 
   @action
