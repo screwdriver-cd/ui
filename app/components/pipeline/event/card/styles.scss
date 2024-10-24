@@ -85,8 +85,6 @@
 
       .abort-event-button {
         margin-left: auto;
-        margin-top: auto;
-        margin-bottom: auto;
         background-color: colors.$sd-white;
       }
     }
@@ -153,12 +151,22 @@
       }
 
       .event-buttons {
-        margin-top: auto;
-        margin-bottom: auto;
+        display: flex;
 
         .parameters-button {
           background: colors.$sd-white;
+          margin: 0 0.25rem;
         }
+      }
+    }
+
+    button {
+      &.btn {
+        display: flex;
+
+         svg {
+           margin: auto;
+         }
       }
     }
   }
