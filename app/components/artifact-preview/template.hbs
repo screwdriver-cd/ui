@@ -1,13 +1,15 @@
 <div>
-  {{#if (eq this.selectedArtifact "/")}}
-    <BsButton
-      @type="primary"
-      @icon="glyphicon glyphicon-download"
-      @onClick={{action "downloadAll"}}
-      title="Download all artifacts as ZIP file"
-    >
-      Download All
-    </BsButton>
+  {{#if this.allowDownloadDir}}
+    {{#if (eq this.selectedArtifact "/")}}
+      <BsButton
+        @type="primary"
+        @icon="glyphicon glyphicon-download"
+        @onClick={{action "downloadAll"}}
+        title="Download all artifacts as ZIP file"
+      >
+        Download All
+      </BsButton>
+    {{/if}}
   {{else}}
     <BsButton
       @type="primary"

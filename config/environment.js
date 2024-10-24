@@ -70,6 +70,7 @@ module.exports = environment => {
       RELEASE_VERSION: 'stable',
       DOWNTIME_JOBS: true,
       SHOW_AVATAR: true,
+      DOWNLOAD_ARTIFACT_DIR: true,
       FEEDBACK_HOSTNAME: '',
       FEEDBACK_SCRIPT: '',
       FEEDBACK_CONFIG: ''

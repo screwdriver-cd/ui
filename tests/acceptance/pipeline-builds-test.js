@@ -106,6 +106,7 @@ module('Acceptance | pipeline build', function (hooks) {
       const build = makeBuilds(1000000)[0];
 
       build.id = 1000000;
+      build.jobId = 12345;
       build.status = 'FAILURE';
 
       return [

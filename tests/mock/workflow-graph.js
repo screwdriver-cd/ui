@@ -7,7 +7,7 @@ export default () =>
         { name: '~pr' },
         { name: '~commit' },
         { id: 12345, name: 'main' },
-        { is: 123456, name: 'publish' }
+        { id: 123456, name: 'publish' }
       ],
       edges: [
         { src: '~pr', dest: 'main' },
