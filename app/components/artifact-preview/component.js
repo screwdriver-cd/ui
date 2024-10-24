@@ -50,7 +50,7 @@ export default Component.extend({
 
       const filePath = this.router.currentRoute.params.file_path;
 
-      if (filePath.endsWith('/')) {
+      if (filePath.endsWith('/') && ENV.APP.DOWNLOAD_ARTIFACT_DIR) {
         const curPath = filePath.replace(/\/$/, '');
 
         downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${this.buildId}/artifacts/${curPath}?type=download&dir=true`;
