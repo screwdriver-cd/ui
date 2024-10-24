@@ -4,6 +4,8 @@
 
 @mixin styles {
   .event-card {
+    display: flex;
+    flex-direction: column;
     padding: 1rem;
     cursor: pointer;
 
@@ -81,17 +83,18 @@
         }
       }
 
-      #abort-event-button {
+      .abort-event-button {
         margin-left: auto;
-        margin-top: auto;
-        margin-bottom: auto;
         background-color: colors.$sd-white;
-        border-radius: 5px;
       }
     }
 
     .event-card-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       font-size: 0.85rem;
+      flex: 1;
 
       .message {
         font-weight: variables.$weight-bold;
@@ -118,6 +121,7 @@
     .event-card-footer {
       display: flex;
       justify-content: space-between;
+      height: 2.5rem;
 
       .counts {
         display: flex;
@@ -146,11 +150,23 @@
         }
       }
 
-      #show-parameters {
-        @include button.styles;
+      .event-buttons {
+        display: flex;
 
-        background: colors.$sd-white;
-        border-radius: 5px;
+        .parameters-button {
+          background: colors.$sd-white;
+          margin: 0 0.25rem;
+        }
+      }
+    }
+
+    button {
+      &.btn {
+        display: flex;
+
+         svg {
+           margin: auto;
+         }
       }
     }
   }
