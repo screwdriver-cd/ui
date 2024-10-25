@@ -1,0 +1,25 @@
+<BsModal
+  id="show-event-group-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">Events in group: {{@event.groupEventId}}</div>
+  </modal.header>
+  <modal.body>
+    <VerticalCollection
+      @items={{this.events}}
+      @estimateHeight={{150}}
+      @idForFirstItem={{@event.id}}
+      as |event|
+    >
+      <Pipeline::Event::Card
+        @pipeline={{@pipeline}}
+        @event={{event}}
+        @jobs={{@jobs}}
+        @userSettings={{@userSettings}}
+        @queueName="eventGroupModal"
+      />
+    </VerticalCollection>
+  </modal.body>
+</BsModal>
