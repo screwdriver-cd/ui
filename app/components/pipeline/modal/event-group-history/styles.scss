@@ -1,0 +1,16 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  #show-event-group-modal {
+    &.modal {
+      .modal-dialog {
+        max-width: 30rem;
+
+        .modal-body {
+          max-height: 35rem;
+          overflow: scroll;
+        }
+      }
+    }
+  }
+}

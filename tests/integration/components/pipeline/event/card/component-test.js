@@ -113,6 +113,9 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert
       .dom('.event-card-footer .event-buttons .parameters-button')
       .doesNotExist();
+    assert
+      .dom('.event-card-footer .event-buttons .event-group-button')
+      .doesNotExist();
   });
 
   test('it does not render highlight', async function (assert) {
@@ -211,6 +214,43 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
     assert
       .dom('.event-card-footer .event-buttons .parameters-button')
+      .exists({ count: 1 });
+  });
+
+  test('it renders button for event group', async function (assert) {
+    const router = this.owner.lookup('service:router');
+    const shuttle = this.owner.lookup('service:shuttle');
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
+    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+
+    this.setProperties({
+      event: {
+        id: 11,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {
+          parameters: {
+            foo: { value: 'bar' }
+          }
+        }
+      },
+      pipeline: {},
+      userSettings: {}
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @pipeline={{this.pipeline}}
+        @userSettings={{this.userSettings}}
+        @showEventGroup={{true}}
+      />`
+    );
+
+    assert
+      .dom('.event-card-footer .event-buttons .event-group-button')
       .exists({ count: 1 });
   });
 

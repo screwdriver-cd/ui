@@ -1,9 +1,11 @@
 @use 'confirm-action/styles' as confirmAction;
+@use 'event-group-history/styles' as eventGroup;
 @use 'start-event/styles' as startEvent;
 @use 'toggle-job/styles' as toggleJob;
 
 @mixin styles {
   @include confirmAction.styles;
+  @include eventGroup.styles;
   @include startEvent.styles;
   @include toggleJob.styles;
 }
