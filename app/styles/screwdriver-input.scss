@@ -1,0 +1,15 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  input[type='search'] {
+    color: colors.$sd-text;
+    border-radius: 5px;
+    border: 2px solid colors.$sd-separator;
+    padding: 0 0.25rem;
+
+    &:invalid {
+      color: colors.$sd-warn-bg;
+      border-color: colors.$sd-warn-bg;
+    }
+  }
+}
