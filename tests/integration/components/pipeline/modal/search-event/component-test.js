@@ -29,6 +29,7 @@ module(
       assert.dom('.modal-title').exists({ count: 1 });
       assert.dom('#search-input').exists({ count: 1 });
       assert.dom('#search-input input').exists({ count: 1 });
+      assert.dom('#search-input .invalid-sha').doesNotExist();
       assert.dom('#search-results').exists({ count: 1 });
     });
 
@@ -82,55 +83,8 @@ module(
       await fillIn('input', 'xyz');
 
       assert.equal(shuttle.fetchFromApi.callCount, 0);
-      assert.dom('#search-input input').hasClass('invalid');
-    });
-
-    test('it does not change input class when input is continuously invalid', async function (assert) {
-      this.setProperties({
-        pipeline: {},
-        jobs: [],
-        userSettings: {},
-        closeModal: () => {}
-      });
-
-      await render(
-        hbs`<Pipeline::Modal::SearchEvent
-            @pipeline={{this.pipeline}}
-            @jobs={{this.jobs}}
-            @userSettings={{this.userSettings}}
-            @closeModal={{this.closeModal}}
-        />`
-      );
-
-      await fillIn('input', 'xyz');
-      assert.dom('#search-input input').hasClass('invalid');
-
-      await fillIn('input', 'xyzK');
-      assert.dom('#search-input input').hasClass('invalid');
-    });
-
-    test('it resets input class when input is empty', async function (assert) {
-      this.setProperties({
-        pipeline: {},
-        jobs: [],
-        userSettings: {},
-        closeModal: () => {}
-      });
-
-      await render(
-        hbs`<Pipeline::Modal::SearchEvent
-            @pipeline={{this.pipeline}}
-            @jobs={{this.jobs}}
-            @userSettings={{this.userSettings}}
-            @closeModal={{this.closeModal}}
-        />`
-      );
-
-      await fillIn('input', 'xyz');
-      assert.dom('#search-input input').hasClass('invalid');
-
-      await fillIn('input', '');
-      assert.dom('#search-input input').doesNotHaveClass('invalid');
+      assert.dom('#search-input input').isNotValid();
+      assert.dom('#search-input .invalid-sha').exists({ count: 1 });
     });
 
     test('it clears input and search results when escape key is pressed', async function (assert) {

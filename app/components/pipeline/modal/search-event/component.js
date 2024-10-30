@@ -10,13 +10,13 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   @tracked searchResults;
 
-  @tracked inputClass;
+  @tracked invalidSha;
 
   constructor() {
     super(...arguments);
 
     this.searchResults = [];
-    this.inputClass = null;
+    this.invalidSha = false;
   }
 
   @action
@@ -24,12 +24,13 @@ export default class PipelineModalSearchEventComponent extends Component {
     const inputValue = inputEvent.target.value;
 
     if (inputValue && inputValue.length > 0) {
-      if (!/^[0-9a-f]{1,40}$/.test(inputValue)) {
-        if (!this.inputClass) {
-          this.inputClass = 'invalid';
-        }
+      const validHex = /^[0-9a-f]{1,40}$/;
+
+      if (!validHex.test(inputValue)) {
+        this.invalidSha = true;
       } else {
-        this.inputClass = null;
+        this.invalidSha = false;
+
         this.shuttle
           .fetchFromApi(
             'get',
@@ -39,8 +40,6 @@ export default class PipelineModalSearchEventComponent extends Component {
             this.searchResults = events;
           });
       }
-    } else {
-      this.inputClass = null;
     }
   }
 
@@ -51,6 +50,7 @@ export default class PipelineModalSearchEventComponent extends Component {
         event.stopImmediatePropagation();
         this.sha = null;
         this.searchResults = [];
+        this.invalidSha = false;
       }
     }
   }

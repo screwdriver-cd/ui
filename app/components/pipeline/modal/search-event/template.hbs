@@ -9,14 +9,18 @@
   <modal.body>
     <div id="search-input">
       <Input
-        @type="text"
+        @type="search"
         @value={{this.sha}}
         autofocus={{true}}
-        class={{this.inputClass}}
+        maxlength="40"
+        pattern="^[0-9a-fA-F]{1,40}$"
         placeholder="Search for an event by SHA"
         {{on "input" this.handleInput}}
         {{on "keydown" this.handleKeyPress}}
       />
+      {{#if this.invalidSha}}
+        <div class="invalid-sha">Invalid SHA.  SHA can only contain hex values.</div>
+      {{/if}}
     </div>
 
     <div id="search-results">
