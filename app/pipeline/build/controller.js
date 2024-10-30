@@ -78,7 +78,7 @@ export default Controller.extend({
   isVirtualBuild: computed('model.job', 'model.event.workflowGraph.nodes', {
     get() {
       const job = this.get('model.job');
-      const jobName = job.isPR ? job.prParentJobName : job.name;
+      const jobName = job.prParentJobName || job.name;
       const nodes = this.get('model.event.workflowGraph.nodes');
 
       return nodes.find(node => node.name === jobName).virtual;
