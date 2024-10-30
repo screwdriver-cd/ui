@@ -1,0 +1,38 @@
+<BsModal
+  id="search-event-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">Search for an event</div>
+  </modal.header>
+  <modal.body>
+    <div id="search-input">
+      <Input
+        @type="text"
+        @value={{this.sha}}
+        autofocus={{true}}
+        class={{this.inputClass}}
+        placeholder="Search for an event by SHA"
+        {{on "input" this.handleInput}}
+        {{on "keydown" this.handleKeyPress}}
+      />
+    </div>
+
+    <div id="search-results">
+      <VerticalCollection
+        @items={{this.searchResults}}
+        @estimateHeight={{150}}
+        as |event|
+      >
+        <Pipeline::Event::Card
+          @pipeline={{@pipeline}}
+          @event={{event}}
+          @jobs={{@jobs}}
+          @userSettings={{@userSettings}}
+          @queueName="searchResults"
+        />
+      </VerticalCollection>
+    </div>
+  </modal.body>
+</BsModal>
