@@ -278,6 +278,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         @event={{this.event}}
         @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
+        @showAbort={{true}}
       />`
     );
 
