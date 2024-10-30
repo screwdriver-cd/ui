@@ -23,25 +23,27 @@
       </a>
     </div>
     {{#if (eq this.status "RUNNING")}}
-      <BsButton
-        class="abort-event-button"
-        @type="danger"
-        @outline={{true}}
-        @onClick={{fn this.openAbortBuildModal}}
-        title="Abort event"
-      >
-        <FaIcon
-          @icon="stop-circle"
-          @fixedWidth="true"
-          @prefix="far"
-        />
-        {{#if this.showAbortBuildModal}}
-          <Pipeline::Modal::StopBuild
-            @eventId={{@event.id}}
-            @closeModal={{this.closeAbortBuildModal}}
+      {{#if @showAbort}}
+        <BsButton
+          class="abort-event-button"
+          @type="danger"
+          @outline={{true}}
+          @onClick={{fn this.openAbortBuildModal}}
+          title="Abort event"
+        >
+          <FaIcon
+            @icon="stop-circle"
+            @fixedWidth="true"
+            @prefix="far"
           />
-        {{/if}}
-      </BsButton>
+          {{#if this.showAbortBuildModal}}
+            <Pipeline::Modal::StopBuild
+              @eventId={{@event.id}}
+              @closeModal={{this.closeAbortBuildModal}}
+            />
+          {{/if}}
+        </BsButton>
+      {{/if}}
     {{/if}}
   </div>
 
