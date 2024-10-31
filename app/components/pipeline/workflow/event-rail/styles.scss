@@ -1,0 +1,38 @@
+@use 'screwdriver-colors' as colors;
+@use 'screwdriver-button' as button;
+
+@mixin styles {
+  #event-rail {
+    @include button.styles;
+
+    height: 100%;
+    border-top: 1px solid rgba(colors.$sd-text-med, 0.5);
+    border-right: 1px solid rgba(colors.$sd-text-med, 0.5);
+
+    $rail-actions-height: 4rem;
+
+    #event-rail-actions {
+      height: $rail-actions-height;
+      display: flex;
+      padding: 0.5rem 1rem 1rem;
+      gap: 1rem;
+
+      #search-for-event-button {
+        display: flex;
+
+        svg {
+          margin: auto;
+        }
+      }
+
+      #start-event-button {
+        margin-left: auto;
+      }
+    }
+
+    #event-cards-container {
+      height: calc(100% - $rail-actions-height);
+      overflow: scroll;
+    }
+  }
+}
