@@ -109,6 +109,10 @@ export default class WorkflowDataReloadService extends Service {
     return this.latestCommitResponse?.id;
   }
 
+  getBuildsForEvent(eventId) {
+    return this.buildsCache.get(eventId);
+  }
+
   registerCallback(queueName, eventId, callback) {
     if (!this.callbacks.has(queueName)) {
       this.callbacks.set(queueName, new Map());
