@@ -151,12 +151,14 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     const callback = sinon.spy();
     const eventId = 123;
     const fakeBuilds = [{ id: 999 }];
+    const fakeLatestCommit = { id: 987, sha: 'abc123' };
 
     service.buildsCache.set(eventId, fakeBuilds);
+    service.latestCommitResponse = fakeLatestCommit;
 
     service.registerCallback('test', eventId, callback);
     assert.equal(callback.calledOnce, true);
-    assert.equal(callback.calledWith(fakeBuilds), true);
+    assert.equal(callback.calledWith(fakeBuilds, fakeLatestCommit), true);
   });
 
   test('registerCallback fetches data if cached response does not exist', async function (assert) {
@@ -165,15 +167,18 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     const callback = sinon.spy();
     const eventId = 123;
     const fakeBuilds = [{ id: 999 }];
+    const fakeLatestCommit = { id: 987, sha: 'abc123' };
 
     const stubShuttle = sinon
       .stub(shuttle, 'fetchFromApi')
       .resolves(fakeBuilds);
 
+    service.latestCommitResponse = fakeLatestCommit;
+
     await service.registerCallback('test', eventId, callback);
     assert.equal(stubShuttle.calledOnce, true);
     assert.equal(callback.calledOnce, true);
-    assert.equal(callback.calledWith(fakeBuilds), true);
+    assert.equal(callback.calledWith(fakeBuilds, fakeLatestCommit), true);
   });
 
   test('removeCallback removes event from queue', function (assert) {

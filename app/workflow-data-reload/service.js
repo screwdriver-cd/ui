@@ -113,7 +113,7 @@ export default class WorkflowDataReloadService extends Service {
     }
 
     if (this.buildsCache.has(eventId)) {
-      callback(this.buildsCache.get(eventId));
+      callback(this.buildsCache.get(eventId), this.latestCommitResponse);
     } else {
       this.fetchBuildDataForEvent(eventId).then(() => {});
     }
