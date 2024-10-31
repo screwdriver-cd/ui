@@ -132,7 +132,6 @@ export default class WorkflowDataReloadService extends Service {
         if (this.eventIdCounts.get(eventId) === 1) {
           this.eventIdCounts.delete(eventId);
           this.eventIdSet.delete(eventId);
-          this.buildsCache.delete(eventId);
         } else {
           this.eventIdCounts.set(eventId, this.eventIdCounts.get(eventId) - 1);
         }

@@ -282,7 +282,7 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     assert.equal(service.eventIdCounts.get(987), 2);
   });
 
-  test('removeCallback removes builds cache value correctly', function (assert) {
+  test('removeCallback does not remove builds cache value', function (assert) {
     const service = this.owner.lookup('service:workflow-data-reload');
     const shuttle = this.owner.lookup('service:shuttle');
     const queueName = 'test';
@@ -298,6 +298,6 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     assert.equal(service.queueNames.size, 0);
     assert.equal(service.eventIdSet.size, 0);
     assert.equal(service.eventIdCounts.size, 0);
-    assert.equal(service.buildsCache.size, 0);
+    assert.equal(service.buildsCache.size, 1);
   });
 });
