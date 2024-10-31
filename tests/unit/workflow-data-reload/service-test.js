@@ -96,6 +96,41 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     assert.equal(fakeCallback.calledWith(fakeBuilds, fakeLatestCommit), true);
   });
 
+  test('fetchData calls callback for latest commit event', async function (assert) {
+    const service = this.owner.lookup('service:workflow-data-reload');
+    const shuttle = this.owner.lookup('service:shuttle');
+    const fakeBuilds = [{ id: 999 }];
+    const fakeLatestCommit = { id: 987 };
+    const fakeCallback = sinon.spy();
+
+    service.registerLatestCommitCallback(fakeCallback);
+    sinon
+      .stub(shuttle, 'fetchFromApi')
+      .onFirstCall()
+      .resolves(fakeLatestCommit)
+      .onSecondCall()
+      .resolves(fakeBuilds);
+
+    await service.fetchData();
+
+    assert.equal(fakeCallback.calledOnce, true);
+    assert.equal(fakeCallback.calledWith(fakeLatestCommit), true);
+  });
+
+  test('fetchData calls callback when there is no latest commit event', async function (assert) {
+    const service = this.owner.lookup('service:workflow-data-reload');
+    const shuttle = this.owner.lookup('service:shuttle');
+    const fakeCallback = sinon.spy();
+
+    service.registerLatestCommitCallback(fakeCallback);
+    sinon.stub(shuttle, 'fetchFromApi').rejects();
+
+    await service.fetchData();
+
+    assert.equal(fakeCallback.calledOnce, true);
+    assert.equal(fakeCallback.calledWith(null), true);
+  });
+
   test('registerCallback creates a new queue and adds event', function (assert) {
     const service = this.owner.lookup('service:workflow-data-reload');
     const shuttle = this.owner.lookup('service:shuttle');

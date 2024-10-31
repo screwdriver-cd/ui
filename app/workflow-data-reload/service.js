@@ -11,6 +11,8 @@ export default class WorkflowDataReloadService extends Service {
 
   latestCommitResponse;
 
+  latestCommitCallback;
+
   buildsCache;
 
   callbacks;
@@ -56,6 +58,7 @@ export default class WorkflowDataReloadService extends Service {
       this.queueNames.clear();
       this.eventIdSet.clear();
       this.eventIdCounts.clear();
+      this.removeLatestCommitCallback();
     }
   }
 
@@ -64,7 +67,17 @@ export default class WorkflowDataReloadService extends Service {
       .fetchFromApi('get', `/pipelines/${this.pipelineId}/latestCommitEvent`)
       .then(latestCommitEvent => {
         this.latestCommitResponse = latestCommitEvent;
+
+        if (this.latestCommitCallback) {
+          this.latestCommitCallback(latestCommitEvent);
+        }
+
         this.fetchBuilds();
+      })
+      .catch(() => {
+        if (this.latestCommitCallback) {
+          this.latestCommitCallback(null);
+        }
       });
   }
 
@@ -137,5 +150,13 @@ export default class WorkflowDataReloadService extends Service {
         }
       }
     }
+  }
+
+  registerLatestCommitCallback(callback) {
+    this.latestCommitCallback = callback;
+  }
+
+  removeLatestCommitCallback() {
+    this.latestCommitCallback = null;
   }
 }
