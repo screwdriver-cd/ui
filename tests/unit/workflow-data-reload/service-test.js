@@ -96,6 +96,41 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     assert.equal(fakeCallback.calledWith(fakeBuilds, fakeLatestCommit), true);
   });
 
+  test('fetchData calls callback for latest commit event', async function (assert) {
+    const service = this.owner.lookup('service:workflow-data-reload');
+    const shuttle = this.owner.lookup('service:shuttle');
+    const fakeBuilds = [{ id: 999 }];
+    const fakeLatestCommit = { id: 987 };
+    const fakeCallback = sinon.spy();
+
+    service.registerLatestCommitCallback(fakeCallback);
+    sinon
+      .stub(shuttle, 'fetchFromApi')
+      .onFirstCall()
+      .resolves(fakeLatestCommit)
+      .onSecondCall()
+      .resolves(fakeBuilds);
+
+    await service.fetchData();
+
+    assert.equal(fakeCallback.calledOnce, true);
+    assert.equal(fakeCallback.calledWith(fakeLatestCommit), true);
+  });
+
+  test('fetchData calls callback when there is no latest commit event', async function (assert) {
+    const service = this.owner.lookup('service:workflow-data-reload');
+    const shuttle = this.owner.lookup('service:shuttle');
+    const fakeCallback = sinon.spy();
+
+    service.registerLatestCommitCallback(fakeCallback);
+    sinon.stub(shuttle, 'fetchFromApi').rejects();
+
+    await service.fetchData();
+
+    assert.equal(fakeCallback.calledOnce, true);
+    assert.equal(fakeCallback.calledWith(null), true);
+  });
+
   test('registerCallback creates a new queue and adds event', function (assert) {
     const service = this.owner.lookup('service:workflow-data-reload');
     const shuttle = this.owner.lookup('service:shuttle');
@@ -151,12 +186,14 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     const callback = sinon.spy();
     const eventId = 123;
     const fakeBuilds = [{ id: 999 }];
+    const fakeLatestCommit = { id: 987, sha: 'abc123' };
 
     service.buildsCache.set(eventId, fakeBuilds);
+    service.latestCommitResponse = fakeLatestCommit;
 
     service.registerCallback('test', eventId, callback);
     assert.equal(callback.calledOnce, true);
-    assert.equal(callback.calledWith(fakeBuilds), true);
+    assert.equal(callback.calledWith(fakeBuilds, fakeLatestCommit), true);
   });
 
   test('registerCallback fetches data if cached response does not exist', async function (assert) {
@@ -165,15 +202,18 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     const callback = sinon.spy();
     const eventId = 123;
     const fakeBuilds = [{ id: 999 }];
+    const fakeLatestCommit = { id: 987, sha: 'abc123' };
 
     const stubShuttle = sinon
       .stub(shuttle, 'fetchFromApi')
       .resolves(fakeBuilds);
 
+    service.latestCommitResponse = fakeLatestCommit;
+
     await service.registerCallback('test', eventId, callback);
     assert.equal(stubShuttle.calledOnce, true);
     assert.equal(callback.calledOnce, true);
-    assert.equal(callback.calledWith(fakeBuilds), true);
+    assert.equal(callback.calledWith(fakeBuilds, fakeLatestCommit), true);
   });
 
   test('removeCallback removes event from queue', function (assert) {
@@ -277,7 +317,7 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     assert.equal(service.eventIdCounts.get(987), 2);
   });
 
-  test('removeCallback removes builds cache value correctly', function (assert) {
+  test('removeCallback does not remove builds cache value', function (assert) {
     const service = this.owner.lookup('service:workflow-data-reload');
     const shuttle = this.owner.lookup('service:shuttle');
     const queueName = 'test';
@@ -293,6 +333,6 @@ module('Unit | Service | workflowDataReload', function (hooks) {
     assert.equal(service.queueNames.size, 0);
     assert.equal(service.eventIdSet.size, 0);
     assert.equal(service.eventIdCounts.size, 0);
-    assert.equal(service.buildsCache.size, 0);
+    assert.equal(service.buildsCache.size, 1);
   });
 });
