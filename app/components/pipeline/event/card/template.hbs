@@ -3,6 +3,7 @@
   title={{this.title}}
   {{did-insert this.initialize}}
   {{did-update this.update @event}}
+  {{on "click" this.goToEvent}}
 >
   <div class="event-card-title">
     <div class="event-status {{this.status}}">
