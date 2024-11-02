@@ -102,6 +102,10 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     });
   }
 
+  get isSearchDisabled() {
+    return !this.events;
+  }
+
   @action
   openSearchEventModal() {
     this.showSearchEventModal = true;
