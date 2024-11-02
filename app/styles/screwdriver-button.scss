@@ -6,7 +6,7 @@
     background-color: colors.$sd-running;
     border-color: colors.$sd-running;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: rgba(colors.$sd-running, 0.75);
       border-color: transparent;
     }
@@ -16,7 +16,7 @@
     color: colors.$sd-running;
     border-color: colors.$sd-running;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: rgba(colors.$sd-running, 0.1);
     }
   }
@@ -26,7 +26,7 @@
     background-color: colors.$sd-warn-bg;
     border-color: colors.$sd-warn-bg;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: rgba(colors.$sd-warn-bg, 0.75);
       border-color: transparent;
     }
@@ -36,7 +36,7 @@
     color: colors.$sd-warn-bg;
     border-color: colors.$sd-warn-bg;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: rgba(colors.$sd-warn-bg, 0.1);
     }
   }
