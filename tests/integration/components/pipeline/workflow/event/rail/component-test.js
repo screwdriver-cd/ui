@@ -14,13 +14,11 @@ module(
 
       sinon.stub(router, 'currentRouteName').value('events');
 
-      await render(
-        hbs`<Pipeline::Workflow::EventRail
-        />`
-      );
+      await render(hbs`<Pipeline::Workflow::EventRail/>`);
 
       assert.dom('#event-rail-actions').exists({ count: 1 });
       assert.dom('#search-for-event-button').exists({ count: 1 });
+      assert.dom('#search-for-event-button').isDisabled();
       assert.dom('#start-event-button').exists({ count: 1 });
       assert.dom('#event-cards-container').exists({ count: 1 });
     });
