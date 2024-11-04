@@ -1,0 +1,84 @@
+<div
+  id="pipeline-workflow-container"
+  {{did-update this.update @event}}
+>
+  <Pipeline::Workflow::EventRail
+    @pipeline={{this.pipeline}}
+    @userSettings={{this.userSettings}}
+    @event={{this.eventRailAnchor}}
+    @jobs={{this.jobs}}
+    @reloadEvents={{@reloadEventRail}}
+  />
+
+  {{#if this.event}}
+    <div id="workflow-graph-container">
+      <div id="workflow-graph-controls">
+        <div
+          class="button-container"
+          title="Toggle to {{if this.showDownstreamTriggers "hide" "show"}} the downstream trigger nodes."
+        >
+          <XToggle
+            @size="medium"
+            @theme="material"
+            @showLabels={{true}}
+            @value={{this.showDownstreamTriggers}}
+            @offLabel="Hide triggers"
+            @onLabel="Show triggers"
+            @onToggle={{fn this.toggleShowDownstreamTriggers}}
+            @disabled={{this.disableDownstreamTriggers}}
+          />
+        </div>
+      </div>
+
+      <div id="graph-container">
+        <Pipeline::Workflow::Graph
+          @workflowGraph={{this.workflowGraphToDisplay}}
+          @event={{this.event}}
+          @jobs={{this.jobs}}
+          @builds={{this.builds}}
+          @stages={{this.stages}}
+          @chainPr={{this.pipeline.prChain}}
+          @displayJobNameLength={{this.displayJobNameLength}}
+          @setShowTooltip={{this.setShowTooltip}}
+          @displayStageTooltip={{true}}
+          @setShowStageTooltip={{this.setShowStageTooltip}}
+        />
+
+        {{#if this.showTooltip}}
+          <Pipeline::Workflow::Tooltip
+            @d3Data={{this.d3Data}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @builds={{this.builds}}
+            @workflowGraph={{this.workflowGraphToDisplay}}
+            @pipeline={{this.pipeline}}
+            @latestCommitEvent={{this.latestCommitEvent}}
+          />
+        {{/if}}
+        {{#if this.showStageTooltip}}
+          <Pipeline::Workflow::Tooltip::Stage
+            @d3Data={{this.d3Data}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @builds={{this.builds}}
+            @workflowGraph={{this.workflowGraphToDisplay}}
+            @pipeline={{this.pipeline}}
+            @latestCommitEvent={{this.latestCommitEvent}}
+          />
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+
+  {{#if @noEvents}}
+    <div id="no-events">
+      This pipeline has no events yet
+    </div>
+  {{/if}}
+
+  {{#if @invalidEvent}}
+    <div id="invalid-event">
+      Event does not exist for this pipeline
+    </div>
+  {{/if}}
+</div>

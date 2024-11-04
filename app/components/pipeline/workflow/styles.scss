@@ -1,7 +1,77 @@
+@use 'variables';
+
+@use 'event-rail/styles' as event-rail;
 @use 'graph/styles' as graph;
 @use 'tooltip/styles' as tooltip;
 
 @mixin styles {
-  @include graph.styles;
-  @include tooltip.styles;
+  #pipeline-workflow-container {
+    display: grid;
+    $events-rail-width: 26rem;
+
+    grid-template-areas: 'events workflow';
+    grid-template-columns: $events-rail-width calc(100% - $events-rail-width);
+    grid-template-rows: 100%;
+
+    @include event-rail.styles;
+
+    #event-card-rail {
+      grid-area: events;
+    }
+
+    #workflow-graph-container {
+      grid-area: workflow;
+      $graph-controls-height: 2.5rem;
+
+      #workflow-graph-controls {
+        display: flex;
+        align-content: center;
+        padding-left: 1rem;
+        height: $graph-controls-height;
+
+        .button-container {
+          .x-toggle-component {
+            label {
+              margin-bottom: 0;
+
+              &.off-label {
+                padding-right: 0;
+              }
+
+              &.on-label {
+                padding-left: 0.85rem;
+              }
+            }
+          }
+        }
+      }
+
+      #graph-container {
+        position: relative;
+        height: calc(100% - $graph-controls-height);
+        overflow: auto;
+
+        #workflow-graph {
+          height: 100%;
+
+          svg {
+            min-width: 100%;
+            min-height: 100%;
+          }
+        }
+
+        @include graph.styles;
+        @include tooltip.styles;
+      }
+    }
+
+    #no-events,
+    #invalid-event {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.5rem;
+      font-weight: variables.$weight-bold;
+    }
+  }
 }

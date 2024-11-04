@@ -35,9 +35,8 @@ export default class WorkflowDataReloadService extends Service {
   }
 
   start(pipelineId) {
-    this.pipelineId = pipelineId;
-
     this.stop();
+    this.pipelineId = pipelineId;
     this.fetchData().then(() => {});
 
     this.intervalId = setInterval(
