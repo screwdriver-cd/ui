@@ -1,101 +1,20 @@
-@use 'screwdriver-colors' as colors;
-@use 'show/styles' as show;
+@use 'variables';
 
 @mixin styles {
+  $pipeline-tab-height: variables.$pipeline-tab-height;
+
   display: grid;
 
   grid-template-areas:
-    'pipeline-tab pipeline-tab'
-    'pipeline-events pipeline-event-main-content';
-  grid-template-rows: 3.75rem calc(100% - 3.75rem);
-  grid-template-columns: 26rem calc(100% - 26rem);
+    'pipeline-tab'
+    'pipeline-workflow-events';
+  grid-template-rows: $pipeline-tab-height calc(100% - $pipeline-tab-height);
 
   #pipeline-tab {
     grid-area: pipeline-tab;
   }
 
-  .pipeline-events {
-    grid-area: pipeline-events;
-
-    border: 1px solid #cbd5e1;
-    background-color: white;
-
-    // scroll
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-
-    .search-filter-bar {
-      display: flex;
-      padding: 12px 24px;
-      justify-content: space-between;
-
-      .search-filter {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-
-        .search {
-        }
-        .filter {
-        }
-      }
-
-      .new-event {
-        cursor: pointer;
-      }
-
-      .img {
-        width: 18px;
-        height: 18px;
-      }
-    }
-
-    .event-cards {
-      overflow-y: scroll;
-
-      .event-card {
-        border-top: 1px solid #cbd5e1;
-      }
-      .event-card:first-child {
-        border-top: none;
-      }
-
-      .event-card-group {
-        // padding-bottom: 10px;
-        // margin: 0.5rem 0.25rem;
-        margin-top: 0.75rem;
-        margin-bottom: 0.75rem;
-
-        // border: 1px solid #cbd5e1;
-        border-top: 1px solid #cbd5e1;
-        border-bottom: 1px solid #cbd5e1;
-        // border-radius: 0.25rem;
-
-        position: relative;
-
-        .event-card-group-toggle {
-          position: absolute;
-
-          display: flex;
-          width: 100%;
-          flex-wrap: wrap;
-          justify-content: flex-end;
-
-          cursor: pointer;
-
-          .badge {
-            color: #007bff;
-          }
-        }
-
-        div.event-card:nth-child(1),
-        div.event-card:nth-child(2) {
-          border-top: none;
-        }
-      }
-    }
+  #pipeline-workflow-container {
+    grid-area: pipeline-workflow-events;
   }
-
-  @include show.styles;
 }

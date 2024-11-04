@@ -1,58 +1,62 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
-import { setBuildStatus } from 'screwdriver-ui/utils/pipeline/build';
+import { NotFoundError } from 'ember-ajax/errors';
 
 export default class NewPipelineEventsShowRoute extends Route {
   @service shuttle;
 
-  async model() {
-    const eventId = this.paramsFor('v2.pipeline.events.show').event_id;
+  async model(params, transition) {
+    const eventId = params.event_id;
     const model = this.modelFor('v2.pipeline.events');
-    const { latestCommitEvent } = model;
+    const pipelineId = model.pipeline.id;
 
-    let event = latestCommitEvent;
+    let latestCommitEvent;
 
-    if (eventId !== latestCommitEvent.id) {
-      event = await this.shuttle.fetchFromApi('get', `/events/${eventId}`);
+    let event;
+
+    if (transition.data.latestCommitEvent) {
+      event = transition.data.latestCommitEvent;
+      latestCommitEvent = event;
+    } else {
+      event = await this.shuttle
+        .fetchFromApi('get', `/events/${eventId}`)
+        .catch(err => {
+          if (err instanceof NotFoundError) {
+            return null;
+          }
+
+          return undefined;
+        });
+
+      latestCommitEvent = await this.shuttle.fetchFromApi(
+        'get',
+        `/pipelines/${pipelineId}/latestCommitEvent`
+      );
     }
-
-    const events = await this.shuttle.fetchFromApi(
-      'get',
-      `/pipelines/${model.pipeline.id}/events?page=1&count=20`
-    );
-
-    const builds = await this.shuttle.fetchFromApi(
-      'get',
-      `/events/${eventId}/builds?fetchSteps=false`
-    );
 
     const jobs = await this.shuttle.fetchFromApi(
       'get',
-      `/pipelines/${model.pipeline.id}/jobs`
+      `/pipelines/${pipelineId}/jobs`
     );
 
     const stages = await this.shuttle.fetchFromApi(
       'get',
-      `/pipelines/${model.pipeline.id}/stages`
+      `/pipelines/${pipelineId}/stages`
     );
 
     const triggers = await this.shuttle.fetchFromApi(
       'get',
-      `/pipelines/${model.pipeline.id}/triggers`
+      `/pipelines/${pipelineId}/triggers`
     );
-
-    builds.forEach(build => {
-      setBuildStatus(build);
-    });
 
     return {
       ...model,
       event,
-      events,
-      builds,
+      latestCommitEvent,
       jobs,
       stages,
-      triggers
+      triggers,
+      invalidEvent: event === null
     };
   }
 }
