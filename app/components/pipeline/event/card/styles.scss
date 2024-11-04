@@ -6,7 +6,10 @@
   .event-card {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    margin: 1rem;
+    padding: 0.5rem;
+    border-radius: 3px;
+    border: 1px solid colors.$sd-light-gray;
     cursor: pointer;
 
     &:hover {
@@ -165,9 +168,9 @@
       &.btn {
         display: flex;
 
-         svg {
-           margin: auto;
-         }
+        svg {
+          margin: auto;
+        }
       }
     }
   }
