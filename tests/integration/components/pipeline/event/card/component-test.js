@@ -9,10 +9,17 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders title when event is first in group', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
 
     this.setProperties({
       event: {
@@ -38,12 +45,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.event-card').hasAttribute('title', 'Event: 11');
   });
 
-  test('it renders title when event is first in group', async function (assert) {
+  test('it renders title when event is in group', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
 
     this.setProperties({
       event: {
@@ -71,10 +85,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders core elements', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -120,10 +143,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it does not render highlight', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/99');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -152,10 +184,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders event label', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -182,10 +223,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders button for parameters', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -219,10 +269,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders button for event group', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -256,10 +315,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders abort button for running event', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'RUNNING' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'RUNNING' }]);
+      });
 
     this.setProperties({
       event: {
@@ -287,15 +355,22 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders latest commit badge', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
-    const workflowDataReloadService = this.owner.lookup(
+    const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
     const latestCommitSha = 'abc123def456';
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
-    workflowDataReloadService.latestCommitResponse = { sha: latestCommitSha };
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake((queueName, id, callback) => {
+        callback({ sha: latestCommitSha });
+      });
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -323,10 +398,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it does not render counts for collapsed event', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'COLLAPSED' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'COLLAPSED' }]);
+      });
 
     this.setProperties({
       event: {
@@ -353,17 +437,24 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders count values', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon
-      .stub(shuttle, 'fetchFromApi')
-      .resolves([
-        { status: 'SUCCESS' },
-        { status: 'UNSTABLE' },
-        { status: 'SUCCESS' },
-        { status: 'FAILURE' }
-      ]);
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([
+          { status: 'SUCCESS' },
+          { status: 'UNSTABLE' },
+          { status: 'SUCCESS' },
+          { status: 'FAILURE' }
+        ]);
+      });
 
     this.setProperties({
       event: {
@@ -392,15 +483,24 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it re-renders correctly when event changes', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon
-      .stub(shuttle, 'fetchFromApi')
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
       .onCall(0)
-      .resolves([{ status: 'SUCCESS' }])
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      })
       .onCall(1)
-      .resolves([{ status: 'FAILURE' }]);
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'FAILURE' }]);
+      });
 
     this.setProperties({
       event: {
@@ -443,15 +543,22 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders latest commit badge', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
-    const workflowDataReloadService = this.owner.lookup(
+    const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
     const latestCommitSha = 'abc123def456';
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
-    workflowDataReloadService.latestCommitResponse = { sha: latestCommitSha };
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake((queueName, id, callback) => {
+        callback({ sha: latestCommitSha });
+      });
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -479,10 +586,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it does not render counts for collapsed event', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'COLLAPSED' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'COLLAPSED' }]);
+      });
 
     this.setProperties({
       event: {
@@ -509,17 +625,24 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders count values', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon
-      .stub(shuttle, 'fetchFromApi')
-      .resolves([
-        { status: 'SUCCESS' },
-        { status: 'UNSTABLE' },
-        { status: 'SUCCESS' },
-        { status: 'FAILURE' }
-      ]);
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([
+          { status: 'SUCCESS' },
+          { status: 'UNSTABLE' },
+          { status: 'SUCCESS' },
+          { status: 'FAILURE' }
+        ]);
+      });
 
     this.setProperties({
       event: {
@@ -548,15 +671,24 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it re-renders correctly when event changes', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon
-      .stub(shuttle, 'fetchFromApi')
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
       .onCall(0)
-      .resolves([{ status: 'SUCCESS' }])
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      })
       .onCall(1)
-      .resolves([{ status: 'FAILURE' }]);
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'FAILURE' }]);
+      });
 
     this.setProperties({
       event: {

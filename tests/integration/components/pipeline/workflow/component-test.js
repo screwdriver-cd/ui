@@ -91,7 +91,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     sinon.stub(router, 'currentRouteName').value('events');
     sinon.stub(router, 'currentURL').value(`/v2/pipelines/1/events/${eventId}`);
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
-    sinon.stub(workflowDataReload, 'registerCallback').callsFake(() => {});
     sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
     const event = {
