@@ -10,8 +10,6 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @service router;
 
-  @service workflowDataReload;
-
   @tracked showSearchEventModal = false;
 
   @tracked showStartEventModal = false;
