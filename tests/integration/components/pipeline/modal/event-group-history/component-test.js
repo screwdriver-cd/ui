@@ -11,9 +11,6 @@ module(
 
     test('it renders', async function (assert) {
       const router = this.owner.lookup('service:router');
-      const workflowDataReload = this.owner.lookup(
-        'service:workflow-data-reload'
-      );
       const shuttle = this.owner.lookup('service:shuttle');
       const groupEventId = 1;
       const mockEvent = {
@@ -25,7 +22,6 @@ module(
       };
 
       sinon.stub(router, 'currentURL').value('');
-      sinon.stub(workflowDataReload, 'registerCallback').returns();
       sinon.stub(shuttle, 'fetchFromApi').resolves([
         { ...mockEvent, id: 3 },
         { ...mockEvent, id: 2 },

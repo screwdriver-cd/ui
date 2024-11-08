@@ -72,7 +72,11 @@ export default class PipelineEventCardComponent extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    this.workflowDataReload.removeCallback(this.queueName, this.event.id);
+    this.workflowDataReload.removeLatestCommitEventCallback(
+      this.queueName,
+      this.event.id
+    );
+    this.workflowDataReload.removeBuildsCallback(this.queueName, this.event.id);
 
     if (this.durationIntervalId) {
       clearInterval(this.durationIntervalId);
@@ -82,7 +86,12 @@ export default class PipelineEventCardComponent extends Component {
 
   @action
   initialize() {
-    this.workflowDataReload.registerCallback(
+    this.workflowDataReload.registerLatestCommitEventCallback(
+      this.queueName,
+      this.event.id,
+      this.latestCommitEventCallback
+    );
+    this.workflowDataReload.registerBuildsCallback(
       this.queueName,
       this.event.id,
       this.buildsCallback
@@ -91,7 +100,11 @@ export default class PipelineEventCardComponent extends Component {
 
   @action
   update(element, [event]) {
-    this.workflowDataReload.removeCallback(this.queueName, this.event.id);
+    this.workflowDataReload.removeLatestCommitEventCallback(
+      this.queueName,
+      this.event.id
+    );
+    this.workflowDataReload.removeBuildsCallback(this.queueName, this.event.id);
 
     this.event = event;
 
@@ -102,7 +115,12 @@ export default class PipelineEventCardComponent extends Component {
     this.durationText = null;
     this.firstCreateTime = null;
 
-    this.workflowDataReload.registerCallback(
+    this.workflowDataReload.registerLatestCommitEventCallback(
+      this.queueName,
+      this.event.id,
+      this.latestCommitEventCallback
+    );
+    this.workflowDataReload.registerBuildsCallback(
       this.queueName,
       this.event.id,
       this.buildsCallback
@@ -110,11 +128,26 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   @action
-  buildsCallback(builds, latestCommitEvent) {
+  latestCommitEventCallback(latestCommitEvent) {
+    this.latestCommitEvent = latestCommitEvent;
+
+    if (this.latestCommitEvent.id !== this.event.id) {
+      this.workflowDataReload.removeLatestCommitEventCallback(
+        this.queueName,
+        this.event.id
+      );
+    }
+  }
+
+  @action
+  buildsCallback(builds) {
     const isEventComplete = isComplete(builds);
 
     if (isSkipped(this.event, builds) || isEventComplete) {
-      this.workflowDataReload.removeCallback(this.queueName, this.event.id);
+      this.workflowDataReload.removeBuildsCallback(
+        this.queueName,
+        this.event.id
+      );
 
       if (this.durationIntervalId) {
         clearInterval(this.durationIntervalId);
@@ -125,7 +158,6 @@ export default class PipelineEventCardComponent extends Component {
     }
 
     this.builds = builds;
-    this.latestCommitEvent = latestCommitEvent;
     this.status = getStatus(this.event, builds);
 
     if (this.status !== 'COLLAPSED') {
