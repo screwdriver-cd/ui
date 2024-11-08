@@ -60,29 +60,12 @@ export default class PipelineWorkflowComponent extends Component {
           if (latestCommitEvent) {
             this.workflowDataReload.removeLatestCommitCallback();
 
-            const pipelineId = pipeline.id;
+            const transition = this.router.replaceWith(
+              'v2.pipeline.events.show',
+              latestCommitEvent.id
+            );
 
-            Promise.all([
-              this.shuttle.fetchFromApi('get', `/pipelines/${pipelineId}/jobs`),
-              this.shuttle.fetchFromApi(
-                'get',
-                `/pipelines/${pipelineId}/stages`
-              ),
-              this.shuttle.fetchFromApi(
-                'get',
-                `/pipelines/${pipelineId}/triggers`
-              )
-            ]).then(([jobs, stages, triggers]) => {
-              this.router.replaceWith('v2.pipeline.events.show', {
-                ...this.args,
-                noEvents: false,
-                event: latestCommitEvent,
-                jobs,
-                stages,
-                triggers,
-                id: latestCommitEvent.id
-              });
-            });
+            transition.data = { latestCommitEvent };
           }
         }
       );
