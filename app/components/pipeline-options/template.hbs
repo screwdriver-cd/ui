@@ -62,7 +62,7 @@
                 </p>
               </div>
               <div class="col-8">
-                <Input 
+                <Input
                   class="pipeline-badge-name col-12"
                   placeholder="Sonar badge name"
                   @type="text"
@@ -70,7 +70,7 @@
                 />
               </div>
               <div class="col-8">
-                <Input 
+                <Input
                   class="pipeline-badge-uri col-12"
                   placeholder="Sonar badge uri"
                   @type="text"
@@ -224,6 +224,9 @@
                 <div class="col-10">
                   <h4 title="Job: {{job.name}}">
                     {{truncate job.name 50}}
+                    {{# if job.virtualJob}}
+                      <span class="job-label">virtual</span>
+                    {{/if}}
                   </h4>
                   {{#if job.stateChanger}}
                     <i class="float-right">

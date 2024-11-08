@@ -135,6 +135,7 @@ export default Controller.extend(ModelReloaderMixin, {
             // PR-specific
             nextJobDetail.prParentJobId = job.prParentJobId || null;
             nextJobDetail.prNum = job.group || null;
+            nextJobDetail.isVirtualJob = job.virtualJob;
           }
           nextJobsDetails.push(nextJobDetail);
         });
