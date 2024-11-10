@@ -94,10 +94,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
     assert.dom('tbody tr').exists({ count: 2 });
   });
 
@@ -125,7 +127,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ],
         annotations: {
           'screwdriver.cd/displayName': 'a'
-        }
+        },
+        stageName: 'production'
       },
       {
         jobId: 2,
@@ -148,7 +151,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
         ],
         annotations: {
           'screwdriver.cd/displayName': 'a'
-        }
+        },
+        stageName: 'integration'
       }
     ]);
     set(this, 'updateListViewJobs', () => Promise.resolve([]));
@@ -245,10 +249,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
 
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('6h 13m 8s');
@@ -309,10 +315,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
     assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
@@ -372,10 +380,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
     assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
@@ -435,10 +445,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
     assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
@@ -498,10 +510,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
     assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
@@ -561,10 +575,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Still running.');
     assert.dom('tbody tr').includesText('04/16/2020, 01:30 AM');
@@ -624,10 +640,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').includesText('Not started.');
   });
@@ -683,10 +701,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
     assert.dom('tbody tr').exists({ count: 1 });
     assert.dom('tbody tr').doesNotIncludeText('Still running.');
   });

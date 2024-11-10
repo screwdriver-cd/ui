@@ -149,25 +149,29 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               id: '1',
               name: 'a',
               pipelineId: '1234',
-              annotations: {}
+              annotations: {},
+              stageName: 'production'
             }),
             EmberObject.create({
               id: '2',
               name: 'b',
               pipelineId: '1234',
-              annotations: {}
+              annotations: {},
+              stageName: 'N/A'
             }),
             EmberObject.create({
               id: '3',
               name: 'c',
               pipelineId: '1234',
-              annotations: {}
+              annotations: {},
+              stageName: 'N/A'
             }),
             EmberObject.create({
               id: '4',
               name: 'd',
               pipelineId: '1234',
-              annotations: {}
+              annotations: {},
+              stageName: 'N/A'
             })
           ]
         })
@@ -198,7 +202,8 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         jobPipelineId: '1234',
         annotations: {},
         prParentJobId: null,
-        prNum: null
+        prNum: null,
+        stageName: 'production'
       },
       {
         jobId: '2',
@@ -206,7 +211,8 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         jobPipelineId: '1234',
         annotations: {},
         prParentJobId: null,
-        prNum: null
+        prNum: null,
+        stageName: 'N/A'
       },
       {
         jobId: '3',
@@ -214,7 +220,8 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         jobPipelineId: '1234',
         annotations: {},
         prParentJobId: null,
-        prNum: null
+        prNum: null,
+        stageName: 'N/A'
       }
     ]);
   });
@@ -242,25 +249,29 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               id: '1',
               name: 'a',
               pipelineId: '1234',
-              annotations: {}
+              annotations: {},
+              stageName: 'production'
             }),
             EmberObject.create({
               id: '2',
               name: 'b',
               pipelineId: '1234',
-              annotations: {}
+              annotations: {},
+              stageName: 'integration'
             }),
             EmberObject.create({
               id: '3',
               name: 'c',
               pipelineId: '1234',
-              annotations: {}
+              annotations: {},
+              stageName: 'integration'
             }),
             EmberObject.create({
               id: '4',
               name: 'd',
               pipelineId: '1234',
-              annotations: {}
+              annotations: {},
+              stageName: 'N/A'
             })
           ]
         })
@@ -295,7 +306,8 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         jobPipelineId: '1234',
         annotations: {},
         prParentJobId: null,
-        prNum: null
+        prNum: null,
+        stageName: 'production'
       },
       {
         jobId: '2',
@@ -303,7 +315,8 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         jobPipelineId: '1234',
         annotations: {},
         prParentJobId: null,
-        prNum: null
+        prNum: null,
+        stageName: 'integration'
       },
       {
         jobId: '3',
@@ -311,7 +324,8 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         jobPipelineId: '1234',
         annotations: {},
         prParentJobId: null,
-        prNum: null
+        prNum: null,
+        stageName: 'integration'
       },
       {
         jobId: '4',
@@ -319,7 +333,8 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         jobPipelineId: '1234',
         annotations: {},
         prParentJobId: null,
-        prNum: null
+        prNum: null,
+        stageName: 'N/A'
       }
     ]);
   });
