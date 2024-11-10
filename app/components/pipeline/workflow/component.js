@@ -6,6 +6,7 @@ import { isComplete, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 import { getDisplayJobNameLength, getWorkflowGraph } from './util';
 
 const BUILD_QUEUE_NAME = 'graph';
+const RELOAD_ID = 'pipeline';
 
 export default class PipelineWorkflowComponent extends Component {
   @service router;
@@ -54,11 +55,18 @@ export default class PipelineWorkflowComponent extends Component {
     this.pipeline = pipeline;
     this.userSettings = this.args.userSettings;
 
+    this.workflowDataReload.start(this.args.pipeline.id);
+
     if (this.args.noEvents) {
-      this.workflowDataReload.registerLatestCommitCallback(
+      this.workflowDataReload.registerLatestCommitEventCallback(
+        BUILD_QUEUE_NAME,
+        RELOAD_ID,
         latestCommitEvent => {
           if (latestCommitEvent) {
-            this.workflowDataReload.removeLatestCommitCallback();
+            this.workflowDataReload.removeLatestCommitEventCallback(
+              BUILD_QUEUE_NAME,
+              RELOAD_ID
+            );
 
             const transition = this.router.replaceWith(
               'v2.pipeline.events.show',
@@ -78,7 +86,7 @@ export default class PipelineWorkflowComponent extends Component {
       if (this.args.event) {
         this.event = this.args.event;
 
-        this.workflowDataReload.registerCallback(
+        this.workflowDataReload.registerBuildsCallback(
           BUILD_QUEUE_NAME,
           this.event.id,
           this.buildsCallback
@@ -86,8 +94,6 @@ export default class PipelineWorkflowComponent extends Component {
         this.setWorkflowGraphFromEvent();
       }
     }
-
-    this.workflowDataReload.start(this.args.pipeline.id);
   }
 
   willDestroy() {
@@ -124,7 +130,10 @@ export default class PipelineWorkflowComponent extends Component {
     this.latestCommitEvent = latestCommitEvent;
 
     if (isSkipped(this.event, builds) || isComplete(builds)) {
-      this.workflowDataReload.removeCallback(BUILD_QUEUE_NAME, this.event.id);
+      this.workflowDataReload.removeBuildsCallback(
+        BUILD_QUEUE_NAME,
+        this.event.id
+      );
     }
   }
 
