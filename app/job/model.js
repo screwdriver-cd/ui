@@ -74,6 +74,13 @@ export default Model.extend({
       return get(this, 'permutations.0.annotations') || {};
     }
   }),
+  stageName: computed('permutations.0.stage', 'permutations.[]', {
+    get() {
+      const stage = get(this, 'permutations.0.stage');
+
+      return stage ? stage.name : 'N/A';
+    }
+  }),
   virtualJob: computed('annotations', 'permutations.0.annotations', {
     get() {
       const annotations = get(this, 'annotations');
