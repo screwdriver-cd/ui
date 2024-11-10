@@ -14,13 +14,22 @@ export default class DataReloader {
 
   intervalId;
 
-  constructor(shuttle, jobIds, pageSize) {
+  buildHistory;
+
+  constructor(
+    shuttle,
+    jobIds,
+    pageSize,
+    buildHistory = ENV.APP.NUM_BUILDS_LISTED
+  ) {
     this.shuttle = shuttle;
     this.jobIdsMatchingFilter = jobIds.slice(0, pageSize);
 
     jobIds.forEach(jobId => {
       this.builds[jobId] = [];
     });
+
+    this.buildHistory = buildHistory;
   }
 
   setCorrectBuildStatus(builds) {
@@ -64,7 +73,8 @@ export default class DataReloader {
     this.jobCallbacks[jobId].push(buildsCallback);
   }
 
-  async fetchBuildsForJobs(jobIds) {
+  // this needs change so it will get the number of history
+  async fetchBuildsForJobs(jobIds, count = ENV.APP.NUM_BUILDS_LISTED) {
     if (jobIds.length === 0) {
       return;
     }
@@ -72,9 +82,7 @@ export default class DataReloader {
     await this.shuttle
       .fetchFromApi(
         'get',
-        `/builds/statuses?jobIds=${jobIds.join('&jobIds=')}&numBuilds=${
-          ENV.APP.NUM_BUILDS_LISTED
-        }`
+        `/builds/statuses?jobIds=${jobIds.join('&jobIds=')}&numBuilds=${count}`
       )
       .then(response => {
         response.forEach(buildsForJob => {
@@ -99,7 +107,10 @@ export default class DataReloader {
         return;
       }
 
-      this.fetchBuildsForJobs(this.jobIdsMatchingFilter).then(() => {});
+      this.fetchBuildsForJobs(
+        this.jobIdsMatchingFilter,
+        this.buildHistory
+      ).then(() => {});
     }, ENV.APP.BUILD_RELOAD_TIMER);
   }
 
