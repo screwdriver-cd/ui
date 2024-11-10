@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
+import ENV from 'screwdriver-ui/config/environment';
 import DataReloader from './dataReloader';
 
 const INITIAL_PAGE_SIZE = 10;
@@ -13,6 +14,8 @@ export default class PipelineJobsTableComponent extends Component {
   dataReloader;
 
   data = [];
+
+  buildsHistory = ENV.APP.NUM_BUILDS_LISTED;
 
   columns = [
     {
@@ -116,6 +119,17 @@ export default class PipelineJobsTableComponent extends Component {
 
     this.dataReloader
       .fetchBuildsForJobs(this.dataReloader.newJobIds())
+      .then(() => {});
+  }
+
+  @action
+  updateBuildsHistory(count) {
+    this.buildsHistory = parseInt(count, 10);
+    const jobIds = this.data.map(record => record.job.id);
+
+    this.dataReloader.buildHistory = this.buildsHistory;
+    this.dataReloader
+      .fetchBuildsForJobs(jobIds, this.buildsHistory)
       .then(() => {});
   }
 }

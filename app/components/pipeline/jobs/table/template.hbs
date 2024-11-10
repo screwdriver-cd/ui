@@ -24,6 +24,14 @@
       @type="text"
       placeholder="Search for job by name..."
     />
+    <select id="jobs-table-history-options" onchange={{action this.updateBuildsHistory value="target.value"}}>
+      <option value="" disabled selected={{eq this.buildsHistory 0}}>History</option>
+      <option value="5" selected={{eq this.buildsHistory 5}}>5</option>
+      <option value="10" selected={{eq this.buildsHistory 10}}>10</option>
+      <option value="15" selected={{eq this.buildsHistory 15}}>15</option>
+      <option value="20" selected={{eq this.buildsHistory 20}}>20</option>
+      <option value="25" selected={{eq this.buildsHistory 25}}>25</option>
+    </select>
   </MT.GlobalFilter>
 
   <div id="jobs-table">
