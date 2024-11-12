@@ -196,8 +196,15 @@ export default Component.extend({
 
   getRows(jobsDetails = []) {
     const rows = jobsDetails.map(jobDetails => {
-      const { jobId, jobName, annotations, prParentJobId, prNum, stageName } =
-        jobDetails;
+      const {
+        jobId,
+        jobName,
+        annotations,
+        prParentJobId,
+        prNum,
+        isVirtualJob,
+        stageName
+      } = jobDetails;
       const latestBuild = jobDetails.builds.length
         ? get(jobDetails, 'builds.lastObject')
         : null;
@@ -205,7 +212,8 @@ export default Component.extend({
       const jobData = {
         jobName,
         displayName: annotations['screwdriver.cd/displayName'],
-        build: latestBuild
+        build: latestBuild,
+        isVirtualJob
       };
 
       const hasParameters =

@@ -60,22 +60,32 @@ module('Integration | Component | pipeline options', function (hooks) {
         EmberObject.create({
           id: '3456',
           name: 'B',
-          isDisabled: false
+          isDisabled: false,
+          virtualJob: false
         }),
         EmberObject.create({
           id: '1234',
           name: 'main',
-          isDisabled: false
+          isDisabled: false,
+          virtualJob: false
         }),
         EmberObject.create({
           id: '2345',
           name: 'A',
-          isDisabled: false
+          isDisabled: false,
+          virtualJob: false
         }),
         EmberObject.create({
           id: '4567',
           name: 'long-long-long-long-long-long-long-long-long-long-long-job-name',
-          isDisabled: false
+          isDisabled: false,
+          virtualJob: false
+        }),
+        EmberObject.create({
+          id: '8899',
+          name: 'virtual-job-ci-setup',
+          isDisabled: false,
+          virtualJob: true
         })
       ])
     );
@@ -121,13 +131,19 @@ module('Integration | Component | pipeline options', function (hooks) {
 
     // Jobs
     assert.dom('section.jobs h3').hasText('Jobs');
-    assert.dom('section.jobs li').exists({ count: 5 });
+    assert.dom('section.jobs li').exists({ count: 6 });
     assert.dom('section.jobs li:nth-child(2) h4').hasText('A');
     assert.dom('section.jobs li:nth-child(3) h4').hasText('B');
     assert
       .dom('section.jobs li:nth-child(4) h4')
       .hasText('long-long-long-long-long-long-long-long-long-long-...');
     assert.dom('section.jobs li:nth-child(5) h4').hasText('main');
+    assert
+      .dom('section.jobs li:nth-child(6) h4')
+      .hasText('virtual-job-ci-setup virtual');
+    assert
+      .dom('section.jobs li:nth-child(6) h4 span.job-label')
+      .hasText('virtual');
     assert
       .dom('section.jobs p')
       .hasText('Toggle to disable or enable the job.');
@@ -145,7 +161,10 @@ module('Integration | Component | pipeline options', function (hooks) {
     assert
       .dom('section.cache li:nth-child(4) h4')
       .hasText('Job long-long-long-long-long-long-long-long-long-long-...');
-    assert.dom('section.cache li:last-child h4').hasText('Job main');
+    assert.dom('section.cache li:nth-child(5) h4').hasText('Job main');
+    assert
+      .dom('section.cache li:last-child h4')
+      .hasText('Job virtual-job-ci-setup');
 
     // Danger Zone
     assert.dom('section.danger h3').hasText('Danger Zone');

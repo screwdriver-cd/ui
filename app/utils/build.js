@@ -17,7 +17,7 @@ const isActiveBuild = (status, endTime) =>
  */
 const isPRJob = jobName => /^PR-/.test(jobName);
 
-const statusIcon = (status, isLight) => {
+const statusIcon = (status, isLight, isVirtualJob) => {
   let icon = {
     prefix: 'fa',
     spin: false,
@@ -33,7 +33,7 @@ const statusIcon = (status, isLight) => {
     case 'CREATED':
     case 'WARNING':
     case 'SUCCESS':
-      icon.name = 'check-circle';
+      icon.name = isVirtualJob ? 'fast-forward' : 'check-circle';
       icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'UNSTABLE':
@@ -49,7 +49,7 @@ const statusIcon = (status, isLight) => {
       icon.flip = true;
       break;
     case 'FAILURE':
-      icon.name = 'times-circle';
+      icon.name = isVirtualJob ? 'fast-forward' : 'times-circle';
       icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'ABORTED':
