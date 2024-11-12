@@ -16,16 +16,22 @@ const STATUS_MAP = {
   BLOCKED: { icon: '\ue908' },
   COLLAPSED: { icon: '\ue908' },
   FROZEN: { icon: '\ue910' },
-  SKIPPED: { icon: '\ue909' }
+  SKIPPED: { icon: '\ue909' },
+  VIRTUAL: { icon: '\ue911' }
 };
 
 /**
  * Find the icon to set as the text for a node
  * @method icon
- * @param  {String} status Text that denotes a build status
+ * @param  {String}   status    Text that denotes a build status
+ * @param  {Boolean}  isVirtual Indicates whether the job is virtual or not
  * @return {String}        Unicode character that maps to an icon in screwdriver icon font
  */
-export function icon(status) {
+export function icon(status, isVirtual) {
+  if (isVirtual && (!status || ['SUCCESS', 'WARNING', 'CREATED'])) {
+    return STATUS_MAP.VIRTUAL.icon;
+  }
+
   return STATUS_MAP[status] ? STATUS_MAP[status].icon : STATUS_MAP.UNKNOWN.icon;
 }
 
@@ -514,11 +520,24 @@ export function addJobIcons( // eslint-disable-line max-params
         return icon('SKIPPED');
       }
 
-      return icon(d.status);
+      return icon(d.status, d.virtual);
     })
-    .attr('font-size', `${ICON_SIZE}px`)
+    .attr('font-size', d => {
+      return `${
+        icon(d.status, d.virtual) === STATUS_MAP.VIRTUAL.icon
+          ? ICON_SIZE * 2
+          : ICON_SIZE
+      }px`;
+    })
     .style('text-anchor', 'middle')
-    .attr('x', d => calcNodeCenter(d.pos.x, nodeWidth))
+    .attr('x', d => {
+      return (
+        calcNodeCenter(d.pos.x, nodeWidth) +
+        (icon(d.status, d.virtual) === STATUS_MAP.VIRTUAL.icon
+          ? ICON_SIZE / 2
+          : 0)
+      );
+    })
     .attr(
       'y',
       d =>
