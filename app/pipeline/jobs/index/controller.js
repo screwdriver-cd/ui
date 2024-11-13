@@ -105,7 +105,6 @@ export default Controller.extend(ModelReloaderMixin, {
     const { jobIds } = this;
 
     if (listViewOffset < jobIds.length) {
-      console.log('bananas');
       const jobsDetails = await Promise.all(
         jobIds.slice(listViewOffset, listViewCutOff).map(async jobId =>
           this.store

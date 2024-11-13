@@ -110,6 +110,7 @@ export default Component.extend({
       data: rows,
       isLoading: false
     });
+    console.log('from init: this.numBuilds', this.numBuilds);
   },
 
   didUpdate() {
@@ -313,18 +314,8 @@ export default Component.extend({
     'jobsDetails.[]',
     function jobsObserverFunc({ jobsDetails }) {
       const rows = this.getRows(jobsDetails);
-
-      console.log('rows: ', rows);
-      // console.log('rows history: ', rows[0].history);
       const lastRows = this.lastRows || [];
 
-      console.log('boom boom boom');
-      console.log(
-        'mapped rows:',
-        rows
-          .map(r => r.job)
-          .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
-      );
       let isEqualRes = isEqual(
         rows
           .map(r => r.job)
@@ -334,9 +325,13 @@ export default Component.extend({
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
       );
 
-      isEqualRes =
-        rows.map(r => r.history.length).reduce((a, b) => a + b, 0) ===
-        lastRows.map(r => r.history.length).reduce((a, b) => a + b, 0);
+      if (
+        rows.map(r => r.history.length).reduce((a, b) => a + b, 0) !==
+        lastRows.map(r => r.history.length).reduce((a, b) => a + b, 0)
+      ) {
+        isEqualRes = false;
+      }
+
       if (!isEqualRes) {
         console.log('boom boom boom bang bang bang');
         this.set('lastRows', rows);
@@ -382,17 +377,9 @@ export default Component.extend({
     },
 
     async updateBuildsHistory(value) {
-      console.log('updateBuildsHistory', value);
       this.updateNumBuilds(value);
-      // this need to change jobsDetails so it will trigger the observer
-
-      // const jobs = await this.updateListViewJobs();
-      // console.log('jobs from updateBuildsHistory: ', jobs);
-      // const rows = this.getRows(jobs);
-
-      // this.set('data', rows);
-      // this.set('jobsDetails', jobs);
-      // this.set('lastRows', rows);
+      this.numBuilds = value;
+      await this.refreshListViewJobs();
     }
   }
 });
