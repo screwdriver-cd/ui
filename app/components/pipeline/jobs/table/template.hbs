@@ -25,7 +25,7 @@
       @type="text"
       placeholder="Search for job by name..."
     />
-    <select id="jobs-table-history-options" onchange={{action this.updateBuildsHistory value="target.value"}}>
+    <select id="jobs-v2-table-history-options" onchange={{action this.updateBuildsHistory value="target.value"}}>
       <option value="" disabled selected={{eq this.buildsHistory 0}}>History</option>
       <option value="5" selected={{eq this.buildsHistory 5}}>5</option>
       <option value="10" selected={{eq this.buildsHistory 10}}>10</option>
