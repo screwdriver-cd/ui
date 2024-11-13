@@ -88,4 +88,29 @@
   .models-table-wrapper div.lt-body-wrap {
     overflow-y: auto;
   }
+
+  /* Custom styles for the select box to match the button */
+  // .form-group select {
+  //   border: 1px solid $brand-600; /* Use the same color as the button border */
+  //   color: $brand-600; /* Text color matching button */
+  // }
+  select {
+    @include reset_select;
+    @include reset_input;
+    width: 100%;
+    background: rgba(53, 112, 244, 0.05);
+    border-radius: 2px;
+    padding: 10px 30px 10px 10px;
+
+    &:focus ~ .control-icon {
+      color: #3697f2;
+    }
+  }
+
+  .control-icon {
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    @include transform(translateY(-50%));
+  }
 }

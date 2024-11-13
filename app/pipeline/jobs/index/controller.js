@@ -52,6 +52,7 @@ export default Controller.extend(ModelReloaderMixin, {
   jobId: '',
   session: service(),
   stop: service('event-stop'),
+  numBuilds: ENV.APP.NUM_BUILDS_LISTED,
   init() {
     this._super(...arguments);
     this.startReloading();
@@ -98,20 +99,26 @@ export default Controller.extend(ModelReloaderMixin, {
   paginateEvents: [],
   updateEvents,
   async getNewListViewJobs(listViewOffset, listViewCutOff) {
+    console.log('getNewListViewJobs');
+    console.log('this.numBuilds', this.numBuilds);
+
     const { jobIds } = this;
 
     if (listViewOffset < jobIds.length) {
+      console.log('bananas');
       const jobsDetails = await Promise.all(
         jobIds.slice(listViewOffset, listViewCutOff).map(async jobId =>
           this.store
             .query('build-history', {
               jobIds: jobId,
               offset: 0,
-              numBuilds: ENV.APP.NUM_BUILDS_LISTED
+              numBuilds: this.numBuilds
             })
             .catch(() => Promise.resolve([]))
         )
       );
+
+      console.log('jobsDetails', jobsDetails);
       const nextJobsDetails = [];
 
       jobsDetails.toArray().forEach(nextJobDetails => {
@@ -139,6 +146,7 @@ export default Controller.extend(ModelReloaderMixin, {
           nextJobsDetails.push(nextJobDetail);
         });
       });
+      console.log('nextJobsDetails:', nextJobsDetails);
 
       return nextJobsDetails;
     }
@@ -280,6 +288,9 @@ export default Controller.extend(ModelReloaderMixin, {
       await stopBuild.bind(this)(givenEvent, job);
       await this.reload();
       set(this, 'lastRefreshed', PAST_TIME);
+    },
+    updateNumBuilds(count) {
+      this.set('numBuilds', count);
     }
   },
   willDestroy() {
