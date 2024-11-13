@@ -313,8 +313,19 @@ export default Component.extend({
     'jobsDetails.[]',
     function jobsObserverFunc({ jobsDetails }) {
       const rows = this.getRows(jobsDetails);
+
+      console.log('rows: ', rows);
+      // console.log('rows history: ', rows[0].history);
       const lastRows = this.lastRows || [];
-      const isEqualRes = isEqual(
+
+      console.log('boom boom boom');
+      console.log(
+        'mapped rows:',
+        rows
+          .map(r => r.job)
+          .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
+      );
+      let isEqualRes = isEqual(
         rows
           .map(r => r.job)
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
@@ -323,7 +334,11 @@ export default Component.extend({
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
       );
 
+      isEqualRes =
+        rows.map(r => r.history.length).reduce((a, b) => a + b, 0) ===
+        lastRows.map(r => r.history.length).reduce((a, b) => a + b, 0);
       if (!isEqualRes) {
+        console.log('boom boom boom bang bang bang');
         this.set('lastRows', rows);
         this.set('data', rows);
       }
@@ -364,6 +379,20 @@ export default Component.extend({
       const { job } = this;
 
       this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
+    },
+
+    async updateBuildsHistory(value) {
+      console.log('updateBuildsHistory', value);
+      this.updateNumBuilds(value);
+      // this need to change jobsDetails so it will trigger the observer
+
+      // const jobs = await this.updateListViewJobs();
+      // console.log('jobs from updateBuildsHistory: ', jobs);
+      // const rows = this.getRows(jobs);
+
+      // this.set('data', rows);
+      // this.set('jobsDetails', jobs);
+      // this.set('lastRows', rows);
     }
   }
 });
