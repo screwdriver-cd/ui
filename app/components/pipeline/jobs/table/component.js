@@ -42,6 +42,12 @@ export default class PipelineJobsTableComponent extends Component {
       component: 'coverageCell'
     },
     {
+      title: 'STAGE',
+      propertyName: 'stageName',
+      className: 'stage-column',
+      component: 'stageCell'
+    },
+    {
       title: 'METRICS',
       className: 'metrics-column',
       component: 'metricsCell'
@@ -69,6 +75,7 @@ export default class PipelineJobsTableComponent extends Component {
       this.data.push({
         job,
         jobName: job.name,
+        stageName: job?.permutations?.[0]?.stage?.name || 'N/A',
         pipeline: this.args.pipeline,
         jobs: this.args.jobs,
         timestampFormat: this.args.userSettings.timestampFormat,

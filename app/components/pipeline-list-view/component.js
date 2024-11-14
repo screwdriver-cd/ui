@@ -59,6 +59,12 @@ export default Component.extend({
       component: 'pipeline-list-coverage-cell'
     },
     {
+      title: 'STAGE',
+      propertyName: 'stage',
+      component: 'pipeline-list-stage-cell',
+      sortFunction: (a, b) => collator.compare(a.stageName, b.stageName)
+    },
+    {
       title: 'METRICS',
       propertyName: 'job',
       disableSorting: true,
@@ -196,7 +202,8 @@ export default Component.extend({
         annotations,
         prParentJobId,
         prNum,
-        isVirtualJob
+        isVirtualJob,
+        stageName
       } = jobDetails;
       const latestBuild = jobDetails.builds.length
         ? get(jobDetails, 'builds.lastObject')
@@ -245,6 +252,8 @@ export default Component.extend({
 
       let coverageData = {};
 
+      let stageData;
+
       if (latestBuild) {
         if (latestBuild.startTime) {
           if (this.timestampPreference === 'UTC') {
@@ -283,6 +292,8 @@ export default Component.extend({
         if (annotations && annotations['screwdriver.cd/coverageScope']) {
           coverageData.scope = annotations['screwdriver.cd/coverageScope'];
         }
+
+        stageData = { stageName };
       }
 
       return {
@@ -291,7 +302,8 @@ export default Component.extend({
         duration: duration === null ? 'N/A' : duration,
         history: jobDetails.builds,
         actions: actionsData,
-        coverage: coverageData
+        coverage: coverageData,
+        stage: stageData
       };
     });
 

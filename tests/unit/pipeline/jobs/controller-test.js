@@ -150,6 +150,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'a',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'production',
               virtualJob: false
             }),
             EmberObject.create({
@@ -157,6 +158,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'b',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'N/A',
               virtualJob: false
             }),
             EmberObject.create({
@@ -164,6 +166,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'c',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'N/A',
               virtualJob: false
             }),
             EmberObject.create({
@@ -171,6 +174,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'd',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'N/A',
               virtualJob: false
             }),
             EmberObject.create({
@@ -178,6 +182,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'v',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'N/A',
               virtualJob: true
             })
           ]
@@ -210,6 +215,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         annotations: {},
         prParentJobId: null,
         prNum: null,
+        stageName: 'production',
         isVirtualJob: false
       },
       {
@@ -219,6 +225,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         annotations: {},
         prParentJobId: null,
         prNum: null,
+        stageName: 'N/A',
         isVirtualJob: false
       },
       {
@@ -228,6 +235,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         annotations: {},
         prParentJobId: null,
         prNum: null,
+        stageName: 'N/A',
         isVirtualJob: false
       }
     ]);
@@ -257,6 +265,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'a',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'production',
               virtualJob: false
             }),
             EmberObject.create({
@@ -264,6 +273,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'b',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'integration',
               virtualJob: false
             }),
             EmberObject.create({
@@ -271,6 +281,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'c',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'integration',
               virtualJob: false
             }),
             EmberObject.create({
@@ -278,6 +289,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'd',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'N/A',
               virtualJob: false
             }),
             EmberObject.create({
@@ -285,6 +297,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
               name: 'v',
               pipelineId: '1234',
               annotations: {},
+              stageName: 'N/A',
               virtualJob: true
             })
           ]
@@ -321,6 +334,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         annotations: {},
         prParentJobId: null,
         prNum: null,
+        stageName: 'production',
         isVirtualJob: false
       },
       {
@@ -330,6 +344,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         annotations: {},
         prParentJobId: null,
         prNum: null,
+        stageName: 'integration',
         isVirtualJob: false
       },
       {
@@ -339,6 +354,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         annotations: {},
         prParentJobId: null,
         prNum: null,
+        stageName: 'integration',
         isVirtualJob: false
       },
       {
@@ -348,6 +364,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         annotations: {},
         prParentJobId: null,
         prNum: null,
+        stageName: 'N/A',
         isVirtualJob: false
       },
       {
@@ -357,6 +374,7 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
         annotations: {},
         prParentJobId: null,
         prNum: null,
+        stageName: 'N/A',
         isVirtualJob: true
       }
     ]);

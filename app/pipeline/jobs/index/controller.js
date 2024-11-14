@@ -132,6 +132,8 @@ export default Controller.extend(ModelReloaderMixin, {
             nextJobDetail.jobName = job.name;
             nextJobDetail.jobPipelineId = job.pipelineId;
             nextJobDetail.annotations = job.annotations;
+            nextJobDetail.stageName = job.stageName;
+
             // PR-specific
             nextJobDetail.prParentJobId = job.prParentJobId || null;
             nextJobDetail.prNum = job.group || null;
