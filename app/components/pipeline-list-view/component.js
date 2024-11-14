@@ -7,6 +7,7 @@ import isEqual from 'lodash.isequal';
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import { next } from '@ember/runloop';
+import ENV from 'screwdriver-ui/config/environment';
 
 const collator = new Intl.Collator('en', {
   numeric: true,
@@ -23,6 +24,8 @@ export default Component.extend({
   lastRows: [],
   moreJobs: true,
   timestampPreference: null,
+  numBuildsHistory: ENV.APP.NUM_BUILDS_LISTED,
+  buildsHistoryOptions: [5, 10, 15, 20, 25, 30],
   columns: [
     {
       title: 'JOB',
@@ -83,7 +86,8 @@ export default Component.extend({
     this.setProperties({
       isLoading: true,
       pipelineParameters: this.getDefaultPipelineParameters(),
-      jobParameters: this.getDefaultJobParameters()
+      jobParameters: this.getDefaultJobParameters(),
+      numBuildsHistory: this.numBuilds
     });
 
     const jobs = await this.updateListViewJobs();
@@ -110,7 +114,6 @@ export default Component.extend({
       data: rows,
       isLoading: false
     });
-    console.log('from init: this.numBuilds', this.numBuilds);
   },
 
   didUpdate() {
@@ -333,7 +336,6 @@ export default Component.extend({
       }
 
       if (!isEqualRes) {
-        console.log('boom boom boom bang bang bang');
         this.set('lastRows', rows);
         this.set('data', rows);
       }
@@ -376,9 +378,9 @@ export default Component.extend({
       this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
     },
 
-    async updateBuildsHistory(value) {
-      this.updateNumBuilds(value);
-      this.numBuilds = value;
+    async updateNumBuildsHistory(count) {
+      this.numBuildsHistory = Number(count);
+      this.updateNumBuilds(this.numBuildsHistory);
       await this.refreshListViewJobs();
     }
   }

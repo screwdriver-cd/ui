@@ -99,9 +99,6 @@ export default Controller.extend(ModelReloaderMixin, {
   paginateEvents: [],
   updateEvents,
   async getNewListViewJobs(listViewOffset, listViewCutOff) {
-    console.log('getNewListViewJobs');
-    console.log('this.numBuilds', this.numBuilds);
-
     const { jobIds } = this;
 
     if (listViewOffset < jobIds.length) {
@@ -117,7 +114,6 @@ export default Controller.extend(ModelReloaderMixin, {
         )
       );
 
-      console.log('jobsDetails', jobsDetails);
       const nextJobsDetails = [];
 
       jobsDetails.toArray().forEach(nextJobDetails => {
@@ -148,7 +144,6 @@ export default Controller.extend(ModelReloaderMixin, {
           nextJobsDetails.push(nextJobDetail);
         });
       });
-      console.log('nextJobsDetails:', nextJobsDetails);
 
       return nextJobsDetails;
     }
