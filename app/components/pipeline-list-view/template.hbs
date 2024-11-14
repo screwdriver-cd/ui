@@ -18,13 +18,10 @@
     <BsForm class="form-inline">
       <div class="form-group d-flex align-items-center">
         <label for="jobs-history-options" class="mr-2 font-weight-bold">History</label>
-        <select class="form-control" id="jobs-history-options" name="jobs-history-options" onchange={{action "updateBuildsHistory" value="target.value"}}>
-          <option value="5" selected={{eq this.numBuilds 5}}>5</option>
-          <option value="10" selected={{eq this.numBuilds 10}}>10</option>
-          <option value="15" selected={{eq this.numBuilds 15}}>15</option>
-          <option value="20" selected={{eq this.numBuilds 20}}>20</option>
-          <option value="25" selected={{eq this.numBuilds 25}}>25</option>
-          <option value="30" selected={{eq this.numBuilds 30}}>30</option>
+        <select class="form-control" id="jobs-history-options" name="jobs-history-options" onchange={{action "updateNumBuildsHistory" value="target.value"}}>
+          {{#each this.buildsHistoryOptions as |opt|}}
+            <option value={{opt}} selected={{eq opt this.numBuilds}}>{{opt}}</option>
+          {{/each}}
         </select>
         <span class="control-icon">
           <FaIcon @icon="caret-down" />
