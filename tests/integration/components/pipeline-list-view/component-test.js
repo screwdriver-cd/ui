@@ -3,6 +3,7 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { set } from '@ember/object';
+import ENV from 'screwdriver-ui/config/environment';
 
 module('Integration | Component | pipeline list view', function (hooks) {
   setupRenderingTest(hooks);
@@ -78,6 +79,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'numBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -89,6 +94,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @numBuilds={{this.numBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
@@ -101,6 +108,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
         'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
       );
     assert.dom('tbody tr').exists({ count: 2 });
+    assert.dom('.form-inline').exists({ count: 1 });
+    assert.dom('#jobs-history-options').hasValue('5');
   });
 
   test('it renders then resets jobDetails', async function (assert) {
