@@ -4,6 +4,7 @@
   {{/if}}
 {{/if}}
 
+{{log "boom boom boom"}}
 <div class="padded-container">
   <InfoMessage
     @message={{this.errorMessage}}
@@ -33,7 +34,7 @@
         @setShowListView={{action "setShowListView"}}
         @refreshListViewJobs={{action "refreshListViewJobs"}}
         @updateNumBuilds={{action "updateNumBuilds"}}
-        @numBuilds={{this.numBuilds}}
+        @defaultNumBuilds={{this.defaultNumBuilds}}
       />
     </div>
   </div>

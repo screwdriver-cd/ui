@@ -20,7 +20,7 @@
         <label for="jobs-history-options" class="mr-2 font-weight-bold">History</label>
         <select class="form-control" id="jobs-history-options" name="jobs-history-options" onchange={{action "updateNumBuildsHistory" value="target.value"}}>
           {{#each this.buildsHistoryOptions as |opt|}}
-            <option value={{opt}} selected={{eq opt this.numBuilds}}>{{opt}}</option>
+            <option value={{opt}} selected={{eq opt this.numBuildsHistory}}>{{opt}}</option>
           {{/each}}
         </select>
         <span class="control-icon">

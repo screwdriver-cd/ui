@@ -7,7 +7,6 @@ import isEqual from 'lodash.isequal';
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import { next } from '@ember/runloop';
-import ENV from 'screwdriver-ui/config/environment';
 
 const collator = new Intl.Collator('en', {
   numeric: true,
@@ -24,7 +23,6 @@ export default Component.extend({
   lastRows: [],
   moreJobs: true,
   timestampPreference: null,
-  numBuildsHistory: ENV.APP.NUM_BUILDS_LISTED,
   buildsHistoryOptions: [5, 10, 15, 20, 25, 30],
   columns: [
     {
@@ -87,7 +85,7 @@ export default Component.extend({
       isLoading: true,
       pipelineParameters: this.getDefaultPipelineParameters(),
       jobParameters: this.getDefaultJobParameters(),
-      numBuildsHistory: this.numBuilds
+      numBuildsHistory: this.defaultNumBuilds
     });
 
     const jobs = await this.updateListViewJobs();
