@@ -89,11 +89,6 @@
     overflow-y: auto;
   }
 
-  /* Custom styles for the select box to match the button */
-  // .form-group select {
-  //   border: 1px solid $brand-600; /* Use the same color as the button border */
-  //   color: $brand-600; /* Text color matching button */
-  // }
   select {
     @include reset_select;
     @include reset_input;
