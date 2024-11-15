@@ -89,23 +89,14 @@
     overflow-y: auto;
   }
 
-  select {
-    @include reset_select;
-    @include reset_input;
-    width: 100%;
-    background: rgba(53, 112, 244, 0.05);
-    border-radius: 2px;
-    padding: 10px 30px 10px 10px;
-
-    &:focus ~ .control-icon {
-      color: #3697f2;
-    }
+  .input-group-prepend .input-group-text,
+  .custom-select {
+    border-color: $brand-600;
+    // background-color: transparent;
+    color: $brand-600;
   }
 
-  .control-icon {
-    position: absolute;
-    top: 50%;
-    right: 30px;
-    @include transform(translateY(-50%));
+  .input-group-prepend .input-group-text * {
+    color: inherit; /* Ensure all child elements inherit the parent's color */
   }
 }
