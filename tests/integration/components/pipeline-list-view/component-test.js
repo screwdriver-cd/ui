@@ -759,7 +759,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
-    set(this, 'numBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
     set(this, 'updateNumBuilds', () => {
       assert.ok(true);
     });
@@ -775,7 +775,7 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
       @updateNumBuilds={{this.updateNumBuilds}}
-      @numBuilds={{this.numBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });

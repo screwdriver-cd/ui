@@ -207,6 +207,10 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
 
     await settled();
 
+    console.log(
+      'controller.jobsDetails',
+      JSON.stringify(controller.jobsDetails, null, 2)
+    );
     assert.deepEqual(controller.jobsDetails, [
       {
         jobId: '1',

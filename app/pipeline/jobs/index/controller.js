@@ -52,15 +52,17 @@ export default Controller.extend(ModelReloaderMixin, {
   jobId: '',
   session: service(),
   stop: service('event-stop'),
-  numBuilds: ENV.APP.NUM_BUILDS_LISTED,
+  defaultNumBuilds: ENV.APP.NUM_BUILDS_LISTED,
   init() {
     this._super(...arguments);
     this.startReloading();
     this.setProperties({
       eventsPage: 1,
       listViewOffset: 0,
-      showDownstreamTriggers: false
+      showDownstreamTriggers: false,
+      numBuilds: this.defaultNumBuilds
     });
+    console.log('this.numBuilds', this.numBuilds);
   },
 
   async reload() {
