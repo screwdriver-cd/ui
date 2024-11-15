@@ -62,7 +62,6 @@ export default Controller.extend(ModelReloaderMixin, {
       showDownstreamTriggers: false,
       numBuilds: this.defaultNumBuilds
     });
-    console.log('this.numBuilds', this.numBuilds);
   },
 
   async reload() {
