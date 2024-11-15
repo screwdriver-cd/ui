@@ -801,10 +801,12 @@ module('Integration | Component | pipeline list view', function (hooks) {
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
     assert.dom('tbody').exists({ count: 1 });
-    assert.dom('th.table-header').exists({ count: 7 });
+    assert.dom('th.table-header').exists({ count: 8 });
     assert
       .dom('thead')
-      .hasText('JOB HISTORY DURATION START TIME COVERAGE METRICS ACTIONS');
+      .hasText(
+        'JOB HISTORY DURATION START TIME COVERAGE STAGE METRICS ACTIONS'
+      );
     assert.dom('tbody tr').exists({ count: 2 });
     assert.dom('.form-inline').exists({ count: 1 });
     assert
