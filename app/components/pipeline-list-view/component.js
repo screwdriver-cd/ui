@@ -7,6 +7,7 @@ import isEqual from 'lodash.isequal';
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import { next } from '@ember/runloop';
+import ENV from 'screwdriver-ui/config/environment';
 
 const collator = new Intl.Collator('en', {
   numeric: true,
@@ -23,6 +24,8 @@ export default Component.extend({
   lastRows: [],
   moreJobs: true,
   timestampPreference: null,
+  numBuildsHistory: ENV.APP.NUM_BUILDS_LISTED,
+  buildsHistoryOptions: [5, 10, 15, 20, 25, 30],
   columns: [
     {
       title: 'JOB',
@@ -59,12 +62,6 @@ export default Component.extend({
       component: 'pipeline-list-coverage-cell'
     },
     {
-      title: 'STAGE',
-      propertyName: 'stage',
-      component: 'pipeline-list-stage-cell',
-      sortFunction: (a, b) => collator.compare(a.stageName, b.stageName)
-    },
-    {
       title: 'METRICS',
       propertyName: 'job',
       disableSorting: true,
@@ -83,7 +80,8 @@ export default Component.extend({
     this.setProperties({
       isLoading: true,
       pipelineParameters: this.getDefaultPipelineParameters(),
-      jobParameters: this.getDefaultJobParameters()
+      jobParameters: this.getDefaultJobParameters(),
+      numBuildsHistory: this.numBuilds
     });
 
     const jobs = await this.updateListViewJobs();
@@ -196,15 +194,7 @@ export default Component.extend({
 
   getRows(jobsDetails = []) {
     const rows = jobsDetails.map(jobDetails => {
-      const {
-        jobId,
-        jobName,
-        annotations,
-        prParentJobId,
-        prNum,
-        isVirtualJob,
-        stageName
-      } = jobDetails;
+      const { jobId, jobName, annotations, prParentJobId, prNum } = jobDetails;
       const latestBuild = jobDetails.builds.length
         ? get(jobDetails, 'builds.lastObject')
         : null;
@@ -212,8 +202,7 @@ export default Component.extend({
       const jobData = {
         jobName,
         displayName: annotations['screwdriver.cd/displayName'],
-        build: latestBuild,
-        isVirtualJob
+        build: latestBuild
       };
 
       const hasParameters =
@@ -251,8 +240,6 @@ export default Component.extend({
       let buildId;
 
       let coverageData = {};
-
-      let stageData;
 
       if (latestBuild) {
         if (latestBuild.startTime) {
@@ -292,8 +279,6 @@ export default Component.extend({
         if (annotations && annotations['screwdriver.cd/coverageScope']) {
           coverageData.scope = annotations['screwdriver.cd/coverageScope'];
         }
-
-        stageData = { stageName };
       }
 
       return {
@@ -302,8 +287,7 @@ export default Component.extend({
         duration: duration === null ? 'N/A' : duration,
         history: jobDetails.builds,
         actions: actionsData,
-        coverage: coverageData,
-        stage: stageData
+        coverage: coverageData
       };
     });
 
@@ -314,7 +298,8 @@ export default Component.extend({
     function jobsObserverFunc({ jobsDetails }) {
       const rows = this.getRows(jobsDetails);
       const lastRows = this.lastRows || [];
-      const isEqualRes = isEqual(
+
+      let isEqualRes = isEqual(
         rows
           .map(r => r.job)
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
@@ -322,6 +307,13 @@ export default Component.extend({
           .map(r => r.job)
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
       );
+
+      if (
+        rows.map(r => r.history.length).reduce((a, b) => a + b, 0) !==
+        lastRows.map(r => r.history.length).reduce((a, b) => a + b, 0)
+      ) {
+        isEqualRes = false;
+      }
 
       if (!isEqualRes) {
         this.set('lastRows', rows);
@@ -364,6 +356,12 @@ export default Component.extend({
       const { job } = this;
 
       this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
+    },
+
+    async updateNumBuildsHistory(count) {
+      this.numBuildsHistory = Number(count);
+      this.updateNumBuilds(this.numBuildsHistory);
+      await this.refreshListViewJobs();
     }
   }
 });
