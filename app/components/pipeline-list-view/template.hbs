@@ -17,15 +17,16 @@
   <div class="col-10 d-flex justify-content-end">
     <BsForm class="form-inline">
       <div class="form-group d-flex align-items-center">
-        <label for="jobs-history-options" class="mr-2 font-weight-bold">History</label>
-        <select class="form-control" id="jobs-history-options" name="jobs-history-options" onchange={{action "updateNumBuildsHistory" value="target.value"}}>
-          {{#each this.buildsHistoryOptions as |opt|}}
-            <option value={{opt}} selected={{eq opt this.numBuildsHistory}}>{{opt}}</option>
-          {{/each}}
-        </select>
-        <span class="control-icon">
-          <FaIcon @icon="caret-down" />
-        </span>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="jobs-history-options"><FaIcon @icon="history" /></label>
+          </div>
+          <select class="custom-select" id="jobs-history-options" name="jobs-history-options" onchange={{action "updateNumBuildsHistory" value="target.value"}}>
+            {{#each this.buildsHistoryOptions as |opt|}}
+              <option value={{opt}} selected={{eq opt this.numBuildsHistory}}>{{opt}}</option>
+            {{/each}}
+          </select>
+        </div>
       </div>
     </BsForm>
   </div>
