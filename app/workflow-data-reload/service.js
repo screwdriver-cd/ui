@@ -50,4 +50,8 @@ export default class WorkflowDataReloadService extends Service {
   removeLatestCommitEventCallback(queueName, id) {
     this.latestCommitEventReloader.removeCallback(queueName, id);
   }
+
+  getLatestCommitEvent() {
+    return this.latestCommitEventReloader.getLatestCommitEvent();
+  }
 }

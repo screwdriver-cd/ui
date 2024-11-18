@@ -40,5 +40,16 @@ module(
 
       assert.equal(response, null);
     });
+
+    test('getLatestCommitEvent returns correct value', async function (assert) {
+      const latestCommitEventReloader = new LatestCommitEventReloader(null);
+      const spyResponseCache = sinon.spy(new Map());
+
+      latestCommitEventReloader.responseCache = spyResponseCache;
+
+      latestCommitEventReloader.getLatestCommitEvent();
+
+      assert.equal(spyResponseCache.get.calledOnce, true);
+    });
   }
 );

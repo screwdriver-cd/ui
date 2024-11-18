@@ -1,7 +1,13 @@
 import DataReloader from './dataReloader';
 
+const CACHE_KEY = 'latestCommitEvent';
+
 export default class LatestCommitEventReloader extends DataReloader {
   pipelineId;
+
+  constructor(shuttle) {
+    super(shuttle, CACHE_KEY);
+  }
 
   setPipelineId(pipelineId) {
     this.pipelineId = pipelineId;
@@ -16,5 +22,9 @@ export default class LatestCommitEventReloader extends DataReloader {
       .catch(() => {
         return null;
       });
+  }
+
+  getLatestCommitEvent() {
+    return this.responseCache.get(CACHE_KEY);
   }
 }
