@@ -52,13 +52,15 @@ export default Controller.extend(ModelReloaderMixin, {
   jobId: '',
   session: service(),
   stop: service('event-stop'),
+  defaultNumBuilds: ENV.APP.NUM_BUILDS_LISTED,
   init() {
     this._super(...arguments);
     this.startReloading();
     this.setProperties({
       eventsPage: 1,
       listViewOffset: 0,
-      showDownstreamTriggers: false
+      showDownstreamTriggers: false,
+      numBuilds: this.defaultNumBuilds
     });
   },
 
@@ -107,11 +109,12 @@ export default Controller.extend(ModelReloaderMixin, {
             .query('build-history', {
               jobIds: jobId,
               offset: 0,
-              numBuilds: ENV.APP.NUM_BUILDS_LISTED
+              numBuilds: this.numBuilds
             })
             .catch(() => Promise.resolve([]))
         )
       );
+
       const nextJobsDetails = [];
 
       jobsDetails.toArray().forEach(nextJobDetails => {
@@ -283,6 +286,9 @@ export default Controller.extend(ModelReloaderMixin, {
       await stopBuild.bind(this)(givenEvent, job);
       await this.reload();
       set(this, 'lastRefreshed', PAST_TIME);
+    },
+    updateNumBuilds(count) {
+      this.set('numBuilds', count);
     }
   },
   willDestroy() {

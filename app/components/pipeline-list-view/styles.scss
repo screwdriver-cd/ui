@@ -88,4 +88,56 @@
   .models-table-wrapper div.lt-body-wrap {
     overflow-y: auto;
   }
+
+  // .has-float-label is a courtesy class from https://github.com/tonycorporated/bootstrap-float-label/blob/master/bootstrap-float-label.css
+  .has-float-label {
+    display: block;
+    position: relative;
+  }
+
+  .has-float-label > span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: text;
+    font-size: 75%;
+    opacity: 1;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+    top: -0.5em;
+    left: 0.75rem;
+    z-index: 3;
+    line-height: 1;
+    padding: 0 1px;
+  }
+
+  .has-float-label > span::after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    background: white;
+    height: 2px;
+    top: 50%;
+    left: -0.2em;
+    right: -0.2em;
+    z-index: -1;
+  }
+
+  .has-float-label .form-control:focus + span {
+    font-size: 80%;
+    opacity: 0.8;
+    top: -0.5em;
+  }
+
+  .form-group.d-flex.align-items-center {
+    min-width: 75px; /* Adjust the minimum width as needed */
+
+    label {
+      width: 100%;
+
+      .custom-select {
+        width: 100%;
+      }
+    }
+  }
 }

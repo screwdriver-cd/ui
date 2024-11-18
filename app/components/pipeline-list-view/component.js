@@ -23,6 +23,7 @@ export default Component.extend({
   lastRows: [],
   moreJobs: true,
   timestampPreference: null,
+  buildsHistoryOptions: [5, 10, 15, 20, 25, 30],
   columns: [
     {
       title: 'JOB',
@@ -83,7 +84,8 @@ export default Component.extend({
     this.setProperties({
       isLoading: true,
       pipelineParameters: this.getDefaultPipelineParameters(),
-      jobParameters: this.getDefaultJobParameters()
+      jobParameters: this.getDefaultJobParameters(),
+      numBuildsHistory: this.defaultNumBuilds
     });
 
     const jobs = await this.updateListViewJobs();
@@ -314,7 +316,8 @@ export default Component.extend({
     function jobsObserverFunc({ jobsDetails }) {
       const rows = this.getRows(jobsDetails);
       const lastRows = this.lastRows || [];
-      const isEqualRes = isEqual(
+
+      let isEqualRes = isEqual(
         rows
           .map(r => r.job)
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
@@ -322,6 +325,13 @@ export default Component.extend({
           .map(r => r.job)
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
       );
+
+      if (
+        rows.map(r => r.history.length).reduce((a, b) => a + b, 0) !==
+        lastRows.map(r => r.history.length).reduce((a, b) => a + b, 0)
+      ) {
+        isEqualRes = false;
+      }
 
       if (!isEqualRes) {
         this.set('lastRows', rows);
@@ -364,6 +374,12 @@ export default Component.extend({
       const { job } = this;
 
       this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
+    },
+
+    async updateNumBuildsHistory(count) {
+      this.numBuildsHistory = Number(count);
+      this.updateNumBuilds(this.numBuildsHistory);
+      await this.refreshListViewJobs();
     }
   }
 });
