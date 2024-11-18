@@ -41,7 +41,7 @@ module('Unit | Service | workflowDataReload | DataReloader', function (hooks) {
   });
 
   test('fetchData caches data correctly for single key cache', async function (assert) {
-    const cacheKey = 987;
+    const cacheKey = 'cacheKey';
     const dataReloader = new DataReloader(null, cacheKey);
     const id = 123;
 
@@ -118,7 +118,7 @@ module('Unit | Service | workflowDataReload | DataReloader', function (hooks) {
   });
 
   test('registerCallback calls callback if response exists in cache for single key cache', function (assert) {
-    const cacheKey = 987;
+    const cacheKey = 'cacheKey';
     const dataReloader = new DataReloader(null, cacheKey);
     const id = 123;
     const callback = sinon.spy();
@@ -170,7 +170,7 @@ module('Unit | Service | workflowDataReload | DataReloader', function (hooks) {
   });
 
   test('registerCallback caches fetched data if cached response does not exist for single key cache', async function (assert) {
-    const cacheKey = 987;
+    const cacheKey = 'cacheKey';
     const dataReloader = new DataReloader(null, cacheKey);
     const id = 123;
     const callback = sinon.spy();
