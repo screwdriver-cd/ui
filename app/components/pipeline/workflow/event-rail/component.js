@@ -20,7 +20,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   eventType;
 
-  oldestCommitEventId = null;
+  oldestEvent = null;
 
   constructor() {
     super(...arguments);
@@ -67,16 +67,16 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @action
   async fetchOlderEvents(event) {
-    if (event.id === this.oldestCommitEventId) {
+    if (event.id === this.oldestEvent?.id) {
       return [];
     }
 
     return this.fetchEvents(event.id, 'lt').then(events => {
       if (events.length < EVENT_BATCH_SIZE) {
         if (events.length === 0) {
-          this.oldestCommitEventId = event.id;
+          this.oldestEvent = event;
         } else {
-          this.oldestCommitEventId = events[events.length - 1].id;
+          this.oldestEvent = events[events.length - 1];
         }
       }
 
