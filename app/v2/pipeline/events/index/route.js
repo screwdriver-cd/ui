@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
-import { NotFoundError } from 'ember-ajax/errors';
 
 export default class NewPipelineEventsIndexRoute extends Route {
   @service shuttle;
@@ -9,33 +8,26 @@ export default class NewPipelineEventsIndexRoute extends Route {
     const model = this.modelFor('v2.pipeline.events');
     const pipelineId = model.pipeline.id;
 
-    const latestCommitEvent = await this.shuttle
-      .fetchFromApi('get', `/pipelines/${pipelineId}/latestCommitEvent`)
-      .then(event => {
-        return event;
-      })
-      .catch(err => {
-        if (err instanceof NotFoundError) {
-          return null;
-        }
-
-        return undefined;
+    const latestEvent = await this.shuttle
+      .fetchFromApi('get', `/pipelines/${pipelineId}/events?count=1`)
+      .then(events => {
+        return events[0];
       });
 
-    return { ...model, latestCommitEvent };
+    return { ...model, latestEvent };
   }
 
   afterModel(model) {
-    const { latestCommitEvent } = model;
+    const { latestEvent } = model;
 
-    if (latestCommitEvent) {
+    if (latestEvent) {
       const transition = this.replaceWith(
         'v2.pipeline.events.show',
-        latestCommitEvent.id
+        latestEvent.id
       );
 
       transition.data = {
-        latestCommitEvent
+        latestEvent
       };
     }
   }
