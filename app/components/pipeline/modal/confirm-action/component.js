@@ -8,6 +8,8 @@ import { capitalizeFirstLetter, truncateMessage } from './util';
 export default class PipelineModalConfirmActionComponent extends Component {
   @service shuttle;
 
+  @service workflowDataReload;
+
   @service session;
 
   @tracked errorMessage = null;
@@ -22,6 +24,14 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   parameters;
 
+  latestCommitEvent;
+
+  constructor() {
+    super(...arguments);
+
+    this.latestCommitEvent = this.workflowDataReload.getLatestCommitEvent();
+  }
+
   get action() {
     return this.args.job.status ? 'restart' : 'start';
   }
@@ -31,7 +41,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isLatestCommitEvent() {
-    return this.args.event.sha === this.args.latestCommitEvent.sha;
+    return this.args.event.sha === this.latestCommitEvent.sha;
   }
 
   get commitUrl() {

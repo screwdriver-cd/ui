@@ -9,6 +9,16 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    hooks.beforeEach(function () {
+      const workflowDataReload = this.owner.lookup(
+        'service:workflow-data-reload'
+      );
+
+      sinon
+        .stub(workflowDataReload, 'getLatestCommitEvent')
+        .returns({ sha: 'deadbeef0123456789' });
+    });
+
     test('it renders start action', async function (assert) {
       this.setProperties({
         pipeline: { parameters: {} },
@@ -17,7 +27,6 @@ module(
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
@@ -26,7 +35,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -50,7 +58,6 @@ module(
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main', status: 'SUCCESS' },
         closeModal: () => {}
       });
@@ -59,7 +66,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -76,7 +82,6 @@ module(
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         stage: { name: 'stage' },
         closeModal: () => {}
@@ -86,7 +91,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @stage={{this.stage}}
             @closeModal={{this.closeModal}}
@@ -106,7 +110,6 @@ module(
           sha: '0123456789deadbeef'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
@@ -115,7 +118,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -133,7 +135,6 @@ module(
           type: 'pr'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
@@ -142,7 +143,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -158,7 +158,6 @@ module(
           type: 'pr'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
@@ -167,7 +166,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -184,7 +182,6 @@ module(
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main', status: 'FROZEN' },
         closeModal: () => {}
       });
@@ -193,7 +190,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -217,7 +213,6 @@ module(
           }
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
@@ -226,7 +221,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -243,7 +237,6 @@ module(
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main', status: 'FROZEN' },
         closeModal: () => {}
       });
@@ -252,7 +245,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -269,7 +261,6 @@ module(
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main', status: 'FROZEN' },
         closeModal: () => {}
       });
@@ -278,7 +269,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -300,7 +290,6 @@ module(
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
@@ -310,7 +299,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -341,7 +329,6 @@ module(
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
@@ -351,7 +338,6 @@ module(
             @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
