@@ -11,6 +11,8 @@ export default class LatestCommitEventReloader extends DataReloader {
 
   setPipelineId(pipelineId) {
     this.pipelineId = pipelineId;
+    this.idSet.clear();
+    this.idSet.add(pipelineId);
   }
 
   async fetchDataForId() {
