@@ -79,7 +79,9 @@ export default class DataReloader {
 
     this.callbacks.get(queueName).set(id, callback);
 
-    this.idSet.add(id);
+    if (!this.cacheKey) {
+      this.idSet.add(id);
+    }
 
     if (this.idCounts.has(id)) {
       this.idCounts.set(id, this.idCounts.get(id) + 1);
@@ -111,7 +113,10 @@ export default class DataReloader {
 
         if (this.idCounts.get(id) === 1) {
           this.idCounts.delete(id);
-          this.idSet.delete(id);
+
+          if (!this.cacheKey) {
+            this.idSet.delete(id);
+          }
         } else {
           this.idCounts.set(id, this.idCounts.get(id) - 1);
         }
