@@ -10,28 +10,29 @@ export default class NewPipelineEventsShowRoute extends Route {
     const model = this.modelFor('v2.pipeline.events');
     const pipelineId = model.pipeline.id;
 
-    let latestCommitEvent;
+    let latestEvent;
 
     let event;
 
-    if (transition.data.latestCommitEvent) {
-      event = transition.data.latestCommitEvent;
-      latestCommitEvent = event;
+    if (transition.data.latestEvent) {
+      event = transition.data.latestEvent;
+      latestEvent = event;
     } else {
       event = await this.shuttle
         .fetchFromApi('get', `/events/${eventId}`)
-        .catch(err => {
+        .catch(async err => {
           if (err instanceof NotFoundError) {
+            latestEvent = await this.shuttle
+              .fetchFromApi('get', `/pipelines/${pipelineId}/events?count=1`)
+              .then(events => {
+                return events[0];
+              });
+
             return null;
           }
 
           return undefined;
         });
-
-      latestCommitEvent = await this.shuttle.fetchFromApi(
-        'get',
-        `/pipelines/${pipelineId}/latestCommitEvent`
-      );
     }
 
     const jobs = await this.shuttle.fetchFromApi(
@@ -52,7 +53,7 @@ export default class NewPipelineEventsShowRoute extends Route {
     return {
       ...model,
       event,
-      latestCommitEvent,
+      latestEvent,
       jobs,
       stages,
       triggers,

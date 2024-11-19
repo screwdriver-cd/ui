@@ -31,7 +31,7 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked selectedEvent;
 
-  @tracked latestCommitEvent;
+  @tracked latestEvent;
 
   @tracked builds;
 
@@ -54,6 +54,7 @@ export default class PipelineWorkflowComponent extends Component {
 
     this.pipeline = pipeline;
     this.userSettings = this.args.userSettings;
+    this.latestEvent = this.args.latestEvent;
 
     this.workflowDataReload.start(this.args.pipeline.id);
 
@@ -73,7 +74,7 @@ export default class PipelineWorkflowComponent extends Component {
               latestCommitEvent.id
             );
 
-            transition.data = { latestCommitEvent };
+            transition.data = { latestEvent: latestCommitEvent };
           }
         }
       );
@@ -81,7 +82,6 @@ export default class PipelineWorkflowComponent extends Component {
       this.jobs = this.args.jobs;
       this.stages = this.args.stages;
       this.triggers = this.args.triggers;
-      this.latestCommitEvent = this.args.latestCommitEvent;
 
       if (this.args.event) {
         this.event = this.args.event;
@@ -127,9 +127,8 @@ export default class PipelineWorkflowComponent extends Component {
   }
 
   @action
-  buildsCallback(builds, latestCommitEvent) {
+  buildsCallback(builds) {
     this.builds = builds;
-    this.latestCommitEvent = latestCommitEvent;
 
     if (isSkipped(this.event, builds) || isComplete(builds)) {
       this.workflowDataReload.removeBuildsCallback(
@@ -140,7 +139,7 @@ export default class PipelineWorkflowComponent extends Component {
   }
 
   get eventRailAnchor() {
-    return this.args.invalidEvent ? this.latestCommitEvent : this.event;
+    return this.args.invalidEvent ? this.latestEvent : this.event;
   }
 
   get displayJobNameLength() {
