@@ -108,6 +108,8 @@ export default class PipelineWorkflowComponent extends Component {
 
     this.event = event;
     this.builds = builds;
+    this.showTooltip = false;
+    this.showStageTooltip = false;
 
     this.setWorkflowGraphFromEvent();
   }
