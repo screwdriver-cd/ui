@@ -104,6 +104,23 @@ module('Unit | Service | workflowDataReload | DataReloader', function (hooks) {
     assert.equal(dataReloader.idSet.has(id2), true);
   });
 
+  test('registerCallback does not increment idSet for single key cache', function (assert) {
+    const dataReloader = new DataReloader(null, 'key');
+    const queue1 = 'test';
+    const queue2 = 'abc';
+    const id1 = 123;
+    const id2 = 987;
+
+    dataReloader.registerCallback(queue1, id1, () => {});
+    dataReloader.registerCallback(queue2, id1, () => {});
+    dataReloader.registerCallback(queue2, id2, () => {});
+
+    assert.equal(dataReloader.callbacks.get(queue1).size, 1);
+    assert.equal(dataReloader.callbacks.get(queue2).size, 2);
+    assert.equal(dataReloader.idCounts.size, 2);
+    assert.equal(dataReloader.idSet.size, 0);
+  });
+
   test('registerCallback calls callback if response exists in cache', function (assert) {
     const dataReloader = new DataReloader(null);
     const callback = sinon.spy();
@@ -202,6 +219,24 @@ module('Unit | Service | workflowDataReload | DataReloader', function (hooks) {
     assert.equal(dataReloader.callbacks.get('test').has(123), true);
     assert.equal(dataReloader.callbacks.get('abc').has(987), true);
     assert.equal(dataReloader.idSet.size, 2);
+    assert.equal(dataReloader.idCounts.size, 2);
+    assert.equal(dataReloader.idCounts.get(123), 1);
+    assert.equal(dataReloader.idCounts.get(987), 1);
+  });
+
+  test('removeCallback removes event from queue for single key cache', function (assert) {
+    const dataReloader = new DataReloader(null, 'key');
+
+    dataReloader.registerCallback('test', 123, () => {});
+    dataReloader.registerCallback('test', 987, () => {});
+    dataReloader.registerCallback('abc', 987, () => {});
+
+    dataReloader.removeCallback('test', 987);
+    assert.equal(dataReloader.callbacks.get('test').size, 1);
+    assert.equal(dataReloader.callbacks.get('abc').size, 1);
+    assert.equal(dataReloader.callbacks.get('test').has(123), true);
+    assert.equal(dataReloader.callbacks.get('abc').has(987), true);
+    assert.equal(dataReloader.idSet.size, 0);
     assert.equal(dataReloader.idCounts.size, 2);
     assert.equal(dataReloader.idCounts.get(123), 1);
     assert.equal(dataReloader.idCounts.get(987), 1);
