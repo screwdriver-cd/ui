@@ -15,6 +15,16 @@
         @flip={{this.icon.flip}}
       />
     </div>
+    {{#if this.isPR}}
+      <div class="pr-title" title={{this.prTitle}}>
+        <a
+          href={{@event.pr.url}}
+          target="_blank"
+        >
+          {{this.prTitle}}
+        </a>
+      </div>
+    {{/if}}
     <div class="sha" title={{this.truncatedSha}}>
       <a
         class={{if this.isLatestCommit "latest-commit"}}
