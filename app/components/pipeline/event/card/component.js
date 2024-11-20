@@ -181,14 +181,18 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   @action
-  goToEvent() {
-    const { event } = this;
+  goToEvent(e) {
+    if (e.target.href) {
+      e.stopPropagation();
+    } else {
+      const { event } = this;
 
-    this.router.transitionTo('v2.pipeline.events.show', {
-      event,
-      reloadEventRail: this.queueName !== 'eventRail',
-      id: event.id
-    });
+      this.router.transitionTo('v2.pipeline.events.show', {
+        event,
+        reloadEventRail: this.queueName !== 'eventRail',
+        id: event.id
+      });
+    }
   }
 
   get isHighlighted() {
