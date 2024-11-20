@@ -195,8 +195,18 @@ export default class PipelineEventCardComponent extends Component {
     }
   }
 
+  get isPR() {
+    return this.event.type === 'pr';
+  }
+
+  get prTitle() {
+    return `PR-${this.event.prNum}`;
+  }
+
   get isHighlighted() {
-    return this.router.currentURL.endsWith(this.event.id);
+    const eventId = this.isPR ? this.event.prNum : this.event.id;
+
+    return this.router.currentURL.endsWith(eventId);
   }
 
   get title() {
