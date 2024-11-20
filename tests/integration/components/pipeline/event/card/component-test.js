@@ -123,6 +123,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.event-card-title .event-status').exists({ count: 1 });
     assert.dom('.event-card-title .event-status').hasClass('SUCCESS');
     assert.dom('.event-card-title .event-status svg').exists({ count: 1 });
+    assert.dom('.event-card-title pr-title').doesNotExist();
     assert.dom('.event-card-title .sha').exists({ count: 1 });
 
     assert.dom('.event-card-body').exists({ count: 1 });
@@ -727,5 +728,126 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
     assert.dom('.event-card-title .event-status').hasClass('FAILURE');
     assert.dom('.event-card-title .sha').hasText('#deadbee');
+  });
+
+  test('it renders PR title', async function (assert) {
+    const router = this.owner.lookup('service:router');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/2');
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
+
+    this.setProperties({
+      event: {
+        id: 11,
+        groupEventId: 11,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {},
+        type: 'pr',
+        prNum: 4
+      },
+      pipeline: {},
+      userSettings: {}
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @pipeline={{this.pipeline}}
+        @userSettings={{this.userSettings}}
+      />`
+    );
+
+    assert.dom('.event-card-title .pr-title').exists({ count: 1 });
+    assert.dom('.event-card-title .pr-title').containsText('PR-4');
+  });
+
+  test('it does not render highlight for PR', async function (assert) {
+    const router = this.owner.lookup('service:router');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/2');
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
+
+    this.setProperties({
+      event: {
+        id: 11,
+        groupEventId: 11,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {},
+        type: 'pr',
+        prNum: 4
+      },
+      pipeline: {},
+      userSettings: {}
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @pipeline={{this.pipeline}}
+        @userSettings={{this.userSettings}}
+      />`
+    );
+
+    assert.dom('.highlighted').doesNotExist();
+  });
+
+  test('it renders PR highlight', async function (assert) {
+    const router = this.owner.lookup('service:router');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/4');
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
+
+    this.setProperties({
+      event: {
+        id: 11,
+        groupEventId: 11,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {},
+        type: 'pr',
+        prNum: 4
+      },
+      pipeline: {},
+      userSettings: {}
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @pipeline={{this.pipeline}}
+        @userSettings={{this.userSettings}}
+      />`
+    );
+
+    assert.dom('.highlighted').exists({ count: 1 });
   });
 });
