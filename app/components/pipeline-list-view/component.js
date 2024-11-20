@@ -210,14 +210,13 @@ export default Component.extend({
       const latestBuild = jobDetails.builds.length
         ? get(jobDetails, 'builds.lastObject')
         : null;
-
       const jobData = {
         jobName,
         displayName: annotations['screwdriver.cd/displayName'],
         build: latestBuild,
-        isVirtualJob
+        isVirtualJob,
+        stageName
       };
-
       const hasParameters =
         Object.keys(
           this.pipelineParameters === undefined ? {} : this.pipelineParameters
@@ -253,8 +252,6 @@ export default Component.extend({
       let buildId;
 
       let coverageData = {};
-
-      let stageData;
 
       if (latestBuild) {
         if (latestBuild.startTime) {
@@ -294,8 +291,6 @@ export default Component.extend({
         if (annotations && annotations['screwdriver.cd/coverageScope']) {
           coverageData.scope = annotations['screwdriver.cd/coverageScope'];
         }
-
-        stageData = { stageName };
       }
 
       return {
@@ -304,8 +299,7 @@ export default Component.extend({
         duration: duration === null ? 'N/A' : duration,
         history: jobDetails.builds,
         actions: actionsData,
-        coverage: coverageData,
-        stage: stageData
+        coverage: coverageData
       };
     });
 
