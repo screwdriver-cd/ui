@@ -2,9 +2,9 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 
 export default Component.extend({
-  stageName: computed('record.stage.stageName', {
+  stageName: computed('record.job.stageName', {
     get() {
-      return this.record.stage?.stageName || 'N/A';
+      return this.record.job?.stageName || 'N/A';
     }
   })
 });

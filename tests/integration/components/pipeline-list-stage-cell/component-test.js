@@ -8,7 +8,7 @@ module('Integration | Component | pipeline list stage cell', function (hooks) {
 
   test('it renders', async function (assert) {
     this.set('record', {
-      stage: { stageName: 'production' }
+      job: { stageName: 'production' }
     });
 
     await render(hbs`<PipelineListStageCell
@@ -20,7 +20,7 @@ module('Integration | Component | pipeline list stage cell', function (hooks) {
 
   test('it renders default stage N/A if does not exist', async function (assert) {
     this.set('record', {
-      stage: { stageName: 'N/A' }
+      job: { stageName: 'N/A' }
     });
 
     await render(hbs`<PipelineListStageCell
