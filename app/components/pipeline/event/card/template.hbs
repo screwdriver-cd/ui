@@ -19,6 +19,7 @@
       <a
         class={{if this.isLatestCommit "latest-commit"}}
         href={{@event.commit.url}}
+        target="_blank"
       >
         {{this.truncatedSha}}
       </a>
@@ -65,7 +66,10 @@
       {{#if this.isCommitterDifferent}}
         <div>
           Committed by:
-          <a href={{@event.commit.author.url}}>
+          <a
+            href={{@event.commit.author.url}}
+            target="_blank"
+          >
             {{@event.commit.author.name}}
           </a>
         </div>
@@ -79,7 +83,10 @@
               External Trigger
             </LinkTo>
           {{else}}
-            <a href={{@event.creator.url}}>
+            <a
+              href={{@event.creator.url}}
+              target="_blank"
+            >
               {{@event.creator.name}}
             </a>
           {{/if}}
@@ -88,14 +95,20 @@
         {{#if @event.meta.subscribedSourceUrl}}
           <div>
             Started by subscribed event:
-            <a href={{@event.meta.subscribedSourceUrl}}>
+            <a
+              href={{@event.meta.subscribedSourceUrl}}
+              target="_blank"
+            >
               Subscribed Source
             </a>
           </div>
         {{else}}
           <div>
             Started and committed by:
-            <a href={{@event.creator.url}}>
+            <a
+              href={{@event.creator.url}}
+              target="_blank"
+            >
               {{@event.creator.name}}
             </a>
           </div>
