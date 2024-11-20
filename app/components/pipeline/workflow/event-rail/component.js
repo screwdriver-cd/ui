@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import ENV from 'screwdriver-ui/config/environment';
 
 const EVENT_BATCH_SIZE = 10;
 
@@ -20,7 +21,11 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   eventType;
 
-  oldestCommitEventId = null;
+  newestEvent = null;
+
+  oldestEvent = null;
+
+  intervalId = null;
 
   constructor() {
     super(...arguments);
@@ -33,7 +38,17 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
     if (event) {
       this.firstItemId = event.id;
+      this.newestEvent = event;
       this.events = [event];
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy();
+
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
   }
 
@@ -67,16 +82,16 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @action
   async fetchOlderEvents(event) {
-    if (event.id === this.oldestCommitEventId) {
+    if (event.id === this.oldestEvent?.id) {
       return [];
     }
 
     return this.fetchEvents(event.id, 'lt').then(events => {
       if (events.length < EVENT_BATCH_SIZE) {
         if (events.length === 0) {
-          this.oldestCommitEventId = event.id;
+          this.oldestEvent = event;
         } else {
-          this.oldestCommitEventId = events[events.length - 1].id;
+          this.oldestEvent = events[events.length - 1];
         }
       }
 
@@ -88,6 +103,11 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     this.fetchNewerEvents(event).then(newerEvents => {
       if (newerEvents.length > 0) {
         this.events = newerEvents.concat(this.events);
+        this.newestEvent = newerEvents[0];
+      } else if (!this.intervalId) {
+        this.intervalId = setInterval(() => {
+          this.addNewerEvents(this.newestEvent);
+        }, ENV.APP.BUILD_RELOAD_TIMER);
       }
     });
   }
