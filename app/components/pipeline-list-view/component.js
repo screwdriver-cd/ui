@@ -61,7 +61,7 @@ export default Component.extend({
     },
     {
       title: 'STAGE',
-      propertyName: 'stage',
+      propertyName: 'job',
       component: 'pipeline-list-stage-cell',
       sortFunction: (a, b) => collator.compare(a.stageName, b.stageName)
     },
