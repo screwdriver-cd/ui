@@ -5,6 +5,8 @@ import { service } from '@ember/service';
 import { isComplete, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 import { getDisplayJobNameLength, getWorkflowGraph } from './util';
 
+const PIPELINE_EVENT = 'pipeline';
+const PR_EVENT = 'pr';
 const BUILD_QUEUE_NAME = 'graph';
 const RELOAD_ID = 'pipeline';
 
@@ -47,6 +49,8 @@ export default class PipelineWorkflowComponent extends Component {
 
   workflowGraphWithDownstreamTriggers;
 
+  eventType;
+
   constructor() {
     super(...arguments);
 
@@ -55,8 +59,15 @@ export default class PipelineWorkflowComponent extends Component {
     this.pipeline = pipeline;
     this.userSettings = this.args.userSettings;
     this.latestEvent = this.args.latestEvent;
+    this.eventType = this.router.currentRouteName.includes('events')
+      ? PIPELINE_EVENT
+      : PR_EVENT;
 
-    this.workflowDataReload.start(this.args.pipeline.id);
+    if (this.eventType === PIPELINE_EVENT) {
+      this.workflowDataReload.start(this.args.pipeline.id);
+    } else {
+      this.workflowDataReload.start();
+    }
 
     if (this.args.noEvents) {
       this.workflowDataReload.registerLatestCommitEventCallback(
@@ -136,6 +147,10 @@ export default class PipelineWorkflowComponent extends Component {
         this.event.id
       );
     }
+  }
+
+  get isPR() {
+    return this.eventType === PR_EVENT;
   }
 
   get eventRailAnchor() {
