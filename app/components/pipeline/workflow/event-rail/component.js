@@ -4,6 +4,8 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
+const PIPELINE_EVENT = 'pipeline';
+const PR_EVENT = 'pr';
 const EVENT_BATCH_SIZE = 10;
 
 export default class PipelineWorkflowEventRailComponent extends Component {
@@ -31,8 +33,8 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     super(...arguments);
 
     this.eventType = this.router.currentRouteName.includes('events')
-      ? 'pipeline'
-      : 'pr';
+      ? PIPELINE_EVENT
+      : PR_EVENT;
 
     const { event } = this.args;
 
@@ -50,6 +52,10 @@ export default class PipelineWorkflowEventRailComponent extends Component {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
+  }
+
+  get isPR() {
+    return this.eventType === PR_EVENT;
   }
 
   @action
