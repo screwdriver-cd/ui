@@ -14,11 +14,6 @@ export default class NewPipelinePullsRoute extends Route {
       '/users/settings'
     );
 
-    const jobs = await this.shuttle.fetchFromApi(
-      'get',
-      `/pipelines/${pipelineId}/jobs?type=pipeline`
-    );
-
     const stages = await this.shuttle.fetchFromApi(
       'get',
       `/pipelines/${pipelineId}/stages`
@@ -31,12 +26,14 @@ export default class NewPipelinePullsRoute extends Route {
 
     const pullRequestIds = new Set();
 
-    await this.shuttle
+    const pullRequestJobs = await this.shuttle
       .fetchFromApi('get', `/pipelines/${pipelineId}/jobs?type=pr`)
       .then(prJobs => {
         prJobs.forEach(prJob => {
           pullRequestIds.add(getPrNumber(prJob));
         });
+
+        return prJobs;
       });
 
     const newestPrNum = newestPrNumber(pullRequestIds);
@@ -44,9 +41,9 @@ export default class NewPipelinePullsRoute extends Route {
     return {
       ...model,
       userSettings,
-      jobs,
       stages,
       triggers,
+      pullRequestJobs,
       pullRequestIds,
       newestPrNum
     };
