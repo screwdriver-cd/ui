@@ -9,6 +9,8 @@ export default class WorkflowDataReloadService extends Service {
 
   buildsReloader;
 
+  requiresLatestCommitEvent;
+
   constructor() {
     super(...arguments);
 
@@ -21,8 +23,14 @@ export default class WorkflowDataReloadService extends Service {
   start(pipelineId) {
     this.stop();
 
-    this.latestCommitEventReloader.setPipelineId(pipelineId);
-    this.latestCommitEventReloader.start();
+    if (pipelineId) {
+      this.requiresLatestCommitEvent = true;
+      this.latestCommitEventReloader.setPipelineId(pipelineId);
+      this.latestCommitEventReloader.start();
+    } else {
+      this.requiresLatestCommitEvent = false;
+    }
+
     this.buildsReloader.start();
   }
 
@@ -44,7 +52,9 @@ export default class WorkflowDataReloadService extends Service {
   }
 
   registerLatestCommitEventCallback(queueName, id, callback) {
-    this.latestCommitEventReloader.registerCallback(queueName, id, callback);
+    if (this.requiresLatestCommitEvent) {
+      this.latestCommitEventReloader.registerCallback(queueName, id, callback);
+    }
   }
 
   removeLatestCommitEventCallback(queueName, id) {
