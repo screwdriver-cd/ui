@@ -70,13 +70,13 @@
 
   {{#if @noEvents}}
     <div id="no-events">
-      This pipeline has no events yet
+      This pipeline has no {{if this.isPR "open pull requests" "events"}} yet
     </div>
   {{/if}}
 
   {{#if @invalidEvent}}
     <div id="invalid-event">
-      Event does not exist for this pipeline
+      {{if this.isPR "Pull request" "Event"}} does not exist for this pipeline
     </div>
   {{/if}}
 </div>
