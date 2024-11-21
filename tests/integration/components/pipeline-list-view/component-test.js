@@ -79,6 +79,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -90,6 +94,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
@@ -172,6 +178,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`
       {{#if this.showPipelineListView}}
@@ -185,6 +195,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
           @buildParameters={{this.buildParameters}}
           @showListView={{this.showListView}}
           @setShowListView={{this.setShowListView}}
+          @updateNumBuilds={{this.updateNumBuilds}}
+          @defaultNumBuilds={{this.defaultNumBuilds}}
         />
 
       {{/if}}`);
@@ -234,6 +246,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -245,6 +261,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
@@ -300,6 +318,14 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -311,6 +337,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
@@ -365,6 +393,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -376,6 +408,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
@@ -430,6 +464,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -441,6 +479,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
@@ -495,6 +535,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -506,6 +550,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
@@ -560,6 +606,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -571,6 +621,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
@@ -625,6 +677,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -636,6 +692,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
@@ -686,6 +744,10 @@ module('Integration | Component | pipeline list view', function (hooks) {
     set(this, 'setShowListView', () => {
       assert.ok(true);
     });
+    set(this, 'defaultNumBuilds', ENV.APP.NUM_BUILDS_LISTED);
+    set(this, 'updateNumBuilds', () => {
+      assert.ok(true);
+    });
 
     await render(hbs`<PipelineListView
       @pipeline={{this.pipeline}}
@@ -697,6 +759,8 @@ module('Integration | Component | pipeline list view', function (hooks) {
       @buildParameters={{this.buildParameters}}
       @showListView={{this.showListView}}
       @setShowListView={{this.setShowListView}}
+      @updateNumBuilds={{this.updateNumBuilds}}
+      @defaultNumBuilds={{this.defaultNumBuilds}}
     />`);
 
     assert.dom('table').exists({ count: 1 });
