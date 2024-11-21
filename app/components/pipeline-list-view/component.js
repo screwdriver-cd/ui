@@ -333,7 +333,10 @@ export default Component.extend({
       }
     }
   ),
-
+  willDestroy() {
+    this._super(...arguments);
+    this.updateNumBuilds(this.defaultNumBuilds);
+  },
   actions: {
     async onScrolledToBottom({ currentTarget }) {
       const { scrollTop, scrollHeight, clientHeight } = currentTarget;
