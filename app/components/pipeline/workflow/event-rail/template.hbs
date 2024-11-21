@@ -21,20 +21,22 @@
         />
       {{/if}}
     </BsButton>
-    <BsButton
-      id="start-event-button"
-      @type="primary"
-      @outline={{true}}
-      @defaultText="Start a new event"
-      @onClick={{this.openStartEventModal}}
-      title="Start a new event"
-    />
-    {{#if this.showStartEventModal}}
-      <Pipeline::Modal::StartEvent
-        @pipeline={{@pipeline}}
-        @jobs={{@jobs}}
-        @closeModal={{this.closeStartEventModal}}
+    {{#if (not this.isPR)}}
+      <BsButton
+        id="start-event-button"
+        @type="primary"
+        @outline={{true}}
+        @defaultText="Start a new event"
+        @onClick={{this.openStartEventModal}}
+        title="Start a new event"
       />
+      {{#if this.showStartEventModal}}
+        <Pipeline::Modal::StartEvent
+          @pipeline={{@pipeline}}
+          @jobs={{@jobs}}
+          @closeModal={{this.closeStartEventModal}}
+        />
+      {{/if}}
     {{/if}}
   </div>
 
