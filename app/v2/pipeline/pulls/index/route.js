@@ -1,4 +1,8 @@
 import Route from '@ember/routing/route';
+import {
+  getPrNumbers,
+  newestPrNumber
+} from 'screwdriver-ui/utils/pipeline/pull-request';
 
 export default class V2PipelinePullsIndexRoute extends Route {
   model() {
@@ -6,8 +10,13 @@ export default class V2PipelinePullsIndexRoute extends Route {
   }
 
   afterModel(model) {
-    if (model.newestPrNum) {
-      this.replaceWith('v2.pipeline.pulls.show', model.newestPrNum);
+    const { pullRequestJobs } = model;
+
+    if (pullRequestJobs.length > 0) {
+      const pullRequestIds = getPrNumbers(pullRequestJobs);
+      const newestPrNum = newestPrNumber(pullRequestIds);
+
+      this.replaceWith('v2.pipeline.pulls.show', newestPrNum);
     }
   }
 }
