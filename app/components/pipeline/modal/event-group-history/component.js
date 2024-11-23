@@ -29,17 +29,25 @@ export default class PipelineModalEventGroupHistoryComponent extends Component {
     }
   }
 
+  get modalHeaderText() {
+    if (this.args.isPR) {
+      return `Events in PR: ${this.args.event.prNum}`;
+    }
+
+    return `Events in group: ${this.args.event.groupEventId}`;
+  }
+
   @action
   fetchGroupEvents() {
-    this.shuttle
-      .fetchFromApi(
-        'get',
-        `/pipelines/${this.args.pipeline.id}/events?groupEventId=${this.args.event.groupEventId}`
-      )
-      .then(events => {
-        if (this.events.length < events.length) {
-          this.events = events;
-        }
-      });
+    const baseUrl = `/pipelines/${this.args.pipeline.id}/events?`;
+    const url = this.args.isPR
+      ? `${baseUrl}prNum=${this.args.event.prNum}`
+      : `${baseUrl}groupEventId=${this.args.event.groupEventId}`;
+
+    this.shuttle.fetchFromApi('get', url).then(events => {
+      if (this.events.length < events.length) {
+        this.events = events;
+      }
+    });
   }
 }
