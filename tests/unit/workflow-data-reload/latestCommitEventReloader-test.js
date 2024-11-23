@@ -41,17 +41,6 @@ module(
       assert.equal(response, null);
     });
 
-    test('setPipelineId sets pipelineId correctly', async function (assert) {
-      const latestCommitEventReloader = new LatestCommitEventReloader(null);
-      const pipelineId = 123;
-
-      latestCommitEventReloader.setPipelineId(pipelineId);
-
-      assert.equal(latestCommitEventReloader.pipelineId, pipelineId);
-      assert.equal(latestCommitEventReloader.idSet.size, 1);
-      assert.equal(latestCommitEventReloader.idSet.has(pipelineId), true);
-    });
-
     test('getLatestCommitEvent returns correct value', async function (assert) {
       const latestCommitEventReloader = new LatestCommitEventReloader(null);
       const spyResponseCache = sinon.spy(new Map());

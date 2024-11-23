@@ -6,6 +6,17 @@ import sinon from 'sinon';
 module('Unit | Service | workflowDataReload | DataReloader', function (hooks) {
   setupTest(hooks);
 
+  test('setPipelineId sets pipelineId correctly', async function (assert) {
+    const dataReloader = new DataReloader(null);
+    const pipelineId = 123;
+
+    dataReloader.setPipelineId(pipelineId);
+
+    assert.equal(dataReloader.pipelineId, pipelineId);
+    assert.equal(dataReloader.idSet.size, 1);
+    assert.equal(dataReloader.idSet.has(pipelineId), true);
+  });
+
   test('fetchData calls callback with correct data', async function (assert) {
     const dataReloader = new DataReloader(null);
     const queueName = 'test';
