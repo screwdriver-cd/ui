@@ -53,5 +53,45 @@ module(
 
       await clearRender();
     });
+
+    test('it renders correct modal header for pull request', async function (assert) {
+      const router = this.owner.lookup('service:router');
+      const shuttle = this.owner.lookup('service:shuttle');
+      const prNum = 1;
+      const mockEvent = {
+        prNum,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {},
+        groupEventId: 1
+      };
+
+      sinon.stub(router, 'currentURL').value('');
+      sinon.stub(shuttle, 'fetchFromApi').resolves([]);
+
+      this.setProperties({
+        pipeline: {},
+        event: { ...mockEvent, id: 1 },
+        jobs: {},
+        userSettings: {},
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Pipeline::Modal::EventGroupHistory
+            @pipeline={{this.pipeline}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @userSettings={{this.userSettings}}
+            @isPR={{true}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert.dom('.modal-header').hasText(`Events in PR: ${prNum} ×`);
+
+      await clearRender();
+    });
   }
 );
