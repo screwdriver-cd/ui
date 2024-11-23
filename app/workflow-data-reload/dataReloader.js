@@ -17,6 +17,8 @@ export default class DataReloader {
 
   idCounts;
 
+  pipelineId;
+
   constructor(shuttle, cacheKey = null) {
     this.shuttle = shuttle;
     this.cacheKey = cacheKey;
@@ -50,6 +52,12 @@ export default class DataReloader {
       this.idSet.clear();
       this.idCounts.clear();
     }
+  }
+
+  setPipelineId(pipelineId) {
+    this.pipelineId = pipelineId;
+    this.idSet.clear();
+    this.idSet.add(pipelineId);
   }
 
   async fetchData() {
