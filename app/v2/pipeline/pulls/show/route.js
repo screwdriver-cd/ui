@@ -13,14 +13,14 @@ export default class V2PipelinePullsShowRoute extends Route {
     const model = this.modelFor('v2.pipeline.pulls');
     const { pipeline, pullRequestJobs } = model;
     const pipelineId = pipeline.id;
-    const pullRequestIds = getPrNumbers(pullRequestJobs);
+    const prNums = getPrNumbers(pullRequestJobs);
     const prNum = parseInt(params.pull_request_number, 10);
 
     let latestEvent;
 
     let event;
 
-    if (pullRequestIds.has(prNum)) {
+    if (prNums.has(prNum)) {
       event = await this.shuttle
         .fetchFromApi('get', `/pipelines/${pipelineId}/events?prNum=${prNum}`)
         .then(events => {
@@ -28,7 +28,7 @@ export default class V2PipelinePullsShowRoute extends Route {
         });
       latestEvent = event;
     } else {
-      const newestPrNum = newestPrNumber(pullRequestIds);
+      const newestPrNum = newestPrNumber(prNums);
 
       latestEvent = await this.shuttle
         .fetchFromApi(
@@ -60,6 +60,7 @@ export default class V2PipelinePullsShowRoute extends Route {
       jobs,
       event,
       latestEvent,
+      prNums: Array.from(prNums).sort((a, b) => a - b),
       invalidEvent: event === undefined
     };
   }

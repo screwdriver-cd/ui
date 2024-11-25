@@ -13,6 +13,8 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @service router;
 
+  @service workflowDataReload;
+
   @tracked showSearchEventModal = false;
 
   @tracked showStartEventModal = false;
@@ -22,6 +24,8 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   @tracked firstItemId;
 
   eventType;
+
+  prNums;
 
   newestEvent = null;
 
@@ -35,6 +39,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     this.eventType = this.router.currentRouteName.includes('events')
       ? PIPELINE_EVENT
       : PR_EVENT;
+    this.prNums = this.args.prNums;
 
     const { event } = this.args;
 
@@ -66,13 +71,41 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     }
   }
 
-  async fetchEvents(eventId, direction) {
+  async fetchEvents(event, direction) {
+    const pipelineId = this.args.pipeline.id;
+
+    if (this.isPR) {
+      if (this.prNums.length === 0) {
+        return [];
+      }
+
+      const openPrNums =
+        direction === 'gt' ? this.prNums : this.prNums.toReversed();
+      const index = openPrNums.indexOf(event.prNum);
+      const prNums = openPrNums.slice(index + 1, index + 1 + EVENT_BATCH_SIZE);
+
+      const promises = prNums.map(prNumToFetch => {
+        return this.shuttle
+          .fetchFromApi(
+            'get',
+            `/pipelines/${pipelineId}/events?type=${this.eventType}&prNum=${prNumToFetch}`
+          )
+          .then(events => {
+            return events[0];
+          });
+      });
+
+      return Promise.all(promises).then(events => {
+        return events;
+      });
+    }
+
     const sort = direction === 'gt' ? 'ascending' : 'descending';
 
     return this.shuttle
       .fetchFromApi(
         'get',
-        `/pipelines/${this.args.pipeline.id}/events?count=${EVENT_BATCH_SIZE}&type=${this.eventType}&id=${direction}:${eventId}&sort=${sort}`
+        `/pipelines/${pipelineId}/events?count=${EVENT_BATCH_SIZE}&type=${this.eventType}&id=${direction}:${event.id}&sort=${sort}`
       )
       .then(events => {
         return events;
@@ -81,7 +114,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @action
   async fetchNewerEvents(event) {
-    return this.fetchEvents(event.id, 'gt').then(events => {
+    return this.fetchEvents(event, 'gt').then(events => {
       return events.reverse();
     });
   }
@@ -92,7 +125,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
       return [];
     }
 
-    return this.fetchEvents(event.id, 'lt').then(events => {
+    return this.fetchEvents(event, 'lt').then(events => {
       if (events.length < EVENT_BATCH_SIZE) {
         if (events.length === 0) {
           this.oldestEvent = event;
@@ -112,6 +145,10 @@ export default class PipelineWorkflowEventRailComponent extends Component {
         this.newestEvent = newerEvents[0];
       } else if (!this.intervalId) {
         this.intervalId = setInterval(() => {
+          if (event.prNum) {
+            this.prNums = this.workflowDataReload.getPrNums();
+          }
+
           this.addNewerEvents(this.newestEvent);
         }, ENV.APP.BUILD_RELOAD_TIMER);
       }
