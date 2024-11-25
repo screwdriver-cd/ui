@@ -70,4 +70,8 @@ export default class WorkflowDataReloadService extends Service {
   getLatestCommitEvent() {
     return this.latestCommitEventReloader.getLatestCommitEvent();
   }
+
+  getPrNums() {
+    return this.openPrsReloader.getPrNums();
+  }
 }
