@@ -64,9 +64,9 @@ export default class PipelineWorkflowComponent extends Component {
       : PR_EVENT;
 
     if (this.eventType === PIPELINE_EVENT) {
-      this.workflowDataReload.start(this.args.pipeline.id);
+      this.workflowDataReload.start(pipeline.id, false);
     } else {
-      this.workflowDataReload.start();
+      this.workflowDataReload.start(pipeline.id, true);
     }
 
     if (this.args.noEvents) {

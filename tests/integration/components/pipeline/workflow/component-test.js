@@ -244,7 +244,8 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
       stages: [],
       triggers: [],
       latestEvent: event,
-      event
+      event,
+      prNums: []
     });
 
     await render(
@@ -256,6 +257,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
         @triggers={{this.triggers}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
+        @prNums={{this.prNums}}
       />`
     );
 

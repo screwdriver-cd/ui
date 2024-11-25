@@ -1,6 +1,7 @@
 import Service, { service } from '@ember/service';
 import BuildsDataReloader from './buildsDataReloader';
 import LatestCommitEventReloader from './latestCommitEventReloader';
+import OpenPrsReloader from './openPrsReloader';
 
 export default class WorkflowDataReloadService extends Service {
   @service shuttle;
@@ -8,6 +9,8 @@ export default class WorkflowDataReloadService extends Service {
   latestCommitEventReloader;
 
   buildsReloader;
+
+  openPrsReloader;
 
   requiresLatestCommitEvent;
 
@@ -18,17 +21,20 @@ export default class WorkflowDataReloadService extends Service {
       this.shuttle
     );
     this.buildsReloader = new BuildsDataReloader(this.shuttle);
+    this.openPrsReloader = new OpenPrsReloader(this.shuttle);
   }
 
-  start(pipelineId) {
+  start(pipelineId, isPR) {
     this.stop();
 
-    if (pipelineId) {
+    if (!isPR) {
       this.requiresLatestCommitEvent = true;
       this.latestCommitEventReloader.setPipelineId(pipelineId);
       this.latestCommitEventReloader.start();
     } else {
       this.requiresLatestCommitEvent = false;
+      this.openPrsReloader.setPipelineId(pipelineId);
+      this.openPrsReloader.start();
     }
 
     this.buildsReloader.start();
@@ -63,5 +69,9 @@ export default class WorkflowDataReloadService extends Service {
 
   getLatestCommitEvent() {
     return this.latestCommitEventReloader.getLatestCommitEvent();
+  }
+
+  getPrNums() {
+    return this.openPrsReloader.getPrNums();
   }
 }
