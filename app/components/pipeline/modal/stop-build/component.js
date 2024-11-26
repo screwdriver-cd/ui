@@ -6,11 +6,7 @@ import { tracked } from '@glimmer/tracking';
 export default class PipelineModalStopBuildComponent extends Component {
   @service shuttle;
 
-  @tracked isDisabled = false;
-
   @tracked errorMessage = null;
-
-  @tracked successMessage = null;
 
   @action
   async stopBuild() {
@@ -18,8 +14,7 @@ export default class PipelineModalStopBuildComponent extends Component {
       await this.shuttle
         .fetchFromApi('put', `/events/${this.args.eventId}/stop`)
         .then(() => {
-          this.successMessage = 'All builds for the event stopped successfully';
-          this.isDisabled = true;
+          this.args.closeModal();
         })
         .catch(err => {
           this.errorMessage = err.message;
@@ -30,8 +25,7 @@ export default class PipelineModalStopBuildComponent extends Component {
           status: 'ABORTED'
         })
         .then(() => {
-          this.successMessage = 'Build stopped successfully';
-          this.isDisabled = true;
+          this.args.closeModal();
         })
         .catch(err => {
           this.errorMessage = err.message;

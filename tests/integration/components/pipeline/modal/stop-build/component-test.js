@@ -51,13 +51,14 @@ module('Integration | Component | pipeline/modal/stop-build', function (hooks) {
     assert.dom('.alert > span').hasText(errorMessage);
   });
 
-  test('it displays success message when stop succeeds', async function (assert) {
+  test('it closes modal when stop succeeds', async function (assert) {
     const shuttle = this.owner.lookup('service:shuttle');
     const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+    const closeModalSpy = sinon.spy();
 
     this.setProperties({
       buildId: 1,
-      closeModal: () => {}
+      closeModal: closeModalSpy
     });
 
     await render(
@@ -70,9 +71,7 @@ module('Integration | Component | pipeline/modal/stop-build', function (hooks) {
     await click('#stop-build');
 
     assert.equal(shuttleStub.calledOnce, true);
-    assert.dom('.alert').exists({ count: 1 });
-    assert.dom('.alert > span').hasText('Build stopped successfully');
-    assert.dom('#stop-build').isDisabled();
+    assert.equal(closeModalSpy.calledOnce, true);
   });
 
   test('it calls correct API when no builds are configured', async function (assert) {
