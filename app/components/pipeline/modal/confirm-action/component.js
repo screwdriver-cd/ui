@@ -14,8 +14,6 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   @tracked errorMessage = null;
 
-  @tracked successMessage = null;
-
   @tracked isAwaitingResponse = false;
 
   @tracked wasActionSuccessful = false;
@@ -114,10 +112,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
     await this.shuttle
       .fetchFromApi('post', '/events', data)
       .then(() => {
-        this.successMessage = `${capitalizeFirstLetter(
-          this.action
-        )}ed successfully`;
-        this.wasActionSuccessful = true;
+        this.args.closeModal();
       })
       .catch(err => {
         this.wasActionSuccessful = false;

@@ -279,9 +279,10 @@ module(
       assert.dom('#submit-action').isEnabled();
     });
 
-    test('it display success message', async function (assert) {
+    test('it closes modal on success', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
       const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+      const closeModalSpy = sinon.spy();
 
       this.setProperties({
         pipeline: { parameters: {} },
@@ -291,7 +292,7 @@ module(
         },
         jobs: [],
         job: { name: 'main' },
-        closeModal: () => {}
+        closeModal: closeModalSpy
       });
 
       await render(
@@ -309,9 +310,7 @@ module(
       await click('#submit-action');
 
       assert.equal(shuttleStub.calledOnce, true);
-      assert.dom('#submit-action').isDisabled();
-      assert.dom('.alert').exists({ count: 1 });
-      assert.dom('.alert > span').hasText('Started successfully');
+      assert.equal(closeModalSpy.calledOnce, true);
     });
 
     test('it displays error message when API call fails', async function (assert) {
