@@ -776,6 +776,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
+    const selectedPrSha = this.owner.lookup('service:selected-pr-sha');
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/2');
     sinon
@@ -784,6 +785,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     sinon
       .stub(workflowDataReload, 'registerBuildsCallback')
       .callsFake(() => {});
+    sinon.stub(selectedPrSha, 'isEventSelected').returns(false);
 
     this.setProperties({
       event: {
@@ -816,6 +818,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
+    const selectedPrSha = this.owner.lookup('service:selected-pr-sha');
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/4');
     sinon
@@ -824,6 +827,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     sinon
       .stub(workflowDataReload, 'registerBuildsCallback')
       .callsFake(() => {});
+    sinon.stub(selectedPrSha, 'isEventSelected').returns(true);
 
     this.setProperties({
       event: {
