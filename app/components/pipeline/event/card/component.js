@@ -27,6 +27,8 @@ export default class PipelineEventCardComponent extends Component {
 
   @service workflowDataReload;
 
+  @service selectedPrSha;
+
   @tracked event;
 
   @tracked builds;
@@ -187,11 +189,26 @@ export default class PipelineEventCardComponent extends Component {
     } else {
       const { event } = this;
 
-      this.router.transitionTo('v2.pipeline.events.show', {
-        event,
-        reloadEventRail: this.queueName !== 'eventRail',
-        id: event.id
-      });
+      const route = this.isPR
+        ? 'v2.pipeline.pulls.show'
+        : 'v2.pipeline.events.show';
+
+      if (this.isPR) {
+        this.selectedPrSha.setSha(event.sha);
+        this.router.transitionTo(route, {
+          event,
+          reloadEventRail: this.queueName !== 'eventRail',
+          id: event.prNum,
+          pull_request_number: event.prNum,
+          sha: event.sha
+        });
+      } else {
+        this.router.transitionTo(route, {
+          event,
+          reloadEventRail: this.queueName !== 'eventRail',
+          id: event.id
+        });
+      }
     }
   }
 
@@ -204,9 +221,13 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   get isHighlighted() {
-    const eventId = this.isPR ? this.event.prNum : this.event.id;
+    const { event } = this;
+    const eventId = this.isPR ? event.prNum : event.id;
+    const isSelectedEvent = this.router.currentURL.endsWith(eventId);
 
-    return this.router.currentURL.endsWith(eventId);
+    return this.isPR
+      ? isSelectedEvent && this.selectedPrSha.isEventSelected(event)
+      : isSelectedEvent;
   }
 
   get title() {
@@ -256,6 +277,10 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   get groupHistoryButtonTitle() {
+    if (this.isPR) {
+      return `View event history for PR: ${this.event.prNum}`;
+    }
+
     const groupId = this.event.parentEventId
       ? this.event.parentEventId
       : this.event.groupEventId;
