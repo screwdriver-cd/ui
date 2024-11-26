@@ -10,6 +10,10 @@ module(
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
+      const router = this.owner.lookup('service:router');
+
+      sinon.stub(router, 'currentRouteName').value('pipeline');
+
       this.setProperties({
         pipeline: {},
         jobs: [],
@@ -34,8 +38,10 @@ module(
     });
 
     test('it makes API call for valid input', async function (assert) {
+      const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
+      sinon.stub(router, 'currentRouteName').value('pipeline');
       sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
       this.setProperties({
@@ -60,8 +66,10 @@ module(
     });
 
     test('it handles invalid input', async function (assert) {
+      const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
+      sinon.stub(router, 'currentRouteName').value('pipeline');
       sinon.spy(shuttle);
 
       this.setProperties({
@@ -88,8 +96,10 @@ module(
     });
 
     test('it clears input and search results when escape key is pressed', async function (assert) {
+      const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
+      sinon.stub(router, 'currentRouteName').value('pipeline');
       sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
       this.setProperties({
