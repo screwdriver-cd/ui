@@ -189,11 +189,26 @@ export default class PipelineEventCardComponent extends Component {
     } else {
       const { event } = this;
 
-      this.router.transitionTo('v2.pipeline.events.show', {
-        event,
-        reloadEventRail: this.queueName !== 'eventRail',
-        id: event.id
-      });
+      const route = this.isPR
+        ? 'v2.pipeline.pulls.show'
+        : 'v2.pipeline.events.show';
+
+      if (this.isPR) {
+        this.selectedPrSha.setSha(event.sha);
+        this.router.transitionTo(route, {
+          event,
+          reloadEventRail: this.queueName !== 'eventRail',
+          id: event.prNum,
+          pull_request_number: event.prNum,
+          sha: event.sha
+        });
+      } else {
+        this.router.transitionTo(route, {
+          event,
+          reloadEventRail: this.queueName !== 'eventRail',
+          id: event.id
+        });
+      }
     }
   }
 
