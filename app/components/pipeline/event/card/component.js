@@ -262,6 +262,10 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   get groupHistoryButtonTitle() {
+    if (this.isPR) {
+      return `View event history for PR: ${this.event.prNum}`;
+    }
+
     const groupId = this.event.parentEventId
       ? this.event.parentEventId
       : this.event.groupEventId;
