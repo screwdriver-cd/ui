@@ -67,6 +67,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   update(element, [event, reloadEvents]) {
     if (reloadEvents) {
       this.firstItemId = event.id;
+      this.newestEvent = event;
       this.events = [event];
     }
   }
