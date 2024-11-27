@@ -117,6 +117,19 @@ export default class PipelineWorkflowComponent extends Component {
   update(element, [event]) {
     const builds = this.workflowDataReload.getBuildsForEvent(event.id);
 
+    this.workflowDataReload.removeBuildsCallback(
+      BUILD_QUEUE_NAME,
+      this.event.id
+    );
+
+    if (!this.isEventComplete(event, builds)) {
+      this.workflowDataReload.registerBuildsCallback(
+        BUILD_QUEUE_NAME,
+        event.id,
+        this.buildsCallback
+      );
+    }
+
     this.event = event;
     this.builds = builds;
     this.showTooltip = false;
@@ -141,12 +154,16 @@ export default class PipelineWorkflowComponent extends Component {
   buildsCallback(builds) {
     this.builds = builds;
 
-    if (isSkipped(this.event, builds) || isComplete(builds)) {
+    if (this.isEventComplete(this.event, builds)) {
       this.workflowDataReload.removeBuildsCallback(
         BUILD_QUEUE_NAME,
         this.event.id
       );
     }
+  }
+
+  isEventComplete(event, builds) {
+    return !!(isSkipped(this.event, builds) || isComplete(builds));
   }
 
   get isPR() {
