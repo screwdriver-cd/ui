@@ -9,13 +9,13 @@ import {
 import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
 
 export default class PipelineModalStartEventComponent extends Component {
+  @service router;
+
   @service shuttle;
 
   @service session;
 
   @tracked errorMessage = null;
-
-  @tracked successMessage = null;
 
   @tracked isAwaitingResponse = false;
 
@@ -68,9 +68,13 @@ export default class PipelineModalStartEventComponent extends Component {
 
     await this.shuttle
       .fetchFromApi('post', '/events', data)
-      .then(() => {
-        this.wasActionSuccessful = true;
-        this.successMessage = `Started successfully`;
+      .then(event => {
+        this.args.closeModal();
+        this.router.transitionTo('v2.pipeline.events.show', {
+          event,
+          reloadEventRail: true,
+          id: event.id
+        });
       })
       .catch(err => {
         this.wasActionSuccessful = false;

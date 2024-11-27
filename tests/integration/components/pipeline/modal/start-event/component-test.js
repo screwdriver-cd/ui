@@ -1,7 +1,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import sinon from 'sinon';
 
 module(
   'Integration | Component | pipeline/modal/start-event',
@@ -64,6 +65,29 @@ module(
       );
 
       assert.dom('#user-notice').exists({ count: 1 });
+    });
+
+    test('it closes modal on success', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+      const closeModalSpy = sinon.spy();
+
+      this.setProperties({
+        pipeline: {},
+        jobs: [],
+        closeModal: closeModalSpy
+      });
+      await render(
+        hbs`<Pipeline::Modal::StartEvent
+            @pipeline={{this.pipeline}}
+            @jobs={{this.jobs}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await click('#submit-action');
+
+      assert.equal(shuttleStub.calledOnce, true);
+      assert.equal(closeModalSpy.calledOnce, true);
     });
   }
 );
