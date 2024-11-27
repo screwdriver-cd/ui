@@ -23,12 +23,10 @@ export function buildPostBody( // eslint-disable-line import/prefer-default-expo
     causeMessage: `Manually started by ${username}`
   };
 
-  if (job?.status) {
+  if (event && job) {
     data.startFrom = job.name;
     data.groupEventId = event.groupEventId;
     data.parentEventId = event.id;
-  } else if (job?.name) {
-    data.startFrom = job.name;
   } else {
     data.startFrom = '~commit';
   }

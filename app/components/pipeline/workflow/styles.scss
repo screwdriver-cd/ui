@@ -21,6 +21,7 @@
 
     #workflow-graph-container {
       grid-area: workflow;
+      overflow: auto;
       $graph-controls-height: 2.5rem;
 
       #workflow-graph-controls {
