@@ -187,6 +187,10 @@ export default class PipelineEventCardComponent extends Component {
     if (e.target.href) {
       e.stopPropagation();
     } else {
+      if (this.args.onClick) {
+        this.args.onClick();
+      }
+
       const { event } = this;
 
       const route = this.isPR
