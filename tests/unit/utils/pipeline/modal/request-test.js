@@ -26,11 +26,21 @@ module('Unit | Utility | pipeline/modal/request', function () {
 
   test('buildPostBody sets correct values for new event starting from job', function (assert) {
     assert.deepEqual(
-      buildPostBody('foobar', 123, { name: 'main' }, null, null, false, null),
+      buildPostBody(
+        'foobar',
+        123,
+        { name: 'main' },
+        { id: 987, groupEventId: 999 },
+        null,
+        false,
+        null
+      ),
       {
         pipelineId: 123,
         causeMessage: 'Manually started by foobar',
-        startFrom: 'main'
+        startFrom: 'main',
+        groupEventId: 999,
+        parentEventId: 987
       }
     );
   });
