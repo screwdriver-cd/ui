@@ -18,14 +18,6 @@
         @dismissible={{false}}
       />
     {{/if}}
-    {{#if this.successMessage}}
-      <InfoMessage
-        @message={{this.successMessage}}
-        @type="success"
-        @icon="check-circle"
-        @dismissible={{false}}
-      />
-    {{/if}}
     Are you sure you want to stop the build?
   </modal.body>
   <modal.footer>
@@ -33,7 +25,6 @@
       id="stop-build"
       @type="primary"
       @onClick={{modal.submit}}
-      disabled={{this.isDisabled}}
     >
       Yes
     </BsButton>
