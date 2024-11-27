@@ -6,6 +6,8 @@ import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
 import { capitalizeFirstLetter, truncateMessage } from './util';
 
 export default class PipelineModalConfirmActionComponent extends Component {
+  @service router;
+
   @service shuttle;
 
   @service workflowDataReload;
@@ -13,8 +15,6 @@ export default class PipelineModalConfirmActionComponent extends Component {
   @service session;
 
   @tracked errorMessage = null;
-
-  @tracked successMessage = null;
 
   @tracked isAwaitingResponse = false;
 
@@ -113,11 +113,13 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
     await this.shuttle
       .fetchFromApi('post', '/events', data)
-      .then(() => {
-        this.successMessage = `${capitalizeFirstLetter(
-          this.action
-        )}ed successfully`;
-        this.wasActionSuccessful = true;
+      .then(event => {
+        this.args.closeModal();
+        this.router.transitionTo('v2.pipeline.events.show', {
+          event,
+          reloadEventRail: true,
+          id: event.id
+        });
       })
       .catch(err => {
         this.wasActionSuccessful = false;
