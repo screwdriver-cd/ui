@@ -4,6 +4,8 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 export default class PipelineModalSearchEventComponent extends Component {
+  @service router;
+
   @service shuttle;
 
   @tracked sha;
@@ -12,11 +14,15 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   @tracked invalidSha;
 
+  isPr;
+
   constructor() {
     super(...arguments);
 
     this.searchResults = [];
     this.invalidSha = false;
+
+    this.isPr = this.router.currentRouteName.includes('pulls');
   }
 
   @action
@@ -31,14 +37,12 @@ export default class PipelineModalSearchEventComponent extends Component {
       } else {
         this.invalidSha = false;
 
-        this.shuttle
-          .fetchFromApi(
-            'get',
-            `/pipelines/${this.args.pipeline.id}/events?sha=${inputValue}`
-          )
-          .then(events => {
-            this.searchResults = events;
-          });
+        const baseUrl = `/pipelines/${this.args.pipeline.id}/events?sha=${inputValue}&type=`;
+        const url = this.isPr ? `${baseUrl}pr` : `${baseUrl}pipeline`;
+
+        this.shuttle.fetchFromApi('get', url).then(events => {
+          this.searchResults = events;
+        });
       }
     }
   }
