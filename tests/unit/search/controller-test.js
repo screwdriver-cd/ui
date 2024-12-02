@@ -1,7 +1,8 @@
-import { resolve } from 'rsvp';
+import { reject, resolve } from 'rsvp';
 import { module, test } from 'qunit';
 import { setupTest } from 'screwdriver-ui/tests/helpers';
 import EmberObject from '@ember/object';
+import { settled } from '@ember/test-helpers';
 import injectSessionStub from '../../helpers/inject-session';
 
 module('Unit | Controller | search', function (hooks) {
@@ -81,6 +82,39 @@ module('Unit | Controller | search', function (hooks) {
     };
 
     controller.send('updatePipelines', { page: 2, search: 'ba' });
+  });
+
+  test('it calls updatePipelines when search result is zero', async function (assert) {
+    injectSessionStub(this);
+    const controller = this.owner.lookup('controller:search');
+
+    const pipelineModelMockArray = [
+      EmberObject.create({
+        id: 2,
+        appId: 'batman/tumbler',
+        branch: 'waynecorp',
+        scmContext: 'bitbucket:bitbucket.org'
+      })
+    ];
+
+    controller.store.query = (_, params) => {
+      if (params.page === 1) {
+        return resolve(pipelineModelMockArray);
+      }
+      if (params.page === 2) {
+        return resolve([]);
+      }
+
+      return reject('This should not run');
+    };
+
+    controller.send('updatePipelines', { page: 1 });
+    await settled();
+    assert.strictEqual(controller.moreToShow, true);
+
+    controller.send('updatePipelines', { page: 2 });
+    await settled();
+    assert.strictEqual(controller.moreToShow, false);
   });
 
   test('it calls addToCollection', function (assert) {

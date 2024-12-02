@@ -1,7 +1,6 @@
 import { computed, set } from '@ember/object';
 import { empty } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import ENV from 'screwdriver-ui/config/environment';
 import Component from '@ember/component';
 
 export default Component.extend({
@@ -16,14 +15,9 @@ export default Component.extend({
     get() {
       const pipelines = this.filteredPipelines;
 
-      if (
-        Array.isArray(pipelines) &&
-        pipelines.length < ENV.APP.NUM_PIPELINES_LISTED
-      ) {
-        return false;
-      }
-
-      return this.moreToShow;
+      return (
+        Array.isArray(pipelines) && pipelines.length > 0 && this.moreToShow
+      );
     }
   }),
   filteredPipelines: computed('pipelines', {
