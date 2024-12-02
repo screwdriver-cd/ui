@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import sinon from 'sinon';
 import injectScmServiceStub from '../../../helpers/inject-scm';
 
 const fakeToken =
@@ -9,6 +10,13 @@ const fakeToken =
 
 module('Integration | Component | app header', function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    const router = this.owner.lookup('service:router');
+
+    sinon.stub(router, 'currentURL').value('');
+    sinon.stub(router, 'currentRouteName').value('home');
+  });
 
   // this test should pass when search bar feature flag is turned off
   test('it renders when search flag is off', async function (assert) {

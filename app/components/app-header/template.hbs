@@ -182,7 +182,6 @@
                 {{/unless}}
               {{/each}}
               {{ddm.divider}}
-              {{#if this.isAdmin}}
               <ddm.item>
                 {{#if this.hasAlternativeRoute}}
                   <span class="switch-ui dropdown-item"
@@ -192,7 +191,6 @@
                   </span>
                 {{/if}}
               </ddm.item>
-              {{/if}}
               {{#if (not @session.data.authenticated.isGuest)}}
                 <ddm.item>
                   <ddm.linkTo @route="user-settings" @title="User Settings">
