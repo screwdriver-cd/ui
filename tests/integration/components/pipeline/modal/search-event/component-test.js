@@ -60,12 +60,40 @@ module(
         />`
       );
 
+      await fillIn('input', 'sha:abc123');
+
+      assert.equal(shuttle.fetchFromApi.callCount, 1);
+    });
+
+    test('it makes API call with default search filter for valid input', async function (assert) {
+      const router = this.owner.lookup('service:router');
+      const shuttle = this.owner.lookup('service:shuttle');
+
+      sinon.stub(router, 'currentRouteName').value('pipeline');
+      sinon.stub(shuttle, 'fetchFromApi').resolves([]);
+
+      this.setProperties({
+        pipeline: {},
+        jobs: [],
+        userSettings: {},
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Pipeline::Modal::SearchEvent
+            @pipeline={{this.pipeline}}
+            @jobs={{this.jobs}}
+            @userSettings={{this.userSettings}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
       await fillIn('input', 'abc123');
 
       assert.equal(shuttle.fetchFromApi.callCount, 1);
     });
 
-    test('it handles invalid input', async function (assert) {
+    test('it handles invalid sha input', async function (assert) {
       const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
@@ -88,7 +116,7 @@ module(
         />`
       );
 
-      await fillIn('input', 'xyz');
+      await fillIn('input', 'sha:xyz');
 
       assert.equal(shuttle.fetchFromApi.callCount, 0);
       assert.dom('#search-input input').isNotValid();

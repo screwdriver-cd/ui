@@ -7,14 +7,14 @@
     <div class="modal-title">Search for an event</div>
   </modal.header>
   <modal.body>
+    Search for an event by commit message, sha, author, or creator. (e.g. sha:996908b or author:d2lam)
     <div id="search-input">
       <Input
         @type="search"
-        @value={{this.sha}}
+        @value={{this.searchInput}}
         autofocus={{true}}
-        maxlength="40"
-        pattern="^[0-9a-fA-F]{1,40}$"
-        placeholder="Search for an event by SHA"
+        maxlength="500"
+        placeholder="Search for an event.."
         {{on "input" this.handleInput}}
         {{on "keydown" this.handleKeyPress}}
       />

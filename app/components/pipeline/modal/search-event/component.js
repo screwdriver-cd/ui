@@ -27,32 +27,46 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   @action
   handleInput(inputEvent) {
-    const inputValue = inputEvent.target.value;
+    const inputValue = inputEvent.target.value.trim();
+    const [searchField, ...searchParts] = inputValue.split(':');
 
-    if (inputValue && inputValue.length > 0) {
-      const validHex = /^[0-9a-f]{1,40}$/;
+    let searchValue = searchParts.join(':').trim(); // In case the search value has a colon
 
-      if (!validHex.test(inputValue)) {
-        this.invalidSha = true;
-      } else {
-        this.invalidSha = false;
+    // Validate searchValue and determine urlFilter
+    const validHex = /^[0-9a-f]{1,40}$/;
+    const validFields = ['sha', 'author', 'creator', 'message'];
 
-        const baseUrl = `/pipelines/${this.args.pipeline.id}/events?sha=${inputValue}&type=`;
-        const url = this.isPr ? `${baseUrl}pr` : `${baseUrl}pipeline`;
+    let urlFilter = 'message'; // Default filter
 
-        this.shuttle.fetchFromApi('get', url).then(events => {
-          this.searchResults = events;
-        });
+    if (searchField === 'sha' && searchValue) {
+      this.invalidSha = !validHex.test(searchValue);
+      if (!this.invalidSha) {
+        urlFilter = 'sha';
       }
+    } else if (validFields.includes(searchField)) {
+      urlFilter = searchField;
+    } else {
+      // Default case, use message as filter
+      searchValue = inputValue;
     }
+
+    // Construct search URL with proper query parameters
+    const baseUrl = `/pipelines/${
+      this.args.pipeline.id
+    }/events?${urlFilter}=${encodeURIComponent(searchValue)}`;
+    const url = `${baseUrl}&type=${this.isPr ? 'pr' : 'pipeline'}`;
+
+    this.shuttle.fetchFromApi('get', url).then(events => {
+      this.searchResults = events;
+    });
   }
 
   @action
   handleKeyPress(event) {
     if (event.key === 'Escape') {
-      if (this.sha?.length > 0) {
+      if (this.searchInput?.length > 0) {
         event.stopImmediatePropagation();
-        this.sha = null;
+        this.searchInput = null;
         this.searchResults = [];
         this.invalidSha = false;
       }
