@@ -13,44 +13,27 @@ export default Component.extend({
   slackUrl: ENV.APP.SLACK_URL,
   releaseVersion: ENV.APP.RELEASE_VERSION,
   searchTerm: '',
-  isAdmin: computed(
-    'session.data.authenticated.scope',
-    function isAdminFunction() {
-      const isAdmin = (this.session.data.authenticated.scope || []).includes(
-        'admin'
-      );
-
-      return isAdmin;
-    }
-  ),
-  isNewUI: computed('router.{currentRouteName,currentURL}', {
+  isNewUI: computed('router.currentURL', {
     get() {
       const currentURL = get(this, 'router.currentURL');
-      const isNewUIRoute = currentURL.includes('/v2/');
 
-      return isNewUIRoute;
+      return currentURL.includes('/v2/');
     }
   }),
-  hasAlternativeRoute: computed(
-    'isNewUI',
-    'router.{currentRouteName,currentURL}',
-    {
-      get() {
-        const routeName = this.router.currentRouteName;
+  hasAlternativeRoute: computed('isNewUI', 'router.currentRouteName', {
+    get() {
+      const routeName = this.router.currentRouteName;
 
-        let alterRouteName = `v2.${this.router.currentRouteName}`;
+      let alterRouteName = `v2.${this.router.currentRouteName}`;
 
-        if (this.isNewUI) {
-          // to remove v2. prefix
-          alterRouteName = routeName.slice(3);
-        }
-
-        const alterRoute = getOwner(this).lookup(`route:${alterRouteName}`);
-
-        return alterRoute;
+      if (this.isNewUI) {
+        // to remove v2. prefix
+        alterRouteName = routeName.slice(3);
       }
+
+      return getOwner(this).lookup(`route:${alterRouteName}`);
     }
-  ),
+  }),
   actions: {
     invalidateSession() {
       this.onInvalidate();
