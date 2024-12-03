@@ -7,7 +7,18 @@
     <div class="modal-title">Search for an event</div>
   </modal.header>
   <modal.body>
-    Search for an event by commit message, sha, author, or creator. (e.g. sha:996908b or author:d2lam)
+    <div id="search-description">
+      Search for an event by commit message, sha, author, or creator.
+    </div>
+    <div id="search-select">
+      <select onchange={{action "setSelection" value="target.value"}} class="form-control">
+      <option disabled selected> Search field </option>
+        <option value="message">message</option>
+        <option value="sha">SHA</option>
+        <option value="creator">creator</option>
+        <option value="author">author</option>
+      </select>
+    </div>
     <div id="search-input">
       <Input
         @type="search"
