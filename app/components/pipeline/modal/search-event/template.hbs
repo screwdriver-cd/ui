@@ -29,10 +29,10 @@
         {{on "input" this.handleInput}}
         {{on "keydown" this.handleKeyPress}}
       />
-      {{#if this.invalidSha}}
-        <div class="invalid-sha">Invalid SHA.  SHA can only contain hex values.</div>
-      {{/if}}
     </div>
+    {{#if this.invalidSha}}
+      <div class="invalid-sha">Invalid SHA.  SHA can only contain hex values.</div>
+    {{/if}}
 
     <div id="search-results">
       <VerticalCollection

@@ -14,11 +14,6 @@
           overflow: hidden;
           white-space: nowrap;
 
-          label {
-            border: none;
-            color: colors.$sd-text-med;
-          }
-
           select {
             display: flex;
             align-items: center;
@@ -40,10 +35,10 @@
           }
 
           @include input.styles;
+        }
 
-          .invalid-sha {
-            color: colors.$sd-warn-bg;
-          }
+        .invalid-sha {
+          color: colors.$sd-warn-bg;
         }
 
         #search-results {
