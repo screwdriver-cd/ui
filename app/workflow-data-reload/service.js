@@ -14,6 +14,10 @@ export default class WorkflowDataReloadService extends Service {
 
   requiresLatestCommitEvent;
 
+  id;
+
+  ids;
+
   constructor() {
     super(...arguments);
 
@@ -22,10 +26,15 @@ export default class WorkflowDataReloadService extends Service {
     );
     this.buildsReloader = new BuildsDataReloader(this.shuttle);
     this.openPrsReloader = new OpenPrsReloader(this.shuttle);
+
+    this.id = 0;
+    this.ids = new Set();
   }
 
   start(pipelineId, isPR) {
-    this.stop();
+    this.stop(this.id);
+    this.id += 1;
+    this.ids.add(this.id);
 
     if (!isPR) {
       this.requiresLatestCommitEvent = true;
@@ -38,11 +47,18 @@ export default class WorkflowDataReloadService extends Service {
     }
 
     this.buildsReloader.start();
+
+    return this.id;
   }
 
-  stop() {
-    this.latestCommitEventReloader.stop();
-    this.buildsReloader.stop();
+  stop(id) {
+    if (this.ids.has(id)) {
+      this.ids.delete(id);
+
+      this.latestCommitEventReloader.stop();
+      this.openPrsReloader.stop();
+      this.buildsReloader.stop();
+    }
   }
 
   getBuildsForEvent(eventId) {
