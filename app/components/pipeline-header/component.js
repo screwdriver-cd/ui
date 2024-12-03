@@ -1,6 +1,7 @@
 import { get, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
+import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
   showCollectionModal: false,
@@ -62,32 +63,50 @@ export default Component.extend({
   // Disabling the eslint rule for computed properties as that causes rendering issues and an infinite loop to the API call with the current setup of ember data
   // eslint-disable-next-line ember/require-computed-property-dependencies
   sameRepoPipeline: computed('pipeline', {
-    get() {
+    async get() {
       const [scm, repositoryId] = this.pipeline.scmUri.split(':');
+      const pipelineName = this.pipeline.scmRepo.name;
+      const sameRepoPipelines = [];
 
-      return this.pipelineService
-        .getSiblingPipeline(this.pipeline.scmRepo.name)
-        .then(value =>
-          value
-            .toArray()
-            .filter(pipe => {
-              const [s, r] = pipe.scmUri.split(':');
+      let page = 0;
 
-              return (
-                pipe.id !== this.pipeline.id && scm === s && repositoryId === r
-              );
-            })
-            .map((pipe, i) => ({
-              index: i,
-              url: `/pipelines/${pipe.id}`,
-              branchAndRootDir: pipe.scmRepo.rootDir
-                ? `${pipe.scmRepo.branch}:${pipe.scmRepo.rootDir}`
-                : pipe.scmRepo.branch
-            }))
-            .sort((l, r) =>
-              l.branchAndRootDir.localeCompare(r.branchAndRootDir)
-            )
-        );
+      do {
+        page += 1;
+
+        const siblingPipelines = (
+          await this.pipelineService.getSiblingPipeline(
+            this.pipeline.scmRepo.name,
+            page
+          )
+        ).toArray();
+
+        sameRepoPipelines.push(...siblingPipelines);
+
+        if (siblingPipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
+          break;
+        }
+      } while (
+        sameRepoPipelines[sameRepoPipelines.length - 1].scmRepo.name ===
+          pipelineName &&
+        page <= 10
+      );
+
+      return sameRepoPipelines
+        .filter(pipe => {
+          const [s, r] = pipe.scmUri.split(':');
+
+          return (
+            pipe.id !== this.pipeline.id && scm === s && repositoryId === r
+          );
+        })
+        .map((pipe, i) => ({
+          index: i,
+          url: `/pipelines/${pipe.id}`,
+          branchAndRootDir: pipe.scmRepo.rootDir
+            ? `${pipe.scmRepo.branch}:${pipe.scmRepo.rootDir}`
+            : pipe.scmRepo.branch
+        }))
+        .sort((l, r) => l.branchAndRootDir.localeCompare(r.branchAndRootDir));
     }
   }),
   actions: {
