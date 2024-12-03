@@ -13,15 +13,11 @@
     cursor: pointer;
 
     &:hover {
-      background: rgba(colors.$sd-pale-purple, 0.5);
+      background: rgba(colors.$sd-highlight, 0.75);
     }
 
     &.highlighted {
-      background: rgba(colors.$sd-highlight, 0.75);
-
-      &:hover {
-        background: rgba(colors.$sd-pale-purple, 0.5);
-      }
+      background: rgba(colors.$sd-pale-purple, 0.5);
     }
 
     .event-card-title {

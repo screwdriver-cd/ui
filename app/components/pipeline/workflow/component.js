@@ -51,6 +51,8 @@ export default class PipelineWorkflowComponent extends Component {
 
   eventType;
 
+  dataReloadId;
+
   constructor() {
     super(...arguments);
 
@@ -64,9 +66,9 @@ export default class PipelineWorkflowComponent extends Component {
       : PR_EVENT;
 
     if (this.eventType === PIPELINE_EVENT) {
-      this.workflowDataReload.start(pipeline.id, false);
+      this.dataReloadId = this.workflowDataReload.start(pipeline.id, false);
     } else {
-      this.workflowDataReload.start(pipeline.id, true);
+      this.dataReloadId = this.workflowDataReload.start(pipeline.id, true);
     }
 
     if (this.args.noEvents) {
@@ -110,7 +112,7 @@ export default class PipelineWorkflowComponent extends Component {
   willDestroy() {
     super.willDestroy();
 
-    this.workflowDataReload.stop();
+    this.workflowDataReload.stop(this.dataReloadId);
   }
 
   @action
