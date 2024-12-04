@@ -8,42 +8,43 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   @service shuttle;
 
-  @tracked sha;
+  @tracked searchField = null;
 
-  @tracked searchResults;
+  @tracked searchInput = null;
 
-  @tracked invalidSha;
+  @tracked searchResults = [];
 
-  isPr;
+  @tracked invalidSha = false;
 
-  searchField;
+  isPr = this.router.currentRouteName.includes('pulls');
 
-  constructor() {
-    super(...arguments);
-
-    this.searchResults = [];
-    this.invalidSha = false;
-    this.searchField = null;
-
-    this.isPr = this.router.currentRouteName.includes('pulls');
-  }
-
-  @action
-  setSelection(selected) {
-    this.searchField = selected;
-  }
+  searchFieldOptions = ['message', 'sha', 'creator', 'author'];
 
   @action
   handleInput(inputEvent) {
-    const inputValue = inputEvent.target.value.trim();
+    const inputValue = inputEvent?.target?.value?.trim() || '';
 
-    // Validate searchValue and determine urlFilter
-    const validHex = /^[0-9a-f]{1,40}$/;
+    if (!inputValue) {
+      this.searchResults = [];
+      this.invalidSha = false;
+      this.searchInput = null;
+
+      return;
+    }
 
     let urlFilter = this.searchField || 'message'; // Default filter
 
-    if (this.searchField === 'sha' && inputValue) {
+    // Validate SHA
+    if (urlFilter === 'sha' && inputValue) {
+      const validHex = /^[0-9a-f]{1,40}$/;
+
       this.invalidSha = !validHex.test(inputValue);
+
+      if (this.invalidSha) {
+        this.searchResults = [];
+
+        return;
+      }
     }
 
     // Construct search URL with proper query parameters
@@ -58,6 +59,14 @@ export default class PipelineModalSearchEventComponent extends Component {
   }
 
   @action
+  setSearchField(selected) {
+    this.searchField = selected;
+    this.invalidSha = false;
+    this.searchResults = [];
+    this.handleInput({ target: { value: this.searchInput } });
+  }
+
+  @action
   handleKeyPress(event) {
     if (event.key === 'Escape') {
       if (this.searchInput?.length > 0) {
@@ -65,6 +74,7 @@ export default class PipelineModalSearchEventComponent extends Component {
         this.searchInput = null;
         this.searchResults = [];
         this.invalidSha = false;
+        this.searchField = null;
       }
     }
   }

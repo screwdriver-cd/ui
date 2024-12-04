@@ -11,12 +11,11 @@
       Search for an event by commit message, sha, author, or creator.
     </div>
     <div id="search-select">
-      <select onchange={{action "setSelection" value="target.value"}} class="form-control">
-      <option disabled selected> Search field </option>
-        <option value="message">message</option>
-        <option value="sha">SHA</option>
-        <option value="creator">creator</option>
-        <option value="author">author</option>
+      <select class="form-control custom-select" id="search-field-options" name="search-field-options" onchange={{action "setSearchField" value="target.value"}}>
+        <option disabled selected> Search field </option>
+        {{#each this.searchFieldOptions as |opt|}}
+          <option value={{opt}}>{{opt}}</option>
+        {{/each}}
       </select>
     </div>
     <div id="search-input">
@@ -31,24 +30,25 @@
       />
     </div>
     {{#if this.invalidSha}}
-      <div class="invalid-sha">Invalid SHA.  SHA can only contain hex values.</div>
+      <div class="invalid-sha">Invalid SHA. SHA can only contain hex values.</div>
+    {{else if (eq this.searchResults.length 0)}}
+      <div class="no-results">No results found.</div>
+    {{else}}
+      <div id="search-results">
+        <VerticalCollection
+          @items={{this.searchResults}}
+          @estimateHeight={{150}}
+          as |event|
+        >
+          <Pipeline::Event::Card
+            @pipeline={{@pipeline}}
+            @event={{event}}
+            @jobs={{@jobs}}
+            @userSettings={{@userSettings}}
+            @queueName="searchResults"
+          />
+        </VerticalCollection>
+      </div>
     {{/if}}
-
-    <div id="search-results">
-      <VerticalCollection
-        @items={{this.searchResults}}
-        @estimateHeight={{150}}
-        as |event|
-      >
-        <Pipeline::Event::Card
-          @pipeline={{@pipeline}}
-          @event={{event}}
-          @jobs={{@jobs}}
-          @userSettings={{@userSettings}}
-          @queueName="searchResults"
-          @onClick={{fn @closeModal}}
-        />
-      </VerticalCollection>
-    </div>
   </modal.body>
 </BsModal>
