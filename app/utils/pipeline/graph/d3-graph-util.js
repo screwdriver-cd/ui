@@ -28,7 +28,7 @@ const STATUS_MAP = {
  * @return {String}        Unicode character that maps to an icon in screwdriver icon font
  */
 export function icon(status, isVirtual) {
-  if (isVirtual && (!status || ['SUCCESS', 'WARNING', 'CREATED'])) {
+  if (isVirtual) {
     return STATUS_MAP.VIRTUAL.icon;
   }
 
