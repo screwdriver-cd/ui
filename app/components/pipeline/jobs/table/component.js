@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
 import DataReloader from './dataReloader';
+import getDisplayName from './util';
 
 const INITIAL_PAGE_SIZE = 10;
 
@@ -74,7 +75,7 @@ export default class PipelineJobsTableComponent extends Component {
     this.args.jobs.forEach(job => {
       this.data.push({
         job,
-        jobName: job.name,
+        jobName: getDisplayName(job),
         stageName: job?.permutations?.[0]?.stage?.name || 'N/A',
         pipeline: this.args.pipeline,
         jobs: this.args.jobs,
