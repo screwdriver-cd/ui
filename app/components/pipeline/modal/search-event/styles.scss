@@ -7,28 +7,15 @@
       .modal-dialog {
         max-width: 30rem;
 
-        #search-select {
-          display: flex;
-          width: 8rem;
-          float: left;
-          overflow: hidden;
-          white-space: nowrap;
-
-          select {
-            display: flex;
-            align-items: center;
-            padding: 0.375rem 0.75rem;
-            margin-bottom: 0;
-          }
-        }
-
         #search-input {
+          select {
+            width: 7rem;
+            margin-right: 0.5rem;
+          }
+
           display: flex;
-          flex-direction: column;
           justify-content: space-between;
           margin-bottom: 1rem;
-          line-height: 2rem;
-          white-space: nowrap;
 
           input {
             flex: 1;

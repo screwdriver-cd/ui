@@ -10,20 +10,16 @@
     <div id="search-description">
       Search for an event by commit message, sha, author, or creator.
     </div>
-    <div id="search-select">
-      <select class="form-control custom-select" id="search-field-options" name="search-field-options" onchange={{action "setSearchField" value="target.value"}}>
-        <option disabled selected> Search field </option>
+    <div id="search-input">
+      <select class="form-control custom-select" id="search-field-options" name="search-field-options" autofocus={{true}}>
         {{#each this.searchFieldOptions as |opt|}}
-          <option value={{opt}}>{{opt}}</option>
+          <option value={{opt}} {{on "click" this.setSearchField}}>{{opt}}</option>
         {{/each}}
       </select>
-    </div>
-    <div id="search-input">
       <Input
         @type="search"
         @value={{this.searchInput}}
-        autofocus={{true}}
-        maxlength="500"
+        maxlength="50"
         placeholder="Search for an event.."
         {{on "input" this.handleInput}}
         {{on "keydown" this.handleKeyPress}}

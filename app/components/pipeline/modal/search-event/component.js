@@ -8,7 +8,7 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   @service shuttle;
 
-  @tracked searchField = null;
+  @tracked searchField = 'message';
 
   @tracked searchInput = null;
 
@@ -32,10 +32,10 @@ export default class PipelineModalSearchEventComponent extends Component {
       return;
     }
 
-    let urlFilter = this.searchField || 'message'; // Default filter
+    const searchField = this.searchField || 'message'; // Default filter
 
     // Validate SHA
-    if (urlFilter === 'sha' && inputValue) {
+    if (searchField === 'sha' && inputValue) {
       const validHex = /^[0-9a-f]{1,40}$/;
 
       this.invalidSha = !validHex.test(inputValue);
@@ -50,7 +50,7 @@ export default class PipelineModalSearchEventComponent extends Component {
     // Construct search URL with proper query parameters
     const baseUrl = `/pipelines/${
       this.args.pipeline.id
-    }/events?${urlFilter}=${encodeURIComponent(inputValue)}`;
+    }/events?${searchField}=${encodeURIComponent(inputValue)}`;
     const url = `${baseUrl}&type=${this.isPr ? 'pr' : 'pipeline'}`;
 
     this.shuttle.fetchFromApi('get', url).then(events => {
@@ -59,8 +59,8 @@ export default class PipelineModalSearchEventComponent extends Component {
   }
 
   @action
-  setSearchField(selected) {
-    this.searchField = selected;
+  setSearchField(event) {
+    this.searchField = event.target.value;
     this.invalidSha = false;
     this.searchResults = [];
     this.handleInput({ target: { value: this.searchInput } });
@@ -74,7 +74,6 @@ export default class PipelineModalSearchEventComponent extends Component {
         this.searchInput = null;
         this.searchResults = [];
         this.invalidSha = false;
-        this.searchField = null;
       }
     }
   }

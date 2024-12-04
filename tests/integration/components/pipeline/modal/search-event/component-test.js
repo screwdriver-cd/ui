@@ -1,6 +1,12 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { fillIn, render, triggerKeyEvent, select } from '@ember/test-helpers';
+import {
+  fillIn,
+  render,
+  triggerKeyEvent,
+  select,
+  settled
+} from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -32,17 +38,16 @@ module(
 
       assert.dom('.modal-title').exists({ count: 1 });
       assert.dom('#search-description').exists({ count: 1 });
-      assert.dom('#search-select').exists({ count: 1 });
-      assert.dom('#search-select select').exists({ count: 1 });
-      assert.dom('#search-select option').exists({ count: 5 });
       assert.dom('#search-input').exists({ count: 1 });
+      assert.dom('#search-input select').exists({ count: 1 });
+      assert.dom('#search-input option').exists({ count: 4 });
       assert.dom('#search-input input').exists({ count: 1 });
       assert.dom('.invalid-sha').doesNotExist();
       assert.dom('#search-results').doesNotExist();
       assert.dom('.no-results').exists({ count: 1 });
     });
 
-    test('it makes API call for valid input', async function (assert) {
+    test('it makes API call for valid input with default searchField', async function (assert) {
       const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
@@ -66,16 +71,23 @@ module(
       );
 
       await fillIn('input', 'this is a message');
+      assert.dom('#search-field-options').hasValue('message');
+      assert.dom('#search-input input').hasValue('this is a message');
 
       assert.equal(shuttle.fetchFromApi.callCount, 1);
     });
 
-    test('it makes API call with search filter for valid input', async function (assert) {
+    test('it makes API call for valid input with selected searchField', async function (assert) {
       const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
       sinon.stub(router, 'currentRouteName').value('pipeline');
-      sinon.stub(shuttle, 'fetchFromApi').resolves([]);
+      sinon
+        .stub(shuttle, 'fetchFromApi')
+        .onCall(0)
+        .resolves([])
+        .onCall(1)
+        .resolves([]);
 
       this.setProperties({
         pipeline: {},
@@ -94,16 +106,17 @@ module(
       );
 
       await select('#search-field-options', 'sha');
+      await settled();
       assert.dom('#search-field-options').hasValue('sha');
-      await fillIn('input', 'abc123');
+      await fillIn('input', 'fe155eb');
+      assert.dom('#search-input input').hasValue('fe155eb');
 
       assert.equal(shuttle.fetchFromApi.callCount, 1);
 
-      // Should make another call if search field changes
       await select('#search-field-options', 'creator');
+      await settled();
       assert.dom('#search-field-options').hasValue('creator');
-
-      assert.equal(shuttle.fetchFromApi.callCount, 2);
+      assert.dom('#search-input input').hasValue('fe155eb');
     });
 
     test('it handles invalid sha input', async function (assert) {
@@ -130,8 +143,13 @@ module(
       );
 
       await select('#search-field-options', 'sha');
+      await settled();
       assert.dom('#search-field-options').hasValue('sha');
+      assert.dom('#search-input input').hasValue('');
       await fillIn('input', ';');
+      assert.dom('#search-field-options').hasValue('sha');
+      assert.dom('#search-input input').hasValue(';');
+      await settled();
 
       assert.equal(shuttle.fetchFromApi.callCount, 0);
       assert.dom('.invalid-sha').exists({ count: 1 });
