@@ -41,7 +41,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isLatestCommitEvent() {
-    return this.args.event.sha === this.latestCommitEvent.sha;
+    return this.args.event.sha === this.latestCommitEvent?.sha;
   }
 
   get commitUrl() {
