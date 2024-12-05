@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
-import getDisplayName from 'screwdriver-ui/components/pipeline/jobs/table/cell/job/util';
+import getDisplayName from 'screwdriver-ui/components/pipeline/jobs/table/util';
 
-module('Unit | Component | pipeline/jobs/table/cell/job/util', function () {
+module('Unit | Component | pipeline/jobs/table/util', function () {
   test('getDisplayName uses job name', function (assert) {
     const job = { name: 'abc123' };
 
