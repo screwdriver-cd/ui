@@ -68,7 +68,8 @@ export default class PipelineJobsTableComponent extends Component {
     this.dataReloader = new DataReloader(
       this.shuttle,
       jobIds,
-      INITIAL_PAGE_SIZE
+      INITIAL_PAGE_SIZE,
+      this.args.numBuilds
     );
     const initialJobIds = this.dataReloader.newJobIds();
 
