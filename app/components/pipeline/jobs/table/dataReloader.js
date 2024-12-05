@@ -14,13 +14,17 @@ export default class DataReloader {
 
   intervalId;
 
-  constructor(shuttle, jobIds, pageSize) {
+  numBuilds;
+
+  constructor(shuttle, jobIds, pageSize, numBuilds) {
     this.shuttle = shuttle;
     this.jobIdsMatchingFilter = jobIds.slice(0, pageSize);
 
     jobIds.forEach(jobId => {
       this.builds[jobId] = [];
     });
+
+    this.numBuilds = numBuilds || ENV.APP.NUM_BUILDS_LISTED;
   }
 
   setCorrectBuildStatus(builds) {
@@ -73,7 +77,7 @@ export default class DataReloader {
       .fetchFromApi(
         'get',
         `/builds/statuses?jobIds=${jobIds.join('&jobIds=')}&numBuilds=${
-          ENV.APP.NUM_BUILDS_LISTED
+          this.numBuilds
         }`
       )
       .then(response => {
@@ -91,6 +95,10 @@ export default class DataReloader {
           }
         });
       });
+  }
+
+  setNumBuilds(numBuilds) {
+    this.numBuilds = numBuilds;
   }
 
   start() {
