@@ -124,7 +124,7 @@ module(
       const shuttle = this.owner.lookup('service:shuttle');
 
       sinon.stub(router, 'currentRouteName').value('pipeline');
-      sinon.spy(shuttle);
+      sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
       this.setProperties({
         pipeline: {},
