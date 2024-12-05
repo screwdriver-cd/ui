@@ -205,7 +205,7 @@ export default Component.extend({
       if (n) {
         const txt = n.select('text');
 
-        txt.text(icon(node.status));
+        txt.text(icon(node.status, node.virtual));
         n.attr(
           'class',
           `graph-node${
