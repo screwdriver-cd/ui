@@ -115,11 +115,22 @@ export default class PipelineModalConfirmActionComponent extends Component {
       .fetchFromApi('post', '/events', data)
       .then(event => {
         this.args.closeModal();
-        this.router.transitionTo('v2.pipeline.events.show', {
-          event,
-          reloadEventRail: true,
-          id: event.id
-        });
+
+        if (this.router.currentRouteName === 'v2.pipeline.events.show') {
+          this.router.transitionTo('v2.pipeline.events.show', {
+            event,
+            reloadEventRail: true,
+            id: event.id
+          });
+        } else if (this.router.currentRouteName === 'v2.pipeline.pulls.show') {
+          this.router.transitionTo('v2.pipeline.pulls.show', {
+            event,
+            reloadEventRail: true,
+            id: event.prNum,
+            pull_request_number: event.prNum,
+            sha: event.sha
+          });
+        }
       })
       .catch(err => {
         this.wasActionSuccessful = false;
