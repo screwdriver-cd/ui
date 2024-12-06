@@ -30,23 +30,7 @@ export default Component.extend({
       propertyName: 'job',
       component: 'pipeline-list-job-cell',
       sortFunction: (a, b) => collator.compare(a.jobName, b.jobName),
-      filterFunction: (val, filterVal, row) => {
-        const _val = row.age;
-
-        if (filterVal === '< 34') {
-          return _val < 34;
-        }
-        if (filterVal === '= 34') {
-          return _val === 34;
-        }
-        if (filterVal === '> 34') {
-          return _val > 34;
-        }
-
-        return true;
-      },
-      filterWithSelect: true,
-      predefinedFilterOptions: ['< 34', '= 34', '> 34']
+      filteredBy: 'job.jobName'
     },
     {
       title: 'HISTORY',
