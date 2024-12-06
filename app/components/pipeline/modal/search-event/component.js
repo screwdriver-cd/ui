@@ -8,51 +8,66 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   @service shuttle;
 
-  @tracked sha;
+  @tracked searchField = 'message';
 
-  @tracked searchResults;
+  @tracked searchInput = null;
 
-  @tracked invalidSha;
+  @tracked searchResults = [];
 
-  isPr;
+  @tracked invalidSha = false;
 
-  constructor() {
-    super(...arguments);
+  isPr = this.router.currentRouteName.includes('pulls');
 
-    this.searchResults = [];
-    this.invalidSha = false;
-
-    this.isPr = this.router.currentRouteName.includes('pulls');
-  }
+  searchFieldOptions = ['message', 'sha', 'creator', 'author'];
 
   @action
   handleInput(inputEvent) {
-    const inputValue = inputEvent.target.value;
+    const inputValue = inputEvent?.target?.value?.trim() || this.searchInput;
 
-    if (inputValue && inputValue.length > 0) {
+    if (!inputValue) {
+      this.searchResults = [];
+      this.invalidSha = false;
+      this.searchInput = null;
+
+      return;
+    }
+
+    // Validate SHA
+    if (this.searchField === 'sha') {
       const validHex = /^[0-9a-f]{1,40}$/;
 
-      if (!validHex.test(inputValue)) {
-        this.invalidSha = true;
-      } else {
-        this.invalidSha = false;
+      this.invalidSha = !validHex.test(inputValue);
 
-        const baseUrl = `/pipelines/${this.args.pipeline.id}/events?sha=${inputValue}&type=`;
-        const url = this.isPr ? `${baseUrl}pr` : `${baseUrl}pipeline`;
+      if (this.invalidSha) {
+        this.searchResults = [];
 
-        this.shuttle.fetchFromApi('get', url).then(events => {
-          this.searchResults = events;
-        });
+        return;
       }
     }
+
+    // Construct search URL with proper query parameters
+    const baseUrl = `/pipelines/${this.args.pipeline.id}/events?${
+      this.searchField
+    }=${encodeURIComponent(inputValue)}`;
+    const url = `${baseUrl}&type=${this.isPr ? 'pr' : 'pipeline'}`;
+
+    this.shuttle.fetchFromApi('get', url).then(events => {
+      this.searchResults = events;
+    });
+  }
+
+  @action
+  setSearchField(searchField) {
+    this.searchField = searchField;
+    this.handleInput();
   }
 
   @action
   handleKeyPress(event) {
     if (event.key === 'Escape') {
-      if (this.sha?.length > 0) {
+      if (this.searchInput?.length > 0) {
         event.stopImmediatePropagation();
-        this.sha = null;
+        this.searchInput = null;
         this.searchResults = [];
         this.invalidSha = false;
       }
