@@ -11,11 +11,16 @@
       Search for an event by commit message, sha, author, or creator.
     </div>
     <div id="search-input">
-      <select class="form-control custom-select" id="search-field-options" name="search-field-options" autofocus={{true}}>
-        {{#each this.searchFieldOptions as |opt|}}
-          <option value={{opt}} {{on "click" this.setSearchField}}>{{opt}}</option>
-        {{/each}}
-      </select>
+      <PowerSelect
+        id="search-field-select"
+        @options={{this.searchFieldOptions}}
+        @renderInPlace={{true}}
+        @selected={{this.searchField}}
+        @onChange={{this.setSearchField}}
+        as |selectedValue|
+      >
+        {{selectedValue}}
+      </PowerSelect>
       <Input
         @type="search"
         @value={{this.searchInput}}
