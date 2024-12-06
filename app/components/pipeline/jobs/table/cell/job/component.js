@@ -1,7 +1,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { statusIcon } from 'screwdriver-ui/utils/build';
-import getDisplayName from './util';
 
 export default class PipelineJobsTableCellJobComponent extends Component {
   @tracked latestBuild;
@@ -25,9 +24,5 @@ export default class PipelineJobsTableCellJobComponent extends Component {
     super.willDestroy();
 
     this.args.record.onDestroy(this.args.record.job);
-  }
-
-  get jobName() {
-    return getDisplayName(this.args.record.job);
   }
 }
