@@ -47,7 +47,7 @@ export default class PipelineWorkflowTooltipComponent extends Component {
     const canRestartPipeline =
       this.session.isAuthenticated && isActivePipeline(this.args.pipeline);
 
-    return canRestartPipeline && !this.tooltipData.job.stageName;
+    return canRestartPipeline && this.tooltipData.job.status;
   }
 
   get canJobStartFromView() {

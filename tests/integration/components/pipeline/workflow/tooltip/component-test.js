@@ -3,6 +3,7 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { authenticateSession } from 'ember-simple-auth/test-support';
+import sinon from 'sinon';
 
 module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
   setupRenderingTest(hooks);
@@ -159,7 +160,7 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       },
       event: {},
       jobs: [],
-      builds: [],
+      builds: [{ id: 1, status: 'SUCCESS' }],
       pipeline: { state: 'ACTIVE' }
     });
 
@@ -283,5 +284,75 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
     );
 
     assert.dom('#hidden-tooltip-description').exists({ count: 1 });
+  });
+
+  test('it renders restart link', async function (assert) {
+    const router = this.owner.lookup('service:router');
+
+    sinon.stub(router, 'currentRoute').value({ name: 'events' });
+    authenticateSession();
+
+    this.setProperties({
+      d3Data: {
+        node: {
+          name: 'main'
+        },
+        d3Event: { clientX: 0, clientY: 0 },
+        sizes: { ICON_SIZE: 0 }
+      },
+      workflowGraph: { nodes: [{ id: 1, name: 'main' }], edges: [] },
+      event: {},
+      jobs: [],
+      builds: [{ id: 1, status: 'SUCCESS' }],
+      pipeline: { state: 'ACTIVE' }
+    });
+
+    await render(
+      hbs`<Pipeline::Workflow::Tooltip
+        @d3Data={{this.d3Data}}
+        @event={{this.event}}
+        @workflowGraph={{this.workflowGraph}}
+        @jobs={{this.jobs}}
+        @builds={{this.builds}}
+        @pipeline={{this.pipeline}}
+      />`
+    );
+
+    assert.dom('#start-job-link').exists({ count: 1 });
+  });
+
+  test('it does not render restart link', async function (assert) {
+    const router = this.owner.lookup('service:router');
+
+    sinon.stub(router, 'currentRoute').value({ name: 'events' });
+    authenticateSession();
+
+    this.setProperties({
+      d3Data: {
+        node: {
+          name: 'main'
+        },
+        d3Event: { clientX: 0, clientY: 0 },
+        sizes: { ICON_SIZE: 0 }
+      },
+      workflowGraph: { nodes: [{ id: 1, name: 'main' }], edges: [] },
+      event: {},
+      jobs: [],
+      builds: [{ id: 1 }],
+      pipeline: { state: 'ACTIVE' }
+    });
+
+    await render(
+      hbs`<Pipeline::Workflow::Tooltip
+        @d3Data={{this.d3Data}}
+        @event={{this.event}}
+        @workflowGraph={{this.workflowGraph}}
+        @jobs={{this.jobs}}
+        @builds={{this.builds}}
+        @pipeline={{this.pipeline}}
+      />`
+    );
+
+    assert.dom('#start-job-link').doesNotExist();
   });
 });
