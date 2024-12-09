@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
+import { dom } from '@fortawesome/fontawesome-svg-core';
 import DataReloader from './dataReloader';
 import getDisplayName from './util';
 
@@ -20,7 +21,8 @@ export default class PipelineJobsTableComponent extends Component {
       title: 'JOB',
       propertyName: 'jobName',
       className: 'job-column',
-      component: 'jobCell'
+      component: 'jobCell',
+      filteredBy: 'jobName'
     },
     {
       title: 'HISTORY',
@@ -46,7 +48,8 @@ export default class PipelineJobsTableComponent extends Component {
       title: 'STAGE',
       propertyName: 'stageName',
       className: 'stage-column',
-      component: 'stageCell'
+      component: 'stageCell',
+      filteredBy: 'stageName'
     },
     {
       title: 'METRICS',
@@ -109,6 +112,8 @@ export default class PipelineJobsTableComponent extends Component {
 
     theme.searchPlaceholderMsg = 'Search for job by name';
     theme.table = 'table table-condensed table-hover table-sm';
+    theme.sortAscIcon = 'fa fa-fw fa-sort-up'; // FontAwesome up arrow
+    theme.sortDescIcon = 'fa fa-fw fa-sort-down'; // FontAwesome down arrow
 
     return theme;
   }
@@ -126,5 +131,11 @@ export default class PipelineJobsTableComponent extends Component {
     this.dataReloader
       .fetchBuildsForJobs(this.dataReloader.newJobIds())
       .then(() => {});
+  }
+
+  // Ensure FontAwesome icons are rendered correctly
+  @action
+  handleDidInsert(element) {
+    dom.i2svg({ node: element });
   }
 }

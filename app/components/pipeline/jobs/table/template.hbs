@@ -1,5 +1,5 @@
 
-<ModelsTable
+<ModelsTable {{did-insert this.handleDidInsert}}
   id="pipeline-jobs"
   @data={{this.data}}
   @columns={{this.columns}}
@@ -17,15 +17,6 @@
   @onDisplayDataChanged={{this.onDisplayDataChanged}}
   as |MT|
 >
-  <MT.GlobalFilter>
-    <Input
-      id="jobs-table-search"
-      @value={{MT.globalFilter}}
-      @type="text"
-      placeholder="Search for job by name..."
-    />
-  </MT.GlobalFilter>
-
   <div id="jobs-table">
       <MT.Table />
   </div>
