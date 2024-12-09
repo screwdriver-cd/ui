@@ -111,6 +111,8 @@ export default class PipelineJobsTableComponent extends Component {
     const theme = this.emberModelTableBootstrapTheme;
 
     theme.table = 'table table-condensed table-hover table-sm';
+    theme.sortAscIcon = 'fa fa-fw fa-sort-up'; // FontAwesome up arrow
+    theme.sortDescIcon = 'fa fa-fw fa-sort-down'; // FontAwesome down arrow
 
     return theme;
   }
