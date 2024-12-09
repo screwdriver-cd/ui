@@ -37,5 +37,25 @@ module(
 
       assert.equal(spyResponseCache.get.calledOnce, true);
     });
+
+    test('getJobsForPr returns correct value', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const pipelineId = 123;
+
+      const openPrsReloader = new OpenPrsReloader(shuttle);
+
+      openPrsReloader.setPipelineId(pipelineId);
+
+      sinon
+        .stub(shuttle, 'fetchFromApi')
+        .resolves([{ name: 'PR-2' }, { name: 'PR-4' }, { name: 'PR-3' }]);
+
+      assert.equal(openPrsReloader.getJobsForPr(1), null);
+      assert.equal(openPrsReloader.getJobsForPr(2), null);
+
+      await openPrsReloader.fetchDataForId();
+      assert.equal(openPrsReloader.getJobsForPr(1), null);
+      assert.equal(openPrsReloader.getJobsForPr(2).length, 1);
+    });
   }
 );
