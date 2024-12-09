@@ -29,26 +29,23 @@ export default Component.extend({
       title: 'JOB',
       propertyName: 'job',
       component: 'pipeline-list-job-cell',
-      sortFunction: (a, b) => collator.compare(a.jobName, b.jobName),
-      filteredBy: 'job.jobName'
+      sortFunction: (a, b) => collator.compare(a.jobName, b.jobName)
     },
     {
       title: 'HISTORY',
       propertyName: 'history',
-      disableFiltering: true,
       disableSorting: true,
       component: 'pipeline-list-history-cell'
     },
     {
       title: 'DURATION',
       propertyName: 'duration',
-      disableFiltering: true
+      disableSorting: true
     },
     {
       title: 'START TIME',
       propertyName: 'startTime',
       sortedBy: 'history',
-      disableFiltering: true,
       sortFunction: (a, b) => {
         const aStartTime = get(a, 'lastObject.startTime');
         const bStartTime = get(b, 'lastObject.startTime');
@@ -60,28 +57,24 @@ export default Component.extend({
       title: 'COVERAGE',
       propertyName: 'coverage',
       disableSorting: true,
-      disableFiltering: true,
       component: 'pipeline-list-coverage-cell'
     },
     {
       title: 'STAGE',
       propertyName: 'job',
       component: 'pipeline-list-stage-cell',
-      disableFiltering: true,
       sortFunction: (a, b) => collator.compare(a.stageName, b.stageName)
     },
     {
       title: 'METRICS',
       propertyName: 'job',
       disableSorting: true,
-      disableFiltering: true,
       component: 'pipeline-list-metrics-cell'
     },
     {
       title: 'ACTIONS',
       propertyName: 'actions',
       disableSorting: true,
-      disableFiltering: true,
       component: 'pipeline-list-actions-cell'
     }
   ],
