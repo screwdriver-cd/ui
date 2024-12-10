@@ -16,11 +16,6 @@
     $searchbar-height: 2rem;
     $table-footer-height: 2.5rem;
 
-    #jobs-table-search {
-      width: 100%;
-      height: $searchbar-height;
-    }
-
     #jobs-table {
       margin: 2rem 0;
       max-height: calc(100% - $searchbar-height - $table-footer-height);
