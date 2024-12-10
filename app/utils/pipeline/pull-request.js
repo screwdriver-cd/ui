@@ -39,3 +39,24 @@ export const newestPrNumber = prNumbers => {
 export const oldestPrNumber = prNumbers => {
   return prNumbers.size ? Math.min(...prNumbers) : null;
 };
+
+/**
+ * Transforms an array of PR jobs into a map of PR number to jobs
+ * @param jobs {Array<Object>} Jobs array with job objects in the shape returned by the API
+ * @returns {Map<number, Array<Object>>}
+ */
+export const getPrJobsMap = jobs => {
+  const prJobsMap = new Map();
+
+  jobs.forEach(job => {
+    const prNumber = getPrNumber(job);
+
+    if (!prJobsMap.has(prNumber)) {
+      prJobsMap.set(prNumber, []);
+    }
+
+    prJobsMap.get(prNumber).push(job);
+  });
+
+  return prJobsMap;
+};
