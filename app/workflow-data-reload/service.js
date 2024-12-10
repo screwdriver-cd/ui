@@ -90,4 +90,8 @@ export default class WorkflowDataReloadService extends Service {
   getPrNums() {
     return this.openPrsReloader.getPrNums();
   }
+
+  getJobsForPr(prNum) {
+    return this.openPrsReloader.getJobsForPr(prNum);
+  }
 }
