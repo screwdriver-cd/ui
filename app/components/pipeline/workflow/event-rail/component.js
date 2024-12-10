@@ -76,7 +76,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     const pipelineId = this.args.pipeline.id;
 
     if (this.isPR) {
-      if (this.prNums.length === 0) {
+      if (!this.prNums || this.prNums.length === 0) {
         return [];
       }
 
