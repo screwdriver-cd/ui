@@ -1,4 +1,6 @@
 @use 'variables';
+@use 'screwdriver-colors' as colors;
+@use 'screwdriver-button' as button;
 
 @use 'event-rail/styles' as event-rail;
 @use 'graph/styles' as graph;
@@ -6,6 +8,8 @@
 
 @mixin styles {
   #pipeline-workflow-container {
+    @include button.styles;
+
     display: grid;
     $events-rail-width: 26rem;
 
@@ -19,37 +23,74 @@
       grid-area: events;
     }
 
-    #workflow-graph-container {
+    #workflow-display-container {
       grid-area: workflow;
       overflow: auto;
       $graph-controls-height: 2.5rem;
 
-      #workflow-graph-controls {
+      #workflow-display-controls {
         display: flex;
         align-content: center;
         padding-left: 1rem;
         height: $graph-controls-height;
 
-        .button-container {
+        #show-workflow-graph-button,
+        #show-workflow-table-button {
+          display: flex;
+
+          svg {
+            margin: auto;
+          }
+
+          &:disabled {
+            background: colors.$sd-pale-purple;
+          }
+        }
+
+        #show-workflow-graph-button {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        #show-workflow-table-button {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          translate: -1px;
+        }
+
+        .downstream-triggers-container {
+          margin-left: 1rem;
+          display: flex;
+
           .x-toggle-component {
+            &.x-toggle-focused .x-toggle-btn:not(.x-toggle-disabled)::after,
+            &.x-toggle-focused .x-toggle-btn:not(.x-toggle-disabled)::before {
+              box-shadow: 0 0 2px 3px colors.$sd-running;
+            }
+
+            .x-toggle-light.x-toggle-btn {
+              background: colors.$sd-text-light;
+            }
+
+            .x-toggle:checked + label > .x-toggle-light.x-toggle-btn {
+              background: colors.$sd-pale-purple;
+            }
+
             label {
               margin-bottom: 0;
 
               &.off-label {
                 padding-right: 0;
               }
-
-              &.on-label {
-                padding-left: 0.85rem;
-              }
             }
           }
         }
       }
 
-      #graph-container {
+      #display-container {
         position: relative;
         height: calc(100% - $graph-controls-height);
+        padding-top: 1rem;
         overflow: auto;
 
         #workflow-graph {
