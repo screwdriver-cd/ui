@@ -61,18 +61,14 @@ export default Route.extend(AuthenticatedRouteMixin, {
         this.router.transitionTo('/404');
       }
 
-      templateTagData.forEach(tagObj => {
-        [templateData, templateDataFiltered].forEach(verPayload => {
-          const taggedVerObj = verPayload.find(
-            verObj => verObj.version === tagObj.version
-          );
+      [...templateData, ...templateDataFiltered].forEach(template => {
+        const tags = templateTagData.filter(
+          tag => template.version === tag.version
+        );
 
-          if (taggedVerObj) {
-            taggedVerObj.tag = taggedVerObj.tag
-              ? `${taggedVerObj.tag} ${tagObj.tag}`
-              : tagObj.tag;
-          }
-        });
+        if (!template.tag) {
+          template.tag = tags.map(tag => tag.tag).join(' ');
+        }
       });
 
       this.setProperties({
