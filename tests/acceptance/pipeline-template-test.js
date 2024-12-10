@@ -431,5 +431,9 @@ module('Acceptance | pipeline template', function (hooks) {
     assert
       .dom('div.parameters > span.value > ul > li > span.value')
       .includesText('value1');
+
+    assert
+      .dom('table.table td div.version-cell')
+      .includesText('1.0.3 - latest');
   });
 });

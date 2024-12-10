@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'screwdriver-ui/tests/helpers';
 import {
+  getPrJobsMap,
   getPrNumber,
   getPrNumbers,
   newestPrNumber,
@@ -35,5 +36,19 @@ module('Unit | Route | utils/pipeline/pull-request', function (hooks) {
   test('oldestPrNumber returns correct value', function (assert) {
     assert.equal(oldestPrNumber(new Set([1, 2, 3, 9, 6])), 1);
     assert.equal(oldestPrNumber(new Set()), null);
+  });
+
+  test('getPrJobsMap returns correct map', function (assert) {
+    const jobs = [
+      { name: 'PR-3:foo' },
+      { name: 'PR-4:foo' },
+      { name: 'PR-3:bar' }
+    ];
+
+    const prJobsMap = getPrJobsMap(jobs);
+
+    assert.equal(prJobsMap.size, 2);
+    assert.equal(prJobsMap.get(3).length, 2);
+    assert.equal(prJobsMap.get(4).length, 1);
   });
 });
