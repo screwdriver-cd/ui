@@ -1,8 +1,12 @@
 import ENV from 'screwdriver-ui/config/environment';
 import { setBuildStatus } from 'screwdriver-ui/utils/pipeline/build';
 
+const QUEUE_NAME = 'jobs-table-data-reloader';
+
 export default class DataReloader {
   shuttle;
+
+  workflowDataReload;
 
   pageSize;
 
@@ -16,8 +20,11 @@ export default class DataReloader {
 
   numBuilds;
 
-  constructor(shuttle, jobIds, pageSize, numBuilds) {
+  constructor(apiFetchers, jobIds, pageSize, numBuilds) {
+    const { shuttle, workflowDataReload } = apiFetchers;
+
     this.shuttle = shuttle;
+    this.workflowDataReload = workflowDataReload;
     this.jobIdsMatchingFilter = jobIds.slice(0, pageSize);
 
     jobIds.forEach(jobId => {
@@ -68,6 +75,14 @@ export default class DataReloader {
     this.jobCallbacks[jobId].push(buildsCallback);
   }
 
+  sendBuildsToCallbacks(jobId, builds) {
+    if (this.jobCallbacks[jobId]) {
+      this.jobCallbacks[jobId].forEach(callback => {
+        callback(builds);
+      });
+    }
+  }
+
   async fetchBuildsForJobs(jobIds) {
     if (jobIds.length === 0) {
       return;
@@ -87,12 +102,7 @@ export default class DataReloader {
           const { jobId } = buildsForJob;
 
           this.builds[jobId] = buildsForJob.builds;
-
-          if (this.jobCallbacks[jobId]) {
-            this.jobCallbacks[jobId].forEach(callback => {
-              callback(buildsForJob.builds);
-            });
-          }
+          this.sendBuildsToCallbacks(jobId, buildsForJob.builds);
         });
       });
   }
@@ -101,21 +111,44 @@ export default class DataReloader {
     this.numBuilds = numBuilds;
   }
 
-  start() {
-    this.intervalId = setInterval(() => {
-      if (Object.keys(this.jobCallbacks).length === 0) {
-        return;
-      }
+  start(eventId) {
+    if (eventId) {
+      this.workflowDataReload.registerBuildsCallback(
+        QUEUE_NAME,
+        eventId,
+        builds => {
+          this.parseEventBuilds(builds);
+        }
+      );
+    } else {
+      this.intervalId = setInterval(() => {
+        if (Object.keys(this.jobCallbacks).length === 0) {
+          return;
+        }
 
-      this.fetchBuildsForJobs(this.jobIdsMatchingFilter).then(() => {});
-    }, ENV.APP.BUILD_RELOAD_TIMER);
+        this.fetchBuildsForJobs(this.jobIdsMatchingFilter).then(() => {});
+      }, ENV.APP.BUILD_RELOAD_TIMER);
+    }
   }
 
-  destroy() {
+  stop(eventId) {
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
+    if (eventId) {
+      this.workflowDataReload.removeBuildsCallback(QUEUE_NAME, eventId);
+    }
 
     this.intervalId = null;
+  }
+
+  parseEventBuilds(eventBuilds) {
+    eventBuilds.forEach(eventBuild => {
+      const { jobId } = eventBuild;
+      const builds = [eventBuild];
+
+      this.builds[jobId] = builds;
+      this.sendBuildsToCallbacks(jobId, builds);
+    });
   }
 }

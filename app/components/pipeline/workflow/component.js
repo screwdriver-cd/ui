@@ -45,6 +45,8 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked workflowGraphToDisplay;
 
+  @tracked showGraph;
+
   workflowGraph;
 
   workflowGraphWithDownstreamTriggers;
@@ -107,6 +109,8 @@ export default class PipelineWorkflowComponent extends Component {
         this.setWorkflowGraphFromEvent();
       }
     }
+
+    this.showGraph = true;
   }
 
   willDestroy() {
@@ -180,9 +184,9 @@ export default class PipelineWorkflowComponent extends Component {
     return getDisplayJobNameLength(this.userSettings);
   }
 
-  get disableDownstreamTriggers() {
+  get hasDownstreamTriggers() {
     return (
-      this.workflowGraph.nodes.length ===
+      this.workflowGraph.nodes.length !==
       this.workflowGraphWithDownstreamTriggers.nodes.length
     );
   }
@@ -216,5 +220,10 @@ export default class PipelineWorkflowComponent extends Component {
     } else {
       this.d3Data = null;
     }
+  }
+
+  @action
+  setShowGraph(showGraph) {
+    this.showGraph = showGraph;
   }
 }

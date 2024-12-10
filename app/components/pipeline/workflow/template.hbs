@@ -12,57 +12,98 @@
   />
 
   {{#if this.event}}
-    <div id="workflow-graph-container">
-      <div id="workflow-graph-controls">
-        <div
-          class="button-container"
-          title="Toggle to {{if this.showDownstreamTriggers "hide" "show"}} the downstream trigger nodes."
+    <div id="workflow-display-container">
+      <div id="workflow-display-controls">
+        <BsButton
+          id="show-workflow-graph-button"
+          @type="primary"
+          @outline={{true}}
+          @onClick={{fn this.setShowGraph true}}
+          disabled={{this.showGraph}}
+          title="View workflow as graph"
         >
-          <XToggle
-            @size="medium"
-            @theme="material"
-            @showLabels={{true}}
-            @value={{this.showDownstreamTriggers}}
-            @offLabel="Hide triggers"
-            @onLabel="Show triggers"
-            @onToggle={{fn this.toggleShowDownstreamTriggers}}
-            @disabled={{this.disableDownstreamTriggers}}
+          <FaIcon
+            @icon="code-branch"
+            @rotation={{90}}
+            @fixedWidth="true"
+            @prefix="fa"
           />
-        </div>
+        </BsButton>
+        <BsButton
+          id="show-workflow-table-button"
+          @type="primary"
+          @outline={{true}}
+          @onClick={{fn this.setShowGraph false}}
+          disabled={{not this.showGraph}}
+          title="View workflow as table"
+        >
+          <FaIcon
+            @icon="th-list"
+            @fixedWidth="true"
+            @prefix="fa"
+          />
+        </BsButton>
+
+        {{#if (and this.showGraph this.hasDownstreamTriggers)}}
+          <div
+            class="downstream-triggers-container"
+            title="Toggle to {{if this.showDownstreamTriggers "hide" "show"}} the downstream trigger nodes."
+          >
+            <XToggle
+              @size="small"
+              @theme="light"
+              @showLabels={{true}}
+              @value={{this.showDownstreamTriggers}}
+              @offLabel="Hide triggers"
+              @onLabel="Show triggers"
+              @onToggle={{fn this.toggleShowDownstreamTriggers}}
+            />
+          </div>
+        {{/if}}
       </div>
 
-      <div id="graph-container">
-        <Pipeline::Workflow::Graph
-          @workflowGraph={{this.workflowGraphToDisplay}}
-          @event={{this.event}}
-          @jobs={{this.jobs}}
-          @builds={{this.builds}}
-          @stages={{this.stages}}
-          @chainPr={{this.pipeline.prChain}}
-          @displayJobNameLength={{this.displayJobNameLength}}
-          @setShowTooltip={{this.setShowTooltip}}
-          @displayStageTooltip={{true}}
-          @setShowStageTooltip={{this.setShowStageTooltip}}
-        />
-
-        {{#if this.showTooltip}}
-          <Pipeline::Workflow::Tooltip
-            @d3Data={{this.d3Data}}
+      <div id="display-container">
+        {{#if this.showGraph}}
+          <Pipeline::Workflow::Graph
+            @workflowGraph={{this.workflowGraphToDisplay}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @builds={{this.builds}}
-            @workflowGraph={{this.workflowGraphToDisplay}}
-            @pipeline={{this.pipeline}}
+            @stages={{this.stages}}
+            @chainPr={{this.pipeline.prChain}}
+            @displayJobNameLength={{this.displayJobNameLength}}
+            @setShowTooltip={{this.setShowTooltip}}
+            @displayStageTooltip={{true}}
+            @setShowStageTooltip={{this.setShowStageTooltip}}
           />
-        {{/if}}
-        {{#if this.showStageTooltip}}
-          <Pipeline::Workflow::Tooltip::Stage
-            @d3Data={{this.d3Data}}
+
+          {{#if this.showTooltip}}
+            <Pipeline::Workflow::Tooltip
+              @d3Data={{this.d3Data}}
+              @event={{this.event}}
+              @jobs={{this.jobs}}
+              @builds={{this.builds}}
+              @workflowGraph={{this.workflowGraphToDisplay}}
+              @pipeline={{this.pipeline}}
+            />
+          {{/if}}
+          {{#if this.showStageTooltip}}
+            <Pipeline::Workflow::Tooltip::Stage
+              @d3Data={{this.d3Data}}
+              @event={{this.event}}
+              @jobs={{this.jobs}}
+              @builds={{this.builds}}
+              @workflowGraph={{this.workflowGraphToDisplay}}
+              @pipeline={{this.pipeline}}
+            />
+          {{/if}}
+        {{else}}
+          <Pipeline::Jobs::Table
+            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @builds={{this.builds}}
-            @workflowGraph={{this.workflowGraphToDisplay}}
-            @pipeline={{this.pipeline}}
+            @userSettings={{this.userSettings}}
+            @numBuilds={{1}}
           />
         {{/if}}
       </div>

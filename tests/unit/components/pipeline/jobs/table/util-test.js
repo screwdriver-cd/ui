@@ -19,4 +19,11 @@ module('Unit | Component | pipeline/jobs/table/util', function () {
 
     assert.equal(getDisplayName(job), configuredName);
   });
+
+  test('getDisplayName removes PR- prefix', function (assert) {
+    const prNum = 123;
+    const job = { name: `PR-${prNum}:abc123` };
+
+    assert.equal(getDisplayName(job, prNum), 'abc123');
+  });
 });
