@@ -132,7 +132,6 @@ export default class PipelineJobsTableComponent extends Component {
       .then(() => {});
   }
 
-  // Ensure FontAwesome icons are rendered correctly
   @action
   handleDidInsert(element) {
     dom.i2svg({ node: element });
