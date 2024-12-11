@@ -39,30 +39,37 @@ export default class V2PipelinePullsShowRoute extends Route {
       latestEvent = event;
     } else {
       const newestPrNum = newestPrNumber(prNums);
-      const baseUrl = `/pipelines/${pipelineId}/events?prNum=${newestPrNum}`;
-      const url = sha ? `${baseUrl}&sha=${sha}` : baseUrl;
 
-      latestEvent = await this.shuttle.fetchFromApi('get', url).then(events => {
-        return events[0];
-      });
+      if (newestPrNum) {
+        const baseUrl = `/pipelines/${pipelineId}/events?prNum=${newestPrNum}`;
+        const url = sha ? `${baseUrl}&sha=${sha}` : baseUrl;
+
+        latestEvent = await this.shuttle
+          .fetchFromApi('get', url)
+          .then(events => {
+            return events[0];
+          });
+      }
     }
 
     let jobs = [];
 
-    if (event && !pipeline.chainPR) {
-      jobs = await this.shuttle.fetchFromApi(
-        'get',
-        `/pipelines/${pipelineId}/jobs?type=pipeline`
-      );
+    if (event) {
+      this.selectedPrSha.setSha(event.sha);
 
-      model.pullRequestJobs.forEach(prJob => {
-        if (getPrNumber(prJob) === prNum) {
-          jobs.push({ ...prJob, group: prNum });
-        }
-      });
+      if (!pipeline.chainPR) {
+        jobs = await this.shuttle.fetchFromApi(
+          'get',
+          `/pipelines/${pipelineId}/jobs?type=pipeline`
+        );
+
+        model.pullRequestJobs.forEach(prJob => {
+          if (getPrNumber(prJob) === prNum) {
+            jobs.push({ ...prJob, group: prNum });
+          }
+        });
+      }
     }
-
-    this.selectedPrSha.setSha(event.sha);
 
     return {
       ...model,
