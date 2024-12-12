@@ -25,20 +25,19 @@
     <div class="modal-title">Add to a new collection</div>
     <div class="create-new-collection">
       <label>
-        <div>Collection name:</div>
+        <div>Name:</div>
         <Input
           id="new-collection-name-input"
           @type="text"
           @value={{this.newCollectionName}}
-          placeholder="Please enter a name for your new collection"
         />
       </label>
       <label>
-        <div>Collection description:</div>
+        <div>Description:</div>
         <Input
           @type="text"
           @value={{this.newCollectionDescription}}
-          placeholder="Optional: enter a name description for your new collection"
+          placeholder="Optional"
         />
       </label>
     </div>
