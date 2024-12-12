@@ -26,11 +26,6 @@ export default class PipelineJobsTableComponent extends Component {
   dataReloader;
 
   numBuilds;
-<<<<<<< HEAD
-=======
-
-  @tracked data;
->>>>>>> 64ff9e8d (Refactor jobs table for use in events view)
 
   @tracked data;
 
