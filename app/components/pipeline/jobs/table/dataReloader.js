@@ -124,15 +124,17 @@ export default class DataReloader {
           this.parseEventBuilds(builds);
         }
       );
-    } else {
-      this.intervalId = setInterval(() => {
-        if (Object.keys(this.jobCallbacks).length === 0) {
-          return;
-        }
 
-        this.fetchBuildsForJobs(this.jobIdsMatchingFilter).then(() => {});
-      }, ENV.APP.BUILD_RELOAD_TIMER);
+      return;
     }
+
+    this.intervalId = setInterval(() => {
+      if (Object.keys(this.jobCallbacks).length === 0) {
+        return;
+      }
+
+      this.fetchBuildsForJobs(this.jobIdsMatchingFilter).then(() => {});
+    }, ENV.APP.BUILD_RELOAD_TIMER);
   }
 
   stop(eventId) {
