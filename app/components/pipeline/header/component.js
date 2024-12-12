@@ -80,20 +80,17 @@ export default class PipelineHeaderComponent extends Component {
 
   @action
   async openAddToCollectionModal() {
-    if (!this.collections) {
-      this.collections = await this.shuttle
-        .fetchFromApi('get', '/collections')
-        .catch(err => {
-          this.errorMessage = `Could not get collections.  ${err.message}`;
-        });
-    }
+    this.collections = await this.shuttle
+      .fetchFromApi('get', '/collections')
+      .catch(err => {
+        this.errorMessage = `Could not get collections.  ${err.message}`;
+      });
 
     this.addToCollectionModalOpen = true;
   }
 
   @action
-  closeAddToCollectionModal(collections) {
+  closeAddToCollectionModal() {
     this.addToCollectionModalOpen = false;
-    this.collections = collections;
   }
 }
