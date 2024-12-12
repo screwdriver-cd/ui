@@ -29,9 +29,9 @@ export default class PipelineJobsTableComponent extends Component {
       propertyName: 'history',
       className: 'history-column',
       component: 'historyCell',
-      filterFunction: async function (_, filterVal) {
-        this.dataReloader.setNumBuilds(filterVal);
-      }.bind(this),
+      filterFunction: async (_, filterVal) => {
+        await this.dataReloader.setNumBuilds(filterVal);
+      },
       filterWithSelect: true,
       predefinedFilterOptions: ['5', '10', '15', '20', '25', '30']
     },
