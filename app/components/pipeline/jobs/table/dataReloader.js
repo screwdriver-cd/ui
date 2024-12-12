@@ -98,7 +98,11 @@ export default class DataReloader {
   }
 
   setNumBuilds(numBuilds) {
+    if (this.numBuilds === numBuilds) {
+      return;
+    }
     this.numBuilds = numBuilds;
+    this.fetchBuildsForJobs(this.jobIdsMatchingFilter).then(() => {});
   }
 
   start() {
