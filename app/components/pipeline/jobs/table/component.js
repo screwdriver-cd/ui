@@ -29,58 +29,7 @@ export default class PipelineJobsTableComponent extends Component {
 
   @tracked data;
 
-  columns = [
-    {
-      title: 'JOB',
-      propertyName: 'jobName',
-      className: 'job-column',
-      component: 'jobCell',
-      filteredBy: 'jobName'
-    },
-    {
-      title: 'HISTORY',
-      propertyName: 'history',
-      className: 'history-column',
-      component: 'historyCell',
-      filterFunction: async (_, filterVal) => {
-        await this.dataReloader.setNumBuilds(filterVal);
-      },
-      filterWithSelect: true,
-      predefinedFilterOptions: ['5', '10', '15', '20', '25', '30']
-    },
-    {
-      title: 'DURATION',
-      className: 'duration-column',
-      component: 'durationCell'
-    },
-    {
-      title: 'START TIME',
-      className: 'start-time-column',
-      component: 'startTimeCell'
-    },
-    {
-      title: 'COVERAGE',
-      className: 'coverage-column',
-      component: 'coverageCell'
-    },
-    {
-      title: 'STAGE',
-      propertyName: 'stageName',
-      className: 'stage-column',
-      component: 'stageCell',
-      filteredBy: 'stageName'
-    },
-    {
-      title: 'METRICS',
-      className: 'metrics-column',
-      component: 'metricsCell'
-    },
-    {
-      title: 'ACTIONS',
-      className: 'actions-column',
-      component: 'actionsCell'
-    }
-  ];
+  columns;
 
   constructor() {
     super(...arguments);
@@ -91,6 +40,75 @@ export default class PipelineJobsTableComponent extends Component {
     this.userSettings = this.args.userSettings;
     this.numBuilds = this.args.numBuilds;
     this.data = null;
+
+    this.setColumnData();
+  }
+
+  setColumnData() {
+    const historyColumnConfiguration = {
+      title: 'HISTORY',
+      className: 'history-column',
+      component: 'historyCell'
+    };
+
+    if (!this.event) {
+      historyColumnConfiguration.propertyName = 'history';
+      historyColumnConfiguration.filterWithSelect = true;
+      historyColumnConfiguration.predefinedFilterOptions = [
+        '5',
+        '10',
+        '15',
+        '20',
+        '25',
+        '30'
+      ];
+      historyColumnConfiguration.filterFunction = async (_, filterVal) => {
+        await this.dataReloader.setNumBuilds(filterVal);
+      };
+    }
+
+    this.columns = [
+      {
+        title: 'JOB',
+        propertyName: 'jobName',
+        className: 'job-column',
+        component: 'jobCell',
+        filteredBy: 'jobName'
+      },
+      historyColumnConfiguration,
+      {
+        title: 'DURATION',
+        className: 'duration-column',
+        component: 'durationCell'
+      },
+      {
+        title: 'START TIME',
+        className: 'start-time-column',
+        component: 'startTimeCell'
+      },
+      {
+        title: 'COVERAGE',
+        className: 'coverage-column',
+        component: 'coverageCell'
+      },
+      {
+        title: 'STAGE',
+        propertyName: 'stageName',
+        className: 'stage-column',
+        component: 'stageCell',
+        filteredBy: 'stageName'
+      },
+      {
+        title: 'METRICS',
+        className: 'metrics-column',
+        component: 'metricsCell'
+      },
+      {
+        title: 'ACTIONS',
+        className: 'actions-column',
+        component: 'actionsCell'
+      }
+    ];
   }
 
   willDestroy() {
