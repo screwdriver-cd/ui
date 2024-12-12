@@ -107,8 +107,12 @@ export default class DataReloader {
       });
   }
 
-  setNumBuilds(numBuilds) {
+  async setNumBuilds(numBuilds) {
+    if (this.numBuilds === numBuilds) {
+      return;
+    }
     this.numBuilds = numBuilds;
+    await this.fetchBuildsForJobs(this.jobIdsMatchingFilter);
   }
 
   start(eventId) {
