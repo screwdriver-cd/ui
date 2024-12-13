@@ -56,6 +56,31 @@
           {{/if}}
         </BsButton>
       {{/if}}
+    {{else}}
+      {{#if (and this.isPR this.isRestrictPR)}}
+        <BsButton
+          class="start-event-button"
+          @type="primary"
+          @outline={{true}}
+          @onClick={{fn this.openStartEventModal}}
+          title="Start PR event"
+        >
+          <FaIcon
+            @icon="play-circle"
+            @fixedWidth="true"
+            @prefix="far"
+          />
+          {{#if this.showStartEventModal}}
+            <Pipeline::Modal::StartEvent
+              @pipeline={{@pipeline}}
+              @jobs={{@jobs}}
+              @event={{@event}}
+              @isRestrictPR={{true}}
+              @closeModal={{this.closeStartEventModal}}
+            />
+          {{/if}}
+        </BsButton>
+      {{/if}}
     {{/if}}
   </div>
 
