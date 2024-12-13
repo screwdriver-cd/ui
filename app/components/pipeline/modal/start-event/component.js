@@ -56,34 +56,39 @@ export default class PipelineModalStartEventComponent extends Component {
   async startBuild() {
     this.isAwaitingResponse = true;
 
+    const { isRestrictPR } = this.args;
+    const prNum = isRestrictPR ? this.args.event.prNum : null;
+    const event = isRestrictPR ? this.args.event : null;
+
     const data = buildPostBody(
       this.session.data.authenticated.username,
       this.args.pipeline.id,
       null,
-      null,
+      event,
       this.parameters,
       false,
-      null
+      null,
+      prNum
     );
 
     await this.shuttle
       .fetchFromApi('post', '/events', data)
-      .then(event => {
+      .then(newEvent => {
         this.args.closeModal();
 
         if (this.router.currentRouteName === 'v2.pipeline.events.show') {
           this.router.transitionTo('v2.pipeline.events.show', {
-            event,
+            newEvent,
             reloadEventRail: true,
-            id: event.id
+            id: newEvent.id
           });
         } else if (this.router.currentRouteName === 'v2.pipeline.pulls.show') {
           this.router.transitionTo('v2.pipeline.pulls.show', {
-            event,
+            newEvent,
             reloadEventRail: true,
-            id: event.prNum,
-            pull_request_number: event.prNum,
-            sha: event.sha
+            id: newEvent.prNum,
+            pull_request_number: newEvent.prNum,
+            sha: newEvent.sha
           });
         }
       })
