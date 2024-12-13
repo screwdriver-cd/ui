@@ -138,26 +138,15 @@ export default class TemplatesPipelineDetailController extends Controller {
 
   get filteredTemplates() {
     const { pipelineTemplateVersions, pipelineTemplateTags } = this.model;
-    const { startTime, endTime } = this;
-    const startTimeInDate = new Date(startTime);
-    const endTimeInDate = new Date(endTime);
 
-    const filteredVersions = pipelineTemplateVersions.filter(v => {
+    pipelineTemplateVersions.forEach(template => {
       // TODO: polyfill pipeline template metrics data
-      v.metrics = {
+      template.metrics = {
         jobs: { count: '' },
         builds: { count: '' },
         pipelines: { count: '' }
       };
 
-      const createTimeInDate = new Date(v.createTime);
-
-      return (
-        createTimeInDate >= startTimeInDate && createTimeInDate <= endTimeInDate
-      );
-    });
-
-    filteredVersions.forEach(template => {
       const tags = pipelineTemplateTags.filter(
         tag => template.version === tag.version
       );
@@ -167,7 +156,7 @@ export default class TemplatesPipelineDetailController extends Controller {
       }
     });
 
-    return filteredVersions;
+    return pipelineTemplateVersions;
   }
 
   @action
