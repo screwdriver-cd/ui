@@ -8,7 +8,8 @@ import { getDisplayJobNameLength, getWorkflowGraph } from './util';
 const PIPELINE_EVENT = 'pipeline';
 const PR_EVENT = 'pr';
 const BUILD_QUEUE_NAME = 'graph';
-const RELOAD_ID = 'pipeline';
+const LATEST_COMMIT_EVENT_QUEUE_NAME = 'latestCommitEvent';
+const OPEN_PRS_QUEUE_NAME = 'openPrs';
 
 export default class PipelineWorkflowComponent extends Component {
   @service router;
@@ -59,6 +60,7 @@ export default class PipelineWorkflowComponent extends Component {
     super(...arguments);
 
     const { pipeline } = this.args;
+    const pipelineId = pipeline.id;
 
     this.pipeline = pipeline;
     this.userSettings = this.args.userSettings;
@@ -68,31 +70,54 @@ export default class PipelineWorkflowComponent extends Component {
       : PR_EVENT;
 
     if (this.eventType === PIPELINE_EVENT) {
-      this.dataReloadId = this.workflowDataReload.start(pipeline.id, false);
+      this.dataReloadId = this.workflowDataReload.start(pipelineId, false);
     } else {
-      this.dataReloadId = this.workflowDataReload.start(pipeline.id, true);
+      this.dataReloadId = this.workflowDataReload.start(pipelineId, true);
     }
 
     if (this.args.noEvents) {
-      this.workflowDataReload.registerLatestCommitEventCallback(
-        BUILD_QUEUE_NAME,
-        RELOAD_ID,
-        latestCommitEvent => {
-          if (latestCommitEvent) {
-            this.workflowDataReload.removeLatestCommitEventCallback(
-              BUILD_QUEUE_NAME,
-              RELOAD_ID
-            );
+      if (this.eventType === PR_EVENT) {
+        this.workflowDataReload.registerOpenPrsCallback(
+          OPEN_PRS_QUEUE_NAME,
+          pipelineId,
+          openPrs => {
+            if (openPrs.length > 0) {
+              this.workflowDataReload.removeOpenPrsCallback(
+                OPEN_PRS_QUEUE_NAME,
+                pipelineId
+              );
+              const transition = this.router.replaceWith(
+                'v2.pipeline.pulls.show',
+                openPrs[0]
+              );
 
-            const transition = this.router.replaceWith(
-              'v2.pipeline.events.show',
-              latestCommitEvent.id
-            );
-
-            transition.data = { latestEvent: latestCommitEvent };
+              transition.data = {
+                prNums: openPrs
+              };
+            }
           }
-        }
-      );
+        );
+      } else {
+        this.workflowDataReload.registerLatestCommitEventCallback(
+          LATEST_COMMIT_EVENT_QUEUE_NAME,
+          pipelineId,
+          latestCommitEvent => {
+            if (latestCommitEvent) {
+              this.workflowDataReload.removeLatestCommitEventCallback(
+                LATEST_COMMIT_EVENT_QUEUE_NAME,
+                pipelineId
+              );
+
+              const transition = this.router.replaceWith(
+                'v2.pipeline.events.show',
+                latestCommitEvent.id
+              );
+
+              transition.data = { latestEvent: latestCommitEvent };
+            }
+          }
+        );
+      }
     } else {
       this.jobs = this.args.jobs;
       this.stages = this.args.stages;

@@ -38,11 +38,13 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
   test('it renders for pipeline with no PRs', async function (assert) {
     const router = this.owner.lookup('service:router');
+    const shuttle = this.owner.lookup('service:shuttle');
     const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
 
     sinon.stub(router, 'currentRouteName').value('pulls');
+    sinon.stub(shuttle, 'fetchFromApi').resolves([]);
     sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
     this.setProperties({
