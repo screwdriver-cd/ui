@@ -7,7 +7,8 @@
     .build-history-container {
       padding: 1rem 0;
 
-      a {
+      a,
+      .created {
         display: flex;
 
         svg {
