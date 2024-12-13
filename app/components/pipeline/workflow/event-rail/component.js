@@ -69,6 +69,12 @@ export default class PipelineWorkflowEventRailComponent extends Component {
       this.firstItemId = event.id;
       this.newestEvent = event;
       this.events = [event];
+      this.oldestEvent = null;
+
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
     }
   }
 
