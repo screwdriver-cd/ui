@@ -24,6 +24,29 @@ module('Unit | Utility | pipeline/modal/request', function () {
     );
   });
 
+  test('buildPostBody sets correct values for new PR event', function (assert) {
+    assert.deepEqual(
+      buildPostBody(
+        'foobar',
+        123,
+        null,
+        { id: 9, groupEventId: 2 },
+        null,
+        false,
+        null,
+        5
+      ),
+      {
+        pipelineId: 123,
+        causeMessage: 'Manually started by foobar',
+        startFrom: '~pr',
+        groupEventId: 2,
+        parentEventId: 9,
+        prNum: 5
+      }
+    );
+  });
+
   test('buildPostBody sets correct values for new event starting from job', function (assert) {
     assert.deepEqual(
       buildPostBody(
