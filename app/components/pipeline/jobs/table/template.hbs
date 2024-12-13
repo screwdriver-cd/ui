@@ -1,9 +1,13 @@
-
-<ModelsTable {{did-insert this.handleDidInsert}}
-  id="pipeline-jobs"
-  @data={{this.data}}
-  @columns={{this.columns}}
-  @columnComponents={{hash
+<div
+  id="pipeline-jobs-container"
+  {{did-insert this.initialize}}
+  {{did-update this.update @event}}
+>
+  <ModelsTable
+    id="pipeline-jobs"
+    @data={{this.data}}
+    @columns={{this.columns}}
+    @columnComponents={{hash
     jobCell=(component "pipeline/jobs/table/cell/job")
     historyCell=(component "pipeline/jobs/table/cell/history")
     durationCell=(component "pipeline/jobs/table/cell/duration")
@@ -19,50 +23,51 @@
 >
   <div id="jobs-table">
       <MT.Table />
-  </div>
+    </div>
 
-  <div id="jobs-table-footer">
-    <MT.Summary
-      id="table-summary"
-      as |Summary|
-    >
-      {{Summary.summary}}
-    </MT.Summary>
+    <div id="jobs-table-footer">
+      <MT.Summary
+        id="table-summary"
+        as |Summary|
+      >
+        {{Summary.summary}}
+      </MT.Summary>
 
-    <MT.PageSizeSelect id="select-pagination-size"/>
+      <MT.PageSizeSelect id="select-pagination-size"/>
 
-    <MT.PaginationSimple id="pagination-controls"as |PS|>
-      <div id="page-navigation">
-        <BsButton
-          disabled={{if PS.goToBackEnabled false true}}
-          @onClick={{fn PS.goToFirst}}
-        >
-          <FaIcon @icon="angle-double-left"/>
-        </BsButton>
-        <BsButton
-          disabled={{if PS.goToBackEnabled false true}}
-          @onClick={{fn PS.goToPrev}}
-        >
-          <FaIcon @icon="angle-left"/>
-        </BsButton>
-        <BsButton
-          disabled={{if PS.goToForwardEnabled false true}}
-          @onClick={{fn PS.goToNext}}
-        >
-          <FaIcon @icon="angle-right"/>
-        </BsButton>
-        <BsButton
-          disabled={{if PS.goToForwardEnabled false true}}
-          @onClick={{fn PS.goToLast}}
-        >
-          <FaIcon @icon="angle-double-right"/>
-        </BsButton>
-      </div>
+      <MT.PaginationSimple id="pagination-controls"as |PS|>
+        <div id="page-navigation">
+          <BsButton
+            disabled={{if PS.goToBackEnabled false true}}
+            @onClick={{fn PS.goToFirst}}
+          >
+            <FaIcon @icon="angle-double-left"/>
+          </BsButton>
+          <BsButton
+            disabled={{if PS.goToBackEnabled false true}}
+            @onClick={{fn PS.goToPrev}}
+          >
+            <FaIcon @icon="angle-left"/>
+          </BsButton>
+          <BsButton
+            disabled={{if PS.goToForwardEnabled false true}}
+            @onClick={{fn PS.goToNext}}
+          >
+            <FaIcon @icon="angle-right"/>
+          </BsButton>
+          <BsButton
+            disabled={{if PS.goToForwardEnabled false true}}
+            @onClick={{fn PS.goToLast}}
+          >
+            <FaIcon @icon="angle-double-right"/>
+          </BsButton>
+        </div>
 
-      <div id="page-select">
-        <label class="input-group-text">Page:</label>
-        <PS.PageNumberSelect/>
-      </div>
-    </MT.PaginationSimple>
-  </div>
-</ModelsTable>
+        <div id="page-select">
+          <label class="input-group-text">Page:</label>
+          <PS.PageNumberSelect/>
+        </div>
+      </MT.PaginationSimple>
+    </div>
+  </ModelsTable>
+</div>
