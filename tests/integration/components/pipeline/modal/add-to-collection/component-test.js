@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { click, fillIn, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
-import { createCollectionBody } from 'screwdriver-ui/components/collection/modal/add-to-collection/util';
+import { createCollectionBody } from 'screwdriver-ui/components/pipeline/modal/add-to-collection/util';
 
 module(
-  'Integration | Component | collection/modal/add-to-collection',
+  'Integration | Component | pipeline/modal/add-to-collection',
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -17,7 +17,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @closeModal={{this.closeModal}}
         />`
@@ -42,7 +42,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @errorMessage={{this.errorMessage}}
             @pipeline={{this.pipeline}}
             @closeModal={{this.closeModal}}
@@ -64,7 +64,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @collections={{this.collections}}
             @closeModal={{this.closeModal}}
@@ -84,7 +84,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @closeModal={{this.closeModal}}
         />`
@@ -105,7 +105,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @collections={{this.collections}}
             @closeModal={{this.closeModal}}
@@ -129,7 +129,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @closeModal={{this.closeModal}}
         />`
@@ -163,7 +163,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @closeModal={{this.closeModal}}
         />`
@@ -188,7 +188,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @collections={{this.collections}}
             @closeModal={{this.closeModal}}
@@ -220,7 +220,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @collections={{this.collections}}
             @closeModal={{this.closeModal}}
@@ -249,7 +249,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @collections={{this.collections}}
             @closeModal={{this.closeModal}}
@@ -284,7 +284,7 @@ module(
       });
 
       await render(
-        hbs`<Collection::Modal::AddToCollection
+        hbs`<Pipeline::Modal::AddToCollection
             @pipeline={{this.pipeline}}
             @collections={{this.collections}}
             @closeModal={{this.closeModal}}
