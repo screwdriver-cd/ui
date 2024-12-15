@@ -20,6 +20,7 @@ export default Controller.extend({
   filteredTemplates: alias('model.templateDataFiltered'),
   startTime: alias('model.filter.startTime'),
   endTime: alias('model.filter.endTime'),
+  selectedRange: alias('model.filter.selectedRange'),
   trusted: computed('templates.[]', function computeTrusted() {
     return this.get('templates').some(t => t.trusted && t.latest);
   }),
@@ -99,9 +100,15 @@ export default Controller.extend({
           .catch(err => this.set('errorMessage', err))
       );
     },
-    timeRangeChange(startTime, endTime) {
+    timeRangeChange(startTime, endTime, selectedRange = null) {
       // send to router to refresh model accordingly
-      this.send('setFetchDates', startTime, endTime);
+      console.log('timeRangeChange: ', startTime, endTime, selectedRange);
+      if (selectedRange) {
+        console.log('selectedRange updating: ', selectedRange);
+        this.set('selectedRange', selectedRange);
+      }
+      console.log(this.get('selectedRange'));
+      this.send('setFetchDates', startTime, endTime, selectedRange);
     }
   }
 });

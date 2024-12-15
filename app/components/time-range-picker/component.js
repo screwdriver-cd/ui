@@ -6,7 +6,7 @@ import timeRange, {
 
 export default Component.extend({
   classNames: ['chart-controls'],
-  selectedRange: '1yr',
+  selectedRange: 'none',
   timeRanges: [
     { alias: '6hr', value: '6hr' },
     { alias: '12hr', value: '12hr' },
@@ -16,8 +16,21 @@ export default Component.extend({
     { alias: '3mo', value: '3mo' },
     { alias: '6mo', value: '180d' },
     { alias: '1yr', value: '1yr' },
-    { alias: 'all', value: null }
+    // whats best value for all?
+    { alias: 'all', value: null } // should be disabled since it's not used in the backend
   ],
+  init() {
+    this._super(...arguments);
+    if (!this.get('selectedRange')) {
+      // what's the best value for none?
+      if (!this.timeRanges.find(range => range.alias === 'none')) {
+        this.timeRanges.unshift({ alias: 'none', value: 'none' });
+      }
+      this.set('selectedRange', 'none');
+    } else {
+      this.timeRanges = this.timeRanges.filter(range => range.alias !== 'none');
+    }
+  },
   // flatpickr addon seems to prefer dates in string
   customRange: computed('startTime', 'endTime', {
     get() {
@@ -37,6 +50,7 @@ export default Component.extend({
 
   actions: {
     setTimeRange(range) {
+      console.log('range: ', range);
       if (this.selectedRange === range) {
         return;
       }
@@ -46,13 +60,13 @@ export default Component.extend({
       if (range) {
         const { startTime, endTime } = timeRange(new Date(), range);
 
-        this.onTimeRangeChange(startTime, endTime);
+        this.onTimeRangeChange(startTime, endTime, this.selectedRange);
       } else {
         this.onTimeRangeChange();
       }
     },
     setCustomRange([start, end]) {
-      this.set('selectedRange');
+      this.set('selectedRange', 'none');
 
       if (start) {
         end.setHours(23, 59, 59);

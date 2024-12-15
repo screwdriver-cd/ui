@@ -99,6 +99,7 @@ export default Component.extend({
   }),
 
   async init() {
+    console.log('template-versions init');
     this._super(...arguments);
     this.theme.table = 'table table-condensed table-sm';
     const userPreferences = await this.userSettings.getUserPreference();
@@ -181,8 +182,8 @@ export default Component.extend({
   },
 
   actions: {
-    timeRangeChange(startTime, endTime) {
-      this.onTimeRangeChange(startTime, endTime);
+    timeRangeChange(startTime, endTime, selectedRange = null) {
+      this.onTimeRangeChange(startTime, endTime, selectedRange);
     }
   }
 });
