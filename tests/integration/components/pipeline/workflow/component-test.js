@@ -30,7 +30,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     );
 
     assert.dom('#event-rail').exists({ count: 1 });
-    assert.dom('#workflow-graph-container').doesNotExist();
+    assert.dom('#workflow-display-container').doesNotExist();
     assert.dom('#no-events').exists({ count: 1 });
     assert.dom('#no-events').hasText('This pipeline has no events yet');
     assert.dom('#invalid-event').doesNotExist();
@@ -59,7 +59,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     );
 
     assert.dom('#event-rail').exists({ count: 1 });
-    assert.dom('#workflow-graph-container').doesNotExist();
+    assert.dom('#workflow-display-container').doesNotExist();
     assert.dom('#no-events').exists({ count: 1 });
     assert
       .dom('#no-events')
@@ -107,7 +107,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     );
 
     assert.dom('#event-rail').exists({ count: 1 });
-    assert.dom('#workflow-graph-container').doesNotExist();
+    assert.dom('#workflow-display-container').doesNotExist();
     assert.dom('#no-events').doesNotExist();
     assert.dom('#invalid-event').exists({ count: 1 });
     assert
@@ -148,7 +148,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     );
 
     assert.dom('#event-rail').exists({ count: 1 });
-    assert.dom('#workflow-graph-container').doesNotExist();
+    assert.dom('#workflow-display-container').doesNotExist();
     assert.dom('#no-events').doesNotExist();
     assert.dom('#invalid-event').exists({ count: 1 });
     assert
@@ -204,7 +204,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     );
 
     assert.dom('#event-rail').exists({ count: 1 });
-    assert.dom('#workflow-graph-container').exists({ count: 1 });
+    assert.dom('#workflow-display-container').exists({ count: 1 });
     assert.dom('#no-events').doesNotExist();
     assert.dom('#invalid-event').doesNotExist();
   });
@@ -262,7 +262,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     );
 
     assert.dom('#event-rail').exists({ count: 1 });
-    assert.dom('#workflow-graph-container').exists({ count: 1 });
+    assert.dom('#workflow-display-container').exists({ count: 1 });
     assert.dom('#no-events').doesNotExist();
     assert.dom('#invalid-event').doesNotExist();
   });
