@@ -16,7 +16,8 @@ export default Component.extend({
     { alias: '3mo', value: '3mo' },
     { alias: '6mo', value: '180d' },
     { alias: '1yr', value: '1yr' },
-    { alias: 'all', value: null }
+    // whats best value for all?
+    { alias: 'all', value: null } // should be disabled since it's not used in the backend
   ],
   init() {
     this._super(...arguments);
@@ -55,6 +56,7 @@ export default Component.extend({
 
   actions: {
     setTimeRange(range) {
+      console.log('range: ', range);
       if (this.selectedRange === range) {
         return;
       }
