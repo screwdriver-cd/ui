@@ -16,8 +16,7 @@ export default Component.extend({
     { alias: '3mo', value: '3mo' },
     { alias: '6mo', value: '180d' },
     { alias: '1yr', value: '1yr' },
-    // whats best value for all?
-    { alias: 'all', value: null } // should be disabled since it's not used in the backend
+    { alias: 'all', value: null }
   ],
   init() {
     this._super(...arguments);
