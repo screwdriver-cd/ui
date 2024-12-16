@@ -18,7 +18,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
   init() {
     this._super(...arguments);
 
-    console.log('this is called again');
     this.set('selectedRange', '1yr');
     const { startTime, endTime } = timeRange(
       new Date(),

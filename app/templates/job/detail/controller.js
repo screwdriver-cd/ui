@@ -102,12 +102,6 @@ export default Controller.extend({
     },
     timeRangeChange(startTime, endTime, selectedRange = null) {
       // send to router to refresh model accordingly
-      console.log('timeRangeChange: ', startTime, endTime, selectedRange);
-      if (selectedRange) {
-        console.log('selectedRange updating: ', selectedRange);
-        this.set('selectedRange', selectedRange);
-      }
-      console.log(this.get('selectedRange'));
       this.send('setFetchDates', startTime, endTime, selectedRange);
     }
   }

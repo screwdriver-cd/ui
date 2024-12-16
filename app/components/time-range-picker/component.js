@@ -21,15 +21,21 @@ export default Component.extend({
   ],
   init() {
     this._super(...arguments);
-    if (!this.get('selectedRange')) {
-      // what's the best value for none?
+    if (
+      !this.get('selectedRange') &&
+      this.get('startTime') &&
+      this.get('endTime')
+    ) {
+      // only show 'none' option if above condition is met
       if (!this.timeRanges.find(range => range.alias === 'none')) {
         this.timeRanges.unshift({ alias: 'none', value: 'none' });
       }
       this.set('selectedRange', 'none');
-    } else {
-      this.timeRanges = this.timeRanges.filter(range => range.alias !== 'none');
+
+      return;
     }
+    // 'none' option should not be available as options
+    this.timeRanges = this.timeRanges.filter(range => range.alias !== 'none');
   },
   // flatpickr addon seems to prefer dates in string
   customRange: computed('startTime', 'endTime', {
