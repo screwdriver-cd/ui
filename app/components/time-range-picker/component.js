@@ -6,7 +6,7 @@ import timeRange, {
 
 export default Component.extend({
   classNames: ['chart-controls'],
-  selectedRange: '1yr',
+  selectedRange: 'none',
   timeRanges: [
     { alias: '6hr', value: '6hr' },
     { alias: '12hr', value: '12hr' },
@@ -18,6 +18,24 @@ export default Component.extend({
     { alias: '1yr', value: '1yr' },
     { alias: 'all', value: null }
   ],
+  init() {
+    this._super(...arguments);
+    if (
+      !this.get('selectedRange') &&
+      this.get('startTime') &&
+      this.get('endTime')
+    ) {
+      // only show 'none' option if above condition is met
+      if (!this.timeRanges.find(range => range.alias === 'none')) {
+        this.timeRanges.unshift({ alias: 'none', value: 'none' });
+      }
+      this.set('selectedRange', 'none');
+
+      return;
+    }
+    // 'none' option should not be available as options
+    this.timeRanges = this.timeRanges.filter(range => range.alias !== 'none');
+  },
   // flatpickr addon seems to prefer dates in string
   customRange: computed('startTime', 'endTime', {
     get() {
@@ -46,13 +64,13 @@ export default Component.extend({
       if (range) {
         const { startTime, endTime } = timeRange(new Date(), range);
 
-        this.onTimeRangeChange(startTime, endTime);
+        this.onTimeRangeChange(startTime, endTime, this.selectedRange);
       } else {
         this.onTimeRangeChange();
       }
     },
     setCustomRange([start, end]) {
-      this.set('selectedRange');
+      this.set('selectedRange', 'none');
 
       if (start) {
         end.setHours(23, 59, 59);

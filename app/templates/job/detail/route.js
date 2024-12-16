@@ -12,11 +12,17 @@ export default Route.extend(AuthenticatedRouteMixin, {
   templateTagData: null,
   startTime: null,
   endTime: null,
+  selectedRange: null,
   fetchAll: true,
   fetchFiltered: false,
   init() {
     this._super(...arguments);
-    const { startTime, endTime } = timeRange(new Date(), '1yr');
+
+    this.set('selectedRange', '1yr');
+    const { startTime, endTime } = timeRange(
+      new Date(),
+      this.get('selectedRange')
+    );
 
     // these are used for querying, so they are in ISO8601 format
     this.set('startTime', startTime);
@@ -32,7 +38,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
   model(params) {
     this._super(...arguments);
 
-    const { startTime, endTime, fetchAll, fetchFiltered } = this;
+    const { startTime, endTime, fetchAll, fetchFiltered, selectedRange } = this;
 
     return RSVP.all([
       fetchAll
@@ -85,7 +91,8 @@ export default Route.extend(AuthenticatedRouteMixin, {
         templateDataFiltered,
         filter: {
           startTime,
-          endTime
+          endTime,
+          selectedRange
         }
       };
     });
@@ -95,10 +102,11 @@ export default Route.extend(AuthenticatedRouteMixin, {
     controller.reset();
   },
   actions: {
-    setFetchDates(startTime, endTime) {
+    setFetchDates(startTime, endTime, selectedRange = null) {
       this.set('startTime', startTime);
       this.set('endTime', endTime);
       this.set('fetchFiltered', true);
+      this.set('selectedRange', selectedRange);
       this.refresh();
     },
     refreshModel: function refreshModel() {
