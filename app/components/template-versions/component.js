@@ -99,7 +99,6 @@ export default Component.extend({
   }),
 
   async init() {
-    console.log('template-versions init');
     this._super(...arguments);
     this.theme.table = 'table table-condensed table-sm';
     const userPreferences = await this.userSettings.getUserPreference();
