@@ -73,10 +73,24 @@ module('Integration | Component | template versions', function (hooks) {
 
   test('it renders template versions in a table', async function (assert) {
     this.set('mock', TEMPLATES);
+    this.set('selectedRange', '1yr');
 
-    await render(hbs`<TemplateVersions @templates={{this.mock}}/>;`);
+    await render(
+      hbs`<TemplateVersions @templates={{this.mock}} @selectedRange={{this.selectedRange}}/>;`
+    );
 
     assert.dom('h4').hasText('All Versions');
+    assert.dom('div.range-selection').exists();
+    assert.dom('div.range-selection span').exists();
+    assert.dom('div.range-selection span').hasText('Time Range');
+    assert.dom('div.range-selection div.btn-group').exists();
+    assert.dom('div.range-selection div.btn-group button').exists({ count: 9 });
+    assert
+      .dom('div.range-selection div.btn-group button.active')
+      .exists({ count: 1 });
+    assert
+      .dom('div.range-selection div.btn-group button.active')
+      .hasText('1yr');
 
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });

@@ -8,7 +8,9 @@
     @onChange={{action "setTimeRange"}} as |bg|
   >
     {{#each this.timeRanges as |range|}}
-      <bg.button @value={{range.value}}>
+      <bg.button 
+        @value={{range.value}}
+      >
         {{range.alias}}
       </bg.button>
     {{/each}}
