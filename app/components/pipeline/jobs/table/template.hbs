@@ -8,20 +8,20 @@
     @data={{this.data}}
     @columns={{this.columns}}
     @columnComponents={{hash
-    jobCell=(component "pipeline/jobs/table/cell/job")
-    historyCell=(component "pipeline/jobs/table/cell/history")
-    durationCell=(component "pipeline/jobs/table/cell/duration")
-    startTimeCell=(component "pipeline/jobs/table/cell/start-time")
-    coverageCell=(component "pipeline/jobs/table/cell/coverage")
-    stageCell=(component "pipeline/jobs/table/cell/stage")
-    metricsCell=(component "pipeline/jobs/table/cell/metrics")
-    actionsCell=(component "pipeline/jobs/table/cell/actions")
-  }}
-  @themeInstance={{this.theme}}
-  @onDisplayDataChanged={{this.onDisplayDataChanged}}
-  as |MT|
->
-  <div id="jobs-table">
+      jobCell=(component "pipeline/jobs/table/cell/job")
+      historyCell=(component "pipeline/jobs/table/cell/history")
+      durationCell=(component "pipeline/jobs/table/cell/duration")
+      startTimeCell=(component "pipeline/jobs/table/cell/start-time")
+      coverageCell=(component "pipeline/jobs/table/cell/coverage")
+      stageCell=(component "pipeline/jobs/table/cell/stage")
+      metricsCell=(component "pipeline/jobs/table/cell/metrics")
+      actionsCell=(component "pipeline/jobs/table/cell/actions")
+    }}
+    @themeInstance={{this.theme}}
+    @onDisplayDataChanged={{this.onDisplayDataChanged}}
+    as |MT|
+  >
+    <div id="jobs-table">
       <MT.Table />
     </div>
 
