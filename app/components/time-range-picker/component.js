@@ -7,19 +7,20 @@ import timeRange, {
 export default Component.extend({
   classNames: ['chart-controls'],
   selectedRange: 'none',
-  timeRanges: [
-    { alias: '6hr', value: '6hr' },
-    { alias: '12hr', value: '12hr' },
-    { alias: '1d', value: '1d' },
-    { alias: '1wk', value: '1wk' },
-    { alias: '1mo', value: '1mo' },
-    { alias: '3mo', value: '3mo' },
-    { alias: '6mo', value: '180d' },
-    { alias: '1yr', value: '1yr' },
-    { alias: 'all', value: null }
-  ],
+  timeRanges: [],
   init() {
     this._super(...arguments);
+    this.timeRanges = [
+      { alias: '6hr', value: '6hr' },
+      { alias: '12hr', value: '12hr' },
+      { alias: '1d', value: '1d' },
+      { alias: '1wk', value: '1wk' },
+      { alias: '1mo', value: '1mo' },
+      { alias: '3mo', value: '3mo' },
+      { alias: '6mo', value: '180d' },
+      { alias: '1yr', value: '1yr' },
+      { alias: 'all', value: null }
+    ];
     if (
       !this.get('selectedRange') &&
       this.get('startTime') &&
@@ -30,11 +31,7 @@ export default Component.extend({
         this.timeRanges.unshift({ alias: 'none', value: 'none' });
       }
       this.set('selectedRange', 'none');
-
-      return;
     }
-    // 'none' option should not be available as options
-    this.timeRanges = this.timeRanges.filter(range => range.alias !== 'none');
   },
   // flatpickr addon seems to prefer dates in string
   customRange: computed('startTime', 'endTime', {
