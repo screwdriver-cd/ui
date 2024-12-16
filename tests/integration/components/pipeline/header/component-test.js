@@ -12,7 +12,8 @@ module('Integration | Component | pipeline/header', function (hooks) {
       pipeline: {
         id: 123,
         scmContext: 'github:github.com',
-        scmRepo: { url: 'https://gihub.com/test' }
+        scmRepo: { url: 'https://gihub.com/test' },
+        annotations: {}
       }
     });
 
@@ -35,7 +36,7 @@ module('Integration | Component | pipeline/header', function (hooks) {
 
   test('it renders link to parent pipeline', async function (assert) {
     this.setProperties({
-      pipeline: { configPipelineId: 999 }
+      pipeline: { configPipelineId: 999, annotations: {} }
     });
 
     await render(hbs`<Pipeline::Header
@@ -51,7 +52,8 @@ module('Integration | Component | pipeline/header', function (hooks) {
   test('it renders link to sonarqube project', async function (assert) {
     this.setProperties({
       pipeline: {
-        badges: { sonar: { uri: 'https://sonarqube.com/test' } }
+        badges: { sonar: { uri: 'https://sonarqube.com/test' } },
+        annotations: {}
       }
     });
 
@@ -70,7 +72,8 @@ module('Integration | Component | pipeline/header', function (hooks) {
       pipeline: {
         badges: {
           sonar: { defaultUri: 'https://sonarqube.com' }
-        }
+        },
+        annotations: {}
       }
     });
 
@@ -109,7 +112,8 @@ module('Integration | Component | pipeline/header', function (hooks) {
       pipeline: {
         id: 123,
         scmUri: 'git.github.com:9876',
-        scmRepo: { url: 'https://gihub.com/test' }
+        scmRepo: { url: 'https://gihub.com/test' },
+        annotations: {}
       }
     });
 
@@ -123,5 +127,29 @@ module('Integration | Component | pipeline/header', function (hooks) {
 
     assert.dom('#repo-pipelines .dropdown-menu').exists({ count: 1 });
     assert.dom('#repo-pipelines .dropdown-menu > a').exists({ count: 2 });
+  });
+
+  test('it renders pipeline description', async function (assert) {
+    const pipelineDescription = 'This is a test pipeline';
+
+    this.setProperties({
+      pipeline: {
+        id: 123,
+        scmContext: 'github:github.com',
+        scmRepo: { url: 'https://gihub.com/test' },
+        annotations: {
+          'screwdriver.cd/pipelineDescription': pipelineDescription
+        }
+      }
+    });
+
+    await render(hbs`<Pipeline::Header
+      @pipeline={{this.pipeline}}
+      @collections={{this.collections}}
+    />`);
+
+    assert
+      .dom('#pipeline-header .pipeline-description')
+      .hasText(pipelineDescription);
   });
 });
