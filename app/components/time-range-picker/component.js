@@ -56,7 +56,6 @@ export default Component.extend({
 
   actions: {
     setTimeRange(range) {
-      console.log('range: ', range);
       if (this.selectedRange === range) {
         return;
       }
