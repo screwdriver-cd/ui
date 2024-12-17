@@ -7,15 +7,11 @@
     height: 100%;
 
     $pipeline-nav-width: 4rem;
-    $pipeline-header-height: 4.5rem;
 
     grid-template-areas:
       'pipeline-nav pipeline-header'
       'pipeline-nav pipeline-main';
     grid-template-columns: $pipeline-nav-width calc(100% - $pipeline-nav-width);
-    grid-template-rows: $pipeline-header-height calc(
-        100% - $pipeline-header-height
-      );
 
     #pipeline-nav {
       grid-area: pipeline-nav;
