@@ -69,73 +69,82 @@ export default class PipelineWorkflowComponent extends Component {
       ? PIPELINE_EVENT
       : PR_EVENT;
 
-    if (this.eventType === PIPELINE_EVENT) {
-      this.dataReloadId = this.workflowDataReload.start(pipelineId, false);
-    } else {
-      this.dataReloadId = this.workflowDataReload.start(pipelineId, true);
-    }
+    this.dataReloadId = this.workflowDataReload.start(
+      pipelineId,
+      this.eventType === PR_EVENT
+    );
 
     if (this.args.noEvents) {
-      if (this.eventType === PR_EVENT) {
-        this.workflowDataReload.registerOpenPrsCallback(
-          OPEN_PRS_QUEUE_NAME,
-          pipelineId,
-          openPrs => {
-            if (openPrs.length > 0) {
-              this.workflowDataReload.removeOpenPrsCallback(
-                OPEN_PRS_QUEUE_NAME,
-                pipelineId
-              );
-              const transition = this.router.replaceWith(
-                'v2.pipeline.pulls.show',
-                openPrs[0]
-              );
-
-              transition.data = {
-                prNums: openPrs
-              };
-            }
-          }
-        );
-      } else {
-        this.workflowDataReload.registerLatestCommitEventCallback(
-          LATEST_COMMIT_EVENT_QUEUE_NAME,
-          pipelineId,
-          latestCommitEvent => {
-            if (latestCommitEvent) {
-              this.workflowDataReload.removeLatestCommitEventCallback(
-                LATEST_COMMIT_EVENT_QUEUE_NAME,
-                pipelineId
-              );
-
-              const transition = this.router.replaceWith(
-                'v2.pipeline.events.show',
-                latestCommitEvent.id
-              );
-
-              transition.data = { latestEvent: latestCommitEvent };
-            }
-          }
-        );
-      }
+      this.monitorForNewEvents();
     } else {
       this.jobs = this.args.jobs;
       this.stages = this.args.stages;
       this.triggers = this.args.triggers;
 
-      if (this.args.event) {
-        this.event = this.args.event;
-
-        this.workflowDataReload.registerBuildsCallback(
-          BUILD_QUEUE_NAME,
-          this.event.id,
-          this.buildsCallback
-        );
-        this.setWorkflowGraphFromEvent();
-      }
+      this.monitorForNewBuilds();
     }
 
     this.showGraph = true;
+  }
+
+  monitorForNewEvents() {
+    const pipelineId = this.pipeline.id;
+
+    if (this.eventType === PR_EVENT) {
+      this.workflowDataReload.registerOpenPrsCallback(
+        OPEN_PRS_QUEUE_NAME,
+        pipelineId,
+        openPrs => {
+          if (openPrs.length > 0) {
+            this.workflowDataReload.removeOpenPrsCallback(
+              OPEN_PRS_QUEUE_NAME,
+              pipelineId
+            );
+            const transition = this.router.replaceWith(
+              'v2.pipeline.pulls.show',
+              openPrs[0]
+            );
+
+            transition.data = {
+              prNums: openPrs
+            };
+          }
+        }
+      );
+    } else {
+      this.workflowDataReload.registerLatestCommitEventCallback(
+        LATEST_COMMIT_EVENT_QUEUE_NAME,
+        pipelineId,
+        latestCommitEvent => {
+          if (latestCommitEvent) {
+            this.workflowDataReload.removeLatestCommitEventCallback(
+              LATEST_COMMIT_EVENT_QUEUE_NAME,
+              pipelineId
+            );
+
+            const transition = this.router.replaceWith(
+              'v2.pipeline.events.show',
+              latestCommitEvent.id
+            );
+
+            transition.data = { latestEvent: latestCommitEvent };
+          }
+        }
+      );
+    }
+  }
+
+  monitorForNewBuilds() {
+    if (this.args.event) {
+      this.event = this.args.event;
+
+      this.workflowDataReload.registerBuildsCallback(
+        BUILD_QUEUE_NAME,
+        this.event.id,
+        this.buildsCallback
+      );
+      this.setWorkflowGraphFromEvent();
+    }
   }
 
   willDestroy() {
