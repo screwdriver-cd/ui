@@ -12,11 +12,13 @@ import {
   addJobIcons,
   addJobNames,
   addStages,
+  calcNodeCenter,
   getElementSizes,
   getGraphSvg,
   getMaximumJobNameLength,
   getNodeWidth,
-  icon
+  icon,
+  STATUS_MAP
 } from 'screwdriver-ui/utils/pipeline/graph/d3-graph-util';
 
 export default Component.extend({
@@ -199,6 +201,14 @@ export default Component.extend({
     if (!data) return;
     const el = d3.select(this.element);
 
+    const elementSizes = getElementSizes();
+    const { ICON_SIZE } = elementSizes;
+    const maximumJobNameLength = getMaximumJobNameLength(
+      this.decoratedGraph,
+      this.args.displayJobNameLength
+    );
+    const nodeWidth = getNodeWidth(elementSizes, maximumJobNameLength);
+
     data.nodes.forEach(node => {
       const n = el.select(`g.graph-node[data-job="${node.name}"]`);
 
@@ -211,7 +221,23 @@ export default Component.extend({
           `graph-node${
             node.status ? ` build-${node.status.toLowerCase()}` : ''
           }`
-        );
+        )
+          .attr(
+            'font-size',
+            `${
+              icon(node.status, node.virtual) === STATUS_MAP.VIRTUAL.icon
+                ? ICON_SIZE * 2
+                : ICON_SIZE
+            }px`
+          )
+          .style('text-anchor', 'middle')
+          .attr(
+            'x',
+            calcNodeCenter(node.pos.x, nodeWidth) +
+              (icon(node.status, node.virtual) === STATUS_MAP.VIRTUAL.icon
+                ? ICON_SIZE / 2
+                : 0)
+          );
       }
     });
   },

@@ -5,80 +5,91 @@
 @mixin styles {
   #pipeline-header {
     display: flex;
+    flex-direction: column;
     background-color: colors.$sd-flyout-bg;
     padding: 1rem;
 
-    a {
-      color: colors.$sd-black;
-    }
+    .header-main {
+      display: flex;
 
-    .header-item {
-      margin-top: auto;
-      margin-bottom: auto;
-      padding-right: 0.5rem;
-
-      &.pipeline-name {
-        font-size: 24px;
-        font-weight: variables.$weight-bold;
+      a {
+        color: colors.$sd-black;
       }
 
-      .sonarqube {
-        height: 1rem;
-        width: 1rem;
-      }
+      .header-item {
+        margin-top: auto;
+        margin-bottom: auto;
+        padding-right: 0.5rem;
 
-      &.dropdown {
-        max-width: 20rem;
-
-        .dropdown-toggle {
-          display: flex;
-          justify-content: space-between;
-
-          svg {
-            margin: auto 0.25rem;
-          }
-
-          &::after {
-            margin-top: auto;
-            margin-bottom: 0.75rem;
-          }
-
-          .branch {
-            overflow: auto;
-          }
+        &.pipeline-name {
+          font-size: 24px;
+          font-weight: variables.$weight-bold;
         }
 
-        .dropdown-menu {
-          display: flex;
-          flex-direction: column;
-          overflow-x: scroll;
-          max-height: 10rem;
-          width: 20rem;
+        .sonarqube {
+          height: 1rem;
+          width: 1rem;
+        }
 
-          svg {
-            width: 10px;
-            height: 10px;
-          }
+        &.dropdown {
+          max-width: 20rem;
 
-          a {
-            padding: 0.25rem 0.75rem;
+          .dropdown-toggle {
+            display: flex;
+            justify-content: space-between;
 
-            &:hover {
-              background-color: colors.$sd-highlight;
+            svg {
+              margin: auto 0.25rem;
+            }
+
+            &::after {
+              margin-top: auto;
+              margin-bottom: 0.75rem;
+            }
+
+            .branch {
+              overflow: auto;
             }
           }
 
-          span {
-            margin: auto;
+          .dropdown-menu {
+            display: flex;
+            flex-direction: column;
+            overflow-x: scroll;
+            max-height: 10rem;
+            width: 20rem;
+
+            svg {
+              width: 10px;
+              height: 10px;
+            }
+
+            a {
+              padding: 0.25rem 0.75rem;
+
+              &:hover {
+                background-color: colors.$sd-highlight;
+              }
+            }
+
+            span {
+              margin: auto;
+            }
           }
         }
       }
+
+      @include button.styles;
+
+      #add-to-collection {
+        margin-left: auto;
+      }
     }
 
-    @include button.styles;
-
-    #add-to-collection {
-      margin-left: auto;
+    .pipeline-description {
+      margin-top: 0.25rem;
+      height: 2.25rem;
+      overflow: auto;
     }
   }
 }

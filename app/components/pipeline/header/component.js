@@ -16,6 +16,10 @@ export default class PipelineHeaderComponent extends Component {
 
   sameRepoPipeline = [];
 
+  get pipelineDescription() {
+    return this.args.pipeline.annotations['screwdriver.cd/pipelineDescription'];
+  }
+
   get sonarBadgeUri() {
     return (
       this.args.pipeline.badges.sonar.uri ||

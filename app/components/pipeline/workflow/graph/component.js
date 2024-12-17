@@ -131,6 +131,13 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
   @action
   redraw(element, [workflowGraph, builds, event]) {
+    const elementSizes = getElementSizes();
+    const maximumJobNameLength = getMaximumJobNameLength(
+      this.decoratedGraph,
+      this.args.displayJobNameLength
+    );
+    const nodeWidth = getNodeWidth(elementSizes, maximumJobNameLength);
+
     if (
       this.event.id !== event.id ||
       this.decoratedGraph.nodes.length !== workflowGraph.nodes.length
@@ -149,6 +156,11 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
     this.getDecoratedGraph(workflowGraph, builds, event);
     updateEdgeStatuses(this.graphSvg, this.decoratedGraph);
-    updateJobStatuses(this.graphSvg, this.decoratedGraph);
+    updateJobStatuses(
+      this.graphSvg,
+      this.decoratedGraph,
+      elementSizes,
+      nodeWidth
+    );
   }
 }
