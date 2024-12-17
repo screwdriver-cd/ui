@@ -20,6 +20,8 @@ const STATUS_MAP = {
   VIRTUAL: { icon: '\ue911' }
 };
 
+export { STATUS_MAP };
+
 /**
  * Find the icon to set as the text for a node
  * @method icon
@@ -28,7 +30,10 @@ const STATUS_MAP = {
  * @return {String}        Unicode character that maps to an icon in screwdriver icon font
  */
 export function icon(status, isVirtual) {
-  if (isVirtual) {
+  if (
+    isVirtual &&
+    (!status || ['SUCCESS', 'WARNING', 'CREATED'].includes(status))
+  ) {
     return STATUS_MAP.VIRTUAL.icon;
   }
 
@@ -625,8 +630,12 @@ export function addJobNames(
  * Updates the job statuses in the existing graph SVG
  * @param svg
  * @param data
+ * @param sizes
+ * @param nodeWidth
  */
-export function updateJobStatuses(svg, data) {
+export function updateJobStatuses(svg, data, sizes, nodeWidth) {
+  const { ICON_SIZE } = sizes;
+
   svg
     .selectAll('.graph-node')
     .data(data.nodes)
@@ -636,9 +645,24 @@ export function updateJobStatuses(svg, data) {
         node.status ? ` build-${node.status.toLowerCase()}` : ''
       }`;
     })
+    .attr('font-size', node => {
+      return `${
+        icon(node.status, node.virtual) === STATUS_MAP.VIRTUAL.icon
+          ? ICON_SIZE * 2
+          : ICON_SIZE
+      }px`;
+    })
+    .attr('x', node => {
+      return (
+        calcNodeCenter(node.pos.x, nodeWidth) +
+        (icon(node.status, node.virtual) === STATUS_MAP.VIRTUAL.icon
+          ? ICON_SIZE / 2
+          : 0)
+      );
+    })
     .select('text')
     .html(node => {
-      return icon(node.status);
+      return icon(node.status, node.virtual);
     });
 }
 
