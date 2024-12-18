@@ -68,9 +68,8 @@ export default class PipelineHeaderComponent extends Component {
                 pipeline.id !== pipelineId && scm === s && repositoryId === r
               );
             })
-            .map((pipeline, i) => ({
-              index: i,
-              url: `/pipelines/${pipeline.id}`,
+            .map(pipeline => ({
+              url: `/v2/pipelines/${pipeline.id}`,
               branchAndRootDir: pipeline.scmRepo.rootDir
                 ? `${pipeline.scmRepo.branch}:${pipeline.scmRepo.rootDir}`
                 : pipeline.scmRepo.branch
