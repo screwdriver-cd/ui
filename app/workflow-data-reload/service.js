@@ -87,6 +87,14 @@ export default class WorkflowDataReloadService extends Service {
     return this.latestCommitEventReloader.getLatestCommitEvent();
   }
 
+  registerOpenPrsCallback(queueName, id, callback) {
+    this.openPrsReloader.registerCallback(queueName, id, callback);
+  }
+
+  removeOpenPrsCallback(queueName, id) {
+    this.openPrsReloader.removeCallback(queueName, id);
+  }
+
   getPrNums() {
     return this.openPrsReloader.getPrNums();
   }
