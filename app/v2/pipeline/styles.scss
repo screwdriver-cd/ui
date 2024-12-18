@@ -12,6 +12,7 @@
       'pipeline-nav pipeline-header'
       'pipeline-nav pipeline-main';
     grid-template-columns: $pipeline-nav-width calc(100% - $pipeline-nav-width);
+    grid-template-rows: max-content 1fr;
 
     #pipeline-nav {
       grid-area: pipeline-nav;
