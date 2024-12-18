@@ -17,11 +17,13 @@ export default class V2PipelinePullsShowRoute extends Route {
     }
   };
 
-  async model(params) {
+  async model(params, transition) {
     const model = this.modelFor('v2.pipeline.pulls');
-    const { pipeline, pullRequestJobs } = model;
+    const { pipeline } = model;
     const pipelineId = pipeline.id;
-    const prNums = getPrNumbers(pullRequestJobs);
+    const prNums = transition.data.prNums
+      ? new Set(transition.data.prNums)
+      : getPrNumbers(model.pullRequestJobs);
     const prNum = parseInt(params.pull_request_number, 10);
     const { sha } = params;
 
