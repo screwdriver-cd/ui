@@ -1,7 +1,6 @@
 import { get, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import ENV from 'screwdriver-ui/config/environment';
 
 export default Component.extend({
   showCollectionModal: false,
@@ -64,32 +63,31 @@ export default Component.extend({
   // eslint-disable-next-line ember/require-computed-property-dependencies
   sameRepoPipeline: computed('pipeline', {
     async get() {
+      const maxPage = 10;
       const [scm, repositoryId] = this.pipeline.scmUri.split(':');
       const pipelineName = this.pipeline.scmRepo.name;
       const sameRepoPipelines = [];
 
-      let page = 0;
-
-      do {
-        page += 1;
-
+      for (let page = 1; page <= maxPage; page += 1) {
         const siblingPipelines = (
           await this.pipelineService.getSiblingPipeline(
             this.pipeline.scmRepo.name,
             page
           )
-        ).toArray();
+        )
+          .toArray()
+          .filter(pipeline => pipeline.scmUri.split(':')[0] === scm);
 
         sameRepoPipelines.push(...siblingPipelines);
 
-        if (siblingPipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
+        if (
+          siblingPipelines.length === 0 ||
+          sameRepoPipelines[sameRepoPipelines.length - 1].scmRepo.name !==
+            pipelineName
+        ) {
           break;
         }
-      } while (
-        sameRepoPipelines[sameRepoPipelines.length - 1].scmRepo.name ===
-          pipelineName &&
-        page <= 10
-      );
+      }
 
       return sameRepoPipelines
         .filter(pipe => {
