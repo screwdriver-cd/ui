@@ -1,2 +1,8 @@
 & {
+  .button-container {
+    margin-right: 15px;
+  }
+  .btn-outline-primary:hover {
+    background-color: $sd-pale-blue;
+  }
 }
