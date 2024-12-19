@@ -33,11 +33,11 @@ const statusIcon = (status, isLight, isVirtualJob) => {
     case 'CREATED':
     case 'WARNING':
     case 'SUCCESS':
-      icon.name = isVirtualJob ? 'fast-forward' : 'check-circle';
+      icon.name = isVirtualJob ? 'forward-fast' : 'circle-check';
       icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'UNSTABLE':
-      icon.name = 'exclamation-circle';
+      icon.name = 'circle-exclamation';
       break;
     case 'FROZEN':
       icon.name = 'snowflake';
@@ -49,16 +49,16 @@ const statusIcon = (status, isLight, isVirtualJob) => {
       icon.flip = true;
       break;
     case 'FAILURE':
-      icon.name = isVirtualJob ? 'fast-forward' : 'times-circle';
+      icon.name = isVirtualJob ? 'forward-fast' : 'circle-xmark';
       icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'ABORTED':
-      icon.name = 'stop-circle';
+      icon.name = 'circle-stop';
       icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'SKIPPED':
       // TODO: Replace skipped property if necessary.
-      icon.name = 'exclamation-circle';
+      icon.name = 'circle-exclamation';
       break;
     default:
       icon.name = 'circle';

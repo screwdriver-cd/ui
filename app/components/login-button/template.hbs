@@ -14,14 +14,14 @@
   {{#unless scmContext.readOnly}}
     <p>
       <a href="#authenticate" onClick={{action "authenticate" scmContext.context}}>
-        <FaIcon @icon="sign-in-alt" />
+        <FaIcon @icon="right-to-bracket" />
         Sign in with {{scmContext.displayName}}
       </a>
     </p>
   {{/unless}}
 {{else}}
   <a href="#authenticate" onClick={{action "authenticate"}}>
-    <FaIcon @icon="sign-in-alt" />
+    <FaIcon @icon="right-to-bracket" />
     Sign in with SCM Provider
   </a>
 {{/each}}
