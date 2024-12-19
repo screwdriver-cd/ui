@@ -33,7 +33,7 @@ module('Integration | Component | build step item', function (hooks) {
       @stepCode={{128}}
     />`);
 
-    assert.dom('svg').hasClass('fa-times', 'fail icon');
+    assert.dom('svg').hasClass('fa-xmark', 'fail icon');
   });
 
   test('it renders an O when not run', async function (assert) {

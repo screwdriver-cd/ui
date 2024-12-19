@@ -8,7 +8,8 @@ import { getDisplayJobNameLength, getWorkflowGraph } from './util';
 const PIPELINE_EVENT = 'pipeline';
 const PR_EVENT = 'pr';
 const BUILD_QUEUE_NAME = 'graph';
-const RELOAD_ID = 'pipeline';
+const LATEST_COMMIT_EVENT_QUEUE_NAME = 'latestCommitEvent';
+const OPEN_PRS_QUEUE_NAME = 'openPrs';
 
 export default class PipelineWorkflowComponent extends Component {
   @service router;
@@ -59,6 +60,7 @@ export default class PipelineWorkflowComponent extends Component {
     super(...arguments);
 
     const { pipeline } = this.args;
+    const pipelineId = pipeline.id;
 
     this.pipeline = pipeline;
     this.userSettings = this.args.userSettings;
@@ -67,21 +69,57 @@ export default class PipelineWorkflowComponent extends Component {
       ? PIPELINE_EVENT
       : PR_EVENT;
 
-    if (this.eventType === PIPELINE_EVENT) {
-      this.dataReloadId = this.workflowDataReload.start(pipeline.id, false);
-    } else {
-      this.dataReloadId = this.workflowDataReload.start(pipeline.id, true);
-    }
+    this.dataReloadId = this.workflowDataReload.start(
+      pipelineId,
+      this.eventType === PR_EVENT
+    );
 
     if (this.args.noEvents) {
+      this.monitorForNewEvents();
+    } else {
+      this.jobs = this.args.jobs;
+      this.stages = this.args.stages;
+      this.triggers = this.args.triggers;
+
+      this.monitorForNewBuilds();
+    }
+
+    this.showGraph = true;
+  }
+
+  monitorForNewEvents() {
+    const pipelineId = this.pipeline.id;
+
+    if (this.eventType === PR_EVENT) {
+      this.workflowDataReload.registerOpenPrsCallback(
+        OPEN_PRS_QUEUE_NAME,
+        pipelineId,
+        openPrs => {
+          if (openPrs.length > 0) {
+            this.workflowDataReload.removeOpenPrsCallback(
+              OPEN_PRS_QUEUE_NAME,
+              pipelineId
+            );
+            const transition = this.router.replaceWith(
+              'v2.pipeline.pulls.show',
+              openPrs[0]
+            );
+
+            transition.data = {
+              prNums: openPrs
+            };
+          }
+        }
+      );
+    } else {
       this.workflowDataReload.registerLatestCommitEventCallback(
-        BUILD_QUEUE_NAME,
-        RELOAD_ID,
+        LATEST_COMMIT_EVENT_QUEUE_NAME,
+        pipelineId,
         latestCommitEvent => {
           if (latestCommitEvent) {
             this.workflowDataReload.removeLatestCommitEventCallback(
-              BUILD_QUEUE_NAME,
-              RELOAD_ID
+              LATEST_COMMIT_EVENT_QUEUE_NAME,
+              pipelineId
             );
 
             const transition = this.router.replaceWith(
@@ -93,24 +131,20 @@ export default class PipelineWorkflowComponent extends Component {
           }
         }
       );
-    } else {
-      this.jobs = this.args.jobs;
-      this.stages = this.args.stages;
-      this.triggers = this.args.triggers;
-
-      if (this.args.event) {
-        this.event = this.args.event;
-
-        this.workflowDataReload.registerBuildsCallback(
-          BUILD_QUEUE_NAME,
-          this.event.id,
-          this.buildsCallback
-        );
-        this.setWorkflowGraphFromEvent();
-      }
     }
+  }
 
-    this.showGraph = true;
+  monitorForNewBuilds() {
+    if (this.args.event) {
+      this.event = this.args.event;
+
+      this.workflowDataReload.registerBuildsCallback(
+        BUILD_QUEUE_NAME,
+        this.event.id,
+        this.buildsCallback
+      );
+      this.setWorkflowGraphFromEvent();
+    }
   }
 
   willDestroy() {

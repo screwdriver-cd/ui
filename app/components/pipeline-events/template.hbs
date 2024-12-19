@@ -9,7 +9,7 @@
     <InfoMessage
       @message={{this.errorMessage}}
       @type="warning"
-      @icon="exclamation-triangle"
+      @icon="triangle-exclamation"
       @scmContext={{this.pipeline.scmContext}}
     />
   {{/if}}
@@ -18,7 +18,7 @@
     <InfoMessage
       @message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration."
       @type="info"
-      @icon="exclamation-triangle"
+      @icon="triangle-exclamation"
     />
   {{/if}}
 

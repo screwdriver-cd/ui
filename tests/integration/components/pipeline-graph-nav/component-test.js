@@ -409,7 +409,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     />`);
 
     assert.dom('.FAILURE').exists({ count: 1 });
-    assert.dom('.status .fa-times-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-xmark').exists({ count: 1 });
   });
 
   test('it renders when selectedEvent is a ABORTED event', async function (assert) {
@@ -452,7 +452,7 @@ module('Integration | Component | pipeline graph nav', function (hooks) {
     />`);
 
     assert.dom('.ABORTED').exists({ count: 1 });
-    assert.dom('.status .fa-stop-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-stop').exists({ count: 1 });
   });
 
   test('it renders when selectedEvent is latestCommit event', async function (assert) {
