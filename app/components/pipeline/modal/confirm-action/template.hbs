@@ -11,7 +11,7 @@
       <InfoMessage
         @message={{this.errorMessage}}
         @type="warning"
-        @icon="exclamation-triangle"
+        @icon="triangle-exclamation"
         @dismissible={{false}}
       />
     {{/if}}
@@ -31,7 +31,7 @@
       </a>
       {{#unless this.isLatestNonPrCommitEvent}}
         <div class="alert alert-warning">
-          <FaIcon @icon="exclamation-triangle" />
+          <FaIcon @icon="triangle-exclamation" />
           This is <strong>NOT</strong> the latest commit.
         </div>
       {{/unless}}

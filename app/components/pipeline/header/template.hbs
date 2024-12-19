@@ -16,7 +16,7 @@
         @route="v2.pipeline"
         @model={{@pipeline.configPipelineId}}
       >
-        <FaIcon @icon="cog" />
+        <FaIcon @icon="gear" />
         Parent Pipeline
       </LinkTo>
     {{/if}}
@@ -56,12 +56,9 @@
       <dd.menu as |ddm|>
         {{#each (await this.sameRepoPipeline) as |pipe|}}
           <ddm.item>
-            <LinkTo
-              @route="v2.pipeline"
-              @model={{pipe.id}}
-            >
+            <a href={{pipe.url}}>
               {{svg-jar "link" class="img"}} {{pipe.branchAndRootDir}}
-            </LinkTo>
+            </a>
           </ddm.item>
         {{else}}
           <span>

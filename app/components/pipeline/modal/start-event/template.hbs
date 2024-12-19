@@ -11,7 +11,7 @@
       <InfoMessage
         @message={{this.errorMessage}}
         @type="warning"
-        @icon="exclamation-triangle"
+        @icon="triangle-exclamation"
         @dismissible={{false}}
       />
     {{/if}}
@@ -21,7 +21,7 @@
         id="user-notice"
         class="alert alert-warning"
       >
-        <FaIcon @icon="exclamation-triangle" />
+        <FaIcon @icon="triangle-exclamation" />
         {{@notice}}
       </div>
     {{/if}}
