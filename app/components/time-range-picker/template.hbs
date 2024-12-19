@@ -1,7 +1,20 @@
+<div class="button-container" style="margin-right: 10px;">
+  <BsButtonGroup
+    class="event-options-toggle"
+    @value={{this.selectedTimePicker}}
+    @type="radio"
+    @onChange={{action "toggleTimePicker"}} as |bg|
+  >
+    {{#each this.timePickerOptions as |opt|}}
+      <bg.button @value={{opt.value}} @type="primary" @outline={{true}}>
+        {{opt.label}}
+      </bg.button>
+    {{/each}}
+  </BsButtonGroup>
+</div>
+
+{{#if this.isRangePicker}}
 <div class="chart-control range-selection">
-    <span class="title">
-      Time Range
-    </span>
   <BsButtonGroup
     @value={{this.selectedRange}}
     @type="radio"
@@ -16,11 +29,8 @@
     {{/each}}
   </BsButtonGroup>
 </div>
-
+{{else}}
 <div class="chart-control custom-date-selection">
-    <span class="title">
-      Custom Date Range
-    </span>
   <EmberFlatpickr
     @clickOpens={{true}}
     @dateFormat="m/d/Y"
@@ -32,3 +42,4 @@
     placeholder="Choose Start & End Date Time"
   />
 </div>
+{{/if}}
