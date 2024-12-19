@@ -1,7 +1,6 @@
 <BsModal
   id="stop-build-modal"
   @onHide={{fn @closeModal}}
-  @onSubmit={{fn this.stopBuild}}
   as |modal|
 >
   <modal.header>
@@ -24,9 +23,10 @@
     <BsButton
       id="stop-build"
       @type="primary"
-      @onClick={{modal.submit}}
-    >
-      Yes
-    </BsButton>
+      @defaultText="Yes"
+      @pendingText="Stopping"
+      @fulfilledText="Stopped"
+      @onClick={{fn this.stopBuild}}
+    />
   </modal.footer>
 </BsModal>

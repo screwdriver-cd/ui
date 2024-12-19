@@ -1,7 +1,6 @@
 <BsModal
   id="add-to-collection-modal"
   @onHide={{fn @closeModal}}
-  @onSubmit={{fn this.submitCollections}}
   as |modal|
 >
   <modal.header>
@@ -76,7 +75,7 @@
       @pendingText="Adding to collection(s)..."
       @fulfilledText="Added to collection(s)"
       @type="primary"
-      @onClick={{modal.submit}}
+      @onClick={{fn this.submitCollections}}
     />
   </modal.footer>
 </BsModal>
