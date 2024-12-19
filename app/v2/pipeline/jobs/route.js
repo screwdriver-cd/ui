@@ -10,7 +10,7 @@ export default class NewPipelineJobsRoute extends Route {
 
     const jobs = await this.shuttle.fetchFromApi(
       'get',
-      `/pipelines/${pipelineId}/jobs`
+      `/pipelines/${pipelineId}/jobs?type=pipeline`
     );
 
     const userSettings = await this.shuttle.fetchFromApi(
