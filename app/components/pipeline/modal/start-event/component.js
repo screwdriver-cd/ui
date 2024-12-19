@@ -59,7 +59,7 @@ export default class PipelineModalStartEventComponent extends Component {
     const data = buildPostBody(
       this.session.data.authenticated.username,
       this.args.pipeline.id,
-      null,
+      this.args.job,
       null,
       this.parameters,
       false,

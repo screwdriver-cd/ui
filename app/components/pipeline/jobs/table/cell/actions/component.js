@@ -57,6 +57,10 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
       : null;
   }
 
+  get startEventTitle() {
+    return `Start a new event from ${this.args.record.job.name}`;
+  }
+
   get startButtonDisabled() {
     return isStartButtonDisabled(this.isPipelineInactive, this.args.record.job);
   }
