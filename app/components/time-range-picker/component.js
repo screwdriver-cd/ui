@@ -36,7 +36,11 @@ export default Component.extend({
       this.set('selectedRange', undefined);
     }
   },
-  isRangePicker: computed.equal('selectedTimePicker', 'range'),
+  isRangePicker: computed('selectedTimePicker', {
+    get() {
+      return this.selectedTimePicker === 'range';
+    }
+  }),
   // flatpickr addon seems to prefer dates in string
   customRange: computed('startTime', 'endTime', {
     get() {

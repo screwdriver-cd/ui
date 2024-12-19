@@ -80,9 +80,15 @@ module('Integration | Component | template versions', function (hooks) {
     );
 
     assert.dom('h4').hasText('All Versions');
+    assert.dom('div.timePicker-options-toggle').exists();
+    assert.dom('div.timePicker-options-toggle button').exists({ count: 2 });
+    assert
+      .dom('div.timePicker-options-toggle button.active')
+      .exists({ count: 1 });
+    assert
+      .dom('div.timePicker-options-toggle button.active')
+      .hasText('Time Range');
     assert.dom('div.range-selection').exists();
-    assert.dom('div.range-selection span').exists();
-    assert.dom('div.range-selection span').hasText('Time Range');
     assert.dom('div.range-selection div.btn-group').exists();
     assert.dom('div.range-selection div.btn-group button').exists({ count: 9 });
     assert
