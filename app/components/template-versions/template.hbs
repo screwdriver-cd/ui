@@ -4,6 +4,9 @@
 
 {{#unless this.isPipelineTemplatePage}}
 <div class="table-controls">
+  <span style="margin-right: 10px; align-self: center;">
+    <em>Note: Changing the time or custom date range will update the metrics displayed in the table, including pipelines, jobs, and builds.</em>
+  </span>
   <TimeRangePicker
     @startTime={{@startTime}}
     @endTime={{@endTime}}
