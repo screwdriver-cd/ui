@@ -1,7 +1,6 @@
 <BsModal
   id="confirm-action-modal"
   @onHide={{fn @closeModal}}
-  @onSubmit={{fn this.startBuild}}
   as |modal|
 >
   <modal.header>
@@ -70,7 +69,7 @@
       @defaultText="Yes"
       @pendingText={{this.pendingAction}}
       @fulfilledText={{this.completedAction}}
-      @onClick={{modal.submit}}
+      @onClick={{fn this.startBuild}}
     />
   </modal.footer>
 </BsModal>
