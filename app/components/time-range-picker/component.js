@@ -6,33 +6,37 @@ import timeRange, {
 
 export default Component.extend({
   classNames: ['chart-controls'],
-  selectedRange: 'none',
-  timeRanges: [],
+  selectedRange: '1mo',
+  timeRanges: [
+    { alias: '6hr', value: '6hr' },
+    { alias: '12hr', value: '12hr' },
+    { alias: '1d', value: '1d' },
+    { alias: '1wk', value: '1wk' },
+    { alias: '1mo', value: '1mo' },
+    { alias: '3mo', value: '3mo' },
+    { alias: '6mo', value: '180d' },
+    { alias: '1yr', value: '1yr' },
+    { alias: 'all', value: null }
+  ],
+  timePickerOptions: [
+    { label: 'Time Range', value: 'range' },
+    { label: 'Custom Date Range', value: 'custom' }
+  ],
+  selectedTimePicker: 'range',
   init() {
     this._super(...arguments);
-    this.timeRanges = [
-      { alias: '6hr', value: '6hr' },
-      { alias: '12hr', value: '12hr' },
-      { alias: '1d', value: '1d' },
-      { alias: '1wk', value: '1wk' },
-      { alias: '1mo', value: '1mo' },
-      { alias: '3mo', value: '3mo' },
-      { alias: '6mo', value: '180d' },
-      { alias: '1yr', value: '1yr' },
-      { alias: 'all', value: null }
-    ];
     if (
       !this.get('selectedRange') &&
       this.get('startTime') &&
       this.get('endTime')
     ) {
-      // only show 'none' option if above condition is met
-      if (!this.timeRanges.find(range => range.alias === 'none')) {
-        this.timeRanges.unshift({ alias: 'none', value: 'none' });
-      }
-      this.set('selectedRange', 'none');
+      this.set('selectedTimePicker', 'custom');
+      // set the selected range to undefined to avoid setting the time range
+      //  when the custom range is set
+      this.set('selectedRange', undefined);
     }
   },
+  isRangePicker: computed.equal('selectedTimePicker', 'range'),
   // flatpickr addon seems to prefer dates in string
   customRange: computed('startTime', 'endTime', {
     get() {
@@ -67,15 +71,40 @@ export default Component.extend({
       }
     },
     setCustomRange([start, end]) {
-      this.set('selectedRange', 'none');
-
       if (start) {
+        // Convert start and end to dates without time for comparison
+        const startDate = new Date(start).setHours(0, 0, 0, 0);
+        const endDate = new Date(end).setHours(0, 0, 0, 0);
+        const originalStartDate = new Date(this.get('startTime')).setHours(
+          0,
+          0,
+          0,
+          0
+        );
+        const originalEndDate = new Date(this.get('endTime')).setHours(
+          0,
+          0,
+          0,
+          0
+        );
+        // if no change in the date range, return
+
+        if (originalStartDate === startDate && originalEndDate === endDate) {
+          return;
+        }
         end.setHours(23, 59, 59);
         this.onTimeRangeChange(start.toISOString(), end.toISOString());
       } else {
         // always set end to a minute before EOD, and of local time
         this.onTimeRangeChange();
       }
+    },
+    toggleTimePicker(option) {
+      if (this.selectedTimePicker === option) {
+        return;
+      }
+
+      this.set('selectedTimePicker', option);
     }
   }
 });
