@@ -96,8 +96,10 @@ module('Integration | Component | pipeline header', function (hooks) {
     ];
 
     const pipelineStub = Service.extend({
-      getSiblingPipeline() {
-        return Promise.resolve(siblingPipelineMock);
+      getSiblingPipeline(_, page) {
+        if (page === 1) return Promise.resolve(siblingPipelineMock);
+
+        return Promise.resolve([]);
       }
     });
 
@@ -151,8 +153,12 @@ module('Integration | Component | pipeline header', function (hooks) {
       createSiblingPipelineMock(6)
     ];
 
+    const loadPages = [];
+
     const pipelineStub = Service.extend({
       getSiblingPipeline(_, page) {
+        loadPages.push(page);
+
         if (page === 1) return Promise.resolve(firstPageSiblingPipelines);
         if (page === 2) return Promise.resolve(secondPageSiblingPipelines);
         if (page === 3) return Promise.resolve([]);
@@ -171,6 +177,7 @@ module('Integration | Component | pipeline header', function (hooks) {
 
     await click('span.branch');
     assert.dom('li.branch-item').exists({ count: 5 });
+    assert.deepEqual(loadPages, [1, 2, 3]);
   });
 
   test('it renders branch-move when API returns multiple pages with other name pipeline', async function (assert) {
@@ -213,8 +220,12 @@ module('Integration | Component | pipeline header', function (hooks) {
       }
     ];
 
+    const loadPages = [];
+
     const pipelineStub = Service.extend({
       getSiblingPipeline(_, page) {
+        loadPages.push(page);
+
         if (page === 1) return Promise.resolve(firstPageSiblingPipelines);
         if (page === 2) return Promise.resolve(secondPageSiblingPipelines);
 
@@ -232,6 +243,92 @@ module('Integration | Component | pipeline header', function (hooks) {
 
     await click('span.branch');
     assert.dom('li.branch-item').exists({ count: 4 });
+    assert.deepEqual(loadPages, [1, 2]);
+  });
+
+  test('it renders branch-move when API returns multiple pages with multiple scm', async function (assert) {
+    const pipelineMock = EmberObject.create({
+      id: 1,
+      scmContext: 'github:github.com',
+      scmUri: 'github.com:123456:master',
+      scmRepo: {
+        name: 'batman/batmobile'
+      }
+    });
+
+    const createSiblingPipelineMock = id => {
+      return {
+        id,
+        scmRepo: {
+          name: pipelineMock.scmRepo.name,
+          branch: `branch-${id}`
+        },
+        scmUri: pipelineMock.scmUri
+      };
+    };
+
+    // In test, NUM_PIPELINES_LISTED is 3
+    const firstPageSiblingPipelines = [
+      pipelineMock,
+      createSiblingPipelineMock(2),
+      createSiblingPipelineMock(3),
+      {
+        id: 4,
+        scmRepo: {
+          name: 'batman/batmobile-other',
+          branch: `main`
+        },
+        scmUri: 'example.com:123456:master'
+      }
+    ];
+    const secondPageSiblingPipelines = [
+      createSiblingPipelineMock(5),
+      createSiblingPipelineMock(6),
+      {
+        id: 7,
+        scmRepo: {
+          name: 'batman/batmobile',
+          branch: `main`
+        },
+        scmUri: 'example.com:789:master'
+      }
+    ];
+    const thirdPageSiblingPipelines = [
+      {
+        id: 8,
+        scmRepo: {
+          name: 'batman/batmobile',
+          branch: `main`
+        },
+        scmUri: 'example.com:789:master'
+      }
+    ];
+
+    const loadPages = [];
+
+    const pipelineStub = Service.extend({
+      getSiblingPipeline(_, page) {
+        loadPages.push(page);
+
+        if (page === 1) return Promise.resolve(firstPageSiblingPipelines);
+        if (page === 2) return Promise.resolve(secondPageSiblingPipelines);
+        if (page === 3) return Promise.resolve(thirdPageSiblingPipelines);
+
+        return assert.fails('This line should not run.');
+      }
+    });
+
+    this.owner.unregister('service:pipeline');
+    this.owner.register('service:pipeline', pipelineStub);
+
+    injectScmServiceStub(this);
+
+    this.set('pipelineMock', pipelineMock);
+    await render(hbs`<PipelineHeader @pipeline={{this.pipelineMock}} />`);
+
+    await click('span.branch');
+    assert.dom('li.branch-item').exists({ count: 4 });
+    assert.deepEqual(loadPages, [1, 2, 3]);
   });
 
   test('it renders link to parent pipeline for child pipeline', async function (assert) {

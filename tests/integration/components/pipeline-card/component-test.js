@@ -31,7 +31,7 @@ const lastEventInfo = EmberObject.create({
   statusColor: 'build-empty',
   durationText: '--',
   sha: 'Not available',
-  icon: 'question-circle',
+  icon: 'circle-question',
   commitMessage: 'No events have been run for this pipeline',
   commitUrl: '#'
 });
@@ -73,7 +73,7 @@ module('Integration | Component | pipeline card', function (hooks) {
       />
     `);
 
-    await waitFor('.commit-status svg.fa-question-circle');
+    await waitFor('.commit-status svg.fa-circle-question');
 
     assert.dom('.branch-info a').hasText(mockPipeline.scmRepo.name);
     assert
@@ -85,7 +85,7 @@ module('Integration | Component | pipeline card', function (hooks) {
       .hasAttribute('href', `/pipelines/${mockPipeline.id}`);
     assert
       .dom('.commit-status a:nth-of-type(1) svg')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-circle-question');
     assert.dom('.commit-status a:nth-of-type(2)').hasText(lastEventInfo.sha);
     assert
       .dom('.commit-status a:nth-of-type(2)')
@@ -290,7 +290,7 @@ module('Integration | Component | pipeline card', function (hooks) {
     });
 
     assert.dom('.commit-status svg').hasClass('build-warning');
-    assert.dom('.commit-status svg').hasClass('fa-check-circle');
+    assert.dom('.commit-status svg').hasClass('fa-circle-check');
 
     assert
       .dom('.events-thumbnail-wrapper rect:nth-of-type(1)')
