@@ -421,7 +421,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
 
     assert
       .dom(
-        '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle'
+        '.parameter-list.expanded .parameter label svg.fa-triangle-exclamation'
       )
       .doesNotExist();
 
@@ -429,12 +429,12 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
 
     assert
       .dom(
-        '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle'
+        '.parameter-list.expanded .parameter label svg.fa-triangle-exclamation'
       )
       .exists({ count: 1 });
     assert
       .dom(
-        '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle title'
+        '.parameter-list.expanded .parameter label svg.fa-triangle-exclamation title'
       )
       .hasText('Default value: foobar');
   });
