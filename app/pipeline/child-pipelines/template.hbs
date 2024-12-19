@@ -6,7 +6,7 @@
 
 <div class="padded-container">
   {{#if this.hasInactivePipelines}}
-    {{info-message message="You have one or more inactive pipelines. You can activate these by adding back the corresponding SCM URL in the yaml configuration." type="info" icon="exclamation-triangle"}}
+    {{info-message message="You have one or more inactive pipelines. You can activate these by adding back the corresponding SCM URL in the yaml configuration." type="info" icon="triangle-exclamation"}}
   {{/if}}
 
   <PipelineList @pipelines={{this.pipelines}} @pipeline={{this.pipeline}} @onDeleteChildPipeline={{action "onDeleteChildPipeline"}}/>

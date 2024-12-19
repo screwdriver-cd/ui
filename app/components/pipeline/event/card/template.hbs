@@ -44,7 +44,7 @@
           title="Abort event"
         >
           <FaIcon
-            @icon="stop-circle"
+            @icon="circle-stop"
             @fixedWidth="true"
             @prefix="far"
           />
@@ -141,7 +141,7 @@
       {{#if this.failureCount}}
         <div class="count">
           <div class="failures">
-            <FaIcon @icon="times-circle" @fixedWidth="true"/>
+            <FaIcon @icon="circle-xmark" @fixedWidth="true"/>
           </div>
           <div>
             {{this.failureCount}}
@@ -151,7 +151,7 @@
       {{#if this.warningCount}}
         <div class="count">
           <div class="warnings">
-            <FaIcon @icon="exclamation-circle" @fixedWidth="true"/>
+            <FaIcon @icon="circle-exclamation" @fixedWidth="true"/>
           </div>
           <div>
             {{this.warningCount}}
@@ -161,7 +161,7 @@
       {{#if this.successCount}}
         <div class="count">
           <div class="successes">
-            <FaIcon @icon="check-circle" @fixedWidth="true"/>
+            <FaIcon @icon="circle-check" @fixedWidth="true"/>
           </div>
           <div>
             {{this.successCount}}
@@ -181,7 +181,7 @@
             title="View configured parameters"
           >
             <FaIcon
-              @icon="cog"
+              @icon="gear"
               @fixedWidth="true"
               @prefix="fa"
             />

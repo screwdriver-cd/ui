@@ -5,7 +5,7 @@
   <InfoMessage
     @message={{this.errorMessage}}
     @type="warning"
-    @icon="exclamation-triangle"
+    @icon="triangle-exclamation"
   />
   {{#if this.newToken}}
     <BsAlert @type="success" @onDismissed={{action "clearNewToken"}}>

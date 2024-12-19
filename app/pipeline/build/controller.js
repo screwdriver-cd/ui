@@ -66,11 +66,11 @@ export default Controller.extend({
 
       switch (statusMessageType) {
         case 'INFO':
-          return 'info-circle';
+          return 'circle-info';
         case 'ERROR':
         case 'WARN':
         default:
-          return 'exclamation-triangle';
+          return 'triangle-exclamation';
       }
     }
   }),

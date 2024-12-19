@@ -214,7 +214,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.stopButton').doesNotExist();
-    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-check').exists({ count: 1 });
     assert.dom('.commit .latest-commit').hasText('#abc123');
     assert.dom('.commit .last-successful').hasText('Last successful');
     assert.dom('.message').hasText('this was a test');
@@ -360,7 +360,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-check').exists({ count: 1 });
     assert.dom('.commit').hasText('PR-2 Start');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 2 });
@@ -410,7 +410,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-check').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 2 });
@@ -456,7 +456,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-check').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 2 });
@@ -506,7 +506,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-check').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 2 });
@@ -552,7 +552,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-check').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('.by').hasText('Started and committed by: batman');
@@ -648,7 +648,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     />`);
 
     assert.dom('.SKIPPED').exists({ count: 1 });
-    assert.dom('.status .fa-exclamation-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-exclamation').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('[skip ci] skip ci build.');
     assert.dom('.by').hasText('Started and committed by: batman');
@@ -694,7 +694,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
 
     assert.dom('.SUCCESS').exists({ count: 1 });
     assert.dom('.stopButton').doesNotExist();
-    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-check').exists({ count: 1 });
     assert.dom('.commit .latest-commit').hasText('#abc123');
     assert.dom('.commit .last-successful').hasText('Last successful');
     assert.dom('.message').hasText('this was a test');
@@ -769,7 +769,7 @@ module('Integration | Component | pipeline event row', function (hooks) {
     />`);
 
     assert.dom('.SUCCESS').exists({ count: 1 });
-    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-check').exists({ count: 1 });
     assert.dom('.commit').hasText('#abc123 Last successful');
     assert.dom('.message').hasText('this was a test');
     assert.dom('svg').exists({ count: 2 });

@@ -1,6 +1,6 @@
 {{page-title "Preferences"}}
 
-<InfoMessage @message={{this.errorMessage}} @type="warning" @icon="exclamation-triangle" />
+<InfoMessage @message={{this.errorMessage}} @type="warning" @icon="triangle-exclamation" />
 <InfoMessage @message={{this.successMessage}} @type="success" @icon="check" />
 <div>
   <section class="preference">
@@ -74,7 +74,7 @@
               class="reset-button"
               {{action "resetUserSettings"}}
             >
-              <FaIcon @icon="sync" />
+              <FaIcon @icon="rotate" />
               Reset
             </button>
             <button

@@ -36,13 +36,13 @@ module('Unit | Utility | build', function () {
   test('it gets the right fs class name for given status', assert => {
     const successLight = {
       flip: false,
-      name: 'check-circle',
+      name: 'circle-check',
       prefix: 'far',
       spin: false
     };
     const success = {
       flip: false,
-      name: 'check-circle',
+      name: 'circle-check',
       prefix: 'fas',
       spin: false
     };
@@ -54,19 +54,19 @@ module('Unit | Utility | build', function () {
     };
     const unstable = {
       flip: false,
-      name: 'exclamation-circle',
+      name: 'circle-exclamation',
       prefix: 'fa',
       spin: false
     };
     const failureLight = {
       flip: false,
-      name: 'times-circle',
+      name: 'circle-xmark',
       prefix: 'far',
       spin: false
     };
     const failure = {
       flip: false,
-      name: 'times-circle',
+      name: 'circle-xmark',
       prefix: 'fas',
       spin: false
     };

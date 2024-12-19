@@ -33,7 +33,7 @@ export default Component.extend({
         case 'success':
           return 'check';
         case 'failure':
-          return 'times';
+          return 'xmark';
         default:
           return 'circle';
       }
