@@ -87,8 +87,8 @@ export default Component.extend({
           0,
           0
         );
-        // if no change in the date range, return
 
+        // if no change in the date range, return
         if (originalStartDate === startDate && originalEndDate === endDate) {
           return;
         }
