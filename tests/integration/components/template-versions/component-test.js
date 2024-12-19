@@ -80,23 +80,25 @@ module('Integration | Component | template versions', function (hooks) {
     );
 
     assert.dom('h4').hasText('All Versions');
-    assert.dom('div.timePicker-options-toggle').exists();
-    assert.dom('div.timePicker-options-toggle button').exists({ count: 2 });
-    assert
-      .dom('div.timePicker-options-toggle button.active')
-      .exists({ count: 1 });
-    assert
-      .dom('div.timePicker-options-toggle button.active')
-      .hasText('Time Range');
     assert.dom('div.range-selection').exists();
+    assert.dom('div.range-selection span').exists({ count: 1 });
+    assert.dom('div.range-selection span').hasText('Time Range');
     assert.dom('div.range-selection div.btn-group').exists();
-    assert.dom('div.range-selection div.btn-group button').exists({ count: 9 });
+    assert.dom('div.range-selection div.btn-group button').exists({ count: 8 });
     assert
       .dom('div.range-selection div.btn-group button.active')
       .exists({ count: 1 });
     assert
       .dom('div.range-selection div.btn-group button.active')
       .hasText('1yr');
+    assert.dom('div.custom-date-selection span').exists({ count: 1 });
+    assert.dom('div.custom-date-selection span').hasText('Custom Date Range');
+    assert
+      .dom('div.custom-date-selection input.flatpickr-input')
+      .exists({ count: 1 });
+    assert
+      .dom('div.custom-date-selection input.flatpickr-input')
+      .isNotFocused();
 
     assert.dom('table').exists({ count: 1 });
     assert.dom('thead').exists({ count: 1 });
@@ -182,6 +184,26 @@ module('Integration | Component | template versions', function (hooks) {
     assert.dom('tfoot tr td:nth-child(4)').hasText('8');
     assert.dom('tfoot tr td:nth-child(5)').hasText('311');
     assert.dom('tfoot tr td:nth-child(6)').hasText('');
+
+    await render(
+      hbs`<TemplateVersions @templates={{this.mock}} @startTime="2024-11-30" @endTime="2024-12-01"/>;`
+    );
+
+    assert.dom('h4').hasText('All Versions');
+    assert.dom('div.range-selection').exists();
+    assert.dom('div.range-selection span').exists({ count: 1 });
+    assert.dom('div.range-selection span').hasText('Time Range');
+    assert.dom('div.range-selection div.btn-group').exists();
+    assert.dom('div.range-selection div.btn-group button').exists({ count: 8 });
+    assert
+      .dom('div.range-selection div.btn-group button.active')
+      .exists({ count: 0 });
+    assert.dom('div.custom-date-selection span').exists({ count: 1 });
+    assert.dom('div.custom-date-selection span').hasText('Custom Date Range');
+    assert
+      .dom('div.custom-date-selection input.flatpickr-input')
+      .exists({ count: 1 });
+    assert.dom('div.custom-date-selection input.flatpickr-input').isFocused();
   });
 
   test('it removes a version', async function (assert) {

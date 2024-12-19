@@ -15,32 +15,8 @@ export default Component.extend({
     { alias: '1mo', value: '1mo' },
     { alias: '3mo', value: '3mo' },
     { alias: '6mo', value: '180d' },
-    { alias: '1yr', value: '1yr' },
-    { alias: 'all', value: null }
+    { alias: '1yr', value: '1yr' }
   ],
-  timePickerOptions: [
-    { label: 'Time Range', value: 'range' },
-    { label: 'Custom Date Range', value: 'custom' }
-  ],
-  selectedTimePicker: 'range',
-  init() {
-    this._super(...arguments);
-    if (
-      !this.get('selectedRange') &&
-      this.get('startTime') &&
-      this.get('endTime')
-    ) {
-      this.set('selectedTimePicker', 'custom');
-      // set the selected range to undefined to avoid setting the time range
-      //  when the custom range is set
-      this.set('selectedRange', undefined);
-    }
-  },
-  isRangePicker: computed('selectedTimePicker', {
-    get() {
-      return this.selectedTimePicker === 'range';
-    }
-  }),
   // flatpickr addon seems to prefer dates in string
   customRange: computed('startTime', 'endTime', {
     get() {
@@ -103,12 +79,15 @@ export default Component.extend({
         this.onTimeRangeChange();
       }
     },
-    toggleTimePicker(option) {
-      if (this.selectedTimePicker === option) {
-        return;
+    handleFlatpickrReady(selectedDates, dateStr, instance) {
+      if (
+        !this.get('selectedRange') &&
+        this.get('startTime') &&
+        this.get('endTime')
+      ) {
+        instance.input.focus(); // Focus the input when ready
+        instance.close(); // Close the calendar when ready
       }
-
-      this.set('selectedTimePicker', option);
     }
   }
 });
