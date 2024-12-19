@@ -73,7 +73,7 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
       @record={{this.record}}
     />`);
 
-    assert.dom('.fa-stop-circle').exists({ count: 1 });
+    assert.dom('.fa-circle-stop').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
@@ -93,7 +93,7 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
       @record={{this.record}}
     />`);
 
-    assert.dom('.fa-stop-circle').exists({ count: 1 });
+    assert.dom('.fa-circle-stop').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
@@ -113,7 +113,7 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
       @record={{this.record}}
     />`);
 
-    assert.dom('.fa-check-circle').exists({ count: 1 });
+    assert.dom('.fa-circle-check').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
@@ -133,7 +133,7 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
       @record={{this.record}}
     />`);
 
-    assert.dom('.fa-fast-forward').exists({ count: 1 });
+    assert.dom('.fa-forward-fast').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
@@ -153,7 +153,7 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
       @record={{this.record}}
     />`);
 
-    assert.dom('.fa-times-circle').exists({ count: 1 });
+    assert.dom('.fa-circle-xmark').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
@@ -173,7 +173,7 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
       @record={{this.record}}
     />`);
 
-    assert.dom('.fa-fast-forward').exists({ count: 1 });
+    assert.dom('.fa-forward-fast').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
