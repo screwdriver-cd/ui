@@ -54,7 +54,7 @@
         {{#if (eq this.newEventStartFromType 'STAGE')}}
           Stage:
           <code>
-            {{this.menuData.stage.name}}
+            {{this.stageMenuData.stage.name}}
           </code>
         {{else}}
           Job:
@@ -84,7 +84,7 @@
         }}
           <br />
           <div class="commit-warning alert alert-warning">
-            <FaIcon @icon="exclamation-triangle" />
+            <FaIcon @icon="triangle-exclamation" />
             This is
             <strong>
               NOT

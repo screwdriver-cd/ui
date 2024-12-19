@@ -762,16 +762,16 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.pipeline-card:nth-of-type(1) .commit-status svg')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-circle-check');
     assert
       .dom('.pipeline-card:nth-of-type(2) .commit-status svg')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-circle-question');
     assert
       .dom('.pipeline-card:nth-of-type(3) .commit-status svg')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-circle-question');
     assert
       .dom('.pipeline-card:nth-of-type(4) .commit-status svg')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-circle-question');
 
     // check that helper function getSha() works correctly
     assert
@@ -880,16 +880,16 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status svg')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-circle-check');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status svg')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-circle-question');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status svg')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-circle-question');
     assert
       .dom('.collection-pipeline:nth-of-type(4) .status svg')
-      .hasClass('fa-question-circle');
+      .hasClass('fa-circle-question');
 
     // check that helper function getSha() works correctly
     assert
@@ -1181,16 +1181,16 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status svg')
-      .hasClass('fa-stop-circle');
+      .hasClass('fa-circle-stop');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status svg')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-circle-check');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status svg')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-circle-check');
     assert
       .dom('.collection-pipeline:nth-of-type(4) .status svg')
-      .hasClass('fa-stop-circle');
+      .hasClass('fa-circle-stop');
 
     // check that helper function getSha() works correctly
     assert
@@ -1228,16 +1228,16 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status svg')
-      .hasClass('fa-stop-circle');
+      .hasClass('fa-circle-stop');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status svg')
-      .hasClass('fa-stop-circle');
+      .hasClass('fa-circle-stop');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status svg')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-circle-check');
     assert
       .dom('.collection-pipeline:nth-of-type(4) .status svg')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-circle-check');
 
     // check that helper function getSha() works correctly
     assert
@@ -1275,16 +1275,16 @@ module('Integration | Component | collection view', function (hooks) {
     // check that helper function getIcon() works correctly
     assert
       .dom('.collection-pipeline:nth-of-type(1) .status svg')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-circle-check');
     assert
       .dom('.collection-pipeline:nth-of-type(2) .status svg')
-      .hasClass('fa-check-circle');
+      .hasClass('fa-circle-check');
     assert
       .dom('.collection-pipeline:nth-of-type(3) .status svg')
-      .hasClass('fa-stop-circle');
+      .hasClass('fa-circle-stop');
     assert
       .dom('.collection-pipeline:nth-of-type(4) .status svg')
-      .hasClass('fa-stop-circle');
+      .hasClass('fa-circle-stop');
 
     // check that helper function getSha() works correctly
 
