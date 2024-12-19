@@ -1,7 +1,6 @@
 <BsModal
   id="start-event-modal"
   @onHide={{fn @closeModal}}
-  @onSubmit={{fn this.startBuild}}
   as |modal|
 >
   <modal.header>
@@ -50,7 +49,7 @@
       @defaultText="Yes"
       @pendingText="Starting"
       @fulfilledText="Started"
-      @onClick={{modal.submit}}
+      @onClick={{fn this.startBuild}}
     />
   </modal.footer>
 </BsModal>
