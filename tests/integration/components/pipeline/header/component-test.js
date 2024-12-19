@@ -105,6 +105,11 @@ module('Integration | Component | pipeline/header', function (hooks) {
         id: 125,
         scmUri: 'git.github.com:9876',
         scmRepo: { branch: 'ghi' }
+      },
+      {
+        id: 321,
+        scmUri: 'git.not.com:9876',
+        scmRepo: { branch: 'abc' }
       }
     ]);
 
