@@ -641,7 +641,8 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
           { status: 'SUCCESS' },
           { status: 'UNSTABLE' },
           { status: 'SUCCESS' },
-          { status: 'FAILURE' }
+          { status: 'FAILURE' },
+          { status: 'CREATED' }
         ]);
       });
 
