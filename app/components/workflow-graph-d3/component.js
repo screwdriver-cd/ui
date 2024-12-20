@@ -177,7 +177,7 @@ export default Component.extend({
       this.draw(decoratedGraph);
       set(this, 'lastGraph', wg);
     } else {
-      this.redraw(decoratedGraph);
+      this.redraw(decoratedGraph).then(() => {});
     }
   },
   actions: {
@@ -197,15 +197,17 @@ export default Component.extend({
       }
     }
   },
-  redraw(data) {
+  async redraw(data) {
     if (!data) return;
     const el = d3.select(this.element);
 
     const elementSizes = getElementSizes();
     const { ICON_SIZE } = elementSizes;
+    const desiredJobNameLength =
+      await this.userSettings.getDisplayJobNameLength();
     const maximumJobNameLength = getMaximumJobNameLength(
       this.decoratedGraph,
-      this.args.displayJobNameLength
+      desiredJobNameLength
     );
     const nodeWidth = getNodeWidth(elementSizes, maximumJobNameLength);
 
