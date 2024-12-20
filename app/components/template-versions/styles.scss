@@ -17,9 +17,7 @@
 
   .table-controls {
     display: flex;
-    justify-content: space-between; /* Space between the note and the picker */
-    align-items: center; /* Keep vertical alignment centered */
-    flex-wrap: wrap;
+    flex-direction: column;
     margin-bottom: 10px;
 
   > * {
