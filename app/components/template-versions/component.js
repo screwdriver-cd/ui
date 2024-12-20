@@ -181,8 +181,8 @@ export default Component.extend({
   },
 
   actions: {
-    timeRangeChange(startTime, endTime) {
-      this.onTimeRangeChange(startTime, endTime);
+    timeRangeChange(startTime, endTime, selectedRange = null) {
+      this.onTimeRangeChange(startTime, endTime, selectedRange);
     }
   }
 });
