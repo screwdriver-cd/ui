@@ -22,8 +22,8 @@
     flex-wrap: wrap;
     margin-bottom: 10px;
 
-  .table-controls .note {
-    margin-right: auto; /* Push the TimeRangePicker to the end */
-    align-self: center; /* Ensure the note aligns vertically */
+  > * {
+    margin-left: auto;
+  }
   }
 }
