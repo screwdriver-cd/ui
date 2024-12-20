@@ -1,24 +1,25 @@
 <div class="chart-control range-selection">
-    <span class="title">
-      Time Range
-    </span>
+  <span class="title">
+    Time Range
+  </span>
   <BsButtonGroup
     @value={{this.selectedRange}}
     @type="radio"
     @onChange={{action "setTimeRange"}} as |bg|
   >
     {{#each this.timeRanges as |range|}}
-      <bg.button @value={{range.value}}>
+      <bg.button 
+        @value={{range.value}}
+      >
         {{range.alias}}
       </bg.button>
     {{/each}}
   </BsButtonGroup>
 </div>
-
 <div class="chart-control custom-date-selection">
-    <span class="title">
-      Custom Date Range
-    </span>
+  <span class="title">
+    Custom Date Range
+  </span>
   <EmberFlatpickr
     @clickOpens={{true}}
     @dateFormat="m/d/Y"
@@ -27,6 +28,7 @@
     @mode="range"
     @onChange={{action (mut this.dateValues)}}
     @onClose={{action "setCustomRange"}}
+    @onReady={{action "handleFlatpickrReady"}}
     placeholder="Choose Start & End Date Time"
   />
 </div>

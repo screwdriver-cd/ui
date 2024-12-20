@@ -313,7 +313,9 @@ export function addStages(
       .attr('width', calcStageWidth(stage, nodeWidth, sizes))
       .attr('height', calcStageHeight(stage, sizes))
       .attr('stroke', 'grey')
-      .attr('fill', '#ffffff');
+      .attr('fill', '#ffffff')
+      .attr('rx', 5) // Add rx attribute for rounded corners
+      .attr('ry', 5); // Add ry attribute for rounded corners
 
     // stage info
     const fo = svg

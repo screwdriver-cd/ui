@@ -10,11 +10,12 @@ import {
 } from 'screwdriver-ui/utils/pipeline/event';
 import {
   getDurationText,
+  getExternalPipelineId,
   getFailureCount,
   getFirstCreateTime,
-  getExternalPipelineId,
-  getStartDate,
   getRunningDurationText,
+  getStartDate,
+  getSuccessCount,
   getTruncatedMessage,
   getTruncatedSha,
   getWarningCount,
@@ -165,7 +166,7 @@ export default class PipelineEventCardComponent extends Component {
     if (this.status !== 'COLLAPSED') {
       this.failureCount = getFailureCount(builds);
       this.warningCount = getWarningCount(builds);
-      this.successCount = builds.length - this.failureCount - this.warningCount;
+      this.successCount = getSuccessCount(builds);
     }
 
     if (!this.durationIntervalId && !isEventComplete) {
