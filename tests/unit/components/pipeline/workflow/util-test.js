@@ -20,6 +20,19 @@ module('Unit | Component | pipeline/workflow/util', function () {
     );
   });
 
+  test('getFilteredGraph returns original graph if there are no external jobs', function (assert) {
+    assert.deepEqual(
+      getFilteredGraph({
+        nodes: [{ name: 'main' }, { name: 'build' }],
+        edges: [{ src: 'main', dest: 'build' }]
+      }),
+      {
+        nodes: [{ name: 'main' }, { name: 'build' }],
+        edges: [{ src: 'main', dest: 'build' }]
+      }
+    );
+  });
+
   test('getFilteredGraph removes nodes that trigger external pipelines', function (assert) {
     assert.deepEqual(
       getFilteredGraph({
@@ -32,6 +45,25 @@ module('Unit | Component | pipeline/workflow/util', function () {
       {
         nodes: [{ name: 'main' }, { name: 'build' }],
         edges: [{ src: 'main', dest: 'build' }]
+      }
+    );
+  });
+
+  test('getFilteredGraph keeps external pipeline nodes in the middle of the graph', function (assert) {
+    assert.deepEqual(
+      getFilteredGraph({
+        nodes: [{ name: 'sd@123' }, { name: 'main' }, { name: 'build' }],
+        edges: [
+          { src: 'main', dest: 'sd@123' },
+          { src: 'sd@123', dest: 'build' }
+        ]
+      }),
+      {
+        nodes: [{ name: 'sd@123' }, { name: 'main' }, { name: 'build' }],
+        edges: [
+          { src: 'main', dest: 'sd@123' },
+          { src: 'sd@123', dest: 'build' }
+        ]
       }
     );
   });
