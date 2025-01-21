@@ -216,6 +216,26 @@ export function calcStageHeight(stage, sizes, yDisplacement = 0) {
 }
 
 /**
+ * Calculates the y center position of a stage
+ * @param stage
+ * @param sizes
+ * @param verticalDisplacements
+ * @param yDisplacement
+ * @returns {number}
+ */
+export function calcStageYCenter(
+  stage,
+  sizes,
+  verticalDisplacements,
+  yDisplacement = 0
+) {
+  return (
+    calcStageY(stage, sizes, verticalDisplacements, yDisplacement) +
+    calcStageHeight(stage, sizes) / 2
+  );
+}
+
+/**
  * Returns the vertical displacement for the stages spanning the specified rows
  * @param startRow
  * @param endRow
@@ -440,10 +460,13 @@ export function addEdges( // eslint-disable-line max-params
   verticalDisplacements
 ) {
   const { ICON_SIZE, EDGE_GAP, ARROWHEAD } = sizes;
+  const edgesToDraw = data.edges.filter(e => {
+    return e.hidden !== true;
+  });
 
   svg
     .selectAll('link')
-    .data(data.edges)
+    .data(edgesToDraw)
     .enter()
     .append('path')
     .attr('class', d =>
@@ -466,6 +489,92 @@ export function addEdges( // eslint-disable-line max-params
       );
       const endX = calcNodeCenter(d.to.x, nodeWidth) - ICON_SIZE / 2 - EDGE_GAP;
       const endY = calcYPos(d.to.y, sizes, verticalDisplacements, ICON_SIZE);
+
+      path.moveTo(startX, startY);
+      // curvy line
+      path.bezierCurveTo(endX, startY, endX - nodeWidth / 2, endY, endX, endY);
+      // arrowhead
+      path.lineTo(endX - ARROWHEAD, endY - ARROWHEAD);
+      path.moveTo(endX, endY);
+      path.lineTo(endX - ARROWHEAD, endY + ARROWHEAD);
+
+      return path;
+    });
+}
+
+/**
+ * Adds stage edges to the graph
+ * @param svg
+ * @param data
+ * @param sizes
+ * @param nodeWidth
+ * @param isSkipped
+ * @param verticalDisplacements
+ */
+export function addStageEdges( // eslint-disable-line max-params
+  svg,
+  data,
+  sizes,
+  nodeWidth,
+  isSkipped,
+  verticalDisplacements
+) {
+  const { ICON_SIZE, EDGE_GAP, ARROWHEAD } = sizes;
+
+  svg
+    .selectAll('link')
+    .data(data.stageEdges)
+    .enter()
+    .append('path')
+    .attr('class', d =>
+      isSkipped
+        ? 'graph-edge stage-edge build-skipped'
+        : `graph-edge stage-edge ${
+            d.status ? `build-${d.status.toLowerCase()}` : ''
+          }`
+    )
+    .attr('stroke-dasharray', d => (!d.status || isSkipped ? 5 : 0))
+    .attr('stroke-width', 2)
+    .attr('fill', 'transparent')
+    .attr('d', d => {
+      const path = d3.path();
+
+      let startX;
+
+      let startY;
+
+      if (d.srcStageName) {
+        const stage = d.from;
+
+        startX =
+          calcStageX(stage, nodeWidth, sizes) +
+          calcStageWidth(stage, nodeWidth, sizes);
+
+        startY = calcStageYCenter(stage, sizes, verticalDisplacements);
+      } else {
+        startX =
+          calcNodeCenter(d.from.pos.x, nodeWidth) + ICON_SIZE / 2 + EDGE_GAP;
+        startY = calcYPos(
+          d.from.pos.y,
+          sizes,
+          verticalDisplacements,
+          ICON_SIZE
+        );
+      }
+
+      let endX;
+
+      let endY;
+
+      if (d.destStageName) {
+        const stage = d.to;
+
+        endX = calcStageX(stage, nodeWidth, sizes);
+        endY = calcStageYCenter(stage, sizes, verticalDisplacements);
+      } else {
+        endX = calcNodeCenter(d.to.pos.x, nodeWidth) - ICON_SIZE / 2 - EDGE_GAP;
+        endY = calcYPos(d.to.pos.y, sizes, verticalDisplacements, ICON_SIZE);
+      }
 
       path.moveTo(startX, startY);
       // curvy line

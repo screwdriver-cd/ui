@@ -12,6 +12,7 @@ import {
   addJobIcons,
   addJobNames,
   addStages,
+  addStageEdges,
   calcNodeCenter,
   getElementSizes,
   getGraphSvg,
@@ -136,7 +137,7 @@ export default Component.extend({
           start: startFrom,
           chainPR: this.prChainEnabled,
           prNum: this.selectedEventObj?.prNum,
-          stages
+          stages: this.minified ? [] : stages
         });
       }
     }
@@ -289,6 +290,18 @@ export default Component.extend({
           this.displayStageMenuHandle
         )
       : {};
+
+    // stage edges
+    if (this.showStages) {
+      addStageEdges(
+        svg,
+        data,
+        this.elementSizes,
+        nodeWidth,
+        isSkipped,
+        verticalDisplacements
+      );
+    }
 
     // edges
     addEdges(
