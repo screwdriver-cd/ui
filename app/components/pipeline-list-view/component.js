@@ -23,7 +23,7 @@ export default Component.extend({
   lastRows: [],
   moreJobs: true,
   timestampPreference: null,
-  buildsHistoryOptions: [5, 10, 15, 20, 25, 30],
+  buildsHistoryOptions: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
   columns: [
     {
       title: 'JOB',

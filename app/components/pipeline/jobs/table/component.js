@@ -60,7 +60,11 @@ export default class PipelineJobsTableComponent extends Component {
         '15',
         '20',
         '25',
-        '30'
+        '30',
+        '35',
+        '40',
+        '45',
+        '50'
       ];
       historyColumnConfiguration.filterFunction = async (_, filterVal) => {
         await this.dataReloader.setNumBuilds(filterVal);
