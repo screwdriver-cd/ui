@@ -268,7 +268,12 @@ const positionStage = (x, y, stage) => {
   }
 };
 
-const calcNodeDepth = graph => {
+/**
+ * Calculate depth of each nodes
+ * @param  {Object}  graph  Raw graph definition
+ * @returns {Object}        Map of node name to its depth
+ */
+const calcNodeDepths = graph => {
   const result = [];
   const nodes = {};
   const edges = {};
@@ -328,9 +333,9 @@ const calcNodeDepth = graph => {
  * @method walkGraph
  * @param  {Object}  graph                Raw graph definition
  * @param  {String}  start                The job name to start from for this iteration
- * @param  {Number}  x                    The column for this iteration
  * @param  {Array}   y                    Accumulator of column depth
  * @param  {Object}  stageNameToStageMap  Map of stage name to stage metadata (also includes workflow graph)
+ * @param  {Object}  nodeDepth            Map of node name to its depth
  */
 const walkGraph = (graph, start, y, stageNameToStageMap, nodeDepth) => {
   const nodeNames = graph.edges.filter(e => e.src === start).map(e => e.dest);
@@ -444,8 +449,9 @@ const positionGraphNodes = graph => {
         }, new Map())
       : null;
 
+  const nodeDepth = calcNodeDepths(graph);
+
   let y = [0]; // accumulator for column heights
-  const nodeDepth = calcNodeDepth(graph);
 
   nodes.forEach(n => {
     // Set root nodes on left
