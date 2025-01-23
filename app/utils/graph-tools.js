@@ -240,6 +240,10 @@ const positionStage = (x, y, stage) => {
   const stageStartX = x;
   const stageEndX = stageStartX + stageGraph.meta.width - 1;
 
+  for (let i = stageStartX; i <= stageEndX; i += 1) {
+    if (!y[i]) y[i] = y[0] - 1;
+  }
+
   // Find a row with no items for all the stage columns
   const stageStartY = Math.max(...y.slice(stageStartX, stageEndX + 1));
 
@@ -265,22 +269,84 @@ const positionStage = (x, y, stage) => {
 };
 
 /**
+ * Calculate depth of each nodes
+ * @param  {Object}  graph  Raw graph definition
+ * @returns {Object}        Map of node name to its depth
+ */
+const calcNodeDepths = graph => {
+  const result = [];
+  const nodes = {};
+  const edges = {};
+  const srcEdges = {};
+  const visited = {};
+  const depth = {};
+
+  graph.nodes.forEach(n => {
+    nodes[n.name] = n;
+    depth[n.name] = 0;
+  });
+  graph.edges.forEach(({ src, dest }) => {
+    if (!edges[src]) {
+      edges[src] = [];
+    }
+
+    if (!srcEdges[dest]) {
+      srcEdges[dest] = [];
+    }
+
+    edges[src].push(dest);
+    srcEdges[dest].push(src);
+  });
+
+  // Topological sort
+  const search = n => {
+    if (!visited[n.name]) {
+      visited[n.name] = true;
+      if (edges[n.name]) edges[n.name].forEach(dest => search(nodes[dest]));
+      result.push(n);
+    }
+  };
+
+  graph.nodes.forEach(n => search(n));
+  const sortedNodes = result.reverse();
+
+  // Set graph depth
+  for (const n of sortedNodes) {
+    let x = -1;
+
+    if (srcEdges[n.name]) {
+      for (const src of srcEdges[n.name]) {
+        x = Math.max(x, depth[src]);
+      }
+    }
+
+    x += 1;
+
+    depth[n.name] = x;
+  }
+
+  return depth;
+};
+
+/**
  * Walks the graph to find siblings and set their positions
  * @method walkGraph
  * @param  {Object}  graph                Raw graph definition
  * @param  {String}  start                The job name to start from for this iteration
- * @param  {Number}  x                    The column for this iteration
  * @param  {Array}   y                    Accumulator of column depth
  * @param  {Object}  stageNameToStageMap  Map of stage name to stage metadata (also includes workflow graph)
+ * @param  {Object}  nodeDepth            Map of node name to its depth
  */
-const walkGraph = (graph, start, x, y, stageNameToStageMap) => {
-  if (!y[x]) {
-    y[x] = y[0] - 1;
-  }
+const walkGraph = (graph, start, y, stageNameToStageMap, nodeDepth) => {
   const nodeNames = graph.edges.filter(e => e.src === start).map(e => e.dest);
 
   nodeNames.forEach(name => {
     const obj = node(graph.nodes, name);
+    const x = nodeDepth[name];
+
+    if (!y[x]) {
+      y[x] = y[0] - 1;
+    }
 
     const { stageName } = obj;
 
@@ -292,13 +358,13 @@ const walkGraph = (graph, start, x, y, stageNameToStageMap) => {
       }
 
       // walk if not yet visited
-      walkGraph(graph, name, x + 1, y, stageNameToStageMap);
+      walkGraph(graph, name, y, stageNameToStageMap, nodeDepth);
     } else if (!obj.pos) {
       obj.pos = { x, y: y[x] };
       y[x] += 1;
 
       // walk if not yet visited
-      walkGraph(graph, name, x + 1, y, stageNameToStageMap);
+      walkGraph(graph, name, y, stageNameToStageMap, nodeDepth);
     }
   });
 };
@@ -383,6 +449,8 @@ const positionGraphNodes = graph => {
         }, new Map())
       : null;
 
+  const nodeDepth = calcNodeDepths(graph);
+
   let y = [0]; // accumulator for column heights
 
   nodes.forEach(n => {
@@ -413,7 +481,7 @@ const positionGraphNodes = graph => {
       }
 
       // recursively walk the graph from root/ detached node
-      walkGraph(graph, n.name, 1, y, stageNameToStageMap);
+      walkGraph(graph, n.name, y, stageNameToStageMap, nodeDepth);
     }
   });
 
@@ -421,7 +489,7 @@ const positionGraphNodes = graph => {
   graph.meta = {
     // Validator starts with a graph with no nodes or edges. Should have a size of at least 1
     height: Math.max(1, ...y),
-    width: Math.max(1, y.length - 1)
+    width: Math.max(1, y.length)
   };
 
   return graph;
