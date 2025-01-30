@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { click, render, triggerKeyEvent } from '@ember/test-helpers';
+import { render, triggerKeyEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { selectChoose, selectSearch } from 'ember-power-select/test-support';
 import sinon from 'sinon';
@@ -16,43 +16,17 @@ module(
           defaultValues: ['foo', 'bar'],
           value: 'foo'
         },
-        onOpen: () => {},
         onSelectValue: () => {}
       });
 
       await render(
         hbs`<Pipeline::Parameters::Selectable
             @parameter={{this.parameter}}
-            @onOpen={{this.onOpen}}
             @onSelectValue={{this.onSelectValue}}
         />`
       );
 
       assert.dom(this.element).hasText('foo');
-    });
-
-    test('it calls onOpen callback', async function (assert) {
-      const onOpen = sinon.spy();
-
-      this.setProperties({
-        parameter: {
-          defaultValues: ['foo', 'bar'],
-          value: 'foo'
-        },
-        onOpen,
-        onSelectValue: () => {}
-      });
-
-      await render(
-        hbs`<Pipeline::Parameters::Selectable
-            @parameter={{this.parameter}}
-            @onOpen={{this.onOpen}}
-            @onSelectValue={{this.onSelectValue}}
-        />`
-      );
-      await click('.ember-power-select-trigger');
-
-      assert.equal(onOpen.callCount, 1);
     });
 
     test('it calls onSelectValue callback when selection is made', async function (assert) {
@@ -64,14 +38,12 @@ module(
 
       this.setProperties({
         parameter,
-        onOpen: () => {},
         onSelectValue
       });
 
       await render(
         hbs`<Pipeline::Parameters::Selectable
             @parameter={{this.parameter}}
-            @onOpen={{this.onOpen}}
             @onSelectValue={{this.onSelectValue}}
         />`
       );
@@ -92,14 +64,12 @@ module(
 
       this.setProperties({
         parameter,
-        onOpen: () => {},
         onSelectValue
       });
 
       await render(
         hbs`<Pipeline::Parameters::Selectable
             @parameter={{this.parameter}}
-            @onOpen={{this.onOpen}}
             @onSelectValue={{this.onSelectValue}}
         />`
       );
