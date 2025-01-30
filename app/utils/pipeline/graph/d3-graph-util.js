@@ -51,6 +51,7 @@ export function getElementSizes(isMinified = false) {
     : { ICON_SIZE: 36, TITLE_SIZE: 12, ARROWHEAD: 6 };
 
   sizes.STAGE_GAP = sizes.ICON_SIZE / 9;
+  sizes.STAGE_GAP_HORIZONTAL = sizes.ICON_SIZE * 3;
   sizes.EDGE_GAP = Math.floor(sizes.ICON_SIZE / 6);
 
   return sizes;
@@ -99,13 +100,41 @@ export function getNodeWidth(sizes, maximumJobNameLength) {
 }
 
 /**
+ * Returns the horizontal column displacement for the specified column
+ * @param colPosition
+ * @param horizontalDisplacements
+ * @returns {*|number}
+ */
+export function getHorizontalDisplacementByColumnPosition(
+  colPosition,
+  horizontalDisplacements
+) {
+  if (horizontalDisplacements) {
+    return horizontalDisplacements[colPosition] || 0;
+  }
+
+  return 0;
+}
+
+/**
  * Returns the center of a node
  * @param nodePosition
  * @param nodeWidth
  * @returns {number}
  */
-export function calcNodeCenter(nodePosition, nodeWidth) {
-  return nodeWidth / 2 + nodePosition * nodeWidth;
+export function calcNodeCenter(
+  nodePosition,
+  nodeWidth,
+  horizontalDisplacements
+) {
+  return (
+    nodeWidth / 2 +
+    nodePosition * nodeWidth +
+    getHorizontalDisplacementByColumnPosition(
+      nodePosition,
+      horizontalDisplacements
+    )
+  );
 }
 
 /**
@@ -163,8 +192,15 @@ export function calcYPos(pos, sizes, verticalDisplacements, spacer = 0) {
  * @param sizes
  * @returns {*}
  */
-export function calcStageX(stage, nodeWidth, sizes) {
-  return stage.pos.x * nodeWidth + sizes.STAGE_GAP;
+export function calcStageX(stage, nodeWidth, sizes, horizontalDisplacements) {
+  return (
+    stage.pos.x * nodeWidth +
+    sizes.STAGE_GAP +
+    getHorizontalDisplacementByColumnPosition(
+      stage.pos.x,
+      horizontalDisplacements
+    )
+  );
 }
 
 /**
@@ -192,24 +228,95 @@ export function calcStageY(
 }
 
 /**
+ * Returns the vertical displacement for the stages spanning the specified rows
+ * @param startRow
+ * @param endRow
+ * @param stageVerticalDisplacements
+ * @returns {number}
+ */
+export function getStageVerticalDisplacementByRowPosition(
+  startRow,
+  endRow,
+  stageVerticalDisplacements
+) {
+  let yDisplacement = 0;
+
+  for (let i = startRow; i <= endRow; i += 1) {
+    yDisplacement += getVerticalDisplacementByRowPosition(
+      i,
+      stageVerticalDisplacements
+    );
+  }
+
+  return yDisplacement;
+}
+
+/**
+ * Returns the horizontal displacement within the stage
+ * @param startColumn
+ * @param endColumn
+ * @param horizontalDisplacements
+ * @returns {number}
+ */
+export function getStageHorizontalDisplacementByColumnPosition(
+  startColumn,
+  endColumn,
+  horizontalDisplacements
+) {
+  return (
+    getHorizontalDisplacementByColumnPosition(
+      endColumn,
+      horizontalDisplacements
+    ) -
+    getHorizontalDisplacementByColumnPosition(
+      startColumn,
+      horizontalDisplacements
+    )
+  );
+}
+
+/**
  * Calculates the width of a stage
  * @param stage
  * @param nodeWidth
  * @param sizes
+ * @param horizontalDisplacements
  * @returns {number}
  */
-export function calcStageWidth(stage, nodeWidth, sizes) {
-  return stage.graph.meta.width * nodeWidth - sizes.STAGE_GAP;
+export function calcStageWidth(
+  stage,
+  nodeWidth,
+  sizes,
+  horizontalDisplacements
+) {
+  // return stage.graph.meta.width * nodeWidth - sizes.STAGE_GAP;
+  const xDisplacement = horizontalDisplacements
+    ? getStageHorizontalDisplacementByColumnPosition(
+        stage.pos.x,
+        stage.pos.x + stage.graph.meta.width - 1,
+        horizontalDisplacements
+      )
+    : 0;
+
+  return stage.graph.meta.width * nodeWidth - sizes.STAGE_GAP + xDisplacement;
 }
 
 /**
  * Calculates the height of a stage
  * @param stage
  * @param sizes
- * @param yDisplacement
+ * @param stageVerticalDisplacements
  * @returns {number}
  */
-export function calcStageHeight(stage, sizes, yDisplacement = 0) {
+export function calcStageHeight(stage, sizes, stageVerticalDisplacements = 0) {
+  const yDisplacement = stageVerticalDisplacements
+    ? getStageVerticalDisplacementByRowPosition(
+        stage.pos.y,
+        stage.pos.y + stage.graph.meta.height - 1,
+        stageVerticalDisplacements
+      )
+    : 0;
+
   const { ICON_SIZE, STAGE_GAP } = sizes;
 
   return 2 * ICON_SIZE * stage.graph.meta.height - STAGE_GAP + yDisplacement;
@@ -233,30 +340,6 @@ export function calcStageYCenter(
     calcStageY(stage, sizes, verticalDisplacements, yDisplacement) +
     calcStageHeight(stage, sizes) / 2
   );
-}
-
-/**
- * Returns the vertical displacement for the stages spanning the specified rows
- * @param startRow
- * @param endRow
- * @param stageVerticalDisplacements
- * @returns {number}
- */
-export function getStageVerticalDisplacementByRowPosition(
-  startRow,
-  endRow,
-  stageVerticalDisplacements
-) {
-  let yDisplacement = 0;
-
-  for (let i = startRow; i <= endRow; i += 1) {
-    yDisplacement += getVerticalDisplacementByRowPosition(
-      i,
-      stageVerticalDisplacements
-    );
-  }
-
-  return yDisplacement;
 }
 
 /**
@@ -301,6 +384,41 @@ export function getVerticalDisplacements(
 }
 
 /**
+ * Returns the horizontal displacements due to stages
+ * @param data
+ * @param sizes
+ * @returns {{stageVerticalDisplacements: {}, verticalDisplacements: {}}}
+ */
+export function getHorizontalDisplacements(data, sizes) {
+  const stagesGroupedByStartRowPosition = groupBy(data.stages, 'pos.y');
+
+  const columnsToBeDisplaced = {};
+
+  data.stages.forEach(s => {
+    const stageEndPosX = s.pos.x + s.graph.meta.width - 1;
+
+    if (stagesGroupedByStartRowPosition[stageEndPosX + 1]) {
+      columnsToBeDisplaced[stageEndPosX + 1] = true;
+    }
+  });
+
+  const horizontalDisplacements = {};
+
+  for (let i = 0; i < data.meta.width; i += 1) {
+    const shouldColumnBeDisplaced = columnsToBeDisplaced[i];
+
+    if (shouldColumnBeDisplaced) {
+      horizontalDisplacements[i] =
+        horizontalDisplacements[i - 1] + sizes.STAGE_GAP_HORIZONTAL;
+    } else {
+      horizontalDisplacements[i] = i === 0 ? 0 : horizontalDisplacements[i - 1];
+    }
+  }
+
+  return horizontalDisplacements;
+}
+
+/**
  * Adds stages to the graph, additionally returns the vertical displacements due to stages
  * @param svg
  * @param data
@@ -323,14 +441,19 @@ export function addStages(
   const stageNameDisplacementMap = {};
   const stageNameToStageElementsMap = {};
 
+  const horizontalDisplacements = getHorizontalDisplacements(data, sizes);
+
   data.stages.forEach(stage => {
     // stage container
     const stageContainer = svg
       .append('rect')
       .attr('class', 'stage-container')
-      .attr('x', calcStageX(stage, nodeWidth, sizes))
+      .attr('x', calcStageX(stage, nodeWidth, sizes, horizontalDisplacements))
       .attr('y', calcStageY(stage, sizes))
-      .attr('width', calcStageWidth(stage, nodeWidth, sizes))
+      .attr(
+        'width',
+        calcStageWidth(stage, nodeWidth, sizes, horizontalDisplacements)
+      )
       .attr('height', calcStageHeight(stage, sizes))
       .attr('stroke', 'grey')
       .attr('fill', '#ffffff')
@@ -340,9 +463,12 @@ export function addStages(
     // stage info
     const fo = svg
       .append('foreignObject')
-      .attr('width', calcStageWidth(stage, nodeWidth, sizes))
+      .attr(
+        'width',
+        calcStageWidth(stage, nodeWidth, sizes, horizontalDisplacements)
+      )
       .attr('height', 0) // Actual height will be computed and set later
-      .attr('x', calcStageX(stage, nodeWidth, sizes))
+      .attr('x', calcStageX(stage, nodeWidth, sizes, horizontalDisplacements))
       .attr('y', calcStageY(stage, sizes))
       .attr('class', `stage-info-wrapper _stage_${stage.name}`);
 
@@ -414,15 +540,7 @@ export function addStages(
 
     stageContainer.attr(
       'height',
-      calcStageHeight(
-        stage,
-        sizes,
-        getStageVerticalDisplacementByRowPosition(
-          stage.pos.y,
-          stage.pos.y + stage.graph.meta.height - 1,
-          stageVerticalDisplacements
-        )
-      )
+      calcStageHeight(stage, sizes, stageVerticalDisplacements)
     );
     stageContainer.attr(
       'y',
@@ -439,7 +557,10 @@ export function addStages(
     );
   });
 
-  return verticalDisplacements;
+  return {
+    verticalDisplacements,
+    horizontalDisplacements
+  };
 }
 
 /**
@@ -457,7 +578,8 @@ export function addEdges( // eslint-disable-line max-params
   sizes,
   nodeWidth,
   isSkipped,
-  verticalDisplacements
+  verticalDisplacements,
+  horizontalDisplacements
 ) {
   const { ICON_SIZE, EDGE_GAP, ARROWHEAD } = sizes;
   const edgesToDraw = data.edges.filter(e => {
@@ -480,14 +602,19 @@ export function addEdges( // eslint-disable-line max-params
     .attr('d', d => {
       const path = d3.path();
       const startX =
-        calcNodeCenter(d.from.x, nodeWidth) + ICON_SIZE / 2 + EDGE_GAP;
+        calcNodeCenter(d.from.x, nodeWidth, horizontalDisplacements) +
+        ICON_SIZE / 2 +
+        EDGE_GAP;
       const startY = calcYPos(
         d.from.y,
         sizes,
         verticalDisplacements,
         ICON_SIZE
       );
-      const endX = calcNodeCenter(d.to.x, nodeWidth) - ICON_SIZE / 2 - EDGE_GAP;
+      const endX =
+        calcNodeCenter(d.to.x, nodeWidth, horizontalDisplacements) -
+        ICON_SIZE / 2 -
+        EDGE_GAP;
       const endY = calcYPos(d.to.y, sizes, verticalDisplacements, ICON_SIZE);
 
       path.moveTo(startX, startY);
@@ -517,7 +644,8 @@ export function addStageEdges( // eslint-disable-line max-params
   sizes,
   nodeWidth,
   isSkipped,
-  verticalDisplacements
+  verticalDisplacements,
+  horizontalDisplacements
 ) {
   const { ICON_SIZE, EDGE_GAP, ARROWHEAD } = sizes;
 
@@ -547,8 +675,8 @@ export function addStageEdges( // eslint-disable-line max-params
         const stage = d.from;
 
         startX =
-          calcStageX(stage, nodeWidth, sizes) +
-          calcStageWidth(stage, nodeWidth, sizes);
+          calcStageX(stage, nodeWidth, sizes, horizontalDisplacements) +
+          calcStageWidth(stage, nodeWidth, sizes, horizontalDisplacements);
 
         startY = calcStageYCenter(stage, sizes, verticalDisplacements);
       } else {
@@ -569,10 +697,13 @@ export function addStageEdges( // eslint-disable-line max-params
       if (d.destStageName) {
         const stage = d.to;
 
-        endX = calcStageX(stage, nodeWidth, sizes);
+        endX = calcStageX(stage, nodeWidth, sizes, horizontalDisplacements);
         endY = calcStageYCenter(stage, sizes, verticalDisplacements);
       } else {
-        endX = calcNodeCenter(d.to.pos.x, nodeWidth) - ICON_SIZE / 2 - EDGE_GAP;
+        endX =
+          calcNodeCenter(d.to.pos.x, nodeWidth, horizontalDisplacements) -
+          ICON_SIZE / 2 -
+          EDGE_GAP;
         endY = calcYPos(d.to.pos.y, sizes, verticalDisplacements, ICON_SIZE);
       }
 
@@ -604,6 +735,7 @@ export function addJobIcons( // eslint-disable-line max-params
   sizes,
   nodeWidth,
   verticalDisplacements,
+  horizontalDisplacements,
   isSkipped,
   onClick
 ) {
@@ -648,7 +780,7 @@ export function addJobIcons( // eslint-disable-line max-params
     .style('text-anchor', 'middle')
     .attr('x', d => {
       return (
-        calcNodeCenter(d.pos.x, nodeWidth) +
+        calcNodeCenter(d.pos.x, nodeWidth, horizontalDisplacements) +
         (icon(d.status, d.virtual) === STATUS_MAP.VIRTUAL.icon
           ? ICON_SIZE / 2
           : 0)
@@ -684,7 +816,8 @@ export function addJobNames(
   data,
   sizes,
   maximumJobNameLength,
-  verticalDisplacements
+  verticalDisplacements,
+  horizontalDisplacements
 ) {
   const { ICON_SIZE, TITLE_SIZE } = sizes;
   const nodeWidth = getNodeWidth(sizes, maximumJobNameLength);
@@ -719,7 +852,7 @@ export function addJobNames(
       }
     })
     .style('text-anchor', 'middle')
-    .attr('x', d => calcNodeCenter(d.pos.x, nodeWidth))
+    .attr('x', d => calcNodeCenter(d.pos.x, nodeWidth, horizontalDisplacements))
     .attr(
       'y',
       d =>

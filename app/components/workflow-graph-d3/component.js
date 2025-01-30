@@ -280,7 +280,7 @@ export default Component.extend({
     this.set('graphNode', svg);
 
     // stages
-    const verticalDisplacements = this.showStages
+    const { verticalDisplacements, horizontalDisplacements } = this.showStages
       ? addStages(
           svg,
           data,
@@ -299,7 +299,8 @@ export default Component.extend({
         this.elementSizes,
         nodeWidth,
         isSkipped,
-        verticalDisplacements
+        verticalDisplacements,
+        horizontalDisplacements
       );
     }
 
@@ -310,7 +311,8 @@ export default Component.extend({
       this.elementSizes,
       nodeWidth,
       isSkipped,
-      verticalDisplacements
+      verticalDisplacements,
+      horizontalDisplacements
     );
 
     // Jobs Icons
@@ -320,6 +322,7 @@ export default Component.extend({
       this.elementSizes,
       nodeWidth,
       verticalDisplacements,
+      horizontalDisplacements,
       isSkipped,
       onClick
     );
@@ -331,7 +334,8 @@ export default Component.extend({
         data,
         this.elementSizes,
         maximumJobNameLength,
-        verticalDisplacements
+        verticalDisplacements,
+        horizontalDisplacements
       );
     }
   }

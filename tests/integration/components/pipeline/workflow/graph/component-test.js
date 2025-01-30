@@ -126,7 +126,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
 
     assert.dom('svg').exists({ count: 1 });
 
-    assert.equal(this.element.querySelector('svg').children.length, 6);
+    assert.equal(this.element.querySelector('svg').children.length, 7);
   });
 
   test('it renders stage', async function (assert) {
@@ -180,7 +180,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
 
     assert.dom('svg').exists({ count: 1 });
 
-    assert.equal(this.element.querySelector('svg').children.length, 12);
+    assert.equal(this.element.querySelector('svg').children.length, 13);
   });
 
   test('it renders with chained PRs', async function (assert) {

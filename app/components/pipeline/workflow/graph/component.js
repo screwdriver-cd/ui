@@ -8,6 +8,7 @@ import {
   addJobIcons,
   addJobNames,
   addStages,
+  addStageEdges,
   getElementSizes,
   getGraphSvg,
   getMaximumJobNameLength,
@@ -86,18 +87,32 @@ export default class PipelineWorkflowGraphComponent extends Component {
       onClickGraph
     );
 
+    const hasStages = this.args.stages.length > 0;
+
     // stages
-    const verticalDisplacements =
-      this.args.stages.length > 0
-        ? addStages(
-            this.graphSvg,
-            this.decoratedGraph,
-            elementSizes,
-            nodeWidth,
-            onClickStageMenu,
-            this.args.displayStageTooltip
-          )
-        : {};
+    const { verticalDisplacements, horizontalDisplacements } = hasStages
+      ? addStages(
+          this.graphSvg,
+          this.decoratedGraph,
+          elementSizes,
+          nodeWidth,
+          onClickStageMenu,
+          this.args.displayStageTooltip
+        )
+      : {};
+
+    // stage edges
+    if (hasStages) {
+      addStageEdges(
+        this.graphSvg,
+        this.decoratedGraph,
+        elementSizes,
+        nodeWidth,
+        isSkipped,
+        verticalDisplacements,
+        horizontalDisplacements
+      );
+    }
 
     // edges
     addEdges(
@@ -106,7 +121,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
       elementSizes,
       nodeWidth,
       isSkippedEvent,
-      verticalDisplacements
+      verticalDisplacements,
+      horizontalDisplacements
     );
 
     // Jobs Icons
@@ -116,6 +132,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
       elementSizes,
       nodeWidth,
       verticalDisplacements,
+      horizontalDisplacements,
       isSkippedEvent,
       onClickNode
     );
@@ -125,7 +142,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
       this.decoratedGraph,
       elementSizes,
       maximumJobNameLength,
-      verticalDisplacements
+      verticalDisplacements,
+      horizontalDisplacements
     );
   }
 
