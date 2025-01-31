@@ -12,6 +12,7 @@ import {
   addJobIcons,
   addJobNames,
   addStages,
+  addStageEdges,
   calcNodeCenter,
   getElementSizes,
   getGraphSvg,
@@ -136,7 +137,7 @@ export default Component.extend({
           start: startFrom,
           chainPR: this.prChainEnabled,
           prNum: this.selectedEventObj?.prNum,
-          stages
+          stages: this.minified ? [] : stages
         });
       }
     }
@@ -279,7 +280,7 @@ export default Component.extend({
     this.set('graphNode', svg);
 
     // stages
-    const verticalDisplacements = this.showStages
+    const { verticalDisplacements, horizontalDisplacements } = this.showStages
       ? addStages(
           svg,
           data,
@@ -290,6 +291,19 @@ export default Component.extend({
         )
       : {};
 
+    // stage edges
+    if (this.showStages) {
+      addStageEdges(
+        svg,
+        data,
+        this.elementSizes,
+        nodeWidth,
+        isSkipped,
+        verticalDisplacements,
+        horizontalDisplacements
+      );
+    }
+
     // edges
     addEdges(
       svg,
@@ -297,7 +311,8 @@ export default Component.extend({
       this.elementSizes,
       nodeWidth,
       isSkipped,
-      verticalDisplacements
+      verticalDisplacements,
+      horizontalDisplacements
     );
 
     // Jobs Icons
@@ -307,6 +322,7 @@ export default Component.extend({
       this.elementSizes,
       nodeWidth,
       verticalDisplacements,
+      horizontalDisplacements,
       isSkipped,
       onClick
     );
@@ -318,7 +334,8 @@ export default Component.extend({
         data,
         this.elementSizes,
         maximumJobNameLength,
-        verticalDisplacements
+        verticalDisplacements,
+        horizontalDisplacements
       );
     }
   }

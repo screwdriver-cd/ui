@@ -102,6 +102,7 @@ module('Unit | Utility | graph tools', function () {
         }
       ],
       stages: [],
+      stageEdges: [],
       meta: {
         height: 2,
         width: 2
@@ -130,6 +131,7 @@ module('Unit | Utility | graph tools', function () {
         }
       ],
       stages: [],
+      stageEdges: [],
       meta: {
         height: 3,
         width: 2
@@ -168,6 +170,7 @@ module('Unit | Utility | graph tools', function () {
         { src: 'C', dest: 'D', from: { x: 3, y: 0 }, to: { x: 4, y: 0 } }
       ],
       stages: [],
+      stageEdges: [],
       meta: {
         height: 2,
         width: 5
@@ -272,6 +275,7 @@ module('Unit | Utility | graph tools', function () {
         }
       ],
       stages: [],
+      stageEdges: [],
       meta: {
         height: 2,
         width: 5
@@ -378,6 +382,7 @@ module('Unit | Utility | graph tools', function () {
         { src: 'C', dest: 'D', from: { x: 3, y: 0 }, to: { x: 4, y: 0 } }
       ],
       stages: [],
+      stageEdges: [],
       meta: {
         height: 2,
         width: 5
@@ -464,6 +469,7 @@ module('Unit | Utility | graph tools', function () {
         }
       ],
       stages: [],
+      stageEdges: [],
       meta: {
         height: 2,
         width: 3
@@ -513,6 +519,7 @@ module('Unit | Utility | graph tools', function () {
         }
       ],
       stages: [],
+      stageEdges: [],
       meta: {
         height: 4,
         width: 2
@@ -594,6 +601,7 @@ module('Unit | Utility | graph tools', function () {
         }
       ],
       stages: [],
+      stageEdges: [],
       meta: {
         width: 3,
         height: 5
@@ -814,6 +822,7 @@ module('Unit | Utility | graph tools', function () {
             x: 2,
             y: 0
           },
+          hidden: true,
           src: 'publish',
           to: {
             x: 3,
@@ -826,6 +835,7 @@ module('Unit | Utility | graph tools', function () {
             x: 5,
             y: 0
           },
+          hidden: true,
           src: 'ci-certify',
           to: {
             x: 6,
@@ -1039,6 +1049,26 @@ module('Unit | Utility | graph tools', function () {
       }
     ];
 
+    expectedOutput.stageEdges = [
+      {
+        dest: 'stage@integration:setup',
+        destStageName: 'integration',
+        from: expectedOutput.nodes[3],
+        hidden: true,
+        src: 'publish',
+        to: expectedOutput.stages[0]
+      },
+      {
+        dest: 'stage@production:setup',
+        destStageName: 'production',
+        from: expectedOutput.stages[0],
+        hidden: true,
+        src: 'stage@integration:teardown',
+        srcStageName: 'integration',
+        to: expectedOutput.stages[1]
+      }
+    ];
+
     const result = decorateGraph({
       inputGraph: GRAPH,
       stages: STAGES,
@@ -1245,6 +1275,7 @@ module('Unit | Utility | graph tools', function () {
     };
 
     expectedOutput.stages = [];
+    expectedOutput.stageEdges = [];
 
     const result = decorateGraph({
       inputGraph: GRAPH,

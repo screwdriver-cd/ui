@@ -16,6 +16,15 @@ const STAGE_TEARDOWN_PATTERN = /^stage@([\w-]+)(?::teardown)$/;
 const node = (nodes, name) => nodes.find(o => o.name === name);
 
 /**
+ * Find a stage from the list of stage
+ * @method findStage
+ * @param  {Array} stages  List of stage objects
+ * @param  {String} name  Name of the stage to find
+ * @return {Object}       Reference to the stage in the list
+ */
+const findStage = (stages, name) => stages.find(o => o.name === name);
+
+/**
  * Find a build for the given job id
  * @method build
  * @param  {Array} builds   List of build objects
@@ -119,11 +128,12 @@ const extractEventStages = (graph, pipelineStages) => {
  * Replaces the edges associated with the specified node by creating new edges from the upstream nodes of the specified node
  * to the downstream nodes of the specified node.
  * @method  bypassSetupTeardownEdges
- * @param  {Array} edges       List of edges in the workflow graph
- * @param  {String} nodeName   Name of the node (job) in the workflow graph. Ex: 'stage@prod:setup', 'stage@canary:teardown'
- * @return {Array}             List of edges after replacing the edges associated with specified node
+ * @param  {Array}    edges       List of edges in the workflow graph
+ * @param  {String}   nodeName    Name of the node (job) in the workflow graph. Ex: 'stage@prod:setup', 'stage@canary:teardown'
+ * @param  {Boolean}  hasStages   Indicates if stages meta is available
+ * @return {Array}                List of edges after replacing the edges associated with specified node
  */
-const bypassSetupTeardownEdges = (edges, nodeName) => {
+const bypassSetupTeardownEdges = (edges, nodeName, hasStages) => {
   const resultEdges = [];
 
   const asSrcEdges = [];
@@ -144,12 +154,43 @@ const bypassSetupTeardownEdges = (edges, nodeName) => {
       const newDest = asSrcEdge.dest;
 
       asDestEdges.forEach(asDestEdge => {
-        resultEdges.push({ ...asDestEdge, dest: newDest });
+        const newEdge = { ...asDestEdge, dest: newDest };
+
+        if (hasStages) {
+          newEdge.hidden = true;
+        }
+        resultEdges.push(newEdge);
       });
     });
   }
 
   return resultEdges;
+};
+
+const replaceSetupTeardownJobEdgesWithStageEdges = (stages, edges) => {
+  const stageEdges = [];
+
+  if (stages.length) {
+    edges.forEach(e => {
+      if (isStageSetupJob(e.dest) || isStageTeardownJob(e.src)) {
+        e.hidden = true;
+
+        const stageEdge = { ...e };
+
+        if (isStageSetupJob(e.dest)) {
+          stageEdge.destStageName = e.dest.match(STAGE_SETUP_PATTERN)[1];
+        }
+
+        if (isStageTeardownJob(e.src)) {
+          stageEdge.srcStageName = e.src.match(STAGE_TEARDOWN_PATTERN)[1];
+        }
+
+        stageEdges.push(stageEdge);
+      }
+    });
+  }
+
+  return stageEdges;
 };
 
 /**
@@ -626,13 +667,23 @@ const decorateGraph = ({
 
   let edges = originalEdges;
 
+  const hasStages = !!eventStages.length;
+
+  // edges to/from a stage
+  const stageEdges = replaceSetupTeardownJobEdgesWithStageEdges(
+    eventStages,
+    edges
+  );
+
+  graph.stageEdges = stageEdges;
+
   // Bypass setup/teardown edges
   virtualSetupNodes.forEach(setupNode => {
-    edges = bypassSetupTeardownEdges(edges, setupNode.name);
+    edges = bypassSetupTeardownEdges(edges, setupNode.name, hasStages);
   });
 
   virtualTeardownNodes.forEach(teardownNode => {
-    edges = bypassSetupTeardownEdges(edges, teardownNode.name);
+    edges = bypassSetupTeardownEdges(edges, teardownNode.name, hasStages);
   });
 
   graph.edges = edges;
@@ -743,6 +794,30 @@ const decorateGraph = ({
         e.status = srcNode.status;
       }
     }
+  });
+
+  // Decorate stage edges with position status
+  stageEdges.forEach(e => {
+    const srcNode = node(originalNodes, e.src);
+    const destNode = node(originalNodes, e.dest);
+
+    const srcStage = findStage(graph.stages, e.srcStageName);
+    const destStage = findStage(graph.stages, e.destStageName);
+
+    if (!srcNode || !destNode) {
+      return;
+    }
+
+    if (srcNode.status && srcNode.status !== 'RUNNING') {
+      if (prTriggeredNodes && node(prTriggeredNodes, srcNode.name)) {
+        // For non-chain PR pipelines, PR triggered jobs do not need outbound edges to have a status as they are the last node in the chain.
+      } else {
+        e.status = srcNode.status;
+      }
+    }
+
+    e.from = srcStage || srcNode;
+    e.to = destStage || destNode;
   });
 
   return graph;
