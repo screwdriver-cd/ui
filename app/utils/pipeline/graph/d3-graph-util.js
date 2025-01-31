@@ -120,6 +120,7 @@ export function getHorizontalDisplacementByColumnPosition(
  * Returns the center of a node
  * @param nodePosition
  * @param nodeWidth
+ * @param horizontalDisplacements
  * @returns {number}
  */
 export function calcNodeCenter(
@@ -289,7 +290,6 @@ export function calcStageWidth(
   sizes,
   horizontalDisplacements
 ) {
-  // return stage.graph.meta.width * nodeWidth - sizes.STAGE_GAP;
   const xDisplacement = horizontalDisplacements
     ? getStageHorizontalDisplacementByColumnPosition(
         stage.pos.x,
