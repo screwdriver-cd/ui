@@ -59,29 +59,6 @@ export default class PipelineParametersComponent extends Component {
   }
 
   @action
-  openSelect(powerSelectObject) {
-    setTimeout(() => {
-      const container = document.getElementsByClassName('parameters-container');
-      const scrollFrame = container[0];
-      const optionsBox = document.getElementById(
-        `ember-power-select-options-${powerSelectObject.uniqueId}`
-      );
-
-      if (optionsBox === null) {
-        return;
-      }
-
-      const optionsBoxRect = optionsBox.getBoundingClientRect();
-      const scrollFrameRect = scrollFrame.getBoundingClientRect();
-      const hiddenAreaHeight = optionsBoxRect.bottom - scrollFrameRect.bottom;
-
-      if (hiddenAreaHeight > 0) {
-        scrollFrame.scrollBy({ top: hiddenAreaHeight + 10 });
-      }
-    }, 100);
-  }
-
-  @action
   onInput(parameterGroup, parameter, event) {
     this.updateParameter(parameterGroup, parameter, event.target.value);
   }
