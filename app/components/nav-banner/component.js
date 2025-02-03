@@ -3,16 +3,10 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
 export default Component.extend({
-  banner: service('banner'),
-
-  actions: {
-    clearMessage() {
-      this.set('message', null);
-    }
-  },
+  shuttle: service('shuttle'),
 
   setBanners() {
-    this.banner.fetchBanners().then(banners => {
+    this.shuttle.fetchBanners('GLOBAL').then(banners => {
       if (!this.isDestroying && !this.isDestroyed) {
         set(this, 'banners', banners);
       }

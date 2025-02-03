@@ -7,10 +7,12 @@ import { inject as service } from '@ember/service';
 export default Route.extend(AuthenticatedRouteMixin, {
   routeAfterAuthentication: 'pipeline',
   store: service(),
+  shuttle: service(),
   router: service(),
   model(params) {
     set(this, 'pipelineId', params.pipeline_id);
     const collections = this.store.findAll('collection').catch(() => []);
+    const banners = this.shuttle.fetchBanners('PIPELINE', params.pipeline_id);
 
     return RSVP.hash({
       pipeline: this.store
@@ -20,7 +22,8 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
           return [];
         }),
-      collections
+      collections,
+      banners
     });
   },
   actions: {

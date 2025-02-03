@@ -1,3 +1,5 @@
+import Service from '@ember/service';
+import { resolve } from 'rsvp';
 import {
   click,
   fillIn,
@@ -53,6 +55,12 @@ module('Acceptance | dashboards', function (hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify({})
     ]);
+
+    const shuttleService = Service.extend({
+      fetchBanners: () => resolve([])
+    });
+
+    this.owner.register('service:shuttle', shuttleService);
   });
 
   hooks.afterEach(function () {

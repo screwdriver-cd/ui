@@ -10,7 +10,7 @@ module('Integration | Component | nav banner', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders banners', async function (assert) {
-    const bannerStub = Service.extend({
+    const shuttleService = Service.extend({
       fetchBanners: () =>
         resolve([
           EmberObject.create({
@@ -21,7 +21,7 @@ module('Integration | Component | nav banner', function (hooks) {
         ])
     });
 
-    this.owner.register('service:banner', bannerStub);
+    this.owner.register('service:shuttle', shuttleService);
 
     await render(hbs`<NavBanner />`);
 
@@ -29,7 +29,7 @@ module('Integration | Component | nav banner', function (hooks) {
   });
 
   test('it renders banner with image tag', async function (assert) {
-    const bannerStub = Service.extend({
+    const shuttleService = Service.extend({
       fetchBanners: () =>
         resolve([
           EmberObject.create({
@@ -40,7 +40,7 @@ module('Integration | Component | nav banner', function (hooks) {
         ])
     });
 
-    this.owner.register('service:banner', bannerStub);
+    this.owner.register('service:shuttle', shuttleService);
 
     await render(hbs`<NavBanner />`);
 
@@ -48,7 +48,7 @@ module('Integration | Component | nav banner', function (hooks) {
   });
 
   test('it renders with link', async function (assert) {
-    const bannerStub = Service.extend({
+    const shuttleService = Service.extend({
       fetchBanners: () =>
         resolve([
           EmberObject.create({
@@ -59,7 +59,7 @@ module('Integration | Component | nav banner', function (hooks) {
         ])
     });
 
-    this.owner.register('service:banner', bannerStub);
+    this.owner.register('service:shuttle', shuttleService);
 
     await render(hbs`<NavBanner />`);
 

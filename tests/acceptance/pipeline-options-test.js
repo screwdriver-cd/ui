@@ -49,6 +49,18 @@ module('Acceptance | pipeline/options', function (hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify({})
     ]);
+
+    server.get('http://localhost:8080/v4/banners', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([
+        {
+          id: 1,
+          isActive: true,
+          message: 'shutdown imminent'
+        }
+      ])
+    ]);
   });
 
   hooks.afterEach(function () {
@@ -60,6 +72,7 @@ module('Acceptance | pipeline/options', function (hooks) {
     await visit('/pipelines/1/options');
 
     assert.equal(currentURL(), '/pipelines/1/options');
+    assert.dom('.banner').hasText('× shutdown imminent');
     assert.dom('section.pipeline li').exists({ count: 6 });
     assert.dom('section.jobs li').exists({ count: 3 });
     assert.dom('section.danger li').exists({ count: 1 });

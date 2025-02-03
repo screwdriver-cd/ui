@@ -7,6 +7,7 @@ export default Controller.extend({
   session: service('session'),
   pipeline: alias('model.pipeline'),
   collections: alias('model.collections'),
+  banners: alias('model.banners'),
   actions: {
     addToCollection(pipelineId, collection) {
       const { pipelineIds } = collection;
