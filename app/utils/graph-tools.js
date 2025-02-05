@@ -497,7 +497,7 @@ const positionGraphNodes = graph => {
   Object.values(nodeDepth).forEach(d => {
     maxNodeDepth = Math.max(maxNodeDepth, d);
   });
-  let y = Array(maxNodeDepth).fill(0); // accumulator for column heights
+  let y = Array(maxNodeDepth + 1).fill(0); // accumulator for column heights
 
   nodes.forEach(n => {
     // Set root nodes on left
