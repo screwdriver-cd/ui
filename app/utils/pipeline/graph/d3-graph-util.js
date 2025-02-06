@@ -546,16 +546,25 @@ export function addStages(
       'y',
       calcStageY(stage, sizes, verticalDisplacements, yDisplacement)
     );
-
-    svg.attr(
-      'height',
-      Number.parseInt(svg.attr('height'), 10) +
-        getVerticalDisplacementByRowPosition(
-          data.meta.height - 1,
-          verticalDisplacements
-        )
-    );
   });
+
+  svg.attr(
+    'height',
+    Number.parseInt(svg.attr('height'), 10) +
+      getVerticalDisplacementByRowPosition(
+        data.meta.height - 1,
+        verticalDisplacements
+      )
+  );
+
+  svg.attr(
+    'width',
+    Number.parseInt(svg.attr('width'), 10) +
+      getHorizontalDisplacementByColumnPosition(
+        data.meta.width - 1,
+        horizontalDisplacements
+      )
+  );
 
   return {
     verticalDisplacements,
