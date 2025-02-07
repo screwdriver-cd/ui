@@ -3,7 +3,11 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
-import { capitalizeFirstLetter, truncateMessage } from './util';
+import {
+  capitalizeFirstLetter,
+  isParameterized,
+  truncateMessage
+} from './util';
 
 export default class PipelineModalConfirmActionComponent extends Component {
   @service router;
@@ -61,13 +65,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    const pipelineParameters = this.args.pipeline.parameters || {};
-    const eventParameters = this.args.event.meta?.parameters || {};
-
-    return (
-      Object.keys(pipelineParameters).length > 0 ||
-      Object.keys(eventParameters).length > 0
-    );
+    return isParameterized(this.args.pipeline, this.args.event);
   }
 
   get isSubmitButtonDisabled() {
