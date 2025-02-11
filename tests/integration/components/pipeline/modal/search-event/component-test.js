@@ -10,13 +10,18 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders', async function (assert) {
+    hooks.beforeEach(function () {
       const router = this.owner.lookup('service:router');
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
 
       sinon.stub(router, 'currentRouteName').value('pipeline');
+      sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
+    });
 
+    test('it renders', async function (assert) {
       this.setProperties({
-        pipeline: {},
         jobs: [],
         userSettings: {},
         closeModal: () => {}
@@ -24,7 +29,6 @@ module(
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @pipeline={{this.pipeline}}
             @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
@@ -42,14 +46,11 @@ module(
     });
 
     test('it makes API call for valid input with default searchField', async function (assert) {
-      const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
-      sinon.stub(router, 'currentRouteName').value('pipeline');
       sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
       this.setProperties({
-        pipeline: {},
         jobs: [],
         userSettings: {},
         closeModal: () => {}
@@ -57,7 +58,6 @@ module(
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @pipeline={{this.pipeline}}
             @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
@@ -72,10 +72,8 @@ module(
     });
 
     test('it makes API call for valid input with selected searchField', async function (assert) {
-      const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
-      sinon.stub(router, 'currentRouteName').value('pipeline');
       sinon
         .stub(shuttle, 'fetchFromApi')
         .onCall(0)
@@ -84,7 +82,6 @@ module(
         .resolves([]);
 
       this.setProperties({
-        pipeline: {},
         jobs: [],
         userSettings: {},
         closeModal: () => {}
@@ -114,14 +111,11 @@ module(
     });
 
     test('it handles invalid sha input', async function (assert) {
-      const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
-      sinon.stub(router, 'currentRouteName').value('pipeline');
       const spyShuttle = sinon.spy(shuttle, 'fetchFromApi');
 
       this.setProperties({
-        pipeline: {},
         jobs: [],
         userSettings: {},
         closeModal: () => {}
@@ -129,7 +123,6 @@ module(
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @pipeline={{this.pipeline}}
             @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
@@ -149,10 +142,8 @@ module(
     });
 
     test('it clears input and search results when escape key is pressed', async function (assert) {
-      const router = this.owner.lookup('service:router');
       const shuttle = this.owner.lookup('service:shuttle');
 
-      sinon.stub(router, 'currentRouteName').value('pipeline');
       sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
       this.setProperties({
@@ -164,7 +155,6 @@ module(
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @pipeline={{this.pipeline}}
             @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}

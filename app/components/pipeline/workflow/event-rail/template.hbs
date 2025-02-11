@@ -14,7 +14,6 @@
       <FaIcon @icon="magnifying-glass" />
       {{#if this.showSearchEventModal}}
         <Pipeline::Modal::SearchEvent
-          @pipeline={{@pipeline}}
           @jobs={{@jobs}}
           @userSettings={{@userSettings}}
           @closeModal={{this.closeSearchEventModal}}
