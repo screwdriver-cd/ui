@@ -6,10 +6,16 @@ export default class NewPipelineRoute extends Route {
 
   @service shuttle;
 
+  @service pipelinePageState;
+
   async model(params) {
+    this.pipelinePageState.clear();
+
     const pipeline = await this.shuttle
       .fetchFromApi('get', `/pipelines/${params.pipeline_id}`)
       .catch(() => null);
+
+    this.pipelinePageState.setPipeline(pipeline);
 
     return {
       pipeline
