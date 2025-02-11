@@ -5,6 +5,8 @@ import { service } from '@ember/service';
 export default class PipelineJobsTableCellCoverageComponent extends Component {
   @service shuttle;
 
+  @service pipelinePageState;
+
   @tracked latestBuild;
 
   @tracked coverage;
@@ -13,11 +15,11 @@ export default class PipelineJobsTableCellCoverageComponent extends Component {
     super(...arguments);
 
     const { job } = this.args.record;
+    const pipeline = this.pipelinePageState.getPipeline();
 
     this.args.record.onCreate(job, builds => {
       if (builds.length > 0) {
         this.latestBuild = builds[builds.length - 1];
-        const { pipeline } = this.args.record;
 
         this.shuttle
           .fetchFromApi('get', '/coverage/info', {
