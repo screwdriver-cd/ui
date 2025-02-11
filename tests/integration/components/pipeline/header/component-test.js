@@ -8,86 +8,75 @@ module('Integration | Component | pipeline/header', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders core items', async function (assert) {
-    this.setProperties({
-      pipeline: {
-        id: 123,
-        scmContext: 'github:github.com',
-        scmRepo: { url: 'https://gihub.com/test' },
-        annotations: {}
-      }
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    const id = 123;
+    const url = 'https://gihub.com/test';
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      id,
+      scmContext: 'github:github.com',
+      scmRepo: { url },
+      annotations: {}
     });
 
-    await render(hbs`<Pipeline::Header
-      @pipeline={{this.pipeline}}
-      @collections={{this.collections}}
-    />`);
+    await render(hbs`<Pipeline::Header />`);
 
-    assert
-      .dom('#pipeline-link')
-      .hasAttribute('href', `/v2/pipelines/${this.pipeline.id}`);
+    assert.dom('#pipeline-link').hasAttribute('href', `/v2/pipelines/${id}`);
     assert.dom('#parent-pipeline-link').doesNotExist();
     assert.dom('#sonarqube-link').doesNotExist();
-    assert
-      .dom('#scm-link')
-      .hasAttribute('href', `${this.pipeline.scmRepo.url}`);
+    assert.dom('#scm-link').hasAttribute('href', `${url}`);
     assert.dom('#repo-pipelines').exists({ count: 1 });
     assert.dom('#add-to-collection').exists({ count: 1 });
   });
 
   test('it renders link to parent pipeline', async function (assert) {
-    this.setProperties({
-      pipeline: { configPipelineId: 999, annotations: {} }
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    const configPipelineId = 999;
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      configPipelineId,
+      annotations: {}
     });
 
-    await render(hbs`<Pipeline::Header
-      @pipeline={{this.pipeline}}
-      @collections={{this.collections}}
-    />`);
+    await render(hbs`<Pipeline::Header />`);
 
     assert
       .dom('#parent-pipeline-link')
-      .hasAttribute('href', `/v2/pipelines/${this.pipeline.configPipelineId}`);
+      .hasAttribute('href', `/v2/pipelines/${configPipelineId}`);
   });
 
   test('it renders link to sonarqube project', async function (assert) {
-    this.setProperties({
-      pipeline: {
-        badges: { sonar: { uri: 'https://sonarqube.com/test' } },
-        annotations: {}
-      }
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    const uri = 'https://sonarqube.com/test';
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      badges: { sonar: { uri } },
+      annotations: {}
     });
 
-    await render(hbs`<Pipeline::Header
-      @pipeline={{this.pipeline}}
-      @collections={{this.collections}}
-    />`);
+    await render(hbs`<Pipeline::Header />`);
 
-    assert
-      .dom('#sonarqube-link')
-      .hasAttribute('href', `${this.pipeline.badges.sonar.uri}`);
+    assert.dom('#sonarqube-link').hasAttribute('href', `${uri}`);
   });
 
   test('it renders link to sonarqube', async function (assert) {
-    this.setProperties({
-      pipeline: {
-        badges: {
-          sonar: { defaultUri: 'https://sonarqube.com' }
-        },
-        annotations: {}
-      }
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    const defaultUri = 'https://sonarqube.com';
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      badges: {
+        sonar: { defaultUri }
+      },
+      annotations: {}
     });
 
-    await render(hbs`<Pipeline::Header
-      @pipeline={{this.pipeline}}
-      @collections={{this.collections}}
-    />`);
+    await render(hbs`<Pipeline::Header />`);
 
-    assert
-      .dom('#sonarqube-link')
-      .hasAttribute('href', `${this.pipeline.badges.sonar.defaultUri}`);
+    assert.dom('#sonarqube-link').hasAttribute('href', `${defaultUri}`);
   });
 
   test('it renders dropdown to other pipelines', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
     const shuttle = this.owner.lookup('service:shuttle');
 
     sinon.stub(shuttle, 'fetchFromApi').resolves([
@@ -112,20 +101,14 @@ module('Integration | Component | pipeline/header', function (hooks) {
         scmRepo: { branch: 'abc' }
       }
     ]);
-
-    this.setProperties({
-      pipeline: {
-        id: 123,
-        scmUri: 'git.github.com:9876',
-        scmRepo: { url: 'https://gihub.com/test' },
-        annotations: {}
-      }
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      id: 123,
+      scmUri: 'git.github.com:9876',
+      scmRepo: { url: 'https://gihub.com/test' },
+      annotations: {}
     });
 
-    await render(hbs`<Pipeline::Header
-      @pipeline={{this.pipeline}}
-      @collections={{this.collections}}
-    />`);
+    await render(hbs`<Pipeline::Header />`);
 
     assert.dom('#repo-pipelines .dropdown-menu').doesNotExist();
     await click('#repo-pipelines > a.dropdown-toggle');
@@ -135,23 +118,19 @@ module('Integration | Component | pipeline/header', function (hooks) {
   });
 
   test('it renders pipeline description', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
     const pipelineDescription = 'This is a test pipeline';
 
-    this.setProperties({
-      pipeline: {
-        id: 123,
-        scmContext: 'github:github.com',
-        scmRepo: { url: 'https://gihub.com/test' },
-        annotations: {
-          'screwdriver.cd/pipelineDescription': pipelineDescription
-        }
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      id: 123,
+      scmContext: 'github:github.com',
+      scmRepo: { url: 'https://gihub.com/test' },
+      annotations: {
+        'screwdriver.cd/pipelineDescription': pipelineDescription
       }
     });
 
-    await render(hbs`<Pipeline::Header
-      @pipeline={{this.pipeline}}
-      @collections={{this.collections}}
-    />`);
+    await render(hbs`<Pipeline::Header />`);
 
     assert
       .dom('#pipeline-header .pipeline-description')
