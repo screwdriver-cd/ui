@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import sinon from 'sinon';
 
 module(
   'Integration | Component | pipeline/modal/show-parameters',
@@ -9,9 +10,16 @@ module(
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
+
+      sinon.stub(pipelinePageState, 'getPipeline').returns({
+        parameters: { foo: { value: 'foofoo' } }
+      });
+
       this.setProperties({
         event: { meta: { parameters: { foo: { value: 'bar' } } } },
-        pipeline: { parameters: { foo: { value: 'foofoo' } } },
         jobs: [],
         closeModal: () => {}
       });
@@ -19,7 +27,6 @@ module(
       await render(
         hbs`<Pipeline::Modal::ShowParameters
             @event={{this.event}}
-            @pipeline={{this.pipeline}}
             @jobs={{this.jobs}}
             @closeModal={{this.closeModal}}
         />`

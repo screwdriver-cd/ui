@@ -14,6 +14,8 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   @service shuttle;
 
+  @service pipelinePageState;
+
   @service workflowDataReload;
 
   @service session;
@@ -26,6 +28,8 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   @tracked reason = '';
 
+  pipeline;
+
   parameters;
 
   latestCommitEvent;
@@ -33,6 +37,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   constructor() {
     super(...arguments);
 
+    this.pipeline = this.pipelinePageState.getPipeline();
     this.latestCommitEvent = this.workflowDataReload.getLatestCommitEvent();
   }
 
@@ -65,7 +70,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    return isParameterized(this.args.pipeline, this.args.event);
+    return isParameterized(this.pipeline, this.args.event);
   }
 
   get isSubmitButtonDisabled() {
@@ -101,7 +106,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
     const data = buildPostBody(
       this.session.data.authenticated.username,
-      this.args.pipeline.id,
+      this.pipeline.id,
       this.args.job,
       this.args.event,
       this.parameters,
