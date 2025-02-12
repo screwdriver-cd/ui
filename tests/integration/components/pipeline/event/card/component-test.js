@@ -30,14 +30,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -68,14 +66,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -107,14 +103,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -166,7 +160,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
@@ -174,7 +167,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
         @builds={{this.builds}}
-        @pipeline={{this.pipeline}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @userSettings={{this.userSettings}}
       />`
@@ -207,14 +199,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: { label: 'Testing 123' }
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -250,14 +240,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
           }
         }
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @showParameters={{true}}
       />`
@@ -296,14 +284,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
           }
         }
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @showEventGroup={{true}}
       />`
@@ -338,14 +324,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @showAbort={{true}}
       />`
@@ -381,14 +365,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -421,14 +403,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -465,14 +445,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -511,14 +489,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -569,14 +545,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -609,14 +583,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -654,14 +626,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -700,14 +670,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -756,14 +724,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         type: 'pr',
         prNum: 4
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -799,14 +765,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         type: 'pr',
         prNum: 4
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -841,14 +805,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         type: 'pr',
         prNum: 4
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );

@@ -3,7 +3,6 @@
   {{did-update this.update @event}}
 >
   <Pipeline::Workflow::EventRail
-    @pipeline={{this.pipeline}}
     @userSettings={{this.userSettings}}
     @event={{this.eventRailAnchor}}
     @jobs={{this.jobs}}
@@ -84,7 +83,6 @@
               @jobs={{this.jobs}}
               @builds={{this.builds}}
               @workflowGraph={{this.workflowGraphToDisplay}}
-              @pipeline={{this.pipeline}}
             />
           {{/if}}
           {{#if this.showStageTooltip}}
@@ -94,12 +92,10 @@
               @jobs={{this.jobs}}
               @builds={{this.builds}}
               @workflowGraph={{this.workflowGraphToDisplay}}
-              @pipeline={{this.pipeline}}
             />
           {{/if}}
         {{else}}
           <Pipeline::Jobs::Table
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}

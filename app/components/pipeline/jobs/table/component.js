@@ -15,8 +15,6 @@ export default class PipelineJobsTableComponent extends Component {
 
   @service('emt-themes/ember-bootstrap-v5') emberModelTableBootstrapTheme;
 
-  pipeline;
-
   userSettings;
 
   event;
@@ -34,7 +32,6 @@ export default class PipelineJobsTableComponent extends Component {
   constructor() {
     super(...arguments);
 
-    this.pipeline = this.args.pipeline;
     this.event = this.args.event;
     this.jobs = this.args.jobs;
     this.userSettings = this.args.userSettings;
@@ -147,7 +144,6 @@ export default class PipelineJobsTableComponent extends Component {
         job,
         jobName: getDisplayName(job, prNum),
         stageName: job?.permutations?.[0]?.stage?.name || 'N/A',
-        pipeline: this.pipeline,
         jobs: this.jobs,
         timestampFormat: this.userSettings.timestampFormat,
         onCreate: (jobToMonitor, buildsCallback) => {

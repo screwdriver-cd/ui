@@ -7,23 +7,31 @@ import sinon from 'sinon';
 module('Integration | Component | pipeline/workflow', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders for pipeline with no events', async function (assert) {
-    const router = this.owner.lookup('service:router');
+  hooks.beforeEach(function () {
     const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
 
-    sinon.stub(router, 'currentRouteName').value('events');
     sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
+    const pipelineId = 1234;
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({ id: pipelineId });
+    sinon.stub(pipelinePageState, 'getPipelineId').returns(pipelineId);
+  });
+
+  test('it renders for pipeline with no events', async function (assert) {
+    const router = this.owner.lookup('service:router');
+
+    sinon.stub(router, 'currentRouteName').value('events');
+
     this.setProperties({
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Workflow
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @noEvents={{true}}
       />`
@@ -39,22 +47,16 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   test('it renders for pipeline with no PRs', async function (assert) {
     const router = this.owner.lookup('service:router');
     const shuttle = this.owner.lookup('service:shuttle');
-    const workflowDataReload = this.owner.lookup(
-      'service:workflow-data-reload'
-    );
 
     sinon.stub(router, 'currentRouteName').value('pulls');
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
-    sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
     this.setProperties({
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Workflow
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @noEvents={{true}}
       />`
@@ -72,17 +74,12 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   test('it renders for pipeline with invalid event', async function (assert) {
     const router = this.owner.lookup('service:router');
     const shuttle = this.owner.lookup('service:shuttle');
-    const workflowDataReload = this.owner.lookup(
-      'service:workflow-data-reload'
-    );
 
     sinon.stub(router, 'currentRouteName').value('events');
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
-    sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
     this.setProperties({
-      pipeline: {},
       userSettings: {},
       jobs: [],
       stages: [],
@@ -98,7 +95,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     await render(
       hbs`<Pipeline::Workflow
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
         @stages={{this.stages}}
@@ -120,17 +116,12 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   test('it renders for pipeline with invalid pull request', async function (assert) {
     const router = this.owner.lookup('service:router');
     const shuttle = this.owner.lookup('service:shuttle');
-    const workflowDataReload = this.owner.lookup(
-      'service:workflow-data-reload'
-    );
 
     sinon.stub(router, 'currentRouteName').value('pulls');
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/11');
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
-    sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
     this.setProperties({
-      pipeline: {},
       userSettings: {},
       jobs: [],
       stages: [],
@@ -139,7 +130,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     await render(
       hbs`<Pipeline::Workflow
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
         @stages={{this.stages}}
@@ -161,15 +151,11 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   test('it renders for pipeline with event', async function (assert) {
     const router = this.owner.lookup('service:router');
     const shuttle = this.owner.lookup('service:shuttle');
-    const workflowDataReload = this.owner.lookup(
-      'service:workflow-data-reload'
-    );
     const eventId = 123;
 
     sinon.stub(router, 'currentRouteName').value('events');
     sinon.stub(router, 'currentURL').value(`/v2/pipelines/1/events/${eventId}`);
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
-    sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
     const event = {
       id: eventId,
@@ -184,7 +170,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     };
 
     this.setProperties({
-      pipeline: {},
       userSettings: {},
       jobs: [],
       stages: [],
@@ -195,7 +180,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     await render(
       hbs`<Pipeline::Workflow
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
         @stages={{this.stages}}
@@ -214,16 +198,12 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   test('it renders for pipeline with pull request', async function (assert) {
     const router = this.owner.lookup('service:router');
     const shuttle = this.owner.lookup('service:shuttle');
-    const workflowDataReload = this.owner.lookup(
-      'service:workflow-data-reload'
-    );
     const eventId = 123;
     const prNum = 4;
 
     sinon.stub(router, 'currentRouteName').value('pulls');
     sinon.stub(router, 'currentURL').value(`/v2/pipelines/1/pulls/${prNum}`);
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
-    sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
     const event = {
       id: eventId,
@@ -240,7 +220,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     };
 
     this.setProperties({
-      pipeline: {},
       userSettings: {},
       jobs: [],
       stages: [],
@@ -252,7 +231,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     await render(
       hbs`<Pipeline::Workflow
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
         @stages={{this.stages}}

@@ -16,6 +16,8 @@ export default class PipelineWorkflowComponent extends Component {
 
   @service shuttle;
 
+  @service pipelinePageState;
+
   @service workflowDataReload;
 
   @tracked showDownstreamTriggers = false;
@@ -59,10 +61,7 @@ export default class PipelineWorkflowComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const { pipeline } = this.args;
-    const pipelineId = pipeline.id;
-
-    this.pipeline = pipeline;
+    this.pipeline = this.pipelinePageState.getPipeline();
     this.userSettings = this.args.userSettings;
     this.latestEvent = this.args.latestEvent;
     this.eventType = this.router.currentRouteName.includes('events')
@@ -70,7 +69,7 @@ export default class PipelineWorkflowComponent extends Component {
       : PR_EVENT;
 
     this.dataReloadId = this.workflowDataReload.start(
-      pipelineId,
+      this.pipeline.id,
       this.eventType === PR_EVENT
     );
 
