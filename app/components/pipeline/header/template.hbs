@@ -4,24 +4,24 @@
       id="pipeline-link"
       class="header-item pipeline-name"
       @route="v2.pipeline"
-      @model={{@pipeline.id}}
+      @model={{this.pipeline.id}}
     >
-      {{@pipeline.scmRepo.name}}
+      {{this.pipeline.scmRepo.name}}
     </LinkTo>
 
-    {{#if @pipeline.configPipelineId}}
+    {{#if this.pipeline.configPipelineId}}
       <LinkTo
         id="parent-pipeline-link"
         class="header-item"
         @route="v2.pipeline"
-        @model={{@pipeline.configPipelineId}}
+        @model={{this.pipeline.configPipelineId}}
       >
         <FaIcon @icon="gear" />
         Parent Pipeline
       </LinkTo>
     {{/if}}
 
-    {{#if @pipeline.badges.sonar}}
+    {{#if this.pipeline.badges.sonar}}
       <a
         id="sonarqube-link"
         class="header-item"
@@ -36,7 +36,7 @@
 
     <a
       id="scm-link"
-      href="{{branch-url-encode @pipeline.scmRepo.url}}"
+      href="{{branch-url-encode this.pipeline.scmRepo.url}}"
       class="header-item scm"
     >
       <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
@@ -47,7 +47,7 @@
       <dd.toggle>
         <FaIcon @icon="code-branch" @title="Source code" />
         <span class="branch">
-          {{@pipeline.scmRepo.branch}}
+          {{this.pipeline.scmRepo.branch}}
         </span>
         <BsTooltip @placement="bottom" @renderInPlace={{false}} @triggerEvents="hover" class="tooltip">
           Switch to another Pipeline with the same repository
@@ -78,7 +78,7 @@
     >
       {{#if this.addToCollectionModalOpen}}
         <Pipeline::Modal::AddToCollection
-          @pipeline={{@pipeline}}
+          @pipeline={{this.pipeline}}
           @collections={{this.collections}}
           @errorMessage={{this.errorMessage}}
           @closeModal={{this.closeAddToCollectionModal}}
