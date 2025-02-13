@@ -9,13 +9,21 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    hooks.beforeEach(function () {
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
+
+      sinon
+        .stub(pipelinePageState, 'getPipeline')
+        .returns({ id: 123, name: 'myPipeline' });
+    });
+
     test('it renders', async function (assert) {
-      const pipeline = { id: 123, name: 'myPipeline' };
       const job = { id: 123, name: 'main' };
 
       this.setProperties({
         record: {
-          pipeline,
           job,
           onCreate: () => {},
           onDestroy: () => {}
@@ -77,7 +85,6 @@ module(
     });
 
     test('it renders coverage value', async function (assert) {
-      const pipeline = { id: 123, name: 'myPipeline' };
       const job = { id: 123, name: 'main' };
       const builds = [
         {
@@ -93,7 +100,6 @@ module(
 
       this.setProperties({
         record: {
-          pipeline,
           job,
           onCreate: (j, cb) => {
             return cb(builds);
@@ -112,7 +118,6 @@ module(
     });
 
     test('it renders when no coverage available', async function (assert) {
-      const pipeline = { id: 123, name: 'myPipeline' };
       const job = { id: 123, name: 'main' };
       const builds = [
         {
@@ -128,7 +133,6 @@ module(
 
       this.setProperties({
         record: {
-          pipeline,
           job,
           onCreate: (j, cb) => {
             return cb(builds);
