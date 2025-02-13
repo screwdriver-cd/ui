@@ -1,20 +1,22 @@
-{{#each this.banners as |banner|}}
-  <div class="banner">
-    <BsAlert @type={{banner.type}}>
-      <div class="banner-message-container">
-        <FaIcon
-          @icon={{if
+<div class="banners">
+  {{#each @banners as |banner|}}
+    <div class="banner">
+      <BsAlert @type={{banner.type}}>
+        <div class="banner-message-container">
+          <FaIcon
+            @icon={{if
             (eq banner.type "info")
             "circle-info"
             "triangle-exclamation"
           }}
-        />
-        <div class="banner-message">
+          />
+          <div class="banner-message">
           <span>
             {{{input-sanitizer banner.message}}}
           </span>
+          </div>
         </div>
-      </div>
-    </BsAlert>
-  </div>
-{{/each}}
+      </BsAlert>
+    </div>
+  {{/each}}
+</div>

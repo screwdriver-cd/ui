@@ -12,7 +12,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
   model(params) {
     set(this, 'pipelineId', params.pipeline_id);
     const collections = this.store.findAll('collection').catch(() => []);
-    const banners = this.shuttle.fetchBanners('PIPELINE', params.pipeline_id);
+    const banners = this.shuttle
+      .fetchBanners('PIPELINE', params.pipeline_id)
+      .catch(() => []);
 
     return RSVP.hash({
       pipeline: this.store

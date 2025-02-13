@@ -11,14 +11,18 @@ export default class NewPipelineRoute extends Route {
   async model(params) {
     this.pipelinePageState.clear();
 
-    const pipeline = await this.shuttle
-      .fetchFromApi('get', `/pipelines/${params.pipeline_id}`)
-      .catch(() => null);
+    const [pipeline, banners] = await Promise.all([
+      this.shuttle
+        .fetchFromApi('get', `/pipelines/${params.pipeline_id}`)
+        .catch(() => null),
+      this.shuttle.fetchBanners('PIPELINE', params.pipeline_id).catch(() => [])
+    ]);
 
     this.pipelinePageState.setPipeline(pipeline);
 
     return {
-      pipeline
+      pipeline,
+      banners
     };
   }
 

@@ -19,6 +19,10 @@ module('Acceptance | logins', function (hooks) {
     ]);
   });
 
+  hooks.afterEach(function () {
+    server.shutdown();
+  });
+
   test('visiting /login', async assert => {
     await visit('/login');
 

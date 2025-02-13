@@ -36,15 +36,6 @@ export default class PipelineOptionsRoute extends Route {
       return [];
     });
 
-    const banners = await this.shuttle
-      .fetchBanners('PIPELINE', pipelineId)
-      .catch(e => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-
-        return [];
-      });
-
-    return { pipeline, jobs, banners };
+    return { pipeline, jobs };
   }
 }

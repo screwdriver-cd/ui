@@ -1,0 +1,43 @@
+@use 'screwdriver-colors' as colors;
+@use 'variables';
+
+@mixin styles {
+  .banners {
+    .banner .alert {
+      height: variables.$nav-banner-height;
+      border: 0;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    .banner .alert-warn {
+      background: colors.$sd-warn-bg;
+      color: colors.$sd-warn-fg;
+    }
+
+    .banner .alert-info {
+      background: colors.$sd-info-bg;
+      color: colors.$sd-info-fg;
+    }
+
+    .banner {
+      .banner-message-container {
+        height: 2.25rem;
+
+        display: flex;
+        align-content: center;
+
+        svg {
+          display: inline-block;
+          padding-right: 7px;
+          font-size: 20px;
+        }
+
+        .banner-message {
+          display: inline-block;
+          overflow-y: scroll;
+        }
+      }
+    }
+  }
+}

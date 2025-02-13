@@ -1,5 +1,7 @@
 @use 'pipeline/styles' as pipeline;
+@use 'banner/styles' as banner;
 
 @mixin styles {
   @include pipeline.styles;
+  @include banner.styles;
 }
