@@ -3,9 +3,18 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { authenticateSession } from 'ember-simple-auth/test-support';
+import sinon from 'sinon';
 
 module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    sinon
+      .stub(pipelinePageState, 'getPipeline')
+      .returns({ id: 987, state: 'ACTIVE' });
+  });
 
   test('it renders build detail and metrics links', async function (assert) {
     this.setProperties({
@@ -159,8 +168,7 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       },
       event: {},
       jobs: [],
-      builds: [],
-      pipeline: { state: 'ACTIVE' }
+      builds: []
     });
 
     await render(
@@ -169,7 +177,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         @event={{this.event}}
         @jobs={{this.jobs}}
         @builds={{this.builds}}
-        @pipeline={{this.pipeline}}
       />`
     );
 

@@ -11,6 +11,8 @@ export default class PipelineWorkflowTooltipComponent extends Component {
 
   @service session;
 
+  @service pipelinePageState;
+
   @tracked showToggleJobModal = false;
 
   @tracked toggleJobMeta;
@@ -21,6 +23,8 @@ export default class PipelineWorkflowTooltipComponent extends Component {
 
   @tracked showStopBuildModal = false;
 
+  pipeline;
+
   tooltipData = null;
 
   viewDescriptionMaxLength = 25;
@@ -28,6 +32,7 @@ export default class PipelineWorkflowTooltipComponent extends Component {
   constructor() {
     super(...arguments);
 
+    this.pipeline = this.pipelinePageState.getPipeline();
     this.tooltipData = getTooltipData(
       this.args.d3Data.node,
       this.args.event,
@@ -45,7 +50,7 @@ export default class PipelineWorkflowTooltipComponent extends Component {
 
   get displayRestartButton() {
     const canRestartPipeline =
-      this.session.isAuthenticated && isActivePipeline(this.args.pipeline);
+      this.session.isAuthenticated && isActivePipeline(this.pipeline);
 
     return canRestartPipeline && !this.tooltipData.job.stageName;
   }

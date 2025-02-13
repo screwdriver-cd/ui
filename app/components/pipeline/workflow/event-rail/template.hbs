@@ -31,7 +31,6 @@
       />
       {{#if this.showStartEventModal}}
         <Pipeline::Modal::StartEvent
-          @pipeline={{@pipeline}}
           @jobs={{@jobs}}
           @closeModal={{this.closeStartEventModal}}
         />
@@ -49,7 +48,6 @@
       as |event|
     >
       <Pipeline::Event::Card
-        @pipeline={{@pipeline}}
         @event={{event}}
         @jobs={{@jobs}}
         @userSettings={{@userSettings}}

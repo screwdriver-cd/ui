@@ -15,6 +15,8 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @service workflowDataReload;
 
+  @service pipelinePageState;
+
   @tracked showSearchEventModal = false;
 
   @tracked showStartEventModal = false;
@@ -79,7 +81,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   }
 
   async fetchEvents(event, direction) {
-    const pipelineId = this.args.pipeline.id;
+    const pipelineId = this.pipelinePageState.getPipelineId();
 
     if (this.isPR) {
       if (!this.prNums || this.prNums.length === 0) {

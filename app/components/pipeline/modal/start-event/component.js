@@ -15,6 +15,8 @@ export default class PipelineModalStartEventComponent extends Component {
 
   @service session;
 
+  @service pipelinePageState;
+
   @tracked errorMessage = null;
 
   @tracked isAwaitingResponse = false;
@@ -25,13 +27,17 @@ export default class PipelineModalStartEventComponent extends Component {
 
   defaultJobParameters = {};
 
+  pipeline;
+
   parameters;
 
   constructor() {
     super(...arguments);
 
+    this.pipeline = this.pipelinePageState.getPipeline();
+
     this.defaultPipelineParameters = extractDefaultParameters(
-      this.args.pipeline.parameters
+      this.pipeline.parameters
     );
     this.defaultJobParameters = extractDefaultJobParameters(this.args.jobs);
   }
@@ -58,7 +64,7 @@ export default class PipelineModalStartEventComponent extends Component {
 
     const data = buildPostBody(
       this.session.data.authenticated.username,
-      this.args.pipeline.id,
+      this.pipeline.id,
       this.args.job,
       null,
       this.parameters,

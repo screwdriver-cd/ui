@@ -13,15 +13,19 @@ module(
       const workflowDataReload = this.owner.lookup(
         'service:workflow-data-reload'
       );
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
 
       sinon
         .stub(workflowDataReload, 'getLatestCommitEvent')
         .returns({ sha: 'deadbeef0123456789' });
+
+      sinon.stub(pipelinePageState, 'getPipeline').returns({ id: 987 });
     });
 
     test('it renders start action', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
@@ -32,7 +36,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -52,7 +55,6 @@ module(
 
     test('it renders restart action', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
@@ -63,7 +65,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -76,7 +77,6 @@ module(
 
     test('it renders stage name if set', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
@@ -88,7 +88,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -104,7 +103,6 @@ module(
 
     test('it renders warning message for non-latest commit event', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: '0123456789deadbeef'
@@ -115,7 +113,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -128,7 +125,6 @@ module(
 
     test('it does not render warning message for pr commit event', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789',
@@ -140,30 +136,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
-            @event={{this.event}}
-            @jobs={{this.jobs}}
-            @job={{this.job}}
-            @closeModal={{this.closeModal}}
-        />`
-      );
-
-      assert.dom('.modal-body .alert').doesNotExist();
-
-      this.setProperties({
-        pipeline: { parameters: {} },
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'abc123',
-          type: 'pr'
-        },
-        jobs: [],
-        job: { name: 'main' },
-        closeModal: () => {}
-      });
-      await render(
-        hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -176,7 +148,6 @@ module(
 
     test('it renders reason input for frozen job', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
@@ -187,7 +158,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -202,7 +172,6 @@ module(
 
     test('it renders parameter input for parameterized job', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: { param1: 'abc' } },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789',
@@ -218,7 +187,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -231,7 +199,6 @@ module(
 
     test('it disables submit button when no reason is provided for frozen job', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
@@ -242,7 +209,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -255,7 +221,6 @@ module(
 
     test('it enables submit button when reason is provided for frozen job', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
@@ -266,7 +231,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -285,7 +249,6 @@ module(
       const closeModalSpy = sinon.spy();
 
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
@@ -297,7 +260,6 @@ module(
 
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}
@@ -322,7 +284,6 @@ module(
         .rejects({ message: errorMessage });
 
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
@@ -334,7 +295,6 @@ module(
 
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
             @job={{this.job}}

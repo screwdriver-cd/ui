@@ -7,6 +7,8 @@ import ENV from 'screwdriver-ui/config/environment';
 export default class PipelineModalEventGroupHistoryComponent extends Component {
   @service shuttle;
 
+  @service pipelinePageState;
+
   @tracked events = [];
 
   intervalId;
@@ -39,7 +41,7 @@ export default class PipelineModalEventGroupHistoryComponent extends Component {
 
   @action
   fetchGroupEvents() {
-    const baseUrl = `/pipelines/${this.args.pipeline.id}/events?`;
+    const baseUrl = `/pipelines/${this.pipelinePageState.getPipelineId()}/events?`;
     const url = this.args.isPR
       ? `${baseUrl}prNum=${this.args.event.prNum}`
       : `${baseUrl}groupEventId=${this.args.event.groupEventId}`;
