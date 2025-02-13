@@ -8,6 +8,8 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   @service shuttle;
 
+  @service pipelinePageState;
+
   @tracked searchField = 'message';
 
   @tracked searchInput = null;
@@ -46,7 +48,7 @@ export default class PipelineModalSearchEventComponent extends Component {
     }
 
     // Construct search URL with proper query parameters
-    const baseUrl = `/pipelines/${this.args.pipeline.id}/events?${
+    const baseUrl = `/pipelines/${this.pipelinePageState.getPipelineId()}/events?${
       this.searchField
     }=${encodeURIComponent(inputValue)}`;
     const url = `${baseUrl}&type=${this.isPr ? 'pr' : 'pipeline'}`;
