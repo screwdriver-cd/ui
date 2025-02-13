@@ -45,6 +45,12 @@ module('Acceptance | user-settings', function (hooks) {
         id: '1'
       })
     ]);
+
+    server.get('http://localhost:8080/v4/banners', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
   });
 
   hooks.afterEach(function () {

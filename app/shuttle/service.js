@@ -244,9 +244,7 @@ export default Service.extend({
     const url = `/users/settings`;
 
     try {
-      const userSettings = await this.fetchFromApi(method, url);
-
-      return userSettings;
+      return await this.fetchFromApi(method, url);
     } catch (e) {
       return {};
     }
@@ -327,9 +325,8 @@ export default Service.extend({
   async getTemplateDetails(templateId) {
     const method = 'get';
     const url = `/template/${templateId}`;
-    const templateDetails = await this.fetchFromApi(method, url);
 
-    return templateDetails;
+    return this.fetchFromApi(method, url);
   },
 
   async updateSonarBadge(pipelineId, name = '', uri = '') {
@@ -360,6 +357,24 @@ export default Service.extend({
   async fetchJobs(pipelineId) {
     const method = 'get';
     const url = `/pipelines/${pipelineId}/jobs`;
+
+    return this.fetchFromApi(method, url);
+  },
+
+  // GET /banners
+  async fetchBanners(scope, scopeId) {
+    const method = 'get';
+    const params = {
+      isActive: true,
+      scope
+    };
+
+    if (scopeId) {
+      params.scopeId = scopeId;
+    }
+
+    const query = $.param(params);
+    const url = `/banners?${query}`;
 
     return this.fetchFromApi(method, url);
   }
