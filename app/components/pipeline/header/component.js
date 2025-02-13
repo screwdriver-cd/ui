@@ -8,30 +8,38 @@ export default class PipelineHeaderComponent extends Component {
 
   @service shuttle;
 
+  @service pipelinePageState;
+
   @tracked addToCollectionModalOpen = false;
 
   @tracked errorMessage;
 
   @tracked collections = null;
 
+  pipeline;
+
   sameRepoPipeline = [];
 
+  constructor() {
+    super(...arguments);
+
+    this.pipeline = this.pipelinePageState.getPipeline();
+  }
+
   get pipelineDescription() {
-    return this.args.pipeline.annotations['screwdriver.cd/pipelineDescription'];
+    return this.pipeline.annotations['screwdriver.cd/pipelineDescription'];
   }
 
   get sonarBadgeUri() {
     return (
-      this.args.pipeline.badges.sonar.uri ||
-      this.args.pipeline.badges.sonar.defaultUri
+      this.pipeline.badges.sonar.uri || this.pipeline.badges.sonar.defaultUri
     );
   }
 
   get sonarBadgeDescription() {
     const sonarBadgeDescription = 'SonarQube project';
     const sonarBadgeName =
-      this.args.pipeline.badges.sonar.name ||
-      this.args.pipeline.badges.sonar.defaultName;
+      this.pipeline.badges.sonar.name || this.pipeline.badges.sonar.defaultName;
 
     return sonarBadgeName
       ? `SonarQube project: ${sonarBadgeName}`
@@ -39,7 +47,7 @@ export default class PipelineHeaderComponent extends Component {
   }
 
   get scmContext() {
-    const scm = this.scm.getScm(this.args.pipeline.scmContext);
+    const scm = this.scm.getScm(this.pipeline.scmContext);
 
     return {
       scm: scm.displayName,
@@ -49,15 +57,15 @@ export default class PipelineHeaderComponent extends Component {
 
   @action
   async getPipelinesWithSameRepo() {
-    const pipelineId = this.args.pipeline.id;
+    const pipelineId = this.pipeline.id;
 
-    if (this.args.pipeline.scmRepo && this.args.pipeline.scmUri) {
-      const [scm, repositoryId] = this.args.pipeline.scmUri.split(':');
+    if (this.pipeline.scmRepo && this.pipeline.scmUri) {
+      const [scm, repositoryId] = this.pipeline.scmUri.split(':');
 
       this.sameRepoPipeline = await this.shuttle
         .fetchFromApi(
           'get',
-          `/pipelines?search=${this.args.pipeline.scmRepo.name}&sortBy=name&sort=ascending`
+          `/pipelines?search=${this.pipeline.scmRepo.name}&sortBy=name&sort=ascending`
         )
         .then(pipelines =>
           pipelines
