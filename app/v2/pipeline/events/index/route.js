@@ -4,9 +4,11 @@ import { service } from '@ember/service';
 export default class NewPipelineEventsIndexRoute extends Route {
   @service shuttle;
 
+  @service pipelinePageState;
+
   async model() {
     const model = this.modelFor('v2.pipeline.events');
-    const pipelineId = model.pipeline.id;
+    const pipelineId = this.pipelinePageState.getPipelineId();
 
     const latestEvent = await this.shuttle
       .fetchFromApi('get', `/pipelines/${pipelineId}/events?count=1`)
@@ -14,7 +16,10 @@ export default class NewPipelineEventsIndexRoute extends Route {
         return events[0];
       });
 
-    return { ...model, latestEvent };
+    return {
+      userSettings: model.userSettings,
+      latestEvent
+    };
   }
 
   afterModel(model) {

@@ -4,10 +4,10 @@ import { service } from '@ember/service';
 export default class NewPipelineIndexRoute extends Route {
   @service router;
 
-  beforeModel() {
-    const { pipeline } = this.modelFor('v2.pipeline');
+  @service pipelinePageState;
 
-    if (pipeline.childPipelines) {
+  beforeModel() {
+    if (this.pipelinePageState.getPipeline().childPipelines) {
       this.router.replaceWith('pipeline.child-pipelines');
     } else {
       this.router.replaceWith('v2.pipeline.events');
