@@ -99,6 +99,7 @@
       .message {
         font-weight: variables.$weight-bold;
         font-size: 1rem;
+        overflow-x: auto;
       }
 
       .label {
