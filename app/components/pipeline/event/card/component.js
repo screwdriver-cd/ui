@@ -28,6 +28,8 @@ export default class PipelineEventCardComponent extends Component {
 
   @service workflowDataReload;
 
+  @service pipelinePageState;
+
   @service selectedPrSha;
 
   @tracked event;
@@ -37,6 +39,8 @@ export default class PipelineEventCardComponent extends Component {
   @tracked latestCommitEvent;
 
   @tracked status;
+
+  @tracked hideCard;
 
   @tracked failureCount;
 
@@ -70,6 +74,7 @@ export default class PipelineEventCardComponent extends Component {
 
     this.showParametersModal = false;
     this.showAbortBuildModal = false;
+    this.hideCard = false;
   }
 
   willDestroy() {
@@ -162,6 +167,14 @@ export default class PipelineEventCardComponent extends Component {
 
     this.builds = builds;
     this.status = getStatus(this.event, builds);
+
+    if (this.args.handleFilter) {
+      const pipeline = this.pipelinePageState.getPipeline();
+
+      if (pipeline.settings?.filterEventsForNoBuilds) {
+        this.hideCard = !this.isHighlighted && this.status === 'SKIPPED';
+      }
+    }
 
     if (this.status !== 'COLLAPSED') {
       this.failureCount = getFailureCount(builds);
