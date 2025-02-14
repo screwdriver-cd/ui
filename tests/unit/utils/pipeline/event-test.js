@@ -46,8 +46,8 @@ module('Unit | Utility | Pipeline | event', function () {
   });
 
   test('isComplete returns correct value', function (assert) {
-    assert.equal(isComplete(null), true);
-    assert.equal(isComplete([]), true);
+    assert.equal(isComplete(null), false);
+    assert.equal(isComplete([]), false);
     assert.equal(isComplete([{ status: 'UNSTABLE' }]), false);
     assert.equal(
       isComplete([{ status: 'UNSTABLE', endTime: '2024-04-01T00:00:00.000Z' }]),
