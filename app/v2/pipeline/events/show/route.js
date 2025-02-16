@@ -5,10 +5,12 @@ import { NotFoundError } from 'ember-ajax/errors';
 export default class NewPipelineEventsShowRoute extends Route {
   @service shuttle;
 
+  @service pipelinePageState;
+
   async model(params, transition) {
     const eventId = params.event_id;
     const model = this.modelFor('v2.pipeline.events');
-    const pipelineId = model.pipeline.id;
+    const pipelineId = this.pipelinePageState.getPipelineId();
 
     let latestEvent;
 
@@ -51,7 +53,7 @@ export default class NewPipelineEventsShowRoute extends Route {
     );
 
     return {
-      ...model,
+      userSettings: model.userSettings,
       event,
       latestEvent,
       jobs,

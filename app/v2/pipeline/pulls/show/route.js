@@ -9,6 +9,8 @@ import {
 export default class V2PipelinePullsShowRoute extends Route {
   @service shuttle;
 
+  @service pipelinePageState;
+
   @service selectedPrSha;
 
   queryParams = {
@@ -19,7 +21,7 @@ export default class V2PipelinePullsShowRoute extends Route {
 
   async model(params, transition) {
     const model = this.modelFor('v2.pipeline.pulls');
-    const { pipeline } = model;
+    const pipeline = this.pipelinePageState.getPipeline();
     const pipelineId = pipeline.id;
     const prNums = transition.data.prNums
       ? new Set(transition.data.prNums)
