@@ -363,8 +363,10 @@ module('Integration | Component | workflow graph d3', function (hooks) {
       }
     ]);
 
+    this.set('collapsedStages', new Set([]));
+
     await render(
-      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @stages={{this.stages}} @displayStageMenuHandle={{true}}/>`
+      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @stages={{this.stages}} @collapsedStages={{this.collapsedStages}} @displayStageMenuHandle={{true}}/>`
     );
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
@@ -399,6 +401,171 @@ module('Integration | Component | workflow graph d3', function (hooks) {
     assert
       .dom('svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-name')
       .hasText('production');
+
+    // stage view toggle
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-title .stage-view-toggle'
+      ).length,
+      2
+    );
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(1) .stage-info .stage-title .stage-view-toggle'
+      )
+      .hasText('-');
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-title .stage-view-toggle'
+      )
+      .hasText('-');
+
+    // stage actions menu handle
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-actions .stage-menu-handle'
+      ).length,
+      2
+    );
+
+    // stage description
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-description'
+      ).length,
+      2
+    );
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(1) .stage-info .stage-description'
+      )
+      .hasText(STAGE_INT_DESC);
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-description'
+      )
+      .hasText(STAGE_PROD_DESC);
+  });
+
+  test('it renders stages when collapsed', async function (assert) {
+    const STAGE_INT_DESC =
+      'This stage will deploy the latest application to CI environment and certifies it after the tests are passed.';
+    const STAGE_PROD_DESC =
+      'This stage will deploy the CI certified application to production environment and certifies it after the tests are passed.';
+
+    this.set('workflowGraph', {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'component', id: 1 },
+        { name: 'publish', id: 2 },
+        { name: 'stage@integration:setup', id: 28, stageName: 'integration' },
+        { name: 'ci-deploy', id: 21, stageName: 'integration' },
+        { name: 'ci-test', id: 22, stageName: 'integration' },
+        { name: 'ci-certify', id: 23, stageName: 'integration' },
+        {
+          name: 'stage@integration:teardown',
+          id: 29,
+          stageName: 'integration'
+        },
+        { name: 'stage@production:setup', id: 38, stageName: 'production' },
+        { name: 'prod-deploy', id: 31, stageName: 'production' },
+        { name: 'prod-test', id: 32, stageName: 'production' },
+        { name: 'prod-certify', id: 33, stageName: 'production' },
+        { name: 'stage@production:teardown', id: 39, stageName: 'production' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'component' },
+        { src: '~commit', dest: 'component' },
+        { src: 'component', dest: 'publish' },
+        { src: 'publish', dest: 'stage@integration:setup' },
+        { src: 'stage@integration:setup', dest: 'ci-deploy' },
+        { src: 'ci-deploy', dest: 'ci-test' },
+        { src: 'ci-test', dest: 'ci-certify' },
+        { src: 'ci-certify', dest: 'stage@integration:teardown' },
+        { src: 'stage@integration:teardown', dest: 'stage@production:setup' },
+        { src: 'stage@production:setup', dest: 'prod-deploy' },
+        { src: 'prod-deploy', dest: 'prod-test' },
+        { src: 'prod-test', dest: 'prod-certify' },
+        { src: 'prod-certify', dest: 'stage@production:teardown' }
+      ]
+    });
+
+    this.set('stages', [
+      {
+        id: 7,
+        name: 'integration',
+        jobs: [{ id: 21 }, { id: 22 }, { id: 23 }],
+        description: STAGE_INT_DESC,
+        setup: 28,
+        teardown: 29
+      },
+      {
+        id: 8,
+        name: 'production',
+        jobs: [{ id: 31 }, { id: 32 }, { id: 33 }],
+        description: STAGE_PROD_DESC,
+        setup: 38,
+        teardown: 39
+      }
+    ]);
+
+    this.set('collapsedStages', new Set(['production']));
+
+    await render(
+      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @stages={{this.stages}} @collapsedStages={{this.collapsedStages}} @displayStageMenuHandle={{true}}/>`
+    );
+
+    assert.equal(this.element.querySelectorAll('svg').length, 1);
+    assert.equal(
+      this.element.querySelectorAll('svg > g.graph-node').length,
+      10
+    );
+    assert.equal(
+      this.element.querySelectorAll('svg > path.graph-edge').length,
+      9
+    );
+    assert.equal(
+      this.element.querySelectorAll('svg > path.graph-edge.stage-edge').length,
+      2
+    );
+
+    assert.equal(
+      this.element.querySelectorAll('svg > .stage-container').length,
+      2
+    );
+
+    // stage name
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-name'
+      ).length,
+      2
+    );
+    assert
+      .dom('svg > .stage-info-wrapper:nth-of-type(1) .stage-info .stage-name')
+      .hasText('integration');
+    assert
+      .dom('svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-name')
+      .hasText('production');
+
+    // stage view toggle
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-title .stage-view-toggle'
+      ).length,
+      2
+    );
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(1) .stage-info .stage-title .stage-view-toggle'
+      )
+      .hasText('-');
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-title .stage-view-toggle'
+      )
+      .hasText('+');
 
     // stage actions menu handle
     assert.equal(
@@ -524,8 +691,10 @@ module('Integration | Component | workflow graph d3', function (hooks) {
       }
     ]);
 
+    this.set('collapsedStages', new Set([]));
+
     await render(
-      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @stages={{this.stages}} @displayStageMenuHandle={{true}}/>`
+      hbs`<WorkflowGraphD3 @workflowGraph={{this.workflowGraph}} @stages={{this.stages}} @collapsedStages={{this.collapsedStages}} @displayStageMenuHandle={{true}}/>`
     );
 
     assert.equal(this.element.querySelectorAll('svg').length, 1);
@@ -560,6 +729,24 @@ module('Integration | Component | workflow graph d3', function (hooks) {
     assert
       .dom('svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-name')
       .hasText('production');
+
+    // stage view toggle
+    assert.equal(
+      this.element.querySelectorAll(
+        'svg > .stage-info-wrapper .stage-info .stage-title .stage-view-toggle'
+      ).length,
+      2
+    );
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(1) .stage-info .stage-title .stage-view-toggle'
+      )
+      .hasText('-');
+    assert
+      .dom(
+        'svg > .stage-info-wrapper:nth-of-type(2) .stage-info .stage-title .stage-view-toggle'
+      )
+      .hasText('-');
 
     // stage actions menu handle
     assert.equal(

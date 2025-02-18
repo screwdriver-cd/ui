@@ -50,6 +50,8 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked showGraph;
 
+  @tracked collapsedStages = new Set([]);
+
   workflowGraph;
 
   workflowGraphWithDownstreamTriggers;
@@ -253,6 +255,19 @@ export default class PipelineWorkflowComponent extends Component {
     } else {
       this.d3Data = null;
     }
+  }
+
+  @action
+  toggleStageView(stageName, isCollapsed) {
+    const collapsedStages = new Set(this.collapsedStages);
+
+    if (isCollapsed) {
+      collapsedStages.add(stageName);
+    } else {
+      collapsedStages.delete(stageName);
+    }
+
+    this.collapsedStages = collapsedStages;
   }
 
   @action

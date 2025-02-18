@@ -52,6 +52,8 @@ export default Component.extend({
     }
   ),
 
+  collapsedStages: new Set([]),
+
   canRestartPipeline: computed('authenticated', 'pipeline.state', {
     get() {
       return this.authenticated && isActivePipeline(this.get('pipeline'));
@@ -211,6 +213,7 @@ export default Component.extend({
     this._super(...arguments);
     // hide graph tooltip when event changes
     set(this, 'showTooltip', false);
+    set(this, 'collapsedStages', new Set([]));
   },
   actions: {
     graphClicked(job, mouseevent, sizes) {
@@ -386,6 +389,17 @@ export default Component.extend({
       };
 
       setProperties(this, properties);
+    },
+    onToggleStageView(stageName, isCollapsed) {
+      const collapsedStages = new Set(this.collapsedStages);
+
+      if (isCollapsed) {
+        collapsedStages.add(stageName);
+      } else {
+        collapsedStages.delete(stageName);
+      }
+
+      setProperties(this, { collapsedStages });
     },
     confirmStartBuild(newEventStartFromType) {
       setProperties(this, {
