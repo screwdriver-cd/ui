@@ -94,10 +94,22 @@ module('Integration | Component | search list', function (hooks) {
     );
 
     assert.dom('tbody tr:first-child td.appId').hasText('batman/tumbler');
+    assert
+      .dom('tbody tr:first-child td.appId a')
+      .hasAttribute('title', 'batman/tumbler');
     assert.dom('tbody tr:first-child td.branch').hasText('waynecorp');
+    assert
+      .dom('tbody tr:first-child td.branch a')
+      .hasAttribute('title', 'waynecorp');
     assert.dom('tbody tr:first-child td.account').hasText('bitbucket.org');
     assert.dom('tbody tr:nth-child(2) td.appId').hasText('foo/bar');
+    assert
+      .dom('tbody tr:nth-child(2) td.appId a')
+      .hasAttribute('title', 'foo/bar');
     assert.dom('tbody tr:nth-child(2) td.branch').hasText('master');
+    assert
+      .dom('tbody tr:nth-child(2) td.branch a')
+      .hasAttribute('title', 'master');
     assert.dom('tbody tr:nth-child(2) td.account').hasText('github.com');
     assert.dom('.add-to-collection').exists({ count: 2 });
 
