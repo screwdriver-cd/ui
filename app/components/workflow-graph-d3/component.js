@@ -51,6 +51,7 @@ export default Component.extend({
     'workflowGraph',
     'prChainEnabled',
     'stages',
+    'collapsedStages',
     {
       get() {
         let { showPRJobs } = this;
@@ -63,6 +64,8 @@ export default Component.extend({
         const { startFrom } = this;
 
         const stages = this.stages === undefined ? [] : this.stages;
+        const collapsedStages =
+          this.collapsedStages === undefined ? [] : this.collapsedStages;
         const prJobs = this.prJobs === undefined ? [] : this.prJobs;
         const jobs = (this.jobs === undefined ? [] : this.jobs).concat(prJobs);
 
@@ -137,7 +140,8 @@ export default Component.extend({
           start: startFrom,
           chainPR: this.prChainEnabled,
           prNum: this.selectedEventObj?.prNum,
-          stages: this.minified ? [] : stages
+          stages: this.minified ? [] : stages,
+          collapsedStages
         });
       }
     }
@@ -154,6 +158,7 @@ export default Component.extend({
     this.draw(this.decoratedGraph);
 
     set(this, 'lastGraph', this.graph);
+    set(this, 'lastDecoratedGraph', this.decoratedGraph);
   },
 
   // Listen for changes to workflow and update graph accordingly.
@@ -172,11 +177,12 @@ export default Component.extend({
     }
 
     // redraw anyways when graph changes
-    if (lg !== wg) {
+    if (lg !== wg || decoratedGraph !== this.lastDecoratedGraph) {
       this.graphNode.remove();
 
       this.draw(decoratedGraph);
       set(this, 'lastGraph', wg);
+      set(this, 'lastDecoratedGraph', decoratedGraph);
     } else {
       this.redraw(decoratedGraph).then(() => {});
     }
@@ -195,6 +201,14 @@ export default Component.extend({
 
       if (!this.minified && typeof fn === 'function') {
         fn(stage, d3.event);
+      }
+    },
+
+    stageViewToggleClicked(stageName, isCollapsed) {
+      const fn = this.onToggleStageView;
+
+      if (!this.minified && typeof fn === 'function') {
+        fn(stageName, isCollapsed, d3.event);
       }
     }
   },
@@ -268,6 +282,10 @@ export default Component.extend({
       this.send('stageMenuHandleClicked', stage);
     };
 
+    const onClickStageViewToggle = (stageName, isCollapsed) => {
+      this.send('stageViewToggleClicked', stageName, isCollapsed);
+    };
+
     // Add the SVG element
     const svg = getGraphSvg(
       this.element,
@@ -287,7 +305,8 @@ export default Component.extend({
           this.elementSizes,
           nodeWidth,
           onStageMenuHandleClick,
-          this.displayStageMenuHandle
+          this.displayStageMenuHandle,
+          onClickStageViewToggle
         )
       : {};
 

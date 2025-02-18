@@ -1,5 +1,6 @@
 /* global d3 */
 import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 import { decorateGraph } from 'screwdriver-ui/utils/graph-tools';
@@ -27,6 +28,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
   graphSvg;
 
+  @tracked collapsedStages;
+
   constructor() {
     super(...arguments);
     this.event = this.args.event;
@@ -49,7 +52,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
       start: event.startFrom,
       chainPR: this.args.chainPr,
       prNum: event.prNum,
-      stages: this.args.stages
+      stages: this.args.stages,
+      collapsedStages: this.args.collapsedStages
     });
   }
 
@@ -78,6 +82,10 @@ export default class PipelineWorkflowGraphComponent extends Component {
       this.args.setShowStageTooltip(true, stage, d3.event);
     };
 
+    const onClickStageViewToggle = (stageName, isCollapsed) => {
+      this.args.toggleStageView(stageName, isCollapsed);
+    };
+
     // Add the SVG element
     this.graphSvg = getGraphSvg(
       element,
@@ -97,7 +105,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
           elementSizes,
           nodeWidth,
           onClickStageMenu,
-          this.args.displayStageTooltip
+          this.args.displayStageTooltip,
+          onClickStageViewToggle
         )
       : {};
 
