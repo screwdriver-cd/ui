@@ -16,6 +16,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       jobs: [{ id: 1 }],
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
       stages: [],
+      collapsedStages: new Set([]),
       displayJobNameLength: 20
     });
     await render(
@@ -25,6 +26,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @jobs={{this.jobs}}
             @builds={{this.builds}}
             @stages={{this.stages}}
+            @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -47,6 +49,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       jobs: [{ id: 1 }],
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
       stages: [],
+      collapsedStages: new Set([]),
       displayJobNameLength: 25
     });
     await render(
@@ -56,6 +59,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @jobs={{this.jobs}}
             @builds={{this.builds}}
             @stages={{this.stages}}
+            @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -110,6 +114,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
         { id: 3, jobId: 12, status: 'SUCCESS' }
       ],
       stages: [{ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }],
+      collapsedStages: new Set([]),
       displayJobNameLength: 20
     });
     await render(
@@ -119,6 +124,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @jobs={{this.jobs}}
             @builds={{this.builds}}
             @stages={{this.stages}}
+            @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -164,6 +170,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
         { id: 3, jobId: 12, status: 'SUCCESS' }
       ],
       stages: [{ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }],
+      collapsedStages: new Set([]),
       displayJobNameLength: 20
     });
     await render(
@@ -173,6 +180,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @jobs={{this.jobs}}
             @builds={{this.builds}}
             @stages={{this.stages}}
+            @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -196,6 +204,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       jobs: [{ id: 1 }],
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
       stages: [],
+      collapsedStages: new Set([]),
       displayJobNameLength: 20
     });
     await render(
@@ -205,6 +214,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @jobs={{this.jobs}}
             @builds={{this.builds}}
             @stages={{this.stages}}
+            @collapsedStages={{this.collapsedStages}}
             @chainPr={{true}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -237,6 +247,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       jobs: [{ id: 1 }],
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
       stages: [],
+      collapsedStages: new Set([]),
       displayJobNameLength: 20
     });
     await render(
@@ -246,6 +257,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @jobs={{this.jobs}}
             @builds={{this.builds}}
             @stages={{this.stages}}
+            @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -269,6 +281,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       jobs: [{ id: 123 }],
       builds: [{ id: 1, jobId: 123, status: 'RUNNING' }],
       stages: [],
+      collapsedStages: new Set([]),
       displayJobNameLength: 20
     });
     await render(
@@ -278,6 +291,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @jobs={{this.jobs}}
             @builds={{this.builds}}
             @stages={{this.stages}}
+            @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`

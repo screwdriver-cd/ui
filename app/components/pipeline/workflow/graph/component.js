@@ -28,6 +28,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
   decoratedGraph;
 
+  collapsedStages;
+
   graphSvg;
 
   constructor() {
@@ -35,16 +37,24 @@ export default class PipelineWorkflowGraphComponent extends Component {
     this.event = this.args.event;
     this.builds = this.args.builds;
     this.stageBuilds = this.args.stageBuilds;
+    this.collapsedStages = this.args.collapsedStages;
 
     this.getDecoratedGraph(
       this.args.workflowGraph,
       this.args.builds,
       this.args.stageBuilds,
-      this.args.event
+      this.args.event,
+      this.args.collapsedStages
     );
   }
 
-  getDecoratedGraph(workflowGraph, builds, stageBuilds, event) {
+  getDecoratedGraph(
+    workflowGraph,
+    builds,
+    stageBuilds,
+    event,
+    collapsedStages
+  ) {
     this.decoratedGraph = decorateGraph({
       inputGraph: workflowGraph,
       builds,
@@ -55,7 +65,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
       start: event.startFrom,
       chainPR: this.args.chainPr,
       prNum: event.prNum,
-      stages: this.args.stages
+      stages: this.args.stages,
+      collapsedStages
     });
   }
 
@@ -84,6 +95,10 @@ export default class PipelineWorkflowGraphComponent extends Component {
       this.args.setShowStageTooltip(true, stage, d3.event);
     };
 
+    const onClickStageViewToggle = (stageName, isCollapsed) => {
+      this.args.toggleStageView(stageName, isCollapsed);
+    };
+
     // Add the SVG element
     this.graphSvg = getGraphSvg(
       element,
@@ -103,7 +118,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
           elementSizes,
           nodeWidth,
           onClickStageMenu,
-          this.args.displayStageTooltip
+          this.args.displayStageTooltip,
+          onClickStageViewToggle
         )
       : {};
 
@@ -154,7 +170,10 @@ export default class PipelineWorkflowGraphComponent extends Component {
   }
 
   @action
-  redraw(element, [workflowGraph, builds, stageBuilds, event]) {
+  redraw(
+    element,
+    [workflowGraph, builds, stageBuilds, event, collapsedStages]
+  ) {
     const elementSizes = getElementSizes();
     const maximumJobNameLength = getMaximumJobNameLength(
       this.decoratedGraph,
@@ -164,15 +183,23 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
     if (
       this.event.id !== event.id ||
-      this.decoratedGraph.nodes.length !== workflowGraph.nodes.length
+      this.decoratedGraph.nodes.length !== workflowGraph.nodes.length ||
+      this.collapsedStages.length !== collapsedStages.length
     ) {
       if (this.event.id !== event.id) {
         this.event = event;
       }
       this.builds = builds;
       this.stageBuilds = stageBuilds;
+      this.collapsedStages = collapsedStages;
 
-      this.getDecoratedGraph(workflowGraph, builds, stageBuilds, event);
+      this.getDecoratedGraph(
+        workflowGraph,
+        builds,
+        stageBuilds,
+        event,
+        collapsedStages
+      );
       element.replaceChildren();
       this.draw(element);
 
