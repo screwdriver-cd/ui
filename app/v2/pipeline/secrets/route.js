@@ -10,10 +10,15 @@ export default class NewPipelineSecretsRoute extends Route {
 
   @service pipelinePageState;
 
-  async beforeModel() {
+  async beforeModel(transition) {
     // Guests should not access this page
     if (this.session.data.authenticated.isGuest) {
       this.router.replaceWith('v2.pipeline');
+    } else {
+      this.replaceWith(
+        'pipeline.secrets',
+        transition.to.parent.params.pipeline_id
+      );
     }
   }
 
