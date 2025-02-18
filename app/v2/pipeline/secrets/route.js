@@ -8,10 +8,12 @@ export default class NewPipelineSecretsRoute extends Route {
 
   @service shuttle;
 
+  @service pipelinePageState;
+
   async beforeModel() {
     // Guests should not access this page
     if (this.session.data.authenticated.isGuest) {
-      this.router.transitionTo('v2.pipeline');
+      this.router.replaceWith('v2.pipeline');
     }
   }
 
@@ -19,7 +21,7 @@ export default class NewPipelineSecretsRoute extends Route {
     // Refresh error message
     this.controllerFor('v2.pipeline.secrets').set('errorMessage', '');
 
-    const { pipeline } = this.modelFor('v2.pipeline');
+    const pipeline = this.pipelinePageState.getPipeline();
     const pipelineId = pipeline.id;
 
     const secrets = await this.shuttle
