@@ -9,7 +9,7 @@
       <div class="parameter-group">
         <div class="group-title">
           <FaIcon
-            @icon={{if parameterGroup.isOpen "minus-square" "plus-square"}}
+            @icon={{if parameterGroup.isOpen "square-minus" "square-plus"}}
             {{on "click" (fn this.toggleParameterGroup parameterGroup.paramGroupTitle)}}
           />
           <div
@@ -30,14 +30,14 @@
                   {{parameter.name}}
                 </div>
                 {{#if parameter.description}}
-                  <FaIcon @icon="question-circle" @title={{parameter.description}}></FaIcon>
+                  <FaIcon @icon="circle-question" @title={{parameter.description}}></FaIcon>
                 {{/if}}
                 {{#if (and
                         (not (is-array parameter.defaultValues))
                         (not (eq parameter.value parameter.defaultValues))
                       )
                 }}
-                  <FaIcon @icon="exclamation-triangle" @title="Default value: {{parameter.defaultValues}}"></FaIcon>
+                  <FaIcon @icon="triangle-exclamation" @title="Default value: {{parameter.defaultValues}}"></FaIcon>
                 {{/if}}
               </label>
               {{#if (is-array parameter.defaultValues)}}

@@ -45,6 +45,7 @@
       }
 
       &.build-running,
+      &.build-created,
       &.build-queued,
       &.build-blocked,
       &.build-skipped {

@@ -9,13 +9,15 @@ import {
 import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
 
 export default class PipelineModalStartEventComponent extends Component {
+  @service router;
+
   @service shuttle;
 
   @service session;
 
-  @tracked errorMessage = null;
+  @service pipelinePageState;
 
-  @tracked successMessage = null;
+  @tracked errorMessage = null;
 
   @tracked isAwaitingResponse = false;
 
@@ -25,13 +27,17 @@ export default class PipelineModalStartEventComponent extends Component {
 
   defaultJobParameters = {};
 
+  pipeline;
+
   parameters;
 
   constructor() {
     super(...arguments);
 
+    this.pipeline = this.pipelinePageState.getPipeline();
+
     this.defaultPipelineParameters = extractDefaultParameters(
-      this.args.pipeline.parameters
+      this.pipeline.parameters
     );
     this.defaultJobParameters = extractDefaultJobParameters(this.args.jobs);
   }
@@ -58,8 +64,8 @@ export default class PipelineModalStartEventComponent extends Component {
 
     const data = buildPostBody(
       this.session.data.authenticated.username,
-      this.args.pipeline.id,
-      null,
+      this.pipeline.id,
+      this.args.job,
       null,
       this.parameters,
       false,
@@ -68,9 +74,24 @@ export default class PipelineModalStartEventComponent extends Component {
 
     await this.shuttle
       .fetchFromApi('post', '/events', data)
-      .then(() => {
-        this.wasActionSuccessful = true;
-        this.successMessage = `Started successfully`;
+      .then(event => {
+        this.args.closeModal();
+
+        if (this.router.currentRouteName === 'v2.pipeline.events.show') {
+          this.router.transitionTo('v2.pipeline.events.show', {
+            event,
+            reloadEventRail: true,
+            id: event.id
+          });
+        } else if (this.router.currentRouteName === 'v2.pipeline.pulls.show') {
+          this.router.transitionTo('v2.pipeline.pulls.show', {
+            event,
+            reloadEventRail: true,
+            id: event.prNum,
+            pull_request_number: event.prNum,
+            sha: event.sha
+          });
+        }
       })
       .catch(err => {
         this.wasActionSuccessful = false;

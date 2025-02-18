@@ -1,7 +1,7 @@
 <div class="actions">
   <span class={{this.startButtonClass}} {{action "startSingleBuild" "START"}}>
     <FaIcon
-      @icon="play-circle"
+      @icon="circle-play"
       @fixedWidth="true"
       @prefix="far"
       @title="Start a new build."
@@ -9,7 +9,7 @@
   </span>
   <span class={{this.stopButtonClass}} {{action "stopBuild"}}>
     <FaIcon
-      @icon="stop-circle"
+      @icon="circle-stop"
       @fixedWidth="true"
       @prefix="far"
       @title="Stop build."
@@ -17,7 +17,7 @@
   </span>
   <span class={{this.startButtonClass}} {{action "startSingleBuild" "RESTART"}}>
     <FaIcon
-      @icon="redo-alt"
+      @icon="rotate-right"
       @fixedWidth="true"
       @prefix="fas"
       @title="Restart from latest build."

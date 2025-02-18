@@ -13,6 +13,8 @@ import {
 export default class PipelineJobsTableCellActionsComponent extends Component {
   @service shuttle;
 
+  @service pipelinePageState;
+
   @tracked latestBuild;
 
   @tracked showStartEventModal = false;
@@ -20,6 +22,8 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
   @tracked showStopBuildModal = false;
 
   @tracked showRestartJobModal = false;
+
+  pipeline;
 
   isPipelineInactive = true;
 
@@ -33,6 +37,7 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
     super(...arguments);
 
     this.job = { ...this.args.record.job };
+    this.pipeline = this.pipelinePageState.getPipeline();
 
     this.args.record.onCreate(this.job, builds => {
       if (builds.length > 0) {
@@ -40,7 +45,7 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
       }
     });
 
-    this.isPipelineInactive = isInactivePipeline(this.args.record.pipeline);
+    this.isPipelineInactive = isInactivePipeline(this.pipeline);
   }
 
   willDestroy() {
@@ -52,9 +57,13 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
   get notice() {
     const { job } = this.args.record;
 
-    return shouldDisplayNotice(this.args.record.pipeline, job)
+    return shouldDisplayNotice(this.pipeline, job)
       ? `This will create a new event then trigger downstream jobs. Make sure the (${job.name}) job can be successfully completed without rerunning any upstream jobs (i.e., does this job depend on any metadata that was previously set?)`
       : null;
+  }
+
+  get startEventTitle() {
+    return `Start a new event from ${this.args.record.job.name}`;
   }
 
   get startButtonDisabled() {
@@ -107,7 +116,7 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
       this.shuttle.fetchFromApi('get', `/events/${eventId}`),
       this.shuttle.fetchFromApi(
         'get',
-        `/pipelines/${this.args.record.pipeline.id}/latestCommitEvent`
+        `/pipelines/${this.pipeline.id}/latestCommitEvent`
       )
     ]).then(([latestEvent, latestCommitEvent]) => {
       this.latestEvent = latestEvent;

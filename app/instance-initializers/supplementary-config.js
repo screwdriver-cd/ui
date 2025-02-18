@@ -69,6 +69,14 @@ export function initialize() {
   ) {
     ENV.APP.FEEDBACK_CONFIG = window.SUPPLEMENTARY_CONFIG.FEEDBACK_CONFIG;
   }
+  if (
+    window.SUPPLEMENTARY_CONFIG &&
+    window.SUPPLEMENTARY_CONFIG.DOWNLOAD_ARTIFACT_DIR
+  ) {
+    ENV.APP.DOWNLOAD_ARTIFACT_DIR = convertToBool(
+      window.SUPPLEMENTARY_CONFIG.DOWNLOAD_ARTIFACT_DIR
+    );
+  }
 }
 
 export default {

@@ -10,11 +10,12 @@ import {
 } from 'screwdriver-ui/utils/pipeline/event';
 import {
   getDurationText,
+  getExternalPipelineId,
   getFailureCount,
   getFirstCreateTime,
-  getExternalPipelineId,
-  getStartDate,
   getRunningDurationText,
+  getStartDate,
+  getSuccessCount,
   getTruncatedMessage,
   getTruncatedSha,
   getWarningCount,
@@ -27,6 +28,10 @@ export default class PipelineEventCardComponent extends Component {
 
   @service workflowDataReload;
 
+  @service pipelinePageState;
+
+  @service selectedPrSha;
+
   @tracked event;
 
   @tracked builds;
@@ -34,6 +39,8 @@ export default class PipelineEventCardComponent extends Component {
   @tracked latestCommitEvent;
 
   @tracked status;
+
+  @tracked hideCard;
 
   @tracked failureCount;
 
@@ -67,12 +74,17 @@ export default class PipelineEventCardComponent extends Component {
 
     this.showParametersModal = false;
     this.showAbortBuildModal = false;
+    this.hideCard = false;
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
 
-    this.workflowDataReload.removeCallback(this.queueName, this.event.id);
+    this.workflowDataReload.removeLatestCommitEventCallback(
+      this.queueName,
+      this.event.id
+    );
+    this.workflowDataReload.removeBuildsCallback(this.queueName, this.event.id);
 
     if (this.durationIntervalId) {
       clearInterval(this.durationIntervalId);
@@ -82,7 +94,12 @@ export default class PipelineEventCardComponent extends Component {
 
   @action
   initialize() {
-    this.workflowDataReload.registerCallback(
+    this.workflowDataReload.registerLatestCommitEventCallback(
+      this.queueName,
+      this.event.id,
+      this.latestCommitEventCallback
+    );
+    this.workflowDataReload.registerBuildsCallback(
       this.queueName,
       this.event.id,
       this.buildsCallback
@@ -91,7 +108,11 @@ export default class PipelineEventCardComponent extends Component {
 
   @action
   update(element, [event]) {
-    this.workflowDataReload.removeCallback(this.queueName, this.event.id);
+    this.workflowDataReload.removeLatestCommitEventCallback(
+      this.queueName,
+      this.event.id
+    );
+    this.workflowDataReload.removeBuildsCallback(this.queueName, this.event.id);
 
     this.event = event;
 
@@ -102,7 +123,12 @@ export default class PipelineEventCardComponent extends Component {
     this.durationText = null;
     this.firstCreateTime = null;
 
-    this.workflowDataReload.registerCallback(
+    this.workflowDataReload.registerLatestCommitEventCallback(
+      this.queueName,
+      this.event.id,
+      this.latestCommitEventCallback
+    );
+    this.workflowDataReload.registerBuildsCallback(
       this.queueName,
       this.event.id,
       this.buildsCallback
@@ -110,11 +136,26 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   @action
-  buildsCallback(builds, latestCommitEvent) {
+  latestCommitEventCallback(latestCommitEvent) {
+    this.latestCommitEvent = latestCommitEvent;
+
+    if (this.latestCommitEvent.id !== this.event.id) {
+      this.workflowDataReload.removeLatestCommitEventCallback(
+        this.queueName,
+        this.event.id
+      );
+    }
+  }
+
+  @action
+  buildsCallback(builds) {
     const isEventComplete = isComplete(builds);
 
     if (isSkipped(this.event, builds) || isEventComplete) {
-      this.workflowDataReload.removeCallback(this.queueName, this.event.id);
+      this.workflowDataReload.removeBuildsCallback(
+        this.queueName,
+        this.event.id
+      );
 
       if (this.durationIntervalId) {
         clearInterval(this.durationIntervalId);
@@ -125,13 +166,20 @@ export default class PipelineEventCardComponent extends Component {
     }
 
     this.builds = builds;
-    this.latestCommitEvent = latestCommitEvent;
     this.status = getStatus(this.event, builds);
+
+    if (this.args.handleFilter) {
+      const pipeline = this.pipelinePageState.getPipeline();
+
+      if (pipeline.settings?.filterEventsForNoBuilds) {
+        this.hideCard = !this.isHighlighted && this.status === 'SKIPPED';
+      }
+    }
 
     if (this.status !== 'COLLAPSED') {
       this.failureCount = getFailureCount(builds);
       this.warningCount = getWarningCount(builds);
-      this.successCount = builds.length - this.failureCount - this.warningCount;
+      this.successCount = getSuccessCount(builds);
     }
 
     if (!this.durationIntervalId && !isEventComplete) {
@@ -148,8 +196,60 @@ export default class PipelineEventCardComponent extends Component {
     }
   }
 
+  @action
+  goToEvent(e) {
+    if (e.target.href) {
+      e.stopPropagation();
+    } else {
+      if (this.isHighlighted) {
+        return;
+      }
+
+      if (this.args.onClick) {
+        this.args.onClick();
+      }
+
+      const { event } = this;
+
+      const route = this.isPR
+        ? 'v2.pipeline.pulls.show'
+        : 'v2.pipeline.events.show';
+
+      if (this.isPR) {
+        this.selectedPrSha.setSha(event.sha);
+        this.router.transitionTo(route, {
+          event,
+          reloadEventRail: this.queueName !== 'eventRail',
+          id: event.prNum,
+          pull_request_number: event.prNum,
+          sha: event.sha
+        });
+      } else {
+        this.router.transitionTo(route, {
+          event,
+          reloadEventRail: this.queueName !== 'eventRail',
+          id: event.id
+        });
+      }
+    }
+  }
+
+  get isPR() {
+    return this.event.type === 'pr';
+  }
+
+  get prTitle() {
+    return `PR-${this.event.prNum}`;
+  }
+
   get isHighlighted() {
-    return this.router.currentURL.endsWith(this.event.id);
+    const { event } = this;
+    const eventId = this.isPR ? event.prNum : event.id;
+    const isSelectedEvent = this.router.currentURL.endsWith(eventId);
+
+    return this.isPR
+      ? isSelectedEvent && this.selectedPrSha.isEventSelected(event)
+      : isSelectedEvent;
   }
 
   get title() {
@@ -199,6 +299,10 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   get groupHistoryButtonTitle() {
+    if (this.isPR) {
+      return `View event history for PR: ${this.event.prNum}`;
+    }
+
     const groupId = this.event.parentEventId
       ? this.event.parentEventId
       : this.event.groupEventId;

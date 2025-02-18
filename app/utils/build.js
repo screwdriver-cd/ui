@@ -17,7 +17,7 @@ const isActiveBuild = (status, endTime) =>
  */
 const isPRJob = jobName => /^PR-/.test(jobName);
 
-const statusIcon = (status, isLight) => {
+const statusIcon = (status, isLight, isVirtualJob) => {
   let icon = {
     prefix: 'fa',
     spin: false,
@@ -33,11 +33,11 @@ const statusIcon = (status, isLight) => {
     case 'CREATED':
     case 'WARNING':
     case 'SUCCESS':
-      icon.name = 'check-circle';
+      icon.name = isVirtualJob ? 'forward-fast' : 'circle-check';
       icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'UNSTABLE':
-      icon.name = 'exclamation-circle';
+      icon.name = 'circle-exclamation';
       break;
     case 'FROZEN':
       icon.name = 'snowflake';
@@ -49,16 +49,16 @@ const statusIcon = (status, isLight) => {
       icon.flip = true;
       break;
     case 'FAILURE':
-      icon.name = 'times-circle';
+      icon.name = isVirtualJob ? 'forward-fast' : 'circle-xmark';
       icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'ABORTED':
-      icon.name = 'stop-circle';
+      icon.name = 'circle-stop';
       icon.prefix = isLight ? 'far' : 'fas';
       break;
     case 'SKIPPED':
       // TODO: Replace skipped property if necessary.
-      icon.name = 'exclamation-circle';
+      icon.name = 'circle-exclamation';
       break;
     default:
       icon.name = 'circle';

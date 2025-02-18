@@ -139,7 +139,9 @@ Router.map(function route() {
           this.route('show', { path: '/:event_id' });
         });
         this.route('jobs');
-        this.route('pulls');
+        this.route('pulls', function pullsRoute() {
+          this.route('show', { path: '/:pull_request_number' });
+        });
         this.route(
           'build',
           { path: 'builds/:build_id' },

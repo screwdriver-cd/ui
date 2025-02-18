@@ -9,10 +9,17 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders title when event is first in group', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
 
     this.setProperties({
       event: {
@@ -23,14 +30,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -38,12 +43,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.event-card').hasAttribute('title', 'Event: 11');
   });
 
-  test('it renders title when event is first in group', async function (assert) {
+  test('it renders title when event is in group', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
 
     this.setProperties({
       event: {
@@ -54,14 +66,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -71,10 +81,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders core elements', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -84,14 +103,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -100,6 +117,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.event-card-title .event-status').exists({ count: 1 });
     assert.dom('.event-card-title .event-status').hasClass('SUCCESS');
     assert.dom('.event-card-title .event-status svg').exists({ count: 1 });
+    assert.dom('.event-card-title pr-title').doesNotExist();
     assert.dom('.event-card-title .sha').exists({ count: 1 });
 
     assert.dom('.event-card-body').exists({ count: 1 });
@@ -120,10 +138,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it does not render highlight', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/99');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -133,7 +160,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
@@ -141,7 +167,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
         @builds={{this.builds}}
-        @pipeline={{this.pipeline}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @userSettings={{this.userSettings}}
       />`
@@ -152,10 +177,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders event label', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -165,14 +199,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: { label: 'Testing 123' }
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -182,10 +214,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders button for parameters', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -199,14 +240,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
           }
         }
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @showParameters={{true}}
       />`
@@ -219,10 +258,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders button for event group', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -236,14 +284,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
           }
         }
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
         @showEventGroup={{true}}
       />`
@@ -256,10 +302,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders abort button for running event', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'RUNNING' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'RUNNING' }]);
+      });
 
     this.setProperties({
       event: {
@@ -269,15 +324,14 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
+        @showAbort={{true}}
       />`
     );
 
@@ -286,15 +340,22 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders latest commit badge', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
-    const workflowDataReloadService = this.owner.lookup(
+    const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
     const latestCommitSha = 'abc123def456';
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
-    workflowDataReloadService.latestCommitResponse = { sha: latestCommitSha };
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake((queueName, id, callback) => {
+        callback({ sha: latestCommitSha });
+      });
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -304,14 +365,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -322,10 +381,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it does not render counts for collapsed event', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'COLLAPSED' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'COLLAPSED' }]);
+      });
 
     this.setProperties({
       event: {
@@ -335,14 +403,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -352,17 +418,24 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders count values', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon
-      .stub(shuttle, 'fetchFromApi')
-      .resolves([
-        { status: 'SUCCESS' },
-        { status: 'UNSTABLE' },
-        { status: 'SUCCESS' },
-        { status: 'FAILURE' }
-      ]);
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([
+          { status: 'SUCCESS' },
+          { status: 'UNSTABLE' },
+          { status: 'SUCCESS' },
+          { status: 'FAILURE' }
+        ]);
+      });
 
     this.setProperties({
       event: {
@@ -372,14 +445,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -391,15 +462,24 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it re-renders correctly when event changes', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon
-      .stub(shuttle, 'fetchFromApi')
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
       .onCall(0)
-      .resolves([{ status: 'SUCCESS' }])
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      })
       .onCall(1)
-      .resolves([{ status: 'FAILURE' }]);
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'FAILURE' }]);
+      });
 
     this.setProperties({
       event: {
@@ -409,14 +489,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -442,15 +520,22 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders latest commit badge', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
-    const workflowDataReloadService = this.owner.lookup(
+    const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
     const latestCommitSha = 'abc123def456';
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'SUCCESS' }]);
-    workflowDataReloadService.latestCommitResponse = { sha: latestCommitSha };
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake((queueName, id, callback) => {
+        callback({ sha: latestCommitSha });
+      });
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
 
     this.setProperties({
       event: {
@@ -460,14 +545,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -478,10 +561,19 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it does not render counts for collapsed event', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
-    sinon.stub(shuttle, 'fetchFromApi').resolves([{ status: 'COLLAPSED' }]);
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'COLLAPSED' }]);
+      });
 
     this.setProperties({
       event: {
@@ -491,14 +583,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -508,17 +598,25 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it renders count values', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon
-      .stub(shuttle, 'fetchFromApi')
-      .resolves([
-        { status: 'SUCCESS' },
-        { status: 'UNSTABLE' },
-        { status: 'SUCCESS' },
-        { status: 'FAILURE' }
-      ]);
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([
+          { status: 'SUCCESS' },
+          { status: 'UNSTABLE' },
+          { status: 'SUCCESS' },
+          { status: 'FAILURE' },
+          { status: 'CREATED' }
+        ]);
+      });
 
     this.setProperties({
       event: {
@@ -528,14 +626,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -547,15 +643,24 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   test('it re-renders correctly when event changes', async function (assert) {
     const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
 
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon
-      .stub(shuttle, 'fetchFromApi')
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
       .onCall(0)
-      .resolves([{ status: 'SUCCESS' }])
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      })
       .onCall(1)
-      .resolves([{ status: 'FAILURE' }]);
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'FAILURE' }]);
+      });
 
     this.setProperties({
       event: {
@@ -565,14 +670,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         creator: { name: 'batman' },
         meta: {}
       },
-      pipeline: {},
       userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @userSettings={{this.userSettings}}
       />`
     );
@@ -594,5 +697,124 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
     assert.dom('.event-card-title .event-status').hasClass('FAILURE');
     assert.dom('.event-card-title .sha').hasText('#deadbee');
+  });
+
+  test('it renders PR title', async function (assert) {
+    const router = this.owner.lookup('service:router');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/2');
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
+
+    this.setProperties({
+      event: {
+        id: 11,
+        groupEventId: 11,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {},
+        type: 'pr',
+        prNum: 4
+      },
+      userSettings: {}
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @userSettings={{this.userSettings}}
+      />`
+    );
+
+    assert.dom('.event-card-title .pr-title').exists({ count: 1 });
+    assert.dom('.event-card-title .pr-title').containsText('PR-4');
+  });
+
+  test('it does not render highlight for PR', async function (assert) {
+    const router = this.owner.lookup('service:router');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
+    const selectedPrSha = this.owner.lookup('service:selected-pr-sha');
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/2');
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
+    sinon.stub(selectedPrSha, 'isEventSelected').returns(false);
+
+    this.setProperties({
+      event: {
+        id: 11,
+        groupEventId: 11,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {},
+        type: 'pr',
+        prNum: 4
+      },
+      userSettings: {}
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @userSettings={{this.userSettings}}
+      />`
+    );
+
+    assert.dom('.highlighted').doesNotExist();
+  });
+
+  test('it renders PR highlight', async function (assert) {
+    const router = this.owner.lookup('service:router');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
+    const selectedPrSha = this.owner.lookup('service:selected-pr-sha');
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/4');
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
+    sinon.stub(selectedPrSha, 'isEventSelected').returns(true);
+
+    this.setProperties({
+      event: {
+        id: 11,
+        groupEventId: 11,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {},
+        type: 'pr',
+        prNum: 4
+      },
+      userSettings: {}
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @userSettings={{this.userSettings}}
+      />`
+    );
+
+    assert.dom('.highlighted').exists({ count: 1 });
   });
 });

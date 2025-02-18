@@ -1,7 +1,6 @@
 <BsModal
   id="toggle-job-modal"
   @onHide={{fn @closeModal}}
-  @onSubmit={{fn this.updateJob}}
   as |modal|
 >
   <modal.header>
@@ -14,7 +13,7 @@
       <InfoMessage
         @message={{this.errorMessage}}
         @type="warning"
-        @icon="exclamation-triangle"
+        @icon="triangle-exclamation"
         @dismissible={{false}}
       />
     {{/if}}
@@ -22,7 +21,7 @@
       <InfoMessage
         @message={{this.successMessage}}
         @type="success"
-        @icon="check-circle"
+        @icon="circle-check"
         @dismissible={{false}}
       />
     {{/if}}
@@ -39,10 +38,11 @@
     <BsButton
       id="submit-action"
       @type="primary"
-      @onClick={{modal.submit}}
+      @defaultText="Save"
+      @pendingText="Saving"
+      @fulfilledText="Saved"
+      @onClick={{fn this.updateJob}}
       disabled={{this.isDisabled}}
-    >
-      Save
-    </BsButton>
+    />
   </modal.footer>
 </BsModal>

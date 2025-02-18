@@ -1,0 +1,55 @@
+<BsModal
+  id="search-event-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">Search for an event</div>
+  </modal.header>
+  <modal.body>
+    <div id="search-description">
+      Search for an event by commit message, sha, author, or creator.
+    </div>
+    <div id="search-input">
+      <PowerSelect
+        id="search-field-select"
+        @options={{this.searchFieldOptions}}
+        @renderInPlace={{true}}
+        @selected={{this.searchField}}
+        @onChange={{this.setSearchField}}
+        as |selectedValue|
+      >
+        {{selectedValue}}
+      </PowerSelect>
+      <Input
+        @type="search"
+        @value={{this.searchInput}}
+        maxlength="50"
+        placeholder="Search for an event.."
+        {{on "input" this.handleInput}}
+        {{on "keydown" this.handleKeyPress}}
+      />
+    </div>
+    {{#if this.invalidSha}}
+      <div class="invalid-sha">Invalid SHA. SHA can only contain hex values.</div>
+    {{else if (eq this.searchResults.length 0)}}
+      <div class="no-results">No results found.</div>
+    {{else}}
+      <div id="search-results">
+        <VerticalCollection
+          @items={{this.searchResults}}
+          @estimateHeight={{150}}
+          as |event|
+        >
+          <Pipeline::Event::Card
+            @pipeline={{@pipeline}}
+            @event={{event}}
+            @jobs={{@jobs}}
+            @userSettings={{@userSettings}}
+            @queueName="searchResults"
+          />
+        </VerticalCollection>
+      </div>
+    {{/if}}
+  </modal.body>
+</BsModal>

@@ -1,0 +1,39 @@
+@use 'screwdriver-colors' as colors;
+@use 'screwdriver-input' as input;
+
+@mixin styles {
+  #search-event-modal {
+    &.modal {
+      .modal-dialog {
+        max-width: 30rem;
+
+        #search-input {
+          #search-field-select {
+            width: 7rem;
+            margin-right: 0.5rem;
+          }
+
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 1rem;
+
+          input {
+            flex: 1;
+          }
+
+          @include input.styles;
+        }
+
+        .invalid-sha {
+          color: colors.$sd-warn-bg;
+        }
+
+        #search-results {
+          margin-top: 1rem;
+          max-height: 35rem;
+          overflow: scroll;
+        }
+      }
+    }
+  }
+}

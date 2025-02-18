@@ -1,7 +1,6 @@
 <BsModal
   id="stop-build-modal"
   @onHide={{fn @closeModal}}
-  @onSubmit={{fn this.stopBuild}}
   as |modal|
 >
   <modal.header>
@@ -14,15 +13,7 @@
       <InfoMessage
         @message={{this.errorMessage}}
         @type="warning"
-        @icon="exclamation-triangle"
-        @dismissible={{false}}
-      />
-    {{/if}}
-    {{#if this.successMessage}}
-      <InfoMessage
-        @message={{this.successMessage}}
-        @type="success"
-        @icon="check-circle"
+        @icon="triangle-exclamation"
         @dismissible={{false}}
       />
     {{/if}}
@@ -32,10 +23,10 @@
     <BsButton
       id="stop-build"
       @type="primary"
-      @onClick={{modal.submit}}
-      disabled={{this.isDisabled}}
-    >
-      Yes
-    </BsButton>
+      @defaultText="Yes"
+      @pendingText="Stopping"
+      @fulfilledText="Stopped"
+      @onClick={{fn this.stopBuild}}
+    />
   </modal.footer>
 </BsModal>

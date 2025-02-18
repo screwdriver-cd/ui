@@ -10,6 +10,8 @@ module('Unit | Utility | Pipeline | build', function () {
     assert.equal(hasWarning({}), false);
     assert.equal(hasWarning({ meta: {} }), false);
     assert.equal(hasWarning({ meta: { build: {} } }), false);
+    assert.equal(hasWarning({ meta: { build: { warning: false } } }), false);
+    assert.equal(hasWarning({ meta: { build: { warning: true } } }), true);
     assert.equal(hasWarning({ meta: { build: { warning: {} } } }), false);
     assert.equal(
       hasWarning({ meta: { build: { warning: { message: '' } } } }),

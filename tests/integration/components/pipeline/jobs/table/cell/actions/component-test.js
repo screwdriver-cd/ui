@@ -9,14 +9,22 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    hooks.beforeEach(function () {
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
+
+      sinon
+        .stub(pipelinePageState, 'getPipeline')
+        .returns({ state: 'INACTIVE' });
+    });
+
     test('it renders', async function (assert) {
       const job = { id: 123, name: 'main', state: 'ENABLED' };
-      const pipeline = { state: 'INACTIVE' };
 
       this.setProperties({
         record: {
           job,
-          pipeline,
           onCreate: () => {},
           onDestroy: () => {}
         }
@@ -34,12 +42,10 @@ module(
     test('it calls onCreate', async function (assert) {
       const onCreate = sinon.spy();
       const job = { id: 123, name: 'main', state: 'ENABLED' };
-      const pipeline = { state: 'INACTIVE' };
 
       this.setProperties({
         record: {
           job,
-          pipeline,
           onCreate,
           onDestroy: () => {}
         }
@@ -58,12 +64,10 @@ module(
     test('it calls onDestroy', async function (assert) {
       const onDestroy = sinon.spy();
       const job = { id: 123, name: 'main', state: 'ENABLED' };
-      const pipeline = { state: 'INACTIVE' };
 
       this.setProperties({
         record: {
           job,
-          pipeline,
           onCreate: () => {},
           onDestroy
         }

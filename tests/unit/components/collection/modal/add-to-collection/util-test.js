@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import {
   createCollectionBody,
   getCollectionsWithoutPipeline
-} from 'screwdriver-ui/components/collection/modal/add-to-collection/util';
+} from 'screwdriver-ui/components/pipeline/modal/add-to-collection/util';
 
 module(
   'Unit | Component | collection/modal/add-to-collection/util',

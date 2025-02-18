@@ -1,77 +1,73 @@
-
-<ModelsTable
-  id="pipeline-jobs"
-  @data={{this.data}}
-  @columns={{this.columns}}
-  @columnComponents={{hash
-    jobCell=(component "pipeline/jobs/table/cell/job")
-    historyCell=(component "pipeline/jobs/table/cell/history")
-    durationCell=(component "pipeline/jobs/table/cell/duration")
-    startTimeCell=(component "pipeline/jobs/table/cell/start-time")
-    coverageCell=(component "pipeline/jobs/table/cell/coverage")
-    metricsCell=(component "pipeline/jobs/table/cell/metrics")
-    actionsCell=(component "pipeline/jobs/table/cell/actions")
-  }}
-  @themeInstance={{this.theme}}
-  @useFilteringByColumns={{false}}
-  @onDisplayDataChanged={{this.onDisplayDataChanged}}
-  as |MT|
+<div
+  id="pipeline-jobs-container"
+  {{did-insert this.initialize}}
+  {{did-update this.update @event}}
 >
-  <MT.GlobalFilter>
-    <Input
-      id="jobs-table-search"
-      @value={{MT.globalFilter}}
-      @type="text"
-      placeholder="Search for job by name..."
-    />
-  </MT.GlobalFilter>
-
-  <div id="jobs-table">
+  <ModelsTable
+    id="pipeline-jobs"
+    @data={{this.data}}
+    @columns={{this.columns}}
+    @columnComponents={{hash
+      jobCell=(component "pipeline/jobs/table/cell/job")
+      historyCell=(component "pipeline/jobs/table/cell/history")
+      durationCell=(component "pipeline/jobs/table/cell/duration")
+      startTimeCell=(component "pipeline/jobs/table/cell/start-time")
+      coverageCell=(component "pipeline/jobs/table/cell/coverage")
+      stageCell=(component "pipeline/jobs/table/cell/stage")
+      metricsCell=(component "pipeline/jobs/table/cell/metrics")
+      actionsCell=(component "pipeline/jobs/table/cell/actions")
+    }}
+    @themeInstance={{this.theme}}
+    @onDisplayDataChanged={{this.onDisplayDataChanged}}
+    as |MT|
+  >
+    <div id="jobs-table">
       <MT.Table />
-  </div>
+    </div>
 
-  <div id="jobs-table-footer">
-    <MT.Summary
-      id="table-summary"
-      as |Summary|
-    >
-      {{Summary.summary}}
-    </MT.Summary>
+    <div id="jobs-table-footer">
+      <MT.Summary
+        id="table-summary"
+        as |Summary|
+      >
+        {{Summary.summary}}
+      </MT.Summary>
 
-    <MT.PageSizeSelect id="select-pagination-size"/>
+      <MT.PageSizeSelect id="select-pagination-size"/>
 
-    <MT.PaginationSimple id="pagination-controls"as |PS|>
-      <div id="page-navigation">
-        <BsButton
-          disabled={{if PS.goToBackEnabled false true}}
-          @onClick={{fn PS.goToFirst}}
-        >
-          <FaIcon @icon="angle-double-left"/>
-        </BsButton>
-        <BsButton
-          disabled={{if PS.goToBackEnabled false true}}
-          @onClick={{fn PS.goToPrev}}
-        >
-          <FaIcon @icon="angle-left"/>
-        </BsButton>
-        <BsButton
-          disabled={{if PS.goToForwardEnabled false true}}
-          @onClick={{fn PS.goToNext}}
-        >
-          <FaIcon @icon="angle-right"/>
-        </BsButton>
-        <BsButton
-          disabled={{if PS.goToForwardEnabled false true}}
-          @onClick={{fn PS.goToLast}}
-        >
-          <FaIcon @icon="angle-double-right"/>
-        </BsButton>
-      </div>
+      <MT.PaginationSimple id="pagination-controls"as |PS|>
+        <div id="page-navigation">
+          <BsButton
+            disabled={{if PS.goToBackEnabled false true}}
+            @onClick={{fn PS.goToFirst}}
+          >
+            <FaIcon @icon="angle-double-left"/>
+          </BsButton>
+          <BsButton
+            disabled={{if PS.goToBackEnabled false true}}
+            @onClick={{fn PS.goToPrev}}
+          >
+            <FaIcon @icon="angle-left"/>
+          </BsButton>
+          <BsButton
+            disabled={{if PS.goToForwardEnabled false true}}
+            @onClick={{fn PS.goToNext}}
+          >
+            <FaIcon @icon="angle-right"/>
+          </BsButton>
+          <BsButton
+            disabled={{if PS.goToForwardEnabled false true}}
+            @onClick={{fn PS.goToLast}}
+          >
+            <FaIcon @icon="angle-double-right"/>
+          </BsButton>
+        </div>
 
-      <div id="page-select">
-        <label class="input-group-text">Page:</label>
-        <PS.PageNumberSelect/>
-      </div>
-    </MT.PaginationSimple>
-  </div>
-</ModelsTable>
+        <div id="page-select">
+          <label class="input-group-text">Page:</label>
+          <PS.PageNumberSelect/>
+        </div>
+      </MT.PaginationSimple>
+    </div>
+  </ModelsTable>
+</div>

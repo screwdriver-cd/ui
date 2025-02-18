@@ -4,7 +4,7 @@
   as |modal|
 >
   <modal.header>
-    <div class="modal-title">Events in group: {{@event.groupEventId}}</div>
+    <div class="modal-title">{{this.modalHeaderText}}</div>
   </modal.header>
   <modal.body>
     <VerticalCollection
@@ -14,11 +14,11 @@
       as |event|
     >
       <Pipeline::Event::Card
-        @pipeline={{@pipeline}}
         @event={{event}}
         @jobs={{@jobs}}
         @userSettings={{@userSettings}}
         @queueName="eventGroupModal"
+        @onClick={{fn @closeModal}}
       />
     </VerticalCollection>
   </modal.body>

@@ -66,27 +66,24 @@ export default Controller.extend({
 
       switch (statusMessageType) {
         case 'INFO':
-          return 'info-circle';
+          return 'circle-info';
         case 'ERROR':
         case 'WARN':
         default:
-          return 'exclamation-triangle';
+          return 'triangle-exclamation';
       }
     }
   }),
 
-  isVirtualBuild: computed(
-    'model.build.jobId',
-    'model.event.workflowGraph.nodes',
-    {
-      get() {
-        const jobId = parseInt(this.get('model.build.jobId'), 10);
-        const nodes = this.get('model.event.workflowGraph.nodes');
+  isVirtualBuild: computed('model.job', 'model.event.workflowGraph.nodes', {
+    get() {
+      const job = this.get('model.job');
+      const jobName = job.prParentJobName || job.name;
+      const nodes = this.get('model.event.workflowGraph.nodes');
 
-        return nodes.find(node => node.id === jobId).virtual;
-      }
+      return nodes.find(node => node.name === jobName).virtual;
     }
-  ),
+  }),
 
   showStepCollection: computed('isVirtualBuild', 'stepList', {
     get() {

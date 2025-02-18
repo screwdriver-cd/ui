@@ -7,6 +7,7 @@
  * @param parameters
  * @param isFrozen
  * @param reason
+ * @param prNum
  * @returns {{causeMessage: string, pipelineId}}
  */
 export function buildPostBody( // eslint-disable-line import/prefer-default-export
@@ -16,21 +17,24 @@ export function buildPostBody( // eslint-disable-line import/prefer-default-expo
   event,
   parameters,
   isFrozen,
-  reason
+  reason,
+  prNum
 ) {
   const data = {
     pipelineId,
     causeMessage: `Manually started by ${username}`
   };
 
-  if (job?.status) {
-    data.startFrom = job.name;
+  data.startFrom = job ? job.name : '~commit';
+
+  if (prNum) {
+    data.startFrom = '~pr';
+    data.prNum = prNum;
+  }
+
+  if (event) {
     data.groupEventId = event.groupEventId;
     data.parentEventId = event.id;
-  } else if (job?.name) {
-    data.startFrom = job.name;
-  } else {
-    data.startFrom = '~commit';
   }
 
   if (parameters) {

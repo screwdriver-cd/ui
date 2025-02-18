@@ -19,6 +19,15 @@
         Download
       </BsButton>
     {{/if}}
+  {{else}}
+    <BsButton
+      @type="primary"
+      @icon="glyphicon glyphicon-download"
+      @onClick={{action "download"}}
+      title="Download current artifact"
+    >
+      Download
+    </BsButton>
   {{/if}}
   {{#if this.iframeUrl}}
     <iframe id={{this.iframeId}} src={{this.iframeUrl}}>

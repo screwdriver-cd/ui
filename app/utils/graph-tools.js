@@ -16,6 +16,15 @@ const STAGE_TEARDOWN_PATTERN = /^stage@([\w-]+)(?::teardown)$/;
 const node = (nodes, name) => nodes.find(o => o.name === name);
 
 /**
+ * Find a stage from the list of stage
+ * @method findStage
+ * @param  {Array} stages  List of stage objects
+ * @param  {String} name  Name of the stage to find
+ * @return {Object}       Reference to the stage in the list
+ */
+const findStage = (stages, name) => stages.find(o => o.name === name);
+
+/**
  * Find a build for the given job id
  * @method build
  * @param  {Array} builds   List of build objects
@@ -119,11 +128,12 @@ const extractEventStages = (graph, pipelineStages) => {
  * Replaces the edges associated with the specified node by creating new edges from the upstream nodes of the specified node
  * to the downstream nodes of the specified node.
  * @method  bypassSetupTeardownEdges
- * @param  {Array} edges       List of edges in the workflow graph
- * @param  {String} nodeName   Name of the node (job) in the workflow graph. Ex: 'stage@prod:setup', 'stage@canary:teardown'
- * @return {Array}             List of edges after replacing the edges associated with specified node
+ * @param  {Array}    edges       List of edges in the workflow graph
+ * @param  {String}   nodeName    Name of the node (job) in the workflow graph. Ex: 'stage@prod:setup', 'stage@canary:teardown'
+ * @param  {Boolean}  hasStages   Indicates if stages meta is available
+ * @return {Array}                List of edges after replacing the edges associated with specified node
  */
-const bypassSetupTeardownEdges = (edges, nodeName) => {
+const bypassSetupTeardownEdges = (edges, nodeName, hasStages) => {
   const resultEdges = [];
 
   const asSrcEdges = [];
@@ -144,12 +154,43 @@ const bypassSetupTeardownEdges = (edges, nodeName) => {
       const newDest = asSrcEdge.dest;
 
       asDestEdges.forEach(asDestEdge => {
-        resultEdges.push({ ...asDestEdge, dest: newDest });
+        const newEdge = { ...asDestEdge, dest: newDest };
+
+        if (hasStages) {
+          newEdge.hidden = true;
+        }
+        resultEdges.push(newEdge);
       });
     });
   }
 
   return resultEdges;
+};
+
+const replaceSetupTeardownJobEdgesWithStageEdges = (stages, edges) => {
+  const stageEdges = [];
+
+  if (stages.length) {
+    edges.forEach(e => {
+      if (isStageSetupJob(e.dest) || isStageTeardownJob(e.src)) {
+        e.hidden = true;
+
+        const stageEdge = { ...e };
+
+        if (isStageSetupJob(e.dest)) {
+          stageEdge.destStageName = e.dest.match(STAGE_SETUP_PATTERN)[1];
+        }
+
+        if (isStageTeardownJob(e.src)) {
+          stageEdge.srcStageName = e.src.match(STAGE_TEARDOWN_PATTERN)[1];
+        }
+
+        stageEdges.push(stageEdge);
+      }
+    });
+  }
+
+  return stageEdges;
 };
 
 /**
@@ -240,6 +281,10 @@ const positionStage = (x, y, stage) => {
   const stageStartX = x;
   const stageEndX = stageStartX + stageGraph.meta.width - 1;
 
+  for (let i = stageStartX; i <= stageEndX; i += 1) {
+    if (!y[i]) y[i] = y[0] - 1;
+  }
+
   // Find a row with no items for all the stage columns
   const stageStartY = Math.max(...y.slice(stageStartX, stageEndX + 1));
 
@@ -265,22 +310,84 @@ const positionStage = (x, y, stage) => {
 };
 
 /**
+ * Calculate depth of each nodes
+ * @param  {Object}  graph  Raw graph definition
+ * @returns {Object}        Map of node name to its depth
+ */
+const calcNodeDepths = graph => {
+  const result = [];
+  const nodes = {};
+  const edges = {};
+  const srcEdges = {};
+  const visited = {};
+  const depth = {};
+
+  graph.nodes.forEach(n => {
+    nodes[n.name] = n;
+    depth[n.name] = 0;
+  });
+  graph.edges.forEach(({ src, dest }) => {
+    if (!edges[src]) {
+      edges[src] = [];
+    }
+
+    if (!srcEdges[dest]) {
+      srcEdges[dest] = [];
+    }
+
+    edges[src].push(dest);
+    srcEdges[dest].push(src);
+  });
+
+  // Topological sort
+  const search = n => {
+    if (!visited[n.name]) {
+      visited[n.name] = true;
+      if (edges[n.name]) edges[n.name].forEach(dest => search(nodes[dest]));
+      result.push(n);
+    }
+  };
+
+  graph.nodes.forEach(n => search(n));
+  const sortedNodes = result.reverse();
+
+  // Set graph depth
+  for (const n of sortedNodes) {
+    let x = -1;
+
+    if (srcEdges[n.name]) {
+      for (const src of srcEdges[n.name]) {
+        x = Math.max(x, depth[src]);
+      }
+    }
+
+    x += 1;
+
+    depth[n.name] = x;
+  }
+
+  return depth;
+};
+
+/**
  * Walks the graph to find siblings and set their positions
  * @method walkGraph
  * @param  {Object}  graph                Raw graph definition
  * @param  {String}  start                The job name to start from for this iteration
- * @param  {Number}  x                    The column for this iteration
  * @param  {Array}   y                    Accumulator of column depth
  * @param  {Object}  stageNameToStageMap  Map of stage name to stage metadata (also includes workflow graph)
+ * @param  {Object}  nodeDepth            Map of node name to its depth
  */
-const walkGraph = (graph, start, x, y, stageNameToStageMap) => {
-  if (!y[x]) {
-    y[x] = y[0] - 1;
-  }
+const walkGraph = (graph, start, y, stageNameToStageMap, nodeDepth) => {
   const nodeNames = graph.edges.filter(e => e.src === start).map(e => e.dest);
 
   nodeNames.forEach(name => {
     const obj = node(graph.nodes, name);
+    const x = nodeDepth[name];
+
+    if (!y[x]) {
+      y[x] = y[0] - 1;
+    }
 
     const { stageName } = obj;
 
@@ -292,13 +399,13 @@ const walkGraph = (graph, start, x, y, stageNameToStageMap) => {
       }
 
       // walk if not yet visited
-      walkGraph(graph, name, x + 1, y, stageNameToStageMap);
+      walkGraph(graph, name, y, stageNameToStageMap, nodeDepth);
     } else if (!obj.pos) {
       obj.pos = { x, y: y[x] };
       y[x] += 1;
 
       // walk if not yet visited
-      walkGraph(graph, name, x + 1, y, stageNameToStageMap);
+      walkGraph(graph, name, y, stageNameToStageMap, nodeDepth);
     }
   });
 };
@@ -383,7 +490,14 @@ const positionGraphNodes = graph => {
         }, new Map())
       : null;
 
-  let y = [0]; // accumulator for column heights
+  const nodeDepth = calcNodeDepths(graph);
+
+  let maxNodeDepth = 0;
+
+  Object.values(nodeDepth).forEach(d => {
+    maxNodeDepth = Math.max(maxNodeDepth, d);
+  });
+  let y = Array(maxNodeDepth + 1).fill(0); // accumulator for column heights
 
   nodes.forEach(n => {
     // Set root nodes on left
@@ -413,7 +527,7 @@ const positionGraphNodes = graph => {
       }
 
       // recursively walk the graph from root/ detached node
-      walkGraph(graph, n.name, 1, y, stageNameToStageMap);
+      walkGraph(graph, n.name, y, stageNameToStageMap, nodeDepth);
     }
   });
 
@@ -421,7 +535,7 @@ const positionGraphNodes = graph => {
   graph.meta = {
     // Validator starts with a graph with no nodes or edges. Should have a size of at least 1
     height: Math.max(1, ...y),
-    width: Math.max(1, y.length - 1)
+    width: Math.max(1, y.length)
   };
 
   return graph;
@@ -558,13 +672,23 @@ const decorateGraph = ({
 
   let edges = originalEdges;
 
+  const hasStages = !!eventStages.length;
+
+  // edges to/from a stage
+  const stageEdges = replaceSetupTeardownJobEdgesWithStageEdges(
+    eventStages,
+    edges
+  );
+
+  graph.stageEdges = stageEdges;
+
   // Bypass setup/teardown edges
   virtualSetupNodes.forEach(setupNode => {
-    edges = bypassSetupTeardownEdges(edges, setupNode.name);
+    edges = bypassSetupTeardownEdges(edges, setupNode.name, hasStages);
   });
 
   virtualTeardownNodes.forEach(teardownNode => {
-    edges = bypassSetupTeardownEdges(edges, teardownNode.name);
+    edges = bypassSetupTeardownEdges(edges, teardownNode.name, hasStages);
   });
 
   graph.edges = edges;
@@ -675,6 +799,30 @@ const decorateGraph = ({
         e.status = srcNode.status;
       }
     }
+  });
+
+  // Decorate stage edges with position status
+  stageEdges.forEach(e => {
+    const srcNode = node(originalNodes, e.src);
+    const destNode = node(originalNodes, e.dest);
+
+    const srcStage = findStage(graph.stages, e.srcStageName);
+    const destStage = findStage(graph.stages, e.destStageName);
+
+    if (!srcNode || !destNode) {
+      return;
+    }
+
+    if (srcNode.status && srcNode.status !== 'RUNNING') {
+      if (prTriggeredNodes && node(prTriggeredNodes, srcNode.name)) {
+        // For non-chain PR pipelines, PR triggered jobs do not need outbound edges to have a status as they are the last node in the chain.
+      } else {
+        e.status = srcNode.status;
+      }
+    }
+
+    e.from = srcStage || srcNode;
+    e.to = destStage || destNode;
   });
 
   return graph;

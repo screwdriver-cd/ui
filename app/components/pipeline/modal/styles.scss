@@ -1,11 +1,15 @@
+@use 'add-to-collection/styles' as addToCollection;
 @use 'confirm-action/styles' as confirmAction;
 @use 'event-group-history/styles' as eventGroup;
+@use 'search-event/styles' as searchEvent;
 @use 'start-event/styles' as startEvent;
 @use 'toggle-job/styles' as toggleJob;
 
 @mixin styles {
+  @include addToCollection.styles;
   @include confirmAction.styles;
   @include eventGroup.styles;
+  @include searchEvent.styles;
   @include startEvent.styles;
   @include toggleJob.styles;
 }

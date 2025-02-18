@@ -4,6 +4,7 @@ import { alias, match } from '@ember/object/computed';
 import ENV from 'screwdriver-ui/config/environment';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
+import { PR_JOB_NAME } from 'screwdriver-data-schema/config/regex';
 import { SHOULD_RELOAD_NO, SHOULD_RELOAD_YES } from '../mixins/model-reloader';
 
 export default Model.extend({
@@ -61,11 +62,23 @@ export default Model.extend({
     }
   }),
   prParentJobId: attr('string'),
+  prParentJobName: computed('isPR', 'name', {
+    get() {
+      return this.isPR ? this.name.match(PR_JOB_NAME)[2] : null;
+    }
+  }),
   // } for pr job only
   permutations: attr(),
   annotations: computed('permutations.0.annotations', 'permutations.[]', {
     get() {
       return get(this, 'permutations.0.annotations') || {};
+    }
+  }),
+  stageName: computed('permutations.0.stage', 'permutations.[]', {
+    get() {
+      const stage = get(this, 'permutations.0.stage');
+
+      return stage ? stage.name : 'N/A';
     }
   }),
   virtualJob: computed('annotations', 'permutations.0.annotations', {

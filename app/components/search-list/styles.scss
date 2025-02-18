@@ -12,11 +12,23 @@
   .appId {
     text-align: left;
     width: 45%;
+    max-width: 250px;
+    a {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .branch {
     width: 25%;
     text-align: right;
+    max-width: 200px;
+    a {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .account {

@@ -1,7 +1,6 @@
 <BsModal
   id="start-event-modal"
   @onHide={{fn @closeModal}}
-  @onSubmit={{fn this.startBuild}}
   as |modal|
 >
   <modal.header>
@@ -12,15 +11,7 @@
       <InfoMessage
         @message={{this.errorMessage}}
         @type="warning"
-        @icon="exclamation-triangle"
-        @dismissible={{false}}
-      />
-    {{/if}}
-    {{#if this.successMessage}}
-      <InfoMessage
-        @message={{this.successMessage}}
-        @type="success"
-        @icon="check-circle"
+        @icon="triangle-exclamation"
         @dismissible={{false}}
       />
     {{/if}}
@@ -30,7 +21,7 @@
         id="user-notice"
         class="alert alert-warning"
       >
-        <FaIcon @icon="exclamation-triangle" />
+        <FaIcon @icon="triangle-exclamation" />
         {{@notice}}
       </div>
     {{/if}}
@@ -40,7 +31,6 @@
         @action="start"
         @pipelineParameters={{this.defaultPipelineParameters}}
         @jobParameters={{this.defaultJobParameters}}
-        @pipeline={{@pipeline}}
         @jobs={{@jobs}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />
@@ -58,7 +48,7 @@
       @defaultText="Yes"
       @pendingText="Starting"
       @fulfilledText="Started"
-      @onClick={{modal.submit}}
+      @onClick={{fn this.startBuild}}
     />
   </modal.footer>
 </BsModal>

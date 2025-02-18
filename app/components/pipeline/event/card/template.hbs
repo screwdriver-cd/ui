@@ -1,8 +1,9 @@
 <div
-  class="event-card{{if this.isHighlighted " highlighted"}}"
+  class="event-card{{if this.isHighlighted " highlighted"}}{{if this.hideCard " filtered"}}"
   title={{this.title}}
   {{did-insert this.initialize}}
   {{did-update this.update @event}}
+  {{on "click" this.goToEvent}}
 >
   <div class="event-card-title">
     <div class="event-status {{this.status}}">
@@ -14,34 +15,47 @@
         @flip={{this.icon.flip}}
       />
     </div>
+    {{#if this.isPR}}
+      <div class="pr-title" title={{this.prTitle}}>
+        <a
+          href={{@event.pr.url}}
+          target="_blank"
+        >
+          {{this.prTitle}}
+        </a>
+      </div>
+    {{/if}}
     <div class="sha" title={{this.truncatedSha}}>
       <a
         class={{if this.isLatestCommit "latest-commit"}}
         href={{@event.commit.url}}
+        target="_blank"
       >
         {{this.truncatedSha}}
       </a>
     </div>
     {{#if (eq this.status "RUNNING")}}
-      <BsButton
-        class="abort-event-button"
-        @type="danger"
-        @outline={{true}}
-        @onClick={{fn this.openAbortBuildModal}}
-        title="Abort event"
-      >
-        <FaIcon
-          @icon="stop-circle"
-          @fixedWidth="true"
-          @prefix="far"
-        />
-        {{#if this.showAbortBuildModal}}
-          <Pipeline::Modal::StopBuild
-            @eventId={{@event.id}}
-            @closeModal={{this.closeAbortBuildModal}}
+      {{#if @showAbort}}
+        <BsButton
+          class="abort-event-button"
+          @type="danger"
+          @outline={{true}}
+          @onClick={{fn this.openAbortBuildModal}}
+          title="Abort event"
+        >
+          <FaIcon
+            @icon="circle-stop"
+            @fixedWidth="true"
+            @prefix="far"
           />
-        {{/if}}
-      </BsButton>
+          {{#if this.showAbortBuildModal}}
+            <Pipeline::Modal::StopBuild
+              @eventId={{@event.id}}
+              @closeModal={{this.closeAbortBuildModal}}
+            />
+          {{/if}}
+        </BsButton>
+      {{/if}}
     {{/if}}
   </div>
 
@@ -62,7 +76,10 @@
       {{#if this.isCommitterDifferent}}
         <div>
           Committed by:
-          <a href={{@event.commit.author.url}}>
+          <a
+            href={{@event.commit.author.url}}
+            target="_blank"
+          >
             {{@event.commit.author.name}}
           </a>
         </div>
@@ -76,7 +93,10 @@
               External Trigger
             </LinkTo>
           {{else}}
-            <a href={{@event.creator.url}}>
+            <a
+              href={{@event.creator.url}}
+              target="_blank"
+            >
               {{@event.creator.name}}
             </a>
           {{/if}}
@@ -85,14 +105,20 @@
         {{#if @event.meta.subscribedSourceUrl}}
           <div>
             Started by subscribed event:
-            <a href={{@event.meta.subscribedSourceUrl}}>
+            <a
+              href={{@event.meta.subscribedSourceUrl}}
+              target="_blank"
+            >
               Subscribed Source
             </a>
           </div>
         {{else}}
           <div>
             Started and committed by:
-            <a href={{@event.creator.url}}>
+            <a
+              href={{@event.creator.url}}
+              target="_blank"
+            >
               {{@event.creator.name}}
             </a>
           </div>
@@ -115,7 +141,7 @@
       {{#if this.failureCount}}
         <div class="count">
           <div class="failures">
-            <FaIcon @icon="times-circle" @fixedWidth="true"/>
+            <FaIcon @icon="circle-xmark" @fixedWidth="true"/>
           </div>
           <div>
             {{this.failureCount}}
@@ -125,7 +151,7 @@
       {{#if this.warningCount}}
         <div class="count">
           <div class="warnings">
-            <FaIcon @icon="exclamation-circle" @fixedWidth="true"/>
+            <FaIcon @icon="circle-exclamation" @fixedWidth="true"/>
           </div>
           <div>
             {{this.warningCount}}
@@ -135,7 +161,7 @@
       {{#if this.successCount}}
         <div class="count">
           <div class="successes">
-            <FaIcon @icon="check-circle" @fixedWidth="true"/>
+            <FaIcon @icon="circle-check" @fixedWidth="true"/>
           </div>
           <div>
             {{this.successCount}}
@@ -155,7 +181,7 @@
             title="View configured parameters"
           >
             <FaIcon
-              @icon="cog"
+              @icon="gear"
               @fixedWidth="true"
               @prefix="fa"
             />
@@ -163,7 +189,6 @@
             {{#if this.showParametersModal}}
               <Pipeline::Modal::ShowParameters
                 @event={{@event}}
-                @pipeline={{@pipeline}}
                 @jobs={{@jobs}}
                 @closeModal={{this.closeParametersModal}}
               />
@@ -191,6 +216,7 @@
               @event={{@event}}
               @jobs={{@jobs}}
               @userSettings={{@userSettings}}
+              @isPR={{this.isPR}}
               @closeModal={{this.closeEventHistoryModal}}
             />
           {{/if}}

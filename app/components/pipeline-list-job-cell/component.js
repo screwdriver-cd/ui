@@ -5,7 +5,7 @@ import { statusIcon } from 'screwdriver-ui/utils/build';
 export default Component.extend({
   build: computed('record.job', {
     get() {
-      const { build } = this.record.job;
+      const { build, isVirtualJob } = this.record.job;
 
       if (!build) {
         return null;
@@ -13,7 +13,7 @@ export default Component.extend({
 
       return {
         id: build.id,
-        icon: statusIcon(build.status),
+        icon: statusIcon(build.status, false, isVirtualJob),
         status: build.status
       };
     }

@@ -17,10 +17,11 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
     });
   });
 
-  test('it renders', async function (assert) {
+  test('it renders running build for normal job', async function (assert) {
     this.set('record', {
       job: {
         jobName: 'a',
+        isVirtualJob: false,
         build: {
           id: 2,
           status: 'RUNNING'
@@ -36,10 +37,31 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
     assert.dom('.job-name').hasText('a');
   });
 
-  test('it renders an aborted build', async function (assert) {
+  test('it renders running build for virtual job', async function (assert) {
+    this.set('record', {
+      job: {
+        jobName: 'a',
+        isVirtualJob: true,
+        build: {
+          id: 2,
+          status: 'RUNNING'
+        }
+      }
+    });
+
+    await render(hbs`<PipelineListJobCell
+      @record={{this.record}}
+    />`);
+
+    assert.dom('.fa-spinner').exists({ count: 1 });
+    assert.dom('.job-name').hasText('a');
+  });
+
+  test('it renders an aborted build for normal job', async function (assert) {
     this.set('record', {
       job: {
         jobName: 'b',
+        isVirtualJob: false,
         build: {
           id: 2,
           status: 'ABORTED'
@@ -51,14 +73,35 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
       @record={{this.record}}
     />`);
 
-    assert.dom('.fa-stop-circle').exists({ count: 1 });
+    assert.dom('.fa-circle-stop').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
-  test('it renders a successful build', async function (assert) {
+  test('it renders an aborted build for virtual job', async function (assert) {
     this.set('record', {
       job: {
         jobName: 'b',
+        isVirtualJob: true,
+        build: {
+          id: 2,
+          status: 'ABORTED'
+        }
+      }
+    });
+
+    await render(hbs`<PipelineListJobCell
+      @record={{this.record}}
+    />`);
+
+    assert.dom('.fa-circle-stop').exists({ count: 1 });
+    assert.dom('.job-name').hasText('b');
+  });
+
+  test('it renders a successful build for normal job', async function (assert) {
+    this.set('record', {
+      job: {
+        jobName: 'b',
+        isVirtualJob: false,
         build: {
           id: 2,
           status: 'SUCCESS'
@@ -70,14 +113,35 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
       @record={{this.record}}
     />`);
 
-    assert.dom('.fa-check-circle').exists({ count: 1 });
+    assert.dom('.fa-circle-check').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 
-  test('it renders a failed build', async function (assert) {
+  test('it renders a successful build for virtual job', async function (assert) {
     this.set('record', {
       job: {
         jobName: 'b',
+        isVirtualJob: true,
+        build: {
+          id: 2,
+          status: 'SUCCESS'
+        }
+      }
+    });
+
+    await render(hbs`<PipelineListJobCell
+      @record={{this.record}}
+    />`);
+
+    assert.dom('.fa-forward-fast').exists({ count: 1 });
+    assert.dom('.job-name').hasText('b');
+  });
+
+  test('it renders a failed build for normal job', async function (assert) {
+    this.set('record', {
+      job: {
+        jobName: 'b',
+        isVirtualJob: false,
         build: {
           id: 2,
           status: 'FAILURE'
@@ -89,7 +153,27 @@ module('Integration | Component | pipeline list job cell', function (hooks) {
       @record={{this.record}}
     />`);
 
-    assert.dom('.fa-times-circle').exists({ count: 1 });
+    assert.dom('.fa-circle-xmark').exists({ count: 1 });
+    assert.dom('.job-name').hasText('b');
+  });
+
+  test('it renders a failed build for virtual job', async function (assert) {
+    this.set('record', {
+      job: {
+        jobName: 'b',
+        isVirtualJob: true,
+        build: {
+          id: 2,
+          status: 'FAILURE'
+        }
+      }
+    });
+
+    await render(hbs`<PipelineListJobCell
+      @record={{this.record}}
+    />`);
+
+    assert.dom('.fa-forward-fast').exists({ count: 1 });
     assert.dom('.job-name').hasText('b');
   });
 

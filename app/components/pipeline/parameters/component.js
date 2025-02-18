@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { service } from '@ember/service';
 import {
   extractJobParameters,
   extractEventParameters,
@@ -9,13 +10,15 @@ import {
 } from 'screwdriver-ui/utils/pipeline/parameters';
 
 export default class PipelineParametersComponent extends Component {
+  @service pipelinePageState;
+
   @tracked parameters;
 
   @tracked selectedParameters;
 
   constructor() {
     super(...arguments);
-
+    const pipeline = this.pipelinePageState.getPipeline();
     const { pipelineParameters, jobParameters } = this.args.event
       ? extractEventParameters(this.args.event)
       : {
@@ -25,7 +28,7 @@ export default class PipelineParametersComponent extends Component {
 
     this.parameters = getNormalizedParameterGroups(
       pipelineParameters,
-      this.args.pipeline.parameters,
+      pipeline.parameters,
       jobParameters,
       extractJobParameters(this.args.jobs),
       this.args.job ? this.args.job.name : null
@@ -56,29 +59,6 @@ export default class PipelineParametersComponent extends Component {
     });
 
     this.parameters = updatedParameters;
-  }
-
-  @action
-  openSelect(powerSelectObject) {
-    setTimeout(() => {
-      const container = document.getElementsByClassName('parameters-container');
-      const scrollFrame = container[0];
-      const optionsBox = document.getElementById(
-        `ember-power-select-options-${powerSelectObject.uniqueId}`
-      );
-
-      if (optionsBox === null) {
-        return;
-      }
-
-      const optionsBoxRect = optionsBox.getBoundingClientRect();
-      const scrollFrameRect = scrollFrame.getBoundingClientRect();
-      const hiddenAreaHeight = optionsBoxRect.bottom - scrollFrameRect.bottom;
-
-      if (hiddenAreaHeight > 0) {
-        scrollFrame.scrollBy({ top: hiddenAreaHeight + 10 });
-      }
-    }, 100);
   }
 
   @action

@@ -11,7 +11,7 @@
           onClick={{action "onExpandCollapseParamGroup" parameterGroup.jobName}}
         >
           <FaIcon
-            @icon={{if parameterGroup.isOpen "minus-square" "plus-square"}}
+            @icon={{if parameterGroup.isOpen "square-minus" "square-plus"}}
           />
           {{parameterGroup.paramGroupTitle}}
         </h4>
@@ -25,7 +25,7 @@
                 <label class="control-label col-4" for={{el.id}}>
                   {{#if parameter.description}}
                     <FaIcon
-                      @icon="question-circle"
+                      @icon="circle-question"
                       @title={{parameter.description}}
                     />
                   {{/if}}
@@ -47,7 +47,7 @@
                     }}
                     {{#unless (array-includes value parameter.defaultValues)}}
                       <FaIcon
-                        @icon="exclamation-triangle"
+                        @icon="triangle-exclamation"
                         @title={{concat
                           "Default value: "
                           parameter.defaultValues
@@ -90,7 +90,7 @@
                       (array-includes parameter.value parameter.defaultValues)
                     }}
                       <FaIcon
-                        @icon="exclamation-triangle"
+                        @icon="triangle-exclamation"
                         @title={{concat
                           "Default value: "
                           parameter.defaultValues

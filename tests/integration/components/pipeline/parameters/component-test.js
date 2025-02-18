@@ -9,6 +9,12 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it does not render title when no action is set', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: { foo: { value: 'foofoo' } }
+    });
+
     this.setProperties({
       event: {
         meta: {
@@ -19,7 +25,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
         }
       },
       job: { name: 'job1' },
-      pipeline: { parameters: { foo: { value: 'foofoo' } } },
       jobs: [
         {
           name: 'job1',
@@ -33,7 +38,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @event={{this.event}}
         @job={{this.job}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
       />`
     );
@@ -42,6 +46,14 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   });
 
   test('it renders title with correct action', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        foo: { value: 'foofoo' }
+      }
+    });
+
     this.setProperties({
       event: {
         meta: {
@@ -52,7 +64,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
         }
       },
       job: { name: 'job1' },
-      pipeline: { parameters: { foo: { value: 'foofoo' } } },
       jobs: [
         {
           name: 'job1',
@@ -67,7 +78,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
         @action="start"
         @event={{this.event}}
         @job={{this.job}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
       />`
     );
@@ -76,6 +86,15 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   });
 
   test('it renders parameters with shared group expanded from event', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        bar: ['barbar', 'bazbaz'],
+        foo: { value: 'foo', description: 'awesome' }
+      }
+    });
+
     this.setProperties({
       event: {
         meta: {
@@ -86,12 +105,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
           }
         }
       },
-      pipeline: {
-        parameters: {
-          bar: ['barbar', 'bazbaz'],
-          foo: { value: 'foo', description: 'awesome' }
-        }
-      },
       jobs: [
         {
           name: 'job1',
@@ -106,7 +119,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
       />`
     );
@@ -131,6 +143,15 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   });
 
   test('it renders parameters job group expanded from event', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        bar: ['barbar', 'bazbaz'],
+        foo: { value: 'foofoo' }
+      }
+    });
+
     this.setProperties({
       event: {
         meta: {
@@ -139,12 +160,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
             foo: { value: 'foozy' },
             job1: { p1: { value: 'p1' }, p2: { value: 'xyz' } }
           }
-        }
-      },
-      pipeline: {
-        parameters: {
-          bar: ['barbar', 'bazbaz'],
-          foo: { value: 'foofoo' }
         }
       },
       jobs: [
@@ -162,7 +177,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
         @job={{this.job}}
       />`
@@ -187,14 +201,17 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   });
 
   test('it renders parameters with shared group expanded', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        bar: ['barbar', 'bazbaz'],
+        foo: { value: 'foo', description: 'awesome' }
+      }
+    });
+
     this.setProperties({
       pipelineParameters: { bar: { value: 'barbar' }, foo: { value: 'foo' } },
-      pipeline: {
-        parameters: {
-          bar: ['barbar', 'bazbaz'],
-          foo: { value: 'foo', description: 'awesome' }
-        }
-      },
       jobs: [{ name: 'job1' }]
     });
 
@@ -202,7 +219,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @pipelineParameters={{this.pipelineParameters}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
       />`
     );
@@ -227,11 +243,14 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   });
 
   test('it renders parameters job group expanded', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({});
+
     this.setProperties({
       jobParameters: {
         job1: { p1: { value: 'p1' } }
       },
-      pipeline: {},
       jobs: [
         {
           name: 'job1',
@@ -244,7 +263,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @jobParameters={{this.jobParameters}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
       />`
     );
@@ -258,7 +276,15 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   });
 
   test('it updates parameter value on input', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
     const onUpdateParameters = sinon.spy();
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        foo: { value: 'foofoo' }
+      }
+    });
 
     this.setProperties({
       event: {
@@ -267,11 +293,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
             foo: { value: 'foozy' },
             job1: { p1: { value: 'abc' } }
           }
-        }
-      },
-      pipeline: {
-        parameters: {
-          foo: { value: 'foofoo' }
         }
       },
       jobs: [
@@ -287,7 +308,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />`
@@ -304,7 +324,15 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   });
 
   test('it updates job parameter value on input', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
     const onUpdateParameters = sinon.spy();
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        foo: { value: 'foofoo' }
+      }
+    });
 
     this.setProperties({
       event: {
@@ -313,11 +341,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
             foo: { value: 'foozy' },
             job1: { p1: { value: 'abc' } }
           }
-        }
-      },
-      pipeline: {
-        parameters: {
-          foo: { value: 'foofoo' }
         }
       },
       jobs: [
@@ -334,7 +357,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
         @job={{this.job}}
         @onUpdateParameters={{this.onUpdateParameters}}
@@ -352,7 +374,15 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   });
 
   test('it updates parameter value on selection', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
     const onUpdateParameters = sinon.spy();
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        foo: ['foo', 'bar']
+      }
+    });
 
     this.setProperties({
       event: {
@@ -360,11 +390,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
           parameters: {
             foo: { value: 'foo' }
           }
-        }
-      },
-      pipeline: {
-        parameters: {
-          foo: ['foo', 'bar']
         }
       },
       jobs: [],
@@ -375,7 +400,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />`
@@ -392,17 +416,20 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   });
 
   test('it adds icon when input is not equal to default value', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        foo: { value: 'foobar' }
+      }
+    });
+
     this.setProperties({
       event: {
         meta: {
           parameters: {
             foo: { value: 'foobar' }
           }
-        }
-      },
-      pipeline: {
-        parameters: {
-          foo: { value: 'foobar' }
         }
       },
       jobs: [],
@@ -413,7 +440,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />`
@@ -421,7 +447,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
 
     assert
       .dom(
-        '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle'
+        '.parameter-list.expanded .parameter label svg.fa-triangle-exclamation'
       )
       .doesNotExist();
 
@@ -429,17 +455,26 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
 
     assert
       .dom(
-        '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle'
+        '.parameter-list.expanded .parameter label svg.fa-triangle-exclamation'
       )
       .exists({ count: 1 });
     assert
       .dom(
-        '.parameter-list.expanded .parameter label svg.fa-exclamation-triangle title'
+        '.parameter-list.expanded .parameter label svg.fa-triangle-exclamation title'
       )
       .hasText('Default value: foobar');
   });
 
   test('it renders inputs as read only when no action is set', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        bar: ['barbar', 'bazbaz'],
+        foo: { value: 'foo', description: 'awesome' }
+      }
+    });
+
     this.setProperties({
       event: {
         meta: {
@@ -447,12 +482,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
             bar: { value: 'barzy' },
             foo: { value: 'foo' }
           }
-        }
-      },
-      pipeline: {
-        parameters: {
-          bar: ['barbar', 'bazbaz'],
-          foo: { value: 'foo', description: 'awesome' }
         }
       },
       jobs: [
@@ -465,7 +494,6 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     await render(
       hbs`<Pipeline::Parameters
         @event={{this.event}}
-        @pipeline={{this.pipeline}}
         @jobs={{this.jobs}}
       />`
     );

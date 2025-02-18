@@ -1,40 +1,42 @@
 <div class="history-cell">
   {{#if this.latestBuilds}}
     {{#each this.latestBuilds as |build|}}
-      {{#if (not-eq build.status "CREATED")}}
-        <span class="build-history-container">
-          <LinkTo
-            @route="pipeline.build"
-            @models={{array @record.job.pipelineId build.id}}
-            @title={{build.id}}
-          >
+      <span class="build-history-container">
+        {{#if (not-eq build.status "CREATED")}}
+            <LinkTo
+              @route="pipeline.build"
+              @models={{array @record.job.pipelineId build.id}}
+              @title={{build.id}}
+            >
+              <FaIcon
+                @icon="circle"
+                @fixedWidth="true"
+                class={{build.status}}
+              />
+            </LinkTo>
+            <BsTooltip
+              @placement="bottom"
+              @renderInPlace={{true}}
+              class="tooltip"
+            >
+              <p>Build# {{build.id}}</p>
+              {{#if build.startTime}}
+                <p>Start - {{moment-format build.startTime "MM/DD/YYYY HH:mmA"}}</p>
+              {{/if}}
+              {{#if build.endTime}}
+                <p>End - {{moment-format build.endTime "MM/DD/YYYY HH:mmA"}}</p>
+              {{/if}}
+            </BsTooltip>
+        {{else}}
+          <div class="created">
             <FaIcon
               @icon="circle"
               @fixedWidth="true"
               class={{build.status}}
             />
-          </LinkTo>
-          <BsTooltip
-            @placement="bottom"
-            @renderInPlace={{true}}
-            class="tooltip"
-          >
-            <p>Build# {{build.id}}</p>
-            {{#if build.startTime}}
-              <p>Start - {{moment-format build.startTime "MM/DD/YYYY HH:mmA"}}</p>
-            {{/if}}
-            {{#if build.endTime}}
-              <p>End - {{moment-format build.endTime "MM/DD/YYYY HH:mmA"}}</p>
-            {{/if}}
-          </BsTooltip>
-        </span>
-      {{else}}
-        <FaIcon
-          @icon="circle"
-          @fixedWidth="true"
-          class={{build.status}}
-        />
-      {{/if}}
+          </div>
+        {{/if}}
+      </span>
     {{/each}}
   {{/if}}
 </div>

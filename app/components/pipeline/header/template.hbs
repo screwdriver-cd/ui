@@ -1,90 +1,95 @@
 <div id="pipeline-header" {{did-insert this.getPipelinesWithSameRepo}}>
-  <LinkTo
-    id="pipeline-link"
-    class="header-item pipeline-name"
-    @route="v2.pipeline"
-    @model={{@pipeline.id}}
-  >
-    {{@pipeline.scmRepo.name}}
-  </LinkTo>
-
-  {{#if @pipeline.configPipelineId}}
+  <div class="header-main">
     <LinkTo
-      id="parent-pipeline-link"
-      class="header-item"
+      id="pipeline-link"
+      class="header-item pipeline-name"
       @route="v2.pipeline"
-      @model={{@pipeline.configPipelineId}}
+      @model={{this.pipeline.id}}
     >
-      <FaIcon @icon="cog" />
-      Parent Pipeline
+      {{this.pipeline.scmRepo.name}}
     </LinkTo>
-  {{/if}}
 
-  {{#if @pipeline.badges.sonar}}
+    {{#if this.pipeline.configPipelineId}}
+      <LinkTo
+        id="parent-pipeline-link"
+        class="header-item"
+        @route="v2.pipeline"
+        @model={{this.pipeline.configPipelineId}}
+      >
+        <FaIcon @icon="gear" />
+        Parent Pipeline
+      </LinkTo>
+    {{/if}}
+
+    {{#if this.pipeline.badges.sonar}}
+      <a
+        id="sonarqube-link"
+        class="header-item"
+        href={{this.sonarBadgeUri}}
+        title={{this.sonarBadgeDescription}}
+        target="_blank"
+        rel="noopener"
+      >
+        {{svg-jar "sonarqube" class="img sonarqube"}}
+      </a>
+    {{/if}}
+
     <a
-      id="sonarqube-link"
-      class="header-item"
-      href={{this.sonarBadgeUri}}
-      title={{this.sonarBadgeDescription}}
-      target="_blank"
-      rel="noopener"
+      id="scm-link"
+      href="{{branch-url-encode this.pipeline.scmRepo.url}}"
+      class="header-item scm"
     >
-      {{svg-jar "sonarqube" class="img sonarqube"}}
+      <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
+      {{this.scmContext.scm}}
     </a>
-  {{/if}}
 
-  <a
-    id="scm-link"
-    href="{{branch-url-encode @pipeline.scmRepo.url}}"
-    class="header-item scm"
-  >
-    <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
-    {{this.scmContext.scm}}
-  </a>
-
-  <BsDropdown id='repo-pipelines' class="header-item" as |dd|>
-    <dd.toggle>
-      <FaIcon @icon="code-branch" @title="Source code" />
-      <span class="branch">
-        {{@pipeline.scmRepo.branch}}
-      </span>
-      <BsTooltip @placement="bottom" @renderInPlace={{false}} @triggerEvents="hover" class="tooltip">
-        Switch to another Pipeline with the same repository
-      </BsTooltip>
-    </dd.toggle>
-    <dd.menu as |ddm|>
-      {{#each (await this.sameRepoPipeline) as |pipe|}}
-        <ddm.item>
-          <LinkTo
-            @route="v2.pipeline"
-            @model={{pipe.id}}
-          >
-            {{svg-jar "link" class="img"}} {{pipe.branchAndRootDir}}
-          </LinkTo>
-        </ddm.item>
-      {{else}}
-        <span>
+    <BsDropdown id='repo-pipelines' class="header-item" as |dd|>
+      <dd.toggle>
+        <FaIcon @icon="code-branch" @title="Source code" />
+        <span class="branch">
+          {{this.pipeline.scmRepo.branch}}
+        </span>
+        <BsTooltip @placement="bottom" @renderInPlace={{false}} @triggerEvents="hover" class="tooltip">
+          Switch to another Pipeline with the same repository
+        </BsTooltip>
+      </dd.toggle>
+      <dd.menu as |ddm|>
+        {{#each (await this.sameRepoPipeline) as |pipe|}}
+          <ddm.item>
+            <a href={{pipe.url}}>
+              {{svg-jar "link" class="img"}} {{pipe.branchAndRootDir}}
+            </a>
+          </ddm.item>
+        {{else}}
+          <span>
           No other Pipelines with the same repository
         </span>
-      {{/each}}
-    </dd.menu>
-  </BsDropdown>
+        {{/each}}
+      </dd.menu>
+    </BsDropdown>
 
-  <BsButton
-    id="add-to-collection"
-    class="confirm"
-    @defaultText="Add to collection"
-    @type="primary"
-    @outline={{true}}
-    @onClick={{this.openAddToCollectionModal}}
-  />
+    <BsButton
+      id="add-to-collection"
+      class="confirm"
+      @defaultText="Add to collection"
+      @type="primary"
+      @outline={{true}}
+      @onClick={{this.openAddToCollectionModal}}
+    >
+      {{#if this.addToCollectionModalOpen}}
+        <Pipeline::Modal::AddToCollection
+          @pipeline={{this.pipeline}}
+          @collections={{this.collections}}
+          @errorMessage={{this.errorMessage}}
+          @closeModal={{this.closeAddToCollectionModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
 
-  {{#if this.addToCollectionModalOpen}}
-    <Collection::Modal::AddToCollection
-      @pipeline={{@pipeline}}
-      @collections={{this.collections}}
-      @errorMessage={{this.errorMessage}}
-      @closeModal={{this.closeAddToCollectionModal}}
-    />
+  {{#if this.pipelineDescription}}
+    <div class="pipeline-description">
+      {{this.pipelineDescription}}
+    </div>
   {{/if}}
 </div>

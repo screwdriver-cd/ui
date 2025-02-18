@@ -15,8 +15,8 @@ module('Unit | Utility | pipeline', function () {
   const INACTIVE_PIPELINE_2 = { id: 4, state: 'INACTIVE' };
 
   test('it gets the right fs class name for given state', assert => {
-    assert.equal(getStateIcon('ACTIVE'), 'check-circle');
-    assert.equal(getStateIcon('INACTIVE'), 'times-circle');
+    assert.equal(getStateIcon('ACTIVE'), 'circle-check');
+    assert.equal(getStateIcon('INACTIVE'), 'circle-xmark');
     assert.equal(getStateIcon('some_incorrect_state'), '');
     assert.equal(getStateIcon(''), '');
     assert.equal(getStateIcon(), '');

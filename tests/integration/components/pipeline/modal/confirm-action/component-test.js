@@ -9,24 +9,35 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    hooks.beforeEach(function () {
+      const workflowDataReload = this.owner.lookup(
+        'service:workflow-data-reload'
+      );
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
+
+      sinon
+        .stub(workflowDataReload, 'getLatestCommitEvent')
+        .returns({ sha: 'deadbeef0123456789' });
+
+      sinon.stub(pipelinePageState, 'getPipeline').returns({ id: 987 });
+    });
+
     test('it renders start action', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -44,22 +55,18 @@ module(
 
     test('it renders restart action', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main', status: 'SUCCESS' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -70,23 +77,19 @@ module(
 
     test('it renders stage name if set', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         stage: { name: 'stage' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @stage={{this.stage}}
             @closeModal={{this.closeModal}}
@@ -100,22 +103,18 @@ module(
 
     test('it renders warning message for non-latest commit event', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: '0123456789deadbeef'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -126,48 +125,19 @@ module(
 
     test('it does not render warning message for pr commit event', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789',
           type: 'pr'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
-            @job={{this.job}}
-            @closeModal={{this.closeModal}}
-        />`
-      );
-
-      assert.dom('.modal-body .alert').doesNotExist();
-
-      this.setProperties({
-        pipeline: { parameters: {} },
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'abc123',
-          type: 'pr'
-        },
-        jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
-        job: { name: 'main' },
-        closeModal: () => {}
-      });
-      await render(
-        hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
-            @event={{this.event}}
-            @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -178,22 +148,18 @@ module(
 
     test('it renders reason input for frozen job', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main', status: 'FROZEN' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -206,7 +172,6 @@ module(
 
     test('it renders parameter input for parameterized job', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: { param1: 'abc' } },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789',
@@ -217,16 +182,13 @@ module(
           }
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -237,22 +199,18 @@ module(
 
     test('it disables submit button when no reason is provided for frozen job', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main', status: 'FROZEN' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -263,22 +221,18 @@ module(
 
     test('it enables submit button when reason is provided for frozen job', async function (assert) {
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main', status: 'FROZEN' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -289,28 +243,25 @@ module(
       assert.dom('#submit-action').isEnabled();
     });
 
-    test('it display success message', async function (assert) {
+    test('it closes modal on success', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
       const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+      const closeModalSpy = sinon.spy();
 
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
-        closeModal: () => {}
+        closeModal: closeModalSpy
       });
 
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -321,9 +272,7 @@ module(
       await click('#submit-action');
 
       assert.equal(shuttleStub.calledOnce, true);
-      assert.dom('#submit-action').isDisabled();
-      assert.dom('.alert').exists({ count: 1 });
-      assert.dom('.alert > span').hasText('Started successfully');
+      assert.equal(closeModalSpy.calledOnce, true);
     });
 
     test('it displays error message when API call fails', async function (assert) {
@@ -335,23 +284,19 @@ module(
         .rejects({ message: errorMessage });
 
       this.setProperties({
-        pipeline: { parameters: {} },
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
         jobs: [],
-        latestCommitEvent: { sha: 'deadbeef0123456789' },
         job: { name: 'main' },
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @pipeline={{this.pipeline}}
             @event={{this.event}}
             @jobs={{this.jobs}}
-            @latestCommitEvent={{this.latestCommitEvent}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`

@@ -18,7 +18,7 @@ export default Component.extend({
         const name = this.get('job.environment.SD_TEMPLATE_NAME');
         const version = this.get('job.environment.SD_TEMPLATE_VERSION');
 
-        return `/templates/${namespace}/${name}/${version}`;
+        return `/templates/job/${namespace}/${name}/${version}`;
       }
     }
   ),
@@ -47,7 +47,7 @@ export default Component.extend({
           'job.environment.SD_PIPELINE_TEMPLATE_VERSION'
         );
 
-        return `/pipeline/template/${namespace}/${name}/${version}`;
+        return `/templates/pipeline/${namespace}/${name}/${version}`;
       }
     }
   ),

@@ -7,6 +7,7 @@ import {
   getFailureCount,
   getRunningDurationText,
   getStartDate,
+  getSuccessCount,
   getTruncatedMessage,
   getTruncatedSha,
   getWarningCount,
@@ -194,6 +195,18 @@ module('Unit | Component | pipeline/event/card/util', function () {
 
   test('getWarningCount returns correct value', function (assert) {
     assert.equal(getWarningCount([]), 0);
+    assert.equal(
+      getWarningCount([
+        { status: 'SUCCESS' },
+        { status: 'UNSTABLE' },
+        { status: 'ABORTED' }
+      ]),
+      1
+    );
+  });
+
+  test('getSuccessCount returns correct value', function (assert) {
+    assert.equal(getSuccessCount([]), 0);
     assert.equal(
       getWarningCount([
         { status: 'SUCCESS' },

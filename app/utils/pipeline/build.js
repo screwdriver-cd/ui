@@ -5,7 +5,15 @@
  */
 
 export const hasWarning = build => {
-  return !!build?.meta?.build?.warning?.message;
+  if (build?.meta?.build?.warning) {
+    if (typeof build.meta.build.warning === 'boolean') {
+      return build.meta.build.warning;
+    }
+
+    return !!build.meta.build.warning.message;
+  }
+
+  return false;
 };
 
 /**

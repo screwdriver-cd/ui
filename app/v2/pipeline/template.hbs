@@ -1,12 +1,10 @@
-{{page-title "Pipeline"}}
+{{page-title this.model.pipelineName}}
+
+<Banner @banners={{this.model.banners}}/>
+
 <div id="pipeline-page-contents">
   <Pipeline::Nav />
-
-  <Pipeline::Header
-    @pipeline={{this.model.pipeline}}
-    @collections={{this.model.collections}}
-  />
-
+  <Pipeline::Header />
   <div
     id="pipeline-main"
     class="{{this.routeClasses}}"

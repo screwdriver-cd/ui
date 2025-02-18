@@ -7,10 +7,10 @@
     @onClick={{fn this.openStartEventModal}}
   >
     <FaIcon
-      @icon="play-circle"
+      @icon="circle-play"
       @fixedWidth="true"
       @prefix="far"
-      @title="Start a new event"
+      @title={{this.startEventTitle}}
     />
   </BsButton>
   <BsButton
@@ -20,7 +20,7 @@
     @onClick={{fn this.openStopBuildModal}}
   >
     <FaIcon
-      @icon="stop-circle"
+      @icon="circle-stop"
       @fixedWidth="true"
       @prefix="far"
       @title="Stop build"
@@ -34,7 +34,7 @@
     @onClick={{fn this.openRestartJobModal}}
   >
     <FaIcon
-      @icon="redo-alt"
+      @icon="rotate-right"
       @fixedWidth="true"
       @prefix="fas"
       @title="Restart from latest build"
@@ -43,7 +43,6 @@
 
   {{#if this.showStartEventModal}}
     <Pipeline::Modal::StartEvent
-      @pipeline={{@record.pipeline}}
       @jobs={{@record.jobs}}
       @job={{@record.job}}
       @notice={{this.notice}}
@@ -58,7 +57,6 @@
   {{/if}}
   {{#if this.showRestartJobModal}}
     <Pipeline::Modal::ConfirmAction
-      @pipeline={{@record.pipeline}}
       @event={{this.latestEvent}}
       @jobs={{@record.jobs}}
       @latestCommitEvent={{this.latestCommitEvent}}

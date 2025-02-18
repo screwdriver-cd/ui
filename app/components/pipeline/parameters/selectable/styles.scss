@@ -16,10 +16,14 @@
     }
 
     .ember-basic-dropdown-content-wormhole-origin {
-      .ember-power-select-options {
-        li {
-          overflow: scroll;
-          text-overflow: ellipsis;
+      .ember-power-select-dropdown {
+        position: relative;
+
+        .ember-power-select-options {
+          li {
+            overflow: scroll;
+            text-overflow: ellipsis;
+          }
         }
       }
     }

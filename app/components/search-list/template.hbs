@@ -2,7 +2,7 @@
   <InfoMessage
     @message={{this.addCollectionError}}
     @type="warning"
-    @icon="exclamation-triangle"
+    @icon="triangle-exclamation"
   />
 {{/if}}
 {{#if this.addCollectionSuccess}}
@@ -43,13 +43,13 @@
       <tr>
         <td class="appId">
           {{!-- {{#highlight-terms query}} --}}
-          <LinkTo @route="pipeline" @model={{pipeline.id}}>
+          <LinkTo @route="pipeline" @model={{pipeline.id}} title="{{pipeline.appId}}">
             {{pipeline.appId}}
           </LinkTo>
           {{!-- {{/highlight-terms}} --}}
         </td>
         <td class="branch">
-          <a href={{branch-url-encode pipeline.hubUrl}}>
+          <a href={{branch-url-encode pipeline.hubUrl}} title="{{pipeline.branch}}">
             <FaIcon @icon="code-branch" />{{pipeline.branch}}
           </a>
         </td>

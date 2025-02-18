@@ -62,32 +62,49 @@ export default Component.extend({
   // Disabling the eslint rule for computed properties as that causes rendering issues and an infinite loop to the API call with the current setup of ember data
   // eslint-disable-next-line ember/require-computed-property-dependencies
   sameRepoPipeline: computed('pipeline', {
-    get() {
+    async get() {
+      const maxPage = 10;
       const [scm, repositoryId] = this.pipeline.scmUri.split(':');
+      const pipelineName = this.pipeline.scmRepo.name;
+      const sameRepoPipelines = [];
 
-      return this.pipelineService
-        .getSiblingPipeline(this.pipeline.scmRepo.name)
-        .then(value =>
-          value
-            .toArray()
-            .filter(pipe => {
-              const [s, r] = pipe.scmUri.split(':');
+      for (let page = 1; page <= maxPage; page += 1) {
+        const siblingPipelines = (
+          await this.pipelineService.getSiblingPipeline(
+            this.pipeline.scmRepo.name,
+            page
+          )
+        )
+          .toArray()
+          .filter(pipeline => pipeline.scmUri.split(':')[0] === scm);
 
-              return (
-                pipe.id !== this.pipeline.id && scm === s && repositoryId === r
-              );
-            })
-            .map((pipe, i) => ({
-              index: i,
-              url: `/pipelines/${pipe.id}`,
-              branchAndRootDir: pipe.scmRepo.rootDir
-                ? `${pipe.scmRepo.branch}:${pipe.scmRepo.rootDir}`
-                : pipe.scmRepo.branch
-            }))
-            .sort((l, r) =>
-              l.branchAndRootDir.localeCompare(r.branchAndRootDir)
-            )
-        );
+        sameRepoPipelines.push(...siblingPipelines);
+
+        if (
+          siblingPipelines.length === 0 ||
+          sameRepoPipelines[sameRepoPipelines.length - 1].scmRepo.name !==
+            pipelineName
+        ) {
+          break;
+        }
+      }
+
+      return sameRepoPipelines
+        .filter(pipe => {
+          const [s, r] = pipe.scmUri.split(':');
+
+          return (
+            pipe.id !== this.pipeline.id && scm === s && repositoryId === r
+          );
+        })
+        .map((pipe, i) => ({
+          index: i,
+          url: `/pipelines/${pipe.id}`,
+          branchAndRootDir: pipe.scmRepo.rootDir
+            ? `${pipe.scmRepo.branch}:${pipe.scmRepo.rootDir}`
+            : pipe.scmRepo.branch
+        }))
+        .sort((l, r) => l.branchAndRootDir.localeCompare(r.branchAndRootDir));
     }
   }),
   actions: {

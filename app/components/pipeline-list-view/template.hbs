@@ -7,12 +7,24 @@
       @onChange={{action this.setShowListView}} as |bg|
     >
       <bg.button @value={{false}}>
-        <FaIcon @icon="th" />
+        <FaIcon @icon="table-cells" />
       </bg.button>
       <bg.button @value={{true}}>
-        <FaIcon @icon="th-list" />
+        <FaIcon @icon="table-list" />
       </bg.button>
     </BsButtonGroup>
+  </div>
+  <div class="col-10 d-flex justify-content-end form-inline">
+    <div class="form-group d-flex align-items-center">
+      <label class="has-float-label" for="jobs-history-options">
+        <select class="form-control custom-select" id="jobs-history-options" name="jobs-history-options" onchange={{action "updateNumBuildsHistory" value="target.value"}}>
+          {{#each this.buildsHistoryOptions as |opt|}}
+            <option value={{opt}} selected={{eq opt this.numBuildsHistory}}>{{opt}}</option>
+          {{/each}}
+        </select>
+        <span>History</span>
+      </label>
+    </div>
   </div>
 </div>
 

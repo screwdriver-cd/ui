@@ -3,7 +3,7 @@
     <InfoMessage
       @message={{this.addCollectionError}}
       @type="warning"
-      @icon="exclamation-triangle"
+      @icon="triangle-exclamation"
     />
   </div>
 {{/if}}
@@ -64,7 +64,7 @@
 
   {{#if this.pipeline.configPipelineId}}
     <div class="header-item">
-      <FaIcon @icon="cog" />
+      <FaIcon @icon="gear" />
       <LinkTo @route="pipeline" @model={{this.pipeline.configPipelineId}}>
         Parent Pipeline
       </LinkTo>

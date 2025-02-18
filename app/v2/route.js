@@ -8,13 +8,5 @@ export default class NewRoute extends Route {
 
   beforeModel(transition) {
     this.session.requireAuthentication(transition, 'login');
-
-    const isAdmin = (this.session.data.authenticated.scope || []).includes(
-      'admin'
-    );
-
-    if (!isAdmin) {
-      this.router.transitionTo('/404');
-    }
   }
 }

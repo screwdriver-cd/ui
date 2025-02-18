@@ -3,10 +3,10 @@ const getStateIcon = state => {
 
   switch (state) {
     case 'ACTIVE':
-      icon = 'check-circle';
+      icon = 'circle-check';
       break;
     case 'INACTIVE':
-      icon = 'times-circle';
+      icon = 'circle-xmark';
       break;
     default:
       icon = '';

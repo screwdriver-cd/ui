@@ -17,7 +17,11 @@
 
   .table-controls {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     margin-bottom: 10px;
+
+  > * {
+    margin-left: auto;
+  }
   }
 }

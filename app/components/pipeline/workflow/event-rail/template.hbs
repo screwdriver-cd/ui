@@ -1,0 +1,62 @@
+<div
+  id="event-rail"
+  {{did-update this.update @event @reloadEvents}}
+>
+  <div id="event-rail-actions">
+    <BsButton
+      id="search-for-event-button"
+      @type="primary"
+      @outline={{true}}
+      @onClick={{this.openSearchEventModal}}
+      disabled={{this.isSearchDisabled}}
+      title="Search for an event"
+    >
+      <FaIcon @icon="magnifying-glass" />
+      {{#if this.showSearchEventModal}}
+        <Pipeline::Modal::SearchEvent
+          @jobs={{@jobs}}
+          @userSettings={{@userSettings}}
+          @closeModal={{this.closeSearchEventModal}}
+        />
+      {{/if}}
+    </BsButton>
+    {{#if (not this.isPR)}}
+      <BsButton
+        id="start-event-button"
+        @type="primary"
+        @outline={{true}}
+        @defaultText="Start a new event"
+        @onClick={{this.openStartEventModal}}
+        title="Start a new event"
+      />
+      {{#if this.showStartEventModal}}
+        <Pipeline::Modal::StartEvent
+          @jobs={{@jobs}}
+          @closeModal={{this.closeStartEventModal}}
+        />
+      {{/if}}
+    {{/if}}
+  </div>
+
+  <div id="event-cards-container">
+    <VerticalCollection
+      @items={{this.events}}
+      @estimateHeight={{150}}
+      @idForFirstItem={{this.firstItemId}}
+      @firstReached={{this.addNewerEvents}}
+      @lastReached={{this.addOlderEvents}}
+      as |event|
+    >
+      <Pipeline::Event::Card
+        @event={{event}}
+        @jobs={{@jobs}}
+        @userSettings={{@userSettings}}
+        @queueName="eventRail"
+        @showAbort={{true}}
+        @showParameters={{true}}
+        @showEventGroup={{true}}
+        @handleFilter={{true}}
+      />
+    </VerticalCollection>
+  </div>
+</div>

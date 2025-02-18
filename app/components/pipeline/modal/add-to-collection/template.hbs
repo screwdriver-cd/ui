@@ -1,0 +1,81 @@
+<BsModal
+  id="add-to-collection-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    Add to collection(s)
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+      />
+    {{/if}}
+    {{#if this.successMessage}}
+      <InfoMessage
+        @message={{this.successMessage}}
+        @type="success"
+        @icon="circle-check"
+      />
+    {{/if}}
+    <div class="modal-title">Add to a new collection</div>
+    <div class="create-new-collection">
+      <label>
+        <div>Name:</div>
+        <Input
+          id="new-collection-name-input"
+          @type="text"
+          @value={{this.newCollectionName}}
+        />
+      </label>
+      <label>
+        <div>Description:</div>
+        <Input
+          @type="text"
+          @value={{this.newCollectionDescription}}
+          placeholder="Optional"
+        />
+      </label>
+    </div>
+
+    {{#if this.hasCollections}}
+      <hr />
+      <div class="modal-title">Add to an existing collection</div>
+      <div class="select-collections">
+        <BsButtonGroup
+          @value={{this.selectedCollections}}
+          @type="checkbox"
+          @onChange={{fn (mut this.selectedCollections)}}
+          as |bg|
+        >
+          {{#each this.collectionsWithoutPipeline as |collection|}}
+            <bg.button
+              id="collection-{{collection.id}}"
+              @type="primary"
+              @outline={{true}}
+              @value={{collection}}
+            >
+              {{collection.name}}
+            </bg.button>
+          {{/each}}
+        </BsButtonGroup>
+      </div>
+    {{/if}}
+
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-collections"
+      class="confirm"
+      disabled={{this.isSubmitButtonDisabled}}
+      @defaultText="Add to collection(s)"
+      @pendingText="Adding to collection(s)..."
+      @fulfilledText="Added to collection(s)"
+      @type="primary"
+      @onClick={{fn this.submitCollections}}
+    />
+  </modal.footer>
+</BsModal>

@@ -27,6 +27,7 @@ module('Unit | Utility | pipeline-graph | d3-graph-util', function () {
       TITLE_SIZE: 12,
       ARROWHEAD: 6,
       STAGE_GAP: 4,
+      STAGE_GAP_HORIZONTAL: 108,
       EDGE_GAP: 6
     });
     assert.deepEqual(getElementSizes(true), {
@@ -34,6 +35,7 @@ module('Unit | Utility | pipeline-graph | d3-graph-util', function () {
       TITLE_SIZE: 0,
       ARROWHEAD: 2,
       STAGE_GAP: 12 / 9,
+      STAGE_GAP_HORIZONTAL: 36,
       EDGE_GAP: 2
     });
   });
@@ -124,7 +126,14 @@ module('Unit | Utility | pipeline-graph | d3-graph-util', function () {
   });
 
   test('calcStageX returns correct value for x position of stage', function (assert) {
-    assert.equal(calcStageX({ pos: { x: 2 } }, 10, { STAGE_GAP: 5 }), 25);
+    const stage = { pos: { x: 2 } };
+    const sizes = {
+      STAGE_GAP: 5
+    };
+    const horizontalDisplacements = { 0: 23, 1: 23, 2: 45 };
+
+    assert.equal(calcStageX(stage, 10, sizes), 25);
+    assert.equal(calcStageX(stage, 10, sizes, horizontalDisplacements), 70);
   });
 
   test('calcStageY returns correct value for y position of stage', function (assert) {
@@ -137,18 +146,31 @@ module('Unit | Utility | pipeline-graph | d3-graph-util', function () {
   });
 
   test('calcStageWidth returns correct value for width of stage', function (assert) {
+    const stage = { graph: { meta: { width: 3 } }, pos: { x: 2 } };
+    const stageVerticalDisplacements = {
+      0: 23,
+      1: 35,
+      2: 13,
+      3: 13,
+      4: 43,
+      5: 23
+    };
+    const sizes = { STAGE_GAP: 5 };
+
+    assert.equal(calcStageWidth(stage, 10, sizes), 25);
     assert.equal(
-      calcStageWidth({ graph: { meta: { width: 3 } } }, 10, { STAGE_GAP: 5 }),
-      25
+      calcStageWidth(stage, 10, sizes, stageVerticalDisplacements),
+      55
     );
   });
 
   test('calcStageHeight returns correct value for height of stage', function (assert) {
-    const stage = { graph: { meta: { height: 3 } } };
+    const stage = { graph: { meta: { height: 3 } }, pos: { y: 2 } };
+    const stageVerticalDisplacements = { 0: 23, 1: 35, 2: 13, 4: 10, 5: 23 };
     const sizes = { ICON_SIZE: 10, STAGE_GAP: 3 };
 
     assert.equal(calcStageHeight(stage, sizes), 57);
-    assert.equal(calcStageHeight(stage, sizes, 6), 63);
+    assert.equal(calcStageHeight(stage, sizes, stageVerticalDisplacements), 80);
   });
 
   test('getStageVerticalDisplacementByRowPosition returns correct vertical stage displacement', function (assert) {

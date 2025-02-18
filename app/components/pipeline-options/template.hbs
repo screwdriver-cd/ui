@@ -1,7 +1,7 @@
 <InfoMessage
   @message={{this.errorMessage}}
   @type="warning"
-  @icon="exclamation-triangle"
+  @icon="triangle-exclamation"
 />
 <InfoMessage @message={{this.successMessage}} @type="success" @icon="check" />
 <div class="row">
@@ -62,7 +62,7 @@
                 </p>
               </div>
               <div class="col-8">
-                <Input 
+                <Input
                   class="pipeline-badge-name col-12"
                   placeholder="Sonar badge name"
                   @type="text"
@@ -70,7 +70,7 @@
                 />
               </div>
               <div class="col-8">
-                <Input 
+                <Input
                   class="pipeline-badge-uri col-12"
                   placeholder="Sonar badge uri"
                   @type="text"
@@ -79,7 +79,7 @@
               </div>
               <div class="col-4 right">
                 <button class="reset-button" {{action "resetPipelineSonarBadge"}}>
-                  <FaIcon @icon="sync" />
+                  <FaIcon @icon="rotate" />
                   Reset
                 </button>
                 <button type="submit"
@@ -113,7 +113,7 @@
               </div>
               <div class="col-4 right">
                 <button class="reset-button" {{action "resetPipelineAlias"}}>
-                  <FaIcon @icon="sync" />
+                  <FaIcon @icon="rotate" />
                   Reset
                 </button>
                 <button
@@ -153,7 +153,7 @@
                     </div>
                     <div class="col-4 right">
                       <button class="reset-button" {{action "resetMetricsDowntimeJobs"}}>
-                        <FaIcon @icon="sync" />
+                        <FaIcon @icon="rotate" />
                         Reset
                       </button>
                       <button
@@ -174,7 +174,7 @@
                   <p>
                     Users with admin permission to this pipeline.
                     <FaIcon
-                      @icon="question-circle"
+                      @icon="circle-question"
                       @title="If you have write access to the repository, you can become a pipeline admin by starting/stopping builds or syncing the pipeline."
                     />
                   </p>
@@ -224,6 +224,9 @@
                 <div class="col-10">
                   <h4 title="Job: {{job.name}}">
                     {{truncate job.name 50}}
+                    {{# if job.virtualJob}}
+                      <span class="job-label">virtual</span>
+                    {{/if}}
                   </h4>
                   {{#if job.stateChanger}}
                     <i class="float-right">
@@ -295,7 +298,7 @@
             </div>
             <div class="col-2 right" title="Click to sync the webhooks.">
               <a href="#" {{action "sync" "webhooks"}}>
-                <FaIcon @icon="sync" />
+                <FaIcon @icon="rotate" />
               </a>
             </div>
           </div>
@@ -312,7 +315,7 @@
             </div>
             <div class="col-2 right" title="Click to sync pull requests.">
               <a href="#" {{action "sync" "pullrequests"}}>
-                <FaIcon @icon="sync" />
+                <FaIcon @icon="rotate" />
               </a>
             </div>
           </div>
@@ -329,7 +332,7 @@
             </div>
             <div class="col-2 right" title="Click to sync the pipeline property.">
               <a href="#" {{action "sync"}}>
-                <FaIcon @icon="sync" />
+                <FaIcon @icon="rotate" />
               </a>
             </div>
           </div>
@@ -401,7 +404,7 @@
               <p>
                 Setup your pipeline preference to group events or not.
                 <FaIcon
-                  @icon="question-circle"
+                  @icon="circle-question"
                   @title="When grouping is enabled, events which share a common accesstor will be grouped together"
                 />
               </p>
@@ -639,7 +642,7 @@
                       </h4>
                     </modal.header>
                     <modal.body>
-                      <FaIcon @icon="exclamation-triangle" @pull="left" @size="4" />
+                      <FaIcon @icon="triangle-exclamation" @pull="left" @size="4" />
                       <span>This action cannot be undone. Are you sure you want to delete the pipeline?</span>
                       <p>Please type <b>{{this.pipeline.scmRepo.name}}</b>  to confirm.</p>
                       <Input

@@ -1,0 +1,120 @@
+<div
+  id="pipeline-workflow-container"
+  {{did-update this.update @event}}
+>
+  <Pipeline::Workflow::EventRail
+    @userSettings={{this.userSettings}}
+    @event={{this.eventRailAnchor}}
+    @jobs={{this.jobs}}
+    @prNums={{@prNums}}
+    @reloadEvents={{@reloadEventRail}}
+  />
+
+  {{#if this.event}}
+    <div id="workflow-display-container">
+      <div id="workflow-display-controls">
+        <BsButton
+          id="show-workflow-graph-button"
+          @type="primary"
+          @outline={{true}}
+          @onClick={{fn this.setShowGraph true}}
+          disabled={{this.showGraph}}
+          title="View workflow as graph"
+        >
+          <FaIcon
+            @icon="code-branch"
+            @rotation={{90}}
+            @fixedWidth="true"
+            @prefix="fa"
+          />
+        </BsButton>
+        <BsButton
+          id="show-workflow-table-button"
+          @type="primary"
+          @outline={{true}}
+          @onClick={{fn this.setShowGraph false}}
+          disabled={{not this.showGraph}}
+          title="View workflow as table"
+        >
+          <FaIcon
+            @icon="table-list"
+            @fixedWidth="true"
+            @prefix="fa"
+          />
+        </BsButton>
+
+        {{#if (and this.showGraph this.hasDownstreamTriggers)}}
+          <div
+            class="downstream-triggers-container"
+            title="Toggle to {{if this.showDownstreamTriggers "hide" "show"}} the downstream trigger nodes."
+          >
+            <XToggle
+              @size="small"
+              @theme="light"
+              @showLabels={{true}}
+              @value={{this.showDownstreamTriggers}}
+              @offLabel="Hide triggers"
+              @onLabel="Show triggers"
+              @onToggle={{fn this.toggleShowDownstreamTriggers}}
+            />
+          </div>
+        {{/if}}
+      </div>
+
+      <div id="display-container">
+        {{#if this.showGraph}}
+          <Pipeline::Workflow::Graph
+            @workflowGraph={{this.workflowGraphToDisplay}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @builds={{this.builds}}
+            @stages={{this.stages}}
+            @chainPr={{this.pipeline.prChain}}
+            @displayJobNameLength={{this.displayJobNameLength}}
+            @setShowTooltip={{this.setShowTooltip}}
+            @displayStageTooltip={{true}}
+            @setShowStageTooltip={{this.setShowStageTooltip}}
+          />
+
+          {{#if this.showTooltip}}
+            <Pipeline::Workflow::Tooltip
+              @d3Data={{this.d3Data}}
+              @event={{this.event}}
+              @jobs={{this.jobs}}
+              @builds={{this.builds}}
+              @workflowGraph={{this.workflowGraphToDisplay}}
+            />
+          {{/if}}
+          {{#if this.showStageTooltip}}
+            <Pipeline::Workflow::Tooltip::Stage
+              @d3Data={{this.d3Data}}
+              @event={{this.event}}
+              @jobs={{this.jobs}}
+              @builds={{this.builds}}
+              @workflowGraph={{this.workflowGraphToDisplay}}
+            />
+          {{/if}}
+        {{else}}
+          <Pipeline::Jobs::Table
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @userSettings={{this.userSettings}}
+            @numBuilds={{1}}
+          />
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+
+  {{#if @noEvents}}
+    <div id="no-events">
+      This pipeline has no {{if this.isPR "open pull requests" "events"}} yet
+    </div>
+  {{/if}}
+
+  {{#if @invalidEvent}}
+    <div id="invalid-event">
+      {{if this.isPR "Pull request" "Event"}} does not exist for this pipeline
+    </div>
+  {{/if}}
+</div>

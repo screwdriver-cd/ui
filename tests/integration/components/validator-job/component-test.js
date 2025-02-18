@@ -188,7 +188,7 @@ module('Integration | Component | validator job', function (hooks) {
       .hasText('This template extends baz template.');
     assert
       .dom('h4:nth-of-type(2) a')
-      .hasAttribute('href', '/templates/default/baz/2.0.0');
+      .hasAttribute('href', '/templates/job/default/baz/2.0.0');
   });
 
   test('it renders template name with version tag', async function (assert) {
@@ -214,7 +214,7 @@ module('Integration | Component | validator job', function (hooks) {
     assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
     assert
       .dom('h4:nth-of-type(2) a')
-      .hasAttribute('href', '/templates/foo/bar/latest');
+      .hasAttribute('href', '/templates/job/foo/bar/latest');
   });
 
   test('it renders template name with version number', async function (assert) {
@@ -240,7 +240,7 @@ module('Integration | Component | validator job', function (hooks) {
     assert.dom('h4:nth-of-type(2)').hasText('This job uses foo/bar template.');
     assert
       .dom('h4:nth-of-type(2) a')
-      .hasAttribute('href', '/templates/foo/bar/0.0.1');
+      .hasAttribute('href', '/templates/job/foo/bar/0.0.1');
   });
 
   test('it renders when there are no steps or commands', async function (assert) {

@@ -6,19 +6,26 @@
   .event-card {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    margin: 0 1rem 1rem;
+    padding: 0.5rem;
+    border-radius: 3px;
+    border: 1px solid colors.$sd-light-gray;
     cursor: pointer;
 
     &:hover {
-      background: rgba(colors.$sd-pale-purple, 0.5);
+      background: rgba(colors.$sd-highlight, 0.75);
     }
 
     &.highlighted {
-      background: rgba(colors.$sd-highlight, 0.75);
+      background: rgba(colors.$sd-pale-purple, 0.5);
+    }
 
-      &:hover {
-        background: rgba(colors.$sd-pale-purple, 0.5);
-      }
+    &.filtered {
+      visibility: hidden;
+      height: 0;
+      border: none;
+      margin-bottom: 0;
+      padding: 0;
     }
 
     .event-card-title {
@@ -74,6 +81,7 @@
         }
       }
 
+      .pr-title,
       .sha {
         display: flex;
         padding-left: 1rem;
@@ -99,6 +107,7 @@
       .message {
         font-weight: variables.$weight-bold;
         font-size: 1rem;
+        overflow-x: auto;
       }
 
       .label {
@@ -165,9 +174,9 @@
       &.btn {
         display: flex;
 
-         svg {
-           margin: auto;
-         }
+        svg {
+          margin: auto;
+        }
       }
     }
   }

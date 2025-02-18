@@ -1,7 +1,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import sinon from 'sinon';
 
 module(
   'Integration | Component | pipeline/modal/start-event',
@@ -9,14 +10,18 @@ module(
     setupRenderingTest(hooks);
 
     test('it renders when pipeline has no parameters', async function (assert) {
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
+
+      sinon.stub(pipelinePageState, 'getPipeline').returns({});
+
       this.setProperties({
-        pipeline: {},
         jobs: [],
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::StartEvent
-            @pipeline={{this.pipeline}}
             @jobs={{this.jobs}}
             @closeModal={{this.closeModal}}
         />`
@@ -26,8 +31,15 @@ module(
     });
 
     test('it renders when pipeline has parameters', async function (assert) {
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
+
+      sinon
+        .stub(pipelinePageState, 'getPipeline')
+        .returns({ parameters: { p1: ['abc', '123'] } });
+
       this.setProperties({
-        pipeline: { parameters: { p1: ['abc', '123'] } },
         jobs: [
           {
             name: 'main',
@@ -38,7 +50,6 @@ module(
       });
       await render(
         hbs`<Pipeline::Modal::StartEvent
-            @pipeline={{this.pipeline}}
             @jobs={{this.jobs}}
             @closeModal={{this.closeModal}}
         />`
@@ -49,14 +60,18 @@ module(
     });
 
     test('it renders optional notice', async function (assert) {
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
+
+      sinon.stub(pipelinePageState, 'getPipeline').returns({});
+
       this.setProperties({
-        pipeline: {},
         jobs: [],
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::StartEvent
-            @pipeline={{this.pipeline}}
             @jobs={{this.jobs}}
             @closeModal={{this.closeModal}}
             @notice="This is a notice to the user"
@@ -64,6 +79,33 @@ module(
       );
 
       assert.dom('#user-notice').exists({ count: 1 });
+    });
+
+    test('it closes modal on success', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
+
+      const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+      const closeModalSpy = sinon.spy();
+
+      sinon.stub(pipelinePageState, 'getPipeline').returns({});
+
+      this.setProperties({
+        jobs: [],
+        closeModal: closeModalSpy
+      });
+      await render(
+        hbs`<Pipeline::Modal::StartEvent
+            @jobs={{this.jobs}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await click('#submit-action');
+
+      assert.equal(shuttleStub.calledOnce, true);
+      assert.equal(closeModalSpy.calledOnce, true);
     });
   }
 );

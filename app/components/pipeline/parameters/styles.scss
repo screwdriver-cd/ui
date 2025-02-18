@@ -42,12 +42,11 @@
 
           .parameter {
             display: flex;
+            align-items: baseline;
             padding: 0.2rem;
 
             label {
               display: flex;
-              margin-top: auto;
-              margin-bottom: auto;
               padding-right: 0.5rem;
               flex-basis: 25%;
               max-width: 50%;
@@ -62,7 +61,7 @@
                 margin-bottom: auto;
                 padding-left: 0.25rem;
 
-                &.fa-exclamation-triangle {
+                &.fa-triangle-exclamation {
                   color: colors.$sd-warning;
                 }
               }

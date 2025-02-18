@@ -12,11 +12,14 @@ import {
   addJobIcons,
   addJobNames,
   addStages,
+  addStageEdges,
+  calcNodeCenter,
   getElementSizes,
   getGraphSvg,
   getMaximumJobNameLength,
   getNodeWidth,
-  icon
+  icon,
+  STATUS_MAP
 } from 'screwdriver-ui/utils/pipeline/graph/d3-graph-util';
 
 export default Component.extend({
@@ -134,7 +137,7 @@ export default Component.extend({
           start: startFrom,
           chainPR: this.prChainEnabled,
           prNum: this.selectedEventObj?.prNum,
-          stages
+          stages: this.minified ? [] : stages
         });
       }
     }
@@ -175,7 +178,7 @@ export default Component.extend({
       this.draw(decoratedGraph);
       set(this, 'lastGraph', wg);
     } else {
-      this.redraw(decoratedGraph);
+      this.redraw(decoratedGraph).then(() => {});
     }
   },
   actions: {
@@ -195,9 +198,19 @@ export default Component.extend({
       }
     }
   },
-  redraw(data) {
+  async redraw(data) {
     if (!data) return;
     const el = d3.select(this.element);
+
+    const elementSizes = getElementSizes();
+    const { ICON_SIZE } = elementSizes;
+    const desiredJobNameLength =
+      await this.userSettings.getDisplayJobNameLength();
+    const maximumJobNameLength = getMaximumJobNameLength(
+      this.decoratedGraph,
+      desiredJobNameLength
+    );
+    const nodeWidth = getNodeWidth(elementSizes, maximumJobNameLength);
 
     data.nodes.forEach(node => {
       const n = el.select(`g.graph-node[data-job="${node.name}"]`);
@@ -205,13 +218,29 @@ export default Component.extend({
       if (n) {
         const txt = n.select('text');
 
-        txt.text(icon(node.status));
+        txt.text(icon(node.status, node.virtual));
         n.attr(
           'class',
           `graph-node${
             node.status ? ` build-${node.status.toLowerCase()}` : ''
           }`
-        );
+        )
+          .attr(
+            'font-size',
+            `${
+              icon(node.status, node.virtual) === STATUS_MAP.VIRTUAL.icon
+                ? ICON_SIZE * 2
+                : ICON_SIZE
+            }px`
+          )
+          .style('text-anchor', 'middle')
+          .attr(
+            'x',
+            calcNodeCenter(node.pos.x, nodeWidth) +
+              (icon(node.status, node.virtual) === STATUS_MAP.VIRTUAL.icon
+                ? ICON_SIZE / 2
+                : 0)
+          );
       }
     });
   },
@@ -251,7 +280,7 @@ export default Component.extend({
     this.set('graphNode', svg);
 
     // stages
-    const verticalDisplacements = this.showStages
+    const { verticalDisplacements, horizontalDisplacements } = this.showStages
       ? addStages(
           svg,
           data,
@@ -262,6 +291,19 @@ export default Component.extend({
         )
       : {};
 
+    // stage edges
+    if (this.showStages) {
+      addStageEdges(
+        svg,
+        data,
+        this.elementSizes,
+        nodeWidth,
+        isSkipped,
+        verticalDisplacements,
+        horizontalDisplacements
+      );
+    }
+
     // edges
     addEdges(
       svg,
@@ -269,7 +311,8 @@ export default Component.extend({
       this.elementSizes,
       nodeWidth,
       isSkipped,
-      verticalDisplacements
+      verticalDisplacements,
+      horizontalDisplacements
     );
 
     // Jobs Icons
@@ -279,6 +322,7 @@ export default Component.extend({
       this.elementSizes,
       nodeWidth,
       verticalDisplacements,
+      horizontalDisplacements,
       isSkipped,
       onClick
     );
@@ -290,7 +334,8 @@ export default Component.extend({
         data,
         this.elementSizes,
         maximumJobNameLength,
-        verticalDisplacements
+        verticalDisplacements,
+        horizontalDisplacements
       );
     }
   }

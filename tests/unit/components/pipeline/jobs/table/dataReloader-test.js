@@ -9,7 +9,7 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
       { status: 'SUCCESS', meta: { build: { warning: { message: 'Oops' } } } }
     ];
 
-    new DataReloader(null, [], 0).setCorrectBuildStatus(builds);
+    new DataReloader({}, [], 0).setCorrectBuildStatus(builds);
 
     assert.equal(builds[0].status, 'SUCCESS');
     assert.equal(builds[1].status, 'WARNING');
@@ -17,7 +17,7 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
 
   test('updateJobsMatchingFilter updates', function (assert) {
     const jobIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const dataReloader = new DataReloader(null, jobIds, 3);
+    const dataReloader = new DataReloader({}, jobIds, 3);
 
     assert.equal(dataReloader.jobIdsMatchingFilter.length, 3);
     assert.equal(dataReloader.jobIdsMatchingFilter[0], 0);
@@ -44,7 +44,7 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
   });
 
   test('newJobIds returns new job ids', function (assert) {
-    const dataReloader = new DataReloader(null, [1, 2, 3, 4, 5], 5);
+    const dataReloader = new DataReloader({}, [1, 2, 3, 4, 5], 5);
 
     dataReloader.jobIdsMatchingFilter = [1, 2, 6, 7, 8];
     dataReloader.jobCallbacks = { 1: [], 2: [], 3: [], 4: [], 5: [] };
@@ -57,7 +57,7 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
   });
 
   test('removeCallbacksForJobId removes entry', function (assert) {
-    const dataReloader = new DataReloader(null, [1, 2], 2);
+    const dataReloader = new DataReloader({}, [1, 2], 2);
 
     dataReloader.jobCallbacks = { 1: [], 2: [] };
     assert.equal(Object.entries(dataReloader.jobCallbacks).length, 2);
@@ -68,7 +68,7 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
   });
 
   test('addCallbackForJobId adds callback', function (assert) {
-    const dataReloader = new DataReloader(null, [], 0);
+    const dataReloader = new DataReloader({}, [], 0);
     const jobId = 1;
     const callback = sinon.stub();
 
@@ -80,7 +80,7 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
   });
 
   test('addCallbackForJobId calls callback if builds exist', function (assert) {
-    const dataReloader = new DataReloader(null, [], 0);
+    const dataReloader = new DataReloader({}, [], 0);
     const jobId = 1;
     const builds = [{ id: 1 }];
     const callback = sinon.stub();
@@ -111,7 +111,7 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
 
     sinon.stub(shuttle, 'fetchFromApi').resolves(buildStatuses);
 
-    const dataReloader = new DataReloader(shuttle, [], 0);
+    const dataReloader = new DataReloader({ shuttle }, [], 0);
 
     dataReloader.addCallbackForJobId(jobId, callback);
 
@@ -120,6 +120,23 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
     assert.equal(dataReloader.builds[jobId].length, builds.length);
     assert.equal(dataReloader.builds[jobId][0].status, 'SUCCESS');
     assert.equal(dataReloader.builds[jobId][1].status, 'WARNING');
+    assert.equal(callback.callCount, 1);
+    assert.equal(callback.calledWith(builds), true);
+  });
+
+  test('parseEventBuilds parses builds and calls callbacks', function (assert) {
+    const jobId = 1;
+    const builds = [{ id: 11, status: 'SUCCESS', jobId }];
+    const callback = sinon.stub();
+
+    const dataReloader = new DataReloader({}, [], 0);
+
+    dataReloader.addCallbackForJobId(jobId, callback);
+
+    dataReloader.parseEventBuilds(builds);
+
+    assert.equal(dataReloader.builds[jobId].length, builds.length);
+    assert.equal(dataReloader.builds[jobId][0].status, 'SUCCESS');
     assert.equal(callback.callCount, 1);
     assert.equal(callback.calledWith(builds), true);
   });

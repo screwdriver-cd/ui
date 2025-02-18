@@ -3,16 +3,24 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
-import { capitalizeFirstLetter, truncateMessage } from './util';
+import {
+  capitalizeFirstLetter,
+  isParameterized,
+  truncateMessage
+} from './util';
 
 export default class PipelineModalConfirmActionComponent extends Component {
+  @service router;
+
   @service shuttle;
+
+  @service pipelinePageState;
+
+  @service workflowDataReload;
 
   @service session;
 
   @tracked errorMessage = null;
-
-  @tracked successMessage = null;
 
   @tracked isAwaitingResponse = false;
 
@@ -20,7 +28,18 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   @tracked reason = '';
 
+  pipeline;
+
   parameters;
+
+  latestCommitEvent;
+
+  constructor() {
+    super(...arguments);
+
+    this.pipeline = this.pipelinePageState.getPipeline();
+    this.latestCommitEvent = this.workflowDataReload.getLatestCommitEvent();
+  }
 
   get action() {
     return this.args.job.status ? 'restart' : 'start';
@@ -31,7 +50,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isLatestCommitEvent() {
-    return this.args.event.sha === this.args.latestCommitEvent.sha;
+    return this.args.event.sha === this.latestCommitEvent?.sha;
   }
 
   get commitUrl() {
@@ -51,13 +70,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    const pipelineParameters = this.args.pipeline.parameters || {};
-    const eventParameters = this.args.event.meta?.parameters || {};
-
-    return (
-      Object.keys(pipelineParameters).length > 0 ||
-      Object.keys(eventParameters).length > 0
-    );
+    return isParameterized(this.pipeline, this.args.event);
   }
 
   get isSubmitButtonDisabled() {
@@ -93,7 +106,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
     const data = buildPostBody(
       this.session.data.authenticated.username,
-      this.args.pipeline.id,
+      this.pipeline.id,
       this.args.job,
       this.args.event,
       this.parameters,
@@ -103,11 +116,24 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
     await this.shuttle
       .fetchFromApi('post', '/events', data)
-      .then(() => {
-        this.successMessage = `${capitalizeFirstLetter(
-          this.action
-        )}ed successfully`;
-        this.wasActionSuccessful = true;
+      .then(event => {
+        this.args.closeModal();
+
+        if (this.router.currentRouteName === 'v2.pipeline.events.show') {
+          this.router.transitionTo('v2.pipeline.events.show', {
+            event,
+            reloadEventRail: true,
+            id: event.id
+          });
+        } else if (this.router.currentRouteName === 'v2.pipeline.pulls.show') {
+          this.router.transitionTo('v2.pipeline.pulls.show', {
+            event,
+            reloadEventRail: true,
+            id: event.prNum,
+            pull_request_number: event.prNum,
+            sha: event.sha
+          });
+        }
       })
       .catch(err => {
         this.wasActionSuccessful = false;

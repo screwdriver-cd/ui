@@ -1,7 +1,120 @@
+@use 'variables';
+@use 'screwdriver-colors' as colors;
+@use 'screwdriver-button' as button;
+
+@use 'event-rail/styles' as event-rail;
 @use 'graph/styles' as graph;
 @use 'tooltip/styles' as tooltip;
 
 @mixin styles {
-  @include graph.styles;
-  @include tooltip.styles;
+  #pipeline-workflow-container {
+    @include button.styles;
+
+    display: grid;
+    $events-rail-width: 26rem;
+
+    grid-template-areas: 'events workflow';
+    grid-template-columns: $events-rail-width calc(100% - $events-rail-width);
+    grid-template-rows: 100%;
+
+    @include event-rail.styles;
+
+    #event-card-rail {
+      grid-area: events;
+    }
+
+    #workflow-display-container {
+      grid-area: workflow;
+      overflow: auto;
+      padding-right: 1rem;
+      $graph-controls-height: 2.5rem;
+
+      #workflow-display-controls {
+        display: flex;
+        align-content: center;
+        padding-left: 1rem;
+        height: $graph-controls-height;
+
+        #show-workflow-graph-button,
+        #show-workflow-table-button {
+          display: flex;
+
+          svg {
+            margin: auto;
+          }
+
+          &:disabled {
+            background: colors.$sd-pale-purple;
+          }
+        }
+
+        #show-workflow-graph-button {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        #show-workflow-table-button {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          translate: -1px;
+        }
+
+        .downstream-triggers-container {
+          margin-left: 1rem;
+          display: flex;
+
+          .x-toggle-component {
+            &.x-toggle-focused .x-toggle-btn:not(.x-toggle-disabled)::after,
+            &.x-toggle-focused .x-toggle-btn:not(.x-toggle-disabled)::before {
+              box-shadow: 0 0 2px 3px colors.$sd-running;
+            }
+
+            .x-toggle-light.x-toggle-btn {
+              background: colors.$sd-text-light;
+            }
+
+            .x-toggle:checked + label > .x-toggle-light.x-toggle-btn {
+              background: colors.$sd-pale-purple;
+            }
+
+            label {
+              margin-bottom: 0;
+
+              &.off-label {
+                padding-right: 0;
+              }
+            }
+          }
+        }
+      }
+
+      #display-container {
+        position: relative;
+        height: calc(100% - $graph-controls-height);
+        padding-top: 1rem;
+        overflow: auto;
+
+        #workflow-graph {
+          height: 100%;
+
+          svg {
+            min-width: 100%;
+            min-height: 100%;
+          }
+        }
+
+        @include graph.styles;
+        @include tooltip.styles;
+      }
+    }
+
+    #no-events,
+    #invalid-event {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.5rem;
+      font-weight: variables.$weight-bold;
+    }
+  }
 }

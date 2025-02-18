@@ -16,11 +16,6 @@
     $searchbar-height: 2rem;
     $table-footer-height: 2.5rem;
 
-    #jobs-table-search {
-      width: 100%;
-      height: $searchbar-height;
-    }
-
     #jobs-table {
       margin: 2rem 0;
       max-height: calc(100% - $searchbar-height - $table-footer-height);
@@ -41,6 +36,7 @@
             }
 
             &.coverage-column,
+            &.stage-column,
             &.metrics-column,
             &.actions-column {
               width: 10rem;
@@ -56,6 +52,7 @@
 
           tr {
             color: colors.$sd-text;
+            height: 4rem;
 
             &:hover {
               color: colors.$sd-text;

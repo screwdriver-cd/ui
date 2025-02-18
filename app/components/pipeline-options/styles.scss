@@ -81,6 +81,15 @@
       background-color: $sd-primary;
       color: $sd-white;
     }
+
+    .job-label {
+      background: $sd-light-gray;
+      border-radius: 3px;
+      border: none;
+      font-size: 14px;
+      font-weight: $weight-normal;
+      padding: 2px 7px;
+    }
   }
 
   .toggle-expand {

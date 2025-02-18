@@ -6,11 +6,13 @@
     display: grid;
     height: 100%;
 
+    $pipeline-nav-width: 4rem;
+
     grid-template-areas:
       'pipeline-nav pipeline-header'
       'pipeline-nav pipeline-main';
-    grid-template-columns: 4rem calc(100% - 4rem);
-    grid-template-rows: 4.5rem calc(100% - 4.5rem);
+    grid-template-columns: $pipeline-nav-width calc(100% - $pipeline-nav-width);
+    grid-template-rows: max-content 1fr;
 
     #pipeline-nav {
       grid-area: pipeline-nav;

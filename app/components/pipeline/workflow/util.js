@@ -12,16 +12,39 @@ export const getDisplayJobNameLength = userSettings => {
 };
 
 /**
- * Filters the workflow graph by removing nodes that start with 'sd@' (i.e., triggers external pipelines)
+ * Filters the workflow graph by removing nodes that start with 'sd@' (i.e., triggers external pipelines) and are the last job in the chain
  * @param workflowGraph {{nodes: Array, edges: Array}} The workflow graph to filter
  */
 export const getFilteredGraph = workflowGraph => {
+  const externalJobPrefix = 'sd@';
+
+  if (
+    workflowGraph.nodes.filter(node => node.name.startsWith(externalJobPrefix))
+      .length === 0
+  ) {
+    return workflowGraph;
+  }
+
+  const externalJobsToKeep = new Set();
+
+  workflowGraph.edges.forEach(edge => {
+    if (edge.src.startsWith(externalJobPrefix)) {
+      externalJobsToKeep.add(edge.src);
+    }
+  });
+
   const nodes = workflowGraph.nodes.filter(node => {
-    return !node.name.startsWith('sd@');
+    return (
+      !node.name.startsWith(externalJobPrefix) ||
+      externalJobsToKeep.has(node.name)
+    );
   });
 
   const edges = workflowGraph.edges.filter(edge => {
-    return !edge.dest.startsWith('sd@');
+    return (
+      !edge.dest.startsWith(externalJobPrefix) ||
+      externalJobsToKeep.has(edge.dest)
+    );
   });
 
   return { nodes, edges };

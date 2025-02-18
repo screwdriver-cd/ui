@@ -191,7 +191,7 @@ module('Integration | Component | pipeline workflow', function (hooks) {
     );
 
     assert.dom('.latest-commit').exists({ count: 1 });
-    assert.dom('.fa-exclamation-triangle').doesNotExist({ count: 1 });
+    assert.dom('.fa-triangle-exclamation').doesNotExist({ count: 1 });
   });
 
   test('it renders without latest-commit', async function (assert) {
@@ -219,7 +219,7 @@ module('Integration | Component | pipeline workflow', function (hooks) {
     );
 
     assert.dom('.latest-commit').doesNotExist();
-    assert.dom('.fa-exclamation-triangle').exists({ count: 1 });
+    assert.dom('.fa-triangle-exclamation').exists({ count: 1 });
   });
 
   test('it renders with warning build', async function (assert) {

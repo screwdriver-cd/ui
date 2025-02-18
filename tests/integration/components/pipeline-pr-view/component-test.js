@@ -54,7 +54,7 @@ module('Integration | Component | pipeline pr view', function (hooks) {
       'myname Started 06/03/2021, 10:04 PM'
     );
     assert.dom('.date').hasText('Started 06/03/2021, 10:04 PM');
-    assert.dom('.status .fa-check-circle').exists({ count: 1 });
+    assert.dom('.status .fa-circle-check').exists({ count: 1 });
   });
 
   // When a user sets a job to unstable, it should show unstable icon
@@ -98,7 +98,7 @@ module('Integration | Component | pipeline pr view', function (hooks) {
     );
 
     assert.dom('.UNSTABLE').exists({ count: 1 });
-    assert.dom('.fa-exclamation-circle').exists({ count: 1 });
+    assert.dom('.fa-circle-exclamation').exists({ count: 1 });
   });
 
   test('it renders a failed PR', async function (assert) {
@@ -141,7 +141,7 @@ module('Integration | Component | pipeline pr view', function (hooks) {
     );
 
     assert.dom('.FAILURE').exists({ count: 1 });
-    assert.dom('.fa-times-circle').exists({ count: 1 });
+    assert.dom('.fa-circle-xmark').exists({ count: 1 });
   });
 
   test('it renders a queued PR', async function (assert) {

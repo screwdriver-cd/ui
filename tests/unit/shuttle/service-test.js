@@ -126,4 +126,49 @@ module('Unit | Service | shuttle', function (hooks) {
       assert.equal(sha, 'sha3', 'sha is sha3');
     });
   });
+
+  test('it fetches active banners', function (assert) {
+    assert.expect(3);
+    const service = this.owner.lookup('service:shuttle');
+    const globalBanners = [
+      { id: 1, isActive: true, message: 'shutdown imminent', scope: 'GLOBAL' }
+    ];
+    const pipelineBanners = [
+      { id: 11, isActive: true, message: 'hello', scope: 'PIPELINE' }
+    ];
+
+    server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/banners`, request => {
+      const { isActive, scope, scopeId } = request.queryParams;
+
+      let result = [];
+
+      if (isActive) {
+        if (scope === 'GLOBAL') {
+          result = globalBanners;
+        } else if (scope === 'PIPELINE' && scopeId === '37') {
+          result = pipelineBanners;
+        }
+      }
+
+      return [
+        200,
+        {
+          'Content-Type': 'application/json'
+        },
+        JSON.stringify(result)
+      ];
+    });
+
+    service.fetchBanners('GLOBAL').then(result => {
+      assert.deepEqual(result, globalBanners);
+    });
+
+    service.fetchBanners('PIPELINE', 37).then(result => {
+      assert.deepEqual(result, pipelineBanners);
+    });
+
+    service.fetchBanners('PIPELINE', 38).then(result => {
+      assert.deepEqual(result, []);
+    });
+  });
 });

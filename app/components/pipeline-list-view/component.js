@@ -23,6 +23,7 @@ export default Component.extend({
   lastRows: [],
   moreJobs: true,
   timestampPreference: null,
+  buildsHistoryOptions: [5, 10, 15, 20, 25, 30],
   columns: [
     {
       title: 'JOB',
@@ -59,6 +60,12 @@ export default Component.extend({
       component: 'pipeline-list-coverage-cell'
     },
     {
+      title: 'STAGE',
+      propertyName: 'job',
+      component: 'pipeline-list-stage-cell',
+      sortFunction: (a, b) => collator.compare(a.stageName, b.stageName)
+    },
+    {
       title: 'METRICS',
       propertyName: 'job',
       disableSorting: true,
@@ -77,7 +84,8 @@ export default Component.extend({
     this.setProperties({
       isLoading: true,
       pipelineParameters: this.getDefaultPipelineParameters(),
-      jobParameters: this.getDefaultJobParameters()
+      jobParameters: this.getDefaultJobParameters(),
+      numBuildsHistory: this.defaultNumBuilds
     });
 
     const jobs = await this.updateListViewJobs();
@@ -190,17 +198,25 @@ export default Component.extend({
 
   getRows(jobsDetails = []) {
     const rows = jobsDetails.map(jobDetails => {
-      const { jobId, jobName, annotations, prParentJobId, prNum } = jobDetails;
+      const {
+        jobId,
+        jobName,
+        annotations,
+        prParentJobId,
+        prNum,
+        isVirtualJob,
+        stageName
+      } = jobDetails;
       const latestBuild = jobDetails.builds.length
         ? get(jobDetails, 'builds.lastObject')
         : null;
-
       const jobData = {
         jobName,
         displayName: annotations['screwdriver.cd/displayName'],
-        build: latestBuild
+        build: latestBuild,
+        isVirtualJob,
+        stageName
       };
-
       const hasParameters =
         Object.keys(
           this.pipelineParameters === undefined ? {} : this.pipelineParameters
@@ -294,7 +310,8 @@ export default Component.extend({
     function jobsObserverFunc({ jobsDetails }) {
       const rows = this.getRows(jobsDetails);
       const lastRows = this.lastRows || [];
-      const isEqualRes = isEqual(
+
+      let isEqualRes = isEqual(
         rows
           .map(r => r.job)
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName)),
@@ -303,13 +320,23 @@ export default Component.extend({
           .sort((a, b) => (a.jobName || '').localeCompare(b.jobName))
       );
 
+      if (
+        rows.map(r => r.history.length).reduce((a, b) => a + b, 0) !==
+        lastRows.map(r => r.history.length).reduce((a, b) => a + b, 0)
+      ) {
+        isEqualRes = false;
+      }
+
       if (!isEqualRes) {
         this.set('lastRows', rows);
         this.set('data', rows);
       }
     }
   ),
-
+  willDestroy() {
+    this._super(...arguments);
+    this.updateNumBuilds(this.defaultNumBuilds);
+  },
   actions: {
     async onScrolledToBottom({ currentTarget }) {
       const { scrollTop, scrollHeight, clientHeight } = currentTarget;
@@ -344,6 +371,12 @@ export default Component.extend({
       const { job } = this;
 
       this.startSingleBuild(job.id, job.name, buildState, parameterizedModel);
+    },
+
+    async updateNumBuildsHistory(count) {
+      this.numBuildsHistory = Number(count);
+      this.updateNumBuilds(this.numBuildsHistory);
+      await this.refreshListViewJobs();
     }
   }
 });

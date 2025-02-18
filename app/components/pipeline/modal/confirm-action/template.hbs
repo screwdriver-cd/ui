@@ -1,7 +1,6 @@
 <BsModal
   id="confirm-action-modal"
   @onHide={{fn @closeModal}}
-  @onSubmit={{fn this.startBuild}}
   as |modal|
 >
   <modal.header>
@@ -12,15 +11,7 @@
       <InfoMessage
         @message={{this.errorMessage}}
         @type="warning"
-        @icon="exclamation-triangle"
-        @dismissible={{false}}
-      />
-    {{/if}}
-    {{#if this.successMessage}}
-      <InfoMessage
-        @message={{this.successMessage}}
-        @type="success"
-        @icon="check-circle"
+        @icon="triangle-exclamation"
         @dismissible={{false}}
       />
     {{/if}}
@@ -40,7 +31,7 @@
       </a>
       {{#unless this.isLatestNonPrCommitEvent}}
         <div class="alert alert-warning">
-          <FaIcon @icon="exclamation-triangle" />
+          <FaIcon @icon="triangle-exclamation" />
           This is <strong>NOT</strong> the latest commit.
         </div>
       {{/unless}}
@@ -64,7 +55,6 @@
         @action={{this.action}}
         @job={{@job}}
         @event={{@event}}
-        @pipeline={{@pipeline}}
         @jobs={{@jobs}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />
@@ -78,7 +68,7 @@
       @defaultText="Yes"
       @pendingText={{this.pendingAction}}
       @fulfilledText={{this.completedAction}}
-      @onClick={{modal.submit}}
+      @onClick={{fn this.startBuild}}
     />
   </modal.footer>
 </BsModal>

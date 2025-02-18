@@ -10,11 +10,12 @@ module(
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
-      const job = { id: 123, name: 'main' };
+      const jobName = 'main';
 
       this.setProperties({
         record: {
-          job,
+          job: { id: 123, name: 'main' },
+          jobName,
           onCreate: () => {},
           onDestroy: () => {}
         }
@@ -26,7 +27,7 @@ module(
         />`
       );
 
-      assert.dom('.job-name').hasText(job.name);
+      assert.dom('.job-name').hasText(jobName);
     });
 
     test('it calls onCreate', async function (assert) {
@@ -36,6 +37,7 @@ module(
       this.setProperties({
         record: {
           job,
+          jobName: 'main',
           onCreate,
           onDestroy: () => {}
         }
@@ -58,6 +60,7 @@ module(
       this.setProperties({
         record: {
           job,
+          jobName: 'main',
           onCreate: () => {},
           onDestroy
         }
@@ -72,33 +75,6 @@ module(
 
       assert.equal(onDestroy.calledOnce, true);
       assert.equal(onDestroy.calledWith(job), true);
-    });
-
-    test('it uses display name if annotation is set', async function (assert) {
-      const displayName = 'Display me';
-      const job = {
-        id: 123,
-        name: 'main',
-        permutations: [
-          { annotations: { 'screwdriver.cd/displayName': displayName } }
-        ]
-      };
-
-      this.setProperties({
-        record: {
-          job,
-          onCreate: () => {},
-          onDestroy: () => {}
-        }
-      });
-
-      await render(
-        hbs`<Pipeline::Jobs::Table::Cell::Job
-            @record={{this.record}}
-        />`
-      );
-
-      assert.dom('.job-name').hasText(displayName);
     });
   }
 );

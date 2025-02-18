@@ -53,6 +53,11 @@ module('Acceptance | dashboards', function (hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify({})
     ]);
+    server.get('http://localhost:8080/v4/banners', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
   });
 
   hooks.afterEach(function () {

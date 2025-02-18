@@ -23,7 +23,7 @@
     <LinkTo
       id="build-link"
       @route="pipeline.build"
-      @models={{array @pipeline.id this.tooltipData.job.buildId}}
+      @models={{array this.pipeline.id this.tooltipData.job.buildId}}
       @disabled={{not this.buildDetailsAvailable}}
     >
       Go to build details
@@ -131,10 +131,8 @@
 {{/if}}
 {{#if this.showConfirmActionModal}}
   <Pipeline::Modal::ConfirmAction
-    @pipeline={{@pipeline}}
     @event={{@event}}
     @jobs={{@jobs}}
-    @latestCommitEvent={{@latestCommitEvent}}
     @job={{this.tooltipData.job}}
     @closeModal={{this.closeConfirmActionModal}}
   />

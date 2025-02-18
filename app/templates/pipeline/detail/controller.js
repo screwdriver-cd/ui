@@ -137,26 +137,26 @@ export default class TemplatesPipelineDetailController extends Controller {
   }
 
   get filteredTemplates() {
-    const { startTime, endTime } = this;
-    const startTimeInDate = new Date(startTime);
-    const endTimeInDate = new Date(endTime);
+    const { pipelineTemplateVersions, pipelineTemplateTags } = this.model;
 
-    let filteredVersions = this.model.pipelineTemplateVersions.filter(v => {
+    pipelineTemplateVersions.forEach(template => {
       // TODO: polyfill pipeline template metrics data
-      v.metrics = {
+      template.metrics = {
         jobs: { count: '' },
         builds: { count: '' },
         pipelines: { count: '' }
       };
 
-      const createTimeInDate = new Date(v.createTime);
-
-      return (
-        createTimeInDate >= startTimeInDate && createTimeInDate <= endTimeInDate
+      const tags = pipelineTemplateTags.filter(
+        tag => template.version === tag.version
       );
+
+      if (!template.tag) {
+        template.tag = tags.map(tag => tag.tag).join(' ');
+      }
     });
 
-    return filteredVersions;
+    return pipelineTemplateVersions;
   }
 
   @action

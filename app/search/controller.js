@@ -57,11 +57,9 @@ export default Controller.extend({
         .then(pipelines => {
           const nextPipelines = pipelines.toArray();
 
-          if (Array.isArray(nextPipelines)) {
-            if (nextPipelines.length < ENV.APP.NUM_PIPELINES_LISTED) {
-              this.set('moreToShow', false);
-            }
-
+          if (!Array.isArray(nextPipelines) || nextPipelines.length === 0) {
+            this.set('moreToShow', false);
+          } else {
             this.set(
               'pipelinesToShow',
               this.pipelinesToShow.concat(nextPipelines)

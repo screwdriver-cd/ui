@@ -7,23 +7,16 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders base graph', async function (assert) {
-    const workflowGraph = {
-      nodes: [{ name: '~commit' }, { name: 'main' }],
-      edges: [{ src: '~commit', dest: 'main' }]
-    };
-    const event = { startFrom: '~commit' };
-    const jobs = [{ id: 1 }];
-    const builds = [{ id: 1, jobId: 1, status: 'SUCCESS' }];
-    const stages = [];
-    const displayJobNameLength = 20;
-
     this.setProperties({
-      workflowGraph,
-      event,
-      jobs,
-      builds,
-      stages,
-      displayJobNameLength
+      workflowGraph: {
+        nodes: [{ name: '~commit' }, { name: 'main' }],
+        edges: [{ src: '~commit', dest: 'main' }]
+      },
+      event: { startFrom: '~commit' },
+      jobs: [{ id: 1 }],
+      builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
+      stages: [],
+      displayJobNameLength: 20
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -44,23 +37,17 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
 
   test('it renders with correct job display name length', async function (assert) {
     const nodeNames = ['~commit', 'abcdefghijklmnopqrstuvwxyz'];
-    const workflowGraph = {
-      nodes: [{ name: nodeNames[0] }, { name: nodeNames[1] }],
-      edges: [{ src: nodeNames[0], dest: nodeNames[1] }]
-    };
-    const event = { startFrom: nodeNames[0] };
-    const jobs = [{ id: 1 }];
-    const builds = [{ id: 1, jobId: 1, status: 'SUCCESS' }];
-    const stages = [];
-    const displayJobNameLength = 25;
 
     this.setProperties({
-      workflowGraph,
-      event,
-      jobs,
-      builds,
-      stages,
-      displayJobNameLength
+      workflowGraph: {
+        nodes: [{ name: nodeNames[0] }, { name: nodeNames[1] }],
+        edges: [{ src: nodeNames[0], dest: nodeNames[1] }]
+      },
+      event: { startFrom: nodeNames[0] },
+      jobs: [{ id: 1 }],
+      builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
+      stages: [],
+      displayJobNameLength: 25
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -87,52 +74,43 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it renders virtual stage', async function (assert) {
-    const workflowGraph = {
-      nodes: [
-        { name: '~commit' },
-        {
-          id: 11,
-          name: 'stage@test:setup',
-          stageName: 'test',
-          virtual: true
-        },
-        { id: 1, name: 'main', stageName: 'test' },
-        {
-          id: 12,
-          name: 'stage@test:teardown',
-          stageName: 'test',
-          virtual: true
-        }
-      ],
-      edges: [
-        { src: '~commit', dest: 'stage@test:setup' },
-        { src: 'stage@test:setup', dest: 'main' },
-        { src: 'main', dest: 'stage@test:teardown' }
-      ]
-    };
-    const event = { startFrom: '~commit' };
-    const jobs = [
-      { id: 1, name: 'main' },
-      { id: 11, name: 'stage@test:setup' },
-      { id: 12, name: 'stage@test:teardown' }
-    ];
-    const builds = [
-      { id: 1, jobId: 11, status: 'SUCCESS' },
-      { id: 2, jobId: 1, status: 'SUCCESS' },
-      { id: 3, jobId: 12, status: 'SUCCESS' }
-    ];
-    const stages = [
-      { id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }
-    ];
-    const displayJobNameLength = 20;
-
     this.setProperties({
-      workflowGraph,
-      event,
-      jobs,
-      builds,
-      stages,
-      displayJobNameLength
+      workflowGraph: {
+        nodes: [
+          { name: '~commit' },
+          {
+            id: 11,
+            name: 'stage@test:setup',
+            stageName: 'test',
+            virtual: true
+          },
+          { id: 1, name: 'main', stageName: 'test' },
+          {
+            id: 12,
+            name: 'stage@test:teardown',
+            stageName: 'test',
+            virtual: true
+          }
+        ],
+        edges: [
+          { src: '~commit', dest: 'stage@test:setup' },
+          { src: 'stage@test:setup', dest: 'main' },
+          { src: 'main', dest: 'stage@test:teardown' }
+        ]
+      },
+      event: { startFrom: '~commit' },
+      jobs: [
+        { id: 1, name: 'main' },
+        { id: 11, name: 'stage@test:setup' },
+        { id: 12, name: 'stage@test:teardown' }
+      ],
+      builds: [
+        { id: 1, jobId: 11, status: 'SUCCESS' },
+        { id: 2, jobId: 1, status: 'SUCCESS' },
+        { id: 3, jobId: 12, status: 'SUCCESS' }
+      ],
+      stages: [{ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }],
+      displayJobNameLength: 20
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -152,50 +130,41 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it renders stage', async function (assert) {
-    const workflowGraph = {
-      nodes: [
-        { name: '~commit' },
-        {
-          id: 11,
-          name: 'stage@test:setup',
-          stageName: 'test'
-        },
-        { id: 1, name: 'main', stageName: 'test' },
-        {
-          id: 12,
-          name: 'stage@test:teardown',
-          stageName: 'test'
-        }
-      ],
-      edges: [
-        { src: '~commit', dest: 'stage@test:setup' },
-        { src: 'stage@test:setup', dest: 'main' },
-        { src: 'main', dest: 'stage@test:teardown' }
-      ]
-    };
-    const event = { startFrom: '~commit' };
-    const jobs = [
-      { id: 1, name: 'main' },
-      { id: 11, name: 'stage@test:setup' },
-      { id: 12, name: 'stage@test:teardown' }
-    ];
-    const builds = [
-      { id: 1, jobId: 11, status: 'SUCCESS' },
-      { id: 2, jobId: 1, status: 'SUCCESS' },
-      { id: 3, jobId: 12, status: 'SUCCESS' }
-    ];
-    const stages = [
-      { id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }
-    ];
-    const displayJobNameLength = 20;
-
     this.setProperties({
-      workflowGraph,
-      event,
-      jobs,
-      builds,
-      stages,
-      displayJobNameLength
+      workflowGraph: {
+        nodes: [
+          { name: '~commit' },
+          {
+            id: 11,
+            name: 'stage@test:setup',
+            stageName: 'test'
+          },
+          { id: 1, name: 'main', stageName: 'test' },
+          {
+            id: 12,
+            name: 'stage@test:teardown',
+            stageName: 'test'
+          }
+        ],
+        edges: [
+          { src: '~commit', dest: 'stage@test:setup' },
+          { src: 'stage@test:setup', dest: 'main' },
+          { src: 'main', dest: 'stage@test:teardown' }
+        ]
+      },
+      event: { startFrom: '~commit' },
+      jobs: [
+        { id: 1, name: 'main' },
+        { id: 11, name: 'stage@test:setup' },
+        { id: 12, name: 'stage@test:teardown' }
+      ],
+      builds: [
+        { id: 1, jobId: 11, status: 'SUCCESS' },
+        { id: 2, jobId: 1, status: 'SUCCESS' },
+        { id: 3, jobId: 12, status: 'SUCCESS' }
+      ],
+      stages: [{ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }],
+      displayJobNameLength: 20
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -215,26 +184,19 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it renders with chained PRs', async function (assert) {
-    const workflowGraph = {
-      nodes: [{ name: '~pr' }, { name: 'first' }, { name: 'second' }],
-      edges: [
-        { src: '~pr', dest: 'first' },
-        { src: 'first', dest: 'second' }
-      ]
-    };
-    const event = { startFrom: '~pr' };
-    const jobs = [{ id: 1 }];
-    const builds = [{ id: 1, jobId: 1, status: 'SUCCESS' }];
-    const stages = [];
-    const displayJobNameLength = 20;
-
     this.setProperties({
-      workflowGraph,
-      event,
-      jobs,
-      builds,
-      stages,
-      displayJobNameLength
+      workflowGraph: {
+        nodes: [{ name: '~pr' }, { name: 'first' }, { name: 'second' }],
+        edges: [
+          { src: '~pr', dest: 'first' },
+          { src: 'first', dest: 'second' }
+        ]
+      },
+      event: { startFrom: '~pr' },
+      jobs: [{ id: 1 }],
+      builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
+      stages: [],
+      displayJobNameLength: 20
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -254,10 +216,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it re-renders graph when workflowGraph changes', async function (assert) {
-    const workflowGraph = {
-      nodes: [{ name: '~commit' }, { name: 'main' }],
-      edges: [{ src: '~commit', dest: 'main' }]
-    };
     const workflowGraphWithDownstreamTriggers = {
       nodes: [
         { name: '~commit' },
@@ -269,19 +227,17 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
         { src: 'main', dest: 'sd-main-triggers' }
       ]
     };
-    const event = { startFrom: '~commit' };
-    const jobs = [{ id: 1 }];
-    const builds = [{ id: 1, jobId: 1, status: 'SUCCESS' }];
-    const stages = [];
-    const displayJobNameLength = 20;
 
     this.setProperties({
-      workflowGraph,
-      event,
-      jobs,
-      builds,
-      stages,
-      displayJobNameLength
+      workflowGraph: {
+        nodes: [{ name: '~commit' }, { name: 'main' }],
+        edges: [{ src: '~commit', dest: 'main' }]
+      },
+      event: { startFrom: '~commit' },
+      jobs: [{ id: 1 }],
+      builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
+      stages: [],
+      displayJobNameLength: 20
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -304,23 +260,16 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it re-renders graph when builds update', async function (assert) {
-    const workflowGraph = {
-      nodes: [{ name: '~commit' }, { name: 'main', id: 123 }],
-      edges: [{ src: '~commit', dest: 'main' }]
-    };
-    const event = { startFrom: '~commit' };
-    const jobs = [{ id: 123 }];
-    const builds = [{ id: 1, jobId: 123, status: 'RUNNING' }];
-    const stages = [];
-    const displayJobNameLength = 20;
-
     this.setProperties({
-      workflowGraph,
-      event,
-      jobs,
-      builds,
-      stages,
-      displayJobNameLength
+      workflowGraph: {
+        nodes: [{ name: '~commit' }, { name: 'main', id: 123 }],
+        edges: [{ src: '~commit', dest: 'main' }]
+      },
+      event: { startFrom: '~commit' },
+      jobs: [{ id: 123 }],
+      builds: [{ id: 1, jobId: 123, status: 'RUNNING' }],
+      stages: [],
+      displayJobNameLength: 20
     });
     await render(
       hbs`<Pipeline::Workflow::Graph

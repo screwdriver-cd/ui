@@ -141,6 +141,18 @@ module('Acceptance | pipeline build', function (hooks) {
         // {“1018240”:{“showPRJobs”:true},“1048190”:{“showPRJobs”:false},“displayJobNameLength”:30}
       })
     ]);
+
+    server.get('http://localhost:8080/v4/banners', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([
+        {
+          id: 1,
+          isActive: true,
+          message: 'shutdown imminent'
+        }
+      ])
+    ]);
   });
 
   hooks.afterEach(function () {
@@ -226,6 +238,7 @@ module('Acceptance | pipeline build', function (hooks) {
     await visit('/pipelines/4');
 
     assert.equal(currentURL(), `/pipelines/4/events/${desiredEventId}`);
+    assert.dom('.banner').hasText('× shutdown imminent');
     assert.equal(getPageTitle(), 'foo/bar', 'Page title is correct');
     assert
       .dom('a div.pipeline-name')

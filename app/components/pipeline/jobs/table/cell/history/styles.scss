@@ -1,9 +1,14 @@
 @mixin styles {
   .history-cell {
     display: flex;
+    max-width: 9rem;
+    overflow: scroll;
 
     .build-history-container {
-      a {
+      padding: 1rem 0;
+
+      a,
+      .created {
         display: flex;
 
         svg {

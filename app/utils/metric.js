@@ -7,19 +7,19 @@ const getIcon = status => {
       return 'refresh fa-spin';
     case 'success':
     case 'warning':
-      return 'check-circle';
+      return 'circle-check';
     case 'failure':
-      return 'times-circle';
+      return 'circle-xmark';
     case 'aborted':
-      return 'stop-circle';
+      return 'circle-stop';
     case 'blocked':
       return 'ban';
     case 'unstable':
-      return 'exclamation-circle';
+      return 'circle-exclamation';
     case 'frozen':
-      return 'minus-circle';
+      return 'circle-minus';
     default:
-      return 'question-circle';
+      return 'circle-question';
   }
 };
 
@@ -83,7 +83,7 @@ const formatMetrics = metrics => {
         status: 'build-empty',
         durationText: '--',
         sha: 'Not available',
-        icon: 'question-circle',
+        icon: 'circle-question',
         commitMessage: 'No events have been run for this pipeline',
         commitUrl: '#',
         createTime: 0,

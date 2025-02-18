@@ -12,7 +12,9 @@ module('Acceptance | search', function (hooks) {
   hooks.beforeEach(function () {
     server = new Pretender();
     server.get('http://localhost:8080/v4/pipelines', request => {
-      if (!request.queryParams.search) {
+      const { search, page } = request.queryParams;
+
+      if (!search) {
         return [
           200,
           { 'Content-Type': 'application/json' },
@@ -59,7 +61,8 @@ module('Acceptance | search', function (hooks) {
           ])
         ];
       }
-      if (request.queryParams.search === 'banana') {
+
+      if (search === 'banana' && page === '1') {
         return [
           200,
           { 'Content-Type': 'application/json' },
@@ -109,6 +112,12 @@ module('Acceptance | search', function (hooks) {
         }
       ])
     ]);
+
+    server.get('http://localhost:8080/v4/banners', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
   });
 
   hooks.afterEach(function () {
@@ -146,8 +155,11 @@ module('Acceptance | search', function (hooks) {
 
     assert.equal(currentURL(), '/search?query=banana ');
     assert.dom('tr').exists({ count: 3 });
-    assert.dom('.showMore').doesNotExist();
+    assert.dom('.showMore').hasText('Show more results...');
     assert.dom('.num-results').hasText('Showing 2 result(s)');
+    await click('.showMore');
+    await waitUntil(() => !find('.showMore'));
+    assert.dom('.showMore').doesNotExist();
   });
 
   test('visiting /search?query=doesnotexist when logged in', async function (assert) {

@@ -106,7 +106,7 @@ module(
       />`);
       assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
       assert
-        .dom('.fa-question-circle')
+        .dom('.fa-circle-question')
         .exists({ count: 2 }, 'Theare are 2 description info');
       assert
         .dom('.ember-basic-dropdown')
@@ -147,7 +147,7 @@ module(
       />`);
       assert.dom('.form-group').exists({ count: 3 }, 'There are 3 parameters');
       assert
-        .dom('.fa-exclamation-triangle')
+        .dom('.fa-triangle-exclamation')
         .exists({ count: 2 }, 'There are are 2 default value warnings');
       assert
         .dom('.ember-basic-dropdown')
