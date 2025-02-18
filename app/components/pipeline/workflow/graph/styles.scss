@@ -119,6 +119,19 @@
             line-height: 0.75rem;
           }
         }
+
+        .stage-view-toggle {
+          background-color: colors.$sd-black;
+          border-radius: 5px;
+          color: colors.$sd-white;
+          cursor: pointer;
+          font-family: monospace;
+          font-stretch: ultra-expanded;
+          font-weight: bold;
+          margin-right: 10px;
+          text-align: center;
+          width: 20px;
+        }
       }
 
       .stage-description {

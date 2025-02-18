@@ -291,4 +291,44 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
 
     assert.dom('#hidden-tooltip-description').exists({ count: 1 });
   });
+
+  test('it does not render actionable menu options when the node represents stage jobs group', async function (assert) {
+    this.setProperties({
+      d3Data: {
+        node: {
+          name: 'stage@production jobs(3)',
+          description:
+            'This job group includes the following jobs: prod-deploy, prod-test, prod-certify',
+          type: 'JOB_GROUP'
+        },
+        d3Event: { clientX: 0, clientY: 0 },
+        sizes: { ICON_SIZE: 0 }
+      },
+      event: {},
+      jobs: [],
+      builds: []
+    });
+
+    await render(
+      hbs`<Pipeline::Workflow::Tooltip
+        @d3Data={{this.d3Data}}
+        @event={{this.event}}
+        @jobs={{this.jobs}}
+        @builds={{this.builds}}
+      />`
+    );
+
+    assert.dom('#remote-pipeline-link').doesNotExist();
+    assert.dom('.downstream-pipeline-link').doesNotExist();
+    assert.dom('#build-link').doesNotExist();
+    assert.dom('#metrics-link').doesNotExist();
+    assert.dom('#toggle-job-link').doesNotExist();
+    assert.dom('#stop-build-link').doesNotExist();
+
+    // assert.dom('#tooltip-description').exists({ count: 1 });
+    assert.dom('#hidden-tooltip-description').exists({ count: 1 });
+    assert
+      .dom('#hidden-tooltip-description')
+      .hasText('Description: This job group includes t...');
+  });
 });
