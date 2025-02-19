@@ -43,7 +43,9 @@ export default class PipelineJobsTableComponent extends Component {
 
   setColumnData() {
     const historyColumnConfiguration = {
-      title: 'HISTORY',
+      title: this.args.historyColumnName
+        ? this.args.historyColumnName.toUpperCase()
+        : 'HISTORY',
       className: 'history-column',
       component: 'historyCell'
     };
