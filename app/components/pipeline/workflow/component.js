@@ -161,7 +161,7 @@ export default class PipelineWorkflowComponent extends Component {
       this.event.id
     );
 
-    if (!this.isEventComplete(event, builds)) {
+    if (!this.isEventComplete(builds)) {
       this.workflowDataReload.registerBuildsCallback(
         BUILD_QUEUE_NAME,
         event.id,
@@ -193,7 +193,7 @@ export default class PipelineWorkflowComponent extends Component {
   buildsCallback(builds) {
     this.builds = builds;
 
-    if (this.isEventComplete(this.event, builds)) {
+    if (this.isEventComplete(builds)) {
       this.workflowDataReload.removeBuildsCallback(
         BUILD_QUEUE_NAME,
         this.event.id
@@ -201,8 +201,8 @@ export default class PipelineWorkflowComponent extends Component {
     }
   }
 
-  isEventComplete(event, builds) {
-    return !!(isSkipped(this.event, builds) || isComplete(builds));
+  isEventComplete(builds) {
+    return isSkipped(this.event, builds) || isComplete(builds);
   }
 
   get isPR() {
