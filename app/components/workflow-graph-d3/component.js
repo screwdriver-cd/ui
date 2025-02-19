@@ -65,7 +65,9 @@ export default Component.extend({
 
         const stages = this.stages === undefined ? [] : this.stages;
         const collapsedStages =
-          this.collapsedStages === undefined ? [] : this.collapsedStages;
+          this.collapsedStages === undefined
+            ? new Set([])
+            : this.collapsedStages;
         const prJobs = this.prJobs === undefined ? [] : this.prJobs;
         const jobs = (this.jobs === undefined ? [] : this.jobs).concat(prJobs);
 
