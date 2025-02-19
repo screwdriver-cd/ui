@@ -11,12 +11,12 @@ export default Service.extend({
     this.set('buildsLink', buildsLink);
   },
 
-  getSiblingPipeline(scmRepo, page) {
+  getSiblingPipeline(scmUri, page) {
     const pipelineListConfig = {
       page,
       count: ENV.APP.NUM_PIPELINES_LISTED,
-      search: scmRepo,
-      sortBy: 'name',
+      scmUri,
+      sortBy: 'scmUri',
       sort: 'ascending'
     };
 
