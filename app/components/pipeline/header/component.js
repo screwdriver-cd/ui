@@ -57,25 +57,17 @@ export default class PipelineHeaderComponent extends Component {
 
   @action
   async getPipelinesWithSameRepo() {
-    const pipelineId = this.pipeline.id;
-
     if (this.pipeline.scmRepo && this.pipeline.scmUri) {
-      const [scm, repositoryId] = this.pipeline.scmUri.split(':');
+      const { scmUri } = this.pipeline;
 
       this.sameRepoPipeline = await this.shuttle
         .fetchFromApi(
           'get',
-          `/pipelines?search=${this.pipeline.scmRepo.name}&sortBy=name&sort=ascending`
+          `/pipelines?scmUri=${scmUri}&sortBy=scmUri&sort=ascending`
         )
         .then(pipelines =>
           pipelines
-            .filter(pipeline => {
-              const [s, r] = pipeline.scmUri.split(':');
-
-              return (
-                pipeline.id !== pipelineId && scm === s && repositoryId === r
-              );
-            })
+            .filter(pipeline => pipeline.scmUri !== scmUri)
             .map(pipeline => ({
               url: `/v2/pipelines/${pipeline.id}`,
               branchAndRootDir: pipeline.scmRepo.rootDir

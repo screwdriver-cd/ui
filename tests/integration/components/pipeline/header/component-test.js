@@ -82,28 +82,23 @@ module('Integration | Component | pipeline/header', function (hooks) {
     sinon.stub(shuttle, 'fetchFromApi').resolves([
       {
         id: 123,
-        scmUri: 'git.github.com:9876',
+        scmUri: 'git.github.com:9876:abc',
         scmRepo: { branch: 'abc' }
       },
       {
         id: 124,
-        scmUri: 'git.github.com:9876',
+        scmUri: 'git.github.com:9876:def',
         scmRepo: { branch: 'def' }
       },
       {
         id: 125,
-        scmUri: 'git.github.com:9876',
+        scmUri: 'git.github.com:9876:ghi',
         scmRepo: { branch: 'ghi' }
-      },
-      {
-        id: 321,
-        scmUri: 'git.not.com:9876',
-        scmRepo: { branch: 'abc' }
       }
     ]);
     sinon.stub(pipelinePageState, 'getPipeline').returns({
       id: 123,
-      scmUri: 'git.github.com:9876',
+      scmUri: 'git.github.com:9876:abc',
       scmRepo: { url: 'https://gihub.com/test' },
       annotations: {}
     });

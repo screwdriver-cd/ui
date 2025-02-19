@@ -64,39 +64,23 @@ export default Component.extend({
   sameRepoPipeline: computed('pipeline', {
     async get() {
       const maxPage = 10;
-      const [scm, repositoryId] = this.pipeline.scmUri.split(':');
-      const pipelineName = this.pipeline.scmRepo.name;
-      const sameRepoPipelines = [];
+      const { scmUri } = this.pipeline;
+      const siblingPipelines = [];
 
       for (let page = 1; page <= maxPage; page += 1) {
-        const siblingPipelines = (
-          await this.pipelineService.getSiblingPipeline(
-            this.pipeline.scmRepo.name,
-            page
-          )
-        )
-          .toArray()
-          .filter(pipeline => pipeline.scmUri.split(':')[0] === scm);
+        const pipelines = (
+          await this.pipelineService.getSiblingPipeline(scmUri, page)
+        ).toArray();
 
-        sameRepoPipelines.push(...siblingPipelines);
-
-        if (
-          siblingPipelines.length === 0 ||
-          sameRepoPipelines[sameRepoPipelines.length - 1].scmRepo.name !==
-            pipelineName
-        ) {
+        if (pipelines.length === 0) {
           break;
         }
+
+        siblingPipelines.push(...pipelines);
       }
 
-      return sameRepoPipelines
-        .filter(pipe => {
-          const [s, r] = pipe.scmUri.split(':');
-
-          return (
-            pipe.id !== this.pipeline.id && scm === s && repositoryId === r
-          );
-        })
+      return siblingPipelines
+        .filter(pipe => pipe.scmUri !== scmUri) // Exclude itself
         .map((pipe, i) => ({
           index: i,
           url: `/pipelines/${pipe.id}`,
