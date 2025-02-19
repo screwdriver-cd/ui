@@ -10,10 +10,15 @@ export default class PipelineOptionsRoute extends Route {
 
   @service pipelinePageState;
 
-  beforeModel() {
+  beforeModel(transition) {
     // Guests should not access this page
     if (this.session.data.authenticated.isGuest) {
       this.replaceWith('v2.pipeline');
+    } else {
+      this.replaceWith(
+        'pipeline.options',
+        transition.to.parent.params.pipeline_id
+      );
     }
 
     // Reset error message when switching pages
