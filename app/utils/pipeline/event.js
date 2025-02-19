@@ -13,7 +13,7 @@ export const isSkipped = (event, builds) => {
 
   return builds?.length > 0
     ? false
-    : !!event?.commit?.message.match(/\[(skip ci|ci skip)\]/);
+    : !!event.commit?.message.match(/\[(skip ci|ci skip)\]/);
 };
 
 /**
@@ -23,7 +23,7 @@ export const isSkipped = (event, builds) => {
  */
 export const isComplete = builds => {
   if (!builds || builds.length === 0) {
-    return true;
+    return false;
   }
 
   return builds.every(build => {
@@ -48,11 +48,11 @@ export const getStatus = (event, builds) => {
     return 'SKIPPED';
   }
 
-  if (isComplete(builds)) {
-    if (!builds || builds.length === 0) {
-      return 'UNKNOWN';
-    }
+  if (!builds || builds.length === 0) {
+    return 'UNKNOWN';
+  }
 
+  if (isComplete(builds)) {
     return builds.filter(build => build.status === 'WARNING').length > 0
       ? 'WARNING'
       : builds[0].status;
