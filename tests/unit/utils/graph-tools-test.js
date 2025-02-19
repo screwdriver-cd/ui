@@ -1268,14 +1268,16 @@ module('Unit | Utility | graph tools', function () {
       },
       nodes: [
         {
-          description: 'prod-deploy, prod-test, prod-certify',
+          description:
+            'This job group includes the following jobs: prod-deploy, prod-test, prod-certify',
           isDisabled: false,
           name: 'stage@production jobs (3)',
           pos: {
             x: 6,
             y: 0
           },
-          stageName: 'production'
+          stageName: 'production',
+          type: 'JOB_GROUP'
         },
         {
           isDisabled: false,

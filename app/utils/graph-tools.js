@@ -142,8 +142,11 @@ const collapseStageNodesAndEdges = (stage, originalNodes, originalEdges) => {
   const stageJobNames = stage.jobs.map(j => j.name);
   const stageNodeGroup = {
     name: `stage@${stageName} jobs (${stageJobNames.length})`,
-    description: stageJobNames.join(', '),
-    stageName
+    description: `This job group includes the following jobs: ${stageJobNames.join(
+      ', '
+    )}`,
+    stageName,
+    type: 'JOB_GROUP'
   };
 
   const collapsedNodes = [stageNodeGroup];

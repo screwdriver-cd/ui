@@ -19,7 +19,7 @@
           Go to downstream pipeline {{t.triggerName}}
         </LinkTo>
     {{/each}}
-  {{else}}
+  {{else if (not-eq this.tooltipData.job.type "JOB_GROUP")}}
     <LinkTo
       id="build-link"
       @route="pipeline.build"
@@ -78,27 +78,31 @@
     {{/if}}
   {{/if}}
 
-  {{#if this.tooltipData.displayStop}}
-    <a
-      id="stop-build-link"
-      href="#"
-      {{on "click" (fn this.openStopBuildModal)}}
-    >
-      Stop build
-    </a>
-  {{/if}}
-  {{#if (eq this.tooltipData.job.status "FROZEN")}}
-    <a
-      id="stop-build-link"
-      href="#"
-      {{on "click" (fn this.openStopBuildModal)}}
-    >
-      Stop frozen build
-    </a>
+  {{#if (not-eq this.tooltipData.job.type "JOB_GROUP")}}
+    {{#if this.tooltipData.displayStop}}
+      <a
+        id="stop-build-link"
+        href="#"
+        {{on "click" (fn this.openStopBuildModal)}}
+      >
+        Stop build
+      </a>
+    {{/if}}
+    {{#if (eq this.tooltipData.job.status "FROZEN")}}
+      <a
+        id="stop-build-link"
+        href="#"
+        {{on "click" (fn this.openStopBuildModal)}}
+      >
+        Stop frozen build
+      </a>
+    {{/if}}
   {{/if}}
 
   {{#if this.tooltipData.job.description}}
-    <hr>
+    {{#if (not-eq this.tooltipData.job.type "JOB_GROUP")}}
+      <hr>
+    {{/if}}
     {{#if this.enableHiddenDescription}}
       <span
         id="hidden-tooltip-description"
