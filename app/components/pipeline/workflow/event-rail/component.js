@@ -81,7 +81,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   }
 
   async fetchEvents(event, direction) {
-    const pipelineId = this.pipelinePageState.getPipelineId();
+    const pipeline = this.pipelinePageState.getPipeline();
 
     if (this.isPR) {
       if (!this.prNums || this.prNums.length === 0) {
@@ -97,7 +97,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
         return this.shuttle
           .fetchFromApi(
             'get',
-            `/pipelines/${pipelineId}/events?type=${this.eventType}&prNum=${prNumToFetch}`
+            `/pipelines/${pipeline.id}/events?type=${this.eventType}&prNum=${prNumToFetch}`
           )
           .then(events => {
             return events[0];
@@ -110,15 +110,14 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     }
 
     const sort = direction === 'gt' ? 'ascending' : 'descending';
+    const baseUrl = `/pipelines/${pipeline.id}/events?count=${EVENT_BATCH_SIZE}&type=${this.eventType}&id=${direction}:${event.id}&sort=${sort}`;
+    const url = pipeline.settings?.filterSchedulerEvents
+      ? `${baseUrl}&creator=ne:sd:scheduler`
+      : baseUrl;
 
-    return this.shuttle
-      .fetchFromApi(
-        'get',
-        `/pipelines/${pipelineId}/events?count=${EVENT_BATCH_SIZE}&type=${this.eventType}&id=${direction}:${event.id}&sort=${sort}`
-      )
-      .then(events => {
-        return events;
-      });
+    return this.shuttle.fetchFromApi('get', url).then(events => {
+      return events;
+    });
   }
 
   @action

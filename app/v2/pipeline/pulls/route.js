@@ -4,9 +4,10 @@ import { service } from '@ember/service';
 export default class NewPipelinePullsRoute extends Route {
   @service shuttle;
 
+  @service pipelinePageState;
+
   async model() {
-    const model = this.modelFor('v2.pipeline');
-    const pipelineId = model.pipeline.id;
+    const pipelineId = this.pipelinePageState.getPipelineId();
 
     const userSettings = await this.shuttle.fetchFromApi(
       'get',
@@ -29,7 +30,6 @@ export default class NewPipelinePullsRoute extends Route {
     );
 
     return {
-      ...model,
       userSettings,
       stages,
       triggers,

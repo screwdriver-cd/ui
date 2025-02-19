@@ -28,8 +28,10 @@
     }
 
     #event-cards-container {
-      height: calc(100% - $rail-actions-height);
+      $margin-bottom: 1rem;
+      height: calc(100% - $rail-actions-height - $margin-bottom);
       overflow: scroll;
+      margin-bottom: $margin-bottom;
     }
   }
 }
