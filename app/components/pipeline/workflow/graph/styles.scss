@@ -98,8 +98,10 @@
           background-color: colors.$sd-black;
           border-radius: 5px;
           color: colors.$sd-white;
-          font-weight: bold;
           cursor: pointer;
+          font-family: monospace;
+          font-stretch: ultra-expanded;
+          font-weight: bold;
           margin-right: 10px;
           text-align: center;
           width: 20px;
