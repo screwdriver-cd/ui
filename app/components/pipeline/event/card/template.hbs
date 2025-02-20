@@ -35,7 +35,7 @@
       </a>
     </div>
     {{#if (eq this.status "RUNNING")}}
-      {{#if @showAbort}}
+      {{#if @allowEventAction}}
         <BsButton
           class="abort-event-button"
           @type="danger"
@@ -52,6 +52,31 @@
             <Pipeline::Modal::StopBuild
               @eventId={{@event.id}}
               @closeModal={{this.closeAbortBuildModal}}
+            />
+          {{/if}}
+        </BsButton>
+      {{/if}}
+    {{else}}
+      {{#if (and @allowEventAction this.isPR)}}
+        <BsButton
+          class="start-event-button"
+          @type="primary"
+          @outline={{true}}
+          @onClick={{fn this.openStartEventModal}}
+          title="Start PR event"
+        >
+          <FaIcon
+            @icon="play-circle"
+            @fixedWidth="true"
+            @prefix="far"
+          />
+          {{#if this.showStartEventModal}}
+            <Pipeline::Modal::StartEvent
+              @pipeline={{@pipeline}}
+              @jobs={{@jobs}}
+              @event={{@event}}
+              @isRestrictPR={{true}}
+              @closeModal={{this.closeStartEventModal}}
             />
           {{/if}}
         </BsButton>

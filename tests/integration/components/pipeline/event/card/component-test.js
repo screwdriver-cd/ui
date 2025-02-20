@@ -119,6 +119,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.event-card-title .event-status svg').exists({ count: 1 });
     assert.dom('.event-card-title pr-title').doesNotExist();
     assert.dom('.event-card-title .sha').exists({ count: 1 });
+    assert.dom('.event-card-title .start-event-button').doesNotExist();
 
     assert.dom('.event-card-body').exists({ count: 1 });
     assert.dom('.event-card-body .message').exists({ count: 1 });
@@ -331,7 +332,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
         @userSettings={{this.userSettings}}
-        @showAbort={{true}}
+        @allowEventAction={{true}}
       />`
     );
 
@@ -736,6 +737,46 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
     assert.dom('.event-card-title .pr-title').exists({ count: 1 });
     assert.dom('.event-card-title .pr-title').containsText('PR-4');
+    assert.dom('.event-card-title .start-event-button').doesNotExist();
+  });
+
+  test('it renders start event button for PR', async function (assert) {
+    const router = this.owner.lookup('service:router');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
+
+    sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/2');
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake(() => {});
+
+    this.setProperties({
+      event: {
+        id: 11,
+        groupEventId: 11,
+        sha: 'abc123def456',
+        commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+        creator: { name: 'batman' },
+        meta: {},
+        type: 'pr',
+        prNum: 4
+      },
+      userSettings: {}
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @userSettings={{this.userSettings}}
+        @allowEventAction={{true}}
+      />`
+    );
+
+    assert.dom('.event-card-title .start-event-button').exists({ count: 1 });
   });
 
   test('it does not render highlight for PR', async function (assert) {
