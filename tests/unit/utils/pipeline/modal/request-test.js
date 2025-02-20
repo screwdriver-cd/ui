@@ -74,16 +74,37 @@ module('Unit | Utility | pipeline/modal/request', function () {
         'foobar',
         123,
         null,
-        { id: 9, groupEventId: 2 },
+        { id: 9, groupEventId: 2, prNum: 5 },
         null,
         false,
-        null,
-        5
+        null
       ),
       {
         pipelineId: 123,
         causeMessage: 'Manually started by foobar',
         startFrom: '~pr',
+        groupEventId: 2,
+        parentEventId: 9,
+        prNum: 5
+      }
+    );
+  });
+
+  test('buildPostBody sets correct values for starting from PR job', function (assert) {
+    assert.deepEqual(
+      buildPostBody(
+        'foobar',
+        123,
+        { name: 'job' },
+        { id: 9, groupEventId: 2, prNum: 5 },
+        null,
+        false,
+        null
+      ),
+      {
+        pipelineId: 123,
+        causeMessage: 'Manually started by foobar',
+        startFrom: 'PR-5:job',
         groupEventId: 2,
         parentEventId: 9,
         prNum: 5
