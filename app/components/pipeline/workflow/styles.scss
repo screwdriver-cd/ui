@@ -25,15 +25,16 @@
 
     #workflow-display-container {
       grid-area: workflow;
+      display: flex;
+      flex-direction: column;
       overflow: auto;
       padding-right: 1rem;
-      $graph-controls-height: 2.5rem;
 
       #workflow-display-controls {
         display: flex;
         align-content: center;
         padding-left: 1rem;
-        height: $graph-controls-height;
+        height: 2.5rem;
 
         #show-workflow-graph-button,
         #show-workflow-table-button {
@@ -88,9 +89,34 @@
         }
       }
 
+      #pr-restrictions {
+        display: flex;
+        height: 2.5rem;
+        margin-left: 1rem;
+        color: colors.$sd-warning;
+
+        .restriction-message {
+          margin-top: auto;
+          margin-bottom: auto;
+          margin-right: 0.25rem;
+        }
+
+        svg {
+          margin-top: auto;
+          margin-bottom: auto;
+
+          &.restriction-icon-container {
+            width: 1rem;
+            height: 1rem;
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
+          }
+        }
+      }
+
       #display-container {
         position: relative;
-        height: calc(100% - $graph-controls-height);
+        flex: 1;
         padding-top: 1rem;
         overflow: auto;
 

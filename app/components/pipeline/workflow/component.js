@@ -10,6 +10,7 @@ const PR_EVENT = 'pr';
 const BUILD_QUEUE_NAME = 'graph';
 const LATEST_COMMIT_EVENT_QUEUE_NAME = 'latestCommitEvent';
 const OPEN_PRS_QUEUE_NAME = 'openPrs';
+const RESTRICT_PR_ANNOTATION = 'screwdriver.cd/restrictPR';
 
 export default class PipelineWorkflowComponent extends Component {
   @service router;
@@ -222,6 +223,43 @@ export default class PipelineWorkflowComponent extends Component {
       this.workflowGraph.nodes.length !==
       this.workflowGraphWithDownstreamTriggers.nodes.length
     );
+  }
+
+  get hasPrRestrictions() {
+    if (!this.isPR) {
+      return false;
+    }
+
+    if (
+      this.pipeline.annotations &&
+      Object.hasOwn(this.pipeline.annotations, RESTRICT_PR_ANNOTATION)
+    ) {
+      const restriction = this.pipeline.annotations[RESTRICT_PR_ANNOTATION];
+
+      return restriction !== 'none';
+    }
+
+    return false;
+  }
+
+  get hasForkPrRestriction() {
+    if (!this.hasPrRestrictions) {
+      return false;
+    }
+
+    const restriction = this.pipeline.annotations[RESTRICT_PR_ANNOTATION];
+
+    return restriction === 'fork' || restriction === 'all';
+  }
+
+  get hasBranchPrRestriction() {
+    if (!this.hasPrRestrictions) {
+      return false;
+    }
+
+    const restriction = this.pipeline.annotations[RESTRICT_PR_ANNOTATION];
+
+    return restriction === 'branch' || restriction === 'all';
   }
 
   @action
