@@ -50,6 +50,8 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked showGraph;
 
+  @tracked collapsedStages = new Set([]);
+
   workflowGraph;
 
   workflowGraphWithDownstreamTriggers;
@@ -57,8 +59,6 @@ export default class PipelineWorkflowComponent extends Component {
   eventType;
 
   dataReloadId;
-
-  @tracked collapsedStages = new Set([]);
 
   constructor() {
     super(...arguments);

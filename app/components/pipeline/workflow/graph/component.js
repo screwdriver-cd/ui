@@ -1,6 +1,5 @@
 /* global d3 */
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 import { decorateGraph } from 'screwdriver-ui/utils/graph-tools';
@@ -26,23 +25,25 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
   decoratedGraph;
 
-  graphSvg;
+  collapsedStages;
 
-  @tracked collapsedStages;
+  graphSvg;
 
   constructor() {
     super(...arguments);
     this.event = this.args.event;
     this.builds = this.args.builds;
+    this.collapsedStages = this.args.collapsedStages;
 
     this.getDecoratedGraph(
       this.args.workflowGraph,
       this.args.builds,
-      this.args.event
+      this.args.event,
+      this.args.collapsedStages
     );
   }
 
-  getDecoratedGraph(workflowGraph, builds, event) {
+  getDecoratedGraph(workflowGraph, builds, event, collapsedStages) {
     this.decoratedGraph = decorateGraph({
       inputGraph: workflowGraph,
       builds,
@@ -53,7 +54,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
       chainPR: this.args.chainPr,
       prNum: event.prNum,
       stages: this.args.stages,
-      collapsedStages: this.args.collapsedStages
+      collapsedStages
     });
   }
 
@@ -157,7 +158,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
   }
 
   @action
-  redraw(element, [workflowGraph, builds, event]) {
+  redraw(element, [workflowGraph, builds, event, collapsedStages]) {
     const elementSizes = getElementSizes();
     const maximumJobNameLength = getMaximumJobNameLength(
       this.decoratedGraph,
@@ -167,14 +168,16 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
     if (
       this.event.id !== event.id ||
-      this.decoratedGraph.nodes.length !== workflowGraph.nodes.length
+      this.decoratedGraph.nodes.length !== workflowGraph.nodes.length ||
+      this.collapsedStages.length !== collapsedStages.length
     ) {
       if (this.event.id !== event.id) {
         this.event = event;
       }
       this.builds = builds;
+      this.collapsedStages = collapsedStages;
 
-      this.getDecoratedGraph(workflowGraph, builds, event);
+      this.getDecoratedGraph(workflowGraph, builds, event, collapsedStages);
       element.replaceChildren();
       this.draw(element);
 
