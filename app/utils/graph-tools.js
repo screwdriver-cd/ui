@@ -149,12 +149,17 @@ const collapseStageNodesAndEdges = (stage, originalNodes, originalEdges) => {
     type: 'JOB_GROUP'
   };
 
-  const collapsedNodes = [stageNodeGroup];
+  let isStageNodeGroupNotIncluded = true;
+
+  const collapsedNodes = [];
   const collapsedEdges = [];
 
   originalNodes.forEach(n => {
     if (n.stageName !== stageName) {
       collapsedNodes.push(n);
+    } else if (isStageNodeGroupNotIncluded) {
+      collapsedNodes.push(stageNodeGroup);
+      isStageNodeGroupNotIncluded = false;
     }
   });
 

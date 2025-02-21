@@ -1268,18 +1268,6 @@ module('Unit | Utility | graph tools', function () {
       },
       nodes: [
         {
-          description:
-            'This job group includes the following jobs: prod-deploy, prod-test, prod-certify',
-          isDisabled: false,
-          name: 'stage@production jobs (3)',
-          pos: {
-            x: 6,
-            y: 0
-          },
-          stageName: 'production',
-          type: 'JOB_GROUP'
-        },
-        {
           isDisabled: false,
           name: '~pr',
           pos: {
@@ -1342,6 +1330,18 @@ module('Unit | Utility | graph tools', function () {
             y: 0
           },
           stageName: 'integration'
+        },
+        {
+          description:
+            'This job group includes the following jobs: prod-deploy, prod-test, prod-certify',
+          isDisabled: false,
+          name: 'stage@production jobs (3)',
+          pos: {
+            x: 6,
+            y: 0
+          },
+          stageName: 'production',
+          type: 'JOB_GROUP'
         }
       ]
     };
@@ -1356,9 +1356,9 @@ module('Unit | Utility | graph tools', function () {
             width: 3
           },
           nodes: [
+            expectedOutput.nodes[4],
             expectedOutput.nodes[5],
-            expectedOutput.nodes[6],
-            expectedOutput.nodes[7]
+            expectedOutput.nodes[6]
           ]
         },
         id: 7,
@@ -1394,10 +1394,10 @@ module('Unit | Utility | graph tools', function () {
             height: 1,
             width: 1
           },
-          nodes: [expectedOutput.nodes[0]]
+          nodes: [expectedOutput.nodes[7]]
         },
         id: 8,
-        jobs: [expectedOutput.nodes[0]],
+        jobs: [expectedOutput.nodes[7]],
         name: 'production',
         pos: {
           x: 6,
@@ -1411,7 +1411,7 @@ module('Unit | Utility | graph tools', function () {
       {
         dest: 'stage@integration:setup',
         destStageName: 'integration',
-        from: expectedOutput.nodes[4],
+        from: expectedOutput.nodes[3],
         hidden: true,
         src: 'publish',
         to: expectedOutput.stages[0]
