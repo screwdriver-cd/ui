@@ -390,14 +390,14 @@ export function getVerticalDisplacements(
  * @returns {{stageVerticalDisplacements: {}, verticalDisplacements: {}}}
  */
 export function getHorizontalDisplacements(data, sizes) {
-  const stagesGroupedByStartRowPosition = groupBy(data.stages, 'pos.y');
+  const stagesGroupedByStartColumnPosition = groupBy(data.stages, 'pos.x');
 
   const columnsToBeDisplaced = {};
 
   data.stages.forEach(s => {
     const stageEndPosX = s.pos.x + s.graph.meta.width - 1;
 
-    if (stagesGroupedByStartRowPosition[stageEndPosX + 1]) {
+    if (stagesGroupedByStartColumnPosition[stageEndPosX + 1]) {
       columnsToBeDisplaced[stageEndPosX + 1] = true;
     }
   });
