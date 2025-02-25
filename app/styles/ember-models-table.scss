@@ -1,0 +1,128 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  .table-main {
+    margin: 2rem 0;
+
+    table {
+      thead {
+        color: colors.$sd-text-med;
+
+        th {
+          .input-group {
+            border: 1px solid colors.$sd-light-gray;
+            border-radius: 3px;
+            width: 90%;
+
+            input {
+              border: none;
+              border-radius: 3px;
+            }
+
+            button {
+              border-color: transparent;
+
+              &:hover {
+                background-color: transparent;
+              }
+
+              &:focus {
+                box-shadow: none;
+              }
+
+              &:active {
+                background-color: transparent;
+                color: #0056b3;
+              }
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          color: colors.$sd-text;
+          height: 4rem;
+
+          &:hover {
+            color: colors.$sd-text;
+            background-color: rgba(colors.$sd-running, 0.1);
+          }
+        }
+
+        td {
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+
+  .table-footer {
+    display: flex;
+    color: colors.$sd-text-med;
+
+    .table-summary {
+      display: flex;
+      margin: auto;
+    }
+
+    .select-pagination-size {
+      display: flex;
+      margin: auto;
+
+      label {
+        background-color: transparent;
+        border: none;
+        color: colors.$sd-text-med;
+      }
+
+      select {
+        border-radius: 0.25rem;
+      }
+    }
+
+    .page-navigation {
+      display: flex;
+
+      button {
+        background-color: transparent;
+        border: none;
+
+        svg {
+          color: colors.$sd-text;
+        }
+
+        &:disabled {
+          svg {
+            color: rgba(colors.$sd-text, 0.5);
+          }
+        }
+      }
+    }
+
+    .pagination-controls {
+      display: flex;
+      justify-content: flex-end;
+      margin: auto;
+
+      .page-select {
+        display: flex;
+        width: 10rem;
+        margin-right: 2.5rem;
+
+        label {
+          background-color: transparent;
+          border: none;
+          color: colors.$sd-text-med;
+        }
+
+        select {
+          display: flex;
+          align-items: center;
+          padding: 0.375rem 0.75rem;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
