@@ -1,0 +1,40 @@
+<BsModal
+  id="delete-pipeline-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">Are you sure you want to delete this pipeline?</div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div>
+      Repository:
+      <a
+        id="delete-repository-link"
+        href="{{@pipeline.scmRepo.url}}"
+        target="_blank">
+        {{@pipeline.name}}
+      </a>
+    </div>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="delete-pipeline-action"
+      disabled={{this.isDeleteButtonDisabled}}
+      @type="primary"
+      @defaultText="Yes"
+      @pendingText="Deleting"
+      @fulfilledText="Deleted"
+      @onClick={{fn this.deletePipeline}}
+    />
+  </modal.footer>
+</BsModal>
