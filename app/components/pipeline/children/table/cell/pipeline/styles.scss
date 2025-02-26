@@ -1,0 +1,15 @@
+@mixin styles {
+  .pipeline-cell {
+    max-width: 90%;
+
+    a {
+      display: block;
+      white-space: nowrap;
+
+      .pipeline-name {
+        padding: 1rem 0;
+        overflow: auto;
+      }
+    }
+  }
+}
