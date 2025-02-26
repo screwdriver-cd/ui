@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { click, render } from '@ember/test-helpers';
+import { click, fillIn, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -25,17 +25,16 @@ module(
       assert.dom('.modal-header').exists({ count: 1 });
       assert.dom('.alert').doesNotExist();
       assert.dom('.modal-title').exists({ count: 1 });
+      assert.dom('#delete-repository-message').exists({ count: 1 });
+      assert.dom('#delete-repository-input').exists({ count: 1 });
       assert.dom('.modal-footer').exists({ count: 1 });
       assert.dom('#delete-pipeline-action').exists({ count: 1 });
+      assert.dom('#delete-pipeline-action').isDisabled();
     });
 
-    test('it sets error message when deleting pipeline fails', async function (assert) {
-      const shuttle = this.owner.lookup('service:shuttle');
-
-      sinon.stub(shuttle, 'fetchFromApi').rejects();
-
+    test('it enables delete button when input is set correctly', async function (assert) {
       this.setProperties({
-        pipeline: { id: 123 },
+        pipeline: { id: 123, name: 'test' },
         closeModal: () => {}
       });
 
@@ -46,6 +45,31 @@ module(
         />`
       );
 
+      await fillIn('#delete-repository-input', 'not-correct');
+      assert.dom('#delete-pipeline-action').isDisabled();
+
+      await fillIn('#delete-repository-input', 'test');
+      assert.dom('#delete-pipeline-action').isEnabled();
+    });
+
+    test('it sets error message when deleting pipeline fails', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+
+      sinon.stub(shuttle, 'fetchFromApi').rejects();
+
+      this.setProperties({
+        pipeline: { id: 123, name: 'test' },
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Pipeline::Modal::DeletePipeline
+            @pipeline={{this.pipeline}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      await fillIn('#delete-repository-input', 'test');
       await click('#delete-pipeline-action');
       assert.dom('.alert').exists({ count: 1 });
     });
@@ -57,7 +81,7 @@ module(
       sinon.stub(shuttle, 'fetchFromApi').resolves();
 
       this.setProperties({
-        pipeline: { id: 123 },
+        pipeline: { id: 123, name: 'test' },
         closeModal: closeModalSpy
       });
 
@@ -68,6 +92,7 @@ module(
         />`
       );
 
+      await fillIn('#delete-repository-input', 'test');
       await click('#delete-pipeline-action');
 
       assert.equal(closeModalSpy.calledOnce, true);

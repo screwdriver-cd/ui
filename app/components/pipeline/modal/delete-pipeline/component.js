@@ -14,8 +14,17 @@ export default class PipelineModalDeletePipelineComponent extends Component {
 
   @tracked wasActionSuccessful = false;
 
+  @tracked confirmDeleteInput;
+
   get isDeleteButtonDisabled() {
-    return this.wasActionSuccessful || this.isAwaitingResponse;
+    if (this.wasActionSuccessful || this.isAwaitingResponse) {
+      return true;
+    }
+
+    return (
+      !this.confirmDeleteInput ||
+      this.confirmDeleteInput !== this.args.pipeline.name
+    );
   }
 
   @action
