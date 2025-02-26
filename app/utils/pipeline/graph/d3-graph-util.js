@@ -434,7 +434,8 @@ export function addStages(
   sizes,
   nodeWidth,
   onStageMenuHandleClick,
-  displayStageMenuHandle
+  displayStageMenuHandle,
+  onStageViewToggleClick
 ) {
   const { TITLE_SIZE } = sizes;
 
@@ -479,6 +480,22 @@ export function addStages(
       .append('div')
       .attr('class', 'stage-title')
       .style('font-size', `${TITLE_SIZE}px`);
+
+    const isStageCollapsed = stage.isCollapsed;
+
+    // stage expand/collapse toggle button
+    stageTitle
+      .append('span')
+      .html(isStageCollapsed ? '+' : '-')
+      .attr(
+        'title',
+        isStageCollapsed ? 'Expand the stage' : 'Collapse the stage'
+      )
+      .attr('class', 'stage-view-toggle')
+      .style('font-size', `${TITLE_SIZE}px`)
+      .on('click', () => {
+        onStageViewToggleClick(stage.name, !isStageCollapsed);
+      });
 
     // stage info - name
     stageTitle
@@ -735,6 +752,7 @@ export function addStageEdges( // eslint-disable-line max-params
  * @param sizes
  * @param nodeWidth
  * @param verticalDisplacements
+ * @param horizontalDisplacements
  * @param isSkipped
  * @param onClick
  */

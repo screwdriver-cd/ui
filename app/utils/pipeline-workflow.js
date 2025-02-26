@@ -50,5 +50,5 @@ export function canStageStart(activeTab, pipelineGraph, stage) {
     return false;
   }
 
-  return canJobStart(activeTab, pipelineGraph, stage.setup.name);
+  return canJobStart(activeTab, pipelineGraph, `stage@${stage.name}:setup`);
 }
