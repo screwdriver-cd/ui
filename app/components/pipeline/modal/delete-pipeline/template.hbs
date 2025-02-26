@@ -1,0 +1,58 @@
+<BsModal
+  id="delete-pipeline-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">Are you sure you want to delete this pipeline?</div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div id="delete-repository-message">
+      <div class="delete-repository-message-warning">
+        <FaIcon @icon="triangle-exclamation"/>
+        <b>Deleting this pipeline is permanent!</b>
+      </div>
+      <br />
+      <div>
+        The
+        <a
+          id="delete-repository-link"
+          href="{{@pipeline.scmRepo.url}}"
+          target="_blank"
+        >
+          source code repository
+        </a>
+        will remain intact, but the pipeline will be removed.
+      </div>
+      <br />
+      <div>
+        If you are sure you want to delete this pipeline, enter the name of the pipeline (<b>{{@pipeline.name}}</b>) below
+      </div>
+    </div>
+
+    <Input
+      id="delete-repository-input"
+      @value={{this.confirmDeleteInput}}
+    />
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="delete-pipeline-action"
+      disabled={{this.isDeleteButtonDisabled}}
+      @type="primary"
+      @defaultText="Yes"
+      @pendingText="Deleting"
+      @fulfilledText="Deleted"
+      @onClick={{fn this.deletePipeline}}
+    />
+  </modal.footer>
+</BsModal>
