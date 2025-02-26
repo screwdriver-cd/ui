@@ -60,7 +60,33 @@
           </div>
         {{/if}}
       </div>
-
+      {{#if this.hasPrRestrictions}}
+        <div id="pr-restrictions">
+          <div class="restriction-message">
+            Pipeline configuration has restricted automatic building of Pull Requests:
+          </div>
+          {{#if this.hasBranchPrRestriction}}
+            <svg class="restriction-icon-container">
+              <FaIcon
+                @icon="code-branch"
+                @fixedWidth="true"
+                @prefix="fa"
+              />
+              <title>Pull requests from branches are disabled from automatically running</title>
+            </svg>
+          {{/if}}
+          {{#if this.hasForkPrRestriction}}
+            <svg class="restriction-icon-container">
+              <FaIcon
+                @icon="code-fork"
+                @fixedWidth="true"
+                @prefix="fa"
+              />
+              <title>Pull requests from forked repositories are disabled from automatically running</title>
+            </svg>
+          {{/if}}
+        </div>
+      {{/if}}
       <div id="display-container">
         {{#if this.showGraph}}
           <Pipeline::Workflow::Graph
