@@ -115,7 +115,9 @@ export const getFailureCount = builds => {
 };
 
 export const getWarningCount = builds => {
-  return builds.filter(build => build.status === 'UNSTABLE').length;
+  return builds.filter(
+    build => build.status === 'WARNING' || build.status === 'UNSTABLE'
+  ).length;
 };
 
 export const getSuccessCount = builds => {

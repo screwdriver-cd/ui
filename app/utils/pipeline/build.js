@@ -10,7 +10,7 @@ export const hasWarning = build => {
       return build.meta.build.warning;
     }
 
-    return !!build.meta.build.warning.message;
+    return !!build.meta.build.warning;
   }
 
   return false;
