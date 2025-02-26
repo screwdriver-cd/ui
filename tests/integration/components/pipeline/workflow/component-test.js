@@ -246,4 +246,68 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     assert.dom('#no-events').doesNotExist();
     assert.dom('#invalid-event').doesNotExist();
   });
+
+  test('it renders pipeline PR restriction message', async function (assert) {
+    sinon.restore();
+    const router = this.owner.lookup('service:router');
+    const shuttle = this.owner.lookup('service:shuttle');
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    const workflowDataReload = this.owner.lookup(
+      'service:workflow-data-reload'
+    );
+
+    const pipelineId = 1234;
+    const prNum = 4;
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      id: pipelineId,
+      annotations: { 'screwdriver.cd/restrictPR': 'all' }
+    });
+    sinon.stub(pipelinePageState, 'getPipelineId').returns(pipelineId);
+    sinon.stub(workflowDataReload, 'start').callsFake(() => {});
+    sinon.stub(router, 'currentRouteName').value('pulls');
+    sinon.stub(router, 'currentURL').value(`/v2/pipelines/1/pulls/${prNum}`);
+    sinon.stub(shuttle, 'fetchFromApi').resolves([]);
+
+    const event = {
+      id: 123,
+      sha: 'abc123def456',
+      commit: { author: { name: 'batman' }, message: 'Some amazing changes' },
+      creator: { name: 'batman' },
+      meta: {},
+      workflowGraph: {
+        nodes: [{ name: '~commit' }, { name: 'main' }],
+        edges: [{ src: '~commit', dest: 'main' }]
+      },
+      type: 'pr',
+      prNum
+    };
+
+    this.setProperties({
+      userSettings: {},
+      jobs: [],
+      stages: [],
+      triggers: [],
+      latestEvent: event,
+      event,
+      prNums: []
+    });
+
+    await render(
+      hbs`<Pipeline::Workflow
+        @userSettings={{this.userSettings}}
+        @jobs={{this.jobs}}
+        @stages={{this.stages}}
+        @triggers={{this.triggers}}
+        @latestCommitEvent={{this.latestCommitEvent}}
+        @event={{this.event}}
+        @prNums={{this.prNums}}
+      />`
+    );
+
+    assert.dom('#pr-restrictions').exists({ count: 1 });
+    assert
+      .dom('#pr-restrictions .restriction-icon-container')
+      .exists({ count: 2 });
+  });
 });

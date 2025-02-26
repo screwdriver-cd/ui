@@ -56,6 +56,8 @@ export default class PipelineEventCardComponent extends Component {
 
   @tracked showEventHistoryModal;
 
+  @tracked showStartEventModal;
+
   queueName;
 
   userSettings;
@@ -338,5 +340,15 @@ export default class PipelineEventCardComponent extends Component {
   @action
   closeEventHistoryModal() {
     this.showEventHistoryModal = false;
+  }
+
+  @action
+  openStartEventModal() {
+    this.showStartEventModal = true;
+  }
+
+  @action
+  closeStartEventModal() {
+    this.showStartEventModal = false;
   }
 }
