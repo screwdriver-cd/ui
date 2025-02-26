@@ -1,0 +1,20 @@
+@mixin styles {
+  .branch-cell {
+    max-width: 90%;
+
+    a {
+      display: flex;
+
+      svg {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-right: 0.25rem;
+      }
+
+      .branch-name {
+        padding: 1rem 0;
+        overflow: auto;
+      }
+    }
+  }
+}
