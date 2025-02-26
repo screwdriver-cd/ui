@@ -91,7 +91,8 @@
         }
       }
 
-      .abort-event-button {
+      .abort-event-button,
+      .start-event-button {
         margin-left: auto;
         background-color: colors.$sd-white;
       }

@@ -66,7 +66,7 @@ export default class PipelineModalStartEventComponent extends Component {
       this.session.data.authenticated.username,
       this.pipeline.id,
       this.args.job,
-      null,
+      this.args.event,
       this.parameters,
       false,
       null
