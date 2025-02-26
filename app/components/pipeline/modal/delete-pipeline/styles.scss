@@ -1,0 +1,15 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  #delete-pipeline-modal {
+    #delete-repository-message {
+      .delete-repository-message-warning {
+        color: colors.$sd-warn-bg;
+      }
+    }
+
+    #delete-repository-input {
+      width: 100%;
+    }
+  }
+}
