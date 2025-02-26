@@ -199,9 +199,10 @@ module('Unit | Component | pipeline/event/card/util', function () {
       getWarningCount([
         { status: 'SUCCESS' },
         { status: 'UNSTABLE' },
-        { status: 'ABORTED' }
+        { status: 'ABORTED' },
+        { status: 'WARNING' }
       ]),
-      1
+      2
     );
   });
 
