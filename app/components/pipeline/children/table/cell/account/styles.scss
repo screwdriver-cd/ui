@@ -1,0 +1,11 @@
+@mixin styles {
+  .account-cell {
+    display: flex;
+
+    svg {
+      margin-top: auto;
+      margin-bottom: auto;
+      margin-right: 0.25rem;
+    }
+  }
+}
