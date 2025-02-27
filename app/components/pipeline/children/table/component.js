@@ -18,26 +18,29 @@ export default class PipelineChildrenTableComponent extends Component {
   constructor() {
     super(...arguments);
 
-    this.data = this.pipelinePageState
-      .getChildPipelines()
-      .slice(0, 3)
-      .map(pipeline => {
-        const scm = this.scm.getScm(pipeline.scmContext);
+    this.data = this.pipelinePageState.getChildPipelines().map(pipeline => {
+      const scm = this.scm.getScm(pipeline.scmContext);
 
-        return {
-          pipeline,
-          id: pipeline.id,
-          name: pipeline.name,
-          branchName: pipeline.scmRepo.branch,
-          scmRepo: pipeline.scmRepo,
-          scmIcon: scm.iconType,
-          scmName: scm.displayName,
-          state: pipeline.state,
-          onPipelineDeleted: pipelineId => {
-            this.data = this.data.filter(d => d.id !== pipelineId);
-          }
-        };
-      });
+      return {
+        pipeline,
+        id: pipeline.id,
+        name: pipeline.name,
+        branchName: pipeline.scmRepo.branch,
+        scmRepo: pipeline.scmRepo,
+        scmIcon: scm.iconType,
+        scmName: scm.displayName,
+        state: pipeline.state,
+        onPipelineDeleted: pipelineId => {
+          this.data = this.data.filter(d => d.id !== pipelineId);
+
+          const updatedChildPipelines = this.pipelinePageState
+            .getChildPipelines()
+            .filter(p => p.id !== pipelineId);
+
+          this.pipelinePageState.setChildPipelines(updatedChildPipelines);
+        }
+      };
+    });
   }
 
   get theme() {
