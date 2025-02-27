@@ -50,5 +50,29 @@ module(
       await click('#start-all-button');
       assert.dom('.alert').exists({ count: 1 });
     });
+
+    test('it closes modal on successful start', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
+      const closeModalSpy = sinon.spy();
+
+      sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
+      sinon.stub(shuttle, 'fetchFromApi').resolves();
+
+      this.setProperties({
+        closeModal: closeModalSpy
+      });
+
+      await render(
+        hbs`<Pipeline::Modal::StartChildren
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      await click('#start-all-button');
+      assert.equal(closeModalSpy.calledOnce, true);
+    });
   }
 );
