@@ -28,7 +28,7 @@ export default class PipelineModalStartChildrenComponent extends Component {
         `/pipelines/${this.pipelinePageState.getPipelineId()}/startall`
       )
       .then(() => {
-        this.args.closeModal();
+        this.args.closeModal(true);
         this.wasActionSuccessful = true;
       })
       .catch(err => {

@@ -51,7 +51,7 @@ module(
       assert.dom('.alert').exists({ count: 1 });
     });
 
-    test('it closes modal on successful start', async function (assert) {
+    test('it closes modal with correct value on successful start', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
       const pipelinePageState = this.owner.lookup(
         'service:pipeline-page-state'
@@ -73,6 +73,7 @@ module(
 
       await click('#start-all-button');
       assert.equal(closeModalSpy.calledOnce, true);
+      assert.equal(closeModalSpy.calledWith(true), true);
     });
   }
 );
