@@ -210,8 +210,10 @@ export default class PipelineJobsTableComponent extends Component {
       data.currentPageNumber
     );
 
-    this.dataReloader
-      .fetchBuildsForJobs(this.dataReloader.newJobIds())
-      .then(() => {});
+    if (!this.event) {
+      this.dataReloader
+        .fetchBuildsForJobs(this.dataReloader.newJobIds())
+        .then(() => {});
+    }
   }
 }
