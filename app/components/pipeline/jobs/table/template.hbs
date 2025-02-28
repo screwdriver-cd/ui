@@ -21,22 +21,22 @@
     @onDisplayDataChanged={{this.onDisplayDataChanged}}
     as |MT|
   >
-    <div id="jobs-table">
+    <div class="table-main">
       <MT.Table />
     </div>
 
-    <div id="jobs-table-footer">
+    <div class="table-footer">
       <MT.Summary
-        id="table-summary"
+        class="table-summary"
         as |Summary|
       >
         {{Summary.summary}}
       </MT.Summary>
 
-      <MT.PageSizeSelect id="select-pagination-size"/>
+      <MT.PageSizeSelect class="select-pagination-size"/>
 
-      <MT.PaginationSimple id="pagination-controls" as |PS|>
-        <div id="page-navigation">
+      <MT.PaginationSimple class="pagination-controls" as |PS|>
+        <div class="page-navigation">
           <BsButton
             disabled={{if PS.goToBackEnabled false true}}
             @onClick={{fn PS.goToFirst}}
@@ -63,7 +63,7 @@
           </BsButton>
         </div>
 
-        <div id="page-select">
+        <div class="page-select">
           <label class="input-group-text">Page:</label>
           <PS.PageNumberSelect/>
         </div>
