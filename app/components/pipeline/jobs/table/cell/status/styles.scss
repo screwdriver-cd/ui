@@ -1,0 +1,25 @@
+@mixin styles {
+  .status-cell {
+    display: flex;
+
+    .build-status-container {
+      padding: 1rem 0;
+
+      a,
+      .created {
+        display: flex;
+
+        svg {
+          margin: auto;
+        }
+      }
+
+      .tooltip {
+        p {
+          text-align: left;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
