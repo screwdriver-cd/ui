@@ -35,6 +35,10 @@
                 color: #0056b3;
               }
             }
+
+            select + button {
+              display: none;
+            }
           }
         }
       }
