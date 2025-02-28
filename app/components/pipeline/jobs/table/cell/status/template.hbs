@@ -1,0 +1,40 @@
+<div class="status-cell">
+  {{#if this.build}}
+    <span class="build-status-container">
+      {{#if (not-eq this.build.status "CREATED")}}
+        <LinkTo
+          @route="pipeline.build"
+          @models={{array @record.job.pipelineId this.build.id}}
+          @title={{this.build.id}}
+        >
+              <FaIcon
+                @icon="circle"
+                @fixedWidth="true"
+                class={{this.build.status}}
+              />
+            </LinkTo>
+            <BsTooltip
+              @placement="bottom"
+              @renderInPlace={{true}}
+              class="tooltip"
+            >
+              <p>Build# {{this.build.id}}</p>
+              {{#if this.build.startTime}}
+                <p>Start - {{moment-format this.build.startTime "MM/DD/YYYY HH:mmA"}}</p>
+              {{/if}}
+              {{#if this.build.endTime}}
+                <p>End - {{moment-format this.build.endTime "MM/DD/YYYY HH:mmA"}}</p>
+              {{/if}}
+            </BsTooltip>
+      {{else}}
+        <div class="created">
+            <FaIcon
+              @icon="circle"
+              @fixedWidth="true"
+              class={{this.build.status}}
+            />
+          </div>
+      {{/if}}
+    </span>
+  {{/if}}
+</div>
