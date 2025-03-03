@@ -57,8 +57,18 @@ export default class PipelineJobsTableComponent extends Component {
           // eslint-disable-next-line ember/no-string-prototype-extensions
           .map(status => _.capitalize(status))
           .sort(),
-        filterFunction: (val, filterVal) => {
-          return val.toLowerCase() === filterVal.toLowerCase();
+        filterFunction: (val, filterVal, row) => {
+          const filterValue = filterVal.toLowerCase();
+
+          if (val !== 'undefined') {
+            return val.toLowerCase() === filterValue;
+          }
+
+          const build = this.workflowDataReload
+            .getBuildsForEvent(this.event.id)
+            .filter(b => b.jobId === row.job.id)[0];
+
+          return build?.status.toLowerCase() === filterValue;
         }
       };
     } else {
