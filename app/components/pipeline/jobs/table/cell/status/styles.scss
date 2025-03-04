@@ -1,10 +1,9 @@
 @mixin styles {
-  .history-cell {
+  .status-cell {
     display: flex;
-    margin-right: 1rem;
-    overflow: scroll;
+    justify-content: center;
 
-    .build-history-container {
+    .build-status-container {
       padding: 1rem 0;
 
       a,

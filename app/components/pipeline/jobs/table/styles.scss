@@ -1,46 +1,57 @@
 @use 'screwdriver-colors' as colors;
+@use 'ember-models-table';
 
 @use 'cell/actions/styles' as actions;
 @use 'cell/history/styles' as history;
 @use 'cell/job/styles' as job;
 @use 'cell/metrics/styles' as metrics;
+@use 'cell/status/styles' as status;
 
 @mixin styles {
   #pipeline-jobs {
+    @include ember-models-table.styles;
+
     padding: 1rem;
 
     display: flex;
     flex-direction: column;
     height: 100%;
 
-    $searchbar-height: 2rem;
     $table-footer-height: 2.5rem;
 
-    #jobs-table {
-      margin: 2rem 0;
-      max-height: calc(100% - $searchbar-height - $table-footer-height);
+    .table-main {
+      max-height: calc(100% - $table-footer-height);
+      margin-top: 0;
       overflow: scroll;
 
       table {
+        table-layout: fixed;
+        $column-width: 10rem;
+        $start-column-width: 15rem;
+        min-width: calc(7 * $column-width + $start-column-width);
+        width: 100%;
+
+        .start-time-column {
+          width: $start-column-width;
+        }
+
+        .status-column,
+        .duration-column,
+        .coverage-column,
+        .stage-column,
+        .metrics-column,
+        .actions-column {
+          width: $column-width;
+        }
+
         thead {
-          color: colors.$sd-text-med;
+          position: sticky;
+          top: 0;
+          background: colors.$sd-white;
+          z-index: 1;
 
           th {
-            &.history-column {
-              width: 15rem;
-            }
-
-            &.duration-column,
-            &.start-time-column {
-              width: 20rem;
-            }
-
-            &.coverage-column,
-            &.stage-column,
-            &.metrics-column,
-            &.actions-column {
-              width: 10rem;
-            }
+            border: none;
           }
         }
 
@@ -49,20 +60,7 @@
           @include history.styles;
           @include job.styles;
           @include metrics.styles;
-
-          tr {
-            color: colors.$sd-text;
-            height: 4rem;
-
-            &:hover {
-              color: colors.$sd-text;
-              background-color: rgba(colors.$sd-running, 0.1);
-            }
-          }
-
-          td {
-            vertical-align: middle;
-          }
+          @include status.styles;
 
           svg {
             &.SUCCESS {
@@ -96,74 +94,8 @@
       }
     }
 
-    #jobs-table-footer {
+    .table-footer {
       height: $table-footer-height;
-      display: flex;
-      color: colors.$sd-text-med;
-
-      #table-summary {
-        display: flex;
-        margin: auto;
-      }
-
-      #select-pagination-size {
-        display: flex;
-        margin: auto;
-
-        label {
-          background-color: transparent;
-          border: none;
-          color: colors.$sd-text-med;
-        }
-
-        select {
-          border-radius: 0.25rem;
-        }
-      }
-
-      #page-navigation {
-        display: flex;
-
-        button {
-          background-color: transparent;
-          border: none;
-
-          svg {
-            color: colors.$sd-text;
-          }
-
-          &:disabled {
-            svg {
-              color: rgba(colors.$sd-text, 0.5);
-            }
-          }
-        }
-      }
-
-      #pagination-controls {
-        display: flex;
-        justify-content: flex-end;
-        margin: auto;
-
-        #page-select {
-          display: flex;
-          width: 10rem;
-          margin-right: 2.5rem;
-
-          label {
-            background-color: transparent;
-            border: none;
-            color: colors.$sd-text-med;
-          }
-
-          select {
-            display: flex;
-            align-items: center;
-            padding: 0.375rem 0.75rem;
-            margin-bottom: 0;
-          }
-        }
-      }
     }
   }
 }
