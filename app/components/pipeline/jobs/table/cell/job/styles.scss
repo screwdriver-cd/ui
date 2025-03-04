@@ -1,7 +1,6 @@
 @mixin styles {
   .job-cell {
     display: flex;
-    max-width: 50rem;
     padding-right: 2.5rem;
 
     .job-status {
@@ -21,6 +20,7 @@
 
     .job-name {
       padding: 1rem 0;
+      text-wrap: nowrap;
       overflow: scroll;
     }
   }

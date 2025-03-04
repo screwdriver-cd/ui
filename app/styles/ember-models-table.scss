@@ -35,6 +35,18 @@
                 color: #0056b3;
               }
             }
+
+            select {
+              border: none;
+
+              + button {
+                display: none;
+              }
+            }
+
+            .form-control {
+              background-color: transparent;
+            }
           }
         }
       }
@@ -61,14 +73,15 @@
     display: flex;
     color: colors.$sd-text-med;
 
-    .table-summary {
-      display: flex;
-      margin: auto;
+    .entry-summary {
+      margin: auto 0;
+      min-width: 15rem;
     }
 
     .select-pagination-size {
       display: flex;
       margin: auto;
+      min-width: 12rem;
 
       label {
         background-color: transparent;
@@ -81,29 +94,31 @@
       }
     }
 
-    .page-navigation {
-      display: flex;
-
-      button {
-        background-color: transparent;
-        border: none;
-
-        svg {
-          color: colors.$sd-text;
-        }
-
-        &:disabled {
-          svg {
-            color: rgba(colors.$sd-text, 0.5);
-          }
-        }
-      }
-    }
-
     .pagination-controls {
       display: flex;
       justify-content: flex-end;
       margin: auto;
+      flex: 0;
+      min-width: 25rem;
+
+      .page-navigation {
+        display: flex;
+
+        button {
+          background-color: transparent;
+          border: none;
+
+          svg {
+            color: colors.$sd-text;
+          }
+
+          &:disabled {
+            svg {
+              color: rgba(colors.$sd-text, 0.5);
+            }
+          }
+        }
+      }
 
       .page-select {
         display: flex;
