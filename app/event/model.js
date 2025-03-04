@@ -33,6 +33,8 @@ export default Model.extend(ModelReloaderMixin, {
 
   builds: hasMany('build'),
 
+  stageBuilds: hasMany('stage-build'),
+
   isRunning: computed(
     'isComplete',
     'isSkipped',
@@ -233,6 +235,7 @@ export default Model.extend(ModelReloaderMixin, {
   }),
 
   modelToReload: 'builds',
+  additionalModelToReload: 'stageBuilds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   isAborted: equal('status', 'ABORTED'),
   isSkipped: computed('commit.message', 'type', 'numBuilds', {
