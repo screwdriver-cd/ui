@@ -3,8 +3,11 @@ import Service from '@ember/service';
 export default class PipelinePageStateService extends Service {
   pipeline;
 
+  childPipelines;
+
   clear() {
     this.pipeline = null;
+    this.childPipelines = [];
   }
 
   setPipeline(pipeline) {
@@ -17,5 +20,13 @@ export default class PipelinePageStateService extends Service {
 
   getPipelineId() {
     return this.pipeline.id;
+  }
+
+  setChildPipelines(pipelines) {
+    this.childPipelines = pipelines;
+  }
+
+  getChildPipelines() {
+    return this.childPipelines;
   }
 }
