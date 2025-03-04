@@ -21,29 +21,37 @@
 
     .table-main {
       max-height: calc(100% - $table-footer-height);
+      margin-top: 0;
       overflow: scroll;
 
       table {
+        table-layout: fixed;
+        $column-width: 10rem;
+        $start-column-width: 15rem;
+        min-width: calc(7 * $column-width + $start-column-width);
+        width: 100%;
+
+        .start-time-column {
+          width: $start-column-width;
+        }
+
+        .status-column,
+        .duration-column,
+        .coverage-column,
+        .stage-column,
+        .metrics-column,
+        .actions-column {
+          width: $column-width;
+        }
+
         thead {
+          position: sticky;
+          top: 0;
+          background: colors.$sd-white;
+          z-index: 1;
+
           th {
-            &.history-column {
-              width: 15rem;
-            }
-            &.status-column {
-              width: 10rem;
-            }
-
-            &.duration-column,
-            &.start-time-column {
-              width: 20rem;
-            }
-
-            &.coverage-column,
-            &.stage-column,
-            &.metrics-column,
-            &.actions-column {
-              width: 10rem;
-            }
+            border: none;
           }
         }
 

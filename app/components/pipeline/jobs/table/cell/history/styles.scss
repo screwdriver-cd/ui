@@ -1,7 +1,7 @@
 @mixin styles {
   .history-cell {
     display: flex;
-    max-width: 9rem;
+    margin-right: 1rem;
     overflow: scroll;
 
     .build-history-container {

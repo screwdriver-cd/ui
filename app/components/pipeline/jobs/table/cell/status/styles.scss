@@ -1,6 +1,7 @@
 @mixin styles {
   .status-cell {
     display: flex;
+    justify-content: center;
 
     .build-status-container {
       padding: 1rem 0;
