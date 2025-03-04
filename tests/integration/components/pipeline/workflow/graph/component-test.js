@@ -292,4 +292,70 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
 
     assert.dom('svg [data-job=main]').hasClass('build-success');
   });
+
+  test('it re-renders graph when stage builds update', async function (assert) {
+    this.setProperties({
+      workflowGraph: {
+        nodes: [
+          { name: '~commit' },
+          {
+            id: 11,
+            name: 'stage@test:setup',
+            stageName: 'test'
+          },
+          { id: 1, name: 'main', stageName: 'test' },
+          {
+            id: 12,
+            name: 'stage@test:teardown',
+            stageName: 'test'
+          }
+        ],
+        edges: [
+          { src: '~commit', dest: 'stage@test:setup' },
+          { src: 'stage@test:setup', dest: 'main' },
+          { src: 'main', dest: 'stage@test:teardown' }
+        ]
+      },
+      event: { startFrom: '~commit' },
+      jobs: [
+        { id: 1, name: 'main' },
+        { id: 11, name: 'stage@test:setup' },
+        { id: 12, name: 'stage@test:teardown' }
+      ],
+      builds: [
+        { id: 1, jobId: 11, status: 'SUCCESS' },
+        { id: 2, jobId: 1, status: 'SUCCESS' },
+        { id: 3, jobId: 12, status: 'RUNNING' }
+      ],
+      stageBuilds: [{ id: 1, stageId: 10, status: 'RUNNING' }],
+      stages: [{ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }],
+      displayJobNameLength: 20
+    });
+    await render(
+      hbs`<Pipeline::Workflow::Graph
+            @workflowGraph={{this.workflowGraph}}
+            @event={{this.event}}
+            @jobs={{this.jobs}}
+            @builds={{this.builds}}
+            @stageBuilds={{this.stageBuilds}}
+            @stages={{this.stages}}
+            @chainPr={{false}}
+            @displayJobNameLength={{this.displayJobNameLength}}
+      />`
+    );
+
+    assert.dom('svg [data-stage=test]').hasClass('build-running');
+
+    this.setProperties({
+      builds: [
+        { id: 1, jobId: 11, status: 'SUCCESS' },
+        { id: 2, jobId: 1, status: 'SUCCESS' },
+        { id: 3, jobId: 12, status: 'SUCCESS' }
+      ],
+      stageBuilds: [{ id: 1, stageId: 10, status: 'SUCCESS' }]
+    });
+    await rerender();
+
+    assert.dom('svg [data-stage=test]').hasClass('build-success');
+  });
 });

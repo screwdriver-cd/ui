@@ -78,7 +78,8 @@ export default RESTAdapter.extend(DataAdapterMixin, {
       };
     } else if (key === 'event' || key === 'events') {
       o.links = {
-        builds: 'builds'
+        builds: 'builds',
+        stageBuilds: 'stageBuilds'
       };
     } else if (key === 'job' || key === 'jobs') {
       o.links = {

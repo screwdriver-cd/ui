@@ -87,6 +87,7 @@ export default Component.extend({
     async stopEvent(event) {
       await this.stopEvent(event.id);
       event.hasMany('builds').reload();
+      event.hasMany('stageBuilds').reload();
     },
     async eventClick(id, eventType) {
       set(this, 'selected', id);
