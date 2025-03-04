@@ -25,6 +25,16 @@ const node = (nodes, name) => nodes.find(o => o.name === name);
 const findStage = (stages, name) => stages.find(o => o.name === name);
 
 /**
+ * Find a stage build from the list of stage builds
+ * @method findStage
+ * @param  {Array} stageBuilds  List of stage build objects
+ * @param  {Number} stageId     The stage id of the stage build
+ * @return {Object}             Reference to the stage build object from the list if found
+ */
+const findStageBuild = (stageBuilds, stageId) =>
+  stageBuilds.find(sb => `${sb.stageId}` === `${stageId}`);
+
+/**
  * Find a build for the given job id
  * @method build
  * @param  {Array} builds   List of build objects
@@ -605,8 +615,9 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
  * a custom directed graph
  * @method decorateGraph
  * @param  {Object}      inputGraph A directed graph representation { nodes: [], edges: [] }
- * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [builds]     A list of build metadata
- * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [jobs]       A list of job metadata
+ * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [builds]        A list of build metadata
+ * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [stageBuilds]   A list of stage build metadata
+ * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [jobs]          A list of job metadata
  * @param  {String}   [start]     Node name that indicates what started the graph
  * @param  {Boolean}  [chainPR]   Boolean flag for the chainPR setting
  * @param  {number}   [prNum]     The pull request number
@@ -616,6 +627,7 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
 const decorateGraph = ({
   inputGraph,
   builds,
+  stageBuilds,
   jobs,
   start,
   chainPR,
@@ -632,6 +644,11 @@ const decorateGraph = ({
       builds instanceof DS.PromiseArray ||
       builds instanceof DS.PromiseManyArray) &&
     builds.length;
+  const stageBuildsAvailable =
+    (Array.isArray(stageBuilds) ||
+      stageBuilds instanceof DS.PromiseArray ||
+      stageBuilds instanceof DS.PromiseManyArray) &&
+    stageBuilds.length;
   const jobsAvailable =
     (Array.isArray(jobs) ||
       jobs instanceof DS.PromiseArray ||
@@ -705,7 +722,6 @@ const decorateGraph = ({
   positionGraphNodes(graph);
 
   // Decorate nodes with status
-
   nodes.forEach(n => {
     // Get job information
     let jobId = n.id;
@@ -779,6 +795,22 @@ const decorateGraph = ({
           graphNode => graphNode.name !== '~pr'
         )
       : null;
+
+  // Decorate stages with status
+  graph.stages.forEach(s => {
+    // Get build information
+    if (stageBuildsAvailable) {
+      const stage = findStage(pipelineStages, s.name);
+      const stageBuild = findStageBuild(stageBuilds, stage.id);
+
+      s.id = stage.id;
+
+      if (stageBuild) {
+        s.status = stageBuild.status;
+        s.stageBuildId = stageBuild.id;
+      }
+    }
+  });
 
   // Decorate edges with positions and status
   edges.forEach(e => {
