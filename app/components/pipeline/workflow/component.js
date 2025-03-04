@@ -8,6 +8,7 @@ import { getDisplayJobNameLength, getWorkflowGraph } from './util';
 const PIPELINE_EVENT = 'pipeline';
 const PR_EVENT = 'pr';
 const BUILD_QUEUE_NAME = 'graph';
+const STAGE_BUILD_QUEUE_NAME = 'stageBuilds';
 const LATEST_COMMIT_EVENT_QUEUE_NAME = 'latestCommitEvent';
 const OPEN_PRS_QUEUE_NAME = 'openPrs';
 const RESTRICT_PR_ANNOTATION = 'screwdriver.cd/restrictPR';
@@ -40,6 +41,8 @@ export default class PipelineWorkflowComponent extends Component {
   @tracked latestEvent;
 
   @tracked builds;
+
+  @tracked stageBuilds;
 
   @tracked jobs;
 
@@ -143,6 +146,11 @@ export default class PipelineWorkflowComponent extends Component {
         this.event.id,
         this.buildsCallback
       );
+      this.workflowDataReload.registerStageBuildsCallback(
+        STAGE_BUILD_QUEUE_NAME,
+        this.event.id,
+        this.stageBuildsCallback
+      );
       this.setWorkflowGraphFromEvent();
     }
   }
@@ -156,9 +164,17 @@ export default class PipelineWorkflowComponent extends Component {
   @action
   update(element, [event]) {
     const builds = this.workflowDataReload.getBuildsForEvent(event.id);
+    const stageBuilds = this.workflowDataReload.getStageBuildsForEvent(
+      event.id
+    );
 
     this.workflowDataReload.removeBuildsCallback(
       BUILD_QUEUE_NAME,
+      this.event.id
+    );
+
+    this.workflowDataReload.removeStageBuildsCallback(
+      STAGE_BUILD_QUEUE_NAME,
       this.event.id
     );
 
@@ -168,10 +184,16 @@ export default class PipelineWorkflowComponent extends Component {
         event.id,
         this.buildsCallback
       );
+      this.workflowDataReload.registerStageBuildsCallback(
+        STAGE_BUILD_QUEUE_NAME,
+        event.id,
+        this.buildsCallback
+      );
     }
 
     this.event = event;
     this.builds = builds;
+    this.stageBuilds = stageBuilds;
     this.showTooltip = false;
     this.showStageTooltip = false;
 
@@ -197,6 +219,18 @@ export default class PipelineWorkflowComponent extends Component {
     if (this.isEventComplete(builds)) {
       this.workflowDataReload.removeBuildsCallback(
         BUILD_QUEUE_NAME,
+        this.event.id
+      );
+    }
+  }
+
+  @action
+  stageBuildsCallback(stageBuilds) {
+    this.stageBuilds = stageBuilds;
+
+    if (this.isEventComplete(this.builds)) {
+      this.workflowDataReload.removeStageBuildsCallback(
+        STAGE_BUILD_QUEUE_NAME,
         this.event.id
       );
     }
