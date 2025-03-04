@@ -3,6 +3,8 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { dom } from '@fortawesome/fontawesome-svg-core';
+import _ from 'lodash';
+import { statuses } from 'screwdriver-ui/utils/build';
 import DataReloader from './dataReloader';
 import getDisplayName from './util';
 
@@ -42,27 +44,44 @@ export default class PipelineJobsTableComponent extends Component {
   }
 
   setColumnData() {
-    const historyColumnConfiguration = {
-      title: this.args.historyColumnName
-        ? this.args.historyColumnName.toUpperCase()
-        : 'HISTORY',
-      className: 'history-column',
-      component: 'historyCell'
-    };
+    let historyColumnConfiguration;
 
-    if (!this.event) {
-      historyColumnConfiguration.propertyName = 'history';
-      historyColumnConfiguration.filterWithSelect = true;
-      historyColumnConfiguration.predefinedFilterOptions = [
-        '5',
-        '10',
-        '15',
-        '20',
-        '25',
-        '30'
-      ];
-      historyColumnConfiguration.filterFunction = async (_, filterVal) => {
-        await this.dataReloader.setNumBuilds(filterVal);
+    if (this.event) {
+      historyColumnConfiguration = {
+        title: 'STATUS',
+        className: 'status-column',
+        component: 'statusCell',
+        propertyName: 'status',
+        filterWithSelect: true,
+        predefinedFilterOptions: [...statuses, 'WARNING']
+          // eslint-disable-next-line ember/no-string-prototype-extensions
+          .map(status => _.capitalize(status))
+          .sort(),
+        filterFunction: (val, filterVal, row) => {
+          const filterValue = filterVal.toLowerCase();
+
+          if (val !== 'undefined') {
+            return val.toLowerCase() === filterValue;
+          }
+
+          const build = this.workflowDataReload
+            .getBuildsForEvent(this.event.id)
+            .filter(b => b.jobId === row.job.id)[0];
+
+          return build?.status.toLowerCase() === filterValue;
+        }
+      };
+    } else {
+      historyColumnConfiguration = {
+        title: 'HISTORY',
+        className: 'history-column',
+        component: 'historyCell',
+        propertyName: 'history',
+        filterWithSelect: true,
+        predefinedFilterOptions: ['5', '10', '15', '20', '25', '30'],
+        filterFunction: async (_val, filterVal) => {
+          await this.dataReloader.setNumBuilds(filterVal);
+        }
       };
     }
 
@@ -201,8 +220,10 @@ export default class PipelineJobsTableComponent extends Component {
       data.currentPageNumber
     );
 
-    this.dataReloader
-      .fetchBuildsForJobs(this.dataReloader.newJobIds())
-      .then(() => {});
+    if (!this.event) {
+      this.dataReloader
+        .fetchBuildsForJobs(this.dataReloader.newJobIds())
+        .then(() => {});
+    }
   }
 }
