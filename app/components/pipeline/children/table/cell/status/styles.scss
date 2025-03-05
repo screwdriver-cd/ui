@@ -1,0 +1,14 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  .status-cell {
+    svg {
+      &.fa-circle-check {
+        color: colors.$sd-success;
+      }
+      &.fa-circle-xmark {
+        color: colors.$sd-failure;
+      }
+    }
+  }
+}
