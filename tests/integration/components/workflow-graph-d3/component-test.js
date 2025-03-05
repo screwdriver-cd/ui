@@ -92,7 +92,7 @@ module('Integration | Component | workflow graph d3', function (hooks) {
       nodes: [
         { name: '~pr' },
         { name: '~commit' },
-        { name: '~sd@123:main', displayName: 'foo/bar@main' },
+        { name: '~sd@123:main', remoteName: 'foo/bar@main' },
         { name: '~sd@456:main' },
         { name: 'foo', displayName: 'bar' },
         { name: 'baz' }
