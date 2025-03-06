@@ -324,7 +324,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a restart button for completed jobs when authenticated', async function (assert) {
-    assert.expect(4);
+    assert.expect(7);
 
     const reloadBuildSpy = sinon.spy();
 
@@ -357,6 +357,10 @@ module('Integration | Component | build banner', function (hooks) {
     assert.dom('.clicks-disabled').doesNotExist();
     assert.notOk(reloadBuildSpy.called);
     await click('button');
+    assert.dom('.ember-modal-dialog').exists({ count: 1 });
+    assert.dom('.job-info').hasText('Job: PR-671 Commit: Merge it #abcdef1');
+    await click('button.build-action-yes');
+    assert.dom('.ember-modal-dialog').doesNotExist();
   });
 
   test('it renders a disabled restart button for completed disabled jobs when authenticated', async function (assert) {
@@ -395,7 +399,7 @@ module('Integration | Component | build banner', function (hooks) {
   });
 
   test('it renders a stop button for running job when authenticated', async function (assert) {
-    assert.expect(6);
+    assert.expect(9);
     this.set('willRender', () => {
       console.log('will render');
       assert.ok(true);
@@ -427,10 +431,14 @@ module('Integration | Component | build banner', function (hooks) {
 
     assert.dom('button').hasText('Stop');
     await click('button');
+    assert.dom('.ember-modal-dialog').exists({ count: 1 });
+    assert.dom('.job-info').doesNotExist();
+    await click('button.build-action-yes');
+    assert.dom('.ember-modal-dialog').doesNotExist();
   });
 
   test('it renders a stop button for running disabled job when authenticated', async function (assert) {
-    assert.expect(7);
+    assert.expect(10);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -462,10 +470,14 @@ module('Integration | Component | build banner', function (hooks) {
     assert.dom('button').hasText('Stop');
     assert.dom('.clicks-disabled').doesNotExist();
     await click('button');
+    assert.dom('.ember-modal-dialog').exists({ count: 1 });
+    assert.dom('.job-info').doesNotExist();
+    await click('button.build-action-yes');
+    assert.dom('.ember-modal-dialog').doesNotExist();
   });
 
   test('it renders a stop button for blocked job when authenticated', async function (assert) {
-    assert.expect(6);
+    assert.expect(9);
     this.set('willRender', () => {
       assert.ok(true);
     });
@@ -496,6 +508,10 @@ module('Integration | Component | build banner', function (hooks) {
 
     assert.dom('button').hasText('Stop');
     await click('button');
+    assert.dom('.ember-modal-dialog').exists({ count: 1 });
+    assert.dom('.job-info').doesNotExist();
+    await click('button.build-action-yes');
+    assert.dom('.ember-modal-dialog').doesNotExist();
   });
 
   test('it renders coverage info if coverage step finished', async function (assert) {
