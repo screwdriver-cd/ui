@@ -34,7 +34,7 @@ export default class PipelineModalStartChildrenComponent extends Component {
         this.wasActionSuccessful = true;
       })
       .catch(err => {
-        if (err.jqXHR.status === 201) {
+        if (err.jqXHR.status >= 200 && err.jqXHR.status < 300) {
           this.args.closeModal(true);
           this.wasActionSuccessful = true;
         } else {
