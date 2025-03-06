@@ -20,6 +20,7 @@ export default Component.extend({
   classNames: ['build-banner', 'grid'],
   classNameBindings: ['buildStatus'],
   shouldSkipNextNotify: false,
+  showBuildActionModal: false,
   coverage: service(),
   coverageInfo: {},
   coverageStep: computed('buildSteps', {
@@ -321,12 +322,21 @@ export default Component.extend({
       this.changeBuild(targetPr.event.pipelineId, targetPr.build.id);
     },
 
-    buildButtonClick() {
+    buildActionButtonClick() {
+      this.set('showBuildActionModal', false);
       if (this.buildAction === 'Stop') {
         this.onStop();
       } else {
         this.onStart();
       }
+    },
+
+    openBuildActionModal() {
+      this.set('showBuildActionModal', true);
+    },
+
+    closeBuildActionModal() {
+      this.set('showBuildActionModal', false);
     }
   }
 });
