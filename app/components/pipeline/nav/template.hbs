@@ -2,6 +2,11 @@
   <LinkTo @route="v2.pipeline.events" title="Events">
     <FaIcon @icon="cubes" @size="16x" />
   </LinkTo>
+  {{#if this.hasChildPipelines}}
+    <LinkTo @route="v2.pipeline.child-pipelines" title="Child pipelines">
+      <FaIcon @icon="sitemap" @size="16x" />
+    </LinkTo>
+  {{/if}}
   <LinkTo @route="v2.pipeline.secrets" title="Secrets">
     <FaIcon @icon="key" @size="16x" />
   </LinkTo>
