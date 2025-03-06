@@ -75,13 +75,18 @@ export default Mixin.create({
           const additionalModel = this.get(additionalModelToReload);
 
           if (additionalModel) {
-            modelReloadPromises.push(
-              additionalModel.reload().then(() => {
-                if (additionalModel.model && additionalModel.model.reload) {
-                  additionalModel.model.reload();
-                }
-              })
-            );
+            const shouldReloadAdditionalModel =
+              this.shouldReloadAdditionalModel(additionalModel);
+
+            if (shouldReloadAdditionalModel) {
+              modelReloadPromises.push(
+                additionalModel.reload().then(() => {
+                  if (additionalModel.model && additionalModel.model.reload) {
+                    additionalModel.model.reload();
+                  }
+                })
+              );
+            }
           }
         }
 

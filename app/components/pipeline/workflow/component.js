@@ -4,6 +4,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { isComplete, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 import { getDisplayJobNameLength, getWorkflowGraph } from './util';
+import { extractEventStages } from '../../../utils/graph-tools';
 
 const PIPELINE_EVENT = 'pipeline';
 const PR_EVENT = 'pr';
@@ -146,11 +147,18 @@ export default class PipelineWorkflowComponent extends Component {
         this.event.id,
         this.buildsCallback
       );
-      this.workflowDataReload.registerStageBuildsCallback(
-        STAGE_BUILD_QUEUE_NAME,
-        this.event.id,
-        this.stageBuildsCallback
-      );
+
+      const { workflowGraph } = this.event;
+      const eventStages = extractEventStages(workflowGraph);
+
+      if (eventStages && eventStages.length) {
+        this.workflowDataReload.registerStageBuildsCallback(
+          STAGE_BUILD_QUEUE_NAME,
+          this.event.id,
+          this.stageBuildsCallback
+        );
+      }
+
       this.setWorkflowGraphFromEvent();
     }
   }
