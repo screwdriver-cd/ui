@@ -15,6 +15,7 @@
         class="header-item"
         @route="v2.pipeline"
         @model={{this.pipeline.configPipelineId}}
+        target="_blank"
       >
         <FaIcon @icon="gear" />
         Parent Pipeline
@@ -38,6 +39,7 @@
       id="scm-link"
       href="{{branch-url-encode this.pipeline.scmRepo.url}}"
       class="header-item scm"
+      target="_blank"
     >
       <FaIcon @icon={{this.scmContext.scmIcon}} @prefix="fab" />
       {{this.scmContext.scm}}
