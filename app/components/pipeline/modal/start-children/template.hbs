@@ -1,0 +1,30 @@
+<BsModal
+  id="start-all-children-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">Are you sure you want to start all child pipelines?</div>
+  </modal.header>
+  {{#if this.errorMessage}}
+    <modal.body>
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    </modal.body>
+  {{/if}}
+  <modal.footer>
+    <BsButton
+      id="start-all-button"
+      disabled={{this.isStartAllButtonDisabled}}
+      @type="primary"
+      @defaultText="Yes"
+      @pendingText="Starting"
+      @fulfilledText="Started"
+      @onClick={{fn this.startChildren}}
+    />
+  </modal.footer>
+</BsModal>
