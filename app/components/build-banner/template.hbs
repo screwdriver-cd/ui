@@ -178,12 +178,54 @@
   <li class="call-to-action button-right">
     {{#if this.isAuthenticated}}
       <BsButton
-        @onClick={{action "buildButtonClick"}}
+        @onClick={{action "openBuildActionModal"}}
         @outline={{true}}
         disabled={{or (await this.isButtonDisabled) (not this.isButtonDisabledLoaded)}}
       >
         {{this.buildAction}}
       </BsButton>
+      {{#if this.showBuildActionModal}}
+      <ModalDialog
+        @targetAttachment="center"
+        @translucentOverlay={{true}}
+        @containerClass="detached-confirm-dialog"
+      >
+        <h3>
+          Are you sure to {{this.buildAction}}?
+        </h3>
+        {{#if (eq this.buildAction 'Restart')}}
+        <div class="job-info">
+          <p>
+            Job:
+            <code>
+              {{this.jobName}}
+            </code>
+          <br />
+            Commit:
+            <code>
+              {{this.event.truncatedMessage}}
+            </code>
+            <a href={{this.event.commit.url}}>
+              #{{this.event.truncatedSha}}
+            </a>
+          <br />
+          </p>
+        </div>
+        {{/if}}
+      <div class="row confirm-button">
+        <div class="col-6">
+          <button class="build-action-yes" {{action "buildActionButtonClick"}}>
+            Yes
+          </button>
+        </div>
+        <div class="col-6 right">
+          <button class="build-action-no" {{action "closeBuildActionModal"}}>
+            No
+          </button>
+        </div>
+      </div>
+      </ModalDialog>
+      {{/if}}
     {{/if}}
   </li>
 </ul> 
