@@ -134,7 +134,7 @@ Router.map(function route() {
         this.route('secrets');
         this.route('options');
         this.route('metrics');
-
+        this.route('child-pipelines');
         this.route('events', function eventsRoute() {
           this.route('show', { path: '/:event_id' });
         });
