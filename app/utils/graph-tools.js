@@ -83,22 +83,12 @@ const isStageTeardownJob = jobName => STAGE_TEARDOWN_PATTERN.test(jobName);
 /**
  * Compiles and returns a list of stages and associated jobs by traversing the event workflow graph
  * @method  extractEventStages
- * @param  {Object} graph                            Event workflow graph
- * @param  {Array|DS.PromiseArray} pipelineStages   List of latest stage metadata associated with the pipeline
- * @return {Array}                                  List of stage metadata associated with the event
+ * @param  {Object} graph Event workflow graph
+ * @return {Array}        List of stage metadata associated with the event
  */
-const extractEventStages = (graph, pipelineStages) => {
-  const stageToPipelineStageMap = pipelineStages
-    ? pipelineStages.reduce(
-        (obj, stage) => ({
-          ...obj,
-          [stage.name]: stage
-        }),
-        {}
-      )
-    : {};
-  const stageNameToEventStageMap = {};
+const extractEventStages = graph => {
   const { nodes } = graph;
+  const stageNameToEventStageMap = {};
 
   nodes.forEach(n => {
     const { stageName } = n;
@@ -107,12 +97,8 @@ const extractEventStages = (graph, pipelineStages) => {
       let eventStage = stageNameToEventStageMap[stageName];
 
       if (eventStage === undefined) {
-        const pipelineStage = stageToPipelineStageMap[stageName];
-
         eventStage = {
-          id: pipelineStage.id,
-          name: pipelineStage.name,
-          description: pipelineStage.description,
+          name: stageName,
           jobs: [],
           setup: null,
           teardown: null
@@ -132,6 +118,34 @@ const extractEventStages = (graph, pipelineStages) => {
   });
 
   return Object.values(stageNameToEventStageMap);
+};
+
+/**
+ * Enrich event stage by setting additional attributes (Ex: id, description) from corresponding pipeline stage
+ * @method  extractEventStages
+ * @param  {Array|DS.PromiseArray} eventStages      List of stage metadata associated with the event
+ * @param  {Array|DS.PromiseArray} pipelineStages   List of latest stage metadata associated with the pipeline
+ * @return {Array}                                  List of enriched stage metadata associated with the event
+ */
+const decorateEventStages = (eventStages, pipelineStages) => {
+  const stageToPipelineStageMap = pipelineStages
+    ? pipelineStages.reduce(
+        (obj, stage) => ({
+          ...obj,
+          [stage.name]: stage
+        }),
+        {}
+      )
+    : {};
+
+  eventStages.forEach(eventStage => {
+    const pipelineStage = stageToPipelineStageMap[eventStage.name];
+
+    eventStage.id = pipelineStage.id;
+    eventStage.description = pipelineStage.description;
+  });
+
+  return eventStages;
 };
 
 /**
@@ -657,7 +671,7 @@ const decorateGraph = ({
 
   const eventStages =
     pipelineStages && pipelineStages.length > 0
-      ? extractEventStages(inputGraph, pipelineStages)
+      ? decorateEventStages(extractEventStages(inputGraph), pipelineStages)
       : [];
 
   const graph = {};
@@ -917,5 +931,6 @@ export {
   isTrigger,
   subgraphFilter,
   removeBranch,
-  reverseGraph
+  reverseGraph,
+  extractEventStages
 };
