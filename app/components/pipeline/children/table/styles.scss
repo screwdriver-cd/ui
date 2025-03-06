@@ -1,0 +1,43 @@
+@use 'ember-models-table';
+
+@use 'cell/account/styles' as account;
+@use 'cell/branch/styles' as branch;
+@use 'cell/pipeline/styles' as pipeline;
+@use 'cell/status/styles' as status;
+
+@mixin styles {
+  #child-pipelines {
+    @include ember-models-table.styles;
+
+    table {
+      table-layout: fixed;
+      width: 100%;
+
+      thead {
+        th {
+          &.pipeline-column,
+          &.branch-column {
+            min-width: 20rem;
+            width: 40%;
+          }
+          &.account-column {
+            width: 20rem;
+          }
+          &.status-column {
+            width: 10rem;
+          }
+          &.actions-column {
+            width: 7.5rem;
+          }
+        }
+      }
+
+      tbody {
+        @include account.styles;
+        @include branch.styles;
+        @include pipeline.styles;
+        @include status.styles;
+      }
+    }
+  }
+}
