@@ -35,7 +35,9 @@ module(
       );
 
       sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
-      sinon.stub(shuttle, 'fetchFromApi').rejects();
+      sinon
+        .stub(shuttle, 'fetchFromApi')
+        .rejects({ jqXHR: { status: 500 }, response: { message: 'error' } });
 
       this.setProperties({
         closeModal: () => {}
