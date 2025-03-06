@@ -25,15 +25,22 @@ export default class PipelineModalStartChildrenComponent extends Component {
     await this.shuttle
       .fetchFromApi(
         'post',
-        `/pipelines/${this.pipelinePageState.getPipelineId()}/startall`
+        `/pipelines/${this.pipelinePageState.getPipelineId()}/startall`,
+        null,
+        true
       )
       .then(() => {
         this.args.closeModal(true);
         this.wasActionSuccessful = true;
       })
       .catch(err => {
-        this.wasActionSuccessful = false;
-        this.errorMessage = err.message;
+        if (err.jqXHR.status >= 200 && err.jqXHR.status < 300) {
+          this.args.closeModal(true);
+          this.wasActionSuccessful = true;
+        } else {
+          this.wasActionSuccessful = false;
+          this.errorMessage = err.response.message;
+        }
       })
       .finally(() => {
         this.isAwaitingResponse = false;
