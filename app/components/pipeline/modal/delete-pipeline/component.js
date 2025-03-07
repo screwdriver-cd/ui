@@ -32,7 +32,7 @@ export default class PipelineModalDeletePipelineComponent extends Component {
     this.isAwaitingResponse = true;
 
     await this.shuttle
-      .fetchFromApi('delete', `/pipelines/${this.args.pipelineId}`)
+      .fetchFromApi('delete', `/pipelines/${this.args.pipeline.id}`)
       .then(() => {
         this.args.closeModal(true);
       })

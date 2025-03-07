@@ -1,3 +1,4 @@
+@use 'screwdriver-colors' as colors;
 @use 'ember-models-table';
 
 @use 'cell/account/styles' as account;
@@ -9,35 +10,57 @@
   #child-pipelines {
     @include ember-models-table.styles;
 
-    table {
-      table-layout: fixed;
-      width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-      thead {
-        th {
-          &.pipeline-column,
-          &.branch-column {
-            min-width: 20rem;
-            width: 40%;
-          }
-          &.account-column {
-            width: 20rem;
-          }
-          &.status-column {
-            width: 10rem;
-          }
-          &.actions-column {
-            width: 7.5rem;
+    $table-footer-height: 2.5rem;
+
+    .table-main {
+      max-height: calc(100% - $table-footer-height);
+      margin-top: 0;
+      overflow: scroll;
+
+      table {
+        table-layout: fixed;
+        width: 100%;
+
+        thead {
+          position: sticky;
+          top: 0;
+          background: colors.$sd-white;
+
+          th {
+            border: none;
+
+            &.pipeline-column,
+            &.branch-column {
+              min-width: 20rem;
+              width: 40%;
+            }
+            &.account-column {
+              width: 20rem;
+            }
+            &.status-column {
+              width: 10rem;
+            }
+            &.actions-column {
+              width: 7.5rem;
+            }
           }
         }
-      }
 
-      tbody {
-        @include account.styles;
-        @include branch.styles;
-        @include pipeline.styles;
-        @include status.styles;
+        tbody {
+          @include account.styles;
+          @include branch.styles;
+          @include pipeline.styles;
+          @include status.styles;
+        }
       }
+    }
+
+    .table-footer {
+      height: $table-footer-height;
     }
   }
 }

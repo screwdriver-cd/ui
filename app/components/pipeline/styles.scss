@@ -1,3 +1,4 @@
+@use 'children/styles' as children;
 @use 'event/styles' as event;
 @use 'header/styles' as header;
 @use 'jobs/styles' as jobs;
@@ -8,6 +9,7 @@
 @use 'workflow/styles' as workflow;
 
 @mixin styles {
+  @include children.styles;
   @include event.styles;
   @include header.styles;
   @include jobs.styles;
