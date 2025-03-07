@@ -1,0 +1,24 @@
+@use 'table/styles' as table;
+
+@mixin styles {
+  #child-pipelines-container {
+    $margin: 1rem;
+    $start-children-button-container-height: 2.5rem;
+
+    margin: $margin;
+    height: calc(100% - 2 * $margin);
+
+    #start-all-button-container {
+      display: flex;
+      flex-direction: row-reverse;
+      margin-bottom: $margin;
+      height: $start-children-button-container-height;
+    }
+
+    #child-pipeline-table-container {
+      height: calc(100% - $start-children-button-container-height - $margin);
+
+      @include table.styles;
+    }
+  }
+}

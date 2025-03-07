@@ -1,0 +1,22 @@
+<div id="child-pipelines-container">
+  <div id="start-all-button-container">
+    <BsButton
+      id="start-all-button"
+      @type="primary"
+      @outline={{true}}
+      @disabled={{this.childrenPipelineStarted}}
+      @onClick={{this.showStartAllChildrenModal}}
+    >
+      Start all child pipelines
+      {{#if this.isStartAllChildrenModalOpen}}
+        <Pipeline::Modal::StartChildren
+          @closeModal={{this.closeStartAllChildrenModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+
+  <div id="child-pipeline-table-container">
+    <Pipeline::Children::Table />
+  </div>
+</div>
