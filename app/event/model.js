@@ -6,6 +6,7 @@ import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 import ModelReloaderMixin from 'screwdriver-ui/mixins/model-reloader';
 import { isActiveBuild } from 'screwdriver-ui/utils/build';
 import { SHOULD_RELOAD_NO, SHOULD_RELOAD_YES } from '../mixins/model-reloader';
+import { extractEventStages } from '../utils/graph-tools';
 
 export default Model.extend(ModelReloaderMixin, {
   buildId: attr('number'),
@@ -32,6 +33,22 @@ export default Model.extend(ModelReloaderMixin, {
   workflowGraph: attr(),
 
   builds: hasMany('build'),
+
+  stageBuilds: hasMany('stage-build', { async: true }),
+
+  stages: computed('workflowGraph', {
+    get() {
+      return extractEventStages(get(this, 'workflowGraph'));
+    }
+  }),
+
+  hasStages: computed('stages', {
+    get() {
+      const stages = get(this, 'stages');
+
+      return stages && stages.length > 0;
+    }
+  }),
 
   isRunning: computed(
     'isComplete',
@@ -233,6 +250,7 @@ export default Model.extend(ModelReloaderMixin, {
   }),
 
   modelToReload: 'builds',
+  additionalModelToReload: 'stageBuilds',
   reloadTimeout: ENV.APP.EVENT_RELOAD_TIMER,
   isAborted: equal('status', 'ABORTED'),
   isSkipped: computed('commit.message', 'type', 'numBuilds', {
@@ -254,6 +272,9 @@ export default Model.extend(ModelReloaderMixin, {
   // Reload builds only if the event is still running
   shouldReload() {
     return this.isRunning ? SHOULD_RELOAD_YES : SHOULD_RELOAD_NO;
+  },
+  shouldReloadAdditionalModel() {
+    return this.hasStages;
   },
   init() {
     this._super(...arguments);
