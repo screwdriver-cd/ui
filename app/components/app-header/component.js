@@ -61,8 +61,10 @@ export default Component.extend({
         if (targetURL.includes('pulls')) {
           targetURL = `${targetURL.split('pulls/')[0]}pulls`;
         }
+        localStorage.removeItem('newUI');
       } else {
         targetURL = `/v2${currentURL}`;
+        localStorage.setItem('newUI', 'true');
       }
 
       this.router.transitionTo(targetURL);
