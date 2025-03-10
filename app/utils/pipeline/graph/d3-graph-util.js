@@ -440,7 +440,13 @@ export function addStages(
     // stage container
     const stageContainer = svg
       .append('rect')
-      .attr('class', 'stage-container')
+      .attr('data-stage', stage.name)
+      .attr(
+        'class',
+        stage.status
+          ? `stage-container build-${stage.status.toLowerCase()}`
+          : 'stage-container'
+      )
       .attr('x', calcStageX(stage, nodeWidth, sizes, horizontalDisplacements))
       .attr('y', calcStageY(stage, sizes))
       .attr(
@@ -920,6 +926,23 @@ export function updateEdgeStatuses(svg, data) {
     })
     .attr('stroke-dasharray', edge => {
       return !edge.status ? 5 : 0;
+    });
+}
+
+/**
+ * Updates the stage statuses in the existing graph SVG
+ * @param svg
+ * @param data
+ */
+export function updateStageStatuses(svg, data) {
+  svg
+    .selectAll('.stage-container')
+    .data(data.stages)
+    .join()
+    .attr('class', stage => {
+      return stage.status
+        ? `stage-container build-${stage.status.toLowerCase()}`
+        : 'stage-container';
     });
 }
 

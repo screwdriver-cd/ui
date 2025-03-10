@@ -32,7 +32,7 @@ export default Mixin.create({
    * @method reloadEvents
    */
   reloadModel() {
-    const { modelToReload } = this;
+    const { modelToReload, additionalModelToReload } = this;
 
     let model;
 
@@ -55,20 +55,42 @@ export default Mixin.create({
       return;
     }
 
+    const modelReloadPromises = [];
+
     switch (shouldReload) {
       case SHOULD_RELOAD_YES:
         if (!window.navigator.onLine) {
           break;
         }
 
-        model
-          .reload()
-          .then(() => {
+        modelReloadPromises.push(
+          model.reload().then(() => {
             if (model.model && model.model.reload) {
               model.model.reload();
             }
           })
-          .finally(() => this.scheduleReload());
+        );
+
+        if (additionalModelToReload) {
+          const additionalModel = this.get(additionalModelToReload);
+
+          if (additionalModel) {
+            const shouldReloadAdditionalModel =
+              this.shouldReloadAdditionalModel(additionalModel);
+
+            if (shouldReloadAdditionalModel) {
+              modelReloadPromises.push(
+                additionalModel.reload().then(() => {
+                  if (additionalModel.model && additionalModel.model.reload) {
+                    additionalModel.model.reload();
+                  }
+                })
+              );
+            }
+          }
+        }
+
+        Promise.all(modelReloadPromises).finally(() => this.scheduleReload());
         break;
       case SHOULD_RELOAD_SKIP:
         this.scheduleReload();
