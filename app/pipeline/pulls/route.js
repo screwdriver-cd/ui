@@ -15,6 +15,15 @@ export default EventsRoute.extend({
     });
     this.pipelineService.setBuildsLink('pipeline.pulls');
   },
+  beforeModel() {
+    if (localStorage.getItem('newUI') === 'true') {
+      this.transitionTo('v2.pipeline.pulls', this.get('pipeline.id'));
+    } else {
+      const { pipeline } = this.modelFor('pipeline');
+
+      this.set('pipeline', pipeline);
+    }
+  },
   async model() {
     const pipelineId = this.get('pipeline.id');
     const pipelineEventsController = this.controllerFor('pipeline.events');

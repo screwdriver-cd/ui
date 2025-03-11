@@ -12,7 +12,13 @@ export default Route.extend(AuthenticatedRouteMixin, {
   routeAfterAuthentication: 'pipeline.jobs.index',
   pipelineService: service('pipeline'),
   beforeModel() {
-    this.set('pipeline', this.modelFor('pipeline').pipeline);
+    const { pipeline } = this.modelFor('pipeline');
+
+    if (localStorage.getItem('newUI') === 'true') {
+      this.transitionTo('v2.pipeline.jobs', pipeline.id);
+    } else {
+      this.set('pipeline', pipeline);
+    }
   },
   setupController(controller, model) {
     this._super(controller, model);
