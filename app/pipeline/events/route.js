@@ -13,8 +13,18 @@ export default Route.extend({
   routeAfterAuthentication: 'pipeline.events',
   pipelineService: service('pipeline'),
   userSettings: service(),
-  beforeModel() {
-    this.set('pipeline', this.modelFor('pipeline').pipeline);
+  beforeModel(transition) {
+    const { pipeline } = this.modelFor('pipeline');
+
+    if (localStorage.getItem('newUI') === 'true') {
+      if (transition.intent.URL) {
+        this.transitionTo(`/v2${transition.intent.URL}`);
+      } else {
+        this.transitionTo('v2.pipeline.events', pipeline.id);
+      }
+    } else {
+      this.set('pipeline', pipeline);
+    }
   },
   setupController(controller, model = {}) {
     this._super(controller, model);
