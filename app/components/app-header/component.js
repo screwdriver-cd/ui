@@ -2,11 +2,11 @@ import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
 import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { getOwner } from '@ember/application';
 
 export default Component.extend({
   router: service(),
   session: service(),
+  optInRouteMapping: service(),
   tagName: 'header',
   showSearch: false,
   docUrl: ENV.APP.SDDOC_URL,
@@ -17,23 +17,20 @@ export default Component.extend({
     get() {
       const currentURL = get(this, 'router.currentURL');
 
-      return currentURL.includes('/v2/');
+      return currentURL.startsWith('/v2');
     }
   }),
-  hasAlternativeRoute: computed('isNewUI', 'router.currentRouteName', {
-    get() {
-      const routeName = this.router.currentRouteName;
+  hasAlternativeRoute: computed(
+    'router.currentRouteName',
+    'optInRouteMapping.routeMappings',
+    {
+      get() {
+        const routeName = this.router.currentRouteName;
 
-      let alterRouteName = `v2.${this.router.currentRouteName}`;
-
-      if (this.isNewUI) {
-        // to remove v2. prefix
-        alterRouteName = routeName.slice(3);
+        return this.optInRouteMapping.routeMappings.has(routeName);
       }
-
-      return getOwner(this).lookup(`route:${alterRouteName}`);
     }
-  }),
+  ),
   actions: {
     invalidateSession() {
       this.onInvalidate();
@@ -56,10 +53,18 @@ export default Component.extend({
     switchUI() {
       const currentURL = get(this, 'router.currentURL');
 
-      let targetURL = `/v2${currentURL}`;
+      let targetURL = currentURL;
 
       if (this.isNewUI) {
-        targetURL = currentURL.split('/v2/').join('/');
+        targetURL = currentURL.replace('/v2/', '/');
+
+        if (targetURL.includes('pulls')) {
+          targetURL = `${targetURL.split('pulls/')[0]}pulls`;
+        }
+        localStorage.removeItem('newUI');
+      } else {
+        targetURL = `/v2${currentURL}`;
+        localStorage.setItem('newUI', 'true');
       }
 
       this.router.transitionTo(targetURL);
