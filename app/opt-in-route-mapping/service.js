@@ -22,6 +22,9 @@ export default class OptInRouteMappingService extends Service {
     this.routeMappings.set('pipeline.events.show', 'v2.pipeline.events.show');
     this.routeMappings.set('v2.pipeline.events.show', 'pipeline.events.show');
 
+    this.routeMappings.set('pipeline.events.index', 'v2.pipeline.events.index');
+    this.routeMappings.set('v2.pipeline.events.index', 'pipeline.events.index');
+
     this.routeMappings.set('pipeline.pulls', 'v2.pipeline.pulls.show');
     this.routeMappings.set('v2.pipeline.pulls.show', 'pipeline.pulls');
   }
