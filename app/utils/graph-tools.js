@@ -25,6 +25,16 @@ const node = (nodes, name) => nodes.find(o => o.name === name);
 const findStage = (stages, name) => stages.find(o => o.name === name);
 
 /**
+ * Find a stage build from the list of stage builds
+ * @method findStage
+ * @param  {Array} stageBuilds  List of stage build objects
+ * @param  {Number} stageId     The stage id of the stage build
+ * @return {Object}             Reference to the stage build object from the list if found
+ */
+const findStageBuild = (stageBuilds, stageId) =>
+  stageBuilds.find(sb => `${sb.stageId}` === `${stageId}`);
+
+/**
  * Find a build for the given job id
  * @method build
  * @param  {Array} builds   List of build objects
@@ -73,22 +83,12 @@ const isStageTeardownJob = jobName => STAGE_TEARDOWN_PATTERN.test(jobName);
 /**
  * Compiles and returns a list of stages and associated jobs by traversing the event workflow graph
  * @method  extractEventStages
- * @param  {Object} graph                            Event workflow graph
- * @param  {Array|DS.PromiseArray} pipelineStages   List of latest stage metadata associated with the pipeline
- * @return {Array}                                  List of stage metadata associated with the event
+ * @param  {Object} graph Event workflow graph
+ * @return {Array}        List of stage metadata associated with the event
  */
-const extractEventStages = (graph, pipelineStages) => {
-  const stageToPipelineStageMap = pipelineStages
-    ? pipelineStages.reduce(
-        (obj, stage) => ({
-          ...obj,
-          [stage.name]: stage
-        }),
-        {}
-      )
-    : {};
-  const stageNameToEventStageMap = {};
+const extractEventStages = graph => {
   const { nodes } = graph;
+  const stageNameToEventStageMap = {};
 
   nodes.forEach(n => {
     const { stageName } = n;
@@ -97,12 +97,8 @@ const extractEventStages = (graph, pipelineStages) => {
       let eventStage = stageNameToEventStageMap[stageName];
 
       if (eventStage === undefined) {
-        const pipelineStage = stageToPipelineStageMap[stageName];
-
         eventStage = {
-          id: pipelineStage.id,
-          name: pipelineStage.name,
-          description: pipelineStage.description,
+          name: stageName,
           jobs: [],
           setup: null,
           teardown: null
@@ -122,6 +118,34 @@ const extractEventStages = (graph, pipelineStages) => {
   });
 
   return Object.values(stageNameToEventStageMap);
+};
+
+/**
+ * Enrich event stage by setting additional attributes (Ex: id, description) from corresponding pipeline stage
+ * @method  extractEventStages
+ * @param  {Array|DS.PromiseArray} eventStages      List of stage metadata associated with the event
+ * @param  {Array|DS.PromiseArray} pipelineStages   List of latest stage metadata associated with the pipeline
+ * @return {Array}                                  List of enriched stage metadata associated with the event
+ */
+const decorateEventStages = (eventStages, pipelineStages) => {
+  const stageToPipelineStageMap = pipelineStages
+    ? pipelineStages.reduce(
+        (obj, stage) => ({
+          ...obj,
+          [stage.name]: stage
+        }),
+        {}
+      )
+    : {};
+
+  eventStages.forEach(eventStage => {
+    const pipelineStage = stageToPipelineStageMap[eventStage.name];
+
+    eventStage.id = pipelineStage.id;
+    eventStage.description = pipelineStage.description;
+  });
+
+  return eventStages;
 };
 
 /**
@@ -605,8 +629,9 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
  * a custom directed graph
  * @method decorateGraph
  * @param  {Object}      inputGraph A directed graph representation { nodes: [], edges: [] }
- * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [builds]     A list of build metadata
- * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [jobs]       A list of job metadata
+ * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [builds]        A list of build metadata
+ * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [stageBuilds]   A list of stage build metadata
+ * @param  {Array|DS.PromiseArray|DS.PromiseManyArray}  [jobs]          A list of job metadata
  * @param  {String}   [start]     Node name that indicates what started the graph
  * @param  {Boolean}  [chainPR]   Boolean flag for the chainPR setting
  * @param  {number}   [prNum]     The pull request number
@@ -616,6 +641,7 @@ const subgraphFilter = ({ nodes, edges }, startNode) => {
 const decorateGraph = ({
   inputGraph,
   builds,
+  stageBuilds,
   jobs,
   start,
   chainPR,
@@ -632,6 +658,11 @@ const decorateGraph = ({
       builds instanceof DS.PromiseArray ||
       builds instanceof DS.PromiseManyArray) &&
     builds.length;
+  const stageBuildsAvailable =
+    (Array.isArray(stageBuilds) ||
+      stageBuilds instanceof DS.PromiseArray ||
+      stageBuilds instanceof DS.PromiseManyArray) &&
+    stageBuilds.length;
   const jobsAvailable =
     (Array.isArray(jobs) ||
       jobs instanceof DS.PromiseArray ||
@@ -640,7 +671,7 @@ const decorateGraph = ({
 
   const eventStages =
     pipelineStages && pipelineStages.length > 0
-      ? extractEventStages(inputGraph, pipelineStages)
+      ? decorateEventStages(extractEventStages(inputGraph), pipelineStages)
       : [];
 
   const graph = {};
@@ -705,7 +736,6 @@ const decorateGraph = ({
   positionGraphNodes(graph);
 
   // Decorate nodes with status
-
   nodes.forEach(n => {
     // Get job information
     let jobId = n.id;
@@ -779,6 +809,22 @@ const decorateGraph = ({
           graphNode => graphNode.name !== '~pr'
         )
       : null;
+
+  // Decorate stages with status
+  graph.stages.forEach(s => {
+    // Get build information
+    if (stageBuildsAvailable) {
+      const stage = findStage(pipelineStages, s.name);
+      const stageBuild = findStageBuild(stageBuilds, stage.id);
+
+      s.id = stage.id;
+
+      if (stageBuild) {
+        s.status = stageBuild.status;
+        s.stageBuildId = stageBuild.id;
+      }
+    }
+  });
 
   // Decorate edges with positions and status
   edges.forEach(e => {
@@ -885,5 +931,6 @@ export {
   isTrigger,
   subgraphFilter,
   removeBranch,
-  reverseGraph
+  reverseGraph,
+  extractEventStages
 };

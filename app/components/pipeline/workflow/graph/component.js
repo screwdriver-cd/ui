@@ -14,7 +14,8 @@ import {
   getMaximumJobNameLength,
   getNodeWidth,
   updateEdgeStatuses,
-  updateJobStatuses
+  updateJobStatuses,
+  updateStageStatuses
 } from 'screwdriver-ui/utils/pipeline/graph/d3-graph-util';
 import { nodeCanShowTooltip } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
 
@@ -22,6 +23,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
   event;
 
   builds;
+
+  stageBuilds;
 
   decoratedGraph;
 
@@ -31,18 +34,21 @@ export default class PipelineWorkflowGraphComponent extends Component {
     super(...arguments);
     this.event = this.args.event;
     this.builds = this.args.builds;
+    this.stageBuilds = this.args.stageBuilds;
 
     this.getDecoratedGraph(
       this.args.workflowGraph,
       this.args.builds,
+      this.args.stageBuilds,
       this.args.event
     );
   }
 
-  getDecoratedGraph(workflowGraph, builds, event) {
+  getDecoratedGraph(workflowGraph, builds, stageBuilds, event) {
     this.decoratedGraph = decorateGraph({
       inputGraph: workflowGraph,
       builds,
+      stageBuilds,
       jobs: this.args.jobs.map(job => {
         return { ...job, isDisabled: job.state === 'DISABLED' };
       }),
@@ -148,7 +154,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
   }
 
   @action
-  redraw(element, [workflowGraph, builds, event]) {
+  redraw(element, [workflowGraph, builds, stageBuilds, event]) {
     const elementSizes = getElementSizes();
     const maximumJobNameLength = getMaximumJobNameLength(
       this.decoratedGraph,
@@ -164,15 +170,16 @@ export default class PipelineWorkflowGraphComponent extends Component {
         this.event = event;
       }
       this.builds = builds;
+      this.stageBuilds = stageBuilds;
 
-      this.getDecoratedGraph(workflowGraph, builds, event);
+      this.getDecoratedGraph(workflowGraph, builds, stageBuilds, event);
       element.replaceChildren();
       this.draw(element);
 
       return;
     }
 
-    this.getDecoratedGraph(workflowGraph, builds, event);
+    this.getDecoratedGraph(workflowGraph, builds, stageBuilds, event);
     updateEdgeStatuses(this.graphSvg, this.decoratedGraph);
     updateJobStatuses(
       this.graphSvg,
@@ -180,5 +187,6 @@ export default class PipelineWorkflowGraphComponent extends Component {
       elementSizes,
       nodeWidth
     );
+    updateStageStatuses(this.graphSvg, this.decoratedGraph);
   }
 }

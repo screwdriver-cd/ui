@@ -39,6 +39,7 @@ export default Component.extend({
   }),
   decoratedGraph: computed(
     'builds.@each.{id,status}',
+    'stageBuilds.@each.{id,status}',
     'completeWorkflowGraph',
     'jobs.@each.{isDisabled,state,stateChanger}',
     'minified',
@@ -59,6 +60,8 @@ export default Component.extend({
             ? false
             : this.showDownstreamTriggers;
         const builds = this.builds === undefined ? [] : this.builds;
+        const stageBuilds =
+          this.stageBuilds === undefined ? [] : this.stageBuilds;
 
         const { startFrom } = this;
 
@@ -133,6 +136,7 @@ export default Component.extend({
         return decorateGraph({
           inputGraph: this.minified ? subgraphFilter(graph, startFrom) : graph,
           builds,
+          stageBuilds,
           jobs,
           start: startFrom,
           chainPR: this.prChainEnabled,
@@ -212,6 +216,7 @@ export default Component.extend({
     );
     const nodeWidth = getNodeWidth(elementSizes, maximumJobNameLength);
 
+    // redraw nodes
     data.nodes.forEach(node => {
       const n = el.select(`g.graph-node[data-job="${node.name}"]`);
 
@@ -241,6 +246,20 @@ export default Component.extend({
                 ? ICON_SIZE / 2
                 : 0)
           );
+      }
+    });
+
+    // redraw stages
+    data.stages.forEach(stage => {
+      const s = el.select(`g.stage-container[data-stage="${stage.name}"]`);
+
+      if (s) {
+        s.attr(
+          'class',
+          stage.status
+            ? `stage-container build-${stage.status.toLowerCase()}`
+            : 'stage-container'
+        );
       }
     });
   },
