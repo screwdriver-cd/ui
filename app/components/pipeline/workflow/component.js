@@ -185,7 +185,9 @@ export default class PipelineWorkflowComponent extends Component {
       this.event.id
     );
 
-    if (!this.isEventComplete(builds)) {
+    const hasEventCompleted = this.isEventComplete(builds);
+
+    if (!hasEventCompleted) {
       this.workflowDataReload.registerBuildsCallback(
         BUILD_QUEUE_NAME,
         event.id,
@@ -198,14 +200,15 @@ export default class PipelineWorkflowComponent extends Component {
         event.id
       );
 
-      if (!stageBuilds) {
+      this.stageBuilds = stageBuilds;
+
+      if (!stageBuilds || !hasEventCompleted) {
         this.workflowDataReload.registerStageBuildsCallback(
           STAGE_BUILD_QUEUE_NAME,
           event.id,
           this.stageBuildsCallback
         );
       }
-      this.stageBuilds = stageBuilds;
     }
 
     this.event = event;
