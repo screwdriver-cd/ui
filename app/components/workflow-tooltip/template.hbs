@@ -10,60 +10,63 @@
       </LinkTo>
     {{/each}}
   {{else}}
+    {{#if (not-eq this.tooltipData.job.type "JOB_GROUP")}}
+      <LinkTo
+        @route="pipeline.build"
+        @model={{this.tooltipData.job.buildId}}
+        @disabled={{not (and this.tooltipData.job.buildId (not-eq this.tooltipData.job.status "CREATED"))}}
+      >
+        Go to build details
+      </LinkTo>
 
-    <LinkTo
-      @route="pipeline.build"
-      @model={{this.tooltipData.job.buildId}}
-      @disabled={{not (and this.tooltipData.job.buildId (not-eq this.tooltipData.job.status "CREATED"))}}
-    >
-      Go to build details
-    </LinkTo>
+      <LinkTo @route="pipeline.metrics" @query={{hash jobId=this.tooltipData.job.id}}>
+        Go to build metrics
+      </LinkTo>
 
-    <LinkTo @route="pipeline.metrics" @query={{hash jobId=this.tooltipData.job.id}}>
-      Go to build metrics
-    </LinkTo>
-
-    {{#if this.tooltipData.job.isDisabled}}
-      <p>
-        {{this.tooltipData.job.stateChangeMessage}}
-      </p>
-      <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
-        Enable this job
-      </a>
-    {{else}}
-      {{#if this.canRestartPipeline}}
-        {{#if this.tooltipData.job.manualStartDisabled}}
-          <p>
-            Disabled manually starting
-          </p>
-        {{else}}
-          {{#if (eq this.canJobStartFromView true)}}
-            <a href="#" {{action this.confirmStartBuild}}>
-              {{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here
-            </a>
+      {{#if this.tooltipData.job.isDisabled}}
+        <p>
+          {{this.tooltipData.job.stateChangeMessage}}
+        </p>
+        <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
+          Enable this job
+        </a>
+      {{else}}
+        {{#if this.canRestartPipeline}}
+          {{#if this.tooltipData.job.manualStartDisabled}}
+            <p>
+              Disabled manually starting
+            </p>
+          {{else}}
+            {{#if (eq this.canJobStartFromView true)}}
+              <a href="#" {{action this.confirmStartBuild}}>
+                {{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here
+              </a>
+            {{/if}}
           {{/if}}
         {{/if}}
+        {{#if (eq this.tooltipData.job.isDisabled false)}}
+          <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
+            Disable this job
+          </a>
+        {{/if}}
       {{/if}}
-      {{#if (eq this.tooltipData.job.isDisabled false)}}
-        <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
-          Disable this job
+
+      {{#if this.tooltipData.displayStop}}
+        <a href="#" {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>
+          Stop build
+        </a>
+      {{/if}}
+      {{#if (eq this.tooltipData.job.status "FROZEN")}}
+        <a href="#" {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>
+          Stop frozen build
         </a>
       {{/if}}
     {{/if}}
 
-    {{#if this.tooltipData.displayStop}}
-      <a href="#" {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>
-        Stop build
-      </a>
-    {{/if}}
-    {{#if (eq this.tooltipData.job.status "FROZEN")}}
-      <a href="#" {{action this.stopBuild this.tooltipData.selectedEvent this.tooltipData.job}}>
-        Stop frozen build
-      </a>
-    {{/if}}
-
     {{#if this.tooltipData.job.description}}
-      <hr>
+      {{#if (not-eq this.tooltipData.job.type "JOB_GROUP")}}
+        <hr>
+      {{/if}}
       {{#if this.enableHiddenDescription}}
         <span class="text-nowrap" onClick={{action "clickDescription"}}>
           {{#if this.isDescriptionClicked}}
@@ -80,8 +83,6 @@
         </span>
       {{/if}}
     {{/if}}
-
-
   {{/if}}
   {{yield}}
 </div>

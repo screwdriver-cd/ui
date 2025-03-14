@@ -5,6 +5,7 @@ const edgeSrcBranchRegExp = new RegExp('^~(pr|commit):/(.+)/$');
 const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');
 const STAGE_SETUP_PATTERN = /^stage@([\w-]+)(?::setup)$/;
 const STAGE_TEARDOWN_PATTERN = /^stage@([\w-]+)(?::teardown)$/;
+const STAGE_COLLAPSED_JOB_PATTERN = /^stage@([\w-]+) jobs.*$/;
 
 /**
  * Find a node from the list of nodes
@@ -70,6 +71,9 @@ const isStageSetupJob = jobName => STAGE_SETUP_PATTERN.test(jobName);
  */
 const isStageTeardownJob = jobName => STAGE_TEARDOWN_PATTERN.test(jobName);
 
+const isStageCollapsedJob = jobName =>
+  STAGE_COLLAPSED_JOB_PATTERN.test(jobName);
+
 /**
  * Compiles and returns a list of stages and associated jobs by traversing the event workflow graph
  * @method  extractEventStages
@@ -125,6 +129,75 @@ const extractEventStages = (graph, pipelineStages) => {
 };
 
 /**
+ * Replaces all the individual stage nodes with a single node
+ * and direct all the edges associated with individual stage nodes to connect to the new node.
+ *
+ * @param stage         Stage metadata
+ * @param originalNodes List of nodes in the workflow graph
+ * @param originalEdges List of edges in the workflow graph
+ * @returns {{stage, collapsedNodes: {stageName: *, name: string, description: string}[], collapsedEdges: *[]}}
+ */
+const collapseStageNodesAndEdges = (stage, originalNodes, originalEdges) => {
+  const stageName = stage.name;
+  const stageJobNames = stage.jobs.map(j => j.name);
+  const stageNodeGroup = {
+    name: `stage@${stageName} jobs (${stageJobNames.length})`,
+    description: `This job group includes the following jobs: ${stageJobNames.join(
+      ', '
+    )}`,
+    stageName,
+    type: 'JOB_GROUP'
+  };
+
+  let isStageNodeGroupNotIncluded = true;
+
+  const collapsedNodes = [];
+  const collapsedEdges = [];
+
+  originalNodes.forEach(n => {
+    if (n.stageName !== stageName) {
+      collapsedNodes.push(n);
+    } else if (isStageNodeGroupNotIncluded) {
+      collapsedNodes.push(stageNodeGroup);
+      isStageNodeGroupNotIncluded = false;
+    }
+  });
+
+  stageJobNames.push(`stage@${stageName}:setup`);
+  stageJobNames.push(`stage@${stageName}:teardown`);
+
+  originalEdges.forEach(e => {
+    const isSrcInStage = stageJobNames.includes(e.src);
+    const isDestInStage = stageJobNames.includes(e.dest);
+
+    // remove intra stage edges
+    if (isSrcInStage && isDestInStage) {
+      return;
+    }
+
+    const newEdge = { ...e };
+
+    if (isSrcInStage) {
+      newEdge.src = stageNodeGroup.name;
+    } else if (isDestInStage) {
+      newEdge.dest = stageNodeGroup.name;
+    }
+
+    collapsedEdges.push(newEdge);
+  });
+
+  stage.jobs = [stageNodeGroup];
+  delete stage.setup;
+  delete stage.teardown;
+
+  return {
+    stage,
+    collapsedNodes,
+    collapsedEdges
+  };
+};
+
+/**
  * Replaces the edges associated with the specified node by creating new edges from the upstream nodes of the specified node
  * to the downstream nodes of the specified node.
  * @method  bypassSetupTeardownEdges
@@ -172,17 +245,28 @@ const replaceSetupTeardownJobEdgesWithStageEdges = (stages, edges) => {
 
   if (stages.length) {
     edges.forEach(e => {
-      if (isStageSetupJob(e.dest) || isStageTeardownJob(e.src)) {
+      if (
+        isStageSetupJob(e.dest) ||
+        isStageTeardownJob(e.src) ||
+        isStageCollapsedJob(e.dest) ||
+        isStageCollapsedJob(e.src)
+      ) {
         e.hidden = true;
 
         const stageEdge = { ...e };
 
         if (isStageSetupJob(e.dest)) {
           stageEdge.destStageName = e.dest.match(STAGE_SETUP_PATTERN)[1];
+        } else if (isStageCollapsedJob(e.dest)) {
+          stageEdge.destStageName = e.dest.match(
+            STAGE_COLLAPSED_JOB_PATTERN
+          )[1];
         }
 
         if (isStageTeardownJob(e.src)) {
           stageEdge.srcStageName = e.src.match(STAGE_TEARDOWN_PATTERN)[1];
+        } else if (isStageCollapsedJob(e.src)) {
+          stageEdge.srcStageName = e.src.match(STAGE_COLLAPSED_JOB_PATTERN)[1];
         }
 
         stageEdges.push(stageEdge);
@@ -203,11 +287,6 @@ const replaceSetupTeardownJobEdgesWithStageEdges = (stages, edges) => {
  */
 const extractStageNodesAndEdges = (eventWorkflowGraph, eventStage) => {
   const { nodes, edges } = eventWorkflowGraph;
-  const jobNames = [
-    ...eventStage.jobs,
-    eventStage.setup,
-    eventStage.teardown
-  ].map(j => j.name);
   const newNodes = [];
   const newNodesSet = new Set();
   const newEdges = [];
@@ -215,7 +294,7 @@ const extractStageNodesAndEdges = (eventWorkflowGraph, eventStage) => {
   nodes.forEach(n => {
     const { name } = n;
 
-    if (jobNames.includes(name)) {
+    if (n.stageName === eventStage.name) {
       newNodes.push(n);
       newNodesSet.add(name);
     }
@@ -620,7 +699,8 @@ const decorateGraph = ({
   start,
   chainPR,
   prNum,
-  stages: pipelineStages
+  stages: pipelineStages,
+  collapsedStages
 }) => {
   // deep clone
   const originalGraph = JSON.parse(JSON.stringify(inputGraph));
@@ -643,13 +723,35 @@ const decorateGraph = ({
       ? extractEventStages(inputGraph, pipelineStages)
       : [];
 
+  const hasStages = !!eventStages.length;
+
+  let collapsedNodes = [...originalNodes];
+
+  let collapsedEdges = [...originalEdges];
+
+  // collapse stages
+  eventStages.forEach(s => {
+    s.isCollapsed = collapsedStages.has(s.name);
+
+    if (s.isCollapsed) {
+      const result = collapseStageNodesAndEdges(
+        s,
+        collapsedNodes,
+        collapsedEdges
+      );
+
+      collapsedNodes = result.collapsedNodes;
+      collapsedEdges = result.collapsedEdges;
+    }
+  });
+
   const graph = {};
 
   const virtualSetupNodes = [];
   const virtualTeardownNodes = [];
   const nodes = [];
 
-  originalNodes.forEach(n => {
+  collapsedNodes.forEach(n => {
     const { name: jobName, virtual } = n;
 
     // displayName may be Numeric
@@ -670,9 +772,7 @@ const decorateGraph = ({
 
   graph.nodes = nodes;
 
-  let edges = originalEdges;
-
-  const hasStages = !!eventStages.length;
+  let edges = collapsedEdges;
 
   // edges to/from a stage
   const stageEdges = replaceSetupTeardownJobEdgesWithStageEdges(
@@ -803,8 +903,8 @@ const decorateGraph = ({
 
   // Decorate stage edges with position status
   stageEdges.forEach(e => {
-    const srcNode = node(originalNodes, e.src);
-    const destNode = node(originalNodes, e.dest);
+    const srcNode = node(collapsedNodes, e.src);
+    const destNode = node(collapsedNodes, e.dest);
 
     const srcStage = findStage(graph.stages, e.srcStageName);
     const destStage = findStage(graph.stages, e.destStageName);
