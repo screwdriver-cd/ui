@@ -85,7 +85,12 @@ module(
           id: 999,
           status: 'SUCCESS',
           startTime: '2024-07-14T17:25:57.671Z',
-          endTime: '2024-07-14T17:26:55.202Z'
+          endTime: '2024-07-14T17:26:55.202Z',
+          meta: {
+            build: {
+              sha: 'abcdefgh0123456789'
+            }
+          }
         }
       ];
 

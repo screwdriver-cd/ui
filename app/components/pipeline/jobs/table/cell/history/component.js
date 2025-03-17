@@ -21,4 +21,8 @@ export default class PipelineJobsTableCellHistoryComponent extends Component {
 
     this.args.record.onDestroy(this.args.record.job);
   }
+
+  truncateSha(build) {
+    return build.meta.build.sha.slice(0, 7);
+  }
 }

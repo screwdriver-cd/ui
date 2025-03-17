@@ -20,6 +20,7 @@
               class="tooltip"
             >
               <p>Build# {{build.id}}</p>
+              <p>SHA - {{this.truncateSha build}}</p>
               {{#if build.startTime}}
                 <p>Start - {{moment-format build.startTime "MM/DD/YYYY HH:mmA"}}</p>
               {{/if}}
