@@ -16,7 +16,8 @@ import {
   getNodeWidth,
   updateEdgeStatuses,
   updateJobStatuses,
-  updateStageStatuses
+  updateStageStatuses,
+  updateStageEdgeStatuses
 } from 'screwdriver-ui/utils/pipeline/graph/d3-graph-util';
 import { nodeCanShowTooltip } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
 
@@ -217,6 +218,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
       collapsedStages
     );
     updateEdgeStatuses(this.graphSvg, this.decoratedGraph);
+    updateStageEdgeStatuses(this.graphSvg, this.decoratedGraph);
     updateJobStatuses(
       this.graphSvg,
       this.decoratedGraph,
