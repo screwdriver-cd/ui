@@ -1,4 +1,4 @@
-{{#if (and (is-fulfilled this.selectedEventObj.builds) (is-fulfilled this.graph))}}
+{{#if (and (is-fulfilled this.selectedEventObj.builds) (is-fulfilled this.graph) (or (not this.selectedEventObj.hasStages) (is-fulfilled this.selectedEventObj.stageBuilds)))}}
   <WorkflowGraphD3
     @jobId={{this.jobId}}
     @pipeline={{this.pipeline}}
@@ -8,6 +8,7 @@
     @selectedEventObj={{this.selectedEventObj}}
     @selectedEventObjStatus={{this.selectedEventObj.status}}
     @builds={{this.selectedEventObj.builds}}
+    @stageBuilds={{this.stageBuilds}}
     @jobs={{this.jobs}}
     @prJobs={{this.prJobs}}
     @workflowGraph={{this.selectedEventObj.workflowGraph}}

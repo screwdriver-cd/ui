@@ -70,6 +70,32 @@
       }
     }
 
+    .stage-container {
+      &.build-success {
+        stroke: colors.$sd-success;
+      }
+
+      &.build-failure,
+      &.build-aborted {
+        stroke: colors.$sd-failure;
+      }
+
+      &.build-unstable {
+        stroke: colors.$sd-unstable;
+      }
+
+      &.build-warning {
+        stroke: colors.$sd-unstable;
+      }
+
+      &.build-running,
+      &.build-queued,
+      &.build-blocked,
+      &.build-skipped {
+        stroke: colors.$sd-queued;
+      }
+    }
+
     .stage-info {
       padding: 10px;
 
