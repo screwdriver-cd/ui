@@ -959,7 +959,9 @@ const decorateGraph = ({
       return;
     }
 
-    if (srcNode.status && srcNode.status !== 'RUNNING') {
+    if (srcStage) {
+      e.status = srcStage.status;
+    } else if (srcNode.status && srcNode.status !== 'RUNNING') {
       if (prTriggeredNodes && node(prTriggeredNodes, srcNode.name)) {
         // For non-chain PR pipelines, PR triggered jobs do not need outbound edges to have a status as they are the last node in the chain.
       } else {

@@ -618,8 +618,10 @@ export function addEdges( // eslint-disable-line max-params
     .append('path')
     .attr('class', d =>
       isSkipped
-        ? 'graph-edge build-skipped'
-        : `graph-edge ${d.status ? `build-${d.status.toLowerCase()}` : ''}`
+        ? 'graph-edge node-edge build-skipped'
+        : `graph-edge node-edge ${
+            d.status ? `build-${d.status.toLowerCase()}` : ''
+          }`
     )
     .attr('stroke-dasharray', d => (!d.status || isSkipped ? 5 : 0))
     .attr('stroke-width', 2)
@@ -934,11 +936,31 @@ export function updateJobStatuses(svg, data, sizes, nodeWidth) {
  */
 export function updateEdgeStatuses(svg, data) {
   svg
-    .selectAll('.graph-edge')
+    .selectAll('.graph-edge.node-edge')
     .data(data.edges)
     .join()
     .attr('class', edge => {
-      return `graph-edge ${
+      return `graph-edge node-edge ${
+        edge.status ? `build-${edge.status.toLowerCase()}` : ''
+      }`;
+    })
+    .attr('stroke-dasharray', edge => {
+      return !edge.status ? 5 : 0;
+    });
+}
+
+/**
+ * Updates the edge statuses in the existing graph SVG
+ * @param svg
+ * @param data
+ */
+export function updateStageEdgeStatuses(svg, data) {
+  svg
+    .selectAll('.graph-edge.stage-edge')
+    .data(data.stageEdges)
+    .join()
+    .attr('class', edge => {
+      return `graph-edge stage-edge ${
         edge.status ? `build-${edge.status.toLowerCase()}` : ''
       }`;
     })
