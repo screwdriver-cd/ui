@@ -1,5 +1,6 @@
 import Service, { service } from '@ember/service';
 import BuildsDataReloader from './buildsDataReloader';
+import StageBuildsDataReloader from './stageBuildsDataReloader';
 import LatestCommitEventReloader from './latestCommitEventReloader';
 import OpenPrsReloader from './openPrsReloader';
 
@@ -9,6 +10,8 @@ export default class WorkflowDataReloadService extends Service {
   latestCommitEventReloader;
 
   buildsReloader;
+
+  stageBuildsReloader;
 
   openPrsReloader;
 
@@ -25,6 +28,7 @@ export default class WorkflowDataReloadService extends Service {
       this.shuttle
     );
     this.buildsReloader = new BuildsDataReloader(this.shuttle);
+    this.stageBuildsReloader = new StageBuildsDataReloader(this.shuttle);
     this.openPrsReloader = new OpenPrsReloader(this.shuttle);
 
     this.id = 0;
@@ -47,6 +51,7 @@ export default class WorkflowDataReloadService extends Service {
     }
 
     this.buildsReloader.start();
+    this.stageBuildsReloader.start();
 
     return this.id;
   }
@@ -58,6 +63,7 @@ export default class WorkflowDataReloadService extends Service {
       this.latestCommitEventReloader.stop();
       this.openPrsReloader.stop();
       this.buildsReloader.stop();
+      this.stageBuildsReloader.stop();
     }
   }
 
@@ -71,6 +77,18 @@ export default class WorkflowDataReloadService extends Service {
 
   removeBuildsCallback(queueName, id) {
     this.buildsReloader.removeCallback(queueName, id);
+  }
+
+  getStageBuildsForEvent(eventId) {
+    return this.stageBuildsReloader.getStageBuildsForEvent(eventId);
+  }
+
+  registerStageBuildsCallback(queueName, id, callback) {
+    this.stageBuildsReloader.registerCallback(queueName, id, callback);
+  }
+
+  removeStageBuildsCallback(queueName, id) {
+    this.stageBuildsReloader.removeCallback(queueName, id);
   }
 
   registerLatestCommitEventCallback(queueName, id, callback) {

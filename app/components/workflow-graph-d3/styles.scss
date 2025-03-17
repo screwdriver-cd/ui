@@ -105,6 +105,32 @@ g {
   }
 }
 
+.stage-container {
+  &.build-success {
+    stroke: $sd-success;
+  }
+
+  &.build-failure,
+  &.build-aborted {
+    stroke: $sd-failure;
+  }
+
+  &.build-unstable {
+    stroke: $sd-unstable;
+  }
+
+  &.build-warning {
+    stroke: $sd-unstable;
+  }
+
+  &.build-running,
+  &.build-queued,
+  &.build-blocked,
+  &.build-skipped {
+    stroke: $sd-queued;
+  }
+}
+
 .stage-info {
   padding: 10px;
 

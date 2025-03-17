@@ -68,6 +68,19 @@ export default Component.extend({
       showDownstreamTriggers: false,
       reason: ''
     });
+    this.setStageBuilds();
+  },
+
+  setStageBuilds() {
+    let stageBuilds = [];
+
+    if (this.get('selectedEventObj.hasStages')) {
+      stageBuilds = this.get('selectedEventObj.stageBuilds');
+    }
+
+    setProperties(this, {
+      stageBuilds
+    });
   },
 
   canJobStartFromView: computed(
@@ -209,10 +222,16 @@ export default Component.extend({
     }
   ),
 
+  didReceiveAttrs() {
+    this._super(...arguments);
+    this.setStageBuilds();
+  },
+
   didUpdateAttrs() {
     this._super(...arguments);
     // hide graph tooltip when event changes
     set(this, 'showTooltip', false);
+    this.setStageBuilds();
     set(this, 'collapsedStages', new Set([]));
   },
   actions: {
