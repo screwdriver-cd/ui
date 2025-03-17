@@ -209,7 +209,13 @@ export default class PipelineWorkflowGraphComponent extends Component {
       return;
     }
 
-    this.getDecoratedGraph(workflowGraph, builds, stageBuilds, event);
+    this.getDecoratedGraph(
+      workflowGraph,
+      builds,
+      stageBuilds,
+      event,
+      collapsedStages
+    );
     updateEdgeStatuses(this.graphSvg, this.decoratedGraph);
     updateJobStatuses(
       this.graphSvg,
