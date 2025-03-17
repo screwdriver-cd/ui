@@ -188,7 +188,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
     if (
       this.event.id !== event.id ||
       this.decoratedGraph.nodes.length !== workflowGraph.nodes.length ||
-      this.collapsedStages.length !== collapsedStages.length
+      this.collapsedStages.size !== collapsedStages.size
     ) {
       if (this.event.id !== event.id) {
         this.event = event;
