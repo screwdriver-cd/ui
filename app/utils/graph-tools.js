@@ -830,11 +830,37 @@ const decorateGraph = ({
     return s;
   });
 
+  // Decorate stages with status
+  graph.stages.forEach(s => {
+    // Get build information
+    if (stageBuildsAvailable) {
+      const stage = findStage(pipelineStages, s.name);
+      const stageBuild = findStageBuild(stageBuilds, stage.id);
+
+      s.id = stage.id;
+
+      if (stageBuild) {
+        s.status = stageBuild.status;
+        s.stageBuildId = stageBuild.id;
+      }
+    }
+  });
+
   // Decorate nodes with position
   positionGraphNodes(graph);
 
   // Decorate nodes with status
   nodes.forEach(n => {
+    if (n.type === 'JOB_GROUP') {
+      const stage = findStage(graph.stages, n.stageName);
+
+      if (stage && stage.status) {
+        n.status = stage.status;
+      }
+
+      return;
+    }
+
     // Get job information
     let jobId = n.id;
 
@@ -907,22 +933,6 @@ const decorateGraph = ({
           graphNode => graphNode.name !== '~pr'
         )
       : null;
-
-  // Decorate stages with status
-  graph.stages.forEach(s => {
-    // Get build information
-    if (stageBuildsAvailable) {
-      const stage = findStage(pipelineStages, s.name);
-      const stageBuild = findStageBuild(stageBuilds, stage.id);
-
-      s.id = stage.id;
-
-      if (stageBuild) {
-        s.status = stageBuild.status;
-        s.stageBuildId = stageBuild.id;
-      }
-    }
-  });
 
   // Decorate edges with positions and status
   edges.forEach(e => {
