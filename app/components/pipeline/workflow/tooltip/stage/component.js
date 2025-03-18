@@ -24,11 +24,7 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
   }
 
   get stageStatus() {
-    const build = this.args.builds.find(
-      b => b.jobId === this.args.d3Data.stage.setup.id
-    );
-
-    return build ? build.status : null;
+    return this.args.d3Data.stage.status;
   }
 
   get job() {

@@ -1069,7 +1069,8 @@ module('Unit | Utility | graph tools', function () {
         hidden: true,
         src: 'stage@integration:teardown',
         srcStageName: 'integration',
-        to: expectedOutput.stages[1]
+        to: expectedOutput.stages[1],
+        status: undefined
       }
     ];
 
@@ -1403,6 +1404,16 @@ module('Unit | Utility | graph tools', function () {
           x: 6,
           y: 0
         },
+        setup: {
+          name: 'stage@production:setup',
+          id: 38,
+          stageName: 'production'
+        },
+        teardown: {
+          name: 'stage@production:teardown',
+          id: 39,
+          stageName: 'production'
+        },
         isCollapsed: true
       }
     ];
@@ -1423,7 +1434,8 @@ module('Unit | Utility | graph tools', function () {
         hidden: true,
         src: 'stage@integration:teardown',
         srcStageName: 'integration',
-        to: expectedOutput.stages[1]
+        to: expectedOutput.stages[1],
+        status: undefined
       }
     ];
 

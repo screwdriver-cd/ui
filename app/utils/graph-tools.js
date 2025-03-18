@@ -187,8 +187,8 @@ const collapseStageNodesAndEdges = (stage, originalNodes, originalEdges) => {
     }
   });
 
-  stageJobNames.push(`stage@${stageName}:setup`);
-  stageJobNames.push(`stage@${stageName}:teardown`);
+  stageJobNames.push(stage.setup.name);
+  stageJobNames.push(stage.teardown.name);
 
   originalEdges.forEach(e => {
     const isSrcInStage = stageJobNames.includes(e.src);
@@ -211,8 +211,6 @@ const collapseStageNodesAndEdges = (stage, originalNodes, originalEdges) => {
   });
 
   stage.jobs = [stageNodeGroup];
-  delete stage.setup;
-  delete stage.teardown;
 
   return {
     stage,

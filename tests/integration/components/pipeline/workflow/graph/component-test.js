@@ -344,6 +344,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
         { id: 3, jobId: 12, status: 'RUNNING' }
       ],
       stageBuilds: [{ id: 1, stageId: 10, status: 'RUNNING' }],
+      collapsedStages: new Set([]),
       displayJobNameLength: 20
     });
     await render(
@@ -353,6 +354,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @jobs={{this.jobs}}
             @builds={{this.builds}}
             @stageBuilds={{this.stageBuilds}}
+            @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`

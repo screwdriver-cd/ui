@@ -61,9 +61,9 @@ module(
           name: 'integration',
           setup: {
             id: 777,
-            name: 'stage@integration:setup',
-            status: 'RUNNING'
-          }
+            name: 'stage@integration:setup'
+          },
+          status: 'RUNNING'
         }
       };
 
