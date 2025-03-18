@@ -47,10 +47,11 @@ export default class NewPipelineEventsShowRoute extends Route {
       `/pipelines/${pipelineId}/stages`
     );
 
-    const triggers = await this.shuttle.fetchFromApi(
-      'get',
-      `/pipelines/${pipelineId}/triggers`
-    );
+    await this.shuttle
+      .fetchFromApi('get', `/pipelines/${pipelineId}/triggers`)
+      .then(triggers => {
+        this.pipelinePageState.setTriggers(triggers);
+      });
 
     return {
       userSettings: model.userSettings,
@@ -58,7 +59,6 @@ export default class NewPipelineEventsShowRoute extends Route {
       latestEvent,
       jobs,
       stages,
-      triggers,
       invalidEvent: event === null
     };
   }

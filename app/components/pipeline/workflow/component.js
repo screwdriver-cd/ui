@@ -49,8 +49,6 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked stages;
 
-  @tracked triggers;
-
   @tracked workflowGraphToDisplay;
 
   @tracked showGraph;
@@ -83,7 +81,6 @@ export default class PipelineWorkflowComponent extends Component {
     } else {
       this.jobs = this.args.jobs;
       this.stages = this.args.stages;
-      this.triggers = this.args.triggers;
 
       this.monitorForNewBuilds();
     }
@@ -226,7 +223,7 @@ export default class PipelineWorkflowComponent extends Component {
     this.workflowGraph = getWorkflowGraph(workflowGraph, null);
     this.workflowGraphWithDownstreamTriggers = getWorkflowGraph(
       workflowGraph,
-      this.triggers
+      this.pipelinePageState.getTriggers()
     );
     this.workflowGraphToDisplay = this.workflowGraph;
   }
