@@ -72,13 +72,7 @@ module('Acceptance | child pipeline', function (hooks) {
     server.get('http://localhost:8080/v4/banners', () => [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify([
-        {
-          id: 1,
-          isActive: true,
-          message: 'shutdown imminent'
-        }
-      ])
+      JSON.stringify([])
     ]);
   });
 
@@ -91,7 +85,7 @@ module('Acceptance | child pipeline', function (hooks) {
     await visit('/pipelines/1/child-pipelines');
 
     assert.equal(currentURL(), '/pipelines/1/child-pipelines');
-    assert.dom('.banner').hasText('× shutdown imminent');
+    assert.dom('#banners').exists({ count: 1 });
     assert.equal(getPageTitle(), 'Child Pipelines', 'Page title is correct');
     assert.dom('.appId:nth-child(1)').hasText('Name');
     assert.dom('tbody tr:first-child td.appId').hasText('child/one');

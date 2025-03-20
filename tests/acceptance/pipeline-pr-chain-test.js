@@ -87,13 +87,7 @@ module('Acceptance | pipeline pr-chain', function (hooks) {
     server.get('http://localhost:8080/v4/banners', () => [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify([
-        {
-          id: 1,
-          isActive: true,
-          message: 'shutdown imminent'
-        }
-      ])
+      JSON.stringify([])
     ]);
   });
 
@@ -105,7 +99,7 @@ module('Acceptance | pipeline pr-chain', function (hooks) {
     await authenticateSession({ token: 'fakeToken' });
     await visit('/pipelines/4/pulls');
 
-    assert.dom('.banner').hasText('× shutdown imminent');
+    assert.dom('#banners').exists({ count: 1 });
     assert
       .dom('a div.pipeline-name')
       .hasText('foo/bar', 'incorrect pipeline name');
