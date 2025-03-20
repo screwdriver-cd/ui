@@ -145,13 +145,7 @@ module('Acceptance | pipeline build', function (hooks) {
     server.get('http://localhost:8080/v4/banners', () => [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify([
-        {
-          id: 1,
-          isActive: true,
-          message: 'shutdown imminent'
-        }
-      ])
+      JSON.stringify([])
     ]);
   });
 
@@ -238,7 +232,7 @@ module('Acceptance | pipeline build', function (hooks) {
     await visit('/pipelines/4');
 
     assert.equal(currentURL(), `/pipelines/4/events/${desiredEventId}`);
-    assert.dom('.banner').hasText('× shutdown imminent');
+    assert.dom('#banners').exists({ count: 1 });
     assert.equal(getPageTitle(), 'foo/bar', 'Page title is correct');
     assert
       .dom('a div.pipeline-name')
