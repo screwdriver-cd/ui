@@ -1,0 +1,42 @@
+<div
+  id="banners"
+  {{did-insert this.initializeBanners}}
+>
+  {{#if this.displayingBanner}}
+    <BsAlert
+      @type="info"
+      @dismissible={{false}}
+    >
+      <div id="banner">
+        <FaIcon @icon="circle-info" />
+        <div class="message">
+          {{{input-sanitizer this.displayingBanner.message}}}
+        </div>
+      </div>
+
+      <div id="banner-controls">
+        <div id="banner-count">
+          {{this.getDisplayIndex}} of {{this.bannersForDisplay.length}}
+        </div>
+        {{#if (gt this.bannersForDisplay.length 1)}}
+          <BsButton
+            id="next-banner"
+            @type="primary"
+            @outline={{true}}
+            {{on "click" this.nextBanner}}
+          >
+            <FaIcon @icon="caret-right"/>
+          </BsButton>
+          <BsButton
+            id="previous-banner"
+            @type="primary"
+            @outline={{true}}
+            {{on "click" this.previousBanner}}
+          >
+            <FaIcon @icon="caret-left"/>
+          </BsButton>
+        {{/if}}
+      </div>
+    </BsAlert>
+  {{/if}}
+</div>
