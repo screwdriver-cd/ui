@@ -1,0 +1,10 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  .alert {
+    &.alert-info {
+      color: colors.$sd-info-fg;
+      background-color: colors.$sd-info-bg;
+    }
+  }
+}
