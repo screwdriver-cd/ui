@@ -325,7 +325,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
     assert.dom('#toggle-job-link').doesNotExist();
     assert.dom('#stop-build-link').doesNotExist();
 
-    // assert.dom('#tooltip-description').exists({ count: 1 });
     assert.dom('#hidden-tooltip-description').exists({ count: 1 });
     assert
       .dom('#hidden-tooltip-description')

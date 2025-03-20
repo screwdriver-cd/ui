@@ -131,7 +131,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
         this.decoratedGraph,
         elementSizes,
         nodeWidth,
-        isSkipped,
+        isSkippedEvent,
         verticalDisplacements,
         horizontalDisplacements
       );
