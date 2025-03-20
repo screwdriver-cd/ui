@@ -27,13 +27,10 @@ export default class BannersService extends Service {
         .fetchFromApi('get', '/banners?isActive=true&scope=GLOBAL')
         .then(banners => {
           this.globalBanners = banners;
-          this.displayingBanners = banners;
         });
     }
-    if (!this.displayingBanners) {
-      this.displayingBanners = this.globalBanners;
-    }
 
+    this.displayingBanners = this.globalBanners;
     this.bannerCallback(this.displayingBanners);
   }
 
