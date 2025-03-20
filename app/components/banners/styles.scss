@@ -1,0 +1,61 @@
+@use 'screwdriver-colors' as colors;
+@use 'variables';
+@use 'bootstrap-alert' as alert;
+@use 'screwdriver-button' as sdButton;
+
+@mixin styles {
+  #banners {
+    @include alert.styles;
+
+    .alert {
+      height: variables.$banners-height;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      border: none;
+      border-radius: 0;
+
+      #banner {
+        display: flex;
+
+        svg {
+          margin-top: 0.175rem;
+          margin-right: 0.25rem;
+        }
+
+        .message {
+          height: 2.25rem;
+          overflow: auto;
+          padding-right: 5rem;
+        }
+      }
+
+      #banner-controls {
+        display: flex;
+        flex-direction: row-reverse;
+        font-size: 0.75rem;
+        height: 1rem;
+
+        @include sdButton.styles;
+
+        #next-banner,
+        #previous-banner {
+          display: flex;
+          width: 1rem;
+          border: none;
+          padding: 0;
+          color: colors.$sd-info-fg;
+
+          &:hover {
+            color: rgba(colors.$sd-info-fg, 0.75);
+            background-color: transparent;
+          }
+
+          svg {
+            margin: auto;
+          }
+        }
+      }
+    }
+  }
+}
