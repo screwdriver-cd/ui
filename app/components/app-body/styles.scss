@@ -5,7 +5,7 @@
 
   #appContainer {
     flex: 1;
-    min-height: calc(100% - $nav-banner-height);
+    min-height: calc(100% - $banners-height);
     max-height: 100%;
 
     &.pipeline-page {
