@@ -19,6 +19,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     sinon.stub(pipelinePageState, 'getPipeline').returns({ id: pipelineId });
     sinon.stub(pipelinePageState, 'getPipelineId').returns(pipelineId);
+    sinon.stub(pipelinePageState, 'getTriggers').returns([]);
   });
 
   test('it renders for pipeline with no events', async function (assert) {
@@ -83,7 +84,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
       userSettings: {},
       jobs: [],
       stages: [],
-      triggers: [],
       latestEvent: {
         id: 123,
         sha: 'abc123def456',
@@ -98,7 +98,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
         @stages={{this.stages}}
-        @triggers={{this.triggers}}
         @latestEvent={{this.latestCommitEvent}}
         @invalidEvent={{true}}
       />`
@@ -124,8 +123,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     this.setProperties({
       userSettings: {},
       jobs: [],
-      stages: [],
-      triggers: []
+      stages: []
     });
 
     await render(
@@ -133,7 +131,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
         @stages={{this.stages}}
-        @triggers={{this.triggers}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @invalidEvent={{true}}
       />`
@@ -173,7 +170,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
       userSettings: {},
       jobs: [],
       stages: [],
-      triggers: [],
       latestEvent: event,
       event
     });
@@ -183,7 +179,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
         @stages={{this.stages}}
-        @triggers={{this.triggers}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
       />`
@@ -223,7 +218,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
       userSettings: {},
       jobs: [],
       stages: [],
-      triggers: [],
       latestEvent: event,
       event,
       prNums: []
@@ -234,7 +228,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
         @stages={{this.stages}}
-        @triggers={{this.triggers}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
         @prNums={{this.prNums}}
@@ -287,7 +280,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
       userSettings: {},
       jobs: [],
       stages: [],
-      triggers: [],
       latestEvent: event,
       event,
       prNums: []
@@ -298,7 +290,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
         @stages={{this.stages}}
-        @triggers={{this.triggers}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
         @prNums={{this.prNums}}

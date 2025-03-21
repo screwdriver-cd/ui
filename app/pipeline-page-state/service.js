@@ -5,9 +5,12 @@ export default class PipelinePageStateService extends Service {
 
   childPipelines;
 
+  triggers;
+
   clear() {
     this.pipeline = null;
     this.childPipelines = [];
+    this.triggers = [];
   }
 
   setPipeline(pipeline) {
@@ -28,5 +31,13 @@ export default class PipelinePageStateService extends Service {
 
   getChildPipelines() {
     return this.childPipelines;
+  }
+
+  setTriggers(triggers) {
+    this.triggers = triggers;
+  }
+
+  getTriggers() {
+    return this.triggers;
   }
 }
