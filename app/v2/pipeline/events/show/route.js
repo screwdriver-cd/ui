@@ -25,7 +25,11 @@ export default class NewPipelineEventsShowRoute extends Route {
         .catch(async err => {
           if (err instanceof NotFoundError) {
             latestEvent = await this.shuttle
-              .fetchFromApi('get', `/pipelines/${pipelineId}/events?count=1`)
+              // TODO: Change back to count=1 when the API bug is resolved -> https://github.com/screwdriver-cd/screwdriver/issues/3308
+              .fetchFromApi(
+                'get',
+                `/pipelines/${pipelineId}/events?page=1&count=2`
+              )
               .then(events => {
                 return events[0];
               });
