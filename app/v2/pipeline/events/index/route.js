@@ -11,8 +11,8 @@ export default class NewPipelineEventsIndexRoute extends Route {
     const pipelineId = this.pipelinePageState.getPipelineId();
 
     const latestEvent = await this.shuttle
-      // TODO: Add the count=1 query parameter back in when the API bug is resolved -> https://github.com/screwdriver-cd/screwdriver/issues/3308
-      .fetchFromApi('get', `/pipelines/${pipelineId}/events`)
+      // TODO: Change back to count=1 when the API bug is resolved -> https://github.com/screwdriver-cd/screwdriver/issues/3308
+      .fetchFromApi('get', `/pipelines/${pipelineId}/events?page=1&count=2`)
       .then(events => {
         return events[0];
       });
