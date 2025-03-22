@@ -96,11 +96,13 @@
             @builds={{this.builds}}
             @stageBuilds={{this.stageBuilds}}
             @stages={{this.stages}}
+            @collapsedStages={{this.collapsedStages}}
             @chainPr={{this.pipeline.prChain}}
             @displayJobNameLength={{this.displayJobNameLength}}
             @setShowTooltip={{this.setShowTooltip}}
             @displayStageTooltip={{true}}
             @setShowStageTooltip={{this.setShowStageTooltip}}
+            @toggleStageView={{this.toggleStageView}}
           />
 
           {{#if this.showTooltip}}

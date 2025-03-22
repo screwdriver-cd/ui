@@ -691,6 +691,8 @@ module('Unit | Utility | graph tools', function () {
       }
     ];
 
+    const COLLAPSED_STAGES = new Set([]);
+
     const JOBS = [
       { id: 1, name: 'component', virtualJob: false },
       { id: 2, name: 'publish', virtualJob: false },
@@ -1002,7 +1004,8 @@ module('Unit | Utility | graph tools', function () {
           name: 'stage@integration:teardown',
           stageName: 'integration',
           virtual: true
-        }
+        },
+        isCollapsed: false
       },
       {
         description: undefined,
@@ -1045,7 +1048,8 @@ module('Unit | Utility | graph tools', function () {
           id: 39,
           name: 'stage@production:teardown',
           stageName: 'production'
-        }
+        },
+        isCollapsed: false
       }
     ];
 
@@ -1065,13 +1069,379 @@ module('Unit | Utility | graph tools', function () {
         hidden: true,
         src: 'stage@integration:teardown',
         srcStageName: 'integration',
-        to: expectedOutput.stages[1]
+        to: expectedOutput.stages[1],
+        status: undefined
       }
     ];
 
     const result = decorateGraph({
       inputGraph: GRAPH,
       stages: STAGES,
+      collapsedStages: COLLAPSED_STAGES,
+      jobs: JOBS
+    });
+
+    assert.deepEqual(result, expectedOutput);
+  });
+
+  test('it processes graph with collapsed stages', function (assert) {
+    const GRAPH = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'component', id: 1 },
+        { name: 'publish', id: 2 },
+        {
+          name: 'stage@integration:setup',
+          id: 28,
+          stageName: 'integration',
+          virtual: true
+        },
+        { name: 'ci-deploy', id: 21, stageName: 'integration' },
+        { name: 'ci-test', id: 22, stageName: 'integration' },
+        { name: 'ci-certify', id: 23, stageName: 'integration' },
+        {
+          name: 'stage@integration:teardown',
+          id: 29,
+          stageName: 'integration',
+          virtual: true
+        },
+        { name: 'stage@production:setup', id: 38, stageName: 'production' },
+        { name: 'prod-deploy', id: 31, stageName: 'production' },
+        { name: 'prod-test', id: 32, stageName: 'production' },
+        { name: 'prod-certify', id: 33, stageName: 'production' },
+        {
+          name: 'stage@production:teardown',
+          id: 39,
+          stageName: 'production'
+        }
+      ],
+      edges: [
+        { src: '~pr', dest: 'component' },
+        { src: '~commit', dest: 'component' },
+        { src: 'component', dest: 'publish' },
+        { src: 'publish', dest: 'stage@integration:setup' },
+        { src: 'stage@integration:setup', dest: 'ci-deploy' },
+        { src: 'ci-deploy', dest: 'ci-test' },
+        { src: 'ci-test', dest: 'ci-certify' },
+        { src: 'ci-certify', dest: 'stage@integration:teardown' },
+        { src: 'stage@integration:teardown', dest: 'stage@production:setup' },
+        { src: 'stage@production:setup', dest: 'prod-deploy' },
+        { src: 'prod-deploy', dest: 'prod-test' },
+        { src: 'prod-test', dest: 'prod-certify' },
+        { src: 'prod-certify', dest: 'stage@production:teardown' }
+      ]
+    };
+
+    const STAGES = [
+      {
+        id: 7,
+        name: 'integration',
+        jobIds: [21, 22, 23, 24],
+        setup: 28,
+        teardown: 29
+      },
+      {
+        id: 8,
+        name: 'production',
+        jobs: [31, 32],
+        setup: 38,
+        teardown: 39
+      },
+      {
+        id: 9,
+        name: 'canary',
+        jobs: [41, 42],
+        setup: 48,
+        teardown: 49
+      }
+    ];
+
+    const COLLAPSED_STAGES = new Set(['production']);
+
+    const JOBS = [
+      { id: 1, name: 'component', virtualJob: false },
+      { id: 2, name: 'publish', virtualJob: false },
+      { id: 21, name: 'ci-deploy', virtualJob: false },
+      { id: 22, name: 'ci-test', virtualJob: false },
+      { id: 23, name: 'ci-certify', virtualJob: false },
+      { id: 28, name: 'stage@integration:setup', virtualJob: true },
+      { id: 29, name: 'stage@integration:teardown', virtualJob: true },
+      { id: 31, name: 'prod-deploy', virtualJob: false },
+      { id: 32, name: 'prod-test', virtualJob: false },
+      { id: 33, name: 'prod-certify', virtualJob: false },
+      { id: 38, name: 'stage@production:setup', virtualJob: false },
+      { id: 39, name: 'stage@production:teardown', virtualJob: false }
+    ];
+
+    const expectedOutput = {
+      edges: [
+        {
+          dest: 'component',
+          from: {
+            x: 0,
+            y: 0
+          },
+          src: '~pr',
+          to: {
+            x: 1,
+            y: 0
+          }
+        },
+        {
+          dest: 'component',
+          from: {
+            x: 0,
+            y: 1
+          },
+          src: '~commit',
+          to: {
+            x: 1,
+            y: 0
+          }
+        },
+        {
+          dest: 'publish',
+          from: {
+            x: 1,
+            y: 0
+          },
+          src: 'component',
+          to: {
+            x: 2,
+            y: 0
+          }
+        },
+        {
+          dest: 'ci-test',
+          from: {
+            x: 3,
+            y: 0
+          },
+          src: 'ci-deploy',
+          to: {
+            x: 4,
+            y: 0
+          }
+        },
+        {
+          dest: 'ci-certify',
+          from: {
+            x: 4,
+            y: 0
+          },
+          src: 'ci-test',
+          to: {
+            x: 5,
+            y: 0
+          }
+        },
+        {
+          dest: 'ci-deploy',
+          from: {
+            x: 2,
+            y: 0
+          },
+          hidden: true,
+          src: 'publish',
+          to: {
+            x: 3,
+            y: 0
+          }
+        },
+        {
+          dest: 'stage@production jobs (3)',
+          from: {
+            x: 5,
+            y: 0
+          },
+          hidden: true,
+          src: 'ci-certify',
+          to: {
+            x: 6,
+            y: 0
+          }
+        }
+      ],
+      meta: {
+        height: 2,
+        width: 7
+      },
+      nodes: [
+        {
+          isDisabled: false,
+          name: '~pr',
+          pos: {
+            x: 0,
+            y: 0
+          }
+        },
+        {
+          isDisabled: false,
+          name: '~commit',
+          pos: {
+            x: 0,
+            y: 1
+          }
+        },
+        {
+          id: 1,
+          isDisabled: false,
+          name: 'component',
+          pos: {
+            x: 1,
+            y: 0
+          }
+        },
+        {
+          id: 2,
+          isDisabled: false,
+          name: 'publish',
+          pos: {
+            x: 2,
+            y: 0
+          }
+        },
+        {
+          id: 21,
+          isDisabled: false,
+          name: 'ci-deploy',
+          pos: {
+            x: 3,
+            y: 0
+          },
+          stageName: 'integration'
+        },
+        {
+          id: 22,
+          isDisabled: false,
+          name: 'ci-test',
+          pos: {
+            x: 4,
+            y: 0
+          },
+          stageName: 'integration'
+        },
+        {
+          id: 23,
+          isDisabled: false,
+          name: 'ci-certify',
+          pos: {
+            x: 5,
+            y: 0
+          },
+          stageName: 'integration'
+        },
+        {
+          description:
+            'This job group includes the following jobs: prod-deploy, prod-test, prod-certify',
+          name: 'stage@production jobs (3)',
+          pos: {
+            x: 6,
+            y: 0
+          },
+          stageName: 'production',
+          type: 'JOB_GROUP'
+        }
+      ]
+    };
+
+    expectedOutput.stages = [
+      {
+        description: undefined,
+        graph: {
+          edges: [expectedOutput.edges[3], expectedOutput.edges[4]],
+          meta: {
+            height: 1,
+            width: 3
+          },
+          nodes: [
+            expectedOutput.nodes[4],
+            expectedOutput.nodes[5],
+            expectedOutput.nodes[6]
+          ]
+        },
+        id: 7,
+        jobs: [
+          { id: 21, name: 'ci-deploy', stageName: 'integration' },
+          { id: 22, name: 'ci-test', stageName: 'integration' },
+          { id: 23, name: 'ci-certify', stageName: 'integration' }
+        ],
+        name: 'integration',
+        pos: {
+          x: 3,
+          y: 0
+        },
+        setup: {
+          id: 28,
+          name: 'stage@integration:setup',
+          stageName: 'integration',
+          virtual: true
+        },
+        teardown: {
+          id: 29,
+          name: 'stage@integration:teardown',
+          stageName: 'integration',
+          virtual: true
+        },
+        isCollapsed: false
+      },
+      {
+        description: undefined,
+        graph: {
+          edges: [],
+          meta: {
+            height: 1,
+            width: 1
+          },
+          nodes: [expectedOutput.nodes[7]]
+        },
+        id: 8,
+        jobs: [expectedOutput.nodes[7]],
+        name: 'production',
+        pos: {
+          x: 6,
+          y: 0
+        },
+        setup: {
+          name: 'stage@production:setup',
+          id: 38,
+          stageName: 'production'
+        },
+        teardown: {
+          name: 'stage@production:teardown',
+          id: 39,
+          stageName: 'production'
+        },
+        isCollapsed: true
+      }
+    ];
+
+    expectedOutput.stageEdges = [
+      {
+        dest: 'stage@integration:setup',
+        destStageName: 'integration',
+        from: expectedOutput.nodes[3],
+        hidden: true,
+        src: 'publish',
+        to: expectedOutput.stages[0]
+      },
+      {
+        dest: 'stage@production jobs (3)',
+        destStageName: 'production',
+        from: expectedOutput.stages[0],
+        hidden: true,
+        src: 'stage@integration:teardown',
+        srcStageName: 'integration',
+        to: expectedOutput.stages[1],
+        status: undefined
+      }
+    ];
+
+    const result = decorateGraph({
+      inputGraph: GRAPH,
+      stages: STAGES,
+      collapsedStages: COLLAPSED_STAGES,
       jobs: JOBS
     });
 
@@ -1441,6 +1811,8 @@ module('Unit | Utility | graph tools', function () {
       }
     ];
 
+    const COLLAPSED_STAGES = new Set([]);
+
     const JOBS = [
       { id: 1, name: 'triggering-stage', virtualJob: false },
       {
@@ -1472,6 +1844,7 @@ module('Unit | Utility | graph tools', function () {
     const result = decorateGraph({
       inputGraph: GRAPH,
       stages: STAGES,
+      collapsedStages: COLLAPSED_STAGES,
       jobs: JOBS
     });
 
