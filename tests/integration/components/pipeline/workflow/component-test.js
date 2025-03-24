@@ -7,6 +7,9 @@ import sinon from 'sinon';
 module('Integration | Component | pipeline/workflow', function (hooks) {
   setupRenderingTest(hooks);
 
+  const pipelineId = 1234;
+  const pipeline = { id: pipelineId };
+
   hooks.beforeEach(function () {
     const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
@@ -15,11 +18,10 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
-    const pipelineId = 1234;
-
-    sinon.stub(pipelinePageState, 'getPipeline').returns({ id: pipelineId });
+    sinon.stub(pipelinePageState, 'getPipeline').returns(pipeline);
     sinon.stub(pipelinePageState, 'getPipelineId').returns(pipelineId);
     sinon.stub(pipelinePageState, 'getTriggers').returns([]);
+    sinon.stub(pipelinePageState, 'getStages').returns([]);
   });
 
   test('it renders for pipeline with no events', async function (assert) {
@@ -83,7 +85,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     this.setProperties({
       userSettings: {},
       jobs: [],
-      stages: [],
       latestEvent: {
         id: 123,
         sha: 'abc123def456',
@@ -97,7 +98,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
       hbs`<Pipeline::Workflow
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
-        @stages={{this.stages}}
         @latestEvent={{this.latestCommitEvent}}
         @invalidEvent={{true}}
       />`
@@ -122,15 +122,13 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     this.setProperties({
       userSettings: {},
-      jobs: [],
-      stages: []
+      jobs: []
     });
 
     await render(
       hbs`<Pipeline::Workflow
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
-        @stages={{this.stages}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @invalidEvent={{true}}
       />`
@@ -169,7 +167,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     this.setProperties({
       userSettings: {},
       jobs: [],
-      stages: [],
       latestEvent: event,
       event
     });
@@ -217,7 +214,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     this.setProperties({
       userSettings: {},
       jobs: [],
-      stages: [],
       latestEvent: event,
       event,
       prNums: []
@@ -227,7 +223,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
       hbs`<Pipeline::Workflow
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
-        @stages={{this.stages}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
         @prNums={{this.prNums}}
@@ -241,23 +236,13 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   });
 
   test('it renders pipeline PR restriction message', async function (assert) {
-    sinon.restore();
     const router = this.owner.lookup('service:router');
     const shuttle = this.owner.lookup('service:shuttle');
-    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
-    const workflowDataReload = this.owner.lookup(
-      'service:workflow-data-reload'
-    );
 
-    const pipelineId = 1234;
     const prNum = 4;
 
-    sinon.stub(pipelinePageState, 'getPipeline').returns({
-      id: pipelineId,
-      annotations: { 'screwdriver.cd/restrictPR': 'all' }
-    });
-    sinon.stub(pipelinePageState, 'getPipelineId').returns(pipelineId);
-    sinon.stub(workflowDataReload, 'start').callsFake(() => {});
+    pipeline.annotations = { 'screwdriver.cd/restrictPR': 'all' };
+
     sinon.stub(router, 'currentRouteName').value('pulls');
     sinon.stub(router, 'currentURL').value(`/v2/pipelines/1/pulls/${prNum}`);
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
@@ -279,7 +264,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     this.setProperties({
       userSettings: {},
       jobs: [],
-      stages: [],
       latestEvent: event,
       event,
       prNums: []
@@ -289,7 +273,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
       hbs`<Pipeline::Workflow
         @userSettings={{this.userSettings}}
         @jobs={{this.jobs}}
-        @stages={{this.stages}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
         @prNums={{this.prNums}}
@@ -300,5 +283,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     assert
       .dom('#pr-restrictions .restriction-icon-container')
       .exists({ count: 2 });
+
+    delete pipeline.annotations;
   });
 });

@@ -1,6 +1,7 @@
 /* global d3 */
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import { service } from '@ember/service';
 import { isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 import { decorateGraph } from 'screwdriver-ui/utils/graph-tools';
 import {
@@ -20,6 +21,8 @@ import {
 import { nodeCanShowTooltip } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
 
 export default class PipelineWorkflowGraphComponent extends Component {
+  @service pipelinePageState;
+
   event;
 
   builds;
@@ -55,7 +58,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
       start: event.startFrom,
       chainPR: this.args.chainPr,
       prNum: event.prNum,
-      stages: this.args.stages
+      stages: this.pipelinePageState.getStages()
     });
   }
 
@@ -93,7 +96,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
       onClickGraph
     );
 
-    const hasStages = this.args.stages.length > 0;
+    const hasStages = this.pipelinePageState.getStages().length > 0;
 
     // stages
     const { verticalDisplacements, horizontalDisplacements } = hasStages
