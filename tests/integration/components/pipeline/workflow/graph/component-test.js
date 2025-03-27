@@ -2,9 +2,19 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render, rerender } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import sinon from 'sinon';
 
 module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   setupRenderingTest(hooks);
+
+  const stages = [];
+
+  hooks.beforeEach(function () {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    stages.splice(0);
+    sinon.stub(pipelinePageState, 'getStages').returns(stages);
+  });
 
   test('it renders base graph', async function (assert) {
     this.setProperties({
@@ -15,7 +25,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       event: { startFrom: '~commit' },
       jobs: [{ id: 1 }],
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
-      stages: [],
       displayJobNameLength: 20
     });
     await render(
@@ -24,7 +33,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @event={{this.event}}
             @jobs={{this.jobs}}
             @builds={{this.builds}}
-            @stages={{this.stages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -46,7 +54,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       event: { startFrom: nodeNames[0] },
       jobs: [{ id: 1 }],
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
-      stages: [],
       displayJobNameLength: 25
     });
     await render(
@@ -55,7 +62,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @event={{this.event}}
             @jobs={{this.jobs}}
             @builds={{this.builds}}
-            @stages={{this.stages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -74,6 +80,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it renders virtual stage', async function (assert) {
+    stages.push({ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 });
+
     this.setProperties({
       workflowGraph: {
         nodes: [
@@ -109,7 +117,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
         { id: 2, jobId: 1, status: 'SUCCESS' },
         { id: 3, jobId: 12, status: 'SUCCESS' }
       ],
-      stages: [{ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }],
       displayJobNameLength: 20
     });
     await render(
@@ -118,7 +125,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @event={{this.event}}
             @jobs={{this.jobs}}
             @builds={{this.builds}}
-            @stages={{this.stages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -130,6 +136,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it renders stage', async function (assert) {
+    stages.push({ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 });
+
     this.setProperties({
       workflowGraph: {
         nodes: [
@@ -163,7 +171,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
         { id: 2, jobId: 1, status: 'SUCCESS' },
         { id: 3, jobId: 12, status: 'SUCCESS' }
       ],
-      stages: [{ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }],
       displayJobNameLength: 20
     });
     await render(
@@ -172,7 +179,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @event={{this.event}}
             @jobs={{this.jobs}}
             @builds={{this.builds}}
-            @stages={{this.stages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -195,7 +201,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       event: { startFrom: '~pr' },
       jobs: [{ id: 1 }],
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
-      stages: [],
       displayJobNameLength: 20
     });
     await render(
@@ -204,7 +209,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @event={{this.event}}
             @jobs={{this.jobs}}
             @builds={{this.builds}}
-            @stages={{this.stages}}
             @chainPr={{true}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -236,7 +240,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       event: { startFrom: '~commit' },
       jobs: [{ id: 1 }],
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
-      stages: [],
       displayJobNameLength: 20
     });
     await render(
@@ -245,7 +248,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @event={{this.event}}
             @jobs={{this.jobs}}
             @builds={{this.builds}}
-            @stages={{this.stages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -268,7 +270,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       event: { startFrom: '~commit' },
       jobs: [{ id: 123 }],
       builds: [{ id: 1, jobId: 123, status: 'RUNNING' }],
-      stages: [],
       displayJobNameLength: 20
     });
     await render(
@@ -277,7 +278,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @event={{this.event}}
             @jobs={{this.jobs}}
             @builds={{this.builds}}
-            @stages={{this.stages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`
@@ -294,6 +294,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it re-renders graph when stage builds update', async function (assert) {
+    stages.push({ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 });
+
     this.setProperties({
       workflowGraph: {
         nodes: [
@@ -328,7 +330,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
         { id: 3, jobId: 12, status: 'RUNNING' }
       ],
       stageBuilds: [{ id: 1, stageId: 10, status: 'RUNNING' }],
-      stages: [{ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 }],
       displayJobNameLength: 20
     });
     await render(
@@ -338,7 +339,6 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @jobs={{this.jobs}}
             @builds={{this.builds}}
             @stageBuilds={{this.stageBuilds}}
-            @stages={{this.stages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
       />`

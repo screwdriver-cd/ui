@@ -14,10 +14,11 @@ export default class NewPipelinePullsRoute extends Route {
       '/users/settings'
     );
 
-    const stages = await this.shuttle.fetchFromApi(
-      'get',
-      `/pipelines/${pipelineId}/stages`
-    );
+    await this.shuttle
+      .fetchFromApi('get', `/pipelines/${pipelineId}/stages`)
+      .then(stages => {
+        this.pipelinePageState.setStages(stages);
+      });
 
     await this.shuttle
       .fetchFromApi('get', `/pipelines/${pipelineId}/triggers`)
@@ -32,7 +33,6 @@ export default class NewPipelinePullsRoute extends Route {
 
     return {
       userSettings,
-      stages,
       pullRequestJobs
     };
   }
