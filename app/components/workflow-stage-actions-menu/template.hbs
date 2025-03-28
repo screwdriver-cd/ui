@@ -2,7 +2,7 @@
   {{#if this.canRestartPipeline}}
     {{#if (eq this.canStageStartFromView true)}}
       <a href="#" {{action this.confirmStartBuild 'STAGE'}}>
-        {{if this.menuData.stage.setup.status "Restart" "Start"}} pipeline from this stage
+        {{if this.menuData.stage.status "Restart" "Start"}} pipeline from this stage
       </a>
     {{/if}}
   {{/if}}

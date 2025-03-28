@@ -16,9 +16,11 @@
     @causeMessage={{this.selectedEventObj.causeMessage}}
     @graphClicked={{action "graphClicked"}}
     @onShowStageActionsMenu={{action "onShowStageActionsMenu"}}
+    @onToggleStageView={{action "onToggleStageView"}}
     @isSkipped={{this.selectedEventObj.isSkipped}}
     @prChainEnabled={{this.prChainEnabled}}
     @stages={{this.stages}}
+    @collapsedStages={{this.collapsedStages}}
     @displayStageMenuHandle={{this.displayStageMenuHandle}}
   >
     <WorkflowTooltip

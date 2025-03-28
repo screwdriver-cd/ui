@@ -88,7 +88,7 @@ module(
       assert.dom('#start-job-link').hasText('Start pipeline from this stage');
     });
 
-    test('it renders an stage tooltip to start', async function (assert) {
+    test('it renders an stage tooltip to restart', async function (assert) {
       const router = this.owner.lookup('service:router');
 
       sinon.stub(router, 'currentRoute').value({
@@ -102,12 +102,12 @@ module(
             setup: {
               id: 123,
               name: 'setup'
-            }
+            },
+            status: 'SUCCESS'
           }
         },
         event: {},
         jobs: [],
-        builds: [{ jobId: 123, status: 'SUCCESS' }],
         workflowGraph: {
           nodes: [],
           edges: []
