@@ -427,7 +427,8 @@ export function addStages(
   sizes,
   nodeWidth,
   onStageMenuHandleClick,
-  displayStageMenuHandle
+  displayStageMenuHandle,
+  onStageViewToggleClick
 ) {
   const { TITLE_SIZE } = sizes;
 
@@ -478,6 +479,22 @@ export function addStages(
       .append('div')
       .attr('class', 'stage-title')
       .style('font-size', `${TITLE_SIZE}px`);
+
+    const isStageCollapsed = stage.isCollapsed;
+
+    // stage expand/collapse toggle button
+    stageTitle
+      .append('span')
+      .html(isStageCollapsed ? '+' : '-')
+      .attr(
+        'title',
+        isStageCollapsed ? 'Expand the stage' : 'Collapse the stage'
+      )
+      .attr('class', 'stage-view-toggle')
+      .style('font-size', `${TITLE_SIZE}px`)
+      .on('click', () => {
+        onStageViewToggleClick(stage.name, !isStageCollapsed);
+      });
 
     // stage info - name
     stageTitle
@@ -601,8 +618,10 @@ export function addEdges( // eslint-disable-line max-params
     .append('path')
     .attr('class', d =>
       isSkipped
-        ? 'graph-edge build-skipped'
-        : `graph-edge ${d.status ? `build-${d.status.toLowerCase()}` : ''}`
+        ? 'graph-edge node-edge build-skipped'
+        : `graph-edge node-edge ${
+            d.status ? `build-${d.status.toLowerCase()}` : ''
+          }`
     )
     .attr('stroke-dasharray', d => (!d.status || isSkipped ? 5 : 0))
     .attr('stroke-width', 2)
@@ -734,6 +753,7 @@ export function addStageEdges( // eslint-disable-line max-params
  * @param sizes
  * @param nodeWidth
  * @param verticalDisplacements
+ * @param horizontalDisplacements
  * @param isSkipped
  * @param onClick
  */
@@ -916,11 +936,31 @@ export function updateJobStatuses(svg, data, sizes, nodeWidth) {
  */
 export function updateEdgeStatuses(svg, data) {
   svg
-    .selectAll('.graph-edge')
+    .selectAll('.graph-edge.node-edge')
     .data(data.edges)
     .join()
     .attr('class', edge => {
-      return `graph-edge ${
+      return `graph-edge node-edge ${
+        edge.status ? `build-${edge.status.toLowerCase()}` : ''
+      }`;
+    })
+    .attr('stroke-dasharray', edge => {
+      return !edge.status ? 5 : 0;
+    });
+}
+
+/**
+ * Updates the edge statuses in the existing graph SVG
+ * @param svg
+ * @param data
+ */
+export function updateStageEdgeStatuses(svg, data) {
+  svg
+    .selectAll('.graph-edge.stage-edge')
+    .data(data.stageEdges)
+    .join()
+    .attr('class', edge => {
+      return `graph-edge stage-edge ${
         edge.status ? `build-${edge.status.toLowerCase()}` : ''
       }`;
     })
