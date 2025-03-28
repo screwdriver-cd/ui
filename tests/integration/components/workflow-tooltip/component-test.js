@@ -561,4 +561,34 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     assert.dom('span').hasText(`Description: ${fullDescription}`);
   });
+
+  test('it does not render actionable menu options when the node represents stage jobs group', async function (assert) {
+    const data = {
+      job: {
+        name: 'stage@production jobs(3)',
+        description:
+          'This job group includes the following jobs: prod-deploy, prod-test, prod-certify',
+        type: 'JOB_GROUP'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+    this.set('canJobStartFromView', true);
+
+    await render(hbs`<WorkflowTooltip
+        @tooltipData={{this.data}}
+        @canRestartPipeline={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+        @canJobStartFromView={{this.canJobStartFromView}}
+      />`);
+
+    assert.dom('.content a').doesNotExist();
+    assert.dom('.content span').exists({ count: 1 });
+    assert
+      .dom('.content span')
+      .hasText(
+        'Description: This job group includes the following jobs: prod-deploy, prod-test, prod-certify'
+      );
+  });
 });
