@@ -286,7 +286,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -294,7 +293,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );

@@ -26,7 +26,6 @@ module(
           }
         },
         event: {},
-        jobs: [],
         builds: [],
         workflowGraph: {
           nodes: [],
@@ -38,7 +37,6 @@ module(
         hbs`<Pipeline::Workflow::Tooltip::Stage
             @d3Data={{this.d3Data}}
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @builds={{this.builds}}
             @workflowGraph={{this.workflowGraph}}
         />`
@@ -66,7 +64,6 @@ module(
           }
         },
         event: {},
-        jobs: [],
         builds: [],
         workflowGraph: {
           nodes: [],
@@ -78,7 +75,6 @@ module(
         hbs`<Pipeline::Workflow::Tooltip::Stage
             @d3Data={{this.d3Data}}
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @builds={{this.builds}}
             @workflowGraph={{this.workflowGraph}}
         />`
@@ -107,7 +103,6 @@ module(
           }
         },
         event: {},
-        jobs: [],
         workflowGraph: {
           nodes: [],
           edges: []
@@ -118,7 +113,6 @@ module(
         hbs`<Pipeline::Workflow::Tooltip::Stage
             @d3Data={{this.d3Data}}
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @builds={{this.builds}}
             @workflowGraph={{this.workflowGraph}}
         />`
