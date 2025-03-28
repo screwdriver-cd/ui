@@ -40,6 +40,8 @@ export default class PipelineEventCardComponent extends Component {
 
   @tracked status;
 
+  @tracked aggregateStatus;
+
   @tracked hideCard;
 
   @tracked failureCount;
@@ -169,6 +171,7 @@ export default class PipelineEventCardComponent extends Component {
 
     this.builds = builds;
     this.status = getStatus(this.event, builds);
+    this.aggregateStatus = this.status;
 
     if (this.args.handleFilter) {
       const pipeline = this.pipelinePageState.getPipeline();
@@ -182,6 +185,12 @@ export default class PipelineEventCardComponent extends Component {
       this.failureCount = getFailureCount(builds);
       this.warningCount = getWarningCount(builds);
       this.successCount = getSuccessCount(builds);
+
+      if (this.warningCount > 0) {
+        this.aggregateStatus = 'WARNING';
+      } else if (this.failureCount > 0) {
+        this.aggregateStatus = 'FAILURE';
+      }
     }
 
     if (!this.durationIntervalId && !isEventComplete) {

@@ -55,6 +55,11 @@ module('Unit | Utility | Pipeline | event', function () {
     );
     assert.equal(isComplete([{ status: 'SUCCESS' }]), true);
     assert.equal(isComplete([{ status: 'QUEUED' }]), false);
+    assert.equal(isComplete([{ status: 'CREATED' }]), false);
+    assert.equal(
+      isComplete([{ status: 'CREATED' }, { status: 'SUCCESS' }]),
+      true
+    );
   });
 
   test('getStatus returns correct value', function (assert) {
@@ -68,5 +73,10 @@ module('Unit | Utility | Pipeline | event', function () {
     assert.equal(getStatus({}, [{ status: 'FROZEN' }]), 'FROZEN');
     assert.equal(getStatus({}, [{ status: 'CREATED' }]), 'RUNNING');
     assert.equal(getStatus({}, [{ status: 'WARNING' }]), 'WARNING');
+    assert.equal(getStatus({}, [{ status: 'CREATED' }]), 'RUNNING');
+    assert.equal(
+      getStatus({}, [{ status: 'CREATED' }, { status: 'SUCCESS' }]),
+      'SUCCESS'
+    );
   });
 });

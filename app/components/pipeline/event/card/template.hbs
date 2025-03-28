@@ -6,7 +6,7 @@
   {{on "click" this.goToEvent}}
 >
   <div class="event-card-title">
-    <div class="event-status {{this.status}}">
+    <div class="event-status {{this.aggregateStatus}}">
       <FaIcon
         @icon={{this.icon.name}}
         @fixedWidth="true"
