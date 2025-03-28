@@ -39,7 +39,9 @@ export default class PipelineModalStartEventComponent extends Component {
     this.defaultPipelineParameters = extractDefaultParameters(
       this.pipeline.parameters
     );
-    this.defaultJobParameters = extractDefaultJobParameters(this.args.jobs);
+    this.defaultJobParameters = extractDefaultJobParameters(
+      this.pipelinePageState.getJobs()
+    );
   }
 
   get isParameterized() {

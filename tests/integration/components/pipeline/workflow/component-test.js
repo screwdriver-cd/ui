@@ -22,6 +22,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     sinon.stub(pipelinePageState, 'getPipelineId').returns(pipelineId);
     sinon.stub(pipelinePageState, 'getTriggers').returns([]);
     sinon.stub(pipelinePageState, 'getStages').returns([]);
+    sinon.stub(pipelinePageState, 'getJobs').returns([]);
   });
 
   test('it renders for pipeline with no events', async function (assert) {
@@ -84,7 +85,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     this.setProperties({
       userSettings: {},
-      jobs: [],
       latestEvent: {
         id: 123,
         sha: 'abc123def456',
@@ -97,7 +97,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     await render(
       hbs`<Pipeline::Workflow
         @userSettings={{this.userSettings}}
-        @jobs={{this.jobs}}
         @latestEvent={{this.latestCommitEvent}}
         @invalidEvent={{true}}
       />`
@@ -121,14 +120,12 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
     this.setProperties({
-      userSettings: {},
-      jobs: []
+      userSettings: {}
     });
 
     await render(
       hbs`<Pipeline::Workflow
         @userSettings={{this.userSettings}}
-        @jobs={{this.jobs}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @invalidEvent={{true}}
       />`
@@ -166,7 +163,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     this.setProperties({
       userSettings: {},
-      jobs: [],
       latestEvent: event,
       event
     });
@@ -174,7 +170,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     await render(
       hbs`<Pipeline::Workflow
         @userSettings={{this.userSettings}}
-        @jobs={{this.jobs}}
         @stages={{this.stages}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
@@ -213,7 +208,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     this.setProperties({
       userSettings: {},
-      jobs: [],
       latestEvent: event,
       event,
       prNums: []
@@ -222,7 +216,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     await render(
       hbs`<Pipeline::Workflow
         @userSettings={{this.userSettings}}
-        @jobs={{this.jobs}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
         @prNums={{this.prNums}}
@@ -263,7 +256,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     this.setProperties({
       userSettings: {},
-      jobs: [],
       latestEvent: event,
       event,
       prNums: []
@@ -272,7 +264,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     await render(
       hbs`<Pipeline::Workflow
         @userSettings={{this.userSettings}}
-        @jobs={{this.jobs}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
         @prNums={{this.prNums}}

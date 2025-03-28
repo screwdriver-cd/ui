@@ -73,7 +73,6 @@
           {{#if this.showStartEventModal}}
             <Pipeline::Modal::StartEvent
               @pipeline={{@pipeline}}
-              @jobs={{@jobs}}
               @event={{@event}}
               @closeModal={{this.closeStartEventModal}}
             />
@@ -213,7 +212,6 @@
             {{#if this.showParametersModal}}
               <Pipeline::Modal::ShowParameters
                 @event={{@event}}
-                @jobs={{@jobs}}
                 @closeModal={{this.closeParametersModal}}
               />
             {{/if}}
@@ -238,7 +236,6 @@
             <Pipeline::Modal::EventGroupHistory
               @pipeline={{@pipeline}}
               @event={{@event}}
-              @jobs={{@jobs}}
               @userSettings={{@userSettings}}
               @isPR={{this.isPR}}
               @closeModal={{this.closeEventHistoryModal}}

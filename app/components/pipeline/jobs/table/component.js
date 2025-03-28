@@ -13,6 +13,8 @@ const INITIAL_PAGE_SIZE = 10;
 export default class PipelineJobsTableComponent extends Component {
   @service shuttle;
 
+  @service pipelinePageState;
+
   @service workflowDataReload;
 
   @service('emt-themes/ember-bootstrap-v5') emberModelTableBootstrapTheme;
@@ -20,8 +22,6 @@ export default class PipelineJobsTableComponent extends Component {
   userSettings;
 
   event;
-
-  jobs;
 
   dataReloader;
 
@@ -35,7 +35,6 @@ export default class PipelineJobsTableComponent extends Component {
     super(...arguments);
 
     this.event = this.args.event;
-    this.jobs = this.args.jobs;
     this.userSettings = this.args.userSettings;
     this.numBuilds = this.args.numBuilds;
     this.data = null;
@@ -144,12 +143,11 @@ export default class PipelineJobsTableComponent extends Component {
   @action
   async initializeDataLoader() {
     const prNum = this.event?.prNum;
+    const jobs = prNum
+      ? this.workflowDataReload.getJobsForPr(prNum)
+      : this.pipelinePageState.getJobs();
 
-    if (prNum) {
-      this.jobs = this.workflowDataReload.getJobsForPr(prNum);
-    }
-
-    const jobIds = this.jobs.map(job => job.id);
+    const jobIds = jobs.map(job => job.id);
 
     this.dataReloader = new DataReloader(
       { shuttle: this.shuttle, workflowDataReload: this.workflowDataReload },
@@ -160,12 +158,11 @@ export default class PipelineJobsTableComponent extends Component {
 
     this.data = [];
 
-    this.jobs.forEach(job => {
+    jobs.forEach(job => {
       this.data.push({
         job,
         jobName: getDisplayName(job, prNum),
         stageName: job?.permutations?.[0]?.stage?.name || 'N/A',
-        jobs: this.jobs,
         timestampFormat: this.userSettings.timestampFormat,
         onCreate: (jobToMonitor, buildsCallback) => {
           this.dataReloader.addCallbackForJobId(

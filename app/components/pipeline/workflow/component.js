@@ -45,8 +45,6 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked stageBuilds;
 
-  @tracked jobs;
-
   @tracked workflowGraphToDisplay;
 
   @tracked showGraph;
@@ -79,8 +77,6 @@ export default class PipelineWorkflowComponent extends Component {
     if (this.args.noEvents) {
       this.monitorForNewEvents();
     } else {
-      this.jobs = this.args.jobs;
-
       this.monitorForNewBuilds();
     }
 

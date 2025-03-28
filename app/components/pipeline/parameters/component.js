@@ -30,7 +30,7 @@ export default class PipelineParametersComponent extends Component {
       pipelineParameters,
       pipeline.parameters,
       jobParameters,
-      extractJobParameters(this.args.jobs),
+      extractJobParameters(this.pipelinePageState.getJobs()),
       this.args.job ? this.args.job.name : null
     );
 

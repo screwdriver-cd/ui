@@ -9,20 +9,22 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders when pipeline has no parameters', async function (assert) {
-      const pipelinePageState = this.owner.lookup(
-        'service:pipeline-page-state'
-      );
+    let pipelinePageState;
 
+    hooks.beforeEach(function () {
+      pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    });
+
+    test('it renders when pipeline has no parameters', async function (assert) {
       sinon.stub(pipelinePageState, 'getPipeline').returns({});
+      sinon.stub(pipelinePageState, 'getJobs').returns([]);
 
       this.setProperties({
-        jobs: [],
         closeModal: () => {}
       });
+
       await render(
         hbs`<Pipeline::Modal::StartEvent
-            @jobs={{this.jobs}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -31,26 +33,22 @@ module(
     });
 
     test('it renders when pipeline has parameters', async function (assert) {
-      const pipelinePageState = this.owner.lookup(
-        'service:pipeline-page-state'
-      );
-
       sinon
         .stub(pipelinePageState, 'getPipeline')
         .returns({ parameters: { p1: ['abc', '123'] } });
+      sinon.stub(pipelinePageState, 'getJobs').returns([
+        {
+          name: 'main',
+          permutations: [{ parameters: { j1: ['yes', 'no'] } }]
+        }
+      ]);
 
       this.setProperties({
-        jobs: [
-          {
-            name: 'main',
-            permutations: [{ parameters: { j1: ['yes', 'no'] } }]
-          }
-        ],
         closeModal: () => {}
       });
+
       await render(
         hbs`<Pipeline::Modal::StartEvent
-            @jobs={{this.jobs}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -60,19 +58,15 @@ module(
     });
 
     test('it renders optional notice', async function (assert) {
-      const pipelinePageState = this.owner.lookup(
-        'service:pipeline-page-state'
-      );
-
       sinon.stub(pipelinePageState, 'getPipeline').returns({});
+      sinon.stub(pipelinePageState, 'getJobs').returns([]);
 
       this.setProperties({
-        jobs: [],
         closeModal: () => {}
       });
+
       await render(
         hbs`<Pipeline::Modal::StartEvent
-            @jobs={{this.jobs}}
             @closeModal={{this.closeModal}}
             @notice="This is a notice to the user"
         />`
@@ -83,22 +77,18 @@ module(
 
     test('it closes modal on success', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
-      const pipelinePageState = this.owner.lookup(
-        'service:pipeline-page-state'
-      );
-
       const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
       const closeModalSpy = sinon.spy();
 
       sinon.stub(pipelinePageState, 'getPipeline').returns({});
+      sinon.stub(pipelinePageState, 'getJobs').returns([]);
 
       this.setProperties({
-        jobs: [],
         closeModal: closeModalSpy
       });
+
       await render(
         hbs`<Pipeline::Modal::StartEvent
-            @jobs={{this.jobs}}
             @closeModal={{this.closeModal}}
         />`
       );

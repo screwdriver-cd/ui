@@ -14,7 +14,6 @@
       <FaIcon @icon="magnifying-glass" />
       {{#if this.showSearchEventModal}}
         <Pipeline::Modal::SearchEvent
-          @jobs={{@jobs}}
           @userSettings={{@userSettings}}
           @closeModal={{this.closeSearchEventModal}}
         />
@@ -31,7 +30,6 @@
       />
       {{#if this.showStartEventModal}}
         <Pipeline::Modal::StartEvent
-          @jobs={{@jobs}}
           @closeModal={{this.closeStartEventModal}}
         />
       {{/if}}
@@ -49,7 +47,6 @@
     >
       <Pipeline::Event::Card
         @event={{event}}
-        @jobs={{@jobs}}
         @userSettings={{@userSettings}}
         @queueName="eventRail"
         @allowEventAction={{true}}

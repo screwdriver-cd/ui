@@ -43,7 +43,6 @@
 
   {{#if this.showStartEventModal}}
     <Pipeline::Modal::StartEvent
-      @jobs={{@record.jobs}}
       @job={{@record.job}}
       @notice={{this.notice}}
       @closeModal={{this.closeStartEventModal}}
@@ -58,7 +57,6 @@
   {{#if this.showRestartJobModal}}
     <Pipeline::Modal::ConfirmAction
       @event={{this.latestEvent}}
-      @jobs={{@record.jobs}}
       @latestCommitEvent={{this.latestCommitEvent}}
       @job={{this.job}}
       @closeModal={{this.closeRestartJobModal}}

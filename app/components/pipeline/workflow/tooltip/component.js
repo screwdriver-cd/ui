@@ -36,7 +36,7 @@ export default class PipelineWorkflowTooltipComponent extends Component {
     this.tooltipData = getTooltipData(
       this.args.d3Data.node,
       this.args.event,
-      this.args.jobs,
+      this.pipelinePageState.getJobs(),
       this.args.builds
     );
   }
