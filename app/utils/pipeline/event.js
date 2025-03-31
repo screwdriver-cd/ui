@@ -26,15 +26,19 @@ export const isComplete = builds => {
     return false;
   }
 
-  return builds.every(build => {
-    const { status } = build;
+  const filteredBuilds = builds.filter(build => build.status !== 'CREATED');
 
-    if (status === 'UNSTABLE') {
-      return build.endTime !== undefined;
-    }
+  return filteredBuilds.length === 0
+    ? false
+    : filteredBuilds.every(build => {
+        const { status } = build;
 
-    return !unfinishedStatuses.includes(status);
-  });
+        if (status === 'UNSTABLE') {
+          return build.endTime !== undefined;
+        }
+
+        return !unfinishedStatuses.includes(status);
+      });
 };
 
 /**
@@ -53,9 +57,15 @@ export const getStatus = (event, builds) => {
   }
 
   if (isComplete(builds)) {
-    return builds.filter(build => build.status === 'WARNING').length > 0
+    const filteredBuilds = builds.filter(build => build.status !== 'CREATED');
+
+    if (filteredBuilds.length === 0) {
+      return 'RUNNING';
+    }
+
+    return filteredBuilds.filter(build => build.status === 'WARNING').length > 0
       ? 'WARNING'
-      : builds[0].status;
+      : filteredBuilds[0].status;
   }
 
   return builds[0].status === 'FROZEN' ? 'FROZEN' : 'RUNNING';
