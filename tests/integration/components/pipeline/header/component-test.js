@@ -68,6 +68,15 @@ module('Integration | Component | pipeline/header', function (hooks) {
     assert.dom('#sonarqube-link').hasAttribute('href', `${defaultUri}`);
   });
 
+  test('it renders branch with root directory', async function (assert) {
+    const rootDir = 'somethine/else';
+
+    pipeline.scmRepo.rootDir = rootDir;
+    await render(hbs`<Pipeline::Header />`);
+
+    assert.dom('#repo-pipelines .branch').hasText(`main:${rootDir}`);
+  });
+
   test('it renders dropdown to other pipelines', async function (assert) {
     const shuttle = this.owner.lookup('service:shuttle');
 
