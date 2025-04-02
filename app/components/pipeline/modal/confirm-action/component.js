@@ -89,12 +89,6 @@ export default class PipelineModalConfirmActionComponent extends Component {
     return `${capitalizeFirstLetter(this.action)}ing...`;
   }
 
-  get completedAction() {
-    return this.wasActionSuccessful
-      ? `${capitalizeFirstLetter(this.action)}ed`
-      : 'Yes';
-  }
-
   @action
   onUpdateParameters(parameters) {
     this.parameters = parameters;
