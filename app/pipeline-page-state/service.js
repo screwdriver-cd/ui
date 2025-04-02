@@ -9,11 +9,14 @@ export default class PipelinePageStateService extends Service {
 
   stages;
 
+  jobs;
+
   clear() {
     this.pipeline = null;
     this.childPipelines = [];
     this.triggers = [];
     this.stages = [];
+    this.jobs = [];
   }
 
   setPipeline(pipeline) {
@@ -50,5 +53,13 @@ export default class PipelinePageStateService extends Service {
 
   getStages() {
     return this.stages;
+  }
+
+  setJobs(jobs) {
+    this.jobs = jobs;
+  }
+
+  getJobs() {
+    return this.jobs;
   }
 }

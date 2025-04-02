@@ -45,7 +45,6 @@ module(
 
       this.setProperties({
         event: { ...mockEvent, id: 1 },
-        jobs: {},
         userSettings: {},
         closeModal: () => {}
       });
@@ -53,7 +52,6 @@ module(
       await render(
         hbs`<Pipeline::Modal::EventGroupHistory
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
@@ -80,7 +78,6 @@ module(
 
       this.setProperties({
         event: { ...mockEvent, id: 1 },
-        jobs: {},
         userSettings: {},
         closeModal: () => {}
       });
@@ -88,7 +85,6 @@ module(
       await render(
         hbs`<Pipeline::Modal::EventGroupHistory
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @isPR={{true}}
             @closeModal={{this.closeModal}}
