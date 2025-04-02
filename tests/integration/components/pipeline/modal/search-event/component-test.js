@@ -22,14 +22,12 @@ module(
 
     test('it renders', async function (assert) {
       this.setProperties({
-        jobs: [],
         userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
@@ -51,14 +49,12 @@ module(
       sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
       this.setProperties({
-        jobs: [],
         userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
@@ -82,15 +78,12 @@ module(
         .resolves([]);
 
       this.setProperties({
-        jobs: [],
         userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @pipeline={{this.pipeline}}
-            @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
@@ -112,18 +105,15 @@ module(
 
     test('it handles invalid sha input', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
-
       const spyShuttle = sinon.spy(shuttle, 'fetchFromApi');
 
       this.setProperties({
-        jobs: [],
         userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
@@ -147,15 +137,12 @@ module(
       sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
       this.setProperties({
-        pipeline: {},
-        jobs: [],
         userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @jobs={{this.jobs}}
             @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`

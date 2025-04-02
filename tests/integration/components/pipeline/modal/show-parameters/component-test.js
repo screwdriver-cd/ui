@@ -17,17 +17,16 @@ module(
       sinon.stub(pipelinePageState, 'getPipeline').returns({
         parameters: { foo: { value: 'foofoo' } }
       });
+      sinon.stub(pipelinePageState, 'getJobs').returns([]);
 
       this.setProperties({
         event: { meta: { parameters: { foo: { value: 'bar' } } } },
-        jobs: [],
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::ShowParameters
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @closeModal={{this.closeModal}}
         />`
       );
