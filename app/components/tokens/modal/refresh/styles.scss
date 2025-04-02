@@ -1,0 +1,21 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  #refresh-token-modal {
+    &.modal {
+      .modal-dialog {
+        .modal-body {
+          .token-value-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .token-value {
+              margin-left: 5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
