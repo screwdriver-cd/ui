@@ -55,6 +55,12 @@ export default class PipelineHeaderComponent extends Component {
     };
   }
 
+  get pipelineBranch() {
+    const { branch, rootDir } = this.pipeline.scmRepo;
+
+    return rootDir ? `${branch}:${rootDir}` : branch;
+  }
+
   @action
   async getPipelinesWithSameRepo() {
     if (this.pipeline.scmRepo && this.pipeline.scmUri) {
