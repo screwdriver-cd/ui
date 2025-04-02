@@ -14,6 +14,7 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
     sinon
       .stub(pipelinePageState, 'getPipeline')
       .returns({ id: 987, state: 'ACTIVE' });
+    sinon.stub(pipelinePageState, 'getJobs').returns([]);
   });
 
   test('it renders build detail and metrics links', async function (assert) {
@@ -26,7 +27,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -34,7 +34,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -55,7 +54,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -63,7 +61,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -82,7 +79,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -90,7 +86,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -109,7 +104,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -117,7 +111,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -137,7 +130,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -145,7 +137,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -167,7 +158,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -175,7 +165,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -195,7 +184,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -203,7 +191,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -222,7 +209,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -230,7 +216,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -249,7 +234,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -257,7 +241,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -276,7 +259,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -284,7 +266,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );
@@ -305,7 +286,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         sizes: { ICON_SIZE: 0 }
       },
       event: {},
-      jobs: [],
       builds: []
     });
 
@@ -313,7 +293,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       hbs`<Pipeline::Workflow::Tooltip
         @d3Data={{this.d3Data}}
         @event={{this.event}}
-        @jobs={{this.jobs}}
         @builds={{this.builds}}
       />`
     );

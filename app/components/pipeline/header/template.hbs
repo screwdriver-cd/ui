@@ -49,7 +49,7 @@
       <dd.toggle>
         <FaIcon @icon="code-branch" @title="Source code" />
         <span class="branch">
-          {{this.pipeline.scmRepo.branch}}
+          {{this.pipelineBranch}}
         </span>
         <BsTooltip @placement="bottom" @renderInPlace={{false}} @triggerEvents="hover" class="tooltip">
           Switch to another Pipeline with the same repository

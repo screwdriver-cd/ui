@@ -55,7 +55,6 @@
         @action={{this.action}}
         @job={{@job}}
         @event={{@event}}
-        @jobs={{@jobs}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />
     {{/if}}
@@ -67,7 +66,6 @@
       @type="primary"
       @defaultText="Yes"
       @pendingText={{this.pendingAction}}
-      @fulfilledText={{this.completedAction}}
       @onClick={{fn this.startBuild}}
     />
   </modal.footer>

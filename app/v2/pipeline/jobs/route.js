@@ -9,10 +9,11 @@ export default class NewPipelineJobsRoute extends Route {
   async model() {
     const pipelineId = this.pipelinePageState.getPipelineId();
 
-    const jobs = await this.shuttle.fetchFromApi(
-      'get',
-      `/pipelines/${pipelineId}/jobs?type=pipeline`
-    );
+    await this.shuttle
+      .fetchFromApi('get', `/pipelines/${pipelineId}/jobs?type=pipeline`)
+      .then(jobs => {
+        this.pipelinePageState.setJobs(jobs);
+      });
 
     const userSettings = await this.shuttle.fetchFromApi(
       'get',
@@ -20,7 +21,6 @@ export default class NewPipelineJobsRoute extends Route {
     );
 
     return {
-      jobs,
       userSettings
     };
   }

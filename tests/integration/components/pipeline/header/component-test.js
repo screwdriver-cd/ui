@@ -7,36 +7,39 @@ import sinon from 'sinon';
 module('Integration | Component | pipeline/header', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders core items', async function (assert) {
+  const pipelineId = 123;
+  const url = 'https://gihub.com/test';
+  const pipeline = {};
+
+  hooks.beforeEach(function () {
     const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
-    const id = 123;
-    const url = 'https://gihub.com/test';
 
-    sinon.stub(pipelinePageState, 'getPipeline').returns({
-      id,
-      scmContext: 'github:github.com',
-      scmRepo: { url },
-      annotations: {}
-    });
+    sinon.stub(pipelinePageState, 'getPipeline').returns(pipeline);
 
+    pipeline.id = pipelineId;
+    pipeline.scmContext = 'github:github.com';
+    pipeline.scmRepo = { url, branch: 'main' };
+    pipeline.annotations = {};
+  });
+
+  test('it renders core items', async function (assert) {
     await render(hbs`<Pipeline::Header />`);
 
-    assert.dom('#pipeline-link').hasAttribute('href', `/v2/pipelines/${id}`);
+    assert
+      .dom('#pipeline-link')
+      .hasAttribute('href', `/v2/pipelines/${pipelineId}`);
     assert.dom('#parent-pipeline-link').doesNotExist();
     assert.dom('#sonarqube-link').doesNotExist();
     assert.dom('#scm-link').hasAttribute('href', `${url}`);
     assert.dom('#repo-pipelines').exists({ count: 1 });
+    assert.dom('#repo-pipelines .branch').hasText('main');
     assert.dom('#add-to-collection').exists({ count: 1 });
   });
 
   test('it renders link to parent pipeline', async function (assert) {
-    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
     const configPipelineId = 999;
 
-    sinon.stub(pipelinePageState, 'getPipeline').returns({
-      configPipelineId,
-      annotations: {}
-    });
+    pipeline.configPipelineId = configPipelineId;
 
     await render(hbs`<Pipeline::Header />`);
 
@@ -46,13 +49,9 @@ module('Integration | Component | pipeline/header', function (hooks) {
   });
 
   test('it renders link to sonarqube project', async function (assert) {
-    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
     const uri = 'https://sonarqube.com/test';
 
-    sinon.stub(pipelinePageState, 'getPipeline').returns({
-      badges: { sonar: { uri } },
-      annotations: {}
-    });
+    pipeline.badges = { sonar: { uri } };
 
     await render(hbs`<Pipeline::Header />`);
 
@@ -60,23 +59,25 @@ module('Integration | Component | pipeline/header', function (hooks) {
   });
 
   test('it renders link to sonarqube', async function (assert) {
-    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
     const defaultUri = 'https://sonarqube.com';
 
-    sinon.stub(pipelinePageState, 'getPipeline').returns({
-      badges: {
-        sonar: { defaultUri }
-      },
-      annotations: {}
-    });
+    pipeline.badges = { sonar: { defaultUri } };
 
     await render(hbs`<Pipeline::Header />`);
 
     assert.dom('#sonarqube-link').hasAttribute('href', `${defaultUri}`);
   });
 
+  test('it renders branch with root directory', async function (assert) {
+    const rootDir = 'somethine/else';
+
+    pipeline.scmRepo.rootDir = rootDir;
+    await render(hbs`<Pipeline::Header />`);
+
+    assert.dom('#repo-pipelines .branch').hasText(`main:${rootDir}`);
+  });
+
   test('it renders dropdown to other pipelines', async function (assert) {
-    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
     const shuttle = this.owner.lookup('service:shuttle');
 
     sinon.stub(shuttle, 'fetchFromApi').resolves([
@@ -96,12 +97,8 @@ module('Integration | Component | pipeline/header', function (hooks) {
         scmRepo: { branch: 'ghi' }
       }
     ]);
-    sinon.stub(pipelinePageState, 'getPipeline').returns({
-      id: 123,
-      scmUri: 'git.github.com:9876:abc',
-      scmRepo: { url: 'https://gihub.com/test' },
-      annotations: {}
-    });
+
+    pipeline.scmUri = 'git.github.com:9876:abc';
 
     await render(hbs`<Pipeline::Header />`);
 
@@ -110,20 +107,16 @@ module('Integration | Component | pipeline/header', function (hooks) {
 
     assert.dom('#repo-pipelines .dropdown-menu').exists({ count: 1 });
     assert.dom('#repo-pipelines .dropdown-menu > a').exists({ count: 2 });
+
+    delete pipeline.scmUri;
   });
 
   test('it renders pipeline description', async function (assert) {
-    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
     const pipelineDescription = 'This is a test pipeline';
 
-    sinon.stub(pipelinePageState, 'getPipeline').returns({
-      id: 123,
-      scmContext: 'github:github.com',
-      scmRepo: { url: 'https://gihub.com/test' },
-      annotations: {
-        'screwdriver.cd/pipelineDescription': pipelineDescription
-      }
-    });
+    pipeline.annotations = {
+      'screwdriver.cd/pipelineDescription': pipelineDescription
+    };
 
     await render(hbs`<Pipeline::Header />`);
 

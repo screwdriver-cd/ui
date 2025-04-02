@@ -22,6 +22,7 @@ module(
         .returns({ sha: 'deadbeef0123456789' });
 
       sinon.stub(pipelinePageState, 'getPipeline').returns({ id: 987 });
+      sinon.stub(pipelinePageState, 'getJobs').returns([]);
     });
 
     test('it renders start action', async function (assert) {
@@ -30,14 +31,12 @@ module(
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
-        jobs: [],
         job: { name: 'main' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -59,14 +58,12 @@ module(
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
-        jobs: [],
         job: { name: 'main', status: 'SUCCESS' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -81,7 +78,6 @@ module(
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
-        jobs: [],
         job: { name: 'main' },
         stage: { name: 'stage' },
         closeModal: () => {}
@@ -89,7 +85,6 @@ module(
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @stage={{this.stage}}
             @closeModal={{this.closeModal}}
@@ -107,14 +102,12 @@ module(
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: '0123456789deadbeef'
         },
-        jobs: [],
         job: { name: 'main' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -130,14 +123,12 @@ module(
           sha: 'deadbeef0123456789',
           type: 'pr'
         },
-        jobs: [],
         job: { name: 'main' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -152,14 +143,12 @@ module(
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
-        jobs: [],
         job: { name: 'main', status: 'FROZEN' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -181,14 +170,12 @@ module(
             }
           }
         },
-        jobs: [],
         job: { name: 'main' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -203,14 +190,12 @@ module(
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
-        jobs: [],
         job: { name: 'main', status: 'FROZEN' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -225,14 +210,12 @@ module(
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
-        jobs: [],
         job: { name: 'main', status: 'FROZEN' },
         closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -253,7 +236,6 @@ module(
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
-        jobs: [],
         job: { name: 'main' },
         closeModal: closeModalSpy
       });
@@ -261,7 +243,6 @@ module(
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
@@ -288,7 +269,6 @@ module(
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
-        jobs: [],
         job: { name: 'main' },
         closeModal: () => {}
       });
@@ -296,7 +276,6 @@ module(
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
-            @jobs={{this.jobs}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
         />`
