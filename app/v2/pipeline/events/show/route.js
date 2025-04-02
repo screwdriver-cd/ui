@@ -41,10 +41,11 @@ export default class NewPipelineEventsShowRoute extends Route {
         });
     }
 
-    const jobs = await this.shuttle.fetchFromApi(
-      'get',
-      `/pipelines/${pipelineId}/jobs?type=pipeline`
-    );
+    await this.shuttle
+      .fetchFromApi('get', `/pipelines/${pipelineId}/jobs?type=pipeline`)
+      .then(jobs => {
+        this.pipelinePageState.setJobs(jobs);
+      });
 
     await this.shuttle
       .fetchFromApi('get', `/pipelines/${pipelineId}/stages`)
@@ -62,7 +63,6 @@ export default class NewPipelineEventsShowRoute extends Route {
       userSettings: model.userSettings,
       event,
       latestEvent,
-      jobs,
       invalidEvent: event === null
     };
   }
