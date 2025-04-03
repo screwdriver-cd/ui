@@ -1,0 +1,15 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  #delete-token-modal {
+    &.modal {
+      .modal-dialog {
+        .modal-body {
+          .delete-token-message-warning {
+            color: colors.$sd-warn-bg;
+          }
+        }
+      }
+    }
+  }
+}

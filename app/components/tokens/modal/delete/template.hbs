@@ -1,0 +1,46 @@
+<BsModal
+  id="delete-token-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    Delete a {{@type}} token
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        id="error-message"
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+      />
+    {{/if}}
+
+    <div class="delete-token-message">
+      <div class="delete-token-message-warning">
+        <FaIcon @icon="triangle-exclamation" />
+        <b>Deleting this token is permanent!</b>
+      </div>
+      <br />
+      <div>
+        If you are sure you want to delete this token, enter the name of the token (<b>{{@token.name}}</b>) below
+      </div>
+    </div>
+    <Input
+      @type="text"
+      @value={{this.tokenName}}
+      autofocus={{true}}
+    />
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-delete"
+      class="confirm"
+      disabled={{this.isSubmitButtonDisabled}}
+      @defaultText="Delete token"
+      @pendingText="Deleting token..."
+      @type="primary"
+      @onClick={{fn this.deleteToken}}
+    />
+  </modal.footer>
+</BsModal>
