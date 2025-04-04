@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { click, render } from '@ember/test-helpers';
+import { click, render, rerender } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -12,9 +12,9 @@ module('Integration | Component | pipeline/header', function (hooks) {
   const pipeline = {};
 
   hooks.beforeEach(function () {
-    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
-
-    sinon.stub(pipelinePageState, 'getPipeline').returns(pipeline);
+    this.setProperties({
+      pipeline
+    });
 
     pipeline.id = pipelineId;
     pipeline.scmContext = 'github:github.com';
@@ -23,7 +23,11 @@ module('Integration | Component | pipeline/header', function (hooks) {
   });
 
   test('it renders core items', async function (assert) {
-    await render(hbs`<Pipeline::Header />`);
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
 
     assert
       .dom('#pipeline-link')
@@ -41,7 +45,11 @@ module('Integration | Component | pipeline/header', function (hooks) {
 
     pipeline.configPipelineId = configPipelineId;
 
-    await render(hbs`<Pipeline::Header />`);
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
 
     assert
       .dom('#parent-pipeline-link')
@@ -53,7 +61,11 @@ module('Integration | Component | pipeline/header', function (hooks) {
 
     pipeline.badges = { sonar: { uri } };
 
-    await render(hbs`<Pipeline::Header />`);
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
 
     assert.dom('#sonarqube-link').hasAttribute('href', `${uri}`);
   });
@@ -63,7 +75,11 @@ module('Integration | Component | pipeline/header', function (hooks) {
 
     pipeline.badges = { sonar: { defaultUri } };
 
-    await render(hbs`<Pipeline::Header />`);
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
 
     assert.dom('#sonarqube-link').hasAttribute('href', `${defaultUri}`);
   });
@@ -72,7 +88,11 @@ module('Integration | Component | pipeline/header', function (hooks) {
     const rootDir = 'somethine/else';
 
     pipeline.scmRepo.rootDir = rootDir;
-    await render(hbs`<Pipeline::Header />`);
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
 
     assert.dom('#repo-pipelines .branch').hasText(`main:${rootDir}`);
   });
@@ -100,7 +120,11 @@ module('Integration | Component | pipeline/header', function (hooks) {
 
     pipeline.scmUri = 'git.github.com:9876:abc';
 
-    await render(hbs`<Pipeline::Header />`);
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
 
     assert.dom('#repo-pipelines .dropdown-menu').doesNotExist();
     await click('#repo-pipelines > a.dropdown-toggle');
@@ -118,10 +142,44 @@ module('Integration | Component | pipeline/header', function (hooks) {
       'screwdriver.cd/pipelineDescription': pipelineDescription
     };
 
-    await render(hbs`<Pipeline::Header />`);
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
 
     assert
       .dom('#pipeline-header .pipeline-description')
       .hasText(pipelineDescription);
+  });
+
+  test('it rerenders properly', async function (assert) {
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
+    assert
+      .dom('#pipeline-link')
+      .hasAttribute('href', `/v2/pipelines/${pipelineId}`);
+
+    const newPipelineId = 9876;
+    const newBranch = 'abc';
+    const newPipeline = {
+      id: newPipelineId,
+      scmRepo: { url: 'https://gihub.com/foobar', branch: newBranch },
+      scmContext: 'github:github.com',
+      annotations: {}
+    };
+
+    this.setProperties({
+      pipeline: newPipeline
+    });
+    await rerender();
+
+    assert
+      .dom('#pipeline-link')
+      .hasAttribute('href', `/v2/pipelines/${newPipelineId}`);
+    assert.dom('#repo-pipelines .branch').hasText(newBranch);
   });
 });
