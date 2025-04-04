@@ -75,9 +75,10 @@ export default class V2PipelinePullsShowRoute extends Route {
       }
     }
 
+    this.pipelinePageState.setJobs(jobs);
+
     return {
       ...model,
-      jobs,
       event,
       latestEvent,
       prNums: Array.from(prNums).sort((a, b) => a - b),

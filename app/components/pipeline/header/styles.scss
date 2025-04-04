@@ -11,14 +11,13 @@
 
     .header-main {
       display: flex;
+      align-items: center;
 
       a {
         color: colors.$sd-black;
       }
 
       .header-item {
-        margin-top: auto;
-        margin-bottom: auto;
         padding-right: 0.5rem;
 
         &.pipeline-name {
@@ -37,14 +36,10 @@
           .dropdown-toggle {
             display: flex;
             justify-content: space-between;
+            align-items: center;
 
             svg {
-              margin: auto 0.25rem;
-            }
-
-            &::after {
-              margin-top: auto;
-              margin-bottom: 0.75rem;
+              margin: 0 0.25rem;
             }
 
             .branch {

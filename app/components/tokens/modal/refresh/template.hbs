@@ -1,0 +1,65 @@
+<BsModal
+  id="refresh-token-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    Refresh {{this.tokenType}} token
+  </modal.header>
+  <modal.body>
+    <div>
+      The current token for <b>"{{this.token.name}}"</b> will be invalidated and a new one will be generated.
+    </div>
+    <br />
+    <div>
+      Are you sure you want to refresh this token?
+    </div>
+
+    {{#if this.errorMessage}}
+      <InfoMessage
+        id="error-message"
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+      />
+    {{/if}}
+    {{#if this.tokenValue}}
+      <BsAlert
+        id="success-container"
+        @dismissible={{false}}
+        @type="success"
+      >
+        <FaIcon @icon="circle-check" />
+        You can only see this value once, so remember to copy it!
+
+        <div class="token-value-container">
+          <div class="token-value">
+            {{this.tokenValue}}
+          </div>
+          <BsButton
+            @type="success"
+            @outline={{true}}
+            @onClick={{fn this.copyTokenValue}}
+            disabled={{this.isCopyButtonDisabled}}
+          >
+            <FaIcon
+              @icon="copy"
+            />
+          </BsButton>
+        </div>
+      </BsAlert>
+    {{/if}}
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="refresh-token"
+      class="confirm"
+      disabled={{this.isSubmitButtonDisabled}}
+      @defaultText="Refresh token"
+      @pendingText="Refreshing token..."
+      @fulfilledText="Token refreshed"
+      @type="primary"
+      @onClick={{fn this.refreshToken}}
+    />
+  </modal.footer>
+</BsModal>

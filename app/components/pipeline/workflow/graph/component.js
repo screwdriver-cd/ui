@@ -63,7 +63,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
       inputGraph: workflowGraph,
       builds,
       stageBuilds,
-      jobs: this.args.jobs.map(job => {
+      jobs: this.pipelinePageState.getJobs().map(job => {
         return { ...job, isDisabled: job.state === 'DISABLED' };
       }),
       start: event.startFrom,
