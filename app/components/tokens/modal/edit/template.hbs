@@ -1,0 +1,55 @@
+<BsModal
+  id="edit-token-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    Edit a {{@token.type}} token
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        id="error-message"
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+      />
+    {{/if}}
+
+    <div class="edit-token">
+      <label>
+        <div>Name:</div>
+        <Input
+          id="token-name-input"
+          @type="text"
+          @value={{this.tokenName}}
+          placeholder={{@token.name}}
+          class={{this.inputClass}}
+          disabled={{this.inputDisabled}}
+          autofocus={{true}}
+        />
+      </label>
+      <label>
+        <div>Description:</div>
+        <Input
+          id="token-description-input"
+          @type="text"
+          @value={{this.tokenDescription}}
+          placeholder={{@token.description}}
+          disabled={{this.inputDisabled}}
+        />
+      </label>
+    </div>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-token"
+      class="confirm"
+      disabled={{this.isSubmitButtonDisabled}}
+      @defaultText="Update token"
+      @pendingText="Updating token..."
+      @type="primary"
+      @onClick={{fn this.createToken}}
+    />
+  </modal.footer>
+</BsModal>
