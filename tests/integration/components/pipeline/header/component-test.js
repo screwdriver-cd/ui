@@ -167,7 +167,7 @@ module('Integration | Component | pipeline/header', function (hooks) {
     const newBranch = 'abc';
     const newPipeline = {
       id: newPipelineId,
-      scmRepo: { url: 'https://gihub.com/foobar', branch: newBranch },
+      scmRepo: { url: 'https://github.com/foobar', branch: newBranch },
       scmContext: 'github:github.com',
       annotations: {}
     };
