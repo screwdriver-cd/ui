@@ -7,6 +7,7 @@ import sinon from 'sinon';
 module('Integration | Component | pipeline/workflow', function (hooks) {
   setupRenderingTest(hooks);
 
+  let pipelinePageState;
   const pipelineId = 1234;
   const pipeline = { id: pipelineId };
 
@@ -14,7 +15,8 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
-    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    pipelinePageState = this.owner.lookup('service:pipeline-page-state');
 
     sinon.stub(workflowDataReload, 'start').callsFake(() => {});
 
@@ -26,9 +28,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   });
 
   test('it renders for pipeline with no events', async function (assert) {
-    const router = this.owner.lookup('service:router');
-
-    sinon.stub(router, 'currentRouteName').value('events');
+    sinon.stub(pipelinePageState, 'getIsPr').returns(false);
 
     this.setProperties({
       userSettings: {}
@@ -49,10 +49,9 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   });
 
   test('it renders for pipeline with no PRs', async function (assert) {
-    const router = this.owner.lookup('service:router');
     const shuttle = this.owner.lookup('service:shuttle');
 
-    sinon.stub(router, 'currentRouteName').value('pulls');
+    sinon.stub(pipelinePageState, 'getIsPr').returns(true);
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
     this.setProperties({
@@ -79,7 +78,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     const router = this.owner.lookup('service:router');
     const shuttle = this.owner.lookup('service:shuttle');
 
-    sinon.stub(router, 'currentRouteName').value('events');
+    sinon.stub(pipelinePageState, 'getIsPr').returns(false);
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
@@ -115,7 +114,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     const router = this.owner.lookup('service:router');
     const shuttle = this.owner.lookup('service:shuttle');
 
-    sinon.stub(router, 'currentRouteName').value('pulls');
+    sinon.stub(pipelinePageState, 'getIsPr').returns(true);
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/11');
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
@@ -145,7 +144,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     const shuttle = this.owner.lookup('service:shuttle');
     const eventId = 123;
 
-    sinon.stub(router, 'currentRouteName').value('events');
+    sinon.stub(pipelinePageState, 'getIsPr').returns(false);
     sinon.stub(router, 'currentURL').value(`/v2/pipelines/1/events/${eventId}`);
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
@@ -188,7 +187,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     const eventId = 123;
     const prNum = 4;
 
-    sinon.stub(router, 'currentRouteName').value('pulls');
+    sinon.stub(pipelinePageState, 'getIsPr').returns(true);
     sinon.stub(router, 'currentURL').value(`/v2/pipelines/1/pulls/${prNum}`);
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
@@ -236,7 +235,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     pipeline.annotations = { 'screwdriver.cd/restrictPR': 'all' };
 
-    sinon.stub(router, 'currentRouteName').value('pulls');
+    sinon.stub(pipelinePageState, 'getIsPr').returns(true);
     sinon.stub(router, 'currentURL').value(`/v2/pipelines/1/pulls/${prNum}`);
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
