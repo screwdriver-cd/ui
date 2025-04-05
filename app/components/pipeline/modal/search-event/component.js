@@ -4,8 +4,6 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 export default class PipelineModalSearchEventComponent extends Component {
-  @service router;
-
   @service shuttle;
 
   @service pipelinePageState;
@@ -17,8 +15,6 @@ export default class PipelineModalSearchEventComponent extends Component {
   @tracked searchResults = [];
 
   @tracked invalidSha = false;
-
-  isPr = this.router.currentRouteName.includes('pulls');
 
   searchFieldOptions = ['message', 'sha', 'creator', 'author'];
 
@@ -51,7 +47,9 @@ export default class PipelineModalSearchEventComponent extends Component {
     const baseUrl = `/pipelines/${this.pipelinePageState.getPipelineId()}/events?${
       this.searchField
     }=${encodeURIComponent(inputValue)}`;
-    const url = `${baseUrl}&type=${this.isPr ? 'pr' : 'pipeline'}`;
+    const url = `${baseUrl}&type=${
+      this.pipelinePageState.getIsPr() ? 'pr' : 'pipeline'
+    }`;
 
     this.shuttle.fetchFromApi('get', url).then(events => {
       this.searchResults = events;

@@ -6,6 +6,14 @@ export default class NewPipelinePullsRoute extends Route {
 
   @service pipelinePageState;
 
+  activate() {
+    this.pipelinePageState.setIsPr(true);
+  }
+
+  deactivate() {
+    this.pipelinePageState.setIsPr(false);
+  }
+
   async model() {
     const pipelineId = this.pipelinePageState.getPipelineId();
 

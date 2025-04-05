@@ -10,9 +10,11 @@ module(
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
-      const router = this.owner.lookup('service:router');
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
 
-      sinon.stub(router, 'currentRouteName').value('events');
+      sinon.stub(pipelinePageState, 'getIsPr').returns(false);
 
       await render(hbs`<Pipeline::Workflow::EventRail/>`);
 
@@ -24,9 +26,11 @@ module(
     });
 
     test('it renders for pull requests', async function (assert) {
-      const router = this.owner.lookup('service:router');
+      const pipelinePageState = this.owner.lookup(
+        'service:pipeline-page-state'
+      );
 
-      sinon.stub(router, 'currentRouteName').value('pulls');
+      sinon.stub(pipelinePageState, 'getIsPr').returns(true);
 
       await render(hbs`<Pipeline::Workflow::EventRail/>`);
 
