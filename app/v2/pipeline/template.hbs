@@ -1,8 +1,10 @@
-{{page-title this.model.pipelineName}}
+{{page-title this.model.pipeline.name}}
 
 <div id="pipeline-page-contents">
   <Pipeline::Nav />
-  <Pipeline::Header />
+  <Pipeline::Header
+    @pipeline={{this.model.pipeline}}
+  />
   <div
     id="pipeline-main"
     class="{{this.routeClasses}}"
