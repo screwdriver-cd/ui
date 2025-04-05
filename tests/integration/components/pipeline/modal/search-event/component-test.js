@@ -11,13 +11,12 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      const router = this.owner.lookup('service:router');
       const pipelinePageState = this.owner.lookup(
         'service:pipeline-page-state'
       );
 
-      sinon.stub(router, 'currentRouteName').value('pipeline');
       sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
+      sinon.stub(pipelinePageState, 'getIsPr').returns(false);
     });
 
     test('it renders', async function (assert) {
