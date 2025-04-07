@@ -40,4 +40,24 @@
       background-color: rgba(colors.$sd-warn-bg, 0.1);
     }
   }
+
+  .btn-success {
+    color: colors.$sd-white;
+    background-color: colors.$sd-success;
+    border-color: colors.$sd-success;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(colors.$sd-success, 0.75);
+      border-color: transparent;
+    }
+  }
+
+  .btn-outline-success {
+    color: colors.$sd-success;
+    border-color: colors.$sd-success;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(colors.$sd-success, 0.1);
+    }
+  }
 }

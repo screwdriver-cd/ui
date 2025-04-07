@@ -6,8 +6,6 @@ import { isComplete, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 import { getDisplayJobNameLength, getWorkflowGraph } from './util';
 import { extractEventStages } from '../../../utils/graph-tools';
 
-const PIPELINE_EVENT = 'pipeline';
-const PR_EVENT = 'pr';
 const BUILD_QUEUE_NAME = 'graph';
 const STAGE_BUILD_QUEUE_NAME = 'stageBuilds';
 const LATEST_COMMIT_EVENT_QUEUE_NAME = 'latestCommitEvent';
@@ -55,8 +53,6 @@ export default class PipelineWorkflowComponent extends Component {
 
   workflowGraphWithDownstreamTriggers;
 
-  eventType;
-
   dataReloadId;
 
   constructor() {
@@ -65,13 +61,9 @@ export default class PipelineWorkflowComponent extends Component {
     this.pipeline = this.pipelinePageState.getPipeline();
     this.userSettings = this.args.userSettings;
     this.latestEvent = this.args.latestEvent;
-    this.eventType = this.router.currentRouteName.includes('events')
-      ? PIPELINE_EVENT
-      : PR_EVENT;
-
     this.dataReloadId = this.workflowDataReload.start(
       this.pipeline.id,
-      this.eventType === PR_EVENT
+      this.pipelinePageState.getIsPr()
     );
 
     if (this.args.noEvents) {
@@ -86,7 +78,7 @@ export default class PipelineWorkflowComponent extends Component {
   monitorForNewEvents() {
     const pipelineId = this.pipeline.id;
 
-    if (this.eventType === PR_EVENT) {
+    if (this.pipelinePageState.getIsPr()) {
       this.workflowDataReload.registerOpenPrsCallback(
         OPEN_PRS_QUEUE_NAME,
         pipelineId,
@@ -252,7 +244,7 @@ export default class PipelineWorkflowComponent extends Component {
   }
 
   get isPR() {
-    return this.eventType === PR_EVENT;
+    return this.pipelinePageState.getIsPr();
   }
 
   get eventRailAnchor() {
