@@ -33,7 +33,7 @@ export default class NewPipelineRoute extends Route {
     await this.banners.getPipelineBanners(pipelineId);
 
     return {
-      pipelineName: pipeline.name
+      pipeline
     };
   }
 
