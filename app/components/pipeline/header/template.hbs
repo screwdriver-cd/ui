@@ -1,4 +1,6 @@
-<div id="pipeline-header" {{did-insert this.getPipelinesWithSameRepo}}>
+<div id="pipeline-header"
+  {{did-update this.updatePipeline @pipeline}}
+>
   <div class="header-main">
     <LinkTo
       id="pipeline-link"

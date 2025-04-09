@@ -1,0 +1,79 @@
+<BsModal
+  id="create-token-modal"
+  @onHide={{fn @closeModal this.newToken}}
+  as |modal|
+>
+  <modal.header>
+    Create a new {{@type}} token
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        id="error-message"
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+      />
+    {{/if}}
+    {{#if this.tokenValue}}
+      <BsAlert
+        id="success-container"
+        @dismissible={{false}}
+        @type="success"
+      >
+        <FaIcon @icon="circle-check" />
+        You can only see this value once, so remember to copy it!
+
+        <div class="token-value-container">
+          <div class="token-value">
+            {{this.tokenValue}}
+          </div>
+          <BsButton
+            @type="success"
+            @outline={{true}}
+            @onClick={{fn this.copyTokenValue}}
+            disabled={{this.isCopyButtonDisabled}}
+          >
+            <FaIcon
+              @icon="copy"
+            />
+          </BsButton>
+        </div>
+      </BsAlert>
+    {{/if}}
+
+    <div class="create-new-token">
+      <label>
+        <div>Name:</div>
+        <Input
+          id="token-name-input"
+          @type="text"
+          @value={{this.tokenName}}
+          autofocus={{true}}
+          class={{this.inputClass}}
+          disabled={{this.inputDisabled}}
+        />
+      </label>
+      <label>
+        <div>Description:</div>
+        <Input
+          @type="text"
+          @value={{this.tokenDescription}}
+          placeholder="Optional"
+          disabled={{this.inputDisabled}}
+        />
+      </label>
+    </div>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-token"
+      class="confirm"
+      disabled={{this.isSubmitButtonDisabled}}
+      @defaultText="Create token"
+      @pendingText="Creating token..."
+      @type="primary"
+      @onClick={{fn this.createToken}}
+    />
+  </modal.footer>
+</BsModal>
