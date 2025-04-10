@@ -1,0 +1,36 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  #edit-token-modal {
+    &.modal {
+      .modal-dialog {
+        .modal-body {
+          .edit-token {
+            display: flex;
+            flex-direction: column;
+
+            label {
+              display: flex;
+              align-items: center;
+
+              div {
+                width: 6rem;
+              }
+
+              input {
+                flex: 1;
+
+                &.invalid {
+                  color: colors.$sd-warn-bg;
+                  outline: 2px solid colors.$sd-warn-bg;
+                  border-radius: 3px;
+                  border: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
