@@ -1,9 +1,9 @@
 <div class="job-cell">
   <div class="job-status">
-    {{#if this.latestBuild}}
+    {{#if @record.build}}
       <LinkTo
         @route="pipeline.build"
-        @models={{array @record.job.pipelineId this.latestBuild.id}}
+        @models={{array @record.job.pipelineId @record.build.id}}
       >
         <FaIcon
           @icon={{this.statusIcon.name}}
@@ -11,7 +11,7 @@
           @prefix={{this.statusIcon.prefix}}
           @spin={{this.statusIcon.spin}}
           @flip={{this.statusIcon.flip}}
-          class={{this.latestBuild.status}}
+          class={{@record.build.status}}
         />
       </LinkTo>
     {{/if}}

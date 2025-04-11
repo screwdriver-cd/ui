@@ -5,15 +5,10 @@
     overflow: scroll;
 
     .build-history-container {
-      padding: 1rem 0;
-
       a,
       .created {
         display: flex;
-
-        svg {
-          margin: auto;
-        }
+        align-items: center;
       }
 
       .tooltip {

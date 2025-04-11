@@ -5,6 +5,7 @@ import { tracked } from '@glimmer/tracking';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import _ from 'lodash';
 import { statuses } from 'screwdriver-ui/utils/build';
+import { isComplete } from 'screwdriver-ui/utils/pipeline/event';
 import DataReloader from './dataReloader';
 import getDisplayName from './util';
 
@@ -25,7 +26,9 @@ export default class PipelineJobsTableComponent extends Component {
 
   dataReloader;
 
-  numBuilds;
+  jobs;
+
+  previousBuilds;
 
   @tracked data;
 
@@ -36,10 +39,19 @@ export default class PipelineJobsTableComponent extends Component {
 
     this.event = this.args.event;
     this.userSettings = this.args.userSettings;
-    this.numBuilds = this.args.numBuilds;
     this.data = null;
+    this.previousBuilds = new Map();
 
     this.setColumnData();
+    this.setJobs();
+
+    this.dataReloader = new DataReloader(
+      { shuttle: this.shuttle, workflowDataReload: this.workflowDataReload },
+      Array.from(this.jobs.keys()),
+      INITIAL_PAGE_SIZE,
+      this.args.event ? 1 : null,
+      this.setData
+    );
   }
 
   setColumnData() {
@@ -137,66 +149,33 @@ export default class PipelineJobsTableComponent extends Component {
   @action
   initialize(element) {
     dom.i2svg({ node: element });
-    this.initializeDataLoader().then(() => {});
-  }
 
-  @action
-  async initializeDataLoader() {
-    const prNum = this.event?.prNum;
-    const jobs = prNum
-      ? this.workflowDataReload.getJobsForPr(prNum)
-      : this.pipelinePageState.getJobs();
-
-    const jobIds = jobs.map(job => job.id);
-
-    this.dataReloader = new DataReloader(
-      { shuttle: this.shuttle, workflowDataReload: this.workflowDataReload },
-      jobIds,
-      INITIAL_PAGE_SIZE,
-      this.numBuilds
-    );
-
-    this.data = [];
-
-    jobs.forEach(job => {
-      this.data.push({
-        job,
-        jobName: getDisplayName(job, prNum),
-        stageName: job?.permutations?.[0]?.stage?.name || 'N/A',
-        timestampFormat: this.userSettings.timestampFormat,
-        onCreate: (jobToMonitor, buildsCallback) => {
-          this.dataReloader.addCallbackForJobId(
-            jobToMonitor.id,
-            buildsCallback
-          );
-        },
-        onDestroy: jobToMonitor => {
-          this.dataReloader.removeCallbacksForJobId(jobToMonitor.id);
-        }
-      });
-    });
-
-    const eventId = this.event?.id;
-
-    if (!eventId) {
-      const initialJobIds = this.dataReloader.newJobIds();
-
-      await this.dataReloader.fetchBuildsForJobs(initialJobIds);
+    if (!this.event) {
+      this.dataReloader.fetchBuildsForJobs().then(() => {});
     }
 
-    this.dataReloader.start(eventId);
+    this.dataReloader.start(this.event?.id);
+  }
+
+  setJobs() {
+    this.jobs = new Map();
+
+    const jobs = this.event?.prNum
+      ? this.workflowDataReload.getJobsForPr(this.event.prNum)
+      : this.pipelinePageState.getJobs();
+
+    jobs.forEach(job => {
+      this.jobs.set(job.id, job);
+    });
   }
 
   @action
   update(element, [event]) {
     this.data = [];
 
-    if (event) {
-      this.dataReloader.stop(this.event?.id);
-      this.event = event;
-    }
-
-    this.initializeDataLoader().then(() => {});
+    this.dataReloader.stop(this.event.id);
+    this.event = event;
+    this.dataReloader.start(this.event.id);
   }
 
   get theme() {
@@ -218,9 +197,76 @@ export default class PipelineJobsTableComponent extends Component {
     );
 
     if (!this.event) {
-      this.dataReloader
-        .fetchBuildsForJobs(this.dataReloader.newJobIds())
-        .then(() => {});
+      this.dataReloader.fetchBuildsForJobs().then(() => {});
+    }
+  }
+
+  @action
+  setData(builds) {
+    const data = [];
+
+    let jobBuildsMap = new Map();
+
+    if (this.event) {
+      if (isComplete(builds)) {
+        this.dataReloader.stop(this.event.id);
+      }
+
+      if (builds) {
+        builds.forEach(build => {
+          jobBuildsMap.set(build.jobId, [build]);
+        });
+      }
+    } else if (builds) {
+      jobBuildsMap = builds;
+    }
+
+    let buildsHaveChanged = false;
+
+    if (this.previousBuilds.size !== jobBuildsMap.size) {
+      buildsHaveChanged = true;
+    } else {
+      const previousJobIds = Array.from(this.previousBuilds.keys());
+      const currentJobIds = Array.from(jobBuildsMap.keys());
+      const unchangedJobIds = _.intersection(previousJobIds, currentJobIds);
+
+      if (unchangedJobIds.length !== previousJobIds.length) {
+        buildsHaveChanged = true;
+      } else {
+        jobBuildsMap.forEach((buildsForJob, jobId) => {
+          if (this.previousBuilds.get(jobId).length !== buildsForJob.length) {
+            buildsHaveChanged = true;
+          } else {
+            const previousBuildForJob = _.last(this.previousBuilds.get(jobId));
+            const latestBuildForJob = _.last(buildsForJob);
+
+            if (
+              previousBuildForJob?.id !== latestBuildForJob?.id ||
+              previousBuildForJob?.status !== latestBuildForJob?.status
+            ) {
+              buildsHaveChanged = true;
+            }
+          }
+        });
+      }
+    }
+
+    if (buildsHaveChanged) {
+      this.previousBuilds = jobBuildsMap;
+
+      this.jobs.forEach(job => {
+        const buildsForJob = jobBuildsMap.get(job.id);
+
+        data.push({
+          job,
+          build: buildsForJob ? _.last(buildsForJob) : null,
+          builds: buildsForJob,
+          jobName: getDisplayName(job, this.event?.prNum),
+          timestampFormat: this.userSettings.timestampFormat
+        });
+      });
+
+      this.data = data;
     }
   }
 }

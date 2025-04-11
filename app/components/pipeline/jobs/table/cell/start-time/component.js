@@ -5,38 +5,22 @@ import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 export default class PipelineJobsTableCellStartTimeComponent extends Component {
   @tracked latestBuild;
 
-  constructor() {
-    super(...arguments);
-
-    const { job } = this.args.record;
-
-    this.args.record.onCreate(job, builds => {
-      if (builds.length > 0) {
-        this.latestBuild = builds[builds.length - 1];
-      }
-    });
-  }
-
-  willDestroy() {
-    super.willDestroy();
-
-    this.args.record.onDestroy(this.args.record.job);
-  }
-
   get startTime() {
-    if (!this.latestBuild) {
+    const { build, timestampFormat } = this.args.record;
+
+    if (!build) {
       return null;
     }
-    if (!this.latestBuild.startTime) {
+    if (!build.startTime) {
       return 'Not started';
     }
 
-    if (this.args.record.timestampFormat === 'UTC') {
-      return toCustomLocaleString(new Date(this.latestBuild.startTime), {
+    if (timestampFormat === 'UTC') {
+      return toCustomLocaleString(new Date(build.startTime), {
         timeZone: 'UTC'
       });
     }
 
-    return toCustomLocaleString(new Date(this.latestBuild.startTime));
+    return toCustomLocaleString(new Date(build.startTime));
   }
 }

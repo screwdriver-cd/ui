@@ -15,8 +15,6 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
 
   @service pipelinePageState;
 
-  @tracked latestBuild;
-
   @tracked showStartEventModal = false;
 
   @tracked showStopBuildModal = false;
@@ -31,27 +29,11 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
 
   latestCommitEvent;
 
-  job;
-
   constructor() {
     super(...arguments);
 
-    this.job = { ...this.args.record.job };
     this.pipeline = this.pipelinePageState.getPipeline();
-
-    this.args.record.onCreate(this.job, builds => {
-      if (builds.length > 0) {
-        this.latestBuild = builds[builds.length - 1];
-      }
-    });
-
     this.isPipelineInactive = isInactivePipeline(this.pipeline);
-  }
-
-  willDestroy() {
-    super.willDestroy();
-
-    this.args.record.onDestroy(this.args.record.job);
   }
 
   get notice() {
@@ -71,14 +53,14 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
   }
 
   get stopButtonDisabled() {
-    return isStopButtonDisabled(this.latestBuild);
+    return isStopButtonDisabled(this.args.record.build);
   }
 
   get restartButtonDisabled() {
     return isRestartButtonDisabled(
       this.isPipelineInactive,
       this.args.record.job,
-      this.latestBuild
+      this.args.record.build
     );
   }
 
@@ -104,10 +86,11 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
 
   @action
   async openRestartJobModal() {
-    const eventId = this.latestBuild.meta.build
-      ? this.latestBuild.meta.build.eventId
+    const { build } = this.args.record;
+    const eventId = build.meta.build
+      ? build.meta.build.eventId
       : await this.shuttle
-          .fetchFromApi('get', `/builds/${this.latestBuild.id}`)
+          .fetchFromApi('get', `/builds/${build.id}`)
           .then(response => {
             return response.eventId;
           });
@@ -121,7 +104,6 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
     ]).then(([latestEvent, latestCommitEvent]) => {
       this.latestEvent = latestEvent;
       this.latestCommitEvent = latestCommitEvent;
-      this.job.status = this.latestBuild.status;
       this.showRestartJobModal = true;
     });
   }

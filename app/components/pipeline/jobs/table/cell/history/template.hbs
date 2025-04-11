@@ -1,6 +1,6 @@
 <div class="history-cell">
-  {{#if this.latestBuilds}}
-    {{#each this.latestBuilds as |build|}}
+  {{#if @record.builds}}
+    {{#each @record.builds as |build|}}
       <span class="build-history-container">
         {{#if (not-eq build.status "CREATED")}}
             <LinkTo
