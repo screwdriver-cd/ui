@@ -8,22 +8,21 @@ export default class PipelineHeaderComponent extends Component {
 
   @service shuttle;
 
-  @service pipelinePageState;
-
   @tracked addToCollectionModalOpen = false;
 
   @tracked errorMessage;
 
   @tracked collections = null;
 
-  pipeline;
+  @tracked pipeline;
 
-  sameRepoPipeline = [];
+  @tracked sameRepoPipeline = [];
 
   constructor() {
     super(...arguments);
 
-    this.pipeline = this.pipelinePageState.getPipeline();
+    this.pipeline = this.args.pipeline;
+    this.getPipelinesWithSameRepo().then(() => {});
   }
 
   get pipelineDescription() {
@@ -85,6 +84,12 @@ export default class PipelineHeaderComponent extends Component {
             )
         );
     }
+  }
+
+  @action
+  async updatePipeline(element, [pipeline]) {
+    this.pipeline = pipeline;
+    await this.getPipelinesWithSameRepo();
   }
 
   @action
