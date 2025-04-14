@@ -8,30 +8,22 @@ export default class DataReloader {
 
   workflowDataReload;
 
-  pageSize;
-
-  jobIdsMatchingFilter = [];
-
-  jobCallbacks = {};
-
-  builds = {};
+  jobIds = [];
 
   intervalId;
 
   numBuilds;
 
-  constructor(apiFetchers, jobIds, pageSize, numBuilds) {
+  buildsCallback;
+
+  constructor(apiFetchers, jobIds, pageSize, numBuilds, buildsCallback) {
     const { shuttle, workflowDataReload } = apiFetchers;
 
     this.shuttle = shuttle;
     this.workflowDataReload = workflowDataReload;
-    this.jobIdsMatchingFilter = jobIds.slice(0, pageSize);
-
-    jobIds.forEach(jobId => {
-      this.builds[jobId] = [];
-    });
-
+    this.jobIds = jobIds.slice(0, pageSize);
     this.numBuilds = numBuilds || ENV.APP.NUM_BUILDS_LISTED;
+    this.buildsCallback = buildsCallback;
   }
 
   setCorrectBuildStatus(builds) {
@@ -44,66 +36,36 @@ export default class DataReloader {
 
   updateJobsMatchingFilter(jobIds, pageSize, currentPage) {
     if (jobIds.length < pageSize) {
-      this.jobIdsMatchingFilter = jobIds;
+      this.jobIds = jobIds;
     } else {
       const startIndex = (currentPage - 1) * pageSize;
       const endIndex = startIndex + pageSize;
 
-      this.jobIdsMatchingFilter = jobIds.slice(startIndex, endIndex);
+      this.jobIds = jobIds.slice(startIndex, endIndex);
     }
   }
 
-  newJobIds() {
-    return this.jobIdsMatchingFilter.filter(
-      jobId => this.jobCallbacks[jobId] === undefined
-    );
-  }
-
-  removeCallbacksForJobId(jobId) {
-    delete this.jobCallbacks[jobId];
-  }
-
-  addCallbackForJobId(jobId, buildsCallback) {
-    if (this.builds[jobId]) {
-      buildsCallback(this.builds[jobId]);
-    }
-
-    if (!this.jobCallbacks[jobId]) {
-      this.jobCallbacks[jobId] = [];
-    }
-
-    this.jobCallbacks[jobId].push(buildsCallback);
-  }
-
-  sendBuildsToCallbacks(jobId, builds) {
-    if (this.jobCallbacks[jobId]) {
-      this.jobCallbacks[jobId].forEach(callback => {
-        callback(builds);
-      });
-    }
-  }
-
-  async fetchBuildsForJobs(jobIds) {
-    if (jobIds.length === 0) {
+  async fetchBuildsForJobs() {
+    if (this.jobIds.length === 0) {
       return;
     }
 
     await this.shuttle
       .fetchFromApi(
         'get',
-        `/builds/statuses?jobIds=${jobIds.join('&jobIds=')}&numBuilds=${
+        `/builds/statuses?jobIds=${this.jobIds.join('&jobIds=')}&numBuilds=${
           this.numBuilds
         }`
       )
       .then(response => {
+        const buildsMap = new Map();
+
         response.forEach(buildsForJob => {
           this.setCorrectBuildStatus(buildsForJob.builds);
-
-          const { jobId } = buildsForJob;
-
-          this.builds[jobId] = buildsForJob.builds;
-          this.sendBuildsToCallbacks(jobId, buildsForJob.builds);
+          buildsMap.set(buildsForJob.jobId, buildsForJob.builds);
         });
+
+        this.buildsCallback(buildsMap);
       });
   }
 
@@ -112,7 +74,7 @@ export default class DataReloader {
       return;
     }
     this.numBuilds = numBuilds;
-    await this.fetchBuildsForJobs(this.jobIdsMatchingFilter);
+    await this.fetchBuildsForJobs();
   }
 
   start(eventId) {
@@ -121,7 +83,7 @@ export default class DataReloader {
         QUEUE_NAME,
         eventId,
         builds => {
-          this.parseEventBuilds(builds);
+          this.buildsCallback(builds);
         }
       );
 
@@ -129,11 +91,7 @@ export default class DataReloader {
     }
 
     this.intervalId = setInterval(() => {
-      if (Object.keys(this.jobCallbacks).length === 0) {
-        return;
-      }
-
-      this.fetchBuildsForJobs(this.jobIdsMatchingFilter).then(() => {});
+      this.fetchBuildsForJobs().then(() => {});
     }, ENV.APP.BUILD_RELOAD_TIMER);
   }
 
@@ -146,15 +104,5 @@ export default class DataReloader {
     }
 
     this.intervalId = null;
-  }
-
-  parseEventBuilds(eventBuilds) {
-    eventBuilds.forEach(eventBuild => {
-      const { jobId } = eventBuild;
-      const builds = [eventBuild];
-
-      this.builds[jobId] = builds;
-      this.sendBuildsToCallbacks(jobId, builds);
-    });
   }
 }

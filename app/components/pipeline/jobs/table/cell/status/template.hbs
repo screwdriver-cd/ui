@@ -1,39 +1,39 @@
 <div class="status-cell">
-  {{#if this.build}}
+  {{#if @record.build}}
     <span class="build-status-container">
-      {{#if (not-eq this.build.status "CREATED")}}
+      {{#if (not-eq @record.build.status "CREATED")}}
         <LinkTo
           @route="pipeline.build"
-          @models={{array @record.job.pipelineId this.build.id}}
-          @title={{this.build.id}}
+          @models={{array @record.job.pipelineId @record.build.id}}
+          @title={{@record.build.id}}
         >
-              <FaIcon
-                @icon="circle"
-                @fixedWidth="true"
-                class={{this.build.status}}
-              />
-            </LinkTo>
-            <BsTooltip
-              @placement="bottom"
-              @renderInPlace={{true}}
-              class="tooltip"
-            >
-              <p>Build# {{this.build.id}}</p>
-              {{#if this.build.startTime}}
-                <p>Start - {{moment-format this.build.startTime "MM/DD/YYYY HH:mmA"}}</p>
-              {{/if}}
-              {{#if this.build.endTime}}
-                <p>End - {{moment-format this.build.endTime "MM/DD/YYYY HH:mmA"}}</p>
-              {{/if}}
-            </BsTooltip>
+          <FaIcon
+            @icon="circle"
+            @fixedWidth="true"
+            class={{@record.build.status}}
+          />
+        </LinkTo>
+        <BsTooltip
+          @placement="bottom"
+          @renderInPlace={{true}}
+          class="tooltip"
+        >
+          <p>Build# {{@record.build.id}}</p>
+          {{#if @record.build.startTime}}
+            <p>Start - {{moment-format @record.build.startTime "MM/DD/YYYY HH:mmA"}}</p>
+          {{/if}}
+          {{#if @record.build.endTime}}
+            <p>End - {{moment-format @record.build.endTime "MM/DD/YYYY HH:mmA"}}</p>
+          {{/if}}
+        </BsTooltip>
       {{else}}
         <div class="created">
-            <FaIcon
-              @icon="circle"
-              @fixedWidth="true"
-              class={{this.build.status}}
-            />
-          </div>
+          <FaIcon
+            @icon="circle"
+            @fixedWidth="true"
+            class={{@record.build.status}}
+          />
+        </div>
       {{/if}}
     </span>
   {{/if}}

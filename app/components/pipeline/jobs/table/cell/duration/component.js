@@ -6,8 +6,6 @@ import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
 export default class PipelineJobsTableCellDurationComponent extends Component {
   @tracked duration;
 
-  latestBuild;
-
   buildDuration;
 
   intervalId;
@@ -26,14 +24,29 @@ export default class PipelineJobsTableCellDurationComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const { job } = this.args.record;
+    const { build } = this.args.record;
 
-    this.args.record.onCreate(job, builds => {
-      if (builds.length > 0) {
-        this.latestBuild = builds[builds.length - 1];
-        this.initializeBuildDuration();
+    if (build) {
+      const startTime = Date.parse(build.startTime);
+
+      if (build.endTime) {
+        this.duration = humanizeDuration(
+          Date.parse(build.endTime) - startTime,
+          this.humanizeConfig
+        );
+      } else if (unfinishedStatuses.includes(build.status)) {
+        if (build.status === 'RUNNING') {
+          this.buildDuration = new Date() - startTime;
+          this.duration = this.getRunningDurationText();
+
+          this.startInterval();
+        } else {
+          this.duration = '';
+        }
+      } else {
+        this.duration = 'N/A';
       }
-    });
+    }
   }
 
   willDestroy() {
@@ -43,52 +56,13 @@ export default class PipelineJobsTableCellDurationComponent extends Component {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
-
-    this.args.record.onDestroy(this.args.record.job);
-  }
-
-  stopInterval() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-    }
   }
 
   startInterval() {
-    this.stopInterval();
-
     this.intervalId = setInterval(() => {
       this.buildDuration += 1000;
       this.duration = this.getRunningDurationText();
     }, 1000);
-  }
-
-  initializeBuildDuration() {
-    const startTime = Date.parse(this.latestBuild.startTime);
-
-    if (this.latestBuild.endTime) {
-      this.duration = humanizeDuration(
-        Date.parse(this.latestBuild.endTime) - startTime,
-        this.humanizeConfig
-      );
-
-      this.stopInterval();
-    } else if (unfinishedStatuses.includes(this.latestBuild.status))
-      if (this.latestBuild.status === 'RUNNING') {
-        this.buildDuration = new Date() - startTime;
-        this.duration = this.getRunningDurationText();
-
-        if (!this.intervalId) {
-          this.startInterval();
-        }
-      } else {
-        this.duration = '';
-      }
-    else {
-      this.duration = 'N/A';
-
-      this.stopInterval();
-    }
   }
 
   getRunningDurationText() {

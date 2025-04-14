@@ -1,5 +1,5 @@
 <div class="metrics-cell">
-  {{#if this.latestBuild}}
+  {{#if @record.build}}
     <LinkTo
       @route="pipeline.metrics"
       @model={{@record.job.pipelineId}}
