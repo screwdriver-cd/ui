@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { statuses } from 'screwdriver-ui/utils/build';
 import { isComplete } from 'screwdriver-ui/utils/pipeline/event';
 import DataReloader from './dataReloader';
-import getDisplayName from './util';
+import { getDisplayName, sortJobs } from './util';
 
 const INITIAL_PAGE_SIZE = 10;
 
@@ -266,7 +266,7 @@ export default class PipelineJobsTableComponent extends Component {
         });
       });
 
-      this.data = data;
+      this.data = this.event ? data.sort(sortJobs) : data;
     }
   }
 }

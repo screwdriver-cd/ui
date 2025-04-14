@@ -1,5 +1,8 @@
 import { module, test } from 'qunit';
-import getDisplayName from 'screwdriver-ui/components/pipeline/jobs/table/util';
+import {
+  getDisplayName,
+  sortJobs
+} from 'screwdriver-ui/components/pipeline/jobs/table/util';
 
 module('Unit | Component | pipeline/jobs/table/util', function () {
   test('getDisplayName uses job name', function (assert) {
@@ -25,5 +28,61 @@ module('Unit | Component | pipeline/jobs/table/util', function () {
     const job = { name: `PR-${prNum}:abc123` };
 
     assert.equal(getDisplayName(job, prNum), 'abc123');
+  });
+
+  test('sortJobs compares jobs correctly', function (assert) {
+    assert.equal(
+      sortJobs(
+        {
+          job: { name: 'a' }
+        },
+        {
+          job: { name: 'b' }
+        }
+      ),
+      -1
+    );
+    assert.equal(
+      sortJobs(
+        {
+          job: { name: 'a', stageName: 'abc' }
+        },
+        {
+          job: { name: 'a', stageName: 'zoo' }
+        }
+      ),
+      -1
+    );
+    assert.equal(
+      sortJobs(
+        {
+          job: { name: 'a' }
+        },
+        {
+          job: { name: 'a', stageName: 'zoo' }
+        }
+      ),
+      1
+    );
+    assert.equal(
+      sortJobs(
+        {
+          build: { status: 'SUCCESS' }
+        },
+        {}
+      ),
+      -2
+    );
+    assert.equal(
+      sortJobs(
+        {
+          build: { status: 'SUCCESS' }
+        },
+        {
+          build: { status: 'FAILURE' }
+        }
+      ),
+      3
+    );
   });
 });
