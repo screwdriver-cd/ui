@@ -1,0 +1,51 @@
+<div class="actions-button-container">
+  <BsButton
+    @type="primary"
+    @outline={{true}}
+    @onClick={{this.showEditTokenModal}}
+  >
+    <FaIcon
+      @icon="pen"
+      @outline={{true}}
+    />
+    {{#if this.isEditTokenModalOpen}}
+      <Tokens::Modal::Edit
+        @token={{@record}}
+        @closeModal={{this.closeEditTokenModal}}
+      />
+    {{/if}}
+  </BsButton>
+
+  <BsButton
+    @type="primary"
+    @outline={{true}}
+    @onClick={{this.showRefreshTokenModal}}
+  >
+    <FaIcon
+      @icon="rotate-right"
+      @outline={{true}}
+    />
+    {{#if this.isRefreshTokenModalOpen}}
+      <Tokens::Modal::Refresh
+        @token={{@record}}
+        @closeModal={{this.closeRefreshTokenModal}}
+      />
+    {{/if}}
+  </BsButton>
+
+  <BsButton
+    @type="danger"
+    @outline={{true}}
+    @onClick={{this.showDeleteTokenModal}}
+  >
+    <FaIcon
+      @icon="trash"
+    />
+    {{#if this.isDeleteTokenModalOpen}}
+      <Tokens::Modal::Delete
+        @token={{@record}}
+        @closeModal={{this.closeDeleteTokenModal}}
+      />
+    {{/if}}
+  </BsButton>
+</div>
