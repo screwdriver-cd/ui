@@ -46,15 +46,11 @@ export default class TokensModalEditComponent extends Component {
 
   @action
   async createToken() {
-    const { id, type } = this.args.token;
-
     this.isAwaitingResponse = true;
 
-    const updateUrl = `/tokens/${id}`;
-    const url =
-      type === 'pipeline'
-        ? `/pipelines/${this.pipelinePageState.getPipelineId()}${updateUrl}`
-        : updateUrl;
+    const updateUrl = `/tokens/${this.args.token.id}`;
+    const pipelineId = this.pipelinePageState.getPipelineId();
+    const url = pipelineId ? `/pipelines/${pipelineId}${updateUrl}` : updateUrl;
 
     return this.shuttle
       .fetchFromApi('put', url, {

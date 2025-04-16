@@ -8,6 +8,10 @@ module('Integration | Component | tokens/modal/delete', function (hooks) {
   setupRenderingTest(hooks);
 
   let shuttle;
+  const token = {
+    name: 'test-token',
+    type: 'pipeline'
+  };
 
   hooks.beforeEach(function () {
     const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
@@ -15,19 +19,16 @@ module('Integration | Component | tokens/modal/delete', function (hooks) {
     shuttle = this.owner.lookup('service:shuttle');
 
     sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
+
+    this.setProperties({
+      token,
+      closeModal: () => {}
+    });
   });
 
   test('it renders', async function (assert) {
-    this.setProperties({
-      token: {
-        name: 'test-token'
-      },
-      closeModal: () => {}
-    });
-
     await render(
       hbs`<Tokens::Modal::Delete
-        @type="pipeline"
         @token={{this.token}}
         @closeModal={{this.closeModal}}
       />`
@@ -40,16 +41,8 @@ module('Integration | Component | tokens/modal/delete', function (hooks) {
   });
 
   test('it enables the submit button when the token name is correct', async function (assert) {
-    this.setProperties({
-      token: {
-        name: 'test-token'
-      },
-      closeModal: () => {}
-    });
-
     await render(
       hbs`<Tokens::Modal::Delete
-        @type="pipeline"
         @token={{this.token}}
         @closeModal={{this.closeModal}}
       />`
@@ -65,16 +58,8 @@ module('Integration | Component | tokens/modal/delete', function (hooks) {
   test('it displays error message correctly', async function (assert) {
     sinon.stub(shuttle, 'fetchFromApi').rejects({ message: 'Error message' });
 
-    this.setProperties({
-      token: {
-        name: 'test-token'
-      },
-      closeModal: () => {}
-    });
-
     await render(
       hbs`<Tokens::Modal::Delete
-        @type="pipeline"
         @token={{this.token}}
         @closeModal={{this.closeModal}}
       />`
@@ -89,19 +74,14 @@ module('Integration | Component | tokens/modal/delete', function (hooks) {
   test('it autocloses the modal when the token is deleted', async function (assert) {
     sinon.stub(shuttle, 'fetchFromApi').resolves();
 
-    const token = {
-      name: 'test-token'
-    };
     const closeModalSpy = sinon.spy();
 
     this.setProperties({
-      token,
       closeModal: closeModalSpy
     });
 
     await render(
       hbs`<Tokens::Modal::Delete
-        @type="pipeline"
         @token={{this.token}}
         @closeModal={{this.closeModal}}
       />`
