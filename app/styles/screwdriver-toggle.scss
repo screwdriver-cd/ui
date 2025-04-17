@@ -1,0 +1,26 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  .x-toggle-component {
+    &.x-toggle-focused .x-toggle-btn:not(.x-toggle-disabled)::after,
+    &.x-toggle-focused .x-toggle-btn:not(.x-toggle-disabled)::before {
+      box-shadow: 0 0 2px 3px colors.$sd-running;
+    }
+
+    .x-toggle-light.x-toggle-btn {
+      background: colors.$sd-text-light;
+    }
+
+    .x-toggle:checked + label > .x-toggle-light.x-toggle-btn {
+      background: colors.$sd-pale-purple;
+    }
+
+    label {
+      margin-bottom: 0;
+
+      &.off-label {
+        padding-right: 0;
+      }
+    }
+  }
+}
