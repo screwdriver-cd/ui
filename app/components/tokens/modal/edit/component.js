@@ -45,7 +45,7 @@ export default class TokensModalEditComponent extends Component {
   }
 
   @action
-  async createToken() {
+  async editToken() {
     this.isAwaitingResponse = true;
 
     const updateUrl = `/tokens/${this.args.token.id}`;
