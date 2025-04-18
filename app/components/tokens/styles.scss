@@ -1,0 +1,56 @@
+@use 'variables';
+
+@use 'modal/create/styles' as modalCreate;
+@use 'modal/delete/styles' as modalDelete;
+@use 'modal/edit/styles' as modalEdit;
+@use 'modal/refresh/styles' as modalRefresh;
+@use 'table/styles' as tokensTable;
+
+@mixin styles {
+  @include modalCreate.styles;
+  @include modalDelete.styles;
+  @include modalEdit.styles;
+  @include modalRefresh.styles;
+
+  .tokens-container {
+    height: 100%;
+
+    $header-height: 3.75rem;
+
+    #error-message {
+      margin: 0 1rem;
+    }
+
+    .tokens-header {
+      height: $header-height;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .tokens-header-text {
+        .tokens-header-title,
+        .token-type-explanation {
+          margin-left: 1rem;
+          margin-right: 0.5rem;
+        }
+
+        .tokens-header-title {
+          font-size: 1.5rem;
+          font-weight: variables.$weight-bold;
+        }
+      }
+
+      .new-token {
+        margin-right: 1rem;
+      }
+    }
+
+    #tokens-table {
+      $margin-bottom: 1rem;
+      margin-bottom: $margin-bottom;
+      height: calc(100% - $header-height - $margin-bottom);
+
+      @include tokensTable.styles;
+    }
+  }
+}

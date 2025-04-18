@@ -1,0 +1,55 @@
+<div
+  class="tokens-container"
+  {{did-insert this.fetchTokens}}
+>
+  {{#if this.errorMessage}}
+    <InfoMessage
+      id="error-message"
+      @message={{this.errorMessage}}
+      @type="warning"
+      @icon="triangle-exclamation"
+    />
+  {{/if}}
+
+  <div class="tokens-header">
+    <div class="tokens-header-text">
+      <div class="tokens-header-title">
+        Access Tokens
+      </div>
+      <div class="token-type-explanation">
+        {{this.type}} tokens provide access to the
+        <a
+          href="http://docs.screwdriver.cd/user-guide/api"
+          target="_blank"
+        >
+          Screwdriver API
+        </a>.
+        They are scoped to {{this.scope}}.
+      </div>
+    </div>
+
+    <div class="new-token">
+      <BsButton
+        @type="primary"
+        @onClick={{this.showCreateTokenModal}}
+        disabled={{this.isCreateTokenButtonDisabled}}
+      >
+        New Token
+        {{#if this.isCreateTokenModalOpen}}
+          <Tokens::Modal::Create
+            @type={{@type}}
+            @tokens={{this.tokens}}
+            @closeModal={{this.closeCreateTokenModal}}
+          />
+        {{/if}}
+      </BsButton>
+    </div>
+  </div>
+
+  <div id="tokens-table">
+    <Tokens::Table
+      @tokens={{this.tokens}}
+      @type={{@type}}
+    />
+  </div>
+</div>
