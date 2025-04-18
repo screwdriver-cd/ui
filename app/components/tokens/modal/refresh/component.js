@@ -18,28 +18,16 @@ export default class TokensModalRefreshComponent extends Component {
 
   @tracked tokenValue;
 
-  token;
-
   constructor() {
     super(...arguments);
 
     this.isAwaitingResponse = false;
     this.wasActionSuccessful = false;
     this.isCopyButtonDisabled = false;
-
-    this.token = this.args.token;
-  }
-
-  get tokenType() {
-    return this.token.type;
   }
 
   get isSubmitButtonDisabled() {
     return !!(this.wasActionSuccessful || this.isAwaitingResponse);
-  }
-
-  get tokenValue() {
-    return this.token?.value;
   }
 
   @action
@@ -53,9 +41,9 @@ export default class TokensModalRefreshComponent extends Component {
   async refreshToken() {
     this.isAwaitingResponse = true;
 
-    const refreshUrl = `/tokens/${this.token.id}/refresh`;
+    const refreshUrl = `/tokens/${this.args.token.id}/refresh`;
     const url =
-      this.token.type === 'pipeline'
+      this.args.token.type === 'pipeline'
         ? `/pipelines/${this.pipelinePageState.getPipelineId()}${refreshUrl}`
         : refreshUrl;
 
