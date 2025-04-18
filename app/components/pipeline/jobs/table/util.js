@@ -16,6 +16,15 @@ export function getDisplayName(job, prNum) {
 }
 
 /**
+ * Get the stage name of the job.
+ * @param job {Object} Job in the format returned by the API
+ * @returns {string}
+ */
+export function getStageName(job) {
+  return job?.permutations?.[0]?.stage?.name;
+}
+
+/**
  * Comparator function that sorts jobs by the build status first, then stage name, and finally job name.
  * When sorting by build status, the ordering is ordered by the status color: red, yellow, blue, green, grey, no-status (i.e., jobs that did not run).
  */
@@ -24,8 +33,8 @@ export function sortJobs(a, b) {
   const statusB = b.build?.status;
 
   if (statusA === statusB) {
-    const aStageName = a.job.stageName;
-    const bStageName = b.job.stageName;
+    const aStageName = a.stageName;
+    const bStageName = b.stageName;
 
     if (aStageName === bStageName) {
       return a.job.name.localeCompare(b.job.name);

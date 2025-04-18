@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import {
   getDisplayName,
+  getStageName,
   sortJobs
 } from 'screwdriver-ui/components/pipeline/jobs/table/util';
 
@@ -30,6 +31,30 @@ module('Unit | Component | pipeline/jobs/table/util', function () {
     assert.equal(getDisplayName(job, prNum), 'abc123');
   });
 
+  test('getStageName uses stage name', function (assert) {
+    const job = {
+      name: 'abc123',
+      permutations: [
+        {
+          stage: {
+            name: 'production'
+          }
+        }
+      ]
+    };
+
+    assert.equal(getStageName(job), job.permutations[0].stage.name);
+  });
+
+  test('getStageName returns null when stage name when it does not exist', function (assert) {
+    const job = {
+      name: 'abc123',
+      permutations: [{}]
+    };
+
+    assert.equal(getStageName(job), undefined);
+  });
+
   test('sortJobs compares jobs correctly', function (assert) {
     assert.equal(
       sortJobs(
@@ -45,10 +70,12 @@ module('Unit | Component | pipeline/jobs/table/util', function () {
     assert.equal(
       sortJobs(
         {
-          job: { name: 'a', stageName: 'abc' }
+          job: { name: 'a' },
+          stageName: 'abc'
         },
         {
-          job: { name: 'a', stageName: 'zoo' }
+          job: { name: 'a' },
+          stageName: 'zoo'
         }
       ),
       -1
@@ -59,7 +86,8 @@ module('Unit | Component | pipeline/jobs/table/util', function () {
           job: { name: 'a' }
         },
         {
-          job: { name: 'a', stageName: 'zoo' }
+          job: { name: 'a' },
+          stageName: 'zoo'
         }
       ),
       1
