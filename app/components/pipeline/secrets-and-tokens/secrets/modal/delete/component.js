@@ -3,10 +3,8 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 
-export default class TokensModalDeleteComponent extends Component {
+export default class PipelineSecretsAndTokensModalDeleteComponent extends Component {
   @service shuttle;
-
-  @service pipelinePageState;
 
   @tracked errorMessage;
 
@@ -14,7 +12,7 @@ export default class TokensModalDeleteComponent extends Component {
 
   @tracked wasActionSuccessful;
 
-  @tracked tokenName;
+  @tracked secretName;
 
   constructor() {
     super(...arguments);
@@ -28,24 +26,18 @@ export default class TokensModalDeleteComponent extends Component {
       return true;
     }
 
-    return this.tokenName !== this.args.token.name;
+    return this.secretName !== this.args.secret.name;
   }
 
   @action
-  async deleteToken() {
+  async deleteSecret() {
     this.isAwaitingResponse = true;
 
-    const deleteUrl = `/tokens/${this.args.token.id}`;
-    const url =
-      this.args.token.type === 'pipeline'
-        ? `/pipelines/${this.pipelinePageState.getPipelineId()}${deleteUrl}`
-        : deleteUrl;
-
     return this.shuttle
-      .fetchFromApi('delete', url)
+      .fetchFromApi('delete', `/secrets/${this.args.secret.id}`)
       .then(() => {
         this.wasActionSuccessful = true;
-        this.args.closeModal(this.args.token);
+        this.args.closeModal(this.args.secret);
       })
       .catch(err => {
         this.wasActionSuccessful = false;
