@@ -45,7 +45,6 @@ export default class DataReloader {
       clearInterval(this.intervalId);
       this.intervalId = null;
 
-      this.cacheKey = null;
       this.responseCache.clear();
       this.callbacks.clear();
       this.queueNames.clear();
