@@ -17,6 +17,7 @@ export function getDisplayName(job, prNum) {
 
 /**
  * Comparator function that sorts jobs by the build status first, then stage name, and finally job name.
+ * When sorting by build status, the ordering is ordered by the status color: red, yellow, blue, green, grey, no-status (i.e., jobs that did not run).
  */
 export function sortJobs(a, b) {
   const statusA = a.build?.status;
