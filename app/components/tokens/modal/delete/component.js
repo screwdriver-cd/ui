@@ -37,7 +37,7 @@ export default class TokensModalDeleteComponent extends Component {
 
     const deleteUrl = `/tokens/${this.args.token.id}`;
     const url =
-      this.args.type === 'pipeline'
+      this.args.token.type === 'pipeline'
         ? `/pipelines/${this.pipelinePageState.getPipelineId()}${deleteUrl}`
         : deleteUrl;
 

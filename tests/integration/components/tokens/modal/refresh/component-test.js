@@ -15,14 +15,14 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     shuttle = this.owner.lookup('service:shuttle');
 
     sinon.stub(pipelinePageState, 'getPipelineId').returns(1);
-  });
 
-  test('it renders', async function (assert) {
     this.setProperties({
       token: { name: 'test', type: 'pipeline' },
       closeModal: () => {}
     });
+  });
 
+  test('it renders', async function (assert) {
     await render(
       hbs`<Tokens::Modal::Refresh
         @token={{this.token}}
@@ -42,11 +42,6 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
 
     sinon.stub(shuttle, 'fetchFromApi').rejects({ message: errorMessage });
 
-    this.setProperties({
-      token: { name: 'test', type: 'pipeline' },
-      closeModal: () => {}
-    });
-
     await render(
       hbs`<Tokens::Modal::Refresh
         @token={{this.token}}
@@ -65,11 +60,6 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     const newToken = { value: tokenValue };
 
     sinon.stub(shuttle, 'fetchFromApi').resolves(newToken);
-
-    this.setProperties({
-      token: { name: 'test', type: 'pipeline' },
-      closeModal: () => {}
-    });
 
     await render(
       hbs`<Tokens::Modal::Refresh
