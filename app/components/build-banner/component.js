@@ -132,6 +132,41 @@ export default Component.extend({
     }
   }),
 
+  costMetrics: computed('buildMeta', {
+    get() {
+      const { buildMeta } = this;
+
+      return buildMeta?.build?.cost_metrics;
+    }
+  }),
+
+  buildCpu: computed('buildMeta', {
+    get() {
+      const { buildMeta } = this;
+      const cpu = buildMeta?.build?.cost_metrics?.cpu;
+
+      return cpu ? String(`${cpu} vCPU`) : '';
+    }
+  }),
+
+  buildMemory: computed('buildMeta', {
+    get() {
+      const { buildMeta } = this;
+      const memory = buildMeta?.build?.cost_metrics?.memory;
+
+      return memory ? String(`${memory} GiB`) : '';
+    }
+  }),
+
+  buildCost: computed('buildMeta', {
+    get() {
+      const { buildMeta } = this;
+      const cost = buildMeta?.build?.cost_metrics?.cost;
+
+      return cost ? String(`$${cost.toFixed(4)}`) : '';
+    }
+  }),
+
   isWaiting: computed('buildStatus', {
     get() {
       return this.buildStatus === 'QUEUED';
