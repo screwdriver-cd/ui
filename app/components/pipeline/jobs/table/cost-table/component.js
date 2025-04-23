@@ -189,7 +189,7 @@ export default class PipelineJobsTableCostTableComponent extends Component {
       this.jobs.forEach(job => {
         const buildsForJob = jobBuildsMap.get(job.id);
         const build = buildsForJob ? _.last(buildsForJob) : null;
-        const costMetrics = build?.meta?.build?.cost_metrics;
+        const costMetrics = build?.meta?.build?.cost_metrics?.[build.id];
         const cpu = costMetrics?.cpu;
         const memory = costMetrics?.memory;
         const cost = costMetrics?.cost;

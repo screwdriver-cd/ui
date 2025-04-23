@@ -132,36 +132,36 @@ export default Component.extend({
     }
   }),
 
-  costMetrics: computed('buildMeta', {
+  costMetrics: computed('buildId', 'buildMeta', {
     get() {
-      const { buildMeta } = this;
+      const { buildId, buildMeta } = this;
 
-      return buildMeta?.build?.cost_metrics;
+      return buildMeta?.build?.cost_metrics?.[buildId];
     }
   }),
 
-  buildCpu: computed('buildMeta', {
+  buildCpu: computed('buildId', 'buildMeta', {
     get() {
-      const { buildMeta } = this;
-      const cpu = buildMeta?.build?.cost_metrics?.cpu;
+      const { buildId, buildMeta } = this;
+      const cpu = buildMeta?.build?.cost_metrics?.[buildId].cpu;
 
       return cpu ? String(`${cpu} vCPU`) : '';
     }
   }),
 
-  buildMemory: computed('buildMeta', {
+  buildMemory: computed('buildId', 'buildMeta', {
     get() {
-      const { buildMeta } = this;
-      const memory = buildMeta?.build?.cost_metrics?.memory;
+      const { buildId, buildMeta } = this;
+      const memory = buildMeta?.build?.cost_metrics?.[buildId].memory;
 
       return memory ? String(`${memory} GiB`) : '';
     }
   }),
 
-  buildCost: computed('buildMeta', {
+  buildCost: computed('buildId', 'buildMeta', {
     get() {
-      const { buildMeta } = this;
-      const cost = buildMeta?.build?.cost_metrics?.cost;
+      const { buildId, buildMeta } = this;
+      const cost = buildMeta?.build?.cost_metrics?.[buildId].cost;
 
       return cost ? String(`$${cost.toFixed(4)}`) : '';
     }
