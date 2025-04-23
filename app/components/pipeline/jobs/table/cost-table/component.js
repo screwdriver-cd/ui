@@ -46,12 +46,12 @@ export default class PipelineJobsTableCostTableComponent extends Component {
         filteredBy: 'jobName'
       },
       {
-        title: 'CPU',
+        title: 'CPU (vCPU)',
         className: 'cpu-column',
         propertyName: 'cpu'
       },
       {
-        title: 'MEMORY',
+        title: 'MEMORY (GiB)',
         className: 'memory-column',
         propertyName: 'memory'
       },

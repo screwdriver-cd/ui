@@ -143,16 +143,18 @@ export default Component.extend({
   buildCpu: computed('buildMeta', {
     get() {
       const { buildMeta } = this;
+      const cpu = buildMeta?.build?.cost_metrics?.cpu;
 
-      return buildMeta?.build?.cost_metrics?.cpu;
+      return cpu ? String(`${cpu} vCPU`) : '';
     }
   }),
 
   buildMemory: computed('buildMeta', {
     get() {
       const { buildMeta } = this;
+      const memory = buildMeta?.build?.cost_metrics?.memory;
 
-      return buildMeta?.build?.cost_metrics?.memory;
+      return memory ? String(`${memory} GiB`) : '';
     }
   }),
 
