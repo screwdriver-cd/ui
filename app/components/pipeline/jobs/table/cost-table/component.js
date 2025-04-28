@@ -4,14 +4,13 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import _ from 'lodash';
-import { statuses } from 'screwdriver-ui/utils/build';
 import { isComplete } from 'screwdriver-ui/utils/pipeline/event';
-import DataReloader from './dataReloader';
-import { getDisplayName, getStageName, sortJobs } from './util';
+import DataReloader from '../dataReloader';
+import { getDisplayName, sortJobs } from '../util';
 
 const INITIAL_PAGE_SIZE = 10;
 
-export default class PipelineJobsTableComponent extends Component {
+export default class PipelineJobsTableCostTableComponent extends Component {
   @service shuttle;
 
   @service pipelinePageState;
@@ -19,8 +18,6 @@ export default class PipelineJobsTableComponent extends Component {
   @service workflowDataReload;
 
   @service('emt-themes/ember-bootstrap-v5') emberModelTableBootstrapTheme;
-
-  userSettings;
 
   event;
 
@@ -30,19 +27,40 @@ export default class PipelineJobsTableComponent extends Component {
 
   previousBuilds;
 
-  @tracked data;
-
   columns;
+
+  @tracked data;
 
   constructor() {
     super(...arguments);
 
     this.event = this.args.event;
-    this.userSettings = this.args.userSettings;
     this.data = null;
     this.previousBuilds = new Map();
-
-    this.setColumnData();
+    this.columns = [
+      {
+        title: 'JOB',
+        propertyName: 'jobName',
+        className: 'job-column',
+        component: 'jobCell',
+        filteredBy: 'jobName'
+      },
+      {
+        title: 'CPU (vCPU)',
+        className: 'cpu-column',
+        propertyName: 'cpu'
+      },
+      {
+        title: 'MEMORY (GiB)',
+        className: 'memory-column',
+        propertyName: 'memory'
+      },
+      {
+        title: 'COST',
+        className: 'cost-column',
+        propertyName: 'cost'
+      }
+    ];
     this.setJobs();
 
     this.dataReloader = new DataReloader(
@@ -54,90 +72,12 @@ export default class PipelineJobsTableComponent extends Component {
     );
   }
 
-  setColumnData() {
-    let historyColumnConfiguration;
+  get theme() {
+    const theme = this.emberModelTableBootstrapTheme;
 
-    if (this.event) {
-      historyColumnConfiguration = {
-        title: 'STATUS',
-        className: 'status-column',
-        component: 'statusCell',
-        propertyName: 'status',
-        filterWithSelect: true,
-        predefinedFilterOptions: [...statuses, 'WARNING']
-          // eslint-disable-next-line ember/no-string-prototype-extensions
-          .map(status => _.capitalize(status))
-          .sort(),
-        filterFunction: (val, filterVal, row) => {
-          const filterValue = filterVal.toLowerCase();
+    theme.table = 'table table-condensed table-hover table-sm';
 
-          if (val !== 'undefined') {
-            return val.toLowerCase() === filterValue;
-          }
-
-          const build = this.workflowDataReload
-            .getBuildsForEvent(this.event.id)
-            .filter(b => b.jobId === row.job.id)[0];
-
-          return build?.status.toLowerCase() === filterValue;
-        }
-      };
-    } else {
-      historyColumnConfiguration = {
-        title: 'HISTORY',
-        className: 'history-column',
-        component: 'historyCell',
-        propertyName: 'history',
-        filterWithSelect: true,
-        predefinedFilterOptions: ['5', '10', '15', '20', '25', '30'],
-        filterFunction: async (_val, filterVal) => {
-          await this.dataReloader.setNumBuilds(filterVal);
-        }
-      };
-    }
-
-    this.columns = [
-      {
-        title: 'JOB',
-        propertyName: 'jobName',
-        className: 'job-column',
-        component: 'jobCell',
-        filteredBy: 'jobName'
-      },
-      historyColumnConfiguration,
-      {
-        title: 'DURATION',
-        className: 'duration-column',
-        component: 'durationCell'
-      },
-      {
-        title: 'START TIME',
-        className: 'start-time-column',
-        component: 'startTimeCell'
-      },
-      {
-        title: 'COVERAGE',
-        className: 'coverage-column',
-        component: 'coverageCell'
-      },
-      {
-        title: 'STAGE',
-        propertyName: 'stageName',
-        className: 'stage-column',
-        component: 'stageCell',
-        filteredBy: 'stageName'
-      },
-      {
-        title: 'METRICS',
-        className: 'metrics-column',
-        component: 'metricsCell'
-      },
-      {
-        title: 'ACTIONS',
-        className: 'actions-column',
-        component: 'actionsCell'
-      }
-    ];
+    return theme;
   }
 
   willDestroy() {
@@ -176,14 +116,6 @@ export default class PipelineJobsTableComponent extends Component {
     this.dataReloader.stop(this.event.id);
     this.event = event;
     this.dataReloader.start(this.event.id);
-  }
-
-  get theme() {
-    const theme = this.emberModelTableBootstrapTheme;
-
-    theme.table = 'table table-condensed table-hover table-sm';
-
-    return theme;
   }
 
   @action
@@ -256,14 +188,19 @@ export default class PipelineJobsTableComponent extends Component {
 
       this.jobs.forEach(job => {
         const buildsForJob = jobBuildsMap.get(job.id);
+        const build = buildsForJob ? _.last(buildsForJob) : null;
+        const costMetrics = build?.meta?.build?.cost_metrics?.[build.id];
+        const cpu = costMetrics?.cpu;
+        const memory = costMetrics?.memory;
+        const cost = costMetrics?.cost;
 
         data.push({
           job,
-          build: buildsForJob ? _.last(buildsForJob) : null,
-          builds: buildsForJob,
+          build,
           jobName: getDisplayName(job, this.event?.prNum),
-          stageName: getStageName(job),
-          timestampFormat: this.userSettings.timestampFormat
+          cpu,
+          memory,
+          cost: cost ? String(`$${cost.toFixed(4)}`) : ''
         });
       });
 

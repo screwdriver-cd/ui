@@ -175,6 +175,29 @@
       </li>
     {{/if}}
   {{/if}}
+  {{#if this.costMetrics}}
+    <li class="build-cpu">
+      <span class="banner-value">
+        {{this.buildCpu}}
+      </span>
+      <span class="banner-label">
+        CPU
+      </span>
+      <span class="banner-value">
+        {{this.buildMemory}}
+      </span>
+      <span class="banner-label">
+        Memory
+      </span>
+      <span class="banner-value">
+        {{this.buildCost}}
+      </span>
+      <span class="banner-label">
+        Cost
+      </span>
+    </li>
+  {{/if}}
+
   <li class="call-to-action button-right">
     {{#if this.isAuthenticated}}
       <BsButton
