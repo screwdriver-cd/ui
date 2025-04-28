@@ -224,7 +224,9 @@ export default class PipelineWorkflowComponent extends Component {
       workflowGraph,
       this.pipelinePageState.getTriggers()
     );
-    this.workflowGraphToDisplay = this.workflowGraph;
+    this.workflowGraphToDisplay = this.showDownstreamTriggers
+      ? this.workflowGraphWithDownstreamTriggers
+      : this.workflowGraph;
   }
 
   @action
