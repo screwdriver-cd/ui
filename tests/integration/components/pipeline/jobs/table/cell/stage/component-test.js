@@ -9,11 +9,9 @@ module(
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
-      const job = { id: 123, name: 'main' };
-
       this.setProperties({
         record: {
-          job
+          job: { id: 123, name: 'main' }
         }
       });
 
@@ -23,7 +21,24 @@ module(
         />`
       );
 
-      assert.dom('.stage-cell').hasText('N/A');
+      assert.dom('.stage-cell').hasText('');
+    });
+
+    test('it renders stage name', async function (assert) {
+      this.setProperties({
+        record: {
+          job: { id: 123, name: 'main' },
+          stageName: 'test'
+        }
+      });
+
+      await render(
+        hbs`<Pipeline::Jobs::Table::Cell::Stage
+            @record={{this.record}}
+        />`
+      );
+
+      assert.dom('.stage-cell').hasText('test');
     });
   }
 );
