@@ -6,6 +6,7 @@ import { isComplete, isSkipped } from 'screwdriver-ui/utils/pipeline/event';
 import { getDisplayJobNameLength, getWorkflowGraph } from './util';
 import { extractEventStages } from '../../../utils/graph-tools';
 
+const PR_CLOSED_EVENT = '~pr-closed';
 const BUILD_QUEUE_NAME = 'graph';
 const STAGE_BUILD_QUEUE_NAME = 'stageBuilds';
 const LATEST_COMMIT_EVENT_QUEUE_NAME = 'latestCommitEvent';
@@ -261,6 +262,10 @@ export default class PipelineWorkflowComponent extends Component {
     return this.pipelinePageState.getIsPr();
   }
 
+  get isPRClosed() {
+    return this.event?.startFrom === PR_CLOSED_EVENT;
+  }
+
   get eventRailAnchor() {
     return this.args.invalidEvent ? this.latestEvent : this.event;
   }
@@ -277,7 +282,7 @@ export default class PipelineWorkflowComponent extends Component {
   }
 
   get hasPrRestrictions() {
-    if (!this.isPR) {
+    if (!this.isPR && !this.isPRClosed) {
       return false;
     }
 

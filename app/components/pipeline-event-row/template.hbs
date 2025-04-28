@@ -51,9 +51,15 @@
     <div class="date greyOut">
       Started {{this.startDate.content}}
     </div>
-    <span class="message" title={{this.event.commit.message}}>
+    {{#if (eq this.event.startFrom "~pr-closed")}}
+      <span class="message" title={{this.event.causeMessage}}>
+        {{this.event.causeMessage}}
+      </span>
+    {{else}}
+      <span class="message" title={{this.event.commit.message}}>
       {{this.event.truncatedMessage}}
-    </span>
+      </span>
+    {{/if}}
     <div class="by">
       {{#if this.isCommitterDifferent}}
         <span>
