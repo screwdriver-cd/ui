@@ -21,6 +21,10 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @tracked firstItemId;
 
+  @tracked showCards = false;
+
+  collectionApi;
+
   prNums;
 
   newestEvent = null;
@@ -33,14 +37,6 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     super(...arguments);
 
     this.prNums = this.args.prNums;
-
-    const { event } = this.args;
-
-    if (event) {
-      this.firstItemId = event.id;
-      this.newestEvent = event;
-      this.events = [event];
-    }
   }
 
   willDestroy() {
@@ -61,18 +57,49 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   }
 
   @action
+  async initialize() {
+    const { event } = this.args;
+
+    if (event) {
+      await this.fetchNeighborEvents(event).then(() => {
+        this.firstItemId = String(event.id);
+        this.showCards = true;
+      });
+    }
+  }
+
+  @action
   update(element, [event, reloadEvents]) {
     if (reloadEvents) {
-      this.firstItemId = event.id;
-      this.newestEvent = event;
-      this.events = [event];
       this.oldestEvent = null;
 
       if (this.intervalId) {
         clearInterval(this.intervalId);
         this.intervalId = null;
       }
+
+      this.fetchNeighborEvents(event).then(index => {
+        setTimeout(() => {
+          this.collectionApi?.scrollToItem(index);
+        }, 100);
+      });
     }
+  }
+
+  async fetchNeighborEvents(event) {
+    if (!event) {
+      return Promise.resolve();
+    }
+
+    return Promise.all([
+      this.fetchNewerEvents(event),
+      this.fetchOlderEvents(event)
+    ]).then(([newerEvents, olderEvents]) => {
+      this.events = [...newerEvents, event, ...olderEvents];
+      this.newestEvent = this.events[0];
+
+      return newerEvents.length;
+    });
   }
 
   async fetchEvents(event, direction) {
@@ -141,7 +168,8 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     });
   }
 
-  @action addNewerEvents(event) {
+  @action
+  addNewerEvents(event) {
     this.fetchNewerEvents(event).then(newerEvents => {
       if (newerEvents.length > 0) {
         this.events = newerEvents.concat(this.events);
@@ -158,12 +186,18 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     });
   }
 
-  @action addOlderEvents(event) {
+  @action
+  addOlderEvents(event) {
     this.fetchOlderEvents(event).then(olderEvents => {
       if (olderEvents.length > 0) {
         this.events = this.events.concat(olderEvents);
       }
     });
+  }
+
+  @action
+  registerApi(api) {
+    this.collectionApi = api;
   }
 
   get isSearchDisabled() {
