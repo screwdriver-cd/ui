@@ -1,5 +1,6 @@
 <div
   id="event-rail"
+  {{did-insert this.initialize}}
   {{did-update this.update @event @reloadEvents}}
 >
   <div id="event-rail-actions">
@@ -37,23 +38,27 @@
   </div>
 
   <div id="event-cards-container">
-    <VerticalCollection
-      @items={{this.events}}
-      @estimateHeight={{150}}
-      @idForFirstItem={{this.firstItemId}}
-      @firstReached={{this.addNewerEvents}}
-      @lastReached={{this.addOlderEvents}}
-      as |event|
-    >
-      <Pipeline::Event::Card
-        @event={{event}}
-        @userSettings={{@userSettings}}
-        @queueName="eventRail"
-        @allowEventAction={{true}}
-        @showParameters={{true}}
-        @showEventGroup={{true}}
-        @handleFilter={{true}}
-      />
-    </VerticalCollection>
+    {{#if this.showCards}}
+      <VerticalCollection
+        @items={{this.events}}
+        @estimateHeight={{150}}
+        @key={{"id"}}
+        @idForFirstItem={{this.firstItemId}}
+        @firstReached={{this.addNewerEvents}}
+        @lastReached={{this.addOlderEvents}}
+        @registerAPI={{this.registerApi}}
+        as |event|
+      >
+        <Pipeline::Event::Card
+          @event={{event}}
+          @userSettings={{@userSettings}}
+          @queueName="eventRail"
+          @allowEventAction={{true}}
+          @showParameters={{true}}
+          @showEventGroup={{true}}
+          @handleFilter={{true}}
+        />
+      </VerticalCollection>
+    {{/if}}
   </div>
 </div>
