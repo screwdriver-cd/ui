@@ -101,8 +101,12 @@ module(
 
     test('it closes modal with correct argument', async function (assert) {
       const closeModalSpy = sinon.spy();
+      const updatedSecret = {
+        name: 'TEST',
+        allowInPR: true
+      };
 
-      sinon.stub(shuttle, 'fetchFromApi').resolves({});
+      sinon.stub(shuttle, 'fetchFromApi').resolves(updatedSecret);
 
       this.setProperties({
         closeModal: closeModalSpy
@@ -119,7 +123,7 @@ module(
 
       assert.dom('#submit-secret').isDisabled();
       assert.true(closeModalSpy.calledOnce);
-      assert.equal(closeModalSpy.calledWith(true), true);
+      assert.equal(closeModalSpy.calledWith(updatedSecret), true);
     });
   }
 );
