@@ -84,7 +84,7 @@
 
   <div class="event-card-body">
    
-    {{#if (eq this.event.startFrom "~pr-closed")}}
+    {{#if (starts-with this.event.startFrom "~pr-closed")}}
       <div class="message" title={{this.event.causeMessage}}>
         {{this.event.causeMessage}}
       </div>
