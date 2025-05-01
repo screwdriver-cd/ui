@@ -1,8 +1,11 @@
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { service } from '@ember/service';
 
 export default class TokensTableCellActionsComponent extends Component {
+  @service('tokens') tokensService;
+
   @tracked isEditTokenModalOpen;
 
   @tracked isRefreshTokenModalOpen;
@@ -27,7 +30,8 @@ export default class TokensTableCellActionsComponent extends Component {
     this.isEditTokenModalOpen = false;
 
     if (updatedToken) {
-      this.args.record.onUpdated(updatedToken);
+      this.tokensService.updateToken(updatedToken);
+      this.args.record.onSuccess();
     }
   }
 
@@ -51,7 +55,8 @@ export default class TokensTableCellActionsComponent extends Component {
     this.isDeleteTokenModalOpen = false;
 
     if (deletedToken) {
-      this.args.record.onDeleted(deletedToken);
+      this.tokensService.deleteToken(deletedToken);
+      this.args.record.onSuccess();
     }
   }
 }

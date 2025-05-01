@@ -7,6 +7,8 @@ import _ from 'lodash';
 export default class TokensComponent extends Component {
   @service shuttle;
 
+  @service('tokens') tokensService;
+
   @service pipelinePageState;
 
   @tracked errorMessage;
@@ -23,6 +25,16 @@ export default class TokensComponent extends Component {
     this.isCreateTokenButtonDisabled = true;
     this.isCreateTokenModalOpen = false;
     this.tokens = [];
+
+    this.tokensService
+      .fetchTokens(this.pipelinePageState.getPipelineId())
+      .then(() => {
+        this.isCreateTokenButtonDisabled = false;
+        this.tokens = this.tokensService.tokens;
+      })
+      .catch(errorMessage => {
+        this.errorMessage = errorMessage;
+      });
   }
 
   get type() {
@@ -32,22 +44,6 @@ export default class TokensComponent extends Component {
 
   get scope() {
     return this.args.type === 'pipeline' ? 'this pipeline' : 'your account';
-  }
-
-  @action
-  async fetchTokens() {
-    const pipelineId = this.pipelinePageState.getPipelineId();
-    const url = pipelineId ? `/pipelines/${pipelineId}/tokens` : '/tokens';
-
-    await this.shuttle
-      .fetchFromApi('get', url)
-      .then(tokens => {
-        this.tokens = tokens;
-        this.isCreateTokenButtonDisabled = false;
-      })
-      .catch(err => {
-        this.errorMessage = err.message;
-      });
   }
 
   @action

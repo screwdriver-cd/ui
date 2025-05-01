@@ -8,6 +8,8 @@ export default class TokensModalCreateComponent extends Component {
 
   @service pipelinePageState;
 
+  @service('tokens') tokensService;
+
   @tracked errorMessage;
 
   @tracked tokenName;
@@ -22,19 +24,16 @@ export default class TokensModalCreateComponent extends Component {
 
   @tracked newToken;
 
-  tokenNames;
-
   constructor() {
     super(...arguments);
 
     this.isAwaitingResponse = false;
     this.wasActionSuccessful = false;
     this.isCopyButtonDisabled = false;
-    this.tokenNames = this.args.tokens.map(token => token.name);
   }
 
   isTokenNameInvalid() {
-    return this.tokenNames.includes(this.tokenName);
+    return this.tokensService.tokenNames.includes(this.tokenName);
   }
 
   get inputClass() {
@@ -80,6 +79,7 @@ export default class TokensModalCreateComponent extends Component {
       })
       .then(response => {
         this.newToken = response;
+        this.tokensService.addToken(response);
         this.wasActionSuccessful = true;
       })
       .catch(err => {
