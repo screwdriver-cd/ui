@@ -1,7 +1,4 @@
-<div
-  class="tokens-container"
-  {{did-insert this.fetchTokens}}
->
+<div class="tokens-container">
   {{#if this.errorMessage}}
     <InfoMessage
       id="error-message"
@@ -38,7 +35,6 @@
         {{#if this.isCreateTokenModalOpen}}
           <Tokens::Modal::Create
             @type={{@type}}
-            @tokens={{this.tokens}}
             @closeModal={{this.closeCreateTokenModal}}
           />
         {{/if}}

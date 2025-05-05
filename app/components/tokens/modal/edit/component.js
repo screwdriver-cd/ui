@@ -6,6 +6,8 @@ import { service } from '@ember/service';
 export default class TokensModalEditComponent extends Component {
   @service shuttle;
 
+  @service('tokens') tokensService;
+
   @service pipelinePageState;
 
   @tracked errorMessage;
@@ -23,11 +25,10 @@ export default class TokensModalEditComponent extends Component {
 
     this.isAwaitingResponse = false;
     this.wasActionSuccessful = false;
-    this.tokenNames = this.args.token.tokens.map(token => token.name);
   }
 
   isTokenNameInvalid() {
-    return this.tokenNames.includes(this.tokenName);
+    return this.tokensService.tokenNames.includes(this.tokenName);
   }
 
   get inputClass() {

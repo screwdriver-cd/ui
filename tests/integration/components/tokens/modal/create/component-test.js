@@ -9,24 +9,26 @@ module('Integration | Component | tokens/modal/create', function (hooks) {
 
   let shuttle;
 
+  let tokensService;
+
   hooks.beforeEach(function () {
     const pipelinePageState = this.owner.lookup('service:pipelinePageState');
 
     shuttle = this.owner.lookup('service:shuttle');
+    tokensService = this.owner.lookup('service:tokens');
 
     sinon.stub(pipelinePageState, 'getPipelineId').returns(1);
+    tokensService.tokenNames = [];
   });
 
   test('it renders', async function (assert) {
     this.setProperties({
-      tokens: [],
       closeModal: () => {}
     });
 
     await render(
       hbs`<Tokens::Modal::Create
         @type="pipeline"
-        @tokens={{this.tokens}}
         @closeModal={{this.closeModal}}
       />`
     );
@@ -43,7 +45,7 @@ module('Integration | Component | tokens/modal/create', function (hooks) {
     await render(
       hbs`<Tokens::Modal::Create
         @type="user"
-        @tokens={{this.tokens}}
+        @tokenNames={{this.tokenNames}}
         @closeModal={{this.closeModal}}
       />`
     );
@@ -52,15 +54,15 @@ module('Integration | Component | tokens/modal/create', function (hooks) {
   });
 
   test('it sets invalid class on invalid input', async function (assert) {
+    tokensService.tokenNames = ['test'];
+
     this.setProperties({
-      tokens: [{ name: 'test' }],
       closeModal: () => {}
     });
 
     await render(
       hbs`<Tokens::Modal::Create
         @type="pipeline"
-        @tokens={{this.tokens}}
         @closeModal={{this.closeModal}}
       />`
     );
@@ -71,15 +73,15 @@ module('Integration | Component | tokens/modal/create', function (hooks) {
   });
 
   test('it enables submit button when token name is valid', async function (assert) {
+    tokensService.tokenNames = ['test'];
+
     this.setProperties({
-      tokens: [{ name: 'test' }],
       closeModal: () => {}
     });
 
     await render(
       hbs`<Tokens::Modal::Create
         @type="pipeline"
-        @tokens={{this.tokens}}
         @closeModal={{this.closeModal}}
       />`
     );
@@ -93,14 +95,12 @@ module('Integration | Component | tokens/modal/create', function (hooks) {
     sinon.stub(shuttle, 'fetchFromApi').rejects({ message: 'error' });
 
     this.setProperties({
-      tokens: [],
       closeModal: () => {}
     });
 
     await render(
       hbs`<Tokens::Modal::Create
         @type="pipeline"
-        @tokens={{this.tokens}}
         @closeModal={{this.closeModal}}
       />`
     );
@@ -115,30 +115,36 @@ module('Integration | Component | tokens/modal/create', function (hooks) {
   test('it handles API success correctly', async function (assert) {
     const closeModalSpy = sinon.spy();
     const newToken = {
+      name: 'new-token',
       value: 'token-value'
     };
 
     sinon.stub(shuttle, 'fetchFromApi').resolves(newToken);
 
     this.setProperties({
-      tokens: [],
       closeModal: closeModalSpy
     });
 
     await render(
       hbs`<Tokens::Modal::Create
         @type="pipeline"
-        @tokens={{this.tokens}}
         @closeModal={{this.closeModal}}
       />`
     );
     await fillIn('#token-name-input', 'new-token');
+
+    assert.equal(tokensService.tokens.length, 0);
+    assert.equal(tokensService.tokenNames.length, 0);
+
     await click('#submit-token');
 
     assert.dom('#submit-token').isDisabled();
     assert.dom('#error-message').doesNotExist();
     assert.dom('#success-container').exists({ count: 1 });
     assert.dom('#success-container .token-value').hasText(newToken.value);
+
+    assert.equal(tokensService.tokens.length, 1);
+    assert.equal(tokensService.tokenNames.length, 1);
 
     await click('.modal-header .close');
     assert.true(closeModalSpy.calledOnce);

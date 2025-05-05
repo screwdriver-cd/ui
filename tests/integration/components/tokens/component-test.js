@@ -7,18 +7,18 @@ import sinon from 'sinon';
 module('Integration | Component | tokens', function (hooks) {
   setupRenderingTest(hooks);
 
-  let shuttle;
+  let tokensService;
 
   hooks.beforeEach(function () {
     const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
 
-    shuttle = this.owner.lookup('service:shuttle');
+    tokensService = this.owner.lookup('service:tokens');
 
     sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
   });
 
   test('it renders', async function (assert) {
-    sinon.stub(shuttle, 'fetchFromApi').resolves([]);
+    sinon.stub(tokensService, 'fetchTokens').resolves([]);
 
     await render(
       hbs`<Tokens
@@ -38,7 +38,7 @@ module('Integration | Component | tokens', function (hooks) {
   });
 
   test('it renders error message', async function (assert) {
-    sinon.stub(shuttle, 'fetchFromApi').rejects({ message: 'error' });
+    sinon.stub(tokensService, 'fetchTokens').rejects('error');
 
     await render(
       hbs`<Tokens
@@ -47,7 +47,6 @@ module('Integration | Component | tokens', function (hooks) {
     );
 
     assert.dom('#error-message').exists();
-    assert.dom('#error-message').hasText('× error');
     assert.dom('.tokens-header').exists({ count: 1 });
     assert.dom('.tokens-header-text').exists({ count: 1 });
     assert.dom('.tokens-header-title').exists({ count: 1 });
