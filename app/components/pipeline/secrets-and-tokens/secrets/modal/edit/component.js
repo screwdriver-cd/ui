@@ -42,14 +42,14 @@ export default class PipelineSecretsAndTokensModalEditComponent extends Componen
     this.isAwaitingResponse = true;
 
     return this.shuttle
-      .fetchFromApi('PUT', `/secrets/${this.args.secret.id}`, {
-        value: '',
+      .fetchFromApi('put', `/secrets/${this.args.secret.id}`, {
+        value: this.secretValue,
         allowInPR: this.allowInPr
       })
-      .then(() => {
+      .then(response => {
         this.wasActionSuccessful = true;
         if (this.allowInPr !== this.args.secret.allowInPr) {
-          this.args.closeModal(this.allowInPr);
+          this.args.closeModal(response);
         } else {
           this.args.closeModal();
         }
