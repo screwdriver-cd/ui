@@ -11,6 +11,7 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
 
   hooks.beforeEach(function () {
     const pipelinePageState = this.owner.lookup('service:pipelinePageState');
+    const tokensService = this.owner.lookup('service:tokens');
 
     shuttle = this.owner.lookup('service:shuttle');
 
@@ -19,11 +20,12 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     this.setProperties({
       token: {
         name: 'test',
-        type: 'pipeline',
-        tokens: [{ name: 'exists' }]
+        type: 'pipeline'
       },
       closeModal: () => {}
     });
+
+    tokensService.tokenNames = ['exists'];
   });
 
   test('it renders', async function (assert) {
