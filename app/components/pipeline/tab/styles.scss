@@ -4,21 +4,19 @@
 @mixin styles {
   #pipeline-tab {
     display: flex;
+    align-items: center;
     height: variables.$pipeline-tab-height;
 
     ul {
-      margin-top: auto;
-      margin-bottom: auto;
       border: none;
 
       li {
-        border-bottom: 0.2rem solid colors.$sd-white;
         padding-left: 1rem;
         padding-right: 1rem;
         text-align: center;
 
         &.active {
-          border-bottom-color: colors.$sd-link;
+          border-bottom: 0.2rem solid colors.$sd-link;
         }
 
         a {
