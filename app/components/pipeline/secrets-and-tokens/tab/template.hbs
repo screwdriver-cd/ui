@@ -1,0 +1,18 @@
+<div id="secrets-and-tokens-tab">
+  <BsNav @type="tabs" as |nav|>
+    <nav.item
+      id="secrets-tab"
+      class={{if (eq this.activeTab "secrets") "active"}}
+      onClick={{fn this.setActiveTab "secrets"}}
+    >
+      Secrets
+    </nav.item>
+    <nav.item
+      id="tokens-tab"
+      class={{if (eq this.activeTab "tokens") "active"}}
+      onClick={{fn this.setActiveTab "tokens"}}
+    >
+      Tokens
+    </nav.item>
+  </BsNav>
+</div>
