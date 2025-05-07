@@ -16,6 +16,11 @@
     background-color: $grey-800;
     border-color: $grey-800;
     height: $app-header-height;
+
+    @media screen and (max-width: 992px) {
+      min-height: $app-header-height;
+      height: unset;
+    }
   }
 
   .navbar-dark .navbar-nav .nav-link {
