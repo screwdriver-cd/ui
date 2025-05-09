@@ -4,9 +4,11 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 export default class PipelineSecretsAndTokensModalCreateComponent extends Component {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
+
+  @service('pipeline-secrets') pipelineSecrets;
 
   @tracked errorMessage;
 
@@ -20,22 +22,19 @@ export default class PipelineSecretsAndTokensModalCreateComponent extends Compon
 
   @tracked allowInPr;
 
-  secretNames;
-
   constructor() {
     super(...arguments);
 
     this.isAwaitingResponse = false;
     this.wasActionSuccessful = false;
     this.allowInPr = false;
-    this.secretNames = this.args.secrets.map(secret => secret.name);
   }
 
   isSecretNameInvalid() {
     const secretNameRegex = /^[A-Z][A-Z_]*$/;
 
     return this.secretName
-      ? this.secretNames.includes(this.secretName) ||
+      ? this.pipelineSecrets.secretNames.includes(this.secretName) ||
           secretNameRegex.test(this.secretName) === false
       : false;
   }

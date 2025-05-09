@@ -11,23 +11,26 @@ module(
 
     let shuttle;
 
+    let pipelineSecrets;
+
     hooks.beforeEach(function () {
       const pipelinePageState = this.owner.lookup('service:pipelinePageState');
 
+      pipelineSecrets = this.owner.lookup('service:pipelineSecrets');
       shuttle = this.owner.lookup('service:shuttle');
 
       sinon.stub(pipelinePageState, 'getPipelineId').returns(1);
+
+      pipelineSecrets.secretNames = [];
     });
 
     test('it renders', async function (assert) {
       this.setProperties({
-        secrets: [],
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::SecretsAndTokens::Secrets::Modal::Create
-          @secrets={{this.secrets}}
           @closeModal={{this.closeModal}}
         />`
       );
@@ -44,14 +47,14 @@ module(
     });
 
     test('it sets invalid class on invalid input', async function (assert) {
+      pipelineSecrets.secretNames.push('TEST');
+
       this.setProperties({
-        secrets: [{ name: 'TEST' }],
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::SecretsAndTokens::Secrets::Modal::Create
-            @secrets={{this.secrets}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -69,13 +72,11 @@ module(
 
     test('it enables submit button when secret name is valid and value is not blank', async function (assert) {
       this.setProperties({
-        secrets: [],
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::SecretsAndTokens::Secrets::Modal::Create
-            @secrets={{this.secrets}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -93,13 +94,11 @@ module(
       sinon.stub(shuttle, 'fetchFromApi').rejects({ message: 'error' });
 
       this.setProperties({
-        secrets: [],
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::SecretsAndTokens::Secrets::Modal::Create
-          @secrets={{this.secrets}}
           @closeModal={{this.closeModal}}
         />`
       );
@@ -121,13 +120,11 @@ module(
       sinon.stub(shuttle, 'fetchFromApi').resolves(newSecret);
 
       this.setProperties({
-        secrets: [],
         closeModal: closeModalSpy
       });
 
       await render(
         hbs`<Pipeline::SecretsAndTokens::Secrets::Modal::Create
-          @secrets={{this.secrets}}
           @closeModal={{this.closeModal}}
         />`
       );
