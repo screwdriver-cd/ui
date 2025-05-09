@@ -367,12 +367,14 @@ export default class PipelineWorkflowComponent extends Component {
   isEventInAws(builds) {
     this.isBuildClusterAws = false;
 
-    builds.forEach(() => {
+    if (builds) {
       // TODO: See if this is the best way to check if a build is in AWS
+      // builds.forEach(() => {
       // if (build.buildClusterName.startsWith('aws')) {
       //   this.isBuildClusterAws = true;
       // }
-    });
+      // });
+    }
   }
 
   @action
