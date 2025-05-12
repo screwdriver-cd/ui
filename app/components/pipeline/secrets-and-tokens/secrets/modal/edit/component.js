@@ -4,7 +4,9 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 export default class PipelineSecretsAndTokensModalEditComponent extends Component {
-  @service shuttle;
+  @service('shuttle') shuttle;
+
+  @service('pipeline-page-state') pipelinePageState;
 
   @tracked errorMessage;
 
@@ -16,12 +18,40 @@ export default class PipelineSecretsAndTokensModalEditComponent extends Componen
 
   @tracked allowInPr;
 
+  isOverride;
+
   constructor() {
     super(...arguments);
 
     this.isAwaitingResponse = false;
     this.wasActionSuccessful = false;
-    this.allowInPr = this.args.secret.allowInPr;
+
+    const { secret } = this.args;
+
+    this.allowInPr = secret.allowInPr;
+    this.isOverride = secret.inherited && !secret.overridden;
+  }
+
+  get headerText() {
+    const { name } = this.args.secret;
+
+    if (this.isOverride) {
+      return `Override inherited secret: ${name}`;
+    }
+
+    return `Edit secret ${name}`;
+  }
+
+  get submitButtonDefaultText() {
+    const editAction = this.isOverride ? 'Override' : 'Update';
+
+    return `${editAction} secret`;
+  }
+
+  get submitButtonPendingText() {
+    const editAction = this.isOverride ? 'Overriding' : 'Updating';
+
+    return `${editAction} secret...`;
   }
 
   @action
@@ -34,6 +64,10 @@ export default class PipelineSecretsAndTokensModalEditComponent extends Componen
       return true;
     }
 
+    if (this.isOverride) {
+      return !this.secretValue;
+    }
+
     return !this.secretValue && this.allowInPr === this.args.secret.allowInPr;
   }
 
@@ -41,14 +75,28 @@ export default class PipelineSecretsAndTokensModalEditComponent extends Componen
   async editSecret() {
     this.isAwaitingResponse = true;
 
+    const method = this.isOverride ? 'post' : 'put';
+    const url = this.isOverride
+      ? '/secrets'
+      : `/secrets/${this.args.secret.id}`;
+    const payload = {
+      value: this.secretValue,
+      allowInPR: this.allowInPr
+    };
+
+    if (this.isOverride) {
+      payload.pipelineId = this.pipelinePageState.getPipelineId();
+      payload.name = this.args.secret.name;
+    }
+
     return this.shuttle
-      .fetchFromApi('put', `/secrets/${this.args.secret.id}`, {
-        value: this.secretValue,
-        allowInPR: this.allowInPr
-      })
+      .fetchFromApi(method, url, payload)
       .then(response => {
         this.wasActionSuccessful = true;
-        if (this.allowInPr !== this.args.secret.allowInPr) {
+
+        if (this.isOverride) {
+          this.args.closeModal(response);
+        } else if (this.allowInPr !== this.args.secret.allowInPr) {
           this.args.closeModal(response);
         } else {
           this.args.closeModal();
