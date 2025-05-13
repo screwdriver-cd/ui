@@ -61,6 +61,14 @@ export default Component.extend({
     });
   },
 
+  stoppableEventStatus: computed('event.status', {
+    get() {
+      const eventStatus = this.get('event.status');
+
+      return eventStatus !== 'UNKNOWN' && eventStatus !== 'CREATED';
+    }
+  }),
+
   numberOfParameters: computed(
     'pipelineParameters',
     'jobParameters',
