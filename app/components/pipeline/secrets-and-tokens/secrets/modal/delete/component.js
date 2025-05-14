@@ -4,7 +4,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 export default class PipelineSecretsAndTokensModalDeleteComponent extends Component {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
   @tracked errorMessage;
 
@@ -21,12 +21,42 @@ export default class PipelineSecretsAndTokensModalDeleteComponent extends Compon
     this.wasActionSuccessful = false;
   }
 
+  isSecretOverridden() {
+    return this.args.secret.overridden;
+  }
+
+  getSecretName() {
+    return this.args.secret.name;
+  }
+
+  get modalHeader() {
+    return this.isSecretOverridden()
+      ? `Revert overridden secret value for ${this.getSecretName()}`
+      : `Delete secret ${this.getSecretName()}`;
+  }
+
   get isSubmitButtonDisabled() {
     if (this.wasActionSuccessful || this.isAwaitingResponse) {
       return true;
     }
 
-    return this.secretName !== this.args.secret.name;
+    return this.secretName !== this.getSecretName();
+  }
+
+  get deleteSecretNote() {
+    return this.isSecretOverridden()
+      ? `Reverts the secret value to the inherited value`
+      : 'Deleting this secret is permanent!';
+  }
+
+  get buttonDefaultText() {
+    return this.isSecretOverridden() ? 'Revert secret' : 'Delete secret';
+  }
+
+  get buttonPendingText() {
+    return this.isSecretOverridden()
+      ? 'Reverting secret...'
+      : 'Deleting secret...';
   }
 
   @action
