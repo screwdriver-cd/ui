@@ -1,0 +1,31 @@
+@use 'variables' as variables;
+@use 'secrets/styles' as secrets;
+@use 'tab/styles' as tab;
+@use 'secrets/modal/create/styles' as modalCreate;
+@use 'secrets/modal/delete/styles' as modalDelete;
+@use 'secrets/modal/edit/styles' as modalEdit;
+
+@mixin styles {
+  @include modalCreate.styles;
+  @include modalDelete.styles;
+  @include modalEdit.styles;
+
+  #secrets-and-tokens {
+    height: 100%;
+
+    $pipeline-tab-height: variables.$pipeline-tab-height;
+
+    @include tab.styles;
+
+    #secrets-and-tokens-tab {
+      height: $pipeline-tab-height;
+    }
+
+    #secrets-and-tokens-container {
+      height: calc(100% - $pipeline-tab-height);
+      overflow: auto;
+
+      @include secrets.styles;
+    }
+  }
+}

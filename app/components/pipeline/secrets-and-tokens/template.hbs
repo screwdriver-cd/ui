@@ -1,0 +1,21 @@
+<div
+  id="secrets-and-tokens"
+  {{did-update this.updatePipeline @pipelineId}}
+>
+  <Pipeline::SecretsAndTokens::Tab
+    @activeTab={{this.activeTab}}
+    @onTabChange={{this.setActiveTab}}
+  />
+
+  <div id="secrets-and-tokens-container">
+    {{#if (eq this.activeTab "secrets")}}
+      <Pipeline::SecretsAndTokens::Secrets
+        @pipelineId={{this.pipelineId}}
+      />
+    {{else}}
+      <Tokens
+        @type="pipeline"
+      />
+    {{/if}}
+  </div>
+</div>
