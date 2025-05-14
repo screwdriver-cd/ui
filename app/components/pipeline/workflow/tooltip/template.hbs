@@ -6,6 +6,7 @@
         id="remote-pipeline-link"
         @route="v2.pipeline"
         @model={{this.tooltipData.externalTrigger.pipelineId}}
+        target="_blank"
       >
         Go to remote pipeline
       </LinkTo>
@@ -15,6 +16,7 @@
           class="downstream-pipeline-link"
           @route="v2.pipeline"
           @model={{t.pipelineId}}
+          target="_blank"
         >
           Go to downstream pipeline {{t.triggerName}}
         </LinkTo>
