@@ -7,15 +7,17 @@ import ENV from 'screwdriver-ui/config/environment';
 const EVENT_BATCH_SIZE = 10;
 
 export default class PipelineWorkflowEventRailComponent extends Component {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service workflowDataReload;
+  @service('workflow-data-reload') workflowDataReload;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
   @tracked showSearchEventModal = false;
 
   @tracked showStartEventModal = false;
+
+  @tracked showSyncPrModal = false;
 
   @tracked events;
 
@@ -122,12 +124,16 @@ export default class PipelineWorkflowEventRailComponent extends Component {
             `/pipelines/${pipeline.id}/events?type=${this.eventType}&prNum=${prNumToFetch}`
           )
           .then(events => {
+            if (events.length === 0) {
+              this.showSyncPrModal = true;
+            }
+
             return events[0];
           });
       });
 
       return Promise.all(promises).then(events => {
-        return events;
+        return events.filter(eventToFilter => !!eventToFilter);
       });
     }
 
@@ -222,5 +228,10 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   @action
   closeStartEventModal() {
     this.showStartEventModal = false;
+  }
+
+  @action
+  closeSyncPrModal() {
+    this.showSyncPrModal = false;
   }
 }
