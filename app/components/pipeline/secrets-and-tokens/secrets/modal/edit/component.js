@@ -75,18 +75,23 @@ export default class PipelineSecretsAndTokensModalEditComponent extends Componen
   async editSecret() {
     this.isAwaitingResponse = true;
 
-    const method = this.isOverride ? 'post' : 'put';
-    const url = this.isOverride
-      ? '/secrets'
-      : `/secrets/${this.args.secret.id}`;
+    let method;
+
+    let url;
+
     const payload = {
       value: this.secretValue,
       allowInPR: this.allowInPr
     };
 
     if (this.isOverride) {
+      method = 'post';
+      url = '/secrets';
       payload.pipelineId = this.pipelinePageState.getPipelineId();
       payload.name = this.args.secret.name;
+    } else {
+      method = 'put';
+      url = `/secrets/${this.args.secret.id}`;
     }
 
     return this.shuttle
