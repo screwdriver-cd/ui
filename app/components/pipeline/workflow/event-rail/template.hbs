@@ -61,4 +61,10 @@
       </VerticalCollection>
     {{/if}}
   </div>
+
+  {{#if this.showSyncPrModal}}
+    <Pipeline::Workflow::EventRail::Modal::SyncPr
+      @closeModal={{this.closeSyncPrModal}}
+    />
+  {{/if}}
 </div>

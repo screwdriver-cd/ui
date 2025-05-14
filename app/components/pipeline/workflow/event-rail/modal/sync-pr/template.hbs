@@ -1,0 +1,32 @@
+<BsModal
+  id="sync-pr-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">
+      It appears that pull requests for this pipeline are out of sync
+    </div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+    Please re-sync pull requests to ensure the pipeline is up to date.
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="sync-pr-button"
+      @type="primary"
+      @defaultText="Sync"
+      @pendingText="Syncing..."
+      @onClick={{fn this.syncPr}}
+      disabled={{this.isDisabled}}
+    />
+  </modal.footer>
+</BsModal>
