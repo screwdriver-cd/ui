@@ -5,7 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
 module(
-  'Integration | Component | pipeline/workflow/event/rail',
+  'Integration | Component | pipeline/workflow/event-rail',
   function (hooks) {
     setupRenderingTest(hooks);
 
