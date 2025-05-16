@@ -20,6 +20,11 @@
       background: rgba(colors.$sd-pale-purple, 0.5);
     }
 
+    &.outlined {
+      border-width: 2px;
+      border-color: colors.$sd-running;
+    }
+
     &.filtered {
       visibility: hidden;
       height: 0;

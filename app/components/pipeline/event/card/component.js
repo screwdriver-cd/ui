@@ -26,11 +26,11 @@ import {
 export default class PipelineEventCardComponent extends Component {
   @service router;
 
-  @service workflowDataReload;
+  @service('workflow-data-reload') workflowDataReload;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
-  @service selectedPrSha;
+  @service('selected-pr-sha') selectedPrSha;
 
   @tracked event;
 
@@ -261,6 +261,16 @@ export default class PipelineEventCardComponent extends Component {
     return this.isPR
       ? isSelectedEvent && this.selectedPrSha.isEventSelected(event)
       : isSelectedEvent;
+  }
+
+  get isOutlined() {
+    const { baseEvent } = this.args;
+
+    if (!baseEvent) {
+      return false;
+    }
+
+    return this.event.id === baseEvent.id;
   }
 
   get title() {
