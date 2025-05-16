@@ -528,4 +528,31 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
     assert.dom('.highlighted').exists();
   });
+
+  test('it renders card outline', async function (assert) {
+    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
+    sinon
+      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
+      .callsFake(() => {});
+    sinon
+      .stub(workflowDataReload, 'registerBuildsCallback')
+      .callsFake((queueName, id, callback) => {
+        callback([{ status: 'SUCCESS' }]);
+      });
+
+    this.setProperties({
+      event,
+      userSettings: {}
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @baseEvent={{this.event}}
+        @userSettings={{this.userSettings}}
+      />`
+    );
+
+    assert.dom('.outlined').exists();
+  });
 });
