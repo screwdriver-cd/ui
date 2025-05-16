@@ -7,18 +7,21 @@
     <div class="modal-title">{{this.modalHeaderText}}</div>
   </modal.header>
   <modal.body>
-    <VerticalCollection
-      @items={{this.events}}
-      @estimateHeight={{150}}
-      @idForFirstItem={{@event.id}}
-      as |event|
-    >
-      <Pipeline::Event::Card
-        @event={{event}}
-        @userSettings={{@userSettings}}
-        @queueName="eventGroupModal"
-        @onClick={{fn @closeModal}}
-      />
-    </VerticalCollection>
+    {{#if this.showCards}}
+      <VerticalCollection
+        @items={{this.events}}
+        @estimateHeight={{150}}
+        @key={{"id"}}
+        @idForFirstItem={{this.eventId}}
+        as |event|
+      >
+        <Pipeline::Event::Card
+          @event={{event}}
+          @userSettings={{@userSettings}}
+          @queueName="eventGroupModal"
+          @onClick={{fn @closeModal}}
+        />
+      </VerticalCollection>
+    {{/if}}
   </modal.body>
 </BsModal>
