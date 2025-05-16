@@ -115,6 +115,11 @@ export default class PipelineWorkflowEventRailComponent extends Component {
       const openPrNums =
         direction === 'gt' ? this.prNums : this.prNums.toReversed();
       const index = openPrNums.indexOf(event.prNum);
+
+      if (index === -1) {
+        return [];
+      }
+
       const prNums = openPrNums.slice(index + 1, index + 1 + EVENT_BATCH_SIZE);
 
       const promises = prNums.map(prNumToFetch => {
