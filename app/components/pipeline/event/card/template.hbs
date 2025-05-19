@@ -1,5 +1,5 @@
 <div
-  class="event-card{{if this.isHighlighted " highlighted"}}{{if this.hideCard " filtered"}}"
+  class="event-card{{if this.isHighlighted " highlighted"}}{{if this.isOutlined " outlined"}}{{if this.hideCard " filtered"}}"
   title={{this.title}}
   {{did-insert this.initialize}}
   {{did-update this.update @event}}

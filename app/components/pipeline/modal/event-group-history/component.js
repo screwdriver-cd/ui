@@ -9,6 +9,8 @@ export default class PipelineModalEventGroupHistoryComponent extends Component {
 
   @service pipelinePageState;
 
+  @tracked showCards = false;
+
   @tracked events = [];
 
   intervalId;
@@ -39,6 +41,10 @@ export default class PipelineModalEventGroupHistoryComponent extends Component {
     return `Events in group: ${this.args.event.groupEventId}`;
   }
 
+  get eventId() {
+    return String(this.args.event.id);
+  }
+
   @action
   fetchGroupEvents() {
     const baseUrl = `/pipelines/${this.pipelinePageState.getPipelineId()}/events?`;
@@ -49,6 +55,10 @@ export default class PipelineModalEventGroupHistoryComponent extends Component {
     this.shuttle.fetchFromApi('get', url).then(events => {
       if (this.events.length < events.length) {
         this.events = events;
+
+        if (!this.showCards) {
+          this.showCards = true;
+        }
       }
     });
   }
