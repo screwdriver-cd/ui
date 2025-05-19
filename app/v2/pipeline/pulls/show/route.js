@@ -1,81 +1,68 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
 import {
-  getPrNumber,
   getPrNumbers,
   newestPrNumber
 } from 'screwdriver-ui/utils/pipeline/pull-request';
 
 export default class V2PipelinePullsShowRoute extends Route {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
-  @service selectedPrSha;
-
-  queryParams = {
-    sha: {
-      refreshModel: false
-    }
-  };
+  @service('pr-jobs') prJobs;
 
   async model(params, transition) {
     const model = this.modelFor('v2.pipeline.pulls');
-    const pipeline = this.pipelinePageState.getPipeline();
-    const pipelineId = pipeline.id;
-    const prNums = transition.data.prNums
-      ? new Set(transition.data.prNums)
-      : getPrNumbers(model.pullRequestJobs);
-    const prNum = parseInt(params.pull_request_number, 10);
-    const { sha } = params;
+    const prNums = getPrNumbers(this.prJobs.getPullRequestJobs());
 
     let latestEvent;
 
-    let event;
-
-    if (prNums.has(prNum)) {
-      const baseUrl = `/pipelines/${pipelineId}/events?prNum=${prNum}`;
-      const url = sha ? `${baseUrl}&sha=${sha}` : baseUrl;
-
-      event = await this.shuttle.fetchFromApi('get', url).then(events => {
-        return events[0];
-      });
-      latestEvent = event;
-    } else {
-      const newestPrNum = newestPrNumber(prNums);
-
-      if (newestPrNum) {
-        const baseUrl = `/pipelines/${pipelineId}/events?prNum=${newestPrNum}`;
-        const url = sha ? `${baseUrl}&sha=${sha}` : baseUrl;
-
-        latestEvent = await this.shuttle
-          .fetchFromApi('get', url)
-          .then(events => {
-            return events[0];
-          });
-      }
-    }
-
-    let jobs = [];
+    let { event } = transition.data;
 
     if (event) {
-      this.selectedPrSha.setSha(event.sha);
+      latestEvent = event;
+    } else {
+      const eventId = params.event_id;
 
-      if (!pipeline.chainPR) {
-        jobs = await this.shuttle.fetchFromApi(
-          'get',
-          `/pipelines/${pipelineId}/jobs?type=pipeline`
-        );
+      event = await this.shuttle
+        .fetchFromApi('get', `/events/${eventId}`)
+        .then(response => {
+          if (response.type === 'pr') {
+            latestEvent = response;
 
-        model.pullRequestJobs.forEach(prJob => {
-          if (getPrNumber(prJob) === prNum) {
-            jobs.push({ ...prJob, group: prNum });
+            return response;
           }
+
+          return null;
+        })
+        .catch(() => {
+          return undefined;
         });
+
+      if (!event) {
+        const newestPrNum = newestPrNumber(prNums);
+
+        if (newestPrNum) {
+          const pipelineId = this.pipelinePageState.getPipelineId();
+
+          latestEvent = await this.shuttle
+            .fetchFromApi(
+              'get',
+              `/pipelines/${pipelineId}/events?prNum=${newestPrNum}`
+            )
+            .then(events => {
+              return events[0];
+            });
+        }
       }
     }
 
-    this.pipelinePageState.setJobs(jobs);
+    if (event) {
+      await this.prJobs.setPipelineJobs();
+    }
+
+    this.prJobs.setPipelinePageStateJobs(event);
 
     return {
       ...model,

@@ -30,7 +30,7 @@ export default class PipelineEventCardComponent extends Component {
 
   @service('pipeline-page-state') pipelinePageState;
 
-  @service('selected-pr-sha') selectedPrSha;
+  @service('pr-jobs') prJobs;
 
   @tracked event;
 
@@ -227,13 +227,11 @@ export default class PipelineEventCardComponent extends Component {
         : 'v2.pipeline.events.show';
 
       if (this.isPR) {
-        this.selectedPrSha.setSha(event.sha);
+        this.prJobs.setPipelinePageStateJobs(event);
         this.router.transitionTo(route, {
           event,
           reloadEventRail: this.queueName !== 'eventRail',
-          id: event.prNum,
-          pull_request_number: event.prNum,
-          sha: event.sha
+          id: event.id
         });
       } else {
         this.router.transitionTo(route, {
@@ -254,13 +252,7 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   get isHighlighted() {
-    const { event } = this;
-    const eventId = this.isPR ? event.prNum : event.id;
-    const isSelectedEvent = this.router.currentURL.endsWith(eventId);
-
-    return this.isPR
-      ? isSelectedEvent && this.selectedPrSha.isEventSelected(event)
-      : isSelectedEvent;
+    return this.router.currentURL.endsWith(this.event.id);
   }
 
   get isOutlined() {

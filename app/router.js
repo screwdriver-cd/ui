@@ -140,7 +140,7 @@ Router.map(function route() {
         });
         this.route('jobs');
         this.route('pulls', function pullsRoute() {
-          this.route('show', { path: '/:pull_request_number' });
+          this.route('show', { path: '/:event_id' });
         });
         this.route(
           'build',
