@@ -2,9 +2,11 @@ import Route from '@ember/routing/route';
 import { service } from '@ember/service';
 
 export default class NewPipelinePullsRoute extends Route {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
+
+  @service('pr-jobs') prJobs;
 
   activate() {
     this.pipelinePageState.setIsPr(true);
@@ -34,14 +36,10 @@ export default class NewPipelinePullsRoute extends Route {
         this.pipelinePageState.setTriggers(triggers);
       });
 
-    const pullRequestJobs = await this.shuttle.fetchFromApi(
-      'get',
-      `/pipelines/${pipelineId}/jobs?type=pr`
-    );
+    await this.prJobs.setPullRequestJobs();
 
     return {
-      userSettings,
-      pullRequestJobs
+      userSettings
     };
   }
 }

@@ -11,14 +11,11 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   let workflowDataReload;
 
-  let selectedPrSha;
-
   let event;
 
   hooks.beforeEach(function () {
     router = this.owner.lookup('service:router');
     workflowDataReload = this.owner.lookup('service:workflow-data-reload');
-    selectedPrSha = this.owner.lookup('service:selected-pr-sha');
 
     event = {
       id: 11,
@@ -471,62 +468,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     );
 
     assert.dom('.event-card-title .start-event-button').exists();
-  });
-
-  test('it does not render highlight for PR', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/pulls/2');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake(() => {});
-    sinon.stub(selectedPrSha, 'isEventSelected').returns(false);
-
-    event.type = 'pr';
-    event.prNum = 4;
-
-    this.setProperties({
-      event,
-      userSettings: {}
-    });
-
-    await render(
-      hbs`<Pipeline::Event::Card
-        @event={{this.event}}
-        @userSettings={{this.userSettings}}
-      />`
-    );
-
-    assert.dom('.highlighted').doesNotExist();
-  });
-
-  test('it renders PR highlight', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/pulls/4');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake(() => {});
-    sinon.stub(selectedPrSha, 'isEventSelected').returns(true);
-
-    event.type = 'pr';
-    event.prNum = 4;
-
-    this.setProperties({
-      event,
-      userSettings: {}
-    });
-
-    await render(
-      hbs`<Pipeline::Event::Card
-        @event={{this.event}}
-        @userSettings={{this.userSettings}}
-      />`
-    );
-
-    assert.dom('.highlighted').exists();
   });
 
   test('it renders card outline', async function (assert) {
