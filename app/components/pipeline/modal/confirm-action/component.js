@@ -12,13 +12,13 @@ import {
 export default class PipelineModalConfirmActionComponent extends Component {
   @service router;
 
-  @service shuttle;
-
-  @service pipelinePageState;
-
-  @service workflowDataReload;
-
   @service session;
+
+  @service('shuttle') shuttle;
+
+  @service('pipeline-page-state') pipelinePageState;
+
+  @service('workflow-data-reload') workflowDataReload;
 
   @tracked errorMessage = null;
 
@@ -62,7 +62,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isLatestNonPrCommitEvent() {
-    return this.args.event.type === 'pr' ? true : this.isLatestCommitEvent;
+    return this.pipelinePageState.getIsPr() ? true : this.isLatestCommitEvent;
   }
 
   get isFrozen() {
@@ -113,21 +113,15 @@ export default class PipelineModalConfirmActionComponent extends Component {
       .then(event => {
         this.args.closeModal();
 
-        if (this.router.currentRouteName === 'v2.pipeline.events.show') {
-          this.router.transitionTo('v2.pipeline.events.show', {
-            event,
-            reloadEventRail: true,
-            id: event.id
-          });
-        } else if (this.router.currentRouteName === 'v2.pipeline.pulls.show') {
-          this.router.transitionTo('v2.pipeline.pulls.show', {
-            event,
-            reloadEventRail: true,
-            id: event.prNum,
-            pull_request_number: event.prNum,
-            sha: event.sha
-          });
-        }
+        const route = this.pipelinePageState.getIsPr()
+          ? 'v2.pipeline.pulls.show'
+          : 'v2.pipeline.events.show';
+
+        this.router.transitionTo(route, {
+          event,
+          reloadEventRail: true,
+          id: event.id
+        });
       })
       .catch(err => {
         this.wasActionSuccessful = false;
