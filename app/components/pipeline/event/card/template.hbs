@@ -72,7 +72,6 @@
           />
           {{#if this.showStartEventModal}}
             <Pipeline::Modal::StartEvent
-              @pipeline={{@pipeline}}
               @event={{@event}}
               @closeModal={{this.closeStartEventModal}}
             />
@@ -83,7 +82,7 @@
   </div>
 
   <div class="event-card-body">
-   
+
     {{#if (starts-with this.event.startFrom "~pr-closed")}}
       <div class="message" title={{this.event.causeMessage}}>
         {{this.event.causeMessage}}
@@ -93,7 +92,7 @@
       {{this.truncatedMessage}}
     </div>
     {{/if}}
-  
+
     {{#if this.eventLabel}}
       <div class="label">
         <div class="label-contents" title={{this.eventLabel}}>
