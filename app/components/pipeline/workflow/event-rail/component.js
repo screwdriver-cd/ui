@@ -114,7 +114,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
       const openPrNums =
         direction === 'gt' ? this.prNums : this.prNums.toReversed();
-      const index = openPrNums.indexOf(event.prNum);
+      const index = openPrNums.indexOf(parseInt(event.prNum, 10));
 
       if (index === -1) {
         return [];

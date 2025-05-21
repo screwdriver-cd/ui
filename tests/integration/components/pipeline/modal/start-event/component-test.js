@@ -82,6 +82,7 @@ module(
 
       sinon.stub(pipelinePageState, 'getPipeline').returns({});
       sinon.stub(pipelinePageState, 'getJobs').returns([]);
+      sinon.stub(pipelinePageState, 'getIsPr').returns(false);
 
       this.setProperties({
         closeModal: closeModalSpy

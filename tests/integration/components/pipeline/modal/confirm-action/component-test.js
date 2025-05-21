@@ -9,6 +9,12 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    let event;
+
+    let job;
+
+    let isPr;
+
     hooks.beforeEach(function () {
       const workflowDataReload = this.owner.lookup(
         'service:workflow-data-reload'
@@ -23,15 +29,20 @@ module(
 
       sinon.stub(pipelinePageState, 'getPipeline').returns({ id: 987 });
       sinon.stub(pipelinePageState, 'getJobs').returns([]);
+      sinon.stub(pipelinePageState, 'getIsPr').returns(isPr);
+
+      event = {
+        commit: { message: 'commit message', url: 'http://foo.com' },
+        sha: 'deadbeef0123456789'
+      };
+      job = { name: 'main' };
+      isPr = false;
     });
 
     test('it renders start action', async function (assert) {
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'deadbeef0123456789'
-        },
-        job: { name: 'main' },
+        event,
+        job,
         closeModal: () => {}
       });
       await render(
@@ -53,12 +64,11 @@ module(
     });
 
     test('it renders restart action', async function (assert) {
+      job.status = 'SUCCESS';
+
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'deadbeef0123456789'
-        },
-        job: { name: 'main', status: 'SUCCESS' },
+        event,
+        job,
         closeModal: () => {}
       });
       await render(
@@ -74,11 +84,8 @@ module(
 
     test('it renders stage name if set', async function (assert) {
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'deadbeef0123456789'
-        },
-        job: { name: 'main' },
+        event,
+        job,
         stage: { name: 'stage' },
         closeModal: () => {}
       });
@@ -97,12 +104,10 @@ module(
     });
 
     test('it renders warning message for non-latest commit event', async function (assert) {
+      event.sha = '0123456789deadbeef';
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: '0123456789deadbeef'
-        },
-        job: { name: 'main' },
+        event,
+        job,
         closeModal: () => {}
       });
       await render(
@@ -117,13 +122,11 @@ module(
     });
 
     test('it does not render warning message for pr commit event', async function (assert) {
+      isPr = true;
+
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'deadbeef0123456789',
-          type: 'pr'
-        },
-        job: { name: 'main' },
+        event,
+        job,
         closeModal: () => {}
       });
       await render(
@@ -138,12 +141,11 @@ module(
     });
 
     test('it renders reason input for frozen job', async function (assert) {
+      job.status = 'FROZEN';
+
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'deadbeef0123456789'
-        },
-        job: { name: 'main', status: 'FROZEN' },
+        event,
+        job,
         closeModal: () => {}
       });
       await render(
@@ -160,17 +162,15 @@ module(
     });
 
     test('it renders parameter input for parameterized job', async function (assert) {
+      event.meta = {
+        parameters: {
+          param1: { value: 'abc' }
+        }
+      };
+
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'deadbeef0123456789',
-          meta: {
-            parameters: {
-              param1: { value: 'abc' }
-            }
-          }
-        },
-        job: { name: 'main' },
+        event,
+        job,
         closeModal: () => {}
       });
       await render(
@@ -205,12 +205,11 @@ module(
     });
 
     test('it enables submit button when reason is provided for frozen job', async function (assert) {
+      job.status = 'FROZEN';
+
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'deadbeef0123456789'
-        },
-        job: { name: 'main', status: 'FROZEN' },
+        event,
+        job,
         closeModal: () => {}
       });
       await render(
@@ -232,11 +231,8 @@ module(
       const closeModalSpy = sinon.spy();
 
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'deadbeef0123456789'
-        },
-        job: { name: 'main' },
+        event,
+        job,
         closeModal: closeModalSpy
       });
 
@@ -265,11 +261,8 @@ module(
         .rejects({ message: errorMessage });
 
       this.setProperties({
-        event: {
-          commit: { message: 'commit message', url: 'http://foo.com' },
-          sha: 'deadbeef0123456789'
-        },
-        job: { name: 'main' },
+        event,
+        job,
         closeModal: () => {}
       });
 

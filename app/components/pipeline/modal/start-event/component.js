@@ -11,11 +11,11 @@ import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
 export default class PipelineModalStartEventComponent extends Component {
   @service router;
 
-  @service shuttle;
-
   @service session;
 
-  @service pipelinePageState;
+  @service('shuttle') shuttle;
+
+  @service('pipeline-page-state') pipelinePageState;
 
   @tracked errorMessage = null;
 
@@ -79,21 +79,15 @@ export default class PipelineModalStartEventComponent extends Component {
       .then(event => {
         this.args.closeModal();
 
-        if (this.router.currentRouteName === 'v2.pipeline.events.show') {
-          this.router.transitionTo('v2.pipeline.events.show', {
-            event,
-            reloadEventRail: true,
-            id: event.id
-          });
-        } else if (this.router.currentRouteName === 'v2.pipeline.pulls.show') {
-          this.router.transitionTo('v2.pipeline.pulls.show', {
-            event,
-            reloadEventRail: true,
-            id: event.prNum,
-            pull_request_number: event.prNum,
-            sha: event.sha
-          });
-        }
+        const route = this.pipelinePageState.getIsPr()
+          ? 'v2.pipeline.pulls.show'
+          : 'v2.pipeline.events.show';
+
+        this.router.transitionTo(route, {
+          event,
+          reloadEventRail: true,
+          id: event.id
+        });
       })
       .catch(err => {
         this.wasActionSuccessful = false;
