@@ -166,19 +166,26 @@ export default class PipelineWorkflowComponent extends Component {
 
   @action
   update(element, [event]) {
-    const { workflowGraph } = this.event;
+    if (this.event) {
+      this.workflowDataReload.removeBuildsCallback(
+        BUILD_QUEUE_NAME,
+        this.event.id
+      );
+
+      this.workflowDataReload.removeStageBuildsCallback(
+        STAGE_BUILD_QUEUE_NAME,
+        this.event.id
+      );
+    }
+
+    const { workflowGraph } = event;
     const hasStages = !!extractEventStages(workflowGraph).length;
     const builds = this.workflowDataReload.getBuildsForEvent(event.id);
 
-    this.workflowDataReload.removeBuildsCallback(
-      BUILD_QUEUE_NAME,
-      this.event.id
-    );
-
-    this.workflowDataReload.removeStageBuildsCallback(
-      STAGE_BUILD_QUEUE_NAME,
-      this.event.id
-    );
+    this.event = event;
+    this.builds = builds;
+    this.showTooltip = false;
+    this.showStageTooltip = false;
 
     this.isEventInAws(builds);
 
@@ -207,11 +214,6 @@ export default class PipelineWorkflowComponent extends Component {
         );
       }
     }
-
-    this.event = event;
-    this.builds = builds;
-    this.showTooltip = false;
-    this.showStageTooltip = false;
 
     this.setWorkflowGraphFromEvent();
   }
