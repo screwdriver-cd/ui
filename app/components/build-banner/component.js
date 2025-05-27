@@ -15,6 +15,7 @@ import {
 const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 export default Component.extend({
+  newUi: false,
   userSettings: service(),
   shuttle: service(),
   classNames: ['build-banner', 'grid'],
@@ -331,6 +332,10 @@ export default Component.extend({
       .catch(() => {
         this.set('allowNotification', false);
       });
+
+    if (localStorage.getItem('newUI') === 'true') {
+      this.set('newUi', true);
+    }
   },
 
   willRender() {
