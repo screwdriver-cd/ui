@@ -1,23 +1,44 @@
 <ul>
   <li class="job-name build-{{this.buildStatus}}">
-    {{#if this.event.pr.url}}
-      <LinkTo
-        @route="pipeline.pulls"
-        @model={{this.pipelineId}}
-        class="banner-value"
-      >
-        {{this.jobName}}
-      </LinkTo>
+    {{#if this.newUi}}
+      {{#if this.event.pr.url}}
+        <LinkTo
+          @route="v2.pipeline.pulls.show"
+          @models={{array this.pipelineId this.event.id}}
+          class="banner-value"
+          >
+            {{this.jobName}}
+          </LinkTo>
+      {{else}}
+        <LinkTo
+          @route="v2.pipeline.events.show"
+          @models={{array this.pipelineId this.event.id}}
+          class="banner-value"
+        >
+          {{this.jobName}}
+        </LinkTo>
+      {{/if}}
     {{else}}
-      <LinkTo
-        @route="pipeline.events.show"
-        @models={{array this.pipelineId this.event.id}}
-        @query={{hash jobId=this.jobId}}
-        class="banner-value"
-      >
-        {{this.jobName}}
-      </LinkTo>
+      {{#if this.event.pr.url}}
+        <LinkTo
+          @route="pipeline.pulls"
+          @model={{this.pipelineId}}
+          class="banner-value"
+        >
+          {{this.jobName}}
+        </LinkTo>
+      {{else}}
+        <LinkTo
+          @route="pipeline.events.show"
+          @models={{array this.pipelineId this.event.id}}
+          @query={{hash jobId=this.jobId}}
+          class="banner-value"
+        >
+          {{this.jobName}}
+        </LinkTo>
+      {{/if}}
     {{/if}}
+
     <span class="banner-label">
       Job
     </span>
@@ -251,5 +272,5 @@
       {{/if}}
     {{/if}}
   </li>
-</ul> 
-      
+</ul>
+
