@@ -7,6 +7,8 @@ import ENV from 'screwdriver-ui/config/environment';
 const EVENT_BATCH_SIZE = 10;
 
 export default class PipelineWorkflowEventRailComponent extends Component {
+  @service router;
+
   @service('shuttle') shuttle;
 
   @service('workflow-data-reload') workflowDataReload;
@@ -114,10 +116,24 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
       const openPrNums =
         direction === 'gt' ? this.prNums : this.prNums.toReversed();
-      const index = openPrNums.indexOf(parseInt(event.prNum, 10));
+      const eventPrNum = parseInt(event.prNum, 10);
+
+      let index = openPrNums.indexOf(eventPrNum);
 
       if (index === -1) {
-        return [];
+        const routeEventId = parseInt(
+          this.router.currentRoute.params.event_id,
+          10
+        );
+
+        if (event.id !== routeEventId) {
+          return [];
+        }
+
+        index =
+          direction === 'gt'
+            ? openPrNums.filter(prNum => prNum < eventPrNum).length - 1
+            : openPrNums.filter(prNum => prNum > eventPrNum).length - 1;
       }
 
       const prNums = openPrNums.slice(index + 1, index + 1 + EVENT_BATCH_SIZE);
