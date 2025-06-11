@@ -6,8 +6,12 @@ import { dom } from '@fortawesome/fontawesome-svg-core';
 import _ from 'lodash';
 import { statuses } from 'screwdriver-ui/utils/build';
 import { isComplete } from 'screwdriver-ui/utils/pipeline/event';
+import {
+  getDisplayName,
+  getStageName
+} from 'screwdriver-ui/utils/pipeline/job';
 import DataReloader from './dataReloader';
-import { getDisplayName, getStageName, sortJobs } from './util';
+import sortJobs from './util';
 
 const INITIAL_PAGE_SIZE = 10;
 
