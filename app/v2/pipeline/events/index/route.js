@@ -10,10 +10,12 @@ export default class NewPipelineEventsIndexRoute extends Route {
     const model = this.modelFor('v2.pipeline.events');
     const pipeline = this.pipelinePageState.getPipeline();
 
-    const latestEvent = await this.shuttle.fetchFromApi(
-      'get',
-      `/events/${pipeline.lastEventId}`
-    );
+    const latestEvent = pipeline.lastEventId
+      ? await this.shuttle.fetchFromApi(
+          'get',
+          `/events/${pipeline.lastEventId}`
+        )
+      : null;
 
     return {
       userSettings: model.userSettings,
