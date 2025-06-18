@@ -126,7 +126,7 @@
     "ember-truth-helpers": "~3.1.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-config-screwdriver": "^5.0.7",
+    "eslint-config-screwdriver": "^8.0.0",
     "eslint-plugin-ember": "^10.6.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -147,7 +147,7 @@
     "qunit": "^2.19.1",
     "qunit-dom": "^2.0.0",
     "sass-embedded": "^1.77.0",
-    "screwdriver-data-schema": "^24.1.0",
+    "screwdriver-data-schema": "^25.6.0",
     "sinon": "^18.0.0",
     "webpack": "^5.76.2"
   }
