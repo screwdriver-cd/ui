@@ -13,6 +13,7 @@ import {
   SHOULD_RELOAD_SKIP,
   SHOULD_RELOAD_YES
 } from '../../mixins/model-reloader';
+import { isStageSetupJob, isStageTeardownJob } from '../../utils/graph-tools';
 
 const SD_SCHEDULER = 'Screwdriver scheduler';
 
@@ -431,31 +432,54 @@ export default Component.extend(ModelReloaderMixin, {
         .sortBy('createTime')
         .reverse();
 
-      if (!this.prChainEnabled) {
-        return prEvents.map(prEvent => {
-          const prWorkflowGraph = prEvent.workflowGraph;
-
-          const prNodes = prWorkflowGraph.nodes.filter(n =>
-            n.name.startsWith('~pr')
-          );
-          const uniqueNodes = [...new Set(prNodes)];
-          const edgesToAdd = prWorkflowGraph.edges.filter(e =>
-            uniqueNodes.some(n => n.name === e.src)
-          );
-          const nodesToAdd = uniqueNodes.concat(
-            prWorkflowGraph.nodes.filter(n =>
-              edgesToAdd.some(e => e.dest === n.name)
-            )
-          );
-
-          prWorkflowGraph.edges.setObjects(edgesToAdd);
-          prWorkflowGraph.nodes.setObjects(nodesToAdd);
-
-          return prEvent;
-        });
+      if (this.prChainEnabled) {
+        return prEvents;
       }
 
-      return prEvents;
+      return prEvents.map(prEvent => {
+        const prWorkflowGraph = prEvent.workflowGraph;
+        const { nodes, edges } = prWorkflowGraph;
+
+        const prNodes = nodes.filter(n => n.name.startsWith('~pr'));
+        const uniqueNodes = [...new Set(prNodes)];
+        const edgesToAdd = edges.filter(e =>
+          uniqueNodes.some(n => n.name === e.src)
+        );
+        const nodesToAdd = uniqueNodes.concat(
+          nodes.filter(n => edgesToAdd.some(e => e.dest === n.name))
+        );
+
+        const stageSetupNodes = nodesToAdd.filter(n => isStageSetupJob(n.name));
+        const stageNames = stageSetupNodes.map(
+          n => n.name.split(':')[0].split('@')[1]
+        );
+
+        nodes.forEach(n => {
+          if (stageNames.includes(n.stageName)) {
+            if (isStageTeardownJob(n.name)) {
+              nodesToAdd.push(n);
+            } else {
+              const edge = edges.find(
+                e => isStageSetupJob(e.src) && e.dest === n.name
+              );
+
+              if (edge) {
+                nodesToAdd.push(n);
+                edgesToAdd.push(edge);
+                edgesToAdd.push({
+                  src: n.name,
+                  dest: `stage@${n.stageName}:teardown`
+                });
+              }
+            }
+          }
+        });
+
+        prWorkflowGraph.edges.setObjects(edgesToAdd);
+        prWorkflowGraph.nodes.setObjects(nodesToAdd);
+
+        return prEvent;
+      });
     },
     set(_, newPrEvents) {
       const events = this.model.events.filter(e => !e.prNum);
