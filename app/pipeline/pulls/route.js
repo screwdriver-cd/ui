@@ -79,6 +79,7 @@ export default EventsRoute.extend({
     return RSVP.hash({
       jobs: jobsPromise,
       events,
+      stages: this.shuttle.fetchStages(pipelineId),
       pipelinePreference: await this.pipelineService.getUserPipelinePreference(
         pipelineId
       ),
