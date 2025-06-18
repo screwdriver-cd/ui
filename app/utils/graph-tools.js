@@ -834,7 +834,8 @@ const decorateGraph = ({
   graph.stages.forEach(s => {
     // Get build information
     if (stageBuildsAvailable) {
-      const stage = findStage(pipelineStages, s.name);
+      const stageName = prNum ? `PR-${prNum}:${s.name}` : s.name;
+      const stage = findStage(pipelineStages, stageName);
       const stageBuild = findStageBuild(stageBuilds, stage.id);
 
       s.id = stage.id;
@@ -1042,5 +1043,7 @@ export {
   subgraphFilter,
   removeBranch,
   reverseGraph,
-  extractEventStages
+  extractEventStages,
+  isStageSetupJob,
+  isStageTeardownJob
 };
