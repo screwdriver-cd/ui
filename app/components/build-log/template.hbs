@@ -50,9 +50,93 @@
               Downloading
             </span>
           {{else}}
-            <a onClick={{action "download"}} title="Download">
-              <FaIcon @icon="download" />
-            </a>
+            <BsDropdown
+              @closeOnMenuClick={{false}} as |dd|
+            >
+              <dd.button
+                class="start-with-parameters-button"
+                @onClick={{action "toggleDropdown" dd.toggleDropdown}}
+              >
+                <a title="Download">
+                  <FaIcon @icon="download" />
+                </a>
+              </dd.button>
+              <dd.menu class="download-log-menu">
+                <div class="parameter-group-list">
+                  <ul>
+                    <li>
+                      <div class="row align-items-start">
+                        <div class="control-label col-4">
+                          <span title="Enable timestamp">Enable timestamp</span>
+                        </div>
+                        <div class="col-8">
+                          <div class="toggle-wrapper">
+                            <XToggle
+                              @size="small"
+                              @value={{this.downloadTimestampEnabled}}
+                              @onLabel="downloadTimestampEnabled:true"
+                              @offLabel="disableTimestamp::false"
+                              @onToggle={{action 'onUpdateDownloadTimestampEnabled'}}
+                              title="Enable log timestamps"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="row align-items-start">
+                        <div class="control-label col-4">
+                          <span title="Timestamp format">Timestamp format</span>
+                        </div>
+                        <div class="col-8">
+                          <PowerSelect
+                            @options={{this.downloadTimestampFormatOptions}}
+                            @renderInPlace={{true}}
+                            @selected={{this.selectedDownloadTimestampFormat}}
+                            @disabled={{not this.downloadTimestampEnabled}}
+                            @searchEnabled={{false}}
+                            @placeholder="Select timestamp"
+                            @onChange={{action 'onUpdateDownloadTimestampFormat'
+                          }} as |timestampFormat|
+                          >
+                            {{timestampFormat.name}}
+                          </PowerSelect>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="row align-items-start">
+                        <div class="control-label col-4">
+                          <span title="Timezone">Timezone</span>
+                        </div>
+                        <div class="col-8">
+                          <PowerSelect
+                            @options={{this.downloadTimezoneOptions}}
+                            @renderInPlace={{true}}
+                            @selected={{this.selectedDownloadTimezone}}
+                            @disabled={{or (not this.downloadTimestampEnabled) (not this.timezoneEnabled)}}
+                            @searchEnabled={{false}}
+                            @placeholder="Select timezone"
+                            @onChange={{action 'onUpdateDownloadTimezone'
+                          }} as |timezone|
+                          >
+                            {{timezone.name}}
+                          </PowerSelect>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="btn-group">
+                  <BsButton
+                    @defaultText="Download"
+                    @type="primary"
+                    @buttonType="submit"
+                    @onClick={{action "download"}}
+                  />
+                </div>
+              </dd.menu>
+            </BsDropdown>
           {{/if}}
         {{/unless}}
       </div>
