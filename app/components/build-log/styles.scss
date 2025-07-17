@@ -96,6 +96,7 @@
     display: inline-block;
     vertical-align: top;
     width: 70px;
+    user-select: none;
   }
 
   .content {
@@ -204,4 +205,97 @@
 }
 .ansi-bright-white-bg {
   background-color: #feffff;
+}
+
+.btn-group {
+  padding: 0 !important;
+
+  .btn-secondary {
+    background-color: initial;
+    border: initial;
+    padding: 0;
+  }
+}
+
+.download-log-menu {
+  min-width: 300px;
+  padding: 5px 10px;
+
+  .parameter-group-list {
+    max-height: 70vh;
+    scroll-behavior: smooth;
+
+    .align-items-start {
+      cursor: initial;
+
+      .col-8 {
+        cursor: initial;
+      }
+    }
+
+    .parameter-group {
+      margin: 10px 10px 0 0;
+      border-radius: 3px;
+      border: 1px solid $sd-separator;
+      padding: 10px;
+      font-weight: 300;
+      color: $sd-text;
+    }
+
+    .parameter-list {
+      &.collapsed {
+        display: none;
+      }
+    }
+
+    .control-label {
+      color: initial;
+      white-space: nowrap;
+      text-align: left;
+      padding: initial;
+      margin: auto 0;
+    }
+
+    .ember-basic-dropdown {
+      width: 150px;
+      padding: 0;
+    }
+
+    .ember-basic-dropdown-trigger {
+      text-align: left;
+      color: initial;
+    }
+
+    .ember-basic-dropdown-content {
+      position: absolute;
+      text-align: left;
+      color: initial;
+    }
+
+    .ember-power-select-option {
+      white-space: nowrap;
+    }
+
+    .ember-basic-dropdown-content-wormhole-origin {
+      padding: 0;
+    }
+
+    .ember-power-select-option {
+      width: fit-content;
+      min-width: 100%;
+    }
+  }
+
+  .x-toggle-component {
+    display: inline-flex;
+
+    .x-toggle-btn {
+      padding: 0.16em 0.1em;
+      cursor: pointer;
+    }
+  }
+
+  .x-toggle:checked + label > .x-toggle-default.x-toggle-btn {
+    background-color: $sd-success;
+  }
 }

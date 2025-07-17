@@ -4,8 +4,16 @@ import { scheduleOnce, later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import ENV from 'screwdriver-ui/config/environment';
+import { TIMESTAMP_OPTIONS } from '../../utils/timestamp-format';
 
 const timeTypes = ['datetime', 'datetimeUTC', 'elapsedBuild', 'elapsedStep'];
+const downloadTimestampFormatOptions = [
+  { value: 'full-time', name: 'Full Datetime' },
+  { value: 'simple-time', name: 'Simple Time' },
+  { value: 'elapsed-build', name: 'Elapsed Build' },
+  { value: 'elapsed-step', name: 'Elapsed Step' }
+];
+const downloadTimezoneOptions = TIMESTAMP_OPTIONS;
 
 export default Component.extend({
   logService: service('build-logs'),
@@ -24,6 +32,12 @@ export default Component.extend({
   timeFormat: 'datetime',
   lastScrollTop: 0,
   lastScrollHeight: 0,
+  downloadTimestampEnabled: false,
+  downloadTimestampFormatOptions,
+  selectedDownloadTimestampFormat: downloadTimestampFormatOptions[0],
+  downloadTimezoneOptions,
+  selectedDownloadTimezone: downloadTimezoneOptions[1],
+  timezoneEnabled: true,
   // eslint-disable-next-line ember/no-observers
   inProgressObserver: observer('totalLine', function inProgressObserver() {
     const inProgress = this.totalLine === undefined;
@@ -67,6 +81,7 @@ export default Component.extend({
           itemSize % ENV.APP.MAX_LOG_LINES < 100
         ) + 1;
   },
+
   logs: computed(
     'buildId',
     'buildStartTime',
@@ -243,6 +258,62 @@ export default Component.extend({
       set(this, 'timeFormat', timeFormat);
     }
 
+    const downloadTimestampEnabled = localStorage.getItem(
+      'screwdriver.logs.download.timestampEnabled'
+    );
+
+    if (
+      downloadTimestampEnabled !== undefined &&
+      downloadTimestampEnabled !== null
+    ) {
+      set(
+        this,
+        'downloadTimestampEnabled',
+        downloadTimestampEnabled.toLowerCase() === 'true'
+      );
+    }
+
+    const selectedDownloadTimestampFormatValue = localStorage.getItem(
+      'screwdriver.logs.download.timestampFormat'
+    );
+    const selectedDownloadTimestampFormat =
+      this.downloadTimestampFormatOptions.find(
+        value => value.value === selectedDownloadTimestampFormatValue
+      );
+
+    if (
+      selectedDownloadTimestampFormat !== undefined &&
+      selectedDownloadTimestampFormat !== null
+    ) {
+      set(
+        this,
+        'selectedDownloadTimestampFormat',
+        selectedDownloadTimestampFormat
+      );
+    }
+
+    set(
+      this,
+      'timezoneEnabled',
+      ['full-time', 'simple-time'].includes(
+        this.selectedDownloadTimestampFormat.value
+      )
+    );
+
+    const selectedDownloadTimezoneValue = localStorage.getItem(
+      'screwdriver.logs.download.timezone'
+    );
+    const selectedDownloadTimezone = this.downloadTimezoneOptions.find(
+      value => value.value === selectedDownloadTimezoneValue
+    );
+
+    if (
+      selectedDownloadTimezone !== undefined &&
+      selectedDownloadTimezone !== null
+    ) {
+      set(this, 'selectedDownloadTimezone', selectedDownloadTimezone);
+    }
+
     this.logService.resetCache();
     set(this, 'lastStepId', `${this.buildId}/${this.stepName}`);
   },
@@ -407,6 +478,7 @@ export default Component.extend({
 
     return Promise.resolve();
   },
+
   actions: {
     scrollToTop() {
       set(this, 'autoscroll', false);
@@ -420,12 +492,55 @@ export default Component.extend({
     scrollToBottom() {
       this.scrollToBottom();
     },
+
+    onUpdateDownloadTimestampEnabled(value) {
+      this.setProperties({ downloadTimestampEnabled: value });
+      localStorage.setItem('screwdriver.logs.download.timestampEnabled', value);
+    },
+
+    onUpdateDownloadTimestampFormat(value) {
+      this.setProperties({
+        selectedDownloadTimestampFormat: value,
+        timezoneEnabled: ['full-time', 'simple-time'].includes(value.value)
+      });
+      localStorage.setItem(
+        'screwdriver.logs.download.timestampFormat',
+        value.value
+      );
+    },
+
+    onUpdateDownloadTimezone(value) {
+      this.setProperties({ selectedDownloadTimezone: value });
+      localStorage.setItem('screwdriver.logs.download.timezone', value.value);
+    },
+
     download() {
       const { buildId, stepName } = this;
-      const downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/steps/${stepName}/logs?type=download`;
+
+      let timezone;
+
+      let timestampParams;
+
+      if (this.downloadTimestampEnabled) {
+        timestampParams = `timestamp=true&timestampFormat=${this.selectedDownloadTimestampFormat.value}`;
+        if (this.timezoneEnabled) {
+          if (this.selectedDownloadTimezone.value === 'LOCAL_TIMEZONE') {
+            // eslint-disable-next-line new-cap
+            timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          } else {
+            timezone = this.selectedDownloadTimezone.value;
+          }
+          timestampParams += `&timezone=${timezone}`;
+        }
+      } else {
+        timestampParams = 'timestamp=false';
+      }
+
+      const downloadLink = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/steps/${stepName}/logs?type=download&${timestampParams}`;
 
       window.open(downloadLink, '_blank');
     },
+
     logScroll() {
       const container = this.element.querySelectorAll('.wrap')[0];
 
@@ -474,6 +589,12 @@ export default Component.extend({
         this.scrollToBottom();
       } else {
         set(this, 'autoscroll', false);
+      }
+    },
+
+    toggleDropdown(toggleAction) {
+      if (typeof toggleAction === 'function') {
+        toggleAction();
       }
     }
   }
