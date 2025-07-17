@@ -121,10 +121,9 @@ export default class PipelineWorkflowEventRailComponent extends Component {
       let index = openPrNums.indexOf(eventPrNum);
 
       if (index === -1) {
-        const routeEventId = parseInt(
-          this.router.currentRoute.params.event_id,
-          10
-        );
+        const routeEventId = this.router.currentRoute.attributes.id
+          ? this.router.currentRoute.attributes.id
+          : parseInt(this.router.currentRoute.params.event_id, 10);
 
         if (event.id !== routeEventId) {
           return [];
