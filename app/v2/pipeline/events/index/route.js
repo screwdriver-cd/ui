@@ -2,12 +2,11 @@ import Route from '@ember/routing/route';
 import { service } from '@ember/service';
 
 export default class NewPipelineEventsIndexRoute extends Route {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
   async model() {
-    const model = this.modelFor('v2.pipeline.events');
     const pipeline = this.pipelinePageState.getPipeline();
 
     const latestEvent = pipeline.lastEventId
@@ -18,7 +17,6 @@ export default class NewPipelineEventsIndexRoute extends Route {
       : null;
 
     return {
-      userSettings: model.userSettings,
       latestEvent
     };
   }

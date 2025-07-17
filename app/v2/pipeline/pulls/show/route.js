@@ -13,7 +13,6 @@ export default class V2PipelinePullsShowRoute extends Route {
   @service('pr-jobs') prJobs;
 
   async model(params, transition) {
-    const model = this.modelFor('v2.pipeline.pulls');
     const prNums = getPrNumbers(this.prJobs.getPullRequestJobs());
 
     let latestEvent;
@@ -65,7 +64,6 @@ export default class V2PipelinePullsShowRoute extends Route {
     this.prJobs.setPipelinePageStateJobs(event);
 
     return {
-      ...model,
       event,
       latestEvent,
       prNums: Array.from(prNums).sort((a, b) => a - b),

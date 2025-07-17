@@ -1,12 +1,15 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+import { service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 
 export default class PipelineJobsTableCellStartTimeComponent extends Component {
+  @service('settings') settings;
+
   @tracked latestBuild;
 
   get startTime() {
-    const { build, timestampFormat } = this.args.record;
+    const { build } = this.args.record;
 
     if (!build) {
       return null;
@@ -15,7 +18,7 @@ export default class PipelineJobsTableCellStartTimeComponent extends Component {
       return 'Not started';
     }
 
-    if (timestampFormat === 'UTC') {
+    if (this.settings.getSettings().timestampFormat === 'UTC') {
       return toCustomLocaleString(new Date(build.startTime), {
         timeZone: 'UTC'
       });

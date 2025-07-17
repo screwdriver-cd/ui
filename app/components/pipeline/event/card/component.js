@@ -32,6 +32,8 @@ export default class PipelineEventCardComponent extends Component {
 
   @service('pr-jobs') prJobs;
 
+  @service('settings') settings;
+
   @tracked event;
 
   @tracked builds;
@@ -62,8 +64,6 @@ export default class PipelineEventCardComponent extends Component {
 
   queueName;
 
-  userSettings;
-
   durationIntervalId;
 
   firstCreateTime;
@@ -72,8 +72,6 @@ export default class PipelineEventCardComponent extends Component {
     super(...arguments);
 
     this.queueName = this.args.queueName;
-    this.userSettings = this.args.userSettings;
-
     this.event = this.args.event;
 
     this.showParametersModal = false;
@@ -296,7 +294,7 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   get startDate() {
-    return getStartDate(this.event, this.userSettings);
+    return getStartDate(this.event, this.settings.getSettings());
   }
 
   get isCommitterDifferent() {

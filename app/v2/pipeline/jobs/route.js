@@ -2,9 +2,11 @@ import Route from '@ember/routing/route';
 import { service } from '@ember/service';
 
 export default class NewPipelineJobsRoute extends Route {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
+
+  @service('settings') settings;
 
   async model() {
     const pipelineId = this.pipelinePageState.getPipelineId();
@@ -15,13 +17,8 @@ export default class NewPipelineJobsRoute extends Route {
         this.pipelinePageState.setJobs(jobs);
       });
 
-    const userSettings = await this.shuttle.fetchFromApi(
-      'get',
-      '/users/settings'
-    );
-
-    return {
-      userSettings
-    };
+    if (!this.settings.getSettings()) {
+      await this.settings.fetchSettings();
+    }
   }
 }
