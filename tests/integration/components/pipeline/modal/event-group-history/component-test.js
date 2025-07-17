@@ -17,10 +17,12 @@ module(
       const pipelinePageState = this.owner.lookup(
         'service:pipeline-page-state'
       );
+      const settings = this.owner.lookup('service:settings');
 
       sinon.stub(router, 'currentURL').value('');
       sinon.stub(shuttle, 'fetchFromApi').resolves(mockApiResponse);
       sinon.stub(pipelinePageState, 'getPipelineId').returns(1);
+      sinon.stub(settings, 'getSettings').returns({});
     });
 
     hooks.afterEach(function () {
@@ -45,14 +47,12 @@ module(
 
       this.setProperties({
         event: { ...mockEvent, id: 1 },
-        userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::EventGroupHistory
             @event={{this.event}}
-            @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -78,14 +78,12 @@ module(
 
       this.setProperties({
         event: { ...mockEvent, id: 1 },
-        userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::EventGroupHistory
             @event={{this.event}}
-            @userSettings={{this.userSettings}}
             @isPR={{true}}
             @closeModal={{this.closeModal}}
         />`

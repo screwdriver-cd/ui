@@ -14,20 +14,20 @@ module(
       const pipelinePageState = this.owner.lookup(
         'service:pipeline-page-state'
       );
+      const settings = this.owner.lookup('service:settings');
 
       sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
       sinon.stub(pipelinePageState, 'getIsPr').returns(false);
+      sinon.stub(settings, 'getSettings').returns({});
     });
 
     test('it renders', async function (assert) {
       this.setProperties({
-        userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -48,13 +48,11 @@ module(
       sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
       this.setProperties({
-        userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -77,13 +75,11 @@ module(
         .resolves([]);
 
       this.setProperties({
-        userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -107,13 +103,11 @@ module(
       const spyShuttle = sinon.spy(shuttle, 'fetchFromApi');
 
       this.setProperties({
-        userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -136,13 +130,11 @@ module(
       sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
       this.setProperties({
-        userSettings: {},
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::SearchEvent
-            @userSettings={{this.userSettings}}
             @closeModal={{this.closeModal}}
         />`
       );
