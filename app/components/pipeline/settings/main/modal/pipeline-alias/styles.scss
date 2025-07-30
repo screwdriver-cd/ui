@@ -1,0 +1,21 @@
+@use 'screwdriver-colors' as colors;
+
+@mixin styles {
+  #edit-pipeline-alias-modal {
+    .modal-body {
+      .configuration-container {
+        label {
+          display: flex;
+          flex-direction: column;
+        }
+
+        input {
+          background-color: colors.$sd-flyout-bg;
+          border-radius: 3px;
+          border: 1px solid colors.$sd-light-gray;
+          padding: 0.375rem 0.75rem;
+        }
+      }
+    }
+  }
+}
