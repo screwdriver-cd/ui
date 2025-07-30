@@ -13,7 +13,6 @@ export default class V2PipelinePullsIndexRoute extends Route {
   @service('pr-jobs') prJobs;
 
   async model() {
-    const model = this.modelFor('v2.pipeline.pulls');
     const pullRequestJobs = this.prJobs.getPullRequestJobs();
 
     let event;
@@ -33,7 +32,6 @@ export default class V2PipelinePullsIndexRoute extends Route {
     }
 
     return {
-      ...model,
       event
     };
   }

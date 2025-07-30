@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import sinon from 'sinon';
 
 module(
   'Integration | Component | pipeline/jobs/table/cell/start-time',
@@ -9,6 +10,14 @@ module(
     setupRenderingTest(hooks);
 
     const job = { id: 123, name: 'main' };
+
+    hooks.beforeEach(function () {
+      const settings = this.owner.lookup('service:settings');
+
+      sinon.stub(settings, 'getSettings').returns({
+        timestampFormat: 'UTC'
+      });
+    });
 
     test('it renders', async function (assert) {
       this.setProperties({
@@ -33,8 +42,7 @@ module(
           build: {
             id: 1,
             startTime: '2021-01-01T20:30:00.000Z'
-          },
-          timestampFormat: 'UTC'
+          }
         }
       });
 
@@ -51,8 +59,7 @@ module(
       this.setProperties({
         record: {
           job,
-          build: { id: 1 },
-          timestampFormat: 'UTC'
+          build: { id: 1 }
         }
       });
 

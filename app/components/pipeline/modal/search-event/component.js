@@ -4,9 +4,9 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 export default class PipelineModalSearchEventComponent extends Component {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
   @tracked searchField = 'message';
 

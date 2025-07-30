@@ -20,8 +20,6 @@ export default class PipelineJobsTableComponent extends Component {
 
   @service('emt-themes/ember-bootstrap-v5') emberModelTableBootstrapTheme;
 
-  userSettings;
-
   event;
 
   dataReloader;
@@ -38,7 +36,6 @@ export default class PipelineJobsTableComponent extends Component {
     super(...arguments);
 
     this.event = this.args.event;
-    this.userSettings = this.args.userSettings;
     this.data = null;
     this.previousBuilds = new Map();
 
@@ -262,8 +259,7 @@ export default class PipelineJobsTableComponent extends Component {
           build: buildsForJob ? _.last(buildsForJob) : null,
           builds: buildsForJob,
           jobName: getDisplayName(job, this.event?.prNum),
-          stageName: getStageName(job),
-          timestampFormat: this.userSettings.timestampFormat
+          stageName: getStageName(job)
         });
       });
 

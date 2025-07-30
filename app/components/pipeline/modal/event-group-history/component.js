@@ -5,9 +5,9 @@ import { service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
 
 export default class PipelineModalEventGroupHistoryComponent extends Component {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
   @tracked showCards = false;
 

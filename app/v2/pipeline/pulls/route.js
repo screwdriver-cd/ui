@@ -8,6 +8,8 @@ export default class NewPipelinePullsRoute extends Route {
 
   @service('pr-jobs') prJobs;
 
+  @service('settings') settings;
+
   activate() {
     this.pipelinePageState.setIsPr(true);
   }
@@ -19,10 +21,9 @@ export default class NewPipelinePullsRoute extends Route {
   async model() {
     const pipelineId = this.pipelinePageState.getPipelineId();
 
-    const userSettings = await this.shuttle.fetchFromApi(
-      'get',
-      '/users/settings'
-    );
+    if (!this.settings.getSettings()) {
+      await this.settings.fetchSettings();
+    }
 
     await this.shuttle
       .fetchFromApi('get', `/pipelines/${pipelineId}/stages`)
@@ -37,9 +38,5 @@ export default class NewPipelinePullsRoute extends Route {
       });
 
     await this.prJobs.setPullRequestJobs();
-
-    return {
-      userSettings
-    };
   }
 }
