@@ -1,0 +1,133 @@
+<div id="pipeline-settings-main-tab-contents">
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Checkout URL and source directory
+      </div>
+      <div>
+        Update your checkout URL and / or source directory.
+      </div>
+
+      <div class="configuration">
+        <div id="pipeline-settings-main-checkout-url">Checkout URL: {{this.checkoutUrl}}</div>
+        <div id="pipeline-settings-main-checkout-directory">Source directory: {{this.pipeline.scmRepo.rootDir}}</div>
+      </div>
+    </div>
+
+    <BsButton
+      @type="primary"
+      @onClick={{this.showUpdatePipelineModal}}
+      @outline={{true}}
+      title="Edit pipeline alias"
+    >
+      <FaIcon @icon="pen" />
+      {{#if this.isUpdatePipelineModalOpen}}
+        <Pipeline::Settings::Main::Modal::Pipeline
+          @closeModal={{this.closeUpdatePipelineModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Pipeline alias
+      </div>
+      <div>
+        Set your preferred pipeline name for the dashboard view.
+      </div>
+
+      <div class="configuration">
+        <div id="pipeline-settings-main-alias">Alias: {{this.pipeline.settings.aliasName}}</div>
+      </div>
+    </div>
+
+    <BsButton
+      @type="primary"
+      @onClick={{this.showUpdatePipelineAliasModal}}
+      @outline={{true}}
+      title="Edit pipeline alias"
+    >
+      <FaIcon @icon="pen" />
+      {{#if this.isUpdatePipelineAliasModalOpen}}
+        <Pipeline::Settings::Main::Modal::PipelineAlias
+          @closeModal={{this.closeUpdatePipelineAliasModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Sonar Badge
+      </div>
+      <div>
+        Customize your sonar badge dashboard and link
+      </div>
+
+      <div class="configuration">
+        <div id="pipeline-settings-main-sonar-badge-name">Badge name: {{this.sonarBadgeName}}</div>
+        <div id="pipeline-settings-main-sonar-badge-uri">Badge URI: {{this.sonarBadgeUri}}</div>
+      </div>
+    </div>
+
+    <BsButton
+      @type="primary"
+      @onClick={{this.showUpdateSonarBadgeModal}}
+      @outline={{true}}
+      title="Edit pipeline alias"
+    >
+      <FaIcon @icon="pen" />
+      {{#if this.isUpdateSonarBadgeModalOpen}}
+        <Pipeline::Settings::Main::Modal::SonarBadge
+          @closeModal={{this.closeUpdateSonarBadgeModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Admins
+      </div>
+      <div>
+        Users with admin permission to this pipeline.
+        <FaIcon
+          @icon="circle-question"
+          @title="If you have write access to the repository, you can become a pipeline admin by starting/stopping builds or syncing the pipeline."
+        />
+      </div>
+
+      <div class="pipeline-admin-list">
+        {{this.pipelineAdmins}}
+      </div>
+    </div>
+  </div>
+
+  <div class="section pipeline-settings-danger-zone">
+    <div class="text-container">
+      <div class="title">
+        Delete this pipeline
+      </div>
+      <div>
+        Once you delete a pipeline, there is no going back.
+      </div>
+    </div>
+    <BsButton
+      @type="danger"
+      @onClick={{this.showDeletePipelineModal}}
+      title="Delete pipeline"
+    >
+      <FaIcon @icon="trash" />
+      {{#if this.isDeletePipelineModalOpen}}
+        <Pipeline::Modal::DeletePipeline
+          @pipeline={{this.pipeline}}
+          @closeModal={{this.closeDeletePipelineModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+</div>
