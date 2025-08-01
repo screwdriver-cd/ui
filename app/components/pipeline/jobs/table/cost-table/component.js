@@ -5,8 +5,9 @@ import { tracked } from '@glimmer/tracking';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import _ from 'lodash';
 import { isComplete } from 'screwdriver-ui/utils/pipeline/event';
+import { getDisplayName } from 'screwdriver-ui/utils/pipeline/job';
 import DataReloader from '../dataReloader';
-import { getDisplayName, sortJobs } from '../util';
+import sortJobs from '../util';
 
 const INITIAL_PAGE_SIZE = 10;
 
