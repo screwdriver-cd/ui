@@ -13,6 +13,8 @@ export default class PipelinePageStateService extends Service {
 
   isPr;
 
+  onForceReloadPipelineHeader;
+
   clear() {
     this.pipeline = null;
     this.childPipelines = [];
@@ -20,6 +22,7 @@ export default class PipelinePageStateService extends Service {
     this.stages = [];
     this.jobs = [];
     this.isPr = false;
+    this.onForceReloadPipelineHeader = null;
   }
 
   setPipeline(pipeline) {
@@ -72,5 +75,15 @@ export default class PipelinePageStateService extends Service {
 
   getIsPr() {
     return this.isPr;
+  }
+
+  setOnForceReloadPipelineHeader(callback) {
+    this.onForceReloadPipelineHeader = callback;
+  }
+
+  forceReloadPipelineHeader() {
+    if (this.onForceReloadPipelineHeader) {
+      this.onForceReloadPipelineHeader();
+    }
   }
 }
