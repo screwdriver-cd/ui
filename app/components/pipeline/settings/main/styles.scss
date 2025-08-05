@@ -1,0 +1,46 @@
+@use 'screwdriver-colors' as colors;
+@use 'variables';
+
+@use 'modal/pipeline/styles' as pipelineModal;
+@use 'modal/pipeline-alias/styles' as pipelineAliasModal;
+@use 'modal/sonar-badge/styles' as sonarBadgeModal;
+
+@mixin modalStyles {
+  @include pipelineModal.styles;
+  @include pipelineAliasModal.styles;
+  @include sonarBadgeModal.styles;
+}
+
+@mixin styles {
+  #pipeline-settings-main-tab-contents {
+    .section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .text-container {
+        .configuration {
+          margin-top: 0.5rem;
+          margin-left: 1rem;
+          font-style: italic;
+        }
+
+        .pipeline-admin-list {
+          font-weight: variables.$weight-bold;
+          margin-top: 1rem;
+          margin-left: 1rem;
+          max-height: 5rem;
+          overflow: auto;
+        }
+      }
+
+      button {
+        margin-right: 1rem;
+      }
+
+      &.pipeline-settings-danger-zone {
+        border-color: colors.$sd-warn-bg;
+      }
+    }
+  }
+}
