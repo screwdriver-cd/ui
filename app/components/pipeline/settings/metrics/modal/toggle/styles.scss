@@ -1,0 +1,11 @@
+@mixin styles {
+  #toggle-multiple-downtime-jobs-modal {
+    .modal-body {
+      .toggle-jobs-list {
+        height: 4rem;
+        overflow: auto;
+        margin: 1rem 0;
+      }
+    }
+  }
+}
