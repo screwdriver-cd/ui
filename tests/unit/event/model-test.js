@@ -241,11 +241,16 @@ module('Unit | Model | event', function (hooks) {
       endTime: new Date(elapsed20secsTime),
       status: 'ABORTED'
     });
+    const build3 = this.owner.lookup('service:store').createRecord('build', {
+      jobId: 3,
+      createTime: new Date(eventStartTime),
+      status: 'SUCCESS'
+    });
     const model = run(() =>
       this.owner.lookup('service:store').createRecord('event')
     );
 
-    run(() => model.set('builds', [build2, build1]));
+    run(() => model.set('builds', [build2, build1, build3]));
 
     await settled();
 
