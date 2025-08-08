@@ -1,0 +1,34 @@
+<BsModal
+  id="pipeline-settings-sync-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    {{this.headerText}}
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        id="error-message"
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+      />
+    {{/if}}
+
+    <div>
+      {{this.syncMessageText}}
+    </div>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-sync-button"
+      class="confirm"
+      disabled={{this.isSubmitButtonDisabled}}
+      @defaultText="Sync"
+      @pendingText="Syncing"
+      @type="primary"
+      @onClick={{fn this.sync}}
+    />
+  </modal.footer>
+</BsModal>
