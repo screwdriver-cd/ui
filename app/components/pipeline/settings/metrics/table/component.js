@@ -114,7 +114,7 @@ export default class PipelineSettingsMetricsTableComponent extends Component {
 
   getDowntimeJobIds() {
     this.downtimeJobIds =
-      this.pipelinePageState.getPipeline().settings.metricsDowntimeJobs || [];
+      this.pipelinePageState.getPipeline().settings?.metricsDowntimeJobs || [];
 
     if (this.downtimeJobIds.length === 0) {
       this.jobs.forEach((job, jobId) => {

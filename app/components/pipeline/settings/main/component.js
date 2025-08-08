@@ -16,9 +16,13 @@ export default class PipelineSettingsMainComponent extends Component {
 
   @tracked isUpdateSonarBadgeModalOpen = false;
 
+  @tracked isSyncModalOpen = false;
+
   @tracked isDeletePipelineModalOpen = false;
 
   @tracked pipeline;
+
+  @tracked syncType;
 
   constructor() {
     super(...arguments);
@@ -95,6 +99,17 @@ export default class PipelineSettingsMainComponent extends Component {
     if (wasUpdated) {
       this.pipeline = this.pipelinePageState.getPipeline();
     }
+  }
+
+  @action
+  sync(syncType) {
+    this.isSyncModalOpen = true;
+    this.syncType = syncType;
+  }
+
+  @action
+  closeSyncModal() {
+    this.isSyncModalOpen = false;
   }
 
   @action
