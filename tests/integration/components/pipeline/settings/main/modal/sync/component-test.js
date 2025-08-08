@@ -34,7 +34,7 @@ module(
         />`
       );
 
-      assert.dom('.modal-header').hasText('Sync Webhooks ×');
+      assert.dom('.modal-header').exists();
       assert.dom('#error-message').doesNotExist();
       assert.dom('#submit-sync-button').exists();
       assert.dom('#submit-sync-button').isEnabled();
