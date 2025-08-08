@@ -9,8 +9,8 @@
       </div>
 
       <div class="configuration">
-        <div id="pipeline-settings-main-checkout-url">Checkout URL: {{this.checkoutUrl}}</div>
-        <div id="pipeline-settings-main-checkout-directory">Source directory: {{this.pipeline.scmRepo.rootDir}}</div>
+        <div id="pipeline-settings-main-checkout-url">Checkout URL: <b>{{this.checkoutUrl}}</b></div>
+        <div id="pipeline-settings-main-checkout-directory">Source directory: <b>{{this.pipeline.scmRepo.rootDir}}</b></div>
       </div>
     </div>
 
@@ -39,7 +39,7 @@
       </div>
 
       <div class="configuration">
-        <div id="pipeline-settings-main-alias">Alias: {{this.pipeline.settings.aliasName}}</div>
+        <div id="pipeline-settings-main-alias">Alias: <b>{{this.pipeline.settings.aliasName}}</b></div>
       </div>
     </div>
 
@@ -68,8 +68,8 @@
       </div>
 
       <div class="configuration">
-        <div id="pipeline-settings-main-sonar-badge-name">Badge name: {{this.sonarBadgeName}}</div>
-        <div id="pipeline-settings-main-sonar-badge-uri">Badge URI: {{this.sonarBadgeUri}}</div>
+        <div id="pipeline-settings-main-sonar-badge-name">Badge name: <b>{{this.sonarBadgeName}}</b></div>
+        <div id="pipeline-settings-main-sonar-badge-uri">Badge URI: <b>{{this.sonarBadgeUri}}</b></div>
       </div>
     </div>
 
@@ -86,6 +86,69 @@
         />
       {{/if}}
     </BsButton>
+  </div>
+
+  <div>
+    <div class="section">
+      <div class="text-container">
+        <div class="title">
+          Sync SCM Webhooks
+        </div>
+        <div>
+          Update the webhooks if they are not working correctly.
+        </div>
+      </div>
+      <BsButton
+        @type="primary"
+        @outline="true"
+        @onClick={{fn this.sync "webhooks"}}
+      >
+        <FaIcon @icon="rotate" />
+      </BsButton>
+    </div>
+
+    <div class="section">
+      <div class="text-container">
+        <div class="title">
+          Sync Pull requests
+        </div>
+        <div>
+          Create or update pull request jobs if they are not displaying properly.
+        </div>
+      </div>
+      <BsButton
+        @type="primary"
+        @outline="true"
+        @onClick={{fn this.sync "pullrequests"}}
+      >
+        <FaIcon @icon="rotate" />
+      </BsButton>
+    </div>
+
+    <div class="section">
+      <div class="text-container">
+        <div class="title">
+          Sync Pipeline
+        </div>
+        <div>
+          Update jobs if they are not displaying properly.
+        </div>
+      </div>
+      <BsButton
+        @type="primary"
+        @outline="true"
+        @onClick={{fn this.sync "pipeline"}}
+      >
+        <FaIcon @icon="rotate" />
+      </BsButton>
+    </div>
+
+    {{#if this.isSyncModalOpen}}
+      <Pipeline::Settings::Main::Modal::Sync
+        @syncType={{this.syncType}}
+        @closeModal={{this.closeSyncModal}}
+      />
+    {{/if}}
   </div>
 
   <div class="section">
