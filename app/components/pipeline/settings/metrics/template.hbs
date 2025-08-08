@@ -1,0 +1,59 @@
+<div id="pipeline-settings-metrics-tab-contents">
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Downtime jobs
+      </div>
+      <div>
+        For an event, compares the number of included jobs that ran with the aggregate time spent on failed builds.
+      </div>
+    </div>
+    <div class="toggle-buttons-container">
+      <BsButton
+        id="include-jobs-button"
+        @type="primary"
+        @outline={{true}}
+        @defaultText="Include multiple jobs"
+        @onClick={{fn this.toggleMultiple true}}
+        disabled={{this.disableIncludeMultipleJobsButton}}
+      />
+      <BsButton
+        id="exclude-jobs-button"
+        @type="primary"
+        @outline={{true}}
+        @defaultText="Exclude multiple jobs"
+        @onClick={{fn this.toggleMultiple false}}
+        disabled={{this.disableExcludeMultipleJobsButton}}
+      />
+      {{#if this.isToggleMultiple}}
+        <BsButton
+          id="cancel-toggle-jobs-button"
+          @type="danger"
+          @outline={{true}}
+          @defaultText="Cancel"
+          @onClick={{fn this.cancelToggleMultiple}}
+        />
+      {{/if}}
+    </div>
+  </div>
+
+  <div id="metrics-table">
+    {{#if this.isToggleMultiple}}
+      {{#if this.isInclude}}
+        <Pipeline::Settings::Metrics::Table
+          @isToggleMultiple={{true}}
+          @isInclude={{true}}
+        />
+      {{else}}
+        <Pipeline::Settings::Metrics::Table
+          @isToggleMultiple={{true}}
+          @isInclude={{false}}
+        />
+      {{/if}}
+    {{else}}
+      <Pipeline::Settings::Metrics::Table
+        @isToggleMultiple={{false}}
+      />
+    {{/if}}
+  </div>
+</div>

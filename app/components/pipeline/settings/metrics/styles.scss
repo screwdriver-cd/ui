@@ -1,0 +1,41 @@
+@use 'modal/toggle/styles' as modal;
+@use 'table/styles' as table;
+
+@mixin modalStyles {
+  @include modal.styles;
+}
+
+@mixin styles {
+  #pipeline-settings-metrics-tab-contents {
+    height: 100%;
+
+    $section-height: 8rem;
+
+    .section {
+      height: $section-height;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .toggle-buttons-container {
+        display: flex;
+        margin: 0 1rem;
+
+        #exclude-jobs-button {
+          margin-left: 0.5rem;
+        }
+        #cancel-toggle-jobs-button {
+          margin-left: auto;
+        }
+      }
+    }
+
+    #metrics-table {
+      $jobs-table-margin: 1rem;
+      height: calc(100% - $section-height - (2 * $jobs-table-margin) - 1rem);
+      margin: 0 $jobs-table-margin;
+
+      @include table.styles;
+    }
+  }
+}
