@@ -118,7 +118,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
     assert.deepEqual(tooltipData.selectedEvent, event);
   });
 
-  test('it gets tooltip data for disabled PR event', function (assert) {
+  test('it gets tooltip data for disabled job', function (assert) {
     const workflowGraph = {
       nodes: [
         { name: '~pr' },
@@ -138,7 +138,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
       },
       prNum: 1
     };
-    const jobs = [{ name: 'p1', state: 'DISABLED' }];
+    const jobs = [{ name: 'p1', state: 'DISABLED', stateChangeMessage: ' ' }];
 
     const tooltipData = getTooltipData(
       {
@@ -177,7 +177,8 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
     );
 
     assert.deepEqual(tooltipData.job, {
-      name: 'main'
+      name: 'main',
+      isDisabled: false
     });
     assert.deepEqual(tooltipData.selectedEvent, event);
   });
@@ -207,6 +208,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
 
     assert.deepEqual(tooltipData.job, {
       name: 'main',
+      isDisabled: false,
       buildId: 123,
       status: 'SUCCESS'
     });
