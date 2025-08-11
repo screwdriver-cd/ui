@@ -1,0 +1,77 @@
+@use 'screwdriver-colors' as colors;
+@use 'ember-models-table';
+
+@use 'cell/action/styles' as action;
+
+@mixin styles {
+  .pipeline-settings-cache-table {
+    @include ember-models-table.styles;
+
+    height: 100%;
+
+    $table-footer-height: 2.5rem;
+    $clear-cache-button-height: 2.5rem;
+
+    .cache-button-container {
+      height: $clear-cache-button-height;
+      margin-left: 1rem;
+    }
+
+    .table-main {
+      $inherited-table-margin: 2rem;
+      margin-top: 0;
+      max-height: calc(
+        100% - $clear-cache-button-height - $table-footer-height -
+          $inherited-table-margin
+      );
+      overflow: scroll;
+
+      table {
+        table-layout: fixed;
+
+        thead {
+          position: sticky;
+          top: 0;
+          background: colors.$sd-white;
+          z-index: 1;
+
+          th {
+            border: none;
+          }
+
+          .row-select-column {
+            .btn {
+              padding-top: 0;
+              padding-bottom: 0;
+            }
+          }
+        }
+
+        tbody {
+          .selected-row {
+            background-color: colors.$sd-highlight;
+          }
+
+          @include action.styles;
+        }
+
+        .row-select-column {
+          width: 3rem;
+
+          .btn:focus,
+          .btn:focus-visible {
+            box-shadow: none;
+          }
+        }
+
+        .action-column {
+          width: 10rem;
+        }
+      }
+    }
+
+    .table-footer {
+      height: $table-footer-height;
+    }
+  }
+}
