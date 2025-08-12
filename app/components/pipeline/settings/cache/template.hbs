@@ -1,0 +1,30 @@
+<div id="pipeline-settings-cache-tab-contents">
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Clear cache
+      </div>
+      <div>
+        Clear the cache for your pipeline or job(s).
+      </div>
+    </div>
+
+    <BsButton
+      id="clear-pipeline-cache-button"
+      @type="primary"
+      @defaultText="Clear pipeline cache"
+      @onClick={{fn this.openClearPipelineCacheModal}}
+      disabled={{this.isClearPipelineCacheButtonDisabled}}
+    >
+      {{#if this.isClearPipelineCacheModalOpen}}
+        <Pipeline::Settings::Cache::Modal::Clear
+          @closeModal={{fn this.closePipelineCacheModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+
+  <div id="jobs-cache-table">
+    <Pipeline::Settings::Cache::Table />
+  </div>
+</div>

@@ -1,0 +1,29 @@
+@use 'modal/clear/styles' as modal;
+@use 'table/styles' as table;
+
+@mixin modalStyles {
+  @include modal.styles;
+}
+
+@mixin styles {
+  #pipeline-settings-cache-tab-contents {
+    height: 100%;
+
+    $section-height: 8rem;
+
+    .section {
+      height: $section-height;
+
+      #clear-pipeline-cache-button {
+        margin-left: 1rem;
+        margin-top: 0.5rem;
+      }
+    }
+
+    #jobs-cache-table {
+      height: calc(100% - $section-height - 1rem);
+
+      @include table.styles;
+    }
+  }
+}
