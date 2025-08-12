@@ -23,7 +23,7 @@ export const nodeCanShowTooltip = node => {
  * @param jobs    Jobs for the pipeline (API response from /pipelines/:id/jobs)
  * @param builds  Builds for the pipeline (API response from /pipelines/:id/builds)
  */
-export function getTooltipData(node, event, jobs, builds = []) {
+export function getTooltipData(node, event, jobs = [], builds = []) {
   const isTrigger = node.name.startsWith('~');
 
   if (isTrigger) {
@@ -68,11 +68,21 @@ export function getTooltipData(node, event, jobs, builds = []) {
   };
 
   const job = { ...node };
+  const originalJob = jobs.find(j => j.name === job.name);
 
-  if (event.prNum) {
-    const originalJob = jobs.find(j => j.name === job.name);
-
-    job.isDisabled = originalJob ? originalJob.state === 'DISABLED' : false;
+  if (originalJob) {
+    job.isDisabled = originalJob.state === 'DISABLED';
+    if (job.stateChanger) {
+      job.stateChanger = originalJob.stateChanger;
+    }
+    if (
+      originalJob.stateChangeMessage &&
+      originalJob.stateChangeMessage !== ' '
+    ) {
+      job.stateChangeMessage = originalJob.stateChangeMessage;
+    }
+  } else if (event.prNum) {
+    job.isDisabled = false;
   }
 
   const build = builds.find(b => b.jobId === node.id);
