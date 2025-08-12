@@ -1,0 +1,15 @@
+<div class="action-cell">
+  <BsButton
+    @type="primary"
+    @outline={{true}}
+    @onClick={{this.openClearJobCacheModal}}
+  >
+    <FaIcon @icon="trash" />
+    {{#if this.isClearJobCacheModalOpen}}
+      <Pipeline::Settings::Cache::Modal::Clear
+        @jobs={{this.job}}
+        @closeModal={{fn this.closeClearJobCacheModal}}
+      />
+    {{/if}}
+  </BsButton>
+</div>
