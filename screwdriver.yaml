@@ -10,7 +10,7 @@ shared:
 
 jobs:
   main:
-    image: node:18
+    image: node:22
     environment:
       COVERAGE: "true"
       SD_SONAR_OPTS: "-Dsonar.sources=app -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
