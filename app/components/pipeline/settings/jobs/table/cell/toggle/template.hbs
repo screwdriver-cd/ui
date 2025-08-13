@@ -1,0 +1,21 @@
+<div class="job-toggle-container">
+  <XToggle
+    @size="small"
+    @theme="light"
+    @showLabels={{false}}
+    @value={{this.isEnabled}}
+    @onToggle={{fn this.toggleJob}}
+
+    as |toggle|
+  >
+    <label for={{this.elementId}} class="sr-only">Toggle {{@record.name}}</label>
+    <toggle.switch id={{this.elementId}}/>
+    {{#if this.showModal}}
+      <Pipeline::Modal::ToggleJob
+        @jobs={{this.jobs}}
+        @toggleAction={{this.toggleAction}}
+        @closeModal={{this.closeModal}}
+      />
+    {{/if}}
+  </XToggle>
+</div>

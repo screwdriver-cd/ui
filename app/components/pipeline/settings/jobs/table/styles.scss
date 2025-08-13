@@ -1,0 +1,86 @@
+@use 'screwdriver-colors' as colors;
+@use 'ember-models-table';
+
+@use 'cell/date/styles' as date;
+@use 'cell/toggle/styles' as toggle;
+
+@mixin styles {
+  .pipeline-settings-job-table {
+    @include ember-models-table.styles;
+
+    height: 100%;
+
+    $select-multiple-height: 2.5rem;
+    $table-footer-height: 2.5rem;
+
+    &.toggle-multiple {
+      .selected-row {
+        background-color: colors.$sd-highlight;
+      }
+    }
+
+    .toggle-jobs-container {
+      display: flex;
+      align-items: center;
+      height: $select-multiple-height;
+
+      #toggle-multiple-jobs-button {
+        margin-right: 1rem;
+      }
+    }
+
+    .table-main {
+      max-height: calc(100% - $select-multiple-height - $table-footer-height);
+      margin-top: 0;
+      overflow: scroll;
+
+      table {
+        table-layout: fixed;
+
+        thead {
+          position: sticky;
+          top: 0;
+          background: colors.$sd-white;
+          z-index: 1;
+
+          th {
+            border: none;
+          }
+
+          .row-select-column {
+            .btn {
+              padding-top: 0;
+              padding-bottom: 0;
+            }
+          }
+        }
+
+        tbody {
+          @include date.styles;
+          @include toggle.styles;
+        }
+
+        .row-select-column {
+          width: 3rem;
+
+          .btn:focus,
+          .btn:focus-visible {
+            box-shadow: none;
+          }
+        }
+
+        .date-column {
+          width: 10rem;
+        }
+
+        .enabled-column {
+          width: 10rem;
+        }
+      }
+    }
+
+    .table-footer {
+      height: $table-footer-height;
+    }
+  }
+}
