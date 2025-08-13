@@ -23,9 +23,9 @@ export default class PipelineWorkflowTooltipComponent extends Component {
 
   @tracked showStopBuildModal = false;
 
-  pipeline;
+  @tracked tooltipData = null;
 
-  tooltipData = null;
+  pipeline;
 
   viewDescriptionMaxLength = 25;
 
@@ -33,12 +33,23 @@ export default class PipelineWorkflowTooltipComponent extends Component {
     super(...arguments);
 
     this.pipeline = this.pipelinePageState.getPipeline();
+    this.setTooltipData();
+  }
+
+  setTooltipData() {
     this.tooltipData = getTooltipData(
       this.args.d3Data.node,
       this.args.event,
       this.pipelinePageState.getJobs(),
       this.args.builds
     );
+  }
+
+  get stateChangerMessage() {
+    const { job } = this.tooltipData;
+    const jobState = job.isDisabled ? 'Disabled' : 'Enabled';
+
+    return `${jobState} by ${job.stateChanger}`;
   }
 
   get buildDetailsAvailable() {
@@ -115,15 +126,18 @@ export default class PipelineWorkflowTooltipComponent extends Component {
     this.showToggleJobModal = true;
 
     this.toggleJobMeta = {
-      id: this.tooltipData.job.id,
-      name: this.tooltipData.job.name,
+      jobs: [this.tooltipData.job],
       action: jobAction
     };
   }
 
   @action
-  closeJobModal() {
+  closeJobModal(updated) {
     this.showToggleJobModal = false;
+
+    if (updated) {
+      this.setTooltipData();
+    }
   }
 
   @action

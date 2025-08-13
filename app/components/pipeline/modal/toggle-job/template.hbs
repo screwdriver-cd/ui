@@ -5,26 +5,23 @@
 >
   <modal.header>
     <div class="modal-title">
-      {{@toggleAction}} the "{{truncate @name 30}}" job?
+      {{this.modalTitle}}
     </div>
   </modal.header>
   <modal.body>
     {{#if this.errorMessage}}
       <InfoMessage
+        id="toggle-job-modal-error"
         @message={{this.errorMessage}}
         @type="warning"
         @icon="triangle-exclamation"
         @dismissible={{false}}
       />
     {{/if}}
-    {{#if this.successMessage}}
-      <InfoMessage
-        @message={{this.successMessage}}
-        @type="success"
-        @icon="circle-check"
-        @dismissible={{false}}
-      />
-    {{/if}}
+
+    <div class="toggle-jobs-list">
+      {{this.jobNames}}
+    </div>
     <label>
       Reason
       <Input
@@ -38,8 +35,8 @@
     <BsButton
       id="submit-action"
       @type="primary"
-      @defaultText="Save"
-      @pendingText="Saving"
+      @defaultText={{this.toggleAction}}
+      @pendingText={{this.pendingActionText}}
       @onClick={{fn this.updateJob}}
       disabled={{this.isDisabled}}
     />
