@@ -72,7 +72,7 @@ export function getTooltipData(node, event, jobs = [], builds = []) {
 
   if (originalJob) {
     job.isDisabled = originalJob.state === 'DISABLED';
-    if (job.stateChanger) {
+    if (originalJob.stateChanger) {
       job.stateChanger = originalJob.stateChanger;
     }
     if (
@@ -81,8 +81,6 @@ export function getTooltipData(node, event, jobs = [], builds = []) {
     ) {
       job.stateChangeMessage = originalJob.stateChangeMessage;
     }
-  } else if (event.prNum) {
-    job.isDisabled = false;
   }
 
   const build = builds.find(b => b.jobId === node.id);

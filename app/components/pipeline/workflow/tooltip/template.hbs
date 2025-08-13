@@ -40,8 +40,10 @@
     </LinkTo>
 
     {{#if this.tooltipData.job.isDisabled}}
-      <p>
-        {{this.tooltipData.job.stateChangeMessage}}
+      <p
+        title={{this.tooltipData.job.stateChangeMessage}}
+      >
+        {{this.stateChangerMessage}}
       </p>
       <a
         id="toggle-job-link"
@@ -129,8 +131,7 @@
 
 {{#if this.showToggleJobModal}}
   <Pipeline::Modal::ToggleJob
-    @jobId={{this.toggleJobMeta.id}}
-    @name={{this.toggleJobMeta.name}}
+    @jobs={{this.toggleJobMeta.jobs}}
     @toggleAction={{this.toggleJobMeta.action}}
     @closeModal={{this.closeJobModal}}
   />

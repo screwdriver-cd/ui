@@ -118,7 +118,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
     assert.deepEqual(tooltipData.selectedEvent, event);
   });
 
-  test('it gets tooltip data for disabled job', function (assert) {
+  test('it gets tooltip data for jobs', function (assert) {
     const workflowGraph = {
       nodes: [
         { name: '~pr' },
@@ -135,24 +135,57 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
       workflowGraph,
       meta: {
         parameters: {}
-      },
-      prNum: 1
+      }
     };
-    const jobs = [{ name: 'p1', state: 'DISABLED', stateChangeMessage: ' ' }];
+    const node = { name: 'p1' };
 
-    const tooltipData = getTooltipData(
-      {
-        name: 'p1'
-      },
-      event,
-      jobs
-    );
+    let tooltipData = getTooltipData(node, event, []);
 
+    assert.deepEqual(tooltipData.job, { name: 'p1' });
+    assert.deepEqual(tooltipData.selectedEvent, event);
+
+    tooltipData = getTooltipData(node, event, [
+      { name: 'p1', state: 'DISABLED' }
+    ]);
+    assert.deepEqual(tooltipData.job, { name: 'p1', isDisabled: true });
+
+    tooltipData = getTooltipData(node, event, [
+      { name: 'p1', state: 'DISABLED', stateChanger: 'foo' }
+    ]);
     assert.deepEqual(tooltipData.job, {
       name: 'p1',
-      isDisabled: true
+      isDisabled: true,
+      stateChanger: 'foo'
     });
-    assert.deepEqual(tooltipData.selectedEvent, event);
+
+    tooltipData = getTooltipData(node, event, [
+      {
+        name: 'p1',
+        state: 'DISABLED',
+        stateChanger: 'foo',
+        stateChangeMessage: ' '
+      }
+    ]);
+    assert.deepEqual(tooltipData.job, {
+      name: 'p1',
+      isDisabled: true,
+      stateChanger: 'foo'
+    });
+
+    tooltipData = getTooltipData(node, event, [
+      {
+        name: 'p1',
+        state: 'DISABLED',
+        stateChanger: 'foo',
+        stateChangeMessage: 'disabled for testing'
+      }
+    ]);
+    assert.deepEqual(tooltipData.job, {
+      name: 'p1',
+      isDisabled: true,
+      stateChanger: 'foo',
+      stateChangeMessage: 'disabled for testing'
+    });
   });
 
   test('it gets tooltip data for job without build data', function (assert) {
