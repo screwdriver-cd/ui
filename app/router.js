@@ -147,6 +147,12 @@ Router.map(function route() {
           { path: 'builds/:build_id' },
           function buildRoute() {}
         );
+        this.route('settings', function settingsRoute() {
+          this.route('cache');
+          this.route('jobs');
+          this.route('metrics');
+          this.route('preferences');
+        });
       }
     );
   });

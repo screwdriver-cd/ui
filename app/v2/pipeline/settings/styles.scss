@@ -1,0 +1,24 @@
+@use 'screwdriver-colors' as colors;
+@use 'variables' as variables;
+
+@mixin styles {
+  #pipeline-settings {
+    height: 100%;
+
+    $pipeline-tab-height: variables.$pipeline-tab-height;
+
+    #pipeline-settings-tab {
+      height: $pipeline-tab-height;
+    }
+
+    #pipeline-settings-container {
+      $pipeline-settings-container-margin: 1rem;
+
+      height: calc(
+        100% - $pipeline-tab-height - (2 * $pipeline-settings-container-margin)
+      );
+      overflow: auto;
+      margin: $pipeline-settings-container-margin;
+    }
+  }
+}
