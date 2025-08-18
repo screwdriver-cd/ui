@@ -1,0 +1,34 @@
+@use 'screwdriver-colors' as colors;
+@use 'variables' as variables;
+@use 'cache/styles' as cache;
+@use 'jobs/styles' as jobs;
+@use 'main/styles' as main;
+@use 'metrics/styles' as metrics;
+@use 'preferences/styles' as preferences;
+@use 'tab/styles' as tab;
+
+@mixin styles {
+  @include cache.styles;
+  @include jobs.styles;
+  @include main.styles;
+  @include metrics.styles;
+  @include preferences.styles;
+  @include tab.styles;
+
+  #pipeline-settings-container {
+    .section {
+      margin-bottom: 1rem;
+      padding: 1rem 0;
+      border: 1px solid colors.$sd-light-gray;
+      border-radius: 3px;
+
+      .text-container {
+        margin-left: 1rem;
+
+        .title {
+          font-weight: variables.$weight-bold;
+        }
+      }
+    }
+  }
+}
