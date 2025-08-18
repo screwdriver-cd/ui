@@ -1,11 +1,9 @@
 @use 'modal/clear/styles' as modal;
 @use 'table/styles' as table;
 
-@mixin modalStyles {
-  @include modal.styles;
-}
-
 @mixin styles {
+  @include modal.styles;
+
   #pipeline-settings-cache-tab-contents {
     height: 100%;
 

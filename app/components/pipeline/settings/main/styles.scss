@@ -5,13 +5,11 @@
 @use 'modal/pipeline-alias/styles' as pipelineAliasModal;
 @use 'modal/sonar-badge/styles' as sonarBadgeModal;
 
-@mixin modalStyles {
+@mixin styles {
   @include pipelineModal.styles;
   @include pipelineAliasModal.styles;
   @include sonarBadgeModal.styles;
-}
 
-@mixin styles {
   #pipeline-settings-main-tab-contents {
     .section {
       display: flex;
