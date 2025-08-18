@@ -1,0 +1,59 @@
+<div id="pipeline-settings-jobs-tab-contents">
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Toggle jobs
+      </div>
+      <div>
+        Enable or disable jobs to modify your workflow.  To toggle multiple jobs at once, select one of the button options below.
+      </div>
+    </div>
+    <div class="toggle-buttons-container">
+      <BsButton
+        id="enable-jobs-button"
+        @type="primary"
+        @outline={{true}}
+        @defaultText="Enable multiple jobs"
+        @onClick={{fn this.toggleMultiple true}}
+        disabled={{this.disableEnableMultipleJobsButton}}
+      />
+      <BsButton
+        id="disable-jobs-button"
+        @type="primary"
+        @outline={{true}}
+        @defaultText="Disable multiple jobs"
+        @onClick={{fn this.toggleMultiple false}}
+        disabled={{this.disableDisableMultipleJobsButton}}
+      />
+      {{#if this.isToggleMultiple}}
+        <BsButton
+          id="cancel-toggle-jobs-button"
+          @type="danger"
+          @outline={{true}}
+          @defaultText="Cancel"
+          @onClick={{fn this.cancelToggleMultiple}}
+        />
+      {{/if}}
+    </div>
+  </div>
+
+  <div id="jobs-table">
+    {{#if this.isToggleMultiple}}
+      {{#if this.isEnable}}
+        <Pipeline::Settings::Jobs::Table
+          @isToggleMultiple={{true}}
+          @jobState="DISABLED"
+        />
+      {{else}}
+        <Pipeline::Settings::Jobs::Table
+          @isToggleMultiple={{true}}
+          @jobState="ENABLED"
+        />
+      {{/if}}
+    {{else}}
+      <Pipeline::Settings::Jobs::Table
+        @isToggleMultiple={{false}}
+      />
+    {{/if}}
+  </div>
+</div>
