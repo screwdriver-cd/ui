@@ -8,13 +8,15 @@
     @include ember-models-table.styles;
 
     height: 100%;
+    margin-left: 1rem;
 
     $table-footer-height: 2.5rem;
-    $clear-cache-button-height: 2.5rem;
+    $clear-cache-button-height: 3rem;
 
     .cache-button-container {
+      display: flex;
+      align-items: center;
       height: $clear-cache-button-height;
-      margin-left: 1rem;
     }
 
     .table-main {
